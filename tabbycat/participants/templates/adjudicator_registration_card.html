@@ -35,6 +35,10 @@
           {{ adjudicator.institution.region.name }}
         {% endif %}
       </div>
+    {% else %}
+      <div class="list-group-item">
+        <em>{% trans "The institutional affiliations of adjudicators are not public at this tournament." %}</em>
+      </div>
     {% endif %}
 
     {% if admin_page %}

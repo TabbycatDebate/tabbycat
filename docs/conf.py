@@ -263,7 +263,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc, 'tabbycat', 'Tabbycat Documentation',
-     [author], 1)
+     [author], 1),
 ]
 
 # If true, show URL addresses after external links.
@@ -320,3 +320,8 @@ else:
 # -- Options for inline LaTeX (imgmath) ------------------------------------
 
 imgmath_image_format = 'svg'
+
+
+# -- Localisation options --------------------------------------------------
+locale_dirs = ['locale/']
+gettext_compact = False

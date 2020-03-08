@@ -76,3 +76,9 @@ if ENABLE_DEBUG_TOOLBAR:
 # ==============================================================================
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# ==============================================================================
+# REST Framework (Browse through APIs)
+# ==============================================================================
+
+REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += ['rest_framework.renderers.BrowsableAPIRenderer',]

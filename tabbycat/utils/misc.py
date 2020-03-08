@@ -1,10 +1,10 @@
 import logging
 from secrets import SystemRandom
+from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils import formats, timezone, translation
-from django.shortcuts import redirect
-
 from ipware.ip import get_real_ip
 
 logger = logging.getLogger(__name__)
@@ -53,10 +53,8 @@ def badge_datetime_format(timestamp):
     return formats.date_format(localized_time, format=fmt)
 
 
-def ranks_dictionary(tournament):
+def ranks_dictionary(tournament, score_min, score_max):
     """ Used for both adjudicator ranks and venue priorities """
-    score_min = tournament.pref('adj_min_score')
-    score_max = tournament.pref('adj_max_score')
     score_range = score_max - score_min
     return [
         {'pk': 'a+', 'fields': {'name': 'A+', 'cutoff': (score_range * 0.9) + score_min}},
@@ -74,3 +72,11 @@ def ranks_dictionary(tournament):
 def generate_identifier_string(charset, length):
     """Used in privateurl/checkin identifier generation"""
     return ''.join(SystemRandom().choice(charset) for _ in range(length))
+
+
+def add_query_string_parameter(url, key, value):
+    scheme, netloc, path, params, query, fragment = urlparse(url)
+    query_parts = parse_qs(query)
+    query_parts[key] = value
+    query = urlencode(query_parts, safe='/')
+    return urlunparse((scheme, netloc, path, params, query, fragment))

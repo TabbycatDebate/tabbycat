@@ -64,7 +64,7 @@ class Command(RoundCommand):
                 for adj, pos in alloc.with_positions():
                     self.stdout.write("   - {pos} {score:.1f} {adj.name}".format(
                         adj=adj, pos=pos,
-                        score=adj.weighted_score(feedback_weight))
+                        score=adj.weighted_score(feedback_weight)),
                     )
 
         if user_warnings:

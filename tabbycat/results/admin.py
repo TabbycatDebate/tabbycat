@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.db.models import OuterRef, Prefetch, Subquery
 
-from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
-
 from draw.models import DebateTeam
 from utils.admin import TabbycatModelAdminFieldsMixin
+
+from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
 
 
 # ==============================================================================
@@ -101,16 +101,16 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
         speaker_person = SpeakerScore.objects.filter(
             ballot_submission_id=OuterRef('ballot_submission_id'),
             debate_team_id=OuterRef('debate_team_id'),
-            position=OuterRef('position')
+            position=OuterRef('position'),
         ).select_related('speaker')
 
         return super(SpeakerScoreByAdjAdmin, self).get_queryset(request).select_related(
             'ballot_submission__debate__round__tournament',
             'debate_adjudicator__adjudicator',
-            'debate_team__team__tournament'
+            'debate_team__team__tournament',
         ).prefetch_related(
             Prefetch('ballot_submission__debate__debateteam_set',
-                queryset=DebateTeam.objects.select_related('team'))
+                queryset=DebateTeam.objects.select_related('team')),
         ).annotate(speaker_name=Subquery(speaker_person.values('speaker__name')))
 
     def get_speaker_name(self, obj):

@@ -19,7 +19,7 @@ Here you can adjust the debate rules and interface options to your liking then h
 Special data types and options
 ==============================
 
-There are a few optional fields that are not covered in the initial data templates, in the visual importer, or that may only be relevant in particular scenarios. It's worth going over these quickly to see if they are needed for your tournament. You can view and edit these fields in the **Edit Database** area (link is in the menu under **Setup**).
+There are a few optional fields that are not covered in the initial data templates, in the visual importer, or that may only be relevant in particular scenarios. It's worth going over these quickly to see if they are needed for your tournament. You can view and edit these fields in the **Edit Database** area (link is in the menu under the tournament's name).
 
 Adjudicator Feedback > Adj Feedback Questions
   - As described in :ref:`adjudicator-feedback`, the types of questions that can be posed for adjudicator feedback are able to be heavily customised. If you are customising your feedback form it should be done here, and before the tournament starts.
@@ -35,24 +35,21 @@ Participants > Regions
 Participants > Adjudicators
   - An adjudicators *Base Score* represents their relative ability to judge important rooms, where adjudicators with higher numbers will, relative to the other adjudicators, be placed in better roles (ie as Chairs) and in the rooms you deem most important in each round. If you are running a small tournament, and plan to do your allocations manually, you can set everyone's number to the same amount.
   - For larger tournaments, particularly those that collect feedback, see the :ref:`adjudicator-feedback` section for more information on how base scores and other variables influence the automated allocation process.
-  - Regardless of how you score the adjs, if you have changed the minimimum chairing score in settings, you'll want to make sure there are enough adjudicators that meet this minimum threshold or the automated allocator may not function effectively.
-  - All types of conflicts are assigned to the relevant adjudicator. Adjudicator's can be conflicted against particular teams, particular institutions, and other adjudicators. Each of these is a located in a tab at the top of the page.
+  - Regardless of how you score the adjs, if you have changed the minimum chairing score in settings, you'll want to make sure there are enough adjudicators that meet this minimum threshold or the automated allocator may not function effectively.
+  - All types of conflicts are assigned to the relevant adjudicator. Adjudicators can be conflicted against particular teams, particular institutions, and other adjudicators. Each of these is a located in a tab at the top of the page.
   - Each adjudicator's gender is optional and is not displayed publicly; it is only shown in the adjudicator allocation interface
-  - Each adjudicator's pronoun is optional, and is only displayed if you use tabbycat to print the ballots and feedback sheets for each round.
+  - Each adjudicator's pronoun is optional, and is only displayed if you use Tabbycat to print the ballots and feedback sheets for each round.
 
 Participants > Teams
   - Note the distinction here between full name and short name. The latter is used on pages where space is tight, such as the draw displays or the adjudicator allocation interface.
-  - Note that "Uses institutional prefix" option. With this option on, a team from the 'MUDS' insttution named '1' or 'Gold' would be displayed as 'MUDS 1' or 'MUDS Gold'.
+  - Note that "Uses institutional prefix" option. With this option on, a team from the 'MUDS' institution named '1' or 'Gold' would be displayed as 'MUDS 1' or 'MUDS Gold'.
   - At present, setting a team's type to Bye, Swing, or Composite only affects very particular circumstances, and should be considered unnecessary.
   - If you do have composite teams, and wish to have them be conflicted by adjudicators from each respective instutution, you'll need to add a new team conflict to each adjudicator from each institution.
-  - If you do have swing teams, or teams that are otherwise ineligible for breaking, this is typically handled through the breaks interface in the main site
+  - If you do have swing teams, or teams that are otherwise ineligible for breaking, this is typically handled through the breaks interface in the main site.
 
 Participants > Speakers
-  - Each speaker's gender is optional and is not displayed publicly; it is only shown in the adjudicator allocation interface
-  - Each speaker's pronoun is optional, and is only displayed if you use tabbycat to print the ballots and feedback sheets for each round.
-
-Tournaments > Divisions
-  - At the moment divisions are only useful for running tournaments that use round-robin style draws. Here, each division represents a draw pool within a round. Division support here is under development and not tested in many scenarios.
+  - Each speaker's gender is optional and is not displayed publicly; it is only shown in the adjudicator allocation interface.
+  - Each speaker's pronoun is optional, and is only displayed if you use Tabbycat to print the ballots and feedback sheets for each round.
 
 Tournaments > Tournaments
   - Note that tournaments can have a welcome message (useful for displaying maps and other information on the homepage).

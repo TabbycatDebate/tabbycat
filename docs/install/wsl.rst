@@ -33,7 +33,7 @@ First, `check that you have the Fall Creators Update (build 1709) <https://suppo
 Then, install the Windows Subsystem for Linux. For most people, this involves the following:
 
 1. Enable the Windows Subsystem for Linux feature, by finding **Turn Windows features on or off** on the Start Menu, then checking the box for **Windows Subsystem for Linux** and clicking **OK**. You'll be prompted to restart your computer to make the changes take effect.
-   
+
   .. image:: images/wsl-feature.png
 
 2. Install Ubuntu by finding it on the Microsoft Store. For your convenience, `here's a direct link to Ubuntu on the Microsoft Store <https://www.microsoft.com/store/p/ubuntu/9nblggh4msv6>`_.

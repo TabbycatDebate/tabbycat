@@ -145,5 +145,6 @@ class TestOneUpOneDown(unittest.TestCase):
         r = OneUpOneDownSwapper(**options).run(d)
         return [(a.id, b.id) for (a, b) in r]
 
+
 if __name__ == '__main__':
     unittest.main()

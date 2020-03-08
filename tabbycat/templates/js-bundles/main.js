@@ -22,7 +22,7 @@ import EditDebateAdjudicatorsContainer from '../../adjallocation/templates/EditD
 import EditPanelAdjudicatorsContainer from '../../adjallocation/templates/EditPanelAdjudicatorsContainer.vue'
 import EditDebateTeamsContainer from '../../draw/templates/EditDebateTeamsContainer.vue'
 import EditDebateVenuesContainer from '../../venues/templates/EditDebateVenuesContainer.vue'
-import store from '../../utils/templates/DragAndDropStore'
+import store from '../../templates/allocations/DragAndDropStore'
 
 // Setup the main constructs used for custom components
 var vueComponents = {}

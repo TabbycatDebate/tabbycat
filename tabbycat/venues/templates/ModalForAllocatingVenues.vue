@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import ModalActionMixin from '../../utils/templates/modals/ModalActionMixin.vue'
+import ModalActionMixin from '../../templates/modals/ModalActionMixin.vue'
 
 export default {
   mixins: [ModalActionMixin],

@@ -1,6 +1,6 @@
 language: python
+os: linux
 dist: xenial
-sudo: required
 group: edge
 env:
   global:
@@ -20,7 +20,7 @@ branches:
   except:
   - l10n_develop
 
-matrix:
+jobs:
   include:
 
     # Python 3.7
@@ -39,7 +39,7 @@ matrix:
         - pg_lsclusters
         - createdb travisci -U postgres
       script:
-        - flake8 tabbycat
+        - pre-commit run --all-files
         - npm run lint
         - python tabbycat/manage.py test -v 2 --exclude-tag=selenium
 

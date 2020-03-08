@@ -47,22 +47,22 @@ class EditPanelAdjsPanelSerializer(EditDebateAdjsDebateSerializer):
 class SimpleDebateImportanceSerializer(EditDebateAdjsDebateSerializer):
     class Meta:
         model = EditDebateAdjsDebateSerializer.Meta.model
-        fields = ('id', 'importance',)
+        fields = ('id', 'importance')
 
 
 class SimplePanelImportanceSerializer(EditPanelAdjsPanelSerializer):
     class Meta:
         model = EditPanelAdjsPanelSerializer.Meta.model
-        fields = ('id', 'importance',)
+        fields = ('id', 'importance')
 
 
 class SimpleDebateAllocationSerializer(EditDebateAdjsDebateSerializer):
     class Meta:
         model = EditDebateAdjsDebateSerializer.Meta.model
-        fields = ('id', 'adjudicators',)
+        fields = ('id', 'adjudicators')
 
 
 class SimplePanelAllocationSerializer(EditPanelAdjsPanelSerializer):
     class Meta:
         model = EditPanelAdjsPanelSerializer.Meta.model
-        fields = ('id', 'adjudicators',)
+        fields = ('id', 'adjudicators')

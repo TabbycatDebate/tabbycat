@@ -218,7 +218,7 @@ class ActionLogEntry(models.Model):
                 return obj.name
             else:
                 return str(obj)
-        except:
+        except Exception:
             return "<error displaying %s>" % model_name
 
     @property

@@ -1,9 +1,9 @@
 import logging
 from threading import Lock
 
-from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -28,8 +28,10 @@ class Submission(models.Model):
 
     SUBMITTER_TABROOM = 'T'
     SUBMITTER_PUBLIC = 'P'
-    SUBMITTER_TYPE_CHOICES = ((SUBMITTER_TABROOM, _("Tab room")),
-                              (SUBMITTER_PUBLIC, _("Public")), )
+    SUBMITTER_TYPE_CHOICES = (
+        (SUBMITTER_TABROOM, _("Tab room")),
+        (SUBMITTER_PUBLIC, _("Public")),
+    )
 
     timestamp = models.DateTimeField(auto_now_add=True,
         verbose_name=_("timestamp"))
@@ -143,7 +145,7 @@ class BallotSubmission(Submission):
             'timestamp': badge_datetime_format(self.timestamp),
             'confirmed': self.confirmed,
             'debate': self.debate.id,
-            'result_status': self.debate.result_status
+            'result_status': self.debate.result_status,
         }
 
     def serialize(self, tournament=None):
@@ -158,14 +160,19 @@ class BallotSubmission(Submission):
         if self.confirm_timestamp and self.confirmed:
             confirmed = timezone.localtime(self.confirm_timestamp).isoformat()
 
+        if tournament.pref('enable_blind_checks') and tournament.pref('teams_in_debate') == 'bp':
+            admin_url = 'results-ballotset-edit'
+            assistant_url = 'results-assistant-ballotset-edit'
+        else:
+            admin_url = 'old-results-ballotset-edit'
+            assistant_url = 'old-results-assistant-ballotset-edit'
+
         return {
             'ballot_id': self.id,
             'debate_id': self.debate.id,
             'submitter': self.submitter.username if self.submitter else self.ip_address,
-            'admin_link': reverse_tournament('old-results-ballotset-edit',
-                                             tournament, kwargs={'pk': self.id}),
-            'assistant_link': reverse_tournament('old-results-assistant-ballotset-edit',
-                                                 tournament, kwargs={'pk': self.id}),
+            'admin_link': reverse_tournament(admin_url, tournament, kwargs={'pk': self.id}),
+            'assistant_link': reverse_tournament(assistant_url, tournament, kwargs={'pk': self.id}),
             'short_time': created_short,
             'created_timestamp': created,
             'confirmed_timestamp': confirmed,

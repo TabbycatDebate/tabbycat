@@ -6,12 +6,12 @@ from django_summernote.widgets import SummernoteWidget
 from dynamic_preferences.preferences import Section
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, LongStringPreference, StringPreference
 
-from standings.teams import TeamStandingsGenerator
 from standings.speakers import SpeakerStandingsGenerator
+from standings.teams import TeamStandingsGenerator
 from tournaments.utils import get_side_name_choices
 
-from .types import MultiValueChoicePreference
 from .models import tournament_preferences_registry
+from .types import MultiValueChoicePreference
 
 
 # ==============================================================================
@@ -90,6 +90,7 @@ class MarginIncludesDissent(BooleanPreference):
     section = scoring
     name = 'margin_includes_dissenters'
     default = False
+
 
 # ==============================================================================
 draw_rules = Section('draw_rules', verbose_name=_("Draw Rules"))
@@ -338,6 +339,7 @@ class HideTraineePosition(BooleanPreference):
     section = draw_rules
     name = 'no_trainee_position'
     default = False
+
 
 # ==============================================================================
 feedback = Section('feedback', verbose_name=_("Feedback"))
@@ -780,14 +782,13 @@ class DisableBallotConfirmation(BooleanPreference):
     default = False
 
 
-# Disabled pending rollout of new ballot interface
-# @tournament_preferences_registry.register
-# class EnableBlindBallotConfirmation(BooleanPreference):
-#     help_text = _("Requires scores of draft ballot to be re-entered during confirmation (as a more stringent check)")
-#     verbose_name = _("Enforce blind confirmations")
-#     section = data_entry
-#     name = 'enable_blind_checks'
-#     default = False
+@tournament_preferences_registry.register
+class EnableBlindBallotConfirmation(BooleanPreference):
+    help_text = _("Requires scores of draft ballots to be re-entered as part of the confirmation stage (to create more stringent check). Only applies to BP formats.")
+    verbose_name = _("Enforce blind confirmations")
+    section = data_entry
+    name = 'enable_blind_checks'
+    default = False
 
 
 @tournament_preferences_registry.register
@@ -1099,7 +1100,7 @@ class ShowTeamInstitutions(BooleanPreference):
 
 @tournament_preferences_registry.register
 class ShowAdjudicatorInstitutions(BooleanPreference):
-    help_text = _("In tables listing adjudicators, adds a column showing their institutions")
+    help_text = _("Hide the institutions of adjudicators on public pages and on printed ballots")
     verbose_name = _("Show adjudicator institutions")
     section = ui_options
     name = 'show_adjudicator_institutions'

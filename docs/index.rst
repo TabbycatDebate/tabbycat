@@ -81,4 +81,3 @@ formats too. If you're looking for a general overview of the software, check out
    about/changelog
    about/contributing
    about/licence
-   about/tournament-history

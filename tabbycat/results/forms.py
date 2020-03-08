@@ -139,7 +139,7 @@ class BaseResultForm(forms.Form):
         self.initial.update({
             'debate_result_status': self.debate.result_status,
             'confirmed': self.ballotsub.confirmed,
-            'discarded': self.ballotsub.discarded
+            'discarded': self.ballotsub.discarded,
         })
 
         if self.has_tournament_password:
@@ -155,13 +155,13 @@ class BaseResultForm(forms.Form):
             for field in ('discarded', 'confirmed'):
                 self.add_error(field, forms.ValidationError(
                     _("The ballot set can't be both discarded and confirmed."),
-                    code='discard_confirm'
+                    code='discard_confirm',
                 ))
 
         if cleaned_data.get('debate_result_status') == Debate.STATUS_CONFIRMED and not cleaned_data.get('confirmed') and self.debate.confirmed_ballot is None:
             self.add_error('debate_result_status', forms.ValidationError(
                 _("The debate status can't be confirmed unless one of the ballot sets is confirmed."),
-                code='status_confirm'
+                code='status_confirm',
             ))
 
         return cleaned_data
@@ -195,13 +195,12 @@ class BaseResultForm(forms.Form):
         if self.ballotsub.confirmed:
             self.ballotsub.confirm_timestamp = timezone.now()
 
-        # 5. Notify the Latest Results consumer (for results/overview)
-        if self.ballotsub.confirmed:
-            if self.debate.result_status is self.debate.STATUS_CONFIRMED:
+            # 5. Notify the Latest Results consumer (for results/overview)
+            if self.debate.result_status == Debate.STATUS_CONFIRMED:
                 group_name = BallotResultConsumer.group_prefix + "_" + t.slug
                 async_to_sync(get_channel_layer().group_send)(group_name, {
                     "type": "send_json",
-                    "data": self.ballotsub.serialize_like_actionlog
+                    "data": self.ballotsub.serialize_like_actionlog,
                 })
 
         # 6. Notify the Results Page/Ballots Status Graph
@@ -210,13 +209,13 @@ class BaseResultForm(forms.Form):
         async_to_sync(get_channel_layer().group_send)(group_name, {
             "type": "send_json",
             "data": {
-                'status': self.cleaned_data['debate_result_status'],
+                'status': self.debate.result_status,
                 'icon': meta[0],
                 'class': meta[1],
                 'sort': meta[2],
                 'ballot': self.ballotsub.serialize(t),
-                'round': self.debate.round.id
-            }
+                'round': self.debate.round_id,
+            },
         })
 
         return self.ballotsub
@@ -301,11 +300,11 @@ class BaseBallotSetForm(BaseResultForm):
                 (str(teams[0].id) + "," + str(teams[1].id),
                     _("%(aff_team)s affirmed, %(neg_team)s negated") % {'aff_team': teams[0].short_name, 'neg_team': teams[1].short_name}),
                 (str(teams[1].id) + "," + str(teams[0].id),
-                    _("%(aff_team)s affirmed, %(neg_team)s negated") % {'aff_team': teams[1].short_name, 'neg_team': teams[0].short_name})
+                    _("%(aff_team)s affirmed, %(neg_team)s negated") % {'aff_team': teams[1].short_name, 'neg_team': teams[0].short_name}),
             ]
             self.fields['choose_sides'] = forms.TypedChoiceField(
                 choices=side_choices,
-                coerce=lambda x: tuple(Team.objects.get(id=int(v)) for v in x.split(","))
+                coerce=lambda x: tuple(Team.objects.get(id=int(v)) for v in x.split(",")),
             )
             for team in self.debate.teams:
                 self.fields['team_%d' % team.id] = forms.ModelChoiceField(queryset=team.speakers, required=False)
@@ -472,7 +471,7 @@ class BaseBallotSetForm(BaseResultForm):
                     self.add_error(self._fieldname_speaker(side, pos), forms.ValidationError(
                         _("The speaker %(speaker)s doesn't appear to be on team %(team)s."),
                         params={'speaker': speaker.name, 'team': team.short_name},
-                        code='speaker_wrongteam')
+                        code='speaker_wrongteam'),
                     )
 
                 # Don't count this speaker if the speech is marked as a ghost
@@ -486,7 +485,7 @@ class BaseBallotSetForm(BaseResultForm):
                     message = ngettext(
                         "%(speaker)s appears to have given %(count)d substantive speech.",  # never used, needed for i18n
                         "%(speaker)s appears to have given %(count)d substantive speeches.",
-                        len(positions)
+                        len(positions),
                     )
                     params = {'speaker': speaker.name, 'count': len(positions)}
                     for pos in positions:
@@ -502,14 +501,14 @@ class BaseBallotSetForm(BaseResultForm):
                 if reply_speaker == last_speaker and reply_speaker is not None:
                     self.add_error(self._fieldname_speaker(side, self.reply_position), forms.ValidationError(
                         _("The last substantive speaker and reply speaker can't be the same."),
-                        code='reply_speaker_consecutive'
+                        code='reply_speaker_consecutive',
                     ))
 
                 # The reply speaker must have given a substantive speech.
                 if len(speaker_positions.get(reply_speaker, [])) == 0:
                     self.add_error(self._fieldname_speaker(side, self.reply_position), forms.ValidationError(
                         _("The reply speaker for this team did not give a substantive speech."),
-                        code='reply_speaker_not_repeat'
+                        code='reply_speaker_not_repeat',
                     ))
 
     def clean_scoresheet(self, cleaned_data):
@@ -662,7 +661,7 @@ class SingleBallotSetForm(BaseBallotSetForm):
             if len(totals) == 2 and totals[0] == totals[1]:
                 self.add_error(None, forms.ValidationError(
                     _("The total scores for the teams are the same (i.e. a draw)."),
-                    code='draw'
+                    code='draw',
                 ))
 
             elif len(totals) > 2:
@@ -672,7 +671,7 @@ class SingleBallotSetForm(BaseBallotSetForm):
                         self.add_error(None, forms.ValidationError(
                             _("The total scores for the following teams are the same: %(teams)s"),
                             params={'teams': ", ".join(self._side_name(side) for side in sides)},
-                            code='tied_score'
+                            code='tied_score',
                         ))
 
             # Check that the margin did not exceed the maximum permissible.
@@ -681,7 +680,7 @@ class SingleBallotSetForm(BaseBallotSetForm):
                 if margin > self.max_margin:
                     self.add_error(None, forms.ValidationError(
                         _("The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_margin).1f)."),
-                        params={'margin': margin, 'max_margin': self.max_margin}, code='max_margin'
+                        params={'margin': margin, 'max_margin': self.max_margin}, code='max_margin',
                     ))
 
     def populate_result_with_scores(self, result):
@@ -758,7 +757,7 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
                 if totals[0] == totals[1]:
                     self.add_error(None, forms.ValidationError(
                         _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s."),
-                        params={'adj': adj.name}, code='draw'
+                        params={'adj': adj.name}, code='draw',
                     ))
 
                 # Check that the margin did not exceed the maximum permissible.
@@ -766,7 +765,7 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
                 if self.max_margin and margin > self.max_margin:
                     self.add_error(None, forms.ValidationError(
                         _("The margin (%(margin).1f) in the ballot of adjudicator %(adj)s exceeds the maximum allowable margin (%(max_margin).1f)."),
-                        params={'adj': adj.name, 'margin': margin, 'max_margin': self.max_margin}, code='max_margin'
+                        params={'adj': adj.name, 'margin': margin, 'max_margin': self.max_margin}, code='max_margin',
                     ))
 
     def populate_result_with_scores(self, result):
@@ -786,7 +785,7 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
             sheet_dict = {
                 "adjudicator": adj,
                 "teams": self.scoresheet(
-                    lambda side, pos: self._fieldname_score(adj, side, pos)
+                    lambda side, pos: self._fieldname_score(adj, side, pos),
                 ),
             }
             yield sheet_dict
@@ -813,13 +812,13 @@ class BPEliminationResultForm(BaseResultForm):
             self.add_error(None, forms.ValidationError(
                 _("Sides for this debate are not confirmed. You can't save a result "
                   "for this debate until the sides have been confirmed in the draw."),
-                code='sides_unconfirmed'
+                code='sides_unconfirmed',
             ))
 
         if 'advancing' in cleaned_data and len(cleaned_data['advancing']) != 2:
             self.add_error('advancing', forms.ValidationError(
                 _("There must be exactly two teams advancing."),
-                code='num_advancing'
+                code='num_advancing',
             ))
 
         return cleaned_data

@@ -1,20 +1,19 @@
-import math
-
+from django.forms import CharField, ChoiceField, Form, ModelChoiceField, ModelForm
 from django.forms.fields import IntegerField
 from django.forms.models import ModelChoiceIterator
-from django.forms import CharField, ChoiceField, Form, ModelChoiceField, ModelForm
-from django.utils.translation import gettext_lazy as _
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
+from breakqual.utils import auto_make_break_rounds
 from options.preferences import TournamentStaff
 from options.presets import all_presets, get_preferences_data, presets_for_form, public_presets_for_form
 
 from .models import Round, Tournament
-from .utils import auto_make_break_rounds, auto_make_rounds
+from .utils import auto_make_rounds
 
 
 class TournamentStartForm(ModelForm):
@@ -62,7 +61,7 @@ class TournamentStartForm(ModelForm):
                 seq=1,
                 break_size=break_size,
                 is_general=True,
-                priority=100
+                priority=100,
             )
             open_break.full_clean()
             open_break.save()
@@ -127,11 +126,7 @@ class TournamentConfigureForm(ModelForm):
         open_break = BreakCategory.objects.filter(tournament=t, is_general=True).first()
         # Check there aren't already break rounds (i.e. when importing demos)
         if open_break and not t.break_rounds().exists():
-            if t.pref('teams_in_debate') == 'bp':
-                num_break_rounds = math.ceil(math.log2(open_break.break_size / 2))
-            else:
-                num_break_rounds = math.ceil(math.log2(open_break.break_size))
-            auto_make_break_rounds(t, num_break_rounds, open_break)
+            auto_make_break_rounds(open_break, t, False)
 
 
 class RoundWithCompleteOptionChoiceIterator(ModelChoiceIterator):

@@ -6,7 +6,7 @@
 {% block sidebar %}{% endblock %} {# Need to override sidebar manually it will crash when no tournaments are present. Ideally this would be handled with the Mixins but this is a relatively unique view as it is part of Tournaments but is admin-only and thus shown with the sidebar #}
 
 {% block page-alerts %}
-  {% include 'database_limit_warning.html' %}
+  {% include 'errors/database_limit_warning.html' %}
 {% endblock %}
 
 {% block content %}

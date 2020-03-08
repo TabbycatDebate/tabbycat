@@ -11,11 +11,11 @@
 
   {% if tournament %}
     {% blocktrans trimmed with tournament_name=tournament.short_name asvar meta_description %}
-      The tab for {{ tournament_name }} runs on Tabbycat, an open-source tab system for a variety of parliamentary debating formats
+      The tab for {{ tournament_name }} runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats
     {% endblocktrans %}
   {% else %}
     {% blocktrans trimmed asvar meta_description %}
-      This tab runs on Tabbycat, an open-source tab system for a variety of parliamentary debating formats
+      This tab runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats
     {% endblocktrans %}
   {% endif %}
   <meta name="description" content="{{ meta_description }}" />

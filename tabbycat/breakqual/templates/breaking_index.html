@@ -25,9 +25,14 @@
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <a class="btn btn-primary" href="{% tournamenturl 'breakqual-edit-eligibility' %}">
-    {% trans "Edit Teams' Eligibility" %}
-  </a>
+  <div class="btn-group btn-group">
+    <a class="btn btn-outline-primary" href="{% tournamenturl 'break-categories-edit' %}">
+      {% trans "Break Categories" %}
+    </a>
+    <a class="btn btn-outline-primary" href="{% tournamenturl 'breakqual-edit-eligibility' %}">
+      {% trans "Team Eligibility" %}
+    </a>
+  </div>
 {% endblock %}
 
 {% block content %}
