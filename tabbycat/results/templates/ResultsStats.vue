@@ -31,6 +31,11 @@
                  data-toggle="tooltip" :title="statuses.draft + ' ' + gettext('Unconfirmed')">
               <i data-feather="circle"></i>&nbsp;&nbsp;{{ statuses.draft }}
             </div>
+            <div class="progress-bar bg-warning" role="progressbar"
+                 :style="{ width: statusWidths.postponed }"
+                 data-toggle="tooltip" :title="statuses.postponed + ' ' + gettext('Postponed')">
+              <i data-feather="check"></i>&nbsp;&nbsp;{{ statuses.postponed }}
+            </div>
             <div class="progress-bar bg-success" role="progressbar"
                  :style="{ width: statusWidths.confirmed }"
                  data-toggle="tooltip" :title="statuses.confirmed + ' ' + gettext('Confirmed')">
@@ -66,6 +71,7 @@ export default {
       return {
         none: this.widthForType(this.statuses.none, this.statuses),
         draft: this.widthForType(this.statuses.draft, this.statuses),
+        postponed: this.widthForType(this.statuses.postponed, this.statuses),
         confirmed: this.widthForType(this.statuses.confirmed, this.statuses),
       }
     },

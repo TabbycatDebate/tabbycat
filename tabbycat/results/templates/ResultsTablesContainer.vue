@@ -95,6 +95,7 @@ export default {
       return {
         none: this.sumForType(this.debates, 'status', 'N'),
         draft: this.sumForType(this.debates, 'status', 'D'),
+        postponed: this.sumForType(this.debates, 'status', 'P'),
         confirmed: this.sumForType(this.debates, 'status', 'C'),
       }
     },

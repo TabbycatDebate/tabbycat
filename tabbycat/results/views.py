@@ -29,13 +29,14 @@ from tournaments.models import Round
 from utils.misc import get_ip_address, reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.tables import TabbycatTableBuilder
-from utils.views import VueTableTemplateView
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 
+from .consumers import BallotStatusConsumer
 from .forms import BPEliminationResultForm, PerAdjudicatorBallotSetForm, SingleBallotSetForm
 from .models import BallotSubmission, TeamScore
 from .prefetch import populate_confirmed_ballots
 from .tables import ResultsTableBuilder
-from .utils import populate_identical_ballotsub_lists
+from .utils import get_status_meta, populate_identical_ballotsub_lists
 
 logger = logging.getLogger(__name__)
 
@@ -73,6 +74,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
         table.add_debate_venue_columns(draw, for_admin=True)
         table.add_debate_results_columns(draw, iron=True)
         table.add_debate_adjudicators_column(draw, show_splits=True, for_admin=True)
+        table.add_debate_postponement_column(draw)
         return table
 
     def get_irons_list(self):
@@ -701,3 +703,30 @@ class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, VueTableTemplat
         debates = [da.debate for da in debateadjs]
         table.add_debate_venue_columns(debates)
         return table
+
+
+class PostponeDebateView(AdministratorMixin, RoundMixin, PostOnlyRedirectView):
+
+    round_redirect_pattern_name = 'results-round-list'
+
+    def post(self, request, *args, **kwargs):
+        debate = Debate.objects.get(id=kwargs.pop('debate_id'))
+        debate.result_status = Debate.STATUS_POSTPONED
+        debate.save()
+
+        # Notify the Results Page
+        group_name = BallotStatusConsumer.group_prefix + "_" + debate.round.tournament.slug
+        meta = get_status_meta(debate)
+        async_to_sync(get_channel_layer().group_send)(group_name, {
+            "type": "send_json",
+            "data": {
+                'status': debate.result_status,
+                'icon': meta[0],
+                'class': meta[1],
+                'sort': meta[2],
+                'ballot': None,
+                'round': debate.round_id,
+            },
+        })
+
+        return super().post(request, *args, **kwargs)

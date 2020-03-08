@@ -236,11 +236,7 @@ class RoundMixin(RoundFromUrlMixin, TournamentMixin):
         # Override if self.round_redirect_pattern_name is specified,
         # otherwise just pass down the chain
         if self.round_redirect_pattern_name:
-            try:
-                return reverse_round(self.round_redirect_pattern_name,
-                                     self.round, args=args, kwargs=kwargs)
-            except NoReverseMatch:
-                pass
+            return reverse_round(self.round_redirect_pattern_name, self.round, args=args, kwargs=kwargs)
         return super().get_redirect_url(*args, **kwargs)
 
 

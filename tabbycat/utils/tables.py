@@ -2,6 +2,7 @@ import logging
 import warnings
 
 from django.contrib.humanize.templatetags.humanize import ordinal
+from django.template.loader import render_to_string
 from django.utils.encoding import force_text
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
@@ -936,6 +937,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
             } for i in range(1, len(side_abbrs)+1)]
 
         self.add_columns(results_header, results_data)
+
+    def add_debate_postponement_column(self, debates):
+        col_data = [render_to_string('debate_postponement_form.html', {'debate': d}) for d in debates]
+        header = {'key': 'postpone', 'title': _("Postpone")}
+        self.add_column(header, col_data)
 
     def add_standings_results_columns(self, standings, rounds, show_ballots):
 
