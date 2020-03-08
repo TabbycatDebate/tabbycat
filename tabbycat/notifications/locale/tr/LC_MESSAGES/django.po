@@ -1,0 +1,402 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"PO-Revision-Date: 2020-05-24 07:33\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Turkish\n"
+"Language: tr_TR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: tr\n"
+"X-Crowdin-File: /develop/tabbycat/notifications/locale/en/LC_MESSAGES/django.po\n"
+
+#: notifications/apps.py:7
+msgid "Notifications"
+msgstr ""
+
+#: notifications/consumers.py:37
+msgid "Failed to send e-mails."
+msgstr ""
+
+#: notifications/consumers.py:40
+msgid "Connection error sending e-mails."
+msgstr ""
+
+#: notifications/forms.py:11
+msgid "Recipient email address"
+msgstr ""
+
+#: notifications/forms.py:15
+#, python-format
+msgid "Test email from %(host)s"
+msgstr ""
+
+#: notifications/forms.py:16
+#, python-format
+msgid "Congratulations! If you're reading this message, your email backend on %(host)s looks all good to go!"
+msgstr ""
+
+#: notifications/forms.py:29
+msgid "Subject"
+msgstr ""
+
+#: notifications/forms.py:30
+msgid "Message"
+msgstr "Mesaj"
+
+#: notifications/models.py:12 notifications/models.py:27
+msgid "email"
+msgstr "e-posta"
+
+#: notifications/models.py:13
+msgid "SMS"
+msgstr ""
+
+#: notifications/models.py:22
+msgid "recipient"
+msgstr ""
+
+#: notifications/models.py:24
+msgid "method"
+msgstr ""
+
+#: notifications/models.py:29 notifications/models.py:130
+msgid "context"
+msgstr ""
+
+#: notifications/models.py:31
+msgid "message"
+msgstr "mesaj"
+
+#: notifications/models.py:34
+msgid "notification"
+msgstr ""
+
+#: notifications/models.py:36 notifications/models.py:75
+#: notifications/models.py:126
+msgid "timestamp"
+msgstr ""
+
+#: notifications/models.py:39
+msgid "sent message"
+msgstr ""
+
+#: notifications/models.py:40
+msgid "sent messages"
+msgstr ""
+
+#: notifications/models.py:60
+msgid "team points"
+msgstr ""
+
+#: notifications/models.py:61
+msgid "ballot confirmed"
+msgstr ""
+
+#: notifications/models.py:62
+msgid "feedback URL"
+msgstr ""
+
+#: notifications/models.py:63
+msgid "ballot URL"
+msgstr ""
+
+#: notifications/models.py:64
+msgid "landing page URL"
+msgstr ""
+
+#: notifications/models.py:65
+msgid "adjudicator draw released"
+msgstr ""
+
+#: notifications/models.py:66
+msgid "team registration"
+msgstr ""
+
+#: notifications/models.py:67
+msgid "adjudicator registration"
+msgstr ""
+
+#: notifications/models.py:68
+msgid "motion(s) released"
+msgstr ""
+
+#: notifications/models.py:69
+msgid "team draw released"
+msgstr ""
+
+#: notifications/models.py:73 notifications/models.py:128
+msgid "event"
+msgstr ""
+
+#: notifications/models.py:78
+msgid "tournament"
+msgstr "turnuva"
+
+#: notifications/models.py:80
+msgid "round"
+msgstr "tur"
+
+#: notifications/models.py:83
+msgid "bulk notification"
+msgstr ""
+
+#: notifications/models.py:84
+msgid "bulk notifications"
+msgstr ""
+
+#: notifications/models.py:110
+msgid "Processed"
+msgstr ""
+
+#: notifications/models.py:111
+msgid "Dropped"
+msgstr ""
+
+#: notifications/models.py:112
+msgid "Deferred"
+msgstr ""
+
+#: notifications/models.py:113
+msgid "Delivered"
+msgstr ""
+
+#: notifications/models.py:114
+msgid "Bounced"
+msgstr ""
+
+#: notifications/models.py:115
+msgid "Opened"
+msgstr ""
+
+#: notifications/models.py:116
+msgid "Clicked"
+msgstr ""
+
+#: notifications/models.py:117
+msgid "Unsubscribed"
+msgstr ""
+
+#: notifications/models.py:118
+msgid "Marked as spam"
+msgstr ""
+
+#: notifications/models.py:119
+msgid "Unsubscribed from group"
+msgstr ""
+
+#: notifications/models.py:120
+msgid "Resubscribed to group"
+msgstr ""
+
+#: notifications/models.py:124
+msgid "email message"
+msgstr ""
+
+#: notifications/models.py:133
+msgid "email status"
+msgstr ""
+
+#: notifications/models.py:134
+msgid "email statuses"
+msgstr ""
+
+#: notifications/templates/email_participants.html:12
+#, python-format
+msgid "You have not specified a reply-to address. This means that participants may not reply to the message if they have questions. Please set one in the <a href=\"%(notifications_options_url)s\">Notifications section of the preferences</a>."
+msgstr ""
+
+#: notifications/templates/email_participants.html:20
+#, python-format
+msgid "The webhook URL for use in SendGrid is <a href=\"%(notifications_webhook_url)s\">%(notifications_webhook_url)s</a>. Please point the HTTP POST URL in <a href=\"https://app.sendgrid.com/settings/mail_settings\">SendGrid</a> to that."
+msgstr ""
+
+#: notifications/templates/email_participants.html:50
+msgid "Send Message(s)"
+msgstr ""
+
+#: notifications/templates/email_statuses.html:10
+msgid "Emails can be sent by Tabbycat for a variety of purposes. Emails are sent when specific preferences are enabled (i.e. enabling Ballot Receipts) or through actions available on specific pages (i.e. the Draw Display page for matchups; or the Participants page for team registration). This page shows the status of previously-sent emails."
+msgstr ""
+
+#: notifications/templates/notifications_nav.html:5 notifications/views.py:47
+msgid "Email Statuses"
+msgstr ""
+
+#: notifications/templates/notifications_nav.html:11
+#: notifications/templates/test_email.html:24
+msgid "Send Test Email"
+msgstr ""
+
+#: notifications/templates/notifications_nav.html:14
+msgid "Send Custom Email"
+msgstr ""
+
+#: notifications/templates/test_email.html:5
+#: notifications/templates/test_email.html:18
+msgctxt "page title"
+msgid "Send Test Email"
+msgstr ""
+
+#: notifications/templates/test_email.html:19
+msgid "You can use this form to send a test email, to check that your email backend settings are working, before you try to send email notifications to participants."
+msgstr ""
+
+#: notifications/templates/test_email.html:25
+msgid "Go back to the site home page"
+msgstr ""
+
+#: notifications/utils.py:29
+msgid "the chair"
+msgstr ""
+
+#: notifications/utils.py:30
+msgid "the only"
+msgstr ""
+
+#: notifications/utils.py:31
+msgid "a panellist"
+msgstr ""
+
+#: notifications/utils.py:32
+msgid "a trainee"
+msgstr ""
+
+#: notifications/utils.py:55
+msgid "TBA"
+msgstr ""
+
+#: notifications/utils.py:101
+#, python-format
+msgid "%(tournament)s %(round)s @ %(room)s"
+msgstr ""
+
+#: notifications/utils.py:112
+#, python-format
+msgid "<li>%(side)s: %(team)s (%(points)d points with %(speaks)s total speaks)"
+msgstr ""
+
+#: notifications/utils.py:115
+#, python-format
+msgid "<li>%(side)s: %(team)s (%(points)s - %(speaks)s total speaks)"
+msgstr ""
+
+#: notifications/utils.py:116
+msgid "Win"
+msgstr ""
+
+#: notifications/utils.py:116
+msgid "Loss"
+msgstr ""
+
+#: notifications/utils.py:128
+#, python-format
+msgid "<li>%(pos)s: %(speaker)s (%(score)s)</li>"
+msgstr ""
+
+#: notifications/utils.py:202
+#, python-format
+msgid "<li>%(text)s (%(ref)s)</li>"
+msgstr ""
+
+#: notifications/utils.py:237 notifications/utils.py:238
+msgid ", "
+msgstr ", "
+
+#: notifications/views.py:39
+#, python-format
+msgid "There was an error sending the test email: %(error)s"
+msgstr ""
+
+#: notifications/views.py:42
+#, python-format
+msgid "A test email has been sent to %(recipient)s."
+msgstr ""
+
+#: notifications/views.py:53
+msgid "N/A"
+msgstr ""
+
+#: notifications/views.py:54
+msgid "Not known"
+msgstr ""
+
+#: notifications/views.py:59
+#, python-format
+msgid "%(status)s @ %(time)s"
+msgstr ""
+
+#: notifications/views.py:102
+#, python-format
+msgid "@ %s"
+msgstr ""
+
+#: notifications/views.py:119
+msgid "Timeline"
+msgstr ""
+
+#: notifications/views.py:129 notifications/views.py:220
+msgid "Participant"
+msgstr ""
+
+#: notifications/views.py:130
+msgid "Status"
+msgstr "Durum"
+
+#: notifications/views.py:131
+msgid "Time"
+msgstr "Zaman"
+
+#: notifications/views.py:170
+msgid "Email Participants"
+msgstr ""
+
+#: notifications/views.py:196
+#, python-format
+msgid "%(email_count)s email has been queued for sending."
+msgid_plural "%(email_count)s emails have been queued for sending."
+msgstr[0] ""
+msgstr[1] ""
+
+#: notifications/views.py:202
+msgid "No emails were sent — likely because no recipients were selected."
+msgstr ""
+
+#: notifications/views.py:210
+msgid "Send Email"
+msgstr ""
+
+#: notifications/views.py:225
+msgid "Email Address"
+msgstr ""
+
+#: notifications/views.py:226
+msgid "Not Provided"
+msgstr ""
+
+#: notifications/views.py:239
+msgid "Role"
+msgstr ""
+
+#: notifications/views.py:240
+msgid "Adjudicator"
+msgstr "Jüri"
+
+#: notifications/views.py:240
+msgid "Speaker"
+msgstr "Konuşmacı"
+
+#: notifications/views.py:248
+msgid "Speakers"
+msgstr "Konuşmacılar"
+
+#: notifications/views.py:249
+msgid "Adjudicators"
+msgstr "Jüriler"
+
