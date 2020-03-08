@@ -4,8 +4,8 @@ import logging
 from django.contrib import messages
 from django.db.models import Prefetch
 from django.forms import ModelChoiceField
-from django.views.generic.base import TemplateView
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
+from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -49,7 +49,7 @@ class BaseEditDebateOrPanelAdjudicatorsView(DebateDragAndDropMixin, Administrato
             'draw_rules__adj_history_penalty',
             'draw_rules__preformed_panel_mismatch_penalty',
             'draw_rules__no_trainee_position',
-            'draw_rules__no_panellist_position'
+            'draw_rules__no_panellist_position',
         ]
         info['allocationSettings'] = {}
         for key in allocation_preferences:
@@ -114,7 +114,7 @@ class EditPanelAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
     def get_draw_or_panels_objects(self):
         panels = self.round.preformedpanel_set.all().prefetch_related(
             Prefetch('preformedpaneladjudicator_set',
-                queryset=PreformedPanelAdjudicator.objects.select_related('adjudicator'))
+                queryset=PreformedPanelAdjudicator.objects.select_related('adjudicator')),
         )
         return panels
 
@@ -189,7 +189,7 @@ class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
 
     def get_formset_queryset(self):
         return self.formset_model.objects.filter(
-            adjudicator__tournament=self.tournament
+            adjudicator__tournament=self.tournament,
         ).order_by('adjudicator__name')
 
     def add_message(self, nsaved, ndeleted):
@@ -229,7 +229,7 @@ class AdjudicatorAdjudicatorConflictsView(BaseAdjudicatorConflictsView):
 
     def get_formset_queryset(self):
         return self.formset_model.objects.filter(
-            adjudicator1__tournament=self.tournament
+            adjudicator1__tournament=self.tournament,
         ).order_by('adjudicator1__name')
 
     def add_message(self, nsaved, ndeleted):
@@ -268,7 +268,7 @@ class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
 
     def get_formset_queryset(self):
         return self.formset_model.objects.filter(
-            adjudicator__tournament=self.tournament
+            adjudicator__tournament=self.tournament,
         ).order_by('adjudicator__name')
 
     def add_message(self, nsaved, ndeleted):
@@ -310,7 +310,7 @@ class TeamInstitutionConflictsView(BaseAdjudicatorConflictsView):
 
     def get_formset_queryset(self):
         return self.formset_model.objects.filter(
-            team__tournament=self.tournament
+            team__tournament=self.tournament,
         ).order_by('team__short_name')
 
     def add_message(self, nsaved, ndeleted):

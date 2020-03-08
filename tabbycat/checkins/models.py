@@ -99,5 +99,5 @@ class Event(models.Model):
         return {
             'id': self.id,
             'identifier': self.identifier.barcode,
-            'time': timezone.localtime(self.time).strftime("%a, %d %b %Y %H:%M:%S")
+            'time': timezone.localtime(self.time).strftime("%a, %d %b %Y %H:%M:%S"),
         }

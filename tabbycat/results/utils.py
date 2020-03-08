@@ -1,8 +1,8 @@
 import logging
 from itertools import combinations
 
-from django.db.models import Count
 from django.contrib.humanize.templatetags.humanize import ordinal
+from django.db.models import Count
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
@@ -30,7 +30,7 @@ def readable_ballotsub_result(debateresult):
     def get_display_name(dt, t, use_codes):
         return {
             'team_name': dt.team.code_name if use_codes else dt.team.short_name,
-            'side_abbr': dt.get_side_abbr(t)
+            'side_abbr': dt.get_side_abbr(t),
         }
 
     def format_dt(dt, t, use_codes):
@@ -149,7 +149,7 @@ _BP_POSITION_NAMES = [
     # Translators: Abbreviation for Member for the Opposition
     [gettext_lazy("MO"),
     # Translators: Abbreviation for Opposition Whip
-     gettext_lazy("OW")]
+     gettext_lazy("OW")],
 ]
 
 

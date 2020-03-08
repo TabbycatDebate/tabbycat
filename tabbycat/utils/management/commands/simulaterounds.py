@@ -2,8 +2,8 @@ from django.contrib.auth import get_user_model
 
 from adjallocation.allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from availability.utils import activate_all, set_availability
-from draw.models import Debate
 from draw.manager import DrawManager
+from draw.models import Debate
 from results.dbutils import add_results_to_round
 from results.management.commands.generateresults import GenerateResultsCommandMixin
 from tournaments.models import Round

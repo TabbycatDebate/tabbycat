@@ -58,7 +58,7 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
         queryset = self.tournament.relevant_venues.prefetch_related('venuecategory_set')
         formset_factory_kwargs = {
             'form': venuecategoryform_factory(venues_queryset=queryset),
-            'extra': 3
+            'extra': 3,
         }
         return formset_factory_kwargs
 
@@ -81,7 +81,7 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
 
             message = ngettext("Saved venue category: %(list)s",
                 "Saved venue categories: %(list)s",
-                len(self.instances)
+                len(self.instances),
             ) % {'list': ", ".join(category.name for category in self.instances)}
             messages.success(self.request, message)
         else:
@@ -108,16 +108,16 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
             'labels': {
                 'subject_content_type': 'Constrainee Type',
                 'subject_id': 'Constrainee ID',
-                'category': 'Venue Category'
+                'category': 'Venue Category',
             },
             'help_texts': {
-                'subject_id': 'Delete the existing number and start typing the name of the person/team/institution you want to constrain to lookup their ID.'
+                'subject_id': 'Delete the existing number and start typing the name of the person/team/institution you want to constrain to lookup their ID.',
             },
             'widgets': {
                 'subject_content_type': Select(attrs={'data-filter': True}),
-                'subject_id': SelectPrepopulated(data_list=self.subject_choices())
+                'subject_id': SelectPrepopulated(data_list=self.subject_choices()),
             },
-            'extra': 8
+            'extra': 8,
         }
         return formset_factory_kwargs
 

@@ -1,6 +1,6 @@
 from django import template
-from django.utils.translation import gettext
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext
 
 register = template.Library()
 

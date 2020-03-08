@@ -1,10 +1,10 @@
 import logging
 
-from . import base
+from breakqual.models import BreakCategory
+
 # These imports add the break generators in those files to the registry.
 from . import aida  # noqa: F401
-
-from breakqual.models import BreakCategory
+from . import base
 
 logger = logging.getLogger(__name__)
 

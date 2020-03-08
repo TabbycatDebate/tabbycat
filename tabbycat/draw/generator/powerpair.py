@@ -4,8 +4,8 @@ from collections import OrderedDict
 from django.utils.translation import gettext as _
 
 from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError
-from .pairing import Pairing
 from .one_up_one_down import OneUpOneDownSwapper
+from .pairing import Pairing
 
 
 class PowerPairedDrawGenerator(BasePairDrawGenerator):
@@ -117,7 +117,7 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         "least_to_date": "npullups",
         "lowest_ds_wins": "draw_strength",
         "lowest_ds_speaks": "draw_strength_speaks",
-        "none": None
+        "none": None,
     }
 
     def _pullup_filter(self, teams):
@@ -143,7 +143,7 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         "pullup_middle"              : "_pullup_middle",
         "pullup_random"              : "_pullup_random",
         "intermediate"               : "_intermediate_brackets",
-        "intermediate_bubble_up_down": "_intermediate_brackets_with_bubble_up_down"
+        "intermediate_bubble_up_down": "_intermediate_brackets_with_bubble_up_down",
     }
 
     def resolve_odd_brackets(self, brackets):
@@ -447,7 +447,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         "pullup_bottom"               : "_pullup_bottom",
         "pullup_random"               : "_pullup_random",
         "intermediate1"               : "_intermediate_brackets_1",
-        "intermediate2"               : "_intermediate_brackets_2"
+        "intermediate2"               : "_intermediate_brackets_2",
     }
 
     def _pullup_top(self, brackets):
@@ -601,7 +601,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
                     num_teams = min(len(unfilled_pool["aff"]), len(pool["neg"]))
                     intermediates[unfilled_points].append({
                         "aff": unfilled_pool["aff"][:num_teams],
-                        "neg": pool["neg"][:num_teams]
+                        "neg": pool["neg"][:num_teams],
                     })
                     del unfilled_pool["aff"][:num_teams]
                     del pool["neg"][:num_teams]
@@ -610,7 +610,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
                     num_teams = min(len(unfilled_pool["neg"]), len(pool["aff"]))
                     intermediates[unfilled_points].append({
                         "aff": pool["aff"][:num_teams],
-                        "neg": unfilled_pool["neg"][:num_teams]
+                        "neg": unfilled_pool["neg"][:num_teams],
                     })
                     del pool["aff"][:num_teams]
                     del unfilled_pool["neg"][:num_teams]

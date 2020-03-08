@@ -576,7 +576,7 @@ class DebateResultByAdjudicator(BaseDebateResult):
         for adj in self.debate.adjudicators.voting():
             sheet_dict = {
                 "adjudicator": adj,
-                "teams": self.sheet_as_dicts(self.scoresheets[adj])
+                "teams": self.sheet_as_dicts(self.scoresheets[adj]),
             }
             yield sheet_dict
 

@@ -1,7 +1,7 @@
 import unittest
 
-from ..generator.bphungarian import BPHungarianDrawGenerator
 from .utils import TestTeam
+from ..generator.bphungarian import BPHungarianDrawGenerator
 
 DUMMY_TEAMS = [TestTeam(1, 'A', side_history=[0, 0, 0, 0]),
                TestTeam(2, 'B', side_history=[0, 0, 0, 0]),

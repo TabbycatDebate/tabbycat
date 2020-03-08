@@ -75,8 +75,8 @@ def get_feedback_overview(t, adjudicators):
                 confirmed=True,
                 ignored=False,
             ).exclude(
-                source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE
-            ).select_related('source_adjudicator__debate__round', 'source_team__debate__round')
+                source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE,
+            ).select_related('source_adjudicator__debate__round', 'source_team__debate__round'),
         ),
         Prefetch('debateadjudicator_set', to_attr='debateadjs_for_rounds',
             queryset=DebateAdjudicator.objects.filter(

@@ -1,6 +1,6 @@
 import json
-from smtplib import SMTPException
 import random
+from smtplib import SMTPException
 
 from channels.consumer import SyncConsumer
 from django.conf import settings
@@ -27,7 +27,7 @@ class NotificationQueueConsumer(SyncConsumer):
         BulkNotification.EVENT_TYPE_POINTS: standings_email_generator,
         BulkNotification.EVENT_TYPE_MOTIONS: motion_release_email_generator,
         BulkNotification.EVENT_TYPE_TEAM_REG: team_speaker_email_generator,
-        BulkNotification.EVENT_TYPE_TEAM_DRAW: team_draw_email_generator
+        BulkNotification.EVENT_TYPE_TEAM_DRAW: team_draw_email_generator,
     }
 
     def _send(self, event, messages, records):
@@ -90,7 +90,7 @@ class NotificationQueueConsumer(SyncConsumer):
             email = mail.EmailMultiAlternatives(
                 subject=subject.render(context), body=html2text(body),
                 from_email=from_email, to=[recipient_to], reply_to=reply_to,
-                headers={'X-SMTPAPI': json.dumps({'unique_args': {'hook-id': hook_id}})} # SendGrid-specific 'hook-id'
+                headers={'X-SMTPAPI': json.dumps({'unique_args': {'hook-id': hook_id}})}, # SendGrid-specific 'hook-id'
             )
             email.attach_alternative(body, "text/html")
             messages.append(email)
@@ -101,7 +101,7 @@ class NotificationQueueConsumer(SyncConsumer):
                             method=SentMessage.METHOD_TYPE_EMAIL,
                             context=instance, message=raw_message,
                             message_id=raw_message['Message-ID'], hook_id=hook_id,
-                            notification=bulk_notification)
+                            notification=bulk_notification),
             )
 
         self._send(event, messages, records)
@@ -119,7 +119,7 @@ class NotificationQueueConsumer(SyncConsumer):
             email = mail.EmailMultiAlternatives(
                 subject=event['subject'], body=html2text(event['body']),
                 from_email=from_email, to=[address], reply_to=reply_to,
-                headers={'X-SMTPAPI': json.dumps({'unique_args': {'hook-id': hook_id}})} # SendGrid-specific 'hook-id'
+                headers={'X-SMTPAPI': json.dumps({'unique_args': {'hook-id': hook_id}})}, # SendGrid-specific 'hook-id'
             )
             email.attach_alternative(event['body'], "text/html")
             messages.append(email)
@@ -130,7 +130,7 @@ class NotificationQueueConsumer(SyncConsumer):
                             method=SentMessage.METHOD_TYPE_EMAIL,
                             tournament=t, messsage=raw_message,
                             message_id=raw_message['Message-ID'], hook_id=hook_id,
-                            notification=bulk_notification)
+                            notification=bulk_notification),
             )
 
         self._send(event, messages, records)

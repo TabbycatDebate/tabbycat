@@ -1,16 +1,16 @@
-import os
 import logging
+import os
 
-from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
+from django.core.management.base import BaseCommand, CommandError
 from django.template.defaultfilters import slugify
 
 import participants.models as pm
 import venues.models as vm
 from draw.models import DebateTeam
+from importer.importers import DUPLICATE_INFO, importer_registry, TournamentDataImporterFatal
 from tournaments.models import Tournament
 from tournaments.utils import auto_make_rounds
-from importer.importers import DUPLICATE_INFO, importer_registry, TournamentDataImporterFatal
 
 
 class Command(BaseCommand):

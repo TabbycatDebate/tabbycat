@@ -1,7 +1,7 @@
+import csv
 import json
 import logging
 import math
-import csv
 
 from django.contrib import messages
 from django.db.models import Count, F, Q
@@ -21,18 +21,17 @@ from results.prefetch import populate_wins_for_debateteams
 from tournaments.mixins import (PersonalizablePublicTournamentPageMixin, PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
-
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
-from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 
-from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from .forms import make_feedback_form_class, UpdateAdjudicatorScoresForm
-from .tables import FeedbackTableBuilder
-from .utils import get_feedback_overview
+from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from .prefetch import populate_debate_adjudicators
 from .progress import get_feedback_progress
+from .tables import FeedbackTableBuilder
+from .utils import get_feedback_overview
 
 logger = logging.getLogger(__name__)
 
@@ -82,7 +81,7 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
         for (band_min, band_max), threshold_class in zip(bands, threshold_classes):
             band_specs.append({
                 'min': band_min, 'max': band_max, 'class': threshold_class,
-                'count': [x >= band_min and x < band_max for x in scores].count(True)
+                'count': [x >= band_min and x < band_max for x in scores].count(True),
             })
         band_specs[0]['count'] += [x == max_score for x in scores].count(True)
 
@@ -234,7 +233,7 @@ class FeedbackMixin(TournamentMixin):
     def get_feedback_queryset(self):
         return AdjudicatorFeedback.objects.filter(
             Q(adjudicator__tournament=self.tournament) |
-            Q(adjudicator__tournament__isnull=True)
+            Q(adjudicator__tournament__isnull=True),
         ).select_related(
             'adjudicator',
             'source_adjudicator__adjudicator',
@@ -298,7 +297,7 @@ class ImportantFeedbackView(FeedbackCardsView):
     def get_feedback_queryset(self):
         queryset = super().get_feedback_queryset()
         return queryset.annotate(
-            feedback_importance=F('score') - F('adjudicator__base_score')
+            feedback_importance=F('score') - F('adjudicator__base_score'),
         ).filter(
             Q(feedback_importance__gt=2) | Q(feedback_importance__lt=-2),
         ).order_by('-timestamp')
@@ -362,7 +361,7 @@ class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
         teams_table = TabbycatTableBuilder(view=self, sort_key="team", title=_("A Team"))
         add_link_data = [{
             'text': team_name_for_data_entry(team, use_code_names),
-            'link': self.get_from_team_link(team)
+            'link': self.get_from_team_link(team),
         } for team in tournament.team_set.all()]
         header = {'key': 'team', 'title': _("Team")}
         teams_table.add_column(header, add_link_data)
@@ -535,7 +534,7 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PersonalizablePublicTou
         'enforce_required': True,
         'include_unreleased_draws': False,
         'use_tournament_password': True,
-        'ignored_option': False
+        'ignored_option': False,
     }
 
     def form_valid(self, form):
@@ -692,7 +691,7 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
         return ngettext_lazy(
             "%(nmissing)d missing feedback submission (%(fulfilled).1f%% returned)",
             "%(nmissing)d missing feedback submissions (%(fulfilled).1f%% returned)",
-            total_missing
+            total_missing,
         ) % {'nmissing': total_missing, 'fulfilled': percentage_fulfilled}
 
     def get_tables(self):

@@ -5,6 +5,7 @@ from django import template
 from django.conf import settings
 from django.template.base import kwarg_re, TemplateSyntaxError, Variable
 from django.template.defaulttags import URLNode
+
 from tournaments.utils import get_side_name
 
 register = template.Library()
@@ -31,7 +32,7 @@ def version(path_string, base_url=settings.MEDIA_URL):
             version_cache[path_string] = mtime
 
         return base_url + rx.sub(r'\1.%d.\2' % mtime, path_string)
-    except:
+    except Exception:
         return base_url + path_string
 
 
@@ -185,7 +186,7 @@ def roundurl(parser, token):
 def next_value(value, arg):
     try:
         return value[int(arg) + 1]
-    except:
+    except Exception:
         return None
 
 
@@ -193,7 +194,7 @@ def next_value(value, arg):
 def prev_value(value, arg):
     try:
         return value[int(arg) - 1]
-    except:
+    except Exception:
         return None
 
 

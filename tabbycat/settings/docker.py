@@ -12,6 +12,6 @@ DATABASES = {
          'USER': 'tabbycat',
          'PASSWORD': 'tabbycat',
          'HOST': 'db',
-         'PORT': 5432, # Non-standard to prevent collisions
+         'PORT': 5432, # Non-standard to prevent collisions,
     }
 }
