@@ -47,7 +47,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
                 'sort': meta[2],
                 'tooltip': meta[3],
                 'status': debate.result_status, # Hook for vue
-                'id': debate.id
+                'id': debate.id,
             }
             status_cells.append(cell)
         self.add_column(status_header, status_cells)
@@ -66,7 +66,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             'current_user': user.username,
             'acting_role': view_role,
             'new_ballot': reverse_tournament(link, self.tournament,
-                                             kwargs={'debate_id': debate.id})
+                                             kwargs={'debate_id': debate.id}),
         }
 
     def add_ballot_entry_columns(self, debates, view_role, user):

@@ -32,10 +32,10 @@ from tournaments.mixins import (CurrentRoundMixin, DebateDragAndDropMixin,
     TournamentMixin)
 from tournaments.models import Round
 from tournaments.utils import get_side_name
-from utils.mixins import AdministratorMixin
-from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.misc import reverse_round, reverse_tournament
+from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from venues.allocator import allocate_venues
 from venues.models import VenueConstraint
 from venues.utils import venue_conflicts_display
@@ -45,9 +45,9 @@ from .generator import DrawFatalError, DrawUserError
 from .manager import DrawManager
 from .models import Debate, TeamSideAllocation
 from .prefetch import populate_history
+from .serializers import EditDebateTeamsDebateSerializer, EditDebateTeamsTeamSerializer
 from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilder,
         PositionBalanceReportSummaryTableBuilder, PublicDrawTableBuilder)
-from .serializers import EditDebateTeamsDebateSerializer, EditDebateTeamsTeamSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -121,7 +121,7 @@ class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
                 subtitle = ngettext(
                     "debate starts at %(time)s",
                     "debates start at %(time)s",
-                    debates.count()
+                    debates.count(),
                 ) % {'round_name': r.name, 'time': r.starts_at.strftime('%H:%M')}
             else:
                 subtitle = ""
@@ -516,7 +516,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
         for side in self.tournament.sides:
             # Translators: e.g. "Affirmative: Break rank"
             tooltip = _("%(side_name)s: Break rank") % {
-                'side_name': get_side_name(self.tournament, side, 'full')
+                'side_name': get_side_name(self.tournament, side, 'full'),
             }
             tooltip = tooltip.capitalize()
             # Translators: "BR" stands for "Break rank"
@@ -524,7 +524,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
 
             table.add_column(
                 {'tooltip': tooltip, 'key': key, 'text': key},
-                [d.get_team(side).break_rank_for_category(category) for d in draw]
+                [d.get_team(side).break_rank_for_category(category) for d in draw],
             )
 
     def get_template_names(self):
@@ -642,7 +642,7 @@ class CreateDrawView(DrawStatusEdit):
             messages.error(request, mark_safe(_(
                 "<p>The draw could not be created, for the following reason: "
                 "<em>%(message)s</em></p>\n"
-                "<p>Please fix this issue before attempting to create the draw.</p>"
+                "<p>Please fix this issue before attempting to create the draw.</p>",
             ) % {'message': str(e)}))
             logger.warning("User error creating draw: " + str(e), exc_info=True)
             return HttpResponseRedirect(reverse_round('availability-index', self.round))
@@ -651,7 +651,7 @@ class CreateDrawView(DrawStatusEdit):
                 "<p>The draw could not be created, because the following error occurred: "
                 "<em>%(message)s</em></p>\n"
                 "<p>If this issue persists and you're not sure how to resolve it, please "
-                "contact the developers.</p>"
+                "contact the developers.</p>",
             ) % {'message': str(e)}))
             logger.exception("Fatal error creating draw: " + str(e))
             return HttpResponseRedirect(reverse_round('availability-index', self.round))
@@ -660,7 +660,7 @@ class CreateDrawView(DrawStatusEdit):
                 "<p>The team standings could not be generated, because the following error occurred: "
                 "<em>%(message)s</em></p>\n"
                 "<p>Because generating the draw uses the current team standings, this "
-                "prevents the draw from being generated.</p>"
+                "prevents the draw from being generated.</p>",
             ) % {'message': str(e)}
             standings_options_url = reverse_tournament('options-tournament-section', self.tournament, kwargs={'section': 'standings'})
             instructions = BaseStandingsView.admin_standings_error_instructions % {'standings_options_url': standings_options_url}

@@ -1,9 +1,9 @@
+from django.forms import CharField, ChoiceField, Form, ModelChoiceField, ModelForm
 from django.forms.fields import IntegerField
 from django.forms.models import ModelChoiceIterator
-from django.forms import CharField, ChoiceField, Form, ModelChoiceField, ModelForm
-from django.utils.translation import gettext_lazy as _
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
@@ -61,7 +61,7 @@ class TournamentStartForm(ModelForm):
                 seq=1,
                 break_size=break_size,
                 is_general=True,
-                priority=100
+                priority=100,
             )
             open_break.full_clean()
             open_break.save()

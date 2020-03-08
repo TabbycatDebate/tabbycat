@@ -103,7 +103,7 @@ class VenueConstraintManager(models.Manager):
         return VenueConstraint.objects.filter(
             models.Q(team__debateteam__debate__in=debates) |
             models.Q(institution__team__debateteam__debate__in=debates) |
-            models.Q(adjudicator__debateadjudicator__debate__in=debates)
+            models.Q(adjudicator__debateadjudicator__debate__in=debates),
         ).distinct()
 
 

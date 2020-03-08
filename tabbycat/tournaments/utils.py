@@ -1,8 +1,7 @@
 import logging
 
 from django.utils.encoding import force_text
-from django.utils.translation import gettext_lazy as _
-from django.utils.translation import gettext, pgettext_lazy
+from django.utils.translation import gettext, gettext_lazy as _, pgettext_lazy
 
 from .models import Round
 

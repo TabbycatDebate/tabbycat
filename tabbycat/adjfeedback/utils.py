@@ -6,6 +6,7 @@ from django.db.models import Count, Prefetch, Q
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
+from options.preferences import FeedbackPaths
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +35,16 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
 
     if feedback_paths is None:
         feedback_paths = debateadj.debate.round.tournament.pref('feedback_paths')
+    if feedback_paths not in [o[0] for o in FeedbackPaths.choices]:
+        logger.error("Unrecognised preference: %s", feedback_paths)
+
+    # Need to associate the feedback submission status with the Adjudicator object
+    # directly to be passed onto AdjudicatorAllocation. Must use debateadj to assure
+    # the prefetch is available.
+    if hasattr(debateadj.debate.debateadjudicator_set.first(), 'submitted'):
+        for dadj in debateadj.debate.debateadjudicator_set.all():
+            dadj.adjudicator.submitted = dadj.submitted
+
     if debate is None:
         debate = debateadj.debate
     adjudicators = debate.adjudicators
@@ -48,9 +59,6 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
             targets = []
     else:
         targets = []
-
-    if feedback_paths not in ['all-adjs', 'with-p-on-c', 'minimal']:
-        logger.error("Unrecognised preference: %s", feedback_paths)
 
     return targets
 
@@ -67,8 +75,8 @@ def get_feedback_overview(t, adjudicators):
                 confirmed=True,
                 ignored=False,
             ).exclude(
-                source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE
-            ).select_related('source_adjudicator__debate__round', 'source_team__debate__round')
+                source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE,
+            ).select_related('source_adjudicator__debate__round', 'source_team__debate__round'),
         ),
         Prefetch('debateadjudicator_set', to_attr='debateadjs_for_rounds',
             queryset=DebateAdjudicator.objects.filter(

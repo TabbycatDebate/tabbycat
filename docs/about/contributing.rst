@@ -1,2 +1,2 @@
 .. _contributing:
-.. include:: ../../CONTRIBUTING.rst
+.. include:: ../../.github/CONTRIBUTING.rst

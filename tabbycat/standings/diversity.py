@@ -123,7 +123,7 @@ def get_diversity_data_sets(t, for_public):
         'adjudicators_region': [],
         'adjudicators_results': [],
         'detailed_adjudicators_results': [],
-        'regions': all_regions  # For CSS
+        'regions': all_regions,  # For CSS
     }
 
     # ==========================================================================
@@ -178,7 +178,7 @@ def get_diversity_data_sets(t, for_public):
     adjtypes = [
         DebateAdjudicator.TYPE_CHAIR,
         DebateAdjudicator.TYPE_PANEL,
-        DebateAdjudicator.TYPE_TRAINEE
+        DebateAdjudicator.TYPE_TRAINEE,
     ]
     data_sets['adjudicators_position'] = compile_grouped_gender_counts(titles, debateadjs,
             'adjudicator__gender', 'type', adjtypes)
@@ -224,7 +224,7 @@ def get_diversity_data_sets(t, for_public):
                 None,
                 DebateAdjudicator.TYPE_CHAIR,
                 DebateAdjudicator.TYPE_PANEL,
-                DebateAdjudicator.TYPE_TRAINEE
+                DebateAdjudicator.TYPE_TRAINEE,
             ]
             data_sets['detailed_adjudicators_results'] = compile_grouped_means_by_gender(
                     titles, adjfeedbacks, 'adjudicator__gender', 'source_adjudicator__type', group_values)
