@@ -13,6 +13,9 @@ should not appear in any of them.
 
 class BaseScoresheet:
 
+    uses_declared_winners = False
+    uses_scores = False
+
     def __init__(self, *args, **kwargs):
         """Absorb leftover arguments."""
         pass
@@ -54,6 +57,8 @@ class ScoresMixin:
     different ways. This class is agnostic to  how many sides there are in a
     debate."""
 
+    uses_scores = True
+
     def __init__(self, positions, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.positions = positions
@@ -83,6 +88,8 @@ class ScoresMixin:
 class DeclaredWinnersMixin:
     """Provides functionality for explicit declaration of winner(s)."""
 
+    uses_declared_winners = True
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.declared_winners = set()
@@ -96,6 +103,7 @@ class DeclaredWinnersMixin:
         self.declared_winners.add(winner)
 
     def set_declared_winners(self, winners):
+        winners = set(winners)
         assert winners.issubset(set(self.sides)) or len(winners) == 0, "Declared winners must be in: " + ", ".join(map(repr, self.sides))
         self.declared_winners = winners
 
