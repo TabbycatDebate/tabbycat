@@ -12,7 +12,7 @@ from notifications.views import RoleColumnMixin, RoundTemplateEmailCreateView
 from participants.models import Speaker
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 PublicTournamentPageMixin, RoundMixin, TournamentMixin)
-from utils.misc import redirect_round, reverse_round
+from utils.misc import redirect_round
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView, PostOnlyRedirectView
 
@@ -152,8 +152,7 @@ class EmailMotionReleaseView(RoleColumnMixin, RoundTemplateEmailCreateView):
     subject_template = 'motion_email_subject'
     message_template = 'motion_email_message'
 
-    def get_success_url(self):
-        return reverse_round('draw-display', self.round)
+    round_redirect_pattern_name = 'draw-display'
 
     def get_default_send_queryset(self):
         return Speaker.objects.filter(team__round_availabilities__round=self.round, email__isnull=False).exclude(email__exact="")
