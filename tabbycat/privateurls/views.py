@@ -147,8 +147,7 @@ class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView
     subject_template = 'url_email_subject'
     message_template = 'url_email_message'
 
-    def get_success_url(self):
-        return reverse_tournament('privateurls-list', self.tournament)
+    tournament_redirect_pattern_name = 'privateurls-list'
 
     def get_extra(self):
         extra = super().get_extra()

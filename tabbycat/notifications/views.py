@@ -15,7 +15,6 @@ from django.views.generic.edit import FormView
 
 from participants.models import Person
 from tournaments.mixins import RoundMixin, TournamentMixin
-from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import VueTableTemplateView
@@ -172,6 +171,9 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
 
     form_class = BasicEmailForm
 
+    def get_success_url(self, *args, **kwargs):
+        return self.get_redirect_url(*args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sg_webhook'] = EmailStatus.objects.filter(email__notification__tournament=self.tournament).exists()
@@ -201,6 +203,9 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
         else:
             messages.warning(self.request, _("No emails were sent — likely because no recipients were selected."))
 
+    def get_person_type(self, person, **kwargs):
+        return 'adj' if kwargs['mixed'] and hasattr(person, 'adjudicator') else 'spk'
+
     def get_table(self, mixed_participants=False):
         table = TabbycatTableBuilder(view=self, sort_key='name')
 
@@ -214,7 +219,7 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
             'name': 'recipients',
             'value': p.id,
             'noSave': True,
-            'type': 'adj' if mixed_participants and hasattr(p, 'adjudicator') else 'spk',
+            'type': self.get_person_type(p, mixed=mixed_participants),
         } for p in queryset])
 
         table.add_column({'key': 'name', 'tooltip': _("Participant"), 'icon': 'user'}, [{
@@ -253,8 +258,7 @@ class RoleColumnMixin:
 
 class CustomEmailCreateView(RoleColumnMixin, BaseSelectPeopleEmailView):
 
-    def get_success_url(self):
-        return reverse_tournament('notifications-email', self.tournament)
+    tournament_redirect_pattern_name = 'notifications-email'
 
     def default_send(self, p, default_send_queryset):
         return False
