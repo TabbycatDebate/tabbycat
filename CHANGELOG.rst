@@ -8,6 +8,8 @@ Change Log
 *Release date: TBD*
 
 - Fixed issue where the ballot graph would ignore draft ballots getting confirmed
+- Fixed team draw notifications failing due to an unexpected variable
+- Fixed ballot receipts not showing decimal speaker points
 
 
 2.3.2
