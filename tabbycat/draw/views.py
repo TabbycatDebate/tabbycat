@@ -673,8 +673,8 @@ class CreateDrawView(DrawStatusEdit):
         if not relevant_adj_venue_constraints.exists():
             allocate_venues(self.round)
         else:
-            messages.warning(request, _("Venues were not auto-allocated because there are one or more adjudicator venue constraints. "
-                "You should run venue allocations after allocating adjudicators."))
+            messages.warning(request, _("Rooms were not auto-allocated because there are one or more adjudicator room constraints. "
+                "You should run room allocations after allocating adjudicators."))
 
         self.log_action()
         return super().post(request, *args, **kwargs)

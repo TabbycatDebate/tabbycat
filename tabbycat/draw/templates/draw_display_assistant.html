@@ -15,7 +15,7 @@
       {% if tournament.current_rounds|length == 1 %}
 
         {% tournamenturl 'draw-assistant-display-current-rounds-by-venue' as url %}
-        {% trans "Display Draw ordered by Venue" as text %}
+        {% trans "Display Draw ordered by Room" as text %}
         {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="🏫" blank=True %}
 
         {% tournamenturl 'draw-assistant-display-current-rounds-by-team' as url %}
@@ -25,7 +25,7 @@
       {% else %}
 
         {% tournamenturl 'draw-assistant-display-current-rounds-by-venue' as url %}
-        {% trans "Display Draws for <strong>All Current Rounds</strong> ordered by Venue" as text %}
+        {% trans "Display Draws for <strong>All Current Rounds</strong> ordered by Room" as text %}
         {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="🏫" blank=True %}
 
         {% tournamenturl 'draw-assistant-display-current-rounds-by-team' as url %}
@@ -36,7 +36,7 @@
 
           {% roundurl 'draw-assistant-display-specific-round-by-venue' round as url %}
           {% blocktrans trimmed with round_name=round.name asvar text %}
-            Display Draw for <strong>{{ round_name }}</strong> ordered by Venue
+            Display Draw for <strong>{{ round_name }}</strong> ordered by Room
           {% endblocktrans %}
           {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="🏫" blank=True %}
 

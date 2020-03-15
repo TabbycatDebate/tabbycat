@@ -15,15 +15,15 @@ class VenuesWorkerConsumer(EditDebateOrPanelWorkerMixin):
         group = event['extra']['group_name']
 
         if round.draw_status == Round.STATUS_RELEASED:
-            self.return_error(group, _("Draw is already released, unrelease draw to assign venues."))
+            self.return_error(group, _("Draw is already released, unrelease draw to assign rooms."))
             return
         if round.draw_status != Round.STATUS_CONFIRMED:
-            self.return_error(group, _("Draw is not confirmed, confirm draw to assign venues."))
+            self.return_error(group, _("Draw is not confirmed, confirm draw to assign rooms."))
             return
 
         allocate_venues(round)
         self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE)
 
         content = self.reserialize_debates(SimpleDebateVenueSerializer, round)
-        msg = _("Successfully auto-allocated venues to debates.")
+        msg = _("Successfully auto-allocated rooms to debates.")
         self.return_response(content, group, msg, 'success')

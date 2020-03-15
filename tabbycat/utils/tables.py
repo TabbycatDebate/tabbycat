@@ -726,9 +726,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
             if len(descriptions) > 0:
                 if len(descriptions) == 1:
-                    categories_sentence = _("This venue %(predicate)s.") % {'predicate': descriptions[0]}
+                    categories_sentence = _("This room %(predicate)s.") % {'predicate': descriptions[0]}
                 else:
-                    categories_sentence = _("This venue %(predicates)s, and %(last_predicate)s.") % {
+                    categories_sentence = _("This room %(predicates)s, and %(last_predicate)s.") % {
                         'predicates': ", ".join(descriptions[:-1]),
                         'last_predicate': descriptions[-1]}
 
@@ -743,7 +743,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         venue_header = {
             'key': 'venue',
             'icon': 'map-pin',
-            'tooltip': _("Venue"),
+            'tooltip': _("Room"),
         }
         self.add_column(venue_header, venue_data)
 
