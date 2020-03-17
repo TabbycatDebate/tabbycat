@@ -148,9 +148,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
     Tabbycat."""
 
     ADJ_SYMBOLS = {
-        AdjudicatorAllocation.POSITION_CHAIR: _("ⓒ"),
-        AdjudicatorAllocation.POSITION_ONLY: _("ⓒ"),
-        AdjudicatorAllocation.POSITION_TRAINEE: _("ⓣ"),
+        AdjudicatorAllocation.POSITION_CHAIR: _("Ⓒ"),
+        AdjudicatorAllocation.POSITION_ONLY: _("Ⓒ"),
+        AdjudicatorAllocation.POSITION_TRAINEE: _("Ⓣ"),
     }
 
     ADJ_POSITION_NAMES = {
