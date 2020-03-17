@@ -40,8 +40,8 @@
         <span class="text-secondary small">Received as {{ as }}</span>
       {% endblocktrans %}
       <span class="badge float-right badge-secondary" data-toggle="tooltip">
-        {% blocktrans trimmed with test=feedback.adjudicator.base_score|floatformat:"1" %}
-          Test {{ test }}
+        {% blocktrans trimmed with base=feedback.adjudicator.base_score|floatformat:"1" %}
+          Base {{ base }}
         {% endblocktrans %}
       </span>
     </div>
