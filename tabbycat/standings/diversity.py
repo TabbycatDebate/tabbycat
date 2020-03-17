@@ -166,7 +166,7 @@ def get_diversity_data_sets(t, for_public):
         data_sets['adjudicators_gender'].append(compile_gender_counts(_("All"), adjudicators, 'gender'))
 
     if Adjudicator.objects.filter(tournament=t).filter(independent=True).exists():
-        data_sets['adjudicators_gender'].append(compile_gender_counts(_("Indies"),
+        data_sets['adjudicators_gender'].append(compile_gender_counts(_("IAs"),
             adjudicators.filter(independent=True), 'gender'))
 
     if (t.pref('public_breaking_adjs') is True or for_public is False) and Adjudicator.objects.filter(breaking=True).exists():
