@@ -80,10 +80,10 @@
         <thead>
           <tr>
             <th>{% trans "Debate ID" %}</th>
-            {% for side_name in side_names %}
+            {% for side in side_names %}
               <th>
                 {% blocktrans trimmed %}
-                  Team(s) on {{ side_name }}
+                  Team(s) on {{ side }}
                 {% endblocktrans %}
               </th>
             {% endfor %}

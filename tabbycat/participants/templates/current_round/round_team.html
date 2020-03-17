@@ -9,8 +9,8 @@
 
     {% if debate.sides_confirmed %}
       {% if grammatical_person == "3" %}
-        {% blocktrans trimmed with team_name=team_short_name side=debateteam.get_side_name room=debate.venue.display_name|default:venue_tba %}
-          {{ team_name }} is debating as the <strong>{{ side }}</strong> team against <strong>{{ opponent }}</strong> in <strong>{{ room }}</strong>.
+        {% blocktrans trimmed with team=team_short_name side=debateteam.get_side_name room=debate.venue.display_name|default:venue_tba %}
+          {{ team }} is debating as the <strong>{{ side }}</strong> team against <strong>{{ opponent }}</strong> in <strong>{{ room }}</strong>.
         {% endblocktrans %}
       {% else %}
         {% blocktrans trimmed with side=debateteam.get_side_name room=debate.venue.display_name|default:venue_tba %}
@@ -19,8 +19,8 @@
       {% endif %}
     {% else %}
       {% if grammatical_person == "3" %}
-        {% blocktrans trimmed with team_name=team_short_name room=debate.venue.display_name|default:venue_tba %}
-          {{ team_name }} is debating against <strong>{{ opponent }}</strong> in <strong>{{ room }}</strong>.
+        {% blocktrans trimmed with team=team_short_name room=debate.venue.display_name|default:venue_tba %}
+          {{ team }} is debating against <strong>{{ opponent }}</strong> in <strong>{{ room }}</strong>.
         {% endblocktrans %}
       {% else %}
         {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba %}
@@ -34,8 +34,8 @@
 
     {% if debate.sides_confirmed %}
       {% if grammatical_person == "3" %}
-        {% blocktrans trimmed with team_name=team_short_name side=debateteam.get_side_name room=debate.venue.display_name|default:venue_tba %}
-          {{ team_name }} is debating as the <strong>{{ side }}</strong> team in <strong>{{ room }}</strong>.
+        {% blocktrans trimmed with team=team_short_name side=debateteam.get_side_name room=debate.venue.display_name|default:venue_tba %}
+          {{ team }} is debating as the <strong>{{ side }}</strong> team in <strong>{{ room }}</strong>.
         {% endblocktrans %}
       {% else %}
         {% blocktrans trimmed with side=debateteam.get_side_name room=debate.venue.display_name|default:venue_tba %}
@@ -44,8 +44,8 @@
       {% endif %}
     {% else %}
       {% if grammatical_person == "3" %}
-        {% blocktrans trimmed with team_name=team_short_name room=debate.venue.display_name|default:venue_tba %}
-          {{ team_name }} is debating in <strong>{{ room }}</strong>.
+        {% blocktrans trimmed with team=team_short_name room=debate.venue.display_name|default:venue_tba %}
+          {{ team }} is debating in <strong>{{ room }}</strong>.
         {% endblocktrans %}
       {% else %}
         {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba %}

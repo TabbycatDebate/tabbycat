@@ -292,14 +292,14 @@
         {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="👭" blank=True %}
 
         {% roundurl 'draw-display-specific-round-by-venue' as url %}
-        {% blocktrans trimmed with round_name=round.name asvar text %}
-          Display Draw for <strong>{{ round_name }}</strong> ordered by Room
+        {% blocktrans trimmed with round=round.name asvar text %}
+          Display Draw for <strong>{{ round }}</strong> ordered by Room
         {% endblocktrans %}
         {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="🏫" blank=True %}
 
         {% roundurl 'draw-display-specific-round-by-team' as url %}
-        {% blocktrans trimmed with round_name=round.name asvar text %}
-          Display Draw for <strong>{{ round_name }}</strong> ordered by Team
+        {% blocktrans trimmed with round=round.name asvar text %}
+          Display Draw for <strong>{{ round }}</strong> ordered by Team
         {% endblocktrans %}
         {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="👭" blank=True %}
 

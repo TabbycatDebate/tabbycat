@@ -5,8 +5,8 @@
 {% block head-title %}<span class="emoji">⏰</span> {% trans "Overview" %}{% endblock %}
 
 {% block sub-title %}
-  {% blocktrans trimmed with round_name=round.name round_status=round.get_draw_status_display.lower %}
-    current round: {{ round_name }}, status: {{ round_status }}
+  {% blocktrans trimmed with round=round.name status=round.get_draw_status_display.lower %}
+    current round: {{ round }}, status: {{ status }}
   {% endblocktrans %}
 {% endblock %}
 

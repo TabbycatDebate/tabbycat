@@ -13,14 +13,14 @@
 
 {% block head-title %}
   <span class="emoji">🔥</span>
-  {% blocktrans trimmed with name=round.name %}Confirm Draw Deletion for {{ name }}{% endblocktrans %}
+  {% blocktrans trimmed with round=round.name %}Confirm Draw Deletion for {{ round }}{% endblocktrans %}
 {% endblock %}
 
 {% block page-alerts %}
 
   <div class="alert alert-warning">
-    {% blocktrans trimmed with name=round.name %}
-    Do you really want to regenerate the draw for {{ name }}? This will
+    {% blocktrans trimmed with round=round.name %}
+    Do you really want to regenerate the draw for {{ round }}? This will
     delete <strong>all the debates in the current draw</strong> —  including
     their ballots and adjudicator allocations — and cannot be undone.
     You probably don't want to do this if any results have been entered!
@@ -30,8 +30,8 @@
   <form method="POST" action="{% roundurl 'draw-regenerate' %}">
     {% csrf_token %}
     <button class="btn btn-block btn-danger " type="submit">
-      {% blocktrans trimmed with name=round.name %}
-      Yes, I want to delete the current draw for {{ name }}
+      {% blocktrans trimmed with round=round.name %}
+      Yes, I want to delete the current draw for {{ round }}
       {% endblocktrans %}
     </button>
   </form>

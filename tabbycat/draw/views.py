@@ -515,8 +515,8 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
     def _add_break_rank_columns(self, table, draw, category):
         for side in self.tournament.sides:
             # Translators: e.g. "Affirmative: Break rank"
-            tooltip = _("%(side_name)s: Break rank") % {
-                'side_name': get_side_name(self.tournament, side, 'full'),
+            tooltip = _("%(side)s: Break rank") % {
+                'side': get_side_name(self.tournament, side, 'full'),
             }
             tooltip = tooltip.capitalize()
             # Translators: "BR" stands for "Break rank"
