@@ -10,8 +10,8 @@
   {% for category in tournament.break_categories_nongeneral %}
     <li>
       <a class="nav-link" href="{% tournamenturl 'standings-public-tab-break-category' category=category.slug %}">
-        {% blocktrans trimmed with category_name=category.name %}
-          {{ category_name }} Teams
+        {% blocktrans trimmed with category=category.name %}
+          {{ category }} Teams
         {% endblocktrans %}
       </a>
     </li>
@@ -27,8 +27,8 @@
     {% if category.public %}
       <li>
         <a class="nav-link" href="{% tournamenturl 'standings-public-tab-speaker-category' category=category.slug %}">
-          {% blocktrans trimmed with category_name=category.name %}
-            {{ category_name }} Speakers
+          {% blocktrans trimmed with category=category.name %}
+            {{ category }} Speakers
           {% endblocktrans %}
         </a>
       </li>
@@ -75,8 +75,8 @@
   <li class="nav-item {% if draw_nav %}active{% endif %}">
     <a class="nav-link" href="{% tournamenturl 'draw-public-current-rounds' %}">
       {% if tournament.current_rounds|length == 1 %}
-        {% blocktrans trimmed with round_name=current_round.name %}
-          Draw for {{ round_name }}
+        {% blocktrans trimmed with round=current_round.name %}
+          Draw for {{ round }}
         {% endblocktrans %}
       {% else %}
         {% trans "Current Draws" %}

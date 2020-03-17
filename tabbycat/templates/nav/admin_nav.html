@@ -198,8 +198,8 @@
       </a>
       {% for category in tournament.break_categories_nongeneral %}
         <a class="list-group-item {% if standings_active %}active{% endif %}" href="{% roundurl 'standings-break-category' round=current_round category=category.slug %}">
-          <i data-feather="users"></i>{% blocktrans trimmed with category_name=category.name %}
-            {{ category_name }} Teams
+          <i data-feather="users"></i>{% blocktrans trimmed with category=category.name %}
+            {{ category }} Teams
           {% endblocktrans %}
         </a>
       {% endfor %}
@@ -212,8 +212,8 @@
       </a>
       {% for category in tournament.speakercategory_set.all %}
         <a class="list-group-item" href="{% roundurl 'standings-speaker-category' round=current_round category=category.slug %}">
-          <i data-feather="user-plus"></i>{% blocktrans trimmed with category_name=category.name %}
-            {{ category_name }} Speakers
+          <i data-feather="user-plus"></i>{% blocktrans trimmed with category=category.name %}
+            {{ category }} Speakers
           {% endblocktrans %}
         </a>
       {% endfor %}
@@ -250,7 +250,7 @@
             </a>
             {% for category in tournament.breakcategory_set.all %}
               <a class="list-group-item" href="{% tournamenturl 'breakqual-teams' category.slug %}">
-                <i data-feather="pie-chart"></i>{% blocktrans trimmed with category_name=category.name %}{{ category_name }}{% endblocktrans %}
+                <i data-feather="pie-chart"></i>{% blocktrans trimmed with category=category.name %}{{ category }}{% endblocktrans %}
               </a>
             {% endfor %}
             <a class="list-group-item" href="{% tournamenturl 'breakqual-adjudicators' %}">

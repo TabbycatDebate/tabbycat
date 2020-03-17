@@ -618,7 +618,7 @@ class BaseAdjudicatorActionView(LogActionMixin, AdministratorMixin, TournamentMi
             adj_id = int(request.POST["adj_id"])
             adjudicator = Adjudicator.objects.get(id=adj_id)
         except (ValueError, Adjudicator.DoesNotExist, Adjudicator.MultipleObjectsReturned):
-            raise AdjudicatorActionError(_("Whoops! I didn't recognise that adjudicator: %(adj)s") % {'adj': adj_id})
+            raise AdjudicatorActionError(_("Whoops! I didn't recognise that adjudicator: %(adjudicator)s") % {'adjudicator': adj_id})
         return adjudicator
 
     def post(self, request, *args, **kwargs):
@@ -734,8 +734,8 @@ class BaseFeedbackToggleView(AdministratorMixin, TournamentMixin, PostOnlyRedire
             source = feedback.source_team.team.short_name
         result = self.feedback_result(feedback)
         messages.success(self.request, _(
-            "Feedback for %(adj)s from %(source)s is now %(result)s.")
-            % {'adj': feedback.adjudicator.name, 'source': source, 'result': result})
+            "Feedback for %(adjudicator)s from %(source)s is now %(result)s.")
+            % {'adjudicator': feedback.adjudicator.name, 'source': source, 'result': result})
 
         return super().post(request, *args, **kwargs)
 

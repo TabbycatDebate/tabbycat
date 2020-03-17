@@ -30,9 +30,9 @@ class BaseDrawTableBuilder(TabbycatTableBuilder):
     def _prepend_side_header(self, side, name, abbr, text_only=False):
         # Translators: e.g. "Affirmative: Rank", "Government: Draw strength",
         # "Opening government: Total speaker score", "Closing opposition: Number of firsts"
-        tooltip = _("%(side_name)s: %(metric_name)s") % {
-            'side_name': get_side_name(self.tournament, side, 'full'),
-            'metric_name': name.capitalize(),
+        tooltip = _("%(side)s: %(metric)s") % {
+            'side': get_side_name(self.tournament, side, 'full'),
+            'metric': name.capitalize(),
         }
         tooltip = tooltip.capitalize()
         key = format_html("{}<br>{}", get_side_name(self.tournament, side, 'abbr'), abbr)

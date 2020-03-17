@@ -93,15 +93,15 @@
           {% endif %}
 
           {% roundurl 'edit-panel-adjudicators' as url %}
-          {% blocktrans trimmed asvar text with r_name=round.abbreviation %}
-            Edit preformed panels for {{ r_name }}
+          {% blocktrans trimmed asvar text with round=round.abbreviation %}
+            Edit preformed panels for {{ round }}
           {% endblocktrans %}
           {% include "components/item-action.html" with text=text type="primary" %}
 
           {% if round.next %}
             {% roundurl 'edit-panel-adjudicators' round.next as url %}
-            {% blocktrans trimmed asvar text with r_name=round.next.abbreviation %}
-              Edit preformed panels for {{ r_name }}
+            {% blocktrans trimmed asvar text with round=round.next.abbreviation %}
+              Edit preformed panels for {{ round }}
             {% endblocktrans %}
             {% include "components/item-action.html" with text=text type="primary" %}
           {% endif %}
