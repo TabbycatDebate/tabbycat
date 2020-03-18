@@ -38,18 +38,6 @@ class BaseScoresheet:
             return set()
         return self._get_winners()
 
-    # Default methods
-    # Winners may be declared by the form as validation; by default do nothing.
-
-    def set_declared_winners(self, winners):
-        pass
-
-    def add_declared_winner(self, winner):
-        pass
-
-    def get_declared_winners(self):
-        pass
-
 
 class ScoresMixin:
     """Provides functionality for speaker scores.
@@ -106,9 +94,6 @@ class DeclaredWinnersMixin:
         winners = set(winners)
         assert winners.issubset(set(self.sides)) or len(winners) == 0, "Declared winners must be in: " + ", ".join(map(repr, self.sides))
         self.declared_winners = winners
-
-    def get_declared_winners(self):
-        return self.declared_winners
 
     def identical(self, other):
         return super().identical(other) and set(self.declared_winners) == set(other.declared_winners)

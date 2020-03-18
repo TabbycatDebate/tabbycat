@@ -706,12 +706,12 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 if totals[0] == totals[1] and self.declared_winner in ['none', 'high-points']:
                     self.add_error(None, forms.ValidationError(
                         _("The total scores for the teams are the same (i.e. a draw)."),
-                        code='draw'
+                        code='draw',
                     ))
                 elif self.declared_winner in ['high-points', 'tied-points'] and not high_point_declared:
                     self.add_error(None, forms.ValidationError(
                         _("The declared winner does not correspond to the team with the highest score."),
-                        code='wrong_winner'
+                        code='wrong_winner',
                     ))
 
             elif len(totals) > 2:
@@ -739,7 +739,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
             result.set_score(side, pos, score)
 
         if self._fieldname_declared_winner() in self.cleaned_data:
-            result.set_winner(set([self.cleaned_data[self._fieldname_declared_winner()]]))
+            result.set_winners(set([self.cleaned_data[self._fieldname_declared_winner()]]))
 
     # --------------------------------------------------------------------------
     # Template access methods
@@ -832,12 +832,12 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
                     if totals[0] == totals[1] and self.declared_winner in ['none', 'high-points']:
                         self.add_error(None, forms.ValidationError(
                             _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s."),
-                            params={'adj': adj.name}, code='draw'
+                            params={'adj': adj.name}, code='draw',
                         ))
                     elif self.declared_winner in ['high-points', 'tied-points'] and not high_point_declared:
                         self.add_error(None, forms.ValidationError(
                             _("The declared winner does not correspond to the team with the highest score for adjudicator %(adj)s."),
-                            params={'adj': adj.name}, code='wrong_winner'
+                            params={'adj': adj.name}, code='wrong_winner',
                         ))
 
                 # Check that the margin did not exceed the maximum permissible.
@@ -856,7 +856,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
             declared_winner = self.cleaned_data.get(self._fieldname_declared_winner(adj))
             if declared_winner is not None:
-                result.set_winner(adj, set([declared_winner]))
+                result.set_winners(adj, set([declared_winner]))
 
     # --------------------------------------------------------------------------
     # Template access methods
@@ -946,15 +946,15 @@ class SingleEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
                 ngettext(
                     "There must be exactly %(n)d team advancing.",
                     "There must be exactly %(n)d teams advancing.",
-                    num_advancing
+                    num_advancing,
                 ) % {'n': num_advancing},
-                code='num_advancing'
+                code='num_advancing',
             ))
 
         return cleaned_data
 
     def populate_result_with_wins(self, result):
-        result.set_winner(set(self.cleaned_data[self._fieldname_advancing()]))
+        result.set_winners(set(self.cleaned_data[self._fieldname_advancing()]))
 
     def scoresheets(self):
         return [{'advancing': self[self._fieldname_advancing()]}]
@@ -988,12 +988,12 @@ class PerAdjudicatorEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
             if self._fieldname_advancing(adj) in cleaned_data and len(cleaned_data[self._fieldname_advancing(adj)]) != 1:
                 self.add_error(self._fieldname_advancing(adj), forms.ValidationError(
                     _("There must be exactly 1 team advancing."),
-                    code='num_advancing'
+                    code='num_advancing',
                 ))
 
     def populate_result_with_wins(self, result):
         for adj in self.adjudicators:
-            result.set_winner(adj, set(self.cleaned_data[self._fieldname_advancing(adj)]))
+            result.set_winners(adj, set(self.cleaned_data[self._fieldname_advancing(adj)]))
 
     def scoresheets(self):
         for adj in self.adjudicators:
