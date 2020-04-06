@@ -261,16 +261,21 @@ class InstitutionSerializer(serializers.ModelSerializer):
     teams = TournamentHyperlinkedRelatedField(
         source='team_set',
         many=True,
-        read_only=True,
         view_name='api-team-detail',
+    )
+    adjudicators = TournamentHyperlinkedRelatedField(
+        source='adjudicator_set',
+        many=True,
+        view_name='api-adjudicator-detail',
     )
 
     class Meta:
         model = Institution
-        fields = ('url', 'id', 'name', 'code', 'teams')
+        fields = ('url', 'id', 'name', 'code', 'teams', 'adjudicators')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         if not kwargs['context']['request'].user.is_staff:
             self.fields.pop('teams')
+            self.fields.pop('adjudicators')

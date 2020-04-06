@@ -1,4 +1,4 @@
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
 from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
@@ -71,14 +71,20 @@ class SpeakerEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, Retri
         return super().get_queryset().prefetch_related('speaker_set')
 
 
-class InstitutionViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.InstitutionSerializer
+    access_preference = 'public_institutions_list'
 
     def perform_create(self, serializer):
         serializer.save()
 
     def get_queryset(self):
-        return Institution.objects.all().prefetch_related(Prefetch('team_set', queryset=self.tournament.team_set.all()))
+        return Institution.objects.filter(
+            Q(adjudicator__tournament=self.tournament) | Q(team__tournament=self.tournament),
+        ).distinct().prefetch_related(
+            Prefetch('team_set', queryset=self.tournament.team_set.all()),
+            Prefetch('adjudicator_set', queryset=self.tournament.adjudicator_set.all()),
+        )
 
 
 class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
