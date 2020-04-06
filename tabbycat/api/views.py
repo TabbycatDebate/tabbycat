@@ -12,10 +12,10 @@ from tournaments.mixins import TournamentFromUrlMixin
 from tournaments.models import Tournament
 
 from . import serializers
-from .mixins import AdministratorAPIMixin, TournamentAPIMixin, TournamentPublicAPIMixin
+from .mixins import AdministratorAPIMixin, PublicAPIMixin, TournamentAPIMixin, TournamentPublicAPIMixin
 
 
-class APIRootView(AdministratorAPIMixin, GenericAPIView):
+class APIRootView(PublicAPIMixin, GenericAPIView):
     name = "API Root"
     lookup_field = 'slug'
     lookup_url_kwarg = 'tournament_slug'
@@ -31,7 +31,7 @@ class APIRootView(AdministratorAPIMixin, GenericAPIView):
         })
 
 
-class TournamentViewSet(AdministratorAPIMixin, ModelViewSet):
+class TournamentViewSet(PublicAPIMixin, ModelViewSet):
     # Don't use TournamentAPIMixin here, it's not filtering objects by tournament.
     queryset = Tournament.objects.all()
     serializer_class = serializers.TournamentSerializer
@@ -47,23 +47,25 @@ class TournamentPreferenceViewSet(TournamentFromUrlMixin, AdministratorAPIMixin,
         return self.tournament
 
 
-class BreakCategoryViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+class BreakCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.BreakCategorySerializer
 
 
-class SpeakerCategoryViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+class SpeakerCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.SpeakerCategorySerializer
 
 
-class BreakEligibilityView(TournamentAPIMixin, AdministratorAPIMixin, RetrieveUpdateAPIView):
+class BreakEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, RetrieveUpdateAPIView):
     serializer_class = serializers.BreakEligibilitySerializer
+    access_preference = 'public_break_categories'
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related('team_set')
 
 
-class SpeakerEligibilityView(TournamentAPIMixin, AdministratorAPIMixin, RetrieveUpdateAPIView):
+class SpeakerEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, RetrieveUpdateAPIView):
     serializer_class = serializers.SpeakerEligibilitySerializer
+    access_preference = 'public_participants'
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related('speaker_set')
@@ -79,12 +81,14 @@ class InstitutionViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet
         return Institution.objects.all().prefetch_related(Prefetch('team_set', queryset=self.tournament.team_set.all()))
 
 
-class TeamViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.TeamSerializer
+    access_preference = 'public_participants'
 
 
-class AdjudicatorViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+class AdjudicatorViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.AdjudicatorSerializer
+    access_preference = 'public_participants'
 
 
 class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
@@ -94,9 +98,10 @@ class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
         return Institution.objects.all()
 
 
-class SpeakerViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.SpeakerSerializer
     tournament_field = "team__tournament"
+    access_preference = 'public_participants'
 
     def perform_create(self, serializer):
         serializer.save()

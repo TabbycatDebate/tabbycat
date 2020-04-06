@@ -129,6 +129,15 @@ class SpeakerSerializer(serializers.ModelSerializer):
         queryset=SpeakerCategory.objects.all(),
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(self, *args, **kwargs)
+        if not kwargs['context']['request'].user.is_staff:
+            self.fields.pop('gender')
+            self.fields.pop('email')
+            self.fields.pop('phone')
+            self.fields.pop('pronoun')
+            self.fields.pop('anonymous')
+
     class Meta:
         model = Speaker
         fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
@@ -149,6 +158,23 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         queryset=Institution.objects.all(),
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Remove private fields in the public endpoint if needed
+        if not kwargs['context']['request'].user.is_staff:
+            t = kwargs['context']['tournament']
+            if not t.pref('show_adjudicator_institutions'):
+                self.fields.pop('institution')
+
+            self.fields.pop('base_score')
+            self.fields.pop('trainee')
+            self.fields.pop('gender')
+            self.fields.pop('email')
+            self.fields.pop('phone')
+            self.fields.pop('pronoun')
+            self.fields.pop('anonymous')
+
     class Meta:
         model = Adjudicator
         fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
@@ -164,7 +190,6 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
 
 class TeamSerializer(serializers.ModelSerializer):
-    speakers = SpeakerSerializer(many=True, required=False)
     url = TournamentHyperlinkedIdentityField(view_name='api-team-detail')
     institution = serializers.HyperlinkedRelatedField(
         allow_null=True,
@@ -181,6 +206,24 @@ class TeamSerializer(serializers.ModelSerializer):
         model = Team
         fields = ('url', 'id', 'reference', 'code_name', 'emoji',
                   'institution', 'speakers', 'use_institution_prefix', 'break_categories')
+
+    def __init__(self, *args, **kwargs):
+        self.fields['speakers'] = SpeakerSerializer(*args, many=True, required=False, **kwargs)
+
+        super().__init__(*args, **kwargs)
+
+        # Remove private fields in the public endpoint if needed
+        if not kwargs['context']['request'].user.is_staff:
+            t = kwargs['context']['tournament']
+            if t.pref('team_code_names') in ('admin-tooltips-code', 'admin-tooltips-real', 'everywhere'):
+                self.fields.pop('institution')
+                self.fields.pop('use_institution_prefix')
+                self.fields.pop('reference')
+            elif not t.pref('show_team_institutions'):
+                self.fields.pop('institution')
+                self.fields.pop('use_institution_prefix')
+            if not t.pref('public_break_categories'):
+                self.fields.pop('break_categories')
 
     def create(self, validated_data):
         """Four things must be done, excluding saving the Team object:
@@ -225,3 +268,9 @@ class InstitutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Institution
         fields = ('url', 'id', 'name', 'code', 'teams')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if not kwargs['context']['request'].user.is_staff:
+            self.fields.pop('teams')
