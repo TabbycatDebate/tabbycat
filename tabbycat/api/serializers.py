@@ -3,7 +3,8 @@ from rest_framework import serializers
 from breakqual.models import BreakCategory
 from participants.emoji import pick_unused_emoji
 from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
-from tournaments.models import Tournament
+from tournaments.models import Round, Tournament
+from venues.models import Venue, VenueCategory
 
 from .fields import SpeakerHyperlinkedIdentityField, TournamentHyperlinkedIdentityField, TournamentHyperlinkedRelatedField
 
@@ -15,6 +16,9 @@ class TournamentSerializer(serializers.ModelSerializer):
         lookup_field='slug', lookup_url_kwarg='tournament_slug')
 
     class TournamentLinksSerializer(serializers.Serializer):
+        rounds = serializers.HyperlinkedIdentityField(
+            view_name='api-round-list',
+            lookup_field='slug', lookup_url_kwarg='tournament_slug')
         break_categories = serializers.HyperlinkedIdentityField(
             view_name='api-breakcategory-list',
             lookup_field='slug', lookup_url_kwarg='tournament_slug')
@@ -33,12 +37,41 @@ class TournamentSerializer(serializers.ModelSerializer):
         speakers = serializers.HyperlinkedIdentityField(
             view_name='api-speaker-list',
             lookup_field='slug', lookup_url_kwarg='tournament_slug')
+        venues = serializers.HyperlinkedIdentityField(
+            view_name='api-venue-list',
+            lookup_field='slug', lookup_url_kwarg='tournament_slug')
+        venue_categories = serializers.HyperlinkedIdentityField(
+            view_name='api-venuecategory-list',
+            lookup_field='slug', lookup_url_kwarg='tournament_slug')
 
     _links = TournamentLinksSerializer(source='*', read_only=True)
 
     class Meta:
         model = Tournament
-        fields = ('name', 'short_name', 'slug', 'seq', 'active', 'url', '_links')
+        fields = '__all__'
+
+
+class RoundSerializer(serializers.ModelSerializer):
+    tournament = serializers.HyperlinkedRelatedField(
+        view_name='api-tournament-detail',
+        lookup_field='slug', lookup_url_kwarg='tournament_slug',
+        queryset=Tournament.objects.all(),
+    )
+    url = TournamentHyperlinkedIdentityField(
+        view_name='api-round-detail',
+        lookup_field='seq', lookup_url_kwarg='round_seq')
+    break_category = TournamentHyperlinkedRelatedField(
+        view_name='api-breakcategory-detail',
+        queryset=BreakCategory.objects.all())
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not kwargs['context']['request'].user.is_staff:
+            self.fields.pop('feedback_weight')
+
+    class Meta:
+        model = Round
+        fields = '__all__'
 
 
 class BreakCategorySerializer(serializers.ModelSerializer):
@@ -279,3 +312,29 @@ class InstitutionSerializer(serializers.ModelSerializer):
         if not kwargs['context']['request'].user.is_staff:
             self.fields.pop('teams')
             self.fields.pop('adjudicators')
+
+
+class VenueSerializer(serializers.ModelSerializer):
+    url = TournamentHyperlinkedIdentityField(view_name='api-venue-detail')
+    categories = TournamentHyperlinkedRelatedField(
+        source='venuecategory_set',
+        many=True,
+        view_name='api-venuecategory-detail',
+    )
+    display_name = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Venue
+        fields = '__all__'
+
+
+class VenueCategorySerializer(serializers.ModelSerializer):
+    url = TournamentHyperlinkedIdentityField(view_name='api-venuecategory-detail')
+    venues = TournamentHyperlinkedRelatedField(
+        many=True,
+        view_name='api-venue-detail',
+    )
+
+    class Meta:
+        model = VenueCategory
+        fields = '__all__'

@@ -47,6 +47,15 @@ class TournamentPreferenceViewSet(TournamentFromUrlMixin, AdministratorAPIMixin,
         return self.tournament
 
 
+class RoundViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
+    serializer_class = serializers.RoundSerializer
+    lookup_field = 'seq'
+    lookup_url_kwarg = 'round_seq'
+
+    def get_queryset(self):
+        return self.tournament.round_set.all()
+
+
 class BreakCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.BreakCategorySerializer
 
@@ -111,3 +120,11 @@ class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet)
 
     def perform_create(self, serializer):
         serializer.save()
+
+
+class VenueViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
+    serializer_class = serializers.VenueSerializer
+
+
+class VenueCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
+    serializer_class = serializers.VenueCategorySerializer

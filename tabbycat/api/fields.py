@@ -5,6 +5,9 @@ from rest_framework.reverse import reverse
 class TournamentHyperlinkedRelatedField(HyperlinkedRelatedField):
     tournament_field = 'tournament'
 
+    def use_pk_only_optimization(self):
+        return False
+
     def get_tournament(self, obj):
         return obj.tournament
 
