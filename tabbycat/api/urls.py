@@ -87,6 +87,9 @@ urlpatterns = [
                 path('<int:pk>/',
                      views.TeamViewSet.as_view(detail_methods),
                      name='api-team-detail'),
+                path('standings/',
+                     views.TeamStandingsView.as_view(),
+                     name='api-team-standings'),
             ])),
             path('adjudicators/', include([
                 path('',
@@ -103,6 +106,9 @@ urlpatterns = [
                 path('<int:pk>/',
                      views.SpeakerViewSet.as_view(detail_methods),
                      name='api-speaker-detail'),
+                path('standings/',
+                     views.SpeakerStandingsView.as_view(),
+                     name='api-speaker-standings'),
             ])),
             path('venues/', include([
                 path('',

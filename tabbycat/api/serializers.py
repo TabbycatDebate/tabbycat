@@ -6,7 +6,8 @@ from participants.models import Adjudicator, Institution, Speaker, SpeakerCatego
 from tournaments.models import Round, Tournament
 from venues.models import Venue, VenueCategory
 
-from .fields import SpeakerHyperlinkedIdentityField, TournamentHyperlinkedIdentityField, TournamentHyperlinkedRelatedField
+from .fields import (AnonymisingHyperlinkedTournamentRelatedField, SpeakerHyperlinkedIdentityField,
+    TournamentHyperlinkedIdentityField, TournamentHyperlinkedRelatedField)
 
 
 class TournamentSerializer(serializers.ModelSerializer):
@@ -161,6 +162,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
         view_name='api-speakercategory-detail',
         queryset=SpeakerCategory.objects.all(),
     )
+    team = TournamentHyperlinkedRelatedField(view_name='api-team-detail')
 
     def __init__(self, *args, **kwargs):
         super().__init__(self, *args, **kwargs)
@@ -338,3 +340,29 @@ class VenueCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = VenueCategory
         fields = '__all__'
+
+
+class BaseStandingsSerializer(serializers.Serializer):
+    rank = serializers.SerializerMethodField()
+    tied = serializers.SerializerMethodField()
+    metrics = serializers.SerializerMethodField()
+
+    def get_rank(self, obj):
+        return obj.rankings['rank'][0]
+
+    def get_tied(self, obj):
+        return obj.rankings['rank'][1]
+
+    def get_metrics(self, obj):
+        return [{'metric': s, 'value': v} for s, v in obj.metrics.items()]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+class TeamStandingsSerializer(BaseStandingsSerializer):
+    team = TournamentHyperlinkedRelatedField(view_name='api-team-detail')
+
+
+class SpeakerStandingsSerializer(BaseStandingsSerializer):
+    speaker = AnonymisingHyperlinkedTournamentRelatedField(view_name='api-speaker-detail', anonymous_source='anonymous')

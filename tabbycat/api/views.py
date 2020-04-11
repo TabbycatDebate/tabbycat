@@ -7,7 +7,8 @@ from rest_framework.reverse import reverse
 from rest_framework.viewsets import ModelViewSet
 
 from options.models import TournamentPreferenceModel
-from participants.models import Institution
+from participants.models import Institution, Speaker
+from standings.base import Standings
 from tournaments.mixins import TournamentFromUrlMixin
 from tournaments.models import Tournament
 
@@ -128,3 +129,26 @@ class VenueViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
 
 class VenueCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.VenueCategorySerializer
+
+
+class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPIView):
+    lookup_field = 'slug'
+    lookup_url_kwarg = 'tournament_slug'
+
+
+class SpeakerStandingsView(BaseStandingsView):
+    name = "Speaker Standings"
+    access_preference = 'speaker_tab_released'
+
+    def get(self, request, format=None):
+        speakers = Speaker.objects.filter(team__tournament=self.tournament)
+        return Response(serializers.SpeakerStandingsSerializer(data=Standings(speakers)))
+
+
+class TeamStandingsView(BaseStandingsView):
+    name = 'Team Standings'
+    access_preference = 'team_tab_released'
+
+    def get(self, request, format=None):
+        teams = self.tournament.team_set.all()
+        return Response(serializers.TeamStandingsSerializer(data=Standings(teams)))
