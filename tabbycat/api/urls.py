@@ -37,6 +37,15 @@ urlpatterns = [
                     path('',
                         views.RoundViewSet.as_view(detail_methods),
                         name='api-round-detail'),
+
+                    path('pairings/', include([
+                        path('',
+                            views.PairingViewSet.as_view(list_methods),
+                            name='api-pairing-list'),
+                        path('<int:pk>/',
+                            views.PairingViewSet.as_view(detail_methods),
+                            name='api-pairing-detail'),
+                    ])),
                 ])),
             ])),
 

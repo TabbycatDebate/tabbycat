@@ -34,6 +34,30 @@ class TournamentHyperlinkedIdentityField(TournamentHyperlinkedRelatedField, Hype
     pass
 
 
+class RoundHyperlinkedRelatedField(TournamentHyperlinkedRelatedField):
+    round_field = 'round'
+
+    def get_round(self, obj):
+        return obj.round
+
+    def get_url(self, obj, view_name, request, format):
+        lookup_value = getattr(obj, self.lookup_field)
+        round = self.get_round(obj)
+        kwargs = {
+            'tournament_slug': round.tournament.slug,
+            'round_seq': round.seq,
+            self.lookup_url_kwarg: lookup_value,
+        }
+        return reverse(view_name, kwargs=kwargs, request=request, format=format)
+
+    def get_queryset(self):
+        return self.queryset.filter(**{self.round_field: self.context['round']})
+
+
+class RoundHyperlinkedIdentityField(RoundHyperlinkedRelatedField, HyperlinkedIdentityField):
+    pass
+
+
 class SpeakerHyperlinkedIdentityField(TournamentHyperlinkedRelatedField, HyperlinkedIdentityField):
     tournament_field = 'team__tournament'
 

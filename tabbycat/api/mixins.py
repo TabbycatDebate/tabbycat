@@ -1,12 +1,16 @@
+import operator
+
 from rest_framework.permissions import IsAdminUser
 
 from tournaments.mixins import RoundFromUrlMixin, TournamentFromUrlMixin
 
-from .permissions import IsAdminOrReadOnly, PublicPreferencePermission
+from .permissions import IsAdminOrReadOnly, PublicIfReleasedPermission, PublicPreferencePermission
 
 
 class TournamentAPIMixin(TournamentFromUrlMixin):
     tournament_field = 'tournament'
+
+    access_operator = operator.eq
     access_setting = True
 
     def lookup_kwargs(self):
@@ -48,6 +52,10 @@ class AdministratorAPIMixin:
 
 class TournamentPublicAPIMixin:
     permission_classes = [PublicPreferencePermission]
+
+
+class OnReleasePublicAPIMixin(TournamentPublicAPIMixin):
+    permission_classes = [PublicIfReleasedPermission]
 
 
 class PublicAPIMixin:

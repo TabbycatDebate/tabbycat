@@ -10,10 +10,11 @@ from options.models import TournamentPreferenceModel
 from participants.models import Institution, Speaker
 from standings.base import Standings
 from tournaments.mixins import TournamentFromUrlMixin
-from tournaments.models import Tournament
+from tournaments.models import Round, Tournament
 
 from . import serializers
-from .mixins import AdministratorAPIMixin, PublicAPIMixin, TournamentAPIMixin, TournamentPublicAPIMixin
+from .mixins import AdministratorAPIMixin, PublicAPIMixin, RoundAPIMixin, TournamentAPIMixin, TournamentPublicAPIMixin
+from .permissions import PublicPreferencePermission
 
 
 class APIRootView(PublicAPIMixin, GenericAPIView):
@@ -162,3 +163,32 @@ class TeamStandingsView(BaseStandingsView):
     def get(self, request, format=None):
         teams = self.tournament.team_set.all()
         return Response(serializers.TeamStandingsSerializer(data=Standings(teams)))
+
+
+class PairingViewSet(RoundAPIMixin, ModelViewSet):
+
+    class Permission(PublicPreferencePermission):
+        def get_tournament_preference(self, view, op):
+            return {
+                'off': False,
+                'current': view.tournament.current_round.id == view.round.id and self.get_round_status(view),
+                'all-released': self.get_round_status(view),
+            }[view.tournament.pref(view.access_preference)]
+
+        def get_round_status(self, view):
+            return getattr(view.round, view.round_released_field) == view.round_released_value
+
+    serializer_class = serializers.RoundPairingSerializer
+
+    access_preference = 'public_draw'
+
+    round_released_field = 'draw_status'
+    round_released_value = Round.STATUS_RELEASED
+
+    permission_classes = [Permission]
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('round', 'round__tournament', 'venue', 'venue__tournament').prefetch_related(
+            'debateteam_set', 'debateteam_set__team', 'debateteam_set__team__tournament',
+            'debateadjudicator_set', 'debateadjudicator_set__adjudicator', 'debateadjudicator_set__adjudicator__tournament',
+        )

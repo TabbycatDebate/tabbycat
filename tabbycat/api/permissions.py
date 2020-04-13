@@ -5,11 +5,16 @@ class PublicPreferencePermission(BasePermission):
 
     def has_permission(self, request, view):
         return (request.user and request.user.is_staff) or (
-            request.method in SAFE_METHODS and self.get_tournament_preference(
-                view.tournament, view.access_preference, view.access_setting))
+            request.method in SAFE_METHODS and self.get_tournament_preference(view, view.access_operator))
 
-    def get_tournament_preference(self, tournament, preference, setting):
-        return tournament.pref(preference) == setting
+    def get_tournament_preference(self, view, op):
+        return op(view.tournament.pref(view.access_preference), view.access_setting)
+
+
+class PublicIfReleasedPermission(PublicPreferencePermission):
+
+    def has_object_permission(self, request, view, obj):
+        return getattr(obj.round, view.round_released_field) == view.round_released_value
 
 
 class IsAdminOrReadOnly(BasePermission):

@@ -1,12 +1,13 @@
 from rest_framework import serializers
 
 from breakqual.models import BreakCategory
+from draw.models import Debate, DebateTeam
 from participants.emoji import pick_unused_emoji
 from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 from tournaments.models import Round, Tournament
 from venues.models import Venue, VenueCategory
 
-from .fields import (AnonymisingHyperlinkedTournamentRelatedField, SpeakerHyperlinkedIdentityField,
+from .fields import (AnonymisingHyperlinkedTournamentRelatedField, RoundHyperlinkedIdentityField, SpeakerHyperlinkedIdentityField,
     TournamentHyperlinkedIdentityField, TournamentHyperlinkedRelatedField)
 
 
@@ -64,6 +65,13 @@ class RoundSerializer(serializers.ModelSerializer):
     break_category = TournamentHyperlinkedRelatedField(
         view_name='api-breakcategory-detail',
         queryset=BreakCategory.objects.all())
+
+    class RoundLinksSerializer(serializers.Serializer):
+        pairing = TournamentHyperlinkedIdentityField(
+            view_name='api-pairing-list',
+            lookup_field='seq', lookup_url_kwarg='round_seq')
+
+    _links = RoundLinksSerializer(source='*', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -162,7 +170,6 @@ class SpeakerSerializer(serializers.ModelSerializer):
         view_name='api-speakercategory-detail',
         queryset=SpeakerCategory.objects.all(),
     )
-    team = TournamentHyperlinkedRelatedField(view_name='api-team-detail')
 
     def __init__(self, *args, **kwargs):
         super().__init__(self, *args, **kwargs)
@@ -366,3 +373,27 @@ class TeamStandingsSerializer(BaseStandingsSerializer):
 
 class SpeakerStandingsSerializer(BaseStandingsSerializer):
     speaker = AnonymisingHyperlinkedTournamentRelatedField(view_name='api-speaker-detail', anonymous_source='anonymous')
+
+
+class RoundPairingSerializer(serializers.ModelSerializer):
+    class DebateTeamSerializer(serializers.ModelSerializer):
+        team = TournamentHyperlinkedRelatedField(view_name='api-team-detail')
+        side = serializers.CharField()
+
+        class Meta:
+            model = DebateTeam
+            fields = ('team', 'side')
+
+    class DebateAdjudicatorSerializer(serializers.Serializer):
+        chair = TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail')
+        panellists = TournamentHyperlinkedRelatedField(many=True, view_name='api-adjudicator-detail')
+        trainees = TournamentHyperlinkedRelatedField(many=True, view_name='api-adjudicator-detail')
+
+    url = RoundHyperlinkedIdentityField(view_name='api-pairing-detail')
+    venue = TournamentHyperlinkedRelatedField(view_name='api-venue-detail')
+    teams = DebateTeamSerializer(many=True, source='debateteam_set')
+    adjudicators = DebateAdjudicatorSerializer()
+
+    class Meta:
+        model = Debate
+        fields = ('url', 'id', 'venue', 'teams', 'adjudicators', 'sides_confirmed')
