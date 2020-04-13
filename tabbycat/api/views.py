@@ -101,6 +101,10 @@ class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.TeamSerializer
     access_preference = 'public_participants'
 
+    def get_queryset(self):
+        return super().get_queryset().select_related('tournament').prefetch_related(
+            Prefetch('speaker_set', queryset=Speaker.objects.all().prefetch_related('categories', 'categories__tournament').select_related('team__tournament')))
+
 
 class AdjudicatorViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.AdjudicatorSerializer
@@ -126,9 +130,15 @@ class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet)
 class VenueViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.VenueSerializer
 
+    def get_queryset(self):
+        return super().get_queryset().select_related('tournament').prefetch_related('venuecategory_set', 'venuecategory_set__tournament')
+
 
 class VenueCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.VenueCategorySerializer
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('tournament').prefetch_related('venues', 'venues__tournament')
 
 
 class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPIView):
