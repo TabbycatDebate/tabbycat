@@ -31,6 +31,9 @@ urlpatterns = [
     path('load-demo/',
         LoadDemoView.as_view(),
         name='load-demo'),
+    path('inactive/',
+        tournaments.views.PublicSiteInactiveTournamentsView.as_view(),
+        name='tabbycat-inactive-tournaments'),
 
     # Top Level Pages
     path('donations/',
