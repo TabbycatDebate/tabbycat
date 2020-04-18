@@ -246,7 +246,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = ('url', 'id', 'reference', 'code_name', 'emoji',
+        fields = ('url', 'id', 'reference', 'code_name', 'emoji', 'short_name', 'long_name',
                   'institution', 'speakers', 'use_institution_prefix', 'break_categories')
 
     def __init__(self, *args, **kwargs):
@@ -261,6 +261,8 @@ class TeamSerializer(serializers.ModelSerializer):
                 self.fields.pop('institution')
                 self.fields.pop('use_institution_prefix')
                 self.fields.pop('reference')
+                self.fields.pop('short_name')
+                self.fields.pop('long_name')
             elif not t.pref('show_team_institutions'):
                 self.fields.pop('institution')
                 self.fields.pop('use_institution_prefix')
