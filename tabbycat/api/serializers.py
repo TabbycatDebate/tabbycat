@@ -17,6 +17,11 @@ class TournamentSerializer(serializers.ModelSerializer):
         view_name='api-tournament-detail',
         lookup_field='slug', lookup_url_kwarg='tournament_slug')
 
+    current_rounds = TournamentHyperlinkedRelatedField(
+        view_name='api-round-detail', read_only=True, many=True,
+        lookup_field='seq', lookup_url_kwarg='round_seq',
+    )
+
     class TournamentLinksSerializer(serializers.Serializer):
         rounds = serializers.HyperlinkedIdentityField(
             view_name='api-round-list',
