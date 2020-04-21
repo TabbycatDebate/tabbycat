@@ -2,7 +2,6 @@ import logging
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-
 from django.conf import settings
 from django.contrib import messages
 from django.db import ProgrammingError
@@ -29,13 +28,13 @@ from tournaments.mixins import (CurrentRoundMixin, PersonalizablePublicTournamen
 from tournaments.models import Round
 from utils.misc import get_ip_address, reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
-from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
+from utils.views import VueTableTemplateView
 
 from .forms import BPEliminationResultForm, PerAdjudicatorBallotSetForm, SingleBallotSetForm
 from .models import BallotSubmission, TeamScore
-from .tables import ResultsTableBuilder
 from .prefetch import populate_confirmed_ballots
+from .tables import ResultsTableBuilder
 from .utils import populate_identical_ballotsub_lists
 
 logger = logging.getLogger(__name__)
@@ -87,7 +86,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
                         'venue': d.venue.display_name if d.venue else None,
                         'team': team_name_for_data_entry(debateteam.team, use_code_names),
                         'current_round': debateteam.iron,
-                        'previous_round': debateteam.iron_prev
+                        'previous_round': debateteam.iron_prev,
                     })
         return iron_speeches
 
@@ -288,7 +287,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
                     "extra": {"debate_id": self.debate.id},
                     "subject": self.tournament.pref("ballot_email_subject"),
                     "body": self.tournament.pref("ballot_email_message"),
-                    "send_to": None
+                    "send_to": None,
                 })
 
         self.add_success_message()
@@ -470,9 +469,6 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, BaseBa
         messages.success(self.request, _("Thanks, %(user)s! Your ballot for %(debate)s has "
                 "been recorded.") % {'user': self.object.name, 'debate': self.matchup_description()})
 
-    def get_success_url(self):
-        return reverse_tournament('post-results-public-ballotset-new', self.tournament)
-
     def populate_objects(self):
         self.object = self.get_object() # must be populated before self.error_page() called
 
@@ -514,7 +510,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, BaseBa
             request=self.request,
             template=['public_enter_results_error.html'],
             context=context,
-            using=self.template_engine
+            using=self.template_engine,
         )
 
 
@@ -524,6 +520,9 @@ class OldPublicNewBallotSetByIdUrlView(SingleObjectFromTournamentMixin, BasePubl
     allow_null_tournament = True
     private_url = False
 
+    def get_success_url(self):
+        return reverse_tournament('post-results-public-ballotset-new', self.tournament)
+
     def is_page_enabled(self, tournament):
         return tournament.pref('participant_ballots') == 'public'
 
@@ -532,6 +531,9 @@ class OldPublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin,
     model = Adjudicator
     allow_null_tournament = True
     private_url = True
+
+    def get_success_url(self):
+        return reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': self.kwargs['url_key']})
 
     def is_page_enabled(self, tournament):
         return tournament.pref('participant_ballots') == 'private-urls'
@@ -566,7 +568,7 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
 
     def get_queryset(self):
         return self.model.objects.select_related(
-            'round'
+            'round',
         ).prefetch_related('debateteam_set__team')
 
     def response_error(self, error):

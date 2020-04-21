@@ -692,7 +692,7 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
         for adj in self.debate.adjudicators.voting():
             sheet_dict = {
                 "adjudicator": adj,
-                "teams": self.sheet_as_dicts(self.scoresheets[adj])
+                "teams": self.sheet_as_dicts(self.scoresheets[adj]),
             }
             sheet_dict["adjudicator"] = adj
             yield sheet_dict
@@ -734,7 +734,7 @@ class BaseConsensusDebateResultWithSpeakers(BaseDebateResultWithSpeakers):
     def load_scoresheet(self):
         speakerscores = self.ballotsub.speakerscore_set.filter(
             debate_team__side__in=self.sides,
-            position__in=self.positions
+            position__in=self.positions,
         ).select_related('debate_team')
 
         for ss in speakerscores:
@@ -857,7 +857,7 @@ class BPEliminationDebateResult(BaseDebateResult):
 
     def load_advancing(self):
         queryset = self.ballotsub.teamscore_set.filter(
-            debate_team__side__in=self.sides, win=True
+            debate_team__side__in=self.sides, win=True,
         ).values_list('debate_team__side', flat=True)
         self.advancing = list(queryset)
 

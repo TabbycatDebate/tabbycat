@@ -2,12 +2,12 @@
 {% load debate_tags i18n %}
 
 {% block head-title %}<span class="emoji">👋</span>
-{% blocktrans trimmed with tournament_name=tournament.name %}
-    Welcome to {{ tournament_name }}
+{% blocktrans trimmed with tournament=tournament.name %}
+    Welcome to {{ tournament }}
 {% endblocktrans %}{% endblock %}
 {% block page-title %}
-  {% blocktrans trimmed with tournament_name=tournament.name %}
-    Welcome to {{ tournament_name }}
+  {% blocktrans trimmed with tournament=tournament.name %}
+    Welcome to {{ tournament }}
   {% endblocktrans %}
 {% endblock %}
 
@@ -40,8 +40,8 @@
 
     {% if pref.break_category_tabs_released > 0 %}
       {% for category in tournament.break_categories_nongeneral %}
-        {% blocktrans asvar text trimmed with category_name=category.name %}
-          {{ category_name }} Team Tab
+        {% blocktrans asvar text trimmed with category=category.name %}
+          {{ category }} Team Tab
         {% endblocktrans %}
         {% tournamenturl 'standings-public-tab-break-category' category=category.slug as url %}
         {% include "components/item-action.html" with icon="users" %}
@@ -57,8 +57,8 @@
     {% if pref.speaker_category_tabs_released > 0 %}
       {% for category in tournament.speakercategory_set.all %}
         {% if category.public %}
-          {% blocktrans asvar text trimmed with category_name=category.name %}
-            {{ category_name }} Speaker Tab
+          {% blocktrans asvar text trimmed with category=category.name %}
+            {{ category }} Speaker Tab
           {% endblocktrans %}
           {% tournamenturl 'standings-public-tab-speaker-category' category=category.slug as url %}
           {% include "components/item-action.html" with icon="user" %}
@@ -94,8 +94,8 @@
       {% tournamenturl 'draw-public-current-rounds' as url %}
       {% if tournament.public_draws_available %}
         {% if tournament.current_rounds|length == 1 %}
-          {% blocktrans trimmed with round_name=current_round.name asvar draw_for_round_text %}
-            Draw for {{ round_name }}
+          {% blocktrans trimmed with round=current_round.name asvar draw_for_round_text %}
+            Draw for {{ round }}
           {% endblocktrans %}
         {% else %}
           {% trans "Draws for Current Rounds" as draw_for_round_text %}
@@ -103,8 +103,8 @@
         {% include "components/item-action.html" with icon="eye" text=draw_for_round_text %}
       {% else %}
         {% if tournament.current_rounds|length == 1 %}
-          {% blocktrans trimmed with round_name=current_round.name asvar draw_for_round_text %}
-            {{ round_name }}'s draw has yet to be released
+          {% blocktrans trimmed with round=current_round.name asvar draw_for_round_text %}
+            {{ round }}'s draw has yet to be released
           {% endblocktrans %}
         {% else %}
           {% trans "The draw for the next round has yet to be released" as draw_for_round_text %}
@@ -145,8 +145,8 @@
 
     {% if pref.public_breaking_teams %}
       {% for category in tournament.breakcategory_set.all %}
-        {% blocktrans trimmed asvar text with category_name=category.name %}
-          {{ category_name }} Break
+        {% blocktrans trimmed asvar text with category=category.name %}
+          {{ category }} Break
         {% endblocktrans %}
         {% tournamenturl 'breakqual-public-teams' category.slug as url %}
         {% include "components/item-action.html" with icon="pie-chart" %}
@@ -198,8 +198,8 @@
     {% if pref.public_draw == 'all-released' %}
       {% for r in tournament.round_set.all %}
         {% if r.draw_status == r.STATUS_RELEASED %}
-          {% blocktrans trimmed asvar text with round_name=r.name %}
-            Draw for {{ round_name }}
+          {% blocktrans trimmed asvar text with round=r.name %}
+            Draw for {{ round }}
           {% endblocktrans %}
           {% roundurl 'draw-public-for-round' r as url %}
           {% include "components/item-action.html" with icon="eye" %}

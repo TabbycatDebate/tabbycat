@@ -16,5 +16,4 @@ urlpatterns = [
     path('urls_sheets/',
         views.PrintableRandomisedURLs.as_view(),
         name='printing-urls'),
-
 ]

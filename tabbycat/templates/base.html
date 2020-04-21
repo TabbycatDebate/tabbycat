@@ -10,8 +10,8 @@
   <title>{% if tournament %}{{ tournament.short_name }}{% else %}{% trans "Tabbycat" %}{% endif %} | {% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
 
   {% if tournament %}
-    {% blocktrans trimmed with tournament_name=tournament.short_name asvar meta_description %}
-      The tab for {{ tournament_name }} runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats
+    {% blocktrans trimmed with tournament=tournament.short_name asvar meta_description %}
+      The tab for {{ tournament }} runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats
     {% endblocktrans %}
   {% else %}
     {% blocktrans trimmed asvar meta_description %}

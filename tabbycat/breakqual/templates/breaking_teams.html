@@ -1,8 +1,8 @@
 {% extends "tables/base_vue_table.html" %}
 {% load static debate_tags i18n add_field_css %}
 
-{% block head-title %}{% blocktrans trimmed with category_name=category.name %}
-  {{ category_name }} Break
+{% block head-title %}{% blocktrans trimmed with category=category.name %}
+  {{ category }} Break
 {% endblocktrans %}{% endblock %}
 {% block sub-title %}
   {% if pref.public_breaking_teams %}
@@ -11,8 +11,8 @@
     {% trans "not publicly visible" %}
   {% endif %}
 {% endblock %}
-{% block page-title %}👑 {% blocktrans trimmed with category_name=category.name %}
-  {{ category_name }} Break
+{% block page-title %}👑 {% blocktrans trimmed with category=category.name %}
+  {{ category }} Break
 {% endblocktrans %}{% endblock %}
 
 {% block page-subnav-sections %}
@@ -122,8 +122,8 @@
         </div>
         <div class="form-inline col-md-6">
           <button class="btn btn-primary btn-block btn-success" type="submit" name="save_update_one">
-            {% blocktrans trimmed with category_name=category.name %}
-              Save Remarks and Update the {{ category_name }} Break
+            {% blocktrans trimmed with category=category.name %}
+              Save Remarks and Update the {{ category }} Break
             {% endblocktrans %}
           </button>
         </div>

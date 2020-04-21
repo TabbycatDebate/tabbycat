@@ -1,7 +1,7 @@
-from utils.management.base import TournamentCommand
 from draw.models import Debate
 from results.models import BallotSubmission
 from tournaments.models import Round, Tournament
+from utils.management.base import TournamentCommand
 
 
 class Command(TournamentCommand):
@@ -10,7 +10,7 @@ class Command(TournamentCommand):
         "Compares ballots between an original tournament and a check tournament "
         "set up to mimic the original tournament. This requires advanced use to "
         "set up, and is not intended for general use. Don't use unless you know "
-        "what you're doing."
+        "what you're doing.",
     )
 
     def add_arguments(self, parser):
@@ -73,7 +73,7 @@ class Command(TournamentCommand):
                 cssba = compare.speakerscorebyadj_set.get(
                     debate_team__side=ssba.debate_team.side,
                     debate_adjudicator=ssba.debate_adjudicator,
-                    position=ssba.position
+                    position=ssba.position,
                 )
                 if ssba.score != cssba.score:
                     self.stdout.write("{dt}, speaker {pos}, from {adj}: original score={orig}, check score={check}".format(

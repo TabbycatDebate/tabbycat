@@ -30,8 +30,8 @@
       <div class="list-group-item card-title pb-1">
         <h4>
         {% if forms.grouper.name %}
-          {% blocktrans trimmed with institution_name=forms.grouper.name %}
-            Teams for {{ institution_name }}
+          {% blocktrans trimmed with institution=forms.grouper.name %}
+            Teams for {{ institution }}
           {% endblocktrans %}
         {% else %}
           {% trans "Unaffiliated Teams" %}

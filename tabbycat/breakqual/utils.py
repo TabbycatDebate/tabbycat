@@ -60,7 +60,7 @@ def liveness(self, team, teams_count, prelims, current_round):
     highest_liveness = 3
     for bc in team.break_categories.all():
         import random
-        status = random.choice([1,2,3])
+        status = random.choice([1, 2, 3])
         highest_liveness = 3
         if status == 1:
             live_info['tooltip'] += 'Definitely in for the %s break<br>test' % bc.name

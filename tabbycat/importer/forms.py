@@ -23,7 +23,7 @@ class ImportValidationError(ValidationError):
     def __init__(self, lineno, message, *args, **kwargs):
         message = _("line %(lineno)d: %(message)s") % {
             'lineno': lineno,
-            'message': message
+            'message': message,
         }
         super().__init__(message, *args, **kwargs)
 
@@ -100,15 +100,15 @@ class ImportVenuesRawForm(forms.Form):
             venues.append(params)
 
         if len(venues) == 0:
-            raise ValidationError(_("There were no venues to import."))
+            raise ValidationError(_("There were no rooms to import."))
 
         max_allowed = MAX_FORM_DATA_FIELDS // (len(VenueDetailsForm.base_fields) + 1)
         if len(venues) > max_allowed:
             raise ValidationError(ngettext(
-                "Sorry, you can only import up to %(max_allowed)d venue at a "
+                "Sorry, you can only import up to %(max_allowed)d room at a "
                 "time. (You currently have %(given)d.) "
                 "Try splitting your import into smaller chunks.",
-                "Sorry, you can only import up to %(max_allowed)d venues at a "
+                "Sorry, you can only import up to %(max_allowed)d rooms at a "
                 "time. (You currently have %(given)d.) "
                 "Try splitting your import into smaller chunks.",
                 max_allowed) % {'max_allowed': max_allowed, 'given': len(venues)})

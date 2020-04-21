@@ -5,9 +5,9 @@
       <div class="modal-content">
         <div class="modal-body text-center p-4">
 
-          <p class="lead" v-text="gettext(`Auto-Allocate Venues to Debates`)"></p>
-          <p v-text="gettext(`The allocator assigns venues to debates while trying to match
-                              all of the venue constraints that have been specified.`)"></p>
+          <p class="lead" v-text="gettext(`Auto-Allocate Rooms to Debates`)"></p>
+          <p v-text="gettext(`The allocator assigns rooms to debates while trying to match
+                              all of the room constraints that have been specified.`)"></p>
           <button type="submit" @click="performWSAction()"
                   :class="['btn btn-block btn-success', loading ? 'disabled': '']"
                   v-text="loading ? gettext('Loading...') : gettext('Auto-Allocate')"></button>

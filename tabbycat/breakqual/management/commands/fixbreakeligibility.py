@@ -32,15 +32,15 @@ class Command(TournamentCommand):
                 raise CommandError("There's no speaker category with slug '%s'" % slug)
 
             break_subquery = tournament.breakcategory_set.filter(
-                team=OuterRef('pk'), slug=slug
+                team=OuterRef('pk'), slug=slug,
             )
             speaker_subquery = tournament.speakercategory_set.filter(
-                speaker=OuterRef('pk'), slug=slug
+                speaker=OuterRef('pk'), slug=slug,
             )
             team_queryset = tournament.team_set.prefetch_related(
-                Prefetch('speaker_set', queryset=Speaker.objects.annotate(eligible=Exists(speaker_subquery)))
+                Prefetch('speaker_set', queryset=Speaker.objects.annotate(eligible=Exists(speaker_subquery))),
             ).annotate(
-                currently_eligible=Exists(break_subquery)
+                currently_eligible=Exists(break_subquery),
             )
 
             for team in team_queryset:
@@ -54,7 +54,7 @@ class Command(TournamentCommand):
                         message = "Would make {team.short_name} ({speakers}) eligible for {category.name}"
                     self.stdout.write(message.format(
                         team=team, speakers=", ".join(s.name for s in team.speaker_set.all()),
-                        category=break_category
+                        category=break_category,
                     ))
 
                 elif team.currently_eligible and not should_be_eligible:
@@ -65,11 +65,11 @@ class Command(TournamentCommand):
                         message = "Would remove {team.short_name} ({speakers}) from {category.name}"
                     self.stdout.write(message.format(
                         team=team, speakers=", ".join(s.name for s in team.speaker_set.all()),
-                        category=break_category
+                        category=break_category,
                     ))
 
                 elif team.currently_eligible and should_be_eligible and options["verbosity"] > 1:
                     self.stdout.write(" - {team.short_name} ({speakers}) is correctly marked eligible for {category.name}".format(
                         team=team, speakers=", ".join(s.name for s in team.speaker_set.all()),
-                        category=break_category
+                        category=break_category,
                     ))

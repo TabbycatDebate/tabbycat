@@ -92,6 +92,10 @@
          class="list-group-item" data-parent="#setuph">
         <span class="circle-icon small-circle"></span><i data-feather="box"></i>{% trans "Preformed Panels" %}
       </a>
+      <a class="list-group-item" data-parent="$setuph" data-toggle="tooltip"
+         title="{% trans 'It\'s moved to the site menu, which is accessible by clicking the Tabbycat logo at the top of this sidebar.' %}">
+        <span class="circle-icon small-circle"></span><i data-feather="database"></i><em>{% trans "Where's Edit Database?" %}</em>
+      </a>
     </div>
   </div>
 
@@ -129,7 +133,7 @@
       </a>
       <a href="{% tournamenturl 'admin-venues-statuses' %}"
          class="list-group-item {% if checkins_venues_statuses %}active{% endif %}" data-parent="#checkinh">
-        <i data-feather="map"></i>{% trans "Venues' Status" %}
+        <i data-feather="map"></i>{% trans "Rooms' Status" %}
       </a>
     </div>
   </div>
@@ -194,8 +198,8 @@
       </a>
       {% for category in tournament.break_categories_nongeneral %}
         <a class="list-group-item {% if standings_active %}active{% endif %}" href="{% roundurl 'standings-break-category' round=current_round category=category.slug %}">
-          <i data-feather="users"></i>{% blocktrans trimmed with category_name=category.name %}
-            {{ category_name }} Teams
+          <i data-feather="users"></i>{% blocktrans trimmed with category=category.name %}
+            {{ category }} Teams
           {% endblocktrans %}
         </a>
       {% endfor %}
@@ -208,8 +212,8 @@
       </a>
       {% for category in tournament.speakercategory_set.all %}
         <a class="list-group-item" href="{% roundurl 'standings-speaker-category' round=current_round category=category.slug %}">
-          <i data-feather="user-plus"></i>{% blocktrans trimmed with category_name=category.name %}
-            {{ category_name }} Speakers
+          <i data-feather="user-plus"></i>{% blocktrans trimmed with category=category.name %}
+            {{ category }} Speakers
           {% endblocktrans %}
         </a>
       {% endfor %}
@@ -246,7 +250,7 @@
             </a>
             {% for category in tournament.breakcategory_set.all %}
               <a class="list-group-item" href="{% tournamenturl 'breakqual-teams' category.slug %}">
-                <i data-feather="pie-chart"></i>{% blocktrans trimmed with category_name=category.name %}{{ category_name }}{% endblocktrans %}
+                <i data-feather="pie-chart"></i>{% blocktrans trimmed with category=category.name %}{{ category }}{% endblocktrans %}
               </a>
             {% endfor %}
             <a class="list-group-item" href="{% tournamenturl 'breakqual-adjudicators' %}">

@@ -1,9 +1,8 @@
 import logging
 
-from django.db import models
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
-from django.utils.translation import gettext_lazy as _
-from django.utils.translation import gettext
+from django.db import models
+from django.utils.translation import gettext, gettext_lazy as _
 
 from tournaments.utils import get_side_name
 
@@ -24,10 +23,12 @@ class Debate(models.Model):
     STATUS_POSTPONED = 'P' # obsolete
     STATUS_DRAFT = 'D'
     STATUS_CONFIRMED = 'C'
-    STATUS_CHOICES = ((STATUS_NONE, _("none")),
-                      (STATUS_POSTPONED, _("postponed")),
-                      (STATUS_DRAFT, _("draft")),
-                      (STATUS_CONFIRMED, _("confirmed")), )
+    STATUS_CHOICES = (
+        (STATUS_NONE, _("none")),
+        (STATUS_POSTPONED, _("postponed")),
+        (STATUS_DRAFT, _("draft")),
+        (STATUS_CONFIRMED, _("confirmed")),
+    )
 
     objects = DebateManager()
 
@@ -60,7 +61,7 @@ class Debate(models.Model):
         description = "[{}/{}/{}] ".format(self.round.tournament.slug, self.round.abbreviation, self.id)
         try:
             description += self.matchup
-        except:
+        except Exception:
             logger.exception("Error rendering Debate.matchup in Debate.__str__")
             description += "<error showing teams>"
         return description

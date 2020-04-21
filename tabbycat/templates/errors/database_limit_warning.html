@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n humanize %}
 {% comment %}
   The threshold for showing this message is governed by WarnAboutDatabaseUseMixin,
   not here. The variable `database_rows_used` won't be set if we don't want this
@@ -6,7 +6,7 @@
   will never appear, but we need to provide the pluralization for other languages.
 {% endcomment %}
 {% if database_rows_used %}
-  {% blocktrans trimmed count nrows=database_rows_used asvar database_use_warning_message %}
+  {% blocktrans trimmed with nrows=database_rows_used|intcomma count dbrows=database_rows_used asvar database_use_warning_message %}
     You're currently using {{ nrows }} row in your database. If you haven't
     already upgraded your Heroku database to a paid tier, it's limited to a
     maximum of 10,000 rows. As you're close to this limit, you should

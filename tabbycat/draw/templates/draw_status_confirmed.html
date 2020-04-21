@@ -51,7 +51,7 @@
       <div class="card">
 
         <div class="card-body">
-          <h5 class="card-title mb-0">{% trans "Venue Allocations" %}</h5>
+          <h5 class="card-title mb-0">{% trans "Room Allocations" %}</h5>
         </div>
         <div class="list-group list-group-flush">
 
@@ -59,10 +59,10 @@
 
           {% roundurl 'edit-debate-venues' round as url %}
           {% if round.num_debates_without_venue > 0 %}
-            {% trans "Allocate venues" as title %}
+            {% trans "Allocate rooms" as title %}
             {% include "components/item-action.html" with text=title type="success" to_complete=True %}
           {% else %}
-            {% trans "Edit venue allocation" as title %}
+            {% trans "Edit room allocation" as title %}
             {% include "components/item-action.html" with text=title type="primary" %}
           {% endif %}
 
@@ -93,15 +93,15 @@
           {% endif %}
 
           {% roundurl 'edit-panel-adjudicators' as url %}
-          {% blocktrans trimmed asvar text with r_name=round.abbreviation %}
-            Edit preformed panels for {{ r_name }}
+          {% blocktrans trimmed asvar text with round=round.abbreviation %}
+            Edit preformed panels for {{ round }}
           {% endblocktrans %}
           {% include "components/item-action.html" with text=text type="primary" %}
 
           {% if round.next %}
             {% roundurl 'edit-panel-adjudicators' round.next as url %}
-            {% blocktrans trimmed asvar text with r_name=round.next.abbreviation %}
-              Edit preformed panels for {{ r_name }}
+            {% blocktrans trimmed asvar text with round=round.next.abbreviation %}
+              Edit preformed panels for {{ round }}
             {% endblocktrans %}
             {% include "components/item-action.html" with text=text type="primary" %}
           {% endif %}

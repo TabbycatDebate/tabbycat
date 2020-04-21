@@ -43,7 +43,7 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
             "extra": {'user_id': user.id, 'round_id': self.round.id,
                       'tournament_id': self.tournament.id,
                       'settings': action_settings,
-                      'group_name': self.group_name()}
+                      'group_name': self.group_name()},
         })
 
     def get_debates_or_panels(self, debates_or_panels):
@@ -104,8 +104,8 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
         async_to_sync(get_channel_layer().group_send)(
             self.group_name(), {
                 'type': 'broadcast_debates_or_panels',
-                'content': original_content
-            }
+                'content': original_content,
+            },
         )
 
     def broadcast_debates_or_panels(self, event):
@@ -228,19 +228,19 @@ class EditDebateOrPanelWorkerMixin(SyncConsumer):
         async_to_sync(get_channel_layer().group_send)(
             group_name, {
                 'type': 'broadcast_debates_or_panels',
-                'content': content
-            }
+                'content': content,
+            },
         )
 
     def return_response(self, serialized_debates_or_panels, group_name,
                         message_text, message_type):
         content = {
             'debatesOrPanels': serialized_debates_or_panels.data,
-            'message': {'text': message_text, 'type': message_type}
+            'message': {'text': message_text, 'type': message_type},
         }
         async_to_sync(get_channel_layer().group_send)(
             group_name, {
                 'type': 'broadcast_debates_or_panels',
-                'content': content
-            }
+                'content': content,
+            },
         )

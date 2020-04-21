@@ -6,12 +6,12 @@ from django_summernote.widgets import SummernoteWidget
 from dynamic_preferences.preferences import Section
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, LongStringPreference, StringPreference
 
-from standings.teams import TeamStandingsGenerator
 from standings.speakers import SpeakerStandingsGenerator
+from standings.teams import TeamStandingsGenerator
 from tournaments.utils import get_side_name_choices
 
-from .types import MultiValueChoicePreference
 from .models import tournament_preferences_registry
+from .types import MultiValueChoicePreference
 
 
 # ==============================================================================
@@ -90,6 +90,7 @@ class MarginIncludesDissent(BooleanPreference):
     section = scoring
     name = 'margin_includes_dissenters'
     default = False
+
 
 # ==============================================================================
 draw_rules = Section('draw_rules', verbose_name=_("Draw Rules"))
@@ -338,6 +339,7 @@ class HideTraineePosition(BooleanPreference):
     section = draw_rules
     name = 'no_trainee_position'
     default = False
+
 
 # ==============================================================================
 feedback = Section('feedback', verbose_name=_("Feedback"))
@@ -834,10 +836,10 @@ class CheckInWindowPeople(FloatPreference):
 
 @tournament_preferences_registry.register
 class CheckInWindowVenues(FloatPreference):
-    help_text = _("The amount of time (in hours) before a venue's check-in event expires")
+    help_text = _("The amount of time (in hours) before a room's check-in event expires")
     section = data_entry
     name = 'checkin_window_venues'
-    verbose_name = _("Check-In Window (Venues)")
+    verbose_name = _("Check-In Window (Rooms)")
     default = 2.0
 
 

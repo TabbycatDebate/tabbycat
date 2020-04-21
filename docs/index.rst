@@ -1,7 +1,7 @@
 
 .. raw:: html
 
-    <img id="logo" src="https://rawgit.com/TabbycatDebate/tabbycat/develop/tabbycat/static/logo.svg">
+    <img id="logo" src="https://raw.githubusercontent.com/TabbycatDebate/tabbycat/develop/tabbycat/static/logo.svg?sanitize=true">
 
 ======================
 Tabbycat User Guide
@@ -37,6 +37,7 @@ formats too. If you're looking for a general overview of the software, check out
    use/starting-a-tournament
    use/running-a-tournament
    use/finishing-a-tournament
+   use/backups
 
 .. toctree::
    :maxdepth: 1
@@ -55,7 +56,6 @@ formats too. If you're looking for a general overview of the software, check out
 
    features/adjudicator-feedback
    features/adjudicator-allocation
-   features/backups
    features/breaks
    features/check-ins
    features/data-entry

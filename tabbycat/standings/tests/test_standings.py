@@ -1,14 +1,14 @@
 from django.test import TestCase
 
-from ..base import StandingsError
-from ..teams import TeamStandingsGenerator
-
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Institution, Speaker, Team
 from results.models import BallotSubmission, SpeakerScore, TeamScore
 from tournaments.models import Round, Tournament
 from venues.models import Venue
+
+from ..base import StandingsError
+from ..teams import TeamStandingsGenerator
 
 
 # TODO does it ignore unconfirmed ballot submissions?
@@ -165,7 +165,7 @@ class TestTrivialStandings(TestCase):
     def test_wbw_tied(self):
         # npullups should be 0 for both teams, so is a tied first metric,
         # allowing wbw to be tested as a second metric (the normal use case)
-        generator = TeamStandingsGenerator(('npullups', 'wbw',), ())
+        generator = TeamStandingsGenerator(('npullups', 'wbw'), ())
         standings = generator.generate(self.tournament.team_set.all())
         self.assertEqual(standings.get_standing(self.team1).metrics['wbw1'], 2)
         self.assertEqual(standings.get_standing(self.team2).metrics['wbw1'], 0)

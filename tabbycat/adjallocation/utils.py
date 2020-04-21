@@ -25,42 +25,42 @@ def adjudicator_conflicts_display(debates):
 
             if conflicts.personal_conflict_adj_team(adj, team):
                 conflict_messages[debate].append(("danger", _(
-                    "Conflict: <strong>%(adj)s</strong> & <strong>%(team)s</strong> "
-                    "(personal)"
-                ) % {'adj': adj.name, 'team': team.short_name}))
+                    "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> "
+                    "(personal)",
+                ) % {'adjudicator': adj.name, 'team': team.short_name}))
 
             for institution in conflicts.conflicting_institutions_adj_team(adj, team):
                 conflict_messages[debate].append(("danger", _(
-                    "Conflict: <strong>%(adj)s</strong> & <strong>%(team)s</strong> "
-                    "via institution <strong>%(inst)s</strong>"
+                    "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> "
+                    "via institution <strong>%(institution)s</strong>",
                 ) % {
-                    'adj': adj.name,
+                    'adjudicator': adj.name,
                     'team': team.short_name,
-                    'inst': institution.code,
+                    'institution': institution.code,
                 }))
 
         for adj1, adj2 in combinations(debate.adjudicators.all(), 2):
 
             if conflicts.personal_conflict_adj_adj(adj1, adj2):
                 conflict_messages[debate].append(("danger", _(
-                    "Conflict: <strong>%(adj1)s</strong> & <strong>%(adj2)s</strong> "
-                    "(personal)"
-                ) % {'adj1': adj1.name, 'adj2': adj2.name}))
+                    "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> "
+                    "(personal)",
+                ) % {'adjudicator1': adj1.name, 'adjudicator2': adj2.name}))
 
             for institution in conflicts.conflicting_institutions_adj_adj(adj1, adj2):
                 conflict_messages[debate].append(("warning", _(
-                    "Conflict: <strong>%(adj1)s</strong> & <strong>%(adj2)s</strong> "
-                    "via institution <strong>%(inst)s</strong>"
+                    "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> "
+                    "via institution <strong>%(institution)s</strong>",
                 ) % {
-                    'adj1': adj1.name,
-                    'adj2': adj2.name,
-                    'inst': institution.code,
+                    'adjudicator1': adj1.name,
+                    'adjudicator2': adj2.name,
+                    'institution': institution.code,
                 }))
 
     return conflict_messages
 
 
-def percentile(n, percent, key=lambda x:x):
+def percentile(n, percent, key=lambda x: x):
     """
     Find the percentile of a list of values.
 

@@ -1,7 +1,7 @@
-from draw.manager import DrawManager
 from availability.utils import activate_all
-from participants.models import Team
+from draw.manager import DrawManager
 from draw.models import DebateTeam
+from participants.models import Team
 from tournaments.models import Round
 from utils.tests import BaseMinimalTournamentTestCase
 

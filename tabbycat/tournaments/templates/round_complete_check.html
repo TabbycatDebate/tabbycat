@@ -5,7 +5,7 @@
 {% block head-title %}
   <span class="emoji">🙏</span> {% trans "Confirm Round Completion" %}
 {% endblock %}
-{% block sub-title %}{% blocktrans trimmed with name=round.name %}for {{ name }}{% endblocktrans %}{% endblock %}
+{% block sub-title %}{% blocktrans trimmed with round=round.name %}for {{ round }}{% endblocktrans %}{% endblock %}
 
 {% block page-subnav-actions %}
 
@@ -31,15 +31,15 @@
       {% csrf_token %}
         {% if increment_ok and not prior_rounds_not_completed %}
           <button class="btn btn-success" id="completeRound" type="submit">
-            {% blocktrans trimmed with round_name=round.name %}
-              Mark {{ round_name }} as Completed
+            {% blocktrans trimmed with round=round.name %}
+              Mark {{ round }} as Completed
             {% endblocktrans %}
             <i data-feather="chevron-right"></i>
           </button>
         {% else %}
           <button class="btn btn-danger" id="completeRound" type="submit">
-            {% blocktrans trimmed with round_name=round.name %}
-              Mark {{ round_name }} as Completed Anyway
+            {% blocktrans trimmed with round=round.name %}
+              Mark {{ round }} as Completed Anyway
             {% endblocktrans %}
             <i data-feather="chevron-right"></i>
           </button>
@@ -47,8 +47,8 @@
     </form>
   {% elif round.next %}
     <a href="{% roundurl 'availability-index' round.next %}" class="btn btn-outline-primary">
-      {% blocktrans trimmed with round_name=round.next.name %}
-        Go to {{ round_name }}
+      {% blocktrans trimmed with round=round.next.name %}
+        Go to {{ round }}
       {% endblocktrans %}
       <i data-feather="chevron-right"></i>
     </a>
@@ -59,8 +59,8 @@
 {% block page-alerts %}
 
   {% if round.completed %}
-    {% blocktrans trimmed with round_name=round.name asvar message %}
-      {{ round_name }} has already been marked as completed!
+    {% blocktrans trimmed with round=round.name asvar message %}
+      {{ round }} has already been marked as completed!
     {% endblocktrans %}
     {% include 'components/alert.html' with type='danger' icon='alert-circle' %}
   {% elif prior_rounds_not_completed %}
@@ -74,8 +74,8 @@
     {% include 'components/alert.html' with type='danger' icon='alert-circle' %}
 
   {% elif increment_ok %}
-    {% blocktrans trimmed with round_name=round.name asvar message %}
-      All ballots from {{ round_name }} are confirmed. You should be good to go!
+    {% blocktrans trimmed with round=round.name asvar message %}
+      All ballots from {{ round }} are confirmed. You should be good to go!
     {% endblocktrans %}
     {% include 'components/alert.html' with type='success' icon='check-circle' %}
 
@@ -110,9 +110,9 @@
       {% endblocktrans %}
       {% include 'components/alert.html' with type='info' icon='eye-off' %}
     {% else %}
-      {% blocktrans trimmed with round_name=round.name asvar message %}
+      {% blocktrans trimmed with round=round.name asvar message %}
         <p><strong>
-          Results for {{ round_name }} will be published online once you mark
+          Results for {{ round }} will be published online once you mark
           this round as complete!
         </strong></p>
         <p>

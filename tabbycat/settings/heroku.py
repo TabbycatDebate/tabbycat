@@ -40,7 +40,7 @@ if 'DJANGO_SECRET_KEY' in environ and environ.get('DISABLE_HTTPS_REDIRECTS', '')
 
 # Parse database configuration from $DATABASE_URL
 DATABASES = {
-    'default': dj_database_url.config(default='postgres://localhost')
+    'default': dj_database_url.config(default='postgres://localhost'),
 }
 
 # ==============================================================================
@@ -82,7 +82,7 @@ CACHES = {
             "SOCKET_CONNECT_TIMEOUT": 5,
             "SOCKET_TIMEOUT": 60,
         },
-    }
+    },
 }
 
 CHANNEL_LAYERS = {
@@ -94,7 +94,7 @@ CHANNEL_LAYERS = {
             # This matches websocket_timeout in Daphne
             "group_expiry": 10800,
         },
-        # RedisChannelLayer should pool by default
+        # RedisChannelLayer should pool by default,
     },
 }
 
