@@ -14,7 +14,7 @@ from tournaments.models import Round, Tournament
 
 from . import serializers
 from .mixins import AdministratorAPIMixin, PublicAPIMixin, RoundAPIMixin, TournamentAPIMixin, TournamentPublicAPIMixin
-from .permissions import PublicPreferencePermission
+from .permissions import APIEnabledPermission, PublicPreferencePermission
 
 
 class APIRootView(PublicAPIMixin, GenericAPIView):
@@ -185,7 +185,7 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
     round_released_field = 'draw_status'
     round_released_value = Round.STATUS_RELEASED
 
-    permission_classes = [Permission]
+    permission_classes = [APIEnabledPermission, Permission]
 
     def get_queryset(self):
         return super().get_queryset().select_related('round', 'round__tournament', 'venue', 'venue__tournament').prefetch_related(

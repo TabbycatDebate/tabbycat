@@ -5,6 +5,7 @@ from django.http import Http404
 from django.utils.text import slugify
 from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
+from dynamic_preferences.registries import global_preferences_registry
 from dynamic_preferences.views import PreferenceFormView
 
 from actionlog.mixins import LogActionMixin
@@ -52,8 +53,23 @@ class TournamentConfigIndexView(AdministratorMixin, TournamentMixin, TemplateVie
         return super().get_context_data(**kwargs)
 
 
-class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, TournamentMixin, PreferenceFormView):
-    registry = tournament_preferences_registry
+class MultiPreferenceFormView(PreferenceFormView):
+    possible_registries = []
+
+    def dispatch(self, request, *args, **kwargs):
+        for registry in self.possible_registries:
+            self.registry = registry
+            try:
+                return super().dispatch(request, *args, **kwargs)
+                break
+            except Http404:
+                continue
+        else:
+            raise Http404
+
+
+class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, TournamentMixin, MultiPreferenceFormView):
+    possible_registries = [global_preferences_registry, tournament_preferences_registry]
     section = None
     template_name = "preferences_section_set.html"
 

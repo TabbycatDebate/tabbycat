@@ -1,4 +1,12 @@
+from dynamic_preferences.registries import global_preferences_registry
 from rest_framework.permissions import BasePermission, SAFE_METHODS
+
+
+class APIEnabledPermission(BasePermission):
+    message = "The API has been disabled on this site."
+
+    def has_permission(self, request, view):
+        return global_preferences_registry.manager()['global__enable_api']
 
 
 class PublicPreferencePermission(BasePermission):

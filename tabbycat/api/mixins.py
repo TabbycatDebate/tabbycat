@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAdminUser
 
 from tournaments.mixins import RoundFromUrlMixin, TournamentFromUrlMixin
 
-from .permissions import IsAdminOrReadOnly, PublicIfReleasedPermission, PublicPreferencePermission
+from .permissions import APIEnabledPermission, IsAdminOrReadOnly, PublicIfReleasedPermission, PublicPreferencePermission
 
 
 class TournamentAPIMixin(TournamentFromUrlMixin):
@@ -47,16 +47,16 @@ class RoundAPIMixin(TournamentAPIMixin, RoundFromUrlMixin):
 
 
 class AdministratorAPIMixin:
-    permission_classes = [IsAdminUser]
+    permission_classes = [APIEnabledPermission, IsAdminUser]
 
 
 class TournamentPublicAPIMixin:
-    permission_classes = [PublicPreferencePermission]
+    permission_classes = [APIEnabledPermission, PublicPreferencePermission]
 
 
 class OnReleasePublicAPIMixin(TournamentPublicAPIMixin):
-    permission_classes = [PublicIfReleasedPermission]
+    permission_classes = [APIEnabledPermission, PublicIfReleasedPermission]
 
 
 class PublicAPIMixin:
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [APIEnabledPermission, IsAdminOrReadOnly]
