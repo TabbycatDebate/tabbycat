@@ -67,17 +67,17 @@ urlpatterns = [
     path('accounts/',
         include('django.contrib.auth.urls')),
 
-    # Tournament URLs
-    path('<slug:tournament_slug>/',
-        include('tournaments.urls')),
-
     # Notifications
     path('notifications/',
         include('notifications.urls')),
 
     # API
-    path('api/v1/',
+    path('api',
         include('api.urls')),
+
+    # Tournament URLs
+    path('<slug:tournament_slug>/',
+        include('tournaments.urls')),
 ]
 
 if settings.DEBUG and settings.ENABLE_DEBUG_TOOLBAR:  # Only serve debug toolbar when on DEBUG

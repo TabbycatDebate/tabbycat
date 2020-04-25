@@ -19,6 +19,17 @@ from .permissions import APIEnabledPermission, PublicPreferencePermission
 
 class APIRootView(PublicAPIMixin, GenericAPIView):
     name = "API Root"
+
+    def get(self, request, format=None):
+        return Response({
+            "_links": {
+                "v1": reverse('api-v1-root', request=request, format=format),
+            },
+        })
+
+
+class APIV1RootView(PublicAPIMixin, GenericAPIView):
+    name = "API Version 1 Root"
     lookup_field = 'slug'
     lookup_url_kwarg = 'tournament_slug'
 

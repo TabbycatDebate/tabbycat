@@ -129,6 +129,7 @@ INSTALLED_APPS = (
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
 FIXTURE_DIRS = (os.path.join(os.path.dirname(BASE_DIR), 'data', 'fixtures'), )
+SILENCED_SYSTEM_CHECKS = ('urls.W002',)
 
 # ==============================================================================
 # Templates
