@@ -55,6 +55,7 @@ formats too. If you're looking for a general overview of the software, check out
 
    features/adjudicator-feedback
    features/adjudicator-allocation
+   features/api
    features/backups
    features/breaks
    features/check-ins

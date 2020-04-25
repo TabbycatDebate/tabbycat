@@ -36,6 +36,11 @@ To help you decide which to choose, here's a summary:
 |                      |                   | whatever format it | the importer classes |
 |                      |                   | is already in      |                      |
 +----------------------+-------------------+--------------------+----------------------+
+| **API**              | Tournaments with  | Less manual        | Requires programming |
+|                      | external          | intervention       | knowledge or use of  |
+|                      | registration      |                    | an existing external |
+|                      | systems           |                    | application          |
++----------------------+-------------------+--------------------+----------------------+
 
 Demonstration data
 ==================
@@ -110,3 +115,8 @@ Developing your own importer
 ============================
 
 If our suggested file formats cause you headaches, it might be easier to write your own importer. We have a generic importer framework that should make this easier, so for some tournaments it might (very conceivably) be faster to write your own importer to conform to your data, than it is to make your data conform to our importer. You need a background in Python in order to do this. For more details, see :ref:`tournament-data-importers`.
+
+Application Programming Interface (API)
+=======================================
+
+Participants can be imported in Tabbycat through the :ref:`API <api>`, using authenticated endpoints making ``POST`` requests to the relevant endpoints. There may be tournament registration software which interfaces with Tabbycat, or you may have to program one yourself, in any language.
