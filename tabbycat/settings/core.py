@@ -123,6 +123,7 @@ INSTALLED_APPS = (
     'statici18n', # Compile js translations as static file; saving requests
     'polymorphic',
     'rest_framework',
+    'rest_framework.authtoken',
 )
 
 ROOT_URLCONF = 'urls'
@@ -299,7 +300,7 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 }
