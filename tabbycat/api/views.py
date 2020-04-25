@@ -83,7 +83,7 @@ class SpeakerEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, Retri
 
 
 class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
-    serializer_class = serializers.InstitutionSerializer
+    serializer_class = serializers.PerTournamentInstitutionSerializer
     access_preference = 'public_institutions_list'
 
     def perform_create(self, serializer):
