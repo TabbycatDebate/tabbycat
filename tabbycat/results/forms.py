@@ -196,9 +196,8 @@ class BaseResultForm(forms.Form):
         if self.ballotsub.confirmed:
             self.ballotsub.confirm_timestamp = timezone.now()
 
-        # 5. Notify the Latest Results consumer (for results/overview)
-        if self.ballotsub.confirmed:
-            if self.debate.result_status is self.debate.STATUS_CONFIRMED:
+            # 5. Notify the Latest Results consumer (for results/overview)
+            if self.debate.result_status == Debate.STATUS_CONFIRMED:
                 group_name = BallotResultConsumer.group_prefix + "_" + t.slug
                 async_to_sync(get_channel_layer().group_send)(group_name, {
                     "type": "send_json",
@@ -211,12 +210,12 @@ class BaseResultForm(forms.Form):
         async_to_sync(get_channel_layer().group_send)(group_name, {
             "type": "send_json",
             "data": {
-                'status': self.cleaned_data['debate_result_status'],
+                'status': self.debate.result_status,
                 'icon': meta[0],
                 'class': meta[1],
                 'sort': meta[2],
                 'ballot': self.ballotsub.serialize(t),
-                'round': self.debate.round.id
+                'round': self.debate.round_id
             }
         })
 

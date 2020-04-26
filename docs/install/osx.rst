@@ -75,7 +75,7 @@ c. Extract all files in it to a folder of your choice.
 3. Set up a new database
 ================================================================================
 
-.. hint:: You can skip steps 1-3 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like.
+.. hint:: You can skip steps 1--3 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like.
 
 a. Open up a copy of the Terminal app, then copy/paste or type in::
 

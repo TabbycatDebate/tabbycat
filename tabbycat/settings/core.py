@@ -25,9 +25,9 @@ LEAGUE = bool(int(os.environ['LEAGUE'])) if 'LEAGUE' in os.environ else False
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.3.2'
+TABBYCAT_VERSION = '2.3.3'
 TABBYCAT_CODENAME = 'LaPerm'
-READTHEDOCS_VERSION = 'v2.3.2'
+READTHEDOCS_VERSION = 'v2.3.3'
 
 # ==============================================================================
 # Internationalization and Localization

@@ -16,8 +16,10 @@ export default {
         teamDetails.push(this.makeItem(codeName, 'btn-outline-secondary', false))
       }
       let speakerDetails = []
-      for (let speaker of this.subject.speakers) {
-        speakerDetails.push(this.makePersonItem(speaker))
+      if (typeof this.subject.speakers !== 'undefined') {
+        for (let speaker of this.subject.speakers) {
+          speakerDetails.push(this.makePersonItem(speaker))
+        }
       }
       let institutionDetails = this.makeInstitutionItem(this.subject)
       return [teamDetails, speakerDetails, institutionDetails]

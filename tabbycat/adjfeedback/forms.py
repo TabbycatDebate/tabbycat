@@ -132,7 +132,7 @@ class BaseFeedbackForm(forms.Form):
         if question.answer_type == question.ANSWER_TYPE_BOOLEAN_SELECT:
             field = BooleanSelectField()
         elif question.answer_type == question.ANSWER_TYPE_BOOLEAN_CHECKBOX:
-            field = forms.BooleanField()
+            field = forms.BooleanField(required=False)
         elif question.answer_type == question.ANSWER_TYPE_INTEGER_TEXTBOX:
             min_value = int(question.min_value) if question.min_value else None
             max_value = int(question.max_value) if question.max_value else None
@@ -156,9 +156,13 @@ class BaseFeedbackForm(forms.Form):
         elif question.answer_type == question.ANSWER_TYPE_MULTIPLE_SELECT:
             field = AdjudicatorFeedbackCheckboxSelectMultipleField(choices=question.choices_for_field)
         field.label = question.text
-        if question.required:
-            field.label += "*"
-        field.required = self._enforce_required and question.required
+
+        # Required checkbox fields don't really make sense; so override the behaviour?
+        if question.answer_type != question.ANSWER_TYPE_BOOLEAN_CHECKBOX:
+            if question.required:
+                field.label += "*"
+            field.required = self._enforce_required and question.required
+
         return field
 
     def _create_fields(self):
@@ -166,7 +170,7 @@ class BaseFeedbackForm(forms.Form):
         # Feedback questions defined for the tournament
         adj_min_score = self._tournament.pref('adj_min_score')
         adj_max_score = self._tournament.pref('adj_max_score')
-        score_label = mark_safe(_("Overall score (%(min)d=worst; %(max)d=best)") % {
+        score_label = mark_safe(_("Overall score (%(min)d=worst; %(max)d=best)*") % {
                 'min': int(adj_min_score), 'max': int(adj_max_score)})
         self.fields['score'] = forms.FloatField(min_value=adj_min_score, max_value=adj_max_score, label=score_label)
 
