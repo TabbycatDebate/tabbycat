@@ -6,8 +6,9 @@ Change Log
 -------------
 *Release date: ?*
 
+- Filtered the home page for active tournaments with a new page to list the inactive
 - Added support for Russian, and shortened the language selector
-- Renamed 'test score' to 'base score'
+- Renamed 'test score' to 'base score', as well as 'venue' to 'room'
 - Divisions-specific features have been deprecated and removed
 - Moved the 'Edit Database' menu item to the dropdown with the logo in the admin navigation
 - Pull-ups can now be restricted to teams with the lowest draw strength (by speaker or team points) of their bracket
