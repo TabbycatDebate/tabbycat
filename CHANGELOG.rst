@@ -5,11 +5,12 @@ Change Log
 
 2.3.3
 -----
-*Release date: TBD*
+*Release date: 26 April 2020*
 
 - Fixed issue where the ballot graph would ignore draft ballots getting confirmed
 - Fixed team draw notifications failing due to an unexpected variable
 - Fixed ballot receipts not showing decimal speaker points
+- Fixed issue where Docker installs would compile without css/javascript; breaking many pages
 
 
 2.3.2
