@@ -18,6 +18,17 @@ Change Log
 - The Edit Venues screen now shows highlights for priority and venue category
 - Tweaked the display of tables on mobile devices — they should now more reliably show a full BP draw without horizontal scrolling
 
+
+2.3.3
+-----
+*Release date: 26 April 2020*
+
+- Fixed issue where the ballot graph would ignore draft ballots getting confirmed
+- Fixed team draw notifications failing due to an unexpected variable
+- Fixed ballot receipts not showing decimal speaker points
+- Fixed issue where Docker installs would compile without css/javascript; breaking many pages
+
+
 2.3.2
 -----
 *Release date: 19 October 2019*
