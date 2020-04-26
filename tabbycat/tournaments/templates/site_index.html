@@ -15,7 +15,7 @@
 {% empty %}
 
   <div class="list-group">
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and not has_inactive %}
 
       {% blocktrans trimmed asvar text %}
         It looks like there aren't any tournaments on this site. Would you like to create one?
@@ -25,9 +25,15 @@
 
     {% else %}
 
-      {% blocktrans trimmed asvar p1 %}
-        There are currently no tournaments set up on this site.
-      {% endblocktrans %}
+      {% if has_inactive %}
+        {% blocktrans trimmed asvar p1 %}
+          There are currently no active tournaments set up on this site.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed asvar p1 %}
+          There are currently no tournaments set up on this site.
+        {% endblocktrans %}
+      {% endif %}
       {% include "components/explainer-card.html" with type="info" %}
 
     {% endif %}
