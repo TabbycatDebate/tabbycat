@@ -177,14 +177,17 @@ export default new Vuex.Store({
     },
     sortedDebatesOrPanels: (state, getters) => {
       let debatesOrPanels = getters.shardedDebatesOrPanels
+      let bracketKey = 'bracket_min' in debatesOrPanels[0] ? 'bracket_min' : 'bracket'
       if (state.sortType === null || state.sortType === 'bracket') {
-        if (debatesOrPanels.length > 0 && 'bracket_min' in debatesOrPanels[0]) {
+        if (debatesOrPanels.length > 0 && bracketKey === 'bracket_min') {
           return debatesOrPanels.sort((a, b) => a.bracket_min - b.bracket_min).reverse()
         } else {
           return debatesOrPanels.sort((a, b) => a.bracket - b.bracket).reverse()
         }
       } else if (state.sortType === 'importance') {
-        return debatesOrPanels.sort((a, b) => a.importance - b.importance).reverse()
+        return debatesOrPanels.sort(
+          (a, b) => a.importance - b.importance !== 0 ? a.importance - b.importance : a[bracketKey] - b[bracketKey]
+        ).reverse()
       }
       return debatesOrPanels
     },
