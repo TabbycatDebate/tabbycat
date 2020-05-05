@@ -392,7 +392,6 @@ class SpeakerStandingsSerializer(BaseStandingsSerializer):
 class RoundPairingSerializer(serializers.ModelSerializer):
     class DebateTeamSerializer(serializers.ModelSerializer):
         team = TournamentHyperlinkedRelatedField(view_name='api-team-detail')
-        side = serializers.CharField()
 
         class Meta:
             model = DebateTeam
@@ -403,6 +402,14 @@ class RoundPairingSerializer(serializers.ModelSerializer):
         panellists = TournamentHyperlinkedRelatedField(many=True, view_name='api-adjudicator-detail')
         trainees = TournamentHyperlinkedRelatedField(many=True, view_name='api-adjudicator-detail')
 
+        def save(self, **kwargs):
+            aa = kwargs['debate'].adjudicators
+            aa.chair = self._validated_data['chair']
+            aa.panellists = self._validated_data['panellists']
+            aa.trainees = self._validated_data['trainees']
+            aa.save()
+            return aa
+
     url = RoundHyperlinkedIdentityField(view_name='api-pairing-detail')
     venue = TournamentHyperlinkedRelatedField(view_name='api-venue-detail')
     teams = DebateTeamSerializer(many=True, source='debateteam_set')
@@ -411,3 +418,20 @@ class RoundPairingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Debate
         fields = ('url', 'id', 'venue', 'teams', 'adjudicators', 'sides_confirmed')
+
+    def create(self, validated_data):
+        teams_data = validated_data.pop('teams')
+        adjs_data = validated_data.pop('adjudicators')
+
+        validated_data['round'] = self.context['round']
+        debate = super().create(validated_data)
+
+        teams = self.DebateTeamSerializer(many=True)
+        teams._validated_data = teams_data  # Data was already validated
+        teams.save(debate=debate)
+
+        adjudicators = self.DebateAdjudicatorSerializer()
+        adjudicators._validated_data = adjs_data
+        adjudicators.save(debate=debate)
+
+        return debate
