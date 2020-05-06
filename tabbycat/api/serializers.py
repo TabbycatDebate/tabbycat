@@ -180,7 +180,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
     )
 
     def __init__(self, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         if not kwargs['context']['request'].user.is_staff:
             self.fields.pop('gender')
             self.fields.pop('email')
@@ -208,11 +208,31 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         queryset=Institution.objects.all(),
     )
 
+    institution_conflicts = serializers.HyperlinkedRelatedField(
+        many=True,
+        view_name='api-global-institution-detail',
+        queryset=Institution.objects.all(),
+    )
+    team_conflicts = serializers.HyperlinkedRelatedField(
+        many=True,
+        view_name='api-team-detail',
+        queryset=Team.objects.all(),
+    )
+    adjudicator_conflicts = serializers.HyperlinkedRelatedField(
+        many=True,
+        view_name='api-adjudicator-detail',
+        queryset=Adjudicator.objects.all(),
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # Remove private fields in the public endpoint if needed
         if not kwargs['context']['request'].user.is_staff:
+            self.fields.pop('institution_conflicts')
+            self.fields.pop('team_conflicts')
+            self.fields.pop('adjudicator_conflicts')
+
             t = kwargs['context']['tournament']
             if not t.pref('show_adjudicator_institutions'):
                 self.fields.pop('institution')
@@ -228,7 +248,8 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Adjudicator
         fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
-                  'institution', 'base_score', 'trainee', 'independent', 'adj_core')
+                  'institution', 'base_score', 'trainee', 'independent', 'adj_core',
+                  'institution_conflicts', 'team_conflicts', 'adjudicator_conflicts')
 
     def create(self, validated_data):
         adj = super().create(validated_data)
@@ -252,10 +273,17 @@ class TeamSerializer(serializers.ModelSerializer):
         queryset=BreakCategory.objects.all(),
     )
 
+    institution_conflicts = serializers.HyperlinkedRelatedField(
+        many=True,
+        view_name='api-global-institution-detail',
+        queryset=Institution.objects.all(),
+    )
+
     class Meta:
         model = Team
         fields = ('url', 'id', 'reference', 'code_name', 'emoji', 'short_name', 'long_name',
-                  'institution', 'speakers', 'use_institution_prefix', 'break_categories')
+                  'institution', 'speakers', 'use_institution_prefix', 'break_categories',
+                  'institution_conflicts')
 
     def __init__(self, *args, **kwargs):
         self.fields['speakers'] = SpeakerSerializer(*args, many=True, required=False, **kwargs)
@@ -264,6 +292,8 @@ class TeamSerializer(serializers.ModelSerializer):
 
         # Remove private fields in the public endpoint if needed
         if not kwargs['context']['request'].user.is_staff:
+            self.fields.pop('institution_conflicts')
+
             t = kwargs['context']['tournament']
             if t.pref('team_code_names') in ('admin-tooltips-code', 'admin-tooltips-real', 'everywhere'):
                 self.fields.pop('institution')
