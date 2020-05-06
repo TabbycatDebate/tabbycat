@@ -4,8 +4,8 @@
 {% block page-alerts %}
 
   {% if round %}
-    {% blocktrans trimmed with round_name=round.name asvar message %}
-      The draw for {{ round_name }} has yet to be released.
+    {% blocktrans trimmed with round=round.name asvar message %}
+      The draw for {{ round }} has yet to be released.
     {% endblocktrans %}
   {% else %}
     {% trans "The draw for the next round has yet to be released." as message %}

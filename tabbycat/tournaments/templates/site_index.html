@@ -11,42 +11,11 @@
 {% block content %}
 
 {% for tournament in tournaments %}
-  <div class="list-group mt-2">
-
-    {% url 'tournament-admin-home' tournament_slug=tournament.slug as admin_url %}
-    {% url 'tournament-assistant-home' tournament_slug=tournament.slug as assistant_url %}
-    {% url 'tournament-public-index' tournament_slug=tournament.slug as public_url %}
-
-    {% if user.is_superuser %}
-      {% blocktrans trimmed asvar text with tn=tournament.name %}
-        Administrator area for <strong>{{ tn }}</strong>
-      {% endblocktrans %}
-      {% include "components/item-action.html" with icon="settings" url=admin_url %}
-    {% endif %}
-
-    {% if user.is_authenticated %}
-      {% blocktrans trimmed asvar text with tn=tournament.name %}
-        Assistant area for <strong>{{ tn }}</strong>
-      {% endblocktrans %}
-     {% include "components/item-action.html" with icon="pocket" url=assistant_url %}
-
-      {% blocktrans trimmed asvar text with tn=tournament.name %}
-        Public area for <strong>{{ tn }}</strong>
-      {% endblocktrans %}
-      {% include "components/item-action.html" with icon="globe" url=public_url %}
-
-    {% else %}
-
-      {% include "components/item-action.html" with text=tournament.name icon="award" url=public_url%}
-
-    {% endif %}
-
-
-  </div>
+  {% include "tournament_index_links.html" %}
 {% empty %}
 
   <div class="list-group">
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and not has_inactive %}
 
       {% blocktrans trimmed asvar text %}
         It looks like there aren't any tournaments on this site. Would you like to create one?
@@ -56,15 +25,28 @@
 
     {% else %}
 
-      {% blocktrans trimmed asvar p1 %}
-        There are currently no tournaments set up on this site.
-      {% endblocktrans %}
+      {% if has_inactive %}
+        {% blocktrans trimmed asvar p1 %}
+          There are currently no active tournaments set up on this site.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed asvar p1 %}
+          There are currently no tournaments set up on this site.
+        {% endblocktrans %}
+      {% endif %}
       {% include "components/explainer-card.html" with type="info" %}
 
     {% endif %}
   </div>
 
 {% endfor %}
+
+{% if has_inactive %}
+  <div class="list-group mt-2">
+    {% trans "Inactive Tournaments" as text %}{% url 'tabbycat-inactive-tournaments' as url %}
+    {% include "components/item-action.html" with icon="layers" %}
+  </div>
+{% endif %}
 
 <div class="list-group mt-2">
   {% if user.is_superuser %}

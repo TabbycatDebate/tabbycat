@@ -46,8 +46,8 @@
 
             <div class="list-group-item">
               <h4 class="card-title mb-0">
-                {% blocktrans trimmed with category_name=category.name %}
-                  {{ category_name }} Break
+                {% blocktrans trimmed with category=category.name %}
+                  {{ category }} Break
                 {% endblocktrans %}
               {% blocktrans trimmed with size=category.break_size %}
               <span class="badge float-right badge-light">

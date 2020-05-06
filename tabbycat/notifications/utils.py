@@ -254,7 +254,7 @@ def team_speaker_email_generator(to, tournament_id):
     return emails
 
 
-def team_draw_email_generator(to, url, round_id):
+def team_draw_email_generator(to, round_id):
     emails = []
     round = Round.objects.get(id=round_id)
     tournament = round.tournament

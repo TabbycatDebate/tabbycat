@@ -48,7 +48,7 @@ def readable_ballotsub_result(debateresult):
         elif not debateresult.is_voting and debateresult.is_elimination:
             result_winner = _("Advancing: %(advancing_list)s<br>\n")
             result_winner = result_winner % {
-                'advancing_list': ", ".join(format_dt(dt, t, use_codes) for dt in debateresult.advancing_dt())
+                'advancing_list': ", ".join(format_dt(dt, t, use_codes) for dt in debateresult.advancing_dt()),
             }
             result = _("Eliminated: %(eliminated_list)s")
             result = result % {

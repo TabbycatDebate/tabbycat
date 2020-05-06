@@ -5,17 +5,21 @@
 
 {% block head-title %}
   {% if new %}
-    {% blocktrans trimmed %}
-      New Ballot Set for {{ debate_name }}
+    {% blocktrans trimmed with debate=debate_name %}
+      New Ballot Set for {{ debate }}
     {% endblocktrans %}
   {% else %}
-    {% blocktrans trimmed %}
-      Edit Ballot Set for {{ debate_name }}
+    {% blocktrans trimmed with debate=debate_name %}
+      Edit Ballot Set for {{ debate }}
     {% endblocktrans %}
   {% endif %}
 {% endblock %}
 
-{% block page-title %}{{ debate.venue.display_name }}: {{ debate_name }}{% endblock %}
+{% block page-title %}
+  {% blocktrans trimmed with room=debate.venue.display_name debate=debate_name %}
+    {{ room }}: {{ debate }}
+  {% endblocktrans %}
+{% endblock %}
 
 {% block page-subnav-sections %}
   {% if for_admin %}
@@ -51,9 +55,9 @@
 
   {% if iron %}
     {% for i in iron %}
-      {% team_name_for_data_entry i.team use_team_code_names as i_team %}
+      {% team_name_for_data_entry i.team use_team_code_names as team %}
       {% blocktrans trimmed asvar message %}
-        {{ i_team }} had speakers who spoke multiple times in the last round — i.e. an 'iron' person
+        {{ team }} had speakers who spoke multiple times in the last round — i.e. an 'iron' person
         speech. Please carefully check the ballot to see if that is still the case for this round.
         If it is, ensure the speakers selected below reflect this.
       {% endblocktrans %}

@@ -2,25 +2,25 @@
 {% load debate_tags add_field_css humanize static i18n %}
 
 
-{% block page-title %}{% blocktrans trimmed %}
-  Enter Results for {{ debate_name }}
+{% block page-title %}{% blocktrans trimmed with debate=debate_name %}
+  Enter Results for {{ debate }}
 {% endblocktrans %}{% endblock %}
-{% block head-title %}{% blocktrans trimmed %}
-  Enter Results for {{ debate_name }}
+{% block head-title %}{% blocktrans trimmed with debate=debate_name %}
+  Enter Results for {{ debate }}
 {% endblocktrans %}{% endblock %}
 {% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
 
 {% block sub-title %}
-  {% blocktrans trimmed with round=debate.round.name venue=debate.venue.display_name %}
-    {{ round }} @ {{ venue }}
+  {% blocktrans trimmed with round=debate.round.name room=debate.venue.display_name %}
+    {{ round }} @ {{ room }}
   {% endblocktrans %}
 {% endblock %}
 
 {% block page-alerts %}
 
   {% if form.scoresheets|length > 1 %}
-    {% blocktrans trimmed with adj_name=adjudicator.name asvar message %}
-      {{ adj_name }}, note that you must enter <strong>all of the ballots</strong> from your panel, not just your own!
+    {% blocktrans trimmed with adjudicator=adjudicator.name asvar message %}
+      {{ adjudicator }}, note that you must enter <strong>all of the ballots</strong> from your panel, not just your own!
     {% endblocktrans %}
     {% include "components/alert.html" with type="warning" %}
   {% endif %}

@@ -5,8 +5,8 @@
   <div class="row d-print-none p-3 d-flex justify-content-between">
     <div class="h3 pt-1">
       {% trans "Printable Scoresheets" %}
-      {% blocktrans trimmed with round_name=round.name asvar subtitle %}
-        for {{ round_name }}
+      {% blocktrans trimmed with round=round.name asvar subtitle %}
+        for {{ round }}
       {% endblocktrans %}
       <small class="text-muted d-md-inline d-none">{{ subtitle }}</small>
     </div>

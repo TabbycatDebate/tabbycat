@@ -4,8 +4,8 @@
 {% block head-title %}
   {% trans "Feedback Forms" %}
 {% endblock %}
-{% block page-title %}{% blocktrans trimmed with round_name=round.name %}
-Printable Feedback Forms for {{ round_name }}
+{% block page-title %}{% blocktrans trimmed with round=round.name %}
+Printable Feedback Forms for {{ round }}
 {% endblocktrans %}{% endblock %}
 
 {% block page-alerts %}

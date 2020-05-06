@@ -42,8 +42,8 @@
   {% else %}
     {% if previous_unconfirmed %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="{% blocktrans trimmed with round_name=round.prev.name %}{{ previous_unconfirmed }} debates from
-        {{ round_name }} do not have a completed ballot — this may lead to a draw that fails or is incorrect{% endblocktrans %}">
+        data-toggle="tooltip" title="{% blocktrans trimmed with round=round.prev.name %}{{ previous_unconfirmed }} debates from
+        {{ round }} do not have a completed ballot — this may lead to a draw that fails or is incorrect{% endblocktrans %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
     {% elif availability_info.teams.in_now == 0 %}
@@ -58,12 +58,12 @@
       </button>
     {% elif availability_info.venues.in_now == 0 %}
       <button class="btn btn-danger disabled"
-        data-toggle="tooltip" title="{% trans "The draw cannot be generated until some venues have been marked as available." %}">
+        data-toggle="tooltip" title="{% trans "The draw cannot be generated until some rooms have been marked as available." %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
     {% elif min_venues > availability_info.venues.in_now %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="{% trans "There aren't enough venues marked as available for the number of debates — the draw may not generate properly." %}">
+        data-toggle="tooltip" title="{% trans "There aren't enough rooms marked as available for the number of debates — the draw may not generate properly." %}">
          {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
        </button>
     {% elif min_adjudicators > availability_info.adjs.in_now %}
@@ -118,11 +118,11 @@
     <div class="alert alert-warning">
       <i data-feather="alert-circle"></i>
       {% roundurl 'tournament-complete-round-check' round.prev as complete_prev_round_url %}
-      {% blocktrans trimmed with round_name=round.name prev_round_name=round.prev.name %}
-        This is a page for <strong>{{ round_name }}</strong>, but the previous
+      {% blocktrans trimmed with round=round.name prev_round=round.prev.name %}
+        This is a page for <strong>{{ round }}</strong>, but the previous
         round is still not marked as completed. Did you forget to
         <a href="{{ complete_prev_round_url }}" class="alert-link">
-          mark {{ prev_round_name }} as completed?
+          mark {{ prev_round }} as completed?
         </a>
       {% endblocktrans %}
     </div>

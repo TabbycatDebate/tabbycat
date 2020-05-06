@@ -191,7 +191,7 @@ class Command(BaseCommand):
             pm.Institution.objects.all().delete()
 
         if self.options['clean_shared'] or self.options['delete_venue_categories']:
-            self._warning("Deleting all venue categories from the database")
+            self._warning("Deleting all room categories from the database")
             vm.VenueCategory.objects.all().delete()
 
         if self.options['clean_shared'] or self.options['delete_regions']:

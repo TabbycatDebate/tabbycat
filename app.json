@@ -4,6 +4,7 @@
   "repository": "https://github.com/TabbycatDebate/tabbycat",
   "keywords": ["debate", "debating"],
   "website": "https://tabbycat.readthedocs.io/",
+  "logo": "https://raw.githubusercontent.com/TabbycatDebate/tabbycat/develop/tabbycat/static/logo-social.png",
   "addons": [
     "papertrail",
     "sendgrid:starter",

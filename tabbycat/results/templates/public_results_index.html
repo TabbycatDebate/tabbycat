@@ -9,8 +9,8 @@
 <ul class="list-group">
   {% for r in tournament.rounds_with_released_results %}
     {% roundurl 'results-public-round' r as url %}
-    {% blocktrans trimmed with round_name=r.name asvar text %}
-      Results for {{ round_name }}
+    {% blocktrans trimmed with round=r.name asvar text %}
+      Results for {{ round }}
     {% endblocktrans %}
     {% include "components/item-action.html" with icon="trending-up" %}
   {% endfor %}

@@ -5,7 +5,7 @@
 {% block page-title %}{% trans "Enter Ballot" %}{% endblock %}
 
 {% block content %}
-  <p class="lead">{% blocktrans trimmed with round_name=round.name %}
-    The draw and/or motions for {{ round_name }} have yet to be released.
+  <p class="lead">{% blocktrans trimmed with round=round.name %}
+    The draw and/or motions for {{ round }} have yet to be released.
   {% endblocktrans %}</p>
 {% endblock %}

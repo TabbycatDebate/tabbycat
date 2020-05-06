@@ -63,9 +63,9 @@
     </slot>
     <slot name="adjudicators">
       <div class="flex-16 align-self-center p-2 small">
-        <span v-for="adj in debateOrPanel.adjudicators.C">{{ adj.name }} ⓒ, </span>
+        <span v-for="adj in debateOrPanel.adjudicators.C">{{ adj.name }} Ⓒ, </span>
         <span v-for="adj in debateOrPanel.adjudicators.P">{{ adj.name }}, </span>
-        <span v-for="adj in debateOrPanel.adjudicators.T">{{ adj.name }} ⓣ,</span>
+        <span v-for="adj in debateOrPanel.adjudicators.T">{{ adj.name }} Ⓣ,</span>
       </div>
     </slot>
   </div>

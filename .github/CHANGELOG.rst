@@ -6,8 +6,9 @@ Change Log
 -------------
 *Release date: ?*
 
+- Filtered the home page for active tournaments with a new page to list the inactive
 - Added support for Russian, and shortened the language selector
-- Renamed 'test score' to 'base score'
+- Renamed 'test score' to 'base score', as well as 'venue' to 'room'
 - Divisions-specific features have been deprecated and removed
 - Moved the 'Edit Database' menu item to the dropdown with the logo in the admin navigation
 - Pull-ups can now be restricted to teams with the lowest draw strength (by speaker or team points) of their bracket
@@ -16,6 +17,17 @@ Change Log
 - The 'Show adjudicator institutions' preference now covers a wider range of cases; meaning that if it is unchecked then all adjudicator's institutional affiliations should be hidden from the public
 - The Edit Venues screen now shows highlights for priority and venue category
 - Tweaked the display of tables on mobile devices — they should now more reliably show a full BP draw without horizontal scrolling
+
+
+2.3.3
+-----
+*Release date: 26 April 2020*
+
+- Fixed issue where the ballot graph would ignore draft ballots getting confirmed
+- Fixed team draw notifications failing due to an unexpected variable
+- Fixed ballot receipts not showing decimal speaker points
+- Fixed issue where Docker installs would compile without css/javascript; breaking many pages
+
 
 2.3.2
 -----

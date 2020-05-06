@@ -52,8 +52,8 @@
       {% endif %}
     {% empty %}
       <div class="list-group-item">
-        <em>{% blocktrans trimmed %}
-          {{ participant_name }} doesn't have any feedback to submit.
+        <em>{% blocktrans trimmed with name=participant_name %}
+          {{ name }} doesn't have any feedback to submit.
         {% endblocktrans %}</em>
       </div>
     {% endfor %}
