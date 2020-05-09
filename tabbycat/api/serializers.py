@@ -127,9 +127,10 @@ class BreakEligibilitySerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['team_set'] = serializers.PrimaryKeyRelatedField(
+        self.fields['team_set'] = TournamentHyperlinkedRelatedField(
             many=True,
             queryset=kwargs['context']['tournament'].team_set.all(),
+            view_name='api-team-detail',
         )
 
     class Meta:
@@ -151,9 +152,10 @@ class SpeakerEligibilitySerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['speaker_set'] = serializers.PrimaryKeyRelatedField(
+        self.fields['speaker_set'] = TournamentHyperlinkedRelatedField(
             many=True,
             queryset=Speaker.objects.filter(team__tournament=kwargs['context']['tournament']),
+            view_name='api-speaker-detail',
         )
 
     class Meta:
