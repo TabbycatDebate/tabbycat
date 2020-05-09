@@ -157,23 +157,33 @@ class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPI
     lookup_field = 'slug'
     lookup_url_kwarg = 'tournament_slug'
 
+    def get_category_filter(self):
+        """Adds a filter for categories in subclasses"""
+        category = self.request.query_params.get('category', None)
+        if category is not None:
+            return Q(categories__pk=category)
+        return Q()
+
+    def get(self, request, format=None):
+        return Response(self.get_serializer(data=Standings(self.get_queryset())).data)
+
 
 class SpeakerStandingsView(BaseStandingsView):
     name = "Speaker Standings"
+    serializer_class = serializers.SpeakerStandingsSerializer
     access_preference = 'speaker_tab_released'
 
-    def get(self, request, format=None):
-        speakers = Speaker.objects.filter(team__tournament=self.tournament)
-        return Response(serializers.SpeakerStandingsSerializer(data=Standings(speakers)))
+    def get_queryset(self):
+        return Speaker.objects.filter(Q(team__tournament=self.tournament) & self.get_category_filter())
 
 
 class TeamStandingsView(BaseStandingsView):
     name = 'Team Standings'
+    serializer_class = serializers.TeamStandingsSerializer
     access_preference = 'team_tab_released'
 
-    def get(self, request, format=None):
-        teams = self.tournament.team_set.all()
-        return Response(serializers.TeamStandingsSerializer(data=Standings(teams)))
+    def get_queryset(self):
+        return self.tournament.team_set.filter(self.get_category_filter())
 
 
 class PairingViewSet(RoundAPIMixin, ModelViewSet):
