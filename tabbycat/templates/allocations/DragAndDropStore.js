@@ -111,9 +111,33 @@ export default new Vuex.Store({
           debatesArray.sort((a, b) => a.bracket - b.bracket).reverse()
         }
       } else if (sortType === 'importance') {
-        debatesArray.sort(
-          (a, b) => a.importance - b.importance !== 0 ? a.importance - b.importance : a[bracketKey] - b[bracketKey]
-        ).reverse()
+        debatesArray.sort((a, b) =>
+          a.importance - b.importance !== 0 ? a.importance - b.importance : a[bracketKey] - b[bracketKey]
+        ).reverse() // Note: secondary sorting by bracket
+      } else if (sortType === 'liveness') {
+        // Same logic as in Drag and Drop Debate; should ideally be abstracted
+        for (let debate of debatesArray) {
+          if ('liveness' in debate === false) {
+            debate.liveness = 0
+            if ('teams' in debate && debate.teams) {
+              for (const keyAndEntry of Object.entries(debate.teams)) {
+                let team = keyAndEntry[1]
+                // Team can be a number (ID) or null (e.g. when editing sides)
+                if (team !== null && typeof team === 'object' && 'break_categories' in team) {
+                  for (let bc of team.break_categories) {
+                    let category = state.highlights.break.options[bc]
+                    if (category && team.points > category.fields.dead && team.points < category.fields.safe) {
+                      debate.liveness += 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        debatesArray.sort((a, b) =>
+          a.liveness - b.liveness !== 0 ? a.liveness - b.liveness : a[bracketKey] - b[bracketKey]
+        ).reverse() // Note: secondary sorting by bracket
       }
       // Using the sorted array, assign an index to the original dictionary values to be used by sortedDebatesOrPanels()
       for (let i = 0; i < debatesArray.length; i++) {

@@ -11,6 +11,7 @@ Change Log
 - Renamed 'test score' to 'base score', as well as 'venue' to 'room'
 - Divisions-specific features have been deprecated and removed
 - Changing the sorting on debates in allocation views now only sorts once. Thus, changing importances will no longer re-order the list immediately.
+- Enabled debates to be sorted by the sum liveness of teams present
 - Moved the 'Edit Database' menu item to the dropdown with the logo in the admin navigation
 - Pull-ups can now be restricted to teams with the lowest draw strength (by speaker or team points) of their bracket
 - The number of pull-ups and draw strength by speaker score are now available as team standing metrics
