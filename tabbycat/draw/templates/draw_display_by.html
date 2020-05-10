@@ -30,6 +30,15 @@
     </div>
   </div>
 
+  <div class="d-none d-md-flex">
+    <div class="btn btn-outline-primary" id="hide_adjudicators">
+      {% trans "Hide Adjudicators" %}
+    </div>
+    <div class="btn btn-outline-primary" id="show_adjudicators" style="display: none;">
+      {% trans "Show Adjudicators" %}
+    </div>
+  </div>
+
   <div class="btn-group text-size d-none d-md-flex">
     <div class="btn btn-outline-secondary">
       {% trans "Text Size" %}
@@ -101,6 +110,14 @@
         $(this).addClass("active").siblings().removeClass("active");
         $(".table").removeClass("draw-xs draw-s draw-m draw-l draw-xl").addClass( sizeClass);
         return false;
+      });
+      $("#hide_adjudicators").click(function(event){
+        $("td.adjudicator-name, #hide_adjudicators, th.sort-adjudicators").hide()
+        $("#show_adjudicators").show()
+      });
+      $("#show_adjudicators").click(function(event){
+        $("td.adjudicator-name, #hide_adjudicators, th.sort-adjudicators").show()
+        $("#show_adjudicators").hide()
       });
     });
     $(document).keydown(function(e) {

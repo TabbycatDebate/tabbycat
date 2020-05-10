@@ -589,6 +589,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 adjs_data[0]['type'] = 'O'
 
             da_data.append({
+                'class': 'adjudicator-name',
                 'text': construct_text(adjs_data),
                 'popover': {
                     'title': _("Debate Adjudicators"),
