@@ -17,6 +17,7 @@ Change Log
 - The number of pull-ups and draw strength by speaker score are now available as team standing metrics
 - Added the new emoji that come along with Unicode 11 — thanks to Viran Weerasekera for this addition!
 - Added toggle to hide adjudicators on the draw release page
+- Separated private URL printing pages into Teams and Adjudicators
 - The 'Show adjudicator institutions' preference now covers a wider range of cases; meaning that if it is unchecked then all adjudicator's institutional affiliations should be hidden from the public
 - The Edit Venues screen now shows highlights for priority and venue category
 - Tweaked the display of tables on mobile devices — they should now more reliably show a full BP draw without horizontal scrolling

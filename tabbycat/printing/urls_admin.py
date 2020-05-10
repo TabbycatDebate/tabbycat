@@ -13,7 +13,10 @@ urlpatterns = [
         name='printing-feedback'),
 
     # Private URL distribution
-    path('urls_sheets/',
-        views.PrintableRandomisedURLs.as_view(),
-        name='printing-urls'),
+    path('urls_sheets/teams',
+        views.PrintableRandomisedURLsForTeams.as_view(),
+        name='printing-urls-teams'),
+    path('urls_sheets/adjudicators',
+        views.PrintableRandomisedURLsForAdjudicators.as_view(),
+        name='printing-urls-adjudicators'),
 ]
