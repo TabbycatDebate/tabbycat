@@ -33,6 +33,15 @@ urlpatterns = [
                     views.TournamentViewSet.as_view(detail_methods),
                     name='api-tournament-detail'),
 
+                path('/motions', include([
+                    path('',
+                        views.MotionViewSet.as_view(list_methods),
+                        name='api-motion-list'),
+                    path('/<int:pk>',
+                        views.MotionViewSet.as_view(detail_methods),
+                        name='api-motion-detail'),
+                ])),
+
                 path('/rounds', include([
                     path('',
                         views.RoundViewSet.as_view(list_methods),

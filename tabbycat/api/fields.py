@@ -11,13 +11,16 @@ class TournamentHyperlinkedRelatedField(HyperlinkedRelatedField):
     def get_tournament(self, obj):
         return obj.tournament
 
-    def get_url(self, obj, view_name, request, format):
+    def get_url_kwargs(self, obj):
         lookup_value = getattr(obj, self.lookup_field)
         kwargs = {
             'tournament_slug': self.get_tournament(obj).slug,
             self.lookup_url_kwarg: lookup_value,
         }
-        return reverse(view_name, kwargs=kwargs, request=request, format=format)
+        return kwargs
+
+    def get_url(self, obj, view_name, request, format):
+        return reverse(view_name, kwargs=self.get_url_kwargs(obj), request=request, format=format)
 
     def get_object(self, view_name, view_args, view_kwargs):
         lookup_value = view_kwargs[self.lookup_url_kwarg]
@@ -35,20 +38,19 @@ class TournamentHyperlinkedIdentityField(TournamentHyperlinkedRelatedField, Hype
 
 
 class RoundHyperlinkedRelatedField(TournamentHyperlinkedRelatedField):
+    tournament_field = 'round__tournament'
     round_field = 'round'
+
+    def get_tournament(self, obj):
+        return self.get_round(obj).tournament
 
     def get_round(self, obj):
         return obj.round
 
-    def get_url(self, obj, view_name, request, format):
-        lookup_value = getattr(obj, self.lookup_field)
-        round = self.get_round(obj)
-        kwargs = {
-            'tournament_slug': round.tournament.slug,
-            'round_seq': round.seq,
-            self.lookup_url_kwarg: lookup_value,
-        }
-        return reverse(view_name, kwargs=kwargs, request=request, format=format)
+    def get_url_kwargs(self, obj):
+        kwargs = super().get_url_kwargs(obj)
+        kwargs['round_seq'] = self.get_round(obj)
+        return kwargs
 
     def get_queryset(self):
         return self.queryset.filter(**{self.round_field: self.context['round']})
@@ -75,3 +77,11 @@ class AnonymisingHyperlinkedTournamentRelatedField(TournamentHyperlinkedRelatedF
         if getattr(value, self.null_when, True):
             return None
         return super().to_representation(value)
+
+
+class MotionHyperlinkedIdentityField(RoundHyperlinkedIdentityField):
+
+    def get_url_kwargs(self, obj):
+        kwargs = super().get_url_kwargs(obj)
+        kwargs.pop('round_seq')
+        return kwargs

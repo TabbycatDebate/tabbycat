@@ -66,7 +66,13 @@ class RoundViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     lookup_url_kwarg = 'round_seq'
 
     def get_queryset(self):
-        return self.tournament.round_set.all()
+        return super().get_queryset().prefetch_related('motion_set')
+
+
+class MotionViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+    """Administrator-access as may include unreleased motions."""
+    serializer_class = serializers.MotionSerializer
+    tournament_field = 'round__tournament'
 
 
 class BreakCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):

@@ -2,13 +2,14 @@ from rest_framework import serializers
 
 from breakqual.models import BreakCategory
 from draw.models import Debate, DebateTeam
+from motions.models import Motion
 from participants.emoji import pick_unused_emoji
 from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 from tournaments.models import Round, Tournament
 from venues.models import Venue, VenueCategory
 
-from .fields import (AnonymisingHyperlinkedTournamentRelatedField, RoundHyperlinkedIdentityField, SpeakerHyperlinkedIdentityField,
-    TournamentHyperlinkedIdentityField, TournamentHyperlinkedRelatedField)
+from .fields import (AnonymisingHyperlinkedTournamentRelatedField, MotionHyperlinkedIdentityField, RoundHyperlinkedIdentityField,
+    SpeakerHyperlinkedIdentityField, TournamentHyperlinkedIdentityField, TournamentHyperlinkedRelatedField)
 
 
 class TournamentSerializer(serializers.ModelSerializer):
@@ -62,6 +63,18 @@ class TournamentSerializer(serializers.ModelSerializer):
 
 
 class RoundSerializer(serializers.ModelSerializer):
+    class RoundMotionsSerializer(serializers.ModelSerializer):
+        url = MotionHyperlinkedIdentityField(view_name='api-motion-detail')
+
+        class Meta:
+            model = Motion
+            exclude = ('round',)
+
+    class RoundLinksSerializer(serializers.Serializer):
+        pairing = TournamentHyperlinkedIdentityField(
+            view_name='api-pairing-list',
+            lookup_field='seq', lookup_url_kwarg='round_seq')
+
     tournament = serializers.HyperlinkedRelatedField(
         view_name='api-tournament-detail',
         lookup_field='slug', lookup_url_kwarg='tournament_slug',
@@ -73,11 +86,7 @@ class RoundSerializer(serializers.ModelSerializer):
     break_category = TournamentHyperlinkedRelatedField(
         view_name='api-breakcategory-detail',
         queryset=BreakCategory.objects.all())
-
-    class RoundLinksSerializer(serializers.Serializer):
-        pairing = TournamentHyperlinkedIdentityField(
-            view_name='api-pairing-list',
-            lookup_field='seq', lookup_url_kwarg='round_seq')
+    motions = RoundMotionsSerializer(many=True, source='motion_set')
 
     _links = RoundLinksSerializer(source='*', read_only=True)
 
@@ -86,9 +95,56 @@ class RoundSerializer(serializers.ModelSerializer):
         if not kwargs['context']['request'].user.is_staff:
             self.fields.pop('feedback_weight')
 
+            if not self.instance.motions_released:
+                self.fields.pop('motions')
+
     class Meta:
         model = Round
         fields = '__all__'
+
+    def create(self, validated_data):
+        motions_data = validated_data.pop('motions')
+        round = super().create(validated_data)
+
+        motions = self.RoundMotionsSerializer(many=True, context={'tournament': round.tournament})
+        motions._validated_data = motions_data  # Data was already validated
+        motions.save(round=round)
+
+        return round
+
+
+class MotionSerializer(serializers.ModelSerializer):
+    class RoundsSerializer(serializers.ModelSerializer):
+        round = TournamentHyperlinkedRelatedField(view_name='api-round-detail',
+            lookup_field='seq', lookup_url_kwarg='round_seq')
+
+        class Meta:
+            model = Motion
+            fields = ('round', 'seq')
+
+    url = MotionHyperlinkedIdentityField(view_name='api-motion-detail')
+    rounds = RoundsSerializer(many=True, source='as_iterable')
+
+    class Meta:
+        model = Motion
+        exclude = ('round', 'seq')
+
+    def handle_roundmotions(self, validated_data):
+        """While the fields for the rounds is within a nested serializer,
+        as there isn't already a many-to-many relationship, there will
+        always only be one value. This method modifies validated_data in
+        place to directly have the fields from the nested serializer."""
+        rounds = validated_data.pop('rounds')
+        validated_data['round'] = rounds[0]['round']
+        validated_data['seq'] = rounds[0]['seq']
+
+    def create(self, validated_data):
+        self.handle_roundmotions(validated_data)
+        super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        self.handle_roundmotions(validated_data)
+        super().update(validated_data)
 
 
 class BreakCategorySerializer(serializers.ModelSerializer):
