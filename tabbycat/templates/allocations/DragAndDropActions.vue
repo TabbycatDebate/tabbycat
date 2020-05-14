@@ -28,14 +28,17 @@
             <i data-feather="list"></i>
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
-            <a class="dropdown-item" href="#" @click="setSorting('bracket')">
+            <a v-if="!isElimination" class="dropdown-item" href="#" @click="setSorting('bracket')">
               Sort by Bracket
             </a>
             <a class="dropdown-item" href="#" @click="setSorting('importance')">
               Sort by Importance
             </a>
-            <a class="dropdown-item" href="#" @click="setSorting('liveness')">
+            <a v-if="!isElimination" class="dropdown-item" href="#" @click="setSorting('liveness')">
               Sort by Liveness
+            </a>
+            <a v-if="isElimination" class="dropdown-item" href="#" @click="setSorting('rank')">
+              Sort by Break Rank
             </a>
           </div>
         </div>
@@ -88,6 +91,9 @@ export default {
     ...mapMutations(['toggleHighlight', 'setSorting']),
   },
   computed: {
+    isElimination: function () {
+      return this.$store.state.round.stage === 'E'
+    },
     currentHighlightKey: function () {
       let currentKey = Object.keys(this.highlights).filter(key => this.highlights[key].active)
       if (currentKey.length > 0) {
