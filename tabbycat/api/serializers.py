@@ -1,3 +1,4 @@
+from django.db.models import QuerySet
 from rest_framework import serializers
 
 from breakqual.models import BreakCategory
@@ -98,7 +99,8 @@ class RoundSerializer(serializers.ModelSerializer):
         if not kwargs['context']['request'].user.is_staff:
             self.fields.pop('feedback_weight')
 
-            if not self.instance.motions_released:
+            # Can't show in a ListSerializer
+            if isinstance(self.instance, QuerySet) or not self.instance.motions_released:
                 self.fields.pop('motions')
 
     class Meta:

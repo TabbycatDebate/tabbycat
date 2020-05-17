@@ -49,7 +49,7 @@ class RoundHyperlinkedRelatedField(TournamentHyperlinkedRelatedField):
 
     def get_url_kwargs(self, obj):
         kwargs = super().get_url_kwargs(obj)
-        kwargs['round_seq'] = self.get_round(obj)
+        kwargs['round_seq'] = self.get_round(obj).seq
         return kwargs
 
     def get_queryset(self):
