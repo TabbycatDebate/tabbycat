@@ -1,4 +1,4 @@
-from django.db.models import Prefetch, Q
+from django.db.models import Count, Prefetch, Q
 from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
 from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
@@ -46,7 +46,12 @@ class APIV1RootView(PublicAPIMixin, GenericAPIView):
 
 class TournamentViewSet(PublicAPIMixin, ModelViewSet):
     # Don't use TournamentAPIMixin here, it's not filtering objects by tournament.
-    queryset = Tournament.objects.all()
+    queryset = Tournament.objects.all().prefetch_related(
+        'breakcategory_set',
+        Prefetch('round_set',
+            queryset=Round.objects.filter(completed=False).annotate(Count('debate')),
+            to_attr='current_round_set'),
+    )
     serializer_class = serializers.TournamentSerializer
     lookup_field = 'slug'
     lookup_url_kwarg = 'tournament_slug'
