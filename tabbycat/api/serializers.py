@@ -51,6 +51,9 @@ class TournamentSerializer(serializers.ModelSerializer):
         venue_categories = serializers.HyperlinkedIdentityField(
             view_name='api-venuecategory-list',
             lookup_field='slug', lookup_url_kwarg='tournament_slug')
+        motions = serializers.HyperlinkedIdentityField(
+            view_name='api-motion-list',
+            lookup_field='slug', lookup_url_kwarg='tournament_slug')
         preferences = serializers.HyperlinkedIdentityField(
             view_name='tournamentpreferencemodel-list',
             lookup_field='slug', lookup_url_kwarg='tournament_slug')
