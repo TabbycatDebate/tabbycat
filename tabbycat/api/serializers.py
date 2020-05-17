@@ -248,11 +248,12 @@ class SpeakerSerializer(serializers.ModelSerializer):
             self.fields.pop('phone')
             self.fields.pop('pronoun')
             self.fields.pop('anonymous')
+            self.fields.pop('url_key')
 
     class Meta:
         model = Speaker
         fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
-                  'categories')
+                  'categories', 'url_key')
 
     def create(self, validated_data):
         speaker_categories = validated_data.pop("categories")
@@ -305,12 +306,13 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
             self.fields.pop('phone')
             self.fields.pop('pronoun')
             self.fields.pop('anonymous')
+            self.fields.pop('url_key')
 
     class Meta:
         model = Adjudicator
         fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
                   'institution', 'base_score', 'trainee', 'independent', 'adj_core',
-                  'institution_conflicts', 'team_conflicts', 'adjudicator_conflicts')
+                  'institution_conflicts', 'team_conflicts', 'adjudicator_conflicts', 'url_key')
 
     def create(self, validated_data):
         adj = super().create(validated_data)
