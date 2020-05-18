@@ -4,6 +4,7 @@ import logging
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Exists, OuterRef, Prefetch
+from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _, gettext_lazy
 
@@ -189,12 +190,10 @@ class BaseFeedbackForm(forms.Form):
         To be called by save() of child classes."""
         af = AdjudicatorFeedback(**kwargs)
 
-        if self._confirm_on_submit:
-            self.discard_all_existing(adjudicator=kwargs['adjudicator'],
-                                      source_adjudicator=kwargs['source_adjudicator'],
-                                      source_team=kwargs['source_team'])
-            af.confirmed = True
-
+        af.confirmed = self._confirm_on_submit
+        if af.confirmed:
+            af.confirm_timestamp = timezone.now()
+            af.confirmer = self.request.user
         af.score = self.cleaned_data['score']
 
         if self._ignored_option:
@@ -208,11 +207,6 @@ class BaseFeedbackForm(forms.Form):
                 question.answer_type_class(feedback=af, question=question, answer=response).save()
 
         return af
-
-    def discard_all_existing(self, **kwargs):
-        for fb in AdjudicatorFeedback.objects.filter(**kwargs):
-            fb.discarded = True
-            fb.save()
 
 
 def make_feedback_form_class(source, tournament, *args, **kwargs):
