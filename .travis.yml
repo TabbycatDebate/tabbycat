@@ -23,10 +23,10 @@ branches:
 jobs:
   include:
 
-    # Python 3.7
+    # Python 3.8
     # This job also runs style guide checkers (flake8 and lint).
     - os: linux
-      python: 3.7
+      python: 3.8
       before_install:
         - node --version
         - npm --version
@@ -43,10 +43,10 @@ jobs:
         - npm run lint
         - python tabbycat/manage.py test -v 2 --exclude-tag=selenium
 
-    # Python 3.6
+    # Python 3.7
     # This job also runs the code coverage tool.
     - os: linux
-      python: 3.6
+      python: 3.7
       before_install:
         - node --version
         - npm --version
@@ -67,6 +67,24 @@ jobs:
       after_script:
         - coverage xml
         - if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+
+    # Python 3.6
+    # No extra tasks; job should be deprecated some time
+    - os: linux
+      python: 3.6
+      before_install:
+        - node --version
+        - npm --version
+      install:
+        - pip install -r ./config/requirements_development.txt
+        - npm install
+      before_script:
+        - sudo cp /etc/postgresql/{9.6,12}/main/pg_hba.conf
+        - sudo systemctl restart postgresql@12-main
+        - pg_lsclusters
+        - createdb travisci -U postgres
+      script:
+        - python tabbycat/manage.py test -v 2 --exclude-tag=selenium
 
     # Docker
     - os: linux
