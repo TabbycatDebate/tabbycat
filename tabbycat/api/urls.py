@@ -42,6 +42,24 @@ urlpatterns = [
                         name='api-motion-detail'),
                 ])),
 
+                path('/feedback-questions', include([
+                    path('',
+                        views.FeedbackQuestionViewSet.as_view(list_methods),
+                        name='api-feedbackquestion-list'),
+                    path('/<int:pk>',
+                        views.FeedbackQuestionViewSet.as_view(detail_methods),
+                        name='api-feedbackquestion-detail'),
+                ])),
+
+                path('/feedback', include([
+                    path('',
+                        views.FeedbackViewSet.as_view(list_methods),
+                        name='api-feedback-list'),
+                    path('/<int:pk>',
+                        views.FeedbackViewSet.as_view(detail_methods),
+                        name='api-feedback-detail'),
+                ])),
+
                 path('/rounds', include([
                     path('',
                         views.RoundViewSet.as_view(list_methods),

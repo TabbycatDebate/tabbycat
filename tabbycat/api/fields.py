@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework.relations import HyperlinkedIdentityField, HyperlinkedRelatedField
 from rest_framework.reverse import reverse
 
@@ -29,8 +30,11 @@ class TournamentHyperlinkedRelatedField(HyperlinkedRelatedField):
         }
         return self.get_queryset().get(**lookup_kwargs)
 
+    def lookup_kwargs(self):
+        return {self.tournament_field: self.context['tournament']}
+
     def get_queryset(self):
-        return self.queryset.filter(**{self.tournament_field: self.context['tournament']})
+        return self.queryset.filter(**self.lookup_kwargs()).select_related(self.tournament_field)
 
 
 class TournamentHyperlinkedIdentityField(TournamentHyperlinkedRelatedField, HyperlinkedIdentityField):
@@ -52,8 +56,11 @@ class RoundHyperlinkedRelatedField(TournamentHyperlinkedRelatedField):
         kwargs['round_seq'] = self.get_round(obj).seq
         return kwargs
 
+    def lookup_kwargs(self):
+        return {self.round_field: self.context['round']}
+
     def get_queryset(self):
-        return self.queryset.filter(**{self.round_field: self.context['round']})
+        return super().get_queryset().select_related(self.round_field)
 
 
 class RoundHyperlinkedIdentityField(RoundHyperlinkedRelatedField, HyperlinkedIdentityField):
@@ -85,3 +92,20 @@ class MotionHyperlinkedIdentityField(RoundHyperlinkedIdentityField):
         kwargs = super().get_url_kwargs(obj)
         kwargs.pop('round_seq')
         return kwargs
+
+
+class AdjudicatorFeedbackIdentityField(RoundHyperlinkedIdentityField):
+    tournament_field = None
+    round_field = None
+
+    def get_url_kwargs(self, obj):
+        kwargs = super().get_url_kwargs(obj)
+        kwargs.pop('round_seq')
+        return kwargs
+
+    def lookup_kwargs(self):
+        return {}  # More complicated lookup than with kwargs
+
+    def get_queryset(self):
+        return super().get_queryset().filter(
+            Q(source_adjudicator__debate__round=self.context['round']) | Q(source_team__debate__round=self.context['round']))

@@ -1,16 +1,25 @@
-from django.db.models import QuerySet
-from rest_framework import serializers
+from urllib import parse
 
+from django.db.models import QuerySet
+from django.urls import get_script_prefix, resolve, Resolver404
+from django.utils import timezone
+from django.utils.encoding import uri_to_iri
+from rest_framework import serializers
+from rest_framework.relations import Hyperlink
+
+from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
 from draw.models import Debate, DebateTeam
 from motions.models import Motion
 from participants.emoji import pick_unused_emoji
 from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
+from results.mixins import TabroomSubmissionFieldsMixin
 from tournaments.models import Round, Tournament
 from venues.models import Venue, VenueCategory
 
-from .fields import (AnonymisingHyperlinkedTournamentRelatedField, MotionHyperlinkedIdentityField, RoundHyperlinkedIdentityField,
-    SpeakerHyperlinkedIdentityField, TournamentHyperlinkedIdentityField, TournamentHyperlinkedRelatedField)
+from .fields import (AdjudicatorFeedbackIdentityField, AnonymisingHyperlinkedTournamentRelatedField, MotionHyperlinkedIdentityField,
+    RoundHyperlinkedIdentityField, RoundHyperlinkedRelatedField, SpeakerHyperlinkedIdentityField, TournamentHyperlinkedIdentityField,
+    TournamentHyperlinkedRelatedField)
 
 
 class TournamentSerializer(serializers.ModelSerializer):
@@ -54,6 +63,12 @@ class TournamentSerializer(serializers.ModelSerializer):
             lookup_field='slug', lookup_url_kwarg='tournament_slug')
         motions = serializers.HyperlinkedIdentityField(
             view_name='api-motion-list',
+            lookup_field='slug', lookup_url_kwarg='tournament_slug')
+        feedback = serializers.HyperlinkedIdentityField(
+            view_name='api-feedback-list',
+            lookup_field='slug', lookup_url_kwarg='tournament_slug')
+        feedback_questions = serializers.HyperlinkedIdentityField(
+            view_name='api-feedbackquestion-list',
             lookup_field='slug', lookup_url_kwarg='tournament_slug')
         preferences = serializers.HyperlinkedIdentityField(
             view_name='tournamentpreferencemodel-list',
@@ -530,3 +545,145 @@ class RoundPairingSerializer(serializers.ModelSerializer):
         adjudicators.save(debate=debate)
 
         return debate
+
+
+class FeedbackQuestionSerializer(serializers.ModelSerializer):
+
+    class ChoicesField(serializers.Field):
+
+        def to_representation(self, value):
+            return value.split(AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR)
+
+        def to_internal_value(self, data):
+            return AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR.join(data)
+
+    url = TournamentHyperlinkedIdentityField(view_name='api-feedbackquestion-detail')
+    choices = ChoicesField()
+
+    class Meta:
+        model = AdjudicatorFeedbackQuestion
+        exclude = ('tournament',)
+
+
+class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer):
+
+    class SourceField(TournamentHyperlinkedRelatedField):
+        """Taken from REST_Framework: rest_framework.relations.HyperlinkedRelatedField
+
+        This subclass adapts the framework in order to have a hyperlinked field which
+        is dynamic on the model of object given or taken; merging into one field, as
+        well as using an attribute from it, which would not be possible for fear of
+        nulls."""
+
+        view_name = ''  # View and model/queryset is dynamic on the object
+
+        def get_queryset(self):
+            return self.model.all()
+
+        def to_representation(self, value):
+            format = self.context.get('format', None)
+            if format and self.format and self.format != format:
+                format = self.format
+
+            # Return the hyperlink, or error if incorrectly configured.
+            if value.source_adjudicator is not None:
+                url = self.get_url(value.source_adjudicator.adjudicator, 'api-adjudicator-detail', self.context['request'], format)
+            elif value.source_team is not None:
+                url = self.get_url(value.source_team.team, 'api-team-detail', self.context['request'], format)
+
+            if url is None:
+                return None
+
+            return Hyperlink(url, value)
+
+        def to_internal_value(self, data):
+            # Was the value already entered?
+            if isinstance(data, Adjudicator) or isinstance(data, Team):
+                return data
+
+            try:
+                http_prefix = data.startswith(('http:', 'https:'))
+            except AttributeError:
+                self.fail('incorrect_type', data_type=type(data).__name__)
+
+            if http_prefix:
+                # If needed convert absolute URLs to relative path
+                data = parse.urlparse(data).path
+                prefix = get_script_prefix()
+                if data.startswith(prefix):
+                    data = '/' + data[len(prefix):]
+
+            data = uri_to_iri(data)
+            try:
+                match = resolve(data)
+            except Resolver404:
+                self.fail('no_match')
+
+            self.model = {
+                'api-adjudicator-detail': Adjudicator,
+                'api-team-detail': Team,
+            }[match.view_name]
+
+            try:
+                return self.get_object(match.view_name, match.args, match.kwargs)
+            except self.model.DoesNotExist:
+                self.fail('does_not_exist')
+
+    class FeedbackAnswerSerializer(serializers.Serializer):
+        question = TournamentHyperlinkedRelatedField(view_name='api-feedbackquestion-detail')
+        answer = serializers.CharField()
+
+        def validate(self, data):
+            # Convert answer to correct type
+            model = AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[data.question.answer_type]
+            data['answer'] = model.ANSWER_TYPE(data['answer'])
+            return super().validate(data)
+
+    url = AdjudicatorFeedbackIdentityField(view_name='api-feedback-detail')
+    adjudicator = TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail')
+    source = SourceField(source='*')
+    debate = RoundHyperlinkedRelatedField(view_name='api-pairing-detail')
+    answers = FeedbackAnswerSerializer(many=True, source='get_answers')
+
+    class Meta:
+        model = AdjudicatorFeedback
+        exclude = ('source_adjudicator', 'source_team')
+        read_only_fields = ('timestamp', 'version', 'submitter_type', 'submitter', 'confirmer', 'confirm_timestamp', 'ip_address')
+
+    def validate(self, data):
+        # Test answers for correct source
+        source_type = 'from_team' if isinstance(data['source'], Team) else 'from_adj'
+        for answer in data['answers']:
+            if not getattr(answer['question'], source_type, False):
+                raise serializers.ValidationError("Question is not permitted from source.")
+        return super().validate(data)
+
+    def get_request(self):
+        return self.context['request']
+
+    def create(self, validated_data):
+        debate = validated_data.pop('debate')
+        source = validated_data.pop('source')
+        answers = validated_data.pop('answers')
+
+        if isinstance(source, Team):
+            validated_data['source_team'] = source.debateteam_set.get(debate=debate)
+        else:
+            validated_data['source_adjudicator'] = source.debateadjudicator_set.get(debate=debate)
+
+        validated_data.update(self.get_submitter_fields())
+        if validated_data['confirmed']:
+            validated_data['confirmer'] = self.context['request'].user
+            validated_data['confirm_timestamp'] = timezone.now()
+
+        feedback = super().create(validated_data)
+
+        # Create answers
+        for answer in answers:
+            question = answer['question']
+            model = AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[question.answer_type]
+            obj = model(question=question, feedback=feedback, answer=answer['answer'])
+            obj.clean()
+            obj.save()
+
+        return feedback

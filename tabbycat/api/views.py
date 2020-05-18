@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.viewsets import ModelViewSet
 
+from adjfeedback.models import AdjudicatorFeedbackQuestion
 from options.models import TournamentPreferenceModel
 from participants.models import Institution, Speaker
 from standings.base import Standings
@@ -224,3 +225,38 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
             'debateteam_set', 'debateteam_set__team', 'debateteam_set__team__tournament',
             'debateadjudicator_set', 'debateadjudicator_set__adjudicator', 'debateadjudicator_set__adjudicator__tournament',
         )
+
+
+class FeedbackQuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
+    serializer_class = serializers.FeedbackQuestionSerializer
+
+    def get_queryset(self):
+        q = super().get_queryset().filter()
+        if self.request.query_params.get('from_adj'):
+            q.filter(from_adj=True)
+        if self.request.query_params.get('from_team'):
+            q.filter(from_team=True)
+        return q
+
+
+class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+    serializer_class = serializers.FeedbackSerializer
+    tournament_field = 'adjudicator__tournament'
+
+    def get_queryset(self):
+        answers_prefetch = [
+            Prefetch(
+                typ.__name__.lower() + "_set",
+                queryset=typ.objects.all().select_related('question', 'question__tournament'),
+                to_attr=typ.__name__,
+            )
+            for typ in AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE.keys()
+        ]
+        return super().get_queryset().select_related(
+            'adjudicator', 'adjudicator__tournament',
+            'source_adjudicator', 'source_team', 'source_team__team',
+            'source_adjudicator__adjudicator__tournament', 'source_team__team__tournament',
+            'source_adjudicator__debate', 'source_team__debate',
+            'source_adjudicator__debate__round', 'source_team__debate__round',
+            'source_adjudicator__debate__round__tournament', 'source_team__debate__round__tournament',
+        ).prefetch_related(*answers_prefetch)

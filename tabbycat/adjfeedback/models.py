@@ -45,6 +45,8 @@ class AdjudicatorFeedbackAnswer(models.Model):
 
 
 class AdjudicatorFeedbackBooleanAnswer(AdjudicatorFeedbackAnswer):
+    ANSWER_TYPE = bool
+
     # Note: by convention, if no answer is chosen for a boolean answer, an
     # instance of this object should not be created. This way, there is no need
     # for a NullBooleanField.
@@ -56,6 +58,8 @@ class AdjudicatorFeedbackBooleanAnswer(AdjudicatorFeedbackAnswer):
 
 
 class AdjudicatorFeedbackIntegerAnswer(NumericalValueMixin, AdjudicatorFeedbackAnswer):
+    ANSWER_TYPE = int
+
     answer = models.IntegerField(verbose_name=_("answer"))
 
     class Meta(AdjudicatorFeedbackAnswer.Meta):
@@ -64,6 +68,8 @@ class AdjudicatorFeedbackIntegerAnswer(NumericalValueMixin, AdjudicatorFeedbackA
 
 
 class AdjudicatorFeedbackFloatAnswer(NumericalValueMixin, AdjudicatorFeedbackAnswer):
+    ANSWER_TYPE = float
+
     answer = models.FloatField(verbose_name=_("answer"))
 
     class Meta(AdjudicatorFeedbackAnswer.Meta):
@@ -72,6 +78,7 @@ class AdjudicatorFeedbackFloatAnswer(NumericalValueMixin, AdjudicatorFeedbackAns
 
 
 class AdjudicatorFeedbackStringAnswer(AdjudicatorFeedbackAnswer):
+    ANSWER_TYPE = str
     answer = models.TextField(verbose_name=_("answer"))
 
     class Meta(AdjudicatorFeedbackAnswer.Meta):
@@ -290,6 +297,13 @@ class AdjudicatorFeedback(Submission):
         if self.round:
             return self.round.feedback_weight
         return 1
+
+    def get_answers(self):
+        return [
+            {'question': q.question, 'answer': q.answer}
+            for typ in AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE.keys()
+            for q in getattr(self, typ.__name__)
+        ]
 
     def clean(self):
         if not (self.source_adjudicator or self.source_team):

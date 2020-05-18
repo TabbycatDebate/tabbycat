@@ -20,7 +20,7 @@ class TournamentAPIMixin(TournamentFromUrlMixin):
         serializer.save(**self.lookup_kwargs())
 
     def get_queryset(self):
-        return self.get_serializer_class().Meta.model.objects.filter(**self.lookup_kwargs())
+        return self.get_serializer_class().Meta.model.objects.filter(**self.lookup_kwargs()).select_related(self.tournament_field)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
