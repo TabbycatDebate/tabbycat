@@ -292,12 +292,12 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         view_name='api-global-institution-detail',
         queryset=Institution.objects.all(),
     )
-    team_conflicts = serializers.HyperlinkedRelatedField(
+    team_conflicts = TournamentHyperlinkedRelatedField(
         many=True,
         view_name='api-team-detail',
         queryset=Team.objects.all(),
     )
-    adjudicator_conflicts = serializers.HyperlinkedRelatedField(
+    adjudicator_conflicts = TournamentHyperlinkedRelatedField(
         many=True,
         view_name='api-adjudicator-detail',
         queryset=Adjudicator.objects.all(),

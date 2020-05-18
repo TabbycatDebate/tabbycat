@@ -134,6 +134,13 @@ class AdjudicatorViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
     serializer_class = serializers.AdjudicatorSerializer
     access_preference = 'public_participants'
 
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related(
+            'team_conflicts', 'team_conflicts__tournament',
+            'adjudicator_conflicts', 'adjudicator_conflicts__tournament',
+            'institution_conflicts',
+        )
+
 
 class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.InstitutionSerializer
