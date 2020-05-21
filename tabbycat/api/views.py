@@ -8,7 +8,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from options.models import TournamentPreferenceModel
-from participants.models import Institution, Speaker
+from participants.models import Institution, Speaker, Team
 from standings.base import Standings
 from tournaments.mixins import TournamentFromUrlMixin
 from tournaments.models import Round, Tournament
@@ -176,12 +176,12 @@ class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPI
     lookup_field = 'slug'
     lookup_url_kwarg = 'tournament_slug'
 
-    def get_category_filter(self):
-        """Adds a filter for categories in subclasses"""
+    def get_queryset(self):
+        qs = self.model.filter(**{self.tournament_field: self.tournament})
         category = self.request.query_params.get('category', None)
         if category is not None:
-            return Q(categories__pk=category)
-        return Q()
+            return qs.filter(categories__pk=category)
+        return qs
 
     def get(self, request, format=None):
         return Response(self.get_serializer(data=Standings(self.get_queryset())).data)
@@ -191,18 +191,15 @@ class SpeakerStandingsView(BaseStandingsView):
     name = "Speaker Standings"
     serializer_class = serializers.SpeakerStandingsSerializer
     access_preference = 'speaker_tab_released'
-
-    def get_queryset(self):
-        return Speaker.objects.filter(Q(team__tournament=self.tournament) & self.get_category_filter())
+    model = Speaker
+    tournament_field = 'team__tournament'
 
 
 class TeamStandingsView(BaseStandingsView):
     name = 'Team Standings'
     serializer_class = serializers.TeamStandingsSerializer
     access_preference = 'team_tab_released'
-
-    def get_queryset(self):
-        return self.tournament.team_set.filter(self.get_category_filter())
+    model = Team
 
 
 class PairingViewSet(RoundAPIMixin, ModelViewSet):
@@ -240,9 +237,9 @@ class FeedbackQuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     def get_queryset(self):
         q = super().get_queryset().filter()
         if self.request.query_params.get('from_adj'):
-            q.filter(from_adj=True)
+            q = q.filter(from_adj=True)
         if self.request.query_params.get('from_team'):
-            q.filter(from_team=True)
+            q = q.filter(from_team=True)
         return q
 
 
