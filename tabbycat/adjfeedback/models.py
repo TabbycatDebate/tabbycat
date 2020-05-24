@@ -223,7 +223,7 @@ class AdjudicatorFeedback(Submission):
 
     ignored = models.BooleanField(default=False,
         verbose_name=_("ignored"),
-        help_text=_("Whether the feedback should affect the judge's score"))
+        help_text=_("Whether the feedback should affect the adjudicator's score"))
 
     class Meta:
         unique_together = [('adjudicator', 'source_adjudicator', 'source_team', 'version')]
