@@ -643,7 +643,7 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
     adjudicator = TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail')
     source = SourceField(source='*')
     debate = RoundHyperlinkedRelatedField(view_name='api-pairing-detail')
-    answers = FeedbackAnswerSerializer(many=True, source='get_answers')
+    answers = FeedbackAnswerSerializer(many=True, source='get_answers', required=False)
 
     class Meta:
         model = AdjudicatorFeedback
