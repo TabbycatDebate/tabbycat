@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-20 23:12-0500\n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,39 +21,39 @@ msgstr ""
 msgid "There are no available adjudicators. Ensure there are adjudicators who have been marked as available for this round before auto-allocating."
 msgstr ""
 
-#: adjallocation/allocators/hungarian.py:51
+#: adjallocation/allocators/hungarian.py:50
 #, python-format
 msgid "%(count)s score is larger than the maximum permitted adjudicator score (%(score).1f)."
 msgid_plural "%(count)s scores are larger than the maximum permitted adjudicator score (%(score).1f)."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjallocation/allocators/hungarian.py:60
+#: adjallocation/allocators/hungarian.py:59
 #, python-format
 msgid "%(count)s score is smaller than the minimum permitted adjudicator score (%(score).1f)."
 msgid_plural "%(count)s scores are smaller than the minimum permitted adjudicator score (%(score).1f)."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjallocation/allocators/hungarian.py:112
+#: adjallocation/allocators/hungarian.py:111
 msgid "There are no adjudicators eligible to be a chair or panellist. Try changing the \"Minimum feedback score required to be allocated as chair or panellist\" setting to something lower than at least some adjudicators' current scores, and try again."
 msgstr ""
 
-#: adjallocation/allocators/hungarian.py:120
+#: adjallocation/allocators/hungarian.py:119
 msgid "There are no debates for this round. Maybe you haven't created a draw yet?"
 msgstr ""
 
-#: adjallocation/allocators/hungarian.py:167
+#: adjallocation/allocators/hungarian.py:166
 #, python-format
 msgid "There are %(debate_count)s debates but only %(adj_count)s voting adjudicators."
 msgstr ""
 
-#: adjallocation/allocators/hungarian.py:173
+#: adjallocation/allocators/hungarian.py:172
 #, python-format
 msgid "There are %(panel_debates)s panel debates but only %(panellists)s available panellists (less than %(needed)s)."
 msgstr ""
 
-#: adjallocation/allocators/hungarian.py:283
+#: adjallocation/allocators/hungarian.py:282
 #, python-format
 msgid "There are %(debates_count)s debates but only %(voting_count)s voting adjudicators."
 msgstr ""
@@ -281,7 +281,7 @@ msgstr ""
 msgid "There are no preformed panels to use. Have you allocated preformed panels for this round? If not, try just auto-allocating adjudicators instead."
 msgstr ""
 
-#: adjallocation/templates/preformed_index.html:5 adjallocation/views.py:127
+#: adjallocation/templates/preformed_index.html:5 adjallocation/views.py:128
 msgid "Preformed Panels"
 msgstr ""
 
@@ -295,27 +295,27 @@ msgstr ""
 
 #: adjallocation/templates/preformed_index.html:37
 #, python-format
-msgid "Edit Preformed Panels for %(round_name)s"
+msgid "Edit Preformed Panels for %(round)s"
 msgstr ""
 
 #: adjallocation/utils.py:28
 #, python-format
-msgid "Conflict: <strong>%(adj)s</strong> & <strong>%(team)s</strong> (personal)"
+msgid "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> (personal)"
 msgstr ""
 
 #: adjallocation/utils.py:34
 #, python-format
-msgid "Conflict: <strong>%(adj)s</strong> & <strong>%(team)s</strong> via institution <strong>%(inst)s</strong>"
+msgid "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> via institution <strong>%(institution)s</strong>"
 msgstr ""
 
 #: adjallocation/utils.py:46
 #, python-format
-msgid "Conflict: <strong>%(adj1)s</strong> & <strong>%(adj2)s</strong> (personal)"
+msgid "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> (personal)"
 msgstr ""
 
 #: adjallocation/utils.py:52
 #, python-format
-msgid "Conflict: <strong>%(adj1)s</strong> & <strong>%(adj2)s</strong> via institution <strong>%(inst)s</strong>"
+msgid "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> via institution <strong>%(institution)s</strong>"
 msgstr ""
 
 #: adjallocation/views.py:35
@@ -334,118 +334,118 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
-#: adjallocation/views.py:89
+#: adjallocation/views.py:90
 msgid "Edit Allocation"
 msgstr ""
 
-#: adjallocation/views.py:104
+#: adjallocation/views.py:105
 msgid "Edit Panels"
 msgstr ""
 
-#: adjallocation/views.py:110
+#: adjallocation/views.py:111
 msgid "Return to Panels Overview"
 msgstr ""
 
-#: adjallocation/views.py:171
+#: adjallocation/views.py:172
 msgid "Adjudicator-Team Conflicts"
 msgstr ""
 
-#: adjallocation/views.py:172
+#: adjallocation/views.py:173
 msgid "Save Adjudicator-Team Conflicts"
 msgstr ""
 
-#: adjallocation/views.py:197
+#: adjallocation/views.py:198
 #, python-format
 msgid "Saved %(count)d adjudicator-team conflict."
 msgid_plural "Saved %(count)d adjudicator-team conflicts."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjallocation/views.py:203
+#: adjallocation/views.py:204
 #, python-format
 msgid "Deleted %(count)d adjudicator-team conflict."
 msgid_plural "Deleted %(count)d adjudicator-team conflicts."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjallocation/views.py:208
+#: adjallocation/views.py:209
 msgid "No changes were made to adjudicator-team conflicts."
 msgstr ""
 
-#: adjallocation/views.py:215
+#: adjallocation/views.py:216
 msgid "Adjudicator-Adjudicator Conflicts"
 msgstr ""
 
-#: adjallocation/views.py:216
+#: adjallocation/views.py:217
 msgid "Save Adjudicator-Adjudicator Conflicts"
 msgstr ""
 
-#: adjallocation/views.py:237
+#: adjallocation/views.py:238
 #, python-format
 msgid "Saved %(count)d adjudicator-adjudicator conflict."
 msgid_plural "Saved %(count)d adjudicator-adjudicator conflicts."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjallocation/views.py:243
+#: adjallocation/views.py:244
 #, python-format
 msgid "Deleted %(count)d adjudicator-adjudicator conflict."
 msgid_plural "Deleted %(count)d adjudicator-adjudicator conflicts."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjallocation/views.py:248
+#: adjallocation/views.py:249
 msgid "No changes were made to adjudicator-adjudicator conflicts."
 msgstr ""
 
-#: adjallocation/views.py:255
+#: adjallocation/views.py:256
 msgid "Adjudicator-Institution Conflicts"
 msgstr ""
 
-#: adjallocation/views.py:256
+#: adjallocation/views.py:257
 msgid "Save Adjudicator-Institution Conflicts"
 msgstr ""
 
-#: adjallocation/views.py:276
+#: adjallocation/views.py:277
 #, python-format
 msgid "Saved %(count)d adjudicator-institution conflict."
 msgid_plural "Saved %(count)d adjudicator-institution conflicts."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjallocation/views.py:282
+#: adjallocation/views.py:283
 #, python-format
 msgid "Deleted %(count)d adjudicator-institution conflict."
 msgid_plural "Deleted %(count)d adjudicator-institution conflicts."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjallocation/views.py:287
+#: adjallocation/views.py:288
 msgid "No changes were made to adjudicator-institution conflicts."
 msgstr ""
 
-#: adjallocation/views.py:294
+#: adjallocation/views.py:295
 msgid "Team-Institution Conflicts"
 msgstr ""
 
-#: adjallocation/views.py:295
+#: adjallocation/views.py:296
 msgid "Save Team-Institution Conflicts"
 msgstr ""
 
-#: adjallocation/views.py:318
+#: adjallocation/views.py:319
 #, python-format
 msgid "Saved %(count)d team-institution conflict."
 msgid_plural "Saved %(count)d team-institution conflicts."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjallocation/views.py:324
+#: adjallocation/views.py:325
 #, python-format
 msgid "Deleted %(count)d team-institution conflict."
 msgid_plural "Deleted %(count)d team-institution conflicts."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjallocation/views.py:329
+#: adjallocation/views.py:330
 msgid "No changes were made to team-institution conflicts."
 msgstr ""

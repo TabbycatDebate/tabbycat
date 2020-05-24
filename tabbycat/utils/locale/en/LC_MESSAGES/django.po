@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-20 23:12-0500\n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
 "PO-Revision-Date: 2019-07-11 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -25,11 +25,11 @@ msgid "No Data Available"
 msgstr ""
 
 #: utils/tables.py:151 utils/tables.py:152
-msgid "ⓒ"
+msgid "Ⓒ"
 msgstr ""
 
 #: utils/tables.py:153
-msgid "ⓣ"
+msgid "Ⓣ"
 msgstr ""
 
 #: utils/tables.py:157
@@ -192,11 +192,11 @@ msgstr ""
 msgid "Round"
 msgstr ""
 
-#: utils/tables.py:497 utils/tables.py:677
+#: utils/tables.py:497 utils/tables.py:683
 msgid "Name"
 msgstr ""
 
-#: utils/tables.py:503 utils/tables.py:659
+#: utils/tables.py:503 utils/tables.py:665
 msgid "Institution"
 msgstr ""
 
@@ -212,127 +212,120 @@ msgstr ""
 msgid "Always Trainee"
 msgstr ""
 
-#: utils/tables.py:557
+#: utils/tables.py:562
 msgid "in minority"
 msgstr ""
 
-#: utils/tables.py:589
+#: utils/tables.py:595
 msgid "Debate Adjudicators"
 msgstr ""
 
-#: utils/tables.py:620
+#: utils/tables.py:626
 msgid "Order as listed"
 msgstr ""
 
-#: utils/tables.py:627
+#: utils/tables.py:633
 msgid "?"
 msgstr ""
 
-#: utils/tables.py:630
+#: utils/tables.py:636
 msgid "Motion"
 msgstr ""
 
-#: utils/tables.py:645
+#: utils/tables.py:651
 msgid "Team"
 msgstr ""
 
-#: utils/tables.py:650 utils/tables.py:699
+#: utils/tables.py:656 utils/tables.py:705
 msgid "Categories"
 msgstr ""
 
-#: utils/tables.py:670
+#: utils/tables.py:676
 msgid "Redacted"
 msgstr ""
 
-#: utils/tables.py:697
+#: utils/tables.py:703
 msgid "Category"
 msgstr ""
 
-#: utils/tables.py:724
+#: utils/tables.py:730
 #, python-format
-msgid "This venue %(predicate)s."
+msgid "This room %(predicate)s."
 msgstr ""
 
-#: utils/tables.py:726
+#: utils/tables.py:732
 #, python-format
-msgid "This venue %(predicates)s, and %(last_predicate)s."
+msgid "This room %(predicates)s, and %(last_predicate)s."
 msgstr ""
 
-#: utils/tables.py:741
-msgid "Venue"
+#: utils/tables.py:747
+msgid "Room"
 msgstr ""
 
-#: utils/tables.py:757
+#: utils/tables.py:763
 #, python-format
 msgid "Teams have met once"
 msgid_plural "Teams have met %(count)d times"
 msgstr[0] ""
 msgstr[1] ""
 
-#: utils/tables.py:763
+#: utils/tables.py:769
 msgid "Teams are from the same institution"
 msgstr ""
 
-#: utils/tables.py:769
+#: utils/tables.py:775
 msgid "Conflicts/Flags"
 msgstr ""
 
-#: utils/tables.py:823
+#: utils/tables.py:829
 msgid "The ballot you submitted"
 msgstr ""
 
-#: utils/tables.py:827
+#: utils/tables.py:833
 msgid "View/Edit Ballot"
 msgstr ""
 
-#: utils/tables.py:836
+#: utils/tables.py:842
 msgid "No ballot"
 msgstr ""
 
-#: utils/tables.py:838
+#: utils/tables.py:844
 msgid "Elimination"
 msgstr ""
 
-#: utils/tables.py:841 utils/tables.py:853
+#: utils/tables.py:847 utils/tables.py:859
 msgid "View Ballot"
 msgstr ""
 
-#: utils/tables.py:861
+#: utils/tables.py:867
 msgid "Result"
 msgstr ""
 
 #. Translators: "TBC" stands for "to be confirmed".
-#: utils/tables.py:867
+#: utils/tables.py:873
 msgid "TBC"
 msgstr ""
 
-#: utils/tables.py:868
+#: utils/tables.py:874
 msgid "Side"
 msgstr ""
 
-#: utils/tables.py:906
+#: utils/tables.py:912
 msgid "Team iron-manned this round and the last."
 msgstr ""
 
-#: utils/tables.py:909
+#: utils/tables.py:915
 msgid "Team iron-manned this round."
 msgstr ""
 
-#: utils/tables.py:912
+#: utils/tables.py:918
 msgid "Team iron-manned last round."
 msgstr ""
 
-#: utils/tables.py:929 utils/tables.py:930
+#: utils/tables.py:935 utils/tables.py:936
 #, python-format
 msgid "Team %(num)d"
 msgstr ""
-
-#: utils/templates/database_limit_warning.html:9
-#, python-format
-msgid "You're currently using %(nrows)s row in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
-msgid_plural "You're currently using %(nrows)s rows in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
-msgstr[0] ""
-msgstr[1] ""
 
 #: utils/views.py:38
 msgid "Whoops! You're not meant to type that URL into your browser."
