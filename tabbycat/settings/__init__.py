@@ -1,4 +1,5 @@
 import os
+import pathlib
 
 from split_settings.tools import optional, include
 
@@ -22,6 +23,11 @@ if os.environ.get('DJANGO_SECRET_KEY', ''):
     base_settings.append('heroku.py')
 
 if os.environ.get('LOCAL_DEVELOPMENT', ''):
+    expected_file = pathlib.Path(__file__).parent / 'development.py'
+    if not expected_file.exists():
+        raise RuntimeError("development.py not found\n"
+            "Hint: Copy settings/development.example to settings/development.py and modify,\n"
+            "      or unset the LOCAL_DEVELOPMENT environment variable.")
     base_settings.append('development.py')
 
 
