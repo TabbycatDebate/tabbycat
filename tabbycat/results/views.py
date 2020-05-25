@@ -104,6 +104,20 @@ class AssistantResultsEntryView(AssistantMixin, CurrentRoundMixin, BaseResultsEn
 class AdminResultsEntryForRoundView(AdministratorMixin, BaseResultsEntryForRoundView):
     template_name = 'admin_results.html'
 
+    # Stopgap to warn user about potential database inconsistency, when trainee adjudicators
+    # seem to have given scores. This normally happens when an adjudicator was demoted after
+    # a result was entered. See: https://github.com/TabbycatDebate/tabbycat/issues/922
+    # This stopgap should be deleted after a more general data consistency solution is
+    # implemented.
+    def get_context_data(self, **kwargs):
+        kwargs["debates_with_trainee_scoresheets"] = [
+            f"{debate.matchup} ({debate.venue.name})"
+            for debate in self.round.debate_set.filter(
+                ballotsubmission__speakerscorebyadj__debate_adjudicator__type='T'
+            ).distinct()
+        ]
+        return super().get_context_data(**kwargs)
+
 
 class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableTemplateView):
 

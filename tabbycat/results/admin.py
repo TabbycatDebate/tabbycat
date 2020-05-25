@@ -86,7 +86,8 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
                      'debate_team__team__reference', 'debate_team__team__institution__code',
                      'debate_adjudicator__adjudicator__name')
 
-    list_filter = ('debate_team__debate__round', 'debate_adjudicator__adjudicator__name')
+    list_filter = ('debate_team__debate__round', 'debate_adjudicator__adjudicator__name',
+                   'debate_adjudicator__type')
     raw_id_fields = ('debate_team', 'debate_adjudicator', 'ballot_submission')
 
     def get_round(self, obj):
