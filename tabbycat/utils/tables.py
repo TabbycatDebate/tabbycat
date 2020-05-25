@@ -341,6 +341,20 @@ class TabbycatTableBuilder(BaseTableBuilder):
             cell['sort'] = 0
         return cell
 
+    def _show_ballots(self, cell, ts, link: str):
+        if self.admin:
+            cell['popover']['content'].append({
+                'text': _("View/edit debate ballot"),
+                'link': reverse_tournament(link,
+                        self.tournament, kwargs={'pk': ts.ballot_submission_id}),
+            })
+        elif self.tournament.pref('ballots_released'):
+            cell['popover']['content'].append({
+                'text': _("View debate ballot"),
+                'link': reverse_tournament('results-public-scoresheet-view',
+                        self.tournament, kwargs={'pk': ts.debate_team.debate_id}),
+            })
+
     def _result_cell_two(self, ts, compress=False, show_score=False, show_ballots=False):
         if not hasattr(ts, 'debate_team') or not hasattr(ts.debate_team.opponent, 'team'):
             return {'text': self.BLANK_TEXT}
@@ -363,26 +377,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
             cell['popover']['title'] = _("No result for debate against %(team)s") % {'team': self._team_long_name(opp)}
 
         if show_score and ts.score is not None:
-            score = ts.score
-            if self.tournament.integer_scores(ts.debate_team.debate.round.stage) and score.is_integer():
-                score = int(ts.score)
-            cell['subtext'] = metricformat(score)
-            cell['popover']['content'].append(
-                {'text': _("Total speaker score: <strong>%s</strong>") % metricformat(score)})
+            self._show_score(ts, cell)
 
         if show_ballots:
-            if self.admin:
-                cell['popover']['content'].append({
-                    'text': _("View/edit debate ballot"),
-                    'link': reverse_tournament('old-results-ballotset-edit',
-                            self.tournament, kwargs={'pk': ts.ballot_submission_id}),
-                })
-            elif self.tournament.pref('ballots_released'):
-                cell['popover']['content'].append({
-                    'text': _("View debate ballot"),
-                    'link': reverse_tournament('results-public-scoresheet-view',
-                            self.tournament, kwargs={'pk': ts.debate_team.debate_id}),
-                })
+            self._show_ballots(cell, ts, "old-results-ballotset-edit")
 
         if self._show_speakers_in_draw:
             cell['popover']['content'].append({
@@ -394,6 +392,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 self._team_record_link(opp))
 
         return cell
+
+    def _show_score(self, ts, cell):
+        score = ts.score
+        if self.tournament.integer_scores(ts.debate_team.debate.round.stage) and score.is_integer():
+            score = int(ts.score)
+        cell['subtext'] = metricformat(score)
+        cell['popover']['content'].append(
+            {'text': _("Total speaker score: <strong>%s</strong>") % metricformat(score)})
 
     def _result_cell_bp(self, ts, compress=False, show_score=False, show_ballots=False):
         if not hasattr(ts, 'debate_team'):
@@ -442,26 +448,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 cell['popover']['title'] = _("No result for debate")
 
         if show_score and ts.score is not None:
-            score = ts.score
-            if self.tournament.integer_scores(ts.debate_team.debate.round.stage) and score.is_integer():
-                score = int(ts.score)
-            cell['subtext'] = metricformat(score)
-            cell['popover']['content'].append(
-                {'text': _("Total speaker score: <strong>%s</strong>") % metricformat(score)})
+            self._show_score(ts, cell)
 
         if show_ballots:
-            if self.admin:
-                cell['popover']['content'].append({
-                    'text': _("View/edit debate ballot"),
-                    'link': reverse_tournament('results-ballotset-edit',
-                            self.tournament, kwargs={'pk': ts.ballot_submission_id}),
-                })
-            elif self.tournament.pref('ballots_released'):
-                cell['popover']['content'].append({
-                    'text': _("View debate ballot"),
-                    'link': reverse_tournament('results-public-scoresheet-view',
-                            self.tournament, kwargs={'pk': ts.debate_team.debate_id}),
-                })
+            self._show_ballots(cell, ts, "results-ballotset-edit")
 
         return cell
 
