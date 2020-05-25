@@ -10,14 +10,14 @@ test_draw.py.
 This script must be run from the directory it is in."""
 
 import argparse
-import os.path
+import pathlib
 import random
 import string
 import sys
 
-draw_dir = os.path.abspath(os.path.join("..", ".."))
+draw_dir = pathlib.Path(__file__).resolve().parents[2]
 if draw_dir not in sys.path:
-    sys.path.append(draw_dir)
+    sys.path.append(str(draw_dir))
 print(draw_dir)
 del draw_dir
 
