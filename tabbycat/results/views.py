@@ -113,7 +113,7 @@ class AdminResultsEntryForRoundView(AdministratorMixin, BaseResultsEntryForRound
         kwargs["debates_with_trainee_scoresheets"] = [
             f"{debate.matchup} ({debate.venue.name})"
             for debate in self.round.debate_set.filter(
-                ballotsubmission__speakerscorebyadj__debate_adjudicator__type='T',
+                ballotsubmission__speakerscorebyadj__debate_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE,
             ).distinct()
         ]
         return super().get_context_data(**kwargs)
