@@ -1,11 +1,12 @@
 import os
+import pathlib
 
 from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
 
 
-BASE_DIR = os.path.dirname(os.path.abspath(os.path.join(__file__, os.pardir)))
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+BASE_DIR = pathlib.Path(__file__).resolve().parents[1]
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # ==============================================================================
 # Overwritten in local.py or heroku.py
@@ -37,7 +38,7 @@ LANGUAGE_CODE = 'en'
 TIME_ZONE = os.environ.get('TIME_ZONE', 'Australia/Melbourne')
 
 LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale'),
+    BASE_DIR / 'locale',
 ]
 
 # Languages that should be available in the switcher
@@ -51,7 +52,7 @@ LANGUAGES = [
     ('ru', _('Russian')),
 ]
 
-STATICI18N_ROOT = os.path.join(BASE_DIR, "locale")
+STATICI18N_ROOT = BASE_DIR / 'locale'
 
 FORMAT_MODULE_PATH = [
     'utils.formats',
@@ -126,7 +127,7 @@ INSTALLED_APPS = (
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
-FIXTURE_DIRS = (os.path.join(os.path.dirname(BASE_DIR), 'data', 'fixtures'), )
+FIXTURE_DIRS = (BASE_DIR.parent / 'data' / 'fixtures', )
 
 # ==============================================================================
 # Templates
@@ -135,7 +136,7 @@ FIXTURE_DIRS = (os.path.join(os.path.dirname(BASE_DIR), 'data', 'fixtures'), )
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [BASE_DIR / 'templates'],
         'OPTIONS': {
             'context_processors': [
                 'django.contrib.auth.context_processors.auth',
@@ -180,10 +181,10 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 # Static Files and Compilation
 # ==============================================================================
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
+STATICFILES_DIRS = (BASE_DIR / 'static', )
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
