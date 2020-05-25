@@ -42,6 +42,18 @@ class TestTrivialStandings(TestCase):
             TeamScore.objects.create(debate_team=dt2, ballot_submission=ballotsub,
                 margin=-2*i, points=0, score=100-i, win=False, votes_given=0, votes_possible=1)
 
+        # add elimination round with wild result, it should be ignored by all tests
+        elim_rd = Round.objects.create(tournament=self.tournament, seq=3, stage=Round.STAGE_ELIMINATION)
+        elim_debate = Debate.objects.create(round=elim_rd)
+        elim_dt1 = DebateTeam.objects.create(debate=elim_debate, team=self.team1, side=DebateTeam.SIDE_AFF)
+        elim_dt2 = DebateTeam.objects.create(debate=elim_debate, team=self.team2, side=DebateTeam.SIDE_NEG)
+        DebateAdjudicator.objects.create(debate=elim_debate, adjudicator=adj, type=DebateAdjudicator.TYPE_CHAIR)
+        elim_ballotsub = BallotSubmission.objects.create(debate=elim_debate, confirmed=True)
+        TeamScore.objects.create(debate_team=elim_dt1, ballot_submission=elim_ballotsub,
+            margin=-25, points=0, score=300, win=False, votes_given=0, votes_possible=3)
+        TeamScore.objects.create(debate_team=elim_dt2, ballot_submission=elim_ballotsub,
+            margin=+25, points=1, score=325, win=True,  votes_given=3, votes_possible=3)
+
     def tearDown(self):
         DebateTeam.objects.filter(team__tournament=self.tournament).delete()
         self.tournament.delete()

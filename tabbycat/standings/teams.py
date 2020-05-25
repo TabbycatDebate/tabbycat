@@ -303,7 +303,9 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
         ts = TeamScore.objects.filter(
             ballot_submission__confirmed=True,
             debate_team__team=tsi.team,
-            debate_team__debate__debateteam__team=other.team)
+            debate_team__debate__debateteam__team=other.team,
+            debate_team__debate__round__stage=Round.STAGE_PRELIMINARY,
+        )
 
         if round is not None:
             ts = ts.filter(debate_team__debate__round__seq__lte=round.seq)
