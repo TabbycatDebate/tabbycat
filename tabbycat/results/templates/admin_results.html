@@ -73,8 +73,8 @@
 {% block page-alerts-role-specific %}
   {# Overrides the assistant version of the same alert. #}
 
-  {% trans "This page automatically updates with the new ballot entries and checkins as they occur. You will, however, need to reload it once all ballots are completed in order to advance the round." as message %}
-  {% include "components/alert.html" with type="info" %}
+  {% trans "This page automatically updates with the new ballot entries and checkins as they occur. You will, however, need to reload it once all ballots are completed in order to advance the round." as p1 %}
+  {% include "components/explainer-card.html" with type="info" %}
 
   {% comment %}
     Stopgap to warn user about potential database inconsistency, when trainee adjudicators
