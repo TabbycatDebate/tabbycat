@@ -84,10 +84,10 @@
     implemented.
   {% endcomment %}
   {% if debates_with_trainee_scoresheets %}
-    {% blocktrans trimmed with debates_list=debates_with_trainee_scoresheets|join:", " count n=debates_with_trainee_scoresheets|length asvar message %}
+    {% blocktrans trimmed with debates_list=debates_with_trainee_scoresheets|join:", " count ndebates=debates_with_trainee_scoresheets|length asvar message %}
       The following debate appears to have scoresheets from trainees: {{ debates_list }}.
     {% plural %}
-      The following debates appear to have scoresheets from trainees: {{ debates_list }}.
+      The following {{ ndebates }} debates appear to have scoresheets from trainees: {{ debates_list }}.
     {% endblocktrans %}
     {% url 'admin:results_speakerscorebyadj_changelist' as editdb_speakerscorebyadj_url %}
     {% blocktrans trimmed asvar extra %}
