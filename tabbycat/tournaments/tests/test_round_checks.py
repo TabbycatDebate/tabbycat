@@ -1,5 +1,3 @@
-from unittest import expectedFailure
-
 from django.test import TestCase
 
 from adjallocation.models import DebateAdjudicator
@@ -68,7 +66,6 @@ class TestRoundChecks(TestCase):
         DebateAdjudicator.objects.filter(debate=self.debates[0]).delete()
         self.assertEqual(self.round.num_debates_without_chair, 1)
 
-    @expectedFailure
     def test_num_debates_with_even_panel(self):
         self.assertEqual(self.round.num_debates_with_even_panel, 0)
         del self.round.num_debates_with_even_panel

@@ -425,11 +425,10 @@ class Round(models.Model):
         """Returns the number of debates in the round, in which there are an
         positive and even number of voting judges."""
         from adjallocation.models import DebateAdjudicator
-        debates_with_even_panel = self.debate_set.exclude(
-            debateadjudicator__type=DebateAdjudicator.TYPE_TRAINEE,
-        ).annotate(
-            panellists=Count('debateadjudicator'),
-            odd_panellists=Count('debateadjudicator') % 2,
+        debateadj_filter = ~Q(debateadjudicator__type=DebateAdjudicator.TYPE_TRAINEE)
+        debates_with_even_panel = self.debate_set.annotate(
+            panellists=Count('debateadjudicator', filter=debateadj_filter),
+            odd_panellists=Count('debateadjudicator', filter=debateadj_filter) % 2,
         ).filter(panellists__gt=0, odd_panellists=0).count()
         return debates_with_even_panel
 
