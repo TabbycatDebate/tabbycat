@@ -4,6 +4,7 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.http.response import Http404
 from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView
@@ -263,14 +264,14 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
         action = request.POST['action']
 
         try:
-            person = Person.objects.get(url_key=kwargs['url_key'])
-            identifier = PersonIdentifier.objects.get(person=person)
-        except ObjectDoesNotExist:
+            identifier = Person.objects.get(url_key=kwargs['url_key']).checkin_identifier
+        except Person.DoesNotExist:
+            raise Http404("Person does not exist")
+        except PersonIdentifier.DoesNotExist:
             messages.error(self.request, _("Could not check you in as you do not have an identifying code — your tab director may need to make you an identifier."))
             return super().post(request, *args, **kwargs)
 
-        checkins = get_unexpired_checkins(t, 'checkin_window_people')
-        existing_checkin = checkins.filter(identifier=identifier)
+        existing_checkin = get_unexpired_checkins(t, 'checkin_window_people').filter(identifier=identifier)
         if action == 'revoke':
             if existing_checkin.exists():
                 messages.success(self.request, _("You have revoked your check-in."))

@@ -1,17 +1,22 @@
 from django.db.models import Count, Prefetch, Q
+from django.http.response import Http404
 from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
-from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import GenericAPIView, get_object_or_404, RetrieveUpdateAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
+from checkins.consumers import CheckInEventConsumer
+from checkins.utils import create_identifiers, get_unexpired_checkins
 from options.models import TournamentPreferenceModel
-from participants.models import Institution, Speaker, Team
+from participants.models import Adjudicator, Institution, Speaker, Team
 from standings.base import Standings
 from tournaments.mixins import TournamentFromUrlMixin
 from tournaments.models import Round, Tournament
+from venues.models import Venue
 
 from . import serializers
 from .mixins import AdministratorAPIMixin, PublicAPIMixin, RoundAPIMixin, TournamentAPIMixin, TournamentPublicAPIMixin
@@ -170,6 +175,104 @@ class VenueCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
 
     def get_queryset(self):
         return super().get_queryset().select_related('tournament').prefetch_related('venues', 'venues__tournament')
+
+
+class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
+    name = "Check-ins"
+
+    lookup_field = 'pk'
+    lookup_url_kwarg = None
+
+    def get_object_queryset(self):
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
+        return self.get_queryset().filter(**filter_kwargs)
+
+    def get_object(self):
+        obj = get_object_or_404(self.get_object_queryset())
+
+        # May raise a permission denied
+        self.check_object_permissions(self.request, obj)
+
+        if not hasattr(obj, 'checkin_identifier'):
+            raise Http404('No identifier')
+        return obj
+
+    def get_barcodes(self, obj):
+        return [obj.checkin_identifier.barcode]
+
+    def broadcast_checkin(self, obj, check):
+        CheckInEventConsumer().receive_json({
+            'barcodes': self.get_barcodes(obj),
+            'status': check,
+            'type': obj.checkin_identifier.instance_attr,
+            'component_id': None,
+        })
+
+    def get_response_dict(self, request, obj, checked, **kwargs):
+        return {
+            'object': reverse(
+                self.object_api_view,
+                kwargs={'tournament_slug': self.tournament.slug, 'pk': obj.pk},
+                request=request,
+                format=kwargs.get('format'),
+            ),
+            'barcode': obj.checkin_identifier.barcode,
+            'checked': checked,
+        }
+
+    def get_queryset(self):
+        return self.model.objects.filter(**self.lookup_kwargs()).select_related(self.tournament_field)
+
+    def get(self, request, *args, **kwargs):
+        obj = self.get_object()
+
+        event = get_unexpired_checkins(self.tournament, self.window_preference_pref).filter(identifier=obj.checkin_identifier)
+        return Response(self.get_response_dict(request, obj, event.exists()))
+
+    def delete(self, request, *args, **kwargs):
+        """Checks out"""
+        obj = self.get_object()
+        self.broadcast_checkin(obj, False)
+        return Response(self.get_response_dict(request, obj, False))
+
+    def put(self, request, *args, **kwargs):
+        """Checks in"""
+        obj = self.get_object()
+        self.broadcast_checkin(obj, True)
+        return Response(self.get_response_dict(request, obj, True))
+
+    def patch(self, request, *args, **kwargs):
+        """Toggles the check-in status"""
+        obj = self.get_object()
+        check = get_unexpired_checkins(self.tournament, self.window_preference_pref).filter(identifier=obj.checkin_identifier).exists()
+        self.broadcast_checkin(obj.checkin_identifier, not check)
+        return Response(self.get_response_dict(request, obj, not check))
+
+    def post(self, request, *args, **kwargs):
+        """Creates an identifier"""
+        obj = self.get_object_queryset()
+        create_identifiers(self.model.checkin_identifier.related.related_model, obj)
+        return Response(self.get_response_dict(request, obj.get(), False))
+
+
+class AdjudicatorCheckinsView(BaseCheckinsView):
+    model = Adjudicator
+    object_api_view = 'api-adjudicator-detail'
+    window_preference_pref = 'checkin_window_people'
+
+
+class SpeakerCheckinsView(BaseCheckinsView):
+    model = Speaker
+    object_api_view = 'api-speaker-detail'
+    window_preference_pref = 'checkin_window_people'
+    tournament_field = 'team__tournament'
+
+
+class VenueCheckinsView(BaseCheckinsView):
+    model = Venue
+    object_api_view = 'api-venue-detail'
+    window_preference_pref = 'checkin_window_venues'
 
 
 class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPIView):

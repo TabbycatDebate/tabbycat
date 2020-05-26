@@ -250,12 +250,17 @@ class SpeakerEligibilitySerializer(serializers.ModelSerializer):
 
 
 class SpeakerSerializer(serializers.ModelSerializer):
+
+    class LinksSerializer(serializers.Serializer):
+        checkin = TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-checkin')
+
     url = TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-detail')
     categories = TournamentHyperlinkedRelatedField(
         many=True,
         view_name='api-speakercategory-detail',
         queryset=SpeakerCategory.objects.all(),
     )
+    _links = LinksSerializer(source='*', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -270,7 +275,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Speaker
         fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
-                  'categories', 'url_key')
+                  'categories', 'url_key', '_links')
 
     def create(self, validated_data):
         speaker_categories = validated_data.pop("categories")
@@ -280,6 +285,10 @@ class SpeakerSerializer(serializers.ModelSerializer):
 
 
 class AdjudicatorSerializer(serializers.ModelSerializer):
+
+    class LinksSerializer(serializers.Serializer):
+        checkin = TournamentHyperlinkedIdentityField(view_name='api-adjudicator-checkin')
+
     url = TournamentHyperlinkedIdentityField(view_name='api-adjudicator-detail')
     institution = serializers.HyperlinkedRelatedField(
         allow_null=True,
@@ -302,6 +311,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         view_name='api-adjudicator-detail',
         queryset=Adjudicator.objects.all(),
     )
+    _links = LinksSerializer(source='*', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -329,7 +339,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         model = Adjudicator
         fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
                   'institution', 'base_score', 'trainee', 'independent', 'adj_core',
-                  'institution_conflicts', 'team_conflicts', 'adjudicator_conflicts', 'url_key')
+                  'institution_conflicts', 'team_conflicts', 'adjudicator_conflicts', 'url_key', '_links')
 
     def create(self, validated_data):
         adj = super().create(validated_data)
@@ -448,6 +458,10 @@ class PerTournamentInstitutionSerializer(InstitutionSerializer):
 
 
 class VenueSerializer(serializers.ModelSerializer):
+
+    class LinksSerializer(serializers.Serializer):
+        checkin = TournamentHyperlinkedIdentityField(view_name='api-venue-checkin')
+
     url = TournamentHyperlinkedIdentityField(view_name='api-venue-detail')
     categories = TournamentHyperlinkedRelatedField(
         source='venuecategory_set',
@@ -455,6 +469,7 @@ class VenueSerializer(serializers.ModelSerializer):
         view_name='api-venuecategory-detail',
     )
     display_name = serializers.ReadOnlyField()
+    _links = LinksSerializer(source='*', read_only=True)
 
     class Meta:
         model = Venue
