@@ -41,18 +41,21 @@ class TestRoundChecks(TestCase):
         DebateAdjudicator.objects.create(debate=self.debates[1], adjudicator=self.adjs[0],
             type=DebateAdjudicator.TYPE_PANEL)
         self.assertEqual(self.round.duplicate_panellists.count(), 1)
+        self.assertEqual(self.round.duplicate_panellists.first(), self.adjs[0])
 
     def test_duplicate_venues(self):
         self.assertEqual(self.round.duplicate_venues.count(), 0)
         self.debates[0].venue = self.venues[1]
         self.debates[0].save()
         self.assertEqual(self.round.duplicate_venues.count(), 1)
+        self.assertEqual(self.round.duplicate_venues.first(), self.venues[1])
 
     def test_duplicate_team_names(self):
         self.assertEqual(self.round.duplicate_team_names.count(), 0)
         self.debates[0].aff_dt.team = self.teams[1][0]
         self.debates[0].aff_dt.save()
         self.assertEqual(self.round.duplicate_team_names.count(), 1)
+        self.assertEqual(self.round.duplicate_team_names.first(), self.teams[1][0].short_name)
 
     # Properties need to be deleted in between checks, because they're all
     # decorated by @cached_property.
