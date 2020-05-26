@@ -455,10 +455,6 @@ class Round(models.Model):
         return Adjudicator.objects.exclude(debateadjudicator__debate__round=self).filter(
             round_availabilities__round=self).count()
 
-    @cached_property
-    def is_break_round(self):
-        return self.stage == self.STAGE_ELIMINATION
-
     # --------------------------------------------------------------------------
     # Draw retrieval methods
     # --------------------------------------------------------------------------
@@ -573,6 +569,10 @@ class Round(models.Model):
         round, then it returns the next round that is either in the same break
         category or is a preliminary round."""
         return self._rounds_in_same_sequence().filter(seq__gt=self.seq).order_by('seq').first()
+
+    @cached_property
+    def is_break_round(self):
+        return self.stage == self.STAGE_ELIMINATION
 
     @property
     def is_current(self):
