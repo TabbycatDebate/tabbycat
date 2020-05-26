@@ -18,7 +18,7 @@ from tournaments.models import Round, Tournament
 from venues.models import Venue, VenueCategory
 
 from .fields import (AdjudicatorFeedbackIdentityField, AnonymisingHyperlinkedTournamentRelatedField, MotionHyperlinkedIdentityField,
-    RoundHyperlinkedIdentityField, RoundHyperlinkedRelatedField, SpeakerHyperlinkedIdentityField, TournamentHyperlinkedIdentityField,
+    RoundHyperlinkedIdentityField, RoundHyperlinkedRelatedField, TournamentHyperlinkedIdentityField,
     TournamentHyperlinkedRelatedField)
 
 
@@ -250,7 +250,7 @@ class SpeakerEligibilitySerializer(serializers.ModelSerializer):
 
 
 class SpeakerSerializer(serializers.ModelSerializer):
-    url = SpeakerHyperlinkedIdentityField(view_name='api-speaker-detail')
+    url = TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-detail')
     categories = TournamentHyperlinkedRelatedField(
         many=True,
         view_name='api-speakercategory-detail',

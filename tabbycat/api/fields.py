@@ -4,7 +4,11 @@ from rest_framework.reverse import reverse
 
 
 class TournamentHyperlinkedRelatedField(HyperlinkedRelatedField):
-    tournament_field = 'tournament'
+    default_tournament_field = 'tournament'
+
+    def __init__(self, *args, **kwargs):
+        self.tournament_field = kwargs.pop('tournament_field', self.default_tournament_field)
+        super().__init__(*args, **kwargs)
 
     def use_pk_only_optimization(self):
         return False
@@ -42,7 +46,7 @@ class TournamentHyperlinkedIdentityField(TournamentHyperlinkedRelatedField, Hype
 
 
 class RoundHyperlinkedRelatedField(TournamentHyperlinkedRelatedField):
-    tournament_field = 'round__tournament'
+    default_tournament_field = 'round__tournament'
     round_field = 'round'
 
     def get_tournament(self, obj):
@@ -67,13 +71,6 @@ class RoundHyperlinkedIdentityField(RoundHyperlinkedRelatedField, HyperlinkedIde
     pass
 
 
-class SpeakerHyperlinkedIdentityField(TournamentHyperlinkedRelatedField, HyperlinkedIdentityField):
-    tournament_field = 'team__tournament'
-
-    def get_tournament(self, obj):
-        return obj.team.tournament
-
-
 class AnonymisingHyperlinkedTournamentRelatedField(TournamentHyperlinkedRelatedField):
 
     def __init__(self, view_name=None, **kwargs):
@@ -95,7 +92,7 @@ class MotionHyperlinkedIdentityField(RoundHyperlinkedIdentityField):
 
 
 class AdjudicatorFeedbackIdentityField(RoundHyperlinkedIdentityField):
-    tournament_field = None
+    default_tournament_field = None
     round_field = None
 
     def get_url_kwargs(self, obj):

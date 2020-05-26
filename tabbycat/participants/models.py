@@ -332,6 +332,10 @@ class Speaker(Person):
     def __str__(self):
         return str(self.name)
 
+    @property
+    def tournament(self):
+        return self.team.tournament
+
 
 class AdjudicatorManager(models.Manager):
     use_for_related_fields = True
