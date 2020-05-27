@@ -22,7 +22,9 @@ Change Log
 - The 'Show adjudicator institutions' preference now covers a wider range of cases; meaning that if it is unchecked then all adjudicator's institutional affiliations should be hidden from the public
 - The Edit Venues screen now shows highlights for priority and venue category
 - Tweaked the display of tables on mobile devices — they should now more reliably show a full BP draw without horizontal scrolling
-
+- Fixed issue causing crashes when trainees were demoted after results were entered (`#922 <https://github.com/TabbycatDebate/tabbycat/issues/922>`_)
+- Fixed issue where who-beat-whom would include elimination rounds (`#1073 <https://github.com/TabbycatDebate/tabbycat/issues/1073>`_)
+- Fixed issue causing even panels to be missed for user warnings (`#1465 <https://github.com/TabbycatDebate/tabbycat/issues/1465>`_)
 
 2.3.3
 -----
