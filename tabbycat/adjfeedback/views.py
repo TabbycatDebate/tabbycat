@@ -373,8 +373,6 @@ class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
                 'tooltip': _("Institution"),
             }, [team.institution.code if team.institution else TabbycatTableBuilder.BLANK_TEXT for team in tournament.team_set.all()])
 
-        adjudicators = tournament.adjudicator_set.all()
-
         adjs_table = TabbycatTableBuilder(view=self, sort_key="adjudicator", title=_("An Adjudicator"))
         adjudicators = tournament.adjudicator_set.all()
 
