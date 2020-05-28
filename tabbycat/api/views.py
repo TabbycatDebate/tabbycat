@@ -13,7 +13,8 @@ from checkins.consumers import CheckInEventConsumer
 from checkins.utils import create_identifiers, get_unexpired_checkins
 from options.models import TournamentPreferenceModel
 from participants.models import Adjudicator, Institution, Speaker, Team
-from standings.base import Standings
+from standings.speakers import SpeakerStandingsGenerator
+from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import TournamentFromUrlMixin
 from tournaments.models import Round, Tournament
 from venues.models import Venue
@@ -284,23 +285,43 @@ class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPI
     lookup_field = 'slug'
     lookup_url_kwarg = 'tournament_slug'
 
+    def get_metrics(self):
+        pref_model = self.model.__name__.lower()
+        return self.tournament.pref(pref_model + '_standings_precedence'), self.tournament.pref(pref_model + '_standings_extra_metrics')
+
     def get_queryset(self):
-        qs = self.model.filter(**{self.tournament_field: self.tournament})
+        qs = self.model.objects.filter(**{self.tournament_field: self.tournament}).select_related(self.tournament_field)
         category = self.request.query_params.get('category', None)
         if category is not None:
             return qs.filter(categories__pk=category)
         return qs
 
-    def get(self, request, format=None):
-        return Response(self.get_serializer(data=Standings(self.get_queryset())).data)
+    def get_max_round(self):
+        return None
+
+    def get(self, request, **kwargs):
+        metrics, extra_metrics = self.get_metrics()
+        generator = self.generator(metrics, ('rank',), extra_metrics)
+        standings = generator.generate(self.get_queryset(), round=self.get_max_round())
+        serializer = self.get_serializer(iter(standings), many=True)
+        return Response(serializer.data)
 
 
-class SpeakerStandingsView(BaseStandingsView):
+class SubstantiveSpeakerStandingsView(BaseStandingsView):
     name = "Speaker Standings"
     serializer_class = serializers.SpeakerStandingsSerializer
     access_preference = 'speaker_tab_released'
     model = Speaker
     tournament_field = 'team__tournament'
+    generator = SpeakerStandingsGenerator
+
+    def get_max_round(self):
+        return self.tournament.round_set.last()
+
+
+class ReplySpeakerStandingsView(SubstantiveSpeakerStandingsView):
+    def get_metrics(self):
+        return ('replies_avg',), ('replies_stddev', 'replies_count')
 
 
 class TeamStandingsView(BaseStandingsView):
@@ -308,6 +329,7 @@ class TeamStandingsView(BaseStandingsView):
     serializer_class = serializers.TeamStandingsSerializer
     access_preference = 'team_tab_released'
     model = Team
+    generator = TeamStandingsGenerator
 
 
 class PairingViewSet(RoundAPIMixin, ModelViewSet):

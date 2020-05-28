@@ -157,9 +157,14 @@ urlpatterns = [
                             views.SpeakerCheckinsView.as_view(),
                             name='api-speaker-checkin'),
                     ])),
-                    path('/standings',
-                         views.SpeakerStandingsView.as_view(),
-                         name='api-speaker-standings'),
+                    path('/standings', include([
+                        path('',
+                            views.SubstantiveSpeakerStandingsView.as_view(),
+                            name='api-substantive-speaker-standings'),
+                        path('/replies',
+                            views.ReplySpeakerStandingsView.as_view(),
+                            name='api-reply-speaker-standings'),
+                    ])),
                 ])),
                 path('/venues', include([
                     path('',
