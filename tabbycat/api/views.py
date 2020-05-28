@@ -81,7 +81,6 @@ class RoundViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
 
 
 class MotionViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
-    """Administrator-access as may include unreleased motions."""
     serializer_class = serializers.MotionSerializer
     tournament_field = 'round__tournament'
 
@@ -132,7 +131,13 @@ class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
 
     def get_queryset(self):
         return super().get_queryset().select_related('tournament').prefetch_related(
-            Prefetch('speaker_set', queryset=Speaker.objects.all().prefetch_related('categories', 'categories__tournament').select_related('team__tournament')))
+            Prefetch(
+                'speaker_set',
+                queryset=Speaker.objects.all().prefetch_related('categories', 'categories__tournament').select_related('team__tournament'),
+            ),
+            'institution_conflicts',
+            'break_categories', 'break_categories__tournament',
+        )
 
 
 class AdjudicatorViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
