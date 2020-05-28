@@ -93,12 +93,6 @@ class RoundSerializer(serializers.ModelSerializer):
         pairing = TournamentHyperlinkedIdentityField(
             view_name='api-pairing-list',
             lookup_field='seq', lookup_url_kwarg='round_seq')
-
-    tournament = serializers.HyperlinkedRelatedField(
-        view_name='api-tournament-detail',
-        lookup_field='slug', lookup_url_kwarg='tournament_slug',
-        queryset=Tournament.objects.all(),
-    )
     url = TournamentHyperlinkedIdentityField(
         view_name='api-round-detail',
         lookup_field='seq', lookup_url_kwarg='round_seq')
@@ -473,7 +467,7 @@ class VenueSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Venue
-        fields = '__all__'
+        exclude = ('tournament',)
 
 
 class VenueCategorySerializer(serializers.ModelSerializer):
@@ -485,7 +479,7 @@ class VenueCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VenueCategory
-        fields = '__all__'
+        exclude = ('tournament',)
 
 
 class BaseStandingsSerializer(serializers.Serializer):
