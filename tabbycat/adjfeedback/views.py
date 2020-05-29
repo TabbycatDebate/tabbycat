@@ -6,6 +6,7 @@ import math
 from django.contrib import messages
 from django.db.models import Count, F, Q
 from django.http import HttpResponse, JsonResponse
+from django.utils import timezone
 from django.utils.translation import gettext as _, gettext_lazy, ngettext, ngettext_lazy
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView
@@ -751,7 +752,10 @@ class ConfirmFeedbackView(BaseFeedbackToggleView):
         return _("confirmed") if feedback.confirmed else _("un-confirmed")
 
     def modify_feedback(self, feedback):
-        feedback.confirmed = False if feedback.confirmed else True
+        feedback.confirmed = not feedback.confirmed
+        if feedback.confirmed:
+            feedback.confirm_timestamp = timezone.now()
+            feedback.confirmer = self.request.user
         return feedback
 
 
@@ -761,7 +765,7 @@ class IgnoreFeedbackView(BaseFeedbackToggleView):
         return _("ignored") if feedback.ignored else _("un-ignored")
 
     def modify_feedback(self, feedback):
-        feedback.ignored = False if feedback.ignored else True
+        feedback.ignored = not feedback.ignored
         return feedback
 
 
