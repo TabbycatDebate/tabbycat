@@ -302,6 +302,7 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
         for sc in speaker_categories:
             table.add_column({'title': _('%s Speakers') % sc.name, 'key': sc.name}, [{
                 'text': getattr(team, 'nspeakers_%s' % sc.slug, 'N/A'),
+                'sort': getattr(team, 'nspeakers_%s' % sc.slug, 0),
                 'tooltip': ngettext(
                     'Team has %(nspeakers)s speaker with the %(category)s speaker category assigned',
                     'Team has %(nspeakers)s speakers with the %(category)s speaker category assigned',
