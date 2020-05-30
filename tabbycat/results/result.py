@@ -463,8 +463,8 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
 
     def assert_loaded(self):
         super().assert_loaded()
-        assert set(self.debate.adjudicators.voting()) == set(self.scoresheets)
-        assert set(self.debateadjs) == set(self.scoresheets)
+        assert set(self.debate.adjudicators.voting()) == set(self.scoresheets.keys())
+        assert set(self.debateadjs.keys()) == set(self.scoresheets.keys())
         assert self.sides == ['aff', 'neg'], "VotingDebateResult can only be used for two-team formats."
 
     def is_complete(self):
