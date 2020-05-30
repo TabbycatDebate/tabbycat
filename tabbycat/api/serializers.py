@@ -431,7 +431,6 @@ class InstitutionSerializer(serializers.ModelSerializer):
 
 
 class PerTournamentInstitutionSerializer(InstitutionSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name='api-institution-detail')
     teams = TournamentHyperlinkedRelatedField(
         source='team_set',
         many=True,

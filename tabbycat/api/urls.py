@@ -113,14 +113,9 @@ urlpatterns = [
                     ])),
                 ])),
 
-                path('/institutions', include([
-                    path('',
-                         views.InstitutionViewSet.as_view(list_methods),
-                         name='api-institution-list'),
-                    path('/<int:pk>',
-                         views.InstitutionViewSet.as_view(detail_methods),
-                         name='api-institution-detail'),
-                ])),
+                path('/institutions',
+                    views.InstitutionViewSet.as_view({'get': 'list'}),
+                    name='api-institution-list'),
                 path('/teams', include([
                     path('',
                          views.TeamViewSet.as_view(list_methods),
