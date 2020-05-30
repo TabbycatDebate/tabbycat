@@ -365,12 +365,12 @@ class FeedbackQuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.FeedbackQuestionSerializer
 
     def get_queryset(self):
-        q = super().get_queryset().filter()
+        filters = Q()
         if self.request.query_params.get('from_adj'):
-            q = q.filter(from_adj=True)
+            filters &= Q(from_adj=True)
         if self.request.query_params.get('from_team'):
-            q = q.filter(from_team=True)
-        return q
+            filters &= Q(from_team=True)
+        return super().get_queryset().filter(filters)
 
 
 class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
@@ -378,6 +378,21 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     tournament_field = 'adjudicator__tournament'
 
     def get_queryset(self):
+        query_params = self.request.query_params
+        filters = Q()
+        if query_params.get('source_type') == 'adjudicator':
+            filters &= Q(source_team__isnull=True)
+            if query_params.get('source'):
+                filters &= Q(source_adjudicator__adjudicator_id=query_params.get('source'))
+        elif query_params.get('source_type') == 'team':
+            filters &= Q(source_adjudicator__isnull=True)
+            if query_params.get('source'):
+                filters &= Q(source_adjudicator__adjudicator_id=query_params.get('source'))
+        if query_params.get('round'):
+            filters &= Q(source_adjudicator__debate__round__seq=query_params.get('round')) | Q(source_team__debate__round__seq=query_params.get('round'))
+        if query_params.get('target'):
+            filters &= Q(adjudicator_id=query_params.get('target'))
+
         answers_prefetch = [
             Prefetch(
                 typ.__name__.lower() + "_set",
@@ -386,7 +401,7 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
             )
             for typ in AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE.keys()
         ]
-        return super().get_queryset().select_related(
+        return super().get_queryset().filter(filters).select_related(
             'adjudicator', 'adjudicator__tournament',
             'source_adjudicator', 'source_team', 'source_team__team',
             'source_adjudicator__adjudicator__tournament', 'source_team__team__tournament',
