@@ -15,6 +15,12 @@
   {% endif %}
 {% endblock %}
 
+{% block sub-title %}
+  {% blocktrans trimmed with round=debate.round.name room=debate.venue.display_name %}
+    {{ round }} @ {{ room }}
+  {% endblocktrans %}
+{% endblock %}
+
 {% block page-title %}
   {% blocktrans trimmed with room=debate.venue.display_name debate=debate_name %}
     {{ room }}: {{ debate }}
