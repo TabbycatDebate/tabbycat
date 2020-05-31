@@ -94,7 +94,7 @@ class Person(models.Model):
     name = models.CharField(max_length=70, db_index=True,
         verbose_name=_("name"))
     email = models.EmailField(blank=True, null=True,
-        verbose_name=_("e-mail address"))
+        verbose_name=_("email address"))
     phone = models.CharField(max_length=40, blank=True,
         verbose_name=_("phone"))
     anonymous = models.BooleanField(default=False,
