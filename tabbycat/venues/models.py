@@ -13,6 +13,8 @@ class Venue(models.Model):
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
         null=True, db_index=True,
         verbose_name=_("tournament"))
+    url = models.URLField(verbose_name=_("URL"), blank=True,
+        help_text=_("A URL that contains extra information about this venue, e.g. a map or a meeting link (for online tournaments)"))
 
     round_availabilities = GenericRelation('availability.RoundAvailability')
 
