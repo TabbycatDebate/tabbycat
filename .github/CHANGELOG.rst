@@ -10,6 +10,7 @@ Change Log
 - Added support for Russian, and shortened the language selector
 - Renamed 'test score' to 'base score', as well as 'venue' to 'room'
 - Divisions-specific features have been deprecated and removed
+- The 'Feedback Explanation' preference now uses a full text area for easier text formatting
 - Changing the sorting on debates in allocation views now only sorts once. Thus, changing importances will no longer re-order the list immediately.
 - Display room ranks in the Edit Adjudicator UI during elimination rounds and allow for sorting by room rank
 - Enabled debates to be sorted by the sum liveness of teams present
