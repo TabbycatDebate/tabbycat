@@ -294,6 +294,7 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
             table.add_column({'title': bc.name, 'key': bc.slug}, [{
                 'component': 'check-cell',
                 'checked': True if bc in team.break_categories.all() else False,
+                'sort': True if bc in team.break_categories.all() else False,
                 'id': team.id,
                 'type': bc.slug,
             } for team in teams])
