@@ -410,12 +410,13 @@ class ShowUnaccredited(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class FeedbackIntroduction(StringPreference):
+class FeedbackIntroduction(LongStringPreference):
     help_text = _("Any explanatory text needed to introduce the feedback form")
     verbose_name = _("Feedback introduction/explanation")
     section = feedback
     name = 'feedback_introduction'
     default = ''
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
     field_kwargs = {'required': False}
 
 
