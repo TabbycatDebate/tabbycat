@@ -753,7 +753,9 @@ paths:
         - feedback
     post:
       operationId: v1_tournaments_feedback_update
-      description: Modify feedback
+      description: >-
+        Modify feedback. Only the confirmed and ignored fields can be updated;
+        all other fields are ignored.
       responses:
         '201':
           description: ''
@@ -1098,7 +1100,11 @@ paths:
         - rounds
     post:
       operationId: v1_tournaments_rounds_update
-      description: Modify a round
+      description: >-
+        Modify a round. Motions are modified by sequence, so their text fields can be modified.
+        To move motions, placeholder sequences are needed through Motion endpoints, as well as
+        for deleting motions. Motions can be appended through this method. An empty field has no
+        effect.
       responses:
         '201':
           description: ''
@@ -1202,7 +1208,9 @@ paths:
         - debates
     post:
       operationId: v1_tournaments_rounds_pairings_update
-      description: Modify a pairing in the round
+      description: >-
+        Modify a pairing in the round. Teams can be modified, but cannot be moved between sides.
+        This method thus cannot be used when confirming sides. An empty field has no effect.
       responses:
         '201':
           description: ''

@@ -93,6 +93,7 @@ class RoundSerializer(serializers.ModelSerializer):
         pairing = TournamentHyperlinkedIdentityField(
             view_name='api-pairing-list',
             lookup_field='seq', lookup_url_kwarg='round_seq')
+
     url = TournamentHyperlinkedIdentityField(
         view_name='api-round-detail',
         lookup_field='seq', lookup_url_kwarg='round_seq')
@@ -126,6 +127,16 @@ class RoundSerializer(serializers.ModelSerializer):
 
         return round
 
+    def update(self, instance, validated_data):
+        motions_data = validated_data.pop('motions')
+        for motion in motions_data:
+            Motion.objects.update_or_create(round=instance, seq=motion['seq'], defaults={
+                'text': motion['text'],
+                'reference': motion['reference'],
+                'info_slide': motion['info_slide'],
+            })
+        return super().update(instance, validated_data)
+
 
 class MotionSerializer(serializers.ModelSerializer):
     class RoundsSerializer(serializers.ModelSerializer):
@@ -158,7 +169,7 @@ class MotionSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         self.handle_roundmotions(validated_data)
-        super().update(validated_data)
+        super().update(instance, validated_data)
 
 
 class BreakCategorySerializer(serializers.ModelSerializer):
@@ -270,12 +281,6 @@ class SpeakerSerializer(serializers.ModelSerializer):
         model = Speaker
         fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
                   'categories', 'url_key', '_links')
-
-    def create(self, validated_data):
-        speaker_categories = validated_data.pop("categories")
-        speaker = super().create(validated_data)
-        speaker.categories.set(speaker_categories)
-        return speaker
 
 
 class AdjudicatorSerializer(serializers.ModelSerializer):
@@ -554,6 +559,16 @@ class RoundPairingSerializer(serializers.ModelSerializer):
 
         return debate
 
+    def update(self, instance, validated_data):
+        teams_data = validated_data.pop('teams')
+        for team in teams_data:
+            DebateTeam.objects.update_or_create(debate=instance, side=team['side'], defaults={
+                'team': team['team'],
+            })
+        adjudicators = self.DebateAdjudicatorSerializer()
+        adjudicators._validated_data = validated_data.pop('adjudicators')
+        adjudicators.save(debate=instance)
+
 
 class FeedbackQuestionSerializer(serializers.ModelSerializer):
 
@@ -695,3 +710,12 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
             obj.save()
 
         return feedback
+
+    def update(self, instance, validated_data):
+        if validated_data['confirmed'] and not instance.confirmed:
+            validated_data['confirmer'] = self.context['request'].user
+            validated_data['confirm_timestamp'] = timezone.now()
+
+        instance.confirmed = validated_data['confirmed']
+        instance.ignored = validated_data['ignored']
+        instance.save()
