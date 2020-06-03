@@ -84,6 +84,7 @@ TABBYCAT_APPS = (
     'actionlog',
     'adjallocation',
     'adjfeedback',
+    'api',
     'availability',
     'breakqual',
     'checkins',
