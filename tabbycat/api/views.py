@@ -1,3 +1,5 @@
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.db.models import Count, Prefetch, Q
 from django.http.response import Http404
 from dynamic_preferences.api.serializers import PreferenceSerializer
@@ -208,12 +210,18 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
         return [obj.checkin_identifier.barcode]
 
     def broadcast_checkin(self, obj, check):
-        CheckInEventConsumer().receive_json({
-            'barcodes': self.get_barcodes(obj),
-            'status': check,
-            'type': obj.checkin_identifier.instance_attr,
-            'component_id': None,
-        })
+        group_name = CheckInEventConsumer.group_prefix + "_" + self.tournament.slug
+        async_to_sync(get_channel_layer().group_send)(
+            group_name, {
+                'type': 'broadcast_checkin',
+                'content': {
+                    'barcodes': self.get_barcodes(obj),
+                    'status': check,
+                    'type': obj.checkin_identifier.instance_attr,
+                    'component_id': None,
+                },
+            },
+        )
 
     def get_response_dict(self, request, obj, checked, **kwargs):
         return {
@@ -252,7 +260,7 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
         """Toggles the check-in status"""
         obj = self.get_object()
         check = get_unexpired_checkins(self.tournament, self.window_preference_pref).filter(identifier=obj.checkin_identifier).exists()
-        self.broadcast_checkin(obj.checkin_identifier, not check)
+        self.broadcast_checkin(obj, not check)
         return Response(self.get_response_dict(request, obj, not check))
 
     def post(self, request, *args, **kwargs):
