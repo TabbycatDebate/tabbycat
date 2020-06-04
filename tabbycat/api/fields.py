@@ -38,7 +38,7 @@ class TournamentHyperlinkedRelatedField(HyperlinkedRelatedField):
         return {self.tournament_field: self.context['tournament']}
 
     def get_queryset(self):
-        return self.queryset.filter(**self.lookup_kwargs()).select_related(self.tournament_field)
+        return super().get_queryset().filter(**self.lookup_kwargs()).select_related(self.tournament_field)
 
 
 class TournamentHyperlinkedIdentityField(TournamentHyperlinkedRelatedField, HyperlinkedIdentityField):
