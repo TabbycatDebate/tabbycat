@@ -141,7 +141,8 @@ class RoundSerializer(serializers.ModelSerializer):
 class MotionSerializer(serializers.ModelSerializer):
     class RoundsSerializer(serializers.ModelSerializer):
         round = TournamentHyperlinkedRelatedField(view_name='api-round-detail',
-            lookup_field='seq', lookup_url_kwarg='round_seq')
+            lookup_field='seq', lookup_url_kwarg='round_seq',
+            queryset=Round.objects.all())
 
         class Meta:
             model = Motion
@@ -479,6 +480,7 @@ class VenueCategorySerializer(serializers.ModelSerializer):
     venues = TournamentHyperlinkedRelatedField(
         many=True,
         view_name='api-venue-detail',
+        queryset=Venue.objects.all(),
     )
 
     class Meta:
@@ -505,7 +507,7 @@ class BaseStandingsSerializer(serializers.Serializer):
 
 
 class TeamStandingsSerializer(BaseStandingsSerializer):
-    team = TournamentHyperlinkedRelatedField(view_name='api-team-detail')
+    team = TournamentHyperlinkedRelatedField(view_name='api-team-detail', queryset=Team.objects.all())
 
 
 class SpeakerStandingsSerializer(BaseStandingsSerializer):
@@ -514,16 +516,17 @@ class SpeakerStandingsSerializer(BaseStandingsSerializer):
 
 class RoundPairingSerializer(serializers.ModelSerializer):
     class DebateTeamSerializer(serializers.ModelSerializer):
-        team = TournamentHyperlinkedRelatedField(view_name='api-team-detail')
+        team = TournamentHyperlinkedRelatedField(view_name='api-team-detail', queryset=Team.objects.all())
 
         class Meta:
             model = DebateTeam
             fields = ('team', 'side')
 
     class DebateAdjudicatorSerializer(serializers.Serializer):
-        chair = TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail')
-        panellists = TournamentHyperlinkedRelatedField(many=True, view_name='api-adjudicator-detail')
-        trainees = TournamentHyperlinkedRelatedField(many=True, view_name='api-adjudicator-detail')
+        adjudicators = Adjudicator.objects.all()
+        chair = TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail', queryset=adjudicators)
+        panellists = TournamentHyperlinkedRelatedField(many=True, view_name='api-adjudicator-detail', queryset=adjudicators)
+        trainees = TournamentHyperlinkedRelatedField(many=True, view_name='api-adjudicator-detail', queryset=adjudicators)
 
         def save(self, **kwargs):
             aa = kwargs['debate'].adjudicators
@@ -534,7 +537,7 @@ class RoundPairingSerializer(serializers.ModelSerializer):
             return aa
 
     url = RoundHyperlinkedIdentityField(view_name='api-pairing-detail')
-    venue = TournamentHyperlinkedRelatedField(view_name='api-venue-detail')
+    venue = TournamentHyperlinkedRelatedField(view_name='api-venue-detail', queryset=Venue.objects.all())
     teams = DebateTeamSerializer(many=True, source='debateteam_set')
     adjudicators = DebateAdjudicatorSerializer()
 
@@ -601,7 +604,7 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
         view_name = ''  # View and model/queryset is dynamic on the object
 
         def get_queryset(self):
-            return self.model.all()
+            return self.model.objects.all()
 
         def to_representation(self, value):
             format = self.context.get('format', None)
@@ -653,7 +656,7 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
                 self.fail('does_not_exist')
 
     class FeedbackAnswerSerializer(serializers.Serializer):
-        question = TournamentHyperlinkedRelatedField(view_name='api-feedbackquestion-detail')
+        question = TournamentHyperlinkedRelatedField(view_name='api-feedbackquestion-detail', queryset=AdjudicatorFeedbackQuestion.objects.all())
         answer = serializers.CharField()
 
         def validate(self, data):
@@ -663,9 +666,9 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
             return super().validate(data)
 
     url = AdjudicatorFeedbackIdentityField(view_name='api-feedback-detail')
-    adjudicator = TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail')
+    adjudicator = TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail', queryset=Adjudicator.objects.all())
     source = SourceField(source='*')
-    debate = RoundHyperlinkedRelatedField(view_name='api-pairing-detail')
+    debate = RoundHyperlinkedRelatedField(view_name='api-pairing-detail', queryset=Debate.objects.all())
     answers = FeedbackAnswerSerializer(many=True, source='get_answers', required=False)
 
     class Meta:
