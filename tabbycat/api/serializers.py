@@ -606,6 +606,9 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
         def get_queryset(self):
             return self.model.objects.all()
 
+        def get_attribute(self, obj):
+            return obj
+
         def to_representation(self, value):
             format = self.context.get('format', None)
             if format and self.format and self.format != format:
@@ -623,6 +626,8 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
             return Hyperlink(url, value)
 
         def to_internal_value(self, data):
+            self.source_attrs = ['source']  # Must set
+
             # Was the value already entered?
             if isinstance(data, Adjudicator) or isinstance(data, Team):
                 return data
@@ -655,20 +660,27 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
             except self.model.DoesNotExist:
                 self.fail('does_not_exist')
 
+    class DebateHyperlinkedRelatedField(RoundHyperlinkedRelatedField):
+        def lookup_kwargs(self):
+            return {self.tournament_field: self.context['tournament']}
+
     class FeedbackAnswerSerializer(serializers.Serializer):
-        question = TournamentHyperlinkedRelatedField(view_name='api-feedbackquestion-detail', queryset=AdjudicatorFeedbackQuestion.objects.all())
+        question = TournamentHyperlinkedRelatedField(
+            view_name='api-feedbackquestion-detail',
+            queryset=AdjudicatorFeedbackQuestion.objects.all(),
+        )
         answer = serializers.CharField()
 
         def validate(self, data):
             # Convert answer to correct type
-            model = AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[data.question.answer_type]
+            model = AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[data['question'].answer_type]
             data['answer'] = model.ANSWER_TYPE(data['answer'])
             return super().validate(data)
 
     url = AdjudicatorFeedbackIdentityField(view_name='api-feedback-detail')
     adjudicator = TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail', queryset=Adjudicator.objects.all())
     source = SourceField(source='*')
-    debate = RoundHyperlinkedRelatedField(view_name='api-pairing-detail', queryset=Debate.objects.all())
+    debate = DebateHyperlinkedRelatedField(view_name='api-pairing-detail', queryset=Debate.objects.all())
     answers = FeedbackAnswerSerializer(many=True, source='get_answers', required=False)
 
     class Meta:
@@ -679,7 +691,7 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
     def validate(self, data):
         # Test answers for correct source
         source_type = 'from_team' if isinstance(data['source'], Team) else 'from_adj'
-        for answer in data['answers']:
+        for answer in data.get('get_answers'):
             if not getattr(answer['question'], source_type, False):
                 raise serializers.ValidationError("Question is not permitted from source.")
         return super().validate(data)
@@ -690,7 +702,7 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
     def create(self, validated_data):
         debate = validated_data.pop('debate')
         source = validated_data.pop('source')
-        answers = validated_data.pop('answers')
+        answers = validated_data.pop('get_answers')
 
         if isinstance(source, Team):
             validated_data['source_team'] = source.debateteam_set.get(debate=debate)

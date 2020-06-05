@@ -302,7 +302,7 @@ class AdjudicatorFeedback(Submission):
         return [
             {'question': q.question, 'answer': q.answer}
             for typ in AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE.keys()
-            for q in getattr(self, typ.__name__)
+            for q in getattr(self, typ.__name__.lower() + '_set').all()
         ]
 
     def clean(self):

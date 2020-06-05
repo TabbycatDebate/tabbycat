@@ -385,6 +385,9 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.FeedbackSerializer
     tournament_field = 'adjudicator__tournament'
 
+    def perform_create(self, serializer):
+        serializer.save()
+
     def get_queryset(self):
         query_params = self.request.query_params
         filters = Q()
