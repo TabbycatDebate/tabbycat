@@ -7,6 +7,7 @@ from django.utils.encoding import uri_to_iri
 from rest_framework import serializers
 from rest_framework.relations import Hyperlink
 
+from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
 from draw.models import Debate, DebateTeam
@@ -689,25 +690,38 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
         read_only_fields = ('timestamp', 'version', 'submitter_type', 'submitter', 'confirmer', 'confirm_timestamp', 'ip_address')
 
     def validate(self, data):
+        source = data.pop('source')
+        debate = data.pop('debate')
+
         # Test answers for correct source
-        source_type = 'from_team' if isinstance(data['source'], Team) else 'from_adj'
+        source_type = 'from_team' if isinstance(source, Team) else 'from_adj'
         for answer in data.get('get_answers'):
             if not getattr(answer['question'], source_type, False):
                 raise serializers.ValidationError("Question is not permitted from source.")
+
+        # Test participants in debate
+        if not data['adjudicator'].debateadjudicator_set.filter(debate=debate).exists():
+            raise serializers.ValidationError("Target is not in debate")
+
+        # Also move the source field into participant_specific fields
+        if isinstance(source, Team):
+            try:
+                data['source_team'] = source.debateteam_set.get(debate=debate)
+            except DebateTeam.DoesNotExist:
+                raise serializers.ValidationError("Source is not in debate")
+        elif isinstance(source, Adjudicator):
+            try:
+                data['source_adjudicator'] = source.debateadjudicator_set.get(debate=debate)
+            except DebateAdjudicator.DoesNotExist:
+                raise serializers.ValidationError("Source is not in debate")
+
         return super().validate(data)
 
     def get_request(self):
         return self.context['request']
 
     def create(self, validated_data):
-        debate = validated_data.pop('debate')
-        source = validated_data.pop('source')
         answers = validated_data.pop('get_answers')
-
-        if isinstance(source, Team):
-            validated_data['source_team'] = source.debateteam_set.get(debate=debate)
-        else:
-            validated_data['source_adjudicator'] = source.debateadjudicator_set.get(debate=debate)
 
         validated_data.update(self.get_submitter_fields())
         if validated_data['confirmed']:
