@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-20 23:12-0500\n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
 "PO-Revision-Date: 2019-07-11 23:49\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -252,60 +252,60 @@ msgstr ""
 msgid "Go back to the site home page"
 msgstr ""
 
-#: notifications/utils.py:28
+#: notifications/utils.py:29
 msgid "the chair"
 msgstr ""
 
-#: notifications/utils.py:29
+#: notifications/utils.py:30
 msgid "the only"
 msgstr ""
 
-#: notifications/utils.py:30
+#: notifications/utils.py:31
 msgid "a panellist"
 msgstr ""
 
-#: notifications/utils.py:31
+#: notifications/utils.py:32
 msgid "a trainee"
 msgstr ""
 
-#: notifications/utils.py:54
+#: notifications/utils.py:55
 msgid "TBA"
 msgstr ""
 
-#: notifications/utils.py:100
+#: notifications/utils.py:101
 #, python-format
 msgid "%(tournament)s %(round)s @ %(room)s"
 msgstr ""
 
-#: notifications/utils.py:111
+#: notifications/utils.py:112
 #, python-format
-msgid "<li>%(side)s: %(team)s (%(points)d points with %(speaks)d total speaks)"
-msgstr ""
-
-#: notifications/utils.py:114
-#, python-format
-msgid "<li>%(side)s: %(team)s (%(points)s - %(speaks)d total speaks)"
+msgid "<li>%(side)s: %(team)s (%(points)d points with %(speaks)s total speaks)"
 msgstr ""
 
 #: notifications/utils.py:115
+#, python-format
+msgid "<li>%(side)s: %(team)s (%(points)s - %(speaks)s total speaks)"
+msgstr ""
+
+#: notifications/utils.py:116
 msgid "Win"
 msgstr ""
 
-#: notifications/utils.py:115
+#: notifications/utils.py:116
 msgid "Loss"
 msgstr ""
 
-#: notifications/utils.py:127
+#: notifications/utils.py:128
 #, python-format
 msgid "<li>%(pos)s: %(speaker)s (%(score)s)</li>"
 msgstr ""
 
-#: notifications/utils.py:201
+#: notifications/utils.py:202
 #, python-format
 msgid "<li>%(text)s (%(ref)s)</li>"
 msgstr ""
 
-#: notifications/utils.py:236 notifications/utils.py:237
+#: notifications/utils.py:237 notifications/utils.py:238
 msgid ", "
 msgstr ""
 

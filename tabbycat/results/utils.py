@@ -29,9 +29,9 @@ def readable_ballotsub_result(ballotsub):
 
     def format_dt(dt, t, use_codes):
         # Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
-        return _("%(team_name)s as %(side_abbr)s") % {
-            'team_name': dt.team.code_name if use_codes else dt.team.short_name,
-            'side_abbr': dt.get_side_abbr(t),
+        return _("%(team)s as %(side)s") % {
+            'team': dt.team.code_name if use_codes else dt.team.short_name,
+            'side': dt.get_side_abbr(t),
         }
 
     t = ballotsub.debate.round.tournament

@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load static debate_tags add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">🎪</span> {% trans "Add Venues" context 'page title' %}
+{% block head-title %}<span class="emoji">🎪</span> {% trans "Add Rooms" context 'page title' %}
 {% blocktrans trimmed with step=wizard.steps.step1 count=wizard.steps.count %}(Step {{ step }} of {{ count }}){% endblocktrans %}{% endblock %}
-{% block page-title %}{% trans "Add Venues" context 'page title' %}{% endblock %}
+{% block page-title %}{% trans "Add Rooms" context 'page title' %}{% endblock %}
 
 {% block content %}
 
@@ -14,7 +14,7 @@
   </div>
 
   {% blocktrans trimmed asvar p1 %}
-    Priorities indicate how much you want to use the venue. Larger numbers indicate higher priority. If you have more venues than debates, the venues with the lowest priorities will not be used.
+    Priorities indicate how much you want to use the room. Larger numbers indicate higher priority. If you have more rooms than debates, the rooms with the lowest priorities will not be used.
   {% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" %}
 
@@ -30,7 +30,7 @@
     {% for form in wizard.form.forms %}
       {% include "components/form-main.html" with double=True %}
     {% endfor %}
-    {% trans 'Save All Venues' as title %}
+    {% trans 'Save All Rooms' as title %}
     {% include "components/form-submit.html" %}
   </div>
 

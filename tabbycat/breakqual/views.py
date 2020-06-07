@@ -291,16 +291,17 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
 
         break_categories = t.breakcategory_set.order_by('seq')
         for bc in break_categories:
-            table.add_column({'title': bc.name, 'key': bc.name}, [{
+            table.add_column({'title': bc.name, 'key': bc.slug}, [{
                 'component': 'check-cell',
                 'checked': True if bc in team.break_categories.all() else False,
+                'sort': True if bc in team.break_categories.all() else False,
                 'id': team.id,
-                'type': bc.id,
+                'type': bc.slug,
             } for team in teams])
 
         # Provide list of members within speaker categories for convenient entry
         for sc in speaker_categories:
-            table.add_column({'title': _('%s Speakers') % sc.name, 'key': sc.name}, [{
+            table.add_column({'title': _('%s Speakers') % sc.name, 'key': sc.name + "_speakers"}, [{
                 'text': getattr(team, 'nspeakers_%s' % sc.slug, 'N/A'),
                 'tooltip': ngettext(
                     'Team has %(nspeakers)s speaker with the %(category)s speaker category assigned',

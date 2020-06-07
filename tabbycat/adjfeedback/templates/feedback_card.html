@@ -27,12 +27,12 @@
             {% elif feedback.score > score_thresholds.high_score %}badge-success
             {% else %}badge-primary{% endif %}" data-toggle="tooltip"
             title="{% trans "The score given in this piece of feedback." %}">
-        {% blocktrans trimmed with score=feedback.score rname=feedback.round.abbreviation %}
-          {{ rname }} {{ score }}
+        {% blocktrans trimmed with score=feedback.score round=feedback.round.abbreviation %}
+          {{ round }} {{ score }}
         {% endblocktrans %}
       </span>
-      {% blocktrans with adj=feedback.adjudicator.name %}
-        On {{ adj }}
+      {% blocktrans with adjudicator=feedback.adjudicator.name %}
+        On {{ adjudicator }}
       {% endblocktrans %}
     </div>
     <div class="list-group-item h5">
@@ -40,8 +40,8 @@
         <span class="text-secondary small">Received as {{ as }}</span>
       {% endblocktrans %}
       <span class="badge float-right badge-secondary" data-toggle="tooltip">
-        {% blocktrans trimmed with test=feedback.adjudicator.base_score|floatformat:"1" %}
-          Test {{ test }}
+        {% blocktrans trimmed with base=feedback.adjudicator.base_score|floatformat:"1" %}
+          Base {{ base }}
         {% endblocktrans %}
       </span>
     </div>

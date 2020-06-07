@@ -106,17 +106,17 @@ class TournamentMixin(TabbycatPageTitlesMixin, TournamentFromUrlMixin):
         if t.current_round is None:
             if hasattr(self.request, 'user') and self.request.user.is_superuser:
                 messages.warning(request, _("You've been redirected to this "
-                    "page because tournament %(tournament_name)s has no rounds. "
+                    "page because tournament %(tournament)s has no rounds. "
                     "Please create some before returning to the admin site.") %
-                    {'tournament_name': t.name})
+                    {'tournament': t.name})
                 admin_url = reverse('admin:tournaments_round_changelist')
                 return redirect(admin_url)
             else:
                 logger.warning("Current round wasn't set, redirecting to site index")
                 messages.warning(request, _("There's a problem with the data "
-                    "for the tournament %(tournament_name)s. Please contact a "
+                    "for the tournament %(tournament)s. Please contact a "
                     "tab director and ask them to investigate.") %
-                    {'tournament_name': t.name})
+                    {'tournament': t.name})
                 url = add_query_string_parameter(reverse('tabbycat-index'), 'redirect', 'false')
                 return redirect(url)
 

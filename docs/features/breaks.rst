@@ -36,7 +36,7 @@ which is the default.
   :widths: 30 70
 
   * - Rule name (string to use in ``importtournament`` CSV files)
-    - Descrption
+    - Description
 
   * - Standard (``standard``)
     - The top *n* teams break. This is the default, and

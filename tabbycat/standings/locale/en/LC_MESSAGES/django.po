@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-20 23:12-0500\n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
 "PO-Revision-Date: 2019-07-11 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -49,7 +49,7 @@ msgid "All Speakers"
 msgstr ""
 
 #: standings/diversity.py:169
-msgid "Indies"
+msgid "IAs"
 msgstr ""
 
 #: standings/diversity.py:177
@@ -189,7 +189,7 @@ msgstr ""
 msgid "wins"
 msgstr ""
 
-#: standings/teams.py:75 standings/views.py:597
+#: standings/teams.py:75 standings/views.py:596
 msgid "Wins"
 msgstr ""
 
@@ -497,7 +497,7 @@ msgstr ""
 
 #: standings/templates/standings_menu.html:47
 #, python-format
-msgid "%(category_name)s"
+msgid "%(category)s"
 msgstr ""
 
 #: standings/templates/standings_menu.html:55
@@ -517,87 +517,87 @@ msgstr ""
 msgid "The team standings precedence is empty. This means that teams aren't ranked according to any metrics, so everyone is first equal. If this isn't what you intended, set the team standings precedence in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>. In most tournaments, the first metric should be points or wins."
 msgstr ""
 
-#: standings/views.py:100
+#: standings/views.py:99
 #, python-format
 msgid "<p>There was an error generating the standings: <em>%(message)s</em></p>"
 msgstr ""
 
-#: standings/views.py:105
+#: standings/views.py:104
 #, python-format
 msgid "<p>You may need to double-check the <a href=\"%(standings_options_url)s\" class=\"alert-link\">standings configuration under the Setup section</a>. If this issue persists and you're not sure how to fix it, please contact the developers.</p>"
 msgstr ""
 
-#: standings/views.py:113
+#: standings/views.py:112
 msgid "<p>The tab director will need to resolve this issue.</p>"
 msgstr ""
 
-#: standings/views.py:117
+#: standings/views.py:116
 #, python-format
 msgid "as of %(round)s"
 msgstr ""
 
 #. Translators: 'title' is the main title; "(Top 15 Only)" is just a suffix
-#: standings/views.py:182
+#: standings/views.py:181
 #, python-format
 msgid "%(title)s (Top %(limit)d Only)"
 msgstr ""
 
-#: standings/views.py:207 standings/views.py:433
+#: standings/views.py:206 standings/views.py:432
 msgid "The tab can't be displayed because all rounds so far in this tournament are silent."
 msgstr ""
 
-#: standings/views.py:283
+#: standings/views.py:282
 msgid "Speaker Standings"
 msgstr ""
 
-#: standings/views.py:325
+#: standings/views.py:324
 msgid "Speaker Tab"
 msgstr ""
 
-#: standings/views.py:340
+#: standings/views.py:339
 #, python-format
 msgid "%(category)s Speaker Standings"
 msgstr ""
 
-#: standings/views.py:358
+#: standings/views.py:357
 #, python-format
 msgid "%(category)s Speaker Tab"
 msgstr ""
 
-#: standings/views.py:371
+#: standings/views.py:370
 msgid "Reply Speaker Standings"
 msgstr ""
 
-#: standings/views.py:376
+#: standings/views.py:375
 msgid "Reply speeches aren't enabled in this tournament."
 msgstr ""
 
-#: standings/views.py:413
+#: standings/views.py:412
 msgid "Reply Speaker Tab"
 msgstr ""
 
-#: standings/views.py:425 standings/views.py:674
+#: standings/views.py:424 standings/views.py:673
 msgid "Team Standings"
 msgstr ""
 
-#: standings/views.py:504
+#: standings/views.py:503
 msgid "Team Tab"
 msgstr ""
 
-#: standings/views.py:523
+#: standings/views.py:522
 #, python-format
 msgid "%(category)s Team Standings"
 msgstr ""
 
-#: standings/views.py:550
+#: standings/views.py:549
 #, python-format
 msgid "%(category)s Team Tab"
 msgstr ""
 
-#: standings/views.py:561
+#: standings/views.py:560
 msgid "Current Team Standings"
 msgstr ""
 
-#: standings/views.py:597
+#: standings/views.py:596
 msgid "Points"
 msgstr ""

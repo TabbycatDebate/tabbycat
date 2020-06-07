@@ -16,7 +16,6 @@ MANAGERS = ADMINS
 DEBUG = bool(int(os.environ['DEBUG'])) if 'DEBUG' in os.environ else False
 ENABLE_DEBUG_TOOLBAR = False # Must default to false; overriden in Dev config
 DISABLE_SENTRY = True # Overriden in Heroku config
-
 SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
 # ==============================================================================
@@ -24,7 +23,7 @@ SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 # ==============================================================================
 
 TABBYCAT_VERSION = '2.4.0a'
-TABBYCAT_CODENAME = 'M'
+TABBYCAT_CODENAME = 'Maine Coon'
 READTHEDOCS_VERSION = 'v2.4.0'
 
 # ==============================================================================

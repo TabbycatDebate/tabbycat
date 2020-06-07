@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex border-bottom bg-white">
-    <slot name="bracket">
+    <slot name="bracket" v-if="!isElimination">
       <div v-if="debateOrPanel.bracket >= 0" class="flex-1-25 flex-truncate d-flex border-right"
            data-toggle="tooltip" :title="gettext(`The debate's bracket`)">
         <div class="align-self-center flex-fill text-center" v-text="debateOrPanel.bracket"></div>
@@ -15,7 +15,13 @@
         </div>
       </div>
     </slot>
-    <slot name="liveness">
+    <slot name="rank" v-if="isElimination">
+      <div v-if="debateOrPanel.bracket >= 0" class="flex-1-25 flex-truncate d-flex border-right"
+           data-toggle="tooltip" :title="gettext(`The debate's room rank (break rank of highest-ranked team)`)">
+        <div class="align-self-center flex-fill text-center" v-text="debateOrPanel.room_rank"></div>
+      </div>
+    </slot>
+    <slot name="liveness" v-if="!isElimination">
       <div v-if="debateOrPanel.bracket >= 0" class="flex-1-25 flex-truncate border-right d-flex"
            data-toggle="tooltip" :title="gettext(`The total number of live break categories across
               all teams`)">
@@ -63,9 +69,9 @@
     </slot>
     <slot name="adjudicators">
       <div class="flex-16 align-self-center p-2 small">
-        <span v-for="adj in debateOrPanel.adjudicators.C">{{ adj.name }} ⓒ, </span>
+        <span v-for="adj in debateOrPanel.adjudicators.C">{{ adj.name }} Ⓒ, </span>
         <span v-for="adj in debateOrPanel.adjudicators.P">{{ adj.name }}, </span>
-        <span v-for="adj in debateOrPanel.adjudicators.T">{{ adj.name }} ⓣ,</span>
+        <span v-for="adj in debateOrPanel.adjudicators.T">{{ adj.name }} Ⓣ,</span>
       </div>
     </slot>
   </div>

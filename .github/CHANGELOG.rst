@@ -2,20 +2,40 @@
 Change Log
 ==========
 
-2.4.0 (Maine)
--------------
+2.4.0 (Maine Coon)
+------------------
 *Release date: ?*
 
+- Filtered the home page for active tournaments with a new page to list the inactive
 - Added support for Russian, and shortened the language selector
-- Renamed 'test score' to 'base score'
+- Renamed 'test score' to 'base score', as well as 'venue' to 'room'
 - Divisions-specific features have been deprecated and removed
+- The 'Feedback Explanation' preference now uses a full text area for easier text formatting
+- Changing the sorting on debates in allocation views now only sorts once. Thus, changing importances will no longer re-order the list immediately.
+- Display room ranks in the Edit Adjudicator UI during elimination rounds and allow for sorting by room rank
+- Enabled debates to be sorted by the sum liveness of teams present
 - Moved the 'Edit Database' menu item to the dropdown with the logo in the admin navigation
 - Pull-ups can now be restricted to teams with the lowest draw strength (by speaker or team points) of their bracket
 - The number of pull-ups and draw strength by speaker score are now available as team standing metrics
 - Added the new emoji that come along with Unicode 11 — thanks to Viran Weerasekera for this addition!
+- Added toggle to hide adjudicators on the draw release page
+- Separated private URL printing pages into Teams and Adjudicators
 - The 'Show adjudicator institutions' preference now covers a wider range of cases; meaning that if it is unchecked then all adjudicator's institutional affiliations should be hidden from the public
 - The Edit Venues screen now shows highlights for priority and venue category
 - Tweaked the display of tables on mobile devices — they should now more reliably show a full BP draw without horizontal scrolling
+- Fixed issue causing crashes when trainees were demoted after results were entered (`#922 <https://github.com/TabbycatDebate/tabbycat/issues/922>`_)
+- Fixed issue where who-beat-whom would include elimination rounds (`#1073 <https://github.com/TabbycatDebate/tabbycat/issues/1073>`_)
+- Fixed issue causing even panels to be missed for user warnings (`#1465 <https://github.com/TabbycatDebate/tabbycat/issues/1465>`_)
+
+2.3.3
+-----
+*Release date: 26 April 2020*
+
+- Fixed issue where the ballot graph would ignore draft ballots getting confirmed
+- Fixed team draw notifications failing due to an unexpected variable
+- Fixed ballot receipts not showing decimal speaker points
+- Fixed issue where Docker installs would compile without css/javascript; breaking many pages
+
 
 2.3.2
 -----

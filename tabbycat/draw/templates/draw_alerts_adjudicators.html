@@ -20,7 +20,7 @@
     {% include "components/item-info.html" with nopad=True type="danger" %}
   {% endif %}
 
-  {% if pref.ballots_per_debate == 'per-adj' and even_panel > 0 %}
+  {% if round.ballots_per_debate == 'per-adj' and even_panel > 0 %}
     {% blocktrans trimmed asvar text count ndebates=even_panel %}
       1 debate has a panel with an even number of adjudicators.
     {% plural %}

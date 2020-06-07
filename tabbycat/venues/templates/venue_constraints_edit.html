@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% load add_field_css debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">🏰</span>{% trans "Venue Constraints" %}{% endblock %}
-{% block page-title %}🏰{% trans "Venue Constraints" %}{% endblock %}
+{% block head-title %}<span class="emoji">🏰</span>{% trans "Room Constraints" %}{% endblock %}
+{% block page-title %}🏰{% trans "Room Constraints" %}{% endblock %}
 
 {% block content %}
 
   {% blocktrans trimmed asvar p1 %}
-    Venue constraints tell the venue allocator to try to keep the specified
+    Room constraints tell the room allocator to try to keep the specified
     team or adjudicator, or all teams (but not adjudicators) from the
-    specified institution, in a venue in the given category. The "priority"
+    specified institution, in a room in the given category. The "priority"
     field resolves conflicting constraints: the higher priority takes
     precedence. You can also use the priority field to specify
     "lower-preference" constraints, which are taken if a higher-priority
@@ -17,7 +17,7 @@
   {% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" %}
 
-  {% trans "Save Venue Constraints" as save_text %}
+  {% trans "Save Room Constraints" as save_text %}
   {% include "components/formset.html" with quadruple=True %}
 
 {% endblock content %}

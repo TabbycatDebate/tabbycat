@@ -26,18 +26,18 @@
     {% include "components/item-action.html" with emoji="👂" %}
 
     {% tournamenturl 'importer-simple-venues' as url %}
-    {% trans "Add Venues" as text %}
+    {% trans "Add Rooms" as text %}
     {% include "components/item-action.html" with emoji="🎪" %}
 
   </ul>
   <ul class="list-group mt-3">
 
     {% tournamenturl 'venues-categories' as url %}
-    {% trans "Add/Edit Venue Categories" as text %}
+    {% trans "Add/Edit Room Categories" as text %}
     {% include "components/item-action.html" with emoji="🏪" %}
 
     {% tournamenturl 'venues-constraints' as url %}
-    {% trans "Add/Edit Venue Constraints" as text %}
+    {% trans "Add/Edit Room Constraints" as text %}
     {% include "components/item-action.html" with emoji="🏰" %}
 
   </ul>
