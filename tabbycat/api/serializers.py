@@ -118,6 +118,12 @@ class RoundSerializer(serializers.ModelSerializer):
         model = Round
         fields = '__all__'
 
+    def validate(self, data):
+        if (data['break_category'] is None) == (data['stage'] == Round.STAGE_ELIMINATION):
+            # break category is None _XNOR_ stage is elimination
+            raise serializers.ValidationError("Rounds are elimination iff they have a break category.")
+        return super().validate(data)
+
     def create(self, validated_data):
         motions_data = validated_data.pop('motions')
         round = super().create(validated_data)
@@ -397,6 +403,11 @@ class TeamSerializer(serializers.ModelSerializer):
                 self.fields.pop('use_institution_prefix')
             if not t.pref('public_break_categories'):
                 self.fields.pop('break_categories')
+
+    def validate(self, data):
+        if data['use_institution_prefix'] and data['institution'] is None:
+            raise serializers.ValidationError("Cannot include institution prefix without institution.")
+        return super().validate(data)
 
     def create(self, validated_data):
         """Four things must be done, excluding saving the Team object:

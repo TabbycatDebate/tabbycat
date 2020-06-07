@@ -325,6 +325,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Checkin'
+        '404':
+          description: 'No identifier. Use POST to generate.'
       tags:
         - v1
         - adjudicators
@@ -353,6 +355,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Checkin'
+        '404':
+          description: 'No identifier. Use POST to generate.'
       tags:
         - v1
         - adjudicators
@@ -367,6 +371,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Checkin'
+        '404':
+          description: 'No identifier. Use POST to generate.'
       tags:
         - v1
         - adjudicators
@@ -377,6 +383,8 @@ paths:
       responses:
         '204':
           description: ''
+        '404':
+          description: 'No identifier. Use POST to generate.'
       tags:
         - v1
         - adjudicators
@@ -1555,6 +1563,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Checkin'
+        '404':
+          description: 'No identifier. Use POST to generate.'
       tags:
         - v1
         - speakers
@@ -1583,6 +1593,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Checkin'
+        '404':
+          description: 'No identifier. Use POST to generate.'
       tags:
         - v1
         - speakers
@@ -1597,6 +1609,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Checkin'
+        '404':
+          description: 'No identifier. Use POST to generate.'
       tags:
         - v1
         - speakers
@@ -1607,6 +1621,8 @@ paths:
       responses:
         '204':
           description: ''
+        '404':
+          description: 'No identifier. Use POST to generate.'
       tags:
         - v1
         - speakers
@@ -1970,6 +1986,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Checkin'
+        '404':
+          description: 'No identifier. Use POST to generate.'
       tags:
         - v1
         - venues
@@ -1998,6 +2016,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Checkin'
+        '404':
+          description: 'No identifier. Use POST to generate.'
       tags:
         - v1
         - venues
@@ -2012,6 +2032,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Checkin'
+        '404':
+          description: 'No identifier. Use POST to generate.'
       tags:
         - v1
         - venues
@@ -2022,6 +2044,8 @@ paths:
       responses:
         '204':
           description: ''
+        '404':
+          description: 'No identifier. Use POST to generate.'
       tags:
         - v1
         - venues

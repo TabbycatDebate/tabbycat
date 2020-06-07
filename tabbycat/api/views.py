@@ -4,6 +4,7 @@ from django.db.models import Count, Prefetch, Q
 from django.http.response import Http404
 from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
+from rest_framework.exceptions import NotFound
 from rest_framework.generics import GenericAPIView, get_object_or_404, RetrieveUpdateAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -203,7 +204,7 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
         self.check_object_permissions(self.request, obj)
 
         if not hasattr(obj, 'checkin_identifier'):
-            raise Http404('No identifier')
+            raise NotFound(detail='No identifier. Use POST to generate.')
         return obj
 
     def get_barcodes(self, obj):
@@ -265,7 +266,9 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
 
     def post(self, request, *args, **kwargs):
         """Creates an identifier"""
-        obj = self.get_object_queryset()
+        obj = self.get_object_queryset()  # Don't .get() as create_identifiers expects a queryset
+        if not obj.exists():
+            raise Http404
         create_identifiers(self.model.checkin_identifier.related.related_model, obj)
         return Response(self.get_response_dict(request, obj.get(), False))
 
