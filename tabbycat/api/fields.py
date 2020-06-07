@@ -74,10 +74,11 @@ class RoundHyperlinkedIdentityField(RoundHyperlinkedRelatedField, HyperlinkedIde
 
 
 class AnonymisingHyperlinkedTournamentRelatedField(TournamentHyperlinkedRelatedField):
+    default_tournament_field = 'team__tournament'
 
-    def __init__(self, view_name=None, queryset=None, **kwargs):
+    def __init__(self, view_name=None, queryset=Speaker.objects.all(), **kwargs):
         self.null_when = kwargs.pop('anonymous_source')
-        super().__init__(view_name=view_name, queryset=Speaker.objects.all(), **kwargs)
+        super().__init__(view_name=view_name, queryset=queryset, **kwargs)
 
     def to_representation(self, value):
         if getattr(value, self.null_when, True):

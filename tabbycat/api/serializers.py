@@ -100,7 +100,8 @@ class RoundSerializer(serializers.ModelSerializer):
         lookup_field='seq', lookup_url_kwarg='round_seq')
     break_category = TournamentHyperlinkedRelatedField(
         view_name='api-breakcategory-detail',
-        queryset=BreakCategory.objects.all())
+        queryset=BreakCategory.objects.all(),
+        required=False)
     motions = RoundMotionsSerializer(many=True, source='motion_set')
 
     _links = RoundLinksSerializer(source='*', read_only=True)
@@ -125,7 +126,7 @@ class RoundSerializer(serializers.ModelSerializer):
         return super().validate(data)
 
     def create(self, validated_data):
-        motions_data = validated_data.pop('motions')
+        motions_data = validated_data.pop('motion_set')
         round = super().create(validated_data)
 
         motions = self.RoundMotionsSerializer(many=True, context={'tournament': round.tournament})
@@ -167,7 +168,7 @@ class MotionSerializer(serializers.ModelSerializer):
         as there isn't already a many-to-many relationship, there will
         always only be one value. This method modifies validated_data in
         place to directly have the fields from the nested serializer."""
-        rounds = validated_data.pop('rounds')
+        rounds = validated_data.pop('as_iterable')
         validated_data['round'] = rounds[0]['round']
         validated_data['seq'] = rounds[0]['seq']
 
@@ -378,7 +379,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = ('url', 'id', 'reference', 'code_name', 'emoji', 'short_name', 'long_name',
+        fields = ('url', 'id', 'reference', 'short_reference', 'code_name', 'emoji', 'short_name', 'long_name',
                   'institution', 'speakers', 'use_institution_prefix', 'break_categories',
                   'institution_conflicts')
 
@@ -415,9 +416,13 @@ class TeamSerializer(serializers.ModelSerializer):
         2. Create emoji/code name if not stated,
         3. Create the speakers.
         4. Add institution conflict"""
-        validated_data['short_reference'] = validated_data['reference'][:34]
+
+        if len(validated_data['short_reference']) == 0:
+            validated_data['short_reference'] = validated_data['reference'][:34]
+
         speakers_data = validated_data.pop('speakers')
         break_categories = validated_data.pop('break_categories')
+
         emoji, code_name = pick_unused_emoji()
         if 'emoji' not in validated_data:
             validated_data['emoji'] = emoji
@@ -558,7 +563,7 @@ class RoundPairingSerializer(serializers.ModelSerializer):
         fields = ('url', 'id', 'venue', 'teams', 'adjudicators', 'sides_confirmed')
 
     def create(self, validated_data):
-        teams_data = validated_data.pop('teams')
+        teams_data = validated_data.pop('debateteam_set')
         adjs_data = validated_data.pop('adjudicators')
 
         validated_data['round'] = self.context['round']
@@ -575,7 +580,7 @@ class RoundPairingSerializer(serializers.ModelSerializer):
         return debate
 
     def update(self, instance, validated_data):
-        teams_data = validated_data.pop('teams')
+        teams_data = validated_data.pop('debateteam_set')
         for team in teams_data:
             DebateTeam.objects.update_or_create(debate=instance, side=team['side'], defaults={
                 'team': team['team'],

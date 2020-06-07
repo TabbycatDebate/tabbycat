@@ -3247,6 +3247,13 @@ components:
             below)
           type: string
           maxLength: 150
+        short_reference:
+          title: Short name/suffix
+          description: >-
+            The name shown in the draw. Do not include institution name (see
+            "uses institutional prefix" below)
+          type: string
+          maxLength: 35
         code_name:
           title: Code name
           description: Name used to obscure institutional identity on public-facing pages
