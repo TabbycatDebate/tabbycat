@@ -11,7 +11,7 @@ class NumericalValueMixin:
     def clean(self):
         min = self.question.min_value
         max = self.question.max_value
-        if (self.answer < min and min is not None) or (self.answer > max and max is not None):
+        if (min is not None and self.answer < min) or (max is not None and self.answer > max):
             raise ValidationError(gettext("Value is outside the range of allowed values."))
         return super().clean()
 
