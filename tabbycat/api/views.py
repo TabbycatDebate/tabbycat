@@ -171,6 +171,9 @@ class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet)
     def perform_create(self, serializer):
         serializer.save()
 
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('categories')
+
 
 class VenueViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.VenueSerializer
@@ -411,7 +414,6 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
             Prefetch(
                 typ.__name__.lower() + "_set",
                 queryset=typ.objects.all().select_related('question', 'question__tournament'),
-                to_attr=typ.__name__,
             )
             for typ in AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE.keys()
         ]
