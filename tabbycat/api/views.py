@@ -59,7 +59,7 @@ class TournamentViewSet(PublicAPIMixin, ModelViewSet):
     queryset = Tournament.objects.all().prefetch_related(
         'breakcategory_set',
         Prefetch('round_set',
-            queryset=Round.objects.filter(completed=False).annotate(Count('debate')),
+            queryset=Round.objects.filter(completed=False).annotate(Count('debate')).order_by('seq'),
             to_attr='current_round_set'),
     )
     serializer_class = serializers.TournamentSerializer

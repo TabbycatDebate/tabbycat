@@ -61,7 +61,6 @@ class MultiPreferenceFormView(PreferenceFormView):
             self.registry = registry
             try:
                 return super().dispatch(request, *args, **kwargs)
-                break
             except Http404:
                 continue
         else:

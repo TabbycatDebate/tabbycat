@@ -117,10 +117,10 @@ class RoundSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Round
-        fields = '__all__'
+        exclude = ('tournament',)
 
     def validate(self, data):
-        if (data['break_category'] is None) == (data['stage'] == Round.STAGE_ELIMINATION):
+        if (data.get('break_category') is None) == (data.get('stage') == Round.STAGE_ELIMINATION):
             # break category is None _XNOR_ stage is elimination
             raise serializers.ValidationError("Rounds are elimination iff they have a break category.")
         return super().validate(data)
