@@ -252,7 +252,7 @@ class Tournament(models.Model):
                 current_elim_rounds.setdefault(r.break_category_id, r)
         return [
             current_elim_rounds.get(category.pk)
-            for category in self.breakcategory_set.all().order_by('seq')  # Order by break, then seq
+            for category in self.breakcategory_set.order_by('seq')  # Order by break, then seq
             if category.pk in current_elim_rounds
         ]
 
