@@ -1,6 +1,6 @@
 {% load debate_tags participant_link i18n %}
 
-{# Position, opponent and room #}
+{# Position and opponent #}
 <div class="list-group-item lead {% if draw_released %}active{% endif %}">
 
   {# (Two-team formats) #}
@@ -29,16 +29,6 @@
       {% endif %}
     {% endif %}
 
-    {% if venue.url %}
-      {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba url=venue.url %}
-        Your debate is in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
-      {% endblocktrans %}
-    {% else %}
-      {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba %}
-        Your debate is in <strong>{{ room }}</strong>.
-      {% endblocktrans %}
-    {% endif %}
-
   {# (British Parliamentary) #}
   {% elif pref.teams_in_debate == 'bp' %}
 
@@ -52,39 +42,33 @@
           You are debating as the <strong>{{ side }}</strong> team.
         {% endblocktrans %}
       {% endif %}
-      {% if venue.url %}
-        {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba url=venue.url %}
-          Your debate is in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
-        {% endblocktrans %}
-      {% else %}
-        {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba %}
-          Your debate is in <strong>{{ room }}</strong>.
-        {% endblocktrans %}
-      {% endif %}
-    {% else %}
-      {% if grammatical_person == "3" %}
-        {% if venue.url %}
-          {% blocktrans trimmed with team=team_short_name room=debate.venue.display_name|default:venue_tba url=venue.url %}
-            {{ team }} is debating in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
-          {% endblocktrans %}
-        {% else %}
-          {% blocktrans trimmed with team=team_short_name room=debate.venue.display_name|default:venue_tba %}
-            {{ team }} is debating in <strong>{{ room }}</strong>.
-          {% endblocktrans %}
-        {% endif %}
-      {% else %}
-        {% if venue.url %}
-          {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba url=venue.url %}
-            Your are debating in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
-          {% endblocktrans %}
-        {% else %}
-          {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba %}
-            You are debating in <strong>{{ room }}</strong>.
-          {% endblocktrans %}
-        {% endif %}
-      {% endif %}
     {% endif %}
 
+  {% endif %}
+</div>
+
+{# Room #}
+<div class="list-group-item lead {% if draw_released %}active{% endif %}">
+  {% if grammatical_person == "3" %}
+    {% if venue.url %}
+      {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba url=venue.url %}
+        Their debate is in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
+      {% endblocktrans %}
+    {% else %}
+      {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba %}
+        Their debate is in <strong>{{ room }}</strong>.
+      {% endblocktrans %}
+    {% endif %}
+  {% else %}
+    {% if venue.url %}
+      {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba url=venue.url %}
+        Your debate is in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
+      {% endblocktrans %}
+    {% else %}
+      {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba %}
+        Your debate is in <strong>{{ room }}</strong>.
+      {% endblocktrans %}
+    {% endif %}
   {% endif %}
 </div>
 
