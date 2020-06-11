@@ -131,7 +131,7 @@ class TeamAdmin(admin.ModelAdmin):
 
     def formfield_for_choice_field(self, db_field, request, **kwargs):
         if db_field.name == 'emoji' and kwargs.get("initial") is None:
-            kwargs["initial"] = pick_unused_emoji()
+            kwargs["initial"] = pick_unused_emoji()[0]
         return super().formfield_for_choice_field(db_field, request, **kwargs)
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):

@@ -83,6 +83,7 @@ TABBYCAT_APPS = (
     'actionlog',
     'adjallocation',
     'adjfeedback',
+    'api',
     'availability',
     'breakqual',
     'checkins',
@@ -122,11 +123,13 @@ INSTALLED_APPS = (
     'statici18n', # Compile js translations as static file; saving requests
     'polymorphic',
     'rest_framework',
+    'rest_framework.authtoken',
 )
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
 FIXTURE_DIRS = (os.path.join(os.path.dirname(BASE_DIR), 'data', 'fixtures'), )
+SILENCED_SYSTEM_CHECKS = ('urls.W002',)
 
 # ==============================================================================
 # Templates
@@ -298,7 +301,7 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 }

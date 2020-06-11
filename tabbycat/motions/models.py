@@ -28,6 +28,10 @@ class Motion(models.Model):
     def __str__(self):
         return self.text
 
+    def as_iterable(self):
+        """For DRF; stopgap for many-to-many"""
+        return [self]
+
 
 class DebateTeamMotionPreference(models.Model):
     """Represents a motion preference submitted by a debate team."""
