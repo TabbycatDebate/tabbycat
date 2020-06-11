@@ -2,8 +2,8 @@
 Change Log
 ==========
 
-2.4.0 (Maine Coon)
-------------------
+2.4.0 (Manx)
+------------
 *Release date: ?*
 
 - Filtered the home page for active tournaments with a new page to list inactive ones
