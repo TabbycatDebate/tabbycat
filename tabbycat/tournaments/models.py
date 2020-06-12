@@ -242,18 +242,18 @@ class Tournament(models.Model):
 
         # For something this complicated it's easier just to get the entire
         # round set from the database, and process it in Python.
-        rounds = self.round_set.filter(completed=False).order_by('seq').annotate(
-                Count('debate')).select_related('break_category')
+        rounds = getattr(self, 'current_round_set',
+            self.round_set.filter(completed=False).annotate(Count('debate')).order_by('seq'))
         current_elim_rounds = {}
         for r in rounds:
             if not r.is_break_round:
                 return [r]  # short-circuit everything else
             elif r.debate__count > 0:
-                current_elim_rounds.setdefault(r.break_category, r)
+                current_elim_rounds.setdefault(r.break_category_id, r)
         return [
-            current_elim_rounds.get(category)
-            for category in self.breakcategory_set.order_by('seq')
-            if category in current_elim_rounds
+            current_elim_rounds.get(category.pk)
+            for category in self.breakcategory_set.order_by('seq')  # Order by break, then seq
+            if category.pk in current_elim_rounds
         ]
 
     @cached_property

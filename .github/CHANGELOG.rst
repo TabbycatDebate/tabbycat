@@ -2,28 +2,30 @@
 Change Log
 ==========
 
-2.4.0 (Maine Coon)
-------------------
+2.4.0 (Manx)
+------------
 *Release date: ?*
 
-- Filtered the home page for active tournaments with a new page to list the inactive
+- Filtered the home page for active tournaments with a new page to list inactive ones
 - Added support for Russian, and shortened the language selector
 - Renamed 'test score' to 'base score', as well as 'venue' to 'room'
-- Divisions-specific features have been deprecated and removed
+- Deprecated and removed divisions-specific features
 - Added a "URL" field to Rooms. When a room is publicly displayed it will then present the nominated URL. This is designed so that you can more easily host online tournaments, but may also have use in other scenarios - e.g. linked to a per-room map.
-- The 'Feedback Explanation' preference now uses a full text area for easier text formatting
-- Changing the sorting on debates in allocation views now only sorts once. Thus, changing importances will no longer re-order the list immediately.
-- Display room ranks in the Edit Adjudicator UI during elimination rounds and allow for sorting by room rank
+- The 'Feedback explanation' preference now uses a full text area for easier text formatting
+- Changing the sorting on debates in allocation views now only sorts once, so changing importances will no longer re-order the list immediately (`#1275 <https://github.com/TabbycatDebate/tabbycat/issues/1275>`_)
+- Added room ranks to the Edit Adjudicator UI during elimination round, including sorting by room rank (`#1454 <https://github.com/TabbycatDebate/tabbycat/issues/1454>`_)
 - Enabled debates to be sorted by the sum liveness of teams present
 - Moved the 'Edit Database' menu item to the dropdown with the logo in the admin navigation
 - Pull-ups can now be restricted to teams with the lowest draw strength (by speaker or team points) of their bracket
-- The number of pull-ups and draw strength by speaker score are now available as team standing metrics
-- Added the new emoji that come along with Unicode 11 — thanks to Viran Weerasekera for this addition!
+- Added team standing metrics: number of pull-ups, and draw strength by speaker score
+- Extended draw strength so that it works for BP (`#1071 <https://github.com/TabbycatDebate/tabbycat/issues/1071>`_)
+- Added the new emoji from Unicode 11 — thanks to Viran Weerasekera for this addition!
 - Added toggle to hide adjudicators on the draw release page
-- Separated private URL printing pages into Teams and Adjudicators
-- The 'Show adjudicator institutions' preference now covers a wider range of cases; meaning that if it is unchecked then all adjudicator's institutional affiliations should be hidden from the public
+- Separated private URL printing pages into teams and adjudicators
+- Applied 'Show adjudicator institutions' preference to more cases; so if turned off, they should be hidden from public everywhere
 - The Edit Venues screen now shows highlights for priority and venue category
 - Tweaked the display of tables on mobile devices — they should now more reliably show a full BP draw without horizontal scrolling
+- Fixed internal server error when standings precedence is empty (`#1108 <https://github.com/TabbycatDebate/tabbycat/issues/1108>`_)
 - Fixed issue causing crashes when trainees were demoted after results were entered (`#922 <https://github.com/TabbycatDebate/tabbycat/issues/922>`_)
 - Fixed issue where who-beat-whom would include elimination rounds (`#1073 <https://github.com/TabbycatDebate/tabbycat/issues/1073>`_)
 - Fixed issue causing even panels to be missed for user warnings (`#1465 <https://github.com/TabbycatDebate/tabbycat/issues/1465>`_)
