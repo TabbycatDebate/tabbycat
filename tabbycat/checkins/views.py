@@ -21,7 +21,7 @@ from utils.views import PostOnlyRedirectView
 from venues.serializers import VenueSerializer
 
 from .consumers import CheckInEventConsumer
-from .models import PersonIdentifier, VenueIdentifier
+from .models import Event, PersonIdentifier, VenueIdentifier
 from .utils import create_identifiers, get_unexpired_checkins
 
 
@@ -264,7 +264,8 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
         action = request.POST['action']
 
         try:
-            identifier = Person.objects.get(url_key=kwargs['url_key']).checkin_identifier
+            person = Person.objects.get(url_key=kwargs['url_key'])
+            identifier = person.checkin_identifier
         except Person.DoesNotExist:
             raise Http404("Person does not exist")
         except PersonIdentifier.DoesNotExist:
@@ -274,6 +275,8 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
         existing_checkin = get_unexpired_checkins(t, 'checkin_window_people').filter(identifier=identifier)
         if action == 'revoke':
             if existing_checkin.exists():
+                existing_checkin.delete()
+                checkin_dict = {'identifier': identifier.barcode}
                 messages.success(self.request, _("You have revoked your check-in."))
             else:
                 messages.error(self.request, _("Whoops! Looks like your check-in was already revoked."))
@@ -281,21 +284,21 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
             if existing_checkin.exists():
                 messages.error(self.request, _("Whoops! Looks like you're already checked in."))
             else:
+                checkin = Event.objects.create(identifier=identifier,
+                                               tournament=self.tournament)
+                checkin_dict = checkin.serialize()
+                checkin_dict['owner_name'] = person.name
                 messages.success(self.request, _("You are now checked in."))
         else:
             return TemplateResponse(request=self.request, template='400.html', status=400)
 
-        group_name = CheckInEventConsumer.group_prefix + "_" + t.slug
-
         # Override permissions check - no user but authenticated through URL
+        group_name = CheckInEventConsumer.group_prefix + "_" + t.slug
         async_to_sync(get_channel_layer().group_send)(
             group_name, {
-                'type': 'broadcast_checkin',
-                'content': {
-                    'barcodes': [identifier.barcode],
-                    'status': action == 'checkin',
-                    'type': 'people',
-                    'component_id': None,
+                'type': 'send_json',
+                'data': {
+                    'checkins': [checkin_dict],
                 },
             },
         )
