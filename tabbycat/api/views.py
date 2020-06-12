@@ -13,6 +13,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from checkins.consumers import CheckInEventConsumer
+from checkins.models import Event
 from checkins.utils import create_identifiers, get_unexpired_checkins
 from options.models import TournamentPreferenceModel
 from participants.models import Adjudicator, Institution, Speaker, Team
@@ -210,19 +211,24 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
             raise NotFound(detail='No identifier. Use POST to generate.')
         return obj
 
-    def get_barcodes(self, obj):
-        return [obj.checkin_identifier.barcode]
-
     def broadcast_checkin(self, obj, check):
+        # Send result to websocket for treatment when opened; but perform the action here
+        if check:
+            checkin = Event.objects.create(identifier=obj.checkin_identifier,
+                                           tournament=self.tournament)
+            checkin_dict = checkin.serialize()
+            checkin_dict['owner_name'] = obj.name
+        else:
+            checkins = get_unexpired_checkins(self.tournament, self.window_preference_pref)
+            checkins.filter(identifier=obj.checkin_identifier).delete()
+            checkin_dict = {'identifier': obj.checkin_identifier.barcode}
+
         group_name = CheckInEventConsumer.group_prefix + "_" + self.tournament.slug
         async_to_sync(get_channel_layer().group_send)(
             group_name, {
-                'type': 'broadcast_checkin',
-                'content': {
-                    'barcodes': self.get_barcodes(obj),
-                    'status': check,
-                    'type': obj.checkin_identifier.instance_attr,
-                    'component_id': None,
+                'type': 'send_json',
+                'data': {
+                    'checkins': [checkin_dict],
                 },
             },
         )
