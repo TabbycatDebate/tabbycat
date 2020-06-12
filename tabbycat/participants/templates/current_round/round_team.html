@@ -75,7 +75,7 @@
       {% else %}
         {% if venue.url %}
           {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba url=venue.url %}
-            Your are debating in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
+            You are debating in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
           {% endblocktrans %}
         {% else %}
           {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba %}
