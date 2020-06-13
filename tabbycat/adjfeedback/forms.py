@@ -193,7 +193,7 @@ class BaseFeedbackForm(forms.Form):
         af.confirmed = self._confirm_on_submit
         if af.confirmed:
             af.confirm_timestamp = timezone.now()
-            af.confirmer = self.request.user
+            af.confirmer = kwargs.get('submitter')
         af.score = self.cleaned_data['score']
 
         if self._ignored_option:
