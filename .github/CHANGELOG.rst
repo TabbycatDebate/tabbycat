@@ -6,12 +6,12 @@ Change Log
 ------------
 *Release date: ?*
 
-- Created an Application Programming Interface for most aspects of Tabbycat
+- Created an `application programming interface (API) <https://tabbycat.readthedocs.io/en/stable/features/api.html>`_ for most aspects of Tabbycat
 - Filtered the home page for active tournaments with a new page to list inactive ones
 - Added support for Simplified Chinese, Bengali, Malay, Russian, and shortened the language selector
 - Renamed 'test score' to 'base score', as well as 'venue' to 'room'
 - Deprecated and removed divisions-specific features
-- Added a "URL" field to Rooms. When a room is publicly displayed it will then present the nominated URL. This is designed so that you can more easily host online tournaments, but may also have use in other scenarios - e.g. linked to a per-room map.
+- Added a 'URL' field to Rooms. When a room is publicly displayed it will then present the nominated URL. This is designed so that you can more easily host online tournaments, but may also have use in other scenarios - e.g. linked to a per-room map.
 - The 'Feedback explanation' preference now uses a full text area for easier text formatting
 - Changing the sorting on debates in allocation views now only sorts once, so changing importances will no longer re-order the list immediately (`#1275 <https://github.com/TabbycatDebate/tabbycat/issues/1275>`_)
 - Added room ranks to the Edit Adjudicator UI during elimination round, including sorting by room rank (`#1454 <https://github.com/TabbycatDebate/tabbycat/issues/1454>`_)
@@ -26,7 +26,7 @@ Change Log
 - Applied 'Show adjudicator institutions' preference to more cases; so if turned off, they should be hidden from public everywhere
 - The Edit Venues screen now shows highlights for priority and venue category
 - Tweaked the display of tables on mobile devices — they should now more reliably show a full BP draw without horizontal scrolling
-- Grouped adjudicators by round when submitting feedback - reduce the length of the text shown in selector
+- Grouped adjudicators by round when submitting feedback — reduce the length of the text shown in selector
 - Fixed internal server error when standings precedence is empty (`#1108 <https://github.com/TabbycatDebate/tabbycat/issues/1108>`_)
 - Fixed issue causing crashes when trainees were demoted after results were entered (`#922 <https://github.com/TabbycatDebate/tabbycat/issues/922>`_)
 - Fixed issue where who-beat-whom would include elimination rounds (`#1073 <https://github.com/TabbycatDebate/tabbycat/issues/1073>`_)
