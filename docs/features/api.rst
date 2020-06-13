@@ -21,3 +21,8 @@ Depending on what the external application does, it may require administrator ac
 The API can be disabled in its entirety over an instance through the *Enable API* preference in the *Global Settings* section of the tournament options. This will prevent all authentication and all access, including administrator access, to all API endpoints.
 
 Unauthenticated (public) endpoints are restricted in that they cannot perform modifications. Further, data hidden from the public is also hidden within the API, with access to endpoints and specific fields governed by the tournament's and round's settings. For example, if team codes are used but the participants' list is activated, the team endpoint will be publicly accessible but without showing team names (only codes) nor institutional affiliations.
+
+Schema
+======
+
+The schema is available on `Swagger <https://app.swaggerhub.com/apis/tienne-B/tabbycat-api/1.0.0>`_. The OpenAPI schema is also available in the ``docs`` directory of Tabbycat.
