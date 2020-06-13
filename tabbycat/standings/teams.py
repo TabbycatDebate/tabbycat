@@ -3,7 +3,7 @@
 import logging
 
 from django.contrib.postgres.aggregates import ArrayAgg
-from django.db.models import Avg, Count, F, FloatField, Func, Q, StdDev, Sum
+from django.db.models import Avg, Count, F, FloatField, Func, IntegerField, Q, StdDev, Sum
 from django.db.models.functions import Cast
 from django.utils.translation import gettext_lazy as _
 
@@ -45,7 +45,7 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     def get_where_field(self):
         return self.get_field()
 
-    def get_annotation(self, round=None):
+    def get_annotation_filter(self, round=None):
         annotation_filter = Q(
             debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
         )
@@ -55,7 +55,10 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
             annotation_filter &= Q(debateteam__teamscore__ballot_submission__confirmed=True)
         if self.where_value is not None:
             annotation_filter &= Q(**{self.get_where_field(): self.where_value})
-        return self.function(self.get_field(), filter=annotation_filter)
+        return annotation_filter
+
+    def get_annotation(self, round=None):
+        return self.function(self.get_field(), filter=self.get_annotation_filter(round))
 
 
 class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -136,7 +139,12 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     name = _("average individual speaker score")
     abbr = _("AISS")
 
-    def get_annotation(self, round=None):
+    function = Avg
+
+    def get_field(self):
+        return 'debateteam__speakerscore__score'
+
+    def get_annotation_filter(self, round=None):
         annotation_filter = Q(
             debateteam__teamscore__ballot_submission__confirmed=True,
             debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
@@ -151,7 +159,7 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         if self.tournament is not None:
             annotation_filter &= Q(debateteam__speakerscore__position__lte=self.tournament.last_substantive_position)
 
-        return Avg('debateteam__speakerscore__score', filter=annotation_filter)
+        return annotation_filter
 
     def get_annotated_queryset(self, queryset, column_name, round=None):
         if round is not None:
@@ -256,16 +264,12 @@ class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
             NullIf('debateteam__teamscore__votes_possible', 0, output_field=FloatField()) *
             self.adjs_per_debate)
 
-    def annotate(self, queryset, standings, round=None):
-        super().annotate(queryset, standings, round)
-
+    def get_annotation(self, round=None):
         # If the number of ballots carried by every team is an integer, then
         # it's probably (though not certainly) the case that there are no
         # "weird" cases causing any fractional numbers of votes due to
         # normalization. In that case, convert all metrics to integers.
-        if all(tsi.metrics[self.key] == int(tsi.metrics[self.key]) for tsi in standings.infoview()):
-            for tsi in standings.infoview():
-                tsi.metrics[self.key] = int(tsi.metrics[self.key])
+        return Cast(super().get_annotation(round), output_field=IntegerField())
 
 
 class NumberOfFirstsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
