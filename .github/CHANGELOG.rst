@@ -4,7 +4,7 @@ Change Log
 
 2.4.0 (Manx)
 ------------
-*Release date: ?*
+*Release date: 14 June 2020*
 
 - Created an `application programming interface (API) <https://tabbycat.readthedocs.io/en/stable/features/api.html>`_ for most aspects of Tabbycat
 - Filtered the home page for active tournaments with a new page to list inactive ones
