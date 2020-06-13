@@ -242,18 +242,18 @@ class Tournament(models.Model):
 
         # For something this complicated it's easier just to get the entire
         # round set from the database, and process it in Python.
-        rounds = self.round_set.filter(completed=False).order_by('seq').annotate(
-                Count('debate')).select_related('break_category')
+        rounds = getattr(self, 'current_round_set',
+            self.round_set.filter(completed=False).annotate(Count('debate')).order_by('seq'))
         current_elim_rounds = {}
         for r in rounds:
             if not r.is_break_round:
                 return [r]  # short-circuit everything else
             elif r.debate__count > 0:
-                current_elim_rounds.setdefault(r.break_category, r)
+                current_elim_rounds.setdefault(r.break_category_id, r)
         return [
-            current_elim_rounds.get(category)
-            for category in self.breakcategory_set.order_by('seq')
-            if category in current_elim_rounds
+            current_elim_rounds.get(category.pk)
+            for category in self.breakcategory_set.order_by('seq')  # Order by break, then seq
+            if category.pk in current_elim_rounds
         ]
 
     @cached_property
@@ -425,11 +425,10 @@ class Round(models.Model):
         """Returns the number of debates in the round, in which there are an
         positive and even number of voting judges."""
         from adjallocation.models import DebateAdjudicator
-        debates_with_even_panel = self.debate_set.exclude(
-            debateadjudicator__type=DebateAdjudicator.TYPE_TRAINEE,
-        ).annotate(
-            panellists=Count('debateadjudicator'),
-            odd_panellists=Count('debateadjudicator') % 2,
+        debateadj_filter = ~Q(debateadjudicator__type=DebateAdjudicator.TYPE_TRAINEE)
+        debates_with_even_panel = self.debate_set.annotate(
+            panellists=Count('debateadjudicator', filter=debateadj_filter),
+            odd_panellists=Count('debateadjudicator', filter=debateadj_filter) % 2,
         ).filter(panellists__gt=0, odd_panellists=0).count()
         return debates_with_even_panel
 
@@ -454,10 +453,6 @@ class Round(models.Model):
         from participants.models import Adjudicator
         return Adjudicator.objects.exclude(debateadjudicator__debate__round=self).filter(
             round_availabilities__round=self).count()
-
-    @cached_property
-    def is_break_round(self):
-        return self.stage == self.STAGE_ELIMINATION
 
     # --------------------------------------------------------------------------
     # Draw retrieval methods
@@ -573,6 +568,10 @@ class Round(models.Model):
         round, then it returns the next round that is either in the same break
         category or is a preliminary round."""
         return self._rounds_in_same_sequence().filter(seq__gt=self.seq).order_by('seq').first()
+
+    @cached_property
+    def is_break_round(self):
+        return self.stage == self.STAGE_ELIMINATION
 
     @property
     def is_current(self):

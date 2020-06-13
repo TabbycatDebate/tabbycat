@@ -1,0 +1,210 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-03-12 19:19\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese Simplified\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: zh-CN\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/features/breaks.po\n"
+"Language: zh_CN\n"
+
+#: ../../features/breaks.rst:5
+msgid "Breaks and Break Rounds"
+msgstr ""
+
+#: ../../features/breaks.rst:7
+msgid "In Tabbycat, elimination rounds (sometimes called *outrounds* or the *final series*) are called \"break rounds\", and the qualification of teams to compete in the elimination phase of a tournament is called the \"break\"."
+msgstr ""
+
+#: ../../features/breaks.rst:12
+msgid "About break categories"
+msgstr ""
+
+#: ../../features/breaks.rst:14
+msgid "Tabbycat supports multiple and arbitrarily-named break categories. Most tournaments will have just one category, typically called \"Open\", leading to the grand final. Some tournaments also have restricted-eligibility break categories, for example, for novice teams or teams for whom English is a second language."
+msgstr ""
+
+#: ../../features/breaks.rst:19
+msgid "Having multiple break categories is intended for tournaments where multiple *parallel* elimination phases derive from the *same* preliminary rounds (inrounds). It's not for parallel but distinct competitions---for those, you should create distinct tournaments."
+msgstr ""
+
+#: ../../features/breaks.rst:27
+msgid "Break qualification rules"
+msgstr ""
+
+#: ../../features/breaks.rst:29
+msgid "Tabbycat supports several break qualification rules, and each break category must be configured to use one of them. Most tournaments will use \"Standard\", which is the default."
+msgstr ""
+
+#: ../../features/breaks.rst:38
+msgid "Rule name (string to use in ``importtournament`` CSV files)"
+msgstr ""
+
+#: ../../features/breaks.rst:39
+msgid "Descrption"
+msgstr ""
+
+#: ../../features/breaks.rst:41
+msgid "Standard (``standard``)"
+msgstr ""
+
+#: ../../features/breaks.rst:42
+msgid "The top *n* teams break. This is the default, and most tournaments use this rule."
+msgstr ""
+
+#: ../../features/breaks.rst:45
+msgid "AIDA 1996 (``aida-1996``)"
+msgstr ""
+
+#: ../../features/breaks.rst:46
+msgid "The top *n* teams that are also in the top three teams from their institution break."
+msgstr ""
+
+#: ../../features/breaks.rst:49
+msgid "AIDA 2016 (Australs) (``aida-2016-australs``)"
+msgstr ""
+
+#: ../../features/breaks.rst:50
+msgid "The top *n* teams that fulfil either of these criteria break:"
+msgstr ""
+
+#: ../../features/breaks.rst:53
+msgid "They are in the top *n* teams overall, and in the top three teams from their institution."
+msgstr ""
+
+#: ../../features/breaks.rst:55
+msgid "They have at least as many wins as the *n*\\ th-ranked team, and they are the top team from their institution."
+msgstr ""
+
+#: ../../features/breaks.rst:58
+msgid "If fewer than *n* teams fulfil either criterion, then the best teams not fulfilling the criteria are added to make *n* teams."
+msgstr ""
+
+#: ../../features/breaks.rst:62
+msgid "AIDA 2016 (Easters) (``aida-2016-easters``)"
+msgstr ""
+
+#: ../../features/breaks.rst:63
+msgid "As for AIDA 2016 (Australs), except that if fewer than *n* teams fulfil either criterion, then only the best teams who are in the top three teams from their institution are added to make *n* teams."
+msgstr ""
+
+#: ../../features/breaks.rst:68
+msgid "The break generators are somewhat more complex than described in the above table: among other things, they also handle cases where there is a tie for the last place in the break, and for those break categories marked \"general\", they will show where ineligible teams would have broken, had they been eligible."
+msgstr ""
+
+#: ../../features/breaks.rst:75
+msgid "Setting up break categories and rounds"
+msgstr ""
+
+#: ../../features/breaks.rst:77
+msgid "For each break category in your tournament, you need to do two things:"
+msgstr ""
+
+#: ../../features/breaks.rst:79
+msgid "Create (and name) a break category"
+msgstr ""
+
+#: ../../features/breaks.rst:80
+msgid "Create break rounds for the category"
+msgstr ""
+
+#: ../../features/breaks.rst:81
+msgid "Set the eligibility of teams to compete in the category"
+msgstr ""
+
+#: ../../features/breaks.rst:83
+msgid "If you only have one break category (open) and you create your tournament using the \"Create New Tournament\" page, simply enter the number of teams in the break (*e.g.*, 8 if you're breaking to quarterfinals). Tabbycat will create the break category and break rounds for you. For any further break categories, you'll need to go to the **Breaks** item in the left-hand menu for a particular tournament and then click **Break Categories**. Fill out the forms for the number of new break categories and save. Rounds will be created automatically. You'll still need to set the eligibility of teams though, as in (3) below."
+msgstr ""
+
+#: ../../features/breaks.rst:92
+msgid "If you create your tournament using the `importtournament` command or in **Edit Database**, you'll need to do all three steps above yourself. You may also want to edit the break rounds (2) to change their names."
+msgstr ""
+
+#: ../../features/breaks.rst:97
+msgid "1. Creating break categories"
+msgstr ""
+
+#: ../../features/breaks.rst:99
+msgid "If using the `importtournament` command, there is an example file, *break_categories.csv*, that you can copy and adjust. If using **Edit Database**, add categories under **Break Qualification > Break categories**."
+msgstr ""
+
+#: ../../features/breaks.rst:103
+msgid "Most of the fields are self-explanatory or described on the Edit Database form, except for one: \"rule\", which sets the break qualification rule. Permissible values are described in :ref:`breakqual-rules` above. If using `importtournament`, be sure to use the correct string (in brackets in the table). The rule defaults to \"Standard\" (``standard``)."
+msgstr ""
+
+#: ../../features/breaks.rst:109
+msgid "The \"institution cap\" field was removed in Tabbycat 1.0. All Australs break qualification rules are now hard-coded to a cap of three teams per institution."
+msgstr ""
+
+#: ../../features/breaks.rst:114
+msgid "2. Creating break rounds"
+msgstr ""
+
+#: ../../features/breaks.rst:116
+msgid "You should create a round for every break round you intend to hold, including it in *rounds.csv* if using `importtournament`, or adding them under **Tournaments > Rounds** if using **Edit Database**. Be careful to set the following fields correctly:"
+msgstr ""
+
+#: ../../features/breaks.rst:121
+msgid "*Break category* must be set to the relevant break category."
+msgstr ""
+
+#: ../../features/breaks.rst:122
+msgid "*Stage* and *draw type* must both be set to \"Elimination\"."
+msgstr ""
+
+#: ../../features/breaks.rst:125
+msgid "3. Setting break eligibility"
+msgstr ""
+
+#: ../../features/breaks.rst:127
+msgid "Once a break category has been created it will not have any teams eligible for it, even if it was marked as \"Is general\". To edit the eligibility of teams for any break round go to the **Breaks** item in the left-hand menu for a particular tournament and then click **Team Eligiblity**."
+msgstr ""
+
+#: ../../features/breaks.rst:132
+msgid "Here you can select \"all\" or \"none\" to toggle all team eligiblities or edit them using the tick boxes. Once you **save** it should return you to the main break page which will display the number of teams marked eligible."
+msgstr ""
+
+#: ../../features/breaks.rst:136
+msgid "Adjudicators can be marked as \"breaking\" on the **Feedback** page; clicking **Adjudicators** on the breaks page will take you straight there."
+msgstr ""
+
+#: ../../features/breaks.rst:140
+msgid "Generating the break"
+msgstr ""
+
+#: ../../features/breaks.rst:142
+msgid "Unlike team or speaker standings, each category's break (and the break ranks of teams) are not determined automatically and updated continuously. Instead each can be generated (and regenerated) as desired."
+msgstr ""
+
+#: ../../features/breaks.rst:146
+msgid "To do so go to the **Breaks** item in the left-hand menu and then click the white button that corresponds to the break category you'd like to determine the rankings for. When prompted, select **Generate the break for all categories** to display the list of breaking teams."
+msgstr ""
+
+#: ../../features/breaks.rst:151
+msgid "From this page you can update the breaking teams list for this break category (or all categories) as well as view and edit 'remarks' that account for cases in which a team may not break (such as being capped or losing a coin toss)."
+msgstr ""
+
+#: ../../features/breaks.rst:155
+msgid "Please double-check the generated break before announcing or releasing it. Although the break generation code is designed to handle edge cases, we don't test the code for such cases."
+msgstr ""
+
+#: ../../features/breaks.rst:160
+msgid "Creating draws for break rounds"
+msgstr ""
+
+#: ../../features/breaks.rst:162
+msgid "Creating a draw for a break round proceeds as normal, except that the team availability process is skipped. Instead, when you visit the availability page for that round it will have automatically determined which teams should be debating based upon the determined break for that category. Once a draw has been generated it will then use the relevant break ranks to create the matchups (ie 1st-breaking vs 16th-breaking, 2nd vs 15th, *etc.*). Subsequent break rounds will then also automatically determine matchups based on the previous round's results and room ranks."
+msgstr ""
+
+#: ../../features/breaks.rst:171
+msgid "If the \"break size\" of a break category is not a power of 2, it will treat the first break round as a partial-elimination draw and only create a draw for the teams not skipping the partial-elimination round. Subsequent break rounds will then process as described above."
+msgstr ""
+

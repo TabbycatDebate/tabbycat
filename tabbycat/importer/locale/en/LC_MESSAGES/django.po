@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-20 23:12-0500\n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,13 +44,13 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: importer/forms.py:103
-msgid "There were no venues to import."
+msgid "There were no rooms to import."
 msgstr ""
 
 #: importer/forms.py:108
 #, python-format
-msgid "Sorry, you can only import up to %(max_allowed)d venue at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
-msgid_plural "Sorry, you can only import up to %(max_allowed)d venues at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
+msgid "Sorry, you can only import up to %(max_allowed)d room at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
+msgid_plural "Sorry, you can only import up to %(max_allowed)d rooms at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -183,7 +183,7 @@ msgstr ""
 
 #: importer/templates/simple_import_adjudicators_details.html:48
 #, python-format
-msgid "Adjudicators for %(institution_name)s"
+msgid "Adjudicators for %(institution)s"
 msgstr ""
 
 #: importer/templates/simple_import_adjudicators_details.html:52
@@ -235,15 +235,15 @@ msgid "Add Adjudicators"
 msgstr ""
 
 #: importer/templates/simple_import_index.html:29
-msgid "Add Venues"
+msgid "Add Rooms"
 msgstr ""
 
 #: importer/templates/simple_import_index.html:36
-msgid "Add/Edit Venue Categories"
+msgid "Add/Edit Room Categories"
 msgstr ""
 
 #: importer/templates/simple_import_index.html:40
-msgid "Add/Edit Venue Constraints"
+msgid "Add/Edit Room Constraints"
 msgstr ""
 
 #: importer/templates/simple_import_index.html:47
@@ -294,7 +294,7 @@ msgstr ""
 
 #: importer/templates/simple_import_teams_details.html:33
 #, python-format
-msgid "Teams for %(institution_name)s"
+msgid "Teams for %(institution)s"
 msgstr ""
 
 #: importer/templates/simple_import_teams_details.html:37
@@ -323,58 +323,58 @@ msgstr ""
 #: importer/templates/simple_import_venues_raw.html:4
 #: importer/templates/simple_import_venues_raw.html:6
 msgctxt "page title"
-msgid "Add Venues"
+msgid "Add Rooms"
 msgstr ""
 
 #: importer/templates/simple_import_venues_details.html:16
-msgid "Priorities indicate how much you want to use the venue. Larger numbers indicate higher priority. If you have more venues than debates, the venues with the lowest priorities will not be used."
+msgid "Priorities indicate how much you want to use the room. Larger numbers indicate higher priority. If you have more rooms than debates, the rooms with the lowest priorities will not be used."
 msgstr ""
 
 #: importer/templates/simple_import_venues_details.html:33
-msgid "Save All Venues"
+msgid "Save All Rooms"
 msgstr ""
 
 #: importer/templates/simple_import_venues_raw.html:15
-msgid "Paste a list of venues with one venue per line and following the format of: <code>name,priority</code>. For example:"
+msgid "Paste a list of rooms with one room per line and following the format of: <code>name,priority</code>. For example:"
 msgstr ""
 
-#: importer/views.py:103
+#: importer/views.py:102
 #, python-format
 msgid "Added %(count)d institution."
 msgid_plural "Added %(count)d institutions."
 msgstr[0] ""
 msgstr[1] ""
 
-#: importer/views.py:124
+#: importer/views.py:123
 #, python-format
-msgid "Added %(count)d venue."
-msgid_plural "Added %(count)d venues."
+msgid "Added %(count)d room."
+msgid_plural "Added %(count)d rooms."
 msgstr[0] ""
 msgstr[1] ""
 
-#: importer/views.py:183
+#: importer/views.py:182
 #, python-format
 msgid "Added %(count)d team."
 msgid_plural "Added %(count)d teams."
 msgstr[0] ""
 msgstr[1] ""
 
-#: importer/views.py:204
+#: importer/views.py:203
 #, python-format
 msgid "Adjudicator %(number)d"
 msgstr ""
 
-#: importer/views.py:209
+#: importer/views.py:208
 #, python-format
 msgid "Added %(count)d adjudicator."
 msgid_plural "Added %(count)d adjudicators."
 msgstr[0] ""
 msgstr[1] ""
 
-#: importer/views.py:225
+#: importer/views.py:224
 msgid "<p>There were one or more errors creating the demo tournament. Before retrying, please delete the existing demo tournament <strong>and</strong> the institutions in the Edit Database Area.</p><p><i>Technical information: The errors are as follows:</i></p>"
 msgstr ""
 
-#: importer/views.py:233
+#: importer/views.py:232
 msgid "Created new demo tournament. You can now configure it below."
 msgstr ""

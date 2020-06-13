@@ -1,0 +1,434 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-01-02 01:48\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Portuguese\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: pt-PT\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/features/draw-generation.po\n"
+"Language: pt_PT\n"
+
+#: ../../features/draw-generation.rst:5
+msgid "Draw Generation"
+msgstr ""
+
+#: ../../features/draw-generation.rst:7
+msgid "The draw generator is quite flexible. You can specify a number of settings to suit different tournaments' rules."
+msgstr ""
+
+#: ../../features/draw-generation.rst:10
+msgid "Summary of options"
+msgstr ""
+
+#: ../../features/draw-generation.rst:11
+msgid "Options are set in the **Configuration** page as described in :ref:`starting a tournament <starting-a-tournament>`."
+msgstr ""
+
+#: ../../features/draw-generation.rst:18
+msgid "Option"
+msgstr ""
+
+#: ../../features/draw-generation.rst:19
+msgid "Description"
+msgstr ""
+
+#: ../../features/draw-generation.rst:20
+msgid "Allowable values"
+msgstr ""
+
+#: ../../features/draw-generation.rst:22
+msgid ":ref:`Odd bracket resolution method <draw-odd-bracket>`"
+msgstr ""
+
+#: ../../features/draw-generation.rst:23
+msgid "How to resolve odd brackets"
+msgstr ""
+
+#: ../../features/draw-generation.rst:24
+msgid "Pull up from top"
+msgstr ""
+
+#: ../../features/draw-generation.rst:25
+msgid "Pull up from bottom"
+msgstr ""
+
+#: ../../features/draw-generation.rst:26
+msgid "Pull up from middle"
+msgstr ""
+
+#: ../../features/draw-generation.rst:27
+msgid "Pull up at random"
+msgstr ""
+
+#: ../../features/draw-generation.rst:29
+msgid "If sides are `Random` or `Balance`:"
+msgstr ""
+
+#: ../../features/draw-generation.rst:31
+msgid "Intermediate"
+msgstr ""
+
+#: ../../features/draw-generation.rst:32
+msgid "Intermediate with bubble-up-bubble-down"
+msgstr ""
+
+#: ../../features/draw-generation.rst:34
+msgid "If sides are `Pre-allocated`:"
+msgstr ""
+
+#: ../../features/draw-generation.rst:36
+msgid "Intermediate 1"
+msgstr ""
+
+#: ../../features/draw-generation.rst:37
+msgid "Intermediate 2"
+msgstr ""
+
+#: ../../features/draw-generation.rst:39
+msgid ":ref:`Side allocations method <draw-side-allocations>`"
+msgstr ""
+
+#: ../../features/draw-generation.rst:40
+msgid "How to allocate aff/neg"
+msgstr ""
+
+#: ../../features/draw-generation.rst:41 ../../features/draw-generation.rst:51
+msgid "Random"
+msgstr ""
+
+#: ../../features/draw-generation.rst:42
+msgid "Balance"
+msgstr ""
+
+#: ../../features/draw-generation.rst:43
+msgid "Pre-allocated"
+msgstr ""
+
+#: ../../features/draw-generation.rst:44
+msgid "Manual ballot"
+msgstr ""
+
+#: ../../features/draw-generation.rst:46
+msgid ":ref:`Pairing method <draw-pairing-method>`"
+msgstr ""
+
+#: ../../features/draw-generation.rst:47
+msgid "How to pair teams within brackets"
+msgstr ""
+
+#: ../../features/draw-generation.rst:48
+msgid "Slide"
+msgstr ""
+
+#: ../../features/draw-generation.rst:49
+msgid "Fold"
+msgstr ""
+
+#: ../../features/draw-generation.rst:50
+msgid "Adjacent"
+msgstr ""
+
+#: ../../features/draw-generation.rst:53
+msgid ":ref:`Conflict avoidance method <draw-conflict-avoidance>`"
+msgstr ""
+
+#: ../../features/draw-generation.rst:54
+msgid "How to avoid history/institution conflicts"
+msgstr ""
+
+#: ../../features/draw-generation.rst:55
+msgid "Off"
+msgstr ""
+
+#: ../../features/draw-generation.rst:56
+msgid "One-up-one-down"
+msgstr ""
+
+#: ../../features/draw-generation.rst:58
+msgid ":ref:`Pullup restriction <draw-pullup-restriction>`"
+msgstr ""
+
+#: ../../features/draw-generation.rst:59
+msgid "Whether and how to restrict pullups"
+msgstr ""
+
+#: ../../features/draw-generation.rst:60
+msgid "No restriction"
+msgstr ""
+
+#: ../../features/draw-generation.rst:61
+msgid "Choose from teams who have been pulled up the fewest times so far"
+msgstr ""
+
+#: ../../features/draw-generation.rst:62
+msgid "Choose from teams with the lowest draw strength by speaks so far"
+msgstr ""
+
+#: ../../features/draw-generation.rst:64
+msgid "The valid options for intermediate brackets change depending on whether sides are pre-allocated, but these are **not** checked for validity. If you choose an invalid combination, Tabbycat will just crash. This won't corrupt the database, but it might be momentarily annoying."
+msgstr ""
+
+#: ../../features/draw-generation.rst:67
+msgid "The big picture"
+msgstr ""
+
+#: ../../features/draw-generation.rst:68
+msgid "When generating a power-paired draw, Tabbycat goes through five steps:"
+msgstr ""
+
+#: ../../features/draw-generation.rst:70
+msgid "First, it divides teams into \"raw brackets\", grouping them by the number of wins."
+msgstr ""
+
+#: ../../features/draw-generation.rst:71
+msgid "Second, it resolves odd brackets, applying the odd brackets rule to make sure there is an even number of teams in each bracket. This is often called \"pulling up\" teams."
+msgstr ""
+
+#: ../../features/draw-generation.rst:72
+msgid "Third, within each bracket, it pairs teams into debates using the pairing method."
+msgstr ""
+
+#: ../../features/draw-generation.rst:73
+msgid "Fourth, if enabled, it adjusts pairings to avoid history or institution conflicts."
+msgstr ""
+
+#: ../../features/draw-generation.rst:74
+msgid "Finally, it assigns sides to teams in each debate."
+msgstr ""
+
+#: ../../features/draw-generation.rst:76
+msgid "For each of these steps except the first, Tabbycat allows you to choose between a number of different methods."
+msgstr ""
+
+#: ../../features/draw-generation.rst:80
+msgid "Explanations of options"
+msgstr ""
+
+#: ../../features/draw-generation.rst:85
+msgid "Odd bracket resolution"
+msgstr ""
+
+#: ../../features/draw-generation.rst:86
+msgid "The **draw odd brackets** option specifies what you do when a bracket has an odd number of teams. (Obviously you have to do something, otherwise you can't pair off teams within the bracket.) There are two groups of methods: pull-up and intermediate brackets."
+msgstr ""
+
+#: ../../features/draw-generation.rst:90
+msgid "**Pull-up methods** take one or more teams from the next bracket down, and move them into the odd bracket to fill the bracket."
+msgstr ""
+
+#: ../../features/draw-generation.rst:92
+msgid "**Intermediate brackets** take the excess teams from the odd bracket and move them down into a new bracket, which sits between the odd bracket and the next one down (the \"intermediate bracket\"). It then takes teams from the next bracket down and moves them up to fill the new intermediate bracket."
+msgstr ""
+
+#: ../../features/draw-generation.rst:94
+msgid "The exact mechanics depend on whether or not sides are pre-allocated."
+msgstr ""
+
+#: ../../features/draw-generation.rst:97
+msgid "When sides are not pre-allocated"
+msgstr ""
+
+#: ../../features/draw-generation.rst:101
+msgid "**Pull-up methods:** Take a team from the next bracket down, and add them to the odd bracket to form an even bracket. You can choose to pull up the top team from the next bracket, or the bottom team, or the middle team, or a randomly chosen team. (If you pull up the middle team, and the bracket has an even number of teams, then it will choose randomly from the two middle teams.)"
+msgstr ""
+
+#: ../../features/draw-generation.rst:103
+msgid "**Intermediate brackets:** Take the bottom team from the odd bracket and match them against the top team from the next bracket. An intermediate bracket always has two teams."
+msgstr ""
+
+#: ../../features/draw-generation.rst:105
+msgid "If you're using conflict avoidance and intermediate brackets, you will probably want to use **Intermediate with bubble-up-bubble-down** instead. This uses the \"bubble-up-bubble-down\" rule to swap teams out of an intermediate bracket if there is a history or institution conflict. This is defined in the Australs constitution and is analogous to the \"one-up-one-down\" rule."
+msgstr ""
+
+#: ../../features/draw-generation.rst:107
+msgid "Using `Intermediate` with `One-up-one-down` does **not** imply `Intermediate with bubble-up-bubble-down`. You must enable `Intermediate with bubble-up-bubble-down` specifically."
+msgstr ""
+
+#: ../../features/draw-generation.rst:110
+msgid "When sides are pre-allocated"
+msgstr ""
+
+#: ../../features/draw-generation.rst:111
+msgid "When sides are pre-allocated, an \"odd bracket\" is one that has an uneven number of affirmative and negative teams. (So odd brackets can have an even number of teams, *e.g.* 4 affs and 2 negs.)"
+msgstr ""
+
+#: ../../features/draw-generation.rst:115
+msgid "**Pull-up methods:** Take as many teams from the next bracket down as necessary to fill the bracket. If there aren't enough teams in the next bracket down, take teams from the bracket after that, and so on, until the (original) odd bracket is filled. Higher brackets are always filled first. You can choose to pull up the top teams from the next bracket, the bottom teams, or a random selection of teams."
+msgstr ""
+
+#: ../../features/draw-generation.rst:117
+msgid "**Intermediate brackets:** Take the unpaired teams in a bracket, and move them down to a new intermediate bracket. Then, take the number of teams necessary from the opposite side, from the next bracket down, to fill the next bracket."
+msgstr ""
+
+#: ../../features/draw-generation.rst:119
+msgid "**Intermediate 1** and **Intermediate 2** differ only in what happens if there aren't enough teams in the next bracket to fill the intermediate bracket. In **Intermediate 1**, it will just take teams from the bracket after that, and so on, until the intermediate bracket is filled. In **Intermediate 2**, it will split the intermediate bracket: the teams that can be paired with the next bracket form the first intermediate bracket, and then the teams that aren't form a new (unfilled) intermediate bracket, to be filled from teams from the bracket after that. This keeps going, splitting into as many intermediate brackets as necessary, until all excess teams from the original odd bracket are paired."
+msgstr ""
+
+#: ../../features/draw-generation.rst:124
+msgid "Side allocations"
+msgstr ""
+
+#: ../../features/draw-generation.rst:125
+msgid "There are four methods:"
+msgstr ""
+
+#: ../../features/draw-generation.rst:129
+msgid "**Random** allocates randomly. Some tournaments might like this, but most will probably want to use Balance, because Random doesn't guarantee that a team won't be (say) affirming the entire tournament."
+msgstr ""
+
+#: ../../features/draw-generation.rst:130
+msgid "**Balance** assigns the team that has affirmed less so far the affirmative side (and, therefore, the team that has negated less the negative side). If both teams have affirmed the same number of times, it assigns sides randomly."
+msgstr ""
+
+#: ../../features/draw-generation.rst:131
+msgid "**Preallocated** is used for pre-allocated sides. If used, you must enter data for pre-allocated sides into the database, as specified below."
+msgstr ""
+
+#: ../../features/draw-generation.rst:132
+msgid "**Manually enter from ballot** is used for tournaments where the sides of the teams involved are not assigned in advance, but are instead determined by the teams themselves"
+msgstr ""
+
+#: ../../features/draw-generation.rst:135
+msgid "Pre-allocated sides"
+msgstr ""
+
+#: ../../features/draw-generation.rst:136
+msgid "There isn't currently any way to edit side allocations from the front end. To do so from the back end, you need to create one ``TeamPositionAllocation`` entry for each team in each round. All teams must have an allocation for every round. There are a few ways to do this, take your pick:"
+msgstr ""
+
+#: ../../features/draw-generation.rst:140
+msgid "If you're using the :ref:`importtournament command <importtournament-command>`, it reads sides from the file sides.csv."
+msgstr ""
+
+#: ../../features/draw-generation.rst:141
+msgid "You can do this from the Django admin interface (under Setup > Edit Database) by going to the relevant team and adding a **team position allocation** entry. That is:"
+msgstr ""
+
+#: ../../features/draw-generation.rst:143
+msgid "Click **Admin** on the bottom right of any page after logging into an account with :ref:`superuser access <user-accounts>`."
+msgstr ""
+
+#: ../../features/draw-generation.rst:144
+msgid "Next to **Teams**, click **Change**."
+msgstr ""
+
+#: ../../features/draw-generation.rst:145
+msgid "Click on the name of the team you want to edit side allocations for."
+msgstr ""
+
+#: ../../features/draw-generation.rst:146
+msgid "Add or edit the entry or entries in the **Team position allocations** table at the bottom."
+msgstr ""
+
+#: ../../features/draw-generation.rst:148
+msgid "You can also do this by writing a script that creates ``TeamPositionAllocation`` objects and saves them. Have a look at `draw/management/commands/generatesideallocations.py <https://github.com/TabbycatDebate/tabbycat/blob/master/tabbycat/draw/management/commands/generatesideallocations.py>`_ for an example."
+msgstr ""
+
+#: ../../features/draw-generation.rst:153
+msgid "Pairing method"
+msgstr ""
+
+#: ../../features/draw-generation.rst:154
+msgid "It's easiest to describe these by example, using a ten-team bracket:"
+msgstr ""
+
+#: ../../features/draw-generation.rst:156
+msgid "**Fold**: 1 vs 10, 2 vs 9, 3 vs 8, 4 vs 7, 5 vs 6. (Also known as high-low pairing.)"
+msgstr ""
+
+#: ../../features/draw-generation.rst:157
+msgid "**Slide**: 1 vs 6, 2 vs 7, 3 vs 8, 4 vs 9, 5 vs 10."
+msgstr ""
+
+#: ../../features/draw-generation.rst:158
+msgid "**Adjacent**: 1 vs 2, 3 vs 4, 5 vs 6, 7 vs 8, 9 vs 10. (Also known as high-high pairing.)"
+msgstr ""
+
+#: ../../features/draw-generation.rst:159
+msgid "**Random**: paired at random within bracket."
+msgstr ""
+
+#: ../../features/draw-generation.rst:161
+msgid "Teams are always paired within their brackets, after resolving odd brackets."
+msgstr ""
+
+#: ../../features/draw-generation.rst:166
+msgid "Conflict avoidance method"
+msgstr ""
+
+#: ../../features/draw-generation.rst:167
+msgid "A **conflict** is when two teams would face each other that have seen each other before, or are from the same institutions. Some tournaments have a preference against allowing this if it's avoidable within certain limits. The **draw avoid conflicts** option allows you to specify how."
+msgstr ""
+
+#: ../../features/draw-generation.rst:169
+msgid "You can turn this off by using **Off**. Other than this, there is currently one conflict avoidance method implemented."
+msgstr ""
+
+#: ../../features/draw-generation.rst:171
+msgid "**One-up-one-down** is the method specified in the Australs constitution. Broadly speaking, if there is a debate with a conflict:"
+msgstr ""
+
+#: ../../features/draw-generation.rst:173
+msgid "It tries to swap teams with the debate \"one up\" from it in the draw."
+msgstr ""
+
+#: ../../features/draw-generation.rst:174
+msgid "If that doesn't work, it tries to swap teams with the debate \"one down\" from it in the draw."
+msgstr ""
+
+#: ../../features/draw-generation.rst:175
+msgid "If neither of those works, it accepts the original conflicted debate."
+msgstr ""
+
+#: ../../features/draw-generation.rst:177
+msgid "It's a bit more complicated than that, for two reasons:"
+msgstr ""
+
+#: ../../features/draw-generation.rst:181
+msgid "History conflicts are prioritised over (*i.e.*, \"worse than\") institution conflicts. So it's fine to resolve a history conflict by creating an institution conflict, but not the vice versa."
+msgstr ""
+
+#: ../../features/draw-generation.rst:182
+msgid "Each swap obviously affects the debates around it, so it's not legal to have two adjacent swaps. (Otherwise, in theory, a team could \"one down\" all the way to the bottom of the draw!) So there is an optimization algorithm that finds the best combination of swaps, *i.e.* the one that minimises conflict, and if there are two profiles that have the same least conflict, then it chooses the one with fewer swaps."
+msgstr ""
+
+#: ../../features/draw-generation.rst:187
+msgid "Pullup restriction"
+msgstr ""
+
+#: ../../features/draw-generation.rst:188
+msgid "You can restrict which teams can be pulled up by configuring the draw generator to choose a pullup team from among only those teams who are the \"best off\" according to a given metric. If several teams are equally \"best off\" within the lower bracket, the draw generator chooses among them using the same **pull-up method** already specified (*e.g.*, \"pull up from top\")"
+msgstr ""
+
+#: ../../features/draw-generation.rst:192
+msgid "You can **choose from teams who have been pulled up the fewest times so far**, that is, in rounds before the current round. Most of the time, this is equivalent to saying that a team cannot be pulled up more than once. But if *all* teams in a bracket have been pulled up at least once, it then chooses from among teams who have been pulled up *only* once (if any), and so on."
+msgstr ""
+
+#: ../../features/draw-generation.rst:194
+msgid "You can **choose from teams with the lowest draw strength so far**, by **wins** or **speaks**."
+msgstr ""
+
+#: ../../features/draw-generation.rst:196
+msgid "If you choose speaks, it's unlikely that two teams will have the same draw strength by speaks, so most of the time this will just choose the team in the lower bracket that's had the easiest draw so far (as measured by their opponents' speaker scores)."
+msgstr ""
+
+#: ../../features/draw-generation.rst:198
+msgid "Pullup restrictions only apply when the :ref:`odd bracket resolution method <draw-odd-bracket>` is a pullup method. They have no effect on intermediate brackets."
+msgstr ""
+
+#: ../../features/draw-generation.rst:201
+msgid "What do I do if the draw looks wrong?"
+msgstr ""
+
+#: ../../features/draw-generation.rst:203
+msgid "You can edit match-ups directly from the draw page. Functionally, you can do anything you want. Of course, operationally, you should only edit the draw when you *know* that the draw algorithm got something wrong. If you need to do this, even just once, please file a bug report by creating a new issue on `our issues page on GitHub <https://github.com/TabbycatDebate/tabbycat/issues>`_."
+msgstr ""
+

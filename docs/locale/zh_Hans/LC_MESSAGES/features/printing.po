@@ -1,0 +1,66 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-03-12 19:19\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese Simplified\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: zh-CN\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/features/printing.po\n"
+"Language: zh_CN\n"
+
+#: ../../features/printing.rst:3
+msgid "Printing Ballots and Feedback"
+msgstr ""
+
+#: ../../features/printing.rst:5
+msgid "Tabbycat offers the ability to print scoresheets and feedback sheets on a per-round basis. This means that each scoresheet is customised to match the draw, and so will display:"
+msgstr ""
+
+#: ../../features/printing.rst:7
+msgid "The motion or possible motions that could have been chosen from"
+msgstr ""
+
+#: ../../features/printing.rst:8
+msgid "The teams, and a list of speakers for each team"
+msgstr ""
+
+#: ../../features/printing.rst:9
+msgid "The room number, and name of the adjudicators present"
+msgstr ""
+
+#: ../../features/printing.rst:11
+msgid "Feedback sheets will also be customised in this manner; displaying:"
+msgstr ""
+
+#: ../../features/printing.rst:13
+msgid "A 'from' source. Sheet will be printed for each possible piece of feedback in that room: ie adjudicators will each get a sheet for their panellists and trainees while teams and panellists will get sheets for the chair."
+msgstr ""
+
+#: ../../features/printing.rst:14
+msgid "The specific questions you established when configuring the :ref:`adjudicator feedback questions <adjudicator-feedback>`"
+msgstr ""
+
+#: ../../features/printing.rst:15
+msgid "The room number"
+msgstr ""
+
+#: ../../features/printing.rst:17
+msgid "To print the ballots for each round, you would go to the **Display** page for that round, the click one of the two relevant print links. This opens a new window. In each window, you then use your browser's print function (CTRL-P). In the resulting print interface (from your browser) you'll want to turn background graphics on, header/footers off, and set the layout to portrait (feedback sheets) or landscape (score sheets)."
+msgstr ""
+
+#: ../../features/printing.rst:19
+msgid "Typically you'd save these to PDF for printing, although you should be able to print straight from this dialogue box."
+msgstr ""
+
+#: ../../features/printing.rst:21
+msgid "Printing works best in Safari and Firefox; use those if possible."
+msgstr ""
+

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-20 23:12-0500\n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -301,15 +301,15 @@ msgstr ""
 
 #: motions/templates/show.html:16
 #, python-format
-msgid "Reveal Info Slide for %(round_name)s"
-msgid_plural "Reveal Info Slides for %(round_name)s"
+msgid "Reveal Info Slide for %(round)s"
+msgid_plural "Reveal Info Slides for %(round)s"
 msgstr[0] ""
 msgstr[1] ""
 
 #: motions/templates/show.html:24
 #, python-format
-msgid "Reveal Motion for %(round_name)s"
-msgid_plural "Reveal Motions for %(round_name)s"
+msgid "Reveal Motion for %(round)s"
+msgid_plural "Reveal Motions for %(round)s"
 msgstr[0] ""
 msgstr[1] ""
 

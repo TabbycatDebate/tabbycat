@@ -1,0 +1,474 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"PO-Revision-Date: 2020-05-25 00:15\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Russian\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ru\n"
+"X-Crowdin-File: /develop/tabbycat/adjallocation/locale/en/LC_MESSAGES/django.po\n"
+
+#: adjallocation/allocators/base.py:34
+msgid "There are no available adjudicators. Ensure there are adjudicators who have been marked as available for this round before auto-allocating."
+msgstr "Нет доступных судей. Убедитесь, что есть судьи, которые были отмечены как доступные, перед автоматическим распределением судей."
+
+#: adjallocation/allocators/hungarian.py:50
+#, python-format
+msgid "%(count)s score is larger than the maximum permitted adjudicator score (%(score).1f)."
+msgid_plural "%(count)s scores are larger than the maximum permitted adjudicator score (%(score).1f)."
+msgstr[0] "Рейтинг %(count)s судьи выше, чем максимальный допустимый рейтинг судьи (%(score).1f)."
+msgstr[1] "Рейтинг %(count)s судей выше, чем максимальный допустимый рейтинг судьи (%(score).1f)."
+msgstr[2] "Рейтинг %(count)s судей выше, чем максимальный допустимый рейтинг судьи (%(score).1f)."
+msgstr[3] "Рейтинг %(count)s судей выше, чем максимальный допустимый рейтинг судьи (%(score).1f)."
+
+#: adjallocation/allocators/hungarian.py:59
+#, python-format
+msgid "%(count)s score is smaller than the minimum permitted adjudicator score (%(score).1f)."
+msgid_plural "%(count)s scores are smaller than the minimum permitted adjudicator score (%(score).1f)."
+msgstr[0] "Рейтинг %(count)s судьи ниже, чем минимальный допустимый рейтинг судьи (%(score).1f)."
+msgstr[1] "Рейтинг %(count)s судей ниже, чем минимальный допустимый рейтинг судьи (%(score).1f)."
+msgstr[2] "Рейтинг %(count)s судей ниже, чем минимальный допустимый рейтинг судьи (%(score).1f)."
+msgstr[3] "Рейтинг %(count)s судей ниже, чем минимальный допустимый рейтинг судьи (%(score).1f)."
+
+#: adjallocation/allocators/hungarian.py:111
+msgid "There are no adjudicators eligible to be a chair or panellist. Try changing the \"Minimum feedback score required to be allocated as chair or panellist\" setting to something lower than at least some adjudicators' current scores, and try again."
+msgstr "Нет судей, имеющих право быть чэйром или вингом. Попробуйте изменить \"минимальные баллы по обратной связи, необходимые для того, чтобы быть чэйром или вингом\" на более низкие, чем текущие баллы кого-то из судей и попробуйте снова."
+
+#: adjallocation/allocators/hungarian.py:119
+msgid "There are no debates for this round. Maybe you haven't created a draw yet?"
+msgstr "Нет дебатов для этого раунда. Возможно, вы еще не создали сетку?"
+
+#: adjallocation/allocators/hungarian.py:166
+#, python-format
+msgid "There are %(debate_count)s debates but only %(adj_count)s voting adjudicators."
+msgstr "Есть %(debate_count)s дебатов, но только %(adj_count)s голосующих судей."
+
+#: adjallocation/allocators/hungarian.py:172
+#, python-format
+msgid "There are %(panel_debates)s panel debates but only %(panellists)s available panellists (less than %(needed)s)."
+msgstr "Есть %(panel_debates)s дебатов, но только %(panellists)s доступных вингов (меньше чем %(needed)s)."
+
+#: adjallocation/allocators/hungarian.py:282
+#, python-format
+msgid "There are %(debates_count)s debates but only %(voting_count)s voting adjudicators."
+msgstr "Есть %(debates_count)s дебатов, но только %(voting_count)s голосующих судей."
+
+#: adjallocation/apps.py:7
+msgid "Adjudicator Allocation"
+msgstr "Расстановка судей"
+
+#: adjallocation/consumers.py:59
+msgid "Draw is already released, unrelease draw to redo auto-allocations."
+msgstr "Сетка уже опубликована, отмените публикацию для того, чтобы внести изменения в автоматическое распределение."
+
+#: adjallocation/consumers.py:63
+msgid "Draw is not confirmed, confirm draw to run auto-allocations."
+msgstr "Сетка не подтверждена, подтвердите сетку для автоматической расстановки судей."
+
+#: adjallocation/consumers.py:69
+msgid "There are no preformed panels available to allocate."
+msgstr "Нет заранее сформированных коллегий, которые можно распределить."
+
+#: adjallocation/consumers.py:83
+msgid "Successfully auto-allocated preformed panels to debates."
+msgstr "Коллегии распределены."
+
+#: adjallocation/consumers.py:109
+#, python-format
+msgid "Successfully auto-allocated adjudicators to debates. However, there was a warning:"
+msgid_plural "Successfully auto-allocated adjudicators to debates. However, there were %(count)d warnings:"
+msgstr[0] "Судьи успешно распределены по дебатам. Внимание! Предупреждение:"
+msgstr[1] "Судьи успешно распределены по дебатам. Внимание! Предупреждения (%(count)d):"
+msgstr[2] "Судьи успешно распределены по дебатам. Внимание! Предупреждения (%(count)d):"
+msgstr[3] "Судьи успешно распределены по дебатам. Внимание! Предупреждения (%(count)d):"
+
+#: adjallocation/consumers.py:115
+msgid "Successfully auto-allocated adjudicators to debates."
+msgstr "Судьи распределены."
+
+#: adjallocation/consumers.py:131
+msgid "There aren't any panels to fill. Create panels first."
+msgstr "Нет коллегий для заполнения. Сначала создайте коллегии."
+
+#: adjallocation/consumers.py:155
+#, python-format
+msgid "Successfully auto-allocated adjudicators to preformed panels. However, there was a warning:"
+msgid_plural "Successfully auto-allocated adjudicators to preformed panels. However, there were %(count)d warnings:"
+msgstr[0] "Судьи распределены по коллегиям. Внимание! Предупреждение:"
+msgstr[1] "Судьи распределены по коллегиям. Внимание! %(count)d предупреждений:"
+msgstr[2] "Судьи распределены по коллегиям. Внимание! %(count)d предупреждений:"
+msgstr[3] "Судьи распределены по коллегиям. Внимание! %(count)d предупреждений:"
+
+#: adjallocation/consumers.py:161
+msgid "Successfully auto-allocated adjudicators to preformed panels."
+msgstr "Судьи распределены по коллегиям."
+
+#: adjallocation/consumers.py:207
+msgid "You have no break category set as 'is general' so debate importances can't be calculated."
+msgstr "У вас нет брейковой категории, установленной как \"основная\", так что важность дебатов невозможно подсчитать."
+
+#: adjallocation/consumers.py:215
+msgid "Succesfully auto-prioritised debates."
+msgstr "Приоритет комнат выставлен автоматически."
+
+#: adjallocation/consumers.py:237
+msgid "You have no break category set as 'is general' so panel importances can't be calculated."
+msgstr "У вас нет брейковой категории, установленной как \"основная\", так что важность коллегий невозможно подсчитать."
+
+#: adjallocation/consumers.py:246
+msgid "Succesfully auto-prioritised preformed panels."
+msgstr "Приоритет коллегий выставлен."
+
+#: adjallocation/consumers.py:264
+msgid "Since this is the first round, the preformed panels aren't annotated with brackets and liveness."
+msgstr "Так как это первый раунд, распределение коллегий не связано с количеством баллов команд и брейковостью румов."
+
+#: adjallocation/consumers.py:267
+msgid "The previous round's draw doesn't exist, so preformed panels can't be annotated with brackets and liveness."
+msgstr "Сетки на предыдущий раунд нет, поэтому невозможно распределить коллегии исходя из количества баллов команд и брейковости румов."
+
+#: adjallocation/consumers.py:270
+msgid "Succesfully created new preformed panels for this round."
+msgstr "Созданы новые коллегии на этот раунд."
+
+#: adjallocation/models.py:18
+msgid "chair"
+msgstr "чэйр"
+
+#: adjallocation/models.py:19
+msgid "panellist"
+msgstr "винг"
+
+#: adjallocation/models.py:20
+msgid "trainee"
+msgstr "винг без права голоса"
+
+#: adjallocation/models.py:26
+msgid "debate"
+msgstr "дебаты"
+
+#: adjallocation/models.py:28 adjallocation/models.py:48
+#: adjallocation/models.py:80 adjallocation/models.py:169
+msgid "adjudicator"
+msgstr "судья"
+
+#: adjallocation/models.py:30 adjallocation/models.py:171
+msgid "type"
+msgstr "тип"
+
+#: adjallocation/models.py:31
+msgid "available?"
+msgstr "доступно?"
+
+#: adjallocation/models.py:34
+msgid "debate adjudicator"
+msgstr "судья дебатов"
+
+#: adjallocation/models.py:35
+msgid "debate adjudicators"
+msgstr "судьи дебатов"
+
+#: adjallocation/models.py:50 adjallocation/models.py:95
+msgid "team"
+msgstr "команда"
+
+#: adjallocation/models.py:53
+msgid "adjudicator-team conflict"
+msgstr "конфликт команд и судей"
+
+#: adjallocation/models.py:54
+msgid "adjudicator-team conflicts"
+msgstr "конфликты команд и судей"
+
+#: adjallocation/models.py:64
+msgid "adjudicator 1"
+msgstr "судья 1"
+
+#: adjallocation/models.py:67
+msgid "adjudicator 2"
+msgstr "судья 2"
+
+#: adjallocation/models.py:70
+msgid "adjudicator-adjudicator conflict"
+msgstr "конфликт между судьями"
+
+#: adjallocation/models.py:71
+msgid "adjudicator-adjudicator conflicts"
+msgstr "конфликты между судьями"
+
+#: adjallocation/models.py:82 adjallocation/models.py:97
+msgid "institution"
+msgstr "клуб"
+
+#: adjallocation/models.py:85
+msgid "adjudicator-institution conflict"
+msgstr "конфликт между судьей и клубом"
+
+#: adjallocation/models.py:86
+msgid "adjudicator-institution conflicts"
+msgstr "конфликты между судьями и клубами"
+
+#: adjallocation/models.py:100
+msgid "team-institution conflict"
+msgstr "конфликт между командой и клубом"
+
+#: adjallocation/models.py:101
+msgid "team-institution conflicts"
+msgstr "конфликты между командами и клубами"
+
+#: adjallocation/models.py:114
+msgid "round"
+msgstr "раунд"
+
+#: adjallocation/models.py:116
+msgid "importance"
+msgstr "значение"
+
+#: adjallocation/models.py:119
+msgid "minimum bracket"
+msgstr "минимальное значение баллов команд"
+
+#: adjallocation/models.py:120
+msgid "Estimate of the lowest bracket for which this panel might be"
+msgstr "Установить минимальное значение баллов команд, при котором может судить эта коллегия"
+
+#: adjallocation/models.py:122
+msgid "maximum bracket"
+msgstr "максимальное значение баллов команд"
+
+#: adjallocation/models.py:123
+msgid "Estimate of the highest bracket for which this panel might be"
+msgstr "Установить максимальное значение баллов команд, при котором может судить эта коллегия"
+
+#: adjallocation/models.py:125
+msgid "room rank"
+msgstr "ранг комнаты"
+
+#: adjallocation/models.py:126
+msgid "Sequential number of panel, not used in any algorithms"
+msgstr "Порядковый номер коллегии, не используемый в алгоритмах"
+
+#: adjallocation/models.py:128
+msgid "liveness"
+msgstr "брейковость"
+
+#: adjallocation/models.py:129
+msgid "Number of categories this room is expected to be live for"
+msgstr "Количество категорий, для которых этот рум может быть брейковым"
+
+#: adjallocation/models.py:132
+msgid "preformed panel"
+msgstr "заранее сформированная коллегия"
+
+#: adjallocation/models.py:133
+msgid "preformed panels"
+msgstr "заранее сформированные коллегии"
+
+#: adjallocation/models.py:167
+msgid "panel"
+msgstr "коллегия"
+
+#: adjallocation/models.py:174
+msgid "preformed panel adjudicator"
+msgstr "судья коллегии"
+
+#: adjallocation/models.py:175
+msgid "preformed panel adjudicators"
+msgstr "судьи коллегии"
+
+#: adjallocation/preformed/base.py:41
+msgid "There are no preformed panels to use. Have you allocated preformed panels for this round? If not, try just auto-allocating adjudicators instead."
+msgstr "Предварительно сформированных коллегий нет. Вы распределяли коллегии для этого раунда? Если нет, попробуйте вместо этого использовать автораспределение судей."
+
+#: adjallocation/templates/preformed_index.html:5 adjallocation/views.py:128
+msgid "Preformed Panels"
+msgstr "Заранее сформированные коллегии"
+
+#: adjallocation/templates/preformed_index.html:10
+msgid "A preformed panel is a defined group of adjudicators that is specified for a round before its draw has been generated. You can then manually or automatically apply these panels during the normal adjudicator allocation process. This can make allocations faster or allow you to create more considered panels of adjudicators."
+msgstr "Заранее сформированная коллегия — это группа судей, которая задана для раунда до создания сетки. Вы можете вручную или автоматически распределить эти коллегии по комнатам при распределения судей. Это может ускорить распределение судей или позволить вам создать более сбалансированные коллегии."
+
+#: adjallocation/templates/preformed_index.html:16
+msgid "Note that only adjudicators who have been marked as 'available' for that round will be able to be allocated for that round, so you may need to set their availability in advance."
+msgstr "Обратите внимание, что только судьи, которые были отмечены как \"доступные\" для этого раунда, смогут быть распределены на это раунд, поэтому вам может потребоваться заранее отметить их как \"доступных\"."
+
+#: adjallocation/templates/preformed_index.html:37
+#, python-format
+msgid "Edit Preformed Panels for %(round)s"
+msgstr "Редактировать коллегии для %(round)s"
+
+#: adjallocation/utils.py:28
+#, python-format
+msgid "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> (personal)"
+msgstr "Конфликт: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> (личный)"
+
+#: adjallocation/utils.py:34
+#, python-format
+msgid "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> via institution <strong>%(institution)s</strong>"
+msgstr "Конфликт: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> с клубом <strong>%(institution)s</strong>"
+
+#: adjallocation/utils.py:46
+#, python-format
+msgid "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> (personal)"
+msgstr "Конфликт: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> (личный)"
+
+#: adjallocation/utils.py:52
+#, python-format
+msgid "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> via institution <strong>%(institution)s</strong>"
+msgstr "Конфликт: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> с клубом <strong>%(institution)s</strong>"
+
+#: adjallocation/views.py:35
+msgid "Male"
+msgstr "Мужской"
+
+#: adjallocation/views.py:36
+msgid "Female"
+msgstr "Женский"
+
+#: adjallocation/views.py:37
+msgid "Other"
+msgstr "Другой"
+
+#: adjallocation/views.py:38
+msgid "Unknown"
+msgstr "Неизвестный"
+
+#: adjallocation/views.py:90
+msgid "Edit Allocation"
+msgstr "Редактировать распределение"
+
+#: adjallocation/views.py:105
+msgid "Edit Panels"
+msgstr "Редактировать коллегии судей"
+
+#: adjallocation/views.py:111
+msgid "Return to Panels Overview"
+msgstr "Вернуться к обзору коллегий"
+
+#: adjallocation/views.py:172
+msgid "Adjudicator-Team Conflicts"
+msgstr "Конфликты команд и судей"
+
+#: adjallocation/views.py:173
+msgid "Save Adjudicator-Team Conflicts"
+msgstr "Сохранить конфликты команд и судей"
+
+#: adjallocation/views.py:198
+#, python-format
+msgid "Saved %(count)d adjudicator-team conflict."
+msgid_plural "Saved %(count)d adjudicator-team conflicts."
+msgstr[0] "Сохранен %(count)d конфликт межд судьей и командой."
+msgstr[1] "Сохранены %(count)d конфликты между судьями и командами."
+msgstr[2] "Сохранены %(count)d конфликты между судьями и командами."
+msgstr[3] "Сохранены %(count)d конфликты между судьями и командами."
+
+#: adjallocation/views.py:204
+#, python-format
+msgid "Deleted %(count)d adjudicator-team conflict."
+msgid_plural "Deleted %(count)d adjudicator-team conflicts."
+msgstr[0] "Удален %(count)d конфликт между судьей и командой."
+msgstr[1] "Удалены %(count)d конфликты между судьями и командами."
+msgstr[2] "Удалены %(count)d конфликты между судьями и командами."
+msgstr[3] "Удалены %(count)d конфликты между судьями и командами."
+
+#: adjallocation/views.py:209
+msgid "No changes were made to adjudicator-team conflicts."
+msgstr "Не было внесено никаких изменений в конфликты между судьями и командами."
+
+#: adjallocation/views.py:216
+msgid "Adjudicator-Adjudicator Conflicts"
+msgstr "Конфликты между судьями"
+
+#: adjallocation/views.py:217
+msgid "Save Adjudicator-Adjudicator Conflicts"
+msgstr "Сохранить конфликты между судьями"
+
+#: adjallocation/views.py:238
+#, python-format
+msgid "Saved %(count)d adjudicator-adjudicator conflict."
+msgid_plural "Saved %(count)d adjudicator-adjudicator conflicts."
+msgstr[0] "Сохранен %(count)d конфликт между судьями."
+msgstr[1] "Сохранены %(count)d конфликты между судьями."
+msgstr[2] "Сохранены %(count)d конфликты между судьями."
+msgstr[3] "Сохранены %(count)d конфликты между судьями."
+
+#: adjallocation/views.py:244
+#, python-format
+msgid "Deleted %(count)d adjudicator-adjudicator conflict."
+msgid_plural "Deleted %(count)d adjudicator-adjudicator conflicts."
+msgstr[0] "Удален %(count)d конфликт между судьями."
+msgstr[1] "Удалены %(count)d конфликты между судьями."
+msgstr[2] "Удалены %(count)d конфликты между судьями."
+msgstr[3] "Удалены %(count)d конфликты между судьями."
+
+#: adjallocation/views.py:249
+msgid "No changes were made to adjudicator-adjudicator conflicts."
+msgstr "Не было внесено никаких изменений в конфликты между судьями."
+
+#: adjallocation/views.py:256
+msgid "Adjudicator-Institution Conflicts"
+msgstr "Конфликты между судьями и клубами"
+
+#: adjallocation/views.py:257
+msgid "Save Adjudicator-Institution Conflicts"
+msgstr "Сохранить конфликты между судьями и клубами"
+
+#: adjallocation/views.py:277
+#, python-format
+msgid "Saved %(count)d adjudicator-institution conflict."
+msgid_plural "Saved %(count)d adjudicator-institution conflicts."
+msgstr[0] "Сохранен %(count)d конфликт между судьей и клубом."
+msgstr[1] "Сохранено конфликтов между судьями и клубами: %(count)d."
+msgstr[2] "Сохранено конфликтов между судьями и клубами: %(count)d."
+msgstr[3] "Сохранено конфликтов между судьями и клубами: %(count)d."
+
+#: adjallocation/views.py:283
+#, python-format
+msgid "Deleted %(count)d adjudicator-institution conflict."
+msgid_plural "Deleted %(count)d adjudicator-institution conflicts."
+msgstr[0] "Удалено конфликтов между судьями и клубами: %(count)d."
+msgstr[1] "Удалено конфликтов между судьями и клубами: %(count)d."
+msgstr[2] "Удалено конфликтов между судьями и клубами: %(count)d."
+msgstr[3] "Удалено конфликтов между судьями и клубами: %(count)d."
+
+#: adjallocation/views.py:288
+msgid "No changes were made to adjudicator-institution conflicts."
+msgstr "Не было внесено никаких изменений в конфликты между судьями и клубами."
+
+#: adjallocation/views.py:295
+msgid "Team-Institution Conflicts"
+msgstr "Конфликты между командами и клубами"
+
+#: adjallocation/views.py:296
+msgid "Save Team-Institution Conflicts"
+msgstr "Сохранить конфликты между командами и клубами"
+
+#: adjallocation/views.py:319
+#, python-format
+msgid "Saved %(count)d team-institution conflict."
+msgid_plural "Saved %(count)d team-institution conflicts."
+msgstr[0] "Сохранено конфликтов между командами и клубами: %(count)d."
+msgstr[1] "Сохранено конфликтов между командами и клубами: %(count)d."
+msgstr[2] "Сохранено конфликтов между командами и клубами: %(count)d."
+msgstr[3] "Сохранено конфликтов между командами и клубами: %(count)d."
+
+#: adjallocation/views.py:325
+#, python-format
+msgid "Deleted %(count)d team-institution conflict."
+msgid_plural "Deleted %(count)d team-institution conflicts."
+msgstr[0] "Удалено конфликтов между командами и клубами: %(count)d."
+msgstr[1] "Удалено конфликтов между командами и клубами: %(count)d."
+msgstr[2] "Удалено конфликтов между командами и клубами: %(count)d."
+msgstr[3] "Удалено конфликтов между командами и клубами: %(count)d."
+
+#: adjallocation/views.py:330
+msgid "No changes were made to team-institution conflicts."
+msgstr "Не было внесено никаких изменений в конфликты между командами и клубами."
+

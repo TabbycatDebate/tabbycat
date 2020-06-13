@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-20 23:12-0500\n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: checkins/apps.py:7 templates/nav/admin_nav.html:113
+#: api/apps.py:7
+msgid "Application Programming Interface"
+msgstr ""
+
+#: checkins/apps.py:7 templates/nav/admin_nav.html:117
 #: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:92
 msgid "Check-Ins"
 msgstr ""
@@ -76,11 +80,11 @@ msgid "debate identifiers"
 msgstr ""
 
 #: checkins/models.py:79
-msgid "venue identifier"
+msgid "room identifier"
 msgstr ""
 
 #: checkins/models.py:80
-msgid "venue identifiers"
+msgid "room identifiers"
 msgstr ""
 
 #: checkins/models.py:87
@@ -159,7 +163,7 @@ msgstr ""
 msgid "%(speaker)s is missing."
 msgstr ""
 
-#: checkins/views.py:29 templates/nav/admin_nav.html:124
+#: checkins/views.py:29 templates/nav/admin_nav.html:128
 #: templates/nav/assistant_nav.html:42
 msgid "Scan Identifiers"
 msgstr ""
@@ -169,24 +173,23 @@ msgid "People's Check-In Statuses"
 msgstr ""
 
 #: checkins/views.py:119
-msgid "Venue's Check-In Statuses"
+msgid "Rooms' Check-In Statuses"
 msgstr ""
 
-#: checkins/views.py:168 templates/nav/admin_nav.html:120
+#: checkins/views.py:168 templates/nav/admin_nav.html:124
 msgid "Make Identifiers"
 msgstr ""
 
-#: checkins/views.py:175 templates/nav/admin_nav.html:206
+#: checkins/views.py:175 templates/nav/admin_nav.html:210
 msgid "Speakers"
 msgstr ""
 
-#: checkins/views.py:180 templates/nav/admin_nav.html:254
-#: templates/nav/public_nav.html:132
+#: checkins/views.py:180 templates/nav/public_nav.html:132
 msgid "Adjudicators"
 msgstr ""
 
 #: checkins/views.py:185
-msgid "Venues"
+msgid "Rooms"
 msgstr ""
 
 #: checkins/views.py:226
@@ -218,31 +221,31 @@ msgstr ""
 msgid "You are now checked in."
 msgstr ""
 
-#: settings/core.py:46
+#: settings/core.py:45
 msgid "Arabic"
 msgstr ""
 
-#: settings/core.py:47
+#: settings/core.py:46
 msgid "English"
 msgstr ""
 
-#: settings/core.py:48
+#: settings/core.py:47
 msgid "Spanish"
 msgstr ""
 
-#: settings/core.py:49
+#: settings/core.py:48
 msgid "French"
 msgstr ""
 
-#: settings/core.py:50
+#: settings/core.py:49
 msgid "Japanese"
 msgstr ""
 
-#: settings/core.py:51
+#: settings/core.py:50
 msgid "Portuguese"
 msgstr ""
 
-#: settings/core.py:52
+#: settings/core.py:51
 msgid "Russian"
 msgstr ""
 
@@ -283,11 +286,11 @@ msgstr ""
 
 #: templates/base.html:13
 #, python-format
-msgid "The tab for %(tournament_name)s runs on Tabbycat, an open-source tab system for a variety of parliamentary debating formats"
+msgid "The tab for %(tournament)s runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats"
 msgstr ""
 
 #: templates/base.html:17
-msgid "This tab runs on Tabbycat, an open-source tab system for a variety of parliamentary debating formats"
+msgid "This tab runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats"
 msgstr ""
 
 #: templates/components/form-errors.html:4
@@ -307,6 +310,13 @@ msgstr ""
 #, python-format
 msgid "This assistant page isn't enabled for this tournament. <a href=\"%(url)s\">Back to the assistant home page.</a>"
 msgstr ""
+
+#: templates/errors/database_limit_warning.html:9
+#, python-format
+msgid "You're currently using %(nrows)s row in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
+msgid_plural "You're currently using %(nrows)s rows in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
+msgstr[0] ""
+msgstr[1] ""
 
 #: templates/errors/public_403.html:14
 #, python-format
@@ -329,7 +339,7 @@ msgid "This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 msgstr ""
 
 #: templates/footer.html:20
-msgid "Tabbycat is an open-source project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments."
+msgid "Tabbycat is a source-available project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments."
 msgstr ""
 
 #: templates/footer.html:24
@@ -423,8 +433,8 @@ msgstr ""
 msgid "Public Area"
 msgstr ""
 
-#: templates/nav/admin_nav.html:60 templates/nav/admin_nav.html:146
-#: templates/nav/admin_nav.html:186 templates/nav/admin_nav.html:246
+#: templates/nav/admin_nav.html:60 templates/nav/admin_nav.html:150
+#: templates/nav/admin_nav.html:190 templates/nav/admin_nav.html:249
 msgid "Overview"
 msgstr ""
 
@@ -457,102 +467,122 @@ msgstr ""
 msgid "Preformed Panels"
 msgstr ""
 
-#: templates/nav/admin_nav.html:103 templates/nav/public_nav.html:147
+#: templates/nav/admin_nav.html:96
+msgid "It\\"
+msgstr ""
+
+#: templates/nav/admin_nav.html:97
+msgid "Where's Edit Database?"
+msgstr ""
+
+#: templates/nav/admin_nav.html:107 templates/nav/public_nav.html:147
 msgid "Sides"
 msgstr ""
 
-#: templates/nav/admin_nav.html:128 templates/nav/assistant_nav.html:48
+#: templates/nav/admin_nav.html:132 templates/nav/assistant_nav.html:48
 msgid "People's Status"
 msgstr ""
 
-#: templates/nav/admin_nav.html:132
-msgid "Venues' Status"
+#: templates/nav/admin_nav.html:136
+msgid "Rooms' Status"
 msgstr ""
 
-#: templates/nav/admin_nav.html:140
+#: templates/nav/admin_nav.html:144
 msgid "Feedback"
 msgstr ""
 
-#: templates/nav/admin_nav.html:149
+#: templates/nav/admin_nav.html:153
 msgid "Latest"
 msgstr ""
 
-#: templates/nav/admin_nav.html:152
+#: templates/nav/admin_nav.html:156
 msgid "Important"
 msgstr ""
 
-#: templates/nav/admin_nav.html:155
+#: templates/nav/admin_nav.html:159
 msgid "Comments"
 msgstr ""
 
-#: templates/nav/admin_nav.html:158
+#: templates/nav/admin_nav.html:162
 msgid "Find by Source"
 msgstr ""
 
-#: templates/nav/admin_nav.html:161
+#: templates/nav/admin_nav.html:165
 msgid "Find by Target"
 msgstr ""
 
-#: templates/nav/admin_nav.html:164
+#: templates/nav/admin_nav.html:168
 msgid "Unsubmitted"
 msgstr ""
 
-#: templates/nav/admin_nav.html:167
+#: templates/nav/admin_nav.html:171
 msgid "Add Feedback"
 msgstr ""
 
-#: templates/nav/admin_nav.html:170
+#: templates/nav/admin_nav.html:174
 msgid "Bulk Update"
 msgstr ""
 
-#: templates/nav/admin_nav.html:179 templates/nav/public_nav.html:152
+#: templates/nav/admin_nav.html:183 templates/nav/public_nav.html:152
 msgid "Standings"
 msgstr ""
 
-#: templates/nav/admin_nav.html:190
+#: templates/nav/admin_nav.html:194
 msgid "All Teams"
 msgstr ""
 
-#: templates/nav/admin_nav.html:192
+#: templates/nav/admin_nav.html:196
 msgid "Teams"
 msgstr ""
 
-#: templates/nav/admin_nav.html:197 templates/nav/public_nav.html:13
+#: templates/nav/admin_nav.html:201 templates/nav/public_nav.html:13
 #, python-format
-msgid "%(category_name)s Teams"
+msgid "%(category)s Teams"
 msgstr ""
 
-#: templates/nav/admin_nav.html:204
+#: templates/nav/admin_nav.html:208
 msgid "All Speakers"
 msgstr ""
 
-#: templates/nav/admin_nav.html:211 templates/nav/public_nav.html:30
+#: templates/nav/admin_nav.html:215 templates/nav/public_nav.html:30
 #, python-format
-msgid "%(category_name)s Speakers"
+msgid "%(category)s Speakers"
 msgstr ""
 
-#: templates/nav/admin_nav.html:219
+#: templates/nav/admin_nav.html:223
 msgid "Replies"
 msgstr ""
 
-#: templates/nav/admin_nav.html:223 templates/nav/public_nav.html:142
+#: templates/nav/admin_nav.html:227 templates/nav/public_nav.html:142
 msgid "Motions"
 msgstr ""
 
-#: templates/nav/admin_nav.html:226 templates/nav/public_nav.html:157
+#: templates/nav/admin_nav.html:230 templates/nav/public_nav.html:157
 msgid "Diversity"
 msgstr ""
 
-#: templates/nav/admin_nav.html:239
+#: templates/nav/admin_nav.html:243
 msgid "Breaks"
 msgstr ""
 
-#: templates/nav/admin_nav.html:250
+#: templates/nav/admin_nav.html:253
 #, python-format
-msgid "%(category_name)s"
+msgid "%(category)s"
 msgstr ""
 
-#: templates/nav/admin_nav.html:269 templates/nav/top_nav_base.html:101
+#: templates/nav/admin_nav.html:257
+msgid "Adjudicators'"
+msgstr ""
+
+#: templates/nav/admin_nav.html:260
+msgid "Edit Categories"
+msgstr ""
+
+#: templates/nav/admin_nav.html:263
+msgid "Edit Eligibility"
+msgstr ""
+
+#: templates/nav/admin_nav.html:278 templates/nav/top_nav_base.html:101
 msgid "Log Out"
 msgstr ""
 
@@ -581,7 +611,7 @@ msgid "View Identifiers"
 msgstr ""
 
 #: templates/nav/assistant_nav.html:51
-msgid "Venue's Status"
+msgid "Room's Status"
 msgstr ""
 
 #: templates/nav/assistant_nav.html:59
@@ -618,7 +648,7 @@ msgstr ""
 
 #: templates/nav/public_nav.html:78
 #, python-format
-msgid "Draw for %(round_name)s"
+msgid "Draw for %(round)s"
 msgstr ""
 
 #: templates/nav/public_nav.html:82
@@ -787,7 +817,7 @@ msgstr ""
 
 #: templates/registration/password_reset_email.html:2
 #, python-format
-msgid "Hi, %(username)s!"
+msgid "Hi, %(user)s!"
 msgstr ""
 
 #: templates/registration/password_reset_email.html:6
@@ -836,12 +866,12 @@ msgstr ""
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr ""
 
-#: urls.py:94
+#: urls.py:101
 #, python-format
-msgid "Hi, %(username)s — you just logged in!"
+msgid "Hi, %(user)s — you just logged in!"
 msgstr ""
 
-#: urls.py:97
+#: urls.py:104
 msgid "Welcome! You just logged in!"
 msgstr ""
 

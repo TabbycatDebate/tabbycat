@@ -160,6 +160,11 @@ class Team(models.Model):
     break_categories = models.ManyToManyField('breakqual.BreakCategory', blank=True,
         verbose_name=_("break categories"))
 
+    institution_conflicts = models.ManyToManyField('Institution',
+        through='adjallocation.TeamInstitutionConflict',
+        related_name='team_inst_conflicts',
+        verbose_name=_("institution conflicts"))
+
     round_availabilities = GenericRelation('availability.RoundAvailability')
     venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='team',
             content_type_field='subject_content_type', object_id_field='subject_id')
@@ -327,6 +332,10 @@ class Speaker(Person):
     def __str__(self):
         return str(self.name)
 
+    @property
+    def tournament(self):
+        return self.team.tournament
+
 
 class AdjudicatorManager(models.Manager):
     use_for_related_fields = True
@@ -345,15 +354,18 @@ class Adjudicator(Person):
     base_score = models.FloatField(default=0,
         verbose_name=_("base score"))
 
-    # TODO: Are these actually used?= If not, remove?
     institution_conflicts = models.ManyToManyField('Institution',
         through='adjallocation.AdjudicatorInstitutionConflict',
         related_name='adj_inst_conflicts',
         verbose_name=_("institution conflicts"))
-    conflicts = models.ManyToManyField('Team',
+    team_conflicts = models.ManyToManyField('Team',
         through='adjallocation.AdjudicatorTeamConflict',
-        related_name='adj_adj_conflicts',
+        related_name='adj_team_conflicts',
         verbose_name=_("team conflicts"))
+    adjudicator_conflicts = models.ManyToManyField('Adjudicator',
+        through='adjallocation.AdjudicatorAdjudicatorConflict',
+        related_name='adj_adj_conflicts',
+        verbose_name=_("adjudicator conflicts"))
 
     trainee = models.BooleanField(default=False,
         verbose_name=_("always trainee"),
@@ -380,10 +392,6 @@ class Adjudicator(Person):
             return self.name
         else:
             return "%s (%s)" % (self.name, self.institution.code)
-
-    @property
-    def is_unaccredited(self):
-        return self.novice
 
     @property
     def region(self):

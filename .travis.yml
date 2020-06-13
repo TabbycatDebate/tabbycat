@@ -7,11 +7,11 @@ env:
     - CC_TEST_REPORTER_ID=c18003eb2d4d191e9ebd68d9c3cf8082ba690eccac12df6660a098a78fc8713b
     - PGPORT=5433
 addons:
-  postgresql: "11"
+  postgresql: "12"
   apt:
     packages:
-      - postgresql-11
-      - postgresql-client-11
+      - postgresql-12
+      - postgresql-client-12
   # chrome: stable # Re-enable for functional tests if/when they work on Travis
 services:
   - postgresql
@@ -23,10 +23,10 @@ branches:
 jobs:
   include:
 
-    # Python 3.7
+    # Python 3.8
     # This job also runs style guide checkers (flake8 and lint).
     - os: linux
-      python: 3.7
+      python: 3.8
       before_install:
         - node --version
         - npm --version
@@ -34,8 +34,8 @@ jobs:
         - pip install -r ./config/requirements_development.txt
         - npm install
       before_script:
-        - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
-        - sudo systemctl restart postgresql@11-main
+        - sudo cp /etc/postgresql/{9.6,12}/main/pg_hba.conf
+        - sudo systemctl restart postgresql@12-main
         - pg_lsclusters
         - createdb travisci -U postgres
       script:
@@ -43,10 +43,10 @@ jobs:
         - npm run lint
         - python tabbycat/manage.py test -v 2 --exclude-tag=selenium
 
-    # Python 3.6
+    # Python 3.7
     # This job also runs the code coverage tool.
     - os: linux
-      python: 3.6
+      python: 3.7
       before_install:
         - node --version
         - npm --version
@@ -55,8 +55,8 @@ jobs:
         - pip install coverage
         - npm install
       before_script:
-        - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
-        - sudo systemctl restart postgresql@11-main
+        - sudo cp /etc/postgresql/{9.6,12}/main/pg_hba.conf
+        - sudo systemctl restart postgresql@12-main
         - pg_lsclusters
         - createdb travisci -U postgres
         - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -67,6 +67,24 @@ jobs:
       after_script:
         - coverage xml
         - if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+
+    # Python 3.6
+    # No extra tasks; job should be deprecated some time
+    - os: linux
+      python: 3.6
+      before_install:
+        - node --version
+        - npm --version
+      install:
+        - pip install -r ./config/requirements_development.txt
+        - npm install
+      before_script:
+        - sudo cp /etc/postgresql/{9.6,12}/main/pg_hba.conf
+        - sudo systemctl restart postgresql@12-main
+        - pg_lsclusters
+        - createdb travisci -U postgres
+      script:
+        - python tabbycat/manage.py test -v 2 --exclude-tag=selenium
 
     # Docker
     - os: linux

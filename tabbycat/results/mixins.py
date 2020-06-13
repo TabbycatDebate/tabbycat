@@ -8,11 +8,15 @@ class TabroomSubmissionFieldsMixin:
     instance, used with forms that are submitted by tabroom officials. It is up
     to subclasses to use get_submitter_fields() appropriately."""
 
+    def get_request(self):
+        return self.request
+
     def get_submitter_fields(self):
+        request = self.get_request()
         return {
-            'submitter': self.request.user,
+            'submitter': request.user,
             'submitter_type': Submission.SUBMITTER_TABROOM,
-            'ip_address': get_ip_address(self.request),
+            'ip_address': get_ip_address(request),
         }
 
 

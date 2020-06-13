@@ -1,0 +1,118 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-01-02 01:50\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Japanese\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ja\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/features/backups.po\n"
+"Language: ja_JP\n"
+
+#: ../../features/backups.rst:5
+msgid "Backups"
+msgstr ""
+
+#: ../../features/backups.rst:7
+msgid "Tabbycat doesn't provide an in-built backup system; instead you should create copies of your database directly. Heroku provides a very good backup utility for all sites hosted on Heroku which makes this easy, and for Heroku-based Tabbycat sites, we strongly recommend it."
+msgstr ""
+
+#: ../../features/backups.rst:12
+msgid "You should **always** back up the database before deleting *any* data while in the Edit Database area, because deleting data cannot be undone. It is also a good idea to back up the database before doing anything in the Edit Database area, unless you're very familiar and confident with editing the Tabbycat database directly."
+msgstr ""
+
+#: ../../features/backups.rst:18
+msgid "You may, as a matter of standard practice at large tournaments, wish to back up the database twice per round: Once just after you've generated the draw and allocated adjudicators, and once just after you've finished entering results."
+msgstr ""
+
+#: ../../features/backups.rst:22
+msgid "If you're using an online version of Tabbycat, it's a good idea to download the backups. While it's extremely rare to lose internet access or have an outage in a critical web service (*i.e.*, Heroku), having a local copy of your backups allows you to :ref:`restore your tab to a local installation <backup-restore-to-local>` if this ever happens."
+msgstr ""
+
+#: ../../features/backups.rst:29
+msgid "Installations on Heroku"
+msgstr ""
+
+#: ../../features/backups.rst:31
+msgid "Heroku provides a utility to easily back up and restore the entire site database."
+msgstr ""
+
+#: ../../features/backups.rst:35
+msgid "If you don't have the Heroku CLI"
+msgstr ""
+
+#: ../../features/backups.rst:36
+msgid "You can capture backups from the Heroku Dashboard:"
+msgstr ""
+
+#: ../../features/backups.rst:38
+msgid "Go to the `Heroku Dashboard <http://dashboard.heroku.com/>`_ and click on your app."
+msgstr ""
+
+#: ../../features/backups.rst:40
+msgid "Under *Installed add-ons*, go to **Heroku Postgres**."
+msgstr ""
+
+#: ../../features/backups.rst:41
+msgid "Scroll down, and click on the **Capture Backup** button."
+msgstr ""
+
+#: ../../features/backups.rst:42
+msgid "Once the capture has finished, a **Download** button will be available."
+msgstr ""
+
+#: ../../features/backups.rst:44
+msgid "You can't restore a backup without the Heroku Command Line Interface (CLI), so if you end up needing your backup, you'll need to install the `Heroku CLI <https://devcenter.heroku.com/articles/heroku-cli>`_, and then follow the instructions below."
+msgstr ""
+
+#: ../../features/backups.rst:50
+msgid "If you have the Heroku CLI"
+msgstr ""
+
+#: ../../features/backups.rst:52
+msgid "The best guide to backing up databases is the `Heroku Dev Center's PGBackups guide <https://devcenter.heroku.com/articles/heroku-postgres-backups>`_."
+msgstr ""
+
+#: ../../features/backups.rst:55
+msgid "To capture a backup::"
+msgstr ""
+
+#: ../../features/backups.rst:59
+msgid "To download the most recently captured backup::"
+msgstr ""
+
+#: ../../features/backups.rst:63
+msgid "To restore a backup::"
+msgstr ""
+
+#: ../../features/backups.rst:67
+msgid "If you have multiple Tabbycat sites, you'll need to specify which one by adding ``--app mytournamentname`` to the end of the command."
+msgstr ""
+
+#: ../../features/backups.rst:71
+msgid "Local installations"
+msgstr ""
+
+#: ../../features/backups.rst:73
+msgid "There are lots of ways to back up local PostgreSQL databases, but we'd suggest using the `pg_dump <https://www.postgresql.org/docs/current/static/app-pgdump.html>`_ and `pg_restore <https://www.postgresql.org/docs/current/static/app-pgrestore.html>`_ commands."
+msgstr ""
+
+#: ../../features/backups.rst:83
+msgid "Restoring a Heroku backup to a local installation"
+msgstr ""
+
+#: ../../features/backups.rst:85
+msgid "As detailed in the `Heroku Dev Center <https://devcenter.heroku.com/articles/heroku-postgres-import-export#restore-to-local-database>`_, you can restore a downloaded Heroku backup to a local installation. This might be useful if, say, your internet connection breaks irrecoverably in the middle of a tournament and you need to run offline. Of course, for this to work, you need to have downloaded your backup before your internet connection broke---a good reason to download a copy of your backups as soon as you make them."
+msgstr ""
+
+#: ../../features/backups.rst:92
+msgid "Assuming your download is called ``latest.dump`` (this is the default name), your PostgreSQL username is ``tabbycat``, and you wish to call your local database ``fromheroku`` (if not, replace arguments as appropriate)::"
+msgstr ""
+

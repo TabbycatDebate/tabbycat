@@ -66,7 +66,7 @@
 <div class="list-group mt-2">
   {% if user.is_authenticated %}
 
-    {% blocktrans asvar text %}Change Password ({{ user }}){% endblocktrans %}
+    {% blocktrans asvar text %}Get API Token / Change Password ({{ user }}){% endblocktrans %}
     {% url 'password_change' as url %}
     {% include "components/item-action.html" with icon="rotate-cw" %}
 

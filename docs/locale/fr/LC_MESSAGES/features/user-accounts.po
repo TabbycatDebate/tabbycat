@@ -1,0 +1,194 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-02-04 03:38\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: French\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: fr\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/features/user-accounts.po\n"
+"Language: fr_FR\n"
+
+#: ../../features/user-accounts.rst:5
+msgid "User Accounts"
+msgstr "Comptes d’utilisateur"
+
+#: ../../features/user-accounts.rst:7
+msgid "For obvious reasons, user logins are required to data entry and administrative functions. Conceptually, there are four levels of access:"
+msgstr "Pour des raisons évidentes, la connexion est nécessaire pour la saisie des données et des fonctions administratives. Conceptuelement, il y a quatre niveaux d’accès :"
+
+#: ../../features/user-accounts.rst:14
+msgid "Access"
+msgstr "Accès"
+
+#: ../../features/user-accounts.rst:15
+msgid "Should be used by"
+msgstr "Devrait être utilisé par"
+
+#: ../../features/user-accounts.rst:16
+msgid "Grants access to"
+msgstr "Donne accès à"
+
+#: ../../features/user-accounts.rst:17
+msgid "Is capable of"
+msgstr "Est capable de"
+
+#: ../../features/user-accounts.rst:19
+msgid "Public"
+msgstr "Publique"
+
+#: ../../features/user-accounts.rst:20
+msgid "The public"
+msgstr "Le public"
+
+#: ../../features/user-accounts.rst:21
+msgid "Publicly available information."
+msgstr "Information disponible publiquement."
+
+#: ../../features/user-accounts.rst:22
+msgid "Viewing things, and submitting new ballots/feedback if electronic submission is permitted by the tournament."
+msgstr "Voir des choses et soumettre de nouveaux feuilles/évaluations si la soumission électronique est permise par le tournoi."
+
+#: ../../features/user-accounts.rst:24
+msgid "Assistant"
+msgstr "Assistant"
+
+#: ../../features/user-accounts.rst:25
+msgid "Data entry helpers"
+msgstr "Aides de saisie"
+
+#: ../../features/user-accounts.rst:26
+msgid "The assistant area"
+msgstr "L’aire des assistants"
+
+#: ../../features/user-accounts.rst:27
+msgid "Entering, confirming and printing ballots and feedback, checking in ballots and people, and displaying the draw."
+msgstr "Entrer, confirmer et imprimer les feuilles et évaluations, enregistrer les bulletins et les personnes, afficher le tirage."
+
+#: ../../features/user-accounts.rst:29
+msgid "Superuser"
+msgstr "Super-utilisateur"
+
+#: ../../features/user-accounts.rst:30
+msgid "Chief adjudicators"
+msgstr "Juges en chef"
+
+#: ../../features/user-accounts.rst:31
+msgid "The administrator and assistant areas"
+msgstr "Les aires d’administrateur et d’assistant"
+
+#: ../../features/user-accounts.rst:32
+msgid "Generating draws, allocating adjudicators and venues, and editing ballots, feedback and adjudicator scores."
+msgstr "Générer les tirages, repartir les juges et salles, modifier les bulletins, évaluations et scores de juge."
+
+#: ../../features/user-accounts.rst:34
+msgid "Staff and superuser"
+msgstr "Équipage et super-utilisateur"
+
+#: ../../features/user-accounts.rst:35
+msgid "Tab director"
+msgstr "Directeur de jumelage"
+
+#: ../../features/user-accounts.rst:36
+msgid "The administrator, assistant and Edit Database areas"
+msgstr "Les aires d’administrateur, assistant, et de base de données"
+
+#: ../../features/user-accounts.rst:37
+msgid "Editing the database directly."
+msgstr "Modifier la base de données directement."
+
+#: ../../features/user-accounts.rst:39
+msgid "If a user account on the tab system belongs to someone who is also a participant in the tournament (*e.g.*, a chief adjudicator), these two capacities are completely separate. User accounts are only used to regulate access to administrative functions. Tabbycat doesn't know about any relationship between user accounts, and who is participating in the tournament."
+msgstr "Si un compte d’utilisateur dans le système de jumelage appartient à quelqu’un qui est aussi un participant au tournoi (*e.g.* un juge en chef), ces deux capacités sont complètement séparées. Les comptes d’utilisateur sont seulement pour réguler l’accès aux fonctions administratives. Tabbycat ne connait aucun relation entre les comptes et les participants aux tournois."
+
+#: ../../features/user-accounts.rst:42
+msgid "Account roles"
+msgstr "Rôles de compte"
+
+#: ../../features/user-accounts.rst:44
+msgid "You should create an account for each person who needs to access the tab system. When you create an account in the Edit Database area, there are checkboxes for **Superuser status** and **Staff access**. Superusers have access to the administrator area, and staff have access to the Edit Database area. You should grant permissions as follows:"
+msgstr "Vous devriez créer un compte pour chaque personne qui à besoin d’accès au système de jumelage. Quand vous créez un compte dans l’aide de la base de données, il y a des cases à cocher pour le **statut de super-utilisateur** et **accès d’équipage**. Les super-utilisateurs ont accès à l’interface d’administrateur et l’équipe ont accès à l’aire de la base de données. Vous devriez donner les permissions comme suit :"
+
+#: ../../features/user-accounts.rst:46
+msgid "Tab directors should get both superuser and staff status."
+msgstr "Les directeurs de jumelage devraient avoir l’accès super-utilisateur et d’équipage."
+
+#: ../../features/user-accounts.rst:47
+msgid "Chief adjudicators and their deputies should get superuser status, but not staff status."
+msgstr "Les juges en chef et leurs députés devraient être super-utilisateur, mais pas d’équipage."
+
+#: ../../features/user-accounts.rst:48
+msgid "Tab assistants (helping only with data entry) should get neither superuser nor staff status."
+msgstr "Les assistants de jumelage (qui aident seulement avec la saisie de données) ne devrait être ni super-utilisateur ni d’équipe."
+
+#: ../../features/user-accounts.rst:50
+msgid "Tournament participants (other than tab staff) do not need an account. Everything they need to know can be accessed without an account. If you're using electronic ballots or electronic feedback, they access these using a URL that only they know (see :ref:`private-urls`)."
+msgstr "Les participants de tournoi (autre que l’équipe de jumelage) n’ont pas besoin de compte. Tout ce qu’ils ont besoin peut être accédé sans compte. Si vous utilisez des bulletins ou évaluations en ligne, ils peuvent y accéder avec un lien que seulement ils savent (voir :ref:`private-urls`)."
+
+#: ../../features/user-accounts.rst:52
+msgid "When doing data entry, users with superuser status should use the **assistant area**. The administrator area is intended for managing the tournament, and doesn't include someand should **not** in general be used for data entry. Specifically, the administrator area lacks checks that are important for data integrity assurance. It should be used only to override the normal :ref:`data entry <data-entry>` procedure, for example, to unconfirm or modify a ballot."
+msgstr "Lors de la saisie des données, les super-utilisateurs devraient utiliser **l'aire des assistants**. L'aire d'administrateur est pour la gestion du tournoi, généralement **pas** pour la saisie de données. Spécifiquement, l'aire d'administrateur n'a pas de vérification qui est important pour l'intégrité des données. Il devrait seulement être utilisé pour redéfinir la procédure de :ref:`saisie de données <data-entry>` normale, par exemple, pour dé-confirmer ou modifier une feuille."
+
+#: ../../features/user-accounts.rst:54
+msgid "The **Edit Database** interface should not be used except where it is actually necessary. There are a few functions which require this, but as a principle, it shouldn't be used as a matter of course."
+msgstr "L'**aire de la base de données** ne devrait pas être utilisé que lorsque c'est absolument nécessaire. Il y a quelques fonctionnalités qui le requièrent, mais comme principe, ne devrait pas être utilisé en opération normale."
+
+#: ../../features/user-accounts.rst:56
+msgid "In theory, you could grant an account staff status but not superuser status. But then they'd be allowed to edit the database, but not run the tournament, which would be weird."
+msgstr "En théorie, vous pourriez accorder un compte le statut d’équipage mais pas de super-utilisateur. Sauf que là, ils seront permis de modifier la base de données mais pas gérer le tournoi, ce qui serait étrange."
+
+#: ../../features/user-accounts.rst:59
+msgid "Adding accounts"
+msgstr "Ajouter des compte"
+
+#: ../../features/user-accounts.rst:61
+msgid "To add an account:"
+msgstr "Pour ajouter un compte :"
+
+#: ../../features/user-accounts.rst:63
+msgid "Go to the Edit Database area of the site."
+msgstr "Va dans l’aire de base de données du site."
+
+#: ../../features/user-accounts.rst:65
+msgid "Under **Authentication and Authorization**, click the **Add** link next to **Users**."
+msgstr "Sous **Authentification et Autorisation**, cliquer le lien **Ajouter** à côté de **Utilisateurs**."
+
+#: ../../features/user-accounts.rst:67
+msgid "Ask the user to enter a username, password and possibly email address."
+msgstr "Demander l’utilisateur de rentrer un nom d’utilisateur, mot de passe et potentiellement adresse courriel."
+
+#: ../../features/user-accounts.rst:69
+msgid "Only they should know what the password is."
+msgstr "Ils devraient être les seuls à connaitre leurs mots de passe."
+
+#: ../../features/user-accounts.rst:70
+msgid "If you're hosting on the internet, all passwords should be at least moderately strong!"
+msgstr "Si le site est hébergé sur l’internet, tous les mots de passe devraient être au moins modérément fort !"
+
+#: ../../features/user-accounts.rst:71
+msgid "Passwords are not stored as raw passwords, so you can't figure out what their password is."
+msgstr "Les mots de passe ne sont pas stockés en brut, donc vous ne pouvez pas décerner leur mot de passe."
+
+#: ../../features/user-accounts.rst:72
+msgid "The email address is optional."
+msgstr "L’adresse courriel est facultative."
+
+#: ../../features/user-accounts.rst:73
+msgid "This email address is only used to reset their password if they forget it, and has nothing to do with the email address that Tabbycat uses to send emails to tournament participants (*e.g.* private URL links)."
+msgstr "Cet adresse courriel est seulement utiliser pour réinitialiser leur mot de passe s'ils l'oublient, n'ayant aucun lien avec l'adresse courriel que Tabbycat utilise pour envoyer les courriels aux participants de tournoi (*e.g.* les liens privées)."
+
+#: ../../features/user-accounts.rst:75
+msgid "If they are being assigned superuser and/or staff status, check the relevant boxes."
+msgstr "S'ils auront le statut de super-utilisateur ou de personnel, cochez les cases pertinents."
+
+#: ../../features/user-accounts.rst:77
+msgid "Click \"Save\" or \"Save and add another\"."
+msgstr "Cliquer « Sauvegarder » ou « Sauvegarder et ajouter d’avantage »."
+
