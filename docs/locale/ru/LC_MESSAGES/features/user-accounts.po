@@ -1,0 +1,194 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-01-02 01:49\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Russian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ru\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/features/user-accounts.po\n"
+"Language: ru_RU\n"
+
+#: ../../features/user-accounts.rst:5
+msgid "User Accounts"
+msgstr ""
+
+#: ../../features/user-accounts.rst:7
+msgid "For obvious reasons, user logins are required to data entry and administrative functions. Conceptually, there are four levels of access:"
+msgstr ""
+
+#: ../../features/user-accounts.rst:14
+msgid "Access"
+msgstr ""
+
+#: ../../features/user-accounts.rst:15
+msgid "Should be used by"
+msgstr ""
+
+#: ../../features/user-accounts.rst:16
+msgid "Grants access to"
+msgstr ""
+
+#: ../../features/user-accounts.rst:17
+msgid "Is capable of"
+msgstr ""
+
+#: ../../features/user-accounts.rst:19
+msgid "Public"
+msgstr "Публично"
+
+#: ../../features/user-accounts.rst:20
+msgid "The public"
+msgstr ""
+
+#: ../../features/user-accounts.rst:21
+msgid "Publicly available information."
+msgstr ""
+
+#: ../../features/user-accounts.rst:22
+msgid "Viewing things, and submitting new ballots/feedback if electronic submission is permitted by the tournament."
+msgstr ""
+
+#: ../../features/user-accounts.rst:24
+msgid "Assistant"
+msgstr ""
+
+#: ../../features/user-accounts.rst:25
+msgid "Data entry helpers"
+msgstr ""
+
+#: ../../features/user-accounts.rst:26
+msgid "The assistant area"
+msgstr ""
+
+#: ../../features/user-accounts.rst:27
+msgid "Entering, confirming and printing ballots and feedback, checking in ballots and people, and displaying the draw."
+msgstr ""
+
+#: ../../features/user-accounts.rst:29
+msgid "Superuser"
+msgstr ""
+
+#: ../../features/user-accounts.rst:30
+msgid "Chief adjudicators"
+msgstr ""
+
+#: ../../features/user-accounts.rst:31
+msgid "The administrator and assistant areas"
+msgstr ""
+
+#: ../../features/user-accounts.rst:32
+msgid "Generating draws, allocating adjudicators and venues, and editing ballots, feedback and adjudicator scores."
+msgstr ""
+
+#: ../../features/user-accounts.rst:34
+msgid "Staff and superuser"
+msgstr ""
+
+#: ../../features/user-accounts.rst:35
+msgid "Tab director"
+msgstr ""
+
+#: ../../features/user-accounts.rst:36
+msgid "The administrator, assistant and Edit Database areas"
+msgstr ""
+
+#: ../../features/user-accounts.rst:37
+msgid "Editing the database directly."
+msgstr ""
+
+#: ../../features/user-accounts.rst:39
+msgid "If a user account on the tab system belongs to someone who is also a participant in the tournament (*e.g.*, a chief adjudicator), these two capacities are completely separate. User accounts are only used to regulate access to administrative functions. Tabbycat doesn't know about any relationship between user accounts, and who is participating in the tournament."
+msgstr ""
+
+#: ../../features/user-accounts.rst:42
+msgid "Account roles"
+msgstr ""
+
+#: ../../features/user-accounts.rst:44
+msgid "You should create an account for each person who needs to access the tab system. When you create an account in the Edit Database area, there are checkboxes for **Superuser status** and **Staff access**. Superusers have access to the administrator area, and staff have access to the Edit Database area. You should grant permissions as follows:"
+msgstr ""
+
+#: ../../features/user-accounts.rst:46
+msgid "Tab directors should get both superuser and staff status."
+msgstr ""
+
+#: ../../features/user-accounts.rst:47
+msgid "Chief adjudicators and their deputies should get superuser status, but not staff status."
+msgstr ""
+
+#: ../../features/user-accounts.rst:48
+msgid "Tab assistants (helping only with data entry) should get neither superuser nor staff status."
+msgstr ""
+
+#: ../../features/user-accounts.rst:50
+msgid "Tournament participants (other than tab staff) do not need an account. Everything they need to know can be accessed without an account. If you're using electronic ballots or electronic feedback, they access these using a URL that only they know (see :ref:`private-urls`)."
+msgstr ""
+
+#: ../../features/user-accounts.rst:52
+msgid "When doing data entry, users with superuser status should use the **assistant area**. The administrator area is intended for managing the tournament, and doesn't include someand should **not** in general be used for data entry. Specifically, the administrator area lacks checks that are important for data integrity assurance. It should be used only to override the normal :ref:`data entry <data-entry>` procedure, for example, to unconfirm or modify a ballot."
+msgstr ""
+
+#: ../../features/user-accounts.rst:54
+msgid "The **Edit Database** interface should not be used except where it is actually necessary. There are a few functions which require this, but as a principle, it shouldn't be used as a matter of course."
+msgstr ""
+
+#: ../../features/user-accounts.rst:56
+msgid "In theory, you could grant an account staff status but not superuser status. But then they'd be allowed to edit the database, but not run the tournament, which would be weird."
+msgstr ""
+
+#: ../../features/user-accounts.rst:59
+msgid "Adding accounts"
+msgstr ""
+
+#: ../../features/user-accounts.rst:61
+msgid "To add an account:"
+msgstr ""
+
+#: ../../features/user-accounts.rst:63
+msgid "Go to the Edit Database area of the site."
+msgstr ""
+
+#: ../../features/user-accounts.rst:65
+msgid "Under **Authentication and Authorization**, click the **Add** link next to **Users**."
+msgstr ""
+
+#: ../../features/user-accounts.rst:67
+msgid "Ask the user to enter a username, password and possibly email address."
+msgstr ""
+
+#: ../../features/user-accounts.rst:69
+msgid "Only they should know what the password is."
+msgstr ""
+
+#: ../../features/user-accounts.rst:70
+msgid "If you're hosting on the internet, all passwords should be at least moderately strong!"
+msgstr ""
+
+#: ../../features/user-accounts.rst:71
+msgid "Passwords are not stored as raw passwords, so you can't figure out what their password is."
+msgstr ""
+
+#: ../../features/user-accounts.rst:72
+msgid "The email address is optional."
+msgstr ""
+
+#: ../../features/user-accounts.rst:73
+msgid "This email address is only used to reset their password if they forget it, and has nothing to do with the email address that Tabbycat uses to send emails to tournament participants (*e.g.* private URL links)."
+msgstr ""
+
+#: ../../features/user-accounts.rst:75
+msgid "If they are being assigned superuser and/or staff status, check the relevant boxes."
+msgstr ""
+
+#: ../../features/user-accounts.rst:77
+msgid "Click \"Save\" or \"Save and add another\"."
+msgstr ""
+

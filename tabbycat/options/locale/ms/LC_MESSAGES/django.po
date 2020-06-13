@@ -1,0 +1,1453 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"PO-Revision-Date: 2020-05-24 07:32\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Malay\n"
+"Language: ms_MY\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ms\n"
+"X-Crowdin-File: /develop/tabbycat/options/locale/en/LC_MESSAGES/django.po\n"
+
+#: options/apps.py:10
+msgid "Tournament Options"
+msgstr ""
+
+#: options/models.py:13
+msgid "instance"
+msgstr ""
+
+#: options/models.py:18
+msgid "tournament preference"
+msgstr ""
+
+#: options/models.py:19
+msgid "tournament preferences"
+msgstr ""
+
+#: options/preferences.py:18 options/templates/preferences_index.html:28
+msgid "Score Rules"
+msgstr ""
+
+#: options/preferences.py:24
+msgid "Minimum allowed score for substantive speeches"
+msgstr ""
+
+#: options/preferences.py:27
+msgid "Minimum speaker score"
+msgstr ""
+
+#: options/preferences.py:33
+msgid "Maximum speaker score"
+msgstr ""
+
+#: options/preferences.py:34
+msgid "Maximum allowed score for substantive speeches"
+msgstr ""
+
+#: options/preferences.py:42
+msgid "Speaker score step"
+msgstr ""
+
+#: options/preferences.py:43
+msgid "Score steps allowed for substantive speeches, e.g. full points (1) or half points (0.5)"
+msgstr ""
+
+#: options/preferences.py:51
+msgid "The largest amount by which one team can beat another (0 means no limit)"
+msgstr ""
+
+#: options/preferences.py:52
+msgid "Maximum margin"
+msgstr ""
+
+#: options/preferences.py:61
+msgid "Minimum allowed score for reply speeches"
+msgstr ""
+
+#: options/preferences.py:62
+msgid "Minimum reply score"
+msgstr ""
+
+#: options/preferences.py:70
+msgid "Maximum allowed score for reply speeches"
+msgstr ""
+
+#: options/preferences.py:71
+msgid "Maximum reply score"
+msgstr ""
+
+#: options/preferences.py:79
+msgid "Score steps allowed for reply speeches, e.g. full points (1) or half points (0.5)"
+msgstr ""
+
+#: options/preferences.py:80
+msgid "Reply score step"
+msgstr ""
+
+#: options/preferences.py:88
+msgid "If checked, a team's winning margin includes dissenting adjudicators"
+msgstr ""
+
+#: options/preferences.py:89
+msgid "Margin includes dissenters"
+msgstr ""
+
+#: options/preferences.py:96 options/templates/preferences_index.html:33
+msgid "Draw Rules"
+msgstr ""
+
+#: options/preferences.py:102
+msgid "The auto-allocator will only take adjudicators at or above this score as voting panellists"
+msgstr ""
+
+#: options/preferences.py:103
+msgid "Minimum adjudicator score to vote"
+msgstr ""
+
+#: options/preferences.py:111
+msgid "Penalty applied by adjudicator auto-allocator for conflicts"
+msgstr ""
+
+#: options/preferences.py:112
+msgid "Adjudicator conflict penalty"
+msgstr ""
+
+#: options/preferences.py:120
+msgid "Penalty applied by adjudicator auto-allocator for history"
+msgstr ""
+
+#: options/preferences.py:121
+msgid "Adjudicator history penalty"
+msgstr ""
+
+#: options/preferences.py:129
+msgid "Penality applied by preformed panel auto-allocator for priority mismatch"
+msgstr ""
+
+#: options/preferences.py:130
+msgid "Importance mismatch penalty"
+msgstr ""
+
+#: options/preferences.py:138
+msgid "Penalty applied by conflict avoidance method for teams seeing their own institution"
+msgstr ""
+
+#: options/preferences.py:139
+msgid "Team institution penalty"
+msgstr ""
+
+#: options/preferences.py:147
+msgid "Penalty applied by conflict avoidance method for teams seeing each other twice or more"
+msgstr ""
+
+#: options/preferences.py:148
+msgid "Team history penalty"
+msgstr ""
+
+#: options/preferences.py:156
+msgid "If checked, the draw will try to avoid pairing teams against their own institution"
+msgstr ""
+
+#: options/preferences.py:157
+msgid "Avoid same institution"
+msgstr ""
+
+#: options/preferences.py:165
+msgid "If checked, the draw will try to avoid having teams see each other twice"
+msgstr ""
+
+#: options/preferences.py:166
+msgid "Avoid team history"
+msgstr ""
+
+#: options/preferences.py:174
+msgid "How odd brackets are resolved (see documentation for further details)"
+msgstr ""
+
+#: options/preferences.py:175
+msgid "Odd bracket resolution method"
+msgstr ""
+
+#: options/preferences.py:179
+msgid "Pull up from top"
+msgstr ""
+
+#: options/preferences.py:180
+msgid "Pull up from bottom"
+msgstr ""
+
+#: options/preferences.py:181
+msgid "Pull up from middle"
+msgstr ""
+
+#: options/preferences.py:182
+msgid "Pull up at random"
+msgstr ""
+
+#: options/preferences.py:183
+msgid "Intermediate brackets"
+msgstr ""
+
+#: options/preferences.py:184
+msgid "Intermediate brackets with bubble-up-bubble-down"
+msgstr ""
+
+#: options/preferences.py:185
+msgid "Intermediate 1 (pre-allocated sides)"
+msgstr ""
+
+#: options/preferences.py:186
+msgid "Intermediate 2 (pre-allocated sides)"
+msgstr ""
+
+#: options/preferences.py:193
+msgid "How affirmative/negative positions are assigned (see documentation for further details)"
+msgstr ""
+
+#: options/preferences.py:194
+msgid "Side allocations method"
+msgstr ""
+
+#: options/preferences.py:198 options/preferences.py:215
+msgid "Random"
+msgstr ""
+
+#: options/preferences.py:199
+msgid "Balance"
+msgstr ""
+
+#: options/preferences.py:200
+msgid "Pre-allocated"
+msgstr ""
+
+#: options/preferences.py:201
+msgid "Manually enter from ballot"
+msgstr ""
+
+#: options/preferences.py:208
+msgid "Slide: 1 vs 6, 2 vs 7, …. Fold: 1 vs 10, 2 vs 9, …. Adjacent: 1 vs 2, 3 vs 4, …."
+msgstr ""
+
+#: options/preferences.py:209
+msgid "Pairing method"
+msgstr ""
+
+#: options/preferences.py:213
+msgid "Slide"
+msgstr ""
+
+#: options/preferences.py:214
+msgid "Fold"
+msgstr ""
+
+#: options/preferences.py:216
+msgid "Adjacent"
+msgstr ""
+
+#: options/preferences.py:217
+msgid "Fold top, adjacent rest"
+msgstr ""
+
+#: options/preferences.py:224
+msgid "Method used to try to avoid teams facing each other multiple times or their own institution (see documentation for further details)"
+msgstr ""
+
+#: options/preferences.py:226
+msgid "Conflict avoidance method"
+msgstr ""
+
+#: options/preferences.py:230
+msgid "Off"
+msgstr ""
+
+#: options/preferences.py:231
+msgid "One-up-one-down"
+msgstr ""
+
+#: options/preferences.py:238
+msgid "If using pull-ups, restrict which teams can be pulled up. Two-team formats only. Has no effect on BP or intermediate brackets."
+msgstr ""
+
+#: options/preferences.py:240
+msgid "Pullup restriction"
+msgstr ""
+
+#: options/preferences.py:244
+msgid "No restriction"
+msgstr ""
+
+#: options/preferences.py:245
+msgid "Choose from teams who have been pulled up the fewest times so far"
+msgstr ""
+
+#: options/preferences.py:246
+msgid "Choose from teams with the lowest draw strength by wins so far"
+msgstr ""
+
+#: options/preferences.py:247
+msgid "Choose from teams with the lowest draw strength by speaks so far"
+msgstr ""
+
+#: options/preferences.py:254
+msgid "In BP, how pullups are distributed. Only \"Anywhere\" is WUDC-compliant."
+msgstr ""
+
+#: options/preferences.py:255
+msgid "BP pullup distribution"
+msgstr ""
+
+#: options/preferences.py:259
+msgid "Anywhere in bracket"
+msgstr ""
+
+#: options/preferences.py:260
+msgid "All in the same room (not WUDC-compliant)"
+msgstr ""
+
+#: options/preferences.py:267
+msgid "In BP, which position cost function to use (see documentation for details)"
+msgstr ""
+
+#: options/preferences.py:268
+msgid "BP position cost"
+msgstr ""
+
+#: options/preferences.py:272
+msgid "Simple"
+msgstr ""
+
+#: options/preferences.py:273
+msgid "Rényi entropy"
+msgstr ""
+
+#: options/preferences.py:274
+msgid "Population variance"
+msgstr ""
+
+#: options/preferences.py:281
+msgid "Rényi order α, if BP position cost uses Rényi entropy. Shannon is α = 1, Hartley is α = 0, collision is α = 2. See documentation for details."
+msgstr ""
+
+#: options/preferences.py:284
+msgid "Rényi order (BP)"
+msgstr ""
+
+#: options/preferences.py:293
+msgid "The BP position cost is raised to this power; higher exponents bias towards resolving fewer large position imbalances over more small ones. See documentation for details."
+msgstr ""
+
+#: options/preferences.py:296
+msgid "BP position cost exponent"
+msgstr ""
+
+#: options/preferences.py:305
+msgid "In BP, which method to use to solve the assignment problem. Only Hungarian with preshuffling is WUDC-compliant."
+msgstr ""
+
+#: options/preferences.py:307
+msgid "BP assignment method"
+msgstr ""
+
+#: options/preferences.py:311
+msgid "Hungarian algorithm (not WUDC-compliant)"
+msgstr ""
+
+#: options/preferences.py:312
+msgid "Hungarian algorithm with preshuffling"
+msgstr ""
+
+#: options/preferences.py:319
+msgid "Automatically make all adjudicators available for all rounds"
+msgstr ""
+
+#: options/preferences.py:320
+msgid "Skip adjudicator check-ins"
+msgstr ""
+
+#: options/preferences.py:328
+msgid "Hide panellist positions in the UI (and don't allocate them)"
+msgstr ""
+
+#: options/preferences.py:329
+msgid "No panellist adjudicators"
+msgstr ""
+
+#: options/preferences.py:337
+msgid "Hide trainee positions in the UI (and don't allocate them)"
+msgstr ""
+
+#: options/preferences.py:338
+msgid "No trainee adjudicators"
+msgstr ""
+
+#: options/preferences.py:345 options/templates/preferences_index.html:48
+msgid "Feedback"
+msgstr ""
+
+#: options/preferences.py:351
+msgid "Minimum possible adjudicator score that can be given"
+msgstr ""
+
+#: options/preferences.py:352
+msgid "Minimum adjudicator score"
+msgstr ""
+
+#: options/preferences.py:360
+msgid "Maximum possible adjudicator score that can be given"
+msgstr ""
+
+#: options/preferences.py:361
+msgid "Maximum adjudicator score"
+msgstr ""
+
+#: options/preferences.py:369
+msgid "Used to inform available choices in the feedback forms for adjudicators (both online and printed) and feedback progress"
+msgstr ""
+
+#: options/preferences.py:370
+msgid "Allow and expect feedback to be submitted by"
+msgstr ""
+
+#: options/preferences.py:374
+msgid "Chairs on panellists and trainees"
+msgstr ""
+
+#: options/preferences.py:375
+msgid "Panellists on chairs, chairs on panellists and trainees"
+msgstr ""
+
+#: options/preferences.py:376
+msgid "All adjudicators (including trainees) on each other"
+msgstr ""
+
+#: options/preferences.py:383
+msgid "Expect feedback to be submitted by teams on"
+msgstr ""
+
+#: options/preferences.py:384
+msgid "Used to inform available choices in the feedback forms for teams (both online and printed) and feedback progress; this option is used by, e.g., UADC"
+msgstr ""
+
+#: options/preferences.py:388
+msgid "Orallist only (voting panellists permitted, with prompts to select orallist)"
+msgstr ""
+
+#: options/preferences.py:389
+msgid "All adjudicators in their panels (including trainees)"
+msgstr ""
+
+#: options/preferences.py:396
+msgid "Show unexpected feedback submissions in participants pages"
+msgstr ""
+
+#: options/preferences.py:397
+msgid "Displays unexpected feedback with a question mark symbol; only relevant if public participants and feedback progress are both enabled"
+msgstr ""
+
+#: options/preferences.py:405
+msgid "Show if an adjudicator is a trainee (unaccredited)"
+msgstr ""
+
+#: options/preferences.py:406
+msgid "Show unaccredited"
+msgstr ""
+
+#: options/preferences.py:414
+msgid "Any explanatory text needed to introduce the feedback form"
+msgstr ""
+
+#: options/preferences.py:415
+msgid "Feedback introduction/explanation"
+msgstr ""
+
+#: options/preferences.py:423 options/templates/preferences_index.html:38
+msgid "Debate Rules"
+msgstr ""
+
+#: options/preferences.py:429
+msgid "Two-team format (e.g. Australs, WSDC) or British Parliamentary"
+msgstr ""
+
+#: options/preferences.py:430
+msgid "Teams in debate"
+msgstr ""
+
+#: options/preferences.py:434
+msgid "Two-team format"
+msgstr ""
+
+#: options/preferences.py:435
+msgid "British Parliamentary (four teams)"
+msgstr ""
+
+#: options/preferences.py:442
+msgid "Whether panels submit a ballot each or a single ballot for a debate during the preliminary rounds. Note: BP must use one per debate."
+msgstr ""
+
+#: options/preferences.py:443
+msgid "Ballots per debate, preliminary rounds"
+msgstr ""
+
+#: options/preferences.py:447 options/preferences.py:460
+msgid "One ballot per voting adjudicator"
+msgstr ""
+
+#: options/preferences.py:448 options/preferences.py:461
+msgid "Consensus ballot (one ballot per debate)"
+msgstr ""
+
+#: options/preferences.py:455
+msgid "Whether panels submit a ballot each or a single ballot for a debate during the elimination rounds. Note: BP must use one per debate."
+msgstr ""
+
+#: options/preferences.py:456
+msgid "Ballots per debate, elimination rounds"
+msgstr ""
+
+#: options/preferences.py:468
+msgid "How many substantive speakers on a team"
+msgstr ""
+
+#: options/preferences.py:469
+msgid "Substantive speakers"
+msgstr ""
+
+#: options/preferences.py:477
+msgid "What to call the teams"
+msgstr ""
+
+#: options/preferences.py:478
+msgid "Side names"
+msgstr ""
+
+#: options/preferences.py:487
+msgid "Whether this style features scored reply speeches"
+msgstr ""
+
+#: options/preferences.py:488
+msgid "Reply scores"
+msgstr ""
+
+#: options/preferences.py:496
+msgid "Enables the motion veto field on ballots, to track veto statistics"
+msgstr ""
+
+#: options/preferences.py:497
+msgid "Motion vetoes"
+msgstr ""
+
+#: options/preferences.py:504 options/templates/preferences_index.html:43
+msgid "Standings"
+msgstr ""
+
+#: options/preferences.py:510
+msgid "The number of substantive speeches a speaker can miss and still be on the speaker tab (-1 means no limit)"
+msgstr ""
+
+#: options/preferences.py:511
+msgid "Speeches missable for standings eligibility"
+msgstr ""
+
+#: options/preferences.py:519
+msgid "The number of reply speeches a speaker can miss and still be on the replies tab (-1 means no limit)"
+msgstr ""
+
+#: options/preferences.py:520
+msgid "Replies missable for standings eligibility"
+msgstr ""
+
+#: options/preferences.py:528
+msgid "Metrics to use to rank teams (see documentation for further details)"
+msgstr ""
+
+#: options/preferences.py:529
+msgid "Team standings precedence"
+msgstr ""
+
+#: options/preferences.py:545 options/preferences.py:580
+#, python-format
+msgid "The following metrics can't be listed twice: %(duplicates)s"
+msgstr ""
+
+#: options/preferences.py:551
+msgid "Metrics to calculate, but not used to rank teams"
+msgstr ""
+
+#: options/preferences.py:552
+msgid "Team standings extra metrics"
+msgstr ""
+
+#: options/preferences.py:563
+msgid "Metrics to use to rank speakers (see documentation for further details)"
+msgstr ""
+
+#: options/preferences.py:564
+msgid "Speaker standings precedence"
+msgstr ""
+
+#: options/preferences.py:586
+msgid "Metrics to calculate, but not used to rank speakers"
+msgstr ""
+
+#: options/preferences.py:587
+msgid "Speaker standings extra metrics"
+msgstr ""
+
+#: options/preferences.py:597 options/templates/preferences_index.html:59
+msgid "Tab Release"
+msgstr ""
+
+#: options/preferences.py:603
+msgid "Enables public display of the team tab. Intended for use after the tournament."
+msgstr ""
+
+#: options/preferences.py:604
+msgid "Release team tab to public"
+msgstr ""
+
+#: options/preferences.py:612
+msgid "Only show scores for the top X teams in the public tab (set to 0 to show all teams)."
+msgstr ""
+
+#: options/preferences.py:613
+msgid "Top teams cutoff"
+msgstr ""
+
+#: options/preferences.py:621
+msgid "Enables public display of the speaker tab. Intended for use after the tournament."
+msgstr ""
+
+#: options/preferences.py:622
+msgid "Release speaker tab to public"
+msgstr ""
+
+#: options/preferences.py:630
+msgid "Only show scores for the top X speakers in the public tab (set to 0 to show all speakers)."
+msgstr ""
+
+#: options/preferences.py:631
+msgid "Top speakers cutoff"
+msgstr ""
+
+#: options/preferences.py:639
+msgid "Enables public display of the replies tab. Intended for use after the tournament."
+msgstr ""
+
+#: options/preferences.py:640
+msgid "Release replies tab to public"
+msgstr ""
+
+#: options/preferences.py:648
+msgid "Only show scores for the top X repliers in the public tab (set to 0 to show all repliers)."
+msgstr ""
+
+#: options/preferences.py:649
+msgid "Top replies cutoff"
+msgstr ""
+
+#: options/preferences.py:675
+msgid "Enables public display of all motions and win/loss/selection information. This includes all motions — whether they have been marked as released or not. Intended for use after the tournament."
+msgstr ""
+
+#: options/preferences.py:678
+msgid "Release motions tab to public"
+msgstr ""
+
+#: options/preferences.py:686
+msgid "Enables public display of the feedback scores of all adjudicators"
+msgstr ""
+
+#: options/preferences.py:687
+msgid "Release adjudicator tab to public"
+msgstr ""
+
+#: options/preferences.py:695
+msgid "What (if released) the adjudicator tab shows"
+msgstr ""
+
+#: options/preferences.py:696
+msgid "Adjudicator tab displays"
+msgstr ""
+
+#: options/preferences.py:700
+msgid "Only shows base score"
+msgstr ""
+
+#: options/preferences.py:701
+msgid "Only shows final score"
+msgstr ""
+
+#: options/preferences.py:702
+msgid "Shows base, final, and per-round scores"
+msgstr ""
+
+#: options/preferences.py:709
+msgid "Enables public display of every adjudicator's ballot. Intended for use after the tournament."
+msgstr ""
+
+#: options/preferences.py:710
+msgid "Release ballots to public"
+msgstr ""
+
+#: options/preferences.py:718
+msgid "This releases all the results for all rounds (including silent and break rounds). Do so only after the tournament is finished!"
+msgstr ""
+
+#: options/preferences.py:719
+msgid "Release all round results to public"
+msgstr ""
+
+#: options/preferences.py:726 options/templates/preferences_index.html:64
+msgid "Data Entry"
+msgstr ""
+
+#: options/preferences.py:732
+msgid "Whether adjudicators can submit ballots themselves, and how they do so"
+msgstr ""
+
+#: options/preferences.py:733
+msgid "Ballot submissions from adjudicators"
+msgstr ""
+
+#: options/preferences.py:737 options/preferences.py:751
+msgid "Disabled (tab staff only)"
+msgstr ""
+
+#: options/preferences.py:738 options/preferences.py:752
+msgid "Use private URLs"
+msgstr ""
+
+#: options/preferences.py:739 options/preferences.py:753
+msgid "Use publicly accessible form"
+msgstr ""
+
+#: options/preferences.py:746
+msgid "Whether participants can submit feedback themselves, and how they do so"
+msgstr ""
+
+#: options/preferences.py:747
+msgid "Feedback submissions from participants"
+msgstr ""
+
+#: options/preferences.py:760
+msgid "If checked, users must enter a password when submitting public feedback and ballots"
+msgstr ""
+
+#: options/preferences.py:761
+msgid "Require password for submission"
+msgstr ""
+
+#: options/preferences.py:769
+msgid "Value of the password required for public submissions, if passwords are required"
+msgstr ""
+
+#: options/preferences.py:770
+msgid "Password for public submission"
+msgstr ""
+
+#: options/preferences.py:778
+msgid "Bypasses double checking by setting ballots to be automatically confirmed"
+msgstr ""
+
+#: options/preferences.py:779
+msgid "Bypass double checking"
+msgstr ""
+
+#: options/preferences.py:787
+msgid "Requires scores of draft ballots to be re-entered as part of the confirmation stage (to create more stringent check). Only applies to BP formats."
+msgstr ""
+
+#: options/preferences.py:788
+msgid "Enforce blind confirmations"
+msgstr ""
+
+#: options/preferences.py:796
+msgid "If checked, ballots require a motion to be selected from a list of options. "
+msgstr ""
+
+#: options/preferences.py:797
+msgid "Enable motion selection"
+msgstr ""
+
+#: options/preferences.py:805
+msgid "Whether assistants can access pages that can reveal matchups and motions ahead of public release (these pages are useful for displaying draws/motions to the public and for printing ballots)."
+msgstr ""
+
+#: options/preferences.py:808
+msgid "Assistant user access"
+msgstr ""
+
+#: options/preferences.py:813
+msgid "All areas (results entry, draw display, and motions)"
+msgstr ""
+
+#: options/preferences.py:814
+msgid "Just results entry and draw display"
+msgstr ""
+
+#: options/preferences.py:815
+msgid "Only results entry"
+msgstr ""
+
+#: options/preferences.py:821
+msgid "Whether participants can check themselves in/out through their private URL."
+msgstr ""
+
+#: options/preferences.py:822
+msgid "Participant self-checkin"
+msgstr ""
+
+#: options/preferences.py:830
+msgid "The amount of time (in hours) before a speaker or adjudicator's check-in event expires"
+msgstr ""
+
+#: options/preferences.py:833
+msgid "Check-In Window (People)"
+msgstr ""
+
+#: options/preferences.py:839
+msgid "The amount of time (in hours) before a room's check-in event expires"
+msgstr ""
+
+#: options/preferences.py:842
+msgid "Check-In Window (Rooms)"
+msgstr ""
+
+#: options/preferences.py:848
+msgid "Whether the printed scoresheets should show the 'circle digits' prompt to help check bad handwriting"
+msgstr ""
+
+#: options/preferences.py:849
+msgid "Ballot Digit Checks"
+msgstr ""
+
+#: options/preferences.py:857
+msgid "Whether the printed scoresheets should hide the text of motions (even if they have been entered and released)"
+msgstr ""
+
+#: options/preferences.py:858
+msgid "Ballot Hide Motions"
+msgstr ""
+
+#: options/preferences.py:866
+msgid "The location to return scoresheets to, printed on pre-printed ballots. Set to 'TBA' to hide."
+msgstr ""
+
+#: options/preferences.py:867
+msgid "Score return location"
+msgstr ""
+
+#: options/preferences.py:875
+msgid "The location to return feedback to, printed on pre-printed feedback forms. Set to 'TBA' to hide."
+msgstr ""
+
+#: options/preferences.py:876
+msgid "Feedback return location"
+msgstr ""
+
+#: options/preferences.py:883 options/templates/preferences_index.html:69
+msgid "Public Features"
+msgstr ""
+
+#: options/preferences.py:889
+msgid "Enables the public page listing all participants in the tournament"
+msgstr ""
+
+#: options/preferences.py:890
+msgid "Enable public view of participants list"
+msgstr ""
+
+#: options/preferences.py:898
+msgid "Enables the public page listing all institutions in the tournament"
+msgstr ""
+
+#: options/preferences.py:899
+msgid "Enable public view of institutions list"
+msgstr ""
+
+#: options/preferences.py:907
+msgid "Enables the public page listing diversity statistics"
+msgstr ""
+
+#: options/preferences.py:908
+msgid "Enable public view of diversity info"
+msgstr ""
+
+#: options/preferences.py:916
+msgid "Enables the public page showing checkin statuses for individuals, institutions, and teams. Note that this page can be slow when used at very large tournaments."
+msgstr ""
+
+#: options/preferences.py:919
+msgid "Enable public view of the checkin statuses"
+msgstr ""
+
+#: options/preferences.py:927
+msgid "If the participants list is enabled, displays break category eligibility on that page"
+msgstr ""
+
+#: options/preferences.py:928
+msgid "Show break categories on participants page"
+msgstr ""
+
+#: options/preferences.py:936
+msgid "Enables the public page listing pre-allocated sides"
+msgstr ""
+
+#: options/preferences.py:937
+msgid "Show pre-allocated sides to public"
+msgstr ""
+
+#: options/preferences.py:945
+msgid "Enables the public page showing released draws"
+msgstr ""
+
+#: options/preferences.py:946
+msgid "Enable public view of draw"
+msgstr ""
+
+#: options/preferences.py:950
+msgid "Disabled"
+msgstr ""
+
+#: options/preferences.py:951
+msgid "Show a single page for the current round's draw"
+msgstr ""
+
+#: options/preferences.py:952
+msgid "Show individual pages for all released draws"
+msgstr ""
+
+#: options/preferences.py:959
+msgid "Enables the public page showing results of non-silent rounds"
+msgstr ""
+
+#: options/preferences.py:960
+msgid "Enable public view of results"
+msgstr ""
+
+#: options/preferences.py:968
+msgid "Enables the public page showing motions that have been explicitly released to the public"
+msgstr ""
+
+#: options/preferences.py:969
+msgid "Enable public view of motions"
+msgstr ""
+
+#: options/preferences.py:977
+msgid "Enables the public page showing team standings, showing wins only (not speaker scores or ranking)"
+msgstr ""
+
+#: options/preferences.py:978
+msgid "Enable public view of team standings"
+msgstr ""
+
+#: options/preferences.py:986
+msgid "Enables the public page for each team and adjudicator showing their records"
+msgstr ""
+
+#: options/preferences.py:987
+msgid "Enable public record pages"
+msgstr ""
+
+#: options/preferences.py:995
+msgid "Enables the public page showing the team breaks. Intended for use after the break announcement."
+msgstr ""
+
+#: options/preferences.py:996
+msgid "Release team breaks to public"
+msgstr ""
+
+#: options/preferences.py:1004
+msgid "Enables the public page showing breaking adjudicators. Intended for use after the break announcement."
+msgstr ""
+
+#: options/preferences.py:1005
+msgid "Release adjudicators break to public"
+msgstr ""
+
+#: options/preferences.py:1013
+msgid "Enables the public page detailing who has unsubmitted feedback"
+msgstr ""
+
+#: options/preferences.py:1014
+msgid "Enable public view of unsubmitted feedback"
+msgstr ""
+
+#: options/preferences.py:1022
+msgid "List of tournament staff, to be displayed on the tournament home page. Leave this blank or with the default text if you want to not show this information."
+msgstr ""
+
+#: options/preferences.py:1023
+msgid "Tournament staff"
+msgstr ""
+
+#: options/preferences.py:1033
+msgid "Message to be displayed on the tournament home page"
+msgstr ""
+
+#: options/preferences.py:1034
+msgid "Welcome message"
+msgstr ""
+
+#: options/preferences.py:1043 options/templates/preferences_index.html:74
+msgid "UI Options"
+msgstr ""
+
+#: options/preferences.py:1049
+msgid "If showing results to public, show splitting adjudicators in them"
+msgstr ""
+
+#: options/preferences.py:1050
+msgid "Show splitting adjudicators"
+msgstr ""
+
+#: options/preferences.py:1058
+msgid "If showing results to public, show which motions were selected in the record"
+msgstr ""
+
+#: options/preferences.py:1059
+msgid "Show motions in results"
+msgstr ""
+
+#: options/preferences.py:1067
+msgid "Whether and how to use code names for teams"
+msgstr ""
+
+#: options/preferences.py:1068
+msgid "Team code names"
+msgstr ""
+
+#: options/preferences.py:1073
+msgid "Do not use code names"
+msgstr ""
+
+#: options/preferences.py:1074
+msgid "Use real names everywhere, and show code names in tooltips"
+msgstr ""
+
+#: options/preferences.py:1075
+msgid "Use code names for public; real names with code names in tooltips for admins"
+msgstr ""
+
+#: options/preferences.py:1077
+msgid "Use code names for public; code names with real names in tooltips for admins"
+msgstr ""
+
+#: options/preferences.py:1079
+msgid "Use code names everywhere; do not use tooltips (real names show in some admin views)"
+msgstr ""
+
+#: options/preferences.py:1085
+msgid "Display team emoji in the public and admin interfaces"
+msgstr ""
+
+#: options/preferences.py:1086
+msgid "Show emoji"
+msgstr ""
+
+#: options/preferences.py:1094
+msgid "In tables listing teams, adds a column showing their institutions"
+msgstr ""
+
+#: options/preferences.py:1095
+msgid "Show team institutions"
+msgstr ""
+
+#: options/preferences.py:1103
+msgid "Hide the institutions of adjudicators on public pages and on printed ballots"
+msgstr ""
+
+#: options/preferences.py:1104
+msgid "Show adjudicator institutions"
+msgstr ""
+
+#: options/preferences.py:1112
+msgid "Enables a hover element on every team's name showing that team's speakers"
+msgstr ""
+
+#: options/preferences.py:1113
+msgid "Show speakers in draw"
+msgstr ""
+
+#: options/preferences.py:1121
+msgid "Order in which are listed by round in the public view"
+msgstr ""
+
+#: options/preferences.py:1122
+msgid "Order to display motions"
+msgstr ""
+
+#: options/preferences.py:1126
+msgid "Earliest round first"
+msgstr ""
+
+#: options/preferences.py:1127
+msgid "Latest round first"
+msgstr ""
+
+#: options/preferences.py:1133 options/templates/preferences_index.html:79
+msgid "Notifications"
+msgstr ""
+
+#: options/preferences.py:1139
+msgid "The name of the organizer tasked with managing emails (in case of replies)"
+msgstr ""
+
+#: options/preferences.py:1140
+msgid "Reply-to name"
+msgstr ""
+
+#: options/preferences.py:1148
+msgid "The email address for handling replies"
+msgstr ""
+
+#: options/preferences.py:1149
+msgid "Reply-to address"
+msgstr ""
+
+#: options/preferences.py:1157
+msgid "A secret key to accept email status events"
+msgstr ""
+
+#: options/preferences.py:1158
+msgid "Email status secret key"
+msgstr ""
+
+#: options/preferences.py:1168
+msgid "Enables a copy of adjudicators' ballots to be automatically sent to them (by email) after they are entered in Tabbycat (for confirmation or checking)"
+msgstr ""
+
+#: options/preferences.py:1169
+msgid "Ballot receipts"
+msgstr ""
+
+#: options/preferences.py:1177
+msgid "The subject line for emails sent to adjudicators with their submitted ballot. Use '{{ DEBATE }}' as a placeholder for the associated debate"
+msgstr ""
+
+#: options/preferences.py:1179
+msgid "Ballot receipt subject line"
+msgstr ""
+
+#: options/preferences.py:1187
+msgid "The message body for emails sent to adjudicators with their submitted ballot."
+msgstr ""
+
+#: options/preferences.py:1188
+msgid "Ballot receipt message"
+msgstr ""
+
+#: options/preferences.py:1204
+msgid "The subject line for emails sent to speakers with their team points."
+msgstr ""
+
+#: options/preferences.py:1205
+msgid "Team points subject line"
+msgstr ""
+
+#: options/preferences.py:1212
+msgid "The message body for emails sent to speakers with their team points."
+msgstr ""
+
+#: options/preferences.py:1213
+msgid "Team points message"
+msgstr ""
+
+#: options/preferences.py:1222
+msgid "The subject-line for emails sent to adjudicators with their assignments."
+msgstr ""
+
+#: options/preferences.py:1223
+msgid "Adjudicator draw subject line"
+msgstr ""
+
+#: options/preferences.py:1230
+msgid "The message body for emails sent to adjudicators with their assignments."
+msgstr ""
+
+#: options/preferences.py:1231
+msgid "Adjudicator draw message"
+msgstr ""
+
+#: options/preferences.py:1240
+msgid "The subject-line for emails sent to teams with their draw."
+msgstr ""
+
+#: options/preferences.py:1241
+msgid "Team draw subject line"
+msgstr ""
+
+#: options/preferences.py:1248 options/preferences.py:1266
+msgid "The message body for emails sent to participants with their private URLs."
+msgstr ""
+
+#: options/preferences.py:1249 options/preferences.py:1267
+msgid "Private URL notification message"
+msgstr ""
+
+#: options/preferences.py:1258
+msgid "The subject-line for emails sent to participants with their private URLs."
+msgstr ""
+
+#: options/preferences.py:1259
+msgid "Private URL notification subject line"
+msgstr ""
+
+#: options/preferences.py:1280
+msgid "The subject-line for emails sent to participants on motion release."
+msgstr ""
+
+#: options/preferences.py:1281
+msgid "Motion release notification subject line"
+msgstr ""
+
+#: options/preferences.py:1288
+msgid "The message body for emails sent to participants on motion release."
+msgstr ""
+
+#: options/preferences.py:1289
+msgid "Motion release notification message"
+msgstr ""
+
+#: options/preferences.py:1297
+msgid "The subject-line for emails sent to participants informing them of their team registration."
+msgstr ""
+
+#: options/preferences.py:1298
+msgid "Team registration notification subject line"
+msgstr ""
+
+#: options/preferences.py:1305
+msgid "The message body for emails sent to participants informing them of their team registration."
+msgstr ""
+
+#: options/preferences.py:1306
+msgid "Team registration notification message"
+msgstr ""
+
+#: options/presets.py:32 options/presets.py:351
+msgid "Public Information Options"
+msgstr ""
+
+#: options/presets.py:32
+msgid "Enable Public Information"
+msgstr ""
+
+#: options/presets.py:33
+msgid "Disable Public Information"
+msgstr ""
+
+#: options/presets.py:67
+msgid "Australs Rules"
+msgstr ""
+
+#: options/presets.py:68
+msgid "3 vs 3 with replies, chosen motions, intermediate brackets, one-up-one-down. Compliant with AIDA rules."
+msgstr ""
+
+#: options/presets.py:107
+msgid "British Parliamentary Rules"
+msgstr ""
+
+#: options/presets.py:108
+msgid "2 vs 2 vs 2 vs 2. Compliant with WUDC rules."
+msgstr ""
+
+#: options/presets.py:148
+msgid "Canadian Parliamentary Rules"
+msgstr ""
+
+#: options/presets.py:150
+msgid "2 vs 2 with replies (unscored) and POIs. May require additional configuration depending on regional variations."
+msgstr ""
+
+#: options/presets.py:173
+msgid "Australian Easters Rules"
+msgstr ""
+
+#: options/presets.py:175
+msgid "3 vs 3 without replies, set motions, novices, intermediate bubbles, one-up-one-down. Compliant with AIDA rules."
+msgstr ""
+
+#: options/presets.py:193
+msgid "2 vs 2 Impromptu"
+msgstr ""
+
+#: options/presets.py:195
+msgid "2 vs 2 with replies, chosen motions, chosen sides, and novice statuses."
+msgstr ""
+
+#: options/presets.py:220
+msgid "3 vs 3 Prepared"
+msgstr ""
+
+#: options/presets.py:222
+msgid "3 vs 3 with preallocated sides, publicly displayed sides and motions, and novice statuses."
+msgstr ""
+
+#: options/presets.py:249
+msgid "UADC Rules"
+msgstr ""
+
+#: options/presets.py:251
+msgid "3 vs 3 with replies, chosen motions, and all adjudicators can receive feedback from teams."
+msgstr ""
+
+#: options/presets.py:287
+msgid "WSDC Rules"
+msgstr ""
+
+#: options/presets.py:289
+msgid "3 vs 3 with replies, chosen motions, prop/opp side labels, and all adjudicators can receive feedback from teams."
+msgstr ""
+
+#: options/presets.py:353
+msgid "For tournaments hosted online: this sets it up so that people can access the draw and other generally useful information via the tab site."
+msgstr ""
+
+#: options/presets.py:365
+msgid "Tab Release Options"
+msgstr ""
+
+#: options/presets.py:367
+msgid "For when a tab is ready to be released. This will publicly display the results of all rounds, the team tab, the speaker tab, etc"
+msgstr ""
+
+#: options/templates/preferences_index.html:4
+#: options/templates/preferences_index.html:5
+msgid "Configuration"
+msgstr ""
+
+#: options/templates/preferences_index.html:10
+#, python-format
+msgid "You both have team code names enabled, and team institutions showing on public pages. If your objective in enabling team code names is to obscure team institutions, this probably defeats the purpose of code names. You can edit these settings in the <a href=\"%(ui_url)s\" class=\"alert-link\">UI Options section</a>."
+msgstr ""
+
+#: options/templates/preferences_index.html:29
+msgid "The range of scores that can awarded to speeches, replies, and teams"
+msgstr ""
+
+#: options/templates/preferences_index.html:34
+msgid "How teams are paired in the draw and how adjudicators are auto-allocated"
+msgstr ""
+
+#: options/templates/preferences_index.html:39
+msgid "How many speeches in a debate, how motions are decided, and whether reply speeches are used"
+msgstr ""
+
+#: options/templates/preferences_index.html:44
+msgid "How teams and speakers are ranked in the released tabs"
+msgstr ""
+
+#: options/templates/preferences_index.html:49
+msgid "How adjudicators are ranked and who can submit feedback"
+msgstr ""
+
+#: options/templates/preferences_index.html:60
+msgid "When to release a public tab is made visible and what data it shows"
+msgstr ""
+
+#: options/templates/preferences_index.html:65
+msgid "How ballots, feedback, and check-ins are entered, including online submission options"
+msgstr ""
+
+#: options/templates/preferences_index.html:70
+msgid "What information the site displays on the publicly accessible pages"
+msgstr ""
+
+#: options/templates/preferences_index.html:75
+msgid "Small tweaks in what information is presented by the interface"
+msgstr ""
+
+#: options/templates/preferences_index.html:80
+msgid "Configures sending notifications, such as emails confirming ballot submissions or team points"
+msgstr ""
+
+#: options/templates/preferences_index.html:92
+msgid "Manually Set Current Round"
+msgstr ""
+
+#: options/templates/preferences_index.html:93
+msgid "Tabbycat will prompt you to advance the current round on each round's results page. However, if there are special circumstances that require you to override this and set the current round to something else, use this page."
+msgstr ""
+
+#: options/templates/preferences_index.html:100
+msgid "Presets"
+msgstr ""
+
+#: options/templates/preferences_index.html:101
+msgid "These modify common settings for basic rules; double check our <a href=\"https://tabbycat.readthedocs.io/\" target=\"_blank\">documentation</a> to ensure they are correct for your tournament. Each links will display what settings it changes before applying them."
+msgstr ""
+
+#: options/templates/preferences_index.html:112
+#, python-format
+msgid "Apply %(preset)s"
+msgstr ""
+
+#: options/templates/preferences_presets_complete.html:4
+#: options/templates/preferences_presets_complete.html:5
+#, python-format
+msgid "Presets Applied: %(preset_title)s"
+msgstr ""
+
+#: options/templates/preferences_presets_complete.html:10
+#: options/templates/preferences_presets_confirm.html:10
+#: options/templates/preferences_section_set.html:19
+msgid "Back to Configuration"
+msgstr ""
+
+#: options/templates/preferences_presets_complete.html:16
+msgid "Preferences that were changed"
+msgstr ""
+
+#: options/templates/preferences_presets_confirm.html:4
+#: options/templates/preferences_presets_confirm.html:5
+#, python-format
+msgid "Confirm Presets: %(preset_title)s"
+msgstr ""
+
+#: options/templates/preferences_presets_confirm.html:18
+msgid "Preferences that will not change"
+msgstr ""
+
+#: options/templates/preferences_presets_confirm.html:23
+msgid "Preferences that will change"
+msgstr ""
+
+#: options/templates/preferences_presets_confirm.html:30
+#, python-format
+msgid "Apply Presets: %(preset_title)s"
+msgstr ""
+
+#: options/templates/preferences_section_set.html:6
+#, python-format
+msgid "Configuration: %(section)s"
+msgstr ""
+
+#: options/templates/preferences_section_set.html:10
+#, python-format
+msgid "Edit Configuration: %(section)s"
+msgstr ""
+
+#: options/views.py:43
+msgid "Your draw rules specify four teams per-debate but your ballot setting specifies that adjudicators submit independent ballots. These settings <strong>are not compatible and will cause results entry to crash</strong>. You need to go back to the Debate Rules settings and change your configuration to use consensus ballots."
+msgstr ""
+
+#: options/views.py:63
+#, python-format
+msgid "Tournament options (%(section)s) saved."
+msgstr ""
+
+#: options/views.py:113
+#, python-format
+msgid "Tournament options saved according to preset %(name)s."
+msgstr ""
+

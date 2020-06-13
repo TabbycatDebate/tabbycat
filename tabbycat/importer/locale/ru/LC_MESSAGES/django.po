@@ -1,0 +1,395 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"PO-Revision-Date: 2020-05-25 00:36\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Russian\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ru\n"
+"X-Crowdin-File: /develop/tabbycat/importer/locale/en/LC_MESSAGES/django.po\n"
+
+#: importer/forms.py:24
+#, python-format
+msgid "line %(lineno)d: %(message)s"
+msgstr "строка %(lineno)d: %(message)s"
+
+#: importer/forms.py:51
+#, python-format
+msgid "This line (for %(institution)s) didn't have a code"
+msgstr "В этой строке (%(institution)s) нет кода"
+
+#: importer/forms.py:56
+#, python-format
+msgid "This line (for %(institution)s) had too many columns"
+msgstr "В этой строке (%(institution)s) слишком много столбцов"
+
+#: importer/forms.py:66
+msgid "There were no institutions to import."
+msgstr "Не было клубов для импорта."
+
+#: importer/forms.py:71
+#, python-format
+msgid "Sorry, you can only import up to %(max_allowed)d institution at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
+msgid_plural "Sorry, you can only import up to %(max_allowed)d institutions at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
+msgstr[0] "Одновременно можно импортировать только %(max_allowed)d клубов. Сейчас указано %(given)d.. Попробуйте импортировать клубы в несколько приёмов."
+msgstr[1] "Одновременно можно импортировать только %(max_allowed)d клубов. Сейчас указано %(given)d.. Попробуйте импортировать клубы в несколько приёмов."
+msgstr[2] "Одновременно можно импортировать только %(max_allowed)d клубов. Сейчас указано %(given)d.. Попробуйте импортировать клубы в несколько приёмов."
+msgstr[3] "Одновременно можно импортировать только %(max_allowed)d клубов. Сейчас указано %(given)d.. Попробуйте импортировать клубы в несколько приёмов."
+
+#: importer/forms.py:103
+msgid "There were no rooms to import."
+msgstr "Не было аудиторий для импорта."
+
+#: importer/forms.py:108
+#, python-format
+msgid "Sorry, you can only import up to %(max_allowed)d room at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
+msgid_plural "Sorry, you can only import up to %(max_allowed)d rooms at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
+msgstr[0] "Извините, вы можете импортировать максимум %(max_allowed)d аудиторий за один раз. (Сейчас у вас есть %(given)d.) Попробуйте разбить ваш импорт на несколько очередей."
+msgstr[1] "Извините, вы можете импортировать максимум %(max_allowed)d аудиторий за один раз. (Сейчас у вас есть %(given)d.) Попробуйте разбить ваш импорт на несколько очередей."
+msgstr[2] "Извините, вы можете импортировать максимум %(max_allowed)d аудиторий за один раз. (Сейчас у вас есть %(given)d.) Попробуйте разбить ваш импорт на несколько очередей."
+msgstr[3] "Извините, вы можете импортировать максимум %(max_allowed)d аудиторий за один раз. (Сейчас у вас есть %(given)d.) Попробуйте разбить ваш импорт на несколько очередей."
+
+#: importer/forms.py:191
+msgid "Speakers' names"
+msgstr "Имена спикеров"
+
+#: importer/forms.py:192
+msgid "Speakers' email addresses"
+msgstr "Email адреса спикеров"
+
+#: importer/forms.py:193
+msgid "Optional, useful to include if distributing private URLs, list in same order as speakers' names"
+msgstr "Необязательно, полезно включать при распределении линых URL, список в том же порядке, что и имена спикеров"
+
+#: importer/forms.py:200
+msgid "Name (excluding institution name)"
+msgstr "Название (без названия клуба)"
+
+#: importer/forms.py:201
+msgid "Prefix team name with institution name?"
+msgstr "Указать название клуба перед названием команды?"
+
+#: importer/forms.py:204
+msgid "Do not include institution name (check the \"Prefix team name with institution name?\" field instead)"
+msgstr "Не указывать название клуба (вместо поля \"Указать название клуба перед названием команды\")"
+
+#: importer/forms.py:213
+msgid "(Not applicable to unaffiliated teams)"
+msgstr "(Не применимо к неафиллированным командам)"
+
+#: importer/forms.py:218
+msgid "One speaker's name per line"
+msgstr "Одно имя спикера на строчку"
+
+#: importer/forms.py:219
+msgid "Can be separated by newlines, tabs or commas"
+msgstr "Может быть разделен ярлыками, запятыми или новыми строками"
+
+#: importer/forms.py:221
+#, python-format
+msgid "Speaker %d"
+msgstr "Спикер %d"
+
+#: importer/forms.py:223
+#, python-format
+msgid "speaker%d@example.edu"
+msgstr "спикер %d @example.edu"
+
+#: importer/forms.py:237
+msgid "There must be at least one speaker."
+msgstr "Должен быть хотя бы один спикер."
+
+#: importer/forms.py:246
+#, python-format
+msgid "%(email)s is not a valid email address."
+msgstr "%(email)s не является допустимым email."
+
+#: importer/forms.py:259
+msgid "There are more email addresses than speakers."
+msgstr "Адресов электронной почты больше чем спикеров."
+
+#: importer/forms.py:297
+msgid "Every team in a single tournament from the same institution must have a different name. Please correct the duplicate data."
+msgstr "В рамках одного турнира у всех команд из одного клуба должны быть разные названия. Пожалуйста, исправьте повторяющиеся названия."
+
+#: importer/forms.py:309
+msgid "Rating"
+msgstr "Рейтинг"
+
+#: importer/forms.py:317
+#, python-format
+msgid "This value must be between %(min)d and %(max)d."
+msgstr "Значение должно быть между %(min)d и %(max)d."
+
+#: importer/forms.py:339
+msgid "Unaffiliated (no institution)"
+msgstr "Без клуба"
+
+#: importer/forms.py:351
+#, python-format
+msgid "%(name)s (%(code)s)"
+msgstr "%(name)s %(code)s)"
+
+#: importer/forms.py:372
+#, python-format
+msgid "Sorry, you can only import up to %(max_allowed)d team at a time. (These numbers currently add to %(given)d.) Try splitting your import into smaller chunks."
+msgid_plural "Sorry, you can only import up to %(max_allowed)d teams at a time. (These numbers currently add to %(given)d.) Try splitting your import into smaller chunks."
+msgstr[0] "Извините, вы можете импортировать максимум %(max_allowed)d команд за один раз (Эти числа сейчас добавляются к %(given)d.). Попробуйте разделить ваш импорт на несколько очередей."
+msgstr[1] "Извините, вы можете импортировать максимум %(max_allowed)d команд за один раз (Эти числа сейчас добавляются к %(given)d.). Попробуйте разделить ваш импорт на несколько очередей."
+msgstr[2] "Извините, вы можете импортировать максимум %(max_allowed)d команд за один раз (Эти числа сейчас добавляются к %(given)d.). Попробуйте разделить ваш импорт на несколько очередей."
+msgstr[3] "Извините, вы можете импортировать максимум %(max_allowed)d команд за один раз (Эти числа сейчас добавляются к %(given)d.). Попробуйте разделить ваш импорт на несколько очередей."
+
+#: importer/forms.py:385
+#, python-format
+msgid "Sorry, you can only import up to %(max_allowed)d adjudicator at a time. (These numbers currently add to %(given)d.) Try splitting your import into smaller chunks."
+msgid_plural "Sorry, you can only import up to %(max_allowed)d adjudicators at a time. (These numbers currently add to %(given)d.) Try splitting your import into smaller chunks."
+msgstr[0] "Извините, вы можете импортировать максимум %(max_allowed)d судей за один раз. (Эти числа сейчас добавляются к %(given)d.) Попробуйте разделить ваш импорт на несколько очередей."
+msgstr[1] "Извините, вы можете импортировать максимум %(max_allowed)d судей за один раз. (Эти числа сейчас добавляются к %(given)d.) Попробуйте разделить ваш импорт на несколько очередей."
+msgstr[2] "Извините, вы можете импортировать максимум %(max_allowed)d судей за один раз. (Эти числа сейчас добавляются к %(given)d.) Попробуйте разделить ваш импорт на несколько очередей."
+msgstr[3] "Извините, вы можете импортировать максимум %(max_allowed)d судей за один раз. (Эти числа сейчас добавляются к %(given)d.) Попробуйте разделить ваш импорт на несколько очередей."
+
+#: importer/templates/simple_import_adjudicators_details.html:4
+#: importer/templates/simple_import_adjudicators_details.html:6
+#: importer/templates/simple_import_adjudicators_numbers.html:4
+#: importer/templates/simple_import_adjudicators_numbers.html:6
+msgctxt "page title"
+msgid "Add Adjudicators"
+msgstr "Добавить судей"
+
+#: importer/templates/simple_import_adjudicators_details.html:5
+#: importer/templates/simple_import_adjudicators_numbers.html:5
+#: importer/templates/simple_import_institutions_details.html:5
+#: importer/templates/simple_import_institutions_raw.html:5
+#: importer/templates/simple_import_teams_details.html:5
+#: importer/templates/simple_import_teams_numbers.html:5
+#: importer/templates/simple_import_venues_details.html:5
+#: importer/templates/simple_import_venues_raw.html:5
+#, python-format
+msgid "(Step %(step)s of %(count)s)"
+msgstr "(Шаг %(step)s из %(count)s)"
+
+#: importer/templates/simple_import_adjudicators_details.html:13
+#: importer/templates/simple_import_institutions_details.html:17
+#: importer/templates/simple_import_teams_details.html:17
+#: importer/templates/simple_import_venues_details.html:13
+msgid "Previous Step"
+msgstr "Предыдущий шаг"
+
+#: importer/templates/simple_import_adjudicators_details.html:18
+#, python-format
+msgid "As per <a href=\"%(options_feedback)s\" class=\"alert-link\">this tournament's configuration</a>, an adjudicator's rating must be between <strong>%(min)s</strong> and <strong>%(max)s</strong>. Providing email addresses is optional but can be useful if using <a href=\"%(privateurls_url)s\" class=\"alert-link\">private URLs</a> for feedback or ballots."
+msgstr "В <a href=\"%(options_feedback)s\" class=\"alert-link\"> настройках турнира </a>, рейтинг судьи должен быть между <strong>%(min)s</strong> и <strong>%(max)s</strong>. Предоставление email адресов опционально, но может быть полезно при использовании <a href=\"%(privateurls_url)s\" class=\"alert-link\"> личных URL </a> для бэллотов и форм обратной связи."
+
+#: importer/templates/simple_import_adjudicators_details.html:48
+#, python-format
+msgid "Adjudicators for %(institution)s"
+msgstr "Судьи клуба %(institution)s"
+
+#: importer/templates/simple_import_adjudicators_details.html:52
+msgid "Unaffiliated Adjudicators"
+msgstr "Неафиллированные судьи"
+
+#: importer/templates/simple_import_adjudicators_details.html:72
+msgid "Save All Adjudicators"
+msgstr "Сохранить всех судей"
+
+#: importer/templates/simple_import_adjudicators_numbers.html:14
+#, python-format
+msgid "You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add institutions</a> before adding adjudicators."
+msgstr "Перед добавлением судей необходимо <a href=\"%(import_institutions_url)s\" class=\"alert-link\"> добавить клубы</a>."
+
+#: importer/templates/simple_import_adjudicators_numbers.html:23
+msgid "Specify the number of new adjudicators to add per institution. In the next step you can specify their names and ratings."
+msgstr "Укажите количество новых судей, относящихся к каждому клубу. На следующем этапе вы можете указать их имена и рейтинг."
+
+#: importer/templates/simple_import_adjudicators_numbers.html:27
+msgid "You can add up to 198 adjudicators at a time. If you have more than 198 adjudicators, split them into chunks. (Please don't try to add more than 198 in one go; the system will crash and you will lose data.)"
+msgstr "Вы можете добавить до 198 судей за один раз. Если у вас есть более 198 судей, разделите их на очереди. (Пожалуйста, не пытайтесь добавить более 198 за один раз: система сбрасывается и вы потеряете данные.)"
+
+#: importer/templates/simple_import_adjudicators_numbers.html:59
+#: importer/templates/simple_import_teams_numbers.html:60
+msgctxt "button"
+msgid "Next Step"
+msgstr "Следующий шаг"
+
+#: importer/templates/simple_import_index.html:4
+#: importer/templates/simple_import_index.html:5
+msgid "Simple Importer"
+msgstr "Простой импорт"
+
+#: importer/templates/simple_import_index.html:9
+msgid "There are <a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-data.html\" target=\"_blank\">several ways to import data into Tabbycat</a>. Which one is best depends on the size of your tournament and your technical background. This <strong>simple importer</strong> is the easiest to use and works well for small- and medium-sized tournaments."
+msgstr "Есть несколько <a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-data.html\" target=\"_blank\"> способов импорта данных в Tabbycat</a>. Какой из них подойдет больше зависит от размера вашего турнира и ваших технических возможностей. Этот <strong> простой импортер</strong> является самым доступным в использовании и хорошо работает на маленьких и среднего размера турнирах."
+
+#: importer/templates/simple_import_index.html:16
+msgid "Add Institutions"
+msgstr "Добавить клубы"
+
+#: importer/templates/simple_import_index.html:21
+msgid "Add Teams"
+msgstr "Добавить команды"
+
+#: importer/templates/simple_import_index.html:25
+msgid "Add Adjudicators"
+msgstr "Добавить судей"
+
+#: importer/templates/simple_import_index.html:29
+msgid "Add Rooms"
+msgstr "Добавить аудитории"
+
+#: importer/templates/simple_import_index.html:36
+msgid "Add/Edit Room Categories"
+msgstr "Добавить/Изменить категории аудиторий"
+
+#: importer/templates/simple_import_index.html:40
+msgid "Add/Edit Room Constraints"
+msgstr "Добавить/изменить ограничения аудиторий"
+
+#: importer/templates/simple_import_index.html:47
+msgid "Add/Edit Adjudicator-Team Conflicts"
+msgstr "Добавить/изменить конфликты команд и судей"
+
+#: importer/templates/simple_import_index.html:51
+msgid "Add/Edit Adjudicator-Adjudicator Conflicts"
+msgstr "Добавить/изменить конфликты между судьями"
+
+#: importer/templates/simple_import_index.html:55
+msgid "Add/Edit Adjudicator-Institution Conflicts"
+msgstr "Добавить/изменить конфликты между судьями и клубами"
+
+#: importer/templates/simple_import_index.html:59
+msgid "Add/Edit Team-Institution Conflicts"
+msgstr "Добавить/редактировать конфликты между командами и клубами"
+
+#: importer/templates/simple_import_institutions_details.html:4
+#: importer/templates/simple_import_institutions_details.html:6
+#: importer/templates/simple_import_institutions_raw.html:4
+#: importer/templates/simple_import_institutions_raw.html:6
+msgctxt "page title"
+msgid "Add Institutions"
+msgstr "Добавить клубы"
+
+#: importer/templates/simple_import_institutions_details.html:37
+msgid "Save All Institutions"
+msgstr "Сохранить все клубы"
+
+#: importer/templates/simple_import_institutions_raw.html:30
+#: importer/templates/simple_import_venues_raw.html:30
+msgid "There are some problems with the data on this form:"
+msgstr "В форме указаны ошибочные данные:"
+
+#: importer/templates/simple_import_institutions_raw.html:41
+#: importer/templates/simple_import_venues_raw.html:41
+msgid "Next Step"
+msgstr "Следующий шаг"
+
+#: importer/templates/simple_import_teams_details.html:4
+#: importer/templates/simple_import_teams_details.html:6
+#: importer/templates/simple_import_teams_numbers.html:4
+#: importer/templates/simple_import_teams_numbers.html:6
+msgctxt "page title"
+msgid "Add Teams"
+msgstr "Добавить команды"
+
+#: importer/templates/simple_import_teams_details.html:33
+#, python-format
+msgid "Teams for %(institution)s"
+msgstr "Команды клуба %(institution)s"
+
+#: importer/templates/simple_import_teams_details.html:37
+msgid "Unaffiliated Teams"
+msgstr "Неафиллированные команды"
+
+#: importer/templates/simple_import_teams_details.html:51
+msgid "Save All Teams"
+msgstr "Сохранить все команды"
+
+#: importer/templates/simple_import_teams_numbers.html:15
+#, python-format
+msgid "You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add institutions</a> before adding teams."
+msgstr "Перед добавлением команд необходимо <a href=\"%(import_institutions_url)s\" class=\"alert-link\"> добавить клубы</a>."
+
+#: importer/templates/simple_import_teams_numbers.html:24
+msgid "Specify the number of new teams to add per institution. In the next step you can specify team and speaker names."
+msgstr "Укажите количество новых команд, относящихся к каждому клубу. На следующем этапе вы сможете указать название команды и имена спикеров."
+
+#: importer/templates/simple_import_teams_numbers.html:28
+msgid "You can add up to 141 teams at a time. If you have more than 141 teams, split them into chunks. (Please don't try to add more than 141 in one go; the system will crash and you will lose data.)"
+msgstr "Вы можете добавить до 141 команды за один раз. Если у вас есть более 141 команды, разделите их на очереди. (Пожалуйста, не пытайтесь добавить более 141 за один раз: система сбрасывается и вы потеряете данные.)"
+
+#: importer/templates/simple_import_venues_details.html:4
+#: importer/templates/simple_import_venues_details.html:6
+#: importer/templates/simple_import_venues_raw.html:4
+#: importer/templates/simple_import_venues_raw.html:6
+msgctxt "page title"
+msgid "Add Rooms"
+msgstr "Добавить аудитории"
+
+#: importer/templates/simple_import_venues_details.html:16
+msgid "Priorities indicate how much you want to use the room. Larger numbers indicate higher priority. If you have more rooms than debates, the rooms with the lowest priorities will not be used."
+msgstr "Приоритеты указывают на то, насколько вы хотите использовать эту аудиторию. Большие числа указывают более высокий приоритет. Если у вас больше аудиторий, чем дебатов, места с самыми низкими приоритетами не будут использоваться."
+
+#: importer/templates/simple_import_venues_details.html:33
+msgid "Save All Rooms"
+msgstr "Сохранить все аудитории"
+
+#: importer/templates/simple_import_venues_raw.html:15
+msgid "Paste a list of rooms with one room per line and following the format of: <code>name,priority</code>. For example:"
+msgstr "Вставьте список аудиторий с одной аудиторией на строку и следуйте формату: <code>имя,приоритет</code>. Например:"
+
+#: importer/views.py:102
+#, python-format
+msgid "Added %(count)d institution."
+msgid_plural "Added %(count)d institutions."
+msgstr[0] "Количество добавленных клубов: %(count)d."
+msgstr[1] "Количество добавленных клубов: %(count)d."
+msgstr[2] "Количество добавленных клубов: %(count)d."
+msgstr[3] "Количество добавленных клубов: %(count)d."
+
+#: importer/views.py:123
+#, python-format
+msgid "Added %(count)d room."
+msgid_plural "Added %(count)d rooms."
+msgstr[0] "Добавлена %(count)d аудитория."
+msgstr[1] "Добавлены %(count)d аудитории."
+msgstr[2] "Добавлены %(count)d аудитории."
+msgstr[3] "Добавлены %(count)d аудитории."
+
+#: importer/views.py:182
+#, python-format
+msgid "Added %(count)d team."
+msgid_plural "Added %(count)d teams."
+msgstr[0] "Добавлена %(count)d команда."
+msgstr[1] "Добавлены %(count)d команды."
+msgstr[2] "Добавлены %(count)d команды."
+msgstr[3] "Добавлены %(count)d команды."
+
+#: importer/views.py:203
+#, python-format
+msgid "Adjudicator %(number)d"
+msgstr "Судья %(number)d"
+
+#: importer/views.py:208
+#, python-format
+msgid "Added %(count)d adjudicator."
+msgid_plural "Added %(count)d adjudicators."
+msgstr[0] "Добавлен %(count)d судья."
+msgstr[1] "Добавлены %(count)d судьи."
+msgstr[2] "Добавлены %(count)d судьи."
+msgstr[3] "Добавлены %(count)d судьи."
+
+#: importer/views.py:224
+msgid "<p>There were one or more errors creating the demo tournament. Before retrying, please delete the existing demo tournament <strong>and</strong> the institutions in the Edit Database Area.</p><p><i>Technical information: The errors are as follows:</i></p>"
+msgstr ""
+
+#: importer/views.py:232
+msgid "Created new demo tournament. You can now configure it below."
+msgstr ""
+

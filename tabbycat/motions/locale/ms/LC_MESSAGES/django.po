@@ -1,0 +1,334 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"PO-Revision-Date: 2020-06-02 08:41\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Malay\n"
+"Language: ms_MY\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ms\n"
+"X-Crowdin-File: /develop/tabbycat/motions/locale/en/LC_MESSAGES/django.po\n"
+
+#: motions/apps.py:7 motions/templates/public_motions.html:4
+#: motions/templates/public_motions.html:5
+msgid "Motions"
+msgstr "Usul"
+
+#: motions/models.py:9
+msgid "sequence number"
+msgstr ""
+
+#: motions/models.py:10
+msgid "The order in which motions are displayed"
+msgstr "Urutan usul yang akan terpapar"
+
+#: motions/models.py:12
+msgid "text"
+msgstr "teks"
+
+#: motions/models.py:13
+msgid "The full motion e.g., \"This House would straighten all bananas\""
+msgstr "Usul Penuh. Cth., \"Dewan ini percaya tomato bukan buah\""
+
+#: motions/models.py:15
+msgid "reference"
+msgstr "rujukan"
+
+#: motions/models.py:16
+msgid "Shortcode for the motion, e.g., \"Bananas\""
+msgstr "Nama pendek untuk usul, cth., \"Tomato\""
+
+#: motions/models.py:18
+msgid "info slide"
+msgstr "maklumat tambahan"
+
+#: motions/models.py:19
+msgid "The information slide for this topic; if it has one"
+msgstr "Maklumat tambahan untuk usul ini, jika ada"
+
+#: motions/models.py:21
+msgid "round"
+msgstr "pusingan"
+
+#: motions/models.py:25 motions/models.py:37
+msgid "motion"
+msgstr "usul"
+
+#: motions/models.py:26
+msgid "motions"
+msgstr "usul"
+
+#: motions/models.py:35
+msgid "debate team"
+msgstr "pasukan"
+
+#: motions/models.py:39
+msgid "preferences"
+msgstr "pilihan"
+
+#: motions/models.py:41
+msgid "ballot submission"
+msgstr "penyerahan keputusan"
+
+#: motions/models.py:45
+msgid "debate team motion preference"
+msgstr ""
+
+#: motions/models.py:46
+msgid "debate team motion preferences"
+msgstr ""
+
+#: motions/statistics.py:88
+msgid "extremely strong evidence"
+msgstr ""
+
+#: motions/statistics.py:89
+msgid "strong evidence"
+msgstr ""
+
+#: motions/statistics.py:90
+msgid "moderate evidence"
+msgstr ""
+
+#: motions/statistics.py:91
+msgid "weak evidence"
+msgstr ""
+
+#: motions/statistics.py:92
+msgid "very weak evidence"
+msgstr ""
+
+#: motions/statistics.py:93
+msgid "extremely weak evidence"
+msgstr ""
+
+#: motions/statistics.py:116
+msgid "balance inconclusive"
+msgstr ""
+
+#: motions/statistics.py:117
+msgid "too few debates to get a meaningful statistic"
+msgstr ""
+
+#: motions/statistics.py:125
+#, python-format
+msgid "imbalanced at %(level)s level"
+msgstr ""
+
+#: motions/statistics.py:126
+#, python-format
+msgid "χ² statistic is %(chisq).3f, providing %(evidence)s to suggest that this motion was imbalanced — at a %(level)s level of significance."
+msgstr ""
+
+#: motions/statistics.py:131
+msgid "probably balanced"
+msgstr ""
+
+#: motions/statistics.py:132
+#, python-format
+msgid "χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that this motion was imbalanced at any level of significance."
+msgstr ""
+
+#: motions/templates/motion_statistics.html:4
+#: motions/templates/motion_statistics.html:5 motions/views.py:165
+msgid "Motion Statistics"
+msgstr ""
+
+#: motions/templates/motion_statistics.html:12
+msgid "The results data displayed here is presented without tests for statistical significance. Correlations should not be automatically considered reliable; particularly at small tournaments and during elimination rounds."
+msgstr ""
+
+#: motions/templates/motion_statistics.html:39
+#: motions/templates/public_motions.html:31
+msgid "View Info Slide"
+msgstr ""
+
+#: motions/templates/motion_statistics_bp_elim.html:10
+#, python-format
+msgid "results from %(ndebates)s debate"
+msgid_plural "results from %(ndebates)s debates"
+msgstr[0] ""
+
+#: motions/templates/motion_statistics_bp_elim.html:26
+#, python-format
+msgid "%(advancing)s of %(ndebates)s team on %(side)s (%(percentage)s%%) advanced"
+msgid_plural "%(advancing)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) advanced"
+msgstr[0] ""
+
+#: motions/templates/motion_statistics_bp_elim.html:31
+#, python-format
+msgid "%(eliminated)s of %(ndebates)s team on %(side)s (%(percentage)s%%) were eliminated"
+msgid_plural "%(eliminated)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) were eliminated"
+msgstr[0] ""
+
+#: motions/templates/motion_statistics_bp_elim.html:41
+msgid "advanced"
+msgstr ""
+
+#: motions/templates/motion_statistics_bp_elim.html:43
+msgctxt "abbreviation for 'advanced', used when not enough space"
+msgid "adv."
+msgstr ""
+
+#: motions/templates/motion_statistics_bp_elim.html:50
+msgid "eliminated"
+msgstr "disingkir"
+
+#: motions/templates/motion_statistics_bp_elim.html:52
+msgctxt "abbreviation for 'eliminated', used when not enough space"
+msgid "elim."
+msgstr "disingkir"
+
+#: motions/templates/motion_statistics_bp_elim.html:58
+#, python-format
+msgid "%(side)s results distribution"
+msgstr ""
+
+#: motions/templates/motion_statistics_bp_elim.html:72
+#: motions/templates/motion_statistics_bp_prelim.html:115
+msgid "No results for this motion"
+msgstr ""
+
+#: motions/templates/motion_statistics_bp_prelim.html:13
+msgid "Government"
+msgstr "Kerajaan"
+
+#: motions/templates/motion_statistics_bp_prelim.html:17
+msgid "Opposition"
+msgstr "Pembangkang"
+
+#: motions/templates/motion_statistics_bp_prelim.html:21
+msgid "Average Points per bench"
+msgstr "Markah Purata setiap pihak"
+
+#: motions/templates/motion_statistics_bp_prelim.html:29
+msgid "Opening"
+msgstr "Pembuka"
+
+#: motions/templates/motion_statistics_bp_prelim.html:33
+msgid "Closing"
+msgstr "Penutup"
+
+#: motions/templates/motion_statistics_bp_prelim.html:37
+msgid "Average Points per half"
+msgstr "Markah Purata setiap belah"
+
+#: motions/templates/motion_statistics_bp_prelim.html:60
+#, python-format
+msgid "average points per position (%(ndebates)s debate)"
+msgid_plural "average points per position (%(ndebates)s debates)"
+msgstr[0] "markah purata untuk setiap kedudukan (%(ndebates)s perdebatan)"
+
+#: motions/templates/motion_statistics_bp_prelim.html:78
+#, python-format
+msgid "%(count)s result for %(side)s (%(percentage)s%%) were for %(points)s points"
+msgid_plural "%(count)s results for %(side)s (%(percentage)s%%) were for %(points)s points"
+msgstr[0] ""
+
+#: motions/templates/motion_statistics_bp_prelim.html:101
+#, python-format
+msgid "%(side)s results"
+msgstr ""
+
+#: motions/templates/motion_statistics_twoteam.html:31
+#: motions/templates/motion_statistics_twoteam.html:38
+#, python-format
+msgid "%(count)s %(side)s win"
+msgid_plural "%(count)s %(side)s wins"
+msgstr[0] ""
+
+#: motions/templates/motion_statistics_twoteam.html:53
+msgid "No teams debated this motion"
+msgstr "Tiada pasukan berdebat usul ini"
+
+#: motions/templates/motion_statistics_twoteam.html:91
+#: motions/templates/motion_statistics_twoteam.html:98
+#, python-format
+msgid "%(count)s %(side)s veto"
+msgid_plural "%(count)s %(side)s vetoes"
+msgstr[0] ""
+
+#: motions/templates/motion_statistics_twoteam.html:113
+msgid "No teams vetoed this motion"
+msgstr "Tiada pasukan tolak usul ini"
+
+#: motions/templates/motions_edit.html:4 motions/templates/motions_edit.html:10
+msgid "Edit Motion"
+msgid_plural "Edit Motions"
+msgstr[0] "Ubah suai Usul"
+
+#: motions/templates/motions_edit.html:18
+msgid "Display Draw"
+msgstr "Tunjuk usul"
+
+#: motions/templates/motions_edit.html:55
+msgid "Save Motion"
+msgid_plural "Save Motions"
+msgstr[0] "Simpan usul"
+
+#: motions/templates/motions_info.html:8
+msgid "Info Slide"
+msgstr "Maklumat tambahan"
+
+#: motions/templates/public_motions.html:39
+msgid "There are no motions available for this round."
+msgstr "Tiada usul wujud untuk pusingan ini."
+
+#: motions/templates/public_motions.html:45
+msgid "The motions for this round have not been released."
+msgstr "Usul untuk pusingan ini belum lagi disiarkan."
+
+#: motions/templates/public_motions.html:50
+msgid "The motion for this round has not been released."
+msgstr "Usul untuk pusingan ini belum lagi disiarkan."
+
+#: motions/templates/show.html:16
+#, python-format
+msgid "Reveal Info Slide for %(round)s"
+msgid_plural "Reveal Info Slides for %(round)s"
+msgstr[0] "Tunjukkan Maklumat Tambahan untuk %(round)s"
+
+#: motions/templates/show.html:24
+#, python-format
+msgid "Reveal Motion for %(round)s"
+msgid_plural "Reveal Motions for %(round)s"
+msgstr[0] "Tunjukkan usul untuk %(round)s"
+
+#: motions/templates/show.html:41
+msgid "There are no motions for this round entered into Tabbycat."
+msgstr "Tiada usul dimasukkan dalam Tabbycat untuk pusingan ini."
+
+#: motions/views.py:87
+msgid "The motion has been saved."
+msgstr "Usul telah disimpan."
+
+#: motions/views.py:89
+#, python-format
+msgid "%(count)d motion has been saved."
+msgid_plural "%(count)d motions have been saved."
+msgstr[0] "%(count)d usul telah disimpan."
+
+#: motions/views.py:94
+#, python-format
+msgid "%(count)d motion has been deleted."
+msgid_plural "%(count)d motions have been deleted."
+msgstr[0] "%(count)d usul telah dibuang."
+
+#: motions/views.py:118
+msgid "Released the motion(s)."
+msgstr "Usul disiarkan."
+
+#: motions/views.py:125
+msgid "Unreleased the motion(s)."
+msgstr "Siaran usul ditarik balik."
+
+#: motions/views.py:149
+msgid "Round Motions"
+msgstr "Usul Pusingan"
+

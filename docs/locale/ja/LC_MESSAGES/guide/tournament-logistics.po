@@ -1,0 +1,1392 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-01-02 01:52\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Japanese\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ja\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/guide/tournament-logistics.po\n"
+"Language: ja_JP\n"
+
+#: ../../guide/tournament-logistics.rst:5
+msgid "Tournament Logistics"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:7
+msgid "Unlike the rest of our documentation, this section does not deal with particular features or technical concerns with Tabbycat itself. Instead it is an attempt to outline the logistics of tab direction and aims to be of general relevance for people running major tournaments. At present, it is organised by the various ‘stages' of tabbing a tournament, and most of the content takes the form of check-lists or comments designed to highlight and provide guidance on common issues."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:9
+msgid "Whilst it aims for general relevance, we should note that this guide is relatively opinionated and mostly written from the perspective of people whose primary experience is tabbing at Australasian tournaments using Tabbycat. That said, we welcome feedback and additions that can account for different format and regional considerations. In the future, if the guide becomes more general and more extensive, it could be spun off into a separate project."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:11
+msgid "As with the rest of our documentation, this page is source-available and we welcome :ref:`feedback and contributions <contributing>`. Note also that we've formatted this guide a single page to reduce clutter, but the sub-sections in the sidebar can be used to help navigate across sections."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:14
+msgid "Planning and Preparation"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:16
+msgid "This section aims to outline concerns that occur in the months before the tournament: after you have agreed to help with tabbing and while the organising committee and adjudication core are deciding how they want to run key processes such as registration and feedback. It is organised in terms of who you should coordinate with in order to plan for a well-tabbed tournament."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:19
+msgid "General Notes"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:21
+msgid "You should avoid being the sole person responsible for that tab unless it is a small tournament. There are many cases where you want to be in several places at once and the easiest way to accommodate that is by having co-directors or trusted assistants. Few tab decisions require a single source of authority; it is far better to have multiple people available to share responsibilities around."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:23
+msgid "In a similar manner, it is worth considering how you can use the tournament to help train other people. Typically, knowledge of tabbing is concentrated in relatively few people and gained mostly through on-the-ground experience; meaning that every tournament should be approached as rare opportunity to help spread knowledge about tabbing more widely in a circuit. Consider reaching out to institutions or the tournament as a whole to see if they have anyone who would be interested in helping out."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:26
+msgid "Convenors"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:28
+msgid "It might sound obvious but it will pay to have a very thorough conversation about the tab process (more or less the contents of this document) with the convenors a few months out from the tournament. Do this even if you know the convenors to be knowledgeable or experienced debaters. Key concerns are:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:32
+msgid "Whether internet access will be available and whether participants can be presumed to have smart phones. This has an obvious impact on how online feedback, ballots, and draw release is done. Note that Eduroam is not necessarily a reliable guarantee of access; many participants will come from universities who don't have access to it or will need to follow a setup process that is onerous or requires them to be at their home institution."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:33
+msgid "What kind of room is the tab room going to be? Is it possible to optimize its placement when the bookings for rooms are made? Key details include: How large is it? Does it have a sufficient amount of desk space (for data entry)? Does it have a good projector (for allocations)?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:34
+msgid "If they have the resources, having an adjacent room available for just the adjudication core to use can also be useful. While you want to work closely with the adjudication core, they may want to discuss sensitive information (motions, equity) in a space without volunteers present; or they might at times get in the way of things, such as by eating lunch in the middle of a frenetic ballot entry process."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:35
+msgid "Ensure that plans are made for food to be brought to tab room. Otherwise you will starve and the adjudication core will swan off to lunch. Having regular access to caffeine can also be similarly essential to some adjudication and tab teams."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:36
+msgid "What kind of printers will be available? Can the tournament buy/borrow one? This is obviously a key consideration for pre-printed ballots. Also try and ensure there are back-up printing options if possible. Clearly stipulate your need for ink and paper; and try and opt for a black/white laserjet, over an inkjet, if possible."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:37
+msgid "What kind of volunteers will be available? How many, and what is their experience level? As a very broad recommendation, you probably want around 1 volunteer for every 10 rooms, assuming volunteers are performing a dual role as data-enterers and ballot-collectors."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:38
+msgid "Will the tournament make a donation to whoever maintains the tabbing software you are using? Depending on the license of your tabbing software and the nature of your tournament (for profit vs not for profit) this may be required. Also, if your tab is self-hosted or independently hosted (such as how Tabbycat is generally deployed on Heroku) accounting officers should also be aware that there will be some costs associated with hosting the tab."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:39
+msgid "You should also ensure that people helping with the tab are fairly compensated for their flights, registration, etc and that any volunteers are invited along to socials and/or given some other recompense."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:40
+msgid "Will Swing teams be available? You should plan to have at least one more than you need. For example, with 39 teams, you should have both an 40th swing team to fill in the draw, and the option to easily assemble an 41st swing team in case a team goes missing. At very large tournaments (say over 150 teams) you should plan for even more swing team capacity — it's not unheard of for say three teams to vanish all in a single round. In these cases, you should try and ensure that the swing teams are always ready to go — i.e. that that they are pre-formed, you have a clear communication channel with them, and that they distributed/waiting near the debating rooms so they can fill in at a moment's notice (often you will only find out that teams are missing right as debates are scheduled to start)."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:41
+msgid "How will critical information be communicated to participants? Consider that in general, Facebook announcements do not reach many people, although paying to boost the posts is often a very cheap way of dramatically raising their effectiveness. In particular also ensure or check how you manage to get in touch with teams or adjudicators who go missing: will they have reliable phone numbers? Can you get a list of institutional reps who can be reliably called? You want to have processes in place for chasing up adjudicators who do things such as make scoring mistakes as soon as possible in order to minimise delays."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:42
+msgid "How will critical information be shared between the tab team, adjudication core, and logistics/convening teams? For smaller/medium sized tournaments a group chat augmented by phone calls (assuming everyone knows everyone else's number) can be sufficient, but even then, you need to ensure that any critical information conveyed privately (i.e. in a call or in person) is conveyed back to the group channel. At very large tournaments (or if you have the resources) walkie-talkies are an excellent way to manage communication — just make sure you have (ahead of time) reserve the different channels to a distinct and known purpose (i.e. general discussion; just the tab team & adjudication core; just convenors)."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:43
+msgid "As part of this it is ideal if the organising committees can procure local SIM cards for members of the tab team and adjudication core who are not local. These should be relatively generous in their plans — you don't want to worry about running out of minutes or data if on a critical call or using a hotspot to make critical allocation adjustments."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:44
+msgid "At major tournaments you want to arrive at least a day before check-in; and ideally whenever it is that the adjudication core is arriving for their own preparation."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:47
+msgid "Registration"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:49
+msgid "Having effective registration systems and processes is one of the most important aspects of preparing to tab a large tournament. Bad registration data *will* make setting up a tab extremely painful and introduces the chance for mistakes or inconsistencies in tab data that will only come to light in the first round. As such:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:53
+msgid "You should check in with the registration team and see what they plan to do as soon as possible after being brought on-board. As part of this you should make it clear that you should be consulted on any decisions they make about what data to collect, when to collect it, and how to collect it."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:54
+msgid "Registration data should be collected into a shared and live-updating source, such as a Google Sheet. There should be as few canonical sources (ideally one) of data as possible; i.e. there should be a single sheet for individual details, a single sheet for team details, etc; and these should be maintained all the way through to check-in. For both you, and the registration team, having multiple conflicting or outdated copies of data will lead to errors. However, for the registration team these errors can usually be easily sorted out in person (at check-in) but for you that information always needs to be reliable and up to date otherwise what is imported into the tab cannot be trusted."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:56
+msgid "At this point our recommendation is to, in most cases, not use specialised registration systems as they are somewhat less intuitive and less flexible than setting up good Google Forms/Sheets."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:58
+msgid "If, for whatever reason, the registration team are not able to give you 'live' access to the data they have on hand, make sure they send you copies of it (even if it is incomplete) well before you need it to setup the tab itself. You want to be able to verify what data is actually being collected and how it is formatted well in advance."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:60
+msgid "You should have access to *all* of the data collected; often registration teams will make (false) assumptions about what you do or do not need. It is better to have everything and then selectively filter out what is not relevant to the tab."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:61
+msgid "It is critical that the registration team should check in with you before setting up forms asking for information. Every additional time that registration asks for data there will be less and less participation in the process, so you should aim to gather all that you need at the first opportunity; typically during the canonical individual registration phase. Particular information that should not be overlooked for tab purposes:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:63
+msgid "Individual registration should ask whether a participant is a speaker or an adjudicator."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:64
+msgid "If that person is a speaker it should ask for their team name/number (reconciling these later is painful)."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:65
+msgid "Individual registration should ask for any accessibility requirements of both adjudicators and speakers."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:66
+msgid "Individual registration should ask for the previous institutions of both adjudicators and speakers."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:67
+msgid "Individual registration should ask for the email addresses of all participants."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:68
+msgid "Individual registration should ask for the phone numbers of adjudicators."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:69
+msgid "Individual registration should ask for the gender identity of both adjudicators and speakers. Even if you are not *planning* on using this to inform processes, such as adjudicator allocations, you want it on hand in case plans change."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:71
+msgid "Independent adjudicators and the adjudication core should follow normal registration procedures. Having them not go through the normal process makes it easy to overlook their data or not get a complete picture of it. For example, adjudication core members might forget to nominate conflicts, or neglect to provide their previous institutions."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:72
+msgid "You should confirm how the registration team plans to manage how people check-in to the accommodation in particular. Check-in is when issues with registration data come to light and it is vital that these changes are noted and recorded. Some form of validation of registration data *must* occur at check-in — in particular all adjudicators should be (individually) verified as present and all members of a team should confirm their presence along with their team's name/number and speakers."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:73
+msgid "After check-in you need to have a definitive list of who is physically present at the tournament so you can run a first-round draw with confidence. Registration must know this and have processes in place for recording people individually as they arrive, and for that data to filter back to you."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:75
+msgid "If you are using Tabbycat's secret links for feedback or ballots these are best distributed at check-in. The registration team should know about this, prepare for it, and be provided with the pdfs to print and distribute."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:78
+msgid "Adjudication cores"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:80
+msgid "If there is a group chat for the adjudication core you probably want to be part of it; even if you don't contribute much. There are lots of small things that end up being discussed without consideration of how they will affect tab issues and it is also a chance to get to know — ahead of time — the people you will be working with closely over the tournament."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:82
+msgid "Members of the adjudication core will often leave tab-relevant decisions until the days prior to the first round or whenever it is that they can first meet with the tab team in person. This often wastes critical time and forces rushed decisions. Many considerations can instead be raised and discussed prior to the tournament. These could include:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:86
+msgid "How to manage the feedback process. This typically benefits from foresight and pre-planning, rather than being decided on the ground. Key considerations are:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:90
+msgid "Who submits feedback on whom? Do trainees do so on their chairs? Do panellists do so on each other? (Presuming your tab software supports these options)."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:91
+msgid "Is feedback mandatory? If so, how will this be enforced exactly?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:92
+msgid "How much weight does each adjudicator's test or CV score have over the course of the tournament? By Round 3, or by Round 8, what proportion of an adjudicator's score is derived from their test and what proportion is derived from their feedback?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:93
+msgid "Will the adjudication core tweak an adjudicator's score to 'artificially' increase or decrease it to where they think it should be. For example, this could be done by adjusting a test/CV score upwards in order to compensate for bad feedback that (for whatever reason) they did not think was reliable or fair? Depending on your adjudication core's preferences and your tab software's allowances it is not unheard of for them to maintain full manual control over scores by reading/processing feedback results but only ever manually adjusting scores as a result (rather than having it automatically adjust due to the ratings in the feedback)."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:94
+msgid "What is the score scale going to be? What do each of those numbers represent? How will this be communicated to participants so they can score accurately and consistently?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:95
+msgid "What kind of questions will feedback forms ask? If using :ref:`customisable printed or online forms <adjudicator-feedback>` consider how these questions be used tactically to identify key issues (say discriminatory scoring) or more easily identify people who should be promoted/demoted. While managing feedback is often a messy and subjective task, it can often be improved by being more targeted in what data it collects."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:96
+msgid "How will feedback be monitored, and how will this information feed back into the scores and allocations? At large tournaments it is not unusual for an adjudication core member to sit off each round to review and process feedback — there isn't really a good stretch of available time to do so otherwise. However even if doing this note that there are communication issues to manage here, as each adjudication core member will each end up with a relatively incomplete overview of the total volume of feedback."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:98
+msgid "If possible it's nice to plan in advance for when the tab will be released (i.e. on the last night; the day after; etc.) as this often gets left to the last minute to be decided. Also the possibility of whether people can redact themselves from tabs should be raised, as that might be useful to inform participants of during online registration or tournament briefings. In a similar fashion, some adjudication cores might also want to limit speaker tabs to only a certain number of places, particularly at novice-centric tournaments."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:99
+msgid "How to handle conflict collection; see the following section."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:100
+msgid "How to handle the submission of scoresheets and feedback, primarily in terms of which parts of the process should be done online and offline. Some adjudication cores will have strong thoughts here; others will happily follow whatever you recommend. Key considerations:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:104
+msgid "Paper-based feedback is much more taxing to enter than paper-based scoresheets —  typically there is much more of it; it asks for a greater variety of data; and it is submitted at inconsistent times. The one advantage is that it is easier to make feedback mandatory with paper, as you can ensure all teams and adjudicators have done so prior to leaving the room. Thus, in most cases, a good online feedback system is much more preferable than paper. If using paper be aware that you will need a lot of volunteers to ensure the feedback is collected promptly. If internet or smartphone access is limited at your tournament it is probably best to accommodate both paper-based and online methods."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:105
+msgid "The consequences of having incorrect or missing ballots are much more severe than for feedback. As such major tournaments use paper ballots in some form as the final stage in a checking process to ensure that the results of a debate are definitely correct — adjudicators will always make mistakes and while digital ballots can catch/prevent some types of error (i.e. a low point win) they can't catch others (assigning the wrong scores to the wrong speaker, nominating the wrong winning team, etc.). Assuming your software supports both options, the choice is thus whether to use a hybrid approach (online submission followed by paper verification) or to rely entirely on paper. A fully-paper based approach will be simpler for both yourself and adjudicators, and can be almost as efficient if you have a sufficient number of volunteers. In contrast, a hybrid approach will be potentially much faster if you are short of volunteers and if you expect that almost all adjudicators will have access to the internet, a smartphone, and are capable of following instructions."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:107
+msgid "In some circuits, and when using some particular tab software, tournaments might run a 'dual tab' where there is a second, independent, version of the tab software and database into which all data is *also* entered. From what we understand this performs a dual role, as both a backup system that can take over from the main one (say if internet access drops) and as a way of verifying ballot data (by comparing draws or databases between software rather than having a two-step entry process operating for a single tab). This practice seems obsolete when working with modern web-based tab software that is capable of backing up and restoring to an offline system, but we would like to hear your feedback if you think that is not the case."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:110
+msgid "Conflicts/Clashes (registration/equity/adjudication core)"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:114
+msgid "There should always be a *single* means of collecting conflicts (i.e. a single Google Sheet/Form) and all conflicts should go through it. Because the nature of this data is sensitive and evolving, there must be a single location where it can be easily captured and verified as having been entered into the tab. Conflicts data should never be spread across a loose collection of emails/personal messages/spreadsheets; otherwise keeping track and knowing which ones have been entered into the system will be painful and error prone. Get in touch in with equity and registration in advance and make it clear that they should not make their own conflicts form; or if they've already made one, make sure you adopt it and have access/control of it."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:115
+msgid "Conflicts should, ideally, *only be collected after a participants list has been published* and requests for people to nominate conflicts should also be sent out as few times as possible. Most people will only fill this form in once, so it is vital that when asked to nominate conflicts they have as much information as they need to do so comprehensively. Without a public and reasonably-complete participants list people will either nominate conflicts that are not present (wasting your time in cross-referencing data) or not realise someone is present and raise the conflict at a latter, less opportune time."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:116
+msgid "In some circuits only adjudicators are allowed to nominate conflicts because of the risk of teams using conflicts 'tactically' to block adjudicators that they think are terrible judges. However, having teams nominate conflicts can be useful: adjudicators may overlook a conflict or there may be equity-based reasons that a conflict is non-symmetrical. This trade-off can be handled in two ways:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:120
+msgid "Not allow teams to nominate conflicts during registration; but allow them to approach equity teams before, or during, the tournament to identify the conflict. Equity can then raise the issue with the tab team and adjudication core and it can be added to the tab."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:121
+msgid "Allow teams to nominate conflicts during registration; but have the adjudication core review the data for 'tactical' conflicts. These are usually relatively easily identified, although can be overlooked if the adjudication core does not know the participants or their region/circuit well. The adjudication core can then override the conflict, discuss it with the teams, or raise it with equity. However, if going down this route, the tab team should discuss with the adjudication core how to manage this process well-ahead of the tournament, and ensure they actually do review the conflicts prior to the first round — otherwise it will likely surface during an allocation and become a major distraction during a critical time period."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:123
+msgid "As mentioned in the previous section, the adjudication core (possibly with equity) should provide some degree of guidance about what kinds of debating-related conflicts should be provided. People should be able to self-define what constitutes a conflict, but there are circumstances where they are overly cautious and can be reassured that it is not necessary. The opposite problem may occur also, where many people may have a very high bar for what defines a conflict which could lead to perceptions of bias from other participants."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:124
+msgid "Generally, it is preferable that each form nominates a single conflict, and people are asked to re-submit for each conflict they are adding."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:126
+msgid "To save you some hassle the conflict form should make this very clear (i.e. that one conflict = one submission; ensure the field labels reinforce this)"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:127
+msgid "The conflict form should also make clear that you shouldn't use the form if you don't have any conflicts (i.e. people will submit 'None', 'None' etc)"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:128
+msgid "The conflicts form should also make clear that adjudicator's don't need to submit a conflict for their current institution and that team's don't need to submit conflicts for adjudicators from their current institution."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:130
+msgid "In poorly-structured conflict forms, identifying exactly who is doing the conflicting and who is being conflicted is a nightmare. You want to structure the questions to minimise this ambiguity. A form should definitely ask:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:132
+msgid "Who are you (the conflict-specifier)?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:133
+msgid "Are you a team or an adjudicator?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:134
+msgid "Which institution are you from?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:135
+msgid "If part of a team, which team are you in?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:136
+msgid "Who are you conflicting?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:137
+msgid "Are they a team or an adjudicator?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:138
+msgid "Which institution are they from?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:139
+msgid "If they are in a team, which team is it?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:140
+msgid "Have previously attended any other institutions; or have other reasons to conflict entire institutions? If so, specify those institutions."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:142
+msgid "Note that this last question can be tricky to deal with; good tab software will let you conflict an adjudicator from an institution other than their own, but it is harder to mark an individual team as having members previously attending another institution. These circumstances are rare and typically very 'soft' conflicts but are probably best handled by creating individual conflicts between that team and adjudicators from the previous institution in question."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:143
+msgid "Adjudication core members will often not nominate their own conflicts; presuming that they will notice and correct them during allocations. They often forget or overlook this. Their conflicts should be entered as per normal."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:146
+msgid "Scheduling (convenors / venue organisers)"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:148
+msgid "One of the easiest ways to have things run late is to set an unrealistic schedule. As much as possible the timing allocated to rounds (inclusive of events such as lunch or committee forums) should conform to an even distribution of how long it takes to process results and create a draw/allocation — you don't want to be in a position where particular rounds have too much time and others too little time to spend on allocations and other crucial tasks. This is something that should definitely be working on in conjunction with convenors and other critical parties before they lock down timing details with food suppliers or the operators of the debating venues."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:150
+msgid "Note also that in most circumstances it is preferable to create a draw and allocation for the first day of the next round at the night before. This time should be built in to the schedule of the previous day, and raised with the adjudication core so they don't expect to be able to immediately depart after the day's rounds are done."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:152
+msgid "Below is the time taken within each round at Australs 2017. For context, this was neither a particular efficiently or inefficiently tabbed tournament. Notable details:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:156
+msgid "The tournament was ~40 rooms each round and had access to 3-6 runners and data enterers. Paper ballots were pre-printed and distributed by runners to rooms prior to the debates starting, then collected sometime after the 15 minute deliberation period. Feedback was submitted online. At Australs all adjudicators (excluding trainees) submit their own ballots."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:157
+msgid "The adjudication core were neither particular slow nor fast in allocating adjudicators compared to other adjudication cores. At Australs most adjudication cores will create allocations by using first running an automatic allocation then extensively tweak the results."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:158
+msgid "There were no serious issues that delayed the tabbing of any particular round beyond the routine and expected issues of last-minute draw changes, adjudicators producing incomprehensible ballots, etc."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:159
+msgid "Whilst the tab ran relatively quickly, there were minor delays because of mismatches between the planned schedule and the optimal schedule from a tab perspective."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:160
+msgid "A round at Australs takes around 2 hours from a debater's perspective: 30m of prep, ~60m for a debate, ~15m for deliberation, and ~15m for the oral adjudication and feedback."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:161
+msgid "We didn't note the timing of data-entry in Round 8 as there was no time pressure. After data entry was finished, finalising and double-checking the breaks took through to ~7-8pm."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:164
+msgid "Day"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:164
+msgid "One"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:164
+msgid "Two"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:164
+msgid "Three"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:166
+msgid "Round"
+msgstr "ラウンド"
+
+#: ../../guide/tournament-logistics.rst:166
+msgid "1"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:166
+msgid "2"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:166
+msgid "3"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:166
+msgid "4"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:166
+msgid "5"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:166
+msgid "6"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:166
+msgid "7"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:166
+msgid "8"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:168
+msgid "Draw generated"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:168
+#: ../../guide/tournament-logistics.rst:169
+msgid "*Night prior**"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:168
+msgid "12:43"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:168
+msgid "16:12"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:168
+msgid "19:17*"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:168
+msgid "12:05"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:168
+msgid "15:46"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:168
+msgid "19:10*"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:168
+msgid "12:07"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:169
+msgid "Allocation finished"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:169
+msgid "13:17 ``+34m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:169
+msgid "16:36 ``+24m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:169
+msgid "20:28* ``+71m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:169
+msgid "12:58 ``+53m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:169
+msgid "16:24 ``+38m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:169
+msgid "21:30* ``+140m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:169
+msgid "13:25 ``+78m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:170
+msgid "Motions released"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:170
+msgid "09:28"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:170
+msgid "13:50 ``+33m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:170
+msgid "16:47 ``+11m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:170
+msgid "09:22"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:170
+msgid "13:14 ``+16m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:170
+msgid "16:40 ``+16m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:170
+msgid "9:30"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:170
+msgid "14:18 ``+53m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:171
+msgid "First ballot received"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:171
+msgid "11:51 ``+143m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:171
+msgid "15:46 ``+116m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:171
+msgid "18:52 ``+125m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:171
+msgid "11:18 ``+116m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:171
+msgid "15:13 ``+119m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:171
+msgid "18:40 ``+120m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:171
+msgid "11:35 ``+125m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:171
+#: ../../guide/tournament-logistics.rst:172
+msgid "?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:172
+msgid "Last ballot confirmed"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:172
+msgid "12:38 ``+47m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:172
+msgid "16:07 ``+21m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:172
+msgid "19:15 ``+23m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:172
+msgid "12:05 ``+47m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:172
+msgid "15:44 ``+31m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:172
+msgid "19:09 ``+29m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:172
+msgid "12:06 ``+31m``"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:176
+msgid "Tab Setup"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:178
+msgid "Setting up a tab site is the most technically challenging (or at least annoying) part of tabbing. It is where you need to reconcile large amounts of data and configure a variety of settings to ensure everything will run without issues during rounds. While this is often done a day or two before the tournament, ideally you should look to do as much as possible in the week or two beforehand where there is much less time pressure."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:181
+msgid "Importing data: workflow"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:185
+msgid "First check with registration people if their data is complete, and if not who is missing. If it's only a few people it's viable (for tab purposes) to use place-holders for them, as long as you remember to follow up and edit their data manually later."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:186
+msgid "Familiarise yourself with the different methods for importing data into your tabbing program. Typically, these include options for bulk-importing spreadsheets, for adding information piece-by-piece through a graphical interface, or a hybrid systems. Depending on your tabbing software it may be easiest to first setup your tournament on a local copy of the tab (where it will be faster to rectify mistakes) and transfer the data to the live site when everything is mostly complete."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:188
+msgid "If you are using Tabbycat our spreadsheet importer is definitely easiest to use on a local copy; however using the visual importer is perfectly viable for larger tournaments if you are not comfortable with the command line. When using the spreadsheet importer note that it will likely take several iterations to get the data to import cleanly as there will typically be small mismatches in speaker/institution names and the like."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:190
+msgid "If the tournament (or the host society) has their own domain name and your tab software is self-hosted consider whether you want to setup the tab site on their domain so that the URL is nicer and/or easier to type."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:192
+msgid "If you are using Tabbycat, and deploying to Heroku, be sure to read our documentation about the size of Postgres database your tournament will require. Setting up the correct size of database from the start is the best way to go, as transferring information at a later stage is a hassle and could delay the tab at inopportune times."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:195
+msgid "Importing data: regions/societies"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:199
+msgid "Societies will often have special names that they like to use in draws (that are not the same as their institution's name or acronym). These can be gathered from institutional reps or from prior tabs. When in doubt err on the colloquial / most recognisable name; particularly for formats where teams need to find each other prior to the debate."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:200
+msgid "If your tabbing software has methods for assigning region information to teams and adjudicators (for diversity purposes) determine with the adjudication core the types of regions that will be used."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:203
+msgid "Importing data: participants"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:207
+msgid "Check you have emails/phone numbers included in your data that will be imported (presuming your tabbing software supports this) there are useful to have on hand later for either emailing out information or quickly following up errant adjudicators."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:208
+msgid "Often, the easiest way to prepare registration data for tab imports is to create new tabs in the registration spreadsheet, and use referencing to automatically order and arrange their data into the format your tab software wants. If the registration data changes significantly this will also make it easier to re-import things."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:209
+msgid "Often some adjudicators, typically local independents, may not be available for all rounds. Try and find out who this affects and when; once data has been imported you can :ref:`pre-check these adjudicators in and out of rounds <availability>` (if your tab software supports this; otherwise note it for later)."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:210
+msgid "Remember that the swing team(s) probably also need to be imported into the tab."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:213
+msgid "Data import: rooms"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:217
+msgid "Ideally you want not just a list of rooms, but also of their types and categories — i.e. what building a room is in and/or it will be coded so that participants can find it."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:218
+msgid "You want to know if access to some rooms is conditional; i.e. if some rooms are only available for some rounds. Again, if your tab software supports it you can :ref:`record this availability information into the system <availability>` (once data is imported) otherwise you can note it for later."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:219
+msgid "Registration should have collected information about accessibility requirements; they should be imported into your tab software (if it :ref:`supports automatically matching accessibility requirements <venue-constraints>`) or note for later. In general you will also want to use a similar process to ensure that members of the adjudication core are assigned rooms that are close to the tab room."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:220
+msgid "You also want some idea of priority; that is to say if some rooms are inconvenient (and you have more rooms than you need) they should be marked as a low priority so they will be allocated only if needed. Again, this might be automatically done by your tab software or something you will need to note and manually change after each draw is made."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:223
+msgid "Data import: adjudicator test/CV scores"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:225
+msgid "Ideally the adjudication core should do this themselves as they are marking the test or scoring CVs. If they won't, or you don't trust them with full tab access, be prepared to do so yourself."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:228
+msgid "Data import: tab access"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:230
+msgid "Set up user accounts for the adjudication core with dummy passwords (they can change them later)."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:231
+msgid "Set up user accounts for runners/assistants with dummy passwords (they can change them later)."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:233
+msgid "If using Tabbycat and using online ballots or feedback with the private URLs method, participants should be emailed out their private URLs before they start travelling to arrive at the tournament (i.e. when they have a reasonable chance of checking their email). This can be done using the inbuilt pages on Tabbycat, or by importing participants data into a service such as Mailchimp."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:236
+msgid "Pre-Rounds Setup"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:239
+msgid "Setting up the tab room"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:241
+msgid "This is typically the first order of business, as all future pre-round setup tasks (i.e. training the adjudication core, testing printing, etc.) are better for being done in the same space that will be used throughout the rounds. Once you're in the space there are a couple of small checks to run through before the larger question of how to arrange and use the space should be tackled:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:245
+msgid "Check with convenors whether things can be left in the tab room overnight. If they can't you'll need to make plans for how to move any big items (printers; ballot stacks) to and from the tab room each day."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:246
+msgid "Check that the internet access in the tab room is reliable."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:247
+msgid "Check that the projector system works, both with whatever wired-in computer is in the room and when connected to your laptop."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:248
+msgid "Check what items either yourself, or the organisers, have at hand and check if anything needs to be acquired before the next day. Critical items for tab rooms are typically:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:252
+msgid "An extension cord with multi box; ideally a pair of each."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:253
+msgid "Whiteboard markers (assuming there is a whiteboard) otherwise permanent markers and large sheets of paper (i.e. A2) can suffice."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:254
+msgid "Boxes. Lots of boxes. Loose ballots are a source of confusion and error, so you want some way of temporarily storing ballots as they proceed through the entering and checking process. You probably want at least three large boxes (for ballots to-enter, ballots to-check, and finished ballots) but more will be useful."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:255
+msgid "Spare printing ink/toner, and paper for the printer. Ideally your paper would be multi-coloured, with each colour being used for a different round. Pastel colours are ideal, and you ideally want at least three different colours so that you don't have to repeat a colour within the same day. Be sure to calculate how many sheets you will need per round and ensure you have a generous number of spares."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:256
+msgid "If tabbing a format that can produce multiple ballots per-debate, staplers are essential to keep those ballots organised. Buy at least two sturdy ones."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:258
+msgid "Non-essential, but often useful to have items:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:262
+msgid "Whatever dongles/adapters you need to connect your laptop to the projectors, both in the tab room and in the briefing room."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:263
+msgid "An Ethernet cable (or two) as a backup option if WiFi drops or is overloaded."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:264
+msgid "Post-it notes are a great way to temporarily mark ballots with information; typically used to indicate ballots that need correcting."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:265
+msgid "You'll often need to make impromptu signs; sticky tape and/or blu-tack are good here"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:266
+msgid "Spare pens for the people doing data entry to use"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:267
+msgid "Trash bags for collecting rubbish as it accumulates"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:268
+msgid "A Chrome Cast can occasionally be very useful if a projector or screen doesn't have accessible input cables or so that you can use a projector without having your laptop tethered to a particular podium and desk."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:270
+msgid "If you haven't already it's a good idea to check your printing setup by printing off a bunch of generic ballots and feedback forms to have on hand if the need arises (i.e. a ballot is missing and needs to go out ASAP; or if someone can't do feedback online and needs to do so on paper). At worst, the blank ballots you print can be used for the out-rounds. While printing these off, time how long it takes the printer to print say 25 ballots and extrapolate from that to figure out how long it will take to print the entire round's worth of ballots. Note that if printing off a round's ballots is relatively quick it can be useful to delay it in order to better accommodate any last-minute changes to the draw that happen post-announcement. It's also worth thinking about how you (or at least who will) group up the printed ballots in order to distribute them to runners."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:272
+msgid "At this point you should also setup whatever process you need for managing runners and the ballot collection process. At a minimum, this should probably be a spreadsheet or a list on a whiteboard outlining the different groups of rooms with spaces to mark in which runners are delivering/collecting ballots for each location. Who is running where might change from day to day and should be kept updated. It should also have some method for contacting each runner (i.e. a cell phone number)."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:274
+msgid "The question of how to arrange the actual room is one with many answers, and is obviously shaped by the peculiarities of the space itself. However there needs to be some system behind it so that people know exactly where to go and what to do when there is time pressure."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:276
+msgid "The key consideration behind this system is typically the 'flow' of ballots: what happens after they are brought back from runners, but before they are completely entered into the system. Think through how you want this process to operate and how the space can be arranged to make each step as smooth as possible. Considerations:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:280
+msgid "When runners initially return a big stack of ballots, what happens? They could be transferred directly to the data-enterers to start on, but it is often useful to have preliminary checks here in order to keep the job of the data-enterers as simple as possible. These checks could include:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:284
+msgid "For formats with multiple ballots per-debate, you typically want to identify and staple together all the ballots from a given panel."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:285
+msgid "For tournaments where ballots are liable to go missing (or for when you have plenty of data-enterers and want peace of mind) it is worth using the :ref:`ballot 'check-in' system of your tab software <data-entry>` (if it has one) to mark off ballots as physically present in the tab room. This allows you to quickly identify which ballots are missing and begin tracking them down earlier than you would do otherwise if just waiting for the 'to enter' pile to be exhausted."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:286
+msgid "Depending on your preferences and resources, ballots could at this stage be checked for errors. This could include a basic sweep for missing information (i.e. totals) or a comprehensive sweep that includes checking math errors, ambiguous handwriting, low-point wins, etc.). While this will delay the time between ballots arriving and being entered, it will mean that you can start correcting ballots sooner, and lessens the burden on (potentially inexperienced) data-enterers to check and catch these. If you have many runners, and they are familiar with how debating scoring works, this is recommended."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:288
+msgid "Once this preliminary step has occurred the next task is actually entering the ballots. The number of steps here is dependent on your tab software and tab settings; you might have had the 'draft' ballot be submitted online by chairs or you might have the whole two-step process of a 'draft' ballot entry and the 'confirmed' ballot entry taking place within the tab room. Considerations:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:292
+msgid "Regardless of whether you are working with a one-step or a two-step process, you want to arrange the tables where data-enterers are sitting such that their need to move is minimised. That might mean either have a central inbox of ballots to enter in the centre of the tables (such that everyone can reach it) or having multiple 'clusters' of enterers around boxes."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:293
+msgid "If work with a two-step process you want those two steps to be an active part of the spatial arrangement. That is to say, typically there will be a grouping of enterers who are working on the initial ballot entry (clustered around a box or boxes) and then a separate 'downstream' grouping of enterers that work on confirming/validating those entries. Depending on the size of tournament and quantity of runners, you either want it so that individuals from the first group can easily pass their ballots to the box of the second group; i.e. by reaching across the table or walking a short distance. At huge tournaments, you might want a dedicated person to transfer ballots between boxes to prevent enterers having to get up."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:294
+msgid "In a two-step process people may need to transfer roles, as generally you want to prioritise entry and then validation. Often this isn't necessarily much more efficient, but if 'rebalancing' the roles make sure that the spaces assigned to each role can accommodate extra people, and that people physically move to occupy each role."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:295
+msgid "In general, you want to minimise the number of ballots that each enterer feels the need to 'hoard' to work through to keep the work evenly distributed. If people are taking a large number of ballots to process, at the final stages of entering some people will have a bunch to work through while others will be finished. Making it easy to collect and pass on ballots in the space itself helps cut down on this while keeping entry efficient."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:296
+msgid "While the exact spatial arrangement depends on your numbers and what furniture is available, a long rectangle is a good starting point as the ballot process is in general linear (check, enter, validate, finish). Typically, this might look like a series of tables in a row with enterers sitting on either side and with the various ballot boxes in the middle."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:297
+msgid "When ballots have finished being enter/validated there definitely should be some sort of final 'done' box. Take care how ballots are put here, a common source of error is people putting ballots there before they are fully finished."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:298
+msgid "When ballots need to be corrected you generally want to 'extract' them from this process and hand them off to a tab-director or assistant to chase up and collect. There should be a forethought process for managing this; and ideally a dedicated space for it to prevent ballots being lost and to make it easy to identify ongoing issues. This might look like a process of sticking a post-it note (outlining the error) to the ballot, and then pulling it from entry/validation and placing it on a desk. Ideally you also want one of the tab directors always *not* doing data entry so that they are immediately available to manage this process."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:301
+msgid "Training volunteers"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:303
+msgid "If at all feasible you want to train that volunteers acting as runners and/or data enterers the day *before* the tournament starts otherwise the first round will be rough. It's generally a good idea for this training session to generally mirror the process of running a round. It's also generally a good idea that — even if you have enough people for dedicated runner and data-enterer roles — to train all volunteers so that they are familiar with each role and can fill in if needed. This has a couple of stages:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:307
+msgid "Introductions and details"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:311
+msgid "Volunteering is typically thankless and often stressful. It's also quite a dull and mechanical process: deliver paper; collect paper; enter numbers; check numbers. Given the rather unglamorous nature of their role you want your volunteers to feel welcome and a crucial part of a wider team. When meeting everyone for the first time try and run the introductions in a non-perfunctory manner and get to know people's background/interests and outline how valuable they are to the tournament."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:312
+msgid "As part of this process you should, note their cell phone numbers or whatever means you will use to coordinate communication between the team."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:313
+msgid "Figure out what will be happening during downtime and how you can make it more enjoyable. Would volunteers like to watch debates, work in the tab room, etc. Is there anything they would like during those down times (music, snacks, coffee, etc.)."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:315
+msgid "Rooms and Running"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:319
+msgid "If runners are unfamiliar with debating in general, outline the basics of what draws are, what ballots are actually for, and what this process looks like from a debater's perspective."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:320
+msgid "Outline how/when the printing process occurs and who will sort/assign the ballots. Now is a good time to assign different runners to the different groups/rooms that they will be working with."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:321
+msgid "It is critical that, as a group, you actually go to everyone one of the venue groups and identify all of the venue rooms that are listed so that everyone knows exactly where to go. This may take some time. But it is a good chance to both check those rooms actually exist and pre-identify any problems that might occur with runners and debaters finding them."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:322
+msgid "Outline in general what happens during ballot collecting: when to do it, how to approach chairs, what do to if they are slow or delaying. You should raise the chance of chairs being belligerent and outline how they (and you) should deal with this."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:323
+msgid "If you are having runners pre-check ballots it's a good idea to fill out a few 'bad' ballots to demonstrate the kinds of checking required. If you are using any communication systems (i.e. having runners mark of buildings as 'done' in an online system) go through that now also."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:325
+msgid "Data entry and checking"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:329
+msgid "Before starting, setup logins for everyone and show them how to login. Also get an idea of what devices they will be using, or can bring, for data entry purposes. Check/ensure that they will have internet access on those devices."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:330
+msgid "Run through this in the actual tab room; illustrating examples with actual ballots and going through the roles in the actual spots which they will occur."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:331
+msgid "Run through how the seating/table/box arrangement works and the types of roles at different positions."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:332
+msgid "Emphasise that in general, any ambiguities should be raised with the tab directors/assistants; i.e. that you should never guess about ballots but instead always delegate resolving issues to someone else."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:333
+msgid "Run through the different edge cases and things to check during entry. For example Iron Person speeches, mismatched totals, entering the wrong ballot for the wrong panellist, etc (see section below). Be sure to also go through what happens when the validation step fails; i.e. when a ballot needs to be re-entered."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:336
+msgid "Training the adjudication core"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:338
+msgid "Typically making the first-round's draw and allocation is the best time to really run through how your tab software and processes work in a 'real' environment as well as the expectations surrounding their and your role. Generous amounts of time should be budgeted for this; it's not uncommon for it to take up most of an evening. It's also worth having an older tab, or a tab full of fake data handy in order to show them how, say, the feedback or allocation interfaces look like when full of data."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:340
+msgid "To kick off you should probably setup tab logins for the adjudication core as necessary, outline what kinds of access they have, and (particularly if they haven't used your tab software before) outline broadly what pages they should and shouldn't access. In particular, show them how to find and parse feedback as that is often the interface where they will be spending most of their time individually. As part of this tour outline (if you haven't already) how feedback will work, as well as the means by which the adjudication core can use the tab software to keep track of feedback as it comes in. Ideally some sort of general strategy should be formed for this, so that particular people sit out rounds, or are delegated the task of catching up on feedback at other points."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:342
+msgid "Depending on how many runners you have it may be necessary, or beneficial, if the adjudication core helps out with data entry. However, if you go down this route the adjudication core need to be highly trained; they are often much more likely than volunteers (who are less self-confident and have more experience) to make errors. Whether you do or don't do this, ensure that adjudication core members know to come to the tab room ASAP after they have finished adjudications rather than swanning around socialising or going to lunch. Draws will often be held up just by the fact that not enough adjudication core members are present to start or finish an allocation."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:344
+msgid "The first-round allocation is the last thing you want to cover. It is typically your only change to slowly and comprehensively walk the adjudication core through the allocation interface and the allocation system."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:346
+msgid "Allocation interfaces, while often complex, should be stepped through so that the adjudication core knows precisely how to operate it themselves (if needed). They should know what it can (and can't do) and how the different features can be used and activated. For example, diversity highlights might be an optional toggle (in which case you explain how to active it, when to do so, and what it represents) or there might be parts of the interface that detail information such as a room's liveness, energy, or bracket which should be highlighted and explained (i.e. how 'liveness' is determined)."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:348
+msgid "Secondly, and most importantly, is outlining how the automated process of adjudicator allocation operates, and how this can be made to match the adjudication core's preferences. Typically, you want to rely on automatic adjudicator allocations as much as possible in order to decrease the time taken to do an allocation; however every adjudication core has a different philosophy on what their perfect allocation looks like, and it is your job to try and align that ideal with what the automated system produces as much as is possible. The precursor to this is yourself knowing how your tab system allocation works: what is the relationship between a debate's bracket (or assigned priority/energy) and the numeric ranking of the automatically generated panel? Does the software optimise panel strength for a voting majority, or across all panellists? When does the software allocate solo chairs over panels? How does it avoid conflicts? Does it have (and enforce) particular expectations for a given adjudicator's score; or does it rely on a more relative comparison? The answers to the questions will often be dramatically different between different programs and you should know them in advance."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:350
+msgid "Most tab software will have at least some options for you to configure those automated processes — either by changing the automatic allocation's parameters directly or by controlling the ranking and feedback systems that feed into it. The first round is the prime opportunity to configure these options so that they align as close as possible with what the priorities of the adjudication core. If your feedback ranking system is mismatched with how you expect the automatic allocation to place adjudicators, or if the distribution of adjudicators across the draw is not what you expect, the adjudication core will end up wasting significant amounts of time adjusting allocations. Even if things work well using the default settings, ensure you experiment and demonstrate the consequences of changing the settings just to show that it can be done, what the general effects are, and to see if there are even-better configurations."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:352
+msgid "This process of tweaking the automatic allocation settings is one you should also revisit as the rounds progress."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:354
+msgid "How to approach diversity (typically in terms of region and gender) across an allocation in particular is something that some members of an adjudication core will not have had to consider in the context of a large tournament with time pressure or in terms of having to make explicit trade-offs. Again, you should make it clear how the software can accommodate this, and get the adjudication core to plan for how (in general) they want to approach this. Often it will form the final phase of the allocation process, and so can easily be forgotten or skipped over; or people will have different philosophies of how to approach this which are only raised at critical points."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:356
+msgid "Outline that there will usually be a trade-off between the quality of each allocations and the speed at which the tournament runs. When time is not a factor, many adjudication cores will often take an hour or more in order to create a perfect allocation; but they should know though that aiming for perfect during many rounds will break the schedule. You should try and get them to set some sort of time goal for allocations, and (during the rounds) ensure that they are aware of when they are going too fast or too slow. Depending on your personal preferences and the norms surrounding tab direction in your circuit you may want to actual enforce these time limits."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:358
+msgid "Finally, outline how you will all communicate. Again, there should be a single medium for this so that everyone knows what is going on; and this is ideally something that has been planned out beforehand with them and the organising committee. But at this point the tab team may have expanded, or there may be better options than what was being used previously. It's also worth outlining which parts of the tab team will generally be doing what roles and where — i.e. who will be rolling the draw, who will be chasing up people, etc."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:361
+msgid "Preparing a briefing"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:365
+msgid "At large tournaments there should be some form of briefing covering ballots and feedback process, even if it is just quick one. Usually you will want to be the person to design and deliver this; other people less-familiar with the system may miss details."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:366
+msgid "Liaise with convenors and the other people doing briefings to ensure (a) they know you're doing one; and (b) you are not overlapping in terms of content."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:367
+msgid "See the last section of this document for notes on what can be useful to include here"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:370
+msgid "Final checks"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:374
+msgid "Check if the convenors have made a map that clearly outlines where the rooms are. Ensure it's clear and post it to either the tab site (ideally) or somewhere like Facebook."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:375
+msgid "Check that convenors have some sort of way-finding system in place, i.e. chalked directions or colour-coded signs. Check these colour codes match the names of your venues."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:376
+msgid "Check that the draw types are correct for each round in the tab system."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:377
+msgid "Check with adjudication core if/when there are secret rounds and that these are correct in the edit data base area."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:378
+msgid "Check how the draw will be displayed and managed. Is the projector good; how big does the text size need to be? How fast is the scroll?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:379
+msgid "If you will pre-print ballots check that you've set the \"return ballots to\" configuration setting; even if it just says \"to runners\"."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:382
+msgid "Managing Rounds"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:384
+msgid "Once everything has been setup and everyone knows what they should do, the actual process of running each round should go smoothly. It probably won't though. The earlier sections should have laid out what the ideal process for managing data entry and allocations, so this section will instead focus on what can go wrong and what to keep an eye out for."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:387
+msgid "Disaster scenarios"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:389
+msgid "There are two broad classes of disaster scenario here. The first, and more rare case is when either internet access at the venue goes out or if a web service that your tab software depends on has an outage (for example, both Tabbie 2 and Heroku-deployed Tabbycat instances depend on Amazon Web Services). The first can at least be solved temporarily if tethering is available, but if that is not possible (or the latter case occurs) you may need to switch to using an offline copy of that tab by restoring from a backup if the outage is non-transient."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:391
+msgid "Obviously, for this to work, you should be taking regular backups using whatever mechanism your tab software allows. Key times to do so are critical events such as finishing entering a round's data or finalising an adjudication allocation as these are especially difficult to recreate. Importantly, these backups are only useful to you if you have a downloaded copy of them; ideally download to a Dropbox or some other cloud service that will spread them across multiple computers and an online service."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:393
+msgid "Having an outage of internet access or a key web service go down to the point of having to switch to an offline tab is an exceedingly rare event, but one worth planning for at large tournaments. That is to say you should have ideally have an offline copy of your tabbing software setup on your local machine, and know how to restore a backup to it if necessary."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:395
+msgid "Backups are also useful as guards against a much more common source of error: data loss caused by user error. It is not unheard of for even experienced tab directors (or inexperienced adjudication core members) to accidentally delete an entire allocation, delete a round, or some other form of destructive action that would require a lot of work to redo. Taking backups at key points, and knowing how to restore them (to the online copy of the tab) is a useful — and occasionally essential — skill."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:397
+msgid "The much more common source of a major tab disruption is a major user-error or a bug within your tab software itself. Fixing these will be highly-context dependent and the best way you can prepare for them is to know your tab software well enough to understand what might have caused it or be able to contact someone else who does. That said, having backups on hand can also allow you to restore your database to before the bug or user-error occurred and try to proceed without re-triggering it."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:400
+msgid "Expected problems"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:402
+msgid "Incorrect ballots are an inevitable tragedy. Many more optimistic tab directors will imagine that these can be prevented through sufficiently detailed briefings, recurring public shamings, or fool-proof ballot designs. While these might help in cutting down the number of errors, eliminating them entirely seems to be an unachievable goal. Note that this is particularly true at international tournaments and/or at tournaments that draw participants from circuits which have more than one predominant format."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:404
+msgid "While debaters as a whole display astonishing levels of innovation in discovering new ways to incorrectly fill in a ballot, there are a couple of broad cases that you should look out for an prepare people to deal with:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:408
+msgid "Not adding up score correctly. Pretty much everyone who does this will note that this is the first time that it has ever happened to them."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:409
+msgid "Omitting some information. Most common are not filling in total scores, the nominating winner, or the margin. Having omitted an entire team's scores or speaker names is not uncommon."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:410
+msgid "Scores that are outside the range."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:411
+msgid "Low-point wins, or tied-point wins. Typically occurs in conjunction with (1)."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:412
+msgid "Poor handwriting rendering numbers illegible. While one could 'guess' whether a number is in fact a 6 or a 5 based on a team's total score, doing so is dangerous as it assumes that the person hasn't also done (1)."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:413
+msgid "'Correcting' information in an ambiguous way. For example, using arrows to swap a speaker's order (which is typically circular/ambiguous) or drawing numbers over other numbers in a way that makes it unclear which is the original and which is the replacement."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:414
+msgid "Ballots just going entirely missing because either a runner missed the room, the chair forgot to return it, or the chair just left it in the room."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:416
+msgid "Ballots aside, there are a number of other common occurrences that will necessitate changes to the drawn and allocations:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:420
+msgid "Teams will not turn up to debates, or turn up to debates extremely late. In both cases they will often not notifying anyone. Aside from needing to swap in a swing team in their place in the draw, it's worth keeping in mind that the necessity of a swing team might not be known until right when debates are about to start (which can lead to issues if you assume trainees or runners will be filling up the 'spare' swing team)."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:421
+msgid "Adjudicators will also go missing. As with teams this can usually be caught during roll call; but might also not be known up until debates start. If the adjudication core is available they can make adjustments, but often you will need to make a call as to whether to form an even-sized panel or to redistribute adjudicators from elsewhere."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:422
+msgid "When a draw is released there will often be conflicts that were unknown to the tab system, and will necessitate making changes to the draw post-release. It's important that when making these changes you keep a clear record of what needs to change (if there are multiple swaps needed it can get tricky to keep track of) and ensure that all parties involved know about where they are being swapped to."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:425
+msgid "Ongoing checks"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:427
+msgid "You will have a decent amount of downtime during rounds when debates are happening. A couple of things its worth keeping an eye on during that time:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:431
+msgid "Ensuring your backups have been taken and downloaded."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:432
+msgid "Ensuring the tab room isn't devolving into mess."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:433
+msgid "If you can be bothered (and if no adjudication core member is doing so) reviewing feedback for critical issues (i.e. comments highlighting severe issues, or chairs getting very low scores) is a good way to be useful. If using paper-based feedback this can look like physically separating out these feedback forms for the attention of the adjudication core; while if using online feedback systems you may want to keep a collection of browser tabs to show."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:434
+msgid "Chasing up the language committee (if one exists for this tournament) to confirm which teams are in which category and what their break preferences are (if multiple breaks are not allowed). You want to have this information confirmed as soon as possible as it becomes of critical value to allocations once the draw starts segmenting into live/dead rooms."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:435
+msgid "Reviewing how efficiently things are running and whether there are any bottlenecks that can be better addressed in the next round. It's generally a good idea to (on a whiteboard or a spreadsheet) keep track of how long each stage of a round is taking (running, data-entry, allocation) and what (if anything) is causing delays."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:437
+msgid "If hosting Tabbycat on Heroku keep an eye on the metrics section of the dashboard area, noting if there are 'timeout errors' and what the average response times are. Adding more dynos should help with both."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:440
+msgid "Breaks and Break Rounds"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:443
+msgid "Generating the adjudicator's break"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:445
+msgid "Determining the adjudicator break generally involves a complex set of considerations rather than strictly ranking based on feedback. As such most adjudication cores will use whiteboards or Google docs to draft and discuss the possible options. One thing to note here is that breaking adjudicators will need to be marked as such in the tab at some point (both so they can be on future draws, and for publication) so you want to be careful that the tab is the final source of authority here — it is easy for information to get out of sync between what the adjudication core is using to draft the break and the system."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:447
+msgid "When the adjudication core is determining the break ensure that they have an idea of the *quantity* of adjudicators needed (breaking too few or too many will cause issues) and whether there are any special considerations (such as having conflicts with large portions of the draw, or leaving at a given point) that involve a specific adjudicator being considered."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:450
+msgid "Generating the team break"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:452
+msgid "Before doing so in an automated fashion, first check in your tab software whether all teams are assigned to the right break categories. Depending on whether your software supports multiple formats you probably also want to check that each break category is using the right 'rule' specified by the tournament (i.e. a WUDC- or Australs- compliant break ranking). Also double check the break size itself is correct in the software."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:454
+msgid "Hopefully the automated system will generate a correct break, but this should always be checked against what you'd expect the results to be from standings. Note also that there are cases, such as when a team has to leave, or when teams are or are not double-breaking, that mean the automated break results need to be overridden (typically in Tabbycat you would add a marker or note to include their ranking, but exclude them from having a break rank)."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:457
+msgid "Announcing the break"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:459
+msgid "Mistakes are made surprisingly often during results announcements. Again, this is often a problem with incomplete or out of sync data, where print-outs, slides, or the tab site itself might not reflect (for example) last minute changes about breaks or have potentially mixed up teams or adjudicators with similar names. Things that can help:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:463
+msgid "Have a single source for what is being read out — i.e. a printed list (recommended) or the tab site itself — but don't mix and match. If making slides (often a good idea for large/crowded venues) copy the data from the canonical source being announced."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:464
+msgid "Double check what is being read out against the tab site, and/or whatever draft lists were used to determine the adjudicator's break. Verify with the adjudication core that everyone who should be there is, and that nobody is missing."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:465
+msgid "Clarify what information should be on the print-outs and the general order in which things are read. For example, it might be easy to omit breaking adjudicator's institutions, to use ambiguous abbreviations over full institution names, or to have an inconsistent approach to how the information is read (i.e. whether it is read as *wins* then *team points* then *team name*)."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:466
+msgid "Without revealing any details try and get at least some guidance on how to pronounce names that people are not familiar with pronounce."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:467
+msgid "Have backup copies of whatever is being read from and clarify who is reading off what portions."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:468
+msgid "Try to publish the break list on the tab website (or via some other online method) shortly after it is announced in order to minimise the chance of misinformation spreading."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:471
+msgid "Managing the out-rounds"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:473
+msgid "Out-rounds are generally under less time pressure and can be managed by just one or two members of the tab team. However, they tend to be run in a more haphazard fashion, so there are a couple of things to keep on top of:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:477
+msgid "You should keep track of which adjudicators have or have not been used throughout the finals allocations. It is easy for adjudication cores to forget to allocate someone and have to either drop them or promote them beyond what they had originally intended."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:478
+msgid "It is very easy for ballots to get lost in break rounds as chairs have less defined roles and processes in what they do with their ballots. While having correct speaker scores correctly entered for break rounds isn't a strict necessity, it is nice to have and the alternative (using fake speaks just to record the winner) can cause confusion.  Closely manage distributing ballots to the chairs and collecting them as soon as possible afterwards; especially if there is any time pressure. Generally it is not worth printing off per-debate ballots; just print a stack of generic ballots at the start of the out-rounds and distribute as needed."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:479
+msgid "You should know, in addition to when the break rounds are, when the results announcements are. Often these announcements are saved (for suspense or logistics reasons) until particular points of time (i.e. until the evening social; or until other out-rounds are finished). Obviously it's important not to accidentally release results; but often convenors and the adjudication core will often have different ideas about when results are meant to be released."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:481
+msgid "If using Tabbycat to manage out-rounds with multiple break categories, note that the round progression is no longer strictly linear. So be careful with when/if results are released online and note that often you can't rely on online interface to release draws publicly."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:484
+msgid "Preparing for tab release"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:486
+msgid "At some point, if you haven't already, have a discussion with the adjudication core about when the tab itself will be released and what data will be released. Well before the tab is due to be released you want to check that anonymisations and any speaker flags (i.e. Novice, ESL) are up to date in your tab software."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:489
+msgid "Managing the tab release"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:491
+msgid "Almost there!"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:493
+msgid "If hosting Tabbycat on Heroku it's worth increasing the resources available to the server for the ~12 hour period following tab release; it's by far the most concentrated burst of traffic the site will receive. Because Heroku bills by the hour, even going to a relatively expensive option, such as performance dynos with auto-scaling, will be very cheap if run just for this period. That said the site should be relatively resilient even in the face of large amounts of traffic; even running with the most basic resources allocated, at worst pages will be temporarily slow or not load."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:495
+msgid "To get an idea of how the site is performing in the Heroku dashboard keep an eye on the average request time number and adjust the number of dynos to try and keep it under say two seconds; ideally just one. When you first turn on the tab release settings, make sure you go through and load every page before announcing it to the public, doing so will trigger the caching mechanism that means potentially complex pages (say the speaker tab) don't need to be calculated from scratch each time someone loads the page."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:498
+msgid "Post-tournament"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:500
+msgid "Once you have sufficiently recovered, consider writing up and sharing a post-script about how things went; noting things that did or didn't go well. Next year's tab directors would certainly appreciate it, and it would be great to see this kind of knowledge spread more widely. The developers of your tab software would also appreciate hearing your feedback; particularly if there were issues that could have been prevented or ameliorated by the software itself."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:503
+msgid "Appendix: Briefing Notes"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:505
+msgid "This is a very loose, but not exhaustive, collection of things that are useful to communicate to speakers and adjudicators in a tab briefing. While briefing fatigue is real, having clear expectations about how things like ballots and feedback work are highly valuable uses of the tournament's time if they can at all help cut down the kinds of problems that delay the tab."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:508
+msgid "How feedback works"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:510
+msgid "Is it online, or offline? If online did people receive links? What do they do if they have lost it?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:511
+msgid "Is feedback mandatory? What accountability mechanisms are there? Will you publish the shame list online or raise it in between rounds?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:512
+msgid "Who will be submitting feedback on who? Do trainees do so?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:513
+msgid "Remind teams that only one of their feedbacks count; they should coordinate who is doing it."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:514
+msgid "What is the feedback scale? What does it correspond to? Common sources of confusion:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:516
+msgid "Feedback scales are not like Uber. You do not get five stars for being adequate and generic."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:517
+msgid "Feedback scales are not relative to position; it is an absolute scale. That is to say, if your trainee was good, they probably do not deserve the highest rating; they get whatever rating indicates they should be a panellist or low-chair."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:518
+msgid "Consider accompanying the score/scale with a statement characterising how these numbers correspond to positions - e.g. a 4.0 means 'should continue on good panels, should chair low rooms'"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:520
+msgid "If using online submission options, what should people without phones or internet access do?"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:523
+msgid "How ballots work"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:525
+msgid "This part of the presentation will be condescending. It is also necessary. The two causes of delays in the draw running late, and thus the tournament running late are (1) people not filling out ballots correctly or (2) people's ballots going missing. Emphasise that this should be taken seriously; minutes spent chasing bad ballots are often minutes that delay every single person at the tournament from doing what they are actually here to do. You should highlight, ideally with illustrated examples:"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:529
+msgid "Which parts of the ballot *must* be filled in; people will often overlook margins, or special fields such as motion vetoes."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:530
+msgid "That people must specify the full names of speakers; not nicknames or just-first names. Often names will be written poorly or have ambiguities (i.e. two speakers on a team called James) and having the full name is the only way to resolve it."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:531
+msgid "That people should **not draw arrows to swap the order of speakers** as these are impossible to decipher. Here, and in other areas, always *cross-out* information clearly and write it again rather than using arrows or drawing over what is there."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:532
+msgid "That people should try and write numbers in a manner that makes them crystal clear. Put cross-bars in 7s; bases on 1's. Make 8's actually look like two circles. If people know they have poor handwriting maybe consider writing the literal words — *seventy-one* below the numbers."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:533
+msgid "That for styles that do not have a single ballot for a panel, reiterate that everyone fills in their own ballots. At Australs, if this isn't made absolutely clear someone will average their panels ballots in order to try and 'help' you."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:534
+msgid "That runners do not fill out ballots. In BP, remind them that only chairs should fill out ballots (i.e. it cannot be deputised to a wing). In formats with individual ballots, remind chairs to make sure their wings have actually filled out a ballot, and get them to check for errors or ambiguities."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:535
+msgid "That everyone is bad at math. People who think they are good at math just haven't messed up their ballot *yet*. Emphasize that people should always use their phone's calculators to check totals. At typical tournaments using exclusively paper ballots math errors happen multiple times a round, almost every round."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:536
+msgid "How long people have to fill out their ballots. Suggest that chairs actually keep track of this time during a stopwatch, and start moving towards critical steps (i.e. scoring) well *before* the time is up, not *once* it is up."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:537
+msgid "Outline what chairs should do to return ballots. If ballots are being run by runners, outline what they should do if a runner doesn't appear. If they are not being run by runners remind people that returning ballots should be there number one priority, over say giving a lengthy adjudication or team feedback. Or getting lunch."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:538
+msgid "Remind people to *be nice to runners* and that being mean to runners will have serious consequences."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:539
+msgid "Remind people that the tab team and adjudication core will not, except for absolutely exceptional circumstances, accept photos or messaged descriptions of ballots; that all results must be on paper and handled in the same manner. The adjudication core should also be reminded of this."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:542
+msgid "How to locate the tab room"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:544
+msgid "People should know how to get to the tab room, either to raise issues with the adjudication core or to correct ballot errors. Make it crystal clear where it is and how to get there. Also ensure people know not to barge in; that they should knock and wait."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:546
+msgid "Clearly communicate the contact details of the tab directors and get people to take them down. In most cases you do not want people going through convenors or the adjudication core for any tab-related issues."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:549
+msgid "Misc"
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:551
+msgid "Now is a good time to encourage people to consider getting involved with tabbing and tab-development. Emphasize that both do not necessarily require technical skills and that tabbers are (or should be) open to feedback and ideas from the wider community. Tell people to come find you and chat if they are interested and put up a link to the `Facebook tabbing group <https://www.facebook.com/groups/1681761898801915/?ref=bookmarks>`_."
+msgstr ""
+
+#: ../../guide/tournament-logistics.rst:553
+msgid "If you appreciated this guide we'd appreciate a slide promoting `Timekept <http://timekept.com>`_ and `Debatekeeper <https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&hl=en>`_. This would also be a good point to remind people that their timekeeping apps shouldn't be making noise *unless* they have been explicitly assigned to keep time by the chair."
+msgstr ""
+
