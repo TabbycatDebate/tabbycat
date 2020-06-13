@@ -41,14 +41,31 @@ LOCALE_PATHS = [
 ]
 
 # Languages that should be available in the switcher
+EXTRA_LANG_INFO = {
+    'ms': {
+        'bidi': False,
+        'code': 'ms',
+        'name': 'Malay',
+        'name_local': 'Bahasa Melayu', #unicode codepoints here
+    },
+}
+
+# Add custom languages not provided by Django
+import django.conf.locale
+LANG_INFO = dict(django.conf.locale.LANG_INFO, **EXTRA_LANG_INFO)
+django.conf.locale.LANG_INFO = LANG_INFO
+
 LANGUAGES = [
     ('ar', _('Arabic')),
+    ('bn', _('Bengali')),
     ('en', _('English')),
     ('es', _('Spanish')),
     ('fr', _('French')),
     ('ja', _('Japanese')),
+    ('ms', _('Malay')),
     ('pt', _('Portuguese')),
     ('ru', _('Russian')),
+    ('zh-hans', _('Simplified Chinese')),
 ]
 
 STATICI18N_ROOT = os.path.join(BASE_DIR, "locale")
