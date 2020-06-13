@@ -602,7 +602,9 @@ msgstr ""
 msgid "\n"
 "        On %(adjudicator)s\n"
 "      "
-msgstr "На %(adjudicator)s"
+msgstr "\n"
+"        На %(adjudicator)s\n"
+"      "
 
 #: adjfeedback/templates/feedback_card.html:39
 #, python-format
