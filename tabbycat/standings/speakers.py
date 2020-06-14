@@ -60,39 +60,6 @@ class AverageSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     function = Avg
 
 
-class TrimmedMeanSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
-    """Metric annotator for trimmed mean speaker score."""
-    key = "trimmed_mean"
-    name = _("trimmed mean (high-low drop)")
-    abbr = _("Trim")
-
-    class MaximumScore(SpeakerScoreQuerySetMetricAnnotator):
-        function = Max
-
-    class MinimumScore(SpeakerScoreQuerySetMetricAnnotator):
-        function = Min
-
-    def get_annotated_queryset(self, queryset, column_name, round=None):
-        # Slight breach of separation of concerns: add the 'count' annotation so
-        # that the main annotation will know what 'count' means. We can't do
-        # this inline in get_annotation() because Django doesn't support the
-        # syntax F('count') > 2, and we're forced to use count__gt=2 instead.
-        queryset = NumberOfSpeechesMetricAnnotator().get_annotated_queryset(queryset, 'count', round=round)
-        return super().get_annotated_queryset(queryset, column_name, round=round)
-
-    def get_annotation(self, round=None):
-        total = TotalSpeakerScoreMetricAnnotator().get_annotation(round)
-        highest = self.MaximumScore().get_annotation(round)
-        lowest = self.MinimumScore().get_annotation(round)
-
-        return Case(
-            When(count__gt=2, then=(total - highest - lowest) / (F('count') - 2)),
-            When(count__gt=0, then=total / F('count')),
-            default=None,
-            output_field=FloatField(),
-        )
-
-
 class SpeakerTeamPointsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
 
     key = "team_points"
@@ -169,6 +136,42 @@ class NumberOfRepliesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     function = Count
     replies = True
     listed = False
+
+
+class TrimmedMeanSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
+    """Metric annotator for trimmed mean speaker score."""
+    key = "trimmed_mean"
+    name = _("trimmed mean (high-low drop)")
+    abbr = _("Trim")
+
+    class SpeechCount(NumberOfSpeechesMetricAnnotator):
+        key = 'speech_count'
+
+    class MaximumScore(SpeakerScoreQuerySetMetricAnnotator):
+        function = Max
+
+    class MinimumScore(SpeakerScoreQuerySetMetricAnnotator):
+        function = Min
+
+    def get_annotated_queryset(self, queryset, round=None):
+        # Slight breach of separation of concerns: add the 'count' annotation so
+        # that the main annotation will know what 'count' means. We can't do
+        # this inline in get_annotation() because Django doesn't support the
+        # syntax F('count') > 2, and we're forced to use count__gt=2 instead.
+        queryset = self.SpeechCount().get_annotated_queryset(queryset, round=round)
+        return super().get_annotated_queryset(queryset, round=round)
+
+    def get_annotation(self, round=None):
+        total = TotalSpeakerScoreMetricAnnotator().get_annotation(round)
+        highest = self.MaximumScore().get_annotation(round)
+        lowest = self.MinimumScore().get_annotation(round)
+
+        return Case(
+            When(speech_count__gt=2, then=(total - highest - lowest) / (F('count') - 2)),
+            When(speech_count__gt=0, then=total / F('count')),
+            default=None,
+            output_field=FloatField(),
+        )
 
 
 # ==============================================================================

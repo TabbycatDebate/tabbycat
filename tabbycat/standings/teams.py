@@ -161,14 +161,14 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
         return annotation_filter
 
-    def get_annotated_queryset(self, queryset, column_name, round=None):
+    def get_annotated_queryset(self, queryset, round=None):
         if round is not None:
             self.tournament = round.tournament
         else:
             first_team = queryset.first()
             self.tournament = first_team.tournament if first_team is not None else None
 
-        return super().get_annotated_queryset(queryset, column_name, round)
+        return super().get_annotated_queryset(queryset, round)
 
 
 class BaseDrawStrengthMetricAnnotator(BaseMetricAnnotator):
@@ -193,13 +193,13 @@ class BaseDrawStrengthMetricAnnotator(BaseMetricAnnotator):
         opponents_by_team = {team.id: team.opponent_ids for team in teams_with_opponents}
 
         opp_metric_queryset = self.opponent_annotator().get_annotated_queryset(
-                queryset[0].tournament.team_set.all(), 'opp_metric', round)
+                queryset[0].tournament.team_set.all(), round)
         opp_metric_queryset_teams = {team.id: team for team in opp_metric_queryset}
 
         for team in queryset:
             draw_strength = 0
             for opponent_id in opponents_by_team[team.id]:
-                opp_metric = opp_metric_queryset_teams[opponent_id].opp_metric
+                opp_metric = getattr(opp_metric_queryset_teams[opponent_id], self.opponent_annotator.key)
                 if opp_metric is not None: # opp_metric is None when no debates have happened
                     draw_strength += opp_metric
             standings.add_metric(team, self.key, draw_strength)

@@ -5,7 +5,7 @@ import random
 
 from django.utils.translation import gettext as _
 
-from .metrics import metricgetter, RepeatedMetricAnnotator
+from .metrics import metricgetter, QuerySetMetricAnnotator, RepeatedMetricAnnotator
 
 logger = logging.getLogger(__name__)
 
@@ -301,6 +301,9 @@ class BaseStandingsGenerator:
         # relies on a nested ID selection instead.
         queryset_for_metrics = queryset.model.objects.filter(id__in=queryset.values_list('id', flat=True))
 
+        for annotator in self.queryset_metric_annotators:
+            queryset_for_metrics = annotator.get_annotated_queryset(queryset_for_metrics, round)
+
         for annotator in self.metric_annotators:
             logger.debug("Running metric annotator: %s", annotator.name)
             annotator.run(queryset_for_metrics, standings, round)
@@ -347,6 +350,7 @@ class BaseStandingsGenerator:
         """
         self.precedence = list()
         self.metric_annotators = list()
+        self.queryset_metric_annotators = list()
         repeated_metric_indices = {}
 
         all_metrics = [(m, True) for m in metrics] + [(m, False) for m in extra_metrics]
@@ -366,6 +370,8 @@ class BaseStandingsGenerator:
                 args = ()
 
             annotator = klass(*args)
+            if issubclass(klass, QuerySetMetricAnnotator):
+                self.queryset_metric_annotators.append(annotator)
             self.metric_annotators.append(annotator)
 
             if ranked:
