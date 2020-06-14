@@ -591,17 +591,7 @@ class RoundPairingSerializer(serializers.ModelSerializer):
 
 
 class FeedbackQuestionSerializer(serializers.ModelSerializer):
-
-    class ChoicesField(serializers.Field):
-
-        def to_representation(self, value):
-            return value.split(AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR)
-
-        def to_internal_value(self, data):
-            return AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR.join(data)
-
     url = TournamentHyperlinkedIdentityField(view_name='api-feedbackquestion-detail')
-    choices = ChoicesField()
 
     class Meta:
         model = AdjudicatorFeedbackQuestion
