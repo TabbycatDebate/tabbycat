@@ -42,7 +42,7 @@ If using Windows 10 Pro, Enterprise, or Education Edition
 
 .. rst-class:: spaced-list
 
-1. Install the ****Docker Desktop for Windows*** from the `Docker store page <https://store.docker.com/search?type=edition&offering=community>`_.
+1. Install the **Docker Desktop for Windows** from the `Docker store page <https://store.docker.com/search?type=edition&offering=community>`_.
 2. Before or shortly after installing it, Docker may ask you to enable hypervisor and restart your PC. If it asks you this follow the prompts and restart as asked.
 3. Once Docker has finished installing, open up the newly-installed Docker application, then right-click the app's icon (the whale) in the Taskbar.
 4. From there, hit *Settings* in the menu and *Shared Drives* in the sidebar. Tick the checkbox next to your hardrive and then click *Apply*. After that has applied exit and reopen the docker app (ie right-click the taskbar icon and hit exit) and verify that the checkbox is still there.
