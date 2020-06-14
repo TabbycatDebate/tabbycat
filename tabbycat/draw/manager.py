@@ -107,7 +107,7 @@ class BaseDrawManager:
             debate = Debate(round=self.round)
             debate.bracket = pairing.bracket
             debate.room_rank = pairing.room_rank
-            debate.flags = ",".join(pairing.flags)  # comma-separated list
+            debate.flags = pairing.flags
             if (self.round.tournament.pref('draw_side_allocations') == "manual-ballot" or
                     self.round.is_break_round):
                 debate.sides_confirmed = False
@@ -115,7 +115,7 @@ class BaseDrawManager:
 
             for team, side in zip(pairing.teams, self.round.tournament.sides):
                 DebateTeam.objects.create(debate=debate, team=team, side=side,
-                        flags=",".join(pairing.get_team_flags(team)))
+                        flags=pairing.get_team_flags(team))
 
     def delete(self):
         self.round.debate_set.all().delete()
