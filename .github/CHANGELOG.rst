@@ -31,6 +31,7 @@ Change Log
 - Fixed issue causing crashes when trainees were demoted after results were entered (`#922 <https://github.com/TabbycatDebate/tabbycat/issues/922>`_)
 - Fixed issue where who-beat-whom would include elimination rounds (`#1073 <https://github.com/TabbycatDebate/tabbycat/issues/1073>`_)
 - Fixed issue causing even panels to be missed for user warnings (`#1465 <https://github.com/TabbycatDebate/tabbycat/issues/1465>`_)
+- Stopped actively maintaining `local installation instructions for Windows <https://tabbycat.readthedocs.io/en/latest/install/windows.html>`_
 
 2.3.3
 -----
