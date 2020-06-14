@@ -18,31 +18,21 @@ Requisite technical background
 
 It will help a lot if you have some experience with Linux, but mainly you need to be familiar with command-line interfaces, and you should be willing to install and work with the `Windows Subsystem for Linux <https://docs.microsoft.com/windows/wsl/about>`_. You might need to be prepared to familiarise yourself with aspects of WSL not covered in these instructions. While a background in the specific tools Tabbycat uses (Python, PostgreSQL, *etc.*) will make things easier, it's not necessary: we'll talk you through the rest.
 
-**WSL 1 or WSL 2?** Both WSL 1 and WSL 2 should work with Tabbycat. If you don't have any existing need for WSL 1, we recommend installing WSL 2. Microsoft's guidance indicates that WSL 2 offers faster performance for web apps like Tabbycat, and anecdotally we've found this to be the case.
-
 A. Install Ubuntu on Windows
 ============================
 
 *If you already have a Linux distribution installed on your PC, skip to* :ref:`part B <install-wsl-tabbycat>`.
 
-First, `check that you have the Fall Creators Update (build 1709) <https://support.microsoft.com/en-us/help/4028685/windows-10-get-the-fall-creators-update>`_. If you don't, update Windows.
+Install the Windows Subsystem for Linux by `following these instructions on the Microsoft website <https://docs.microsoft.com/windows/wsl/install-win10>`_.
 
-Then, install the Windows Subsystem for Linux. For most people, this involves the following:
+When you get to the part about installing a Linux distribution, we recommend the `latest version of Ubuntu <https://www.microsoft.com/store/p/ubuntu/9nblggh4msv6>`_ if you don't have an existing preference.
 
-1. Enable the Windows Subsystem for Linux feature, by finding **Turn Windows features on or off** on the Start Menu, then checking the box for **Windows Subsystem for Linux** and clicking **OK**. You'll be prompted to restart your computer to make the changes take effect.
+.. admonition:: WSL 1 or WSL 2?
+  :class: note
 
-  .. image:: images/wsl-feature.png
+  If you don't have any existing need for WSL 1, we recommend installing WSL 2. Microsoft's guidance indicates that WSL 2 offers faster performance for web apps like Tabbycat, and anecdotally we've found this to be the case. However, both WSL 1 and WSL 2 should work.
 
-2. Install Ubuntu by finding it on the Microsoft Store. For your convenience, `here's a direct link to Ubuntu on the Microsoft Store <https://www.microsoft.com/store/p/ubuntu/9nblggh4msv6>`_.
-
-3. Launch Ubuntu and follow the instructions. You'll be prompted to create a user account for your Ubuntu system.
-
-Some more detailed instructions, including some troubleshooting, are `available on Microsoft's website <https://docs.microsoft.com/windows/wsl/about>`_.
-
-.. admonition:: Advanced users
-  :class: tip
-
-  You can, of course, use any Linux distribution that Windows supports. We just suggest Ubuntu because it's the most well-known (and the one that we use).
+.. tip:: The instructions will ask you to open **Windows PowerShell as administrator**. To do this, search the Start Menu for "PowerShell", right-click Windows PowerShell, click "Run as administrator" and grant it permission to change your device. Then to run each command as instructed, paste it into PowerShell and press Enter. (As of June 2020, there are three commands.)
 
 .. _install-wsl-tabbycat:
 
