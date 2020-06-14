@@ -11,17 +11,14 @@ Installing Locally on Linux on Windows (WSL)
 
   If you just want to quickly set up a copy of Tabbycat to run locally on Windows, consider :ref:`installing using Docker<install-docker>`, which is a shorter process than the one below.
 
-  Windows Subsystem for Linux is only available on Windows 10. If you have an older version of Windows, :ref:`install Tabbycat locally on Windows <install-windows>` instead.
-
-.. note::
-
-  Windows Subsystem for Linux (WSL) was taken out of beta in the `Windows 10 Fall Creators Update <https://blogs.windows.com/windowsexperience/2017/10/17/whats-new-windows-10-fall-creators-update/>`_, which was released in October 2017. On Windows 10 computers, we now recommend this local installation method over :ref:`installing it directly on Windows <install-windows>`.
+  Windows Subsystem for Linux is only available on Windows 10. If you have an older version of Windows, :ref:`install Tabbycat locally on Windows <install-windows>` instead. However, on Windows 10 computers, we recommend this method over installing directly on Windows.
 
 Requisite technical background
 ==============================
 
 It will help a lot if you have some experience with Linux, but mainly you need to be familiar with command-line interfaces, and you should be willing to install and work with the `Windows Subsystem for Linux <https://docs.microsoft.com/windows/wsl/about>`_. You might need to be prepared to familiarise yourself with aspects of WSL not covered in these instructions. While a background in the specific tools Tabbycat uses (Python, PostgreSQL, *etc.*) will make things easier, it's not necessary: we'll talk you through the rest.
 
+**WSL 1 or WSL 2?** Both WSL 1 and WSL 2 should work with Tabbycat. If you don't have any existing need for WSL 1, we recommend installing WSL 2. Microsoft's guidance indicates that WSL 2 offers faster performance for web apps like Tabbycat, and anecdotally we've found this to be the case.
 
 A. Install Ubuntu on Windows
 ============================

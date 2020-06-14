@@ -4,6 +4,13 @@
 Installing Locally on Windows
 =============================
 
+.. admonition:: Notice on status of these instructions
+  :class: note
+
+  The developers of Tabbycat have **stopped actively maintaining** these instructions. For Windows 10 users, we now recommend :ref:`Linux on Windows (WSL) <install-wsl>` for local installations. We're keeping these instructions up in case they're useful for anyone who might need them, but please be aware that they might not work smoothly.
+
+  If you encounter any problems, please seek help in our `Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_. We're lucky to have a fantastic community of Tabbycat users who are often kind enough to share their experiences with fellow users, and someone there might be able to help.
+
 .. admonition:: Is this the best installation method for you?
   :class: attention
 
