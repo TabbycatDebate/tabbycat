@@ -129,7 +129,7 @@ class RoundSerializer(serializers.ModelSerializer):
         motions_data = validated_data.pop('motion_set')
         round = super().create(validated_data)
 
-        motions = self.RoundMotionsSerializer(many=True, context={'tournament': round.tournament})
+        motions = self.RoundMotionsSerializer(many=True, context=self.context)
         motions._validated_data = motions_data  # Data was already validated
         motions.save(round=round)
 
@@ -435,7 +435,7 @@ class TeamSerializer(serializers.ModelSerializer):
         )
 
         # The data is passed to the sub-serializer so that it handles categories
-        speakers = SpeakerSerializer(many=True, context={'tournament': team.tournament})
+        speakers = SpeakerSerializer(many=True, context=self.context)
         speakers._validated_data = speakers_data  # Data was already validated
         speakers.save(team=team)
 
