@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib import admin, messages
 from django.db.models import Prefetch
+from django.utils.translation import gettext, ngettext
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import ngettext
 
 from draw.models import DebateTeam
 from utils.admin import custom_titled_filter
@@ -62,13 +62,17 @@ class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
 @admin.register(AdjudicatorFeedbackIntegerAnswer)
 @admin.register(AdjudicatorFeedbackStringAnswer)
 class AdjudicatorFeedbackAnswerAdmin(admin.ModelAdmin):
-    list_display = ('question', 'get_target', 'get_source', 'answer', 'feedback')
+    list_display = ('question', 'get_target', 'get_source', 'answer', 'get_feedback_description')
+    list_select_related = ('question', 'feedback__adjudicator',
+                           'feedback__source_adjudicator__adjudicator',
+                           'feedback__source_team__team')
     list_filter  = (
         'question', 'answer',
         ('feedback__adjudicator__name', custom_titled_filter(_('target'))),
         ('feedback__source_adjudicator__adjudicator__name', custom_titled_filter(_('source adjudicator'))),
         ('feedback__source_team__team__short_name', custom_titled_filter(_('source team'))),
     )
+    raw_id_fields = ('feedback',)
 
     def get_target(self, obj):
         return obj.feedback.adjudicator.name
@@ -81,8 +85,15 @@ class AdjudicatorFeedbackAnswerAdmin(admin.ModelAdmin):
         elif obj.feedback.source_adjudicator:
             return obj.feedback.source_adjudicator.adjudicator.name
 
+    def get_feedback_description(self, obj):
+        return gettext("%(timestamp)s (version %(version)s)") % {
+            'timestamp': obj.feedback.timestamp.isoformat(),
+            'version': obj.feedback.version,
+        }
+
     get_target.short_description = _("Target")
     get_source.short_description = _("Source")
+    get_feedback_description.short_description = _("Feedback timestamp and version")
 
 
 class BaseAdjudicatorFeedbackAnswerInline(admin.TabularInline):
