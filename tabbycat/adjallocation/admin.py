@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django.db.models import Prefetch
+
+from draw.models import DebateTeam
 
 from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
                      AdjudicatorTeamConflict, DebateAdjudicator, PreformedPanel,
@@ -10,6 +13,16 @@ class DebateAdjudicatorAdmin(admin.ModelAdmin):
     list_display = ('debate', 'adjudicator', 'type')
     search_fields = ('adjudicator__name', 'type')
     raw_id_fields = ('debate',)
+
+    def get_queryset(self, request):
+        # can't use list_select_related class attribute, because DebateAdjudicatorManager
+        # always puts a select_related on this
+        return super().get_queryset(request).prefetch_related(
+            Prefetch('debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')),
+        ).select_related(
+            'debate__round__tournament',
+            'adjudicator__institution',
+        )
 
 
 @admin.register(AdjudicatorTeamConflict)
@@ -42,7 +55,7 @@ class AdjudicatorInstitutionConflictAdmin(admin.ModelAdmin):
 @admin.register(TeamInstitutionConflict)
 class TeamInstitutionConflictAdmin(admin.ModelAdmin):
     list_display = ('team', 'institution')
-    list_select_related = ('team__institution', 'institution')
+    list_select_related = ('team__institution', 'team__tournament', 'institution')
     search_fields = ('team__short_name', 'team__long_name', 'institution__name')
 
 
