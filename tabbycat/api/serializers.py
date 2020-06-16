@@ -417,9 +417,6 @@ class TeamSerializer(serializers.ModelSerializer):
             if not t.pref('public_break_categories'):
                 self.fields.pop('break_categories')
 
-    def validate_emoji(self, value):
-        return empty_without_null_validator(value)
-
     def validate(self, data):
         if data['use_institution_prefix'] and data['institution'] is None:
             raise serializers.ValidationError("Cannot include institution prefix without institution.")
@@ -439,10 +436,13 @@ class TeamSerializer(serializers.ModelSerializer):
         break_categories = validated_data.pop('break_categories')
 
         emoji, code_name = pick_unused_emoji()
-        if not validated_data.get('emoji', False):
+        if 'emoji' not in validated_data or validated_data['emoji'] is None:
             validated_data['emoji'] = emoji
-        if not validated_data.get('code_name', False):
+        if 'code_name' not in validated_data or validated_data['code_name'] is None:
             validated_data['code_name'] = code_name
+
+        if validated_data['emoji'] == '':
+            validated_data['emoji'] = None  # Must convert to null to avoid uniqueness errors
 
         team = super().create(validated_data)
         team.break_categories.set(
