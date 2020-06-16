@@ -2,6 +2,16 @@
 Change Log
 ==========
 
+2.4.1
+-----
+*Release date: TBD*
+
+- Allowed blank/null values for emoji and code names in Teams' API
+- Improved performance of certain database pages
+- Fixed issue where null points caused an error in current standings
+- Fixed issue preventing the creation of speakers in teams through API
+- Little updates and clarifications to the documentation
+
 2.4.0 (Manx)
 ------------
 *Release date: 14 June 2020*
