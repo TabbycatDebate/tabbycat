@@ -424,9 +424,9 @@ class TeamSerializer(serializers.ModelSerializer):
         break_categories = validated_data.pop('break_categories')
 
         emoji, code_name = pick_unused_emoji()
-        if 'emoji' not in validated_data:
+        if not validated_data.get('emoji', False):
             validated_data['emoji'] = emoji
-        if 'code_name' not in validated_data:
+        if not validated_data.get('code_name', False):
             validated_data['code_name'] = code_name
 
         team = super().create(validated_data)
