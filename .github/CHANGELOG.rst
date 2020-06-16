@@ -6,7 +6,8 @@ Change Log
 -----
 *Release date: TBD*
 
-- Allowed blank/null values for emoji and code names in Teams' API
+- Allowed null values for emoji and code names in Teams' API
+- Enforced use of null values where field is undetermined yet cannot be blank in API
 - Improved performance of certain database pages
 - Fixed issue where null points caused an error in current standings
 - Fixed issue preventing the creation of speakers in teams through API

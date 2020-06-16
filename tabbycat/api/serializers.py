@@ -23,6 +23,12 @@ from .fields import (AdjudicatorFeedbackIdentityField, AnonymisingHyperlinkedTou
     TournamentHyperlinkedRelatedField)
 
 
+def empty_without_null_validator(value):
+    if value == '':
+        raise serializers.ValidationError("Field cannot be an empty string. Use null.")
+    return value
+
+
 class TournamentSerializer(serializers.ModelSerializer):
 
     url = serializers.HyperlinkedIdentityField(
@@ -291,6 +297,9 @@ class SpeakerSerializer(serializers.ModelSerializer):
         fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
                   'categories', 'url_key', '_links')
 
+    def validate_url_key(self, value):
+        return empty_without_null_validator(value)
+
 
 class AdjudicatorSerializer(serializers.ModelSerializer):
 
@@ -349,6 +358,9 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
                   'institution', 'base_score', 'trainee', 'independent', 'adj_core',
                   'institution_conflicts', 'team_conflicts', 'adjudicator_conflicts', 'url_key', '_links')
 
+    def validate_url_key(self, value):
+        return empty_without_null_validator(value)
+
     def create(self, validated_data):
         adj = super().create(validated_data)
 
@@ -404,6 +416,9 @@ class TeamSerializer(serializers.ModelSerializer):
                 self.fields.pop('use_institution_prefix')
             if not t.pref('public_break_categories'):
                 self.fields.pop('break_categories')
+
+    def validate_emoji(self, value):
+        return empty_without_null_validator(value)
 
     def validate(self, data):
         if data['use_institution_prefix'] and data['institution'] is None:
