@@ -6,6 +6,7 @@ Change Log
 -----
 *Release date: TBD*
 
+- Fixed bug causing main action item not to appear in languages other than English
 - Allowed null values for emoji and code names in Teams' API
 - Enforced use of null values where field is undetermined yet cannot be blank in API
 - Improved performance of certain database pages
