@@ -57,6 +57,8 @@ urlpatterns = [
         include('django_summernote.urls')),
 
     # Admin area
+    path('jet/',
+        include('jet.urls', 'jet')),
     path('database/',
         admin.site.urls),
 

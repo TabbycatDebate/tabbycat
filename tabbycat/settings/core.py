@@ -122,6 +122,7 @@ TABBYCAT_APPS = (
 )
 
 INSTALLED_APPS = (
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
