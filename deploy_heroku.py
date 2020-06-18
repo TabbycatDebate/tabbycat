@@ -157,10 +157,7 @@ if shutil.which("heroku") is None:
 
 # Create the app with addons
 addons = ["papertrail", "sendgrid:starter", "heroku-postgresql:%s" % args.pg_plan, "rediscloud:30"]
-command = ["heroku", "apps:create"]
-
-# Ensure on the right stack (for NGINX compatability)
-command.extend(["--stack", "heroku-16"])
+command = ["heroku", "apps:create", "--stack", "heroku-18"]
 
 if addons:
     command.extend(["--addons", ",".join(addons)])
