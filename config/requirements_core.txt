@@ -2,7 +2,7 @@
 
 # Django
 Django==3.0.7
-django-appconf==1.0.3                   # Helper for handling app configs
+django-appconf==1.0.4                   # Helper for handling app configs
 django-dynamic-preferences==1.9         # Settings management
 django-extensions==2.2.9                # For the generate secret command
 django-formtools==2.2                   # Form wizards
@@ -10,13 +10,13 @@ django-ipware==2.1.0                    # IP Address logging
 django-gfklookupwidget==1.0.8           # Replaces object_id field with a search link
 djangorestframework==3.11.0             # For serialising objects
 django-polymorphic==2.1.2               # Permits model polymorphism
-django-split-settings==1.0.0            # Modularise settings files
-django-statici18n==1.8.3                # Compile translations files as static file
+django-split-settings==1.0.1            # Modularise settings files
+django-statici18n==1.9.0                # Compile translations files as static file
 django-summernote==0.8.11.6             # WYSIWYG editor
 dj-cmd==1.0                             # Provides the dj command alias
 
 # Database
-psycopg2==2.8.4                         # For Django to talk to postgres
+psycopg2==2.8.5                         # For Django to talk to postgres
 # Note: The Heroku instructions seem to advise using psycopg2-binary:
 #     https://devcenter.heroku.com/articles/heroku-postgresql#connecting-with-django
 # but the psycopg2 documentation advises against using the binary distribution
@@ -32,7 +32,7 @@ ipython==7.15.*
 munkres==1.1.2                          # Algorithm for adjudicator allocation
 redis==3.5.3
 qrcode==6.1                             # QR codes for printed private URL sheets
-html2text==2019.8.11                    # Compatibility with plain-text email clients
+html2text==2020.1.16                    # Compatibility with plain-text email clients
 
 # Django admin (Jet)
 # This is an unofficial fork of no-longer-maintained geex-arts/django-jet,
