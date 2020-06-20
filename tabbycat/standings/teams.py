@@ -3,7 +3,7 @@
 import logging
 
 from django.contrib.postgres.aggregates import ArrayAgg
-from django.db.models import Avg, Count, F, FloatField, Func, IntegerField, Q, StdDev, Sum
+from django.db.models import Avg, Count, F, FloatField, Func, Q, StdDev, Sum
 from django.db.models.functions import Cast
 from django.utils.translation import gettext_lazy as _
 
@@ -264,12 +264,17 @@ class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
             NullIf('debateteam__teamscore__votes_possible', 0, output_field=FloatField()) *
             self.adjs_per_debate)
 
-    def get_annotation(self, round=None):
+    def annotate_with_queryset(self, queryset, standings):
         # If the number of ballots carried by every team is an integer, then
         # it's probably (though not certainly) the case that there are no
         # "weird" cases causing any fractional numbers of votes due to
         # normalization. In that case, convert all metrics to integers.
-        return Cast(super().get_annotation(round), output_field=IntegerField())
+        cast = int if all(t.num_adjs == int(t.num_adjs) for t in queryset) else float
+        for item in queryset:
+            metric = item.num_adjs
+            if metric is None:
+                metric = 0
+            standings.add_metric(item, self.key, cast(metric))
 
 
 class NumberOfFirstsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
