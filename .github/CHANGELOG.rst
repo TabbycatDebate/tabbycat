@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+2.5.0 (Nebelung)
+----------------
+*Release date: ?*
+
+
 2.4.0 (Manx)
 ------------
 *Release date: 14 June 2020*
@@ -32,6 +37,7 @@ Change Log
 - Fixed issue where who-beat-whom would include elimination rounds (`#1073 <https://github.com/TabbycatDebate/tabbycat/issues/1073>`_)
 - Fixed issue causing even panels to be missed for user warnings (`#1465 <https://github.com/TabbycatDebate/tabbycat/issues/1465>`_)
 - Stopped actively maintaining `local installation instructions for Windows <https://tabbycat.readthedocs.io/en/latest/install/windows.html>`_
+
 
 2.3.3
 -----
