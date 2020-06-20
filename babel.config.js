@@ -1,7 +1,7 @@
 module.exports = {
   plugins: ['lodash'],
   presets: [
-    ['@vue/app', {
+    ['@vue/cli-plugin-babel/preset', {
       polyfills: [
         // 'es6.promise',
         // 'es6.symbol',
