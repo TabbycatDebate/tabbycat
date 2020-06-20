@@ -37,4 +37,4 @@ html2text==2019.8.11                    # Compatibility with plain-text email cl
 # Django admin (Jet)
 # This is an unofficial fork of no-longer-maintained geex-arts/django-jet,
 # patched to support Django 3.
-git+https://github.com/Barukimang/django-jet.git@1.0.8-django3
+r-django-jet==2.0.8
