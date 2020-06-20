@@ -145,8 +145,9 @@ def get_git_push_spec():
     exit(1)
 
 
-# Check that Heroku is installed
-if shutil.which("heroku") is None:
+# Check that Heroku is installed (shutil.which requires Python 3.3+, otherwise
+# skip the check, it'll crash on the next command without a friendly message)
+if sys.version_info >= (3, 3) and shutil.which("heroku") is None:
     print_yellow("Error: heroku not found.")
     print("You'll need to install the Heroku CLI before you can use this script.")
     print("Go to https://devcenter.heroku.com/articles/heroku-cli, or search the")
