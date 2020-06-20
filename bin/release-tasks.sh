@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-echo "-----> I'm post-compile hook"
+echo "-----> I'm the release tasks script"
 cd ./tabbycat/
 
 echo "-----> Running database migration"
@@ -17,4 +17,4 @@ npm run build
 echo "-----> Running static files compilation"
 python manage.py collectstatic --noinput -v 0
 
-echo "-----> Post-compile done"
+echo "-----> Release tasks done"
