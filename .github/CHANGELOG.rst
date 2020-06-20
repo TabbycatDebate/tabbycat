@@ -6,6 +6,8 @@ Change Log
 -----
 *Release date: TBD*
 
+- Require round sequence numbers to be nonnegative (`#1514 <https://github.com/TabbycatDebate/tabbycat/issues/1514>`_)
+    - This change may cause upgrades of existing sites to fail with an ``IntegrityError`` if they have a negative round sequence number. Please change all round sequence numbers to positive numbers (or 0) before upgrading. Negative round numbers cause most Tabbycat pages to fail anyway, so functioning existing sites shouldn't have this problem.
 - Fixed bug causing main action item not to appear in languages other than English
 - Allowed null values for emoji and code names in Teams' API
 - Enforced use of null values where field is undetermined yet cannot be blank in API
