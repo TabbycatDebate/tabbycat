@@ -23,6 +23,12 @@ from .fields import (AdjudicatorFeedbackIdentityField, AnonymisingHyperlinkedTou
     TournamentHyperlinkedRelatedField)
 
 
+def empty_without_null_validator(value):
+    if value == '':
+        raise serializers.ValidationError("Field cannot be an empty string. Use null.")
+    return value
+
+
 class TournamentSerializer(serializers.ModelSerializer):
 
     url = serializers.HyperlinkedIdentityField(
@@ -291,6 +297,9 @@ class SpeakerSerializer(serializers.ModelSerializer):
         fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
                   'categories', 'url_key', '_links')
 
+    def validate_url_key(self, value):
+        return empty_without_null_validator(value)
+
 
 class AdjudicatorSerializer(serializers.ModelSerializer):
 
@@ -348,6 +357,9 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
                   'institution', 'base_score', 'trainee', 'independent', 'adj_core',
                   'institution_conflicts', 'team_conflicts', 'adjudicator_conflicts', 'url_key', '_links')
+
+    def validate_url_key(self, value):
+        return empty_without_null_validator(value)
 
     def create(self, validated_data):
         adj = super().create(validated_data)
@@ -424,10 +436,13 @@ class TeamSerializer(serializers.ModelSerializer):
         break_categories = validated_data.pop('break_categories')
 
         emoji, code_name = pick_unused_emoji()
-        if 'emoji' not in validated_data:
+        if 'emoji' not in validated_data or validated_data['emoji'] is None:
             validated_data['emoji'] = emoji
-        if 'code_name' not in validated_data:
+        if 'code_name' not in validated_data or validated_data['code_name'] is None:
             validated_data['code_name'] = code_name
+
+        if validated_data['emoji'] == '':
+            validated_data['emoji'] = None  # Must convert to null to avoid uniqueness errors
 
         team = super().create(validated_data)
         team.break_categories.set(

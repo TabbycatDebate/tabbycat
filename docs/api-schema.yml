@@ -2484,6 +2484,7 @@ components:
           type: string
           format: email
           maxLength: 254
+          nullable: true
         phone:
           title: Phone
           type: string
@@ -2546,6 +2547,7 @@ components:
           format: slug
           pattern: '^[-a-zA-Z0-9_]+$'
           maxLength: 24
+          nullable: true
         _links:
           title: links
           type: object
@@ -3185,6 +3187,7 @@ components:
           type: string
           format: email
           maxLength: 254
+          nullable: true
         phone:
           title: Phone
           type: string
@@ -3214,6 +3217,7 @@ components:
           format: slug
           pattern: '^[-a-zA-Z0-9_]+$'
           maxLength: 24
+          nullable: true
         _links:
           title: links
           type: object
@@ -3263,6 +3267,7 @@ components:
           title: Emoji
           type: string
           maxLength: 2
+          nullable: true
         short_name:
           title: Short name
           description: >-

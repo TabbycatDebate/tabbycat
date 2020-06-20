@@ -7,6 +7,21 @@ Change Log
 *Release date: ?*
 
 
+2.4.1
+-----
+*Release date: TBD*
+
+- Require round sequence numbers to be nonnegative (`#1514 <https://github.com/TabbycatDebate/tabbycat/issues/1514>`_)
+    - This change may cause upgrades of existing sites to fail with an ``IntegrityError`` if they have a negative round sequence number. Please change all round sequence numbers to positive numbers (or 0) before upgrading. Negative round numbers cause most Tabbycat pages to fail anyway, so functioning existing sites shouldn't have this problem.
+- Fixed bug causing main action item not to appear in languages other than English
+- Allowed null values for emoji and code names in Teams' API
+- Enforced use of null values where field is undetermined yet cannot be blank in API
+- Improved performance of certain database pages
+- Fixed issue where null points caused an error in current standings
+- Fixed issue preventing the creation of speakers in teams through API
+- Little updates and clarifications to the documentation
+
+
 2.4.0 (Manx)
 ------------
 *Release date: 14 June 2020*
