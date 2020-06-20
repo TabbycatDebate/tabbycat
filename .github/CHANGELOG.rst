@@ -4,10 +4,12 @@ Change Log
 
 2.4.1
 -----
-*Release date: TBD*
+*Release date: 21 June 2020*
 
+- Fixed issue where redundant check-ins would crash (`#1513 <https://github.com/TabbycatDebate/tabbycat/pull/1513>`_)
 - Require round sequence numbers to be nonnegative (`#1514 <https://github.com/TabbycatDebate/tabbycat/issues/1514>`_)
     - This change may cause upgrades of existing sites to fail with an ``IntegrityError`` if they have a negative round sequence number. Please change all round sequence numbers to positive numbers (or 0) before upgrading. Negative round numbers cause most Tabbycat pages to fail anyway, so functioning existing sites shouldn't have this problem.
+- Adjust display of team names in registration cards (`#1511 <https://github.com/TabbycatDebate/tabbycat/pull/1511>`_)
 - Fixed bug causing main action item not to appear in languages other than English
 - Allowed null values for emoji and code names in Teams' API
 - Enforced use of null values where field is undetermined yet cannot be blank in API
