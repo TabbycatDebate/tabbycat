@@ -99,7 +99,7 @@ requires Git to work. So, install the latest version for Windows from the
 -----------------
   *Node.js is a JavaScript runtime.*
 
-Download and run the node.js 8 Installer (.msi) for either `x64 versions  <https://nodejs.org/dist/v8.9.4/node-v8.9.4-x64.msi>`_ of Windows or `x86 versions <https://nodejs.org/dist/v8.9.4/node-v8.9.4-x86.msi>`_.
+Download and run the node.js 8 Installer (.msi) for either `x64 versions  <https://nodejs.org/dist/v12.18.1/node-v12.18.1-x64.msi>`_ of Windows or `x86 versions <https://nodejs.org/dist/v12.18.1/node-v12.18.1-x86.msi>`_.
 
 2. Get the source code
 ======================

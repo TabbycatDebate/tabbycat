@@ -66,8 +66,8 @@
     "not ie <= 11"
   ],
   "engines": {
-    "node": "8.11.x",
-    "npm": "6.3.x"
+    "node": "12.18.x",
+    "npm": "6.14.x"
   },
   "license": "UNLICENSED",
   "repository": "https://github.com/TabbycatDebate/tabbycat"
