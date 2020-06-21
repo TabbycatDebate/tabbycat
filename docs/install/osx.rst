@@ -56,7 +56,7 @@ You'll need to use the PostgreSQL command-line tools, so run the command that th
 1(c). Node.js/NPM
 --------------------------------------------------------------------------------
 
-Download and run the `node.js 8 macOS Installer (.pkg) <https://nodejs.org/dist/v8.9.4/node-v8.9.4.pkg>`_
+Download and run the `node.js 8 macOS Installer (.pkg) <https://nodejs.org/dist/v12.18.1/node-v12.18.1.pkg>`_
 
 2. Get the source code
 ================================================================================
