@@ -543,8 +543,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     adj_str = "<strong>" + adj_str + "</strong>"
                 adj_str += '</span>'
                 adjs_list.append(adj_str)
-            return "<div class='clearfix pt-1 pb-1 d-block d-md-none'> \
-                    </div><span class='d-none d-md-inline'>, </span>".join(adjs_list)
+            return ("<div class='clearfix pt-1 pb-1 d-block d-md-none'> "
+                    "</div><span class='d-none d-md-inline'>, </span>").join(adjs_list)
 
         def construct_popover(adjs_data):
             popover_data = []
@@ -552,12 +552,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 descriptors = []
                 if a['position'] != AdjudicatorAllocation.POSITION_ONLY:
                     descriptors.append(self.ADJ_POSITION_NAMES[a['position']])
-                if a['adj'].institution is not None and (
-                        self.admin or self.tournament.pref('show_adjudicator_institutions')):
+                if (for_admin or self.tournament.pref('show_adjudicator_institutions')) and \
+                        a['adj'].institution is not None:
                     descriptors.append(a['adj'].institution.code)
-                if for_admin or self.tournament.pref('show_adjudicator_institutions'):
-                    if a['adj'].institution is not None:
-                        descriptors.append(a['adj'].institution.code)
                 if a.get('split', False):
                     descriptors.append("<span class='text-danger'>" + _("in minority") + "</span>")
                 text = a['adj'].name
