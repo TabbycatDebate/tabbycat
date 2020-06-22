@@ -2,6 +2,14 @@
 Change Log
 ==========
 
+2.4.2
+-----
+*Release date: 22 June 2020*
+
+- Removed duplicate institution name in popovers (`#1515 <https://github.com/TabbycatDebate/tabbycat/issues/1515>`_)
+- Fixed participant record page crashes resulting from `#1511 <https://github.com/TabbycatDebate/tabbycat/pull/1511>`_ (`#1518 <https://github.com/TabbycatDebate/tabbycat/pull/1518>`_)
+- Fixed hanging in preformed panel creation
+
 2.4.1
 -----
 *Release date: 21 June 2020*
