@@ -10,17 +10,38 @@
     </div>
 
       <div class="list-group-item">
-        {% if not use_code_names and team.short_name != team.long_name or private_url or admin_page %}
-          <strong>{% if participant %}{% trans "Team name:" %}{% else %}{% trans "Full name:" %}{% endif %}</strong>
-          {{ team.long_name }}
-            {% if not team.code_name or pref.team_code_names == 'off' %}
-              {% if pref.show_emoji %}({{ team.emoji }}){% endif %}
-            {% endif %}
+        {% if not use_code_names or private_url or admin_page %}
+          {% if team.short_name == team.long_name %}
+            <div>
+              <strong>{% trans "Team name:" %}</strong>
+              {{ team.long_name }}
+            </div>
+          {% else %}
+            <div>
+              <strong>{% trans "Full team name:" %}</strong>
+              {{ team.long_name }}
+            </div>
+            <div>
+              <strong>{% trans "Short team name:" %}</strong>
+              {{ team.short_name }}
+            </div>
+          {% endif %}
         {% endif %}
-        {% if team.code_name and pref.team_code_names != 'off' %}
-          <br />
-          <strong>{% trans "Code name:" %}</strong>
-          {{ team.code_name }} {% if pref.show_emoji %}({{ team.emoji }}){% endif %}
+        {% if pref.team_code_names != 'off' %}
+          <div>
+            <strong>{% trans "Code name:" %}</strong>
+            {% if team.code_name %}
+              {{ team.code_name }}
+            {% else %}
+              <span class="text-muted">{% trans "No code name assigned" %}</span>
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if pref.show_emoji %}
+          <div>
+            <strong>{% trans "Emoji:" %}</strong>
+            {{ team.emoji }}
+          </div>
         {% endif %}
       </div>
 
@@ -37,36 +58,42 @@
 
     {% if pref.public_break_categories or admin_page or private_url %}
       <div class="list-group-item">
-        <strong>{% trans "Eligible for break categories:" %}</strong>
-        {% for category in team.break_categories.all %}
-          {{ category.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
-        {% empty %}
-          <span class="text-muted">{% trans "None" %}</span>
-        {% endfor %}
-        {% if participant %}
-          <br />
-          <strong>{% trans "Speaker categories:" %}</strong>
-          {% for category in participant.categories.all %}
+        <div>
+          <strong>{% trans "Eligible for break categories:" %}</strong>
+          {% for category in team.break_categories.all %}
             {{ category.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
           {% empty %}
             <span class="text-muted">{% trans "None" %}</span>
           {% endfor %}
+        </div>
+        {% if participant %}
+          <div>
+            <strong>{% trans "Speaker categories:" %}</strong>
+            {% for category in participant.categories.all %}
+              {{ category.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
+            {% empty %}
+              <span class="text-muted">{% trans "None" %}</span>
+            {% endfor %}
+          </div>
         {% endif %}
       </div>
-    {% endif %} {# pref.public_break_categories or admin_page #}
+    {% endif %}
 
     {% if pref.show_team_institutions or admin_page or private_url %}
       <div class="list-group-item">
-        <strong>{% trans "Institution:" %}</strong>
-        {% if team.institution %}
-          {{ team.institution.name }}
-        {% else %}
-          <span class="text-muted">{% trans "Unaffiliated" %}</span>
-        {% endif %}
+        <div>
+          <strong>{% trans "Institution:" %}</strong>
+          {% if team.institution %}
+            {{ team.institution.name }}
+          {% else %}
+            <span class="text-muted">{% trans "Unaffiliated" %}</span>
+          {% endif %}
+        </div>
         {% if team.institution.region %}
-          <br />
-          <strong>{% trans "Region:" %}</strong>
-          {{ team.institution.region.name }}
+          <div>
+            <strong>{% trans "Region:" %}</strong>
+            {{ team.institution.region.name }}
+          </div>
         {% endif %}
       </div>
     {% endif %}
@@ -74,19 +101,23 @@
     {% if admin_page %}
       <div class="list-group-item">
 
-        <strong>{% trans "Institutional Conflicts:" %}</strong>
-        {% for ic in team.teaminstitutionconflict_set.all %}
-          {{ ic.institution.name }}{% if not forloop.last %}{% trans "; " %}{% endif %}
-        {% empty %}
-          <span class="text-muted">{% trans "None" %}</span>
-        {% endfor %}
+        <div>
+          <strong>{% trans "Institutional Conflicts:" %}</strong>
+          {% for ic in team.teaminstitutionconflict_set.all %}
+            {{ ic.institution.name }}{% if not forloop.last %}{% trans "; " %}{% endif %}
+          {% empty %}
+            <span class="text-muted">{% trans "None" %}</span>
+          {% endfor %}
+        </div>
 
-        <strong><br>{% trans "Adjudicator Conflicts:" %}</strong>
-        {% for ac in team.adjudicatorteamconflict_set.all %}
-          {{ ac.adjudicator.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
-        {% empty %}
-          <span class="text-muted">{% trans "None" %}</span>
-        {% endfor %}
+        <div>
+          <strong>{% trans "Adjudicator Conflicts:" %}</strong>
+          {% for ac in team.adjudicatorteamconflict_set.all %}
+            {{ ac.adjudicator.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
+          {% empty %}
+            <span class="text-muted">{% trans "None" %}</span>
+          {% endfor %}
+        </div>
 
       </div>
 

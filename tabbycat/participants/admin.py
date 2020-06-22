@@ -119,7 +119,7 @@ class TeamAdmin(admin.ModelAdmin):
     form = TeamForm
     list_display = ('long_name', 'short_name', 'emoji', 'institution',
                     'tournament')
-    search_fields = ('reference', 'short_name', 'institution__name',
+    search_fields = ('reference', 'short_name', 'code_name', 'institution__name',
                      'institution__code', 'tournament__name')
     list_filter = ('tournament', 'institution', 'break_categories')
     inlines = (SpeakerInline, TeamSideAllocationInline, VenueConstraintInline,
