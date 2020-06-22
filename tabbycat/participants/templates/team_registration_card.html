@@ -57,7 +57,7 @@
     {% endif %}
 
     {% if pref.public_break_categories or admin_page or private_url %}
-      <div class="list-group-item">
+      <div class="list-group-item {% if not pref.public_break_categories %} list-group-item-dark{% endif %}">
         <div>
           <strong>{% trans "Eligible for break categories:" %}</strong>
           {% for category in team.break_categories.all %}
@@ -80,7 +80,7 @@
     {% endif %}
 
     {% if pref.show_team_institutions or admin_page or private_url %}
-      <div class="list-group-item">
+      <div class="list-group-item {% if not pref.show_team_institutions %} list-group-item-dark{% endif %}">
         <div>
           <strong>{% trans "Institution:" %}</strong>
           {% if team.institution %}
@@ -99,7 +99,7 @@
     {% endif %}
 
     {% if admin_page %}
-      <div class="list-group-item">
+      <div class="list-group-item list-group-item-dark">
 
         <div>
           <strong>{% trans "Institutional Conflicts:" %}</strong>
@@ -121,7 +121,7 @@
 
       </div>
 
-      <div class="list-group-item">
+      <div class="list-group-item list-group-item-dark">
         <strong>{% trans "Room Constraints:" %}</strong>
         {% for vc in team.venue_constraints.all %}
           {{ vc.category }}{% if not forloop.last %}{% trans ", " %}{% endif %}
