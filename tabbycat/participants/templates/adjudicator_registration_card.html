@@ -22,7 +22,7 @@
     {% endif %}
 
     {% if pref.show_adjudicator_institutions or admin_page or private_url %}
-      <div class="list-group-item">
+      <div class="list-group-item {% if not pref.show_adjudicator_institutions %}list-group-item-dark{% endif %}">
         <div>
           <strong>{% trans "Institution:" %}</strong>
           {% if adjudicator.institution %}
@@ -45,7 +45,7 @@
     {% endif %}
 
     {% if admin_page %}
-      <div class="list-group-item">
+      <div class="list-group-item list-group-item-dark">
         <div>
           <strong>{% trans "Institutional Conflicts:" %}</strong>
           {% for ic in adjudicator.adjudicatorinstitutionconflict_set.all %}
@@ -76,7 +76,7 @@
         </div>
       </div>
 
-      <div class="list-group-item">
+      <div class="list-group-item list-group-item-dark">
         <strong>{% trans "Room Constraints:" %}</strong>
         {% for vc in adjudicator.venue_constraints.all %}
           {{ vc.category }}{% if not forloop.last %}{% trans ", " %}{% endif %}
