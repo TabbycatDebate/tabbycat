@@ -37,10 +37,10 @@ export default {
     },
     hasPanelClashConflict: function () {
       // adj-adj personal clashes
-      let debateAdjudicators = this.allDebatesOrPanels[this.debateOrPanelId].adjudicators
-      let clashes = this.adjudicatorClashesForItem(this.adjudicator.id)
+      const debateAdjudicators = this.allDebatesOrPanels[this.debateOrPanelId].adjudicators
+      const clashes = this.adjudicatorClashesForItem(this.adjudicator.id)
       if (clashes && 'adjudicator' in clashes) {
-        for (let clash of clashes.adjudicator) {
+        for (const clash of clashes.adjudicator) {
           if (this.isAdjudicatorInPanel(clash.id, debateAdjudicators)) {
             return true
           }
@@ -53,10 +53,10 @@ export default {
       if (!('teams' in this.allDebatesOrPanels[this.debateOrPanelId])) {
         return false // For preformed panels
       }
-      let debateTeams = this.allDebatesOrPanels[this.debateOrPanelId].teams
-      let clashes = this.adjudicatorClashesForItem(this.adjudicator.id)
+      const debateTeams = this.allDebatesOrPanels[this.debateOrPanelId].teams
+      const clashes = this.adjudicatorClashesForItem(this.adjudicator.id)
       if (clashes && 'team' in clashes) {
-        for (let clash of clashes.team) {
+        for (const clash of clashes.team) {
           if (this.isTeamInDebateTeams(clash.id, debateTeams)) {
             return true
           }
@@ -66,10 +66,10 @@ export default {
     },
     hasPanelInstitutionalConflict: function () {
       // adj-adj institutional clashes
-      let debateAdjudicators = this.allDebatesOrPanels[this.debateOrPanelId].adjudicators
-      let clashes = this.adjudicatorClashesForItem(this.adjudicator.id)
+      const debateAdjudicators = this.allDebatesOrPanels[this.debateOrPanelId].adjudicators
+      const clashes = this.adjudicatorClashesForItem(this.adjudicator.id)
       if (clashes && 'institution' in clashes) {
-        for (let clash of clashes.institution) {
+        for (const clash of clashes.institution) {
           if (this.isInstitutionInPanel(clash.id, debateAdjudicators, this.adjudicator.id)) {
             return true
           }
@@ -82,10 +82,10 @@ export default {
       if (!('teams' in this.allDebatesOrPanels[this.debateOrPanelId])) {
         return false // For preformed panels
       }
-      let debateTeams = this.allDebatesOrPanels[this.debateOrPanelId].teams
-      let clashes = this.adjudicatorClashesForItem(this.adjudicator.id)
+      const debateTeams = this.allDebatesOrPanels[this.debateOrPanelId].teams
+      const clashes = this.adjudicatorClashesForItem(this.adjudicator.id)
       if (clashes && 'institution' in clashes) {
-        for (let clash of clashes.institution) {
+        for (const clash of clashes.institution) {
           if (this.isInstitutionInDebateTeams(clash.id, debateTeams)) {
             return true
           }
@@ -95,11 +95,11 @@ export default {
     },
     hasPanelHistoryConflict: function () {
       // adj-adj history conflicts
-      let debateAdjudicators = this.allDebatesOrPanels[this.debateOrPanelId].adjudicators
-      let histories = this.adjudicatorHistoriesForItem(this.adjudicator.id)
+      const debateAdjudicators = this.allDebatesOrPanels[this.debateOrPanelId].adjudicators
+      const histories = this.adjudicatorHistoriesForItem(this.adjudicator.id)
       let smallestAgo = 99
       if (histories && 'adjudicator' in histories) {
-        for (let history of histories.adjudicator) {
+        for (const history of histories.adjudicator) {
           if (this.isAdjudicatorInPanel(history.id, debateAdjudicators)) {
             if (history.ago < smallestAgo) {
               smallestAgo = history.ago // Want to ensure we show the most recent clash
@@ -118,11 +118,11 @@ export default {
       if (!('teams' in this.allDebatesOrPanels[this.debateOrPanelId])) {
         return false // For preformed panels
       }
-      let debateTeams = this.allDebatesOrPanels[this.debateOrPanelId].teams
-      let histories = this.adjudicatorHistoriesForItem(this.adjudicator.id)
+      const debateTeams = this.allDebatesOrPanels[this.debateOrPanelId].teams
+      const histories = this.adjudicatorHistoriesForItem(this.adjudicator.id)
       let smallestAgo = 99
       if (histories && 'team' in histories) {
-        for (let history of histories.team) {
+        for (const history of histories.team) {
           if (this.isTeamInDebateTeams(history.id, debateTeams)) {
             if (history.ago < smallestAgo) {
               smallestAgo = history.ago // Want to ensure we show the most recent clash

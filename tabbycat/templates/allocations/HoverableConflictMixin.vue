@@ -17,7 +17,7 @@ export default {
         clashes = this.adjudicatorClashesForItem(itemId)
         histories = this.adjudicatorHistoriesForItem(itemId)
       }
-      this.setHoverConflicts({ 'clashes': clashes, 'histories': histories })
+      this.setHoverConflicts({ clashes: clashes, histories: histories })
     },
     hideHoverConflicts: function () {
       this.unsetHoverConflicts()
