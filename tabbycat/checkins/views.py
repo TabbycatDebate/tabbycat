@@ -269,7 +269,7 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
         except Person.DoesNotExist:
             raise Http404("Person does not exist")
         except PersonIdentifier.DoesNotExist:
-            messages.error(self.request, _("Could not check you in as you do not have an identifying code — your tab director may need to make you an identifier."))
+            messages.error(request, _("Could not check you in as you do not have an identifying code — your tab director may need to make you an identifier."))
             return super().post(request, *args, **kwargs)
 
         existing_checkin = get_unexpired_checkins(t, 'checkin_window_people').filter(identifier=identifier)
@@ -277,18 +277,20 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
             if existing_checkin.exists():
                 existing_checkin.delete()
                 checkin_dict = {'identifier': identifier.barcode}
-                messages.success(self.request, _("You have revoked your check-in."))
+                messages.success(request, _("You have revoked your check-in."))
             else:
-                messages.error(self.request, _("Whoops! Looks like your check-in was already revoked."))
+                messages.error(request, _("Whoops! Looks like your check-in was already revoked."))
+                return super().post(request, *args, **kwargs)
         elif action == 'checkin':
             if existing_checkin.exists():
-                messages.error(self.request, _("Whoops! Looks like you're already checked in."))
+                messages.error(request, _("Whoops! Looks like you're already checked in."))
+                return super().post(request, *args, **kwargs)
             else:
                 checkin = Event.objects.create(identifier=identifier,
                                                tournament=self.tournament)
                 checkin_dict = checkin.serialize()
                 checkin_dict['owner_name'] = person.name
-                messages.success(self.request, _("You are now checked in."))
+                messages.success(request, _("You are now checked in."))
         else:
             return TemplateResponse(request=self.request, template='400.html', status=400)
 

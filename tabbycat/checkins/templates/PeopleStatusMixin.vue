@@ -38,7 +38,7 @@ export default {
         return this.tct('%s, a %s from %s with no assigned identifier', subs)
       }
       if (entity.speakers !== null && entity.type === 'Team') {
-        let speakers = []
+        const speakers = []
         _.forEach(entity.speakers, (speaker) => {
           if (speaker.status) {
             speakers.push(this.tct('%s (Present; id=%s)', [speaker.name, speaker.identifier[0]]))

@@ -47,7 +47,7 @@ export default {
         this.scrollStop = false
         this.scrollPage(-1) // Faster close to top
       }
-      let windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
       if (event.clientY > (windowHeight - this.windowThresholds)) {
         this.scrollStop = false
         this.scrollPage(1)

@@ -60,7 +60,7 @@ import BallotEntryScoresheet from './BallotEntryScoresheet.vue'
 import BallotEntryFooter from './BallotEntryFooter.vue'
 
 export default {
-  mixins: [ ],
+  mixins: [],
   components: { BallotEntryHeader, BallotEntryScoresheet, BallotEntryFooter },
   props: {
     debateName: String,
@@ -120,34 +120,34 @@ export default {
       var changedScores = this.speakerScores[teamPosition]
       changedScores[speakerPosition] = Number(speakerScore)
       this.$set(this.speakerScores, teamPosition, changedScores)
-      let teamScore = Object.values(changedScores).reduce((a, b) => a + b, 0)
+      const teamScore = Object.values(changedScores).reduce((a, b) => a + b, 0)
       this.$set(this.teamScores, teamPosition, teamScore)
     },
   },
   mounted: function () {
-    let ballotForm = $('#ballot').first()
+    const ballotForm = $('#ballot').first()
     // Get per-adj scoresheets
-    for (let sheet of $(ballotForm).find('div[data-type="sheet"]')) {
+    for (const sheet of $(ballotForm).find('div[data-type="sheet"]')) {
       var sheetData = {
-        'teams': [],
-        'title': sheet.getAttribute('data-title'),
-        'subtitle': sheet.getAttribute('data-subtitle'),
+        teams: [],
+        title: sheet.getAttribute('data-title'),
+        subtitle: sheet.getAttribute('data-subtitle'),
       }
-      for (let team of $(sheet).find('div[data-type="team"]')) {
+      for (const team of $(sheet).find('div[data-type="team"]')) {
         var speakersData = []
-        for (let speaker of $(team).find('div[data-type="speaker"]')) {
+        for (const speaker of $(team).find('div[data-type="speaker"]')) {
           speakersData.push({
-            'position': speaker.getAttribute('data-position'),
-            'nameField': $(speaker).find('select')[0],
-            'duplicateField': $(speaker).find('input[type="checkbox"]')[0],
-            'scoreField': $(speaker).find('input[type="number"]')[0],
+            position: speaker.getAttribute('data-position'),
+            nameField: $(speaker).find('select')[0],
+            duplicateField: $(speaker).find('input[type="checkbox"]')[0],
+            scoreField: $(speaker).find('input[type="number"]')[0],
           })
         }
-        sheetData['teams'].push({
-          'name': team.getAttribute('data-name'),
-          'position': team.getAttribute('data-side'),
-          'id': team.getAttribute('data-id'),
-          'speakers': speakersData,
+        sheetData.teams.push({
+          name: team.getAttribute('data-name'),
+          position: team.getAttribute('data-side'),
+          id: team.getAttribute('data-id'),
+          speakers: speakersData,
         })
         this.speakerScores[team.getAttribute('data-side')] = {}
       }

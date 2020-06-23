@@ -26,7 +26,7 @@ import HoverPanelGroup from './HoverPanelGroup.vue'
 
 export default {
   components: { HoverPanelGroup },
-  mixins: [ HoverPanelTeamMixin, HoverPanelAdjudicatorMixin, HoverPanelSharedMixin ],
+  mixins: [HoverPanelTeamMixin, HoverPanelAdjudicatorMixin, HoverPanelSharedMixin],
   computed: {
     subject: function () {
       return this.hoverSubject
@@ -35,13 +35,13 @@ export default {
       return [this.topRow, this.bottomRow]
     },
     topRow: function () {
-      let leftFeatures = this.hoverType ? this['topleft' + this.hoverType] : []
-      let rightFeatures = this.hoverType ? this['topright' + this.hoverType] : []
+      const leftFeatures = this.hoverType ? this['topleft' + this.hoverType] : []
+      const rightFeatures = this.hoverType ? this['topright' + this.hoverType] : []
       return { left: leftFeatures, right: rightFeatures }
     },
     bottomRow: function () {
-      let leftFeatures = this.hoverType ? this['bottomleft' + this.hoverType] : []
-      let rightFeatures = this.hoverType ? this['bottomright' + this.hoverType] : []
+      const leftFeatures = this.hoverType ? this['bottomleft' + this.hoverType] : []
+      const rightFeatures = this.hoverType ? this['bottomright' + this.hoverType] : []
       return { left: leftFeatures, right: rightFeatures }
     },
     ...mapState(['hoverSubject', 'hoverType', 'highlights', 'extra']),

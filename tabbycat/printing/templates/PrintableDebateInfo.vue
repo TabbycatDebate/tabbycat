@@ -176,7 +176,7 @@ export default {
       return this.ballot.debateAdjudicators
     },
     panellistsAsString: function () {
-      let adjs = []
+      const adjs = []
       this.panellistsExcludingSelf.forEach((a) => {
         let position = ''
         switch (a.position) {

@@ -9,19 +9,20 @@
       </h4>
     </div>
 
-    {% with show_codes=team.code_name and pref.team_code_names != 'off' show_names=not use_code_names and team.short_name != team.long_name %}
       <div class="list-group-item">
-        {% if private_url or admin_page or show_names %}
+        {% if not use_code_names and team.short_name != team.long_name or private_url or admin_page %}
           <strong>{% if participant %}{% trans "Team name:" %}{% else %}{% trans "Full name:" %}{% endif %}</strong>
-          {{ team.long_name }} {% if pref.show_emoji and not show_codes %}({{ team.emoji }}){% endif %}
+          {{ team.long_name }}
+            {% if not team.code_name or pref.team_code_names == 'off' %}
+              {% if pref.show_emoji %}({{ team.emoji }}){% endif %}
+            {% endif %}
         {% endif %}
-        {% if show_codes %}
+        {% if team.code_name and pref.team_code_names != 'off' %}
           <br />
           <strong>{% trans "Code name:" %}</strong>
           {{ team.code_name }} {% if pref.show_emoji %}({{ team.emoji }}){% endif %}
         {% endif %}
       </div>
-    {% endwith %}
 
     {% if pref.show_speakers_in_draw %}
       <div class="list-group-item">
