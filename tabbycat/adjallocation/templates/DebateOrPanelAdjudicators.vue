@@ -47,6 +47,7 @@ export default {
       if (this.adjudicatorScores.length > 0) {
         return this.uiRound(this.average(this.adjudicatorScores))
       }
+      return false
     },
     averageVotingScore: function () {
       if (this.adjudicatorScores.length > 1) {
@@ -54,6 +55,7 @@ export default {
         const majorityScores = this.adjudicatorScores.slice(0, votingMajority)
         return this.uiRound(this.average(majorityScores))
       }
+      return false
     },
   },
   methods: {

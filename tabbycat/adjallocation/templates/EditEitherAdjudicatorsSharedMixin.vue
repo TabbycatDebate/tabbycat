@@ -37,7 +37,7 @@ export default {
       if (debateID === null) {
         return null // Moving to or from Unused
       }
-      if (!this.allDebatesOrPanels.hasOwnProperty(debateID)) {
+      if (!Object.prototype.hasOwnProperty.call(this.allDebatesOrPanels, debateID)) {
         const explanation = `A change to the allocation may have been unable to be fulfilled by the
                            server as there was no matching debate on this page. Refresh this page
                            to bring its copy of debates back in-sync with the server.`

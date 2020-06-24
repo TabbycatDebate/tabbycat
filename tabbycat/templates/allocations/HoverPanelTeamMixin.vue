@@ -60,6 +60,7 @@ export default {
       if (clashes) {
         return this.makeClashItems(clashes)
       }
+      return null
     },
     bottomrightteam: function () {
       // History
@@ -67,6 +68,7 @@ export default {
       if (histories) {
         return this.makeHistoryItems(histories)
       }
+      return null
     },
     ...mapGetters(['teamClashesForItem', 'teamHistoriesForItem']),
   },

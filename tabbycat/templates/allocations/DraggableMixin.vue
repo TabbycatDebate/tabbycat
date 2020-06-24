@@ -2,7 +2,10 @@
 
 export default {
   props: {
-    locked: false,
+    locked: {
+      type: Boolean,
+      default: false,
+    },
     dragPayload: Object, // The context of the draggable item; sent to store
   },
   data: function () {

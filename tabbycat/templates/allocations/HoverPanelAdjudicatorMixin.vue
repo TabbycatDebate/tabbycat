@@ -29,6 +29,7 @@ export default {
       if (clashes) {
         return this.makeClashItems(clashes)
       }
+      return null
     },
     bottomrightadjudicator: function () {
       // History
@@ -36,6 +37,7 @@ export default {
       if (histories) {
         return this.makeHistoryItems(histories)
       }
+      return null
     },
     ...mapGetters(['adjudicatorClashesForItem', 'adjudicatorHistoriesForItem']),
   },

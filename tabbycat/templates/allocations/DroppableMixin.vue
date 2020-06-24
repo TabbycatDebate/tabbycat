@@ -5,7 +5,10 @@ import { mapMutations } from 'vuex'
 
 export default {
   props: {
-    locked: false,
+    locked: {
+      type: Boolean,
+      default: false,
+    },
     handleDrop: Function,
     dropContext: Object, // Passed to the handler of the item
   },

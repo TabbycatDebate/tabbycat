@@ -47,23 +47,27 @@
     </slot>
     <slot name="teams">
       <div class="vc-bp-grid flex-12 flex-truncate" v-if="sides.length === 4">
-        <div :class="['d-flex flex-truncate align-items-center']"
-             v-for="side in sides" v-if="debateOrPanel.teams">
-          <inline-team v-if="debateOrPanel.teams[side]" :debate-id="debateOrPanel.id"
-                       :is-elimination="isElimination" :team="debateOrPanel.teams[side]"></inline-team>
-          <div v-else class="bg-danger small text-white text-uppercase px-2 py-1 flex-fill d-flex align-items-center">
-            No {{ side }} team
-          </div>
+        <div :class="['d-flex flex-truncate align-items-center']" v-if="debateOrPanel.teams">
+          <template v-for="side in sides">
+            <inline-team v-if="debateOrPanel.teams[side]" :debate-id="debateOrPanel.id"
+                         :is-elimination="isElimination" :team="debateOrPanel.teams[side]"
+                         :key="debateOrPanel.teams[side].id"></inline-team>
+            <div v-else class="bg-danger small text-white text-uppercase px-2 py-1 flex-fill d-flex align-items-center">
+              No {{ side }} team
+            </div>
+          </template>
         </div>
       </div>
       <div class="d-flex flex-column flex-6 flex-truncate" v-if="sides.length === 2">
-        <div :class="['d-flex flex-fill align-items-center']"
-             v-for="side in sides" v-if="debateOrPanel.teams">
-          <inline-team v-if="debateOrPanel.teams[side]" :debate-id="debateOrPanel.id"
-                       :is-elimination="isElimination" :team="debateOrPanel.teams[side]"></inline-team>
-          <div v-else class="bg-danger small text-white text-uppercase px-2 py-1 flex-fill d-flex align-items-center">
-            No {{ side }} team
-          </div>
+        <div :class="['d-flex flex-fill align-items-center']" v-if="debateOrPanel.teams">
+          <template v-for="side in sides">
+            <inline-team v-if="debateOrPanel.teams[side]" :debate-id="debateOrPanel.id"
+                         :is-elimination="isElimination" :team="debateOrPanel.teams[side]"
+                         :key="debateOrPanel.teams[side].id"></inline-team>
+            <div v-else class="bg-danger small text-white text-uppercase px-2 py-1 flex-fill d-flex align-items-center">
+              No {{ side }} team
+            </div>
+          </template>
         </div>
       </div>
     </slot>

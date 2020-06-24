@@ -2,16 +2,16 @@
 
   <transition name="slide-over">
     <div class="panel slideover-info" v-if="this.subject">
-
-      <div v-if="row" v-for="row in rows" class="list-group-item flex-horizontal pl-2 flex-justify">
-        <div class="flex-align-start">
-          <hover-panel-group :groups="row['left']"></hover-panel-group>
+      <template v-if="row">
+        <div v-for="row in rows" class="list-group-item flex-horizontal pl-2 flex-justify">
+          <div class="flex-align-start">
+            <hover-panel-group :groups="row['left']"></hover-panel-group>
+          </div>
+          <div>
+            <hover-panel-group :groups="row['right']"></hover-panel-group>
+          </div>
         </div>
-        <div>
-          <hover-panel-group :groups="row['right']"></hover-panel-group>
-        </div>
-      </div>
-
+      </template>
     </div>
   </transition>
 
