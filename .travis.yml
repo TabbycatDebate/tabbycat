@@ -28,6 +28,7 @@ jobs:
     - os: linux
       python: 3.8
       before_install:
+        - nvm install 12.18.1
         - node --version
         - npm --version
       install:
@@ -47,6 +48,7 @@ jobs:
     - os: linux
       python: 3.7
       before_install:
+        - nvm install 12.18.1
         - node --version
         - npm --version
       install:
@@ -72,6 +74,7 @@ jobs:
     - os: linux
       python: 3.6
       before_install:
+        - nvm install 12.18.1
         - node --version
         - npm --version
       install:
