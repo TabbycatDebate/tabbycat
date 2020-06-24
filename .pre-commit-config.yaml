@@ -26,7 +26,22 @@ repos:
   rev: '0.0.2' # Use the sha or tag you want to point at like 0.0.1
   hooks:
   - id: stylelint
-    exclude_types: ['css'] # Only lint sass; not static assets
-    additional_dependencies: [
-      'stylelint@13.6.1', 'stylelint-config-standard@20.0.0', 'stylelint-scss@3.18.0'
-    ]
+    files: '\.scss' # Only lint sass; not static assets
+    types: [file]
+    additional_dependencies:
+    - stylelint@13.6.1
+    - stylelint-config-standard@20.0.0
+    - stylelint-scss@3.18.0
+- repo: https://github.com/pre-commit/mirrors-eslint
+  rev: 'v7.3.1'  # Use the sha / tag you want to point at
+  hooks:
+  - id: eslint
+    files: '\.vue'
+    types: [file]
+    additional_dependencies:
+    - eslint@6.8.0
+    - eslint-plugin-import@2.20.2
+    - eslint-plugin-node@11.1.0
+    - eslint-plugin-promise@4.2.1
+    - eslint-plugin-standard@4.0.0
+    - eslint-plugin-vue@6.2.2
