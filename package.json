@@ -57,7 +57,6 @@
     "vue-template-compiler": "^2.6.11",
     "vue-touch": "^2.0.0-beta.4",
     "vuex": "^3.4.0",
-    "babel-eslint": "^10.1.0",
     "livereload": "^0.9.1"
   },
   "devDependencies": {},
