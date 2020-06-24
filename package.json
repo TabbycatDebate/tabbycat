@@ -4,7 +4,7 @@
   "scripts": {
     "serve": "npm-run-all -p serve-*",
     "build": "NODE_ENV='production' npm-run-all -p build-* cp-*",
-    "lint": "npm-run-all -p lint-*",
+    "lint": "pre-commit run --all-files",
     "build-sass": "npx node-sass --output-style compressed --include-path node_modules/ --output tabbycat/static/css/ tabbycat/templates/scss/style.scss",
     "build-sass-print": "npx node-sass --output-style compressed --output tabbycat/static/css/ tabbycat/templates/scss/printables.scss",
     "build-vue": "npx vue-cli-service build",
@@ -14,9 +14,6 @@
     "cp-jquery": "cpx node_modules/jquery/dist/jquery.js tabbycat/static/js/vendor",
     "cp-validate": "cpx node_modules/jquery-validation/dist/jquery.validate.js tabbycat/static/js/vendor",
     "docs": "sphinx-autobuild docs docs/_build/html --port 7999",
-    "lint-python": "flake8 .",
-    "lint-sass": "stylelint --cache \"tabbycat/templates/scss/**/*.scss\"",
-    "lint-vue": "npx vue-cli-service lint tabbycat/ --ext .vue --cache --ignore-pattern tabbycat/staticfiles/,tabbycat/static/",
     "serve-django": "dj r 0.0.0.0:8000",
     "serve-live": "livereload 'tabbycat/' --exts 'css' --exclusions 'tabbycat/static/vue/'",
     "serve-sass": "npm run build-sass -- --watch --recursive --output-style expanded & npm run build-sass-print -- --watch --recursive --output-style expanded --sourcemap",
@@ -67,10 +64,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2.2",
-    "livereload": "^0.9.1",
-    "stylelint": "^9.10.x",
-    "stylelint-config-standard": "^18.3.0",
-    "stylelint-scss": "^3.18.0"
+    "livereload": "^0.9.1"
   },
   "devDependencies": {},
   "browserslist": [

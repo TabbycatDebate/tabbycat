@@ -22,3 +22,11 @@ repos:
     - pep8-naming
     - flake8-commas
     exclude: migrations/
+- repo: https://github.com/awebdeveloper/pre-commit-stylelint
+  rev: '0.0.2' # Use the sha or tag you want to point at like 0.0.1
+  hooks:
+  - id: stylelint
+    exclude_types: ['css'] # Only lint sass; not static assets
+    additional_dependencies: [
+      'stylelint@13.6.1', 'stylelint-config-standard@20.0.0', 'stylelint-scss@3.18.0'
+    ]
