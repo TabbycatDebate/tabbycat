@@ -97,6 +97,11 @@ class BreakCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
 class SpeakerCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.SpeakerCategorySerializer
 
+    def get_queryset(self):
+        if not self.request.user or not self.request.user.is_staff:
+            return super().get_queryset().filter(public=True)
+        return super().get_queryset()
+
 
 class BreakEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, RetrieveUpdateAPIView):
     serializer_class = serializers.BreakEligibilitySerializer
