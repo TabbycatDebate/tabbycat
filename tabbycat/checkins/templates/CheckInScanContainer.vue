@@ -150,26 +150,26 @@ export default {
             drawingCtx.clearRect(
               0, 0,
               parseInt(drawingCanvas.getAttribute('width')),
-              parseInt(drawingCanvas.getAttribute('height'))
+              parseInt(drawingCanvas.getAttribute('height')),
             )
             result.boxes.filter(box => box !== result.box).forEach((box) => {
               // The searching for box
               Quagga.ImageDebug.drawPath(
                 box, { x: 0, y: 1 }, drawingCtx,
-                { color: '#fd681d', lineWidth: 2 }
+                { color: '#fd681d', lineWidth: 2 },
               )
             })
           }
           if (result.box) {
             Quagga.ImageDebug.drawPath(
               result.box, { x: 0, y: 1 }, drawingCtx,
-              { color: '#663da0', lineWidth: 4 }
+              { color: '#663da0', lineWidth: 4 },
             )
           }
           if (result.codeResult && result.codeResult.code) {
             Quagga.ImageDebug.drawPath(
               result.line, { x: 'x', y: 'y' }, drawingCtx,
-              { color: '#00bf8a', lineWidth: 8 }
+              { color: '#00bf8a', lineWidth: 8 },
             )
           }
         }

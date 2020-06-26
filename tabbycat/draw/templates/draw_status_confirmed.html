@@ -33,7 +33,7 @@
             {% endif %} {# active_adjs < debates_in_round #}
 
             {% roundurl 'edit-debate-adjudicators' as url %}
-            {% if active_adjs < debates_in_round or no_chair > 0 or pref.ballots_per_debate == 'per-adj' and even_panel > 0 %}
+            {% if active_adjs < debates_in_round or no_chair > 0 or round.ballots_per_debate == 'per-adj' and even_panel > 0 %}
               {% trans "Allocate adjudicators" as title %}
               {% include "components/item-action.html" with text=title type="success" to_complete=True %}
             {% else %}

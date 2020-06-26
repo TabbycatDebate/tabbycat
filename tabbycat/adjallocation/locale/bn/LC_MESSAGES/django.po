@@ -1,0 +1,452 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"PO-Revision-Date: 2020-06-16 23:14\n"
+"Last-Translator: \n"
+"Language-Team: Bengali\n"
+"Language: bn_BD\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: bn\n"
+"X-Crowdin-File: /develop/tabbycat/adjallocation/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 922\n"
+
+#: adjallocation/allocators/base.py:34
+msgid "There are no available adjudicators. Ensure there are adjudicators who have been marked as available for this round before auto-allocating."
+msgstr "কোনো বিচারকের উপস্থিতি নিশ্চিত করা হয়নি। স্বয়ংক্রিয় বিচারক সংস্থানের আগে যথেষ্ট বিচারকের উপস্থিতি নিশ্চিত করুন."
+
+#: adjallocation/allocators/hungarian.py:50
+#, python-format
+msgid "%(count)s score is larger than the maximum permitted adjudicator score (%(score).1f)."
+msgid_plural "%(count)s scores are larger than the maximum permitted adjudicator score (%(score).1f)."
+msgstr[0] "%(count)s আপনার জমা দেয়া স্কোরটি সর্বোচ্চ বিচারক স্কোর (%(score).1f) অপেক্ষা বড়."
+msgstr[1] "%(count)s জমাকৃত স্কোরটি নির্ধারিত সর্বোচ্চ বিচারক স্কোর (%(score).1f) অপেক্ষা বেশি."
+
+#: adjallocation/allocators/hungarian.py:59
+#, python-format
+msgid "%(count)s score is smaller than the minimum permitted adjudicator score (%(score).1f)."
+msgid_plural "%(count)s scores are smaller than the minimum permitted adjudicator score (%(score).1f)."
+msgstr[0] "%(count)s আপনার জমা দেয়া স্কোরটি সর্বোচ্চ বিচারক স্কোর (%(score).1f) অপেক্ষা বড়."
+msgstr[1] "%(count)s আপনার জমা দেয়া স্কোরটি সর্বোচ্চ বিচারক স্কোর (%(score).1f) অপেক্ষা বড়."
+
+#: adjallocation/allocators/hungarian.py:111
+msgid "There are no adjudicators eligible to be a chair or panellist. Try changing the \"Minimum feedback score required to be allocated as chair or panellist\" setting to something lower than at least some adjudicators' current scores, and try again."
+msgstr "চেয়ার অথবা প্যানেলিস্ট হওয়ার যোগ্য বিচারক নেই। \"চেয়ার বা প্যানেলিস্ট হওয়ার সর্বনিম্ন মূল্যায়ন স্কোর\" পরিবর্তন করে বিচারকদের বর্তমান স্কোরের নিচে নির্ধারণ করুন।."
+
+#: adjallocation/allocators/hungarian.py:119
+msgid "There are no debates for this round. Maybe you haven't created a draw yet?"
+msgstr "এই রাউন্ডের জন্য কোনো বিতর্ক নেই। সম্ভবত আপনি ড্র তৈরী করেন নি এখনো?"
+
+#: adjallocation/allocators/hungarian.py:166
+#, python-format
+msgid "There are %(debate_count)s debates but only %(adj_count)s voting adjudicators."
+msgstr "%(debate_count)s টি বিতর্ক আছে কিন্তু মাত্র %(adj_count)s জন ভোট করার মতো বিচারক আছেন।"
+
+#: adjallocation/allocators/hungarian.py:172
+#, python-format
+msgid "There are %(panel_debates)s panel debates but only %(panellists)s available panellists (less than %(needed)s)."
+msgstr "%(panel_debates)s টি প্যানেল বিতর্ক আছে কিন্তু মাত্র %(panellists)s জন প্যানেলিস্ট আছেন ( %(needed)s এর তুলনায় কম)."
+
+#: adjallocation/allocators/hungarian.py:282
+#, python-format
+msgid "There are %(debates_count)s debates but only %(voting_count)s voting adjudicators."
+msgstr "%(debates_count)s টি বিতর্ক আছে কিন্তু মাত্র %(voting_count)s জন ভোট করার মতো বিচারক আছেন।"
+
+#: adjallocation/apps.py:7
+msgid "Adjudicator Allocation"
+msgstr "বিচারক নির্ধারণ"
+
+#: adjallocation/consumers.py:59
+msgid "Draw is already released, unrelease draw to redo auto-allocations."
+msgstr "ড্র ইতোমধ্যে প্রকাশিত হয়েছে, পুণরায় স্বয়ংক্রিয় বিচারক বন্টনের জন্য সেটি বন্ধ করুন।."
+
+#: adjallocation/consumers.py:63
+msgid "Draw is not confirmed, confirm draw to run auto-allocations."
+msgstr "ড্র নিশ্চিত করা হয়নি, স্বয়ংক্রিয় বিচারক বন্টনের জন্য ড্র নিশ্চিত করুন।."
+
+#: adjallocation/consumers.py:69
+msgid "There are no preformed panels available to allocate."
+msgstr "কোনো পূর্বগঠিত প্যানেল নেই।"
+
+#: adjallocation/consumers.py:83
+msgid "Successfully auto-allocated preformed panels to debates."
+msgstr "সফলভাবে পূর্বগঠিত প্যানেল অনুযায়ী স্বয়ংক্রিয়ভাবে বিচারক নির্ধারিত হয়েছে।"
+
+#: adjallocation/consumers.py:109
+#, python-format
+msgid "Successfully auto-allocated adjudicators to debates. However, there was a warning:"
+msgid_plural "Successfully auto-allocated adjudicators to debates. However, there were %(count)d warnings:"
+msgstr[0] "বিতর্কের বিচারক স্বয়ংক্রিয়ভাবে নির্ধারিত হয়েছে। তবে, একটি সতর্কবানী ছিলোঃ"
+msgstr[1] "পূর্বগঠিতপ্যানেল অনুযায়ী সফলভাবে বিতর্কের বিচারক স্বয়ংক্রিয়ভাবে নির্ধারিত হয়েছে। তবে, %(count)d টি সতর্কবানী ছিলোঃ"
+
+#: adjallocation/consumers.py:115
+msgid "Successfully auto-allocated adjudicators to debates."
+msgstr "সফলভাবে বিতর্কের বিচারকদের স্বয়ংক্রিয়ভাবে নির্ধারণ করা হয়েছে।"
+
+#: adjallocation/consumers.py:131
+msgid "There aren't any panels to fill. Create panels first."
+msgstr "কোনো পূর্বগঠিত প্যানেল নেই। প্রথমে প্যানেল তৈরী করুন।"
+
+#: adjallocation/consumers.py:155
+#, python-format
+msgid "Successfully auto-allocated adjudicators to preformed panels. However, there was a warning:"
+msgid_plural "Successfully auto-allocated adjudicators to preformed panels. However, there were %(count)d warnings:"
+msgstr[0] "পূর্বগঠিত প্যানেল অনুযায়ী সফলভাবে বিতর্কের বিচারক স্বয়ংক্রিয়ভাবে নির্ধারিত হয়েছে। তবে, একটি সতর্কবানী ছিলোঃ"
+msgstr[1] "পূর্বগঠিত প্যানেল অনুযায়ী সফলভাবে বিতর্কের বিচারক স্বয়ংক্রিয়ভাবে নির্ধারিত হয়েছে। তবে, %(count)d টি সতর্কবানী ছিলোঃ"
+
+#: adjallocation/consumers.py:161
+msgid "Successfully auto-allocated adjudicators to preformed panels."
+msgstr "স্বয়ংক্রিয়ভাবে বিচারকগণের  পূর্বগঠিত প্যানেল নির্ধারিত হয়েছে।"
+
+#: adjallocation/consumers.py:207
+msgid "You have no break category set as 'is general' so debate importances can't be calculated."
+msgstr "কোনো ব্রেক বিভাগকে \"সাধারণ\" হিসেবে চিহ্নিত করা না হওয়ায় বিতর্কের গুরুত্ব হিসাব করা যায় নি।"
+
+#: adjallocation/consumers.py:215
+msgid "Succesfully auto-prioritised debates."
+msgstr "স্বয়ংক্রিয়ভাবে বিতর্কের গুরুত্ব নির্ধারিত হয়েছে। "
+
+#: adjallocation/consumers.py:237
+msgid "You have no break category set as 'is general' so panel importances can't be calculated."
+msgstr "কোনো ব্রেক বিভাগকে \"সাধারণ\" হিসেবে চিহ্নিত করা না হওয়ায় প্যানেলের গুরুত্ব হিসাব করা যায় নি।"
+
+#: adjallocation/consumers.py:246
+msgid "Succesfully auto-prioritised preformed panels."
+msgstr "স্বয়ংক্রিয়ভাবে পূর্বনির্ধারিত প্যানেলের গুরুত্ব নির্ধারিত হয়েছে।"
+
+#: adjallocation/consumers.py:264
+msgid "Since this is the first round, the preformed panels aren't annotated with brackets and liveness."
+msgstr "যেহেতু এটি প্রথম পর্ব, তাই পূর্বগঠিত প্যানেলগুলির সাথে ব্র্যাকেট এবং সম্ভাব্যতার তথ্য দেখানো যায় নি।"
+
+#: adjallocation/consumers.py:267
+msgid "The previous round's draw doesn't exist, so preformed panels can't be annotated with brackets and liveness."
+msgstr "আগের পর্বের ড্র এখনো করা হয়নি, তাই পূর্বগঠিত প্যানেলকে ব্র্যাকেট এবং সম্ভাব্যতার সাথে দেখানো যায় নি।"
+
+#: adjallocation/consumers.py:270
+msgid "Succesfully created new preformed panels for this round."
+msgstr "এই পর্বের জন্য পূর্বগঠিত প্যানেল সফলভাবে তৈরী হয়েছে।"
+
+#: adjallocation/models.py:18
+msgid "chair"
+msgstr "স্পিকার"
+
+#: adjallocation/models.py:19
+msgid "panellist"
+msgstr "প্যানেলিস্ট"
+
+#: adjallocation/models.py:20
+msgid "trainee"
+msgstr "নবিশ বিচারক"
+
+#: adjallocation/models.py:26
+msgid "debate"
+msgstr "বিতর্ক"
+
+#: adjallocation/models.py:28 adjallocation/models.py:48
+#: adjallocation/models.py:80 adjallocation/models.py:169
+msgid "adjudicator"
+msgstr "বিচারক"
+
+#: adjallocation/models.py:30 adjallocation/models.py:171
+msgid "type"
+msgstr "ধরণ"
+
+#: adjallocation/models.py:31
+msgid "available?"
+msgstr "উপস্থিত?"
+
+#: adjallocation/models.py:34
+msgid "debate adjudicator"
+msgstr "বিতর্কের বিচারক"
+
+#: adjallocation/models.py:35
+msgid "debate adjudicators"
+msgstr "বিতর্কের বিচারকগণ"
+
+#: adjallocation/models.py:50 adjallocation/models.py:95
+msgid "team"
+msgstr "দল"
+
+#: adjallocation/models.py:53
+msgid "adjudicator-team conflict"
+msgstr "বিচারক-দল দ্বন্দ্ব"
+
+#: adjallocation/models.py:54
+msgid "adjudicator-team conflicts"
+msgstr "বিচারক-দল দ্বন্দ্বসমূহ"
+
+#: adjallocation/models.py:64
+msgid "adjudicator 1"
+msgstr "বিচারক ১"
+
+#: adjallocation/models.py:67
+msgid "adjudicator 2"
+msgstr "বিচারক ২"
+
+#: adjallocation/models.py:70
+msgid "adjudicator-adjudicator conflict"
+msgstr "বিচারক-বিচারক দ্বন্দ্ব"
+
+#: adjallocation/models.py:71
+msgid "adjudicator-adjudicator conflicts"
+msgstr "বিচারক-বিচারক দ্বন্দ্বসমূহ"
+
+#: adjallocation/models.py:82 adjallocation/models.py:97
+msgid "institution"
+msgstr "প্রতিষ্ঠান"
+
+#: adjallocation/models.py:85
+msgid "adjudicator-institution conflict"
+msgstr "বিচারক-প্রতিষ্ঠান দ্বন্দ্ব"
+
+#: adjallocation/models.py:86
+msgid "adjudicator-institution conflicts"
+msgstr "বিচারক-প্রতিষ্ঠান দ্বন্দ্বসমূহ"
+
+#: adjallocation/models.py:100
+msgid "team-institution conflict"
+msgstr "দল-প্রতিষ্ঠান দ্বন্দ্ব"
+
+#: adjallocation/models.py:101
+msgid "team-institution conflicts"
+msgstr "দল-প্রতিষ্ঠান দ্বন্দ্বসমূহ"
+
+#: adjallocation/models.py:114
+msgid "round"
+msgstr "পর্ব"
+
+#: adjallocation/models.py:116
+msgid "importance"
+msgstr "গুরুত্ব"
+
+#: adjallocation/models.py:119
+msgid "minimum bracket"
+msgstr "সর্বনিম্ন ব্র্যাকেট"
+
+#: adjallocation/models.py:120
+msgid "Estimate of the lowest bracket for which this panel might be"
+msgstr "সর্বনিম্ন যে ব্র্যাকেটে এই প্যানেল বিচারকার্য করতে পারে"
+
+#: adjallocation/models.py:122
+msgid "maximum bracket"
+msgstr "সর্বোচ্চ ব্র্যাকেট"
+
+#: adjallocation/models.py:123
+msgid "Estimate of the highest bracket for which this panel might be"
+msgstr "সর্বোচ্চ যে ব্র্যাকেটে এই প্যানেল বিচারকার্য করতে পারে"
+
+#: adjallocation/models.py:125
+msgid "room rank"
+msgstr "কক্ষের র‍্যাংক "
+
+#: adjallocation/models.py:126
+msgid "Sequential number of panel, not used in any algorithms"
+msgstr "কোনো এলগোরিদমে ব্যবহৃত হয়নি এমন প্যানেলের ক্রমিক নাম্বার"
+
+#: adjallocation/models.py:128
+msgid "liveness"
+msgstr "সম্ভাব্যতা"
+
+#: adjallocation/models.py:129
+msgid "Number of categories this room is expected to be live for"
+msgstr "যে কয়টি বিভাগের জন্য এই কক্ষটি সম্ভাব্য"
+
+#: adjallocation/models.py:132
+msgid "preformed panel"
+msgstr "পূর্বগঠিত প্যানেল"
+
+#: adjallocation/models.py:133
+msgid "preformed panels"
+msgstr "পূর্বগঠিত প্যানেল"
+
+#: adjallocation/models.py:167
+msgid "panel"
+msgstr "প্যানেল"
+
+#: adjallocation/models.py:174
+msgid "preformed panel adjudicator"
+msgstr "পূর্বগঠিত প্যানেলের বিচারক"
+
+#: adjallocation/models.py:175
+msgid "preformed panel adjudicators"
+msgstr "পূর্বগঠিত প্যানেলের বিচারকগণ"
+
+#: adjallocation/preformed/base.py:41
+msgid "There are no preformed panels to use. Have you allocated preformed panels for this round? If not, try just auto-allocating adjudicators instead."
+msgstr "প্যানেল পূর্বগঠিত আছে। এ পর্বের জন্যে কি আপনি পূর্বগঠিত প্যানেল নির্ধারণ করেছেন? না করে থাকে স্বয়ংক্রিয়ভাবে বিচারক নির্ধারণ করে দেখুন?"
+
+#: adjallocation/templates/preformed_index.html:5 adjallocation/views.py:128
+msgid "Preformed Panels"
+msgstr "পূর্বগঠিত প্যানেল"
+
+#: adjallocation/templates/preformed_index.html:10
+msgid "A preformed panel is a defined group of adjudicators that is specified for a round before its draw has been generated. You can then manually or automatically apply these panels during the normal adjudicator allocation process. This can make allocations faster or allow you to create more considered panels of adjudicators."
+msgstr "একটি পূর্বগঠিত প্যানেল একটি নির্ধারিত বিচারকের সমষ্টি যেটি কোনো পর্বের ড্র তৈরীর পূর্বেই নির্ধারণ করা থাকে। তারপর আপনি স্বয়ংক্রিয়ভাবে অথবা নিজে নিজে এই প্যানেলগুলি স্বাভাবিক বিচারক নির্ধারণ প্রক্রিয়ার মাধ্যমে কোনো কক্ষে নির্দিষ্ট করতে পারেন। এটি আপনার বিচারক নির্ধারণ প্রক্রিয়াকে দ্রুত করবে।"
+
+#: adjallocation/templates/preformed_index.html:16
+msgid "Note that only adjudicators who have been marked as 'available' for that round will be able to be allocated for that round, so you may need to set their availability in advance."
+msgstr "উল্লেখ্য যে, শুধু যেসব বিচারকের উপস্থিত হিসেবে চিহ্নিত করা হয়েছে এই পর্বের জন্য, তারাই এই পর্বে বিভিন্ন বিতর্কের জন্য নির্ধারিত হবেন। তাই আগেই তাদের উপস্থিতি নিশ্চিত করুন।"
+
+#: adjallocation/templates/preformed_index.html:37
+#, python-format
+msgid "Edit Preformed Panels for %(round)s"
+msgstr "%(round)s এর জন্য পূর্বগঠিত প্যানেল পরিবর্তন করুন"
+
+#: adjallocation/utils.py:28
+#, python-format
+msgid "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> (personal)"
+msgstr "দ্বন্দ্বঃ <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> (personal)"
+
+#: adjallocation/utils.py:34
+#, python-format
+msgid "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> via institution <strong>%(institution)s</strong>"
+msgstr "দ্বন্দ্বঃ <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> প্রতিষ্ঠানের দ্বারা <strong>%(institution)s</strong>"
+
+#: adjallocation/utils.py:46
+#, python-format
+msgid "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> (personal)"
+msgstr "দ্বন্দ্বঃ <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> (personal)"
+
+#: adjallocation/utils.py:52
+#, python-format
+msgid "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> via institution <strong>%(institution)s</strong>"
+msgstr "দ্বন্দ্বঃ <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> প্রতিষ্ঠানের দ্বারা <strong>%(institution)s</strong>"
+
+#: adjallocation/views.py:35
+msgid "Male"
+msgstr "পুরুষ"
+
+#: adjallocation/views.py:36
+msgid "Female"
+msgstr "নারী"
+
+#: adjallocation/views.py:37
+msgid "Other"
+msgstr "অন্যান্য"
+
+#: adjallocation/views.py:38
+msgid "Unknown"
+msgstr "অজ্ঞাত"
+
+#: adjallocation/views.py:90
+msgid "Edit Allocation"
+msgstr "নির্ধারিত বিচারক পরিবর্তন করুন"
+
+#: adjallocation/views.py:105
+msgid "Edit Panels"
+msgstr "প্যানেল পরিবর্তন করুন"
+
+#: adjallocation/views.py:111
+msgid "Return to Panels Overview"
+msgstr "প্যানেলের সার্বিক চিত্রে ফিরে যান"
+
+#: adjallocation/views.py:172
+msgid "Adjudicator-Team Conflicts"
+msgstr "বিচারক-দল দ্বন্দ্বসমূহ"
+
+#: adjallocation/views.py:173
+msgid "Save Adjudicator-Team Conflicts"
+msgstr "বিচারক-দল দ্বন্দ্বসমূহ সেভ করুন"
+
+#: adjallocation/views.py:198
+#, python-format
+msgid "Saved %(count)d adjudicator-team conflict."
+msgid_plural "Saved %(count)d adjudicator-team conflicts."
+msgstr[0] "%(count)d বিচারক-দল দ্বন্দ্ব সেভ করা হয়েছে"
+msgstr[1] "%(count)d বিচারক-দল দ্বন্দ্বগুলি সেভ করা হয়েছে"
+
+#: adjallocation/views.py:204
+#, python-format
+msgid "Deleted %(count)d adjudicator-team conflict."
+msgid_plural "Deleted %(count)d adjudicator-team conflicts."
+msgstr[0] "%(count)d বিচারক-দল দ্বন্দ্ব মুছে ফেলা হয়েছে।"
+msgstr[1] "%(count)d বিচারক-দল দ্বন্দ্ব মুছে ফেলা হয়েছে।"
+
+#: adjallocation/views.py:209
+msgid "No changes were made to adjudicator-team conflicts."
+msgstr "বিচারক-দল দ্বন্দ্বসমূহের কোনো পরিবর্তন করা হয়নি"
+
+#: adjallocation/views.py:216
+msgid "Adjudicator-Adjudicator Conflicts"
+msgstr "বিচারক-বিচারক দ্বন্দ্বসমূহ"
+
+#: adjallocation/views.py:217
+msgid "Save Adjudicator-Adjudicator Conflicts"
+msgstr "বিচারক-বিচারক দ্বন্দ্বসমূহ সেভ করুন"
+
+#: adjallocation/views.py:238
+#, python-format
+msgid "Saved %(count)d adjudicator-adjudicator conflict."
+msgid_plural "Saved %(count)d adjudicator-adjudicator conflicts."
+msgstr[0] "%(count)d বিচারক-বিচারক দ্বন্দ্ব সেভ করা হয়েছে।"
+msgstr[1] "%(count)d বিচারক-বিচারক দ্বন্দ্ব সেভ করা হয়েছে।"
+
+#: adjallocation/views.py:244
+#, python-format
+msgid "Deleted %(count)d adjudicator-adjudicator conflict."
+msgid_plural "Deleted %(count)d adjudicator-adjudicator conflicts."
+msgstr[0] "%(count)d বিচারক-বিচারক দ্বন্দ্ব সেভ করা হয়েছে।"
+msgstr[1] "%(count)d বিচারক-বিচারক দ্বন্দ্ব সেভ করা হয়েছে।"
+
+#: adjallocation/views.py:249
+msgid "No changes were made to adjudicator-adjudicator conflicts."
+msgstr "বিচারক-বিচারক দ্বন্দ্বের কোনো পরিবর্তন হয়নি"
+
+#: adjallocation/views.py:256
+msgid "Adjudicator-Institution Conflicts"
+msgstr "বিচারক-প্রতিষ্ঠান দ্বন্দ্ব"
+
+#: adjallocation/views.py:257
+msgid "Save Adjudicator-Institution Conflicts"
+msgstr "বিচারক-প্রতিষ্ঠান দ্বন্দ্ব সেভ করুন"
+
+#: adjallocation/views.py:277
+#, python-format
+msgid "Saved %(count)d adjudicator-institution conflict."
+msgid_plural "Saved %(count)d adjudicator-institution conflicts."
+msgstr[0] "%(count)d বিচারক-প্রতিষ্ঠান দ্বন্দ্ব সেভ করা হয়েছে।"
+msgstr[1] "%(count)d বিচারক-বিচারক দ্বন্দ্ব সেভ করা হয়েছে।"
+
+#: adjallocation/views.py:283
+#, python-format
+msgid "Deleted %(count)d adjudicator-institution conflict."
+msgid_plural "Deleted %(count)d adjudicator-institution conflicts."
+msgstr[0] "%(count)d বিচারক-প্রতিষ্ঠান দ্বন্দ্ব মুছে ফেলা হয়েছে।"
+msgstr[1] "%(count)d বিচারক-প্রতিষ্ঠান দ্বন্দ্ব সেভ করা হয়েছে।"
+
+#: adjallocation/views.py:288
+msgid "No changes were made to adjudicator-institution conflicts."
+msgstr "বিচারক-প্রতিষ্ঠান দ্বন্দ্বের কোনো পরিবর্তন হয়নি"
+
+#: adjallocation/views.py:295
+msgid "Team-Institution Conflicts"
+msgstr "দল-প্রতিষ্ঠান দ্বন্দ্বসমূহ"
+
+#: adjallocation/views.py:296
+msgid "Save Team-Institution Conflicts"
+msgstr "দল-প্রতিষ্ঠান দ্বন্দ্বসমূহ সেভ করুন"
+
+#: adjallocation/views.py:319
+#, python-format
+msgid "Saved %(count)d team-institution conflict."
+msgid_plural "Saved %(count)d team-institution conflicts."
+msgstr[0] "%(count)d দল-প্রতিষ্ঠান দ্বন্দ্ব সেভ করা হয়েছে।"
+msgstr[1] "%(count)d দল-প্রতিষ্ঠান দ্বন্দ্ব সেভ করা হয়েছে।"
+
+#: adjallocation/views.py:325
+#, python-format
+msgid "Deleted %(count)d team-institution conflict."
+msgid_plural "Deleted %(count)d team-institution conflicts."
+msgstr[0] "%(count)d দল-প্রতিষ্ঠান দ্বন্দ্ব মুছে ফেলা হয়েছে।"
+msgstr[1] "%(count)d দল-প্রতিষ্ঠান দ্বন্দ্ব মুছে ফেলা হয়েছে।"
+
+#: adjallocation/views.py:330
+msgid "No changes were made to team-institution conflicts."
+msgstr "দল-প্রতিষ্ঠান দ্বন্দ্বের কোনো পরিবর্তন হয়নি"
+

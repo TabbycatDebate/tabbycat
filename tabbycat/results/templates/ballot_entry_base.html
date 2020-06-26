@@ -44,7 +44,7 @@
 
 {% block page-alerts %}
 
-  {% if pref.ballots_per_debate == 'per-adj' and debate.adjudicators.is_even %}
+  {% if round.ballots_per_debate == 'per-adj' and debate.adjudicators.is_even %}
     {% blocktrans trimmed asvar message %}
       This debate has a panel with an even number of voting adjudicators.
       If the adjudicators split evenly, the debate will be awarded to the team

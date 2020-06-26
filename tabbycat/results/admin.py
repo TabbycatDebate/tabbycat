@@ -65,9 +65,9 @@ class TeamScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
             'ballot_submission__debate__round__tournament',
             'debate_adjudicator__adjudicator',
             'debate_team__team',
-            'debate_team__team__tournament'
+            'debate_team__team__tournament',
         ).prefetch_related(
-            Prefetch('ballot_submission__debate__debateteam_set', queryset=DebateTeam.objects.select_related('team'))
+            Prefetch('ballot_submission__debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')),
         )
 
 
@@ -106,7 +106,8 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
                      'debate_team__team__reference', 'debate_team__team__institution__code',
                      'debate_adjudicator__adjudicator__name')
 
-    list_filter = ('debate_team__debate__round', 'debate_adjudicator__adjudicator__name')
+    list_filter = ('debate_team__debate__round', 'debate_adjudicator__adjudicator__name',
+                   'debate_adjudicator__type')
     raw_id_fields = ('debate_team', 'debate_adjudicator', 'ballot_submission')
 
     def get_queryset(self, request):

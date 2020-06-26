@@ -29,6 +29,7 @@
     "April": "4\u6708",
     "August": "8\u6708",
     "Available %s": "\u5229\u7528\u53ef\u80fd %s",
+    "Break": "\u30d6\u30ec\u30a4\u30af",
     "Cancel": "\u30ad\u30e3\u30f3\u30bb\u30eb",
     "Choose": "\u9078\u629e",
     "Choose a Date": "\u65e5\u4ed8\u3092\u9078\u629e",

@@ -1,0 +1,60 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-06-16 23:15\n"
+"Last-Translator: \n"
+"Language-Team: Bengali\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: bn\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/guide/upgrading.po\n"
+"X-Crowdin-File-ID: 1309\n"
+"Language: bn_BD\n"
+
+#: ../../guide/upgrading.rst:5
+msgid "Upgrading Tabbycat"
+msgstr ""
+
+#: ../../guide/upgrading.rst:7
+msgid "Generally only want to upgrade copies of tab sites that are used on an ongoing basis for multiple tournaments, or if there is a bugfix release between when you setup your site and when the tournament is running."
+msgstr ""
+
+#: ../../guide/upgrading.rst:11
+msgid "Going from any version of Tabbycat 1 to any version of Tabbycat 2 won't work with the below instructions — check out the CHANGELOG for the 2.0 version for details of how to perform this upgrade."
+msgstr ""
+
+#: ../../guide/upgrading.rst:14
+msgid "Upgrading a Local Copy"
+msgstr ""
+
+#: ../../guide/upgrading.rst:16
+msgid "Assuming you haven't made any changes to the Tabbycat code, upgrading a locally installed copy should just be a matter of `downloading the latest source code <https://github.com/TabbycatDebate/tabbycat/releases/latest>`_ and replacing the existing files with the new ones. If you used git to download these files initially you can just pull down the latest copy of the master branch to do this."
+msgstr ""
+
+#: ../../guide/upgrading.rst:18
+msgid "You would then repeat the \"Install Tabbycat\" instructions for your original installation method."
+msgstr ""
+
+#: ../../guide/upgrading.rst:21
+msgid "Upgrading on Heroku"
+msgstr ""
+
+#: ../../guide/upgrading.rst:23
+msgid "The easiest way to upgrade a Heroku site is to create an account on Github and then to `'fork' <https://help.github.com/articles/fork-a-repo/>`_ the `Tabbycat repository <https://github.com/TabbycatDebate/tabbycat>`_."
+msgstr ""
+
+#: ../../guide/upgrading.rst:25
+msgid "Once you have done this you can login to your Heroku Dashboard, go to your app, and then navigate to the Deploy tab. In this tab, adjacent to *Deployment method* select the GitHub option. This will bring up a new 'Connect to GitHub' section where you can search for 'Tabbycat' to find the copy of the repository you made earlier and connect it."
+msgstr ""
+
+#: ../../guide/upgrading.rst:29
+msgid "Once connected a new *Manual deploy* section will appear. Make sure you select the *master* branch (not develop) and then click *Deploy Branch*. This will then show the app deploying and notify you when it has finished; which may take several minutes."
+msgstr ""
+

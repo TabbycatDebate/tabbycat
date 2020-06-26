@@ -63,24 +63,26 @@ urlpatterns = [
         admin.site.urls),
 
     # Accounts
-    path('accounts/logout/',
-        auth_views.LogoutView.as_view(),
-        {'next_page': '/'},  # override to specify next_page
-        name='logout'),
-    path('accounts/',
-        include('django.contrib.auth.urls')),
-
-    # Tournament URLs
-    path('<slug:tournament_slug>/',
-        include('tournaments.urls')),
+    path('accounts/', include([
+        path('logout/',
+            auth_views.LogoutView.as_view(),
+            {'next_page': '/'},  # override to specify next_page
+            name='logout'),
+        path('',
+            include('django.contrib.auth.urls')),
+    ])),
 
     # Notifications
     path('notifications/',
         include('notifications.urls')),
 
     # API
-    path('api/v1/',
+    path('api',
         include('api.urls')),
+
+    # Tournament URLs
+    path('<slug:tournament_slug>/',
+        include('tournaments.urls')),
 ]
 
 if settings.DEBUG and settings.ENABLE_DEBUG_TOOLBAR:  # Only serve debug toolbar when on DEBUG

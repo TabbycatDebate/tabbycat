@@ -1,5 +1,5 @@
 <template>
-  <th class="vue-sortable" @click="resort(header.key)"
+  <th :class="['vue-sortable', 'sort-' + header.key]" @click="resort(header.key)"
       :title="header.tooltip" :data-toggle="header.tooltip ? 'tooltip' : null"
       @hover="header.tooltip ? showTooltip : null">
     <div class="d-flex align-items-end">

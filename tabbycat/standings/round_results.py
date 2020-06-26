@@ -54,14 +54,13 @@ def add_team_round_results_public(teams, rounds, opponents=False):
     """Sets, on each item `t` in `teams`, the following attributes:
       - `t.round_results`, a list of `TeamScore` objects, one for each round in
         `rounds` (in the same order), relating to the team `t`.
-      - `t.wins`, the number of wins that team has from the rounds in `rounds`
       - `t.points`, the number of points that team has from the rounds in
         `rounds`.
     """
     add_team_round_results(teams, rounds, opponents=opponents,
         lookup=(lambda teams, x: [t for t in teams if t == x][0]), id_attr='id')
     for team in teams:
-        team.points = sum([ts.points for ts in team.round_results if ts])
+        team.points = sum([ts.points for ts in team.round_results if ts and ts.points is not None])
 
 
 def add_speaker_round_results(standings, rounds, tournament, replies=False):

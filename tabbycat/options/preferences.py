@@ -4,6 +4,7 @@ from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 from dynamic_preferences.preferences import Section
+from dynamic_preferences.registries import global_preferences_registry
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, LongStringPreference, StringPreference
 
 from standings.speakers import SpeakerStandingsGenerator
@@ -410,12 +411,13 @@ class ShowUnaccredited(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class FeedbackIntroduction(StringPreference):
+class FeedbackIntroduction(LongStringPreference):
     help_text = _("Any explanatory text needed to introduce the feedback form")
     verbose_name = _("Feedback introduction/explanation")
     section = feedback
     name = 'feedback_introduction'
     default = ''
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
     field_kwargs = {'required': False}
 
 
@@ -1336,3 +1338,17 @@ class TeamNameEmailMessage(LongStringPreference):
     name = 'team_email_message'
     default = ("<p>Hi {{ USER }},</p>"
         "<p>You are registered as <strong>{{ LONG }}</strong> in {{ TOURN }} with {{ SPEAKERS }}.</p>")
+
+
+# ==============================================================================
+global_settings = Section('global', verbose_name=_('Global Settings'))
+# ==============================================================================
+
+
+@global_preferences_registry.register
+class EnableAPIAccess(BooleanPreference):
+    help_text = _("Enables external applications to access the site through a dedicated interface, subject to public information settings.")
+    verbose_name = _("Enable API access")
+    section = global_settings
+    name = 'enable_api'
+    default = True

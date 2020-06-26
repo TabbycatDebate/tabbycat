@@ -36,6 +36,8 @@ class AdjudicatorFeedbackAnswer(models.Model):
 
 
 class AdjudicatorFeedbackBooleanAnswer(AdjudicatorFeedbackAnswer):
+    ANSWER_TYPE = bool
+
     # Note: by convention, if no answer is chosen for a boolean answer, an
     # instance of this object should not be created. This way, there is no need
     # for a NullBooleanField.
@@ -47,6 +49,8 @@ class AdjudicatorFeedbackBooleanAnswer(AdjudicatorFeedbackAnswer):
 
 
 class AdjudicatorFeedbackIntegerAnswer(AdjudicatorFeedbackAnswer):
+    ANSWER_TYPE = int
+
     answer = models.IntegerField(verbose_name=_("answer"))
 
     class Meta(AdjudicatorFeedbackAnswer.Meta):
@@ -55,6 +59,8 @@ class AdjudicatorFeedbackIntegerAnswer(AdjudicatorFeedbackAnswer):
 
 
 class AdjudicatorFeedbackFloatAnswer(AdjudicatorFeedbackAnswer):
+    ANSWER_TYPE = float
+
     answer = models.FloatField(verbose_name=_("answer"))
 
     class Meta(AdjudicatorFeedbackAnswer.Meta):
@@ -63,6 +69,7 @@ class AdjudicatorFeedbackFloatAnswer(AdjudicatorFeedbackAnswer):
 
 
 class AdjudicatorFeedbackStringAnswer(AdjudicatorFeedbackAnswer):
+    ANSWER_TYPE = str
     answer = models.TextField(verbose_name=_("answer"))
 
     class Meta(AdjudicatorFeedbackAnswer.Meta):
@@ -223,7 +230,7 @@ class AdjudicatorFeedback(Submission):
 
     ignored = models.BooleanField(default=False,
         verbose_name=_("ignored"),
-        help_text=_("Whether the feedback should affect the judge's score"))
+        help_text=_("Whether the feedback should affect the adjudicator's score"))
 
     class Meta:
         unique_together = [('adjudicator', 'source_adjudicator', 'source_team', 'version')]
@@ -271,6 +278,13 @@ class AdjudicatorFeedback(Submission):
         if self.round:
             return self.round.feedback_weight
         return 1
+
+    def get_answers(self):
+        return [
+            {'question': q.question, 'answer': q.answer}
+            for typ in AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE.keys()
+            for q in getattr(self, typ.__name__.lower() + '_set').all()
+        ]
 
     def clean(self):
         if not (self.source_adjudicator or self.source_team):

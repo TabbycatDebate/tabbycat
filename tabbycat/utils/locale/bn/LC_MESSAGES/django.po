@@ -1,0 +1,335 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"PO-Revision-Date: 2020-06-16 23:14\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Bengali\n"
+"Language: bn_BD\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: bn\n"
+"X-Crowdin-File: /develop/tabbycat/utils/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 954\n"
+
+#: utils/forms.py:25
+msgid "E-mail address"
+msgstr ""
+
+#: utils/tables.py:43
+msgid "No Data Available"
+msgstr ""
+
+#: utils/tables.py:151 utils/tables.py:152
+msgid "Ⓒ"
+msgstr ""
+
+#: utils/tables.py:153
+msgid "Ⓣ"
+msgstr ""
+
+#: utils/tables.py:157
+msgid "chair"
+msgstr "স্পিকার"
+
+#: utils/tables.py:158
+msgid "panellist"
+msgstr "প্যানেলিস্ট"
+
+#: utils/tables.py:159
+msgid "trainee"
+msgstr "নবিশ বিচারক"
+
+#: utils/tables.py:162
+msgid "—"
+msgstr ""
+
+#: utils/tables.py:226 utils/tables.py:232
+#, python-format
+msgid "View %(a)s's %(d)s Record"
+msgstr ""
+
+#: utils/tables.py:242 utils/tables.py:247
+#, python-format
+msgid "View %(team)s's Record"
+msgstr ""
+
+#: utils/tables.py:269
+#, python-format
+msgid "Code name: <strong>%(name)s</strong>"
+msgstr ""
+
+#: utils/tables.py:271
+#, python-format
+msgid "Real name: <strong>%(name)s</strong>"
+msgstr ""
+
+#: utils/tables.py:283
+#, python-format
+msgid "%(team)s won"
+msgstr ""
+
+#: utils/tables.py:288
+#, python-format
+msgid "%(team)s lost"
+msgstr ""
+
+#: utils/tables.py:293 utils/tables.py:321 utils/tables.py:339
+#, python-format
+msgid "%(team)s—no result"
+msgstr ""
+
+#: utils/tables.py:301
+#, python-format
+msgid "%(team)s took 1st"
+msgstr ""
+
+#: utils/tables.py:306
+#, python-format
+msgid "%(team)s took 2nd"
+msgstr ""
+
+#: utils/tables.py:311
+#, python-format
+msgid "%(team)s took 3rd"
+msgstr ""
+
+#: utils/tables.py:316
+#, python-format
+msgid "%(team)s took 4th"
+msgstr ""
+
+#: utils/tables.py:329
+#, python-format
+msgid "%(team)s is advancing"
+msgstr ""
+
+#: utils/tables.py:334
+#, python-format
+msgid "%(team)s was eliminated"
+msgstr ""
+
+#: utils/tables.py:352
+#, python-format
+msgid " vs %(opposition)s"
+msgstr ""
+
+#: utils/tables.py:359
+#, python-format
+msgid "Won against %(team)s"
+msgstr ""
+
+#: utils/tables.py:361
+#, python-format
+msgid "Lost to %(team)s"
+msgstr ""
+
+#: utils/tables.py:363
+#, python-format
+msgid "No result for debate against %(team)s"
+msgstr ""
+
+#: utils/tables.py:371 utils/tables.py:450
+#, python-format
+msgid "Total speaker score: <strong>%s</strong>"
+msgstr ""
+
+#: utils/tables.py:376 utils/tables.py:455
+msgid "View/edit debate ballot"
+msgstr ""
+
+#: utils/tables.py:382 utils/tables.py:461
+msgid "View debate ballot"
+msgstr ""
+
+#: utils/tables.py:403
+msgid "Teams in debate:"
+msgstr ""
+
+#: utils/tables.py:406
+#, python-format
+msgid "%(team)s (%(side)s)"
+msgstr ""
+
+#: utils/tables.py:407 utils/tables.py:411 utils/tables.py:437
+msgid "??"
+msgstr ""
+
+#: utils/tables.py:425
+msgid "advancing"
+msgstr ""
+
+#: utils/tables.py:426
+msgid "Advancing"
+msgstr ""
+
+#: utils/tables.py:428
+msgid "eliminated"
+msgstr ""
+
+#: utils/tables.py:429
+msgid "Eliminated"
+msgstr ""
+
+#: utils/tables.py:432 utils/tables.py:442
+msgid "No result for debate"
+msgstr ""
+
+#: utils/tables.py:439
+#, python-format
+msgid "Placed %(place)s"
+msgstr ""
+
+#: utils/tables.py:470
+msgid "Tournament"
+msgstr "প্রতিযোগিতা"
+
+#: utils/tables.py:479
+msgid "Round"
+msgstr "পর্ব"
+
+#: utils/tables.py:497 utils/tables.py:683
+msgid "Name"
+msgstr ""
+
+#: utils/tables.py:503 utils/tables.py:665
+msgid "Institution"
+msgstr "প্রতিষ্ঠান"
+
+#: utils/tables.py:509
+msgid "Member of the Adjudication Core"
+msgstr ""
+
+#: utils/tables.py:516
+msgid "Independent Adjudicator"
+msgstr ""
+
+#: utils/tables.py:524
+msgid "Always Trainee"
+msgstr ""
+
+#: utils/tables.py:562
+msgid "in minority"
+msgstr ""
+
+#: utils/tables.py:595
+msgid "Debate Adjudicators"
+msgstr ""
+
+#: utils/tables.py:626
+msgid "Order as listed"
+msgstr ""
+
+#: utils/tables.py:633
+msgid "?"
+msgstr ""
+
+#: utils/tables.py:636
+msgid "Motion"
+msgstr "প্রস্তাব"
+
+#: utils/tables.py:651
+msgid "Team"
+msgstr "দল"
+
+#: utils/tables.py:656 utils/tables.py:705
+msgid "Categories"
+msgstr ""
+
+#: utils/tables.py:676
+msgid "Redacted"
+msgstr ""
+
+#: utils/tables.py:703
+msgid "Category"
+msgstr ""
+
+#: utils/tables.py:730
+#, python-format
+msgid "This room %(predicate)s."
+msgstr ""
+
+#: utils/tables.py:732
+#, python-format
+msgid "This room %(predicates)s, and %(last_predicate)s."
+msgstr ""
+
+#: utils/tables.py:747
+msgid "Room"
+msgstr ""
+
+#: utils/tables.py:763
+#, python-format
+msgid "Teams have met once"
+msgid_plural "Teams have met %(count)d times"
+msgstr[0] ""
+msgstr[1] ""
+
+#: utils/tables.py:769
+msgid "Teams are from the same institution"
+msgstr ""
+
+#: utils/tables.py:775
+msgid "Conflicts/Flags"
+msgstr ""
+
+#: utils/tables.py:829
+msgid "The ballot you submitted"
+msgstr ""
+
+#: utils/tables.py:833
+msgid "View/Edit Ballot"
+msgstr ""
+
+#: utils/tables.py:842
+msgid "No ballot"
+msgstr ""
+
+#: utils/tables.py:844
+msgid "Elimination"
+msgstr ""
+
+#: utils/tables.py:847 utils/tables.py:859
+msgid "View Ballot"
+msgstr ""
+
+#: utils/tables.py:867
+msgid "Result"
+msgstr ""
+
+#. Translators: "TBC" stands for "to be confirmed".
+#: utils/tables.py:873
+msgid "TBC"
+msgstr ""
+
+#: utils/tables.py:874
+msgid "Side"
+msgstr "পক্ষ"
+
+#: utils/tables.py:912
+msgid "Team iron-manned this round and the last."
+msgstr ""
+
+#: utils/tables.py:915
+msgid "Team iron-manned this round."
+msgstr ""
+
+#: utils/tables.py:918
+msgid "Team iron-manned last round."
+msgstr ""
+
+#: utils/tables.py:935 utils/tables.py:936
+#, python-format
+msgid "Team %(num)d"
+msgstr ""
+
+#: utils/views.py:38
+msgid "Whoops! You're not meant to type that URL into your browser."
+msgstr ""
+

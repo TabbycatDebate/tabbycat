@@ -56,6 +56,7 @@ class DebateSerializerMixin(serializers.ModelSerializer):
     venue = VenueSerializer(read_only=True)
     adjudicators = serializers.SerializerMethodField(read_only=True)
     teams = serializers.SerializerMethodField(read_only=True)
+    sort_index = serializers.SerializerMethodField(read_only=True)
 
     def adjudicator_representation(self, debate_or_panel_adj):
         return AdjudicatorSerializer(debate_or_panel_adj.adjudicator).data
@@ -80,7 +81,10 @@ class DebateSerializerMixin(serializers.ModelSerializer):
             sides[debate_team.side] = self.team_representation(debate_team)
         return sides
 
+    def get_sort_index(self, obj):
+        return 1 # Set on front-end; just need the attr set at load time for reactivity triggers
+
     class Meta:
         model = Debate
         fields = ('id', 'bracket', 'room_rank', 'importance', 'result_status',
-                  'sides_confirmed', 'venue', 'teams', 'adjudicators')
+                  'sides_confirmed', 'venue', 'teams', 'adjudicators', 'sort_index')

@@ -1,0 +1,255 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-01-02 01:49\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Russian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ru\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/features/notifications.po\n"
+"Language: ru_RU\n"
+
+#: ../../features/notifications.rst:3
+msgid "Sending Notifications"
+msgstr ""
+
+#: ../../features/notifications.rst:5
+msgid "Tabbycat offers integrations with email delivery services to send notifications to participants on certain enumerated events. For sending these emails, `SendGrid <https://sendgrid.com/>`_ is readily available as an add-on in Heroku. It may be necessary to install the `SendGrid add-on <https://elements.heroku.com/addons/sendgrid>`_ manually. Other integrations may also be used in its place by changing the relevant environment variables."
+msgstr ""
+
+#: ../../features/notifications.rst:8
+msgid "Events"
+msgstr ""
+
+#: ../../features/notifications.rst:10
+msgid "Tabbycat includes a number of templated notifications that can be sent in various times. Variables which are included between curly brackets which are substituted for personalized information passed by email. Links to email will redirect to a page where the message can be changed and the participants selected."
+msgstr ""
+
+#: ../../features/notifications.rst:12
+msgid "All emails have the ``{{ USER }}`` and ``{{ TOURN }}`` variables to indicate who the email is sent to, and the tournament it relates to. The \"From\" in the emails will also be the tournament's name."
+msgstr ""
+
+#: ../../features/notifications.rst:17
+msgid "Email content and description"
+msgstr ""
+
+#: ../../features/notifications.rst:18
+msgid "Variables"
+msgstr ""
+
+#: ../../features/notifications.rst:20
+msgid "**Adjudicator draw notification**"
+msgstr ""
+
+#: ../../features/notifications.rst:22
+msgid "Email to adjudicators indicating their room assignment."
+msgstr ""
+
+#: ../../features/notifications.rst:24 ../../features/notifications.rst:36
+#: ../../features/notifications.rst:74
+msgid "Available through the admin draw page."
+msgstr ""
+
+#: ../../features/notifications.rst:25 ../../features/notifications.rst:37
+msgid "``{{ ROUND }}``: The round name"
+msgstr ""
+
+#: ../../features/notifications.rst:26 ../../features/notifications.rst:38
+msgid "``{{ VENUE }}``: The venue of the assigned debate"
+msgstr ""
+
+#: ../../features/notifications.rst:27 ../../features/notifications.rst:39
+msgid "``{{ PANEL }}``: A list of all the adjudicators assigned to the venue (with positions)"
+msgstr ""
+
+#: ../../features/notifications.rst:28 ../../features/notifications.rst:40
+msgid "``{{ DRAW }}``: A list of the team matchup with their roles"
+msgstr ""
+
+#: ../../features/notifications.rst:29
+msgid "``{{ POSITION }}``: The target adjudicator's position in the panel"
+msgstr ""
+
+#: ../../features/notifications.rst:30
+msgid "``{{ URL }}``: A link to the adjudicator's private URL page"
+msgstr ""
+
+#: ../../features/notifications.rst:32
+msgid "**Team draw notification**"
+msgstr ""
+
+#: ../../features/notifications.rst:34
+msgid "Email to teams indicating their pairing."
+msgstr ""
+
+#: ../../features/notifications.rst:41
+msgid "``{{ TEAM }}``: The team's code or short name"
+msgstr ""
+
+#: ../../features/notifications.rst:42
+msgid "``{{ SIDE }}``: The team's side"
+msgstr ""
+
+#: ../../features/notifications.rst:44
+msgid "**Private URL distribution**"
+msgstr ""
+
+#: ../../features/notifications.rst:46
+msgid "Email to participants giving them their private URL for electronic forms."
+msgstr ""
+
+#: ../../features/notifications.rst:48
+msgid "Available through the private URLs page."
+msgstr ""
+
+#: ../../features/notifications.rst:49
+msgid "``{{ URL }}``: The personalized URL"
+msgstr ""
+
+#: ../../features/notifications.rst:50
+msgid "``{{ KEY }}``: The private code in the URL"
+msgstr ""
+
+#: ../../features/notifications.rst:52
+msgid "**Ballot submission receipt**"
+msgstr ""
+
+#: ../../features/notifications.rst:54
+msgid "Email to adjudicators of their ballot after tabroom confirmation."
+msgstr ""
+
+#: ../../features/notifications.rst:56
+msgid "Sent automatically when their ballot's result status becomes confirmed, if enabled in the \"Notifications\" section of the tournament options."
+msgstr ""
+
+#: ../../features/notifications.rst:58
+msgid "``{{ DEBATE }}``: The name (with round & venue) of the relevent debate"
+msgstr ""
+
+#: ../../features/notifications.rst:59
+msgid "``{{ SCORES }}``: The submitted ballot with speaker scores ands team names"
+msgstr ""
+
+#: ../../features/notifications.rst:61
+msgid "**Current team standings**"
+msgstr ""
+
+#: ../../features/notifications.rst:63
+msgid "Email to speakers with their point total."
+msgstr ""
+
+#: ../../features/notifications.rst:65
+msgid "Available through the \"Confirm Round Completion\" page."
+msgstr ""
+
+#: ../../features/notifications.rst:66
+msgid "``{{ URL }}``: The URL of the team standings page (if public)"
+msgstr ""
+
+#: ../../features/notifications.rst:67
+msgid "``{{ TEAM }}``: The team's name"
+msgstr ""
+
+#: ../../features/notifications.rst:68
+msgid "``{{ POINTS }}``: The team's number of points"
+msgstr ""
+
+#: ../../features/notifications.rst:70
+msgid "**Motion release**"
+msgstr ""
+
+#: ../../features/notifications.rst:72
+msgid "Email to speakers with the motion(s) of the current round."
+msgstr ""
+
+#: ../../features/notifications.rst:75
+msgid "``{{ ROUND }}``: The name of the round"
+msgstr ""
+
+#: ../../features/notifications.rst:76
+msgid "``{{ MOTIONS }}``: A list of the motions released"
+msgstr ""
+
+#: ../../features/notifications.rst:78
+msgid "**Team information**"
+msgstr ""
+
+#: ../../features/notifications.rst:80
+msgid "Email to speakers with information pertaining to their team, such as eligibility and codes."
+msgstr ""
+
+#: ../../features/notifications.rst:82
+msgid "Available through the Participants page."
+msgstr ""
+
+#: ../../features/notifications.rst:83
+msgid "``{{ SHORT }}``: The team's short name"
+msgstr ""
+
+#: ../../features/notifications.rst:84
+msgid "``{{ LONG }}``: The team's long name"
+msgstr ""
+
+#: ../../features/notifications.rst:85
+msgid "``{{ CODE }}``: The team's code name"
+msgstr ""
+
+#: ../../features/notifications.rst:86
+msgid "``{{ EMOJI }}``: The team's assigned emoji"
+msgstr ""
+
+#: ../../features/notifications.rst:87
+msgid "``{{ DIVISION }}``: The team's division if applicable"
+msgstr ""
+
+#: ../../features/notifications.rst:88
+msgid "``{{ BREAK }}``: Break categories which the team is a member"
+msgstr ""
+
+#: ../../features/notifications.rst:89
+msgid "``{{ SPEAKERS }}``: A list of the speakers in the team"
+msgstr ""
+
+#: ../../features/notifications.rst:90
+msgid "``{{ INSTITUTION }}``: The team's affiliation"
+msgstr ""
+
+#: ../../features/notifications.rst:93
+msgid "Event Webhook"
+msgstr ""
+
+#: ../../features/notifications.rst:95
+msgid "With SendGrid, the status of sent emails can be sent to Tabbycat to be displayed, giving an indication of failures and whether participants have opened the messages. To activate this feature, setup must be done both in your SendGrid account and in Tabbycat."
+msgstr ""
+
+#: ../../features/notifications.rst:97
+msgid "Set a secret key in the Email section of the tournament's preferences. This key must be alphanumeric without any spaces."
+msgstr ""
+
+#: ../../features/notifications.rst:98
+msgid "Copy the \"web-hook\" link presented in a box at the top of the \"email participants\" page."
+msgstr ""
+
+#: ../../features/notifications.rst:99
+msgid "Go to https://app.sendgrid.com/settings/mail_settings and select \"Event Notifications\""
+msgstr ""
+
+#: ../../features/notifications.rst:100
+msgid "Enable the feature and paste the Tabbycat URL under \"HTTP POST URL\"."
+msgstr ""
+
+#: ../../features/notifications.rst:101
+msgid "Select the notifications to keep track (or all of them)."
+msgstr ""
+
+#: ../../features/notifications.rst:103
+msgid "Each email and change in status sent to Tabbycat will add a row to the database. If the number of rows is limited, as is for free Heroku apps, enabling the webhook may use up a significant number of rows. Be selective in the events to keep track."
+msgstr ""
+

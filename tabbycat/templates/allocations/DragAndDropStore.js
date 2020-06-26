@@ -29,8 +29,6 @@ export default new Vuex.Store({
     // For hover conflicts
     hoverClashes: null,
     hoverHistories: null,
-    // For sorting
-    sortType: null,
     // For sharding
     sharding: {
       split: null,
@@ -60,6 +58,12 @@ export default new Vuex.Store({
           state.highlights[key].options[item.pk] = item
         })
       })
+      // Set Initial Sorting
+      if (state.round.stage === 'E') {
+        this.commit('setSorting', 'rank')
+      } else {
+        this.commit('setSorting', 'bracket')
+      }
     },
     setupWebsocketBridge (state, bridge) {
       state.wsBridge = bridge // Load websocket into store for universal access
@@ -100,8 +104,56 @@ export default new Vuex.Store({
       })
       state.highlights[type].active = !state.highlights[type].active
     },
-    setSorting (state, type) {
-      state.sortType = type
+    setSorting (state, sortType) {
+      let debatesArray = Object.values(state.debatesOrPanels)
+
+      if (debatesArray.length === 0) {
+        return // e.g. Preformed Panels page prior to use
+      }
+
+      let bracketKey = 'bracket_min' in debatesArray[0] ? 'bracket_min' : 'bracket'
+      // Sort the array of debates according to specified sort type
+      if (sortType === 'bracket') {
+        if (debatesArray.length > 0 && bracketKey === 'bracket_min') {
+          debatesArray.sort((a, b) => a.bracket_min - b.bracket_min).reverse()
+        } else {
+          debatesArray.sort((a, b) => a.bracket - b.bracket).reverse()
+        }
+      } else if (sortType === 'rank') {
+        debatesArray.sort((a, b) => a.room_rank - b.room_rank)
+      } else if (sortType === 'importance') {
+        debatesArray.sort((a, b) =>
+          a.importance - b.importance !== 0 ? a.importance - b.importance : a[bracketKey] - b[bracketKey]
+        ).reverse() // Note: secondary sorting by bracket
+      } else if (sortType === 'liveness') {
+        // Same logic as in Drag and Drop Debate; should ideally be abstracted
+        for (let debate of debatesArray) {
+          if ('liveness' in debate === false) {
+            debate.liveness = 0
+            if ('teams' in debate && debate.teams) {
+              for (const keyAndEntry of Object.entries(debate.teams)) {
+                let team = keyAndEntry[1]
+                // Team can be a number (ID) or null (e.g. when editing sides)
+                if (team !== null && typeof team === 'object' && 'break_categories' in team) {
+                  for (let bc of team.break_categories) {
+                    let category = state.highlights.break.options[bc]
+                    if (category && team.points > category.fields.dead && team.points < category.fields.safe) {
+                      debate.liveness += 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        debatesArray.sort((a, b) =>
+          a.liveness - b.liveness !== 0 ? a.liveness - b.liveness : a[bracketKey] - b[bracketKey]
+        ).reverse() // Note: secondary sorting by bracket
+      }
+      // Using the sorted array, assign an index to the original dictionary values to be used by sortedDebatesOrPanels()
+      for (let i = 0; i < debatesArray.length; i++) {
+        state.debatesOrPanels[debatesArray[i].id]['sort_index'] = i
+      }
     },
     setSharding (state, payload) {
       state.sharding[payload.option] = payload.value
@@ -176,20 +228,8 @@ export default new Vuex.Store({
       return shardedDebates[state.sharding.index]
     },
     sortedDebatesOrPanels: (state, getters) => {
-      let debatesOrPanels = getters.shardedDebatesOrPanels
-      let bracketKey = 'bracket_min' in debatesOrPanels[0] ? 'bracket_min' : 'bracket'
-      if (state.sortType === null || state.sortType === 'bracket') {
-        if (debatesOrPanels.length > 0 && bracketKey === 'bracket_min') {
-          return debatesOrPanels.sort((a, b) => a.bracket_min - b.bracket_min).reverse()
-        } else {
-          return debatesOrPanels.sort((a, b) => a.bracket - b.bracket).reverse()
-        }
-      } else if (state.sortType === 'importance') {
-        return debatesOrPanels.sort(
-          (a, b) => a.importance - b.importance !== 0 ? a.importance - b.importance : a[bracketKey] - b[bracketKey]
-        ).reverse()
-      }
-      return debatesOrPanels
+      // sort_index here is assigned in setSorting()
+      return getters.shardedDebatesOrPanels.sort((a, b) => a.sort_index - b.sort_index)
     },
     allocatableItems: state => {
       return state.allocatableItems

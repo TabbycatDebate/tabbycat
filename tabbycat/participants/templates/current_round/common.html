@@ -14,9 +14,7 @@
   <div class="list-group-item">
     <strong>{% trans "Teams:" %}</strong>
     {% for dt in debate.debateteams_ordered %}
-      {% team_record_link dt.team admin_page tournament %}
-      {% if debate.sides_confirmed %}
-         ({% debate_team_side_name dt tournament %}){% endif %}{% if not forloop.last %},{% endif %}
+      {% team_record_link dt.team admin_page tournament %}{% if debate.sides_confirmed %} ({% debate_team_side_name dt tournament %}){% endif %}{% if not forloop.last %},{% endif %}
     {% endfor %}
   </div>
 {% endif %} {# pref.teams_in_debate == 'bp' #}
@@ -36,9 +34,9 @@
         {% for adj, adjtype in adjudicators.with_positions %}
           {% if adj != debateadjudicator.adjudicator %}
             <a href="{% adj_record_link adj admin_page tournament %}">
-              {{ adj.name }}</a>{% if adjtype == adjudicators.POSITION_CHAIR %} {% trans "Ⓒ" context "chair icon" %}{% elif adjtype == adjudicators.POSITION_TRAINEE %} {% trans "Ⓣ" context "trainee icon" %}{% endif %}{% if not forloop.last %},{% endif %}
+              {{ adj.name }}</a>{% if adjtype == adjudicators.POSITION_CHAIR %}&nbsp;{% trans "Ⓒ" context "chair icon" %}{% elif adjtype == adjudicators.POSITION_TRAINEE %}&nbsp;{% trans "Ⓣ" context "trainee icon" %}{% endif %}{% if not forloop.last %},{% endif %}
           {% else %}
-            {{ adj.name }}{% if adjtype == adjudicators.POSITION_CHAIR %} {% trans "Ⓒ" context "chair icon" %}{% elif adjtype == adjudicators.POSITION_TRAINEE %} {% trans "Ⓣ" context "trainee icon" %}{% endif %}{% if not forloop.last %},{% endif %}
+            {{ adj.name }}{% if adjtype == adjudicators.POSITION_CHAIR %}&nbsp;{% trans "Ⓒ" context "chair icon" %}{% elif adjtype == adjudicators.POSITION_TRAINEE %}&nbsp;{% trans "Ⓣ" context "trainee icon" %}{% endif %}{% if not forloop.last %},{% endif %}
           {% endif %}
         {% endfor %}
       {% endwith %}
