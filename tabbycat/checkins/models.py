@@ -12,7 +12,7 @@ from utils.misc import generate_identifier_string
 
 def generate_identifier():
     # First number should not be 0 so it is easier import into Excel etc
-    new_id = str(random.choice([1,2,3,4,5,6,7,8,9])) + generate_identifier_string(digits, 5)
+    new_id = str(random.choice([1, 2, 3, 4, 5, 6, 7, 8, 9])) + generate_identifier_string(digits, 5)
     if Identifier.objects.filter(barcode=new_id).count() == 0:
         return new_id
     else:
@@ -76,8 +76,8 @@ class VenueIdentifier(Identifier):
         verbose_name=("venue"), related_name='checkin_identifier')
 
     class Meta:
-        verbose_name = _("venue identifier")
-        verbose_name_plural = _("venue identifiers")
+        verbose_name = _("room identifier")
+        verbose_name_plural = _("room identifiers")
 
 
 class Event(models.Model):
@@ -99,5 +99,5 @@ class Event(models.Model):
         return {
             'id': self.id,
             'identifier': self.identifier.barcode,
-            'time': timezone.localtime(self.time).strftime("%a, %d %b %Y %H:%M:%S")
+            'time': timezone.localtime(self.time).strftime("%a, %d %b %Y %H:%M:%S"),
         }

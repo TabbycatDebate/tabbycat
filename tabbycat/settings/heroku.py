@@ -9,8 +9,6 @@ from sentry_sdk.integrations.redis import RedisIntegration
 
 from .core import TABBYCAT_VERSION
 
-from .core import TABBYCAT_VERSION
-
 
 # ==============================================================================
 # Heroku
@@ -42,7 +40,7 @@ if 'DJANGO_SECRET_KEY' in environ and environ.get('DISABLE_HTTPS_REDIRECTS', '')
 
 # Parse database configuration from $DATABASE_URL
 DATABASES = {
-    'default': dj_database_url.config(default='postgres://localhost')
+    'default': dj_database_url.config(default='postgres://localhost'),
 }
 
 # ==============================================================================
@@ -84,7 +82,7 @@ CACHES = {
             "SOCKET_CONNECT_TIMEOUT": 5,
             "SOCKET_TIMEOUT": 60,
         },
-    }
+    },
 }
 
 CHANNEL_LAYERS = {
@@ -96,15 +94,23 @@ CHANNEL_LAYERS = {
             # This matches websocket_timeout in Daphne
             "group_expiry": 10800,
         },
-        # RedisChannelLayer should pool by default
+        # RedisChannelLayer should pool by default,
     },
 }
 
 # ==============================================================================
-# SendGrid
+# Email / SendGrid
 # ==============================================================================
 
-if environ.get('SENDGRID_USERNAME', ''):
+if environ.get('EMAIL_HOST', ''):
+    SERVER_EMAIL = environ['DEFAULT_FROM_EMAIL']
+    DEFAULT_FROM_EMAIL = environ['DEFAULT_FROM_EMAIL']
+    EMAIL_HOST = environ['EMAIL_HOST']
+    EMAIL_HOST_USER = environ['EMAIL_HOST_USER']
+    EMAIL_HOST_PASSWORD = environ['EMAIL_HOST_PASSWORD']
+    EMAIL_PORT = int(environ.get('EMAIL_PORT', 587))
+    EMAIL_USE_TLS = bool(environ.get('EMAIL_USE_TLS', True))
+elif environ.get('SENDGRID_USERNAME', ''):
     SERVER_EMAIL = environ['SENDGRID_USERNAME']
     DEFAULT_FROM_EMAIL = environ.get('DEFAULT_FROM_EMAIL', environ['SENDGRID_USERNAME'])
     EMAIL_HOST = 'smtp.sendgrid.net'

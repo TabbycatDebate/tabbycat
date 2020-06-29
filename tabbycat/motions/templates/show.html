@@ -13,18 +13,18 @@
     <div>
       {% if infos %}
         <button class="btn btn-lg btn-info btn-block mb-5" data-toggle="modal" data-target="#infoPop">
-          {% blocktrans trimmed with round_name=round.name count ninfos=infos|length %}
-            Reveal Info Slide for {{ round_name }}
+          {% blocktrans trimmed with round=round.name count ninfos=infos|length %}
+            Reveal Info Slide for {{ round }}
           {% plural %}
-            Reveal Info Slides for {{ round_name }}
+            Reveal Info Slides for {{ round }}
           {% endblocktrans %}
         </button>
       {% endif %}
       <button class="btn btn-lg btn-success btn-block" data-toggle="modal" data-target="#motionPop">
-        {% blocktrans trimmed with round_name=round.name count nmotions=motions|length %}
-          Reveal Motion for {{ round_name }}
+        {% blocktrans trimmed with round=round.name count nmotions=motions|length %}
+          Reveal Motion for {{ round }}
         {% plural %}
-          Reveal Motions for {{ round_name }}
+          Reveal Motions for {{ round }}
         {% endblocktrans %}
       </button>
     </div>

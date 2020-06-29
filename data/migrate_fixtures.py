@@ -3,8 +3,8 @@
 
 import argparse
 import os
-import re
 import platform
+import re
 import subprocess
 import sys
 from os.path import abspath, dirname, join, relpath

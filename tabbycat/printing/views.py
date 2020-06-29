@@ -1,12 +1,10 @@
 import json
 
 import qrcode
-from qrcode.image import svg
-
-from django.db.models import Q
 from django.contrib.humanize.templatetags.humanize import ordinal
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView
+from qrcode.image import svg
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from adjfeedback.utils import expected_feedback_targets
@@ -14,12 +12,13 @@ from checkins.models import DebateIdentifier
 from checkins.utils import create_identifiers
 from draw.models import DebateTeam
 from options.utils import use_team_code_names
-from participants.models import Person
+from participants.models import Adjudicator, Speaker
 from results.utils import side_and_position_names
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 RoundMixin, TournamentMixin)
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
+from venues.serializers import VenueSerializer
 
 
 class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
@@ -33,7 +32,7 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
             default_scale_info = AdjudicatorFeedbackQuestion(
                 text=self.tournament.pref('feedback_introduction'), seq=0,
                 answer_type='comment', # Custom type just for print display
-                required=True, from_team=True, from_adj=True
+                required=True, from_team=True, from_adj=True,
             )
             default_questions.append(default_scale_info.serialize())
 
@@ -42,7 +41,7 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
             answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE,
             required=True, from_team=True, from_adj=True,
             min_value=self.tournament.pref('adj_min_score'),
-            max_value=self.tournament.pref('adj_max_score')
+            max_value=self.tournament.pref('adj_max_score'),
         )
         default_questions.append(default_scale_question.serialize())
 
@@ -64,7 +63,7 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
             source_n = source.short_name
 
         return {
-            'venue': venue.serialize() if venue else '',
+            'venue': VenueSerializer(venue).data if venue else '',
             'authorInstitution': source.institution.code if source.institution else _("Unaffiliated"),
             'author': source_n, 'authorPosition': source_p,
             'target': target.name, 'targetPosition': target_p,
@@ -228,7 +227,7 @@ class AssistantPrintScoresheetsView(CurrentRoundMixin, OptionalAssistantTourname
     assistant_page_permissions = ['all_areas']
 
 
-class PrintableRandomisedURLs(TournamentMixin, AdministratorMixin, TemplateView):
+class BasePrintableRandomisedURLs(TournamentMixin, AdministratorMixin, TemplateView):
 
     template_name = 'randomised_url_sheets.html'
 
@@ -243,15 +242,25 @@ class PrintableRandomisedURLs(TournamentMixin, AdministratorMixin, TemplateView)
 
         return participants
 
+    def get_participants_for_type(self):
+        raise NotImplementedError("subclasses must implement get_participants_for_type()")
+
     def get_context_data(self, **kwargs):
-
-        participants = Person.objects.filter(
-            Q(speaker__team__tournament=self.tournament) | Q(adjudicator__tournament__isnull=True) & Q(url_key__isnull=False))
-
-        participants_array = list(participants.select_related('speaker', 'speaker__team', 'adjudicator__institution', 'adjudicator')
-            .values('name', 'speaker__team__short_name', 'adjudicator__institution__code', 'url_key'))
-        kwargs['parts'] = self.add_urls(participants_array)
-
+        participants_array = self.get_participants_for_type()
+        kwargs['participants'] = self.add_urls(participants_array)
         kwargs['exists'] = self.tournament.participants.filter(url_key__isnull=False).exists()
-
         return super().get_context_data(**kwargs)
+
+
+class PrintableRandomisedURLsForTeams(BasePrintableRandomisedURLs):
+
+    def get_participants_for_type(self):
+        participants = Speaker.objects.filter(team__tournament=self.tournament, url_key__isnull=False)
+        return list(participants.select_related('team').values('name', 'team__short_name', 'url_key'))
+
+
+class PrintableRandomisedURLsForAdjudicators(BasePrintableRandomisedURLs):
+
+    def get_participants_for_type(self):
+        participants = Adjudicator.objects.filter(tournament=self.tournament, url_key__isnull=False)
+        return list(participants.select_related('institution').values('name', 'institution__code', 'url_key'))

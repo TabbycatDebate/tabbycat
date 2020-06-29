@@ -1,0 +1,129 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"PO-Revision-Date: 2020-05-24 07:34\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Hebrew\n"
+"Language: he_IL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: he\n"
+"X-Crowdin-File: /develop/tabbycat/printing/locale/en/LC_MESSAGES/django.po\n"
+
+#: printing/templates/feedback_list.html:5
+msgid "Feedback Forms"
+msgstr ""
+
+#: printing/templates/feedback_list.html:7
+#, python-format
+msgid "Printable Feedback Forms for %(round)s"
+msgstr ""
+
+#: printing/templates/feedback_list.html:14
+msgid "No feedback questions have been added for either teams or adjudicators to answer."
+msgstr ""
+
+#: printing/templates/feedback_list.html:16
+msgid "No feedback questions have been added for teams to answer."
+msgstr ""
+
+#: printing/templates/feedback_list.html:18
+msgid "No feedback questions have been added for adjudicators to answer."
+msgstr ""
+
+#: printing/templates/feedback_list.html:20
+#, python-format
+msgid "%(first_sentence)s Check the <a href=\"http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html\" target=\"_blank\">documentation</a> for information on how to add these (otherwise these forms will be quite bare)."
+msgstr ""
+
+#: printing/templates/feedback_list.html:41
+msgid "There are no feedback sheets available — perhaps adjudicators have not been allocated?"
+msgstr ""
+
+#: printing/templates/printables_list.html:9
+msgid "Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate <strong>page orientation</strong>, to turn off <strong>headers/footers</strong> and turn on <strong>background graphics</strong>. Works best in Chrome."
+msgstr ""
+
+#: printing/templates/randomised_url_sheets.html:4
+#, python-format
+msgid "Printable %(sheet)s URLs"
+msgstr ""
+
+#: printing/templates/randomised_url_sheets.html:13
+msgid "This page is designed to be printed as double sided A4 sheets, with the outside facing side showing the participant name and the inside facing side showing the URL. Use CTRL-P to print; for best results use Chrome."
+msgstr ""
+
+#: printing/templates/randomised_url_sheets.html:27
+#: printing/templates/randomised_url_sheets.html:31
+#, python-format
+msgid "Private URL for %(name)s (%(group)s)"
+msgstr ""
+
+#: printing/templates/randomised_url_sheets.html:38
+msgid "Please bookmark the following URL, you will use it to submit forms throughout the tournament:"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:7
+msgid "Printable Scoresheets"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:8
+#, python-format
+msgid "for %(round)s"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:14
+msgid "Edit Motion(s)"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:33
+msgid "There are no scoresheets available — perhaps the round has not been drawn?"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:40
+msgid "Edit Ballot Motions"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:42
+msgid "&times;"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:47
+msgid "\n"
+"              Editing motions here will not save them permanently — it will only\n"
+"              update the text used in the printed ballots below. This can be useful if using\n"
+"              placeholder motions (to ensure confidentiality) in Tabbycat, but you still want to print\n"
+"              ballots with correct motions.\n"
+"              "
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:55
+msgid "Motion"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:59
+msgid "Changes to motions will update in the displayed ballots automatically"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:96
+msgid "Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication."
+msgstr ""
+
+#: printing/views.py:40
+msgid "Overall Score"
+msgstr ""
+
+#: printing/views.py:67 printing/views.py:177 printing/views.py:197
+msgid "Unaffiliated"
+msgstr ""
+
+#: printing/views.py:80 printing/views.py:84
+msgid "Team"
+msgstr "קבוצה"
+

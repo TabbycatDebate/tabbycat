@@ -35,6 +35,10 @@
           {{ adjudicator.institution.region.name }}
         {% endif %}
       </div>
+    {% else %}
+      <div class="list-group-item">
+        <em>{% trans "The institutional affiliations of adjudicators are not public at this tournament." %}</em>
+      </div>
     {% endif %}
 
     {% if admin_page %}
@@ -68,7 +72,7 @@
       </div>
 
       <div class="list-group-item">
-        <strong>{% trans "Venue Constraints:" %}</strong>
+        <strong>{% trans "Room Constraints:" %}</strong>
         {% for vc in adjudicator.venue_constraints.all %}
           {{ vc.category }}{% if not forloop.last %}{% trans ", " %}{% endif %}
         {% empty %}

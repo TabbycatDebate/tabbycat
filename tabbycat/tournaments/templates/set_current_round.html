@@ -30,18 +30,18 @@
 {% if next %}
   <div class="alert alert-warning">
     <i data-feather="alert-circle"></i>
-    {% blocktrans trimmed with tournament_name=tournament.name %}
+    {% blocktrans trimmed with tournament=tournament.name %}
       No round is currently set. In order for Tabbycat to work, please set the
       <strong>current round</strong> of the tournament
-      <strong>{{ tournament_name }}</strong>.
+      <strong>{{ tournament }}</strong>.
     {% endblocktrans %}
   </div>
 {% else %}
   <div class="alert alert-info">
     <i data-feather="alert-circle"></i>
-    {% blocktrans trimmed with tournament_name=tournament.name %}
+    {% blocktrans trimmed with tournament=tournament.name %}
       On this page, you can set the <strong>current round</strong> of the tournament
-      <strong>{{ tournament_name }}</strong>.
+      <strong>{{ tournament }}</strong>.
     {% endblocktrans %}
   </div>
 {% endif %}
@@ -50,8 +50,8 @@
   <div class="alert alert-danger">
     <i data-feather="alert-circle"></i>
     {% url 'admin:tournaments_round_changelist' as round_changelist_url %}
-    {% blocktrans trimmed with tournament_name=tournament.name %}
-      The tournament <strong>{{ tournament_name }}</strong> has no rounds.
+    {% blocktrans trimmed with tournament=tournament.name %}
+      The tournament <strong>{{ tournament }}</strong> has no rounds.
       You'll need to <a href="{{ round_changelist_url }}">add rounds and
       associate them with this tournament</a> before you can set the current
       round.

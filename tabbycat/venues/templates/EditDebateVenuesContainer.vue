@@ -9,10 +9,10 @@
       <template slot="default-highlights">
         <button class="btn conflictable conflicts-toolbar hover-adjudicator"
                 data-toggle="tooltip" v-text="gettext('Constraint')"
-                :title="gettext('This adjudicator or team has an unmet venue constraint.')"></button>
+                :title="gettext('This adjudicator or team has an unmet room constraint.')"></button>
         <button class="btn panel-incomplete"
                 data-toggle="tooltip" v-text="gettext('Incomplete')"
-                :title="gettext('Debate has no venue.')"></button>
+                :title="gettext('Debate has no room.')"></button>
       </template>
     </drag-and-drop-actions>
 
@@ -38,8 +38,8 @@
 </template>
 
 <script>
-import DragAndDropContainerMixin from '../../utils/templates/DragAndDropContainerMixin.vue'
-import DroppableItem from '../../utils/templates/DroppableItem.vue'
+import DragAndDropContainerMixin from '../../templates/allocations/DragAndDropContainerMixin.vue'
+import DroppableItem from '../../templates/allocations/DroppableItem.vue'
 
 import ModalForAllocatingVenues from './ModalForAllocatingVenues.vue'
 import DraggableVenue from './DraggableVenue.vue'
@@ -61,7 +61,7 @@ export default {
           options: [],
         },
       },
-      allocateIntro: `TKTK`,
+      allocateIntro: 'TKTK',
       unallocatedComponent: DraggableVenue,
     }
   },
@@ -80,9 +80,9 @@ export default {
       return debate
     },
     moveVenue: function (dragData, dropData) {
-      let venueChanges = []
-      let fromDebate = this.getDebate(dragData.assignment)
-      let toDebate = this.getDebate(dropData.assignment)
+      const venueChanges = []
+      const fromDebate = this.getDebate(dragData.assignment)
+      const toDebate = this.getDebate(dropData.assignment)
       if (fromDebate !== null) { // Not moving FROM Unused
         fromDebate.venue = null
       }
@@ -94,12 +94,12 @@ export default {
       }
       // Send results
       if (fromDebate !== null) {
-        venueChanges.push({ 'id': fromDebate.id, 'venue': fromDebate.venue })
+        venueChanges.push({ id: fromDebate.id, venue: fromDebate.venue })
       }
       if (toDebate !== null && dragData.assignment !== dropData.assignment) {
-        venueChanges.push({ 'id': toDebate.id, 'venue': toDebate.venue })
+        venueChanges.push({ id: toDebate.id, venue: toDebate.venue })
       }
-      this.$store.dispatch('updateDebatesOrPanelsAttribute', { 'venues': venueChanges })
+      this.$store.dispatch('updateDebatesOrPanelsAttribute', { venues: venueChanges })
       this.$store.dispatch('updateAllocableItemModified', [dragData.item])
     },
     getUnallocatedItemFromDebateOrPanel (debateOrPanel) {

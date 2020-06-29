@@ -25,7 +25,9 @@
 {% endblock %}
 
 {% block sub-title %}
-  {{ debate.round.name }} @ {{ debate.venue.display_name }}
+  {% blocktrans trimmed with round=debate.round.name room=debate.venue.display_name %}
+    {{ round }} @ {{ room }}
+  {% endblocktrans %}
 {% endblock %}
 
 {% block page-subnav-sections %}
@@ -37,8 +39,8 @@
   {% else %}
     <a class="btn btn-outline-primary" href="{% roundurl 'results-public-round' debate.round %}">
       <i data-feather="chevron-left"></i>
-      {% blocktrans trimmed with round_name=debate.round.name %}
-        Return to Results for {{ round_name }}
+      {% blocktrans trimmed with round=debate.round.name %}
+        Return to Results for {{ round }}
       {% endblocktrans %}
     </a>
   {% endif %}

@@ -1,7 +1,7 @@
 import logging
 
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Max, Min, Q
 from django.forms import Select
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic import TemplateView
@@ -11,7 +11,7 @@ from actionlog.models import ActionLogEntry
 from availability.utils import annotate_availability
 from tournaments.mixins import DebateDragAndDropMixin, TournamentMixin
 from utils.forms import SelectPrepopulated
-from utils.misc import redirect_tournament, reverse_tournament
+from utils.misc import ranks_dictionary, redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView
 
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = "edit_debate_venues.html"
-    page_title = gettext_lazy("Edit Venues")
+    page_title = gettext_lazy("Edit Rooms")
     prefetch_venues = False # Fetched in full as get_serialised
 
     def debates_or_panels_factory(self, debates):
@@ -38,10 +38,14 @@ class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateV
         return self.json_render(serialized_venues.data)
 
     def get_extra_info(self):
+        p_range = Venue.objects.filter(tournament=self.tournament).aggregate(
+            min=Min('priority'), max=Max('priority'))
         info = super().get_extra_info()
-        info['highlights']['priority'] = [] # TODO - venue priority range
-        info['highlights']['category'] = [] # TODO - venue category
-        info['highlights']['break'] = [] # TODO
+        info['highlights']['priority'] = ranks_dictionary(
+            self.tournament, p_range['min'], p_range['max'])
+        # Most recently created venues take priority in getting the highlight
+        vcs = VenueCategory.objects.order_by('id').reverse()
+        info['highlights']['category'] = [{'pk': vc.id, 'fields': {'name': vc.name}} for vc in vcs]
         return info
 
 
@@ -54,7 +58,7 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
         queryset = self.tournament.relevant_venues.prefetch_related('venuecategory_set')
         formset_factory_kwargs = {
             'form': venuecategoryform_factory(venues_queryset=queryset),
-            'extra': 3
+            'extra': 3,
         }
         return formset_factory_kwargs
 
@@ -66,19 +70,26 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
             form.fields['venues'].queryset = venues
         return formset
 
+    def get_formset_queryset(self):
+        return self.tournament.venuecategory_set.all()
+
     def formset_valid(self, formset):
-        result = super().formset_valid(formset)
+        self.instances = formset.save(commit=False)
         if self.instances:
-            message = ngettext("Saved venue category: %(list)s",
+            for category in self.instances:
+                category.tournament = self.tournament
+
+            message = ngettext("Saved room category: %(list)s",
                 "Saved venue categories: %(list)s",
-                len(self.instances)
+                len(self.instances),
             ) % {'list': ", ".join(category.name for category in self.instances)}
             messages.success(self.request, message)
         else:
-            messages.success(self.request, _("No changes were made to the venue categories."))
+            messages.success(self.request, _("No changes were made to the room categories."))
+
         if "add_more" in self.request.POST:
             return redirect_tournament('venues-categories', self.tournament)
-        return result
+        return super().formset_valid(formset)
 
     def get_success_url(self, *args, **kwargs):
         return reverse_tournament('importer-simple-index', self.tournament)
@@ -97,16 +108,16 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
             'labels': {
                 'subject_content_type': 'Constrainee Type',
                 'subject_id': 'Constrainee ID',
-                'category': 'Venue Category'
+                'category': 'Room Category',
             },
             'help_texts': {
-                'subject_id': 'Delete the existing number and start typing the name of the person/team/institution you want to constrain to lookup their ID.'
+                'subject_id': 'Delete the existing number and start typing the name of the person/team/institution you want to constrain to lookup their ID.',
             },
             'widgets': {
                 'subject_content_type': Select(attrs={'data-filter': True}),
-                'subject_id': SelectPrepopulated(data_list=self.subject_choices())
+                'subject_id': SelectPrepopulated(data_list=self.subject_choices()),
             },
-            'extra': 8
+            'extra': 8,
         }
         return formset_factory_kwargs
 
@@ -138,8 +149,8 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
         result = super().formset_valid(formset)
         if self.instances:
             count = len(self.instances)
-            message = ngettext("Saved %(count)d venue constraint.",
-                "Saved %(count)d venue constraints.", count) % {'count': count}
+            message = ngettext("Saved %(count)d room constraint.",
+                "Saved %(count)d room constraints.", count) % {'count': count}
             messages.success(self.request, message)
         if "add_more" in self.request.POST:
             return redirect_tournament('venues-constraints', self.tournament)

@@ -6,14 +6,15 @@ from threading import Lock
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
-from django.urls import reverse_lazy
 from django.db.models import Count, Q
 from django.shortcuts import redirect, resolve_url
-from django.utils.http import is_safe_url
+from django.urls import reverse_lazy
 from django.utils.html import format_html_join
+from django.utils.http import is_safe_url
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, FormView, UpdateView
+from django.views.generic.list import ListView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -54,8 +55,15 @@ class PublicSiteIndexView(WarnAboutDatabaseUseMixin, TemplateView):
             return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        kwargs['tournaments'] = Tournament.objects.all()
+        kwargs['tournaments'] = Tournament.objects.filter(active=True)
+        kwargs['has_inactive'] = Tournament.objects.filter(active=False).exists()
         return super().get_context_data(**kwargs)
+
+
+class PublicSiteInactiveTournamentsView(ListView):
+    template_name = 'site_inactive_tournaments.html'
+    queryset = Tournament.objects.filter(active=False)
+    allow_empty = False
 
 
 class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
@@ -113,14 +121,14 @@ class CompleteRoundCheckView(AdministratorMixin, RoundMixin, TemplateView):
     def get_context_data(self, **kwargs):
         prior_rounds_not_completed = self.tournament.round_set.filter(
             Q(break_category=self.round.break_category) | Q(break_category__isnull=True),
-            completed=False, seq__lt=self.round.seq
+            completed=False, seq__lt=self.round.seq,
         )
         kwargs['number_of_prior_rounds_not_completed'] = prior_rounds_not_completed.count()
         kwargs['prior_rounds_not_completed'] = format_html_join(
             ", ",
             "<a href=\"{}\" class=\"alert-link\">{}</a>",
             ((reverse_round('tournament-complete-round-check', r), r.name)
-                for r in prior_rounds_not_completed)
+                for r in prior_rounds_not_completed),
         )
 
         kwargs['num_unconfirmed'] = self.round.debate_set.filter(
@@ -205,7 +213,7 @@ class BlankSiteStartView(FormView):
         with self.lock:
             if User.objects.exists():
                 logger.warning("Tried to post the blank-site-start view when a user account already exists.")
-                messages.error(request, "Whoops! It looks like someone's already created the first user account. Please log in.")
+                messages.error(request, _("Whoops! It looks like someone's already created the first user account. Please log in."))
                 return redirect('login')
 
             return super().post(request)
@@ -213,7 +221,7 @@ class BlankSiteStartView(FormView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        messages.info(self.request, "Welcome! You've created an account for %s." % user.username)
+        messages.info(self.request, _("Welcome! You've created an account for %s.") % user.username)
 
         return super().form_valid(form)
 
@@ -272,7 +280,7 @@ class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
     def get_redirect_to(self, use_default=True):
         redirect_to = self.request.POST.get(
             self.redirect_field_name,
-            self.request.GET.get(self.redirect_field_name, '')
+            self.request.GET.get(self.redirect_field_name, ''),
         )
         if not redirect_to and use_default:
             return reverse_tournament('tournament-admin-home', tournament=self.tournament)

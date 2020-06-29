@@ -124,10 +124,6 @@ class Person(models.Model):
     def __str__(self):
         return str(self.name)
 
-    @property
-    def has_contact(self):
-        return bool(self.email or self.phone)
-
 
 class TeamManager(LookupByNameFieldsMixin, models.Manager):
     name_fields = ['short_name', 'long_name']
@@ -164,6 +160,11 @@ class Team(models.Model):
     break_categories = models.ManyToManyField('breakqual.BreakCategory', blank=True,
         verbose_name=_("break categories"))
 
+    institution_conflicts = models.ManyToManyField('Institution',
+        through='adjallocation.TeamInstitutionConflict',
+        related_name='team_inst_conflicts',
+        verbose_name=_("institution conflicts"))
+
     round_availabilities = GenericRelation('availability.RoundAvailability')
     venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='team',
             content_type_field='subject_content_type', object_id_field='subject_id')
@@ -172,14 +173,16 @@ class Team(models.Model):
     TYPE_SWING = 'S'
     TYPE_COMPOSITE = 'C'
     TYPE_BYE = 'B'
-    TYPE_CHOICES = ((TYPE_NONE, _("none")),
-                    (TYPE_SWING, _("swing")),
-                    (TYPE_COMPOSITE, _("composite")),
-                    (TYPE_BYE, _("bye")), )
+    TYPE_CHOICES = (
+        (TYPE_NONE, _("none")),
+        (TYPE_SWING, _("swing")),
+        (TYPE_COMPOSITE, _("composite")),
+        (TYPE_BYE, _("bye")),
+    )
     type = models.CharField(max_length=1, choices=TYPE_CHOICES, default=TYPE_NONE,
         verbose_name=_("type"))
 
-    emoji = models.CharField(max_length=2, default=None, choices=EMOJI_FIELD_CHOICES,
+    emoji = models.CharField(max_length=3, default=None, choices=EMOJI_FIELD_CHOICES,
         blank=True, null=True,   # uses null=True to allow multiple teams to have no emoji
         verbose_name=_("emoji"))
 
@@ -293,7 +296,7 @@ class Team(models.Model):
         try:
             return DebateTeam.objects.filter(
                 debate__round__seq__lt=round_seq,
-                team=self, ).order_by('-debate__round__seq')[0].debate
+                team=self).order_by('-debate__round__seq')[0].debate
         except IndexError:
             return None
 
@@ -329,10 +332,9 @@ class Speaker(Person):
     def __str__(self):
         return str(self.name)
 
-    def serialize(self):
-        speaker = {'id': self.id, 'name': self.name, 'team': self.team.short_name}
-        speaker['institution'] = self.institution.serialize if self.institution else None
-        return speaker
+    @property
+    def tournament(self):
+        return self.team.tournament
 
 
 class AdjudicatorManager(models.Manager):
@@ -349,18 +351,21 @@ class Adjudicator(Person):
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE, blank=True, null=True,
         verbose_name=_("tournament"),
         help_text=_("Adjudicators not assigned to any tournament can be shared between tournaments"))
-    test_score = models.FloatField(default=0,
-        verbose_name=_("test score"))
+    base_score = models.FloatField(default=0,
+        verbose_name=_("base score"))
 
-    # TODO: Are these actually used?= If not, remove?
     institution_conflicts = models.ManyToManyField('Institution',
         through='adjallocation.AdjudicatorInstitutionConflict',
         related_name='adj_inst_conflicts',
         verbose_name=_("institution conflicts"))
-    conflicts = models.ManyToManyField('Team',
+    team_conflicts = models.ManyToManyField('Team',
         through='adjallocation.AdjudicatorTeamConflict',
-        related_name='adj_adj_conflicts',
+        related_name='adj_team_conflicts',
         verbose_name=_("team conflicts"))
+    adjudicator_conflicts = models.ManyToManyField('Adjudicator',
+        through='adjallocation.AdjudicatorAdjudicatorConflict',
+        related_name='adj_adj_conflicts',
+        verbose_name=_("adjudicator conflicts"))
 
     trainee = models.BooleanField(default=False,
         verbose_name=_("always trainee"),
@@ -389,10 +394,6 @@ class Adjudicator(Person):
             return "%s (%s)" % (self.name, self.institution.code)
 
     @property
-    def is_unaccredited(self):
-        return self.novice
-
-    @property
     def region(self):
         return self.institution.region if self.institution else None
 
@@ -401,7 +402,7 @@ class Adjudicator(Person):
         if feedback_score is None:
             feedback_score = 0
             feedback_weight = 0
-        return self.test_score * (1 - feedback_weight) + (feedback_weight * feedback_score)
+        return self.base_score * (1 - feedback_weight) + (feedback_weight * feedback_score)
 
     @cached_property
     def score(self):

@@ -44,8 +44,8 @@
   {% for category in tournament.speakercategory_set.all %}
     <a class="btn btn-outline-primary"
        href="{% roundurl 'standings-speaker-category' round=current_round category=category.slug %}">
-      {% blocktrans trimmed with category_name=category.name %}
-        {{ category_name }}
+      {% blocktrans trimmed with category=category.name %}
+        {{ category }}
       {% endblocktrans %}
     </a>
   {% endfor %}

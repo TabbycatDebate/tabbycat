@@ -7,8 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Q
 from django.forms import HiddenInput
 from django.http import JsonResponse
-from django.utils.translation import gettext_lazy, ngettext
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.base import View
 
 from actionlog.mixins import LogActionMixin
@@ -22,10 +21,11 @@ from tournaments.mixins import (PublicTournamentPageMixin,
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
-from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
+from utils.views import ModelFormSetView, VueTableTemplateView
 
 from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
+from .serializers import SpeakerSerializer
 from .tables import AdjudicatorDebateTable, TeamDebateTable
 
 logger = logging.getLogger(__name__)
@@ -87,11 +87,14 @@ class BaseInstitutionsListView(TournamentMixin, VueTableTemplateView):
 
     def get_table(self):
         institutions = Institution.objects.select_related('region').filter(
-            Q(team__tournament=self.tournament) | Q(adjudicator__tournament=self.tournament)
+            Q(team__tournament=self.tournament) | Q(adjudicator__tournament=self.tournament),
         ).annotate(
-            nteams=Count('team', distinct=True),
-            nadjs=Count('adjudicator', filter=Q(adjudicator__independent=False), distinct=True),
-            nias=Count('adjudicator', filter=Q(adjudicator__independent=True), distinct=True),
+            nteams=Count('team', distinct=True, filter=Q(
+                team__tournament=self.tournament)),
+            nadjs=Count('adjudicator', filter=Q(
+                adjudicator__tournament=self.tournament, adjudicator__independent=False), distinct=True),
+            nias=Count('adjudicator', filter=Q(
+                adjudicator__tournament=self.tournament, adjudicator__independent=True), distinct=True),
         ).distinct()
 
         table = TabbycatTableBuilder(view=self, sort_key='code')
@@ -137,7 +140,7 @@ class BaseCodeNamesListView(TournamentMixin, VueTableTemplateView):
         table = TabbycatTableBuilder(view=self, sort_key='code_name')
         table.add_column(
             {'key': 'code_name', 'title': _("Code name")},
-            [{'text': t.code_name or "—"} for t in teams]
+            [{'text': t.code_name or "—"} for t in teams],
         )
         table.add_team_columns(teams)
         return table
@@ -254,11 +257,11 @@ class BaseAdjudicatorRecordView(BaseRecordView):
     def get_context_data(self, **kwargs):
         try:
             kwargs['debateadjudications'] = self.object.debateadjudicator_set.filter(
-                debate__round=self.tournament.current_round
+                debate__round=self.tournament.current_round,
             ).select_related(
-                'debate__round'
+                'debate__round',
             ).prefetch_related(
-                'debate__round__motion_set'
+                'debate__round__motion_set',
             )
         except ObjectDoesNotExist:
             kwargs['debateadjudications'] = None
@@ -304,17 +307,20 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
     formset_model = SpeakerCategory
     action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_CATEGORIES_EDIT
 
+    url_name = 'participants-speaker-categories-edit'
+    success_url = 'participants-list'
+
     def get_formset_factory_kwargs(self):
         return {
             'fields': ('name', 'tournament', 'slug', 'seq', 'limit', 'public'),
             'extra': 2,
             'widgets': {
-                'tournament': HiddenInput
-            }
+                'tournament': HiddenInput,
+            },
         }
 
     def get_formset_queryset(self):
-        return SpeakerCategory.objects.filter(tournament=self.tournament)
+        return self.formset_model.objects.filter(tournament=self.tournament)
 
     def get_formset_kwargs(self):
         return {
@@ -324,19 +330,19 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
     def formset_valid(self, formset):
         result = super().formset_valid(formset)
         if self.instances:
-            message = ngettext("Saved speaker category: %(list)s",
-                "Saved speaker categories: %(list)s",
-                len(self.instances)
+            message = ngettext("Saved category: %(list)s",
+                "Saved categories: %(list)s",
+                len(self.instances),
             ) % {'list': ", ".join(category.name for category in self.instances)}
             messages.success(self.request, message)
         else:
-            messages.success(self.request, _("No changes were made to the speaker categories."))
+            messages.success(self.request, _("No changes were made to the categories."))
         if "add_more" in self.request.POST:
-            return redirect_tournament('participants-speaker-categories-edit', self.tournament)
+            return redirect_tournament(self.url_name, self.tournament)
         return result
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_tournament('participants-list', self.tournament)
+        return reverse_tournament(self.success_url, self.tournament)
 
 
 class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
@@ -359,13 +365,13 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
                 'component': 'check-cell',
                 'checked': True if sc in speaker.categories.all() else False,
                 'id': speaker.id,
-                'type': sc.id
+                'type': sc.id,
             } for speaker in speakers])
         return table
 
     def get_context_data(self, **kwargs):
         speaker_categories = self.tournament.speakercategory_set.all()
-        json_categories = [bc.serialize for bc in speaker_categories]
+        json_categories = SpeakerSerializer(speaker_categories, many=True).data
         kwargs["speaker_categories"] = json.dumps(json_categories)
         kwargs["speaker_categories_length"] = speaker_categories.count()
         kwargs["save"] = reverse_tournament('participants-speaker-update-eligibility', self.tournament)
@@ -374,28 +380,29 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
 
 class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT
+    participant_model = Speaker
+    many_to_many_field = 'categories'
 
-    def set_category_eligibility(self, speaker, sent_status):
+    def set_category_eligibility(self, participant, sent_status):
         category_id = sent_status['type']
-        marked_eligible = category_id in [c.id for c in speaker.categories.all()]
+        many_to_many_model = getattr(participant, self.many_to_many_field)
+        marked_eligible = category_id in {c.id for c in many_to_many_model.all()}
         if sent_status['checked'] and not marked_eligible:
-            speaker.categories.add(category_id)
-            speaker.save()
+            many_to_many_model.add(category_id)
         elif not sent_status['checked'] and marked_eligible:
-            speaker.categories.remove(category_id)
-            speaker.save()
+            many_to_many_model.remove(category_id)
 
     def post(self, request, *args, **kwargs):
         body = self.request.body.decode('utf-8')
         posted_info = json.loads(body)
 
         try:
-            speaker_ids = [int(key) for key in posted_info.keys()]
-            speakers = Speaker.objects.prefetch_related('categories').in_bulk(speaker_ids)
-            for speaker_id, speaker in speakers.items():
-                self.set_category_eligibility(speaker, posted_info[str(speaker_id)])
+            participant_ids = [int(key) for key in posted_info.keys()]
+            participants = self.participant_model.objects.prefetch_related(self.many_to_many_field).in_bulk(participant_ids)
+            for participant_id, participant in participants.items():
+                self.set_category_eligibility(participant, posted_info[str(participant_id)])
             self.log_action()
-        except:
+        except Exception:
             message = "Error handling eligiblity updates"
             logger.exception(message)
             return JsonResponse({'status': 'false', 'message': message}, status=500)

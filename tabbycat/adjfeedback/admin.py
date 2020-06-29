@@ -1,23 +1,23 @@
 from django import forms
 from django.contrib import admin, messages
 from django.db.models import Prefetch
+from django.utils.translation import gettext, ngettext
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import ngettext
 
 from draw.models import DebateTeam
 from utils.admin import custom_titled_filter
 
-from .models import (AdjudicatorFeedback, AdjudicatorFeedbackBooleanAnswer, AdjudicatorFeedbackFloatAnswer, AdjudicatorFeedbackIntegerAnswer,
-    AdjudicatorFeedbackQuestion, AdjudicatorFeedbackStringAnswer,
-    AdjudicatorTestScoreHistory)
+from .models import (AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackBooleanAnswer,
+    AdjudicatorFeedbackFloatAnswer, AdjudicatorFeedbackIntegerAnswer, AdjudicatorFeedbackQuestion,
+    AdjudicatorFeedbackStringAnswer)
 
 
 # ==============================================================================
-# Adjudicator test score histories
+# Adjudicator base score histories
 # ==============================================================================
 
-@admin.register(AdjudicatorTestScoreHistory)
-class AdjudicatorTestScoreHistoryAdmin(admin.ModelAdmin):
+@admin.register(AdjudicatorBaseScoreHistory)
+class AdjudicatorBaseScoreHistoryAdmin(admin.ModelAdmin):
     list_display = ('adjudicator', 'round', 'score', 'timestamp')
     list_filter  = ('adjudicator', 'round')
     ordering     = ('timestamp',)
@@ -62,13 +62,17 @@ class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
 @admin.register(AdjudicatorFeedbackIntegerAnswer)
 @admin.register(AdjudicatorFeedbackStringAnswer)
 class AdjudicatorFeedbackAnswerAdmin(admin.ModelAdmin):
-    list_display = ('question', 'get_target', 'get_source', 'answer', 'feedback')
+    list_display = ('question', 'get_target', 'get_source', 'answer', 'get_feedback_description')
+    list_select_related = ('question', 'feedback__adjudicator',
+                           'feedback__source_adjudicator__adjudicator',
+                           'feedback__source_team__team')
     list_filter  = (
         'question', 'answer',
         ('feedback__adjudicator__name', custom_titled_filter(_('target'))),
         ('feedback__source_adjudicator__adjudicator__name', custom_titled_filter(_('source adjudicator'))),
         ('feedback__source_team__team__short_name', custom_titled_filter(_('source team'))),
     )
+    raw_id_fields = ('feedback',)
 
     def get_target(self, obj):
         return obj.feedback.adjudicator.name
@@ -81,8 +85,15 @@ class AdjudicatorFeedbackAnswerAdmin(admin.ModelAdmin):
         elif obj.feedback.source_adjudicator:
             return obj.feedback.source_adjudicator.adjudicator.name
 
+    def get_feedback_description(self, obj):
+        return gettext("%(timestamp)s (version %(version)s)") % {
+            'timestamp': obj.feedback.timestamp.isoformat(),
+            'version': obj.feedback.version,
+        }
+
     get_target.short_description = _("Target")
     get_source.short_description = _("Source")
+    get_feedback_description.short_description = _("Feedback timestamp and version")
 
 
 class BaseAdjudicatorFeedbackAnswerInline(admin.TabularInline):
@@ -169,7 +180,7 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
             "%(count)d feedback submissions were marked as confirmed. Note that "
             "this may have caused other feedback submissions to be marked as "
             "unconfirmed.",
-            final_count
+            final_count,
         ) % {'count': final_count}
         self.message_user(request, message)
 
@@ -182,7 +193,7 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
                 "%(count)d feedback submissions were not marked as confirmed, "
                 "probably because other feedback submissions that conflict "
                 "with them were also marked as confirmed.",
-                difference
+                difference,
             ) % {'count': difference}
             self.message_user(request, message, level=messages.WARNING)
 
@@ -191,7 +202,7 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
         message = ngettext(
             "1 feedback submission was marked as unconfirmed.",
             "%(count)d feedback submissions were marked as unconfirmed.",
-            count
+            count,
         ) % {'count': count}
         self.message_user(request, message)
 
@@ -201,7 +212,7 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
         message = ngettext(
             "1 feedback submission is now ignored.",
             "%(count)d feedback submissions are now ignored.",
-            count
+            count,
         ) % {'count': count}
         self.message_user(request, message)
 
@@ -211,6 +222,6 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
         message = ngettext(
             "1 feedback submission is now recognized.",
             "%(count)d feedback submissions are now recognized.",
-            count
+            count,
         ) % {'count': count}
         self.message_user(request, message)

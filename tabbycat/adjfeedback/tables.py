@@ -51,23 +51,23 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         } for adj in adjudicators]
         self.add_column(overall_header, overall_data)
 
-    def add_test_score_columns(self, adjudicators, editable=False):
+    def add_base_score_columns(self, adjudicators, editable=False):
         test_header = {
-            'key': 'test-score',
+            'key': 'base-score',
             'icon': 'file',
-            'tooltip': _("Test score result"),
+            'tooltip': _("Base score result"),
         }
         if editable:
             test_data = [{
-                'text': self.get_formatted_adj_score(adj.test_score),
+                'text': self.get_formatted_adj_score(adj.base_score),
                 'modal': adj.id,
-                'class': 'edit-test-score',
-                'tooltip': _("Click to edit test score"),
+                'class': 'edit-base-score',
+                'tooltip': _("Click to edit base score"),
             } for adj in adjudicators]
         else:
             test_data = [{
-                'text': self.get_formatted_adj_score(adj.test_score),
-                'tooltip': _("Assigned test score"),
+                'text': self.get_formatted_adj_score(adj.base_score),
+                'tooltip': _("Assigned base score"),
             } for adj in adjudicators]
 
         self.add_column(test_header, test_data)
@@ -76,11 +76,11 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         diff_header = {
             'key': 'score-difference',
             'icon': 'maximize-2',
-            'tooltip': _("The current difference between an adjudicator's test score and current score"),
+            'tooltip': _("The current difference between an adjudicator's base score and current score"),
         }
         diff_data = [{
-            'text': self.get_formatted_adj_score(scores[adj] - adj.test_score),
-            'tooltip': _("The difference between this adjudicator's test score and current score"),
+            'text': self.get_formatted_adj_score(scores[adj] - adj.base_score),
+            'tooltip': _("The difference between this adjudicator's base score and current score"),
         } for adj in adjudicators]
 
         self.add_column(diff_header, diff_data)
@@ -117,40 +117,27 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
     def add_feedback_link_columns(self, adjudicators):
         link_head = {
             'key': 'view-feedback',
-            'icon': 'eye'
+            'icon': 'eye',
         }
         link_cell = [{
             'text': ngettext(
                 "View %(count)s<br>feedback",
                 "View %(count)s<br>feedbacks",
-                len(adj.feedback_data) - 1
-            ) % {'count': len(adj.feedback_data) - 1}, # -1 to account for test score
+                len(adj.feedback_data) - 1,
+            ) % {'count': len(adj.feedback_data) - 1}, # -1 to account for base score
             'class': 'view-feedback',
             'sort': adj.debates,
-            'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.pk})
+            'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.pk}),
         } for adj in adjudicators]
         self.add_column(link_head, link_cell)
 
-    def add_feedback_note_columns(self, adjudicators):
-        note_head = {
-            'key': 'no',
-            'icon': 'tablet'
-        }
-        note_cell = [{
-            'text': _("Edit<br>Note"),
-            'class': 'edit-note',
-            'modal': str(adj.id) + '===' + str(adj.notes)
-        } for adj in adjudicators]
-        self.add_column(note_head, note_cell)
-
     def add_feedback_progress_columns(self, progress_list, key="P"):
-
         def _owed_cell(progress):
             owed = progress.num_unsubmitted()
             cell = {
                 'text': owed,
                 'sort': owed,
-                'class': 'text-danger strong' if owed > 0 else 'text-success'
+                'class': 'text-danger strong' if owed > 0 else 'text-success',
             }
             return cell
 
@@ -182,6 +169,6 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             }
             owed_link_data = [{
                 'text': _("View Missing Feedback"),
-                'link': _record_link(progress)
+                'link': _record_link(progress),
             } for progress in progress_list]
             self.add_column(owed_link_header, owed_link_data)

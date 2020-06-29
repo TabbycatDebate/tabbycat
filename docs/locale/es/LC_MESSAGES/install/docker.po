@@ -1,0 +1,171 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-01-02 01:49\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Spanish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: es-ES\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/install/docker.po\n"
+"Language: es_ES\n"
+
+#: ../../install/docker.rst:5
+msgid "Installing Locally using Docker"
+msgstr ""
+
+#: ../../install/docker.rst:7
+msgid "Is this the best install method for you?"
+msgstr ""
+
+#: ../../install/docker.rst:10
+msgid "In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`"
+msgstr ""
+
+#: ../../install/docker.rst:12
+#, python-format
+msgid "If you need an offline copy of Tabbycat, installing using Docker should be simpler and quicker than using the \"Install Locally on…\" instructions for your operating system. However if a Docker installation doesn't work as outlined below, it's harder to address what isn't working. If you encounter any problems with Docker, we recommend using the \"Install Locally on…\" option as a fallback, but if you need to do so, `please also report the issue you're having on GitHub <https://github.com/TabbycatDebate/tabbycat/issues/new?labels=installation-docker&title=Docker%20installation%20problem&body=Please%20be%20sure%20to%20include%20your%20operating%20system%20and%20version,%20and%20please%20be%20as%20specific%20as%20you%20can%20about%20the%20problem%20you%20encountered%3A%0D%0D>`_ or :ref:`contact the developers <authors>`."
+msgstr ""
+
+#: ../../install/docker.rst:14
+msgid "Docker is an application that makes it very easy to load and run a specific collection of software. It allows us to bundle everything necessary to run Tabbycat into a single package rather than have users install everything needed step-by-step. Once set up, Docker will allow you to start and stop a webserver (that in turn runs Tabbycat) on your computer whenever you want and without the need for internet access."
+msgstr ""
+
+#: ../../install/docker.rst:18
+msgid "1. Download Tabbycat"
+msgstr ""
+
+#: ../../install/docker.rst:20
+msgid "`Go to the page for our latest release <https://github.com/TabbycatDebate/tabbycat/releases/latest>`_."
+msgstr ""
+
+#: ../../install/docker.rst:22
+msgid "Download the zip or tar.gz file."
+msgstr ""
+
+#: ../../install/docker.rst:24
+msgid "Extract all files in it to a folder of your choice."
+msgstr ""
+
+#: ../../install/docker.rst:28
+msgid "2. Install Docker"
+msgstr ""
+
+#: ../../install/docker.rst:31
+msgid "If using macOS or Linux"
+msgstr ""
+
+#: ../../install/docker.rst:33
+msgid "Install the **Docker Community Edition (stable)** from the `Docker store page <https://store.docker.com/search?type=edition&offering=community>`_."
+msgstr ""
+
+#: ../../install/docker.rst:36
+msgid "If using Windows 10 Pro, Enterprise, or Education Edition"
+msgstr ""
+
+#: ../../install/docker.rst:40
+msgid "Install the ****Docker Community Edition (stable)*** from the `Docker store page <https://store.docker.com/search?type=edition&offering=community>`_."
+msgstr ""
+
+#: ../../install/docker.rst:41
+msgid "Before or shortly after installing it, Docker may ask you to enable hypervisor and restart your PC. If it asks you this follow the prompts and restart as asked."
+msgstr ""
+
+#: ../../install/docker.rst:42
+msgid "Once Docker has finished installing, open up the newly-installed Docker application, then right-click the app's icon (the whale) in the Taskbar."
+msgstr ""
+
+#: ../../install/docker.rst:43
+msgid "From there, hit *Settings* in the menu and *Shared Drives* in the sidebar. Tick the checkbox next to your hardrive and then click *Apply*. After that has applied exit and reopen the docker app (ie right-click the taskbar icon and hit exit) and verify that the checkbox is still there."
+msgstr ""
+
+#: ../../install/docker.rst:49
+msgid "If using Windows 7, Windows 8, or Windows 10 Home Edition"
+msgstr ""
+
+#: ../../install/docker.rst:51
+msgid "Install the **Docker Toolbox** from the `Docker Toolbox downloads page <https://www.docker.com/products/docker-toolbox>`_."
+msgstr ""
+
+#: ../../install/docker.rst:53
+msgid "Not sure which edition of Windows you have? Click Start, search for \"System\", and open the Control Panel item \"System\"."
+msgstr ""
+
+#: ../../install/docker.rst:57
+msgid "3. Run Tabbycat in Docker"
+msgstr ""
+
+#: ../../install/docker.rst:60
+msgid "If using the Docker App"
+msgstr ""
+
+#: ../../install/docker.rst:62
+msgid "*These instructions apply if you installed the Docker App, i.e., if you are using macOS, Linux or Windows Pro/Enterprise/Education.*"
+msgstr ""
+
+#: ../../install/docker.rst:66
+msgid "Ensure that Docker application is open (there should be a whale icon in your menu/task bar) and that it says that Docker is running."
+msgstr ""
+
+#: ../../install/docker.rst:68
+msgid "Browse to the location where you extracted Tabbycat to. Open up the **bin** folder there. Within that folder:"
+msgstr ""
+
+#: ../../install/docker.rst:70
+msgid "If you're on macOS, press the Control key, click the icon for **osx_docker_start.command**, then choose Open from the shortcut menu."
+msgstr ""
+
+#: ../../install/docker.rst:71
+msgid "If you're on Windows, open **windows_docker_start.bat**."
+msgstr ""
+
+#: ../../install/docker.rst:72
+msgid "If you're on Linux, open up a terminal in the Tabbycat folder (*i.e.* the folder containing ``README.md``) and run ``docker-compose up``."
+msgstr ""
+
+#: ../../install/docker.rst:74
+msgid "A terminal window should popup and bunch of text scroll by. If this is your first time running Docker it may take a while (30 minutes or more) to download the virtual machine. When the text has stopped scrolling by you should see a `Finished building Tabbycat!` message."
+msgstr ""
+
+#: ../../install/docker.rst:76
+msgid "Open up http://localhost:8000/ (Windows) or http://0.0.0.0:8000 (OSX/Linux) in a browser of your choice!"
+msgstr ""
+
+#: ../../install/docker.rst:78 ../../install/docker.rst:100
+msgid "If you want to reopen Tabbycat at a later time (say after restarting) repeat steps 1 through 4 here."
+msgstr ""
+
+#: ../../install/docker.rst:81
+msgid "If using the Docker Toolbox"
+msgstr ""
+
+#: ../../install/docker.rst:83
+msgid "*These instructions apply if you installed the Docker Toolbox, i.e., if you are using Windows 7, Windows 8 or Windows 10 Home.*"
+msgstr ""
+
+#: ../../install/docker.rst:87
+msgid "Start the **Docker Quickstart Terminal**."
+msgstr ""
+
+#: ../../install/docker.rst:89
+msgid "Run the command ``docker-machine ip``. Take note of the IP address it shows, for example::"
+msgstr ""
+
+#: ../../install/docker.rst:94
+msgid "Navigate to the Tabbycat folder (*i.e.* the folder containing ``README.md``) and run ``docker-compose up``."
+msgstr ""
+
+#: ../../install/docker.rst:96
+msgid "Open a browser and go to http://192.168.99.100:8000/, replacing \"192.168.99.100\" with whatever IP address was shown in step 2."
+msgstr ""
+
+#: ../../install/docker.rst:98
+msgid "Once you're done and want to stop the Tabbycat server, press Ctrl+C, wait until the next prompt appears, and then run ``docker-machine stop``."
+msgstr ""
+

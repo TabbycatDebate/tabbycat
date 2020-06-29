@@ -26,15 +26,23 @@
 <script>
 // Note the checks for "this.adjudicator" are a means of coping when an adj is assigned that is not
 // in the master list — i.e. those from another tournament or that were added since the page was loaded
-import DraggableItem from '../../utils/templates/DraggableItem.vue'
-import HighlightableMixin from '../../utils/templates/HighlightableMixin.vue'
-import ConflictableAdjudicatorMixin from '../../utils/templates/ConflictableAdjudicatorMixin.vue'
-import HoverableConflictReceiverMixin from '../../utils/templates/HoverableConflictReceiverMixin.vue'
+import DraggableItem from '../../templates/allocations/DraggableItem.vue'
+import HighlightableMixin from '../../templates/allocations/HighlightableMixin.vue'
+import ConflictableAdjudicatorMixin from '../../templates/allocations/ConflictableAdjudicatorMixin.vue'
+import HoverableConflictReceiverMixin from '../../templates/allocations/HoverableConflictReceiverMixin.vue'
 
 export default {
   mixins: [HighlightableMixin, ConflictableAdjudicatorMixin, HoverableConflictReceiverMixin],
   components: { DraggableItem },
-  props: { item: Object, dragPayload: Object, isTrainee: false, debateOrPanelId: Number },
+  props: {
+    item: Object,
+    dragPayload: Object,
+    debateOrPanelId: Number,
+    isTrainee: {
+      type: Boolean,
+      default: false,
+    },
+  },
   computed: {
     highlightData: function () {
       return this.adjudicator
@@ -49,6 +57,7 @@ export default {
       if (this.item && 'id' in this.item) {
         return this.item.id
       }
+      return null
     },
     unavailable: function () {
       if (this.doubleAllocated) {
@@ -74,7 +83,12 @@ export default {
     },
     institutionCode: function () {
       if (this.adjudicator && this.adjudicator.institution) {
-        return this.$store.state.institutions[this.adjudicator.institution].code
+        const code = this.$store.state.institutions[this.item.institution].code
+        var stringDelta = code.length - this.initialledName.length
+        if (stringDelta > 3) { // Trim to prevent UI blow outs
+          return code.substring(0, this.initialledName.length + 3) + '…'
+        }
+        return code
       } else {
         return this.gettext('Unaffiliated')
       }

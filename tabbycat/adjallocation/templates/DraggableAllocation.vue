@@ -8,7 +8,7 @@
       <droppable-item class="d-flex flex-grow-1" :handle-drop="handleDebateOrPanelDrop"
                       :drop-context="{ assignment: debateOrPanel.id, position: 'C'}">
         <div :class="['align-items-center flex-fill', chairID ? 'd-none' : 'd-flex panel-incomplete']">
-          <div class="mx-auto py-2 px-3">ⓒ</div>
+          <div class="mx-auto py-2 px-3">Ⓒ</div>
         </div>
         <draggable-adjudicator v-if="chairID" class="flex-fill" :item="allAdjudicators[chairID]"
                                :debate-or-panel-id="debateOrPanel.id"
@@ -31,7 +31,7 @@
       <droppable-item class="d-flex flex-grow-1 flex-wrap" :handle-drop="handleDebateOrPanelDrop"
                       :drop-context="{ assignment: debateOrPanel.id, position: 'T'}">
         <div :class="['align-items-center flex-fill', adjudicators.T.length > 0 ? 'd-none' : 'd-flex']">
-          <div class="mx-auto py-2 px-4">ⓣ</div>
+          <div class="mx-auto py-2 px-4">Ⓣ</div>
         </div>
         <draggable-adjudicator v-for="adjID in adjudicators.T" :item="allAdjudicators[adjID]"
                                :debate-or-panel-id="debateOrPanel.id"
@@ -45,12 +45,12 @@
 </template>
 
 <script>
-import DroppableItem from '../../utils/templates/DroppableItem.vue'
+import DroppableItem from '../../templates/allocations/DroppableItem.vue'
 import DraggableAdjudicator from './DraggableAdjudicator.vue'
 
 export default {
   components: { DraggableAdjudicator, DroppableItem },
-  props: [ 'debateOrPanel', 'handleDebateOrPanelDrop' ],
+  props: ['debateOrPanel', 'handleDebateOrPanelDrop'],
   computed: {
     chairID () {
       return this.adjudicators.C[0]
@@ -65,9 +65,9 @@ export default {
   methods: {
     getDragPayload: function (adjID, position) {
       return {
-        'item': adjID,
-        'assignment': this.debateOrPanel.id,
-        'position': position,
+        item: adjID,
+        assignment: this.debateOrPanel.id,
+        position: position,
       }
     },
     handledrop: function (droppedData) {

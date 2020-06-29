@@ -5,8 +5,8 @@
 
     <div class="list-group-item">
       <h4 class="card-title mb-0">
-        {% blocktrans trimmed with round_name=current_round.name %}
-          In This Round ({{ round_name }})
+        {% blocktrans trimmed with round=current_round.name %}
+          In This Round ({{ round }})
         {% endblocktrans %}
         {% if admin_page and not draw_released %}
           <em>{% trans "(Not Released to Public)" %}</em>
@@ -16,7 +16,7 @@
 
     {% if draw_released or admin_page %}
 
-      {% trans "Venue TBA" as venue_tba %}
+      {% trans "Room TBA" as venue_tba %}
 
       {% if debateadjudications != None %}
         {% for debateadjudicator in debateadjudications %}
@@ -28,8 +28,8 @@
         <div class="list-group-item">
           <em>
             {% if grammatical_person == "3" %}
-              {% blocktrans trimmed with adj_name=adjudicator.name %}
-                {{ adj_name }} is not adjudicating this round.
+              {% blocktrans trimmed with adjudicator=adjudicator.name %}
+                {{ adjudicator }} is not adjudicating this round.
               {% endblocktrans %}
             {% else %}
               {% blocktrans trimmed %}
@@ -47,10 +47,10 @@
           <div class="list-group-item">
             <em>
               {# This is never in the singular, it's just needed to make pluralization work with i18n. #}
-              {% blocktrans trimmed with team_name=team_short_name count ndebates=debateteams|length %}
-                It looks like {{ team_name }} is competing in {{ ndebates }} debate this round.
+              {% blocktrans trimmed with team=team_short_name count ndebates=debateteams|length %}
+                It looks like {{ team }} is competing in {{ ndebates }} debate this round.
               {% plural %}
-                It looks like {{ team_name }} is competing in {{ ndebates }} debates this round.
+                It looks like {{ team }} is competing in {{ ndebates }} debates this round.
               {% endblocktrans %}
               {% if not admin_page %}
                 {% trans "If this is an error, please contact a tab director immediately." %}
@@ -68,8 +68,8 @@
         <div class="list-group-item">
           <em>
             {% if grammatical_person == "3" %}
-              {% blocktrans trimmed with team_name=team_short_name %}
-                {{ team_name }} does not have a debate this round.
+              {% blocktrans trimmed with team=team_short_name %}
+                {{ team }} does not have a debate this round.
               {% endblocktrans %}
             {% else %}
               {% blocktrans trimmed %}

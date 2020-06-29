@@ -50,15 +50,15 @@ $conflict-history-base:   #3498db;
 $incomplete-panel:        rgba(100, 100, 100, 0.5); // Needs xparency
 
 // Adj Rankings
-$adj-ranking-0:           hsla(175, 90%, 40%, 1); // A+
-$adj-ranking-1:           hsla(140, 90%, 42%, 1); // A
-$adj-ranking-2:           hsla(90, 90%, 38%, 1); // A-
-$adj-ranking-3:           hsla(55, 90%, 45%, 1); // B+
-$adj-ranking-4:           hsla(30, 95%, 60%, 1); // B
-$adj-ranking-5:           hsla(0, 95%, 48%, 1); // B-
-$adj-ranking-6:           hsla(0, 100%, 34%, 1); // C+
-$adj-ranking-7:           hsla(0, 0%, 60%, 1);
-$adj-ranking-8:           hsla(0, 0%, 50%, 1);
+$alpha-ranking-0:           hsla(175, 90%, 40%, 1); // A+
+$alpha-ranking-1:           hsla(140, 90%, 42%, 1); // A
+$alpha-ranking-2:           hsla(90, 90%, 38%, 1); // A-
+$alpha-ranking-3:           hsla(55, 90%, 45%, 1); // B+
+$alpha-ranking-4:           hsla(30, 95%, 60%, 1); // B
+$alpha-ranking-5:           hsla(0, 95%, 48%, 1); // B-
+$alpha-ranking-6:           hsla(0, 100%, 34%, 1); // C+
+$alpha-ranking-7:           hsla(0, 0%, 60%, 1);
+$alpha-ranking-8:           hsla(0, 0%, 50%, 1);
 
 // Team Positions
 $aff:                     theme-color("info");

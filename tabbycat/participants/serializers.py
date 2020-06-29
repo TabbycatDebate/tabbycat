@@ -1,12 +1,18 @@
 from rest_framework import serializers
 
-from .models import Adjudicator, Institution, Speaker, Team
+from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 
 
 class SpeakerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Speaker
         fields = ('id', 'name', 'gender')
+
+
+class SpeakerCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SpeakerCategory
+        fields = ('name')
 
 
 class InstitutionSerializer(serializers.ModelSerializer):
@@ -22,7 +28,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Adjudicator
-        fields = ('id', 'name', 'gender', 'institution',)
+        fields = ('id', 'name', 'gender', 'institution')
 
 
 class TeamSerializer(serializers.ModelSerializer):

@@ -13,11 +13,11 @@
 
 <script>
 import { mapState } from 'vuex'
-import HighlightableMixin from '../../utils/templates/HighlightableMixin.vue'
-import HoverablePanelMixin from '../../utils/templates/HoverablePanelMixin.vue'
-import HoverableConflictMixin from '../../utils/templates/HoverableConflictMixin.vue'
-import HoverableConflictReceiverMixin from '../../utils/templates/HoverableConflictReceiverMixin.vue'
-import ConflictableTeamMixin from '../../utils/templates/ConflictableTeamMixin.vue'
+import HighlightableMixin from '../../templates/allocations/HighlightableMixin.vue'
+import HoverablePanelMixin from '../../templates/allocations/HoverablePanelMixin.vue'
+import HoverableConflictMixin from '../../templates/allocations/HoverableConflictMixin.vue'
+import HoverableConflictReceiverMixin from '../../templates/allocations/HoverableConflictReceiverMixin.vue'
+import ConflictableTeamMixin from '../../templates/allocations/ConflictableTeamMixin.vue'
 
 export default {
   mixins: [HighlightableMixin, HoverablePanelMixin, HoverableConflictMixin, HoverableConflictReceiverMixin, ConflictableTeamMixin],
@@ -64,10 +64,10 @@ export default {
       if (this.isElimination || this.team.break_categories.length === 0) {
         return true // Never show strikeouts in out rounds; don't show if no categories are set
       }
-      let breakCategoriesCount = this.team.break_categories.length
+      const breakCategoriesCount = this.team.break_categories.length
       let letDeadCategoriesCount = 0
-      for (let bc of this.team.break_categories) {
-        let category = this.highlights.break.options[bc]
+      for (const bc of this.team.break_categories) {
+        const category = this.highlights.break.options[bc]
         if (category) {
           if (this.team.points >= category.fields.safe) {
             letDeadCategoriesCount += 1

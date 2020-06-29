@@ -105,8 +105,7 @@ thead,
 //------------------------------------------------------------------------------
 
 .table > thead > tr > th,
-.table > tbody > tr > td,
-.draw-container .thead {
+.table > tbody > tr > td {
   padding: 8px 8px 8px 4px;
 }
 
@@ -128,8 +127,7 @@ thead,
 }
 
 // Icons in headers
-.table > thead > tr > th .header-icon,
-.draw-container .thead .header-icon {
+.table > thead > tr > th .header-icon {
   width: 16px;
   height: 16px; // Need to match font size of header text
   box-sizing: initial;
@@ -140,10 +138,6 @@ thead,
     padding-bottom: 3px;
     margin-bottom: -4px; // Un-Offset tooltip underline
   }
-}
-
-.draw-container .thead .feather {
-  margin-top: -4px;
 }
 
 // Icons in cells (may as well make them big to match text size)
@@ -222,15 +216,36 @@ thead,
 
   // Table widths on mobile devices should span the screen
   .table-container {
-    margin-left: -15px;
+    margin-left: -20px;
     margin-right: -15px;
     border-left: 0;
     border-right: 0;
     border-radius: 0;
 
     .card-body {
-      padding: 0.5rem 0;
+      padding-left: 0 !important; // Hard left border on mobile
     }
+
+    .table > thead > tr > th:first-child,
+    .table > tbody > tr > td:first-child {
+      padding-left: 8px; // Double padding to compensate for smushed borders
+    }
+  }
+
+  // Break venues into new lines on mobile
+  .venue-name {
+    min-width: auto;
+  }
+
+  // Reduce widths of team names on mobile
+  .team-name {
+    white-space: normal;
+  }
+
+  // To save horizontal space; put the emoji in a vertical orientation
+  .team-name .flex-vertical-center {
+    flex-direction: column;
+    align-items: start;
   }
 
   // But not in the admin interface

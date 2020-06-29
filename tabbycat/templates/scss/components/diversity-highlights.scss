@@ -6,7 +6,185 @@
   color: #fff; // Needed to keep consistent with other bars
 }
 
-// For D3
+.break-display {
+
+  &.break-0 {
+    @include hover-highlights($break-cat-1);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
+  }
+
+  &.break-0-disabled {
+    @include outline-highlights($break-cat-1);
+  }
+
+  &.break-1 {
+    @include hover-highlights($break-cat-2);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
+  }
+
+  &.break-1-disabled {
+    @include outline-highlights($break-cat-2);
+  }
+
+  &.break-2 {
+    @include hover-highlights($break-cat-3);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
+  }
+
+  &.break-2-disabled {
+    @include outline-highlights($break-cat-3);
+  }
+
+  &.break-3 {
+    @include hover-highlights($break-cat-4);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
+  }
+
+  &.break-4-disabled {
+    @include outline-highlights($break-cat-4);
+  }
+}
+
+.category-display {
+
+  &.category-0 {
+    @include hover-highlights($break-cat-1);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
+  }
+
+  &.category-0-disabled {
+    @include outline-highlights($break-cat-1);
+  }
+
+  &.category-1 {
+    @include hover-highlights($break-cat-2);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
+  }
+
+  &.category-1-disabled {
+    @include outline-highlights($break-cat-2);
+  }
+
+  &.category-2 {
+    @include hover-highlights($break-cat-3);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
+  }
+
+  &.category-2-disabled {
+    @include outline-highlights($break-cat-3);
+  }
+
+  &.category-3 {
+    @include hover-highlights($break-cat-4);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
+  }
+
+  &.category-4-disabled {
+    @include outline-highlights($break-cat-4);
+  }
+}
+
+.gender-display {
+
+  .vue-draggable-muted {
+    color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+  }
+
+  &.gender-male,
+  &.gender-m,
+  &.gender-M,
+  &.gender-0 {
+    @include hover-highlights($male);
+  }
+
+  &.gender-female,
+  &.gender-f,
+  &.gender-F,
+  &.gender-nm,
+  &.gender-1 {
+    @include hover-highlights($female);
+  }
+
+  &.gender-other,
+  &.gender-o,
+  &.gender-O,
+  &.gender-2 {
+    @include hover-highlights($other);
+  }
+
+  &.gender-unknown,
+  &.gender-u,
+  &.gender-U,
+  &.gender-,
+  &.gender-3 {
+    @include hover-highlights($unknown);
+  }
+
+  // For Teams
+  &.gender-men-2 {
+    @include hover-highlights($male);
+  }
+
+  &.gender-notmen-2 {
+    @include hover-highlights($female);
+  }
+
+  &.gender-men-3,
+  &.gender-men-4 {
+    @include hover-highlights(darken($male, 20%));
+  }
+
+  &.gender-notmen-3,
+  &.gender-notmen-4 {
+    @include hover-highlights(darken($female, 20%));
+  }
+}
+
+.gender-text {
+
+  &.gender-male {
+    color: $male;
+  }
+
+  &.gender-female,
+  &.gender-nm {
+    color: $female;
+  }
+
+  &.gender-other {
+    color: $other;
+  }
+
+  &.gender-unknown {
+    color: $unknown;
+  }
+}
+
+// For D3 only
 path.gender-nm {
   fill: $female;
 }
@@ -26,44 +204,76 @@ path.gender-other {
 // For diversity graphs and allocation
 .region-display {
 
-  .vue-draggable-muted {
-    color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
-  }
-
   &.region-0 {
     @include hover-highlights($region-cat-0);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
   }
 
   &.region-1 {
     @include hover-highlights($region-cat-1);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
   }
 
   &.region-2 {
     @include hover-highlights($region-cat-2);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
   }
 
   &.region-3 {
     @include hover-highlights($region-cat-3);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
   }
 
   &.region-4 {
     @include hover-highlights($region-cat-4);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
   }
 
   &.region-5 {
     @include hover-highlights($region-cat-5);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
   }
 
   &.region-6 {
     @include hover-highlights($region-cat-6);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
   }
 
   &.region-7 {
     @include hover-highlights($region-cat-7);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
   }
 
   &.region-8 {
     @include hover-highlights($region-cat-8);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
   }
 }
 
@@ -102,4 +312,101 @@ path.region-7 {
 
 path.region-8 {
   fill: $region-cat-8;
+}
+
+// Ranking Display (Adjs)
+.rank-display {
+
+  .vue-draggable-muted {
+    color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+  }
+
+  &.ranking-90,
+  &.rank-0 {
+    @include hover-highlights($alpha-ranking-0);
+  }
+
+  &.ranking-80,
+  &.rank-1 {
+    @include hover-highlights($alpha-ranking-1);
+  }
+
+  &.ranking-70,
+  &.rank-2 {
+    @include hover-highlights($alpha-ranking-2);
+  }
+
+  &.ranking-60,
+  &.rank-3 {
+    @include hover-highlights($alpha-ranking-3);
+  }
+
+  &.ranking-50,
+  &.rank-4 {
+    @include hover-highlights($alpha-ranking-4);
+  }
+
+  &.ranking-40,
+  &.rank-5 {
+    @include hover-highlights($alpha-ranking-5);
+  }
+
+  &.ranking-30,
+  &.rank-6 {
+    @include hover-highlights($alpha-ranking-6);
+  }
+
+  &.ranking-20,
+  &.rank-7 {
+    @include hover-highlights($alpha-ranking-7);
+  }
+
+  &.ranking-10,
+  &.rank-8 {
+    @include hover-highlights($alpha-ranking-8);
+  }
+}
+
+// Priority Display (Venues)
+.priority-display {
+
+  .vue-draggable-muted {
+    color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+  }
+
+  &.priority-0 {
+    @include hover-highlights($alpha-ranking-0);
+  }
+
+  &.priority-1 {
+    @include hover-highlights($alpha-ranking-1);
+  }
+
+  &.priority-2 {
+    @include hover-highlights($alpha-ranking-2);
+  }
+
+  &.priority-3 {
+    @include hover-highlights($alpha-ranking-3);
+  }
+
+  &.priority-4 {
+    @include hover-highlights($alpha-ranking-4);
+  }
+
+  &.priority-5 {
+    @include hover-highlights($alpha-ranking-5);
+  }
+
+  &.priority-6 {
+    @include hover-highlights($alpha-ranking-6);
+  }
+
+  &.priority-7 {
+    @include hover-highlights($alpha-ranking-7);
+  }
+
+  &.priority-8 {
+    @include hover-highlights($alpha-ranking-8);
+  }
 }

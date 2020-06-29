@@ -1441,7 +1441,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 1,
     "fields": {
         "adjudicator": 73,
@@ -1451,7 +1451,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 2,
     "fields": {
         "adjudicator": 74,
@@ -1461,7 +1461,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 3,
     "fields": {
         "adjudicator": 75,
@@ -1471,7 +1471,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 4,
     "fields": {
         "adjudicator": 76,
@@ -1481,7 +1481,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 5,
     "fields": {
         "adjudicator": 77,
@@ -1491,7 +1491,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 6,
     "fields": {
         "adjudicator": 78,
@@ -1501,7 +1501,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 7,
     "fields": {
         "adjudicator": 79,
@@ -1511,7 +1511,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 8,
     "fields": {
         "adjudicator": 80,
@@ -1521,7 +1521,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 9,
     "fields": {
         "adjudicator": 81,
@@ -1531,7 +1531,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 10,
     "fields": {
         "adjudicator": 82,
@@ -1541,7 +1541,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 11,
     "fields": {
         "adjudicator": 83,
@@ -1551,7 +1551,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 12,
     "fields": {
         "adjudicator": 84,
@@ -1561,7 +1561,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 13,
     "fields": {
         "adjudicator": 85,
@@ -1571,7 +1571,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 14,
     "fields": {
         "adjudicator": 86,
@@ -1581,7 +1581,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 15,
     "fields": {
         "adjudicator": 87,
@@ -1591,7 +1591,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 16,
     "fields": {
         "adjudicator": 88,
@@ -1601,7 +1601,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 17,
     "fields": {
         "adjudicator": 89,
@@ -1611,7 +1611,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 18,
     "fields": {
         "adjudicator": 90,
@@ -1621,7 +1621,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 19,
     "fields": {
         "adjudicator": 91,
@@ -1631,7 +1631,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 20,
     "fields": {
         "adjudicator": 92,
@@ -1641,7 +1641,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 21,
     "fields": {
         "adjudicator": 93,
@@ -1651,7 +1651,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 22,
     "fields": {
         "adjudicator": 94,
@@ -1661,7 +1661,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 23,
     "fields": {
         "adjudicator": 95,
@@ -1671,7 +1671,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 24,
     "fields": {
         "adjudicator": 96,
@@ -1681,7 +1681,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 25,
     "fields": {
         "adjudicator": 97,
@@ -1691,7 +1691,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 26,
     "fields": {
         "adjudicator": 98,
@@ -1701,7 +1701,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 27,
     "fields": {
         "adjudicator": 99,
@@ -6783,7 +6783,7 @@
     "fields": {
         "institution": 13,
         "tournament": 1,
-        "test_score": 5.0,
+        "base_score": 5.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -6796,7 +6796,7 @@
     "fields": {
         "institution": 8,
         "tournament": 1,
-        "test_score": 5.0,
+        "base_score": 5.0,
         "trainee": false,
         "breaking": true,
         "independent": true,
@@ -6809,7 +6809,7 @@
     "fields": {
         "institution": 12,
         "tournament": 1,
-        "test_score": 5.0,
+        "base_score": 5.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -6822,7 +6822,7 @@
     "fields": {
         "institution": 1,
         "tournament": 1,
-        "test_score": 1.0,
+        "base_score": 1.0,
         "trainee": false,
         "breaking": false,
         "independent": true,
@@ -6835,7 +6835,7 @@
     "fields": {
         "institution": 1,
         "tournament": 1,
-        "test_score": 5.0,
+        "base_score": 5.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -6848,7 +6848,7 @@
     "fields": {
         "institution": 2,
         "tournament": 1,
-        "test_score": 2.0,
+        "base_score": 2.0,
         "trainee": false,
         "breaking": true,
         "independent": false,
@@ -6861,7 +6861,7 @@
     "fields": {
         "institution": 3,
         "tournament": 1,
-        "test_score": 5.0,
+        "base_score": 5.0,
         "trainee": false,
         "breaking": false,
         "independent": true,
@@ -6874,7 +6874,7 @@
     "fields": {
         "institution": 4,
         "tournament": 1,
-        "test_score": 4.0,
+        "base_score": 4.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -6887,7 +6887,7 @@
     "fields": {
         "institution": 4,
         "tournament": 1,
-        "test_score": 5.0,
+        "base_score": 5.0,
         "trainee": false,
         "breaking": false,
         "independent": true,
@@ -6900,7 +6900,7 @@
     "fields": {
         "institution": 12,
         "tournament": 1,
-        "test_score": 5.0,
+        "base_score": 5.0,
         "trainee": false,
         "breaking": false,
         "independent": true,
@@ -6913,7 +6913,7 @@
     "fields": {
         "institution": 12,
         "tournament": 1,
-        "test_score": 4.0,
+        "base_score": 4.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -6926,7 +6926,7 @@
     "fields": {
         "institution": 8,
         "tournament": 1,
-        "test_score": 4.0,
+        "base_score": 4.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -6939,7 +6939,7 @@
     "fields": {
         "institution": 5,
         "tournament": 1,
-        "test_score": 4.0,
+        "base_score": 4.0,
         "trainee": false,
         "breaking": false,
         "independent": true,
@@ -6952,7 +6952,7 @@
     "fields": {
         "institution": 5,
         "tournament": 1,
-        "test_score": 2.0,
+        "base_score": 2.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -6965,7 +6965,7 @@
     "fields": {
         "institution": 6,
         "tournament": 1,
-        "test_score": 2.0,
+        "base_score": 2.0,
         "trainee": false,
         "breaking": true,
         "independent": true,
@@ -6978,7 +6978,7 @@
     "fields": {
         "institution": 6,
         "tournament": 1,
-        "test_score": 5.0,
+        "base_score": 5.0,
         "trainee": false,
         "breaking": true,
         "independent": false,
@@ -6991,7 +6991,7 @@
     "fields": {
         "institution": 7,
         "tournament": 1,
-        "test_score": 2.0,
+        "base_score": 2.0,
         "trainee": false,
         "breaking": true,
         "independent": false,
@@ -7004,7 +7004,7 @@
     "fields": {
         "institution": 7,
         "tournament": 1,
-        "test_score": 2.0,
+        "base_score": 2.0,
         "trainee": false,
         "breaking": true,
         "independent": false,
@@ -7017,7 +7017,7 @@
     "fields": {
         "institution": 8,
         "tournament": 1,
-        "test_score": 1.0,
+        "base_score": 1.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -7030,7 +7030,7 @@
     "fields": {
         "institution": 8,
         "tournament": 1,
-        "test_score": 2.0,
+        "base_score": 2.0,
         "trainee": false,
         "breaking": true,
         "independent": false,
@@ -7043,7 +7043,7 @@
     "fields": {
         "institution": 9,
         "tournament": 1,
-        "test_score": 4.0,
+        "base_score": 4.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -7056,7 +7056,7 @@
     "fields": {
         "institution": 10,
         "tournament": 1,
-        "test_score": 2.0,
+        "base_score": 2.0,
         "trainee": false,
         "breaking": true,
         "independent": false,
@@ -7069,7 +7069,7 @@
     "fields": {
         "institution": 10,
         "tournament": 1,
-        "test_score": 3.0,
+        "base_score": 3.0,
         "trainee": false,
         "breaking": true,
         "independent": false,
@@ -7082,7 +7082,7 @@
     "fields": {
         "institution": 11,
         "tournament": 1,
-        "test_score": 2.0,
+        "base_score": 2.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -7095,7 +7095,7 @@
     "fields": {
         "institution": 13,
         "tournament": 1,
-        "test_score": 4.0,
+        "base_score": 4.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -7108,7 +7108,7 @@
     "fields": {
         "institution": 13,
         "tournament": 1,
-        "test_score": 3.0,
+        "base_score": 3.0,
         "trainee": false,
         "breaking": true,
         "independent": false,
@@ -7121,7 +7121,7 @@
     "fields": {
         "institution": 5,
         "tournament": 1,
-        "test_score": 5.0,
+        "base_score": 5.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -7134,7 +7134,7 @@
     "fields": {
         "institution": 1,
         "tournament": null,
-        "test_score": 2.5,
+        "base_score": 2.5,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -7147,7 +7147,7 @@
     "fields": {
         "institution": 2,
         "tournament": null,
-        "test_score": 2.5,
+        "base_score": 2.5,
         "trainee": false,
         "breaking": false,
         "independent": false,

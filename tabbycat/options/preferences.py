@@ -4,14 +4,15 @@ from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 from dynamic_preferences.preferences import Section
+from dynamic_preferences.registries import global_preferences_registry
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, LongStringPreference, StringPreference
 
-from standings.teams import TeamStandingsGenerator
 from standings.speakers import SpeakerStandingsGenerator
+from standings.teams import TeamStandingsGenerator
 from tournaments.utils import get_side_name_choices
 
-from .types import MultiValueChoicePreference
 from .models import tournament_preferences_registry
+from .types import MultiValueChoicePreference
 
 
 # ==============================================================================
@@ -90,6 +91,7 @@ class MarginIncludesDissent(BooleanPreference):
     section = scoring
     name = 'margin_includes_dissenters'
     default = False
+
 
 # ==============================================================================
 draw_rules = Section('draw_rules', verbose_name=_("Draw Rules"))
@@ -339,6 +341,7 @@ class HideTraineePosition(BooleanPreference):
     name = 'no_trainee_position'
     default = False
 
+
 # ==============================================================================
 feedback = Section('feedback', verbose_name=_("Feedback"))
 # ==============================================================================
@@ -408,12 +411,13 @@ class ShowUnaccredited(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class FeedbackIntroduction(StringPreference):
+class FeedbackIntroduction(LongStringPreference):
     help_text = _("Any explanatory text needed to introduce the feedback form")
     verbose_name = _("Feedback introduction/explanation")
     section = feedback
     name = 'feedback_introduction'
     default = ''
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
     field_kwargs = {'required': False}
 
 
@@ -686,9 +690,9 @@ class AdjudicatorsTabShows(ChoicePreference):
     section = tab_release
     name = 'adjudicators_tab_shows'
     choices = (
-        ('test', _("Only shows test score")),
+        ('test', _("Only shows base score")),
         ('final', _("Only shows final score")),
-        ('all', _("Shows test, final, and per-round scores")),
+        ('all', _("Shows base, final, and per-round scores")),
     )
     default = 'final'
 
@@ -773,7 +777,7 @@ class DisableBallotConfirmation(BooleanPreference):
 
 @tournament_preferences_registry.register
 class EnableBlindBallotConfirmation(BooleanPreference):
-    help_text = _("Requires scores of draft ballot to be re-entered during confirmation (as a more stringent check)")
+    help_text = _("Requires scores of draft ballots to be re-entered as part of the confirmation stage (to create more stringent check). Only applies to BP formats.")
     verbose_name = _("Enforce blind confirmations")
     section = data_entry
     name = 'enable_blind_checks'
@@ -816,10 +820,10 @@ class CheckInWindowPeople(FloatPreference):
 
 @tournament_preferences_registry.register
 class CheckInWindowVenues(FloatPreference):
-    help_text = _("The amount of time (in hours) before a venue's check-in event expires")
+    help_text = _("The amount of time (in hours) before a room's check-in event expires")
     section = data_entry
     name = 'checkin_window_venues'
-    verbose_name = _("Check-In Window (Venues)")
+    verbose_name = _("Check-In Window (Rooms)")
     default = 2.0
 
 
@@ -1062,7 +1066,7 @@ class ShowTeamInstitutions(BooleanPreference):
 
 @tournament_preferences_registry.register
 class ShowAdjudicatorInstitutions(BooleanPreference):
-    help_text = _("In tables listing adjudicators, adds a column showing their institutions")
+    help_text = _("Hide the institutions of adjudicators on public pages and on printed ballots")
     verbose_name = _("Show adjudicator institutions")
     section = ui_options
     name = 'show_adjudicator_institutions'
@@ -1075,15 +1079,6 @@ class ShowSpeakersInDraw(BooleanPreference):
     verbose_name = _("Show speakers in draw")
     section = ui_options
     name = 'show_speakers_in_draw'
-    default = True
-
-
-@tournament_preferences_registry.register
-class ShowIntroductionToAllocationUI(BooleanPreference):
-    help_text = _("Show an introduction screen when loading the allocation interface (this will automatically uncheck whenever the screen is shown)")
-    verbose_name = _("Show allocation UI intro")
-    section = ui_options
-    name = 'show_allocation_intro'
     default = True
 
 
@@ -1330,3 +1325,17 @@ class EnableMotionReuse(BooleanPreference):
     section = motions
     name = 'enable_motion_reuse'
     default = False
+
+
+# ==============================================================================
+global_settings = Section('global', verbose_name=_('Global Settings'))
+# ==============================================================================
+
+
+@global_preferences_registry.register
+class EnableAPIAccess(BooleanPreference):
+    help_text = _("Enables external applications to access the site through a dedicated interface, subject to public information settings.")
+    verbose_name = _("Enable API access")
+    section = global_settings
+    name = 'enable_api'
+    default = True

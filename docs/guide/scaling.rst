@@ -110,11 +110,22 @@ If you ever need to clear the cache (say to force the site to quickly show an up
 Postgres Limits
 ===============
 
-The free tier of the Postgres database services has a limit of 20 'connections'. As with Redis, it is rare that a Tabbycat site will exceed this limit; most Australs-sized tournaments will see a maximum of 12 connections at any point in time.
+The free tier of the Postgres database services has a limit of 20 'connections'. It is rare that a Tabbycat site will exceed this limit; most Australs-sized tournaments will see a maximum of 12 connections at any point in time.
 
     .. image:: images/connections.png
 
 You can monitor this in your Heroku Dashboard by going to the **Resources** tab and clicking on the purple Postgres link. The **Connections** graph here will show you how close you are to the limit. The first tier up from the 'free' Hobby tiers (i.e. ``Standard-0``) has a connection limit of 120 which can be used to overcome these limits if you do encounter them.
+
+Redis Limits
+============
+
+Tabbycat uses two types of Redis add-on. The official Heroku Redis add-on is used to enable the pages of Tabbycat that display live information, such as the check-ins page, the adjudicator allocation page, and the round results page. The Redis Labs Heroku add-on is used to enable the caching of pages, as described above.
+
+Both types of add-on have connection limits that, if hit, will degrade performance. However, in practice these connection limits are very rarely hit because connections are maintained extremely briefly, or only for very particular types of traffic. As with Postgres, you can click-through to each add-on to examine how close your site is to hitting this connection limit.
+
+The default Redis Labs add-on has a connection limit of 30. This should be sufficient for almost all tournaments — only at WUDC-levels of traffic have we seen that limit breached (to a peak of 118). Upgrading the Redis Labs add-on to the first non-free tier expands the connection limit to 256. This upgrade should only be strictly required for WUDC, but is also a good precaution for EUDC/Australs scale tournaments.
+
+The official Heroku Redis has a connection limit of 20. Even at WUDC's scale the most connections ever observed were 13, so an upgrade should not be necessary.
 
 Mirror Admin Sites
 ==================
@@ -140,6 +151,8 @@ As a quick and rough benchmark, here is a list of typical prices you would encou
         - A tournament of this size will require an upgraded database tier for the time when you are adding new data; i.e. during registration and rounds. Once the tab is released (and no further data changes needed) however you can downgrade it back to the ``Hobby Dev`` tier.
     - 1x ``Hobby Dyno`` ($7/month each) run all day for 7 days = ~$2
         - As recommended, 1 hobby dyno should be run as a baseline in order to see the metrics dashboard; but this can be downgraded a day or so after the tab has been released and traffic is sparse.
+    - 1X ``Redis Labs 100mb Plan`` ($10/month) run for 7 days = ~$2
+        - The upgraded version of Redis is worth running as a precaution while the site is showing draws and the full tab
     - 3x ``Standard 1X Dyno`` ($25/month each) run 10 hours a day for 4 days = ~$4
         - This higher quantity of dynos should only be necessary during traffic spikes (i.e. draw releases, immediately after round advances, and tab release) but unless you want to be constantly turning things on/off its usually easier just to upgrade them at the start of each day of in-rounds (or when the tab is published) and downgrade them at the end of each day. As mentioned earlier, you should occasionally check the *Dyno Load* in the Metrics area and adjust the number of dynos as needed.
     - ``Autoscaled Performance M Dynos`` ($250/month each) average of 5 run for 1 hour = ~$2

@@ -72,7 +72,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     lookup_venue_category_display = make_lookup("venue category display", {
         (""): vm.VenueCategory.DISPLAY_SUFFIX,
         ("suffix"): vm.VenueCategory.DISPLAY_SUFFIX,
-        ("prefix"): vm.VenueCategory.DISPLAY_PREFIX
+        ("prefix"): vm.VenueCategory.DISPLAY_PREFIX,
     })
 
     def import_rounds(self, f):
@@ -80,7 +80,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             tournament=self.tournament,
             stage=self.lookup_round_stage,
             draw_type=self.lookup_draw_type,
-            break_category=lambda x: bm.BreakCategory.objects.get(slug=x, tournament=self.tournament)
+            break_category=lambda x: bm.BreakCategory.objects.get(slug=x, tournament=self.tournament),
         )
 
         def round_interpreter(lineno, line):
@@ -104,12 +104,12 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 if not line.get('region'):
                     return None
                 return {
-                    'name': line['region']
+                    'name': line['region'],
                 }
             self._import(f, pm.Region, region_interpreter, expect_unique=False)
 
         institution_interpreter = make_interpreter(
-            region=lambda x: pm.Region.objects.get(name=x)
+            region=lambda x: pm.Region.objects.get(name=x),
         )
 
         self._import(f, pm.Institution, institution_interpreter)
@@ -131,7 +131,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             def venue_category_interpreter(lineno, line):
                 if not line.get('category'):
                     return None
-                return {'name': line['category']}
+                return {'tournament': self.tournament, 'name': line['category']}
             self._import(f, vm.VenueCategory, venue_category_interpreter, expect_unique=False)
 
         def venue_category_venue_interpreter(lineno, line):
@@ -139,13 +139,14 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 return None
             return {
                 'venuecategory': vm.VenueCategory.objects.get(name=line['category']),
-                'venue': self.tournament.venue_set.get(name=line['name'])
+                'venue': self.tournament.venue_set.get(name=line['name']),
             }
 
         self._import(f, vm.VenueCategory.venues.through, venue_category_venue_interpreter)
 
     def import_venue_categories(self, f):
         venue_category_interpreter = make_interpreter(
+            tournament=self.tournament,
             display_in_venue_name=self.lookup_venue_category_display,
         )
 
@@ -163,7 +164,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         team_interpreter_part = make_interpreter(
             tournament=self.tournament,
-            institution=pm.Institution.objects.lookup
+            institution=pm.Institution.objects.lookup,
         )
 
         def team_interpreter(lineno, line):
@@ -246,19 +247,19 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             institution=pm.Institution.objects.lookup,
             tournament=self.tournament,
             gender=self.lookup_gender,
-            DELETE=['team_conflicts', 'institution_conflicts', 'adj_conflicts']
+            DELETE=['team_conflicts', 'institution_conflicts', 'adj_conflicts'],
         )
         adjudicators = self._import(f, pm.Adjudicator, adjudicator_interpreter)
 
-        def test_score_interpreter(lineno, line):
+        def base_score_interpreter(lineno, line):
             adjudicator = adjudicators[lineno]
-            if line['test_score']:
+            if line['base_score']:
                 return {
                     'adjudicator' : adjudicator,
-                    'score'       : line['test_score'],
+                    'score'       : line['base_score'],
                     'round'       : None,
                 }
-        self._import(f, fm.AdjudicatorTestScoreHistory, test_score_interpreter)
+        self._import(f, fm.AdjudicatorBaseScoreHistory, base_score_interpreter)
 
         def own_institution_conflict_interpreter(lineno, line):
             adjudicator = adjudicators[lineno]
@@ -310,7 +311,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
     def import_motions(self, f):
         motions_interpreter = make_interpreter(
-            DELETE=['rounds', 'seq']
+            DELETE=['rounds', 'seq'],
         )
         motions = self._import(f, mm.Motion, motions_interpreter)
 

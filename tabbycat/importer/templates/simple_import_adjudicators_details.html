@@ -45,8 +45,8 @@
         <div class="card mt-3">
 
           {% if forms.grouper.name %}
-            {% blocktrans trimmed asvar title with institution_name=forms.grouper.name %}
-              Adjudicators for {{ institution_name }}
+            {% blocktrans trimmed asvar title with institution=forms.grouper.name %}
+              Adjudicators for {{ institution }}
             {% endblocktrans %}
           {% else %}
             {% trans "Unaffiliated Adjudicators" as title %}

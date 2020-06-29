@@ -277,7 +277,7 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         debateteams = queryset.filter(
             debate__ballotsubmission__confirmed=True,
             debate__round__silent=False,
-            debate__round__stage=Round.STAGE_PRELIMINARY
+            debate__round__stage=Round.STAGE_PRELIMINARY,
         ).select_related('debate', 'debate__round').prefetch_related(
             'debate__debateadjudicator_set__adjudicator')
         populate_confirmed_ballots([dt.debate for dt in debateteams], results=True)
@@ -342,7 +342,7 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
         # this is also used by get_feedback_progress
         return queryset.filter(
             debate__ballotsubmission__confirmed=True,
-            debate__round__stage=Round.STAGE_PRELIMINARY
+            debate__round__stage=Round.STAGE_PRELIMINARY,
         ).select_related('debate', 'debate__round').prefetch_related(
             'debate__debateadjudicator_set__adjudicator')
 

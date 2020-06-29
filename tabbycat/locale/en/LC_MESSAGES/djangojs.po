@@ -153,6 +153,10 @@ msgid "Uncategorised"
 msgstr ""
 
 #: checkins/templates/VenuesStatusMixin.vue:
+msgid "No Category"
+msgstr ""
+
+#: checkins/templates/VenuesStatusMixin.vue:
 msgid "Priority %1"
 msgstr ""
 
@@ -502,6 +506,27 @@ msgstr ""
 
 #: utils/templates/DragAndDropActions.vue:17
 msgid "Auto-Allocate"
+msgstr ""
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Break"
+msgstr ""
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Gender"
+msgstr ""
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Rank"
+msgstr ""
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Region"
+msgstr ""
+
+#. Translators: Short for "Venue Category"
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Category"
 msgstr ""
 
 #: utils/templates/DragAndDropDebate.vue:5

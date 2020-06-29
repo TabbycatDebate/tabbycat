@@ -1,5 +1,7 @@
 import logging
 
+from django.utils.translation import gettext_lazy as _
+
 from .preferences import tournament_preferences_registry
 
 logger = logging.getLogger(__name__)
@@ -27,8 +29,8 @@ def presets_for_form():
 
 
 def public_presets_for_form():
-    return [('Public Information Options', 'Enable Public Information'),
-            (False, 'Disable Public Information')]
+    return [(_('Public Information Options'), _('Enable Public Information')),
+            (False, _('Disable Public Information'))]
 
 
 def get_preferences_data(selected_preset, tournament):
@@ -62,8 +64,8 @@ class PreferencesPreset:
 
 
 class AustralsPreferences(PreferencesPreset):
-    name         = "Australs Rules"
-    description  = ("3 vs 3 with replies, chosen motions, intermediate brackets, "
+    name         = _("Australs Rules")
+    description  = _("3 vs 3 with replies, chosen motions, intermediate brackets, "
         "one-up-one-down. Compliant with AIDA rules.")
     show_in_list = True
 
@@ -102,8 +104,8 @@ class AustralsPreferences(PreferencesPreset):
 
 
 class BritishParliamentaryPreferences(PreferencesPreset):
-    name         = "British Parliamentary Rules"
-    description  = ("2 vs 2 vs 2 vs 2. Compliant with WUDC rules.")
+    name         = _("British Parliamentary Rules")
+    description  = _("2 vs 2 vs 2 vs 2. Compliant with WUDC rules.")
     show_in_list = True
 
     scoring__score_min                         = 50.0
@@ -143,9 +145,9 @@ class BritishParliamentaryPreferences(PreferencesPreset):
 
 
 class CanadianParliamentaryPreferences(PreferencesPreset):
-    name         = "Canadian Parliamentary Rules"
+    name         = _("Canadian Parliamentary Rules")
     show_in_list = True
-    description  = ("2 vs 2 with replies (unscored) and POIs. May require "
+    description  = _("2 vs 2 with replies (unscored) and POIs. May require "
         "additional configuration depending on regional variations.")
     # Scoring
     scoring__score_min                         = 50.0
@@ -168,9 +170,9 @@ class CanadianParliamentaryPreferences(PreferencesPreset):
 
 
 class AustralianEastersPreferences(AustralsPreferences):
-    name         = "Australian Easters Rules"
+    name         = _("Australian Easters Rules")
     show_in_list = True
-    description  = ("3 vs 3 without replies, set motions, novices, intermediate "
+    description  = _("3 vs 3 without replies, set motions, novices, intermediate "
         "bubbles, one-up-one-down. Compliant with AIDA rules.")
 
     # Scoring
@@ -188,9 +190,9 @@ class AustralianEastersPreferences(AustralsPreferences):
 
 
 class NZEastersPreferences(AustralsPreferences):
-    name         = "2 vs 2 Impromptu"
+    name         = _("2 vs 2 Impromptu")
     show_in_list = True
-    description  = ("2 vs 2 with replies, chosen motions, chosen sides, and "
+    description  = _("2 vs 2 with replies, chosen motions, chosen sides, and "
         "novice statuses.")
 
     # Scoring
@@ -215,9 +217,9 @@ class NZEastersPreferences(AustralsPreferences):
 
 
 class JoyntPreferences(AustralsPreferences):
-    name         = "3 vs 3 Prepared"
+    name         = _("3 vs 3 Prepared")
     show_in_list = True
-    description  = ("3 vs 3 with preallocated sides, publicly displayed sides "
+    description  = _("3 vs 3 with preallocated sides, publicly displayed sides "
         "and motions, and novice statuses.")
 
     # Scoring
@@ -244,9 +246,9 @@ class JoyntPreferences(AustralsPreferences):
 
 
 class UADCPreferences(AustralsPreferences):
-    name         = "UADC Rules"
+    name         = _("UADC Rules")
     show_in_list = True
-    description  = ("3 vs 3 with replies, chosen motions, and all adjudicators "
+    description  = _("3 vs 3 with replies, chosen motions, and all adjudicators "
         "can receive feedback from teams.")
 
     # Rules source = http://www.alcheringa.in/pdrules.pdf
@@ -282,9 +284,9 @@ class UADCPreferences(AustralsPreferences):
 
 
 class WSDCPreferences(AustralsPreferences):
-    name         = "WSDC Rules"
+    name         = _("WSDC Rules")
     show_in_list = True
-    description  = ("3 vs 3 with replies, chosen motions, prop/opp side labels, "
+    description  = _("3 vs 3 with replies, chosen motions, prop/opp side labels, "
         "and all adjudicators can receive feedback from teams.")
 
     # Rules source = http://mkf2v40tlr04cjqkt2dtlqbr.wpengine.netdna-cdn.com/wp-content/uploads/2014/05/WSDC-Debate-Rules-U-2015.pdf
@@ -346,9 +348,9 @@ class WADLPreferences(PreferencesPreset):
 
 
 class PublicInformation(PreferencesPreset):
-    name         = "Public Information Options"
+    name         = _("Public Information Options")
     show_in_list = False
-    description  = ("For tournaments hosted online: this sets it up so that "
+    description  = _("For tournaments hosted online: this sets it up so that "
         "people can access the draw and other generally useful information "
         "via the tab site.")
 
@@ -360,9 +362,9 @@ class PublicInformation(PreferencesPreset):
 
 
 class TabRelease(PreferencesPreset):
-    name         = "Tab Release Options"
+    name         = _("Tab Release Options")
     show_in_list = False
-    description  = ("For when a tab is ready to be released. This will publicly "
+    description  = _("For when a tab is ready to be released. This will publicly "
         "display the results of all rounds, the team tab, the speaker tab, etc")
 
     tab_release__team_tab_released             = True

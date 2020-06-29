@@ -5,6 +5,7 @@ This script is compatible with both Python 2.7 and Python 3.4 (and later)."""
 import argparse
 import platform
 import re
+import shutil
 import subprocess
 import sys
 
@@ -61,6 +62,8 @@ config_group.add_argument("--tab-cache-timeout", type=int, default=None, metavar
                           help="Set the tab page cache timeout to TIMEOUT")
 config_group.add_argument("--enable-debug", action="store_true", default=False,
                           help="Enable Django debug pages")
+config_group.add_argument("--time-zone", type=str, default="Australia/Melbourne",
+                          help="Time zone name from the IANA tz database")
 
 # Import tournament arguments are copied from importtournament.py, and should be
 # updated when these options in importtournament.py change.
@@ -71,13 +74,13 @@ import_tournament_group = parser.add_argument_group(
     "importtournament options, run the importtournament command separately instead.")
 import_tournament_group.add_argument(
     '-s', '--slug', type=str, action='store', default=None, dest="tournament_slug",
-    help='Override tournament slug. (Default: use name of directory.)'),
+    help='Override tournament slug. (Default: use name of directory.)')
 import_tournament_group.add_argument(
     '--name', type=str, action='store', default=None, dest="tournament_name",
-    help='Override tournament name. (Default: use name of directory.)'),
+    help='Override tournament name. (Default: use name of directory.)')
 import_tournament_group.add_argument(
     '--short-name', type=str, action='store', default=None, dest="tournament_short_name",
-    help='Override tournament short name. (Default: use name of directory.)'),
+    help='Override tournament short name. (Default: use name of directory.)')
 
 args = parser.parse_args()
 
@@ -143,30 +146,37 @@ def get_git_push_spec():
         print_yellow("Could not determine current git commit or branch. Use --git-branch to specify a git branch to push.")
     exit(1)
 
+
+# Check that Heroku is installed (shutil.which requires Python 3.3+, otherwise
+# skip the check, it'll crash on the next command without a friendly message)
+if sys.version_info >= (3, 3) and shutil.which("heroku") is None:
+    print_yellow("Error: heroku not found.")
+    print("You'll need to install the Heroku CLI before you can use this script.")
+    print("Go to https://devcenter.heroku.com/articles/heroku-cli, or search the")
+    print("internet for \"Heroku CLI\".")
+    exit(1)
+
 # Create the app with addons
 addons = ["papertrail", "sendgrid:starter", "heroku-postgresql:%s" % args.pg_plan, "rediscloud:30"]
-command = ["heroku", "apps:create"]
-
-# Ensure on the right stack (for NGINX compatability)
-command.extend(["--stack", "heroku-16"])
+command = ["heroku", "apps:create", "--stack", "heroku-18"]
 
 if addons:
     command.extend(["--addons", ",".join(addons)])
 if args.urlname != "-":
     command.append(args.urlname)
 output = get_output_from_command(command)
-match = re.search("https://([\w_-]+)\.herokuapp\.com/\s+\|\s+(https://git.heroku.com/[\w_-]+.git)", output)
+match = re.search(r"https://([\w_-]+)\.herokuapp\.com/\s+\|\s+(https://git.heroku.com/[\w_-]+.git)", output)
 urlname = match.group(1)
 heroku_url = match.group(2)
 
 # Add the redis add-ons (the heroku one needs a config flag)
 run_heroku_command(["addons:create", "heroku-redis:hobby-dev",
-                    "--maxmemory_policy", "allkeys-lru"])
+                    "--maxmemory_policy", "allkeys-lru", "--timeout", "1800"])
 
 # Set build packs
 run_heroku_command(["buildpacks:set", "https://github.com/heroku/heroku-buildpack-nginx.git"])
-run_heroku_command(["buildpacks:add", "--index", "1", "heroku/nodejs"])
-run_heroku_command(["buildpacks:add", "--index", "2", "heroku/python"])
+run_heroku_command(["buildpacks:add", "heroku/nodejs"])
+run_heroku_command(["buildpacks:add", "heroku/python"])
 
 # Set config variables
 secret_key = get_random_secret_key()
@@ -178,6 +188,8 @@ if args.slow_cache_timeout:
     command.append("PUBLIC_SLOW_CACHE_TIMEOUT=%d" % args.slow_cache_timeout)
 if args.tab_cache_timeout:
     command.append("TAB_PAGES_CACHE_TIMEOUT=%d" % args.tab_cache_timeout)
+if args.time_zone:
+    command.append("TIME_ZONE=%s" % args.time_zone)
 
 run_heroku_command(command)
 
