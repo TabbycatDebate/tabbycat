@@ -2,7 +2,7 @@ import logging
 import warnings
 
 from django.contrib.humanize.templatetags.humanize import ordinal
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
@@ -45,24 +45,24 @@ class BaseTableBuilder:
     @staticmethod
     def _convert_header(header):
         if isinstance(header, dict):
-            header['key'] = force_text(header['key'])
+            header['key'] = force_str(header['key'])
             return header
         else:
             # not sure why warnings module isn't working, so also use logger.warning to be annoying
             warnings.warn("Plain-text headers are deprecated, use a dict with key and title instead", stacklevel=3)
-            return {'key': force_text(header), 'title': force_text(header)}
+            return {'key': force_str(header), 'title': force_str(header)}
 
     @staticmethod
     def _convert_cell(cell):
         if isinstance(cell, dict):
             if 'text' in cell:
-                cell['text'] = force_text(cell['text'])
+                cell['text'] = force_str(cell['text'])
             return cell
         else:
             cell_dict = {}
             if isinstance(cell, int) or isinstance(cell, float):
                 cell_dict['sort'] = cell
-            cell_dict['text'] = force_text(cell)
+            cell_dict['text'] = force_str(cell)
             return cell_dict
 
     def add_column(self, header, data):
@@ -134,9 +134,9 @@ class BaseTableBuilder:
         return {
             'head': self.headers,
             'data': self.data,
-            'title': force_text(self.title),
-            'subtitle': force_text(self.subtitle),
-            'empty_title': force_text(self.empty_title),
+            'title': force_str(self.title),
+            'subtitle': force_str(self.subtitle),
+            'empty_title': force_str(self.empty_title),
             'class': self.table_class,
             'sort_key': self.sort_key,
             'sort_order': self.sort_order,
@@ -780,11 +780,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
         headers = []
         for info in info_list:
             header = {'key': info['abbr'],
-                      'tooltip': force_text(info['name']).capitalize()}
+                      'tooltip': force_str(info['name']).capitalize()}
             if info['icon']:
                 header['icon'] = info['icon']
             else:
-                header['title'] = force_text(info['abbr'])
+                header['title'] = force_str(info['abbr'])
 
             headers.append(header)
         return headers
