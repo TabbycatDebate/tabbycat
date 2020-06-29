@@ -24,8 +24,8 @@ export default {
   },
   methods: {
     updateStatus: function (e) {
-      const importanceChanges = [{ 'id': this.debate.id, 'sides_confirmed': e.target.checked }]
-      this.$store.dispatch('updateDebatesOrPanelsAttribute', { 'sides_confirmed': importanceChanges })
+      const importanceChanges = [{ id: this.debate.id, sides_confirmed: e.target.checked }]
+      this.$store.dispatch('updateDebatesOrPanelsAttribute', { sides_confirmed: importanceChanges })
     },
   },
   computed: {

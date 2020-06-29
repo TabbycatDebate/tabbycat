@@ -1,2 +1,1 @@
-.. include:: ../../CHANGELOG.rst
-
+.. include:: ../../.github/CHANGELOG.rst

@@ -8,9 +8,9 @@ from ..scoresheet import (BPScoresheet, HighPointWinsRequiredScoresheet,
 def on_all_testdata(test_fn):
     """Decorator. Tests should be written to take two arguments: self,
      testdata. 'scoresheet' is a Scoresheet object. 'testdata'
-    is a value of BaseTestScoresheet.testdata. This decorator then sets up
+    is a value of BaseBaseScoresheet.testdata. This decorator then sets up
     the scoresheet and runs the test once for each test dataset in
-    BaseTestScoresheet.testdata."""
+    BaseBaseScoresheet.testdata."""
     def foo(self):
         for testdata in self.testdata.values():
             test_fn(self, testdata)

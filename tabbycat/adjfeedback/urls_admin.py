@@ -15,8 +15,8 @@ urlpatterns = [
 
     # Getting/setting values
     path('test/set/',
-        views.SetAdjudicatorTestScoreView.as_view(),
-        name='adjfeedback-set-adj-test-score'),
+        views.SetAdjudicatorBaseScoreView.as_view(),
+        name='adjfeedback-set-adj-base-score'),
     path('breaking/set/',
         views.SetAdjudicatorBreakingStatusView.as_view(),
         name='adjfeedback-set-adj-breaking-status'),

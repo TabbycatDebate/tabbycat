@@ -162,7 +162,7 @@ class BasePairDrawGenerator(BaseDrawGenerator):
         "avoid_history"      : True,
         "avoid_institution"  : True,
         "history_penalty"    : 1e3,
-        "institution_penalty": 1
+        "institution_penalty": 1,
     }
 
     TEAMS_PER_DEBATE = 2

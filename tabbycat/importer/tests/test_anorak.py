@@ -3,8 +3,6 @@
 import logging
 import os.path
 
-from settings import BASE_DIR
-
 from django.test import TestCase
 
 import adjallocation.models as am
@@ -14,9 +12,10 @@ import motions.models as mm
 import participants.models as pm
 import tournaments.models as tm
 import venues.models as vm
+from settings import BASE_DIR
 
-from ..importers.anorak import AnorakTournamentDataImporter
 from ..importers import TournamentDataImporterError
+from ..importers.anorak import AnorakTournamentDataImporter
 
 
 class TestImporterAnorak(TestCase):
@@ -92,7 +91,7 @@ class TestImporterAnorak(TestCase):
         self.importer.import_adjudicators(f)
         self.assertCountsDictEqual(self.importer.counts, {
             pm.Adjudicator: 29,
-            fm.AdjudicatorTestScoreHistory: 29,
+            fm.AdjudicatorBaseScoreHistory: 29,
             am.AdjudicatorInstitutionConflict: 36,
             am.AdjudicatorAdjudicatorConflict: 6,
             am.AdjudicatorTeamConflict: 3,
@@ -156,7 +155,7 @@ class TestImporterAnorak(TestCase):
         self.importer.import_adjudicators(f)
         self.assertCountsDictEqual(self.importer.counts, {
             pm.Adjudicator: 29,
-            fm.AdjudicatorTestScoreHistory: 29,
+            fm.AdjudicatorBaseScoreHistory: 29,
             am.AdjudicatorInstitutionConflict: 36,
             am.AdjudicatorAdjudicatorConflict: 6,
             am.AdjudicatorTeamConflict: 3,

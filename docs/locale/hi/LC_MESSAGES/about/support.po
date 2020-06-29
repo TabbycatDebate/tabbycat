@@ -1,0 +1,54 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-03-13 03:45\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Hindi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: hi\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/about/support.po\n"
+"Language: hi_IN\n"
+
+#: ../../about/support.rst:3
+msgid "Support"
+msgstr ""
+
+#: ../../about/support.rst:5
+msgid "There are a number of ways to report bugs, ask for help, or submit feedback."
+msgstr ""
+
+#: ../../about/support.rst:8
+msgid "Facebook"
+msgstr ""
+
+#: ../../about/support.rst:10
+msgid "`Our Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_ is a good place to ask for help. It's also a good place to keep up with new releases and participate in more general discussions of features and ideas."
+msgstr ""
+
+#: ../../about/support.rst:13
+msgid "GitHub"
+msgstr ""
+
+#: ../../about/support.rst:15
+msgid "Adding an issue to our `GitHub repository <https://github.com/TabbycatDebate/tabbycat/issues>`_ is a great way to let us know about bugs or writeup suggestions for how to improve Tabbycat. Pull requests are also encouraged!"
+msgstr ""
+
+#: ../../about/support.rst:17
+msgid "When submitting bugs or reporting errors please let us know your site address (if installed online) or operating system (if local) along with a complete description of the problem along with any error messages."
+msgstr ""
+
+#: ../../about/support.rst:20
+msgid "Email"
+msgstr ""
+
+#: ../../about/support.rst:22
+msgid "Feel free to :ref:`contact the maintainers directly <authors>` if you are not able to access Facebook or GitHub."
+msgstr ""
+

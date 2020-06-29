@@ -1,9 +1,9 @@
 <script>
 // Mixin for shared logic between editing debate adjudicators and editing panel adjudicators
-import DragAndDropContainerMixin from '../../utils/templates/DragAndDropContainerMixin.vue'
-import ModalForSharding from '../../utils/templates/modals/ModalForSharding.vue'
-import ModalForPrioritising from '../../utils/templates/modals/ModalForPrioritising.vue'
-import ModalForAllocating from '../../utils/templates/modals/ModalForAllocating.vue'
+import DragAndDropContainerMixin from '../../templates/allocations/DragAndDropContainerMixin.vue'
+import ModalForSharding from '../../templates/modals/ModalForSharding.vue'
+import ModalForPrioritising from '../../templates/modals/ModalForPrioritising.vue'
+import ModalForAllocating from '../../templates/modals/ModalForAllocating.vue'
 
 import DebateOrPanelImportance from './DebateOrPanelImportance.vue'
 import DraggableAdjudicator from './DraggableAdjudicator.vue'
@@ -25,7 +25,7 @@ export default {
   methods: {
     getUnallocatedItemFromDebateOrPanel (debateOrPanel) {
       // Return the IDs of the adjudicators allocated to this debate
-      let itemIDs = []
+      const itemIDs = []
       for (const positionAdjudicators of Object.entries(debateOrPanel.adjudicators)) {
         positionAdjudicators[1].forEach((adjudicator) => {
           itemIDs.push(Number(adjudicator))
@@ -37,8 +37,8 @@ export default {
       if (debateID === null) {
         return null // Moving to or from Unused
       }
-      if (!this.allDebatesOrPanels.hasOwnProperty(debateID)) {
-        let explanation = `A change to the allocation may have been unable to be fulfilled by the
+      if (!Object.prototype.hasOwnProperty.call(this.allDebatesOrPanels, debateID)) {
+        const explanation = `A change to the allocation may have been unable to be fulfilled by the
                            server as there was no matching debate on this page. Refresh this page
                            to bring its copy of debates back in-sync with the server.`
         this.showErrorAlert(explanation, null, 'Unrecognised Debate', 'text-danger', true, true)
@@ -63,8 +63,8 @@ export default {
           (dragData.assignment === null && dropData.assignment === null)) {
         return // Moving from Unused to Unused; or from the same position/debate and back again
       }
-      let allocationChanges = []
-      let adjudicatorsSetModified = [dragData.item]
+      const allocationChanges = []
+      const adjudicatorsSetModified = [dragData.item]
       let fromAllocation = this.getAllocation(dragData.assignment)
       let toAllocation = this.getAllocation(dropData.assignment)
       if (dragData.assignment === dropData.assignment) {
@@ -78,8 +78,8 @@ export default {
       if (toAllocation !== null) { // Not moving TO Unused
         toAllocation = this.addToAllocation(toAllocation, dragData.item, dropData.position)
         // If the adj was moved to a chair position there are now two; need to move or swap
-        if (toAllocation['C'].length > 1) {
-          const existingChair = toAllocation['C'][0]
+        if (toAllocation.C.length > 1) {
+          const existingChair = toAllocation.C[0]
           adjudicatorsSetModified.push(existingChair)
           toAllocation = this.removeFromAllocation(toAllocation, existingChair, 'C')
           if (dragData.assignment !== null) {
@@ -91,12 +91,12 @@ export default {
 
       // Send results
       if (fromAllocation !== null) {
-        allocationChanges.push({ 'id': dragData.assignment, 'adjudicators': fromAllocation })
+        allocationChanges.push({ id: dragData.assignment, adjudicators: fromAllocation })
       }
       if (toAllocation !== null && dragData.assignment !== dropData.assignment) {
-        allocationChanges.push({ 'id': dropData.assignment, 'adjudicators': toAllocation })
+        allocationChanges.push({ id: dropData.assignment, adjudicators: toAllocation })
       }
-      this.$store.dispatch('updateDebatesOrPanelsAttribute', { 'adjudicators': allocationChanges })
+      this.$store.dispatch('updateDebatesOrPanelsAttribute', { adjudicators: allocationChanges })
       this.$store.dispatch('updateAllocableItemModified', adjudicatorsSetModified)
     },
     showShard: function () {

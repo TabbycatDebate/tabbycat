@@ -20,15 +20,15 @@
 
 {% block content %}
 
-  {% for p in parts %}
+  {% for p in participants %}
     <div class="h1 text-center printable-page-break">
       <br>
-      {% if p.adjudicator__institution__code %}
-        {% blocktrans trimmed with name=p.name group=p.adjudicator__institution__code %}
+      {% if p.institution__code %}
+        {% blocktrans trimmed with name=p.name group=p.institution__code %}
           Private URL for {{ name }} ({{ group }})
         {% endblocktrans %}
       {% else %}
-        {% blocktrans trimmed with name=p.name group=p.speaker__team__short_name %}
+        {% blocktrans trimmed with name=p.name group=p.team__short_name %}
           Private URL for {{ name }} ({{ group }})
         {% endblocktrans %}
       {% endif %}

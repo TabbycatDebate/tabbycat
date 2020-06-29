@@ -148,9 +148,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
     Tabbycat."""
 
     ADJ_SYMBOLS = {
-        AdjudicatorAllocation.POSITION_CHAIR: _("ⓒ"),
-        AdjudicatorAllocation.POSITION_ONLY: _("ⓒ"),
-        AdjudicatorAllocation.POSITION_TRAINEE: _("ⓣ"),
+        AdjudicatorAllocation.POSITION_CHAIR: _("Ⓒ"),
+        AdjudicatorAllocation.POSITION_ONLY: _("Ⓒ"),
+        AdjudicatorAllocation.POSITION_TRAINEE: _("Ⓣ"),
     }
 
     ADJ_POSITION_NAMES = {
@@ -159,7 +159,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         AdjudicatorAllocation.POSITION_TRAINEE: _("trainee"),
     }
 
-    BLANK_TEXT = "—"
+    BLANK_TEXT = _("—")
 
     def __init__(self, view=None, **kwargs):
         """Constructor.
@@ -225,13 +225,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
             return {
                 'text': _("View %(a)s's %(d)s Record") % {'a': adj_short_name, 'd': suffix},
                 'link': reverse_tournament('participants-adjudicator-record',
-                    self.tournament, kwargs={'pk': adj.pk})
+                    self.tournament, kwargs={'pk': adj.pk}),
             }
         elif self.tournament.pref('public_record'):
             return {
                 'text': _("View %(a)s's %(d)s Record") % {'a': adj_short_name, 'd': suffix},
                 'link': reverse_tournament('participants-public-adjudicator-record',
-                    self.tournament, kwargs={'pk': adj.pk})
+                    self.tournament, kwargs={'pk': adj.pk}),
             }
         else:
             return {'text': '', 'link': False}
@@ -240,12 +240,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if self.admin:
             return {
                 'text': _("View %(team)s's Record") % {'team': self._team_short_name(team)},
-                'link': reverse_tournament('participants-team-record', self.tournament, kwargs={'pk': team.pk})
+                'link': reverse_tournament('participants-team-record', self.tournament, kwargs={'pk': team.pk}),
             }
         elif self.tournament.pref('public_record'):
             return {
                 'text': _("View %(team)s's Record") % {'team': self._team_short_name(team)},
-                'link': reverse_tournament('participants-public-team-record', self.tournament, kwargs={'pk': team.pk})
+                'link': reverse_tournament('participants-public-team-record', self.tournament, kwargs={'pk': team.pk}),
             }
         else:
             return {'text': '', 'link': False}
@@ -256,7 +256,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'emoji': team.emoji if show_emoji and self.tournament.pref('show_emoji') else None,
             'sort': self._team_short_name(team),
             'class': 'team-name no-wrap' if len(self._team_short_name(team)) < 18 else 'team-name',
-            'popover': {'title': self._team_long_name(team), 'content': []}
+            'popover': {'title': self._team_long_name(team), 'content': []},
         }
 
         if highlight:
@@ -375,18 +375,18 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 cell['popover']['content'].append({
                     'text': _("View/edit debate ballot"),
                     'link': reverse_tournament('old-results-ballotset-edit',
-                            self.tournament, kwargs={'pk': ts.ballot_submission_id})
+                            self.tournament, kwargs={'pk': ts.ballot_submission_id}),
                 })
             elif self.tournament.pref('ballots_released'):
                 cell['popover']['content'].append({
                     'text': _("View debate ballot"),
                     'link': reverse_tournament('results-public-scoresheet-view',
-                            self.tournament, kwargs={'pk': ts.debate_team.debate_id})
+                            self.tournament, kwargs={'pk': ts.debate_team.debate_id}),
                 })
 
         if self._show_speakers_in_draw:
             cell['popover']['content'].append({
-                'text': ", ".join([s.name for s in opp.speakers])
+                'text': ", ".join([s.name for s in opp.speakers]),
             })
 
         if self._show_record_links:
@@ -405,7 +405,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if ts.debate_team.debate.sides_confirmed:
                 line = _("%(team)s (%(side)s)") % {
                     'team': other_teams.get(side, _("??")),
-                    'side': get_side_name(self.tournament, side, 'abbr')
+                    'side': get_side_name(self.tournament, side, 'abbr'),
                 }
             else:
                 line = other_teams.get(side, _("??"))
@@ -454,20 +454,20 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 cell['popover']['content'].append({
                     'text': _("View/edit debate ballot"),
                     'link': reverse_tournament('results-ballotset-edit',
-                            self.tournament, kwargs={'pk': ts.ballot_submission_id})
+                            self.tournament, kwargs={'pk': ts.ballot_submission_id}),
                 })
             elif self.tournament.pref('ballots_released'):
                 cell['popover']['content'].append({
                     'text': _("View debate ballot"),
                     'link': reverse_tournament('results-public-scoresheet-view',
-                            self.tournament, kwargs={'pk': ts.debate_team.debate_id})
+                            self.tournament, kwargs={'pk': ts.debate_team.debate_id}),
                 })
 
         return cell
 
     def add_tournament_column(self, tournaments):
         header = {
-            'key': "tournament", 'icon': 'tag', 'tooltip': _("Tournament")
+            'key': "tournament", 'icon': 'tag', 'tooltip': _("Tournament"),
         }
         data = [{
             'sort': t.seq, 'text': t.short_name, 'tooltip': t.short_name,
@@ -476,7 +476,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def add_round_column(self, rounds):
         header = {
-            'key': "round", 'icon': 'clock', 'tooltip': _("Round")
+            'key': "round", 'icon': 'clock', 'tooltip': _("Round"),
         }
         data = [{
             'sort': round.seq, 'text': round.abbreviation, 'tooltip': round.name,
@@ -526,7 +526,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
             }
             self.add_boolean_column(trainee_header, [adj.trainee for adj in adjudicators])
 
-    def add_debate_adjudicators_column(self, debates, title="Adjudicators", show_splits=False, highlight_adj=None):
+    def add_debate_adjudicators_column(self, debates, title="Adjudicators",
+            show_splits=False, highlight_adj=None, for_admin=False):
         da_data = []
 
         def construct_text(adjs_data):
@@ -542,8 +543,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     adj_str = "<strong>" + adj_str + "</strong>"
                 adj_str += '</span>'
                 adjs_list.append(adj_str)
-            return "<div class='clearfix pt-1 pb-1 d-block d-md-none'> \
-                    </div><span class='d-none d-md-inline'>, </span>".join(adjs_list)
+            return ("<div class='clearfix pt-1 pb-1 d-block d-md-none'> "
+                    "</div><span class='d-none d-md-inline'>, </span>").join(adjs_list)
 
         def construct_popover(adjs_data):
             popover_data = []
@@ -551,7 +552,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 descriptors = []
                 if a['position'] != AdjudicatorAllocation.POSITION_ONLY:
                     descriptors.append(self.ADJ_POSITION_NAMES[a['position']])
-                if a['adj'].institution is not None:
+                if (for_admin or self.tournament.pref('show_adjudicator_institutions')) and \
+                        a['adj'].institution is not None:
                     descriptors.append(a['adj'].institution.code)
                 if a.get('split', False):
                     descriptors.append("<span class='text-danger'>" + _("in minority") + "</span>")
@@ -584,11 +586,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 adjs_data[0]['type'] = 'O'
 
             da_data.append({
+                'class': 'adjudicator-name',
                 'text': construct_text(adjs_data),
                 'popover': {
                     'title': _("Debate Adjudicators"),
-                    'content' : construct_popover(adjs_data)
-                }
+                    'content' : construct_popover(adjs_data),
+                },
             })
 
         self.add_column({'key': 'adjudicators', 'title': _(title)}, da_data)
@@ -602,7 +605,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
             motions = [debate.confirmed_ballot.motion if debate.confirmed_ballot else None
                        for debate in debates]
         else:
-            motions = [debate.round.motion_set.first() for debate in debates]
+            motions = []
+            for debate in debates:
+                round = debate.round
+                motion = round.motion_set.first()
+                if debate.round.motions_released or round.tournament.pref('all_results_released'):
+                    motions.append(motion)
+                else:
+                    motions.append(None)
         self.add_motion_column(motions)
 
     def add_motion_column(self, motions, show_order=False):
@@ -612,13 +622,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'icon': 'hash',
                 'tooltip': _("Order as listed"),
             }, [{
-                'text': motion.seq,
-                'sort': motion.round.seq + (motion.seq * 0.1)
+                'text': motion.seq if motion is not None else self.BLANK_TEXT,
+                'sort': motion.round.seq + (motion.seq * 0.1) if motion is not None else 0,
             } for motion in motions])
 
         motion_data = [{
-            'text': motion.reference if motion.reference else '?',
-            'popover': {'content' : [{'text': motion.text}]}
+            'text': motion.reference if motion.reference else _('?'),
+            'popover': {'content' : [{'text': motion.text}]},
         } if motion else self.BLANK_TEXT for motion in motions]
         self.add_column({'key': "motion", 'title': _("Motion")}, motion_data)
 
@@ -642,7 +652,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_column(
                 {'key': 'categories', 'icon': 'user-check', 'tooltip': _("Categories")},
                 [", ".join(bc.name for bc in getattr(team, 'break_categories_nongeneral', []))
-                    for team in teams]
+                    for team in teams],
             )
 
         if self.tournament.pref('show_team_institutions'):
@@ -664,7 +674,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             else:
                 speaker_data.append({
                     'text': speaker.name,
-                    'class': 'no-wrap' if len(speaker.name) < 20 else ''
+                    'class': 'no-wrap' if len(speaker.name) < 20 else '',
                 })
 
         self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'}, speaker_data)
@@ -689,7 +699,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     'key': "category",
                     'title': _("Category"),
                     'icon': 'user-check', # Not ideal but full name blows out tables
-                    'tooltip': _("Categories")
+                    'tooltip': _("Categories"),
                 }, categories_data)
 
     def add_debate_venue_columns(self, debates, with_times=True, for_admin=False):
@@ -698,7 +708,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if not venue:
                 return {'text': ''}
 
-            cell = {'text': venue.display_name, 'class': 'venue-name'}
+            cell = {'text': venue.display_name, 'class': 'venue-name', 'link': venue.url}
 
             categories = venue.venuecategory_set.all()
             if not for_admin:
@@ -714,9 +724,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
             if len(descriptions) > 0:
                 if len(descriptions) == 1:
-                    categories_sentence = _("This venue %(predicate)s.") % {'predicate': descriptions[0]}
+                    categories_sentence = _("This room %(predicate)s.") % {'predicate': descriptions[0]}
                 else:
-                    categories_sentence = _("This venue %(predicates)s, and %(last_predicate)s.") % {
+                    categories_sentence = _("This room %(predicates)s, and %(last_predicate)s.") % {
                         'predicates': ", ".join(descriptions[:-1]),
                         'last_predicate': descriptions[-1]}
 
@@ -731,7 +741,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         venue_header = {
             'key': 'venue',
             'icon': 'map-pin',
-            'tooltip': _("Venue"),
+            'tooltip': _("Room"),
         }
         self.add_column(venue_header, venue_data)
 
@@ -762,7 +772,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         conflicts_header = {'title': _("Conflicts/Flags"), 'key': 'conflags'}
         conflicts_data = [{
             'text': "".join(["<div class=\"text-{0}\">{1}</div>".format(*conflict) for conflict in debate_conflicts]),
-            'class': 'small'
+            'class': 'small',
         } for debate_conflicts in conflicts_by_debate]
         self.add_column(conflicts_header, conflicts_data)
 
@@ -818,7 +828,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if self.admin:
             ballot_links_data = [{
                 'text': _("View/Edit Ballot"),
-                'link': reverse_tournament('old-results-ballotset-edit', self.tournament, kwargs={'pk': debate.confirmed_ballot.id})
+                'link': reverse_tournament('old-results-ballotset-edit', self.tournament, kwargs={'pk': debate.confirmed_ballot.id}),
             } if debate.confirmed_ballot else "" for debate in debates]
             self.add_column(ballot_links_header, ballot_links_data)
 
@@ -832,7 +842,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 else:
                     ballot_links_data.append({
                         'text': _("View Ballot"),
-                        'link': reverse_round('results-privateurl-scoresheet-view', debate.round, kwargs={'url_key': self.private_url_key})
+                        'link': reverse_round('results-privateurl-scoresheet-view', debate.round, kwargs={'url_key': self.private_url_key}),
                     })
             self.add_column(ballot_links_header, ballot_links_data)
 
@@ -845,7 +855,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     ballot_links_data.append({
                         'text': _("View Ballot"),
                         'link': reverse_tournament('results-public-scoresheet-view', self.tournament,
-                            kwargs={'pk': debate.id})
+                            kwargs={'pk': debate.id}),
                     })
             self.add_column(ballot_links_header, ballot_links_data)
 
@@ -915,12 +925,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if all_sides_confirmed:
             results_header = [{
                 'title': get_side_name(self.tournament, side, 'abbr').capitalize(),
-                'key': get_side_name(self.tournament, side, 'abbr')
+                'key': get_side_name(self.tournament, side, 'abbr'),
             } for side in self.tournament.sides]
         else:
             results_header = [{
                 'title': _("Team %(num)d") % {'num': i},
-                'key': _("Team %(num)d") % {'num': i}
+                'key': _("Team %(num)d") % {'num': i},
             } for i in range(1, len(side_abbrs)+1)]
 
         self.add_columns(results_header, results_data)
@@ -933,6 +943,6 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 s.round_results[round_seq],
                 compress=True,
                 show_score=True,
-                show_ballots=show_ballots
+                show_ballots=show_ballots,
             ) for s in standings]
             self.add_column(header, results)

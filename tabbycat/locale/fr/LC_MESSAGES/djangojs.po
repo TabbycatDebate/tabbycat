@@ -3,15 +3,14 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-14 04:50+1100\n"
-"PO-Revision-Date: 2019-09-07 07:07\n"
+"PO-Revision-Date: 2019-12-29 20:45\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Last-Translator: philip_tc\n"
-"X-Generator: crowdin.com\n"
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: fr\n"
 "X-Crowdin-File: /develop/tabbycat/locale/en/LC_MESSAGES/djangojs.po\n"
@@ -31,7 +30,7 @@ msgstr "Activer les sons"
 #. Translators: %1: Time of checkin, %2: Barcode number, %3: Name of "owner"
 #: checkins/templates/CheckInScanContainer.vue:
 msgid "%1 checked in %2: %3"
-msgstr "%1 enregistré %2&nbsp;: %3"
+msgstr "%1 enregistré %2 : %3"
 
 #: checkins/templates/CheckInStatusContainer.vue:
 msgid "All"
@@ -104,11 +103,11 @@ msgstr "%1, un %2 de %3 sans identifiant"
 
 #: checkins/templates/PeopleStatusMixin.vue:
 msgid "%1 (Present; id=%2)"
-msgstr "%1 (Présent&nbsp;; id=%2)"
+msgstr "%1 (Présent ; id=%2)"
 
 #: checkins/templates/PeopleStatusMixin.vue:
 msgid "%1 (Absent; id=%2)"
-msgstr "%1 (Absent&nbsp;; id=%2)"
+msgstr "%1 (Absent ; id=%2)"
 
 #: checkins/templates/PeopleStatusMixin.vue:
 msgid "%1, a team with speakers %2"
@@ -151,6 +150,10 @@ msgid "Uncategorised"
 msgstr "Non catégorisé"
 
 #: checkins/templates/VenuesStatusMixin.vue:
+msgid "No Category"
+msgstr "Aucune catégorie"
+
+#: checkins/templates/VenuesStatusMixin.vue:
 msgid "Priority %1"
 msgstr "Priorité %1"
 
@@ -180,24 +183,21 @@ msgstr "ID %1,"
 
 #: printing/templates/PrintableBallotHeader.vue:
 msgid "Venue:"
-msgstr "Salle&nbsp;:"
+msgstr "Salle :"
 
 #: printing/templates/PrintableBallotHeader.vue:
 msgid "Chair for Panel of %1"
 msgstr "Président pour le jury de %1"
 
-#: printing/templates/PrintableBallotHeader.vue:
-#: printing/templates/PrintableDebateInfo.vue:
+#: printing/templates/PrintableBallotHeader.vue: printing/templates/PrintableDebateInfo.vue:
 msgid "Solo Chair"
 msgstr "Président Seul"
 
-#: printing/templates/PrintableBallotHeader.vue:
-#: printing/templates/PrintableDebateInfo.vue:
+#: printing/templates/PrintableBallotHeader.vue: printing/templates/PrintableDebateInfo.vue:
 msgid "Panellist"
 msgstr "Membre"
 
-#: printing/templates/PrintableBallotHeader.vue:
-#: printing/templates/PrintableDebateInfo.vue:
+#: printing/templates/PrintableBallotHeader.vue: printing/templates/PrintableDebateInfo.vue:
 msgid "Trainee"
 msgstr "Stagiaire"
 
@@ -207,11 +207,11 @@ msgstr "Équipe"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "Mark speeches %1 to %2; <strong>%3</strong>."
-msgstr "Marquer les discours de %1 à %2&nbsp;; <strong>%3</strong>."
+msgstr "Marquer les discours de %1 à %2 ; <strong>%3</strong>."
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "Mark replies %1 to %2; <strong>%3</strong>."
-msgstr "Marquer répliques de %1 à %2&nbsp;; <strong>%3</strong>."
+msgstr "Marquer répliques de %1 à %2 ; <strong>%3</strong>."
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "Return ballots to %1."
@@ -231,7 +231,7 @@ msgstr "Encercler %1"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "<strong>%1</strong>: %2"
-msgstr "<strong>%1</strong>&nbsp;: %2"
+msgstr "<strong>%1</strong> : %2"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "Aff Veto"
@@ -243,7 +243,7 @@ msgstr "Véto Nég"
 
 #: printing/templates/PrintableDebateInfo.vue: printing/templates/PrintableTeamScores.vue:
 msgid "%1:"
-msgstr "%1&nbsp;:"
+msgstr "%1 :"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "tab entry"
@@ -253,8 +253,7 @@ msgstr "saisie tab"
 msgid "tab check"
 msgstr "vérification tab"
 
-#: printing/templates/PrintableDebateInfo.vue:
-#: checkins/templates/PeopleStatusMixin.vue:
+#: printing/templates/PrintableDebateInfo.vue: checkins/templates/PeopleStatusMixin.vue:
 msgid "Unaffiliated"
 msgstr "Non-affilié"
 
@@ -271,10 +270,6 @@ msgid "decimal marks are allowed"
 msgstr "demi-scores sont permises"
 
 #: printing/templates/PrintableDebateInfo.vue:
-msgid "Chair"
-msgstr "Président"
-
-#: printing/templates/PrintableDebateInfo.vue:
 msgid "%1 (%2, %3)"
 msgstr "%1 (%2, %3)"
 
@@ -288,16 +283,15 @@ msgstr " ; "
 
 #: printing/templates/PrintableFeedback.vue:
 msgid "Did %1 deliver the adjudication?"
-msgstr "%1 a-t-il livré le jugement&nbsp;?"
+msgstr "%1 a-t-il livré le jugement ?"
+
+#: printing/templates/PrintableFeedback.vue: printing/templates/PrintableFeedbackQuestion.vue:
+msgid "Yes"
+msgstr "Oui"
 
 #: printing/templates/PrintableFeedback.vue:
 msgid "No, I am submitting feedback on:"
-msgstr "Non, je donne un évaluation sur&nbsp;:"
-
-#: printing/templates/PrintableFeedbackQuestion.vue:
-#: printing/templates/PrintableFeedback.vue:
-msgid "Yes"
-msgstr "Oui"
+msgstr "Non, je donne un évaluation sur :"
 
 #: printing/templates/PrintableFeedbackQuestion.vue:
 msgid "Unsure"
@@ -309,11 +303,11 @@ msgstr "Non"
 
 #: printing/templates/PrintableScoresheet.vue:
 msgid "Which team won the debate:"
-msgstr "Quelle équipe à gagné le débat&nbsp;:"
+msgstr "Quelle équipe à gagné le débat :"
 
 #: printing/templates/PrintableScoresheet.vue:
 msgid "By how many points did they win:"
-msgstr "Par combien de points ont-ils gagné&nbsp;:"
+msgstr "Par combien de points ont-ils gagné :"
 
 #: printing/templates/PrintableTeamScores.vue:
 msgid "%1, %2"
@@ -321,27 +315,27 @@ msgstr "%1, %2"
 
 #: printing/templates/PrintableTeamScores.vue:
 msgid "IMPORTANT: Check and explicitly note if a speaker gives multiple speeches"
-msgstr "IMPORTANT&nbsp;: Cochez et notez explicitement si un orateur a donné plusieurs discours"
+msgstr "IMPORTANT : Cochez et notez explicitement si un orateur a donné plusieurs discours"
 
 #: printing/templates/PrintableTeamScores.vue:
 msgid "Score:"
-msgstr "Score&nbsp;:"
+msgstr "Score :"
 
 #: printing/templates/PrintableTeamScores.vue:
 msgid "Circle the last digit of the %1's score:"
-msgstr "Encerclez le dernier chiffre du score de %1&nbsp;:"
+msgstr "Encerclez le dernier chiffre du score de %1 :"
 
 #: printing/templates/PrintableTeamScores.vue:
 msgid "Circle Rank:"
-msgstr "Encerclez le rang&nbsp;:"
+msgstr "Encerclez le rang :"
 
 #: printing/templates/PrintableTeamScores.vue:
 msgid "Total:"
-msgstr "Total&nbsp;:"
+msgstr "Total :"
 
 #: printing/templates/PrintableTeamScores.vue:
 msgid "Circle the last digit of the team's total:"
-msgstr "Encerclez le dernier chiffre du total de l'équipe&nbsp;:"
+msgstr "Encerclez le dernier chiffre du total de l'équipe :"
 
 #: templates/tables/TablesContainer.vue:8
 msgid "Find in Table"
@@ -367,7 +361,7 @@ msgstr "Fixer tous les disponibilités pour refléter les enregistrements."
 msgid "Match Check-Ins"
 msgstr "Refléter les enregistrements"
 
-#: templates/tables/CheckboxTables.vue
+#: templates/tables/CheckboxTables.vue:
 msgid "Set people as available only if they have a check-in and are currently unavailable — i.e. it will not overwrite any existing availabilities."
 msgstr "Fixer participants comme disponible seulement s’ils peuvent s’enregistrer et qui sont présentement indisponible — i.e. ne va pas écraser les disponibilités qui existent."
 
@@ -510,4 +504,49 @@ msgstr "Prioriser automatiquement"
 #: utils/templates/DragAndDropActions.vue:17
 msgid "Auto-Allocate"
 msgstr "Allouer automatiquement"
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Break"
+msgstr "Qualification"
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Gender"
+msgstr "Genre"
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Rank"
+msgstr "Classement"
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Region"
+msgstr "Région"
+
+#. Translators: Short for "Venue Category"
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Category"
+msgstr "Catégorie"
+
+#: utils/templates/DragAndDropDebate.vue:5
+msgid "The debate's bracket"
+msgstr "La tranche du débat"
+
+#: utils/templates/DragAndDropDebate.vue:9
+msgid "The bracket range of the hypothetical debate"
+msgstr "La gamme des tranches du débat hypothétique"
+
+#: utils/templates/DragAndDropDebate.vue:20
+msgid "The total number of live break categories across all teams"
+msgstr "Le nombre total de catégories de qualification vives sur toutes les équipes"
+
+#: utils/templates/DragAndDropDebate.vue:26
+msgid "The estimated total number of live break categories across all teams of the hypothetical debate"
+msgstr "Le nombre total estimé de catégories de qualification vives sur toutes les équipes du débat hypothétique"
+
+#: utils/templates/DragAndDropDebate.vue:33
+msgid "This debate's priority"
+msgstr "La priorité de ce débat"
+
+#: draw/templates/InlineTeam.vue:41
+msgid "No code name set"
+msgstr "Aucun nom code défini"
 

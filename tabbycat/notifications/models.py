@@ -66,7 +66,7 @@ class BulkNotification(models.Model):
         (EVENT_TYPE_TEAM_REG, _("team registration")),
         (EVENT_TYPE_ADJ_REG, _("adjudicator registration")),
         (EVENT_TYPE_MOTIONS, _("motion(s) released")),
-        (EVENT_TYPE_TEAM_DRAW, _("team draw released"))
+        (EVENT_TYPE_TEAM_DRAW, _("team draw released")),
     )
 
     event = models.CharField(max_length=1, choices=EVENT_TYPE_CHOICES, blank=True,
@@ -117,7 +117,7 @@ class EmailStatus(models.Model):
         (EVENT_TYPE_UNSUBSCRIBED, _("Unsubscribed")),
         (EVENT_TYPE_SPAM, _("Marked as spam")),
         (EVENT_TYPE_ASM_UNSUBSCRIBED, _("Unsubscribed from group")),
-        (EVENT_TYPE_ASM_RESUBSCRIBED, _("Resubscribed to group"))
+        (EVENT_TYPE_ASM_RESUBSCRIBED, _("Resubscribed to group")),
     )
 
     email = models.ForeignKey('notifications.SentMessage', models.CASCADE,

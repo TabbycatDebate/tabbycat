@@ -26,33 +26,27 @@
     {% include "components/item-action.html" with emoji="👂" %}
 
     {% tournamenturl 'importer-simple-venues' as url %}
-    {% trans "Add Venues" as text %}
+    {% trans "Add Rooms" as text %}
     {% include "components/item-action.html" with emoji="🎪" %}
 
   </ul>
   <ul class="list-group mt-3">
 
     {% tournamenturl 'venues-categories' as url %}
-    {% trans "Add/Edit Venue Categories" as text %}
+    {% trans "Add/Edit Room Categories" as text %}
     {% include "components/item-action.html" with emoji="🏪" %}
 
     {% tournamenturl 'venues-constraints-team' as url %}
-    {% trans "Add/Edit Venue-Team Constraints" as text %}
+    {% trans "Add/Edit Room-Team Constraints" as text %}
     {% include "components/item-action.html" with emoji="🏰" %}
 
     {% tournamenturl 'venues-constraints-adjudicator' as url %}
-    {% trans "Add/Edit Venue-Adjudicator Constraints" as text %}
+    {% trans "Add/Edit Room-Adjudicator Constraints" as text %}
     {% include "components/item-action.html" with emoji="🏰" %}
 
     {% tournamenturl 'venues-constraints-institution' as url %}
-    {% trans "Add/Edit Venue-Institution Constraints" as text %}
+    {% trans "Add/Edit Room-Institution Constraints" as text %}
     {% include "components/item-action.html" with emoji="🏰" %}
-
-    {% if pref.division_venues %}
-      {% tournamenturl 'venues-constraints-division' as url %}
-      {% trans "Add/Edit Venue-Division Constraints" as text %}
-      {% include "components/item-action.html" with emoji="🏰" %}
-    {% endif %}
 
   </ul>
   <ul class="list-group mt-3">

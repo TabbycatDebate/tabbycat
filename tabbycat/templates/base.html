@@ -10,12 +10,12 @@
   <title>{% if tournament %}{{ tournament.short_name }}{% else %}{% trans "Tabbycat" %}{% endif %} | {% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
 
   {% if tournament %}
-    {% blocktrans trimmed with tournament_name=tournament.short_name asvar meta_description %}
-      The tab for {{ tournament_name }} runs on Tabbycat, an open-source tab system for a variety of parliamentary debating formats
+    {% blocktrans trimmed with tournament=tournament.short_name asvar meta_description %}
+      The tab for {{ tournament }} runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats
     {% endblocktrans %}
   {% else %}
     {% blocktrans trimmed asvar meta_description %}
-      This tab runs on Tabbycat, an open-source tab system for a variety of parliamentary debating formats
+      This tab runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats
     {% endblocktrans %}
   {% endif %}
   <meta name="description" content="{{ meta_description }}" />
@@ -93,9 +93,9 @@
             {% block head-title %}{% endblock %}
           {% endif %}
           {% if page_subtitle %}
-            <small class="text-muted d-md-inline d-none">{{ page_subtitle }}</small>
+            <small class="text-muted d-md-inline d-block">{{ page_subtitle }}</small>
           {% else %}
-            <small class="text-muted d-md-inline d-none">{% block sub-title %}{% endblock %}</small>
+            <small class="text-muted d-md-inline d-block">{% block sub-title %}{% endblock %}</small>
           {% endif %}
 
         </div>

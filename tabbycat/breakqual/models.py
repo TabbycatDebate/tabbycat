@@ -1,5 +1,7 @@
-from django.db import models
+import math
+
 from django.core.validators import MinValueValidator
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
@@ -62,11 +64,11 @@ class BreakCategory(models.Model):
         return self.breakingteam_set.filter(break_rank__isnull=False)
 
     @property
-    def serialize(self):
-        """Used in EditTeamEligibilityView; TODO: replace with serializer"""
-        return {
-            'id': self.id, 'name': self.name, 'seq': self.seq, 'class': None
-        }
+    def num_break_rounds(self):
+        if self.tournament.pref('teams_in_debate') == 'bp':
+            return math.ceil(math.log2(self.break_size / 2))
+        else:
+            return math.ceil(math.log2(self.break_size))
 
 
 class BreakingTeam(models.Model):

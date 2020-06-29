@@ -1,7 +1,9 @@
-from django.db import models
-from django.db.models import Count, Prefetch, Q
+import logging
+
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
+from django.db import models
+from django.db.models import Count, Prefetch, Q
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -9,14 +11,13 @@ from django.utils.translation import gettext_lazy as _
 from participants.models import Person
 from utils.managers import LookupByNameFieldsMixin
 
-import logging
 logger = logging.getLogger(__name__)
 
 
 PROHIBITED_TOURNAMENT_SLUGS = [
     'jet', 'database', 'admin', 'accounts', 'summernote',  # System
     'start', 'create', 'load-demo', # Setup Wizards
-    'draw', 'notifications', 'archive', # Cross-Tournament app's view roots
+    'tournament', 'notifications', 'archive', 'api', # Cross-Tournament app's view roots
     'favicon.ico', 'robots.txt',  # Files that must be at top level
     '__debug__', 'static', 'donations', 'style', 'i18n', 'jsi18n']  # Misc
 
@@ -46,7 +47,7 @@ class Tournament(models.Model):
     class Meta:
         verbose_name = _('tournament')
         verbose_name_plural = _('tournaments')
-        ordering = ['seq', ]
+        ordering = ['seq']
 
     def __init__(self, *args, **kwargs):
         self._prefs = {}
@@ -182,7 +183,7 @@ class Tournament(models.Model):
         colours in the admin nav bar."""
 
         rounds = self.round_set.order_by('-stage', 'seq').annotate(
-            Count('motion'), Count('debate')
+            Count('motion'), Count('debate'),
         ).select_related('break_category')
         categories_where_current_found = []
         prelim_current_found = False
@@ -241,18 +242,18 @@ class Tournament(models.Model):
 
         # For something this complicated it's easier just to get the entire
         # round set from the database, and process it in Python.
-        rounds = self.round_set.filter(completed=False).order_by('seq').annotate(
-                Count('debate')).select_related('break_category')
+        rounds = getattr(self, 'current_round_set',
+            self.round_set.filter(completed=False).annotate(Count('debate')).order_by('seq'))
         current_elim_rounds = {}
         for r in rounds:
             if not r.is_break_round:
                 return [r]  # short-circuit everything else
             elif r.debate__count > 0:
-                current_elim_rounds.setdefault(r.break_category, r)
+                current_elim_rounds.setdefault(r.break_category_id, r)
         return [
-            current_elim_rounds.get(category)
-            for category in self.breakcategory_set.order_by('seq')
-            if category in current_elim_rounds
+            current_elim_rounds.get(category.pk)
+            for category in self.breakcategory_set.order_by('seq')  # Order by break, then seq
+            if category.pk in current_elim_rounds
         ]
 
     @cached_property
@@ -290,31 +291,37 @@ class Round(models.Model):
     DRAW_POWERPAIRED = 'P'
     DRAW_ELIMINATION = 'E'
     # Translators: These are choices for the type of draw a round should have.
-    DRAW_CHOICES = ((DRAW_RANDOM, _('Random')),
-                    (DRAW_MANUAL, _('Manual')),
-                    (DRAW_ROUNDROBIN, _('Round-robin')),
-                    (DRAW_POWERPAIRED, _('Power-paired')),
-                    (DRAW_ELIMINATION, _('Elimination')), )
+    DRAW_CHOICES = (
+        (DRAW_RANDOM, _('Random')),
+        (DRAW_MANUAL, _('Manual')),
+        (DRAW_ROUNDROBIN, _('Round-robin')),
+        (DRAW_POWERPAIRED, _('Power-paired')),
+        (DRAW_ELIMINATION, _('Elimination')),
+    )
 
     STAGE_PRELIMINARY = 'P'
     STAGE_ELIMINATION = 'E'
-    STAGE_CHOICES = ((STAGE_PRELIMINARY, _('Preliminary')),
-                     (STAGE_ELIMINATION, _('Elimination')), )
+    STAGE_CHOICES = (
+        (STAGE_PRELIMINARY, _('Preliminary')),
+        (STAGE_ELIMINATION, _('Elimination')),
+    )
 
     STATUS_NONE = 'N'
     STATUS_DRAFT = 'D'
     STATUS_CONFIRMED = 'C'
     STATUS_RELEASED = 'R'
     # Translators: These are choices for the status of the draw for a round.
-    STATUS_CHOICES = ((STATUS_NONE, _('None')),
-                      (STATUS_DRAFT, _('Draft')),
-                      (STATUS_CONFIRMED, _('Confirmed')),
-                      (STATUS_RELEASED, _('Released')), )
+    STATUS_CHOICES = (
+        (STATUS_NONE, _('None')),
+        (STATUS_DRAFT, _('Draft')),
+        (STATUS_CONFIRMED, _('Confirmed')),
+        (STATUS_RELEASED, _('Released')),
+    )
 
     objects = RoundManager()
 
     tournament = models.ForeignKey(Tournament, models.CASCADE, verbose_name=_("tournament"))
-    seq = models.IntegerField(verbose_name=_("sequence number"),
+    seq = models.PositiveIntegerField(verbose_name=_("sequence number"),
         help_text=_("A number that determines the order of the round, should count consecutively from 1 for the first round"))
     completed = models.BooleanField(default=False,
         verbose_name=_("completed"),
@@ -340,7 +347,7 @@ class Round(models.Model):
     feedback_weight = models.FloatField(default=0,
         verbose_name=_("feedback weight"),
         # Translator: xgettext:no-python-format
-        help_text=_("The extent to which each adjudicator's overall score depends on feedback vs their test score. At 0, it is 100% drawn from their test score, at 1 it is 100% drawn from feedback."))
+        help_text=_("The extent to which each adjudicator's overall score depends on feedback vs their base score. At 0, it is 100% drawn from their base score, at 1 it is 100% drawn from feedback."))
     silent = models.BooleanField(default=False,
         # Translators: A silent round is a round for which results are not disclosed once the round is over.
         verbose_name=_("silent"),
@@ -418,11 +425,10 @@ class Round(models.Model):
         """Returns the number of debates in the round, in which there are an
         positive and even number of voting judges."""
         from adjallocation.models import DebateAdjudicator
-        debates_with_even_panel = self.debate_set.exclude(
-            debateadjudicator__type=DebateAdjudicator.TYPE_TRAINEE
-        ).annotate(
-            panellists=Count('debateadjudicator'),
-            odd_panellists=Count('debateadjudicator') % 2
+        debateadj_filter = ~Q(debateadjudicator__type=DebateAdjudicator.TYPE_TRAINEE)
+        debates_with_even_panel = self.debate_set.annotate(
+            panellists=Count('debateadjudicator', filter=debateadj_filter),
+            odd_panellists=Count('debateadjudicator', filter=debateadj_filter) % 2,
         ).filter(panellists__gt=0, odd_panellists=0).count()
         return debates_with_even_panel
 
@@ -448,17 +454,9 @@ class Round(models.Model):
         return Adjudicator.objects.exclude(debateadjudicator__debate__round=self).filter(
             round_availabilities__round=self).count()
 
-    @cached_property
-    def is_break_round(self):
-        return self.stage == self.STAGE_ELIMINATION
-
     # --------------------------------------------------------------------------
     # Draw retrieval methods
     # --------------------------------------------------------------------------
-
-    def get_draw(self, ordering=('venue__name',)):
-        # Deprecated fully 8/3/2018, remove after 8/4/2018
-        raise RuntimeError("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.")
 
     def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',),
             teams=True, adjudicators=True, speakers=True, wins=False,
@@ -570,6 +568,10 @@ class Round(models.Model):
         round, then it returns the next round that is either in the same break
         category or is a preliminary round."""
         return self._rounds_in_same_sequence().filter(seq__gt=self.seq).order_by('seq').first()
+
+    @cached_property
+    def is_break_round(self):
+        return self.stage == self.STAGE_ELIMINATION
 
     @property
     def is_current(self):

@@ -7,8 +7,8 @@ from django.db.models import Avg, Count, F, FloatField, Func, Q, StdDev, Sum
 from django.db.models.functions import Cast
 from django.utils.translation import gettext_lazy as _
 
-from tournaments.models import Round
 from results.models import TeamScore
+from tournaments.models import Round
 
 from .base import BaseStandingsGenerator
 from .metrics import BaseMetricAnnotator, metricgetter, QuerySetMetricAnnotator, RepeatedMetricAnnotator
@@ -51,9 +51,10 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
         )
         if round is not None:
             annotation_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
+        if self.exclude_unconfirmed:
+            annotation_filter &= Q(debateteam__teamscore__ballot_submission__confirmed=True)
         if self.where_value is not None:
             annotation_filter &= Q(**{self.get_where_field(): self.where_value})
-
         return self.function(self.get_field(), filter=annotation_filter)
 
 
@@ -139,7 +140,7 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         annotation_filter = Q(
             debateteam__teamscore__ballot_submission__confirmed=True,
             debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
-            debateteam__speakerscore__ghost=False
+            debateteam__speakerscore__ghost=False,
         )
         if round is not None:
             annotation_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
@@ -248,7 +249,7 @@ class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     function = Sum
 
     def __init__(self, adjs_per_debate=3):
-        self.adjs_per_debate = 3
+        self.adjs_per_debate = adjs_per_debate
 
     def get_field(self):
         return (Cast('debateteam__teamscore__votes_given', FloatField()) /
@@ -302,7 +303,9 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
         ts = TeamScore.objects.filter(
             ballot_submission__confirmed=True,
             debate_team__team=tsi.team,
-            debate_team__debate__debateteam__team=other.team)
+            debate_team__debate__debateteam__team=other.team,
+            debate_team__debate__round__stage=Round.STAGE_PRELIMINARY,
+        )
 
         if round is not None:
             ts = ts.filter(debate_team__debate__round__seq__lte=round.seq)

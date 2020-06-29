@@ -2,10 +2,9 @@ import itertools
 import logging
 import random
 
-from munkres import Munkres
-
 from django.db.models import Prefetch
 from django.utils.translation import gettext_lazy as _
+from munkres import Munkres
 
 from adjallocation.models import DebateAdjudicator
 from draw.models import DebateTeam
@@ -49,7 +48,7 @@ class BaseVenueAllocator:
             subjects = itertools.chain(
                 debate.teams,
                 debate.adjudicators.all(),
-                [team.institution for team in debate.teams]
+                [team.institution for team in debate.teams],
             )
             constraints = [vc for subject in subjects for vc in all_constraints.get(subject, [])]
 
@@ -221,9 +220,9 @@ class BaseHungarianVenueAllocator(BaseVenueAllocator):
 
         Get previous debates (with venues & categories) of participants in addition to current ones"""
 
-        return self.round.debate_set.all().select_related('division', 'division__venue_category', 'venue').prefetch_related(
+        return self.round.debate_set.all().select_related('venue').prefetch_related(
             Prefetch('debateadjudicator_set', queryset=DebateAdjudicator.objects.select_related('adjudicator', 'adjudicator__institution')),
-            Prefetch('debateteam_set', queryset=DebateTeam.objects.select_related('team', 'team__institution'))
+            Prefetch('debateteam_set', queryset=DebateTeam.objects.select_related('team', 'team__institution')),
         )
 
     def allocate(self):
@@ -324,7 +323,7 @@ class VenueAllocatorChoices:
         'naive': NaiveVenueAllocator,
         'hungarian': BaseHungarianVenueAllocator,
         'rotate': RotationVenueAllocator,
-        'stationary': StationaryVenueAllocator
+        'stationary': StationaryVenueAllocator,
     }
 
     @classmethod

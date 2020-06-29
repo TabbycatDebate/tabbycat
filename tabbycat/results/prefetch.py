@@ -106,7 +106,7 @@ def populate_results(ballotsubs):
     # Populate debateteams (load_debateteams)
     debateteams = DebateTeam.objects.filter(
         debate__ballotsubmission__in=ballotsubs,
-        side__in=sides
+        side__in=sides,
     ).select_related('team').distinct()
 
     for dt in debateteams:
@@ -117,7 +117,7 @@ def populate_results(ballotsubs):
     speakerscores = SpeakerScore.objects.filter(
         ballot_submission__in=ballotsubs,
         debate_team__side__in=sides,
-        position__in=positions
+        position__in=positions,
     ).select_related('debate_team')
 
     for ss in speakerscores:
@@ -131,10 +131,10 @@ def populate_results(ballotsubs):
     # Populate scoresheets (load_scoresheets)
 
     debateadjs = DebateAdjudicator.objects.filter(
-        debate__ballotsubmission__in=ballotsubs
+        debate__ballotsubmission__in=ballotsubs,
     ).exclude(
-        type=DebateAdjudicator.TYPE_TRAINEE
-    ).select_related('adjudicator').distinct()
+        type=DebateAdjudicator.TYPE_TRAINEE,
+    ).select_related('adjudicator__institution').distinct()
 
     for da in debateadjs:
         for result in results_by_debate_id[da.debate_id]:
@@ -145,8 +145,8 @@ def populate_results(ballotsubs):
     ssbas = SpeakerScoreByAdj.objects.filter(
         ballot_submission__in=ballotsubs,
         debate_team__side__in=sides,
-        position__in=positions
-    ).select_related('debate_adjudicator__adjudicator', 'debate_team')
+        position__in=positions,
+    ).select_related('debate_adjudicator__adjudicator__institution', 'debate_team')
 
     for ssba in ssbas:
         result = results_by_ballotsub_id[ssba.ballot_submission_id]
@@ -157,7 +157,7 @@ def populate_results(ballotsubs):
     # Populate advancing (load_advancing)
     teamscores = TeamScore.objects.filter(
         ballot_submission__in=ballotsubs,
-        debate_team__side__in=sides
+        debate_team__side__in=sides,
     ).select_related('debate_team')
 
     for ts in teamscores:

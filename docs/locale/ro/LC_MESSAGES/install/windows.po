@@ -1,0 +1,315 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-02-25 20:16\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Romanian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ro\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/install/windows.po\n"
+"Language: ro_RO\n"
+
+#: ../../install/windows.rst:5
+msgid "Installing Locally on Windows"
+msgstr ""
+
+#: ../../install/windows.rst:7
+msgid "Is this the best installation method for you?"
+msgstr ""
+
+#: ../../install/windows.rst:10
+msgid "In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`"
+msgstr ""
+
+#: ../../install/windows.rst:12
+msgid "If you just want to quickly set up a copy of Tabbycat to run locally on Windows, consider :ref:`installing using Docker<install-docker>`, which is a shorter process than the one below."
+msgstr ""
+
+#: ../../install/windows.rst:14
+msgid "If you have Windows 10 and any experience with Linux, we recommend installing it on :ref:`Linux on Windows (WSL) <install-wsl>` instead, which is much easier than the process below."
+msgstr ""
+
+#: ../../install/windows.rst:17
+msgid "Requisite technical background"
+msgstr ""
+
+#: ../../install/windows.rst:19
+msgid "You need to be familiar with command-line interfaces to get through this comfortably. While a background in the specific tools Tabbycat uses (Python, PostgreSQL, *etc.*) will make things easier, it's not necessary: we'll talk you through the rest. You just need to be prepared to bear with us. It'll take a while the first time, but it gets easier after that."
+msgstr ""
+
+#: ../../install/windows.rst:21
+msgid "In these instructions, we'll use **Windows PowerShell**, a command-line interface that comes with every installation of Windows (since XP). The easiest way to find it (on Windows 7 and later) is to search for it in your Start Menu. Every line in the instructions that begins with ``>`` is a command that you need to run in PowerShell, but without the ``>``: that sign is a convention used in instructions to make it clear that it is a command you need to run."
+msgstr ""
+
+#: ../../install/windows.rst:23 ../../install/windows.rst:81
+#: ../../install/windows.rst:104
+msgid "Advanced users"
+msgstr ""
+
+#: ../../install/windows.rst:26
+msgid "If you wish to use an SQL engine other that PostgreSQL, most of Tabbycat should work, but a few features rely on SQL functions that aren't supported by all engines. To configure Tabbycat to use a different engine, set the ``DATABASES`` `Django setting <https://docs.djangoproject.com/en/2.2/ref/settings/#databases>`_ accordingly."
+msgstr ""
+
+#: ../../install/windows.rst:29
+msgid "1. Install dependencies"
+msgstr ""
+
+#: ../../install/windows.rst:31
+msgid "First, you need to install all of the software on which Tabbycat depends, if you don't already have it installed."
+msgstr ""
+
+#: ../../install/windows.rst:36
+msgid "1(a). Python"
+msgstr ""
+
+#: ../../install/windows.rst:37
+msgid "*Python is a popular programming language, and the language in which the core of Tabbycat is coded.*"
+msgstr ""
+
+#: ../../install/windows.rst:39
+msgid "Download and install the latest version of Python 3.6 from the `Python website <https://www.python.org/downloads/>`_. In the installer, check the box to add Python to your PATH (see box below)."
+msgstr ""
+
+#: ../../install/windows.rst:42
+msgid "Which file should I download?"
+msgstr ""
+
+#: ../../install/windows.rst:44
+msgid "Regardless of if you have 64-bit or 32-bit Windows, choose the \"Windows x86 executable installer\"."
+msgstr ""
+
+#: ../../install/windows.rst:46
+msgid "**Please take note:** Just after you open the installer, **check the \"Add Python 3.6 to PATH\" box**:"
+msgstr ""
+
+#: ../../install/windows.rst:51
+msgid "To check that Python is installed correctly, open Windows PowerShell, type ``python`` and press Enter. It should look something like this. If you installed the 32-bit version, it will say ``32 bit`` instead of ``64 bit``."
+msgstr ""
+
+#: ../../install/windows.rst:55
+msgid "(To exit Python, type ``exit()`` then press Enter.)"
+msgstr ""
+
+#: ../../install/windows.rst:57
+msgid "**If you already have Python**, great! Some things to double-check:"
+msgstr ""
+
+#: ../../install/windows.rst:59
+msgid "You must have at least Python 3.6 (Python 2 is not supported.)"
+msgstr ""
+
+#: ../../install/windows.rst:60
+msgid "Your installation path must not have any spaces in it."
+msgstr ""
+
+#: ../../install/windows.rst:61
+msgid "If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\\Python36;C:\\Python36\\Scripts`` (or as appropriate for your installation directory). Follow `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path."
+msgstr ""
+
+#: ../../install/windows.rst:66
+msgid "1(b). PostgreSQL"
+msgstr ""
+
+#: ../../install/windows.rst:67
+msgid "*PostgreSQL is a database management system.*"
+msgstr ""
+
+#: ../../install/windows.rst:69
+msgid "Go to the `PostgreSQL downloads page <http://www.postgresql.org/download/windows/>`_, then follow the link through to EnterpriseDB to download and install the latest version of PostgreSQL."
+msgstr ""
+
+#: ../../install/windows.rst:71
+msgid "Once PostgreSQL is installed, the PostgreSQL service will run on your computer whenever you are using it. You might prefer to configure it so that it only runs when you want to run Tabbycat. To do this, open \"Services\" in your Control Panel on Windows, find the PostgreSQL service, and change its startup type to \"Manual\". This will tell it not to start whenever you log in. Then, if you want to run the server (so you can use Tabbycat), you can do so from \"Services\" by selecting the PostgreSQL service and clicking \"Start the service\"."
+msgstr ""
+
+#: ../../install/windows.rst:74
+msgid "1(c). Git"
+msgstr ""
+
+#: ../../install/windows.rst:75
+msgid "*Git is a version control system.*"
+msgstr ""
+
+#: ../../install/windows.rst:77
+msgid "We won't use Git directly, but Node.js (which we install in the next step) requires Git to work. So, install the latest version for Windows from the `Git website <https://git-scm.com/downloads>`_."
+msgstr ""
+
+#: ../../install/windows.rst:84
+msgid "If you already have `GitHub Desktop <https://desktop.github.com/>`_ installed, you might think that this would be good enough. Unfortunately, it's not---GitHub Desktop installs a portable version of Git. Node.js, on the other hand, requires the ``git`` to be in the ``PATH``, so it can call it directly. The easiest (but not only) way to do this is just to install Git from the link above."
+msgstr ""
+
+#: ../../install/windows.rst:92
+msgid "1(d). Node.js/NPM"
+msgstr ""
+
+#: ../../install/windows.rst:93
+msgid "*Node.js is a JavaScript runtime.*"
+msgstr ""
+
+#: ../../install/windows.rst:95
+msgid "Download and run the node.js 8 Installer (.msi) for either `x64 versions  <https://nodejs.org/dist/v8.9.4/node-v8.9.4-x64.msi>`_ of Windows or `x86 versions <https://nodejs.org/dist/v8.9.4/node-v8.9.4-x86.msi>`_."
+msgstr ""
+
+#: ../../install/windows.rst:98
+msgid "2. Get the source code"
+msgstr ""
+
+#: ../../install/windows.rst:100
+msgid "`Go to the page for our latest release <https://github.com/TabbycatDebate/tabbycat/releases/latest>`_."
+msgstr ""
+
+#: ../../install/windows.rst:101
+msgid "Download the zip file."
+msgstr ""
+
+#: ../../install/windows.rst:102
+msgid "Extract all files in it to a folder of your choice."
+msgstr ""
+
+#: ../../install/windows.rst:107
+msgid "If you've used Git before, you might prefer to clone `our GitHub repository`_ instead. Don't forget to check out the |vrelease| tag or the master branch."
+msgstr ""
+
+#: ../../install/windows.rst:109
+msgid "Even better, you might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project)."
+msgstr ""
+
+#: ../../install/windows.rst:114
+msgid "3. Set up a new database"
+msgstr ""
+
+#: ../../install/windows.rst:116
+msgid "You can skip steps 2 and 3 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like."
+msgstr ""
+
+#: ../../install/windows.rst:118
+msgid "Open the **pgAdmin** tool, which you installed as part of installing PostgreSQL. In the object browser on the left, double-click the server marked \"(localhost:5432)\". Log in using the password you set during installation."
+msgstr ""
+
+#: ../../install/windows.rst:120
+msgid "Right-click Login Roles, and click \"New Login Role…\""
+msgstr ""
+
+#: ../../install/windows.rst:124
+msgid "Fill in the New Login Role box as follows (everything not listed below can be left as-is):"
+msgstr ""
+
+#: ../../install/windows.rst:126
+msgid "In the **Properties** tab, in **Role Name**, choose a user account name. (If you don't know what to pick, we suggest \"tabbycat\".)"
+msgstr ""
+
+#: ../../install/windows.rst:127
+msgid "In the **Definition** tab, choose a **Password** and type it in **Password (again)**."
+msgstr ""
+
+#: ../../install/windows.rst:129
+msgid "Then click OK. (Remember this user name and password, you'll need it later.)"
+msgstr ""
+
+#: ../../install/windows.rst:131
+msgid "Right-click Databases, and click \"New Database…\""
+msgstr ""
+
+#: ../../install/windows.rst:135
+msgid "Fill in the New Database box as follows (everything not listed below can be left as-is):"
+msgstr ""
+
+#: ../../install/windows.rst:137
+msgid "In the **Properties** tab, in **Name**, choose a database name (with no spaces in it)."
+msgstr ""
+
+#: ../../install/windows.rst:138
+msgid "In the **Properties** tab, in **Owner**, type the name of the login role you just created."
+msgstr ""
+
+#: ../../install/windows.rst:140
+msgid "Then click OK. (Remember the database name, you'll need it later.)"
+msgstr ""
+
+#: ../../install/windows.rst:143
+msgid "4. Install Tabbycat"
+msgstr ""
+
+#: ../../install/windows.rst:145
+msgid "Almost there!"
+msgstr ""
+
+#: ../../install/windows.rst:147
+msgid "Open a Windows PowerShell. Navigate to the folder where you cloned/extracted Tabbycat. For example, if you installed it in ``C:\\Users\\myusername\\Documents\\GitHub\\tabbycat``, then run::"
+msgstr ""
+
+#: ../../install/windows.rst:151
+msgid "Make a copy of **settings\\\\local.example** and rename it to **settings\\\\local.py**. Open your new **local.py** file. Find this part, and fill in the blanks (the empty quotation marks) as indicated:"
+msgstr ""
+
+#: ../../install/windows.rst:166
+msgid "Optionally, replace the value in this line in the same file with your own time zone, as defined in the `IANA time zone database <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ (*e.g.*, ``Pacific/Auckland``, ``America/Mexico_City``, ``Asia/Kuala_Lumpur``)::"
+msgstr ""
+
+#: ../../install/windows.rst:170
+msgid "Start a new virtual environment. We suggest the name `venv`, though it can be any name you like::"
+msgstr ""
+
+#: ../../install/windows.rst:174
+msgid "Run the `Activate.ps1` script. This puts you \"into\" the virtual environment::"
+msgstr ""
+
+#: ../../install/windows.rst:178
+msgid "If you get an error message saying that the script isn't digitally signed, open a PowerShell with administrator privileges by right-clicking PowerShell in the Start meny and clicking \"Run as administrator\". Then run this command::"
+msgstr ""
+
+#: ../../install/windows.rst:182
+msgid "Read the warning message, then type ``y`` to confirm. By default, the execution policy on Windows is ``Restricted``, which does not permit scripts like ``activate`` to be run. Changing it to ``RemoteSigned`` relaxes it to allow local scripts to be run without checking the signature."
+msgstr ""
+
+#: ../../install/windows.rst:184
+msgid "Install Tabbycat's requirements."
+msgstr ""
+
+#: ../../install/windows.rst:186
+msgid "If you installed **32-bit Python**::"
+msgstr ""
+
+#: ../../install/windows.rst:192
+msgid "You might be wondering: I thought I already installed the requirements. Why am I installing more? And the answer is: Before, you were installing the requirements to create a Python virtual environment for Tabbycat to live in. Now, you're *in* the virtual environment, and you're installing everything required for *Tabbycat* to operate."
+msgstr ""
+
+#: ../../install/windows.rst:194
+msgid "Initialize the database and create a user account for yourself::"
+msgstr ""
+
+#: ../../install/windows.rst:202
+msgid "Start Tabbycat!"
+msgstr ""
+
+#: ../../install/windows.rst:208
+msgid "It should show something like this::"
+msgstr ""
+
+#: ../../install/windows.rst:212
+msgid "Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000/). It should look something like this:"
+msgstr ""
+
+#: ../../install/windows.rst:216
+msgid "If it does, great! You've successfully installed Tabbycat."
+msgstr ""
+
+#: ../../install/windows.rst:218
+msgid "Naturally, your database is currently empty, so proceed to :ref:`importing initial data <importing-initial-data>`."
+msgstr ""
+
+#: ../../install/windows.rst:221
+msgid "Starting up an existing Tabbycat instance"
+msgstr ""
+
+#: ../../install/windows.rst:223
+msgid "To start your Tabbycat instance up again next time you use your computer, open a PowerShell and::"
+msgstr ""
+

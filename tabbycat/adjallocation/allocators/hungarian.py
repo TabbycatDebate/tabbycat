@@ -2,12 +2,11 @@ import logging
 import random
 from math import exp
 
+from django.utils.translation import gettext as _, ngettext
 from munkres import Munkres
 
-from django.utils.translation import gettext as _, ngettext
-
-from ..allocation import AdjudicatorAllocation
 from .base import AdjudicatorAllocationError, BaseAdjudicatorAllocator, register
+from ..allocation import AdjudicatorAllocation
 
 logger = logging.getLogger(__name__)
 
@@ -26,13 +25,13 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
         self.no_panellists = t.pref('no_panellist_position')
         self.no_trainees = t.pref('no_trainee_position')
         self.feedback_weight = self.round.feedback_weight
-        self.extra_messages = "" # Surfaced to users for non-error disclosures
+        self.user_warnings = []  # Surfaced to users for non-error disclosures
 
         self.munkres = Munkres()
 
     def allocate(self):
         self.populate_adj_scores(self.adjudicators)
-        return self.run_allocation(), self.extra_messages
+        return self.run_allocation(), self.user_warnings
 
     def populate_adj_scores(self, adjudicators):
         score_min = self.min_score
@@ -48,20 +47,20 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
         ntoolarge = [adj._normalized_score > 5.0 for adj in adjudicators].count(True)
         if ntoolarge > 0:
             warning_msg = ngettext(
-                "%(count)s normalised score is larger than 5.0.",
-                "%(count)s normalised scores are larger than 5.0.",
-                ntoolarge
-            ) % {'count': ntoolarge}
-            self.extra_messages += " " + warning_msg
+                "%(count)s score is larger than the maximum permitted adjudicator score (%(score).1f).",
+                "%(count)s scores are larger than the maximum permitted adjudicator score (%(score).1f).",
+                ntoolarge,
+            ) % {'count': ntoolarge, 'score': self.max_score}
+            self.user_warnings.append(warning_msg)
             logger.warning(warning_msg)
         ntoosmall = [adj._normalized_score < 0.0 for adj in adjudicators].count(True)
         if ntoosmall > 0:
             warning_msg = ngettext(
-                "%(count)s normalised score is smaller than 0.0.",
-                "%(count)s normalised scores are smaller than 0.0.",
-                ntoosmall
-            ) % {'count': ntoosmall}
-            self.extra_messages += " " + warning_msg
+                "%(count)s score is smaller than the minimum permitted adjudicator score (%(score).1f).",
+                "%(count)s scores are smaller than the minimum permitted adjudicator score (%(score).1f).",
+                ntoosmall,
+            ) % {'count': ntoosmall, 'score': self.min_score}
+            self.user_warnings.append(warning_msg)
             logger.warning(warning_msg)
 
     def calc_cost(self, debate, adj, adjustment=0, chair=None):
@@ -166,7 +165,7 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
         if n_voting < n_debates:
             warning_msg = _("There are %(debate_count)s debates but only %(adj_count)s "
                     "voting adjudicators.") % {'debate_count': n_debates, 'adj_count': n_voting}
-            self.extra_messages += " " + warning_msg
+            self.user_warnings.append(warning_msg)
             logger.warning(warning_msg)
 
         if len(panellists) < len(panel_debates) * 3:
@@ -174,9 +173,9 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
                     "available panellists (less than %(needed)s).") % {
                         'panel_debates': len(panel_debates),
                         'panellists': len(panellists),
-                        'needed': len(panel_debates) * 3
+                        'needed': len(panel_debates) * 3,
                     }
-            self.extra_messages += " " + warning_msg
+            self.user_warnings.append(warning_msg)
             logger.warning(warning_msg)
 
         if len(solos) > 0 and len(solo_debates) > 0:
@@ -283,9 +282,9 @@ class ConsensusHungarianAllocator(BaseHungarianAllocator):
             warning_msg = _("There are %(debates_count)s debates but only "
                     "%(voting_count)s voting adjudicators.") % {
                         'debates_count': n_debates,
-                        'voting_count': n_voting
+                        'voting_count': n_voting,
                     }
-            self.extra_messages += " " + warning_msg
+            self.user_warnings.append(warning_msg)
             logger.warning(warning_msg)
 
         # Allocate voting

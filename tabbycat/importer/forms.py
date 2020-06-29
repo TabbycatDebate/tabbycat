@@ -23,7 +23,7 @@ class ImportValidationError(ValidationError):
     def __init__(self, lineno, message, *args, **kwargs):
         message = _("line %(lineno)d: %(message)s") % {
             'lineno': lineno,
-            'message': message
+            'message': message,
         }
         super().__init__(message, *args, **kwargs)
 
@@ -100,15 +100,15 @@ class ImportVenuesRawForm(forms.Form):
             venues.append(params)
 
         if len(venues) == 0:
-            raise ValidationError(_("There were no venues to import."))
+            raise ValidationError(_("There were no rooms to import."))
 
         max_allowed = MAX_FORM_DATA_FIELDS // (len(VenueDetailsForm.base_fields) + 1)
         if len(venues) > max_allowed:
             raise ValidationError(ngettext(
-                "Sorry, you can only import up to %(max_allowed)d venue at a "
+                "Sorry, you can only import up to %(max_allowed)d room at a "
                 "time. (You currently have %(given)d.) "
                 "Try splitting your import into smaller chunks.",
-                "Sorry, you can only import up to %(max_allowed)d venues at a "
+                "Sorry, you can only import up to %(max_allowed)d rooms at a "
                 "time. (You currently have %(given)d.) "
                 "Try splitting your import into smaller chunks.",
                 max_allowed) % {'max_allowed': max_allowed, 'given': len(venues)})
@@ -304,19 +304,19 @@ class AdjudicatorDetailsForm(BaseInstitutionObjectDetailsForm):
 
     class Meta:
         model = Adjudicator
-        fields = ('name', 'test_score', 'institution', 'email')
+        fields = ('name', 'base_score', 'institution', 'email')
         labels = {
-            'test_score': _("Rating"),
+            'base_score': _("Rating"),
         }
 
-    def clean_test_score(self):
-        test_score = self.cleaned_data['test_score']
+    def clean_base_score(self):
+        base_score = self.cleaned_data['base_score']
         min_score = self.tournament.pref('adj_min_score')
         max_score = self.tournament.pref('adj_max_score')
-        if test_score < min_score or max_score < test_score:
-            self.add_error('test_score', _("This value must be between %(min)d and %(max)d.") %
+        if base_score < min_score or max_score < base_score:
+            self.add_error('base_score', _("This value must be between %(min)d and %(max)d.") %
                 {'min': min_score, 'max': max_score})
-        return test_score
+        return base_score
 
     def save(self, commit=True):
         adj = super().save(commit=commit)

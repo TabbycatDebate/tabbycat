@@ -8,7 +8,7 @@ Unlike the rest of our documentation, this section does not deal with particular
 
 Whilst it aims for general relevance, we should note that this guide is relatively opinionated and mostly written from the perspective of people whose primary experience is tabbing at Australasian tournaments using Tabbycat. That said, we welcome feedback and additions that can account for different format and regional considerations. In the future, if the guide becomes more general and more extensive, it could be spun off into a separate project.
 
-.. note:: As with the rest of our documentation, this page is open-source and we welcome :ref:`feedback and contributions <contributing>`. Note also that we've formatted this guide a single page to reduce clutter, but the sub-sections in the sidebar can be used to help navigate across sections.
+.. note:: As with the rest of our documentation, this page is source-available and we welcome :ref:`feedback and contributions <contributing>`. Note also that we've formatted this guide a single page to reduce clutter, but the sub-sections in the sidebar can be used to help navigate across sections.
 
 Planning and Preparation
 ========================

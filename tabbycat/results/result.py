@@ -537,7 +537,12 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
             return None
 
     def set_score(self, adjudicator, side, position, score):
-        scoresheet = self.scoresheets[adjudicator]
+        try:
+            scoresheet = self.scoresheets[adjudicator]
+        except KeyError:
+            logger.exception("Tried to set score by adjudicator %s, but this adjudicator "
+                "doesn't have a scoresheet.", adjudicator)
+            return
         try:
             scoresheet.set_score(side, position, score)
         except AttributeError:
@@ -686,7 +691,7 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
         for adj in self.debate.adjudicators.voting():
             sheet_dict = {
                 "adjudicator": adj,
-                "teams": self.sheet_as_dicts(self.scoresheets[adj])
+                "teams": self.sheet_as_dicts(self.scoresheets[adj]),
             }
             sheet_dict["adjudicator"] = adj
             yield sheet_dict
@@ -728,7 +733,7 @@ class BaseConsensusDebateResultWithSpeakers(BaseDebateResultWithSpeakers):
     def load_scoresheet(self):
         speakerscores = self.ballotsub.speakerscore_set.filter(
             debate_team__side__in=self.sides,
-            position__in=self.positions
+            position__in=self.positions,
         ).select_related('debate_team')
 
         for ss in speakerscores:
@@ -851,7 +856,7 @@ class BPEliminationDebateResult(BaseDebateResult):
 
     def load_advancing(self):
         queryset = self.ballotsub.teamscore_set.filter(
-            debate_team__side__in=self.sides, win=True
+            debate_team__side__in=self.sides, win=True,
         ).values_list('debate_team__side', flat=True)
         self.advancing = list(queryset)
 

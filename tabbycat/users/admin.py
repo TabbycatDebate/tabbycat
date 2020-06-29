@@ -47,7 +47,7 @@ class UserAdmin(BaseUserAdmin):
 
     add_fieldsets = ( # Set permissions when creating
         (None, {
-            'fields': ('username', 'password1', 'password2', 'email', 'is_staff', 'is_superuser')
+            'fields': ('username', 'password1', 'password2', 'email', 'is_staff', 'is_superuser'),
         }),
     )
 

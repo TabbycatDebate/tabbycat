@@ -1,23 +1,23 @@
 {% extends "base.html" %}
 {% load add_field_css debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">🏪</span> {% trans "Venue Categories" %}{% endblock %}
-{% block page-title %}🏪{% trans "Venue Categories" %}{% endblock %}
+{% block head-title %}<span class="emoji">🏪</span> {% trans "Room Categories" %}{% endblock %}
+{% block page-title %}🏪{% trans "Room Categories" %}{% endblock %}
 
 {% block content %}
 
   {% blocktrans trimmed asvar p1 %}
-    Venue categories allow you to group venues together into "zones" to display in the draw and make navigation easier for participants, and/or specify constraints on venue allocation that require teams, adjudicators or institutions to be put in a venue in a particular category.
+    Room categories allow you to group rooms together into "zones" to display in the draw and make navigation easier for participants, and/or specify constraints on room allocation that require teams, adjudicators or institutions to be put in a room in a particular category.
   {% endblocktrans %}
 
   {% url 'admin:venues_venuecategory_changelist' as edit_db_url %}
   {% blocktrans trimmed asvar p2 %}
-    If you want to delete venue categories, use the <a href="{{ edit_db_url }}" class="alert-link">Edit Database</a> area.
+    If you want to delete room categories, use the <a href="{{ edit_db_url }}" class="alert-link">Edit Database</a> area.
   {% endblocktrans %}
 
   {% include "components/explainer-card.html" with type="info" %}
 
-  {% trans "Save Venue Categories" as save_text %}
+  {% trans "Save Room Categories" as save_text %}
   {% include "components/formset.html" with double=True %}
 
 {% endblock content %}

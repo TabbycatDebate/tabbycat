@@ -5,9 +5,9 @@
       <div class="modal-content">
         <div class="modal-body text-center p-4">
 
-          <p class="lead" v-text="gettext(`Auto-Allocate Venues to Debates`)"></p>
-          <p v-text="gettext(`The allocator assigns venues to debates while trying to match
-                              all of the venue constraints that have been specified.`)"></p>
+          <p class="lead" v-text="gettext(`Auto-Allocate Rooms to Debates`)"></p>
+          <p v-text="gettext(`The allocator assigns rooms to debates while trying to match
+                              all of the room constraints that have been specified.`)"></p>
 
           <div class="text-left py-3">
             <div class="form-group row">
@@ -66,7 +66,7 @@
 <script>
 import { mapState } from 'vuex'
 
-import ModalActionMixin from '../../utils/templates/modals/ModalActionMixin.vue'
+import ModalActionMixin from '../../templates/modals/ModalActionMixin.vue'
 
 export default {
   mixins: [ModalActionMixin],

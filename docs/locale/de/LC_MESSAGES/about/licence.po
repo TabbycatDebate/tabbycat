@@ -1,0 +1,78 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-03-08 16:27\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: German\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: de\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/about/licence.po\n"
+"Language: de_DE\n"
+
+#: ../../../LICENSE.rst:3
+msgid "Licence Information"
+msgstr ""
+
+#: ../../../LICENSE.rst:5
+msgid "We haven't released Tabbycat under an open-source licence, so there is no formal and general right to use this software. Nonetheless, you're welcome to freely use Tabbycat to help run a debating tournament if it is a not-for-profit and not-for-fundraising activity. A voluntary donation of A$1 (Australian dollar) per team would be greatly appreciated, and would help us meet costs and justify our ongoing work and support for Tabbycat users. (A donation link is in the footer of your Tabbycat site.)"
+msgstr ""
+
+#: ../../../LICENSE.rst:8
+msgid "Use at for-profit or fundraising tournaments"
+msgstr ""
+
+#: ../../../LICENSE.rst:10
+msgid "If you use Tabbycat at a tournament where any individual or organisation is making a profit or raising funds (other than to cover the direct costs of the tournament), you or your tournament **must** make a donation of A$1 (Australian dollar) per team to the Tabbycat maintenance team, as outlined in each tournament’s donation page (the link is in the footer of your Tabbycat site). This includes instances where organisations run tournaments partly as fundraising activities and applies even if the organisation itself is a non-profit."
+msgstr ""
+
+#: ../../../LICENSE.rst:12
+msgid "While we suggest that non-profit, non-fundraising tournaments budget for a donation of A$1 per team, it is not required in order for such tournaments to use Tabbycat."
+msgstr ""
+
+#: ../../../LICENSE.rst:15
+msgid "Modifications to and redistributions of Tabbycat"
+msgstr ""
+
+#: ../../../LICENSE.rst:17
+msgid "We grant you permission to modify and/or redistribute Tabbycat, provided that"
+msgstr ""
+
+#: ../../../LICENSE.rst:19
+msgid "you do not receive any payment for this modification and/or redistribution,"
+msgstr ""
+
+#: ../../../LICENSE.rst:20
+msgid "if you modify Tabbycat, you add prominent notices stating that you modified it,"
+msgstr ""
+
+#: ../../../LICENSE.rst:21
+msgid "all references and functionality relating to donations are kept intact, and"
+msgstr ""
+
+#: ../../../LICENSE.rst:22
+msgid "this licence page and all attributions of authorship are included as-is."
+msgstr ""
+
+#: ../../../LICENSE.rst:24
+msgid "Modifying Tabbycat for payment, or using a version of Tabbycat that has been modified for payment, is strictly prohibited without our express permission."
+msgstr ""
+
+#: ../../../LICENSE.rst:26
+msgid "If you use a version of Tabbycat that has been modified by you or a third party to run a for-profit or fundraising tournament, the abovementioned donation of A$1 per team is still required."
+msgstr ""
+
+#: ../../../LICENSE.rst:29
+msgid "Disclaimer of warranty and liability"
+msgstr ""
+
+#: ../../../LICENSE.rst:31
+msgid "We work on this software in our spare time and make it available for not-for-profit use in the hope that it will benefit the debating community. **It is provided \"as is\", without any warranty of any kind, express or implied, including without limitation any warranties of merchantability and fitness for a particular purpose, and we disclaim all legal liability. By using Tabbycat, you agree that none of its contributors will be held liable for any loss or claim arising directly or indirectly from using the software, or for any loss or claim otherwise in connection with the software.**"
+msgstr ""
+

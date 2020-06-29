@@ -25,9 +25,14 @@
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <a class="btn btn-primary" href="{% tournamenturl 'breakqual-edit-eligibility' %}">
-    {% trans "Edit Teams' Eligibility" %}
-  </a>
+  <div class="btn-group btn-group">
+    <a class="btn btn-outline-primary" href="{% tournamenturl 'break-categories-edit' %}">
+      {% trans "Break Categories" %}
+    </a>
+    <a class="btn btn-outline-primary" href="{% tournamenturl 'breakqual-edit-eligibility' %}">
+      {% trans "Team Eligibility" %}
+    </a>
+  </div>
 {% endblock %}
 
 {% block content %}
@@ -41,8 +46,8 @@
 
             <div class="list-group-item">
               <h4 class="card-title mb-0">
-                {% blocktrans trimmed with category_name=category.name %}
-                  {{ category_name }} Break
+                {% blocktrans trimmed with category=category.name %}
+                  {{ category }} Break
                 {% endblocktrans %}
               {% blocktrans trimmed with size=category.break_size %}
               <span class="badge float-right badge-light">

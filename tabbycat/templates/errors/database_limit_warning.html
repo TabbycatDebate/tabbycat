@@ -1,0 +1,25 @@
+{% load i18n humanize %}
+{% comment %}
+  The threshold for showing this message is governed by WarnAboutDatabaseUseMixin,
+  not here. The variable `database_rows_used` won't be set if we don't want this
+  message to display. Obviously, in English, the singular version of this message
+  will never appear, but we need to provide the pluralization for other languages.
+{% endcomment %}
+{% if database_rows_used %}
+  {% blocktrans trimmed with nrows=database_rows_used|intcomma count dbrows=database_rows_used asvar database_use_warning_message %}
+    You're currently using {{ nrows }} row in your database. If you haven't
+    already upgraded your Heroku database to a paid tier, it's limited to a
+    maximum of 10,000 rows. As you're close to this limit, you should
+    <strong>not create new tournaments</strong> on this site unless and until you've
+    <a href="https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases">upgraded
+    your database</a> to a paid tier.
+  {% plural %}
+    You're currently using {{ nrows }} rows in your database. If you haven't
+    already upgraded your Heroku database to a paid tier, it's limited to a
+    maximum of 10,000 rows. As you're close to this limit, you should
+    <strong>not create new tournaments</strong> on this site unless and until you've
+    <a href="https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases">upgraded
+    your database</a> to a paid tier.
+  {% endblocktrans %}
+  {% include "components/alert.html" with type="warning" icon="alert-circle" message=database_use_warning_message %}
+{% endif %}

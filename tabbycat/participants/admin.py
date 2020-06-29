@@ -1,15 +1,14 @@
 from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
-from django.utils.translation import ngettext
-from django.utils.translation import gettext_lazy as _, ngettext_lazy
+from django.utils.translation import gettext_lazy as _, ngettext, ngettext_lazy
 
-from draw.models import TeamSideAllocation
 from adjallocation.models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
                                   AdjudicatorTeamConflict, TeamInstitutionConflict)
-from adjfeedback.models import AdjudicatorTestScoreHistory
+from adjfeedback.models import AdjudicatorBaseScoreHistory
 from availability.admin import RoundAvailabilityInline
 from breakqual.models import BreakCategory
+from draw.models import TeamSideAllocation
 from tournaments.models import Tournament
 from venues.admin import VenueConstraintInline
 
@@ -93,7 +92,7 @@ class TeamForm(forms.ModelForm):
             if bc.tournament != tournament:
                 self.add_error('break_categories', ValidationError(
                     _("The team can't be in a break category of a different tournament. Please remove: %(category)s"),
-                    code='invalid_break_category', params={'category': str(bc)}
+                    code='invalid_break_category', params={'category': str(bc)},
                 ))
         return categories
 
@@ -132,7 +131,7 @@ class TeamAdmin(admin.ModelAdmin):
 
     def formfield_for_choice_field(self, db_field, request, **kwargs):
         if db_field.name == 'emoji' and kwargs.get("initial") is None:
-            kwargs["initial"] = pick_unused_emoji()
+            kwargs["initial"] = pick_unused_emoji()[0]
         return super().formfield_for_choice_field(db_field, request, **kwargs)
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
@@ -169,8 +168,8 @@ class AdjudicatorInstitutionConflictInline(admin.TabularInline):
     extra = 1
 
 
-class AdjudicatorTestScoreHistoryInline(admin.TabularInline):
-    model = AdjudicatorTestScoreHistory
+class AdjudicatorBaseScoreHistoryInline(admin.TabularInline):
+    model = AdjudicatorBaseScoreHistory
     extra = 1
 
 
@@ -188,12 +187,12 @@ class AdjudicatorForm(forms.ModelForm):
 class AdjudicatorAdmin(admin.ModelAdmin):
     form = AdjudicatorForm
     list_display = ('name', 'institution', 'tournament', 'trainee',
-                    'independent', 'adj_core', 'gender', 'test_score')
+                    'independent', 'adj_core', 'gender', 'base_score')
     search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code')
     list_filter = ('tournament', 'institution')
-    list_editable = ('independent', 'adj_core', 'trainee', 'test_score')
+    list_editable = ('independent', 'adj_core', 'trainee', 'base_score')
     inlines = (AdjudicatorTeamConflictInline, AdjudicatorInstitutionConflictInline,
-               AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline,
+               AdjudicatorAdjudicatorConflictInline, AdjudicatorBaseScoreHistoryInline,
                RoundAvailabilityInline)
     actions = ['delete_url_key']
 
@@ -206,7 +205,7 @@ class AdjudicatorAdmin(admin.ModelAdmin):
         message = ngettext(
             "%(count)d adjudicator had their URL key removed.",
             "%(count)d adjudicators had their URL keys removed.",
-            updated
+            updated,
         ) % {'count': updated}
         self.message_user(request, message)
     delete_url_key.short_description = _("Delete URL key")

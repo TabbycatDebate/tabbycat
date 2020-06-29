@@ -3,8 +3,8 @@ import logging
 import random
 import string
 
-from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
@@ -29,7 +29,7 @@ IDENTIFIER_CLASSES = {
 def delete_identifiers(queryset):
     klass = IDENTIFIER_CLASSES[queryset.model._meta.label]
     attr = klass.instance_attr
-    klass.objects.filter(**{attr + '__in': queryset}).delete()
+    return klass.objects.filter(**{attr + '__in': queryset}).delete()
 
 
 def get_unexpired_checkins(tournament, window_preference_type):

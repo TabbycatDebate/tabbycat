@@ -27,6 +27,7 @@
     "6 a.m.": "6 a.m.",
     "6 p.m.": "6 p.m.",
     "Add": "A\u00f1adir",
+    "All": "Todos",
     "April": "Abril",
     "August": "Agosto",
     "Available %s": "%s Disponibles",
@@ -39,6 +40,7 @@
     "Chosen %s": "%s elegidos",
     "Click to choose all %s at once.": "Haga clic para seleccionar todos los %s de una vez",
     "Click to remove all chosen %s at once.": "Haz clic para eliminar todos los %s elegidos",
+    "Confirmed": "Confirmado",
     "December": "Diciembre",
     "Delete": "Eliminar",
     "February": "Febrero",
@@ -73,6 +75,7 @@
     "Tomorrow": "Ma\u00f1ana",
     "Type into this box to filter down the list of available %s.": "Escriba en este cuadro para filtrar la lista de %s disponibles",
     "Warning: you have unsaved changes": "Advertencia: Tiene cambios que no ha guardado",
+    "Yes": "S\u00ed",
     "Yesterday": "Ayer",
     "You have selected an action, and you haven't made any changes on individual fields. You're probably looking for the Go button rather than the Save button.": "Ha seleccionado una acci\u00f3n y no hs hecho ning\u00fan cambio en campos individuales. Probablemente est\u00e9 buscando el bot\u00f3n Ejecutar en lugar del bot\u00f3n Guardar.",
     "You have selected an action, but you haven't saved your changes to individual fields yet. Please click OK to save. You'll need to re-run the action.": "Ha seleccionado una acci\u00f3n, pero no ha guardado los cambios en los campos individuales todav\u00eda. Pulse OK para guardar. Tendr\u00e1 que volver a ejecutar la acci\u00f3n.",
@@ -107,7 +110,7 @@
       if (typeof(value) == 'undefined') {
         return (count == 1) ? singular : plural;
       } else {
-        return value[django.pluralidx(count)];
+        return value.constructor === Array ? value[django.pluralidx(count)] : value;
       }
     };
 

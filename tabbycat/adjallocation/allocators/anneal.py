@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 @register
-class SAAllocator(BaseAdjudicatorAllocator):
+class SimulatedAnnealingAllocator(BaseAdjudicatorAllocator):
 
     key = "simanneal"
 
@@ -69,7 +69,7 @@ class SAAllocator(BaseAdjudicatorAllocator):
             aa.panellists = panel
             result.append(aa)
 
-        return result, ""
+        return result, []
 
     def save_best(self):
         self.best_energy = self.energy

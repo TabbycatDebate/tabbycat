@@ -1,5 +1,5 @@
-from random import shuffle
 from operator import attrgetter
+from random import shuffle
 
 from utils.management.base import CommandError, RoundCommand
 

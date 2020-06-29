@@ -1,0 +1,98 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-03-11 21:06\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Hebrew\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: he\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/install/wsl.po\n"
+"Language: he_IL\n"
+
+#: ../../install/wsl.rst:5
+msgid "Installing Locally on Linux on Windows (WSL)"
+msgstr ""
+
+#: ../../install/wsl.rst:7
+msgid "Is this the best installation method for you?"
+msgstr ""
+
+#: ../../install/wsl.rst:10
+msgid "In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`"
+msgstr ""
+
+#: ../../install/wsl.rst:12
+msgid "If you just want to quickly set up a copy of Tabbycat to run locally on Windows, consider :ref:`installing using Docker<install-docker>`, which is a shorter process than the one below."
+msgstr ""
+
+#: ../../install/wsl.rst:14
+msgid "Windows Subsystem for Linux is only available on Windows 10. If you have an older version of Windows, :ref:`install Tabbycat locally on Windows <install-windows>` instead."
+msgstr ""
+
+#: ../../install/wsl.rst:18
+msgid "Windows Subsystem for Linux (WSL) was taken out of beta in the `Windows 10 Fall Creators Update <https://blogs.windows.com/windowsexperience/2017/10/17/whats-new-windows-10-fall-creators-update/>`_, which was released in October 2017. On Windows 10 computers, we now recommend this local installation method over :ref:`installing it directly on Windows <install-windows>`."
+msgstr ""
+
+#: ../../install/wsl.rst:21
+msgid "Requisite technical background"
+msgstr ""
+
+#: ../../install/wsl.rst:23
+msgid "It will help a lot if you have some experience with Linux, but mainly you need to be familiar with command-line interfaces, and you should be willing to install and work with the `Windows Subsystem for Linux <https://docs.microsoft.com/windows/wsl/about>`_. You might need to be prepared to familiarise yourself with aspects of WSL not covered in these instructions. While a background in the specific tools Tabbycat uses (Python, PostgreSQL, *etc.*) will make things easier, it's not necessary: we'll talk you through the rest."
+msgstr ""
+
+#: ../../install/wsl.rst:27
+msgid "A. Install Ubuntu on Windows"
+msgstr ""
+
+#: ../../install/wsl.rst:29
+msgid "*If you already have a Linux distribution installed on your PC, skip to* :ref:`part B <install-wsl-tabbycat>`."
+msgstr ""
+
+#: ../../install/wsl.rst:31
+msgid "First, `check that you have the Fall Creators Update (build 1709) <https://support.microsoft.com/en-us/help/4028685/windows-10-get-the-fall-creators-update>`_. If you don't, update Windows."
+msgstr ""
+
+#: ../../install/wsl.rst:33
+msgid "Then, install the Windows Subsystem for Linux. For most people, this involves the following:"
+msgstr ""
+
+#: ../../install/wsl.rst:35
+msgid "Enable the Windows Subsystem for Linux feature, by finding **Turn Windows features on or off** on the Start Menu, then checking the box for **Windows Subsystem for Linux** and clicking **OK**. You'll be prompted to restart your computer to make the changes take effect."
+msgstr ""
+
+#: ../../install/wsl.rst:39
+msgid "Install Ubuntu by finding it on the Microsoft Store. For your convenience, `here's a direct link to Ubuntu on the Microsoft Store <https://www.microsoft.com/store/p/ubuntu/9nblggh4msv6>`_."
+msgstr ""
+
+#: ../../install/wsl.rst:41
+msgid "Launch Ubuntu and follow the instructions. You'll be prompted to create a user account for your Ubuntu system."
+msgstr ""
+
+#: ../../install/wsl.rst:43
+msgid "Some more detailed instructions, including some troubleshooting, are `available on Microsoft's website <https://docs.microsoft.com/windows/wsl/about>`_."
+msgstr ""
+
+#: ../../install/wsl.rst:45
+msgid "Advanced users"
+msgstr ""
+
+#: ../../install/wsl.rst:48
+msgid "You can, of course, use any Linux distribution that Windows supports. We just suggest Ubuntu because it's the most well-known (and the one that we use)."
+msgstr ""
+
+#: ../../install/wsl.rst:53
+msgid "B. Install Tabbycat"
+msgstr ""
+
+#: ../../install/wsl.rst:55
+msgid "You now have a Linux subsystem running on your computer, so head over to the :ref:`instructions to install Tabbycat locally on Linux <install-linux>` and follow those (in full)."
+msgstr ""
+

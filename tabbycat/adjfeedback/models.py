@@ -1,14 +1,13 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
-from django.utils.translation import gettext_lazy as _
-from django.utils.translation import gettext
+from django.utils.translation import gettext, gettext_lazy as _
 
 from adjallocation.models import DebateAdjudicator
 from results.models import Submission
 
 
-class AdjudicatorTestScoreHistory(models.Model):
+class AdjudicatorBaseScoreHistory(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE,
         verbose_name=_("adjudicator"))
     # cascade to avoid ambiguity, null round indicates beginning of tournament
@@ -18,8 +17,8 @@ class AdjudicatorTestScoreHistory(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name=_("timestamp"))
 
     class Meta:
-        verbose_name = _("adjudicator test score history")
-        verbose_name_plural = _("adjudicator test score histories")
+        verbose_name = _("adjudicator base score history")
+        verbose_name_plural = _("adjudicator base score histories")
 
     def __str__(self):
         return "{.name:s} ({:.1f}) in {!s}".format(self.adjudicator, self.score, self.round)
@@ -37,6 +36,8 @@ class AdjudicatorFeedbackAnswer(models.Model):
 
 
 class AdjudicatorFeedbackBooleanAnswer(AdjudicatorFeedbackAnswer):
+    ANSWER_TYPE = bool
+
     # Note: by convention, if no answer is chosen for a boolean answer, an
     # instance of this object should not be created. This way, there is no need
     # for a NullBooleanField.
@@ -48,6 +49,8 @@ class AdjudicatorFeedbackBooleanAnswer(AdjudicatorFeedbackAnswer):
 
 
 class AdjudicatorFeedbackIntegerAnswer(AdjudicatorFeedbackAnswer):
+    ANSWER_TYPE = int
+
     answer = models.IntegerField(verbose_name=_("answer"))
 
     class Meta(AdjudicatorFeedbackAnswer.Meta):
@@ -56,6 +59,8 @@ class AdjudicatorFeedbackIntegerAnswer(AdjudicatorFeedbackAnswer):
 
 
 class AdjudicatorFeedbackFloatAnswer(AdjudicatorFeedbackAnswer):
+    ANSWER_TYPE = float
+
     answer = models.FloatField(verbose_name=_("answer"))
 
     class Meta(AdjudicatorFeedbackAnswer.Meta):
@@ -64,6 +69,7 @@ class AdjudicatorFeedbackFloatAnswer(AdjudicatorFeedbackAnswer):
 
 
 class AdjudicatorFeedbackStringAnswer(AdjudicatorFeedbackAnswer):
+    ANSWER_TYPE = str
     answer = models.TextField(verbose_name=_("answer"))
 
     class Meta(AdjudicatorFeedbackAnswer.Meta):
@@ -86,15 +92,17 @@ class AdjudicatorFeedbackQuestion(models.Model):
     ANSWER_TYPE_LONGTEXT = 'tl'
     ANSWER_TYPE_SINGLE_SELECT = 'ss'
     ANSWER_TYPE_MULTIPLE_SELECT = 'ms'
-    ANSWER_TYPE_CHOICES = ((ANSWER_TYPE_BOOLEAN_CHECKBOX, _("checkbox")),
-                           (ANSWER_TYPE_BOOLEAN_SELECT, _("yes/no (dropdown)")),
-                           (ANSWER_TYPE_INTEGER_TEXTBOX, _("integer (textbox)")),
-                           (ANSWER_TYPE_INTEGER_SCALE, _("integer scale")),
-                           (ANSWER_TYPE_FLOAT, _("float")),
-                           (ANSWER_TYPE_TEXT, _("text")),
-                           (ANSWER_TYPE_LONGTEXT, _("long text")),
-                           (ANSWER_TYPE_SINGLE_SELECT, _("select one")),
-                           (ANSWER_TYPE_MULTIPLE_SELECT, _("select multiple")), )
+    ANSWER_TYPE_CHOICES = (
+        (ANSWER_TYPE_BOOLEAN_CHECKBOX, _("checkbox")),
+        (ANSWER_TYPE_BOOLEAN_SELECT, _("yes/no (dropdown)")),
+        (ANSWER_TYPE_INTEGER_TEXTBOX, _("integer (textbox)")),
+        (ANSWER_TYPE_INTEGER_SCALE, _("integer scale")),
+        (ANSWER_TYPE_FLOAT, _("float")),
+        (ANSWER_TYPE_TEXT, _("text")),
+        (ANSWER_TYPE_LONGTEXT, _("long text")),
+        (ANSWER_TYPE_SINGLE_SELECT, _("select one")),
+        (ANSWER_TYPE_MULTIPLE_SELECT, _("select multiple")),
+    )
     ANSWER_TYPE_CLASSES = {
         ANSWER_TYPE_BOOLEAN_CHECKBOX: AdjudicatorFeedbackBooleanAnswer,
         ANSWER_TYPE_BOOLEAN_SELECT: AdjudicatorFeedbackBooleanAnswer,
@@ -222,7 +230,7 @@ class AdjudicatorFeedback(Submission):
 
     ignored = models.BooleanField(default=False,
         verbose_name=_("ignored"),
-        help_text=_("Whether the feedback should affect the judge's score"))
+        help_text=_("Whether the feedback should affect the adjudicator's score"))
 
     class Meta:
         unique_together = [('adjudicator', 'source_adjudicator', 'source_team', 'version')]
@@ -270,6 +278,13 @@ class AdjudicatorFeedback(Submission):
         if self.round:
             return self.round.feedback_weight
         return 1
+
+    def get_answers(self):
+        return [
+            {'question': q.question, 'answer': q.answer}
+            for typ in AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE.keys()
+            for q in getattr(self, typ.__name__.lower() + '_set').all()
+        ]
 
     def clean(self):
         if not (self.source_adjudicator or self.source_team):

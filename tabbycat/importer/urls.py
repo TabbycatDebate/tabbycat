@@ -19,5 +19,4 @@ urlpatterns = [
     path('simple/venues/',
         views.ImportVenuesWizardView.as_view(),
         name='importer-simple-venues'),
-
 ]

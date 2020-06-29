@@ -6,8 +6,8 @@
   </a>
   {% for category in tournament.breakcategory_set.all %}
     <a class="btn btn-outline-primary" href="{% tournamenturl 'breakqual-teams' category.slug %}">
-      {% blocktrans trimmed with category_name=category.name %}
-        {{ category_name }} Break
+      {% blocktrans trimmed with category=category.name %}
+        {{ category }} Break
       {% endblocktrans %}
     </a>
   {% endfor %}

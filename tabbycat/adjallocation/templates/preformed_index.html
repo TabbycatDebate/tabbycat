@@ -34,8 +34,8 @@
         {% endif %}
       {% endifchanged %}
 
-      {% blocktrans trimmed asvar text with round_name=r.name %}
-        Edit Preformed Panels for {{ round_name }}
+      {% blocktrans trimmed asvar text with round=r.name %}
+        Edit Preformed Panels for {{ round }}
       {% endblocktrans %}
       {% roundurl 'edit-panel-adjudicators' r as url %}
       {% if r.draw_status == r.STATUS_CONFIRMED %}

@@ -5,17 +5,18 @@ from django.http import Http404
 from django.utils.text import slugify
 from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
+from dynamic_preferences.registries import global_preferences_registry
 from dynamic_preferences.views import PreferenceFormView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import TournamentMixin
-from utils.mixins import AdministratorMixin
 from utils.misc import reverse_tournament
+from utils.mixins import AdministratorMixin
 
-from .presets import all_presets, get_preferences_data
 from .forms import tournament_preference_form_builder
 from .preferences import tournament_preferences_registry
+from .presets import all_presets, get_preferences_data
 
 logger = logging.getLogger(__name__)
 
@@ -40,20 +41,34 @@ class TournamentConfigIndexView(AdministratorMixin, TournamentMixin, TemplateVie
         if t.pref('teams_in_debate') == 'bp':
             if t.pref('ballots_per_debate_prelim') == 'per-adj' or \
                t.pref('ballots_per_debate_elim') == 'per-adj':
-                error = _(("Your draw rules specify four teams per-debate but ",
-                           "your ballot setting specifies that adjudicators ",
-                           "submit independent ballots. These settings ",
-                           "<strong>are not compatible and will cause results ",
-                           "entry to crash</strong>. You need to go back to ",
-                           "the Debate Rules settings and change your ",
-                           "configuration to use consensus ballots."))
+                error = _("Your draw rules specify four teams per-debate but "
+                          "your ballot setting specifies that adjudicators "
+                          "submit independent ballots. These settings "
+                          "<strong>are not compatible and will cause results "
+                          "entry to crash</strong>. You need to go back to "
+                          "the Debate Rules settings and change your "
+                          "configuration to use consensus ballots.")
                 messages.error(self.request, error)
 
         return super().get_context_data(**kwargs)
 
 
-class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, TournamentMixin, PreferenceFormView):
-    registry = tournament_preferences_registry
+class MultiPreferenceFormView(PreferenceFormView):
+    possible_registries = []
+
+    def dispatch(self, request, *args, **kwargs):
+        for registry in self.possible_registries:
+            self.registry = registry
+            try:
+                return super().dispatch(request, *args, **kwargs)
+            except Http404:
+                continue
+        else:
+            raise Http404
+
+
+class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, TournamentMixin, MultiPreferenceFormView):
+    possible_registries = [global_preferences_registry, tournament_preferences_registry]
     section = None
     template_name = "preferences_section_set.html"
 
