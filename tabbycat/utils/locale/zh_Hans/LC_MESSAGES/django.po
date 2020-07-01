@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-25 00:05\n"
+"POT-Creation-Date: 2020-11-16 15:04-0400\n"
+"PO-Revision-Date: 2020-11-16 19:12\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -15,316 +15,304 @@ msgstr ""
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: zh-CN\n"
 "X-Crowdin-File: /develop/tabbycat/utils/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 954\n"
 
 #: utils/forms.py:25
-msgid "E-mail address"
-msgstr "电子邮件地址"
+msgid "Email address"
+msgstr ""
 
-#: utils/tables.py:43
+#: utils/tables.py:46
 msgid "No Data Available"
 msgstr ""
 
-#: utils/tables.py:151 utils/tables.py:152
+#: utils/tables.py:154 utils/tables.py:155
 msgid "Ⓒ"
 msgstr "Ⓒ"
 
-#: utils/tables.py:153
+#: utils/tables.py:156
 msgid "Ⓣ"
 msgstr "Ⓣ"
 
-#: utils/tables.py:157
+#: utils/tables.py:160
 msgid "chair"
 msgstr "主席"
 
-#: utils/tables.py:158
+#: utils/tables.py:161
 msgid "panellist"
 msgstr "成员"
 
-#: utils/tables.py:159
+#: utils/tables.py:162
 msgid "trainee"
 msgstr "实习生"
 
-#: utils/tables.py:162
+#: utils/tables.py:165
 msgid "—"
 msgstr "—"
 
-#: utils/tables.py:226 utils/tables.py:232
+#: utils/tables.py:166
+msgid "Redacted"
+msgstr ""
+
+#: utils/tables.py:230 utils/tables.py:236
 #, python-format
 msgid "View %(a)s's %(d)s Record"
 msgstr ""
 
-#: utils/tables.py:242 utils/tables.py:247
+#: utils/tables.py:246 utils/tables.py:251
 #, python-format
 msgid "View %(team)s's Record"
 msgstr ""
 
-#: utils/tables.py:269
+#: utils/tables.py:273
 #, python-format
 msgid "Code name: <strong>%(name)s</strong>"
 msgstr "代号：<strong>%(name)s</strong>"
 
-#: utils/tables.py:271
+#: utils/tables.py:275
 #, python-format
 msgid "Real name: <strong>%(name)s</strong>"
 msgstr ""
 
-#: utils/tables.py:283
+#: utils/tables.py:287
 #, python-format
 msgid "%(team)s won"
 msgstr "%(team)s获胜了"
 
-#: utils/tables.py:288
+#: utils/tables.py:292
 #, python-format
 msgid "%(team)s lost"
 msgstr "%(team)s败北了"
 
-#: utils/tables.py:293 utils/tables.py:321 utils/tables.py:339
+#: utils/tables.py:297 utils/tables.py:309 utils/tables.py:333
 #, python-format
 msgid "%(team)s—no result"
 msgstr ""
 
-#: utils/tables.py:301
+#: utils/tables.py:314
 #, python-format
-msgid "%(team)s took 1st"
+msgid "%(team)s placed %(place)s"
 msgstr ""
 
-#: utils/tables.py:306
-#, python-format
-msgid "%(team)s took 2nd"
-msgstr ""
-
-#: utils/tables.py:311
-#, python-format
-msgid "%(team)s took 3rd"
-msgstr ""
-
-#: utils/tables.py:316
-#, python-format
-msgid "%(team)s took 4th"
-msgstr ""
-
-#: utils/tables.py:329
+#: utils/tables.py:323
 #, python-format
 msgid "%(team)s is advancing"
 msgstr "%(team)s在推进"
 
-#: utils/tables.py:334
+#: utils/tables.py:328
 #, python-format
 msgid "%(team)s was eliminated"
 msgstr "%(team)s淘汰了"
 
-#: utils/tables.py:352
+#: utils/tables.py:346
 #, python-format
 msgid " vs %(opposition)s"
 msgstr "对%(opposition)s"
 
-#: utils/tables.py:359
+#: utils/tables.py:353
 #, python-format
 msgid "Won against %(team)s"
 msgstr ""
 
-#: utils/tables.py:361
+#: utils/tables.py:355
 #, python-format
 msgid "Lost to %(team)s"
 msgstr "败北了给%(team)s"
 
-#: utils/tables.py:363
+#: utils/tables.py:357
 #, python-format
 msgid "No result for debate against %(team)s"
 msgstr ""
 
-#: utils/tables.py:371 utils/tables.py:450
+#: utils/tables.py:365 utils/tables.py:444
 #, python-format
 msgid "Total speaker score: <strong>%s</strong>"
 msgstr ""
 
-#: utils/tables.py:376 utils/tables.py:455
+#: utils/tables.py:370 utils/tables.py:449
 msgid "View/edit debate ballot"
 msgstr ""
 
-#: utils/tables.py:382 utils/tables.py:461
+#: utils/tables.py:376 utils/tables.py:455
 msgid "View debate ballot"
 msgstr ""
 
-#: utils/tables.py:403
+#: utils/tables.py:397
 msgid "Teams in debate:"
 msgstr ""
 
-#: utils/tables.py:406
+#: utils/tables.py:400
 #, python-format
 msgid "%(team)s (%(side)s)"
 msgstr "%(team)s（%(side)s）"
 
-#: utils/tables.py:407 utils/tables.py:411 utils/tables.py:437
+#: utils/tables.py:401 utils/tables.py:405 utils/tables.py:431
+#: utils/tables.py:627
 msgid "??"
 msgstr "??"
 
-#: utils/tables.py:425
+#: utils/tables.py:419
 msgid "advancing"
 msgstr "在推进"
 
-#: utils/tables.py:426
+#: utils/tables.py:420
 msgid "Advancing"
 msgstr "在推进"
 
-#: utils/tables.py:428
+#: utils/tables.py:422
 msgid "eliminated"
 msgstr "淘汰了"
 
-#: utils/tables.py:429
+#: utils/tables.py:423
 msgid "Eliminated"
 msgstr "淘汰了"
 
-#: utils/tables.py:432 utils/tables.py:442
+#: utils/tables.py:426 utils/tables.py:436
 msgid "No result for debate"
 msgstr ""
 
-#: utils/tables.py:439
+#: utils/tables.py:433
 #, python-format
 msgid "Placed %(place)s"
 msgstr ""
 
-#: utils/tables.py:470
+#: utils/tables.py:464
 msgid "Tournament"
 msgstr "比赛"
 
-#: utils/tables.py:479
+#: utils/tables.py:473
 msgid "Round"
 msgstr "赛"
 
-#: utils/tables.py:497 utils/tables.py:683
+#: utils/tables.py:494 utils/tables.py:677
 msgid "Name"
 msgstr "名字"
 
-#: utils/tables.py:503 utils/tables.py:665
+#: utils/tables.py:500 utils/tables.py:659
 msgid "Institution"
 msgstr ""
 
-#: utils/tables.py:509
+#: utils/tables.py:506
 msgid "Member of the Adjudication Core"
 msgstr ""
 
-#: utils/tables.py:516
+#: utils/tables.py:513
 msgid "Independent Adjudicator"
 msgstr ""
 
-#: utils/tables.py:524
+#: utils/tables.py:521
 msgid "Always Trainee"
 msgstr ""
 
-#: utils/tables.py:562
+#: utils/tables.py:556
 msgid "in minority"
 msgstr ""
 
-#: utils/tables.py:595
+#: utils/tables.py:589
 msgid "Debate Adjudicators"
 msgstr ""
 
-#: utils/tables.py:626
+#: utils/tables.py:620
 msgid "Order as listed"
 msgstr ""
 
-#: utils/tables.py:633
-msgid "?"
-msgstr "？"
-
-#: utils/tables.py:636
+#: utils/tables.py:630
 msgid "Motion"
 msgstr "话题"
 
-#: utils/tables.py:651
+#: utils/tables.py:645
 msgid "Team"
 msgstr "队伍"
 
-#: utils/tables.py:656 utils/tables.py:705
+#: utils/tables.py:650 utils/tables.py:699
 msgid "Categories"
 msgstr "类别"
 
-#: utils/tables.py:676
-msgid "Redacted"
-msgstr ""
-
-#: utils/tables.py:703
+#: utils/tables.py:697
 msgid "Category"
 msgstr "类别"
 
-#: utils/tables.py:730
+#: utils/tables.py:724
 #, python-format
 msgid "This room %(predicate)s."
 msgstr ""
 
-#: utils/tables.py:732
+#: utils/tables.py:726
 #, python-format
 msgid "This room %(predicates)s, and %(last_predicate)s."
 msgstr ""
 
-#: utils/tables.py:747
+#: utils/tables.py:741
 msgid "Room"
 msgstr "房间"
 
-#: utils/tables.py:763
+#: utils/tables.py:759
 #, python-format
 msgid "Teams have met once"
 msgid_plural "Teams have met %(count)d times"
 msgstr[0] ""
 
-#: utils/tables.py:769
+#: utils/tables.py:765
 msgid "Teams are from the same institution"
 msgstr ""
 
-#: utils/tables.py:775
+#: utils/tables.py:771
 msgid "Conflicts/Flags"
 msgstr ""
 
-#: utils/tables.py:829
+#: utils/tables.py:825
 msgid "The ballot you submitted"
 msgstr ""
 
-#: utils/tables.py:833
+#: utils/tables.py:829
 msgid "View/Edit Ballot"
 msgstr ""
 
-#: utils/tables.py:842
+#: utils/tables.py:838
 msgid "No ballot"
 msgstr ""
 
-#: utils/tables.py:844
+#: utils/tables.py:840
 msgid "Elimination"
 msgstr "淘汰"
 
-#: utils/tables.py:847 utils/tables.py:859
+#: utils/tables.py:843 utils/tables.py:855
 msgid "View Ballot"
 msgstr ""
 
-#: utils/tables.py:867
+#: utils/tables.py:863
 msgid "Result"
 msgstr ""
 
 #. Translators: "TBC" stands for "to be confirmed".
-#: utils/tables.py:873
+#: utils/tables.py:869
 msgid "TBC"
 msgstr "待定"
 
-#: utils/tables.py:874
+#: utils/tables.py:870
 msgid "Side"
 msgstr "方"
 
-#: utils/tables.py:912
+#: utils/tables.py:908
 msgid "Team iron-manned this round and the last."
 msgstr ""
 
-#: utils/tables.py:915
+#: utils/tables.py:911
 msgid "Team iron-manned this round."
 msgstr ""
 
-#: utils/tables.py:918
+#: utils/tables.py:914
 msgid "Team iron-manned last round."
 msgstr ""
 
-#: utils/tables.py:935 utils/tables.py:936
+#: utils/tables.py:931 utils/tables.py:932
 #, python-format
 msgid "Team %(num)d"
 msgstr "队伍 %(num)d"
+
+#: utils/tables.py:939
+msgid "Postpone"
+msgstr ""
 
 #: utils/views.py:38
 msgid "Whoops! You're not meant to type that URL into your browser."
