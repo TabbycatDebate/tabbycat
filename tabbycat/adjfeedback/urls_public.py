@@ -1,5 +1,4 @@
 from django.urls import path
-from django.views.generic.base import RedirectView
 
 from participants.models import Adjudicator, Team
 
@@ -10,10 +9,6 @@ urlpatterns = [
     path('progress/',
         views.PublicFeedbackProgress.as_view(),
         name='public_feedback_progress'),
-
-    # Transitional provision added 7/10/2017, remove after 7/11/2017
-    path('feedback_progress/',
-        RedirectView.as_view(url='/%(tournament_slug)s/feedback/progress/', permanent=True)),
 
     # Submission via Public Form
     path('add/',
