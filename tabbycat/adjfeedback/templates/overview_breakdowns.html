@@ -8,7 +8,7 @@
 
           {% if threshold.count != 0 %}
             {% widthratio threshold.count c_total 100 as c_percentage %}
-            <div class="progress-bar ranking-display ranking-{{ threshold.class }}" role="progressbar"
+            <div class="progress-bar rank-display ranking-{{ threshold.class }}" role="progressbar"
                  style="width: {{ c_percentage }}%;" data-toggle="tooltip"
                  title="{% blocktrans trimmed with min=threshold.min max=threshold.max percent=c_percentage|floatformat:"0" count count=threshold.count %}
                    {{ count }} adjudicator currently has a score equal to or above
