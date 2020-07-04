@@ -7,6 +7,13 @@ Change Log
 *Release date: ?*
 
 
+2.4.3
+-----
+*Release date: 4 July 2020*
+
+- Fixed issue preventing break eligibility from saving (`#1521 <https://github.com/TabbycatDebate/tabbycat/issues/1521>`_)
+
+
 2.4.2
 -----
 *Release date: 22 June 2020*
