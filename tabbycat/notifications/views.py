@@ -222,7 +222,7 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
             'class': 'no-wrap' if len(p.name) < 20 else '',
         } for p in queryset])
 
-        table.add_column({'key': 'email', 'tooltip': _("Email Address"), 'icon': 'mail'}, [{
+        table.add_column({'key': 'email', 'tooltip': _("Email address"), 'icon': 'mail'}, [{
             'text': p.email if p.email else _("Not Provided"),
             'class': 'small' if p.email else 'small text-warning',
         } for p in queryset])

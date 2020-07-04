@@ -627,7 +627,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             } for motion in motions])
 
         motion_data = [{
-            'text': motion.reference if motion.reference else _('?'),
+            'text': motion.reference if motion.reference else _('??'),
             'popover': {'content' : [{'text': motion.text}]},
         } if motion else self.BLANK_TEXT for motion in motions]
         self.add_column({'key': "motion", 'title': _("Motion")}, motion_data)
