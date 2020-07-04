@@ -101,7 +101,7 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
             else:
                 subtitle = _("@ %s") % timezone.localtime(notification.timestamp).strftime("%a, %d %b %Y %H:%M:%S")
 
-            table = TabbycatTableBuilder(view=self, title=notification.get_event_display().title(), subtitle=subtitle)
+            table = TabbycatTableBuilder(view=self, title=notification.get_event_display().capitalize(), subtitle=subtitle)
 
             emails_recipient = []
             emails_status = []
