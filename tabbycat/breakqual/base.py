@@ -4,7 +4,7 @@ generator (which just takes the top teams)."""
 import logging
 from itertools import groupby
 
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.translation import gettext as _
 
 from breakqual.models import BreakingTeam
@@ -88,7 +88,7 @@ class BaseBreakGenerator:
                     name = annotator_class.choice_name
                 else:
                     name = annotator_class.name
-                return force_text(name)
+                return force_str(name)
 
             raise BreakGeneratorError(
                 _("The break qualification rule %(rule)s requires the following "
