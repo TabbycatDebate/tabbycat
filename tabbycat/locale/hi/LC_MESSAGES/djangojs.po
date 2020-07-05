@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-14 04:50+1100\n"
-"PO-Revision-Date: 2020-03-13 03:46\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2020-07-10 07:06\n"
+"Last-Translator: \n"
 "Language-Team: Hindi\n"
 "Language: hi_IN\n"
 "MIME-Version: 1.0\n"
@@ -12,8 +12,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-Language: hi\n"
 "X-Crowdin-File: /develop/tabbycat/locale/en/LC_MESSAGES/djangojs.po\n"
+"X-Crowdin-File-ID: 962\n"
 
 #: checkins/templates/CheckInScanContainer.vue:
 msgid "Scan Using Camera"
@@ -42,7 +44,7 @@ msgid "By %1"
 msgstr ""
 
 #: checkins/templates/CheckInStatusContainer.vue:
-msgid "No matching venues found."
+msgid "No matching rooms found."
 msgstr ""
 
 #: checkins/templates/CheckInStatusContainer.vue:
@@ -182,7 +184,7 @@ msgid "ID %1,"
 msgstr ""
 
 #: printing/templates/PrintableBallotHeader.vue:
-msgid "Venue:"
+msgid "Room:"
 msgstr ""
 
 #: printing/templates/PrintableBallotHeader.vue:
