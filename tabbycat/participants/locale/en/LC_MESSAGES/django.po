@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"POT-Creation-Date: 2020-07-05 13:59-0300\n"
 "PO-Revision-Date: 2019-07-11 23:49\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -71,7 +71,7 @@ msgid "What the institution is typically called for short, e.g., \"Cambridge\", 
 msgstr ""
 
 #: participants/models.py:54 participants/models.py:154
-#: participants/models.py:340
+#: participants/models.py:349
 msgid "institution"
 msgstr ""
 
@@ -80,7 +80,7 @@ msgid "institutions"
 msgstr ""
 
 #: participants/models.py:63 participants/models.py:156
-#: participants/models.py:343
+#: participants/models.py:352
 msgid "tournament"
 msgstr ""
 
@@ -126,12 +126,12 @@ msgstr ""
 msgid "speaker category"
 msgstr ""
 
-#: participants/models.py:87 participants/models.py:321
+#: participants/models.py:87 participants/models.py:326
 msgid "speaker categories"
 msgstr ""
 
 #: participants/models.py:97
-msgid "e-mail address"
+msgid "email address"
 msgstr ""
 
 #: participants/models.py:99
@@ -238,99 +238,103 @@ msgstr ""
 msgid "break categories"
 msgstr ""
 
-#: participants/models.py:172
-msgid "none"
-msgstr ""
-
-#: participants/models.py:173
-msgid "swing"
-msgstr ""
-
-#: participants/models.py:174
-msgid "composite"
-msgstr ""
-
-#: participants/models.py:175
-msgid "bye"
-msgstr ""
-
-#: participants/models.py:178
-msgid "type"
-msgstr ""
-
-#: participants/models.py:182
-msgid "emoji"
-msgstr ""
-
-#: participants/models.py:196 participants/models.py:319
-msgid "team"
-msgstr ""
-
-#: participants/models.py:197
-msgid "teams"
-msgstr ""
-
-#: participants/models.py:302
-msgid "Teams must have an institution if they are using the institutional prefix."
-msgstr ""
-
-#: participants/models.py:304
-msgid "Teams must have a full name if they don't use the institutional prefix."
-msgstr ""
-
-#: participants/models.py:306
-msgid "Teams must have a short name if they don't use the institutional prefix."
-msgstr ""
-
-#: participants/models.py:324
-msgid "speaker"
-msgstr ""
-
-#: participants/models.py:325
-msgid "speakers"
-msgstr ""
-
-#: participants/models.py:344
-msgid "Adjudicators not assigned to any tournament can be shared between tournaments"
-msgstr ""
-
-#: participants/models.py:346
-msgid "base score"
-msgstr ""
-
-#: participants/models.py:352
+#: participants/models.py:166 participants/models.py:360
 msgid "institution conflicts"
 msgstr ""
 
-#: participants/models.py:356
-msgid "team conflicts"
+#: participants/models.py:177
+msgid "none"
 msgstr ""
 
-#: participants/models.py:359
-msgid "always trainee"
+#: participants/models.py:178
+msgid "swing"
 msgstr ""
 
-#: participants/models.py:360
-msgid "If checked, this adjudicator will never be auto-allocated a voting position, regardless of their score"
+#: participants/models.py:179
+msgid "composite"
 msgstr ""
 
-#: participants/models.py:362
-msgid "breaking"
+#: participants/models.py:180
+msgid "bye"
+msgstr ""
+
+#: participants/models.py:183
+msgid "type"
+msgstr ""
+
+#: participants/models.py:187
+msgid "emoji"
+msgstr ""
+
+#: participants/models.py:201 participants/models.py:324
+msgid "team"
+msgstr ""
+
+#: participants/models.py:202
+msgid "teams"
+msgstr ""
+
+#: participants/models.py:307
+msgid "Teams must have an institution if they are using the institutional prefix."
+msgstr ""
+
+#: participants/models.py:309
+msgid "Teams must have a full name if they don't use the institutional prefix."
+msgstr ""
+
+#: participants/models.py:311
+msgid "Teams must have a short name if they don't use the institutional prefix."
+msgstr ""
+
+#: participants/models.py:329
+msgid "speaker"
+msgstr ""
+
+#: participants/models.py:330
+msgid "speakers"
+msgstr ""
+
+#: participants/models.py:353
+msgid "Adjudicators not assigned to any tournament can be shared between tournaments"
+msgstr ""
+
+#: participants/models.py:355
+msgid "base score"
 msgstr ""
 
 #: participants/models.py:364
-msgid "independent"
+msgid "team conflicts"
 msgstr ""
 
-#: participants/models.py:366
-msgid "adjudication core"
+#: participants/models.py:368
+msgid "adjudicator conflicts"
 msgstr ""
 
-#: participants/models.py:375
-msgid "adjudicator"
+#: participants/models.py:371
+msgid "always trainee"
+msgstr ""
+
+#: participants/models.py:372
+msgid "If checked, this adjudicator will never be auto-allocated a voting position, regardless of their score"
+msgstr ""
+
+#: participants/models.py:374
+msgid "breaking"
 msgstr ""
 
 #: participants/models.py:376
+msgid "independent"
+msgstr ""
+
+#: participants/models.py:378
+msgid "adjudication core"
+msgstr ""
+
+#: participants/models.py:387
+msgid "adjudicator"
+msgstr ""
+
+#: participants/models.py:388
 msgid "adjudicators"
 msgstr ""
 
@@ -365,17 +369,17 @@ msgid "Member of the adjudication core"
 msgstr ""
 
 #: participants/templates/adjudicator_registration_card.html:26
-#: participants/templates/team_registration_card.html:57
+#: participants/templates/team_registration_card.html:60
 msgid "Institution:"
 msgstr ""
 
 #: participants/templates/adjudicator_registration_card.html:30
-#: participants/templates/team_registration_card.html:61
+#: participants/templates/team_registration_card.html:64
 msgid "Unaffiliated"
 msgstr ""
 
 #: participants/templates/adjudicator_registration_card.html:34
-#: participants/templates/team_registration_card.html:65
+#: participants/templates/team_registration_card.html:68
 msgid "Region:"
 msgstr ""
 
@@ -384,12 +388,12 @@ msgid "The institutional affiliations of adjudicators are not public at this tou
 msgstr ""
 
 #: participants/templates/adjudicator_registration_card.html:47
-#: participants/templates/team_registration_card.html:74
+#: participants/templates/team_registration_card.html:77
 msgid "Institutional Conflicts:"
 msgstr ""
 
 #: participants/templates/adjudicator_registration_card.html:49
-#: participants/templates/team_registration_card.html:76
+#: participants/templates/team_registration_card.html:79
 msgid "; "
 msgstr ""
 
@@ -397,12 +401,12 @@ msgstr ""
 #: participants/templates/adjudicator_registration_card.html:58
 #: participants/templates/adjudicator_registration_card.html:69
 #: participants/templates/adjudicator_registration_card.html:79
-#: participants/templates/team_registration_card.html:30
-#: participants/templates/team_registration_card.html:41
-#: participants/templates/team_registration_card.html:49
-#: participants/templates/team_registration_card.html:78
-#: participants/templates/team_registration_card.html:85
-#: participants/templates/team_registration_card.html:95
+#: participants/templates/team_registration_card.html:33
+#: participants/templates/team_registration_card.html:44
+#: participants/templates/team_registration_card.html:52
+#: participants/templates/team_registration_card.html:81
+#: participants/templates/team_registration_card.html:88
+#: participants/templates/team_registration_card.html:98
 msgid "None"
 msgstr ""
 
@@ -414,21 +418,21 @@ msgstr ""
 #: participants/templates/adjudicator_registration_card.html:64
 #: participants/templates/adjudicator_registration_card.html:66
 #: participants/templates/adjudicator_registration_card.html:77
-#: participants/templates/team_registration_card.html:28
-#: participants/templates/team_registration_card.html:39
-#: participants/templates/team_registration_card.html:47
-#: participants/templates/team_registration_card.html:83
-#: participants/templates/team_registration_card.html:93
+#: participants/templates/team_registration_card.html:31
+#: participants/templates/team_registration_card.html:42
+#: participants/templates/team_registration_card.html:50
+#: participants/templates/team_registration_card.html:86
+#: participants/templates/team_registration_card.html:96
 msgid ", "
 msgstr ""
 
 #: participants/templates/adjudicator_registration_card.html:61
-#: participants/templates/team_registration_card.html:81
+#: participants/templates/team_registration_card.html:84
 msgid "Adjudicator Conflicts:"
 msgstr ""
 
 #: participants/templates/adjudicator_registration_card.html:75
-#: participants/templates/team_registration_card.html:91
+#: participants/templates/team_registration_card.html:94
 msgid "Room Constraints:"
 msgstr ""
 
@@ -478,42 +482,42 @@ msgstr ""
 msgid "Teams:"
 msgstr ""
 
-#: participants/templates/current_round/common.html:30
+#: participants/templates/current_round/common.html:28
 msgid "Adjudicator:"
 msgid_plural "Adjudicators:"
 msgstr[0] ""
 msgstr[1] ""
 
+#: participants/templates/current_round/common.html:37
 #: participants/templates/current_round/common.html:39
-#: participants/templates/current_round/common.html:41
 msgctxt "chair icon"
 msgid "Ⓒ"
 msgstr ""
 
+#: participants/templates/current_round/common.html:37
 #: participants/templates/current_round/common.html:39
-#: participants/templates/current_round/common.html:41
 msgctxt "trainee icon"
 msgid "Ⓣ"
 msgstr ""
 
-#: participants/templates/current_round/common.html:46
+#: participants/templates/current_round/common.html:44
 msgid "There are no panellists or trainees assigned to this debate."
 msgstr ""
 
-#: participants/templates/current_round/common.html:56
+#: participants/templates/current_round/common.html:54
 msgid "Motions are not released to public."
 msgstr ""
 
-#: participants/templates/current_round/common.html:59
+#: participants/templates/current_round/common.html:57
 msgid "Motion:"
 msgstr ""
 
-#: participants/templates/current_round/common.html:63
+#: participants/templates/current_round/common.html:61
 #, python-format
 msgid "Motion %(seq)s:"
 msgstr ""
 
-#: participants/templates/current_round/common.html:71
+#: participants/templates/current_round/common.html:69
 msgid "The motion(s) for this round haven't yet been released."
 msgstr ""
 
@@ -579,42 +583,52 @@ msgstr ""
 
 #: participants/templates/current_round/round_team.html:12
 #, python-format
-msgid "%(team)s is debating as the <strong>%(side)s</strong> team against <strong>%(opponent)s</strong> in <strong>%(room)s</strong>."
+msgid "%(team)s is debating as the <strong>%(side)s</strong> team against <strong>%(opponent)s</strong>."
 msgstr ""
 
 #: participants/templates/current_round/round_team.html:16
 #, python-format
-msgid "You are debating as the <strong>%(side)s</strong> team against <strong>%(opponent)s</strong> in <strong>%(room)s</strong>."
+msgid "You are debating as the <strong>%(side)s</strong> team against <strong>%(opponent)s</strong>."
 msgstr ""
 
 #: participants/templates/current_round/round_team.html:22
 #, python-format
-msgid "%(team)s is debating against <strong>%(opponent)s</strong> in <strong>%(room)s</strong>."
+msgid "%(team)s is debating against <strong>%(opponent)s</strong>."
 msgstr ""
 
 #: participants/templates/current_round/round_team.html:26
 #, python-format
-msgid "You are debating against <strong>%(opponent)s</strong> in <strong>%(room)s</strong>."
+msgid "You are debating against <strong>%(opponent)s</strong>."
 msgstr ""
 
-#: participants/templates/current_round/round_team.html:37
+#: participants/templates/current_round/round_team.html:39
 #, python-format
-msgid "%(team)s is debating as the <strong>%(side)s</strong> team in <strong>%(room)s</strong>."
+msgid "%(team)s is debating as the <strong>%(side)s</strong> team."
 msgstr ""
 
-#: participants/templates/current_round/round_team.html:41
+#: participants/templates/current_round/round_team.html:43
 #, python-format
-msgid "You are debating as the <strong>%(side)s</strong> team in <strong>%(room)s</strong>."
+msgid "You are debating as the <strong>%(side)s</strong> team."
 msgstr ""
 
-#: participants/templates/current_round/round_team.html:47
+#: participants/templates/current_round/round_team.html:56
 #, python-format
-msgid "%(team)s is debating in <strong>%(room)s</strong>."
+msgid "%(team)s's debate is in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
 msgstr ""
 
-#: participants/templates/current_round/round_team.html:51
+#: participants/templates/current_round/round_team.html:60
 #, python-format
-msgid "You are debating in <strong>%(room)s</strong>."
+msgid "%(team)s's debate is in <strong>%(room)s</strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_team.html:66
+#, python-format
+msgid "Your debate is in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
+msgstr ""
+
+#: participants/templates/current_round/round_team.html:70
+#, python-format
+msgid "Your debate is in <strong>%(room)s</strong>."
 msgstr ""
 
 #: participants/templates/edit_speaker_eligibility.html:7
@@ -752,19 +766,19 @@ msgstr ""
 msgid "Full name:"
 msgstr ""
 
-#: participants/templates/team_registration_card.html:18
+#: participants/templates/team_registration_card.html:22
 msgid "Code name:"
 msgstr ""
 
-#: participants/templates/team_registration_card.html:26
+#: participants/templates/team_registration_card.html:29
 msgid "Speakers:"
 msgstr ""
 
-#: participants/templates/team_registration_card.html:37
+#: participants/templates/team_registration_card.html:40
 msgid "Eligible for break categories:"
 msgstr ""
 
-#: participants/templates/team_registration_card.html:45
+#: participants/templates/team_registration_card.html:48
 msgid "Speaker categories:"
 msgstr ""
 

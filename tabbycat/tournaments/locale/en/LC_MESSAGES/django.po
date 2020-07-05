@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"POT-Creation-Date: 2020-07-05 13:59-0300\n"
 "PO-Revision-Date: 2019-07-11 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -346,7 +346,7 @@ msgid "You can only create this account once, but if you like, you can change th
 msgstr ""
 
 #: tournaments/templates/blank_site_start.html:32
-msgid "The e-mail address is used for password resets. You don't have to provide one, but if you don't, you won't be able to reset your password if you forget it."
+msgid "The email address is used for password resets. You don't have to provide one, but if you don't, you won't be able to reset your password if you forget it."
 msgstr ""
 
 #: tournaments/templates/blank_site_start.html:40
@@ -755,7 +755,7 @@ msgstr ""
 
 #: tournaments/templates/site_index.html:69
 #, python-format
-msgid "Change Password (%(user)s)"
+msgid "Get API Token / Change Password (%(user)s)"
 msgstr ""
 
 #: tournaments/templates/site_index.html:73
