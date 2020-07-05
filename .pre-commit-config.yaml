@@ -39,6 +39,8 @@ repos:
     files: '\.vue'
     types: [file]
     additional_dependencies:
+    - '@vue/eslint-config-standard@5.1.2'
+    - '@vue/cli-plugin-eslint@4.4.5'
     - eslint@6.8.0
     - eslint-plugin-import@2.20.2
     - eslint-plugin-node@11.1.0

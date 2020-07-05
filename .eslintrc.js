@@ -7,7 +7,8 @@ module.exports = {
   },
   "extends": [
     "plugin:vue/essential",
-    "standard"
+    // "plugin:vue/recommended" // TODO
+    "@vue/standard"
   ],
   "rules": {
     "comma-dangle": [
