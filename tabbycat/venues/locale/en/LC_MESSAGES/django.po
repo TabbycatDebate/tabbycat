@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-05 13:59-0300\n"
+"POT-Creation-Date: 2020-07-05 15:26-0300\n"
 "PO-Revision-Date: 2019-07-11 23:50\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Crowdin-File: /develop/tabbycat/venues/locale/en/LC_MESSAGES/django.po\n"
 
 #: venues/apps.py:7
-msgid "Venues"
+msgid "Rooms"
 msgstr ""
 
 #: venues/consumers.py:18
@@ -53,7 +53,7 @@ msgid "URL"
 msgstr ""
 
 #: venues/models.py:17
-msgid "A URL that contains extra information about this venue, e.g. a map or a meeting link (for online tournaments)"
+msgid "A URL that contains extra information about this room, e.g. a map or a meeting link (for online tournaments)"
 msgstr ""
 
 #: venues/models.py:24

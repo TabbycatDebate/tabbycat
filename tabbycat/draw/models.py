@@ -35,7 +35,7 @@ class Debate(models.Model):
     round = models.ForeignKey('tournaments.Round', models.CASCADE, db_index=True,
         verbose_name=_("round"))
     venue = models.ForeignKey('venues.Venue', models.SET_NULL, blank=True, null=True,
-        verbose_name=_("venue"))
+        verbose_name=_("room"))
 
     bracket = models.FloatField(default=0,
         verbose_name=_("bracket"))
