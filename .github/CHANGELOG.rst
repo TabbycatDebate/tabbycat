@@ -2,6 +2,12 @@
 Change Log
 ==========
 
+2.4.4
+-----
+*Release date: TBD*
+
+- Fixed colours associated with adjudicators' scores not showing
+
 2.4.3
 -----
 *Release date: 4 July 2020*
