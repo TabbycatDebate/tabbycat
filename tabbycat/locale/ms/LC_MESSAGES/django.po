@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-06-07 12:44\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2020-07-19 19:52-0300\n"
+"PO-Revision-Date: 2020-07-19 23:01\n"
+"Last-Translator: \n"
 "Language-Team: Malay\n"
 "Language: ms_MY\n"
 "MIME-Version: 1.0\n"
@@ -12,14 +12,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-Language: ms\n"
 "X-Crowdin-File: /develop/tabbycat/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 934\n"
 
 #: api/apps.py:7
 msgid "Application Programming Interface"
 msgstr ""
 
-#: checkins/apps.py:7 templates/nav/admin_nav.html:117
+#: checkins/apps.py:7 templates/nav/admin_nav.html:113
 #: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:92
 msgid "Check-Ins"
 msgstr ""
@@ -161,90 +163,102 @@ msgstr ""
 msgid "%(speaker)s is missing."
 msgstr ""
 
-#: checkins/views.py:29 templates/nav/admin_nav.html:128
+#: checkins/views.py:30 templates/nav/admin_nav.html:124
 #: templates/nav/assistant_nav.html:42
 msgid "Scan Identifiers"
 msgstr ""
 
-#: checkins/views.py:62
+#: checkins/views.py:63
 msgid "People's Check-In Statuses"
 msgstr ""
 
-#: checkins/views.py:119
+#: checkins/views.py:120
 msgid "Rooms' Check-In Statuses"
 msgstr ""
 
-#: checkins/views.py:168 templates/nav/admin_nav.html:124
+#: checkins/views.py:169 templates/nav/admin_nav.html:120
 msgid "Make Identifiers"
 msgstr ""
 
-#: checkins/views.py:175 templates/nav/admin_nav.html:210
+#: checkins/views.py:176 templates/nav/admin_nav.html:206
 msgid "Speakers"
 msgstr ""
 
-#: checkins/views.py:180 templates/nav/public_nav.html:132
+#: checkins/views.py:181 templates/nav/public_nav.html:132
 msgid "Adjudicators"
 msgstr ""
 
-#: checkins/views.py:185
+#: checkins/views.py:186
 msgid "Rooms"
 msgstr "Bilik"
 
-#: checkins/views.py:226
+#: checkins/views.py:227
 #, python-format
 msgid "Generated identifiers for %s"
 msgstr ""
 
-#: checkins/views.py:233
+#: checkins/views.py:234
 msgid "Identifiers"
 msgstr ""
 
-#: checkins/views.py:269
+#: checkins/views.py:272
 msgid "Could not check you in as you do not have an identifying code — your tab director may need to make you an identifier."
 msgstr ""
 
-#: checkins/views.py:276
+#: checkins/views.py:280
 msgid "You have revoked your check-in."
 msgstr ""
 
-#: checkins/views.py:278
+#: checkins/views.py:282
 msgid "Whoops! Looks like your check-in was already revoked."
 msgstr ""
 
-#: checkins/views.py:281
+#: checkins/views.py:286
 msgid "Whoops! Looks like you're already checked in."
 msgstr ""
 
-#: checkins/views.py:283
+#: checkins/views.py:293
 msgid "You are now checked in."
 msgstr ""
 
-#: settings/core.py:45
+#: settings/core.py:59
 msgid "Arabic"
 msgstr ""
 
-#: settings/core.py:46
+#: settings/core.py:60
+msgid "Bengali"
+msgstr ""
+
+#: settings/core.py:61
 msgid "English"
 msgstr ""
 
-#: settings/core.py:47
+#: settings/core.py:62
 msgid "Spanish"
 msgstr ""
 
-#: settings/core.py:48
+#: settings/core.py:63
 msgid "French"
 msgstr ""
 
-#: settings/core.py:49
+#: settings/core.py:64
 msgid "Japanese"
 msgstr ""
 
-#: settings/core.py:50
+#: settings/core.py:65
+msgid "Malay"
+msgstr ""
+
+#: settings/core.py:66
 msgid "Portuguese"
 msgstr ""
 
-#: settings/core.py:51
+#: settings/core.py:67
 msgid "Russian"
+msgstr ""
+
+#: settings/core.py:68
+msgid "Simplified Chinese"
 msgstr ""
 
 #: templates/admin/delete_protected_message.html:4
@@ -430,8 +444,8 @@ msgstr ""
 msgid "Public Area"
 msgstr ""
 
-#: templates/nav/admin_nav.html:60 templates/nav/admin_nav.html:150
-#: templates/nav/admin_nav.html:190 templates/nav/admin_nav.html:249
+#: templates/nav/admin_nav.html:60 templates/nav/admin_nav.html:146
+#: templates/nav/admin_nav.html:186 templates/nav/admin_nav.html:245
 msgid "Overview"
 msgstr ""
 
@@ -464,122 +478,114 @@ msgstr ""
 msgid "Preformed Panels"
 msgstr "Panel hakim tetap"
 
-#: templates/nav/admin_nav.html:96
-msgid "It\\"
-msgstr ""
-
-#: templates/nav/admin_nav.html:97
-msgid "Where's Edit Database?"
-msgstr ""
-
-#: templates/nav/admin_nav.html:107 templates/nav/public_nav.html:147
+#: templates/nav/admin_nav.html:103 templates/nav/public_nav.html:147
 msgid "Sides"
 msgstr ""
 
-#: templates/nav/admin_nav.html:132 templates/nav/assistant_nav.html:48
+#: templates/nav/admin_nav.html:128 templates/nav/assistant_nav.html:48
 msgid "People's Status"
 msgstr ""
 
-#: templates/nav/admin_nav.html:136
+#: templates/nav/admin_nav.html:132
 msgid "Rooms' Status"
 msgstr ""
 
-#: templates/nav/admin_nav.html:144
+#: templates/nav/admin_nav.html:140
 msgid "Feedback"
 msgstr ""
 
-#: templates/nav/admin_nav.html:153
+#: templates/nav/admin_nav.html:149
 msgid "Latest"
 msgstr ""
 
-#: templates/nav/admin_nav.html:156
+#: templates/nav/admin_nav.html:152
 msgid "Important"
 msgstr ""
 
-#: templates/nav/admin_nav.html:159
+#: templates/nav/admin_nav.html:155
 msgid "Comments"
 msgstr "Komen"
 
-#: templates/nav/admin_nav.html:162
+#: templates/nav/admin_nav.html:158
 msgid "Find by Source"
 msgstr ""
 
-#: templates/nav/admin_nav.html:165
+#: templates/nav/admin_nav.html:161
 msgid "Find by Target"
 msgstr ""
 
-#: templates/nav/admin_nav.html:168
+#: templates/nav/admin_nav.html:164
 msgid "Unsubmitted"
 msgstr ""
 
-#: templates/nav/admin_nav.html:171
+#: templates/nav/admin_nav.html:167
 msgid "Add Feedback"
 msgstr ""
 
-#: templates/nav/admin_nav.html:174
+#: templates/nav/admin_nav.html:170
 msgid "Bulk Update"
 msgstr ""
 
-#: templates/nav/admin_nav.html:183 templates/nav/public_nav.html:152
+#: templates/nav/admin_nav.html:179 templates/nav/public_nav.html:152
 msgid "Standings"
 msgstr ""
 
-#: templates/nav/admin_nav.html:194
+#: templates/nav/admin_nav.html:190
 msgid "All Teams"
 msgstr ""
 
-#: templates/nav/admin_nav.html:196
+#: templates/nav/admin_nav.html:192
 msgid "Teams"
 msgstr ""
 
-#: templates/nav/admin_nav.html:201 templates/nav/public_nav.html:13
+#: templates/nav/admin_nav.html:197 templates/nav/public_nav.html:13
 #, python-format
 msgid "%(category)s Teams"
 msgstr ""
 
-#: templates/nav/admin_nav.html:208
+#: templates/nav/admin_nav.html:204
 msgid "All Speakers"
 msgstr ""
 
-#: templates/nav/admin_nav.html:215 templates/nav/public_nav.html:30
+#: templates/nav/admin_nav.html:211 templates/nav/public_nav.html:30
 #, python-format
 msgid "%(category)s Speakers"
 msgstr ""
 
-#: templates/nav/admin_nav.html:223
+#: templates/nav/admin_nav.html:219
 msgid "Replies"
 msgstr ""
 
-#: templates/nav/admin_nav.html:227 templates/nav/public_nav.html:142
+#: templates/nav/admin_nav.html:223 templates/nav/public_nav.html:142
 msgid "Motions"
 msgstr ""
 
-#: templates/nav/admin_nav.html:230 templates/nav/public_nav.html:157
+#: templates/nav/admin_nav.html:226 templates/nav/public_nav.html:157
 msgid "Diversity"
 msgstr ""
 
-#: templates/nav/admin_nav.html:243
+#: templates/nav/admin_nav.html:239
 msgid "Breaks"
 msgstr ""
 
-#: templates/nav/admin_nav.html:253
+#: templates/nav/admin_nav.html:249
 #, python-format
 msgid "%(category)s"
 msgstr ""
 
-#: templates/nav/admin_nav.html:257
+#: templates/nav/admin_nav.html:253
 msgid "Adjudicators'"
 msgstr ""
 
-#: templates/nav/admin_nav.html:260
+#: templates/nav/admin_nav.html:256
 msgid "Edit Categories"
 msgstr ""
 
-#: templates/nav/admin_nav.html:263
+#: templates/nav/admin_nav.html:259
 msgid "Edit Eligibility"
 msgstr ""
 
-#: templates/nav/admin_nav.html:278 templates/nav/top_nav_base.html:101
+#: templates/nav/admin_nav.html:274 templates/nav/top_nav_base.html:101
 msgid "Log Out"
 msgstr ""
 
@@ -745,22 +751,32 @@ msgid "Go to the home page"
 msgstr ""
 
 #: templates/registration/password_change_form.html:4
-#: templates/registration/password_change_form.html:19
+#: templates/registration/password_change_form.html:27
 msgctxt "page title"
 msgid "Password Change"
 msgstr ""
 
-#: templates/registration/password_change_form.html:20
+#: templates/registration/password_change_form.html:16
+#, python-format
+msgid "API Token: <samp>%(api_token)s</samp>"
+msgstr ""
+
+#: templates/registration/password_change_form.html:19
+msgid "The API token will allow you to authorize external applications to access the site as staff."
+msgstr ""
+
+#: templates/registration/password_change_form.html:28
 msgid "Please enter your old password, then enter a new one."
 msgstr ""
 
-#: templates/registration/password_change_form.html:25
-#: templates/registration/password_reset_confirm.html:38
+#: templates/registration/password_change_form.html:33
+#: templates/registration/password_reset_confirm.html:25
 msgctxt "button"
 msgid "Change my password"
 msgstr ""
 
-#: templates/registration/password_change_form.html:26
+#: templates/registration/password_change_form.html:34
+#: templates/registration/password_reset_confirm.html:26
 msgid "Cancel and go back to the site home page"
 msgstr ""
 
@@ -770,46 +786,47 @@ msgctxt "page title"
 msgid "Password reset complete"
 msgstr ""
 
-#: templates/registration/password_reset_complete.html:16
+#: templates/registration/password_reset_complete.html:11
 msgid "Your password has been reset."
 msgstr ""
 
-#. Translators: This text appears on a button that takes the user to the login page after a password reset.
-#: templates/registration/password_reset_complete.html:23
+#: templates/registration/password_reset_complete.html:14
+#: templates/registration/password_reset_done.html:15
 msgid "Go to the login page"
 msgstr ""
 
 #: templates/registration/password_reset_confirm.html:4
-#: templates/registration/password_reset_confirm.html:14
 msgctxt "page title"
 msgid "Password Reset Confirmation"
 msgstr ""
 
-#: templates/registration/password_reset_confirm.html:26
+#: templates/registration/password_reset_confirm.html:16
+#: templates/registration/password_reset_form.html:4
+#: templates/registration/password_reset_form.html:24
+msgctxt "page title"
+msgid "Password Reset"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:18
 msgid "Please enter a new password (twice):"
 msgstr ""
 
-#: templates/registration/password_reset_confirm.html:44
+#: templates/registration/password_reset_confirm.html:33
 msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
 msgstr ""
 
 #: templates/registration/password_reset_done.html:4
 #: templates/registration/password_reset_done.html:5
 msgctxt "page title"
-msgid "Password reset e-mail sent"
+msgid "Password reset email sent"
 msgstr ""
 
-#: templates/registration/password_reset_done.html:16
-msgid "We've e-mailed you instructions for setting your password, if an account exists with the e-mail address you entered. You should receive them shortly."
+#: templates/registration/password_reset_done.html:11
+msgid "We've emailed you instructions for setting your password, if an account exists with the email address you entered. You should receive them shortly."
 msgstr ""
 
-#: templates/registration/password_reset_done.html:19
-msgid "If you don't receive an e-mail, please make sure you've entered the address you registered with, and check your spam folder."
-msgstr ""
-
-#. Translators: This text appears on a button that takes the user back to the login page from the password reset page.
-#: templates/registration/password_reset_done.html:26
-msgid "Return to the login page"
+#: templates/registration/password_reset_done.html:12
+msgid "If you don't receive an email, please make sure you've entered the address you registered with, and check your spam folder."
 msgstr ""
 
 #: templates/registration/password_reset_email.html:2
@@ -819,7 +836,7 @@ msgstr ""
 
 #: templates/registration/password_reset_email.html:6
 #, python-format
-msgid "Someone asked for a password reset for the e-mail address %(email)s on the Tabbycat site at %(protocol)s://%(domain)s."
+msgid "Someone asked for a password reset for the email address %(email)s on the Tabbycat site at %(protocol)s://%(domain)s."
 msgstr ""
 
 #: templates/registration/password_reset_email.html:10
@@ -828,25 +845,19 @@ msgstr ""
 
 #: templates/registration/password_reset_email.html:13
 #, python-format
-msgid "If this wasn't you, that probably means someone else typed your e-mail address into the password reset form on the Tabbycat site at %(protocol)s://%(domain)s."
-msgstr ""
-
-#: templates/registration/password_reset_form.html:4
-#: templates/registration/password_reset_form.html:24
-msgctxt "page title"
-msgid "Password Reset"
+msgid "If this wasn't you, that probably means someone else typed your email address into the password reset form on the Tabbycat site at %(protocol)s://%(domain)s."
 msgstr ""
 
 #: templates/registration/password_reset_form.html:27
-msgid "Enter your e-mail address below, and we'll e-mail you a password reset link."
+msgid "Enter your email address below, and we'll email you a password reset link."
 msgstr ""
 
 #: templates/registration/password_reset_form.html:34
-msgid "Please enter a valid e-mail address."
+msgid "Please enter a valid email address."
 msgstr ""
 
 #: templates/registration/password_reset_form.html:39
-msgid "E-mail address"
+msgid "Email address"
 msgstr ""
 
 #: templates/registration/password_reset_form.html:50
@@ -863,12 +874,12 @@ msgstr ""
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr ""
 
-#: urls.py:101
+#: urls.py:103
 #, python-format
 msgid "Hi, %(user)s — you just logged in!"
 msgstr ""
 
-#: urls.py:104
+#: urls.py:106
 msgid "Welcome! You just logged in!"
 msgstr ""
 
@@ -878,5 +889,9 @@ msgstr ""
 
 #: users/admin.py:22
 msgid "Superusers have full access all areas of Tabbycat necessary to run a tournament. Users who are not superusers are still able to perform data entry tasks such as adding results and feedback but can't access confidential areas such as the Breaks and Feedback sections. Chief adjudicators and their deputies are generally given superuser status if they know what they are doing."
+msgstr ""
+
+#: users/templates/admin/auth/delete_user_warning.html:6
+msgid "<strong>Warning:</strong> You shouldn't delete users from the database once they've done something, because the database logs actions taken by those users, and deleting the users also deletes the related logs. If you wish to deactivate a user account, go back to edit the user, click on the “Permissions” tab, unchecked the “Active” box, and save the user."
 msgstr ""
 
