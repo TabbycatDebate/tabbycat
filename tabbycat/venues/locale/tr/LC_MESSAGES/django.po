@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-24 07:35\n"
+"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"PO-Revision-Date: 2023-05-25 23:54\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -15,200 +15,208 @@ msgstr ""
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: tr\n"
 "X-Crowdin-File: /develop/tabbycat/venues/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 956\n"
 
-#: venues/apps.py:7
-msgid "Venues"
-msgstr "Salonlar"
+#: venues/apps.py
+msgid "Rooms"
+msgstr "Odalar"
 
-#: venues/consumers.py:18
+#: venues/consumers.py
 msgid "Draw is already released, unrelease draw to assign rooms."
-msgstr ""
+msgstr "Kura zaten yayınlandı, odaları atamak için kurayı yayından kaldırın."
 
-#: venues/consumers.py:21
+#: venues/consumers.py
 msgid "Draw is not confirmed, confirm draw to assign rooms."
-msgstr ""
+msgstr "Kura onaylanmadı, oda atamak için kurayı onaylayın."
 
-#: venues/consumers.py:28
+#: venues/consumers.py
 msgid "Successfully auto-allocated rooms to debates."
-msgstr ""
+msgstr "Maçlara odalar başarıyla otomatik tahsis edidi."
 
-#: venues/models.py:9 venues/models.py:64
+#: venues/models.py
 msgid "name"
 msgstr "isim"
 
-#: venues/models.py:11 venues/models.py:118
+#: venues/models.py
 msgid "priority"
-msgstr ""
+msgstr "öncelik"
 
-#: venues/models.py:12
+#: venues/models.py
 msgid "Rooms with a higher priority number will be preferred when allocating rooms to debates"
-msgstr ""
+msgstr "Tartışmalara oda tahsis edilirken öncelik numarası daha yüksek olan odalar tercih edilecektir"
 
-#: venues/models.py:15 venues/models.py:76
+#: venues/models.py
 msgid "tournament"
 msgstr "turnuva"
 
-#: venues/models.py:22
+#: venues/models.py
+msgid "URL"
+msgstr "URL"
+
+#: venues/models.py
+msgid "A URL that contains extra information about this room, e.g. a map or a meeting link (for online tournaments)"
+msgstr "Bu oda hakkında ek bilgi içeren bir URL, ör. harita veya toplantı bağlantısı (çevrimiçi turnuvalar için)"
+
+#: venues/models.py
 msgid "room"
-msgstr ""
+msgstr "oda"
 
-#: venues/models.py:23 venues/models.py:74
+#: venues/models.py
 msgid "rooms"
-msgstr ""
+msgstr "odalar"
 
-#: venues/models.py:59
+#: venues/models.py
 msgid "Don't display in room name"
-msgstr ""
+msgstr "Oda adında gösterme"
 
-#: venues/models.py:60
+#: venues/models.py
 msgid "Display as prefix"
-msgstr ""
+msgstr "Önek olarak görüntüle"
 
-#: venues/models.py:61
+#: venues/models.py
 msgid "Display as suffix"
-msgstr ""
+msgstr "Son ek olarak görüntüle"
 
-#: venues/models.py:65
+#: venues/models.py
 msgid "Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room\". This name is shown when the category is prefixed or suffixed to a room name in the draw, e.g., \"Purple – G05\"."
-msgstr ""
+msgstr "Kategorinin adı, örneğin, \"Mor\", \"Adımsız erişim\", \"Sekme odasına yakın\". Bu ad, kategori kuradaki bir oda adının önüne veya sonekine eklendiğinde gösterilir, örneğin, \"Mor – G05\"."
 
-#: venues/models.py:69
+#: venues/models.py
 msgid "description"
-msgstr ""
+msgstr "açıklama"
 
-#: venues/models.py:70
+#: venues/models.py
 msgid "Description, as the predicate of a sentence, e.g. \"has step-free access\", \"is close to the briefing hall\". This description follows \"This room\" when shown in tooltips, e.g., \"This room is close to the briefing hall.\"."
-msgstr ""
+msgstr "Bir cümlenin yüklemi olarak açıklama, örneğin \"adımsız erişime sahip\", \"brifing salonuna yakın\". Bu açıklama, araç ipuçlarında gösterildiğinde \"Bu oda\"yı izler, örneğin, \"Bu oda brifing salonuna yakındır.\""
 
-#: venues/models.py:80
+#: venues/models.py
 msgid "display in room name"
-msgstr ""
+msgstr "oda adında görüntüle"
 
-#: venues/models.py:81
+#: venues/models.py
 msgid "Prefix: \"Purple – G05\", Suffix: \"G05 – Purple\""
-msgstr ""
+msgstr "Önek: \"Mor – G05\", Son Ek: \"G05 – Mor\""
 
-#: venues/models.py:83
+#: venues/models.py
 msgid "display in public tooltip"
-msgstr ""
+msgstr "genel araç ipucunda görüntüle"
 
-#: venues/models.py:84
+#: venues/models.py
 msgid "Displays the description in the tooltip for the room on public pages. The description, if not blank, will always show on admin pages."
-msgstr ""
+msgstr "Genel sayfalarda odanın araç ipucundaki açıklamayı görüntüler. Açıklama, boş değilse, her zaman yönetici sayfalarında gösterilir."
 
-#: venues/models.py:88
+#: venues/models.py
 msgid "room category"
-msgstr ""
+msgstr "oda kategorisi"
 
-#: venues/models.py:89
+#: venues/models.py
 msgid "room categories"
-msgstr ""
+msgstr "oda kategorileri"
 
-#: venues/models.py:117
+#: venues/models.py
 msgid "category"
 msgstr "kategori"
 
-#: venues/models.py:121
+#: venues/models.py
 msgid "subject content type"
-msgstr ""
+msgstr "konu içerik türü"
 
-#: venues/models.py:124
+#: venues/models.py
 msgid "subject ID"
-msgstr ""
+msgstr "konu kimliği"
 
-#: venues/models.py:130
+#: venues/models.py
 msgid "room constraint"
-msgstr ""
+msgstr "oda kısıtlaması"
 
-#: venues/models.py:131
+#: venues/models.py
 msgid "room constraints"
-msgstr ""
+msgstr "oda kısıtlamaları"
 
-#: venues/templates/venue_categories_edit.html:4
-#: venues/templates/venue_categories_edit.html:5
+#: venues/templates/venue_categories_edit.html
 msgid "Room Categories"
-msgstr ""
+msgstr "oda kategorileri"
 
-#: venues/templates/venue_categories_edit.html:9
+#: venues/templates/venue_categories_edit.html
 msgid "Room categories allow you to group rooms together into \"zones\" to display in the draw and make navigation easier for participants, and/or specify constraints on room allocation that require teams, adjudicators or institutions to be put in a room in a particular category."
-msgstr ""
+msgstr "Oda kategorileri, kurada görüntülemek ve katılımcılar için gezinmeyi kolaylaştırmak için odaları birlikte \"bölgeler\" halinde gruplandırmanıza ve/veya takımların, jürilerin veya kurumların belirli bir kategorideki bir odaya yerleştirilmesini gerektiren oda tahsisi kısıtlamalarını belirtmenize olanak tanır."
 
-#: venues/templates/venue_categories_edit.html:14
+#: venues/templates/venue_categories_edit.html
 #, python-format
 msgid "If you want to delete room categories, use the <a href=\"%(edit_db_url)s\" class=\"alert-link\">Edit Database</a> area."
-msgstr ""
+msgstr "Oda kategorilerini silmek istiyorsanız, <a href=\"%(edit_db_url)s\" class=\"alert-link\">veritabanı düzenle</a> alanını kullanın."
 
-#: venues/templates/venue_categories_edit.html:20
+#: venues/templates/venue_categories_edit.html
 msgid "Save Room Categories"
-msgstr ""
+msgstr "Oda Kategorilerini Kaydet"
 
-#: venues/templates/venue_constraints_edit.html:4
-#: venues/templates/venue_constraints_edit.html:5
+#: venues/templates/venue_constraints_edit.html
 msgid "Room Constraints"
-msgstr ""
+msgstr "oda kısıtlamaları"
 
-#: venues/templates/venue_constraints_edit.html:9
+#: venues/templates/venue_constraints_edit.html
 msgid "Room constraints tell the room allocator to try to keep the specified team or adjudicator, or all teams (but not adjudicators) from the specified institution, in a room in the given category. The \"priority\" field resolves conflicting constraints: the higher priority takes precedence. You can also use the priority field to specify \"lower-preference\" constraints, which are taken if a higher-priority constraint couldn't be met."
-msgstr ""
+msgstr "Oda kısıtlamaları, oda tahsis edene, belirtilen takımı veya jüriyi veya belirtilen kurumdaki tüm takımları (ancak jürileri değil) verilen kategorideki bir odada tutmaya çalışmasını söyler. \"Öncelik\" alanı çakışan conflictleri çözer: daha yüksek öncelik önceliklidir. Öncelik alanını, daha yüksek öncelikli bir kısıtlama karşılanamadığında alınan \"düşük tercihli\" kısıtlamaları belirtmek için de kullanabilirsiniz."
 
-#: venues/templates/venue_constraints_edit.html:20
+#: venues/templates/venue_constraints_edit.html
 msgid "Save Room Constraints"
-msgstr ""
+msgstr "Oda Kısıtlamalarını Kaydet"
 
-#: venues/utils.py:38 venues/utils.py:50
+#: venues/utils.py
 #, python-format
 msgid "Room constraint of %(name)s met (%(category)s)"
-msgstr ""
+msgstr "%(name)s'nin oda kısıtlaması karşılandı. (%(category)s)"
 
-#: venues/utils.py:39 venues/utils.py:51
+#: venues/utils.py
 #, python-format
 msgid "Room does not meet any constraint of %(name)s"
-msgstr ""
+msgstr "Oda %(name)s'nın herhangi bir kısıtlamasını karşılamıyor"
 
-#: venues/utils.py:44
+#: venues/utils.py
 #, python-format
 msgid "Room constraint of %(team)s met (%(category)s, via institution %(institution)s)"
-msgstr ""
+msgstr "%(team)s'nin oda kısıtlaması karşılandı. (%(institution)s kurumunundan %(category)s)"
 
-#: venues/utils.py:45
+#: venues/utils.py
 #, python-format
 msgid "Room does not meet any constraint of institution %(institution)s (%(team)s)"
-msgstr ""
+msgstr "Oda %(institution)s kurumunun herhangi bir kısıtlamasını karşılamıyor. (%(team)s)"
 
-#: venues/views.py:27
+#: venues/views.py
 msgid "Edit Rooms"
-msgstr ""
+msgstr "Odaları Düzenle"
 
-#: venues/views.py:82
+#: venues/views.py
 #, python-format
 msgid "Saved room category: %(list)s"
 msgid_plural "Saved venue categories: %(list)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Oda kategorisi kaydedildi: %(list)s"
+msgstr[1] "Mekan kategorileri kaydedildi: %(list)s"
 
-#: venues/views.py:88
+#: venues/views.py
 msgid "No changes were made to the room categories."
-msgstr ""
+msgstr "Oda kategorilerinde herhangi bir değişiklik yapılmamıştır."
 
-#: venues/views.py:138
+#: venues/views.py
 #, python-format
 msgid "%s (Adjudicator)"
 msgstr "%s (Jüri)"
 
-#: venues/views.py:141
+#: venues/views.py
 #, python-format
 msgid "%s (Team)"
-msgstr ""
+msgstr "%s (Takım)"
 
-#: venues/views.py:144
+#: venues/views.py
 #, python-format
 msgid "%s (Institution)"
-msgstr ""
+msgstr "%s (Kurum)"
 
-#: venues/views.py:152
+#: venues/views.py
 #, python-format
 msgid "Saved %(count)d room constraint."
 msgid_plural "Saved %(count)d room constraints."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)d oda kısıtlaması kaydedildi."
+msgstr[1] "%(count)d oda kısıtlamaları kaydedildi."
 
