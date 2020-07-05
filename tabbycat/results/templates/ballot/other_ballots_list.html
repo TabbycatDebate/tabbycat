@@ -5,7 +5,7 @@
   {% with nballotsubs=all_ballotsubs.count %}
     {% if new and nballotsubs > 0 or nballotsubs > 1 %}
       <li class="list-group-item list-group-item-warning">
-        <h4 class="list-group-item-heading">
+        <h4 class="list-group-item-heading mb-0">
           {% blocktrans trimmed with number=nballotsubs|apnumber count nballotsubs=nballotsubs %}
             There is {{ number }} existing ballot set for this debate.
           {% plural %}
