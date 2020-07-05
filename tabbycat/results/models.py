@@ -43,10 +43,10 @@ class Submission(models.Model):
         verbose_name=_("confirmed"))
 
     # only relevant if submitter was in tab room
-    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE,
+    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT,
         blank=True, null=True, related_name="%(app_label)s_%(class)s_submitted",
         verbose_name=_("submitter"))
-    confirmer = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE,
+    confirmer = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT,
         blank=True, null=True, related_name="%(app_label)s_%(class)s_confirmed",
         verbose_name=_("confirmer"))
     confirm_timestamp = models.DateTimeField(blank=True, null=True,
