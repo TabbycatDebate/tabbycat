@@ -32,7 +32,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
     @staticmethod
     def get_formatted_adj_score(score, strong=False):
         if score is None:
-            return 'N/A'
+            return _('N/A')
         if strong is True:
             return '<strong>%0.1f</strong>' % score
         else:
