@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-24 07:26\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2020-10-23 08:08\n"
+"Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
 "MIME-Version: 1.0\n"
@@ -12,8 +12,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-Language: ja\n"
 "X-Crowdin-File: /develop/tabbycat/adjallocation/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 922\n"
 
 #: adjallocation/allocators/base.py:34
 msgid "There are no available adjudicators. Ensure there are adjudicators who have been marked as available for this round before auto-allocating."
@@ -250,7 +252,7 @@ msgstr "生存度"
 
 #: adjallocation/models.py:129
 msgid "Number of categories this room is expected to be live for"
-msgstr ""
+msgstr "この部屋で生存が予想されるカテゴリー数"
 
 #: adjallocation/models.py:132
 msgid "preformed panel"
@@ -278,68 +280,68 @@ msgstr "使用できる事前設定されたパネルはいません。このラ
 
 #: adjallocation/templates/preformed_index.html:5 adjallocation/views.py:128
 msgid "Preformed Panels"
-msgstr ""
+msgstr "事前設定されたパネル"
 
 #: adjallocation/templates/preformed_index.html:10
 msgid "A preformed panel is a defined group of adjudicators that is specified for a round before its draw has been generated. You can then manually or automatically apply these panels during the normal adjudicator allocation process. This can make allocations faster or allow you to create more considered panels of adjudicators."
-msgstr ""
+msgstr "「事前設定されたパネル」はドロー生成前にラウンドに割り当てられたジャッジグループと定義されています。これらのパネルは通常のジャッジアロケーション作業の間に、自動もしくは手動で適用できます。より早くアロケーションを行うことができ、または配慮の行き届いたパネル配置を実現できます。"
 
 #: adjallocation/templates/preformed_index.html:16
 msgid "Note that only adjudicators who have been marked as 'available' for that round will be able to be allocated for that round, so you may need to set their availability in advance."
-msgstr ""
+msgstr "「参加可能」と表示されているジャッジのみがそのラウンドに割り当てられているか確認してください。 事前にジャッジの参加可否を設定する必要がある場合があります。"
 
 #: adjallocation/templates/preformed_index.html:37
 #, python-format
 msgid "Edit Preformed Panels for %(round)s"
-msgstr ""
+msgstr "%(round)sの事前設定されたパネルを編集する"
 
 #: adjallocation/utils.py:28
 #, python-format
 msgid "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> (personal)"
-msgstr ""
+msgstr "コンフリクト：<strong>%(adjudicator)s</strong>・<strong>%(team)s</strong>間（個人）"
 
 #: adjallocation/utils.py:34
 #, python-format
 msgid "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> via institution <strong>%(institution)s</strong>"
-msgstr ""
+msgstr "コンフリクト：<strong>%(adjudicator)s</strong>・<strong>%(team)s</strong>（<strong>%(institution)s</strong>・大学/団体）"
 
 #: adjallocation/utils.py:46
 #, python-format
 msgid "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> (personal)"
-msgstr ""
+msgstr "コンフリクト：<strong>%(adjudicator1)s</strong>・<strong>%(adjudicator2)s</strong>（個人）"
 
 #: adjallocation/utils.py:52
 #, python-format
 msgid "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> via institution <strong>%(institution)s</strong>"
-msgstr ""
+msgstr "コンフリクト：<strong>%(adjudicator1)s</strong>・<strong>%(adjudicator2)s</strong>（<strong>%(institution)s</strong>・大学/団体）"
 
 #: adjallocation/views.py:35
 msgid "Male"
-msgstr ""
+msgstr "男性"
 
 #: adjallocation/views.py:36
 msgid "Female"
-msgstr ""
+msgstr "女性"
 
 #: adjallocation/views.py:37
 msgid "Other"
-msgstr ""
+msgstr "その他"
 
 #: adjallocation/views.py:38
 msgid "Unknown"
-msgstr ""
+msgstr "不明"
 
 #: adjallocation/views.py:90
 msgid "Edit Allocation"
-msgstr ""
+msgstr "アロケーションを編集する"
 
 #: adjallocation/views.py:105
 msgid "Edit Panels"
-msgstr ""
+msgstr "パネルを編集する"
 
 #: adjallocation/views.py:111
 msgid "Return to Panels Overview"
-msgstr ""
+msgstr "パネルの概要に戻る"
 
 #: adjallocation/views.py:172
 msgid "Adjudicator-Team Conflicts"
@@ -415,25 +417,25 @@ msgstr "ジャッジ・インスティチューション間のコンフリクト
 
 #: adjallocation/views.py:295
 msgid "Team-Institution Conflicts"
-msgstr ""
+msgstr "チーム・大学（または団体）間のコンフリクト"
 
 #: adjallocation/views.py:296
 msgid "Save Team-Institution Conflicts"
-msgstr ""
+msgstr "チーム・大学（または団体）間のコンフリクトを保存する"
 
 #: adjallocation/views.py:319
 #, python-format
 msgid "Saved %(count)d team-institution conflict."
 msgid_plural "Saved %(count)d team-institution conflicts."
-msgstr[0] ""
+msgstr[0] "%(count)d個のチーム・大学（または団体）間のコンフリクトを保存しました。"
 
 #: adjallocation/views.py:325
 #, python-format
 msgid "Deleted %(count)d team-institution conflict."
 msgid_plural "Deleted %(count)d team-institution conflicts."
-msgstr[0] ""
+msgstr[0] "%(count)d個のチーム・大学（または団体）間のコンフリクトを削除しました。"
 
 #: adjallocation/views.py:330
 msgid "No changes were made to team-institution conflicts."
-msgstr ""
+msgstr "チーム・大学（または団体）間のコンフリクトに変更はありません。"
 
