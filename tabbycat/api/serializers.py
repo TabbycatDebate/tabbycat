@@ -491,9 +491,9 @@ class VenueSerializer(serializers.ModelSerializer):
 
     url = TournamentHyperlinkedIdentityField(view_name='api-venue-detail')
     categories = TournamentHyperlinkedRelatedField(
-        source='venuecategory_set',
-        many=True,
+        source='venuecategory_set', many=True,
         view_name='api-venuecategory-detail',
+        queryset=VenueCategory.objects.all(),
     )
     display_name = serializers.ReadOnlyField()
     _links = LinksSerializer(source='*', read_only=True)
