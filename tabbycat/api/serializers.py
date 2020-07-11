@@ -455,6 +455,15 @@ class TeamSerializer(serializers.ModelSerializer):
 
         return team
 
+    def update(self, instance, validated_data):
+        speakers_data = validated_data.pop('speakers')
+        if len(speakers_data) > 0:
+            speakers = SpeakerSerializer(many=True, context=self.context)
+            speakers._validated_data = speakers_data  # Data was already validated
+            speakers.save(team=instance)
+
+        return super().update(instance, validated_data)
+
 
 class InstitutionSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='api-global-institution-detail')

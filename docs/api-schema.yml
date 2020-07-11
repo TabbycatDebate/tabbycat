@@ -1744,7 +1744,9 @@ paths:
         - teams
     post:
       operationId: v1_tournaments_teams_update
-      description: Modify a team
+      description: >-
+        Modify a team. The speakers field can only create speakers, not
+        modify or remove them. Leave empty if none are being added.
       responses:
         '201':
           description: ''
