@@ -12,6 +12,7 @@ Change Log
 - Fixed eligibilty API endpoints when a list of participants is not present
 - Fixed speaker category eligibility API endpoint not accepting speakers
 - Allowed updating teams, excluding speakers, through the team detail API endpoint
+- Added date and time formats for Malay
 
 2.4.3
 -----
