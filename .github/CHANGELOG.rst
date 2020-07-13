@@ -4,7 +4,7 @@ Change Log
 
 2.4.4
 -----
-*Release date: TBD*
+*Release date: 13 July 2020*
 
 - Fixed colours associated with adjudicators' scores not showing
 - Showed validation errors when using API with invalid field names
