@@ -881,6 +881,15 @@ class FeedbackReturnLocation(StringPreference):
     default = 'TBA'
 
 
+@tournament_preferences_registry.register
+class EnablePostponements(BooleanPreference):
+    help_text = _("Enables debates to have their status set to postponed")
+    verbose_name = _("Enable postponements")
+    section = data_entry
+    name = 'enable_postponements'
+    default = False
+
+
 # ==============================================================================
 public_features = Section('public_features', verbose_name=_("Public Features"))
 # ==============================================================================

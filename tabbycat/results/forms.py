@@ -126,7 +126,6 @@ class BaseResultForm(forms.Form):
 
     confirmed = forms.BooleanField(required=False)
     discarded = forms.BooleanField(required=False)
-    debate_result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
 
     def __init__(self, ballotsub, password=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -135,6 +134,9 @@ class BaseResultForm(forms.Form):
         self.tournament = self.debate.round.tournament
 
         self.has_tournament_password = password and self.tournament.pref('public_use_password')
+
+        status_choices = Debate.STATUS_CHOICES if self.tournament.pref('enable_postponements') else Debate.STATUS_CHOICES_RESTRICTED
+        self.fields['debate_result_status'] = forms.ChoiceField(choices=status_choices)
 
         self.initial.update({
             'debate_result_status': self.debate.result_status,
