@@ -22,12 +22,17 @@ class DebateManager(models.Manager):
 
 class Debate(models.Model):
     STATUS_NONE = 'N'
-    STATUS_POSTPONED = 'P' # obsolete
+    STATUS_POSTPONED = 'P'
     STATUS_DRAFT = 'D'
     STATUS_CONFIRMED = 'C'
     STATUS_CHOICES = (
         (STATUS_NONE, _("none")),
         (STATUS_POSTPONED, _("postponed")),
+        (STATUS_DRAFT, _("draft")),
+        (STATUS_CONFIRMED, _("confirmed")),
+    )
+    STATUS_CHOICES_RESTRICTED = (  # If postponements are disabled - used in forms
+        (STATUS_NONE, _("none")),
         (STATUS_DRAFT, _("draft")),
         (STATUS_CONFIRMED, _("confirmed")),
     )
