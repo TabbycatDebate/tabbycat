@@ -2,6 +2,12 @@
 Change Log
 ==========
 
+2.4.5
+-----
+*Release date: ?*
+
+- Fixed the display of room URLs on private URL pages
+
 2.4.4
 -----
 *Release date: 13 July 2020*
