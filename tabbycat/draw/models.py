@@ -1,5 +1,6 @@
 import logging
 
+from django.contrib.humanize.templatetags.humanize import ordinal
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import gettext, gettext_lazy as _
@@ -307,14 +308,8 @@ class DebateTeam(models.Model):
 
     def get_result_display(self):
         if self.team.tournament.pref('teams_in_debate') == 'bp':
-            if self.points == 3:
-                return gettext("placed 1st")
-            elif self.points == 2:
-                return gettext("placed 2nd")
-            elif self.points == 1:
-                return gettext("placed 3rd")
-            elif self.points == 0:
-                return gettext("placed 4th")
+            if self.points is not None:
+                return gettext("placed %(place)s") % {'place': ordinal(4 - self.points)}
             else:
                 return gettext("result unknown")
         else:
