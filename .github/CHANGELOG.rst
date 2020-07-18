@@ -7,6 +7,7 @@ Change Log
 *Release date: ?*
 
 - Fixed the display of room URLs on private URL pages
+- Preformed panels with a bracket range now sort more sensibly
 
 2.4.4
 -----
