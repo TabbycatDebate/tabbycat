@@ -10,6 +10,7 @@ Change Log
 - Preformed panels with a bracket range now sort more sensibly (thanks Zachary for the report)
 - Fixed manual sorting of preformed panels in general
 - Improved sorting of feedback table when sorting 'difference between base score and current score' (thanks Zachary for the report)
+- Fixed issue where the last saved counter was not updating on normal tables
 
 2.4.4
 -----
