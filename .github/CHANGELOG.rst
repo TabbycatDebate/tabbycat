@@ -6,9 +6,10 @@ Change Log
 -----
 *Release date: ?*
 
-- Fixed the display of room URLs on private URL pages
-- Preformed panels with a bracket range now sort more sensibly
+- Fixed the display of room URLs on private URL pages (thanks Viran for the report)
+- Preformed panels with a bracket range now sort more sensibly (thanks Zachary for the report)
 - Fixed manual sorting of preformed panels in general
+- Improved sorting of feedback table when sorting 'difference between base score and current score' (thanks Zachary for the report)
 
 2.4.4
 -----

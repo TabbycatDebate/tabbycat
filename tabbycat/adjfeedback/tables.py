@@ -80,6 +80,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         }
         diff_data = [{
             'text': self.get_formatted_adj_score(scores[adj] - adj.base_score),
+            'sort': scores[adj] - adj.base_score,
             'tooltip': _("The difference between this adjudicator's base score and current score"),
         } for adj in adjudicators]
 
