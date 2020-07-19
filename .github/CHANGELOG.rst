@@ -4,7 +4,7 @@ Change Log
 
 2.4.5
 -----
-*Release date: ?*
+*Release date: 19 July 2020*
 
 - Fixed the display of room URLs on private URL pages (thanks Viran for the report)
 - Preformed panels with a bracket range now sort more sensibly (thanks Zachary for the report)
