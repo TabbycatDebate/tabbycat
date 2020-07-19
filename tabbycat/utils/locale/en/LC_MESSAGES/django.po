@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-05 13:59-0300\n"
+"POT-Creation-Date: 2020-07-19 19:52-0300\n"
 "PO-Revision-Date: 2019-07-11 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -78,248 +78,233 @@ msgstr ""
 msgid "%(team)s lost"
 msgstr ""
 
-#: utils/tables.py:293 utils/tables.py:321 utils/tables.py:339
+#: utils/tables.py:293 utils/tables.py:305 utils/tables.py:329
 #, python-format
 msgid "%(team)s—no result"
 msgstr ""
 
-#: utils/tables.py:301
+#: utils/tables.py:310
 #, python-format
-msgid "%(team)s took 1st"
+msgid "%(team)s placed %(place)s"
 msgstr ""
 
-#: utils/tables.py:306
-#, python-format
-msgid "%(team)s took 2nd"
-msgstr ""
-
-#: utils/tables.py:311
-#, python-format
-msgid "%(team)s took 3rd"
-msgstr ""
-
-#: utils/tables.py:316
-#, python-format
-msgid "%(team)s took 4th"
-msgstr ""
-
-#: utils/tables.py:329
+#: utils/tables.py:319
 #, python-format
 msgid "%(team)s is advancing"
 msgstr ""
 
-#: utils/tables.py:334
+#: utils/tables.py:324
 #, python-format
 msgid "%(team)s was eliminated"
 msgstr ""
 
-#: utils/tables.py:352
+#: utils/tables.py:342
 #, python-format
 msgid " vs %(opposition)s"
 msgstr ""
 
-#: utils/tables.py:359
+#: utils/tables.py:349
 #, python-format
 msgid "Won against %(team)s"
 msgstr ""
 
-#: utils/tables.py:361
+#: utils/tables.py:351
 #, python-format
 msgid "Lost to %(team)s"
 msgstr ""
 
-#: utils/tables.py:363
+#: utils/tables.py:353
 #, python-format
 msgid "No result for debate against %(team)s"
 msgstr ""
 
-#: utils/tables.py:371 utils/tables.py:450
+#: utils/tables.py:361 utils/tables.py:440
 #, python-format
 msgid "Total speaker score: <strong>%s</strong>"
 msgstr ""
 
-#: utils/tables.py:376 utils/tables.py:455
+#: utils/tables.py:366 utils/tables.py:445
 msgid "View/edit debate ballot"
 msgstr ""
 
-#: utils/tables.py:382 utils/tables.py:461
+#: utils/tables.py:372 utils/tables.py:451
 msgid "View debate ballot"
 msgstr ""
 
-#: utils/tables.py:403
+#: utils/tables.py:393
 msgid "Teams in debate:"
 msgstr ""
 
-#: utils/tables.py:406
+#: utils/tables.py:396
 #, python-format
 msgid "%(team)s (%(side)s)"
 msgstr ""
 
-#: utils/tables.py:407 utils/tables.py:411 utils/tables.py:437
-#: utils/tables.py:630
+#: utils/tables.py:397 utils/tables.py:401 utils/tables.py:427
+#: utils/tables.py:620
 msgid "??"
 msgstr ""
 
-#: utils/tables.py:425
+#: utils/tables.py:415
 msgid "advancing"
 msgstr ""
 
-#: utils/tables.py:426
+#: utils/tables.py:416
 msgid "Advancing"
 msgstr ""
 
-#: utils/tables.py:428
+#: utils/tables.py:418
 msgid "eliminated"
 msgstr ""
 
-#: utils/tables.py:429
+#: utils/tables.py:419
 msgid "Eliminated"
 msgstr ""
 
-#: utils/tables.py:432 utils/tables.py:442
+#: utils/tables.py:422 utils/tables.py:432
 msgid "No result for debate"
 msgstr ""
 
-#: utils/tables.py:439
+#: utils/tables.py:429
 #, python-format
 msgid "Placed %(place)s"
 msgstr ""
 
-#: utils/tables.py:470
+#: utils/tables.py:460
 msgid "Tournament"
 msgstr ""
 
-#: utils/tables.py:479
+#: utils/tables.py:469
 msgid "Round"
 msgstr ""
 
-#: utils/tables.py:497 utils/tables.py:680
+#: utils/tables.py:487 utils/tables.py:670
 msgid "Name"
 msgstr ""
 
-#: utils/tables.py:503 utils/tables.py:662
+#: utils/tables.py:493 utils/tables.py:652
 msgid "Institution"
 msgstr ""
 
-#: utils/tables.py:509
+#: utils/tables.py:499
 msgid "Member of the Adjudication Core"
 msgstr ""
 
-#: utils/tables.py:516
+#: utils/tables.py:506
 msgid "Independent Adjudicator"
 msgstr ""
 
-#: utils/tables.py:524
+#: utils/tables.py:514
 msgid "Always Trainee"
 msgstr ""
 
-#: utils/tables.py:559
+#: utils/tables.py:549
 msgid "in minority"
 msgstr ""
 
-#: utils/tables.py:592
+#: utils/tables.py:582
 msgid "Debate Adjudicators"
 msgstr ""
 
-#: utils/tables.py:623
+#: utils/tables.py:613
 msgid "Order as listed"
 msgstr ""
 
-#: utils/tables.py:633
+#: utils/tables.py:623
 msgid "Motion"
 msgstr ""
 
-#: utils/tables.py:648
+#: utils/tables.py:638
 msgid "Team"
 msgstr ""
 
-#: utils/tables.py:653 utils/tables.py:702
+#: utils/tables.py:643 utils/tables.py:692
 msgid "Categories"
 msgstr ""
 
-#: utils/tables.py:673
+#: utils/tables.py:663
 msgid "Redacted"
 msgstr ""
 
-#: utils/tables.py:700
+#: utils/tables.py:690
 msgid "Category"
 msgstr ""
 
-#: utils/tables.py:727
+#: utils/tables.py:717
 #, python-format
 msgid "This room %(predicate)s."
 msgstr ""
 
-#: utils/tables.py:729
+#: utils/tables.py:719
 #, python-format
 msgid "This room %(predicates)s, and %(last_predicate)s."
 msgstr ""
 
-#: utils/tables.py:744
+#: utils/tables.py:734
 msgid "Room"
 msgstr ""
 
-#: utils/tables.py:760
+#: utils/tables.py:750
 #, python-format
 msgid "Teams have met once"
 msgid_plural "Teams have met %(count)d times"
 msgstr[0] ""
 msgstr[1] ""
 
-#: utils/tables.py:766
+#: utils/tables.py:756
 msgid "Teams are from the same institution"
 msgstr ""
 
-#: utils/tables.py:772
+#: utils/tables.py:762
 msgid "Conflicts/Flags"
 msgstr ""
 
-#: utils/tables.py:826
+#: utils/tables.py:816
 msgid "The ballot you submitted"
 msgstr ""
 
-#: utils/tables.py:830
+#: utils/tables.py:820
 msgid "View/Edit Ballot"
 msgstr ""
 
-#: utils/tables.py:839
+#: utils/tables.py:829
 msgid "No ballot"
 msgstr ""
 
-#: utils/tables.py:841
+#: utils/tables.py:831
 msgid "Elimination"
 msgstr ""
 
-#: utils/tables.py:844 utils/tables.py:856
+#: utils/tables.py:834 utils/tables.py:846
 msgid "View Ballot"
 msgstr ""
 
-#: utils/tables.py:864
+#: utils/tables.py:854
 msgid "Result"
 msgstr ""
 
 #. Translators: "TBC" stands for "to be confirmed".
-#: utils/tables.py:870
+#: utils/tables.py:860
 msgid "TBC"
 msgstr ""
 
-#: utils/tables.py:871
+#: utils/tables.py:861
 msgid "Side"
 msgstr ""
 
-#: utils/tables.py:909
+#: utils/tables.py:899
 msgid "Team iron-manned this round and the last."
 msgstr ""
 
-#: utils/tables.py:912
+#: utils/tables.py:902
 msgid "Team iron-manned this round."
 msgstr ""
 
-#: utils/tables.py:915
+#: utils/tables.py:905
 msgid "Team iron-manned last round."
 msgstr ""
 
-#: utils/tables.py:932 utils/tables.py:933
+#: utils/tables.py:922 utils/tables.py:923
 #, python-format
 msgid "Team %(num)d"
 msgstr ""
