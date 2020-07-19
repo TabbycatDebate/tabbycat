@@ -2,6 +2,16 @@
 Change Log
 ==========
 
+2.4.5
+-----
+*Release date: 19 July 2020*
+
+- Fixed the display of room URLs on private URL pages (thanks Viran for the report)
+- Preformed panels with a bracket range now sort more sensibly (thanks Zachary for the report)
+- Fixed manual sorting of preformed panels in general
+- Improved sorting of feedback table when sorting 'difference between base score and current score' (thanks Zachary for the report)
+- Fixed issue where the last saved counter was not updating on normal tables
+
 2.4.4
 -----
 *Release date: 13 July 2020*
