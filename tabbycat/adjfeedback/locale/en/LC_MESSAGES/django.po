@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-05 13:59-0300\n"
+"POT-Creation-Date: 2020-07-20 04:47-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -449,38 +449,38 @@ msgstr ""
 msgid "The current difference between an adjudicator's base score and current score"
 msgstr ""
 
-#: adjfeedback/tables.py:83
+#: adjfeedback/tables.py:84
 msgid "The difference between this adjudicator's base score and current score"
 msgstr ""
 
-#: adjfeedback/tables.py:92
+#: adjfeedback/tables.py:93
 msgid "The standard deviation of this adjudicator's current scores; with larger numbers meaning less consistent feedback scores."
 msgstr ""
 
-#: adjfeedback/tables.py:96
+#: adjfeedback/tables.py:97
 msgid "The standard deviation of this adjudicator's current scores"
 msgstr ""
 
-#: adjfeedback/tables.py:105
+#: adjfeedback/tables.py:106
 msgid "Feedback Per Round"
 msgstr ""
 
-#: adjfeedback/tables.py:106
+#: adjfeedback/tables.py:107
 msgid "Hover over the data points to show the average score received in that round"
 msgstr ""
 
-#: adjfeedback/tables.py:124
+#: adjfeedback/tables.py:125
 #, python-format
 msgid "View %(count)s<br>feedback"
 msgid_plural "View %(count)s<br>feedbacks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/tables.py:147
+#: adjfeedback/tables.py:148
 msgid "Unsubmitted feedback ballots"
 msgstr ""
 
-#: adjfeedback/tables.py:171
+#: adjfeedback/tables.py:172
 msgid "View Missing Feedback"
 msgstr ""
 
@@ -494,8 +494,10 @@ msgid "Enter Feedback"
 msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html:9
+#: adjfeedback/templates/public_add_feedback.html:13
+#: adjfeedback/templates/public_add_feedback.html:20
 #, python-format
-msgid "Add Feedback from %(source_name)s"
+msgid "Add Feedback from %(name)s"
 msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html:13
@@ -798,12 +800,6 @@ msgstr ""
 
 #: adjfeedback/templates/public_add_feedback.html:5
 msgid "click your name or your team on this list"
-msgstr ""
-
-#: adjfeedback/templates/public_add_feedback.html:13
-#: adjfeedback/templates/public_add_feedback.html:20
-#, python-format
-msgid "Add feedback from %(name)s"
 msgstr ""
 
 #: adjfeedback/templates/update_adjudicator_scores.html:4
