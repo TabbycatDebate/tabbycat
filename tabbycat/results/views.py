@@ -92,7 +92,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs["incomplete_ballots"] = self._get_draw().filter(
-            Q(result_status=Debate.STATUS_NONE) | Q(result_status=Debate.STATUS_DRAFT)).count()
+            Q(result_status=Debate.STATUS_NONE) | Q(result_status=Debate.STATUS_DRAFT)).exists()
         kwargs["iron_speeches"] = self.get_irons_list()
         return super().get_context_data(**kwargs)
 
