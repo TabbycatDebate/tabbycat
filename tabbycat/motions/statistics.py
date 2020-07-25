@@ -35,6 +35,7 @@ class MotionTwoTeamStatsCalculator:
         annotations = {}  # dict of keyword arguments to pass to .annotate()
 
         # This if-else block could be simplified using **kwargs notation, but it'd be miserable to read
+        annotations['nrounds'] = Count('rounds')
         annotations['ndebates'] = Count('ballotsubmission', distinct=True)
         annotations['tdebates'] = Count('rounds__debate', distinct=True)
         annotations.update({'%s_wins' % side: Count(
@@ -129,7 +130,7 @@ class RoundMotionsTwoTeamStatsCalculator(MotionTwoTeamStatsCalculator):
 
         annotations = {}  # dict of keyword arguments to pass to .annotate()
 
-        # This if-else block could be simplified using **kwargs notation, but it'd be miserable to read
+        annotations['nrounds'] = Count('round')
         annotations['ndebates'] = Count(
             'motion__ballotsubmission',
             filter=Q(motion__ballotsubmission__debate__round=F('round')),
