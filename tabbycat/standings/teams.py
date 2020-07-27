@@ -379,7 +379,7 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
     }
 
     ranking_annotator_classes = {
-        "rank"        : BasicRankAnnotator,
-        "subrank"     : SubrankAnnotator,
-        "institution" : RankFromInstitutionAnnotator,
+        "rank"            : BasicRankAnnotator,
+        "subrank"         : SubrankAnnotator,
+        "institution_rank": RankFromInstitutionAnnotator,
     }
