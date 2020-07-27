@@ -2545,6 +2545,8 @@ components:
             format: uri
         url_key:
           title: URL Key
+          description: >-
+            Set null to automatically generate; set as empty string to have no URL key.
           type: string
           format: slug
           pattern: '^[-a-zA-Z0-9_]+$'
@@ -3215,6 +3217,8 @@ components:
             format: uri
         url_key:
           title: URL Key
+          description: >-
+            Set null to automatically generate; set as empty string to have no URL key.
           type: string
           format: slug
           pattern: '^[-a-zA-Z0-9_]+$'

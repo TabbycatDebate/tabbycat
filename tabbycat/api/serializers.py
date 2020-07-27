@@ -15,6 +15,7 @@ from draw.models import Debate, DebateTeam
 from motions.models import Motion
 from participants.emoji import pick_unused_emoji
 from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
+from privateurls.utils import populate_url_keys
 from results.mixins import TabroomSubmissionFieldsMixin
 from tournaments.models import Round, Tournament
 from venues.models import Venue, VenueCategory
@@ -22,12 +23,6 @@ from venues.models import Venue, VenueCategory
 from .fields import (AdjudicatorFeedbackIdentityField, AnonymisingHyperlinkedTournamentRelatedField, MotionHyperlinkedIdentityField,
     RoundHyperlinkedIdentityField, RoundHyperlinkedRelatedField, TournamentHyperlinkedIdentityField,
     TournamentHyperlinkedRelatedField)
-
-
-def empty_without_null_validator(value):
-    if value == '':
-        raise serializers.ValidationError("Field cannot be an empty string. Use null.")
-    return value
 
 
 class TournamentSerializer(serializers.ModelSerializer):
@@ -290,8 +285,17 @@ class SpeakerSerializer(serializers.ModelSerializer):
         fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
                   'categories', 'url_key', '_links')
 
-    def validate_url_key(self, value):
-        return empty_without_null_validator(value)
+    def create(self, validated_data):
+        url_key = validated_data.pop('url_key', None)
+        if url_key is not None and len(url_key) != 0:  # Let an empty string be null for the uniqueness constraint
+            validated_data['url_key'] = url_key
+
+        speaker = super().create(validated_data)
+
+        if url_key is None:
+            populate_url_keys([speaker])
+
+        return speaker
 
 
 class AdjudicatorSerializer(serializers.ModelSerializer):
@@ -351,11 +355,15 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
                   'institution', 'base_score', 'trainee', 'independent', 'adj_core',
                   'institution_conflicts', 'team_conflicts', 'adjudicator_conflicts', 'url_key', '_links')
 
-    def validate_url_key(self, value):
-        return empty_without_null_validator(value)
-
     def create(self, validated_data):
+        url_key = validated_data.pop('url_key', None)
+        if url_key is not None and len(url_key) != 0:  # Let an empty string be null for the uniqueness constraint
+            validated_data['url_key'] = url_key
+
         adj = super().create(validated_data)
+
+        if url_key is None:  # If explicitly null (and not just an empty string)
+            populate_url_keys([adj])
 
         if adj.institution is not None:
             adj.adjudicatorinstitutionconflict_set.get_or_create(institution=adj.institution)
