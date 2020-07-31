@@ -107,7 +107,7 @@ def populate_results(ballotsubs):
     debateteams = DebateTeam.objects.filter(
         debate__ballotsubmission__in=ballotsubs,
         side__in=sides,
-    ).select_related('team').distinct()
+    ).select_related('team', 'team__tournament').distinct()
 
     for dt in debateteams:
         for result in results_by_debate_id[dt.debate_id]:
@@ -118,7 +118,7 @@ def populate_results(ballotsubs):
         ballot_submission__in=ballotsubs,
         debate_team__side__in=sides,
         position__in=positions,
-    ).select_related('debate_team')
+    ).select_related('speaker', 'speaker__team__tournament', 'debate_team')
 
     for ss in speakerscores:
         result = results_by_ballotsub_id[ss.ballot_submission_id]
@@ -134,7 +134,7 @@ def populate_results(ballotsubs):
         debate__ballotsubmission__in=ballotsubs,
     ).exclude(
         type=DebateAdjudicator.TYPE_TRAINEE,
-    ).select_related('adjudicator__institution').distinct()
+    ).select_related('adjudicator__institution', 'adjudicator__tournament').distinct()
 
     for da in debateadjs:
         for result in results_by_debate_id[da.debate_id]:

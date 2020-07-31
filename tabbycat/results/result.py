@@ -45,6 +45,7 @@ from statistics import mean
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 
+from .result_info import DebateResultInfo
 from .scoresheet import (BPEliminationScoresheet, BPScoresheet, HighPointWinsRequiredScoresheet, LowPointWinsAllowedScoresheet,
                          ResultOnlyScoresheet, TiedPointWinsAllowedScoresheet)
 from .utils import side_and_position_names
@@ -248,7 +249,7 @@ class BaseDebateResult:
         if not self.debate.sides_confirmed:
             return  # don't load if sides aren't confirmed
 
-        d_teams = self.debate.debateteam_set.select_related('team').all()
+        d_teams = self.debate.debateteam_set.select_related('team', 'team__tournament').all()
         if set(dt.side for dt in d_teams) != set(self.sides):
             raise ResultError("Debate has invalid sides.")
 
@@ -354,6 +355,9 @@ class BaseDebateResult:
             teams.append(side_dict)
         return teams
 
+    def get_result_info(self):
+        return DebateResultInfo(self)
+
 
 class DebateResultByAdjudicator(BaseDebateResult):
     """Base class for voting ballots.
@@ -409,7 +413,7 @@ class DebateResultByAdjudicator(BaseDebateResult):
 
     def load_scoresheets(self):
         self.debateadjs_query = self.debate.debateadjudicator_set.exclude(
-            type=DebateAdjudicator.TYPE_TRAINEE).select_related('adjudicator')
+            type=DebateAdjudicator.TYPE_TRAINEE).select_related('adjudicator', 'adjudicator__tournament')
         self.debateadjs = {da.adjudicator: da for da in self.debateadjs_query}
         self.scoresheets = {adj: self.scoresheet_class(
             positions=getattr(self, 'positions', None)) for adj in self.debateadjs.keys()
@@ -658,7 +662,7 @@ class DebateResultWithScoresMixin:
         speakerscores = self.ballotsub.speakerscore_set.filter(
             debate_team__side__in=self.sides,
             position__in=self.positions,
-        ).select_related('speaker', 'debate_team')
+        ).select_related('speaker', 'speaker__team__tournament', 'debate_team')
 
         for ss in speakerscores:
             self.speakers[ss.debate_team.side][ss.position] = ss.speaker
