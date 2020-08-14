@@ -50,9 +50,15 @@
             entered by <strong>{{ submitter }}</strong>,
           {% endblocktrans %}
         {% elif other.submitter_type == ballotsub.SUBMITTER_PUBLIC %}
-          {% blocktrans trimmed with ip_address=other.ip_address %}
-            submitted from the public form on {{ ip_address }},
-          {% endblocktrans %}
+          {% if other.participant_submitter %}
+            {% blocktrans trimmed with adjudicator=other.participant_submitter %}
+              submitted from <strong>{{ adjudicator }}</strong>'s private URL,
+            {% endblocktrans %}
+          {% else %}
+            {% blocktrans trimmed with ip_address=other.ip_address %}
+              submitted from the public form on {{ ip_address }},
+            {% endblocktrans %}
+          {% endif %}
         {% endif %}
 
         {% blocktrans trimmed with timestamp=other.timestamp timeago=other.timestamp|timesince %}
