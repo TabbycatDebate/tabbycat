@@ -3152,6 +3152,23 @@ components:
               items:
                 type: string
                 format: uri
+        bracket:
+          title: Bracket
+          type: number
+        room_rank:
+          title: room rank
+          type: integer
+        importance:
+          title: importance
+          type: integer
+        result_status:
+          title: result status
+          type: string
+          enum:
+            - N
+            - P
+            - D
+            - C
         sides_confirmed:
           title: Sides confirmed
           description: >-

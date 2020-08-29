@@ -586,9 +586,17 @@ class RoundPairingSerializer(serializers.ModelSerializer):
     teams = DebateTeamSerializer(many=True, source='debateteam_set')
     adjudicators = DebateAdjudicatorSerializer()
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not kwargs['context']['request'].user.is_staff:
+            self.fields.pop('bracket')
+            self.fields.pop('room_rank')
+            self.fields.pop('importance')
+            self.fields.pop('result_status')
+
     class Meta:
         model = Debate
-        fields = ('url', 'id', 'venue', 'teams', 'adjudicators', 'sides_confirmed')
+        exclude = ('round', 'flags')
 
     def create(self, validated_data):
         teams_data = validated_data.pop('debateteam_set')
