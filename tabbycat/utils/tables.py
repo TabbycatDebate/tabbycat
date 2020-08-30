@@ -160,6 +160,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
     }
 
     BLANK_TEXT = _("—")
+    REDACTED_CELL = {'text': "<em>" + _("Redacted") + "</em>", 'class': 'no-wrap'}
 
     def __init__(self, view=None, **kwargs):
         """Constructor.
@@ -478,12 +479,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         adj_data = []
         for adj in adjudicators:
-            cell = {'text': adj.name}
-            if self._show_record_links:
-                cell['popover'] = {'content': [self._adjudicator_record_link(adj)]}
-            if subtext == 'institution' and adj.institution is not None:
-                cell['subtext'] = adj.institution.code
-            adj_data.append(cell)
+            if adj.anonymous:
+                adj_data.append(self.REDACTED_CELL)
+            else:
+                cell = {'text': adj.name}
+                if self._show_record_links:
+                    cell['popover'] = {'content': [self._adjudicator_record_link(adj)]}
+                if subtext == 'institution' and adj.institution is not None:
+                    cell['subtext'] = adj.institution.code
+                adj_data.append(cell)
         self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'}, adj_data)
 
         if show_institutions and self.tournament.pref('show_adjudicator_institutions'):
@@ -660,7 +664,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         speaker_data = []
         for speaker in speakers:
             if getattr(speaker, 'anonymise', False):
-                speaker_data.append({'text': "<em>" + _("Redacted") + "</em>", 'class': 'no-wrap'})
+                speaker_data.append(self.REDACTED_CELL)
             else:
                 speaker_data.append({
                     'text': speaker.name,
