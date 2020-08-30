@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-05 13:59-0300\n"
+"POT-Creation-Date: 2020-08-30 20:00-0300\n"
 "PO-Revision-Date: 2019-07-11 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -330,9 +330,6 @@ msgid "current round: %(round)s, status: %(status)s"
 msgstr ""
 
 #: tournaments/templates/blank_site_start.html:7
-msgid "Welcome to Tabbycat"
-msgstr ""
-
 #: tournaments/templates/blank_site_start.html:20
 msgid "Welcome to Tabbycat!"
 msgstr ""
