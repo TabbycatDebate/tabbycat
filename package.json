@@ -22,7 +22,7 @@
     "windows-build": "SET NODE_ENV='production' & npm-run-all -p build-* cp-* && cpx \"tabbycat/static/vue/app.js\" \"tabbycat/static/vue/js/\""
   },
   "dependencies": {
-    "@babel/cli": "^7.10.3",
+    "@babel/cli": "^7.11.5",
     "@babel/core": "^7.10.3",
     "@babel/preset-env": "^7.10.3",
     "@popperjs/core": "^2.4.2",
