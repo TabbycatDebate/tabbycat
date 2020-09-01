@@ -52,6 +52,12 @@ paths:
           required: false
           schema:
             type: integer
+        - name: region
+          in: query
+          description: Name of the region to include.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: ''
@@ -813,6 +819,12 @@ paths:
           required: false
           schema:
             type: integer
+        - name: region
+          in: query
+          description: Name of the region to include.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: ''
@@ -2214,7 +2226,8 @@ components:
           minLength: 1
         region:
           title: Region
-          type: integer
+          type: string
+          maxLength: 100
           nullable: true
     TournamentInstitution:
       required:
@@ -2249,7 +2262,8 @@ components:
           minLength: 1
         region:
           title: Region
-          type: integer
+          type: string
+          maxLength: 100
           nullable: true
         teams:
           title: Teams

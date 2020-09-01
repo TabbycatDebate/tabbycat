@@ -127,9 +127,14 @@ class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
         serializer.save()
 
     def get_queryset(self):
+        filters = Q()
+        if self.request.query_params.get('region'):
+            filters &= Q(region__name=self.request.query_params['region'])
+
         return Institution.objects.filter(
             Q(adjudicator__tournament=self.tournament) | Q(team__tournament=self.tournament),
-        ).distinct().prefetch_related(
+            filters,
+        ).distinct().select_related('region').prefetch_related(
             Prefetch('team_set', queryset=self.tournament.team_set.all()),
             Prefetch('adjudicator_set', queryset=self.tournament.adjudicator_set.all()),
         )
@@ -166,7 +171,10 @@ class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.InstitutionSerializer
 
     def get_queryset(self):
-        return Institution.objects.all()
+        filters = Q()
+        if self.request.query_params.get('region'):
+            filters &= Q(region__name=self.request.query_params['region'])
+        return Institution.objects.filter(filters).select_related('region')
 
 
 class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
