@@ -144,7 +144,7 @@ class RoundSerializer(serializers.ModelSerializer):
         return round
 
     def update(self, instance, validated_data):
-        motions_data = validated_data.pop('motions')
+        motions_data = validated_data.pop('motion_set')
         for motion in motions_data:
             try:
                 Motion.objects.update_or_create(round=instance, seq=motion.get('seq'), defaults={
