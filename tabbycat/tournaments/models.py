@@ -321,7 +321,7 @@ class Round(models.Model):
     objects = RoundManager()
 
     tournament = models.ForeignKey(Tournament, models.CASCADE, verbose_name=_("tournament"))
-    seq = models.IntegerField(verbose_name=_("sequence number"),
+    seq = models.PositiveIntegerField(verbose_name=_("sequence number"),
         help_text=_("A number that determines the order of the round, should count consecutively from 1 for the first round"))
     completed = models.BooleanField(default=False,
         verbose_name=_("completed"),

@@ -156,7 +156,7 @@ class ActionLogEntry(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True,
         verbose_name=_("timestamp"))
     # cascade to avoid double-null user/ip-address
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, blank=True, null=True,
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT, blank=True, null=True,
         verbose_name=_("user"))
     ip_address = models.GenericIPAddressField(blank=True, null=True,
         verbose_name=_("IP address"))

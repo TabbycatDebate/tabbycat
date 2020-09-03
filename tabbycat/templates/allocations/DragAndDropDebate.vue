@@ -46,21 +46,21 @@
       </div>
     </slot>
     <slot name="teams">
-      <div class="vc-bp-grid flex-12 flex-truncate" v-if="sides.length === 4">
-        <div :class="['d-flex flex-truncate align-items-center']"
-             v-for="side in sides" v-if="debateOrPanel.teams">
+      <div class="vc-bp-grid flex-12 flex-truncate" v-if="sides.length === 4 && debateOrPanel.teams">
+        <div :class="['d-flex flex-truncate align-items-center']" v-for="side in sides">
           <inline-team v-if="debateOrPanel.teams[side]" :debate-id="debateOrPanel.id"
-                       :is-elimination="isElimination" :team="debateOrPanel.teams[side]"></inline-team>
+                       :is-elimination="isElimination" :team="debateOrPanel.teams[side]"
+                       :key="debateOrPanel.teams[side].id"></inline-team>
           <div v-else class="bg-danger small text-white text-uppercase px-2 py-1 flex-fill d-flex align-items-center">
             No {{ side }} team
           </div>
         </div>
       </div>
-      <div class="d-flex flex-column flex-6 flex-truncate" v-if="sides.length === 2">
-        <div :class="['d-flex flex-fill align-items-center']"
-             v-for="side in sides" v-if="debateOrPanel.teams">
+      <div class="d-flex flex-column flex-6 flex-truncate" v-if="sides.length === 2 && debateOrPanel.teams">
+        <div :class="['d-flex flex-fill align-items-center']" v-for="side in sides">
           <inline-team v-if="debateOrPanel.teams[side]" :debate-id="debateOrPanel.id"
-                       :is-elimination="isElimination" :team="debateOrPanel.teams[side]"></inline-team>
+                       :is-elimination="isElimination" :team="debateOrPanel.teams[side]"
+                       :key="debateOrPanel.teams[side].id"></inline-team>
           <div v-else class="bg-danger small text-white text-uppercase px-2 py-1 flex-fill d-flex align-items-center">
             No {{ side }} team
           </div>
@@ -103,11 +103,11 @@ export default {
         let liveness = 0
         if ('teams' in this.debateOrPanel && this.debateOrPanel.teams) {
           for (const keyAndEntry of Object.entries(this.debateOrPanel.teams)) {
-            let team = keyAndEntry[1]
+            const team = keyAndEntry[1]
             // Team can be a number (ID) or null (e.g. when editing sides)
             if (team !== null && typeof team === 'object' && 'break_categories' in team) {
-              for (let bc of team.break_categories) {
-                let category = this.highlights.break.options[bc]
+              for (const bc of team.break_categories) {
+                const category = this.highlights.break.options[bc]
                 if (category && team.points > category.fields.dead && team.points < category.fields.safe) {
                   liveness += 1
                 }

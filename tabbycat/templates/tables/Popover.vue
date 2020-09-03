@@ -1,19 +1,38 @@
 <template>
 
   <v-touch class="touch-target" ref="container" v-on:tap="togglePopOver">
-    <div class="hover-target" @mouseenter="showPopOver">
+    <div class="hover-target" @mouseenter="showPopOver" @mouseleave="hidePopOver">
 
       <slot>
         {{ cellData.content }}
       </slot>
 
+      <div class="popover bs-popover-bottom" role="tooltip" ref="popover"
+           v-show="showingPopOver" @mouseenter="hoveringPopOver = true" @mouseleave="hidePopOver">
+        <div class="popover-header d-flex">
+          <h6 class="flex-grow-1" v-if="cellData.title">{{ cellData.title }}</h6>
+          <div class="popover-close" v-on:click="hidePopOver(true)" v-on:tap="hidePopOver(true)">
+            <i data-feather="x" class="hoverable text-danger"></i>
+          </div>
+        </div>
+        <div class="popover-body">
+          <div class="list-group list-group-item-flush">
+            <div class="list-group-item" v-for="item in cellData.content">
+              <a :href="item.link" v-if="item.link">{{ item.text }}</a>
+              <span v-else>{{ item.text }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
+
   </v-touch>
 
 </template>
 
 <script>
-import _ from 'lodash'
+import { createPopper } from '@popperjs/core'
 // Inheriting componets should provide a getPopOverTitle() method
 // Along with providing an element with the "popover-raw" class as a direct
 // descendent of the component's root template
@@ -27,11 +46,27 @@ export default {
   data: function () {
     return {
       showingPopOver: false,
+      hoveringPopOver: false, // If mouse is hovering inside the popover
+      popperInstance: Object,
     }
   },
   created: function () {
     // Watch for events on the global event hub
     this.$eventHub.$on('hideOtherPopOvers', this.responeToGlobalHide)
+  },
+  mounted: function () {
+    this.popperInstance = createPopper(this.$refs.container.$el, this.$refs.popover, {
+      placement: 'right-end',
+      strategy: 'fixed',
+      modifiers: [
+        {
+          name: 'offset',
+          options: {
+            offset: [10, -20],
+          },
+        },
+      ],
+    })
   },
   methods: {
     togglePopOver: function (event) {
@@ -40,71 +75,26 @@ export default {
           // Need to give time to taps on links to register
           setTimeout(() => this.hidePopOver(), 150)
         } else {
-          this.showPopOver()
+          this.showingPopOver = true
         }
       }
     },
-    getPopContent: function () {
-      // Grab popover content from actual render html back as a string
-      // Include the HTML explicitly in the template created problems
-      let string = ''
-      if (this.cellData.content.length > 0) {
-        string += '<div class="list-group list-group-item-flush">'
-        _.forEach(this.cellData.content, (item) => {
-          string += '<div class="list-group-item">'
-          if (item.link) {
-            string += `<a href="${item.link}">${item.text}</a></div>`
-          } else {
-            string += `${item.text}</div>`
-          }
-        })
-        string += '</div>'
-      }
-      return string
-    },
-    getPopTitle: function () {
-      if (!_.isUndefined(this.cellData.title)) {
-        return this.cellData.title
-      }
-      return ''
-    },
     showPopOver: function () {
-      if (this.showingPopOver) {
-        return // This throws errors in Boostraps popover calls if not caught
-      }
-
-      $(this.$refs.container.$el).popover({
-        animation: false,
-        trigger: 'hover', // Dismiss handlers
-        placement: 'bottom',
-        fallbackPlacement: 'clockwise', // Can't be flip given overlap offsets
-        html: true,
-        title: this.getPopTitle,
-        content: this.getPopContent,
-        container: this.$refs.container.$el, // Must be same as event trigger
-        offset: '0px, -12px', // Shift so hover is easier
-      })
-      $(this.$refs.container.$el).popover('show')
-
-      // Wait until the show/hide actions finish before changing state
-      const self = this
-      $(this.$refs.container.$el).on('shown.bs.popover', () => {
-        self.showingPopOver = true
-        self.$eventHub.$emit('hideOtherPopOvers', self._uid)
-      })
-      $(this.$refs.container.$el).on('hidden.bs.popover', () => {
-        self.showingPopOver = false
-      })
+      this.$eventHub.$emit('hideOtherPopOvers', self._uid)
+      this.popperInstance.setOptions({ placement: 'bottom' })
+      this.showingPopOver = true
     },
-    hidePopOver: function () {
-      if (this.showingPopOver) {
-        $(this.$refs.container.$el).tooltip().popover('dispose')
+    hidePopOver: function (force = false) {
+      if (!this.hoveringPopOver || force) {
+        // To access link items in the popover the cursor will leave the main element
+        // So don't dismiss the popover if this is the case
         this.showingPopOver = false
+        this.hoveringPopOver = false
       }
     },
     responeToGlobalHide (uid) {
       if (this._uid !== uid) {
-        this.hidePopOver()
+        this.hidePopOver(true)
       }
     },
   },

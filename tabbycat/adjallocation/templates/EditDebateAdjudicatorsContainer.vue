@@ -59,7 +59,7 @@ export default {
       allocations in their place.`,
     prioritiseIntro: `Using auto-prioritise will remove all existing debate priorities and assign
       new ones.`,
-    noDebatesInline: `There are no debates created for this round.`,
+    noDebatesInline: 'There are no debates created for this round.',
   }),
 }
 </script>

@@ -1,5 +1,6 @@
 import logging
 
+from django.contrib.humanize.templatetags.humanize import ordinal
 from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.db import models
@@ -36,7 +37,7 @@ class Debate(models.Model):
     round = models.ForeignKey('tournaments.Round', models.CASCADE, db_index=True,
         verbose_name=_("round"))
     venue = models.ForeignKey('venues.Venue', models.SET_NULL, blank=True, null=True,
-        verbose_name=_("venue"))
+        verbose_name=_("room"))
 
     bracket = models.FloatField(default=0,
         verbose_name=_("bracket"))
@@ -292,14 +293,8 @@ class DebateTeam(models.Model):
 
     def get_result_display(self):
         if self.team.tournament.pref('teams_in_debate') == 'bp':
-            if self.points == 3:
-                return gettext("placed 1st")
-            elif self.points == 2:
-                return gettext("placed 2nd")
-            elif self.points == 1:
-                return gettext("placed 3rd")
-            elif self.points == 0:
-                return gettext("placed 4th")
+            if self.points is not None:
+                return gettext("placed %(place)s") % {'place': ordinal(4 - self.points)}
             else:
                 return gettext("result unknown")
         else:

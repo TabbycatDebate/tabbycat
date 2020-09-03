@@ -639,7 +639,7 @@ class PublicDiversityStandingsView(PublicTournamentPageMixin, BaseDiversityStand
 
 class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
     public_page_preference = 'adjudicators_tab_released'
-    page_title = 'Feedback Overview'
+    page_title = gettext_lazy('Feedback Overview')
     page_emoji = '🙅'
     for_public = False
     sort_key = 'name'
@@ -656,7 +656,7 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
             table.add_base_score_columns(adjudicators)
         if self.tournament.pref('adjudicators_tab_shows') == 'all':
             table.add_feedback_graphs(adjudicators)
-        messages.info(self.request, ("An adjudicator's score is determined by "
+        messages.info(self.request, _("An adjudicator's score is determined by "
             "a customisable mix of their base score and their feedback ratings."
             " The current mix is specified below as the 'Score Components.' "
             "Feedback ratings are determined by averaging the results of all "

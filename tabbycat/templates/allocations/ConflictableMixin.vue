@@ -11,7 +11,7 @@ export default {
             continue
           }
           // Need to find the adjudicator's own institutional conflicts to compare
-          let adjsInstitutionalConflicts = this.adjudicatorClashesForItem(adjudicatorId)
+          const adjsInstitutionalConflicts = this.adjudicatorClashesForItem(adjudicatorId)
           if (adjsInstitutionalConflicts && 'institution' in adjsInstitutionalConflicts) {
             for (const institutionalConflict of adjsInstitutionalConflicts.institution) {
               if (institutionalConflict.id === idToFind) {
@@ -28,9 +28,9 @@ export default {
       // Search for the institutional conflict amongst the conflicts of the teams present
       let found = false
       Object.keys(debateTeams).forEach(debateTeamPosition => {
-        let team = debateTeams[debateTeamPosition]
+        const team = debateTeams[debateTeamPosition]
         if (team !== null) { // Handle when sides editing may be in progress
-          let teamsConflicts = this.teamClashesForItem(team.id)
+          const teamsConflicts = this.teamClashesForItem(team.id)
           if (typeof teamsConflicts !== 'undefined') {
             if ('institution' in teamsConflicts) {
               for (const institutionalConflict of teamsConflicts.institution) {

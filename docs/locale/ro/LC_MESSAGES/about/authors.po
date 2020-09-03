@@ -1,0 +1,70 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-02-25 20:17\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Romanian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ro\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/about/authors.po\n"
+"Language: ro_RO\n"
+
+#: ../../../AUTHORS.rst:3
+msgid "Authors & Acknowledgements"
+msgstr ""
+
+#: ../../../AUTHORS.rst:6
+msgid "Authors"
+msgstr ""
+
+#: ../../../AUTHORS.rst:8
+msgid "Tabbycat was authored by Qi-Shan Lim for Auckland Australs 2010. The current active maintainers are:"
+msgstr ""
+
+#: ../../../AUTHORS.rst:10
+msgid "Philip Belesky (`pb-e-mail <mailto:contact@philipbelesky.com>`_)"
+msgstr ""
+
+#: ../../../AUTHORS.rst:11
+msgid "Chuan-Zheng Lee (`cz-e-mail <mailto:czlee@stanford.edu>`_)"
+msgstr ""
+
+#: ../../../AUTHORS.rst:13
+msgid "Please don't hesitate to contact us with any suggestions, expressions of interest or generally anything relating to Tabbycat."
+msgstr ""
+
+#: ../../../AUTHORS.rst:16
+msgid "Contributors"
+msgstr ""
+
+#: ../../../AUTHORS.rst:18
+msgid "Étienne Beaulé has contributed many features, fixes, and suggestions across many aspects of Tabbycat."
+msgstr ""
+
+#: ../../../AUTHORS.rst:19
+msgid "Thevesh Theva contributed the algorithm for calculating the liveness of teams within a particular break category."
+msgstr ""
+
+#: ../../../AUTHORS.rst:20
+msgid "Viran Weerasekera contributed the statistical tests used to estimate the degree to which a motion's results and vetoes are balanced."
+msgstr ""
+
+#: ../../../AUTHORS.rst:21
+msgid "Viran Weerasekera, Valerie Tierney, Molly Dale, Madeline Schultz, and Vail Bromberger contributed to the \"Tournament Logistics\" section of our documentation."
+msgstr ""
+
+#: ../../../AUTHORS.rst:24
+msgid "Sponsors"
+msgstr ""
+
+#: ../../../AUTHORS.rst:26
+msgid "Thanks to the Western Australian Debating League for sponsoring various features related to organising division-based tournaments and round-robin based draw methods."
+msgstr ""
+

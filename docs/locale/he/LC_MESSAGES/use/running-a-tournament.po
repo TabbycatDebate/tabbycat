@@ -1,0 +1,194 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-03-11 21:06\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Hebrew\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: he\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/use/running-a-tournament.po\n"
+"Language: he_IL\n"
+
+#: ../../use/running-a-tournament.rst:5
+msgid "Running a Tournament"
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:7
+msgid "Once you've finished the steps in :ref:`starting-a-tournament`, you're ready to go! This page outlines what you would do for each round during the tournament. After the tournament, proceed to :ref:`finishing-a-tournament`."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:9
+msgid "This is all done from the admin area (*i.e.*, by the tab director or adjudication core member). In the admin area, tournament-wide pages (feedback, standings, and break) are at the top of the left-hand menu, while round-specific pages (availability, draw, display, motions, and results) are in dropdown's organised by each round's abbreviation."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:11
+msgid "The basic workflow for each round is:"
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:13
+msgid ":ref:`Mark the teams, adjudicators, and venues present as available <availability>`"
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:14
+msgid ":ref:`Generate the draw <generating-the-draw>` and allocate the adjudicators"
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:15
+msgid ":ref:`Show/release the draw <releasing-the-draw>`"
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:16
+msgid ":ref:`Release/enter <releasing-the-motions>` the motions"
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:17
+msgid "Have the debates"
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:18
+msgid ":ref:`Enter results <entering-results>`"
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:19
+msgid ":ref:`Advance to the next round <advancing-round>`"
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:24
+msgid "Availability"
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:26
+msgid "**Set availability.** For each round, you need to set the venue, team and adjudicator availability. If any of those are not marked as available they will not be used within the draw; so this feature is mostly useful for when adjudicators or venues are only available for certain rounds."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:28
+msgid "To do this, click the round in the menu, then click **Check-Ins**. Here you can then go to the availability pages for venue, teams, and adjudicators, or check in everything at once. When you've set everything appropriately use the **Generate Draw** button in the top right to advance."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:34
+msgid "You can set availabilities in advance of the current round — ie if you know the venue/adjudicator schedules their availabilities can be set ahead of time."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:37
+msgid "Generating the draw"
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:39
+msgid "**Confirm the draft draw**. After advancing from availability section you will first be shown a draft draw that details how the draw was formulated, pointing out pull-ups and conflict swaps and the like."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:43
+msgid "The draft draw is for you to double-check. While there are some basic tests on the draw algorithm, it never hurts to sanity-check it again."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:45
+msgid "If you *do* find something wrong with a draft draw, you can edit the match-ups, but please also let us know what the problem was! You can find our contact details in the :ref:`authors` section."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:47
+msgid "Once on the confirmed draw page you can click **Edit Adjudicators**."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:51
+msgid "**Allocate the adjudicators**. Changes here will auto-save; feel free to return to the **Draw** when needed. See :ref:`adjudicator allocation <adjudicator-allocation>` for more details about the allocation process."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:55
+msgid "If you are using venue constraints the **Draw** page may prompt you to Auto Allocate the venues used to satisfy those constraints; see :ref:`venue-constraints <venue-constraints>` for more details. Regardless of whether you are using venue constraints or not you can change the Venues per-debate in the **Edit Venues** area."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:60
+msgid "Releasing the draw"
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:62
+msgid "Once you're happy with your adjudicator allocation, you're ready to start the round."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:64
+msgid "**Release to general assembly.** From the *Display* page for that round, go to **Show by Venue** or **Show by Team** (whichever you prefer). Then put it up on the projector. There are automatic scroll buttons and buttons for changing text sizing."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:68
+msgid "**Release to public.** If you're using the public draw function (where the draw is posted publicly to your Tabbycat website) use the **Release to Public** button to allow the page to display."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:72
+msgid "To avoid the site from being overloaded by anxious refreshers, we recommend that large tournaments not release the draw to the public until after it's been seen by general assembly. That said, note that due to caching there can be a delay of up to 1 minute between when a draw is released and when it first shows up on the public site."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:73
+msgid "Tabbycat can be set to send emails once the draw is released to adjudicators informing them of their assignments for convenience."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:78
+msgid "Entering and Releasing Motions"
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:80
+msgid "Tabbycat is agnostic as to whether you enter motions into Tabbycat before or after they are shown publicly. However, they must be entered *at some point* before ballots are entered."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:82
+msgid "**Enter the motion text.** Either before or after their public release motions can be entered in the **Motions** section for that round."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:84
+msgid "**Release to general assembly.** If you are entering motions *before* they are publicly revealed note that there is a *Display Motions* button in the **Display** area that allows you to do a Power Point style motion release."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:86
+msgid "**Release to public.** As with draws, if you have the *enable public view of motions* setting configured your Tabbycat website will display a running list of motions from the tournament. When this is on, using the **Release Motions to Public** button on the **Motions** page will mark the current set of motions as able to be displayed on this page."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:91
+msgid "Entering Results"
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:93
+msgid "Enter debate results and feedback as they come in (and/or allow online entry of results and feedback)."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:95
+msgid "Both results and feedback entered in the tab room or online need to be confirmed before the results are counted. To confirm a debate ballot and the debate as a whole, the confirmed checkbox under *Ballot Status* should be ticket in addition to the *Debate Status* being set to Confirmed."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:97
+msgid "Note that you can track data entry progress from the **Overview** page for the tournament."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:99
+msgid "See :ref:`data-entry` for more details about the data entry process."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:101
+msgid "We strongly recommend entering all data using the assistant area, not the admin area. This is because the admin area (intentionally) does not enforce the data confirmation procedure."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:106
+msgid "Advancing to the next round"
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:108
+msgid "Once you've got all the results entered and confirmed, you're ready to progress to the next round. This can be done by going to the **Results** area, and then using the **Advance to Next Round** button."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:112
+msgid "When you advance to the next round, if you've enabled public results, the results for the current round (which is now the previous round) will be released to the public **unless** the round is marked as \"silent\" in the database. So if you're careful about when results should be released, don't change the current round until you're ready to release those results."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:114
+msgid "There is a design assumption that you will always want to release results for non-silent rounds before you start working on the draw for the next round. If this isn't true for you, please get in touch with us so that we know. The workaround is to make all rounds silent, then unsilent them when you're ready to release results."
+msgstr ""
+
+#: ../../use/running-a-tournament.rst:116
+msgid "Emails can be sent to speakers informing them of their team's win/loss/points record before advancing rounds. This is independent from whether the whole round's results are released to the public."
+msgstr ""
+

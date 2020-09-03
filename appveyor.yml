@@ -16,10 +16,10 @@ build: false
 
 # Set python version to not be the default (2.7.X)
 environment:
-  nodejs_version: "8" # Match install instructions
+  nodejs_version: "12" # Match install instructions
   matrix:
-    - PYTHON: "C:\\Python36" # Match install instructions
-      PYTHON_VERSION: "3.6.8"
+    - PYTHON: "C:\\Python38" # Match install instructions
+      PYTHON_VERSION: "3.8.3"
       PYTHON_ARCH: "32"
   global:
     POSTGRES_ENV_POSTGRES_USER: postgres

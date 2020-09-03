@@ -95,7 +95,7 @@ export default {
       return this.$store.state.round.stage === 'E'
     },
     currentHighlightKey: function () {
-      let currentKey = Object.keys(this.highlights).filter(key => this.highlights[key].active)
+      const currentKey = Object.keys(this.highlights).filter(key => this.highlights[key].active)
       if (currentKey.length > 0) {
         return currentKey[0]
       }

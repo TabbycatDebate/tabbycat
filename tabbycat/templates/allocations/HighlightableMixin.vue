@@ -17,7 +17,7 @@ export default {
       ].join(' ')
     },
     activeClass: function () {
-      let currentKey = Object.keys(this.highlights).filter(key => this.highlights[key].active)
+      const currentKey = Object.keys(this.highlights).filter(key => this.highlights[key].active)
       if (currentKey.length > 0) {
         return currentKey + '-display'
       }
@@ -76,8 +76,8 @@ export default {
     getCSSForOverlapping: function (highlightKey, highlightType) {
       if (typeof this.highlightData === 'object' && this.highlightData && highlightKey in this.highlightData) {
         var classes = []
-        let highlightCategories = Object.keys(this.highlights[highlightType].options)
-        for (let category of this.highlightData[highlightKey]) {
+        const highlightCategories = Object.keys(this.highlights[highlightType].options)
+        for (const category of this.highlightData[highlightKey]) {
           let matchingCategory = []
           if (typeof category === 'object') {
             matchingCategory = highlightCategories.filter(
@@ -97,8 +97,8 @@ export default {
     getCSSForOrder: function (highlightKey, highlightType) {
       if (this.highlightData && typeof this.highlightData === 'object') {
         if (highlightKey in this.highlightData) {
-          let orderedCategories = Object.keys(this.highlights[highlightType].options)
-          for (let category of orderedCategories) {
+          const orderedCategories = Object.keys(this.highlights[highlightType].options)
+          for (const category of orderedCategories) {
             if (this.highlightData[highlightKey] >= this.highlights[highlightType].options[category].fields.cutoff) {
               return this.highlights[highlightType].options[category].css
             }

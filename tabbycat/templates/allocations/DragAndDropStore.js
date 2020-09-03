@@ -106,11 +106,16 @@ export default new Vuex.Store({
     },
     setSorting (state, sortType) {
       let debatesArray = Object.values(state.debatesOrPanels)
+
+      if (debatesArray.length === 0) {
+        return // e.g. Preformed Panels page prior to use
+      }
+
       let bracketKey = 'bracket_min' in debatesArray[0] ? 'bracket_min' : 'bracket'
       // Sort the array of debates according to specified sort type
       if (sortType === 'bracket') {
         if (debatesArray.length > 0 && bracketKey === 'bracket_min') {
-          debatesArray.sort((a, b) => a.bracket_min - b.bracket_min).reverse()
+          debatesArray.sort((a, b) => ((a.bracket_min + a.bracket_max) / 2) - ((b.bracket_min + b.bracket_max) / 2)).reverse()
         } else {
           debatesArray.sort((a, b) => a.bracket - b.bracket).reverse()
         }

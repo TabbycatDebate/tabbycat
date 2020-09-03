@@ -12,14 +12,24 @@
 </template>
 
 <script>
+// Note this has to work across the VueX pages (where save updates are located in the store) and
+// across checkbox tables (where save updates are notified over the event hub)
+
 export default {
   props: { css: String },
   data: () => ({
-    lastSavedDisplay: '', animationClass: '', currentTimer: null,
+    lastSavedTime: null, lastSavedDisplay: '', animationClass: '', currentTimer: null,
   }),
+  created () {
+    this.$eventHub.$on('update-saved-counter', this.updateLastSavedTimeFromEvent)
+  },
   watch: {
-    lastSaved: function (lastSaved) {
-      // When the last saved store updates trigger updates to the display text once a second for 60s
+    lastSavedFromStore: function (time) {
+      // When the last saved store updates set the local variable to match
+      this.lastSavedTime = time
+    },
+    lastSavedTime: function (time) {
+      // When the local time updates, display it
       clearInterval(this.currentTimer)
       this.updatedLastSavedDisplay()
       this.animationClass = 'save-flash'
@@ -29,19 +39,22 @@ export default {
     },
   },
   methods: {
+    updateLastSavedTimeFromEvent: function (time) {
+      this.lastSavedTime = time
+    },
     updatedLastSavedDisplay: function () {
-      const secondsLastSaved = Math.abs(new Date() - this.lastSaved) / 1000
+      const secondsLastSaved = Math.abs(new Date() - this.lastSavedTime) / 1000
       if (secondsLastSaved > 5) {
         this.animationClass = '' // Remove animation flash
       }
       if (secondsLastSaved > 59) {
-        this.lastSavedDisplay = ` at ${this.lastSaved.getHours()}:${this.paddedMinutes()}`
+        this.lastSavedDisplay = ` at ${this.lastSavedTime.getHours()}:${this.paddedMinutes()}`
       } else {
         this.lastSavedDisplay = ` ${parseInt(secondsLastSaved)}s ago`
       }
     },
     paddedMinutes: function () {
-      const minutes = String(this.lastSaved.getMinutes())
+      const minutes = String(this.lastSavedTime.getMinutes())
       if (minutes.length === 1) {
         return `0${minutes}`
       }
@@ -49,7 +62,7 @@ export default {
     },
   },
   computed: {
-    lastSaved: function () {
+    lastSavedFromStore: function () {
       return this.$store.state.lastSaved
     },
   },

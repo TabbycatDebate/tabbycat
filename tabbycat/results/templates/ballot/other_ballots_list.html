@@ -3,21 +3,13 @@
 <ul class="list-group {% if all_ballotsubs.count > 0 %}mb-3{% endif %}">
 
   {% with nballotsubs=all_ballotsubs.count %}
-    {% if new and nballotsubs > 0 %}
+    {% if new and nballotsubs > 0 or nballotsubs > 1 %}
       <li class="list-group-item list-group-item-warning">
-        <h4 class="list-group-item-heading">
+        <h4 class="list-group-item-heading mb-0">
           {% blocktrans trimmed with number=nballotsubs|apnumber count nballotsubs=nballotsubs %}
             There is {{ number }} existing ballot set for this debate.
           {% plural %}
             There are {{ number }} existing ballot sets for this debate.
-          {% endblocktrans %}
-        </h4>
-      </li>
-    {% elif nballotsubs > 1 %}
-      <li class="list-group-item list-group-item-warning">
-        <h4 class="list-group-item-heading">
-          {% blocktrans trimmed with number=nballotsubs|apnumber %}
-            There are {{ number }} ballot sets for this debate.
           {% endblocktrans %}
         </h4>
       </li>
@@ -49,7 +41,7 @@
           <span class="badge badge-success float-right">{% trans "CURRENTLY VIEWING" %}</span>
         {% endif %}
 
-        {% blocktrans trimmed with version=other.version%}
+        {% blocktrans trimmed with version=other.version %}
           Version <strong>{{ version }}</strong>,
         {% endblocktrans %}
 
@@ -67,12 +59,11 @@
           {{ timestamp }} ({{ timeago }} ago),
         {% endblocktrans %}
 
-        {% if other.confirmed and other.confirmer %}
-          {% blocktrans trimmed with confirmer=other.confirmer %}
+        {% if other.confirmed %}
+          {% trans "unknown" as confirmer_unknown %}
+          {% blocktrans trimmed with confirmer=other.confirmer|default:confirmer_unknown %}
             confirmed by <strong>{{ confirmer }}</strong>
           {% endblocktrans %}
-        {% elif other.confirmed %}
-          {% trans "confirmed by <strong>unknown confirmer</strong>" %}
         {% else %}
           {% trans "unconfirmed" %}
         {% endif %}

@@ -12,7 +12,7 @@ version: '3'
 
 services:
   db:
-    image: postgres:10
+    image: postgres:12
     environment:
       - POSTGRES_PASSWORD=tabbycat
       - POSTGRES_USER=tabbycat

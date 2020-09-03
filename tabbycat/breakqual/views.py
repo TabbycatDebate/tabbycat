@@ -296,7 +296,7 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
                 'checked': True if bc in team.break_categories.all() else False,
                 'sort': True if bc in team.break_categories.all() else False,
                 'id': team.id,
-                'type': bc.slug,
+                'type': bc.id,
             } for team in teams])
 
         # Provide list of members within speaker categories for convenient entry
