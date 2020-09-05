@@ -139,7 +139,7 @@ class RoundSerializer(serializers.ModelSerializer):
         return round
 
     def update(self, instance, validated_data):
-        motions_data = validated_data.pop('motions')
+        motions_data = validated_data.pop('motion_set')
         for motion in motions_data:
             try:
                 Motion.objects.update_or_create(round=instance, seq=motion.get('seq'), defaults={
@@ -263,6 +263,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
         checkin = TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-checkin')
 
     url = TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-detail')
+    team = TournamentHyperlinkedRelatedField(view_name='api-team-detail', queryset=Team.objects.all())
     categories = TournamentHyperlinkedRelatedField(
         many=True,
         view_name='api-speakercategory-detail',
@@ -283,7 +284,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Speaker
         fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
-                  'categories', 'url_key', '_links')
+                  'categories', 'url_key', '_links', 'team')
 
     def create(self, validated_data):
         url_key = validated_data.pop('url_key', None)
@@ -372,6 +373,11 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
 
 class TeamSerializer(serializers.ModelSerializer):
+    class TeamSpeakerSerializer(SpeakerSerializer):
+        class Meta(SpeakerSerializer.Meta):
+            fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
+                      'categories', 'url_key', '_links')
+
     url = TournamentHyperlinkedIdentityField(view_name='api-team-detail')
     institution = serializers.HyperlinkedRelatedField(
         allow_null=True,
@@ -397,7 +403,7 @@ class TeamSerializer(serializers.ModelSerializer):
                   'institution_conflicts')
 
     def __init__(self, *args, **kwargs):
-        self.fields['speakers'] = SpeakerSerializer(*args, many=True, required=False, **kwargs)
+        self.fields['speakers'] = self.TeamSpeakerSerializer(*args, many=True, required=False, **kwargs)
 
         super().__init__(*args, **kwargs)
 
@@ -586,9 +592,17 @@ class RoundPairingSerializer(serializers.ModelSerializer):
     teams = DebateTeamSerializer(many=True, source='debateteam_set')
     adjudicators = DebateAdjudicatorSerializer()
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not kwargs['context']['request'].user.is_staff:
+            self.fields.pop('bracket')
+            self.fields.pop('room_rank')
+            self.fields.pop('importance')
+            self.fields.pop('result_status')
+
     class Meta:
         model = Debate
-        fields = ('url', 'id', 'venue', 'teams', 'adjudicators', 'sides_confirmed')
+        exclude = ('round', 'flags')
 
     def create(self, validated_data):
         teams_data = validated_data.pop('debateteam_set')

@@ -234,7 +234,7 @@ class TeamScore(models.Model):
 
     points = models.PositiveSmallIntegerField(null=True, blank=True,
         verbose_name=_("points"))
-    win = models.NullBooleanField(null=True, blank=True,
+    win = models.BooleanField(null=True, blank=True,
         verbose_name=_("win"))
     margin = ScoreField(null=True, blank=True,
         verbose_name=_("margin"))
