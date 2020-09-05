@@ -17,7 +17,7 @@ from results.forms import TournamentPasswordField
 from tournaments.models import Round
 from utils.forms import OptionalChoiceField
 
-from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
+from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback
 from .utils import expected_feedback_targets
 
 logger = logging.getLogger(__name__)
@@ -92,16 +92,6 @@ class BlockChecboxWidget(forms.CheckboxSelectMultiple):
     template_name = 'spaced_choice_widget.html'
 
 
-class AdjudicatorFeedbackCheckboxSelectMultipleField(forms.MultipleChoiceField):
-    """Class to do multiple choice fields following our conventions.
-    Specifically, converts to a string rather than a list."""
-    widget = BlockChecboxWidget()
-
-    def clean(self, value):
-        value = super(AdjudicatorFeedbackCheckboxSelectMultipleField, self).clean(value)
-        return AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR.join(value)
-
-
 # ==============================================================================
 # Feedback Forms
 # ==============================================================================
@@ -155,7 +145,7 @@ class BaseFeedbackForm(forms.Form):
         elif question.answer_type == question.ANSWER_TYPE_SINGLE_SELECT:
             field = OptionalChoiceField(choices=question.choices_for_field)
         elif question.answer_type == question.ANSWER_TYPE_MULTIPLE_SELECT:
-            field = AdjudicatorFeedbackCheckboxSelectMultipleField(choices=question.choices_for_field)
+            field = forms.MultipleChoiceField(choices=question.choices_for_field, widget=BlockChecboxWidget())
         field.label = question.text
 
         # Required checkbox fields don't really make sense; so override the behaviour?
