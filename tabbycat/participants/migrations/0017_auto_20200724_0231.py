@@ -6,7 +6,9 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('participants', '0016_auto_20200705_1317'),
+        # originally depended on 0016_auto_20200705_1317; changed to 0014 so
+        # that it can be placed on the hotfix branch
+        ('participants', '0014_auto_20200613_2006'),
     ]
 
     operations = [
