@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.db.models import Prefetch, Q
 from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.utils import timezone
+from django.utils import formats, timezone
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.base import View
 from django.views.generic.edit import FormView
@@ -56,7 +56,10 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
     def _create_status_timeline(self, status):
         statuses = []
         for s in status:
-            text = _("%(status)s @ %(time)s") % {'status': s.get_event_display(), 'time': s.timestamp}
+            text = _("%(status)s @ %(time)s") % {
+                'status': s.get_event_display(),
+                'time': formats.time_format(timezone.localtime(s.timestamp), use_l10n=True),
+            }
             statuses.append({
                 'text': '<span class="%s">%s</span>' % (self._get_event_class(s.event), text),
             })
@@ -99,16 +102,18 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
             if notification.round is not None:
                 subtitle = notification.round.name
             else:
-                subtitle = _("@ %s") % timezone.localtime(notification.timestamp).strftime("%a, %d %b %Y %H:%M:%S")
+                subtitle = _("@ %s") % formats.time_format(timezone.localtime(notification.timestamp), use_l10n=True)
 
             table = TabbycatTableBuilder(view=self, title=notification.get_event_display().capitalize(), subtitle=subtitle)
 
             emails_recipient = []
+            emails_addresses = []
             emails_status = []
             emails_time = []
 
             for sentmessage in notification.sentmessage_set.all():
                 emails_recipient.append(sentmessage.recipient.name if sentmessage.recipient else self.UNKNOWN_RECIPIENT_CELL)
+                emails_addresses.append(sentmessage.email or self.UNKNOWN_RECIPIENT_CELL)
 
                 if len(sentmessage.statuses) > 0:
                     latest_status = sentmessage.statuses[0]  # already ordered
@@ -121,12 +126,13 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
                         },
                     }
                     emails_status.append(status_cell)
-                    emails_time.append(latest_status.timestamp)
+                    emails_time.append(formats.time_format(timezone.localtime(latest_status.timestamp), use_l10n=True))
                 else:
                     emails_status.append(self.NA_CELL)
                     emails_time.append(self.NA_CELL)
 
             table.add_column({'key': 'name', 'tooltip': _("Participant"), 'icon': 'user'}, emails_recipient)
+            table.add_column({'key': 'email', 'tooltip': _("Email address"), 'icon': 'mail'}, emails_addresses)
             table.add_column({'key': 'name', 'title': _("Status")}, emails_status)
             table.add_column({'key': 'name', 'title': _("Time")}, emails_time)
 

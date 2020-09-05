@@ -54,6 +54,7 @@ class BulkNotification(models.Model):
     EVENT_TYPE_ADJ_REG = 'a'
     EVENT_TYPE_MOTIONS = 'm'
     EVENT_TYPE_TEAM_DRAW = 'r'
+    EVENT_TYPE_CUSTOM = ''
 
     EVENT_TYPE_CHOICES = (
         (EVENT_TYPE_POINTS, _("team points")),
@@ -66,6 +67,7 @@ class BulkNotification(models.Model):
         (EVENT_TYPE_ADJ_REG, _("adjudicator registration")),
         (EVENT_TYPE_MOTIONS, _("motion(s) released")),
         (EVENT_TYPE_TEAM_DRAW, _("team draw released")),
+        (EVENT_TYPE_CUSTOM, _("custom message")),
     )
 
     event = models.CharField(max_length=1, choices=EVENT_TYPE_CHOICES, blank=True,
