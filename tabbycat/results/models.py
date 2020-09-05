@@ -42,6 +42,11 @@ class Submission(models.Model):
     confirmed = models.BooleanField(default=False,
         verbose_name=_("confirmed"))
 
+    # relevant for private URL submissions
+    participant_submitter = models.ForeignKey('participants.Person', models.PROTECT,
+        blank=True, null=True, related_name="%(app_label)s_%(class)s_participant_submitted",
+        verbose_name=_("from participant"))
+
     # only relevant if submitter was in tab room
     submitter = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT,
         blank=True, null=True, related_name="%(app_label)s_%(class)s_submitted",

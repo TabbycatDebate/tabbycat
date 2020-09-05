@@ -560,6 +560,11 @@ class PublicAddFeedbackByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, Pub
     def is_page_enabled(self, tournament):
         return tournament.pref('participant_feedback') == 'private-urls'
 
+    def get_submitter_fields(self):
+        fields = super().get_submitter_fields()
+        fields['participant_submitter'] = self.object
+        return fields
+
     def get_success_url(self):
         # Redirect to non-cached page: their original private URL
         if isinstance(self.object, Adjudicator):
