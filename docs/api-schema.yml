@@ -3462,6 +3462,10 @@ components:
             Venues with a higher priority number will be preferred when
             allocating venues to debates
           type: integer
+        external_url:
+          title: External URL
+          type: string
+          format: uri
     VenueCategory:
       required:
         - venues
