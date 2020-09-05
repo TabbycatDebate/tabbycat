@@ -6,6 +6,10 @@ Change Log
 ----------------
 *Release date: ?*
 
+- Added URL field from the Room model to the Venues API endpoints as 'external URL'
+- The Institution API endpoints show institutions' regions as their name, and regions can be created
+- Adjudicator Feedback choices and draw flags are stored with PostgreSQL-specific arrays (`#1525 <https://github.com/TabbycatDebate/tabbycat/issues/1525>`_)
+- Private URL submissions now store the participant whose link was used rather than just their IP address (`#1586 <https://github.com/TabbycatDebate/tabbycat/issues/1586>`_)
 
 2.4.5
 -----
