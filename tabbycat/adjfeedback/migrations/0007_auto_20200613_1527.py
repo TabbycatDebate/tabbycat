@@ -10,6 +10,15 @@ def populate_answers(apps, schema_editor):
     many_answers = apps.get_model('adjfeedback', 'AdjudicatorFeedbackManyAnswer')
     for sa in string_answers.objects.filter(question__answer_type='ms'):  # Multiple select
         many_answers.objects.create(answer=sa.answer.split('//'), feedback_id=sa.feedback_id, question_id=sa.question_id)
+    string_answers.objects.filter(question__answer_type='ms').delete()
+
+
+def depopulate_answers(apps, schema_editor):
+    string_answers = apps.get_model('adjfeedback', 'adjudicatorfeedbackstringanswer')
+    many_answers = apps.get_model('adjfeedback', 'AdjudicatorFeedbackManyAnswer')
+    for ma in many_answers.objects.all():
+        string_answers.objects.create(answer='//'.join(ma.answer), feedback_id=ma.feedback_id, question_id=ma.question_id)
+    many_answers.objects.all().delete()
 
 
 class Migration(migrations.Migration):
@@ -52,5 +61,5 @@ class Migration(migrations.Migration):
                 'unique_together': {('question', 'feedback')},
             },
         ),
-        migrations.RunPython(populate_answers),
+        migrations.RunPython(populate_answers, reverse_code=depopulate_answers),
     ]

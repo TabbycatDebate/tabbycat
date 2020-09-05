@@ -1132,7 +1132,7 @@
         "required": true,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1150,7 +1150,7 @@
         "required": true,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1168,7 +1168,7 @@
         "required": true,
         "min_value": -20.0,
         "max_value": 20.0,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1186,7 +1186,7 @@
         "required": true,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1204,7 +1204,7 @@
         "required": false,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1222,7 +1222,7 @@
         "required": false,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1240,7 +1240,7 @@
         "required": true,
         "min_value": 0.0,
         "max_value": 10.0,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1258,7 +1258,7 @@
         "required": true,
         "min_value": 0.0,
         "max_value": 10.0,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1276,7 +1276,7 @@
         "required": false,
         "min_value": null,
         "max_value": null,
-        "choices": "Absolutely!//Sure, why not//If I have to//Please don't"
+        "choices": "[\"Absolutely!\", \"Sure, why not\", \"If I have to\", \"Please don't\"]"
     }
 },
 {
@@ -1294,7 +1294,7 @@
         "required": false,
         "min_value": null,
         "max_value": null,
-        "choices": "biased//clear//concise//rambly//attentive//inattentive"
+        "choices": "[\"biased\", \"clear\", \"concise\", \"rambly\", \"attentive\", \"inattentive\"]"
     }
 },
 {
@@ -1312,7 +1312,7 @@
         "required": false,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1368,7 +1368,7 @@
         "venue": 12,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1382,7 +1382,7 @@
         "venue": 22,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1396,7 +1396,7 @@
         "venue": 11,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1410,7 +1410,7 @@
         "venue": 15,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1424,7 +1424,7 @@
         "venue": 18,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1438,7 +1438,7 @@
         "venue": 17,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1452,7 +1452,7 @@
         "venue": 13,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1466,7 +1466,7 @@
         "venue": 20,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1480,7 +1480,7 @@
         "venue": 16,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1494,7 +1494,7 @@
         "venue": 21,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1508,7 +1508,7 @@
         "venue": 14,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1522,7 +1522,7 @@
         "venue": 19,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1535,7 +1535,7 @@
         "debate": 1,
         "team": 12,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1545,7 +1545,7 @@
         "debate": 1,
         "team": 18,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1555,7 +1555,7 @@
         "debate": 2,
         "team": 4,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1565,7 +1565,7 @@
         "debate": 2,
         "team": 17,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1575,7 +1575,7 @@
         "debate": 3,
         "team": 16,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1585,7 +1585,7 @@
         "debate": 3,
         "team": 13,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1595,7 +1595,7 @@
         "debate": 4,
         "team": 20,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1605,7 +1605,7 @@
         "debate": 4,
         "team": 1,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1615,7 +1615,7 @@
         "debate": 5,
         "team": 3,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1625,7 +1625,7 @@
         "debate": 5,
         "team": 8,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1635,7 +1635,7 @@
         "debate": 6,
         "team": 9,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1645,7 +1645,7 @@
         "debate": 6,
         "team": 23,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1655,7 +1655,7 @@
         "debate": 7,
         "team": 11,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1665,7 +1665,7 @@
         "debate": 7,
         "team": 19,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1675,7 +1675,7 @@
         "debate": 8,
         "team": 7,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1685,7 +1685,7 @@
         "debate": 8,
         "team": 22,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1695,7 +1695,7 @@
         "debate": 9,
         "team": 2,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1705,7 +1705,7 @@
         "debate": 9,
         "team": 10,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1715,7 +1715,7 @@
         "debate": 10,
         "team": 24,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1725,7 +1725,7 @@
         "debate": 10,
         "team": 14,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1735,7 +1735,7 @@
         "debate": 11,
         "team": 6,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1745,7 +1745,7 @@
         "debate": 11,
         "team": 21,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1755,7 +1755,7 @@
         "debate": 12,
         "team": 5,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1765,7 +1765,7 @@
         "debate": 12,
         "team": 15,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1785,7 +1785,7 @@
     "fields": {
         "seq": 2,
         "text": "This House regrets the existence of Valentine's Day",
-        "reference": "Valentine\u2019s Day",
+        "reference": "Valentine’s Day",
         "info_slide": "",
         "round": 1
     }
@@ -3456,7 +3456,7 @@
         "tournament": 1,
         "use_institution_prefix": false,
         "type": "N",
-        "emoji": "\ud83d\ude4f",
+        "emoji": "🙏",
         "break_categories": []
     }
 },
@@ -3473,7 +3473,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udc4a",
+        "emoji": "👊",
         "break_categories": []
     }
 },
@@ -3490,7 +3490,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83c\udfd0",
+        "emoji": "🏐",
         "break_categories": []
     }
 },
@@ -3507,7 +3507,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udc69",
+        "emoji": "👩",
         "break_categories": []
     }
 },
@@ -3524,7 +3524,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\ude14",
+        "emoji": "😔",
         "break_categories": []
     }
 },
@@ -3541,7 +3541,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83e\udd54",
+        "emoji": "🥔",
         "break_categories": []
     }
 },
@@ -3558,7 +3558,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83c\udff3",
+        "emoji": "🏳",
         "break_categories": []
     }
 },
@@ -3575,7 +3575,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83e\udd88",
+        "emoji": "🦈",
         "break_categories": []
     }
 },
@@ -3592,7 +3592,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udcb0",
+        "emoji": "💰",
         "break_categories": []
     }
 },
@@ -3609,7 +3609,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udc4d",
+        "emoji": "👍",
         "break_categories": []
     }
 },
@@ -3626,7 +3626,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\ude1b",
+        "emoji": "😛",
         "break_categories": []
     }
 },
@@ -3643,7 +3643,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83e\udd89",
+        "emoji": "🦉",
         "break_categories": []
     }
 },
@@ -3660,7 +3660,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udc3c",
+        "emoji": "🐼",
         "break_categories": []
     }
 },
@@ -3677,7 +3677,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83c\udf35",
+        "emoji": "🌵",
         "break_categories": []
     }
 },
@@ -3694,7 +3694,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udc7d",
+        "emoji": "👽",
         "break_categories": []
     }
 },
@@ -3711,7 +3711,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udc60",
+        "emoji": "👠",
         "break_categories": []
     }
 },
@@ -3728,7 +3728,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udc5f",
+        "emoji": "👟",
         "break_categories": []
     }
 },
@@ -3745,7 +3745,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83c\udf49",
+        "emoji": "🍉",
         "break_categories": []
     }
 },
@@ -3762,7 +3762,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\ude46",
+        "emoji": "🙆",
         "break_categories": []
     }
 },
@@ -3779,7 +3779,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udecd",
+        "emoji": "🛍",
         "break_categories": []
     }
 },
@@ -3796,7 +3796,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udea8",
+        "emoji": "🚨",
         "break_categories": []
     }
 },
@@ -3813,7 +3813,7 @@
         "tournament": 1,
         "use_institution_prefix": false,
         "type": "N",
-        "emoji": "\ud83d\udc1a",
+        "emoji": "🐚",
         "break_categories": []
     }
 },
@@ -3830,7 +3830,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\ude23",
+        "emoji": "😣",
         "break_categories": []
     }
 },
@@ -3847,7 +3847,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\ude98",
+        "emoji": "🚘",
         "break_categories": []
     }
 },
@@ -3855,6 +3855,7 @@
     "model": "participants.speaker",
     "pk": 1,
     "fields": {
+        "person_ptr": 1,
         "team": 1,
         "categories": [
             2
@@ -3865,6 +3866,7 @@
     "model": "participants.speaker",
     "pk": 2,
     "fields": {
+        "person_ptr": 2,
         "team": 1,
         "categories": [
             1
@@ -3875,6 +3877,7 @@
     "model": "participants.speaker",
     "pk": 3,
     "fields": {
+        "person_ptr": 3,
         "team": 1,
         "categories": [
             2
@@ -3885,6 +3888,7 @@
     "model": "participants.speaker",
     "pk": 4,
     "fields": {
+        "person_ptr": 4,
         "team": 2,
         "categories": [
             2
@@ -3895,6 +3899,7 @@
     "model": "participants.speaker",
     "pk": 5,
     "fields": {
+        "person_ptr": 5,
         "team": 2,
         "categories": [
             1
@@ -3905,6 +3910,7 @@
     "model": "participants.speaker",
     "pk": 6,
     "fields": {
+        "person_ptr": 6,
         "team": 2,
         "categories": [
             2
@@ -3915,6 +3921,7 @@
     "model": "participants.speaker",
     "pk": 7,
     "fields": {
+        "person_ptr": 7,
         "team": 3,
         "categories": [
             2
@@ -3925,6 +3932,7 @@
     "model": "participants.speaker",
     "pk": 8,
     "fields": {
+        "person_ptr": 8,
         "team": 3,
         "categories": [
             1
@@ -3935,6 +3943,7 @@
     "model": "participants.speaker",
     "pk": 9,
     "fields": {
+        "person_ptr": 9,
         "team": 3,
         "categories": [
             2
@@ -3945,6 +3954,7 @@
     "model": "participants.speaker",
     "pk": 10,
     "fields": {
+        "person_ptr": 10,
         "team": 4,
         "categories": [
             2
@@ -3955,6 +3965,7 @@
     "model": "participants.speaker",
     "pk": 11,
     "fields": {
+        "person_ptr": 11,
         "team": 4,
         "categories": [
             2
@@ -3965,6 +3976,7 @@
     "model": "participants.speaker",
     "pk": 12,
     "fields": {
+        "person_ptr": 12,
         "team": 4,
         "categories": [
             1
@@ -3975,6 +3987,7 @@
     "model": "participants.speaker",
     "pk": 13,
     "fields": {
+        "person_ptr": 13,
         "team": 5,
         "categories": [
             1
@@ -3985,6 +3998,7 @@
     "model": "participants.speaker",
     "pk": 14,
     "fields": {
+        "person_ptr": 14,
         "team": 5,
         "categories": [
             2
@@ -3995,6 +4009,7 @@
     "model": "participants.speaker",
     "pk": 15,
     "fields": {
+        "person_ptr": 15,
         "team": 5,
         "categories": [
             1
@@ -4005,6 +4020,7 @@
     "model": "participants.speaker",
     "pk": 16,
     "fields": {
+        "person_ptr": 16,
         "team": 6,
         "categories": [
             2
@@ -4015,6 +4031,7 @@
     "model": "participants.speaker",
     "pk": 17,
     "fields": {
+        "person_ptr": 17,
         "team": 6,
         "categories": [
             2
@@ -4025,6 +4042,7 @@
     "model": "participants.speaker",
     "pk": 18,
     "fields": {
+        "person_ptr": 18,
         "team": 6,
         "categories": [
             2
@@ -4035,6 +4053,7 @@
     "model": "participants.speaker",
     "pk": 19,
     "fields": {
+        "person_ptr": 19,
         "team": 7,
         "categories": [
             1
@@ -4045,6 +4064,7 @@
     "model": "participants.speaker",
     "pk": 20,
     "fields": {
+        "person_ptr": 20,
         "team": 7,
         "categories": [
             1
@@ -4055,6 +4075,7 @@
     "model": "participants.speaker",
     "pk": 21,
     "fields": {
+        "person_ptr": 21,
         "team": 7,
         "categories": [
             1
@@ -4065,6 +4086,7 @@
     "model": "participants.speaker",
     "pk": 22,
     "fields": {
+        "person_ptr": 22,
         "team": 8,
         "categories": [
             2
@@ -4075,6 +4097,7 @@
     "model": "participants.speaker",
     "pk": 23,
     "fields": {
+        "person_ptr": 23,
         "team": 8,
         "categories": [
             1
@@ -4085,6 +4108,7 @@
     "model": "participants.speaker",
     "pk": 24,
     "fields": {
+        "person_ptr": 24,
         "team": 8,
         "categories": [
             1
@@ -4095,6 +4119,7 @@
     "model": "participants.speaker",
     "pk": 25,
     "fields": {
+        "person_ptr": 25,
         "team": 9,
         "categories": [
             1
@@ -4105,6 +4130,7 @@
     "model": "participants.speaker",
     "pk": 26,
     "fields": {
+        "person_ptr": 26,
         "team": 9,
         "categories": [
             1
@@ -4115,6 +4141,7 @@
     "model": "participants.speaker",
     "pk": 27,
     "fields": {
+        "person_ptr": 27,
         "team": 9,
         "categories": [
             1
@@ -4125,6 +4152,7 @@
     "model": "participants.speaker",
     "pk": 28,
     "fields": {
+        "person_ptr": 28,
         "team": 10,
         "categories": [
             2
@@ -4135,6 +4163,7 @@
     "model": "participants.speaker",
     "pk": 29,
     "fields": {
+        "person_ptr": 29,
         "team": 10,
         "categories": [
             1
@@ -4145,6 +4174,7 @@
     "model": "participants.speaker",
     "pk": 30,
     "fields": {
+        "person_ptr": 30,
         "team": 10,
         "categories": [
             2
@@ -4155,6 +4185,7 @@
     "model": "participants.speaker",
     "pk": 31,
     "fields": {
+        "person_ptr": 31,
         "team": 11,
         "categories": [
             1
@@ -4165,6 +4196,7 @@
     "model": "participants.speaker",
     "pk": 32,
     "fields": {
+        "person_ptr": 32,
         "team": 11,
         "categories": [
             1
@@ -4175,6 +4207,7 @@
     "model": "participants.speaker",
     "pk": 33,
     "fields": {
+        "person_ptr": 33,
         "team": 11,
         "categories": [
             1
@@ -4185,6 +4218,7 @@
     "model": "participants.speaker",
     "pk": 34,
     "fields": {
+        "person_ptr": 34,
         "team": 12,
         "categories": [
             1
@@ -4195,6 +4229,7 @@
     "model": "participants.speaker",
     "pk": 35,
     "fields": {
+        "person_ptr": 35,
         "team": 12,
         "categories": [
             1
@@ -4205,6 +4240,7 @@
     "model": "participants.speaker",
     "pk": 36,
     "fields": {
+        "person_ptr": 36,
         "team": 12,
         "categories": [
             2
@@ -4215,6 +4251,7 @@
     "model": "participants.speaker",
     "pk": 37,
     "fields": {
+        "person_ptr": 37,
         "team": 13,
         "categories": [
             2
@@ -4225,6 +4262,7 @@
     "model": "participants.speaker",
     "pk": 38,
     "fields": {
+        "person_ptr": 38,
         "team": 13,
         "categories": [
             1
@@ -4235,6 +4273,7 @@
     "model": "participants.speaker",
     "pk": 39,
     "fields": {
+        "person_ptr": 39,
         "team": 13,
         "categories": [
             1
@@ -4245,6 +4284,7 @@
     "model": "participants.speaker",
     "pk": 40,
     "fields": {
+        "person_ptr": 40,
         "team": 14,
         "categories": [
             1
@@ -4255,6 +4295,7 @@
     "model": "participants.speaker",
     "pk": 41,
     "fields": {
+        "person_ptr": 41,
         "team": 14,
         "categories": [
             2
@@ -4265,6 +4306,7 @@
     "model": "participants.speaker",
     "pk": 42,
     "fields": {
+        "person_ptr": 42,
         "team": 14,
         "categories": [
             2
@@ -4275,6 +4317,7 @@
     "model": "participants.speaker",
     "pk": 43,
     "fields": {
+        "person_ptr": 43,
         "team": 15,
         "categories": [
             1
@@ -4285,6 +4328,7 @@
     "model": "participants.speaker",
     "pk": 44,
     "fields": {
+        "person_ptr": 44,
         "team": 15,
         "categories": [
             1
@@ -4295,6 +4339,7 @@
     "model": "participants.speaker",
     "pk": 45,
     "fields": {
+        "person_ptr": 45,
         "team": 15,
         "categories": [
             1
@@ -4305,6 +4350,7 @@
     "model": "participants.speaker",
     "pk": 46,
     "fields": {
+        "person_ptr": 46,
         "team": 16,
         "categories": [
             1
@@ -4315,6 +4361,7 @@
     "model": "participants.speaker",
     "pk": 47,
     "fields": {
+        "person_ptr": 47,
         "team": 16,
         "categories": [
             1
@@ -4325,6 +4372,7 @@
     "model": "participants.speaker",
     "pk": 48,
     "fields": {
+        "person_ptr": 48,
         "team": 16,
         "categories": [
             2
@@ -4335,6 +4383,7 @@
     "model": "participants.speaker",
     "pk": 49,
     "fields": {
+        "person_ptr": 49,
         "team": 17,
         "categories": [
             1
@@ -4345,6 +4394,7 @@
     "model": "participants.speaker",
     "pk": 50,
     "fields": {
+        "person_ptr": 50,
         "team": 17,
         "categories": [
             1
@@ -4355,6 +4405,7 @@
     "model": "participants.speaker",
     "pk": 51,
     "fields": {
+        "person_ptr": 51,
         "team": 17,
         "categories": [
             1
@@ -4365,6 +4416,7 @@
     "model": "participants.speaker",
     "pk": 52,
     "fields": {
+        "person_ptr": 52,
         "team": 18,
         "categories": [
             1
@@ -4375,6 +4427,7 @@
     "model": "participants.speaker",
     "pk": 53,
     "fields": {
+        "person_ptr": 53,
         "team": 18,
         "categories": [
             2
@@ -4385,6 +4438,7 @@
     "model": "participants.speaker",
     "pk": 54,
     "fields": {
+        "person_ptr": 54,
         "team": 18,
         "categories": [
             1
@@ -4395,6 +4449,7 @@
     "model": "participants.speaker",
     "pk": 55,
     "fields": {
+        "person_ptr": 55,
         "team": 19,
         "categories": [
             1
@@ -4405,6 +4460,7 @@
     "model": "participants.speaker",
     "pk": 56,
     "fields": {
+        "person_ptr": 56,
         "team": 19,
         "categories": [
             1
@@ -4415,6 +4471,7 @@
     "model": "participants.speaker",
     "pk": 57,
     "fields": {
+        "person_ptr": 57,
         "team": 19,
         "categories": [
             1
@@ -4425,6 +4482,7 @@
     "model": "participants.speaker",
     "pk": 58,
     "fields": {
+        "person_ptr": 58,
         "team": 20,
         "categories": [
             2
@@ -4435,6 +4493,7 @@
     "model": "participants.speaker",
     "pk": 59,
     "fields": {
+        "person_ptr": 59,
         "team": 20,
         "categories": [
             2
@@ -4445,6 +4504,7 @@
     "model": "participants.speaker",
     "pk": 60,
     "fields": {
+        "person_ptr": 60,
         "team": 20,
         "categories": [
             1
@@ -4455,6 +4515,7 @@
     "model": "participants.speaker",
     "pk": 61,
     "fields": {
+        "person_ptr": 61,
         "team": 21,
         "categories": [
             2
@@ -4465,6 +4526,7 @@
     "model": "participants.speaker",
     "pk": 62,
     "fields": {
+        "person_ptr": 62,
         "team": 21,
         "categories": [
             1
@@ -4475,6 +4537,7 @@
     "model": "participants.speaker",
     "pk": 63,
     "fields": {
+        "person_ptr": 63,
         "team": 21,
         "categories": [
             2
@@ -4485,6 +4548,7 @@
     "model": "participants.speaker",
     "pk": 64,
     "fields": {
+        "person_ptr": 64,
         "team": 22,
         "categories": [
             2
@@ -4495,6 +4559,7 @@
     "model": "participants.speaker",
     "pk": 65,
     "fields": {
+        "person_ptr": 65,
         "team": 22,
         "categories": [
             2
@@ -4505,6 +4570,7 @@
     "model": "participants.speaker",
     "pk": 66,
     "fields": {
+        "person_ptr": 66,
         "team": 22,
         "categories": [
             1
@@ -4515,6 +4581,7 @@
     "model": "participants.speaker",
     "pk": 67,
     "fields": {
+        "person_ptr": 67,
         "team": 23,
         "categories": [
             1
@@ -4525,6 +4592,7 @@
     "model": "participants.speaker",
     "pk": 68,
     "fields": {
+        "person_ptr": 68,
         "team": 23,
         "categories": [
             2
@@ -4535,6 +4603,7 @@
     "model": "participants.speaker",
     "pk": 69,
     "fields": {
+        "person_ptr": 69,
         "team": 23,
         "categories": [
             2
@@ -4545,6 +4614,7 @@
     "model": "participants.speaker",
     "pk": 70,
     "fields": {
+        "person_ptr": 70,
         "team": 24,
         "categories": [
             1
@@ -4555,6 +4625,7 @@
     "model": "participants.speaker",
     "pk": 71,
     "fields": {
+        "person_ptr": 71,
         "team": 24,
         "categories": [
             2
@@ -4565,6 +4636,7 @@
     "model": "participants.speaker",
     "pk": 72,
     "fields": {
+        "person_ptr": 72,
         "team": 24,
         "categories": [
             2
@@ -4575,6 +4647,7 @@
     "model": "participants.adjudicator",
     "pk": 73,
     "fields": {
+        "person_ptr": 73,
         "institution": 13,
         "tournament": 1,
         "base_score": 5.0,
@@ -4588,6 +4661,7 @@
     "model": "participants.adjudicator",
     "pk": 74,
     "fields": {
+        "person_ptr": 74,
         "institution": 8,
         "tournament": 1,
         "base_score": 5.0,
@@ -4601,6 +4675,7 @@
     "model": "participants.adjudicator",
     "pk": 75,
     "fields": {
+        "person_ptr": 75,
         "institution": 12,
         "tournament": 1,
         "base_score": 5.0,
@@ -4614,6 +4689,7 @@
     "model": "participants.adjudicator",
     "pk": 76,
     "fields": {
+        "person_ptr": 76,
         "institution": 1,
         "tournament": 1,
         "base_score": 1.0,
@@ -4627,6 +4703,7 @@
     "model": "participants.adjudicator",
     "pk": 77,
     "fields": {
+        "person_ptr": 77,
         "institution": 1,
         "tournament": 1,
         "base_score": 0.0,
@@ -4640,6 +4717,7 @@
     "model": "participants.adjudicator",
     "pk": 78,
     "fields": {
+        "person_ptr": 78,
         "institution": 2,
         "tournament": 1,
         "base_score": 2.0,
@@ -4653,6 +4731,7 @@
     "model": "participants.adjudicator",
     "pk": 79,
     "fields": {
+        "person_ptr": 79,
         "institution": 3,
         "tournament": 1,
         "base_score": 5.0,
@@ -4666,6 +4745,7 @@
     "model": "participants.adjudicator",
     "pk": 80,
     "fields": {
+        "person_ptr": 80,
         "institution": 4,
         "tournament": 1,
         "base_score": 4.0,
@@ -4679,6 +4759,7 @@
     "model": "participants.adjudicator",
     "pk": 81,
     "fields": {
+        "person_ptr": 81,
         "institution": 4,
         "tournament": 1,
         "base_score": 5.0,
@@ -4692,6 +4773,7 @@
     "model": "participants.adjudicator",
     "pk": 82,
     "fields": {
+        "person_ptr": 82,
         "institution": 12,
         "tournament": 1,
         "base_score": 0.0,
@@ -4705,6 +4787,7 @@
     "model": "participants.adjudicator",
     "pk": 83,
     "fields": {
+        "person_ptr": 83,
         "institution": 12,
         "tournament": 1,
         "base_score": 4.0,
@@ -4718,6 +4801,7 @@
     "model": "participants.adjudicator",
     "pk": 84,
     "fields": {
+        "person_ptr": 84,
         "institution": 8,
         "tournament": 1,
         "base_score": 4.0,
@@ -4731,6 +4815,7 @@
     "model": "participants.adjudicator",
     "pk": 85,
     "fields": {
+        "person_ptr": 85,
         "institution": 5,
         "tournament": 1,
         "base_score": 4.0,
@@ -4744,6 +4829,7 @@
     "model": "participants.adjudicator",
     "pk": 86,
     "fields": {
+        "person_ptr": 86,
         "institution": 5,
         "tournament": 1,
         "base_score": 2.0,
@@ -4757,6 +4843,7 @@
     "model": "participants.adjudicator",
     "pk": 87,
     "fields": {
+        "person_ptr": 87,
         "institution": 6,
         "tournament": 1,
         "base_score": 2.0,
@@ -4770,6 +4857,7 @@
     "model": "participants.adjudicator",
     "pk": 88,
     "fields": {
+        "person_ptr": 88,
         "institution": 6,
         "tournament": 1,
         "base_score": 5.0,
@@ -4783,6 +4871,7 @@
     "model": "participants.adjudicator",
     "pk": 89,
     "fields": {
+        "person_ptr": 89,
         "institution": 7,
         "tournament": 1,
         "base_score": 2.0,
@@ -4796,6 +4885,7 @@
     "model": "participants.adjudicator",
     "pk": 90,
     "fields": {
+        "person_ptr": 90,
         "institution": 7,
         "tournament": 1,
         "base_score": 2.0,
@@ -4809,6 +4899,7 @@
     "model": "participants.adjudicator",
     "pk": 91,
     "fields": {
+        "person_ptr": 91,
         "institution": 8,
         "tournament": 1,
         "base_score": 1.0,
@@ -4822,6 +4913,7 @@
     "model": "participants.adjudicator",
     "pk": 92,
     "fields": {
+        "person_ptr": 92,
         "institution": 8,
         "tournament": 1,
         "base_score": 0.0,
@@ -4835,6 +4927,7 @@
     "model": "participants.adjudicator",
     "pk": 93,
     "fields": {
+        "person_ptr": 93,
         "institution": 9,
         "tournament": 1,
         "base_score": 4.0,
@@ -4848,6 +4941,7 @@
     "model": "participants.adjudicator",
     "pk": 94,
     "fields": {
+        "person_ptr": 94,
         "institution": 10,
         "tournament": 1,
         "base_score": 2.0,
@@ -4861,6 +4955,7 @@
     "model": "participants.adjudicator",
     "pk": 95,
     "fields": {
+        "person_ptr": 95,
         "institution": 10,
         "tournament": 1,
         "base_score": 3.0,
@@ -4874,6 +4969,7 @@
     "model": "participants.adjudicator",
     "pk": 96,
     "fields": {
+        "person_ptr": 96,
         "institution": 11,
         "tournament": 1,
         "base_score": 2.0,
@@ -4887,6 +4983,7 @@
     "model": "participants.adjudicator",
     "pk": 97,
     "fields": {
+        "person_ptr": 97,
         "institution": 13,
         "tournament": 1,
         "base_score": 4.0,
@@ -4900,6 +4997,7 @@
     "model": "participants.adjudicator",
     "pk": 98,
     "fields": {
+        "person_ptr": 98,
         "institution": 13,
         "tournament": 1,
         "base_score": 3.0,
@@ -4913,6 +5011,7 @@
     "model": "participants.adjudicator",
     "pk": 99,
     "fields": {
+        "person_ptr": 99,
         "institution": 5,
         "tournament": 1,
         "base_score": 5.0,
@@ -4930,6 +5029,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -4949,6 +5049,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -4968,6 +5069,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -4987,6 +5089,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -5006,6 +5109,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -5025,6 +5129,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -5044,6 +5149,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -5063,6 +5169,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -5082,6 +5189,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -5101,6 +5209,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -5120,6 +5229,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -5139,6 +5249,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -8429,7 +8540,8 @@
     "fields": {
         "name": "01",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8438,7 +8550,8 @@
     "fields": {
         "name": "02",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8447,7 +8560,8 @@
     "fields": {
         "name": "03",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8456,7 +8570,8 @@
     "fields": {
         "name": "G01",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8465,7 +8580,8 @@
     "fields": {
         "name": "G02",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8474,7 +8590,8 @@
     "fields": {
         "name": "G03",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8483,7 +8600,8 @@
     "fields": {
         "name": "G04",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8492,7 +8610,8 @@
     "fields": {
         "name": "G05",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8501,7 +8620,8 @@
     "fields": {
         "name": "G06",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8510,7 +8630,8 @@
     "fields": {
         "name": "G08",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8519,7 +8640,8 @@
     "fields": {
         "name": "103",
         "priority": 20,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8528,7 +8650,8 @@
     "fields": {
         "name": "104",
         "priority": 20,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8537,7 +8660,8 @@
     "fields": {
         "name": "205",
         "priority": 20,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8546,7 +8670,8 @@
     "fields": {
         "name": "308",
         "priority": 20,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8555,7 +8680,8 @@
     "fields": {
         "name": "4.01",
         "priority": 30,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8564,7 +8690,8 @@
     "fields": {
         "name": "4.03",
         "priority": 30,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8573,7 +8700,8 @@
     "fields": {
         "name": "Basement A",
         "priority": 30,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8582,7 +8710,8 @@
     "fields": {
         "name": "Basement B",
         "priority": 30,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8591,7 +8720,8 @@
     "fields": {
         "name": "Z09",
         "priority": 40,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8600,7 +8730,8 @@
     "fields": {
         "name": "Z10",
         "priority": 40,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8609,7 +8740,8 @@
     "fields": {
         "name": "Main Hall",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8618,7 +8750,8 @@
     "fields": {
         "name": "Sub Hall",
         "priority": 20,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8627,7 +8760,8 @@
     "fields": {
         "name": "Outside",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8636,6 +8770,7 @@
     "fields": {
         "name": "(Accessible)",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "S",
         "display_in_public_tooltip": false,
         "venues": [
@@ -8650,6 +8785,7 @@
     "fields": {
         "name": "Close to tab",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "-",
         "display_in_public_tooltip": false,
         "venues": [
@@ -8664,6 +8800,7 @@
     "fields": {
         "name": "Apple",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "P",
         "display_in_public_tooltip": false,
         "venues": [
@@ -8679,6 +8816,7 @@
     "fields": {
         "name": "Banana",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "P",
         "display_in_public_tooltip": false,
         "venues": [
@@ -8694,6 +8832,7 @@
     "fields": {
         "name": "Coconut",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "P",
         "display_in_public_tooltip": false,
         "venues": [
@@ -8710,6 +8849,7 @@
     "fields": {
         "name": "Date",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "P",
         "display_in_public_tooltip": false,
         "venues": [
@@ -8726,6 +8866,7 @@
     "fields": {
         "name": "Feijoa",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "P",
         "display_in_public_tooltip": false,
         "venues": [
@@ -8740,6 +8881,7 @@
     "fields": {
         "name": "Very Small",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "-",
         "display_in_public_tooltip": false,
         "venues": []
@@ -8751,6 +8893,7 @@
     "fields": {
         "name": "Kiwifruit",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "-",
         "display_in_public_tooltip": false,
         "venues": [
@@ -8822,6 +8965,15 @@
             "team"
         ],
         "subject_id": 17
+    }
+},
+{
+    "model": "dynamic_preferences.globalpreferencemodel",
+    "pk": 1,
+    "fields": {
+        "section": "global",
+        "name": "enable_api",
+        "raw_value": "True"
     }
 }
 ]
