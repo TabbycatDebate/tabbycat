@@ -2,6 +2,13 @@
 Change Log
 ==========
 
+2.4.6
+-----
+*Release date: TBD*
+
+- Fixed issue where team names with an institution were longer than the maximum size (`#1564 <https://github.com/TabbycatDebate/tabbycat/issues/1564>`_)
+- Fixed issue that made saving motions impossible through the Round API detail endpoint
+
 2.4.5
 -----
 *Release date: 19 July 2020*
