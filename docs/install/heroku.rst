@@ -4,7 +4,7 @@
 Installing on Heroku
 ====================
 
-When running Tabbycat on the internet, we set it up on `Heroku <http://www.heroku.com/>`_. The project is set up to be good to go on Heroku, and it works well for us, so if you'd like to run it online, we recommend that you do the same. Naturally, this requires you to have a Heroku account.
+When running Tabbycat on the internet, we set it up on `Heroku <http://www.heroku.com/>`_. The project is set up to be good to go on Heroku, and it works well for us. Naturally, this requires you to have a Heroku account.
 
 There are two ways to do this: a **short way** and a **long way**. Most people should use the short way. The long way requires some familiarity with command-line interfaces and Git, and requires a :ref:`local installation <install-local>` as a prerequisite, but makes it easier to :ref:`upgrade versions <upgrade-heroku>` later on and (unlike the short way) allows you to import data from CSV files.
 
@@ -21,7 +21,7 @@ If you don't already have a Heroku account, it'll prompt you to create one. Once
 
 .. note:: During the setup process, Heroku will ask you to verify your account by adding a credit card. A standard Tabbycat site *will not charge* your card — charges only accrue if you deliberately add a paid service in the Heroku dashboard.
 
-  If you can't access a credit card, you can instead install a limited version, which we call "Tabbykitten". However, Tabbykitten cannot send any e-mails or handle as much public traffic. We therefore strongly recommend it only as a last resort, and even then only for small tournaments.  `Use this link to set up a Tabbykitten site <https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/kitten>`_.
+  If you can't access a credit card, you can instead install an out-of-date limited version, which we call "Tabbykitten". However, Tabbykitten cannot send any e-mails or handle as much public traffic. We therefore strongly recommend it only as a last resort, and even then only for small tournaments.  `Use this link to set up a Tabbykitten site <https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/kitten>`_.
 
 The long way
 ============
