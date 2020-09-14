@@ -1200,7 +1200,7 @@ paths:
         required: true
         schema:
           type: string
-  '/v1/tournaments/{tournament_slug}/rounds/{round_seq}/pairings/{id}':
+  '/v1/tournaments/{tournament_slug}/rounds/{round_seq}/pairings/{debate_pk}':
     get:
       operationId: v1_tournaments_rounds_pairings_read
       description: Retrieve a debate in the round
@@ -1241,7 +1241,132 @@ paths:
         - v1
         - debates
     parameters:
+      - name: debate_pk
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: round_seq
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: tournament_slug
+        in: path
+        required: true
+        schema:
+          type: string
+  '/v1/tournaments/{tournament_slug}/rounds/{round_seq}/pairings/{debate_pk}/ballots':
+    get:
+      operationId: v1_tournaments_rounds_pairings_ballots_list
+      description: Retrieve ballots for a debate
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DebateResult'
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          required: false
+          schema:
+            type: integer
+        - name: completed
+          in: query
+          description: Whether to include unconfirmed ballots
+          required: false
+          schema:
+            type: boolean
+      tags:
+        - v1
+        - results
+    post:
+      operationId: v1_tournaments_rounds_pairings_ballots_create
+      description: Create a result for a debate
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DebateResult'
+      tags:
+        - v1
+        - results
+      requestBody:
+        $ref: '#/components/requestBodies/DebateResult'
+    parameters:
+      - name: debate_pk
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: round_seq
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: tournament_slug
+        in: path
+        required: true
+        schema:
+          type: string
+  '/v1/tournaments/{tournament_slug}/rounds/{round_seq}/pairings/{debate_pk}/ballots/{id}':
+    get:
+      operationId: v1_tournaments_rounds_pairings_ballots_read
+      description: Retrieve a ballot of a debate
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DebateResult'
+      tags:
+        - v1
+        - results
+    post:
+      operationId: v1_tournaments_rounds_pairings_ballots_update
+      description: Modify a debate ballot. Cannot re-edit scores.
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DebateResult'
+      tags:
+        - v1
+        - results
+      requestBody:
+        $ref: '#/components/requestBodies/DebateResult'
+    delete:
+      operationId: v1_tournaments_rounds_pairings_ballots_delete
+      description: Delete a ballot of the debate
+      responses:
+        '204':
+          description: ''
+      tags:
+        - v1
+        - results
+    parameters:
       - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: debate_pk
         in: path
         required: true
         schema:
@@ -2172,6 +2297,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Team'
+      required: true
+    DebateResult:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DebateResult'
       required: true
   securitySchemes:
     Token:
@@ -3492,3 +3623,140 @@ components:
             pages. The description, if not blank, will always show on admin
             pages.
           type: boolean
+    DebateResult:
+      required:
+        - result
+      type: object
+      properties:
+        url:
+          title: Url
+          type: string
+          format: uri
+          readOnly: true
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        result:
+          title: Result
+          type: object
+          properties:
+            sheets:
+              title: Sheets
+              type: array
+              items:
+                type: object
+                required:
+                  - teams
+                properties:
+                  adjudicator:
+                    title: Adjudicator
+                    type: string
+                    format: uri
+                    nullable: true
+                  teams:
+                    title: Teams
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - side
+                        - team
+                      properties:
+                        side:
+                          title: Side
+                          type: string
+                          enum:
+                            - aff
+                            - neg
+                            - og
+                            - oo
+                            - cg
+                            - co
+                        points:
+                          title: Points
+                          type: integer
+                        win:
+                          title: Win
+                          type: boolean
+                        score:
+                          title: Score
+                          type: number
+                        team:
+                          title: Team
+                          type: string
+                          format: uri
+                        speeches:
+                          title: Speeches
+                          description: Speeches must be given in speaker order.
+                          type: array
+                          items:
+                            type: object
+                            required:
+                              - score
+                              - speaker
+                            properties:
+                              ghost:
+                                title: Ghost
+                                description: >-
+                                  If checked, this score does not count towards
+                                  the speaker tab. This is typically checked
+                                  for speeches where someone spoke twice to
+                                  make up for an absent teammate (sometimes
+                                  known as iron-person or iron-man speeches).
+                                type: boolean
+                              score:
+                                title: Score
+                                type: number
+                              speaker:
+                                title: Speaker
+                                type: string
+                                format: uri
+        motion:
+          title: Motion
+          type: string
+          format: uri
+          nullable: true
+        timestamp:
+          title: Timestamp
+          type: string
+          format: date-time
+          readOnly: true
+        version:
+          title: Version
+          type: integer
+          readOnly: true
+        submitter_type:
+          title: Submitter type
+          type: string
+          enum:
+            - T
+            - P
+          readOnly: true
+        confirmed:
+          title: Confirmed
+          type: boolean
+        confirm_timestamp:
+          title: Confirm timestamp
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        ip_address:
+          title: IP address
+          type: string
+          format: ipv4
+          readOnly: true
+        discarded:
+          title: Discarded
+          type: boolean
+        submitter:
+          title: Submitter
+          type: integer
+          nullable: true
+          readOnly: true
+        confirmer:
+          title: Confirmer
+          type: integer
+          nullable: true
+          readOnly: true
