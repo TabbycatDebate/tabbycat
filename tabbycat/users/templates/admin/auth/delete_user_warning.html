@@ -1,0 +1,11 @@
+{% load i18n %}
+
+{% if protected %}
+  <div style="background-color: #f0dada; padding: 15px 15px 5px; margin-bottom: 20px; border-radius: 4px;">
+    <p>
+      {% blocktrans trimmed %}
+        <strong>Warning:</strong> You shouldn't delete users from the database once they've done something, because the database logs actions taken by those users, and deleting the users also deletes the related logs. If you wish to deactivate a user account, go back to edit the user, click on the “Permissions” tab, unchecked the “Active” box, and save the user.
+      {% endblocktrans %}
+    </p>
+  </div>
+{% endif %}

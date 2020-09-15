@@ -4,7 +4,7 @@
 
     <input max="2" min="-2" step="1" type="range" v-model="importance">
 
-    <div class="tooltip top tooltip-vue mt-4 ml-3" role="tooltip" v-if="showTooltip">
+    <div class="tooltip top tooltip-vue mt-5 ml-3" role="tooltip" v-if="showTooltip">
       <div class="tooltip-arrow"></div>
       <div class="tooltip-inner">{{ importanceDescription }}</div>
     </div>

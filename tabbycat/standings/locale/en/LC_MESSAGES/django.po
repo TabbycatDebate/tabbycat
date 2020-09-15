@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"POT-Creation-Date: 2020-07-05 13:59-0300\n"
 "PO-Revision-Date: 2019-07-11 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -600,4 +600,12 @@ msgstr ""
 
 #: standings/views.py:596
 msgid "Points"
+msgstr ""
+
+#: standings/views.py:642
+msgid "Feedback Overview"
+msgstr ""
+
+#: standings/views.py:659
+msgid "An adjudicator's score is determined by a customisable mix of their base score and their feedback ratings. The current mix is specified below as the 'Score Components.' Feedback ratings are determined by averaging the results of all individual pieces of feedback across all rounds. <a href='http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html#how-is-an-adjudicator-s-score-determined'>Read more</a>."
 msgstr ""

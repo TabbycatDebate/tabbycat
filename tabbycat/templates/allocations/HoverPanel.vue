@@ -2,8 +2,8 @@
 
   <transition name="slide-over">
     <div class="panel slideover-info" v-if="this.subject">
-      <template v-if="row">
-        <div v-for="row in rows" class="list-group-item flex-horizontal pl-2 flex-justify">
+      <template v-if="panelRows">
+        <div v-for="row in panelRows" class="list-group-item flex-horizontal pl-2 flex-justify">
           <div class="flex-align-start">
             <hover-panel-group :groups="row['left']"></hover-panel-group>
           </div>
@@ -31,7 +31,7 @@ export default {
     subject: function () {
       return this.hoverSubject
     },
-    rows: function () {
+    panelRows: function () {
       return [this.topRow, this.bottomRow]
     },
     topRow: function () {

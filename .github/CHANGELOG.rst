@@ -6,6 +6,41 @@ Change Log
 ----------------
 *Release date: ?*
 
+- Added URL field from the Room model to the Venues API endpoints as 'external URL'
+- The Institution API endpoints show institutions' regions as their name, and regions can be created
+- Adjudicator Feedback choices and draw flags are stored with PostgreSQL-specific arrays (`#1525 <https://github.com/TabbycatDebate/tabbycat/issues/1525>`_)
+- Private URL submissions now store the participant whose link was used rather than just their IP address (`#1586 <https://github.com/TabbycatDebate/tabbycat/issues/1586>`_)
+
+2.4.5
+-----
+*Release date: 19 July 2020*
+
+- Fixed the display of room URLs on private URL pages (thanks Viran for the report)
+- Preformed panels with a bracket range now sort more sensibly (thanks Zachary for the report)
+- Fixed manual sorting of preformed panels in general
+- Improved sorting of feedback table when sorting 'difference between base score and current score' (thanks Zachary for the report)
+- Fixed issue where the last saved counter was not updating on normal tables
+
+
+2.4.4
+-----
+*Release date: 13 July 2020*
+
+- Fixed colours associated with adjudicators' scores not showing
+- Showed validation errors when using API with invalid field names
+- Prevented Tabbycat from creating default conflicts with the API if already specified in the request
+- Fixed eligibility API endpoints when a list of participants is not present
+- Fixed speaker category eligibility API endpoint not accepting speakers
+- Allowed updating teams, excluding speakers, through the team detail API endpoint
+- Added date and time formats for Malay
+
+
+2.4.3
+-----
+*Release date: 4 July 2020*
+
+- Fixed issue preventing break eligibility from saving (`#1521 <https://github.com/TabbycatDebate/tabbycat/issues/1521>`_)
+
 
 2.4.2
 -----

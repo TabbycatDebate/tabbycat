@@ -1,6 +1,6 @@
 from django.core.validators import MinValueValidator, validate_slug
 from django.forms import ValidationError
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 from dynamic_preferences.preferences import Section
@@ -572,7 +572,7 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
         classes = [TeamStandingsGenerator.metric_annotator_classes[metric] for metric in value]
         duplicates = [c for c in classes if c.repeatable is False and classes.count(c) > 1]
         if duplicates:
-            duplicates_str = ", ".join(list(set(force_text(c.name) for c in duplicates)))
+            duplicates_str = ", ".join(list(set(force_str(c.name) for c in duplicates)))
             raise ValidationError(_("The following metrics can't be listed twice: "
                     "%(duplicates)s") % {'duplicates': duplicates_str})
 
@@ -607,7 +607,7 @@ class SpeakerStandingsPrecedence(MultiValueChoicePreference):
         classes = [SpeakerStandingsGenerator.metric_annotator_classes[metric] for metric in value]
         duplicates = [c for c in classes if c.repeatable is False and classes.count(c) > 1]
         if duplicates:
-            duplicates_str = ", ".join(list(set(force_text(c.name) for c in duplicates)))
+            duplicates_str = ", ".join(list(set(force_str(c.name) for c in duplicates)))
             raise ValidationError(_("The following metrics can't be listed twice: "
                     "%(duplicates)s") % {'duplicates': duplicates_str})
 

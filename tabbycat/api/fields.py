@@ -1,5 +1,5 @@
 from django.db.models import Q
-from rest_framework.relations import HyperlinkedIdentityField, HyperlinkedRelatedField
+from rest_framework.relations import HyperlinkedIdentityField, HyperlinkedRelatedField, SlugRelatedField
 from rest_framework.reverse import reverse
 
 from participants.models import Speaker
@@ -131,3 +131,12 @@ class AdjudicatorFeedbackIdentityField(RoundHyperlinkedIdentityField):
     def get_queryset(self):
         return super().get_queryset().filter(
             Q(source_adjudicator__debate__round=self.context['round']) | Q(source_team__debate__round=self.context['round']))
+
+
+class CreatableSlugRelatedField(SlugRelatedField):
+    def to_internal_value(self, data):
+        try:
+            # get_or_create returns (obj, created?) - only want the object
+            return self.get_queryset().get_or_create(**{self.slug_field: data})[0]
+        except (TypeError, ValueError):
+            self.fail('invalid')

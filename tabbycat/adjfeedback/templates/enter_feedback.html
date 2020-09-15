@@ -6,8 +6,8 @@
 {% block head-title %}
   <span class="emoji">🙅</span>
   {% if source_name %}
-    {% blocktrans trimmed %}
-      Add Feedback from {{ source_name }}
+    {% blocktrans trimmed with name=source_name %}
+      Add Feedback from {{ name }}
     {% endblocktrans %}
   {% else %}
     {% trans "Add Feedback" %}

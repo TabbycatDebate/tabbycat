@@ -10,7 +10,6 @@ from django.db.models import Count, Q
 from django.shortcuts import redirect, resolve_url
 from django.urls import reverse_lazy
 from django.utils.html import format_html_join
-from django.utils.http import is_safe_url
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, FormView, UpdateView
@@ -292,9 +291,10 @@ class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
         return super().form_valid(form)
 
     def get_success_url(self):
+        from django.utils.http import url_has_allowed_host_and_scheme
         # Copied from django.contrib.auth.views.LoginView.get_success_url
         redirect_to = self.get_redirect_to(use_default=True)
-        url_is_safe = is_safe_url(
+        url_is_safe = url_has_allowed_host_and_scheme(
             url=redirect_to,
             allowed_hosts={self.request.get_host()},
             require_https=self.request.is_secure(),
