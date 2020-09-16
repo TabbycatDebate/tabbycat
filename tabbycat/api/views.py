@@ -415,7 +415,7 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
         elif query_params.get('source_type') == 'team':
             filters &= Q(source_adjudicator__isnull=True)
             if query_params.get('source'):
-                filters &= Q(source_adjudicator__adjudicator_id=query_params.get('source'))
+                filters &= Q(source_team__team_id=query_params.get('source'))
         if query_params.get('round'):
             filters &= Q(source_adjudicator__debate__round__seq=query_params.get('round')) | Q(source_team__debate__round__seq=query_params.get('round'))
         if query_params.get('target'):
