@@ -202,7 +202,7 @@ class TeamScoreByAdj(models.Model):
     debate_team = models.ForeignKey('draw.DebateTeam', models.CASCADE,
         verbose_name=_("debate team"))
 
-    win = models.NullBooleanField(null=True, blank=True,
+    win = models.BooleanField(null=True, blank=True,
         verbose_name=_("win"))
     margin = ScoreField(null=True, blank=True,
         verbose_name=_("margin"))
