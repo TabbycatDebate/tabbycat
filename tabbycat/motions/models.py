@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django_summernote.fields import SummernoteTextField
 
 
 class Motion(models.Model):
@@ -14,7 +15,7 @@ class Motion(models.Model):
     reference = models.CharField(max_length=100,
         verbose_name=_("reference"),
         help_text=_("Shortcode for the motion, e.g., \"Bananas\""))
-    info_slide = models.TextField(
+    info_slide = SummernoteTextField(
         verbose_name=_("info slide"), default="", blank=True,
         help_text=_("The information slide for this topic; if it has one"))
     round = models.ForeignKey('tournaments.Round', models.CASCADE,

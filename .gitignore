@@ -13,6 +13,9 @@ tabbycat/static/jsi18n/
 tabbycat/static/vue/
 tabbycat/static/fonts/
 
+# Saved media files
+tabbycat/media
+
 # Translations
 .tx/
 

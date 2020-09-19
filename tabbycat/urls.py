@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin, messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.signals import user_logged_in
@@ -83,7 +84,7 @@ urlpatterns = [
     # Tournament URLs
     path('<slug:tournament_slug>/',
         include('tournaments.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG and settings.ENABLE_DEBUG_TOOLBAR:  # Only serve debug toolbar when on DEBUG
     import debug_toolbar
