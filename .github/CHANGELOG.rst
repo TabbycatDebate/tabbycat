@@ -11,6 +11,16 @@ Change Log
 - Adjudicator Feedback choices and draw flags are stored with PostgreSQL-specific arrays (`#1525 <https://github.com/TabbycatDebate/tabbycat/issues/1525>`_)
 - Private URL submissions now store the participant whose link was used rather than just their IP address (`#1586 <https://github.com/TabbycatDebate/tabbycat/issues/1586>`_)
 
+
+2.4.6
+-----
+*Release date: 19 September 2020*
+
+- Fixed issue where team names with an institution were longer than the maximum size (`#1564 <https://github.com/TabbycatDebate/tabbycat/issues/1564>`_)
+- Fixed issue that made saving motions impossible through the Round API detail endpoint
+- Fixed issue that made filtering by source team impossible for the Feedback API
+
+
 2.4.5
 -----
 *Release date: 19 July 2020*
