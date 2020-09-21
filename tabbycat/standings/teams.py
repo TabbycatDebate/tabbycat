@@ -70,6 +70,9 @@ class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     function = Sum
     field = "points"
 
+    def get_field(self):
+        return F(super().get_field()) * F('debateteam__debate__round__weight')
+
 
 class WinsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for total number of wins."""

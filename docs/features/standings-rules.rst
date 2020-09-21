@@ -39,7 +39,8 @@ metrics that will be shown in the team standings, but not used to rank teams.
   * - Points
     - How many points the team has. For two-team formats, this is just a synonym
       for wins, and differs only in column labelling. For BP, this is 3 points
-      for a first, 2 for a second, 1 for a third and 0 for a fourth.
+      for a first, 2 for a second, 1 for a third and 0 for a fourth. Round
+      weightings are taken into account.
 
   * - Total speaker score
     - The sum of all speaker scores attained in all debates.
