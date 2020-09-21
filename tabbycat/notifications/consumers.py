@@ -34,10 +34,10 @@ class NotificationQueueConsumer(SyncConsumer):
         try:
             mail.get_connection().send_messages(messages)
         except SMTPException as e:
-            self.send_error(e, _("Failed to send e-mails."), event)
+            self.send_error(e, _("Failed to send emails."), event)
             raise
         except ConnectionError as e:
-            self.send_error(e, _("Connection error sending e-mails."), event)
+            self.send_error(e, _("Connection error sending emails."), event)
             raise
         else:
             SentMessage.objects.bulk_create(records)

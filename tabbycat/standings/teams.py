@@ -235,14 +235,14 @@ class TeamPullupsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     abbr = _("PU")
 
     function = Count
-    where_value = r'(^|,)pullup($|,)'
+    where_value = ['pullup']
     exclude_unconfirmed = False
 
     def get_field(self):
         return 'debateteam'
 
     def get_where_field(self):
-        return 'debateteam__flags__regex'
+        return 'debateteam__flags__contains'
 
 
 class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):

@@ -2,9 +2,85 @@
 Change Log
 ==========
 
+2.5.0 (Nebelung)
+----------------
+*Release date: ?*
+
+- Added URL field from the Room model to the Venues API endpoints as 'external URL'
+- The Institution API endpoints show institutions' regions as their name, and regions can be created
+- Adjudicator Feedback choices and draw flags are stored with PostgreSQL-specific arrays (`#1525 <https://github.com/TabbycatDebate/tabbycat/issues/1525>`_)
+- Private URL submissions now store the participant whose link was used rather than just their IP address (`#1586 <https://github.com/TabbycatDebate/tabbycat/issues/1586>`_)
+
+
+2.4.6
+-----
+*Release date: 19 September 2020*
+
+- Fixed issue where team names with an institution were longer than the maximum size (`#1564 <https://github.com/TabbycatDebate/tabbycat/issues/1564>`_)
+- Fixed issue that made saving motions impossible through the Round API detail endpoint
+- Fixed issue that made filtering by source team impossible for the Feedback API
+
+
+2.4.5
+-----
+*Release date: 19 July 2020*
+
+- Fixed the display of room URLs on private URL pages (thanks Viran for the report)
+- Preformed panels with a bracket range now sort more sensibly (thanks Zachary for the report)
+- Fixed manual sorting of preformed panels in general
+- Improved sorting of feedback table when sorting 'difference between base score and current score' (thanks Zachary for the report)
+- Fixed issue where the last saved counter was not updating on normal tables
+
+
+2.4.4
+-----
+*Release date: 13 July 2020*
+
+- Fixed colours associated with adjudicators' scores not showing
+- Showed validation errors when using API with invalid field names
+- Prevented Tabbycat from creating default conflicts with the API if already specified in the request
+- Fixed eligibility API endpoints when a list of participants is not present
+- Fixed speaker category eligibility API endpoint not accepting speakers
+- Allowed updating teams, excluding speakers, through the team detail API endpoint
+- Added date and time formats for Malay
+
+
+2.4.3
+-----
+*Release date: 4 July 2020*
+
+- Fixed issue preventing break eligibility from saving (`#1521 <https://github.com/TabbycatDebate/tabbycat/issues/1521>`_)
+
+
+2.4.2
+-----
+*Release date: 22 June 2020*
+
+- Removed duplicate institution name in popovers (`#1515 <https://github.com/TabbycatDebate/tabbycat/issues/1515>`_)
+- Fixed participant record page crashes resulting from `#1511 <https://github.com/TabbycatDebate/tabbycat/pull/1511>`_ (`#1518 <https://github.com/TabbycatDebate/tabbycat/pull/1518>`_)
+- Fixed hanging in preformed panel creation
+
+
+2.4.1
+-----
+*Release date: 21 June 2020*
+
+- Fixed issue where redundant check-ins would crash (`#1513 <https://github.com/TabbycatDebate/tabbycat/pull/1513>`_)
+- Require round sequence numbers to be nonnegative (`#1514 <https://github.com/TabbycatDebate/tabbycat/issues/1514>`_)
+    - This change may cause upgrades of existing sites to fail with an ``IntegrityError`` if they have a negative round sequence number. Please change all round sequence numbers to positive numbers (or 0) before upgrading. Negative round numbers cause most Tabbycat pages to fail anyway, so functioning existing sites shouldn't have this problem.
+- Adjust display of team names in registration cards (`#1511 <https://github.com/TabbycatDebate/tabbycat/pull/1511>`_)
+- Fixed bug causing main action item not to appear in languages other than English
+- Allowed null values for emoji and code names in Teams' API
+- Enforced use of null values where field is undetermined yet cannot be blank in API
+- Improved performance of certain database pages
+- Fixed issue where null points caused an error in current standings
+- Fixed issue preventing the creation of speakers in teams through API
+- Little updates and clarifications to the documentation
+
+
 2.4.0 (Manx)
 ------------
-*Release date: ?*
+*Release date: 14 June 2020*
 
 - Created an `application programming interface (API) <https://tabbycat.readthedocs.io/en/stable/features/api.html>`_ for most aspects of Tabbycat
 - Filtered the home page for active tournaments with a new page to list inactive ones
@@ -31,6 +107,8 @@ Change Log
 - Fixed issue causing crashes when trainees were demoted after results were entered (`#922 <https://github.com/TabbycatDebate/tabbycat/issues/922>`_)
 - Fixed issue where who-beat-whom would include elimination rounds (`#1073 <https://github.com/TabbycatDebate/tabbycat/issues/1073>`_)
 - Fixed issue causing even panels to be missed for user warnings (`#1465 <https://github.com/TabbycatDebate/tabbycat/issues/1465>`_)
+- Stopped actively maintaining `local installation instructions for Windows <https://tabbycat.readthedocs.io/en/latest/install/windows.html>`_
+
 
 2.3.3
 -----

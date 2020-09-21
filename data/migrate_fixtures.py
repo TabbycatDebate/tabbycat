@@ -114,7 +114,7 @@ for fixture in fixtures:
     run_command(["python", MANAGE_PY, "checkpreferences"])
     run_command(["python", MANAGE_PY, "dumpdata", "--natural-foreign", "--natural-primary",
             "-e=availability", "-e=contenttypes", "-e=options", "-e=auth.Permission",
-            "-e=admin.logentry", "-e=actionlog.actionlogentry", "-e=sessions",
+            "-e=admin.logentry", "-e=actionlog.actionlogentry", "-e=sessions", "-e=authtoken.token",
             "--indent=4", "--format=json", "--output=" + path])
 
 print_yellow("Migrated %d fixtures." % len(fixtures))

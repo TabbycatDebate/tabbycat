@@ -6,7 +6,7 @@ import { mapMutations } from 'vuex'
 export default {
   methods: {
     showHoverPanel: function (subject, type) {
-      this.setHoverPanel({ 'subject': subject, 'type': type })
+      this.setHoverPanel({ subject: subject, type: type })
     },
     hideHoverPanel: function () {
       this.unsetHoverPanel()

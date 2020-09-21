@@ -50,7 +50,7 @@ import DraggableAdjudicator from './DraggableAdjudicator.vue'
 
 export default {
   components: { DraggableAdjudicator, DroppableItem },
-  props: [ 'debateOrPanel', 'handleDebateOrPanelDrop' ],
+  props: ['debateOrPanel', 'handleDebateOrPanelDrop'],
   computed: {
     chairID () {
       return this.adjudicators.C[0]
@@ -65,9 +65,9 @@ export default {
   methods: {
     getDragPayload: function (adjID, position) {
       return {
-        'item': adjID,
-        'assignment': this.debateOrPanel.id,
-        'position': position,
+        item: adjID,
+        assignment: this.debateOrPanel.id,
+        position: position,
       }
     },
     handledrop: function (droppedData) {

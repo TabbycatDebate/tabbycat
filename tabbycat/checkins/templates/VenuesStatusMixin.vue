@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     getToolTipForVenue: function (entity) {
-      let categories = []
+      const categories = []
       _.forEach(entity.categories, (c) => {
         categories.push(c.name)
       })

@@ -99,7 +99,17 @@ import ModalActionMixin from './ModalActionMixin.vue'
 
 export default {
   mixins: [ModalActionMixin],
-  props: { introText: String, forPanels: false, forVenues: false },
+  props: {
+    introText: String,
+    forPanels: {
+      type: Boolean,
+      default: false,
+    },
+    forVenues: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data: function () {
     return {
       id: 'confirmAllocateModal',

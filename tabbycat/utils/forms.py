@@ -22,7 +22,7 @@ class SuperuserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         fields = ("username", "email")
-        labels = {"email": _("E-mail address")}
+        labels = {"email": _("Email address")}
 
     def save(self, commit=True):
         user = super(SuperuserCreationForm, self).save(commit=False)

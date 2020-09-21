@@ -32,10 +32,16 @@ export default {
   mixins: [DraggableMixin, HoverablePanelMixin, HoverableConflictMixin],
   // Passed down from the parent because the trigger for the show/hide needs to be on this element
   props: {
-    hoverPanel: false,
+    hoverPanel: {
+      type: Boolean,
+      default: false,
+    },
     hoverPanelItem: Object,
     hoverPanelType: String,
-    hoverConflicts: false,
+    hoverConflicts: {
+      type: Boolean,
+      default: false,
+    },
     hoverConflictsItem: Number,
     hoverConflictsType: String,
   },

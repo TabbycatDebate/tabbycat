@@ -97,6 +97,11 @@ class BreakCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
 class SpeakerCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.SpeakerCategorySerializer
 
+    def get_queryset(self):
+        if not self.request.user or not self.request.user.is_staff:
+            return super().get_queryset().filter(public=True)
+        return super().get_queryset()
+
 
 class BreakEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, RetrieveUpdateAPIView):
     serializer_class = serializers.BreakEligibilitySerializer
@@ -122,9 +127,14 @@ class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
         serializer.save()
 
     def get_queryset(self):
+        filters = Q()
+        if self.request.query_params.get('region'):
+            filters &= Q(region__name=self.request.query_params['region'])
+
         return Institution.objects.filter(
             Q(adjudicator__tournament=self.tournament) | Q(team__tournament=self.tournament),
-        ).distinct().prefetch_related(
+            filters,
+        ).distinct().select_related('region').prefetch_related(
             Prefetch('team_set', queryset=self.tournament.team_set.all()),
             Prefetch('adjudicator_set', queryset=self.tournament.adjudicator_set.all()),
         )
@@ -161,7 +171,10 @@ class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.InstitutionSerializer
 
     def get_queryset(self):
-        return Institution.objects.all()
+        filters = Q()
+        if self.request.query_params.get('region'):
+            filters &= Q(region__name=self.request.query_params['region'])
+        return Institution.objects.filter(filters).select_related('region')
 
 
 class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
@@ -356,11 +369,17 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
 
     class Permission(PublicPreferencePermission):
         def get_tournament_preference(self, view, op):
-            return {
+            t = view.tournament
+            r = view.round
+
+            draw_status = {
                 'off': False,
-                'current': view.tournament.current_round.id == view.round.id and self.get_round_status(view),
+                'current': t.current_round.id == r.id and self.get_round_status(view),
                 'all-released': self.get_round_status(view),
-            }[view.tournament.pref(view.access_preference)]
+            }[t.pref(view.access_preference)]
+
+            result_status = t.pref('public_results') and r.completed and not r.is_silent
+            return draw_status or result_status or t.pref('all_results_released')
 
         def get_round_status(self, view):
             return getattr(view.round, view.round_released_field) == view.round_released_value
@@ -410,7 +429,7 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
         elif query_params.get('source_type') == 'team':
             filters &= Q(source_adjudicator__isnull=True)
             if query_params.get('source'):
-                filters &= Q(source_adjudicator__adjudicator_id=query_params.get('source'))
+                filters &= Q(source_team__team_id=query_params.get('source'))
         if query_params.get('round'):
             filters &= Q(source_adjudicator__debate__round__seq=query_params.get('round')) | Q(source_team__debate__round__seq=query_params.get('round'))
         if query_params.get('target'):

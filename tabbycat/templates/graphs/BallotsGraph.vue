@@ -130,7 +130,7 @@ export default {
       if (this.earliestBallotTime && this.lastestBallotTime) {
         return Math.max(
           Math.abs((this.lastestBallotTime - this.earliestBallotTime) * 0.02),
-          defaultTime
+          defaultTime,
         )
       }
       return defaultTime
@@ -258,11 +258,11 @@ export default {
       // Add extra initial row so there is always the null state shown
       ballotsSeries.splice(0, 0, this.addSeries(
         0, 0,
-        ballotsSeries[0].unix_time
+        ballotsSeries[0].unix_time,
       ))
       ballotsSeries.splice(0, 0, this.addSeries(
         0, 0,
-        ballotsSeries[0].unix_time - this.timePadding
+        ballotsSeries[0].unix_time - this.timePadding,
       ))
 
       return ballotsSeries
