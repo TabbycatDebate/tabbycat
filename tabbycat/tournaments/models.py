@@ -357,7 +357,7 @@ class Round(models.Model):
         help_text=_("Whether motions will appear on the public website, assuming that feature is turned on"))
     starts_at = models.TimeField(verbose_name=_("starts at"), blank=True, null=True)
 
-    weight = models.FloatField(default=1,
+    weight = models.IntegerField(default=1,
         verbose_name=_("weight"),
         help_text=_("A factor for the points received in the round. For example, if 2, all points are doubled."))
 

@@ -3,7 +3,7 @@
 import logging
 
 from django.contrib.postgres.aggregates import ArrayAgg
-from django.db.models import Avg, Count, F, FloatField, Func, Q, StdDev, Sum
+from django.db.models import Avg, Count, F, FloatField, Func, PositiveIntegerField, Q, StdDev, Sum
 from django.db.models.functions import Cast
 from django.utils.translation import gettext_lazy as _
 
@@ -33,6 +33,7 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
 
     function = None  # must be set by subclasses
     field = None  # must be set by subclasses
+    output_field = None
 
     where_value = None
 
@@ -58,7 +59,7 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
         return annotation_filter
 
     def get_annotation(self, round=None):
-        return self.function(self.get_field(), filter=self.get_annotation_filter(round))
+        return self.function(self.get_field(), filter=self.get_annotation_filter(round), output_field=self.output_field)
 
 
 class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -69,6 +70,7 @@ class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
     function = Sum
     field = "points"
+    output_field = PositiveIntegerField()
 
     def get_field(self):
         return F(super().get_field()) * F('debateteam__debate__round__weight')
