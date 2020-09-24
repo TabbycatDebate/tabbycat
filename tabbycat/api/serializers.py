@@ -518,7 +518,7 @@ class VenueSerializer(serializers.ModelSerializer):
         queryset=VenueCategory.objects.all(),
     )
     display_name = serializers.ReadOnlyField()
-    external_url = serializers.URLField(source='url')
+    external_url = serializers.URLField(source='url', required=False, allow_blank=True)
     _links = LinksSerializer(source='*', read_only=True)
 
     class Meta:
