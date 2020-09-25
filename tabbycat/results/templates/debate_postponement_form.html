@@ -4,7 +4,7 @@
 {% else %}
   <form method="POST" action="{% roundurl 'results-postpone-debate' debate.round debate.id %}" class='text-secondary'>
     {% csrf_token %}
-    <button type="submit" class="btn btn-link text-muted p-0">
+    <button type="submit" class="btn btn-link text-primary p-0">
       <small>{% trans "Postpone" %}</small>
     </button>
   </form>
