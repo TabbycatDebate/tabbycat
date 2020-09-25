@@ -71,11 +71,11 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
         table.add_ballot_check_in_columns(draw, key="check_ins")
         table.add_ballot_status_columns(draw, key="status")
         table.add_ballot_entry_columns(draw, self.view_role, self.request.user)
+        if self.tournament.pref('enable_postponements'):
+            table.add_debate_postponement_column(draw)
         table.add_debate_venue_columns(draw, for_admin=True)
         table.add_debate_results_columns(draw, iron=True)
         table.add_debate_adjudicators_column(draw, show_splits=True, for_admin=True)
-        if self.tournament.pref('enable_postponements'):
-            table.add_debate_postponement_column(draw)
         return table
 
     def get_irons_list(self):
