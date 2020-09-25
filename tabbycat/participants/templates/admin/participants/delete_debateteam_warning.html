@@ -10,9 +10,10 @@
           {{ object_name }}</strong>.
         {% endblocktrans %}
       {% else %}
+        {# objects_name can be either singular or plural (because that's how Django works) #}
         {% blocktrans trimmed %}
           <strong>Warning:</strong> If there are “debate team” objects in the
-          above list, <strong>you probably shouldn't delete these
+          above list, <strong>you probably shouldn't delete the selected
           {{ objects_name }}</strong>.
         {% endblocktrans %}
       {% endif %}

@@ -161,6 +161,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
     }
 
     BLANK_TEXT = _("—")
+    REDACTED_CELL = {'text': "<em>" + _("Redacted") + "</em>", 'class': 'no-wrap'}
 
     def __init__(self, view=None, **kwargs):
         """Constructor.
@@ -296,32 +297,22 @@ class TabbycatTableBuilder(BaseTableBuilder):
             cell['sort'] = 0
         return cell
 
+    BP_POINT_ICONS = ("chevrons-down", "chevron-down", "chevron-up", "chevrons-up")
+    BP_POINT_ICONCLASSES = ("text-danger result-icon", "text-warning result-icon", "text-info result-icon", "text-success result-icon")
+
     def _result_cell_class_four(self, points, cell):
         team_name = cell['popover']['title']
-        if points == 3:
-            cell['popover']['title'] = _("%(team)s took 1st") % {'team': team_name}
-            cell['icon'] = "chevrons-up"
-            cell['iconClass'] = "text-success result-icon"
-            cell['sort'] = 4
-        elif points == 2:
-            cell['popover']['title'] = _("%(team)s took 2nd") % {'team': team_name}
-            cell['icon'] = "chevron-up"
-            cell['iconClass'] = "text-info result-icon"
-            cell['sort'] = 3
-        elif points == 1:
-            cell['popover']['title'] = _("%(team)s took 3rd") % {'team': team_name}
-            cell['icon'] = "chevron-down"
-            cell['iconClass'] = "text-warning result-icon"
-            cell['sort'] = 2
-        elif points == 0:
-            cell['popover']['title'] = _("%(team)s took 4th") % {'team': team_name}
-            cell['icon'] = "chevrons-down"
-            cell['iconClass'] = "text-danger result-icon"
-            cell['sort'] = 1
-        else: # None
+
+        if points is None:
             cell['popover']['title'] = _("%(team)s—no result") % {'team': team_name}
             cell['icon'] = ""
             cell['sort'] = 0
+            return cell
+
+        cell['popover']['title'] = _("%(team)s placed %(place)s") % {'team': team_name, 'place': ordinal(4 - points)}
+        cell['icon'] = self.BP_POINT_ICONS[points]
+        cell['iconClass'] = self.BP_POINT_ICONCLASSES[points]
+        cell['sort'] = points + 1
         return cell
 
     def _result_cell_class_four_elim(self, advancing, cell):
@@ -489,12 +480,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         adj_data = []
         for adj in adjudicators:
-            cell = {'text': adj.name}
-            if self._show_record_links:
-                cell['popover'] = {'content': [self._adjudicator_record_link(adj)]}
-            if subtext == 'institution' and adj.institution is not None:
-                cell['subtext'] = adj.institution.code
-            adj_data.append(cell)
+            if adj.anonymous:
+                adj_data.append(self.REDACTED_CELL)
+            else:
+                cell = {'text': adj.name}
+                if self._show_record_links:
+                    cell['popover'] = {'content': [self._adjudicator_record_link(adj)]}
+                if subtext == 'institution' and adj.institution is not None:
+                    cell['subtext'] = adj.institution.code
+                adj_data.append(cell)
         self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'}, adj_data)
 
         if show_institutions and self.tournament.pref('show_adjudicator_institutions'):
@@ -671,7 +665,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         speaker_data = []
         for speaker in speakers:
             if getattr(speaker, 'anonymise', False):
-                speaker_data.append({'text': "<em>" + _("Redacted") + "</em>", 'class': 'no-wrap'})
+                speaker_data.append(self.REDACTED_CELL)
             else:
                 speaker_data.append({
                     'text': speaker.name,

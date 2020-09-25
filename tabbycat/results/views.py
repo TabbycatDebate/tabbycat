@@ -562,6 +562,10 @@ class OldPublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin,
     allow_null_tournament = True
     private_url = True
 
+    def populate_objects(self):
+        super().populate_objects()
+        self.ballotsub.participant_submitter = Adjudicator.objects.get(url_key=self.kwargs['url_key'])
+
     def get_success_url(self):
         return reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': self.kwargs['url_key']})
 

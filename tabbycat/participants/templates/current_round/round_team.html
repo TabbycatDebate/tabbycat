@@ -52,8 +52,8 @@
 {# Room #}
 <div class="list-group-item lead {% if draw_released %}active{% endif %}">
   {% if grammatical_person == "3" %}
-    {% if venue.url %}
-      {% blocktrans trimmed with team=team_short_name room=debate.venue.display_name|default:venue_tba url=venue.url %}
+    {% if debate.venue.url %}
+      {% blocktrans trimmed with team=team_short_name room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
         {{ team }}'s debate is in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
       {% endblocktrans %}
     {% else %}
@@ -62,8 +62,8 @@
       {% endblocktrans %}
     {% endif %}
   {% else %}
-    {% if venue.url %}
-      {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba url=venue.url %}
+    {% if debate.venue.url %}
+      {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
         Your debate is in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
       {% endblocktrans %}
     {% else %}

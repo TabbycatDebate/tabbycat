@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-05 15:26-0300\n"
+"POT-Creation-Date: 2020-07-19 19:52-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -178,148 +178,137 @@ msgstr ""
 msgid "The break size (%(size)d) for this break category was invalid. It must be either six times or four times a power of two."
 msgstr ""
 
-#: draw/models.py:27
+#: draw/models.py:28
 msgid "none"
 msgstr ""
 
-#: draw/models.py:28
+#: draw/models.py:29
 msgid "postponed"
 msgstr ""
 
-#: draw/models.py:29
+#: draw/models.py:30
 msgid "draft"
 msgstr ""
 
-#: draw/models.py:30
+#: draw/models.py:31
 msgid "confirmed"
 msgstr ""
 
-#: draw/models.py:36 draw/models.py:389
+#: draw/models.py:37 draw/models.py:384
 msgid "round"
 msgstr ""
 
-#: draw/models.py:38
+#: draw/models.py:39
 msgid "room"
 msgstr ""
 
-#: draw/models.py:41
+#: draw/models.py:42
 msgid "bracket"
 msgstr ""
 
-#: draw/models.py:43
+#: draw/models.py:44
 msgid "room rank"
 msgstr ""
 
-#: draw/models.py:49
+#: draw/models.py:50
 msgid "importance"
 msgstr ""
 
-#: draw/models.py:51
+#: draw/models.py:52
 msgid "result status"
 msgstr ""
 
-#: draw/models.py:53
+#: draw/models.py:54
 msgid "sides confirmed"
 msgstr ""
 
-#: draw/models.py:54
+#: draw/models.py:55
 msgid "If unchecked, the sides assigned to teams in this debate are just placeholders."
 msgstr ""
 
-#: draw/models.py:57 draw/models.py:272
+#: draw/models.py:58 draw/models.py:273
 msgid "debate"
 msgstr ""
 
-#: draw/models.py:58
+#: draw/models.py:59
 msgid "debates"
 msgstr ""
 
 #. Translators: This is appended to a list of teams, e.g. "Auckland
 #. 1, Vic Wellington 1 (sides not confirmed)". Mind the leading
 #. space.
-#: draw/models.py:77 draw/models.py:102
+#: draw/models.py:78 draw/models.py:103
 msgid " (sides not confirmed)"
 msgstr ""
 
 #. Translators: This goes between teams in a debate, e.g. "Auckland 1
 #. vs Vic Wellington 1". Mind the leading and trailing spaces.
-#: draw/models.py:89 draw/models.py:106
+#: draw/models.py:90 draw/models.py:107
 msgid " vs "
 msgstr ""
 
-#: draw/models.py:262
+#: draw/models.py:263
 msgid "affirmative"
 msgstr ""
 
-#: draw/models.py:263
+#: draw/models.py:264
 msgid "negative"
 msgstr ""
 
-#: draw/models.py:264
+#: draw/models.py:265
 msgid "opening government"
 msgstr ""
 
-#: draw/models.py:265
+#: draw/models.py:266
 msgid "opening opposition"
 msgstr ""
 
-#: draw/models.py:266
+#: draw/models.py:267
 msgid "closing government"
 msgstr ""
 
-#: draw/models.py:267
+#: draw/models.py:268
 msgid "closing opposition"
 msgstr ""
 
-#: draw/models.py:274 draw/models.py:391
+#: draw/models.py:275 draw/models.py:386
 msgid "team"
 msgstr ""
 
-#: draw/models.py:276 draw/models.py:393
+#: draw/models.py:277 draw/models.py:388
 msgid "side"
 msgstr ""
 
-#: draw/models.py:282
+#: draw/models.py:283
 msgid "debate team"
 msgstr ""
 
-#: draw/models.py:283
+#: draw/models.py:284
 msgid "debate teams"
 msgstr ""
 
-#: draw/models.py:311
-msgid "placed 1st"
+#: draw/models.py:312
+#, python-format
+msgid "placed %(place)s"
 msgstr ""
 
-#: draw/models.py:313
-msgid "placed 2nd"
-msgstr ""
-
-#: draw/models.py:315
-msgid "placed 3rd"
-msgstr ""
-
-#: draw/models.py:317
-msgid "placed 4th"
-msgstr ""
-
-#: draw/models.py:319 draw/models.py:326
+#: draw/models.py:314 draw/models.py:321
 msgid "result unknown"
 msgstr ""
 
-#: draw/models.py:322
+#: draw/models.py:317
 msgid "won"
 msgstr ""
 
-#: draw/models.py:324
+#: draw/models.py:319
 msgid "lost"
 msgstr ""
 
-#: draw/models.py:397
+#: draw/models.py:392
 msgid "team side allocation"
 msgstr ""
 
-#: draw/models.py:398
+#: draw/models.py:393
 msgid "team side allocations"
 msgstr ""
 
