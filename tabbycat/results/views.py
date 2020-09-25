@@ -556,8 +556,6 @@ class OldPublicNewBallotSetByIdUrlView(SingleObjectFromTournamentMixin, BasePubl
 
 class OldPublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, BasePublicNewBallotSetView):
     model = Adjudicator
-    allow_null_tournament = True
-    private_url = True
 
     def populate_objects(self):
         super().populate_objects()
@@ -598,9 +596,7 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
             return self.object.matchup
 
     def get_queryset(self):
-        return self.model.objects.select_related(
-            'round',
-        ).prefetch_related('debateteam_set__team')
+        return self.model.objects.select_related('round').prefetch_related('debateteam_set__team')
 
     def response_error(self, error):
         status, message = error
@@ -655,9 +651,9 @@ class PublicBallotScoresheetsView(BasePublicBallotScoresheetsView):
 
 class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixin, BasePublicBallotScoresheetsView):
 
+    model = Debate
     template_name = 'privateurl_ballot_set.html'
     error_template_name = 'privateurl_ballot_set_error.html'
-    slug_url_kwarg = 'url_key'
     slug_field = 'debateadjudicator__adjudicator__url_key'
 
     def is_page_enabled(self, tournament):
@@ -687,7 +683,7 @@ class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixi
         )
 
     def get_queryset(self):
-        return self.model.objects.filter(round=self.round).prefetch_related('debateteam_set__team')
+        return super(BasePublicBallotScoresheetsView).get_queryset()
 
 
 class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, VueTableTemplateView):

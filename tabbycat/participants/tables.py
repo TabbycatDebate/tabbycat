@@ -3,7 +3,7 @@ from django.utils.translation import gettext as _
 
 from adjallocation.models import DebateAdjudicator
 from draw.prefetch import populate_opponents
-from results.models import SpeakerScore, TeamScore
+from results.models import BallotSubmission, SpeakerScore, TeamScore
 from results.prefetch import populate_confirmed_ballots, populate_wins
 from standings.templatetags.standingsformat import metricformat
 from tournaments.models import Round
@@ -54,6 +54,8 @@ class AdjudicatorDebateTable:
         ).prefetch_related(
             Prefetch('debate__debateadjudicator_set',
                 queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
+            Prefetch('debate__ballotsubmission_set',
+                queryset=BallotSubmission.objects.exclude(discarded=True), to_attr='undiscarded_ballots'),
             'debate__debateteam_set__team__speaker_set',
             'debate__round__motion_set',
         )
@@ -103,6 +105,8 @@ class TeamDebateTable:
             Prefetch('debate_team__speakerscore_set',
                 queryset=SpeakerScore.objects.filter(ballot_submission__confirmed=True).select_related('speaker').order_by('position'),
                 to_attr='speaker_scores'),
+            Prefetch('debate_team__debate__ballotsubmission_set',
+                queryset=BallotSubmission.objects.exclude(discarded=True), to_attr='undiscarded_ballots'),
         ).order_by('debate_team__debate__round__seq')
 
         if not table.admin and not tournament.pref('all_results_released'):

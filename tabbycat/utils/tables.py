@@ -829,7 +829,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         elif self.private_url:
             ballot_links_data = []
             for debate in debates:
-                if not debate.ballotsubmission_set.exclude(discarded=True).exists():
+                if len(debate.undiscarded_ballots) == 0:
                     ballot_links_data.append(_("No ballot"))
                 elif self.tournament.pref('teams_in_debate') == 'bp' and debate.round.is_break_round:
                     ballot_links_data.append(_("Elimination"))
