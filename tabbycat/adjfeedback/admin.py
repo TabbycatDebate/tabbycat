@@ -8,8 +8,8 @@ from draw.models import DebateTeam
 from utils.admin import custom_titled_filter
 
 from .models import (AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackBooleanAnswer,
-    AdjudicatorFeedbackFloatAnswer, AdjudicatorFeedbackIntegerAnswer, AdjudicatorFeedbackQuestion,
-    AdjudicatorFeedbackStringAnswer)
+    AdjudicatorFeedbackFloatAnswer, AdjudicatorFeedbackIntegerAnswer, AdjudicatorFeedbackManyAnswer,
+    AdjudicatorFeedbackQuestion, AdjudicatorFeedbackStringAnswer)
 
 
 # ==============================================================================
@@ -60,6 +60,7 @@ class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
 @admin.register(AdjudicatorFeedbackBooleanAnswer)
 @admin.register(AdjudicatorFeedbackFloatAnswer)
 @admin.register(AdjudicatorFeedbackIntegerAnswer)
+@admin.register(AdjudicatorFeedbackManyAnswer)
 @admin.register(AdjudicatorFeedbackStringAnswer)
 class AdjudicatorFeedbackAnswerAdmin(admin.ModelAdmin):
     list_display = ('question', 'get_target', 'get_source', 'answer', 'get_feedback_description')

@@ -165,8 +165,7 @@ class EmailTeamRegistrationView(TournamentTemplateEmailCreateView):
     subject_template = 'team_email_subject'
     message_template = 'team_email_message'
 
-    def get_success_url(self):
-        return reverse_tournament('participants-list', self.tournament)
+    tournament_redirect_pattern_name = 'participants-list'
 
     def get_queryset(self):
         return Speaker.objects.filter(team__tournament=self.tournament).select_related('team').prefetch_related('team__speaker_set')

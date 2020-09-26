@@ -1,4 +1,3 @@
-from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -25,7 +24,7 @@ class SentMessage(models.Model):
 
     email = models.EmailField(null=True,
         verbose_name=_("email"))
-    context = JSONField(blank=True, null=True,
+    context = models.JSONField(blank=True, null=True,
         verbose_name=_("context"))
     message = models.TextField(null=True,
         verbose_name=_("message"))
@@ -126,7 +125,7 @@ class EmailStatus(models.Model):
         verbose_name=_("timestamp"))
     event = models.CharField(max_length=20, choices=EVENT_TYPE_CHOICES,
         verbose_name=_("event"))
-    data = JSONField(blank=True, null=True,
+    data = models.JSONField(blank=True, null=True,
         verbose_name=_("context"))
 
     class Meta:

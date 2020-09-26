@@ -45,7 +45,7 @@ msgid "By %1"
 msgstr ""
 
 #: checkins/templates/CheckInStatusContainer.vue:
-msgid "No matching venues found."
+msgid "No matching rooms found."
 msgstr ""
 
 #: checkins/templates/CheckInStatusContainer.vue:
@@ -185,7 +185,7 @@ msgid "ID %1,"
 msgstr ""
 
 #: printing/templates/PrintableBallotHeader.vue:
-msgid "Venue:"
+msgid "Room:"
 msgstr ""
 
 #: printing/templates/PrintableBallotHeader.vue:
