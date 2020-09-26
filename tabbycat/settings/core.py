@@ -276,6 +276,8 @@ SUMMERNOTE_CONFIG = {
     'iframe': True, # Necessary; if just to compartmentalise jQuery dependency,
 }
 
+X_FRAME_OPTIONS = 'SAMEORIGIN' # Necessary to get Django-Summernote working because of Django 3 changes
+
 # ==============================================================================
 # Database
 # ==============================================================================
