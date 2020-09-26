@@ -883,7 +883,7 @@ class FeedbackReturnLocation(StringPreference):
 
 @tournament_preferences_registry.register
 class EnablePostponements(BooleanPreference):
-    help_text = _("Enables debates to have their status set to postponed")
+    help_text = _("Lets debates have their status as postponed, as to not block draw generation.")
     verbose_name = _("Enable postponements")
     section = data_entry
     name = 'enable_postponements'
