@@ -7,8 +7,7 @@ from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
 
-from .core import TABBYCAT_VERSION
-
+from .core import TABBYCAT_VERSION, SUMMERNOTE_CONFIG
 
 # ==============================================================================
 # Heroku
@@ -148,3 +147,10 @@ SCOUT_NAME = "Tabbycat"
 if environ.get('SCOUT_MONITOR'):
     # Scout should be listed first; prepend it to the existing list if added
     INSTALLED_APPS = ('scout_apm.django', *INSTALLED_APPS)
+
+
+# ==============================================================================
+# Summernote (WYSWIG)
+# ==============================================================================
+# Heroku cannot store user media files, therefore do not allow them to be uploaded
+SUMMERNOTE_CONFIG['disable_upload'] = True
