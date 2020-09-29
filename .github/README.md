@@ -34,15 +34,13 @@ Our user guide is at [tabbycat.readthedocs.io](http://tabbycat.readthedocs.io/).
 
 ## ⬆️ Installation
 
-The fastest way to launch a Tabbycat site is to click this button:
+Tabbycat sites can be deployed with various platforms. The two main platforms are [Calico](https://calicotab.com/), specially designed for Tabbycat, and Heroku.
+
+To deploy on Calico, [click here](https://calicotab.com/). For Heroku, click this button:
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/master)
 
-During the installation process Heroku will ask you to verify your account by adding a credit or debit card. A standard Tabbycat site *will not charge* your card without explicit permission — charges only accrue if you deliberately add a paid service in the Heroku dashboard.
-
-That said if you do not have access to a credit or debit card we offer a version of the software — 'Tabbykitten' — that does not require Heroku to verify your account. However, as a result, this version is limited: it cannot send emails and cannot be upgraded with extra database capacity or to better handle large amounts of traffic (although you can perform these upgrades later if you verify your Heroku account). We recommend using it only for small tournaments. [Use this link to set up a Tabbykitten version](https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/kitten).
-
-Our documentation also provides guides for how to run Tabbycat on your local machine.
+[Our documentation](https://tabbycat.readthedocs.io/en/stable/#installation-docs) also provides advanced instructions for deployment and troubleshooting, including locally.
 
 ## 💪 Support and Contributing
 
