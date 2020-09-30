@@ -34,13 +34,13 @@ Our user guide is at [tabbycat.readthedocs.io](http://tabbycat.readthedocs.io/).
 
 ## ⬆️ Installation
 
-Tabbycat sites can be deployed with various platforms. The two main platforms are [Calico](https://calicotab.com/), specially designed for Tabbycat, and Heroku.
+Tabbycat can be deployed in a number of ways. While you can set it up to [run on your own computer](https://tabbycat.readthedocs.io/en/stable/install/local.html) most users will want to run it as a website.
 
-To deploy on Calico, [click here](https://calicotab.com/). For Heroku, click this button:
+Tabbycat is configured for a '1 click' install to the [Heroku](https://www.heroku.com) web platform. Click this button to begin:
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/master)
 
-[Our documentation](https://tabbycat.readthedocs.io/en/stable/#installation-docs) also provides advanced instructions for deployment and troubleshooting, including locally.
+While the baseline Heroku hosting is free, some features require additional setup and larger tournaments will likely need to pay for greater hosting capacities. As an alternative, the [Calico](https://calicotab.com/) service will host Tabbycat sites for a flat fee while also managing all scaling/configuration concerns and providing ongoing access to the released tab.
 
 ## 💪 Support and Contributing
 
