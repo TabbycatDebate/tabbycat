@@ -507,7 +507,7 @@ class BaseBallotSetForm(BaseResultForm):
                     ))
 
                 # The reply speaker must have given a substantive speech.
-                if len(speaker_positions.get(reply_speaker, [])) == 0:
+                if self.tournament.pref('require_substantive_for_reply') and len(speaker_positions.get(reply_speaker, [])) == 0:
                     self.add_error(self._fieldname_speaker(side, self.reply_position), forms.ValidationError(
                         _("The reply speaker for this team did not give a substantive speech."),
                         code='reply_speaker_not_repeat',
