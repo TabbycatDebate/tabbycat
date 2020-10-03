@@ -1,4 +1,4 @@
-from django.db.models import Avg, Case, Count, Q, Sum, When
+from django.db.models import Avg, Case, Count, F, Q, Sum, When
 
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
@@ -16,7 +16,10 @@ def populate_win_counts(teams, round=None):
         annotation_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
 
     teams_annotated = Team.objects.filter(id__in=teams_by_id.keys()).annotate(
-        points_annotation=Sum('debateteam__teamscore__points', filter=annotation_filter),
+        points_annotation=Sum(
+            F('debateteam__teamscore__points') * F('debateteam__debate__round__weight'),
+            filter=annotation_filter,
+        ),
         win_count_annotation=Count(Case(When(debateteam__teamscore__win=True, then=1)), filter=annotation_filter),
     )
 
