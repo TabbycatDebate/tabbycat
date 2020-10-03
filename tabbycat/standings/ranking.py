@@ -61,9 +61,9 @@ class BaseRankAnnotator:
         annotations = {a.key: a for a in annotators}
         for key in self.metrics:
             if annotations[key].ascending:
-                ordering.append(F(key).asc())
+                ordering.append(F(key).asc(nulls_last=True))
             else:
-                ordering.append(F(key).desc())
+                ordering.append(F(key).desc(nulls_last=True))
         return ordering
 
     def get_annotated_queryset(self, queryset, annotators):
@@ -152,9 +152,9 @@ class SubrankAnnotator(BaseRankWithinGroupAnnotator):
         annotations = {a.key: a for a in annotators}
         for key in self.metrics[1:]:
             if annotations[key].ascending:
-                ordering.append(F(key).asc())
+                ordering.append(F(key).asc(nulls_last=True))
             else:
-                ordering.append(F(key).desc())
+                ordering.append(F(key).desc(nulls_last=True))
         return ordering
 
     def get_annotation(self, annotators):
