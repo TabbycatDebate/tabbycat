@@ -8,6 +8,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
 from adjallocation.allocation import AdjudicatorAllocation
+from draw.generator import DRAW_FLAG_DESCRIPTIONS
 from options.utils import use_team_code_names
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.mixins import SingleObjectByRandomisedUrlMixin
@@ -17,6 +18,7 @@ from utils.misc import reverse_round, reverse_tournament
 from .mixins import AdministratorMixin
 
 logger = logging.getLogger(__name__)
+_draw_flags_dict = dict(DRAW_FLAG_DESCRIPTIONS)
 
 
 class BaseTableBuilder:
@@ -745,9 +747,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
         conflicts_by_debate = []
         for debate in debates:
             # conflicts is a list of (level, message) tuples
-            conflicts = [("secondary", flag) for flag in debate.get_flags_display()]
-            conflicts += [("secondary", "%(team)s: %(flag)s" % {'team': self._team_short_name(debate.get_team(side)), 'flag': flag})
-                    for side in self.tournament.sides for flag in debate.get_dt(side).get_flags_display()]
+            conflicts = [("secondary", _draw_flags_dict.get(flag, flag)) for flag in debate.flags]
+            conflicts += [("secondary", "%(team)s: %(flag)s" % {
+                        'team': self._team_short_name(debate.get_team(side)),
+                        'flag': _draw_flags_dict.get(flag, flag),
+                    }) for side in self.tournament.sides for flag in debate.get_dt(side).flags]
 
             if self.tournament.pref('avoid_team_history'):
                 history = debate.history
