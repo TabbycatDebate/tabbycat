@@ -494,6 +494,15 @@ class ReplyScores(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class RequireSubstantiveForReply(BooleanPreference):
+    help_text = _("Whether to limit reply speeches to speakers who gave a constructive speech in the debate")
+    verbose_name = _("Require reply speaker to have given a substantive speech")
+    section = debate_rules
+    name = 'require_substantive_for_reply'
+    default = True
+
+
+@tournament_preferences_registry.register
 class MotionVetoes(BooleanPreference):
     help_text = _("Enables the motion veto field on ballots, to track veto statistics")
     verbose_name = _("Motion vetoes")
