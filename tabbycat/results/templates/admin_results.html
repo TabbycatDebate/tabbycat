@@ -62,7 +62,7 @@
 
 {% block page-subnav-actions %}
   {% if round.is_current %}
-    <a class="btn {% if incomplete_ballots %}btn-outline-success{% else %}btn-danger disabled{% endif %} " href="{% roundurl 'tournament-complete-round-check' %}">
+    <a class="btn {% if incomplete_ballots %}btn-danger disabled{% else %}btn-outline-success{% endif %} " href="{% roundurl 'tournament-complete-round-check' %}">
       {% trans "Complete Round" %} <i data-feather="chevron-right"></i>
     </a>
   {% else %}
