@@ -271,7 +271,7 @@
 
       {% trans "(for the briefing room)" as briefing_room_subtext %}
 
-      {% if round.is_current %}
+      {% if round.is_current and tournament.current_rounds|length == 1 %}
 
         {% tournamenturl 'draw-display-current-rounds-by-venue' as url %}
         {% trans "Display Draw ordered by Room" as text %}
