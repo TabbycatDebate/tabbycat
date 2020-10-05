@@ -119,7 +119,7 @@ export default new Vuex.Store({
         } else {
           debatesArray.sort((a, b) => a.bracket - b.bracket).reverse()
         }
-      } else if (sortType === 'rank') {
+      } else if (sortType === 'room_rank') {
         debatesArray.sort((a, b) => a.room_rank - b.room_rank)
       } else if (sortType === 'importance') {
         debatesArray.sort((a, b) =>
