@@ -5,9 +5,13 @@
 
     <div class="list-group-item">
       <h4 class="card-title mb-0">
-        {% blocktrans trimmed with round=current_round.name %}
-          In This Round ({{ round }})
-        {% endblocktrans %}
+        {% if tournament.current_rounds|length == 1 %}
+          {% blocktrans trimmed with round=current_round.name %}
+            In This Round ({{ round }})
+          {% endblocktrans %}
+        {% else %}
+          {% trans "In This Round" %}
+        {% endif %}
         {% if admin_page and not draw_released %}
           <em>{% trans "(Not Released to Public)" %}</em>
         {% endif %}

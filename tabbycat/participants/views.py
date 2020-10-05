@@ -221,7 +221,7 @@ class BaseTeamRecordView(BaseRecordView):
         try:
             kwargs['debateteams'] = self.object.debateteam_set.select_related(
                 'debate__round').prefetch_related('debate__round__motion_set').filter(
-                debate__round=tournament.current_round)
+                debate__round__in=tournament.current_rounds)
         except ObjectDoesNotExist:
             kwargs['debateteams'] = None
 
@@ -256,7 +256,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
     def get_context_data(self, **kwargs):
         try:
             kwargs['debateadjudications'] = self.object.debateadjudicator_set.filter(
-                debate__round=self.tournament.current_round,
+                debate__round__in=self.tournament.current_rounds,
             ).select_related(
                 'debate__round',
             ).prefetch_related(

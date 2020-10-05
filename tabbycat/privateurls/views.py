@@ -205,11 +205,11 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
 
         if hasattr(self.object, 'adjudicator'):
             kwargs['debateadjudications'] = self.object.adjudicator.debateadjudicator_set.filter(
-                debate__round=t.current_round).select_related('debate__round').prefetch_related('debate__round__motion_set')
+                debate__round__in=t.current_rounds).select_related('debate__round').prefetch_related('debate__round__motion_set')
         else:
             kwargs['debateteams'] = self.object.speaker.team.debateteam_set.select_related(
                 'debate__round').prefetch_related('debate__round__motion_set').filter(
-                debate__round=t.current_round)
+                debate__round__in=t.current_rounds)
 
         kwargs['draw_released'] = t.current_round.draw_status == Round.STATUS_RELEASED
         kwargs['feedback_pref'] = t.pref('participant_feedback') == 'private-urls'
