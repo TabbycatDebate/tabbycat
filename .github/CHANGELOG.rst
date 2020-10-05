@@ -8,6 +8,7 @@ Change Log
 
 - Added URL field from the Room model to the Venues API endpoints as 'external URL'
 - The Institution API endpoints show institutions' regions as their name, and regions can be created
+- Added a preference to allow dedicated reply speaker. Thanks to Miha Frangež for the PR! (`#1584 https://github.com/TabbycatDebate/tabbycat/issues/1584`)
 - Adjudicator Feedback choices and draw flags are stored with PostgreSQL-specific arrays (`#1525 <https://github.com/TabbycatDebate/tabbycat/issues/1525>`_)
 - Private URL submissions now store the participant whose link was used rather than just their IP address (`#1586 <https://github.com/TabbycatDebate/tabbycat/issues/1586>`_)
 - Optimised database queries to create all debates in a draw at once (`#1376 <https://github.com/TabbycatDebate/tabbycat/pull/1376>`_)
