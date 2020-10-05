@@ -58,12 +58,8 @@ export default new Vuex.Store({
           state.highlights[key].options[item.pk] = item
         })
       })
-      // Set Initial Sorting
-      if (state.round.stage === 'E') {
-        this.commit('setSorting', 'rank')
-      } else {
-        this.commit('setSorting', 'bracket')
-      }
+      // Set Initial Sorting Order - using room rank for consistency with draw and preformed panels
+      this.commit('setSorting', 'room_rank')
     },
     setupWebsocketBridge (state, bridge) {
       state.wsBridge = bridge // Load websocket into store for universal access
