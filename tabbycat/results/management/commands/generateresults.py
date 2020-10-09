@@ -40,21 +40,21 @@ class GenerateResultsCommandMixin:
         status.add_argument("-c", "--confirmed", action="store_true",
                             help="Make added ballot sets confirmed")
 
-    @staticmethod
-    def _get_user(options):
+    def _get_user(self, options):
         try:
             return User.objects.get(username=options["user"])
         except User.DoesNotExist:
             if options["create_user"]:
+                self.stdout.write(self.style.MIGRATE_HEADING(
+                    f"Creating user: {options['user']}"))
                 return User.objects.create_user(options["user"], "", options["user"])
             else:
                 raise CommandError("There is no user called {user!r}. Use the --create-user option to create it.".format(user=options["user"]))
 
-    @classmethod
-    def result_kwargs(cls, options):
+    def result_kwargs(self, options):
         return {
             "submitter_type": SUBMITTER_TYPE_MAP[options["submitter_type"]],
-            "user"          : cls._get_user(options),
+            "user"          : self._get_user(options),
             "discarded"     : options["discarded"],
             "confirmed"     : options["confirmed"],
             "reply_random"  : options["reply_random"],

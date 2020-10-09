@@ -14,14 +14,12 @@ logger = logging.getLogger(__name__)
 
 
 def get_status_meta(debate):
-    if debate.result_status == Debate.STATUS_NONE:
-        return "x", "text-danger", 0, _("No Ballot")
-    elif debate.result_status == Debate.STATUS_DRAFT:
-        return "circle", "text-info", 2, _("Ballot is Unconfirmed")
-    elif debate.result_status == Debate.STATUS_CONFIRMED:
-        return "check", "text-success", 3, _("Ballot is Confirmed")
-    else:
-        raise ValueError('Debate has no discernable status')
+    return {
+        Debate.STATUS_NONE: ("x", "text-danger", 0, _("No Ballot")),
+        Debate.STATUS_POSTPONED: ("pause", "", 4, _("Debate was Postponed")),
+        Debate.STATUS_DRAFT: ("circle", "text-info", 2, _("Ballot is Unconfirmed")),
+        Debate.STATUS_CONFIRMED: ("check", "text-success", 3, _("Ballot is Confirmed")),
+    }[debate.result_status]
 
 
 def readable_ballotsub_result(debateresult):

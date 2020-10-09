@@ -481,7 +481,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
 class InstitutionSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='api-global-institution-detail')
-    region = fields.CreatableSlugRelatedField(slug_field='name', queryset=Region.objects.all())
+    region = fields.CreatableSlugRelatedField(slug_field='name', queryset=Region.objects.all(), required=False)
 
     class Meta:
         model = Institution
@@ -520,7 +520,7 @@ class VenueSerializer(serializers.ModelSerializer):
         queryset=VenueCategory.objects.all(),
     )
     display_name = serializers.ReadOnlyField()
-    external_url = serializers.URLField(source='url')
+    external_url = serializers.URLField(source='url', required=False, allow_blank=True)
     _links = LinksSerializer(source='*', read_only=True)
 
     class Meta:

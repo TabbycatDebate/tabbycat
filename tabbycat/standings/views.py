@@ -18,7 +18,7 @@ from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
-from utils.misc import reverse_round, reverse_tournament
+from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import VueTableTemplateView
@@ -676,8 +676,7 @@ class EmailTeamStandingsView(RoundTemplateEmailCreateView):
     subject_template = 'team_points_email_subject'
     message_template = 'team_points_email_message'
 
-    def get_success_url(self):
-        return reverse_round('tournament-complete-round-check', self.round)
+    round_redirect_pattern_name = 'tournament-complete-round-check'
 
     def get_queryset(self):
         return Speaker.objects.filter(team__tournament=self.tournament)

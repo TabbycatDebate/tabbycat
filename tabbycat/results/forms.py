@@ -127,7 +127,6 @@ class BaseResultForm(forms.Form):
 
     confirmed = forms.BooleanField(required=False)
     discarded = forms.BooleanField(required=False)
-    debate_result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
 
     def __init__(self, ballotsub, password=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -136,6 +135,9 @@ class BaseResultForm(forms.Form):
         self.tournament = self.debate.round.tournament
 
         self.has_tournament_password = password and self.tournament.pref('public_use_password')
+
+        status_choices = Debate.STATUS_CHOICES if self.tournament.pref('enable_postponements') else Debate.STATUS_CHOICES_RESTRICTED
+        self.fields['debate_result_status'] = forms.ChoiceField(choices=status_choices)
 
         self.initial.update({
             'debate_result_status': self.debate.result_status,
@@ -574,7 +576,7 @@ class ScoresMixin:
                     ))
 
                 # The reply speaker must have given a substantive speech.
-                if len(speaker_positions.get(reply_speaker, [])) == 0:
+                if self.tournament.pref('require_substantive_for_reply') and len(speaker_positions.get(reply_speaker, [])) == 0:
                     self.add_error(self._fieldname_speaker(side, self.reply_position), forms.ValidationError(
                         _("The reply speaker for this team did not give a substantive speech."),
                         code='reply_speaker_not_repeat',

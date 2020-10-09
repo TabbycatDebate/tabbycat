@@ -523,6 +523,15 @@ class ReplyScores(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class RequireSubstantiveForReply(BooleanPreference):
+    help_text = _("Whether to limit reply speeches to speakers who gave a constructive speech in the debate")
+    verbose_name = _("Require reply speaker to have given a substantive speech")
+    section = debate_rules
+    name = 'require_substantive_for_reply'
+    default = True
+
+
+@tournament_preferences_registry.register
 class MotionVetoes(BooleanPreference):
     help_text = _("Enables the motion veto field on ballots, to track veto statistics")
     verbose_name = _("Motion vetoes")
@@ -908,6 +917,15 @@ class FeedbackReturnLocation(StringPreference):
     section = data_entry
     name = 'feedback_return_location'
     default = 'TBA'
+
+
+@tournament_preferences_registry.register
+class EnablePostponements(BooleanPreference):
+    help_text = _("Lets debates have their status as postponed, as to not block draw generation.")
+    verbose_name = _("Enable postponements")
+    section = data_entry
+    name = 'enable_postponements'
+    default = False
 
 
 # ==============================================================================

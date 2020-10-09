@@ -28,6 +28,10 @@
             <i data-feather="list"></i>
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
+            <a class="dropdown-item" href="#" @click="setSorting('room_rank')">
+              <span v-if="isElimination" >Sort by Break Rank</span>
+              <span v-if="!isElimination" >Sort by Room Rank</span>
+            </a>
             <a v-if="!isElimination" class="dropdown-item" href="#" @click="setSorting('bracket')">
               Sort by Bracket
             </a>
@@ -36,9 +40,6 @@
             </a>
             <a v-if="!isElimination" class="dropdown-item" href="#" @click="setSorting('liveness')">
               Sort by Liveness
-            </a>
-            <a v-if="isElimination" class="dropdown-item" href="#" @click="setSorting('rank')">
-              Sort by Break Rank
             </a>
           </div>
         </div>

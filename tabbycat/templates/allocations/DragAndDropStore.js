@@ -58,12 +58,8 @@ export default new Vuex.Store({
           state.highlights[key].options[item.pk] = item
         })
       })
-      // Set Initial Sorting
-      if (state.round.stage === 'E') {
-        this.commit('setSorting', 'rank')
-      } else {
-        this.commit('setSorting', 'bracket')
-      }
+      // Set Initial Sorting Order - using room rank for consistency with draw and preformed panels
+      this.commit('setSorting', 'room_rank')
     },
     setupWebsocketBridge (state, bridge) {
       state.wsBridge = bridge // Load websocket into store for universal access
@@ -119,7 +115,7 @@ export default new Vuex.Store({
         } else {
           debatesArray.sort((a, b) => a.bracket - b.bracket).reverse()
         }
-      } else if (sortType === 'rank') {
+      } else if (sortType === 'room_rank') {
         debatesArray.sort((a, b) => a.room_rank - b.room_rank)
       } else if (sortType === 'importance') {
         debatesArray.sort((a, b) =>

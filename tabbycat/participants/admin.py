@@ -141,13 +141,11 @@ class TeamAdmin(admin.ModelAdmin):
         return super().formfield_for_manytomany(db_field, request, **kwargs)
 
     def delete_url_key(self, request, queryset):
-        team_speakers = [team.speaker_set.all() for team in queryset]
-        for speakers in team_speakers:
-            speakers.update(url_key=None)
+        num_speakers = Speaker.objects.filter(team__in=queryset).update(url_key=None)
         message = ngettext_lazy(
             "%(count)d speaker had their URL key removed.",
             "%(count)d speakers had their URL keys removed.",
-            len(team_speakers)) % {'count': len(team_speakers)}
+            num_speakers) % {'count': num_speakers}
         self.message_user(request, message)
     delete_url_key.short_description = _("Delete URL key")
 

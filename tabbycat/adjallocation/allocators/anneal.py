@@ -14,10 +14,7 @@ class SimulatedAnnealingAllocator(BaseAdjudicatorAllocator):
 
     key = "simanneal"
 
-    SCORE_ADJ_TEAM_CONFLICT = 10000
     SCORE_TARGET_PANEL = 800
-    SCORE_ADJ_TEAM_HISTORY = 100
-    SCORE_ADJ_ADJ_HISTORY = 30
 
     MAX_TRIES = 3
 
@@ -30,12 +27,13 @@ class SimulatedAnnealingAllocator(BaseAdjudicatorAllocator):
     def allocate(self, initial=None):
 
         if initial is None:
-            initial = VotingHungarianAllocator(self.debates, self.adjudicators, self.round).allocate()
+            # Ignore warnings by the Hungarian allocator
+            initial = VotingHungarianAllocator(self.debates, self.adjudicators, self.round).allocate()[0]
 
-        pairs = [(aa.container, tuple(aa.all())) for aa in initial]
+        self.state = {aa.container: tuple(aa.all()) for aa in initial}
 
-        top_bracket = pairs[0][0].bracket
-        bot_bracket = pairs[-1][0].bracket
+        top_bracket = initial[0].container.bracket
+        bot_bracket = initial[-1].container.bracket
 
         # 4-0 - 5 brackets, needs 6 gaps
         # 5-2
@@ -44,13 +42,10 @@ class SimulatedAnnealingAllocator(BaseAdjudicatorAllocator):
 
         div = 3.0 / gaps
 
-        for debate, panel in pairs:
+        for debate in self.state.keys():
             setattr(debate, 'target_panel', 2 + (debate.bracket - bot_bracket +
                                                  1) * div)
-
-        logger.info([d.target_panel for d, p in pairs])
-
-        self.state = dict(pairs)
+        logger.info([d.target_panel for d in self.state.keys()])
 
         self.anneal(800, 1, 1e4, self.state)
 
@@ -73,7 +68,7 @@ class SimulatedAnnealingAllocator(BaseAdjudicatorAllocator):
 
     def save_best(self):
         self.best_energy = self.energy
-        self.best_state = dict(self.state)
+        self.best_state = self.state
 
     def anneal(self, steps, min_temp, max_temp, state):
 
