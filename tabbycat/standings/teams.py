@@ -302,6 +302,16 @@ class NumberOfSecondsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     where_value = 2
 
 
+class NumberOfThirdsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    key = "thirds"
+    name = _("number of thirds")
+    abbr = _("3rds")
+
+    function = Count
+    field = "points"
+    where_value = 1
+
+
 class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
     """Metric annotator for who-beat-whom. Use once for every who-beat-whom in
     the precedence."""
@@ -380,6 +390,7 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "num_adjs"            : NumberOfAdjudicatorsMetricAnnotator,
         "firsts"              : NumberOfFirstsMetricAnnotator,
         "seconds"             : NumberOfSecondsMetricAnnotator,
+        "thirds"              : NumberOfThirdsMetricAnnotator,
         "wbw"                 : WhoBeatWhomMetricAnnotator,
     }
 

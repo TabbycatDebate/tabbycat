@@ -95,6 +95,10 @@ metrics that will be shown in the team standings, but not used to rank teams.
     - The number of debates in which the team came second. Only makes sense for
       British Parliamentary.
 
+  * - Number of thirds
+    - The number of debates in which the team came third. Only makes sense for
+      British Parliamentary with variable round weights.
+
   * - Number of pullups before this round
     - The number of times the team has been pulled up as part of
       :ref:`draw generation <draw-generation>`. You probably wouldn't use this
