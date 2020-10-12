@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-24 07:26\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2020-06-16 11:49\n"
+"Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Language: bn_BD\n"
 "MIME-Version: 1.0\n"
@@ -12,8 +12,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-Language: bn\n"
 "X-Crowdin-File: /develop/tabbycat/breakqual/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 928\n"
 
 #: breakqual/apps.py:7
 msgid "Break Qualification"
@@ -30,7 +32,7 @@ msgstr "প্রতিযোগিতা"
 
 #: breakqual/models.py:12
 msgid "name"
-msgstr ""
+msgstr "নাম"
 
 #: breakqual/models.py:13
 msgid "Name to be displayed, e.g., \"ESL\""
@@ -46,7 +48,7 @@ msgstr ""
 
 #: breakqual/models.py:18
 msgid "sequence number"
-msgstr ""
+msgstr "ক্রম সংখ্যা"
 
 #: breakqual/models.py:19
 msgid "The order in which the categories are displayed"

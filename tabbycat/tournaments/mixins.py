@@ -10,7 +10,7 @@ from django.db.models import Prefetch, Q
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.urls import NoReverseMatch, reverse
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.translation import gettext as _
 from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
@@ -160,8 +160,8 @@ class TournamentWebsocketMixin(TournamentFromUrlMixin):
     def send_error(self, error, message, original_content):
         # Need to forcibly decode the string (for translations)
         self.send_json({
-            'error': force_text(error),
-            'message': force_text(message),
+            'error': force_str(error),
+            'message': force_str(message),
             'original_content': original_content,
             'component_id': original_content['component_id'],
         })

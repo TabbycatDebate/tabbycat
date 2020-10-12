@@ -110,17 +110,17 @@ export default {
   methods: {
     openShard: function (shardIdentifier, selectedIndex) {
       this.resetModal()
-      this.setSharding({ 'option': 'index', 'value': selectedIndex })
+      this.setSharding({ option: 'index', value: selectedIndex })
       $.fn.showAlert('success', `Opened shard ${this.split} ${shardIdentifier}
                                  (sorted by ${this.mix} using ${this.sort})`)
     },
     closeShard: function () {
       this.resetModal()
       this.setState('index', null)
-      $.fn.showAlert('success', `Closed shard`)
+      $.fn.showAlert('success', 'Closed shard')
     },
     setState: function (key, value) {
-      this.setSharding({ 'option': key, 'value': value })
+      this.setSharding({ option: key, value: value })
     },
     ...mapMutations(['setSharding']),
   },

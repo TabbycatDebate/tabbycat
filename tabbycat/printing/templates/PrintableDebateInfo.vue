@@ -87,13 +87,12 @@
           <div class="db-item-gutter"></div>
         </template>
         <div class="flex-fill">
-          <div class="db-flex-item db-align-vertical-center"
-               v-for="motion in roundInfo.motions"
-               v-if="!roundInfo.hideMotions">
-            <div v-html="tct('<strong>%s</strong>: %s', [motion.seq, motion.text])"></div>
-          </div>
-          <div class="d-flex"
-               v-if="roundInfo.motions.length === 0 || roundInfo.hideMotions">
+          <template v-if="!roundInfo.hideMotions">
+            <div class="db-flex-item db-align-vertical-center" v-for="motion in roundInfo.motions">
+              <div v-html="tct('<strong>%s</strong>: %s', [motion.seq, motion.text])"></div>
+            </div>
+          </template>
+          <div class="d-flex" v-if="roundInfo.motions.length === 0 || roundInfo.hideMotions">
             <div class="flex-fill db-fill-in strong mr-3 pt-3 mt-2"
                  v-for="choice_type in ['1', '2', '3', ]"
                  v-text="tct('%s:', [choice_type])"></div>
@@ -137,11 +136,8 @@
 <script>
 import _ from 'lodash'
 
-import PrintableTeamScores from './PrintableTeamScores.vue'
-
 export default {
   props: ['ballot', 'roundInfo', 'showScoring'],
-  components: { PrintableTeamScores },
   methods: {
     getAdjudicatorInstitution: function (debateAdjudicator) {
       const institution = debateAdjudicator.adjudicator.institution
@@ -176,7 +172,7 @@ export default {
       return this.ballot.debateAdjudicators
     },
     panellistsAsString: function () {
-      let adjs = []
+      const adjs = []
       this.panellistsExcludingSelf.forEach((a) => {
         let position = ''
         switch (a.position) {

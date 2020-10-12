@@ -14,7 +14,9 @@ The entry-point to the API is through ``/api``. The API endpoints are based on R
 Administrator vs public access
 ==============================
 
-Depending on what the external application does, it may require administrator access, or the publicly accessible information suffices. The administrator endpoints does not just retrieve (``GET``) data; it can also change it, such as adding new participants or marking teams as break-eligible. To grant administrator access to an application, you can give it your token, which can be found under *Tokens* in the database or under *Change Password* on the site home page. Each user has a token automatically generated when registered.
+Depending on what the external application does, it may require administrator access, or the publicly accessible information suffices. The administrator endpoints may not just retrieve (``GET``) data; they can also change data, such as adding new participants or marking teams as break-eligible. To grant administrator access to an application, you can give it your token, which can be found under *Tokens* in the database or under *Change Password* on the site home page. Each user has a token automatically generated when registered but may have to be manually generated in the *Edit Database* area if upgrading from an older version.
+
+When crafting requests, the token can be passed through HTTP headers in this format: ``Authorization: Token 938fab3...``, replacing the truncated code with your token.
 
 .. note:: Tokens can also be revoked by deleting them in the database area, which will stop the external applications from making further changes.
 

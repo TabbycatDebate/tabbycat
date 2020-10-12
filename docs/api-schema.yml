@@ -52,6 +52,12 @@ paths:
           required: false
           schema:
             type: integer
+        - name: region
+          in: query
+          description: Name of the region to include.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: ''
@@ -585,7 +591,9 @@ paths:
               - team
         - name: source
           in: query
-          description: The ID of the participant submitting feedback; must be used in conjunction with `source_type`
+          description: >-
+            The ID of the participant submitting feedback; must be used in
+            conjunction with `source_type`
           required: false
           schema:
             type: integer
@@ -653,13 +661,17 @@ paths:
             type: integer
         - name: from_adj
           in: query
-          description: Filter to the questions posed to adjudicators. (Determined by presence of parameter)
+          description: >-
+            Filter to the questions posed to adjudicators. (Determined by
+            presence of parameter)
           required: false
           schema:
             type: boolean
         - name: from_team
           in: query
-          description: Filter by whether the question is posed to teams. (Determined by presence of parameter)
+          description: >-
+            Filter by whether the question is posed to teams. (Determined by
+            presence of parameter)
           required: false
           schema:
             type: boolean
@@ -799,7 +811,8 @@ paths:
   '/v1/tournaments/{tournament_slug}/institutions':
     get:
       operationId: v1_tournaments_institutions_list
-      description: List all institutions with an affiliated participant in the tournament
+      description: >-
+        List all institutions with an affiliated participant in the tournament
       parameters:
         - name: limit
           in: query
@@ -813,6 +826,12 @@ paths:
           required: false
           schema:
             type: integer
+        - name: region
+          in: query
+          description: Name of the region to include.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: ''
@@ -1033,7 +1052,8 @@ paths:
     parameters:
       - name: id
         in: path
-        description: A unique integer value identifying this tournament preference.
+        description: >-
+          A unique integer value identifying this tournament preference.
         required: true
         schema:
           type: integer
@@ -1109,10 +1129,10 @@ paths:
     post:
       operationId: v1_tournaments_rounds_update
       description: >-
-        Modify a round. Motions are modified by sequence, so their text fields can be modified.
-        To move motions, placeholder sequences are needed through Motion endpoints, as well as
-        for deleting motions. Motions can be appended through this method. An empty field has no
-        effect.
+        Modify a round. Motions are modified by sequence, so their text fields
+        can be modified. To move motions, placeholder sequences are needed
+        through Motion endpoints, as well as for deleting motions. Motions can
+        be appended through this method. An empty field has no effect.
       responses:
         '201':
           description: ''
@@ -1217,8 +1237,9 @@ paths:
     post:
       operationId: v1_tournaments_rounds_pairings_update
       description: >-
-        Modify a pairing in the round. Teams can be modified, but cannot be moved between sides.
-        This method thus cannot be used when confirming sides. An empty field has no effect.
+        Modify a pairing in the round. Teams can be modified, but cannot be
+        moved between sides. This method thus cannot be used when confirming
+        sides. An empty field has no effect.
       responses:
         '201':
           description: ''
@@ -1744,7 +1765,9 @@ paths:
         - teams
     post:
       operationId: v1_tournaments_teams_update
-      description: Modify a team
+      description: >-
+        Modify a team. The speakers field can only create speakers, not
+        modify or remove them. Leave empty if none are being added.
       responses:
         '201':
           description: ''
@@ -2212,7 +2235,8 @@ components:
           minLength: 1
         region:
           title: Region
-          type: integer
+          type: string
+          maxLength: 100
           nullable: true
     TournamentInstitution:
       required:
@@ -2247,7 +2271,8 @@ components:
           minLength: 1
         region:
           title: Region
-          type: integer
+          type: string
+          maxLength: 100
           nullable: true
         teams:
           title: Teams
@@ -2369,8 +2394,8 @@ components:
         seq:
           title: Sequence number
           description: >-
-            A number that determines the relative order in which tournaments are
-            displayed on the homepage.
+            A number that determines the relative order in which tournaments
+            are displayed on the homepage.
           type: integer
           maximum: 2147483647
           minimum: -2147483648
@@ -2484,6 +2509,7 @@ components:
           type: string
           format: email
           maxLength: 254
+          nullable: true
         phone:
           title: Phone
           type: string
@@ -2497,8 +2523,8 @@ components:
         pronoun:
           title: Pronoun
           description: >-
-            If printing ballots using Tabbycat, there is the option to pre-print
-            pronouns
+            If printing ballots using Tabbycat, there is the option to
+            pre-print pronouns
           type: string
           maxLength: 10
         institution:
@@ -2542,10 +2568,13 @@ components:
             format: uri
         url_key:
           title: URL Key
+          description: >-
+            Set null to automatically generate; set as empty string to have no URL key.
           type: string
           format: slug
           pattern: '^[-a-zA-Z0-9_]+$'
           maxLength: 24
+          nullable: true
         _links:
           title: links
           type: object
@@ -2681,7 +2710,6 @@ components:
               readOnly: true
     BreakEligibility:
       required:
-        - slug
         - team_set
       type: object
       properties:
@@ -2690,6 +2718,7 @@ components:
           description: 'Slug for URLs, e.g., "esl"'
           type: string
           format: slug
+          readOnly: true
         team_set:
           title: Team set
           type: array
@@ -2698,7 +2727,6 @@ components:
             format: uri
     SpeakerEligibility:
       required:
-        - slug
         - speaker_set
       type: object
       properties:
@@ -2707,6 +2735,7 @@ components:
           description: 'Slug for URLs, e.g., "esl"'
           type: string
           format: slug
+          readOnly: true
         speaker_set:
           title: Speaker set
           type: array
@@ -2801,10 +2830,12 @@ components:
           title: Submitter
           type: integer
           nullable: true
+          readOnly: true
         confirmer:
           title: Confirmer
           type: integer
           nullable: true
+          readOnly: true
     FeedbackQuestion:
       required:
         - choices
@@ -2844,7 +2875,8 @@ components:
           maxLength: 255
         name:
           title: Name
-          description: 'A short name for the question, e.g., "Agree with decision"'
+          description: >-
+            'A short name for the question, e.g., "Agree with decision"'
           type: string
           maxLength: 30
         reference:
@@ -2925,7 +2957,8 @@ components:
                 type: integer
         text:
           title: Text
-          description: 'The full motion e.g., "This House would straighten all bananas"'
+          description: >-
+            'The full motion e.g., "This House would straighten all bananas"'
           type: string
           maxLength: 500
         reference:
@@ -2994,7 +3027,8 @@ components:
                 maxLength: 100
               info_slide:
                 title: Info slide
-                description: The information slide for this topic; if it has one
+                description: >-
+                  The information slide for this topic; if it has one
         _links:
           title: links
           readOnly: true
@@ -3057,15 +3091,15 @@ components:
           title: Feedback weight
           description: >-
             The extent to which each adjudicator's overall score depends on
-            feedback vs their base score. At 0, it is 100% drawn from their base
-            score, at 1 it is 100% drawn from feedback.
+            feedback vs their base score. At 0, it is 100% drawn from their
+            base score, at 1 it is 100% drawn from feedback.
           type: number
           format: float
         silent:
           title: Silent
           description: >-
-            If marked silent, information about this round (such as its results)
-            will not be shown publicly.
+            If marked silent, information about this round (such as its
+            results) will not be shown publicly.
           type: boolean
         motions_released:
           title: Motions released
@@ -3146,6 +3180,23 @@ components:
               items:
                 type: string
                 format: uri
+        bracket:
+          title: Bracket
+          type: number
+        room_rank:
+          title: room rank
+          type: integer
+        importance:
+          title: importance
+          type: integer
+        result_status:
+          title: result status
+          type: string
+          enum:
+            - N
+            - P
+            - D
+            - C
         sides_confirmed:
           title: Sides confirmed
           description: >-
@@ -3185,6 +3236,7 @@ components:
           type: string
           format: email
           maxLength: 254
+          nullable: true
         phone:
           title: Phone
           type: string
@@ -3210,10 +3262,13 @@ components:
             format: uri
         url_key:
           title: URL Key
+          description: >-
+            Set null to automatically generate; set as empty string to have no URL key.
           type: string
           format: slug
           pattern: '^[-a-zA-Z0-9_]+$'
           maxLength: 24
+          nullable: true
         _links:
           title: links
           type: object
@@ -3256,25 +3311,27 @@ components:
           maxLength: 35
         code_name:
           title: Code name
-          description: Name used to obscure institutional identity on public-facing pages
+          description: >-
+            Name used to obscure institutional identity on public-facing pages
           type: string
           maxLength: 150
         emoji:
           title: Emoji
           type: string
           maxLength: 2
+          nullable: true
         short_name:
           title: Short name
           description: >-
-            The name shown in the draw, including institution name. (This is
-            autogenerated.)
+            The name shown in the draw, including institution name. This is
+            autogenerated.
           type: string
           readOnly: true
         long_name:
           title: Long name
           description: >-
-            The full name of the team, including institution name. (This is
-            autogenerated.)
+            The full name of the team, including institution name. This is
+            autogenerated.
           type: string
           readOnly: true
         institution:
@@ -3411,7 +3468,6 @@ components:
         display_name:
           title: Display name
           type: string
-          format: uri
           readOnly: true
         _links:
           title: links
@@ -3434,6 +3490,11 @@ components:
             Venues with a higher priority number will be preferred when
             allocating venues to debates
           type: integer
+        external_url:
+          title: External URL
+          type: string
+          format: uri
+          nullable: true
     VenueCategory:
       required:
         - venues

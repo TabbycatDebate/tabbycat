@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-06-11 19:05\n"
+"PO-Revision-Date: 2020-06-16 11:06\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Bengali\n"
 "Language: bn_BD\n"
@@ -15,6 +15,8 @@ msgstr ""
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: bn\n"
 "X-Crowdin-File: /develop/tabbycat/results/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 948\n"
 
 #: results/apps.py:7 results/templates/public_results_index.html:4
 #: results/templates/public_results_index.html:5 results/views.py:112
@@ -201,7 +203,7 @@ msgstr ""
 
 #: results/models.py:193 results/models.py:237 results/models.py:273
 msgid "score"
-msgstr ""
+msgstr "স্কোর/ফলাফল"
 
 #: results/models.py:194 results/models.py:274
 msgid "position"

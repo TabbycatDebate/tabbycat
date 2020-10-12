@@ -331,6 +331,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         question_interpreter = make_interpreter(
             tournament=self.tournament,
             answer_type=self.lookup_feedback_answer_type,
+            choices=lambda c: c.split('//'),
         )
 
         self._import(f, fm.AdjudicatorFeedbackQuestion, question_interpreter)

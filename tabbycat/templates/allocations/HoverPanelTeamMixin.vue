@@ -4,7 +4,7 @@ import { mapGetters } from 'vuex'
 export default {
   computed: {
     topleftteam: function () {
-      let teamDetails = []
+      const teamDetails = []
       if (this.extra.codeNames !== 'everywhere') {
         teamDetails.push(this.makeItem(this.subject.short_name, 'btn-outline-secondary', false))
       }
@@ -15,26 +15,26 @@ export default {
         }
         teamDetails.push(this.makeItem(codeName, 'btn-outline-secondary', false))
       }
-      let speakerDetails = []
+      const speakerDetails = []
       if (typeof this.subject.speakers !== 'undefined') {
-        for (let speaker of this.subject.speakers) {
+        for (const speaker of this.subject.speakers) {
           speakerDetails.push(this.makePersonItem(speaker))
         }
       }
-      let institutionDetails = this.makeInstitutionItem(this.subject)
+      const institutionDetails = this.makeInstitutionItem(this.subject)
       return [teamDetails, speakerDetails, institutionDetails]
     },
     toprightteam: function () {
-      let points = this.subject.points ? this.subject.points : 0 // Points can be null
-      let pointsDetails = [this.makeItem(`On ${points} Points`, 'btn-outline-secondary', false)]
+      const points = this.subject.points ? this.subject.points : 0 // Points can be null
+      const pointsDetails = [this.makeItem(`On ${points} Points`, 'btn-outline-secondary', false)]
       if (this.subject.break_categories.length === 0) {
-        let item = this.makeItem(`No Break Categories Set`, 'btn-outline-secondary', false)
+        const item = this.makeItem('No Break Categories Set', 'btn-outline-secondary', false)
         pointsDetails.push(item)
       } else if (this.highlights.break) {
-        for (let bc of this.subject.break_categories) {
-          let category = this.highlights.break.options[bc]
+        for (const bc of this.subject.break_categories) {
+          const category = this.highlights.break.options[bc]
           if (category) {
-            let breakCSS = 'break-display ' + category.css
+            const breakCSS = 'break-display ' + category.css
             let status = '?'
             let info = ''
             if (this.subject.points >= category.fields.safe) {
@@ -47,7 +47,7 @@ export default {
               status = 'LIVE'
               info = `(>${category.fields.dead})`
             }
-            let item = this.makeItem(`${status} for ${category.fields.name} ${info}`, breakCSS, false)
+            const item = this.makeItem(`${status} for ${category.fields.name} ${info}`, breakCSS, false)
             pointsDetails.push(item)
           }
         }
@@ -56,17 +56,19 @@ export default {
     },
     bottomleftteam: function () {
       // Conflicts
-      let clashes = this.teamClashesForItem(this.subject.id)
+      const clashes = this.teamClashesForItem(this.subject.id)
       if (clashes) {
         return this.makeClashItems(clashes)
       }
+      return null
     },
     bottomrightteam: function () {
       // History
-      let histories = this.teamHistoriesForItem(this.subject.id)
+      const histories = this.teamHistoriesForItem(this.subject.id)
       if (histories) {
         return this.makeHistoryItems(histories)
       }
+      return null
     },
     ...mapGetters(['teamClashesForItem', 'teamHistoriesForItem']),
   },

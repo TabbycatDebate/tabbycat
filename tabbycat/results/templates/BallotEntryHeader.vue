@@ -102,9 +102,9 @@ export default {
   },
   methods: {
     setSelected: function () {
-      let motionData = $('#ballot').first().find('div[data-type="motion_selection"]')
+      const motionData = $('#ballot').first().find('div[data-type="motion_selection"]')
       if (motionData.length > 0) {
-        for (let option of $(motionData[0]).find('option')) {
+        for (const option of $(motionData[0]).find('option')) {
           if (option.getAttribute('value') === this.selectedMotion) {
             option.setAttribute('selected', '')
           } else {
@@ -114,8 +114,8 @@ export default {
       }
     },
     setVetoed: function (team) {
-      for (let option of $(this.motionVetoes[team]['element']).find('option')) {
-        if (option.getAttribute('value') === this.motionVetoes[team]['value']) {
+      for (const option of $(this.motionVetoes[team].element).find('option')) {
+        if (option.getAttribute('value') === this.motionVetoes[team].value) {
           option.setAttribute('selected', '')
         } else {
           option.removeAttribute('selected')
@@ -129,15 +129,15 @@ export default {
     },
   },
   mounted: function () {
-    let ballotForm = $('#ballot').first()
+    const ballotForm = $('#ballot').first()
     // Get ballot selection info
-    let motionData = $(ballotForm).find('div[data-type="motion_selection"]')
+    const motionData = $(ballotForm).find('div[data-type="motion_selection"]')
     if (motionData.length > 0) { // If it has found any matching elements
       if ($(motionData[0]).find('option').length > 0) { // If the element has motion options
         this.motionSelectionEnabled = true
-        for (let option of $(motionData[0]).find('option')) {
+        for (const option of $(motionData[0]).find('option')) {
           if (option.getAttribute('value') != null && option.getAttribute('value')) {
-            let optionID = option.getAttribute('value')
+            const optionID = option.getAttribute('value')
             this.$set(this.motionOptions, optionID, option.innerText) // Must be reactive
             if (option.getAttribute('selected') != null) {
               this.selectedMotion = optionID
@@ -147,23 +147,23 @@ export default {
       }
     }
     // Get ballot veto info
-    let motionVetoes = $(ballotForm).find('div[data-type="motion_veto"]')
+    const motionVetoes = $(ballotForm).find('div[data-type="motion_veto"]')
     if (motionVetoes.length > 0) {
       this.motionVetoesEnabled = true
       if (Object.keys(this.motionOptions).length === 0) {
         // If motion selection is disabled but vetoes are enabled then grab motions list from vetos
-        for (let option of $(motionVetoes[0]).find('option')) {
+        for (const option of $(motionVetoes[0]).find('option')) {
           if (option.getAttribute('value') != null && option.getAttribute('value')) {
-            let optionID = option.getAttribute('value')
+            const optionID = option.getAttribute('value')
             this.$set(this.motionOptions, optionID, option.innerText) // Must be reactive
           }
         }
       }
-      for (let teamVeto of $(motionVetoes)) {
-        let teamName = $(teamVeto).find('label')[0].innerText
-        for (let option of $(teamVeto).find('option')) {
+      for (const teamVeto of $(motionVetoes)) {
+        const teamName = $(teamVeto).find('label')[0].innerText
+        for (const option of $(teamVeto).find('option')) {
           if (option.getAttribute('selected') != null) {
-            let optionDictionary = { 'value': option.getAttribute('value'), 'element': teamVeto }
+            const optionDictionary = { value: option.getAttribute('value'), element: teamVeto }
             this.$set(this.motionVetoes, teamName, optionDictionary) // Must be reactive
           }
         }

@@ -2,7 +2,10 @@
 
 export default {
   props: {
-    locked: false,
+    locked: {
+      type: Boolean,
+      default: false,
+    },
     dragPayload: Object, // The context of the draggable item; sent to store
   },
   data: function () {
@@ -47,7 +50,7 @@ export default {
         this.scrollStop = false
         this.scrollPage(-1) // Faster close to top
       }
-      let windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
       if (event.clientY > (windowHeight - this.windowThresholds)) {
         this.scrollStop = false
         this.scrollPage(1)

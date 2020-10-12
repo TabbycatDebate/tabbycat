@@ -43,7 +43,7 @@
     {% trans "Use the simple importer to add your initial data." as text %}
     {% include "components/item-action.html" with alone=True to_complete=True %}
 
-  {% elif round.get_draw_status_display.lower == 'none' %}
+  {% elif round.draw_status == round.STATUS_NONE %}
 
     {% roundurl 'availability-index' round as url %}
     {% blocktrans trimmed with round=round.name asvar text %}
@@ -51,7 +51,7 @@
     {% endblocktrans %}
     {% include "components/item-action.html" with alone=True to_complete=True %}
 
-  {% elif round.get_draw_status_display.lower == 'confirmed' %}
+  {% elif round.draw_status == round.STATUS_CONFIRMED %}
 
     {% roundurl 'draw' round as url %}
     {% blocktrans trimmed with round=round.name asvar text %}
@@ -59,7 +59,7 @@
     {% endblocktrans %}
     {% include "components/item-action.html" with alone=True to_complete=True %}
 
-  {% elif round.get_draw_status_display.lower == 'released' %}
+  {% elif round.draw_status == round.STATUS_RELEASED %}
 
     {% roundurl 'results-round-list' round as url %}
     {% blocktrans trimmed with round=round.name asvar text %}

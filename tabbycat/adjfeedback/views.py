@@ -374,8 +374,6 @@ class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
                 'tooltip': _("Institution"),
             }, [team.institution.code if team.institution else TabbycatTableBuilder.BLANK_TEXT for team in tournament.team_set.all()])
 
-        adjudicators = tournament.adjudicator_set.all()
-
         adjs_table = TabbycatTableBuilder(view=self, sort_key="adjudicator", title=_("An Adjudicator"))
         adjudicators = tournament.adjudicator_set.all()
 
@@ -559,6 +557,11 @@ class PublicAddFeedbackByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, Pub
 
     def is_page_enabled(self, tournament):
         return tournament.pref('participant_feedback') == 'private-urls'
+
+    def get_submitter_fields(self):
+        fields = super().get_submitter_fields()
+        fields['participant_submitter'] = self.object
+        return fields
 
     def get_success_url(self):
         # Redirect to non-cached page: their original private URL

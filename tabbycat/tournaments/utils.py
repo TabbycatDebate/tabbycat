@@ -1,6 +1,6 @@
 import logging
 
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.translation import gettext, gettext_lazy as _, pgettext_lazy
 
 from .models import Round
@@ -89,7 +89,7 @@ def get_side_name_choices():
     """Returns a list of choices for position names suitable for presentation in
     a form."""
     return [
-        (code, force_text(names["aff_full"]).capitalize() + ", " + force_text(names["neg_full"]).capitalize())
+        (code, force_str(names["aff_full"]).capitalize() + ", " + force_str(names["neg_full"]).capitalize())
         for code, names in SIDE_NAMES.items()
     ]
 
@@ -103,9 +103,9 @@ def get_side_name(tournament, side, name_type):
     """
     if side in ('aff', 'neg'):
         names = SIDE_NAMES.get(tournament.pref('side_names'), SIDE_NAMES['aff-neg'])
-        return force_text(names["%s_%s" % (side, name_type)])
+        return force_str(names["%s_%s" % (side, name_type)])
     elif side in ('og', 'oo', 'cg', 'co'):
-        return force_text(BP_SIDE_NAMES["%s_%s" % (side, name_type)])
+        return force_str(BP_SIDE_NAMES["%s_%s" % (side, name_type)])
     else:
         raise ValueError("get_side_name() side must be one of: 'aff', 'neg', 'og', 'oo', 'cg', 'co', not: %r" % (side,))
 
@@ -113,7 +113,7 @@ def get_side_name(tournament, side, name_type):
 def _get_side_name(name_type):
     def _wrapped(tournament):
         names = SIDE_NAMES.get(tournament.pref('side_names'), SIDE_NAMES['aff-neg'])
-        return force_text(names[name_type])
+        return force_str(names[name_type])
     return _wrapped
 
 

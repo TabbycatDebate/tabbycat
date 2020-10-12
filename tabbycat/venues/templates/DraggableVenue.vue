@@ -22,7 +22,14 @@ import HighlightableMixin from '../../templates/allocations/HighlightableMixin.v
 export default {
   mixins: [HighlightableMixin],
   components: { DraggableItem },
-  props: { item: Object, dragPayload: Object, isTrainee: false },
+  props: {
+    item: Object,
+    dragPayload: Object,
+    isTrainee: {
+      type: Boolean,
+      default: false,
+    },
+  },
   computed: {
     highlightData: function () {
       return this.item

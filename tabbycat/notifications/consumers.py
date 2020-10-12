@@ -34,10 +34,10 @@ class NotificationQueueConsumer(SyncConsumer):
         try:
             mail.get_connection().send_messages(messages)
         except SMTPException as e:
-            self.send_error(e, _("Failed to send e-mails."), event)
+            self.send_error(e, _("Failed to send emails."), event)
             raise
         except ConnectionError as e:
-            self.send_error(e, _("Connection error sending e-mails."), event)
+            self.send_error(e, _("Connection error sending emails."), event)
             raise
         else:
             SentMessage.objects.bulk_create(records)
@@ -54,14 +54,18 @@ class NotificationQueueConsumer(SyncConsumer):
     def email(self, event):
         # Get database objects
         if 'debate_id' in event['extra']:
-            round = Debate.objects.get(pk=event['extra']['debate_id']).round
+            event['extra']['debate'] = Debate.objects.all().select_related(
+                'round', 'round__tournament').get(pk=event['extra'].pop('debate_id'))
+            round = event['extra']['debate'].round
             t = round.tournament
         elif 'round_id' in event['extra']:
-            round = Round.objects.get(pk=event['extra']['round_id'])
+            round = Round.objects.all().select_related('tournament').get(pk=event['extra'].pop('round_id'))
+            event['extra']['round'] = round
             t = round.tournament
         else:
             round = None
             t = Tournament.objects.get(pk=event['extra']['tournament_id'])
+            event['extra']['tournament'] = t
 
         from_email, reply_to = self._get_from_fields(t)
         notification_type = event['message']

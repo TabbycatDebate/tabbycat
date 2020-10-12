@@ -29,4 +29,4 @@ class Command(TournamentCommand):
             else:
                 self.stdout.write("{verb} team {!r} from {} alone".format(
                     team.reference, team.institution.code,
-                    erb="Would leave" if options["dry_run"] else "Leaving"))
+                    verb="Would leave" if options["dry_run"] else "Leaving"))
