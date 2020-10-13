@@ -8,7 +8,7 @@ Change Log
 
 - Added URL field from the Room model to the Venues API endpoints as 'external URL'
 - The Institution API endpoints show institutions' regions as their name, and regions can be created
-- Added a preference to allow dedicated reply speaker. Thanks to Miha Frangež for the PR! (`#1584 https://github.com/TabbycatDebate/tabbycat/issues/1584`)
+- Added a preference to allow dedicated reply speaker. Thanks to Miha Frangež for the PR! (`#1584 <https://github.com/TabbycatDebate/tabbycat/issues/1584>`_)
 - Adjudicator Feedback choices and draw flags are stored with PostgreSQL-specific arrays (`#1525 <https://github.com/TabbycatDebate/tabbycat/issues/1525>`_)
 - Private URL submissions now store the participant whose link was used rather than just their IP address (`#1586 <https://github.com/TabbycatDebate/tabbycat/issues/1586>`_)
 - Optimised database queries to create all debates in a draw at once (`#1376 <https://github.com/TabbycatDebate/tabbycat/pull/1376>`_)
@@ -17,6 +17,8 @@ Change Log
 - Fixed simulated annealing adjudicator allocator when initialised with the Hungarian method (`#1619 <https://github.com/TabbycatDebate/tabbycat/pull/1619>`_)
 - Added selectors for adjudicator positions in draw emails (`#1423 <https://github.com/TabbycatDebate/tabbycat/pull/1423>`_)
 - Implemented debate postponement, allowing debates to be marked as "postponed" in the results page. Postponed debates do not block draw generation, contrary to unconfirmed debates. (`#1563 <https://github.com/TabbycatDebate/tabbycat/pull/1563>`_)
+- Added round weights so that team points can be pondered between rounds, implementing tapered scoring. Weights only affect the sum of team points. (`#1512 <https://github.com/TabbycatDebate/tabbycat/pull/1512>`_)
+- Delegated the calculation of team and speaker rankings to database functions where available, with metrics using the same query. (`#1617 <https://github.com/TabbycatDebate/tabbycat/pull/1617>`_)
 
 
 2.4.6
