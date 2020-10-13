@@ -18,8 +18,8 @@
         <div class="popover-body">
           <div class="list-group list-group-item-flush">
             <div class="list-group-item" v-for="item in cellData.content">
-              <a :href="item.link" v-if="item.link">{{ item.text }}</a>
-              <span v-else>{{ item.text }}</span>
+              <a :href="item.link" v-if="item.link" v-html="item.text"></a>
+              <span v-else v-html="item.text"></span>
             </div>
           </div>
         </div>

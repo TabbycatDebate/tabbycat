@@ -3494,6 +3494,7 @@ components:
           title: External URL
           type: string
           format: uri
+          nullable: true
     VenueCategory:
       required:
         - venues
