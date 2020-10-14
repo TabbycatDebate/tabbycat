@@ -21,6 +21,15 @@ Change Log
 - Delegated the calculation of team and speaker rankings to database functions where available, with metrics using the same query. (`#1617 <https://github.com/TabbycatDebate/tabbycat/pull/1617>`_)
 
 
+2.4.7
+-----
+*Release date: 15 October 2020*
+
+- Fixed draw display links not showing concurrent rounds (`#1239 <https://github.com/TabbycatDebate/tabbycat/issues/1239>`_)
+- Record pages now show concurrent rounds
+- Non-public speaker categories are now hidden from public API endpoints when unauthenticated
+
+
 2.4.6
 -----
 *Release date: 19 September 2020*
