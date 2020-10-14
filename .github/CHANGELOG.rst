@@ -4,7 +4,7 @@ Change Log
 
 2.4.7
 -----
-*Release date: TBD*
+*Release date: 15 October 2020*
 
 - Fixed draw display links not showing concurrent rounds (`#1239 <https://github.com/TabbycatDebate/tabbycat/issues/1239>`_)
 - Record pages now show concurrent rounds
