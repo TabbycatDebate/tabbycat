@@ -16,7 +16,7 @@ from checkins.consumers import CheckInEventConsumer
 from checkins.models import Event
 from checkins.utils import create_identifiers, get_unexpired_checkins
 from options.models import TournamentPreferenceModel
-from participants.models import Adjudicator, Institution, Speaker, Team
+from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import TournamentFromUrlMixin
@@ -116,7 +116,10 @@ class SpeakerEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, Retri
     access_preference = 'public_participants'
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('speaker_set')
+        qs = super().get_queryset().prefetch_related('speaker_set')
+        if not self.request.user or not self.request.user.is_staff:
+            return qs.filter(public=True)
+        return qs
 
 
 class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
@@ -140,10 +143,14 @@ class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     access_preference = 'public_participants'
 
     def get_queryset(self):
+        category_prefetch = Prefetch('categories', queryset=SpeakerCategory.objects.all().select_related('tournament'))
+        if not self.request.user or not self.request.user.is_staff:
+            category_prefetch.queryset = category_prefetch.queryset.filter(public=True)
+
         return super().get_queryset().select_related('tournament').prefetch_related(
             Prefetch(
                 'speaker_set',
-                queryset=Speaker.objects.all().prefetch_related('categories', 'categories__tournament').select_related('team__tournament'),
+                queryset=Speaker.objects.all().prefetch_related(category_prefetch).select_related('team__tournament'),
             ),
             'institution_conflicts',
             'break_categories', 'break_categories__tournament',
@@ -178,7 +185,11 @@ class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet)
         serializer.save()
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('categories')
+        category_prefetch = Prefetch('categories', queryset=SpeakerCategory.objects.all().select_related('tournament'))
+        if not self.request.user or not self.request.user.is_staff:
+            category_prefetch.queryset = category_prefetch.queryset.filter(public=True)
+
+        return super().get_queryset().prefetch_related(category_prefetch)
 
 
 class VenueViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
