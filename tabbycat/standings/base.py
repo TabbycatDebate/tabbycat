@@ -223,6 +223,7 @@ class Standings:
         self.get_standing(instance).add_ranking(key, value)
 
     def sort_from_rankings(self, tiebreak_func=None):
+        """Sorts Standings by a SQL-provided ranking, requiring less treatment."""
         self._standings = list(self.infos.values())
 
         if tiebreak_func:
@@ -300,6 +301,9 @@ class BaseStandingsGenerator:
         self._check_annotators(self.ranking_annotators, _("The same ranking would be added twice:"))
 
     def _annotate_metrics(self, queryset, standings, round):
+        """Runs the annotators to be added to the Standings. All annotators are
+        run, but SQL-based annotators merely add the field to the Standings,
+        as the annotation was already calculated in the SQL query."""
         for annotator in self.metric_annotators:
             logger.debug("Running metric annotator: %s", annotator.name)
             annotator.run(queryset, standings, round)
@@ -334,6 +338,7 @@ class BaseStandingsGenerator:
             # we can use SQL window functions for rankings
             return self.generate_from_queryset(queryset_for_metrics, standings, round)
 
+        # Otherwise (not all precedence metrics are SQL-based), need to sort Standings
         self._annotate_metrics(queryset_for_metrics, standings, round)
 
         standings.sort(self.precedence, self._tiebreak_func)
