@@ -878,6 +878,7 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
 
     def speakerscore_field_score(self, side, position):
         return self.scoresheet.get_score(side, position)
+
     get_score = speakerscore_field_score
 
     def teamscore_field_score(self, side):
