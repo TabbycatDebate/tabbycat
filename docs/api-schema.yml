@@ -3242,6 +3242,12 @@ components:
           title: Starts at
           type: string
           format: time
+        weight:
+          title: Weight
+          description: >-
+            A factor for the points received in the round. For example, if 2,
+            all points are doubled.
+          type: integer
     Debate:
       required:
         - venue
