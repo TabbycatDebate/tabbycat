@@ -19,6 +19,11 @@ Change Log
 - Implemented debate postponement, allowing debates to be marked as "postponed" in the results page. Postponed debates do not block draw generation, contrary to unconfirmed debates. (`#1563 <https://github.com/TabbycatDebate/tabbycat/pull/1563>`_)
 - Added round weights so that team points can be pondered between rounds, implementing tapered scoring. Weights only affect the sum of team points. (`#1512 <https://github.com/TabbycatDebate/tabbycat/pull/1512>`_)
 - Delegated the calculation of team and speaker rankings to database functions where available, with metrics using the same query. (`#1617 <https://github.com/TabbycatDebate/tabbycat/pull/1617>`_)
+- Overhauled the results framework to allow for more types of ballots
+    - BP finals now nominate only one team winning (`#527 <https://github.com/TabbycatDebate/tabbycat/issues/527>`_)
+    - There are now settings to allow tied-point and low-point wins, with declared winners (`#643 <https://github.com/TabbycatDebate/tabbycat/issues/643>`_)
+    - Two-team formats can now have scoreless ballots, and winner ballots are not restricted to elimination rounds (`#1003 <https://github.com/TabbycatDebate/tabbycat/issues/1003>`_)
+    - Results are now discoverable through the API.
 
 
 2.4.7
