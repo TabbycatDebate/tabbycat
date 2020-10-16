@@ -5,7 +5,7 @@ from checkins.utils import get_checkins
 from draw.models import DebateTeam
 from tournaments.models import Tournament
 
-from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
+from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore, TeamScoreByAdj
 from .result import DebateResult
 
 
@@ -72,7 +72,7 @@ def populate_checkins(debates, tournament):
 
 def populate_results(ballotsubs):
     """Populates the `_result` attribute of each BallotSubmission in
-    `ballotsubs` with a populated VotingDebateResult instance.
+    `ballotsubs` with a populated DebateResult instance.
 
     For best performance, the ballot submissions should already have their
     debates prefetched (using select_related).
@@ -107,7 +107,7 @@ def populate_results(ballotsubs):
     debateteams = DebateTeam.objects.filter(
         debate__ballotsubmission__in=ballotsubs,
         side__in=sides,
-    ).select_related('team').distinct()
+    ).select_related('team', 'team__tournament').distinct()
 
     for dt in debateteams:
         for result in results_by_debate_id[dt.debate_id]:
@@ -118,7 +118,7 @@ def populate_results(ballotsubs):
         ballot_submission__in=ballotsubs,
         debate_team__side__in=sides,
         position__in=positions,
-    ).select_related('debate_team')
+    ).select_related('speaker', 'speaker__team__tournament', 'debate_team')
 
     for ss in speakerscores:
         result = results_by_ballotsub_id[ss.ballot_submission_id]
@@ -134,7 +134,7 @@ def populate_results(ballotsubs):
         debate__ballotsubmission__in=ballotsubs,
     ).exclude(
         type=DebateAdjudicator.TYPE_TRAINEE,
-    ).select_related('adjudicator__institution').distinct()
+    ).select_related('adjudicator__institution', 'adjudicator__tournament').distinct()
 
     for da in debateadjs:
         for result in results_by_debate_id[da.debate_id]:
@@ -162,8 +162,19 @@ def populate_results(ballotsubs):
 
     for ts in teamscores:
         result = results_by_ballotsub_id[ts.ballot_submission_id]
-        if result.uses_advancing and ts.win:
-            result.advancing.append(ts.debate_team.side)
+        if result.uses_declared_winners and ts.win and not result.is_voting:
+            result.add_winner(ts.debate_team.side)
+
+    # Populate advancing (load_advancing)
+    teamscoresbyadj = TeamScoreByAdj.objects.filter(
+        ballot_submission__in=ballotsubs,
+        debate_team__side__in=sides,
+    ).select_related('debate_team')
+
+    for tsba in teamscoresbyadj:
+        result = results_by_ballotsub_id[tsba.ballot_submission_id]
+        if result.uses_declared_winners and tsba.win:
+            result.add_winner(tsba.debate_adjudicator.adjudicator, tsba.debate_team.side)
 
     # Finally, check that everything is in order
 

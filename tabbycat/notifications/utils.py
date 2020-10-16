@@ -19,7 +19,7 @@ from adjallocation.allocation import AdjudicatorAllocation
 from options.utils import use_team_code_names
 from participants.models import Person
 from participants.prefetch import populate_win_counts
-from results.result import BaseConsensusDebateResultWithSpeakers, DebateResult, VotingDebateResult
+from results.result import ConsensusDebateResultWithScores, DebateResult, DebateResultByAdjudicatorWithScores
 from results.utils import side_and_position_names
 
 
@@ -107,7 +107,7 @@ def ballots_email_generator(to, debate):
                 points = 4 - scoresheet.rank(side)
             else:
                 side_string += _("<li>%(side)s: %(team)s (%(points)s - %(speaks)s total speaks)")
-                points = _("Win") if side == scoresheet.winner() else _("Loss")
+                points = _("Win") if side in scoresheet.winners() else _("Loss")
 
             ballot += side_string % {
                 'side': side_name,
@@ -131,14 +131,14 @@ def ballots_email_generator(to, debate):
 
         return mark_safe(ballot)
 
-    if isinstance(results, VotingDebateResult):
+    if isinstance(results, DebateResultByAdjudicatorWithScores):
         for (adj, ballot) in results.scoresheets.items():
             if adj.email is None:
                 continue
 
             context = {'DEBATE': round_name, 'USER': adj.name, 'SCORES': _create_ballot(results, ballot)}
             emails.append((context, adj))
-    elif isinstance(results, BaseConsensusDebateResultWithSpeakers):
+    elif isinstance(results, ConsensusDebateResultWithScores):
         context = {'DEBATE': round_name, 'SCORES': _create_ballot(results, results.scoresheet)}
 
         for adj in debate.debateadjudicator_set.all():

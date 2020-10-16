@@ -15,6 +15,7 @@ from adjfeedback.models import AdjudicatorFeedbackQuestion
 from checkins.consumers import CheckInEventConsumer
 from checkins.models import Event
 from checkins.utils import create_identifiers, get_unexpired_checkins
+from draw.models import Debate
 from options.models import TournamentPreferenceModel
 from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 from standings.speakers import SpeakerStandingsGenerator
@@ -396,6 +397,7 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
             return getattr(view.round, view.round_released_field) == view.round_released_value
 
     serializer_class = serializers.RoundPairingSerializer
+    lookup_url_kwarg = 'debate_pk'
 
     access_preference = 'public_draw'
 
@@ -409,6 +411,41 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
             'debateteam_set', 'debateteam_set__team', 'debateteam_set__team__tournament',
             'debateadjudicator_set', 'debateadjudicator_set__adjudicator', 'debateadjudicator_set__adjudicator__tournament',
         )
+
+
+class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
+    serializer_class = serializers.BallotSerializer
+    access_preference = 'ballots_released'
+
+    tournament_field = 'debate__round__tournament'
+    round_field = 'debate__round'
+
+    @property
+    def debate(self):
+        if hasattr(self, '_debate'):
+            return self._debate
+
+        self._debate = get_object_or_404(Debate, pk=self.kwargs.get('debate_pk'))
+        return self._debate
+
+    def perform_create(self, serializer):
+        serializer.save(**{'debate': self.debate})
+
+    def lookup_kwargs(self):
+        kwargs = super().lookup_kwargs()
+        kwargs['debate'] = self.debate
+        return kwargs
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['debate'] = self.debate
+        return context
+
+    def get_queryset(self):
+        filters = Q()
+        if self.request.query_params.get('confirmed') or not self.request.user.is_staff:
+            filters &= Q(confirmed=True)
+        return super().get_queryset().filter(filters)
 
 
 class FeedbackQuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
