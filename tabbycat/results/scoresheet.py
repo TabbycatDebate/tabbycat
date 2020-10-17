@@ -83,7 +83,7 @@ class DeclaredWinnersMixin:
         self.declared_winners = set()
 
     def is_complete(self):
-        return super().is_complete() and len(self.declared_winners) == self.number_winners
+        return super().is_complete() and self.declared_winners <= set(self.sides) and len(self.declared_winners) == self.number_winners
 
     def add_declared_winner(self, winner):
         assert winner in self.sides or winner is None, "Declared winner must be one of: " + ", ".join(map(repr, self.sides))
@@ -91,7 +91,7 @@ class DeclaredWinnersMixin:
 
     def set_declared_winners(self, winners):
         winners = set(winners)
-        assert winners <= set(self.sides), "Declared winners must be in: " + ", ".join(map(repr, self.sides))
+        assert winners <= set(self.sides) or len(winners) == 0, "Declared winners must be in: " + ", ".join(map(repr, self.sides))
         self.declared_winners = winners
 
     def identical(self, other):
