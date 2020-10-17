@@ -132,7 +132,7 @@ class NotificationQueueConsumer(SyncConsumer):
             records.append(
                 SentMessage(recipient_id=pk, email=address,
                             method=SentMessage.METHOD_TYPE_EMAIL,
-                            tournament=t, messsage=raw_message,
+                            message=raw_message,
                             message_id=raw_message['Message-ID'], hook_id=hook_id,
                             notification=bulk_notification),
             )
