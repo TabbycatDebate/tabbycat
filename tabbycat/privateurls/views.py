@@ -69,7 +69,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
                 return ''
             path = reverse_tournament('privateurls-person-index', self.tournament,
                 kwargs={'url_key': person.url_key})
-            return {'text': "🔗", 'link': request.build_absolute_uri(path)}
+            return {'text': "🔗", 'link': path}
 
         table.add_column(
             {'title': _("URL"), 'key': "url"},
@@ -157,11 +157,18 @@ class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView
     def get_table(self):
         table = super().get_table()
 
-        table.add_column({'key': 'url', 'tooltip': _("URL Key"), 'icon': 'terminal'}, [{
-            'text': p.url_key,
-            'link': self.request.build_absolute_uri(reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': p.url_key})),
-            'class': 'small',
-        } for p in self.get_queryset()])
+        data = []
+        for p in self.get_queryset():
+            cell = {
+                'text': p.url_key or _("no URL"),
+                'class': 'small' if p.url_key else 'small text-warning',
+            }
+            if p.url_key:
+                cell['link'] = self.request.build_absolute_uri(
+                    reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': p.url_key}))
+            data.append(cell)
+
+        table.add_column({'key': 'url', 'tooltip': _("URL Key"), 'icon': 'terminal'}, data)
 
         return table
 
