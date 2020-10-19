@@ -273,7 +273,7 @@ class CustomEmailCreateView(RoleColumnMixin, BaseSelectPeopleEmailView):
             "subject": request.POST['subject_line'],
             "body": request.POST['message_body'],
             "tournament": self.tournament.id,
-            "send_to": [(p.id, p.email) for p in people],
+            "send_to": [p.id for p in people],
         })
 
         self.add_sent_notification(len(people))

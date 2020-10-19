@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from html2text import html2text
 
 from draw.models import Debate
+from participants.models import Person
 from tournaments.models import Round, Tournament
 
 from .models import BulkNotification, SentMessage
@@ -54,14 +55,17 @@ class NotificationQueueConsumer(SyncConsumer):
     def email(self, event):
         # Get database objects
         if 'debate_id' in event['extra']:
-            round = Debate.objects.get(pk=event['extra']['debate_id']).round
+            event['extra']['debate'] = Debate.objects.select_related('round', 'round__tournament').get(pk=event['extra'].pop('debate_id'))
+            round = event['extra']['debate'].round
             t = round.tournament
         elif 'round_id' in event['extra']:
-            round = Round.objects.get(pk=event['extra']['round_id'])
+            round = Round.objects.select_related('tournament').get(pk=event['extra'].pop('round_id'))
+            event['extra']['round'] = round
             t = round.tournament
         else:
             round = None
-            t = Tournament.objects.get(pk=event['extra']['tournament_id'])
+            t = Tournament.objects.get(pk=event['extra'].pop('tournament_id'))
+            event['extra']['tournament'] = t
 
         from_email, reply_to = self._get_from_fields(t)
         notification_type = event['message']
@@ -69,7 +73,8 @@ class NotificationQueueConsumer(SyncConsumer):
         subject = Template(event['subject'])
         html_body = Template(event['body'])
 
-        data = self.NOTIFICATION_GENERATORS[notification_type](to=event['send_to'], **event['extra'])
+        recipients = Person.objects.filter(pk__in=event['send_to'] or [], email__isnull=False).exclude(email='')
+        data = self.NOTIFICATION_GENERATORS[notification_type](to=recipients, **event['extra'])
 
         # Prepare messages
 
@@ -118,12 +123,14 @@ class NotificationQueueConsumer(SyncConsumer):
         t = Tournament.objects.get(id=event['tournament'])
         from_email, reply_to = self._get_from_fields(t)
 
+        recipients = Person.objects.filter(pk__in=event['send_to'], email__isnull=False).exclude(email='')
+
         bulk_notification = BulkNotification.objects.create(tournament=t, subject_template=event['subject'], body_template=event['body'])
-        for pk, address in event['send_to']:
-            hook_id = str(bulk_notification.id) + "-" + str(pk) + "-" + str(random.randint(1000, 9999))
+        for recipient in recipients:
+            hook_id = str(bulk_notification.id) + "-" + str(recipient.pk) + "-" + str(random.randint(1000, 9999))
             email = mail.EmailMultiAlternatives(
                 subject=event['subject'], body=html2text(event['body']),
-                from_email=from_email, to=[address], reply_to=reply_to,
+                from_email=from_email, to=[recipient.email], reply_to=reply_to,
                 headers={'X-SMTPAPI': json.dumps({'unique_args': {'hook-id': hook_id}})}, # SendGrid-specific 'hook-id'
             )
             email.attach_alternative(event['body'], "text/html")
@@ -131,7 +138,7 @@ class NotificationQueueConsumer(SyncConsumer):
 
             raw_message = email.message()
             records.append(
-                SentMessage(recipient_id=pk, email=address,
+                SentMessage(recipient=recipient, email=recipient.email,
                             method=SentMessage.METHOD_TYPE_EMAIL,
                             message_id=raw_message['Message-ID'], hook_id=hook_id,
                             notification=bulk_notification))
