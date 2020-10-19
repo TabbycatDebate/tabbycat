@@ -15,8 +15,9 @@ from adjfeedback.models import AdjudicatorFeedbackQuestion
 from checkins.consumers import CheckInEventConsumer
 from checkins.models import Event
 from checkins.utils import create_identifiers, get_unexpired_checkins
+from draw.models import Debate
 from options.models import TournamentPreferenceModel
-from participants.models import Adjudicator, Institution, Speaker, Team
+from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import TournamentFromUrlMixin
@@ -116,7 +117,10 @@ class SpeakerEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, Retri
     access_preference = 'public_participants'
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('speaker_set')
+        qs = super().get_queryset().prefetch_related('speaker_set')
+        if not self.request.user or not self.request.user.is_staff:
+            return qs.filter(public=True)
+        return qs
 
 
 class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
@@ -145,10 +149,14 @@ class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     access_preference = 'public_participants'
 
     def get_queryset(self):
+        category_prefetch = Prefetch('categories', queryset=SpeakerCategory.objects.all().select_related('tournament'))
+        if not self.request.user or not self.request.user.is_staff:
+            category_prefetch.queryset = category_prefetch.queryset.filter(public=True)
+
         return super().get_queryset().select_related('tournament').prefetch_related(
             Prefetch(
                 'speaker_set',
-                queryset=Speaker.objects.all().prefetch_related('categories', 'categories__tournament').select_related('team__tournament'),
+                queryset=Speaker.objects.all().prefetch_related(category_prefetch).select_related('team__tournament'),
             ),
             'institution_conflicts',
             'break_categories', 'break_categories__tournament',
@@ -186,7 +194,11 @@ class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet)
         serializer.save()
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('categories')
+        category_prefetch = Prefetch('categories', queryset=SpeakerCategory.objects.all().select_related('tournament'))
+        if not self.request.user or not self.request.user.is_staff:
+            category_prefetch.queryset = category_prefetch.queryset.filter(public=True)
+
+        return super().get_queryset().prefetch_related(category_prefetch)
 
 
 class VenueViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
@@ -385,6 +397,7 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
             return getattr(view.round, view.round_released_field) == view.round_released_value
 
     serializer_class = serializers.RoundPairingSerializer
+    lookup_url_kwarg = 'debate_pk'
 
     access_preference = 'public_draw'
 
@@ -398,6 +411,41 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
             'debateteam_set', 'debateteam_set__team', 'debateteam_set__team__tournament',
             'debateadjudicator_set', 'debateadjudicator_set__adjudicator', 'debateadjudicator_set__adjudicator__tournament',
         )
+
+
+class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
+    serializer_class = serializers.BallotSerializer
+    access_preference = 'ballots_released'
+
+    tournament_field = 'debate__round__tournament'
+    round_field = 'debate__round'
+
+    @property
+    def debate(self):
+        if hasattr(self, '_debate'):
+            return self._debate
+
+        self._debate = get_object_or_404(Debate, pk=self.kwargs.get('debate_pk'))
+        return self._debate
+
+    def perform_create(self, serializer):
+        serializer.save(**{'debate': self.debate})
+
+    def lookup_kwargs(self):
+        kwargs = super().lookup_kwargs()
+        kwargs['debate'] = self.debate
+        return kwargs
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['debate'] = self.debate
+        return context
+
+    def get_queryset(self):
+        filters = Q()
+        if self.request.query_params.get('confirmed') or not self.request.user.is_staff:
+            filters &= Q(confirmed=True)
+        return super().get_queryset().filter(filters)
 
 
 class FeedbackQuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
@@ -429,7 +477,7 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
         elif query_params.get('source_type') == 'team':
             filters &= Q(source_adjudicator__isnull=True)
             if query_params.get('source'):
-                filters &= Q(source_adjudicator__adjudicator_id=query_params.get('source'))
+                filters &= Q(source_team__team_id=query_params.get('source'))
         if query_params.get('round'):
             filters &= Q(source_adjudicator__debate__round__seq=query_params.get('round')) | Q(source_team__debate__round__seq=query_params.get('round'))
         if query_params.get('target'):

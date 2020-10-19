@@ -2,11 +2,13 @@ import logging
 import warnings
 
 from django.contrib.humanize.templatetags.humanize import ordinal
+from django.template.loader import render_to_string
 from django.utils.encoding import force_str
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
 from adjallocation.allocation import AdjudicatorAllocation
+from draw.generator import DRAW_FLAG_DESCRIPTIONS
 from options.utils import use_team_code_names
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.mixins import SingleObjectByRandomisedUrlMixin
@@ -16,6 +18,7 @@ from utils.misc import reverse_round, reverse_tournament
 from .mixins import AdministratorMixin
 
 logger = logging.getLogger(__name__)
+_draw_flags_dict = dict(DRAW_FLAG_DESCRIPTIONS)
 
 
 class BaseTableBuilder:
@@ -160,6 +163,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
     }
 
     BLANK_TEXT = _("—")
+    REDACTED_CELL = {'text': "<em>" + _("Redacted") + "</em>", 'class': 'no-wrap'}
 
     def __init__(self, view=None, **kwargs):
         """Constructor.
@@ -478,12 +482,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         adj_data = []
         for adj in adjudicators:
-            cell = {'text': adj.name}
-            if self._show_record_links:
-                cell['popover'] = {'content': [self._adjudicator_record_link(adj)]}
-            if subtext == 'institution' and adj.institution is not None:
-                cell['subtext'] = adj.institution.code
-            adj_data.append(cell)
+            if adj.anonymous:
+                adj_data.append(self.REDACTED_CELL)
+            else:
+                cell = {'text': adj.name}
+                if self._show_record_links:
+                    cell['popover'] = {'content': [self._adjudicator_record_link(adj)]}
+                if subtext == 'institution' and adj.institution is not None:
+                    cell['subtext'] = adj.institution.code
+                adj_data.append(cell)
         self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'}, adj_data)
 
         if show_institutions and self.tournament.pref('show_adjudicator_institutions'):
@@ -660,7 +667,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         speaker_data = []
         for speaker in speakers:
             if getattr(speaker, 'anonymise', False):
-                speaker_data.append({'text': "<em>" + _("Redacted") + "</em>", 'class': 'no-wrap'})
+                speaker_data.append(self.REDACTED_CELL)
             else:
                 speaker_data.append({
                     'text': speaker.name,
@@ -740,9 +747,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
         conflicts_by_debate = []
         for debate in debates:
             # conflicts is a list of (level, message) tuples
-            conflicts = [("secondary", flag) for flag in debate.get_flags_display()]
-            conflicts += [("secondary", "%(team)s: %(flag)s" % {'team': self._team_short_name(debate.get_team(side)), 'flag': flag})
-                    for side in self.tournament.sides for flag in debate.get_dt(side).get_flags_display()]
+            conflicts = [("secondary", _draw_flags_dict.get(flag, flag)) for flag in debate.flags]
+            conflicts += [("secondary", "%(team)s: %(flag)s" % {
+                        'team': self._team_short_name(debate.get_team(side)),
+                        'flag': _draw_flags_dict.get(flag, flag),
+                    }) for side in self.tournament.sides for flag in debate.get_dt(side).flags]
 
             if self.tournament.pref('avoid_team_history'):
                 history = debate.history
@@ -924,6 +933,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
             } for i in range(1, len(side_abbrs)+1)]
 
         self.add_columns(results_header, results_data)
+
+    def add_debate_postponement_column(self, debates):
+        col_data = [render_to_string('debate_postponement_form.html', {'debate': d}) for d in debates]
+        header = {'key': 'postpone', 'title': _("Postpone")}
+        self.add_column(header, col_data)
 
     def add_standings_results_columns(self, standings, rounds, show_ballots):
 

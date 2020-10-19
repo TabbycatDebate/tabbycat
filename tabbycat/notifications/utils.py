@@ -18,7 +18,7 @@ from django.utils.translation import gettext as _
 from adjallocation.allocation import AdjudicatorAllocation
 from options.utils import use_team_code_names
 from participants.prefetch import populate_win_counts
-from results.result import BaseConsensusDebateResultWithSpeakers, DebateResult, VotingDebateResult
+from results.result import ConsensusDebateResultWithScores, DebateResult, DebateResultByAdjudicatorWithScores
 from results.utils import side_and_position_names
 
 
@@ -88,7 +88,7 @@ def ballots_email_generator(to, debate):  # "to" is unused
     round_name = _("%(tournament)s %(round)s @ %(room)s") % {'tournament': str(tournament),
                                                              'round': debate.round.name, 'room': debate.venue.name}
 
-    use_codes = use_team_code_names(debate.round.tournament, False)
+    use_codes = use_team_code_names(tournament, False)
 
     def _create_ballot(result, scoresheet):
         ballot = "<ul>"
@@ -100,7 +100,7 @@ def ballots_email_generator(to, debate):  # "to" is unused
                 points = 4 - scoresheet.rank(side)
             else:
                 side_string += _("<li>%(side)s: %(team)s (%(points)s - %(speaks)s total speaks)")
-                points = _("Win") if side == scoresheet.winner() else _("Loss")
+                points = _("Win") if side in scoresheet.winners() else _("Loss")
 
             ballot += side_string % {
                 'side': side_name,
@@ -124,14 +124,14 @@ def ballots_email_generator(to, debate):  # "to" is unused
 
         return mark_safe(ballot)
 
-    if isinstance(results, VotingDebateResult):
+    if isinstance(results, DebateResultByAdjudicatorWithScores):
         for adj, ballot in results.scoresheets.items():
             if adj.email is None:  # As "to" is None, must check if eligible email
                 continue
 
             context = {'DEBATE': round_name, 'USER': adj.name, 'SCORES': _create_ballot(results, ballot)}
             emails.append((context, adj))
-    elif isinstance(results, BaseConsensusDebateResultWithSpeakers):
+    elif isinstance(results, ConsensusDebateResultWithScores):
         context = {'DEBATE': round_name, 'SCORES': _create_ballot(results, results.scoresheet)}
 
         for adj in debate.debateadjudicator_set.all().select_related('adjudicator'):
@@ -240,7 +240,7 @@ def team_draw_email_generator(to, round):
         for dt in debate.debateteam_set.all():
             context_team = context.copy()
             context_team['TEAM'] = dt.team.code_name if use_codes else dt.team.short_name
-            context_team['SIDE'] = dt.get_side_name(tournament=tournament)
+            context_team['SIDE'] = dt.get_side_name(tournament=round.tournament)
 
             for speaker in dt.team.speakers:
                 if not _check_in_to(speaker.id, to_ids):

@@ -357,6 +357,10 @@ class Round(models.Model):
         help_text=_("Whether motions will appear on the public website, assuming that feature is turned on"))
     starts_at = models.TimeField(verbose_name=_("starts at"), blank=True, null=True)
 
+    weight = models.IntegerField(default=1,
+        verbose_name=_("weight"),
+        help_text=_("A factor for the points received in the round. For example, if 2, all points are doubled."))
+
     class Meta:
         verbose_name = _('round')
         verbose_name_plural = _('rounds')
@@ -568,6 +572,11 @@ class Round(models.Model):
         round, then it returns the next round that is either in the same break
         category or is a preliminary round."""
         return self._rounds_in_same_sequence().filter(seq__gt=self.seq).order_by('seq').first()
+
+    @cached_property
+    def is_last(self):
+        """Returns a boolean if no next round in the sequence exists."""
+        return not self._rounds_in_same_sequence().filter(seq__gt=self.seq).order_by('seq').exists()
 
     @cached_property
     def is_break_round(self):

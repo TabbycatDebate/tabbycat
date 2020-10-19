@@ -62,8 +62,9 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
             d_or_p.save()
 
         serialized = self.importance_serializer(debates_or_panels, many=True)
-        del content['importance'] # Reserialise as debatesOrPanels
-        self.return_attributes(content, serialized)
+        content_to_return = content.copy()
+        del content_to_return['importance'] # Reserialise as debatesOrPanels
+        self.return_attributes(content_to_return, serialized)
 
     def delete_adjudicators(self, debate_or_panel, adj_ids):
         return debate_or_panel.related_adjudicator_set.exclude(
@@ -95,8 +96,9 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
         # TODO: is it necessary to re-fetch? Or should the objects be returned?
         debates_or_panels = self.get_debates_or_panels(changes)
         serialized = self.adjudicators_serializer(debates_or_panels, many=True)
-        del content['adjudicators']
-        self.return_attributes(content, serialized)
+        content_to_return = content.copy()
+        del content_to_return['adjudicators']
+        self.return_attributes(content_to_return, serialized)
 
     def return_attributes(self, original_content, serialized_content):
         """ Return the original JSON but with the generic debatesOrPanels key """

@@ -214,6 +214,24 @@ class TestTrivialStandings(TestCase):
     def test_double_metric_error(self):
         self.assertRaises(StandingsError, TeamStandingsGenerator, ('points', 'wbw', 'points'), ('rank',))
 
+    def test_points_with_extra_team(self):
+        # check that a team with no debates doesn't throw off the rankings
+        team_extra = Team.objects.create(tournament=self.tournament, reference="extra", use_institution_prefix=False)
+        generator = TeamStandingsGenerator(('points',), ('rank',))
+        standings = self.get_standings(generator)
+        self.assertEqual(standings.get_standing(self.team1).rankings['rank'], (1, False))
+        self.assertEqual(standings.get_standing(self.team2).rankings['rank'], (2, False))
+        self.assertEqual(standings.get_standing(team_extra).rankings['rank'], (3, False))
+
+    def test_wins_with_extra_team(self):
+        # check that a team with no debates doesn't throw off the rankings
+        team_extra = Team.objects.create(tournament=self.tournament, reference="extra", use_institution_prefix=False)
+        generator = TeamStandingsGenerator(('wins',), ('rank',))
+        standings = self.get_standings(generator)
+        self.assertEqual(standings.get_standing(self.team1).rankings['rank'], (1, False))
+        self.assertEqual(standings.get_standing(self.team2).rankings['rank'], (2, True))
+        self.assertEqual(standings.get_standing(team_extra).rankings['rank'], (2, True))
+
 
 class IgnorableDebateMixin:
 

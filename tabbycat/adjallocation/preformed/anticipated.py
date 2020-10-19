@@ -49,6 +49,7 @@ def calculate_anticipated_draw(round):
 
     # 2. Compute a (min, max) of outcomes for each team
     team_points_after = []
+    points_available = [round.prev.weight * i for i in range(nteamsindebate)]
     for debate in debates:
         points_now = [team.points_count for team in debate.teams]
         highest = max(points_now)
@@ -58,13 +59,13 @@ def calculate_anticipated_draw(round):
         # one bracket; in these cases it's easy to prove this closed-form
         # guarantee for what the teams in that room will look like afterwards.
         if highest - lowest <= 1:
-            points_after = [(lowest+i, highest+i) for i in range(nteamsindebate)]
+            points_after = [(lowest+i, highest+i) for i in points_available]
 
         # For more complicated rooms (e.g. [9, 8, 8, 7]), it gets harder; just
         # use brute force. For few enough rooms this won't be too bad a hit.
         else:
             possible_outcomes = []
-            for result in itertools.permutations(range(nteamsindebate)):
+            for result in itertools.permutations(points_available):
                 outcome = [n + r for n, r in zip(points_now, result)]
                 outcome.sort(reverse=True)
                 possible_outcomes.append(outcome)
