@@ -26,8 +26,6 @@ class SentMessage(models.Model):
         verbose_name=_("email"))
     context = models.JSONField(blank=True, null=True,
         verbose_name=_("context"))
-    message = models.TextField(null=True,
-        verbose_name=_("message"))
 
     notification = models.ForeignKey('notifications.BulkNotification', models.CASCADE,
         verbose_name=_("notification"))
@@ -79,6 +77,11 @@ class BulkNotification(models.Model):
         verbose_name=_("tournament"))
     round = models.ForeignKey('tournaments.Round', models.CASCADE, blank=True, null=True,
         verbose_name=_("round"))
+
+    subject_template = models.TextField(null=True,
+        verbose_name=_("subject template"))
+    body_template = models.TextField(null=True,
+        verbose_name=_("body template"))
 
     class Meta:
         verbose_name = _("bulk notification")
