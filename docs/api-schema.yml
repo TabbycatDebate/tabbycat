@@ -1853,7 +1853,7 @@ paths:
             type: integer
         - name: category
           in: query
-          description: Restrict the standings to a speaker category
+          description: Restrict the standings to a break category
           required: false
           schema:
             type: integer
