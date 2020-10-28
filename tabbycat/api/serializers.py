@@ -10,7 +10,7 @@ from rest_framework.relations import Hyperlink
 
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
-from breakqual.models import BreakCategory
+from breakqual.models import BreakCategory, BreakingTeam
 from draw.models import Debate, DebateTeam
 from motions.models import Motion
 from participants.emoji import pick_unused_emoji
@@ -185,6 +185,8 @@ class BreakCategorySerializer(serializers.ModelSerializer):
     class BreakCategoryLinksSerializer(serializers.Serializer):
         eligibility = fields.TournamentHyperlinkedIdentityField(
             view_name='api-breakcategory-eligibility')
+        breaking_teams = fields.TournamentHyperlinkedIdentityField(
+            view_name='api-breakcategory-break')
 
     url = fields.TournamentHyperlinkedIdentityField(
         view_name='api-breakcategory-detail')
@@ -255,6 +257,26 @@ class SpeakerEligibilitySerializer(BaseEligibilitySerializer):
         model = SpeakerCategory
         participants_field = 'speaker_set'
         fields = ('slug', participants_field)
+
+
+class BreakingTeamSerializer(serializers.ModelSerializer):
+    team = fields.TournamentHyperlinkedRelatedField(view_name='api-team-detail', queryset=Team.objects.all())
+
+    class Meta:
+        model = BreakingTeam
+        exclude = ('id', 'break_category')
+
+
+class PartialBreakingTeamSerializer(BreakingTeamSerializer):
+    class Meta:
+        model = BreakingTeam
+        fields = ('team', 'remark')
+
+    def save(self, **kwargs):
+        bt = self.context['break_category'].breakingteam_set.get(team=self.validated_data['team'])
+        bt.remark = self.validated_data.get('remark', '')
+        bt.save()
+        return bt
 
 
 class SpeakerSerializer(serializers.ModelSerializer):

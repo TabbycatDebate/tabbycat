@@ -105,6 +105,11 @@ urlpatterns = [
                         path('/eligibility',
                             views.BreakEligibilityView.as_view(),
                             name='api-breakcategory-eligibility'),
+                        path('/break',
+                            views.BreakingTeamsView.as_view(
+                                {'get': 'list', 'post': 'create', 'delete': 'destroy', 'patch': 'update'},
+                            ),
+                            name='api-breakcategory-break'),
                     ])),
                 ])),
 

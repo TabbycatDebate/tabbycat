@@ -9,9 +9,11 @@ from rest_framework.generics import GenericAPIView, get_object_or_404, RetrieveU
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
+from breakqual.models import BreakCategory
+from breakqual.views import GenerateBreakMixin
 from checkins.consumers import CheckInEventConsumer
 from checkins.models import Event
 from checkins.utils import create_identifiers, get_unexpired_checkins
@@ -121,6 +123,47 @@ class SpeakerEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, Retri
         if not self.request.user or not self.request.user.is_staff:
             return qs.filter(public=True)
         return qs
+
+
+class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBreakMixin, GenericViewSet):
+    serializer_class = serializers.BreakingTeamSerializer
+    tournament_field = 'break_category__tournament'
+    access_preference = 'public_breaking_teams'
+
+    @property
+    def break_category(self):
+        return get_object_or_404(BreakCategory, tournament=self.tournament, pk=self.kwargs.get('pk'))
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('team', 'team__tournament').order_by('rank')
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['break_category'] = self.break_category
+        return context
+
+    def list(self, request, *args, **kwargs):
+        """Pagination might be dangerous here, so disabled."""
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        self.generate_break((self.break_category,))
+        return self.list(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        """Destroy is normally for a specific instance, now QuerySet."""
+        self.filter_queryset(self.get_queryset()).delete()
+        return Response(status=204)  # No content
+
+    def update(self, request, *args, **kwargs):
+        """Update team remark and then regenerate break."""
+        serializer = serializers.PartialBreakingTeamSerializer(data=request.data, context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return self.create(request, *args, **kwargs)
 
 
 class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):

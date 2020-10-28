@@ -563,6 +563,74 @@ paths:
         required: true
         schema:
           type: string
+  '/v1/tournaments/{tournament_slug}/break-categories/{id}/break':
+    get:
+      operationId: v1_tournaments_break-categories_break_read
+      description: Get team breaks for the break category
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BreakingTeam'
+      tags:
+        - v1
+        - break-categories
+    post:
+      operationId: v1_tournaments_break-categories_break_create
+      description: Create a break for a break category
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BreakingTeam'
+      tags:
+        - v1
+        - break-categories
+    delete:
+      operationId: v1_tournaments_break-categories_break_delete
+      description: Delete a break category''s break
+      responses:
+        '204':
+          description: ''
+      tags:
+        - v1
+        - break-categories
+    patch:
+      operationId: v1_tournaments_break-categories_break_partial_update
+      description: Update remark on team and regenerate break
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BreakingTeam'
+      tags:
+        - v1
+        - break-categories
+      requestBody:
+        $ref: '#/components/requestBodies/PartialBreakingTeam'
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: tournament_slug
+        in: path
+        required: true
+        schema:
+          type: string
   '/v1/tournaments/{tournament_slug}/feedback':
     get:
       operationId: v1_tournaments_feedback_list
@@ -2327,6 +2395,30 @@ components:
           schema:
             $ref: '#/components/schemas/DebateResult'
       required: true
+    PartialBreakingTeam:
+      content:
+        application/json:
+          schema:
+            required:
+              - team
+            type: object
+            properties:
+              team:
+                title: Team
+                type: string
+                format: uri
+              remark:
+                title: Remark
+                type: string
+                nullable: true
+                enum:
+                  - C
+                  - I
+                  - D
+                  - d
+                  - t
+                  - w
+                  - null
   securitySchemes:
     Token:
       type: apiKey
@@ -3822,3 +3914,31 @@ components:
           type: integer
           nullable: true
           readOnly: true
+    BreakingTeam:
+      required:
+        - team
+        - rank
+      type: object
+      properties:
+        team:
+          title: Team
+          type: string
+          format: uri
+        rank:
+          title: Rank
+          type: integer
+        break_rank:
+          title: Break rank
+          type: integer
+        remark:
+          title: Remark
+          type: string
+          nullable: true
+          enum:
+            - C
+            - I
+            - D
+            - d
+            - t
+            - w
+            - null
