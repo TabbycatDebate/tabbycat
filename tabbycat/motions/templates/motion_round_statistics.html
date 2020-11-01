@@ -17,7 +17,7 @@
         <h4 class="mb-3 mt-1">
           {{ motion.text }} <small class="text-muted d-md-inline d-none">({{ motion.reference }})</small>
           {% if motion.nrounds > 1 %}
-            {% for m_round in motion.rounds.all.reverse %}
+            {% for m_round in motion.rounds.all %}
               <span class="badge mr-2 float-right badge-light">
                 {{ m_round.abbreviation }}
               </span>
