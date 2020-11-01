@@ -30,7 +30,7 @@
     "@sentry/integrations": "^5.17.0",
     "@vue/cli-plugin-babel": "^4.4.5",
     "@vue/cli-service": "^4.4.0",
-    "ajv": "6.9.2",
+    "ajv": "6.12.6",
     "bootstrap": "^4.5.0",
     "browserify": "16.2.x",
     "browserslist": "^4.12.0",
