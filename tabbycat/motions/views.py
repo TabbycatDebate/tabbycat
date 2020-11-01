@@ -97,20 +97,6 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
 class CopyMotionsView(EditMotionsView):
     formset_model = RoundMotion
 
-    def get_formset_factory_kwargs(self):
-        excludes = ['round', 'id']
-
-        nexisting = self.get_formset_queryset().count()
-        if self.tournament.pref('enable_motions'):
-            delete = True
-            extra = max(3 - nexisting, 0)
-        else:
-            excludes.append('seq')
-            extra = max(1 - nexisting, 0)
-            delete = nexisting > 1  # if there's more than one, allow deletion
-
-        return {'can_delete': delete, 'exclude': excludes, 'extra': extra}
-
     def get_formset_queryset(self):
         return self.round.roundmotions_set.all()
 
@@ -226,25 +212,23 @@ class BaseMotionStatisticsView(TournamentMixin, TemplateView):
         kwargs['stage'] = {'PRELIM': Round.STAGE_PRELIMINARY, 'ELIM': Round.STAGE_ELIMINATION}
         return super().get_context_data(**kwargs)
 
+    def get_statistics(self, *args, **kwargs):
+        if self.tournament.pref('teams_in_debate') == 'two':
+            return self.two_team_statistics_generator(self.tournament, *args, **kwargs)
+        else:
+            return self.bp_statistics_generator(self.tournament, *args, **kwargs)
+
 
 class RoundMotionStatisticsView(BaseMotionStatisticsView):
     stats_type = "round"
-
-    def get_statistics(self, *args, **kwargs):
-        if self.tournament.pref('teams_in_debate') == 'two':
-            return RoundMotionTwoTeamStatsCalculator(self.tournament, *args, **kwargs)
-        else:
-            return RoundMotionBPStatsCalculator(self.tournament, *args, **kwargs)
+    two_team_statistics_generator = RoundMotionTwoTeamStatsCalculator
+    bp_statistics_generator = RoundMotionBPStatsCalculator
 
 
 class GlobalMotionStatisticsView(BaseMotionStatisticsView):
     stats_type = "global"
-
-    def get_statistics(self, *args, **kwargs):
-        if self.tournament.pref('teams_in_debate') == 'two':
-            return MotionTwoTeamStatsCalculator(self.tournament, *args, **kwargs)
-        else:
-            return MotionBPStatsCalculator(self.tournament, *args, **kwargs)
+    two_team_statistics_generator = MotionTwoTeamStatsCalculator
+    bp_statistics_generator = MotionBPStatsCalculator
 
 
 class BasePublicMotionStatisticsView(PublicTournamentPageMixin):
