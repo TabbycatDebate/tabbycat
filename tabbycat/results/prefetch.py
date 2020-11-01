@@ -122,11 +122,12 @@ def populate_results(ballotsubs):
 
     for ss in speakerscores:
         result = results_by_ballotsub_id[ss.ballot_submission_id]
-        result.speakers[ss.debate_team.side][ss.position] = ss.speaker
-        result.ghosts[ss.debate_team.side][ss.position] = ss.ghost
+        if result.uses_speakers:
+            result.speakers[ss.debate_team.side][ss.position] = ss.speaker
+            result.ghosts[ss.debate_team.side][ss.position] = ss.ghost
 
-        if not result.is_voting:
-            result.set_score(ss.debate_team.side, ss.position, ss.score)
+            if not result.is_voting:
+                result.set_score(ss.debate_team.side, ss.position, ss.score)
 
     # Populate scoresheets (load_scoresheets)
 
@@ -150,7 +151,7 @@ def populate_results(ballotsubs):
 
     for ssba in ssbas:
         result = results_by_ballotsub_id[ssba.ballot_submission_id]
-        if result.is_voting:
+        if result.uses_speakers and result.is_voting:
             result.set_score(ssba.debate_adjudicator.adjudicator, ssba.debate_team.side,
                 ssba.position, ssba.score)
 
