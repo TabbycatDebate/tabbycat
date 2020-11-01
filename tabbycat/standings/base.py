@@ -333,7 +333,7 @@ class BaseStandingsGenerator:
         for annotator in self.queryset_metric_annotators:
             queryset_for_metrics = annotator.get_annotated_queryset(queryset_for_metrics, round)
 
-        if len(self.precedence) > 0 and set(self.precedence).issubset(set(a.key for a in self.queryset_metric_annotators)):
+        if len(self.precedence) > 0 and set(self.precedence) <= {a.key for a in self.queryset_metric_annotators}:
             # If there is a precedence and all used metrics are aggregation-based,
             # we can use SQL window functions for rankings
             return self.generate_from_queryset(queryset_for_metrics, standings, round)
