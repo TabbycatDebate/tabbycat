@@ -362,6 +362,8 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
             t = kwargs['context']['tournament']
             if not t.pref('show_adjudicator_institutions'):
                 self.fields.pop('institution')
+            if not t.pref('public_breaking_adjs'):
+                self.fields.pop('breaking')
 
             self.fields.pop('base_score')
             self.fields.pop('trainee')
@@ -375,7 +377,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Adjudicator
         fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
-                  'institution', 'base_score', 'trainee', 'independent', 'adj_core',
+                  'institution', 'base_score', 'breaking', 'trainee', 'independent', 'adj_core',
                   'institution_conflicts', 'team_conflicts', 'adjudicator_conflicts', 'url_key', '_links')
 
     def create(self, validated_data):

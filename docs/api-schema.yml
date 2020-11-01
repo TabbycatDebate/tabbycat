@@ -238,6 +238,13 @@ paths:
           required: false
           schema:
             type: integer
+        - name: break
+          in: query
+          description: >-
+            If present, only show breaking adjudicators, if permissions allow.
+          required: false
+          schema:
+            type: boolean
       responses:
         '200':
           description: ''
@@ -2759,6 +2766,9 @@ components:
           title: Base score
           type: number
           format: float
+        breaking:
+          title: Breaking
+          type: boolean
         trainee:
           title: Always trainee
           description: >-

@@ -132,7 +132,9 @@ class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBr
 
     @property
     def break_category(self):
-        return get_object_or_404(BreakCategory, tournament=self.tournament, pk=self.kwargs.get('pk'))
+        if self._break_category is None:
+            self._break_category = get_object_or_404(BreakCategory, tournament=self.tournament, pk=self.kwargs.get('pk'))
+        return self._break_category
 
     def get_queryset(self):
         return super().get_queryset().select_related('team', 'team__tournament').order_by('rank')
@@ -210,12 +212,19 @@ class AdjudicatorViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
     serializer_class = serializers.AdjudicatorSerializer
     access_preference = 'public_participants'
 
+    def get_break_permission(self):
+        return self.request.user.is_staff or self.tournament.pref('public_breaking_adjs')
+
     def get_queryset(self):
+        filters = Q()
+        if self.request.query_params.get('break') and self.get_break_permission():
+            filters &= Q(breaking=True)
+
         return super().get_queryset().prefetch_related(
             'team_conflicts', 'team_conflicts__tournament',
             'adjudicator_conflicts', 'adjudicator_conflicts__tournament',
             'institution_conflicts',
-        )
+        ).filter(filters)
 
 
 class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
