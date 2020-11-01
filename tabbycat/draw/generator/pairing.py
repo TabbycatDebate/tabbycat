@@ -56,9 +56,9 @@ class BasePairing:
         teams = [debate.get_team(side) for side in cls.sides] # order matters
         bracket = debate.bracket
         room_rank = debate.room_rank
-        flags = debate.flags.split(",")
+        flags = debate.flags
         team_flags = {
-            debate.get_team(side): debate.get_dt(side).flags.split(",")
+            debate.get_team(side): debate.get_dt(side).flags
             for side in tournament.sides
         }
         return cls(teams, bracket=bracket, room_rank=room_rank, flags=flags,

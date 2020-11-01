@@ -6,7 +6,74 @@ Change Log
 ----------------
 *Release date: ?*
 
-- Made it possible to re-use an existing motion for multiple rounds.
+- Added URL field from the Room model to the Venues API endpoints as 'external URL'
+- The Institution API endpoints show institutions' regions as their name, and regions can be created
+- Added a preference to allow dedicated reply speaker. Thanks to Miha Frangež for the PR! (`#1584 <https://github.com/TabbycatDebate/tabbycat/issues/1584>`_)
+- Adjudicator Feedback choices and draw flags are stored with PostgreSQL-specific arrays (`#1525 <https://github.com/TabbycatDebate/tabbycat/issues/1525>`_)
+- Private URL submissions now store the participant whose link was used rather than just their IP address (`#1586 <https://github.com/TabbycatDebate/tabbycat/issues/1586>`_)
+- Optimised database queries to create all debates in a draw at once (`#1376 <https://github.com/TabbycatDebate/tabbycat/pull/1376>`_)
+- Optimised deletion of team private URLs (`#1618 <https://github.com/TabbycatDebate/tabbycat/pull/1618>`_)
+- Reduced number of database queries in sending notifications (`#1592 <https://github.com/TabbycatDebate/tabbycat/pull/1592>`_)
+- Fixed simulated annealing adjudicator allocator when initialised with the Hungarian method (`#1619 <https://github.com/TabbycatDebate/tabbycat/pull/1619>`_)
+- Added selectors for adjudicator positions in draw emails (`#1423 <https://github.com/TabbycatDebate/tabbycat/pull/1423>`_)
+- Implemented debate postponement, allowing debates to be marked as "postponed" in the results page. Postponed debates do not block draw generation, contrary to unconfirmed debates. (`#1563 <https://github.com/TabbycatDebate/tabbycat/pull/1563>`_)
+- Added round weights so that team points can be pondered between rounds, implementing tapered scoring. Weights only affect the sum of team points. (`#1512 <https://github.com/TabbycatDebate/tabbycat/pull/1512>`_)
+- Delegated the calculation of team and speaker rankings to database functions where available, with metrics using the same query. (`#1617 <https://github.com/TabbycatDebate/tabbycat/pull/1617>`_)
+- Overhauled the results framework to allow for more types of ballots
+    - BP finals now nominate only one team winning (`#527 <https://github.com/TabbycatDebate/tabbycat/issues/527>`_)
+    - There are now settings to allow tied-point and low-point wins, with declared winners (`#643 <https://github.com/TabbycatDebate/tabbycat/issues/643>`_)
+    - Two-team formats can now have scoreless ballots, and winner ballots are not restricted to elimination rounds (`#1003 <https://github.com/TabbycatDebate/tabbycat/issues/1003>`_)
+    - Results are now discoverable through the API.
+- Breaks are now explorable and manipulable through the API.
+
+
+2.4.7
+-----
+*Release date: 15 October 2020*
+
+- Fixed draw display links not showing concurrent rounds (`#1239 <https://github.com/TabbycatDebate/tabbycat/issues/1239>`_)
+- Record pages now show concurrent rounds
+- Non-public speaker categories are now hidden from public API endpoints when unauthenticated
+
+
+2.4.6
+-----
+*Release date: 19 September 2020*
+
+- Fixed issue where team names with an institution were longer than the maximum size (`#1564 <https://github.com/TabbycatDebate/tabbycat/issues/1564>`_)
+- Fixed issue that made saving motions impossible through the Round API detail endpoint
+- Fixed issue that made filtering by source team impossible for the Feedback API
+
+
+2.4.5
+-----
+*Release date: 19 July 2020*
+
+- Fixed the display of room URLs on private URL pages (thanks Viran for the report)
+- Preformed panels with a bracket range now sort more sensibly (thanks Zachary for the report)
+- Fixed manual sorting of preformed panels in general
+- Improved sorting of feedback table when sorting 'difference between base score and current score' (thanks Zachary for the report)
+- Fixed issue where the last saved counter was not updating on normal tables
+
+
+2.4.4
+-----
+*Release date: 13 July 2020*
+
+- Fixed colours associated with adjudicators' scores not showing
+- Showed validation errors when using API with invalid field names
+- Prevented Tabbycat from creating default conflicts with the API if already specified in the request
+- Fixed eligibility API endpoints when a list of participants is not present
+- Fixed speaker category eligibility API endpoint not accepting speakers
+- Allowed updating teams, excluding speakers, through the team detail API endpoint
+- Added date and time formats for Malay
+
+
+2.4.3
+-----
+*Release date: 4 July 2020*
+
+- Fixed issue preventing break eligibility from saving (`#1521 <https://github.com/TabbycatDebate/tabbycat/issues/1521>`_)
 
 
 2.4.2

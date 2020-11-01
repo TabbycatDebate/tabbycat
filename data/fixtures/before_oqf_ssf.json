@@ -1885,7 +1885,7 @@
         "required": true,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1903,7 +1903,7 @@
         "required": true,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1921,7 +1921,7 @@
         "required": true,
         "min_value": -20.0,
         "max_value": 20.0,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1939,7 +1939,7 @@
         "required": true,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1957,7 +1957,7 @@
         "required": false,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1975,7 +1975,7 @@
         "required": false,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1993,7 +1993,7 @@
         "required": true,
         "min_value": 0.0,
         "max_value": 10.0,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -2011,7 +2011,7 @@
         "required": true,
         "min_value": 0.0,
         "max_value": 10.0,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -2029,7 +2029,7 @@
         "required": false,
         "min_value": null,
         "max_value": null,
-        "choices": "Absolutely!//Sure, why not//If I have to//Please don't"
+        "choices": "[\"Absolutely!\", \"Sure, why not\", \"If I have to\", \"Please don't\"]"
     }
 },
 {
@@ -2047,7 +2047,7 @@
         "required": false,
         "min_value": null,
         "max_value": null,
-        "choices": "biased//clear//concise//rambly//attentive//inattentive"
+        "choices": "[\"biased\", \"clear\", \"concise\", \"rambly\", \"attentive\", \"inattentive\"]"
     }
 },
 {
@@ -2065,7 +2065,7 @@
         "required": false,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -2330,7 +2330,7 @@
         "venue": 21,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2344,7 +2344,7 @@
         "venue": 23,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2358,7 +2358,7 @@
         "venue": 14,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2372,7 +2372,7 @@
         "venue": 18,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2386,7 +2386,7 @@
         "venue": 1,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2400,7 +2400,7 @@
         "venue": 19,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2414,7 +2414,7 @@
         "venue": 22,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2428,7 +2428,7 @@
         "venue": 17,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2442,7 +2442,7 @@
         "venue": 16,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2456,7 +2456,7 @@
         "venue": 20,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2470,7 +2470,7 @@
         "venue": 13,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2484,7 +2484,7 @@
         "venue": 15,
         "bracket": 0.0,
         "room_rank": 0,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2498,7 +2498,7 @@
         "venue": 17,
         "bracket": 1.0,
         "room_rank": 3,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2512,7 +2512,7 @@
         "venue": 20,
         "bracket": 0.0,
         "room_rank": 12,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2526,7 +2526,7 @@
         "venue": 1,
         "bracket": 1.0,
         "room_rank": 6,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2540,7 +2540,7 @@
         "venue": 22,
         "bracket": 0.0,
         "room_rank": 7,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2554,7 +2554,7 @@
         "venue": 23,
         "bracket": 1.0,
         "room_rank": 4,
-        "flags": "1u1d_inst",
+        "flags": "[\"1u1d_inst\"]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2568,7 +2568,7 @@
         "venue": 15,
         "bracket": 1.0,
         "room_rank": 5,
-        "flags": "1u1d_other",
+        "flags": "[\"1u1d_other\"]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2582,7 +2582,7 @@
         "venue": 14,
         "bracket": 1.0,
         "room_rank": 1,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2596,7 +2596,7 @@
         "venue": 19,
         "bracket": 0.0,
         "room_rank": 8,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2610,7 +2610,7 @@
         "venue": 13,
         "bracket": 0.0,
         "room_rank": 11,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2624,7 +2624,7 @@
         "venue": 18,
         "bracket": 0.0,
         "room_rank": 10,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2638,7 +2638,7 @@
         "venue": 16,
         "bracket": 1.0,
         "room_rank": 2,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2652,7 +2652,7 @@
         "venue": 21,
         "bracket": 0.0,
         "room_rank": 9,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2666,7 +2666,7 @@
         "venue": 20,
         "bracket": 1.0,
         "room_rank": 4,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2680,7 +2680,7 @@
         "venue": 14,
         "bracket": 2.0,
         "room_rank": 3,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2694,7 +2694,7 @@
         "venue": 16,
         "bracket": 1.0,
         "room_rank": 8,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2708,7 +2708,7 @@
         "venue": 18,
         "bracket": 1.0,
         "room_rank": 9,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2722,7 +2722,7 @@
         "venue": 21,
         "bracket": 0.0,
         "room_rank": 12,
-        "flags": "1u1d_other",
+        "flags": "[\"1u1d_other\"]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2736,7 +2736,7 @@
         "venue": 17,
         "bracket": 1.0,
         "room_rank": 6,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2750,7 +2750,7 @@
         "venue": 23,
         "bracket": 2.0,
         "room_rank": 1,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2764,7 +2764,7 @@
         "venue": 1,
         "bracket": 1.0,
         "room_rank": 5,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2778,7 +2778,7 @@
         "venue": 19,
         "bracket": 2.0,
         "room_rank": 2,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2792,7 +2792,7 @@
         "venue": 22,
         "bracket": 0.0,
         "room_rank": 11,
-        "flags": "1u1d_inst",
+        "flags": "[\"1u1d_inst\"]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2806,7 +2806,7 @@
         "venue": 13,
         "bracket": 0.0,
         "room_rank": 10,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2820,7 +2820,7 @@
         "venue": 15,
         "bracket": 1.0,
         "room_rank": 7,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2834,7 +2834,7 @@
         "venue": 23,
         "bracket": 1.0,
         "room_rank": 7,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2848,7 +2848,7 @@
         "venue": 16,
         "bracket": 3.0,
         "room_rank": 1,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2862,7 +2862,7 @@
         "venue": 18,
         "bracket": 1.0,
         "room_rank": 9,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2876,7 +2876,7 @@
         "venue": 15,
         "bracket": 1.0,
         "room_rank": 8,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2890,7 +2890,7 @@
         "venue": 21,
         "bracket": 1.0,
         "room_rank": 10,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2904,7 +2904,7 @@
         "venue": 13,
         "bracket": 0.0,
         "room_rank": 12,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2918,7 +2918,7 @@
         "venue": 17,
         "bracket": 0.5,
         "room_rank": 11,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2932,7 +2932,7 @@
         "venue": 1,
         "bracket": 2.0,
         "room_rank": 5,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2946,7 +2946,7 @@
         "venue": 19,
         "bracket": 2.0,
         "room_rank": 6,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2960,7 +2960,7 @@
         "venue": 22,
         "bracket": 2.5,
         "room_rank": 2,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2974,7 +2974,7 @@
         "venue": 14,
         "bracket": 2.0,
         "room_rank": 4,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -2988,7 +2988,7 @@
         "venue": 20,
         "bracket": 2.0,
         "room_rank": 3,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "C",
         "sides_confirmed": true
@@ -3002,7 +3002,7 @@
         "venue": 9,
         "bracket": 0.0,
         "room_rank": 2,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "N",
         "sides_confirmed": true
@@ -3016,7 +3016,7 @@
         "venue": 16,
         "bracket": 0.0,
         "room_rank": 1,
-        "flags": "",
+        "flags": "[]",
         "importance": 2,
         "result_status": "N",
         "sides_confirmed": true
@@ -3030,7 +3030,7 @@
         "venue": 25,
         "bracket": 0.0,
         "room_rank": 2,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "N",
         "sides_confirmed": false
@@ -3044,7 +3044,7 @@
         "venue": 24,
         "bracket": 0.0,
         "room_rank": 1,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "N",
         "sides_confirmed": false
@@ -3058,7 +3058,7 @@
         "venue": 27,
         "bracket": 0.0,
         "room_rank": 1,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "N",
         "sides_confirmed": false
@@ -3072,7 +3072,7 @@
         "venue": 25,
         "bracket": 0.0,
         "room_rank": 3,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "N",
         "sides_confirmed": false
@@ -3086,7 +3086,7 @@
         "venue": 26,
         "bracket": 0.0,
         "room_rank": 2,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "N",
         "sides_confirmed": false
@@ -3100,7 +3100,7 @@
         "venue": 24,
         "bracket": 0.0,
         "room_rank": 4,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "N",
         "sides_confirmed": false
@@ -3113,7 +3113,7 @@
         "debate": 1,
         "team": 3,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3123,7 +3123,7 @@
         "debate": 1,
         "team": 21,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3133,7 +3133,7 @@
         "debate": 2,
         "team": 20,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3143,7 +3143,7 @@
         "debate": 2,
         "team": 9,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3153,7 +3153,7 @@
         "debate": 3,
         "team": 2,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3163,7 +3163,7 @@
         "debate": 3,
         "team": 13,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3173,7 +3173,7 @@
         "debate": 4,
         "team": 7,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3183,7 +3183,7 @@
         "debate": 4,
         "team": 24,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3193,7 +3193,7 @@
         "debate": 5,
         "team": 6,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3203,7 +3203,7 @@
         "debate": 5,
         "team": 22,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3213,7 +3213,7 @@
         "debate": 6,
         "team": 5,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3223,7 +3223,7 @@
         "debate": 6,
         "team": 10,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3233,7 +3233,7 @@
         "debate": 7,
         "team": 12,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3243,7 +3243,7 @@
         "debate": 7,
         "team": 16,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3253,7 +3253,7 @@
         "debate": 8,
         "team": 19,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3263,7 +3263,7 @@
         "debate": 8,
         "team": 15,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3273,7 +3273,7 @@
         "debate": 9,
         "team": 17,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3283,7 +3283,7 @@
         "debate": 9,
         "team": 1,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3293,7 +3293,7 @@
         "debate": 10,
         "team": 23,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3303,7 +3303,7 @@
         "debate": 10,
         "team": 11,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3313,7 +3313,7 @@
         "debate": 11,
         "team": 4,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3323,7 +3323,7 @@
         "debate": 11,
         "team": 8,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3333,7 +3333,7 @@
         "debate": 12,
         "team": 14,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3343,7 +3343,7 @@
         "debate": 12,
         "team": 18,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3353,7 +3353,7 @@
         "debate": 13,
         "team": 16,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3363,7 +3363,7 @@
         "debate": 13,
         "team": 2,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3373,7 +3373,7 @@
         "debate": 14,
         "team": 13,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3383,7 +3383,7 @@
         "debate": 14,
         "team": 12,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3393,7 +3393,7 @@
         "debate": 15,
         "team": 15,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3403,7 +3403,7 @@
         "debate": 15,
         "team": 7,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3413,7 +3413,7 @@
         "debate": 16,
         "team": 22,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3423,7 +3423,7 @@
         "debate": 16,
         "team": 4,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3433,7 +3433,7 @@
         "debate": 17,
         "team": 18,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3443,7 +3443,7 @@
         "debate": 17,
         "team": 3,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3453,7 +3453,7 @@
         "debate": 18,
         "team": 1,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3463,7 +3463,7 @@
         "debate": 18,
         "team": 6,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3473,7 +3473,7 @@
         "debate": 19,
         "team": 11,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3483,7 +3483,7 @@
         "debate": 19,
         "team": 5,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3493,7 +3493,7 @@
         "debate": 20,
         "team": 24,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3503,7 +3503,7 @@
         "debate": 20,
         "team": 21,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3513,7 +3513,7 @@
         "debate": 21,
         "team": 17,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3523,7 +3523,7 @@
         "debate": 21,
         "team": 23,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3533,7 +3533,7 @@
         "debate": 22,
         "team": 14,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3543,7 +3543,7 @@
         "debate": 22,
         "team": 20,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3553,7 +3553,7 @@
         "debate": 23,
         "team": 9,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3563,7 +3563,7 @@
         "debate": 23,
         "team": 8,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3573,7 +3573,7 @@
         "debate": 24,
         "team": 10,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3583,7 +3583,7 @@
         "debate": 24,
         "team": 19,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3593,7 +3593,7 @@
         "debate": 25,
         "team": 3,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3603,7 +3603,7 @@
         "debate": 25,
         "team": 4,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3613,7 +3613,7 @@
         "debate": 26,
         "team": 1,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3623,7 +3623,7 @@
         "debate": 26,
         "team": 18,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3633,7 +3633,7 @@
         "debate": 27,
         "team": 15,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3643,7 +3643,7 @@
         "debate": 27,
         "team": 6,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3653,7 +3653,7 @@
         "debate": 28,
         "team": 21,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3663,7 +3663,7 @@
         "debate": 28,
         "team": 12,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3673,7 +3673,7 @@
         "debate": 29,
         "team": 24,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3683,7 +3683,7 @@
         "debate": 29,
         "team": 19,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3693,7 +3693,7 @@
         "debate": 30,
         "team": 10,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3703,7 +3703,7 @@
         "debate": 30,
         "team": 2,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3713,7 +3713,7 @@
         "debate": 31,
         "team": 9,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3723,7 +3723,7 @@
         "debate": 31,
         "team": 7,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3733,7 +3733,7 @@
         "debate": 32,
         "team": 20,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3743,7 +3743,7 @@
         "debate": 32,
         "team": 5,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3753,7 +3753,7 @@
         "debate": 33,
         "team": 16,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3763,7 +3763,7 @@
         "debate": 33,
         "team": 11,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3773,7 +3773,7 @@
         "debate": 34,
         "team": 23,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3783,7 +3783,7 @@
         "debate": 34,
         "team": 14,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3793,7 +3793,7 @@
         "debate": 35,
         "team": 22,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3803,7 +3803,7 @@
         "debate": 35,
         "team": 13,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3813,7 +3813,7 @@
         "debate": 36,
         "team": 8,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3823,7 +3823,7 @@
         "debate": 36,
         "team": 17,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3833,7 +3833,7 @@
         "debate": 37,
         "team": 19,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3843,7 +3843,7 @@
         "debate": 37,
         "team": 22,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3853,7 +3853,7 @@
         "debate": 38,
         "team": 11,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3863,7 +3863,7 @@
         "debate": 38,
         "team": 7,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3873,7 +3873,7 @@
         "debate": 39,
         "team": 8,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3883,7 +3883,7 @@
         "debate": 39,
         "team": 5,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3893,7 +3893,7 @@
         "debate": 40,
         "team": 3,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3903,7 +3903,7 @@
         "debate": 40,
         "team": 23,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3913,7 +3913,7 @@
         "debate": 41,
         "team": 21,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3923,7 +3923,7 @@
         "debate": 41,
         "team": 15,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3933,7 +3933,7 @@
         "debate": 42,
         "team": 13,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3943,7 +3943,7 @@
         "debate": 42,
         "team": 14,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3953,7 +3953,7 @@
         "debate": 43,
         "team": 2,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3963,7 +3963,7 @@
         "debate": 43,
         "team": 24,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3973,7 +3973,7 @@
         "debate": 44,
         "team": 12,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3983,7 +3983,7 @@
         "debate": 44,
         "team": 9,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -3993,7 +3993,7 @@
         "debate": 45,
         "team": 16,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4003,7 +4003,7 @@
         "debate": 45,
         "team": 1,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4013,7 +4013,7 @@
         "debate": 46,
         "team": 4,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4023,7 +4023,7 @@
         "debate": 46,
         "team": 18,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4033,7 +4033,7 @@
         "debate": 47,
         "team": 6,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4043,7 +4043,7 @@
         "debate": 47,
         "team": 20,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4053,7 +4053,7 @@
         "debate": 48,
         "team": 17,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4063,7 +4063,7 @@
         "debate": 48,
         "team": 10,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4073,7 +4073,7 @@
         "debate": 67,
         "team": 12,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4083,7 +4083,7 @@
         "debate": 67,
         "team": 20,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4093,7 +4093,7 @@
         "debate": 68,
         "team": 18,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4103,7 +4103,7 @@
         "debate": 68,
         "team": 4,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4113,7 +4113,7 @@
         "debate": 69,
         "team": 5,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4123,7 +4123,7 @@
         "debate": 69,
         "team": 6,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4133,7 +4133,7 @@
         "debate": 70,
         "team": 10,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4143,7 +4143,7 @@
         "debate": 70,
         "team": 9,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4153,7 +4153,7 @@
         "debate": 71,
         "team": 4,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4163,7 +4163,7 @@
         "debate": 71,
         "team": 7,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4173,7 +4173,7 @@
         "debate": 72,
         "team": 20,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4183,7 +4183,7 @@
         "debate": 72,
         "team": 17,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4193,7 +4193,7 @@
         "debate": 73,
         "team": 11,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4203,7 +4203,7 @@
         "debate": 73,
         "team": 18,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4213,7 +4213,7 @@
         "debate": 74,
         "team": 1,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4223,7 +4223,7 @@
         "debate": 74,
         "team": 12,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -4240,7 +4240,7 @@
     "pk": 2,
     "fields": {
         "text": "This House regrets the existence of Valentine's Day",
-        "reference": "Valentine\u2019s Day",
+        "reference": "Valentine’s Day",
         "info_slide": ""
     }
 },
@@ -5880,7 +5880,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83c\udf29",
+        "emoji": "🌩",
         "break_categories": [
             1
         ]
@@ -5899,7 +5899,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83c\udf83",
+        "emoji": "🎃",
         "break_categories": [
             1
         ]
@@ -5918,7 +5918,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83c\udd92",
+        "emoji": "🆒",
         "break_categories": [
             1
         ]
@@ -5937,7 +5937,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83c\udf4c",
+        "emoji": "🍌",
         "break_categories": [
             1,
             2,
@@ -5958,7 +5958,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83c\udd98",
+        "emoji": "🆘",
         "break_categories": [
             1,
             2,
@@ -5979,7 +5979,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udc8e",
+        "emoji": "💎",
         "break_categories": [
             1,
             2,
@@ -6000,7 +6000,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udd6f",
+        "emoji": "🕯",
         "break_categories": [
             1
         ]
@@ -6019,7 +6019,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83c\udf96",
+        "emoji": "🎖",
         "break_categories": [
             1
         ]
@@ -6038,7 +6038,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udda8",
+        "emoji": "🖨",
         "break_categories": [
             1,
             2
@@ -6058,7 +6058,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\ude34",
+        "emoji": "😴",
         "break_categories": [
             1,
             2
@@ -6078,7 +6078,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83c\udf36",
+        "emoji": "🌶",
         "break_categories": [
             1
         ]
@@ -6097,7 +6097,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\ude4c",
+        "emoji": "🙌",
         "break_categories": [
             1
         ]
@@ -6116,7 +6116,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udd96",
+        "emoji": "🖖",
         "break_categories": [
             1
         ]
@@ -6135,7 +6135,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udd95",
+        "emoji": "🖕",
         "break_categories": [
             1
         ]
@@ -6154,7 +6154,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\u26cf",
+        "emoji": "⛏",
         "break_categories": [
             1
         ]
@@ -6173,7 +6173,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udc26",
+        "emoji": "🐦",
         "break_categories": [
             1
         ]
@@ -6192,7 +6192,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\ude2e",
+        "emoji": "😮",
         "break_categories": [
             1,
             2
@@ -6212,7 +6212,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83c\udf37",
+        "emoji": "🌷",
         "break_categories": [
             1,
             2
@@ -6232,7 +6232,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udd75",
+        "emoji": "🕵",
         "break_categories": [
             1,
             2,
@@ -6253,7 +6253,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udeac",
+        "emoji": "🚬",
         "break_categories": [
             1
         ]
@@ -6272,7 +6272,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udc60",
+        "emoji": "👠",
         "break_categories": [
             1
         ]
@@ -6291,7 +6291,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udc53",
+        "emoji": "👓",
         "break_categories": [
             1
         ]
@@ -6310,7 +6310,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83d\udc4a",
+        "emoji": "👊",
         "break_categories": [
             1
         ]
@@ -6329,7 +6329,7 @@
         "tournament": 1,
         "use_institution_prefix": true,
         "type": "N",
-        "emoji": "\ud83c\udf53",
+        "emoji": "🍓",
         "break_categories": [
             1
         ]
@@ -6339,6 +6339,7 @@
     "model": "participants.speaker",
     "pk": 1,
     "fields": {
+        "person_ptr": 1,
         "team": 1,
         "categories": []
     }
@@ -6347,6 +6348,7 @@
     "model": "participants.speaker",
     "pk": 2,
     "fields": {
+        "person_ptr": 2,
         "team": 1,
         "categories": []
     }
@@ -6355,6 +6357,7 @@
     "model": "participants.speaker",
     "pk": 3,
     "fields": {
+        "person_ptr": 3,
         "team": 1,
         "categories": []
     }
@@ -6363,6 +6366,7 @@
     "model": "participants.speaker",
     "pk": 4,
     "fields": {
+        "person_ptr": 4,
         "team": 2,
         "categories": []
     }
@@ -6371,6 +6375,7 @@
     "model": "participants.speaker",
     "pk": 5,
     "fields": {
+        "person_ptr": 5,
         "team": 2,
         "categories": []
     }
@@ -6379,6 +6384,7 @@
     "model": "participants.speaker",
     "pk": 6,
     "fields": {
+        "person_ptr": 6,
         "team": 2,
         "categories": []
     }
@@ -6387,6 +6393,7 @@
     "model": "participants.speaker",
     "pk": 7,
     "fields": {
+        "person_ptr": 7,
         "team": 3,
         "categories": []
     }
@@ -6395,6 +6402,7 @@
     "model": "participants.speaker",
     "pk": 8,
     "fields": {
+        "person_ptr": 8,
         "team": 3,
         "categories": []
     }
@@ -6403,6 +6411,7 @@
     "model": "participants.speaker",
     "pk": 9,
     "fields": {
+        "person_ptr": 9,
         "team": 3,
         "categories": []
     }
@@ -6411,6 +6420,7 @@
     "model": "participants.speaker",
     "pk": 10,
     "fields": {
+        "person_ptr": 10,
         "team": 4,
         "categories": []
     }
@@ -6419,6 +6429,7 @@
     "model": "participants.speaker",
     "pk": 11,
     "fields": {
+        "person_ptr": 11,
         "team": 4,
         "categories": []
     }
@@ -6427,6 +6438,7 @@
     "model": "participants.speaker",
     "pk": 12,
     "fields": {
+        "person_ptr": 12,
         "team": 4,
         "categories": []
     }
@@ -6435,6 +6447,7 @@
     "model": "participants.speaker",
     "pk": 13,
     "fields": {
+        "person_ptr": 13,
         "team": 5,
         "categories": []
     }
@@ -6443,6 +6456,7 @@
     "model": "participants.speaker",
     "pk": 14,
     "fields": {
+        "person_ptr": 14,
         "team": 5,
         "categories": []
     }
@@ -6451,6 +6465,7 @@
     "model": "participants.speaker",
     "pk": 15,
     "fields": {
+        "person_ptr": 15,
         "team": 5,
         "categories": []
     }
@@ -6459,6 +6474,7 @@
     "model": "participants.speaker",
     "pk": 16,
     "fields": {
+        "person_ptr": 16,
         "team": 6,
         "categories": []
     }
@@ -6467,6 +6483,7 @@
     "model": "participants.speaker",
     "pk": 17,
     "fields": {
+        "person_ptr": 17,
         "team": 6,
         "categories": []
     }
@@ -6475,6 +6492,7 @@
     "model": "participants.speaker",
     "pk": 18,
     "fields": {
+        "person_ptr": 18,
         "team": 6,
         "categories": []
     }
@@ -6483,6 +6501,7 @@
     "model": "participants.speaker",
     "pk": 19,
     "fields": {
+        "person_ptr": 19,
         "team": 7,
         "categories": []
     }
@@ -6491,6 +6510,7 @@
     "model": "participants.speaker",
     "pk": 20,
     "fields": {
+        "person_ptr": 20,
         "team": 7,
         "categories": []
     }
@@ -6499,6 +6519,7 @@
     "model": "participants.speaker",
     "pk": 21,
     "fields": {
+        "person_ptr": 21,
         "team": 7,
         "categories": []
     }
@@ -6507,6 +6528,7 @@
     "model": "participants.speaker",
     "pk": 22,
     "fields": {
+        "person_ptr": 22,
         "team": 8,
         "categories": []
     }
@@ -6515,6 +6537,7 @@
     "model": "participants.speaker",
     "pk": 23,
     "fields": {
+        "person_ptr": 23,
         "team": 8,
         "categories": []
     }
@@ -6523,6 +6546,7 @@
     "model": "participants.speaker",
     "pk": 24,
     "fields": {
+        "person_ptr": 24,
         "team": 8,
         "categories": []
     }
@@ -6531,6 +6555,7 @@
     "model": "participants.speaker",
     "pk": 25,
     "fields": {
+        "person_ptr": 25,
         "team": 9,
         "categories": []
     }
@@ -6539,6 +6564,7 @@
     "model": "participants.speaker",
     "pk": 26,
     "fields": {
+        "person_ptr": 26,
         "team": 9,
         "categories": []
     }
@@ -6547,6 +6573,7 @@
     "model": "participants.speaker",
     "pk": 27,
     "fields": {
+        "person_ptr": 27,
         "team": 9,
         "categories": []
     }
@@ -6555,6 +6582,7 @@
     "model": "participants.speaker",
     "pk": 28,
     "fields": {
+        "person_ptr": 28,
         "team": 10,
         "categories": []
     }
@@ -6563,6 +6591,7 @@
     "model": "participants.speaker",
     "pk": 29,
     "fields": {
+        "person_ptr": 29,
         "team": 10,
         "categories": []
     }
@@ -6571,6 +6600,7 @@
     "model": "participants.speaker",
     "pk": 30,
     "fields": {
+        "person_ptr": 30,
         "team": 10,
         "categories": []
     }
@@ -6579,6 +6609,7 @@
     "model": "participants.speaker",
     "pk": 31,
     "fields": {
+        "person_ptr": 31,
         "team": 11,
         "categories": []
     }
@@ -6587,6 +6618,7 @@
     "model": "participants.speaker",
     "pk": 32,
     "fields": {
+        "person_ptr": 32,
         "team": 11,
         "categories": []
     }
@@ -6595,6 +6627,7 @@
     "model": "participants.speaker",
     "pk": 33,
     "fields": {
+        "person_ptr": 33,
         "team": 11,
         "categories": []
     }
@@ -6603,6 +6636,7 @@
     "model": "participants.speaker",
     "pk": 34,
     "fields": {
+        "person_ptr": 34,
         "team": 12,
         "categories": []
     }
@@ -6611,6 +6645,7 @@
     "model": "participants.speaker",
     "pk": 35,
     "fields": {
+        "person_ptr": 35,
         "team": 12,
         "categories": []
     }
@@ -6619,6 +6654,7 @@
     "model": "participants.speaker",
     "pk": 36,
     "fields": {
+        "person_ptr": 36,
         "team": 12,
         "categories": []
     }
@@ -6627,6 +6663,7 @@
     "model": "participants.speaker",
     "pk": 37,
     "fields": {
+        "person_ptr": 37,
         "team": 13,
         "categories": []
     }
@@ -6635,6 +6672,7 @@
     "model": "participants.speaker",
     "pk": 38,
     "fields": {
+        "person_ptr": 38,
         "team": 13,
         "categories": []
     }
@@ -6643,6 +6681,7 @@
     "model": "participants.speaker",
     "pk": 39,
     "fields": {
+        "person_ptr": 39,
         "team": 13,
         "categories": []
     }
@@ -6651,6 +6690,7 @@
     "model": "participants.speaker",
     "pk": 40,
     "fields": {
+        "person_ptr": 40,
         "team": 14,
         "categories": []
     }
@@ -6659,6 +6699,7 @@
     "model": "participants.speaker",
     "pk": 41,
     "fields": {
+        "person_ptr": 41,
         "team": 14,
         "categories": []
     }
@@ -6667,6 +6708,7 @@
     "model": "participants.speaker",
     "pk": 42,
     "fields": {
+        "person_ptr": 42,
         "team": 14,
         "categories": []
     }
@@ -6675,6 +6717,7 @@
     "model": "participants.speaker",
     "pk": 43,
     "fields": {
+        "person_ptr": 43,
         "team": 15,
         "categories": []
     }
@@ -6683,6 +6726,7 @@
     "model": "participants.speaker",
     "pk": 44,
     "fields": {
+        "person_ptr": 44,
         "team": 15,
         "categories": []
     }
@@ -6691,6 +6735,7 @@
     "model": "participants.speaker",
     "pk": 45,
     "fields": {
+        "person_ptr": 45,
         "team": 15,
         "categories": []
     }
@@ -6699,6 +6744,7 @@
     "model": "participants.speaker",
     "pk": 46,
     "fields": {
+        "person_ptr": 46,
         "team": 16,
         "categories": []
     }
@@ -6707,6 +6753,7 @@
     "model": "participants.speaker",
     "pk": 47,
     "fields": {
+        "person_ptr": 47,
         "team": 16,
         "categories": []
     }
@@ -6715,6 +6762,7 @@
     "model": "participants.speaker",
     "pk": 48,
     "fields": {
+        "person_ptr": 48,
         "team": 16,
         "categories": []
     }
@@ -6723,6 +6771,7 @@
     "model": "participants.speaker",
     "pk": 49,
     "fields": {
+        "person_ptr": 49,
         "team": 17,
         "categories": []
     }
@@ -6731,6 +6780,7 @@
     "model": "participants.speaker",
     "pk": 50,
     "fields": {
+        "person_ptr": 50,
         "team": 17,
         "categories": []
     }
@@ -6739,6 +6789,7 @@
     "model": "participants.speaker",
     "pk": 51,
     "fields": {
+        "person_ptr": 51,
         "team": 17,
         "categories": []
     }
@@ -6747,6 +6798,7 @@
     "model": "participants.speaker",
     "pk": 52,
     "fields": {
+        "person_ptr": 52,
         "team": 18,
         "categories": []
     }
@@ -6755,6 +6807,7 @@
     "model": "participants.speaker",
     "pk": 53,
     "fields": {
+        "person_ptr": 53,
         "team": 18,
         "categories": []
     }
@@ -6763,6 +6816,7 @@
     "model": "participants.speaker",
     "pk": 54,
     "fields": {
+        "person_ptr": 54,
         "team": 18,
         "categories": []
     }
@@ -6771,6 +6825,7 @@
     "model": "participants.speaker",
     "pk": 55,
     "fields": {
+        "person_ptr": 55,
         "team": 19,
         "categories": []
     }
@@ -6779,6 +6834,7 @@
     "model": "participants.speaker",
     "pk": 56,
     "fields": {
+        "person_ptr": 56,
         "team": 19,
         "categories": []
     }
@@ -6787,6 +6843,7 @@
     "model": "participants.speaker",
     "pk": 57,
     "fields": {
+        "person_ptr": 57,
         "team": 19,
         "categories": []
     }
@@ -6795,6 +6852,7 @@
     "model": "participants.speaker",
     "pk": 58,
     "fields": {
+        "person_ptr": 58,
         "team": 20,
         "categories": []
     }
@@ -6803,6 +6861,7 @@
     "model": "participants.speaker",
     "pk": 59,
     "fields": {
+        "person_ptr": 59,
         "team": 20,
         "categories": []
     }
@@ -6811,6 +6870,7 @@
     "model": "participants.speaker",
     "pk": 60,
     "fields": {
+        "person_ptr": 60,
         "team": 20,
         "categories": []
     }
@@ -6819,6 +6879,7 @@
     "model": "participants.speaker",
     "pk": 61,
     "fields": {
+        "person_ptr": 61,
         "team": 21,
         "categories": []
     }
@@ -6827,6 +6888,7 @@
     "model": "participants.speaker",
     "pk": 62,
     "fields": {
+        "person_ptr": 62,
         "team": 21,
         "categories": []
     }
@@ -6835,6 +6897,7 @@
     "model": "participants.speaker",
     "pk": 63,
     "fields": {
+        "person_ptr": 63,
         "team": 21,
         "categories": []
     }
@@ -6843,6 +6906,7 @@
     "model": "participants.speaker",
     "pk": 64,
     "fields": {
+        "person_ptr": 64,
         "team": 22,
         "categories": []
     }
@@ -6851,6 +6915,7 @@
     "model": "participants.speaker",
     "pk": 65,
     "fields": {
+        "person_ptr": 65,
         "team": 22,
         "categories": []
     }
@@ -6859,6 +6924,7 @@
     "model": "participants.speaker",
     "pk": 66,
     "fields": {
+        "person_ptr": 66,
         "team": 22,
         "categories": []
     }
@@ -6867,6 +6933,7 @@
     "model": "participants.speaker",
     "pk": 67,
     "fields": {
+        "person_ptr": 67,
         "team": 23,
         "categories": []
     }
@@ -6875,6 +6942,7 @@
     "model": "participants.speaker",
     "pk": 68,
     "fields": {
+        "person_ptr": 68,
         "team": 23,
         "categories": []
     }
@@ -6883,6 +6951,7 @@
     "model": "participants.speaker",
     "pk": 69,
     "fields": {
+        "person_ptr": 69,
         "team": 23,
         "categories": []
     }
@@ -6891,6 +6960,7 @@
     "model": "participants.speaker",
     "pk": 70,
     "fields": {
+        "person_ptr": 70,
         "team": 24,
         "categories": []
     }
@@ -6899,6 +6969,7 @@
     "model": "participants.speaker",
     "pk": 71,
     "fields": {
+        "person_ptr": 71,
         "team": 24,
         "categories": []
     }
@@ -6907,6 +6978,7 @@
     "model": "participants.speaker",
     "pk": 72,
     "fields": {
+        "person_ptr": 72,
         "team": 24,
         "categories": []
     }
@@ -6915,6 +6987,7 @@
     "model": "participants.adjudicator",
     "pk": 73,
     "fields": {
+        "person_ptr": 73,
         "institution": 13,
         "tournament": 1,
         "base_score": 5.0,
@@ -6928,6 +7001,7 @@
     "model": "participants.adjudicator",
     "pk": 74,
     "fields": {
+        "person_ptr": 74,
         "institution": 8,
         "tournament": 1,
         "base_score": 5.0,
@@ -6941,6 +7015,7 @@
     "model": "participants.adjudicator",
     "pk": 75,
     "fields": {
+        "person_ptr": 75,
         "institution": 12,
         "tournament": 1,
         "base_score": 5.0,
@@ -6954,6 +7029,7 @@
     "model": "participants.adjudicator",
     "pk": 76,
     "fields": {
+        "person_ptr": 76,
         "institution": 1,
         "tournament": 1,
         "base_score": 1.0,
@@ -6967,6 +7043,7 @@
     "model": "participants.adjudicator",
     "pk": 77,
     "fields": {
+        "person_ptr": 77,
         "institution": 1,
         "tournament": 1,
         "base_score": 5.0,
@@ -6980,6 +7057,7 @@
     "model": "participants.adjudicator",
     "pk": 78,
     "fields": {
+        "person_ptr": 78,
         "institution": 2,
         "tournament": 1,
         "base_score": 2.0,
@@ -6993,6 +7071,7 @@
     "model": "participants.adjudicator",
     "pk": 79,
     "fields": {
+        "person_ptr": 79,
         "institution": 3,
         "tournament": 1,
         "base_score": 5.0,
@@ -7006,6 +7085,7 @@
     "model": "participants.adjudicator",
     "pk": 80,
     "fields": {
+        "person_ptr": 80,
         "institution": 4,
         "tournament": 1,
         "base_score": 4.0,
@@ -7019,6 +7099,7 @@
     "model": "participants.adjudicator",
     "pk": 81,
     "fields": {
+        "person_ptr": 81,
         "institution": 4,
         "tournament": 1,
         "base_score": 5.0,
@@ -7032,6 +7113,7 @@
     "model": "participants.adjudicator",
     "pk": 82,
     "fields": {
+        "person_ptr": 82,
         "institution": 12,
         "tournament": 1,
         "base_score": 5.0,
@@ -7045,6 +7127,7 @@
     "model": "participants.adjudicator",
     "pk": 83,
     "fields": {
+        "person_ptr": 83,
         "institution": 12,
         "tournament": 1,
         "base_score": 4.0,
@@ -7058,6 +7141,7 @@
     "model": "participants.adjudicator",
     "pk": 84,
     "fields": {
+        "person_ptr": 84,
         "institution": 8,
         "tournament": 1,
         "base_score": 4.0,
@@ -7071,6 +7155,7 @@
     "model": "participants.adjudicator",
     "pk": 85,
     "fields": {
+        "person_ptr": 85,
         "institution": 5,
         "tournament": 1,
         "base_score": 4.0,
@@ -7084,6 +7169,7 @@
     "model": "participants.adjudicator",
     "pk": 86,
     "fields": {
+        "person_ptr": 86,
         "institution": 5,
         "tournament": 1,
         "base_score": 2.0,
@@ -7097,6 +7183,7 @@
     "model": "participants.adjudicator",
     "pk": 87,
     "fields": {
+        "person_ptr": 87,
         "institution": 6,
         "tournament": 1,
         "base_score": 2.0,
@@ -7110,6 +7197,7 @@
     "model": "participants.adjudicator",
     "pk": 88,
     "fields": {
+        "person_ptr": 88,
         "institution": 6,
         "tournament": 1,
         "base_score": 5.0,
@@ -7123,6 +7211,7 @@
     "model": "participants.adjudicator",
     "pk": 89,
     "fields": {
+        "person_ptr": 89,
         "institution": 7,
         "tournament": 1,
         "base_score": 2.0,
@@ -7136,6 +7225,7 @@
     "model": "participants.adjudicator",
     "pk": 90,
     "fields": {
+        "person_ptr": 90,
         "institution": 7,
         "tournament": 1,
         "base_score": 2.0,
@@ -7149,6 +7239,7 @@
     "model": "participants.adjudicator",
     "pk": 91,
     "fields": {
+        "person_ptr": 91,
         "institution": 8,
         "tournament": 1,
         "base_score": 1.0,
@@ -7162,6 +7253,7 @@
     "model": "participants.adjudicator",
     "pk": 92,
     "fields": {
+        "person_ptr": 92,
         "institution": 8,
         "tournament": 1,
         "base_score": 2.0,
@@ -7175,6 +7267,7 @@
     "model": "participants.adjudicator",
     "pk": 93,
     "fields": {
+        "person_ptr": 93,
         "institution": 9,
         "tournament": 1,
         "base_score": 4.0,
@@ -7188,6 +7281,7 @@
     "model": "participants.adjudicator",
     "pk": 94,
     "fields": {
+        "person_ptr": 94,
         "institution": 10,
         "tournament": 1,
         "base_score": 2.0,
@@ -7201,6 +7295,7 @@
     "model": "participants.adjudicator",
     "pk": 95,
     "fields": {
+        "person_ptr": 95,
         "institution": 10,
         "tournament": 1,
         "base_score": 3.0,
@@ -7214,6 +7309,7 @@
     "model": "participants.adjudicator",
     "pk": 96,
     "fields": {
+        "person_ptr": 96,
         "institution": 11,
         "tournament": 1,
         "base_score": 2.0,
@@ -7227,6 +7323,7 @@
     "model": "participants.adjudicator",
     "pk": 97,
     "fields": {
+        "person_ptr": 97,
         "institution": 13,
         "tournament": 1,
         "base_score": 4.0,
@@ -7240,6 +7337,7 @@
     "model": "participants.adjudicator",
     "pk": 98,
     "fields": {
+        "person_ptr": 98,
         "institution": 13,
         "tournament": 1,
         "base_score": 3.0,
@@ -7253,6 +7351,7 @@
     "model": "participants.adjudicator",
     "pk": 99,
     "fields": {
+        "person_ptr": 99,
         "institution": 5,
         "tournament": 1,
         "base_score": 5.0,
@@ -7266,6 +7365,7 @@
     "model": "participants.adjudicator",
     "pk": 159,
     "fields": {
+        "person_ptr": 159,
         "institution": 1,
         "tournament": null,
         "base_score": 2.5,
@@ -7279,6 +7379,7 @@
     "model": "participants.adjudicator",
     "pk": 160,
     "fields": {
+        "person_ptr": 160,
         "institution": 2,
         "tournament": null,
         "base_score": 2.5,
@@ -7296,6 +7397,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7315,6 +7417,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7334,6 +7437,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7353,6 +7457,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7372,6 +7477,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7391,6 +7497,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7410,6 +7517,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7429,6 +7537,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7448,6 +7557,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7467,6 +7577,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7486,6 +7597,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7505,6 +7617,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7524,6 +7637,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7543,6 +7657,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7562,6 +7677,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7581,6 +7697,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7600,6 +7717,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7619,6 +7737,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7638,6 +7757,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7657,6 +7777,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7676,6 +7797,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7695,6 +7817,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7714,6 +7837,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7733,6 +7857,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7752,6 +7877,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7771,6 +7897,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7790,6 +7917,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7809,6 +7937,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7828,6 +7957,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7847,6 +7977,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7866,6 +7997,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7885,6 +8017,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7904,6 +8037,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7923,6 +8057,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7942,6 +8077,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7961,6 +8097,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7980,6 +8117,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -7999,6 +8137,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -8018,6 +8157,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -8037,6 +8177,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -8056,6 +8197,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -8075,6 +8217,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -8094,6 +8237,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -8113,6 +8257,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -8132,6 +8277,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -8151,6 +8297,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -8170,6 +8317,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -8189,6 +8337,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "admin"
         ],
@@ -8198,6 +8347,2118 @@
         "debate": 48,
         "motion": 12,
         "discarded": false
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 1,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_adjudicator": 1,
+        "debate_team": 23,
+        "win": false,
+        "margin": -2.5,
+        "score": 259.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 2,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_adjudicator": 1,
+        "debate_team": 24,
+        "win": true,
+        "margin": 2.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 3,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_adjudicator": 2,
+        "debate_team": 21,
+        "win": false,
+        "margin": -0.5,
+        "score": 266.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 4,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_adjudicator": 2,
+        "debate_team": 22,
+        "win": true,
+        "margin": 0.5,
+        "score": 267.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 5,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_adjudicator": 3,
+        "debate_team": 19,
+        "win": false,
+        "margin": -3.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 6,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_adjudicator": 3,
+        "debate_team": 20,
+        "win": true,
+        "margin": 3.5,
+        "score": 265.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 7,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_adjudicator": 4,
+        "debate_team": 17,
+        "win": false,
+        "margin": -4.5,
+        "score": 257.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 8,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_adjudicator": 4,
+        "debate_team": 18,
+        "win": true,
+        "margin": 4.5,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 9,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_adjudicator": 5,
+        "debate_team": 15,
+        "win": false,
+        "margin": -0.5,
+        "score": 260.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 10,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_adjudicator": 5,
+        "debate_team": 16,
+        "win": true,
+        "margin": 0.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 11,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_adjudicator": 6,
+        "debate_team": 13,
+        "win": false,
+        "margin": -7.5,
+        "score": 255.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 12,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_adjudicator": 6,
+        "debate_team": 14,
+        "win": true,
+        "margin": 7.5,
+        "score": 263.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 13,
+    "fields": {
+        "ballot_submission": 7,
+        "debate_adjudicator": 7,
+        "debate_team": 11,
+        "win": true,
+        "margin": 2.5,
+        "score": 267.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 14,
+    "fields": {
+        "ballot_submission": 7,
+        "debate_adjudicator": 7,
+        "debate_team": 12,
+        "win": false,
+        "margin": -2.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 15,
+    "fields": {
+        "ballot_submission": 8,
+        "debate_adjudicator": 8,
+        "debate_team": 9,
+        "win": true,
+        "margin": 8.0,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 16,
+    "fields": {
+        "ballot_submission": 8,
+        "debate_adjudicator": 8,
+        "debate_team": 10,
+        "win": false,
+        "margin": -8.0,
+        "score": 256.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 17,
+    "fields": {
+        "ballot_submission": 8,
+        "debate_adjudicator": 9,
+        "debate_team": 9,
+        "win": true,
+        "margin": 4.5,
+        "score": 269.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 18,
+    "fields": {
+        "ballot_submission": 8,
+        "debate_adjudicator": 9,
+        "debate_team": 10,
+        "win": false,
+        "margin": -4.5,
+        "score": 265.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 19,
+    "fields": {
+        "ballot_submission": 8,
+        "debate_adjudicator": 10,
+        "debate_team": 9,
+        "win": true,
+        "margin": 1.5,
+        "score": 264.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 20,
+    "fields": {
+        "ballot_submission": 8,
+        "debate_adjudicator": 10,
+        "debate_team": 10,
+        "win": false,
+        "margin": -1.5,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 21,
+    "fields": {
+        "ballot_submission": 9,
+        "debate_adjudicator": 11,
+        "debate_team": 7,
+        "win": true,
+        "margin": 2.5,
+        "score": 263.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 22,
+    "fields": {
+        "ballot_submission": 9,
+        "debate_adjudicator": 11,
+        "debate_team": 8,
+        "win": false,
+        "margin": -2.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 23,
+    "fields": {
+        "ballot_submission": 9,
+        "debate_adjudicator": 12,
+        "debate_team": 7,
+        "win": true,
+        "margin": 7.5,
+        "score": 268.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 24,
+    "fields": {
+        "ballot_submission": 9,
+        "debate_adjudicator": 12,
+        "debate_team": 8,
+        "win": false,
+        "margin": -7.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 25,
+    "fields": {
+        "ballot_submission": 9,
+        "debate_adjudicator": 13,
+        "debate_team": 7,
+        "win": false,
+        "margin": -1.0,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 26,
+    "fields": {
+        "ballot_submission": 9,
+        "debate_adjudicator": 13,
+        "debate_team": 8,
+        "win": true,
+        "margin": 1.0,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 27,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 14,
+        "debate_team": 5,
+        "win": true,
+        "margin": 3.0,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 28,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 14,
+        "debate_team": 6,
+        "win": false,
+        "margin": -3.0,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 29,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 15,
+        "debate_team": 5,
+        "win": true,
+        "margin": 5.0,
+        "score": 267.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 30,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 15,
+        "debate_team": 6,
+        "win": false,
+        "margin": -5.0,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 31,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 16,
+        "debate_team": 5,
+        "win": true,
+        "margin": 8.0,
+        "score": 268.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 32,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 16,
+        "debate_team": 6,
+        "win": false,
+        "margin": -8.0,
+        "score": 260.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 33,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 17,
+        "debate_team": 3,
+        "win": false,
+        "margin": -2.5,
+        "score": 265.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 34,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 17,
+        "debate_team": 4,
+        "win": true,
+        "margin": 2.5,
+        "score": 268.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 35,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 18,
+        "debate_team": 3,
+        "win": true,
+        "margin": 2.5,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 36,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 18,
+        "debate_team": 4,
+        "win": false,
+        "margin": -2.5,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 37,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 19,
+        "debate_team": 3,
+        "win": false,
+        "margin": -3.0,
+        "score": 258.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 38,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 19,
+        "debate_team": 4,
+        "win": true,
+        "margin": 3.0,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 39,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 20,
+        "debate_team": 1,
+        "win": true,
+        "margin": 1.0,
+        "score": 267.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 40,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 20,
+        "debate_team": 2,
+        "win": false,
+        "margin": -1.0,
+        "score": 266.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 41,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 21,
+        "debate_team": 1,
+        "win": true,
+        "margin": 1.5,
+        "score": 265.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 42,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 21,
+        "debate_team": 2,
+        "win": false,
+        "margin": -1.5,
+        "score": 264.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 43,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 22,
+        "debate_team": 1,
+        "win": false,
+        "margin": -12.0,
+        "score": 256.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 44,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 22,
+        "debate_team": 2,
+        "win": true,
+        "margin": 12.0,
+        "score": 268.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 45,
+    "fields": {
+        "ballot_submission": 13,
+        "debate_adjudicator": 33,
+        "debate_team": 47,
+        "win": true,
+        "margin": 1.5,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 46,
+    "fields": {
+        "ballot_submission": 13,
+        "debate_adjudicator": 33,
+        "debate_team": 48,
+        "win": false,
+        "margin": -1.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 47,
+    "fields": {
+        "ballot_submission": 13,
+        "debate_adjudicator": 34,
+        "debate_team": 47,
+        "win": true,
+        "margin": 3.5,
+        "score": 268.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 48,
+    "fields": {
+        "ballot_submission": 13,
+        "debate_adjudicator": 34,
+        "debate_team": 48,
+        "win": false,
+        "margin": -3.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 49,
+    "fields": {
+        "ballot_submission": 13,
+        "debate_adjudicator": 35,
+        "debate_team": 47,
+        "win": true,
+        "margin": 0.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 50,
+    "fields": {
+        "ballot_submission": 13,
+        "debate_adjudicator": 35,
+        "debate_team": 48,
+        "win": false,
+        "margin": -0.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 51,
+    "fields": {
+        "ballot_submission": 14,
+        "debate_adjudicator": 24,
+        "debate_team": 45,
+        "win": true,
+        "margin": 0.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 52,
+    "fields": {
+        "ballot_submission": 14,
+        "debate_adjudicator": 24,
+        "debate_team": 46,
+        "win": false,
+        "margin": -0.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 53,
+    "fields": {
+        "ballot_submission": 15,
+        "debate_adjudicator": 36,
+        "debate_team": 43,
+        "win": false,
+        "margin": -2.5,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 54,
+    "fields": {
+        "ballot_submission": 15,
+        "debate_adjudicator": 36,
+        "debate_team": 44,
+        "win": true,
+        "margin": 2.5,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 55,
+    "fields": {
+        "ballot_submission": 15,
+        "debate_adjudicator": 37,
+        "debate_team": 43,
+        "win": true,
+        "margin": 2.0,
+        "score": 258.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 56,
+    "fields": {
+        "ballot_submission": 15,
+        "debate_adjudicator": 37,
+        "debate_team": 44,
+        "win": false,
+        "margin": -2.0,
+        "score": 256.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 57,
+    "fields": {
+        "ballot_submission": 15,
+        "debate_adjudicator": 38,
+        "debate_team": 43,
+        "win": false,
+        "margin": -1.0,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 58,
+    "fields": {
+        "ballot_submission": 15,
+        "debate_adjudicator": 38,
+        "debate_team": 44,
+        "win": true,
+        "margin": 1.0,
+        "score": 263.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 59,
+    "fields": {
+        "ballot_submission": 16,
+        "debate_adjudicator": 39,
+        "debate_team": 41,
+        "win": true,
+        "margin": 1.0,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 60,
+    "fields": {
+        "ballot_submission": 16,
+        "debate_adjudicator": 39,
+        "debate_team": 42,
+        "win": false,
+        "margin": -1.0,
+        "score": 259.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 61,
+    "fields": {
+        "ballot_submission": 16,
+        "debate_adjudicator": 40,
+        "debate_team": 41,
+        "win": true,
+        "margin": 1.5,
+        "score": 263.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 62,
+    "fields": {
+        "ballot_submission": 16,
+        "debate_adjudicator": 40,
+        "debate_team": 42,
+        "win": false,
+        "margin": -1.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 63,
+    "fields": {
+        "ballot_submission": 16,
+        "debate_adjudicator": 41,
+        "debate_team": 41,
+        "win": true,
+        "margin": 3.5,
+        "score": 268.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 64,
+    "fields": {
+        "ballot_submission": 16,
+        "debate_adjudicator": 41,
+        "debate_team": 42,
+        "win": false,
+        "margin": -3.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 65,
+    "fields": {
+        "ballot_submission": 17,
+        "debate_adjudicator": 30,
+        "debate_team": 39,
+        "win": true,
+        "margin": 2.0,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 66,
+    "fields": {
+        "ballot_submission": 17,
+        "debate_adjudicator": 30,
+        "debate_team": 40,
+        "win": false,
+        "margin": -2.0,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 67,
+    "fields": {
+        "ballot_submission": 17,
+        "debate_adjudicator": 31,
+        "debate_team": 39,
+        "win": false,
+        "margin": -3.0,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 68,
+    "fields": {
+        "ballot_submission": 17,
+        "debate_adjudicator": 31,
+        "debate_team": 40,
+        "win": true,
+        "margin": 3.0,
+        "score": 263.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 69,
+    "fields": {
+        "ballot_submission": 17,
+        "debate_adjudicator": 32,
+        "debate_team": 39,
+        "win": false,
+        "margin": -1.0,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 70,
+    "fields": {
+        "ballot_submission": 17,
+        "debate_adjudicator": 32,
+        "debate_team": 40,
+        "win": true,
+        "margin": 1.0,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 71,
+    "fields": {
+        "ballot_submission": 18,
+        "debate_adjudicator": 23,
+        "debate_team": 37,
+        "win": true,
+        "margin": 0.5,
+        "score": 263.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 72,
+    "fields": {
+        "ballot_submission": 18,
+        "debate_adjudicator": 23,
+        "debate_team": 38,
+        "win": false,
+        "margin": -0.5,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 73,
+    "fields": {
+        "ballot_submission": 19,
+        "debate_adjudicator": 27,
+        "debate_team": 35,
+        "win": true,
+        "margin": 3.0,
+        "score": 265.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 74,
+    "fields": {
+        "ballot_submission": 19,
+        "debate_adjudicator": 27,
+        "debate_team": 36,
+        "win": false,
+        "margin": -3.0,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 75,
+    "fields": {
+        "ballot_submission": 20,
+        "debate_adjudicator": 26,
+        "debate_team": 33,
+        "win": true,
+        "margin": 2.0,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 76,
+    "fields": {
+        "ballot_submission": 20,
+        "debate_adjudicator": 26,
+        "debate_team": 34,
+        "win": false,
+        "margin": -2.0,
+        "score": 259.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 77,
+    "fields": {
+        "ballot_submission": 21,
+        "debate_adjudicator": 29,
+        "debate_team": 31,
+        "win": false,
+        "margin": -0.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 78,
+    "fields": {
+        "ballot_submission": 21,
+        "debate_adjudicator": 29,
+        "debate_team": 32,
+        "win": true,
+        "margin": 0.5,
+        "score": 265.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 79,
+    "fields": {
+        "ballot_submission": 22,
+        "debate_adjudicator": 28,
+        "debate_team": 29,
+        "win": false,
+        "margin": -6.0,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 80,
+    "fields": {
+        "ballot_submission": 22,
+        "debate_adjudicator": 28,
+        "debate_team": 30,
+        "win": true,
+        "margin": 6.0,
+        "score": 266.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 81,
+    "fields": {
+        "ballot_submission": 23,
+        "debate_adjudicator": 42,
+        "debate_team": 27,
+        "win": true,
+        "margin": 2.0,
+        "score": 266.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 82,
+    "fields": {
+        "ballot_submission": 23,
+        "debate_adjudicator": 42,
+        "debate_team": 28,
+        "win": false,
+        "margin": -2.0,
+        "score": 264.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 83,
+    "fields": {
+        "ballot_submission": 23,
+        "debate_adjudicator": 43,
+        "debate_team": 27,
+        "win": false,
+        "margin": -1.0,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 84,
+    "fields": {
+        "ballot_submission": 23,
+        "debate_adjudicator": 43,
+        "debate_team": 28,
+        "win": true,
+        "margin": 1.0,
+        "score": 263.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 85,
+    "fields": {
+        "ballot_submission": 23,
+        "debate_adjudicator": 44,
+        "debate_team": 27,
+        "win": false,
+        "margin": -2.0,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 86,
+    "fields": {
+        "ballot_submission": 23,
+        "debate_adjudicator": 44,
+        "debate_team": 28,
+        "win": true,
+        "margin": 2.0,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 87,
+    "fields": {
+        "ballot_submission": 24,
+        "debate_adjudicator": 25,
+        "debate_team": 25,
+        "win": true,
+        "margin": 7.5,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 88,
+    "fields": {
+        "ballot_submission": 24,
+        "debate_adjudicator": 25,
+        "debate_team": 26,
+        "win": false,
+        "margin": -7.5,
+        "score": 254.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 89,
+    "fields": {
+        "ballot_submission": 25,
+        "debate_adjudicator": 48,
+        "debate_team": 49,
+        "win": false,
+        "margin": -2.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 90,
+    "fields": {
+        "ballot_submission": 25,
+        "debate_adjudicator": 48,
+        "debate_team": 50,
+        "win": true,
+        "margin": 2.5,
+        "score": 264.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 91,
+    "fields": {
+        "ballot_submission": 26,
+        "debate_adjudicator": 47,
+        "debate_team": 51,
+        "win": false,
+        "margin": -2.5,
+        "score": 259.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 92,
+    "fields": {
+        "ballot_submission": 26,
+        "debate_adjudicator": 47,
+        "debate_team": 52,
+        "win": true,
+        "margin": 2.5,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 93,
+    "fields": {
+        "ballot_submission": 27,
+        "debate_adjudicator": 52,
+        "debate_team": 53,
+        "win": true,
+        "margin": 4.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 94,
+    "fields": {
+        "ballot_submission": 27,
+        "debate_adjudicator": 52,
+        "debate_team": 54,
+        "win": false,
+        "margin": -4.5,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 95,
+    "fields": {
+        "ballot_submission": 27,
+        "debate_adjudicator": 53,
+        "debate_team": 53,
+        "win": false,
+        "margin": -2.5,
+        "score": 258.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 96,
+    "fields": {
+        "ballot_submission": 27,
+        "debate_adjudicator": 53,
+        "debate_team": 54,
+        "win": true,
+        "margin": 2.5,
+        "score": 260.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 97,
+    "fields": {
+        "ballot_submission": 27,
+        "debate_adjudicator": 54,
+        "debate_team": 53,
+        "win": false,
+        "margin": -5.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 98,
+    "fields": {
+        "ballot_submission": 27,
+        "debate_adjudicator": 54,
+        "debate_team": 54,
+        "win": true,
+        "margin": 5.5,
+        "score": 266.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 99,
+    "fields": {
+        "ballot_submission": 28,
+        "debate_adjudicator": 55,
+        "debate_team": 55,
+        "win": false,
+        "margin": -0.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 100,
+    "fields": {
+        "ballot_submission": 28,
+        "debate_adjudicator": 55,
+        "debate_team": 56,
+        "win": true,
+        "margin": 0.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 101,
+    "fields": {
+        "ballot_submission": 28,
+        "debate_adjudicator": 56,
+        "debate_team": 55,
+        "win": false,
+        "margin": -6.0,
+        "score": 260.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 102,
+    "fields": {
+        "ballot_submission": 28,
+        "debate_adjudicator": 56,
+        "debate_team": 56,
+        "win": true,
+        "margin": 6.0,
+        "score": 266.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 103,
+    "fields": {
+        "ballot_submission": 28,
+        "debate_adjudicator": 57,
+        "debate_team": 55,
+        "win": true,
+        "margin": 9.5,
+        "score": 266.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 104,
+    "fields": {
+        "ballot_submission": 28,
+        "debate_adjudicator": 57,
+        "debate_team": 56,
+        "win": false,
+        "margin": -9.5,
+        "score": 257.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 105,
+    "fields": {
+        "ballot_submission": 29,
+        "debate_adjudicator": 64,
+        "debate_team": 57,
+        "win": false,
+        "margin": -8.5,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 106,
+    "fields": {
+        "ballot_submission": 29,
+        "debate_adjudicator": 64,
+        "debate_team": 58,
+        "win": true,
+        "margin": 8.5,
+        "score": 271.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 107,
+    "fields": {
+        "ballot_submission": 29,
+        "debate_adjudicator": 65,
+        "debate_team": 57,
+        "win": true,
+        "margin": 5.0,
+        "score": 264.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 108,
+    "fields": {
+        "ballot_submission": 29,
+        "debate_adjudicator": 65,
+        "debate_team": 58,
+        "win": false,
+        "margin": -5.0,
+        "score": 259.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 109,
+    "fields": {
+        "ballot_submission": 29,
+        "debate_adjudicator": 66,
+        "debate_team": 57,
+        "win": false,
+        "margin": -2.0,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 110,
+    "fields": {
+        "ballot_submission": 29,
+        "debate_adjudicator": 66,
+        "debate_team": 58,
+        "win": true,
+        "margin": 2.0,
+        "score": 264.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 111,
+    "fields": {
+        "ballot_submission": 30,
+        "debate_adjudicator": 50,
+        "debate_team": 59,
+        "win": true,
+        "margin": 7.0,
+        "score": 266.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 112,
+    "fields": {
+        "ballot_submission": 30,
+        "debate_adjudicator": 50,
+        "debate_team": 60,
+        "win": false,
+        "margin": -7.0,
+        "score": 259.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 113,
+    "fields": {
+        "ballot_submission": 31,
+        "debate_adjudicator": 45,
+        "debate_team": 61,
+        "win": false,
+        "margin": -5.5,
+        "score": 260.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 114,
+    "fields": {
+        "ballot_submission": 31,
+        "debate_adjudicator": 45,
+        "debate_team": 62,
+        "win": true,
+        "margin": 5.5,
+        "score": 266.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 115,
+    "fields": {
+        "ballot_submission": 32,
+        "debate_adjudicator": 49,
+        "debate_team": 63,
+        "win": true,
+        "margin": 5.5,
+        "score": 258.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 116,
+    "fields": {
+        "ballot_submission": 32,
+        "debate_adjudicator": 49,
+        "debate_team": 64,
+        "win": false,
+        "margin": -5.5,
+        "score": 253.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 117,
+    "fields": {
+        "ballot_submission": 33,
+        "debate_adjudicator": 46,
+        "debate_team": 65,
+        "win": false,
+        "margin": -6.5,
+        "score": 255.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 118,
+    "fields": {
+        "ballot_submission": 33,
+        "debate_adjudicator": 46,
+        "debate_team": 66,
+        "win": true,
+        "margin": 6.5,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 119,
+    "fields": {
+        "ballot_submission": 34,
+        "debate_adjudicator": 61,
+        "debate_team": 67,
+        "win": true,
+        "margin": 5.5,
+        "score": 265.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 120,
+    "fields": {
+        "ballot_submission": 34,
+        "debate_adjudicator": 61,
+        "debate_team": 68,
+        "win": false,
+        "margin": -5.5,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 121,
+    "fields": {
+        "ballot_submission": 34,
+        "debate_adjudicator": 62,
+        "debate_team": 67,
+        "win": false,
+        "margin": -1.0,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 122,
+    "fields": {
+        "ballot_submission": 34,
+        "debate_adjudicator": 62,
+        "debate_team": 68,
+        "win": true,
+        "margin": 1.0,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 123,
+    "fields": {
+        "ballot_submission": 34,
+        "debate_adjudicator": 63,
+        "debate_team": 67,
+        "win": true,
+        "margin": 10.0,
+        "score": 268.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 124,
+    "fields": {
+        "ballot_submission": 34,
+        "debate_adjudicator": 63,
+        "debate_team": 68,
+        "win": false,
+        "margin": -10.0,
+        "score": 258.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 125,
+    "fields": {
+        "ballot_submission": 35,
+        "debate_adjudicator": 58,
+        "debate_team": 69,
+        "win": false,
+        "margin": -1.0,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 126,
+    "fields": {
+        "ballot_submission": 35,
+        "debate_adjudicator": 58,
+        "debate_team": 70,
+        "win": true,
+        "margin": 1.0,
+        "score": 265.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 127,
+    "fields": {
+        "ballot_submission": 35,
+        "debate_adjudicator": 59,
+        "debate_team": 69,
+        "win": true,
+        "margin": 3.5,
+        "score": 265.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 128,
+    "fields": {
+        "ballot_submission": 35,
+        "debate_adjudicator": 59,
+        "debate_team": 70,
+        "win": false,
+        "margin": -3.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 129,
+    "fields": {
+        "ballot_submission": 35,
+        "debate_adjudicator": 60,
+        "debate_team": 69,
+        "win": true,
+        "margin": 5.0,
+        "score": 258.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 130,
+    "fields": {
+        "ballot_submission": 35,
+        "debate_adjudicator": 60,
+        "debate_team": 70,
+        "win": false,
+        "margin": -5.0,
+        "score": 253.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 131,
+    "fields": {
+        "ballot_submission": 36,
+        "debate_adjudicator": 51,
+        "debate_team": 71,
+        "win": false,
+        "margin": -1.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 132,
+    "fields": {
+        "ballot_submission": 36,
+        "debate_adjudicator": 51,
+        "debate_team": 72,
+        "win": true,
+        "margin": 1.5,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 133,
+    "fields": {
+        "ballot_submission": 37,
+        "debate_adjudicator": 73,
+        "debate_team": 73,
+        "win": false,
+        "margin": -5.5,
+        "score": 259.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 134,
+    "fields": {
+        "ballot_submission": 37,
+        "debate_adjudicator": 73,
+        "debate_team": 74,
+        "win": true,
+        "margin": 5.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 135,
+    "fields": {
+        "ballot_submission": 38,
+        "debate_adjudicator": 67,
+        "debate_team": 75,
+        "win": false,
+        "margin": -4.0,
+        "score": 258.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 136,
+    "fields": {
+        "ballot_submission": 38,
+        "debate_adjudicator": 67,
+        "debate_team": 76,
+        "win": true,
+        "margin": 4.0,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 137,
+    "fields": {
+        "ballot_submission": 39,
+        "debate_adjudicator": 77,
+        "debate_team": 77,
+        "win": false,
+        "margin": -2.5,
+        "score": 257.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 138,
+    "fields": {
+        "ballot_submission": 39,
+        "debate_adjudicator": 77,
+        "debate_team": 78,
+        "win": true,
+        "margin": 2.5,
+        "score": 259.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 139,
+    "fields": {
+        "ballot_submission": 39,
+        "debate_adjudicator": 78,
+        "debate_team": 77,
+        "win": false,
+        "margin": -10.5,
+        "score": 255.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 140,
+    "fields": {
+        "ballot_submission": 39,
+        "debate_adjudicator": 78,
+        "debate_team": 78,
+        "win": true,
+        "margin": 10.5,
+        "score": 266.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 141,
+    "fields": {
+        "ballot_submission": 39,
+        "debate_adjudicator": 79,
+        "debate_team": 77,
+        "win": false,
+        "margin": -5.0,
+        "score": 257.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 142,
+    "fields": {
+        "ballot_submission": 39,
+        "debate_adjudicator": 79,
+        "debate_team": 78,
+        "win": true,
+        "margin": 5.0,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 143,
+    "fields": {
+        "ballot_submission": 40,
+        "debate_adjudicator": 74,
+        "debate_team": 79,
+        "win": false,
+        "margin": -3.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 144,
+    "fields": {
+        "ballot_submission": 40,
+        "debate_adjudicator": 74,
+        "debate_team": 80,
+        "win": true,
+        "margin": 3.5,
+        "score": 268.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 145,
+    "fields": {
+        "ballot_submission": 40,
+        "debate_adjudicator": 75,
+        "debate_team": 79,
+        "win": false,
+        "margin": -1.5,
+        "score": 259.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 146,
+    "fields": {
+        "ballot_submission": 40,
+        "debate_adjudicator": 75,
+        "debate_team": 80,
+        "win": true,
+        "margin": 1.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 147,
+    "fields": {
+        "ballot_submission": 40,
+        "debate_adjudicator": 76,
+        "debate_team": 79,
+        "win": false,
+        "margin": -2.0,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 148,
+    "fields": {
+        "ballot_submission": 40,
+        "debate_adjudicator": 76,
+        "debate_team": 80,
+        "win": true,
+        "margin": 2.0,
+        "score": 263.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 149,
+    "fields": {
+        "ballot_submission": 41,
+        "debate_adjudicator": 80,
+        "debate_team": 81,
+        "win": false,
+        "margin": -4.0,
+        "score": 263.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 150,
+    "fields": {
+        "ballot_submission": 41,
+        "debate_adjudicator": 80,
+        "debate_team": 82,
+        "win": true,
+        "margin": 4.0,
+        "score": 267.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 151,
+    "fields": {
+        "ballot_submission": 41,
+        "debate_adjudicator": 81,
+        "debate_team": 81,
+        "win": true,
+        "margin": 7.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 152,
+    "fields": {
+        "ballot_submission": 41,
+        "debate_adjudicator": 81,
+        "debate_team": 82,
+        "win": false,
+        "margin": -7.5,
+        "score": 257.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 153,
+    "fields": {
+        "ballot_submission": 41,
+        "debate_adjudicator": 82,
+        "debate_team": 81,
+        "win": false,
+        "margin": -4.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 154,
+    "fields": {
+        "ballot_submission": 41,
+        "debate_adjudicator": 82,
+        "debate_team": 82,
+        "win": true,
+        "margin": 4.5,
+        "score": 266.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 155,
+    "fields": {
+        "ballot_submission": 42,
+        "debate_adjudicator": 86,
+        "debate_team": 83,
+        "win": true,
+        "margin": 3.5,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 156,
+    "fields": {
+        "ballot_submission": 42,
+        "debate_adjudicator": 86,
+        "debate_team": 84,
+        "win": false,
+        "margin": -3.5,
+        "score": 259.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 157,
+    "fields": {
+        "ballot_submission": 42,
+        "debate_adjudicator": 87,
+        "debate_team": 83,
+        "win": true,
+        "margin": 2.5,
+        "score": 267.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 158,
+    "fields": {
+        "ballot_submission": 42,
+        "debate_adjudicator": 87,
+        "debate_team": 84,
+        "win": false,
+        "margin": -2.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 159,
+    "fields": {
+        "ballot_submission": 42,
+        "debate_adjudicator": 88,
+        "debate_team": 83,
+        "win": true,
+        "margin": 3.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 160,
+    "fields": {
+        "ballot_submission": 42,
+        "debate_adjudicator": 88,
+        "debate_team": 84,
+        "win": false,
+        "margin": -3.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 161,
+    "fields": {
+        "ballot_submission": 43,
+        "debate_adjudicator": 83,
+        "debate_team": 85,
+        "win": false,
+        "margin": -10.0,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 162,
+    "fields": {
+        "ballot_submission": 43,
+        "debate_adjudicator": 83,
+        "debate_team": 86,
+        "win": true,
+        "margin": 10.0,
+        "score": 270.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 163,
+    "fields": {
+        "ballot_submission": 43,
+        "debate_adjudicator": 84,
+        "debate_team": 85,
+        "win": false,
+        "margin": -1.0,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 164,
+    "fields": {
+        "ballot_submission": 43,
+        "debate_adjudicator": 84,
+        "debate_team": 86,
+        "win": true,
+        "margin": 1.0,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 165,
+    "fields": {
+        "ballot_submission": 43,
+        "debate_adjudicator": 85,
+        "debate_team": 85,
+        "win": false,
+        "margin": -6.5,
+        "score": 260.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 166,
+    "fields": {
+        "ballot_submission": 43,
+        "debate_adjudicator": 85,
+        "debate_team": 86,
+        "win": true,
+        "margin": 6.5,
+        "score": 267.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 167,
+    "fields": {
+        "ballot_submission": 44,
+        "debate_adjudicator": 71,
+        "debate_team": 87,
+        "win": true,
+        "margin": 10.0,
+        "score": 267.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 168,
+    "fields": {
+        "ballot_submission": 44,
+        "debate_adjudicator": 71,
+        "debate_team": 88,
+        "win": false,
+        "margin": -10.0,
+        "score": 257.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 169,
+    "fields": {
+        "ballot_submission": 45,
+        "debate_adjudicator": 72,
+        "debate_team": 89,
+        "win": false,
+        "margin": -1.0,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 170,
+    "fields": {
+        "ballot_submission": 45,
+        "debate_adjudicator": 72,
+        "debate_team": 90,
+        "win": true,
+        "margin": 1.0,
+        "score": 263.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 171,
+    "fields": {
+        "ballot_submission": 46,
+        "debate_adjudicator": 68,
+        "debate_team": 91,
+        "win": false,
+        "margin": -1.0,
+        "score": 268.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 172,
+    "fields": {
+        "ballot_submission": 46,
+        "debate_adjudicator": 68,
+        "debate_team": 92,
+        "win": true,
+        "margin": 1.0,
+        "score": 269.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 173,
+    "fields": {
+        "ballot_submission": 47,
+        "debate_adjudicator": 70,
+        "debate_team": 93,
+        "win": false,
+        "margin": -7.5,
+        "score": 258.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 174,
+    "fields": {
+        "ballot_submission": 47,
+        "debate_adjudicator": 70,
+        "debate_team": 94,
+        "win": true,
+        "margin": 7.5,
+        "score": 266.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 175,
+    "fields": {
+        "ballot_submission": 48,
+        "debate_adjudicator": 69,
+        "debate_team": 95,
+        "win": true,
+        "margin": 8.0,
+        "score": 266.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 176,
+    "fields": {
+        "ballot_submission": 48,
+        "debate_adjudicator": 69,
+        "debate_team": 96,
+        "win": false,
+        "margin": -8.0,
+        "score": 258.5
     }
 },
 {
@@ -21923,7 +24184,8 @@
         "feedback_weight": 0.7,
         "silent": false,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -21942,7 +24204,8 @@
         "feedback_weight": 0.7,
         "silent": false,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -21961,7 +24224,8 @@
         "feedback_weight": 0.7,
         "silent": false,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -21980,7 +24244,8 @@
         "feedback_weight": 0.7,
         "silent": false,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -21999,7 +24264,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -22018,7 +24284,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -22037,7 +24304,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -22056,7 +24324,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -22075,7 +24344,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -22094,7 +24364,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -22103,7 +24374,8 @@
     "fields": {
         "name": "M04",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22112,7 +24384,8 @@
     "fields": {
         "name": "M05",
         "priority": 10,
-        "tournament": null
+        "tournament": null,
+        "url": ""
     }
 },
 {
@@ -22121,7 +24394,8 @@
     "fields": {
         "name": "M10",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22130,7 +24404,8 @@
     "fields": {
         "name": "M11",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22139,7 +24414,8 @@
     "fields": {
         "name": "G01",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22148,7 +24424,8 @@
     "fields": {
         "name": "G02",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22157,7 +24434,8 @@
     "fields": {
         "name": "G03",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22166,7 +24444,8 @@
     "fields": {
         "name": "G04",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22175,7 +24454,8 @@
     "fields": {
         "name": "G05",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22184,7 +24464,8 @@
     "fields": {
         "name": "G06",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22193,7 +24474,8 @@
     "fields": {
         "name": "G07",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22202,7 +24484,8 @@
     "fields": {
         "name": "G08",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22211,7 +24494,8 @@
     "fields": {
         "name": "K03",
         "priority": 20,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22220,7 +24504,8 @@
     "fields": {
         "name": "K04",
         "priority": 20,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22229,7 +24514,8 @@
     "fields": {
         "name": "K05",
         "priority": 20,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22238,7 +24524,8 @@
     "fields": {
         "name": "K06",
         "priority": 20,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22247,7 +24534,8 @@
     "fields": {
         "name": "K08",
         "priority": 20,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22256,7 +24544,8 @@
     "fields": {
         "name": "P01",
         "priority": 30,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22265,7 +24554,8 @@
     "fields": {
         "name": "P03",
         "priority": 30,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22274,7 +24564,8 @@
     "fields": {
         "name": "P05",
         "priority": 30,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22283,7 +24574,8 @@
     "fields": {
         "name": "P07",
         "priority": 30,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22292,7 +24584,8 @@
     "fields": {
         "name": "Z09",
         "priority": 40,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22301,7 +24594,8 @@
     "fields": {
         "name": "Z10",
         "priority": 40,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22310,7 +24604,8 @@
     "fields": {
         "name": "Shared 140",
         "priority": 200,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22319,7 +24614,8 @@
     "fields": {
         "name": "Shared 2.9.0",
         "priority": 100,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22328,7 +24624,8 @@
     "fields": {
         "name": "Black 11G",
         "priority": 50,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22337,7 +24634,8 @@
     "fields": {
         "name": "Test",
         "priority": 55,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -22346,7 +24644,8 @@
     "fields": {
         "name": "Test2SSS",
         "priority": 155,
-        "tournament": null
+        "tournament": null,
+        "url": ""
     }
 },
 {
@@ -22355,7 +24654,8 @@
     "fields": {
         "name": "Test3SSS",
         "priority": 200,
-        "tournament": null
+        "tournament": null,
+        "url": ""
     }
 },
 {
@@ -22364,6 +24664,7 @@
     "fields": {
         "name": "1",
         "description": "1",
+        "tournament": null,
         "display_in_venue_name": "P",
         "display_in_public_tooltip": false,
         "venues": [
@@ -22379,6 +24680,7 @@
     "fields": {
         "name": "2",
         "description": "2",
+        "tournament": null,
         "display_in_venue_name": "P",
         "display_in_public_tooltip": false,
         "venues": [
@@ -22394,6 +24696,7 @@
     "fields": {
         "name": "3",
         "description": "3",
+        "tournament": null,
         "display_in_venue_name": "P",
         "display_in_public_tooltip": false,
         "venues": [
@@ -22410,6 +24713,7 @@
     "fields": {
         "name": "4",
         "description": "4",
+        "tournament": null,
         "display_in_venue_name": "P",
         "display_in_public_tooltip": false,
         "venues": [
@@ -22426,6 +24730,7 @@
     "fields": {
         "name": "5",
         "description": "5",
+        "tournament": null,
         "display_in_venue_name": "P",
         "display_in_public_tooltip": false,
         "venues": [
@@ -22440,6 +24745,7 @@
     "fields": {
         "name": "6",
         "description": "6",
+        "tournament": null,
         "display_in_venue_name": "P",
         "display_in_public_tooltip": false,
         "venues": [
@@ -22454,11 +24760,21 @@
     "fields": {
         "name": "7",
         "description": "7",
+        "tournament": null,
         "display_in_venue_name": "P",
         "display_in_public_tooltip": false,
         "venues": [
             22
         ]
+    }
+},
+{
+    "model": "dynamic_preferences.globalpreferencemodel",
+    "pk": 1,
+    "fields": {
+        "section": "global",
+        "name": "enable_api",
+        "raw_value": "True"
     }
 }
 ]

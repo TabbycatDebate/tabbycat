@@ -97,19 +97,21 @@ class QuerySetMetricAnnotator(BaseMetricAnnotator):
     def get_annotation(self, round):
         raise NotImplementedError("Subclasses of QuerySetMetricAnnotator must implement get_annotation().")
 
-    def get_annotated_queryset(self, queryset, column_name, round=None):
+    def get_annotated_queryset(self, queryset, round=None):
         """Returns a QuerySet annotated with the metric given."""
         annotation = self.get_annotation(round=round)
         logger.info("Annotation in %s: %s", self.__class__.__name__, str(annotation))
-        return queryset.annotate(**{column_name: annotation}).distinct()
+        self.queryset_annotated = True
+        return queryset.annotate(**{self.key: annotation})
 
-    def annotate_with_queryset(self, queryset, standings, round=None):
-        """Annotates items with the given QuerySet, using the "metric" field."""
+    def annotate_with_queryset(self, queryset, standings):
+        """Annotates items with the given QuerySet."""
         for item in queryset:
-            if item.metric is None:
-                item.metric = 0
-            standings.add_metric(item, self.key, item.metric)
+            metric = getattr(item, self.key)
+            if metric is None:
+                metric = 0
+            standings.add_metric(item, self.key, metric)
 
     def annotate(self, queryset, standings, round=None):
-        queryset = self.get_annotated_queryset(queryset, "metric", round)
-        self.annotate_with_queryset(queryset, standings, round)
+        assert self.queryset_annotated, "get_annotated_queryset() must be run before annotate()"
+        self.annotate_with_queryset(queryset, standings)

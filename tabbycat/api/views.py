@@ -9,14 +9,17 @@ from rest_framework.generics import GenericAPIView, get_object_or_404, RetrieveU
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
+from breakqual.models import BreakCategory
+from breakqual.views import GenerateBreakMixin
 from checkins.consumers import CheckInEventConsumer
 from checkins.models import Event
 from checkins.utils import create_identifiers, get_unexpired_checkins
+from draw.models import Debate
 from options.models import TournamentPreferenceModel
-from participants.models import Adjudicator, Institution, Speaker, Team
+from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import TournamentFromUrlMixin
@@ -97,6 +100,11 @@ class BreakCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
 class SpeakerCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.SpeakerCategorySerializer
 
+    def get_queryset(self):
+        if not self.request.user or not self.request.user.is_staff:
+            return super().get_queryset().filter(public=True)
+        return super().get_queryset()
+
 
 class BreakEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, RetrieveUpdateAPIView):
     serializer_class = serializers.BreakEligibilitySerializer
@@ -111,7 +119,51 @@ class SpeakerEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, Retri
     access_preference = 'public_participants'
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('speaker_set')
+        qs = super().get_queryset().prefetch_related('speaker_set')
+        if not self.request.user or not self.request.user.is_staff:
+            return qs.filter(public=True)
+        return qs
+
+
+class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBreakMixin, GenericViewSet):
+    serializer_class = serializers.BreakingTeamSerializer
+    tournament_field = 'break_category__tournament'
+    access_preference = 'public_breaking_teams'
+
+    @property
+    def break_category(self):
+        return get_object_or_404(BreakCategory, tournament=self.tournament, pk=self.kwargs.get('pk'))
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('team', 'team__tournament').order_by('rank')
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['break_category'] = self.break_category
+        return context
+
+    def list(self, request, *args, **kwargs):
+        """Pagination might be dangerous here, so disabled."""
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        self.generate_break((self.break_category,))
+        return self.list(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        """Destroy is normally for a specific instance, now QuerySet."""
+        self.filter_queryset(self.get_queryset()).delete()
+        return Response(status=204)  # No content
+
+    def update(self, request, *args, **kwargs):
+        """Update team remark and then regenerate break."""
+        serializer = serializers.PartialBreakingTeamSerializer(data=request.data, context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return self.create(request, *args, **kwargs)
 
 
 class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
@@ -122,9 +174,14 @@ class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
         serializer.save()
 
     def get_queryset(self):
+        filters = Q()
+        if self.request.query_params.get('region'):
+            filters &= Q(region__name=self.request.query_params['region'])
+
         return Institution.objects.filter(
             Q(adjudicator__tournament=self.tournament) | Q(team__tournament=self.tournament),
-        ).distinct().prefetch_related(
+            filters,
+        ).distinct().select_related('region').prefetch_related(
             Prefetch('team_set', queryset=self.tournament.team_set.all()),
             Prefetch('adjudicator_set', queryset=self.tournament.adjudicator_set.all()),
         )
@@ -135,10 +192,14 @@ class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     access_preference = 'public_participants'
 
     def get_queryset(self):
+        category_prefetch = Prefetch('categories', queryset=SpeakerCategory.objects.all().select_related('tournament'))
+        if not self.request.user or not self.request.user.is_staff:
+            category_prefetch.queryset = category_prefetch.queryset.filter(public=True)
+
         return super().get_queryset().select_related('tournament').prefetch_related(
             Prefetch(
                 'speaker_set',
-                queryset=Speaker.objects.all().prefetch_related('categories', 'categories__tournament').select_related('team__tournament'),
+                queryset=Speaker.objects.all().prefetch_related(category_prefetch).select_related('team__tournament'),
             ),
             'institution_conflicts',
             'break_categories', 'break_categories__tournament',
@@ -161,7 +222,10 @@ class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.InstitutionSerializer
 
     def get_queryset(self):
-        return Institution.objects.all()
+        filters = Q()
+        if self.request.query_params.get('region'):
+            filters &= Q(region__name=self.request.query_params['region'])
+        return Institution.objects.filter(filters).select_related('region')
 
 
 class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
@@ -173,7 +237,11 @@ class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet)
         serializer.save()
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('categories')
+        category_prefetch = Prefetch('categories', queryset=SpeakerCategory.objects.all().select_related('tournament'))
+        if not self.request.user or not self.request.user.is_staff:
+            category_prefetch.queryset = category_prefetch.queryset.filter(public=True)
+
+        return super().get_queryset().prefetch_related(category_prefetch)
 
 
 class VenueViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
@@ -356,16 +424,23 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
 
     class Permission(PublicPreferencePermission):
         def get_tournament_preference(self, view, op):
-            return {
+            t = view.tournament
+            r = view.round
+
+            draw_status = {
                 'off': False,
-                'current': view.tournament.current_round.id == view.round.id and self.get_round_status(view),
+                'current': t.current_round.id == r.id and self.get_round_status(view),
                 'all-released': self.get_round_status(view),
-            }[view.tournament.pref(view.access_preference)]
+            }[t.pref(view.access_preference)]
+
+            result_status = t.pref('public_results') and r.completed and not r.is_silent
+            return draw_status or result_status or t.pref('all_results_released')
 
         def get_round_status(self, view):
             return getattr(view.round, view.round_released_field) == view.round_released_value
 
     serializer_class = serializers.RoundPairingSerializer
+    lookup_url_kwarg = 'debate_pk'
 
     access_preference = 'public_draw'
 
@@ -379,6 +454,41 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
             'debateteam_set', 'debateteam_set__team', 'debateteam_set__team__tournament',
             'debateadjudicator_set', 'debateadjudicator_set__adjudicator', 'debateadjudicator_set__adjudicator__tournament',
         )
+
+
+class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
+    serializer_class = serializers.BallotSerializer
+    access_preference = 'ballots_released'
+
+    tournament_field = 'debate__round__tournament'
+    round_field = 'debate__round'
+
+    @property
+    def debate(self):
+        if hasattr(self, '_debate'):
+            return self._debate
+
+        self._debate = get_object_or_404(Debate, pk=self.kwargs.get('debate_pk'))
+        return self._debate
+
+    def perform_create(self, serializer):
+        serializer.save(**{'debate': self.debate})
+
+    def lookup_kwargs(self):
+        kwargs = super().lookup_kwargs()
+        kwargs['debate'] = self.debate
+        return kwargs
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['debate'] = self.debate
+        return context
+
+    def get_queryset(self):
+        filters = Q()
+        if self.request.query_params.get('confirmed') or not self.request.user.is_staff:
+            filters &= Q(confirmed=True)
+        return super().get_queryset().filter(filters)
 
 
 class FeedbackQuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
@@ -410,7 +520,7 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
         elif query_params.get('source_type') == 'team':
             filters &= Q(source_adjudicator__isnull=True)
             if query_params.get('source'):
-                filters &= Q(source_adjudicator__adjudicator_id=query_params.get('source'))
+                filters &= Q(source_team__team_id=query_params.get('source'))
         if query_params.get('round'):
             filters &= Q(source_adjudicator__debate__round__seq=query_params.get('round')) | Q(source_team__debate__round__seq=query_params.get('round'))
         if query_params.get('target'):

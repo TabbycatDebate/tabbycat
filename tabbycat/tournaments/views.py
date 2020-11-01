@@ -10,7 +10,6 @@ from django.db.models import Count, Q
 from django.shortcuts import redirect, resolve_url
 from django.urls import reverse_lazy
 from django.utils.html import format_html_join
-from django.utils.http import is_safe_url
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, FormView, UpdateView
@@ -21,6 +20,7 @@ from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from notifications.models import BulkNotification
 from results.models import BallotSubmission
+from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_round, reverse_tournament
@@ -85,12 +85,11 @@ class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin
                     'content_object', 'user').order_by('-timestamp')[:updates]
         kwargs["initialActions"] = json.dumps([a.serialize for a in actions])
 
-        subs = BallotSubmission.objects.filter(
-            debate__round__tournament=t, confirmed=True).prefetch_related(
-            'teamscore_set__debate_team',
-            'teamscore_set__debate_team__team').select_related(
-            'debate__round__tournament').order_by('-timestamp')[:updates]
-        subs = [bs.serialize_like_actionlog for bs in subs]
+        debates = t.current_round.debate_set.filter(
+            ballotsubmission__confirmed=True,
+        ).order_by('-ballotsubmission__timestamp')[:updates]
+        populate_confirmed_ballots(debates, results=True)
+        subs = [d._confirmed_ballot.serialize_like_actionlog for d in debates]
         kwargs["initialBallots"] = json.dumps(subs)
 
         status = t.current_round.draw_status
@@ -292,9 +291,10 @@ class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
         return super().form_valid(form)
 
     def get_success_url(self):
+        from django.utils.http import url_has_allowed_host_and_scheme
         # Copied from django.contrib.auth.views.LoginView.get_success_url
         redirect_to = self.get_redirect_to(use_default=True)
-        url_is_safe = is_safe_url(
+        url_is_safe = url_has_allowed_host_and_scheme(
             url=redirect_to,
             allowed_hosts={self.request.get_host()},
             require_https=self.request.is_secure(),
