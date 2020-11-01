@@ -17,8 +17,8 @@ from utils.misc import redirect_round, reverse_round
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView, PostOnlyRedirectView
 
-from .models import Motion, RoundMotions
-from .statistics import MotionBPStatsCalculator, MotionTwoTeamStatsCalculator, RoundMotionsBPStatsCalculator, RoundMotionsTwoTeamStatsCalculator
+from .models import Motion, RoundMotion
+from .statistics import MotionBPStatsCalculator, MotionTwoTeamStatsCalculator, RoundMotionBPStatsCalculator, RoundMotionTwoTeamStatsCalculator
 
 
 class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
@@ -74,7 +74,7 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
     def formset_valid(self, formset):
         motions = formset.save(commit=True)
         for i, motion in enumerate(motions, start=1):
-            RoundMotions(motion=motion, round=self.round, seq=1).save()
+            RoundMotion(motion=motion, round=self.round, seq=1).save()
 
             self.log_action(content_object=motion)
 
@@ -95,7 +95,7 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
 
 
 class CopyMotionsView(EditMotionsView):
-    formset_model = RoundMotions
+    formset_model = RoundMotion
 
     def get_formset_factory_kwargs(self):
         excludes = ['round', 'id']
@@ -140,10 +140,10 @@ class CopyPreviousMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, Po
         new_motions = []
 
         for motion in motions:
-            new_motions.append(RoundMotions(motion=motion.motion, seq=motion.seq, round=self.round))
+            new_motions.append(RoundMotion(motion=motion.motion, seq=motion.seq, round=self.round))
             self.log_action(content_object=motion.motion)
 
-        RoundMotions.objects.bulk_create(new_motions)
+        RoundMotion.objects.bulk_create(new_motions)
         messages.success(request, ngettext(
             "The motion was copied from the previous round.",
             "The %(count)d motions were copied from the previous round.",
@@ -228,14 +228,14 @@ class BaseMotionStatisticsView(TournamentMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class RoundMotionsStatisticsView(BaseMotionStatisticsView):
+class RoundMotionStatisticsView(BaseMotionStatisticsView):
     stats_type = "round"
 
     def get_statistics(self, *args, **kwargs):
         if self.tournament.pref('teams_in_debate') == 'two':
-            return RoundMotionsTwoTeamStatsCalculator(self.tournament, *args, **kwargs)
+            return RoundMotionTwoTeamStatsCalculator(self.tournament, *args, **kwargs)
         else:
-            return RoundMotionsBPStatsCalculator(self.tournament, *args, **kwargs)
+            return RoundMotionBPStatsCalculator(self.tournament, *args, **kwargs)
 
 
 class GlobalMotionStatisticsView(BaseMotionStatisticsView):
@@ -257,7 +257,7 @@ class BasePublicMotionStatisticsView(PublicTournamentPageMixin):
     for_public = True
 
 
-class AdminRoundMotionsStatisticsView(AdministratorMixin, RoundMotionsStatisticsView):
+class AdminRoundMotionStatisticsView(AdministratorMixin, RoundMotionStatisticsView):
     pass
 
 
@@ -265,7 +265,7 @@ class AdminGlobalMotionStatisticsView(AdministratorMixin, GlobalMotionStatistics
     pass
 
 
-class PublicRoundMotionsStatisticsView(BasePublicMotionStatisticsView, RoundMotionsStatisticsView):
+class PublicRoundMotionStatisticsView(BasePublicMotionStatisticsView, RoundMotionStatisticsView):
     pass
 
 

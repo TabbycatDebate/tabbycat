@@ -4,7 +4,7 @@ from django.db.models import Avg, Count, F, Q
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
-from motions.models import Motion, RoundMotions
+from motions.models import Motion, RoundMotion
 from tournaments.models import Round
 
 
@@ -133,10 +133,10 @@ class MotionTwoTeamStatsCalculator:
         return label, info
 
 
-class RoundMotionsTwoTeamStatsCalculator(MotionTwoTeamStatsCalculator):
+class RoundMotionTwoTeamStatsCalculator(MotionTwoTeamStatsCalculator):
 
     def _prefetch_motions(self):
-        motions = RoundMotions.objects.filter(
+        motions = RoundMotion.objects.filter(
             round__tournament=self.tournament,
             motion__ballotsubmission__confirmed=True,
         ).annotate(
@@ -148,10 +148,10 @@ class RoundMotionsTwoTeamStatsCalculator(MotionTwoTeamStatsCalculator):
         ).prefetch_related('round', 'motion').order_by('round__seq', 'seq')
         self.dict_motions = {m.id: m for m in motions}
 
-        motions = RoundMotions.objects.filter(pk__in=self.dict_motions.keys()).annotate(tdebates=Count('round__debate'))
+        motions = RoundMotion.objects.filter(pk__in=self.dict_motions.keys()).annotate(tdebates=Count('round__debate'))
         self._annotate_annotations(motions, ('tdebates',))
 
-        motions = RoundMotions.objects.filter(
+        motions = RoundMotion.objects.filter(
             pk__in=self.dict_motions.keys(),
         ).annotate(**{'%s_wins' % side: Count(
             'motion__ballotsubmission__teamscore',
@@ -164,7 +164,7 @@ class RoundMotionsTwoTeamStatsCalculator(MotionTwoTeamStatsCalculator):
         self._annotate_annotations(motions, ['%s_wins' % side for side in self.tournament.sides])
 
         if self.include_vetoes:
-            motions = RoundMotions.objects.filter(
+            motions = RoundMotion.objects.filter(
                 pk__in=self.dict_motions.keys(),
             ).annotate(**{'%s_vetoes' % side: Count(
                 'motion__debateteammotionpreference',
@@ -299,7 +299,7 @@ class MotionBPStatsCalculator:
                 motion.counts_by_side.append((side, advancing, advancing_pc, eliminated, eliminated_pc))
 
 
-class RoundMotionsBPStatsCalculator(MotionBPStatsCalculator):
+class RoundMotionBPStatsCalculator(MotionBPStatsCalculator):
 
     def _prefetch_prelim_motions(self):
         """Constructs the database query for preliminary round motions.
@@ -308,7 +308,7 @@ class RoundMotionsBPStatsCalculator(MotionBPStatsCalculator):
         position, and (2) the number of teams receiving n points from each
         position for each n = 0, 1, 2, 3."""
 
-        self.prelim_motions = RoundMotions.objects.filter(
+        self.prelim_motions = RoundMotion.objects.filter(
             round__tournament=self.tournament,
             round__stage=Round.STAGE_PRELIMINARY,
             motion__ballotsubmission__confirmed=True,
@@ -347,7 +347,7 @@ class RoundMotionsBPStatsCalculator(MotionBPStatsCalculator):
         Elimination rounds in BP are advancing/eliminated, so this just collates
         information on who advanced and who did not."""
 
-        self.elim_motions = RoundMotions.objects.filter(
+        self.elim_motions = RoundMotion.objects.filter(
             round__tournament=self.tournament,
             round__stage=Round.STAGE_ELIMINATION,
             motion__ballotsubmission__confirmed=True,

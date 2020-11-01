@@ -31,7 +31,7 @@ urlpatterns = [
 
     path('statistics/', include([
         path('',
-            views.AdminRoundMotionsStatisticsView.as_view(),
+            views.AdminRoundMotionStatisticsView.as_view(),
             name='motions-statistics'),
         path('global/',
             views.AdminGlobalMotionStatisticsView.as_view(),

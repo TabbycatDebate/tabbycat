@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from draw.models import Debate, DebateTeam
-from motions.models import DebateTeamMotionPreference, Motion, RoundMotions
+from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
 from motions.statistics import MotionBPStatsCalculator, MotionTwoTeamStatsCalculator
 from participants.models import Team
 from results.models import BallotSubmission, TeamScore
@@ -35,8 +35,8 @@ class TestMotionStatisticsTwoTeam(TestCase):
         DebateTeamMotionPreference.objects.create(debate_team=dt2, ballot_submission=ballotsub,
             motion=vetoed, preference=3)
 
-        RoundMotions.objects.create(round=rd, motion=motion, seq=1)
-        RoundMotions.objects.create(round=rd, motion=vetoed, seq=2)
+        RoundMotion.objects.create(round=rd, motion=motion, seq=1)
+        RoundMotion.objects.create(round=rd, motion=vetoed, seq=2)
 
     def tearDown(self):
         DebateTeam.objects.filter(team__tournament=self.tournament).delete()

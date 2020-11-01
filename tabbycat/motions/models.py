@@ -14,7 +14,7 @@ class Motion(models.Model):
     info_slide = models.TextField(
         verbose_name=_("info slide"), default="", blank=True,
         help_text=_("The information slide for this topic; if it has one"))
-    rounds = models.ManyToManyField('tournaments.Round', through='motions.RoundMotions',
+    rounds = models.ManyToManyField('tournaments.Round', through='motions.RoundMotion',
         verbose_name=_("rounds"))
 
     class Meta:
@@ -50,7 +50,7 @@ class DebateTeamMotionPreference(models.Model):
         return "{0.motion.reference:s} ({0.preference:d}) by {0.debate_team!s}".format(self)
 
 
-class RoundMotions(models.Model):
+class RoundMotion(models.Model):
     """Represents the relation between rounds and motions"""
 
     motion = models.ForeignKey(Motion, models.CASCADE,

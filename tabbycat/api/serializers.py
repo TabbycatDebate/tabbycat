@@ -89,7 +89,7 @@ class TournamentSerializer(serializers.ModelSerializer):
 
 
 class RoundSerializer(serializers.ModelSerializer):
-    class RoundMotionsSerializer(serializers.ModelSerializer):
+    class RoundMotionSerializer(serializers.ModelSerializer):
         url = MotionHyperlinkedIdentityField(view_name='api-motion-detail')
 
         class Meta:
@@ -108,7 +108,7 @@ class RoundSerializer(serializers.ModelSerializer):
         view_name='api-breakcategory-detail',
         queryset=BreakCategory.objects.all(),
         required=False)
-    motions = RoundMotionsSerializer(many=True, source='motion_set')
+    motions = RoundMotionSerializer(many=True, source='motion_set')
 
     _links = RoundLinksSerializer(source='*', read_only=True)
 
@@ -135,7 +135,7 @@ class RoundSerializer(serializers.ModelSerializer):
         motions_data = validated_data.pop('motion_set')
         round = super().create(validated_data)
 
-        motions = self.RoundMotionsSerializer(many=True, context=self.context)
+        motions = self.RoundMotionSerializer(many=True, context=self.context)
         motions._validated_data = motions_data  # Data was already validated
         motions.save(round=round)
 

@@ -326,7 +326,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'motion' : motion,
                     'round'  : tm.Round.objects.get(abbreviation=round_name, tournament=self.tournament),
                 }
-        self._import(f, mm.RoundMotions, round_motions_interpreter)
+        self._import(f, mm.RoundMotion, round_motions_interpreter)
 
     def import_sides(self, f):
         def side_interpreter(lineno, line):
