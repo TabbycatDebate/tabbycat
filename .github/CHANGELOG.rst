@@ -25,6 +25,7 @@ Change Log
     - Two-team formats can now have scoreless ballots, and winner ballots are not restricted to elimination rounds (`#1003 <https://github.com/TabbycatDebate/tabbycat/issues/1003>`_)
     - Results are now discoverable through the API.
 - Breaks are now explorable and manipulable through the API.
+- Removed the simulated annealing adjudicator allocator.
 
 
 2.4.7
