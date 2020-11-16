@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-19 19:52-0300\n"
+"POT-Creation-Date: 2020-11-16 14:55-0400\n"
 "PO-Revision-Date: 2019-07-11 23:49\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -21,18 +21,18 @@ msgstr ""
 msgid "The team can't be in a break category of a different tournament. Please remove: %(category)s"
 msgstr ""
 
-#: participants/admin.py:148
+#: participants/admin.py:146
 #, python-format
 msgid "%(count)d speaker had their URL key removed."
 msgid_plural "%(count)d speakers had their URL keys removed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: participants/admin.py:152 participants/admin.py:211
+#: participants/admin.py:150 participants/admin.py:209
 msgid "Delete URL key"
 msgstr ""
 
-#: participants/admin.py:206
+#: participants/admin.py:204
 #, python-format
 msgid "%(count)d adjudicator had their URL key removed."
 msgid_plural "%(count)d adjudicators had their URL keys removed."
@@ -729,49 +729,53 @@ msgstr ""
 msgid "%(name)s doesn't have any feedback to submit."
 msgstr ""
 
-#: participants/templates/in_this_round.html:8
+#: participants/templates/in_this_round.html:9
 #, python-format
 msgid "In This Round (%(round)s)"
 msgstr ""
 
-#: participants/templates/in_this_round.html:12
+#: participants/templates/in_this_round.html:13
+msgid "In This Round"
+msgstr ""
+
+#: participants/templates/in_this_round.html:16
 msgid "(Not Released to Public)"
 msgstr ""
 
-#: participants/templates/in_this_round.html:19
+#: participants/templates/in_this_round.html:23
 msgid "Room TBA"
 msgstr ""
 
-#: participants/templates/in_this_round.html:31
+#: participants/templates/in_this_round.html:35
 #, python-format
 msgid "%(adjudicator)s is not adjudicating this round."
 msgstr ""
 
-#: participants/templates/in_this_round.html:35
+#: participants/templates/in_this_round.html:39
 msgid "You are not adjudicating this round."
 msgstr ""
 
-#: participants/templates/in_this_round.html:50
+#: participants/templates/in_this_round.html:54
 #, python-format
 msgid "It looks like %(team)s is competing in %(ndebates)s debate this round."
 msgid_plural "It looks like %(team)s is competing in %(ndebates)s debates this round."
 msgstr[0] ""
 msgstr[1] ""
 
-#: participants/templates/in_this_round.html:56
+#: participants/templates/in_this_round.html:60
 msgid "If this is an error, please contact a tab director immediately."
 msgstr ""
 
-#: participants/templates/in_this_round.html:71
+#: participants/templates/in_this_round.html:75
 #, python-format
 msgid "%(team)s does not have a debate this round."
 msgstr ""
 
-#: participants/templates/in_this_round.html:75
+#: participants/templates/in_this_round.html:79
 msgid "You do not have a debate this round."
 msgstr ""
 
-#: participants/templates/in_this_round.html:87
+#: participants/templates/in_this_round.html:91
 msgid "The draw for this round hasn't yet been released."
 msgstr ""
 
@@ -903,30 +907,30 @@ msgstr ""
 msgid "Team Registration"
 msgstr ""
 
-#: participants/views.py:208
+#: participants/views.py:207
 msgid "Results"
 msgstr ""
 
-#: participants/views.py:213 participants/views.py:247
+#: participants/views.py:212 participants/views.py:246
 #, python-format
 msgid "Record for %(name)s"
 msgstr ""
 
-#: participants/views.py:244
+#: participants/views.py:243
 msgid "Previous Rounds"
 msgstr ""
 
-#: participants/views.py:333
+#: participants/views.py:332
 #, python-format
 msgid "Saved category: %(list)s"
 msgid_plural "Saved categories: %(list)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: participants/views.py:339
+#: participants/views.py:338
 msgid "No changes were made to the categories."
 msgstr ""
 
-#: participants/views.py:352
+#: participants/views.py:351
 msgid "Speaker Category Eligibility"
 msgstr ""
