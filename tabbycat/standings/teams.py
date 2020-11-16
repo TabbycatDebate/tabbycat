@@ -139,7 +139,7 @@ class AverageMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
 
 class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
-    """Metric annotator for total constructive speaker score."""
+    """Metric annotator for total substantive speaker score."""
     key = "speaks_ind_avg"
     name = _("average individual speaker score")
     abbr = _("AISS")
