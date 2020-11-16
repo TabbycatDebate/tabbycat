@@ -27,22 +27,22 @@ def readable_ballotsub_result(debateresult):
 
     def get_display_name(dt, t, use_codes):
         return {
-            'team_name': dt.team.code_name if use_codes else dt.team.short_name,
-            'side_abbr': dt.get_side_abbr(t),
+            'team': dt.team.code_name if use_codes else dt.team.short_name,
+            'side': dt.get_side_abbr(t),
         }
 
     def format_dt(dt, t, use_codes):
         # Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
-        return _("%(team_name)s as %(side_abbr)s") % get_display_name(dt, t, use_codes)
+        return _("%(team)s as %(side)s") % get_display_name(dt, t, use_codes)
 
     t = debateresult.tournament
     use_codes = use_team_code_names(t, True)
 
     try:
         if t.pref('teams_in_debate') == 'two':
-            result_winner = _("%(team_name)s (%(side_abbr)s) won") % get_display_name(debateresult.winning_dt(), t, use_codes)
+            result_winner = _("%(team)s (%(side)s) won") % get_display_name(debateresult.winning_dt(), t, use_codes)
             # Translators: The team here is the losing team
-            result = _("vs %(team_name)s (%(side_abbr)s)") % get_display_name(debateresult.losing_dt(), t, use_codes)
+            result = _("vs %(team)s (%(side)s)") % get_display_name(debateresult.losing_dt(), t, use_codes)
         elif not debateresult.is_voting and debateresult.is_elimination:
             result_winner = _("Advancing: %(advancing_list)s<br>\n")
             result_winner = result_winner % {
