@@ -3,12 +3,12 @@
 # blog and app.
 
 from itertools import accumulate
-from math import ceil, comb, floor
+from math import ceil, factorial, floor
 
 
 def ncr(n, r):
     try:
-        binom = comb(n, r)
+        binom = factorial(n) // factorial(r) // factorial(n - r)
     except ValueError:
         binom = 0
     return binom
@@ -21,9 +21,12 @@ def get_bp_coefficients(nrounds):
     See: https://oeis.org/A008287"""
 
     def get_coefficient(m, k):
-        return sum(ncr(m, i) * ncr(m, k - 2 * i) for i in range(k // 2 + 1))
+        coeff = 0
+        for i in range(0, floor(k / 2) + 1):
+            coeff += ncr(m, i) * ncr(m, k - 2 * i)
+        return coeff
 
-    half_row = [get_coefficient(nrounds, k) for k in range(ceil((3 * nrounds + 1) / 2))]
+    half_row = [get_coefficient(nrounds, k) for k in range(0, ceil((3 * nrounds + 1) / 2))]
 
     if nrounds == 0:
         return half_row
