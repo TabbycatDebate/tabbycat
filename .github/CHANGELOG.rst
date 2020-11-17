@@ -26,6 +26,7 @@ Change Log
     - Results are now discoverable through the API.
 - Breaks are now explorable and manipulable through the API.
 - Removed the simulated annealing adjudicator allocator.
+- Fixed issue with Sentry integration preventing some debugging info from being included in error reports
 
 
 2.4.7
