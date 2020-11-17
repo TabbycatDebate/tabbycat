@@ -136,10 +136,6 @@ if not environ.get('DISABLE_SENTRY'):
         release=TABBYCAT_VERSION,
     )
 
-    # Override dictionary trimming so that all preferences will be included in Sentry reports
-    # https://forum.sentry.io/t/python-sdk-extra-data-capped-at-400-characters/6909
-    sentry_sdk.serializer.MAX_DATABAG_BREADTH = 200
-
 # ==============================================================================
 # Scout
 # ==============================================================================
