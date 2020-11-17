@@ -14,4 +14,4 @@ django-redis==4.12.1                    # Use redis for cache (on heroku; local 
 # Misc
 sendgrid==6.3.1                         # Email service of choice on Heroku
 scout-apm==2.14.3                        # Performance monitoring
-sentry-sdk==0.15.1                      # Client for Sentry error tracking
+sentry-sdk==0.19.3                      # Client for Sentry error tracking
