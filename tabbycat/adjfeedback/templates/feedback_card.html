@@ -31,7 +31,7 @@
           {{ round }} {{ score }}
         {% endblocktrans %}
       </span>
-      {% blocktrans with adjudicator=feedback.adjudicator.name %}
+      {% blocktrans trimmed with adjudicator=feedback.adjudicator.name %}
         On {{ adjudicator }}
       {% endblocktrans %}
     </div>

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 15:04-0400\n"
+"POT-Creation-Date: 2020-11-18 17:59-0400\n"
 "PO-Revision-Date: 2019-07-11 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -344,10 +344,7 @@ msgstr ""
 
 #: results/templates/admin_results.html:43
 #, python-format
-msgid ""
-"\n"
-"                    A speaker from %(team)s gave multiple speeches in the current round\n"
-"                  "
+msgid "A speaker from %(team)s gave multiple speeches in the current round"
 msgstr ""
 
 #: results/templates/admin_results.html:52
@@ -876,20 +873,20 @@ msgstr ""
 
 #: results/utils.py:47
 #, python-format
-msgid "Advancing: %(advancing_list)s<br>\n"
+msgid "Advancing: %(advancing_list)s<br>"
 msgstr ""
 
-#: results/utils.py:51
+#: results/utils.py:50
 #, python-format
 msgid "Eliminated: %(eliminated_list)s"
 msgstr ""
 
-#: results/utils.py:59
+#: results/utils.py:58
 #, python-format
-msgid "1st: %(first_team)s<br>\n"
+msgid "1st: %(first_team)s<br>"
 msgstr ""
 
-#: results/utils.py:61
+#: results/utils.py:59
 #, python-format
 msgid ""
 "2nd: %(second_team)s<br>\n"
@@ -897,52 +894,52 @@ msgid ""
 "4th: %(fourth_team)s"
 msgstr ""
 
-#: results/utils.py:76
+#: results/utils.py:74
 #, python-format
 msgid "Error with result for %(debate)s"
 msgstr ""
 
 #. Translators: Abbreviation for Prime Minister
-#: results/utils.py:136
+#: results/utils.py:134
 msgid "PM"
 msgstr ""
 
 #. Translators: Abbreviation for Deputy Prime Minister
-#: results/utils.py:138
+#: results/utils.py:136
 msgid "DPM"
 msgstr ""
 
 #. Translators: Abbreviation for Leader of the Opposition
-#: results/utils.py:140
+#: results/utils.py:138
 msgid "LO"
 msgstr ""
 
 #. Translators: Abbreviation for Deputy Leader of the Opposition
-#: results/utils.py:142
+#: results/utils.py:140
 msgid "DLO"
 msgstr ""
 
 #. Translators: Abbreviation for Member for the Government
-#: results/utils.py:144
+#: results/utils.py:142
 msgid "MG"
 msgstr ""
 
 #. Translators: Abbreviation for Government Whip
-#: results/utils.py:146
+#: results/utils.py:144
 msgid "GW"
 msgstr ""
 
 #. Translators: Abbreviation for Member for the Opposition
-#: results/utils.py:148
+#: results/utils.py:146
 msgid "MO"
 msgstr ""
 
 #. Translators: Abbreviation for Opposition Whip
-#: results/utils.py:150
+#: results/utils.py:148
 msgid "OW"
 msgstr ""
 
-#: results/utils.py:170
+#: results/utils.py:168
 msgid "Reply"
 msgstr ""
 

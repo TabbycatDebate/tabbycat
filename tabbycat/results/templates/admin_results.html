@@ -40,7 +40,7 @@
               {% endif %}
               {% if iron.current_round %}
                 <p class="text-info mt-3 mb-0">
-                  {% blocktrans with team=iron.team %}
+                  {% blocktrans trimmed with team=iron.team %}
                     A speaker from {{ team }} gave multiple speeches in the current round
                   {% endblocktrans %}
                 </p>

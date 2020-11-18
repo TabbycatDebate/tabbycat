@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 14:55-0400\n"
+"POT-Creation-Date: 2020-11-18 17:59-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1030,12 +1030,12 @@ msgstr ""
 msgid "Adjudicator Assignments"
 msgstr ""
 
-#: draw/views.py:400
-msgid "Team Pairings"
-msgstr ""
-
 #: draw/views.py:404
 msgid "Position"
+msgstr ""
+
+#: draw/views.py:424
+msgid "Team Pairings"
 msgstr ""
 
 #: draw/views.py:447
