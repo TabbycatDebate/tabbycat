@@ -1,0 +1,321 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-16 15:04-0400\n"
+"PO-Revision-Date: 2020-11-18 21:01\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Talossan\n"
+"Language: tzl_TZL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: tzl\n"
+"X-Crowdin-File: /develop/tabbycat/utils/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 954\n"
+
+#: utils/forms.py:25
+msgid "Email address"
+msgstr "crwdns51650:0crwdne51650:0"
+
+#: utils/tables.py:46
+msgid "No Data Available"
+msgstr "crwdns33570:0crwdne33570:0"
+
+#: utils/tables.py:154 utils/tables.py:155
+msgid "Ⓒ"
+msgstr "crwdns51494:0crwdne51494:0"
+
+#: utils/tables.py:156
+msgid "Ⓣ"
+msgstr "crwdns51496:0crwdne51496:0"
+
+#: utils/tables.py:160
+msgid "chair"
+msgstr "crwdns33576:0crwdne33576:0"
+
+#: utils/tables.py:161
+msgid "panellist"
+msgstr "crwdns33578:0crwdne33578:0"
+
+#: utils/tables.py:162
+msgid "trainee"
+msgstr "crwdns33580:0crwdne33580:0"
+
+#: utils/tables.py:165
+msgid "—"
+msgstr "crwdns35632:0crwdne35632:0"
+
+#: utils/tables.py:166
+msgid "Redacted"
+msgstr "crwdns33672:0crwdne33672:0"
+
+#: utils/tables.py:230 utils/tables.py:236
+#, python-format
+msgid "View %(a)s's %(d)s Record"
+msgstr "crwdns33582:0%(a)scrwdnd33582:0%(d)scrwdne33582:0"
+
+#: utils/tables.py:246 utils/tables.py:251
+#, python-format
+msgid "View %(team)s's Record"
+msgstr "crwdns33584:0%(team)scrwdne33584:0"
+
+#: utils/tables.py:273
+#, python-format
+msgid "Code name: <strong>%(name)s</strong>"
+msgstr "crwdns33586:0%(name)scrwdne33586:0"
+
+#: utils/tables.py:275
+#, python-format
+msgid "Real name: <strong>%(name)s</strong>"
+msgstr "crwdns33588:0%(name)scrwdne33588:0"
+
+#: utils/tables.py:287
+#, python-format
+msgid "%(team)s won"
+msgstr "crwdns33590:0%(team)scrwdne33590:0"
+
+#: utils/tables.py:292
+#, python-format
+msgid "%(team)s lost"
+msgstr "crwdns33592:0%(team)scrwdne33592:0"
+
+#: utils/tables.py:297 utils/tables.py:309 utils/tables.py:333
+#, python-format
+msgid "%(team)s—no result"
+msgstr "crwdns33594:0%(team)scrwdne33594:0"
+
+#: utils/tables.py:314
+#, python-format
+msgid "%(team)s placed %(place)s"
+msgstr "crwdns51696:0%(team)scrwdnd51696:0%(place)scrwdne51696:0"
+
+#: utils/tables.py:323
+#, python-format
+msgid "%(team)s is advancing"
+msgstr "crwdns33604:0%(team)scrwdne33604:0"
+
+#: utils/tables.py:328
+#, python-format
+msgid "%(team)s was eliminated"
+msgstr "crwdns33606:0%(team)scrwdne33606:0"
+
+#: utils/tables.py:346
+#, python-format
+msgid " vs %(opposition)s"
+msgstr "crwdns33608:0%(opposition)scrwdne33608:0"
+
+#: utils/tables.py:353
+#, python-format
+msgid "Won against %(team)s"
+msgstr "crwdns33610:0%(team)scrwdne33610:0"
+
+#: utils/tables.py:355
+#, python-format
+msgid "Lost to %(team)s"
+msgstr "crwdns33612:0%(team)scrwdne33612:0"
+
+#: utils/tables.py:357
+#, python-format
+msgid "No result for debate against %(team)s"
+msgstr "crwdns33614:0%(team)scrwdne33614:0"
+
+#: utils/tables.py:365 utils/tables.py:444
+#, python-format
+msgid "Total speaker score: <strong>%s</strong>"
+msgstr "crwdns33616:0%scrwdne33616:0"
+
+#: utils/tables.py:370 utils/tables.py:449
+msgid "View/edit debate ballot"
+msgstr "crwdns33618:0crwdne33618:0"
+
+#: utils/tables.py:376 utils/tables.py:455
+msgid "View debate ballot"
+msgstr "crwdns33620:0crwdne33620:0"
+
+#: utils/tables.py:397
+msgid "Teams in debate:"
+msgstr "crwdns33622:0crwdne33622:0"
+
+#: utils/tables.py:400
+#, python-format
+msgid "%(team)s (%(side)s)"
+msgstr "crwdns33624:0%(team)scrwdnd33624:0%(side)scrwdne33624:0"
+
+#: utils/tables.py:401 utils/tables.py:405 utils/tables.py:431
+#: utils/tables.py:627
+msgid "??"
+msgstr "crwdns35330:0crwdne35330:0"
+
+#: utils/tables.py:419
+msgid "advancing"
+msgstr "crwdns33626:0crwdne33626:0"
+
+#: utils/tables.py:420
+msgid "Advancing"
+msgstr "crwdns33628:0crwdne33628:0"
+
+#: utils/tables.py:422
+msgid "eliminated"
+msgstr "crwdns33630:0crwdne33630:0"
+
+#: utils/tables.py:423
+msgid "Eliminated"
+msgstr "crwdns33632:0crwdne33632:0"
+
+#: utils/tables.py:426 utils/tables.py:436
+msgid "No result for debate"
+msgstr "crwdns33634:0crwdne33634:0"
+
+#: utils/tables.py:433
+#, python-format
+msgid "Placed %(place)s"
+msgstr "crwdns33644:0%(place)scrwdne33644:0"
+
+#: utils/tables.py:464
+msgid "Tournament"
+msgstr "crwdns33646:0crwdne33646:0"
+
+#: utils/tables.py:473
+msgid "Round"
+msgstr "crwdns33648:0crwdne33648:0"
+
+#: utils/tables.py:494 utils/tables.py:677
+msgid "Name"
+msgstr "crwdns33650:0crwdne33650:0"
+
+#: utils/tables.py:500 utils/tables.py:659
+msgid "Institution"
+msgstr "crwdns33652:0crwdne33652:0"
+
+#: utils/tables.py:506
+msgid "Member of the Adjudication Core"
+msgstr "crwdns33654:0crwdne33654:0"
+
+#: utils/tables.py:513
+msgid "Independent Adjudicator"
+msgstr "crwdns33656:0crwdne33656:0"
+
+#: utils/tables.py:521
+msgid "Always Trainee"
+msgstr "crwdns33658:0crwdne33658:0"
+
+#: utils/tables.py:556
+msgid "in minority"
+msgstr "crwdns35332:0crwdne35332:0"
+
+#: utils/tables.py:589
+msgid "Debate Adjudicators"
+msgstr "crwdns33660:0crwdne33660:0"
+
+#: utils/tables.py:620
+msgid "Order as listed"
+msgstr "crwdns33662:0crwdne33662:0"
+
+#: utils/tables.py:630
+msgid "Motion"
+msgstr "crwdns33664:0crwdne33664:0"
+
+#: utils/tables.py:645
+msgid "Team"
+msgstr "crwdns33666:0crwdne33666:0"
+
+#: utils/tables.py:650 utils/tables.py:699
+msgid "Categories"
+msgstr "crwdns33668:0crwdne33668:0"
+
+#: utils/tables.py:697
+msgid "Category"
+msgstr "crwdns33674:0crwdne33674:0"
+
+#: utils/tables.py:724
+#, python-format
+msgid "This room %(predicate)s."
+msgstr "crwdns51498:0%(predicate)scrwdne51498:0"
+
+#: utils/tables.py:726
+#, python-format
+msgid "This room %(predicates)s, and %(last_predicate)s."
+msgstr "crwdns51500:0%(predicates)scrwdnd51500:0%(last_predicate)scrwdne51500:0"
+
+#: utils/tables.py:741
+msgid "Room"
+msgstr "crwdns51502:0crwdne51502:0"
+
+#: utils/tables.py:759
+#, python-format
+msgid "Teams have met once"
+msgid_plural "Teams have met %(count)d times"
+msgstr[0] "crwdns33692:1crwdne33692:1"
+msgstr[1] "crwdns33692:5%(count)dcrwdne33692:5"
+
+#: utils/tables.py:765
+msgid "Teams are from the same institution"
+msgstr "crwdns33694:0crwdne33694:0"
+
+#: utils/tables.py:771
+msgid "Conflicts/Flags"
+msgstr "crwdns33696:0crwdne33696:0"
+
+#: utils/tables.py:825
+msgid "The ballot you submitted"
+msgstr "crwdns34602:0crwdne34602:0"
+
+#: utils/tables.py:829
+msgid "View/Edit Ballot"
+msgstr "crwdns33698:0crwdne33698:0"
+
+#: utils/tables.py:838
+msgid "No ballot"
+msgstr "crwdns34604:0crwdne34604:0"
+
+#: utils/tables.py:840
+msgid "Elimination"
+msgstr "crwdns34606:0crwdne34606:0"
+
+#: utils/tables.py:843 utils/tables.py:855
+msgid "View Ballot"
+msgstr "crwdns33700:0crwdne33700:0"
+
+#: utils/tables.py:863
+msgid "Result"
+msgstr "crwdns33702:0crwdne33702:0"
+
+#. Translators: "TBC" stands for "to be confirmed".
+#: utils/tables.py:869
+msgid "TBC"
+msgstr "crwdns33704:0crwdne33704:0"
+
+#: utils/tables.py:870
+msgid "Side"
+msgstr "crwdns33706:0crwdne33706:0"
+
+#: utils/tables.py:908
+msgid "Team iron-manned this round and the last."
+msgstr "crwdns34608:0crwdne34608:0"
+
+#: utils/tables.py:911
+msgid "Team iron-manned this round."
+msgstr "crwdns34610:0crwdne34610:0"
+
+#: utils/tables.py:914
+msgid "Team iron-manned last round."
+msgstr "crwdns34612:0crwdne34612:0"
+
+#: utils/tables.py:931 utils/tables.py:932
+#, python-format
+msgid "Team %(num)d"
+msgstr "crwdns33708:0%(num)dcrwdne33708:0"
+
+#: utils/tables.py:939
+msgid "Postpone"
+msgstr "crwdns51790:0crwdne51790:0"
+
+#: utils/views.py:38
+msgid "Whoops! You're not meant to type that URL into your browser."
+msgstr "crwdns33710:0crwdne33710:0"
+

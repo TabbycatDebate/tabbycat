@@ -1,0 +1,1055 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-18 17:59-0400\n"
+"PO-Revision-Date: 2020-11-18 22:18\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Talossan\n"
+"Language: tzl_TZL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: tzl\n"
+"X-Crowdin-File: /develop/tabbycat/results/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 948\n"
+
+#: results/apps.py:7 results/templates/public_results_index.html:4
+#: results/templates/public_results_index.html:5 results/views.py:140
+msgid "Results"
+msgstr "crwdns32384:0crwdne32384:0"
+
+#: results/forms.py:39
+msgid "Tournament password"
+msgstr "crwdns51746:0crwdne51746:0"
+
+#: results/forms.py:45
+msgid "That password isn't correct."
+msgstr "crwdns32386:0crwdne32386:0"
+
+#: results/forms.py:77
+msgid "Please enter a whole number."
+msgstr "crwdns32388:0crwdne32388:0"
+
+#: results/forms.py:79
+#, python-format
+msgid "Please enter a multiple of %s."
+msgstr "crwdns32390:0%scrwdne32390:0"
+
+#: results/forms.py:160
+msgid "The ballot set can't be both discarded and confirmed."
+msgstr "crwdns32392:0crwdne32392:0"
+
+#: results/forms.py:167
+msgid "The debate status can't be confirmed unless one of the ballot sets is confirmed."
+msgstr "crwdns32394:0crwdne32394:0"
+
+#: results/forms.py:297 results/forms.py:331
+msgid "---------"
+msgstr "crwdns32396:0crwdne32396:0"
+
+#: results/forms.py:299 results/forms.py:301
+#, python-format
+msgid "%(aff_team)s affirmed, %(neg_team)s negated"
+msgstr "crwdns32398:0%(aff_team)scrwdnd32398:0%(neg_team)scrwdne32398:0"
+
+#: results/forms.py:318
+#, python-format
+msgid "%(side)s's motion veto"
+msgstr "crwdns51398:0%(side)scrwdne51398:0"
+
+#: results/forms.py:327 results/forms.py:895
+#, python-format
+msgid "%(team)s (%(side)s)"
+msgstr "crwdns32424:0%(team)scrwdnd32424:0%(side)scrwdne32424:0"
+
+#: results/forms.py:330
+msgid "Winner"
+msgstr "crwdns51748:0crwdne51748:0"
+
+#: results/forms.py:483
+msgid "Mark as a duplicate speech"
+msgstr "crwdns32402:0crwdne32402:0"
+
+#: results/forms.py:543
+#, python-format
+msgid "The speaker %(speaker)s doesn't appear to be on team %(team)s."
+msgstr "crwdns32406:0%(speaker)scrwdnd32406:0%(team)scrwdne32406:0"
+
+#: results/forms.py:557
+#, python-format
+msgid "%(speaker)s appears to have given %(count)d substantive speech."
+msgid_plural "%(speaker)s appears to have given %(count)d substantive speeches."
+msgstr[0] "crwdns32408:1%(speaker)scrwdnd32408:1%(count)dcrwdne32408:1"
+msgstr[1] "crwdns32408:5%(speaker)scrwdnd32408:5%(count)dcrwdne32408:5"
+
+#: results/forms.py:574
+msgid "The last substantive speaker and reply speaker can't be the same."
+msgstr "crwdns32410:0crwdne32410:0"
+
+#: results/forms.py:581
+msgid "The reply speaker for this team did not give a substantive speech."
+msgstr "crwdns32412:0crwdne32412:0"
+
+#: results/forms.py:713
+msgid "The total scores for the teams are the same (i.e. a draw)."
+msgstr "crwdns32414:0crwdne32414:0"
+
+#: results/forms.py:718
+msgid "The declared winner does not correspond to the team with the highest score."
+msgstr "crwdns51750:0crwdne51750:0"
+
+#: results/forms.py:727
+#, python-format
+msgid "The total scores for the following teams are the same: %(teams)s"
+msgstr "crwdns32416:0%(teams)scrwdne32416:0"
+
+#: results/forms.py:737
+#, python-format
+msgid "The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_margin).1f)."
+msgstr "crwdns32418:0%(margin)crwdnd32418:0%(max_margin)crwdne32418:0"
+
+#: results/forms.py:840
+#, python-format
+msgid "The total scores for the teams are the same (i.e. a draw) for adjudicator %(adjudicator)s."
+msgstr "crwdns51400:0%(adjudicator)scrwdne51400:0"
+
+#: results/forms.py:845
+#, python-format
+msgid "The declared winner does not correspond to the team with the highest score for adjudicator %(adjudicator)s."
+msgstr "crwdns51752:0%(adjudicator)scrwdne51752:0"
+
+#: results/forms.py:853
+#, python-format
+msgid "The margin (%(margin).1f) in the ballot of adjudicator %(adjudicator)s exceeds the maximum allowable margin (%(max_margin).1f)."
+msgstr "crwdns51402:0%(margin)crwdnd51402:0%(adjudicator)scrwdnd51402:0%(max_margin)crwdne51402:0"
+
+#: results/forms.py:909
+msgid "Sides for this debate are not confirmed. You can't save a result for this debate until the sides have been confirmed in the draw."
+msgstr "crwdns32426:0crwdne32426:0"
+
+#: results/forms.py:952
+#, python-format
+msgid "There must be exactly %(n)d team advancing."
+msgid_plural "There must be exactly %(n)d teams advancing."
+msgstr[0] "crwdns51754:1%(n)dcrwdne51754:1"
+msgstr[1] "crwdns51754:5%(n)dcrwdne51754:5"
+
+#: results/forms.py:995
+msgid "There must be exactly 1 team advancing."
+msgstr "crwdns51756:0crwdne51756:0"
+
+#: results/models.py:32
+msgid "Tab room"
+msgstr "crwdns32434:0crwdne32434:0"
+
+#: results/models.py:33
+msgid "Public"
+msgstr "crwdns32436:0crwdne32436:0"
+
+#: results/models.py:37
+msgid "timestamp"
+msgstr "crwdns32438:0crwdne32438:0"
+
+#: results/models.py:39
+msgid "version"
+msgstr "crwdns32440:0crwdne32440:0"
+
+#: results/models.py:41
+msgid "submitter type"
+msgstr "crwdns32442:0crwdne32442:0"
+
+#: results/models.py:43
+msgid "confirmed"
+msgstr "crwdns32444:0crwdne32444:0"
+
+#: results/models.py:48
+msgid "from participant"
+msgstr "crwdns51758:0crwdne51758:0"
+
+#: results/models.py:53
+msgid "submitter"
+msgstr "crwdns32446:0crwdne32446:0"
+
+#: results/models.py:56
+msgid "confirmer"
+msgstr "crwdns32448:0crwdne32448:0"
+
+#: results/models.py:58
+msgid "confirm timestamp"
+msgstr "crwdns32450:0crwdne32450:0"
+
+#: results/models.py:60
+msgid "IP address"
+msgstr "crwdns32452:0crwdne32452:0"
+
+#: results/models.py:97
+msgid "A tab room ballot must have a user associated."
+msgstr "crwdns32454:0crwdne32454:0"
+
+#: results/models.py:105
+msgid "debate"
+msgstr "crwdns32456:0crwdne32456:0"
+
+#: results/models.py:107
+msgid "motion"
+msgstr "crwdns32458:0crwdne32458:0"
+
+#: results/models.py:109
+msgid "discarded"
+msgstr "crwdns32460:0crwdne32460:0"
+
+#: results/models.py:113 results/models.py:199 results/models.py:238
+#: results/models.py:276 results/models.py:318
+msgid "ballot submission"
+msgstr "crwdns32464:0crwdne32464:0"
+
+#: results/models.py:114
+msgid "ballot submissions"
+msgstr "crwdns32466:0crwdne32466:0"
+
+#: results/models.py:133
+#, python-format
+msgid "Debate is in round %(round)d but motion (%(motion)s) is from round %(motion_round)d"
+msgstr "crwdns32468:0%(round)dcrwdnd32468:0%(motion)scrwdnd32468:0%(motion_round)dcrwdne32468:0"
+
+#: results/models.py:140
+msgid "A ballot can't be both confirmed and discarded!"
+msgstr "crwdns32470:0crwdne32470:0"
+
+#: results/models.py:201 results/models.py:240
+msgid "debate adjudicator"
+msgstr "crwdns32474:0crwdne32474:0"
+
+#: results/models.py:203 results/models.py:242 results/models.py:278
+#: results/models.py:320
+msgid "debate team"
+msgstr "crwdns32476:0crwdne32476:0"
+
+#: results/models.py:206 results/models.py:283
+msgid "win"
+msgstr "crwdns32490:0crwdne32490:0"
+
+#: results/models.py:208 results/models.py:285
+msgid "margin"
+msgstr "crwdns32492:0crwdne32492:0"
+
+#: results/models.py:210 results/models.py:243 results/models.py:287
+#: results/models.py:323
+msgid "score"
+msgstr "crwdns32478:0crwdne32478:0"
+
+#: results/models.py:215
+msgid "team score by adjudicator"
+msgstr "crwdns51760:0crwdne51760:0"
+
+#: results/models.py:216
+msgid "team scores by adjudicator"
+msgstr "crwdns51762:0crwdne51762:0"
+
+#: results/models.py:231 results/models.py:265
+msgid "The debate team, debate adjudicator and ballot submission must all relate to the same debate."
+msgstr "crwdns32486:0crwdne32486:0"
+
+#: results/models.py:244 results/models.py:324
+msgid "position"
+msgstr "crwdns32480:0crwdne32480:0"
+
+#: results/models.py:250
+msgid "speaker score by adjudicator"
+msgstr "crwdns32482:0crwdne32482:0"
+
+#: results/models.py:251
+msgid "speaker scores by adjudicator"
+msgstr "crwdns32484:0crwdne32484:0"
+
+#: results/models.py:281
+msgid "points"
+msgstr "crwdns32488:0crwdne32488:0"
+
+#: results/models.py:289
+msgid "votes given"
+msgstr "crwdns32494:0crwdne32494:0"
+
+#: results/models.py:291
+msgid "votes possible"
+msgstr "crwdns32496:0crwdne32496:0"
+
+#: results/models.py:295
+msgid "team score"
+msgstr "crwdns32498:0crwdne32498:0"
+
+#: results/models.py:296
+msgid "team scores"
+msgstr "crwdns32500:0crwdne32500:0"
+
+#: results/models.py:322
+msgid "speaker"
+msgstr "crwdns32502:0crwdne32502:0"
+
+#: results/models.py:326
+msgid "ghost"
+msgstr "crwdns32504:0crwdne32504:0"
+
+#: results/models.py:327
+msgid "If checked, this score does not count towards the speaker tab. This is typically checked for speeches where someone spoke twice to make up for an absent teammate (sometimes known as \"iron-person\" or \"iron-man\" speeches)."
+msgstr "crwdns32506:0crwdne32506:0"
+
+#: results/models.py:336
+msgid "speaker score"
+msgstr "crwdns32508:0crwdne32508:0"
+
+#: results/models.py:337
+msgid "speaker scores"
+msgstr "crwdns32510:0crwdne32510:0"
+
+#: results/models.py:346
+msgid "The debate team and speaker must be from the same team."
+msgstr "crwdns32512:0crwdne32512:0"
+
+#: results/models.py:349
+msgid "The ballot submission and debate team must relate to the same debate."
+msgstr "crwdns32514:0crwdne32514:0"
+
+#: results/tables.py:15
+msgid "Whether this debate's ballot has been checked in"
+msgstr "crwdns34468:0crwdne34468:0"
+
+#: results/tables.py:36
+msgid "Status of this debate's ballot"
+msgstr "crwdns32528:0crwdne32528:0"
+
+#: results/templates/admin_results.html:6
+msgid "Display Draw"
+msgstr "crwdns32548:0crwdne32548:0"
+
+#: results/templates/admin_results.html:9
+msgid "Check-In Ballots"
+msgstr "crwdns32550:0crwdne32550:0"
+
+#: results/templates/admin_results.html:12
+msgid "Recent 'Iron-Persons'"
+msgstr "crwdns34470:0crwdne34470:0"
+
+#: results/templates/admin_results.html:20
+msgid "Teams who have recently missed a speaker"
+msgstr "crwdns34472:0crwdne34472:0"
+
+#: results/templates/admin_results.html:36
+#, python-format
+msgid "A speaker from %(team)s gave multiple speeches in the previous round"
+msgstr "crwdns34474:0%(team)scrwdne34474:0"
+
+#: results/templates/admin_results.html:43
+#, python-format
+msgid "A speaker from %(team)s gave multiple speeches in the current round"
+msgstr "crwdns51798:0%(team)scrwdne51798:0"
+
+#: results/templates/admin_results.html:52
+msgid "No known cases in the current or previous round"
+msgstr "crwdns34478:0crwdne34478:0"
+
+#: results/templates/admin_results.html:66
+msgid "Complete Round"
+msgstr "crwdns34480:0crwdne34480:0"
+
+#: results/templates/admin_results.html:76
+msgid "This page automatically updates with the new ballot entries and checkins as they occur. You will, however, need to reload it once all ballots are completed in order to advance the round."
+msgstr "crwdns34482:0crwdne34482:0"
+
+#: results/templates/admin_results.html:88
+#, python-format
+msgid "The following debate appears to have scoresheets from trainees: %(debates_list)s."
+msgid_plural "The following %(ndebates)s debates appear to have scoresheets from trainees: %(debates_list)s."
+msgstr[0] "crwdns51634:1%(debates_list)scrwdne51634:1"
+msgstr[1] "crwdns51634:5%(ndebates)scrwdnd51634:5%(debates_list)scrwdne51634:5"
+
+#: results/templates/admin_results.html:94
+#, python-format
+msgid "This can happen if you demote a panellist to trainee after a result has been submitted for that debate. This may indicate that there is an inconsistency in results data, which may cause unexpected results (or crashes). Please consider going to the Edit Database area and deleting the offending <a href=\"%(editdb_speakerscorebyadj_url)s?debate_adjudicator__type__exact=T\" class=\"alert-link\">\"speaker scores by adj\" objects</a>, and then opening and resaving the result here."
+msgstr "crwdns51636:0%(editdb_speakerscorebyadj_url)scrwdne51636:0"
+
+#: results/templates/admin_results.html:107
+#, python-format
+msgid "This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Results can't be entered while this configuration is in place. Please <a href=\"%(debate_rules_url)s\">revise this tournament's configuration</a> before you try to enter results."
+msgstr "crwdns32554:0%(debate_rules_url)scrwdne32554:0"
+
+#: results/templates/admin_results.html:115
+#, python-format
+msgid "Currently there are no motions entered for this round, so debate results cannot be entered. <a href=\"%(motions_url)s\" class=\"alert-link\">Add Motions.</a>"
+msgstr "crwdns32556:0%(motions_url)scrwdne32556:0"
+
+#: results/templates/admin_results.html:124
+#, python-format
+msgid "Your tournament configuration allows ballots to be submitted online by adjudicators. The draw <a href=\"%(display_url)s\" class=\"alert-link\">must be released</a> before they can do so for this round."
+msgstr "crwdns32558:0%(display_url)scrwdne32558:0"
+
+#: results/templates/admin_results.html:131
+#, python-format
+msgid "Your tournament configuration allows feedback to be submitted online by participants. The draw <a href=\"%(display_url)s\" class=\"alert-link\">must be released</a> before they can do so for this round."
+msgstr "crwdns32560:0%(display_url)scrwdne32560:0"
+
+#: results/templates/assistant_enter_results.html:7
+#: results/templates/ballot_entry_base.html:30
+msgid "Back to All Results"
+msgstr "crwdns32562:0crwdne32562:0"
+
+#: results/templates/assistant_enter_results.html:11
+#: results/templates/ballot_entry_base.html:35
+#: results/templates/ballot_entry_base.html:39
+msgid "Create a new ballot set for this debate"
+msgstr "crwdns32564:0crwdne32564:0"
+
+#: results/templates/assistant_enter_results.html:33
+msgid "You can't confirm this ballot set because you entered it."
+msgstr "crwdns32566:0crwdne32566:0"
+
+#: results/templates/assistant_enter_results.html:41
+msgid "Confirm results"
+msgstr "crwdns32568:0crwdne32568:0"
+
+#: results/templates/assistant_enter_results.html:44
+msgid "Results are incorrect"
+msgstr "crwdns32570:0crwdne32570:0"
+
+#: results/templates/assistant_enter_results.html:49
+#: results/templates/enter_results.html:53
+#: results/templates/public_enter_results.html:68
+msgid "Emails will be sent to adjudicators when the ballot is confirmed."
+msgstr "crwdns32572:0crwdne32572:0"
+
+#: results/templates/assistant_results.html:4
+#: results/templates/assistant_results.html:5
+msgid "Enter Results"
+msgstr "crwdns32574:0crwdne32574:0"
+
+#: results/templates/assistant_results.html:12
+msgid "This page automatically updates with the new ballot entries and checkins as they occur."
+msgstr "crwdns35286:0crwdne35286:0"
+
+#: results/templates/assistant_results.html:16
+msgid "This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Results can't be entered while this configuration is in place. Please ask an administrator to change this configuration."
+msgstr "crwdns32576:0crwdne32576:0"
+
+#: results/templates/assistant_results.html:23
+msgid "Currently there are no motions entered for this round, so debate results cannot be entered. Please ask an administrator to add motions."
+msgstr "crwdns32578:0crwdne32578:0"
+
+#: results/templates/assistant_results.html:33
+#, python-format
+msgid "One debate does not have its sides confirmed. Results for this debate cannot be entered until its side allocations are marked as confirmed."
+msgid_plural "%(ndebates)s debate do not have their sides confirmed. Results for these debates cannot be entered until their side allocations are marked as confirmed."
+msgstr[0] "crwdns32580:1crwdne32580:1"
+msgstr[1] "crwdns32580:5%(ndebates)scrwdne32580:5"
+
+#: results/templates/assistant_results.html:44
+#, python-format
+msgid "One debate has a panel with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted."
+msgid_plural "%(num_even_panel)s debates have panels with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted."
+msgstr[0] "crwdns32582:1crwdne32582:1"
+msgstr[1] "crwdns32582:5%(num_even_panel)scrwdne32582:5"
+
+#: results/templates/ballot/ballot_debate_info.html:6
+msgid "Debate Information"
+msgstr "crwdns32604:0crwdne32604:0"
+
+#: results/templates/ballot/ballot_debate_info.html:42
+msgid "No speakers spoke twice (no 'iron-person' speeches)"
+msgstr "crwdns35288:0crwdne35288:0"
+
+#: results/templates/ballot/ballot_debate_info.html:45
+msgid "A speaker spoke twice (an 'iron-person' speech)"
+msgstr "crwdns35290:0crwdne35290:0"
+
+#: results/templates/ballot/ballot_scoresheet.html:28
+msgid "Result"
+msgstr "crwdns32610:0crwdne32610:0"
+
+#: results/templates/ballot/ballot_scoresheet.html:28
+msgid "Rank"
+msgstr "crwdns32612:0crwdne32612:0"
+
+#: results/templates/ballot/ballot_scoresheet.html:34
+msgid "Margin"
+msgstr "crwdns32614:0crwdne32614:0"
+
+#: results/templates/ballot/ballot_set.html:6
+msgid "There are some problems with this scoresheet. Please review and correct them."
+msgstr "crwdns32618:0crwdne32618:0"
+
+#: results/templates/ballot/ballot_set.html:19
+#: results/templates/ballot_entry_form.html:23
+#, python-format
+msgid "Ballot from %(name)s (%(institution)s)"
+msgstr "crwdns32650:0%(name)scrwdnd32650:0%(institution)scrwdne32650:0"
+
+#: results/templates/ballot/ballot_set.html:23
+#: results/templates/ballot_entry_form.html:27
+#, python-format
+msgid "Ballot from %(name)s"
+msgstr "crwdns32652:0%(name)scrwdne32652:0"
+
+#: results/templates/ballot/ballot_set.html:31
+#: results/templates/public_ballot_set.html:71
+msgid "Scoresheet"
+msgstr "crwdns32654:0crwdne32654:0"
+
+#: results/templates/ballot/ballot_set.html:35
+msgid "Solo Chair"
+msgstr "crwdns32656:0crwdne32656:0"
+
+#: results/templates/ballot/ballot_set.html:35
+#: results/templates/ballot_entry_form.html:32
+msgid "Chair"
+msgstr "crwdns32658:0crwdne32658:0"
+
+#: results/templates/ballot/ballot_set.html:35
+#: results/templates/ballot_entry_form.html:34
+msgid "Panellist"
+msgstr "crwdns32660:0crwdne32660:0"
+
+#: results/templates/ballot/ballot_set.html:35
+msgid "Trainee"
+msgstr "crwdns32662:0crwdne32662:0"
+
+#: results/templates/ballot/ballot_set.html:44
+msgid "Assign sides before entering scores"
+msgstr "crwdns32664:0crwdne32664:0"
+
+#: results/templates/ballot/ballot_speaks.html:19
+msgid "Duplicate speeches are hidden from the speaker tab. If a speaker is 'iron-manning' you would typically mark only the lesser of their scores as a duplicate."
+msgstr "crwdns32616:0crwdne32616:0"
+
+#: results/templates/ballot/other_ballots_list.html:9
+#, python-format
+msgid "There is %(number)s existing ballot set for this debate."
+msgid_plural "There are %(number)s existing ballot sets for this debate."
+msgstr[0] "crwdns32622:1%(number)scrwdne32622:1"
+msgstr[1] "crwdns32622:5%(number)scrwdne32622:5"
+
+#: results/templates/ballot/other_ballots_list.html:21
+msgid "This ballot set is <strong>confirmed</strong>."
+msgstr "crwdns32626:0crwdne32626:0"
+
+#: results/templates/ballot/other_ballots_list.html:26
+msgid "This ballot set is <strong>discarded</strong>."
+msgstr "crwdns32628:0crwdne32628:0"
+
+#: results/templates/ballot/other_ballots_list.html:41
+msgid "CURRENTLY VIEWING"
+msgstr "crwdns32630:0crwdne32630:0"
+
+#: results/templates/ballot/other_ballots_list.html:44
+#, python-format
+msgid "Version <strong>%(version)s</strong>,"
+msgstr "crwdns32632:0%(version)scrwdne32632:0"
+
+#: results/templates/ballot/other_ballots_list.html:49
+#, python-format
+msgid "entered by <strong>%(submitter)s</strong>,"
+msgstr "crwdns32634:0%(submitter)scrwdne32634:0"
+
+#: results/templates/ballot/other_ballots_list.html:54
+#, python-format
+msgid "submitted from <strong>%(adjudicator)s</strong>'s private URL,"
+msgstr "crwdns51764:0%(adjudicator)scrwdne51764:0"
+
+#: results/templates/ballot/other_ballots_list.html:58
+#, python-format
+msgid "submitted from the public form on %(ip_address)s,"
+msgstr "crwdns32636:0%(ip_address)scrwdne32636:0"
+
+#: results/templates/ballot/other_ballots_list.html:64
+#, python-format
+msgid "%(timestamp)s (%(timeago)s ago),"
+msgstr "crwdns32638:0%(timestamp)scrwdnd32638:0%(timeago)scrwdne32638:0"
+
+#: results/templates/ballot/other_ballots_list.html:69
+msgid "unknown"
+msgstr "crwdns51638:0crwdne51638:0"
+
+#: results/templates/ballot/other_ballots_list.html:70
+#, python-format
+msgid "confirmed by <strong>%(confirmer)s</strong>"
+msgstr "crwdns32640:0%(confirmer)scrwdne32640:0"
+
+#: results/templates/ballot/other_ballots_list.html:74
+msgid "unconfirmed"
+msgstr "crwdns32644:0crwdne32644:0"
+
+#: results/templates/ballot/other_ballots_list.html:78
+msgid "(discarded)"
+msgstr "crwdns32646:0crwdne32646:0"
+
+#: results/templates/ballot/other_ballots_list.html:82
+#, python-format
+msgid "<em>(identical to version %(others)s)</em>"
+msgid_plural "<em>(identical to versions %(others)s)</em>"
+msgstr[0] "crwdns32648:1%(others)scrwdne32648:1"
+msgstr[1] "crwdns32648:5%(others)scrwdne32648:5"
+
+#: results/templates/ballot_entry.html:21
+#, python-format
+msgid "This ballot entry interface is in beta, if you encounter any problems the older version of the interface is <a href=\"%(old_url)s\" class=\"alert-link\">available here</a>."
+msgstr "crwdns34490:0%(old_url)scrwdne34490:0"
+
+#: results/templates/ballot_entry_base.html:8
+#, python-format
+msgid "New Ballot Set for %(debate)s"
+msgstr "crwdns51404:0%(debate)scrwdne51404:0"
+
+#: results/templates/ballot_entry_base.html:12
+#, python-format
+msgid "Edit Ballot Set for %(debate)s"
+msgstr "crwdns51406:0%(debate)scrwdne51406:0"
+
+#: results/templates/ballot_entry_base.html:19
+#, python-format
+msgid "%(room)s: %(debate)s"
+msgstr "crwdns51408:0%(room)scrwdnd51408:0%(debate)scrwdne51408:0"
+
+#: results/templates/ballot_entry_base.html:48
+msgid "This debate has a panel with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted."
+msgstr "crwdns32674:0crwdne32674:0"
+
+#: results/templates/ballot_entry_base.html:59
+#, python-format
+msgid "%(team)s had speakers who spoke multiple times in the last round — i.e. an 'iron' person speech. Please carefully check the ballot to see if that is still the case for this round. If it is, ensure the speakers selected below reflect this."
+msgstr "crwdns51410:0%(team)scrwdne51410:0"
+
+#: results/templates/ballot_entry_form.html:38
+#, python-format
+msgid "Scoresheet from chair %(chair)s"
+msgstr "crwdns35296:0%(chair)scrwdne35296:0"
+
+#: results/templates/ballot_entry_form.html:42
+msgid "Scoresheet, no chair set"
+msgstr "crwdns34498:0crwdne34498:0"
+
+#: results/templates/ballot_entry_form.html:63
+#, python-format
+msgid "Error with %(pos)s's speaker field: %(error)s"
+msgstr "crwdns34500:0%(pos)scrwdnd34500:0%(error)scrwdne34500:0"
+
+#: results/templates/ballot_entry_form.html:69
+#, python-format
+msgid "Error with %(pos)s's duplicate speaker field: %(error)s"
+msgstr "crwdns34502:0%(pos)scrwdnd34502:0%(error)scrwdne34502:0"
+
+#: results/templates/ballot_entry_form.html:75
+#, python-format
+msgid "Error with %(pos)s's score field: %(error)s"
+msgstr "crwdns34504:0%(pos)scrwdnd34504:0%(error)scrwdne34504:0"
+
+#: results/templates/debate_postponement_form.html:3
+msgid "Postponed"
+msgstr "crwdns51766:0crwdne51766:0"
+
+#: results/templates/debate_postponement_form.html:8
+msgid "Postpone"
+msgstr "crwdns51768:0crwdne51768:0"
+
+#: results/templates/enter_results.html:15
+msgid "Ballot Status"
+msgstr "crwdns32678:0crwdne32678:0"
+
+#: results/templates/enter_results.html:16
+msgid "only the confirmed ballot set will affect this debate's result"
+msgstr "crwdns32680:0crwdne32680:0"
+
+#: results/templates/enter_results.html:32
+msgid "Debate Status"
+msgstr "crwdns32682:0crwdne32682:0"
+
+#: results/templates/enter_results.html:35
+msgid "all debates must be confirmed to complete the round"
+msgstr "crwdns34506:0crwdne34506:0"
+
+#: results/templates/enter_results.html:45
+msgid "Save Ballot"
+msgstr "crwdns32686:0crwdne32686:0"
+
+#: results/templates/enter_results.html:48
+msgid "Cancel Entry"
+msgstr "crwdns32688:0crwdne32688:0"
+
+#: results/templates/includes/public_enter_results_info.html:4
+#, python-format
+msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can submit results and/or feedback for your debates. You may bookmark this page and return here after each debate for the available actions."
+msgstr "crwdns51700:0%(name)scrwdne51700:0"
+
+#: results/templates/privateurl_ballot_set.html:7
+#: results/templates/privateurl_ballot_set_error.html:12
+#, python-format
+msgid "The page is provided to allow you, <strong>%(name)s</strong>, to verify your own scoresheet. <strong>You must not share this URL with anyone.</strong> Sharing the URL will allow others to access <strong>all</strong> actions from your personal landing page."
+msgstr "crwdns35500:0%(name)scrwdne35500:0"
+
+#: results/templates/privateurl_ballot_set_error.html:4
+#: results/templates/privateurl_ballot_set_error.html:6
+#: results/templates/public_ballot_set_error.html:4
+#: results/templates/public_ballot_set_error.html:6
+msgid "Ballot Not Available"
+msgstr "crwdns34512:0crwdne34512:0"
+
+#: results/templates/privateurl_ballot_set_error.html:27
+#, python-format
+msgid "<a href=\"%(url)s\">Back to your private landing page.</a>"
+msgstr "crwdns35502:0%(url)scrwdne35502:0"
+
+#: results/templates/public_add_ballot.html:4
+#: results/templates/public_add_ballot_unreleased.html:4
+#: results/templates/public_add_ballot_unreleased.html:5
+msgid "Enter Ballot"
+msgstr "crwdns32542:0crwdne32542:0"
+
+#: results/templates/public_add_ballot.html:5
+msgid "Who are you?"
+msgstr "crwdns32692:0crwdne32692:0"
+
+#: results/templates/public_add_ballot.html:6
+msgid "(click your name on this list)"
+msgstr "crwdns32694:0crwdne32694:0"
+
+#: results/templates/public_add_ballot_unreleased.html:8
+#, python-format
+msgid "The draw and/or motions for %(round)s have yet to be released."
+msgstr "crwdns51414:0%(round)scrwdne51414:0"
+
+#: results/templates/public_ballot_set.html:6
+#: results/templates/public_ballot_set.html:10
+#: results/templates/public_ballot_set.html:17
+#: results/templates/public_ballot_set.html:21
+#, python-format
+msgid "Ballot for %(matchup)s"
+msgstr "crwdns32698:0%(matchup)scrwdne32698:0"
+
+#: results/templates/public_ballot_set.html:28 results/views.py:255
+#, python-format
+msgid "%(round)s @ %(room)s"
+msgstr "crwdns51416:0%(round)scrwdnd51416:0%(room)scrwdne51416:0"
+
+#: results/templates/public_ballot_set.html:37
+msgid "Return to landing page"
+msgstr "crwdns34508:0crwdne34508:0"
+
+#: results/templates/public_ballot_set.html:42
+#, python-format
+msgid "Return to Results for %(round)s"
+msgstr "crwdns51418:0%(round)scrwdne51418:0"
+
+#: results/templates/public_ballot_set.html:54
+msgid "Motion"
+msgstr "crwdns32702:0crwdne32702:0"
+
+#: results/templates/public_ballot_set.html:67
+#, python-format
+msgid "From %(name)s (%(institution)s)"
+msgstr "crwdns32704:0%(name)scrwdnd32704:0%(institution)scrwdne32704:0"
+
+#: results/templates/public_ballot_set.html:92
+#: results/templates/public_ballot_set.html:96
+#, python-format
+msgid "<em>Total for %(name)s (%(side)s)</em>"
+msgstr "crwdns34510:0%(name)scrwdnd34510:0%(side)scrwdne34510:0"
+
+#: results/templates/public_ballot_set.html:105
+#: results/templates/public_ballot_set.html:109
+#, python-format
+msgid "<em>%(name)s (%(side)s)</em>"
+msgstr "crwdns51770:0%(name)scrwdnd51770:0%(side)scrwdne51770:0"
+
+#: results/templates/public_ballot_set.html:117
+msgid "Won"
+msgstr "crwdns51772:0crwdne51772:0"
+
+#: results/templates/public_ballot_set.html:117
+msgid "Lost"
+msgstr "crwdns51774:0crwdne51774:0"
+
+#: results/templates/public_ballot_set_error.html:14
+#, python-format
+msgid "<a href=\"%(url)s\">Back to the tournament home page.</a>"
+msgstr "crwdns34514:0%(url)scrwdne34514:0"
+
+#: results/templates/public_enter_results.html:5
+#: results/templates/public_enter_results.html:8
+#, python-format
+msgid "Enter Results for %(debate)s"
+msgstr "crwdns51420:0%(debate)scrwdne51420:0"
+
+#: results/templates/public_enter_results.html:16
+#, python-format
+msgid "%(adjudicator)s, note that you must enter <strong>all of the ballots</strong> from your panel, not just your own!"
+msgstr "crwdns51422:0%(adjudicator)scrwdne51422:0"
+
+#: results/templates/public_enter_results.html:24
+#, python-format
+msgid "This form has already been submitted <strong>once</strong>. Please contact a tab official after submitting your form."
+msgid_plural "This form has already been submitted <strong>%(nsubmissions)s</strong> times. Please contact a tab official after submitting your form."
+msgstr[0] "crwdns32712:1crwdne32712:1"
+msgstr[1] "crwdns32712:5%(nsubmissions)scrwdne32712:5"
+
+#: results/templates/public_enter_results.html:63
+msgid "Submit Ballot(s)"
+msgstr "crwdns34516:0crwdne34516:0"
+
+#: results/templates/public_enter_results.html:65
+msgid "When submitting this form your IP address will be stored for logging purposes."
+msgstr "crwdns32714:0crwdne32714:0"
+
+#: results/templates/public_enter_results_error.html:4
+#, python-format
+msgid "No Result to Enter (%(adjudicator)s)"
+msgstr "crwdns51424:0%(adjudicator)scrwdne51424:0"
+
+#: results/templates/public_enter_results_error.html:7
+msgid "No Result to Enter"
+msgstr "crwdns32718:0crwdne32718:0"
+
+#: results/templates/public_results_for_round.html:7
+msgid "View by Team"
+msgstr "crwdns32722:0crwdne32722:0"
+
+#: results/templates/public_results_for_round.html:10
+msgid "View by Debate"
+msgstr "crwdns32724:0crwdne32724:0"
+
+#: results/templates/public_results_index.html:12
+#, python-format
+msgid "Results for %(round)s"
+msgstr "crwdns51426:0%(round)scrwdne51426:0"
+
+#: results/templates/public_results_not_available.html:4
+#: results/templates/public_results_not_available.html:6
+#: results/templates/public_results_silent.html:4
+#: results/templates/public_results_silent.html:6
+msgid "Results Not Available"
+msgstr "crwdns34518:0crwdne34518:0"
+
+#: results/templates/public_results_not_available.html:12
+#, python-format
+msgid "The results for %(round)s aren't yet available."
+msgstr "crwdns51428:0%(round)scrwdne51428:0"
+
+#: results/templates/public_results_silent.html:12
+#, python-format
+msgid "%(round)s is a silent round."
+msgstr "crwdns51430:0%(round)scrwdne51430:0"
+
+#: results/utils.py:18
+msgid "No Ballot"
+msgstr "crwdns32518:0crwdne32518:0"
+
+#: results/utils.py:19
+msgid "Debate was Postponed"
+msgstr "crwdns51776:0crwdne51776:0"
+
+#: results/utils.py:20
+msgid "Ballot is Unconfirmed"
+msgstr "crwdns32520:0crwdne32520:0"
+
+#: results/utils.py:21
+msgid "Ballot is Confirmed"
+msgstr "crwdns32522:0crwdne32522:0"
+
+#. Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
+#: results/utils.py:36
+#, python-format
+msgid "%(team)s as %(side)s"
+msgstr "crwdns51432:0%(team)scrwdnd51432:0%(side)scrwdne51432:0"
+
+#: results/utils.py:43
+#, python-format
+msgid "%(team)s (%(side)s) won"
+msgstr "crwdns51778:0%(team)scrwdnd51778:0%(side)scrwdne51778:0"
+
+#. Translators: The team here is the losing team
+#: results/utils.py:45
+#, python-format
+msgid "vs %(team)s (%(side)s)"
+msgstr "crwdns51780:0%(team)scrwdnd51780:0%(side)scrwdne51780:0"
+
+#: results/utils.py:47
+#, python-format
+msgid "Advancing: %(advancing_list)s<br>"
+msgstr "crwdns51800:0%(advancing_list)scrwdne51800:0"
+
+#: results/utils.py:50
+#, python-format
+msgid "Eliminated: %(eliminated_list)s"
+msgstr "crwdns32738:0%(eliminated_list)scrwdne32738:0"
+
+#: results/utils.py:58
+#, python-format
+msgid "1st: %(first_team)s<br>"
+msgstr "crwdns51802:0%(first_team)scrwdne51802:0"
+
+#: results/utils.py:59
+#, python-format
+msgid "2nd: %(second_team)s<br>\n"
+"3rd: %(third_team)s<br>\n"
+"4th: %(fourth_team)s"
+msgstr "crwdns32742:0%(second_team)scrwdnd32742:0%(third_team)scrwdnd32742:0%(fourth_team)scrwdne32742:0"
+
+#: results/utils.py:74
+#, python-format
+msgid "Error with result for %(debate)s"
+msgstr "crwdns32744:0%(debate)scrwdne32744:0"
+
+#. Translators: Abbreviation for Prime Minister
+#: results/utils.py:134
+msgid "PM"
+msgstr "crwdns32762:0crwdne32762:0"
+
+#. Translators: Abbreviation for Deputy Prime Minister
+#: results/utils.py:136
+msgid "DPM"
+msgstr "crwdns32764:0crwdne32764:0"
+
+#. Translators: Abbreviation for Leader of the Opposition
+#: results/utils.py:138
+msgid "LO"
+msgstr "crwdns32766:0crwdne32766:0"
+
+#. Translators: Abbreviation for Deputy Leader of the Opposition
+#: results/utils.py:140
+msgid "DLO"
+msgstr "crwdns32768:0crwdne32768:0"
+
+#. Translators: Abbreviation for Member for the Government
+#: results/utils.py:142
+msgid "MG"
+msgstr "crwdns32770:0crwdne32770:0"
+
+#. Translators: Abbreviation for Government Whip
+#: results/utils.py:144
+msgid "GW"
+msgstr "crwdns32772:0crwdne32772:0"
+
+#. Translators: Abbreviation for Member for the Opposition
+#: results/utils.py:146
+msgid "MO"
+msgstr "crwdns32774:0crwdne32774:0"
+
+#. Translators: Abbreviation for Opposition Whip
+#: results/utils.py:148
+msgid "OW"
+msgstr "crwdns32776:0crwdne32776:0"
+
+#: results/utils.py:168
+msgid "Reply"
+msgstr "crwdns32778:0crwdne32778:0"
+
+#: results/views.py:252 results/views.py:254
+msgid " vs "
+msgstr "crwdns32786:0crwdne32786:0"
+
+#: results/views.py:257
+msgid "N/A"
+msgstr "crwdns51640:0crwdne51640:0"
+
+#: results/views.py:391
+#, python-format
+msgid "Ballot set for %(debate)s added."
+msgstr "crwdns32788:0%(debate)scrwdne32788:0"
+
+#: results/views.py:393 results/views.py:460
+msgid " Email receipts queued to be sent."
+msgstr "crwdns34524:0crwdne34524:0"
+
+#: results/views.py:407
+#, python-format
+msgid "Whoops! The debate %(debate)s doesn't have a chair, so you can't enter results for it."
+msgstr "crwdns32792:0%(debate)scrwdne32792:0"
+
+#: results/views.py:413
+#, python-format
+msgid "Whoops! The debate %(debate)s doesn't have its sides confirmed, so you can't enter results for it."
+msgstr "crwdns32794:0%(debate)scrwdne32794:0"
+
+#: results/views.py:453
+#, python-format
+msgid "Ballot set for %(matchup)s discarded."
+msgstr "crwdns32796:0%(matchup)scrwdne32796:0"
+
+#: results/views.py:455
+#, python-format
+msgid "Ballot set for %(matchup)s confirmed."
+msgstr "crwdns32798:0%(matchup)scrwdne32798:0"
+
+#: results/views.py:457
+#, python-format
+msgid "Edits to ballot set for %(matchup)s saved."
+msgstr "crwdns32800:0%(matchup)scrwdne32800:0"
+
+#: results/views.py:501
+#, python-format
+msgid "Thanks, %(user)s! Your ballot for %(debate)s has been recorded."
+msgstr "crwdns32802:0%(user)scrwdnd32802:0%(debate)scrwdne32802:0"
+
+#: results/views.py:509
+msgid "The draw for this round hasn't been released yet."
+msgstr "crwdns32804:0crwdne32804:0"
+
+#: results/views.py:513
+msgid "The motions for this round haven't been released yet."
+msgstr "crwdns32806:0crwdne32806:0"
+
+#: results/views.py:518
+msgid "It looks like you don't have a debate this round."
+msgstr "crwdns32808:0crwdne32808:0"
+
+#: results/views.py:520
+msgid "It looks like you're assigned to two or more debates this round. Please contact a tab room official."
+msgstr "crwdns32810:0crwdne32810:0"
+
+#: results/views.py:528
+msgid "Your debate doesn't have a chair, so you can't enter results for it. Please contact a tab room official."
+msgstr "crwdns32812:0crwdne32812:0"
+
+#: results/views.py:533
+msgid "It looks like the sides for this debate haven't yet been confirmed, so you can't enter results for it. Please contact a tab room official."
+msgstr "crwdns32814:0crwdne32814:0"
+
+#: results/views.py:624
+msgid "It looks like you were assigned to two or more debates. Please contact a tab room official."
+msgstr "crwdns35504:0crwdne35504:0"
+
+#: results/views.py:642
+#, python-format
+msgid "This debate is in %s, which is a silent round."
+msgstr "crwdns34526:0%scrwdne34526:0"
+
+#: results/views.py:645
+#, python-format
+msgid "This debate is in %s, the results for which aren't available yet."
+msgstr "crwdns34528:0%scrwdne34528:0"
+
+#: results/views.py:649
+#, python-format
+msgid "The result for debate %s is not confirmed."
+msgstr "crwdns34530:0%scrwdne34530:0"
+
+#: results/views.py:652
+#, python-format
+msgid "The debate %s does not have a confirmed ballot."
+msgstr "crwdns34532:0%scrwdne34532:0"
+
+#: results/views.py:674
+#, python-format
+msgid "There is no result yet for debate %s."
+msgstr "crwdns34534:0%scrwdne34534:0"
+
+#: results/views.py:730
+#, python-format
+msgid "Add result from %(adjudicator)s"
+msgstr "crwdns32816:0%(adjudicator)scrwdne32816:0"
+
+#: results/views.py:734
+msgid "Adjudicator"
+msgstr "crwdns32818:0crwdne32818:0"
+

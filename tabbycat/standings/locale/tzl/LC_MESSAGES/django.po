@@ -1,0 +1,622 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-16 15:04-0400\n"
+"PO-Revision-Date: 2020-11-18 21:01\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Talossan\n"
+"Language: tzl_TZL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: tzl\n"
+"X-Crowdin-File: /develop/tabbycat/standings/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 950\n"
+
+#: standings/base.py:300
+msgid "The same metric would be added twice:"
+msgstr "crwdns32820:0crwdne32820:0"
+
+#: standings/base.py:301
+msgid "The same ranking would be added twice:"
+msgstr "crwdns32822:0crwdne32822:0"
+
+#: standings/base.py:410
+#, python-format
+msgid "Unrecognized metric code: \"%(code)s\""
+msgstr "crwdns32824:0%(code)scrwdne32824:0"
+
+#: standings/diversity.py:136 standings/diversity.py:166
+#: standings/diversity.py:187
+msgid "All"
+msgstr "crwdns32826:0crwdne32826:0"
+
+#: standings/diversity.py:140 standings/diversity.py:155
+#: standings/diversity.py:173 standings/diversity.py:191
+msgid "Breaking"
+msgstr "crwdns32828:0crwdne32828:0"
+
+#: standings/diversity.py:147
+#, python-format
+msgid "Not %(category)s"
+msgstr "crwdns32830:0%(category)scrwdne32830:0"
+
+#: standings/diversity.py:151
+msgid "All Speakers"
+msgstr "crwdns32832:0crwdne32832:0"
+
+#: standings/diversity.py:169
+msgid "IAs"
+msgstr "crwdns51434:0crwdne51434:0"
+
+#: standings/diversity.py:177
+msgid "Chairs"
+msgstr "crwdns32836:0crwdne32836:0"
+
+#: standings/diversity.py:177
+msgid "Panellists"
+msgstr "crwdns32838:0crwdne32838:0"
+
+#: standings/diversity.py:177
+msgid "Trainees"
+msgstr "crwdns32840:0crwdne32840:0"
+
+#: standings/diversity.py:209
+msgid "Average Rating"
+msgstr "crwdns32842:0crwdne32842:0"
+
+#: standings/diversity.py:210
+msgid "Median Rating"
+msgstr "crwdns32844:0crwdne32844:0"
+
+#: standings/diversity.py:211
+msgid "Upper Quartile Rating"
+msgstr "crwdns32846:0crwdne32846:0"
+
+#: standings/diversity.py:212
+msgid "Lower Quartile Rating"
+msgstr "crwdns32848:0crwdne32848:0"
+
+#: standings/diversity.py:218
+msgid "Average Rating From Teams"
+msgstr "crwdns32850:0crwdne32850:0"
+
+#: standings/diversity.py:219
+msgid "Average Rating From Chairs"
+msgstr "crwdns32852:0crwdne32852:0"
+
+#: standings/diversity.py:220
+msgid "Average Rating From Panellists"
+msgstr "crwdns32854:0crwdne32854:0"
+
+#: standings/diversity.py:221
+msgid "Average Rating From Trainees"
+msgstr "crwdns32856:0crwdne32856:0"
+
+#: standings/diversity.py:246
+msgid "Average Score"
+msgstr "crwdns32858:0crwdne32858:0"
+
+#: standings/diversity.py:247
+msgid "Median Score"
+msgstr "crwdns32860:0crwdne32860:0"
+
+#: standings/diversity.py:248
+msgid "Upper Quartile Score"
+msgstr "crwdns32862:0crwdne32862:0"
+
+#: standings/diversity.py:249
+msgid "Lower Quartile Score"
+msgstr "crwdns32864:0crwdne32864:0"
+
+#: standings/diversity.py:256
+msgid "Reply Speaker Average"
+msgstr "crwdns32866:0crwdne32866:0"
+
+#: standings/diversity.py:257
+#, python-format
+msgid "Speaker %(num)d Average"
+msgstr "crwdns32868:0%(num)dcrwdne32868:0"
+
+#: standings/diversity.py:265
+msgid "Average Finals Score"
+msgstr "crwdns32870:0crwdne32870:0"
+
+#: standings/speakers.py:50 standings/speakers.py:103
+msgid "total"
+msgstr "crwdns32872:0crwdne32872:0"
+
+#: standings/speakers.py:51 standings/speakers.py:104
+msgid "Total"
+msgstr "crwdns32874:0crwdne32874:0"
+
+#: standings/speakers.py:58 standings/speakers.py:113
+msgid "average"
+msgstr "crwdns32876:0crwdne32876:0"
+
+#: standings/speakers.py:59 standings/speakers.py:114
+msgid "Avg"
+msgstr "crwdns32878:0crwdne32878:0"
+
+#: standings/speakers.py:66
+msgid "team points"
+msgstr "crwdns34536:0crwdne34536:0"
+
+#: standings/speakers.py:67
+msgid "Team"
+msgstr "crwdns34538:0crwdne34538:0"
+
+#: standings/speakers.py:86 standings/speakers.py:123
+msgid "standard deviation"
+msgstr "crwdns32884:0crwdne32884:0"
+
+#: standings/speakers.py:87 standings/speakers.py:124
+msgid "Stdev"
+msgstr "crwdns32886:0crwdne32886:0"
+
+#: standings/speakers.py:95
+msgid "number of speeches given"
+msgstr "crwdns32888:0crwdne32888:0"
+
+#: standings/speakers.py:96 standings/speakers.py:135
+msgid "Num"
+msgstr "crwdns32890:0crwdne32890:0"
+
+#: standings/speakers.py:134
+msgid "replies given"
+msgstr "crwdns32892:0crwdne32892:0"
+
+#: standings/speakers.py:144
+msgid "trimmed mean (high-low drop)"
+msgstr "crwdns32880:0crwdne32880:0"
+
+#: standings/speakers.py:145
+msgid "Trim"
+msgstr "crwdns32882:0crwdne32882:0"
+
+#: standings/teams.py:68
+msgid "points"
+msgstr "crwdns32894:0crwdne32894:0"
+
+#: standings/teams.py:69
+msgid "Pts"
+msgstr "crwdns32896:0crwdne32896:0"
+
+#: standings/teams.py:82
+msgid "wins"
+msgstr "crwdns32900:0crwdne32900:0"
+
+#: standings/teams.py:83 standings/views.py:596
+msgid "Wins"
+msgstr "crwdns32902:0crwdne32902:0"
+
+#: standings/teams.py:93
+msgid "total speaker score"
+msgstr "crwdns32904:0crwdne32904:0"
+
+#: standings/teams.py:94
+msgid "Spk"
+msgstr "crwdns32906:0crwdne32906:0"
+
+#: standings/teams.py:103
+msgid "average total speaker score"
+msgstr "crwdns32908:0crwdne32908:0"
+
+#: standings/teams.py:104
+msgid "ATSS"
+msgstr "crwdns32910:0crwdne32910:0"
+
+#: standings/teams.py:113
+msgid "speaker score standard deviation"
+msgstr "crwdns32912:0crwdne32912:0"
+
+#: standings/teams.py:114
+msgid "SSD"
+msgstr "crwdns32914:0crwdne32914:0"
+
+#: standings/teams.py:124
+msgid "sum of margins"
+msgstr "crwdns32916:0crwdne32916:0"
+
+#: standings/teams.py:125
+msgid "Marg"
+msgstr "crwdns32918:0crwdne32918:0"
+
+#: standings/teams.py:134
+msgid "average margin"
+msgstr "crwdns32920:0crwdne32920:0"
+
+#: standings/teams.py:135
+msgid "AWM"
+msgstr "crwdns32922:0crwdne32922:0"
+
+#: standings/teams.py:144
+msgid "average individual speaker score"
+msgstr "crwdns32924:0crwdne32924:0"
+
+#: standings/teams.py:145
+msgid "AISS"
+msgstr "crwdns32926:0crwdne32926:0"
+
+#: standings/teams.py:216
+msgid "draw strength by wins"
+msgstr "crwdns35302:0crwdne35302:0"
+
+#: standings/teams.py:217
+msgid "DS"
+msgstr "crwdns32930:0crwdne32930:0"
+
+#: standings/teams.py:224
+msgid "draw strength by total speaker score"
+msgstr "crwdns35304:0crwdne35304:0"
+
+#: standings/teams.py:225
+msgid "DSS"
+msgstr "crwdns35306:0crwdne35306:0"
+
+#: standings/teams.py:236
+msgid "number of pullups before this round"
+msgstr "crwdns35308:0crwdne35308:0"
+
+#: standings/teams.py:237
+msgid "PU"
+msgstr "crwdns35310:0crwdne35310:0"
+
+#: standings/teams.py:259
+msgid "number of adjudicators who voted for this team"
+msgstr "crwdns32932:0crwdne32932:0"
+
+#: standings/teams.py:260
+msgid "Ballots"
+msgstr "crwdns32934:0crwdne32934:0"
+
+#: standings/teams.py:261
+msgid "votes/ballots carried"
+msgstr "crwdns32936:0crwdne32936:0"
+
+#: standings/teams.py:287
+msgid "number of firsts"
+msgstr "crwdns32938:0crwdne32938:0"
+
+#: standings/teams.py:288
+msgid "1sts"
+msgstr "crwdns32940:0crwdne32940:0"
+
+#: standings/teams.py:297
+msgid "number of seconds"
+msgstr "crwdns32942:0crwdne32942:0"
+
+#: standings/teams.py:298
+msgid "2nds"
+msgstr "crwdns32944:0crwdne32944:0"
+
+#: standings/teams.py:307
+msgid "number of thirds"
+msgstr "crwdns51782:0crwdne51782:0"
+
+#: standings/teams.py:308
+msgid "3rds"
+msgstr "crwdns51784:0crwdne51784:0"
+
+#: standings/teams.py:320
+msgid "Who-beat-whom"
+msgstr "crwdns32946:0crwdne32946:0"
+
+#: standings/teams.py:321
+msgid "WBW"
+msgstr "crwdns32948:0crwdne32948:0"
+
+#: standings/teams.py:322
+msgid "who-beat-whom"
+msgstr "crwdns32950:0crwdne32950:0"
+
+#: standings/templates/current_standings.html:6
+msgid "It also excludes results from silent rounds (if any) and from the current round."
+msgstr "crwdns32958:0crwdne32958:0"
+
+#: standings/templates/current_standings.html:9
+#, python-format
+msgid "This list is sorted by team points, then alphabetically by team name. It does not indicate each team's ranking within each bracket. %(silent_round_sentence)s"
+msgstr "crwdns32960:0%(silent_round_sentence)scrwdne32960:0"
+
+#: standings/templates/current_standings.html:15
+#, python-format
+msgid "This list is sorted by number of wins, then alphabetically by team name. It does not indicate each team's ranking within each bracket. %(silent_round_sentence)s"
+msgstr "crwdns32962:0%(silent_round_sentence)scrwdne32962:0"
+
+#: standings/templates/current_standings_no_round.html:6
+msgid "There aren't any rounds for which results are available."
+msgstr "crwdns32964:0crwdne32964:0"
+
+#: standings/templates/reply_standings.html:6
+msgid "Reply speakers are ranked by their <strong>average reply score</strong>."
+msgstr "crwdns32966:0crwdne32966:0"
+
+#: standings/templates/reply_standings.html:9
+#, python-format
+msgid "Speakers can miss up to %(count)s reply speeches before they are omitted from the replies tab."
+msgstr "crwdns32968:0%(count)scrwdne32968:0"
+
+#: standings/templates/reply_standings.html:14
+msgid "All reply speakers appear in these standings, no matter how many replies they've missed."
+msgstr "crwdns32970:0crwdne32970:0"
+
+#: standings/templates/reply_standings.html:18
+#: standings/templates/speaker_standings.html:40
+#, python-format
+msgid "These settings can be changed in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>."
+msgstr "crwdns32972:0%(standings_config_url)scrwdne32972:0"
+
+#: standings/templates/speaker_standings.html:11
+#, python-format
+msgid "The speaker standings precedence is empty. This means that speakers aren't ranked according to any metrics, so everyone is first equal. If this isn't what you intended, set the speaker standings precedence in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>. In most tournaments, the first metric should be total or average."
+msgstr "crwdns35312:0%(standings_config_url)scrwdne35312:0"
+
+#: standings/templates/speaker_standings.html:23
+msgid "Speakers are ranked by their <strong>average score</strong>."
+msgstr "crwdns32974:0crwdne32974:0"
+
+#: standings/templates/speaker_standings.html:25
+msgid "Speakers are ranked by their <strong>total score</strong>. Any speaker who misses a single debate will be severely punished in these rankings."
+msgstr "crwdns32976:0crwdne32976:0"
+
+#: standings/templates/speaker_standings.html:32
+#, python-format
+msgid "Speakers can miss up to %(count)s debates before they are omitted from the speaker tab."
+msgstr "crwdns32978:0%(count)scrwdne32978:0"
+
+#: standings/templates/speaker_standings.html:37
+msgid "All speakers appear in these standings, no matter how many debates they've missed."
+msgstr "crwdns32980:0crwdne32980:0"
+
+#: standings/templates/speaker_standings.html:48
+#, python-format
+msgid "Enforcing the limit on the number of missed debates requires the \"number of speeches given\" metric to be included in the speaker standings calculations, so it's been automatically added. To remove this warning message, add <strong>Number of speeches given</strong> to the <strong>Speaker standings extra metrics</strong> in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>."
+msgstr "crwdns32982:0%(standings_config_url)scrwdne32982:0"
+
+#: standings/templates/standings_diversity.html:4
+#: standings/templates/standings_diversity.html:5
+msgid "Diversity Overview"
+msgstr "crwdns32984:0crwdne32984:0"
+
+#: standings/templates/standings_diversity.html:22
+msgid "The results data displayed here is presented without tests for statistical significance. Correlations should not be automatically considered reliable; particularly at small tournaments. A 'region' is a customisable category assigned to a set of institutions, and counted using the number of participants assigned to those institutions."
+msgstr "crwdns35314:0crwdne35314:0"
+
+#: standings/templates/standings_diversity.html:37
+msgid "Non-cis male identifying"
+msgstr "crwdns32988:0crwdne32988:0"
+
+#: standings/templates/standings_diversity.html:40
+msgid "Cis-male identifying"
+msgstr "crwdns34542:0crwdne34542:0"
+
+#: standings/templates/standings_diversity.html:43
+msgid "Unspecified/unrecorded"
+msgstr "crwdns32992:0crwdne32992:0"
+
+#: standings/templates/standings_index.html:5
+#: standings/templates/standings_index.html:6
+msgid "Standings"
+msgstr "crwdns32994:0crwdne32994:0"
+
+#: standings/templates/standings_index.html:18
+msgid "Top Speaks"
+msgstr "crwdns32996:0crwdne32996:0"
+
+#: standings/templates/standings_index.html:22
+#: standings/templates/standings_index.html:41
+#, python-format
+msgid "%(speaker)s in %(round)s"
+msgstr "crwdns32998:0%(speaker)scrwdnd32998:0%(round)scrwdne32998:0"
+
+#: standings/templates/standings_index.html:28
+#: standings/templates/standings_index.html:47
+#: standings/templates/standings_index.html:66
+#: standings/templates/standings_index.html:87
+#: standings/templates/standings_index.html:108
+#: standings/templates/standings_index.html:129
+#: standings/templates/standings_index.html:150
+#: standings/templates/standings_index.html:163
+#: standings/templates/standings_index.html:182
+msgid "No data yet"
+msgstr "crwdns33000:0crwdne33000:0"
+
+#: standings/templates/standings_index.html:37
+msgid "Bottom Speaks"
+msgstr "crwdns33002:0crwdne33002:0"
+
+#: standings/templates/standings_index.html:56
+msgid "Largest Margins"
+msgstr "crwdns33004:0crwdne33004:0"
+
+#: standings/templates/standings_index.html:60
+#: standings/templates/standings_index.html:81
+#, python-format
+msgid "%(team)s vs %(opp)s in %(round)s"
+msgstr "crwdns34544:0%(team)scrwdnd34544:0%(opp)scrwdnd34544:0%(round)scrwdne34544:0"
+
+#: standings/templates/standings_index.html:77
+msgid "Closest Margins"
+msgstr "crwdns33008:0crwdne33008:0"
+
+#: standings/templates/standings_index.html:98
+msgid "Top Team Scores"
+msgstr "crwdns33010:0crwdne33010:0"
+
+#: standings/templates/standings_index.html:102
+#: standings/templates/standings_index.html:123
+#, python-format
+msgid "%(team)s in %(round)s"
+msgstr "crwdns33012:0%(team)scrwdnd33012:0%(round)scrwdne33012:0"
+
+#: standings/templates/standings_index.html:119
+msgid "Bottom Team Scores"
+msgstr "crwdns33014:0crwdne33014:0"
+
+#: standings/templates/standings_index.html:140
+msgid "Most/Least Popular Motions"
+msgstr "crwdns33016:0crwdne33016:0"
+
+#: standings/templates/standings_index.html:144
+#: standings/templates/standings_index.html:157
+#, python-format
+msgid "%(reference)s in %(abbreviation)s"
+msgstr "crwdns33018:0%(reference)scrwdnd33018:0%(abbreviation)scrwdne33018:0"
+
+#: standings/templates/standings_index.html:173
+msgid "Average Speaks"
+msgstr "crwdns33020:0crwdne33020:0"
+
+#: standings/templates/standings_menu.html:6
+msgid "Overview"
+msgstr "crwdns33022:0crwdne33022:0"
+
+#: standings/templates/standings_menu.html:12
+#: standings/templates/standings_menu.html:19
+msgid "Teams"
+msgstr "crwdns33026:0crwdne33026:0"
+
+#: standings/templates/standings_menu.html:17
+msgctxt "All [Teams]"
+msgid "All"
+msgstr "crwdns33028:0crwdne33028:0"
+
+#: standings/templates/standings_menu.html:32
+msgid "Speakers"
+msgstr "crwdns33030:0crwdne33030:0"
+
+#: standings/templates/standings_menu.html:37
+msgctxt "Substantive speeches"
+msgid "Substantives"
+msgstr "crwdns33032:0crwdne33032:0"
+
+#: standings/templates/standings_menu.html:39
+msgctxt "All [Speakers]"
+msgid "All"
+msgstr "crwdns33034:0crwdne33034:0"
+
+#: standings/templates/standings_menu.html:41
+msgid "Speakers "
+msgstr "crwdns33036:0crwdne33036:0"
+
+#: standings/templates/standings_menu.html:47
+#, python-format
+msgid "%(category)s"
+msgstr "crwdns51436:0%(category)scrwdne51436:0"
+
+#: standings/templates/standings_menu.html:55
+msgid "Replies"
+msgstr "crwdns33040:0crwdne33040:0"
+
+#: standings/templates/standings_menu.html:64
+msgid "Motions"
+msgstr "crwdns33042:0crwdne33042:0"
+
+#: standings/templates/standings_menu.html:68
+msgid "Diversity"
+msgstr "crwdns33044:0crwdne33044:0"
+
+#: standings/templates/team_standings.html:10
+#, python-format
+msgid "The team standings precedence is empty. This means that teams aren't ranked according to any metrics, so everyone is first equal. If this isn't what you intended, set the team standings precedence in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>. In most tournaments, the first metric should be points or wins."
+msgstr "crwdns35316:0%(standings_config_url)scrwdne35316:0"
+
+#: standings/views.py:99
+#, python-format
+msgid "<p>There was an error generating the standings: <em>%(message)s</em></p>"
+msgstr "crwdns33046:0%(message)scrwdne33046:0"
+
+#: standings/views.py:104
+#, python-format
+msgid "<p>You may need to double-check the <a href=\"%(standings_options_url)s\" class=\"alert-link\">standings configuration under the Setup section</a>. If this issue persists and you're not sure how to fix it, please contact the developers.</p>"
+msgstr "crwdns33048:0%(standings_options_url)scrwdne33048:0"
+
+#: standings/views.py:112
+msgid "<p>The tab director will need to resolve this issue.</p>"
+msgstr "crwdns33050:0crwdne33050:0"
+
+#: standings/views.py:116
+#, python-format
+msgid "as of %(round)s"
+msgstr "crwdns33052:0%(round)scrwdne33052:0"
+
+#. Translators: 'title' is the main title; "(Top 15 Only)" is just a suffix
+#: standings/views.py:181
+#, python-format
+msgid "%(title)s (Top %(limit)d Only)"
+msgstr "crwdns33054:0%(title)scrwdnd33054:0%(limit)dcrwdne33054:0"
+
+#: standings/views.py:206 standings/views.py:432
+msgid "The tab can't be displayed because all rounds so far in this tournament are silent."
+msgstr "crwdns33056:0crwdne33056:0"
+
+#: standings/views.py:282
+msgid "Speaker Standings"
+msgstr "crwdns33058:0crwdne33058:0"
+
+#: standings/views.py:324
+msgid "Speaker Tab"
+msgstr "crwdns33060:0crwdne33060:0"
+
+#: standings/views.py:339
+#, python-format
+msgid "%(category)s Speaker Standings"
+msgstr "crwdns33062:0%(category)scrwdne33062:0"
+
+#: standings/views.py:357
+#, python-format
+msgid "%(category)s Speaker Tab"
+msgstr "crwdns33064:0%(category)scrwdne33064:0"
+
+#: standings/views.py:370
+msgid "Reply Speaker Standings"
+msgstr "crwdns33066:0crwdne33066:0"
+
+#: standings/views.py:375
+msgid "Reply speeches aren't enabled in this tournament."
+msgstr "crwdns33068:0crwdne33068:0"
+
+#: standings/views.py:412
+msgid "Reply Speaker Tab"
+msgstr "crwdns33070:0crwdne33070:0"
+
+#: standings/views.py:424 standings/views.py:673
+msgid "Team Standings"
+msgstr "crwdns33072:0crwdne33072:0"
+
+#: standings/views.py:503
+msgid "Team Tab"
+msgstr "crwdns33076:0crwdne33076:0"
+
+#: standings/views.py:522
+#, python-format
+msgid "%(category)s Team Standings"
+msgstr "crwdns33078:0%(category)scrwdne33078:0"
+
+#: standings/views.py:549
+#, python-format
+msgid "%(category)s Team Tab"
+msgstr "crwdns33080:0%(category)scrwdne33080:0"
+
+#: standings/views.py:560
+msgid "Current Team Standings"
+msgstr "crwdns33082:0crwdne33082:0"
+
+#: standings/views.py:596
+msgid "Points"
+msgstr "crwdns33084:0crwdne33084:0"
+
+#: standings/views.py:642
+msgid "Feedback Overview"
+msgstr "crwdns51642:0crwdne51642:0"
+
+#: standings/views.py:659
+msgid "An adjudicator's score is determined by a customisable mix of their base score and their feedback ratings. The current mix is specified below as the 'Score Components.' Feedback ratings are determined by averaging the results of all individual pieces of feedback across all rounds. <a href='http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html#how-is-an-adjudicator-s-score-determined'>Read more</a>."
+msgstr "crwdns51644:0crwdne51644:0"
+
