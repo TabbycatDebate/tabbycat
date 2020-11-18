@@ -1,0 +1,939 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-16 14:55-0400\n"
+"PO-Revision-Date: 2020-11-18 21:01\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Talossan\n"
+"Language: tzl_TZL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: tzl\n"
+"X-Crowdin-File: /develop/tabbycat/participants/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 942\n"
+
+#: participants/admin.py:94
+#, python-format
+msgid "The team can't be in a break category of a different tournament. Please remove: %(category)s"
+msgstr "crwdns31870:0%(category)scrwdne31870:0"
+
+#: participants/admin.py:146
+#, python-format
+msgid "%(count)d speaker had their URL key removed."
+msgid_plural "%(count)d speakers had their URL keys removed."
+msgstr[0] "crwdns34372:1%(count)dcrwdne34372:1"
+msgstr[1] "crwdns34372:5%(count)dcrwdne34372:5"
+
+#: participants/admin.py:150 participants/admin.py:209
+msgid "Delete URL key"
+msgstr "crwdns31874:0crwdne31874:0"
+
+#: participants/admin.py:204
+#, python-format
+msgid "%(count)d adjudicator had their URL key removed."
+msgid_plural "%(count)d adjudicators had their URL keys removed."
+msgstr[0] "crwdns31876:1%(count)dcrwdne31876:1"
+msgstr[1] "crwdns31876:5%(count)dcrwdne31876:5"
+
+#: participants/apps.py:7 participants/views.py:40
+msgid "Participants"
+msgstr "crwdns31878:0crwdne31878:0"
+
+#: participants/models.py:20 participants/models.py:36
+#: participants/models.py:65 participants/models.py:95
+msgid "name"
+msgstr "crwdns31880:0crwdne31880:0"
+
+#: participants/models.py:23 participants/models.py:44
+msgid "region"
+msgstr "crwdns31882:0crwdne31882:0"
+
+#: participants/models.py:24
+msgid "regions"
+msgstr "crwdns31884:0crwdne31884:0"
+
+#. Translators: Change the examples to institutions native to your language; keep consistent between strings
+#: participants/models.py:38
+msgid "The institution's full name, e.g., \"University of Cambridge\", \"Victoria University of Wellington\""
+msgstr "crwdns31886:0crwdne31886:0"
+
+#: participants/models.py:40
+msgid "code"
+msgstr "crwdns31888:0crwdne31888:0"
+
+#. Translators: Change the examples to institutions native to your language; keep consistent between strings
+#: participants/models.py:42
+msgid "What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\""
+msgstr "crwdns31890:0crwdne31890:0"
+
+#: participants/models.py:54 participants/models.py:154
+#: participants/models.py:349
+msgid "institution"
+msgstr "crwdns31892:0crwdne31892:0"
+
+#: participants/models.py:55
+msgid "institutions"
+msgstr "crwdns31894:0crwdne31894:0"
+
+#: participants/models.py:63 participants/models.py:156
+#: participants/models.py:352
+msgid "tournament"
+msgstr "crwdns31896:0crwdne31896:0"
+
+#. Translators: Translate ESL to the acronym for "<target language> as a second/foreign language", not "English"
+#: participants/models.py:67
+msgid "Name to be displayed, e.g., \"Novice\", \"ESL\""
+msgstr "crwdns31898:0crwdne31898:0"
+
+#: participants/models.py:69
+msgid "slug"
+msgstr "crwdns31900:0crwdne31900:0"
+
+#. Translators: Translate esl to the acronym for "<target language> as a second/foreign language", not "English"
+#: participants/models.py:71
+msgid "Slug for URLs, e.g., \"novice\", \"esl\""
+msgstr "crwdns31902:0crwdne31902:0"
+
+#: participants/models.py:73
+msgid "sequence number"
+msgstr "crwdns31904:0crwdne31904:0"
+
+#: participants/models.py:74
+msgid "The order in which the categories are displayed"
+msgstr "crwdns31906:0crwdne31906:0"
+
+#: participants/models.py:76
+msgid "limit"
+msgstr "crwdns31908:0crwdne31908:0"
+
+#: participants/models.py:77
+msgid "At most this many speakers will be shown on the public tab for this category, or use 0 for no limit"
+msgstr "crwdns31910:0crwdne31910:0"
+
+#: participants/models.py:79
+msgid "public"
+msgstr "crwdns31912:0crwdne31912:0"
+
+#: participants/models.py:80
+msgid "If checked, this category will be included in the speaker category tabs shown to the public"
+msgstr "crwdns31914:0crwdne31914:0"
+
+#: participants/models.py:86
+msgid "speaker category"
+msgstr "crwdns31916:0crwdne31916:0"
+
+#: participants/models.py:87 participants/models.py:326
+msgid "speaker categories"
+msgstr "crwdns31918:0crwdne31918:0"
+
+#: participants/models.py:97
+msgid "email address"
+msgstr "crwdns51610:0crwdne51610:0"
+
+#: participants/models.py:99
+msgid "phone"
+msgstr "crwdns31922:0crwdne31922:0"
+
+#: participants/models.py:101
+msgid "anonymous"
+msgstr "crwdns31924:0crwdne31924:0"
+
+#: participants/models.py:102
+msgid "Anonymous persons will have their name and team redacted on public tab releases"
+msgstr "crwdns31926:0crwdne31926:0"
+
+#: participants/models.py:105
+msgid "URL key"
+msgstr "crwdns31928:0crwdne31928:0"
+
+#: participants/models.py:110
+msgid "male"
+msgstr "crwdns31932:0crwdne31932:0"
+
+#: participants/models.py:111
+msgid "female"
+msgstr "crwdns31934:0crwdne31934:0"
+
+#: participants/models.py:112
+msgid "other"
+msgstr "crwdns31936:0crwdne31936:0"
+
+#: participants/models.py:114
+msgid "gender"
+msgstr "crwdns31938:0crwdne31938:0"
+
+#: participants/models.py:115
+msgid "Gender is displayed in the adjudicator allocation interface, and nowhere else"
+msgstr "crwdns31940:0crwdne31940:0"
+
+#: participants/models.py:117
+msgid "pronoun"
+msgstr "crwdns31942:0crwdne31942:0"
+
+#: participants/models.py:118
+msgid "If printing ballots using Tabbycat, there is the option to pre-print pronouns"
+msgstr "crwdns31944:0crwdne31944:0"
+
+#: participants/models.py:121
+msgid "person"
+msgstr "crwdns31946:0crwdne31946:0"
+
+#: participants/models.py:122
+msgid "persons"
+msgstr "crwdns31948:0crwdne31948:0"
+
+#: participants/models.py:137
+msgid "full name/suffix"
+msgstr "crwdns31950:0crwdne31950:0"
+
+#: participants/models.py:138
+msgid "Do not include institution name (see \"uses institutional prefix\" below)"
+msgstr "crwdns31952:0crwdne31952:0"
+
+#: participants/models.py:140
+msgid "short name/suffix"
+msgstr "crwdns31954:0crwdne31954:0"
+
+#: participants/models.py:141
+msgid "The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)"
+msgstr "crwdns31956:0crwdne31956:0"
+
+#: participants/models.py:143
+msgid "code name"
+msgstr "crwdns31958:0crwdne31958:0"
+
+#: participants/models.py:144
+msgid "Name used to obscure institutional identity on public-facing pages"
+msgstr "crwdns31960:0crwdne31960:0"
+
+#: participants/models.py:147
+msgid "short name"
+msgstr "crwdns31962:0crwdne31962:0"
+
+#: participants/models.py:148
+msgid "The name shown in the draw, including institution name. (This is autogenerated.)"
+msgstr "crwdns31964:0crwdne31964:0"
+
+#: participants/models.py:150
+msgid "long name"
+msgstr "crwdns31966:0crwdne31966:0"
+
+#: participants/models.py:151
+msgid "The full name of the team, including institution name. (This is autogenerated.)"
+msgstr "crwdns31968:0crwdne31968:0"
+
+#: participants/models.py:158
+msgid "Uses institutional prefix"
+msgstr "crwdns31972:0crwdne31972:0"
+
+#: participants/models.py:159
+msgid "If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\""
+msgstr "crwdns31974:0crwdne31974:0"
+
+#: participants/models.py:161
+msgid "break categories"
+msgstr "crwdns31976:0crwdne31976:0"
+
+#: participants/models.py:166 participants/models.py:360
+msgid "institution conflicts"
+msgstr "crwdns32008:0crwdne32008:0"
+
+#: participants/models.py:177
+msgid "none"
+msgstr "crwdns31978:0crwdne31978:0"
+
+#: participants/models.py:178
+msgid "swing"
+msgstr "crwdns31980:0crwdne31980:0"
+
+#: participants/models.py:179
+msgid "composite"
+msgstr "crwdns31982:0crwdne31982:0"
+
+#: participants/models.py:180
+msgid "bye"
+msgstr "crwdns31984:0crwdne31984:0"
+
+#: participants/models.py:183
+msgid "type"
+msgstr "crwdns31986:0crwdne31986:0"
+
+#: participants/models.py:187
+msgid "emoji"
+msgstr "crwdns31988:0crwdne31988:0"
+
+#: participants/models.py:201 participants/models.py:324
+msgid "team"
+msgstr "crwdns31990:0crwdne31990:0"
+
+#: participants/models.py:202
+msgid "teams"
+msgstr "crwdns31992:0crwdne31992:0"
+
+#: participants/models.py:307
+msgid "Teams must have an institution if they are using the institutional prefix."
+msgstr "crwdns31994:0crwdne31994:0"
+
+#: participants/models.py:309
+msgid "Teams must have a full name if they don't use the institutional prefix."
+msgstr "crwdns31996:0crwdne31996:0"
+
+#: participants/models.py:311
+msgid "Teams must have a short name if they don't use the institutional prefix."
+msgstr "crwdns31998:0crwdne31998:0"
+
+#: participants/models.py:329
+msgid "speaker"
+msgstr "crwdns32000:0crwdne32000:0"
+
+#: participants/models.py:330
+msgid "speakers"
+msgstr "crwdns32002:0crwdne32002:0"
+
+#: participants/models.py:353
+msgid "Adjudicators not assigned to any tournament can be shared between tournaments"
+msgstr "crwdns32004:0crwdne32004:0"
+
+#: participants/models.py:355
+msgid "base score"
+msgstr "crwdns35628:0crwdne35628:0"
+
+#: participants/models.py:364
+msgid "team conflicts"
+msgstr "crwdns32010:0crwdne32010:0"
+
+#: participants/models.py:368
+msgid "adjudicator conflicts"
+msgstr "crwdns51612:0crwdne51612:0"
+
+#: participants/models.py:371
+msgid "always trainee"
+msgstr "crwdns32012:0crwdne32012:0"
+
+#: participants/models.py:372
+msgid "If checked, this adjudicator will never be auto-allocated a voting position, regardless of their score"
+msgstr "crwdns32014:0crwdne32014:0"
+
+#: participants/models.py:374
+msgid "breaking"
+msgstr "crwdns32016:0crwdne32016:0"
+
+#: participants/models.py:376
+msgid "independent"
+msgstr "crwdns32018:0crwdne32018:0"
+
+#: participants/models.py:378
+msgid "adjudication core"
+msgstr "crwdns32020:0crwdne32020:0"
+
+#: participants/models.py:387
+msgid "adjudicator"
+msgstr "crwdns32022:0crwdne32022:0"
+
+#: participants/models.py:388
+msgid "adjudicators"
+msgstr "crwdns32024:0crwdne32024:0"
+
+#: participants/tables.py:28
+msgid "Points after this debate"
+msgstr "crwdns32026:0crwdne32026:0"
+
+#: participants/tables.py:30
+msgid "Wins after this debate"
+msgstr "crwdns32028:0crwdne32028:0"
+
+#: participants/tables.py:39
+msgid "Speaker scores<br>(in speaking order)"
+msgstr "crwdns32030:0crwdne32030:0"
+
+#: participants/tables.py:39
+msgid "Speaks"
+msgstr "crwdns32032:0crwdne32032:0"
+
+#: participants/templates/adjudicator_record.html:17
+#: participants/templates/team_record.html:19
+#, python-format
+msgid "About %(name)s"
+msgstr "crwdns32074:0%(name)scrwdne32074:0"
+
+#: participants/templates/adjudicator_registration_card.html:15
+msgid "Independent adjudicator"
+msgstr "crwdns34374:0crwdne34374:0"
+
+#: participants/templates/adjudicator_registration_card.html:18
+msgid "Member of the adjudication core"
+msgstr "crwdns35234:0crwdne35234:0"
+
+#: participants/templates/adjudicator_registration_card.html:26
+#: participants/templates/team_registration_card.html:60
+msgid "Institution:"
+msgstr "crwdns35236:0crwdne35236:0"
+
+#: participants/templates/adjudicator_registration_card.html:30
+#: participants/templates/team_registration_card.html:64
+msgid "Unaffiliated"
+msgstr "crwdns35238:0crwdne35238:0"
+
+#: participants/templates/adjudicator_registration_card.html:34
+#: participants/templates/team_registration_card.html:68
+msgid "Region:"
+msgstr "crwdns35240:0crwdne35240:0"
+
+#: participants/templates/adjudicator_registration_card.html:40
+msgid "The institutional affiliations of adjudicators are not public at this tournament."
+msgstr "crwdns51326:0crwdne51326:0"
+
+#: participants/templates/adjudicator_registration_card.html:47
+#: participants/templates/team_registration_card.html:77
+msgid "Institutional Conflicts:"
+msgstr "crwdns35242:0crwdne35242:0"
+
+#: participants/templates/adjudicator_registration_card.html:49
+#: participants/templates/team_registration_card.html:79
+msgid "; "
+msgstr "crwdns35244:0crwdne35244:0"
+
+#: participants/templates/adjudicator_registration_card.html:51
+#: participants/templates/adjudicator_registration_card.html:58
+#: participants/templates/adjudicator_registration_card.html:69
+#: participants/templates/adjudicator_registration_card.html:79
+#: participants/templates/team_registration_card.html:33
+#: participants/templates/team_registration_card.html:44
+#: participants/templates/team_registration_card.html:52
+#: participants/templates/team_registration_card.html:81
+#: participants/templates/team_registration_card.html:88
+#: participants/templates/team_registration_card.html:98
+msgid "None"
+msgstr "crwdns35246:0crwdne35246:0"
+
+#: participants/templates/adjudicator_registration_card.html:54
+msgid "Team Conflicts:"
+msgstr "crwdns35248:0crwdne35248:0"
+
+#: participants/templates/adjudicator_registration_card.html:56
+#: participants/templates/adjudicator_registration_card.html:64
+#: participants/templates/adjudicator_registration_card.html:66
+#: participants/templates/adjudicator_registration_card.html:77
+#: participants/templates/team_registration_card.html:31
+#: participants/templates/team_registration_card.html:42
+#: participants/templates/team_registration_card.html:50
+#: participants/templates/team_registration_card.html:86
+#: participants/templates/team_registration_card.html:96
+msgid ", "
+msgstr "crwdns35250:0crwdne35250:0"
+
+#: participants/templates/adjudicator_registration_card.html:61
+#: participants/templates/team_registration_card.html:84
+msgid "Adjudicator Conflicts:"
+msgstr "crwdns35252:0crwdne35252:0"
+
+#: participants/templates/adjudicator_registration_card.html:75
+#: participants/templates/team_registration_card.html:94
+msgid "Room Constraints:"
+msgstr "crwdns51328:0crwdne51328:0"
+
+#: participants/templates/admin/participants/adjudicator/change_form.html:8
+msgid "<strong>Don't forget:</strong> If this adjudicator should be conflicted against their own institution, you should add this conflict <strong>now</strong> in the <strong>Adjudicator-institution conflicts</strong> tab above, because the own-institution conflict is <strong>not</strong> automatically created when using this form."
+msgstr "crwdns32084:0crwdne32084:0"
+
+#: participants/templates/admin/participants/delete_debateteam_warning.html:7
+#, python-format
+msgid "<strong>Warning:</strong> If there are “debate team” objects in the above list, <strong>you probably shouldn't delete this %(object_name)s</strong>."
+msgstr "crwdns32086:0%(object_name)scrwdne32086:0"
+
+#: participants/templates/admin/participants/delete_debateteam_warning.html:14
+#, python-format
+msgid "<strong>Warning:</strong> If there are “debate team” objects in the above list, <strong>you probably shouldn't delete the selected %(objects_name)s</strong>."
+msgstr "crwdns51670:0%(objects_name)scrwdne51670:0"
+
+#. Translators: This follows the above sentence in the same paragraph.
+#: participants/templates/admin/participants/delete_debateteam_warning.html:21
+msgid "This is especially the case if any team that would be deleted has already participated in a debate. If a team already has a result entered for it, deleting the team also deletes those results, <strong>which normally breaks the tab</strong>, even if you think you don't need those results anymore. If a team has debated and is withdrawing from the tournament, you should <strong>not</strong> delete it. Just mark the team inactive under the “Availability” section of the Tabbycat admin area."
+msgstr "crwdns32090:0crwdne32090:0"
+
+#: participants/templates/admin/participants/delete_debateteam_warning.html:33
+msgid "Note that deleting an institution also deletes all teams from that institution."
+msgstr "crwdns32092:0crwdne32092:0"
+
+#: participants/templates/admin/participants/delete_debateteam_warning.html:41
+#, python-format
+msgid "If you're very sure about deleting this %(object_name)s, please delete the above objects first, and be sure to heed the warning that you will see on the “debate team” objects page before proceeding."
+msgstr "crwdns32094:0%(object_name)scrwdne32094:0"
+
+#: participants/templates/admin/participants/delete_debateteam_warning.html:47
+#, python-format
+msgid "If you're very sure about deleting these %(objects_name)s, please delete the above objects first, and be sure to heed the warning that you will see on the “debate team” objects page before proceeding."
+msgstr "crwdns32096:0%(objects_name)scrwdne32096:0"
+
+#: participants/templates/admin/participants/team/change_form.html:8
+msgid "<strong>Don't forget:</strong> If this team should be conflicted against its own institution, you should add this conflict <strong>now</strong> in the <strong>Team-institution conflicts</strong> tab above, because the own-institution conflict is <strong>not</strong> automatically created when using this form."
+msgstr "crwdns34392:0crwdne34392:0"
+
+#: participants/templates/current_round/common.html:6
+#, python-format
+msgid "The round begins at %(start_time)s"
+msgstr "crwdns32050:0%(start_time)scrwdne32050:0"
+
+#: participants/templates/current_round/common.html:15
+msgid "Teams:"
+msgstr "crwdns32052:0crwdne32052:0"
+
+#: participants/templates/current_round/common.html:28
+msgid "Adjudicator:"
+msgid_plural "Adjudicators:"
+msgstr[0] "crwdns32054:1crwdne32054:1"
+msgstr[1] "crwdns32054:5crwdne32054:5"
+
+#: participants/templates/current_round/common.html:37
+#: participants/templates/current_round/common.html:39
+msgctxt "chair icon"
+msgid "Ⓒ"
+msgstr "crwdns32056:0crwdne32056:0"
+
+#: participants/templates/current_round/common.html:37
+#: participants/templates/current_round/common.html:39
+msgctxt "trainee icon"
+msgid "Ⓣ"
+msgstr "crwdns32058:0crwdne32058:0"
+
+#: participants/templates/current_round/common.html:44
+msgid "There are no panellists or trainees assigned to this debate."
+msgstr "crwdns32060:0crwdne32060:0"
+
+#: participants/templates/current_round/common.html:54
+msgid "Motions are not released to public."
+msgstr "crwdns32062:0crwdne32062:0"
+
+#: participants/templates/current_round/common.html:57
+msgid "Motion:"
+msgstr "crwdns32064:0crwdne32064:0"
+
+#: participants/templates/current_round/common.html:61
+#, python-format
+msgid "Motion %(seq)s:"
+msgstr "crwdns32066:0%(seq)scrwdne32066:0"
+
+#: participants/templates/current_round/common.html:69
+msgid "The motion(s) for this round haven't yet been released."
+msgstr "crwdns32068:0crwdne32068:0"
+
+#: participants/templates/current_round/round_adj.html:14
+#, python-format
+msgid "%(adjudicator)s is the <strong>chair</strong> adjudicating %(aff)s vs %(neg)s in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
+msgstr "crwdns51672:0%(adjudicator)scrwdnd51672:0%(aff)scrwdnd51672:0%(neg)scrwdnd51672:0%(url)scrwdnd51672:0%(room)scrwdne51672:0"
+
+#: participants/templates/current_round/round_adj.html:18
+#, python-format
+msgid "%(adjudicator)s is the <strong>chair</strong> adjudicating %(aff)s vs %(neg)s in <strong>%(room)s</strong>."
+msgstr "crwdns51330:0%(adjudicator)scrwdnd51330:0%(aff)scrwdnd51330:0%(neg)scrwdnd51330:0%(room)scrwdne51330:0"
+
+#: participants/templates/current_round/round_adj.html:24
+#, python-format
+msgid "You are the <strong>chair</strong> adjudicating %(aff)s vs %(neg)s in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
+msgstr "crwdns51674:0%(aff)scrwdnd51674:0%(neg)scrwdnd51674:0%(url)scrwdnd51674:0%(room)scrwdne51674:0"
+
+#: participants/templates/current_round/round_adj.html:28
+#, python-format
+msgid "You are the <strong>chair</strong> adjudicating %(aff)s vs %(neg)s in <strong>%(room)s</strong>."
+msgstr "crwdns51332:0%(aff)scrwdnd51332:0%(neg)scrwdnd51332:0%(room)scrwdne51332:0"
+
+#: participants/templates/current_round/round_adj.html:36
+#, python-format
+msgid "%(adjudicator)s is a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
+msgstr "crwdns51676:0%(adjudicator)scrwdnd51676:0%(type)scrwdnd51676:0%(aff)scrwdnd51676:0%(neg)scrwdnd51676:0%(url)scrwdnd51676:0%(room)scrwdne51676:0"
+
+#: participants/templates/current_round/round_adj.html:40
+#, python-format
+msgid "%(adjudicator)s is a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s in <strong>%(room)s</strong>."
+msgstr "crwdns51334:0%(adjudicator)scrwdnd51334:0%(type)scrwdnd51334:0%(aff)scrwdnd51334:0%(neg)scrwdnd51334:0%(room)scrwdne51334:0"
+
+#: participants/templates/current_round/round_adj.html:46
+#, python-format
+msgid "You are a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
+msgstr "crwdns51678:0%(type)scrwdnd51678:0%(aff)scrwdnd51678:0%(neg)scrwdnd51678:0%(url)scrwdnd51678:0%(room)scrwdne51678:0"
+
+#: participants/templates/current_round/round_adj.html:50
+#, python-format
+msgid "You are a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s in <strong>%(room)s</strong>."
+msgstr "crwdns51336:0%(type)scrwdnd51336:0%(aff)scrwdnd51336:0%(neg)scrwdnd51336:0%(room)scrwdne51336:0"
+
+#: participants/templates/current_round/round_adj.html:58
+#, python-format
+msgid "%(adjudicator)s is adjudicating %(aff)s vs %(neg)s in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
+msgstr "crwdns51680:0%(adjudicator)scrwdnd51680:0%(aff)scrwdnd51680:0%(neg)scrwdnd51680:0%(url)scrwdnd51680:0%(room)scrwdne51680:0"
+
+#: participants/templates/current_round/round_adj.html:62
+#, python-format
+msgid "%(adjudicator)s is adjudicating %(aff)s vs %(neg)s in <strong>%(room)s</strong>."
+msgstr "crwdns51338:0%(adjudicator)scrwdnd51338:0%(aff)scrwdnd51338:0%(neg)scrwdnd51338:0%(room)scrwdne51338:0"
+
+#: participants/templates/current_round/round_adj.html:68
+#, python-format
+msgid "You are adjudicating %(aff)s vs %(neg)s in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
+msgstr "crwdns51682:0%(aff)scrwdnd51682:0%(neg)scrwdnd51682:0%(url)scrwdnd51682:0%(room)scrwdne51682:0"
+
+#: participants/templates/current_round/round_adj.html:72
+#, python-format
+msgid "You are adjudicating %(aff)s vs %(neg)s in <strong>%(room)s</strong>."
+msgstr "crwdns51340:0%(aff)scrwdnd51340:0%(neg)scrwdnd51340:0%(room)scrwdne51340:0"
+
+#: participants/templates/current_round/round_adj.html:85
+#, python-format
+msgid "%(adjudicator)s is the <strong>chair</strong> adjudicating in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
+msgstr "crwdns51684:0%(adjudicator)scrwdnd51684:0%(url)scrwdnd51684:0%(room)scrwdne51684:0"
+
+#: participants/templates/current_round/round_adj.html:89
+#, python-format
+msgid "%(adjudicator)s is the <strong>chair</strong> adjudicating in <strong>%(room)s</strong>."
+msgstr "crwdns51342:0%(adjudicator)scrwdnd51342:0%(room)scrwdne51342:0"
+
+#: participants/templates/current_round/round_adj.html:95
+#, python-format
+msgid "You are the <strong>chair</strong> adjudicating in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
+msgstr "crwdns51686:0%(url)scrwdnd51686:0%(room)scrwdne51686:0"
+
+#: participants/templates/current_round/round_adj.html:99
+#, python-format
+msgid "You are the <strong>chair</strong> adjudicating in <strong>%(room)s</strong>."
+msgstr "crwdns51344:0%(room)scrwdne51344:0"
+
+#: participants/templates/current_round/round_adj.html:107
+#, python-format
+msgid "%(adjudicator)s is a <strong>%(type)s</strong> adjudicating in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
+msgstr "crwdns51688:0%(adjudicator)scrwdnd51688:0%(type)scrwdnd51688:0%(url)scrwdnd51688:0%(room)scrwdne51688:0"
+
+#: participants/templates/current_round/round_adj.html:111
+#, python-format
+msgid "%(adjudicator)s is a <strong>%(type)s</strong> adjudicating in <strong>%(room)s</strong>."
+msgstr "crwdns51346:0%(adjudicator)scrwdnd51346:0%(type)scrwdnd51346:0%(room)scrwdne51346:0"
+
+#: participants/templates/current_round/round_adj.html:117
+#, python-format
+msgid "You are a <strong>%(type)s</strong> adjudicating in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
+msgstr "crwdns51690:0%(type)scrwdnd51690:0%(url)scrwdnd51690:0%(room)scrwdne51690:0"
+
+#: participants/templates/current_round/round_adj.html:121
+#, python-format
+msgid "You are a <strong>%(type)s</strong> adjudicating in <strong>%(room)s</strong>."
+msgstr "crwdns51348:0%(type)scrwdnd51348:0%(room)scrwdne51348:0"
+
+#: participants/templates/current_round/round_adj.html:129
+#, python-format
+msgid "%(adjudicator)s is adjudicating in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
+msgstr "crwdns51692:0%(adjudicator)scrwdnd51692:0%(url)scrwdnd51692:0%(room)scrwdne51692:0"
+
+#: participants/templates/current_round/round_adj.html:133
+#, python-format
+msgid "%(adjudicator)s is adjudicating in <strong>%(room)s</strong>."
+msgstr "crwdns51350:0%(adjudicator)scrwdnd51350:0%(room)scrwdne51350:0"
+
+#: participants/templates/current_round/round_adj.html:139
+#, python-format
+msgid "You are adjudicating in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
+msgstr "crwdns51694:0%(url)scrwdnd51694:0%(room)scrwdne51694:0"
+
+#: participants/templates/current_round/round_adj.html:143
+#, python-format
+msgid "You are adjudicating in <strong>%(room)s</strong>."
+msgstr "crwdns51352:0%(room)scrwdne51352:0"
+
+#: participants/templates/current_round/round_team.html:12
+#, python-format
+msgid "%(team)s is debating as the <strong>%(side)s</strong> team against <strong>%(opponent)s</strong>."
+msgstr "crwdns51614:0%(team)scrwdnd51614:0%(side)scrwdnd51614:0%(opponent)scrwdne51614:0"
+
+#: participants/templates/current_round/round_team.html:16
+#, python-format
+msgid "You are debating as the <strong>%(side)s</strong> team against <strong>%(opponent)s</strong>."
+msgstr "crwdns51616:0%(side)scrwdnd51616:0%(opponent)scrwdne51616:0"
+
+#: participants/templates/current_round/round_team.html:22
+#, python-format
+msgid "%(team)s is debating against <strong>%(opponent)s</strong>."
+msgstr "crwdns51618:0%(team)scrwdnd51618:0%(opponent)scrwdne51618:0"
+
+#: participants/templates/current_round/round_team.html:26
+#, python-format
+msgid "You are debating against <strong>%(opponent)s</strong>."
+msgstr "crwdns51620:0%(opponent)scrwdne51620:0"
+
+#: participants/templates/current_round/round_team.html:39
+#, python-format
+msgid "%(team)s is debating as the <strong>%(side)s</strong> team."
+msgstr "crwdns51622:0%(team)scrwdnd51622:0%(side)scrwdne51622:0"
+
+#: participants/templates/current_round/round_team.html:43
+#, python-format
+msgid "You are debating as the <strong>%(side)s</strong> team."
+msgstr "crwdns51624:0%(side)scrwdne51624:0"
+
+#: participants/templates/current_round/round_team.html:56
+#, python-format
+msgid "%(team)s's debate is in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
+msgstr "crwdns51626:0%(team)scrwdnd51626:0%(url)scrwdnd51626:0%(room)scrwdne51626:0"
+
+#: participants/templates/current_round/round_team.html:60
+#, python-format
+msgid "%(team)s's debate is in <strong>%(room)s</strong>."
+msgstr "crwdns51628:0%(team)scrwdnd51628:0%(room)scrwdne51628:0"
+
+#: participants/templates/current_round/round_team.html:66
+#, python-format
+msgid "Your debate is in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
+msgstr "crwdns51630:0%(url)scrwdnd51630:0%(room)scrwdne51630:0"
+
+#: participants/templates/current_round/round_team.html:70
+#, python-format
+msgid "Your debate is in <strong>%(room)s</strong>."
+msgstr "crwdns51632:0%(room)scrwdne51632:0"
+
+#: participants/templates/edit_speaker_eligibility.html:7
+#, python-format
+msgid "It looks like there aren't any speaker categories are defined. If you'd like to produce category-specific speaker tabs, such as a novice or ESL tab, use the <a href=\"%(categories_url)s\" class=\"alert-link\">Speaker Categories</a> page to define them, then return to this page to set speaker eligibility."
+msgstr "crwdns32102:0%(categories_url)scrwdne32102:0"
+
+#: participants/templates/feedback_progress_panel.html:10
+msgid "Feedback Returns"
+msgstr "crwdns32104:0crwdne32104:0"
+
+#: participants/templates/feedback_progress_panel.html:17
+#, python-format
+msgid "Has submitted feedback for <strong>%(adjudicator)s</strong>"
+msgstr "crwdns32106:0%(adjudicator)scrwdne32106:0"
+
+#: participants/templates/feedback_progress_panel.html:25
+#, python-format
+msgid "Has not submitted feedback for one of: <strong>%(adjudicators)s</strong> (whoever gave the oral adjudication)"
+msgstr "crwdns32108:0%(adjudicators)scrwdne32108:0"
+
+#: participants/templates/feedback_progress_panel.html:30
+#, python-format
+msgid "Has not submitted feedback for <strong>%(adjudicator)s</strong>"
+msgstr "crwdns32110:0%(adjudicator)scrwdne32110:0"
+
+#: participants/templates/feedback_progress_panel.html:39
+msgid "More feedback submissions than expected for this debate:"
+msgstr "crwdns32112:0crwdne32112:0"
+
+#: participants/templates/feedback_progress_panel.html:48
+#, python-format
+msgid "Unexpected feedback submission for <strong>%(adjudicator)s</strong>"
+msgstr "crwdns32114:0%(adjudicator)scrwdne32114:0"
+
+#: participants/templates/feedback_progress_panel.html:55
+#, python-format
+msgid "%(name)s doesn't have any feedback to submit."
+msgstr "crwdns51370:0%(name)scrwdne51370:0"
+
+#: participants/templates/in_this_round.html:9
+#, python-format
+msgid "In This Round (%(round)s)"
+msgstr "crwdns51372:0%(round)scrwdne51372:0"
+
+#: participants/templates/in_this_round.html:13
+msgid "In This Round"
+msgstr "crwdns51744:0crwdne51744:0"
+
+#: participants/templates/in_this_round.html:16
+msgid "(Not Released to Public)"
+msgstr "crwdns32036:0crwdne32036:0"
+
+#: participants/templates/in_this_round.html:23
+msgid "Room TBA"
+msgstr "crwdns51374:0crwdne51374:0"
+
+#: participants/templates/in_this_round.html:35
+#, python-format
+msgid "%(adjudicator)s is not adjudicating this round."
+msgstr "crwdns51376:0%(adjudicator)scrwdne51376:0"
+
+#: participants/templates/in_this_round.html:39
+msgid "You are not adjudicating this round."
+msgstr "crwdns34414:0crwdne34414:0"
+
+#: participants/templates/in_this_round.html:54
+#, python-format
+msgid "It looks like %(team)s is competing in %(ndebates)s debate this round."
+msgid_plural "It looks like %(team)s is competing in %(ndebates)s debates this round."
+msgstr[0] "crwdns51378:1%(team)scrwdnd51378:1%(ndebates)scrwdne51378:1"
+msgstr[1] "crwdns51378:5%(team)scrwdnd51378:5%(ndebates)scrwdne51378:5"
+
+#: participants/templates/in_this_round.html:60
+msgid "If this is an error, please contact a tab director immediately."
+msgstr "crwdns32136:0crwdne32136:0"
+
+#: participants/templates/in_this_round.html:75
+#, python-format
+msgid "%(team)s does not have a debate this round."
+msgstr "crwdns51380:0%(team)scrwdne51380:0"
+
+#: participants/templates/in_this_round.html:79
+msgid "You do not have a debate this round."
+msgstr "crwdns34416:0crwdne34416:0"
+
+#: participants/templates/in_this_round.html:91
+msgid "The draw for this round hasn't yet been released."
+msgstr "crwdns32072:0crwdne32072:0"
+
+#: participants/templates/participants_subnav.html:6
+msgid "Participants List"
+msgstr "crwdns32118:0crwdne32118:0"
+
+#: participants/templates/participants_subnav.html:10
+msgid "Institutions List"
+msgstr "crwdns32120:0crwdne32120:0"
+
+#: participants/templates/participants_subnav.html:15
+msgid "Emails have already been sent."
+msgstr "crwdns34418:0crwdne34418:0"
+
+#: participants/templates/participants_subnav.html:19
+msgid "Email Team Registrations"
+msgstr "crwdns34420:0crwdne34420:0"
+
+#: participants/templates/participants_subnav.html:26 participants/views.py:134
+msgid "Code Names"
+msgstr "crwdns32122:0crwdne32122:0"
+
+#: participants/templates/participants_subnav.html:31
+#: participants/templates/speaker_categories_edit.html:4
+#: participants/templates/speaker_categories_edit.html:5
+msgid "Speaker Categories"
+msgstr "crwdns32124:0crwdne32124:0"
+
+#: participants/templates/participants_subnav.html:35
+msgid "Speaker Eligibility"
+msgstr "crwdns32126:0crwdne32126:0"
+
+#: participants/templates/speaker_categories_edit.html:16
+msgid "Speaker categories allow category-specific speaker tabs to be produced, <i>e.g.</i>, for novice or ESL categories. On this page, you can define what speaker categories exist. After you've defined the categories, you can set speaker eligibility on the Speaker Eligibility page."
+msgstr "crwdns32128:0crwdne32128:0"
+
+#: participants/templates/speaker_categories_edit.html:23
+#, python-format
+msgid "If you want to delete speaker categories, use the <a href=\"%(edit_db_url)s\" class=\"alert-link\">Edit Database</a> area."
+msgstr "crwdns32130:0%(edit_db_url)scrwdne32130:0"
+
+#: participants/templates/speaker_categories_edit.html:29
+msgid "Save Speaker Categories"
+msgstr "crwdns32132:0crwdne32132:0"
+
+#: participants/templates/team_registration_card.html:14
+msgid "Team name:"
+msgstr "crwdns35270:0crwdne35270:0"
+
+#: participants/templates/team_registration_card.html:14
+msgid "Full name:"
+msgstr "crwdns32150:0crwdne32150:0"
+
+#: participants/templates/team_registration_card.html:22
+msgid "Code name:"
+msgstr "crwdns32152:0crwdne32152:0"
+
+#: participants/templates/team_registration_card.html:29
+msgid "Speakers:"
+msgstr "crwdns32154:0crwdne32154:0"
+
+#: participants/templates/team_registration_card.html:40
+msgid "Eligible for break categories:"
+msgstr "crwdns32158:0crwdne32158:0"
+
+#: participants/templates/team_registration_card.html:48
+msgid "Speaker categories:"
+msgstr "crwdns34424:0crwdne34424:0"
+
+#: participants/templatetags/team_name_for_data_entry.py:18
+#, python-format
+msgid "%(code_name)s <em>(%(real_name)s)</em>"
+msgstr "crwdns32160:0%(code_name)scrwdnd32160:0%(real_name)scrwdne32160:0"
+
+#: participants/views.py:45
+msgid "Adjudicators"
+msgstr "crwdns32162:0crwdne32162:0"
+
+#: participants/views.py:54
+msgid "Speakers"
+msgstr "crwdns32164:0crwdne32164:0"
+
+#: participants/views.py:85
+msgid "Institutions"
+msgstr "crwdns32166:0crwdne32166:0"
+
+#: participants/views.py:101
+msgid "Code"
+msgstr "crwdns32168:0crwdne32168:0"
+
+#: participants/views.py:102
+msgid "Full name"
+msgstr "crwdns32170:0crwdne32170:0"
+
+#: participants/views.py:104
+msgid "Region"
+msgstr "crwdns32172:0crwdne32172:0"
+
+#: participants/views.py:106
+msgid "Teams"
+msgstr "crwdns32174:0crwdne32174:0"
+
+#: participants/views.py:106
+msgid "Number of teams"
+msgstr "crwdns32176:0crwdne32176:0"
+
+#: participants/views.py:108
+msgid "Adjs"
+msgstr "crwdns32178:0crwdne32178:0"
+
+#: participants/views.py:109
+msgid "Number of adjudicators, excluding independents"
+msgstr "crwdns32180:0crwdne32180:0"
+
+#: participants/views.py:111
+msgid "IAs"
+msgstr "crwdns32182:0crwdne32182:0"
+
+#: participants/views.py:112
+msgid "Number of independent adjudicators"
+msgstr "crwdns32184:0crwdne32184:0"
+
+#: participants/views.py:142
+msgid "Code name"
+msgstr "crwdns32186:0crwdne32186:0"
+
+#: participants/views.py:162
+msgid "Team Registration"
+msgstr "crwdns34426:0crwdne34426:0"
+
+#: participants/views.py:207
+msgid "Results"
+msgstr "crwdns32190:0crwdne32190:0"
+
+#: participants/views.py:212 participants/views.py:246
+#, python-format
+msgid "Record for %(name)s"
+msgstr "crwdns32188:0%(name)scrwdne32188:0"
+
+#: participants/views.py:243
+msgid "Previous Rounds"
+msgstr "crwdns32192:0crwdne32192:0"
+
+#: participants/views.py:332
+#, python-format
+msgid "Saved category: %(list)s"
+msgid_plural "Saved categories: %(list)s"
+msgstr[0] "crwdns51382:1%(list)scrwdne51382:1"
+msgstr[1] "crwdns51382:5%(list)scrwdne51382:5"
+
+#: participants/views.py:338
+msgid "No changes were made to the categories."
+msgstr "crwdns51384:0crwdne51384:0"
+
+#: participants/views.py:351
+msgid "Speaker Category Eligibility"
+msgstr "crwdns32198:0crwdne32198:0"
+
