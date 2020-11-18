@@ -54,6 +54,13 @@
     (window,"UA-314178-25",{anonymizeIp:true,colorDepth:true,characterSet:true,screenSize:true,language:true});
   </script>
   {% endif %}
+  {% if LANGUAGE_CODE == 'tzl' %}<!-- In-context translations; use Talossan -->
+  <script>
+    var _jipt = [];
+    _jipt.push(['project', 'tabbycat']);
+  </script>
+  <script src="//cdn.crowdin.com/jipt/jipt.js"></script>
+  {% endif %}
 </head>
 
 <body class="{% block body-class %}{% endblock %}">
