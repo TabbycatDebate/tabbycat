@@ -686,5 +686,8 @@ class EmailTeamStandingsView(RoundTemplateEmailCreateView):
 
     def get_extra(self):
         extra = super().get_extra()
-        extra['url'] = self.request.build_absolute_uri(reverse_tournament('standings-public-teams-current', self.tournament))
+        if self.tournament.pref('public_team_standings'):
+            extra['url'] = self.request.build_absolute_uri(reverse_tournament('standings-public-teams-current', self.tournament))
+        else:
+            extra['url'] = ""
         return extra

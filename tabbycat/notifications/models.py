@@ -26,8 +26,6 @@ class SentMessage(models.Model):
         verbose_name=_("email"))
     context = models.JSONField(blank=True, null=True,
         verbose_name=_("context"))
-    message = models.TextField(null=True,
-        verbose_name=_("message"))
 
     notification = models.ForeignKey('notifications.BulkNotification', models.CASCADE,
         verbose_name=_("notification"))
@@ -54,6 +52,7 @@ class BulkNotification(models.Model):
     EVENT_TYPE_ADJ_REG = 'a'
     EVENT_TYPE_MOTIONS = 'm'
     EVENT_TYPE_TEAM_DRAW = 'r'
+    EVENT_TYPE_CUSTOM = ''
 
     EVENT_TYPE_CHOICES = (
         (EVENT_TYPE_POINTS, _("team points")),
@@ -66,6 +65,7 @@ class BulkNotification(models.Model):
         (EVENT_TYPE_ADJ_REG, _("adjudicator registration")),
         (EVENT_TYPE_MOTIONS, _("motion(s) released")),
         (EVENT_TYPE_TEAM_DRAW, _("team draw released")),
+        (EVENT_TYPE_CUSTOM, _("custom message")),
     )
 
     event = models.CharField(max_length=1, choices=EVENT_TYPE_CHOICES, blank=True,
@@ -77,6 +77,11 @@ class BulkNotification(models.Model):
         verbose_name=_("tournament"))
     round = models.ForeignKey('tournaments.Round', models.CASCADE, blank=True, null=True,
         verbose_name=_("round"))
+
+    subject_template = models.TextField(null=True,
+        verbose_name=_("subject template"))
+    body_template = models.TextField(null=True,
+        verbose_name=_("body template"))
 
     class Meta:
         verbose_name = _("bulk notification")
