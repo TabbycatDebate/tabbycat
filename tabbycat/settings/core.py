@@ -49,9 +49,9 @@ EXTRA_LANG_INFO = {
         'name_local': 'Bahasa Melayu', #unicode codepoints here
     },
     'tzl': {
-        # Use code for Talossan can't use proper reserved code...
-        # Talossan is a constructed language, so odds of actually
-        # without native speakers, so chance of using is low.
+        # Use code for Talossan; can't use proper reserved code...
+        # Talossan is a constructed language, without native speakers,
+        # so the odds of having a translation are low.
         'code': 'tzl',
         'name': 'Translation',
         'name_local': 'Translation',
@@ -78,7 +78,6 @@ LANGUAGES = [
 ]
 
 STATICI18N_ROOT = os.path.join(BASE_DIR, "locale")
-#LANGUAGE_COOKIE_NAME = 'language_code'
 
 FORMAT_MODULE_PATH = [
     'utils.formats',
