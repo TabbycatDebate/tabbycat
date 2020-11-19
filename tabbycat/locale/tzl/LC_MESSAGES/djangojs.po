@@ -1,0 +1,554 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-14 04:50+1100\n"
+"PO-Revision-Date: 2020-11-18 21:01\n"
+"Last-Translator: \n"
+"Language-Team: Talossan\n"
+"Language: tzl_TZL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: tzl\n"
+"X-Crowdin-File: /develop/tabbycat/locale/en/LC_MESSAGES/djangojs.po\n"
+"X-Crowdin-File-ID: 962\n"
+
+#: checkins/templates/CheckInScanContainer.vue:
+msgid "Scan Using Camera"
+msgstr "crwdns34746:0crwdne34746:0"
+
+#: checkins/templates/CheckInScanContainer.vue:
+msgid "Stop Camera Scan"
+msgstr "crwdns34748:0crwdne34748:0"
+
+#: checkins/templates/CheckInScanContainer.vue:
+msgid "Turn On Sounds"
+msgstr "crwdns34750:0crwdne34750:0"
+
+#. Translators: %1: Time of checkin, %2: Barcode number, %3: Name of "owner"
+#: checkins/templates/CheckInScanContainer.vue:
+msgid "%1 checked in %2: %3"
+msgstr "crwdns34752:0%1crwdnd34752:0%2crwdnd34752:0%3crwdne34752:0"
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "All"
+msgstr "crwdns34754:0crwdne34754:0"
+
+#. Translators: %1: Option name
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "By %1"
+msgstr "crwdns34756:0%1crwdne34756:0"
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "No matching rooms found."
+msgstr "crwdns51658:0crwdne51658:0"
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "No matching people found."
+msgstr "crwdns34760:0crwdne34760:0"
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "This page will live-update with new check-ins as they occur although the initial list may be up to a minute old."
+msgstr "crwdns34762:0crwdne34762:0"
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "<strong>✓</strong> All"
+msgstr "crwdns34764:0crwdne34764:0"
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "<strong>☓</strong> All"
+msgstr "crwdns34766:0crwdne34766:0"
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "Click to check-in manually"
+msgstr "crwdns34768:0crwdne34768:0"
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "saving..."
+msgstr "crwdns34770:0crwdne34770:0"
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "This person does not have a check-in identifier so they can't be checked in"
+msgstr "crwdns34772:0crwdne34772:0"
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "If you want to view this page without the sidebar (i.e. for displaying to an auditorium) you can use the assistant version."
+msgstr "crwdns34774:0crwdne34774:0"
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "Open the assistant version."
+msgstr "crwdns34776:0crwdne34776:0"
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "Click to undo a check-in"
+msgstr "crwdns34778:0crwdne34778:0"
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "%1, a %2 of no institutional affiliation with identifier of %3"
+msgstr "crwdns34780:0%1crwdnd34780:0%2crwdnd34780:0%3crwdne34780:0"
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "%1, a %2 of no institutional affiliation with no assigned identifier"
+msgstr "crwdns34782:0%1crwdnd34782:0%2crwdne34782:0"
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "%1, a %2 from %3 with identifier of %4"
+msgstr "crwdns34784:0%1crwdnd34784:0%2crwdnd34784:0%3crwdnd34784:0%4crwdne34784:0"
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "%1, a %2 from %3 with no assigned identifier"
+msgstr "crwdns34786:0%1crwdnd34786:0%2crwdnd34786:0%3crwdne34786:0"
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "%1 (Present; id=%2)"
+msgstr "crwdns34788:0%1crwdnd34788:0%2crwdne34788:0"
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "%1 (Absent; id=%2)"
+msgstr "crwdns34790:0%1crwdnd34790:0%2crwdne34790:0"
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "%1, a team with speakers %2"
+msgstr "crwdns34792:0%1crwdnd34792:0%2crwdne34792:0"
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "%1, a %2"
+msgstr "crwdns34794:0%1crwdnd34794:0%2crwdne34794:0"
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "Anonymous (due to team codes)"
+msgstr "crwdns34796:0crwdne34796:0"
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "Anon"
+msgstr "crwdns34798:0crwdne34798:0"
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "Independent"
+msgstr "crwdns34800:0crwdne34800:0"
+
+#: checkins/templates/VenuesStatusMixin.vue:
+msgid "%1 (%2) with identifier of %3"
+msgstr "crwdns34804:0%1crwdnd34804:0%2crwdnd34804:0%3crwdne34804:0"
+
+#: checkins/templates/VenuesStatusMixin.vue:
+msgid "%1 (no category) with identifier of %2"
+msgstr "crwdns34806:0%1crwdnd34806:0%2crwdne34806:0"
+
+#: checkins/templates/VenuesStatusMixin.vue:
+msgid "%1 (%2) with no assigned identifier"
+msgstr "crwdns34808:0%1crwdnd34808:0%2crwdne34808:0"
+
+#: checkins/templates/VenuesStatusMixin.vue:
+msgid "%1 (no category) with no assigned identifier"
+msgstr "crwdns34810:0%1crwdne34810:0"
+
+#: checkins/templates/VenuesStatusMixin.vue:
+msgid "Uncategorised"
+msgstr "crwdns34812:0crwdne34812:0"
+
+#: checkins/templates/VenuesStatusMixin.vue:
+msgid "No Category"
+msgstr "crwdns35637:0crwdne35637:0"
+
+#: checkins/templates/VenuesStatusMixin.vue:
+msgid "Priority %1"
+msgstr "crwdns34814:0%1crwdne34814:0"
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "%1 %2 from %3"
+msgstr "crwdns34816:0%1crwdnd34816:0%2crwdnd34816:0%3crwdne34816:0"
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "%1 %2 from %3 %4"
+msgstr "crwdns34818:0%1crwdnd34818:0%2crwdnd34818:0%3crwdnd34818:0%4crwdne34818:0"
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "%1 %2 from %3 on %4 (Chair)"
+msgstr "crwdns34820:0%1crwdnd34820:0%2crwdnd34820:0%3crwdnd34820:0%4crwdne34820:0"
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "%1 %2 from %3 on %4 (Panellist)"
+msgstr "crwdns34822:0%1crwdnd34822:0%2crwdnd34822:0%3crwdnd34822:0%4crwdne34822:0"
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "%1 %2 from %3 on %4 (Trainee)"
+msgstr "crwdns34824:0%1crwdnd34824:0%2crwdnd34824:0%3crwdnd34824:0%4crwdne34824:0"
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "ID %1,"
+msgstr "crwdns34826:0%1crwdne34826:0"
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "Room:"
+msgstr "crwdns51660:0crwdne51660:0"
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "Chair for Panel of %1"
+msgstr "crwdns34830:0%1crwdne34830:0"
+
+#: printing/templates/PrintableBallotHeader.vue: printing/templates/PrintableDebateInfo.vue:
+msgid "Solo Chair"
+msgstr "crwdns34832:0crwdne34832:0"
+
+#: printing/templates/PrintableBallotHeader.vue: printing/templates/PrintableDebateInfo.vue:
+msgid "Panellist"
+msgstr "crwdns34834:0crwdne34834:0"
+
+#: printing/templates/PrintableBallotHeader.vue: printing/templates/PrintableDebateInfo.vue:
+msgid "Trainee"
+msgstr "crwdns34836:0crwdne34836:0"
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "Team"
+msgstr "crwdns34838:0crwdne34838:0"
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Mark speeches %1 to %2; <strong>%3</strong>."
+msgstr "crwdns34840:0%1crwdnd34840:0%2crwdnd34840:0%3crwdne34840:0"
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Mark replies %1 to %2; <strong>%3</strong>."
+msgstr "crwdns34842:0%1crwdnd34842:0%2crwdnd34842:0%3crwdne34842:0"
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Return ballots to %1."
+msgstr "crwdns34844:0%1crwdne34844:0"
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "The motion is <em>%1</em>"
+msgstr "crwdns34846:0%1crwdne34846:0"
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Debated"
+msgstr "crwdns34848:0crwdne34848:0"
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Circle %1"
+msgstr "crwdns34850:0%1crwdne34850:0"
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "<strong>%1</strong>: %2"
+msgstr "crwdns34852:0%1crwdnd34852:0%2crwdne34852:0"
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Aff Veto"
+msgstr "crwdns34854:0crwdne34854:0"
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Neg Veto"
+msgstr "crwdns34856:0crwdne34856:0"
+
+#: printing/templates/PrintableDebateInfo.vue: printing/templates/PrintableTeamScores.vue:
+msgid "%1:"
+msgstr "crwdns34864:0%1crwdne34864:0"
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "tab entry"
+msgstr "crwdns34866:0crwdne34866:0"
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "tab check"
+msgstr "crwdns34868:0crwdne34868:0"
+
+#: printing/templates/PrintableDebateInfo.vue: checkins/templates/PeopleStatusMixin.vue:
+msgid "Unaffiliated"
+msgstr "crwdns34802:0crwdne34802:0"
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "no ½ marks"
+msgstr "crwdns34872:0crwdne34872:0"
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "½ marks are allowed"
+msgstr "crwdns34874:0crwdne34874:0"
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "decimal marks are allowed"
+msgstr "crwdns34876:0crwdne34876:0"
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "%1 (%2, %3)"
+msgstr "crwdns34886:0%1crwdnd34886:0%2crwdnd34886:0%3crwdne34886:0"
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Adjudicating with %1."
+msgstr "crwdns34888:0%1crwdne34888:0"
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "; "
+msgstr "crwdns34890:0crwdne34890:0"
+
+#: printing/templates/PrintableFeedback.vue:
+msgid "Did %1 deliver the adjudication?"
+msgstr "crwdns34892:0%1crwdne34892:0"
+
+#: printing/templates/PrintableFeedback.vue: printing/templates/PrintableFeedbackQuestion.vue:
+msgid "Yes"
+msgstr "crwdns34894:0crwdne34894:0"
+
+#: printing/templates/PrintableFeedback.vue:
+msgid "No, I am submitting feedback on:"
+msgstr "crwdns34896:0crwdne34896:0"
+
+#: printing/templates/PrintableFeedbackQuestion.vue:
+msgid "Unsure"
+msgstr "crwdns34900:0crwdne34900:0"
+
+#: printing/templates/PrintableFeedbackQuestion.vue:
+msgid "No"
+msgstr "crwdns34902:0crwdne34902:0"
+
+#: printing/templates/PrintableScoresheet.vue:
+msgid "Which team won the debate:"
+msgstr "crwdns34904:0crwdne34904:0"
+
+#: printing/templates/PrintableScoresheet.vue:
+msgid "By how many points did they win:"
+msgstr "crwdns34906:0crwdne34906:0"
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "%1, %2"
+msgstr "crwdns34908:0%1crwdnd34908:0%2crwdne34908:0"
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "IMPORTANT: Check and explicitly note if a speaker gives multiple speeches"
+msgstr "crwdns34910:0crwdne34910:0"
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "Score:"
+msgstr "crwdns34914:0crwdne34914:0"
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "Circle the last digit of the %1's score:"
+msgstr "crwdns34916:0%1crwdne34916:0"
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "Circle Rank:"
+msgstr "crwdns34938:0crwdne34938:0"
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "Total:"
+msgstr "crwdns34948:0crwdne34948:0"
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "Circle the last digit of the team's total:"
+msgstr "crwdns34950:0crwdne34950:0"
+
+#: templates/tables/TablesContainer.vue:8
+msgid "Find in Table"
+msgstr "crwdns34952:0crwdne34952:0"
+
+#: templates/tables/CheckboxTables.vue:30
+msgid "Set All Breaking as Available"
+msgstr "crwdns34954:0crwdne34954:0"
+
+#: templates/tables/CheckboxTables.vue:36
+msgid "Set all the availabilities to exactly match what they were in the previous round."
+msgstr "crwdns34956:0crwdne34956:0"
+
+#: templates/tables/CheckboxTables.vue:37
+msgid "Match"
+msgstr "crwdns34958:0crwdne34958:0"
+
+#: templates/tables/CheckboxTables.vue:41
+msgid "Set all availabilities to exactly match check-ins."
+msgstr "crwdns34960:0crwdne34960:0"
+
+#: templates/tables/CheckboxTables.vue:44
+msgid "Match Check-Ins"
+msgstr "crwdns34962:0crwdne34962:0"
+
+#: templates/tables/CheckboxTables.vue:
+msgid "Set people as available only if they have a check-in and are currently unavailable — i.e. it will not overwrite any existing availabilities."
+msgstr "crwdns34964:0crwdne34964:0"
+
+#: templates/tables/CheckboxTables.vue:47
+msgid "Copy From Check-Ins"
+msgstr "crwdns34966:0crwdne34966:0"
+
+#: tournaments/templates/TournamentOverviewContainer.vue:
+msgid "Ballots Status"
+msgstr "crwdns34968:0crwdne34968:0"
+
+#: tournaments/templates/TournamentOverviewContainer.vue:
+msgid "Latest Actions"
+msgstr "crwdns34970:0crwdne34970:0"
+
+#: tournaments/templates/TournamentOverviewContainer.vue:
+msgid "No Actions Yet"
+msgstr "crwdns34972:0crwdne34972:0"
+
+#: tournaments/templates/TournamentOverviewContainer.vue:
+msgid "Latest Results"
+msgstr "crwdns34974:0crwdne34974:0"
+
+#: tournaments/templates/TournamentOverviewContainer.vue:
+msgid "No Confirmed Results Yet"
+msgstr "crwdns34976:0crwdne34976:0"
+
+#: participants/templates/DiversityContainer.vue:6
+msgid "Speaker Demographics"
+msgstr "crwdns34978:0crwdne34978:0"
+
+#: participants/templates/DiversityContainer.vue:11
+msgid "No Gender Information"
+msgstr "crwdns34980:0crwdne34980:0"
+
+#: participants/templates/DiversityContainer.vue:18
+msgid "No Speaker Categories Information"
+msgstr "crwdns34982:0crwdne34982:0"
+
+#: participants/templates/DiversityContainer.vue:33
+msgid "Speaker Results"
+msgstr "crwdns34984:0crwdne34984:0"
+
+#: participants/templates/DiversityContainer.vue:36
+msgid "speakers with gender data"
+msgstr "crwdns34986:0crwdne34986:0"
+
+#: participants/templates/DiversityContainer.vue:38
+msgid "speaker scores total"
+msgstr "crwdns34988:0crwdne34988:0"
+
+#: participants/templates/DiversityContainer.vue:49
+msgid "No Region Information"
+msgstr "crwdns34990:0crwdne34990:0"
+
+#: participants/templates/DiversityContainer.vue:56
+msgid "Adjudicator Demographics"
+msgstr "crwdns34992:0crwdne34992:0"
+
+#: participants/templates/DiversityContainer.vue:68
+msgid "No Position Information"
+msgstr "crwdns34994:0crwdne34994:0"
+
+#: participants/templates/DiversityContainer.vue:83
+msgid "Adjudicator Results"
+msgstr "crwdns34996:0crwdne34996:0"
+
+#: participants/templates/DiversityContainer.vue:86
+msgid "adjudicators with gender data"
+msgstr "crwdns34998:0crwdne34998:0"
+
+#: participants/templates/DiversityContainer.vue:88
+msgid "feedback scores total"
+msgstr "crwdns35000:0crwdne35000:0"
+
+#: participants/templates/DiversityContainer.vue:94
+msgid "No Adjudicator Ratings Information"
+msgstr "crwdns35002:0crwdne35002:0"
+
+#: participants/templates/DiversityContainer.vue:99
+msgid "No Adjudicator-Adjudicator Feedback Information"
+msgstr "crwdns35004:0crwdne35004:0"
+
+#: results/templates/ResultsStats.vue:10
+msgid "Checked-In"
+msgstr "crwdns35006:0crwdne35006:0"
+
+#: results/templates/ResultsStats.vue:15
+msgid "Not Checked-In"
+msgstr "crwdns35008:0crwdne35008:0"
+
+#: results/templates/ResultsStats.vue:19
+msgid "Ballot Check-Ins"
+msgstr "crwdns35010:0crwdne35010:0"
+
+#: results/templates/ResultsStats.vue:26
+msgid "Unknown"
+msgstr "crwdns35012:0crwdne35012:0"
+
+#: results/templates/ResultsStats.vue:31
+msgid "Unconfirmed"
+msgstr "crwdns35014:0crwdne35014:0"
+
+#: results/templates/ResultsStats.vue:36
+msgid "Confirmed"
+msgstr "crwdns35016:0crwdne35016:0"
+
+#: results/templates/ResultsStats.vue:40
+msgid "Ballot Statuses"
+msgstr "crwdns35018:0crwdne35018:0"
+
+#: results/templates/BallotsCell.vue:18
+msgid "You cannot confirm this ballot because you entered it"
+msgstr "crwdns35020:0crwdne35020:0"
+
+#: results/templates/BallotsCell.vue:34
+msgid "Add Ballot"
+msgstr "crwdns35022:0crwdne35022:0"
+
+#: results/templates/BallotsCell.vue:79
+msgid "Re-Edit"
+msgstr "crwdns35024:0crwdne35024:0"
+
+#: results/templates/BallotsCell.vue:81
+msgid "Review"
+msgstr "crwdns35026:0crwdne35026:0"
+
+#: utils/templates/AutoSaveCounter.vue:4
+msgid "No changes"
+msgstr "crwdns35028:0crwdne35028:0"
+
+#: utils/templates/DragAndDropActions.vue:8
+msgid "Return to Draw"
+msgstr "crwdns35030:0crwdne35030:0"
+
+#: utils/templates/DragAndDropActions.vue:15
+msgid "Auto-Prioritise"
+msgstr "crwdns35032:0crwdne35032:0"
+
+#: utils/templates/DragAndDropActions.vue:17
+msgid "Auto-Allocate"
+msgstr "crwdns35034:0crwdne35034:0"
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Break"
+msgstr "crwdns35639:0crwdne35639:0"
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Gender"
+msgstr "crwdns35641:0crwdne35641:0"
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Rank"
+msgstr "crwdns35643:0crwdne35643:0"
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Region"
+msgstr "crwdns35645:0crwdne35645:0"
+
+#. Translators: Short for "Venue Category"
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Category"
+msgstr "crwdns35647:0crwdne35647:0"
+
+#: utils/templates/DragAndDropDebate.vue:5
+msgid "The debate's bracket"
+msgstr "crwdns35054:0crwdne35054:0"
+
+#: utils/templates/DragAndDropDebate.vue:9
+msgid "The bracket range of the hypothetical debate"
+msgstr "crwdns35056:0crwdne35056:0"
+
+#: utils/templates/DragAndDropDebate.vue:20
+msgid "The total number of live break categories across all teams"
+msgstr "crwdns35058:0crwdne35058:0"
+
+#: utils/templates/DragAndDropDebate.vue:26
+msgid "The estimated total number of live break categories across all teams of the hypothetical debate"
+msgstr "crwdns35060:0crwdne35060:0"
+
+#: utils/templates/DragAndDropDebate.vue:33
+msgid "This debate's priority"
+msgstr "crwdns35062:0crwdne35062:0"
+
+#: draw/templates/InlineTeam.vue:41
+msgid "No code name set"
+msgstr "crwdns35064:0crwdne35064:0"
+

@@ -48,6 +48,14 @@ EXTRA_LANG_INFO = {
         'name': 'Malay',
         'name_local': 'Bahasa Melayu', #unicode codepoints here
     },
+    'tzl': {
+        # Use code for Talossan; can't use proper reserved code...
+        # Talossan is a constructed language, without native speakers,
+        # so the odds of having a translation are low.
+        'code': 'tzl',
+        'name': 'Translation',
+        'name_local': 'Translation',
+    },
 }
 
 # Add custom languages not provided by Django
@@ -66,6 +74,7 @@ LANGUAGES = [
     ('pt', _('Portuguese')),
     ('ru', _('Russian')),
     ('zh-hans', _('Simplified Chinese')),
+    ('tzl', _('Translation')),
 ]
 
 STATICI18N_ROOT = os.path.join(BASE_DIR, "locale")
