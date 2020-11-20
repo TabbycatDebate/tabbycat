@@ -66,7 +66,7 @@ jobs:
       run: |
         npm run build
         python ./tabbycat/manage.py collectstatic --noinput -v 0
-    - name: Run Migration
+    - name: Run Migrations
       run: python ./tabbycat/manage.py migrate
     - name: Run Tests
       run: python tabbycat/manage.py test -v 2 --exclude-tag=selenium
