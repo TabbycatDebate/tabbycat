@@ -1,14 +1,14 @@
 # ==============================================================================
-# Travis CI
+# Github CI
 # ==============================================================================
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'USER': 'postgres',
-        'NAME': 'travisci',
-        'PASSWORD': '',
+        'NAME': 'postgres',
+        'PASSWORD': 'postgres',
         'HOST': 'localhost',
-        'PORT': '',
+        'PORT': '5432',
     },
 }
