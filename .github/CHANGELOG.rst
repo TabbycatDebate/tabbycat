@@ -14,7 +14,6 @@ Change Log
 - Optimised database queries to create all debates in a draw at once (`#1376 <https://github.com/TabbycatDebate/tabbycat/pull/1376>`_)
 - Optimised deletion of team private URLs (`#1618 <https://github.com/TabbycatDebate/tabbycat/pull/1618>`_)
 - Reduced number of database queries in sending notifications (`#1592 <https://github.com/TabbycatDebate/tabbycat/pull/1592>`_)
-- Fixed simulated annealing adjudicator allocator when initialised with the Hungarian method (`#1619 <https://github.com/TabbycatDebate/tabbycat/pull/1619>`_)
 - Added selectors for adjudicator positions in draw emails (`#1423 <https://github.com/TabbycatDebate/tabbycat/pull/1423>`_)
 - Implemented debate postponement, allowing debates to be marked as "postponed" in the results page. Postponed debates do not block draw generation, contrary to unconfirmed debates. (`#1563 <https://github.com/TabbycatDebate/tabbycat/pull/1563>`_)
 - Added round weights so that team points can be pondered between rounds, implementing tapered scoring. Weights only affect the sum of team points. (`#1512 <https://github.com/TabbycatDebate/tabbycat/pull/1512>`_)
@@ -26,7 +25,7 @@ Change Log
     - Two-team formats can now have scoreless ballots, and winner ballots are not restricted to elimination rounds (`#1003 <https://github.com/TabbycatDebate/tabbycat/issues/1003>`_)
     - Results are now discoverable through the API.
 - Breaks are now explorable and manipulable through the API.
-- Removed the simulated annealing adjudicator allocator.
+- Removed the simulated annealing adjudicator allocator. (`#1619 <https://github.com/TabbycatDebate/tabbycat/pull/1619>`_)
 - Fixed issue with Sentry integration preventing some debugging info from being included in error reports
 
 
