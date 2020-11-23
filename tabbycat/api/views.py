@@ -549,4 +549,5 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
             'source_adjudicator__debate', 'source_team__debate',
             'source_adjudicator__debate__round', 'source_team__debate__round',
             'source_adjudicator__debate__round__tournament', 'source_team__debate__round__tournament',
+            'participant_submitter__adjudicator__tournament', 'participant_submitter__speaker__team__tournament',
         ).prefetch_related(*answers_prefetch)

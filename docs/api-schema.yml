@@ -9,7 +9,7 @@ info:
   license:
     name: Tabbycat
     url: 'https://tabbycat.readthedocs.io/en/stable/about/licence.html'
-  version: 1.0.0
+  version: 1.1.0
 security:
   - Token: []
 paths:
@@ -641,7 +641,9 @@ paths:
   '/v1/tournaments/{tournament_slug}/feedback':
     get:
       operationId: v1_tournaments_feedback_list
-      description: List all adjudicator feedback for a tournament
+      description: >-
+        List all adjudicator feedback for a tournament.
+        Warning: Expensive operation.
       parameters:
         - name: limit
           in: query
@@ -3059,6 +3061,15 @@ components:
           title: Ignored
           description: Whether the feedback should affect the judge's score
           type: boolean
+        participant_submitter:
+          title: Participant submitter
+          description: >-
+            The submitting participant, adjudicator or speaker (if by private
+            URL)
+          type: string
+          format: uri
+          nullable: true
+          readOnly: true
         submitter:
           title: Submitter
           type: integer
@@ -3914,6 +3925,13 @@ components:
         discarded:
           title: Discarded
           type: boolean
+        participant_submitter:
+          title: Participant submitter
+          description: The submitting adjudicator (if by private URL)
+          type: string
+          format: uri
+          nullable: true
+          readOnly: true
         submitter:
           title: Submitter
           type: integer
