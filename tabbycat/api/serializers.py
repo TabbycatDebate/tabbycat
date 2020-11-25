@@ -995,7 +995,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         queryset=Motion.objects.all())
     url = fields.DebateHyperlinkedIdentityField(view_name='api-ballot-detail')
     participant_submitter = fields.TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail',
-        queryset=Adjudicator.objects.all())
+        queryset=Adjudicator.objects.all(), source='participant_submitter.adjudicator')
 
     class Meta:
         model = BallotSubmission

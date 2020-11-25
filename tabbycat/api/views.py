@@ -442,7 +442,7 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
                 'all-released': self.get_round_status(view),
             }[t.pref(view.access_preference)]
 
-            result_status = t.pref('public_results') and r.completed and not r.is_silent
+            result_status = t.pref('public_results') and r.completed and not r.silent
             return draw_status or result_status or t.pref('all_results_released')
 
         def get_round_status(self, view):
@@ -497,7 +497,7 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
         filters = Q()
         if self.request.query_params.get('confirmed') or not self.request.user.is_staff:
             filters &= Q(confirmed=True)
-        return super().get_queryset().filter(filters)
+        return super().get_queryset().filter(filters).select_related('participant_submitter__adjudicator__tournament')
 
 
 class FeedbackQuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
