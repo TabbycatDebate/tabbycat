@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-24 07:26\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2020-10-12 07:20\n"
+"Last-Translator: \n"
 "Language-Team: Malay\n"
 "Language: ms_MY\n"
 "MIME-Version: 1.0\n"
@@ -12,8 +12,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-Language: ms\n"
 "X-Crowdin-File: /develop/tabbycat/adjallocation/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 922\n"
 
 #: adjallocation/allocators/base.py:34
 msgid "There are no available adjudicators. Ensure there are adjudicators who have been marked as available for this round before auto-allocating."
@@ -241,7 +243,7 @@ msgstr "kedudukan bilik"
 
 #: adjallocation/models.py:126
 msgid "Sequential number of panel, not used in any algorithms"
-msgstr ""
+msgstr "Bilangan panel berjujukan, tidak digunakan dalam algoritma"
 
 #: adjallocation/models.py:128
 msgid "liveness"
@@ -249,7 +251,7 @@ msgstr "layak break"
 
 #: adjallocation/models.py:129
 msgid "Number of categories this room is expected to be live for"
-msgstr ""
+msgstr "Bilangan kategori break yang masih boleh break"
 
 #: adjallocation/models.py:132
 msgid "preformed panel"
@@ -310,7 +312,7 @@ msgstr ""
 #: adjallocation/utils.py:52
 #, python-format
 msgid "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> via institution <strong>%(institution)s</strong>"
-msgstr ""
+msgstr "Konflik:<strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> kerana institusi <strong>%(institution)s</strong>"
 
 #: adjallocation/views.py:35
 msgid "Male"
