@@ -69,6 +69,7 @@ LANGUAGES = [
     ('en', _('English')),
     ('es', _('Spanish')),
     ('fr', _('French')),
+    ('id', _('Indonesian')),
     ('ja', _('Japanese')),
     ('ms', _('Malay')),
     ('pt', _('Portuguese')),
