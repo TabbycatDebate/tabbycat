@@ -51,7 +51,6 @@
     "Tomorrow": "\u0986\u0997\u09be\u09ae\u09c0\u0995\u09be\u09b2",
     "Trainee": "\u09a8\u09ac\u09bf\u09b6 \u09ac\u09bf\u099a\u09be\u09b0\u0995",
     "Unknown": "\u0985\u099c\u09cd\u099e\u09be\u09a4",
-    "Venue:": "\u0995\u0995\u09cd\u09b7:",
     "Yesterday": "\u0997\u09a4\u0995\u09be\u09b2"
   };
   for (var key in newcatalog) {
