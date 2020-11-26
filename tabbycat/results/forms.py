@@ -1002,4 +1002,4 @@ class PerAdjudicatorEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
 
     def scoresheets(self):
         for adj in self.adjudicators:
-            yield {'advancing': self[self._fieldname_advancing(adj)]}
+            yield {'adjudicator': adj, 'advancing': self[self._fieldname_advancing(adj)]}
