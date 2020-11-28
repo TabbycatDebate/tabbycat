@@ -6,25 +6,29 @@ Change Log
 ----------------
 *Release date: ?*
 
-- Added URL field from the Room model to the Venues API endpoints as 'external URL'
-- The Institution API endpoints show institutions' regions as their name, and regions can be created
 - Added a preference to allow dedicated reply speaker. Thanks to Miha Frangež for the PR! (`#1584 <https://github.com/TabbycatDebate/tabbycat/issues/1584>`_)
-- Adjudicator Feedback choices and draw flags are stored with PostgreSQL-specific arrays (`#1525 <https://github.com/TabbycatDebate/tabbycat/issues/1525>`_)
 - Private URL submissions now store the participant whose link was used rather than just their IP address (`#1586 <https://github.com/TabbycatDebate/tabbycat/issues/1586>`_)
-- Optimised database queries to create all debates in a draw at once (`#1376 <https://github.com/TabbycatDebate/tabbycat/pull/1376>`_)
-- Optimised deletion of team private URLs (`#1618 <https://github.com/TabbycatDebate/tabbycat/pull/1618>`_)
-- Reduced number of database queries in sending notifications (`#1592 <https://github.com/TabbycatDebate/tabbycat/pull/1592>`_)
 - Added selectors for adjudicator positions in draw emails (`#1423 <https://github.com/TabbycatDebate/tabbycat/pull/1423>`_)
 - Implemented debate postponement, allowing debates to be marked as "postponed" in the results page. Postponed debates do not block draw generation, contrary to unconfirmed debates. (`#1563 <https://github.com/TabbycatDebate/tabbycat/pull/1563>`_)
 - Added round weights so that team points can be pondered between rounds, implementing tapered scoring. Weights only affect the sum of team points. (`#1512 <https://github.com/TabbycatDebate/tabbycat/pull/1512>`_)
-- Delegated the calculation of team and speaker rankings to database functions where available, with metrics using the same query. (`#1617 <https://github.com/TabbycatDebate/tabbycat/pull/1617>`_)
-- Added in-context translation through Crowdin integration (`#1664 <https://github.com/TabbycatDebate/tabbycat/pull/1664>`_)
+- Optimisations to the database
+    - Adjudicator Feedback choices and draw flags are stored with PostgreSQL-specific arrays (`#1525 <https://github.com/TabbycatDebate/tabbycat/issues/1525>`_)
+    - Optimised database queries to create all debates in a draw at once (`#1376 <https://github.com/TabbycatDebate/tabbycat/pull/1376>`_)
+    - Optimised deletion of team private URLs (`#1618 <https://github.com/TabbycatDebate/tabbycat/pull/1618>`_)
+    - Reduced number of database queries in sending notifications (`#1592 <https://github.com/TabbycatDebate/tabbycat/pull/1592>`_)
+    - Delegated the calculation of team and speaker rankings to database functions where available, with metrics using the same query. (`#1617 <https://github.com/TabbycatDebate/tabbycat/pull/1617>`_)
+- Improvements to the API, including
+    - Added URL field from the Room model to the Venues API endpoints as 'external URL'
+    - The Institution API endpoints show institutions' regions as their name, and regions can be created
+    - Breaks are now explorable and manipulable through the API.
 - Overhauled the results framework to allow for more types of ballots
     - BP finals now nominate only one team winning (`#527 <https://github.com/TabbycatDebate/tabbycat/issues/527>`_)
     - There are now settings to allow tied-point and low-point wins, with declared winners (`#643 <https://github.com/TabbycatDebate/tabbycat/issues/643>`_)
     - Two-team formats can now have scoreless ballots, and winner ballots are not restricted to elimination rounds (`#1003 <https://github.com/TabbycatDebate/tabbycat/issues/1003>`_)
     - Results are now discoverable through the API.
-- Breaks are now explorable and manipulable through the API.
+- Added new translations and features to help translators
+    - Thanks to Pascal Alfadian for his work on an Indonesian translation!
+    - Added in-context translation through Crowdin enabling translations to be made directly on Tabbycat (`#1664 <https://github.com/TabbycatDebate/tabbycat/pull/1664>`_)
 - Removed the simulated annealing adjudicator allocator. (`#1619 <https://github.com/TabbycatDebate/tabbycat/pull/1619>`_)
 - Fixed issue with Sentry integration preventing some debugging info from being included in error reports
 
