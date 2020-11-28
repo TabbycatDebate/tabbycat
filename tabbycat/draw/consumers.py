@@ -126,9 +126,9 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
     def receive_json(self, content):
         for (key, value) in content.items():
             if key == 'sides_confirmed':
-                self.receive_sides_status(content)
+                self.receive_debate_change(content, key, 'sides_confirmed', 'sides_confirmed', self.sides_status_serializer)
             elif key == 'venues':
-                self.receive_venues(content)
+                self.receive_debate_change(content, key, 'venue', 'venue_id', self.venues_serializer)
             elif key == 'teams':
                 self.receive_teams(content)
 
@@ -176,28 +176,16 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
         del content['teams']
         self.return_attributes(content, serialized)
 
-    def receive_sides_status(self, content):
-        changes = {int(c['id']): c for c in content['sides_confirmed']}
+    def receive_debate_change(self, content, key, content_name, field_name, serializer):
+        changes = {int(c['id']): c for c in content[key]}
         debates = self.get_debates_or_panels(changes)
         for debate in debates:
-            debate.sides_confirmed = changes[debate.id]['sides_confirmed']
+            setattr(debate, field_name, changes[debate.id][content_name])
             debate.save()
 
         debates = self.get_debates_or_panels(changes)
-        serialized = self.sides_status_serializer(debates, many=True)
-        del content['sides_confirmed']
-        self.return_attributes(content, serialized)
-
-    def receive_venues(self, content):
-        changes = {int(c['id']): c for c in content['venues']}
-        debates = self.get_debates_or_panels(changes)
-        for debate in debates:
-            debate.venue_id = changes[debate.id]['venue']
-            debate.save()
-
-        debates = self.get_debates_or_panels(changes)
-        serialized = self.venues_serializer(debates, many=True)
-        del content['venues']
+        serialized = serializer(debates, many=True)
+        del content[content_name]
         self.return_attributes(content, serialized)
 
 
