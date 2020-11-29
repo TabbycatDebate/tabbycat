@@ -4,7 +4,7 @@ Change Log
 
 2.5.0 (Nebelung)
 ----------------
-*Release date: ?*
+*Release date: 29 November 2020*
 
 - Added a preference to allow dedicated reply speaker. Thanks to Miha Frangež for the PR! (`#1584 <https://github.com/TabbycatDebate/tabbycat/issues/1584>`_)
 - Private URL submissions now store the participant whose link was used rather than just their IP address (`#1586 <https://github.com/TabbycatDebate/tabbycat/issues/1586>`_)
