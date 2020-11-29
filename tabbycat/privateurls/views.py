@@ -14,6 +14,7 @@ from notifications.models import BulkNotification, SentMessage
 from notifications.views import RoleColumnMixin, TournamentTemplateEmailCreateView
 from participants.models import Adjudicator, Person, Speaker
 from participants.tables import AdjudicatorDebateTable, TeamDebateTable
+from participants.views import BaseRecordView
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin, TournamentMixin
 from tournaments.models import Round
 from utils.misc import reverse_tournament
@@ -204,12 +205,9 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
             kwargs['checkins_used'] = False
 
         if hasattr(self.object, 'adjudicator'):
-            kwargs['debateadjudications'] = self.object.adjudicator.debateadjudicator_set.filter(
-                debate__round__in=t.current_rounds).select_related('debate__round').prefetch_related('debate__round__motion_set')
+            kwargs['debateadjudications'] = BaseRecordView.allocations_set(self.object.adjudicator, False)
         else:
-            kwargs['debateteams'] = self.object.speaker.team.debateteam_set.select_related(
-                'debate__round').prefetch_related('debate__round__motion_set').filter(
-                debate__round__in=t.current_rounds)
+            kwargs['debateteams'] = BaseRecordView.allocations_set(self.object.speaker.team, False)
 
         kwargs['draw_released'] = t.current_round.draw_status == Round.STATUS_RELEASED
         kwargs['feedback_pref'] = t.pref('participant_feedback') == 'private-urls'

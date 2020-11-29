@@ -31,6 +31,7 @@ Change Log
     - Added in-context translation through Crowdin enabling translations to be made directly on Tabbycat (`#1664 <https://github.com/TabbycatDebate/tabbycat/pull/1664>`_)
 - Removed the simulated annealing adjudicator allocator. (`#1619 <https://github.com/TabbycatDebate/tabbycat/pull/1619>`_)
 - Fixed issue with Sentry integration preventing some debugging info from being included in error reports
+- Improved handling of multiple current rounds in record pages, and prevented data leakage
 
 
 2.4.7
