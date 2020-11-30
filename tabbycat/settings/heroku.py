@@ -99,10 +99,18 @@ CHANNEL_LAYERS = {
 }
 
 # ==============================================================================
-# SendGrid
+# Email / SendGrid
 # ==============================================================================
 
-if environ.get('SENDGRID_USERNAME', ''):
+if environ.get('EMAIL_HOST', ''):
+    SERVER_EMAIL = environ['DEFAULT_FROM_EMAIL']
+    DEFAULT_FROM_EMAIL = environ['DEFAULT_FROM_EMAIL']
+    EMAIL_HOST = environ['EMAIL_HOST']
+    EMAIL_HOST_USER = environ['EMAIL_HOST_USER']
+    EMAIL_HOST_PASSWORD = environ['EMAIL_HOST_PASSWORD']
+    EMAIL_PORT = int(environ.get('EMAIL_PORT', 587))
+    EMAIL_USE_TLS = bool(environ.get('EMAIL_USE_TLS', True))
+elif environ.get('SENDGRID_USERNAME', ''):
     SERVER_EMAIL = environ['SENDGRID_USERNAME']
     DEFAULT_FROM_EMAIL = environ.get('DEFAULT_FROM_EMAIL', environ['SENDGRID_USERNAME'])
     EMAIL_HOST = 'smtp.sendgrid.net'
@@ -116,6 +124,7 @@ if environ.get('SENDGRID_USERNAME', ''):
 # ==============================================================================
 
 if not environ.get('DISABLE_SENTRY'):
+    DISABLE_SENTRY = False
     sentry_sdk.init(
         dsn="https://6bf2099f349542f4b9baf73ca9789597@sentry.io/185382",
         integrations=[
@@ -126,10 +135,6 @@ if not environ.get('DISABLE_SENTRY'):
         send_default_pii=True,
         release=TABBYCAT_VERSION,
     )
-
-    # Override dictionary trimming so that all preferences will be included in Sentry reports
-    # https://forum.sentry.io/t/python-sdk-extra-data-capped-at-400-characters/6909
-    sentry_sdk.serializer.MAX_DATABAG_BREADTH = 200
 
 # ==============================================================================
 # Scout

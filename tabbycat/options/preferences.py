@@ -1,6 +1,6 @@
 from django.core.validators import MinValueValidator, validate_slug
 from django.forms import ValidationError
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 from dynamic_preferences.preferences import Section
@@ -466,6 +466,35 @@ class BallotsPerDebateElimination(ChoicePreference):
 
 
 @tournament_preferences_registry.register
+class BallotMustConfirmWinner(ChoicePreference):
+    help_text = _("Whether adjudicator(s) must select the winning team in their ballot, and how it should be treated. Note: Not supported in BP.")
+    verbose_name = _("Winner Declaration in ballot(s)")
+    section = debate_rules
+    name = 'winners_in_ballots'
+    choices = (
+        ('none', _("Do not require separate winner selection")),
+        ('high-points', _("Require separate winner selection as a check on correct scores")),
+        ('tied-points', _("Require winner selection to break tied-point debates")),
+        ('low-points', _("Require winner selection, overriding scores")),
+    )
+    default = 'none'
+
+
+@tournament_preferences_registry.register
+class BallotUsesScores(ChoicePreference):
+    help_text = _("When ballots should ask for speaker scores.")
+    verbose_name = _("Require speaker scores")
+    section = debate_rules
+    name = 'speakers_in_ballots'
+    choices = (
+        ('always', _("Always require speaker scores")),
+        ('prelim', _("Only require speaker scores in preliminary rounds")),
+        ('never', _("Never require speaker scores")),
+    )
+    default = 'always'
+
+
+@tournament_preferences_registry.register
 class SubstantiveSpeakers(IntegerPreference):
     help_text = _("How many substantive speakers on a team")
     verbose_name = _("Substantive speakers")
@@ -490,6 +519,15 @@ class ReplyScores(BooleanPreference):
     verbose_name = _("Reply scores")
     section = debate_rules
     name = 'reply_scores_enabled'
+    default = True
+
+
+@tournament_preferences_registry.register
+class RequireSubstantiveForReply(BooleanPreference):
+    help_text = _("Whether to limit reply speeches to speakers who gave a substantive speech in the debate")
+    verbose_name = _("Require reply speaker to have given a substantive speech")
+    section = debate_rules
+    name = 'require_substantive_for_reply'
     default = True
 
 
@@ -543,7 +581,7 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
         classes = [TeamStandingsGenerator.metric_annotator_classes[metric] for metric in value]
         duplicates = [c for c in classes if c.repeatable is False and classes.count(c) > 1]
         if duplicates:
-            duplicates_str = ", ".join(list(set(force_text(c.name) for c in duplicates)))
+            duplicates_str = ", ".join(list(set(force_str(c.name) for c in duplicates)))
             raise ValidationError(_("The following metrics can't be listed twice: "
                     "%(duplicates)s") % {'duplicates': duplicates_str})
 
@@ -578,7 +616,7 @@ class SpeakerStandingsPrecedence(MultiValueChoicePreference):
         classes = [SpeakerStandingsGenerator.metric_annotator_classes[metric] for metric in value]
         duplicates = [c for c in classes if c.repeatable is False and classes.count(c) > 1]
         if duplicates:
-            duplicates_str = ", ".join(list(set(force_text(c.name) for c in duplicates)))
+            duplicates_str = ", ".join(list(set(force_str(c.name) for c in duplicates)))
             raise ValidationError(_("The following metrics can't be listed twice: "
                     "%(duplicates)s") % {'duplicates': duplicates_str})
 
@@ -879,6 +917,15 @@ class FeedbackReturnLocation(StringPreference):
     section = data_entry
     name = 'feedback_return_location'
     default = 'TBA'
+
+
+@tournament_preferences_registry.register
+class EnablePostponements(BooleanPreference):
+    help_text = _("Lets debates have their status as postponed, as to not block draw generation.")
+    verbose_name = _("Enable postponements")
+    section = data_entry
+    name = 'enable_postponements'
+    default = False
 
 
 # ==============================================================================

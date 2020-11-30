@@ -10,21 +10,20 @@ from .bpelimination import (PartialBPEliminationDrawGenerator, AfterPartialBPEli
     FirstBPEliminationDrawGenerator, SubsequentBPEliminationDrawGenerator)
 
 
-# Flag codes must NOT have commas in them, because they go into a comma-delimited list.
-DRAW_FLAG_DESCRIPTIONS = {
-    "max_swapped":  _("Too many swaps"),
-    "1u1d_hist":    _("One-up-one-down (history)"),
-    "1u1d_inst":    _("One-up-one-down (institution)"),
-    "1u1d_other":   _("One-up-one-down (to accommodate)"),
-    "bub_up_hist":  _("Bubble up (history)"),
-    "bub_dn_hist":  _("Bubble down (history)"),
-    "bub_up_inst":  _("Bubble up (institution)"),
-    "bub_dn_inst":  _("Bubble down (institution)"),
-    "bub_up_accom": _("Bubble up (to accommodate)"),
-    "bub_dn_accom": _("Bubble down (to accommodate)"),
-    "no_bub_updn":  _("Can't bubble up/down"),
-    "pullup":       _("Pull-up team"),
-}
+DRAW_FLAG_DESCRIPTIONS = (
+    ("max_swapped", _("Too many swaps")),
+    ("1u1d_hist", _("One-up-one-down (history)")),
+    ("1u1d_inst", _("One-up-one-down (institution)")),
+    ("1u1d_other", _("One-up-one-down (to accommodate)")),
+    ("bub_up_hist", _("Bubble up (history)")),
+    ("bub_dn_hist", _("Bubble down (history)")),
+    ("bub_up_inst", _("Bubble up (institution)")),
+    ("bub_dn_inst", _("Bubble down (institution)")),
+    ("bub_up_accom", _("Bubble up (to accommodate)")),
+    ("bub_dn_accom", _("Bubble down (to accommodate)")),
+    ("no_bub_updn", _("Can't bubble up/down")),
+    ("pullup", _("Pull-up team")),
+)
 
 
 def DrawGenerator(teams_per_debate, draw_type, teams, results=None, rrseq=None, **kwargs):  # noqa: N802 (factory function)

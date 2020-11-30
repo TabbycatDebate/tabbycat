@@ -2,6 +2,38 @@
 Change Log
 ==========
 
+2.5.0 (Nebelung)
+----------------
+*Release date: 30 November 2020*
+
+- Added a preference to allow dedicated reply speaker. Thanks to Miha Frangež for the PR! (`#1584 <https://github.com/TabbycatDebate/tabbycat/issues/1584>`_)
+- Private URL submissions now store the participant whose link was used rather than just their IP address (`#1586 <https://github.com/TabbycatDebate/tabbycat/issues/1586>`_)
+- Added selectors for adjudicator positions in draw emails (`#1423 <https://github.com/TabbycatDebate/tabbycat/pull/1423>`_)
+- Implemented debate postponement, allowing debates to be marked as "postponed" in the results page. Postponed debates do not block draw generation, contrary to unconfirmed debates. (`#1563 <https://github.com/TabbycatDebate/tabbycat/pull/1563>`_)
+- Added round weights so that team points can be pondered between rounds, implementing tapered scoring. Weights only affect the sum of team points. (`#1512 <https://github.com/TabbycatDebate/tabbycat/pull/1512>`_)
+- Optimisations to the database
+    - Adjudicator Feedback choices and draw flags are stored with PostgreSQL-specific arrays (`#1525 <https://github.com/TabbycatDebate/tabbycat/issues/1525>`_)
+    - Optimised database queries to create all debates in a draw at once (`#1376 <https://github.com/TabbycatDebate/tabbycat/pull/1376>`_)
+    - Optimised deletion of team private URLs (`#1618 <https://github.com/TabbycatDebate/tabbycat/pull/1618>`_)
+    - Reduced number of database queries in sending notifications (`#1592 <https://github.com/TabbycatDebate/tabbycat/pull/1592>`_)
+    - Delegated the calculation of team and speaker rankings to database functions where available, with metrics using the same query. (`#1617 <https://github.com/TabbycatDebate/tabbycat/pull/1617>`_)
+- Improvements to the API, including
+    - Added URL field from the Room model to the Venues API endpoints as 'external URL'
+    - The Institution API endpoints show institutions' regions as their name, and regions can be created
+    - Breaks are now explorable and manipulable through the API.
+- Overhauled the results framework to allow for more types of ballots
+    - BP finals now nominate only one team winning (`#527 <https://github.com/TabbycatDebate/tabbycat/issues/527>`_)
+    - There are now settings to allow tied-point and low-point wins, with declared winners (`#643 <https://github.com/TabbycatDebate/tabbycat/issues/643>`_)
+    - Two-team formats can now have scoreless ballots, and winner ballots are not restricted to elimination rounds (`#1003 <https://github.com/TabbycatDebate/tabbycat/issues/1003>`_)
+    - Results are now discoverable through the API.
+- Added new translations and features to help translators
+    - Thanks to Pascal Alfadian for his work on an Indonesian translation!
+    - Added in-context translation through Crowdin enabling translations to be made directly on Tabbycat (`#1664 <https://github.com/TabbycatDebate/tabbycat/pull/1664>`_)
+- Removed the simulated annealing adjudicator allocator. (`#1619 <https://github.com/TabbycatDebate/tabbycat/pull/1619>`_)
+- Fixed issue with Sentry integration preventing some debugging info from being included in error reports
+- Improved handling of multiple current rounds in record pages, and prevented data leakage
+
+
 2.4.7
 -----
 *Release date: 15 October 2020*
@@ -10,6 +42,7 @@ Change Log
 - Record pages now show concurrent rounds
 - Non-public speaker categories are now hidden from public API endpoints when unauthenticated
 
+
 2.4.6
 -----
 *Release date: 19 September 2020*
@@ -17,6 +50,7 @@ Change Log
 - Fixed issue where team names with an institution were longer than the maximum size (`#1564 <https://github.com/TabbycatDebate/tabbycat/issues/1564>`_)
 - Fixed issue that made saving motions impossible through the Round API detail endpoint
 - Fixed issue that made filtering by source team impossible for the Feedback API
+
 
 2.4.5
 -----
@@ -28,23 +62,26 @@ Change Log
 - Improved sorting of feedback table when sorting 'difference between base score and current score' (thanks Zachary for the report)
 - Fixed issue where the last saved counter was not updating on normal tables
 
+
 2.4.4
 -----
 *Release date: 13 July 2020*
 
 - Fixed colours associated with adjudicators' scores not showing
 - Showed validation errors when using API with invalid field names
-- Prevented Tabbycat from creating default conflicts with the API if already specififed in the request
-- Fixed eligibilty API endpoints when a list of participants is not present
+- Prevented Tabbycat from creating default conflicts with the API if already specified in the request
+- Fixed eligibility API endpoints when a list of participants is not present
 - Fixed speaker category eligibility API endpoint not accepting speakers
 - Allowed updating teams, excluding speakers, through the team detail API endpoint
 - Added date and time formats for Malay
+
 
 2.4.3
 -----
 *Release date: 4 July 2020*
 
 - Fixed issue preventing break eligibility from saving (`#1521 <https://github.com/TabbycatDebate/tabbycat/issues/1521>`_)
+
 
 2.4.2
 -----
@@ -53,6 +90,7 @@ Change Log
 - Removed duplicate institution name in popovers (`#1515 <https://github.com/TabbycatDebate/tabbycat/issues/1515>`_)
 - Fixed participant record page crashes resulting from `#1511 <https://github.com/TabbycatDebate/tabbycat/pull/1511>`_ (`#1518 <https://github.com/TabbycatDebate/tabbycat/pull/1518>`_)
 - Fixed hanging in preformed panel creation
+
 
 2.4.1
 -----
@@ -69,6 +107,7 @@ Change Log
 - Fixed issue where null points caused an error in current standings
 - Fixed issue preventing the creation of speakers in teams through API
 - Little updates and clarifications to the documentation
+
 
 2.4.0 (Manx)
 ------------
@@ -100,6 +139,7 @@ Change Log
 - Fixed issue where who-beat-whom would include elimination rounds (`#1073 <https://github.com/TabbycatDebate/tabbycat/issues/1073>`_)
 - Fixed issue causing even panels to be missed for user warnings (`#1465 <https://github.com/TabbycatDebate/tabbycat/issues/1465>`_)
 - Stopped actively maintaining `local installation instructions for Windows <https://tabbycat.readthedocs.io/en/latest/install/windows.html>`_
+
 
 2.3.3
 -----

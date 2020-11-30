@@ -4,7 +4,7 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count, Q
+from django.db.models import Count, Prefetch, Q
 from django.forms import HiddenInput
 from django.http import JsonResponse
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
@@ -13,6 +13,7 @@ from django.views.generic.base import View
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
+from motions.models import Motion
 from notifications.models import BulkNotification
 from notifications.views import TournamentTemplateEmailCreateView
 from options.utils import use_team_code_names
@@ -165,8 +166,7 @@ class EmailTeamRegistrationView(TournamentTemplateEmailCreateView):
     subject_template = 'team_email_subject'
     message_template = 'team_email_message'
 
-    def get_success_url(self):
-        return reverse_tournament('participants-list', self.tournament)
+    tournament_redirect_pattern_name = 'participants-list'
 
     def get_queryset(self):
         return Speaker.objects.filter(team__tournament=self.tournament).select_related('team').prefetch_related('team__speaker_set')
@@ -189,10 +189,27 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
     def use_team_code_names(self):
         return use_team_code_names(self.tournament, self.admin)
 
+    @staticmethod
+    def allocations_set(obj, admin):
+        model_related = {'Team': 'debateteam_set', 'Adjudicator': 'debateadjudicator_set'}[type(obj).__name__]
+        try:
+            qs = getattr(obj, model_related).filter(
+                debate__round__in=obj.tournament.current_rounds).select_related('debate__round')
+            if admin:
+                qs = qs.prefetch_related('debate__round__motion_set')
+            else:
+                qs = qs.filter(debate__round__draw_status=Round.STATUS_RELEASED).prefetch_related(
+                    Prefetch('debate__round__motion_set', queryset=Motion.objects.filter(round__motions_released=True)))
+            return qs
+        except ObjectDoesNotExist:
+            return None
+
     def get_context_data(self, **kwargs):
         kwargs['admin_page'] = self.admin
         kwargs['draw_released'] = self.tournament.current_round.draw_status == Round.STATUS_RELEASED
         kwargs['use_code_names'] = self.use_team_code_names()
+        kwargs[self.model_kwarg] = self.allocations_set(self.object, self.admin)
+
         return super().get_context_data(**kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -203,6 +220,7 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
 class BaseTeamRecordView(BaseRecordView):
 
     model = Team
+    model_kwarg = 'debateteams'
     template_name = 'team_record.html'
 
     table_title = _("Results")
@@ -217,18 +235,8 @@ class BaseTeamRecordView(BaseRecordView):
             return self.object.emoji
 
     def get_context_data(self, **kwargs):
-        tournament = self.tournament
-
-        try:
-            kwargs['debateteams'] = self.object.debateteam_set.select_related(
-                'debate__round').prefetch_related('debate__round__motion_set').filter(
-                debate__round__in=tournament.current_rounds)
-        except ObjectDoesNotExist:
-            kwargs['debateteams'] = None
-
         kwargs['team_short_name'] = self.object.code_name if self.use_team_code_names() else self.object.short_name
-        kwargs['feedback_progress'] = FeedbackProgressForTeam(self.object, tournament)
-
+        kwargs['feedback_progress'] = FeedbackProgressForTeam(self.object, self.tournament)
         return super().get_context_data(**kwargs)
 
     def get_table(self):
@@ -238,6 +246,7 @@ class BaseTeamRecordView(BaseRecordView):
 class BaseAdjudicatorRecordView(BaseRecordView):
 
     model = Adjudicator
+    model_kwarg = 'debateadjudications'
     template_name = 'adjudicator_record.html'
     page_emoji = '⚖'
 
@@ -255,20 +264,8 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         return adjs
 
     def get_context_data(self, **kwargs):
-        try:
-            kwargs['debateadjudications'] = self.object.debateadjudicator_set.filter(
-                debate__round__in=self.tournament.current_rounds,
-            ).select_related(
-                'debate__round',
-            ).prefetch_related(
-                'debate__round__motion_set',
-            )
-        except ObjectDoesNotExist:
-            kwargs['debateadjudications'] = None
-
         kwargs['feedback_progress'] = FeedbackProgressForAdjudicator(self.object, self.tournament)
         kwargs['adjadj_conflicts'] = self._get_adj_adj_conflicts()
-
         return super().get_context_data(**kwargs)
 
     def get_table(self):

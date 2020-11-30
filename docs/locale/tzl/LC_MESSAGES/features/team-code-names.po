@@ -1,0 +1,104 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-11-18 21:01\n"
+"Last-Translator: \n"
+"Language-Team: Talossan\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: tzl\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/features/team-code-names.po\n"
+"X-Crowdin-File-ID: 1297\n"
+"Language: tzl_TZL\n"
+
+#: ../../features/team-code-names.rst:5
+msgid "Team Code Names"
+msgstr "crwdns48655:0crwdne48655:0"
+
+#: ../../features/team-code-names.rst:7
+msgid "Some tournaments use \"code names\" to obscure the institutional affiliations of teams. For example, rather than calling a team \"Harvard DK\", they would be presented in the draw as \"Butterfly\". A natural way to do this would be just to change the name of every team, but then the team's \"real name\" would be hidden from tournament staff, too."
+msgstr "crwdns48657:0crwdne48657:0"
+
+#: ../../features/team-code-names.rst:13
+msgid "Instead, Tabbycat allows you to assign code names to teams, alongside their real names. This way, you can have code names show to participants, while real team names show in administrative views (*e.g.* allocating adjudicators). It also allows you to \"decode\" team names for elimination rounds or final tab release easily, without having to actually change every team's name."
+msgstr "crwdns48659:0crwdne48659:0"
+
+#: ../../features/team-code-names.rst:19
+msgid "While the most frequently-used public views have been checked to ensure that they show only code names, not all views have been checked thoroughly. Please check views using demonstration data on a test site, configured in the same way that you would use it at your tournament, before using code names at a real tournament."
+msgstr "crwdns48661:0crwdne48661:0"
+
+#: ../../features/team-code-names.rst:26
+msgid "Assigning code names"
+msgstr "crwdns48663:0crwdne48663:0"
+
+#: ../../features/team-code-names.rst:28
+msgid "Most methods of importing teams, including the simple importer and the ``importtournament`` command, automatically assign code names to teams. The code name is the name of the emoji that is automatically assigned at the same time. For example, the team assigned 🦋 will be code-named \"Butterfly\"."
+msgstr "crwdns48665:0crwdne48665:0"
+
+#: ../../features/team-code-names.rst:33
+msgid "If you wish to use your own code names, you need to set the \"code name\" field of each team. Here are two ways to do this:"
+msgstr "crwdns48667:0crwdne48667:0"
+
+#: ../../features/team-code-names.rst:36
+msgid "**Edit Database area:** Enter the Edit Database area, and under **Participants > Teams**, click **Change**. Modify each team one by one, entering a new code name then saving."
+msgstr "crwdns48669:0crwdne48669:0"
+
+#: ../../features/team-code-names.rst:39
+msgid "``importtournament`` **command:** If you imported a tournament from CSV files, you can just add a ``code_name`` column to your teams CSV file."
+msgstr "crwdns48671:0crwdne48671:0"
+
+#: ../../features/team-code-names.rst:43
+msgid "Displaying code names"
+msgstr "crwdns48673:0crwdne48673:0"
+
+#: ../../features/team-code-names.rst:45
+msgid "Code names are disabled by default; to enable then, go to **Setup > Configuration > Public Options**, and change the **Team code names** option. You can choose between the following options:"
+msgstr "crwdns48675:0crwdne48675:0"
+
+#: ../../features/team-code-names.rst:49
+msgid "Do not use code names"
+msgstr "crwdns48677:0crwdne48677:0"
+
+#: ../../features/team-code-names.rst:50
+msgid "Use real names everywhere, and show code names in tooltips"
+msgstr "crwdns48679:0crwdne48679:0"
+
+#: ../../features/team-code-names.rst:51
+msgid "Use code names for public; real names with code names in tooltips for admins"
+msgstr "crwdns48681:0crwdne48681:0"
+
+#: ../../features/team-code-names.rst:52
+msgid "Use code names for public; code names with real names in tooltips for admins"
+msgstr "crwdns48683:0crwdne48683:0"
+
+#: ../../features/team-code-names.rst:53
+msgid "Use code names everywhere; do not use tooltips (real names show in some admin views)"
+msgstr "crwdns48685:0crwdne48685:0"
+
+#: ../../features/team-code-names.rst:55
+msgid "\"Code names in tooltips\" means that the code name will display in the details box that appears when you roll over a team's name, and similarly for real names."
+msgstr "crwdns48687:0crwdne48687:0"
+
+#: ../../features/team-code-names.rst:58
+msgid "One typical use is as follows:"
+msgstr "crwdns48689:0crwdne48689:0"
+
+#: ../../features/team-code-names.rst:60
+msgid "Before the tournament, set the team code names setting to *Use code names for public; real names with code names in tooltips for admins*. This hides real names from anything participants would see, but continues to refer to teams in administrative views by real names."
+msgstr "crwdns48691:0crwdne48691:0"
+
+#: ../../features/team-code-names.rst:64
+msgid "After the break is announced, set it to *Use real names everywhere, and show code names in tooltips*. This basically decodes all team names, while still allowing people to look up the (now former) code name of a team."
+msgstr "crwdns48693:0crwdne48693:0"
+
+#: ../../features/team-code-names.rst:68
+msgid "If you're enabling team codes, you probably want to disable the **Show team institutions** option too."
+msgstr "crwdns48695:0crwdne48695:0"
+

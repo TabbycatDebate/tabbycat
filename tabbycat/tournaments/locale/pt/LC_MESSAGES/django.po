@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-24 09:47\n"
+"POT-Creation-Date: 2020-11-16 15:04-0400\n"
+"PO-Revision-Date: 2020-11-16 19:11\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Portuguese\n"
 "Language: pt_PT\n"
@@ -15,6 +15,8 @@ msgstr ""
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: pt-PT\n"
 "X-Crowdin-File: /develop/tabbycat/tournaments/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 952\n"
 
 #: tournaments/apps.py:7
 msgid "Tournaments"
@@ -297,22 +299,30 @@ msgid "starts at"
 msgstr "começa em"
 
 #: tournaments/models.py:361
+msgid "weight"
+msgstr ""
+
+#: tournaments/models.py:362
+msgid "A factor for the points received in the round. For example, if 2, all points are doubled."
+msgstr ""
+
+#: tournaments/models.py:365
 msgid "round"
 msgstr "rodada"
 
-#: tournaments/models.py:362
+#: tournaments/models.py:366
 msgid "rounds"
 msgstr "rodadas"
 
-#: tournaments/models.py:375
+#: tournaments/models.py:379
 msgid "A round in the elimination stage must have its draw type set to \"Elimination\"."
 msgstr "Uma rodada na fase de eliminação deve ter o seu tipo de alocação de posições definido como \"Eliminação\"."
 
-#: tournaments/models.py:378
+#: tournaments/models.py:382
 msgid "A round in the preliminary stage cannot have its draw type set to \"Elimination\"."
 msgstr "Uma rodada na fase de classificação não pode ter o seu tipo de alocação de posições definido como \"Eliminação\"."
 
-#: tournaments/models.py:383
+#: tournaments/models.py:387
 msgid "Elimination rounds must have a break category."
 msgstr "Rodadas eliminatórias devem ter uma categoria de classificação."
 
@@ -330,9 +340,6 @@ msgid "current round: %(round)s, status: %(status)s"
 msgstr "rodada atual: %(round)s, status: %(status)s"
 
 #: tournaments/templates/blank_site_start.html:7
-msgid "Welcome to Tabbycat"
-msgstr "Bem-vindo ao Tabbycat"
-
 #: tournaments/templates/blank_site_start.html:20
 msgid "Welcome to Tabbycat!"
 msgstr "Bem-vindo ao Tabbycat!"
@@ -346,7 +353,7 @@ msgid "You can only create this account once, but if you like, you can change th
 msgstr "Você só pode criar essa conta uma vez, mas, caso queira, poderá modificar o login e a senha depois de criado, ou adicionar novos super usuários posteriormente."
 
 #: tournaments/templates/blank_site_start.html:32
-msgid "The e-mail address is used for password resets. You don't have to provide one, but if you don't, you won't be able to reset your password if you forget it."
+msgid "The email address is used for password resets. You don't have to provide one, but if you don't, you won't be able to reset your password if you forget it."
 msgstr "O endereço eletrônico é utilizado para reconfigurações da senha. Você não precisa informar um, mas caso não o faça, não poderá reconfigurar sua senha caso a esqueça."
 
 #: tournaments/templates/blank_site_start.html:40
@@ -755,8 +762,8 @@ msgstr ""
 
 #: tournaments/templates/site_index.html:69
 #, python-format
-msgid "Change Password (%(user)s)"
-msgstr "Mudar Senha (%(user)s)"
+msgid "Get API Token / Change Password (%(user)s)"
+msgstr ""
 
 #: tournaments/templates/site_index.html:73
 #, python-format
@@ -991,49 +998,49 @@ msgstr "Rodada %(number)d"
 msgid "R%(number)d"
 msgstr "R%(number)d"
 
-#: tournaments/views.py:154
+#: tournaments/views.py:153
 #, python-format
 msgid "%(round)s has been marked as completed. All rounds are now completed, so you're done with the tournament! Congratulations!"
 msgstr "%(round)s foram marcadas como concluídas. Todas as rodadas estão concluídas, então você finalizou o torneio! Parabéns!"
 
-#: tournaments/views.py:160
+#: tournaments/views.py:159
 #, python-format
 msgid "%(round)s has been marked as completed. That's the last round in that sequence! Going back to the first round that hasn't been marked as completed."
 msgstr "%(round)s foram marcadas como concluídas. Esta é a última rodada na sequência. Voltando para a primeira rodada não marcada como concluída."
 
-#: tournaments/views.py:173
+#: tournaments/views.py:172
 #, python-format
 msgid "%(round)s has been marked as completed. You've made it to the end of the preliminary rounds! Congratulations! The next step is to generate the break."
 msgstr "%(round)s foram marcadas como concluídas. Você o fez até o final das rodadas classificatórias! Parabéns! O próximo passo é gerar a classificação."
 
-#: tournaments/views.py:179
+#: tournaments/views.py:178
 #, python-format
 msgid "%(round)s has been marked as completed. That was the last preliminary round, but one or more preliminary rounds are still not completed. Going back to the first incomplete preliminary round."
 msgstr "%(round)s foram marcadas como concluídas. Essa foi a última rodada classificatória, mas uma ou mais rodadas classificatórias ainda não estão concluídas. Voltando à primeira rodada classificatória incompleta."
 
-#: tournaments/views.py:187
+#: tournaments/views.py:186
 #, python-format
 msgid "%(this_round)s has been marked as completed. Moving on to %(next_round)s! Woohoo! Keep it up!"
 msgstr "%(this_round)s foram marcadas como concluídas. Indo para %(next_round)s! Aí sim! Continue assim!"
 
-#: tournaments/views.py:216
+#: tournaments/views.py:215
 msgid "Whoops! It looks like someone's already created the first user account. Please log in."
 msgstr ""
 
-#: tournaments/views.py:224
+#: tournaments/views.py:223
 #, python-format
 msgid "Welcome! You've created an account for %s."
 msgstr ""
 
-#: tournaments/views.py:239
+#: tournaments/views.py:238
 msgid "8-team generic dataset"
 msgstr "Conjunto de dados genérico de 8 times"
 
-#: tournaments/views.py:240
+#: tournaments/views.py:239
 msgid "24-team Australs dataset"
 msgstr "Conjunto de dados do Australs de 24 times"
 
-#: tournaments/views.py:241
+#: tournaments/views.py:240
 msgid "88-team BP dataset"
 msgstr "Conjunto de dados do BP de 88 times"
 

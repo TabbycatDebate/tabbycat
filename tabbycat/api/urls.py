@@ -74,9 +74,20 @@ urlpatterns = [
                             path('',
                                 views.PairingViewSet.as_view(list_methods),
                                 name='api-pairing-list'),
-                            path('/<int:pk>',
-                                views.PairingViewSet.as_view(detail_methods),
-                                name='api-pairing-detail'),
+                            path('/<int:debate_pk>', include([
+                                path('',
+                                    views.PairingViewSet.as_view(detail_methods),
+                                    name='api-pairing-detail'),
+
+                                path('/ballots', include([
+                                    path('',
+                                        views.BallotViewSet.as_view(list_methods),
+                                        name='api-ballot-list'),
+                                    path('/<int:pk>',
+                                        views.BallotViewSet.as_view(detail_methods),
+                                        name='api-ballot-detail'),
+                                ])),
+                            ])),
                         ])),
                     ])),
                 ])),
@@ -94,6 +105,11 @@ urlpatterns = [
                         path('/eligibility',
                             views.BreakEligibilityView.as_view(),
                             name='api-breakcategory-eligibility'),
+                        path('/break',
+                            views.BreakingTeamsView.as_view(
+                                {'get': 'list', 'post': 'create', 'delete': 'destroy', 'patch': 'update'},
+                            ),
+                            name='api-breakcategory-break'),
                     ])),
                 ])),
 

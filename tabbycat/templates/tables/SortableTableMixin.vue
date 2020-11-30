@@ -1,9 +1,19 @@
+
 <script>
 // Inheritors should provide a computed property of sortableData
 import _ from 'lodash'
 
 export default {
-  props: { defaultSortKey: '', defaultSortOrder: '' },
+  props: {
+    defaultSortKey: {
+      type: String,
+      default: '',
+    },
+    defaultSortOrder: {
+      type: String,
+      default: '',
+    },
+  },
   data: function () {
     // Sort Key/Order need to be internal state; only passed on by
     // the parent for their default values

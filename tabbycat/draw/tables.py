@@ -1,6 +1,6 @@
 from itertools import islice, zip_longest
 
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
@@ -260,8 +260,8 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
             metric_info = next(self.standings.metrics_info())
             header = {
                 'key': "pts",  # always use 'pts' to make it more predictable
-                'title': force_text(metric_info['abbr']),
-                'tooltip': force_text(metric_info['name']),
+                'title': force_str(metric_info['abbr']),
+                'tooltip': force_str(metric_info['name']),
             }
             cells = []
             infos = self.standings.get_standings(teams)

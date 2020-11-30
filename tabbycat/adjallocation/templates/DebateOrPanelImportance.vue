@@ -41,8 +41,8 @@ export default {
       },
       set (value) {
         // Pass a message to the parent component to then save a change to the store
-        let importanceChanges = [{ 'id': this.debateOrPanel.id, 'importance': value }]
-        this.$store.dispatch('updateDebatesOrPanelsAttribute', { 'importance': importanceChanges })
+        const importanceChanges = [{ id: this.debateOrPanel.id, importance: value }]
+        this.$store.dispatch('updateDebatesOrPanelsAttribute', { importance: importanceChanges })
       },
     },
   },

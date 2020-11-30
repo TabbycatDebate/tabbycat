@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-25 00:05\n"
+"POT-Creation-Date: 2020-07-05 15:26-0300\n"
+"PO-Revision-Date: 2020-07-10 16:27\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -15,9 +15,11 @@ msgstr ""
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: fr\n"
 "X-Crowdin-File: /develop/tabbycat/venues/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 956\n"
 
 #: venues/apps.py:7
-msgid "Venues"
+msgid "Rooms"
 msgstr "Salles"
 
 #: venues/consumers.py:18
@@ -32,11 +34,11 @@ msgstr "Le tirage n'est pas confirmé, confirme-le pour attribuer les salles."
 msgid "Successfully auto-allocated rooms to debates."
 msgstr "Les salles ont été attribués automatiquement aux débats avec succès."
 
-#: venues/models.py:9 venues/models.py:64
+#: venues/models.py:9 venues/models.py:66
 msgid "name"
 msgstr "nom"
 
-#: venues/models.py:11 venues/models.py:118
+#: venues/models.py:11 venues/models.py:120
 msgid "priority"
 msgstr "priorité"
 
@@ -44,83 +46,91 @@ msgstr "priorité"
 msgid "Rooms with a higher priority number will be preferred when allocating rooms to debates"
 msgstr "Les salles ayant un nombre plus élevé de priorité seront privilégiées lors de l’attribution de salles de débats"
 
-#: venues/models.py:15 venues/models.py:76
+#: venues/models.py:15 venues/models.py:78
 msgid "tournament"
 msgstr "tournoi"
 
-#: venues/models.py:22
+#: venues/models.py:16
+msgid "URL"
+msgstr "URL"
+
+#: venues/models.py:17
+msgid "A URL that contains extra information about this room, e.g. a map or a meeting link (for online tournaments)"
+msgstr "Un URL qui donne plus d'information sur la salle, comme une carte ou lien de rencontre (pour tournois en ligne)"
+
+#: venues/models.py:24
 msgid "room"
 msgstr "salle"
 
-#: venues/models.py:23 venues/models.py:74
+#: venues/models.py:25 venues/models.py:76
 msgid "rooms"
 msgstr "salles"
 
-#: venues/models.py:59
+#: venues/models.py:61
 msgid "Don't display in room name"
 msgstr "Ne pas afficher dans le nom de la salle"
 
-#: venues/models.py:60
+#: venues/models.py:62
 msgid "Display as prefix"
 msgstr "Afficher sous forme de préfixe"
 
-#: venues/models.py:61
+#: venues/models.py:63
 msgid "Display as suffix"
 msgstr "Afficher sous forme de suffixe"
 
-#: venues/models.py:65
+#: venues/models.py:67
 msgid "Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room\". This name is shown when the category is prefixed or suffixed to a room name in the draw, e.g., \"Purple – G05\"."
 msgstr "Nom de la catégorie, par exemple, « Violet », « sans marches », « près de la salle de tab ». Ce nom est affiché lorsque la catégorie est le préfixe ou suffixe d’un nom de salle dans le tirage, par exemple, « Violet – G05 »."
 
-#: venues/models.py:69
+#: venues/models.py:71
 msgid "description"
 msgstr "description"
 
-#: venues/models.py:70
+#: venues/models.py:72
 msgid "Description, as the predicate of a sentence, e.g. \"has step-free access\", \"is close to the briefing hall\". This description follows \"This room\" when shown in tooltips, e.g., \"This room is close to the briefing hall.\"."
 msgstr "Description, comme le prédicat d’une phrase, par exemple « a accès sans étape », « est à proximité de la salle de réunion d’information ». Cette description fait suite à « Cette salle » lorsque affiché dans les info-bulles, par exemple, « cette salle est à proximité de la salle de réunion d’information. »."
 
-#: venues/models.py:80
+#: venues/models.py:82
 msgid "display in room name"
 msgstr "afficher dans le nom de la salle"
 
-#: venues/models.py:81
+#: venues/models.py:83
 msgid "Prefix: \"Purple – G05\", Suffix: \"G05 – Purple\""
 msgstr "Préfixe : « Violet – G05 », suffixe : « G05 – Violet »"
 
-#: venues/models.py:83
+#: venues/models.py:85
 msgid "display in public tooltip"
 msgstr "afficher dans l’info-bulle public"
 
-#: venues/models.py:84
+#: venues/models.py:86
 msgid "Displays the description in the tooltip for the room on public pages. The description, if not blank, will always show on admin pages."
 msgstr "Montre la description dans l’info-bulle décrivant la salle sur les pages publiques. La description, si non vide, s'affiche toujours sur les pages administratives."
 
-#: venues/models.py:88
+#: venues/models.py:90
 msgid "room category"
 msgstr "catégorie de salle"
 
-#: venues/models.py:89
+#: venues/models.py:91
 msgid "room categories"
 msgstr "catégories de salle"
 
-#: venues/models.py:117
+#: venues/models.py:119
 msgid "category"
 msgstr "catégorie"
 
-#: venues/models.py:121
+#: venues/models.py:123
 msgid "subject content type"
 msgstr "type de contenu du sujet"
 
-#: venues/models.py:124
+#: venues/models.py:126
 msgid "subject ID"
 msgstr "identifiant de sujet"
 
-#: venues/models.py:130
+#: venues/models.py:132
 msgid "room constraint"
 msgstr "contrainte de salle"
 
-#: venues/models.py:131
+#: venues/models.py:133
 msgid "room constraints"
 msgstr "contraintes de salle"
 

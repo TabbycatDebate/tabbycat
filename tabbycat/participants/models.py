@@ -94,7 +94,7 @@ class Person(models.Model):
     name = models.CharField(max_length=70, db_index=True,
         verbose_name=_("name"))
     email = models.EmailField(blank=True, null=True,
-        verbose_name=_("e-mail address"))
+        verbose_name=_("email address"))
     phone = models.CharField(max_length=40, blank=True,
         verbose_name=_("phone"))
     anonymous = models.BooleanField(default=False,
@@ -182,7 +182,7 @@ class Team(models.Model):
     type = models.CharField(max_length=1, choices=TYPE_CHOICES, default=TYPE_NONE,
         verbose_name=_("type"))
 
-    emoji = models.CharField(max_length=2, default=None, choices=EMOJI_FIELD_CHOICES,
+    emoji = models.CharField(max_length=3, default=None, choices=EMOJI_FIELD_CHOICES,
         blank=True, null=True,   # uses null=True to allow multiple teams to have no emoji
         verbose_name=_("emoji"))
 

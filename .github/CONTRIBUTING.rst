@@ -74,7 +74,7 @@ Style guide
 
 For the front end interface design there is a style guide available at "/style/" once a tournament has been setup.
 
-For python code, we use `flake8 <http://flake8.readthedocs.io>`_ to check for a non-strict series of style rules. Warnings will trigger a Travis CI build to fail. The entire codebase can be checked by using::
+For python code, we use `flake8 <http://flake8.readthedocs.io>`_ to check for a non-strict series of style rules. Warnings will trigger a CI build to fail. The entire codebase can be checked by using::
 
     $ pre-commit run flake8 --all-files
 
@@ -157,7 +157,7 @@ Release checklist
 
 1. Check that all migrations have been generated and committed into Git
 2. Merge translations from the Crowdin pull request and compile messages
-3. Bump version number in ``docs/conf.py``
+3. Bump version number in ``docs/conf.py`` and ``docs/api-schema.yml`` (if applicable)
 4. Bump version number and (if applicable) codename in ``tabbycat/settings/core.py``
 5. Update the main ``CHANGELOG.rst`` file (including release date)
 6. Check the major current deployment options, including:
@@ -166,7 +166,7 @@ Release checklist
     3. Docker (macOS, Windows 10*) and Docker Toolbox (Windows 10 Home) methods
     4. Using Bash and Powershell on Windows
     5. Using Terminal on macOS (at least test out a fresh install of the npm/pip  dependencies)
-7. Check that the last Travis CI build passed and run the full local test suite (this will include the Selenium tests that are not on Travis)
+7. Check that the last Github Actions build passed and run the full local test suite (this will include the Selenium tests that are not on Travis)
 8. Shift remaining issues from the Github Milestone
 9. Create and finish the release branch as per git-flow
 10. Ensure the tag is correct (``vX.Y.Z``) and published to GitHub

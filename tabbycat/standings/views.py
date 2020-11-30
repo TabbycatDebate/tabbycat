@@ -18,7 +18,7 @@ from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
-from utils.misc import reverse_round, reverse_tournament
+from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import VueTableTemplateView
@@ -639,7 +639,7 @@ class PublicDiversityStandingsView(PublicTournamentPageMixin, BaseDiversityStand
 
 class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
     public_page_preference = 'adjudicators_tab_released'
-    page_title = 'Feedback Overview'
+    page_title = gettext_lazy('Feedback Overview')
     page_emoji = '🙅'
     for_public = False
     sort_key = 'name'
@@ -656,7 +656,7 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
             table.add_base_score_columns(adjudicators)
         if self.tournament.pref('adjudicators_tab_shows') == 'all':
             table.add_feedback_graphs(adjudicators)
-        messages.info(self.request, ("An adjudicator's score is determined by "
+        messages.info(self.request, _("An adjudicator's score is determined by "
             "a customisable mix of their base score and their feedback ratings."
             " The current mix is specified below as the 'Score Components.' "
             "Feedback ratings are determined by averaging the results of all "
@@ -676,8 +676,7 @@ class EmailTeamStandingsView(RoundTemplateEmailCreateView):
     subject_template = 'team_points_email_subject'
     message_template = 'team_points_email_message'
 
-    def get_success_url(self):
-        return reverse_round('tournament-complete-round-check', self.round)
+    round_redirect_pattern_name = 'tournament-complete-round-check'
 
     def get_queryset(self):
         return Speaker.objects.filter(team__tournament=self.tournament)
@@ -687,5 +686,8 @@ class EmailTeamStandingsView(RoundTemplateEmailCreateView):
 
     def get_extra(self):
         extra = super().get_extra()
-        extra['url'] = self.request.build_absolute_uri(reverse_tournament('standings-public-teams-current', self.tournament))
+        if self.tournament.pref('public_team_standings'):
+            extra['url'] = self.request.build_absolute_uri(reverse_tournament('standings-public-teams-current', self.tournament))
+        else:
+            extra['url'] = ""
         return extra

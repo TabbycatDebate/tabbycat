@@ -3,7 +3,7 @@
 import logging
 
 from django.contrib.postgres.aggregates import ArrayAgg
-from django.db.models import Avg, Count, F, FloatField, Func, Q, StdDev, Sum
+from django.db.models import Avg, Count, F, FloatField, Func, PositiveIntegerField, Q, StdDev, Sum
 from django.db.models.functions import Cast
 from django.utils.translation import gettext_lazy as _
 
@@ -33,6 +33,7 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
 
     function = None  # must be set by subclasses
     field = None  # must be set by subclasses
+    output_field = None
 
     where_value = None
 
@@ -45,7 +46,7 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     def get_where_field(self):
         return self.get_field()
 
-    def get_annotation(self, round=None):
+    def get_annotation_filter(self, round=None):
         annotation_filter = Q(
             debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
         )
@@ -55,7 +56,10 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
             annotation_filter &= Q(debateteam__teamscore__ballot_submission__confirmed=True)
         if self.where_value is not None:
             annotation_filter &= Q(**{self.get_where_field(): self.where_value})
-        return self.function(self.get_field(), filter=annotation_filter)
+        return annotation_filter
+
+    def get_annotation(self, round=None):
+        return self.function(self.get_field(), filter=self.get_annotation_filter(round), output_field=self.output_field)
 
 
 class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -66,6 +70,10 @@ class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
     function = Sum
     field = "points"
+    output_field = PositiveIntegerField()
+
+    def get_field(self):
+        return F(super().get_field()) * F('debateteam__debate__round__weight')
 
 
 class WinsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -131,12 +139,17 @@ class AverageMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
 
 class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
-    """Metric annotator for total constructive speaker score."""
+    """Metric annotator for total substantive speaker score."""
     key = "speaks_ind_avg"
     name = _("average individual speaker score")
     abbr = _("AISS")
 
-    def get_annotation(self, round=None):
+    function = Avg
+
+    def get_field(self):
+        return 'debateteam__speakerscore__score'
+
+    def get_annotation_filter(self, round=None):
         annotation_filter = Q(
             debateteam__teamscore__ballot_submission__confirmed=True,
             debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
@@ -151,16 +164,16 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         if self.tournament is not None:
             annotation_filter &= Q(debateteam__speakerscore__position__lte=self.tournament.last_substantive_position)
 
-        return Avg('debateteam__speakerscore__score', filter=annotation_filter)
+        return annotation_filter
 
-    def get_annotated_queryset(self, queryset, column_name, round=None):
+    def get_annotated_queryset(self, queryset, round=None):
         if round is not None:
             self.tournament = round.tournament
         else:
             first_team = queryset.first()
             self.tournament = first_team.tournament if first_team is not None else None
 
-        return super().get_annotated_queryset(queryset, column_name, round)
+        return super().get_annotated_queryset(queryset, round)
 
 
 class BaseDrawStrengthMetricAnnotator(BaseMetricAnnotator):
@@ -185,13 +198,13 @@ class BaseDrawStrengthMetricAnnotator(BaseMetricAnnotator):
         opponents_by_team = {team.id: team.opponent_ids for team in teams_with_opponents}
 
         opp_metric_queryset = self.opponent_annotator().get_annotated_queryset(
-                queryset[0].tournament.team_set.all(), 'opp_metric', round)
+                queryset[0].tournament.team_set.all(), round)
         opp_metric_queryset_teams = {team.id: team for team in opp_metric_queryset}
 
         for team in queryset:
             draw_strength = 0
             for opponent_id in opponents_by_team[team.id]:
-                opp_metric = opp_metric_queryset_teams[opponent_id].opp_metric
+                opp_metric = getattr(opp_metric_queryset_teams[opponent_id], self.opponent_annotator.key)
                 if opp_metric is not None: # opp_metric is None when no debates have happened
                     draw_strength += opp_metric
             standings.add_metric(team, self.key, draw_strength)
@@ -224,14 +237,14 @@ class TeamPullupsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     abbr = _("PU")
 
     function = Count
-    where_value = r'(^|,)pullup($|,)'
+    where_value = ['pullup']
     exclude_unconfirmed = False
 
     def get_field(self):
         return 'debateteam'
 
     def get_where_field(self):
-        return 'debateteam__flags__regex'
+        return 'debateteam__flags__contains'
 
 
 class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -256,16 +269,17 @@ class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
             NullIf('debateteam__teamscore__votes_possible', 0, output_field=FloatField()) *
             self.adjs_per_debate)
 
-    def annotate(self, queryset, standings, round=None):
-        super().annotate(queryset, standings, round)
-
+    def annotate_with_queryset(self, queryset, standings):
         # If the number of ballots carried by every team is an integer, then
         # it's probably (though not certainly) the case that there are no
         # "weird" cases causing any fractional numbers of votes due to
         # normalization. In that case, convert all metrics to integers.
-        if all(tsi.metrics[self.key] == int(tsi.metrics[self.key]) for tsi in standings.infoview()):
-            for tsi in standings.infoview():
-                tsi.metrics[self.key] = int(tsi.metrics[self.key])
+        cast = int if all(t.num_adjs == int(t.num_adjs) for t in queryset) else float
+        for item in queryset:
+            metric = item.num_adjs
+            if metric is None:
+                metric = 0
+            standings.add_metric(item, self.key, cast(metric))
 
 
 class NumberOfFirstsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -286,6 +300,16 @@ class NumberOfSecondsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     function = Count
     field = "points"
     where_value = 2
+
+
+class NumberOfThirdsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    key = "thirds"
+    name = _("number of thirds")
+    abbr = _("3rds")
+
+    function = Count
+    field = "points"
+    where_value = 1
 
 
 class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
@@ -366,11 +390,12 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "num_adjs"            : NumberOfAdjudicatorsMetricAnnotator,
         "firsts"              : NumberOfFirstsMetricAnnotator,
         "seconds"             : NumberOfSecondsMetricAnnotator,
+        "thirds"              : NumberOfThirdsMetricAnnotator,
         "wbw"                 : WhoBeatWhomMetricAnnotator,
     }
 
     ranking_annotator_classes = {
-        "rank"        : BasicRankAnnotator,
-        "subrank"     : SubrankAnnotator,
-        "institution" : RankFromInstitutionAnnotator,
+        "rank"            : BasicRankAnnotator,
+        "subrank"         : SubrankAnnotator,
+        "institution_rank": RankFromInstitutionAnnotator,
     }

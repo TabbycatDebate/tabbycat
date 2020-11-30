@@ -21,7 +21,14 @@ import HoverablePanelMixin from '../../templates/allocations/HoverablePanelMixin
 export default {
   mixins: [HoverablePanelMixin, HighlightableMixin],
   components: { DraggableItem },
-  props: { item: Object, dragPayload: Object, isTrainee: false },
+  props: {
+    item: Object,
+    dragPayload: Object,
+    isTrainee: {
+      type: Boolean,
+      default: false,
+    },
+  },
   computed: {
     teamName: function () {
       let name = this.item.short_name // Default

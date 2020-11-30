@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-25 00:36\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2020-11-18 17:59-0400\n"
+"PO-Revision-Date: 2020-11-18 22:15\n"
+"Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
@@ -12,8 +12,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
 "X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-Language: ru\n"
 "X-Crowdin-File: /develop/tabbycat/draw/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 930\n"
 
 #: draw/admin.py:67
 #, python-format
@@ -47,55 +49,55 @@ msgstr[1] "%(count)d дебаты были отмечены имеющими н�
 msgstr[2] "%(count)d дебаты были отмечены имеющими неподтвержденные стороны."
 msgstr[3] "%(count)d дебаты были отмечены имеющими неподтвержденные стороны."
 
-#: draw/apps.py:7 draw/views.py:429 draw/views.py:432
+#: draw/apps.py:7 draw/views.py:452 draw/views.py:455
 msgid "Draw"
 msgstr "Сетка"
 
-#: draw/generator/__init__.py:15
+#: draw/generator/__init__.py:14
 msgid "Too many swaps"
 msgstr "Слишком много перестановок"
 
-#: draw/generator/__init__.py:16
+#: draw/generator/__init__.py:15
 msgid "One-up-one-down (history)"
 msgstr "Одна вверх одна вниз (история)"
 
-#: draw/generator/__init__.py:17
+#: draw/generator/__init__.py:16
 msgid "One-up-one-down (institution)"
 msgstr "Одна вверх, одна вниз (клуб)"
 
-#: draw/generator/__init__.py:18
+#: draw/generator/__init__.py:17
 msgid "One-up-one-down (to accommodate)"
 msgstr "Одна вверх одна вниз (для размещения)"
 
-#: draw/generator/__init__.py:19
+#: draw/generator/__init__.py:18
 msgid "Bubble up (history)"
 msgstr "Поднять вверх (история)"
 
-#: draw/generator/__init__.py:20
+#: draw/generator/__init__.py:19
 msgid "Bubble down (history)"
 msgstr "Опустить вниз (история)"
 
-#: draw/generator/__init__.py:21
+#: draw/generator/__init__.py:20
 msgid "Bubble up (institution)"
 msgstr "Поднять вверх (клуб)"
 
-#: draw/generator/__init__.py:22
+#: draw/generator/__init__.py:21
 msgid "Bubble down (institution)"
 msgstr "Опустить вниз (клуб)"
 
-#: draw/generator/__init__.py:23
+#: draw/generator/__init__.py:22
 msgid "Bubble up (to accommodate)"
 msgstr "Поднять вверх (для удобства)"
 
-#: draw/generator/__init__.py:24
+#: draw/generator/__init__.py:23
 msgid "Bubble down (to accommodate)"
 msgstr "Опустить вниз (для удобства)"
 
-#: draw/generator/__init__.py:25
+#: draw/generator/__init__.py:24
 msgid "Can't bubble up/down"
 msgstr "Не удалось переместить вверх/вниз"
 
-#: draw/generator/__init__.py:26
+#: draw/generator/__init__.py:25
 msgid "Pull-up team"
 msgstr "Команда, которая была пулл-апнута"
 
@@ -177,77 +179,77 @@ msgstr "Тип сетки %(type)s не может быть использова
 msgid "Unrecognised \"teams in debate\" option: %(option)s"
 msgstr "Опция «команды в дебатах» не распознана: %(option)s"
 
-#: draw/manager.py:269
+#: draw/manager.py:276
 #, python-format
 msgid "The break size (%(size)d) for this break category was invalid. It must be either six times or four times a power of two."
 msgstr "Размер брейка (%(size)d) для этой категории не валиден. Он должен быть либо шесть раз либо четыре раза в степени 2."
 
-#: draw/models.py:27
+#: draw/models.py:29 draw/models.py:35
 msgid "none"
 msgstr "нет"
 
-#: draw/models.py:28
+#: draw/models.py:30
 msgid "postponed"
 msgstr "отложен"
 
-#: draw/models.py:29
+#: draw/models.py:31 draw/models.py:36
 msgid "draft"
 msgstr "черновик"
 
-#: draw/models.py:30
+#: draw/models.py:32 draw/models.py:37
 msgid "confirmed"
 msgstr "подтвержденные"
 
-#: draw/models.py:36 draw/models.py:389
+#: draw/models.py:43 draw/models.py:375
 msgid "round"
 msgstr "раунд"
 
-#: draw/models.py:38
-msgid "venue"
+#: draw/models.py:45
+msgid "room"
 msgstr "аудитория"
 
-#: draw/models.py:41
+#: draw/models.py:48
 msgid "bracket"
 msgstr "значение баллов команд"
 
-#: draw/models.py:43
+#: draw/models.py:50
 msgid "room rank"
 msgstr "место команды"
 
-#: draw/models.py:49
+#: draw/models.py:56
 msgid "importance"
 msgstr "значение"
 
-#: draw/models.py:51
+#: draw/models.py:58
 msgid "result status"
 msgstr "статус результата"
 
-#: draw/models.py:53
+#: draw/models.py:60
 msgid "sides confirmed"
 msgstr "стороны подтверждены"
 
-#: draw/models.py:54
+#: draw/models.py:61
 msgid "If unchecked, the sides assigned to teams in this debate are just placeholders."
 msgstr "Если не отмечено, то стороны, назначенные командам в этой дискуссии, являются просто заменителями."
 
-#: draw/models.py:57 draw/models.py:272
+#: draw/models.py:64 draw/models.py:272
 msgid "debate"
 msgstr "дебаты"
 
-#: draw/models.py:58
+#: draw/models.py:65
 msgid "debates"
 msgstr "дебаты"
 
 #. Translators: This is appended to a list of teams, e.g. "Auckland
 #. 1, Vic Wellington 1 (sides not confirmed)". Mind the leading
 #. space.
-#: draw/models.py:77 draw/models.py:102
+#: draw/models.py:84 draw/models.py:109
 msgid " (sides not confirmed)"
 msgstr " (стороны не подтверждены)"
 
 #. Translators: This goes between teams in a debate, e.g. "Auckland 1
 #. vs Vic Wellington 1". Mind the leading and trailing spaces.
-#: draw/models.py:89 draw/models.py:106
+#: draw/models.py:96 draw/models.py:113
 msgid " vs "
 msgstr " против "
 
@@ -275,55 +277,44 @@ msgstr "второе правительство"
 msgid "closing opposition"
 msgstr "вторая оппозиция"
 
-#: draw/models.py:274 draw/models.py:391
+#: draw/models.py:274 draw/models.py:377
 msgid "team"
 msgstr "команда"
 
-#: draw/models.py:276 draw/models.py:393
+#: draw/models.py:276 draw/models.py:379
 msgid "side"
 msgstr "сторона"
 
-#: draw/models.py:282
+#: draw/models.py:281
 msgid "debate team"
 msgstr "команда"
 
-#: draw/models.py:283
+#: draw/models.py:282
 msgid "debate teams"
 msgstr "команды"
 
-#: draw/models.py:311
-msgid "placed 1st"
-msgstr "заняли 1е"
+#: draw/models.py:303
+#, python-format
+msgid "placed %(place)s"
+msgstr "заняли %(place)s"
 
-#: draw/models.py:313
-msgid "placed 2nd"
-msgstr "заняли 2е"
-
-#: draw/models.py:315
-msgid "placed 3rd"
-msgstr "заняли 3е"
-
-#: draw/models.py:317
-msgid "placed 4th"
-msgstr "заняли 4е"
-
-#: draw/models.py:319 draw/models.py:326
+#: draw/models.py:305 draw/models.py:312
 msgid "result unknown"
 msgstr "результат неизвестен"
 
-#: draw/models.py:322
+#: draw/models.py:308
 msgid "won"
 msgstr "выиграли"
 
-#: draw/models.py:324
+#: draw/models.py:310
 msgid "lost"
 msgstr "проиграли"
 
-#: draw/models.py:397
+#: draw/models.py:383
 msgid "team side allocation"
 msgstr "распределение команды на сторону"
 
-#: draw/models.py:398
+#: draw/models.py:384
 msgid "team side allocations"
 msgstr "распределение команд по сторонам"
 
@@ -1027,30 +1018,30 @@ msgstr "Отчеты о балансе позиций доступны толь�
 msgid "Position balance reports aren't computed for the first round of a tournament."
 msgstr "Отчет о балансе позиций не составлен для первого раунда турнира."
 
-#: draw/views.py:66 draw/views.py:460
+#: draw/views.py:68 draw/views.py:483
 msgid "No debates in this round"
 msgstr "Нет дебатов в этом раунде"
 
-#: draw/views.py:74
+#: draw/views.py:76
 #, python-format
 msgid "Draw for %(round)s"
 msgstr "Сетка на %(round)s"
 
-#: draw/views.py:76
+#: draw/views.py:78
 msgid "Draws for Current Rounds"
 msgstr "Сетка на текущий раунд"
 
-#: draw/views.py:80
+#: draw/views.py:82
 #, python-format
 msgid "debates start at %(time)s (in %(time_zone)s)"
 msgstr "дебаты начинаются в %(time)s (в %(time_zone)s)"
 
-#: draw/views.py:84
+#: draw/views.py:86
 #, python-format
 msgid "start times in time zone: %(time_zone)s"
 msgstr "время начала в часовом поясе: %(time_zone)s"
 
-#: draw/views.py:122
+#: draw/views.py:124
 #, python-format
 msgid "debate starts at %(time)s"
 msgid_plural "debates start at %(time)s"
@@ -1059,124 +1050,128 @@ msgstr[1] "дебаты начнутся в %(time)s"
 msgstr[2] "дебаты начнутся в %(time)s"
 msgstr[3] "дебаты начнутся в %(time)s"
 
-#: draw/views.py:169
+#: draw/views.py:171
 msgid "The draw for this round hasn't been released."
 msgstr "Сетка на этот раунд не была опубликована."
 
-#: draw/views.py:222
+#: draw/views.py:224
 #, python-format
 msgid "All Debates for All Rounds of %(tournament)s"
 msgstr "Все дебаты во всех раундов %(tournament)s"
 
-#: draw/views.py:380
+#: draw/views.py:382
 msgid "Adjudicator Assignments"
 msgstr "Назначения судей"
 
-#: draw/views.py:400
+#: draw/views.py:404
+msgid "Position"
+msgstr ""
+
+#: draw/views.py:424
 msgid "Team Pairings"
 msgstr "Паросочетания команд"
 
-#: draw/views.py:424
+#: draw/views.py:447
 msgid "No Draw"
 msgstr "Нет сетки"
 
-#: draw/views.py:426
+#: draw/views.py:449
 msgid "Draft Draw"
 msgstr "Черновик сетки"
 
 #. Translators: e.g. "Affirmative: Break rank"
-#: draw/views.py:518
+#: draw/views.py:541
 #, python-format
 msgid "%(side)s: Break rank"
 msgstr "%(side)s Брейковый ранг"
 
 #. Translators: "BR" stands for "Break rank"
-#: draw/views.py:523
+#: draw/views.py:546
 msgid "BR"
 msgstr "БР"
 
-#: draw/views.py:548
+#: draw/views.py:571
 msgid "Draw with Details"
 msgstr "Сетка с деталями"
 
-#: draw/views.py:556
+#: draw/views.py:579
 msgid "Position Balance Report"
 msgstr "Отчет о балансе позиций"
 
-#: draw/views.py:567
+#: draw/views.py:590
 #, python-format
 msgid "Rényi entropy of order %(order)s"
 msgstr "Энтропия Реньи порядка %(order)s"
 
 #. Translators: This is appended to the string "Rényi entropy of order 1.0"
-#: draw/views.py:570
+#: draw/views.py:593
 msgid " (<i>i.e.</i>, Shannon entropy)"
 msgstr " (<i>т.е.</i>, энтропия Шэннона)"
 
-#: draw/views.py:600
+#: draw/views.py:623
 msgid "Teams with position imbalances"
 msgstr "Команды с дисбалансом позиции"
 
-#: draw/views.py:601
+#: draw/views.py:624
 msgid "No teams with position imbalances! Hooray!"
 msgstr "Нет команд с дисбалансом позиции! Ура!"
 
-#: draw/views.py:604
+#: draw/views.py:627
 msgid "Annotated draw"
 msgstr "Аннотированная сетка"
 
-#: draw/views.py:635
+#: draw/views.py:658
 #, python-format
 msgid "Could not create draw for %(round)s, there was already a draw!"
 msgstr "Не удалось создать сетку для %(round)s, так как сетка уже была создана!"
 
-#: draw/views.py:643
+#: draw/views.py:666
 #, python-format
 msgid "<p>The draw could not be created, for the following reason: <em>%(message)s</em></p>\n"
 "<p>Please fix this issue before attempting to create the draw.</p>"
 msgstr "<p>Сетка не может быть создана по следующим причинам:<em>%(message)s</em></p>\n"
 "<p>Пожалуйста, решите эту проблему перед тем как создавать сетку.</p>"
 
-#: draw/views.py:651
+#: draw/views.py:674
 #, python-format
 msgid "<p>The draw could not be created, because the following error occurred: <em>%(message)s</em></p>\n"
 "<p>If this issue persists and you're not sure how to resolve it, please contact the developers.</p>"
 msgstr "<p>Сетка не может быть создана, поскольку произошла следующая ошибка: <em>%(message)s</em></p>\n"
 "<p>Если эта проблема повторяется и вы не знаете, как её решить, пожалуйста, свяжитесь с разработчиками.</p>"
 
-#: draw/views.py:660
+#: draw/views.py:683
 #, python-format
 msgid "<p>The team standings could not be generated, because the following error occurred: <em>%(message)s</em></p>\n"
 "<p>Because generating the draw uses the current team standings, this prevents the draw from being generated.</p>"
 msgstr "<p>Положение команд не может быть сгенерировано, поскольку произошла следующая ошибка:<em>%(message)s</em></p>\n"
 "<p>Поскольку генератор сетки использует текущее положение команд, это не дает сетке быть сгенерированной.</p>"
 
-#: draw/views.py:676
+#: draw/views.py:699
 msgid "Rooms were not auto-allocated because there are one or more adjudicator room constraints. You should run room allocations after allocating adjudicators."
 msgstr "Аудитории не были автоматически распределены, так как существуют ограничения на аудитории, связанные с судьями. Распределите аудитории после распределения судей."
 
-#: draw/views.py:703
+#: draw/views.py:726
 msgid "Deleted the draw. You can now recreate it as normal."
 msgstr "Сетка удалена. Теперь вы можете создать её заново."
 
-#: draw/views.py:723
+#: draw/views.py:746
 msgid "Released the draw."
 msgstr "Сетка опубликована."
 
-#: draw/views.py:738
+#: draw/views.py:761
 msgid "Unreleased the draw."
 msgstr "Отменить опубликование сетки."
 
-#: draw/views.py:751
+#: draw/views.py:774
 #, python-format
 msgid "Sorry, \"%(input)s\" isn't a valid time. It must be in 24-hour format, with a colon, for example: \"13:57\"."
 msgstr "Извините, \"%(input)s\"не является корректным временем. Оно должно быть в 24-часовом формате, с двоеточием, например: \"13:57\"."
 
-#: draw/views.py:770
+#: draw/views.py:793
 msgid "Side Pre-Allocations"
 msgstr "Предварительное распределение по сторонам"
 
-#: draw/views.py:803
+#: draw/views.py:826
 msgid "Edit Matchups"
 msgstr "Изменить паросочетания"
 

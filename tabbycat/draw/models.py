@@ -1,10 +1,12 @@
 import logging
 
+from django.contrib.humanize.templatetags.humanize import ordinal
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import gettext, gettext_lazy as _
 
 from tournaments.utils import get_side_name
+from utils.fields import ChoiceArrayField
 
 from .generator import DRAW_FLAG_DESCRIPTIONS
 
@@ -20,12 +22,17 @@ class DebateManager(models.Manager):
 
 class Debate(models.Model):
     STATUS_NONE = 'N'
-    STATUS_POSTPONED = 'P' # obsolete
+    STATUS_POSTPONED = 'P'
     STATUS_DRAFT = 'D'
     STATUS_CONFIRMED = 'C'
     STATUS_CHOICES = (
         (STATUS_NONE, _("none")),
         (STATUS_POSTPONED, _("postponed")),
+        (STATUS_DRAFT, _("draft")),
+        (STATUS_CONFIRMED, _("confirmed")),
+    )
+    STATUS_CHOICES_RESTRICTED = (  # If postponements are disabled - used in forms
+        (STATUS_NONE, _("none")),
         (STATUS_DRAFT, _("draft")),
         (STATUS_CONFIRMED, _("confirmed")),
     )
@@ -35,15 +42,15 @@ class Debate(models.Model):
     round = models.ForeignKey('tournaments.Round', models.CASCADE, db_index=True,
         verbose_name=_("round"))
     venue = models.ForeignKey('venues.Venue', models.SET_NULL, blank=True, null=True,
-        verbose_name=_("venue"))
+        verbose_name=_("room"))
 
     bracket = models.FloatField(default=0,
         verbose_name=_("bracket"))
     room_rank = models.IntegerField(default=0,
         verbose_name=_("room rank"))
 
-    # comma-separated list of strings
-    flags = models.CharField(max_length=100, blank=True)
+    flags = ChoiceArrayField(blank=True, default=list,
+        base_field=models.CharField(max_length=15, choices=DRAW_FLAG_DESCRIPTIONS))
 
     importance = models.IntegerField(default=0, choices=[(i, i) for i in range(-2, 3)],
         verbose_name=_("importance"))
@@ -213,13 +220,6 @@ class Debate(models.Model):
                 self._confirmed_ballot = None
             return self._confirmed_ballot
 
-    def get_flags_display(self):
-        if not self.flags:
-            return []  # don't return [""]
-        else:
-            # If the verbose description can't be found, just show the raw flag
-            return [DRAW_FLAG_DESCRIPTIONS.get(f, f) for f in self.flags.split(",")]
-
     @property
     def history(self):
         try:
@@ -275,8 +275,7 @@ class DebateTeam(models.Model):
     side = models.CharField(max_length=3, choices=SIDE_CHOICES,
         verbose_name=_("side"))
 
-    # comma-separated list of strings
-    flags = models.CharField(max_length=100, blank=True)
+    flags = ChoiceArrayField(base_field=models.CharField(max_length=15, choices=DRAW_FLAG_DESCRIPTIONS), blank=True, default=list)
 
     class Meta:
         verbose_name = _("debate team")
@@ -298,23 +297,10 @@ class DebateTeam(models.Model):
                 self._opponent = None
             return self._opponent
 
-    def get_flags_display(self):
-        if not self.flags:
-            return []  # don't return [""]
-        else:
-            # If the verbose description can't be found, just show the raw flag
-            return [DRAW_FLAG_DESCRIPTIONS.get(f, f) for f in self.flags.split(",")]
-
     def get_result_display(self):
         if self.team.tournament.pref('teams_in_debate') == 'bp':
-            if self.points == 3:
-                return gettext("placed 1st")
-            elif self.points == 2:
-                return gettext("placed 2nd")
-            elif self.points == 1:
-                return gettext("placed 3rd")
-            elif self.points == 0:
-                return gettext("placed 4th")
+            if self.points is not None:
+                return gettext("placed %(place)s") % {'place': ordinal(4 - self.points)}
             else:
                 return gettext("result unknown")
         else:

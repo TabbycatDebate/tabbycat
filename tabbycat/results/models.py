@@ -42,11 +42,16 @@ class Submission(models.Model):
     confirmed = models.BooleanField(default=False,
         verbose_name=_("confirmed"))
 
+    # relevant for private URL submissions
+    participant_submitter = models.ForeignKey('participants.Person', models.PROTECT,
+        blank=True, null=True, related_name="%(app_label)s_%(class)s_participant_submitted",
+        verbose_name=_("from participant"))
+
     # only relevant if submitter was in tab room
-    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE,
+    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT,
         blank=True, null=True, related_name="%(app_label)s_%(class)s_submitted",
         verbose_name=_("submitter"))
-    confirmer = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE,
+    confirmer = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT,
         blank=True, null=True, related_name="%(app_label)s_%(class)s_confirmed",
         verbose_name=_("confirmer"))
     confirm_timestamp = models.DateTimeField(blank=True, null=True,
@@ -136,7 +141,12 @@ class BallotSubmission(Submission):
 
     @property
     def serialize_like_actionlog(self):
-        result_winner, result = readable_ballotsub_result(self)
+        if hasattr(self, '_result'):
+            dr = self._result
+        else:
+            from results.result import DebateResult
+            dr = DebateResult(self)
+        result_winner, result = readable_ballotsub_result(dr)
         return {
             'user': result_winner,
             'id': self.id,
@@ -167,10 +177,19 @@ class BallotSubmission(Submission):
             admin_url = 'old-results-ballotset-edit'
             assistant_url = 'old-results-assistant-ballotset-edit'
 
+        submitter = self.ip_address
+        private_url = False
+        if self.submitter:
+            submitter = self.submitter.username
+        elif self.participant_submitter:
+            submitter = self.participant_submitter.name
+            private_url = True
+
         return {
             'ballot_id': self.id,
             'debate_id': self.debate.id,
-            'submitter': self.submitter.username if self.submitter else self.ip_address,
+            'submitter': submitter,
+            'private_url': private_url,
             'admin_link': reverse_tournament(admin_url, tournament, kwargs={'pk': self.id}),
             'assistant_link': reverse_tournament(assistant_url, tournament, kwargs={'pk': self.id}),
             'short_time': created_short,
@@ -180,6 +199,46 @@ class BallotSubmission(Submission):
             'confirmed': self.confirmed,
             'discarded': self.discarded,
         }
+
+
+class TeamScoreByAdj(models.Model):
+    """Holds team result given by a particular adjudicator in a debate.
+    Mostly redundant; is necessary however for voting elimination ballots."""
+    ballot_submission = models.ForeignKey(BallotSubmission, models.CASCADE,
+        verbose_name=_("ballot submission"))
+    debate_adjudicator = models.ForeignKey('adjallocation.DebateAdjudicator', models.CASCADE,
+        verbose_name=_("debate adjudicator"))
+    debate_team = models.ForeignKey('draw.DebateTeam', models.CASCADE,
+        verbose_name=_("debate team"))
+
+    win = models.BooleanField(null=True, blank=True,
+        verbose_name=_("win"))
+    margin = ScoreField(null=True, blank=True,
+        verbose_name=_("margin"))
+    score = ScoreField(null=True, blank=True,
+        verbose_name=_("score"))
+
+    class Meta:
+        unique_together = [('debate_adjudicator', 'debate_team', 'ballot_submission')]
+        index_together = ['ballot_submission', 'debate_adjudicator']
+        verbose_name = _("team score by adjudicator")
+        verbose_name_plural = _("team scores by adjudicator")
+
+    def __str__(self):
+        has_won = "Win" if self.win else "Loss"
+        return ("[{0.ballot_submission_id}/{0.id}] {1} for "
+            "{0.debate_team!s} from {0.debate_adjudicator!s}").format(self, has_won)
+
+    @property
+    def debate(self):
+        return self.debate_team.debate
+
+    def clean(self):
+        super().clean()
+        if (self.debate_team.debate != self.debate_adjudicator.debate or
+                self.debate_team.debate != self.ballot_submission.debate):
+            raise ValidationError(_("The debate team, debate adjudicator and ballot "
+                    "submission must all relate to the same debate."))
 
 
 class SpeakerScoreByAdj(models.Model):
@@ -229,7 +288,7 @@ class TeamScore(models.Model):
 
     points = models.PositiveSmallIntegerField(null=True, blank=True,
         verbose_name=_("points"))
-    win = models.NullBooleanField(null=True, blank=True,
+    win = models.BooleanField(null=True, blank=True,
         verbose_name=_("win"))
     margin = ScoreField(null=True, blank=True,
         verbose_name=_("margin"))

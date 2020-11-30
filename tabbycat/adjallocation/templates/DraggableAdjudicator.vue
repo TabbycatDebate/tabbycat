@@ -34,7 +34,15 @@ import HoverableConflictReceiverMixin from '../../templates/allocations/Hoverabl
 export default {
   mixins: [HighlightableMixin, ConflictableAdjudicatorMixin, HoverableConflictReceiverMixin],
   components: { DraggableItem },
-  props: { item: Object, dragPayload: Object, isTrainee: false, debateOrPanelId: Number },
+  props: {
+    item: Object,
+    dragPayload: Object,
+    debateOrPanelId: Number,
+    isTrainee: {
+      type: Boolean,
+      default: false,
+    },
+  },
   computed: {
     highlightData: function () {
       return this.adjudicator
@@ -49,6 +57,7 @@ export default {
       if (this.item && 'id' in this.item) {
         return this.item.id
       }
+      return null
     },
     unavailable: function () {
       if (this.doubleAllocated) {

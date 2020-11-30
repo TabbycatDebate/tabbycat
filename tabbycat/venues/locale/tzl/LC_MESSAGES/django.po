@@ -1,0 +1,224 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-05 15:26-0300\n"
+"PO-Revision-Date: 2020-11-18 21:01\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Talossan\n"
+"Language: tzl_TZL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: tzl\n"
+"X-Crowdin-File: /develop/tabbycat/venues/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 956\n"
+
+#: venues/apps.py:7
+msgid "Rooms"
+msgstr "crwdns51662:0crwdne51662:0"
+
+#: venues/consumers.py:18
+msgid "Draw is already released, unrelease draw to assign rooms."
+msgstr "crwdns51504:0crwdne51504:0"
+
+#: venues/consumers.py:21
+msgid "Draw is not confirmed, confirm draw to assign rooms."
+msgstr "crwdns51506:0crwdne51506:0"
+
+#: venues/consumers.py:28
+msgid "Successfully auto-allocated rooms to debates."
+msgstr "crwdns51508:0crwdne51508:0"
+
+#: venues/models.py:9 venues/models.py:66
+msgid "name"
+msgstr "crwdns33714:0crwdne33714:0"
+
+#: venues/models.py:11 venues/models.py:120
+msgid "priority"
+msgstr "crwdns33716:0crwdne33716:0"
+
+#: venues/models.py:12
+msgid "Rooms with a higher priority number will be preferred when allocating rooms to debates"
+msgstr "crwdns51510:0crwdne51510:0"
+
+#: venues/models.py:15 venues/models.py:78
+msgid "tournament"
+msgstr "crwdns33720:0crwdne33720:0"
+
+#: venues/models.py:16
+msgid "URL"
+msgstr "crwdns51652:0crwdne51652:0"
+
+#: venues/models.py:17
+msgid "A URL that contains extra information about this room, e.g. a map or a meeting link (for online tournaments)"
+msgstr "crwdns51664:0crwdne51664:0"
+
+#: venues/models.py:24
+msgid "room"
+msgstr "crwdns51512:0crwdne51512:0"
+
+#: venues/models.py:25 venues/models.py:76
+msgid "rooms"
+msgstr "crwdns51514:0crwdne51514:0"
+
+#: venues/models.py:61
+msgid "Don't display in room name"
+msgstr "crwdns51516:0crwdne51516:0"
+
+#: venues/models.py:62
+msgid "Display as prefix"
+msgstr "crwdns33730:0crwdne33730:0"
+
+#: venues/models.py:63
+msgid "Display as suffix"
+msgstr "crwdns33732:0crwdne33732:0"
+
+#: venues/models.py:67
+msgid "Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room\". This name is shown when the category is prefixed or suffixed to a room name in the draw, e.g., \"Purple – G05\"."
+msgstr "crwdns51518:0crwdne51518:0"
+
+#: venues/models.py:71
+msgid "description"
+msgstr "crwdns33736:0crwdne33736:0"
+
+#: venues/models.py:72
+msgid "Description, as the predicate of a sentence, e.g. \"has step-free access\", \"is close to the briefing hall\". This description follows \"This room\" when shown in tooltips, e.g., \"This room is close to the briefing hall.\"."
+msgstr "crwdns51520:0crwdne51520:0"
+
+#: venues/models.py:82
+msgid "display in room name"
+msgstr "crwdns51522:0crwdne51522:0"
+
+#: venues/models.py:83
+msgid "Prefix: \"Purple – G05\", Suffix: \"G05 – Purple\""
+msgstr "crwdns33742:0crwdne33742:0"
+
+#: venues/models.py:85
+msgid "display in public tooltip"
+msgstr "crwdns33744:0crwdne33744:0"
+
+#: venues/models.py:86
+msgid "Displays the description in the tooltip for the room on public pages. The description, if not blank, will always show on admin pages."
+msgstr "crwdns51524:0crwdne51524:0"
+
+#: venues/models.py:90
+msgid "room category"
+msgstr "crwdns51526:0crwdne51526:0"
+
+#: venues/models.py:91
+msgid "room categories"
+msgstr "crwdns51528:0crwdne51528:0"
+
+#: venues/models.py:119
+msgid "category"
+msgstr "crwdns33752:0crwdne33752:0"
+
+#: venues/models.py:123
+msgid "subject content type"
+msgstr "crwdns33754:0crwdne33754:0"
+
+#: venues/models.py:126
+msgid "subject ID"
+msgstr "crwdns33756:0crwdne33756:0"
+
+#: venues/models.py:132
+msgid "room constraint"
+msgstr "crwdns51530:0crwdne51530:0"
+
+#: venues/models.py:133
+msgid "room constraints"
+msgstr "crwdns51532:0crwdne51532:0"
+
+#: venues/templates/venue_categories_edit.html:4
+#: venues/templates/venue_categories_edit.html:5
+msgid "Room Categories"
+msgstr "crwdns51534:0crwdne51534:0"
+
+#: venues/templates/venue_categories_edit.html:9
+msgid "Room categories allow you to group rooms together into \"zones\" to display in the draw and make navigation easier for participants, and/or specify constraints on room allocation that require teams, adjudicators or institutions to be put in a room in a particular category."
+msgstr "crwdns51536:0crwdne51536:0"
+
+#: venues/templates/venue_categories_edit.html:14
+#, python-format
+msgid "If you want to delete room categories, use the <a href=\"%(edit_db_url)s\" class=\"alert-link\">Edit Database</a> area."
+msgstr "crwdns51538:0%(edit_db_url)scrwdne51538:0"
+
+#: venues/templates/venue_categories_edit.html:20
+msgid "Save Room Categories"
+msgstr "crwdns51540:0crwdne51540:0"
+
+#: venues/templates/venue_constraints_edit.html:4
+#: venues/templates/venue_constraints_edit.html:5
+msgid "Room Constraints"
+msgstr "crwdns51542:0crwdne51542:0"
+
+#: venues/templates/venue_constraints_edit.html:9
+msgid "Room constraints tell the room allocator to try to keep the specified team or adjudicator, or all teams (but not adjudicators) from the specified institution, in a room in the given category. The \"priority\" field resolves conflicting constraints: the higher priority takes precedence. You can also use the priority field to specify \"lower-preference\" constraints, which are taken if a higher-priority constraint couldn't be met."
+msgstr "crwdns51544:0crwdne51544:0"
+
+#: venues/templates/venue_constraints_edit.html:20
+msgid "Save Room Constraints"
+msgstr "crwdns51546:0crwdne51546:0"
+
+#: venues/utils.py:38 venues/utils.py:50
+#, python-format
+msgid "Room constraint of %(name)s met (%(category)s)"
+msgstr "crwdns51548:0%(name)scrwdnd51548:0%(category)scrwdne51548:0"
+
+#: venues/utils.py:39 venues/utils.py:51
+#, python-format
+msgid "Room does not meet any constraint of %(name)s"
+msgstr "crwdns51550:0%(name)scrwdne51550:0"
+
+#: venues/utils.py:44
+#, python-format
+msgid "Room constraint of %(team)s met (%(category)s, via institution %(institution)s)"
+msgstr "crwdns51552:0%(team)scrwdnd51552:0%(category)scrwdnd51552:0%(institution)scrwdne51552:0"
+
+#: venues/utils.py:45
+#, python-format
+msgid "Room does not meet any constraint of institution %(institution)s (%(team)s)"
+msgstr "crwdns51554:0%(institution)scrwdnd51554:0%(team)scrwdne51554:0"
+
+#: venues/views.py:27
+msgid "Edit Rooms"
+msgstr "crwdns51556:0crwdne51556:0"
+
+#: venues/views.py:82
+#, python-format
+msgid "Saved room category: %(list)s"
+msgid_plural "Saved venue categories: %(list)s"
+msgstr[0] "crwdns51558:1%(list)scrwdne51558:1"
+msgstr[1] "crwdns51558:5%(list)scrwdne51558:5"
+
+#: venues/views.py:88
+msgid "No changes were made to the room categories."
+msgstr "crwdns51560:0crwdne51560:0"
+
+#: venues/views.py:138
+#, python-format
+msgid "%s (Adjudicator)"
+msgstr "crwdns33790:0%scrwdne33790:0"
+
+#: venues/views.py:141
+#, python-format
+msgid "%s (Team)"
+msgstr "crwdns33792:0%scrwdne33792:0"
+
+#: venues/views.py:144
+#, python-format
+msgid "%s (Institution)"
+msgstr "crwdns33794:0%scrwdne33794:0"
+
+#: venues/views.py:152
+#, python-format
+msgid "Saved %(count)d room constraint."
+msgid_plural "Saved %(count)d room constraints."
+msgstr[0] "crwdns51562:1%(count)dcrwdne51562:1"
+msgstr[1] "crwdns51562:5%(count)dcrwdne51562:5"
+

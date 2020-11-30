@@ -8,14 +8,13 @@ from django.contrib import messages
 from django.db.models import Prefetch, Q
 from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.utils import timezone
+from django.utils import formats, timezone
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.base import View
 from django.views.generic.edit import FormView
 
 from participants.models import Person
 from tournaments.mixins import RoundMixin, TournamentMixin
-from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import VueTableTemplateView
@@ -56,7 +55,10 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
     def _create_status_timeline(self, status):
         statuses = []
         for s in status:
-            text = _("%(status)s @ %(time)s") % {'status': s.get_event_display(), 'time': s.timestamp}
+            text = _("%(status)s @ %(time)s") % {
+                'status': s.get_event_display(),
+                'time': formats.time_format(timezone.localtime(s.timestamp), use_l10n=True),
+            }
             statuses.append({
                 'text': '<span class="%s">%s</span>' % (self._get_event_class(s.event), text),
             })
@@ -99,16 +101,18 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
             if notification.round is not None:
                 subtitle = notification.round.name
             else:
-                subtitle = _("@ %s") % timezone.localtime(notification.timestamp).strftime("%a, %d %b %Y %H:%M:%S")
+                subtitle = _("@ %s") % formats.time_format(timezone.localtime(notification.timestamp), use_l10n=True)
 
-            table = TabbycatTableBuilder(view=self, title=notification.get_event_display().title(), subtitle=subtitle)
+            table = TabbycatTableBuilder(view=self, title=notification.get_event_display().capitalize(), subtitle=subtitle)
 
             emails_recipient = []
+            emails_addresses = []
             emails_status = []
             emails_time = []
 
             for sentmessage in notification.sentmessage_set.all():
                 emails_recipient.append(sentmessage.recipient.name if sentmessage.recipient else self.UNKNOWN_RECIPIENT_CELL)
+                emails_addresses.append(sentmessage.email or self.UNKNOWN_RECIPIENT_CELL)
 
                 if len(sentmessage.statuses) > 0:
                     latest_status = sentmessage.statuses[0]  # already ordered
@@ -121,12 +125,13 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
                         },
                     }
                     emails_status.append(status_cell)
-                    emails_time.append(latest_status.timestamp)
+                    emails_time.append(formats.time_format(timezone.localtime(latest_status.timestamp), use_l10n=True))
                 else:
                     emails_status.append(self.NA_CELL)
                     emails_time.append(self.NA_CELL)
 
             table.add_column({'key': 'name', 'tooltip': _("Participant"), 'icon': 'user'}, emails_recipient)
+            table.add_column({'key': 'email', 'tooltip': _("Email address"), 'icon': 'mail'}, emails_addresses)
             table.add_column({'key': 'name', 'title': _("Status")}, emails_status)
             table.add_column({'key': 'name', 'title': _("Time")}, emails_time)
 
@@ -172,6 +177,9 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
 
     form_class = BasicEmailForm
 
+    def get_success_url(self, *args, **kwargs):
+        return self.get_redirect_url(*args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sg_webhook'] = EmailStatus.objects.filter(email__notification__tournament=self.tournament).exists()
@@ -201,6 +209,9 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
         else:
             messages.warning(self.request, _("No emails were sent — likely because no recipients were selected."))
 
+    def get_person_type(self, person, **kwargs):
+        return 'adj' if kwargs['mixed'] and hasattr(person, 'adjudicator') else 'spk'
+
     def get_table(self, mixed_participants=False):
         table = TabbycatTableBuilder(view=self, sort_key='name')
 
@@ -214,7 +225,7 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
             'name': 'recipients',
             'value': p.id,
             'noSave': True,
-            'type': 'adj' if mixed_participants and hasattr(p, 'adjudicator') else 'spk',
+            'type': self.get_person_type(p, mixed=mixed_participants),
         } for p in queryset])
 
         table.add_column({'key': 'name', 'tooltip': _("Participant"), 'icon': 'user'}, [{
@@ -222,7 +233,7 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
             'class': 'no-wrap' if len(p.name) < 20 else '',
         } for p in queryset])
 
-        table.add_column({'key': 'email', 'tooltip': _("Email Address"), 'icon': 'mail'}, [{
+        table.add_column({'key': 'email', 'tooltip': _("Email address"), 'icon': 'mail'}, [{
             'text': p.email if p.email else _("Not Provided"),
             'class': 'small' if p.email else 'small text-warning',
         } for p in queryset])
@@ -253,8 +264,7 @@ class RoleColumnMixin:
 
 class CustomEmailCreateView(RoleColumnMixin, BaseSelectPeopleEmailView):
 
-    def get_success_url(self):
-        return reverse_tournament('notifications-email', self.tournament)
+    tournament_redirect_pattern_name = 'notifications-email'
 
     def default_send(self, p, default_send_queryset):
         return False
@@ -267,7 +277,7 @@ class CustomEmailCreateView(RoleColumnMixin, BaseSelectPeopleEmailView):
             "subject": request.POST['subject_line'],
             "body": request.POST['message_body'],
             "tournament": self.tournament.id,
-            "send_to": [(p.id, p.email) for p in people],
+            "send_to": [p.id for p in people],
         })
 
         self.add_sent_notification(len(people))
