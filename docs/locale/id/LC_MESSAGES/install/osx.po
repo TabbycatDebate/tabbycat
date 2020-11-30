@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-23 04:45\n"
+"PO-Revision-Date: 2021-04-18 16:34\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr ""
 
 #: ../../install/osx.rst:10
 msgid "In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`"
-msgstr ""
+msgstr "Dalam kebanyakan kasus, kami merekomendasikan melakukan: ref: `penginstalan berbasis internet di Heroku <install-heroku>` sebagai gantinya. Jika Anda memutuskan untuk melakukan instalasi lokal, pastikan untuk membaca halaman kami di: ref: `local installations <install-local>` untuk membantu Anda memahami apa yang terjadi, khususnya bagian ini:: ref: `install-decision`"
 
 #: ../../install/osx.rst:12
 msgid "If you just want to quickly set up a copy of Tabbycat to run locally on macOS, consider :ref:`installing using Docker<install-docker>`, which is a shorter process than the one below."
@@ -56,7 +56,7 @@ msgstr ""
 
 #: ../../install/osx.rst:27
 msgid "1. Install dependencies"
-msgstr ""
+msgstr "1. instal depedensi"
 
 #: ../../install/osx.rst:29
 msgid "First, you need to install all of the software on which Tabbycat depends, if you don't already have it installed."
@@ -104,19 +104,19 @@ msgstr ""
 
 #: ../../install/osx.rst:62
 msgid "2. Get the source code"
-msgstr ""
+msgstr "2. Dapatkan source codenya"
 
 #: ../../install/osx.rst:64
 msgid "`Go to the page for our latest release <https://github.com/TabbycatDebate/tabbycat/releases/latest>`_."
-msgstr ""
+msgstr "Buka halaman untuk rilis terbaru kami <https://github.com/TabbycatDebate/tabbycat/releases/latest>`_."
 
 #: ../../install/osx.rst:65
 msgid "Download the zip or tar.gz file."
-msgstr ""
+msgstr "Unduh file zip atau berkas tar.gz."
 
 #: ../../install/osx.rst:66
 msgid "Extract all files in it to a folder of your choice."
-msgstr ""
+msgstr "Ekstrak semua berkas ke dalam sebuah folder pilihan anda."
 
 #: ../../install/osx.rst:71
 msgid "If you've used Git before, you might prefer to clone `our GitHub repository`_ instead. Don't forget to check out the |vrelease| tag or the master branch."
@@ -128,7 +128,7 @@ msgstr ""
 
 #: ../../install/osx.rst:76
 msgid "3. Set up a new database"
-msgstr ""
+msgstr "3. Siapkan database baru"
 
 #: ../../install/osx.rst:78
 msgid "You can skip steps 1--3 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like."
@@ -156,7 +156,7 @@ msgstr ""
 
 #: ../../install/osx.rst:101
 msgid "4. Install Tabbycat"
-msgstr ""
+msgstr "4. Instal Tabbycat"
 
 #: ../../install/osx.rst:102
 msgid "Almost there!"
@@ -164,7 +164,7 @@ msgstr ""
 
 #: ../../install/osx.rst:104
 msgid "Navigate to your Tabbycat directory::"
-msgstr ""
+msgstr "Arahkan ke direktori Tabbycat Anda::"
 
 #: ../../install/osx.rst:108
 msgid "Copy **settings/local.example** to **settings/local.py**. Find this part in your new **local.py**, and fill in the blanks as indicated:"
@@ -192,7 +192,7 @@ msgstr ""
 
 #: ../../install/osx.rst:149
 msgid "Start Tabbycat!"
-msgstr ""
+msgstr "Mulai program Tabbycat!"
 
 #: ../../install/osx.rst:155
 msgid "It should show something like this::"
@@ -208,7 +208,7 @@ msgstr ""
 
 #: ../../install/osx.rst:167
 msgid "Starting up an existing Tabbycat instance"
-msgstr ""
+msgstr "Memulai instance Tabbycat yang ada"
 
 #: ../../install/osx.rst:168
 msgid "To start your Tabbycat instance up again next time you use your computer::"

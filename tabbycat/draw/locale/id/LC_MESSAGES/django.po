@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-18 17:59-0400\n"
-"PO-Revision-Date: 2020-11-24 03:56\n"
+"PO-Revision-Date: 2020-12-08 00:20\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -920,205 +920,208 @@ msgstr "Konfirmasi Pengundian"
 #: draw/templates/draw_status_draft.html:25
 #, python-format
 msgid "The team standings precedence is empty. This means that teams aren't ranked according to any metrics, so all teams are in a single bracket containing everyone. If this isn't what you intended, set the team standings precedence in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>, then delete and recreate the draw. In most tournaments, the first metric should be points or wins."
-msgstr ""
+msgstr "Presedensi urutan tim kosong. Ini berarti bahwa tim tidak di-ranking berdasarkan metrik apapun, maka semua tim berada pada satu bracket yang berisi semuanya. Jika ini tidak seperti yang Anda inginkan, set presedensi urutan tim pada <a href=\"%(standings_config_url)s\" class=\"alert-link\">Seksi Urutan pada konfigurasi turnamen ini</a>, lalu hapus dan buat ulang pengundiannya. Pada sebagian besar turnamen, metrik pertama seharusnya jumlah poin atau kemenangan."
 
 #: draw/templates/draw_status_draft.html:41
 #, python-format
 msgid "Brackets are formed using the first metric in the team standings precedence, which is currently set to <strong>%(metric)s</strong>, rather than team points, which is the more usual convention. If this isn't what you wanted, you can <a href=\"%(standings_config_url)s\" class=\"alert-link\">change the team standings precedence in the standings configuration page</a>."
-msgstr ""
+msgstr "Bracket dibangun menggunakan metrik pertama pada presedensi, yang saat ini diset ke <strong>%(metric)s</strong>, alih-alih poin tim, yang merupakan konvensi umum. Jika ini bukan yang Anda inginkan, Anda dapat <a href=\"%(standings_config_url)s\" class=\"alert-link\">mengubah presedensi urutan tim pada halaman konfigurasi urutan</a>."
 
 #: draw/templates/draw_status_draft.html:53
 #, python-format
 msgid "The draw type for this round is set to <strong>manual</strong>, so Tabbycat has just made a blank draw. Head on over to <a href=\"%(edit_matchups_url)s\" class=\"alert-link\">Edit Sides/Matchups</a> to fill it in."
-msgstr ""
+msgstr "Tipe pengundian untuk ronde ini diset ke <strong>manual</strong>, sehingga Tabbycat baru saja membuat pengundian kosong. Pindahlah ke <a href=\"%(edit_matchups_url)s\" class=\"alert-link\">Sunting Sisi/Matchup</a> untuk mengisinya."
 
 #: draw/templates/draw_status_draft.html:64
 #, python-format
 msgid "The adjudicator score range is 0, and so adjudicator scores will be ignored when allocating. You can <a href=\"%(feedback_config_url)s\" class=\"alert-link\">change the adjudicator score range in the feedback configuration page</a>."
-msgstr ""
+msgstr "Rentang nilai adjudicator adalah 0, maka nilai adjudicator akan diabaikan saat mengalokasikan. Anda dapat <a href=\"%(feedback_config_url)s\" class=\"alert-link\">mengubah rentang nilai adjudicator pada halaman konfigurasi umpanbalik</a>."
 
 #: draw/templates/draw_status_draft.html:74
 msgid "Tabbycat assigns sides in elimination rounds randomly. However, because in elimination rounds, many tournaments draw lots for sides in front of an audience, the sides are marked as \"unconfirmed\", so that it doesn't look like sides have been pre-assigned. After you confirm the draw, you'll need to confirm sides on the \"Edit Sides/Matchups\" page, even if you wish to accept Tabbycat's random assignment."
-msgstr ""
+msgstr "Tabbycat menentukan sisi pada ronde eliminasi secara acak. Namun begitu, karena di ronde eliminasi banyak turnamen mengundi banyak sisi di depan audiens, sisi-sisi ditandai sebagai \"tidak terkonfirmasi\", sehingga tidak terlihat seperti sisinya sudah ditentukan sebelumnya. Setelah Anda mengonfirmasi pengundiannya, Anda perlu mengonfirmasi sisi-sisi pada halaman \"Sunting Sisi/Matchup\", walaupun Anda menginginkan untuk menerima penentuan acak dari Tabbycat."
 
 #: draw/templates/draw_status_draft.html:81
 msgid "Highlighted cells relate to changes in position balance, as follows: <ul> <li>Red cells indicates that the team could not be allocated a position that maintains position balance.</li> <li>Yellow cells indicate that the team was previously imbalanced, and is given the best position possible in this draw, but is nonetheless still imbalanced.</li> <li>Green cells indicate that the team's previous imbalance is resolved with this draw.</li> </ul>"
-msgstr ""
+msgstr "Sel yang diwarnai berhubungan dengan perubahan pada keseimbangan posisi, seperti berikut: <ul> <li>Sel berwarna merah mengindikasikan bahwa tim tidak dapat dialokasikan ke sebuah posisi yang menjaga keseimbangan.</li> <li>Sel kuning mengindikasikan bahwa tim tersebut sebelumnya tidak seimbang, dan diberikan posisi terbaik yang memungkinkan di pengundian ini, tetapi tetap saja tidak seimbang.</li> <li>Sel berwarna hijau mengindikasikan bahwa ketidakseimbangan tim sebelumnya sudah diperbaiki pada pengundian ini.</li> </ul>"
 
 #: draw/templates/draw_status_none.html:6
 #, python-format
 msgid "A draw for %(round)s hasn't yet been generated. To generate one, go to the <a href=\"%(availability_url)s\" class=\"alert-link\">Availability section</a>."
-msgstr ""
+msgstr "Pengundian untuk %(round)s belum dibangkitkan. Untuk membangkitkan, pergi ke <a href=\"%(availability_url)s\" class=\"alert-link\">seksi Ketersediaan</a>."
 
 #: draw/templates/position_balance.html:6
 msgid "It looks like sides aren't confirmed for some debates in this round. This position balance report is generated using the \"unconfirmed sides\" in the database, and as a consequence, may not make much sense. It's best to confirm sides in all debates before looking at this report."
-msgstr ""
+msgstr "Sepertinya sisi belum dikonfirmasi pada beberapa debat dalam ronde ini. Laporan keseimbangan posisi ini dibangkitkan menggunakan \"sisi tidak terkonfirmasi\" di dalam basisdata, dan konsekuensinya, mungkin tidak masuk akal. Akan lebih baik untuk mengonfirmasi sisi-sisi di setiap debat sebelum melihat laporan ini."
 
 #: draw/templates/position_balance.html:15
 #, python-format
 msgid "Your current position cost function is <strong>%(cost_func)s</strong>, raised to an exponent of <strong>%(exponent)s</strong>. <a href=\"http://tabbycat.readthedocs.io/en/latest/features/draw-generation-bp.html#position-cost-options\" target=_\"blank\">Read more about how position cost functions work</a> in our documentation."
-msgstr ""
+msgstr "Fungsi biaya posisi Anda saat ini adalah <strong>%(cost_func)s</strong>, dipangkatkan <strong>%(exponent)s</strong>. <a href=\"http://tabbycat.readthedocs.io/en/latest/features/draw-generation-bp.html#position-cost-options\" target=_\"blank\">Baca lebih lanjut tentang bagaimana fungsi biaya posisi bekerja</a> di dalam dokumentasi kami."
 
 #: draw/templates/position_balance_break.html:6
 msgid "Position balance reports aren't computed for elimination rounds."
-msgstr ""
+msgstr "Laporan keseimbangan posisi tidak dihitung untuk ronde eliminasi."
 
 #: draw/templates/position_balance_nonbp.html:6
 msgid "Position balance reports are only available for British Parliamentary tournaments."
-msgstr ""
+msgstr "Laporan keseimbangan posisi hanya tersedia untuk turnamen Parlemen Inggris."
 
 #: draw/templates/position_balance_round1.html:6
 msgid "Position balance reports aren't computed for the first round of a tournament."
-msgstr ""
+msgstr "Laporan keseimbangan posisi tidak dihitung untuk ronde pertama dari sebuah turnamen."
 
 #: draw/views.py:68 draw/views.py:483
 msgid "No debates in this round"
-msgstr ""
+msgstr "Tidak ada debat dalam ronde ini"
 
 #: draw/views.py:76
 #, python-format
 msgid "Draw for %(round)s"
-msgstr ""
+msgstr "Pengundian untuk %(round)s"
 
 #: draw/views.py:78
 msgid "Draws for Current Rounds"
-msgstr ""
+msgstr "Pengundian untuk Ronde Ini"
 
 #: draw/views.py:82
 #, python-format
 msgid "debates start at %(time)s (in %(time_zone)s)"
-msgstr ""
+msgstr "debat dimulai pada %(time)s (zona waktu %(time_zone)s)"
 
 #: draw/views.py:86
 #, python-format
 msgid "start times in time zone: %(time_zone)s"
-msgstr ""
+msgstr "waktu mulai pada zona waktu: %(time_zone)s"
 
 #: draw/views.py:124
 #, python-format
 msgid "debate starts at %(time)s"
 msgid_plural "debates start at %(time)s"
-msgstr[0] ""
+msgstr[0] "debat dimulai pada %(time)s"
 
 #: draw/views.py:171
 msgid "The draw for this round hasn't been released."
-msgstr ""
+msgstr "Pengundian untuk ronde ini belum dirilis."
 
 #: draw/views.py:224
 #, python-format
 msgid "All Debates for All Rounds of %(tournament)s"
-msgstr ""
+msgstr "Seluruh Debat pada Semua Ronde dari %(tournament)s"
 
 #: draw/views.py:382
 msgid "Adjudicator Assignments"
-msgstr ""
+msgstr "Penugasan Juri"
 
 #: draw/views.py:404
 msgid "Position"
-msgstr ""
+msgstr "Posisi"
 
 #: draw/views.py:424
 msgid "Team Pairings"
-msgstr ""
+msgstr "Pemasangan Tim"
 
 #: draw/views.py:447
 msgid "No Draw"
-msgstr ""
+msgstr "Tidak ada Pengundian"
 
 #: draw/views.py:449
 msgid "Draft Draw"
-msgstr ""
+msgstr "Pengundian Draf"
 
 #. Translators: e.g. "Affirmative: Break rank"
 #: draw/views.py:541
 #, python-format
 msgid "%(side)s: Break rank"
-msgstr ""
+msgstr "%(side)s: Ranking break"
 
 #. Translators: "BR" stands for "Break rank"
 #: draw/views.py:546
 msgid "BR"
-msgstr ""
+msgstr "RB"
 
 #: draw/views.py:571
 msgid "Draw with Details"
-msgstr ""
+msgstr "Pengundian dengan Detail"
 
 #: draw/views.py:579
 msgid "Position Balance Report"
-msgstr ""
+msgstr "Laporan Keseimbangan Posisi"
 
 #: draw/views.py:590
 #, python-format
 msgid "Rényi entropy of order %(order)s"
-msgstr ""
+msgstr "Entropi Rényi dari urutan %(order)s"
 
 #. Translators: This is appended to the string "Rényi entropy of order 1.0"
 #: draw/views.py:593
 msgid " (<i>i.e.</i>, Shannon entropy)"
-msgstr ""
+msgstr " (<i>yaitu</i>, entropi Shannon)"
 
 #: draw/views.py:623
 msgid "Teams with position imbalances"
-msgstr ""
+msgstr "Tim dengan ketidakseimbangan posisi"
 
 #: draw/views.py:624
 msgid "No teams with position imbalances! Hooray!"
-msgstr ""
+msgstr "Tidak ada tim dengan ketidakseimbangan posisi! Mantul!"
 
 #: draw/views.py:627
 msgid "Annotated draw"
-msgstr ""
+msgstr "Pengundian dengan catatan"
 
 #: draw/views.py:658
 #, python-format
 msgid "Could not create draw for %(round)s, there was already a draw!"
-msgstr ""
+msgstr "Tidak dapat membuat pengundian untuk %(round)s, karena sudah ada pengundian sebelumnya!"
 
 #: draw/views.py:666
 #, python-format
 msgid "<p>The draw could not be created, for the following reason: <em>%(message)s</em></p>\n"
 "<p>Please fix this issue before attempting to create the draw.</p>"
-msgstr ""
+msgstr "<p>Pengundian tidak dapat dibuat, karena alasan berikut: <em>%(message)s</em></p>\n"
+"<p>Mohon perbaiki masalah ini sebelum mencoba membuat pengundiannya.</p>"
 
 #: draw/views.py:674
 #, python-format
 msgid "<p>The draw could not be created, because the following error occurred: <em>%(message)s</em></p>\n"
 "<p>If this issue persists and you're not sure how to resolve it, please contact the developers.</p>"
-msgstr ""
+msgstr "<p>Pengundian tidak dapat dibuat, karena kesalahan ini terjadi: <em>%(message)s</em></p>\n"
+"<p>Jika masalahnya terus berlanjut dan Anda tidak yakin bagaimana memecahkannya, mohon kontak pengembang.</p>"
 
 #: draw/views.py:683
 #, python-format
 msgid "<p>The team standings could not be generated, because the following error occurred: <em>%(message)s</em></p>\n"
 "<p>Because generating the draw uses the current team standings, this prevents the draw from being generated.</p>"
-msgstr ""
+msgstr "<p>Klasemen tim tidak dapat dibangkitkan, karena kesalahan berikut terjadi: <em>%(message)s</em></p>\n"
+"<p>Karena membangkitkan pengundian menggunakan klasemen tim ini, pengundian tidak dapat dibangkitkan juga.</p>"
 
 #: draw/views.py:699
 msgid "Rooms were not auto-allocated because there are one or more adjudicator room constraints. You should run room allocations after allocating adjudicators."
-msgstr ""
+msgstr "Ruangan tidak dialokasikan otomatis karena ada satu atau lebih batasan ruangan juri. Anda harus menjalankan alokasi ruangan setelah mengalokasikan juri."
 
 #: draw/views.py:726
 msgid "Deleted the draw. You can now recreate it as normal."
-msgstr ""
+msgstr "Pengundian dihapus. Anda sekarang dapat membuatnya kembali sebagai normal."
 
 #: draw/views.py:746
 msgid "Released the draw."
-msgstr ""
+msgstr "Pengundian dirilis."
 
 #: draw/views.py:761
 msgid "Unreleased the draw."
-msgstr ""
+msgstr "Pengundian ditarik kembali."
 
 #: draw/views.py:774
 #, python-format
 msgid "Sorry, \"%(input)s\" isn't a valid time. It must be in 24-hour format, with a colon, for example: \"13:57\"."
-msgstr ""
+msgstr "Maaf, \"%(input)s\" bukan waktu yang valid. Waktu harus dalam format 24-jam, dengan titik dua, contohnya: \"13:57\"."
 
 #: draw/views.py:793
 msgid "Side Pre-Allocations"
-msgstr ""
+msgstr "Pre-Alokasi Sisi"
 
 #: draw/views.py:826
 msgid "Edit Matchups"
-msgstr ""
+msgstr "Sunting Matchup"
 

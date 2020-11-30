@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-23 04:45\n"
+"PO-Revision-Date: 2021-04-18 00:21\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr ""
 
 #: ../../install/wsl.rst:10
 msgid "In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`"
-msgstr ""
+msgstr "Dalam kebanyakan kasus, kami merekomendasikan melakukan: ref: `penginstalan berbasis internet di Heroku <install-heroku>` sebagai gantinya. Jika Anda memutuskan untuk melakukan instalasi lokal, pastikan untuk membaca halaman kami di: ref: `local installations <install-local>` untuk membantu Anda memahami apa yang terjadi, khususnya bagian ini:: ref: `install-decision`"
 
 #: ../../install/wsl.rst:12
 msgid "If you just want to quickly set up a copy of Tabbycat to run locally on Windows, consider :ref:`installing using Docker<install-docker>`, which is a shorter process than the one below."
@@ -44,7 +44,7 @@ msgstr ""
 
 #: ../../install/wsl.rst:21
 msgid "Requisite technical background"
-msgstr ""
+msgstr "Latar belakang teknis yang diperlukan"
 
 #: ../../install/wsl.rst:23
 msgid "It will help a lot if you have some experience with Linux, but mainly you need to be familiar with command-line interfaces, and you should be willing to install and work with the `Windows Subsystem for Linux <https://docs.microsoft.com/windows/wsl/about>`_. You might need to be prepared to familiarise yourself with aspects of WSL not covered in these instructions. While a background in the specific tools Tabbycat uses (Python, PostgreSQL, *etc.*) will make things easier, it's not necessary: we'll talk you through the rest."
