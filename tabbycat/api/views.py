@@ -132,7 +132,7 @@ class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBr
 
     @property
     def break_category(self):
-        if self._break_category is None:
+        if not hasattr(self, "_break_category"):
             self._break_category = get_object_or_404(BreakCategory, tournament=self.tournament, pk=self.kwargs.get('pk'))
         return self._break_category
 
