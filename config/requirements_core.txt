@@ -16,7 +16,7 @@ django-summernote==0.8.11.6             # WYSIWYG editor
 dj-cmd==1.0                             # Provides the dj command alias
 
 # Database
-psycopg2==2.8.5                         # For Django to talk to postgres
+psycopg2==2.8.6                         # For Django to talk to postgres
 # Note: The Heroku instructions seem to advise using psycopg2-binary:
 #     https://devcenter.heroku.com/articles/heroku-postgresql#connecting-with-django
 # but the psycopg2 documentation advises against using the binary distribution
