@@ -38,7 +38,7 @@
     "cpx": "1.5.x",
     "d3": "^5.9.7",
     "django-channels": "1.1.8",
-    "eslint-plugin-html": "^5.0.5",
+    "eslint-plugin-html": "^6.1.1",
     "feather-icons": "^4.28.0",
     "inter-ui": "^3.13.1",
     "jquery": "^3.5.1",
