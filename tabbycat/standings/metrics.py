@@ -8,6 +8,8 @@ context-specific files, e.g., teams.py or speakers.py.
 
 import logging
 
+from django.db.models import Case, F, When
+
 logger = logging.getLogger(__name__)
 
 
@@ -103,6 +105,11 @@ class QuerySetMetricAnnotator(BaseMetricAnnotator):
         logger.info("Annotation in %s: %s", self.__class__.__name__, str(annotation))
         self.queryset_annotated = True
         return queryset.annotate(**{self.key: annotation})
+
+    def get_ranking_annotation(self, min_field, min_rounds):
+        if min_rounds is None:
+            return F(self.key)
+        return Case(When(**{min_field + "__gte": min_rounds, "then": F(self.key)}))
 
     def annotate_with_queryset(self, queryset, standings):
         """Annotates items with the given QuerySet."""

@@ -231,9 +231,6 @@ class Standings:
 
         self._standings.sort(key=lambda r: tuple(r.rankings[key] for key in self.ranking_keys))
 
-        if self.rank_filter:
-            self._standings.sort(key=self.rank_filter, reverse=True)
-
         self.ranked = True
 
     def sort(self, precedence, tiebreak_func=None):
@@ -274,7 +271,7 @@ class BaseStandingsGenerator:
 
     DEFAULT_OPTIONS = {
         "tiebreak": "random",
-        "rank_filter": None,
+        "rank_filter": (None, None),  # (Field name, Min value)
         "include_filter": None,  # not currently used by other code,
     }
 
@@ -312,6 +309,9 @@ class BaseStandingsGenerator:
         if self.options["include_filter"]:
             standings.filter(self.options["include_filter"])
 
+    def get_rank_filter(self):
+        return lambda info: info.metrics[self.options["rank_filter"][0]] >= self.options["rank_filter"][1]
+
     def generate(self, queryset, round=None):
         """Generates standings for the objects in queryset. Returns a
         Standings object.
@@ -322,7 +322,8 @@ class BaseStandingsGenerator:
             (That is, rounds after `round` are excluded from the standings.)
         """
 
-        standings = Standings(queryset, rank_filter=self.options["rank_filter"])
+        rank_filter = self.get_rank_filter() if self.options["rank_filter"][0] is not None else None
+        standings = Standings(queryset, rank_filter=rank_filter)
 
         # The original queryset might have filtered out information relevant to
         # calculating the metrics (e.g., if it filters teams by participation in
@@ -355,7 +356,7 @@ class BaseStandingsGenerator:
         aggregations present from the queryset (no repeated metrics)"""
 
         for annotator in self.ranking_annotators:
-            queryset = annotator.get_annotated_queryset(queryset, self.queryset_metric_annotators)
+            queryset = annotator.get_annotated_queryset(queryset, self.queryset_metric_annotators, *self.options["rank_filter"])
 
         self._annotate_metrics(queryset, standings, round)
 
