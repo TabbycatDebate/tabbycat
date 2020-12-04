@@ -3,8 +3,8 @@
 import logging
 
 from django.contrib.postgres.aggregates import ArrayAgg
-from django.db.models import Avg, Count, F, FloatField, Func, PositiveIntegerField, Q, StdDev, Sum
-from django.db.models.functions import Cast
+from django.db.models import Avg, Count, F, FloatField, PositiveIntegerField, Q, StdDev, Sum, Value
+from django.db.models.functions import Cast, Coalesce, NullIf
 from django.utils.translation import gettext_lazy as _
 
 from results.models import TeamScore
@@ -15,12 +15,6 @@ from .metrics import BaseMetricAnnotator, metricgetter, QuerySetMetricAnnotator,
 from .ranking import BasicRankAnnotator, RankFromInstitutionAnnotator, SubrankAnnotator
 
 logger = logging.getLogger(__name__)
-
-
-class NullIf(Func):
-    """NULLIF() function in SQL. This implementation doesn't vet arguments, so
-    it's a little fragile when used incorrectly - use with care."""
-    function = 'NULLIF'
 
 
 # ==============================================================================
@@ -265,9 +259,9 @@ class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         self.adjs_per_debate = adjs_per_debate
 
     def get_field(self):
-        return (Cast('debateteam__teamscore__votes_given', FloatField()) /
+        return Coalesce(Cast('debateteam__teamscore__votes_given', FloatField()) /
             NullIf('debateteam__teamscore__votes_possible', 0, output_field=FloatField()) *
-            self.adjs_per_debate)
+            self.adjs_per_debate, Value(0.0))
 
     def annotate_with_queryset(self, queryset, standings):
         # If the number of ballots carried by every team is an integer, then
@@ -276,10 +270,7 @@ class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         # normalization. In that case, convert all metrics to integers.
         cast = int if all(t.num_adjs == int(t.num_adjs) for t in queryset) else float
         for item in queryset:
-            metric = item.num_adjs
-            if metric is None:
-                metric = 0
-            standings.add_metric(item, self.key, cast(metric))
+            standings.add_metric(item, self.key, cast(item.num_adjs))
 
 
 class NumberOfFirstsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):

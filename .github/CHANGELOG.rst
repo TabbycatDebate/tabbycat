@@ -2,6 +2,15 @@
 Change Log
 ==========
 
+2.5.1
+-----
+*Release date: 4 December 2020*
+
+- Fixed breaks API endpoints not getting the break category
+- Ensured that the "votes/ballots carried" team metric is always defined (`#1682 <https://github.com/TabbycatDebate/tabbycat/issues/1682>`_)
+- Re-implemented rank filters for speaker standings
+
+
 2.5.0 (Nebelung)
 ----------------
 *Release date: 30 November 2020*

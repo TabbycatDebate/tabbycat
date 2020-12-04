@@ -169,7 +169,6 @@ class TrimmedMeanSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator
         return Case(
             When(speech_count__gt=2, then=(total - highest - lowest) / (F('speech_count') - 2)),
             When(speech_count__gt=0, then=total / F('speech_count')),
-            default=None,
             output_field=FloatField(),
         )
 
