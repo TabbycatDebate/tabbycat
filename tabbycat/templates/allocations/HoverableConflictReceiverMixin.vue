@@ -20,7 +20,7 @@ export default {
   computed: {
     hasHoverClashConflict: function () {
       // These are many to one; no need to lookup the target's conflicts as can be inferred via ID
-      let sourceClashes = this.currentHoverClashes
+      const sourceClashes = this.currentHoverClashes
       if (!sourceClashes) { return false }
       // Hovered over an adj; highlight a team
       if ('team' in sourceClashes && this.clashableType === 'team') {
@@ -41,9 +41,9 @@ export default {
       return false
     },
     hasHoverInstitutionalConflict: function () {
-      let sourceClashes = this.currentHoverClashes
+      const sourceClashes = this.currentHoverClashes
       if (!sourceClashes) { return false }
-      let itemClashes = this.getConflictsForType('clash')
+      const itemClashes = this.getConflictsForType('clash')
       if (!itemClashes) { return false }
       if ('institution' in sourceClashes && 'institution' in itemClashes) {
         for (const sourceClash of sourceClashes.institution) {
@@ -61,7 +61,7 @@ export default {
       if (!this.currentHoverHistories) {
         return false // This is called by template directly; hence the need to check for null
       }
-      let sourceHistories = this.currentHoverHistories
+      const sourceHistories = this.currentHoverHistories
       let smallestAgo = 99
       // Hovered over an adj; highlight a team
       if ('team' in sourceHistories && this.clashableType === 'team') {

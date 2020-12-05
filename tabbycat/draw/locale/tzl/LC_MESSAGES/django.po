@@ -1,0 +1,1139 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-18 17:59-0400\n"
+"PO-Revision-Date: 2020-11-18 22:15\n"
+"Last-Translator: \n"
+"Language-Team: Talossan\n"
+"Language: tzl_TZL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: tzl\n"
+"X-Crowdin-File: /develop/tabbycat/draw/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 930\n"
+
+#: draw/admin.py:67
+#, python-format
+msgid "%(count)d debate had its status set to %(status)s."
+msgid_plural "%(count)d debates had their statuses set to %(status)s."
+msgstr[0] "crwdns29942:1%(count)dcrwdnd29942:1%(status)scrwdne29942:1"
+msgstr[1] "crwdns29942:5%(count)dcrwdnd29942:5%(status)scrwdne29942:5"
+
+#: draw/admin.py:74
+#, python-format
+msgid "Set result status to %(status)s"
+msgstr "crwdns29944:0%(status)scrwdne29944:0"
+
+#: draw/admin.py:84
+#, python-format
+msgid "%(count)d debate was marked as having its sides confirmed."
+msgid_plural "%(count)d debates were marked as having their sides confirmed."
+msgstr[0] "crwdns29946:1%(count)dcrwdne29946:1"
+msgstr[1] "crwdns29946:5%(count)dcrwdne29946:5"
+
+#: draw/admin.py:93
+#, python-format
+msgid "%(count)d debate was marked as having its sides not confirmed."
+msgid_plural "%(count)d debates were marked as having their sides not confirmed."
+msgstr[0] "crwdns29948:1%(count)dcrwdne29948:1"
+msgstr[1] "crwdns29948:5%(count)dcrwdne29948:5"
+
+#: draw/apps.py:7 draw/views.py:452 draw/views.py:455
+msgid "Draw"
+msgstr "crwdns29950:0crwdne29950:0"
+
+#: draw/generator/__init__.py:14
+msgid "Too many swaps"
+msgstr "crwdns29952:0crwdne29952:0"
+
+#: draw/generator/__init__.py:15
+msgid "One-up-one-down (history)"
+msgstr "crwdns29954:0crwdne29954:0"
+
+#: draw/generator/__init__.py:16
+msgid "One-up-one-down (institution)"
+msgstr "crwdns29956:0crwdne29956:0"
+
+#: draw/generator/__init__.py:17
+msgid "One-up-one-down (to accommodate)"
+msgstr "crwdns29958:0crwdne29958:0"
+
+#: draw/generator/__init__.py:18
+msgid "Bubble up (history)"
+msgstr "crwdns29960:0crwdne29960:0"
+
+#: draw/generator/__init__.py:19
+msgid "Bubble down (history)"
+msgstr "crwdns29962:0crwdne29962:0"
+
+#: draw/generator/__init__.py:20
+msgid "Bubble up (institution)"
+msgstr "crwdns29964:0crwdne29964:0"
+
+#: draw/generator/__init__.py:21
+msgid "Bubble down (institution)"
+msgstr "crwdns29966:0crwdne29966:0"
+
+#: draw/generator/__init__.py:22
+msgid "Bubble up (to accommodate)"
+msgstr "crwdns29968:0crwdne29968:0"
+
+#: draw/generator/__init__.py:23
+msgid "Bubble down (to accommodate)"
+msgstr "crwdns29970:0crwdne29970:0"
+
+#: draw/generator/__init__.py:24
+msgid "Can't bubble up/down"
+msgstr "crwdns29972:0crwdne29972:0"
+
+#: draw/generator/__init__.py:25
+msgid "Pull-up team"
+msgstr "crwdns29974:0crwdne29974:0"
+
+#: draw/generator/bpelimination.py:36 draw/generator/elimination.py:68
+#, python-format
+msgid "%d debates in the previous round don't have a result."
+msgstr "crwdns29976:0%dcrwdne29976:0"
+
+#: draw/generator/bpelimination.py:38
+#, python-format
+msgid "%d debates in the previous round don't have exactly two teams advancing."
+msgstr "crwdns29978:0%dcrwdne29978:0"
+
+#: draw/generator/bpelimination.py:71
+#, python-format
+msgid "The room ranks of the partial elimination round indicate that an odd number of teams (%(nbypassing)d) bypassed it."
+msgstr "crwdns29980:0%(nbypassing)dcrwdne29980:0"
+
+#: draw/generator/bpelimination.py:75
+#, python-format
+msgid "The room ranks of the partial elimination round indicate that %(nbypassing)d teams bypassed it, but %(advancing)d teams advanced from it."
+msgstr "crwdns29982:0%(nbypassing)dcrwdnd29982:0%(advancing)dcrwdne29982:0"
+
+#: draw/generator/bpelimination.py:122
+#, python-format
+msgid "The number of debates (%d) in the last round is not a power of two."
+msgstr "crwdns29984:0%dcrwdne29984:0"
+
+#: draw/generator/bphungarian.py:171
+#, python-format
+msgid "The Rényi order can't be negative, and it's currently set to %(alpha)f."
+msgstr "crwdns29986:0%(alpha)crwdne29986:0"
+
+#: draw/generator/common.py:51
+#, python-format
+msgid "The number of teams presented for the draw was not a multiple of %(num)d."
+msgstr "crwdns29988:0%(num)dcrwdne29988:0"
+
+#: draw/generator/common.py:54
+msgid "There were no teams for the draw."
+msgstr "crwdns29990:0crwdne29990:0"
+
+#: draw/generator/elimination.py:43
+#, python-format
+msgid "There are only %d teams breaking in this category; there need to be at least two to generate an elimination round draw."
+msgstr "crwdns29992:0%dcrwdne29992:0"
+
+#: draw/generator/elimination.py:75
+#, python-format
+msgid "The number of teams (%d) in this round is not a power of two."
+msgstr "crwdns29994:0%dcrwdne29994:0"
+
+#: draw/generator/powerpair.py:78
+#, python-format
+msgid "%(noninteger)d out of %(total)d teams have a noninteger first metric in the team standings. Intermediate brackets require the first team standings metric to be an integer (typically points or wins)."
+msgstr "crwdns29996:0%(noninteger)dcrwdnd29996:0%(total)dcrwdne29996:0"
+
+#: draw/generator/random.py:97
+#, python-format
+msgid "There were %(aff_count)d affirmative teams but %(neg_count)d negative teams."
+msgstr "crwdns29998:0%(aff_count)dcrwdnd29998:0%(neg_count)dcrwdne29998:0"
+
+#: draw/generator/random.py:100
+msgid "One or more teams had an allocated side that wasn't affirmative or negative."
+msgstr "crwdns30000:0crwdne30000:0"
+
+#: draw/manager.py:41
+#, python-format
+msgid "The draw type %(type)s can't be used with two-team formats."
+msgstr "crwdns30002:0%(type)scrwdne30002:0"
+
+#: draw/manager.py:43
+#, python-format
+msgid "The draw type %(type)s can't be used with British Parliamentary."
+msgstr "crwdns30004:0%(type)scrwdne30004:0"
+
+#: draw/manager.py:45
+#, python-format
+msgid "Unrecognised \"teams in debate\" option: %(option)s"
+msgstr "crwdns30006:0%(option)scrwdne30006:0"
+
+#: draw/manager.py:276
+#, python-format
+msgid "The break size (%(size)d) for this break category was invalid. It must be either six times or four times a power of two."
+msgstr "crwdns30008:0%(size)dcrwdne30008:0"
+
+#: draw/models.py:29 draw/models.py:35
+msgid "none"
+msgstr "crwdns30010:0crwdne30010:0"
+
+#: draw/models.py:30
+msgid "postponed"
+msgstr "crwdns30012:0crwdne30012:0"
+
+#: draw/models.py:31 draw/models.py:36
+msgid "draft"
+msgstr "crwdns30014:0crwdne30014:0"
+
+#: draw/models.py:32 draw/models.py:37
+msgid "confirmed"
+msgstr "crwdns30016:0crwdne30016:0"
+
+#: draw/models.py:43 draw/models.py:375
+msgid "round"
+msgstr "crwdns30018:0crwdne30018:0"
+
+#: draw/models.py:45
+msgid "room"
+msgstr "crwdns51656:0crwdne51656:0"
+
+#: draw/models.py:48
+msgid "bracket"
+msgstr "crwdns30024:0crwdne30024:0"
+
+#: draw/models.py:50
+msgid "room rank"
+msgstr "crwdns30026:0crwdne30026:0"
+
+#: draw/models.py:56
+msgid "importance"
+msgstr "crwdns30032:0crwdne30032:0"
+
+#: draw/models.py:58
+msgid "result status"
+msgstr "crwdns30034:0crwdne30034:0"
+
+#: draw/models.py:60
+msgid "sides confirmed"
+msgstr "crwdns30036:0crwdne30036:0"
+
+#: draw/models.py:61
+msgid "If unchecked, the sides assigned to teams in this debate are just placeholders."
+msgstr "crwdns30038:0crwdne30038:0"
+
+#: draw/models.py:64 draw/models.py:272
+msgid "debate"
+msgstr "crwdns30040:0crwdne30040:0"
+
+#: draw/models.py:65
+msgid "debates"
+msgstr "crwdns30042:0crwdne30042:0"
+
+#. Translators: This is appended to a list of teams, e.g. "Auckland
+#. 1, Vic Wellington 1 (sides not confirmed)". Mind the leading
+#. space.
+#: draw/models.py:84 draw/models.py:109
+msgid " (sides not confirmed)"
+msgstr "crwdns30044:0crwdne30044:0"
+
+#. Translators: This goes between teams in a debate, e.g. "Auckland 1
+#. vs Vic Wellington 1". Mind the leading and trailing spaces.
+#: draw/models.py:96 draw/models.py:113
+msgid " vs "
+msgstr "crwdns30046:0crwdne30046:0"
+
+#: draw/models.py:262
+msgid "affirmative"
+msgstr "crwdns30048:0crwdne30048:0"
+
+#: draw/models.py:263
+msgid "negative"
+msgstr "crwdns30050:0crwdne30050:0"
+
+#: draw/models.py:264
+msgid "opening government"
+msgstr "crwdns30052:0crwdne30052:0"
+
+#: draw/models.py:265
+msgid "opening opposition"
+msgstr "crwdns30054:0crwdne30054:0"
+
+#: draw/models.py:266
+msgid "closing government"
+msgstr "crwdns30056:0crwdne30056:0"
+
+#: draw/models.py:267
+msgid "closing opposition"
+msgstr "crwdns30058:0crwdne30058:0"
+
+#: draw/models.py:274 draw/models.py:377
+msgid "team"
+msgstr "crwdns30060:0crwdne30060:0"
+
+#: draw/models.py:276 draw/models.py:379
+msgid "side"
+msgstr "crwdns30062:0crwdne30062:0"
+
+#: draw/models.py:281
+msgid "debate team"
+msgstr "crwdns30064:0crwdne30064:0"
+
+#: draw/models.py:282
+msgid "debate teams"
+msgstr "crwdns30066:0crwdne30066:0"
+
+#: draw/models.py:303
+#, python-format
+msgid "placed %(place)s"
+msgstr "crwdns51666:0%(place)scrwdne51666:0"
+
+#: draw/models.py:305 draw/models.py:312
+msgid "result unknown"
+msgstr "crwdns30076:0crwdne30076:0"
+
+#: draw/models.py:308
+msgid "won"
+msgstr "crwdns30078:0crwdne30078:0"
+
+#: draw/models.py:310
+msgid "lost"
+msgstr "crwdns30080:0crwdne30080:0"
+
+#: draw/models.py:383
+msgid "team side allocation"
+msgstr "crwdns30082:0crwdne30082:0"
+
+#: draw/models.py:384
+msgid "team side allocations"
+msgstr "crwdns30084:0crwdne30084:0"
+
+#. Translators: e.g. "Affirmative: Rank", "Government: Draw strength",
+#. "Opening government: Total speaker score", "Closing opposition: Number of firsts"
+#: draw/tables.py:33
+#, python-format
+msgid "%(side)s: %(metric)s"
+msgstr "crwdns51190:0%(side)scrwdnd51190:0%(metric)scrwdne51190:0"
+
+#: draw/tables.py:76
+#, python-format
+msgid "Team %(num)d"
+msgstr "crwdns30088:0%(num)dcrwdne30088:0"
+
+#: draw/tables.py:88
+msgid "Room rank of this debate"
+msgstr "crwdns30090:0crwdne30090:0"
+
+#: draw/tables.py:96
+msgid "Bracket of this debate"
+msgstr "crwdns30092:0crwdne30092:0"
+
+#: draw/tables.py:165
+msgid "side history<br>\n"
+"(number of times the team has been on each side before this round)"
+msgstr "crwdns30098:0crwdne30098:0"
+
+#. Translators: Abbreviation for "side history"
+#: draw/tables.py:167
+msgid "SH"
+msgstr "crwdns30100:0crwdne30100:0"
+
+#: draw/tables.py:232
+msgid "Went from balanced to imbalanced"
+msgstr "crwdns30102:0crwdne30102:0"
+
+#: draw/tables.py:233
+msgid "Went from imbalanced to balanced"
+msgstr "crwdns30104:0crwdne30104:0"
+
+#: draw/tables.py:234
+msgid "Best improvement possible, still imbalanced"
+msgstr "crwdns30106:0crwdne30106:0"
+
+#: draw/tables.py:235
+msgid "Was imbalanced and still imbalanced"
+msgstr "crwdns30108:0crwdne30108:0"
+
+#: draw/tables.py:256 draw/tables.py:378
+msgid "No metrics in the team standings precedence"
+msgstr "crwdns35166:0crwdne35166:0"
+
+#: draw/tables.py:282
+msgid "Side"
+msgstr "crwdns30110:0crwdne30110:0"
+
+#: draw/tables.py:283
+msgid "Position this round"
+msgstr "crwdns30112:0crwdne30112:0"
+
+#: draw/tables.py:287
+msgid "Before"
+msgstr "crwdns30114:0crwdne30114:0"
+
+#: draw/tables.py:288
+msgid "Side history before this round"
+msgstr "crwdns30116:0crwdne30116:0"
+
+#: draw/tables.py:292
+msgid "After"
+msgstr "crwdns30118:0crwdne30118:0"
+
+#: draw/tables.py:293
+msgid "Side history after this round"
+msgstr "crwdns30120:0crwdne30120:0"
+
+#: draw/tables.py:303 draw/tables.py:398
+msgid "Cost"
+msgstr "crwdns30122:0crwdne30122:0"
+
+#: draw/tables.py:303
+msgid "Position cost"
+msgstr "crwdns30124:0crwdne30124:0"
+
+#: draw/tables.py:316
+msgid "Status"
+msgstr "crwdns30126:0crwdne30126:0"
+
+#: draw/tables.py:360
+msgid "Teams with this many points are permitted in this debate<br>\n"
+"(bracket in bold)"
+msgstr "crwdns30128:0crwdne30128:0"
+
+#: draw/tables.py:386
+#, python-format
+msgid "%(team)s: %(metric)s"
+msgstr "crwdns30130:0%(team)scrwdnd30130:0%(metric)scrwdne30130:0"
+
+#: draw/tables.py:393
+msgid "side history before this round"
+msgstr "crwdns30132:0crwdne30132:0"
+
+#: draw/tables.py:393
+msgid "Sides"
+msgstr "crwdns30134:0crwdne30134:0"
+
+#: draw/tables.py:398
+msgid "position cost"
+msgstr "crwdns30136:0crwdne30136:0"
+
+#: draw/templates/admin/draw/debateteam/delete_warning.html:5
+msgid "STOP!!! Read this first! Deleting debate teams from the database may crash Tabbycat!"
+msgstr "crwdns30138:0crwdne30138:0"
+
+#: draw/templates/admin/draw/debateteam/delete_warning.html:10
+msgid "Tabbycat requires that all debates have <strong>exactly</strong> one debate team for each side, and no other debate teams, at all times. If you delete any debate teams, you must then either replace each one with a new debate team in the same debate, or delete the associated debate objects. If you don't do this correctly, many pages <strong>will</strong> crash."
+msgstr "crwdns30140:0crwdne30140:0"
+
+#: draw/templates/admin/draw/debateteam/delete_warning.html:15
+#: draw/templates/admin/draw/debateteam/edit_warning.html:15
+msgid "This is a common source of errors. If it happens to you, check the debates (under the Draw section in this Edit Database area) and ensure that all of them have exactly one affirmative and one negative team."
+msgstr "crwdns30142:0crwdne30142:0"
+
+#: draw/templates/admin/draw/debateteam/edit_warning.html:5
+msgid "WARNING!!! If you are editing debate teams, read this first!"
+msgstr "crwdns30144:0crwdne30144:0"
+
+#: draw/templates/admin/draw/debateteam/edit_warning.html:10
+msgid "Tabbycat requires that there be <strong>exactly</strong> one debate team for each side, and no other debate teams, in each debate. If you edit debate teams in the database, you must ensure that this remains the case. If you don't do this correctly, many pages <strong>will</strong> crash."
+msgstr "crwdns30146:0crwdne30146:0"
+
+#: draw/templates/draw_alerts_adjudicators.html:6
+#, python-format
+msgid "1 debate does not have a chair."
+msgid_plural "%(ndebates)s debates do not have a chair."
+msgstr[0] "crwdns30154:1crwdne30154:1"
+msgstr[1] "crwdns30154:5%(ndebates)scrwdne30154:5"
+
+#: draw/templates/draw_alerts_adjudicators.html:15
+#, python-format
+msgid "<strong>%(adjudicators)s</strong> is adjudicating multiple debates."
+msgid_plural "The following <strong>%(nadjs)s</strong> adjudicators are adjudicating multiple debates: <strong>%(adjudicators)s</strong>"
+msgstr[0] "crwdns30156:1%(adjudicators)scrwdne30156:1"
+msgstr[1] "crwdns30156:5%(nadjs)scrwdnd30156:5%(adjudicators)scrwdne30156:5"
+
+#: draw/templates/draw_alerts_adjudicators.html:24
+#, python-format
+msgid "1 debate has a panel with an even number of adjudicators."
+msgid_plural "%(ndebates)s debates have panels with an even number of adjudicators."
+msgstr[0] "crwdns30158:1crwdne30158:1"
+msgstr[1] "crwdns30158:5%(ndebates)scrwdne30158:5"
+
+#: draw/templates/draw_alerts_adjudicators.html:33
+#, python-format
+msgid "1 debate has an adjudicator conflict."
+msgid_plural "%(ndebates)s debates have adjudicator conflicts."
+msgstr[0] "crwdns30160:1crwdne30160:1"
+msgstr[1] "crwdns30160:5%(ndebates)scrwdne30160:5"
+
+#: draw/templates/draw_alerts_adjudicators.html:42
+#, python-format
+msgid "<strong>%(adjudicators)s</strong> is unavailable this round, but is assigned to a debate."
+msgid_plural "The following <strong>%(nadjs)s</strong> adjudicators are unavailable this round, but are assigned to debates: <strong>%(adjudicators)s</strong>"
+msgstr[0] "crwdns34040:1%(adjudicators)scrwdne34040:1"
+msgstr[1] "crwdns34040:5%(nadjs)scrwdnd34040:5%(adjudicators)scrwdne34040:5"
+
+#: draw/templates/draw_alerts_adjudicators.html:51
+#, python-format
+msgid "1 adjudicator is available but not assigned to a debate."
+msgid_plural "%(ndebates)s adjudicators are available but not assigned to a debate."
+msgstr[0] "crwdns34042:1crwdne34042:1"
+msgstr[1] "crwdns34042:5%(ndebates)scrwdne34042:5"
+
+#: draw/templates/draw_alerts_teams.html:6
+#, python-format
+msgid "<strong>%(teams)s</strong> is competing in multiple debates."
+msgid_plural "The following <strong>%(nteams)s</strong> teams are competing in multiple debates: <strong>%(teams)s</strong>"
+msgstr[0] "crwdns30162:1%(teams)scrwdne30162:1"
+msgstr[1] "crwdns30162:5%(nteams)scrwdnd30162:5%(teams)scrwdne30162:5"
+
+#: draw/templates/draw_alerts_venues.html:5
+#, python-format
+msgid "1 debate does not have a room."
+msgid_plural "%(ndebates)s debates do not have a room."
+msgstr[0] "crwdns51192:1crwdne51192:1"
+msgstr[1] "crwdns51192:5%(ndebates)scrwdne51192:5"
+
+#: draw/templates/draw_alerts_venues.html:14
+#, python-format
+msgid "There are multiple debates in <strong>%(rooms)s</strong>."
+msgid_plural "The following <strong>%(ndebates)s</strong> rooms have multiple debates in them: <strong>%(rooms)s</strong>"
+msgstr[0] "crwdns51194:1%(rooms)scrwdne51194:1"
+msgstr[1] "crwdns51194:5%(ndebates)scrwdnd51194:5%(rooms)scrwdne51194:5"
+
+#: draw/templates/draw_alerts_venues.html:23
+#, python-format
+msgid "1 debate has a room constraint violation."
+msgid_plural "%(ndebates)s debates have room constraint violations."
+msgstr[0] "crwdns51196:1crwdne51196:1"
+msgstr[1] "crwdns51196:5%(ndebates)scrwdne51196:5"
+
+#: draw/templates/draw_base.html:6
+msgid "Availability"
+msgstr "crwdns34044:0crwdne34044:0"
+
+#: draw/templates/draw_base.html:11 draw/templates/draw_status_draft.html:9
+msgid "Edit Sides/Matchups"
+msgstr "crwdns30174:0crwdne30174:0"
+
+#: draw/templates/draw_base.html:16
+msgid "Redo Draw"
+msgstr "crwdns30176:0crwdne30176:0"
+
+#: draw/templates/draw_base.html:19
+msgid "Draw Details"
+msgstr "crwdns30178:0crwdne30178:0"
+
+#: draw/templates/draw_base.html:23
+msgid "Position Balance"
+msgstr "crwdns30180:0crwdne30180:0"
+
+#: draw/templates/draw_base.html:31 draw/templates/draw_display_admin.html:4
+#: draw/templates/draw_display_admin.html:5
+#: draw/templates/draw_display_assistant.html:4
+#: draw/templates/draw_display_assistant.html:5
+msgid "Display Draw"
+msgstr "crwdns30182:0crwdne30182:0"
+
+#: draw/templates/draw_confirm_regeneration.html:5
+msgid "Confirm draw regeneration"
+msgstr "crwdns30184:0crwdne30184:0"
+
+#: draw/templates/draw_confirm_regeneration.html:10
+#: draw/templates/draw_subpage.html:6
+msgid "Back to Draw"
+msgstr "crwdns30150:0crwdne30150:0"
+
+#: draw/templates/draw_confirm_regeneration.html:16
+#, python-format
+msgid "Confirm Draw Deletion for %(round)s"
+msgstr "crwdns51198:0%(round)scrwdne51198:0"
+
+#: draw/templates/draw_confirm_regeneration.html:22
+#, python-format
+msgid "Do you really want to regenerate the draw for %(round)s? This will delete <strong>all the debates in the current draw</strong> —  including their ballots and adjudicator allocations — and cannot be undone. You probably don't want to do this if any results have been entered!"
+msgstr "crwdns51200:0%(round)scrwdne51200:0"
+
+#: draw/templates/draw_confirm_regeneration.html:33
+#, python-format
+msgid "Yes, I want to delete the current draw for %(round)s"
+msgstr "crwdns51202:0%(round)scrwdne51202:0"
+
+#: draw/templates/draw_display_admin.html:17
+msgid "View Draw"
+msgstr "crwdns30192:0crwdne30192:0"
+
+#: draw/templates/draw_display_admin.html:23
+#, python-format
+msgid "Debates start at %(start_time)s"
+msgstr "crwdns30194:0%(start_time)scrwdne30194:0"
+
+#: draw/templates/draw_display_admin.html:27
+msgid "Add Start Time"
+msgstr "crwdns30196:0crwdne30196:0"
+
+#: draw/templates/draw_display_admin.html:34
+msgid "Enter Results"
+msgstr "crwdns30200:0crwdne30200:0"
+
+#: draw/templates/draw_display_admin.html:46
+msgid "Motion Details"
+msgstr "crwdns30202:0crwdne30202:0"
+
+#. Translators: Used when only one motion is expected, but there is more than one.
+#: draw/templates/draw_display_admin.html:54
+#: draw/templates/draw_display_admin.html:80
+#, python-format
+msgid "%(motions_count)s motion has been entered."
+msgid_plural "%(motions_count)s motions have been entered."
+msgstr[0] "crwdns30204:1%(motions_count)scrwdne30204:1"
+msgstr[1] "crwdns30204:5%(motions_count)scrwdne30204:5"
+
+#: draw/templates/draw_display_admin.html:60
+msgid "Edit motions"
+msgstr "crwdns30206:0crwdne30206:0"
+
+#: draw/templates/draw_display_admin.html:63
+msgid "Your configuration/format requires motions to be specified as part of ballot entry. Make sure they are added before results come in!"
+msgstr "crwdns30208:0crwdne30208:0"
+
+#: draw/templates/draw_display_admin.html:65
+msgid "Enter motions"
+msgstr "crwdns30210:0crwdne30210:0"
+
+#: draw/templates/draw_display_admin.html:75
+msgid "The motion has been entered."
+msgstr "crwdns30212:0crwdne30212:0"
+
+#: draw/templates/draw_display_admin.html:87
+msgid "Edit the motion"
+msgstr "crwdns30214:0crwdne30214:0"
+
+#: draw/templates/draw_display_admin.html:90
+msgid "A motion should be added if you want to display it to the auditorium or print in on your ballots (using the links below) or to display it (later) on the public motions page."
+msgstr "crwdns30216:0crwdne30216:0"
+
+#: draw/templates/draw_display_admin.html:92
+msgid "Enter a motion"
+msgstr "crwdns30218:0crwdne30218:0"
+
+#: draw/templates/draw_display_admin.html:106
+msgid "Release Draw"
+msgstr "crwdns30220:0crwdne30220:0"
+
+#: draw/templates/draw_display_admin.html:112
+msgid "You have not generated a draw for this round yet. There is nothing to release."
+msgstr "crwdns30222:0crwdne30222:0"
+
+#: draw/templates/draw_display_admin.html:117
+msgid "The draw for this round is still in a draft state. Confirm the draw before releasing it."
+msgstr "crwdns30224:0crwdne30224:0"
+
+#: draw/templates/draw_display_admin.html:122
+msgid "Unrelease draw to public"
+msgstr "crwdns30226:0crwdne30226:0"
+
+#: draw/templates/draw_display_admin.html:127
+msgid "The draw has been released publicly."
+msgstr "crwdns30228:0crwdne30228:0"
+
+#: draw/templates/draw_display_admin.html:130
+msgid "View public draw page"
+msgstr "crwdns30230:0crwdne30230:0"
+
+#: draw/templates/draw_display_admin.html:139
+#, python-format
+msgid "You have released the draw, so ballots and/or feedback can be submitted from the public forms (if enabled). However, the draw itself will not show to the public unless the \"public view of draw\" setting is enabled in <a class=\"alert-link\" href=\"%(alert_link)s\"> this tournament's configuration</a>."
+msgstr "crwdns30232:0%(alert_link)scrwdne30232:0"
+
+#: draw/templates/draw_display_admin.html:144
+#, python-format
+msgid "You have released the draw, but it will not show to the public unless the \"public view of draw\" setting is enabled in <a class=\"alert-link\" href=\"%(alert_link)s\"> this tournament's configuration</a>."
+msgstr "crwdns30234:0%(alert_link)scrwdne30234:0"
+
+#: draw/templates/draw_display_admin.html:154
+msgid "Release draw to public"
+msgstr "crwdns30236:0crwdne30236:0"
+
+#: draw/templates/draw_display_admin.html:160
+msgid "Your tournament allows ballots and feedback to be submitted online by adjudicators. The draw must be released before they can do so."
+msgstr "crwdns30240:0crwdne30240:0"
+
+#: draw/templates/draw_display_admin.html:163
+msgid "Your tournament allows ballots to be submitted online by adjudicators. The draw must be released before they can do so."
+msgstr "crwdns30242:0crwdne30242:0"
+
+#: draw/templates/draw_display_admin.html:166
+msgid "Your tournament allows feedback to be submitted online by participants. The draw must be released before they can do so."
+msgstr "crwdns30244:0crwdne30244:0"
+
+#: draw/templates/draw_display_admin.html:170
+msgid "Your tournament is configured to show the draw publicly. Releasing a draw will allow it to show it on the public page."
+msgstr "crwdns30246:0crwdne30246:0"
+
+#: draw/templates/draw_display_admin.html:178
+msgid "Your configuration doesn't have a public draw page or feedback/ballot submissions. There's no reason to release the draw."
+msgstr "crwdns30248:0crwdne30248:0"
+
+#: draw/templates/draw_display_admin.html:196
+msgid "Release Motions"
+msgstr "crwdns30250:0crwdne30250:0"
+
+#: draw/templates/draw_display_admin.html:197
+msgid "Release motions to public"
+msgstr "crwdns30252:0crwdne30252:0"
+
+#: draw/templates/draw_display_admin.html:198
+msgid "Unrelease motions to public"
+msgstr "crwdns30254:0crwdne30254:0"
+
+#: draw/templates/draw_display_admin.html:200
+msgid "Release Motion"
+msgstr "crwdns30256:0crwdne30256:0"
+
+#: draw/templates/draw_display_admin.html:201
+msgid "Release motion to public"
+msgstr "crwdns30258:0crwdne30258:0"
+
+#: draw/templates/draw_display_admin.html:202
+msgid "Unrelease motion to public"
+msgstr "crwdns30260:0crwdne30260:0"
+
+#: draw/templates/draw_display_admin.html:216
+msgid "Your tournament is configured to require motions to be selected in ballots and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to be submitted."
+msgstr "crwdns30262:0crwdne30262:0"
+
+#: draw/templates/draw_display_admin.html:220
+msgid "Your tournament is configured to allow motions to be vetoed and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to nominate vetoes."
+msgstr "crwdns30264:0crwdne30264:0"
+
+#: draw/templates/draw_display_admin.html:224
+msgid "Your tournament is configured to show the motion(s) for each round on the public site. You'll need to first release the motion(s) for it to show there."
+msgstr "crwdns30266:0crwdne30266:0"
+
+#: draw/templates/draw_display_admin.html:228
+msgid "Your tournament is not configured to show the motion(s) for each round on the public site. There's no need to release the motion(s)."
+msgstr "crwdns30268:0crwdne30268:0"
+
+#: draw/templates/draw_display_admin.html:240
+msgid "Motions have been released publicly."
+msgstr "crwdns30270:0crwdne30270:0"
+
+#: draw/templates/draw_display_admin.html:242
+msgid "The motion has been released publicly."
+msgstr "crwdns30272:0crwdne30272:0"
+
+#: draw/templates/draw_display_admin.html:245
+msgid "View public motions page"
+msgstr "crwdns30274:0crwdne30274:0"
+
+#: draw/templates/draw_display_admin.html:250
+#, python-format
+msgid "You have released the motions, but they will not show to the public unless the \"public view of motions\" setting is enabled in <a class=\"alert-link\" href=\"%(alert_link)s\">this tournament's configuration</a>."
+msgstr "crwdns30276:0%(alert_link)scrwdne30276:0"
+
+#: draw/templates/draw_display_admin.html:272
+#: draw/templates/draw_display_assistant.html:13
+msgid "(for the briefing room)"
+msgstr "crwdns34050:0crwdne34050:0"
+
+#: draw/templates/draw_display_admin.html:277
+#: draw/templates/draw_display_assistant.html:18
+msgid "Display Draw ordered by Room"
+msgstr "crwdns51204:0crwdne51204:0"
+
+#: draw/templates/draw_display_admin.html:281
+#: draw/templates/draw_display_assistant.html:22
+msgid "Display Draw ordered by Team"
+msgstr "crwdns34054:0crwdne34054:0"
+
+#: draw/templates/draw_display_admin.html:287
+#: draw/templates/draw_display_assistant.html:28
+msgid "Display Draws for <strong>All Current Rounds</strong> ordered by Room"
+msgstr "crwdns51206:0crwdne51206:0"
+
+#: draw/templates/draw_display_admin.html:291
+#: draw/templates/draw_display_assistant.html:32
+msgid "Display Draws for <strong>All Current Rounds</strong> ordered by Team"
+msgstr "crwdns34058:0crwdne34058:0"
+
+#: draw/templates/draw_display_admin.html:295
+#: draw/templates/draw_display_assistant.html:38
+#, python-format
+msgid "Display Draw for <strong>%(round)s</strong> ordered by Room"
+msgstr "crwdns51208:0%(round)scrwdne51208:0"
+
+#: draw/templates/draw_display_admin.html:301
+#: draw/templates/draw_display_assistant.html:44
+#, python-format
+msgid "Display Draw for <strong>%(round)s</strong> ordered by Team"
+msgstr "crwdns51210:0%(round)scrwdne51210:0"
+
+#: draw/templates/draw_display_admin.html:309
+#: draw/templates/draw_display_assistant.html:55
+msgid "Display Motions"
+msgstr "crwdns34064:0crwdne34064:0"
+
+#: draw/templates/draw_display_admin.html:328
+msgid "Email Motions"
+msgstr "crwdns34066:0crwdne34066:0"
+
+#: draw/templates/draw_display_admin.html:330
+msgid "Email Motion"
+msgstr "crwdns34068:0crwdne34068:0"
+
+#: draw/templates/draw_display_admin.html:350
+msgid "Start at"
+msgstr "crwdns30278:0crwdne30278:0"
+
+#: draw/templates/draw_display_assistant.html:62
+msgid "(for printing)"
+msgstr "crwdns34070:0crwdne34070:0"
+
+#: draw/templates/draw_display_assistant.html:66
+msgid "View Ballot Forms"
+msgstr "crwdns34072:0crwdne34072:0"
+
+#: draw/templates/draw_display_assistant.html:71
+msgid "View Feedback Forms"
+msgstr "crwdns34074:0crwdne34074:0"
+
+#: draw/templates/draw_display_by.html:17
+msgid "Scroll Speed"
+msgstr "crwdns30280:0crwdne30280:0"
+
+#: draw/templates/draw_display_by.html:20
+msgid "Fast"
+msgstr "crwdns30282:0crwdne30282:0"
+
+#: draw/templates/draw_display_by.html:23
+#: draw/templates/draw_display_by.html:53
+msgid "Medium"
+msgstr "crwdns30284:0crwdne30284:0"
+
+#: draw/templates/draw_display_by.html:26
+msgid "Slow"
+msgstr "crwdns30286:0crwdne30286:0"
+
+#: draw/templates/draw_display_by.html:29
+msgid "Extra Slow"
+msgstr "crwdns30288:0crwdne30288:0"
+
+#: draw/templates/draw_display_by.html:35
+msgid "Hide Adjudicators"
+msgstr "crwdns51212:0crwdne51212:0"
+
+#: draw/templates/draw_display_by.html:38
+msgid "Show Adjudicators"
+msgstr "crwdns51214:0crwdne51214:0"
+
+#: draw/templates/draw_display_by.html:44
+msgid "Text Size"
+msgstr "crwdns30290:0crwdne30290:0"
+
+#: draw/templates/draw_display_by.html:47
+msgid "Tiny"
+msgstr "crwdns30292:0crwdne30292:0"
+
+#: draw/templates/draw_display_by.html:50
+msgid "Small"
+msgstr "crwdns30294:0crwdne30294:0"
+
+#: draw/templates/draw_display_by.html:56
+msgid "Large"
+msgstr "crwdns30296:0crwdne30296:0"
+
+#: draw/templates/draw_display_by.html:59
+msgid "Huge"
+msgstr "crwdns30298:0crwdne30298:0"
+
+#: draw/templates/draw_display_by.html:65
+msgid "Stop Scroll"
+msgstr "crwdns30300:0crwdne30300:0"
+
+#: draw/templates/draw_not_released.html:7
+#, python-format
+msgid "The draw for %(round)s has yet to be released."
+msgstr "crwdns51216:0%(round)scrwdne51216:0"
+
+#: draw/templates/draw_not_released.html:11
+msgid "The draw for the next round has yet to be released."
+msgstr "crwdns34076:0crwdne34076:0"
+
+#: draw/templates/draw_status_confirmed.html:18
+msgid "Adjudicator Allocations"
+msgstr "crwdns30312:0crwdne30312:0"
+
+#: draw/templates/draw_status_confirmed.html:26
+msgid "There are currently fewer adjudicators checked in than there are rooms."
+msgstr "crwdns34078:0crwdne34078:0"
+
+#: draw/templates/draw_status_confirmed.html:37
+msgid "Allocate adjudicators"
+msgstr "crwdns30316:0crwdne30316:0"
+
+#: draw/templates/draw_status_confirmed.html:40
+msgid "Edit adjudicator allocation"
+msgstr "crwdns30318:0crwdne30318:0"
+
+#: draw/templates/draw_status_confirmed.html:54
+msgid "Room Allocations"
+msgstr "crwdns51218:0crwdne51218:0"
+
+#: draw/templates/draw_status_confirmed.html:62
+msgid "Allocate rooms"
+msgstr "crwdns51220:0crwdne51220:0"
+
+#: draw/templates/draw_status_confirmed.html:65
+msgid "Edit room allocation"
+msgstr "crwdns51222:0crwdne51222:0"
+
+#: draw/templates/draw_status_confirmed.html:78
+msgid "Preformed Panels"
+msgstr "crwdns35168:0crwdne35168:0"
+
+#: draw/templates/draw_status_confirmed.html:84
+#, python-format
+msgid "There is %(npanels)s preformed panel available for this round."
+msgid_plural "There are %(npanels)s preformed panels available for this round."
+msgstr[0] "crwdns35170:1%(npanels)scrwdne35170:1"
+msgstr[1] "crwdns35170:5%(npanels)scrwdne35170:5"
+
+#: draw/templates/draw_status_confirmed.html:91
+msgid "There are no preformed panels available for this round"
+msgstr "crwdns35172:0crwdne35172:0"
+
+#: draw/templates/draw_status_confirmed.html:96
+#: draw/templates/draw_status_confirmed.html:103
+#, python-format
+msgid "Edit preformed panels for %(round)s"
+msgstr "crwdns51224:0%(round)scrwdne51224:0"
+
+#: draw/templates/draw_status_confirmed.html:120
+msgid "Side Allocations"
+msgstr "crwdns30326:0crwdne30326:0"
+
+#: draw/templates/draw_status_confirmed.html:125
+#, python-format
+msgid "1 debate does not have its sides confirmed."
+msgid_plural "%(ndebates)s debates do not have their sides confirmed."
+msgstr[0] "crwdns30328:1crwdne30328:1"
+msgstr[1] "crwdns30328:5%(ndebates)scrwdne30328:5"
+
+#: draw/templates/draw_status_draft.html:6
+msgid "Delete Draw"
+msgstr "crwdns30330:0crwdne30330:0"
+
+#: draw/templates/draw_status_draft.html:17
+msgid "Confirm Draw"
+msgstr "crwdns30332:0crwdne30332:0"
+
+#: draw/templates/draw_status_draft.html:25
+#, python-format
+msgid "The team standings precedence is empty. This means that teams aren't ranked according to any metrics, so all teams are in a single bracket containing everyone. If this isn't what you intended, set the team standings precedence in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>, then delete and recreate the draw. In most tournaments, the first metric should be points or wins."
+msgstr "crwdns35176:0%(standings_config_url)scrwdne35176:0"
+
+#: draw/templates/draw_status_draft.html:41
+#, python-format
+msgid "Brackets are formed using the first metric in the team standings precedence, which is currently set to <strong>%(metric)s</strong>, rather than team points, which is the more usual convention. If this isn't what you wanted, you can <a href=\"%(standings_config_url)s\" class=\"alert-link\">change the team standings precedence in the standings configuration page</a>."
+msgstr "crwdns30334:0%(metric)scrwdnd30334:0%(standings_config_url)scrwdne30334:0"
+
+#: draw/templates/draw_status_draft.html:53
+#, python-format
+msgid "The draw type for this round is set to <strong>manual</strong>, so Tabbycat has just made a blank draw. Head on over to <a href=\"%(edit_matchups_url)s\" class=\"alert-link\">Edit Sides/Matchups</a> to fill it in."
+msgstr "crwdns30336:0%(edit_matchups_url)scrwdne30336:0"
+
+#: draw/templates/draw_status_draft.html:64
+#, python-format
+msgid "The adjudicator score range is 0, and so adjudicator scores will be ignored when allocating. You can <a href=\"%(feedback_config_url)s\" class=\"alert-link\">change the adjudicator score range in the feedback configuration page</a>."
+msgstr "crwdns34088:0%(feedback_config_url)scrwdne34088:0"
+
+#: draw/templates/draw_status_draft.html:74
+msgid "Tabbycat assigns sides in elimination rounds randomly. However, because in elimination rounds, many tournaments draw lots for sides in front of an audience, the sides are marked as \"unconfirmed\", so that it doesn't look like sides have been pre-assigned. After you confirm the draw, you'll need to confirm sides on the \"Edit Sides/Matchups\" page, even if you wish to accept Tabbycat's random assignment."
+msgstr "crwdns30338:0crwdne30338:0"
+
+#: draw/templates/draw_status_draft.html:81
+msgid "Highlighted cells relate to changes in position balance, as follows: <ul> <li>Red cells indicates that the team could not be allocated a position that maintains position balance.</li> <li>Yellow cells indicate that the team was previously imbalanced, and is given the best position possible in this draw, but is nonetheless still imbalanced.</li> <li>Green cells indicate that the team's previous imbalance is resolved with this draw.</li> </ul>"
+msgstr "crwdns30340:0crwdne30340:0"
+
+#: draw/templates/draw_status_none.html:6
+#, python-format
+msgid "A draw for %(round)s hasn't yet been generated. To generate one, go to the <a href=\"%(availability_url)s\" class=\"alert-link\">Availability section</a>."
+msgstr "crwdns51226:0%(round)scrwdnd51226:0%(availability_url)scrwdne51226:0"
+
+#: draw/templates/position_balance.html:6
+msgid "It looks like sides aren't confirmed for some debates in this round. This position balance report is generated using the \"unconfirmed sides\" in the database, and as a consequence, may not make much sense. It's best to confirm sides in all debates before looking at this report."
+msgstr "crwdns30346:0crwdne30346:0"
+
+#: draw/templates/position_balance.html:15
+#, python-format
+msgid "Your current position cost function is <strong>%(cost_func)s</strong>, raised to an exponent of <strong>%(exponent)s</strong>. <a href=\"http://tabbycat.readthedocs.io/en/latest/features/draw-generation-bp.html#position-cost-options\" target=_\"blank\">Read more about how position cost functions work</a> in our documentation."
+msgstr "crwdns30348:0%(cost_func)scrwdnd30348:0%(exponent)scrwdne30348:0"
+
+#: draw/templates/position_balance_break.html:6
+msgid "Position balance reports aren't computed for elimination rounds."
+msgstr "crwdns30350:0crwdne30350:0"
+
+#: draw/templates/position_balance_nonbp.html:6
+msgid "Position balance reports are only available for British Parliamentary tournaments."
+msgstr "crwdns30352:0crwdne30352:0"
+
+#: draw/templates/position_balance_round1.html:6
+msgid "Position balance reports aren't computed for the first round of a tournament."
+msgstr "crwdns30354:0crwdne30354:0"
+
+#: draw/views.py:68 draw/views.py:483
+msgid "No debates in this round"
+msgstr "crwdns34090:0crwdne34090:0"
+
+#: draw/views.py:76
+#, python-format
+msgid "Draw for %(round)s"
+msgstr "crwdns30374:0%(round)scrwdne30374:0"
+
+#: draw/views.py:78
+msgid "Draws for Current Rounds"
+msgstr "crwdns34092:0crwdne34092:0"
+
+#: draw/views.py:82
+#, python-format
+msgid "debates start at %(time)s (in %(time_zone)s)"
+msgstr "crwdns30376:0%(time)scrwdnd30376:0%(time_zone)scrwdne30376:0"
+
+#: draw/views.py:86
+#, python-format
+msgid "start times in time zone: %(time_zone)s"
+msgstr "crwdns34094:0%(time_zone)scrwdne34094:0"
+
+#: draw/views.py:124
+#, python-format
+msgid "debate starts at %(time)s"
+msgid_plural "debates start at %(time)s"
+msgstr[0] "crwdns34096:1%(time)scrwdne34096:1"
+msgstr[1] "crwdns34096:5%(time)scrwdne34096:5"
+
+#: draw/views.py:171
+msgid "The draw for this round hasn't been released."
+msgstr "crwdns34098:0crwdne34098:0"
+
+#: draw/views.py:224
+#, python-format
+msgid "All Debates for All Rounds of %(tournament)s"
+msgstr "crwdns30378:0%(tournament)scrwdne30378:0"
+
+#: draw/views.py:382
+msgid "Adjudicator Assignments"
+msgstr "crwdns34100:0crwdne34100:0"
+
+#: draw/views.py:404
+msgid "Position"
+msgstr "crwdns51708:0crwdne51708:0"
+
+#: draw/views.py:424
+msgid "Team Pairings"
+msgstr "crwdns34102:0crwdne34102:0"
+
+#: draw/views.py:447
+msgid "No Draw"
+msgstr "crwdns30380:0crwdne30380:0"
+
+#: draw/views.py:449
+msgid "Draft Draw"
+msgstr "crwdns30382:0crwdne30382:0"
+
+#. Translators: e.g. "Affirmative: Break rank"
+#: draw/views.py:541
+#, python-format
+msgid "%(side)s: Break rank"
+msgstr "crwdns51228:0%(side)scrwdne51228:0"
+
+#. Translators: "BR" stands for "Break rank"
+#: draw/views.py:546
+msgid "BR"
+msgstr "crwdns30388:0crwdne30388:0"
+
+#: draw/views.py:571
+msgid "Draw with Details"
+msgstr "crwdns30390:0crwdne30390:0"
+
+#: draw/views.py:579
+msgid "Position Balance Report"
+msgstr "crwdns30392:0crwdne30392:0"
+
+#: draw/views.py:590
+#, python-format
+msgid "Rényi entropy of order %(order)s"
+msgstr "crwdns30394:0%(order)scrwdne30394:0"
+
+#. Translators: This is appended to the string "Rényi entropy of order 1.0"
+#: draw/views.py:593
+msgid " (<i>i.e.</i>, Shannon entropy)"
+msgstr "crwdns30396:0crwdne30396:0"
+
+#: draw/views.py:623
+msgid "Teams with position imbalances"
+msgstr "crwdns30398:0crwdne30398:0"
+
+#: draw/views.py:624
+msgid "No teams with position imbalances! Hooray!"
+msgstr "crwdns30400:0crwdne30400:0"
+
+#: draw/views.py:627
+msgid "Annotated draw"
+msgstr "crwdns30402:0crwdne30402:0"
+
+#: draw/views.py:658
+#, python-format
+msgid "Could not create draw for %(round)s, there was already a draw!"
+msgstr "crwdns30404:0%(round)scrwdne30404:0"
+
+#: draw/views.py:666
+#, python-format
+msgid "<p>The draw could not be created, for the following reason: <em>%(message)s</em></p>\n"
+"<p>Please fix this issue before attempting to create the draw.</p>"
+msgstr "crwdns30406:0%(message)scrwdne30406:0"
+
+#: draw/views.py:674
+#, python-format
+msgid "<p>The draw could not be created, because the following error occurred: <em>%(message)s</em></p>\n"
+"<p>If this issue persists and you're not sure how to resolve it, please contact the developers.</p>"
+msgstr "crwdns35178:0%(message)scrwdne35178:0"
+
+#: draw/views.py:683
+#, python-format
+msgid "<p>The team standings could not be generated, because the following error occurred: <em>%(message)s</em></p>\n"
+"<p>Because generating the draw uses the current team standings, this prevents the draw from being generated.</p>"
+msgstr "crwdns30410:0%(message)scrwdne30410:0"
+
+#: draw/views.py:699
+msgid "Rooms were not auto-allocated because there are one or more adjudicator room constraints. You should run room allocations after allocating adjudicators."
+msgstr "crwdns51230:0crwdne51230:0"
+
+#: draw/views.py:726
+msgid "Deleted the draw. You can now recreate it as normal."
+msgstr "crwdns30414:0crwdne30414:0"
+
+#: draw/views.py:746
+msgid "Released the draw."
+msgstr "crwdns30422:0crwdne30422:0"
+
+#: draw/views.py:761
+msgid "Unreleased the draw."
+msgstr "crwdns30424:0crwdne30424:0"
+
+#: draw/views.py:774
+#, python-format
+msgid "Sorry, \"%(input)s\" isn't a valid time. It must be in 24-hour format, with a colon, for example: \"13:57\"."
+msgstr "crwdns30426:0%(input)scrwdne30426:0"
+
+#: draw/views.py:793
+msgid "Side Pre-Allocations"
+msgstr "crwdns30428:0crwdne30428:0"
+
+#: draw/views.py:826
+msgid "Edit Matchups"
+msgstr "crwdns34104:0crwdne34104:0"
+

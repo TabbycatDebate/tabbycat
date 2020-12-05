@@ -1,0 +1,898 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-19 19:52-0300\n"
+"PO-Revision-Date: 2020-11-18 21:01\n"
+"Last-Translator: \n"
+"Language-Team: Talossan\n"
+"Language: tzl_TZL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: tzl\n"
+"X-Crowdin-File: /develop/tabbycat/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 934\n"
+
+#: api/apps.py:7
+msgid "Application Programming Interface"
+msgstr "crwdns51256:0crwdne51256:0"
+
+#: checkins/apps.py:7 templates/nav/admin_nav.html:113
+#: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:92
+msgid "Check-Ins"
+msgstr "crwdns30572:0crwdne30572:0"
+
+#: checkins/consumers.py:73
+msgid "Sent checkin identifier doesn't exist"
+msgstr "crwdns30574:0crwdne30574:0"
+
+#: checkins/consumers.py:74 checkins/consumers.py:79
+msgid "Checkins"
+msgstr "crwdns30576:0crwdne30576:0"
+
+#: checkins/consumers.py:78
+msgid "No checkin identifiers exist for sent barcodes"
+msgstr "crwdns30578:0crwdne30578:0"
+
+#: checkins/models.py:29
+msgid "The barcode must contain exactly six digits."
+msgstr "crwdns34108:0crwdne34108:0"
+
+#: checkins/models.py:32
+msgid "barcode"
+msgstr "crwdns30582:0crwdne30582:0"
+
+#: checkins/models.py:37
+msgid "<Not the child instance>"
+msgstr "crwdns34110:0crwdne34110:0"
+
+#: checkins/models.py:41
+#, python-format
+msgid "%(classname)s %(barcode)s"
+msgstr "crwdns34112:0%(classname)scrwdnd34112:0%(barcode)scrwdne34112:0"
+
+#: checkins/models.py:52
+msgid "person"
+msgstr "crwdns30584:0crwdne30584:0"
+
+#: checkins/models.py:55
+msgid "person identifier"
+msgstr "crwdns30586:0crwdne30586:0"
+
+#: checkins/models.py:56
+msgid "person identifiers"
+msgstr "crwdns30588:0crwdne30588:0"
+
+#: checkins/models.py:64
+msgid "debate"
+msgstr "crwdns30590:0crwdne30590:0"
+
+#: checkins/models.py:67
+msgid "debate identifier"
+msgstr "crwdns30592:0crwdne30592:0"
+
+#: checkins/models.py:68
+msgid "debate identifiers"
+msgstr "crwdns30594:0crwdne30594:0"
+
+#: checkins/models.py:79
+msgid "room identifier"
+msgstr "crwdns51258:0crwdne51258:0"
+
+#: checkins/models.py:80
+msgid "room identifiers"
+msgstr "crwdns51260:0crwdne51260:0"
+
+#: checkins/models.py:87
+msgid "identifier"
+msgstr "crwdns30600:0crwdne30600:0"
+
+#: checkins/models.py:90
+msgid "check-in time"
+msgstr "crwdns30602:0crwdne30602:0"
+
+#: checkins/models.py:92
+msgid "tournament"
+msgstr "crwdns30604:0crwdne30604:0"
+
+#: checkins/models.py:95
+msgid "check-in event"
+msgstr "crwdns30606:0crwdne30606:0"
+
+#: checkins/models.py:96
+msgid "check-in events"
+msgstr "crwdns30608:0crwdne30608:0"
+
+#: checkins/templates/checkin_ids.html:18
+msgid "With identifiers"
+msgstr "crwdns30610:0crwdne30610:0"
+
+#: checkins/templates/checkin_ids.html:30
+msgid "View as barcodes"
+msgstr "crwdns30612:0crwdne30612:0"
+
+#: checkins/templates/checkin_ids.html:36
+msgid "Generate missing identifiers"
+msgstr "crwdns30614:0crwdne30614:0"
+
+#: checkins/templates/checkin_ids.html:38
+msgid "Generate all identifiers"
+msgstr "crwdns30616:0crwdne30616:0"
+
+#: checkins/templates/checkin_ids.html:49
+msgid "There are no identifiers available to view. An admin will need to generate them."
+msgstr "crwdns30618:0crwdne30618:0"
+
+#: checkins/templates/checkin_printables.html:10
+msgid "Each of the barcodes below is also an image file that can be download individually. If you want to download them all at once try using a 'bulk downloader' extension/plugin for your browser, such as <a href=\"https://chrome.google.com/webstore/detail/svg-export/naeaaedieihlkmdajjefioajbbdbdjgp?hl=en-GB\">this one (for Chrome)</a>. To download them as a list you can go to Check-Ins section of the Edit Database area and copy/paste from the relevant table."
+msgstr "crwdns30620:0crwdne30620:0"
+
+#: checkins/templates/checkin_printables.html:15
+msgid "You can use Ctrl+P for printing or saving the barcodes PDF. Be sure to set the appropriate <strong>page orientation</strong>, to turn off <strong>headers/footers</strong> and turn on <strong>background graphics</strong>. Works best in Chrome."
+msgstr "crwdns30622:0crwdne30622:0"
+
+#: checkins/templates/checkin_scan.html:18
+msgid "To scan an identifier type the number below (it will auto-submit). You can also use a barcode scanner (configured to work as a keyboard) or scan from a webcam or phone camera using the button below."
+msgstr "crwdns34114:0crwdne34114:0"
+
+#: checkins/utils.py:61
+#, python-format
+msgid "Not checked in (barcode %(barcode)s)"
+msgstr "crwdns34116:0%(barcode)scrwdne34116:0"
+
+#: checkins/utils.py:65
+msgid "Not checked in; no barcode assigned"
+msgstr "crwdns34118:0crwdne34118:0"
+
+#: checkins/utils.py:72
+#, python-format
+msgid "checked in at %(time)s"
+msgstr "crwdns34120:0%(time)scrwdne34120:0"
+
+#: checkins/utils.py:84
+#, python-format
+msgid "%(speaker)s checked in at %(time)s."
+msgstr "crwdns34122:0%(speaker)scrwdnd34122:0%(time)scrwdne34122:0"
+
+#: checkins/utils.py:86
+#, python-format
+msgid "%(speaker)s is missing."
+msgstr "crwdns30634:0%(speaker)scrwdne30634:0"
+
+#: checkins/views.py:30 templates/nav/admin_nav.html:124
+#: templates/nav/assistant_nav.html:42
+msgid "Scan Identifiers"
+msgstr "crwdns30636:0crwdne30636:0"
+
+#: checkins/views.py:63
+msgid "People's Check-In Statuses"
+msgstr "crwdns30638:0crwdne30638:0"
+
+#: checkins/views.py:120
+msgid "Rooms' Check-In Statuses"
+msgstr "crwdns51262:0crwdne51262:0"
+
+#: checkins/views.py:169 templates/nav/admin_nav.html:120
+msgid "Make Identifiers"
+msgstr "crwdns30642:0crwdne30642:0"
+
+#: checkins/views.py:176 templates/nav/admin_nav.html:206
+msgid "Speakers"
+msgstr "crwdns30644:0crwdne30644:0"
+
+#: checkins/views.py:181 templates/nav/public_nav.html:132
+msgid "Adjudicators"
+msgstr "crwdns30646:0crwdne30646:0"
+
+#: checkins/views.py:186
+msgid "Rooms"
+msgstr "crwdns51264:0crwdne51264:0"
+
+#: checkins/views.py:227
+#, python-format
+msgid "Generated identifiers for %s"
+msgstr "crwdns30650:0%scrwdne30650:0"
+
+#: checkins/views.py:234
+msgid "Identifiers"
+msgstr "crwdns30652:0crwdne30652:0"
+
+#: checkins/views.py:272
+msgid "Could not check you in as you do not have an identifying code — your tab director may need to make you an identifier."
+msgstr "crwdns30654:0crwdne30654:0"
+
+#: checkins/views.py:280
+msgid "You have revoked your check-in."
+msgstr "crwdns30656:0crwdne30656:0"
+
+#: checkins/views.py:282
+msgid "Whoops! Looks like your check-in was already revoked."
+msgstr "crwdns30658:0crwdne30658:0"
+
+#: checkins/views.py:286
+msgid "Whoops! Looks like you're already checked in."
+msgstr "crwdns30660:0crwdne30660:0"
+
+#: checkins/views.py:293
+msgid "You are now checked in."
+msgstr "crwdns30662:0crwdne30662:0"
+
+#: settings/core.py:59
+msgid "Arabic"
+msgstr "crwdns30684:0crwdne30684:0"
+
+#: settings/core.py:60
+msgid "Bengali"
+msgstr "crwdns51570:0crwdne51570:0"
+
+#: settings/core.py:61
+msgid "English"
+msgstr "crwdns30686:0crwdne30686:0"
+
+#: settings/core.py:62
+msgid "Spanish"
+msgstr "crwdns30688:0crwdne30688:0"
+
+#: settings/core.py:63
+msgid "French"
+msgstr "crwdns30690:0crwdne30690:0"
+
+#: settings/core.py:64
+msgid "Japanese"
+msgstr "crwdns30692:0crwdne30692:0"
+
+#: settings/core.py:65
+msgid "Malay"
+msgstr "crwdns51572:0crwdne51572:0"
+
+#: settings/core.py:66
+msgid "Portuguese"
+msgstr "crwdns30694:0crwdne30694:0"
+
+#: settings/core.py:67
+msgid "Russian"
+msgstr "crwdns35540:0crwdne35540:0"
+
+#: settings/core.py:68
+msgid "Simplified Chinese"
+msgstr "crwdns51574:0crwdne51574:0"
+
+#: templates/admin/delete_protected_message.html:4
+msgid "You need to delete the above objects first."
+msgstr "crwdns30696:0crwdne30696:0"
+
+#: templates/admin/style_guide.html:30
+msgid "This style of info card announces critical information. <a href=\"\">Link</a>."
+msgstr "crwdns30698:0crwdne30698:0"
+
+#: templates/admin/style_guide.html:33
+msgid "This style of info card announces general <a href=\"\">information</a>."
+msgstr "crwdns30700:0crwdne30700:0"
+
+#: templates/admin/style_guide.html:160
+msgctxt "page title"
+msgid "Form Title"
+msgstr "crwdns30702:0crwdne30702:0"
+
+#: templates/admin/style_guide.html:161
+msgid "Sub Title Title"
+msgstr "crwdns30704:0crwdne30704:0"
+
+#: templates/admin/style_guide.html:197 templates/registration/login.html:61
+msgctxt "button"
+msgid "Log In"
+msgstr "crwdns30706:0crwdne30706:0"
+
+#: templates/admin/style_guide.html:198 templates/registration/login.html:62
+msgctxt "button"
+msgid "I forgot my password"
+msgstr "crwdns30708:0crwdne30708:0"
+
+#: templates/base.html:10
+msgid "Tabbycat"
+msgstr "crwdns30710:0crwdne30710:0"
+
+#: templates/base.html:13
+#, python-format
+msgid "The tab for %(tournament)s runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats"
+msgstr "crwdns51266:0%(tournament)scrwdne51266:0"
+
+#: templates/base.html:17
+msgid "This tab runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats"
+msgstr "crwdns51268:0crwdne51268:0"
+
+#: templates/components/form-errors.html:4
+msgid "Whoops! There was an error with one or more fields."
+msgstr "crwdns30716:0crwdne30716:0"
+
+#: templates/components/formset.html:23
+msgid "Save and Add More"
+msgstr "crwdns30718:0crwdne30718:0"
+
+#: templates/errors/assistant_403.html:4 templates/errors/assistant_403.html:6
+#: templates/errors/public_403.html:4 templates/errors/public_403.html:6
+msgid "Permission Denied (403)"
+msgstr "crwdns30720:0crwdne30720:0"
+
+#: templates/errors/assistant_403.html:13
+#, python-format
+msgid "This assistant page isn't enabled for this tournament. <a href=\"%(url)s\">Back to the assistant home page.</a>"
+msgstr "crwdns30722:0%(url)scrwdne30722:0"
+
+#: templates/errors/database_limit_warning.html:9
+#, python-format
+msgid "You're currently using %(nrows)s row in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
+msgid_plural "You're currently using %(nrows)s rows in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
+msgstr[0] "crwdns51270:1%(nrows)scrwdne51270:1"
+msgstr[1] "crwdns51270:5%(nrows)scrwdne51270:5"
+
+#: templates/errors/public_403.html:14
+#, python-format
+msgid "Whoops! This page isn't enabled for this tournament. <a href=\"%(url)s\">Back to the tournament home page.</a>"
+msgstr "crwdns30724:0%(url)scrwdne30724:0"
+
+#: templates/errors/public_403.html:20
+#, python-format
+msgid "Whoops! This page isn't enabled for this tournament. <a href=\"%(url)s\">Back to the home page.</a>"
+msgstr "crwdns34124:0%(url)scrwdne34124:0"
+
+#: templates/footer.html:14
+#, python-format
+msgid "%(tournament)s runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
+msgstr "crwdns30726:0%(tournament)scrwdnd30726:0%(tabbycat_version)scrwdnd30726:0%(tabbycat_codename)scrwdne30726:0"
+
+#: templates/footer.html:16
+#, python-format
+msgid "This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
+msgstr "crwdns30728:0%(tabbycat_version)scrwdnd30728:0%(tabbycat_codename)scrwdne30728:0"
+
+#: templates/footer.html:20
+msgid "Tabbycat is a source-available project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments."
+msgstr "crwdns51272:0crwdne51272:0"
+
+#: templates/footer.html:24
+#, python-format
+msgid "For a tournament of this size, we suggest a donation of <strong>$%(amount)s</strong>."
+msgstr "crwdns30732:0%(amount)scrwdne30732:0"
+
+#: templates/footer.html:28
+msgid "Learn more about donating."
+msgstr "crwdns30734:0crwdne30734:0"
+
+#: templates/footer.html:32
+#, python-format
+msgid "<a href=\"%(donations_link)s\">Donations to Tabbycat from individuals or organisations</a> are much appreciated."
+msgstr "crwdns30736:0%(donations_link)scrwdne30736:0"
+
+#: templates/footer.html:40
+msgid "Still timing debates with the stopwatch app?"
+msgstr "crwdns30738:0crwdne30738:0"
+
+#: templates/footer.html:42
+#, python-format
+msgid "Using an app designed for debate timekeeping makes speaking and adjudicating easier! Check out <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/iPad) or <a href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper</a> (Android)."
+msgstr "crwdns30740:0%%crwdnd30740:0%%crwdnd30740:0%%crwdnd30740:0%%crwdne30740:0"
+
+#: templates/footer.html:51
+msgid "Need ballots?"
+msgstr "crwdns30742:0crwdne30742:0"
+
+#: templates/footer.html:53
+msgid "You can <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" rel=\"noreferrer\" target=\"_blank\"> customise and print</a> great ballots from your browser."
+msgstr "crwdns30744:0crwdne30744:0"
+
+#: templates/footer.html:66
+msgid "Language"
+msgstr "crwdns35542:0crwdne35542:0"
+
+#: templates/footer.html:73
+msgid "GitHub"
+msgstr "crwdns30746:0crwdne30746:0"
+
+#: templates/footer.html:79
+msgid "Documentation"
+msgstr "crwdns30748:0crwdne30748:0"
+
+#: templates/footer.html:85
+msgid "Support"
+msgstr "crwdns30750:0crwdne30750:0"
+
+#: templates/footer.html:91
+msgid "Facebook"
+msgstr "crwdns30752:0crwdne30752:0"
+
+#: templates/footer.html:97
+msgid "Set Up A Copy"
+msgstr "crwdns30754:0crwdne30754:0"
+
+#: templates/footer.html:111
+msgid "Change Language"
+msgstr "crwdns30756:0crwdne30756:0"
+
+#: templates/footer.html:128
+msgid "Use this language"
+msgstr "crwdns30758:0crwdne30758:0"
+
+#: templates/nav/admin_nav.html:9 templates/nav/top_nav_base.html:6
+msgid "Tabbycat Logo"
+msgstr "crwdns30760:0crwdne30760:0"
+
+#: templates/nav/admin_nav.html:28 templates/nav/top_nav_base.html:59
+msgid "Site Home"
+msgstr "crwdns30882:0crwdne30882:0"
+
+#: templates/nav/admin_nav.html:31
+msgid "New Tournament"
+msgstr "crwdns35544:0crwdne35544:0"
+
+#: templates/nav/admin_nav.html:34
+msgid "Edit Database"
+msgstr "crwdns30780:0crwdne30780:0"
+
+#: templates/nav/admin_nav.html:42
+msgid "Admin Area"
+msgstr "crwdns30762:0crwdne30762:0"
+
+#: templates/nav/admin_nav.html:46
+msgid "Assistant Area"
+msgstr "crwdns30764:0crwdne30764:0"
+
+#: templates/nav/admin_nav.html:50
+msgid "Public Area"
+msgstr "crwdns30766:0crwdne30766:0"
+
+#: templates/nav/admin_nav.html:60 templates/nav/admin_nav.html:146
+#: templates/nav/admin_nav.html:186 templates/nav/admin_nav.html:245
+msgid "Overview"
+msgstr "crwdns30768:0crwdne30768:0"
+
+#: templates/nav/admin_nav.html:67
+msgid "Setup"
+msgstr "crwdns30770:0crwdne30770:0"
+
+#: templates/nav/admin_nav.html:74
+msgid "Configuration"
+msgstr "crwdns30772:0crwdne30772:0"
+
+#: templates/nav/admin_nav.html:77
+msgid "Import Data"
+msgstr "crwdns30774:0crwdne30774:0"
+
+#: templates/nav/admin_nav.html:81 templates/nav/assistant_nav.html:18
+#: templates/nav/public_nav.html:162
+msgid "Participants"
+msgstr "crwdns30776:0crwdne30776:0"
+
+#: templates/nav/admin_nav.html:85
+msgid "Private URLs"
+msgstr "crwdns30778:0crwdne30778:0"
+
+#: templates/nav/admin_nav.html:89
+msgid "Emails"
+msgstr "crwdns34126:0crwdne34126:0"
+
+#: templates/nav/admin_nav.html:93
+msgid "Preformed Panels"
+msgstr "crwdns34128:0crwdne34128:0"
+
+#: templates/nav/admin_nav.html:103 templates/nav/public_nav.html:147
+msgid "Sides"
+msgstr "crwdns30782:0crwdne30782:0"
+
+#: templates/nav/admin_nav.html:128 templates/nav/assistant_nav.html:48
+msgid "People's Status"
+msgstr "crwdns30786:0crwdne30786:0"
+
+#: templates/nav/admin_nav.html:132
+msgid "Rooms' Status"
+msgstr "crwdns51278:0crwdne51278:0"
+
+#: templates/nav/admin_nav.html:140
+msgid "Feedback"
+msgstr "crwdns30790:0crwdne30790:0"
+
+#: templates/nav/admin_nav.html:149
+msgid "Latest"
+msgstr "crwdns30792:0crwdne30792:0"
+
+#: templates/nav/admin_nav.html:152
+msgid "Important"
+msgstr "crwdns34130:0crwdne34130:0"
+
+#: templates/nav/admin_nav.html:155
+msgid "Comments"
+msgstr "crwdns34132:0crwdne34132:0"
+
+#: templates/nav/admin_nav.html:158
+msgid "Find by Source"
+msgstr "crwdns30794:0crwdne30794:0"
+
+#: templates/nav/admin_nav.html:161
+msgid "Find by Target"
+msgstr "crwdns30796:0crwdne30796:0"
+
+#: templates/nav/admin_nav.html:164
+msgid "Unsubmitted"
+msgstr "crwdns30798:0crwdne30798:0"
+
+#: templates/nav/admin_nav.html:167
+msgid "Add Feedback"
+msgstr "crwdns30800:0crwdne30800:0"
+
+#: templates/nav/admin_nav.html:170
+msgid "Bulk Update"
+msgstr "crwdns30802:0crwdne30802:0"
+
+#: templates/nav/admin_nav.html:179 templates/nav/public_nav.html:152
+msgid "Standings"
+msgstr "crwdns30804:0crwdne30804:0"
+
+#: templates/nav/admin_nav.html:190
+msgid "All Teams"
+msgstr "crwdns30806:0crwdne30806:0"
+
+#: templates/nav/admin_nav.html:192
+msgid "Teams"
+msgstr "crwdns30808:0crwdne30808:0"
+
+#: templates/nav/admin_nav.html:197 templates/nav/public_nav.html:13
+#, python-format
+msgid "%(category)s Teams"
+msgstr "crwdns51280:0%(category)scrwdne51280:0"
+
+#: templates/nav/admin_nav.html:204
+msgid "All Speakers"
+msgstr "crwdns30812:0crwdne30812:0"
+
+#: templates/nav/admin_nav.html:211 templates/nav/public_nav.html:30
+#, python-format
+msgid "%(category)s Speakers"
+msgstr "crwdns51282:0%(category)scrwdne51282:0"
+
+#: templates/nav/admin_nav.html:219
+msgid "Replies"
+msgstr "crwdns30816:0crwdne30816:0"
+
+#: templates/nav/admin_nav.html:223 templates/nav/public_nav.html:142
+msgid "Motions"
+msgstr "crwdns30818:0crwdne30818:0"
+
+#: templates/nav/admin_nav.html:226 templates/nav/public_nav.html:157
+msgid "Diversity"
+msgstr "crwdns30820:0crwdne30820:0"
+
+#: templates/nav/admin_nav.html:239
+msgid "Breaks"
+msgstr "crwdns30822:0crwdne30822:0"
+
+#: templates/nav/admin_nav.html:249
+#, python-format
+msgid "%(category)s"
+msgstr "crwdns51284:0%(category)scrwdne51284:0"
+
+#: templates/nav/admin_nav.html:253
+msgid "Adjudicators'"
+msgstr "crwdns51286:0crwdne51286:0"
+
+#: templates/nav/admin_nav.html:256
+msgid "Edit Categories"
+msgstr "crwdns51288:0crwdne51288:0"
+
+#: templates/nav/admin_nav.html:259
+msgid "Edit Eligibility"
+msgstr "crwdns51290:0crwdne51290:0"
+
+#: templates/nav/admin_nav.html:274 templates/nav/top_nav_base.html:101
+msgid "Log Out"
+msgstr "crwdns30826:0crwdne30826:0"
+
+#: templates/nav/assistant_nav.html:5
+msgid "Enter Results"
+msgstr "crwdns30828:0crwdne30828:0"
+
+#: templates/nav/assistant_nav.html:11 templates/nav/public_nav.html:182
+msgid "Enter Feedback"
+msgstr "crwdns30830:0crwdne30830:0"
+
+#: templates/nav/assistant_nav.html:22
+msgid "Participants List"
+msgstr "crwdns30832:0crwdne30832:0"
+
+#: templates/nav/assistant_nav.html:25 templates/nav/public_nav.html:167
+msgid "Institutions"
+msgstr "crwdns30834:0crwdne30834:0"
+
+#: templates/nav/assistant_nav.html:29
+msgid "Code Names"
+msgstr "crwdns30836:0crwdne30836:0"
+
+#: templates/nav/assistant_nav.html:45
+msgid "View Identifiers"
+msgstr "crwdns30838:0crwdne30838:0"
+
+#: templates/nav/assistant_nav.html:51
+msgid "Room's Status"
+msgstr "crwdns51292:0crwdne51292:0"
+
+#: templates/nav/assistant_nav.html:59
+msgid "Display/Print Draw"
+msgstr "crwdns30842:0crwdne30842:0"
+
+#: templates/nav/public_nav.html:6
+msgid "Team Tab"
+msgstr "crwdns30844:0crwdne30844:0"
+
+#: templates/nav/public_nav.html:22
+msgid "Speaker Tab"
+msgstr "crwdns30846:0crwdne30846:0"
+
+#: templates/nav/public_nav.html:40
+msgid "Replies Tab"
+msgstr "crwdns30848:0crwdne30848:0"
+
+#: templates/nav/public_nav.html:45
+msgid "Adjudicator Tab"
+msgstr "crwdns30850:0crwdne30850:0"
+
+#: templates/nav/public_nav.html:50
+msgid "Motions Tab"
+msgstr "crwdns30852:0crwdne30852:0"
+
+#: templates/nav/public_nav.html:59
+msgid "Draws"
+msgstr "crwdns30854:0crwdne30854:0"
+
+#: templates/nav/public_nav.html:70
+msgid "No Draws Available"
+msgstr "crwdns30858:0crwdne30858:0"
+
+#: templates/nav/public_nav.html:78
+#, python-format
+msgid "Draw for %(round)s"
+msgstr "crwdns51294:0%(round)scrwdne51294:0"
+
+#: templates/nav/public_nav.html:82
+msgid "Current Draws"
+msgstr "crwdns34134:0crwdne34134:0"
+
+#: templates/nav/public_nav.html:102 templates/nav/round_panel.html:57
+msgid "Results"
+msgstr "crwdns30862:0crwdne30862:0"
+
+#: templates/nav/public_nav.html:120
+msgid "Break"
+msgstr "crwdns30864:0crwdne30864:0"
+
+#: templates/nav/public_nav.html:172
+msgid "Feedback Progress"
+msgstr "crwdns30866:0crwdne30866:0"
+
+#: templates/nav/public_nav.html:177
+msgid "Enter Ballot"
+msgstr "crwdns30868:0crwdne30868:0"
+
+#: templates/nav/round_panel.html:27
+msgid "Availability"
+msgstr "crwdns30870:0crwdne30870:0"
+
+#: templates/nav/round_panel.html:37
+msgid "Draw"
+msgstr "crwdns30872:0crwdne30872:0"
+
+#: templates/nav/round_panel.html:48
+msgid "Display"
+msgstr "crwdns30874:0crwdne30874:0"
+
+#: templates/nav/top_nav_base.html:29
+#, python-format
+msgid "Administrator area for <strong>%(tournament)s</strong>"
+msgstr "crwdns30876:0%(tournament)scrwdne30876:0"
+
+#: templates/nav/top_nav_base.html:38
+#, python-format
+msgid "Assistant area for <strong>%(tournament)s</strong>"
+msgstr "crwdns30878:0%(tournament)scrwdne30878:0"
+
+#: templates/nav/top_nav_base.html:47
+#, python-format
+msgid "Public area for <strong>%(tournament)s</strong>"
+msgstr "crwdns30880:0%(tournament)scrwdne30880:0"
+
+#: templates/nav/top_nav_base.html:105
+msgid "Login"
+msgstr "crwdns30884:0crwdne30884:0"
+
+#: templates/registration/logged_out.html:5
+msgid "Goodbye"
+msgstr "crwdns34136:0crwdne34136:0"
+
+#: templates/registration/logged_out.html:12
+#, python-format
+msgid "You have been logged out. <a href=\"%(login_url)s\">Log in again?</a>"
+msgstr "crwdns34138:0%(login_url)scrwdne34138:0"
+
+#: templates/registration/login.html:4
+msgctxt "page title"
+msgid "Login"
+msgstr "crwdns30886:0crwdne30886:0"
+
+#: templates/registration/login.html:29
+msgctxt "page title"
+msgid "Log in to Tabbycat"
+msgstr "crwdns30888:0crwdne30888:0"
+
+#: templates/registration/login.html:37
+msgid "Your username and password didn't match."
+msgstr "crwdns30890:0crwdne30890:0"
+
+#: templates/registration/login.html:46
+msgid "Your account doesn't have access to this page. To proceed, please log in with an account that has access."
+msgstr "crwdns30892:0crwdne30892:0"
+
+#: templates/registration/login.html:49
+msgid "Please log in to see this page."
+msgstr "crwdns30894:0crwdne30894:0"
+
+#: templates/registration/password_change_done.html:4
+#: templates/registration/password_change_done.html:5
+msgctxt "page title"
+msgid "Password changed"
+msgstr "crwdns30896:0crwdne30896:0"
+
+#: templates/registration/password_change_done.html:11
+msgid "Your password has been changed."
+msgstr "crwdns30898:0crwdne30898:0"
+
+#: templates/registration/password_change_done.html:14
+msgid "Go to the home page"
+msgstr "crwdns30900:0crwdne30900:0"
+
+#: templates/registration/password_change_form.html:4
+#: templates/registration/password_change_form.html:27
+msgctxt "page title"
+msgid "Password Change"
+msgstr "crwdns30902:0crwdne30902:0"
+
+#: templates/registration/password_change_form.html:16
+#, python-format
+msgid "API Token: <samp>%(api_token)s</samp>"
+msgstr "crwdns51576:0%(api_token)scrwdne51576:0"
+
+#: templates/registration/password_change_form.html:19
+msgid "The API token will allow you to authorize external applications to access the site as staff."
+msgstr "crwdns51578:0crwdne51578:0"
+
+#: templates/registration/password_change_form.html:28
+msgid "Please enter your old password, then enter a new one."
+msgstr "crwdns30904:0crwdne30904:0"
+
+#: templates/registration/password_change_form.html:33
+#: templates/registration/password_reset_confirm.html:25
+msgctxt "button"
+msgid "Change my password"
+msgstr "crwdns30906:0crwdne30906:0"
+
+#: templates/registration/password_change_form.html:34
+#: templates/registration/password_reset_confirm.html:26
+msgid "Cancel and go back to the site home page"
+msgstr "crwdns30908:0crwdne30908:0"
+
+#: templates/registration/password_reset_complete.html:4
+#: templates/registration/password_reset_complete.html:5
+msgctxt "page title"
+msgid "Password reset complete"
+msgstr "crwdns30910:0crwdne30910:0"
+
+#: templates/registration/password_reset_complete.html:11
+msgid "Your password has been reset."
+msgstr "crwdns30912:0crwdne30912:0"
+
+#: templates/registration/password_reset_complete.html:14
+#: templates/registration/password_reset_done.html:15
+msgid "Go to the login page"
+msgstr "crwdns30914:0crwdne30914:0"
+
+#: templates/registration/password_reset_confirm.html:4
+msgctxt "page title"
+msgid "Password Reset Confirmation"
+msgstr "crwdns30916:0crwdne30916:0"
+
+#: templates/registration/password_reset_confirm.html:16
+#: templates/registration/password_reset_form.html:4
+#: templates/registration/password_reset_form.html:24
+msgctxt "page title"
+msgid "Password Reset"
+msgstr "crwdns30938:0crwdne30938:0"
+
+#: templates/registration/password_reset_confirm.html:18
+msgid "Please enter a new password (twice):"
+msgstr "crwdns30918:0crwdne30918:0"
+
+#: templates/registration/password_reset_confirm.html:33
+msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
+msgstr "crwdns30920:0crwdne30920:0"
+
+#: templates/registration/password_reset_done.html:4
+#: templates/registration/password_reset_done.html:5
+msgctxt "page title"
+msgid "Password reset email sent"
+msgstr "crwdns51580:0crwdne51580:0"
+
+#: templates/registration/password_reset_done.html:11
+msgid "We've emailed you instructions for setting your password, if an account exists with the email address you entered. You should receive them shortly."
+msgstr "crwdns51582:0crwdne51582:0"
+
+#: templates/registration/password_reset_done.html:12
+msgid "If you don't receive an email, please make sure you've entered the address you registered with, and check your spam folder."
+msgstr "crwdns51584:0crwdne51584:0"
+
+#: templates/registration/password_reset_email.html:2
+#, python-format
+msgid "Hi, %(user)s!"
+msgstr "crwdns51296:0%(user)scrwdne51296:0"
+
+#: templates/registration/password_reset_email.html:6
+#, python-format
+msgid "Someone asked for a password reset for the email address %(email)s on the Tabbycat site at %(protocol)s://%(domain)s."
+msgstr "crwdns51586:0%(email)scrwdnd51586:0%(protocol)scrwdnd51586:0%(domain)scrwdne51586:0"
+
+#: templates/registration/password_reset_email.html:10
+msgid "If this was you, follow the link below to reset your password:"
+msgstr "crwdns30934:0crwdne30934:0"
+
+#: templates/registration/password_reset_email.html:13
+#, python-format
+msgid "If this wasn't you, that probably means someone else typed your email address into the password reset form on the Tabbycat site at %(protocol)s://%(domain)s."
+msgstr "crwdns51588:0%(protocol)scrwdnd51588:0%(domain)scrwdne51588:0"
+
+#: templates/registration/password_reset_form.html:27
+msgid "Enter your email address below, and we'll email you a password reset link."
+msgstr "crwdns51590:0crwdne51590:0"
+
+#: templates/registration/password_reset_form.html:34
+msgid "Please enter a valid email address."
+msgstr "crwdns51592:0crwdne51592:0"
+
+#: templates/registration/password_reset_form.html:39
+msgid "Email address"
+msgstr "crwdns51594:0crwdne51594:0"
+
+#: templates/registration/password_reset_form.html:50
+msgctxt "button"
+msgid "Reset my password"
+msgstr "crwdns30946:0crwdne30946:0"
+
+#: templates/registration/password_reset_form.html:53
+msgid "Back to the login page"
+msgstr "crwdns30948:0crwdne30948:0"
+
+#: templates/registration/password_reset_subject.txt:2
+#, python-format
+msgid "Password reset on Tabbycat site at %(domain)s"
+msgstr "crwdns30950:0%(domain)scrwdne30950:0"
+
+#: urls.py:103
+#, python-format
+msgid "Hi, %(user)s — you just logged in!"
+msgstr "crwdns51298:0%(user)scrwdne51298:0"
+
+#: urls.py:106
+msgid "Welcome! You just logged in!"
+msgstr "crwdns30954:0crwdne30954:0"
+
+#: users/admin.py:19
+msgid "Users with staff status can view and edit the Edit Database area. This is potentially dangerous and should be reserved for the actual tab director(s)."
+msgstr "crwdns30956:0crwdne30956:0"
+
+#: users/admin.py:22
+msgid "Superusers have full access all areas of Tabbycat necessary to run a tournament. Users who are not superusers are still able to perform data entry tasks such as adding results and feedback but can't access confidential areas such as the Breaks and Feedback sections. Chief adjudicators and their deputies are generally given superuser status if they know what they are doing."
+msgstr "crwdns30958:0crwdne30958:0"
+
+#: users/templates/admin/auth/delete_user_warning.html:6
+msgid "<strong>Warning:</strong> You shouldn't delete users from the database once they've done something, because the database logs actions taken by those users, and deleting the users also deletes the related logs. If you wish to deactivate a user account, go back to edit the user, click on the “Permissions” tab, unchecked the “Active” box, and save the user."
+msgstr "crwdns51668:0crwdne51668:0"
+

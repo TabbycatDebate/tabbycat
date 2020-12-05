@@ -61,7 +61,7 @@ export default {
           options: [],
         },
       },
-      allocateIntro: `TKTK`,
+      allocateIntro: 'TKTK',
       unallocatedComponent: DraggableVenue,
     }
   },
@@ -80,9 +80,9 @@ export default {
       return debate
     },
     moveVenue: function (dragData, dropData) {
-      let venueChanges = []
-      let fromDebate = this.getDebate(dragData.assignment)
-      let toDebate = this.getDebate(dropData.assignment)
+      const venueChanges = []
+      const fromDebate = this.getDebate(dragData.assignment)
+      const toDebate = this.getDebate(dropData.assignment)
       if (fromDebate !== null) { // Not moving FROM Unused
         fromDebate.venue = null
       }
@@ -94,12 +94,12 @@ export default {
       }
       // Send results
       if (fromDebate !== null) {
-        venueChanges.push({ 'id': fromDebate.id, 'venue': fromDebate.venue })
+        venueChanges.push({ id: fromDebate.id, venue: fromDebate.venue })
       }
       if (toDebate !== null && dragData.assignment !== dropData.assignment) {
-        venueChanges.push({ 'id': toDebate.id, 'venue': toDebate.venue })
+        venueChanges.push({ id: toDebate.id, venue: toDebate.venue })
       }
-      this.$store.dispatch('updateDebatesOrPanelsAttribute', { 'venues': venueChanges })
+      this.$store.dispatch('updateDebatesOrPanelsAttribute', { venues: venueChanges })
       this.$store.dispatch('updateAllocableItemModified', [dragData.item])
     },
     getUnallocatedItemFromDebateOrPanel (debateOrPanel) {

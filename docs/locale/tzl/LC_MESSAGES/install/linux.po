@@ -1,0 +1,249 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-11-18 21:01\n"
+"Last-Translator: \n"
+"Language-Team: Talossan\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: tzl\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/install/linux.po\n"
+"X-Crowdin-File-ID: 1317\n"
+"Language: tzl_TZL\n"
+
+#: ../../install/linux.rst:5
+msgid "Installing Locally on Linux"
+msgstr "crwdns50141:0crwdne50141:0"
+
+#: ../../install/linux.rst:7
+msgid "Is this the best installation method for you?"
+msgstr "crwdns50143:0crwdne50143:0"
+
+#: ../../install/linux.rst:10
+msgid "In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`"
+msgstr "crwdns50145:0:ref:crwdnd50145:0:ref:crwdnd50145:0:ref:crwdne50145:0"
+
+#: ../../install/linux.rst:12
+msgid "If you just want to quickly set up a copy of Tabbycat to run locally on Linux, consider :ref:`installing using Docker<install-docker>`, which is a shorter process than the one below."
+msgstr "crwdns50147:0:ref:crwdne50147:0"
+
+#: ../../install/linux.rst:14
+msgid "The instructions apply to both Linux, and :ref:`Linux on Windows <install-wsl>`."
+msgstr "crwdns50149:0:ref:crwdne50149:0"
+
+#: ../../install/linux.rst:17
+msgid "Requisite technical background"
+msgstr "crwdns50151:0crwdne50151:0"
+
+#: ../../install/linux.rst:19
+msgid "You need to be familiar with command-line interfaces to get through this comfortably. While a background in the specific tools Tabbycat uses (Python, PostgreSQL, *etc.*) will make things easier, it's not necessary: we'll talk you through the rest."
+msgstr "crwdns50153:0crwdne50153:0"
+
+#: ../../install/linux.rst:21 ../../install/linux.rst:56
+#: ../../install/linux.rst:130
+msgid "Advanced users"
+msgstr "crwdns50155:0crwdne50155:0"
+
+#: ../../install/linux.rst:24
+msgid "If you wish to use an SQL engine other that PostgreSQL, most of Tabbycat should work, but a few features rely on SQL functions that aren't supported by all engines. To configure Tabbycat to use a different engine, set the ``DATABASES`` `Django setting <https://docs.djangoproject.com/en/2.2/ref/settings/#databases>`_ accordingly."
+msgstr "crwdns50157:0crwdne50157:0"
+
+#: ../../install/linux.rst:27
+msgid "Short version"
+msgstr "crwdns50159:0crwdne50159:0"
+
+#: ../../install/linux.rst:38
+msgid "Then create **settings/local.py** as described :ref:`below <local-settings-linux>`, then::"
+msgstr "crwdns50161:0:ref:crwdne50161:0"
+
+#: ../../install/linux.rst:53
+msgid "1. Install dependencies"
+msgstr "crwdns50163:0crwdne50163:0"
+
+#: ../../install/linux.rst:54
+msgid "First, you need to install all of the software on which Tabbycat depends, if you don't already have it installed."
+msgstr "crwdns50165:0crwdne50165:0"
+
+#: ../../install/linux.rst:59
+msgid "These instructions are for Ubuntu, and are targeted at Ubuntu 18.04. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies."
+msgstr "crwdns50167:0crwdne50167:0"
+
+#: ../../install/linux.rst:64
+msgid "1(a). Python"
+msgstr "crwdns50169:0crwdne50169:0"
+
+#: ../../install/linux.rst:65
+msgid "Tabbycat requires Python 3.6 or later.  You probably already have Python 3.6, but you'll also need the development package in order to install Psycopg2 later.  The ``venv`` module will come in handy too.  Install::"
+msgstr "crwdns50171:0crwdne50171:0"
+
+#: ../../install/linux.rst:69
+msgid "Check the version::"
+msgstr "crwdns50173:0crwdne50173:0"
+
+#: ../../install/linux.rst:74
+msgid "Tabbycat does not support Python 2. You must use Python 3.6 or later."
+msgstr "crwdns50175:0crwdne50175:0"
+
+#: ../../install/linux.rst:77
+msgid "1(b). PostgreSQL"
+msgstr "crwdns50177:0crwdne50177:0"
+
+#: ../../install/linux.rst:78
+msgid "*PostgreSQL is a database management system.*"
+msgstr "crwdns50179:0crwdne50179:0"
+
+#: ../../install/linux.rst:80
+msgid "Install PostgreSQL using the  `PostgreSQL installation instructions here <http://www.postgresql.org/download/linux/ubuntu/>`_."
+msgstr "crwdns50181:0crwdne50181:0"
+
+#: ../../install/linux.rst:82
+msgid "Normally, installing the latest stable version should be best, but if you're having issues, install the same version as the current `default version on Heroku <https://devcenter.heroku.com/articles/heroku-postgresql#version-support>`_, as that will be what is currently most commonly used with Tabbycat. If you're planning on pushing data between your local installation and a Heroku site, it's best to match the Heroku's current default version."
+msgstr "crwdns50183:0crwdne50183:0"
+
+#: ../../install/linux.rst:84
+msgid "You'll also need the ``libpq-dev`` package in order to install Psycopg2 later::"
+msgstr "crwdns50185:0crwdne50185:0"
+
+#: ../../install/linux.rst:91
+msgid "1(c). Node.js/NPM"
+msgstr "crwdns50187:0crwdne50187:0"
+
+#: ../../install/linux.rst:92
+msgid "*Node.js is a JavaScript runtime.*"
+msgstr "crwdns50189:0crwdne50189:0"
+
+#: ../../install/linux.rst:94
+msgid "Tabbycat requires Node and its package manager to compile front-end dependencies. Install using:"
+msgstr "crwdns50191:0crwdne50191:0"
+
+#: ../../install/linux.rst:104
+msgid "1(d). Other development tools"
+msgstr "crwdns50193:0crwdne50193:0"
+
+#: ../../install/linux.rst:105
+msgid "Some of the Python packages require GCC, G++ and Make in order to install::"
+msgstr "crwdns50195:0crwdne50195:0"
+
+#: ../../install/linux.rst:112
+msgid "2. Get the source code"
+msgstr "crwdns50197:0crwdne50197:0"
+
+#: ../../install/linux.rst:114
+msgid "Choose either of the following two methods."
+msgstr "crwdns50199:0crwdne50199:0"
+
+#: ../../install/linux.rst:117
+msgid "Method 1 (Git clone)"
+msgstr "crwdns50201:0crwdne50201:0"
+
+#: ../../install/linux.rst:119
+msgid "If you have Git, life will be easier if you clone `our GitHub repository`_:"
+msgstr "crwdns50203:0crwdne50203:0"
+
+#: ../../install/linux.rst:126
+msgid "(You can find out if you have Git using ``git --version``. If you don't, you can install it using ``sudo apt install git``.)"
+msgstr "crwdns50205:0crwdne50205:0"
+
+#: ../../install/linux.rst:128
+msgid "The default branch is ``develop``, so you need to explicitly change the branch to ``master``, which is what the ``git checkout master`` line does."
+msgstr "crwdns50207:0crwdne50207:0"
+
+#: ../../install/linux.rst:133
+msgid "You might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project)."
+msgstr "crwdns50209:0:ref:crwdne50209:0"
+
+#: ../../install/linux.rst:136
+msgid "Method 2 (tarball)"
+msgstr "crwdns50211:0crwdne50211:0"
+
+#: ../../install/linux.rst:138
+msgid "If you don't want to use Git, simply download and extract:"
+msgstr "crwdns50213:0crwdne50213:0"
+
+#: ../../install/linux.rst:147
+msgid "3. Set up a new database"
+msgstr "crwdns50215:0crwdne50215:0"
+
+#: ../../install/linux.rst:149
+msgid "You can skip step 1 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like."
+msgstr "crwdns50217:0crwdne50217:0"
+
+#: ../../install/linux.rst:151
+msgid "Create a new user account with a password, replacing ``myusername`` with whatever name you prefer. If you don't know what username to pick, use ``tabbycat``. Grant this user the ability to create databases, since this'll make it easier to spin up new instances of Tabbycat in the future."
+msgstr "crwdns50219:0crwdne50219:0"
+
+#: ../../install/linux.rst:157
+msgid "If you'll be running multiple instances of Tabbycat, developing, or diving into the database yourself, you might find it convenient to set up client authentication so that you don't need to do all manual operations from ``sudo -u postgres``. See the `PostgreSQL documentation on client authentication <http://www.postgresql.org/docs/9.6/static/client-authentication.html>`_ for more information. For example, you could add a ``local all myusername md5`` line to the *pg_hba.conf* file, or you could define a mapping in *pg_ident.conf* and append the ``map=`` option to the ``local all all peer`` line in *pg_hba.conf*."
+msgstr "crwdns50221:0crwdne50221:0"
+
+#: ../../install/linux.rst:159
+msgid "Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running::"
+msgstr "crwdns50223:0crwdne50223:0"
+
+#: ../../install/linux.rst:167
+msgid "4. Install Tabbycat"
+msgstr "crwdns50225:0crwdne50225:0"
+
+#: ../../install/linux.rst:168
+msgid "Almost there!"
+msgstr "crwdns50227:0crwdne50227:0"
+
+#: ../../install/linux.rst:170
+msgid "Navigate to your Tabbycat directory::"
+msgstr "crwdns50229:0crwdne50229:0"
+
+#: ../../install/linux.rst:176
+msgid "Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like:"
+msgstr "crwdns50231:0crwdne50231:0"
+
+#: ../../install/linux.rst:182
+msgid "Run the ``activate`` script. This puts you \"into\" the virtual environment::"
+msgstr "crwdns50233:0crwdne50233:0"
+
+#: ../../install/linux.rst:186
+msgid "Install Tabbycat's requirements into your virtual environment::"
+msgstr "crwdns50235:0crwdne50235:0"
+
+#: ../../install/linux.rst:192
+msgid "Navigate to the **tabbycat/settings** sub folder and copy **local.example** to **local.py**. Find this part in your new **local.py**, and fill in the blanks as indicated:"
+msgstr "crwdns50237:0crwdne50237:0"
+
+#: ../../install/linux.rst:207
+msgid "Optionally, replace the value in this line in the same file with your own time zone, as defined in the `IANA time zone database <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ (*e.g.*, ``Pacific/Auckland``, ``America/Mexico_City``, ``Asia/Kuala_Lumpur``)::"
+msgstr "crwdns50239:0crwdne50239:0"
+
+#: ../../install/linux.rst:211
+msgid "Navigate to the **tabbycat** sub-directory, initialize the database, compile the assets, and create a user account for yourself::"
+msgstr "crwdns50241:0crwdne50241:0"
+
+#: ../../install/linux.rst:219
+msgid "Start Tabbycat!"
+msgstr "crwdns50243:0crwdne50243:0"
+
+#: ../../install/linux.rst:225
+msgid "It should show something like this::"
+msgstr "crwdns50245:0crwdne50245:0"
+
+#: ../../install/linux.rst:229
+msgid "Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000.) It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat."
+msgstr "crwdns50247:0crwdne50247:0"
+
+#: ../../install/linux.rst:234
+msgid "Naturally, your database is currently empty, so proceed to :ref:`importing initial data <importing-initial-data>`."
+msgstr "crwdns50249:0:ref:crwdne50249:0"
+
+#: ../../install/linux.rst:237
+msgid "Starting up an existing Tabbycat instance"
+msgstr "crwdns50251:0crwdne50251:0"
+
+#: ../../install/linux.rst:238
+msgid "To start your Tabbycat instance up again next time you use your computer::"
+msgstr "crwdns50253:0crwdne50253:0"
+

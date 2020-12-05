@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 class BaseAidaBreakGenerator(StandardBreakGenerator):
     key = None
-    rankings = ('rank', 'institution')
+    rankings = ('rank', 'institution_rank')
     institution_cap = 3
 
     def compute_break(self):

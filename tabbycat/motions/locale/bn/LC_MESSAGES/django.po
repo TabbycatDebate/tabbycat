@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-06-16 11:49\n"
+"PO-Revision-Date: 2020-08-30 23:07\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Language: bn_BD\n"
@@ -20,7 +20,7 @@ msgstr ""
 #: motions/apps.py:7 motions/templates/public_motions.html:4
 #: motions/templates/public_motions.html:5
 msgid "Motions"
-msgstr ""
+msgstr "প্রস্তাবসমূহ"
 
 #: motions/models.py:9
 msgid "sequence number"
@@ -64,7 +64,7 @@ msgstr "প্রস্তাব"
 
 #: motions/models.py:26
 msgid "motions"
-msgstr ""
+msgstr "প্রস্তাবসমূহ"
 
 #: motions/models.py:35
 msgid "debate team"

@@ -75,8 +75,8 @@ export default {
     },
     moveTeam: function (dragData, dropData) {
       // Emit the 'send adj to this debate method'
-      let teamChanges = []
-      let fromDebateTeams = this.getDebateTeams(dragData.assignment)
+      const teamChanges = []
+      const fromDebateTeams = this.getDebateTeams(dragData.assignment)
       let toDebateTeams = this.getDebateTeams(dropData.assignment)
       if (dragData.assignment === dropData.assignment) {
         toDebateTeams = fromDebateTeams // If repositioning we don't want two distinct allocations
@@ -93,17 +93,17 @@ export default {
       }
       // Send results
       if (fromDebateTeams !== null) {
-        teamChanges.push({ 'id': dragData.assignment, 'teams': fromDebateTeams })
+        teamChanges.push({ id: dragData.assignment, teams: fromDebateTeams })
       }
       if (toDebateTeams !== null && dragData.assignment !== dropData.assignment) {
-        teamChanges.push({ 'id': dropData.assignment, 'teams': toDebateTeams })
+        teamChanges.push({ id: dropData.assignment, teams: toDebateTeams })
       }
-      this.$store.dispatch('updateDebatesOrPanelsAttribute', { 'teams': teamChanges })
+      this.$store.dispatch('updateDebatesOrPanelsAttribute', { teams: teamChanges })
       this.$store.dispatch('updateAllocableItemModified', [dragData.item])
     },
     getUnallocatedItemFromDebateOrPanel (debateOrPanel) {
       // Provide an array of IDs representing teams in this debate
-      let itemIDs = []
+      const itemIDs = []
       for (const positionDebateTeamID of Object.entries(debateOrPanel.teams)) {
         itemIDs.push(Number(positionDebateTeamID[1]))
       }

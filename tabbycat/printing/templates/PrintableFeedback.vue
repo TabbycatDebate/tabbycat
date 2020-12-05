@@ -22,15 +22,15 @@
       </div>
     </section>
 
-    <printable-feedback-question v-if="ballot.authorPosition !== 'Team'"
-      v-for="question in adjQuestions"
-      :question="question"
-      :key="question.text" ></printable-feedback-question>
+    <template v-if="ballot.authorPosition !== 'Team'">
+      <printable-feedback-question v-for="question in adjQuestions" :question="question"
+        :key="question.text" ></printable-feedback-question>
+    </template>
 
-    <printable-feedback-question v-if="ballot.authorPosition === 'Team'"
-      v-for="question in teamQuestions"
-      :question="question"
-      :key="question.text" ></printable-feedback-question>
+    <template v-else>
+      <printable-feedback-question v-for="question in teamQuestions"
+        :question="question" :key="question.text" ></printable-feedback-question>
+    </template>
 
   </div>
 </template>

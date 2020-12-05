@@ -3,7 +3,6 @@ import Vue from 'vue'
 import VueTouch from 'vue-touch'
 import * as Sentry from '@sentry/browser'
 import * as Integrations from '@sentry/integrations'
-import Popper from 'popper.js'
 import feather from 'feather-icons'
 import 'bootstrap' // Import bootstrap javascript plugins
 
@@ -45,9 +44,6 @@ if (window.buildData.sentry === true) {
 
 global.jQuery = $ // Set for bootstrap
 window.$ = $ // Set for browser window
-
-// Hover over options Needs to come before bootstrap
-window.Popper = Popper
 
 // Add alerts programmatically
 $.fn.extend({

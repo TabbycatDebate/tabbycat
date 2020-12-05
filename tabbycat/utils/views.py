@@ -6,7 +6,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.forms.models import modelformset_factory
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, View
 from django.views.generic.base import ContextMixin, TemplateResponseMixin
@@ -96,7 +96,7 @@ class FormSetMixin(ContextMixin):
     def get_success_url(self):
         if self.success_url:
             # Forcing possible reverse_lazy evaluation
-            url = force_text(self.success_url)
+            url = force_str(self.success_url)
         else:
             raise ImproperlyConfigured("No URL to redirect to. Provide a success_url.")
         return url

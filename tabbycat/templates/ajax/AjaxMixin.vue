@@ -6,7 +6,7 @@ export default {
   methods: {
     ajaxSave: function (
       url, payload, message, completeFunction, failFunction,
-      returnPayload, showErrorModal = true
+      returnPayload, showErrorModal = true,
     ) {
       const self = this
       const dataPayload = JSON.stringify(payload)

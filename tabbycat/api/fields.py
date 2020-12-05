@@ -1,5 +1,5 @@
 from django.db.models import Q
-from rest_framework.relations import HyperlinkedIdentityField, HyperlinkedRelatedField
+from rest_framework.relations import HyperlinkedIdentityField, HyperlinkedRelatedField, SlugRelatedField
 from rest_framework.reverse import reverse
 
 from participants.models import Speaker
@@ -73,6 +73,25 @@ class RoundHyperlinkedIdentityField(RoundHyperlinkedRelatedField, HyperlinkedIde
     pass
 
 
+class DebateHyperlinkedIdentityField(RoundHyperlinkedIdentityField):
+    default_tournament_field = 'debate__round__tournament'
+    round_field = 'debate__round'
+
+    def get_round(self, obj):
+        return obj.debate.round
+
+    def get_url_kwargs(self, obj):
+        kwargs = super().get_url_kwargs(obj)
+        kwargs['debate_pk'] = obj.debate.pk
+        return kwargs
+
+    def lookup_kwargs(self):
+        return {'debate': self.context['debate']}
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('debate')
+
+
 class AnonymisingHyperlinkedTournamentRelatedField(TournamentHyperlinkedRelatedField):
     default_tournament_field = 'team__tournament'
 
@@ -86,12 +105,15 @@ class AnonymisingHyperlinkedTournamentRelatedField(TournamentHyperlinkedRelatedF
         return super().to_representation(value)
 
 
-class MotionHyperlinkedIdentityField(RoundHyperlinkedIdentityField):
-
+class MotionHyperlinkedRelatedField(RoundHyperlinkedRelatedField):
     def get_url_kwargs(self, obj):
         kwargs = super().get_url_kwargs(obj)
         kwargs.pop('round_seq')
         return kwargs
+
+
+class MotionHyperlinkedIdentityField(MotionHyperlinkedRelatedField, HyperlinkedIdentityField):
+    pass
 
 
 class AdjudicatorFeedbackIdentityField(RoundHyperlinkedIdentityField):
@@ -109,3 +131,12 @@ class AdjudicatorFeedbackIdentityField(RoundHyperlinkedIdentityField):
     def get_queryset(self):
         return super().get_queryset().filter(
             Q(source_adjudicator__debate__round=self.context['round']) | Q(source_team__debate__round=self.context['round']))
+
+
+class CreatableSlugRelatedField(SlugRelatedField):
+    def to_internal_value(self, data):
+        try:
+            # get_or_create returns (obj, created?) - only want the object
+            return self.get_queryset().get_or_create(**{self.slug_field: data})[0]
+        except (TypeError, ValueError):
+            self.fail('invalid')

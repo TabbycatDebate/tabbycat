@@ -18,7 +18,7 @@ from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
-from utils.misc import reverse_round, reverse_tournament
+from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import VueTableTemplateView
@@ -200,6 +200,8 @@ class BaseSpeakerStandingsView(BaseStandingsView):
     """Base class for views that display speaker standings."""
 
     rankings = ('rank',)
+    missable_preference = None
+    missable_field = None
 
     def get_standings(self):
         if self.round is None:
@@ -261,7 +263,13 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         return []
 
     def get_rank_filter(self):
-        return None
+        missable = -1 if self.missable_preference is None else self.tournament.pref(self.missable_preference)
+        if missable < 0:
+            return (None, None)  # no limit
+        total_prelim_rounds = self.tournament.round_set.filter(
+            stage=Round.STAGE_PRELIMINARY, seq__lte=self.round.seq).count()
+        minimum_needed = total_prelim_rounds - missable
+        return (self.missable_field, minimum_needed)
 
     def populate_result_missing(self, standings):
         for info in standings:
@@ -282,6 +290,9 @@ class BaseSubstantiveSpeakerStandingsView(BaseSpeakerStandingsView):
     page_title = gettext_lazy("Speaker Standings")
     page_emoji = '💯'
 
+    missable_preference = 'standings_missed_debates'
+    missable_field = 'count'
+
     def get_speakers(self):
         return Speaker.objects.filter(team__tournament=self.tournament)
 
@@ -301,15 +312,6 @@ class BaseSubstantiveSpeakerStandingsView(BaseSpeakerStandingsView):
             return ['total']
         else:
             return []
-
-    def get_rank_filter(self):
-        missable_debates = self.tournament.pref('standings_missed_debates')
-        if missable_debates < 0:
-            return None  # no limit
-        total_prelim_rounds = self.tournament.round_set.filter(
-            stage=Round.STAGE_PRELIMINARY, seq__lte=self.round.seq).count()
-        minimum_debates_needed = total_prelim_rounds - missable_debates
-        return lambda info: info.metrics["count"] >= minimum_debates_needed
 
     def add_round_results(self, standings, rounds):
         add_speaker_round_results(standings, rounds, self.tournament)
@@ -370,6 +372,9 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
     page_title = gettext_lazy("Reply Speaker Standings")
     page_emoji = '💁'
 
+    missable_preference = 'standings_missed_replies'
+    missable_field = 'replies_count'
+
     def get_speakers(self):
         if self.tournament.reply_position is None:
             raise StandingsError(_("Reply speeches aren't enabled in this tournament."))
@@ -380,15 +385,6 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
 
     def get_metrics(self):
         return ('replies_avg',), ('replies_stddev', 'replies_count')
-
-    def get_rank_filter(self):
-        missable_replies = self.tournament.pref('standings_missed_replies')
-        if missable_replies < 0:
-            return None  # no limit
-        total_prelim_rounds = self.tournament.round_set.filter(
-            stage=Round.STAGE_PRELIMINARY, seq__lte=self.round.seq).count()
-        minimum_replies_needed = total_prelim_rounds - missable_replies
-        return lambda info: info.metrics["replies_count"] >= minimum_replies_needed
 
     def add_round_results(self, standings, rounds):
         add_speaker_round_results(standings, rounds, self.tournament, replies=True)
@@ -639,7 +635,7 @@ class PublicDiversityStandingsView(PublicTournamentPageMixin, BaseDiversityStand
 
 class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
     public_page_preference = 'adjudicators_tab_released'
-    page_title = 'Feedback Overview'
+    page_title = gettext_lazy('Feedback Overview')
     page_emoji = '🙅'
     for_public = False
     sort_key = 'name'
@@ -656,7 +652,7 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
             table.add_base_score_columns(adjudicators)
         if self.tournament.pref('adjudicators_tab_shows') == 'all':
             table.add_feedback_graphs(adjudicators)
-        messages.info(self.request, ("An adjudicator's score is determined by "
+        messages.info(self.request, _("An adjudicator's score is determined by "
             "a customisable mix of their base score and their feedback ratings."
             " The current mix is specified below as the 'Score Components.' "
             "Feedback ratings are determined by averaging the results of all "
@@ -676,8 +672,7 @@ class EmailTeamStandingsView(RoundTemplateEmailCreateView):
     subject_template = 'team_points_email_subject'
     message_template = 'team_points_email_message'
 
-    def get_success_url(self):
-        return reverse_round('tournament-complete-round-check', self.round)
+    round_redirect_pattern_name = 'tournament-complete-round-check'
 
     def get_queryset(self):
         return Speaker.objects.filter(team__tournament=self.tournament)
@@ -687,5 +682,8 @@ class EmailTeamStandingsView(RoundTemplateEmailCreateView):
 
     def get_extra(self):
         extra = super().get_extra()
-        extra['url'] = self.request.build_absolute_uri(reverse_tournament('standings-public-teams-current', self.tournament))
+        if self.tournament.pref('public_team_standings'):
+            extra['url'] = self.request.build_absolute_uri(reverse_tournament('standings-public-teams-current', self.tournament))
+        else:
+            extra['url'] = ""
         return extra

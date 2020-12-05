@@ -3,18 +3,20 @@ import logging
 import unicodedata
 from itertools import product
 
-from django.conf import settings
 from django.contrib import messages
+from django.db.models import OuterRef, Subquery
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.utils.functional import cached_property
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
+from django.utils.timezone import get_current_timezone_name
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
 from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from adjallocation.models import DebateAdjudicator
 from adjallocation.utils import adjudicator_conflicts_display
 from availability.utils import annotate_availability
 from draw.generator.powerpair import PowerPairedDrawGenerator
@@ -79,9 +81,9 @@ class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
         if len(self.rounds) == 1 and getattr(self.rounds[0], 'starts_at', None):
             return _("debates start at %(time)s (in %(time_zone)s)") % {
                      'time': self.rounds[0].starts_at.strftime('%H:%M'),
-                     'time_zone': settings.TIME_ZONE}
+                     'time_zone': get_current_timezone_name()}
         elif any(getattr(r, 'starts_at', None) for r in self.rounds):
-            return _("start times in time zone: %(time_zone)s") % {'time_zone': settings.TIME_ZONE}
+            return _("start times in time zone: %(time_zone)s") % {'time_zone': get_current_timezone_name()}
         else:
             return ""
 
@@ -383,17 +385,39 @@ class EmailAdjudicatorAssignmentsView(RoundTemplateEmailCreateView):
     subject_template = 'adj_email_subject'
     message_template = 'adj_email_message'
 
+    round_redirect_pattern_name = 'draw-display'
+
+    dadj_type_display = dict(DebateAdjudicator.TYPE_CHOICES)
+
     def get_extra(self):
         extra = super().get_extra()
         extra['url'] = self.request.build_absolute_uri(
             reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': '0'}))[:-2]
         return extra
 
-    def get_success_url(self):
-        return reverse_round('draw-display', self.round)
+    def get_person_type(self, person, **kwargs):
+        return person.position
+
+    def get_table(self):
+        table = super().get_table()
+
+        table.add_column({'key': 'pos', 'title': _("Position")}, [{
+            'text': self.dadj_type_display[p.position],
+        } for p in self.get_queryset()])
+
+        return table
 
     def get_queryset(self):
-        return Adjudicator.objects.filter(debateadjudicator__debate__round=self.round)
+        return Adjudicator.objects.filter(debateadjudicator__debate__round=self.round).annotate(
+            position=Subquery(DebateAdjudicator.objects.filter(adjudicator_id=OuterRef('pk'), debate__round=self.round).values('type')[:1]),
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = [
+            {'id': pos, 'name': d} for pos, d in DebateAdjudicator.TYPE_CHOICES
+        ]
+        return context
 
 
 class EmailTeamAssignmentsView(RoundTemplateEmailCreateView):
@@ -403,8 +427,7 @@ class EmailTeamAssignmentsView(RoundTemplateEmailCreateView):
     subject_template = 'team_draw_email_subject'
     message_template = 'team_draw_email_message'
 
-    def get_success_url(self):
-        return reverse_round('draw-display', self.round)
+    round_redirect_pattern_name = 'draw-display'
 
     def get_queryset(self):
         return Speaker.objects.filter(team__in=self.round.active_teams)

@@ -18,8 +18,8 @@ export default {
     performWSAction: function (settings = null) {
       this.setLoading(true)
       this.$store.state.wsBridge.send({
-        'action': this.contextOfAction,
-        'settings': settings,
+        action: this.contextOfAction,
+        settings: settings,
       })
     },
   },

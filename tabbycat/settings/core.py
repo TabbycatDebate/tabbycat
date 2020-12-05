@@ -22,9 +22,9 @@ SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.4.6'
-TABBYCAT_CODENAME = 'Manx'
-READTHEDOCS_VERSION = 'v2.4.6'
+TABBYCAT_VERSION = '2.5.1'
+TABBYCAT_CODENAME = 'Nebelung'
+READTHEDOCS_VERSION = 'v2.5.1'
 
 # ==============================================================================
 # Internationalization and Localization
@@ -48,6 +48,14 @@ EXTRA_LANG_INFO = {
         'name': 'Malay',
         'name_local': 'Bahasa Melayu', #unicode codepoints here
     },
+    'tzl': {
+        # Use code for Talossan; can't use proper reserved code...
+        # Talossan is a constructed language, without native speakers,
+        # so the odds of having a translation are low.
+        'code': 'tzl',
+        'name': 'Translation',
+        'name_local': 'Translation',
+    },
 }
 
 # Add custom languages not provided by Django
@@ -61,11 +69,13 @@ LANGUAGES = [
     ('en', _('English')),
     ('es', _('Spanish')),
     ('fr', _('French')),
+    ('id', _('Indonesian')),
     ('ja', _('Japanese')),
     ('ms', _('Malay')),
     ('pt', _('Portuguese')),
     ('ru', _('Russian')),
     ('zh-hans', _('Simplified Chinese')),
+    ('tzl', _('Translation')),
 ]
 
 STATICI18N_ROOT = os.path.join(BASE_DIR, "locale")
@@ -275,6 +285,8 @@ SUMMERNOTE_CONFIG = {
     'disable_upload': True,
     'iframe': True, # Necessary; if just to compartmentalise jQuery dependency,
 }
+
+X_FRAME_OPTIONS = 'SAMEORIGIN' # Necessary to get Django-Summernote working because of Django 3 changes
 
 # ==============================================================================
 # Database

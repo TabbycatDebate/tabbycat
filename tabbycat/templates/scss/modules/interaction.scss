@@ -38,6 +38,21 @@
 .popover {
   max-width: none; // Bootstrap defaults to 270
 
+  h6 {
+    margin-bottom: -2px;
+    line-height: 1;
+  }
+
+  .popover-close {
+    height: 10px;
+  }
+
+  .feather.hoverable {
+    width: 16px;
+    height: 16px;
+    margin: -16px -4px 0 0;
+  }
+
   .list-group-item {
     padding: 0.5rem 0.75rem;
   }
@@ -59,11 +74,14 @@
   padding: 0;
 
   .list-group-item:first-child {
-    border-top: 0;
+    border-radius: 0;
+  }
+
+  .list-group-item:last-child {
+    border-bottom: 0;
   }
 
   .list-group-item {
-    border-bottom: 0;
     border-left: 0;
     border-right: 0;
   }

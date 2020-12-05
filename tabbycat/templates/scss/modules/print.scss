@@ -1,13 +1,8 @@
 @media print {
 
-  // Used by WADL and Feedback Ballots
+  // Used by private URL pages
   .printable-page-break {
     page-break-after: always;
-  }
-
-  // Used by WADL
-  .printable-mastersheet {
-    page-break-inside: avoid;
   }
 
   .page-header .col-md-12 {

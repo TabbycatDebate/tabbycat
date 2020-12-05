@@ -5,7 +5,10 @@ import { mapMutations } from 'vuex'
 
 export default {
   props: {
-    locked: false,
+    locked: {
+      type: Boolean,
+      default: false,
+    },
     handleDrop: Function,
     dropContext: Object, // Passed to the handler of the item
   },
@@ -56,7 +59,7 @@ export default {
       this.aboutToDrop = false
       // Send data to parent's handler method (after deserialising it)
       const dragPayload = JSON.parse(event.dataTransfer.getData('text'))
-      this['handleDrop'](dragPayload, this.dropContext) // Call page-specific method handler passed down
+      this.handleDrop(dragPayload, this.dropContext) // Call page-specific method handler passed down
       this.hideHovers()
     },
     ...mapMutations(['unsetHoverPanel', 'unsetHoverConflicts']),
