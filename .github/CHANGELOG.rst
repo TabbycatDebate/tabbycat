@@ -2,6 +2,14 @@
 Change Log
 ==========
 
+2.5.2
+-----
+*Release date: 6 December 2020*
+
+- Added default value for null votes carried metric
+- Fixed BP Elimination pairings not getting the advancing teams
+
+
 2.5.1
 -----
 *Release date: 4 December 2020*
