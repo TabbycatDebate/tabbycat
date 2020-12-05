@@ -3,8 +3,8 @@
 import logging
 
 from django.contrib.postgres.aggregates import ArrayAgg
-from django.db.models import Avg, Count, F, FloatField, PositiveIntegerField, Q, StdDev, Sum, Value
-from django.db.models.functions import Cast, Coalesce, NullIf
+from django.db.models import Avg, Count, F, FloatField, PositiveIntegerField, Q, StdDev, Sum
+from django.db.models.functions import Cast, NullIf
 from django.utils.translation import gettext_lazy as _
 
 from results.models import TeamScore
@@ -259,18 +259,19 @@ class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         self.adjs_per_debate = adjs_per_debate
 
     def get_field(self):
-        return Coalesce(Cast('debateteam__teamscore__votes_given', FloatField()) /
+        return (Cast('debateteam__teamscore__votes_given', FloatField()) /
             NullIf('debateteam__teamscore__votes_possible', 0, output_field=FloatField()) *
-            self.adjs_per_debate, Value(0.0))
+            self.adjs_per_debate)
 
     def annotate_with_queryset(self, queryset, standings):
         # If the number of ballots carried by every team is an integer, then
         # it's probably (though not certainly) the case that there are no
         # "weird" cases causing any fractional numbers of votes due to
         # normalization. In that case, convert all metrics to integers.
-        cast = int if all(t.num_adjs == int(t.num_adjs) for t in queryset) else float
+        cast = int if all(t.num_adjs == int(t.num_adjs) for t in queryset if t.num_adjs is not None) else float
         for item in queryset:
-            standings.add_metric(item, self.key, cast(item.num_adjs))
+            metric = item.num_adjs or 0
+            standings.add_metric(item, self.key, cast(metric))
 
 
 class NumberOfFirstsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
