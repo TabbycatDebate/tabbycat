@@ -2,12 +2,19 @@
 Change Log
 ==========
 
+2.5.3
+-----
+*Release date: 7 December 2020*
+
+- Fixed issue preventing side/matchup and room edits from saving (`#1689 <https://github.com/TabbycatDebate/tabbycat/issues/1689>`_)
+
+
 2.5.2
 -----
 *Release date: 6 December 2020*
 
 - Added default value for null votes carried metric
-- Fixed BP Elimination pairings not getting the advancing teams
+- Fixed BP elimination pairings not getting the advancing teams
 
 
 2.5.1
