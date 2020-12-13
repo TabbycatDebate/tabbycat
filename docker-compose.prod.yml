@@ -1,0 +1,65 @@
+# Docker-compose is a way to run multiple containers at once and connect them
+# This sets up and runs postgres, redis, honcho and the django worker as services
+# Reference: https://docs.docker.com/compose/compose-file/
+
+# Initial setup with
+# $ docker-compose up
+
+# Can run management commands with
+# $ docker-compose run web /code/manage.py whatever
+
+version: '3'
+
+services:
+  db:
+    image: postgres:12
+    environment:
+      - POSTGRES_PASSWORD=tabbycat
+      - POSTGRES_USER=tabbycat
+      - POSTGRES_DB=tabbycat
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:6
+    volumes:
+     - redis_data:/data
+
+  web:
+    build: .
+    image: tabbycat:2.6.0-dev
+    # Hack to wait until Postgres is up before running things
+    command: ["./bin/docker-wait.sh", "--timeout=0", "db:5432", "--", "./bin/docker-run-honcho.sh"]
+    depends_on:
+      - db
+      - redis
+    expose:
+      - "8000"
+    environment:
+      - DISABLE_SENTRY=1
+      - DOCKER_REDIS=1
+      - IN_DOCKER=1
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ./tabbycat/settings:/tcd/tabbycat/settings
+    working_dir: /tcd
+
+  worker:
+    image: tabbycat:2.6.0-dev
+    # Hack to wait until migration is done before running things
+    command: ["./bin/docker-wait.sh", "--timeout=0", "web:8000", "--", "./bin/docker-run-worker.sh"]
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DISABLE_SENTRY=1
+      - DOCKER_REDIS=1
+      - IN_DOCKER=1
+    volumes:
+      - ./tabbycat/settings:/tcd/tabbycat/settings
+    working_dir: /tcd
+
+volumes:
+  pgdata:
+  redis_data:
