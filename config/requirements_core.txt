@@ -14,6 +14,7 @@ django-split-settings==1.0.1            # Modularise settings files
 django-statici18n==1.9.0                # Compile translations files as static file
 django-summernote==0.8.11.6             # WYSIWYG editor
 dj-cmd==1.0                             # Provides the dj command alias
+django-redis==4.12.1                    # Use redis for cache (on heroku; local optional)
 
 # Database
 psycopg2==2.8.5                         # For Django to talk to postgres
