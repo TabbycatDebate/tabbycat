@@ -2,6 +2,14 @@
 Change Log
 ==========
 
+2.5.4
+-----
+*Release date: 14 December 2020*
+
+- Corrected a conflict in ballots when using declared winners without scores
+- Removed tournament/round caching from API views
+
+
 2.5.3
 -----
 *Release date: 7 December 2020*
