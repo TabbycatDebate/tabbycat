@@ -139,14 +139,15 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     abbr = _("AISS")
 
     function = Avg
+    combinable = False
 
     def get_field(self):
         return 'debateteam__speakerscore__score'
 
     def get_annotation_filter(self, round=None):
         annotation_filter = Q(
-            debateteam__teamscore__ballot_submission__confirmed=True,
             debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
+            debateteam__speakerscore__ballot_submission__confirmed=True,
             debateteam__speakerscore__ghost=False,
         )
         if round is not None:

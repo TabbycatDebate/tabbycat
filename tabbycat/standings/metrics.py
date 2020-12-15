@@ -58,6 +58,7 @@ class BaseMetricAnnotator:
     repeatable = False
     listed = True
     ascending = False  # if True, this metric is sorted in ascending order, not descending
+    combinable = False  # if True, use single query with all combinable metrics
 
     def run(self, queryset, standings, round=None):
         standings.record_added_metric(self.key, self.name, self.abbr, self.icon, self.ascending)
@@ -95,6 +96,7 @@ class RepeatedMetricAnnotator(BaseMetricAnnotator):
 
 class QuerySetMetricAnnotator(BaseMetricAnnotator):
     """Base class for annotators that metrics based on conditional aggregations."""
+    combinable = True
 
     def get_annotation(self, round):
         raise NotImplementedError("Subclasses of QuerySetMetricAnnotator must implement get_annotation().")
@@ -120,5 +122,8 @@ class QuerySetMetricAnnotator(BaseMetricAnnotator):
             standings.add_metric(item, self.key, metric)
 
     def annotate(self, queryset, standings, round=None):
-        assert self.queryset_annotated, "get_annotated_queryset() must be run before annotate()"
-        self.annotate_with_queryset(queryset, standings)
+        if self.combinable:
+            assert self.queryset_annotated, "get_annotated_queryset() must be run before annotate()"
+            self.annotate_with_queryset(queryset, standings)
+        else:
+            self.annotate_with_queryset(self.get_annotated_queryset(queryset, round), standings)
