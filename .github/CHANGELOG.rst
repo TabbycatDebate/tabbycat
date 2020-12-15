@@ -2,9 +2,41 @@
 Change Log
 ==========
 
+2.5.4
+-----
+*Release date: 14 December 2020*
+
+- Corrected a conflict in ballots when using declared winners without scores
+- Removed tournament/round caching from API views
+
+
+2.5.3
+-----
+*Release date: 7 December 2020*
+
+- Fixed issue preventing side/matchup and room edits from saving (`#1689 <https://github.com/TabbycatDebate/tabbycat/issues/1689>`_)
+
+
+2.5.2
+-----
+*Release date: 6 December 2020*
+
+- Added default value for null votes carried metric
+- Fixed BP elimination pairings not getting the advancing teams
+
+
+2.5.1
+-----
+*Release date: 4 December 2020*
+
+- Fixed breaks API endpoints not getting the break category
+- Ensured that the "votes/ballots carried" team metric is always defined (`#1682 <https://github.com/TabbycatDebate/tabbycat/issues/1682>`_)
+- Re-implemented rank filters for speaker standings
+
+
 2.5.0 (Nebelung)
 ----------------
-*Release date: ?*
+*Release date: 30 November 2020*
 
 - Added a preference to allow dedicated reply speaker. Thanks to Miha Frangež for the PR! (`#1584 <https://github.com/TabbycatDebate/tabbycat/issues/1584>`_)
 - Private URL submissions now store the participant whose link was used rather than just their IP address (`#1586 <https://github.com/TabbycatDebate/tabbycat/issues/1586>`_)
@@ -31,6 +63,7 @@ Change Log
     - Added in-context translation through Crowdin enabling translations to be made directly on Tabbycat (`#1664 <https://github.com/TabbycatDebate/tabbycat/pull/1664>`_)
 - Removed the simulated annealing adjudicator allocator. (`#1619 <https://github.com/TabbycatDebate/tabbycat/pull/1619>`_)
 - Fixed issue with Sentry integration preventing some debugging info from being included in error reports
+- Improved handling of multiple current rounds in record pages, and prevented data leakage
 
 
 2.4.7

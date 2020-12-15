@@ -173,8 +173,9 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
         debates = self.get_debates_or_panels(changes)
         serialized = self.teams_serializer(debates, many=True,
             context={'sides': self.tournament.sides})
-        del content['teams']
-        self.return_attributes(content, serialized)
+        content_to_return = content.copy()
+        del content_to_return['teams']
+        self.return_attributes(content_to_return, serialized)
 
     def receive_debate_change(self, content, key, content_name, field_name, serializer):
         changes = {int(c['id']): c for c in content[key]}
@@ -185,8 +186,9 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
 
         debates = self.get_debates_or_panels(changes)
         serialized = serializer(debates, many=True)
-        del content[content_name]
-        self.return_attributes(content, serialized)
+        content_to_return = content.copy()
+        del content_to_return[content_name]
+        self.return_attributes(content_to_return, serialized)
 
 
 class EditDebateOrPanelWorkerMixin(SyncConsumer):

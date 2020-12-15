@@ -820,6 +820,9 @@ class ConsensusDebateResult(BaseDebateResult):
     def advancing_dt(self):
         return [dt for s, dt in self.debateteams.items() if s in self.get_winner()]
 
+    def advancing_teams(self):
+        return [dt.team for dt in self.advancing_dt()]
+
     def eliminated_dt(self):
         return [dt for s, dt in self.debateteams.items() if s not in self.get_winner()]
 

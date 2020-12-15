@@ -56,30 +56,32 @@ class BaseRankAnnotator:
         """
         raise NotImplementedError("BaseRankAnnotator subclasses must implement annotate()")
 
-    def _get_ordering(self, annotators):
+    def _get_ordering(self, annotators, min_field, min_rounds):
         ordering = []
         annotations = {a.key: a for a in annotators}
         for key in self.metrics:
-            if annotations[key].ascending:
-                ordering.append(F(key).asc(nulls_last=True))
+            annotation = annotations[key]
+            if annotation.ascending:
+                ordering.append(annotation.get_ranking_annotation(min_field, min_rounds).asc(nulls_last=True))
             else:
-                ordering.append(F(key).desc(nulls_last=True))
+                ordering.append(annotation.get_ranking_annotation(min_field, min_rounds).desc(nulls_last=True))
         return ordering
 
-    def get_annotated_queryset(self, queryset, annotators):
+    def get_annotated_queryset(self, queryset, annotators, min_field, min_rounds):
         self.queryset_annotated = True
         return queryset.annotate(**{
-            self.key          : self.get_annotation(annotators),
-            self.key + '_tied': self.get_tied_annotation(),
+            self.key          : self.get_annotation(annotators, min_field, min_rounds),
+            self.key + '_tied': self.get_tied_annotation(annotators, min_field, min_rounds),
         })
 
-    def get_annotation(self):
+    def get_annotation(self, annotators, min_field, min_rounds):
         raise NotImplementedError
 
-    def get_tied_annotation(self):
+    def get_tied_annotation(self, annotators, min_field, min_rounds):
+        annotations = {a.key: a for a in annotators}
         return Window(
             expression=Count('id'),
-            partition_by=[F(key) for key in self.metrics],
+            partition_by=[annotations[key].get_ranking_annotation(min_field, min_rounds) for key in self.metrics],
         )
 
     def annotate_with_queryset(self, queryset, standings):
@@ -112,10 +114,10 @@ class BasicRankAnnotator(BaseRankAnnotator):
                 info.add_ranking("rank", (rank, len(group) > 1))
             rank += len(group)
 
-    def get_annotation(self, annotators):
+    def get_annotation(self, annotators, min_field, min_rounds):
         return Window(
             expression=Rank(),
-            order_by=self._get_ordering(annotators),
+            order_by=self._get_ordering(annotators, min_field, min_rounds),
         )
 
 
@@ -147,21 +149,23 @@ class SubrankAnnotator(BaseRankWithinGroupAnnotator):
         self.group_key = metricgetter(metrics[:1])  # don't crash if there are no metrics
         self.rank_key = metricgetter(metrics[1:])
 
-    def _get_ordering(self, annotators):
+    def _get_ordering(self, annotators, min_field, min_rounds):
         ordering = []
         annotations = {a.key: a for a in annotators}
         for key in self.metrics[1:]:
-            if annotations[key].ascending:
-                ordering.append(F(key).asc(nulls_last=True))
+            annotation = annotations[key]
+            if annotation.ascending:
+                ordering.append(annotation.get_ranking_annotation(min_field, min_rounds).asc(nulls_last=True))
             else:
-                ordering.append(F(key).desc(nulls_last=True))
+                ordering.append(annotation.get_ranking_annotation(min_field, min_rounds).desc(nulls_last=True))
         return ordering
 
-    def get_annotation(self, annotators):
+    def get_annotation(self, annotators, min_field, min_rounds):
+        annotations = {a.key: a for a in annotators}
         return Window(
             expression=Rank(),
-            order_by=self._get_ordering(annotators),
-            partition_by=[F(key) for key in self.metrics[:1]],
+            order_by=self._get_ordering(annotators, min_field, min_rounds),
+            partition_by=[annotations[key].get_ranking_annotation(min_field, min_rounds) for key in self.metrics[:1]],
         )
 
 
@@ -179,15 +183,16 @@ class RankFromInstitutionAnnotator(BaseRankWithinGroupAnnotator):
     def group_key(tsi):
         return tsi.team.institution_id
 
-    def get_annotation(self, annotators):
+    def get_annotation(self, annotators, min_field, min_rounds):
         return Window(
             expression=Rank(),
-            order_by=self._get_ordering(annotators),
+            order_by=self._get_ordering(annotators, min_field, min_rounds),
             partition_by=F('institution_id'),
         )
 
-    def get_tied_annotation(self):
+    def get_tied_annotation(self, annotators, min_field, min_rounds):
+        annotations = {a.key: a for a in annotators}
         return Window(
             expression=Count('id'),
-            partition_by=[F('institution_id')] + [F(key) for key in self.metrics],
+            partition_by=[F('institution_id')] + [annotations[key].get_ranking_annotation(min_field, min_rounds) for key in self.metrics],
         )
