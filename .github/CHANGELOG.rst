@@ -17,6 +17,7 @@ Change Log
 - Allow for participant ballot submissions during concurrent rounds.
 - Checkin API endpoints show the timestamp of the current event.
 - Team viewing of ballots can be restricted to their private URLs.
+- Added an optimised production-ready Docker config. Thanks to Sébastien Dunne Fulmer for this contribution!
 
 
 2.5.8
