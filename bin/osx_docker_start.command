@@ -9,4 +9,4 @@ cd "${DIR}"
 cd ..
 
 # Do docker stuff
-docker-compose up
+docker-compose -f docker-compose.yml up

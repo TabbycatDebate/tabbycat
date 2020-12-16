@@ -2,6 +2,14 @@
 Change Log
 ==========
 
+
+2.6.0 (Untitled O-Release)
+----------------
+*Release date: TBA*
+
+- Added an optimised production-ready Docker config. Thanks to Sébastien Dunne Fulmer for this contribution!
+
+
 2.5.4
 -----
 *Release date: 14 December 2020*
