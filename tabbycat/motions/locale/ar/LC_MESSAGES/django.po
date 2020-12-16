@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-07-05 17:05\n"
+"POT-Creation-Date: 2020-12-30 01:01-0400\n"
+"PO-Revision-Date: 2020-12-30 05:09\n"
 "Last-Translator: \n"
 "Language-Team: Arabic\n"
 "Language: ar_SA\n"
@@ -23,46 +23,42 @@ msgid "Motions"
 msgstr "قضايا المناظرة"
 
 #: motions/models.py:9
-msgid "sequence number"
-msgstr "رقم التسلسل"
-
-#: motions/models.py:10
-msgid "The order in which motions are displayed"
-msgstr "الترتيب التي يتم فيه عرض القضايا"
-
-#: motions/models.py:12
 msgid "text"
 msgstr "نص"
 
-#: motions/models.py:13
+#: motions/models.py:10
 msgid "The full motion e.g., \"This House would straighten all bananas\""
 msgstr "نص القضية كاملا. مثل \"سيجعل هذا المجلس شكل الموز مستقيما\""
 
-#: motions/models.py:15
+#: motions/models.py:12
 msgid "reference"
 msgstr "معارض "
 
-#: motions/models.py:16
+#: motions/models.py:13
 msgid "Shortcode for the motion, e.g., \"Bananas\""
 msgstr "الرمز المصغر للقضية مثل: \"الموز\""
 
-#: motions/models.py:18
+#: motions/models.py:15
 msgid "info slide"
 msgstr "شريحة معلوماتية"
 
-#: motions/models.py:19
+#: motions/models.py:16
 msgid "The information slide for this topic; if it has one"
 msgstr "الشريحة المعلوماتية لهذا الموضوع؛ في حال كان يحتوي على واحد"
 
-#: motions/models.py:21
-msgid "round"
-msgstr "جولة"
+#: motions/models.py:19
+msgid "tournament"
+msgstr "بطولة"
 
-#: motions/models.py:25 motions/models.py:37
+#: motions/models.py:21
+msgid "rounds"
+msgstr "جولات"
+
+#: motions/models.py:24 motions/models.py:37 motions/models.py:56
 msgid "motion"
 msgstr "نص القضية"
 
-#: motions/models.py:26
+#: motions/models.py:25
 msgid "motions"
 msgstr "قضايا"
 
@@ -86,68 +82,80 @@ msgstr "فريق المناظرة يفضل المواضيع"
 msgid "debate team motion preferences"
 msgstr "المتناظر يفضلون المواضيع "
 
-#: motions/statistics.py:88
+#: motions/models.py:58
+msgid "round"
+msgstr "جولة"
+
+#: motions/models.py:61
+msgid "sequence number"
+msgstr "رقم التسلسل"
+
+#: motions/models.py:62
+msgid "The order in which motions are displayed"
+msgstr "الترتيب التي يتم فيه عرض القضايا"
+
+#: motions/models.py:67
+msgid "round motion"
+msgstr ""
+
+#: motions/models.py:68
+msgid "round motions"
+msgstr ""
+
+#: motions/statistics.py:86
 msgid "extremely strong evidence"
 msgstr "حجج قوية جداً "
 
-#: motions/statistics.py:89
+#: motions/statistics.py:87
 msgid "strong evidence"
 msgstr "حجج قوية "
 
-#: motions/statistics.py:90
+#: motions/statistics.py:88
 msgid "moderate evidence"
 msgstr "حجج عادية "
 
-#: motions/statistics.py:91
+#: motions/statistics.py:89
 msgid "weak evidence"
 msgstr "حجج ضعيفة "
 
-#: motions/statistics.py:92
+#: motions/statistics.py:90
 msgid "very weak evidence"
 msgstr "حجج ضعيفة جدا "
 
-#: motions/statistics.py:93
+#: motions/statistics.py:91
 msgid "extremely weak evidence"
 msgstr "حجج ضعيفة للغاية"
 
-#: motions/statistics.py:116
+#: motions/statistics.py:114
 msgid "balance inconclusive"
 msgstr "لا يوجد توازن "
 
-#: motions/statistics.py:117
+#: motions/statistics.py:115
 msgid "too few debates to get a meaningful statistic"
 msgstr "عدد قليل من السرد له قيمة "
 
-#: motions/statistics.py:125
+#: motions/statistics.py:123
 #, python-format
 msgid "imbalanced at %(level)s level"
 msgstr ""
 
-#: motions/statistics.py:126
+#: motions/statistics.py:124
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing %(evidence)s to suggest that this motion was imbalanced — at a %(level)s level of significance."
 msgstr ""
 
-#: motions/statistics.py:131
+#: motions/statistics.py:129
 msgid "probably balanced"
 msgstr ""
 
-#: motions/statistics.py:132
+#: motions/statistics.py:130
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that this motion was imbalanced at any level of significance."
 msgstr ""
 
-#: motions/templates/motion_statistics.html:4
-#: motions/templates/motion_statistics.html:5 motions/views.py:165
-msgid "Motion Statistics"
-msgstr "إحصائيات القضية"
-
-#: motions/templates/motion_statistics.html:12
-msgid "The results data displayed here is presented without tests for statistical significance. Correlations should not be automatically considered reliable; particularly at small tournaments and during elimination rounds."
-msgstr ""
-
-#: motions/templates/motion_statistics.html:39
-#: motions/templates/public_motions.html:31
+#: motions/templates/motion_global_statistics.html:22
+#: motions/templates/motion_round_statistics.html:31
+#: motions/templates/public_motions.html:32
 msgid "View Info Slide"
 msgstr "عرض المولاة و المعارضة "
 
@@ -309,7 +317,19 @@ msgstr[5] ""
 msgid "Display Draw"
 msgstr "عرض القرعة"
 
-#: motions/templates/motions_edit.html:55
+#: motions/templates/motions_edit.html:28
+msgid "This will replace all existing motions for this round. The motions themselves will still be in the database."
+msgstr ""
+
+#: motions/templates/motions_edit.html:30
+msgid "Reuse Motions from Last Round"
+msgstr ""
+
+#: motions/templates/motions_edit.html:35
+msgid "Use Existing Motions"
+msgstr ""
+
+#: motions/templates/motions_edit.html:74
 msgid "Save Motion"
 msgid_plural "Save Motions"
 msgstr[0] ""
@@ -323,15 +343,15 @@ msgstr[5] ""
 msgid "Info Slide"
 msgstr ""
 
-#: motions/templates/public_motions.html:39
+#: motions/templates/public_motions.html:41
 msgid "There are no motions available for this round."
 msgstr "لا يوجد قضايا في هذه الجولة "
 
-#: motions/templates/public_motions.html:45
+#: motions/templates/public_motions.html:47
 msgid "The motions for this round have not been released."
 msgstr "القضايا التي تم رفضها في هذه الجولة "
 
-#: motions/templates/public_motions.html:50
+#: motions/templates/public_motions.html:52
 msgid "The motion for this round has not been released."
 msgstr "القضايا التي تم رفضها في هذه الجولة "
 
@@ -361,11 +381,11 @@ msgstr[5] ""
 msgid "There are no motions for this round entered into Tabbycat."
 msgstr "لا يوجد قضايا في هذه الجولة "
 
-#: motions/views.py:87
+#: motions/views.py:91
 msgid "The motion has been saved."
 msgstr "القضايا التي لم يتم حفظها "
 
-#: motions/views.py:89
+#: motions/views.py:93
 #, python-format
 msgid "%(count)d motion has been saved."
 msgid_plural "%(count)d motions have been saved."
@@ -376,7 +396,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: motions/views.py:94
+#: motions/views.py:97
 #, python-format
 msgid "%(count)d motion has been deleted."
 msgid_plural "%(count)d motions have been deleted."
@@ -387,15 +407,30 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: motions/views.py:118
+#: motions/views.py:140
+#, python-format
+msgid "Reused the motion from the previous round."
+msgid_plural "Reused the %(count)d motions from the previous round."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: motions/views.py:164
 msgid "Released the motion(s)."
 msgstr "قضايا تم رفضها "
 
-#: motions/views.py:125
+#: motions/views.py:171
 msgid "Unreleased the motion(s)."
 msgstr "قضايا لم ترفض"
 
-#: motions/views.py:149
+#: motions/views.py:195
 msgid "Round Motions"
 msgstr ""
+
+#: motions/views.py:209
+msgid "Motion Statistics"
+msgstr "إحصائيات القضية"
 

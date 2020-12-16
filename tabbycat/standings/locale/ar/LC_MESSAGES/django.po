@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 15:04-0400\n"
-"PO-Revision-Date: 2020-11-16 19:11\n"
+"POT-Creation-Date: 2020-12-29 23:49-0400\n"
+"PO-Revision-Date: 2020-12-30 04:07\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Arabic\n"
 "Language: ar_SA\n"
@@ -18,15 +18,15 @@ msgstr ""
 "X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-File-ID: 950\n"
 
-#: standings/base.py:300
+#: standings/base.py:297
 msgid "The same metric would be added twice:"
 msgstr ""
 
-#: standings/base.py:301
+#: standings/base.py:298
 msgid "The same ranking would be added twice:"
 msgstr ""
 
-#: standings/base.py:410
+#: standings/base.py:414
 #, python-format
 msgid "Unrecognized metric code: \"%(code)s\""
 msgstr ""
@@ -127,19 +127,19 @@ msgstr "%(num)d متوسط المتناظر "
 msgid "Average Finals Score"
 msgstr "متوسط درجات النهائي "
 
-#: standings/speakers.py:50 standings/speakers.py:103
+#: standings/speakers.py:50 standings/speakers.py:106
 msgid "total"
 msgstr "المجموع"
 
-#: standings/speakers.py:51 standings/speakers.py:104
+#: standings/speakers.py:51 standings/speakers.py:107
 msgid "Total"
 msgstr "المجموع"
 
-#: standings/speakers.py:58 standings/speakers.py:113
+#: standings/speakers.py:58 standings/speakers.py:116
 msgid "average"
 msgstr "متوسط"
 
-#: standings/speakers.py:59 standings/speakers.py:114
+#: standings/speakers.py:59 standings/speakers.py:117
 msgid "Avg"
 msgstr "المتوسط"
 
@@ -151,167 +151,167 @@ msgstr ""
 msgid "Team"
 msgstr "فريق"
 
-#: standings/speakers.py:86 standings/speakers.py:123
+#: standings/speakers.py:89 standings/speakers.py:126
 msgid "standard deviation"
 msgstr "الانحراف المعياري"
 
-#: standings/speakers.py:87 standings/speakers.py:124
+#: standings/speakers.py:90 standings/speakers.py:127
 msgid "Stdev"
 msgstr ""
 
-#: standings/speakers.py:95
+#: standings/speakers.py:98
 msgid "number of speeches given"
 msgstr ""
 
-#: standings/speakers.py:96 standings/speakers.py:135
+#: standings/speakers.py:99 standings/speakers.py:138
 msgid "Num"
 msgstr "رقم"
 
-#: standings/speakers.py:134
+#: standings/speakers.py:137
 msgid "replies given"
 msgstr "خطاب الرد "
 
-#: standings/speakers.py:144
+#: standings/speakers.py:147
 msgid "trimmed mean (high-low drop)"
 msgstr ""
 
-#: standings/speakers.py:145
+#: standings/speakers.py:148
 msgid "Trim"
 msgstr ""
 
-#: standings/teams.py:68
+#: standings/teams.py:62
 msgid "points"
 msgstr "نقاط"
 
-#: standings/teams.py:69
+#: standings/teams.py:63
 msgid "Pts"
 msgstr ""
 
-#: standings/teams.py:82
+#: standings/teams.py:76
 msgid "wins"
 msgstr "عدد مرات الفوز"
 
-#: standings/teams.py:83 standings/views.py:596
+#: standings/teams.py:77 standings/views.py:592
 msgid "Wins"
 msgstr "عدد مرات الفوز"
 
-#: standings/teams.py:93
+#: standings/teams.py:87
 msgid "total speaker score"
 msgstr "مجموع نقاط المتحدث "
 
-#: standings/teams.py:94
+#: standings/teams.py:88
 msgid "Spk"
 msgstr "متحدث"
 
-#: standings/teams.py:103
+#: standings/teams.py:97
 msgid "average total speaker score"
 msgstr ""
 
-#: standings/teams.py:104
+#: standings/teams.py:98
 msgid "ATSS"
 msgstr ""
 
-#: standings/teams.py:113
+#: standings/teams.py:107
 msgid "speaker score standard deviation"
 msgstr ""
 
-#: standings/teams.py:114
+#: standings/teams.py:108
 msgid "SSD"
 msgstr ""
 
-#: standings/teams.py:124
+#: standings/teams.py:118
 msgid "sum of margins"
 msgstr "جمع فرق الدرجات "
 
-#: standings/teams.py:125
+#: standings/teams.py:119
 msgid "Marg"
 msgstr ""
 
-#: standings/teams.py:134
+#: standings/teams.py:128
 msgid "average margin"
 msgstr "متوسط فرق الدرجات "
 
-#: standings/teams.py:135
+#: standings/teams.py:129
 msgid "AWM"
 msgstr ""
 
-#: standings/teams.py:144
+#: standings/teams.py:138
 msgid "average individual speaker score"
 msgstr ""
 
-#: standings/teams.py:145
+#: standings/teams.py:139
 msgid "AISS"
 msgstr ""
 
-#: standings/teams.py:216
+#: standings/teams.py:211
 msgid "draw strength by wins"
 msgstr ""
 
-#: standings/teams.py:217
+#: standings/teams.py:212
 msgid "DS"
 msgstr ""
 
-#: standings/teams.py:224
+#: standings/teams.py:219
 msgid "draw strength by total speaker score"
 msgstr ""
 
-#: standings/teams.py:225
+#: standings/teams.py:220
 msgid "DSS"
 msgstr ""
 
-#: standings/teams.py:236
+#: standings/teams.py:231
 msgid "number of pullups before this round"
 msgstr ""
 
-#: standings/teams.py:237
+#: standings/teams.py:232
 msgid "PU"
 msgstr ""
 
-#: standings/teams.py:259
+#: standings/teams.py:254
 msgid "number of adjudicators who voted for this team"
 msgstr "عدد المحكمين الذين صوتوا لصالح هذا الفريق"
 
-#: standings/teams.py:260
+#: standings/teams.py:255
 msgid "Ballots"
 msgstr "تصويت"
 
-#: standings/teams.py:261
+#: standings/teams.py:256
 msgid "votes/ballots carried"
 msgstr "التصويت / النتائج "
 
-#: standings/teams.py:287
+#: standings/teams.py:280
 msgid "number of firsts"
 msgstr "عدد الأوائل"
 
-#: standings/teams.py:288
+#: standings/teams.py:281
 msgid "1sts"
 msgstr "1st"
 
-#: standings/teams.py:297
+#: standings/teams.py:290
 msgid "number of seconds"
 msgstr "عدد الثواني"
 
-#: standings/teams.py:298
+#: standings/teams.py:291
 msgid "2nds"
 msgstr "2nd"
 
-#: standings/teams.py:307
+#: standings/teams.py:300
 msgid "number of thirds"
 msgstr ""
 
-#: standings/teams.py:308
+#: standings/teams.py:301
 msgid "3rds"
 msgstr ""
 
-#: standings/teams.py:320
+#: standings/teams.py:313
 msgid "Who-beat-whom"
 msgstr "من أفضل من "
 
-#: standings/teams.py:321
+#: standings/teams.py:314
 msgid "WBW"
 msgstr ""
 
-#: standings/teams.py:322
+#: standings/teams.py:315
 msgid "who-beat-whom"
 msgstr "من أفضل من "
 
@@ -421,9 +421,9 @@ msgstr ""
 #: standings/templates/standings_index.html:87
 #: standings/templates/standings_index.html:108
 #: standings/templates/standings_index.html:129
-#: standings/templates/standings_index.html:150
-#: standings/templates/standings_index.html:163
-#: standings/templates/standings_index.html:182
+#: standings/templates/standings_index.html:152
+#: standings/templates/standings_index.html:167
+#: standings/templates/standings_index.html:186
 msgid "No data yet"
 msgstr ""
 
@@ -463,13 +463,7 @@ msgstr ""
 msgid "Most/Least Popular Motions"
 msgstr ""
 
-#: standings/templates/standings_index.html:144
-#: standings/templates/standings_index.html:157
-#, python-format
-msgid "%(reference)s in %(abbreviation)s"
-msgstr ""
-
-#: standings/templates/standings_index.html:173
+#: standings/templates/standings_index.html:177
 msgid "Average Speaks"
 msgstr ""
 
@@ -514,11 +508,16 @@ msgstr ""
 msgid "Replies"
 msgstr "الردود"
 
-#: standings/templates/standings_menu.html:64
+#: standings/templates/standings_menu.html:63
+#: standings/templates/standings_menu.html:76
 msgid "Motions"
 msgstr "قضايا"
 
-#: standings/templates/standings_menu.html:68
+#: standings/templates/standings_menu.html:66
+msgid "By Round"
+msgstr ""
+
+#: standings/templates/standings_menu.html:81
 msgid "Diversity"
 msgstr "تقسيمات"
 
@@ -552,71 +551,71 @@ msgstr ""
 msgid "%(title)s (Top %(limit)d Only)"
 msgstr "%(title)s( أفضل %(limit)d فقط )"
 
-#: standings/views.py:206 standings/views.py:432
+#: standings/views.py:208 standings/views.py:428
 msgid "The tab can't be displayed because all rounds so far in this tournament are silent."
 msgstr "لا يمكن إظهار النتائج لأن كافة جولات البطولة جولات صامتة."
 
-#: standings/views.py:282
+#: standings/views.py:290
 msgid "Speaker Standings"
 msgstr "ترتيب المتحدث"
 
-#: standings/views.py:324
+#: standings/views.py:326
 msgid "Speaker Tab"
 msgstr "النتائج المتحدث"
 
-#: standings/views.py:339
+#: standings/views.py:341
 #, python-format
 msgid "%(category)s Speaker Standings"
 msgstr "%(category)sترتيب المتحدثين "
 
-#: standings/views.py:357
+#: standings/views.py:359
 #, python-format
 msgid "%(category)s Speaker Tab"
 msgstr "نتائج المتحدث %(category)s"
 
-#: standings/views.py:370
+#: standings/views.py:372
 msgid "Reply Speaker Standings"
 msgstr "ترتيب متحدث خطاب الرد"
 
-#: standings/views.py:375
+#: standings/views.py:380
 msgid "Reply speeches aren't enabled in this tournament."
 msgstr "خطابات الرد غير ممكنة في هذه البطولة"
 
-#: standings/views.py:412
+#: standings/views.py:408
 msgid "Reply Speaker Tab"
 msgstr "النتائج متحدثي خطاب الرد"
 
-#: standings/views.py:424 standings/views.py:673
+#: standings/views.py:420 standings/views.py:669
 msgid "Team Standings"
 msgstr "ترتيب الفرق "
 
-#: standings/views.py:503
+#: standings/views.py:499
 msgid "Team Tab"
 msgstr "النتائج حسب الفرق"
 
-#: standings/views.py:522
+#: standings/views.py:518
 #, python-format
 msgid "%(category)s Team Standings"
 msgstr ""
 
-#: standings/views.py:549
+#: standings/views.py:545
 #, python-format
 msgid "%(category)s Team Tab"
 msgstr ""
 
-#: standings/views.py:560
+#: standings/views.py:556
 msgid "Current Team Standings"
 msgstr "ترتيب الفرق الحالي"
 
-#: standings/views.py:596
+#: standings/views.py:592
 msgid "Points"
 msgstr ""
 
-#: standings/views.py:642
+#: standings/views.py:638
 msgid "Feedback Overview"
 msgstr ""
 
-#: standings/views.py:659
+#: standings/views.py:655
 msgid "An adjudicator's score is determined by a customisable mix of their base score and their feedback ratings. The current mix is specified below as the 'Score Components.' Feedback ratings are determined by averaging the results of all individual pieces of feedback across all rounds. <a href='http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html#how-is-an-adjudicator-s-score-determined'>Read more</a>."
 msgstr ""
 
