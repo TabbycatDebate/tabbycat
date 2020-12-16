@@ -5,16 +5,16 @@ from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils import formats, timezone, translation
-from ipware.ip import get_real_ip
+from ipware import get_client_ip
 
 logger = logging.getLogger(__name__)
 
 
 def get_ip_address(request):
-    ip = get_real_ip(request)
-    if ip is None:
+    client_ip, is_routable = get_client_ip(request)
+    if client_ip is None:
         return "0.0.0.0"
-    return ip
+    return client_ip
 
 
 def redirect_tournament(to, tournament, *args, **kwargs):

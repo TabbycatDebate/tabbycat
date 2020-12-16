@@ -44,15 +44,17 @@ function InitChart (vueContext) {
     .attr('class', 'd3-tooltip tooltip')
     .style('opacity', 0)
 
-  path.on('mouseover', function (d, i) {
+  path.on('mouseover', function (event, d) {
+    const e = path.nodes()
+    const i = e.indexOf(this)
     tooltip.html(`<div class='tooltip-inner'>${
       vueContext.graphData[i].count} ${
       vueContext.percentage(vueContext.graphData[i].count)
     }<br>${
       vueContext.nicelabel(vueContext.graphData[i].label)
     }</div>`)
-      .style('left', `${d3.event.pageX}px`)
-      .style('top', `${d3.event.pageY - 28}px`)
+      .style('left', `${event.pageX}px`)
+      .style('top', `${event.pageY - 28}px`)
       .style('opacity', 1)
     d3.select(this).style('opacity', 0.5)
   })
