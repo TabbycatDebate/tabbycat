@@ -108,11 +108,11 @@ function initChart (vueContext) {
     .attr('cy', d => yScale(d.y))
     .attr('r', 5) // Size of circle
     .attr('class', d => `hoverable position-display d3-hover-black ${d.position_class}`)
-    .on('mouseover', (d) => {
+    .on('mouseover', (event, d) => {
       div.style('opacity', 0.9)
       div.html(`<div class='tooltip-inner'>Received a ${d.y} as a ${d.position} in R${d.x}</div>`)
-        .style('left', `${d3.event.pageX}px`)
-        .style('top', `${d3.event.pageY - 28}px`)
+        .style('left', `${event.pageX}px`)
+        .style('top', `${event.pageY - 28}px`)
     })
     .on('mouseout', () => {
       div.style('opacity', 0)
