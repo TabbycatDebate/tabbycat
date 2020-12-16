@@ -12,4 +12,4 @@ pre-commit
 selenium==3.141.*                           # Functional testing (in here for CI tests)
 
 # Debug
-django-debug-toolbar==2.*
+django-debug-toolbar==3.*
