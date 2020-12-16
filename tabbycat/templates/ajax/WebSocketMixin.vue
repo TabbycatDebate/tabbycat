@@ -57,7 +57,7 @@ export default {
       }).bind(socketPath, self))
 
       // Set the data to contain the socket bridge so we can send to it
-      self.$set(self.bridges, socketLabel, webSocketBridge)
+      self.bridges[socketLabel] = webSocketBridge
     }
   },
   methods: {

@@ -1,5 +1,5 @@
 // The base template with universal or near-universal functionality (imported on all pages)
-import Vue from 'vue'
+import { createApp } from 'vue'
 import VueTouch from 'vue-touch'
 import * as Sentry from '@sentry/browser'
 import * as Integrations from '@sentry/integrations'
@@ -11,6 +11,7 @@ import CheckboxTablesContainer from '../tables/CheckboxTablesContainer.vue'
 import TablesContainer from '../tables/TablesContainer.vue'
 // App Templates
 import CheckInStatusContainer from '../../checkins/templates/CheckInStatusContainer.vue'
+import CheckInScanContainer from '../../checkins/templates/CheckInScanContainer.vue'
 import DiversityContainer from '../../participants/templates/DiversityContainer.vue'
 import PrintableBallot from '../../printing/templates/PrintableBallot.vue'
 import BallotEntryContainer from '../../results/templates/BallotEntryContainer.vue'
@@ -170,37 +171,6 @@ $(document).ready(() => {
 })
 
 // -----------------------------------------------------------------------------
-// Vue General Components Setup
-// -----------------------------------------------------------------------------
-
-// Table-based Views
-vueComponents.TablesContainer = TablesContainer
-vueComponents.CheckboxTablesContainer = CheckboxTablesContainer
-vueComponents.ResultsTablesContainer = ResultsTablesContainer
-// Checkin Statuses
-vueComponents.CheckInStatusContainer = CheckInStatusContainer
-// Divisions Containers
-vueComponents.DiversityContainer = DiversityContainer
-vueComponents.TournamentOverviewContainer = TournamentOverviewContainer
-// Printables
-vueComponents.PrintableBallot = PrintableBallot
-// Allocations New
-vueComponents.EditDebateAdjudicatorsContainer = EditDebateAdjudicatorsContainer
-vueComponents.EditPanelAdjudicatorsContainer = EditPanelAdjudicatorsContainer
-vueComponents.EditDebateTeamsContainer = EditDebateTeamsContainer
-vueComponents.EditDebateVenuesContainer = EditDebateVenuesContainer
-// Ballots New
-vueComponents.BallotEntryContainer = BallotEntryContainer
-
-// -----------------------------------------------------------------------------
-// Asynchronously Loaded Components Setup (defer loading to reduce bundle)
-// -----------------------------------------------------------------------------
-
-// Note the 3d graphs are async loaded inline as part of components: {}
-// Check-Ins (thus delays loading quagga)
-vueComponents.CheckInScanContainer = () => import('../../checkins/templates/CheckInScanContainer.vue')
-
-// -----------------------------------------------------------------------------
 // Main Vue Instance
 // -----------------------------------------------------------------------------
 
@@ -244,27 +214,40 @@ const vueTranslationMixin = {
   },
 }
 
-// This is an coordinating instance used for inter-component pub/sub interfaces
-// Only needed by the legay drag and drop screens
-const eventHub = new Vue()
-Vue.prototype.$eventHub = eventHub
-
-// Make a global mixin to provide translation functions
-Vue.mixin(vueTranslationMixin)
-// Provide support for tab events
-Vue.use(VueTouch, { name: 'v-touch' })
-
 // Only instantiate Vue if there is set vueData; otherwise the mount is missing
 if (typeof vueData !== 'undefined') {
   // Many templates share the vueTable base but don't provide data
   if ('tablesData' in vueData && vueData.tablesData === null) {
     // Is an empty table; do not mount
   } else {
-    new Vue({ // eslint-disable-line no-new
-      el: '#vueMount',
-      store, // Inject store into all root level components
-      components: vueComponents,
-      data: vueData,
-    })
+    const app = createApp({
+      // data: vueData,
+      // components: vueComponents
+    }).use(store)
+    app.mixin(vueTranslationMixin)
+    app.use(VueTouch, { name: 'v-touch' })
+
+    // Register top level components
+    // Table-based Views
+    app.component('TablesContainer', TablesContainer)
+    app.component('CheckboxTablesContainer', CheckboxTablesContainer)
+    app.component('ResultsTablesContainer', ResultsTablesContainer)
+    // Checkin Statuses
+    app.component('CheckInStatusContainer', CheckInStatusContainer)
+    // Divisions Containers
+    app.component('DiversityContainer', DiversityContainer)
+    app.component('TournamentOverviewContainer', TournamentOverviewContainer)
+    // Printables
+    app.component('PrintableBallot', PrintableBallot)
+    // Allocations New
+    app.component('EditDebateAdjudicatorsContainer', EditDebateAdjudicatorsContainer)
+    app.component('EditPanelAdjudicatorsContainer', EditPanelAdjudicatorsContainer)
+    app.component('EditDebateTeamsContainer', EditDebateTeamsContainer)
+    app.component('EditDebateVenuesContainer', EditDebateVenuesContainer)
+    // Ballots New
+    app.component('BallotEntryContainer', BallotEntryContainer)
+    app.component('CheckInScanContainer', CheckInScanContainer)
+
+    app.mount('#vueMount')
   }
 }

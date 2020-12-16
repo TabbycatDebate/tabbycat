@@ -49,11 +49,11 @@
          v-text="gettext('No matching rooms found.')"></div>
     <div class="alert alert-info" v-if="entitiesByPresence.length === 0 && !isForVenues"
          v-text="gettext('No matching people found.')"></div>
-    <div class="alert alert-info"
-         v-text="gettext('This page will live-update with new check-ins as they occur although the initial list may be up to a minute old.')">
-
+    <div class="alert alert-info">
+      <span v-text="gettext('This page will live-update with new check-ins as they occur although the initial list may be up to a minute old.')"></span>
       <template v-if="assistantUrl" v-text="gettext('If you want to view this page without the sidebar (i.e. for displaying to an auditorium) you can use the assistant version.')">
-        <a :href="assistantUrl" target="_blank" v-text="gettext('Open the assistant version.')"></a></template>
+        <a :href="assistantUrl" target="_blank" v-text="gettext('Open the assistant version.')"></a>
+      </template>
     </div>
 
     <div v-for="(entities, grouper) in entitiesBySortingSetting" :key="entities[0].id" class="card mt-1">

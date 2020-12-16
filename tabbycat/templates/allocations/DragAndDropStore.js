@@ -1,14 +1,11 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import { createStore } from 'vuex'
 import { splitDebates, sortInterleaved } from './DragAndDropShardingMethods.js'
-
-Vue.use(Vuex)
 
 const debug = process.env.NODE_ENV !== 'production'
 
 // The Vuex data store that contains the list of debates that are mutated
 // and updated through websockets
-export default new Vuex.Store({
+export default createStore({
   state: {
     debatesOrPanels: {}, // Keyed by primary key
     allocatableItems: {}, // Keyed by primary key
