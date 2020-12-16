@@ -1,6 +1,7 @@
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ChannelNameRouter, ProtocolTypeRouter, URLRouter
 from django.conf.urls import url
+from django.core.asgi import get_asgi_application
 
 from actionlog.consumers import ActionLogEntryConsumer
 from adjallocation.consumers import AdjudicatorAllocationWorkerConsumer, PanelEditConsumer
@@ -16,21 +17,20 @@ from venues.consumers import VenuesWorkerConsumer
 # Note the lack of trailing "/" (but paths in apps need a trailing "/")
 
 application = ProtocolTypeRouter({
-
-    # HTTP handled automatically
+    "http": get_asgi_application(),
 
     # WebSocket handlers
     "websocket": AuthMiddlewareStack(
         URLRouter([
             # TournamentOverviewContainer
-            url(r'^ws/(?P<tournament_slug>[-\w_]+)/action_logs/$', ActionLogEntryConsumer),
-            url(r'^ws/(?P<tournament_slug>[-\w_]+)/ballot_results/$', BallotResultConsumer),
-            url(r'^ws/(?P<tournament_slug>[-\w_]+)/ballot_statuses/$', BallotStatusConsumer),
+            url(r'^ws/(?P<tournament_slug>[-\w_]+)/action_logs/$', ActionLogEntryConsumer.as_asgi()),
+            url(r'^ws/(?P<tournament_slug>[-\w_]+)/ballot_results/$', BallotResultConsumer.as_asgi()),
+            url(r'^ws/(?P<tournament_slug>[-\w_]+)/ballot_statuses/$', BallotStatusConsumer.as_asgi()),
             # CheckInStatusContainer
-            url(r'^ws/(?P<tournament_slug>[-\w_]+)/checkins/$', CheckInEventConsumer),
+            url(r'^ws/(?P<tournament_slug>[-\w_]+)/checkins/$', CheckInEventConsumer.as_asgi()),
             # Draw and Preformed Panel Edits
-            url(r'^ws/(?P<tournament_slug>[-\w_]+)/round/(?P<round_seq>[-\w_]+)/debates/$', DebateEditConsumer),
-            url(r'^ws/(?P<tournament_slug>[-\w_]+)/round/(?P<round_seq>[-\w_]+)/panels/$', PanelEditConsumer),
+            url(r'^ws/(?P<tournament_slug>[-\w_]+)/round/(?P<round_seq>[-\w_]+)/debates/$', DebateEditConsumer.as_asgi()),
+            url(r'^ws/(?P<tournament_slug>[-\w_]+)/round/(?P<round_seq>[-\w_]+)/panels/$', PanelEditConsumer.as_asgi()),
         ]),
     ),
 
