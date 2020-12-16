@@ -119,9 +119,9 @@ export default {
     setSpeakerScore: function (teamPosition, speakerPosition, speakerScore) {
       var changedScores = this.speakerScores[teamPosition]
       changedScores[speakerPosition] = Number(speakerScore)
-      this.speakerScore.teamPosition = changedScores
+      this.speakerScore[teamPosition] = changedScores
       const teamScore = Object.values(changedScores).reduce((a, b) => a + b, 0)
-      this.teamScores.teamPosition = teamScore
+      this.teamScores[teamPosition] = teamScore
     },
   },
   mounted: function () {
