@@ -1,6 +1,5 @@
 import logging
 
-from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Count, Prefetch, Q
@@ -255,15 +254,6 @@ class Tournament(models.Model):
             for category in self.breakcategory_set.order_by('seq')  # Order by break, then seq
             if category.pk in current_elim_rounds
         ]
-
-    @cached_property
-    def get_current_round_cached(self):
-        cached_key = "%s_current_round_object" % self.slug
-        if self.current_round:
-            cache.get_or_set(cached_key, self.current_round, None)
-            return cache.get(cached_key)
-        else:
-            return None
 
     @cached_property
     def billable_teams(self):
