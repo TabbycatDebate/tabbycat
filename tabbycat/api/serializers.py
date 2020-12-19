@@ -460,7 +460,7 @@ class TeamSerializer(serializers.ModelSerializer):
         3. Create the speakers.
         4. Add institution conflict"""
 
-        if len(validated_data['short_reference']) == 0:
+        if len(validated_data.get('short_reference'), "") == 0:
             validated_data['short_reference'] = validated_data['reference'][:34]
 
         speakers_data = validated_data.pop('speakers')
