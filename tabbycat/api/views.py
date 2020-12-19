@@ -1,7 +1,6 @@
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.db.models import Count, Prefetch, Q
-from django.http.response import Http404
 from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
 from rest_framework.exceptions import NotFound
@@ -354,9 +353,10 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
         """Creates an identifier"""
         obj = self.get_object_queryset()  # Don't .get() as create_identifiers expects a queryset
         if not obj.exists():
-            raise Http404
+            raise NotFound("Object could not be found")
+        status = 200 if hasattr(obj, 'checkin_identifier') else 201
         create_identifiers(self.model.checkin_identifier.related.related_model, obj)
-        return Response(self.get_response_dict(request, obj.get(), False))
+        return Response(self.get_response_dict(request, obj.get(), False), status=status)
 
 
 class AdjudicatorCheckinsView(BaseCheckinsView):
