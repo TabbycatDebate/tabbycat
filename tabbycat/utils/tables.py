@@ -487,7 +487,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             else:
                 cell = {'text': adj.name}
                 if self._show_record_links:
-                    cell['popover'] = {'content': [self._adjudicator_record_link(adj)]}
+                    cell['popover'] = {'title': adj.name, 'content': [self._adjudicator_record_link(adj)]}
                 if subtext == 'institution' and adj.institution is not None:
                     cell['subtext'] = adj.institution.code
                 adj_data.append(cell)
