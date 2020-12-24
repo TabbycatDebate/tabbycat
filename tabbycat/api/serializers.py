@@ -706,7 +706,7 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
             self.source_attrs = [self.field_source_name]  # Must set
 
             # Was the value already entered?
-            if isinstance(data, (model for model, field in self.models.values())):
+            if isinstance(data, tuple(model for model, field in self.models.values())):
                 return data
 
             try:
