@@ -85,12 +85,16 @@ class RoundViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     lookup_url_kwarg = 'round_seq'
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('motion_set')
+        return super().get_queryset().select_related(
+            'break_category', 'break_category__tournament',
+        ).prefetch_related('roundmotion_set', 'roundmotion_set__motion', 'roundmotion_set__motion__tournament')
 
 
 class MotionViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.MotionSerializer
-    tournament_field = 'round__tournament'
+
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('roundmotion_set', 'roundmotion_set__round')
 
 
 class BreakCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
@@ -488,7 +492,7 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
         filters = Q()
         if self.request.query_params.get('confirmed') or not self.request.user.is_staff:
             filters &= Q(confirmed=True)
-        return super().get_queryset().filter(filters)
+        return super().get_queryset().filter(filters).select_related('motion', 'motion__tournament')
 
 
 class FeedbackQuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):

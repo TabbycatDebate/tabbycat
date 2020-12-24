@@ -105,17 +105,6 @@ class AnonymisingHyperlinkedTournamentRelatedField(TournamentHyperlinkedRelatedF
         return super().to_representation(value)
 
 
-class MotionHyperlinkedRelatedField(RoundHyperlinkedRelatedField):
-    def get_url_kwargs(self, obj):
-        kwargs = super().get_url_kwargs(obj)
-        kwargs.pop('round_seq')
-        return kwargs
-
-
-class MotionHyperlinkedIdentityField(MotionHyperlinkedRelatedField, HyperlinkedIdentityField):
-    pass
-
-
 class AdjudicatorFeedbackIdentityField(RoundHyperlinkedIdentityField):
     default_tournament_field = None
     round_field = None
