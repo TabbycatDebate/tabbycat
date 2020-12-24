@@ -3,13 +3,13 @@ import logging
 import unicodedata
 from itertools import product
 
-from django.conf import settings
 from django.contrib import messages
 from django.db.models import OuterRef, Subquery
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.utils.functional import cached_property
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
+from django.utils.timezone import get_current_timezone_name
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
 from django.views.generic.base import TemplateView
@@ -81,9 +81,9 @@ class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
         if len(self.rounds) == 1 and getattr(self.rounds[0], 'starts_at', None):
             return _("debates start at %(time)s (in %(time_zone)s)") % {
                      'time': self.rounds[0].starts_at.strftime('%H:%M'),
-                     'time_zone': settings.TIME_ZONE}
+                     'time_zone': get_current_timezone_name()}
         elif any(getattr(r, 'starts_at', None) for r in self.rounds):
-            return _("start times in time zone: %(time_zone)s") % {'time_zone': settings.TIME_ZONE}
+            return _("start times in time zone: %(time_zone)s") % {'time_zone': get_current_timezone_name()}
         else:
             return ""
 

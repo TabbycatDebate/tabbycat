@@ -1,7 +1,6 @@
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.db.models import Count, Prefetch, Q
-from django.http.response import Http404
 from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
 from rest_framework.exceptions import NotFound
@@ -136,7 +135,9 @@ class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBr
 
     @property
     def break_category(self):
-        return get_object_or_404(BreakCategory, tournament=self.tournament, pk=self.kwargs.get('pk'))
+        if not hasattr(self, "_break_category"):
+            self._break_category = get_object_or_404(BreakCategory, tournament=self.tournament, pk=self.kwargs.get('pk'))
+        return self._break_category
 
     def get_queryset(self):
         return super().get_queryset().select_related('team', 'team__tournament').order_by('rank')
@@ -214,12 +215,19 @@ class AdjudicatorViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
     serializer_class = serializers.AdjudicatorSerializer
     access_preference = 'public_participants'
 
+    def get_break_permission(self):
+        return self.request.user.is_staff or self.tournament.pref('public_breaking_adjs')
+
     def get_queryset(self):
+        filters = Q()
+        if self.request.query_params.get('break') and self.get_break_permission():
+            filters &= Q(breaking=True)
+
         return super().get_queryset().prefetch_related(
             'team_conflicts', 'team_conflicts__tournament',
             'adjudicator_conflicts', 'adjudicator_conflicts__tournament',
             'institution_conflicts',
-        )
+        ).filter(filters)
 
 
 class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
@@ -349,9 +357,10 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
         """Creates an identifier"""
         obj = self.get_object_queryset()  # Don't .get() as create_identifiers expects a queryset
         if not obj.exists():
-            raise Http404
+            raise NotFound("Object could not be found")
+        status = 200 if hasattr(obj, 'checkin_identifier') else 201
         create_identifiers(self.model.checkin_identifier.related.related_model, obj)
-        return Response(self.get_response_dict(request, obj.get(), False))
+        return Response(self.get_response_dict(request, obj.get(), False), status=status)
 
 
 class AdjudicatorCheckinsView(BaseCheckinsView):
@@ -437,7 +446,7 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
                 'all-released': self.get_round_status(view),
             }[t.pref(view.access_preference)]
 
-            result_status = t.pref('public_results') and r.completed and not r.is_silent
+            result_status = t.pref('public_results') and r.completed and not r.silent
             return draw_status or result_status or t.pref('all_results_released')
 
         def get_round_status(self, view):
@@ -492,7 +501,9 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
         filters = Q()
         if self.request.query_params.get('confirmed') or not self.request.user.is_staff:
             filters &= Q(confirmed=True)
-        return super().get_queryset().filter(filters).select_related('motion', 'motion__tournament')
+        return super().get_queryset().filter(filters).select_related(
+            'motion', 'motion__tournament',
+            'participant_submitter__adjudicator__tournament')
 
 
 class FeedbackQuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
@@ -544,4 +555,5 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
             'source_adjudicator__debate', 'source_team__debate',
             'source_adjudicator__debate__round', 'source_team__debate__round',
             'source_adjudicator__debate__round__tournament', 'source_team__debate__round__tournament',
+            'participant_submitter__adjudicator__tournament', 'participant_submitter__speaker__team__tournament',
         ).prefetch_related(*answers_prefetch)

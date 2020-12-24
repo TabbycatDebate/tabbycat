@@ -1,0 +1,48 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-11-18 21:02\n"
+"Last-Translator: \n"
+"Language-Team: Talossan\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: tzl\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/index.po\n"
+"X-Crowdin-File-ID: 1311\n"
+"Language: tzl_TZL\n"
+
+#: ../../index.rst:18
+msgid "Installation"
+msgstr "crwdns49839:0crwdne49839:0"
+
+#: ../../index.rst:32
+msgid "Using Tabbycat"
+msgstr "crwdns49841:0crwdne49841:0"
+
+#: ../../index.rst:41
+msgid "Tabbing Guide"
+msgstr "crwdns49843:0crwdne49843:0"
+
+#: ../../index.rst:52
+msgid "Feature notes"
+msgstr "crwdns49845:0crwdne49845:0"
+
+#: ../../index.rst:75
+msgid "About"
+msgstr "crwdns49847:0crwdne49847:0"
+
+#: ../../index.rst:8
+msgid "Tabbycat User Guide"
+msgstr "crwdns49849:0crwdne49849:0"
+
+#: ../../index.rst:10
+msgid "Tabbycat is a draw tabulation system for parliamentary debate tournaments. It supports two-team formats such as Australs, World Schools, Asians, Australian Easters and all New Zealand formats, as well as British Parliamentary (WUDC). It is also highly configurable, supporting many custom variations of the above formats too. If you're looking for a general overview of the software, check out our `README on Github <https://github.com/TabbycatDebate/tabbycat>`_."
+msgstr "crwdns49851:0crwdne49851:0"
+

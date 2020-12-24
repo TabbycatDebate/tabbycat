@@ -387,6 +387,8 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
             t = kwargs['context']['tournament']
             if not t.pref('show_adjudicator_institutions'):
                 self.fields.pop('institution')
+            if not t.pref('public_breaking_adjs'):
+                self.fields.pop('breaking')
 
             self.fields.pop('base_score')
             self.fields.pop('trainee')
@@ -400,7 +402,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Adjudicator
         fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
-                  'institution', 'base_score', 'trainee', 'independent', 'adj_core',
+                  'institution', 'base_score', 'breaking', 'trainee', 'independent', 'adj_core',
                   'institution_conflicts', 'team_conflicts', 'adjudicator_conflicts', 'url_key', '_links')
 
     def create(self, validated_data):
@@ -483,7 +485,7 @@ class TeamSerializer(serializers.ModelSerializer):
         3. Create the speakers.
         4. Add institution conflict"""
 
-        if len(validated_data['short_reference']) == 0:
+        if len(validated_data.get('short_reference'), "") == 0:
             validated_data['short_reference'] = validated_data['reference'][:34]
 
         speakers_data = validated_data.pop('speakers')
@@ -696,7 +698,7 @@ class FeedbackQuestionSerializer(serializers.ModelSerializer):
 
 class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer):
 
-    class SourceField(fields.TournamentHyperlinkedRelatedField):
+    class BaseSourceField(fields.TournamentHyperlinkedRelatedField):
         """Taken from REST_Framework: rest_framework.relations.HyperlinkedRelatedField
 
         This subclass adapts the framework in order to have a hyperlinked field which
@@ -718,10 +720,7 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
                 format = self.format
 
             # Return the hyperlink, or error if incorrectly configured.
-            if value.source_adjudicator is not None:
-                url = self.get_url(value.source_adjudicator.adjudicator, 'api-adjudicator-detail', self.context['request'], format)
-            elif value.source_team is not None:
-                url = self.get_url(value.source_team.team, 'api-team-detail', self.context['request'], format)
+            url = self.get_url_options(value, format)
 
             if url is None:
                 return None
@@ -729,10 +728,10 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
             return Hyperlink(url, value)
 
         def to_internal_value(self, data):
-            self.source_attrs = ['source']  # Must set
+            self.source_attrs = [self.field_source_name]  # Must set
 
             # Was the value already entered?
-            if isinstance(data, Adjudicator) or isinstance(data, Team):
+            if isinstance(data, (model for model, field in self.models.values())):
                 return data
 
             try:
@@ -753,15 +752,37 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
             except Resolver404:
                 self.fail('no_match')
 
-            self.model = {
-                'api-adjudicator-detail': Adjudicator,
-                'api-team-detail': Team,
-            }[match.view_name]
+            self.model = {view: model for view, (model, field) in self.models.items()}[match.view_name]
 
             try:
                 return self.get_object(match.view_name, match.args, match.kwargs)
             except self.model.DoesNotExist:
                 self.fail('does_not_exist')
+
+    class SubmitterSourceField(BaseSourceField):
+        field_source_name = 'source'
+        models = {
+            'api-adjudicator-detail': (Adjudicator, 'source_adjudicator'),
+            'api-team-detail': (Team, 'source_team'),
+        }
+
+        def get_url_options(self, value, format):
+            for view_name, (model, field) in self.models.items():
+                if getattr(value, field) is not None:
+                    return self.get_url(getattr(getattr(value, field), model.__name__.lower()), view_name, self.context['request'], format)
+
+    class ParticipantSourceField(BaseSourceField):
+        field_source_name = 'participant_submitter'
+        models = {
+            'api-speaker-detail': (Speaker, 'participant_submitter'),
+            'api-adjudicator-detail': (Adjudicator, 'participant_submitter'),
+        }
+
+        def get_url_options(self, value, format):
+            for view_name, (model, field) in self.models.items():
+                obj = getattr(value.participant_submitter, model.__name__.lower(), None)
+                if obj is not None:
+                    return self.get_url(obj, view_name, self.context['request'], format)
 
     class DebateHyperlinkedRelatedField(fields.RoundHyperlinkedRelatedField):
         def lookup_kwargs(self):
@@ -782,14 +803,17 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
 
     url = fields.AdjudicatorFeedbackIdentityField(view_name='api-feedback-detail')
     adjudicator = fields.TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail', queryset=Adjudicator.objects.all())
-    source = SourceField(source='*')
-    debate = DebateHyperlinkedRelatedField(view_name='api-pairing-detail', queryset=Debate.objects.all())
+    source = SubmitterSourceField(source='*')
+    participant_submitter = ParticipantSourceField()
+    debate = DebateHyperlinkedRelatedField(view_name='api-pairing-detail', queryset=Debate.objects.all(), lookup_url_kwarg='debate_pk')
     answers = FeedbackAnswerSerializer(many=True, source='get_answers', required=False)
 
     class Meta:
         model = AdjudicatorFeedback
         exclude = ('source_adjudicator', 'source_team')
-        read_only_fields = ('timestamp', 'version', 'submitter_type', 'submitter', 'confirmer', 'confirm_timestamp', 'ip_address')
+        read_only_fields = ('timestamp', 'version',
+            'submitter_type', 'participant_submitter', 'submitter',
+            'confirmer', 'confirm_timestamp', 'ip_address')
 
     def validate(self, data):
         source = data.pop('source')
@@ -994,11 +1018,16 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
     result = ResultSerializer(source='result.get_result_info')
     motion = fields.TournamentHyperlinkedRelatedField(view_name='api-motion-detail', required=False, queryset=Motion.objects.all())
     url = fields.DebateHyperlinkedIdentityField(view_name='api-ballot-detail')
+    participant_submitter = fields.TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail',
+        queryset=Adjudicator.objects.all(), source='participant_submitter.adjudicator')
 
     class Meta:
         model = BallotSubmission
         exclude = ('debate',)
-        read_only_fields = ('timestamp', 'version', 'submitter_type', 'submitter', 'confirmer', 'confirm_timestamp', 'ip_address')
+        read_only_fields = ('timestamp', 'version',
+            'submitter_type', 'submitter', 'participant_submitter',
+            'confirmer', 'confirm_timestamp',
+            'ip_address')
 
     def get_request(self):
         return self.context['request']

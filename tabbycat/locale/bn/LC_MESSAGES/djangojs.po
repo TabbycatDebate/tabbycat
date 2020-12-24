@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-14 04:50+1100\n"
-"PO-Revision-Date: 2020-06-16 23:15\n"
+"PO-Revision-Date: 2020-07-10 07:06\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Language: bn_BD\n"
@@ -44,7 +44,7 @@ msgid "By %1"
 msgstr ""
 
 #: checkins/templates/CheckInStatusContainer.vue:
-msgid "No matching venues found."
+msgid "No matching rooms found."
 msgstr ""
 
 #: checkins/templates/CheckInStatusContainer.vue:
@@ -184,8 +184,8 @@ msgid "ID %1,"
 msgstr ""
 
 #: printing/templates/PrintableBallotHeader.vue:
-msgid "Venue:"
-msgstr "কক্ষ:"
+msgid "Room:"
+msgstr ""
 
 #: printing/templates/PrintableBallotHeader.vue:
 msgid "Chair for Panel of %1"

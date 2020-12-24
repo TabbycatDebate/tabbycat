@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-06-16 11:49\n"
+"PO-Revision-Date: 2020-08-30 23:07\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Language: bn_BD\n"
@@ -219,7 +219,7 @@ msgstr ""
 #: breakqual/templates/public_break_index.html:15 breakqual/views.py:73
 #, python-format
 msgid "%(category)s Break"
-msgstr ""
+msgstr "উন্নীতকরণ %(category)s"
 
 #: breakqual/templates/breaking_index.html:52
 #, python-format

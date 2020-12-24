@@ -269,7 +269,7 @@ class BaseMinimalTournamentTestCase(TestCase):
         self.tournament.delete()
 
 
-@tag('selenium') # Exclude from Travis
+@tag('selenium') # Tagged so we can exclude from CI
 class SeleniumTestCase(StaticLiveServerTestCase):
     """Used to verify rendered html and javascript functionality on the site as
     rendered. Opens a Chrome window and checks for JS/DOM state on the fixture

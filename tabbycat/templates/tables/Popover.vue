@@ -10,7 +10,7 @@
       <div class="popover bs-popover-bottom" role="tooltip" ref="popover"
            v-show="showingPopOver" @mouseenter="hoveringPopOver = true" @mouseleave="hidePopOver">
         <div class="popover-header d-flex">
-          <h6 class="flex-grow-1" v-if="cellData.title">{{ cellData.title }}</h6>
+          <h6 class="flex-grow-1" v-if="cellData.title" v-html="cellData.title"></h6>
           <div class="popover-close" v-on:click="hidePopOver(true)" v-on:tap="hidePopOver(true)">
             <i data-feather="x" class="hoverable text-danger"></i>
           </div>

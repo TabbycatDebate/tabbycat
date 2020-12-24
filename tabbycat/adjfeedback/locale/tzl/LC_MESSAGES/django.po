@@ -1,0 +1,965 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-18 17:59-0400\n"
+"PO-Revision-Date: 2020-11-18 22:15\n"
+"Last-Translator: \n"
+"Language-Team: Talossan\n"
+"Language: tzl_TZL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: tzl\n"
+"X-Crowdin-File: /develop/tabbycat/adjfeedback/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 924\n"
+
+#: adjfeedback/admin.py:43
+msgid "Integer scales must have a minimum and maximum"
+msgstr "crwdns29274:0crwdne29274:0"
+
+#: adjfeedback/admin.py:72 adjfeedback/admin.py:138
+msgid "target"
+msgstr "crwdns29276:0crwdne29276:0"
+
+#: adjfeedback/admin.py:73 adjfeedback/admin.py:139 adjfeedback/models.py:235
+msgid "source adjudicator"
+msgstr "crwdns29278:0crwdne29278:0"
+
+#: adjfeedback/admin.py:74 adjfeedback/admin.py:140 adjfeedback/models.py:237
+msgid "source team"
+msgstr "crwdns29280:0crwdne29280:0"
+
+#: adjfeedback/admin.py:90
+#, python-format
+msgid "%(timestamp)s (version %(version)s)"
+msgstr "crwdns51564:0%(timestamp)scrwdnd51564:0%(version)scrwdne51564:0"
+
+#: adjfeedback/admin.py:95
+msgid "Target"
+msgstr "crwdns29282:0crwdne29282:0"
+
+#: adjfeedback/admin.py:96 adjfeedback/admin.py:161
+msgid "Source"
+msgstr "crwdns29284:0crwdne29284:0"
+
+#: adjfeedback/admin.py:97
+msgid "Feedback timestamp and version"
+msgstr "crwdns51566:0crwdne51566:0"
+
+#: adjfeedback/admin.py:179
+#, python-format
+msgid "1 feedback submission was marked as confirmed. Note that this may have caused other feedback submissions to be marked as unconfirmed."
+msgid_plural "%(count)d feedback submissions were marked as confirmed. Note that this may have caused other feedback submissions to be marked as unconfirmed."
+msgstr[0] "crwdns29286:1crwdne29286:1"
+msgstr[1] "crwdns29286:5%(count)dcrwdne29286:5"
+
+#: adjfeedback/admin.py:191
+#, python-format
+msgid "1 feedback submission was not marked as confirmed, probably because other feedback submissions that conflict with it were also marked as confirmed."
+msgid_plural "%(count)d feedback submissions were not marked as confirmed, probably because other feedback submissions that conflict with them were also marked as confirmed."
+msgstr[0] "crwdns29288:1crwdne29288:1"
+msgstr[1] "crwdns29288:5%(count)dcrwdne29288:5"
+
+#: adjfeedback/admin.py:204
+#, python-format
+msgid "1 feedback submission was marked as unconfirmed."
+msgid_plural "%(count)d feedback submissions were marked as unconfirmed."
+msgstr[0] "crwdns29290:1crwdne29290:1"
+msgstr[1] "crwdns29290:5%(count)dcrwdne29290:5"
+
+#: adjfeedback/admin.py:214
+#, python-format
+msgid "1 feedback submission is now ignored."
+msgid_plural "%(count)d feedback submissions are now ignored."
+msgstr[0] "crwdns29292:1crwdne29292:1"
+msgstr[1] "crwdns29292:5%(count)dcrwdne29292:5"
+
+#: adjfeedback/admin.py:224
+#, python-format
+msgid "1 feedback submission is now recognized."
+msgid_plural "%(count)d feedback submissions are now recognized."
+msgstr[0] "crwdns29294:1crwdne29294:1"
+msgstr[1] "crwdns29294:5%(count)dcrwdne29294:5"
+
+#: adjfeedback/apps.py:7
+msgid "Adjudicator Feedback"
+msgstr "crwdns29296:0crwdne29296:0"
+
+#: adjfeedback/forms.py:26
+msgid "chair"
+msgstr "crwdns29298:0crwdne29298:0"
+
+#: adjfeedback/forms.py:27
+msgid "solo"
+msgstr "crwdns29300:0crwdne29300:0"
+
+#: adjfeedback/forms.py:28
+msgid "panellist"
+msgstr "crwdns29302:0crwdne29302:0"
+
+#: adjfeedback/forms.py:29
+msgid "trainee"
+msgstr "crwdns29304:0crwdne29304:0"
+
+#. Translators: Please leave this blank, it should be left for the base Django translations.
+#: adjfeedback/forms.py:57
+msgid "Yes"
+msgstr "crwdns29306:0crwdne29306:0"
+
+#. Translators: Please leave this blank, it should be left for the base Django translations.
+#: adjfeedback/forms.py:59
+msgid "No"
+msgstr "crwdns29308:0crwdne29308:0"
+
+#. Translators: Please leave this blank, it should be left for the base Django translations.
+#: adjfeedback/forms.py:74 adjfeedback/forms.py:83
+msgid "This field is required."
+msgstr "crwdns29310:0crwdne29310:0"
+
+#: adjfeedback/forms.py:164
+#, python-format
+msgid "Overall score (%(min)d=worst; %(max)d=best)*"
+msgstr "crwdns51062:0%(min)dcrwdnd51062:0%(max)dcrwdne51062:0"
+
+#: adjfeedback/forms.py:176
+msgid "Ignored"
+msgstr "crwdns29314:0crwdne29314:0"
+
+#. Translators: e.g. "Megan Pearson (chair)", with adjpos="chair"
+#: adjfeedback/forms.py:228 adjfeedback/forms.py:291
+msgid "Submitted - "
+msgstr "crwdns51064:0crwdne51064:0"
+
+#. Translators: e.g. "Megan Pearson (panellist)", with round="Round 3", adjpos="panellist"
+#: adjfeedback/forms.py:229 adjfeedback/forms.py:296
+#, python-format
+msgid "%(name)s (%(adjpos)s)"
+msgstr "crwdns51066:0%(name)scrwdnd51066:0%(adjpos)scrwdne51066:0"
+
+#: adjfeedback/forms.py:252 adjfeedback/forms.py:326
+msgid "-- Adjudicators --"
+msgstr "crwdns29318:0crwdne29318:0"
+
+#: adjfeedback/forms.py:269
+msgid "Adjudicator this feedback is about"
+msgstr "crwdns29320:0crwdne29320:0"
+
+#: adjfeedback/forms.py:293
+#, python-format
+msgid "%(name)s"
+msgstr "crwdns51068:0%(name)scrwdne51068:0"
+
+#: adjfeedback/forms.py:299
+#, python-format
+msgid "%(name)s (chair gave oral)"
+msgstr "crwdns51070:0%(name)scrwdne51070:0"
+
+#: adjfeedback/forms.py:301
+#, python-format
+msgid "%(name)s (panellist gave oral as chair rolled)"
+msgstr "crwdns51072:0%(name)scrwdne51072:0"
+
+#: adjfeedback/forms.py:392
+#, python-format
+msgid "This line (for %(adjudicator)s) didn't have a score"
+msgstr "crwdns29328:0%(adjudicator)scrwdne29328:0"
+
+#: adjfeedback/forms.py:397
+#, python-format
+msgid "This line (for %(adjudicator)s) had too many columns"
+msgstr "crwdns29330:0%(adjudicator)scrwdne29330:0"
+
+#: adjfeedback/forms.py:410
+#, python-format
+msgid "There are several adjudicators called \"%(adjudicator)s\", so you can't use the bulk importer to update their score. Please do so in the Feedback Overview page instead."
+msgstr "crwdns29332:0%(adjudicator)scrwdne29332:0"
+
+#: adjfeedback/forms.py:416
+#, python-format
+msgid "There is no adjudicator in this tournament with the name \"%(adjudicator)s\""
+msgstr "crwdns29334:0%(adjudicator)scrwdne29334:0"
+
+#: adjfeedback/forms.py:424
+#, python-format
+msgid "The score for %(adjudicator)s, \"%(score)s\", isn't a number"
+msgstr "crwdns29336:0%(adjudicator)scrwdnd29336:0%(score)scrwdne29336:0"
+
+#: adjfeedback/forms.py:439
+msgid "There were no scores to import."
+msgstr "crwdns29338:0crwdne29338:0"
+
+#: adjfeedback/models.py:13 adjfeedback/models.py:230
+msgid "adjudicator"
+msgstr "crwdns29340:0crwdne29340:0"
+
+#: adjfeedback/models.py:16
+msgid "round"
+msgstr "crwdns29342:0crwdne29342:0"
+
+#: adjfeedback/models.py:17 adjfeedback/models.py:231
+msgid "score"
+msgstr "crwdns29344:0crwdne29344:0"
+
+#: adjfeedback/models.py:18
+msgid "timestamp"
+msgstr "crwdns29346:0crwdne29346:0"
+
+#: adjfeedback/models.py:21
+msgid "adjudicator base score history"
+msgstr "crwdns35554:0crwdne35554:0"
+
+#: adjfeedback/models.py:22
+msgid "adjudicator base score histories"
+msgstr "crwdns35556:0crwdne35556:0"
+
+#: adjfeedback/models.py:30
+msgid "question"
+msgstr "crwdns29352:0crwdne29352:0"
+
+#: adjfeedback/models.py:32
+msgid "feedback"
+msgstr "crwdns29354:0crwdne29354:0"
+
+#: adjfeedback/models.py:45 adjfeedback/models.py:55 adjfeedback/models.py:65
+#: adjfeedback/models.py:74
+msgid "answer"
+msgstr "crwdns29356:0crwdne29356:0"
+
+#: adjfeedback/models.py:48
+msgid "adjudicator feedback boolean answer"
+msgstr "crwdns29358:0crwdne29358:0"
+
+#: adjfeedback/models.py:49
+msgid "adjudicator feedback boolean answers"
+msgstr "crwdns29360:0crwdne29360:0"
+
+#: adjfeedback/models.py:58
+msgid "adjudicator feedback integer answer"
+msgstr "crwdns29362:0crwdne29362:0"
+
+#: adjfeedback/models.py:59
+msgid "adjudicator feedback integer answers"
+msgstr "crwdns29364:0crwdne29364:0"
+
+#: adjfeedback/models.py:68
+msgid "adjudicator feedback float answer"
+msgstr "crwdns29366:0crwdne29366:0"
+
+#: adjfeedback/models.py:69
+msgid "adjudicator feedback float answers"
+msgstr "crwdns29368:0crwdne29368:0"
+
+#: adjfeedback/models.py:77
+msgid "adjudicator feedback string answer"
+msgstr "crwdns29370:0crwdne29370:0"
+
+#: adjfeedback/models.py:78
+msgid "adjudicator feedback string answers"
+msgstr "crwdns29372:0crwdne29372:0"
+
+#: adjfeedback/models.py:86
+msgid "adjudicator feedback multiple select answer"
+msgstr "crwdns51702:0crwdne51702:0"
+
+#: adjfeedback/models.py:87
+msgid "adjudicator feedback multiple select answers"
+msgstr "crwdns51704:0crwdne51704:0"
+
+#: adjfeedback/models.py:106
+msgid "checkbox"
+msgstr "crwdns29374:0crwdne29374:0"
+
+#: adjfeedback/models.py:107
+msgid "yes/no (dropdown)"
+msgstr "crwdns29376:0crwdne29376:0"
+
+#: adjfeedback/models.py:108
+msgid "integer (textbox)"
+msgstr "crwdns29378:0crwdne29378:0"
+
+#: adjfeedback/models.py:109
+msgid "integer scale"
+msgstr "crwdns29380:0crwdne29380:0"
+
+#: adjfeedback/models.py:110
+msgid "float"
+msgstr "crwdns29382:0crwdne29382:0"
+
+#: adjfeedback/models.py:111 adjfeedback/models.py:144
+msgid "text"
+msgstr "crwdns29384:0crwdne29384:0"
+
+#: adjfeedback/models.py:112
+msgid "long text"
+msgstr "crwdns29386:0crwdne29386:0"
+
+#: adjfeedback/models.py:113
+msgid "select one"
+msgstr "crwdns29388:0crwdne29388:0"
+
+#: adjfeedback/models.py:114
+msgid "select multiple"
+msgstr "crwdns29390:0crwdne29390:0"
+
+#: adjfeedback/models.py:140
+msgid "tournament"
+msgstr "crwdns29392:0crwdne29392:0"
+
+#: adjfeedback/models.py:142
+msgid "sequence number"
+msgstr "crwdns29394:0crwdne29394:0"
+
+#: adjfeedback/models.py:145
+msgid "The question displayed to participants, e.g., \"Did you agree with the decision?\""
+msgstr "crwdns29396:0crwdne29396:0"
+
+#: adjfeedback/models.py:147
+msgid "name"
+msgstr "crwdns29398:0crwdne29398:0"
+
+#: adjfeedback/models.py:148
+msgid "A short name for the question, e.g., \"Agree with decision\""
+msgstr "crwdns29400:0crwdne29400:0"
+
+#: adjfeedback/models.py:150
+msgid "reference"
+msgstr "crwdns29402:0crwdne29402:0"
+
+#: adjfeedback/models.py:151
+msgid "Code-compatible reference, e.g., \"agree_with_decision\""
+msgstr "crwdns29404:0crwdne29404:0"
+
+#: adjfeedback/models.py:154
+msgid "from adjudicator"
+msgstr "crwdns29406:0crwdne29406:0"
+
+#: adjfeedback/models.py:155
+msgid "Adjudicators should be asked this question (about other adjudicators)"
+msgstr "crwdns29408:0crwdne29408:0"
+
+#: adjfeedback/models.py:157
+msgid "from team"
+msgstr "crwdns29410:0crwdne29410:0"
+
+#: adjfeedback/models.py:158
+msgid "Teams should be asked this question"
+msgstr "crwdns29412:0crwdne29412:0"
+
+#: adjfeedback/models.py:161
+msgid "answer type"
+msgstr "crwdns29414:0crwdne29414:0"
+
+#: adjfeedback/models.py:163
+msgid "required"
+msgstr "crwdns29416:0crwdne29416:0"
+
+#: adjfeedback/models.py:164
+msgid "Whether participants are required to fill out this field"
+msgstr "crwdns29418:0crwdne29418:0"
+
+#: adjfeedback/models.py:166
+msgid "minimum value"
+msgstr "crwdns29420:0crwdne29420:0"
+
+#: adjfeedback/models.py:167
+msgid "Minimum allowed value for numeric fields (ignored for text or boolean fields)"
+msgstr "crwdns29422:0crwdne29422:0"
+
+#: adjfeedback/models.py:169
+msgid "maximum value"
+msgstr "crwdns29424:0crwdne29424:0"
+
+#: adjfeedback/models.py:170
+msgid "Maximum allowed value for numeric fields (ignored for text or boolean fields)"
+msgstr "crwdns29426:0crwdne29426:0"
+
+#: adjfeedback/models.py:175
+msgid "choices"
+msgstr "crwdns29428:0crwdne29428:0"
+
+#: adjfeedback/models.py:176
+msgid "Permissible choices for select one/multiple fields (ignored for other fields)"
+msgstr "crwdns51706:0crwdne51706:0"
+
+#: adjfeedback/models.py:181
+msgid "adjudicator feedback question"
+msgstr "crwdns29432:0crwdne29432:0"
+
+#: adjfeedback/models.py:182
+msgid "adjudicator feedback questions"
+msgstr "crwdns29434:0crwdne29434:0"
+
+#: adjfeedback/models.py:240 adjfeedback/views.py:768
+msgid "ignored"
+msgstr "crwdns29436:0crwdne29436:0"
+
+#: adjfeedback/models.py:241
+msgid "Whether the feedback should affect the adjudicator's score"
+msgstr "crwdns51074:0crwdne51074:0"
+
+#: adjfeedback/models.py:245
+msgid "adjudicator feedback"
+msgstr "crwdns29440:0crwdne29440:0"
+
+#: adjfeedback/models.py:246
+msgid "adjudicator feedbacks"
+msgstr "crwdns29442:0crwdne29442:0"
+
+#: adjfeedback/models.py:300
+msgid "Either the source adjudicator or source team wasn't specified."
+msgstr "crwdns29444:0crwdne29444:0"
+
+#: adjfeedback/models.py:303
+msgid "There was both a source adjudicator and a source team."
+msgstr "crwdns29446:0crwdne29446:0"
+
+#: adjfeedback/models.py:305
+msgid "There is no adjudicator specified as the target for this feedback. Perhaps they were deleted?"
+msgstr "crwdns35160:0crwdne35160:0"
+
+#: adjfeedback/models.py:307
+msgid "Adjudicator did not see this debate."
+msgstr "crwdns29450:0crwdne29450:0"
+
+#: adjfeedback/tables.py:19
+msgid "Whether the adj is marked as breaking (click to mark)"
+msgstr "crwdns33934:0crwdne33934:0"
+
+#: adjfeedback/tables.py:35
+msgid "N/A"
+msgstr "crwdns51568:0crwdne51568:0"
+
+#: adjfeedback/tables.py:45
+msgid "Current weighted score"
+msgstr "crwdns33936:0crwdne33936:0"
+
+#: adjfeedback/tables.py:50
+msgid "This adjudicator's current rating."
+msgstr "crwdns33938:0crwdne33938:0"
+
+#: adjfeedback/tables.py:58
+msgid "Base score result"
+msgstr "crwdns35558:0crwdne35558:0"
+
+#: adjfeedback/tables.py:65
+msgid "Click to edit base score"
+msgstr "crwdns35560:0crwdne35560:0"
+
+#: adjfeedback/tables.py:70
+msgid "Assigned base score"
+msgstr "crwdns35562:0crwdne35562:0"
+
+#: adjfeedback/tables.py:79
+msgid "The current difference between an adjudicator's base score and current score"
+msgstr "crwdns35564:0crwdne35564:0"
+
+#: adjfeedback/tables.py:84
+msgid "The difference between this adjudicator's base score and current score"
+msgstr "crwdns35566:0crwdne35566:0"
+
+#: adjfeedback/tables.py:93
+msgid "The standard deviation of this adjudicator's current scores; with larger numbers meaning less consistent feedback scores."
+msgstr "crwdns33950:0crwdne33950:0"
+
+#: adjfeedback/tables.py:97
+msgid "The standard deviation of this adjudicator's current scores"
+msgstr "crwdns33952:0crwdne33952:0"
+
+#: adjfeedback/tables.py:106
+msgid "Feedback Per Round"
+msgstr "crwdns29452:0crwdne29452:0"
+
+#: adjfeedback/tables.py:107
+msgid "Hover over the data points to show the average score received in that round"
+msgstr "crwdns33954:0crwdne33954:0"
+
+#: adjfeedback/tables.py:125
+#, python-format
+msgid "View %(count)s<br>feedback"
+msgid_plural "View %(count)s<br>feedbacks"
+msgstr[0] "crwdns35162:1%(count)scrwdne35162:1"
+msgstr[1] "crwdns35162:5%(count)scrwdne35162:5"
+
+#: adjfeedback/tables.py:148
+msgid "Unsubmitted feedback ballots"
+msgstr "crwdns33960:0crwdne33960:0"
+
+#: adjfeedback/tables.py:172
+msgid "View Missing Feedback"
+msgstr "crwdns33962:0crwdne33962:0"
+
+#: adjfeedback/templates/add_feedback.html:5
+msgid "Who is the feedback from?"
+msgstr "crwdns29454:0crwdne29454:0"
+
+#: adjfeedback/templates/add_feedback.html:6
+#: adjfeedback/templates/enter_feedback.html:5
+msgid "Enter Feedback"
+msgstr "crwdns29456:0crwdne29456:0"
+
+#: adjfeedback/templates/enter_feedback.html:9
+#: adjfeedback/templates/public_add_feedback.html:13
+#: adjfeedback/templates/public_add_feedback.html:20
+#, python-format
+msgid "Add Feedback from %(name)s"
+msgstr "crwdns51698:0%(name)scrwdne51698:0"
+
+#: adjfeedback/templates/enter_feedback.html:13
+#: adjfeedback/templates/feedback_base.html:42
+msgid "Add Feedback"
+msgstr "crwdns29460:0crwdne29460:0"
+
+#: adjfeedback/templates/enter_feedback.html:21
+msgid "There are no feedback options because no rounds have been released to the public yet. Check back when they have!"
+msgstr "crwdns29462:0crwdne29462:0"
+
+#: adjfeedback/templates/enter_feedback.html:27
+msgid "This tournament expects you to submit feedback <strong>only on the adjudicator who delivered the adjudication</strong>. Do not submit feedback on other adjudicators."
+msgstr "crwdns33964:0crwdne33964:0"
+
+#: adjfeedback/templates/enter_feedback.html:29
+msgid "This tournament expects you to submit feedback on all of the adjudicators on the panel (including trainees)."
+msgstr "crwdns33966:0crwdne33966:0"
+
+#: adjfeedback/templates/enter_feedback.html:43
+msgid "There are some problems with this feedback submission. Please review and correct them."
+msgstr "crwdns29464:0crwdne29464:0"
+
+#: adjfeedback/templates/enter_feedback.html:58
+msgid "When submitting this form your IP address will be stored for logging purposes."
+msgstr "crwdns29466:0crwdne29466:0"
+
+#: adjfeedback/templates/feedback_base.html:8
+msgid "Overview"
+msgstr "crwdns29468:0crwdne29468:0"
+
+#: adjfeedback/templates/feedback_base.html:12
+msgid "Latest"
+msgstr "crwdns29470:0crwdne29470:0"
+
+#: adjfeedback/templates/feedback_base.html:16
+msgid "Unsubmitted"
+msgstr "crwdns29472:0crwdne29472:0"
+
+#: adjfeedback/templates/feedback_base.html:20
+msgid "Important"
+msgstr "crwdns29474:0crwdne29474:0"
+
+#: adjfeedback/templates/feedback_base.html:24
+msgid "Comments"
+msgstr "crwdns33968:0crwdne33968:0"
+
+#: adjfeedback/templates/feedback_base.html:28
+msgid "By Source"
+msgstr "crwdns33970:0crwdne33970:0"
+
+#: adjfeedback/templates/feedback_base.html:32
+msgid "By Target"
+msgstr "crwdns33972:0crwdne33972:0"
+
+#: adjfeedback/templates/feedback_base.html:39
+msgid "Bulk Update Scores"
+msgstr "crwdns29480:0crwdne29480:0"
+
+#: adjfeedback/templates/feedback_by_source.html:4
+#: adjfeedback/templates/feedback_by_source.html:5
+#, python-format
+msgid "Feedback %(source_type)s %(source_name)s"
+msgstr "crwdns29482:0%(source_type)scrwdnd29482:0%(source_name)scrwdne29482:0"
+
+#: adjfeedback/templates/feedback_by_source.html:12
+#, python-format
+msgid "%(source_name)s hasn't submitted any feedback yet."
+msgstr "crwdns29484:0%(source_name)scrwdne29484:0"
+
+#: adjfeedback/templates/feedback_by_source.html:17
+#, python-format
+msgid "%(source_name)s hasn't received any feedback yet."
+msgstr "crwdns29486:0%(source_name)scrwdne29486:0"
+
+#: adjfeedback/templates/feedback_card.html:8
+msgid "This is most likely because the team or adjudicator who submitted this feedback has submitted several times on the same person; or because a team has submitted feedback on multiple panellists (rather than just the orallist)."
+msgstr "crwdns33974:0crwdne33974:0"
+
+#: adjfeedback/templates/feedback_card.html:9
+msgid "Unconfirmed; will not affect this adjudicator's score."
+msgstr "crwdns29490:0crwdne29490:0"
+
+#: adjfeedback/templates/feedback_card.html:14
+msgid "The feedback is counted for the adjudicator, but is not taken into account when calculating scores."
+msgstr "crwdns29492:0crwdne29492:0"
+
+#: adjfeedback/templates/feedback_card.html:15
+msgid "Ignored; will not affect this adjudicator's score."
+msgstr "crwdns29494:0crwdne29494:0"
+
+#: adjfeedback/templates/feedback_card.html:20
+msgid "This feedback is submitted on an adjudicator but it looks like they have been since been removed from the debate. You should probably go to the Edit Database area and delete this feedback."
+msgstr "crwdns29496:0crwdne29496:0"
+
+#: adjfeedback/templates/feedback_card.html:29
+msgid "The score given in this piece of feedback."
+msgstr "crwdns29498:0crwdne29498:0"
+
+#: adjfeedback/templates/feedback_card.html:30
+#, python-format
+msgid "%(round)s %(score)s"
+msgstr "crwdns51076:0%(round)scrwdnd51076:0%(score)scrwdne51076:0"
+
+#: adjfeedback/templates/feedback_card.html:34
+#, python-format
+msgid "On %(adjudicator)s"
+msgstr "crwdns51794:0%(adjudicator)scrwdne51794:0"
+
+#: adjfeedback/templates/feedback_card.html:39
+#, python-format
+msgid "<span class=\"text-secondary small\">Received as %(as)s</span>"
+msgstr "crwdns33980:0%(as)scrwdne33980:0"
+
+#: adjfeedback/templates/feedback_card.html:43
+#, python-format
+msgid "Base %(base)s"
+msgstr "crwdns51080:0%(base)scrwdne51080:0"
+
+#: adjfeedback/templates/feedback_card.html:50
+#, python-format
+msgid "From %(source)s <span class=\"text-secondary small\">(their %(relationship)s)</span>"
+msgstr "crwdns33982:0%(source)scrwdnd33982:0%(relationship)scrwdne33982:0"
+
+#: adjfeedback/templates/feedback_card.html:54
+#, python-format
+msgid "From %(source)s <span class=\"text-secondary small\">(%(relationship)s from %(side)s)</span>"
+msgstr "crwdns33984:0%(source)scrwdnd33984:0%(relationship)scrwdnd33984:0%(side)scrwdne33984:0"
+
+#: adjfeedback/templates/feedback_card.html:58
+msgid "From unknown"
+msgstr "crwdns29512:0crwdne29512:0"
+
+#: adjfeedback/templates/feedback_card.html:85
+#, python-format
+msgid "%(time)s"
+msgstr "crwdns33986:0%(time)scrwdne33986:0"
+
+#: adjfeedback/templates/feedback_card.html:90
+msgid "Unconfirmed feedback is not counted as having been submitted and does not affect this adjudicator's score."
+msgstr "crwdns35042:0crwdne35042:0"
+
+#: adjfeedback/templates/feedback_card.html:95
+msgid "Un-confirm"
+msgstr "crwdns33990:0crwdne33990:0"
+
+#: adjfeedback/templates/feedback_card.html:95
+msgid "Confirm"
+msgstr "crwdns33992:0crwdne33992:0"
+
+#: adjfeedback/templates/feedback_card.html:100
+msgid "Ignored feedback is counted as having been submitted, but does not affect this adjudicator's score."
+msgstr "crwdns35044:0crwdne35044:0"
+
+#: adjfeedback/templates/feedback_card.html:105
+msgid "Un-ignore"
+msgstr "crwdns29518:0crwdne29518:0"
+
+#: adjfeedback/templates/feedback_card.html:105
+msgid "Ignore"
+msgstr "crwdns29520:0crwdne29520:0"
+
+#: adjfeedback/templates/feedback_cards_list.html:17
+msgid "No feedback has been submitted yet"
+msgstr "crwdns29522:0crwdne29522:0"
+
+#: adjfeedback/templates/feedback_overview.html:4
+#, python-format
+msgid "<span id=\"c_breaking\">%(c_breaking)s</span> marked as breaking"
+msgstr "crwdns29524:0%(c_breaking)scrwdne29524:0"
+
+#: adjfeedback/templates/feedback_overview.html:10
+#, python-format
+msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects only chairs to submit feedback (on their panellists and trainees)."
+msgstr "crwdns29526:0%(option_url)scrwdne29526:0"
+
+#: adjfeedback/templates/feedback_overview.html:14
+#, python-format
+msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects both chairs and panellists to submit feedback on each other, and also chairs to submit on trainees."
+msgstr "crwdns29528:0%(option_url)scrwdne29528:0"
+
+#: adjfeedback/templates/feedback_overview.html:20
+#, python-format
+msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects all adjudicators (including trainees) to submit feedback on every other member of the panel (including trainees)."
+msgstr "crwdns29530:0%(option_url)scrwdne29530:0"
+
+#: adjfeedback/templates/feedback_overview.html:31
+#, python-format
+msgid "There is <strong>%(nadjs_outside_range)s adjudicator</strong> with a score <strong>outside the permitted range</strong> of adjudicator scores, which is currently set as %(min_score)s to %(max_score)s. This can cause adjudicator auto-allocation to behave in unexpected ways. If you'd like to use a wider score range, you can configure this in <a href=\"%(feedback_settings_url)s\" class=\"alert-link\"> feedback settings</a>."
+msgid_plural "There are <strong>%(nadjs_outside_range)s adjudicators</strong> with scores <strong>outside the permitted range</strong> of adjudicator scores, which is currently set as %(min_score)s to %(max_score)s. This can cause adjudicator auto-allocation to behave in unexpected ways. If you'd like to use a wider score range, you can configure this in <a href=\"%(feedback_settings_url)s\" class=\"alert-link\"> feedback settings</a>."
+msgstr[0] "crwdns29532:1%(nadjs_outside_range)scrwdnd29532:1%(min_score)scrwdnd29532:1%(max_score)scrwdnd29532:1%(feedback_settings_url)scrwdne29532:1"
+msgstr[1] "crwdns29532:5%(nadjs_outside_range)scrwdnd29532:5%(min_score)scrwdnd29532:5%(max_score)scrwdnd29532:5%(feedback_settings_url)scrwdne29532:5"
+
+#: adjfeedback/templates/overview_breakdowns.html:13
+#, python-format
+msgid "%(count)s adjudicator currently has a score equal to or above %(min)s and below %(max)s. That is %(percent)s%% of the adjudicator pool."
+msgid_plural "%(count)s adjudicators currently have a score equal to or above %(min)s and below %(max)s. That is %(percent)s%% of the adjudicator pool."
+msgstr[0] "crwdns29534:1%(count)scrwdnd29534:1%(min)scrwdnd29534:1%(max)scrwdnd29534:1%(percent)scrwdnd29534:1%%crwdne29534:1"
+msgstr[1] "crwdns29534:5%(count)scrwdnd29534:5%(min)scrwdnd29534:5%(max)scrwdnd29534:5%(percent)scrwdnd29534:5%%crwdne29534:5"
+
+#: adjfeedback/templates/overview_breakdowns.html:27
+#, python-format
+msgid "Score Distributions (range is %(min_score)s–%(max_score)s)"
+msgstr "crwdns29536:0%(min_score)scrwdnd29536:0%(max_score)scrwdne29536:0"
+
+#: adjfeedback/templates/overview_breakdowns.html:43
+msgid "Base"
+msgstr "crwdns51082:0crwdne51082:0"
+
+#: adjfeedback/templates/overview_breakdowns.html:49
+msgid "Feedback"
+msgstr "crwdns29540:0crwdne29540:0"
+
+#: adjfeedback/templates/overview_breakdowns.html:53
+#, python-format
+msgid "The proportion of an adjudicator's score determined by feedback vs the test is set on a per-round basis. Click this link and edit the 'Feedback weight' field to modify this ratio for %(round)s."
+msgstr "crwdns29542:0%(round)scrwdne29542:0"
+
+#: adjfeedback/templates/overview_breakdowns.html:57
+msgid "Score Ratio"
+msgstr "crwdns29544:0crwdne29544:0"
+
+#: adjfeedback/templates/overview_breakdowns.html:72
+#, python-format
+msgid "There is %(c_chairs)s debate per round, so there needs to be %(c_chairs)s chair."
+msgid_plural "There are %(c_chairs)s debates per round, so there need to be %(c_chairs)s chairs."
+msgstr[0] "crwdns29546:1%(c_chairs)scrwdnd29546:1%(c_chairs)scrwdne29546:1"
+msgstr[1] "crwdns29546:5%(c_chairs)scrwdnd29546:5%(c_chairs)scrwdne29546:5"
+
+#: adjfeedback/templates/overview_breakdowns.html:78
+#, python-format
+msgid "There is %(c_debates)s debate per round, but only %(c_chairs)s above the minimum voting score."
+msgid_plural "There are %(c_debates)s debates per round, but only %(c_chairs)s above the minimum voting score."
+msgstr[0] "crwdns29548:1%(c_debates)scrwdnd29548:1%(c_chairs)scrwdne29548:1"
+msgstr[1] "crwdns29548:5%(c_debates)scrwdnd29548:5%(c_chairs)scrwdne29548:5"
+
+#: adjfeedback/templates/overview_breakdowns.html:85
+#, python-format
+msgid "%(c_chairs)s chair"
+msgid_plural "%(c_chairs)s chairs"
+msgstr[0] "crwdns29550:1%(c_chairs)scrwdne29550:1"
+msgstr[1] "crwdns29550:5%(c_chairs)scrwdne29550:5"
+
+#: adjfeedback/templates/overview_breakdowns.html:95
+msgid "All adjudicators with a score high enough to vote, but who aren't allocated as chairs, are allocated as panellists by the auto-allocator."
+msgstr "crwdns29552:0crwdne29552:0"
+
+#: adjfeedback/templates/overview_breakdowns.html:99
+#, python-format
+msgid "%(c_panellists)s panellist"
+msgid_plural "%(c_panellists)s panellists"
+msgstr[0] "crwdns29554:1%(c_panellists)scrwdne29554:1"
+msgstr[1] "crwdns29554:5%(c_panellists)scrwdne29554:5"
+
+#: adjfeedback/templates/overview_breakdowns.html:109
+#, python-format
+msgid "Adjudicators are allocated as trainees by the auto-allocator if their score is less than the 'minimum voting score' (currently %(min_voting)s) set in this tournament's Draw Rules configuration."
+msgstr "crwdns29556:0%(min_voting)scrwdne29556:0"
+
+#: adjfeedback/templates/overview_breakdowns.html:114
+#, python-format
+msgid "%(c_trainees)s trainee"
+msgid_plural "%(c_trainees)s trainees"
+msgstr[0] "crwdns29558:1%(c_trainees)scrwdne29558:1"
+msgstr[1] "crwdns29558:5%(c_trainees)scrwdne29558:5"
+
+#: adjfeedback/templates/overview_breakdowns.html:123
+#, python-format
+msgid "Auto-Allocate Distributions (%(min_voting_score)s+ to vote)"
+msgstr "crwdns29560:0%(min_voting_score)scrwdne29560:0"
+
+#: adjfeedback/templates/overview_modals.html:10
+msgid "Change Base Score"
+msgstr "crwdns35568:0crwdne35568:0"
+
+#: adjfeedback/templates/overview_modals.html:17
+#, python-format
+msgid "The score range for adjudicators is between <strong>%(pref.adj_min_score)s</strong> and <strong>%(pref.adj_max_score)s</strong>. Decimals are permitted. This can be configured in <a href=\"%(feedback_options)s\">Feedback settings</a>."
+msgstr "crwdns29564:0%(pref.adj_min_score)scrwdnd29564:0%(pref.adj_max_score)scrwdnd29564:0%(feedback_options)scrwdne29564:0"
+
+#: adjfeedback/templates/overview_modals.html:25
+#, python-format
+msgid "The minimum score require to be allocated as a panellist or chair (when using the auto-allocator) is <strong>%(min_voting_score)s</strong>. This can be configured in <a href=\"%(draw_rules)s\">Draw settings</a>."
+msgstr "crwdns29566:0%(min_voting_score)scrwdnd29566:0%(draw_rules)scrwdne29566:0"
+
+#: adjfeedback/templates/overview_modals.html:34
+msgid "Base score"
+msgstr "crwdns35570:0crwdne35570:0"
+
+#: adjfeedback/templates/overview_modals.html:41
+msgid "Save Base Score"
+msgstr "crwdns35572:0crwdne35572:0"
+
+#: adjfeedback/templates/public_add_feedback.html:4
+msgid "Who are you?"
+msgstr "crwdns29576:0crwdne29576:0"
+
+#: adjfeedback/templates/public_add_feedback.html:5
+msgid "click your name or your team on this list"
+msgstr "crwdns29578:0crwdne29578:0"
+
+#: adjfeedback/templates/update_adjudicator_scores.html:4
+#: adjfeedback/templates/update_adjudicator_scores.html:6
+msgctxt "page title"
+msgid "Update Adjudicator Scores"
+msgstr "crwdns29582:0crwdne29582:0"
+
+#: adjfeedback/templates/update_adjudicator_scores.html:11
+#, python-format
+msgid "There aren't any adjudicators in this tournament, so you can't update any scores. You might want to <a href=\"%(import_url)s\" class=\"alert-link\">import some adjudicators</a> first."
+msgstr "crwdns29584:0%(import_url)scrwdne29584:0"
+
+#: adjfeedback/templates/update_adjudicator_scores.html:28
+msgid "Paste a list of adjudicators' names and their new scores, in the format: <code>adjudicator,score</code>. For example:"
+msgstr "crwdns29586:0crwdne29586:0"
+
+#: adjfeedback/templates/update_adjudicator_scores.html:40
+msgid "The adjudicators' names must match their names in the tab system exactly."
+msgstr "crwdns29588:0crwdne29588:0"
+
+#: adjfeedback/templates/update_adjudicator_scores.html:47
+msgid "There are some problems with the data on this form:"
+msgstr "crwdns29590:0crwdne29590:0"
+
+#: adjfeedback/templates/update_adjudicator_scores.html:58
+msgid "Submit"
+msgstr "crwdns29592:0crwdne29592:0"
+
+#: adjfeedback/views.py:118
+msgid "Feedback Overview"
+msgstr "crwdns29594:0crwdne29594:0"
+
+#: adjfeedback/views.py:142
+msgid "Find Feedback on Adjudicator"
+msgstr "crwdns29596:0crwdne29596:0"
+
+#: adjfeedback/views.py:153 adjfeedback/views.py:177 adjfeedback/views.py:192
+#, python-format
+msgid "%(count)d feedback"
+msgid_plural "%(count)d feedbacks"
+msgstr[0] "crwdns29598:1%(count)dcrwdne29598:1"
+msgstr[1] "crwdns29598:5%(count)dcrwdne29598:5"
+
+#: adjfeedback/views.py:156 adjfeedback/views.py:182 adjfeedback/views.py:197
+msgid "Feedbacks"
+msgstr "crwdns29600:0crwdne29600:0"
+
+#: adjfeedback/views.py:163
+msgid "Find Feedback"
+msgstr "crwdns29602:0crwdne29602:0"
+
+#: adjfeedback/views.py:171 adjfeedback/views.py:710
+msgid "From Teams"
+msgstr "crwdns29604:0crwdne29604:0"
+
+#: adjfeedback/views.py:186 adjfeedback/views.py:704
+msgid "From Adjudicators"
+msgstr "crwdns29606:0crwdne29606:0"
+
+#: adjfeedback/views.py:271
+msgid "Latest Feedback"
+msgstr "crwdns29608:0crwdne29608:0"
+
+#: adjfeedback/views.py:272
+msgid "(30 most recent)"
+msgstr "crwdns29610:0crwdne29610:0"
+
+#: adjfeedback/views.py:282
+msgid "Only Comments"
+msgstr "crwdns33996:0crwdne33996:0"
+
+#: adjfeedback/views.py:283
+msgid "(250 most recent)"
+msgstr "crwdns33998:0crwdne33998:0"
+
+#: adjfeedback/views.py:294
+msgid "Important Feedback"
+msgstr "crwdns29612:0crwdne29612:0"
+
+#: adjfeedback/views.py:295
+msgid "(rating was much higher/lower than expected)"
+msgstr "crwdns29614:0crwdne29614:0"
+
+#: adjfeedback/views.py:362
+msgid "A Team"
+msgstr "crwdns29616:0crwdne29616:0"
+
+#: adjfeedback/views.py:367
+msgid "Team"
+msgstr "crwdns29618:0crwdne29618:0"
+
+#: adjfeedback/views.py:374 adjfeedback/views.py:391
+msgid "Institution"
+msgstr "crwdns29620:0crwdne29620:0"
+
+#: adjfeedback/views.py:377
+msgid "An Adjudicator"
+msgstr "crwdns29622:0crwdne29622:0"
+
+#: adjfeedback/views.py:384
+msgid "Adjudicator"
+msgstr "crwdns29624:0crwdne29624:0"
+
+#: adjfeedback/views.py:511
+#, python-format
+msgid "Feedback from %(source)s on %(target)s added."
+msgstr "crwdns29626:0%(source)scrwdnd29626:0%(target)scrwdne29626:0"
+
+#: adjfeedback/views.py:541
+#, python-format
+msgid "Thanks, %(source)s! Your feedback on %(target)s has been recorded."
+msgstr "crwdns29628:0%(source)scrwdnd29628:0%(target)scrwdne29628:0"
+
+#: adjfeedback/views.py:625
+#, python-format
+msgid "Whoops! I didn't recognise that adjudicator: %(adjudicator)s"
+msgstr "crwdns51084:0%(adjudicator)scrwdne51084:0"
+
+#: adjfeedback/views.py:648
+msgid "Whoops! The value isn't a valid base score."
+msgstr "crwdns35574:0crwdne35574:0"
+
+#: adjfeedback/views.py:675
+msgid "Feedback Progress"
+msgstr "crwdns29636:0crwdne29636:0"
+
+#: adjfeedback/views.py:696
+#, python-format
+msgid "%(nmissing)d missing feedback submission (%(fulfilled).1f%% returned)"
+msgid_plural "%(nmissing)d missing feedback submissions (%(fulfilled).1f%% returned)"
+msgstr[0] "crwdns34000:1%(nmissing)dcrwdnd34000:1%(fulfilled)crwdnd34000:1%%crwdne34000:1"
+msgstr[1] "crwdns34000:5%(nmissing)dcrwdnd34000:5%(fulfilled)crwdnd34000:5%%crwdne34000:5"
+
+#: adjfeedback/views.py:741
+#, python-format
+msgid "Feedback for %(adjudicator)s from %(source)s is now %(result)s."
+msgstr "crwdns51086:0%(adjudicator)scrwdnd51086:0%(source)scrwdnd51086:0%(result)scrwdne51086:0"
+
+#: adjfeedback/views.py:755
+msgid "confirmed"
+msgstr "crwdns34002:0crwdne34002:0"
+
+#: adjfeedback/views.py:755
+msgid "un-confirmed"
+msgstr "crwdns34004:0crwdne34004:0"
+
+#: adjfeedback/views.py:768
+msgid "un-ignored"
+msgstr "crwdns34006:0crwdne34006:0"
+
+#: adjfeedback/views.py:804
+#, python-format
+msgid "Updated base score for %(count)d adjudicator."
+msgid_plural "Updated base scores for %(count)d adjudicators."
+msgstr[0] "crwdns35576:1%(count)dcrwdne35576:1"
+msgstr[1] "crwdns35576:5%(count)dcrwdne35576:5"
+

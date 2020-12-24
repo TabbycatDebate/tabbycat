@@ -177,10 +177,19 @@ class BallotSubmission(Submission):
             admin_url = 'old-results-ballotset-edit'
             assistant_url = 'old-results-assistant-ballotset-edit'
 
+        submitter = self.ip_address
+        private_url = False
+        if self.submitter:
+            submitter = self.submitter.username
+        elif self.participant_submitter:
+            submitter = self.participant_submitter.name
+            private_url = True
+
         return {
             'ballot_id': self.id,
             'debate_id': self.debate.id,
-            'submitter': self.submitter.username if self.submitter else self.ip_address,
+            'submitter': submitter,
+            'private_url': private_url,
             'admin_link': reverse_tournament(admin_url, tournament, kwargs={'pk': self.id}),
             'assistant_link': reverse_tournament(assistant_url, tournament, kwargs={'pk': self.id}),
             'short_time': created_short,

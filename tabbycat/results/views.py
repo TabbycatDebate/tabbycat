@@ -524,6 +524,9 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, BaseBa
         self.ballotsub = BallotSubmission(debate=self.debate, ip_address=get_ip_address(self.request),
             submitter_type=BallotSubmission.SUBMITTER_PUBLIC)
 
+        if "url_key" in self.kwargs:
+            self.ballotsub.participant_submitter = self.object
+
         if not self.debate.adjudicators.has_chair:
             return self.error_page(_("Your debate doesn't have a chair, so you can't enter results for it. "
                     "Please contact a tab room official."))
@@ -563,10 +566,6 @@ class OldPublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin,
     model = Adjudicator
     allow_null_tournament = True
     private_url = True
-
-    def populate_objects(self):
-        super().populate_objects()
-        self.ballotsub.participant_submitter = Adjudicator.objects.get(url_key=self.kwargs['url_key'])
 
     def get_success_url(self):
         return reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': self.kwargs['url_key']})
