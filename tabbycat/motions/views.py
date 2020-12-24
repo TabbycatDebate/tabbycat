@@ -72,10 +72,16 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
         return self.round.motion_set.order_by('roundmotions__seq')
 
     def formset_valid(self, formset):
-        motions = formset.save(commit=True)
+        motions = formset.save(commit=False)
+        for motion in motions:
+            motion.tournament = self.tournament
+            motion.save()
+
+        for motion in formset.deleted_objects:
+            motion.delete()
+
         for i, motion in enumerate(motions, start=1):
             RoundMotion(motion=motion, round=self.round, seq=1).save()
-
             self.log_action(content_object=motion)
 
         return self.show_message(len(motions), len(formset.deleted_objects))

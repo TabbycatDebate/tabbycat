@@ -281,6 +281,7 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
 
     def import_motions(self, f):
         motions_interpreter = make_interpreter(
+            tournament=self.tournament,
             DELETE=['rounds', 'seq'],
         )
         motions = self._import(f, mm.Motion, motions_interpreter)
