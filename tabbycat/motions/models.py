@@ -14,6 +14,9 @@ class Motion(models.Model):
     info_slide = models.TextField(
         verbose_name=_("info slide"), default="", blank=True,
         help_text=_("The information slide for this topic; if it has one"))
+
+    tournament = models.ForeignKey('tournaments.tournament', models.CASCADE,
+        verbose_name=_("tournament"))
     rounds = models.ManyToManyField('tournaments.Round', through='motions.RoundMotion',
         verbose_name=_("rounds"))
 
@@ -23,10 +26,6 @@ class Motion(models.Model):
 
     def __str__(self):
         return self.text
-
-    def as_iterable(self):
-        """For DRF; stopgap for many-to-many"""
-        return [self]
 
 
 class DebateTeamMotionPreference(models.Model):
