@@ -55,13 +55,13 @@ class Exporter:
         results_prefetch = Prefetch('ballotsubmission_set', queryset=BallotSubmission.objects.filter(confirmed=True).prefetch_related(
             'speakerscore_set', 'speakerscorebyadj_set', 'teamscore_set'))
         veto_prefetch = Prefetch('debateteammotionpreference_set', queryset=DebateTeamMotionPreference.objects.filter(
-            preference=3, ballot_submission__confirmed=True
+            preference=3, ballot_submission__confirmed=True,
         ))
         dt_prefetch = Prefetch('debateteam_set', queryset=DebateTeam.objects.all().select_related(
-            'team', 'team__institution'
+            'team', 'team__institution',
         ).prefetch_related(veto_prefetch))
         debate_prefetch = Prefetch('debate_set', queryset=Debate.objects.all().prefetch_related(
-            'debateadjudicator_set', dt_prefetch, results_prefetch
+            'debateadjudicator_set', dt_prefetch, results_prefetch,
         ))
 
         for round in self.t.round_set.all().prefetch_related(debate_prefetch, 'motion_set').order_by('seq'):
@@ -70,8 +70,8 @@ class Exporter:
 
             round_tag = SubElement(self.root, 'round', {
                 'name': round.name,
-                'elimination': str(round.stage == Round.STAGE_ELIMINATION),
-                'feedback-weight': str(round.feedback_weight)
+                'elimination': str(round.stage == Round.STAGE_ELIMINATION).lower(),
+                'feedback-weight': str(round.feedback_weight),
             })
 
             if round.stage == Round.STAGE_ELIMINATION:
@@ -87,7 +87,7 @@ class Exporter:
 
     def add_debates(self, round_tag, motion, debate):
         debate_tag = SubElement(round_tag, 'debate', {
-            'id': DEBATE_PREFIX + str(debate.id)
+            'id': DEBATE_PREFIX + str(debate.id),
         })
 
         # Add list of motions as attribute
@@ -113,7 +113,7 @@ class Exporter:
 
             for side in self.t.sides:
                 side_tag = SubElement(debate_tag, 'side', {
-                    'team': TEAM_PREFIX + str(debate.get_team(side).id)
+                    'team': TEAM_PREFIX + str(debate.get_team(side).id),
                 })
 
                 dt = debate.get_dt(side)
@@ -128,7 +128,7 @@ class Exporter:
                     ballot_tag = SubElement(side_tag, 'ballot', {
                         'adjudicators': adjs,
                         'rank': str(1 if adv else 2),
-                        'ignored': 'false'
+                        'ignored': 'false',
                     })
                     ballot_tag.text = str(adv)
                 else:
@@ -137,7 +137,7 @@ class Exporter:
                         result,
                         adjs,
                         result.scoresheet,
-                        side
+                        side,
                     )
 
                 if result.uses_speakers:
@@ -152,8 +152,8 @@ class Exporter:
             ballot_tag.set('adjudicators', ADJ_PREFIX + str(adj.id))
 
             minority = adj not in majority
-            ballot_tag.set('minority', lower(str(minority)))
-            ballot_tag.set('ignored', lower(str(minority and not self.t.pref('margin_includes_dissenters'))))
+            ballot_tag.set('minority', str(minority).lower())
+            ballot_tag.set('ignored', str(minority and not self.t.pref('margin_includes_dissenters')).lower())
         else:
             ballot_tag.set('adjudicators', adj)
             ballot_tag.set('ignored', 'false')
@@ -175,18 +175,18 @@ class Exporter:
             if speaker is not None:
                 speech_tag = SubElement(side_tag, 'speech', {
                     'speaker': SPEAKER_PREFIX + str(result.get_speaker(side, pos).id),
-                    'reply': str(pos > self.t.pref('substantive_speakers'))
+                    'reply': str(pos > self.t.pref('substantive_speakers')),
                 })
 
                 if result.is_voting:
                     for (adj, scoresheet) in result.scoresheets.items():
                         ballot_tag = SubElement(speech_tag, 'ballot', {
-                            'adjudicators': ADJ_PREFIX + str(adj.id)
+                            'adjudicators': ADJ_PREFIX + str(adj.id),
                         })
                         ballot_tag.text = str(scoresheet.get_score(side, pos))
                 else:
                     ballot_tag = SubElement(speech_tag, 'ballot', {
-                        'adjudicators': " ".join([ADJ_PREFIX + str(d_adj.adjudicator_id) for d_adj in debate.debateadjudicator_set.all()])
+                        'adjudicators': " ".join([ADJ_PREFIX + str(d_adj.adjudicator_id) for d_adj in debate.debateadjudicator_set.all()]),
                     })
                     ballot_tag.text = str(result.scoresheet.get_score(side, pos))
 
@@ -198,14 +198,14 @@ class Exporter:
             team_tag = SubElement(participants_tag, 'team', {
                 'name': team.long_name,
                 'code': team.code_name,
-                'id': TEAM_PREFIX + str(team.id)
+                'id': TEAM_PREFIX + str(team.id),
             })
 
             team_tag.set('break-eligibilities', " ".join([BREAK_CATEGORY_PREFIX + str(bc.id) for bc in team.break_categories.all()]))
 
             for speaker in team.speaker_set.all():
                 speaker_tag = SubElement(team_tag, 'speaker', {
-                    'id': SPEAKER_PREFIX + str(speaker.id)
+                    'id': SPEAKER_PREFIX + str(speaker.id),
                 })
                 speaker_tag.text = speaker.name
 
@@ -221,9 +221,9 @@ class Exporter:
             adj_tag = SubElement(participants_tag, 'adjudicator', {
                 'id': ADJ_PREFIX + str(adj.id),
                 'name': adj.name,
-                'core': lower(str(adj.adj_core)),
-                'independent': lower(str(adj.independent)),
-                'score': str(adj.base_score)
+                'core': str(adj.adj_core).lower(),
+                'independent': str(adj.independent).lower(),
+                'score': str(adj.base_score),
             })
 
             if adj.institution is not None:
@@ -234,7 +234,7 @@ class Exporter:
 
             for feedback in adj.adjudicatorfeedback_set.filter(confirmed=True):
                 feedback_tag = SubElement(adj_tag, 'feedback', {
-                    'score': str(feedback.score)
+                    'score': str(feedback.score),
                 })
                 if feedback.source_adjudicator is not None:
                     feedback_tag.set('source-adjudicator', ADJ_PREFIX + str(feedback.source_adjudicator.adjudicator_id))
@@ -247,13 +247,13 @@ class Exporter:
                     try:
                         answer = AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[question.answer_type].objects.get(
                             feedback=feedback,
-                            question=question
+                            question=question,
                         )
                     except ObjectDoesNotExist:
                         continue
 
                     answer_tag = SubElement(feedback_tag, 'answer', {
-                        'question': QUESTION_PREFIX + str(answer.question_id)
+                        'question': QUESTION_PREFIX + str(answer.question_id),
                     })
                     answer_tag.text = str(answer.answer)
 
@@ -270,19 +270,19 @@ class Exporter:
 
         for category in break_categories:
             bc_tag = SubElement(self.root, 'break-category', {
-                'id': BREAK_CATEGORY_PREFIX + str(category.id)
+                'id': BREAK_CATEGORY_PREFIX + str(category.id),
             })
             bc_tag.text = category.name
 
     def add_institutions(self):
         institution_query = Institution.objects.filter(
             Q(id__in=self.t.relevant_adjudicators.values_list('institution_id')) |
-            Q(id__in=self.t.team_set.all().values_list('institution_id'))
+            Q(id__in=self.t.team_set.all().values_list('institution_id')),
         ).select_related('region')
         for institution in institution_query:
             institution_tag = SubElement(self.root, 'institution', {
                 'id': INST_PREFIX + str(institution.id),
-                'reference': institution.code
+                'reference': institution.code,
             })
             institution_tag.text = institution.name
 
@@ -293,7 +293,7 @@ class Exporter:
         for motion in Motion.objects.filter(round__tournament=self.t):
             motion_tag = SubElement(self.root, 'motion', {
                 'id': MOTION_PREFIX + str(motion.id),
-                'reference': motion.reference
+                'reference': motion.reference,
             })
 
             if motion.info_slide != '':
@@ -305,7 +305,7 @@ class Exporter:
     def add_venues(self):
         for venue in self.t.relevant_venues:
             venue_tag = SubElement(self.root, 'venue', {
-                'id': VENUE_PREFIX + str(venue.id)
+                'id': VENUE_PREFIX + str(venue.id),
             })
             venue_tag.text = venue.name
 
@@ -314,9 +314,9 @@ class Exporter:
             question_tag = SubElement(self.root, 'question', {
                 'id': QUESTION_PREFIX + str(question.id),
                 'name': question.name,
-                'from-teams': lower(str(question.from_team)),
-                'from-adjudicators': lower(str(question.from_adj)),
-                'type': question.answer_type
+                'from-teams': str(question.from_team).lower(),
+                'from-adjudicators': str(question.from_adj).lower(),
+                'type': question.answer_type,
             })
             question_tag.text = question.text
 
@@ -373,7 +373,7 @@ class Importer:
             "uadc": UADCPreferences,
             "wadl": WADLPreferences,
             "wsdc": WSDCPreferences,
-            "": None
+            "": None,
         }
         if self.root.get('style') is not None and styles[self.root.get('style', '')] is not None:
             style = styles[self.root.get('style')]
@@ -407,7 +407,7 @@ class Importer:
         for institution in self.root.findall('institution'):
             # Use get_or_create as institutions may be shared between tournaments
             inst_obj, created = Institution.objects.get_or_create(
-                code=institution.get('reference'), name=institution.text
+                code=institution.get('reference'), name=institution.text,
             )
             self.institutions[institution.get('id')] = inst_obj
 
@@ -427,7 +427,7 @@ class Importer:
             bc = BreakCategory(
                 tournament=self.tournament, name=breakqual.text,
                 slug=slugify(breakqual.text[:50]), seq=i,
-                break_size=0, is_general=False, priority=0
+                break_size=0, is_general=False, priority=0,
             )
             bc.save()
             self.team_breaks[breakqual.get('id')] = bc
@@ -435,7 +435,7 @@ class Importer:
         for i, category in enumerate(self.root.findall('speaker-category'), 1):
             sc = SpeakerCategory(
                 tournament=self.tournament, name=category.text,
-                slug=slugify(category.text[:50]), seq=i
+                slug=slugify(category.text[:50]), seq=i,
             )
             sc.save()
             self.speaker_categories[category.get('id')] = sc
@@ -456,7 +456,7 @@ class Importer:
                 tournament=self.tournament, seq=i, text=question.text,
                 name=question.get('name'), reference=slugify(question.get('name')[:50]),
                 from_adj=question.get('from-adjudicators') == 'true', from_team=question.get('from-teams') == 'true',
-                answer_type=question.get('type'), required=False
+                answer_type=question.get('type'), required=False,
             )
             q.save()
             self.questions[question.get('id')] = q
@@ -475,7 +475,7 @@ class Importer:
                 team_obj.emoji = emoji
 
             # Find institution from speakers - Get first institution from each speaker to compare
-            p_institutions = set([p.get('institutions',"").split(" ")[0] for p in team.findall('speaker')])
+            p_institutions = set([p.get('institutions', '').split(" ")[0] for p in team.findall('speaker')])
             team_institution = next(iter(p_institutions))
 
             if len(p_institutions) == 1:
@@ -540,8 +540,7 @@ class Importer:
                 tournament=self.tournament, seq=i, completed=True, name=round.get('name'),
                 abbreviation=round.get('name')[:10], stage=round_stage, draw_type=draw_type,
                 draw_status=Round.STATUS_RELEASED, feedback_weight=round.get('feedback-weight', 0),
-                starts_at=round.get('start')
-            )
+                starts_at=round.get('start'))
             rounds.append(round_obj)
 
             if round_stage == Round.STAGE_ELIMINATION:
@@ -589,8 +588,7 @@ class Importer:
                 if motion.get('id') in m_set:
                     motion_obj = Motion(
                         seq=seq_by_round[r], text=motion.text, reference=motion.get('reference'),
-                        info_slide=getattr(motion.find('info-slide'), 'text', ''), round_id=r
-                    )
+                        info_slide=getattr(motion.find('info-slide'), 'text', ''), round_id=r)
                     motion_obj.save()
                     self.motions[motion.get('id')] = motion_obj
 
@@ -601,8 +599,7 @@ class Importer:
             for debate in round.findall('debate'):
                 bs_obj = BallotSubmission(
                     version=1, submitter_type=Submission.SUBMITTER_TABROOM, confirmed=True,
-                    debate=self.debates[debate.get('id')], motion=self.motions.get(debate.get('motion'))
-                )
+                    debate=self.debates[debate.get('id')], motion=self.motions.get(debate.get('motion')))
                 bs_obj.save()
                 dr = DebateResult(bs_obj)
 
@@ -617,8 +614,7 @@ class Importer:
                     if side.get('motion-veto') is not None:
                         bs_obj.debateteammotionpreference_set.add(
                             debate_team=self.debateteams.get((debate.get('id'), side.get('team'))),
-                            motion=self.motions.get(side.get('motion-veto')), preference=3
-                        )
+                            motion=self.motions.get(side.get('motion-veto')), preference=3)
 
                     for speech, pos in zip(side.findall('speech'), self.tournament.positions):
                         if numeric_scores:
