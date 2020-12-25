@@ -28,7 +28,7 @@ class DebateAdjudicator(models.Model):
         verbose_name=_("adjudicator"))
     type = models.CharField(max_length=2, choices=TYPE_CHOICES,
         verbose_name=_("type"))
-    timing_confirmed = models.NullBooleanField(verbose_name=_("available?"))
+    timing_confirmed = models.BooleanField(null=True, verbose_name=_("available?"))
 
     class Meta:
         verbose_name = _("debate adjudicator")

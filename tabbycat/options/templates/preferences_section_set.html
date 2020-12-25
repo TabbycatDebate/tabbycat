@@ -3,12 +3,12 @@
 
 {% load add_field_css %}
 
-{% block page-title %}{% blocktrans trimmed with section_name=section.verbose_name %}
-  Configuration: {{ section_name }}
+{% block page-title %}{% blocktrans trimmed with section=section.verbose_name %}
+  Configuration: {{ section }}
 {% endblocktrans %}{% endblock %}
 {% block head-title %}<span class="emoji">🔧</span>
-  {% blocktrans trimmed with section_name=section.verbose_name %}
-    Edit Configuration: {{ section_name }}
+  {% blocktrans trimmed with section=section.verbose_name %}
+    Edit Configuration: {{ section }}
   {% endblocktrans %}
 {% endblock %}
 

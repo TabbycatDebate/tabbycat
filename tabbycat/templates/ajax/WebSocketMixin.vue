@@ -17,14 +17,14 @@ export default {
   created: function () {
     // Check if this is being run over HTTP(S); match the WS(S) procol
     const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws'
-    let path = `${scheme}://${window.location.host}/ws/`
+    const path = `${scheme}://${window.location.host}/ws/`
     // Construct path
 
     const receiveFromSocket = this.receiveFromSocket
     const self = this
 
     // Setup each websocket connection
-    for (let socketLabel of this.sockets) {
+    for (const socketLabel of this.sockets) {
       // Customise path per-socket
       const socketPath = self.getPathAdditions(path, socketLabel)
 
@@ -97,7 +97,7 @@ export default {
     },
     showLostConnectionAlert: function () {
       if (this.lostConnections > 1) {
-        let explanation = `This page maintains a live connection to the server. That connection has
+        const explanation = `This page maintains a live connection to the server. That connection has
                            been lost. This page will attempt to reconnect and will update this message
                            if it succeeds. You can dismiss this warning if needed, just be aware that
                            you should not change data on this page until the connection resumes.`
@@ -106,7 +106,7 @@ export default {
     },
     dismissLostConnectionAlert: function () {
       if (this.lostConnections > 1) { // Only show modal when a connection is re-opened not opened
-        let explanation = `This page lost its connection to the server but has succesfully reopened
+        const explanation = `This page lost its connection to the server but has succesfully reopened
                            it. Changes made to data on this page will now be saved. However, you may
                            want to refresh the page to verify that earlier changes were saved.`
         this.showErrorAlert(explanation, null, 'Connection Resumed', 'text-success', true, true)

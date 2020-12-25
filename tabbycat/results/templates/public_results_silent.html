@@ -9,8 +9,8 @@
 {% block content %}
   <div class="card">
     <div class="card-body">
-      <p>{% blocktrans trimmed with round_name=round.name %}
-        {{ round_name }} is a silent round.
+      <p>{% blocktrans trimmed with round=round.name %}
+        {{ round }} is a silent round.
       {% endblocktrans %} <span class="emoji">😶</span></p>
     </div>
   </div>

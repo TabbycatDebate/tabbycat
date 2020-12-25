@@ -5,6 +5,7 @@ from django import template
 from django.conf import settings
 from django.template.base import kwarg_re, TemplateSyntaxError, Variable
 from django.template.defaulttags import URLNode
+
 from tournaments.utils import get_side_name
 
 register = template.Library()
@@ -31,7 +32,7 @@ def version(path_string, base_url=settings.MEDIA_URL):
             version_cache[path_string] = mtime
 
         return base_url + rx.sub(r'\1.%d.\2' % mtime, path_string)
-    except:
+    except Exception:
         return base_url + path_string
 
 
@@ -181,23 +182,11 @@ def roundurl(parser, token):
     return RoundURLNode(*args)
 
 
-@register.tag
-def round_url(parser, token):
-    # Deprecated 16/6/2017, remove after 16/7/2017
-    raise RuntimeError("Then {% round_url %} tag is deprecated, use the new {% roundurl %} instead.")
-
-
-@register.tag
-def tournament_url(parser, token):
-    # Deprecated 16/6/2017, remove after 16/7/2017
-    raise RuntimeError("Then {% tournament_url %} tag is deprecated, use the new {% tournamenturl %} instead.")
-
-
 @register.filter
 def next_value(value, arg):
     try:
         return value[int(arg) + 1]
-    except:
+    except Exception:
         return None
 
 
@@ -205,7 +194,7 @@ def next_value(value, arg):
 def prev_value(value, arg):
     try:
         return value[int(arg) - 1]
-    except:
+    except Exception:
         return None
 
 

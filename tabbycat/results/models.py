@@ -1,9 +1,9 @@
 import logging
 from threading import Lock
 
-from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -28,8 +28,10 @@ class Submission(models.Model):
 
     SUBMITTER_TABROOM = 'T'
     SUBMITTER_PUBLIC = 'P'
-    SUBMITTER_TYPE_CHOICES = ((SUBMITTER_TABROOM, _("Tab room")),
-                              (SUBMITTER_PUBLIC, _("Public")), )
+    SUBMITTER_TYPE_CHOICES = (
+        (SUBMITTER_TABROOM, _("Tab room")),
+        (SUBMITTER_PUBLIC, _("Public")),
+    )
 
     timestamp = models.DateTimeField(auto_now_add=True,
         verbose_name=_("timestamp"))
@@ -40,11 +42,16 @@ class Submission(models.Model):
     confirmed = models.BooleanField(default=False,
         verbose_name=_("confirmed"))
 
+    # relevant for private URL submissions
+    participant_submitter = models.ForeignKey('participants.Person', models.PROTECT,
+        blank=True, null=True, related_name="%(app_label)s_%(class)s_participant_submitted",
+        verbose_name=_("from participant"))
+
     # only relevant if submitter was in tab room
-    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE,
+    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT,
         blank=True, null=True, related_name="%(app_label)s_%(class)s_submitted",
         verbose_name=_("submitter"))
-    confirmer = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE,
+    confirmer = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT,
         blank=True, null=True, related_name="%(app_label)s_%(class)s_confirmed",
         verbose_name=_("confirmer"))
     confirm_timestamp = models.DateTimeField(blank=True, null=True,
@@ -134,7 +141,12 @@ class BallotSubmission(Submission):
 
     @property
     def serialize_like_actionlog(self):
-        result_winner, result = readable_ballotsub_result(self)
+        if hasattr(self, '_result'):
+            dr = self._result
+        else:
+            from results.result import DebateResult
+            dr = DebateResult(self)
+        result_winner, result = readable_ballotsub_result(dr)
         return {
             'user': result_winner,
             'id': self.id,
@@ -143,7 +155,7 @@ class BallotSubmission(Submission):
             'timestamp': badge_datetime_format(self.timestamp),
             'confirmed': self.confirmed,
             'debate': self.debate.id,
-            'result_status': self.debate.result_status
+            'result_status': self.debate.result_status,
         }
 
     def serialize(self, tournament=None):
@@ -158,14 +170,28 @@ class BallotSubmission(Submission):
         if self.confirm_timestamp and self.confirmed:
             confirmed = timezone.localtime(self.confirm_timestamp).isoformat()
 
+        if tournament.pref('enable_blind_checks') and tournament.pref('teams_in_debate') == 'bp':
+            admin_url = 'results-ballotset-edit'
+            assistant_url = 'results-assistant-ballotset-edit'
+        else:
+            admin_url = 'old-results-ballotset-edit'
+            assistant_url = 'old-results-assistant-ballotset-edit'
+
+        submitter = self.ip_address
+        private_url = False
+        if self.submitter:
+            submitter = self.submitter.username
+        elif self.participant_submitter:
+            submitter = self.participant_submitter.name
+            private_url = True
+
         return {
             'ballot_id': self.id,
             'debate_id': self.debate.id,
-            'submitter': self.submitter.username if self.submitter else self.ip_address,
-            'admin_link': reverse_tournament('old-results-ballotset-edit',
-                                             tournament, kwargs={'pk': self.id}),
-            'assistant_link': reverse_tournament('old-results-assistant-ballotset-edit',
-                                                 tournament, kwargs={'pk': self.id}),
+            'submitter': submitter,
+            'private_url': private_url,
+            'admin_link': reverse_tournament(admin_url, tournament, kwargs={'pk': self.id}),
+            'assistant_link': reverse_tournament(assistant_url, tournament, kwargs={'pk': self.id}),
             'short_time': created_short,
             'created_timestamp': created,
             'confirmed_timestamp': confirmed,
@@ -185,7 +211,7 @@ class TeamScoreByAdj(models.Model):
     debate_team = models.ForeignKey('draw.DebateTeam', models.CASCADE,
         verbose_name=_("debate team"))
 
-    win = models.NullBooleanField(null=True, blank=True,
+    win = models.BooleanField(null=True, blank=True,
         verbose_name=_("win"))
     margin = ScoreField(null=True, blank=True,
         verbose_name=_("margin"))
@@ -262,7 +288,7 @@ class TeamScore(models.Model):
 
     points = models.PositiveSmallIntegerField(null=True, blank=True,
         verbose_name=_("points"))
-    win = models.NullBooleanField(null=True, blank=True,
+    win = models.BooleanField(null=True, blank=True,
         verbose_name=_("win"))
     margin = ScoreField(null=True, blank=True,
         verbose_name=_("margin"))

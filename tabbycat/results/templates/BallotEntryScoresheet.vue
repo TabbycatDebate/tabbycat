@@ -81,7 +81,7 @@ export default {
         3: '3rd',
         4: '4th',
         '?': '?',
-        'tie': 'TIE',
+        tie: 'TIE',
       },
       rankClasses: {
         1: 'btn-success',
@@ -89,7 +89,7 @@ export default {
         3: 'btn-warning',
         4: 'btn-danger',
         '?': 'btn-secondary',
-        'tie': 'btn-dark',
+        tie: 'btn-dark',
       },
     }
   },
@@ -98,14 +98,14 @@ export default {
       return this.teamScores[this.team.position]
     },
     teamMargin: function () {
-      let nonZeroScores = Object.values(this.teamScores).filter(s => s > 0)
+      const nonZeroScores = Object.values(this.teamScores).filter(s => s > 0)
       if (nonZeroScores.length !== this.teamsCount) { return '?   ' }
       return this.teamScores[this.team.position] - Object.values(this.teamScores).sort().slice(-1)
     },
     teamRank: function () {
-      let nonZeroScores = Object.values(this.teamScores).filter(s => s > 0)
+      const nonZeroScores = Object.values(this.teamScores).filter(s => s > 0)
       if (nonZeroScores.length !== this.teamsCount) { return '?' }
-      let scores = Object.values(this.teamScores).sort((a, b) => a - b).reverse()
+      const scores = Object.values(this.teamScores).sort((a, b) => a - b).reverse()
       for (const [index, score] of scores.entries()) {
         if (score === this.teamScores[this.team.position]) {
           if (Object.values(this.teamScores).filter(s => s === score).length > 1) {

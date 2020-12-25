@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.db.models import OuterRef, Prefetch, Subquery
 
-from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore, TeamScoreByAdj
-
 from draw.models import DebateTeam
 from utils.admin import TabbycatModelAdminFieldsMixin
+
+from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore, TeamScoreByAdj
 
 
 # ==============================================================================
@@ -65,9 +65,9 @@ class TeamScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
             'ballot_submission__debate__round__tournament',
             'debate_adjudicator__adjudicator',
             'debate_team__team',
-            'debate_team__team__tournament'
+            'debate_team__team__tournament',
         ).prefetch_related(
-            Prefetch('ballot_submission__debate__debateteam_set', queryset=DebateTeam.objects.select_related('team'))
+            Prefetch('ballot_submission__debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')),
         )
 
 
@@ -106,21 +106,22 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
                      'debate_team__team__reference', 'debate_team__team__institution__code',
                      'debate_adjudicator__adjudicator__name')
 
-    list_filter = ('debate_team__debate__round', 'debate_adjudicator__adjudicator__name')
+    list_filter = ('debate_team__debate__round', 'debate_adjudicator__adjudicator__name',
+                   'debate_adjudicator__type')
     raw_id_fields = ('debate_team', 'debate_adjudicator', 'ballot_submission')
 
     def get_queryset(self, request):
         speaker_person = SpeakerScore.objects.filter(
             ballot_submission_id=OuterRef('ballot_submission_id'),
             debate_team_id=OuterRef('debate_team_id'),
-            position=OuterRef('position')
+            position=OuterRef('position'),
         ).select_related('speaker')
 
         return super(SpeakerScoreByAdjAdmin, self).get_queryset(request).select_related(
             'ballot_submission__debate__round__tournament',
             'debate_adjudicator__adjudicator',
-            'debate_team__team__tournament'
+            'debate_team__team__tournament',
         ).prefetch_related(
             Prefetch('ballot_submission__debate__debateteam_set',
-                queryset=DebateTeam.objects.select_related('team'))
+                queryset=DebateTeam.objects.select_related('team')),
         ).annotate(speaker_name=Subquery(speaker_person.values('speaker__name')))

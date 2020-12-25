@@ -13,6 +13,9 @@ should not appear in any of them.
 
 class BaseScoresheet:
 
+    uses_declared_winners = False
+    uses_scores = False
+
     def __init__(self, *args, **kwargs):
         """Absorb leftover arguments."""
         pass
@@ -29,23 +32,11 @@ class BaseScoresheet:
         return True
 
     def winners(self):
-        """Returns ['aff'] is the affirmative team won, and ['neg'] if the negative
+        """Returns {'aff'} is the affirmative team won, and {'neg'} if the negative
         team won. `self._get_winners()` must be implemented by subclasses."""
         if not self.is_complete():
             return set()
         return self._get_winners()
-
-    # Default methods
-    # Winners may be declared by the form as validation; by default do nothing.
-
-    def set_declared_winners(self, winners):
-        pass
-
-    def add_declared_winner(self, winner):
-        pass
-
-    def get_declared_winners(self):
-        pass
 
 
 class ScoresMixin:
@@ -53,6 +44,8 @@ class ScoresMixin:
     Does not do any result calculation, since different scoresheets do this in
     different ways. This class is agnostic to  how many sides there are in a
     debate."""
+
+    uses_scores = True
 
     def __init__(self, positions, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -83,24 +76,23 @@ class ScoresMixin:
 class DeclaredWinnersMixin:
     """Provides functionality for explicit declaration of winner(s)."""
 
+    uses_declared_winners = True
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.declared_winners = set()
 
     def is_complete(self):
-        winners_declared = self.declared_winners.issubset(set(self.sides)) and len(self.declared_winners) == self.number_winners
-        return super().is_complete() and winners_declared
+        return super().is_complete() and self.declared_winners <= set(self.sides) and len(self.declared_winners) == self.number_winners
 
     def add_declared_winner(self, winner):
         assert winner in self.sides or winner is None, "Declared winner must be one of: " + ", ".join(map(repr, self.sides))
         self.declared_winners.add(winner)
 
     def set_declared_winners(self, winners):
-        assert winners.issubset(set(self.sides)) or len(winners) == 0, "Declared winners must be in: " + ", ".join(map(repr, self.sides))
+        winners = set(winners)
+        assert winners <= set(self.sides) or len(winners) == 0, "Declared winners must be in: " + ", ".join(map(repr, self.sides))
         self.declared_winners = winners
-
-    def get_declared_winners(self):
-        return self.declared_winners
 
     def identical(self, other):
         return super().identical(other) and set(self.declared_winners) == set(other.declared_winners)
@@ -137,9 +129,9 @@ class HighPointWinsRequiredScoresheet(ScoresMixin, BaseTwoTeamScoresheet):
         aff_total = self.get_total('aff')
         neg_total = self.get_total('neg')
         if aff_total > neg_total:
-            return set(['aff'])
+            return {'aff'}
         elif neg_total > aff_total:
-            return set(['neg'])
+            return {'neg'}
         else:
             return set()
 
@@ -154,9 +146,9 @@ class TiedPointWinsAllowedScoresheet(DeclaredWinnersMixin, ScoresMixin, BaseTwoT
         aff_total = self.get_total('aff')
         neg_total = self.get_total('neg')
         if aff_total >= neg_total and 'aff' in self.declared_winners:
-            return set(['aff'])
+            return {'aff'}
         elif neg_total >= aff_total and 'neg' in self.declared_winners:
-            return set(['neg'])
+            return {'neg'}
         else:
             return set()
 

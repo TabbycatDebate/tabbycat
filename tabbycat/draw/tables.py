@@ -1,9 +1,10 @@
 from itertools import islice, zip_longest
 
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
+
 from participants.utils import get_side_history
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.utils import get_side_name
@@ -29,9 +30,9 @@ class BaseDrawTableBuilder(TabbycatTableBuilder):
     def _prepend_side_header(self, side, name, abbr, text_only=False):
         # Translators: e.g. "Affirmative: Rank", "Government: Draw strength",
         # "Opening government: Total speaker score", "Closing opposition: Number of firsts"
-        tooltip = _("%(side_name)s: %(metric_name)s") % {
-            'side_name': get_side_name(self.tournament, side, 'full'),
-            'metric_name': name.capitalize(),
+        tooltip = _("%(side)s: %(metric)s") % {
+            'side': get_side_name(self.tournament, side, 'full'),
+            'metric': name.capitalize(),
         }
         tooltip = tooltip.capitalize()
         key = format_html("{}<br>{}", get_side_name(self.tournament, side, 'abbr'), abbr)
@@ -40,7 +41,7 @@ class BaseDrawTableBuilder(TabbycatTableBuilder):
         header = {
             'key': key,  # no need to translate
             'tooltip': tooltip,
-            'text': abbr if text_only else key
+            'text': abbr if text_only else key,
         }
 
         return header
@@ -259,8 +260,8 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
             metric_info = next(self.standings.metrics_info())
             header = {
                 'key': "pts",  # always use 'pts' to make it more predictable
-                'title': force_text(metric_info['abbr']),
-                'tooltip': force_text(metric_info['name']),
+                'title': force_str(metric_info['abbr']),
+                'tooltip': force_str(metric_info['name']),
             }
             cells = []
             infos = self.standings.get_standings(teams)
@@ -310,7 +311,7 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
             cells.append({
                 'text': self.STATUSES[category],
                 'sort': sort,
-                'class': 'text-' + style
+                'class': 'text-' + style,
             })
         self.add_column({'key': 'status', 'title': _("Status")}, cells)
 
@@ -375,7 +376,7 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
             header = {
                 'key': "pts" + side_abbr,
                 'tooltip': _("No metrics in the team standings precedence"),
-                'icon': 'star'
+                'icon': 'star',
             }
             self.add_column(header, [0] * len(teams))
         else:
@@ -383,7 +384,7 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
             header = {
                 'key': "pts" + side_abbr,  # always use 'pts' to make it more predictable
                 'tooltip': _("%(team)s: %(metric)s") % {'team': side_abbr, 'metric': metric_info['name']},
-                'icon': 'star'
+                'icon': 'star',
             }
             infos = self.standings.get_standings(teams)
             self.add_column(header, [metricformat(info.metrics[metric_info['key']]) for info in infos])

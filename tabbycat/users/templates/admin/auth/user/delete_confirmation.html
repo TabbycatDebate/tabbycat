@@ -1,0 +1,7 @@
+{% extends "admin/delete_confirmation.html" %}
+
+{% block content %}
+  {{ block.super }}
+  {# It breaks Jet CSS to put this before block.super (they use ul:nth-of-type(2)) #}
+  {% include "admin/auth/delete_user_warning.html" %}
+{% endblock %}

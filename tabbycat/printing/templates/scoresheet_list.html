@@ -5,8 +5,8 @@
   <div class="row d-print-none p-3 d-flex justify-content-between">
     <div class="h3 pt-1">
       {% trans "Printable Scoresheets" %}
-      {% blocktrans trimmed with round_name=round.name asvar subtitle %}
-        for {{ round_name }}
+      {% blocktrans trimmed with round=round.name asvar subtitle %}
+        for {{ round }}
       {% endblocktrans %}
       <small class="text-muted d-md-inline d-none">{{ subtitle }}</small>
     </div>
@@ -44,11 +44,11 @@
           </div>
           <div class="modal-body">
             <p class="lead">
-              {% blocktrans %}
-              Editing motions here will not save them permanently — it will only
-              update the text used in the printed ballots below. This can be useful if using
-              placeholder motions (to ensure confidentiality) in Tabbycat, but you still want to print
-              ballots with correct motions.
+              {% blocktrans trimmed %}
+                Editing motions here will not save them permanently — it will only
+                update the text used in the printed ballots below. This can be useful if using
+                placeholder motions (to ensure confidentiality) in Tabbycat, but you still want to print
+                ballots with correct motions.
               {% endblocktrans %}
             </p>
             <div v-for="motion in roundInfo.motions">
@@ -99,6 +99,7 @@
         // Formatting
         showTabRoomRow: true,
         showInfoRow: false,
+        showAdjInstitutions: '{{ pref.show_adjudicator_institutions|unlocalize }}',
         substantiveMin: '{{ pref.score_min|unlocalize }}',
         substantiveMax: '{{ pref.score_max|unlocalize }}',
         substantiveStep: '{{ pref.score_step|unlocalize }}',

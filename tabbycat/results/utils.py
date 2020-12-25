@@ -1,8 +1,8 @@
 import logging
 from itertools import combinations
 
-from django.db.models import Count
 from django.contrib.humanize.templatetags.humanize import ordinal
+from django.db.models import Count
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
@@ -14,14 +14,12 @@ logger = logging.getLogger(__name__)
 
 
 def get_status_meta(debate):
-    if debate.result_status == Debate.STATUS_NONE:
-        return "x", "text-danger", 0, _("No Ballot")
-    elif debate.result_status == Debate.STATUS_DRAFT:
-        return "circle", "text-info", 2, _("Ballot is Unconfirmed")
-    elif debate.result_status == Debate.STATUS_CONFIRMED:
-        return "check", "text-success", 3, _("Ballot is Confirmed")
-    else:
-        raise ValueError('Debate has no discernable status')
+    return {
+        Debate.STATUS_NONE: ("x", "text-danger", 0, _("No Ballot")),
+        Debate.STATUS_POSTPONED: ("pause", "", 4, _("Debate was Postponed")),
+        Debate.STATUS_DRAFT: ("circle", "text-info", 2, _("Ballot is Unconfirmed")),
+        Debate.STATUS_CONFIRMED: ("check", "text-success", 3, _("Ballot is Confirmed")),
+    }[debate.result_status]
 
 
 def readable_ballotsub_result(debateresult):
@@ -29,26 +27,25 @@ def readable_ballotsub_result(debateresult):
 
     def get_display_name(dt, t, use_codes):
         return {
-            'team_name': dt.team.code_name if use_codes else dt.team.short_name,
-            'side_abbr': dt.get_side_abbr(t)
+            'team': dt.team.code_name if use_codes else dt.team.short_name,
+            'side': dt.get_side_abbr(t),
         }
 
     def format_dt(dt, t, use_codes):
         # Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
-        return _("%(team_name)s as %(side_abbr)s") % get_display_name(dt, t, use_codes)
+        return _("%(team)s as %(side)s") % get_display_name(dt, t, use_codes)
 
     t = debateresult.tournament
     use_codes = use_team_code_names(t, True)
 
     try:
         if t.pref('teams_in_debate') == 'two':
-            result_winner = _("%(team_name)s (%(side_abbr)s) won") % get_display_name(debateresult.winning_dt(), t, use_codes)
+            result_winner = _("%(team)s (%(side)s) won") % get_display_name(debateresult.winning_dt(), t, use_codes)
             # Translators: The team here is the losing team
-            result = _("vs %(team_name)s (%(side_abbr)s)") % get_display_name(debateresult.losing_dt(), t, use_codes)
-        elif not debateresult.is_voting and debateresult.has_two_advancing():
-            result_winner = _("Advancing: %(advancing_list)s<br>\n")
-            result_winner = result_winner % {
-                'advancing_list': ", ".join(format_dt(dt, t, use_codes) for dt in debateresult.advancing_dt())
+            result = _("vs %(team)s (%(side)s)") % get_display_name(debateresult.losing_dt(), t, use_codes)
+        elif not debateresult.is_voting and debateresult.is_elimination:
+            result_winner = _("Advancing: %(advancing_list)s<br>") % {
+                'advancing_list': ", ".join(format_dt(dt, t, use_codes) for dt in debateresult.advancing_dt()),
             }
             result = _("Eliminated: %(eliminated_list)s")
             result = result % {
@@ -58,8 +55,7 @@ def readable_ballotsub_result(debateresult):
         else:  # BP preliminary round
             ordered = debateresult.get_ranked_dt()
 
-            result_winner = _("1st: %(first_team)s<br>\n")
-            result_winner = result_winner % {'first_team':  format_dt(ordered[0], t, use_codes)}
+            result_winner = _("1st: %(first_team)s<br>") % {'first_team':  format_dt(ordered[0], t, use_codes)}
             result = _("2nd: %(second_team)s<br>\n"
                        "3rd: %(third_team)s<br>\n"
                        "4th: %(fourth_team)s")
@@ -149,7 +145,7 @@ _BP_POSITION_NAMES = [
     # Translators: Abbreviation for Member for the Opposition
     [gettext_lazy("MO"),
     # Translators: Abbreviation for Opposition Whip
-     gettext_lazy("OW")]
+     gettext_lazy("OW")],
 ]
 
 

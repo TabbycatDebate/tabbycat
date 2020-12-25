@@ -27,18 +27,11 @@ Short version
 =============
 .. parsed-literal::
 
-  curl -sL https\:\/\/deb.nodesource.com/setup_8.x | sudo -E bash -    # add Node.js source repository
-  sudo apt install python3-dev python3-venv postgresql-11 libpq-dev nodejs gcc g++ make
-
-  # either
-  wget https\:\/\/github.com/TabbycatDebate/tabbycat/archive/|vrelease|.tar.gz
-  tar xf |vrelease|.tar.gz
-  cd tabbycat-|release|
-  # or
+  curl -sL https\:\/\/deb.nodesource.com/setup_12.x | sudo -E bash -    # add Node.js source repository
+  sudo apt install python3-dev python3-venv postgresql libpq-dev nodejs gcc g++ make
   git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
   cd tabbycat
-  git checkout |vrelease|                                         # or master
-
+  git checkout master
   sudo -u postgres createuser myusername --createdb --pwprompt    # skip if not first time
   createdb mydatabasename
 
@@ -69,7 +62,7 @@ First, you need to install all of the software on which Tabbycat depends, if you
 
 1(a). Python
 ------------
-Tabbycat requires Python 3.6 or later.  You probably already have Python 3.6, but you'll also need the development package in order to install Psycopg2 later.  The ``venv`` module will come in handy too.  Install::
+Tabbycat requires Python 3.6 or later.  You probably already have Python 3, but you'll also need the development package in order to install Psycopg2 later.  The ``venv`` module will come in handy too.  Install::
 
     $ sudo apt install python3-dev python3-venv
 
@@ -84,11 +77,13 @@ Check the version::
 ----------------
   *PostgreSQL is a database management system.*
 
-You'll need the ``libpq-dev`` package in order to install Psycopg2 later. As per the `PostgreSQL installation instructions <http://www.postgresql.org/download/linux/ubuntu/>`_::
+Install PostgreSQL using the  `PostgreSQL installation instructions here <http://www.postgresql.org/download/linux/ubuntu/>`_.
 
-    $ sudo apt install postgresql-11 libpq-dev
+Normally, installing the latest stable version should be best, but if you're having issues, install the same version as the current `default version on Heroku <https://devcenter.heroku.com/articles/heroku-postgresql#version-support>`_, as that will be what is currently most commonly used with Tabbycat. If you're planning on pushing data between your local installation and a Heroku site, it's best to match the Heroku's current default version.
 
-You might need (or wish) to add the PostgreSQL apt repository first.
+You'll also need the ``libpq-dev`` package in order to install Psycopg2 later::
+
+    $ sudo apt install libpq-dev
 
 .. _install-linux-nodejs:
 
@@ -101,7 +96,7 @@ Tabbycat requires Node and its package manager to compile front-end dependencies
 .. parsed-literal::
 
   $ sudo apt install curl
-  $ curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+  $ curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
   $ sudo apt install -y nodejs
   $ sudo ln -s /usr/bin/nodejs /usr/bin/node
 
@@ -116,24 +111,37 @@ Some of the Python packages require GCC, G++ and Make in order to install::
 2. Get the source code
 ======================
 
-Choose either of these two methods:
+Choose either of the following two methods.
 
-**Method 1:** Download and extract:
+Method 1 (Git clone)
+--------------------
+
+If you have Git, life will be easier if you clone `our GitHub repository`_:
+
+.. parsed-literal::
+
+    $ git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
+    $ git checkout master
+
+(You can find out if you have Git using ``git --version``. If you don't, you can install it using ``sudo apt install git``.)
+
+.. note:: The default branch is ``develop``, so you need to explicitly change the branch to ``master``, which is what the ``git checkout master`` line does.
+
+.. admonition:: Advanced users
+  :class: tip
+
+  You might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project).
+
+Method 2 (tarball)
+------------------
+
+If you don't want to use Git, simply download and extract:
 
 .. parsed-literal::
 
     $ wget https\:\/\/github.com/TabbycatDebate/tabbycat/archive/|vrelease|.tar.gz
     $ tar xf |vrelease|.tar.gz
     $ cd tabbycat-|release|
-
-**Method 2 (advanced users):** If you've used Git before, you might prefer to clone `our GitHub repository`_ instead:
-
-.. parsed-literal::
-
-    $ git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
-    $ git checkout |vrelease|                              # or master
-
-.. tip:: You might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project).
 
 3. Set up a new database
 ========================

@@ -1,0 +1,257 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-11-18 21:01\n"
+"Last-Translator: \n"
+"Language-Team: Talossan\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: tzl\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/features/notifications.po\n"
+"X-Crowdin-File-ID: 1289\n"
+"Language: tzl_TZL\n"
+
+#: ../../features/notifications.rst:3
+msgid "Sending Notifications"
+msgstr "crwdns48309:0crwdne48309:0"
+
+#: ../../features/notifications.rst:5
+msgid "Tabbycat offers integrations with email delivery services to send notifications to participants on certain enumerated events. For sending these emails, `SendGrid <https://sendgrid.com/>`_ is readily available as an add-on in Heroku. It may be necessary to install the `SendGrid add-on <https://elements.heroku.com/addons/sendgrid>`_ manually. Other integrations may also be used in its place by changing the relevant environment variables."
+msgstr "crwdns48311:0crwdne48311:0"
+
+#: ../../features/notifications.rst:8
+msgid "Events"
+msgstr "crwdns48313:0crwdne48313:0"
+
+#: ../../features/notifications.rst:10
+msgid "Tabbycat includes a number of templated notifications that can be sent in various times. Variables which are included between curly brackets which are substituted for personalized information passed by email. Links to email will redirect to a page where the message can be changed and the participants selected."
+msgstr "crwdns48315:0crwdne48315:0"
+
+#: ../../features/notifications.rst:12
+msgid "All emails have the ``{{ USER }}`` and ``{{ TOURN }}`` variables to indicate who the email is sent to, and the tournament it relates to. The \"From\" in the emails will also be the tournament's name."
+msgstr "crwdns48317:0{{ USER }}crwdnd48317:0{{ TOURN }}crwdne48317:0"
+
+#: ../../features/notifications.rst:17
+msgid "Email content and description"
+msgstr "crwdns48319:0crwdne48319:0"
+
+#: ../../features/notifications.rst:18
+msgid "Variables"
+msgstr "crwdns48321:0crwdne48321:0"
+
+#: ../../features/notifications.rst:20
+msgid "**Adjudicator draw notification**"
+msgstr "crwdns48323:0crwdne48323:0"
+
+#: ../../features/notifications.rst:22
+msgid "Email to adjudicators indicating their room assignment."
+msgstr "crwdns48325:0crwdne48325:0"
+
+#: ../../features/notifications.rst:24 ../../features/notifications.rst:36
+#: ../../features/notifications.rst:74
+msgid "Available through the admin draw page."
+msgstr "crwdns48327:0crwdne48327:0"
+
+#: ../../features/notifications.rst:25 ../../features/notifications.rst:37
+msgid "``{{ ROUND }}``: The round name"
+msgstr "crwdns48329:0{{ ROUND }}crwdne48329:0"
+
+#: ../../features/notifications.rst:26 ../../features/notifications.rst:38
+msgid "``{{ VENUE }}``: The venue of the assigned debate"
+msgstr "crwdns48331:0{{ VENUE }}crwdne48331:0"
+
+#: ../../features/notifications.rst:27 ../../features/notifications.rst:39
+msgid "``{{ PANEL }}``: A list of all the adjudicators assigned to the venue (with positions)"
+msgstr "crwdns48333:0{{ PANEL }}crwdne48333:0"
+
+#: ../../features/notifications.rst:28 ../../features/notifications.rst:40
+msgid "``{{ DRAW }}``: A list of the team matchup with their roles"
+msgstr "crwdns48335:0{{ DRAW }}crwdne48335:0"
+
+#: ../../features/notifications.rst:29
+msgid "``{{ POSITION }}``: The target adjudicator's position in the panel"
+msgstr "crwdns48337:0{{ POSITION }}crwdne48337:0"
+
+#: ../../features/notifications.rst:30
+msgid "``{{ URL }}``: A link to the adjudicator's private URL page"
+msgstr "crwdns48339:0{{ URL }}crwdne48339:0"
+
+#: ../../features/notifications.rst:32
+msgid "**Team draw notification**"
+msgstr "crwdns48341:0crwdne48341:0"
+
+#: ../../features/notifications.rst:34
+msgid "Email to teams indicating their pairing."
+msgstr "crwdns48343:0crwdne48343:0"
+
+#: ../../features/notifications.rst:41
+msgid "``{{ TEAM }}``: The team's code or short name"
+msgstr "crwdns48345:0{{ TEAM }}crwdne48345:0"
+
+#: ../../features/notifications.rst:42
+msgid "``{{ SIDE }}``: The team's side"
+msgstr "crwdns48347:0{{ SIDE }}crwdne48347:0"
+
+#: ../../features/notifications.rst:44
+msgid "**Private URL distribution**"
+msgstr "crwdns48349:0crwdne48349:0"
+
+#: ../../features/notifications.rst:46
+msgid "Email to participants giving them their private URL for electronic forms."
+msgstr "crwdns48351:0crwdne48351:0"
+
+#: ../../features/notifications.rst:48
+msgid "Available through the private URLs page."
+msgstr "crwdns48353:0crwdne48353:0"
+
+#: ../../features/notifications.rst:49
+msgid "``{{ URL }}``: The personalized URL"
+msgstr "crwdns48355:0{{ URL }}crwdne48355:0"
+
+#: ../../features/notifications.rst:50
+msgid "``{{ KEY }}``: The private code in the URL"
+msgstr "crwdns48357:0{{ KEY }}crwdne48357:0"
+
+#: ../../features/notifications.rst:52
+msgid "**Ballot submission receipt**"
+msgstr "crwdns48359:0crwdne48359:0"
+
+#: ../../features/notifications.rst:54
+msgid "Email to adjudicators of their ballot after tabroom confirmation."
+msgstr "crwdns48361:0crwdne48361:0"
+
+#: ../../features/notifications.rst:56
+msgid "Sent automatically when their ballot's result status becomes confirmed, if enabled in the \"Notifications\" section of the tournament options."
+msgstr "crwdns48363:0crwdne48363:0"
+
+#: ../../features/notifications.rst:58
+msgid "``{{ DEBATE }}``: The name (with round & venue) of the relevent debate"
+msgstr "crwdns48365:0{{ DEBATE }}crwdne48365:0"
+
+#: ../../features/notifications.rst:59
+msgid "``{{ SCORES }}``: The submitted ballot with speaker scores ands team names"
+msgstr "crwdns48367:0{{ SCORES }}crwdne48367:0"
+
+#: ../../features/notifications.rst:61
+msgid "**Current team standings**"
+msgstr "crwdns48369:0crwdne48369:0"
+
+#: ../../features/notifications.rst:63
+msgid "Email to speakers with their point total."
+msgstr "crwdns48371:0crwdne48371:0"
+
+#: ../../features/notifications.rst:65
+msgid "Available through the \"Confirm Round Completion\" page."
+msgstr "crwdns48373:0crwdne48373:0"
+
+#: ../../features/notifications.rst:66
+msgid "``{{ URL }}``: The URL of the team standings page (if public)"
+msgstr "crwdns48375:0{{ URL }}crwdne48375:0"
+
+#: ../../features/notifications.rst:67
+msgid "``{{ TEAM }}``: The team's name"
+msgstr "crwdns48377:0{{ TEAM }}crwdne48377:0"
+
+#: ../../features/notifications.rst:68
+msgid "``{{ POINTS }}``: The team's number of points"
+msgstr "crwdns48379:0{{ POINTS }}crwdne48379:0"
+
+#: ../../features/notifications.rst:70
+msgid "**Motion release**"
+msgstr "crwdns48381:0crwdne48381:0"
+
+#: ../../features/notifications.rst:72
+msgid "Email to speakers with the motion(s) of the current round."
+msgstr "crwdns48383:0crwdne48383:0"
+
+#: ../../features/notifications.rst:75
+msgid "``{{ ROUND }}``: The name of the round"
+msgstr "crwdns48385:0{{ ROUND }}crwdne48385:0"
+
+#: ../../features/notifications.rst:76
+msgid "``{{ MOTIONS }}``: A list of the motions released"
+msgstr "crwdns48387:0{{ MOTIONS }}crwdne48387:0"
+
+#: ../../features/notifications.rst:78
+msgid "**Team information**"
+msgstr "crwdns48389:0crwdne48389:0"
+
+#: ../../features/notifications.rst:80
+msgid "Email to speakers with information pertaining to their team, such as eligibility and codes."
+msgstr "crwdns48391:0crwdne48391:0"
+
+#: ../../features/notifications.rst:82
+msgid "Available through the Participants page."
+msgstr "crwdns48393:0crwdne48393:0"
+
+#: ../../features/notifications.rst:83
+msgid "``{{ SHORT }}``: The team's short name"
+msgstr "crwdns48395:0{{ SHORT }}crwdne48395:0"
+
+#: ../../features/notifications.rst:84
+msgid "``{{ LONG }}``: The team's long name"
+msgstr "crwdns48397:0{{ LONG }}crwdne48397:0"
+
+#: ../../features/notifications.rst:85
+msgid "``{{ CODE }}``: The team's code name"
+msgstr "crwdns48399:0{{ CODE }}crwdne48399:0"
+
+#: ../../features/notifications.rst:86
+msgid "``{{ EMOJI }}``: The team's assigned emoji"
+msgstr "crwdns48401:0{{ EMOJI }}crwdne48401:0"
+
+#: ../../features/notifications.rst:87
+msgid "``{{ DIVISION }}``: The team's division if applicable"
+msgstr "crwdns48403:0{{ DIVISION }}crwdne48403:0"
+
+#: ../../features/notifications.rst:88
+msgid "``{{ BREAK }}``: Break categories which the team is a member"
+msgstr "crwdns48405:0{{ BREAK }}crwdne48405:0"
+
+#: ../../features/notifications.rst:89
+msgid "``{{ SPEAKERS }}``: A list of the speakers in the team"
+msgstr "crwdns48407:0{{ SPEAKERS }}crwdne48407:0"
+
+#: ../../features/notifications.rst:90
+msgid "``{{ INSTITUTION }}``: The team's affiliation"
+msgstr "crwdns48409:0{{ INSTITUTION }}crwdne48409:0"
+
+#: ../../features/notifications.rst:93
+msgid "Event Webhook"
+msgstr "crwdns48411:0crwdne48411:0"
+
+#: ../../features/notifications.rst:95
+msgid "With SendGrid, the status of sent emails can be sent to Tabbycat to be displayed, giving an indication of failures and whether participants have opened the messages. To activate this feature, setup must be done both in your SendGrid account and in Tabbycat."
+msgstr "crwdns48413:0crwdne48413:0"
+
+#: ../../features/notifications.rst:97
+msgid "Set a secret key in the Email section of the tournament's preferences. This key must be alphanumeric without any spaces."
+msgstr "crwdns48415:0crwdne48415:0"
+
+#: ../../features/notifications.rst:98
+msgid "Copy the \"web-hook\" link presented in a box at the top of the \"email participants\" page."
+msgstr "crwdns48417:0crwdne48417:0"
+
+#: ../../features/notifications.rst:99
+msgid "Go to https://app.sendgrid.com/settings/mail_settings and select \"Event Notifications\""
+msgstr "crwdns48419:0crwdne48419:0"
+
+#: ../../features/notifications.rst:100
+msgid "Enable the feature and paste the Tabbycat URL under \"HTTP POST URL\"."
+msgstr "crwdns48421:0crwdne48421:0"
+
+#: ../../features/notifications.rst:101
+msgid "Select the notifications to keep track (or all of them)."
+msgstr "crwdns48423:0crwdne48423:0"
+
+#: ../../features/notifications.rst:103
+msgid "Each email and change in status sent to Tabbycat will add a row to the database. If the number of rows is limited, as is for free Heroku apps, enabling the webhook may use up a significant number of rows. Be selective in the events to keep track."
+msgstr "crwdns48425:0crwdne48425:0"
+

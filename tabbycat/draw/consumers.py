@@ -43,7 +43,7 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
             "extra": {'user_id': user.id, 'round_id': self.round.id,
                       'tournament_id': self.tournament.id,
                       'settings': action_settings,
-                      'group_name': self.group_name()}
+                      'group_name': self.group_name()},
         })
 
     def get_debates_or_panels(self, debates_or_panels):
@@ -62,8 +62,9 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
             d_or_p.save()
 
         serialized = self.importance_serializer(debates_or_panels, many=True)
-        del content['importance'] # Reserialise as debatesOrPanels
-        self.return_attributes(content, serialized)
+        content_to_return = content.copy()
+        del content_to_return['importance'] # Reserialise as debatesOrPanels
+        self.return_attributes(content_to_return, serialized)
 
     def delete_adjudicators(self, debate_or_panel, adj_ids):
         return debate_or_panel.related_adjudicator_set.exclude(
@@ -95,8 +96,9 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
         # TODO: is it necessary to re-fetch? Or should the objects be returned?
         debates_or_panels = self.get_debates_or_panels(changes)
         serialized = self.adjudicators_serializer(debates_or_panels, many=True)
-        del content['adjudicators']
-        self.return_attributes(content, serialized)
+        content_to_return = content.copy()
+        del content_to_return['adjudicators']
+        self.return_attributes(content_to_return, serialized)
 
     def return_attributes(self, original_content, serialized_content):
         """ Return the original JSON but with the generic debatesOrPanels key """
@@ -104,8 +106,8 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
         async_to_sync(get_channel_layer().group_send)(
             self.group_name(), {
                 'type': 'broadcast_debates_or_panels',
-                'content': original_content
-            }
+                'content': original_content,
+            },
         )
 
     def broadcast_debates_or_panels(self, event):
@@ -171,8 +173,9 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
         debates = self.get_debates_or_panels(changes)
         serialized = self.teams_serializer(debates, many=True,
             context={'sides': self.tournament.sides})
-        del content['teams']
-        self.return_attributes(content, serialized)
+        content_to_return = content.copy()
+        del content_to_return['teams']
+        self.return_attributes(content_to_return, serialized)
 
     def receive_sides_status(self, content):
         changes = {int(c['id']): c for c in content['sides_confirmed']}
@@ -183,8 +186,9 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
 
         debates = self.get_debates_or_panels(changes)
         serialized = self.sides_status_serializer(debates, many=True)
-        del content['sides_confirmed']
-        self.return_attributes(content, serialized)
+        content_to_return = content.copy()
+        del content_to_return['sides_confirmed']
+        self.return_attributes(content_to_return, serialized)
 
     def receive_venues(self, content):
         changes = {int(c['id']): c for c in content['venues']}
@@ -195,8 +199,9 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
 
         debates = self.get_debates_or_panels(changes)
         serialized = self.venues_serializer(debates, many=True)
-        del content['venues']
-        self.return_attributes(content, serialized)
+        content_to_return = content.copy()
+        del content_to_return['venues']
+        self.return_attributes(content_to_return, serialized)
 
 
 class EditDebateOrPanelWorkerMixin(SyncConsumer):
@@ -228,19 +233,19 @@ class EditDebateOrPanelWorkerMixin(SyncConsumer):
         async_to_sync(get_channel_layer().group_send)(
             group_name, {
                 'type': 'broadcast_debates_or_panels',
-                'content': content
-            }
+                'content': content,
+            },
         )
 
     def return_response(self, serialized_debates_or_panels, group_name,
                         message_text, message_type):
         content = {
             'debatesOrPanels': serialized_debates_or_panels.data,
-            'message': {'text': message_text, 'type': message_type}
+            'message': {'text': message_text, 'type': message_type},
         }
         async_to_sync(get_channel_layer().group_send)(
             group_name, {
                 'type': 'broadcast_debates_or_panels',
-                'content': content
-            }
+                'content': content,
+            },
         )

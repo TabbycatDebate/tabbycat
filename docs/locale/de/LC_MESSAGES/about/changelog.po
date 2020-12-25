@@ -1,0 +1,1920 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-03-08 16:38\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: German\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: de\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/about/changelog.po\n"
+"Language: de_DE\n"
+
+#: ../../../CHANGELOG.rst:3
+msgid "Change Log"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:6
+msgid "2.4.0 (Maine)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:7
+msgid "*Release date: ?*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:9
+msgid "Added support for Russian, and shortened the language selector"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:10
+msgid "Renamed 'test score' to 'base score'"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:11
+msgid "Divisions-specific features have been deprecated and removed"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:12
+msgid "Moved the 'Edit Database' menu item to the dropdown with the logo in the admin navigation"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:13
+msgid "Pull-ups can now be restricted to teams with the lowest draw strength (by speaker or team points) of their bracket"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:14
+msgid "The number of pull-ups and draw strength by speaker score are now available as team standing metrics"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:15
+msgid "Added the new emoji that come along with Unicode 11 — thanks to Viran Weerasekera for this addition!"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:16
+msgid "The 'Show adjudicator institutions' preference now covers a wider range of cases; meaning that if it is unchecked then all adjudicator's institutional affiliations should be hidden from the public"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:20
+msgid "2.3.2"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:21
+msgid "*Release date: 19 October 2019*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:23
+msgid "Fixed issue where teams would appear to be unavailable in break rounds"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:24 ../../../CHANGELOG.rst:294
+#: ../../../CHANGELOG.rst:302 ../../../CHANGELOG.rst:314
+msgid "Other minor fixes"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:28
+msgid "2.3.1"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:29
+msgid "*Release date: 6 October 2019*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:31
+msgid "Fixed issue where the institutions list would count teams/adjudicators outside of the tournament"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:32
+msgid "Fixed issue where a rejected ballot form would crash rather than providing an error message"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:33
+msgid "Fixed issue where the javascript bundle would not build on a local windows install"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:34
+msgid "Fixed issue where the adjudicator record pages would show an unreleased motion if that round's draw was released"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:38
+msgid "2.3.0 (LaPerm)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:39
+msgid "*Release date: 27 September 2019*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:44
+msgid "Added a preformed panel system which provides a powerful take on a 'shadow draw' workflow"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:42
+msgid "Shadow draw systems allow an adjudication core to form panels prior to a round being drawn. For example, the panels for Round 4 could be formed while Round 3 is taking place. Most implementations do so by having the tab system create a copy of the Round 3 draw, form new panels on top of it, and then transpose these panels onto Round 4. In large tournaments this workflow allows an adjudication core much more time to consider panel formation"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:43
+msgid "Tabbycat's preformed panels are formed per-round under a section available under the Setup menu. This interface looks like the standard Edit Adjudicators interface, but the 'debates' shown are based on a simulation of that round's results. These fake debates can then be prioritised"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:44
+msgid "Adjudicators can then be allocated to those fake debates in order to create a pre-formed panel. When the real draw is ready to be created, the priority of each preformed panel will be matched to the priority of the real debates"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:45
+msgid "By using the existing per-debate priority system, and by giving pre-formed panels their own priority, this workflow allows for very fine amounts of control over exactly how preformed panels are allocated as compared to a more simple top-down transposition of panels. Adjudication cores can easily target general areas of the draw (e.g. break-threshold brackets); control adjudicator strength within and across panels; and still account for special cases where a debate requires a particularly strong panel. At the same time, our existing options for automatic prioritisation and automatic allocation apply to all steps of this process so that preformed panels can be created and deployed rapidly"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:50
+msgid "Rewrote the Edit Adjudication, Venues, and Teams pages to enable a number of enhancements"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:47
+msgid "These pages now live-update changes that were made on other instances of that page. As a result, users on different computers can each open the Edit Adjudicators page and see the changes made by the other users. This feature, along with sharding, should make it easier than ever to distribute the task of adjudicator allocation across an entire adjudication core"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:48
+msgid "A new interface layout should better maximise space, particularly in BP settings, while also increasing the font size of key information"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:49
+msgid "The unused panel is now able to sort adjudicators by name, score, or drag order"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:50
+msgid "Average scores for all adjudicators, and a voting majority, are now shown next to the panel"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:51
+msgid "Various allocation-relevant settings, such as the minimum feedback score needed for a voting position, are now available inline on the allocation page itself. This should enable much faster tweaks/iterations of these values"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:52
+msgid "The ballot entry page will now indicate which teams have currently or recently given 'iron person' speeches so that these can be easily tracked, audited, and confirmed. It does show by showing both a text-highlight/icon in the table and in a dedicated modal window. Thanks to Étienne Beaulé for contributing this feature!"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:54
+msgid "Split up the Django settings files. Note that this means if you are upgrading a local install of Tabbycat to this version you will need to:"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:54
+msgid "Copy ``tabbycat/settings/local.example`` to become ``local.py`` (and fill in your original database details)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:55
+msgid "Optional: repeat the same copying procedure for ``development.example`` and set the ``LOCAL_DEVELOPMENT`` environmental variable to ``True`` if you would like to use the settings designed to aid local development"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:61
+msgid "A range of improvements to the email notifications contributed by Étienne Beaulé:"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:57
+msgid "Ballot receipt emails now provide more information about team scores/points"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:58
+msgid "Emails are now in a rich-text format"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:59
+msgid "Custom emails may be sent out to select participants through the web-interface"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:60
+msgid "Participants can be specifically included or excluded from receiving a notification before sending with checks for duplicate messages"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:61
+msgid "Teams can be sent emails with their draw details"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:62
+msgid "Emails can be tracked to determine if sent or read (SendGrid-specific)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:65
+msgid "Expanded the use of private URLs (Encore Étienne Beaulé):"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:64
+msgid "QR codes are now included in addition to the URL when printing private URLs"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:65
+msgid "Private landing pages will now display check-in status (if check-ins are used) along with further details regarding break categories, regions, etc."
+msgstr ""
+
+#: ../../../CHANGELOG.rst:66
+msgid "Current and former draw assignments will display along with submitted ballots (for adjudicators) on landing pages"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:70
+msgid "Reworked how conflicts are determined to support double-past institutional conflicts:"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:68
+msgid "Added a \"team-institution conflict\" model"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:69
+msgid "Like adjudicator-institution conflicts, team-institution conflicts are automatically created if you use the simple importer or the command-line importer; but if you edit the database, it's your responsibility to add/edit them"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:70
+msgid "Institutional affiliations no longer matter for determining conflicts for either teams or adjudicators; only institutions listed in the team's or adjudicator's conflicts matter"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:71
+msgid "An adjudicator/team now conflicts with an adjudicator if *any* institution appears as an institutional conflict for both parties"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:72
+msgid "When printing scoresheets you can now edit the motions display just on that printing page. This allows you to use placeholder motions in Tabbycat (in order to prevent leaks) while still producing ballots with the correct motions"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:73
+msgid "Tabbycat no longer tracks which round is the 'current' round and instead tracks the completion of individual rounds. This change does not alter any existing workflows, but makes it easier to run simultaneous draws in out-rounds"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:74
+msgid "Info-slides can now be split into paragraphs"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:75
+msgid "Check-in pages now differentiate between teams with 1 and 2 checked-in people in two-team formats"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:76
+msgid "Institutional caps in breaks can be based on the number of teams in the break. Thanks to Viran Weerasekera for this feature!"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:77
+msgid "Several Tabbycat functions, adjudicator/venue allocation and email notifications, have been shifted to worker processes to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run ``heroku ps:scale worker=1``"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:78
+msgid "Upgraded to Python 3.6, dropped support for Python 3.5 and below. Note that this will require you to upgrade your python versions if running locally."
+msgstr ""
+
+#: ../../../CHANGELOG.rst:82
+msgid "2.2.10"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:83
+msgid "*Release date: 10 February 2019*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:85
+msgid "Fixed the display of feedback quantities on the Feedback Overview Page"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:86
+msgid "Fixed issue where 'ignored' feedback would hide the result from the feedback graph but not affect an adjudicator's current score. Thanks to Étienne for this fix"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:90
+msgid "2.2.9"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:91
+msgid "*Release date: 24 January 2019*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:93
+msgid "Fixed an issue that could cause errors for tournaments when using an atypical number of rounds and break sizes. Thanks to Étienne for this fix"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:94
+msgid "Fixed an issue where the display of adjudicator's record links would display their name twice"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:98
+msgid "2.2.8"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:99
+msgid "*Release date: 14 December 2018*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:101
+msgid "Fix issue where the check-in buttons were always disabled on admin and assistant pages"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:102
+msgid "Other minor fixes. Thanks to Étienne for these and for the check-in button fix!"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:106
+msgid "2.2.7"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:107
+msgid "*Release date: 16 November 2018*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:109
+msgid "Lock redis-py version to 2.10.6, as workaround for `compatibility issue between django-redis and redis-py <https://github.com/niwinz/django-redis/issues/342>`_"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:110
+msgid "Fix login link on page shown after a user logs out"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:114
+msgid "2.2.6"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:115
+msgid "*Release date: 14 November 2018*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:117
+msgid "Fix issue where check-ins could not be revoked"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:118
+msgid "Fix issue where the standings overview 'dashboard' included scores from elimination rounds. Thanks to Étienne for this fix"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:119
+msgid "Fix issue where the Average Individual Speaker Score metric would fail to calculate in some circumstances. Thanks to Étienne for this fix"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:120
+msgid "Fix issue where draw emails would crash if venues were unspecified. Thanks, again, to Étienne for this fix!"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:124
+msgid "2.2.5"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:125
+msgid "*Release date: 21 October 2018*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:127
+msgid "Remove the buttons from the public check-ins page (as these do nothing unless the user is logged in)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:128
+msgid "Hopefully fixed error that could cause Team- and Adjudicator- Institutional conflicts to not show properly on Allocation pages"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:129
+msgid "Thanks to Étienne for pull requests fixing rare bugs in the user creation form and break generation when rounds are not present"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:133
+msgid "2.2.4"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:134
+msgid "*Release date: 9 October 2018*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:136
+msgid "Small fixes for functions related to email sending, conflict highlighting, and certain configurations of standings metrics"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:140
+msgid "2.2.3"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:141
+msgid "*Release date: 28 September 2018*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:143
+msgid "*Literally* fix the issue causing public views of released scoresheets to throw errors (thanks for the pull request Étienne)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:144
+msgid "Fix minor spacing issues in printed ballots (thanks for the pull request Étienne)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:145
+msgid "Fix issue where institution-less adjudicators would cause some draw views to crash (thanks for the pull request Étienne)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:149
+msgid "2.2.2"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:150
+msgid "*Release date: 22 September 2018*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:152
+msgid "*Actually* fix the issue causing public views of released scoresheets to throw errors"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:156
+msgid "2.2.1"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:157
+msgid "*Release date: 21 September 2018*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:159
+msgid "Fix issue causing public views of released scoresheets to throw errors"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:163
+msgid "2.2.0 (Khao Manee)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:164
+msgid "*Release date: 20 September 2018*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:167
+msgid "Implemented a new server architecture on Heroku along with other optimisation that should significantly improve the performance of sites receiving lots of traffic. Note that if you are upgrading an existing Heroku instance this requires a few tweaks before you deploy the update:"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:167
+msgid "Add the `https://github.com/heroku/heroku-buildpack-nginx.git` build pack under the Settings area of the Heroku Dashboard and positioning it first"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:168
+msgid "If your Heroku Stack is not \"heroku-16\" (noted under that same Settings page) it will need to be set as such using the Heroku CLI and the ``heroku stack:set heroku-16 --app APP_NAME`` command"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:169
+msgid "Added a page to the documentation that details how to scale a Tabbycat site that is receiving large amounts of traffic; and another page that documents how to upgrade a Tabbycat site to a new version"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:170
+msgid "Added support for Japanese and Portuguese. Let us know if you'd like to help contribute translations for either language (or a new one)!"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:171
+msgid "The results-entry page now updates its data live, giving you a more up to date look at data entry progress and reducing the cases of old data leading people to enter new ballots when they meant to confirm them"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:178
+msgid "A huge thanks to Étienne Beaulé for contributing a number of major new features and bug fixes. Notably:"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:173
+msgid "Added a means to mark feedback as 'ignored' so that it still is recorded as having been submitted, but does not affect the targeted-adjudicator's feedback score"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:174
+msgid "Added email notification to adjudicators on round release"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:175
+msgid "Implemented participant self-check-in through the use of their private URLs"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:176
+msgid "Gave all participants to a tournament a private URL key rather than being by team, and added a landing page for the participants using this key"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:177
+msgid "Implemented templated email notifications with ballot submission and round advance with the messages in a new settings panel. Private URL emails are now also customizable"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:178
+msgid "Added the \"average individual speaker score\" metric which averages the scores of all substantive speeches by the team within preliminary rounds. The old \"average speaker score\" metric has been renamed to to \"average total speaker score\""
+msgstr ""
+
+#: ../../../CHANGELOG.rst:179
+msgid "Reworked the ballots status graph to be an area chart"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:180
+msgid "Added the ability to hide motions on printed ballots (even if they have been entered). Thanks to Github user 0zlw for the feature request!"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:181
+msgid "Added the ability to unconfirm feedback from any of the views that show it"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:182
+msgid "BP motion statistics now also show average points split by bench and half"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:183
+msgid "Added a warning when users are close to their free-tier database limit on Heroku that makes it clear not to create new tournaments"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:184
+msgid "Added ``exportconfig`` and ``importconfig`` management commands to export and import tournament configurations to a JSON file"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:185
+msgid "Upgraded `django-dynamic-preferences <https://github.com/EliotBerriot/django-dynamic-preferences>`_ to version 1.6"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:187
+msgid "This won't affect most users, but advanced users previously having problems with a stray ``dynamic_preferences_users_userpreferencemodel`` table who are upgrading an existing instance may wish to run the SQL command ``DROP TABLE dynamic_preferences_users_userpreferencemodel;`` to remove this stray table. When this table was present, it caused an inconsistency between migration state and database schema that in turned caused the ``python manage.py flush`` command to fail. More information is available in the `django-dynamic-preferences changelog <https://django-dynamic-preferences.readthedocs.io/en/latest/history.html#migration-cleanup>`_"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:191
+msgid "2.1.3"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:192
+msgid "*Release date: 21 August 2018*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:194
+msgid "Added an alert for British Parliamentary format grand-final ballots that explains the workaround needed to nominate a sole winner"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:195
+msgid "Improved display of images shown when sharing Tabbycat links on social media"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:196
+msgid "Optimised the performance of several commonly-loaded pages. Thanks to Étienne Beaulé for the pull request!"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:197
+msgid "Prevented the entry of integer-scale feedback questions without the required min/max attributes"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:198
+msgid "Provided a shortcut link to editing a round's feedback weight"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:199
+msgid "Prevented standings from crashing when only a single standings metric is set"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:203
+msgid "2.1.2"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:204
+msgid "*Release date: 14 July 2018*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:206
+msgid "Fixed an error caused when calculating breaks including teams without institutions"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:207
+msgid "Improved display of long motions and info slides"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:208
+msgid "Fixed bug in feedback progress tracking with UADC-style adjudication"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:209
+msgid "Fixed bug where the public checks page would cause large amounts of failing requests"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:210
+msgid "Fixed visual issue with adjudicator lists wrapping poorly on mobile devices"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:211
+msgid "Limited the time it takes to serve requests to match Heroku's in-built limit; this may help improve the performance of sites under heavy load"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:215
+msgid "2.1.1"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:216
+msgid "*Release date: 19 May 2018*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:218
+msgid "The Scan Identifiers page now orders check-ins from top to bottom"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:219
+msgid "The Scan Identifiers now plays different sounds for failed check-ins"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:220
+msgid "The Scan Identifiers now has a toggle for sounds; allowing it to work in browsers like Safari that block auto-playing audio"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:224
+msgid "2.1.0 (Japanese Bobtail)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:225
+msgid "*Release date: 7 May 2018*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:227
+msgid "Added an introductory modal for the adjudicator allocation page to help outline how the features and workflow operate"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:228
+msgid "Added an automated method for assigning importances to debates using their bracket or 'liveness'. This should allow smaller tournaments to more easily assign importances and save time for larger tournaments that do so"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:230
+msgid "Added the ability to switch between using 'team codes' and standard team names"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:230
+msgid "By default team codes are set to match that team's emoji, but team codes are editable and can be imported like standard data"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:231
+msgid "Team codes can be swapped in an out for standard team names at will, with precise control over the contexts in which either is used — i.e. in public-facing pages, in admin-facing pages, in tooltips, *etc.*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:235
+msgid "Added a range of 'check-in' functionality"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:233
+msgid "This includes barcode assignment, printing, and scanning. Scanning methods are optimised both for manual entry, entry with barcodes scanners, and for a 'live' scanning view that uses your phone's camera!"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:234
+msgid "This includes new people and venue status pages that show an overview of check-in status and allow for easy manual check-ins; ideal for a roll-calls!. This page can also be made public"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:235
+msgid "Ballot check-ins have been converted to this new method, and now all printed ballots will contain the barcodes needed to scan them"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:236
+msgid "Venue check-ins have been added alongside the standard 'person' check-ins to allow you to track a room's status at the start of the day or round-by-round"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:239
+msgid "Added (partial) translations in French, Spanish and Arabic"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:238
+msgid "Users can now use a link in the footer to switch the site's language into French, Spanish, or Arabic. By default Tabbycat should also match your browser's language and so automatically apply those languages if it matches"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:239
+msgid "Our translations are generously provided by volunteers, but (so far) do not cover all of the interface text within Tabbycat. If you're interested in helping to translate new or existing languages please get in touch!"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:240
+msgid "Thanks to the excellent team at QatarDebate for contributing the Arabic translations, and to Alejandro, Hernando, Julian and Zoe for contributing the Spanish translations."
+msgstr ""
+
+#: ../../../CHANGELOG.rst:242
+msgid "Added a new (beta) feature: allocation 'sharding'"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:242
+msgid "Sharding allows you to split up the Adjudicator Allocation screen into a defined subset of the draw. This has been designed so that you can have multiple computers doing allocations simultaneously; allowing the adjudication core to split itself and tackle allocations in parallel."
+msgstr ""
+
+#: ../../../CHANGELOG.rst:243
+msgid "Shards can be assigned into defined fractions (i.e. halves or fifths) according to specific criteria (i.e. bracket or priority) and following either a top-to-bottom sorting or a mixed sorting that ensures each bracket has an even proportion of each criteria."
+msgstr ""
+
+#: ../../../CHANGELOG.rst:244
+msgid "Added an option to show a \"Confirm Digits\" option to pre-printed ballots that asks adjudicators to confirm their scores in a manner that may help clarify instances or bad handwriting. This can be enabled in the \"Data Entry\" settings area."
+msgstr ""
+
+#: ../../../CHANGELOG.rst:245
+msgid "Added a 'liveness' calculator for BP that will estimate whether each team has, can, or can't break in each of their categories (as previously existed for 2-team formats)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:246
+msgid "Added draw pull-up option: pull up from middle"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:247
+msgid "Added new draw option: choose pull-up from teams who have been pulled up the fewest times so far"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:248
+msgid "Added the ability to have different 'ballots-per-debates' for in/out rounds; accommodating tournaments like Australian Easters that use consensus for preliminary rounds but voting for elimination rounds."
+msgstr ""
+
+#: ../../../CHANGELOG.rst:249
+msgid "Added time zone support to the locations where times are displayed"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:250
+msgid "Administrators can now view pages as if they were Assistants; allowing them to (for example) use the data entry forms that enforce double-checking without needed to create a separate account"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:251
+msgid "Fixed χ² test in motion statistics, and refactored the motion statistics page"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:252
+msgid "Teams, like adjudicators, no longer need to have an institution"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:253
+msgid "Added a page allowing for bulk updates to adjudicator scores"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:254
+msgid "Added break categories to team standings, and new team standings pages for break categories"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:259
+msgid "Made speaker standings more configurable"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:256
+msgid "Second-order metrics can now be specified"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:257
+msgid "Added trimmed mean (also known as high-low drop)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:258
+msgid "Added ability to set no limit for number of missed debates"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:259
+msgid "Standard deviation is now the population standard deviation (was previously sample), and ranks in ascending order if used to rank speakers."
+msgstr ""
+
+#: ../../../CHANGELOG.rst:273 ../../../CHANGELOG.rst:386
+msgid "Quality of life improvements"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:262
+msgid "Added a \"☆\" indicator to more obviously liveness in the adjudicator allocation screen"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:263
+msgid "Added WYSIWYG editor for tournament welcome message, and moved it to tournament configuration"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:264
+msgid "Added \"appellant\" and \"respondent\" to the side name options"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:265
+msgid "Added a two new columns to the feedback overview page: one that displays the current difference between an adjudicator's test score and their current weighted score; another the displays the standard deviation of an adjudicator's feedback scores"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:266
+msgid "Added an 'important feedback' page that highlights feedback significantly above or below an adjudicator's test score"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:267
+msgid "Added a means to bulk-import adjudicator scores (for example from a CSV) to make it easier to work with external feedback processing"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:268
+msgid "Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:269
+msgid "The \"shared\" checkbox in the simple importer is now hidden unless the relevant tournament option is enabled"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:270
+msgid "Current team standings page now shows silent round results if \"Release all round results to public\" is set"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:271
+msgid "The Consensus vs Voting options for how ballots work has now been split into two settings: one option for preliminary rounds and one option for elimination rounds"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:272
+msgid "Speaker scores now show as integers (without decimals) where the tournament format would not allow decimals"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:273
+msgid "Added a page showing a list of institutions in the tournament"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:274
+msgid "On the assistant \"enter results\" page, pressing \"/\" jumps to the \"Find in Table\" box, so data entry can be done entirely from your keyboard"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:276
+msgid "Switched to using a Websockets/Channels based infrastructure to better allow for asynchronous updates. This should also ameliorate cases where the Memcachier plugin expired due to inactivity which would then crash a site. Notes for those upgrading:"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:276
+msgid "On Heroku: You should remove the Memcachier plugin and instead add 'heroku-redis' to any instances being upgraded"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:277
+msgid "Locally: You should recreate your `local_settings.py` from the `local_settings.example` file"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:280
+msgid "Upgraded to Django 2.0"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:279
+msgid "Converted most raw SQL queries to use the new ``filter`` keyword in annotations"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:283
+msgid "2.0.7"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:284
+msgid "*Release date: 13 April 2018*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:286
+msgid "Fixed an issue preventing draws with pre-allocate sides generating"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:290
+msgid "2.0.6"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:291
+msgid "*Release date: 20 March 2018*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:293
+msgid "Added reminder to add own-institution conflicts in the Edit Database area"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:298
+msgid "2.0.5"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:299
+msgid "*Release date: 7 February 2018*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:301
+msgid "Improved the printing of scoresheets and feedback forms on Chrome."
+msgstr ""
+
+#: ../../../CHANGELOG.rst:306
+msgid "2.0.4"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:307
+msgid "*Release date: 22 January 2018*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:309
+msgid "Add alert for users who try to do voting ballots on BP-configured tournaments"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:310
+msgid "Fixed issue where draws of the \"manual\" type would not generate correctly"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:311
+msgid "Fixed issue where a ballot's speaker names dropdown would contain both team's speakers when using formats with side selection"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:312
+msgid "Fixed issue where scoresheets would not show correctly under some configurations"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:313
+msgid "Improved display of really long motions when using the inbuilt motion-showing page"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:318
+msgid "2.0.3"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:319
+msgid "*Release date: 3 December 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:321
+msgid "Fixed issue where the 'prefix team name with institution name' checkbox would not be correctly saved when using the Simple Importer"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:322
+msgid "Removed the scroll speed / text size buttons on mobile draw views that were making it difficult to view the table"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:323
+msgid "Improved the display of the motions tab page on mobile devices and fixed an issue where it appeared as if only half the vetoes were made"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:327
+msgid "2.0.2"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:328
+msgid "*Release date: 27 November 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:333
+msgid "Fixes and improvements to diversity overview"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:331
+msgid "Fixed average feedback rating from teams, it was previously (incorrectly) showing the average feedback rating from all adjudicators"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:332
+msgid "Gender splits for average feedback rating now go by target adjudicator; this was previously source adjudicator"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:333
+msgid "Persons with unknown gender are now shown in counts (but not score/rating averages); a bug had previously caused them to be incorrectly counted as zero"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:334
+msgid "Improved query efficiency of the page"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:335
+msgid "Improved the BP motions tab for out-rounds by specifying advancing teams as \"top/bottom ½\" rather than as 1st/4th and removed the average-points-per-position graphs that were misleading"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:336
+msgid "Improved handling of long motions in the motion display interface"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:337
+msgid "Fixed issue where creating BP tournaments using the wizard would create an extra break round given the size of the break specified"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:338
+msgid "Fixed auto-allocation in consensus panels where there are fewer judges than debates in the round"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:339
+msgid "Fixed reply speaker validity check when speeches are marked as duplicate"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:340
+msgid "Prohibit assignment of teams to break categories of other tournaments in Edit Database area"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:344
+msgid "2.0.1"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:345
+msgid "*Release date: 21 November 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:347
+msgid "Fixed issue where results submission would crash if sides are unconfirmed"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:348
+msgid "Fixed issue where scoresheets would not display properly for adjudicators who lack institutions"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:349
+msgid "Fixed issue where the round history indicators in the Edit Adjudicators page would sometimes omit the \"rounds ago\" indicator"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:353
+msgid "2.0.0 (Iberian Lynx)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:354
+msgid "*Release date: 13 November 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:358
+msgid "British Parliamentary support"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:357
+msgid "Full support for British Parliamentary format has been added and we're incredibly excited to see Tabbycat's unique features and design (finally) available as an option for those tabbing in the predominant global format"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:358
+msgid "As part of the implementation of this format we've made significant improvements over existing tab software on how sides are allocated within BP draws. This means that teams are less likely to have 'imbalanced' proportions of side allocations (for example having many more debates as Opening Government than Closing Opposition)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:359
+msgid "We've added a new \"Comparisons\" page added to the documentation to outline some of the key differences between Tabbycat and other software in the context of BP tabbing"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:365
+msgid "Refreshed interface design"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:361
+msgid "The basic graphic elements of Tabbycat have had a their typography, icons,  colours, forms, and more redesign for a more distinctive and clear look. We also now have an official logo!"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:362
+msgid "The \"Motions\" stage of the per-round workflow has now been rolled into the Display area to better accommodate BP formats and consolidate the Draw/Motion 'release' process"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:363
+msgid "Sidebar menu items now display all sub-items within a section, such as for Feedback, Standings, and Breaks"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:364
+msgid "Better tablet and mobile interfaces; including a fully responsive sidebar for the admin area that maximises the content area"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:365
+msgid "More explicit and obvious calls-to-action for the key tasks necessary to running a round, with better interface alerts and text to help users understand when and why to perform crucial actions"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:366
+msgid "Redesigned motions tab page that gives a better idea of the sample size and distribution of results in both two- and four- team formats"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:368
+msgid "Improved handling of Break Rounds ballots and sides allocation"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:368
+msgid "The positions of teams within a break round are now created by the initial draw generation in an 'unset' state in recognition that most tournaments assign these manually (through say a coin toss). This should help clarify when showing break rounds draws when sides are or are not finalised"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:369
+msgid "Break rounds ballots for formats where scores are not typically entered (i.e. BP) will only specify that you nominate the teams advancing rather than enter in all of the speakers' scores"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:370
+msgid "Now, like Break Categories, you can define arbitrary Categories such as 'Novice' or 'ESL' to create custom Speaker tabs for groups of Speakers"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:371
+msgid "You can now release an Adjudicators Tab showing test scores, final scores, and/or per-round feedback averages"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:372
+msgid "Information Slides can now be added to the system; either for showing to an auditorium within Tabbycat or for displaying alongside the public list of motions and/or the motions tab"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:373
+msgid "Teams and adjudicators are no longer required to have institutions; something that should be very useful when setting up small IVs and the like"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:374
+msgid "Private URLs can now be incrementally generated. Records of sent mail are now also kept by Tabbycat, so that emails can be incrementally sent to participants as registration data changes"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:376
+msgid "After creating a new tournament you will now be prompted to apply a basic rules and public information preset"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:377
+msgid "Better handling of errors that arise when a debate team is missing or where two teams have been assigned the same side"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:378
+msgid "Fixed issue where the adjudicator feedback graphs would not sort along with their table"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:379
+msgid "The Feedback Overview page now makes it more clear how the score is determined, the current distribution of scores, and how scores affect the distribution of chairs, panellists, and trainees"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:380
+msgid "Speaker tabs now default to sorting by average, except for formats where we are certain that they must be sorted by total. The speaker tab page itself now prominently notes which setting is is currently using"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:381
+msgid "'Feedback paths' now default to a more permissive setting (rather than only allowing Chairs to submit feedback) and the Feedback Overview page will note that current configuration"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:382
+msgid "Emails can be assigned to adjudicators and teams in the Simple Importer"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:383
+msgid "More of the tables that allow you to set or edit data (such as the check-in tables for adjudicators, teams and venues) now automatically save changes"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:384
+msgid "When adding/editing users extraneous fields have been hidden and the \"Staff\" and \"Superuser\" roles have new sub-text clarifying what they mean for users with those permissions"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:385
+msgid "Team record pages now show cumulative team points, and if the speaker tab is fully released, speaker scores for that team in each debate"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:389
+msgid "1.4.6"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:390
+msgid "*Release date: 23 October 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:392
+msgid "Fixed issue where speaker standings with a large amount of non-ranking speakers would cause the page to load slowly or time-out."
+msgstr ""
+
+#: ../../../CHANGELOG.rst:396
+msgid "1.4.5"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:397
+msgid "*Release date: 14 October 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:399
+msgid "Added warning message when adjudicator scores are outside the expected range"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:400
+msgid "Fixed handling of uniqueness failure in simple importer for teams"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:404
+msgid "1.4.4"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:405
+msgid "*Release date: 27 September 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:407
+msgid "Fixed Vue dependency issue preventing Heroku installs after a dependency release"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:408
+msgid "Fixed issue with formatting non-numeric standings metrics"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:409
+msgid "Fixed behaviour of public tabs when all rounds are silent"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:413
+msgid "1.4.3"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:414
+msgid "*Release date: 9 September 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:416
+msgid "A number of improvements to error handling and logging"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:417
+msgid "Changed the \"previous round\" of an elimination round to point to the last one in the same break category"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:418
+msgid "Other minor bug fixes"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:422
+msgid "1.4.2"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:423
+msgid "*Release date: 23 August 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:425
+msgid "Minor bug fixes and error logging improvements"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:429
+msgid "1.4.1"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:430
+msgid "*Release date: 2 August 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:432
+msgid "Fixed bug that prevented edited matchups from being saved"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:433
+msgid "Added flag to prevent retired sites from using the database for sessions"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:437
+msgid "1.4.0 (Havana Brown)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:438
+msgid "*Release date: 26 July 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:444
+msgid "Overhauled the adjudicator allocation, venue allocation, and matchups editing pages, including:"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:441
+msgid "Upgraded to Vue 2.0 and refactored the code so that each page better shares methods for displaying the draw, showing additional information, and dragging/dropping"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:442
+msgid "When dragging/dropping, the changed elements now 'lock' in place to indicate that their saving is in-progress"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:443
+msgid "Added conflicts and recent histories to the slideovers shown for teams/adjudicators"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:444
+msgid "Added 'ranking' toggles to visibly highlight adjudicator strengths and more easily identify unbalanced panels"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:445
+msgid "Each interface's table is now sortable by a debate's importance, bracket, liveness, etc."
+msgstr ""
+
+#: ../../../CHANGELOG.rst:446
+msgid "Added a new \"Tournament Logistics\" guide to the documentation that outlines some general best practices for tabbing tournaments. Thanks to Viran Weerasekera, Valerie Tierney, Molly Dale, Madeline Schultz, and Vail Bromberger for contributing to this document"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:447
+msgid "Added (basic) support for the Canadian Parliamentary format by allowing for consensus ballots and providing a preset. However note that only some of the common draw rules are supported (check our documentation for more information)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:448
+msgid "Added an ESL/EFL tab release option and status field"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:449
+msgid "Added a chi-squared test to measure motion balance in the motion standings/balance. Thanks to Viran Weerasekera for contributing this"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:450
+msgid "The Auto Allocate function for adjudicators will now also allocate trainees to solo-chaired debates"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:451
+msgid "Added a 'Tab Release' preset for easily releasing all standings/results pages after a tournament is finished"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:452
+msgid "Added 'Average Speaks by Round' to the standings overview page"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:453
+msgid "Fixed issue where the Auto Allocator was forming panels of incorrect strengths in debates identified as less important"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:454
+msgid "Fixed issue where toggling iron-person speeches on and off wouldn't hide/unset the relevant checkboxes"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:455
+msgid "Fixed issue where VenueCategories could not be edited if they did not have Venues set"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:456
+msgid "Various other small fixes and improvements"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:460
+msgid "1.3.1"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:461
+msgid "*Release date: 26 May 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:463
+msgid "Fixed bug that allowed duplicate emoji to be occasionally generated"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:467
+msgid "1.3.0 (Genetta)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:468
+msgid "*Release date: 9 May 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:470
+msgid "Added the ability to mark speeches as duplicates when entering ballots so that they will not show in speaker tabs, intended for use with 'iron-man' speeches and swing speakers"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:471
+msgid "Reworked venue constraints and venue display options by streamlining \"venue groups\" and \"venue constraint categories\" into a single \"venue category\" type, with options for how they are used and displayed"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:472
+msgid "Relocated the Random (now renamed 'Private') URL pages to the Setup section and added pages for printing/emailing out the ballot submission URLs"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:473
+msgid "Reworked the simple data importer (formerly the visual importer) to improve its robustness"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:474
+msgid "Improved guards against having no current round set, and added a new page for manually overriding the current round (under Configuration)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:475
+msgid "Added a preference for controlling whether assistant users have access to pages that can reveal draw or motions information ahead of their public release"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:476
+msgid "Added the ability to limit tab releases to a given number of ranks (*i.e.* only show the top 10 speakers)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:477
+msgid "Added the ability to redact individual person's identifying details from speaker tabs"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:478
+msgid "Added the ability for user passwords to be easily reset"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:479
+msgid "Added a minimal set of default feedback questions to newly created Tournaments"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:480
+msgid "When a tournament's current round is set, redirect to a page where it can be set, rather than crashing"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:481
+msgid "A number of other minor bug fixes and enhancements"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:485
+msgid "1.2.3"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:486
+msgid "*Release date: 17 March 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:488
+msgid "Improved the display of the admin ballot entry form on mobile devices"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:489 ../../../CHANGELOG.rst:497
+#: ../../../CHANGELOG.rst:505
+msgid "A number of other minor bug fixes"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:493
+msgid "1.2.2"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:494
+msgid "*Release date: 4 March 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:496
+msgid "Protected debate-team objects from cascaded deletion, and added warning messages with guidance when users would otherwise do this"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:501
+msgid "1.2.1"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:502
+msgid "*Release date: 25 February 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:504
+msgid "Printable feedback forms will now display the default rating scale, any configured introduction text, and better prompt you to add additional questions"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:509
+msgid "1.2.0 (Foldex)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:510
+msgid "*Release date: 15 February 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:512
+msgid "Changed the core workflow by splitting display- and motion- related activities into separate pages to simplify each stage of running a round"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:513
+msgid "Added support for Docker-based installations to make local/offline installations much more simple"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:514
+msgid "Added a \"Tabbykitten\" version of Tabbycat that can be deployed to Heroku without a needing a credit/debit card"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:515
+msgid "Added button to load a demo tournament on the 'New Tournament' page so it is easier to test-run Tabbycat"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:516
+msgid "Changed venue groups to be separate to venue constraint categories"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:517
+msgid "Modified the licence to clarify that donations are required for some tournaments and added a more explicit donations link and explanation page"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:518
+msgid "Added information about autosave status to the adjudicator allocations page"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:519
+msgid "Added configurable side names so that tournaments can use labels like \"Proposition\"/\"Opposition\" instead of \"Affirmative\"/\"Negative\""
+msgstr ""
+
+#: ../../../CHANGELOG.rst:520
+msgid "Started work on basic infrastructure for translations"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:524
+msgid "1.1.7"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:525
+msgid "*Release date: 31 January 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:527
+msgid "Yet more minor bug fixes"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:528
+msgid "The auto-allocation UI will now detail your minimum rating setting better"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:529
+msgid "Added guidance on database backups to documentation"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:533
+msgid "1.1.6"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:534
+msgid "*Release date: 19 January 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:536
+msgid "A number of minor bug fixes"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:537
+msgid "Added basic infrastructure for creating tabbycat translations"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:541
+msgid "1.1.5"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:542
+msgid "*Release date: 12 January 2017*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:544
+msgid "A number of minor bug fixes and improvements to documentation"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:548
+msgid "1.1.4"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:549
+msgid "*Release date: 25 November 2016*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:551
+msgid "Redesigned the footer area to better describe Tabbycat and to promote donations and related projects"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:552
+msgid "Slight tweaks to the site homepage and main menus to better accommodate the login/log out links"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:553
+msgid "A few minor bug fixes and improvements to error reporting"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:557
+msgid "1.1.3"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:558
+msgid "*Release date: 15 September 2016*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:560
+msgid "Fixed bug affecting some migrations from earlier versions"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:561
+msgid "Made latest results show question mark rather than crash if a team is missing"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:562
+msgid "Fixed bug affecting the ability to save motions"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:563
+msgid "Fixed bug preventing draw flags from being displayed"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:567
+msgid "1.1.2"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:568
+msgid "*Release date: 14 September 2016*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:570
+msgid "Allow panels with even number of adjudicators (with warnings), by giving chair the casting vote"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:571
+msgid "Removed defunct person check-in, which hasn't been used since 2010"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:572
+msgid "Collapsed availability database models into a single model with Django content types"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:573
+msgid "Collapsed optional fields in action log entries into a single generic field using Django content types"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:574
+msgid "Added better warnings when attempting to create an elimination round draw with fewer than two teams"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:575
+msgid "Added warnings in Edit Database view when editing debate teams"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:576
+msgid "Renamed \"AIDA pre-2015\" break rule to \"AIDA 1996\""
+msgstr ""
+
+#: ../../../CHANGELOG.rst:580
+msgid "1.1.1"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:581
+msgid "*Release date: 8 September 2016*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:583
+msgid "Fixed a bug where the team standings and team tab would crash when some emoji were not set"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:587
+msgid "1.1.0 (Egyptian Mau)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:588
+msgid "*Release date: 3 September 2016*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:590
+msgid "Added support for the United Asian Debating Championships style"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:591
+msgid "Added support for the World Schools Debating Championships style"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:592
+msgid "Made Windows 8+ Emoji more colourful"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:593
+msgid "Fixed an incompatability between Vue and IE 10-11 which caused tables to not render"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:594
+msgid "Minor bug fixes and dependency updates"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:598
+msgid "1.0.1"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:599
+msgid "*Release date: 19 August 2016*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:601
+msgid "Fixed a minor bug with the visual importer affecting similarly named institutions"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:602
+msgid "Fixed error message when user tries to auto-allocate adjudicators on unconfirmed or released draw"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:603
+msgid "Minor docs edits"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:607
+msgid "1.0.0 (Devon Rex)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:608
+msgid "*Release date: 16 August 2016*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:613
+msgid "Redesigned and redeveloped adjudicator allocation page"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:611
+msgid "Redesigned interface, featuring clearer displays of conflict and diversity information"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:612
+msgid "Changes to importances and panels are now automatically saved"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:613
+msgid "Added debate \"liveness\" to help identify critical rooms—many thanks to Thevesh Theva"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:614
+msgid "Panel score calculations performed live to show strength of voting majorities"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:616
+msgid "New features"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:616
+msgid "Added record pages for teams and adjudicators"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:617
+msgid "Added a diversity tab to display demographic information about participants and scoring"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:619
+msgid "Significant general improvements"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:619
+msgid "Shifted most table rendering to Vue.js to improve performance and design"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:620
+msgid "Drastically reduced number of SQL queries in large tables, *e.g.* draw, results, tab"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:624
+msgid "Break round management"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:622
+msgid "Completed support for break round draws"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:623
+msgid "Simplified procedure for adding remarks to teams and updating break"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:624
+msgid "Reworked break generation code to be class-based, to improve future extensibility"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:625
+msgid "Added support for break qualification rules: AIDA Australs, AIDA Easters, WADL"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:628
+msgid "Feedback"
+msgstr "Feedback"
+
+#: ../../../CHANGELOG.rst:627
+msgid "Changed Boolean fields in AdjudicatorFeedbackQuestion to reflect what they actually do"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:628
+msgid "Changed \"panellist feedback enabled\" option to \"feedback paths\", a choice of three options"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:630
+msgid "Dropped \"/t/\" from tournament URLs and moved \"/admin/\" to \"/database/\", with 301 redirects"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:631
+msgid "Added basic code linting to the continuous integration tests"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:632
+msgid "Many other small bug fixes, refactors, optimisations, and documentation updates"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:636
+msgid "0.9.0 (Chartreux)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:637
+msgid "*Release date: 13 June 2016*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:639
+msgid "Added a beta implementation of the break rounds workflow"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:640
+msgid "Added venue constraints, to allow participants or divisions to preferentially be given venues from predefined groups"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:641
+msgid "Added a button to regenerate draws"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:642
+msgid "Refactored speaker standings implementation to match team standings implementation"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:643
+msgid "New standings metrics, draw methods, and interface settings for running small tournaments and division-based tournaments"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:644
+msgid "Improved support for multiple tournaments"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:645
+msgid "Improved user-facing error messages in some scenarios"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:646
+msgid "Most frontend dependencies now handled by Bower"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:647
+msgid "Static file compilation now handled by Gulp"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:648 ../../../CHANGELOG.rst:660
+msgid "Various bug fixes, optimisations, and documentation edits"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:652
+msgid "0.8.3"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:653
+msgid "*Release date: 4 April 2016*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:655
+msgid "Restored and reworking printing functionality for scoresheets/feedback"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:656
+msgid "Restored Edit Venues and Edit Matchups on the draw pages"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:657
+msgid "Reworked tournament data importers to use csv.DictReader, so that column order in files doesn't matter"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:658
+msgid "Improved dashboard and feedback graphs"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:659
+msgid "Add separate pro speakers tab"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:664
+msgid "0.8.2"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:665
+msgid "*Release date: 20 March 2016*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:667
+msgid "Fixed issue where scores from individual ballots would be deleted when any other panel in the round was edited"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:668
+msgid "Fixed issue where page crashes for URLs with \"tab\" in it but that aren't recognized tab pages"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:672
+msgid "0.8.1"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:673
+msgid "*Release date: 15 March 2016*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:675
+msgid "Fixed a bug where editing a Team in the admin section could cause an error"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:676
+msgid "Added instructions on how to account for speakers speaking twice to docs"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:677
+msgid "Venues Importer wont show VenueGroup import info unless that option is enabled"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:681
+msgid "0.8.0 (Bengal)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:682
+msgid "*Release date: 29 February 2016*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:684
+msgid "Upgraded to Python 3.4, dropped support for Python 2"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:685
+msgid "Restructured directories and, as a consequence, changed database schema"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:686
+msgid "Added Django migrations to the release (they were previously generated by the user)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:687
+msgid "Migrated documentation to `Read The Docs <http://tabbycat.readthedocs.io>`_"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:688
+msgid "New user interface design and workflow"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:689
+msgid "Overhauled tournament preferences to use `django-dynamic-preferences <https://github.com/EliotBerriot/django-dynamic-preferences>`_"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:690
+msgid "Added new visual data importer"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:691
+msgid "Improved flexibility of team standings rules"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:692
+msgid "Moved data utility scripts to Django management commands"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:693
+msgid "Changed emoji to Unicode characters"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:694
+msgid "Various other fixes and refinements"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:698
+msgid "0.7.0 (Abyssinian)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:699
+msgid "*Release date: 31 July 2015*"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:701
+msgid "Support for multiple tournaments"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:702
+msgid "Improved and extensible tournament data importer"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:703
+msgid "Display gender, region, and break category in adjudicator allocation"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:704
+msgid "New views for online adjudicator feedback"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:705
+msgid "Customisable adjudicator feedback forms"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:706
+msgid "Randomised URLs for public submission"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:707
+msgid "Customisable break categories"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:708
+msgid "Computerised break generation (break round draws not supported)"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:709
+msgid "Lots of fixes, interface touch-ups and performance enhancements"
+msgstr ""
+
+#: ../../../CHANGELOG.rst:710
+msgid "Now requires Django 1.8 (and other package upgrades)"
+msgstr ""
+

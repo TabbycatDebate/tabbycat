@@ -11,8 +11,8 @@ def nextpow2(n):
 
 
 def partial_break_round_split(break_size):
-    """Returns a tuple `(debating, bypassing)`, where `debating` is how many
-    teams will debate in the first break round, and `bypassing` is how many
+    """Returns a tuple `(debates, bypassing)`, where `debating` is how many
+    debates there is in the first break round, and `bypassing` is how many
     teams will bypass the first break round, qualifying directly for the
     second."""
 

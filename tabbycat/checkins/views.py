@@ -4,23 +4,24 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.views.generic.base import TemplateView
+from django.http.response import Http404
 from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
+from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from options.utils import use_team_code_names
 from participants.models import Person, Speaker
 from participants.serializers import InstitutionSerializer
+from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import PostOnlyRedirectView
-from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 from venues.serializers import VenueSerializer
 
 from .consumers import CheckInEventConsumer
-from .models import PersonIdentifier, VenueIdentifier
+from .models import Event, PersonIdentifier, VenueIdentifier
 from .utils import create_identifiers, get_unexpired_checkins
 
 
@@ -94,7 +95,7 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
                 'id': speaker.id, 'name': speaker.name, 'type': 'Speaker',
                 'identifier': [code], 'locked': False,
                 'team': speaker.team.code_name if team_codes else speaker.team.short_name,
-                'institution': institution
+                'institution': institution,
             })
         kwargs["speakers"] = json.dumps(speakers)
 
@@ -116,7 +117,7 @@ class PublicCheckInPeopleStatusView(PublicTournamentPageMixin, CheckInPeopleStat
 
 class CheckInVenuesStatusView(BaseCheckInStatusView):
     page_emoji = '👜'
-    page_title = _("Venue's Check-In Statuses")
+    page_title = _("Rooms' Check-In Statuses")
     window_preference = 'checkin_window_venues'
 
     def get_context_data(self, **kwargs):
@@ -174,18 +175,18 @@ class CheckInIdentifiersView(SegregatedCheckinsMixin, TemplateView):
             "speakers": {
                 "title": _("Speakers"),
                 "total": self.t_speakers().count(),
-                "in":  self.speakers_with_barcodes().count()
+                "in":  self.speakers_with_barcodes().count(),
             },
             "adjudicators": {
                 "title": _("Adjudicators"),
                 "total": self.t_adjs().count(),
-                "in":  self.adjs_with_barcodes().count()
+                "in":  self.adjs_with_barcodes().count(),
             },
             "venues": {
-                "title": _("Venues"),
+                "title": _("Rooms"),
                 "total": t.venue_set.count(),
                 "in":  VenueIdentifier.objects.filter(venue__tournament=t).count(),
-            }
+            },
         }
         return super().get_context_data(**kwargs)
 
@@ -264,39 +265,44 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
 
         try:
             person = Person.objects.get(url_key=kwargs['url_key'])
-            identifier = PersonIdentifier.objects.get(person=person)
-        except ObjectDoesNotExist:
-            messages.error(self.request, _("Could not check you in as you do not have an identifying code — your tab director may need to make you an identifier."))
+            identifier = person.checkin_identifier
+        except Person.DoesNotExist:
+            raise Http404("Person does not exist")
+        except PersonIdentifier.DoesNotExist:
+            messages.error(request, _("Could not check you in as you do not have an identifying code — your tab director may need to make you an identifier."))
             return super().post(request, *args, **kwargs)
 
-        checkins = get_unexpired_checkins(t, 'checkin_window_people')
-        existing_checkin = checkins.filter(identifier=identifier)
+        existing_checkin = get_unexpired_checkins(t, 'checkin_window_people').filter(identifier=identifier)
         if action == 'revoke':
             if existing_checkin.exists():
-                messages.success(self.request, _("You have revoked your check-in."))
+                existing_checkin.delete()
+                checkin_dict = {'identifier': identifier.barcode}
+                messages.success(request, _("You have revoked your check-in."))
             else:
-                messages.error(self.request, _("Whoops! Looks like your check-in was already revoked."))
+                messages.error(request, _("Whoops! Looks like your check-in was already revoked."))
+                return super().post(request, *args, **kwargs)
         elif action == 'checkin':
             if existing_checkin.exists():
-                messages.error(self.request, _("Whoops! Looks like you're already checked in."))
+                messages.error(request, _("Whoops! Looks like you're already checked in."))
+                return super().post(request, *args, **kwargs)
             else:
-                messages.success(self.request, _("You are now checked in."))
+                checkin = Event.objects.create(identifier=identifier,
+                                               tournament=self.tournament)
+                checkin_dict = checkin.serialize()
+                checkin_dict['owner_name'] = person.name
+                messages.success(request, _("You are now checked in."))
         else:
             return TemplateResponse(request=self.request, template='400.html', status=400)
 
-        group_name = CheckInEventConsumer.group_prefix + "_" + t.slug
-
         # Override permissions check - no user but authenticated through URL
+        group_name = CheckInEventConsumer.group_prefix + "_" + t.slug
         async_to_sync(get_channel_layer().group_send)(
             group_name, {
-                'type': 'broadcast_checkin',
-                'content': {
-                    'barcodes': [identifier.barcode],
-                    'status': action == 'checkin',
-                    'type': 'people',
-                    'component_id': None
-                }
-            }
+                'type': 'send_json',
+                'data': {
+                    'checkins': [checkin_dict],
+                },
+            },
         )
 
         return super().post(request, *args, **kwargs)

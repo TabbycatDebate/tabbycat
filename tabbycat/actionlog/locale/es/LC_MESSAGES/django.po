@@ -2,19 +2,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-21 05:14-0700\n"
-"PO-Revision-Date: 2019-08-01 15:07\n"
-"Last-Translator: philip_tc\n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"PO-Revision-Date: 2020-07-05 17:08\n"
+"Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: crowdin.com\n"
 "X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-Language: es-ES\n"
 "X-Crowdin-File: /develop/tabbycat/actionlog/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 920\n"
 
 #: actionlog/apps.py:7
 msgid "Action Log"
@@ -53,8 +54,8 @@ msgid "Saved feedback"
 msgstr "Ha guardado feedback"
 
 #: actionlog/models.py:97
-msgid "Edited adjudicator test score"
-msgstr "Ha editado el puntaje del examen de jueces"
+msgid "Edited adjudicator base score"
+msgstr ""
 
 #: actionlog/models.py:98
 msgid "Set adjudicator note"
@@ -69,19 +70,19 @@ msgid "Auto-allocated adjudicators"
 msgstr "Ha asignado a los jueces automáticamente"
 
 #: actionlog/models.py:101
-msgid "Saved a venue manual edit"
+msgid "Saved a room manual edit"
 msgstr "Ha guardado la edición manual de una sala"
 
 #: actionlog/models.py:102
-msgid "Auto-allocated venues"
+msgid "Auto-allocated rooms"
 msgstr "Ha asignado las salas automáticamente"
 
 #: actionlog/models.py:103
-msgid "Edited venue categories"
+msgid "Edited room categories"
 msgstr "Ha editado las categorías de sala"
 
 #: actionlog/models.py:104
-msgid "Edited venue constraints"
+msgid "Edited room constraints"
 msgstr "Editar las restricciones de sala"
 
 #: actionlog/models.py:105
@@ -185,7 +186,7 @@ msgid "Edited adjudicators availability"
 msgstr "Ha editado la disponibilidad de los jueces"
 
 #: actionlog/models.py:130
-msgid "Edited venue availability"
+msgid "Edited room availability"
 msgstr "Ha editado la disponibilidad de salas"
 
 #: actionlog/models.py:131
@@ -205,7 +206,7 @@ msgid "Imported institutions using the simple importer"
 msgstr "Importar las instituciones usando el importador simple"
 
 #: actionlog/models.py:135
-msgid "Imported venues using the simple importer"
+msgid "Imported rooms using the simple importer"
 msgstr "Importar salas usando el importador simple"
 
 #: actionlog/models.py:136
@@ -245,7 +246,7 @@ msgid "Generated check in identifiers for adjudicators"
 msgstr "Generar identificaciones para el check-in de los jueces"
 
 #: actionlog/models.py:145
-msgid "Generated check in identifiers for venues"
+msgid "Generated check in identifiers for rooms"
 msgstr "Generar identificaciones para el check-in de las salas"
 
 #: actionlog/models.py:146

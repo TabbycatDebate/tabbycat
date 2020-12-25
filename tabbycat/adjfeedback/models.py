@@ -1,8 +1,8 @@
+from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
-from django.utils.translation import gettext_lazy as _
-from django.utils.translation import gettext
+from django.utils.translation import gettext, gettext_lazy as _
 
 from adjallocation.models import DebateAdjudicator
 from results.models import Submission
@@ -37,6 +37,8 @@ class AdjudicatorFeedbackAnswer(models.Model):
 
 
 class AdjudicatorFeedbackBooleanAnswer(AdjudicatorFeedbackAnswer):
+    ANSWER_TYPE = bool
+
     # Note: by convention, if no answer is chosen for a boolean answer, an
     # instance of this object should not be created. This way, there is no need
     # for a NullBooleanField.
@@ -48,6 +50,8 @@ class AdjudicatorFeedbackBooleanAnswer(AdjudicatorFeedbackAnswer):
 
 
 class AdjudicatorFeedbackIntegerAnswer(AdjudicatorFeedbackAnswer):
+    ANSWER_TYPE = int
+
     answer = models.IntegerField(verbose_name=_("answer"))
 
     class Meta(AdjudicatorFeedbackAnswer.Meta):
@@ -56,6 +60,8 @@ class AdjudicatorFeedbackIntegerAnswer(AdjudicatorFeedbackAnswer):
 
 
 class AdjudicatorFeedbackFloatAnswer(AdjudicatorFeedbackAnswer):
+    ANSWER_TYPE = float
+
     answer = models.FloatField(verbose_name=_("answer"))
 
     class Meta(AdjudicatorFeedbackAnswer.Meta):
@@ -64,11 +70,21 @@ class AdjudicatorFeedbackFloatAnswer(AdjudicatorFeedbackAnswer):
 
 
 class AdjudicatorFeedbackStringAnswer(AdjudicatorFeedbackAnswer):
+    ANSWER_TYPE = str
     answer = models.TextField(verbose_name=_("answer"))
 
     class Meta(AdjudicatorFeedbackAnswer.Meta):
         verbose_name = _("adjudicator feedback string answer")
         verbose_name_plural = _("adjudicator feedback string answers")
+
+
+class AdjudicatorFeedbackManyAnswer(AdjudicatorFeedbackAnswer):
+    ANSWER_TYPE = list
+    answer = ArrayField(base_field=models.TextField())
+
+    class Meta(AdjudicatorFeedbackAnswer.Meta):
+        verbose_name = _("adjudicator feedback multiple select answer")
+        verbose_name_plural = _("adjudicator feedback multiple select answers")
 
 
 class AdjudicatorFeedbackQuestion(models.Model):
@@ -86,15 +102,17 @@ class AdjudicatorFeedbackQuestion(models.Model):
     ANSWER_TYPE_LONGTEXT = 'tl'
     ANSWER_TYPE_SINGLE_SELECT = 'ss'
     ANSWER_TYPE_MULTIPLE_SELECT = 'ms'
-    ANSWER_TYPE_CHOICES = ((ANSWER_TYPE_BOOLEAN_CHECKBOX, _("checkbox")),
-                           (ANSWER_TYPE_BOOLEAN_SELECT, _("yes/no (dropdown)")),
-                           (ANSWER_TYPE_INTEGER_TEXTBOX, _("integer (textbox)")),
-                           (ANSWER_TYPE_INTEGER_SCALE, _("integer scale")),
-                           (ANSWER_TYPE_FLOAT, _("float")),
-                           (ANSWER_TYPE_TEXT, _("text")),
-                           (ANSWER_TYPE_LONGTEXT, _("long text")),
-                           (ANSWER_TYPE_SINGLE_SELECT, _("select one")),
-                           (ANSWER_TYPE_MULTIPLE_SELECT, _("select multiple")), )
+    ANSWER_TYPE_CHOICES = (
+        (ANSWER_TYPE_BOOLEAN_CHECKBOX, _("checkbox")),
+        (ANSWER_TYPE_BOOLEAN_SELECT, _("yes/no (dropdown)")),
+        (ANSWER_TYPE_INTEGER_TEXTBOX, _("integer (textbox)")),
+        (ANSWER_TYPE_INTEGER_SCALE, _("integer scale")),
+        (ANSWER_TYPE_FLOAT, _("float")),
+        (ANSWER_TYPE_TEXT, _("text")),
+        (ANSWER_TYPE_LONGTEXT, _("long text")),
+        (ANSWER_TYPE_SINGLE_SELECT, _("select one")),
+        (ANSWER_TYPE_MULTIPLE_SELECT, _("select multiple")),
+    )
     ANSWER_TYPE_CLASSES = {
         ANSWER_TYPE_BOOLEAN_CHECKBOX: AdjudicatorFeedbackBooleanAnswer,
         ANSWER_TYPE_BOOLEAN_SELECT: AdjudicatorFeedbackBooleanAnswer,
@@ -104,13 +122,13 @@ class AdjudicatorFeedbackQuestion(models.Model):
         ANSWER_TYPE_TEXT: AdjudicatorFeedbackStringAnswer,
         ANSWER_TYPE_LONGTEXT: AdjudicatorFeedbackStringAnswer,
         ANSWER_TYPE_SINGLE_SELECT: AdjudicatorFeedbackStringAnswer,
-        ANSWER_TYPE_MULTIPLE_SELECT: AdjudicatorFeedbackStringAnswer,
+        ANSWER_TYPE_MULTIPLE_SELECT: AdjudicatorFeedbackManyAnswer,
     }
     ANSWER_TYPE_CLASSES_REVERSE = {
         AdjudicatorFeedbackStringAnswer: [ANSWER_TYPE_TEXT,
                                           ANSWER_TYPE_LONGTEXT,
-                                          ANSWER_TYPE_SINGLE_SELECT,
-                                          ANSWER_TYPE_MULTIPLE_SELECT],
+                                          ANSWER_TYPE_SINGLE_SELECT],
+        AdjudicatorFeedbackManyAnswer: [ANSWER_TYPE_MULTIPLE_SELECT],
         AdjudicatorFeedbackIntegerAnswer:
         [ANSWER_TYPE_INTEGER_SCALE, ANSWER_TYPE_INTEGER_TEXTBOX],
         AdjudicatorFeedbackFloatAnswer: [ANSWER_TYPE_FLOAT],
@@ -152,14 +170,12 @@ class AdjudicatorFeedbackQuestion(models.Model):
         verbose_name=_("maximum value"),
         help_text=_("Maximum allowed value for numeric fields (ignored for text or boolean fields)"))
 
-    CHOICE_SEPARATOR = "//"  # This is hard-coded into the help text string below
-    # We can't insert the CHOICE_SEPARATOR using string formatting because the below must be
-    # translated lazily, and string formatting isn't compatible with lazy objects. (It can be
-    # done with django.utils.text.format_lazy(), but this uses {}-style formating, not %-style.)
-    choices = models.TextField(blank=True,
+    choices = ArrayField(
+        base_field=models.TextField(),
+        blank=True,
         verbose_name=_("choices"),
-        help_text=_("Permissible choices for select one/multiple fields, separated by '//' "
-                    "(ignored for other fields)"))
+        help_text=_("Permissible choices for select one/multiple fields (ignored for other fields)"),
+        default=list)
 
     class Meta:
         unique_together = [('tournament', 'reference'), ('tournament', 'seq')]
@@ -179,7 +195,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
 
     @property
     def choices_for_field(self):
-        return tuple((x, x) for x in self.choices.split(self.CHOICE_SEPARATOR))
+        return tuple((x, x) for x in self.choices)
 
     @property
     def choices_for_number_scale(self):
@@ -203,7 +219,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
             'from_adj': self.from_adj,
         }
         if self.choices:
-            choices = self.choices.replace("'", "").split(self.CHOICE_SEPARATOR)
+            choices = [c.replace("'", "") for c in self.choices]
             question['choice_options'] = choices
         elif self.min_value is not None and self.max_value is not None:
             question['choice_options'] = self.choices_for_number_scale
@@ -223,7 +239,7 @@ class AdjudicatorFeedback(Submission):
 
     ignored = models.BooleanField(default=False,
         verbose_name=_("ignored"),
-        help_text=_("Whether the feedback should affect the judge's score"))
+        help_text=_("Whether the feedback should affect the adjudicator's score"))
 
     class Meta:
         unique_together = [('adjudicator', 'source_adjudicator', 'source_team', 'version')]
@@ -271,6 +287,13 @@ class AdjudicatorFeedback(Submission):
         if self.round:
             return self.round.feedback_weight
         return 1
+
+    def get_answers(self):
+        return [
+            {'question': q.question, 'answer': q.answer}
+            for typ in AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE.keys()
+            for q in getattr(self, typ.__name__.lower() + '_set').all()
+        ]
 
     def clean(self):
         if not (self.source_adjudicator or self.source_team):

@@ -56,7 +56,7 @@ You'll need to use the PostgreSQL command-line tools, so run the command that th
 1(c). Node.js/NPM
 --------------------------------------------------------------------------------
 
-Download and run the `node.js 8 macOS Installer (.pkg) <https://nodejs.org/dist/v8.9.4/node-v8.9.4.pkg>`_
+Download and run the `node.js 8 macOS Installer (.pkg) <https://nodejs.org/dist/v12.18.1/node-v12.18.1.pkg>`_
 
 2. Get the source code
 ================================================================================
@@ -75,7 +75,7 @@ c. Extract all files in it to a folder of your choice.
 3. Set up a new database
 ================================================================================
 
-.. hint:: You can skip steps 1-3 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like.
+.. hint:: You can skip steps 1--3 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like.
 
 a. Open up a copy of the Terminal app, then copy/paste or type in::
 

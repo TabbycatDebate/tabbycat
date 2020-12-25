@@ -23,4 +23,7 @@ urlpatterns = [
     path('eligibility/update',
         views.UpdateEligibilityEditView.as_view(),
         name='breakqual-update-eligibility'),
+    path('categories/',
+        views.EditBreakCategoriesView.as_view(),
+        name='break-categories-edit'),
 ]

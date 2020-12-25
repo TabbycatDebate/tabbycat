@@ -35,7 +35,7 @@ class EditPanelAdjsPanelSerializer(EditDebateAdjsDebateSerializer):
 
     class Meta:
         model = PreformedPanel
-        fields = ('id', 'importance', 'adjudicators',
+        fields = ('id', 'importance', 'adjudicators', 'sort_index',
                   'bracket_min', 'bracket_max', 'room_rank', 'liveness')
 
 # Below classes serialise only a specified field (i.e. allocated adjudicators);
@@ -47,22 +47,22 @@ class EditPanelAdjsPanelSerializer(EditDebateAdjsDebateSerializer):
 class SimpleDebateImportanceSerializer(EditDebateAdjsDebateSerializer):
     class Meta:
         model = EditDebateAdjsDebateSerializer.Meta.model
-        fields = ('id', 'importance',)
+        fields = ('id', 'importance')
 
 
 class SimplePanelImportanceSerializer(EditPanelAdjsPanelSerializer):
     class Meta:
         model = EditPanelAdjsPanelSerializer.Meta.model
-        fields = ('id', 'importance',)
+        fields = ('id', 'importance')
 
 
 class SimpleDebateAllocationSerializer(EditDebateAdjsDebateSerializer):
     class Meta:
         model = EditDebateAdjsDebateSerializer.Meta.model
-        fields = ('id', 'adjudicators',)
+        fields = ('id', 'adjudicators')
 
 
 class SimplePanelAllocationSerializer(EditPanelAdjsPanelSerializer):
     class Meta:
         model = EditPanelAdjsPanelSerializer.Meta.model
-        fields = ('id', 'adjudicators',)
+        fields = ('id', 'adjudicators')

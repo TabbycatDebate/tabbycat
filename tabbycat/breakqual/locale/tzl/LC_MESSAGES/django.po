@@ -1,0 +1,527 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"PO-Revision-Date: 2020-11-18 21:01\n"
+"Last-Translator: \n"
+"Language-Team: Talossan\n"
+"Language: tzl_TZL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: tzl\n"
+"X-Crowdin-File: /develop/tabbycat/breakqual/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 928\n"
+
+#: breakqual/apps.py:7
+msgid "Break Qualification"
+msgstr "crwdns29778:0crwdne29778:0"
+
+#: breakqual/base.py:94
+#, python-format
+msgid "The break qualification rule %(rule)s requires the following metric(s) to be in the team standings precedence in order to work: %(required)s; and the following are missing: %(missing)s."
+msgstr "crwdns29780:0%(rule)scrwdnd29780:0%(required)scrwdnd29780:0%(missing)scrwdne29780:0"
+
+#: breakqual/models.py:10
+msgid "tournament"
+msgstr "crwdns29782:0crwdne29782:0"
+
+#: breakqual/models.py:12
+msgid "name"
+msgstr "crwdns29784:0crwdne29784:0"
+
+#: breakqual/models.py:13
+msgid "Name to be displayed, e.g., \"ESL\""
+msgstr "crwdns29786:0crwdne29786:0"
+
+#: breakqual/models.py:15
+msgid "slug"
+msgstr "crwdns29788:0crwdne29788:0"
+
+#: breakqual/models.py:16
+msgid "Slug for URLs, e.g., \"esl\""
+msgstr "crwdns29790:0crwdne29790:0"
+
+#: breakqual/models.py:18
+msgid "sequence number"
+msgstr "crwdns29792:0crwdne29792:0"
+
+#: breakqual/models.py:19
+msgid "The order in which the categories are displayed"
+msgstr "crwdns29794:0crwdne29794:0"
+
+#: breakqual/models.py:21
+msgid "break size"
+msgstr "crwdns29796:0crwdne29796:0"
+
+#: breakqual/models.py:22
+msgid "Number of breaking teams in this category"
+msgstr "crwdns29798:0crwdne29798:0"
+
+#: breakqual/models.py:24
+msgid "is general"
+msgstr "crwdns29800:0crwdne29800:0"
+
+#: breakqual/models.py:25
+msgid "True if most teams eligible for this category, e.g. Open, False otherwise"
+msgstr "crwdns29802:0crwdne29802:0"
+
+#: breakqual/models.py:27
+msgid "priority"
+msgstr "crwdns29804:0crwdne29804:0"
+
+#: breakqual/models.py:28
+msgid "If a team breaks in multiple categories, higher priority numbers take precedence; teams can break into multiple categories if and only if they all have the same priority"
+msgstr "crwdns29806:0crwdne29806:0"
+
+#: breakqual/models.py:32
+msgid "limit"
+msgstr "crwdns29808:0crwdne29808:0"
+
+#: breakqual/models.py:33
+msgid "At most this many teams will be shown on the public tab for this category, or use 0 for no limit"
+msgstr "crwdns29810:0crwdne29810:0"
+
+#: breakqual/models.py:36
+msgid "Standard"
+msgstr "crwdns29812:0crwdne29812:0"
+
+#: breakqual/models.py:37
+msgid "AIDA 1996"
+msgstr "crwdns29814:0crwdne29814:0"
+
+#: breakqual/models.py:38
+msgid "AIDA 2016 (Easters)"
+msgstr "crwdns29816:0crwdne29816:0"
+
+#: breakqual/models.py:39
+msgid "AIDA 2016 (Australs)"
+msgstr "crwdns29818:0crwdne29818:0"
+
+#: breakqual/models.py:40
+msgid "AIDA 2019 (Australs, Dynamic Cap)"
+msgstr "crwdns34032:0crwdne34032:0"
+
+#: breakqual/models.py:44
+msgid "rule"
+msgstr "crwdns29824:0crwdne29824:0"
+
+#: breakqual/models.py:45
+msgid "Rule for how the break is calculated (most tournaments should use \"Standard\")"
+msgstr "crwdns29826:0crwdne29826:0"
+
+#: breakqual/models.py:48 breakqual/models.py:105
+msgid "breaking teams"
+msgstr "crwdns29828:0crwdne29828:0"
+
+#: breakqual/models.py:57 breakqual/models.py:76
+msgid "break category"
+msgstr "crwdns29830:0crwdne29830:0"
+
+#: breakqual/models.py:58
+msgid "break categories"
+msgstr "crwdns29832:0crwdne29832:0"
+
+#: breakqual/models.py:78
+msgid "team"
+msgstr "crwdns29834:0crwdne29834:0"
+
+#: breakqual/models.py:80
+msgid "rank"
+msgstr "crwdns29836:0crwdne29836:0"
+
+#: breakqual/models.py:82
+msgid "break rank"
+msgstr "crwdns29838:0crwdne29838:0"
+
+#: breakqual/models.py:91
+msgid "Capped"
+msgstr "crwdns29840:0crwdne29840:0"
+
+#: breakqual/models.py:92
+msgid "Ineligible"
+msgstr "crwdns29842:0crwdne29842:0"
+
+#: breakqual/models.py:93
+msgid "Different break"
+msgstr "crwdns29844:0crwdne29844:0"
+
+#: breakqual/models.py:94
+msgid "Disqualified"
+msgstr "crwdns29846:0crwdne29846:0"
+
+#: breakqual/models.py:95
+msgid "Lost coin toss"
+msgstr "crwdns29848:0crwdne29848:0"
+
+#: breakqual/models.py:96
+msgid "Withdrawn"
+msgstr "crwdns29850:0crwdne29850:0"
+
+#: breakqual/models.py:99
+msgid "remark"
+msgstr "crwdns29852:0crwdne29852:0"
+
+#: breakqual/models.py:100
+msgid "Used to explain why an otherwise-qualified team didn't break"
+msgstr "crwdns29854:0crwdne29854:0"
+
+#: breakqual/models.py:104
+msgid "breaking team"
+msgstr "crwdns29856:0crwdne29856:0"
+
+#: breakqual/templates/break_categories_edit.html:4
+#: breakqual/templates/break_categories_edit.html:5
+#: breakqual/templates/breaking_index.html:30
+msgid "Break Categories"
+msgstr "crwdns51122:0crwdne51122:0"
+
+#: breakqual/templates/break_categories_edit.html:17
+#, python-format
+msgid "Break categories allow category-specific break rounds, <i>e.g.</i>, for novice or ESL categories. On this page, you can define what break categories exist. After you've defined the categories, the break rounds will be automatically generated, and you can set team eligibility on the <a href=\"%(eligibility_url)s\">Eligibility</a> page."
+msgstr "crwdns51124:0%(eligibility_url)scrwdne51124:0"
+
+#: breakqual/templates/break_categories_edit.html:25
+#, python-format
+msgid "If you want to delete break categories, use the <a href=\"%(edit_db_url)s\" class=\"alert-link\">Edit Database</a> area."
+msgstr "crwdns51126:0%(edit_db_url)scrwdne51126:0"
+
+#: breakqual/templates/break_categories_edit.html:31
+msgid "Save Break Categories"
+msgstr "crwdns51128:0crwdne51128:0"
+
+#: breakqual/templates/breaking_adjs.html:8
+#, python-format
+msgid "Adjudicators can be marked as breaking in the <a href=\"%(feedback_url)s\">Feedback Overview</a> section."
+msgstr "crwdns29858:0%(feedback_url)scrwdne29858:0"
+
+#: breakqual/templates/breaking_index.html:4
+#: breakqual/templates/breaking_index.html:5
+msgid "Breaks"
+msgstr "crwdns29860:0crwdne29860:0"
+
+#: breakqual/templates/breaking_index.html:10
+msgid "This tournament does not have any break categories set up. You can read about how to create breaks <a href=\"http://tabbycat.readthedocs.io/en/stable/features/breaks.html\" class=\"alert-link\" target=\"_blank\"> at our documentation. </a>"
+msgstr "crwdns29862:0crwdne29862:0"
+
+#: breakqual/templates/breaking_index.html:33
+msgid "Team Eligibility"
+msgstr "crwdns51130:0crwdne51130:0"
+
+#: breakqual/templates/breaking_index.html:49
+#: breakqual/templates/breaking_teams.html:4
+#: breakqual/templates/breaking_teams.html:14
+#: breakqual/templates/breakqual_subnav.html:9
+#: breakqual/templates/public_break_index.html:15 breakqual/views.py:73
+#, python-format
+msgid "%(category)s Break"
+msgstr "crwdns29922:0%(category)scrwdne29922:0"
+
+#: breakqual/templates/breaking_index.html:52
+#, python-format
+msgid "<span class=\"badge float-right badge-light\"> %(size)s Spots </span>"
+msgstr "crwdns29868:0%(size)scrwdne29868:0"
+
+#: breakqual/templates/breaking_index.html:64
+msgid "Teams Eligible"
+msgstr "crwdns29870:0crwdne29870:0"
+
+#: breakqual/templates/breaking_index.html:76
+msgid "Breaking"
+msgstr "crwdns29872:0crwdne29872:0"
+
+#: breakqual/templates/breaking_index.html:84
+msgid "Excluded"
+msgstr "crwdns29874:0crwdne29874:0"
+
+#: breakqual/templates/breaking_index.html:92
+msgid "Eligible"
+msgstr "crwdns29876:0crwdne29876:0"
+
+#: breakqual/templates/breaking_index.html:104
+msgid "Mark teams as eligible"
+msgstr "crwdns29878:0crwdne29878:0"
+
+#: breakqual/templates/breaking_index.html:109
+msgid "Generate this break"
+msgstr "crwdns29880:0crwdne29880:0"
+
+#: breakqual/templates/breaking_index.html:112
+msgid "View this break"
+msgstr "crwdns29882:0crwdne29882:0"
+
+#: breakqual/templates/breaking_teams.html:9
+msgid "publicly visible"
+msgstr "crwdns29884:0crwdne29884:0"
+
+#: breakqual/templates/breaking_teams.html:11
+msgid "not publicly visible"
+msgstr "crwdns29886:0crwdne29886:0"
+
+#: breakqual/templates/breaking_teams.html:27
+msgid "Delete and Regenerate All Breaks"
+msgstr "crwdns29888:0crwdne29888:0"
+
+#: breakqual/templates/breaking_teams.html:36
+msgid "Generate the Break for All Categories"
+msgstr "crwdns29890:0crwdne29890:0"
+
+#: breakqual/templates/breaking_teams.html:48
+#, python-format
+msgid "There are <strong>0 teams marked as eligible</strong> for this category — you will need to <a href=\"%(url)s\" class=\"alert-link\"> add some eligible teams</a> for this break to generate correctly."
+msgstr "crwdns29892:0%(url)scrwdne29892:0"
+
+#: breakqual/templates/breaking_teams.html:60
+#, python-format
+msgid "This break uses the <strong>%(category)s</strong> rule — if you intended to use a different rule, you should <a href=\"%(url)s\"> edit the rule for this break category in the Edit Database area</a>, then delete and regenerate all breaks. Please double-check this before announcing the break or releasing it to the public. The code that generates the break is not robustly tested for corner cases."
+msgstr "crwdns29894:0%(category)scrwdnd29894:0%(url)scrwdne29894:0"
+
+#: breakqual/templates/breaking_teams.html:66
+#, python-format
+msgid "To edit the break use the remarks in the right-hand column. Any team with a remark will be excluded from this break (the break generator will sometimes insert its own remarks). Then, click the appropriate Save Remarks and Update button below. If you have complicated break rules (for example, if some teams are allowed to choose their preferred category) then you may have to update remarks a few times to get the correct break. As a last resort, you can <a href=\"%(url)s\"> edit the breaking teams list directly in the Edit Database area</a>."
+msgstr "crwdns29896:0%(url)scrwdne29896:0"
+
+#: breakqual/templates/breaking_teams.html:76
+#, python-format
+msgid "The <strong>public breaking teams</strong> configuration setting is enabled. As soon as you click the button, the breaking teams list will be visible on the public site, before you have a chance to double-check it! It is strongly recommended that you disable this setting on the <a href=\"%(options_url)s\"> tournament configuration page</a> before generating the team breaks."
+msgstr "crwdns29898:0%(options_url)scrwdne29898:0"
+
+#: breakqual/templates/breaking_teams.html:88
+msgid "The break hasn't yet been generated. Would you like to generate the break for all categories? It's safe to generate the break before all preliminary rounds are complete, if you're curious — you can regenerate it later."
+msgstr "crwdns29900:0crwdne29900:0"
+
+#: breakqual/templates/breaking_teams.html:107
+msgid "<strong>Caution!</strong> The \"public breaking teams\" option is turned on, so the break is publicly visible. If you update the break(s), the changes will become visible <strong>immediately</strong>, <strong>without a chance for you to review them</strong>."
+msgstr "crwdns29902:0crwdne29902:0"
+
+#: breakqual/templates/breaking_teams.html:120
+msgid "Save Remarks and Update All Breaks"
+msgstr "crwdns29904:0crwdne29904:0"
+
+#: breakqual/templates/breaking_teams.html:125
+#, python-format
+msgid "Save Remarks and Update the %(category)s Break"
+msgstr "crwdns51132:0%(category)scrwdne51132:0"
+
+#: breakqual/templates/breaking_teams.html:137
+#, python-format
+msgid "There are <strong>%(count)s teams marked as eligible</strong> for this category. Would you like to add more eligible teams?"
+msgstr "crwdns29908:0%(count)scrwdne29908:0"
+
+#: breakqual/templates/breakqual_subnav.html:5
+msgid "Overview"
+msgstr "crwdns34034:0crwdne34034:0"
+
+#: breakqual/templates/breakqual_subnav.html:15
+msgid "Adjudicators' Break"
+msgstr "crwdns29912:0crwdne29912:0"
+
+#: breakqual/templates/edit_break_eligibility.html:7
+#, python-format
+msgid "It looks like there aren't any break categories are defined. If you'd like to create new break categories you'll need to first <a href=\"%(categories_url)s\" class=\"alert-link\"> add them in the Edit Database area</a>, then return to this page to set team's eligibility."
+msgstr "crwdns29914:0%(categories_url)scrwdne29914:0"
+
+#: breakqual/templates/public_break_index.html:4
+#: breakqual/templates/public_break_index.html:5 breakqual/views.py:66
+msgid "Break"
+msgstr "crwdns29916:0crwdne29916:0"
+
+#: breakqual/templates/public_break_index.html:23
+msgid "Adjudicators"
+msgstr "crwdns29920:0crwdne29920:0"
+
+#. Translators: abbreviation for "grand final"
+#: breakqual/utils.py:129
+msgid "Grand Final"
+msgstr "crwdns51134:0crwdne51134:0"
+
+#: breakqual/utils.py:129
+msgid "GF"
+msgstr "crwdns51136:0crwdne51136:0"
+
+#. Translators: abbreviation for "semifinals"
+#: breakqual/utils.py:131
+msgid "Semifinals"
+msgstr "crwdns51138:0crwdne51138:0"
+
+#: breakqual/utils.py:131
+msgid "SF"
+msgstr "crwdns51140:0crwdne51140:0"
+
+#. Translators: abbreviation for "quarterfinals"
+#: breakqual/utils.py:133
+msgid "Quarterfinals"
+msgstr "crwdns51142:0crwdne51142:0"
+
+#: breakqual/utils.py:133
+msgid "QF"
+msgstr "crwdns51144:0crwdne51144:0"
+
+#. Translators: abbreviation for "octofinals"
+#: breakqual/utils.py:135
+msgid "Octofinals"
+msgstr "crwdns51146:0crwdne51146:0"
+
+#: breakqual/utils.py:135
+msgid "OF"
+msgstr "crwdns51148:0crwdne51148:0"
+
+#. Translators: abbreviation for "double-octofinals"
+#: breakqual/utils.py:137
+msgid "Double-Octofinals"
+msgstr "crwdns51150:0crwdne51150:0"
+
+#: breakqual/utils.py:137
+msgid "DOF"
+msgstr "crwdns51152:0crwdne51152:0"
+
+#. Translators: abbreviation for "triple-octofinals"
+#: breakqual/utils.py:139
+msgid "Triple-Octofinals"
+msgstr "crwdns51154:0crwdne51154:0"
+
+#: breakqual/utils.py:139
+msgid "TOF"
+msgstr "crwdns51156:0crwdne51156:0"
+
+#. Translators: abbreviation for "finals" - first character of category name
+#: breakqual/utils.py:146
+#, python-format
+msgid "%s Finals"
+msgstr "crwdns51158:0%scrwdne51158:0"
+
+#: breakqual/utils.py:146
+#, python-format
+msgid "%sF"
+msgstr "crwdns51160:0%scrwdne51160:0"
+
+#. Translators: abbreviation for "semifinals" - first character of category name
+#: breakqual/utils.py:148
+#, python-format
+msgid "%s Semifinals"
+msgstr "crwdns51162:0%scrwdne51162:0"
+
+#: breakqual/utils.py:148
+#, python-format
+msgid "%sSF"
+msgstr "crwdns51164:0%scrwdne51164:0"
+
+#. Translators: abbreviation for "quarterfinals" - first character of category name
+#: breakqual/utils.py:150
+#, python-format
+msgid "%s Quarterfinals"
+msgstr "crwdns51166:0%scrwdne51166:0"
+
+#: breakqual/utils.py:150
+#, python-format
+msgid "%sQF"
+msgstr "crwdns51168:0%scrwdne51168:0"
+
+#. Translators: abbreviation for "octofinals" - first character of category name
+#: breakqual/utils.py:152
+#, python-format
+msgid "%s Octofinals"
+msgstr "crwdns51170:0%scrwdne51170:0"
+
+#: breakqual/utils.py:152
+#, python-format
+msgid "%sOF"
+msgstr "crwdns51172:0%scrwdne51172:0"
+
+#. Translators: abbreviation for "double-octofinals" - first character of category name
+#: breakqual/utils.py:154
+#, python-format
+msgid "%s Double-Octofinals"
+msgstr "crwdns51174:0%scrwdne51174:0"
+
+#: breakqual/utils.py:154
+#, python-format
+msgid "%sDOF"
+msgstr "crwdns51176:0%scrwdne51176:0"
+
+#. Translators: abbreviation for "triple-octofinals" - first character of category name
+#: breakqual/utils.py:156
+#, python-format
+msgid "%s Triple-Octofinals"
+msgstr "crwdns51178:0%scrwdne51178:0"
+
+#: breakqual/utils.py:156
+#, python-format
+msgid "%sTOF"
+msgstr "crwdns51180:0%scrwdne51180:0"
+
+#. Translators: "UBR" stands for "unknown break round" (used as a fallback when we don't know what it's called)
+#: breakqual/utils.py:168
+#, python-format
+msgid "Unknown %s break round"
+msgstr "crwdns51182:0%scrwdne51182:0"
+
+#: breakqual/utils.py:168
+#, python-format
+msgid "U%sBR"
+msgstr "crwdns51184:0%scrwdne51184:0"
+
+#: breakqual/utils.py:169
+msgid "Unknown break round"
+msgstr "crwdns51186:0crwdne51186:0"
+
+#: breakqual/utils.py:169
+msgid "UBR"
+msgstr "crwdns51188:0crwdne51188:0"
+
+#: breakqual/views.py:97
+#, python-format
+msgid "There was an error generating the break for category %(category)s: %(message)s"
+msgstr "crwdns29924:0%(category)scrwdnd29924:0%(message)scrwdne29924:0"
+
+#: breakqual/views.py:140
+msgid "Eligible for"
+msgstr "crwdns29926:0crwdne29926:0"
+
+#: breakqual/views.py:144
+msgid "Edit Remark"
+msgstr "crwdns29928:0crwdne29928:0"
+
+#: breakqual/views.py:160
+#, python-format
+msgid "Changes to breaking team remarks saved and teams break updated for the following break categories: %(categories)s."
+msgstr "crwdns29930:0%(categories)scrwdne29930:0"
+
+#: breakqual/views.py:167
+#, python-format
+msgid "Changes to breaking team remarks saved and teams break updated for break category %(category)s."
+msgstr "crwdns29932:0%(category)scrwdne29932:0"
+
+#: breakqual/views.py:172
+msgid "Changes to breaking team remarks saved."
+msgstr "crwdns29934:0crwdne29934:0"
+
+#: breakqual/views.py:196
+#, python-format
+msgid "Teams break generated for the following break categories: %(categories)s."
+msgstr "crwdns29936:0%(categories)scrwdne29936:0"
+
+#: breakqual/views.py:209
+msgid "Breaking Adjudicators"
+msgstr "crwdns29938:0crwdne29938:0"
+
+#: breakqual/views.py:274
+msgid "Break Eligibility"
+msgstr "crwdns29940:0crwdne29940:0"
+
+#: breakqual/views.py:303
+#, python-format
+msgid "%s Speakers"
+msgstr "crwdns34036:0%scrwdne34036:0"
+
+#: breakqual/views.py:306
+#, python-format
+msgid "Team has %(nspeakers)s speaker with the %(category)s speaker category assigned"
+msgid_plural "Team has %(nspeakers)s speakers with the %(category)s speaker category assigned"
+msgstr[0] "crwdns34038:1%(nspeakers)scrwdnd34038:1%(category)scrwdne34038:1"
+msgstr[1] "crwdns34038:5%(nspeakers)scrwdnd34038:5%(category)scrwdne34038:5"
+

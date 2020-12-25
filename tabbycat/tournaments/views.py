@@ -6,20 +6,21 @@ from threading import Lock
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
-from django.urls import reverse_lazy
 from django.db.models import Count, Q
 from django.shortcuts import redirect, resolve_url
-from django.utils.http import is_safe_url
+from django.urls import reverse_lazy
 from django.utils.html import format_html_join
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, FormView, UpdateView
+from django.views.generic.list import ListView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from notifications.models import BulkNotification
 from results.models import BallotSubmission
+from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_round, reverse_tournament
@@ -54,8 +55,15 @@ class PublicSiteIndexView(WarnAboutDatabaseUseMixin, TemplateView):
             return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        kwargs['tournaments'] = Tournament.objects.all()
+        kwargs['tournaments'] = Tournament.objects.filter(active=True)
+        kwargs['has_inactive'] = Tournament.objects.filter(active=False).exists()
         return super().get_context_data(**kwargs)
+
+
+class PublicSiteInactiveTournamentsView(ListView):
+    template_name = 'site_inactive_tournaments.html'
+    queryset = Tournament.objects.filter(active=False)
+    allow_empty = False
 
 
 class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
@@ -77,12 +85,11 @@ class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin
                     'content_object', 'user').order_by('-timestamp')[:updates]
         kwargs["initialActions"] = json.dumps([a.serialize for a in actions])
 
-        subs = BallotSubmission.objects.filter(
-            debate__round__tournament=t, confirmed=True).prefetch_related(
-            'teamscore_set__debate_team',
-            'teamscore_set__debate_team__team').select_related(
-            'debate__round__tournament').order_by('-timestamp')[:updates]
-        subs = [bs.serialize_like_actionlog for bs in subs]
+        debates = t.current_round.debate_set.filter(
+            ballotsubmission__confirmed=True,
+        ).order_by('-ballotsubmission__timestamp')[:updates]
+        populate_confirmed_ballots(debates, results=True)
+        subs = [d._confirmed_ballot.serialize_like_actionlog for d in debates]
         kwargs["initialBallots"] = json.dumps(subs)
 
         status = t.current_round.draw_status
@@ -113,14 +120,14 @@ class CompleteRoundCheckView(AdministratorMixin, RoundMixin, TemplateView):
     def get_context_data(self, **kwargs):
         prior_rounds_not_completed = self.tournament.round_set.filter(
             Q(break_category=self.round.break_category) | Q(break_category__isnull=True),
-            completed=False, seq__lt=self.round.seq
+            completed=False, seq__lt=self.round.seq,
         )
         kwargs['number_of_prior_rounds_not_completed'] = prior_rounds_not_completed.count()
         kwargs['prior_rounds_not_completed'] = format_html_join(
             ", ",
             "<a href=\"{}\" class=\"alert-link\">{}</a>",
             ((reverse_round('tournament-complete-round-check', r), r.name)
-                for r in prior_rounds_not_completed)
+                for r in prior_rounds_not_completed),
         )
 
         kwargs['num_unconfirmed'] = self.round.debate_set.filter(
@@ -272,7 +279,7 @@ class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
     def get_redirect_to(self, use_default=True):
         redirect_to = self.request.POST.get(
             self.redirect_field_name,
-            self.request.GET.get(self.redirect_field_name, '')
+            self.request.GET.get(self.redirect_field_name, ''),
         )
         if not redirect_to and use_default:
             return reverse_tournament('tournament-admin-home', tournament=self.tournament)
@@ -284,9 +291,10 @@ class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
         return super().form_valid(form)
 
     def get_success_url(self):
+        from django.utils.http import url_has_allowed_host_and_scheme
         # Copied from django.contrib.auth.views.LoginView.get_success_url
         redirect_to = self.get_redirect_to(use_default=True)
-        url_is_safe = is_safe_url(
+        url_is_safe = url_has_allowed_host_and_scheme(
             url=redirect_to,
             allowed_hosts={self.request.get_host()},
             require_https=self.request.is_secure(),

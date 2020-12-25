@@ -1,0 +1,194 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-03-08 16:31\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Turkish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: tr\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/use/starting-a-tournament.po\n"
+"Language: tr_TR\n"
+
+#: ../../use/starting-a-tournament.rst:5
+msgid "Starting a Tournament"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:7
+msgid "This page outlines a few things you should do at the start of a tournament, after you've :ref:`imported the initial data <importing-initial-data>`. Once you've done these, proceed to :ref:`running a tournament <running-a-tournament>`."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:9
+msgid "Tabbycat is developed for — and tested on — modern web browsers. If you are using **Internet Explorer versions 8, 7, or 6** the interface may look odd or not function properly. Switch to a newer browser if possible."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:13
+msgid "Tournament configuration"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:15
+msgid "After importing all your data you can log into the site as an administrator by loading up the homepage and then using the **Login** button in the lower-right. From there you should go to the administration section of your tournament, and then go to the tournament configuration page by clicking **Setup** then **Configuration** in the menu."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:17
+msgid "Here you can adjust the debate rules and interface options to your liking then hit **Save** when finished. We also offer a number of presets that apply particular rule sets (such as the Australs rules) or feature sets (such as displaying information normally released during briefs on the website)."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:20
+msgid "Special data types and options"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:22
+msgid "There are a few optional fields that are not covered in the initial data templates, in the visual importer, or that may only be relevant in particular scenarios. It's worth going over these quickly to see if they are needed for your tournament. You can view and edit these fields in the **Edit Database** area (link is in the menu under **Setup**)."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:25
+msgid "Adjudicator Feedback > Adj Feedback Questions"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:25
+msgid "As described in :ref:`adjudicator-feedback`, the types of questions that can be posed for adjudicator feedback are able to be heavily customised. If you are customising your feedback form it should be done here, and before the tournament starts."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:30
+msgid "Authentication and Authorisation > Users"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:28
+msgid "Here you can add new admin users (those with full access) as well as new assistant users those (who can only do common data-entry tasks but not edit or view the full tab interface). See :ref:`user-accounts` for information on how to do this."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:30
+msgid "The people you're adding accounts for should be physically present when you do this, so that they can enter their password."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:33
+msgid "Participants > Regions"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:33
+msgid "Optionally, each institution may belong to a *Region*. An institution's region is used within the adjudicator allocation process to visually identify teams and adjudicators for the purposes of highlighting diversity issues.  These have traditionally been used for geographic regions (such as Oceania), although could be repurposed as arbitrary markers of information — for example they could be used to denote teams from a particular State, institutional size, or circuit."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:41
+msgid "Participants > Adjudicators"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:36
+msgid "An adjudicators *Base Score* represents their relative ability to judge important rooms, where adjudicators with higher numbers will, relative to the other adjudicators, be placed in better roles (ie as Chairs) and in the rooms you deem most important in each round. If you are running a small tournament, and plan to do your allocations manually, you can set everyone's number to the same amount."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:37
+msgid "For larger tournaments, particularly those that collect feedback, see the :ref:`adjudicator-feedback` section for more information on how base scores and other variables influence the automated allocation process."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:38
+msgid "Regardless of how you score the adjs, if you have changed the minimimum chairing score in settings, you'll want to make sure there are enough adjudicators that meet this minimum threshold or the automated allocator may not function effectively."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:39
+msgid "All types of conflicts are assigned to the relevant adjudicator. Adjudicator's can be conflicted against particular teams, particular institutions, and other adjudicators. Each of these is a located in a tab at the top of the page."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:40
+msgid "Each adjudicator's gender is optional and is not displayed publicly; it is only shown in the adjudicator allocation interface"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:41
+msgid "Each adjudicator's pronoun is optional, and is only displayed if you use tabbycat to print the ballots and feedback sheets for each round."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:48
+msgid "Participants > Teams"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:44
+msgid "Note the distinction here between full name and short name. The latter is used on pages where space is tight, such as the draw displays or the adjudicator allocation interface."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:45
+msgid "Note that \"Uses institutional prefix\" option. With this option on, a team from the 'MUDS' insttution named '1' or 'Gold' would be displayed as 'MUDS 1' or 'MUDS Gold'."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:46
+msgid "At present, setting a team's type to Bye, Swing, or Composite only affects very particular circumstances, and should be considered unnecessary."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:47
+msgid "If you do have composite teams, and wish to have them be conflicted by adjudicators from each respective instutution, you'll need to add a new team conflict to each adjudicator from each institution."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:48
+msgid "If you do have swing teams, or teams that are otherwise ineligible for breaking, this is typically handled through the breaks interface in the main site"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:52
+msgid "Participants > Speakers"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:51
+msgid "Each speaker's gender is optional and is not displayed publicly; it is only shown in the adjudicator allocation interface"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:52
+msgid "Each speaker's pronoun is optional, and is only displayed if you use tabbycat to print the ballots and feedback sheets for each round."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:55
+msgid "Tournaments > Divisions"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:55
+msgid "At the moment divisions are only useful for running tournaments that use round-robin style draws. Here, each division represents a draw pool within a round. Division support here is under development and not tested in many scenarios."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:58
+msgid "Tournaments > Tournaments"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:58
+msgid "Note that tournaments can have a welcome message (useful for displaying maps and other information on the homepage)."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:61
+msgid "Venues > Venues"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:61
+msgid "A venue's priority determines its priority in being allocated. If there are 20 debates, and 30 rooms, the 20 rooms with the highest priorities will be chosen. Furthermore, if particular debates are marked as important during the draw process, those debates will receive the rooms with the highest priorities. In this way you can give close rooms to members of the adj core, or give larger rooms to debates that will draw a large audience."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:64
+msgid "Venues > Venue Categories"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:64
+msgid "Venue categories are not needed for most kinds of tournaments. Their purpose is to classify particular venues, such as venues all within one building or venues that are accessible. Once assigned these categories can display in the venue's name — ie \"Red 01.01\" or be used to assign Venue Constraints that match particular teams, institutions, or adjudicators to particular types of venues."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:67
+msgid "Information for the briefing"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:69
+msgid "If you're using the online submissions feature, some things you should probably mention in the briefing:"
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:71
+msgid "Adjudicators must fill out ballots completely, including motions and venues—they are entered into the system."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:72
+msgid "There is a static URL for each person's ballots and feedback forms. It can be bookmarked, or the page can refreshed after each round."
+msgstr ""
+
+#: ../../use/starting-a-tournament.rst:73
+msgid "If people submit a result or feedback online, they should indicate that they have done so on the paper copy of their ballot."
+msgstr ""
+

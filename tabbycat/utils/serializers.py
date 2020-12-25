@@ -6,7 +6,7 @@ from rest_framework.renderers import JSONRenderer
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from participants.serializers import AdjudicatorSerializer, TeamSerializer
-from venues.models import Venue
+from venues.models import Venue, VenueCategory
 
 
 def django_rest_json_render(data):
@@ -33,12 +33,21 @@ class VueDraggableItemMixin(serializers.Serializer):
         fields = ('vue_is_locked', 'vue_last_modified', 'available')
 
 
+class VenueCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VenueCategory
+        fields = ('id', 'name', 'description')
+
+
 class VenueSerializer(serializers.ModelSerializer):
     """ Like the below class this cant live in venue/serializers as they depend
     on the DebateSerializerMixin """
+
+    categories = VenueCategorySerializer(many=True, source='venuecategory_set')
+
     class Meta:
         model = Venue
-        fields = ('id', 'name', 'display_name')
+        fields = ('id', 'name', 'display_name', 'priority', 'categories')
 
 
 class DebateSerializerMixin(serializers.ModelSerializer):
@@ -47,6 +56,7 @@ class DebateSerializerMixin(serializers.ModelSerializer):
     venue = VenueSerializer(read_only=True)
     adjudicators = serializers.SerializerMethodField(read_only=True)
     teams = serializers.SerializerMethodField(read_only=True)
+    sort_index = serializers.SerializerMethodField(read_only=True)
 
     def adjudicator_representation(self, debate_or_panel_adj):
         return AdjudicatorSerializer(debate_or_panel_adj.adjudicator).data
@@ -71,7 +81,10 @@ class DebateSerializerMixin(serializers.ModelSerializer):
             sides[debate_team.side] = self.team_representation(debate_team)
         return sides
 
+    def get_sort_index(self, obj):
+        return 1 # Set on front-end; just need the attr set at load time for reactivity triggers
+
     class Meta:
         model = Debate
         fields = ('id', 'bracket', 'room_rank', 'importance', 'result_status',
-                  'sides_confirmed', 'venue', 'teams', 'adjudicators')
+                  'sides_confirmed', 'venue', 'teams', 'adjudicators', 'sort_index')

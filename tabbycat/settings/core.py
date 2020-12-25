@@ -16,16 +16,15 @@ MANAGERS = ADMINS
 DEBUG = bool(int(os.environ['DEBUG'])) if 'DEBUG' in os.environ else False
 ENABLE_DEBUG_TOOLBAR = False # Must default to false; overriden in Dev config
 DISABLE_SENTRY = True # Overriden in Heroku config
-
 SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
 # ==============================================================================
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.4.0a'
-TABBYCAT_CODENAME = 'M'
-READTHEDOCS_VERSION = 'v2.4.0'
+TABBYCAT_VERSION = '2.6.0-dev'
+TABBYCAT_CODENAME = 'O'
+READTHEDOCS_VERSION = 'v2.6.0-dev'
 
 # ==============================================================================
 # Internationalization and Localization
@@ -42,14 +41,41 @@ LOCALE_PATHS = [
 ]
 
 # Languages that should be available in the switcher
+EXTRA_LANG_INFO = {
+    'ms': {
+        'bidi': False,
+        'code': 'ms',
+        'name': 'Malay',
+        'name_local': 'Bahasa Melayu', #unicode codepoints here
+    },
+    'tzl': {
+        # Use code for Talossan; can't use proper reserved code...
+        # Talossan is a constructed language, without native speakers,
+        # so the odds of having a translation are low.
+        'code': 'tzl',
+        'name': 'Translation',
+        'name_local': 'Translation',
+    },
+}
+
+# Add custom languages not provided by Django
+import django.conf.locale
+LANG_INFO = dict(django.conf.locale.LANG_INFO, **EXTRA_LANG_INFO)
+django.conf.locale.LANG_INFO = LANG_INFO
+
 LANGUAGES = [
     ('ar', _('Arabic')),
+    ('bn', _('Bengali')),
     ('en', _('English')),
     ('es', _('Spanish')),
     ('fr', _('French')),
+    ('id', _('Indonesian')),
     ('ja', _('Japanese')),
+    ('ms', _('Malay')),
     ('pt', _('Portuguese')),
     ('ru', _('Russian')),
+    ('zh-hans', _('Simplified Chinese')),
+    ('tzl', _('Translation')),
 ]
 
 STATICI18N_ROOT = os.path.join(BASE_DIR, "locale")
@@ -77,13 +103,14 @@ MIDDLEWARE = [
     # Must be after SessionMiddleware
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'utils.middleware.DebateMiddleware'
+    'utils.middleware.DebateMiddleware',
 ]
 
 TABBYCAT_APPS = (
     'actionlog',
     'adjallocation',
     'adjfeedback',
+    'api',
     'availability',
     'breakqual',
     'checkins',
@@ -101,7 +128,7 @@ TABBYCAT_APPS = (
     'users',
     'standings',
     'notifications',
-    'importer'
+    'importer',
 )
 
 INSTALLED_APPS = (
@@ -122,11 +149,14 @@ INSTALLED_APPS = (
     'formtools',
     'statici18n', # Compile js translations as static file; saving requests
     'polymorphic',
+    'rest_framework',
+    'rest_framework.authtoken',
 )
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
 FIXTURE_DIRS = (os.path.join(os.path.dirname(BASE_DIR), 'data', 'fixtures'), )
+SILENCED_SYSTEM_CHECKS = ('urls.W002',)
 
 # ==============================================================================
 # Templates
@@ -147,16 +177,16 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.template.context_processors.request',  # for Jet
                 'utils.context_processors.debate_context',  # for tournament config vars
-                'django.template.context_processors.i18n'  # for serving static language translations
+                'django.template.context_processors.i18n'  # for serving static language translations,
             ],
             'loaders': [
                 ('django.template.loaders.cached.Loader', [
                     'django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader',
                 ]),
-            ]
+            ],
         }
-    }
+    },
 ]
 
 # ==============================================================================
@@ -171,7 +201,7 @@ TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 * 120
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    }
+    },
 }
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
@@ -253,8 +283,10 @@ SUMMERNOTE_CONFIG = {
         ['misc', ['undo', 'redo', 'codeview']],
     ],
     'disable_upload': True,
-    'iframe': True, # Necessary; if just to compartmentalise jQuery dependency
+    'iframe': True, # Necessary; if just to compartmentalise jQuery dependency,
 }
+
+X_FRAME_OPTIONS = 'SAMEORIGIN' # Necessary to get Django-Summernote working because of Django 3 changes
 
 # ==============================================================================
 # Database
@@ -263,7 +295,7 @@ SUMMERNOTE_CONFIG = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-    }
+    },
 }
 
 # ==============================================================================
@@ -284,4 +316,21 @@ CHANNEL_LAYERS = {
 
 DYNAMIC_PREFERENCES = {
     'REGISTRY_MODULE': 'preferences',
+}
+
+# ==============================================================================
+# REST Framework
+# ==============================================================================
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 }

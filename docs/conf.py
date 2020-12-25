@@ -50,17 +50,17 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Tabbycat'
-copyright = '2019, Philip Belesky, Chuan-Zheng Lee'
-author = 'Philip Belesky, Chuan-Zheng Lee'
+copyright = '2020, Philip Belesky, Chuan-Zheng Lee, Étienne Beaulé'
+author = 'Philip Belesky, Chuan-Zheng Lee, Étienne Beaulé'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = '2.3'
+version = '2.6'
 # The full version, including alpha/beta/rc tags.
-release = '2.3.2'
+release = '2.6.0-dev'
 
 rst_epilog = """
 .. |vrelease| replace:: v{release}
@@ -233,7 +233,7 @@ htmlhelp_basename = 'Tabbycatdoc'
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'Tabbycat.tex', 'Tabbycat Documentation',
-     'Philip Belesky, Chuan-Zheng Lee', 'manual'),
+     author, 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -263,7 +263,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc, 'tabbycat', 'Tabbycat Documentation',
-     [author], 1)
+     [author], 1),
 ]
 
 # If true, show URL addresses after external links.
@@ -277,7 +277,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'Tabbycat', 'Tabbycat Documentation',
-     author, 'Tabbycat', 'One line description of project.',
+     author, 'Tabbycat', 'Debating tabulation software for British Parliamentary and a variety of two-team formats',
      'Miscellaneous'),
 ]
 
@@ -320,3 +320,8 @@ else:
 # -- Options for inline LaTeX (imgmath) ------------------------------------
 
 imgmath_image_format = 'svg'
+
+
+# -- Localisation options --------------------------------------------------
+locale_dirs = ['locale/']
+gettext_compact = False

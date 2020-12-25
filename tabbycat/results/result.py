@@ -45,6 +45,7 @@ from statistics import mean
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 
+from .result_info import DebateResultInfo
 from .scoresheet import (BPEliminationScoresheet, BPScoresheet, HighPointWinsRequiredScoresheet, LowPointWinsAllowedScoresheet,
                          ResultOnlyScoresheet, TiedPointWinsAllowedScoresheet)
 from .utils import side_and_position_names
@@ -248,10 +249,11 @@ class BaseDebateResult:
         if not self.debate.sides_confirmed:
             return  # don't load if sides aren't confirmed
 
-        debateteams = self.debate.debateteam_set.filter(
-                side__in=self.sides).select_related('team')
+        d_teams = self.debate.debateteam_set.select_related('team', 'team__tournament').all()
+        if set(dt.side for dt in d_teams) != set(self.sides):
+            raise ResultError("Debate has invalid sides.")
 
-        for dt in debateteams:
+        for dt in d_teams:
             self.debateteams[dt.side] = dt
 
     def load_scoresheets(self, **kwargs):
@@ -340,17 +342,21 @@ class BaseDebateResult:
             side_dict = self.side_as_dicts(sheet, side, side_name)
 
             # Colour result according to outcome of debate
-            if hasattr(sheet, 'winners'):
-                side_dict["win_style"] = "success" if side in sheet.winners() else "danger"
-            elif hasattr(sheet, 'rank'):
+            if hasattr(sheet, 'rank') and len(self.sides) == 4:
                 rank = sheet.rank(side)
-                if rank:
-                    side_dict["win_style"] = ["success", "info", "warning", "danger"][rank-1]
+                side_dict["rank"] = rank
+                side_dict["win_style"] = ["success", "info", "warning", "danger"][rank-1]
+            elif hasattr(sheet, 'winners'):
+                side_dict["win"] = side in sheet.winners()
+                side_dict["win_style"] = "success" if side in sheet.winners() else "danger"
 
             self.speakers_as_dicts(sheet, side_dict, side, pos_names)
 
             teams.append(side_dict)
         return teams
+
+    def get_result_info(self):
+        return DebateResultInfo(self)
 
 
 class DebateResultByAdjudicator(BaseDebateResult):
@@ -407,20 +413,23 @@ class DebateResultByAdjudicator(BaseDebateResult):
 
     def load_scoresheets(self):
         self.debateadjs_query = self.debate.debateadjudicator_set.exclude(
-            type=DebateAdjudicator.TYPE_TRAINEE).select_related('adjudicator')
+            type=DebateAdjudicator.TYPE_TRAINEE).select_related('adjudicator', 'adjudicator__tournament')
         self.debateadjs = {da.adjudicator: da for da in self.debateadjs_query}
         self.scoresheets = {adj: self.scoresheet_class(
             positions=getattr(self, 'positions', None)) for adj in self.debateadjs.keys()
         }
 
+        if not self.get_scoresheet_class().uses_declared_winners:
+            return  # No need to add winners when already determined through scores
+
         teamscorebyadjs = self.ballotsub.teamscorebyadj_set.filter(
             debate_adjudicator__in=self.debateadjs_query,
-            debate_team__side__in=self.sides
-        ).select_related('debate_adjudicator__adjudicator', 'debate_adjudicator__adjudicator__institution', 'debate_team')
+            debate_team__side__in=self.sides,
+            win=True,
+        ).select_related('debate_adjudicator__adjudicator', 'debate_team')
 
         for tsba in teamscorebyadjs:
-            if tsba.win:
-                self.add_winner(tsba.debate_adjudicator.adjudicator, tsba.debate_team.side)
+            self.add_winner(tsba.debate_adjudicator.adjudicator, tsba.debate_team.side)
 
     def save(self):
         super().save()
@@ -443,7 +452,7 @@ class DebateResultByAdjudicator(BaseDebateResult):
     def add_winner(self, adjudicator, winner):
         self.scoresheets[adjudicator].add_declared_winner(winner)
 
-    def set_winner(self, adjudicator, winners):
+    def set_winners(self, adjudicator, winners):
         self.scoresheets[adjudicator].set_declared_winners(winners)
 
     # --------------------------------------------------------------------------
@@ -578,9 +587,8 @@ class DebateResultByAdjudicator(BaseDebateResult):
         for adj in self.debate.adjudicators.voting():
             sheet_dict = {
                 "adjudicator": adj,
-                "teams": self.sheet_as_dicts(self.scoresheets[adj])
+                "teams": self.sheet_as_dicts(self.scoresheets[adj]),
             }
-            sheet_dict["adjudicator"] = adj
             yield sheet_dict
 
 
@@ -654,7 +662,7 @@ class DebateResultWithScoresMixin:
         speakerscores = self.ballotsub.speakerscore_set.filter(
             debate_team__side__in=self.sides,
             position__in=self.positions,
-        ).select_related('speaker', 'debate_team')
+        ).select_related('speaker', 'speaker__team__tournament', 'debate_team')
 
         for ss in speakerscores:
             self.speakers[ss.debate_team.side][ss.position] = ss.speaker
@@ -733,7 +741,7 @@ class DebateResultWithScoresMixin:
 
     def side_as_dicts(self, sheet, side, side_name):
         return {
-            **super().side_as_dicts(side, side_name),
+            **super().side_as_dicts(sheet, side, side_name),
             "total": sheet.get_total(side),
             "speakers": [],
         }
@@ -754,6 +762,8 @@ class ConsensusDebateResult(BaseDebateResult):
     def init_blank_buffer(self):
         super().init_blank_buffer()
         self.scoresheet = self.scoresheet_class(positions=getattr(self, 'positions', None))
+        if len(self.sides) == 4 and self.debate.round.is_last:
+            self.scoresheet.number_winners = 1
 
     def is_complete(self):
         return super().is_complete() and self.scoresheet.is_complete()
@@ -767,25 +777,32 @@ class ConsensusDebateResult(BaseDebateResult):
         elif len(self.sides) == 4:
             return BPEliminationScoresheet
 
+    def load_scoresheets(self):
+        super().load_scoresheets()
+
+        if not self.scoresheet.uses_declared_winners:
+            return
+
+        winners = self.ballotsub.teamscore_set.filter(win=True).select_related('debate_team').values_list('debate_team__side', flat=True)
+        self.set_winners(set(winners))
+
     def get_winner(self):
-        if len(self.scoresheet.winners()) == 0:
-            return None
         return self.scoresheet.winners()
 
     def add_winner(self, winner):
         self.scoresheet.add_declared_winner(winner)
 
-    def set_winner(self, winners):
+    def set_winners(self, winners):
         self.scoresheet.set_declared_winners(winners)
 
     def winning_side(self):
-        if self.get_winner() is None:
+        if len(self.get_winner()) == 0:
             return None
         assert len(self.get_winner()) == 1, "Should not be called with BP"
         return next(iter(self.get_winner()))
 
     def winning_dt(self):
-        return self.debateteams[self.winning_side()]
+        return self.debateteams.get(self.winning_side())
 
     def winning_team(self):
         return self.winning_dt().team
@@ -800,8 +817,14 @@ class ConsensusDebateResult(BaseDebateResult):
     def has_two_advancing(self):
         return len(self.scoresheet.winners()) == 2
 
+    def is_elimination(self):
+        return not hasattr(self.scoresheet, 'ranked_sides')
+
     def advancing_dt(self):
         return [dt for s, dt in self.debateteams.items() if s in self.get_winner()]
+
+    def advancing_teams(self):
+        return [dt.team for dt in self.advancing_dt()]
 
     def eliminated_dt(self):
         return [dt for s, dt in self.debateteams.items() if s not in self.get_winner()]
@@ -827,6 +850,9 @@ class ConsensusDebateResult(BaseDebateResult):
 
     def teamscore_field_win(self, side):
         return side in self.scoresheet.winners()
+
+    def as_dicts(self):
+        yield {'teams': self.sheet_as_dicts(self.scoresheet)}
 
 
 class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDebateResult):
@@ -858,6 +884,7 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
 
     def speakerscore_field_score(self, side, position):
         return self.scoresheet.get_score(side, position)
+
     get_score = speakerscore_field_score
 
     def teamscore_field_score(self, side):

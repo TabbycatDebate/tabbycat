@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-21 05:14-0700\n"
-"PO-Revision-Date: 2019-07-21 12:19\n"
+"POT-Creation-Date: 2020-11-18 17:59-0400\n"
+"PO-Revision-Date: 2020-11-18 22:18\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Arabic\n"
 "Language: ar_SA\n"
@@ -15,19 +15,8 @@ msgstr ""
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: ar\n"
 "X-Crowdin-File: /develop/tabbycat/printing/locale/en/LC_MESSAGES/django.po\n"
-
-#: printing/templates/division_sheets_list.html:4
-#: printing/templates/division_sheets_list.html:5
-msgid "Division Sheets List"
-msgstr ""
-
-#: printing/templates/division_sheets_list.html:12
-msgid "Master Sheets"
-msgstr ""
-
-#: printing/templates/division_sheets_list.html:29
-msgid "Room Sheets"
-msgstr ""
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 944\n"
 
 #: printing/templates/feedback_list.html:5
 msgid "Feedback Forms"
@@ -35,7 +24,7 @@ msgstr "نموذج التغذية الراجعة"
 
 #: printing/templates/feedback_list.html:7
 #, python-format
-msgid "Printable Feedback Forms for %(round_name)s"
+msgid "Printable Feedback Forms for %(round)s"
 msgstr ""
 
 #: printing/templates/feedback_list.html:14
@@ -58,67 +47,6 @@ msgstr ""
 #: printing/templates/feedback_list.html:41
 msgid "There are no feedback sheets available — perhaps adjudicators have not been allocated?"
 msgstr "لا توجد أوراق ملاحظات متاحة — ربما لم يتم تخصيص الحكام؟"
-
-#: printing/templates/master_sheets_view.html:6
-#, python-format
-msgid "Master Sheet for Debates at %(category_name)s in %(round_name)s"
-msgstr ""
-
-#: printing/templates/master_sheets_view.html:12
-#, python-format
-msgid "Master Sheet for Debates at %(venue_category)s"
-msgstr ""
-
-#: printing/templates/master_sheets_view.html:45
-msgctxt "Division"
-msgid "Div"
-msgstr ""
-
-#: printing/templates/master_sheets_view.html:46
-msgid "Room"
-msgstr ""
-
-#: printing/templates/master_sheets_view.html:47
-msgid "Affirmative"
-msgstr ""
-
-#: printing/templates/master_sheets_view.html:48
-msgid "Negative"
-msgstr ""
-
-#: printing/templates/master_sheets_view.html:49
-msgid "Adjudicator"
-msgstr "محكم "
-
-#: printing/templates/master_sheets_view.html:50
-msgid "Winner of the Debate"
-msgstr ""
-
-#: printing/templates/master_sheets_view.html:51
-msgid "Aff Score"
-msgstr ""
-
-#: printing/templates/master_sheets_view.html:52
-msgid "Neg Score"
-msgstr ""
-
-#: printing/templates/master_sheets_view.html:68
-msgctxt "Odd number of teams"
-msgid "Bye"
-msgstr ""
-
-#: printing/templates/master_sheets_view.html:70
-msgid "Postponed"
-msgstr ""
-
-#: printing/templates/master_sheets_view.html:72
-#, python-format
-msgid "Forfeit by %(side_name)s"
-msgstr ""
-
-#: printing/templates/master_sheets_view.html:92
-msgid "Additional Comments from the Head Ajudicator"
-msgstr ""
 
 #: printing/templates/printables_list.html:9
 msgid "Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate <strong>page orientation</strong>, to turn off <strong>headers/footers</strong> and turn on <strong>background graphics</strong>. Works best in Chrome."
@@ -143,95 +71,56 @@ msgstr ""
 msgid "Please bookmark the following URL, you will use it to submit forms throughout the tournament:"
 msgstr ""
 
-#: printing/templates/room_sheets_view.html:6
-#, python-format
-msgid "Room Sheets for Debates at %(venue_category)s in %(round_name)s"
-msgstr ""
-
-#: printing/templates/room_sheets_view.html:12
-#, python-format
-msgid "Room Sheets for Debates at %(venue_category)s"
-msgstr ""
-
-#: printing/templates/room_sheets_view.html:33
-#, python-format
-msgid "%(tournament)s Division %(division)s"
-msgstr ""
-
-#: printing/templates/room_sheets_view.html:44
-#, python-format
-msgid "<del>%(time)s</del> (Forfeit by %(side)s)"
-msgstr ""
-
-#: printing/templates/room_sheets_view.html:50
-msgid "(No time set)"
-msgstr ""
-
-#: printing/templates/room_sheets_view.html:54
-#, python-format
-msgid "<strong>Affirmative</strong>: %(team)s"
-msgstr ""
-
-#: printing/templates/room_sheets_view.html:59
-#, python-format
-msgid "<strong>Negative</strong>: %(team)s"
-msgstr ""
-
 #: printing/templates/scoresheet_list.html:7
 msgid "Printable Scoresheets"
 msgstr ""
 
 #: printing/templates/scoresheet_list.html:8
 #, python-format
-msgid "for %(round_name)s"
-msgstr ""
+msgid "for %(round)s"
+msgstr "من %(round)s"
 
 #: printing/templates/scoresheet_list.html:14
 msgid "Edit Motion(s)"
 msgstr ""
 
-#: printing/templates/scoresheet_list.html:32
+#: printing/templates/scoresheet_list.html:33
 msgid "There are no scoresheets available — perhaps the round has not been drawn?"
 msgstr "لم تتوفر نموذج درجات لهذه الجولة — "
 
-#: printing/templates/scoresheet_list.html:39
+#: printing/templates/scoresheet_list.html:40
 msgid "Edit Ballot Motions"
 msgstr ""
 
-#: printing/templates/scoresheet_list.html:41
+#: printing/templates/scoresheet_list.html:42
 msgid "&times;"
 msgstr ""
 
-#: printing/templates/scoresheet_list.html:46
-msgid "\n"
-"              Editing motions here will not save them permanently — it will only\n"
-"              update the text used in the printed ballots below. This can be useful if using\n"
-"              placeholder motions (to ensure confidentiality) in Tabbycat, but you still want to print\n"
-"              ballots with correct motions.\n"
-"              "
+#: printing/templates/scoresheet_list.html:47
+msgid "Editing motions here will not save them permanently — it will only update the text used in the printed ballots below. This can be useful if using placeholder motions (to ensure confidentiality) in Tabbycat, but you still want to print ballots with correct motions."
 msgstr ""
 
-#: printing/templates/scoresheet_list.html:54
+#: printing/templates/scoresheet_list.html:55
 msgid "Motion"
 msgstr ""
 
-#: printing/templates/scoresheet_list.html:58
+#: printing/templates/scoresheet_list.html:59
 msgid "Changes to motions will update in the displayed ballots automatically"
 msgstr ""
 
-#: printing/templates/scoresheet_list.html:95
+#: printing/templates/scoresheet_list.html:96
 msgid "Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication."
 msgstr ""
 
-#: printing/views.py:95
+#: printing/views.py:40
 msgid "Overall Score"
 msgstr "مجموع الدرجات"
 
-#: printing/views.py:122 printing/views.py:232 printing/views.py:252
+#: printing/views.py:67 printing/views.py:177 printing/views.py:197
 msgid "Unaffiliated"
 msgstr "غير منتسبين"
 
-#: printing/views.py:135 printing/views.py:139
+#: printing/views.py:80 printing/views.py:84
 msgid "Team"
 msgstr "فريق"
 

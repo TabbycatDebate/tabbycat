@@ -39,7 +39,8 @@ metrics that will be shown in the team standings, but not used to rank teams.
   * - Points
     - How many points the team has. For two-team formats, this is just a synonym
       for wins, and differs only in column labelling. For BP, this is 3 points
-      for a first, 2 for a second, 1 for a third and 0 for a fourth.
+      for a first, 2 for a second, 1 for a third and 0 for a fourth. Round
+      weightings are taken into account.
 
   * - Total speaker score
     - The sum of all speaker scores attained in all debates.
@@ -93,6 +94,10 @@ metrics that will be shown in the team standings, but not used to rank teams.
   * - Number of seconds
     - The number of debates in which the team came second. Only makes sense for
       British Parliamentary.
+
+  * - Number of thirds
+    - The number of debates in which the team came third. Only makes sense for
+      British Parliamentary with variable round weights.
 
   * - Number of pullups before this round
     - The number of times the team has been pulled up as part of

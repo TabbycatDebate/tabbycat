@@ -1,7 +1,7 @@
 import logging
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Exists, OuterRef, Q
 from django.shortcuts import get_object_or_404
 from django.utils.text import format_lazy
@@ -14,6 +14,7 @@ from notifications.models import BulkNotification, SentMessage
 from notifications.views import RoleColumnMixin, TournamentTemplateEmailCreateView
 from participants.models import Adjudicator, Person, Speaker
 from participants.tables import AdjudicatorDebateTable, TeamDebateTable
+from participants.views import BaseRecordView
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin, TournamentMixin
 from tournaments.models import Round
 from utils.misc import reverse_tournament
@@ -39,14 +40,14 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
     def get_participants_to_email(self, already_sent=False):
         subquery = SentMessage.objects.filter(
             notification__event=BulkNotification.EVENT_TYPE_URL,
-            notification__tournament=self.tournament, email=OuterRef('email')
+            notification__tournament=self.tournament, email=OuterRef('email'),
         )
         people = self.tournament.participants.filter(
-            url_key__isnull=False, email__isnull=False
+            url_key__isnull=False, email__isnull=False,
         ).exclude(
-            email__exact=""
+            email__exact="",
         ).annotate(
-            already_sent=Exists(subquery)
+            already_sent=Exists(subquery),
         ).filter(already_sent=already_sent)
         return people
 
@@ -62,22 +63,22 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
                 return {'text': _("no URL"), 'class': 'text-warning'}
             path = reverse_tournament('privateurls-person-index', self.tournament,
                 kwargs={'url_key': person.url_key})
-            return {'text': request.build_absolute_uri(path), 'class': 'small'}
+            return {'text': request.build_absolute_uri(path), 'class': 'small mixed-text'}
 
         def build_link(person):
             if person.url_key is None:
                 return ''
             path = reverse_tournament('privateurls-person-index', self.tournament,
                 kwargs={'url_key': person.url_key})
-            return {'text': "🔗", 'link': request.build_absolute_uri(path)}
+            return {'text': "🔗", 'link': path}
 
         table.add_column(
             {'title': _("URL"), 'key': "url"},
-            [build_url(person) for person in people]
+            [build_url(person) for person in people],
         )
         table.add_column(
             {'title': "", 'key': "key"},
-            [build_link(person) for person in people]
+            [build_link(person) for person in people],
         )
         return table
 
@@ -124,12 +125,12 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
             generated_urls_message = ngettext(
                 "A private URL was generated for %(nblank_people)d person.",
                 "Private URLs were generated for all %(nblank_people)d people.",
-                nblank_people
+                nblank_people,
             ) % {'nblank_people': nblank_people}
             non_generated_urls_message = ngettext(
                 "The already-existing private URL for %(nexisting_people)d person was left intact.",
                 "The already-existing private URLs for %(nexisting_people)d people were left intact.",
-                nexisting_people
+                nexisting_people,
             ) % {'nexisting_people': nexisting_people}
 
             if nexisting_people == 0:
@@ -147,8 +148,7 @@ class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView
     subject_template = 'url_email_subject'
     message_template = 'url_email_message'
 
-    def get_success_url(self):
-        return reverse_tournament('privateurls-list', self.tournament)
+    tournament_redirect_pattern_name = 'privateurls-list'
 
     def get_extra(self):
         extra = super().get_extra()
@@ -158,11 +158,18 @@ class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView
     def get_table(self):
         table = super().get_table()
 
-        table.add_column({'key': 'url', 'tooltip': _("URL Key"), 'icon': 'terminal'}, [{
-            'text': p.url_key,
-            'link': self.request.build_absolute_uri(reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': p.url_key})),
-            'class': 'small'
-        } for p in self.get_queryset()])
+        data = []
+        for p in self.get_queryset():
+            cell = {
+                'text': p.url_key or _("no URL"),
+                'class': 'small' if p.url_key else 'small text-warning',
+            }
+            if p.url_key:
+                cell['link'] = self.request.build_absolute_uri(
+                    reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': p.url_key}))
+            data.append(cell)
+
+        table.add_column({'key': 'url', 'tooltip': _("URL Key"), 'icon': 'terminal'}, data)
 
         return table
 
@@ -205,12 +212,9 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
             kwargs['checkins_used'] = False
 
         if hasattr(self.object, 'adjudicator'):
-            kwargs['debateadjudications'] = self.object.adjudicator.debateadjudicator_set.filter(
-                debate__round=t.current_round).select_related('debate__round').prefetch_related('debate__round__motion_set')
+            kwargs['debateadjudications'] = BaseRecordView.allocations_set(self.object.adjudicator, False)
         else:
-            kwargs['debateteams'] = self.object.speaker.team.debateteam_set.select_related(
-                'debate__round').prefetch_related('debate__round__motion_set').filter(
-                debate__round=t.current_round)
+            kwargs['debateteams'] = BaseRecordView.allocations_set(self.object.speaker.team, False)
 
         kwargs['draw_released'] = t.current_round.draw_status == Round.STATUS_RELEASED
         kwargs['feedback_pref'] = t.pref('participant_feedback') == 'private-urls'

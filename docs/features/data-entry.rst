@@ -28,6 +28,8 @@ Most tab rooms run some sort of check system to ensure data is entered accuratel
 
 As a general principle, Tabbycat requires all ballots to be looked at by two people. The first person enters the data from the ballot, and the second person checks it. The second person isn't allowed to modify the data—they either confirm it or reject it, and if they reject it, then the whole process starts again. This is by design: to be confirmed, the *same* data must have been seen by at least two people.
 
+Debates can be postponed either before or after a ballot is submitted. In this state, the ballot is ignored for the purposes of draw generation, so a draw can be created without having confirmed all ballots. This can also be useful to mark ballots for further inspection. This feature must be enabled in the Data Entry preferences.
+
 .. caution:: The administrator area does **not** work like this. It's designed to be flexible, so allows you to edit, confirm or unconfirm any ballot at any time. For this reason, you should use the **assistant** area to enter ballots, even if you have a superuser account.
 
 .. tip::

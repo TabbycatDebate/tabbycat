@@ -3,6 +3,7 @@
 import itertools
 
 from breakqual.utils import calculate_live_thresholds, determine_liveness
+from draw.generator.utils import ispow2, partial_break_round_split
 from participants.prefetch import populate_win_counts
 
 
@@ -26,13 +27,35 @@ def calculate_anticipated_draw(round):
 
     nteamsindebate = 4 if round.tournament.pref('teams_in_debate') == 'bp' else 2
 
-    if round.prev is None or not round.prev.debate_set.exists():
-        # Special case: If this is the first round, everyone will be on zero.
+    if round.prev is None or not round.prev.debate_set.exists() or round.is_break_round:
+        # Special cases: If this is the first round, everyone will be on zero.
         # Just take all teams, rounded down -- if this is done, it'll typically
         # be done before availability is locked down. Also do this if the last
         # round hasn't yet been drawn, since that's premature for bracket
         # predictions.
-        npanels = round.tournament.team_set.count() // nteamsindebate
+        #
+        # Also occurs for elimination rounds as everyone is just as live.
+
+        nteams = 0
+        if round.is_break_round:
+            break_size = round.break_category.break_size
+            nprev_rounds = round.break_category.round_set.filter(seq__lt=round.seq).count()
+            partial_two = nteamsindebate == 2 and not ispow2(break_size)
+            partial_bp = nteamsindebate == 4 and ispow2(break_size // 6)
+            if nprev_rounds > 0 and (partial_two or partial_bp):
+                # If using partial elimination rounds, the second round is the first for
+                # the powers of two, so start counting from here.
+                nprev_rounds -= 1
+
+            if nprev_rounds == 0 and nteamsindebate == 2:
+                nteams = partial_break_round_split(break_size)[0] * 2
+            else:
+                # Subsequent rounds are half the previous, but always a power of 2
+                nteams = 1 << (break_size.bit_length() - 1 - nprev_rounds)
+        else:
+            nteams = round.tournament.team_set.count()
+
+        npanels = nteams // nteamsindebate
         return [(0, 0, 0) for i in range(npanels)]
 
     # 1. Take the (actual) draw of the last round, with team points
@@ -49,6 +72,7 @@ def calculate_anticipated_draw(round):
 
     # 2. Compute a (min, max) of outcomes for each team
     team_points_after = []
+    points_available = [round.prev.weight * i for i in range(nteamsindebate)]
     for debate in debates:
         points_now = [team.points_count for team in debate.teams]
         highest = max(points_now)
@@ -58,13 +82,13 @@ def calculate_anticipated_draw(round):
         # one bracket; in these cases it's easy to prove this closed-form
         # guarantee for what the teams in that room will look like afterwards.
         if highest - lowest <= 1:
-            points_after = [(lowest+i, highest+i) for i in range(nteamsindebate)]
+            points_after = [(lowest+i, highest+i) for i in points_available]
 
         # For more complicated rooms (e.g. [9, 8, 8, 7]), it gets harder; just
         # use brute force. For few enough rooms this won't be too bad a hit.
         else:
             possible_outcomes = []
-            for result in itertools.permutations(range(nteamsindebate)):
+            for result in itertools.permutations(points_available):
                 outcome = [n + r for n, r in zip(points_now, result)]
                 outcome.sort(reverse=True)
                 possible_outcomes.append(outcome)

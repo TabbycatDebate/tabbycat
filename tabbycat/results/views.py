@@ -2,7 +2,6 @@ import logging
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-
 from django.conf import settings
 from django.contrib import messages
 from django.db import ProgrammingError
@@ -29,16 +28,17 @@ from tournaments.mixins import (CurrentRoundMixin, PersonalizablePublicTournamen
 from tournaments.models import Round
 from utils.misc import get_ip_address, reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
-from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 
+from .consumers import BallotStatusConsumer
 from .forms import (PerAdjudicatorBallotSetForm, PerAdjudicatorEliminationBallotSetForm, SingleBallotSetForm,
                     SingleEliminationBallotSetForm)
 from .models import BallotSubmission, TeamScore
-from .tables import ResultsTableBuilder
 from .prefetch import populate_confirmed_ballots
 from .result import get_class_name
-from .utils import populate_identical_ballotsub_lists
+from .tables import ResultsTableBuilder
+from .utils import get_status_meta, populate_identical_ballotsub_lists
 
 logger = logging.getLogger(__name__)
 
@@ -73,9 +73,11 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
         table.add_ballot_check_in_columns(draw, key="check_ins")
         table.add_ballot_status_columns(draw, key="status")
         table.add_ballot_entry_columns(draw, self.view_role, self.request.user)
+        if self.tournament.pref('enable_postponements'):
+            table.add_debate_postponement_column(draw)
         table.add_debate_venue_columns(draw, for_admin=True)
         table.add_debate_results_columns(draw, iron=True)
-        table.add_debate_adjudicators_column(draw, show_splits=True)
+        table.add_debate_adjudicators_column(draw, show_splits=True, for_admin=True)
         return table
 
     def get_irons_list(self):
@@ -89,13 +91,13 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
                         'venue': d.venue.display_name if d.venue else None,
                         'team': team_name_for_data_entry(debateteam.team, use_code_names),
                         'current_round': debateteam.iron,
-                        'previous_round': debateteam.iron_prev
+                        'previous_round': debateteam.iron_prev,
                     })
         return iron_speeches
 
     def get_context_data(self, **kwargs):
         kwargs["incomplete_ballots"] = self._get_draw().filter(
-            Q(result_status=Debate.STATUS_NONE) | Q(result_status=Debate.STATUS_DRAFT)).count()
+            Q(result_status=Debate.STATUS_NONE) | Q(result_status=Debate.STATUS_DRAFT)).exists()
         kwargs["iron_speeches"] = self.get_irons_list()
         return super().get_context_data(**kwargs)
 
@@ -106,6 +108,29 @@ class AssistantResultsEntryView(AssistantMixin, CurrentRoundMixin, BaseResultsEn
 
 class AdminResultsEntryForRoundView(AdministratorMixin, BaseResultsEntryForRoundView):
     template_name = 'admin_results.html'
+
+    # Stopgap to warn user about potential database inconsistency, when trainee adjudicators
+    # seem to have given scores. This normally happens when an adjudicator was demoted after
+    # a result was entered. See: https://github.com/TabbycatDebate/tabbycat/issues/922
+    # This stopgap should be deleted after a more general data consistency solution is
+    # implemented.
+    def get_context_data(self, **kwargs):
+        kwargs["debates_with_trainee_scoresheets"] = [
+            f"{debate.matchup} ({debate.venue.name})"
+            for debate in self.round.debate_set_with_prefetches(
+                teams=True, venues=True, adjudicators=False, speakers=False,
+                wins=False, results=False, institutions=False, check_ins=False, iron=False,
+                filter_kwargs={
+                    'ballotsubmission__speakerscorebyadj__debate_adjudicator__type':
+                        DebateAdjudicator.TYPE_TRAINEE,
+                },
+                ordering=None,
+            ).select_related('round__tournament').distinct()
+            # TODO: The select_related() call above avoids an N+1 issue in the
+            # call to self.round.tournament.sides in debate.matchup. If this
+            # also happens elsewhere, it might be worth digging into.
+        ]
+        return super().get_context_data(**kwargs)
 
 
 class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableTemplateView):
@@ -227,6 +252,10 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
             kwargs['debate_name'] = _(" vs ").join(self.debate.get_team(side).short_name for side in sides)
         else:
             kwargs['debate_name'] = _(" vs ").join(self.debate.get_team(side).code_name for side in sides)
+        kwargs['page_subtitle'] = _("%(round)s @ %(room)s") % {
+            'round': self.debate.round.name,
+            'room': getattr(self.debate.venue, 'display_name', _("N/A")),
+        }
 
         kwargs['iron'] = self.debate.debateteam_set.annotate(iron=Count('team__debateteam__speakerscore',
             filter=Q(team__debateteam__debate__round=self.debate.round.prev) & Q(team__debateteam__speakerscore__ghost=True),
@@ -290,7 +319,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
                     "extra": {"debate_id": self.debate.id},
                     "subject": self.tournament.pref("ballot_email_subject"),
                     "body": self.tournament.pref("ballot_email_message"),
-                    "send_to": None
+                    "send_to": None,
                 })
 
         self.add_success_message()
@@ -472,9 +501,6 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, BaseBa
         messages.success(self.request, _("Thanks, %(user)s! Your ballot for %(debate)s has "
                 "been recorded.") % {'user': self.object.name, 'debate': self.matchup_description()})
 
-    def get_success_url(self):
-        return reverse_tournament('post-results-public-ballotset-new', self.tournament)
-
     def populate_objects(self):
         self.object = self.get_object() # must be populated before self.error_page() called
 
@@ -498,6 +524,9 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, BaseBa
         self.ballotsub = BallotSubmission(debate=self.debate, ip_address=get_ip_address(self.request),
             submitter_type=BallotSubmission.SUBMITTER_PUBLIC)
 
+        if "url_key" in self.kwargs:
+            self.ballotsub.participant_submitter = self.object
+
         if not self.debate.adjudicators.has_chair:
             return self.error_page(_("Your debate doesn't have a chair, so you can't enter results for it. "
                     "Please contact a tab room official."))
@@ -516,7 +545,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, BaseBa
             request=self.request,
             template=['public_enter_results_error.html'],
             context=context,
-            using=self.template_engine
+            using=self.template_engine,
         )
 
 
@@ -526,6 +555,9 @@ class OldPublicNewBallotSetByIdUrlView(SingleObjectFromTournamentMixin, BasePubl
     allow_null_tournament = True
     private_url = False
 
+    def get_success_url(self):
+        return reverse_tournament('post-results-public-ballotset-new', self.tournament)
+
     def is_page_enabled(self, tournament):
         return tournament.pref('participant_ballots') == 'public'
 
@@ -534,6 +566,9 @@ class OldPublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin,
     model = Adjudicator
     allow_null_tournament = True
     private_url = True
+
+    def get_success_url(self):
+        return reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': self.kwargs['url_key']})
 
     def is_page_enabled(self, tournament):
         return tournament.pref('participant_ballots') == 'private-urls'
@@ -568,7 +603,7 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
 
     def get_queryset(self):
         return self.model.objects.select_related(
-            'round'
+            'round',
         ).prefetch_related('debateteam_set__team')
 
     def response_error(self, error):
@@ -616,7 +651,7 @@ class PublicBallotScoresheetsView(BasePublicBallotScoresheetsView):
             return (404, _("The debate %s does not have a confirmed ballot.") % self.matchup_description())
 
     def get_context_data(self, **kwargs):
-        kwargs['motion'] = self.object.confirmed_ballot.motion
+        kwargs['motion'] = self.object.confirmed_ballot.motion or self.object.round.motion_set.first()
         kwargs['result'] = self.object.confirmed_ballot.result
         kwargs['use_code_names'] = use_team_code_names(self.tournament, False)
         return super().get_context_data(**kwargs)
@@ -701,3 +736,30 @@ class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, VueTableTemplat
         debates = [da.debate for da in debateadjs]
         table.add_debate_venue_columns(debates)
         return table
+
+
+class PostponeDebateView(AdministratorMixin, RoundMixin, PostOnlyRedirectView):
+
+    round_redirect_pattern_name = 'results-round-list'
+
+    def post(self, request, *args, **kwargs):
+        debate = Debate.objects.get(id=kwargs.pop('debate_id'))
+        debate.result_status = Debate.STATUS_POSTPONED
+        debate.save()
+
+        # Notify the Results Page
+        group_name = BallotStatusConsumer.group_prefix + "_" + debate.round.tournament.slug
+        meta = get_status_meta(debate)
+        async_to_sync(get_channel_layer().group_send)(group_name, {
+            "type": "send_json",
+            "data": {
+                'status': debate.result_status,
+                'icon': meta[0],
+                'class': meta[1],
+                'sort': meta[2],
+                'ballot': None,
+                'round': debate.round_id,
+            },
+        })
+
+        return super().post(request, *args, **kwargs)

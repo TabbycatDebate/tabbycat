@@ -9,11 +9,11 @@ test_draw.py.
 
 This script must be run from the directory it is in."""
 
-import os.path
-import sys
-import string
-import random
 import argparse
+import os.path
+import random
+import string
+import sys
 
 draw_dir = os.path.abspath(os.path.join("..", ".."))
 if draw_dir not in sys.path:
@@ -21,8 +21,8 @@ if draw_dir not in sys.path:
 print(draw_dir)
 del draw_dir
 
-from draw.tests.utils import TestTeam     # noqa: E402 (has to come after path modification above)
 from draw.generator import DrawGenerator  # noqa: E402 (has to come after path modification above)
+from draw.tests.utils import TestTeam     # noqa: E402 (has to come after path modification above)
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("rounds", type=int, help="Number of rounds")

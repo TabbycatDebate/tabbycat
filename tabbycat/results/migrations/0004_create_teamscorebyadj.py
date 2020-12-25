@@ -31,7 +31,7 @@ def populate_teamscorebyadj(apps, schema_editor):
             for team, score in teams.items():
                 tsa = TeamScoreByAdj(ballot_submission_id=ballot, debate_adjudicator_id=adj, debate_team_id=team, score=score)
                 tsa.win = team == winner
-                tsa.margin = margin if team == winner else -margin
+                tsa.margin = margin if tsa.win else -margin
                 teamscores.append(tsa)
     TeamScoreByAdj.objects.bulk_create(teamscores)
 
@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
             name='TeamScoreByAdj',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('win', models.NullBooleanField(verbose_name='win')),
+                ('win', models.BooleanField(null=True, verbose_name='win')),
                 ('margin', results.models.ScoreField(blank=True, null=True, verbose_name='margin')),
                 ('score', results.models.ScoreField(blank=True, null=True, verbose_name='score')),
                 ('ballot_submission', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='results.BallotSubmission', verbose_name='ballot submission')),
@@ -69,5 +69,8 @@ class Migration(migrations.Migration):
             name='teamscorebyadj',
             index_together={('ballot_submission', 'debate_adjudicator')},
         ),
-        migrations.RunPython(populate_teamscorebyadj),
+        migrations.RunPython(
+            populate_teamscorebyadj,
+            lambda apps, schema_editor: apps.get_model("results", "teamscorebyadj").objects.all().delete(),
+        ),
     ]

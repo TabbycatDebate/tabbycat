@@ -94,6 +94,7 @@ export default {
     status_totals: function () {
       return {
         none: this.sumForType(this.debates, 'status', 'N'),
+        postponed: this.sumForType(this.debates, 'status', 'P'),
         draft: this.sumForType(this.debates, 'status', 'D'),
         confirmed: this.sumForType(this.debates, 'status', 'C'),
       }

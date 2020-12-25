@@ -1,17 +1,18 @@
 from django.core.validators import MinValueValidator, validate_slug
 from django.forms import ValidationError
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 from dynamic_preferences.preferences import Section
+from dynamic_preferences.registries import global_preferences_registry
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, LongStringPreference, StringPreference
 
-from standings.teams import TeamStandingsGenerator
 from standings.speakers import SpeakerStandingsGenerator
+from standings.teams import TeamStandingsGenerator
 from tournaments.utils import get_side_name_choices
 
-from .types import MultiValueChoicePreference
 from .models import tournament_preferences_registry
+from .types import MultiValueChoicePreference
 
 
 # ==============================================================================
@@ -90,6 +91,7 @@ class MarginIncludesDissent(BooleanPreference):
     section = scoring
     name = 'margin_includes_dissenters'
     default = False
+
 
 # ==============================================================================
 draw_rules = Section('draw_rules', verbose_name=_("Draw Rules"))
@@ -339,6 +341,7 @@ class HideTraineePosition(BooleanPreference):
     name = 'no_trainee_position'
     default = False
 
+
 # ==============================================================================
 feedback = Section('feedback', verbose_name=_("Feedback"))
 # ==============================================================================
@@ -408,12 +411,13 @@ class ShowUnaccredited(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class FeedbackIntroduction(StringPreference):
+class FeedbackIntroduction(LongStringPreference):
     help_text = _("Any explanatory text needed to introduce the feedback form")
     verbose_name = _("Feedback introduction/explanation")
     section = feedback
     name = 'feedback_introduction'
     default = ''
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
     field_kwargs = {'required': False}
 
 
@@ -485,7 +489,7 @@ class BallotUsesScores(ChoicePreference):
     choices = (
         ('always', _("Always require speaker scores")),
         ('prelim', _("Only require speaker scores in preliminary rounds")),
-        ('never', _("Never require speaker scores"))
+        ('never', _("Never require speaker scores")),
     )
     default = 'always'
 
@@ -515,6 +519,15 @@ class ReplyScores(BooleanPreference):
     verbose_name = _("Reply scores")
     section = debate_rules
     name = 'reply_scores_enabled'
+    default = True
+
+
+@tournament_preferences_registry.register
+class RequireSubstantiveForReply(BooleanPreference):
+    help_text = _("Whether to limit reply speeches to speakers who gave a substantive speech in the debate")
+    verbose_name = _("Require reply speaker to have given a substantive speech")
+    section = debate_rules
+    name = 'require_substantive_for_reply'
     default = True
 
 
@@ -568,7 +581,7 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
         classes = [TeamStandingsGenerator.metric_annotator_classes[metric] for metric in value]
         duplicates = [c for c in classes if c.repeatable is False and classes.count(c) > 1]
         if duplicates:
-            duplicates_str = ", ".join(list(set(force_text(c.name) for c in duplicates)))
+            duplicates_str = ", ".join(list(set(force_str(c.name) for c in duplicates)))
             raise ValidationError(_("The following metrics can't be listed twice: "
                     "%(duplicates)s") % {'duplicates': duplicates_str})
 
@@ -603,7 +616,7 @@ class SpeakerStandingsPrecedence(MultiValueChoicePreference):
         classes = [SpeakerStandingsGenerator.metric_annotator_classes[metric] for metric in value]
         duplicates = [c for c in classes if c.repeatable is False and classes.count(c) > 1]
         if duplicates:
-            duplicates_str = ", ".join(list(set(force_text(c.name) for c in duplicates)))
+            duplicates_str = ", ".join(list(set(force_str(c.name) for c in duplicates)))
             raise ValidationError(_("The following metrics can't be listed twice: "
                     "%(duplicates)s") % {'duplicates': duplicates_str})
 
@@ -809,14 +822,13 @@ class DisableBallotConfirmation(BooleanPreference):
     default = False
 
 
-# Disabled pending rollout of new ballot interface
-# @tournament_preferences_registry.register
-# class EnableBlindBallotConfirmation(BooleanPreference):
-#     help_text = _("Requires scores of draft ballot to be re-entered during confirmation (as a more stringent check)")
-#     verbose_name = _("Enforce blind confirmations")
-#     section = data_entry
-#     name = 'enable_blind_checks'
-#     default = False
+@tournament_preferences_registry.register
+class EnableBlindBallotConfirmation(BooleanPreference):
+    help_text = _("Requires scores of draft ballots to be re-entered as part of the confirmation stage (to create more stringent check). Only applies to BP formats.")
+    verbose_name = _("Enforce blind confirmations")
+    section = data_entry
+    name = 'enable_blind_checks'
+    default = False
 
 
 @tournament_preferences_registry.register
@@ -864,10 +876,10 @@ class CheckInWindowPeople(FloatPreference):
 
 @tournament_preferences_registry.register
 class CheckInWindowVenues(FloatPreference):
-    help_text = _("The amount of time (in hours) before a venue's check-in event expires")
+    help_text = _("The amount of time (in hours) before a room's check-in event expires")
     section = data_entry
     name = 'checkin_window_venues'
-    verbose_name = _("Check-In Window (Venues)")
+    verbose_name = _("Check-In Window (Rooms)")
     default = 2.0
 
 
@@ -905,6 +917,15 @@ class FeedbackReturnLocation(StringPreference):
     section = data_entry
     name = 'feedback_return_location'
     default = 'TBA'
+
+
+@tournament_preferences_registry.register
+class EnablePostponements(BooleanPreference):
+    help_text = _("Lets debates have their status as postponed, as to not block draw generation.")
+    verbose_name = _("Enable postponements")
+    section = data_entry
+    name = 'enable_postponements'
+    default = False
 
 
 # ==============================================================================
@@ -1128,7 +1149,7 @@ class ShowTeamInstitutions(BooleanPreference):
 
 @tournament_preferences_registry.register
 class ShowAdjudicatorInstitutions(BooleanPreference):
-    help_text = _("In tables listing adjudicators, adds a column showing their institutions")
+    help_text = _("Hide the institutions of adjudicators on public pages and on printed ballots")
     verbose_name = _("Show adjudicator institutions")
     section = ui_options
     name = 'show_adjudicator_institutions'
@@ -1335,3 +1356,17 @@ class TeamNameEmailMessage(LongStringPreference):
     name = 'team_email_message'
     default = ("<p>Hi {{ USER }},</p>"
         "<p>You are registered as <strong>{{ LONG }}</strong> in {{ TOURN }} with {{ SPEAKERS }}.</p>")
+
+
+# ==============================================================================
+global_settings = Section('global', verbose_name=_('Global Settings'))
+# ==============================================================================
+
+
+@global_preferences_registry.register
+class EnableAPIAccess(BooleanPreference):
+    help_text = _("Enables external applications to access the site through a dedicated interface, subject to public information settings.")
+    verbose_name = _("Enable API access")
+    section = global_settings
+    name = 'enable_api'
+    default = True

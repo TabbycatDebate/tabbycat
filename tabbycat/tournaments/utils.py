@@ -1,29 +1,11 @@
-import itertools
 import logging
 
-from django.db.models import Max
-from django.utils.encoding import force_text
-from django.utils.translation import gettext_lazy as _
-from django.utils.translation import gettext, pgettext_lazy
+from django.utils.encoding import force_str
+from django.utils.translation import gettext, gettext_lazy as _, pgettext_lazy
 
 from .models import Round
 
 logger = logging.getLogger(__name__)
-
-BREAK_ROUND_NAMES = [
-    # Translators: abbreviation for "grand final"
-    (_("Grand Final"), _("GF")),
-    # Translators: abbreviation for "semifinals"
-    (_("Semifinals"), _("SF")),
-    # Translators: abbreviation for "quarterfinals"
-    (_("Quarterfinals"), _("QF")),
-    # Translators: abbreviation for "octofinals"
-    (_("Octofinals"), _("OF")),
-    # Translators: abbreviation for "double-octofinals"
-    (_("Double-Octofinals"), _("DOF")),
-    # Translators: abbreviation for "triple-octofinals"
-    (_("Triple-Octofinals"), _("TOF")),
-]
 
 SIDE_NAMES = {
     'aff-neg': {
@@ -103,34 +85,11 @@ def auto_make_rounds(tournament, num_rounds):
         ).save()
 
 
-def auto_make_break_rounds(tournament, num_break, break_category):
-    """Makes the number of break rounds specified. This is intended as a
-    convenience function. For anything more complicated, a more advanced import
-    method should be used."""
-
-    num_prelim = tournament.prelim_rounds().aggregate(Max('seq'))['seq__max']
-    # Translators: "UBR" stands for "unknown break round" (used as a fallback when we don't know what it's called)
-    break_rounds = itertools.chain(BREAK_ROUND_NAMES, itertools.repeat((_("Unknown break round"), _("UBR"))))
-
-    for i, (name, abbr) in zip(range(num_break), break_rounds):
-        Round(
-            tournament=tournament,
-            break_category=break_category,
-            seq=num_prelim+num_break-i,
-            stage=Round.STAGE_ELIMINATION,
-            name=name,
-            abbreviation=abbr,
-            draw_type=Round.DRAW_ELIMINATION,
-            feedback_weight=0.5,
-            silent=True,
-        ).save()
-
-
 def get_side_name_choices():
     """Returns a list of choices for position names suitable for presentation in
     a form."""
     return [
-        (code, force_text(names["aff_full"]).capitalize() + ", " + force_text(names["neg_full"]).capitalize())
+        (code, force_str(names["aff_full"]).capitalize() + ", " + force_str(names["neg_full"]).capitalize())
         for code, names in SIDE_NAMES.items()
     ]
 
@@ -144,9 +103,9 @@ def get_side_name(tournament, side, name_type):
     """
     if side in ('aff', 'neg'):
         names = SIDE_NAMES.get(tournament.pref('side_names'), SIDE_NAMES['aff-neg'])
-        return force_text(names["%s_%s" % (side, name_type)])
+        return force_str(names["%s_%s" % (side, name_type)])
     elif side in ('og', 'oo', 'cg', 'co'):
-        return force_text(BP_SIDE_NAMES["%s_%s" % (side, name_type)])
+        return force_str(BP_SIDE_NAMES["%s_%s" % (side, name_type)])
     else:
         raise ValueError("get_side_name() side must be one of: 'aff', 'neg', 'og', 'oo', 'cg', 'co', not: %r" % (side,))
 
@@ -154,7 +113,7 @@ def get_side_name(tournament, side, name_type):
 def _get_side_name(name_type):
     def _wrapped(tournament):
         names = SIDE_NAMES.get(tournament.pref('side_names'), SIDE_NAMES['aff-neg'])
-        return force_text(names[name_type])
+        return force_str(names[name_type])
     return _wrapped
 
 

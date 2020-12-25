@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-20 23:12-0500\n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
 "PO-Revision-Date: 2019-07-11 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -55,27 +55,31 @@ msgid "View URLs"
 msgstr ""
 
 #: privateurls/templates/private_urls_nav.html:11
-msgid "Print URLs"
+msgid "Print Teams' URLs"
 msgstr ""
 
-#: privateurls/templates/private_urls_nav.html:18
+#: privateurls/templates/private_urls_nav.html:15
+msgid "Print Adjudicators' URLs"
+msgstr ""
+
+#: privateurls/templates/private_urls_nav.html:22
 msgid "All reachable participants have already been sent their private URLs."
 msgstr ""
 
-#: privateurls/templates/private_urls_nav.html:20
+#: privateurls/templates/private_urls_nav.html:24
 msgid "Email URLs"
 msgstr ""
 
-#: privateurls/templates/private_urls_nav.html:27
+#: privateurls/templates/private_urls_nav.html:31
 msgid "This button only generates private URLs for participants who do not already have one."
 msgstr ""
 
-#: privateurls/templates/private_urls_nav.html:28
-#: privateurls/templates/private_urls_nav.html:35
+#: privateurls/templates/private_urls_nav.html:32
+#: privateurls/templates/private_urls_nav.html:39
 msgid "Generate URLs"
 msgstr ""
 
-#: privateurls/templates/private_urls_nav.html:34
+#: privateurls/templates/private_urls_nav.html:38
 msgid "All participants already have private URLs."
 msgstr ""
 
@@ -94,39 +98,40 @@ msgstr ""
 msgid "(%(team)s)"
 msgstr ""
 
-#: privateurls/templates/public_url_landing.html:21
+#: privateurls/templates/public_url_landing.html:18
 #, python-format
 msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can submit results and/or feedback for your debates. You may bookmark this page and return here after each debate for the available actions."
 msgstr ""
 
-#: privateurls/templates/public_url_landing.html:40
+#: privateurls/templates/public_url_landing.html:37
 #, python-format
 msgid "Revoke check-in from %(check_time)s"
 msgstr ""
 
-#: privateurls/templates/public_url_landing.html:45
+#: privateurls/templates/public_url_landing.html:42
 msgid "Check in"
 msgstr ""
 
-#: privateurls/templates/public_url_landing.html:53
+#. Translators: Include the full-stop; English doesn't because "a.m." already has a full stop.
+#: privateurls/templates/public_url_landing.html:49
 #, python-format
-msgid "You have been checked-in at %(check_time)s"
+msgid "You have been checked in at %(check_time)s"
 msgstr ""
 
-#: privateurls/templates/public_url_landing.html:58
-msgid "You are not currently checked-in"
+#: privateurls/templates/public_url_landing.html:54
+msgid "You are not currently checked in."
 msgstr ""
 
-#: privateurls/templates/public_url_landing.html:67
+#: privateurls/templates/public_url_landing.html:61
 msgid "Submit Ballot"
 msgstr ""
 
+#: privateurls/templates/public_url_landing.html:67
 #: privateurls/templates/public_url_landing.html:73
-#: privateurls/templates/public_url_landing.html:79
 msgid "Submit Feedback"
 msgstr ""
 
-#: privateurls/templates/public_url_landing.html:88
+#: privateurls/templates/public_url_landing.html:82
 #, python-format
 msgid "Registration (%(name)s)"
 msgstr ""

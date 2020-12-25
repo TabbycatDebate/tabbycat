@@ -132,8 +132,8 @@ export default {
       this.$emit('set-speaker-score', this.team.position, this.speaker.position, this.speakerScoreForBallotType)
     },
     setShadowSpeaker: function (setValue) {
-      let select = document.getElementById(this.speaker.nameField.getAttribute('id'))
-      for (let option of select.options) {
+      const select = document.getElementById(this.speaker.nameField.getAttribute('id'))
+      for (const option of select.options) {
         if (option.value === setValue) {
           option.selected = true
         }
@@ -190,14 +190,14 @@ export default {
     },
     selectOptions: function () {
       var options = []
-      for (let speaker of this.speaker.nameField) {
-        options.push({ 'text': speaker.textContent, 'value': speaker.getAttribute('value') })
+      for (const speaker of this.speaker.nameField) {
+        options.push({ text: speaker.textContent, value: speaker.getAttribute('value') })
       }
       return options.sort((a, b) => a.text.localeCompare(b.text))
     },
     selectAttributes: function () {
       var attributes = {
-        'tabindex': this.speaker.nameField.getAttribute('tabindex'),
+        tabindex: this.speaker.nameField.getAttribute('tabindex'),
         'data-counterpart': this.speaker.nameField.getAttribute('id'),
       }
       this.speaker.nameField.setAttribute('tabindex', -1) // Remove old tab order
@@ -205,7 +205,7 @@ export default {
     },
     scoreAttributes: function () {
       var attributes = {}
-      for (let label of ['step', 'min', 'max', 'tabindex', 'type']) {
+      for (const label of ['step', 'min', 'max', 'tabindex', 'type']) {
         attributes[label] = this.speaker.scoreField.getAttribute(label)
       }
       attributes['data-counterpart'] = this.speaker.scoreField.getAttribute('id')

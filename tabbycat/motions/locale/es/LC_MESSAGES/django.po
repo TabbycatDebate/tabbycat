@@ -2,23 +2,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-21 05:14-0700\n"
-"PO-Revision-Date: 2019-07-21 12:18\n"
-"Last-Translator: philip_tc\n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"PO-Revision-Date: 2020-07-05 17:07\n"
+"Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: crowdin.com\n"
 "X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-Language: es-ES\n"
 "X-Crowdin-File: /develop/tabbycat/motions/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 936\n"
 
-#: motions/apps.py:7 motions/templates/public_division_motions.html:4
-#: motions/templates/public_division_motions.html:5
-#: motions/templates/public_motions.html:4
+#: motions/apps.py:7 motions/templates/public_motions.html:4
 #: motions/templates/public_motions.html:5
 msgid "Motions"
 msgstr "Mociones"
@@ -56,46 +55,34 @@ msgid "The information slide for this topic; if it has one"
 msgstr "La diapositiva de información para este tema; si tiene una"
 
 #: motions/models.py:21
-msgid "flagged"
-msgstr "señalado"
-
-#: motions/models.py:22
-msgid "For WADL: Allows for particular motions to be flagged as contentious"
-msgstr ""
-
-#: motions/models.py:24
 msgid "round"
 msgstr "ronda"
 
-#: motions/models.py:26
-msgid "divisions"
-msgstr "divisiones"
-
-#: motions/models.py:30 motions/models.py:42
+#: motions/models.py:25 motions/models.py:37
 msgid "motion"
 msgstr "moción"
 
-#: motions/models.py:31
+#: motions/models.py:26
 msgid "motions"
 msgstr "mociones"
 
-#: motions/models.py:40
+#: motions/models.py:35
 msgid "debate team"
 msgstr "equipo de debate"
 
-#: motions/models.py:44
+#: motions/models.py:39
 msgid "preferences"
 msgstr "preferencia"
 
-#: motions/models.py:46
+#: motions/models.py:41
 msgid "ballot submission"
 msgstr ""
 
-#: motions/models.py:50
+#: motions/models.py:45
 msgid "debate team motion preference"
 msgstr ""
 
-#: motions/models.py:51
+#: motions/models.py:46
 msgid "debate team motion preferences"
 msgstr ""
 
@@ -150,20 +137,8 @@ msgstr ""
 msgid "χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that this motion was imbalanced at any level of significance."
 msgstr ""
 
-#: motions/templates/assign.html:4 motions/templates/assign.html:5
-msgid "Assign Motions"
-msgstr ""
-
-#: motions/templates/assign.html:9
-msgid "Back to Display"
-msgstr ""
-
-#: motions/templates/assign.html:42
-msgid "Save Motion Assignments"
-msgstr ""
-
 #: motions/templates/motion_statistics.html:4
-#: motions/templates/motion_statistics.html:5 motions/views.py:200
+#: motions/templates/motion_statistics.html:5 motions/views.py:165
 msgid "Motion Statistics"
 msgstr ""
 
@@ -221,7 +196,7 @@ msgid "%(side)s results distribution"
 msgstr ""
 
 #: motions/templates/motion_statistics_bp_elim.html:72
-#: motions/templates/motion_statistics_bp_prelim.html:138
+#: motions/templates/motion_statistics_bp_prelim.html:115
 msgid "No results for this motion"
 msgstr ""
 
@@ -263,43 +238,7 @@ msgid_plural "%(count)s results for %(side)s (%(percentage)s%%) were for %(point
 msgstr[0] ""
 msgstr[1] ""
 
-#: motions/templates/motion_statistics_bp_prelim.html:90
-msgid "1st"
-msgstr ""
-
-#: motions/templates/motion_statistics_bp_prelim.html:93
-msgctxt "used when there isn't enough space to display '1st'"
-msgid "1"
-msgstr ""
-
-#: motions/templates/motion_statistics_bp_prelim.html:97
-msgid "2nd"
-msgstr ""
-
-#: motions/templates/motion_statistics_bp_prelim.html:100
-msgctxt "used when there isn't enough space to display '2nd'"
-msgid "2"
-msgstr ""
-
-#: motions/templates/motion_statistics_bp_prelim.html:104
-msgid "3rd"
-msgstr ""
-
-#: motions/templates/motion_statistics_bp_prelim.html:107
-msgctxt "used when there isn't enough space to display '3rd'"
-msgid "3"
-msgstr ""
-
-#: motions/templates/motion_statistics_bp_prelim.html:111
-msgid "4th"
-msgstr ""
-
-#: motions/templates/motion_statistics_bp_prelim.html:114
-msgctxt "used when there isn't enough space to display '4th'"
-msgid "4"
-msgstr ""
-
-#: motions/templates/motion_statistics_bp_prelim.html:124
+#: motions/templates/motion_statistics_bp_prelim.html:101
 #, python-format
 msgid "%(side)s results"
 msgstr ""
@@ -338,11 +277,7 @@ msgstr[1] ""
 msgid "Display Draw"
 msgstr ""
 
-#: motions/templates/motions_edit.html:23
-msgid "Assign Motions to Divisions"
-msgstr ""
-
-#: motions/templates/motions_edit.html:61
+#: motions/templates/motions_edit.html:55
 msgid "Save Motion"
 msgid_plural "Save Motions"
 msgstr[0] ""
@@ -350,38 +285,6 @@ msgstr[1] ""
 
 #: motions/templates/motions_info.html:8
 msgid "Info Slide"
-msgstr ""
-
-#: motions/templates/public_division_motions.html:10
-msgid "No motions have been released yet."
-msgstr ""
-
-#: motions/templates/public_division_motions.html:24
-msgid "RSeq"
-msgstr ""
-
-#: motions/templates/public_division_motions.html:25
-msgid "Round"
-msgstr ""
-
-#: motions/templates/public_division_motions.html:26
-msgid "Reference"
-msgstr ""
-
-#: motions/templates/public_division_motions.html:27
-msgid "Venue(s)"
-msgstr ""
-
-#: motions/templates/public_division_motions.html:28
-msgid "Divisions"
-msgstr ""
-
-#: motions/templates/public_division_motions.html:29
-msgid "Text"
-msgstr ""
-
-#: motions/templates/public_division_motions.html:31
-msgid "Contentious"
 msgstr ""
 
 #: motions/templates/public_motions.html:39
@@ -398,15 +301,15 @@ msgstr ""
 
 #: motions/templates/show.html:16
 #, python-format
-msgid "Reveal Info Slide for %(round_name)s"
-msgid_plural "Reveal Info Slides for %(round_name)s"
+msgid "Reveal Info Slide for %(round)s"
+msgid_plural "Reveal Info Slides for %(round)s"
 msgstr[0] ""
 msgstr[1] ""
 
 #: motions/templates/show.html:24
 #, python-format
-msgid "Reveal Motion for %(round_name)s"
-msgid_plural "Reveal Motions for %(round_name)s"
+msgid "Reveal Motion for %(round)s"
+msgid_plural "Reveal Motions for %(round)s"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -414,33 +317,33 @@ msgstr[1] ""
 msgid "There are no motions for this round entered into Tabbycat."
 msgstr ""
 
-#: motions/views.py:104
+#: motions/views.py:87
 msgid "The motion has been saved."
 msgstr ""
 
-#: motions/views.py:106
+#: motions/views.py:89
 #, python-format
 msgid "%(count)d motion has been saved."
 msgid_plural "%(count)d motions have been saved."
 msgstr[0] ""
 msgstr[1] ""
 
-#: motions/views.py:111
+#: motions/views.py:94
 #, python-format
 msgid "%(count)d motion has been deleted."
 msgid_plural "%(count)d motions have been deleted."
 msgstr[0] ""
 msgstr[1] ""
 
-#: motions/views.py:153
+#: motions/views.py:118
 msgid "Released the motion(s)."
 msgstr ""
 
-#: motions/views.py:160
+#: motions/views.py:125
 msgid "Unreleased the motion(s)."
 msgstr ""
 
-#: motions/views.py:184
+#: motions/views.py:149
 msgid "Round Motions"
 msgstr ""
 

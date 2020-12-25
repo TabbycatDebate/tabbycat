@@ -9,8 +9,8 @@ ENV PYTHONUNBUFFERED 1
 
 # Setup Node/NPM
 RUN apt-get update
-RUN apt-get install -y curl
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get install -y curl nginx
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-get install -y nodejs
 
 # Copy all our files into the baseimage and cd to that directory
@@ -23,8 +23,8 @@ ADD . /tcd/
 RUN git config --global url."https://".insteadOf git://
 
 # Install our node/python requirements
-RUN npm install -g npm@6.3.0
-RUN pip install -r ./config/requirements_core.txt
+RUN npm install -g npm@6.14.5
+RUN pip install -r ./config/requirements_docker.txt
 RUN npm install --only=production
 
 # Compile all the static files
