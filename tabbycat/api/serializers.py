@@ -463,7 +463,7 @@ class TeamSerializer(serializers.ModelSerializer):
         if len(validated_data['short_reference']) == 0:
             validated_data['short_reference'] = validated_data['reference'][:34]
 
-        speakers_data = validated_data.pop('speakers')
+        speakers_data = validated_data.pop('speakers', [])
         break_categories = validated_data.pop('break_categories')
 
         emoji, code_name = pick_unused_emoji()
