@@ -560,6 +560,11 @@ class Importer:
                 starts_at=round.get('start'))
             rounds.append(round_obj)
 
+            if round.find('debate') is None:
+                round_obj.completed = False
+                if round.find('debate/side/ballot') is None:
+                    round_obj.draw_status = Round.STATUS_NONE
+
             if round_stage == Round.STAGE_ELIMINATION:
                 round_obj.break_category = self.team_breaks.get(round.get('break-category'))
             round_obj.save()
