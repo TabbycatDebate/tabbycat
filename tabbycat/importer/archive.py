@@ -4,7 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Prefetch, Q
 from django.utils.text import slugify
 
-from adjallocation.models import DebateAdjudicator
+from adjallocation.models import AdjudicatorAdjudicatorConflict, DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
 from draw.models import Debate, DebateTeam
@@ -479,7 +479,7 @@ class Importer:
             team_institution = next(iter(p_institutions))
 
             if len(p_institutions) == 1:
-                team_obj.institution = self.institutions.get(team_institution, None)
+                team_obj.institution = self.institutions.get(team_institution)
 
             # Remove institution from team name
             if team_obj.institution is not None and team_obj.long_name.startswith(team_obj.institution.name + " "):
@@ -492,33 +492,46 @@ class Importer:
             team_obj.short_reference = team_obj.reference[:35]
             team_obj.save()
 
+            # Institution conflicts
+            team_obj.institution_conflicts.set([self.institutions[i] for i in p_institutions])
+
             # Break eligibilities
-            for bc in team.get('break-eligibilities', "").split():
-                team_obj.break_categories.add(self.team_breaks[bc])
+            team_obj.break_categories.set([self.team_breaks[bc] for bc in team.get('break-eligibilities', "").split()])
 
     def import_speakers(self):
         self.speakers = {}
 
         for team in self.root.find('participants').findall('team'):
             for speaker in team.findall('speaker'):
-                speaker_obj = Speaker(team=self.teams[team.get('id')], name=speaker.text, gender=speaker.get('gender', ''))
+                speaker_obj = Speaker(
+                    team=self.teams[team.get('id')],
+                    name=speaker.text, gender=speaker.get('gender', ''), email=speaker.get('email', ''))
                 speaker_obj.save()
                 self.speakers[speaker.get('id')] = speaker_obj
 
-                for sc in speaker.get('categories', "").split():
-                    speaker_obj.categories.add(self.speaker_categories[sc])
+                speaker_obj.categories.set([self.speaker_categories[sc] for sc in speaker.get('categories', "").split()])
 
     def import_adjudicators(self):
         self.adjudicators = {}
+        adj_adj_conflicts = []
 
         for adj in self.root.find('participants').findall('adjudicator'):
             adj_obj = Adjudicator(
                 tournament=self.tournament, base_score=adj.get('score', 0),
                 institution=self.institutions.get(adj.get('institutions', "").split(" ")[0]),
                 independent=adj.get('independent', False) == 'true', adj_core=adj.get('core', False) == 'true',
-                name=adj.get('name'), gender=adj.get('gender', ''))
+                name=adj.get('name'), gender=adj.get('gender', ''), email=adj.get('email', ''))
             adj_obj.save()
             self.adjudicators[adj.get('id')] = adj_obj
+
+            # Conflicts
+            adj_obj.institution_conflicts.set([self.institutions[i] for i in adj.get('institutions', "").split(" ")])
+            adj_obj.team_conflicts.set([self.teams[t] for t in adj.get('team-conflicts', "").split(" ")])
+            adj_adj_conflicts.extend([(adj.get('id'), adj2) for adj2 in adj.get('adjudicator-conflicts', "").split(" ")])
+
+        AdjudicatorAdjudicatorConflict.objects.bulk_create([
+            AdjudicatorAdjudicatorConflict(adjudicator1=adj1, adjudicator2=adj2) for adj1, adj2 in adj_adj_conflicts
+        ])
 
     def _get_voting_adjs(self, debate):
         voting_adjs = set()
