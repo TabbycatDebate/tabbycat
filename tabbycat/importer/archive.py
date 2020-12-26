@@ -337,6 +337,9 @@ class Importer:
             self.tournament.slug = slugify(self.root.get('name')[:50])
         self.tournament.save()
 
+        self.is_bp = self.root.get('style') == 'bp' or (
+            self.root.find('round/debate') is not None and len(self.root.find('round/debate').findall('side')) == 4)
+
         # Import all the separate parts
         self.set_preferences()
         self.import_institutions()
@@ -382,7 +385,6 @@ class Importer:
             self.elimination_consensus = style.debate_rules__ballots_per_debate_elim == 'per-debate'
             return True # Exit method
 
-        self.is_bp = len(self.root.find('round').find('debate').findall('side')) == 4
         if self.is_bp:
             self.preliminary_consensus = True
             self.elimination_consensus = True
@@ -414,7 +416,7 @@ class Importer:
             if institution.get('region') is not None:
                 region = institution.get('region')
                 if region not in self.regions:
-                    self.regions[region] = Region.objects.get_or_create(name=region)
+                    self.regions[region], created = Region.objects.get_or_create(name=region)
 
                 inst_obj.region = self.regions[region]
                 inst_obj.save()
@@ -475,10 +477,12 @@ class Importer:
                 team_obj.emoji = emoji
 
             # Find institution from speakers - Get first institution from each speaker to compare
-            p_institutions = set([p.get('institutions', '').split(" ")[0] for p in team.findall('speaker')])
-            team_institution = next(iter(p_institutions))
+            p_institutions = [p.get('institutions', '').split(" ") for p in team.findall('speaker')]
+            p_inst = set([i[0] for i in p_institutions])
+            team_institution = next(iter(p_inst)) if len(p_inst) == 1 else None
+            institutions = set([i for s in p_institutions for i in s])
 
-            if len(p_institutions) == 1:
+            if team_institution:  # Both None and ""
                 team_obj.institution = self.institutions.get(team_institution)
 
             # Remove institution from team name
@@ -493,10 +497,10 @@ class Importer:
             team_obj.save()
 
             # Institution conflicts
-            team_obj.institution_conflicts.set([self.institutions[i] for i in p_institutions])
+            team_obj.institution_conflicts.set([self.institutions.get(i) for i in institutions if i != ""])
 
             # Break eligibilities
-            team_obj.break_categories.set([self.team_breaks[bc] for bc in team.get('break-eligibilities', "").split()])
+            team_obj.break_categories.set([self.team_breaks[bc] for bc in team.get('break-eligibilities', "").split() if bc != ""])
 
     def import_speakers(self):
         self.speakers = {}
@@ -509,7 +513,7 @@ class Importer:
                 speaker_obj.save()
                 self.speakers[speaker.get('id')] = speaker_obj
 
-                speaker_obj.categories.set([self.speaker_categories[sc] for sc in speaker.get('categories', "").split()])
+                speaker_obj.categories.set([self.speaker_categories[sc] for sc in speaker.get('categories', "").split() if sc != ""])
 
     def import_adjudicators(self):
         self.adjudicators = {}
@@ -525,12 +529,12 @@ class Importer:
             self.adjudicators[adj.get('id')] = adj_obj
 
             # Conflicts
-            adj_obj.institution_conflicts.set([self.institutions[i] for i in adj.get('institutions', "").split(" ")])
-            adj_obj.team_conflicts.set([self.teams[t] for t in adj.get('team-conflicts', "").split(" ")])
-            adj_adj_conflicts.extend([(adj.get('id'), adj2) for adj2 in adj.get('adjudicator-conflicts', "").split(" ")])
+            adj_obj.institution_conflicts.set([self.institutions[i] for i in adj.get('institutions', "").split(" ") if i != ""])
+            adj_obj.team_conflicts.set([self.teams[t] for t in adj.get('team-conflicts', "").split(" ") if t != ""])
+            adj_adj_conflicts.extend([(adj_obj, adj2) for adj2 in adj.get('adjudicator-conflicts', "").split(" ") if adj2 != ""])
 
         AdjudicatorAdjudicatorConflict.objects.bulk_create([
-            AdjudicatorAdjudicatorConflict(adjudicator1=adj1, adjudicator2=adj2) for adj1, adj2 in adj_adj_conflicts
+            AdjudicatorAdjudicatorConflict(adjudicator1=adj1, adjudicator2=self.adjudicators[adj2]) for adj1, adj2 in adj_adj_conflicts
         ])
 
     def _get_voting_adjs(self, debate):
