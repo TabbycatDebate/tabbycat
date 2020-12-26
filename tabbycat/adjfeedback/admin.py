@@ -21,7 +21,7 @@ class AdjudicatorBaseScoreHistoryAdmin(admin.ModelAdmin):
     list_display = ('adjudicator', 'round', 'score', 'timestamp')
     list_filter  = ('adjudicator', 'round')
     ordering     = ('timestamp',)
-    search_fields = ('adjudicator__name', 'adjudicator__institution__code')
+    search_fields = ('adjudicator__name', 'adjudicator__institution__name')
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('round__tournament', 'adjudicator__institution')
@@ -129,7 +129,7 @@ class RoundListFilter(admin.SimpleListFilter):
 @admin.register(AdjudicatorFeedback)
 class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
     list_display  = ('adjudicator', 'confirmed', 'ignored', 'score', 'version', 'get_source')
-    search_fields = ('adjudicator__name', 'adjudicator__institution__code',
+    search_fields = ('adjudicator__name', 'adjudicator__institution__name',
             'score', 'source_adjudicator__adjudicator__name',
             'source_team__team__short_name', 'source_team__team__long_name')
     raw_id_fields = ('source_team', 'adjudicator', 'source_team', 'source_adjudicator')

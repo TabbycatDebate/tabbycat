@@ -16,7 +16,7 @@ class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('id', 'debate', 'version', 'get_round', 'timestamp',
             'submitter_type', 'submitter', 'confirmer', 'confirmed')
     list_editable = ('confirmed',)
-    search_fields = ('debate__debateteam__team__reference', 'debate__debateteam__team__institution__code')
+    search_fields = ('debate__debateteam__team__reference', 'debate__debateteam__team__institution__name')
     raw_id_fields = ('debate', 'motion')
     list_filter = ('debate__round', 'debate__round__tournament', 'submitter', 'confirmer')
     # This incurs a massive performance hit
@@ -36,7 +36,7 @@ class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
 class TeamScoreAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', 'get_round', 'get_team', 'points', 'win', 'score')
     search_fields = ('debate_team__debate__round__seq', 'debate_team__debate__round__tournament__name',
-                     'debate_team__team__reference', 'debate_team__team__institution__code')
+                     'debate_team__team__reference', 'debate_team__team__institution__name')
     list_filter = ('debate_team__debate__round', )
     raw_id_fields = ('ballot_submission', 'debate_team')
 
@@ -56,7 +56,7 @@ class TeamScoreAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
 class TeamScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', 'get_round', 'get_adj_name', 'get_team', 'win', 'margin', 'score')
     search_fields = ('debate_team__debate__round__seq', 'debate_team__debate__round__tournament__name',
-                     'debate_team__team__reference', 'debate_team__team__institution__code')
+                     'debate_team__team__reference', 'debate_team__team__institution__name')
     list_filter = ('debate_team__debate__round', 'debate_adjudicator__adjudicator__name')
     raw_id_fields = ('ballot_submission', 'debate_adjudicator', 'debate_team')
 
@@ -80,7 +80,7 @@ class SpeakerScoreAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', 'get_round', 'get_team', 'position',
                     'get_speaker_name', 'score', 'ghost')
     search_fields = ('debate_team__debate__round__abbreviation',
-                     'debate_team__team__reference', 'debate_team__team__institution__code',
+                     'debate_team__team__reference', 'debate_team__team__institution__name',
                      'speaker__name')
     list_filter = ('score', 'debate_team__debate__round', 'ghost')
     raw_id_fields = ('debate_team', 'ballot_submission')
@@ -103,7 +103,7 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', 'get_round', 'get_adj_name', 'get_team',
                     'get_speaker_name', 'position', 'score')
     search_fields = ('debate_team__debate__round__seq',
-                     'debate_team__team__reference', 'debate_team__team__institution__code',
+                     'debate_team__team__reference', 'debate_team__team__institution__name',
                      'debate_adjudicator__adjudicator__name')
 
     list_filter = ('debate_team__debate__round', 'debate_adjudicator__adjudicator__name',
