@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
-from django.db.models import Prefetch, Q
+from django.db.models import OuterRef, Prefetch, Q, Subquery
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
 from django.views.generic.base import TemplateView
@@ -23,9 +23,7 @@ from .statistics import MotionBPStatsCalculator, MotionTwoTeamStatsCalculator, R
 
 class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
     public_page_preference = 'public_motions'
-
-    def get_template_names(self):
-        return ['public_motions.html']
+    template_name = 'public_motions.html'
 
     def get_context_data(self, **kwargs):
         order_by = 'seq' if self.tournament.pref('public_motions_order') == 'forward' else '-seq'
@@ -36,7 +34,8 @@ class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
         filter_q = Q(motions_released=True) | Q(seq__lte=self.tournament.current_round.seq)
 
         kwargs['rounds'] = self.tournament.round_set.filter(filter_q).order_by(
-                order_by).prefetch_related(Prefetch('motion_set', queryset=Motion.objects.order_by('roundmotions__seq')))
+                order_by).prefetch_related(Prefetch('roundmotion_set',
+                    queryset=RoundMotion.objects.order_by('seq').select_related('motion')))
         return super().get_context_data(**kwargs)
 
 
@@ -49,7 +48,7 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
     formset_model = Motion
 
     def get_formset_factory_kwargs(self):
-        excludes = ['round', 'id']
+        excludes = ['tournament', 'rounds', 'round', 'id']
 
         nexisting = self.get_formset_queryset().count()
         if self.tournament.pref('enable_motions'):
@@ -69,7 +68,8 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
         return {'initial': initial}
 
     def get_formset_queryset(self):
-        return self.round.motion_set.order_by('roundmotions__seq')
+        roundmotions = self.round.roundmotion_set.filter(motion=OuterRef('pk'))
+        return self.round.motion_set.all().order_by(Subquery(roundmotions.values('seq')[:1]))
 
     def formset_valid(self, formset):
         motions = formset.save(commit=False)
@@ -104,7 +104,7 @@ class CopyMotionsView(EditMotionsView):
     formset_model = RoundMotion
 
     def get_formset_queryset(self):
-        return self.round.roundmotions_set.all()
+        return self.round.roundmotion_set.all()
 
     def formset_valid(self, formset):
         motions = formset.save(commit=False)
@@ -127,8 +127,8 @@ class CopyPreviousMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, Po
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTION_EDIT
 
     def post(self, request, *args, **kwargs):
-        self.round.roundmotions_set.all().delete()
-        motions = self.round.prev.roundmotions_set.select_related('motion')
+        self.round.roundmotion_set.all().delete()
+        motions = self.round.prev.roundmotion_set.select_related('motion')
         new_motions = []
 
         for motion in motions:
@@ -176,9 +176,9 @@ class BaseDisplayMotionsView(RoundMixin, TemplateView):
     template_name = 'show.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['motions'] = self.round.roundmotions_set.select_related('motion').order_by('seq')
+        kwargs['motions'] = self.round.roundmotion_set.select_related('motion').order_by('seq')
         kwargs['motions_length'] = sum(len(i.motion.text) for i in kwargs['motions'])
-        kwargs['infos'] = self.round.roundmotions_set.select_related('motion').exclude(motion__info_slide="").order_by('seq')
+        kwargs['infos'] = self.round.roundmotion_set.select_related('motion').exclude(motion__info_slide="").order_by('seq')
         kwargs['infos_length'] = sum(len(i.motion.info_slide) for i in kwargs['infos'])
         return super().get_context_data(**kwargs)
 

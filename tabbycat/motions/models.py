@@ -62,7 +62,7 @@ class RoundMotion(models.Model):
         help_text=_("The order in which motions are displayed"))
 
     class Meta:
-        ordering = ('motion', 'seq')
+        ordering = ('round', 'seq')
         unique_together = ('round', 'seq')
         verbose_name = _("round motion")
         verbose_name_plural = _("round motions")

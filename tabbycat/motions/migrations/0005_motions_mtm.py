@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'round motion',
                 'verbose_name_plural': 'round motions',
-                'ordering': ('motion', 'seq'),
+                'ordering': ('round', 'seq'),
                 'unique_together': {('round', 'seq')},
             },
         ),
