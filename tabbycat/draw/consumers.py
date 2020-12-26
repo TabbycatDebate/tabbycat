@@ -187,7 +187,7 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
         debates = self.get_debates_or_panels(changes)
         serialized = serializer(debates, many=True)
         content_to_return = content.copy()
-        del content_to_return[content_name]
+        del content_to_return[key]
         self.return_attributes(content_to_return, serialized)
 
 
