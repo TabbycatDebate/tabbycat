@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import OuterRef, Prefetch, Q, Subquery
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
 from django.views.generic.base import TemplateView
@@ -12,19 +12,18 @@ from notifications.views import RoleColumnMixin, RoundTemplateEmailCreateView
 from participants.models import Speaker
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 PublicTournamentPageMixin, RoundMixin, TournamentMixin)
+from tournaments.models import Round
 from utils.misc import redirect_round
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView, PostOnlyRedirectView
 
-from .models import Motion
-from .statistics import MotionStatistics
+from .models import Motion, RoundMotion
+from .statistics import MotionBPStatsCalculator, MotionTwoTeamStatsCalculator, RoundMotionBPStatsCalculator, RoundMotionTwoTeamStatsCalculator
 
 
 class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
     public_page_preference = 'public_motions'
-
-    def get_template_names(self):
-        return ['public_motions.html']
+    template_name = 'public_motions.html'
 
     def get_context_data(self, **kwargs):
         order_by = 'seq' if self.tournament.pref('public_motions_order') == 'forward' else '-seq'
@@ -35,7 +34,8 @@ class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
         filter_q = Q(motions_released=True) | Q(seq__lte=self.tournament.current_round.seq)
 
         kwargs['rounds'] = self.tournament.round_set.filter(filter_q).order_by(
-                order_by).prefetch_related('motion_set')
+                order_by).prefetch_related(Prefetch('roundmotion_set',
+                    queryset=RoundMotion.objects.order_by('seq').select_related('motion')))
         return super().get_context_data(**kwargs)
 
 
@@ -48,7 +48,7 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
     formset_model = Motion
 
     def get_formset_factory_kwargs(self):
-        excludes = ['round', 'id']
+        excludes = ['tournament', 'rounds', 'round', 'id']
 
         nexisting = self.get_formset_queryset().count()
         if self.tournament.pref('enable_motions'):
@@ -68,33 +68,79 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
         return {'initial': initial}
 
     def get_formset_queryset(self):
-        return self.round.motion_set.all()
+        roundmotions = self.round.roundmotion_set.filter(motion=OuterRef('pk'))
+        return self.round.motion_set.all().order_by(Subquery(roundmotions.values('seq')[:1]))
 
     def formset_valid(self, formset):
         motions = formset.save(commit=False)
-        round = self.round
-        for i, motion in enumerate(motions, start=1):
-            if not self.tournament.pref('enable_motions'):
-                motion.seq = i
-            motion.round = round
+        for motion in motions:
+            motion.tournament = self.tournament
             motion.save()
-            self.log_action(content_object=motion)
+
         for motion in formset.deleted_objects:
             motion.delete()
 
-        count = len(motions)
+        for i, motion in enumerate(motions, start=1):
+            RoundMotion(motion=motion, round=self.round, seq=1).save()
+            self.log_action(content_object=motion)
+
+        return self.show_message(len(motions), len(formset.deleted_objects))
+
+    def show_message(self, count, deleted):
         if not self.tournament.pref('enable_motions') and count == 1:
             messages.success(self.request, _("The motion has been saved."))
         elif count > 0:
             messages.success(self.request, ngettext("%(count)d motion has been saved.",
                 "%(count)d motions have been saved.", count) % {'count': count})
 
-        count = len(formset.deleted_objects)
-        if count > 0:
+        if deleted > 0:
             messages.success(self.request, ngettext("%(count)d motion has been deleted.",
-                "%(count)d motions have been deleted.", count) % {'count': count})
+                "%(count)d motions have been deleted.", deleted) % {'count': deleted})
 
-        return redirect_round('draw-display', round)
+        return redirect_round('draw-display', self.round)
+
+
+class CopyMotionsView(EditMotionsView):
+    formset_model = RoundMotion
+
+    def get_formset_queryset(self):
+        return self.round.roundmotion_set.all()
+
+    def formset_valid(self, formset):
+        motions = formset.save(commit=False)
+        for i, motion in enumerate(motions, start=1):
+            if not self.tournament.pref('enable_motions'):
+                motion.seq = i
+            motion.round = self.round
+            motion.save()
+
+            self.log_action(content_object=motion.motion)
+
+        for rm in formset.deleted_objects:
+            rm.delete()
+
+        return self.show_message(len(motions), len(formset.deleted_objects))
+
+
+class CopyPreviousMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
+    round_redirect_pattern_name = 'draw-display'
+    action_log_type = ActionLogEntry.ACTION_TYPE_MOTION_EDIT
+
+    def post(self, request, *args, **kwargs):
+        self.round.roundmotion_set.all().delete()
+        motions = self.round.prev.roundmotion_set.select_related('motion')
+        new_motions = []
+
+        for motion in motions:
+            new_motions.append(RoundMotion(motion=motion.motion, seq=motion.seq, round=self.round))
+            self.log_action(content_object=motion.motion)
+
+        RoundMotion.objects.bulk_create(new_motions)
+        messages.success(request, ngettext(
+            "The motion was copied from the previous round.",
+            "The %(count)d motions were copied from the previous round.",
+            len(new_motions)) % {'count': len(new_motions)})
+        return super().post(request, *args, **kwargs)
 
 
 class BaseReleaseMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
@@ -130,10 +176,10 @@ class BaseDisplayMotionsView(RoundMixin, TemplateView):
     template_name = 'show.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['motions'] = self.round.motion_set.all()
-        kwargs['motions_length'] = sum(len(i.text) for i in kwargs['motions'])
-        kwargs['infos'] = self.round.motion_set.exclude(info_slide="")
-        kwargs['infos_length'] = sum(len(i.info_slide) for i in kwargs['infos'])
+        kwargs['motions'] = self.round.roundmotion_set.select_related('motion').order_by('seq')
+        kwargs['motions_length'] = sum(len(i.motion.text) for i in kwargs['motions'])
+        kwargs['infos'] = self.round.roundmotion_set.select_related('motion').exclude(motion__info_slide="").order_by('seq')
+        kwargs['infos_length'] = sum(len(i.motion.info_slide) for i in kwargs['infos'])
         return super().get_context_data(**kwargs)
 
 
@@ -159,21 +205,58 @@ class EmailMotionReleaseView(RoleColumnMixin, RoundTemplateEmailCreateView):
 
 
 class BaseMotionStatisticsView(TournamentMixin, TemplateView):
-
     template_name = 'motion_statistics.html'
     page_title = gettext_lazy("Motion Statistics")
     page_emoji = '💭'
 
+    for_public = False
+
     def get_context_data(self, **kwargs):
-        kwargs['statistics'] = MotionStatistics(self.tournament)
+        kwargs['statistics'] = self.get_statistics()
+        kwargs['type'] = self.stats_type
+        kwargs['for_public'] = self.for_public
+        kwargs['stage'] = {'PRELIM': Round.STAGE_PRELIMINARY, 'ELIM': Round.STAGE_ELIMINATION}
         return super().get_context_data(**kwargs)
 
+    def get_statistics(self, *args, **kwargs):
+        if self.tournament.pref('teams_in_debate') == 'two':
+            return self.two_team_statistics_generator(self.tournament, *args, **kwargs)
+        else:
+            return self.bp_statistics_generator(self.tournament, *args, **kwargs)
 
-class MotionStatisticsView(AdministratorMixin, BaseMotionStatisticsView):
+
+class RoundMotionStatisticsView(BaseMotionStatisticsView):
+    stats_type = "round"
+    two_team_statistics_generator = RoundMotionTwoTeamStatsCalculator
+    bp_statistics_generator = RoundMotionBPStatsCalculator
+
+
+class GlobalMotionStatisticsView(BaseMotionStatisticsView):
+    stats_type = "global"
+    two_team_statistics_generator = MotionTwoTeamStatsCalculator
+    bp_statistics_generator = MotionBPStatsCalculator
+
+
+class BasePublicMotionStatisticsView(PublicTournamentPageMixin):
+    """Base class for public motion tabs
+
+    Motion context provided in subclasses."""
+    public_page_preference = 'motion_tab_released'
+    cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
+    for_public = True
+
+
+class AdminRoundMotionStatisticsView(AdministratorMixin, RoundMotionStatisticsView):
     pass
 
 
-class PublicMotionStatisticsView(PublicTournamentPageMixin, BaseMotionStatisticsView):
-    public_page_preference = 'motion_tab_released'
-    template_name = 'public_motion_statistics.html'
-    cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
+class AdminGlobalMotionStatisticsView(AdministratorMixin, GlobalMotionStatisticsView):
+    pass
+
+
+class PublicRoundMotionStatisticsView(BasePublicMotionStatisticsView, RoundMotionStatisticsView):
+    pass
+
+
+class PublicGlobalMotionStatisticsView(BasePublicMotionStatisticsView, GlobalMotionStatisticsView):
+    pass

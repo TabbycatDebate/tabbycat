@@ -213,8 +213,8 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
     def get_context_data(self, **kwargs):
         kwargs['ballots'] = json.dumps(self.get_ballots_dicts())
         kwargs['ordinals'] = [ordinal(i) for i in range(1, 5)]
-        motions = self.round.motion_set.order_by('seq')
-        kwargs['motions'] = json.dumps([{'seq': m.seq, 'text': m.text} for m in motions])
+        motions = self.round.roundmotion_set.order_by('seq').select_related('motion')
+        kwargs['motions'] = json.dumps([{'seq': m.seq, 'text': m.motion.text} for m in motions])
         kwargs['use_team_code_names'] = use_team_code_names(self.tournament, False)
         return super().get_context_data(**kwargs)
 
