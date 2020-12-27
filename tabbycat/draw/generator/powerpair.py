@@ -172,7 +172,7 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         Operates in-place. Does not remove empty brackets."""
         pullup_needed_for = None
 
-        for points, teams in brackets.items():
+        for teams in brackets.values():
             if pullup_needed_for:
                 pullup_eligible_teams = self._pullup_filter(teams)
                 pullup_team = pullup_eligible_teams[pos(len(pullup_eligible_teams))]
@@ -471,7 +471,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         # List by highest bracket first.
         pullups_needed_for = list()
 
-        for points, pool in brackets.items():
+        for pool in brackets.values():
 
             # First, try to fulfil any pullups needed from higher brackets.
             # There's no guarantee we will have enough teams in this bracket to
@@ -650,6 +650,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         brackets.clear()
         brackets.update(new_sorted)
 
+    @staticmethod
     def _intermediate_brackets_with_up_down():
         """This should never be called - the associated option string is removed
         from the allowable list above."""

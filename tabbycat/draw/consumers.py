@@ -27,7 +27,7 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
     def receive_json(self, content):
         """ Select the appropriate method given the indicated attribute in JSON
         i.e. from { "importance": { "73" : "1" }, "componentID": 2885 } """
-        for (key, value) in content.items():
+        for key in content.keys():
             if key == 'action':
                 self.receive_action(content['action'], content['settings'], self.scope["user"])
             elif key == 'importance':
@@ -86,11 +86,11 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
                 sent_allocation_ids.extend(adj_id for adj_id in position_ids)
 
             # Delete adjudicators in the posted information
-            delete_count, deleted = self.delete_adjudicators(d_or_p, sent_allocation_ids)
+            self.delete_adjudicators(d_or_p, sent_allocation_ids)
             # Re-create positions of adjudicators in debate
             for (position, position_ids) in sent_allocation.items():
                 for adjudicator_id in position_ids:
-                    obj, created = self.create_adjudicators(d_or_p, adjudicator_id, position)
+                    self.create_adjudicators(d_or_p, adjudicator_id, position)
 
         # Re-fetch the modified data
         # TODO: is it necessary to re-fetch? Or should the objects be returned?
@@ -124,7 +124,7 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
     teams_serializer = EditDebateTeamsDebateSerializer
 
     def receive_json(self, content):
-        for (key, value) in content.items():
+        for key in content.keys():
             if key == 'sides_confirmed':
                 self.receive_debate_change(content, key, 'sides_confirmed', 'sides_confirmed', self.sides_status_serializer)
             elif key == 'venues':
