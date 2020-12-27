@@ -4,12 +4,13 @@ Change Log
 
 2.5.5
 -----
-*Release date: TBD*
+*Release date: 27 December 2020*
 
 - Corrected ordinals displaying HTML entities (`#1691 <https://github.com/TabbycatDebate/tabbycat/issues/1691>`_)
 - Removed interference between "average individual speaker score" and "team points" with other metrics
 - Fixed failing feedback creation through the API
 - Prevented team creation through API failing if speakers not provided
+- Clarified format of adjudicator feedback question choices in documentation
 
 
 2.5.4
