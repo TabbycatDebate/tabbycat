@@ -1,8 +1,8 @@
-from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
 from django.utils.translation import gettext, gettext_lazy as _
+from django_better_admin_arrayfield.models.fields import ArrayField
 
 from adjallocation.models import DebateAdjudicator
 from results.models import Submission
