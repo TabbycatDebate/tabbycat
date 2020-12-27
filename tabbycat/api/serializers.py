@@ -463,7 +463,7 @@ class TeamSerializer(serializers.ModelSerializer):
         if len(validated_data.get('short_reference'), "") == 0:
             validated_data['short_reference'] = validated_data['reference'][:34]
 
-        speakers_data = validated_data.pop('speakers')
+        speakers_data = validated_data.pop('speakers', [])
         break_categories = validated_data.pop('break_categories')
 
         emoji, code_name = pick_unused_emoji()
@@ -706,7 +706,7 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
             self.source_attrs = [self.field_source_name]  # Must set
 
             # Was the value already entered?
-            if isinstance(data, (model for model, field in self.models.values())):
+            if isinstance(data, tuple(model for model, field in self.models.values())):
                 return data
 
             try:
