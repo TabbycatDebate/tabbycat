@@ -109,12 +109,13 @@ class AssistantResultsEntryView(AssistantMixin, CurrentRoundMixin, BaseResultsEn
 class AdminResultsEntryForRoundView(AdministratorMixin, BaseResultsEntryForRoundView):
     template_name = 'admin_results.html'
 
-    # Stopgap to warn user about potential database inconsistency, when trainee adjudicators
-    # seem to have given scores. This normally happens when an adjudicator was demoted after
-    # a result was entered. See: https://github.com/TabbycatDebate/tabbycat/issues/922
-    # This stopgap should be deleted after a more general data consistency solution is
-    # implemented.
     def get_context_data(self, **kwargs):
+        # Stopgap to warn user about potential database inconsistency, when
+        # trainee adjudicators seem to have given scores. This normally happens
+        # when an adjudicator was demoted after a result was entered.
+        # See: https://github.com/TabbycatDebate/tabbycat/issues/922
+        # This stopgap should be deleted after a more general data consistency
+        # solution is implemented.
         kwargs["debates_with_trainee_scoresheets"] = [
             f"{debate.matchup} ({debate.venue.name})"
             for debate in self.round.debate_set_with_prefetches(
@@ -130,6 +131,17 @@ class AdminResultsEntryForRoundView(AdministratorMixin, BaseResultsEntryForRound
             # call to self.round.tournament.sides in debate.matchup. If this
             # also happens elsewhere, it might be worth digging into.
         ]
+
+        # Another warning about potential database inconsistency, but this one's
+        # only ever happened as a consequence of direct database edits via SQL,
+        # so we've probably already got all the consistency checks we can
+        # reasonably have. This is just an extra courtesy for users who try to
+        # hack too much. Just check `exists()`, no further information---it's
+        # not worth the performance hit to do this work for them.
+        kwargs["debates_with_multiple_confirmed_ballots_found"] = self.round.debate_set.annotate(
+            num_ballots=Count('ballotsubmission', filter=Q(ballotsubmission__confirmed=True)),
+        ).filter(num_ballots__gt=1).exists()
+
         return super().get_context_data(**kwargs)
 
 
