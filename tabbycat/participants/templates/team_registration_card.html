@@ -40,7 +40,11 @@
         {% if pref.show_emoji %}
           <div>
             <strong>{% trans "Emoji:" %}</strong>
-            {{ team.emoji }}
+            {% if team.emoji %}
+              {{ team.emoji }}
+            {% else %}
+              <span class="text-muted">{% trans "No emoji assigned" %}</span>
+            {% endif %}
           </div>
         {% endif %}
       </div>
