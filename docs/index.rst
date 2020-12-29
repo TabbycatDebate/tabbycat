@@ -67,7 +67,6 @@ formats too. If you're looking for a general overview of the software, check out
    features/notifications
    features/standings-rules
    features/team-code-names
-   features/data-importers
    features/user-accounts
    features/venue-constraints
 
