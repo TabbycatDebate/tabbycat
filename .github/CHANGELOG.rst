@@ -2,6 +2,14 @@
 Change Log
 ==========
 
+2.6.0 (Ocicat)
+--------------
+*Release date: TBD*
+
+- Deprecated the ``importtournament`` command, in favour of importing data through the API. The CSV importers are available in the CSV-Importers repo. (`#1699 <https://github.com/TabbycatDebate/tabbycat/issues/1699>`_)
+- Motions can now be re-used between rounds, with statistics using the combined data from the rounds. (`#739 <https://github.com/TabbycatDebate/tabbycat/pull/739>`_)
+
+
 2.5.5
 -----
 *Release date: 27 December 2020*

@@ -6,7 +6,7 @@ Installing on Heroku
 
 `Heroku <http://www.heroku.com/>`_ is a platform as a service on which Tabbycat can be installed to be available on the internet. Naturally, this requires you to have a Heroku account.
 
-There are two ways to do this: a **short way** and a **long way**. Most people should use the short way. The long way requires some familiarity with command-line interfaces and Git, and requires a :ref:`local installation <install-local>` as a prerequisite, but makes it easier to :ref:`upgrade versions <upgrade-heroku>` later on and (unlike the short way) allows you to import data from CSV files.
+There are two ways to do this: a **short way** and a **long way**. Most people should use the short way. The long way requires some familiarity with command-line interfaces and Git, and requires a :ref:`local installation <install-local>` as a prerequisite, but makes it easier to :ref:`upgrade versions <upgrade-heroku>` later on.
 
 The short way
 =============
@@ -25,7 +25,7 @@ If you don't already have a Heroku account, it'll prompt you to create one. Once
 
 The long way
 ============
-The long way sets you up with more control over your environment.  Because you'll clone `our GitHub repository`_, it'll be easier for you to :ref:`upgrade your app <upgrade-heroku>` when a new version is released.  You'll also have the flexibility to make and contribute updates to the source code.  We recommend it if you have experience with Git.  It's also easier with this method to import CSV files using the command-line importer, so if you have a very large tournament, this might make importing initial data easier.
+The long way sets you up with more control over your environment.  Because you'll clone `our GitHub repository`_, it'll be easier for you to :ref:`upgrade your app <upgrade-heroku>` when a new version is released.  You'll also have the flexibility to make and contribute updates to the source code.  We recommend it if you have experience with Git.
 
 We've tested these instructions successfully on Windows, Linux and macOS.
 
@@ -52,17 +52,6 @@ Short version of the long way
   cd tabbycat
   git checkout master
   python deploy_heroku.py yourappname
-
-If you want to :ref:`import tournament data <importing-initial-data>` from CSV files, :ref:`install Tabbycat locally <install-local>`, put your CSV files in ``data/yourtournamentname``, then::
-
-  createdb yourlocaldatabasename     # Your settings_local.py file must point here from DATABASES
-  dj migrate
-  dj createsuperuser
-  dj importtournament yourtournamentname --name "Your Tournament Name" --short-name "Tournament"
-  heroku maintenance:on
-  heroku pg:reset
-  heroku pg:push yourlocaldatabasename DATABASE
-  heroku maintenance:off
 
 1. Install dependencies
 -----------------------
@@ -100,7 +89,7 @@ If you do already have a local installation, update to the latest version using:
 .. admonition:: Advanced users
   :class: tip
 
-  It's not *strictly* necessary to have a fully functional local installation if you don't want to import data from CSV files. But it certainly helps.
+  It's not *strictly* necessary to have a fully functional local installation, but it certainly helps.
 
 3. Deploy to Heroku
 -------------------
@@ -122,74 +111,6 @@ b. Run the script to deploy the app to Heroku. Replace ``yourappname`` with your
   When this script finishes, it will open the app in your browser. It should look something like this:
 
   .. image:: images/tabbycat-bare.png
-
-4. Import tournament data locally
----------------------------------
-
-.. note:: Steps 4 and 5 are optional; there are other methods of :ref:`importing data <importing-initial-data>`. However the following method is most useful for large tournaments where manual entry would be tedious.
-
-.. note:: Step 4 is the same as the process described in :ref:`importtournament-command`.
-
-.. rst-class:: spaced-list
-
-a. Place your CSV files in ``data/yourtournamentname``, as described in :ref:`importing-initial-data`.
-
-b. Create a new, blank local database::
-
-    createdb yourlocaldatabasename
-
-  It's normally easiest to name your local database after your app name, so that if you have multiple sites, you know which one relates to which.
-
-  Reconfigure ``DATABASES`` in your settings_local.py file to point to this new database.
-
-c. Activate your virtual environment::
-
-    source venv/bin/activate
-
-d. Run initial migrations on your blank local database::
-
-    dj migrate
-    dj createsuperuser
-
-e. Import your tournament data into your blank local database::
-
-    dj importtournament yourtournamentname --name "Your Tournament Name" --short-name "Tournament"
-
-  If your data's not clean, it might take a few attempts to get this right. We recommend either destroying and recreating the database (``dropdb``, ``createdb``), or wiping it using ``dj flush``, before retrying.
-
-f. Check it looks like how you expect it to look, by starting your local installation::
-
-    dj runserver
-
-5. Push the local database to Heroku
-------------------------------------
-
-Once you're happy with how your local import went, you can push the local database to Heroku.
-
-.. danger:: This step wipes the Heroku database clean, and replaces it with the contents of your local database. If you have any data on the Heroku site that isn't also in your local database, **that data will be lost** and will not be recoverable.
-
-.. tip:: If you have multiple Heroku sites, you may find that the ``heroku`` commands refuse to run, prompting you to specify an app. If so, add ``--app yourappname`` to each ``heroku`` command.
-
-a. Enable maintenance mode. This takes the site offline, to ensure that no-one can possibly create or change any data on the site while you're pushing a new database up::
-
-    heroku maintenance:on
-
-b. Reset the database. (Caution: This permanently deletes all information on your Heroku database!)
-
-  ::
-
-    heroku pg:reset
-
-c. Push your local database to Heroku::
-
-    heroku pg:push yourlocaldatabasename DATABASE
-
-  You might need to specify your local PostgreSQL credentials by adding ``PGUSER=yourusername PGPASSWORD=******** PGHOST=localhost`` to the *beginning* of that command. (This sets environment variables to those values for the duration of that one command.)
-
-d. Disable maintenance mode::
-
-    heroku maintenance:off
-
 
 Heroku options you may want to change
 =====================================
