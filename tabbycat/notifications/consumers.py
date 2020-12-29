@@ -1,12 +1,11 @@
 import json
 import random
-from smtplib import SMTPException
+from email.utils import formataddr
 
 from channels.consumer import SyncConsumer
 from django.conf import settings
 from django.core import mail
 from django.template import Context, Template
-from django.utils.translation import gettext_lazy as _
 from html2text import html2text
 
 from draw.models import Debate
@@ -32,25 +31,14 @@ class NotificationQueueConsumer(SyncConsumer):
     }
 
     def _send(self, event, messages, records):
-        try:
-            mail.get_connection().send_messages(messages)
-        except SMTPException as e:
-            self.send_error(e, _("Failed to send emails."), event)
-            raise
-        except ConnectionError as e:
-            self.send_error(e, _("Connection error sending emails."), event)
-            raise
-        else:
-            SentMessage.objects.bulk_create(records)
+        mail.get_connection().send_messages(messages)
+        SentMessage.objects.bulk_create(records)
 
     def _get_from_fields(self, t):
-        from_email = "%s <%s>" % (t.short_name, settings.DEFAULT_FROM_EMAIL)
-        reply_to = None
+        from_email = formataddr((t.short_name, settings.DEFAULT_FROM_EMAIL))
         if t.pref('reply_to_address'):
-            reply_to = "%s <%s>" % (t.pref('reply_to_name'), t.pref('reply_to_address'))
-
-            return from_email, [reply_to] # Django wants the reply_to as an array
-        return from_email, reply_to # Shouldn't have array of None
+            return from_email, [formataddr((t.pref('reply_to_name'), t.pref('reply_to_address')))]
+        return from_email, None  # Shouldn't have array of None
 
     def email(self, event):
         # Get database objects
@@ -96,13 +84,14 @@ class NotificationQueueConsumer(SyncConsumer):
         records = []
         for instance, recipient in data:
             hook_id = str(bulk_notification.id) + "-" + str(recipient.id) + "-" + str(random.randint(1000, 9999))
-            recipient_to = "%s <%s>" % (recipient.name, recipient.email)
             context = Context(instance)
             body = html_body.render(context)
             email = mail.EmailMultiAlternatives(
                 subject=subject.render(context), body=html2text(body),
-                from_email=from_email, to=[recipient_to], reply_to=reply_to,
-                headers={'X-SMTPAPI': json.dumps({'unique_args': {'hook-id': hook_id}})}, # SendGrid-specific 'hook-id'
+                from_email=from_email, to=[formataddr((recipient.name, recipient.email))],
+                reply_to=reply_to, headers={
+                    'X-SMTPAPI': json.dumps({'unique_args': {'hook-id': hook_id}}),  # SendGrid-specific 'hook-id'
+                },
             )
             email.attach_alternative(body, "text/html")
             messages.append(email)
@@ -130,8 +119,10 @@ class NotificationQueueConsumer(SyncConsumer):
             hook_id = str(bulk_notification.id) + "-" + str(recipient.pk) + "-" + str(random.randint(1000, 9999))
             email = mail.EmailMultiAlternatives(
                 subject=event['subject'], body=html2text(event['body']),
-                from_email=from_email, to=[recipient.email], reply_to=reply_to,
-                headers={'X-SMTPAPI': json.dumps({'unique_args': {'hook-id': hook_id}})}, # SendGrid-specific 'hook-id'
+                from_email=from_email, to=[formataddr((recipient.name, recipient.email))],
+                reply_to=reply_to, headers={
+                    'X-SMTPAPI': json.dumps({'unique_args': {'hook-id': hook_id}}),  # SendGrid-specific 'hook-id'
+                },
             )
             email.attach_alternative(event['body'], "text/html")
             messages.append(email)
