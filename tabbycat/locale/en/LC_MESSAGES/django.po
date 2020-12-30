@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-19 19:52-0300\n"
+"POT-Creation-Date: 2020-12-29 23:49-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgid "Application Programming Interface"
 msgstr ""
 
 #: checkins/apps.py:7 templates/nav/admin_nav.html:113
-#: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:92
+#: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:105
 msgid "Check-Ins"
 msgstr ""
 
@@ -184,7 +184,7 @@ msgstr ""
 msgid "Speakers"
 msgstr ""
 
-#: checkins/views.py:181 templates/nav/public_nav.html:132
+#: checkins/views.py:181 templates/nav/public_nav.html:145
 msgid "Adjudicators"
 msgstr ""
 
@@ -221,44 +221,52 @@ msgstr ""
 msgid "You are now checked in."
 msgstr ""
 
-#: settings/core.py:59
+#: settings/core.py:67
 msgid "Arabic"
 msgstr ""
 
-#: settings/core.py:60
+#: settings/core.py:68
 msgid "Bengali"
 msgstr ""
 
-#: settings/core.py:61
+#: settings/core.py:69
 msgid "English"
 msgstr ""
 
-#: settings/core.py:62
+#: settings/core.py:70
 msgid "Spanish"
 msgstr ""
 
-#: settings/core.py:63
+#: settings/core.py:71
 msgid "French"
 msgstr ""
 
-#: settings/core.py:64
+#: settings/core.py:72
+msgid "Indonesian"
+msgstr ""
+
+#: settings/core.py:73
 msgid "Japanese"
 msgstr ""
 
-#: settings/core.py:65
+#: settings/core.py:74
 msgid "Malay"
 msgstr ""
 
-#: settings/core.py:66
+#: settings/core.py:75
 msgid "Portuguese"
 msgstr ""
 
-#: settings/core.py:67
+#: settings/core.py:76
 msgid "Russian"
 msgstr ""
 
-#: settings/core.py:68
+#: settings/core.py:77
 msgid "Simplified Chinese"
+msgstr ""
+
+#: settings/core.py:78
+msgid "Translation"
 msgstr ""
 
 #: templates/admin/delete_protected_message.html:4
@@ -382,7 +390,7 @@ msgid "Need ballots?"
 msgstr ""
 
 #: templates/footer.html:53
-msgid "You can <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" rel=\"noreferrer\" target=\"_blank\"> customise and print</a> great ballots from your browser."
+msgid "Tabbycat is supported by the <a href=\"http://tabbycat-debate.org/\">Tabbycat Debate Association</a>, a non-profit for advancing open debate technology."
 msgstr ""
 
 #: templates/footer.html:66
@@ -463,7 +471,7 @@ msgid "Import Data"
 msgstr ""
 
 #: templates/nav/admin_nav.html:81 templates/nav/assistant_nav.html:18
-#: templates/nav/public_nav.html:162
+#: templates/nav/public_nav.html:175
 msgid "Participants"
 msgstr ""
 
@@ -479,7 +487,7 @@ msgstr ""
 msgid "Preformed Panels"
 msgstr ""
 
-#: templates/nav/admin_nav.html:103 templates/nav/public_nav.html:147
+#: templates/nav/admin_nav.html:103 templates/nav/public_nav.html:160
 msgid "Sides"
 msgstr ""
 
@@ -527,7 +535,7 @@ msgstr ""
 msgid "Bulk Update"
 msgstr ""
 
-#: templates/nav/admin_nav.html:179 templates/nav/public_nav.html:152
+#: templates/nav/admin_nav.html:179 templates/nav/public_nav.html:165
 msgid "Standings"
 msgstr ""
 
@@ -557,11 +565,11 @@ msgstr ""
 msgid "Replies"
 msgstr ""
 
-#: templates/nav/admin_nav.html:223 templates/nav/public_nav.html:142
+#: templates/nav/admin_nav.html:223 templates/nav/public_nav.html:155
 msgid "Motions"
 msgstr ""
 
-#: templates/nav/admin_nav.html:226 templates/nav/public_nav.html:157
+#: templates/nav/admin_nav.html:226 templates/nav/public_nav.html:170
 msgid "Diversity"
 msgstr ""
 
@@ -594,7 +602,7 @@ msgstr ""
 msgid "Enter Results"
 msgstr ""
 
-#: templates/nav/assistant_nav.html:11 templates/nav/public_nav.html:182
+#: templates/nav/assistant_nav.html:11 templates/nav/public_nav.html:195
 msgid "Enter Feedback"
 msgstr ""
 
@@ -602,7 +610,7 @@ msgstr ""
 msgid "Participants List"
 msgstr ""
 
-#: templates/nav/assistant_nav.html:25 templates/nav/public_nav.html:167
+#: templates/nav/assistant_nav.html:25 templates/nav/public_nav.html:180
 msgid "Institutions"
 msgstr ""
 
@@ -638,40 +646,48 @@ msgstr ""
 msgid "Adjudicator Tab"
 msgstr ""
 
-#: templates/nav/public_nav.html:50
+#: templates/nav/public_nav.html:53 templates/nav/public_nav.html:62
 msgid "Motions Tab"
 msgstr ""
 
-#: templates/nav/public_nav.html:59
+#: templates/nav/public_nav.html:56
+msgid "By round"
+msgstr ""
+
+#: templates/nav/public_nav.html:57
+msgid "Globally"
+msgstr ""
+
+#: templates/nav/public_nav.html:72
 msgid "Draws"
 msgstr ""
 
-#: templates/nav/public_nav.html:70
+#: templates/nav/public_nav.html:83
 msgid "No Draws Available"
 msgstr ""
 
-#: templates/nav/public_nav.html:78
+#: templates/nav/public_nav.html:91
 #, python-format
 msgid "Draw for %(round)s"
 msgstr ""
 
-#: templates/nav/public_nav.html:82
+#: templates/nav/public_nav.html:95
 msgid "Current Draws"
 msgstr ""
 
-#: templates/nav/public_nav.html:102 templates/nav/round_panel.html:57
+#: templates/nav/public_nav.html:115 templates/nav/round_panel.html:57
 msgid "Results"
 msgstr ""
 
-#: templates/nav/public_nav.html:120
+#: templates/nav/public_nav.html:133
 msgid "Break"
 msgstr ""
 
-#: templates/nav/public_nav.html:172
+#: templates/nav/public_nav.html:185
 msgid "Feedback Progress"
 msgstr ""
 
-#: templates/nav/public_nav.html:177
+#: templates/nav/public_nav.html:190
 msgid "Enter Ballot"
 msgstr ""
 

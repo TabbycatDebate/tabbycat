@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-18 17:59-0400\n"
+"POT-Creation-Date: 2020-12-29 23:49-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -382,7 +382,7 @@ msgid "choices"
 msgstr ""
 
 #: adjfeedback/models.py:176
-msgid "Permissible choices for select one/multiple fields (ignored for other fields)"
+msgid "Permissible choices for select one/multiple fields (ignored for other fields), delimit options with commas"
 msgstr ""
 
 #: adjfeedback/models.py:181
@@ -639,32 +639,32 @@ msgstr ""
 msgid "From unknown"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:85
+#: adjfeedback/templates/feedback_card.html:88
 #, python-format
 msgid "%(time)s"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:90
+#: adjfeedback/templates/feedback_card.html:93
 msgid "Unconfirmed feedback is not counted as having been submitted and does not affect this adjudicator's score."
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:95
+#: adjfeedback/templates/feedback_card.html:98
 msgid "Un-confirm"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:95
+#: adjfeedback/templates/feedback_card.html:98
 msgid "Confirm"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:100
+#: adjfeedback/templates/feedback_card.html:103
 msgid "Ignored feedback is counted as having been submitted, but does not affect this adjudicator's score."
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:105
+#: adjfeedback/templates/feedback_card.html:108
 msgid "Un-ignore"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:105
+#: adjfeedback/templates/feedback_card.html:108
 msgid "Ignore"
 msgstr ""
 
