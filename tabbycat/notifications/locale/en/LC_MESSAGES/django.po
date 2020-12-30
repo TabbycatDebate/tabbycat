@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-29 23:49-0400\n"
+"POT-Creation-Date: 2020-12-30 01:01-0400\n"
 "PO-Revision-Date: 2019-07-11 23:49\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -18,14 +18,6 @@ msgstr ""
 
 #: notifications/apps.py:7
 msgid "Notifications"
-msgstr ""
-
-#: notifications/consumers.py:38
-msgid "Failed to send emails."
-msgstr ""
-
-#: notifications/consumers.py:41
-msgid "Connection error sending emails."
 msgstr ""
 
 #: notifications/forms.py:11

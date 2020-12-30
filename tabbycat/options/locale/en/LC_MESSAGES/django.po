@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-29 23:49-0400\n"
+"POT-Creation-Date: 2020-12-30 01:01-0400\n"
 "PO-Revision-Date: 2019-07-11 23:49\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -1298,11 +1298,11 @@ msgid "Latest round first"
 msgstr ""
 
 #: options/preferences.py:1370
-msgid "Whether motions can be copied from one round to another."
+msgid "Whether motions can be reused from one round to another."
 msgstr ""
 
 #: options/preferences.py:1371
-msgid "Allow motion re-use"
+msgid "Allow motion reuse"
 msgstr ""
 
 #: options/preferences.py:1378 options/templates/preferences_index.html:114

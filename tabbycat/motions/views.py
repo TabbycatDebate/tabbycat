@@ -137,8 +137,8 @@ class CopyPreviousMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, Po
 
         RoundMotion.objects.bulk_create(new_motions)
         messages.success(request, ngettext(
-            "The motion was copied from the previous round.",
-            "The %(count)d motions were copied from the previous round.",
+            "Reused the motion from the previous round.",
+            "Reused the %(count)d motions from the previous round.",
             len(new_motions)) % {'count': len(new_motions)})
         return super().post(request, *args, **kwargs)
 

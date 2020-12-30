@@ -1367,8 +1367,8 @@ class PublicMotionsOrder(ChoicePreference):
 
 @tournament_preferences_registry.register
 class EnableMotionReuse(BooleanPreference):
-    help_text = _("Whether motions can be copied from one round to another.")
-    verbose_name = _("Allow motion re-use")
+    help_text = _("Whether motions can be reused from one round to another.")
+    verbose_name = _("Allow motion reuse")
     section = motions
     name = 'enable_motion_reuse'
     default = False
