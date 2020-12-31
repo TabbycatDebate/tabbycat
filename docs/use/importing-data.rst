@@ -25,21 +25,16 @@ To help you decide which to choose, here's a summary:
 |                      | or editing        |                    |                      |
 |                      | existing data     |                    |                      |
 +----------------------+-------------------+--------------------+----------------------+
-| ``importtournament`` | Large tournaments | Easier to repeat,  | Requires basic       |
-| **command**          |                   | can handle most    | knowledge of how to  |
-|                      |                   | formats of         | use a command line   |
-|                      |                   | information        | interface            |
-+----------------------+-------------------+--------------------+----------------------+
-| **Developing your    | Large tournaments | Easier to repeat,  | Requires background  |
-| own importer**       | with custom needs | will take          | in Python and        |
-|                      |                   | information in     | and learning about   |
-|                      |                   | whatever format it | the importer classes |
-|                      |                   | is already in      |                      |
-+----------------------+-------------------+--------------------+----------------------+
 | **API**              | Tournaments with  | Less manual        | Requires programming |
 |                      | external          | intervention       | knowledge or use of  |
 |                      | registration      |                    | an existing external |
 |                      | systems           |                    | application          |
++----------------------+-------------------+--------------------+----------------------+
+| **Developing your    | Large tournaments | Easier to repeat,  | Requires a           |
+| own importer**       | with custom needs | will take          | programming          |
+|                      |                   | information in     | background and       |
+|                      |                   | whatever format it | learning about the   |
+|                      |                   | is already in      | API schema           |
 +----------------------+-------------------+--------------------+----------------------+
 
 Demonstration data
@@ -85,38 +80,7 @@ The general pattern goes like this: Go to **Setup > Edit Database**, find the ty
 
 .. caution:: The Edit Database area is very powerful, and naturally if you mess things up, you can insert potentially catastrophic inconsistencies into the database. For participant information this is hard to do, but it's worth keeping in mind.
 
-.. _importtournament-command:
-
-The ``importtournament`` command on local installations
-=======================================================
-
-We've written a management command called ``importtournament`` to help automate the tournament set-up. The script, however, is neither foolproof nor comprehensive, so you might find you need to modify things slightly if your tournament structure is different from ours. Be prepared to try this a few times to get it to work. Nonetheless, this is probably the fastest way to set up a tournament.
-
-1. Copy and rename the ``data/demo`` folder
-2. See the CSV files in the new folder, and add/replace the data as per your tournament. Note that the institutions (*i.e.* first column) in the ``speakers.csv`` and ``adjudicators.csv`` files must match the institutions in the second column of the ``institutions.csv`` file. And that all CSV files must end with a blank line.
-3. Use this command, replacing ``YOUR_DATA_DIR`` with your new folder's name. (Square brackets indicate optional arguments; if you use them, omit the square brackets. All of them relate to the name of your tournament.)
-
-::
-
-  $ ./manage.py importtournament YOUR_DATA_DIR [--slug SLUG] [--short-name SHORT_NAME] [--name FULL_NAME]
-
-This script has a number of options. They're worth taking a look at before you run the script. For details, see::
-
-  $ ./manage.py importtournament --help
-
-4. Assuming the command completes successfully without errors, you should double check the data in the Django interface, as described above in :ref:`import-edit-database`. In particular you should check that the *Rounds* have the correct draw types and that silent rounds have been marked correctly.
-
-``importtournament`` on Heroku installs
-========================================
-
-Instructions for using the ``importtournament`` command on Heroku installations are in steps 4 and 5 of :ref:`install-heroku`. The recommended procedure is first to import the tournament into a local installation, :ref:`as described above <importtournament-command>`, and then to push the local database to Heroku using the ``heroku pg:push`` command.
-
-Developing your own importer
-============================
-
-If our suggested file formats cause you headaches, it might be easier to write your own importer. We have a generic importer framework that should make this easier, so for some tournaments it might (very conceivably) be faster to write your own importer to conform to your data, than it is to make your data conform to our importer. You need a background in Python in order to do this. For more details, see :ref:`tournament-data-importers`.
-
 Application Programming Interface (API)
 =======================================
 
-Participants can be imported in Tabbycat through the :ref:`API <api>`, using authenticated endpoints making ``POST`` requests to the relevant endpoints. There may be tournament registration software which interfaces with Tabbycat, or you may have to program one yourself, in any language.
+Participants can be imported in Tabbycat through the :ref:`API <api>`, using authenticated endpoints making ``POST`` requests to the relevant endpoints, as described in the ``api-schema.yml`` file. There are also many existing tools to import data from various filetypes and external systems, or you can create your own.
