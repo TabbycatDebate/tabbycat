@@ -58,6 +58,8 @@ class Command(BaseCommand):
         self.color = not options['no_color']
         self.dirpath = self.get_data_path(options['path'])
 
+        self.stdout.write("The importtournament command is deprecated and will be removed in a future version.")
+
         self.clean_shared_instances()
         self.make_tournament()
         loglevel = [logging.ERROR, logging.WARNING, DUPLICATE_INFO, logging.DEBUG][self.verbosity]
