@@ -3,6 +3,7 @@ from django.contrib import admin, messages
 from django.db.models import Prefetch
 from django.utils.translation import gettext, ngettext
 from django.utils.translation import gettext_lazy as _
+from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
 from draw.models import DebateTeam
 from utils.admin import custom_titled_filter
@@ -45,7 +46,7 @@ class QuestionForm(forms.ModelForm):
 
 
 @admin.register(AdjudicatorFeedbackQuestion)
-class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
+class AdjudicatorFeedbackQuestionAdmin(DynamicArrayMixin, admin.ModelAdmin):
     form = QuestionForm
     list_display = ('reference', 'text', 'seq', 'tournament', 'answer_type',
                     'required', 'from_adj', 'from_team')
