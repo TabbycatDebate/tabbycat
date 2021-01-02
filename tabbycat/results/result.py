@@ -814,6 +814,7 @@ class ConsensusDebateResult(BaseDebateResult):
     # BP Elimination-specific methods
     # --------------------------------------------------------------------------
 
+    @property
     def is_elimination(self):
         return not hasattr(self.scoresheet, 'ranked_sides')
 
