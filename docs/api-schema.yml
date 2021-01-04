@@ -2830,6 +2830,10 @@ components:
         - priority
       type: object
       properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
         name:
           title: Name
           description: 'Name to be displayed, e.g., "ESL"'

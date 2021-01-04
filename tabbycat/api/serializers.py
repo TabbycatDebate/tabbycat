@@ -220,7 +220,7 @@ class BreakCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BreakCategory
-        fields = ('name', 'slug', 'seq', 'break_size', 'is_general', 'priority',
+        fields = ('id', 'name', 'slug', 'seq', 'break_size', 'is_general', 'priority',
                   'limit', 'rule', 'url', '_links')
 
 
