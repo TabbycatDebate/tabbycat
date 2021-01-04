@@ -220,8 +220,7 @@ class BreakCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BreakCategory
-        fields = ('id', 'name', 'slug', 'seq', 'break_size', 'is_general', 'priority',
-                  'limit', 'rule', 'url', '_links')
+        exclude = ('tournament', 'breaking_teams')
 
 
 class SpeakerCategorySerializer(serializers.ModelSerializer):
@@ -236,7 +235,7 @@ class SpeakerCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SpeakerCategory
-        fields = ('name', 'slug', 'seq', 'limit', 'public', 'url', '_links')
+        exclude = ('tournament',)
 
 
 class BaseEligibilitySerializer(serializers.ModelSerializer):
@@ -330,8 +329,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Speaker
-        fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
-                  'categories', 'url_key', '_links', 'team')
+        fields = '__all__'
 
     def create(self, validated_data):
         url_key = validated_data.pop('url_key', None)
@@ -401,9 +399,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Adjudicator
-        fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
-                  'institution', 'base_score', 'breaking', 'trainee', 'independent', 'adj_core',
-                  'institution_conflicts', 'team_conflicts', 'adjudicator_conflicts', 'url_key', '_links')
+        exclude = ('tournament', 'round_availabilities', 'venue_constraints')
 
     def create(self, validated_data):
         url_key = validated_data.pop('url_key', None)
@@ -423,9 +419,9 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
 class TeamSerializer(serializers.ModelSerializer):
     class TeamSpeakerSerializer(SpeakerSerializer):
-        class Meta(SpeakerSerializer.Meta):
-            fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
-                      'categories', 'url_key', '_links')
+        class Meta:
+            model = Speaker
+            exclude = ('team',)
 
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-team-detail')
     institution = serializers.HyperlinkedRelatedField(
@@ -447,9 +443,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = ('url', 'id', 'reference', 'short_reference', 'code_name', 'emoji', 'short_name', 'long_name',
-                  'institution', 'speakers', 'use_institution_prefix', 'break_categories',
-                  'institution_conflicts')
+        exclude = ('tournament', 'round_availabilities', 'venue_constraints', 'type')
 
     def __init__(self, *args, **kwargs):
         self.fields['speakers'] = self.TeamSpeakerSerializer(*args, many=True, required=False, **kwargs)
