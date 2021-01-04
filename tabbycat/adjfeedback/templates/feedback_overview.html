@@ -12,16 +12,15 @@
     {% endblocktrans %}
   {% elif pref.feedback_paths == 'with-p-on-c' %}
     {% blocktrans trimmed asvar p1 %}
-      The current <a href="{{ option_url }}" class="alert-link">feedback
-      configuration</a> allows and expects both chairs and panellists to submit
-      feedback on each other, and also chairs to submit on trainees.
+      The current <a href="{{ option_url }}" class="alert-link">feedback configuration</a> allows and expects both chairs and panellists to submit feedback on each other, and also chairs to submit feedback on trainees.
+    {% endblocktrans %}
+  {% elif pref.feedback_paths == 'with-t-on-c' %}
+    {% blocktrans trimmed asvar p1 %}
+      The current <a href="{{ option_url }}" class="alert-link">feedback configuration</a> allows and expects both panellists and trainees to submit feedback on chairs, and chairs to submit feedback on every other member of the panel (including trainees).
     {% endblocktrans %}
   {% elif pref.feedback_paths == 'all-adjs' %}
     {% blocktrans trimmed asvar p1 %}
-      The current <a href="{{ option_url }}" class="alert-link">feedback
-      configuration</a> allows and expects all adjudicators (including trainees)
-      to submit feedback on every other member of the panel (including
-      trainees).
+      The current <a href="{{ option_url }}" class="alert-link">feedback configuration</a> allows and expects all adjudicators (including trainees) to submit feedback on every other member of the panel (including trainees).
     {% endblocktrans %}
   {% endif %}
   {% include "components/explainer-card.html" with type="info" %}
