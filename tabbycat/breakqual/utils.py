@@ -104,11 +104,12 @@ def calculate_live_thresholds(bc, tournament, round):
         team_scores = bc.team_set.filter(
             debateteam__debate__round__seq__lt=round.seq,
             debateteam__teamscore__ballot_submission__confirmed=True,
-        ).annotate(score=Sum('debateteam__teamscore__points')).values_list('score', flat=True)
+            debateteam__teamscore__points__isnull=False,
+        ).annotate(score=Sum('debateteam__teamscore__points')).order_by('-score').values_list('score', flat=True)
         team_scores = list(team_scores)
         team_scores += [0] * (bc.team_set.count() - len(team_scores))
     else:
-        team_scores = None
+        team_scores = []
 
     if bc.break_size <= 1 or total_teams == 0:
         return None, None # Bad input
