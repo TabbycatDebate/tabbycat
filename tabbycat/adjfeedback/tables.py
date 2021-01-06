@@ -2,10 +2,9 @@ import logging
 
 from django.utils.translation import gettext as _, ngettext
 
+from participants.models import Adjudicator, Team
 from utils.misc import reverse_tournament
 from utils.tables import TabbycatTableBuilder
-
-from .progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 
 logger = logging.getLogger(__name__)
 
@@ -134,7 +133,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
     def add_feedback_progress_columns(self, progress_list, key="P"):
         def _owed_cell(progress):
-            owed = progress.num_unsubmitted()
+            owed = progress.num_missing
             cell = {
                 'text': owed,
                 'sort': owed,
@@ -153,16 +152,14 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         if self._show_record_links:
 
             def _record_link(progress):
-                if isinstance(progress, FeedbackProgressForTeam):
+                if isinstance(progress, Team):
                     url_name = 'participants-team-record' if self.admin else 'participants-public-team-record'
-                    pk = progress.team.pk
-                elif isinstance(progress, FeedbackProgressForAdjudicator):
+                elif isinstance(progress, Adjudicator):
                     url_name = 'participants-adjudicator-record' if self.admin else 'participants-public-adjudicator-record'
-                    pk = progress.adjudicator.pk
                 else:
                     logger.error("Unrecognised progress type: %s", progress.__class__.__name__)
                     return ''
-                return reverse_tournament(url_name, self.tournament, kwargs={'pk': pk})
+                return reverse_tournament(url_name, self.tournament, kwargs={'pk': progress.pk})
 
             owed_link_header = {
                 'key': 'submitted',

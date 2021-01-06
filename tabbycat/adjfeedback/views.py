@@ -30,7 +30,7 @@ from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from .forms import make_feedback_form_class, UpdateAdjudicatorScoresForm
 from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from .prefetch import populate_debate_adjudicators
-from .progress import get_feedback_progress
+from .progress import get_feedback_progress_statistics
 from .tables import FeedbackTableBuilder
 from .utils import get_feedback_overview
 
@@ -678,14 +678,14 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
 
     def get_feedback_progress(self):
         if not hasattr(self, "_feedback_progress_result"):
-            self._feedback_progress_result = get_feedback_progress(self.tournament)
+            self._feedback_progress_result = get_feedback_progress_statistics(self.tournament)
         return self._feedback_progress_result
 
     def get_page_subtitle(self):
         teams_progress, adjs_progress = self.get_feedback_progress()
-        all_progress = teams_progress + adjs_progress
-        total_missing = sum([progress.num_unsubmitted() for progress in all_progress])
-        total_expected = sum([progress.num_expected() for progress in all_progress])
+        all_progress = list(teams_progress) + list(adjs_progress)
+        total_missing = sum([progress.num_missing for progress in all_progress])
+        total_expected = sum([progress.num_expected for progress in all_progress])
 
         try:
             percentage_fulfilled = (1 - total_missing / total_expected) * 100
@@ -699,19 +699,17 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
         ) % {'nmissing': total_missing, 'fulfilled': percentage_fulfilled}
 
     def get_tables(self):
-        teams_progress, adjs_progress = self.get_feedback_progress()
+        teams, adjudicators = self.get_feedback_progress()
 
         adjs_table = FeedbackTableBuilder(view=self, title=_("From Adjudicators"),
             sort_key="owed", sort_order="desc")
-        adjudicators = [progress.adjudicator for progress in adjs_progress]
         adjs_table.add_adjudicator_columns(adjudicators, show_metadata=False)
-        adjs_table.add_feedback_progress_columns(adjs_progress)
+        adjs_table.add_feedback_progress_columns(adjudicators)
 
         teams_table = FeedbackTableBuilder(view=self, title=_("From Teams"),
             sort_key="owed", sort_order="desc")
-        teams = [progress.team for progress in teams_progress]
         teams_table.add_team_columns(teams)
-        teams_table.add_feedback_progress_columns(teams_progress)
+        teams_table.add_feedback_progress_columns(teams)
 
         return [adjs_table, teams_table]
 
