@@ -2,6 +2,16 @@
 Change Log
 ==========
 
+2.5.6
+-----
+*Release date: TBD*
+
+- Fixed preliminary BP results showing as elimination in Latest Results
+- Removed break category highlights from elimination round allocators (BACKEND-4DQ, BACKEND-4DR)
+- Reduced checking the order of rounds for debate results (`#1704 <https://github.com/TabbycatDebate/tabbycat/issues/1704>`_)
+- Updated Sentry DSNs
+
+
 2.5.5
 -----
 *Release date: 27 December 2020*
