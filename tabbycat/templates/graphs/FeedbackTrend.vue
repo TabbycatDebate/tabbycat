@@ -52,11 +52,6 @@ function initChart (vueContext) {
     // Set tick increments
     .tickValues(d3.range(vueContext.cellData.minScore, vueContext.cellData.maxScore + 0.5, 1))
 
-  // Define the div for the tooltip
-  const div = d3.select('body').append('div')
-    .attr('class', 'd3-tooltip tooltip')
-    .style('opacity', 0)
-
   const element = $(vueContext.$el).children('.d3-graph')[0]
   const svg = d3.select(element).insert('svg', ':first-child')
     .attr('width', vueContext.width + vueContext.padding + vueContext.padding)
@@ -108,14 +103,16 @@ function initChart (vueContext) {
     .attr('cy', d => yScale(d.y))
     .attr('r', 5) // Size of circle
     .attr('class', d => `hoverable position-display d3-hover-black ${d.position_class}`)
-    .on('mouseover', (event, d) => {
-      div.style('opacity', 0.9)
-      div.html(`<div class='tooltip-inner'>Received a ${d.y} as a ${d.position} in R${d.x}</div>`)
-        .style('left', `${event.pageX}px`)
-        .style('top', `${event.pageY - 28}px`)
+    .on('mouseover', (d, event) => {
+      svg.append('text')
+        .attr('class', 'd3-tooltip tooltip-inner')
+        .attr('opacity', 0.9)
+        .attr('x', xScale(d.x))
+        .attr('y', ((y, max) => { return (y % max + max) % max })(yScale(d.y) - 28, vueContext.height))
+        .text(`Received a ${d.y} as a ${d.position} in R${d.x}`)
     })
-    .on('mouseout', () => {
-      div.style('opacity', 0)
+    .on('mouseout', (d, event) => {
+      d3.select('.tooltip-inner').remove()
     })
 }
 
