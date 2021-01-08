@@ -39,7 +39,7 @@ class Command(TournamentCommand):
 
             # Find the last adj save before venue allocation
             venues_last_allocated = queryset.filter(type=ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE).last()
-            adj_saves = queryset.filter(type=ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE)
+            adj_saves = queryset.filter(type=ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE)
             if venues_last_allocated:
                 adj_saves = adj_saves.filter(timestamp__lte=venues_last_allocated.timestamp)
             last_adj_save = adj_saves.last()
@@ -55,8 +55,8 @@ class Command(TournamentCommand):
                     ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_DEBATES_AUTO,
                 ]).first(),
                 last_adj_save,
-                queryset.filter(type=ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE).last(),
-                # "start at" time goes here
+                venues_last_allocated,
+                # "start at" times goes here
                 queryset.filter(type__in=[
                     ActionLogEntry.ACTION_TYPE_BALLOT_CREATE,
                     ActionLogEntry.ACTION_TYPE_BALLOT_SUBMIT,
@@ -68,11 +68,11 @@ class Command(TournamentCommand):
                 ]).last(),
                 queryset.filter(type=ActionLogEntry.ACTION_TYPE_BALLOT_CONFIRM).last(),
             ]
-            times = [entry.timestamp if entry else None for entry in entries]
-            times = [timezone.localtime(time) if time else None for time in times]
+            times = [timezone.localtime(entry.timestamp) if entry else None for entry in entries]
+            date = next((t for t in times[:5][::-1] if t is not None), None)
 
-            if round.starts_at:
-                starts_at = datetime.datetime.combine(times[4].date(), round.starts_at)
+            if round.starts_at and date is not None:
+                starts_at = datetime.datetime.combine(date.date(), round.starts_at)
                 times.insert(5, starts_at - datetime.timedelta(minutes=15))
                 times.insert(6, starts_at)
             else:
