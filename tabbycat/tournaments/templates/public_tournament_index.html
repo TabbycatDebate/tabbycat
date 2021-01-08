@@ -109,7 +109,7 @@
         {% else %}
           {% trans "The draw for the next round has yet to be released" as draw_for_round_text %}
         {% endif %}
-        {% include "components/item-info.html" with icon="eye-off" text=draw_for_round_text type="muted" %}
+        {% include "components/item-info.html" with icon="eye-off" text=draw_for_round_text type="muted" nopad=True %}
       {% endif %}
     {% endif %}
 
