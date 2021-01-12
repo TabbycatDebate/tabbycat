@@ -2,6 +2,19 @@
 Change Log
 ==========
 
+2.5.6
+-----
+*Release date: 13 January 2021*
+
+- Fixed preliminary BP results showing as elimination in Latest Results
+- Removed break category highlights from elimination round allocators (BACKEND-4DQ, BACKEND-4DR)
+- Reduced checking the order of rounds for debate results (`#1704 <https://github.com/TabbycatDebate/tabbycat/issues/1704>`_)
+- Updated Sentry DSNs
+- Made participant submitter nullable in API endpoints
+- Filtered venues and venue categories without assigned tournament from API endpoints
+- Corrected the ``keytimes`` command with proper lookups, and better deal with null values (BACKEND-4E3)
+
+
 2.5.5
 -----
 *Release date: 27 December 2020*
