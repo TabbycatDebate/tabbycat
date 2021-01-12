@@ -24,7 +24,7 @@ from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import TournamentFromUrlMixin
 from tournaments.models import Round, Tournament
-from venues.models import Venue
+from venues.models import Venue, VenueCategory
 
 from . import serializers
 from .mixins import AdministratorAPIMixin, PublicAPIMixin, RoundAPIMixin, TournamentAPIMixin, TournamentPublicAPIMixin
@@ -257,14 +257,18 @@ class VenueViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.VenueSerializer
 
     def get_queryset(self):
-        return super().get_queryset().select_related('tournament').prefetch_related('venuecategory_set', 'venuecategory_set__tournament')
+        # Tournament must exist for URLs
+        return super().get_queryset().select_related('tournament').prefetch_related(
+            Prefetch('venuecategory_set', queryset=VenueCategory.objects.select_related('tournament').filter(tournament__isnull=False)))
 
 
 class VenueCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.VenueCategorySerializer
 
     def get_queryset(self):
-        return super().get_queryset().select_related('tournament').prefetch_related('venues', 'venues__tournament')
+        # Tournament must exist for URLs
+        return super().get_queryset().select_related('tournament').prefetch_related(
+            Prefetch('venues', queryset=Venue.objects.select_related('tournament').filter(tournament__isnull=False)))
 
 
 class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
