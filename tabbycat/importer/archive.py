@@ -70,6 +70,7 @@ class Exporter:
 
             round_tag = SubElement(self.root, 'round', {
                 'name': round.name,
+                'abbreviation': round.abbreviation,
                 'elimination': str(round.stage == Round.STAGE_ELIMINATION).lower(),
                 'feedback-weight': str(round.feedback_weight),
             })
@@ -555,7 +556,7 @@ class Importer:
 
             round_obj = Round(
                 tournament=self.tournament, seq=i, completed=True, name=round.get('name'),
-                abbreviation=round.get('name')[:10], stage=round_stage, draw_type=draw_type,
+                abbreviation=round.get('abbreviation', round.get('name')[:10]), stage=round_stage, draw_type=draw_type,
                 draw_status=Round.STATUS_RELEASED, feedback_weight=round.get('feedback-weight', 0),
                 starts_at=round.get('start'))
             rounds.append(round_obj)
