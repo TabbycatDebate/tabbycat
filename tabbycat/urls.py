@@ -80,6 +80,10 @@ urlpatterns = [
     path('api',
         include('api.urls')),
 
+    # Archive import/export
+    path('archive/',
+        include('importer.urls_archive')),
+
     # Tournament URLs
     path('<slug:tournament_slug>/',
         include('tournaments.urls')),

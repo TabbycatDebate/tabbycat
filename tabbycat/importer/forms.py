@@ -389,3 +389,9 @@ class ImportAdjudicatorsNumbersForm(BaseNumberForEachInstitutionForm):
         "(These numbers currently add to %(given)d.) "
         "Try splitting your import into smaller chunks.",
         'max_allowed')
+
+
+class ArchiveImportForm(forms.Form):
+
+    xml = forms.CharField(required=True, label=_("XML"),
+        widget=forms.Textarea(), help_text=_("The Debate XML archive to parse")) # attrs={'rows': 20}
