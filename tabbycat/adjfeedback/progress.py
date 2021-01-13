@@ -399,6 +399,9 @@ def get_feedback_progress_statistics(tournament):
     when_chair_filter = Q(debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR) & exclude_self_filter
     adj_expected_filter = {
         'minimal': when_chair_filter,
+        'with-t-on-c': ~Q(debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR) & Q(
+            debateadjudicator__debate__debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR,
+        ) | when_chair_filter,
         'with-p-on-c': Q(
             debateadjudicator__type=DebateAdjudicator.TYPE_PANEL,
             debateadjudicator__debate__debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR,
