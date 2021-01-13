@@ -173,7 +173,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
         base_field=models.TextField(),
         blank=True,
         verbose_name=_("choices"),
-        help_text=_("Permissible choices for select one/multiple fields (ignored for other fields)"),
+        help_text=_("Permissible choices for select one/multiple fields (ignored for other fields), delimit options with commas"),
         default=list)
 
     class Meta:

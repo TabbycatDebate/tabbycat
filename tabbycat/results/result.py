@@ -68,14 +68,11 @@ def get_result_class(round, tournament=None):
     if ballots_per_debate == 'per-adj' and teams_in_debate == 'two':
         if scores_in_debate == 'prelim' and round.is_break_round or scores_in_debate == 'never':
             return DebateResultByAdjudicator
-        else:
-            return DebateResultByAdjudicatorWithScores
+        return DebateResultByAdjudicatorWithScores
     elif ballots_per_debate == 'per-debate':
-        uses_scores_in_break = teams_in_debate == 'bp' or scores_in_debate == 'prelim'
-        if uses_scores_in_break and round.is_break_round or scores_in_debate == 'never':
+        if ((teams_in_debate == 'bp' or scores_in_debate == 'prelim') and round.is_break_round) or scores_in_debate == 'never':
             return ConsensusDebateResult
-        else:
-            return ConsensusDebateResultWithScores
+        return ConsensusDebateResultWithScores
     else:
         raise ValueError("Invalid combination for 'ballots_per_debate' and 'teams_in_debate' preferences: %s, %s" %
                 (ballots_per_debate, teams_in_debate))
@@ -762,7 +759,7 @@ class ConsensusDebateResult(BaseDebateResult):
     def init_blank_buffer(self):
         super().init_blank_buffer()
         self.scoresheet = self.scoresheet_class(positions=getattr(self, 'positions', None))
-        if len(self.sides) == 4 and self.debate.round.is_last:
+        if self.scoresheet_class is BPEliminationScoresheet and self.debate.round.is_last:
             self.scoresheet.number_winners = 1
 
     def is_complete(self):
@@ -814,6 +811,7 @@ class ConsensusDebateResult(BaseDebateResult):
     # BP Elimination-specific methods
     # --------------------------------------------------------------------------
 
+    @property
     def is_elimination(self):
         return not hasattr(self.scoresheet, 'ranked_sides')
 

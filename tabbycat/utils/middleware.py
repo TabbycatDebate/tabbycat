@@ -14,7 +14,7 @@ class DebateMiddleware(object):
         return response
 
     def process_view(self, request, view_func, view_args, view_kwargs):
-        if 'tournament_slug' in view_kwargs:
+        if 'tournament_slug' in view_kwargs and request.path.split('/')[1] != 'api':
             cached_key = "%s_%s" % (view_kwargs['tournament_slug'], 'object')
             cached_tournament_object = cache.get(cached_key)
 

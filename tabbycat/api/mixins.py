@@ -1,17 +1,24 @@
 import operator
 
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAdminUser
 
-from tournaments.mixins import RoundFromUrlMixin, TournamentFromUrlMixin
+from tournaments.models import Round, Tournament
 
 from .permissions import APIEnabledPermission, IsAdminOrReadOnly, PublicIfReleasedPermission, PublicPreferencePermission
 
 
-class TournamentAPIMixin(TournamentFromUrlMixin):
+class TournamentAPIMixin:
     tournament_field = 'tournament'
 
     access_operator = operator.eq
     access_setting = True
+
+    @property
+    def tournament(self):
+        if not hasattr(self, "_tournament"):
+            self._tournament = get_object_or_404(Tournament, slug=self.kwargs['tournament_slug'])
+        return self._tournament
 
     def lookup_kwargs(self):
         return {self.tournament_field: self.tournament}
@@ -28,9 +35,15 @@ class TournamentAPIMixin(TournamentFromUrlMixin):
         return context
 
 
-class RoundAPIMixin(TournamentAPIMixin, RoundFromUrlMixin):
+class RoundAPIMixin(TournamentAPIMixin):
     tournament_field = 'round__tournament'
     round_field = 'round'
+
+    @property
+    def round(self):
+        if not hasattr(self, "_round"):
+            self._round = get_object_or_404(Round, tournament=self.tournament, seq=self.kwargs['round_seq'])
+        return self._round
 
     def perform_create(self, serializer):
         serializer.save(**{self.round_field: self.round})

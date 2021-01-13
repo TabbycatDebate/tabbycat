@@ -2,6 +2,38 @@
 Change Log
 ==========
 
+2.5.6
+-----
+*Release date: 13 January 2021*
+
+- Fixed preliminary BP results showing as elimination in Latest Results
+- Removed break category highlights from elimination round allocators (BACKEND-4DQ, BACKEND-4DR)
+- Reduced checking the order of rounds for debate results (`#1704 <https://github.com/TabbycatDebate/tabbycat/issues/1704>`_)
+- Updated Sentry DSNs
+- Made participant submitter nullable in API endpoints
+- Filtered venues and venue categories without assigned tournament from API endpoints
+- Corrected the ``keytimes`` command with proper lookups, and better deal with null values (BACKEND-4E3)
+
+
+2.5.5
+-----
+*Release date: 27 December 2020*
+
+- Corrected ordinals displaying HTML entities (`#1691 <https://github.com/TabbycatDebate/tabbycat/issues/1691>`_)
+- Removed interference between "average individual speaker score" and "team points" with other metrics
+- Fixed failing feedback creation through the API
+- Prevented team creation through API failing if speakers not provided
+- Clarified format of adjudicator feedback question choices in documentation
+
+
+2.5.4
+-----
+*Release date: 14 December 2020*
+
+- Corrected a conflict in ballots when using declared winners without scores
+- Removed tournament/round caching from API views
+
+
 2.5.3
 -----
 *Release date: 7 December 2020*

@@ -945,7 +945,7 @@ class SingleEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        num_advancing = 2 if self.tournament.pref('teams_in_debate') == 'bp' and not self.debate.round.is_last else 1
+        num_advancing = int(self.tournament.pref('teams_in_debate') == 'bp' and not self.debate.round.is_last) + 1
         if self._fieldname_advancing() in cleaned_data and len(cleaned_data[self._fieldname_advancing()]) != num_advancing:
             self.add_error(self._fieldname_advancing(), forms.ValidationError(
                 ngettext(

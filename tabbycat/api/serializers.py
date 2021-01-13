@@ -463,7 +463,7 @@ class TeamSerializer(serializers.ModelSerializer):
         if len(validated_data['short_reference']) == 0:
             validated_data['short_reference'] = validated_data['reference'][:34]
 
-        speakers_data = validated_data.pop('speakers')
+        speakers_data = validated_data.pop('speakers', [])
         break_categories = validated_data.pop('break_categories')
 
         emoji, code_name = pick_unused_emoji()
@@ -706,7 +706,7 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
             self.source_attrs = [self.field_source_name]  # Must set
 
             # Was the value already entered?
-            if isinstance(data, (model for model, field in self.models.values())):
+            if isinstance(data, tuple(model for model, field in self.models.values())):
                 return data
 
             try:
@@ -779,7 +779,7 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
     url = fields.AdjudicatorFeedbackIdentityField(view_name='api-feedback-detail')
     adjudicator = fields.TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail', queryset=Adjudicator.objects.all())
     source = SubmitterSourceField(source='*')
-    participant_submitter = ParticipantSourceField()
+    participant_submitter = ParticipantSourceField(allow_null=True)
     debate = DebateHyperlinkedRelatedField(view_name='api-pairing-detail', queryset=Debate.objects.all(), lookup_url_kwarg='debate_pk')
     answers = FeedbackAnswerSerializer(many=True, source='get_answers', required=False)
 
@@ -995,7 +995,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         queryset=Motion.objects.all())
     url = fields.DebateHyperlinkedIdentityField(view_name='api-ballot-detail')
     participant_submitter = fields.TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail',
-        queryset=Adjudicator.objects.all(), source='participant_submitter.adjudicator')
+        queryset=Adjudicator.objects.all(), source='participant_submitter.adjudicator', allow_null=True)
 
     class Meta:
         model = BallotSubmission
