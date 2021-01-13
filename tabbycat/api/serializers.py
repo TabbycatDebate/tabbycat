@@ -862,7 +862,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                 side = serializers.CharField()
                 points = serializers.IntegerField(required=False)
                 win = serializers.BooleanField(required=False)
-                score = serializers.FloatField(required=False)
+                score = serializers.FloatField(required=False, allow_null=True)
 
                 team = fields.TournamentHyperlinkedRelatedField(
                     view_name='api-team-detail',
