@@ -57,23 +57,25 @@
     {% endif %}
 
     {% if object.adjudicator and pref.participant_ballots == 'private-urls' %}
-      {% tournamenturl 'results-public-ballotset-new-randomised' url_key as url %}
-      {% trans  "Submit Ballot" as text %}
-      {% include "components/item-action.html" %}
+      {% for round in tournament.current_rounds %}
+        {% roundurl 'results-public-ballotset-new-randomised' url_key as url %}
+        {% blocktrans trimmed with round=round.name asvar text %}Submit Ballot for {{ round }}{% endblocktrans %}
+        {% include "components/item-action.html" %}
+      {% empty %}
+        {% trans "There are no current rounds" as text %}
+        {% include "components/item-info.html" with type='info' %}
+      {% endfor %}
     {% endif %}
 
-    {% if object.adjudicator and pref.participant_feedback == 'private-urls' %}
-      {% tournamenturl 'adjfeedback-public-add-from-adjudicator-randomised' url_key as url %}
+    {% if pref.participant_feedback == 'private-urls' %}
       {% trans "Submit Feedback" as text %}
+      {% if object.adjudicator %}
+        {% tournamenturl 'adjfeedback-public-add-from-adjudicator-randomised' url_key as url %}
+      {% else %}
+        {% tournamenturl 'adjfeedback-public-add-from-team-randomised' url_key as url %}
+      {% endif %}
       {% include "components/item-action.html" %}
     {% endif %}
-
-    {% if object.speaker and pref.participant_feedback == 'private-urls' %}
-      {% tournamenturl 'adjfeedback-public-add-from-team-randomised' url_key as url %}
-      {% trans "Submit Feedback" as text %}
-      {% include "components/item-action.html" %}
-    {% endif %}
-
   </div>
 
   <div class="card-deck">

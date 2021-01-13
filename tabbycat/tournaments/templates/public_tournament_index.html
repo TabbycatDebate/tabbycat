@@ -184,9 +184,11 @@
     {% endif %}
 
     {% if pref.participant_ballots == 'public' %}
-      {% trans "Enter Ballot" as text %}
-      {% tournamenturl 'results-public-ballot-submission-index' as url %}
-      {% include "components/item-action.html" with icon="plus-circle" %}
+      {% for round in tournament.current_rounds %}
+        {% blocktrans trimmed with round=round.name asvar text %}Enter Ballot for {{round }}{% endblocktrans %}
+        {% roundurl 'results-public-ballot-submission-index' as url %}
+        {% include "components/item-action.html" with icon="plus-circle" %}
+      {% endfor %}
     {% endif %}
 
     {% if pref.participant_feedback == 'public' %}
