@@ -42,7 +42,7 @@
     "feather-icons": "^4.28.0",
     "inter-ui": "^3.15.0",
     "jquery": "^3.5.1",
-    "jquery-validation": "^1.19.2",
+    "jquery-validation": "^1.19.3",
     "jsbarcode": "^3.11.3",
     "livereload": "^0.9.1",
     "lodash": "^4.17.20",
