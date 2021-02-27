@@ -496,6 +496,8 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['password'] = True
+        kwargs['result'] = self.result
+        kwargs['vetos'] = self.vetos
         return kwargs
 
     def add_success_message(self):
@@ -525,6 +527,22 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
             submitter_type=BallotSubmission.SUBMITTER_PUBLIC, partial=self.tournament.pref('individual_ballots'),
             private_url=self.private_url, participant_submitter=self.object)
 
+        self.result = DebateResult(self.ballotsub, round=self.round, tournament=self.tournament)
+        self.vetos = None
+        if self.ballotsub.partial:
+            former_ballot = self.debate.ballotsubmission_set.filter(discarded=False).exclude(
+                participant_submitter=self.object,
+            ).prefetch_related(
+                'speakerscore_set', 'speakerscore_set__debate_team',
+                'debateteammotionpreference_set', 'debateteammotionpreference_set__debate_team',
+            ).order_by('-confirmed', '-version').first()
+            self.set_speakers(former_ballot)
+            self.set_motions(former_ballot)
+            if self.prefilled:
+                messages.warning(self.request, _(
+                    "Some information, such as speaker order, shown is based on a previous ballot. "
+                    "If anything is incorrect, please correct it and contact the tab team."))
+
         if not self.debate.adjudicators.has_chair:
             return self.error_page(_("Your debate doesn't have a chair, so you can't enter results for it. "
                     "Please contact a tab room official."))
@@ -533,6 +551,23 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
                 self.tournament.pref('teams_in_debate') == 'two') and not self.debate.sides_confirmed:
             return self.error_page(_("It looks like the sides for this debate haven't yet been confirmed, "
                     "so you can't enter results for it. Please contact a tab room official."))
+
+    def set_speakers(self, former_ballot):
+        if former_ballot.speakerscore_set.exists():
+            for ss in former_ballot.speakerscore_set.all():
+                self.result.set_speaker(ss.debate_team.side, ss.position, ss.speaker)
+                self.result.set_ghost(ss.debate_team.side, ss.position, ss.ghost)
+            self.prefilled = True
+
+    def set_motions(self, former_ballot):
+        if self.tournament.pref('enable_motions'):
+            self.ballotsub.motion = former_ballot.motion
+            self.prefilled = True
+        if self.tournament.pref('motion_vetoes_enabled'):
+            self.vetos = {}
+            for dtmp in former_ballot.debateteammotionpreference_set.all():
+                self.vetos[dtmp.debate_team.side] = dtmp.motion
+            self.prefilled = True
 
     def error_page(self, message):
         # This bypasses the normal TemplateResponseMixin and ContextMixin

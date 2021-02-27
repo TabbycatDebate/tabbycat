@@ -97,11 +97,8 @@ def DebateResult(ballotsub, *args, **kwargs):  # noqa: N802 (factory function)
     of the returned instance. The caller can do so by checking the `.is_voting`
     attribute of the returned instance.
     """
-    r = ballotsub.debate.round
-    tournament = kwargs.pop('tournament', None)
-    if tournament is None:
-        tournament = ballotsub.debate.round.tournament
-
+    r = kwargs.pop('round', ballotsub.debate.round)
+    tournament = kwargs.pop('tournament', r.tournament)
     result_class = get_result_class(ballotsub, r, tournament)
     return result_class(ballotsub, *args, **kwargs)
 

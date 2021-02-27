@@ -130,6 +130,8 @@ class BaseResultForm(forms.Form):
     confirmed = forms.BooleanField(required=False)
     discarded = forms.BooleanField(required=False)
 
+    result_class = None
+
     def __init__(self, ballotsub, password=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.ballotsub = ballotsub
@@ -244,8 +246,6 @@ class BaseBallotSetForm(BaseResultForm):
     For more involved customisations, like there is a ballot per adjudicator
     (voting) or a single ballot for the debate (consensus), we use subclasses.
     """
-
-    result_class = None
 
     def __init__(self, ballotsub, *args, **kwargs):
         super().__init__(ballotsub, *args, **kwargs)
@@ -417,12 +417,9 @@ class BaseBallotSetForm(BaseResultForm):
     # --------------------------------------------------------------------------
 
     def save_ballot(self):
-
-        result = self.result_class(self.ballotsub)
-
         # 4. Save the sides
         if self.choosing_sides:
-            result.set_sides(*self.cleaned_data['choose_sides'])
+            self.result.set_sides(*self.cleaned_data['choose_sides'])
 
         # 5. Save motions
         if self.using_motions:
@@ -441,9 +438,9 @@ class BaseBallotSetForm(BaseResultForm):
                         debate_team=debate_team, preference=3).delete()
 
         # 6. Save participant fields
-        self.save_participant_fields(result)
+        self.save_participant_fields(self.result)
 
-        result.save()
+        self.result.save()
 
     # --------------------------------------------------------------------------
     # Template access methods
