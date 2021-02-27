@@ -43,6 +43,8 @@ class Submission(models.Model):
         verbose_name=_("confirmed"))
 
     # relevant for private URL submissions
+    private_url = models.BooleanField(default=False,
+        verbose_name=_("from private URL"))
     participant_submitter = models.ForeignKey('participants.Person', models.PROTECT,
         blank=True, null=True, related_name="%(app_label)s_%(class)s_participant_submitted",
         verbose_name=_("from participant"))
@@ -107,6 +109,8 @@ class BallotSubmission(Submission):
         verbose_name=_("motion"))
     discarded = models.BooleanField(default=False,
         verbose_name=_("discarded"))
+    partial = models.BooleanField(default=False,
+        verbose_name=_("partial"))
 
     class Meta:
         unique_together = [('debate', 'version')]
