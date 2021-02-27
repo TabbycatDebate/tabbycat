@@ -23,4 +23,8 @@ urlpatterns = [
     path('debate/old/<int:debate_id>/new/',
         views.OldAssistantNewBallotSetView.as_view(),
         name='old-results-assistant-ballotset-new'),
+
+    path('debate/<int:debate_id>/merge/latest/',
+        views.AssistantMergeLatestBallotsView.as_view(),
+        name='results-assistant-merge-latest'),
 ]

@@ -1,4 +1,5 @@
 import logging
+from itertools import groupby
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -35,8 +36,8 @@ from .consumers import BallotStatusConsumer
 from .forms import (PerAdjudicatorBallotSetForm, PerAdjudicatorEliminationBallotSetForm, SingleBallotSetForm,
                     SingleEliminationBallotSetForm)
 from .models import BallotSubmission, TeamScore
-from .prefetch import populate_confirmed_ballots
-from .result import get_class_name
+from .prefetch import populate_confirmed_ballots, populate_results
+from .result import DebateResult, get_class_name, ResultError
 from .tables import ResultsTableBuilder
 from .utils import get_status_meta, populate_identical_ballotsub_lists
 
@@ -279,7 +280,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
             'DebateResultByAdjudicatorWithScores': PerAdjudicatorBallotSetForm,
             'ConsensusDebateResult': SingleEliminationBallotSetForm,
             'ConsensusDebateResultWithScores': SingleBallotSetForm,
-        }[get_class_name(self.debate.round, self.tournament)]
+        }[get_class_name(self.ballotsub, self.debate.round, self.tournament)]
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -521,10 +522,8 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
 
         self.debate = self.debateadj.debate
         self.ballotsub = BallotSubmission(debate=self.debate, ip_address=get_ip_address(self.request),
-            submitter_type=BallotSubmission.SUBMITTER_PUBLIC)
-
-        if "url_key" in self.kwargs:
-            self.ballotsub.participant_submitter = self.object
+            submitter_type=BallotSubmission.SUBMITTER_PUBLIC, partial=self.tournament.pref('individual_ballots'),
+            private_url=self.private_url, participant_submitter=self.object)
 
         if not self.debate.adjudicators.has_chair:
             return self.error_page(_("Your debate doesn't have a chair, so you can't enter results for it. "
@@ -761,3 +760,80 @@ class PostponeDebateView(AdministratorMixin, RoundMixin, PostOnlyRedirectView):
         })
 
         return super().post(request, *args, **kwargs)
+
+
+class BaseMergeLatestBallotsView(BaseNewBallotSetView):
+    tabroom = True
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['result'] = self.result
+        kwargs['vetos'] = self.vetos
+        return kwargs
+
+    def populate_objects(self):
+        super().populate_objects()
+        use_code_names = use_team_code_names_data_entry(self.tournament, True)
+
+        bses = BallotSubmission.objects.filter(
+            debate=self.debate, participant_submitter__isnull=False, discarded=False, partial=True,
+        ).distinct('participant_submitter').select_related('participant_submitter').order_by('-version')
+        populate_results(bses, self.tournament)
+
+        # Handle result conflicts
+        self.result = DebateResult(self.ballotsub, tournament=self.tournament)
+        try:
+            self.result.populate_from_merge(*[b.result for b in bses])
+        except ResultError as e:
+            msg, t, adj, bs, side, speaker = e.args
+            args = {
+                'ballot_url': reverse_tournament(self.edit_ballot_url, self.tournament, kwargs={'pk': bs.id}),
+                'adjudicator': adj.name,
+                'speaker': speaker.name,
+                'team': team_name_for_data_entry(self.debate.get_team(side), use_code_names),
+            }
+            if t == 'speaker':
+                msg = _("The speaking order in the ballots is inconsistent, so could not be merged.")
+            elif t == 'ghost':
+                msg = _("Duplicate speeches are marked inconsistently, so could not be merged.")
+            msg += _(" This error was caught in <a href='%(ballot_url)s'>%(adjudicator)s's ballot</a> for %(speaker)s (%(team)s).")
+            messages.error(self.request, msg % args)
+            return HttpResponseRedirect(reverse_round(self.ballot_list_url, self.debate.round))
+
+        # Handle motion conflicts
+        if self.tournament.pref('enable_motions'):
+            bs_motions = BallotSubmission.objects.filter(
+                id__in=[b.id for b in bses], motion__isnull=False,
+            ).prefetch_related('debateteammotionpreference_set')
+            n_motions = bs_motions.aggregate(n_motions=Count('motion', distinct=True))['n_motions']
+            if n_motions > 1:
+                messages.error(self.request, _("Not all latest ballots list the same motion, so could not be merged."))
+                return HttpResponseRedirect(reverse_round(self.ballot_list_url, self.debate.round))
+            elif n_motions == 1:
+                self.ballotsub.motion = bs_motions[0].motion
+
+        # Vetos
+        self.vetos = {}
+        if self.tournament.pref('motion_vetoes_enabled'):
+            preferences = bs_motions.debateteammotionpreference_set.all().select_related('debate_team__team').values_list(
+                'debate_team', 'motion', 'preference')
+            for dt, prefs in groupby(preferences, key=lambda p: p[0]):
+                group = groupby(prefs)
+                if not (next(group, True) and not next(group, False)):
+                    messages.error(self.request, _(
+                        "Motion vetos are inconsistent for %(team)s, so could not be merged.",
+                    ) % {'team': team_name_for_data_entry(dt.team, use_code_names)})
+                    return HttpResponseRedirect(reverse_round(self.ballot_list_url, self.debate.round))
+                self.vetos[dt.side] = prefs[0]
+
+
+class AdminMergeLatestBallotsView(AdministratorBallotSetMixin, BaseMergeLatestBallotsView):
+    edit_ballot_url = 'results-ballotset-edit'
+    ballot_list_url = 'results-round-list'
+    for_admin = True
+
+
+class AssistantMergeLatestBallotsView(AssistantBallotSetMixin, BaseMergeLatestBallotsView):
+    edit_ballot_url = 'results-assistant-ballotset-edit'
+    ballot_list_url = 'results-assistant-round-list'
+    for_admin = False

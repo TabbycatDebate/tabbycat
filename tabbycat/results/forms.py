@@ -150,6 +150,8 @@ class BaseResultForm(forms.Form):
         if self.has_tournament_password:
             self.fields['password'] = TournamentPasswordField(tournament=self.tournament)
 
+        self.result = kwargs.get('result', self.result_class(self.ballotsub))
+
     def _side_name(self, side):
         return get_side_name(self.tournament, side, 'full')
 
@@ -266,6 +268,8 @@ class BaseBallotSetForm(BaseResultForm):
         self.last_substantive_position = self.tournament.last_substantive_position  # also used in template
         self.reply_position = self.tournament.reply_position  # also used in template
 
+        self.vetos = kwargs.get('vetos')
+
         self.create_fields()
         self.set_tab_indices()
         self.initial.update(self.initial_data())
@@ -363,13 +367,15 @@ class BaseBallotSetForm(BaseResultForm):
 
         if self.using_vetoes:
             for side in self.sides:
-                dtmp = self.ballotsub.debateteammotionpreference_set.filter(
-                        debate_team__side=side, preference=3).first()
+                if self.vetos is None:
+                    dtmp = self.ballotsub.debateteammotionpreference_set.filter(
+                            debate_team__side=side, preference=3).first()
+                else:
+                    dtmp = self.vetos[side]
                 if dtmp:
                     initial[self._fieldname_motion_veto(side)] = dtmp.motion
 
-        result = self.result_class(self.ballotsub)
-        initial.update(self.initial_from_result(result))
+        initial.update(self.initial_from_result(self.result))
 
         return initial
 

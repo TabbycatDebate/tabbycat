@@ -901,6 +901,15 @@ class EnablePostponements(BooleanPreference):
     default = False
 
 
+@tournament_preferences_registry.register
+class SplitVotingBallots(BooleanPreference):
+    help_text = _("Have each voting adjudicator submit a separate ballot.")
+    verbose_name = _("Individual voting ballots")
+    section = data_entry
+    name = 'individual_ballots'
+    default = False
+
+
 # ==============================================================================
 public_features = Section('public_features', verbose_name=_("Public Features"))
 # ==============================================================================

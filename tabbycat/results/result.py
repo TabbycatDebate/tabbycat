@@ -40,6 +40,7 @@ A few notes on error checking:
 
 import logging
 from functools import wraps
+from itertools import product
 from statistics import mean
 
 from adjallocation.allocation import AdjudicatorAllocation
@@ -57,7 +58,7 @@ class ResultError(RuntimeError):
     pass
 
 
-def get_result_class(round, tournament=None):
+def get_result_class(ballotsub, round, tournament=None):
     if tournament is None:
         tournament = round.tournament
 
@@ -65,21 +66,21 @@ def get_result_class(round, tournament=None):
     ballots_per_debate = round.ballots_per_debate
     scores_in_debate = tournament.pref('speakers_in_ballots')
 
-    if ballots_per_debate == 'per-adj' and teams_in_debate == 'two':
-        if scores_in_debate == 'prelim' and round.is_break_round or scores_in_debate == 'never':
-            return DebateResultByAdjudicator
-        return DebateResultByAdjudicatorWithScores
-    elif ballots_per_debate == 'per-debate':
+    if ballots_per_debate == 'per-debate' or ballotsub.partial:
         if ((teams_in_debate == 'bp' or scores_in_debate == 'prelim') and round.is_break_round) or scores_in_debate == 'never':
             return ConsensusDebateResult
         return ConsensusDebateResultWithScores
+    elif ballots_per_debate == 'per-adj' and teams_in_debate == 'two':
+        if scores_in_debate == 'prelim' and round.is_break_round or scores_in_debate == 'never':
+            return DebateResultByAdjudicator
+        return DebateResultByAdjudicatorWithScores
     else:
         raise ValueError("Invalid combination for 'ballots_per_debate' and 'teams_in_debate' preferences: %s, %s" %
                 (ballots_per_debate, teams_in_debate))
 
 
-def get_class_name(round, tournament=None):
-    return get_result_class(round, tournament).__name__
+def get_class_name(ballotsub, round, tournament=None):
+    return get_result_class(ballotsub, round, tournament).__name__
 
 
 def DebateResult(ballotsub, *args, **kwargs):  # noqa: N802 (factory function)
@@ -101,7 +102,7 @@ def DebateResult(ballotsub, *args, **kwargs):  # noqa: N802 (factory function)
     if tournament is None:
         tournament = ballotsub.debate.round.tournament
 
-    result_class = get_result_class(r, tournament)
+    result_class = get_result_class(ballotsub, r, tournament)
     return result_class(ballotsub, *args, **kwargs)
 
 
@@ -254,6 +255,9 @@ class BaseDebateResult:
             self.debateteams[dt.side] = dt
 
     def load_scoresheets(self, **kwargs):
+        pass
+
+    def populate_from_merge(self, *results):
         pass
 
     def save(self):
@@ -427,6 +431,16 @@ class DebateResultByAdjudicator(BaseDebateResult):
 
         for tsba in teamscorebyadjs:
             self.add_winner(tsba.debate_adjudicator.adjudicator, tsba.debate_team.side)
+
+    def populate_from_merge(self, *results):
+        for result in results:
+            adj = result.ballotsub.participant_submitter.adjudicator
+            self.merge_speaker_result(result, adj)
+            if self.get_scoresheet_class().uses_declared_winners:
+                self.set_winners(adj, result.scoresheet.winners())
+
+    def merge_speaker_result(self, result, adj):
+        pass
 
     def save(self):
         super().save()
@@ -908,6 +922,21 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
         for ssba in speakerscorebyadjs:
             self.set_score(ssba.debate_adjudicator.adjudicator,
                            ssba.debate_team.side, ssba.position, ssba.score)
+
+    def merge_speaker_result(self, result, adj):
+        for side, pos in product(self.sides, self.positions):
+            cur_speaker = self.get_speaker(side, pos)
+            if cur_speaker is None:
+                self.set_speaker(side, pos, result.get_speaker(side, pos))
+            elif result.get_speaker(side, pos) != cur_speaker:
+                raise ResultError("Inconsistent speaker order", "speaker", adj, result.ballotsub, side, cur_speaker)
+
+            if not self.get_ghost(side, pos):
+                self.set_ghost(side, pos, result.get_ghost(side, pos))
+            elif not result.get_ghost(side, pos):
+                raise ResultError("Inconsistent ghost scores", "ghost", adj, result.ballotsub, side, cur_speaker)
+
+            self.set_score(adj, side, pos, result.get_score(side, pos))
 
     def save(self):
         super().save()
