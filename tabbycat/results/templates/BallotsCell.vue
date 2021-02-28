@@ -35,6 +35,10 @@
 
       </div>
 
+      <div v-if="canMergeCreate">
+        <a :href="cellData.merge_ballot" v-text="gettext('Merge Ballot(s)')"></a>
+      </div>
+
       <div v-if="needsNewBallot">
         <a :href="cellData.new_ballot" v-text="gettext('Add Ballot')"></a>
       </div>
@@ -61,6 +65,9 @@ export default {
     },
     needsNewBallot: function () {
       return this.viableBallotsCount === this.cellData.ballots.length
+    },
+    canMergeCreate: function () {
+      return this.cellData.ballots.length > 0
     },
   },
   methods: {

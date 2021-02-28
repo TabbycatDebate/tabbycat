@@ -1,5 +1,4 @@
 import logging
-from itertools import groupby
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -19,6 +18,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from draw.prefetch import populate_opponents
+from motions.models import DebateTeamMotionPreference
 from notifications.models import BulkNotification
 from options.utils import use_team_code_names, use_team_code_names_data_entry
 from participants.models import Adjudicator
@@ -324,11 +324,11 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
                 })
 
         self.add_success_message()
-        self.round = self.ballotsub.debate.round  # for LogActionMixin
+        self.round = form.debate.round  # for LogActionMixin
 
         return super().form_valid(form)
 
-    def populate_objects(self):
+    def populate_objects(self, populate=True):
         """Subclasses must implement this method to set `self.ballotsub` and
         `self.debate`. If it returns something other than None, its return
         value will be used as the response, bypassing ordinary template
@@ -342,7 +342,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        error_response = self.populate_objects()
+        error_response = self.populate_objects(populate=False)
         if error_response:
             return error_response
         return super().post(request, *args, **kwargs)
@@ -397,7 +397,7 @@ class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
     def get_error_url(self):
         return self.get_success_url()
 
-    def populate_objects(self):
+    def populate_objects(self, populate=True):
         self.debate = self.object = self.get_object()
         self.ballotsub = BallotSubmission(debate=self.debate, submitter=self.request.user,
             submitter_type=BallotSubmission.SUBMITTER_TABROOM,
@@ -462,7 +462,7 @@ class BaseEditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
 
         messages.success(self.request, message % {'matchup': self.matchup_description()})
 
-    def populate_objects(self):
+    def populate_objects(self, populate=True):
         self.ballotsub = self.object = self.get_object()
         self.debate = self.ballotsub.debate
 
@@ -504,7 +504,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
         messages.success(self.request, _("Thanks, %(user)s! Your ballot for %(debate)s has "
                 "been recorded.") % {'user': self.object.name, 'debate': self.matchup_description()})
 
-    def populate_objects(self):
+    def populate_objects(self, populate=True):
         self.object = self.get_object() # must be populated before self.error_page() called
 
         if self.round.draw_status != Round.STATUS_RELEASED:
@@ -529,19 +529,20 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
 
         self.result = DebateResult(self.ballotsub, round=self.round, tournament=self.tournament)
         self.vetos = None
-        if self.ballotsub.partial:
+        if self.ballotsub.partial and populate:
             former_ballot = self.debate.ballotsubmission_set.filter(discarded=False).exclude(
                 participant_submitter=self.object,
             ).prefetch_related(
                 'speakerscore_set', 'speakerscore_set__debate_team',
                 'debateteammotionpreference_set', 'debateteammotionpreference_set__debate_team',
             ).order_by('-confirmed', '-version').first()
-            self.set_speakers(former_ballot)
-            self.set_motions(former_ballot)
-            if self.prefilled:
-                messages.warning(self.request, _(
-                    "Some information, such as speaker order, shown is based on a previous ballot. "
-                    "If anything is incorrect, please correct it and contact the tab team."))
+            if former_ballot is not None:
+                self.set_speakers(former_ballot)
+                self.set_motions(former_ballot)
+                if self.prefilled:
+                    messages.warning(self.request, _(
+                        "Some information, such as speaker order, shown is based on a previous ballot. "
+                        "If anything is incorrect, please correct it and contact the tab team."))
 
         if not self.debate.adjudicators.has_chair:
             return self.error_page(_("Your debate doesn't have a chair, so you can't enter results for it. "
@@ -566,7 +567,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
         if self.tournament.pref('motion_vetoes_enabled'):
             self.vetos = {}
             for dtmp in former_ballot.debateteammotionpreference_set.all():
-                self.vetos[dtmp.debate_team.side] = dtmp.motion
+                self.vetos[dtmp.debate_team.side] = dtmp
             self.prefilled = True
 
     def error_page(self, message):
@@ -806,13 +807,13 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
         kwargs['vetos'] = self.vetos
         return kwargs
 
-    def populate_objects(self):
+    def populate_objects(self, populate=True):
         super().populate_objects()
         use_code_names = use_team_code_names_data_entry(self.tournament, True)
 
         bses = BallotSubmission.objects.filter(
             debate=self.debate, participant_submitter__isnull=False, discarded=False, partial=True,
-        ).distinct('participant_submitter').select_related('participant_submitter').order_by('-version')
+        ).distinct('participant_submitter').select_related('participant_submitter').order_by('participant_submitter', '-version')
         populate_results(bses, self.tournament)
 
         # Handle result conflicts
@@ -836,10 +837,10 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
             return HttpResponseRedirect(reverse_round(self.ballot_list_url, self.debate.round))
 
         # Handle motion conflicts
+        bs_motions = BallotSubmission.objects.filter(
+            id__in=[b.id for b in bses], motion__isnull=False,
+        ).prefetch_related('debateteammotionpreference_set__debate_team')
         if self.tournament.pref('enable_motions'):
-            bs_motions = BallotSubmission.objects.filter(
-                id__in=[b.id for b in bses], motion__isnull=False,
-            ).prefetch_related('debateteammotionpreference_set')
             n_motions = bs_motions.aggregate(n_motions=Count('motion', distinct=True))['n_motions']
             if n_motions > 1:
                 messages.error(self.request, _("Not all latest ballots list the same motion, so could not be merged."))
@@ -850,16 +851,18 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
         # Vetos
         self.vetos = {}
         if self.tournament.pref('motion_vetoes_enabled'):
-            preferences = bs_motions.debateteammotionpreference_set.all().select_related('debate_team__team').values_list(
-                'debate_team', 'motion', 'preference')
-            for dt, prefs in groupby(preferences, key=lambda p: p[0]):
-                group = groupby(prefs)
-                if not (next(group, True) and not next(group, False)):
-                    messages.error(self.request, _(
-                        "Motion vetos are inconsistent for %(team)s, so could not be merged.",
-                    ) % {'team': team_name_for_data_entry(dt.team, use_code_names)})
-                    return HttpResponseRedirect(reverse_round(self.ballot_list_url, self.debate.round))
-                self.vetos[dt.side] = prefs[0]
+            pref_lists = [list(bs.debateteammotionpreference_set.all().values_list(
+                'debate_team', 'debate_team__side', 'motion', 'preference')) for bs in bs_motions]
+            preferences = set()
+            preferences.update(*[p for p in pref_lists])
+
+            if len(set(p[0] for p in preferences)) != len(preferences):
+                messages.error(self.request, _("Motion vetos are inconsistent, so could not be merged."))
+                return HttpResponseRedirect(reverse_round(self.ballot_list_url, self.debate.round))
+
+            for dt, side, motion, preference in preferences:
+                self.vetos[side] = DebateTeamMotionPreference(
+                    debate_team_id=dt, motion_id=motion, preference=preference, ballot_submission=self.ballotsub)
 
 
 class AdminMergeLatestBallotsView(AdministratorBallotSetMixin, BaseMergeLatestBallotsView):

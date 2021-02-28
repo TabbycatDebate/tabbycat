@@ -54,17 +54,21 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         # These are prefetched, so sort using Python rather than generating an SQL query
         ballotsubmissions = sorted(debate.ballotsubmission_set.all(), key=lambda x: x.version)
         if view_role == 'admin':
-            link = 'old-results-ballotset-new'
+            new_link = 'old-results-ballotset-new'
+            merge_link = 'results-merge-latest'
         else:
-            link = 'old-results-assistant-ballotset-new'
+            new_link = 'old-results-assistant-ballotset-new'
+            merge_link = 'results-assistant-merge-latest'
 
         return {
             'component': 'ballots-cell',
             'ballots': [b.serialize(tournament) for b in ballotsubmissions],
             'current_user': user.username,
             'acting_role': view_role,
-            'new_ballot': reverse_tournament(link, self.tournament,
+            'new_ballot': reverse_tournament(new_link, self.tournament,
                                              kwargs={'debate_id': debate.id}),
+            'merge_ballot': reverse_tournament(merge_link, self.tournament,
+                                               kwargs={'debate_id': debate.id}),
         }
 
     def add_ballot_entry_columns(self, debates, view_role, user):

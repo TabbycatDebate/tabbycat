@@ -31,5 +31,5 @@ urlpatterns = [
 
     path('debate/<int:debate_id>/merge/latest/',
         views.AdminMergeLatestBallotsView.as_view(),
-        name='results-assistant-merge-latest'),
+        name='results-merge-latest'),
 ]

@@ -133,8 +133,10 @@ class BaseResultForm(forms.Form):
     result_class = None
 
     def __init__(self, ballotsub, password=False, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         self.ballotsub = ballotsub
+        self.result = kwargs.pop('result', self.result_class(self.ballotsub))
+        super().__init__(*args, **kwargs)
+
         self.debate = ballotsub.debate
         self.tournament = self.debate.round.tournament
 
@@ -151,8 +153,6 @@ class BaseResultForm(forms.Form):
 
         if self.has_tournament_password:
             self.fields['password'] = TournamentPasswordField(tournament=self.tournament)
-
-        self.result = kwargs.get('result', self.result_class(self.ballotsub))
 
     def _side_name(self, side):
         return get_side_name(self.tournament, side, 'full')
@@ -248,6 +248,7 @@ class BaseBallotSetForm(BaseResultForm):
     """
 
     def __init__(self, ballotsub, *args, **kwargs):
+        self.vetos = kwargs.pop('vetos', None)
         super().__init__(ballotsub, *args, **kwargs)
 
         self.adjudicators = list(self.debate.adjudicators.voting())
@@ -267,8 +268,6 @@ class BaseBallotSetForm(BaseResultForm):
         self.positions = self.tournament.positions
         self.last_substantive_position = self.tournament.last_substantive_position  # also used in template
         self.reply_position = self.tournament.reply_position  # also used in template
-
-        self.vetos = kwargs.get('vetos')
 
         self.create_fields()
         self.set_tab_indices()
@@ -423,11 +422,11 @@ class BaseBallotSetForm(BaseResultForm):
 
         # 5. Save motions
         if self.using_motions:
-            self.ballotsub.motion = self.cleaned_data['motion']
+            self.ballotsub.motion = self.cleaned_data['motion'].motion
 
         if self.using_vetoes:
             for side in self.sides:
-                motion_veto = self.cleaned_data[self._fieldname_motion_veto(side)]
+                motion_veto = self.cleaned_data[self._fieldname_motion_veto(side)].motion
                 debate_team = self.debate.get_dt(side)
                 if motion_veto:
                     self.ballotsub.debateteammotionpreference_set.update_or_create(
