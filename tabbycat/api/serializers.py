@@ -807,7 +807,7 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
         exclude = ('source_adjudicator', 'source_team')
         read_only_fields = ('timestamp', 'version',
             'submitter_type', 'participant_submitter', 'submitter',
-            'confirmer', 'confirm_timestamp', 'ip_address')
+            'confirmer', 'confirm_timestamp', 'ip_address', 'private_url')
 
     def validate(self, data):
         source = data.pop('source')
@@ -1020,8 +1020,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         exclude = ('debate',)
         read_only_fields = ('timestamp', 'version',
             'submitter_type', 'submitter', 'participant_submitter',
-            'confirmer', 'confirm_timestamp',
-            'ip_address')
+            'confirmer', 'confirm_timestamp', 'ip_address', 'partial', 'private_url')
 
     def get_request(self):
         return self.context['request']
@@ -1032,6 +1031,15 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         if validated_data.get('confirmed', False):
             validated_data['confirmer'] = self.context['request'].user
             validated_data['confirm_timestamp'] = timezone.now()
+
+        stage = 'elim' if self.round.stage == Round.STAGE_ELIMINATION else 'prelim'
+        if self.tournament.pref('ballots_per_debate_' + stage) == 'per-adj':
+            if self.context['debate'].debateadjudicator_set.all().count() > 1:
+                if len(result_data['sheets']) == 1:
+                    validated_data['participant_submitter'] = result_data['sheets'][0]['adjudicator']
+                    validated_data['partial'] = True
+                else:
+                    raise serializers.ValidationError('Partial ballots must be individual')
 
         ballot = super().create(validated_data)
 

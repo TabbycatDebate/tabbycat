@@ -3071,12 +3071,17 @@ components:
           type: boolean
         participant_submitter:
           title: Participant submitter
-          description: >-
-            The submitting participant, adjudicator or speaker (if by private
-            URL)
+          description: The submitting participant, adjudicator or speaker
           type: string
           format: uri
           nullable: true
+          readOnly: true
+        private_url:
+          title: Private URL
+          description: >-
+            Whether the feedback was submitted through the participant's
+            private URL.
+          type: boolean
           readOnly: true
         submitter:
           title: Submitter
@@ -3939,6 +3944,20 @@ components:
           type: string
           format: uri
           nullable: true
+          readOnly: true
+        private_url:
+          title: Private URL
+          description: >-
+            Whether the ballot was submitted through the participant's
+            private URL.
+          type: boolean
+          readOnly: true
+        partial:
+          title: Partial
+          description: >-
+            If the ballot only has the scores of one adjudicator,
+            rather than from all.
+          type: boolean
           readOnly: true
         submitter:
           title: Submitter
