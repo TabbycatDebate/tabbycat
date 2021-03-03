@@ -254,6 +254,12 @@ class AdjudicatorFeedback(Submission):
             time=('<unknown>' if self.timestamp is None else str(
                 self.timestamp.isoformat())))
 
+    def _unique_unconfirm_args(self):
+        kwargs = super()._unique_unconfirm_args()
+        if self.source_team is not None and self.source_team.debate.round.tournament.pref('feedback_from_teams') != 'all-adjs':
+            kwargs.pop('adjudicator')
+        return kwargs
+
     @cached_property
     def source(self):
         if self.source_adjudicator:
