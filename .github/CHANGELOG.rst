@@ -2,6 +2,17 @@
 Change Log
 ==========
 
+2.5.7
+-----
+*Release date: 8 March 2021*
+
+- Fixed ballots API endpoint failing due to scoreless ballots
+- Fixed points emails not loading points
+- Fixed warning message for panellist demotion being shown in other warnings
+- Made results silently fail with trainee ballots (due to demotion)
+- Placed back the speaker name for the Speaker Score by Adj admin view, avoiding crashes
+
+
 2.5.6
 -----
 *Release date: 13 January 2021*
