@@ -2,6 +2,21 @@
 Change Log
 ==========
 
+2.6.0 (Ocicat)
+--------------
+*Release date: TBD*
+
+- Tabbycat is now supported by a new non-profit, the Tabbycat Debate Association!
+- Motions can now be re-used between rounds, with statistics using the combined data from the rounds. Motion statistics queries are optimised. (`#739 <https://github.com/TabbycatDebate/tabbycat/pull/739>`_)
+- A new feedback paths allows for trainees to submit feedback on chairs, but not on panellists.
+- Personal redactions foro speakers and adjudicators are indicated in admin tables, but are not hidden. (`#1480 <https://github.com/TabbycatDebate/tabbycat/issues/1480>`_)
+- Unexpected team feedback is unconfirmed to avoid affecting the scores of unexpected adjudicators. (`#473 <https://github.com/TabbycatDebate/tabbycat/issues/473>`_)
+- Added some database area actions to assign emojis and code names, previously only available as commands.
+- Removed
+- Implemented tournament import and export capabilities for `DebateXML <https://github.com/TabbycatDebate/DebateXML>`_.
+- Allow for participant ballot submissions during concurrent rounds.
+
+
 2.5.7
 -----
 *Release date: 8 March 2021*
