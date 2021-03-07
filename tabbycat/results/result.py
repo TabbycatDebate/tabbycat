@@ -550,11 +550,13 @@ class DebateResultByAdjudicator(BaseDebateResult):
         return len(self._adjs_by_side[side])
 
     def teamscore_field_votes_possible(self, side):
-        # Sides argument is ignored
         return len(self.scoresheets)
 
     def teamscorebyadj_field_win(self, adj, side):
         return side in self.scoresheets[adj].winners()
+
+    def teamscorebyadj_field_score(self, adj, side):
+        return None  # Placeholder for subclasses
 
     # --------------------------------------------------------------------------
     # Method for UI display
@@ -846,6 +848,9 @@ class ConsensusDebateResult(BaseDebateResult):
     def teamscore_field_win(self, side):
         return side in self.scoresheet.winners()
 
+    def teamscore_field_score(self, side):
+        return None  # Placeholder for subclasses with scores
+
     def as_dicts(self):
         yield {'teams': self.sheet_as_dicts(self.scoresheet)}
 
@@ -922,7 +927,12 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
                         defaults=self.get_defaults_fields('speakerscorebyadj', adj, side, pos))
 
     def set_score(self, adjudicator, side, position, score):
-        self.scoresheets[adjudicator].set_score(side, position, score)
+        try:
+            self.scoresheets[adjudicator].set_score(side, position, score)
+        except KeyError:
+            logger.exception("Tried to set score by adjudicator %s, but this adjudicator "
+                "doesn't have a scoresheet.", adjudicator)
+            return
 
     # --------------------------------------------------------------------------
     # Model fields

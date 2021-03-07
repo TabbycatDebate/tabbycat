@@ -90,7 +90,7 @@
       The following {{ ndebates }} debates appear to have scoresheets from trainees: {{ debates_list }}.
     {% endblocktrans %}
     {% url 'admin:results_speakerscorebyadj_changelist' as editdb_speakerscorebyadj_url %}
-    {% blocktrans trimmed asvar extra %}
+    {% blocktrans trimmed asvar trainee_extra %}
       This can happen if you demote a panellist to trainee after a result has been
       submitted for that debate. This may indicate that there is an inconsistency
       in results data, which may cause unexpected results (or crashes). Please
@@ -98,7 +98,7 @@
       <a href="{{ editdb_speakerscorebyadj_url }}?debate_adjudicator__type__exact=T" class="alert-link">"speaker
       scores by adj" objects</a>, and then opening and resaving the result here.
     {% endblocktrans %}
-    {% include "components/alert.html" with type="danger" icon="alert-octagon" %}
+    {% include "components/alert.html" with type="danger" icon="alert-octagon" extra=trainee_extra %}
   {% endif %}
 
   {% if pref.teams_in_debate == "bp" and round.ballots_per_debate == "per-adj" %}
