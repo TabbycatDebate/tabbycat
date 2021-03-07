@@ -927,7 +927,12 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
                         defaults=self.get_defaults_fields('speakerscorebyadj', adj, side, pos))
 
     def set_score(self, adjudicator, side, position, score):
-        self.scoresheets[adjudicator].set_score(side, position, score)
+        try:
+            self.scoresheets[adjudicator].set_score(side, position, score)
+        except KeyError:
+            logger.exception("Tried to set score by adjudicator %s, but this adjudicator "
+                "doesn't have a scoresheet.", adjudicator)
+            return
 
     # --------------------------------------------------------------------------
     # Model fields
