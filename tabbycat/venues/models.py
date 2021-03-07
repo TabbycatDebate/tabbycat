@@ -3,6 +3,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from utils.fields import LabelByNameForeignKey
+
 
 class Venue(models.Model):
     name = models.CharField(max_length=40,
@@ -119,7 +121,7 @@ class VenueConstraint(models.Model):
         verbose_name=_("category"))
     priority = models.IntegerField(verbose_name=_("priority"))
 
-    subject_content_type = models.ForeignKey(ContentType, models.CASCADE,
+    subject_content_type = LabelByNameForeignKey(ContentType, models.CASCADE,
         verbose_name=_("subject content type"),
         limit_choices_to=SUBJECT_CONTENT_TYPE_CHOICES)
     subject_id = models.PositiveIntegerField(
