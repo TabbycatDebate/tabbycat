@@ -19,6 +19,13 @@
     {% include "components/alert.html" with type="warning" %}
   {% endif %}
 
+  {% if prefilled %}
+    {% blocktrans trimmed asvar message %}
+      Some information, such as speaker order, shown is based on a previous ballot. If anything is incorrect, please correct it and contact the tab team.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="warning" %}
+  {% endif %}
+
   {% with nballotsubs=all_ballotsubs.count %}
     {% if nballotsubs > 0 %}
       {% blocktrans trimmed with nsubmissions=nballotsubs|apnumber count counter=nballotsubs asvar message %}

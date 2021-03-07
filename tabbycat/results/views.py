@@ -328,7 +328,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 
         return super().form_valid(form)
 
-    def populate_objects(self, populate=True):
+    def populate_objects(self, prefill=True):
         """Subclasses must implement this method to set `self.ballotsub` and
         `self.debate`. If it returns something other than None, its return
         value will be used as the response, bypassing ordinary template
@@ -342,7 +342,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        error_response = self.populate_objects(populate=False)
+        error_response = self.populate_objects(prefill=False)
         if error_response:
             return error_response
         return super().post(request, *args, **kwargs)
@@ -397,7 +397,7 @@ class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
     def get_error_url(self):
         return self.get_success_url()
 
-    def populate_objects(self, populate=True):
+    def populate_objects(self, prefill=True):
         self.debate = self.object = self.get_object()
         self.ballotsub = BallotSubmission(debate=self.debate, submitter=self.request.user,
             submitter_type=BallotSubmission.SUBMITTER_TABROOM,
@@ -462,7 +462,7 @@ class BaseEditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
 
         messages.success(self.request, message % {'matchup': self.matchup_description()})
 
-    def populate_objects(self, populate=True):
+    def populate_objects(self, prefill=True):
         self.ballotsub = self.object = self.get_object()
         self.debate = self.ballotsub.debate
 
@@ -491,6 +491,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
 
     def get_context_data(self, **kwargs):
         kwargs['private_url'] = self.private_url
+        kwargs['prefilled'] = self.prefilled
         return super().get_context_data(**kwargs)
 
     def get_form_kwargs(self):
@@ -504,7 +505,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
         messages.success(self.request, _("Thanks, %(user)s! Your ballot for %(debate)s has "
                 "been recorded.") % {'user': self.object.name, 'debate': self.matchup_description()})
 
-    def populate_objects(self, populate=True):
+    def populate_objects(self, prefill=True):
         self.object = self.get_object() # must be populated before self.error_page() called
 
         if self.round.draw_status != Round.STATUS_RELEASED:
@@ -529,7 +530,8 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
 
         self.result = DebateResult(self.ballotsub, round=self.round, tournament=self.tournament)
         self.vetos = None
-        if self.ballotsub.partial and populate:
+        self.prefilled = False
+        if self.ballotsub.partial and prefill:
             former_ballot = self.debate.ballotsubmission_set.filter(discarded=False).exclude(
                 participant_submitter=self.object,
             ).prefetch_related(
@@ -539,10 +541,6 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
             if former_ballot is not None:
                 self.set_speakers(former_ballot)
                 self.set_motions(former_ballot)
-                if self.prefilled:
-                    messages.warning(self.request, _(
-                        "Some information, such as speaker order, shown is based on a previous ballot. "
-                        "If anything is incorrect, please correct it and contact the tab team."))
 
         if not self.debate.adjudicators.has_chair:
             return self.error_page(_("Your debate doesn't have a chair, so you can't enter results for it. "
@@ -581,6 +579,12 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
             context=context,
             using=self.template_engine,
         )
+
+    def get_all_ballotsubs(self):
+        q = super().get_all_ballotsubs()
+        if self.ballotsub.partial:
+            return q.filter(participant_submitter=self.ballotsub.participant_submitter)
+        return q
 
 
 class OldPublicNewBallotSetByIdUrlView(SingleObjectFromTournamentMixin, BasePublicNewBallotSetView):
@@ -807,7 +811,7 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
         kwargs['vetos'] = self.vetos
         return kwargs
 
-    def populate_objects(self, populate=True):
+    def populate_objects(self, prefill=True):
         super().populate_objects()
         use_code_names = use_team_code_names_data_entry(self.tournament, True)
 

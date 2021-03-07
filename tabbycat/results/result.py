@@ -931,7 +931,7 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
             if not self.get_ghost(side, pos):
                 self.set_ghost(side, pos, result.get_ghost(side, pos))
             elif not result.get_ghost(side, pos):
-                raise ResultError("Inconsistent ghost scores", "ghost", adj, result.ballotsub, side, cur_speaker)
+                raise ResultError("Inconsistent ghost order", "ghost", adj, result.ballotsub, side, cur_speaker)
 
             self.set_score(adj, side, pos, result.get_score(side, pos))
 
