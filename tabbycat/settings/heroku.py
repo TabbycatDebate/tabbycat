@@ -109,8 +109,19 @@ if environ.get('EMAIL_HOST', ''):
     EMAIL_HOST_USER = environ['EMAIL_HOST_USER']
     EMAIL_HOST_PASSWORD = environ['EMAIL_HOST_PASSWORD']
     EMAIL_PORT = int(environ.get('EMAIL_PORT', 587))
-    EMAIL_USE_TLS = bool(environ.get('EMAIL_USE_TLS', True))
+    EMAIL_USE_TLS = environ.get('EMAIL_USE_TLS', '').lower() == 'true'
+
+elif environ.get('SENDGRID_API_KEY', ''):
+    SERVER_EMAIL = environ.get('DEFAULT_FROM_EMAIL', 'root@localhost')
+    DEFAULT_FROM_EMAIL = environ.get('DEFAULT_FROM_EMAIL', 'notconfigured@tabbycatsite')
+    EMAIL_HOST = 'smtp.sendgrid.net'
+    EMAIL_HOST_USER = 'apikey'
+    EMAIL_HOST_PASSWORD = environ['SENDGRID_API_KEY']
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+
 elif environ.get('SENDGRID_USERNAME', ''):
+    # these settings are deprecated as of Tabbycat 2.6.0 (Ocicat)
     SERVER_EMAIL = environ['SENDGRID_USERNAME']
     DEFAULT_FROM_EMAIL = environ.get('DEFAULT_FROM_EMAIL', environ['SENDGRID_USERNAME'])
     EMAIL_HOST = 'smtp.sendgrid.net'
