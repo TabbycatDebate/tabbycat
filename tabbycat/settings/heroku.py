@@ -109,7 +109,7 @@ if environ.get('EMAIL_HOST', ''):
     EMAIL_HOST_USER = environ['EMAIL_HOST_USER']
     EMAIL_HOST_PASSWORD = environ['EMAIL_HOST_PASSWORD']
     EMAIL_PORT = int(environ.get('EMAIL_PORT', 587))
-    EMAIL_USE_TLS = environ.get('EMAIL_USE_TLS', '').lower() == 'true'
+    EMAIL_USE_TLS = environ.get('EMAIL_USE_TLS', 'true').lower() == 'true'
 
 elif environ.get('SENDGRID_API_KEY', ''):
     SERVER_EMAIL = environ.get('DEFAULT_FROM_EMAIL', 'root@localhost')

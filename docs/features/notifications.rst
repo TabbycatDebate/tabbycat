@@ -47,8 +47,8 @@ If you configure these config vars, Tabbycat will use them to send emails.
 - ``EMAIL_HOST``: Host server
 - ``EMAIL_HOST_USER``: Username for authentification to host
 - ``EMAIL_HOST_PASSWORD``: Password with username
-- ``EMAIL_PORT`` (default 587): Port for server
-- ``EMAIL_USE_TLS`` (default True): Whether to use `Transport Layer Security <https://en.wikipedia.org/wiki/Transport_Layer_Security>`_ (True/False)
+- ``EMAIL_PORT`` (default ``587``): Port for server
+- ``EMAIL_USE_TLS`` (default ``true``): Whether to use `Transport Layer Security <https://en.wikipedia.org/wiki/Transport_Layer_Security>`_ (``true`` or ``false``)
 
 Events
 ======
