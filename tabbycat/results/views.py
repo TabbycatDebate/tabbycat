@@ -869,13 +869,13 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
                     debate_team_id=dt, motion_id=motion, preference=preference, ballot_submission=self.ballotsub)
 
 
-class AdminMergeLatestBallotsView(AdministratorBallotSetMixin, BaseMergeLatestBallotsView):
+class AdminMergeLatestBallotsView(OldAdministratorBallotSetMixin, BaseMergeLatestBallotsView):
     edit_ballot_url = 'results-ballotset-edit'
     ballot_list_url = 'results-round-list'
     for_admin = True
 
 
-class AssistantMergeLatestBallotsView(AssistantBallotSetMixin, BaseMergeLatestBallotsView):
+class AssistantMergeLatestBallotsView(OldAssistantBallotSetMixin, BaseMergeLatestBallotsView):
     edit_ballot_url = 'results-assistant-ballotset-edit'
     ballot_list_url = 'results-assistant-round-list'
     for_admin = False
