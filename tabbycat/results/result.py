@@ -398,7 +398,7 @@ class DebateResultByAdjudicator(BaseDebateResult):
     def identical(self, other):
         if not super().identical(other):
             return False
-        if not set(self.scoresheets.keys()) == set(other.scoresheets.keys()):
+        if not hasattr(other, 'scoresheets') or set(self.scoresheets.keys()) != set(other.scoresheets.keys()):
             return False
         for adj, other_sheet in other.scoresheets.items():
             if not self.scoresheets[adj].identical(other_sheet):
@@ -843,7 +843,7 @@ class ConsensusDebateResult(BaseDebateResult):
     # --------------------------------------------------------------------------
 
     def identical(self, other):
-        return super().identical(other) and self.scoresheet.identical(other.scoresheet)
+        return super().identical(other) and hasattr(other, 'scoresheet') and self.scoresheet.identical(other.scoresheet)
 
     # --------------------------------------------------------------------------
     # Team score fields
