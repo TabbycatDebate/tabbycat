@@ -467,7 +467,8 @@ class Round(models.Model):
         if filter_kwargs:
             debates = debates.filter(**filter_kwargs)
         if results:
-            debates = debates.prefetch_related('ballotsubmission_set', 'ballotsubmission_set__submitter')
+            debates = debates.prefetch_related('ballotsubmission_set',
+                'ballotsubmission_set__submitter', 'ballotsubmission_set__participant_submitter')
         if adjudicators:
             debates = debates.prefetch_related(
                 Prefetch('debateadjudicator_set',
