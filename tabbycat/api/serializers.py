@@ -399,7 +399,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Adjudicator
-        exclude = ('tournament', 'round_availabilities', 'venue_constraints')
+        exclude = ('tournament',)
 
     def create(self, validated_data):
         url_key = validated_data.pop('url_key', None)
@@ -443,7 +443,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        exclude = ('tournament', 'round_availabilities', 'venue_constraints', 'type')
+        exclude = ('tournament', 'type')
 
     def __init__(self, *args, **kwargs):
         self.fields['speakers'] = self.TeamSpeakerSerializer(*args, many=True, required=False, **kwargs)
