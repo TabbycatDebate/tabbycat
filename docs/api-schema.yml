@@ -2705,6 +2705,12 @@ components:
           title: Checked
           type: boolean
           readOnly: true
+        timestamp:
+          title: Timestamp
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
     Adjudicator:
       required:
         - name
