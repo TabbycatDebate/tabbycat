@@ -127,7 +127,9 @@ class TeamDebateTable:
         if table.admin or tournament.pref('public_motions'):
             table.add_debate_motion_column(debates)
 
-        if not table.private_url:
+        if table.private_url:
+            table.add_speaker_debate_ballot_link_column(debates)
+        else:
             table.add_debate_ballot_link_column(debates)
 
         return table

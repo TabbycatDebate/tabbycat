@@ -656,7 +656,7 @@ class PublicBallotScoresheetsView(BasePublicBallotScoresheetsView):
         return super().get_context_data(**kwargs)
 
 
-class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixin, BasePublicBallotScoresheetsView):
+class AdjudicatorPrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixin, BasePublicBallotScoresheetsView):
 
     template_name = 'privateurl_ballot_set.html'
     error_template_name = 'privateurl_ballot_set_error.html'
@@ -690,7 +690,17 @@ class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixi
         )
 
     def get_queryset(self):
-        return self.model.objects.filter(round=self.round).prefetch_related('debateteam_set__team')
+        return super().get_queryset().filter(round=self.round)
+
+
+class SpeakerPrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixin, PublicBallotScoresheetsView):
+    slug_field = 'debateteam__team__speaker__url_key'
+
+    def is_page_enabled(self, tournament):
+        return True
+
+    def get_queryset(self):
+        return super().get_queryset().filter(round=self.round)
 
 
 class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, RoundMixin, VueTableTemplateView):
