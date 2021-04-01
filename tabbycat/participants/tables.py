@@ -49,6 +49,7 @@ class AdjudicatorDebateTable:
 
         debateadjs = DebateAdjudicator.objects.filter(
             adjudicator=participant,
+            debate__round__tournament=view.tournament,
         ).select_related(
             'debate__round', 'debate__round__tournament',
         ).prefetch_related(

@@ -140,7 +140,8 @@ class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBr
         return self._break_category
 
     def get_queryset(self):
-        return super().get_queryset().select_related('team', 'team__tournament').order_by('rank')
+        return super().get_queryset().filter(
+            break_category=self.break_category).select_related('team', 'team__tournament').order_by('rank')
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
