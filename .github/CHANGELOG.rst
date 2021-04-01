@@ -6,7 +6,7 @@ Change Log
 -----
 *Release date: 2 April 2021*
 
-- Fixed room constrainee dropdown for room constraints (`#1704 <https://github.com/TabbycatDebate/tabbycat/pull/1723`_)
+- Fixed room constrainee dropdown for room constraints (`#1704 <https://github.com/TabbycatDebate/tabbycat/pull/1723>`_)
 - Filtered breaking teams API endpoint to return just teams breaking in the requested category
 - Fixed adjudicator record and private URL pages crashing when assigned to debates of different formats (`#1766 <https://github.com/TabbycatDebate/tabbycat/issues/1766>`_)
 
