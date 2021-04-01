@@ -28,7 +28,7 @@
     "@popperjs/core": "^2.6.0",
     "@sentry/browser": "^5.27.6",
     "@sentry/integrations": "^5.27.6",
-    "@vue/cli-plugin-babel": "^4.5.9",
+    "@vue/cli-plugin-babel": "^4.5.12",
     "@vue/cli-service": "^4.5.9",
     "ajv": "7.0.0",
     "bootstrap": "^4.5.3",
