@@ -15,6 +15,8 @@ Change Log
 - Removed
 - Implemented tournament import and export capabilities for `DebateXML <https://github.com/TabbycatDebate/DebateXML>`_.
 - Allow for participant ballot submissions during concurrent rounds.
+- Checkin API endpoints show the timestamp of the current event.
+- Team viewing of ballots can be restricted to their private URLs.
 
 
 2.5.8
