@@ -130,5 +130,7 @@ class TeamDebateTable:
 
         if not table.private_url:
             table.add_debate_ballot_link_column(debates)
+        elif tournament.pref('private_ballots_released'):
+            table.add_speaker_debate_ballot_link_column(debates)
 
         return table

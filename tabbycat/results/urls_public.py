@@ -29,9 +29,13 @@ urlpatterns = [
                 views.OldPublicNewBallotSetByRandomisedUrlView.as_view(),
                 name='results-public-ballotset-new-randomised'),
             path('view/',
-                views.PrivateUrlBallotScoresheetView.as_view(),
+                views.AdjudicatorPrivateUrlBallotScoresheetView.as_view(),
                 name='results-privateurl-scoresheet-view'),
         ])),
+
+        path('speaker/<slug:url_key>/',
+            views.SpeakerPrivateUrlBallotScoresheetView.as_view(),
+            name='speaker-results-privateurl-scoresheet'),
     ])),
 
     path('added/',

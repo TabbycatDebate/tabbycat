@@ -10,6 +10,7 @@ from django.utils.translation import ngettext
 from adjallocation.allocation import AdjudicatorAllocation
 from draw.generator import DRAW_FLAG_DESCRIPTIONS
 from options.utils import use_team_code_names
+from results.result import get_result_class
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.mixins import SingleObjectByRandomisedUrlMixin
 from tournaments.utils import get_side_name
@@ -814,6 +815,22 @@ class TabbycatTableBuilder(BaseTableBuilder):
             data.append(row)
         self.add_columns(headers, data)
 
+    def add_speaker_debate_ballot_link_column(self, debates):
+        ballot_links_header = {'key': "ballot", 'icon': 'search', 'tooltip': _("The confirmed ballot")}
+        ballot_links_data = []
+
+        for debate in debates:
+            if not debate.confirmed_ballot:
+                ballot_links_data.append(_("No ballot"))
+            elif not debate.confirmed_ballot.result.uses_speakers:
+                ballot_links_data.append(_("No scores"))
+            else:
+                ballot_links_data.append({
+                    'text': _("View Ballot"),
+                    'link': reverse_round('speaker-results-privateurl-scoresheet', debate.round, kwargs={'url_key': self.private_url_key}),
+                })
+        self.add_column(ballot_links_header, ballot_links_data)
+
     def add_debate_ballot_link_column(self, debates, show_ballot=False):
         ballot_links_header = {'key': "ballot", 'icon': 'search',
                                'tooltip': _("The ballot you submitted")}
@@ -830,8 +847,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
             for debate in debates:
                 if not debate.ballotsubmission_set.exclude(discarded=True).exists():
                     ballot_links_data.append(_("No ballot"))
-                elif self.tournament.pref('teams_in_debate') == 'bp' and debate.round.is_break_round:
-                    ballot_links_data.append(_("Elimination"))
+                elif not get_result_class(debate.round, self.tournament).uses_speakers:
+                    ballot_links_data.append(_("No scores"))
                 else:
                     ballot_links_data.append({
                         'text': _("View Ballot"),

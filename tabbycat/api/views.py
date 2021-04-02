@@ -4,6 +4,7 @@ from django.db.models import Count, Prefetch, Q
 from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
 from rest_framework.exceptions import NotFound
+from rest_framework.fields import DateTimeField
 from rest_framework.generics import GenericAPIView, get_object_or_404, RetrieveUpdateAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -298,6 +299,7 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
 
     def broadcast_checkin(self, obj, check):
         # Send result to websocket for treatment when opened; but perform the action here
+        checkin = None
         if check:
             checkin = Event.objects.create(identifier=obj.checkin_identifier,
                                            tournament=self.tournament)
@@ -309,16 +311,15 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
             checkin_dict = {'identifier': obj.checkin_identifier.barcode}
 
         group_name = CheckInEventConsumer.group_prefix + "_" + self.tournament.slug
-        async_to_sync(get_channel_layer().group_send)(
-            group_name, {
-                'type': 'send_json',
-                'data': {
-                    'checkins': [checkin_dict],
-                },
+        async_to_sync(get_channel_layer().group_send)(group_name, {
+            'type': 'send_json',
+            'data': {
+                'checkins': [checkin_dict],
             },
-        )
+        })
+        return checkin
 
-    def get_response_dict(self, request, obj, checked, **kwargs):
+    def get_response_dict(self, request, obj, checked, event, **kwargs):
         return {
             'object': reverse(
                 self.object_api_view,
@@ -328,6 +329,7 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
             ),
             'barcode': obj.checkin_identifier.barcode,
             'checked': checked,
+            'timestamp': DateTimeField().to_representation(event.time) if event is not None else None,
         }
 
     def get_queryset(self):
@@ -337,26 +339,27 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
         obj = self.get_object()
 
         event = get_unexpired_checkins(self.tournament, self.window_preference_pref).filter(identifier=obj.checkin_identifier)
-        return Response(self.get_response_dict(request, obj, event.exists()))
+        return Response(self.get_response_dict(request, obj, event.exists(), event.first()))
 
     def delete(self, request, *args, **kwargs):
         """Checks out"""
         obj = self.get_object()
         self.broadcast_checkin(obj, False)
-        return Response(self.get_response_dict(request, obj, False))
+        return Response(self.get_response_dict(request, obj, False, None))
 
     def put(self, request, *args, **kwargs):
         """Checks in"""
         obj = self.get_object()
-        self.broadcast_checkin(obj, True)
-        return Response(self.get_response_dict(request, obj, True))
+        e = self.broadcast_checkin(obj, True)
+        return Response(self.get_response_dict(request, obj, True, e))
 
     def patch(self, request, *args, **kwargs):
         """Toggles the check-in status"""
         obj = self.get_object()
-        check = get_unexpired_checkins(self.tournament, self.window_preference_pref).filter(identifier=obj.checkin_identifier).exists()
-        self.broadcast_checkin(obj, not check)
-        return Response(self.get_response_dict(request, obj, not check))
+        events = get_unexpired_checkins(self.tournament, self.window_preference_pref).filter(identifier=obj.checkin_identifier)
+        check = events.exists()
+        e = self.broadcast_checkin(obj, not check)
+        return Response(self.get_response_dict(request, obj, not check, e))
 
     def post(self, request, *args, **kwargs):
         """Creates an identifier"""
@@ -365,7 +368,7 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
             raise NotFound("Object could not be found")
         status = 200 if hasattr(obj, 'checkin_identifier') else 201
         create_identifiers(self.model.checkin_identifier.related.related_model, obj)
-        return Response(self.get_response_dict(request, obj.get(), False), status=status)
+        return Response(self.get_response_dict(request, obj.get(), False, None), status=status)
 
 
 class AdjudicatorCheckinsView(BaseCheckinsView):
