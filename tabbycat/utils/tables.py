@@ -824,8 +824,6 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 ballot_links_data.append(_("No ballot"))
             elif not debate.confirmed_ballot.result.uses_speakers:
                 ballot_links_data.append(_("No scores"))
-            elif not debate.round.completed and not self.tournament.pref('all_results_released'):
-                ballot_links_data.append(_("Unreleased"))
             else:
                 ballot_links_data.append({
                     'text': _("View Ballot"),

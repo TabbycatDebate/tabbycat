@@ -695,6 +695,7 @@ class AdjudicatorPrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandom
 
 class SpeakerPrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixin, PublicBallotScoresheetsView):
     slug_field = 'debateteam__team__speaker__url_key'
+    public_page_preference = 'private_ballots_released'
 
     def is_page_enabled(self, tournament):
         return True

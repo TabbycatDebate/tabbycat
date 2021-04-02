@@ -754,6 +754,15 @@ class AllResultsReleased(BooleanPreference):
     default = False
 
 
+@tournament_preferences_registry.register
+class PrivateBallotsReleased(BooleanPreference):
+    help_text = _("Enables display of confirmed ballots through private URLs. Intended for use after the tournament.")
+    verbose_name = _("Release ballots through private URLs")
+    section = tab_release
+    name = 'private_ballots_released'
+    default = False
+
+
 # ==============================================================================
 data_entry = Section('data_entry', verbose_name=_("Data Entry"))
 # ==============================================================================
