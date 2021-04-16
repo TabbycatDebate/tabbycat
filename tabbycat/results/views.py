@@ -4,6 +4,7 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.db import ProgrammingError
 from django.db.models import Count, Q
 from django.http import HttpResponseRedirect
@@ -18,7 +19,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from draw.prefetch import populate_opponents
-from motions.models import DebateTeamMotionPreference
+from motions.utils import merge_motion_vetos, merge_motions
 from notifications.models import BulkNotification
 from options.utils import use_team_code_names, use_team_code_names_data_entry
 from participants.models import Adjudicator
@@ -845,28 +846,18 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
             id__in=[b.id for b in bses], motion__isnull=False,
         ).prefetch_related('debateteammotionpreference_set__debate_team')
         if self.tournament.pref('enable_motions'):
-            n_motions = bs_motions.aggregate(n_motions=Count('motion', distinct=True))['n_motions']
-            if n_motions > 1:
-                messages.error(self.request, _("Not all latest ballots list the same motion, so could not be merged."))
+            try:
+                merge_motions(self.ballotsub, bs_motions)
+            except ValidationError as e:
+                messages.error(self.request, e)
                 return HttpResponseRedirect(reverse_round(self.ballot_list_url, self.debate.round))
-            elif n_motions == 1:
-                self.ballotsub.motion = bs_motions[0].motion
 
         # Vetos
-        self.vetos = {}
-        if self.tournament.pref('motion_vetoes_enabled'):
-            pref_lists = [list(bs.debateteammotionpreference_set.all().values_list(
-                'debate_team', 'debate_team__side', 'motion', 'preference')) for bs in bs_motions]
-            preferences = set()
-            preferences.update(*[p for p in pref_lists])
-
-            if len(set(p[0] for p in preferences)) != len(preferences):
-                messages.error(self.request, _("Motion vetos are inconsistent, so could not be merged."))
-                return HttpResponseRedirect(reverse_round(self.ballot_list_url, self.debate.round))
-
-            for dt, side, motion, preference in preferences:
-                self.vetos[side] = DebateTeamMotionPreference(
-                    debate_team_id=dt, motion_id=motion, preference=preference, ballot_submission=self.ballotsub)
+        try:
+            self.vetos = merge_motion_vetos(self.ballotsub, bs_motions)
+        except ValidationError as e:
+            messages.error(self.request, e)
+            return HttpResponseRedirect(reverse_round(self.ballot_list_url, self.debate.round))
 
 
 class AdminMergeLatestBallotsView(OldAdministratorBallotSetMixin, BaseMergeLatestBallotsView):
