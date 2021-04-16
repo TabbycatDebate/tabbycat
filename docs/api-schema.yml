@@ -4,7 +4,7 @@ info:
   description: Parliamentary debate tabulation software
   termsOfService: 'https://tabbycat.readthedocs.io/en/stable/'
   contact:
-    email: tech@debatingsociety.ca
+    email: ebeaule@tabbycat-debate.org
     name: Étienne Beaulé
   license:
     name: Tabbycat

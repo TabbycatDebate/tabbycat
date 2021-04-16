@@ -9,7 +9,7 @@ Tabbycat was authored by Qi-Shan Lim for Auckland Australs 2010. The current act
 
 - Philip Belesky (`pb-e-mail <mailto:contact@philipbelesky.com>`_)
 - Chuan-Zheng Lee (`cz-e-mail <mailto:czlee@stanford.edu>`_)
-- Étienne Beaulé (`eb-e-mail <tech@debatingsociety.ca>`_)
+- Étienne Beaulé (`eb-e-mail <mailto:ebeaule@tabbycat-debate.org>`_)
 
 Please don't hesitate to contact us with any suggestions, expressions of interest or generally anything relating to Tabbycat.
 
