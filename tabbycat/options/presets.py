@@ -119,6 +119,7 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     scoring__score_max                         = 99.0
     scoring__score_step                        = 1.0
     scoring__maximum_margin                    = 0.0
+    scoring__teamscore_includes_ghosts         = False  # WUDC 34.9.3.2
     # Debate Rules
     debate_rules__substantive_speakers         = 2
     debate_rules__teams_in_debate              = 'bp'

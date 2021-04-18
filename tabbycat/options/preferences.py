@@ -93,6 +93,15 @@ class MarginIncludesDissent(BooleanPreference):
     default = False
 
 
+@tournament_preferences_registry.register
+class TeamScoreIncludesGhost(BooleanPreference):
+    help_text = _("If checked, all speaker scores, including for duplicate speeches, will be counted for team scores")
+    verbose_name = _("Team score includes ghosts")
+    section = scoring
+    name = 'teamscore_includes_ghosts'
+    default = True
+
+
 # ==============================================================================
 draw_rules = Section('draw_rules', verbose_name=_("Draw Rules"))
 # ==============================================================================
