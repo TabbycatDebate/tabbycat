@@ -109,7 +109,7 @@ class QuerySetMetricAnnotator(BaseMetricAnnotator):
     def annotate_with_queryset(self, queryset, standings):
         """Annotates items with the given QuerySet."""
         for item in queryset:
-            standings.add_metric(item, self.key, getattr(item, self.key, 0))
+            standings.add_metric(item, self.key, getattr(item, self.key))
 
     def annotate(self, queryset, standings, round=None):
         assert self.queryset_annotated, "get_annotated_queryset() must be run before annotate()"
