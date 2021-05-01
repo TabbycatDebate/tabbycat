@@ -34,7 +34,7 @@
     "bootstrap": "^4.5.3",
     "browserify": "17.0.x",
     "browserslist": "^4.12.0",
-    "core-js": "^3.8.1",
+    "core-js": "^3.11.1",
     "cpx": "1.5.x",
     "d3": "^6.3.1",
     "django-channels": "1.1.8",
