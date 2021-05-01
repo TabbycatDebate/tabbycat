@@ -223,10 +223,12 @@ class Standings:
         self.get_standing(instance).add_ranking(key, value)
 
     def sort_from_rankings(self, tiebreak_func=None):
-        """Sorts Standings by a SQL-provided ranking, requiring less treatment."""
+        """Sorts Standings by a SQL-provided ranking, and so sorting is not
+        affected by None values."""
         self._standings = list(self.infos.values())
 
         if tiebreak_func:
+            # If tiebreak is SQL-provided, it's skipped
             tiebreak_func(self._standings)
             self._standings.sort(key=lambda r: tuple(r.rankings[key] for key in self.ranking_keys))
 
@@ -360,14 +362,6 @@ class BaseStandingsGenerator:
         for annotator in self.ranking_annotators:
             queryset = annotator.get_annotated_queryset(queryset, self.queryset_metric_annotators)
 
-        tiebreak_func = None
-        ordering_keys = [a.key for a in self.ranking_annotators]
-        if self._qs_tiebreak_field is None:
-            tiebreak_func = self._tiebreak_func
-        else:
-            ordering_keys.append(self._qs_tiebreak_field)
-
-        queryset = queryset.order_by(*ordering_keys)
         self._annotate_metrics(queryset, standings, round)
 
         # Can use window functions to rank standings if all are from queryset
@@ -376,8 +370,17 @@ class BaseStandingsGenerator:
             annotator.run_queryset(queryset, standings)
         logger.debug("Ranking queryset annotators done.")
 
-        standings.sort_from_rankings(tiebreak_func)
+        # Order by rank and tie-breaker if available.
+        tiebreak_func = None
+        ordering_keys = [a.key for a in self.ranking_annotators]
+        if self._qs_tiebreak_field is None:
+            # Pass to Standings-based if SQL doesn't exist; gives None if none given
+            tiebreak_func = self._tiebreak_func
+        else:
+            ordering_keys.append(self._qs_tiebreak_field)
+        queryset = queryset.order_by(*ordering_keys)
 
+        standings.sort_from_rankings(tiebreak_func)
         return standings
 
     @staticmethod

@@ -19,19 +19,21 @@ def metricgetter(items, negate=None):
     For example:
      - After `f = metricgetter(("a",))`, the call `f(x)` returns `(x.metrics["a"],)`.
      - After `g = metricgetter((4, 9))`, the call `g(x)` returns `(x.metrics[4], x.metrics[9])`.
+
+    If the metric is None (e.g. no scores so can't calculate stdev), use 0 instead to sort.
     """
 
     if negate is None:
 
         def metricitemgetter(x):
-            return tuple(x.metrics[item] for item in items)
+            return tuple(x.metrics[item] or 0 for item in items)
 
     else:
         assert len(items) == len(negate), "items had %d items but negate had %d" % (len(items), len(negate))
         coeffs = [-1 if neg else 1 for neg in negate]
 
         def metricitemgetter(x):
-            return tuple(coeff * x.metrics[item] for (coeff, item) in zip(coeffs, items))
+            return tuple(coeff * (x.metrics[item] or 0) for (coeff, item) in zip(coeffs, items))
 
     return metricitemgetter
 
