@@ -228,10 +228,10 @@ class Standings:
         self._standings = list(self.infos.values())
 
         if tiebreak_func:
-            # If tiebreak is SQL-provided, it's skipped
+            # If tiebreak is SQL-provided, this is skipped
             tiebreak_func(self._standings)
-            self._standings.sort(key=lambda r: tuple(r.rankings[key] for key in self.ranking_keys))
 
+        self._standings.sort(key=lambda r: tuple(r.rankings[key] for key in self.ranking_keys))
         self.ranked = True
 
     def sort(self, precedence, tiebreak_func=None):
