@@ -44,7 +44,7 @@ Answer types and options
 Options:
 
 - **min_value** and **max_value** specify the minimum and maximum allowable values in the field. Mandatory for "integer scale" types and optional for "integer (textbox)" and "float" types.
-- **choices** is used with "select one" and "select multiple" types, and is a ``//``-delimited list of possible answers, *e.g.* ``biased//clear//concise//rambly//attentive//inattentive``
+- **choices** is used with "select one" and "select multiple" types, and is a comma-delimited list of possible answers, *e.g.* ``biased,clear,concise,rambly,attentive,inattentive``
 - **required** specifies whether users must fill out the field before clicking "submit". This requirement is only enforced on public submission forms. It is not enforced on forms entered by tab room assistants.
 
   The exception to this is the "checkbox" type. For checkboxes, "required" means that the user cannot submit the form unless the box is checked. Think of it like an "I agree to the terms" checkbox. This isn't a deliberate design decision—it's just a quirk of how checkboxes work on web forms.

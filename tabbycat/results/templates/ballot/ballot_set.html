@@ -80,7 +80,7 @@
         {% endif %}
 
       </div>
-      {% if form.using_declared_winner %}
+      {% if form.using_declared_winner and form.has_scores %}
         <div class="list-group-item">
           {% include "components/form-field.html" with field=sheet.declared_winner %}
         </div>

@@ -56,13 +56,13 @@
       {% if debate.round.motion_set.all|length == 1 %}
         <strong>{% trans "Motion:" %}</strong> {{ debate.round.motion_set.first.text }}
       {% else %}
-        {% for motion in debate.round.motion_set.all %}
+        {% for rm in debate.round.roundmotion_set.all %}
           <strong>
-            {% blocktrans trimmed with seq=motion.seq %}
+            {% blocktrans trimmed with seq=rm.seq %}
               Motion {{ seq }}:
             {% endblocktrans %}
           </strong>
-          {{ motion.text }}<br />
+          {{ rm.motion.text }}<br />
         {% endfor %}
       {% endif %}
     {% else %} {# elif not (current_round.motions_released or admin_page) #}

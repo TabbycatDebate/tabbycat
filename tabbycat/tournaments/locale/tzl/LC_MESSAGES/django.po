@@ -1,0 +1,1046 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-16 15:04-0400\n"
+"PO-Revision-Date: 2020-11-18 21:01\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Talossan\n"
+"Language: tzl_TZL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: tzl\n"
+"X-Crowdin-File: /develop/tabbycat/tournaments/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 952\n"
+
+#: tournaments/apps.py:7
+msgid "Tournaments"
+msgstr "crwdns33086:0crwdne33086:0"
+
+#: tournaments/forms.py:27
+msgid "Number of preliminary rounds"
+msgstr "crwdns33088:0crwdne33088:0"
+
+#: tournaments/forms.py:32
+msgid "Number of teams in the open break"
+msgstr "crwdns33090:0crwdne33090:0"
+
+#: tournaments/forms.py:33
+msgid "Leave blank if there are no break rounds."
+msgstr "crwdns33092:0crwdne33092:0"
+
+#: tournaments/forms.py:39
+msgid "Did you agree with their decision?"
+msgstr "crwdns33094:0crwdne33094:0"
+
+#: tournaments/forms.py:39
+msgid "Agree?"
+msgstr "crwdns33096:0crwdne33096:0"
+
+#: tournaments/forms.py:45
+msgid "Comments"
+msgstr "crwdns33098:0crwdne33098:0"
+
+#. Translators: This is the name given to the 'Open Break'.
+#: tournaments/forms.py:59
+msgid "Open"
+msgstr "crwdns33100:0crwdne33100:0"
+
+#: tournaments/forms.py:84
+msgid "Format Configuration"
+msgstr "crwdns33102:0crwdne33102:0"
+
+#: tournaments/forms.py:85
+msgid "Apply a standard set of settings to match a common debate format"
+msgstr "crwdns33104:0crwdne33104:0"
+
+#: tournaments/forms.py:89
+msgid "Public Configuration"
+msgstr "crwdns33106:0crwdne33106:0"
+
+#: tournaments/forms.py:90
+msgid "Show non-sensitive information on the public-facing side of this site, like draws (once released) and the motions of previous rounds"
+msgstr "crwdns33108:0crwdne33108:0"
+
+#: tournaments/forms.py:96
+msgid "<strong>Tabulation:</strong> [list tabulation staff here]<br /><strong>Organisation:</strong> [list organising committee members here]<br /><strong>Adjudication:</strong> [list chief adjudicators here]"
+msgstr "crwdns33110:0crwdne33110:0"
+
+#: tournaments/forms.py:186
+msgid "Current preliminary round"
+msgstr "crwdns34546:0crwdne34546:0"
+
+#: tournaments/forms.py:187
+msgid "All preliminary rounds have been completed"
+msgstr "crwdns34548:0crwdne34548:0"
+
+#: tournaments/forms.py:199
+#, python-format
+msgid "Current elimination round in <strong>%(category)s</strong> <em>(only if all preliminary rounds have been completed)</em>"
+msgstr "crwdns34550:0%(category)scrwdne34550:0"
+
+#: tournaments/forms.py:205
+#, python-format
+msgid "All elimination rounds in %(category)s have been completed"
+msgstr "crwdns34552:0%(category)scrwdne34552:0"
+
+#: tournaments/forms.py:217
+msgid "If the current round is a preliminary round, this field must be blank."
+msgstr "crwdns34554:0crwdne34554:0"
+
+#: tournaments/forms.py:223
+msgid "If all preliminary rounds have been completed, this field is required."
+msgstr "crwdns34556:0crwdne34556:0"
+
+#: tournaments/mixins.py:108
+#, python-format
+msgid "You've been redirected to this page because tournament %(tournament)s has no rounds. Please create some before returning to the admin site."
+msgstr "crwdns51438:0%(tournament)scrwdne51438:0"
+
+#: tournaments/mixins.py:116
+#, python-format
+msgid "There's a problem with the data for the tournament %(tournament)s. Please contact a tab director and ask them to investigate."
+msgstr "crwdns51440:0%(tournament)scrwdne51440:0"
+
+#: tournaments/mixins.py:129
+msgid "You've been redirected to this page because of a problem with how teams are assigned to sides in a debate."
+msgstr "crwdns33114:0crwdne33114:0"
+
+#: tournaments/mixins.py:136
+msgid "There's a problem with how teams are assigned to sides in a debate. The tab director will need to resolve this issue."
+msgstr "crwdns33116:0crwdne33116:0"
+
+#: tournaments/mixins.py:231 tournaments/templates/round_complete_check.html:8
+#, python-format
+msgid "for %(round)s"
+msgstr "crwdns33118:0%(round)scrwdne33118:0"
+
+#: tournaments/mixins.py:431
+msgid "Return to Draw"
+msgstr "crwdns35320:0crwdne35320:0"
+
+#: tournaments/models.py:27
+msgid "You can't use this as a tournament slug, because it's reserved for a Tabbycat system URL. Please try another one."
+msgstr "crwdns33120:0crwdne33120:0"
+
+#: tournaments/models.py:34 tournaments/models.py:330
+msgid "name"
+msgstr "crwdns33122:0crwdne33122:0"
+
+#: tournaments/models.py:35
+msgid "The full name, e.g. \"Australasian Intervarsity Debating Championships 2016\""
+msgstr "crwdns33124:0crwdne33124:0"
+
+#: tournaments/models.py:37
+msgid "short name"
+msgstr "crwdns33126:0crwdne33126:0"
+
+#: tournaments/models.py:38
+msgid "The name used in the menu, e.g. \"Australs 2016\""
+msgstr "crwdns33128:0crwdne33128:0"
+
+#: tournaments/models.py:40 tournaments/models.py:324
+msgid "sequence number"
+msgstr "crwdns33130:0crwdne33130:0"
+
+#: tournaments/models.py:41
+msgid "A number that determines the relative order in which tournaments are displayed on the homepage."
+msgstr "crwdns33132:0crwdne33132:0"
+
+#: tournaments/models.py:43
+msgid "slug"
+msgstr "crwdns33134:0crwdne33134:0"
+
+#: tournaments/models.py:44
+msgid "The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\""
+msgstr "crwdns33136:0crwdne33136:0"
+
+#: tournaments/models.py:45
+msgid "active"
+msgstr "crwdns33142:0crwdne33142:0"
+
+#: tournaments/models.py:48 tournaments/models.py:323
+msgid "tournament"
+msgstr "crwdns33144:0crwdne33144:0"
+
+#: tournaments/models.py:49
+msgid "tournaments"
+msgstr "crwdns33146:0crwdne33146:0"
+
+#: tournaments/models.py:295
+msgid "Random"
+msgstr "crwdns33148:0crwdne33148:0"
+
+#: tournaments/models.py:296
+msgid "Manual"
+msgstr "crwdns33150:0crwdne33150:0"
+
+#: tournaments/models.py:297
+msgid "Round-robin"
+msgstr "crwdns33152:0crwdne33152:0"
+
+#: tournaments/models.py:298
+msgid "Power-paired"
+msgstr "crwdns33154:0crwdne33154:0"
+
+#: tournaments/models.py:299 tournaments/models.py:306
+msgid "Elimination"
+msgstr "crwdns33156:0crwdne33156:0"
+
+#: tournaments/models.py:305
+msgid "Preliminary"
+msgstr "crwdns33158:0crwdne33158:0"
+
+#: tournaments/models.py:315
+msgid "None"
+msgstr "crwdns33160:0crwdne33160:0"
+
+#: tournaments/models.py:316
+msgid "Draft"
+msgstr "crwdns33162:0crwdne33162:0"
+
+#: tournaments/models.py:317
+msgid "Confirmed"
+msgstr "crwdns33164:0crwdne33164:0"
+
+#: tournaments/models.py:318
+msgid "Released"
+msgstr "crwdns33166:0crwdne33166:0"
+
+#: tournaments/models.py:325
+msgid "A number that determines the order of the round, should count consecutively from 1 for the first round"
+msgstr "crwdns33168:0crwdne33168:0"
+
+#: tournaments/models.py:327
+msgid "completed"
+msgstr "crwdns34564:0crwdne34564:0"
+
+#: tournaments/models.py:328
+msgid "True if the round is over, which normally means all results have been entered and confirmed"
+msgstr "crwdns34566:0crwdne34566:0"
+
+#: tournaments/models.py:330
+msgid "e.g. \"Round 1\""
+msgstr "crwdns33170:0crwdne33170:0"
+
+#: tournaments/models.py:331
+msgid "abbreviation"
+msgstr "crwdns33172:0crwdne33172:0"
+
+#: tournaments/models.py:331
+msgid "e.g. \"R1\""
+msgstr "crwdns33174:0crwdne33174:0"
+
+#: tournaments/models.py:333
+msgid "stage"
+msgstr "crwdns33176:0crwdne33176:0"
+
+#: tournaments/models.py:334
+msgid "Preliminary = inrounds, elimination = outrounds"
+msgstr "crwdns33178:0crwdne33178:0"
+
+#: tournaments/models.py:336
+msgid "draw type"
+msgstr "crwdns33180:0crwdne33180:0"
+
+#: tournaments/models.py:337
+msgid "Which draw method to use"
+msgstr "crwdns33182:0crwdne33182:0"
+
+#: tournaments/models.py:340
+msgid "break category"
+msgstr "crwdns33184:0crwdne33184:0"
+
+#: tournaments/models.py:341
+msgid "If elimination round, which break category"
+msgstr "crwdns33186:0crwdne33186:0"
+
+#: tournaments/models.py:344
+msgid "draw status"
+msgstr "crwdns33188:0crwdne33188:0"
+
+#: tournaments/models.py:345
+msgid "The status of this round's draw"
+msgstr "crwdns33190:0crwdne33190:0"
+
+#: tournaments/models.py:348
+msgid "feedback weight"
+msgstr "crwdns33192:0crwdne33192:0"
+
+#: tournaments/models.py:350
+#, no-python-format
+msgid "The extent to which each adjudicator's overall score depends on feedback vs their base score. At 0, it is 100% drawn from their base score, at 1 it is 100% drawn from feedback."
+msgstr "crwdns35630:0crwdne35630:0"
+
+#. Translators: A silent round is a round for which results are not disclosed once the round is over.
+#: tournaments/models.py:353
+msgid "silent"
+msgstr "crwdns33196:0crwdne33196:0"
+
+#: tournaments/models.py:354
+msgid "If marked silent, information about this round (such as its results) will not be shown publicly."
+msgstr "crwdns33198:0crwdne33198:0"
+
+#: tournaments/models.py:356
+msgid "motions released"
+msgstr "crwdns33200:0crwdne33200:0"
+
+#: tournaments/models.py:357
+msgid "Whether motions will appear on the public website, assuming that feature is turned on"
+msgstr "crwdns33202:0crwdne33202:0"
+
+#: tournaments/models.py:358
+msgid "starts at"
+msgstr "crwdns33204:0crwdne33204:0"
+
+#: tournaments/models.py:361
+msgid "weight"
+msgstr "crwdns51786:0crwdne51786:0"
+
+#: tournaments/models.py:362
+msgid "A factor for the points received in the round. For example, if 2, all points are doubled."
+msgstr "crwdns51788:0crwdne51788:0"
+
+#: tournaments/models.py:365
+msgid "round"
+msgstr "crwdns33206:0crwdne33206:0"
+
+#: tournaments/models.py:366
+msgid "rounds"
+msgstr "crwdns33208:0crwdne33208:0"
+
+#: tournaments/models.py:379
+msgid "A round in the elimination stage must have its draw type set to \"Elimination\"."
+msgstr "crwdns33210:0crwdne33210:0"
+
+#: tournaments/models.py:382
+msgid "A round in the preliminary stage cannot have its draw type set to \"Elimination\"."
+msgstr "crwdns33212:0crwdne33212:0"
+
+#: tournaments/models.py:387
+msgid "Elimination rounds must have a break category."
+msgstr "crwdns33214:0crwdne33214:0"
+
+#: tournaments/templates/assistant_tournament_index.html:4
+msgid "Dashboard"
+msgstr "crwdns33220:0crwdne33220:0"
+
+#: tournaments/templates/assistant_tournament_index.html:5
+msgid "Overview"
+msgstr "crwdns33222:0crwdne33222:0"
+
+#: tournaments/templates/assistant_tournament_index.html:8
+#, python-format
+msgid "current round: %(round)s, status: %(status)s"
+msgstr "crwdns51442:0%(round)scrwdnd51442:0%(status)scrwdne51442:0"
+
+#: tournaments/templates/blank_site_start.html:7
+#: tournaments/templates/blank_site_start.html:20
+msgid "Welcome to Tabbycat!"
+msgstr "crwdns33228:0crwdne33228:0"
+
+#: tournaments/templates/blank_site_start.html:23
+msgid "To get started, you'll need to create the first user account. This account is a \"superuser\" account: it will be able to edit anything on the site. Therefore, you should use a strong password."
+msgstr "crwdns33230:0crwdne33230:0"
+
+#: tournaments/templates/blank_site_start.html:28
+msgid "You can only create this account once, but if you like, you can change the username and password after it's created, or add new superusers afterwards."
+msgstr "crwdns33232:0crwdne33232:0"
+
+#: tournaments/templates/blank_site_start.html:32
+msgid "The email address is used for password resets. You don't have to provide one, but if you don't, you won't be able to reset your password if you forget it."
+msgstr "crwdns51646:0crwdne51646:0"
+
+#: tournaments/templates/blank_site_start.html:40
+msgid "Create Account"
+msgstr "crwdns33236:0crwdne33236:0"
+
+#: tournaments/templates/configure_tournament.html:5
+#, python-format
+msgid "Configure Tournament %(tournament)s"
+msgstr "crwdns51444:0%(tournament)scrwdne51444:0"
+
+#: tournaments/templates/configure_tournament.html:9
+#: tournaments/templates/create_tournament.html:5
+msgid "Tabbycat"
+msgstr "crwdns33240:0crwdne33240:0"
+
+#: tournaments/templates/configure_tournament.html:20
+msgid "To finish creating your tournament select a basic configuration options. Note that these can always be changed later (and with more precise control) if needed."
+msgstr "crwdns33242:0crwdne33242:0"
+
+#: tournaments/templates/configure_tournament.html:25
+msgid "Configure Tournament"
+msgstr "crwdns33244:0crwdne33244:0"
+
+#: tournaments/templates/create_tournament.html:4
+msgid "Create New Tournament"
+msgstr "crwdns33246:0crwdne33246:0"
+
+#: tournaments/templates/create_tournament.html:15
+#, python-format
+msgid "Tabbycat is free to use for non-profit and non-fundraising tournaments (although donations are encouraged). If your tournament is run for profit or for fundraising, please note that there is a <a href=\"%(donations_url)s\">required payment</a>. For more details, see the <a href=\"http://tabbycat.readthedocs.io/en/stable/about/licence.html\"> Tabbycat licence agreement</a>."
+msgstr "crwdns33248:0%(donations_url)scrwdne33248:0"
+
+#: tournaments/templates/create_tournament.html:27
+msgid "Just trying out Tabbycat?"
+msgstr "crwdns33250:0crwdne33250:0"
+
+#: tournaments/templates/create_tournament.html:28
+msgid "If you're learning or playing around with Tabbycat, it's easiest to create a demo tournament that is prepopulated with a fake (but typical) set of teams, adjudicators, rooms, and the like. You can then delete this demo tournament later on, or deploy a new instance for your real tournament."
+msgstr "crwdns51446:0crwdne51446:0"
+
+#: tournaments/templates/create_tournament.html:42
+#, python-format
+msgid "Load %(demo)s"
+msgstr "crwdns51448:0%(demo)scrwdne51448:0"
+
+#: tournaments/templates/create_tournament.html:49
+msgid "You already have a tournament set up using this data set. Reloading the data will delete <strong>all data</strong> from that tournament."
+msgstr "crwdns35532:0crwdne35532:0"
+
+#: tournaments/templates/create_tournament.html:69
+msgid "Create Tournament"
+msgstr "crwdns33258:0crwdne33258:0"
+
+#: tournaments/templates/create_tournament.html:70
+msgid "Cancel and go back to the site home page"
+msgstr "crwdns33260:0crwdne33260:0"
+
+#: tournaments/templates/donations.html:4
+#: tournaments/templates/donations.html:5
+msgctxt "title"
+msgid "Donate to Tabbycat"
+msgstr "crwdns33262:0crwdne33262:0"
+
+#: tournaments/templates/donations.html:11
+msgid "Tabbycat is a volunteer effort. Since 2012, its maintainers have spent thousands of hours working on it."
+msgstr "crwdns33264:0crwdne33264:0"
+
+#: tournaments/templates/donations.html:17
+msgid "Donating to Tabbycat helps the maintainers to meet recurring costs and justify our ongoing contributions in responding to support enquiries, keeping the software up to date, fixing bugs, and developing new features."
+msgstr "crwdns33266:0crwdne33266:0"
+
+#: tournaments/templates/donations.html:24
+msgid "We suggest that tournaments budget for a donation of A$1 (Australian dollar) per team. For tournaments run for fundraising or for profit, whether partly or solely, this payment is <strong>required</strong> and your licence to use Tabbycat is conditional upon it. General donations from individuals or organisations are of course also much appreciated."
+msgstr "crwdns33268:0crwdne33268:0"
+
+#: tournaments/templates/donations.html:34
+#, python-format
+msgid "Our suggested donation from %(tournament)s, based on its size, is <strong>A$%(nteams)s</strong>. The easiest way to donate is <a href=\"http://PayPal.Me/tabbycatproject/%(nteams)saud\">via Paypal</a>, but please don’t hesitate to <a href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html#email\">email us</a> if other methods would work better for you. Also, feel free to get in touch if you require an invoice or receipt for the payment."
+msgstr "crwdns33270:0%(tournament)scrwdnd33270:0%(nteams)scrwdnd33270:0%(nteams)scrwdne33270:0"
+
+#: tournaments/templates/donations.html:46
+msgid "The easiest way to donate is <a href=\"http://PayPal.Me/tabbycatproject/0aud\">via Paypal</a>. Please <a href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html\">contact us</a> if you require other options."
+msgstr "crwdns33272:0crwdne33272:0"
+
+#: tournaments/templates/fix_debate_teams.html:6
+msgid "Debate Team Missing"
+msgstr "crwdns33274:0crwdne33274:0"
+
+#: tournaments/templates/fix_debate_teams.html:16
+msgid "Tabbycat always requires that, in every debate, one and only one team is assigned to each side. When that is not the case, this error occurs. Usually, this is the result of debates having been manually edited."
+msgstr "crwdns33276:0crwdne33276:0"
+
+#: tournaments/templates/fix_debate_teams.html:24
+msgid "A list of offending debates is presented below. To fix them, you'll need to do the following:"
+msgstr "crwdns33278:0crwdne33278:0"
+
+#. Translators: This is in a list of instructions.
+#: tournaments/templates/fix_debate_teams.html:33
+msgid "Click the <strong>Fix this debate</strong> button for that debate."
+msgstr "crwdns33280:0crwdne33280:0"
+
+#. Translators: This is in a list of instructions.
+#: tournaments/templates/fix_debate_teams.html:39
+msgid "Ensure that every <strong>side</strong> that should be present in the debate is present and has a <strong>team</strong> assigned. If a team is missing, find an empty row and use the magnifying glass to select a team. Then set the new team's <strong>side</strong> accordingly."
+msgstr "crwdns33282:0crwdne33282:0"
+
+#. Translators: This is in a list of instructions.
+#: tournaments/templates/fix_debate_teams.html:48
+msgid "Ensure that no <strong>side</strong> appears more than once in the debate."
+msgstr "crwdns33284:0crwdne33284:0"
+
+#. Translators: This is in a list of instructions.
+#: tournaments/templates/fix_debate_teams.html:55
+msgid "<strong>Save</strong> the changes."
+msgstr "crwdns33286:0crwdne33286:0"
+
+#: tournaments/templates/fix_debate_teams.html:62
+msgid "Once you've fixed all the debates, you should then be able to return to whatever page you were originally on without the error reoccurring."
+msgstr "crwdns33288:0crwdne33288:0"
+
+#: tournaments/templates/fix_debate_teams.html:68
+#, python-format
+msgid "You can also see all the debates in the <a href=\"%(edit_debates_url)s\" target=\"_blank\">Debates section of the Edit Database Area</a>."
+msgstr "crwdns33290:0%(edit_debates_url)scrwdne33290:0"
+
+#: tournaments/templates/fix_debate_teams.html:82
+msgid "Debate ID"
+msgstr "crwdns33292:0crwdne33292:0"
+
+#: tournaments/templates/fix_debate_teams.html:85
+#, python-format
+msgid "Team(s) on %(side)s"
+msgstr "crwdns51450:0%(side)scrwdne51450:0"
+
+#: tournaments/templates/fix_debate_teams.html:90
+msgid "Link to fix this debate"
+msgstr "crwdns33296:0crwdne33296:0"
+
+#: tournaments/templates/fix_debate_teams.html:101
+msgid "No teams"
+msgstr "crwdns33298:0crwdne33298:0"
+
+#: tournaments/templates/fix_debate_teams.html:109
+msgid "Multiple teams"
+msgstr "crwdns33300:0crwdne33300:0"
+
+#: tournaments/templates/fix_debate_teams.html:120
+msgctxt "button label"
+msgid "Fix this debate"
+msgstr "crwdns33302:0crwdne33302:0"
+
+#: tournaments/templates/fix_debate_teams.html:127
+msgid "It looks like all debates are in good shape!"
+msgstr "crwdns33304:0crwdne33304:0"
+
+#: tournaments/templates/fix_debate_teams.html:128
+msgid "If you keep getting redirected to this page and you're not sure why, please contact the developers of Tabbycat."
+msgstr "crwdns33306:0crwdne33306:0"
+
+#: tournaments/templates/public_tournament_index.html:5
+#: tournaments/templates/public_tournament_index.html:9
+#, python-format
+msgid "Welcome to %(tournament)s"
+msgstr "crwdns51452:0%(tournament)scrwdne51452:0"
+
+#: tournaments/templates/public_tournament_index.html:18
+msgid "There is currently no public information available for this tournament."
+msgstr "crwdns33310:0crwdne33310:0"
+
+#: tournaments/templates/public_tournament_index.html:36
+msgid "Team Tab"
+msgstr "crwdns33312:0crwdne33312:0"
+
+#: tournaments/templates/public_tournament_index.html:43
+#, python-format
+msgid "%(category)s Team Tab"
+msgstr "crwdns51454:0%(category)scrwdne51454:0"
+
+#: tournaments/templates/public_tournament_index.html:52
+msgid "Speaker Tab"
+msgstr "crwdns33316:0crwdne33316:0"
+
+#: tournaments/templates/public_tournament_index.html:60
+#, python-format
+msgid "%(category)s Speaker Tab"
+msgstr "crwdns51456:0%(category)scrwdne51456:0"
+
+#: tournaments/templates/public_tournament_index.html:70
+msgid "Replies Tab"
+msgstr "crwdns33320:0crwdne33320:0"
+
+#: tournaments/templates/public_tournament_index.html:76
+msgid "Adjudicator Tab"
+msgstr "crwdns33322:0crwdne33322:0"
+
+#: tournaments/templates/public_tournament_index.html:82
+msgid "Motions Tab"
+msgstr "crwdns33324:0crwdne33324:0"
+
+#: tournaments/templates/public_tournament_index.html:88
+#: tournaments/templates/public_tournament_index.html:135
+msgid "Sides"
+msgstr "crwdns33326:0crwdne33326:0"
+
+#: tournaments/templates/public_tournament_index.html:97
+#: tournaments/templates/public_tournament_index.html:201
+#, python-format
+msgid "Draw for %(round)s"
+msgstr "crwdns51458:0%(round)scrwdne51458:0"
+
+#: tournaments/templates/public_tournament_index.html:101
+msgid "Draws for Current Rounds"
+msgstr "crwdns34568:0crwdne34568:0"
+
+#: tournaments/templates/public_tournament_index.html:106
+#, python-format
+msgid "%(round)s's draw has yet to be released"
+msgstr "crwdns51460:0%(round)scrwdne51460:0"
+
+#: tournaments/templates/public_tournament_index.html:110
+msgid "The draw for the next round has yet to be released"
+msgstr "crwdns34570:0crwdne34570:0"
+
+#: tournaments/templates/public_tournament_index.html:117
+msgid "Check-Ins"
+msgstr "crwdns33332:0crwdne33332:0"
+
+#: tournaments/templates/public_tournament_index.html:123
+msgid "Results"
+msgstr "crwdns33334:0crwdne33334:0"
+
+#: tournaments/templates/public_tournament_index.html:129
+msgid "Motions"
+msgstr "crwdns33338:0crwdne33338:0"
+
+#: tournaments/templates/public_tournament_index.html:141
+msgid "Team Standings"
+msgstr "crwdns33340:0crwdne33340:0"
+
+#: tournaments/templates/public_tournament_index.html:148
+#, python-format
+msgid "%(category)s Break"
+msgstr "crwdns51462:0%(category)scrwdne51462:0"
+
+#: tournaments/templates/public_tournament_index.html:157
+msgid "Breaking Adjudicators"
+msgstr "crwdns33344:0crwdne33344:0"
+
+#: tournaments/templates/public_tournament_index.html:163
+msgid "Diversity"
+msgstr "crwdns34572:0crwdne34572:0"
+
+#: tournaments/templates/public_tournament_index.html:169
+msgid "Participants"
+msgstr "crwdns33348:0crwdne33348:0"
+
+#: tournaments/templates/public_tournament_index.html:175
+msgid "Institutions"
+msgstr "crwdns33350:0crwdne33350:0"
+
+#: tournaments/templates/public_tournament_index.html:181
+msgid "Feedback Progress"
+msgstr "crwdns33352:0crwdne33352:0"
+
+#: tournaments/templates/public_tournament_index.html:187
+msgid "Enter Ballot"
+msgstr "crwdns33354:0crwdne33354:0"
+
+#: tournaments/templates/public_tournament_index.html:193
+msgid "Enter Feedback"
+msgstr "crwdns33356:0crwdne33356:0"
+
+#: tournaments/templates/public_tournament_index.html:215
+msgid "Tournament Staff"
+msgstr "crwdns33360:0crwdne33360:0"
+
+#: tournaments/templates/round_complete_check.html:4
+#: tournaments/templates/round_complete_check.html:6
+msgid "Confirm Round Completion"
+msgstr "crwdns34574:0crwdne34574:0"
+
+#: tournaments/templates/round_complete_check.html:13
+msgid "Enter Results"
+msgstr "crwdns33366:0crwdne33366:0"
+
+#: tournaments/templates/round_complete_check.html:18
+msgid "Emails have already been sent."
+msgstr "crwdns33368:0crwdne33368:0"
+
+#: tournaments/templates/round_complete_check.html:23
+msgid "Email Team Wins/Losses"
+msgstr "crwdns33370:0crwdne33370:0"
+
+#: tournaments/templates/round_complete_check.html:25
+msgid "Email Team Points"
+msgstr "crwdns33372:0crwdne33372:0"
+
+#: tournaments/templates/round_complete_check.html:34
+#, python-format
+msgid "Mark %(round)s as Completed"
+msgstr "crwdns51464:0%(round)scrwdne51464:0"
+
+#: tournaments/templates/round_complete_check.html:41
+#, python-format
+msgid "Mark %(round)s as Completed Anyway"
+msgstr "crwdns51466:0%(round)scrwdne51466:0"
+
+#: tournaments/templates/round_complete_check.html:50
+#, python-format
+msgid "Go to %(round)s"
+msgstr "crwdns51468:0%(round)scrwdne51468:0"
+
+#: tournaments/templates/round_complete_check.html:62
+#, python-format
+msgid "%(round)s has already been marked as completed!"
+msgstr "crwdns51470:0%(round)scrwdne51470:0"
+
+#: tournaments/templates/round_complete_check.html:67
+#, python-format
+msgid "The following prior round has not yet been completed: %(prior_rounds_not_completed)s. You should complete it before marking this round as completed."
+msgid_plural "The following prior rounds have not yet been completed: %(prior_rounds_not_completed)s. You should complete those before marking this round as completed."
+msgstr[0] "crwdns34584:1%(prior_rounds_not_completed)scrwdne34584:1"
+msgstr[1] "crwdns34584:5%(prior_rounds_not_completed)scrwdne34584:5"
+
+#: tournaments/templates/round_complete_check.html:77
+#, python-format
+msgid "All ballots from %(round)s are confirmed. You should be good to go!"
+msgstr "crwdns51472:0%(round)scrwdne51472:0"
+
+#: tournaments/templates/round_complete_check.html:83
+#, python-format
+msgid "There is still %(num_unconfirmed)s ballot that is not confirmed. You should <strong>not</strong> proceed to the next round until all ballots are confirmed."
+msgid_plural "There are still %(num_unconfirmed)s ballots that are not confirmed. You should <strong>not</strong> proceed to the next round until all ballots are confirmed."
+msgstr[0] "crwdns33380:1%(num_unconfirmed)scrwdne33380:1"
+msgstr[1] "crwdns33380:5%(num_unconfirmed)scrwdne33380:5"
+
+#: tournaments/templates/round_complete_check.html:99
+#, python-format
+msgid "<p>This round is a silent round.</p> <p> Even though public view of results is enabled, results for <em>this</em> round will still be hidden from public view after completing this round. <p> <p> You can change which rounds are silent in the <a href=\"%(round_changelist_url)s\">Edit Database area</a>. </p>"
+msgstr "crwdns35322:0%(round_changelist_url)scrwdne35322:0"
+
+#: tournaments/templates/round_complete_check.html:113
+#, python-format
+msgid "<p><strong> Results for %(round)s will be published online once you mark this round as complete! </strong></p> <p> This round is <em>not</em> a silent round, and public view of results is enabled. </p> <p> If you want to keep the results for just this round hidden, you can mark this round as silent in the <a href=\"%(round_changelist_url)s\">Edit Database area</a>. </p> <p> If you want to disable the public view of results, you can do so in the <a href=\"%(public_features_url)s\">tournament configuration</a>. </p>"
+msgstr "crwdns51474:0%(round)scrwdnd51474:0%(round_changelist_url)scrwdnd51474:0%(public_features_url)scrwdne51474:0"
+
+#: tournaments/templates/set_current_round.html:5
+#: tournaments/templates/set_current_round.html:7
+#: tournaments/templates/set_current_round.html:72
+msgid "Set Current Round"
+msgstr "crwdns33386:0crwdne33386:0"
+
+#: tournaments/templates/set_current_round.html:14
+msgid "Back to Configuration"
+msgstr "crwdns33388:0crwdne33388:0"
+
+#: tournaments/templates/set_current_round.html:33
+#, python-format
+msgid "No round is currently set. In order for Tabbycat to work, please set the <strong>current round</strong> of the tournament <strong>%(tournament)s</strong>."
+msgstr "crwdns51476:0%(tournament)scrwdne51476:0"
+
+#: tournaments/templates/set_current_round.html:42
+#, python-format
+msgid "On this page, you can set the <strong>current round</strong> of the tournament <strong>%(tournament)s</strong>."
+msgstr "crwdns51478:0%(tournament)scrwdne51478:0"
+
+#: tournaments/templates/set_current_round.html:53
+#, python-format
+msgid "The tournament <strong>%(tournament)s</strong> has no rounds. You'll need to <a href=\"%(round_changelist_url)s\">add rounds and associate them with this tournament</a> before you can set the current round."
+msgstr "crwdns51480:0%(tournament)scrwdnd51480:0%(round_changelist_url)scrwdne51480:0"
+
+#: tournaments/templates/site_inactive_tournaments.html:4
+#: tournaments/templates/site_inactive_tournaments.html:5
+#: tournaments/templates/site_index.html:46
+msgid "Inactive Tournaments"
+msgstr "crwdns51482:0crwdne51482:0"
+
+#: tournaments/templates/site_index.html:4
+msgid "Welcome!"
+msgstr "crwdns33396:0crwdne33396:0"
+
+#: tournaments/templates/site_index.html:20
+msgid "It looks like there aren't any tournaments on this site. Would you like to create one?"
+msgstr "crwdns33404:0crwdne33404:0"
+
+#: tournaments/templates/site_index.html:29
+msgid "There are currently no active tournaments set up on this site."
+msgstr "crwdns51484:0crwdne51484:0"
+
+#: tournaments/templates/site_index.html:33
+msgid "There are currently no tournaments set up on this site."
+msgstr "crwdns33406:0crwdne33406:0"
+
+#: tournaments/templates/site_index.html:54
+msgid "New Tournament"
+msgstr "crwdns33414:0crwdne33414:0"
+
+#: tournaments/templates/site_index.html:57
+msgid "Edit Database Area"
+msgstr "crwdns33416:0crwdne33416:0"
+
+#: tournaments/templates/site_index.html:60
+msgid "Send a Test Email"
+msgstr "crwdns34590:0crwdne34590:0"
+
+#: tournaments/templates/site_index.html:69
+#, python-format
+msgid "Get API Token / Change Password (%(user)s)"
+msgstr "crwdns51648:0%(user)scrwdne51648:0"
+
+#: tournaments/templates/site_index.html:73
+#, python-format
+msgid "Log Out (%(user)s)"
+msgstr "crwdns33420:0%(user)scrwdne33420:0"
+
+#: tournaments/templates/site_index.html:79
+msgid "Log In as Admin"
+msgstr "crwdns33422:0crwdne33422:0"
+
+#: tournaments/templates/tournament_index.html:8
+#, python-format
+msgid "We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would make a donation to the project in order to support its ongoing development and maintenance. For a tournament of this size, we suggest a donation of <strong>$%(amount)s</strong>. Note that if your tournament is run for profit, or for fundraising, making this payment is a mandatory condition of Tabbycat's software license. <a href=\"%(url)s\">Learn more about donating.</a>"
+msgstr "crwdns33424:0%(amount)scrwdnd33424:0%(url)scrwdne33424:0"
+
+#: tournaments/templates/tournament_index.html:24
+msgid "Welcome to your new tournament!"
+msgstr "crwdns33426:0crwdne33426:0"
+
+#: tournaments/templates/tournament_index.html:26
+msgid "The next step is to import your initial tournament data: the institutions, teams, adjudicators and rooms that are in your tournament. There are a number of ways to do this. For small-to-medium tournaments, the simple importer is your best bet."
+msgstr "crwdns51486:0crwdne51486:0"
+
+#. Translators: The documentation where the link goes to is in English; translations should mention this with "(in English)" after the link.
+#: tournaments/templates/tournament_index.html:33
+#, python-format
+msgid "For more information, please consult our <a href=\"https://tabbycat.readthedocs.io/en/%(readthedocs_version)s/use/importing-data.html\" class=\"alert-link\" target=\"_blank\"> documentation on importing initial data</a>."
+msgstr "crwdns33430:0%(readthedocs_version)scrwdne33430:0"
+
+#: tournaments/templates/tournament_index.html:43
+msgid "Use the simple importer to add your initial data."
+msgstr "crwdns33432:0crwdne33432:0"
+
+#: tournaments/templates/tournament_index.html:49
+#, python-format
+msgid "Go to the checkins area to begin creating a draw for %(round)s"
+msgstr "crwdns51488:0%(round)scrwdne51488:0"
+
+#: tournaments/templates/tournament_index.html:57
+#, python-format
+msgid "Go to the draw area to allocate adjudicators for %(round)s"
+msgstr "crwdns51490:0%(round)scrwdne51490:0"
+
+#: tournaments/templates/tournament_index.html:65
+#, python-format
+msgid "Go to the results area to begin entering ballots for %(round)s"
+msgstr "crwdns51492:0%(round)scrwdne51492:0"
+
+#: tournaments/templates/tournament_index_links.html:10
+#, python-format
+msgid "Administrator area for <strong>%(tn)s</strong>"
+msgstr "crwdns33398:0%(tn)scrwdne33398:0"
+
+#: tournaments/templates/tournament_index_links.html:17
+#, python-format
+msgid "Assistant area for <strong>%(tn)s</strong>"
+msgstr "crwdns33400:0%(tn)scrwdne33400:0"
+
+#: tournaments/templates/tournament_index_links.html:22
+#, python-format
+msgid "Public area for <strong>%(tn)s</strong>"
+msgstr "crwdns33402:0%(tn)scrwdne33402:0"
+
+#: tournaments/utils.py:12
+msgid "affirmative"
+msgstr "crwdns33464:0crwdne33464:0"
+
+#: tournaments/utils.py:13
+msgid "negative"
+msgstr "crwdns33466:0crwdne33466:0"
+
+#: tournaments/utils.py:14
+msgid "affirmative team"
+msgstr "crwdns33468:0crwdne33468:0"
+
+#: tournaments/utils.py:15
+msgid "negative team"
+msgstr "crwdns33470:0crwdne33470:0"
+
+#: tournaments/utils.py:16
+msgid "Aff"
+msgstr "crwdns33472:0crwdne33472:0"
+
+#: tournaments/utils.py:17
+msgid "Neg"
+msgstr "crwdns33474:0crwdne33474:0"
+
+#: tournaments/utils.py:20
+msgid "government"
+msgstr "crwdns33476:0crwdne33476:0"
+
+#: tournaments/utils.py:21 tournaments/utils.py:29
+msgid "opposition"
+msgstr "crwdns33478:0crwdne33478:0"
+
+#: tournaments/utils.py:22
+msgid "government team"
+msgstr "crwdns33480:0crwdne33480:0"
+
+#: tournaments/utils.py:23 tournaments/utils.py:31
+msgid "opposition team"
+msgstr "crwdns33482:0crwdne33482:0"
+
+#: tournaments/utils.py:24
+msgid "Gov"
+msgstr "crwdns33484:0crwdne33484:0"
+
+#: tournaments/utils.py:25 tournaments/utils.py:33
+msgid "Opp"
+msgstr "crwdns33486:0crwdne33486:0"
+
+#: tournaments/utils.py:28
+msgid "proposition"
+msgstr "crwdns33488:0crwdne33488:0"
+
+#: tournaments/utils.py:30
+msgid "proposition team"
+msgstr "crwdns33490:0crwdne33490:0"
+
+#: tournaments/utils.py:32
+msgid "Prop"
+msgstr "crwdns33492:0crwdne33492:0"
+
+#: tournaments/utils.py:36
+msgid "pro"
+msgstr "crwdns33494:0crwdne33494:0"
+
+#: tournaments/utils.py:37
+msgid "con"
+msgstr "crwdns33496:0crwdne33496:0"
+
+#: tournaments/utils.py:38
+msgid "pro team"
+msgstr "crwdns33498:0crwdne33498:0"
+
+#: tournaments/utils.py:39
+msgid "con team"
+msgstr "crwdns33500:0crwdne33500:0"
+
+#: tournaments/utils.py:40
+msgid "Pro"
+msgstr "crwdns33502:0crwdne33502:0"
+
+#: tournaments/utils.py:41
+msgid "Con"
+msgstr "crwdns33504:0crwdne33504:0"
+
+#: tournaments/utils.py:44
+msgid "appellant"
+msgstr "crwdns33506:0crwdne33506:0"
+
+#: tournaments/utils.py:45
+msgid "respondent"
+msgstr "crwdns33508:0crwdne33508:0"
+
+#: tournaments/utils.py:46
+msgid "appellant team"
+msgstr "crwdns33510:0crwdne33510:0"
+
+#: tournaments/utils.py:47
+msgid "respondent team"
+msgstr "crwdns33512:0crwdne33512:0"
+
+#: tournaments/utils.py:48
+msgid "App"
+msgstr "crwdns33514:0crwdne33514:0"
+
+#: tournaments/utils.py:49
+msgid "Res"
+msgstr "crwdns33516:0crwdne33516:0"
+
+#: tournaments/utils.py:54
+msgid "opening government"
+msgstr "crwdns33518:0crwdne33518:0"
+
+#: tournaments/utils.py:55
+msgid "opening opposition"
+msgstr "crwdns33520:0crwdne33520:0"
+
+#: tournaments/utils.py:56
+msgid "closing government"
+msgstr "crwdns33522:0crwdne33522:0"
+
+#: tournaments/utils.py:57
+msgid "closing opposition"
+msgstr "crwdns33524:0crwdne33524:0"
+
+#: tournaments/utils.py:58
+msgid "opening government team"
+msgstr "crwdns33526:0crwdne33526:0"
+
+#: tournaments/utils.py:59
+msgid "opening opposition team"
+msgstr "crwdns33528:0crwdne33528:0"
+
+#: tournaments/utils.py:60
+msgid "closing government team"
+msgstr "crwdns33530:0crwdne33530:0"
+
+#: tournaments/utils.py:61
+msgid "closing opposition team"
+msgstr "crwdns33532:0crwdne33532:0"
+
+#: tournaments/utils.py:62
+msgctxt "BP position"
+msgid "OG"
+msgstr "crwdns33534:0crwdne33534:0"
+
+#: tournaments/utils.py:63
+msgctxt "BP position"
+msgid "OO"
+msgstr "crwdns33536:0crwdne33536:0"
+
+#: tournaments/utils.py:64
+msgctxt "BP position"
+msgid "CG"
+msgstr "crwdns33538:0crwdne33538:0"
+
+#: tournaments/utils.py:65
+msgctxt "BP position"
+msgid "CO"
+msgstr "crwdns33540:0crwdne33540:0"
+
+#: tournaments/utils.py:78
+#, python-format
+msgid "Round %(number)d"
+msgstr "crwdns33542:0%(number)dcrwdne33542:0"
+
+#. Translators: This stands for "Round %(number)d".
+#: tournaments/utils.py:80
+#, python-format
+msgid "R%(number)d"
+msgstr "crwdns33544:0%(number)dcrwdne33544:0"
+
+#: tournaments/views.py:153
+#, python-format
+msgid "%(round)s has been marked as completed. All rounds are now completed, so you're done with the tournament! Congratulations!"
+msgstr "crwdns35326:0%(round)scrwdne35326:0"
+
+#: tournaments/views.py:159
+#, python-format
+msgid "%(round)s has been marked as completed. That's the last round in that sequence! Going back to the first round that hasn't been marked as completed."
+msgstr "crwdns34594:0%(round)scrwdne34594:0"
+
+#: tournaments/views.py:172
+#, python-format
+msgid "%(round)s has been marked as completed. You've made it to the end of the preliminary rounds! Congratulations! The next step is to generate the break."
+msgstr "crwdns35328:0%(round)scrwdne35328:0"
+
+#: tournaments/views.py:178
+#, python-format
+msgid "%(round)s has been marked as completed. That was the last preliminary round, but one or more preliminary rounds are still not completed. Going back to the first incomplete preliminary round."
+msgstr "crwdns34598:0%(round)scrwdne34598:0"
+
+#: tournaments/views.py:186
+#, python-format
+msgid "%(this_round)s has been marked as completed. Moving on to %(next_round)s! Woohoo! Keep it up!"
+msgstr "crwdns34600:0%(this_round)scrwdnd34600:0%(next_round)scrwdne34600:0"
+
+#: tournaments/views.py:215
+msgid "Whoops! It looks like someone's already created the first user account. Please log in."
+msgstr "crwdns35534:0crwdne35534:0"
+
+#: tournaments/views.py:223
+#, python-format
+msgid "Welcome! You've created an account for %s."
+msgstr "crwdns35536:0%scrwdne35536:0"
+
+#: tournaments/views.py:238
+msgid "8-team generic dataset"
+msgstr "crwdns33560:0crwdne33560:0"
+
+#: tournaments/views.py:239
+msgid "24-team Australs dataset"
+msgstr "crwdns33562:0crwdne33562:0"
+
+#: tournaments/views.py:240
+msgid "88-team BP dataset"
+msgstr "crwdns33564:0crwdne33564:0"
+

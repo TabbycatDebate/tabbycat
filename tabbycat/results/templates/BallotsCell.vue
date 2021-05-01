@@ -28,8 +28,9 @@
 
         <!-- Ballot metadata -->
         <span class="small text-muted ballot-info">
-          <span class="text-monospace">{{ ballot.short_time }}</span>
-          {{ ballot.submitter }}
+          <span class="text-monospace">{{ ballot.short_time }} </span>
+          <span class="text-info" v-if="ballot.private_url">{{ ballot.submitter }}</span>
+          <span v-else>{{ ballot.submitter }}</span>
         </span>
 
       </div>

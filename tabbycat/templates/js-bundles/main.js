@@ -32,7 +32,7 @@ var $ = require('jquery')
 // Setup error logging (should happen before other imports)
 if (window.buildData.sentry === true) {
   Sentry.init({
-    dsn: 'https://88a028d7eb504d93a1e4c92e077d6ce5@sentry.io/185378',
+    dsn: 'https://88a028d7eb504d93a1e4c92e077d6ce5@o85113.ingest.sentry.io/185378',
     integrations: [new Integrations.Vue({ Vue, attachProps: true })],
     release: window.buildData.version,
   })

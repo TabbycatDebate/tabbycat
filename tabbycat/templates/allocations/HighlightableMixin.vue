@@ -74,7 +74,12 @@ export default {
   },
   methods: {
     getCSSForOverlapping: function (highlightKey, highlightType) {
-      if (typeof this.highlightData === 'object' && this.highlightData && highlightKey in this.highlightData) {
+      if (
+        typeof this.highlightData === 'object' &&
+        this.highlightData &&
+        highlightKey in this.highlightData &&
+        highlightType in this.highlights
+      ) {
         var classes = []
         const highlightCategories = Object.keys(this.highlights[highlightType].options)
         for (const category of this.highlightData[highlightKey]) {

@@ -3,6 +3,7 @@ from django.contrib import admin, messages
 from django.db.models import Prefetch
 from django.utils.translation import gettext, ngettext
 from django.utils.translation import gettext_lazy as _
+from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
 from draw.models import DebateTeam
 from utils.admin import custom_titled_filter
@@ -21,7 +22,7 @@ class AdjudicatorBaseScoreHistoryAdmin(admin.ModelAdmin):
     list_display = ('adjudicator', 'round', 'score', 'timestamp')
     list_filter  = ('adjudicator', 'round')
     ordering     = ('timestamp',)
-    search_fields = ('adjudicator__name', 'adjudicator__institution__code')
+    search_fields = ('adjudicator__name', 'adjudicator__institution__name')
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('round__tournament', 'adjudicator__institution')
@@ -45,7 +46,7 @@ class QuestionForm(forms.ModelForm):
 
 
 @admin.register(AdjudicatorFeedbackQuestion)
-class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
+class AdjudicatorFeedbackQuestionAdmin(DynamicArrayMixin, admin.ModelAdmin):
     form = QuestionForm
     list_display = ('reference', 'text', 'seq', 'tournament', 'answer_type',
                     'required', 'from_adj', 'from_team')
@@ -129,7 +130,7 @@ class RoundListFilter(admin.SimpleListFilter):
 @admin.register(AdjudicatorFeedback)
 class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
     list_display  = ('adjudicator', 'confirmed', 'ignored', 'score', 'version', 'get_source')
-    search_fields = ('adjudicator__name', 'adjudicator__institution__code',
+    search_fields = ('adjudicator__name', 'adjudicator__institution__name',
             'score', 'source_adjudicator__adjudicator__name',
             'source_team__team__short_name', 'source_team__team__long_name')
     raw_id_fields = ('source_team', 'adjudicator', 'source_team', 'source_adjudicator')

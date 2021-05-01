@@ -3,8 +3,8 @@
 import logging
 
 from django.contrib.postgres.aggregates import ArrayAgg
-from django.db.models import Avg, Count, F, FloatField, Func, PositiveIntegerField, Q, StdDev, Sum
-from django.db.models.functions import Cast
+from django.db.models import Avg, Count, F, FloatField, PositiveIntegerField, Q, StdDev, Sum
+from django.db.models.functions import Cast, NullIf
 from django.utils.translation import gettext_lazy as _
 
 from results.models import TeamScore
@@ -15,12 +15,6 @@ from .metrics import BaseMetricAnnotator, metricgetter, QuerySetMetricAnnotator,
 from .ranking import BasicRankAnnotator, RankFromInstitutionAnnotator, SubrankAnnotator
 
 logger = logging.getLogger(__name__)
-
-
-class NullIf(Func):
-    """NULLIF() function in SQL. This implementation doesn't vet arguments, so
-    it's a little fragile when used incorrectly - use with care."""
-    function = 'NULLIF'
 
 
 # ==============================================================================
@@ -139,20 +133,21 @@ class AverageMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
 
 class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
-    """Metric annotator for total constructive speaker score."""
+    """Metric annotator for total substantive speaker score."""
     key = "speaks_ind_avg"
     name = _("average individual speaker score")
     abbr = _("AISS")
 
     function = Avg
+    combinable = False
 
     def get_field(self):
         return 'debateteam__speakerscore__score'
 
     def get_annotation_filter(self, round=None):
         annotation_filter = Q(
-            debateteam__teamscore__ballot_submission__confirmed=True,
             debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
+            debateteam__speakerscore__ballot_submission__confirmed=True,
             debateteam__speakerscore__ghost=False,
         )
         if round is not None:
@@ -274,11 +269,9 @@ class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         # it's probably (though not certainly) the case that there are no
         # "weird" cases causing any fractional numbers of votes due to
         # normalization. In that case, convert all metrics to integers.
-        cast = int if all(t.num_adjs == int(t.num_adjs) for t in queryset) else float
+        cast = int if all(t.num_adjs == int(t.num_adjs) for t in queryset if t.num_adjs is not None) else float
         for item in queryset:
-            metric = item.num_adjs
-            if metric is None:
-                metric = 0
+            metric = item.num_adjs or 0
             standings.add_metric(item, self.key, cast(metric))
 
 

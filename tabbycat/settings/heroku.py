@@ -124,8 +124,9 @@ elif environ.get('SENDGRID_USERNAME', ''):
 # ==============================================================================
 
 if not environ.get('DISABLE_SENTRY'):
+    DISABLE_SENTRY = False
     sentry_sdk.init(
-        dsn="https://6bf2099f349542f4b9baf73ca9789597@sentry.io/185382",
+        dsn="https://6bf2099f349542f4b9baf73ca9789597@o85113.ingest.sentry.io/185382",
         integrations=[
             DjangoIntegration(),
             LoggingIntegration(event_level=logging.WARNING),
@@ -134,10 +135,6 @@ if not environ.get('DISABLE_SENTRY'):
         send_default_pii=True,
         release=TABBYCAT_VERSION,
     )
-
-    # Override dictionary trimming so that all preferences will be included in Sentry reports
-    # https://forum.sentry.io/t/python-sdk-extra-data-capped-at-400-characters/6909
-    sentry_sdk.serializer.MAX_DATABAG_BREADTH = 200
 
 # ==============================================================================
 # Scout

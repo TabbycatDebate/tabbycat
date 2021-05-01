@@ -4,12 +4,12 @@ info:
   description: Parliamentary debate tabulation software
   termsOfService: 'https://tabbycat.readthedocs.io/en/stable/'
   contact:
-    email: tech@debatingsociety.ca
+    email: ebeaule@tabbycat-debate.org
     name: Étienne Beaulé
   license:
     name: Tabbycat
     url: 'https://tabbycat.readthedocs.io/en/stable/about/licence.html'
-  version: 1.0.0
+  version: 1.1.0
 security:
   - Token: []
 paths:
@@ -238,6 +238,13 @@ paths:
           required: false
           schema:
             type: integer
+        - name: break
+          in: query
+          description: >-
+            If present, only show breaking adjudicators, if permissions allow.
+          required: false
+          schema:
+            type: boolean
       responses:
         '200':
           description: ''
@@ -563,10 +570,80 @@ paths:
         required: true
         schema:
           type: string
+  '/v1/tournaments/{tournament_slug}/break-categories/{id}/break':
+    get:
+      operationId: v1_tournaments_break-categories_break_read
+      description: Get team breaks for the break category
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BreakingTeam'
+      tags:
+        - v1
+        - break-categories
+    post:
+      operationId: v1_tournaments_break-categories_break_create
+      description: Create a break for a break category
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BreakingTeam'
+      tags:
+        - v1
+        - break-categories
+    delete:
+      operationId: v1_tournaments_break-categories_break_delete
+      description: Delete a break category''s break
+      responses:
+        '204':
+          description: ''
+      tags:
+        - v1
+        - break-categories
+    patch:
+      operationId: v1_tournaments_break-categories_break_partial_update
+      description: Update remark on team and regenerate break
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BreakingTeam'
+      tags:
+        - v1
+        - break-categories
+      requestBody:
+        $ref: '#/components/requestBodies/PartialBreakingTeam'
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: tournament_slug
+        in: path
+        required: true
+        schema:
+          type: string
   '/v1/tournaments/{tournament_slug}/feedback':
     get:
       operationId: v1_tournaments_feedback_list
-      description: List all adjudicator feedback for a tournament
+      description: >-
+        List all adjudicator feedback for a tournament.
+        Warning: Expensive operation.
       parameters:
         - name: limit
           in: query
@@ -1853,7 +1930,7 @@ paths:
             type: integer
         - name: category
           in: query
-          description: Restrict the standings to a speaker category
+          description: Restrict the standings to a break category
           required: false
           schema:
             type: integer
@@ -2327,6 +2404,30 @@ components:
           schema:
             $ref: '#/components/schemas/DebateResult'
       required: true
+    PartialBreakingTeam:
+      content:
+        application/json:
+          schema:
+            required:
+              - team
+            type: object
+            properties:
+              team:
+                title: Team
+                type: string
+                format: uri
+              remark:
+                title: Remark
+                type: string
+                nullable: true
+                enum:
+                  - C
+                  - I
+                  - D
+                  - d
+                  - t
+                  - w
+                  - null
   securitySchemes:
     Token:
       type: apiKey
@@ -2604,6 +2705,12 @@ components:
           title: Checked
           type: boolean
           readOnly: true
+        timestamp:
+          title: Timestamp
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
     Adjudicator:
       required:
         - name
@@ -2667,6 +2774,9 @@ components:
           title: Base score
           type: number
           format: float
+        breaking:
+          title: Breaking
+          type: boolean
         trainee:
           title: Always trainee
           description: >-
@@ -2726,6 +2836,10 @@ components:
         - priority
       type: object
       properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
         name:
           title: Name
           description: 'Name to be displayed, e.g., "ESL"'
@@ -2798,6 +2912,10 @@ components:
         - seq
       type: object
       properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
         name:
           title: Name
           description: 'Name to be displayed, e.g., "ESL"'
@@ -2957,6 +3075,15 @@ components:
           title: Ignored
           description: Whether the feedback should affect the judge's score
           type: boolean
+        participant_submitter:
+          title: Participant submitter
+          description: >-
+            The submitting participant, adjudicator or speaker (if by private
+            URL)
+          type: string
+          format: uri
+          nullable: true
+          readOnly: true
         submitter:
           title: Submitter
           type: integer
@@ -3442,8 +3569,8 @@ components:
         short_reference:
           title: Short name/suffix
           description: >-
-            The name shown in the draw. Do not include institution name (see
-            "uses institutional prefix" below)
+            The decoded name shown in the draw, not including institution name
+            (see "uses institutional prefix" below)
           type: string
           maxLength: 35
         code_name:
@@ -3460,8 +3587,8 @@ components:
         short_name:
           title: Short name
           description: >-
-            The name shown in the draw, including institution name. This is
-            autogenerated.
+            The decoded name shown in the draw, including institution name. This
+            is autogenerated.
           type: string
           readOnly: true
         long_name:
@@ -3812,6 +3939,13 @@ components:
         discarded:
           title: Discarded
           type: boolean
+        participant_submitter:
+          title: Participant submitter
+          description: The submitting adjudicator (if by private URL)
+          type: string
+          format: uri
+          nullable: true
+          readOnly: true
         submitter:
           title: Submitter
           type: integer
@@ -3822,3 +3956,31 @@ components:
           type: integer
           nullable: true
           readOnly: true
+    BreakingTeam:
+      required:
+        - team
+        - rank
+      type: object
+      properties:
+        team:
+          title: Team
+          type: string
+          format: uri
+        rank:
+          title: Rank
+          type: integer
+        break_rank:
+          title: Break rank
+          type: integer
+        remark:
+          title: Remark
+          type: string
+          nullable: true
+          enum:
+            - C
+            - I
+            - D
+            - d
+            - t
+            - w
+            - null

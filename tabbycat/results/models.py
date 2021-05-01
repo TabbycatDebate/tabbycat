@@ -69,6 +69,9 @@ class Submission(models.Model):
         return dict((arg, getattr(self, arg)) for arg in self._meta.unique_together[0]
                     if arg != 'version')
 
+    def _unique_unconfirm_args(self):
+        return self._unique_filter_args
+
     def save(self, *args, **kwargs):
         # Use a lock to protect against the possibility that two submissions do this
         # at the same time and get the same version number or both be confirmed.
@@ -85,7 +88,7 @@ class Submission(models.Model):
             # Check for uniqueness.
             if self.confirmed:
                 unconfirmed = self.__class__.objects.filter(confirmed=True,
-                        **self._unique_filter_args).exclude(pk=self.pk).update(confirmed=False)
+                        **self._unique_unconfirm_args()).exclude(pk=self.pk).update(confirmed=False)
                 if unconfirmed > 0:
                     logger.info("Unconfirmed %d %s so that %s could be confirmed", unconfirmed, self._meta.verbose_name_plural, self)
 
@@ -129,7 +132,7 @@ class BallotSubmission(Submission):
     def clean(self):
         # The motion must be from the relevant round
         super().clean()
-        if self.motion is not None and self.motion.round != self.debate.round:
+        if self.motion is not None and self.debate.round not in self.motion.rounds.all():
             raise ValidationError(_("Debate is in round %(round)d but motion (%(motion)s) is "
                     "from round %(motion_round)d") % {
                     'round': self.debate.round,
@@ -177,10 +180,19 @@ class BallotSubmission(Submission):
             admin_url = 'old-results-ballotset-edit'
             assistant_url = 'old-results-assistant-ballotset-edit'
 
+        submitter = self.ip_address
+        private_url = False
+        if self.submitter:
+            submitter = self.submitter.username
+        elif self.participant_submitter:
+            submitter = self.participant_submitter.name
+            private_url = True
+
         return {
             'ballot_id': self.id,
             'debate_id': self.debate.id,
-            'submitter': self.submitter.username if self.submitter else self.ip_address,
+            'submitter': submitter,
+            'private_url': private_url,
             'admin_link': reverse_tournament(admin_url, tournament, kwargs={'pk': self.id}),
             'assistant_link': reverse_tournament(assistant_url, tournament, kwargs={'pk': self.id}),
             'short_time': created_short,

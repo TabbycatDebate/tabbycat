@@ -70,7 +70,7 @@ def populate_checkins(debates, tournament):
     get_checkins(debates, tournament, None)
 
 
-def populate_results(ballotsubs):
+def populate_results(ballotsubs, tournament=None):
     """Populates the `_result` attribute of each BallotSubmission in
     `ballotsubs` with a populated DebateResult instance.
 
@@ -86,7 +86,8 @@ def populate_results(ballotsubs):
     if not ballotsubs:
         return
 
-    tournament = Tournament.objects.get(round__debate__ballotsubmission=ballotsubs[0])
+    if tournament is None:
+        tournament = Tournament.objects.get(round__debate__ballotsubmission=ballotsubs[0])
     positions = tournament.positions
     sides = tournament.sides
     ballotsubs = list(ballotsubs)  # set ballotsubs in stone to avoid race conditions in later queries
@@ -122,11 +123,12 @@ def populate_results(ballotsubs):
 
     for ss in speakerscores:
         result = results_by_ballotsub_id[ss.ballot_submission_id]
-        result.speakers[ss.debate_team.side][ss.position] = ss.speaker
-        result.ghosts[ss.debate_team.side][ss.position] = ss.ghost
+        if result.uses_speakers:
+            result.speakers[ss.debate_team.side][ss.position] = ss.speaker
+            result.ghosts[ss.debate_team.side][ss.position] = ss.ghost
 
-        if not result.is_voting:
-            result.set_score(ss.debate_team.side, ss.position, ss.score)
+            if not result.is_voting:
+                result.set_score(ss.debate_team.side, ss.position, ss.score)
 
     # Populate scoresheets (load_scoresheets)
 
@@ -150,7 +152,7 @@ def populate_results(ballotsubs):
 
     for ssba in ssbas:
         result = results_by_ballotsub_id[ssba.ballot_submission_id]
-        if result.is_voting:
+        if result.uses_speakers and result.is_voting:
             result.set_score(ssba.debate_adjudicator.adjudicator, ssba.debate_team.side,
                 ssba.position, ssba.score)
 

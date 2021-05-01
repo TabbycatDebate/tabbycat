@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from utils.admin import TabbycatModelAdminFieldsMixin
 
-from .models import DebateTeamMotionPreference, Motion
+from .models import DebateTeamMotionPreference, Motion, RoundMotion
 
 
 # ==============================================================================
@@ -11,9 +11,8 @@ from .models import DebateTeamMotionPreference, Motion
 
 @admin.register(Motion)
 class MotionAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
-    list_display = ('reference', 'round', 'seq', 'get_tournament')
-    list_filter = ('round__tournament', 'round')
-    ordering = ('round',)
+    list_display = ('reference', 'text')
+    list_filter = ('rounds',)
 
 
 @admin.register(DebateTeamMotionPreference)
@@ -21,3 +20,10 @@ class DebateTeamMotionPreferenceAdmin(TabbycatModelAdminFieldsMixin, admin.Model
     list_display = ('ballot_submission', 'get_confirmed', 'get_team',
                     'get_team_side', 'preference', 'get_motion_ref')
     search_fields = ('motion__reference',)
+
+
+@admin.register(RoundMotion)
+class RoundMotionAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
+    list_display = ('seq', 'round', 'motion')
+    list_filter = ('round', 'motion')
+    ordering = ('round__seq', 'seq')

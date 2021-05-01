@@ -95,8 +95,10 @@ class BaseScoreField(forms.FloatField):
 
 
 class MotionModelChoiceField(forms.ModelChoiceField):
+    to_field_name = 'motion_id'
+
     def label_from_instance(self, obj):
-        return "%d. %s" % (obj.seq, obj.text)
+        return "%d. %s" % (obj.seq, obj.motion.text)
 
 
 class SubstantiveScoreField(BaseScoreField):
@@ -247,7 +249,7 @@ class BaseBallotSetForm(BaseResultForm):
         super().__init__(ballotsub, *args, **kwargs)
 
         self.adjudicators = list(self.debate.adjudicators.voting())
-        self.motions = self.debate.round.motion_set
+        self.motions = self.debate.round.roundmotion_set.order_by('seq').select_related('motion')
 
         self.using_motions = self.tournament.pref('enable_motions')
         self.using_vetoes = self.tournament.pref('motion_vetoes_enabled')
@@ -704,8 +706,8 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
         else:
             if len(totals) == 2:
-                declared_winner = cleaned_data.get(self._fieldname_declared_winner())
-                high_point_declared = max(side_totals, key=lambda key: side_totals[key]) == declared_winner
+                max_teams = [side for side, total in side_totals.items() if total == max(totals)]
+                high_point_declared = cleaned_data.get(self._fieldname_declared_winner()) in max_teams
 
                 # Check that no teams had the same total
                 if totals[0] == totals[1] and self.declared_winner in ['none', 'high-points']:
@@ -831,7 +833,8 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
             else:
                 if len(totals) == 2:
-                    high_point_declared = max(side_totals, key=lambda key: side_totals[key]) == cleaned_data[self._fieldname_declared_winner(adj)]
+                    max_teams = [side for side, total in side_totals.items() if total == max(totals)]
+                    high_point_declared = cleaned_data.get(self._fieldname_declared_winner(adj)) in max_teams
 
                     # Check that it was not a draw.
                     if totals[0] == totals[1] and self.declared_winner in ['none', 'high-points']:
@@ -903,6 +906,12 @@ class TeamsMixin:
     def clean(self):
         cleaned_data = super().clean()
 
+        if 'motion' not in cleaned_data:
+            if self.motions.count() == 1:
+                cleaned_data['motion'] = self.motions.get().motion
+            else: # Motions not enabled
+                cleaned_data['motion'] = None
+
         if not self.debate.sides_confirmed:
             self.add_error(None, forms.ValidationError(
                 _("Sides for this debate are not confirmed. You can't save a result "
@@ -944,7 +953,7 @@ class SingleEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        num_advancing = 2 if self.tournament.pref('teams_in_debate') == 'bp' and not self.debate.round.is_last else 1
+        num_advancing = int(self.tournament.pref('teams_in_debate') == 'bp' and not self.debate.round.is_last) + 1
         if self._fieldname_advancing() in cleaned_data and len(cleaned_data[self._fieldname_advancing()]) != num_advancing:
             self.add_error(self._fieldname_advancing(), forms.ValidationError(
                 ngettext(
@@ -1001,4 +1010,4 @@ class PerAdjudicatorEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
 
     def scoresheets(self):
         for adj in self.adjudicators:
-            yield {'advancing': self[self._fieldname_advancing(adj)]}
+            yield {'adjudicator': adj, 'advancing': self[self._fieldname_advancing(adj)]}

@@ -5,14 +5,7 @@
   var django = globals.django || (globals.django = {});
 
   
-  django.pluralidx = function(n) {
-    var v=(n > 1);
-    if (typeof(v) == 'boolean') {
-      return v ? 1 : 0;
-    } else {
-      return v;
-    }
-  };
+  django.pluralidx = function(count) { return (count == 1) ? 0 : 1; };
   
 
   /* gettext library */
@@ -131,7 +124,7 @@
     "No changes": "Aucun changement",
     "No code name set": "Aucun nom code d\u00e9fini",
     "No matching people found.": "Aucunes personnes correspondantes trouv\u00e9es.",
-    "No matching venues found.": "Aucunes salles correspondantes trouv\u00e9es.",
+    "No matching rooms found.": "Aucunes salles correspondantes trouv\u00e9es.",
     "No, I am submitting feedback on:": "Non, je donne un \u00e9valuation sur\u00a0:",
     "Noon": "Midi",
     "Not Checked-In": "Pas enregistr\u00e9",
@@ -157,6 +150,7 @@
     "Return ballots to %1.": "Soumettre feuilles de jugement \u00e0 %1.",
     "Return to Draw": "Retour au tirage",
     "Review": "R\u00e9viser",
+    "Room:": "Salle\u00a0:",
     "Scan Using Camera": "Num\u00e9riser avec l'appareil photo",
     "Score:": "Score\u00a0:",
     "September": "Septembre",
@@ -191,14 +185,13 @@
     "Unconfirmed": "Non-confirm\u00e9",
     "Unknown": "Inconnu",
     "Unsure": "Incertain",
-    "Venue:": "Salle\u00a0:",
     "Warning: you have unsaved changes": "Attention: vous avez des modifications non sauvegard\u00e9es",
     "Which team won the debate:": "Quelle \u00e9quipe \u00e0 gagn\u00e9 le d\u00e9bat\u00a0:",
     "Yes": "Oui",
     "Yesterday": "Hier",
     "You cannot confirm this ballot because you entered it": "Vous pouvez pas confirmer ce feuille parce que vous l\u2019avez saisi",
-    "You have selected an action, and you haven't made any changes on individual fields. You're probably looking for the Go button rather than the Save button.": "Vous avez s\u00e9lectionn\u00e9 une action, et vous n'avez fait aucune modification sur des champs. Vous cherchez probablement le bouton Envoyer et non le bouton Enregistrer.",
-    "You have selected an action, but you haven't saved your changes to individual fields yet. Please click OK to save. You'll need to re-run the action.": "Vous avez s\u00e9lectionn\u00e9 une action, mais vous n'avez pas encore sauvegard\u00e9 certains champs modifi\u00e9s. Cliquez sur OK pour sauver. Vous devrez r\u00e9appliquer l'action.",
+    "You have selected an action, and you haven\u2019t made any changes on individual fields. You\u2019re probably looking for the Go button rather than the Save button.": "Vous avez s\u00e9lectionn\u00e9 une action, et vous n'avez fait aucune modification sur des champs. Vous cherchez probablement le bouton Envoyer et non le bouton Enregistrer.",
+    "You have selected an action, but you haven\u2019t saved your changes to individual fields yet. Please click OK to save. You\u2019ll need to re-run the action.": "Vous avez s\u00e9lectionn\u00e9 une action, mais vous n'avez pas encore enregistr\u00e9 certains champs modifi\u00e9s. Cliquez sur OK pour enregistrer. Vous devrez r\u00e9appliquer l'action.",
     "You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost.": "Vous avez des modifications non sauvegard\u00e9es sur certains champs \u00e9ditables. Si vous lancez une action, ces modifications vont \u00eatre perdues.",
     "adjudicators with gender data": "juges avec donn\u00e9es de genre",
     "decimal marks are allowed": "demi-scores sont permises",
@@ -279,11 +272,9 @@
       "%d/%m/%Y %H:%M:%S",
       "%d/%m/%Y %H:%M:%S.%f",
       "%d/%m/%Y %H:%M",
-      "%d/%m/%Y",
       "%d.%m.%Y %H:%M:%S",
       "%d.%m.%Y %H:%M:%S.%f",
       "%d.%m.%Y %H:%M",
-      "%d.%m.%Y",
       "%Y-%m-%d %H:%M:%S",
       "%Y-%m-%d %H:%M:%S.%f",
       "%Y-%m-%d %H:%M",

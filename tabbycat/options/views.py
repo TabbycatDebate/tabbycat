@@ -16,7 +16,7 @@ from utils.mixins import AdministratorMixin
 
 from .forms import tournament_preference_form_builder
 from .preferences import tournament_preferences_registry
-from .presets import all_presets, get_preferences_data
+from .presets import all_presets, get_preferences_data, save_presets
 
 logger = logging.getLogger(__name__)
 
@@ -37,19 +37,6 @@ class TournamentConfigIndexView(AdministratorMixin, TournamentMixin, TemplateVie
 
     def get_context_data(self, **kwargs):
         kwargs["presets"] = self.get_preset_options()
-        t = self.tournament
-        if t.pref('teams_in_debate') == 'bp':
-            if t.pref('ballots_per_debate_prelim') == 'per-adj' or \
-               t.pref('ballots_per_debate_elim') == 'per-adj':
-                error = _("Your draw rules specify four teams per-debate but "
-                          "your ballot setting specifies that adjudicators "
-                          "submit independent ballots. These settings "
-                          "<strong>are not compatible and will cause results "
-                          "entry to crash</strong>. You need to go back to "
-                          "the Debate Rules settings and change your "
-                          "configuration to use consensus ballots.")
-                messages.error(self.request, error)
-
         return super().get_context_data(**kwargs)
 
 
@@ -118,11 +105,7 @@ class ConfirmTournamentPreferencesView(AdministratorMixin, TournamentMixin, Temp
 
     def save_presets(self):
         selected_preset = self.get_selected_preset()
-        preset_preferences = get_preferences_data(selected_preset, self.tournament)
-
-        for pref in preset_preferences:
-            self.tournament.preferences[pref['key']] = pref['new_value']
-
+        save_presets(self.tournament, selected_preset)
         ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT,
                 user=self.request.user, tournament=self.tournament, content_object=self.tournament)
         messages.success(self.request, _("Tournament options saved according to preset "

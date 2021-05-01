@@ -482,7 +482,7 @@ class OldAssistantEditBallotSetView(OldAssistantBallotSetMixin, BaseEditBallotSe
     pass
 
 
-class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, BaseBallotSetView):
+class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundMixin, BaseBallotSetView):
 
     template_name = 'public_enter_results.html'
     relates_to_new_ballotsub = True
@@ -504,16 +504,15 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, BaseBa
     def populate_objects(self):
         self.object = self.get_object() # must be populated before self.error_page() called
 
-        round = self.tournament.current_round
-        if round.draw_status != Round.STATUS_RELEASED:
+        if self.round.draw_status != Round.STATUS_RELEASED:
             return self.error_page(_("The draw for this round hasn't been released yet."))
 
         if (self.tournament.pref('enable_motions') or self.tournament.pref('motion_vetoes_enabled')) \
-                and not round.motions_released:
+                and not self.round.motions_released:
             return self.error_page(_("The motions for this round haven't been released yet."))
 
         try:
-            self.debateadj = DebateAdjudicator.objects.get(adjudicator=self.object, debate__round=round)
+            self.debateadj = DebateAdjudicator.objects.get(adjudicator=self.object, debate__round=self.round)
         except DebateAdjudicator.DoesNotExist:
             return self.error_page(_("It looks like you don't have a debate this round."))
         except DebateAdjudicator.MultipleObjectsReturned:
@@ -523,6 +522,9 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, BaseBa
         self.debate = self.debateadj.debate
         self.ballotsub = BallotSubmission(debate=self.debate, ip_address=get_ip_address(self.request),
             submitter_type=BallotSubmission.SUBMITTER_PUBLIC)
+
+        if "url_key" in self.kwargs:
+            self.ballotsub.participant_submitter = self.object
 
         if not self.debate.adjudicators.has_chair:
             return self.error_page(_("Your debate doesn't have a chair, so you can't enter results for it. "
@@ -548,7 +550,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, BaseBa
 
 class OldPublicNewBallotSetByIdUrlView(SingleObjectFromTournamentMixin, BasePublicNewBallotSetView):
     model = Adjudicator
-    pk_url_kwarg = 'adj_id'
+    pk_url_kwarg = 'adjudicator_pk'
     allow_null_tournament = True
     private_url = False
 
@@ -563,10 +565,6 @@ class OldPublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin,
     model = Adjudicator
     allow_null_tournament = True
     private_url = True
-
-    def populate_objects(self):
-        super().populate_objects()
-        self.ballotsub.participant_submitter = Adjudicator.objects.get(url_key=self.kwargs['url_key'])
 
     def get_success_url(self):
         return reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': self.kwargs['url_key']})
@@ -658,7 +656,7 @@ class PublicBallotScoresheetsView(BasePublicBallotScoresheetsView):
         return super().get_context_data(**kwargs)
 
 
-class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixin, BasePublicBallotScoresheetsView):
+class AdjudicatorPrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixin, BasePublicBallotScoresheetsView):
 
     template_name = 'privateurl_ballot_set.html'
     error_template_name = 'privateurl_ballot_set_error.html'
@@ -692,10 +690,21 @@ class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixi
         )
 
     def get_queryset(self):
-        return self.model.objects.filter(round=self.round).prefetch_related('debateteam_set__team')
+        return super().get_queryset().filter(round=self.round)
 
 
-class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, VueTableTemplateView):
+class SpeakerPrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixin, PublicBallotScoresheetsView):
+    slug_field = 'debateteam__team__speaker__url_key'
+    public_page_preference = 'private_ballots_released'
+
+    def is_page_enabled(self, tournament):
+        return True
+
+    def get_queryset(self):
+        return super().get_queryset().filter(round=self.round)
+
+
+class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, RoundMixin, VueTableTemplateView):
     """Public view listing all debate-adjudicators for the current round, as
     links for them to enter their ballots."""
 
@@ -703,8 +712,7 @@ class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, VueTableTemplat
         return tournament.pref('participant_ballots') == 'public'
 
     def is_draw_released(self):
-        round = self.tournament.current_round
-        return round.draw_status == Round.STATUS_RELEASED and round.motions_good_for_public
+        return self.round.draw_status == Round.STATUS_RELEASED and self.round.motions_good_for_public
 
     def get_template_names(self):
         if self.is_draw_released():
@@ -717,7 +725,7 @@ class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, VueTableTemplat
             return None
 
         debateadjs = DebateAdjudicator.objects.filter(
-            debate__round=self.tournament.current_round,
+            debate__round=self.round,
         ).select_related(
             'adjudicator', 'debate__venue',
         ).prefetch_related(
@@ -728,8 +736,8 @@ class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, VueTableTemplat
 
         data = [{
             'text': _("Add result from %(adjudicator)s") % {'adjudicator': da.adjudicator.name},
-            'link': reverse_tournament('old-results-public-ballotset-new-pk', self.tournament,
-                    kwargs={'adj_id': da.adjudicator.id}),
+            'link': reverse_round('old-results-public-ballotset-new-pk', self.tournament, self.round,
+                    kwargs={'adjudicator_pk': da.adjudicator_id}),
         } for da in debateadjs]
         header = {'key': 'adj', 'title': _("Adjudicator")}
         table.add_column(header, data)

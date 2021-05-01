@@ -68,14 +68,11 @@ def get_result_class(round, tournament=None):
     if ballots_per_debate == 'per-adj' and teams_in_debate == 'two':
         if scores_in_debate == 'prelim' and round.is_break_round or scores_in_debate == 'never':
             return DebateResultByAdjudicator
-        else:
-            return DebateResultByAdjudicatorWithScores
+        return DebateResultByAdjudicatorWithScores
     elif ballots_per_debate == 'per-debate':
-        uses_scores_in_break = teams_in_debate == 'bp' or scores_in_debate == 'prelim'
-        if uses_scores_in_break and round.is_break_round or scores_in_debate == 'never':
+        if ((teams_in_debate == 'bp' or scores_in_debate == 'prelim') and round.is_break_round) or scores_in_debate == 'never':
             return ConsensusDebateResult
-        else:
-            return ConsensusDebateResultWithScores
+        return ConsensusDebateResultWithScores
     else:
         raise ValueError("Invalid combination for 'ballots_per_debate' and 'teams_in_debate' preferences: %s, %s" %
                 (ballots_per_debate, teams_in_debate))
@@ -553,11 +550,13 @@ class DebateResultByAdjudicator(BaseDebateResult):
         return len(self._adjs_by_side[side])
 
     def teamscore_field_votes_possible(self, side):
-        # Sides argument is ignored
         return len(self.scoresheets)
 
     def teamscorebyadj_field_win(self, adj, side):
         return side in self.scoresheets[adj].winners()
+
+    def teamscorebyadj_field_score(self, adj, side):
+        return None  # Placeholder for subclasses
 
     # --------------------------------------------------------------------------
     # Method for UI display
@@ -762,7 +761,7 @@ class ConsensusDebateResult(BaseDebateResult):
     def init_blank_buffer(self):
         super().init_blank_buffer()
         self.scoresheet = self.scoresheet_class(positions=getattr(self, 'positions', None))
-        if len(self.sides) == 4 and self.debate.round.is_last:
+        if self.scoresheet_class is BPEliminationScoresheet and self.debate.round.is_last:
             self.scoresheet.number_winners = 1
 
     def is_complete(self):
@@ -814,11 +813,15 @@ class ConsensusDebateResult(BaseDebateResult):
     # BP Elimination-specific methods
     # --------------------------------------------------------------------------
 
+    @property
     def is_elimination(self):
         return not hasattr(self.scoresheet, 'ranked_sides')
 
     def advancing_dt(self):
         return [dt for s, dt in self.debateteams.items() if s in self.get_winner()]
+
+    def advancing_teams(self):
+        return [dt.team for dt in self.advancing_dt()]
 
     def eliminated_dt(self):
         return [dt for s, dt in self.debateteams.items() if s not in self.get_winner()]
@@ -844,6 +847,9 @@ class ConsensusDebateResult(BaseDebateResult):
 
     def teamscore_field_win(self, side):
         return side in self.scoresheet.winners()
+
+    def teamscore_field_score(self, side):
+        return None  # Placeholder for subclasses with scores
 
     def as_dicts(self):
         yield {'teams': self.sheet_as_dicts(self.scoresheet)}
@@ -921,7 +927,12 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
                         defaults=self.get_defaults_fields('speakerscorebyadj', adj, side, pos))
 
     def set_score(self, adjudicator, side, position, score):
-        self.scoresheets[adjudicator].set_score(side, position, score)
+        try:
+            self.scoresheets[adjudicator].set_score(side, position, score)
+        except KeyError:
+            logger.exception("Tried to set score by adjudicator %s, but this adjudicator "
+                "doesn't have a scoresheet.", adjudicator)
+            return
 
     # --------------------------------------------------------------------------
     # Model fields

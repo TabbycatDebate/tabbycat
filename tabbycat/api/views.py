@@ -1,17 +1,19 @@
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.db.models import Count, Prefetch, Q
-from django.http.response import Http404
 from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
 from rest_framework.exceptions import NotFound
+from rest_framework.fields import DateTimeField
 from rest_framework.generics import GenericAPIView, get_object_or_404, RetrieveUpdateAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
+from breakqual.models import BreakCategory
+from breakqual.views import GenerateBreakMixin
 from checkins.consumers import CheckInEventConsumer
 from checkins.models import Event
 from checkins.utils import create_identifiers, get_unexpired_checkins
@@ -22,7 +24,7 @@ from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import TournamentFromUrlMixin
 from tournaments.models import Round, Tournament
-from venues.models import Venue
+from venues.models import Venue, VenueCategory
 
 from . import serializers
 from .mixins import AdministratorAPIMixin, PublicAPIMixin, RoundAPIMixin, TournamentAPIMixin, TournamentPublicAPIMixin
@@ -83,12 +85,16 @@ class RoundViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     lookup_url_kwarg = 'round_seq'
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('motion_set')
+        return super().get_queryset().select_related(
+            'break_category', 'break_category__tournament',
+        ).prefetch_related('roundmotion_set', 'roundmotion_set__motion', 'roundmotion_set__motion__tournament')
 
 
 class MotionViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.MotionSerializer
-    tournament_field = 'round__tournament'
+
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('roundmotion_set', 'roundmotion_set__round')
 
 
 class BreakCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
@@ -121,6 +127,50 @@ class SpeakerEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, Retri
         if not self.request.user or not self.request.user.is_staff:
             return qs.filter(public=True)
         return qs
+
+
+class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBreakMixin, GenericViewSet):
+    serializer_class = serializers.BreakingTeamSerializer
+    tournament_field = 'break_category__tournament'
+    access_preference = 'public_breaking_teams'
+
+    @property
+    def break_category(self):
+        if not hasattr(self, "_break_category"):
+            self._break_category = get_object_or_404(BreakCategory, tournament=self.tournament, pk=self.kwargs.get('pk'))
+        return self._break_category
+
+    def get_queryset(self):
+        return super().get_queryset().filter(
+            break_category=self.break_category).select_related('team', 'team__tournament').order_by('rank')
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['break_category'] = self.break_category
+        return context
+
+    def list(self, request, *args, **kwargs):
+        """Pagination might be dangerous here, so disabled."""
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        self.generate_break((self.break_category,))
+        return self.list(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        """Destroy is normally for a specific instance, now QuerySet."""
+        self.filter_queryset(self.get_queryset()).delete()
+        return Response(status=204)  # No content
+
+    def update(self, request, *args, **kwargs):
+        """Update team remark and then regenerate break."""
+        serializer = serializers.PartialBreakingTeamSerializer(data=request.data, context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return self.create(request, *args, **kwargs)
 
 
 class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
@@ -167,12 +217,19 @@ class AdjudicatorViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
     serializer_class = serializers.AdjudicatorSerializer
     access_preference = 'public_participants'
 
+    def get_break_permission(self):
+        return self.request.user.is_staff or self.tournament.pref('public_breaking_adjs')
+
     def get_queryset(self):
+        filters = Q()
+        if self.request.query_params.get('break') and self.get_break_permission():
+            filters &= Q(breaking=True)
+
         return super().get_queryset().prefetch_related(
             'team_conflicts', 'team_conflicts__tournament',
             'adjudicator_conflicts', 'adjudicator_conflicts__tournament',
             'institution_conflicts',
-        )
+        ).filter(filters)
 
 
 class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
@@ -205,14 +262,18 @@ class VenueViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.VenueSerializer
 
     def get_queryset(self):
-        return super().get_queryset().select_related('tournament').prefetch_related('venuecategory_set', 'venuecategory_set__tournament')
+        # Tournament must exist for URLs
+        return super().get_queryset().select_related('tournament').prefetch_related(
+            Prefetch('venuecategory_set', queryset=VenueCategory.objects.select_related('tournament').filter(tournament__isnull=False)))
 
 
 class VenueCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.VenueCategorySerializer
 
     def get_queryset(self):
-        return super().get_queryset().select_related('tournament').prefetch_related('venues', 'venues__tournament')
+        # Tournament must exist for URLs
+        return super().get_queryset().select_related('tournament').prefetch_related(
+            Prefetch('venues', queryset=Venue.objects.select_related('tournament').filter(tournament__isnull=False)))
 
 
 class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
@@ -238,6 +299,7 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
 
     def broadcast_checkin(self, obj, check):
         # Send result to websocket for treatment when opened; but perform the action here
+        checkin = None
         if check:
             checkin = Event.objects.create(identifier=obj.checkin_identifier,
                                            tournament=self.tournament)
@@ -249,16 +311,15 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
             checkin_dict = {'identifier': obj.checkin_identifier.barcode}
 
         group_name = CheckInEventConsumer.group_prefix + "_" + self.tournament.slug
-        async_to_sync(get_channel_layer().group_send)(
-            group_name, {
-                'type': 'send_json',
-                'data': {
-                    'checkins': [checkin_dict],
-                },
+        async_to_sync(get_channel_layer().group_send)(group_name, {
+            'type': 'send_json',
+            'data': {
+                'checkins': [checkin_dict],
             },
-        )
+        })
+        return checkin
 
-    def get_response_dict(self, request, obj, checked, **kwargs):
+    def get_response_dict(self, request, obj, checked, event, **kwargs):
         return {
             'object': reverse(
                 self.object_api_view,
@@ -268,6 +329,7 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
             ),
             'barcode': obj.checkin_identifier.barcode,
             'checked': checked,
+            'timestamp': DateTimeField().to_representation(event.time) if event is not None else None,
         }
 
     def get_queryset(self):
@@ -277,34 +339,36 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
         obj = self.get_object()
 
         event = get_unexpired_checkins(self.tournament, self.window_preference_pref).filter(identifier=obj.checkin_identifier)
-        return Response(self.get_response_dict(request, obj, event.exists()))
+        return Response(self.get_response_dict(request, obj, event.exists(), event.first()))
 
     def delete(self, request, *args, **kwargs):
         """Checks out"""
         obj = self.get_object()
         self.broadcast_checkin(obj, False)
-        return Response(self.get_response_dict(request, obj, False))
+        return Response(self.get_response_dict(request, obj, False, None))
 
     def put(self, request, *args, **kwargs):
         """Checks in"""
         obj = self.get_object()
-        self.broadcast_checkin(obj, True)
-        return Response(self.get_response_dict(request, obj, True))
+        e = self.broadcast_checkin(obj, True)
+        return Response(self.get_response_dict(request, obj, True, e))
 
     def patch(self, request, *args, **kwargs):
         """Toggles the check-in status"""
         obj = self.get_object()
-        check = get_unexpired_checkins(self.tournament, self.window_preference_pref).filter(identifier=obj.checkin_identifier).exists()
-        self.broadcast_checkin(obj, not check)
-        return Response(self.get_response_dict(request, obj, not check))
+        events = get_unexpired_checkins(self.tournament, self.window_preference_pref).filter(identifier=obj.checkin_identifier)
+        check = events.exists()
+        e = self.broadcast_checkin(obj, not check)
+        return Response(self.get_response_dict(request, obj, not check, e))
 
     def post(self, request, *args, **kwargs):
         """Creates an identifier"""
         obj = self.get_object_queryset()  # Don't .get() as create_identifiers expects a queryset
         if not obj.exists():
-            raise Http404
+            raise NotFound("Object could not be found")
+        status = 200 if hasattr(obj, 'checkin_identifier') else 201
         create_identifiers(self.model.checkin_identifier.related.related_model, obj)
-        return Response(self.get_response_dict(request, obj.get(), False))
+        return Response(self.get_response_dict(request, obj.get(), False, None), status=status)
 
 
 class AdjudicatorCheckinsView(BaseCheckinsView):
@@ -390,7 +454,7 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
                 'all-released': self.get_round_status(view),
             }[t.pref(view.access_preference)]
 
-            result_status = t.pref('public_results') and r.completed and not r.is_silent
+            result_status = t.pref('public_results') and r.completed and not r.silent
             return draw_status or result_status or t.pref('all_results_released')
 
         def get_round_status(self, view):
@@ -445,7 +509,9 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
         filters = Q()
         if self.request.query_params.get('confirmed') or not self.request.user.is_staff:
             filters &= Q(confirmed=True)
-        return super().get_queryset().filter(filters)
+        return super().get_queryset().filter(filters).select_related(
+            'motion', 'motion__tournament',
+            'participant_submitter__adjudicator__tournament')
 
 
 class FeedbackQuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
@@ -497,4 +563,5 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
             'source_adjudicator__debate', 'source_team__debate',
             'source_adjudicator__debate__round', 'source_team__debate__round',
             'source_adjudicator__debate__round__tournament', 'source_team__debate__round__tournament',
+            'participant_submitter__adjudicator__tournament', 'participant_submitter__speaker__team__tournament',
         ).prefetch_related(*answers_prefetch)

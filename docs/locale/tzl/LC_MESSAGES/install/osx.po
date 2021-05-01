@@ -1,0 +1,216 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-11-18 21:02\n"
+"Last-Translator: \n"
+"Language-Team: Talossan\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: tzl\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/install/osx.po\n"
+"X-Crowdin-File-ID: 1321\n"
+"Language: tzl_TZL\n"
+
+#: ../../install/osx.rst:5
+msgid "Installing Locally on macOS"
+msgstr "crwdns50323:0crwdne50323:0"
+
+#: ../../install/osx.rst:7
+msgid "Is this the best installation method for you?"
+msgstr "crwdns50325:0crwdne50325:0"
+
+#: ../../install/osx.rst:10
+msgid "In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`"
+msgstr "crwdns50327:0:ref:crwdnd50327:0:ref:crwdnd50327:0:ref:crwdne50327:0"
+
+#: ../../install/osx.rst:12
+msgid "If you just want to quickly set up a copy of Tabbycat to run locally on macOS, consider :ref:`installing using Docker<install-docker>`, which is a shorter process than the one below."
+msgstr "crwdns50329:0:ref:crwdne50329:0"
+
+#: ../../install/osx.rst:15
+msgid "Requisite technical knowledge"
+msgstr "crwdns50331:0crwdne50331:0"
+
+#: ../../install/osx.rst:17
+msgid "You need to be familiar with command-line interfaces to get through this comfortably. While a background in the specific tools Tabbycat uses (Python, PostgreSQL, *etc.*) will make things easier, it's not necessary: we'll talk you through the rest. You just need to be prepared to bear with us. It'll take a while the first time, but it gets easier after that."
+msgstr "crwdns50333:0crwdne50333:0"
+
+#: ../../install/osx.rst:19
+msgid "Every line in the instructions that begins with ``$`` is a command that you need to run in a **Terminal**, but without the ``$``: that sign is a convention used in instructions to make it clear that it is a command you need to run."
+msgstr "crwdns50335:0crwdne50335:0"
+
+#: ../../install/osx.rst:21 ../../install/osx.rst:42 ../../install/osx.rst:68
+msgid "Advanced users"
+msgstr "crwdns50337:0crwdne50337:0"
+
+#: ../../install/osx.rst:24
+msgid "If you wish to use an SQL engine other that PostgreSQL, most of Tabbycat should work, but a few features rely on SQL functions that aren't supported by all engines. To configure Tabbycat to use a different engine, set the ``DATABASES`` `Django setting <https://docs.djangoproject.com/en/2.2/ref/settings/#databases>`_ accordingly."
+msgstr "crwdns50339:0crwdne50339:0"
+
+#: ../../install/osx.rst:27
+msgid "1. Install dependencies"
+msgstr "crwdns50341:0crwdne50341:0"
+
+#: ../../install/osx.rst:29
+msgid "First, you need to install all of the software on which Tabbycat depends, if you don't already have it installed."
+msgstr "crwdns50343:0crwdne50343:0"
+
+#: ../../install/osx.rst:32
+msgid "1(a). Python"
+msgstr "crwdns50345:0crwdne50345:0"
+
+#: ../../install/osx.rst:33
+msgid "Tabbycat requires Python 3.6 or later. macOS only comes with Python 2.7, so you'll need to install this. You can download the latest version from the `Python website <https://www.python.org/downloads/>`_."
+msgstr "crwdns50347:0crwdne50347:0"
+
+#: ../../install/osx.rst:35
+msgid "The executable will probably be called ``python3``, rather than ``python``. Check::"
+msgstr "crwdns50349:0crwdne50349:0"
+
+#: ../../install/osx.rst:40
+msgid "Tabbycat does not support Python 2. You must use Python 3.6 or later."
+msgstr "crwdns50351:0crwdne50351:0"
+
+#: ../../install/osx.rst:45
+msgid "These instructions will use the ``venv`` module. If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead."
+msgstr "crwdns50353:0crwdne50353:0"
+
+#: ../../install/osx.rst:48
+msgid "1(b). Postgres.app"
+msgstr "crwdns50355:0crwdne50355:0"
+
+#: ../../install/osx.rst:50
+msgid "Download `Postgres.app <http://postgresapp.com/>`_, move it to your Applications folder, and open it. This should place an icon in your menu bar, showing that the postgres database is running. Whenever you are running Tabbycat you'll need to have this app running."
+msgstr "crwdns50357:0crwdne50357:0"
+
+#: ../../install/osx.rst:52
+msgid "You'll need to use the PostgreSQL command-line tools, so run the command that the Postgres.app suggests in its `installation instructions <http://postgresapp.com/documentation/install.html>`_ for adding them to your ``$PATH``. As of February 2018, it was::"
+msgstr "crwdns50359:0$PATHcrwdne50359:0"
+
+#: ../../install/osx.rst:57
+msgid "1(c). Node.js/NPM"
+msgstr "crwdns50361:0crwdne50361:0"
+
+#: ../../install/osx.rst:59
+msgid "Download and run the `node.js 8 macOS Installer (.pkg) <https://nodejs.org/dist/v8.9.4/node-v8.9.4.pkg>`_"
+msgstr "crwdns50363:0crwdne50363:0"
+
+#: ../../install/osx.rst:62
+msgid "2. Get the source code"
+msgstr "crwdns50365:0crwdne50365:0"
+
+#: ../../install/osx.rst:64
+msgid "`Go to the page for our latest release <https://github.com/TabbycatDebate/tabbycat/releases/latest>`_."
+msgstr "crwdns50367:0crwdne50367:0"
+
+#: ../../install/osx.rst:65
+msgid "Download the zip or tar.gz file."
+msgstr "crwdns50369:0crwdne50369:0"
+
+#: ../../install/osx.rst:66
+msgid "Extract all files in it to a folder of your choice."
+msgstr "crwdns50371:0crwdne50371:0"
+
+#: ../../install/osx.rst:71
+msgid "If you've used Git before, you might prefer to clone `our GitHub repository`_ instead. Don't forget to check out the |vrelease| tag or the master branch."
+msgstr "crwdns50373:0crwdne50373:0"
+
+#: ../../install/osx.rst:73
+msgid "Even better, you might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project)."
+msgstr "crwdns50375:0:ref:crwdne50375:0"
+
+#: ../../install/osx.rst:76
+msgid "3. Set up a new database"
+msgstr "crwdns50377:0crwdne50377:0"
+
+#: ../../install/osx.rst:78
+msgid "You can skip steps 1--3 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like."
+msgstr "crwdns50379:0crwdne50379:0"
+
+#: ../../install/osx.rst:80
+msgid "Open up a copy of the Terminal app, then copy/paste or type in::"
+msgstr "crwdns50381:0crwdne50381:0"
+
+#: ../../install/osx.rst:84
+msgid "Hit enter then quit and reopen the Terminal app."
+msgstr "crwdns50383:0crwdne50383:0"
+
+#: ../../install/osx.rst:86
+msgid "Create a new user account with a password, replacing ``myusername`` with whatever name you prefer. If you don't know what username to pick, use ``tabbycat``."
+msgstr "crwdns50385:0crwdne50385:0"
+
+#: ../../install/osx.rst:92
+msgid "Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running::"
+msgstr "crwdns50387:0crwdne50387:0"
+
+#: ../../install/osx.rst:96
+msgid "In terminal type in::"
+msgstr "crwdns50389:0crwdne50389:0"
+
+#: ../../install/osx.rst:101
+msgid "4. Install Tabbycat"
+msgstr "crwdns50391:0crwdne50391:0"
+
+#: ../../install/osx.rst:102
+msgid "Almost there!"
+msgstr "crwdns50393:0crwdne50393:0"
+
+#: ../../install/osx.rst:104
+msgid "Navigate to your Tabbycat directory::"
+msgstr "crwdns50395:0crwdne50395:0"
+
+#: ../../install/osx.rst:108
+msgid "Copy **settings/local.example** to **settings/local.py**. Find this part in your new **local.py**, and fill in the blanks as indicated:"
+msgstr "crwdns50397:0crwdne50397:0"
+
+#: ../../install/osx.rst:123
+msgid "Optionally, replace the value in this line in the same file with your own time zone, as defined in the `IANA time zone database <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ (*e.g.*, ``Pacific/Auckland``, ``America/Mexico_City``, ``Asia/Kuala_Lumpur``)::"
+msgstr "crwdns50399:0crwdne50399:0"
+
+#: ../../install/osx.rst:127
+msgid "Ensure you are in the main Tabbycat directory (not the config folder where **settings_local.py** is and start a new virtual environment. We suggest the name ``venv``, though it can be any name you like::"
+msgstr "crwdns50401:0crwdne50401:0"
+
+#: ../../install/osx.rst:131
+msgid "Run the ``activate`` script. This puts you \"into\" the virtual environment::"
+msgstr "crwdns50403:0crwdne50403:0"
+
+#: ../../install/osx.rst:135
+msgid "Install Tabbycat's requirements into your virtual environment::"
+msgstr "crwdns50405:0crwdne50405:0"
+
+#: ../../install/osx.rst:141
+msgid "Navigate to the **tabbycat** sub folder, initialize the database, compile the assets, and create a user account for yourself::"
+msgstr "crwdns50407:0crwdne50407:0"
+
+#: ../../install/osx.rst:149
+msgid "Start Tabbycat!"
+msgstr "crwdns50409:0crwdne50409:0"
+
+#: ../../install/osx.rst:155
+msgid "It should show something like this::"
+msgstr "crwdns50411:0crwdne50411:0"
+
+#: ../../install/osx.rst:159
+msgid "Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000.) It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat."
+msgstr "crwdns50413:0crwdne50413:0"
+
+#: ../../install/osx.rst:164
+msgid "Naturally, your database is currently empty, so proceed to :ref:`importing initial data <importing-initial-data>`."
+msgstr "crwdns50415:0:ref:crwdne50415:0"
+
+#: ../../install/osx.rst:167
+msgid "Starting up an existing Tabbycat instance"
+msgstr "crwdns50417:0crwdne50417:0"
+
+#: ../../install/osx.rst:168
+msgid "To start your Tabbycat instance up again next time you use your computer::"
+msgstr "crwdns50419:0crwdne50419:0"
+

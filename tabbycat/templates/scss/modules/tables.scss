@@ -178,6 +178,10 @@ thead,
   white-space: nowrap; // For cells that we want to force to display full width
 }
 
+.admin-redacted {
+  text-decoration: line-through;
+}
+
 .table > tbody > tr > th,
 .table > tbody > tr > td {
   vertical-align: middle;

@@ -97,10 +97,11 @@ class TournamentMixin(TabbycatPageTitlesMixin, TournamentFromUrlMixin):
         t = self.tournament
 
         if not getattr(settings, 'DISABLE_SENTRY', False):
-            from sentry_sdk import configure_scope
-            with configure_scope() as scope:
-                scope.set_extra('tab_director_email', getattr(settings, 'TAB_DIRECTOR_EMAIL', "not provided"))
-                scope.set_extra('tournament_prefs', self.tournament.preferences.all())
+            from sentry_sdk import set_context
+            set_context("Tabbycat debug info", {
+                "Tab director email": getattr(settings, 'TAB_DIRECTOR_EMAIL', "not provided"),
+                "Tournament preferences": self.tournament.preferences.all(),
+            })
 
         # Lack of current_round caused by creating a tournament without rounds
         if t.current_round is None:
@@ -425,7 +426,8 @@ class DragAndDropMixin(RoundMixin):
             }
             serialised_bcs.append(serialised_bc)
 
-        extra_info['highlights']['break'] = serialised_bcs
+        if self.round.stage == self.round.STAGE_PRELIMINARY:
+            extra_info['highlights']['break'] = serialised_bcs
 
         extra_info['backUrl'] = reverse_round('draw', self.round)
         extra_info['backLabel'] = _("Return to Draw")

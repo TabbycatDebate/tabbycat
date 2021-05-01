@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-24 07:33\n"
+"POT-Creation-Date: 2020-07-05 13:59-0300\n"
+"PO-Revision-Date: 2020-07-05 17:03\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -15,17 +15,19 @@ msgstr ""
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: zh-CN\n"
 "X-Crowdin-File: /develop/tabbycat/notifications/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 938\n"
 
 #: notifications/apps.py:7
 msgid "Notifications"
 msgstr "通知栏"
 
 #: notifications/consumers.py:37
-msgid "Failed to send e-mails."
+msgid "Failed to send emails."
 msgstr ""
 
 #: notifications/consumers.py:40
-msgid "Connection error sending e-mails."
+msgid "Connection error sending emails."
 msgstr ""
 
 #: notifications/forms.py:11
@@ -76,7 +78,7 @@ msgstr ""
 
 #: notifications/models.py:34
 msgid "notification"
-msgstr ""
+msgstr "通知栏"
 
 #: notifications/models.py:36 notifications/models.py:75
 #: notifications/models.py:126
@@ -372,7 +374,7 @@ msgid "Send Email"
 msgstr ""
 
 #: notifications/views.py:225
-msgid "Email Address"
+msgid "Email address"
 msgstr ""
 
 #: notifications/views.py:226

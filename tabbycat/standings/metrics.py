@@ -8,6 +8,8 @@ context-specific files, e.g., teams.py or speakers.py.
 
 import logging
 
+from django.db.models import Case, F, When
+
 logger = logging.getLogger(__name__)
 
 
@@ -58,6 +60,7 @@ class BaseMetricAnnotator:
     repeatable = False
     listed = True
     ascending = False  # if True, this metric is sorted in ascending order, not descending
+    combinable = False  # if True, use single query with all combinable metrics
 
     def run(self, queryset, standings, round=None):
         standings.record_added_metric(self.key, self.name, self.abbr, self.icon, self.ascending)
@@ -95,6 +98,7 @@ class RepeatedMetricAnnotator(BaseMetricAnnotator):
 
 class QuerySetMetricAnnotator(BaseMetricAnnotator):
     """Base class for annotators that metrics based on conditional aggregations."""
+    combinable = True
 
     def get_annotation(self, round):
         raise NotImplementedError("Subclasses of QuerySetMetricAnnotator must implement get_annotation().")
@@ -106,11 +110,19 @@ class QuerySetMetricAnnotator(BaseMetricAnnotator):
         self.queryset_annotated = True
         return queryset.annotate(**{self.key: annotation})
 
+    def get_ranking_annotation(self, min_field, min_rounds):
+        if min_rounds is None:
+            return F(self.key)
+        return Case(When(**{min_field + "__gte": min_rounds, "then": F(self.key)}))
+
     def annotate_with_queryset(self, queryset, standings):
         """Annotates items with the given QuerySet."""
         for item in queryset:
             standings.add_metric(item, self.key, getattr(item, self.key))
 
     def annotate(self, queryset, standings, round=None):
-        assert self.queryset_annotated, "get_annotated_queryset() must be run before annotate()"
-        self.annotate_with_queryset(queryset, standings)
+        if self.combinable:
+            assert self.queryset_annotated, "get_annotated_queryset() must be run before annotate()"
+            self.annotate_with_queryset(queryset, standings)
+        else:
+            self.annotate_with_queryset(self.get_annotated_queryset(queryset, round), standings)

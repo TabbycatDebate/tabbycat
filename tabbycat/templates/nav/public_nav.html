@@ -46,10 +46,23 @@
   </li>
 {% endif %}
 {% if pref.motion_tab_released %}
-  <li class="nav-item {% if motions_nav %}active{% endif %}">
-    <a class="nav-link" href="{% tournamenturl 'motions-public-statistics' %}">{% trans "Motions Tab" %}</a>
-  </li>
-{% endif %}
+  {% if pref.enable_motion_reuse %}
+    <li class="nav-item dropdown {% if motions_nav %}active{% endif %}">
+      <a class="nav-link dropdown-toggle" href="#" id="motionsDrop"
+         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {% trans "Motions Tab" %}
+      </a>
+      <div class="dropdown-menu" aria-labelledby="motionsDrop">
+        <a class="dropdown-item" href="{% tournamenturl 'motions-public-statistics' %}">{% trans "By round" %}</a>
+        <a class="dropdown-item" href="{% tournamenturl 'motions-global-public-statistics' %}">{% trans "Globally" %}</a>
+      </div>
+    </li>
+  {% else %}
+    <li class="nav-item {% if motions_nav %}active{% endif %}">
+      <a class="nav-link" href="{% tournamenturl 'motions-public-statistics' %}">{% trans "Motions Tab" %}</a>
+    </li>
+  {% endif %}
+{% endif%}
 
 <!-- DRAW RELEASES -->
 {% if pref.public_draw == 'all-released' and not pref.team_tab_released %}
@@ -173,9 +186,25 @@
   </li>
 {% endif %}
 {% if pref.participant_ballots == 'public' %}
-  <li class="nav-item {% if enter_ballots_nav %}active{% endif %}">
-    <a class="nav-link" href="{% tournamenturl 'results-public-ballot-submission-index' %}">{% trans "Enter Ballot" %}</a>
-  </li>
+  {% if tournament.current_rounds|length == 1 %}
+    <li class="nav-item {% if enter_ballots_nav %}active{% endif %}">
+      <a class="nav-link" href="{% roundurl 'results-public-ballot-submission-index' tournament.current_rounds.0 %}">{% trans "Enter Ballot" %}</a>
+    </li>
+  {% elif tournament.current_rounds|length > 1 %}
+    <li class="nav-item dropdown {% if enter_ballots_nav %}active{% endif %}">
+      <a class="nav-link dropdown-toggle" href="#" id="roundsDrop"
+         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+         {% trans "Enter Ballot" %}
+      </a>
+      <div class="dropdown-menu" aria-labelledby="roundsDrop">
+        {% for r in tournament.current_rounds %}
+          <a class="dropdown-item" href="{% roundurl 'results-public-ballot-submission-index' r %}">
+            {{ r.name }}
+          </a>
+        {% endfor %}
+      </div>
+    </li>
+  {% endif %}
 {% endif %}
 {% if pref.participant_feedback == 'public' %}
   <li class="nav-item {% if enter_feedback_nav %}active{% endif %}">

@@ -1,3 +1,5 @@
+from operator import attrgetter
+
 from django.contrib.auth import get_user_model
 from django.core.management.base import CommandError
 
@@ -88,24 +90,19 @@ class Command(RoundCommand):
                                            "skipping".format(debate_id, tournament.slug)))
                 self.handle_debate(debate, **options)
 
-    def handle_round(self, round, **options):
+    def handle_object(self, obj, name_field, delete_func, add_func, **options):
         if options["clean"]:
-            self.stdout.write(self.style.WARNING("Deleting all feedback for round {}...".format(round.name)))
-            delete_all_feedback_for_round(round)
+            self.stdout.write(self.style.WARNING("Deleting all feedback for {}...".format(name_field(obj))))
+            delete_func(obj)
 
-        self.stdout.write(self.style.MIGRATE_HEADING("Generating feedback for round {}...".format(round.name)))
+        self.stdout.write(self.style.MIGRATE_HEADING("Generating feedback for {}...".format(name_field(obj))))
         try:
-            add_feedback_to_round(round, **self.feedback_kwargs(options))
+            add_func(obj, **self.feedback_kwargs(options))
         except ValueError as e:
             raise CommandError(e)
+
+    def handle_round(self, round, **options):
+        return self.handle_object(round, attrgetter('name'), delete_all_feedback_for_round, add_feedback_to_round, **options)
 
     def handle_debate(self, debate, **options):
-        if options["clean"]:
-            self.stdout.write(self.style.WARNING("Deleting all feedback for debate {}...".format(debate.matchup)))
-            delete_feedback(debate)
-
-        self.stdout.write(self.style.MIGRATE_HEADING("Generating feedback for debate {}...".format(debate.matchup)))
-        try:
-            add_feedback(debate, **self.feedback_kwargs(options))
-        except ValueError as e:
-            raise CommandError(e)
+        return self.handle_object(debate, attrgetter('matchup'), delete_feedback, add_feedback, **options)
