@@ -1,13 +1,12 @@
-from utils.tests import BaseDebateTestCase
-
 from participants.models import Adjudicator, Institution
+from utils.tests import BaseMinimalTournamentTestCase
 
 
-class TestInstitution(BaseDebateTestCase):
+class TestInstitution(BaseMinimalTournamentTestCase):
     def test_objects(self):
-        self.failUnlessEqual(4, Institution.objects.count())
+        self.assertEqual(4, Institution.objects.count())
 
 
-class TestAdjudicator(BaseDebateTestCase):
+class TestAdjudicator(BaseMinimalTournamentTestCase):
     def test_objects(self):
-        self.failUnlessEqual(8, Adjudicator.objects.count())
+        self.assertEqual(8, Adjudicator.objects.count())

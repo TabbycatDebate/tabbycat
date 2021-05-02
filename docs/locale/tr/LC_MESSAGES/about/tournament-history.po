@@ -1,0 +1,246 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-03-08 16:32\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Turkish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: tr\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/about/tournament-history.po\n"
+"Language: tr_TR\n"
+
+#: ../../about/tournament-history.rst:3
+msgid "Tournament History"
+msgstr ""
+
+#: ../../about/tournament-history.rst:5
+msgid "A partial list of major national and international tournaments (that we know of) which have used Tabbycat."
+msgstr ""
+
+#: ../../about/tournament-history.rst:8
+msgid "2017"
+msgstr ""
+
+#: ../../about/tournament-history.rst:10
+msgid "`APU Philosophy CHallenge <https://apuphil.herokuapp.com/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:11
+msgid "`ANU Spring IV <https://anus2017.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:12
+msgid "`Australian British Parliamentary Debating Championships <https://usutabs.herokuapp.com/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:13
+msgid "`Australasian Wom*ns Debating Championships <http://awdc2017.herokuapp.com/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:14
+msgid "Asia World Schools Debating Championship"
+msgstr ""
+
+#: ../../about/tournament-history.rst:15
+msgid "`Asia British Parliamentary Championship <http://abp2017.herokuapp.com/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:16
+msgid "`Borneo British Parliamentary Championship <https://bbpc17.herokuapp.com/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:17
+msgid "`Canadian British Parliamentary Championship <https://mcgilltab.herokuapp.com/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:18
+msgid "`Cambridge Asian Schools BP Championship <https://abc2017.herokuapp.com/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:19
+msgid "Cambodia United Asian Debating Championship"
+msgstr ""
+
+#: ../../about/tournament-history.rst:20
+msgid "`China British Parliamentary Championships <https://cbp2017.herokuapp.com/cbp2017/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:21
+msgid "`Japan British Parliamentary Championships <https://rabbittank.herokuapp.com/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:22
+msgid "`Kings College London IV <http://kcliv2017.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:23
+msgid "`Kuala Lumpur Open Challenge <https://kloc2017.herokuapp.com/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:24
+msgid "`KPU Pro Ams <https://kduproams2017.herokuapp.com/kduproams2017/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:25
+msgid "`Malaysian National Intervarsity Debating Championship <masnationals2017.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:26
+msgid "`Melbourne Mini <http://mudstabs.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:27
+msgid "`New Zealand Easters 2017 <https://nzeasters2017.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:28
+msgid "`New Zealand British Parliamentary Debating Championship <https://victabs.herokuapp.com/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:29
+msgid "`North East Asia Open <https://neao2017.herokuapp.com/neao2017/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:30
+msgid "`Swords Mini-Gong <https://minigong2017.herokuapp.com/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:31
+msgid "`Shanghai Asian Schools British Parliamentary Debate Championships <https://shanghai2017.herokuapp.com/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:32
+msgid "`UCD Law Society IV <https://ucdlawsociv.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:33
+msgid "`UCD Vice President's Cup <https://ucdlawsociv.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:34
+msgid "`UQ Australs <https://australs2017.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:35
+msgid "`UT MARA Open <http://maraopen2017.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:36
+msgid "`Victoria Cup IV <https://viccup2017.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:37
+msgid "`Western Sydney BP Championship <https://wsbp2017.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:38
+msgid "`Wollongong Easters <https://easters2017.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:39
+msgid "`Yale IV <http://yaleiv2017.herokuapp.com/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:42
+msgid "2016"
+msgstr ""
+
+#: ../../about/tournament-history.rst:44
+msgid "`Sydney Easters <http://easters2016.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:45
+msgid "`Joynt Scroll 2016 <https://joyntscroll2016.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:46
+msgid "`Malaysia Debate Open 2016 <http://tabs.altairtechlab.com/malaysiadebateopen2016/192.168.1.134_8080/t/mdo2016/index.html>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:47
+msgid "`New Zealand Easters 2016 <http://nzeasters2016.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:48
+msgid "`Perth Australs <http://australs2016.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:49
+msgid "`Thailand United Asian Debating Championships <http://uadc2016.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:50 ../../about/tournament-history.rst:61
+msgid "The National Law School Debate"
+msgstr ""
+
+#: ../../about/tournament-history.rst:51
+msgid "The Khazak National Schools Debating Championship"
+msgstr ""
+
+#: ../../about/tournament-history.rst:54
+msgid "2015"
+msgstr ""
+
+#: ../../about/tournament-history.rst:56
+msgid "`Bali United Asian Debating Championships <http://tabs.altairtechlab.com/baliuadc2015/t/baliuadc/index.html>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:57
+msgid "`Daejeon Australs <http://tab.australasians2015.org>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:58
+msgid "`Joynt Scroll <http://joyntscroll2015.herokuapp.com/t/joynt/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:59
+msgid "`Malaysia Debate Open 2015 <http://tabs.altairtechlab.com/malaysiadebateopen2015/>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:60
+msgid "`New Zealand Easters 2015 <https://nzeasters2015.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:62
+msgid "`UNSW/UTS Easters <https://aueasters2015.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:65
+msgid "2014"
+msgstr ""
+
+#: ../../about/tournament-history.rst:67
+msgid "`Joynt Scroll 2014 <http://joyntscroll2014.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:68
+msgid "NTU United Asian Debating Championships"
+msgstr ""
+
+#: ../../about/tournament-history.rst:69
+msgid "`Otago Australs <http://australs2014.herokuapp.com>`_"
+msgstr ""
+
+#: ../../about/tournament-history.rst:72
+msgid "2012"
+msgstr ""
+
+#: ../../about/tournament-history.rst:74
+msgid "Wellington Australs"
+msgstr ""
+
+#: ../../about/tournament-history.rst:77
+msgid "2010"
+msgstr ""
+
+#: ../../about/tournament-history.rst:79
+msgid "Auckland Australs"
+msgstr ""
+

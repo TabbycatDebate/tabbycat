@@ -26,6 +26,7 @@ span.emoji {
 
 .adj-symbol {
   @extend .text-monospace;
+
   color: $gray-700; // not black; but not too gray
   font-style: normal;
   font-weight: bold; // ensure it shows on flakey projectors
@@ -39,26 +40,8 @@ span.emoji {
 .feather {
   height: 18px; // Line height of default text @13px is ~18.5px
   width: 18px;
-}
 
-.list-group-item,
-.alert,
-.card-title {
-
-  .feather {
-    margin-bottom: -3px;
-    margin-right: 10px;
-  }
-
-  .emoji {
-    margin-left: 1px;
-    margin-right: 11px;
-  }
-}
-
-// Icons should have brighter colors (using text-success is too dull)
-.feather {
-
+  // Icons should have brighter colors (using text-success is too dull)
   &.text-success {
     color: theme-color("success");
   }
@@ -77,6 +60,21 @@ span.emoji {
 
   &.text-primary {
     color: theme-color("primary");
+  }
+}
+
+.list-group-item,
+.alert,
+.card-title {
+
+  .feather {
+    margin-top: -2px;
+    margin-right: 10px;
+  }
+
+  .emoji {
+    margin-left: 1px;
+    margin-right: 11px;
   }
 }
 

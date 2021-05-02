@@ -1,8 +1,8 @@
 {% extends "standings_base.html" %}
 {% load debate_tags static i18n %}
 
-{% block page-title %}🗃Diversity Overview{% endblock %}
-{% block head-title %}<span class="emoji">🗃</span>Diversity Overview{% endblock %}
+{% block page-title %}🗃{% trans "Diversity Overview" %}{% endblock %}
+{% block head-title %}<span class="emoji">🗃</span>{% trans "Diversity Overview" %}{% endblock %}
 {% block diversity_active %}active{% endblock %}
 
 {% block page-subnav-sections %}
@@ -19,28 +19,31 @@
 
 {% block page-alerts %}
 
-  {% include "components/explainer-card.html" with type="info" p1="The speaker and adjudicator results data displayed here is presented without tests for statistical significance. Correlations should not be automatically considered reliable; particularly at small tournaments." %}
+  {% blocktrans trimmed asvar text %}
+    The results data displayed here is presented without tests for statistical significance.
+    Correlations should not be automatically considered reliable; particularly at small tournaments.
+    A 'region' is a customisable category assigned to a set of institutions, and counted using the
+    number of participants assigned to those institutions.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
 
 {% endblock %}
 
 {% block content %}
 
-  <div class="d-lg-flex justify-content-lg-between mb-4">
+  <div class="d-lg-flex justify-content-lg-between">
     <div class="nav nav-pills btn-group">
-      <button class="btn btn-outline-secondary h6">
-        {% trans "Key" %}
-      </button>
       <button class="btn btn-primary gender-display gender-nm h6">
         {% trans "Non-cis male identifying" %}
       </button>
       <button class="btn btn-primary gender-display gender-male h6">
-        {% trans "Male identifying" %}
+        {% trans "Cis-male identifying" %}
+      </button>
+      <button class="btn btn-primary gender-display gender-unknown h6">
+        {% trans "Unspecified/unrecorded" %}
       </button>
     </div>
     <div class="nav nav-pills btn-group mt-md-0 mt-3">
-      <button class="btn btn-outline-secondary h6">
-        {% trans "Key" %}
-      </button>
       {% for r in regions %}
         <button class="btn btn-primary region-display region-{{ r.seq }} h6">
           {{ r.name }}

@@ -1,0 +1,21 @@
+{% extends "standings_table.html" %}
+{% load debate_tags i18n %}
+
+{# Note: This template is only used for admins (not public views of the tab). #}
+
+{% block page-alerts %}
+
+  {% if pref.team_standings_precedence|length == 0 %}
+    {% tournamenturl 'options-tournament-section' section='standings' as standings_config_url %}
+    {% blocktrans trimmed asvar message %}
+      The team standings precedence is empty. This means that teams aren't
+      ranked according to any metrics, so everyone is first equal. If this isn't
+      what you intended, set the team standings precedence in the
+      <a href="{{ standings_config_url }}" class="alert-link">Standings section
+      of this tournament's configuration</a>. In most
+      tournaments, the first metric should be points or wins.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="warning" icon="alert-circle" %}
+  {% endif %}
+
+{% endblock %}

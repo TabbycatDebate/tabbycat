@@ -1,0 +1,400 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"PO-Revision-Date: 2020-11-18 21:01\n"
+"Last-Translator: \n"
+"Language-Team: Talossan\n"
+"Language: tzl_TZL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: tzl\n"
+"X-Crowdin-File: /develop/tabbycat/availability/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 926\n"
+
+#: availability/apps.py:7 availability/views.py:36
+msgid "Availability"
+msgstr "crwdns29646:0crwdne29646:0"
+
+#: availability/models.py:15
+msgid "content type"
+msgstr "crwdns29648:0crwdne29648:0"
+
+#: availability/models.py:16
+msgid "object id"
+msgstr "crwdns29650:0crwdne29650:0"
+
+#: availability/models.py:20
+msgid "round"
+msgstr "crwdns29652:0crwdne29652:0"
+
+#: availability/models.py:24
+msgid "round availability"
+msgstr "crwdns29654:0crwdne29654:0"
+
+#: availability/models.py:25
+msgid "round availabilities"
+msgstr "crwdns29656:0crwdne29656:0"
+
+#: availability/templates/availability_index.html:11
+msgid "Mark All Breaking Adjs as Available"
+msgstr "crwdns29658:0crwdne29658:0"
+
+#: availability/templates/availability_index.html:18
+msgid "Mark Everything as Available"
+msgstr "crwdns29660:0crwdne29660:0"
+
+#: availability/templates/availability_index.html:25
+#, python-format
+msgid "Copy Availability from %(prev_round)s"
+msgstr "crwdns29662:0%(prev_round)scrwdne29662:0"
+
+#: availability/templates/availability_index.html:40
+msgid "View Draw"
+msgstr "crwdns29664:0crwdne29664:0"
+
+#: availability/templates/availability_index.html:45
+#, python-format
+msgid "%(previous_unconfirmed)s debates from %(round)s do not have a completed ballot — this may lead to a draw that fails or is incorrect"
+msgstr "crwdns51088:0%(previous_unconfirmed)scrwdnd51088:0%(round)scrwdne51088:0"
+
+#: availability/templates/availability_index.html:47
+#: availability/templates/availability_index.html:52
+#: availability/templates/availability_index.html:57
+#: availability/templates/availability_index.html:62
+#: availability/templates/availability_index.html:67
+#: availability/templates/availability_index.html:72
+#: availability/templates/availability_index.html:77
+#: availability/templates/availability_index.html:82
+#: availability/templates/availability_index.html:86
+msgid "Generate Draw"
+msgstr "crwdns29668:0crwdne29668:0"
+
+#: availability/templates/availability_index.html:51
+msgid "The draw cannot be generated until some teams have been marked as available."
+msgstr "crwdns29670:0crwdne29670:0"
+
+#: availability/templates/availability_index.html:56
+msgid "The draw cannot be generated until some adjudicators have been marked as available."
+msgstr "crwdns29672:0crwdne29672:0"
+
+#: availability/templates/availability_index.html:61
+msgid "The draw cannot be generated until some rooms have been marked as available."
+msgstr "crwdns51090:0crwdne51090:0"
+
+#: availability/templates/availability_index.html:66
+msgid "There aren't enough rooms marked as available for the number of debates — the draw may not generate properly."
+msgstr "crwdns51092:0crwdne51092:0"
+
+#: availability/templates/availability_index.html:71
+msgid "There aren't enough adjudicators marked as available for the number of debates — the draw may not generate properly."
+msgstr "crwdns29678:0crwdne29678:0"
+
+#: availability/templates/availability_index.html:76
+msgid "There is an uneven number of teams marked as available — the draw may not generate properly."
+msgstr "crwdns29680:0crwdne29680:0"
+
+#: availability/templates/availability_index.html:81
+msgid "The number of teams marked as available is not a multiple of 4 — the draw may not generate properly."
+msgstr "crwdns29682:0crwdne29682:0"
+
+#: availability/templates/availability_index.html:99
+#, python-format
+msgid "One debate from %(prev_round)s <strong>does not have a completed ballot</strong>. This may lead to a draw that fails or is incorrect, depending on your draw rules. <a href=\"%(prev_round_results_url)s\" class=\"alert-link\"> Enter results from %(prev_round)s. </a>"
+msgid_plural "%(previous_unconfirmed)s debates from %(prev_round)s <strong>do not have a completed ballot</strong>. This may lead to a draw that fails or is incorrect, depending on your draw rules. <a href=\"%(prev_round_results_url)s\" class=\"alert-link\"> Enter results from %(prev_round)s. </a>"
+msgstr[0] "crwdns29684:1%(prev_round)scrwdnd29684:1%(prev_round_results_url)scrwdnd29684:1%(prev_round)scrwdne29684:1"
+msgstr[1] "crwdns29684:5%(previous_unconfirmed)scrwdnd29684:5%(prev_round)scrwdnd29684:5%(prev_round_results_url)scrwdnd29684:5%(prev_round)scrwdne29684:5"
+
+#: availability/templates/availability_index.html:121
+#, python-format
+msgid "This is a page for <strong>%(round)s</strong>, but the previous round is still not marked as completed. Did you forget to <a href=\"%(complete_prev_round_url)s\" class=\"alert-link\"> mark %(prev_round)s as completed? </a>"
+msgstr "crwdns51094:0%(round)scrwdnd51094:0%(complete_prev_round_url)scrwdnd51094:0%(prev_round)scrwdne51094:0"
+
+#: availability/templates/availability_index.html:137
+#, python-format
+msgid "This is the first round, but its draw type is <strong>%(draw_type)s</strong>. Did you intend for it to be <strong>Random</strong> instead? You can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's draw type in the Edit Database area.</a>"
+msgstr "crwdns29688:0%(draw_type)scrwdnd29688:0%(change_round_url)scrwdne29688:0"
+
+#: availability/templates/availability_index.html:150
+#, python-format
+msgid "This is an elimination round, but it doesn't have a break category. Elimination rounds must be associated with a break category. Please <a href=\"%(change_round_url)s\" class=\"alert-link\"> set this round's break category in the Edit Database area.</a>"
+msgstr "crwdns29690:0%(change_round_url)scrwdne29690:0"
+
+#: availability/templates/availability_index.html:162
+#, python-format
+msgid "This is an elimination round, but its draw type is <strong>%(draw_type)s</strong>. The draw type of all elimination rounds must be \"Elimination\". Please <a href=\"%(change_round_url)s\" class=\"alert-link\"> change this round's draw type in the Edit Database area.</a>"
+msgstr "crwdns29692:0%(draw_type)scrwdnd29692:0%(change_round_url)scrwdne29692:0"
+
+#: availability/templates/availability_index.html:175
+#, python-format
+msgid "There don't appear to be any teams breaking in the %(break_category)s Break. Have you <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> generated the break for the %(break_category)s Break</a> yet?"
+msgstr "crwdns29694:0%(break_category)scrwdnd29694:0%(breakqual_teams_url)scrwdnd29694:0%(break_category)scrwdne29694:0"
+
+#: availability/templates/availability_index.html:187
+#, python-format
+msgid "There's only one team breaking in the %(break_category)s Break. You can't generate an elimination round draw with only one team — you might like to <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> review the break for the %(break_category)s Break</a>."
+msgstr "crwdns29696:0%(break_category)scrwdnd29696:0%(breakqual_teams_url)scrwdnd29696:0%(break_category)scrwdne29696:0"
+
+#: availability/templates/availability_index.html:199
+#, python-format
+msgid "The team standings precedence is empty. This means that teams aren't ranked according to any metrics, so all teams will be in a single bracket containing everyone. If this isn't what you intended, set the team standings precedence in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a> before creating the draw. In most tournaments, the first metric should be points or wins."
+msgstr "crwdns35164:0%(standings_config_url)scrwdne35164:0"
+
+#: availability/templates/base_availability.html:38
+msgid "Select All"
+msgstr "crwdns29698:0crwdne29698:0"
+
+#: availability/templates/base_availability.html:39
+msgid "Select None"
+msgstr "crwdns29700:0crwdne29700:0"
+
+#: availability/templates/base_availability.html:40
+msgid "Check-Ins"
+msgstr "crwdns29702:0crwdne29702:0"
+
+#: availability/templates/base_availability.html:41
+msgid "Check In All Breaking"
+msgstr "crwdns29704:0crwdne29704:0"
+
+#: availability/templates/base_availability.html:42
+msgid "Copy from Previous"
+msgstr "crwdns29706:0crwdne29706:0"
+
+#: availability/templates/base_availability.html:43
+msgid "Save Selected"
+msgstr "crwdns29708:0crwdne29708:0"
+
+#: availability/templates/checkin_progress.html:7
+msgid "Teams"
+msgstr "crwdns29710:0crwdne29710:0"
+
+#: availability/templates/checkin_progress.html:8
+msgid "Adjudicators"
+msgstr "crwdns29712:0crwdne29712:0"
+
+#: availability/templates/checkin_progress.html:9
+msgid "Rooms"
+msgstr "crwdns51096:0crwdne51096:0"
+
+#: availability/templates/checkin_progress.html:43
+msgid "Mark teams as available"
+msgstr "crwdns29716:0crwdne29716:0"
+
+#: availability/templates/checkin_progress.html:46
+msgid "No need to set team availability"
+msgstr "crwdns29718:0crwdne29718:0"
+
+#: availability/templates/checkin_progress.html:49
+msgid "There is an uneven number of teams marked as available for this round."
+msgstr "crwdns29720:0crwdne29720:0"
+
+#: availability/templates/checkin_progress.html:53
+msgid "The number of teams marked as available for this round is not a multiple of 4."
+msgstr "crwdns29722:0crwdne29722:0"
+
+#: availability/templates/checkin_progress.html:59
+msgid "Edit team availability"
+msgstr "crwdns29724:0crwdne29724:0"
+
+#: availability/templates/checkin_progress.html:68
+#, python-format
+msgid "One adjudicator does not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available."
+msgid_plural "%(count)s adjudicators do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available."
+msgstr[0] "crwdns34010:1crwdne34010:1"
+msgstr[1] "crwdns34010:5%(count)scrwdne34010:5"
+
+#: availability/templates/checkin_progress.html:77
+#, python-format
+msgid "%(count)s adjudicator who was not available last round, is available this round."
+msgid_plural "%(count)s adjudicators who were not available last round, are available this round."
+msgstr[0] "crwdns34012:1%(count)scrwdne34012:1"
+msgstr[1] "crwdns34012:5%(count)scrwdne34012:5"
+
+#: availability/templates/checkin_progress.html:84
+#, python-format
+msgid "The following %(count)s adjudicator, who was not available last round, is available this round: %(adjs_list)s"
+msgid_plural "The following %(count)s adjudicators, who were not available last round, are available this round: %(adjs_list)s"
+msgstr[0] "crwdns34014:1%(count)scrwdnd34014:1%(adjs_list)scrwdne34014:1"
+msgstr[1] "crwdns34014:5%(count)scrwdnd34014:5%(adjs_list)scrwdne34014:5"
+
+#: availability/templates/checkin_progress.html:93
+#, python-format
+msgid "%(count)s adjudicator who was available last round, is not available this round."
+msgid_plural "%(count)s adjudicators who were available last round, are not available this round."
+msgstr[0] "crwdns34016:1%(count)scrwdne34016:1"
+msgstr[1] "crwdns34016:5%(count)scrwdne34016:5"
+
+#: availability/templates/checkin_progress.html:100
+#, python-format
+msgid "The following %(count)s adjudicator, who was available last round, is not available this round: %(adjs_list)s"
+msgid_plural "The following %(count)s adjudicators, who were available last round, are not available this round: %(adjs_list)s"
+msgstr[0] "crwdns34018:1%(count)scrwdnd34018:1%(adjs_list)scrwdne34018:1"
+msgstr[1] "crwdns34018:5%(count)scrwdnd34018:5%(adjs_list)scrwdne34018:5"
+
+#: availability/templates/checkin_progress.html:108
+msgid "Mark adjudicators as available"
+msgstr "crwdns29726:0crwdne29726:0"
+
+#. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
+#: availability/templates/checkin_progress.html:111
+#, python-format
+msgid "There needs to be at least one adjudicator marked as available, given the number of debates."
+msgid_plural "There need to be at least %(required_count)s adjudicators marked as available, given the number of debates."
+msgstr[0] "crwdns29728:1crwdne29728:1"
+msgstr[1] "crwdns29728:5%(required_count)scrwdne29728:5"
+
+#: availability/templates/checkin_progress.html:121
+msgid "Edit adjudicator availability"
+msgstr "crwdns29730:0crwdne29730:0"
+
+#: availability/templates/checkin_progress.html:130
+#, python-format
+msgid "%(count)s room that was not available last round, is available this round."
+msgid_plural "%(count)s rooms that were not available last round, are available this round."
+msgstr[0] "crwdns51098:1%(count)scrwdne51098:1"
+msgstr[1] "crwdns51098:5%(count)scrwdne51098:5"
+
+#: availability/templates/checkin_progress.html:137
+#, python-format
+msgid "The following %(count)s room, which was not available last round, is available this round: %(rooms_list)s"
+msgid_plural "The following %(count)s rooms, which were not available last round, are available this round: %(rooms_list)s"
+msgstr[0] "crwdns51100:1%(count)scrwdnd51100:1%(rooms_list)scrwdne51100:1"
+msgstr[1] "crwdns51100:5%(count)scrwdnd51100:5%(rooms_list)scrwdne51100:5"
+
+#: availability/templates/checkin_progress.html:146
+#, python-format
+msgid "%(count)s room that was available last round, is not available this round."
+msgid_plural "%(count)s rooms that were available last round, are not available this round."
+msgstr[0] "crwdns51102:1%(count)scrwdne51102:1"
+msgstr[1] "crwdns51102:5%(count)scrwdne51102:5"
+
+#: availability/templates/checkin_progress.html:153
+#, python-format
+msgid "The following %(count)s room, which was available last round, is not available this round: %(rooms_list)s"
+msgid_plural "The following %(count)s rooms, which were available last round, are not available this round: %(rooms_list)s"
+msgstr[0] "crwdns51104:1%(count)scrwdnd51104:1%(rooms_list)scrwdne51104:1"
+msgstr[1] "crwdns51104:5%(count)scrwdnd51104:5%(rooms_list)scrwdne51104:5"
+
+#: availability/templates/checkin_progress.html:162
+#, python-format
+msgid "One room does not have an associated tournament. Set its 'Tournament' field in the Edit Database area if you want it to be marked as available."
+msgid_plural "%(count)s rooms do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available."
+msgstr[0] "crwdns51106:1crwdne51106:1"
+msgstr[1] "crwdns51106:5%(count)scrwdne51106:5"
+
+#: availability/templates/checkin_progress.html:170
+msgid "Mark rooms as available"
+msgstr "crwdns51108:0crwdne51108:0"
+
+#. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
+#: availability/templates/checkin_progress.html:173
+#, python-format
+msgid "There needs to be at least one room marked as available, given the number of debates."
+msgid_plural "There need to be at least %(required_count)s rooms marked as available, given the number of debates."
+msgstr[0] "crwdns51110:1crwdne51110:1"
+msgstr[1] "crwdns51110:5%(required_count)scrwdne51110:5"
+
+#: availability/templates/checkin_progress.html:185
+msgid "Edit room availability"
+msgstr "crwdns51112:0crwdne51112:0"
+
+#: availability/views.py:95
+msgid "no teams are debating"
+msgstr "crwdns29742:0crwdne29742:0"
+
+#. Translators: nteams in this string can only be 0 or 1
+#: availability/views.py:105
+#, python-format
+msgid "%(nteams)d breaking team — no debates can happen"
+msgid_plural "%(nteams)d breaking teams — no debates can happen"
+msgstr[0] "crwdns29744:1%(nteams)dcrwdne29744:1"
+msgstr[1] "crwdns29744:5%(nteams)dcrwdne29744:5"
+
+#. Translators: ndebating in this string is always at least 2
+#: availability/views.py:113
+#, python-format
+msgid "%(ndebating)d breaking team is debating this round"
+msgid_plural "%(ndebating)d breaking teams are debating this round"
+msgstr[0] "crwdns29746:1%(ndebating)dcrwdne29746:1"
+msgstr[1] "crwdns29746:5%(ndebating)dcrwdne29746:5"
+
+#. Translators: This gets appended to the previous string (the one with
+#. ndebating in it) if (and only if) nbypassing is greater than 0.
+#. "It" refers to this round.
+#: availability/views.py:121
+#, python-format
+msgid "; %(nbypassing)d team is bypassing it"
+msgid_plural "; %(nbypassing)d teams are bypassing it"
+msgstr[0] "crwdns29748:1%(nbypassing)dcrwdne29748:1"
+msgstr[1] "crwdns29748:5%(nbypassing)dcrwdne29748:5"
+
+#. Translators: nadvancing in this string is always at least 2
+#: availability/views.py:140
+#, python-format
+msgid "%(nadvancing)s advancing team is debating this round"
+msgid_plural "%(nadvancing)s advancing teams are debating this round"
+msgstr[0] "crwdns29750:1%(nadvancing)scrwdne29750:1"
+msgstr[1] "crwdns29750:5%(nadvancing)scrwdne29750:5"
+
+#: availability/views.py:180
+msgid "Active Now"
+msgstr "crwdns29752:0crwdne29752:0"
+
+#: availability/views.py:191
+#, python-format
+msgid "Active in %(prev_round)s"
+msgstr "crwdns29754:0%(prev_round)scrwdne29754:0"
+
+#: availability/views.py:197
+msgid "Checked-In"
+msgstr "crwdns29756:0crwdne29756:0"
+
+#: availability/views.py:208
+msgid "Team Availability"
+msgstr "crwdns29758:0crwdne29758:0"
+
+#: availability/views.py:227
+msgid "Adjudicator Availability"
+msgstr "crwdns29760:0crwdne29760:0"
+
+#: availability/views.py:246
+msgid "Room Availability"
+msgstr "crwdns51114:0crwdne51114:0"
+
+#: availability/views.py:260
+msgid "Room"
+msgstr "crwdns51116:0crwdne51116:0"
+
+#: availability/views.py:262
+msgid "Display Name (for the draw)"
+msgstr "crwdns29766:0crwdne29766:0"
+
+#: availability/views.py:265
+msgid "Categories"
+msgstr "crwdns29768:0crwdne29768:0"
+
+#: availability/views.py:266
+msgid "Priority"
+msgstr "crwdns29770:0crwdne29770:0"
+
+#: availability/views.py:286
+msgid "Failed to update some or all availabilities due to an integrityerror. You should retry this action or make individual updates."
+msgstr "crwdns34030:0crwdne34030:0"
+
+#: availability/views.py:294
+msgid "Checked in all teams, adjudicators and rooms."
+msgstr "crwdns51118:0crwdne51118:0"
+
+#: availability/views.py:301
+msgid "Checked in all breaking adjudicators."
+msgstr "crwdns29774:0crwdne29774:0"
+
+#: availability/views.py:309
+msgid "Checked in all teams, adjudicators and rooms from previous round."
+msgstr "crwdns51120:0crwdne51120:0"
+

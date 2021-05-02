@@ -8,7 +8,7 @@
 {% block page-alerts %}
 
   {% blocktrans trimmed asvar p1 %}
-    Each of the barcodes below is also an image file that can be download individually. If you want to download them all at once try using a 'bulk downloader' extension/plugin for your browser, such as <a href="https://chrome.google.com/webstore/detail/image-downloader/cnpniohnfphhjihaiiggeabnkjhpaldj">this one (for Chrome)</a>. To download them as a list you can go to Check-Ins section of the Edit Database area and copy/paste from the relevant table.
+    Each of the barcodes below is also an image file that can be download individually. If you want to download them all at once try using a 'bulk downloader' extension/plugin for your browser, such as <a href="https://chrome.google.com/webstore/detail/svg-export/naeaaedieihlkmdajjefioajbbdbdjgp?hl=en-GB">this one (for Chrome)</a>. To download them as a list you can go to Check-Ins section of the Edit Database area and copy/paste from the relevant table.
   {% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" %}
 
@@ -23,16 +23,19 @@
 
   {% for identifier in identifiers %}
 
-    {% if forloop.first or forloop.counter0|divisibleby:24 %}
+    {% if forloop.first or forloop.counter0|divisibleby:18 %}
       {% if not forloop.first %}</div></div></div>{% endif %}
       <div class="db-page-holder"><div class="db-page p-4"><div class="row">
     {% endif %}
 
-    <div class="col-3 p-2">
+    <div class="col-6 p-2">
       <div class="card text-center">
         <div class="card-body p-0">
-          <img id="{{ identifier.barcode }}" title="{{ identifier.owner }}"
-               class="barcode-placeholder">
+          <svg id="{{ identifier.barcode }}" title="{{ identifier.owner }}"
+               class="barcode-placeholder" jsbarcode-value="{{ identifier.barcode }}"
+               jsbarcode-text="{{ identifier.barcode }} {{ identifier.owner.name|abbreviatename }}"
+               jsbarcode-width="5" jsbarcode-height="50">
+          </svg>
         </div>
         <div class="card-footer">
           <small>{{ identifier.owner }}, {{ identifier.barcode }}</small>
@@ -48,20 +51,9 @@
 
 {% block js %}
   {{ block.super }}
-  <script src="{% static 'js/vendor/JsBarcode.code128.min.js' %}"></script>
+  <script src="{% static 'js/vendor/JsBarcode.all.min.js' %}"></script>
   <script>
-    $(".barcode-placeholder").each(function() {
-      var code = $(this).attr("id");
-      var title = $(this).attr("title").split(" ")
-      var firstNameCode = title[0][0].toUpperCase().replace(/\W/g, '') + "."
-      var lastNameCode = title[title.length - 1].toUpperCase().replace(/\W/g, '')
-      if (lastNameCode.length > 5) {
-        lastNameCode = lastNameCode.substring(0, 5)
-      }
-      $(this).JsBarcode(code, {
-        text: code + " " + firstNameCode + lastNameCode
-      });
-    });
+    JsBarcode(".barcode-placeholder").init();
   </script>
 {% endblock js %}
 

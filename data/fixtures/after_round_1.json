@@ -294,7 +294,7 @@
     }
 },
 {
-    "model": "adjallocation.adjudicatorconflict",
+    "model": "adjallocation.adjudicatorteamconflict",
     "pk": 1,
     "fields": {
         "adjudicator": 77,
@@ -302,7 +302,7 @@
     }
 },
 {
-    "model": "adjallocation.adjudicatorconflict",
+    "model": "adjallocation.adjudicatorteamconflict",
     "pk": 2,
     "fields": {
         "adjudicator": 77,
@@ -310,7 +310,7 @@
     }
 },
 {
-    "model": "adjallocation.adjudicatorconflict",
+    "model": "adjallocation.adjudicatorteamconflict",
     "pk": 3,
     "fields": {
         "adjudicator": 81,
@@ -318,7 +318,7 @@
     }
 },
 {
-    "model": "adjallocation.adjudicatorconflict",
+    "model": "adjallocation.adjudicatorteamconflict",
     "pk": 4,
     "fields": {
         "adjudicator": 84,
@@ -326,7 +326,7 @@
     }
 },
 {
-    "model": "adjallocation.adjudicatorconflict",
+    "model": "adjallocation.adjudicatorteamconflict",
     "pk": 5,
     "fields": {
         "adjudicator": 87,
@@ -334,7 +334,7 @@
     }
 },
 {
-    "model": "adjallocation.adjudicatorconflict",
+    "model": "adjallocation.adjudicatorteamconflict",
     "pk": 6,
     "fields": {
         "adjudicator": 89,
@@ -342,7 +342,7 @@
     }
 },
 {
-    "model": "adjallocation.adjudicatorconflict",
+    "model": "adjallocation.adjudicatorteamconflict",
     "pk": 7,
     "fields": {
         "adjudicator": 91,
@@ -350,7 +350,7 @@
     }
 },
 {
-    "model": "adjallocation.adjudicatorconflict",
+    "model": "adjallocation.adjudicatorteamconflict",
     "pk": 8,
     "fields": {
         "adjudicator": 93,
@@ -361,40 +361,40 @@
     "model": "adjallocation.adjudicatoradjudicatorconflict",
     "pk": 1,
     "fields": {
-        "adjudicator": 73,
-        "conflict_adjudicator": 77
+        "adjudicator1": 73,
+        "adjudicator2": 77
     }
 },
 {
     "model": "adjallocation.adjudicatoradjudicatorconflict",
     "pk": 2,
     "fields": {
-        "adjudicator": 73,
-        "conflict_adjudicator": 89
+        "adjudicator1": 73,
+        "adjudicator2": 89
     }
 },
 {
     "model": "adjallocation.adjudicatoradjudicatorconflict",
     "pk": 3,
     "fields": {
-        "adjudicator": 85,
-        "conflict_adjudicator": 86
+        "adjudicator1": 85,
+        "adjudicator2": 86
     }
 },
 {
     "model": "adjallocation.adjudicatoradjudicatorconflict",
     "pk": 4,
     "fields": {
-        "adjudicator": 86,
-        "conflict_adjudicator": 85
+        "adjudicator1": 86,
+        "adjudicator2": 85
     }
 },
 {
     "model": "adjallocation.adjudicatoradjudicatorconflict",
     "pk": 5,
     "fields": {
-        "adjudicator": 99,
-        "conflict_adjudicator": 97
+        "adjudicator1": 99,
+        "adjudicator2": 97
     }
 },
 {
@@ -686,7 +686,199 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 1,
+    "fields": {
+        "team": 2,
+        "institution": 1
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 2,
+    "fields": {
+        "team": 3,
+        "institution": 1
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 3,
+    "fields": {
+        "team": 1,
+        "institution": 1
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 4,
+    "fields": {
+        "team": 4,
+        "institution": 2
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 5,
+    "fields": {
+        "team": 5,
+        "institution": 3
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 6,
+    "fields": {
+        "team": 6,
+        "institution": 4
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 7,
+    "fields": {
+        "team": 7,
+        "institution": 4
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 8,
+    "fields": {
+        "team": 8,
+        "institution": 5
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 9,
+    "fields": {
+        "team": 9,
+        "institution": 6
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 10,
+    "fields": {
+        "team": 10,
+        "institution": 6
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 11,
+    "fields": {
+        "team": 11,
+        "institution": 7
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 12,
+    "fields": {
+        "team": 12,
+        "institution": 7
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 13,
+    "fields": {
+        "team": 13,
+        "institution": 8
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 14,
+    "fields": {
+        "team": 14,
+        "institution": 8
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 15,
+    "fields": {
+        "team": 15,
+        "institution": 8
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 16,
+    "fields": {
+        "team": 16,
+        "institution": 9
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 17,
+    "fields": {
+        "team": 17,
+        "institution": 10
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 18,
+    "fields": {
+        "team": 18,
+        "institution": 10
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 19,
+    "fields": {
+        "team": 19,
+        "institution": 10
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 20,
+    "fields": {
+        "team": 20,
+        "institution": 11
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 21,
+    "fields": {
+        "team": 21,
+        "institution": 11
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 22,
+    "fields": {
+        "team": 23,
+        "institution": 13
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 23,
+    "fields": {
+        "team": 24,
+        "institution": 13
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 24,
+    "fields": {
+        "team": 22,
+        "institution": 13
+    }
+},
+{
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 1,
     "fields": {
         "adjudicator": 73,
@@ -696,7 +888,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 2,
     "fields": {
         "adjudicator": 74,
@@ -706,7 +898,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 3,
     "fields": {
         "adjudicator": 75,
@@ -716,7 +908,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 4,
     "fields": {
         "adjudicator": 76,
@@ -726,7 +918,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 5,
     "fields": {
         "adjudicator": 78,
@@ -736,7 +928,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 6,
     "fields": {
         "adjudicator": 79,
@@ -746,7 +938,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 7,
     "fields": {
         "adjudicator": 80,
@@ -756,7 +948,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 8,
     "fields": {
         "adjudicator": 81,
@@ -766,7 +958,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 9,
     "fields": {
         "adjudicator": 83,
@@ -776,7 +968,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 10,
     "fields": {
         "adjudicator": 84,
@@ -786,7 +978,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 11,
     "fields": {
         "adjudicator": 85,
@@ -796,7 +988,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 12,
     "fields": {
         "adjudicator": 86,
@@ -806,7 +998,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 13,
     "fields": {
         "adjudicator": 87,
@@ -816,7 +1008,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 14,
     "fields": {
         "adjudicator": 88,
@@ -826,7 +1018,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 15,
     "fields": {
         "adjudicator": 89,
@@ -836,7 +1028,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 16,
     "fields": {
         "adjudicator": 90,
@@ -846,7 +1038,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 17,
     "fields": {
         "adjudicator": 91,
@@ -856,7 +1048,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 18,
     "fields": {
         "adjudicator": 93,
@@ -866,7 +1058,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 19,
     "fields": {
         "adjudicator": 94,
@@ -876,7 +1068,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 20,
     "fields": {
         "adjudicator": 95,
@@ -886,7 +1078,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 21,
     "fields": {
         "adjudicator": 96,
@@ -896,7 +1088,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 22,
     "fields": {
         "adjudicator": 97,
@@ -906,7 +1098,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 23,
     "fields": {
         "adjudicator": 98,
@@ -916,7 +1108,7 @@
     }
 },
 {
-    "model": "adjfeedback.adjudicatortestscorehistory",
+    "model": "adjfeedback.adjudicatorbasescorehistory",
     "pk": 24,
     "fields": {
         "adjudicator": 99,
@@ -940,7 +1132,7 @@
         "required": true,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -958,7 +1150,7 @@
         "required": true,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -976,7 +1168,7 @@
         "required": true,
         "min_value": -20.0,
         "max_value": 20.0,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -994,7 +1186,7 @@
         "required": true,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1012,7 +1204,7 @@
         "required": false,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1030,7 +1222,7 @@
         "required": false,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1048,7 +1240,7 @@
         "required": true,
         "min_value": 0.0,
         "max_value": 10.0,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1066,7 +1258,7 @@
         "required": true,
         "min_value": 0.0,
         "max_value": 10.0,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1084,7 +1276,7 @@
         "required": false,
         "min_value": null,
         "max_value": null,
-        "choices": "Absolutely!//Sure, why not//If I have to//Please don't"
+        "choices": "[\"Absolutely!\", \"Sure, why not\", \"If I have to\", \"Please don't\"]"
     }
 },
 {
@@ -1102,7 +1294,7 @@
         "required": false,
         "min_value": null,
         "max_value": null,
-        "choices": "biased//clear//concise//rambly//attentive//inattentive"
+        "choices": "[\"biased\", \"clear\", \"concise\", \"rambly\", \"attentive\", \"inattentive\"]"
     }
 },
 {
@@ -1120,7 +1312,7 @@
         "required": false,
         "min_value": null,
         "max_value": null,
-        "choices": ""
+        "choices": "[]"
     }
 },
 {
@@ -1134,6 +1326,7 @@
         "break_size": 8,
         "is_general": true,
         "priority": 30,
+        "limit": 0,
         "rule": "standard"
     }
 },
@@ -1148,6 +1341,7 @@
         "break_size": 4,
         "is_general": false,
         "priority": 20,
+        "limit": 0,
         "rule": "standard"
     }
 },
@@ -1162,6 +1356,7 @@
         "break_size": 2,
         "is_general": false,
         "priority": 10,
+        "limit": 0,
         "rule": "standard"
     }
 },
@@ -1171,11 +1366,9 @@
     "fields": {
         "round": 1,
         "venue": 12,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1187,11 +1380,9 @@
     "fields": {
         "round": 1,
         "venue": 22,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1203,11 +1394,9 @@
     "fields": {
         "round": 1,
         "venue": 11,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1219,11 +1408,9 @@
     "fields": {
         "round": 1,
         "venue": 15,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1235,11 +1422,9 @@
     "fields": {
         "round": 1,
         "venue": 18,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1251,11 +1436,9 @@
     "fields": {
         "round": 1,
         "venue": 17,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1267,11 +1450,9 @@
     "fields": {
         "round": 1,
         "venue": 13,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1283,11 +1464,9 @@
     "fields": {
         "round": 1,
         "venue": 20,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1299,11 +1478,9 @@
     "fields": {
         "round": 1,
         "venue": 16,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1315,11 +1492,9 @@
     "fields": {
         "round": 1,
         "venue": 21,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1331,11 +1506,9 @@
     "fields": {
         "round": 1,
         "venue": 14,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1347,11 +1520,9 @@
     "fields": {
         "round": 1,
         "venue": 19,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
-        "flags": "",
+        "flags": "[]",
         "importance": 0,
         "result_status": "C",
         "sides_confirmed": true
@@ -1364,7 +1535,7 @@
         "debate": 1,
         "team": 12,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1374,7 +1545,7 @@
         "debate": 1,
         "team": 18,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1384,7 +1555,7 @@
         "debate": 2,
         "team": 4,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1394,7 +1565,7 @@
         "debate": 2,
         "team": 17,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1404,7 +1575,7 @@
         "debate": 3,
         "team": 16,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1414,7 +1585,7 @@
         "debate": 3,
         "team": 13,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1424,7 +1595,7 @@
         "debate": 4,
         "team": 20,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1434,7 +1605,7 @@
         "debate": 4,
         "team": 1,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1444,7 +1615,7 @@
         "debate": 5,
         "team": 3,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1454,7 +1625,7 @@
         "debate": 5,
         "team": 8,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1464,7 +1635,7 @@
         "debate": 6,
         "team": 9,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1474,7 +1645,7 @@
         "debate": 6,
         "team": 23,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1484,7 +1655,7 @@
         "debate": 7,
         "team": 11,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1494,7 +1665,7 @@
         "debate": 7,
         "team": 19,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1504,7 +1675,7 @@
         "debate": 8,
         "team": 7,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1514,7 +1685,7 @@
         "debate": 8,
         "team": 22,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1524,7 +1695,7 @@
         "debate": 9,
         "team": 2,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1534,7 +1705,7 @@
         "debate": 9,
         "team": 10,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1544,7 +1715,7 @@
         "debate": 10,
         "team": 24,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1554,7 +1725,7 @@
         "debate": 10,
         "team": 14,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1564,7 +1735,7 @@
         "debate": 11,
         "team": 6,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1574,7 +1745,7 @@
         "debate": 11,
         "team": 21,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1584,7 +1755,7 @@
         "debate": 12,
         "team": 5,
         "side": "aff",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
@@ -1594,241 +1765,349 @@
         "debate": 12,
         "team": 15,
         "side": "neg",
-        "flags": ""
+        "flags": "[]"
     }
 },
 {
     "model": "motions.motion",
     "pk": 1,
     "fields": {
-        "seq": 1,
         "text": "This House would abolish national days",
         "reference": "National days",
         "info_slide": "",
-        "flagged": false,
-        "round": 1,
-        "divisions": []
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 2,
     "fields": {
-        "seq": 2,
         "text": "This House regrets the existence of Valentine's Day",
-        "reference": "Valentine\u2019s Day",
+        "reference": "Valentine’s Day",
         "info_slide": "",
-        "flagged": false,
-        "round": 1,
-        "divisions": []
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 3,
     "fields": {
-        "seq": 3,
         "text": "This House would rename Christmas with a name that is religiously neutral",
         "reference": "Christmas",
         "info_slide": "",
-        "flagged": false,
-        "round": 1,
-        "divisions": []
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 4,
     "fields": {
-        "seq": 1,
         "text": "This House would not buy Apple",
         "reference": "Apple",
         "info_slide": "",
-        "flagged": false,
-        "round": 2,
-        "divisions": []
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 5,
     "fields": {
-        "seq": 2,
         "text": "This House would end all research and development tax credits for highly profitable technology companies",
         "reference": "R&D tax credit",
         "info_slide": "",
-        "flagged": false,
-        "round": 2,
-        "divisions": []
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 6,
     "fields": {
-        "seq": 3,
         "text": "This House regrets the rise of computer science at the expense of the humanities",
         "reference": "Computer science",
         "info_slide": "",
-        "flagged": false,
-        "round": 2,
-        "divisions": []
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 7,
     "fields": {
-        "seq": 1,
         "text": "This House would favour creativity over intelligence",
         "reference": "Creativity and intelligence",
         "info_slide": "",
-        "flagged": false,
-        "round": 3,
-        "divisions": []
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 8,
     "fields": {
-        "seq": 2,
         "text": "This House believes that field hockey is better than ice hockey",
         "reference": "Hockey",
         "info_slide": "",
-        "flagged": false,
-        "round": 3,
-        "divisions": []
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 9,
     "fields": {
-        "seq": 3,
         "text": "This House would rather play with Lego than Barbie",
         "reference": "Lego and Barbie",
         "info_slide": "",
-        "flagged": false,
-        "round": 3,
-        "divisions": []
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 10,
     "fields": {
-        "seq": 1,
         "text": "This House would stop importing bananas from Latin America",
         "reference": "Bananas",
         "info_slide": "",
-        "flagged": false,
-        "round": 4,
-        "divisions": []
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 11,
     "fields": {
-        "seq": 2,
         "text": "This House believes that tomatoes are a fruit",
         "reference": "Tomatoes",
         "info_slide": "",
-        "flagged": false,
-        "round": 4,
-        "divisions": []
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 12,
     "fields": {
-        "seq": 3,
         "text": "This House would require all fruit to carry labels noting what pesticides are used on them",
         "reference": "Pesticide labelling",
         "info_slide": "",
-        "flagged": false,
-        "round": 4,
-        "divisions": []
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 13,
     "fields": {
-        "seq": 1,
         "text": "This House would make an exception to laws forbidding indecent exposure for days with hot temperatures",
         "reference": "Indecent exposure",
         "info_slide": "",
-        "flagged": false,
-        "round": 7,
-        "divisions": []
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 14,
     "fields": {
-        "seq": 2,
         "text": "This House regrets the development of different fashion lines for men and women",
         "reference": "Gender and fashion",
         "info_slide": "",
-        "flagged": false,
-        "round": 7,
-        "divisions": []
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 15,
     "fields": {
-        "seq": 3,
         "text": "This House believes that it is unprofessional to wear flip-flops (jandals, thongs) to work",
         "reference": "Flip-flops",
         "info_slide": "",
-        "flagged": false,
-        "round": 7,
-        "divisions": []
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 16,
     "fields": {
-        "seq": 1,
         "text": "This House would stop using cash",
         "reference": "Cash",
         "info_slide": "",
-        "flagged": false,
-        "round": 10,
-        "divisions": []
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 17,
     "fields": {
-        "seq": 2,
         "text": "This House supports Bitcoin",
         "reference": "Bitcoin",
         "info_slide": "",
-        "flagged": false,
-        "round": 10,
-        "divisions": []
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 18,
     "fields": {
-        "seq": 3,
         "text": "This House would allow private organisations to compete in providing currency",
         "reference": "Private currency",
         "info_slide": "",
-        "flagged": false,
+        "tournament": 1
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 1,
+    "fields": {
+        "motion": 1,
+        "round": 1,
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 2,
+    "fields": {
+        "motion": 4,
+        "round": 2,
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 3,
+    "fields": {
+        "motion": 7,
+        "round": 3,
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 4,
+    "fields": {
+        "motion": 10,
+        "round": 4,
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 5,
+    "fields": {
+        "motion": 13,
+        "round": 7,
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 6,
+    "fields": {
+        "motion": 16,
         "round": 10,
-        "divisions": []
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 7,
+    "fields": {
+        "motion": 17,
+        "round": 10,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 8,
+    "fields": {
+        "motion": 2,
+        "round": 1,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 9,
+    "fields": {
+        "motion": 11,
+        "round": 4,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 10,
+    "fields": {
+        "motion": 14,
+        "round": 7,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 11,
+    "fields": {
+        "motion": 5,
+        "round": 2,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 12,
+    "fields": {
+        "motion": 8,
+        "round": 3,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 13,
+    "fields": {
+        "motion": 6,
+        "round": 2,
+        "seq": 3
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 14,
+    "fields": {
+        "motion": 9,
+        "round": 3,
+        "seq": 3
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 15,
+    "fields": {
+        "motion": 18,
+        "round": 10,
+        "seq": 3
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 16,
+    "fields": {
+        "motion": 12,
+        "round": 4,
+        "seq": 3
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 17,
+    "fields": {
+        "motion": 3,
+        "round": 1,
+        "seq": 3
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 18,
+    "fields": {
+        "motion": 15,
+        "round": 7,
+        "seq": 3
     }
 },
 {
@@ -2029,7 +2308,7 @@
         "email": "georgiacrawford@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2042,7 +2321,7 @@
         "email": "wandagriffin@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2055,7 +2334,7 @@
         "email": "helenkeller@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2068,7 +2347,7 @@
         "email": "russellwarren@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2081,7 +2360,7 @@
         "email": "angelrhodes@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "",
         "pronoun": "they"
     }
@@ -2094,7 +2373,7 @@
         "email": "terryhenderson@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2107,7 +2386,7 @@
         "email": "kyleruiz@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2120,7 +2399,7 @@
         "email": "randolphlambert@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": ""
     }
@@ -2133,7 +2412,7 @@
         "email": "sergiopittman@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2146,7 +2425,7 @@
         "email": "earnestbecker@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2159,7 +2438,7 @@
         "email": "ellisrowe@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2172,7 +2451,7 @@
         "email": "robinroberson@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2185,7 +2464,7 @@
         "email": "gwennewman@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2198,7 +2477,7 @@
         "email": "robyncaldwell@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": ""
     }
@@ -2211,7 +2490,7 @@
         "email": "angieholt@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2224,7 +2503,7 @@
         "email": "melvinjordan@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2237,7 +2516,7 @@
         "email": "gladysburke@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": ""
     }
@@ -2250,7 +2529,7 @@
         "email": "pattysaunders@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2263,7 +2542,7 @@
         "email": null,
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2276,7 +2555,7 @@
         "email": "stellalindsey@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2289,7 +2568,7 @@
         "email": "adrianmay@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2302,7 +2581,7 @@
         "email": "taylorbrown@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": ""
     }
@@ -2315,7 +2594,7 @@
         "email": "bethanychambers@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2328,7 +2607,7 @@
         "email": "pamelabryan@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2341,7 +2620,7 @@
         "email": "janetnunez@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2354,7 +2633,7 @@
         "email": "owenchandler@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": ""
     }
@@ -2367,7 +2646,7 @@
         "email": "lillierodriquez@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2380,7 +2659,7 @@
         "email": "rufusdennis@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2393,7 +2672,7 @@
         "email": "martylove@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2406,7 +2685,7 @@
         "email": "sheliawright@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2419,7 +2698,7 @@
         "email": "clarkmills@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2432,7 +2711,7 @@
         "email": "randycarroll@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2445,7 +2724,7 @@
         "email": "caseysparks@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2458,7 +2737,7 @@
         "email": "candacebowen@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2471,7 +2750,7 @@
         "email": "jaimelong@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2484,7 +2763,7 @@
         "email": "leonhall@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2497,7 +2776,7 @@
         "email": "morrisnichols@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2510,7 +2789,7 @@
         "email": "benjaminpadilla@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2523,7 +2802,7 @@
         "email": "phillyons@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2536,7 +2815,7 @@
         "email": "clayholland@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2549,7 +2828,7 @@
         "email": "elenacobb@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2562,7 +2841,7 @@
         "email": "shawntorres@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2575,7 +2854,7 @@
         "email": "williscarson@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2588,7 +2867,7 @@
         "email": "wendellnelson@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2601,7 +2880,7 @@
         "email": "feliciawelch@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2614,7 +2893,7 @@
         "email": "corymeyer@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2627,7 +2906,7 @@
         "email": "stacyfrazier@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2640,7 +2919,7 @@
         "email": "clairedunn@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2653,7 +2932,7 @@
         "email": null,
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2666,7 +2945,7 @@
         "email": "patriciapalmer@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2679,7 +2958,7 @@
         "email": "stewartday@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2692,7 +2971,7 @@
         "email": "timmycraig@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2705,7 +2984,7 @@
         "email": "patrickkelly@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2718,7 +2997,7 @@
         "email": null,
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2731,7 +3010,7 @@
         "email": "andylane@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2744,7 +3023,7 @@
         "email": "scottmcdonald@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2757,7 +3036,7 @@
         "email": "charlenecortez@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2770,7 +3049,7 @@
         "email": "leighholmes@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": ""
     }
@@ -2783,7 +3062,7 @@
         "email": "almaspencer@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2796,7 +3075,7 @@
         "email": null,
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2809,7 +3088,7 @@
         "email": "emiliosimmons@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2822,7 +3101,7 @@
         "email": "rondelgado@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "",
         "pronoun": "he"
     }
@@ -2835,7 +3114,7 @@
         "email": "nadinebarber@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2848,7 +3127,7 @@
         "email": "gailadkins@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "",
         "pronoun": "he"
     }
@@ -2861,7 +3140,7 @@
         "email": "willardwalton@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": ""
     }
@@ -2874,7 +3153,7 @@
         "email": "jackiepeterson@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2887,7 +3166,7 @@
         "email": "terrythornton@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "",
         "pronoun": "they"
     }
@@ -2900,7 +3179,7 @@
         "email": "normanrodgers@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2913,7 +3192,7 @@
         "email": "mattielee@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "",
         "pronoun": "they"
     }
@@ -2926,7 +3205,7 @@
         "email": "woodrowharvey@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2939,7 +3218,7 @@
         "email": "javierchavez@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "",
         "pronoun": ""
     }
@@ -2952,7 +3231,7 @@
         "email": "janiedaniels@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2965,7 +3244,7 @@
         "email": "leviflores@fakemail.com",
         "phone": "(400) 258-4262",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2978,7 +3257,7 @@
         "email": "boydpierce@fakemail.com",
         "phone": "(645) 106-7743",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2991,7 +3270,7 @@
         "email": "eunicemcbride@fakemail.com",
         "phone": "(549) 309-9187",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3004,7 +3283,7 @@
         "email": "ramonacobb@fakemail.com",
         "phone": "(440) 487-5776",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3017,7 +3296,7 @@
         "email": "justinford@fakemail.com",
         "phone": "(618) 921-9188",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3030,7 +3309,7 @@
         "email": "luisbennett@fakemail.com",
         "phone": "(730) 097-8797",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3043,7 +3322,7 @@
         "email": "mandyestrada@fakemail.com",
         "phone": "(559) 299-0471",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3056,7 +3335,7 @@
         "email": "leighmcgee@fakemail.com",
         "phone": "(844) 760-9302",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3069,7 +3348,7 @@
         "email": "jacquelinefreeman@fakemail.com",
         "phone": "(297) 916-1716",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3082,7 +3361,7 @@
         "email": null,
         "phone": "(958) 783-2610",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3095,7 +3374,7 @@
         "email": "pedroburgess@fakemail.com",
         "phone": "(854) 441-0104",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "",
         "pronoun": ""
     }
@@ -3108,7 +3387,7 @@
         "email": "kristycarr@fakemail.com",
         "phone": "(644) 607-3297",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3121,7 +3400,7 @@
         "email": "wilmavaughn@fakemail.com",
         "phone": "(398) 759-9537",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3134,7 +3413,7 @@
         "email": "virginiamccarthy@fakemail.com",
         "phone": "(455) 177-0459",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3147,7 +3426,7 @@
         "email": "tashajenkins@fakemail.com",
         "phone": "(875) 519-9891",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "",
         "pronoun": ""
     }
@@ -3160,7 +3439,7 @@
         "email": null,
         "phone": "(404) 641-5999",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3173,7 +3452,7 @@
         "email": "joallen@fakemail.com",
         "phone": "(761) 993-2983",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3186,7 +3465,7 @@
         "email": "billygriffin@fakemail.com",
         "phone": "(430) 532-2939",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3199,7 +3478,7 @@
         "email": "angelareed@fakemail.com",
         "phone": "(936) 500-1228",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3212,7 +3491,7 @@
         "email": "hugolewis@fakemail.com",
         "phone": "(422) 585-9609",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "they"
     }
@@ -3225,7 +3504,7 @@
         "email": "cassandrawilson@fakemail.com",
         "phone": "(604) 306-2084",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3238,7 +3517,7 @@
         "email": "georgewillis@fakemail.com",
         "phone": "(222) 204-5944",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3251,7 +3530,7 @@
         "email": "jamiehodges@fakemail.com",
         "phone": "(737) 122-6102",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3264,7 +3543,7 @@
         "email": "bennierodriguez@fakemail.com",
         "phone": "(537) 641-2175",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3277,7 +3556,7 @@
         "email": "allisonmartin@fakemail.com",
         "phone": "(525) 384-2715",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3290,7 +3569,7 @@
         "email": "kristielliott@fakemail.com",
         "phone": "(790) 289-5430",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3303,7 +3582,7 @@
         "email": null,
         "phone": "(317) 721-2439",
         "anonymous": false,
-        "notes": null,
+        "url_key": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3319,11 +3598,9 @@
         "long_name": "Custom Team Name",
         "institution": 1,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": false,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83d\ude4f",
+        "emoji": "🙏",
         "break_categories": []
     }
 },
@@ -3338,11 +3615,9 @@
         "long_name": "California Institute of Technology 2",
         "institution": 1,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83d\udc4a",
+        "emoji": "👊",
         "break_categories": []
     }
 },
@@ -3357,11 +3632,9 @@
         "long_name": "California Institute of Technology 3",
         "institution": 1,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83c\udfd0",
+        "emoji": "🏐",
         "break_categories": []
     }
 },
@@ -3376,11 +3649,9 @@
         "long_name": "Columbia University 1",
         "institution": 2,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83d\udc69",
+        "emoji": "👩",
         "break_categories": []
     }
 },
@@ -3395,11 +3666,9 @@
         "long_name": "Cornell University 1",
         "institution": 3,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83d\ude14",
+        "emoji": "😔",
         "break_categories": []
     }
 },
@@ -3414,11 +3683,9 @@
         "long_name": "Harvard University 1",
         "institution": 4,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83e\udd54",
+        "emoji": "🥔",
         "break_categories": []
     }
 },
@@ -3433,11 +3700,9 @@
         "long_name": "Harvard University 2",
         "institution": 4,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83c\udff3",
+        "emoji": "🏳",
         "break_categories": []
     }
 },
@@ -3452,11 +3717,9 @@
         "long_name": "Johns Hopkins University 1",
         "institution": 5,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83e\udd88",
+        "emoji": "🦈",
         "break_categories": []
     }
 },
@@ -3471,11 +3734,9 @@
         "long_name": "Massachusetts Institute of Technology 1",
         "institution": 6,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83d\udcb0",
+        "emoji": "💰",
         "break_categories": []
     }
 },
@@ -3490,11 +3751,9 @@
         "long_name": "Massachusetts Institute of Technology 2",
         "institution": 6,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83d\udc4d",
+        "emoji": "👍",
         "break_categories": []
     }
 },
@@ -3509,11 +3768,9 @@
         "long_name": "Princeton University 1",
         "institution": 7,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83d\ude1b",
+        "emoji": "😛",
         "break_categories": []
     }
 },
@@ -3528,11 +3785,9 @@
         "long_name": "Princeton University 2",
         "institution": 7,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83e\udd89",
+        "emoji": "🦉",
         "break_categories": []
     }
 },
@@ -3547,11 +3802,9 @@
         "long_name": "Stanford University 1",
         "institution": 8,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83d\udc3c",
+        "emoji": "🐼",
         "break_categories": []
     }
 },
@@ -3566,11 +3819,9 @@
         "long_name": "Stanford University 2",
         "institution": 8,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83c\udf35",
+        "emoji": "🌵",
         "break_categories": []
     }
 },
@@ -3585,11 +3836,9 @@
         "long_name": "Stanford University 3",
         "institution": 8,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83d\udc7d",
+        "emoji": "👽",
         "break_categories": []
     }
 },
@@ -3604,11 +3853,9 @@
         "long_name": "University of California, Berkeley 1",
         "institution": 9,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83d\udc60",
+        "emoji": "👠",
         "break_categories": []
     }
 },
@@ -3623,11 +3870,9 @@
         "long_name": "University of Chicago 1",
         "institution": 10,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83d\udc5f",
+        "emoji": "👟",
         "break_categories": []
     }
 },
@@ -3642,11 +3887,9 @@
         "long_name": "University of Chicago 2",
         "institution": 10,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83c\udf49",
+        "emoji": "🍉",
         "break_categories": []
     }
 },
@@ -3661,11 +3904,9 @@
         "long_name": "University of Chicago 3",
         "institution": 10,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83d\ude46",
+        "emoji": "🙆",
         "break_categories": []
     }
 },
@@ -3680,11 +3921,9 @@
         "long_name": "University of Pennsylvania 1",
         "institution": 11,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83d\udecd",
+        "emoji": "🛍",
         "break_categories": []
     }
 },
@@ -3699,11 +3938,9 @@
         "long_name": "University of Pennsylvania 2",
         "institution": 11,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83d\udea8",
+        "emoji": "🚨",
         "break_categories": []
     }
 },
@@ -3718,11 +3955,9 @@
         "long_name": "Special Name",
         "institution": 13,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": false,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83d\udc1a",
+        "emoji": "🐚",
         "break_categories": []
     }
 },
@@ -3737,11 +3972,9 @@
         "long_name": "Yale University 2",
         "institution": 13,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83d\ude23",
+        "emoji": "😣",
         "break_categories": []
     }
 },
@@ -3756,11 +3989,9 @@
         "long_name": "Yale University 3",
         "institution": 13,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
-        "url_key": null,
         "type": "N",
-        "emoji": "\ud83d\ude98",
+        "emoji": "🚘",
         "break_categories": []
     }
 },
@@ -3768,6 +3999,7 @@
     "model": "participants.speaker",
     "pk": 1,
     "fields": {
+        "person_ptr": 1,
         "team": 1,
         "categories": [
             2
@@ -3778,6 +4010,7 @@
     "model": "participants.speaker",
     "pk": 2,
     "fields": {
+        "person_ptr": 2,
         "team": 1,
         "categories": [
             1
@@ -3788,6 +4021,7 @@
     "model": "participants.speaker",
     "pk": 3,
     "fields": {
+        "person_ptr": 3,
         "team": 1,
         "categories": [
             2
@@ -3798,6 +4032,7 @@
     "model": "participants.speaker",
     "pk": 4,
     "fields": {
+        "person_ptr": 4,
         "team": 2,
         "categories": [
             2
@@ -3808,6 +4043,7 @@
     "model": "participants.speaker",
     "pk": 5,
     "fields": {
+        "person_ptr": 5,
         "team": 2,
         "categories": [
             1
@@ -3818,6 +4054,7 @@
     "model": "participants.speaker",
     "pk": 6,
     "fields": {
+        "person_ptr": 6,
         "team": 2,
         "categories": [
             2
@@ -3828,6 +4065,7 @@
     "model": "participants.speaker",
     "pk": 7,
     "fields": {
+        "person_ptr": 7,
         "team": 3,
         "categories": [
             2
@@ -3838,6 +4076,7 @@
     "model": "participants.speaker",
     "pk": 8,
     "fields": {
+        "person_ptr": 8,
         "team": 3,
         "categories": [
             1
@@ -3848,6 +4087,7 @@
     "model": "participants.speaker",
     "pk": 9,
     "fields": {
+        "person_ptr": 9,
         "team": 3,
         "categories": [
             2
@@ -3858,6 +4098,7 @@
     "model": "participants.speaker",
     "pk": 10,
     "fields": {
+        "person_ptr": 10,
         "team": 4,
         "categories": [
             2
@@ -3868,6 +4109,7 @@
     "model": "participants.speaker",
     "pk": 11,
     "fields": {
+        "person_ptr": 11,
         "team": 4,
         "categories": [
             2
@@ -3878,6 +4120,7 @@
     "model": "participants.speaker",
     "pk": 12,
     "fields": {
+        "person_ptr": 12,
         "team": 4,
         "categories": [
             1
@@ -3888,6 +4131,7 @@
     "model": "participants.speaker",
     "pk": 13,
     "fields": {
+        "person_ptr": 13,
         "team": 5,
         "categories": [
             1
@@ -3898,6 +4142,7 @@
     "model": "participants.speaker",
     "pk": 14,
     "fields": {
+        "person_ptr": 14,
         "team": 5,
         "categories": [
             2
@@ -3908,6 +4153,7 @@
     "model": "participants.speaker",
     "pk": 15,
     "fields": {
+        "person_ptr": 15,
         "team": 5,
         "categories": [
             1
@@ -3918,6 +4164,7 @@
     "model": "participants.speaker",
     "pk": 16,
     "fields": {
+        "person_ptr": 16,
         "team": 6,
         "categories": [
             2
@@ -3928,6 +4175,7 @@
     "model": "participants.speaker",
     "pk": 17,
     "fields": {
+        "person_ptr": 17,
         "team": 6,
         "categories": [
             2
@@ -3938,6 +4186,7 @@
     "model": "participants.speaker",
     "pk": 18,
     "fields": {
+        "person_ptr": 18,
         "team": 6,
         "categories": [
             2
@@ -3948,6 +4197,7 @@
     "model": "participants.speaker",
     "pk": 19,
     "fields": {
+        "person_ptr": 19,
         "team": 7,
         "categories": [
             1
@@ -3958,6 +4208,7 @@
     "model": "participants.speaker",
     "pk": 20,
     "fields": {
+        "person_ptr": 20,
         "team": 7,
         "categories": [
             1
@@ -3968,6 +4219,7 @@
     "model": "participants.speaker",
     "pk": 21,
     "fields": {
+        "person_ptr": 21,
         "team": 7,
         "categories": [
             1
@@ -3978,6 +4230,7 @@
     "model": "participants.speaker",
     "pk": 22,
     "fields": {
+        "person_ptr": 22,
         "team": 8,
         "categories": [
             2
@@ -3988,6 +4241,7 @@
     "model": "participants.speaker",
     "pk": 23,
     "fields": {
+        "person_ptr": 23,
         "team": 8,
         "categories": [
             1
@@ -3998,6 +4252,7 @@
     "model": "participants.speaker",
     "pk": 24,
     "fields": {
+        "person_ptr": 24,
         "team": 8,
         "categories": [
             1
@@ -4008,6 +4263,7 @@
     "model": "participants.speaker",
     "pk": 25,
     "fields": {
+        "person_ptr": 25,
         "team": 9,
         "categories": [
             1
@@ -4018,6 +4274,7 @@
     "model": "participants.speaker",
     "pk": 26,
     "fields": {
+        "person_ptr": 26,
         "team": 9,
         "categories": [
             1
@@ -4028,6 +4285,7 @@
     "model": "participants.speaker",
     "pk": 27,
     "fields": {
+        "person_ptr": 27,
         "team": 9,
         "categories": [
             1
@@ -4038,6 +4296,7 @@
     "model": "participants.speaker",
     "pk": 28,
     "fields": {
+        "person_ptr": 28,
         "team": 10,
         "categories": [
             2
@@ -4048,6 +4307,7 @@
     "model": "participants.speaker",
     "pk": 29,
     "fields": {
+        "person_ptr": 29,
         "team": 10,
         "categories": [
             1
@@ -4058,6 +4318,7 @@
     "model": "participants.speaker",
     "pk": 30,
     "fields": {
+        "person_ptr": 30,
         "team": 10,
         "categories": [
             2
@@ -4068,6 +4329,7 @@
     "model": "participants.speaker",
     "pk": 31,
     "fields": {
+        "person_ptr": 31,
         "team": 11,
         "categories": [
             1
@@ -4078,6 +4340,7 @@
     "model": "participants.speaker",
     "pk": 32,
     "fields": {
+        "person_ptr": 32,
         "team": 11,
         "categories": [
             1
@@ -4088,6 +4351,7 @@
     "model": "participants.speaker",
     "pk": 33,
     "fields": {
+        "person_ptr": 33,
         "team": 11,
         "categories": [
             1
@@ -4098,6 +4362,7 @@
     "model": "participants.speaker",
     "pk": 34,
     "fields": {
+        "person_ptr": 34,
         "team": 12,
         "categories": [
             1
@@ -4108,6 +4373,7 @@
     "model": "participants.speaker",
     "pk": 35,
     "fields": {
+        "person_ptr": 35,
         "team": 12,
         "categories": [
             1
@@ -4118,6 +4384,7 @@
     "model": "participants.speaker",
     "pk": 36,
     "fields": {
+        "person_ptr": 36,
         "team": 12,
         "categories": [
             2
@@ -4128,6 +4395,7 @@
     "model": "participants.speaker",
     "pk": 37,
     "fields": {
+        "person_ptr": 37,
         "team": 13,
         "categories": [
             2
@@ -4138,6 +4406,7 @@
     "model": "participants.speaker",
     "pk": 38,
     "fields": {
+        "person_ptr": 38,
         "team": 13,
         "categories": [
             1
@@ -4148,6 +4417,7 @@
     "model": "participants.speaker",
     "pk": 39,
     "fields": {
+        "person_ptr": 39,
         "team": 13,
         "categories": [
             1
@@ -4158,6 +4428,7 @@
     "model": "participants.speaker",
     "pk": 40,
     "fields": {
+        "person_ptr": 40,
         "team": 14,
         "categories": [
             1
@@ -4168,6 +4439,7 @@
     "model": "participants.speaker",
     "pk": 41,
     "fields": {
+        "person_ptr": 41,
         "team": 14,
         "categories": [
             2
@@ -4178,6 +4450,7 @@
     "model": "participants.speaker",
     "pk": 42,
     "fields": {
+        "person_ptr": 42,
         "team": 14,
         "categories": [
             2
@@ -4188,6 +4461,7 @@
     "model": "participants.speaker",
     "pk": 43,
     "fields": {
+        "person_ptr": 43,
         "team": 15,
         "categories": [
             1
@@ -4198,6 +4472,7 @@
     "model": "participants.speaker",
     "pk": 44,
     "fields": {
+        "person_ptr": 44,
         "team": 15,
         "categories": [
             1
@@ -4208,6 +4483,7 @@
     "model": "participants.speaker",
     "pk": 45,
     "fields": {
+        "person_ptr": 45,
         "team": 15,
         "categories": [
             1
@@ -4218,6 +4494,7 @@
     "model": "participants.speaker",
     "pk": 46,
     "fields": {
+        "person_ptr": 46,
         "team": 16,
         "categories": [
             1
@@ -4228,6 +4505,7 @@
     "model": "participants.speaker",
     "pk": 47,
     "fields": {
+        "person_ptr": 47,
         "team": 16,
         "categories": [
             1
@@ -4238,6 +4516,7 @@
     "model": "participants.speaker",
     "pk": 48,
     "fields": {
+        "person_ptr": 48,
         "team": 16,
         "categories": [
             2
@@ -4248,6 +4527,7 @@
     "model": "participants.speaker",
     "pk": 49,
     "fields": {
+        "person_ptr": 49,
         "team": 17,
         "categories": [
             1
@@ -4258,6 +4538,7 @@
     "model": "participants.speaker",
     "pk": 50,
     "fields": {
+        "person_ptr": 50,
         "team": 17,
         "categories": [
             1
@@ -4268,6 +4549,7 @@
     "model": "participants.speaker",
     "pk": 51,
     "fields": {
+        "person_ptr": 51,
         "team": 17,
         "categories": [
             1
@@ -4278,6 +4560,7 @@
     "model": "participants.speaker",
     "pk": 52,
     "fields": {
+        "person_ptr": 52,
         "team": 18,
         "categories": [
             1
@@ -4288,6 +4571,7 @@
     "model": "participants.speaker",
     "pk": 53,
     "fields": {
+        "person_ptr": 53,
         "team": 18,
         "categories": [
             2
@@ -4298,6 +4582,7 @@
     "model": "participants.speaker",
     "pk": 54,
     "fields": {
+        "person_ptr": 54,
         "team": 18,
         "categories": [
             1
@@ -4308,6 +4593,7 @@
     "model": "participants.speaker",
     "pk": 55,
     "fields": {
+        "person_ptr": 55,
         "team": 19,
         "categories": [
             1
@@ -4318,6 +4604,7 @@
     "model": "participants.speaker",
     "pk": 56,
     "fields": {
+        "person_ptr": 56,
         "team": 19,
         "categories": [
             1
@@ -4328,6 +4615,7 @@
     "model": "participants.speaker",
     "pk": 57,
     "fields": {
+        "person_ptr": 57,
         "team": 19,
         "categories": [
             1
@@ -4338,6 +4626,7 @@
     "model": "participants.speaker",
     "pk": 58,
     "fields": {
+        "person_ptr": 58,
         "team": 20,
         "categories": [
             2
@@ -4348,6 +4637,7 @@
     "model": "participants.speaker",
     "pk": 59,
     "fields": {
+        "person_ptr": 59,
         "team": 20,
         "categories": [
             2
@@ -4358,6 +4648,7 @@
     "model": "participants.speaker",
     "pk": 60,
     "fields": {
+        "person_ptr": 60,
         "team": 20,
         "categories": [
             1
@@ -4368,6 +4659,7 @@
     "model": "participants.speaker",
     "pk": 61,
     "fields": {
+        "person_ptr": 61,
         "team": 21,
         "categories": [
             2
@@ -4378,6 +4670,7 @@
     "model": "participants.speaker",
     "pk": 62,
     "fields": {
+        "person_ptr": 62,
         "team": 21,
         "categories": [
             1
@@ -4388,6 +4681,7 @@
     "model": "participants.speaker",
     "pk": 63,
     "fields": {
+        "person_ptr": 63,
         "team": 21,
         "categories": [
             2
@@ -4398,6 +4692,7 @@
     "model": "participants.speaker",
     "pk": 64,
     "fields": {
+        "person_ptr": 64,
         "team": 22,
         "categories": [
             2
@@ -4408,6 +4703,7 @@
     "model": "participants.speaker",
     "pk": 65,
     "fields": {
+        "person_ptr": 65,
         "team": 22,
         "categories": [
             2
@@ -4418,6 +4714,7 @@
     "model": "participants.speaker",
     "pk": 66,
     "fields": {
+        "person_ptr": 66,
         "team": 22,
         "categories": [
             1
@@ -4428,6 +4725,7 @@
     "model": "participants.speaker",
     "pk": 67,
     "fields": {
+        "person_ptr": 67,
         "team": 23,
         "categories": [
             1
@@ -4438,6 +4736,7 @@
     "model": "participants.speaker",
     "pk": 68,
     "fields": {
+        "person_ptr": 68,
         "team": 23,
         "categories": [
             2
@@ -4448,6 +4747,7 @@
     "model": "participants.speaker",
     "pk": 69,
     "fields": {
+        "person_ptr": 69,
         "team": 23,
         "categories": [
             2
@@ -4458,6 +4758,7 @@
     "model": "participants.speaker",
     "pk": 70,
     "fields": {
+        "person_ptr": 70,
         "team": 24,
         "categories": [
             1
@@ -4468,6 +4769,7 @@
     "model": "participants.speaker",
     "pk": 71,
     "fields": {
+        "person_ptr": 71,
         "team": 24,
         "categories": [
             2
@@ -4478,6 +4780,7 @@
     "model": "participants.speaker",
     "pk": 72,
     "fields": {
+        "person_ptr": 72,
         "team": 24,
         "categories": [
             2
@@ -4488,10 +4791,10 @@
     "model": "participants.adjudicator",
     "pk": 73,
     "fields": {
+        "person_ptr": 73,
         "institution": 13,
         "tournament": 1,
-        "test_score": 5.0,
-        "url_key": null,
+        "base_score": 5.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4502,10 +4805,10 @@
     "model": "participants.adjudicator",
     "pk": 74,
     "fields": {
+        "person_ptr": 74,
         "institution": 8,
         "tournament": 1,
-        "test_score": 5.0,
-        "url_key": null,
+        "base_score": 5.0,
         "trainee": false,
         "breaking": false,
         "independent": true,
@@ -4516,10 +4819,10 @@
     "model": "participants.adjudicator",
     "pk": 75,
     "fields": {
+        "person_ptr": 75,
         "institution": 12,
         "tournament": 1,
-        "test_score": 5.0,
-        "url_key": null,
+        "base_score": 5.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4530,10 +4833,10 @@
     "model": "participants.adjudicator",
     "pk": 76,
     "fields": {
+        "person_ptr": 76,
         "institution": 1,
         "tournament": 1,
-        "test_score": 1.0,
-        "url_key": null,
+        "base_score": 1.0,
         "trainee": false,
         "breaking": false,
         "independent": true,
@@ -4544,10 +4847,10 @@
     "model": "participants.adjudicator",
     "pk": 77,
     "fields": {
+        "person_ptr": 77,
         "institution": 1,
         "tournament": 1,
-        "test_score": 0.0,
-        "url_key": null,
+        "base_score": 0.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4558,10 +4861,10 @@
     "model": "participants.adjudicator",
     "pk": 78,
     "fields": {
+        "person_ptr": 78,
         "institution": 2,
         "tournament": 1,
-        "test_score": 2.0,
-        "url_key": null,
+        "base_score": 2.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4572,10 +4875,10 @@
     "model": "participants.adjudicator",
     "pk": 79,
     "fields": {
+        "person_ptr": 79,
         "institution": 3,
         "tournament": 1,
-        "test_score": 5.0,
-        "url_key": null,
+        "base_score": 5.0,
         "trainee": false,
         "breaking": false,
         "independent": true,
@@ -4586,10 +4889,10 @@
     "model": "participants.adjudicator",
     "pk": 80,
     "fields": {
+        "person_ptr": 80,
         "institution": 4,
         "tournament": 1,
-        "test_score": 4.0,
-        "url_key": null,
+        "base_score": 4.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4600,10 +4903,10 @@
     "model": "participants.adjudicator",
     "pk": 81,
     "fields": {
+        "person_ptr": 81,
         "institution": 4,
         "tournament": 1,
-        "test_score": 5.0,
-        "url_key": null,
+        "base_score": 5.0,
         "trainee": false,
         "breaking": false,
         "independent": true,
@@ -4614,10 +4917,10 @@
     "model": "participants.adjudicator",
     "pk": 82,
     "fields": {
+        "person_ptr": 82,
         "institution": 12,
         "tournament": 1,
-        "test_score": 0.0,
-        "url_key": null,
+        "base_score": 0.0,
         "trainee": false,
         "breaking": false,
         "independent": true,
@@ -4628,10 +4931,10 @@
     "model": "participants.adjudicator",
     "pk": 83,
     "fields": {
+        "person_ptr": 83,
         "institution": 12,
         "tournament": 1,
-        "test_score": 4.0,
-        "url_key": null,
+        "base_score": 4.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4642,10 +4945,10 @@
     "model": "participants.adjudicator",
     "pk": 84,
     "fields": {
+        "person_ptr": 84,
         "institution": 8,
         "tournament": 1,
-        "test_score": 4.0,
-        "url_key": null,
+        "base_score": 4.0,
         "trainee": true,
         "breaking": false,
         "independent": false,
@@ -4656,10 +4959,10 @@
     "model": "participants.adjudicator",
     "pk": 85,
     "fields": {
+        "person_ptr": 85,
         "institution": 5,
         "tournament": 1,
-        "test_score": 4.0,
-        "url_key": null,
+        "base_score": 4.0,
         "trainee": true,
         "breaking": false,
         "independent": true,
@@ -4670,10 +4973,10 @@
     "model": "participants.adjudicator",
     "pk": 86,
     "fields": {
+        "person_ptr": 86,
         "institution": 5,
         "tournament": 1,
-        "test_score": 2.0,
-        "url_key": null,
+        "base_score": 2.0,
         "trainee": true,
         "breaking": false,
         "independent": false,
@@ -4684,10 +4987,10 @@
     "model": "participants.adjudicator",
     "pk": 87,
     "fields": {
+        "person_ptr": 87,
         "institution": 6,
         "tournament": 1,
-        "test_score": 2.0,
-        "url_key": null,
+        "base_score": 2.0,
         "trainee": false,
         "breaking": false,
         "independent": true,
@@ -4698,10 +5001,10 @@
     "model": "participants.adjudicator",
     "pk": 88,
     "fields": {
+        "person_ptr": 88,
         "institution": 6,
         "tournament": 1,
-        "test_score": 5.0,
-        "url_key": null,
+        "base_score": 5.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4712,10 +5015,10 @@
     "model": "participants.adjudicator",
     "pk": 89,
     "fields": {
+        "person_ptr": 89,
         "institution": 7,
         "tournament": 1,
-        "test_score": 2.0,
-        "url_key": null,
+        "base_score": 2.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4726,10 +5029,10 @@
     "model": "participants.adjudicator",
     "pk": 90,
     "fields": {
+        "person_ptr": 90,
         "institution": 7,
         "tournament": 1,
-        "test_score": 2.0,
-        "url_key": null,
+        "base_score": 2.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4740,10 +5043,10 @@
     "model": "participants.adjudicator",
     "pk": 91,
     "fields": {
+        "person_ptr": 91,
         "institution": 8,
         "tournament": 1,
-        "test_score": 1.0,
-        "url_key": null,
+        "base_score": 1.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4754,10 +5057,10 @@
     "model": "participants.adjudicator",
     "pk": 92,
     "fields": {
+        "person_ptr": 92,
         "institution": 8,
         "tournament": 1,
-        "test_score": 0.0,
-        "url_key": null,
+        "base_score": 0.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4768,10 +5071,10 @@
     "model": "participants.adjudicator",
     "pk": 93,
     "fields": {
+        "person_ptr": 93,
         "institution": 9,
         "tournament": 1,
-        "test_score": 4.0,
-        "url_key": null,
+        "base_score": 4.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4782,10 +5085,10 @@
     "model": "participants.adjudicator",
     "pk": 94,
     "fields": {
+        "person_ptr": 94,
         "institution": 10,
         "tournament": 1,
-        "test_score": 2.0,
-        "url_key": null,
+        "base_score": 2.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4796,10 +5099,10 @@
     "model": "participants.adjudicator",
     "pk": 95,
     "fields": {
+        "person_ptr": 95,
         "institution": 10,
         "tournament": 1,
-        "test_score": 3.0,
-        "url_key": null,
+        "base_score": 3.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4810,10 +5113,10 @@
     "model": "participants.adjudicator",
     "pk": 96,
     "fields": {
+        "person_ptr": 96,
         "institution": 11,
         "tournament": 1,
-        "test_score": 2.0,
-        "url_key": null,
+        "base_score": 2.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4824,10 +5127,10 @@
     "model": "participants.adjudicator",
     "pk": 97,
     "fields": {
+        "person_ptr": 97,
         "institution": 13,
         "tournament": 1,
-        "test_score": 4.0,
-        "url_key": null,
+        "base_score": 4.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4838,10 +5141,10 @@
     "model": "participants.adjudicator",
     "pk": 98,
     "fields": {
+        "person_ptr": 98,
         "institution": 13,
         "tournament": 1,
-        "test_score": 3.0,
-        "url_key": null,
+        "base_score": 3.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4852,10 +5155,10 @@
     "model": "participants.adjudicator",
     "pk": 99,
     "fields": {
+        "person_ptr": 99,
         "institution": 5,
         "tournament": 1,
-        "test_score": 5.0,
-        "url_key": null,
+        "base_score": 5.0,
         "trainee": false,
         "breaking": false,
         "independent": false,
@@ -4870,6 +5173,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -4878,8 +5182,7 @@
         "ip_address": null,
         "debate": 7,
         "motion": 3,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -4890,6 +5193,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -4898,8 +5202,7 @@
         "ip_address": null,
         "debate": 3,
         "motion": 2,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -4910,6 +5213,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -4918,8 +5222,7 @@
         "ip_address": null,
         "debate": 11,
         "motion": 2,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -4930,6 +5233,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -4938,8 +5242,7 @@
         "ip_address": null,
         "debate": 1,
         "motion": 1,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -4950,6 +5253,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -4958,8 +5262,7 @@
         "ip_address": null,
         "debate": 5,
         "motion": 1,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -4970,6 +5273,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -4978,8 +5282,7 @@
         "ip_address": null,
         "debate": 6,
         "motion": 2,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -4990,6 +5293,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -4998,8 +5302,7 @@
         "ip_address": null,
         "debate": 9,
         "motion": 1,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -5010,6 +5313,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -5018,8 +5322,7 @@
         "ip_address": null,
         "debate": 4,
         "motion": 2,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -5030,6 +5333,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -5038,8 +5342,7 @@
         "ip_address": null,
         "debate": 8,
         "motion": 3,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -5050,6 +5353,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -5058,8 +5362,7 @@
         "ip_address": null,
         "debate": 12,
         "motion": 2,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -5070,6 +5373,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -5078,8 +5382,7 @@
         "ip_address": null,
         "debate": 10,
         "motion": 1,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -5090,6 +5393,7 @@
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
+        "participant_submitter": null,
         "submitter": [
             "random"
         ],
@@ -5098,8 +5402,439 @@
         "ip_address": null,
         "debate": 2,
         "motion": 1,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 1,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_adjudicator": 1,
+        "debate_team": 13,
+        "win": true,
+        "margin": 24.0,
+        "score": 276.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 2,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_adjudicator": 1,
+        "debate_team": 14,
+        "win": false,
+        "margin": -24.0,
+        "score": 252.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 3,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_adjudicator": 3,
+        "debate_team": 5,
+        "win": false,
+        "margin": -1.5,
+        "score": 263.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 4,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_adjudicator": 3,
+        "debate_team": 6,
+        "win": true,
+        "margin": 1.5,
+        "score": 265.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 5,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_adjudicator": 5,
+        "debate_team": 21,
+        "win": true,
+        "margin": 1.0,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 6,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_adjudicator": 5,
+        "debate_team": 22,
+        "win": false,
+        "margin": -1.0,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 7,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_adjudicator": 7,
+        "debate_team": 1,
+        "win": false,
+        "margin": -0.5,
+        "score": 267.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 8,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_adjudicator": 7,
+        "debate_team": 2,
+        "win": true,
+        "margin": 0.5,
+        "score": 267.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 9,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_adjudicator": 9,
+        "debate_team": 9,
+        "win": true,
+        "margin": 3.0,
+        "score": 271.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 10,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_adjudicator": 9,
+        "debate_team": 10,
+        "win": false,
+        "margin": -3.0,
+        "score": 268.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 11,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_adjudicator": 11,
+        "debate_team": 11,
+        "win": true,
+        "margin": 4.0,
+        "score": 260.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 12,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_adjudicator": 11,
+        "debate_team": 12,
+        "win": false,
+        "margin": -4.0,
+        "score": 256.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 13,
+    "fields": {
+        "ballot_submission": 7,
+        "debate_adjudicator": 13,
+        "debate_team": 17,
+        "win": false,
+        "margin": -20.0,
+        "score": 256.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 14,
+    "fields": {
+        "ballot_submission": 7,
+        "debate_adjudicator": 13,
+        "debate_team": 18,
+        "win": true,
+        "margin": 20.0,
+        "score": 276.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 15,
+    "fields": {
+        "ballot_submission": 8,
+        "debate_adjudicator": 14,
+        "debate_team": 7,
+        "win": true,
+        "margin": 9.5,
+        "score": 276.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 16,
+    "fields": {
+        "ballot_submission": 8,
+        "debate_adjudicator": 14,
+        "debate_team": 8,
+        "win": false,
+        "margin": -9.5,
+        "score": 266.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 17,
+    "fields": {
+        "ballot_submission": 9,
+        "debate_adjudicator": 16,
+        "debate_team": 15,
+        "win": false,
+        "margin": -9.0,
+        "score": 267.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 18,
+    "fields": {
+        "ballot_submission": 9,
+        "debate_adjudicator": 16,
+        "debate_team": 16,
+        "win": true,
+        "margin": 9.0,
+        "score": 276.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 19,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 18,
+        "debate_team": 23,
+        "win": false,
+        "margin": -6.5,
+        "score": 265.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 20,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 18,
+        "debate_team": 24,
+        "win": true,
+        "margin": 6.5,
+        "score": 271.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 21,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 19,
+        "debate_team": 23,
+        "win": false,
+        "margin": -1.0,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 22,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 19,
+        "debate_team": 24,
+        "win": true,
+        "margin": 1.0,
+        "score": 263.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 23,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 20,
+        "debate_team": 23,
+        "win": true,
+        "margin": 1.5,
+        "score": 274.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 24,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 20,
+        "debate_team": 24,
+        "win": false,
+        "margin": -1.5,
+        "score": 272.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 25,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 21,
+        "debate_team": 19,
+        "win": false,
+        "margin": -6.5,
+        "score": 243.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 26,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 21,
+        "debate_team": 20,
+        "win": true,
+        "margin": 6.5,
+        "score": 250.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 27,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 22,
+        "debate_team": 19,
+        "win": false,
+        "margin": -2.0,
+        "score": 257.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 28,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 22,
+        "debate_team": 20,
+        "win": true,
+        "margin": 2.0,
+        "score": 259.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 29,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 23,
+        "debate_team": 19,
+        "win": true,
+        "margin": 7.0,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 30,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 23,
+        "debate_team": 20,
+        "win": false,
+        "margin": -7.0,
+        "score": 257.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 31,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 24,
+        "debate_team": 3,
+        "win": true,
+        "margin": 3.0,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 32,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 24,
+        "debate_team": 4,
+        "win": false,
+        "margin": -3.0,
+        "score": 259.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 33,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 25,
+        "debate_team": 3,
+        "win": true,
+        "margin": 12.5,
+        "score": 267.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 34,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 25,
+        "debate_team": 4,
+        "win": false,
+        "margin": -12.5,
+        "score": 254.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 35,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 26,
+        "debate_team": 3,
+        "win": true,
+        "margin": 7.5,
+        "score": 263.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 36,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 26,
+        "debate_team": 4,
+        "win": false,
+        "margin": -7.5,
+        "score": 255.5
     }
 },
 {
@@ -6697,8 +7432,7 @@
         "margin": 24.0,
         "score": 276.0,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6712,8 +7446,7 @@
         "margin": -24.0,
         "score": 252.0,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6727,8 +7460,7 @@
         "margin": -1.5,
         "score": 263.5,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6742,8 +7474,7 @@
         "margin": 1.5,
         "score": 265.0,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6757,8 +7488,7 @@
         "margin": 1.0,
         "score": 262.5,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6772,8 +7502,7 @@
         "margin": -1.0,
         "score": 261.5,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6787,8 +7516,7 @@
         "margin": -0.5,
         "score": 267.0,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6802,8 +7530,7 @@
         "margin": 0.5,
         "score": 267.5,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6817,8 +7544,7 @@
         "margin": 3.0,
         "score": 271.0,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6832,8 +7558,7 @@
         "margin": -3.0,
         "score": 268.0,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6847,8 +7572,7 @@
         "margin": 4.0,
         "score": 260.5,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6862,8 +7586,7 @@
         "margin": -4.0,
         "score": 256.5,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6877,8 +7600,7 @@
         "margin": -20.0,
         "score": 256.0,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6892,8 +7614,7 @@
         "margin": 20.0,
         "score": 276.0,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6907,8 +7628,7 @@
         "margin": 9.5,
         "score": 276.0,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6922,8 +7642,7 @@
         "margin": -9.5,
         "score": 266.5,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6937,8 +7656,7 @@
         "margin": -9.0,
         "score": 267.5,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6952,8 +7670,7 @@
         "margin": 9.0,
         "score": 276.5,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -6967,8 +7684,7 @@
         "margin": -3.75,
         "score": 263.75,
         "votes_given": 1,
-        "votes_possible": 3,
-        "forfeit": false
+        "votes_possible": 3
     }
 },
 {
@@ -6982,8 +7698,7 @@
         "margin": 3.75,
         "score": 267.5,
         "votes_given": 2,
-        "votes_possible": 3,
-        "forfeit": false
+        "votes_possible": 3
     }
 },
 {
@@ -6997,8 +7712,7 @@
         "margin": -4.25,
         "score": 250.25,
         "votes_given": 1,
-        "votes_possible": 3,
-        "forfeit": false
+        "votes_possible": 3
     }
 },
 {
@@ -7012,8 +7726,7 @@
         "margin": 4.25,
         "score": 254.5,
         "votes_given": 2,
-        "votes_possible": 3,
-        "forfeit": false
+        "votes_possible": 3
     }
 },
 {
@@ -7027,8 +7740,7 @@
         "margin": 7.66666666666669,
         "score": 264.166666666667,
         "votes_given": 3,
-        "votes_possible": 3,
-        "forfeit": false
+        "votes_possible": 3
     }
 },
 {
@@ -7042,8 +7754,7 @@
         "margin": -7.66666666666669,
         "score": 256.5,
         "votes_given": 0,
-        "votes_possible": 3,
-        "forfeit": false
+        "votes_possible": 3
     }
 },
 {
@@ -8206,7 +8917,6 @@
         "short_name": "demo",
         "seq": null,
         "slug": "demo",
-        "current_round": 2,
         "active": true
     }
 },
@@ -8216,6 +8926,7 @@
     "fields": {
         "tournament": 1,
         "seq": 1,
+        "completed": true,
         "name": "Round 1",
         "abbreviation": "R1",
         "stage": "P",
@@ -8225,7 +8936,8 @@
         "feedback_weight": 0.7,
         "silent": false,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -8234,6 +8946,7 @@
     "fields": {
         "tournament": 1,
         "seq": 2,
+        "completed": false,
         "name": "Round 2",
         "abbreviation": "R2",
         "stage": "P",
@@ -8243,7 +8956,8 @@
         "feedback_weight": 0.7,
         "silent": false,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -8252,6 +8966,7 @@
     "fields": {
         "tournament": 1,
         "seq": 3,
+        "completed": false,
         "name": "Round 3",
         "abbreviation": "R3",
         "stage": "P",
@@ -8261,7 +8976,8 @@
         "feedback_weight": 0.7,
         "silent": false,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -8270,6 +8986,7 @@
     "fields": {
         "tournament": 1,
         "seq": 4,
+        "completed": false,
         "name": "Round 4",
         "abbreviation": "R4",
         "stage": "P",
@@ -8279,7 +8996,8 @@
         "feedback_weight": 0.7,
         "silent": false,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -8288,6 +9006,7 @@
     "fields": {
         "tournament": 1,
         "seq": 5,
+        "completed": false,
         "name": "Open Quarterfinal",
         "abbreviation": "OQF",
         "stage": "E",
@@ -8297,7 +9016,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -8306,6 +9026,7 @@
     "fields": {
         "tournament": 1,
         "seq": 6,
+        "completed": false,
         "name": "ESL Semifinal",
         "abbreviation": "SSF",
         "stage": "E",
@@ -8315,7 +9036,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -8324,6 +9046,7 @@
     "fields": {
         "tournament": 1,
         "seq": 7,
+        "completed": false,
         "name": "Open Semifinal",
         "abbreviation": "OSF",
         "stage": "E",
@@ -8333,7 +9056,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -8342,6 +9066,7 @@
     "fields": {
         "tournament": 1,
         "seq": 8,
+        "completed": false,
         "name": "ESL Grand Final",
         "abbreviation": "SGF",
         "stage": "E",
@@ -8351,7 +9076,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -8360,6 +9086,7 @@
     "fields": {
         "tournament": 1,
         "seq": 9,
+        "completed": false,
         "name": "EFL Grand Final",
         "abbreviation": "FGF",
         "stage": "E",
@@ -8369,7 +9096,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -8378,6 +9106,7 @@
     "fields": {
         "tournament": 1,
         "seq": 10,
+        "completed": false,
         "name": "Open Grand Final",
         "abbreviation": "OGF",
         "stage": "E",
@@ -8387,7 +9116,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -8396,7 +9126,8 @@
     "fields": {
         "name": "01",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8405,7 +9136,8 @@
     "fields": {
         "name": "02",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8414,7 +9146,8 @@
     "fields": {
         "name": "03",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8423,7 +9156,8 @@
     "fields": {
         "name": "G01",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8432,7 +9166,8 @@
     "fields": {
         "name": "G02",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8441,7 +9176,8 @@
     "fields": {
         "name": "G03",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8450,7 +9186,8 @@
     "fields": {
         "name": "G04",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8459,7 +9196,8 @@
     "fields": {
         "name": "G05",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8468,7 +9206,8 @@
     "fields": {
         "name": "G06",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8477,7 +9216,8 @@
     "fields": {
         "name": "G08",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8486,7 +9226,8 @@
     "fields": {
         "name": "103",
         "priority": 20,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8495,7 +9236,8 @@
     "fields": {
         "name": "104",
         "priority": 20,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8504,7 +9246,8 @@
     "fields": {
         "name": "205",
         "priority": 20,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8513,7 +9256,8 @@
     "fields": {
         "name": "308",
         "priority": 20,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8522,7 +9266,8 @@
     "fields": {
         "name": "4.01",
         "priority": 30,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8531,7 +9276,8 @@
     "fields": {
         "name": "4.03",
         "priority": 30,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8540,7 +9286,8 @@
     "fields": {
         "name": "Basement A",
         "priority": 30,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8549,7 +9296,8 @@
     "fields": {
         "name": "Basement B",
         "priority": 30,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8558,7 +9306,8 @@
     "fields": {
         "name": "Z09",
         "priority": 40,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8567,7 +9316,8 @@
     "fields": {
         "name": "Z10",
         "priority": 40,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8576,7 +9326,8 @@
     "fields": {
         "name": "Main Hall",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8585,7 +9336,8 @@
     "fields": {
         "name": "Sub Hall",
         "priority": 20,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8594,7 +9346,8 @@
     "fields": {
         "name": "Outside",
         "priority": 10,
-        "tournament": 1
+        "tournament": 1,
+        "url": ""
     }
 },
 {
@@ -8603,6 +9356,7 @@
     "fields": {
         "name": "(Accessible)",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "S",
         "display_in_public_tooltip": false,
         "venues": [
@@ -8617,6 +9371,7 @@
     "fields": {
         "name": "Close to tab",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "-",
         "display_in_public_tooltip": false,
         "venues": [
@@ -8631,6 +9386,7 @@
     "fields": {
         "name": "Apple",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "P",
         "display_in_public_tooltip": false,
         "venues": [
@@ -8646,6 +9402,7 @@
     "fields": {
         "name": "Banana",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "P",
         "display_in_public_tooltip": false,
         "venues": [
@@ -8661,6 +9418,7 @@
     "fields": {
         "name": "Coconut",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "P",
         "display_in_public_tooltip": false,
         "venues": [
@@ -8677,6 +9435,7 @@
     "fields": {
         "name": "Date",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "P",
         "display_in_public_tooltip": false,
         "venues": [
@@ -8693,6 +9452,7 @@
     "fields": {
         "name": "Feijoa",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "P",
         "display_in_public_tooltip": false,
         "venues": [
@@ -8707,6 +9467,7 @@
     "fields": {
         "name": "Very Small",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "-",
         "display_in_public_tooltip": false,
         "venues": []
@@ -8718,6 +9479,7 @@
     "fields": {
         "name": "Kiwifruit",
         "description": "",
+        "tournament": null,
         "display_in_venue_name": "-",
         "display_in_public_tooltip": false,
         "venues": [
@@ -8789,6 +9551,15 @@
             "team"
         ],
         "subject_id": 17
+    }
+},
+{
+    "model": "dynamic_preferences.globalpreferencemodel",
+    "pk": 1,
+    "fields": {
+        "section": "global",
+        "name": "enable_api",
+        "raw_value": "True"
     }
 }
 ]

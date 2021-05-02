@@ -21,8 +21,9 @@ class TournamentAdmin(admin.ModelAdmin):
 class RoundAdmin(admin.ModelAdmin):
     list_display = ('name', 'tournament', 'seq', 'abbreviation', 'stage',
                     'draw_type', 'draw_status', 'feedback_weight', 'silent',
-                    'motions_released', 'starts_at')
-    list_editable = ('seq', 'draw_status', 'feedback_weight', 'silent', 'motions_released')
+                    'motions_released', 'starts_at', 'completed')
+    list_editable = ('seq', 'draw_status', 'feedback_weight', 'silent',
+                     'motions_released', 'completed')
     list_filter = ('tournament', )
     search_fields = ('name', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status')
     ordering = ('tournament__slug', 'seq')

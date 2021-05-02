@@ -9,8 +9,9 @@ ENV PYTHONUNBUFFERED 1
 
 # Setup Node/NPM
 RUN apt-get update
-RUN apt-get install -y curl
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash && apt-get install -y nodejs
+RUN apt-get install -y curl nginx
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
+RUN apt-get install -y nodejs
 
 # Copy all our files into the baseimage and cd to that directory
 RUN mkdir /tcd
@@ -22,11 +23,10 @@ ADD . /tcd/
 RUN git config --global url."https://".insteadOf git://
 
 # Install our node/python requirements
-RUN pip install -r ./requirements_common.txt
-RUN npm install
+RUN npm install -g npm@6.14.5
+RUN pip install -r ./config/requirements_docker.txt
+RUN npm install --only=production
 
 # Compile all the static files
-RUN npm -g install gulp-cli # Needed for the gulp command to then work
-RUN npm rebuild node-sass --force
-RUN NODE_ENV='production' npm run build
+RUN npm run build
 RUN python ./tabbycat/manage.py collectstatic --noinput -v 0

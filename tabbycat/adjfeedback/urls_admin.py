@@ -15,14 +15,11 @@ urlpatterns = [
 
     # Getting/setting values
     path('test/set/',
-        views.SetAdjudicatorTestScoreView.as_view(),
-        name='adjfeedback-set-adj-test-score'),
+        views.SetAdjudicatorBaseScoreView.as_view(),
+        name='adjfeedback-set-adj-base-score'),
     path('breaking/set/',
         views.SetAdjudicatorBreakingStatusView.as_view(),
         name='adjfeedback-set-adj-breaking-status'),
-    path('notes/test/set/',
-        views.SetAdjudicatorNoteView.as_view(),
-        name='adjfeedback-set-adj-note'),
 
     # Source
     path('latest/',
@@ -31,6 +28,9 @@ urlpatterns = [
     path('important',
         views.ImportantFeedbackView.as_view(),
         name='adjfeedback-view-important'),
+    path('comments/',
+        views.CommentsFeedbackView.as_view(),
+        name='adjfeedback-view-comments'),
     path('source/list/',
         views.FeedbackBySourceView.as_view(),
         name='adjfeedback-view-by-source'),
@@ -67,4 +67,15 @@ urlpatterns = [
     path('ignore/<int:feedback_id>/',
         views.IgnoreFeedbackView.as_view(),
         name='adjfeedback-ignore-feedback'),
+    path('confirm/<int:feedback_id>/',
+        views.ConfirmFeedbackView.as_view(),
+        name='adjfeedback-confirm-feedback'),
+
+    # CSV views
+    path('csv/scores.csv',
+        views.AdjudicatorScoresCsvView.as_view(),
+        name='adjfeedback-csv-scores'),
+    path('csv/feedback.csv',
+        views.AdjudicatorFeedbackCsvView.as_view(),
+        name='adjfeedback-csv-feedback'),
 ]

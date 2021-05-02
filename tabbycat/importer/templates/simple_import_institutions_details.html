@@ -30,7 +30,6 @@
 
         {% for form in wizard.form %}{# actually a formset #}
 
-          {{ form.id }}
           {% include "components/form-main.html" with double=True %}
 
         {% endfor %}

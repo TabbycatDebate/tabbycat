@@ -1,22 +1,22 @@
 import logging
 
-from django.conf import settings
 from django.contrib import messages
 from django.http import Http404
 from django.utils.text import slugify
 from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
+from dynamic_preferences.registries import global_preferences_registry
 from dynamic_preferences.views import PreferenceFormView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import TournamentMixin
-from utils.mixins import AdministratorMixin
 from utils.misc import reverse_tournament
+from utils.mixins import AdministratorMixin
 
-from .presets import all_presets, get_preferences_data
 from .forms import tournament_preference_form_builder
-from .preferences import global_preferences_registry, tournament_preferences_registry
+from .preferences import tournament_preferences_registry
+from .presets import all_presets, get_preferences_data, save_presets
 
 logger = logging.getLogger(__name__)
 
@@ -32,28 +32,11 @@ class TournamentConfigIndexView(AdministratorMixin, TournamentMixin, TemplateVie
             preset_class.slugified_name = slugify(preset_class.__name__)
             preset_options.append(preset_class)
 
-        preset_options.sort(key=lambda x: x.name)
-        if not settings.LEAGUE:
-            return [p for p in preset_options if p.name != "WADL Options"]
-        else:
-            return preset_options
+        preset_options.sort(key=lambda x: (x.show_in_list, x.name))
+        return preset_options
 
     def get_context_data(self, **kwargs):
         kwargs["presets"] = self.get_preset_options()
-        kwargs["show_leagues"] = settings.LEAGUE
-        t = self.get_tournament()
-        if t.pref('teams_in_debate') == 'bp':
-            if t.pref('ballots_per_debate_prelim') == 'per-adj' or \
-               t.pref('ballots_per_debate_elim') == 'per-adj':
-                error = _("""Your draw rules specify four teams per-debate but
-                             your ballot setting specifies that adjudicators
-                             submit independent ballots. These settings
-                             <strong>are not compatible and will cause results
-                             entry to crash</strong>. You need to go back to
-                             the Debate Rules settings and change your
-                             configuration to use consensus ballots.""")
-                messages.error(self.request, error)
-
         return super().get_context_data(**kwargs)
 
 
@@ -65,7 +48,6 @@ class MultiPreferenceFormView(PreferenceFormView):
             self.registry = registry
             try:
                 return super().dispatch(request, *args, **kwargs)
-                break
             except Http404:
                 continue
         else:
@@ -89,8 +71,6 @@ class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, Tournamen
     def get_form_class(self, *args, **kwargs):
         section = self.kwargs.get('section', None)
         form_class = tournament_preference_form_builder(instance=self.tournament, section=section)
-        if form_class is None:
-            raise ValueError("Could not build form_class: are prefs mixed between global and non-global?")
         return form_class
 
 
@@ -125,11 +105,7 @@ class ConfirmTournamentPreferencesView(AdministratorMixin, TournamentMixin, Temp
 
     def save_presets(self):
         selected_preset = self.get_selected_preset()
-        preset_preferences = get_preferences_data(selected_preset, self.tournament)
-
-        for pref in preset_preferences:
-            self.tournament.preferences[pref['key']] = pref['new_value']
-
+        save_presets(self.tournament, selected_preset)
         ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT,
                 user=self.request.user, tournament=self.tournament, content_object=self.tournament)
         messages.success(self.request, _("Tournament options saved according to preset "

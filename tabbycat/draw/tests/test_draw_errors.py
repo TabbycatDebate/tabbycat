@@ -19,8 +19,8 @@ class TestCreateDrawViewErrors(TournamentTestCase):
     def setUp(self):
         super().setUp()
         self.client.login(username="admin", password="admin")
-        self.round = self.t.round_set.get(seq=self.round_seq)
-        self.t.preferences['standings__team_standings_precedence'] = ['wins', 'speaks_sum']
+        self.round = self.tournament.round_set.get(seq=self.round_seq)
+        self.tournament.preferences['standings__team_standings_precedence'] = ['wins', 'speaks_sum']
 
     def run_test_for_error_response(self, expected_loglevel, error_type):
         url = self.reverse_round('draw-create')
@@ -45,18 +45,18 @@ class TestCreateDrawViewErrors(TournamentTestCase):
         return reverse_round(view_name, self.round)
 
     def test_no_teams(self):
-        set_availability(self.t.team_set.none(), self.round)
+        set_availability(self.tournament.team_set.none(), self.round)
         self.run_test_for_error_response(logging.WARNING, DrawUserError)
 
     def test_odd_teams(self):
-        set_availability(self.t.team_set.all()[:23], self.round)
+        set_availability(self.tournament.team_set.all()[:23], self.round)
         self.run_test_for_error_response(logging.WARNING, DrawUserError)
 
     def test_bad_standings(self):
-        TournamentPreferenceModel.objects.update_or_create(instance=self.t, section='standings',
+        TournamentPreferenceModel.objects.update_or_create(instance=self.tournament, section='standings',
                 name='team_standings_precedence',
                 defaults={'raw_value': MultiValueSerializer.separator.join(['wins', 'speaks_sum', 'wins'])})
         self.run_test_for_error_response(logging.ERROR, StandingsError)
-        TournamentPreferenceModel.objects.update_or_create(instance=self.t, section='standings',
+        TournamentPreferenceModel.objects.update_or_create(instance=self.tournament, section='standings',
                 name='team_standings_precedence',
                 defaults={'raw_value': MultiValueSerializer.separator.join(['wins', 'speaks_sum'])})

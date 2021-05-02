@@ -5,9 +5,13 @@
 {% block head-title %}<span class="emoji">⏰</span> {% trans "Overview" %}{% endblock %}
 
 {% block sub-title %}
-  {% blocktrans trimmed with round_name=round.name round_status=round.get_draw_status_display.lower %}
-    current round: {{ round_name }}, status: {{ round_status }}
+  {% blocktrans trimmed with round=round.name status=round.get_draw_status_display.lower %}
+    current round: {{ round }}, status: {{ status }}
   {% endblocktrans %}
+{% endblock %}
+
+{% block page-alerts %}
+  {% include 'errors/database_limit_warning.html' %}
 {% endblock %}
 
 {% block content %}
@@ -16,7 +20,8 @@
     <tournament-overview-container :tournament-slug="tournamentSlug"
                                    :initial-actions="initialActions"
                                    :initial-ballots="initialBallots"
-                                   :initial-graph-data="initialGraphData">
+                                   :initial-graph-data="initialGraphData"
+                                   :total-debates="totalDebates">
     </tournament-overview-container>
   </div>
 
@@ -26,9 +31,10 @@
   <script>
     window.vueData = {
       tournamentSlug: '{{ tournament_slug }}',
+      totalDebates: {{ total_debates }},
       initialActions: {{ initialActions|safe }},
       initialBallots: {{ initialBallots|safe }},
-      initialGraphData: {{ initialGraphData|safe }},
+      initialGraphData: {{ initial_graph_data|safe }},
     }
   </script>
   {{ block.super }}

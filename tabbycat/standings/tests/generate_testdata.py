@@ -1,8 +1,8 @@
 """Generates random testdata for test_result.py, and prints the dict for copy
 and paste into test_result.py."""
 
-import random
 import pprint
+import random
 from operator import itemgetter
 
 TEAMS = ['A', 'B', 'C', 'D']
@@ -59,7 +59,7 @@ for team, teamscores in teamscores_by_team.items():
         "margin_sum": sum(teamscore["margin"] for teamscore in teamscores),
         "points": sum(teamscore["points"] for teamscore in teamscores),
         "draw_strength": 0,  # Initialize
-        "against": dict.fromkeys([t for t in TEAMS if t is not team], "n/a"),  # Initialize
+        "against": dict.fromkeys([t for t in TEAMS if t is not team], "n/a"),  # Initialize,
     }
 
 # Build up standings metrics that require reference to opponents
@@ -69,7 +69,7 @@ for rd in results:
         for a, b in ((0, 1), (1, 0)):
             team, score = teamscores[a]
             opponent, _ = teamscores[b]
-            if standings[team]["against"][opponent] is "n/a":
+            if standings[team]["against"][opponent] == "n/a":
                 standings[team]["against"][opponent] = score["points"]
             else:
                 standings[team]["against"][opponent] += score["points"]

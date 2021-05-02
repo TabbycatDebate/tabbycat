@@ -1,6 +1,5 @@
-from utils.management.base import TournamentCommand
-
 from draw.models import Debate
+from utils.management.base import TournamentCommand
 
 from ...models import BallotSubmission
 

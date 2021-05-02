@@ -7,9 +7,12 @@ urlpatterns = [
         path('edit/',
             views.EditMotionsView.as_view(),
             name='motions-edit'),
-        path('assign/',
-            views.AssignMotionsView.as_view(),
-            name='motions_assign'),
+        path('copy/',
+            views.CopyMotionsView.as_view(),
+            name='motions-copy'),
+        path('previous/',
+            views.CopyPreviousMotionsView.as_view(),
+            name='motions-previous'),
         path('release/',
             views.ReleaseMotionsView.as_view(),
             name='motions-release'),
@@ -19,9 +22,19 @@ urlpatterns = [
         path('display/',
             views.AdminDisplayMotionsView.as_view(),
             name='motions-display'),
+
+        # Email
+        path('email/',
+            views.EmailMotionReleaseView.as_view(),
+            name='motions-email'),
     ])),
 
-    path('statistics/',
-        views.MotionStatisticsView.as_view(),
-        name='motions-statistics'),
+    path('statistics/', include([
+        path('',
+            views.AdminRoundMotionStatisticsView.as_view(),
+            name='motions-statistics'),
+        path('global/',
+            views.AdminGlobalMotionStatisticsView.as_view(),
+            name='motions-global-statistics'),
+    ])),
 ]

@@ -4,6 +4,13 @@
 Installing Locally on Windows
 =============================
 
+.. admonition:: Notice on status of these instructions
+  :class: note
+
+  The developers of Tabbycat have **stopped actively maintaining** these instructions. For Windows 10 users, we now recommend :ref:`Linux on Windows (WSL) <install-wsl>` for local installations. We're keeping these instructions up in case they're useful for anyone who might need them, but please be aware that they might not work smoothly.
+
+  If you encounter any problems, please seek help in our `Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_. We're lucky to have a fantastic community of Tabbycat users who are often kind enough to share their experiences with fellow users, and someone there might be able to help.
+
 .. admonition:: Is this the best installation method for you?
   :class: attention
 
@@ -23,7 +30,7 @@ In these instructions, we'll use **Windows PowerShell**, a command-line interfac
 .. admonition:: Advanced users
   :class: tip
 
-  Tabbycat is a `Django <https://www.djangoproject.com/>`_ project, so can be installed in any manner that Django projects can normally be installed. For example, if you prefer some SQL system other than PostgreSQL, you can use it so long as it's Django-compatible. Just be aware that we haven't tried it.
+  If you wish to use an SQL engine other that PostgreSQL, most of Tabbycat should work, but a few features rely on SQL functions that aren't supported by all engines. To configure Tabbycat to use a different engine, set the ``DATABASES`` `Django setting <https://docs.djangoproject.com/en/2.2/ref/settings/#databases>`_ accordingly.
 
 1. Install dependencies
 =======================
@@ -36,19 +43,15 @@ First, you need to install all of the software on which Tabbycat depends, if you
 ------------
   *Python is a popular programming language, and the language in which the core of Tabbycat is coded.*
 
-Download and install the latest version of Python 3.5 from the `Python website <https://www.python.org/downloads/>`_.
+Download and install the latest version of Python from the `Python website <https://www.python.org/downloads/>`_.
 In the installer, check the box to add Python to your PATH (see box below).
-
-.. warning:: The 64-bit version of Python 3.6 currently doesn't work with PostgreSQL 9.6, because of a `bug in Python <http://bugs.python.org/issue28680>`_ affecting `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_. If you're using 64-bit Python, you should use Python 3.5 until the Python 3.6.1 is released.
 
 .. hint:: Which file should I download?
 
-    - If you have 32-bit Windows, choose the "Windows x86 executable installer".
-    - If you have 64-bit Windows (and not an Itanium processor), it's better to choose the "Windows x86-64 executable installer".
-    - If you're not sure whether you have 32-bit or 64-bit Windows, consult "About your PC" or "System Properties" in your Start Menu.
+    - Regardless of if you have 64-bit or 32-bit Windows, choose the "Windows x86 executable installer".
 
 .. attention:: **Please take note:** Just after you open the installer,
-  **check the "Add Python 3.5 to PATH" box**:
+  **check the "Add Python 3.x to PATH" box**:
 
   .. image:: images/python-windows-path.png
 
@@ -60,9 +63,9 @@ To check that Python is installed correctly, open Windows PowerShell, type ``pyt
 
 .. note:: **If you already have Python**, great! Some things to double-check:
 
-  - You must have at least Python 3.5. (Python 2 is not supported.)
+  - You must have at least Python 3.6. (Python 2 is not supported.)
   - Your installation path must not have any spaces in it.
-  - If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\Python35;C:\Python35\Scripts`` (or as appropriate for your installation directory). Follow `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path.
+  - If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\Python38;C:\Python38\Scripts`` (or as appropriate for your Python version and installation directory). Follow `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path.
 
 .. _install-windows-postgresql:
 
@@ -96,7 +99,7 @@ requires Git to work. So, install the latest version for Windows from the
 -----------------
   *Node.js is a JavaScript runtime.*
 
-Download and run the node.js 8 Installer (.msi) for either `x64 versions  <https://nodejs.org/dist/v8.9.4/node-v8.9.4-x64.msi>`_ of Windows or `x86 versions <https://nodejs.org/dist/v8.9.4/node-v8.9.4-x86.msi>`_.
+Download and run the node.js 8 Installer (.msi) for either `x64 versions  <https://nodejs.org/dist/v12.18.1/node-v12.18.1-x64.msi>`_ of Windows or `x86 versions <https://nodejs.org/dist/v12.18.1/node-v12.18.1-x86.msi>`_.
 
 2. Get the source code
 ======================
@@ -152,7 +155,7 @@ a. Open a Windows PowerShell. Navigate to the folder where you cloned/extracted 
 
     > Set-Location C:\Users\myusername\Documents\GitHub\tabbycat
 
-b. Make a copy of **local_settings.example** and rename it to **local_settings.py**. Open your new local_settings.py. Find this part, and fill in the blanks (the empty quotation marks) as indicated:
+b. Make a copy of **settings\\local.example** and rename it to **settings\\local.py**. Open your new **local.py** file. Find this part, and fill in the blanks (the empty quotation marks) as indicated:
 
   .. code:: python
 
@@ -190,22 +193,8 @@ e. Install Tabbycat's requirements.
   If you installed **32-bit Python**::
 
     > python -m pip install --upgrade pip
-    > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win32-py3.5.exe
-    > pip install -r requirements_common.txt
+    > pip install -r .\config\requirements_core.txt
     > npm install
-
-  If you installed **64-bit Python**::
-
-    > python -m pip install --upgrade pip
-    > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win-amd64-py3.5.exe
-    > pip install -r requirements_common.txt
-    > npm install
-
-  If you're using a version of **Python other than 3.5**, replace the URL in the
-  second line with the appropriate link from the
-  `win-psycopg page <http://www.stickpeople.com/projects/python/win-psycopg/>`_.
-
-  .. note:: The second line above is an extra step just for Windows. It installs the Windows version of ``psycopg2``, `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_, and must be done before ``pip install -r requirements_common.txt`` so that the latter doesn't try to install the Unix version.
 
   .. hint:: You might be wondering: I thought I already installed the requirements. Why am I installing more? And the answer is: Before, you were installing the requirements to create a Python virtual environment for Tabbycat to live in. Now, you're *in* the virtual environment, and you're installing everything required for *Tabbycat* to operate.
 
@@ -213,7 +202,7 @@ f. Initialize the database and create a user account for yourself::
 
     > cd tabbycat
     > dj migrate
-    > npm run build
+    > npm run windows-build
     > dj collectstatic
     > dj createsuperuser
 

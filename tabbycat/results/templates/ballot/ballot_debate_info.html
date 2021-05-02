@@ -33,19 +33,21 @@
       </div>
     {% endif %}
 
-    <div class="list-group-item pb-3 pt-3">
-      <div class="form-group">
-        <select class="required custom-select form-control" id="hasIron" name="iron"
-                tabindex="{{ form.irontabindex }}" required="" aria-required="true">
-          <option value="0">
-            {% trans "There were no speakers who spoke multiple times (i.e. no 'Iron' person speeches)" %}
-          </option>
-          <option value="1">
-            {% trans "There were speakers who spoke multiple times (i.e. one or more 'Iron' person speeches)" %}
-          </option>
-        </select>
+    {% if form.has_scores %}
+      <div class="list-group-item pb-3 pt-3">
+        <div class="form-group">
+          <select class="required custom-select form-control" id="hasIron" name="iron"
+                  tabindex="{{ form.irontabindex }}" required="" aria-required="true">
+            <option value="0">
+              {% trans "No speakers spoke twice (no 'iron-person' speeches)" %}
+            </option>
+            <option value="1">
+              {% trans "A speaker spoke twice (an 'iron-person' speech)" %}
+            </option>
+          </select>
+        </div>
       </div>
-    </div>
+    {% endif %}
 
   </div>
 </div>

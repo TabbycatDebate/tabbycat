@@ -1,0 +1,15 @@
+{% extends "public_ballot_set.html" %}
+{% load debate_tags i18n %}
+
+{% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
+
+{% block page-alerts %}
+  {% blocktrans trimmed with name=adjudicator.name asvar p1 %}
+    The page is provided to allow you, <strong>{{ name }}</strong>, to verify
+    your own scoresheet.
+    <strong>You must not share this URL with anyone.</strong>
+    Sharing the URL will allow others to access <strong>all</strong> actions
+    from your personal landing page.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="warning" %}
+{% endblock %}

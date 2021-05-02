@@ -9,10 +9,10 @@
     <!-- Links and modals -->
     <div v-if="cellData.link || cellData.modal"
          :data-toggle="cellData.tooltip ? tooltip : ''" :title="cellData.tooltip">
-      <a href="#" v-if="cellData.link" :href="cellData.link" >
+      <a v-if="cellData.link" :href="cellData.link" >
         <span class="tooltip-trigger" v-html="cellData.text"></span>
       </a>
-      <a href="#" v-if="cellData.modal" :data-target="cellData.modal" >
+      <a v-if="cellData.modal" :data-target="cellData.modal" >
         <span class="tooltip-trigger" v-html="cellData.text"></span>
       </a>
       <small v-if="cellData.subtext" v-html="cellData.subtext"></small>

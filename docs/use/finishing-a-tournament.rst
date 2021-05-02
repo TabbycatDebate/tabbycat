@@ -9,7 +9,7 @@ This page outlines some final steps to take after the conclusion of outrounds.
 Tab Release
 ===========
 
-Tabs can be released using the *Tab released* option under **Setup** > **Configuration**. Tabbycat offers the following system tabs:
+Tabs can be released under **Setup** > **Configuration** > **Tab Release**. Tabbycat offers the following system tabs:
 
 - Team Tab
 - Speakers Tab
@@ -22,11 +22,11 @@ If you defined any speaker categories (for example, Novice, ESL or EFL), a tab f
 
 You can also redact individual speaker's identifying details (name, team, and institution) from the public individual tabs. You can do so by going into the **Edit Database** area, going to *Participants > Speakers*, finding the speaker and clicking the **Anonymous** box (and saving).
 
+Silent and non-completed rounds aren't released unless the **Release all round results to public** option is checked, so once your tournament has concluded, you probably want to change this setting.
+
 .. note:: Public tab pages are cached for performance reasons. This means that any changes that affect a tab page (say redacting a speaker or changing a speaker score) may not show up on the public site for up to an hour.
 
 Wrapping Up
 ===========
 
 You probably want to turn off the *Public ballots*, *Public feedback*, *Feedback progress*, and *Public draw* features under **Configuration** at this stage as they no longer have any use.
-
-You also want to go into the **Edit Database** area, find the tournament and hit "release all" so that the results for the final round can be released.

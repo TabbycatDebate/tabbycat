@@ -6,7 +6,7 @@
 
 {% block content %}
 
-  {% blocktrans trimmed asvar p1 %}
+  {% blocktrans trimmed asvar text %}
     There are <a href="https://tabbycat.readthedocs.io/en/stable/use/importing-data.html" target="_blank">several ways to import data into Tabbycat</a>. Which one is best depends on the size of your tournament and your technical background. This <strong>simple importer</strong> is the easiest to use and works well for small- and medium-sized tournaments.
   {% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" %}
@@ -26,18 +26,18 @@
     {% include "components/item-action.html" with emoji="👂" %}
 
     {% tournamenturl 'importer-simple-venues' as url %}
-    {% trans "Add Venues" as text %}
+    {% trans "Add Rooms" as text %}
     {% include "components/item-action.html" with emoji="🎪" %}
 
   </ul>
   <ul class="list-group mt-3">
 
     {% tournamenturl 'venues-categories' as url %}
-    {% trans "Add/Edit Venue Categories" as text %}
+    {% trans "Add/Edit Room Categories" as text %}
     {% include "components/item-action.html" with emoji="🏪" %}
 
     {% tournamenturl 'venues-constraints' as url %}
-    {% trans "Add/Edit Venue Constraints" as text %}
+    {% trans "Add/Edit Room Constraints" as text %}
     {% include "components/item-action.html" with emoji="🏰" %}
 
   </ul>
@@ -54,6 +54,21 @@
     {% tournamenturl 'adjallocation-conflicts-adj-inst' as url %}
     {% trans "Add/Edit Adjudicator-Institution Conflicts" as text %}
     {% include "components/item-action.html" with emoji="🙈" %}
+
+    {% tournamenturl 'adjallocation-conflicts-team-inst' as url %}
+    {% trans "Add/Edit Team-Institution Conflicts" as text %}
+    {% include "components/item-action.html" with emoji="🐒" %}
+
+  </ul>
+  <ul class="list-group mt-3">
+
+    {% tournamenturl 'break-categories-edit' as url %}
+    {% trans "Add/Edit Break Categories" as text %}
+    {% include "components/item-action.html" with emoji="🎯" %}
+
+    {% tournamenturl 'participants-speaker-categories-edit' as url %}
+    {% trans "Add/Edit Speaker Categories" as text %}
+    {% include "components/item-action.html" with emoji="🏆" %}
 
   </ul>
 

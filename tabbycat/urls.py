@@ -1,9 +1,8 @@
 from django.conf import settings
-from django.urls import include, path
 from django.contrib import admin, messages
-from django.contrib.auth.views import logout as auth_logout
 from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
+from django.urls import include, path
 from django.utils.translation import gettext as _
 from django.views.i18n import JavaScriptCatalog
 
@@ -31,6 +30,9 @@ urlpatterns = [
     path('load-demo/',
         LoadDemoView.as_view(),
         name='load-demo'),
+    path('inactive/',
+        tournaments.views.PublicSiteInactiveTournamentsView.as_view(),
+        name='tabbycat-inactive-tournaments'),
 
     # Top Level Pages
     path('donations/',
@@ -46,7 +48,7 @@ urlpatterns = [
 
     # JS Translations Catalogue; includes all djangojs files in locale folders
     path('jsi18n/',
-         JavaScriptCatalog.as_view(domain="djangojs", ),
+         JavaScriptCatalog.as_view(domain="djangojs"),
          name='javascript-catalog'),
 
     # Summernote (WYSYWIG)
@@ -60,22 +62,23 @@ urlpatterns = [
         admin.site.urls),
 
     # Accounts
-    path('accounts/',
-         include('users.urls')),
-    path('accounts/logout/',
-        auth_logout,
-        {'next_page': '/'},  # override to specify next_page
-        name='logout'),
-    path('accounts/',
-        include('django.contrib.auth.urls')),
+    path('accounts/', include('users.urls')),
+
+    # Notifications
+    path('notifications/',
+        include('notifications.urls')),
+
+    # API
+    path('api',
+        include('api.urls')),
+
+    # Archive import/export
+    path('archive/',
+        include('importer.urls_archive')),
 
     # Tournament URLs
     path('<slug:tournament_slug>/',
         include('tournaments.urls')),
-
-    # Draws Cross Tournament
-    path('draw/',
-        include('draw.urls_crosst')),
 ]
 
 if settings.DEBUG and settings.ENABLE_DEBUG_TOOLBAR:  # Only serve debug toolbar when on DEBUG
@@ -93,7 +96,7 @@ if settings.DEBUG and settings.ENABLE_DEBUG_TOOLBAR:  # Only serve debug toolbar
 def on_user_logged_in(sender, request, **kwargs):
     if kwargs.get('user'):
         messages.info(request,
-            _("Hi, %(username)s — you just logged in!")  % {'username': kwargs['user'].username},
+            _("Hi, %(user)s — you just logged in!")  % {'user': kwargs['user'].username},
             fail_silently=True)
     else: # should never happen, but just in case
         messages.info(request, _("Welcome! You just logged in!"), fail_silently=True)

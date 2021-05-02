@@ -1,12 +1,17 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block head-title %}
-  You have been logged out
+  👋 {% trans "Goodbye" %}
 {% endblock %}
 {% block page-title %}You have been logged out{% endblock %}
 
-{% block content %}
-  <div id="logged_out">
-    You have been logged out. <a href="/accounts/login">Log in</a>.
-  </div>
+{% block page-alerts %}
+
+  {% url 'login' as login_url %}
+  {% blocktrans trimmed asvar message %}
+    You have been logged out. <a href="{{ login_url }}">Log in again?</a>
+  {% endblocktrans %}
+  {% include "components/alert.html" with type="info" %}
+
 {% endblock %}

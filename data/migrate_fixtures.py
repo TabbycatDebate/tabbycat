@@ -3,8 +3,8 @@
 
 import argparse
 import os
-import re
 import platform
+import re
 import subprocess
 import sys
 from os.path import abspath, dirname, join, relpath
@@ -74,7 +74,7 @@ if args.unmigrate:
     unmigrations = [tuple(spec.split("/")) for spec in args.unmigrate]
     run_command(["git", "checkout", args.new_commit])
 else:
-    print_yellow("Figuring out the migration difference is...")
+    print_yellow("Figuring out what the migration difference is...")
     run_command(["git", "checkout", args.old_commit])
     run_command(["python", MANAGE_PY, "migrate", "--no-input"])
     run_command(["git", "checkout", args.new_commit])
@@ -114,7 +114,7 @@ for fixture in fixtures:
     run_command(["python", MANAGE_PY, "checkpreferences"])
     run_command(["python", MANAGE_PY, "dumpdata", "--natural-foreign", "--natural-primary",
             "-e=availability", "-e=contenttypes", "-e=options", "-e=auth.Permission",
-            "-e=admin.logentry", "-e=actionlog.actionlogentry", "-e=sessions",
+            "-e=admin.logentry", "-e=actionlog.actionlogentry", "-e=sessions", "-e=authtoken.token",
             "--indent=4", "--format=json", "--output=" + path])
 
 print_yellow("Migrated %d fixtures." % len(fixtures))

@@ -42,9 +42,8 @@
   {% else %}
     {% if previous_unconfirmed %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="{{ previous_unconfirmed }} debates from
-        {{ round.prev.name }} do not have a completed ballot —
-        this may lead to a draw that fails or is incorrect">
+        data-toggle="tooltip" title="{% blocktrans trimmed with round=round.prev.name %}{{ previous_unconfirmed }} debates from
+        {{ round }} do not have a completed ballot — this may lead to a draw that fails or is incorrect{% endblocktrans %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
     {% elif availability_info.teams.in_now == 0 %}
@@ -59,12 +58,12 @@
       </button>
     {% elif availability_info.venues.in_now == 0 %}
       <button class="btn btn-danger disabled"
-        data-toggle="tooltip" title="{% trans "The draw cannot be generated until some venues have been marked as available." %}">
+        data-toggle="tooltip" title="{% trans "The draw cannot be generated until some rooms have been marked as available." %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
     {% elif min_venues > availability_info.venues.in_now %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="{% trans "There aren't enough venues marked as available for the number of debates — the draw may not generate properly." %}">
+        data-toggle="tooltip" title="{% trans "There aren't enough rooms marked as available for the number of debates — the draw may not generate properly." %}">
          {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
        </button>
     {% elif min_adjudicators > availability_info.adjs.in_now %}
@@ -115,15 +114,16 @@
     </div>
   {% endif %}
 
-  {% if round.seq > current_round.seq and not round.is_break_round %}
+  {% if not round.completed and round.prev and not round.prev.completed and not round.is_break_round %}
     <div class="alert alert-warning">
       <i data-feather="alert-circle"></i>
-      {% roundurl 'tournament-advance-round-check' current_round as advance_round_url %}
-      {% blocktrans trimmed with round_name=round.name current_round_name=current_round.name %}
-        This is a page for <strong>{{ round_name }}</strong>, however the current
-        round is still set to <strong>{{ current_round_name }}</strong>. Did you
-        forget to <a href="{{ advance_round_url }}" class="alert-link">
-        advance to the next round?</a>
+      {% roundurl 'tournament-complete-round-check' round.prev as complete_prev_round_url %}
+      {% blocktrans trimmed with round=round.name prev_round=round.prev.name %}
+        This is a page for <strong>{{ round }}</strong>, but the previous
+        round is still not marked as completed. Did you forget to
+        <a href="{{ complete_prev_round_url }}" class="alert-link">
+          mark {{ prev_round }} as completed?
+        </a>
       {% endblocktrans %}
     </div>
   {% endif %}
@@ -192,6 +192,20 @@
           review the break for the {{ break_category }} Break</a>.
       {% endblocktrans %}
     </div>
+  {% endif %}
+
+  {% if pref.team_standings_precedence|length == 0 %}
+    {% tournamenturl 'options-tournament-section' section='standings' as standings_config_url %}
+    {% blocktrans trimmed asvar message %}
+      The team standings precedence is empty. This means that teams aren't
+      ranked according to any metrics, so all teams will be in a single bracket
+      containing everyone. If this isn't what you intended, set the team
+      standings precedence in the
+      <a href="{{ standings_config_url }}" class="alert-link">Standings section
+      of this tournament's configuration</a> before creating the draw. In most
+      tournaments, the first metric should be points or wins.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="warning" icon="alert-circle" %}
   {% endif %}
 
 {% endblock %}

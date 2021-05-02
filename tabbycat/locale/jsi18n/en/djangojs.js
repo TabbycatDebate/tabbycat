@@ -28,7 +28,7 @@
       if (typeof(value) == 'undefined') {
         return (count == 1) ? singular : plural;
       } else {
-        return value[django.pluralidx(count)];
+        return value.constructor === Array ? value[django.pluralidx(count)] : value;
       }
     };
 
@@ -67,15 +67,13 @@
       "%Y-%m-%d %H:%M:%S",
       "%Y-%m-%d %H:%M:%S.%f",
       "%Y-%m-%d %H:%M",
-      "%Y-%m-%d",
       "%d/%m/%Y %H:%M:%S",
       "%d/%m/%Y %H:%M:%S.%f",
       "%d/%m/%Y %H:%M",
-      "%d/%m/%Y",
       "%d/%m/%y %H:%M:%S",
       "%d/%m/%y %H:%M:%S.%f",
       "%d/%m/%y %H:%M",
-      "%d/%m/%y"
+      "%Y-%m-%d"
     ],
     "DATE_FORMAT": "j M Y",
     "DATE_INPUT_FORMATS": [

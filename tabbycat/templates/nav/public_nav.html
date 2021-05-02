@@ -10,8 +10,8 @@
   {% for category in tournament.break_categories_nongeneral %}
     <li>
       <a class="nav-link" href="{% tournamenturl 'standings-public-tab-break-category' category=category.slug %}">
-        {% blocktrans trimmed with category_name=category.name %}
-          {{ category_name }} Teams
+        {% blocktrans trimmed with category=category.name %}
+          {{ category }} Teams
         {% endblocktrans %}
       </a>
     </li>
@@ -27,8 +27,8 @@
     {% if category.public %}
       <li>
         <a class="nav-link" href="{% tournamenturl 'standings-public-tab-speaker-category' category=category.slug %}">
-          {% blocktrans trimmed with category_name=category.name %}
-            {{ category_name }} Speakers
+          {% blocktrans trimmed with category=category.name %}
+            {{ category }} Speakers
           {% endblocktrans %}
         </a>
       </li>
@@ -46,74 +46,79 @@
   </li>
 {% endif %}
 {% if pref.motion_tab_released %}
-  <li class="nav-item {% if motions_nav %}active{% endif %}">
-    <a class="nav-link" href="{% tournamenturl 'motions-public-statistics' %}">{% trans "Motions Tab" %}</a>
-  </li>
-{% endif %}
-
-<!-- DRAW RELEASES -->
-{% if pref.public_draw and not pref.team_tab_released  %}
-  {% if pref.show_all_draws %}
-    <li class="nav-item dropdown {% if draw_nav %}active{% endif %}">
-      <a class="nav-link dropdown-toggle" href="#" id="drawsDrop"
+  {% if pref.enable_motion_reuse %}
+    <li class="nav-item dropdown {% if motions_nav %}active{% endif %}">
+      <a class="nav-link dropdown-toggle" href="#" id="motionsDrop"
          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        {% trans "Draws" %}
+        {% trans "Motions Tab" %}
       </a>
-      <div class="dropdown-menu draw-dropdown-menu" aria-labelledby="drawsDrop">
-        {% for r in tournament.round_set.all %}
-          {% if r.draw_status == r.STATUS_RELEASED %}
-            <a class="dropdown-item" href="{% roundurl 'draw-public-for-round' r %}">
-              {{ r.name }}
-            </a>
-          {% endif %}
-        {% endfor %}
-        {% if pref.enable_mass_draws %}
-          <div role="separator" class="divider"></div>
-          <a class="dropdown-item" href="{% tournamenturl 'draw-public-all-draws' %}">
-            {% trans "View All" %}
-          </a>
-        {% endif %}
-        <div class="dropdown-item">
-          {% trans "No Draws Available" %}
-        </div>
+      <div class="dropdown-menu" aria-labelledby="motionsDrop">
+        <a class="dropdown-item" href="{% tournamenturl 'motions-public-statistics' %}">{% trans "By round" %}</a>
+        <a class="dropdown-item" href="{% tournamenturl 'motions-global-public-statistics' %}">{% trans "Globally" %}</a>
       </div>
     </li>
-  {% elif current_round.draw_status == current_round.STATUS_RELEASED %}
-    <li class="nav-item {% if draw_nav %}active{% endif %}">
-      <a class="nav-link" href="{% tournamenturl 'draw-public-current-round' %}">
-        {% blocktrans trimmed with round_name=current_round.name %}
-          Draw for {{ round_name }}
-        {% endblocktrans %}
-      </a>
+  {% else %}
+    <li class="nav-item {% if motions_nav %}active{% endif %}">
+      <a class="nav-link" href="{% tournamenturl 'motions-public-statistics' %}">{% trans "Motions Tab" %}</a>
     </li>
   {% endif %}
+{% endif%}
+
+<!-- DRAW RELEASES -->
+{% if pref.public_draw == 'all-released' and not pref.team_tab_released %}
+  <li class="nav-item dropdown {% if draw_nav %}active{% endif %}">
+    <a class="nav-link dropdown-toggle" href="#" id="drawsDrop"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      {% trans "Draws" %}
+    </a>
+    <div class="dropdown-menu draw-dropdown-menu" aria-labelledby="drawsDrop">
+      {% for r in tournament.round_set.all %}
+        {% if r.draw_status == r.STATUS_RELEASED %}
+          <a class="dropdown-item" href="{% roundurl 'draw-public-for-round' r %}">
+            {{ r.name }}
+          </a>
+        {% endif %}
+      {% endfor %}
+      <div class="dropdown-item">
+        {% trans "No Draws Available" %}
+      </div>
+    </div>
+  </li>
+{% elif pref.public_draw == 'current' and tournament.public_draws_available and not pref.team_tab_released %}
+  <li class="nav-item {% if draw_nav %}active{% endif %}">
+    <a class="nav-link" href="{% tournamenturl 'draw-public-current-rounds' %}">
+      {% if tournament.current_rounds|length == 1 %}
+        {% blocktrans trimmed with round=current_round.name %}
+          Draw for {{ round }}
+        {% endblocktrans %}
+      {% else %}
+        {% trans "Current Draws" %}
+      {% endif %}
+    </a>
+  </li>
 {% endif %}
 
 <!-- CHECK INS -->
 {% if pref.public_checkins  %}
   <li class="nav-item {% if checkins_status %}active{% endif %}">
-    <a class="nav-link" href="{% tournamenturl 'public-checkin-status' %}">
+    <a class="nav-link" href="{% tournamenturl 'checkins-public-status' %}">
       {% trans "Check-Ins" %}
     </a>
   </li>
 {% endif %}
 
 <!-- RESULTS RELEASES -->
-{% if pref.public_results and current_round.prev %}
+{% if pref.public_results and tournament.rounds_with_released_results %}
   <li class="nav-item dropdown {% if results_nav %}active{% endif %}">
     <a class="nav-link dropdown-toggle" href="#" id="roundsDrop"
        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
        {% trans "Results" %}
     </a>
     <div class="dropdown-menu" aria-labelledby="roundsDrop">
-      {% for r in tournament.round_set.all %}
-        {% if not r.silent or pref.all_results_released %}
-          {% if r.seq < current_round.seq or pref.all_results_released %}
-            <a class="dropdown-item" href="{% roundurl 'results-public-round' r %}">
-              {{ r.name }}
-            </a>
-          {% endif %}
-        {% endif %}
+      {% for r in tournament.rounds_with_released_results %}
+        <a class="dropdown-item" href="{% roundurl 'results-public-round' r %}">
+          {{ r.name }}
+        </a>
       {% endfor %}
     </div>
   </li>
@@ -145,11 +150,6 @@
 {% endif %}
 
 <!-- MISC -->
-{% if pref.public_divisions %}
-  <li>
-    <a class="nav-link" href="{% tournamenturl 'public_divisions' %}">{% trans "Divisions" %}</a>
-  </li>
-{% endif %}
 {% if pref.public_motions and pref.motion_tab_released == False %}
   <li class="nav-item {% if motions_nav %}active{% endif %}">
     <a class="nav-link" href="{% tournamenturl 'motions-public' %}">{% trans "Motions" %}</a>
@@ -186,9 +186,25 @@
   </li>
 {% endif %}
 {% if pref.participant_ballots == 'public' %}
-  <li class="nav-item {% if enter_ballots_nav %}active{% endif %}">
-    <a class="nav-link" href="{% tournamenturl 'results-public-ballot-submission-index' %}">{% trans "Enter Ballot" %}</a>
-  </li>
+  {% if tournament.current_rounds|length == 1 %}
+    <li class="nav-item {% if enter_ballots_nav %}active{% endif %}">
+      <a class="nav-link" href="{% roundurl 'results-public-ballot-submission-index' tournament.current_rounds.0 %}">{% trans "Enter Ballot" %}</a>
+    </li>
+  {% elif tournament.current_rounds|length > 1 %}
+    <li class="nav-item dropdown {% if enter_ballots_nav %}active{% endif %}">
+      <a class="nav-link dropdown-toggle" href="#" id="roundsDrop"
+         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+         {% trans "Enter Ballot" %}
+      </a>
+      <div class="dropdown-menu" aria-labelledby="roundsDrop">
+        {% for r in tournament.current_rounds %}
+          <a class="dropdown-item" href="{% roundurl 'results-public-ballot-submission-index' r %}">
+            {{ r.name }}
+          </a>
+        {% endfor %}
+      </div>
+    </li>
+  {% endif %}
 {% endif %}
 {% if pref.participant_feedback == 'public' %}
   <li class="nav-item {% if enter_feedback_nav %}active{% endif %}">

@@ -1,8 +1,8 @@
 {% extends "draw_base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-outline-primary " href="{% roundurl 'draw' %}">
-    <i data-feather="chevron-left"></i> Back to Draw
+    <i data-feather="chevron-left"></i>{% trans "Back to Draw" %}
   </a>
 {% endblock %}

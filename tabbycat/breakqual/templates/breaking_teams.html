@@ -1,8 +1,8 @@
 {% extends "tables/base_vue_table.html" %}
 {% load static debate_tags i18n add_field_css %}
 
-{% block head-title %}{% blocktrans trimmed with category_name=category.name %}
-  {{ category_name }} Break
+{% block head-title %}{% blocktrans trimmed with category=category.name %}
+  {{ category }} Break
 {% endblocktrans %}{% endblock %}
 {% block sub-title %}
   {% if pref.public_breaking_teams %}
@@ -11,8 +11,8 @@
     {% trans "not publicly visible" %}
   {% endif %}
 {% endblock %}
-{% block page-title %}👑 {% blocktrans trimmed with category_name=category.name %}
-  {{ category_name }} Break
+{% block page-title %}👑 {% blocktrans trimmed with category=category.name %}
+  {{ category }} Break
 {% endblocktrans %}{% endblock %}
 
 {% block page-subnav-sections %}
@@ -72,13 +72,16 @@
     {% if pref.public_breaking_teams %}
       <div class="alert alert-danger">
         <i data-feather="alert-circle"></i>
-        The <strong>public breaking teams</strong> configuration setting is
-        enabled. As soon as you click the button, the breaking teams list will
-        be visible on the public site, before you have a chance to
-        double-check it! It is strongly recommended that you disable this
-        setting on the <a href="{% tournamenturl 'options-tournament-index' %}">
-        tournament configuration page</a> before generating the team
-        breaks.
+        {% tournamenturl 'options-tournament-index' as options_url %}
+        {% blocktrans trimmed %}
+          The <strong>public breaking teams</strong> configuration setting is
+          enabled. As soon as you click the button, the breaking teams list will
+          be visible on the public site, before you have a chance to
+          double-check it! It is strongly recommended that you disable this
+          setting on the <a href="{{ options_url }}">
+          tournament configuration page</a> before generating the team
+          breaks.
+        {% endblocktrans %}
       </div>
     {% else %}
 
@@ -119,8 +122,8 @@
         </div>
         <div class="form-inline col-md-6">
           <button class="btn btn-primary btn-block btn-success" type="submit" name="save_update_one">
-            {% blocktrans trimmed with category_name=category.name %}
-              Save Remarks and Update the {{ category_name }} Break
+            {% blocktrans trimmed with category=category.name %}
+              Save Remarks and Update the {{ category }} Break
             {% endblocktrans %}
           </button>
         </div>

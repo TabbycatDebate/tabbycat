@@ -1,12 +1,13 @@
 import logging
 from threading import Lock
 
-from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from utils.misc import badge_datetime_format
+from utils.misc import badge_datetime_format, reverse_tournament
 
 from .result import DebateResult
 from .utils import readable_ballotsub_result
@@ -27,8 +28,10 @@ class Submission(models.Model):
 
     SUBMITTER_TABROOM = 'T'
     SUBMITTER_PUBLIC = 'P'
-    SUBMITTER_TYPE_CHOICES = ((SUBMITTER_TABROOM, _("Tab room")),
-                              (SUBMITTER_PUBLIC, _("Public")), )
+    SUBMITTER_TYPE_CHOICES = (
+        (SUBMITTER_TABROOM, _("Tab room")),
+        (SUBMITTER_PUBLIC, _("Public")),
+    )
 
     timestamp = models.DateTimeField(auto_now_add=True,
         verbose_name=_("timestamp"))
@@ -39,11 +42,16 @@ class Submission(models.Model):
     confirmed = models.BooleanField(default=False,
         verbose_name=_("confirmed"))
 
+    # relevant for private URL submissions
+    participant_submitter = models.ForeignKey('participants.Person', models.PROTECT,
+        blank=True, null=True, related_name="%(app_label)s_%(class)s_participant_submitted",
+        verbose_name=_("from participant"))
+
     # only relevant if submitter was in tab room
-    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE,
+    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT,
         blank=True, null=True, related_name="%(app_label)s_%(class)s_submitted",
         verbose_name=_("submitter"))
-    confirmer = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE,
+    confirmer = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT,
         blank=True, null=True, related_name="%(app_label)s_%(class)s_confirmed",
         verbose_name=_("confirmer"))
     confirm_timestamp = models.DateTimeField(blank=True, null=True,
@@ -61,6 +69,9 @@ class Submission(models.Model):
         return dict((arg, getattr(self, arg)) for arg in self._meta.unique_together[0]
                     if arg != 'version')
 
+    def _unique_unconfirm_args(self):
+        return self._unique_filter_args
+
     def save(self, *args, **kwargs):
         # Use a lock to protect against the possibility that two submissions do this
         # at the same time and get the same version number or both be confirmed.
@@ -77,7 +88,7 @@ class Submission(models.Model):
             # Check for uniqueness.
             if self.confirmed:
                 unconfirmed = self.__class__.objects.filter(confirmed=True,
-                        **self._unique_filter_args).exclude(pk=self.pk).update(confirmed=False)
+                        **self._unique_unconfirm_args()).exclude(pk=self.pk).update(confirmed=False)
                 if unconfirmed > 0:
                     logger.info("Unconfirmed %d %s so that %s could be confirmed", unconfirmed, self._meta.verbose_name_plural, self)
 
@@ -99,8 +110,6 @@ class BallotSubmission(Submission):
         verbose_name=_("motion"))
     discarded = models.BooleanField(default=False,
         verbose_name=_("discarded"))
-    forfeit = models.ForeignKey('draw.DebateTeam', models.SET_NULL, blank=True, null=True,
-        verbose_name=_("forfeit")) # where valid, cascade should be covered by debate
 
     class Meta:
         unique_together = [('debate', 'version')]
@@ -123,7 +132,7 @@ class BallotSubmission(Submission):
     def clean(self):
         # The motion must be from the relevant round
         super().clean()
-        if self.motion is not None and self.motion.round != self.debate.round:
+        if self.motion is not None and self.debate.round not in self.motion.rounds.all():
             raise ValidationError(_("Debate is in round %(round)d but motion (%(motion)s) is "
                     "from round %(motion_round)d") % {
                     'round': self.debate.round,
@@ -133,20 +142,106 @@ class BallotSubmission(Submission):
         if self.confirmed and self.discarded:
             raise ValidationError(_("A ballot can't be both confirmed and discarded!"))
 
-        if self.forfeit is not None and self.forfeit.debate != self.debate:
-            raise ValidationError(_("The forfeiter must be a team in the debate."))
-
     @property
     def serialize_like_actionlog(self):
-        result_winner, result = readable_ballotsub_result(self)
+        if hasattr(self, '_result'):
+            dr = self._result
+        else:
+            from results.result import DebateResult
+            dr = DebateResult(self)
+        result_winner, result = readable_ballotsub_result(dr)
         return {
             'user': result_winner,
             'id': self.id,
             'type': result,
             'param': '',
             'timestamp': badge_datetime_format(self.timestamp),
-            'confirmed': self.confirmed
+            'confirmed': self.confirmed,
+            'debate': self.debate.id,
+            'result_status': self.debate.result_status,
         }
+
+    def serialize(self, tournament=None):
+        if not tournament:
+            tournament = self.debate.round.tournament
+
+        # Shown in the results page on a per-ballot; always measured in tab TZ
+        created_short = timezone.localtime(self.timestamp).strftime("%H:%M")
+        # These are used by the status graph
+        created = timezone.localtime(self.timestamp).isoformat()
+        confirmed = None
+        if self.confirm_timestamp and self.confirmed:
+            confirmed = timezone.localtime(self.confirm_timestamp).isoformat()
+
+        if tournament.pref('enable_blind_checks') and tournament.pref('teams_in_debate') == 'bp':
+            admin_url = 'results-ballotset-edit'
+            assistant_url = 'results-assistant-ballotset-edit'
+        else:
+            admin_url = 'old-results-ballotset-edit'
+            assistant_url = 'old-results-assistant-ballotset-edit'
+
+        submitter = self.ip_address
+        private_url = False
+        if self.submitter:
+            submitter = self.submitter.username
+        elif self.participant_submitter:
+            submitter = self.participant_submitter.name
+            private_url = True
+
+        return {
+            'ballot_id': self.id,
+            'debate_id': self.debate.id,
+            'submitter': submitter,
+            'private_url': private_url,
+            'admin_link': reverse_tournament(admin_url, tournament, kwargs={'pk': self.id}),
+            'assistant_link': reverse_tournament(assistant_url, tournament, kwargs={'pk': self.id}),
+            'short_time': created_short,
+            'created_timestamp': created,
+            'confirmed_timestamp': confirmed,
+            'version': self.version,
+            'confirmed': self.confirmed,
+            'discarded': self.discarded,
+        }
+
+
+class TeamScoreByAdj(models.Model):
+    """Holds team result given by a particular adjudicator in a debate.
+    Mostly redundant; is necessary however for voting elimination ballots."""
+    ballot_submission = models.ForeignKey(BallotSubmission, models.CASCADE,
+        verbose_name=_("ballot submission"))
+    debate_adjudicator = models.ForeignKey('adjallocation.DebateAdjudicator', models.CASCADE,
+        verbose_name=_("debate adjudicator"))
+    debate_team = models.ForeignKey('draw.DebateTeam', models.CASCADE,
+        verbose_name=_("debate team"))
+
+    win = models.BooleanField(null=True, blank=True,
+        verbose_name=_("win"))
+    margin = ScoreField(null=True, blank=True,
+        verbose_name=_("margin"))
+    score = ScoreField(null=True, blank=True,
+        verbose_name=_("score"))
+
+    class Meta:
+        unique_together = [('debate_adjudicator', 'debate_team', 'ballot_submission')]
+        index_together = ['ballot_submission', 'debate_adjudicator']
+        verbose_name = _("team score by adjudicator")
+        verbose_name_plural = _("team scores by adjudicator")
+
+    def __str__(self):
+        has_won = "Win" if self.win else "Loss"
+        return ("[{0.ballot_submission_id}/{0.id}] {1} for "
+            "{0.debate_team!s} from {0.debate_adjudicator!s}").format(self, has_won)
+
+    @property
+    def debate(self):
+        return self.debate_team.debate
+
+    def clean(self):
+        super().clean()
+        if (self.debate_team.debate != self.debate_adjudicator.debate or
+                self.debate_team.debate != self.ballot_submission.debate):
+            raise ValidationError(_("The debate team, debate adjudicator and ballot "
+                    "submission must all relate to the same debate."))
 
 
 class SpeakerScoreByAdj(models.Model):
@@ -196,7 +291,7 @@ class TeamScore(models.Model):
 
     points = models.PositiveSmallIntegerField(null=True, blank=True,
         verbose_name=_("points"))
-    win = models.NullBooleanField(null=True, blank=True,
+    win = models.BooleanField(null=True, blank=True,
         verbose_name=_("win"))
     margin = ScoreField(null=True, blank=True,
         verbose_name=_("margin"))
@@ -206,10 +301,6 @@ class TeamScore(models.Model):
         verbose_name=_("votes given"))
     votes_possible = models.PositiveSmallIntegerField(null=True, blank=True,
         verbose_name=_("votes possible"))
-
-    forfeit = models.BooleanField(default=False,
-        verbose_name=_("forfeit"),
-        help_text="Debate was a forfeit (True for both winning and forfeiting teams)")
 
     class Meta:
         unique_together = [('debate_team', 'ballot_submission')]

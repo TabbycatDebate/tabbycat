@@ -1,0 +1,85 @@
+{% load debate_tags participant_link i18n %}
+
+<div class="card mt-md-3">
+  <div class="list-group list-group-flush">
+    <div class="list-group-item">
+      <h4 class="card-title mb-0">
+        {{ card_title|safe }}
+      </h4>
+    </div>
+
+    {% if adjudicator.independent or adjudicator.adj_core %}
+      <div class="list-group-item">
+        <ul>
+          {% if adjudicator.independent %}
+            <li><em>{% trans "Independent adjudicator" %}</em></li>
+          {% endif %}
+          {% if adjudicator.adj_core %}
+            <li><em>{% trans "Member of the adjudication core" %}</em></li>
+          {% endif %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {% if pref.show_adjudicator_institutions or admin_page or private_url %}
+      <div class="list-group-item">
+        <strong>{% trans "Institution:" %}</strong>
+        {% if adjudicator.institution %}
+          {{ adjudicator.institution.name }}
+        {% else %}
+          <span class="text-muted">{% trans "Unaffiliated" %}</span>
+        {% endif %}
+        {% if adjudicator.institution.region %}
+          <br />
+          <strong>{% trans "Region:" %}</strong>
+          {{ adjudicator.institution.region.name }}
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="list-group-item">
+        <em>{% trans "The institutional affiliations of adjudicators are not public at this tournament." %}</em>
+      </div>
+    {% endif %}
+
+    {% if admin_page %}
+      <div class="list-group-item">
+
+          <strong>{% trans "Institutional Conflicts:" %}</strong>
+          {% for ic in adjudicator.adjudicatorinstitutionconflict_set.all %}
+            {{ ic.institution.name }}{% if not forloop.last %}{% trans "; " %}{% endif %}
+          {% empty %}
+            <span class="text-muted">{% trans "None" %}</span>
+          {% endfor %}
+
+          <strong><br>{% trans "Team Conflicts:" %}</strong>
+          {% for tc in adjudicator.adjudicatorteamconflict_set.all %}
+            {% team_record_link tc.team admin_page tournament False %}{% if not forloop.last %}{% trans ", " %}{% endif %}
+          {% empty %}
+            <span class="text-muted">{% trans "None" %}</span>
+          {% endfor %}
+
+          <strong><br>{% trans "Adjudicator Conflicts:" %}</strong>
+          {% for adj in adjadj_conflicts %}
+            {% if pref.public_record %}
+              <a href="{% adj_record_link adj admin_page tournament %}">{{ adj.name }}</a>{% if not forloop.last %}{% trans ", " %}{% endif %}
+            {% else %}
+              {{ adj.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
+            {% endif %}
+          {% empty %}
+            <span class="text-muted">{% trans "None" %}</span>
+          {% endfor %}
+
+      </div>
+
+      <div class="list-group-item">
+        <strong>{% trans "Room Constraints:" %}</strong>
+        {% for vc in adjudicator.venue_constraints.all %}
+          {{ vc.category }}{% if not forloop.last %}{% trans ", " %}{% endif %}
+        {% empty %}
+          <span class="text-muted">{% trans "None" %}</span>
+        {% endfor %}
+      </div>
+
+    {% endif %}
+  </div>
+</div>

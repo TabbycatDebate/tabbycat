@@ -1,0 +1,166 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-03-11 21:06\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Hebrew\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: he\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/features/data-entry.po\n"
+"Language: he_IL\n"
+
+#: ../../features/data-entry.rst:5
+msgid "Entering Ballots and Feedback"
+msgstr ""
+
+#: ../../features/data-entry.rst:8
+msgid "Ballot check-in"
+msgstr ""
+
+#: ../../features/data-entry.rst:10
+msgid "For tournaments that require it, there is a \"ballot check-in\" page that can be used to record the arrival of ballots to the tab room. When there's a missing ballot, it can help establish whether the ballot never made it to the tab room, or whether it's probably floating around in the room forgotten. Also, it can help enforce early checks that panels return the correct number of ballots to the room."
+msgstr ""
+
+#: ../../features/data-entry.rst:12
+msgid "To get to the ballot check-in, click the relevant round in the menu of the admin area, and then click \"Results\" and then \"Ballot Check-In\". This requires superuser privileges."
+msgstr ""
+
+#: ../../features/data-entry.rst:14
+msgid "There's no adverse effect from not using the ballot check-in. Data enterers will still be able to enter and confirmed ballots, even if not checked in."
+msgstr ""
+
+#: ../../features/data-entry.rst:18
+msgid "Since the ballot check-in tends to require a dedicated computer or two, it can be worth creating a separate superuser account for ballot check-in, so that it doesn't appear on the action logs as being by a particular person."
+msgstr ""
+
+#: ../../features/data-entry.rst:19
+msgid "Don't forget to provision a computer or two for this if you're planning to use it."
+msgstr ""
+
+#: ../../features/data-entry.rst:20
+msgid "Ballot check-ins can be a bottleneck, so you might decide they're not worth using. Alternatively, you might have multiple computers for this purpose, or you might dedicate a tab room helper to driving the process (since this is probably faster than runners doing the typing in turn)."
+msgstr ""
+
+#: ../../features/data-entry.rst:23
+msgid "Ballot entry"
+msgstr ""
+
+#: ../../features/data-entry.rst:27
+msgid "Most tab rooms run some sort of check system to ensure data is entered accurately. In Tabbycat, this is built into the system, which also helps speed it up."
+msgstr ""
+
+#: ../../features/data-entry.rst:29
+msgid "As a general principle, Tabbycat requires all ballots to be looked at by two people. The first person enters the data from the ballot, and the second person checks it. The second person isn't allowed to modify the data—they either confirm it or reject it, and if they reject it, then the whole process starts again. This is by design: to be confirmed, the *same* data must have been seen by at least two people."
+msgstr ""
+
+#: ../../features/data-entry.rst:31
+msgid "The administrator area does **not** work like this. It's designed to be flexible, so allows you to edit, confirm or unconfirm any ballot at any time. For this reason, you should use the **assistant** area to enter ballots, even if you have a superuser account."
+msgstr ""
+
+#: ../../features/data-entry.rst:35
+msgid "Don't forget to check the totals against the ballot—they're a useful integrity check too."
+msgstr ""
+
+#: ../../features/data-entry.rst:36
+msgid "Don't forget to check the winner against the ballot! If the adjudicator gets it wrong, it's worth asking to clarify."
+msgstr ""
+
+#: ../../features/data-entry.rst:37
+msgid "It can be helpful to think about the room layout to maximize efficiency."
+msgstr ""
+
+#: ../../features/data-entry.rst:38
+msgid "Some tab rooms like to assign some to data entry and some to verification. This isn't really necessary, since Tabbycat doesn't let the same person enter and verify the same ballot. (This is one of many reasons why every person should have their own account.)"
+msgstr ""
+
+#: ../../features/data-entry.rst:39
+msgid "Emails can be configured to be sent to adjudicators as a receipt of their ballot once confirmed."
+msgstr ""
+
+#: ../../features/data-entry.rst:42
+msgid "Duplicate/Swing Speeches"
+msgstr ""
+
+#: ../../features/data-entry.rst:46
+msgid "When entering the ballots there is a toggle label *'Iron' speeches*. When set to \"yes\" this allows you to have the same speaker deliver multiple speeches provided their extra speeches are labelled on the form as 'duplicates'. Typically, most tournaments require that lesser 'iron man' speech is discarded from the tab, which would mean that you would mark the lower speaker of the two scores as the duplicate (note that this may require you to check each score's average across a panel)."
+msgstr ""
+
+#: ../../features/data-entry.rst:48
+msgid "Speeches marked as duplicates are not included in the speaker tab. This means that they can also be used to exclude swing speakers from the tab as needed; even if they do not actually speak twice. To do so, change the name of the swing speaker to be that of an existing team member and ensure that that speech is marked as a duplicate."
+msgstr ""
+
+#: ../../features/data-entry.rst:50
+msgid "There is also an option under **Standings** in the **Configuration** section that specifies the number of debates a speaker can miss before you will not show on the tab. By default there is no limit, but if need be this can be set to hide swing speakers from the final speaker tab."
+msgstr ""
+
+#: ../../features/data-entry.rst:53
+msgid "Feedback entry"
+msgstr ""
+
+#: ../../features/data-entry.rst:57
+msgid "Feedback doesn't have the same verification process as ballots. Feedback that is entered by the tab room is assumed to be confirmed. If feedback is entered multiple times, all copies are retained but only the last one \"counts\" (is considered confirmed)."
+msgstr ""
+
+#: ../../features/data-entry.rst:60
+msgid "Online entry"
+msgstr ""
+
+#: ../../features/data-entry.rst:62
+msgid "There are two methods of allowing ballots and feedback to be submitted online. Both are set in the **Data Entry** page of each tournament's **Configuration** section and can be set independently; both in whether each can be submitted online at all and in which method of online submission are available."
+msgstr ""
+
+#: ../../features/data-entry.rst:68
+msgid "Private URLs"
+msgstr ""
+
+#: ../../features/data-entry.rst:70
+msgid "The first method of data entry is using 'private URLs'. When this setting is enabled you can create a special URL that is unique to a participant. This link contains a number of random characters and is not displayed publicly; it is in effect a secret that only that a specific participant should know. Presuming people do not share these links to others, this provides a means to (relatively) securely identify who is submitting what information. Because Tabbycat knows which participant has which URL it will only allow them to submit feedback/ballots for debates that they were speakers/adjudicators in."
+msgstr ""
+
+#: ../../features/data-entry.rst:72
+msgid "Private URLs should provide more than adequate security for almost all tournaments' purposes, but they aren't foolproof. Anyone with access to the URL for a participant can submit feedback or ballots on their behalf, so it's important that participants not share their URLs. This also means participants need to be careful when submitting from devices they do not own, because the URL will be logged in that device's browser history."
+msgstr ""
+
+#: ../../features/data-entry.rst:74
+msgid "These links must be generated within Tabbycat after the preference is enabled. To do so go to the **Feedback** section and then the **Private URLs** area. Once there you will be prompted to generate those URLs for all participants, which — once generated — will be presented in separate tables (one for teams; one for adjudicators)."
+msgstr ""
+
+#: ../../features/data-entry.rst:78
+msgid "These URLs can then be distributed to each person in a number of ways. There are pages within Tabbycat for printing them out (one URL per page labelled by recipient) or emailing them out (providing participants have been assigned email addresses). In the past tournaments have also used data from this table to send out SMSs by bulk, or distributed them to institutional representatives to disburse."
+msgstr ""
+
+#: ../../features/data-entry.rst:82
+msgid "You can assign email address to participants using the :ref:`importtournament command <importtournament-command>` when importing your registration data, or by going to the *Edit Data* area and looking up each Speaker/Adjudicator."
+msgstr ""
+
+#: ../../features/data-entry.rst:83
+msgid "If, after generating the private URLs, you add additional Teams or Adjudicators you can go to the *Edit Database* area , look up each Speaker/Adjudicator, and type in a bunch of random characters as their *Url key* to assign them a private URL."
+msgstr ""
+
+#: ../../features/data-entry.rst:84
+msgid "You can delete the current set of URLs by running this command in a shell on your server (replacing TOURNAMENT_SLUG with the appropriate value): ``python manage.py privateurls delete --tournament TOURNAMENT_SLUG``"
+msgstr ""
+
+#: ../../features/data-entry.rst:89
+msgid "Public URLs"
+msgstr ""
+
+#: ../../features/data-entry.rst:91
+msgid "The second method of data entry is using 'normal URLs'. This essentially means that any users visiting the public version of the site is able to submit a ballot or feedback (as specified by their respective settings). They do so by self-selecting which Team or Adjudicator they are then entering in a form as normal."
+msgstr ""
+
+#: ../../features/data-entry.rst:93
+msgid "This is, rather obviously, not a particularly secure method of data entry — nothing is stopping anyone on the site from entering data as someone else. The data can be checked, verified, and edited as normal by admins however. As such, this method is only recommended for small tournaments where you can trust those present to enter accurate information (or where accuracy is not crucial)."
+msgstr ""
+
+#: ../../features/data-entry.rst:95
+msgid "There is an additional setting to set a 'tournament password' that needs to be submitted to enable the form.  It is imagined, that if enabled, this password would only be distributed to tournament participants. However this only helps (at best) prevent non-participants from entering information; the fundamental problem of not verifying who is submitting what information is still present."
+msgstr ""
+

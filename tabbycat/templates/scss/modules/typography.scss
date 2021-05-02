@@ -4,9 +4,8 @@
 
 // Primary Typeface
 @font-face {
-  font-family: 'Inter-UI-Regular';
-  src: url('/static/fonts/Inter-UI-Regular.woff2') format('woff2'),
-       url('/static/fonts/Inter-UI-Regular.woff') format('woff');
+  font-family: 'Inter-Regular';
+  src: url('/static/fonts/Inter-Regular.woff2') format('woff2'), url('/static/fonts/Inter-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
@@ -26,6 +25,10 @@ h6,
 
 .badge {
   font-family: $font-family-monospace; // Want evenly aligned labels
+}
+
+.mixed-text {
+  font-feature-settings: "calt" off;
 }
 
 //------------------------------------------------------------------------------
@@ -48,10 +51,11 @@ h6,
 }
 
 .strong {
-  font-weight: bold;
+  font-weight: bold; // deprecate; use font-weight-bold
 }
 
-.lead .strong, .lead strong {
+.lead .strong,
+.lead strong {
   font-weight: bold; // The font for .lead items doesn't have a 'bolder' weight
 }
 
@@ -62,14 +66,18 @@ h6,
 
 .list-group-item.active a {
   color: $alt-bg; // If using a bg color; ensure the links aren't the same color
+  text-decoration: underline;
 }
 
 // Bootstrap only displays up to .display-4; long motions need more options
 .display-5 {
   @extend .display-4;
-  font-size: 3.0rem;
+
+  font-size: 3rem;
 }
+
 .display-6 {
   @extend .display-4;
+
   font-size: 2.5rem;
 }

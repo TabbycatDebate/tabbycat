@@ -11,16 +11,15 @@ export default {
       this.$emit('resort', key)
     },
     sortClasses: function (key) {
-      var baseCSS = 'vue-sort-key '
+      const baseCSS = 'vue-sort-key '
       if (this.sortKey.toLowerCase() === key.toLowerCase()) {
         if (this.sortOrder === 'asc') {
-          return baseCSS + 'vue-sort-active sort-by-asc'
-        } else {
-          return baseCSS + 'vue-sort-active sort-by-desc'
+          return `${baseCSS}vue-sort-active sort-by-asc`
         }
+        return `${baseCSS}vue-sort-active sort-by-desc`
       }
-      return baseCSS + 'text-muted'
-    }
+      return `${baseCSS}text-muted`
+    },
   },
 }
 </script>

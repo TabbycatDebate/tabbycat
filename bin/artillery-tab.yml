@@ -1,0 +1,65 @@
+# Artillery installed as part of npm development requirements
+# Usage (note lack of trailing / on the URL):
+#   (import completed demo + do tab release preset)
+#   (restart dynos on heroku)
+#   $ npx artillery run bin/artillery-tab.yml --target APP
+# Testing Environment:
+#   DEBUG=0
+#   PUBLIC_FAST_CACHE_TIMEOUT=30
+#   PUBLIC_SLOW_CACHE_TIMEOUT=30
+#   TAB_PAGES_CACHE_TIMEOUT=30
+#   SCOUT_MONITOR=false
+#   Hobby dynos
+# Note that a single heroku dyno has a hard limit of 50 requests in its backlog;
+# testing limits should not exceed that (say 40 to account for latency?) else
+# pages will refuse to be served
+
+config:
+  target: 'https://tabbycatdevelop.herokuapp.com'
+  http:
+    timeout: 35 # Responses returned in 30ish seconds or request is aborted
+  phases:
+    - duration: 30
+      arrivalRate: 0
+      name: "Wait for cache to expire"
+    - duration: 300
+      arrivalRate: 3
+      rampTo: 25
+      name: "Load test ramping to 10rps over 5 minutes"
+    - duration: 300
+      arrivalRate: 25
+      name: "Maintain load test maximum over 5 minutes"
+  defaults:
+    headers:
+      x-my-service-auth: '987401838271002188298567'
+scenarios:
+  - name: "Home"
+    weight: 1
+    flow:
+    - get:
+        url: "/demo/"
+  - name: "Speaker Tab"
+    weight: 1
+    flow:
+    - get:
+        url: "/demo/tab/speaker/"
+  - name: "Team Tab"
+    weight: 1
+    flow:
+    - get:
+        url: "/demo/tab/team/"
+  - name: "Diversity"
+    weight: 1
+    flow:
+    - get:
+        url: "/demo/tab/diversity/"
+  - name: "Adj Break"
+    weight: 1
+    flow:
+    - get:
+        url: "/demo/break/adjudicators/"
+  - name: "Results"
+    weight: 1
+    flow:
+    - get:
+        url: "/demo/results/round/3/"

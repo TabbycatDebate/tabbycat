@@ -1,16 +1,13 @@
 from django.test import TestCase
 
-from tournaments.models import Round
 from utils.tests import ConditionalTableViewTestsMixin
 
 
 class PublicResultsForRoundViewTestCase(ConditionalTableViewTestsMixin, TestCase):
 
-    view_toggle = 'public_features__public_results'
+    view_toggle_preference = 'public_features__public_results'
     view_name = 'results-public-round'
     round_seq = 3
 
-    def table_data(self):
-        # Check number of debates is correct
-        round = Round.objects.get(tournament=self.t, seq=self.round_seq)
-        return round.debate_set.all().count() * 2
+    def expected_row_counts(self):
+        return [self.round.debate_set.count() * 2]

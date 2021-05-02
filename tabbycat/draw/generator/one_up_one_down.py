@@ -81,8 +81,8 @@ class OneUpOneDownSwapper(object):
         do the swap."""
         (a1, n1) = debate1
         (a2, n2) = debate2
-        inst = (a1.institution == n1.institution,
-                a2.institution == n2.institution)
+        inst = (a1.institution == n1.institution and a1.institution is not None,
+                a2.institution == n2.institution and a2.institution is not None)
         hist = (a1.seen(n1), a2.seen(n2))
 
         if not ((inst[0] or inst[1]) and self.avoid_institution) and \

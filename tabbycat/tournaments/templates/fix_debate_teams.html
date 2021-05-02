@@ -3,7 +3,7 @@
 
 {% block page-title %}Debate Team Error{% endblock %}
 {% block head-title %}
-  <span class="emoji">‼️</span> Debate Team Missing
+  <span class="emoji">‼️</span>{% trans "Debate Team Missing" %}
 {% endblock %}
 
 
@@ -80,10 +80,10 @@
         <thead>
           <tr>
             <th>{% trans "Debate ID" %}</th>
-            {% for side_name in side_names %}
+            {% for side in side_names %}
               <th>
                 {% blocktrans trimmed %}
-                  Team(s) on {{ side_name }}
+                  Team(s) on {{ side }}
                 {% endblocktrans %}
               </th>
             {% endfor %}

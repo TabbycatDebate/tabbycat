@@ -1,12 +1,12 @@
-import unittest
 import copy
+import unittest
 
 from collections import OrderedDict
 
+from .utils import TestTeam
 from .. import DrawFatalError, DrawGenerator, DrawUserError
 from ..generator.pairing import Pairing, ResultPairing
 from ..generator.utils import partial_break_round_split
-from .utils import TestDivision, TestTeam
 
 DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side="aff"), TestTeam(2, 'B', allocated_side="neg")]
 
@@ -40,45 +40,6 @@ class TestRandomDrawGenerator(unittest.TestCase):
                     self.assertEqual(pairing.flags, [])
 
 
-class TestRoundRobinDrawGenerator(unittest.TestCase):
-    """Basic unit test for core functionality of round-robin draws."""
-
-    teams = [(1, 'A'), (2, 'B'), (3, 'A'), (4, 'B'), (5, 'C'), (6, 'D'),
-             (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
-
-    def rr_permutation(self, teams, rounds, expected_matches):
-        pairings = []
-        for i in range(0, rounds):
-            rd = DrawGenerator("two", "round_robin", teams, results=None, rrseq=i+1)
-            _draw = rd.generate()
-            for pairing in _draw:
-                pairings.append(pairing)
-
-        # Calculate how many pairings have identical matchups over the rounds
-        matches = 0
-        for pair in pairings:
-            search_pairings = list(pairings)
-            search_pairings.remove(pair)
-            for i in range(0, len(search_pairings)):
-                if pair.teams == search_pairings[i].teams or \
-                        pair.teams == search_pairings[i].teams.reverse():
-                    matches = matches + 1
-
-        self.assertEqual(matches, expected_matches)
-
-    def test_draw(self):
-        teams = [TestTeam(*args, side_history=[0, 0]) for args in self.teams]
-        for i, t in enumerate(teams):
-            t.division = TestDivision(i)
-            t.short_name = t.id
-
-        # Even Numbers
-        self.rr_permutation(teams[:12], 10, 0)
-        self.rr_permutation(teams[:8], 5, 0)
-        self.rr_permutation(teams[:6], 5, 0)
-        # TODO: Odd Numbers
-
-
 class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
     """Basic unit test for core functionality of power-paired draws.
     Nowhere near comprehensive."""
@@ -87,7 +48,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
         (4, [1, 2, 3, 4, 5]),
         (3, [6, 7, 8, 9]),
         (2, [10, 11, 12, 13, 14]),
-        (1, [15, 16])
+        (1, [15, 16]),
     ])
 
     def setUp(self):
@@ -108,7 +69,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (4, [1, 2, 3, 4, 5]),
             (3, [6, 7, 8]),
             (2, [9, 10, 11, 12, 13]),
-            (1, [14, 15])
+            (1, [14, 15]),
         ])
         for method in ["pullup_top", "pullup_bottom", "pullup_random", "intermediate"]:
             with self.subTest(method=method):
@@ -121,7 +82,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (4, [1, 2, 3, 4, 5, 6]),
             (3, [7, 8, 9, 10]),
             (2, [11, 12, 13, 14]),
-            (1, [15, 16])
+            (1, [15, 16]),
         ]))
 
     def test_pullup_bottom(self):
@@ -129,7 +90,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (4, [1, 2, 3, 4, 5, 9]),
             (3, [6, 7, 8, 14]),
             (2, [10, 11, 12, 13]),
-            (1, [15, 16])
+            (1, [15, 16]),
         ]))
 
     def test_intermediate_brackets(self):
@@ -139,7 +100,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (3, [7, 8]),
             (2.5, [9, 10]),
             (2, [11, 12, 13, 14]),
-            (1, [15, 16])
+            (1, [15, 16]),
         ]))
 
     def test_pullup_random(self):
@@ -191,7 +152,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (4, [(1, 'A'), (2, 'B'), (3, 'C'), (4, 'A', 'bub_up_accom'), (5, 'C', 12, 'bub_up_inst')]),
             (3, [(6, 'C'), (7, 'D'), (8, 'A', 10), (9, 'B', 10)]),
             (2, [(10, 'D', 8, 9, 'bub_dn_hist'), (11, 'A', 'bub_dn_accom'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
-            (1, [(15, 'C', 14), (16, 'C')])
+            (1, [(15, 'C', 14), (16, 'C')]),
         ])
         expected = OrderedDict([
             (4, [1, 2, 3, 5]),
@@ -199,7 +160,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (3, [7, 8]),
             (2.5, [9, 11]),  # Bubble-down (history, history)
             (2, [10, 12, 13, 14]),
-            (1, [15, 16])
+            (1, [15, 16]),
         ])
         self.brackets_intermediate_bubble_up_down(brackets, expected)
 
@@ -208,7 +169,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (4, [(1, 'A'), (2, 'B'), (3, 'C'), (4, 'A', 'bub_up_accom'), (5, 'C', 12, 'bub_up_inst')]),
             (3, [(6, 'C'), (7, 'D'), (8, 'A', 'bub_up_accom'), (9, 'B', 10, 'bub_up_hist')]),
             (2, [(10, 'D', 9), (11, 'A'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
-            (1, [(15, 'C', 14), (16, 'C')])
+            (1, [(15, 'C', 14), (16, 'C')]),
         ])
         expected = OrderedDict([
             (4, [1, 2, 3, 5]),
@@ -216,7 +177,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (3, [7, 9]),
             (2.5, [8, 10]),  # Bubble-up (history)
             (2, [11, 12, 13, 14]),
-            (1, [15, 16])
+            (1, [15, 16]),
         ])
         self.brackets_intermediate_bubble_up_down(brackets, expected)
 
@@ -225,7 +186,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (4, [(1, 'A'), (2, 'B'), (3, 'C'), (4, 'A', 'bub_up_accom'), (5, 'C', 12, 'bub_up_inst')]),
             (3, [(6, 'C'), (7, 'D'), (8, 'D'), (9, 'B', 10)]),
             (2, [(10, 'D', 9, 'bub_dn_hist'), (11, 'A', 'bub_dn_accom'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
-            (1, [(15, 'C', 14), (16, 'C')])
+            (1, [(15, 'C', 14), (16, 'C')]),
         ])
         expected = OrderedDict([
             (4, [1, 2, 3, 5]),
@@ -233,7 +194,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (3, [7, 8]),
             (2.5, [9, 11]),  # bubble-down (history, institution)
             (2, [10, 12, 13, 14]),
-            (1, [15, 16])
+            (1, [15, 16]),
         ])
         self.brackets_intermediate_bubble_up_down(brackets, expected)
 
@@ -242,7 +203,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (4, [(1, 'A'), (2, 'B'), (3, 'C'), (4, 'A'), (5, 'C', 12)]),
             (3, [(6, 'B'), (7, 'D'), (8, 'D'), (9, 'B')]),
             (2, [(10, 'D'), (11, 'A'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
-            (1, [(15, 'C', 14), (16, 'C')])
+            (1, [(15, 'C', 14), (16, 'C')]),
         ])
         expected = OrderedDict([
             (4, [1, 2, 3, 4]),
@@ -250,7 +211,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (3, [7, 8]),
             (2.5, [9, 10]),
             (2, [11, 12, 13, 14]),
-            (1, [15, 16])
+            (1, [15, 16]),
         ])
         self.brackets_intermediate_bubble_up_down(brackets, expected)
 
@@ -259,7 +220,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (4, [(1, 'A'), (2, 'B'), (3, 'C'), (4, 'A', 'bub_up_accom'), (5, 'C', 12, 'bub_up_inst')]),
             (3, [(6, 'C'), (7, 'D'), (8, 'D'), (9, 'B', 10, 'no_bub_updn')]),
             (2, [(10, 'D', 9), (11, 'B'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
-            (1, [(15, 'C', 14), (16, 'C')])
+            (1, [(15, 'C', 14), (16, 'C')]),
         ])
         expected = OrderedDict([
             (4, [1, 2, 3, 5]),
@@ -267,7 +228,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             (3, [7, 8]),
             (2.5, [9, 10]),  # No bubble (exhausted)
             (2, [11, 12, 13, 14]),
-            (1, [15, 16])
+            (1, [15, 16]),
         ])
         self.brackets_intermediate_bubble_up_down(brackets, expected)
 
@@ -285,17 +246,17 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
 
     def test_pairings_fold(self):
         self.pairings("fold", (
-            (1, 6), (2, 5), (3, 4), (7, 10), (8, 9), (11, 14), (12, 13), (15, 16)
+            (1, 6), (2, 5), (3, 4), (7, 10), (8, 9), (11, 14), (12, 13), (15, 16),
         ))
 
     def test_pairings_slide(self):
         self.pairings("slide", (
-            (1, 4), (2, 5), (3, 6), (7, 9), (8, 10), (11, 13), (12, 14), (15, 16)
+            (1, 4), (2, 5), (3, 6), (7, 9), (8, 10), (11, 13), (12, 14), (15, 16),
         ))
 
     def test_pairings_adjacent(self):
         self.pairings("adjacent", (
-            (1, 2), (3, 4), (5, 6), (7, 8), (9, 10), (11, 12), (13, 14), (15, 16)
+            (1, 2), (3, 4), (5, 6), (7, 8), (9, 10), (11, 12), (13, 14), (15, 16),
         ))
 
     def one_up_one_down(self, data, expected, **options):

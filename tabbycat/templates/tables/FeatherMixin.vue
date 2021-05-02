@@ -1,5 +1,5 @@
 <script>
-import feather from 'feather-icons';
+import feather from 'feather-icons'
 
 // Provides the rendered version of an icon; for when it needs to update
 // on DOM changes
@@ -13,7 +13,8 @@ export default {
       if (this.icon) {
         return feather.icons[this.icon].toSvg()
       }
-    }
+      return null
+    },
   },
 }
 </script>

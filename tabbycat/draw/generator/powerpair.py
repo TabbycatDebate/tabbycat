@@ -4,8 +4,8 @@ from collections import OrderedDict
 from django.utils.translation import gettext as _
 
 from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError
-from .pairing import Pairing
 from .one_up_one_down import OneUpOneDownSwapper
+from .pairing import Pairing
 
 
 class PowerPairedDrawGenerator(BasePairDrawGenerator):
@@ -31,9 +31,13 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
 
         "pullup_restriction" - Restriction on who can be pulled up. Permitted values:
 
-            "none"          - No restriction.
-            "least_to_date" - Choose from teams who have been pulled up the
-                              least number of times in previous rounds.
+            "none"             - No restriction.
+            "least_to_date"    - Choose from teams who have been pulled up the
+                                 least number of times in previous rounds.
+            "lowest_ds_wins"   - Choose from teams who have the lowest draw strength by
+                                 wins (indicative of having been against easier teams)
+            "lowest_ds_speaks" - Choose from teams who have the lowest draw strength by
+                                 speaks (indicative of having been against easier teams)
 
         "pairing_method" - How to pair teams. Permitted values:
             (best explained by example, these examples have a ten-team bracket)
@@ -76,8 +80,9 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
                     "team standings metric to be an integer (typically points or wins).") % {
                     'noninteger': noninteger, 'total': len(self.teams)})
 
-        if self.options["pullup_restriction"] == "least_to_date":
-            self.check_teams_for_attribute("npullups", checkfunc=lambda x: isinstance(x, int))
+        pullup_metric = self.PULLUP_RESTRICTION_METRICS[self.options["pullup_restriction"]]
+        if pullup_metric is not None:
+            self.check_teams_for_attribute(pullup_metric, checkfunc=lambda x: isinstance(x, (int, float)))
 
     def generate(self):
         self._brackets = self._make_raw_brackets()
@@ -108,23 +113,27 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
 
     # Pullup restrictions
 
-    PULLUP_ELIGIBILITY_FILTERS = {
-        "none"         : "_pullup_filter_none",
-        "least_to_date": "_pullup_filter_least_to_date",
+    PULLUP_RESTRICTION_METRICS = {
+        "least_to_date": "npullups",
+        "lowest_ds_wins": "draw_strength",
+        "lowest_ds_speaks": "draw_strength_speaks",
+        "none": None,
     }
 
     def _pullup_filter(self, teams):
         """Returns a function that takes one argument, a team, and returns a
         bool, indicating whether that team is eligible to be pulled up."""
-        function = self.get_option_function("pullup_restriction", self.PULLUP_ELIGIBILITY_FILTERS)
-        return function(teams)
+        option = self.options["pullup_restriction"]
+        try:
+            metric = self.PULLUP_RESTRICTION_METRICS[option]
+        except KeyError:
+            raise ValueError("Invalid option for pullup_restriction: {0}".format(option))
 
-    def _pullup_filter_none(self, teams):
-        return teams
-
-    def _pullup_filter_least_to_date(self, teams):
-        fewest = min(team.npullups for team in teams)
-        return [team for team in teams if team.npullups == fewest]
+        if metric is None:
+            return teams
+        else:
+            least = min(getattr(team, metric) for team in teams)
+            return [team for team in teams if getattr(team, metric) == least]
 
     # Odd bracket resolutions
 
@@ -134,7 +143,7 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         "pullup_middle"              : "_pullup_middle",
         "pullup_random"              : "_pullup_random",
         "intermediate"               : "_intermediate_brackets",
-        "intermediate_bubble_up_down": "_intermediate_brackets_with_bubble_up_down"
+        "intermediate_bubble_up_down": "_intermediate_brackets_with_bubble_up_down",
     }
 
     def resolve_odd_brackets(self, brackets):
@@ -163,7 +172,7 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         Operates in-place. Does not remove empty brackets."""
         pullup_needed_for = None
 
-        for points, teams in brackets.items():
+        for teams in brackets.values():
             if pullup_needed_for:
                 pullup_eligible_teams = self._pullup_filter(teams)
                 pullup_team = pullup_eligible_teams[pos(len(pullup_eligible_teams))]
@@ -438,7 +447,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         "pullup_bottom"               : "_pullup_bottom",
         "pullup_random"               : "_pullup_random",
         "intermediate1"               : "_intermediate_brackets_1",
-        "intermediate2"               : "_intermediate_brackets_2"
+        "intermediate2"               : "_intermediate_brackets_2",
     }
 
     def _pullup_top(self, brackets):
@@ -462,7 +471,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         # List by highest bracket first.
         pullups_needed_for = list()
 
-        for points, pool in brackets.items():
+        for pool in brackets.values():
 
             # First, try to fulfil any pullups needed from higher brackets.
             # There's no guarantee we will have enough teams in this bracket to
@@ -592,7 +601,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
                     num_teams = min(len(unfilled_pool["aff"]), len(pool["neg"]))
                     intermediates[unfilled_points].append({
                         "aff": unfilled_pool["aff"][:num_teams],
-                        "neg": pool["neg"][:num_teams]
+                        "neg": pool["neg"][:num_teams],
                     })
                     del unfilled_pool["aff"][:num_teams]
                     del pool["neg"][:num_teams]
@@ -601,7 +610,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
                     num_teams = min(len(unfilled_pool["neg"]), len(pool["aff"]))
                     intermediates[unfilled_points].append({
                         "aff": pool["aff"][:num_teams],
-                        "neg": unfilled_pool["neg"][:num_teams]
+                        "neg": unfilled_pool["neg"][:num_teams],
                     })
                     del pool["aff"][:num_teams]
                     del unfilled_pool["neg"][:num_teams]
@@ -641,6 +650,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         brackets.clear()
         brackets.update(new_sorted)
 
+    @staticmethod
     def _intermediate_brackets_with_up_down():
         """This should never be called - the associated option string is removed
         from the allowable list above."""

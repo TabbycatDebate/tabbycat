@@ -31,7 +31,7 @@ Tabbie2 and Tabbycat are both internet-based systems. Tabbie2 hosts all tourname
 
 In Tabbycat's decentralised model, there is no persistent 'account' for tournament participants on each tab site or across different tab sites. Indeed, the only people who can log in to the site are those who have been given accounts by the tab director, such as tab staff and members of the adjudication core.
 
-For secure e-ballot and e-feedback submissions, Tabbycat assigns a "private URL" to each adjudicator or team. This is essentially a password that allows a participant to only submit data that they should have access to in that specific tournament. This means participants don't need user accounts and you don't need to collect user account information; however if your tournament uses e-ballots or e-feedback you will need to distribute those private URLs to participants. Tabbycat can e-mail these to participants for you, or print them to give them to participants, or you could distribute the URLs using your own means.
+For secure e-ballot and e-feedback submissions, Tabbycat assigns a "private URL" to each participant. This is essentially a password that allows a participant to only submit data that they should have access to in that specific tournament. This means participants don't need user accounts and you don't need to collect user account information; however if your tournament uses e-ballots or e-feedback you will need to distribute those private URLs to participants. Tabbycat can e-mail these to participants for you, or print them to give them to participants, or you could distribute the URLs using your own means.
 
 **Control over data**. Some participant information in Tabbie2 is shared between tournaments, like their names and conflicts (discussed below). This means participants can manage it directly through their user accounts, without needing to go through you. On the other hand, this requires your participants to co-operate in keeping their accounts up to date, and to provide the correct e-mail address during registration (you'd be surprised how many don't). Furthermore, participants may look to you for assistance, and your ability to help is limited to directing them through Tabbie2 channels—easy enough if they forget their password, but not so much if they forget their account's e-mail address.
 
@@ -80,15 +80,13 @@ As discussed earlier in *User identification*; Tabbie2's e-ballots are tied to u
     - Each adjudicator is present as occupying a particular position (chair, panellist, trainee) rather than having those positions calculated automatically.
     - Chairs can be 'swapped' by dragging adjudicators on top of each other, and an 'unallocated' area can be used to view and store adjudicators that have not been allocated.
 
-**Shadow draws**. Tabbie2 allows you to create 'shadow panels' of adjudicators that can be applied to a draft draw prior to the generation of the real draw. For very large tournaments this can be a valuable method of front-loading some of the allocation process and reducing time pressure. Tabbycat does not have an equivalent feature or method, although one is planned.
-
 **Adjudicator feedback customisation**. Both Tabbie2 and Tabbycat have built-in adjudicator feedback forms, and allow you to specify the questions on the feedback form. Notable differences:
 
 - Setting up questions is painless on neither system. Tabbycat requires you to use the Edit Database area; Tabbie2 makes you click through a slightly more opaque maze of pages and forms.
 - Tabbycat allows for a richer range of types of questions than Tabbie2 does.
 - Tabbie2 allows you to specify different questionnaires for team-on-chair, chair-on-panellist and panellist-on-chair. Tabbycat only differentiates between team-on-adjudicator and adjudicator-on-adjudicator.
 - Tabbycat gives you more control over who is expected to submit feedback on whom; e.g. whether teams submit on panellists, and whether panellists submit on each other. In Tabbie2, you can effect this with blank questionnaires, but only for the three options listed above.
-- Tabbycat can, optionally, automatically incorporate feedback into adjudicator scores using a naive weighted average with the adjudicator test score. This can be disabled by simply setting feedback weight to zero, as some adjudication cores prefer. Tabbie2 has no ability to automatically incorporate feedback.
+- Tabbycat can, optionally, automatically incorporate feedback into adjudicator scores using a naive weighted average with the adjudicator base score. This can be disabled by simply setting feedback weight to zero, as some adjudication cores prefer. Tabbie2 has no ability to automatically incorporate feedback.
 - Tabbycat produces a "shame list" of unsubmitted feedback, which you can optionally publish on the public-facing site to try to incentivise submission.
 
 (How participants access adjudicator feedback submission is discussed in *User identification* above.)
@@ -147,8 +145,6 @@ As with the discussion of allocation interfaces vis-à-vis Tabbie2, there are a 
 
 **Flexibility in draw rules**. As we've said, all major tab systems are WUDC-compliant. But if you want to deviate from WUDC rules, Tournaman has a few more options. Whereas Tabbycat allows you to use intermediate brackets (rather than pull-ups), Tournaman allows you to sacrifice power-pairing integrity for position balance (though this generally isn't necessary to achieve position balance), fold within brackets and avoid teams hitting their own institution. On the other hand, Tabbycat allows you to tune how position balance trades off between teams (which the WUDC constitution doesn't precisely specify).
 
-**Shadow draws**. Tournaman allows you to create ‘shadow panels' of adjudicators that can be applied to a draft draw prior to the generation of the real draw. For very large tournaments this can be a valuable method of front-loading some of the allocation process and reducing time pressure. Tabbycat does not have an equivalent feature or method, although one is planned.
-
 Other considerations
 ====================
 
@@ -164,4 +160,3 @@ Comparison with hand tabbing
 Hand tabbing is easy, until it isn't. Traditionally, using a spreadsheet has been the go-to option for smallish tournaments because, hey, you're pretty handy with Excel, right? Making draws in spreadsheets (or on paper) seems like a pretty approachable task; ultimately it's all cells and formulae and numbers unlike the more arcane underpinnings of actual tab software.
 
 However, hand tabbing does require you to have a good working knowledge of how your format's rules work and how your spreadsheet software of choice can be made to work them. That process might be easy for you, or it might not be. But, either way, we'd like to think that Tabbycat offers a better alternative to hand-tabbing; regardless of how well you can actually hand-tab. The setup costs of creating a copy of Tabbycat are pretty low and you can speed through the process of draw creation, adjudicator allocation, and result entry at a pace. It's still not going to be as fast a spreadsheet for a small tournament, but we think it's getting pretty close. And in exchange for a little speed you get a much stronger guarantee of your draws being correct, options for online data entry, a more comprehensive and shareable final tab, and much more. Give it a shot!
-

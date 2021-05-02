@@ -1,18 +1,18 @@
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, validate_slug
 from django.forms import ValidationError
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
+from django_summernote.widgets import SummernoteWidget
 from dynamic_preferences.preferences import Section
 from dynamic_preferences.registries import global_preferences_registry
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, LongStringPreference, StringPreference
-from django_summernote.widgets import SummernoteWidget
 
-from standings.teams import TeamStandingsGenerator
 from standings.speakers import SpeakerStandingsGenerator
+from standings.teams import TeamStandingsGenerator
 from tournaments.utils import get_side_name_choices
 
-from .types import MultiValueChoicePreference
 from .models import tournament_preferences_registry
+from .types import MultiValueChoicePreference
 
 
 # ==============================================================================
@@ -92,6 +92,7 @@ class MarginIncludesDissent(BooleanPreference):
     name = 'margin_includes_dissenters'
     default = False
 
+
 # ==============================================================================
 draw_rules = Section('draw_rules', verbose_name=_("Draw Rules"))
 # ==============================================================================
@@ -108,8 +109,8 @@ class VotingScore(FloatPreference):
 
 @tournament_preferences_registry.register
 class AdjConflictPenalty(IntegerPreference):
-    help_text = _("Penalty applied by auto-allocator for adjudicator-team conflict")
-    verbose_name = _("Adjudicator-team conflict penalty")
+    help_text = _("Penalty applied by adjudicator auto-allocator for conflicts")
+    verbose_name = _("Adjudicator conflict penalty")
     section = draw_rules
     name = 'adj_conflict_penalty'
     default = 1000000
@@ -117,11 +118,20 @@ class AdjConflictPenalty(IntegerPreference):
 
 @tournament_preferences_registry.register
 class AdjHistoryPenalty(IntegerPreference):
-    help_text = _("Penalty applied by auto-allocator for adjudicator-team history")
-    verbose_name = _("Adjudicator-team history penalty")
+    help_text = _("Penalty applied by adjudicator auto-allocator for history")
+    verbose_name = _("Adjudicator history penalty")
     section = draw_rules
     name = 'adj_history_penalty'
     default = 10000
+
+
+@tournament_preferences_registry.register
+class PreformedPanelMismatchPenalty(IntegerPreference):
+    help_text = _("Penality applied by preformed panel auto-allocator for priority mismatch")
+    verbose_name = _("Importance mismatch penalty")
+    section = draw_rules
+    name = 'preformed_panel_mismatch_penalty'
+    default = 10000000
 
 
 @tournament_preferences_registry.register
@@ -234,6 +244,8 @@ class DrawPullupRestriction(ChoicePreference):
     choices = (
         ('none', _("No restriction")),
         ('least_to_date', _("Choose from teams who have been pulled up the fewest times so far")),
+        ('lowest_ds_wins', _("Choose from teams with the lowest draw strength by wins so far")),
+        ('lowest_ds_speaks', _("Choose from teams with the lowest draw strength by speaks so far")),
     )
     default = 'none'
 
@@ -329,6 +341,7 @@ class HideTraineePosition(BooleanPreference):
     name = 'no_trainee_position'
     default = False
 
+
 # ==============================================================================
 feedback = Section('feedback', verbose_name=_("Feedback"))
 # ==============================================================================
@@ -361,6 +374,7 @@ class FeedbackPaths(ChoicePreference):
     choices = (
         ('minimal', _("Chairs on panellists and trainees")),
         ('with-p-on-c', _("Panellists on chairs, chairs on panellists and trainees")),
+        ('with-t-on-c', _("Panellists and trainees on chairs, vice-versa")),
         ('all-adjs', _("All adjudicators (including trainees) on each other")),
     )
     default = 'with-p-on-c'
@@ -398,12 +412,13 @@ class ShowUnaccredited(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class FeedbackIntroduction(StringPreference):
+class FeedbackIntroduction(LongStringPreference):
     help_text = _("Any explanatory text needed to introduce the feedback form")
     verbose_name = _("Feedback introduction/explanation")
     section = feedback
     name = 'feedback_introduction'
     default = ''
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
     field_kwargs = {'required': False}
 
 
@@ -452,6 +467,35 @@ class BallotsPerDebateElimination(ChoicePreference):
 
 
 @tournament_preferences_registry.register
+class BallotMustConfirmWinner(ChoicePreference):
+    help_text = _("Whether adjudicator(s) must select the winning team in their ballot, and how it should be treated. Note: Not supported in BP.")
+    verbose_name = _("Winner Declaration in ballot(s)")
+    section = debate_rules
+    name = 'winners_in_ballots'
+    choices = (
+        ('none', _("Do not require separate winner selection")),
+        ('high-points', _("Require separate winner selection as a check on correct scores")),
+        ('tied-points', _("Require winner selection to break tied-point debates")),
+        ('low-points', _("Require winner selection, overriding scores")),
+    )
+    default = 'none'
+
+
+@tournament_preferences_registry.register
+class BallotUsesScores(ChoicePreference):
+    help_text = _("When ballots should ask for speaker scores.")
+    verbose_name = _("Require speaker scores")
+    section = debate_rules
+    name = 'speakers_in_ballots'
+    choices = (
+        ('always', _("Always require speaker scores")),
+        ('prelim', _("Only require speaker scores in preliminary rounds")),
+        ('never', _("Never require speaker scores")),
+    )
+    default = 'always'
+
+
+@tournament_preferences_registry.register
 class SubstantiveSpeakers(IntegerPreference):
     help_text = _("How many substantive speakers on a team")
     verbose_name = _("Substantive speakers")
@@ -480,11 +524,11 @@ class ReplyScores(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class MotionVetoes(BooleanPreference):
-    help_text = _("Enables the motion veto field on ballots, to track veto statistics")
-    verbose_name = _("Motion vetoes")
+class RequireSubstantiveForReply(BooleanPreference):
+    help_text = _("Whether to limit reply speeches to speakers who gave a substantive speech in the debate")
+    verbose_name = _("Require reply speaker to have given a substantive speech")
     section = debate_rules
-    name = 'motion_vetoes_enabled'
+    name = 'require_substantive_for_reply'
     default = True
 
 
@@ -529,13 +573,9 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
         classes = [TeamStandingsGenerator.metric_annotator_classes[metric] for metric in value]
         duplicates = [c for c in classes if c.repeatable is False and classes.count(c) > 1]
         if duplicates:
-            duplicates_str = ", ".join(list(set(force_text(c.name) for c in duplicates)))
+            duplicates_str = ", ".join(list(set(force_str(c.name) for c in duplicates)))
             raise ValidationError(_("The following metrics can't be listed twice: "
                     "%(duplicates)s") % {'duplicates': duplicates_str})
-
-        # Check that who-beat-whom isn't listed first
-        if value[0] in ["wbw", "wbwd"]:
-            raise ValidationError(_("Who-beat-whom can't be listed as the first metric"))
 
 
 @tournament_preferences_registry.register
@@ -568,7 +608,7 @@ class SpeakerStandingsPrecedence(MultiValueChoicePreference):
         classes = [SpeakerStandingsGenerator.metric_annotator_classes[metric] for metric in value]
         duplicates = [c for c in classes if c.repeatable is False and classes.count(c) > 1]
         if duplicates:
-            duplicates_str = ", ".join(list(set(force_text(c.name) for c in duplicates)))
+            duplicates_str = ", ".join(list(set(force_str(c.name) for c in duplicates)))
             raise ValidationError(_("The following metrics can't be listed twice: "
                     "%(duplicates)s") % {'duplicates': duplicates_str})
 
@@ -689,9 +729,9 @@ class AdjudicatorsTabShows(ChoicePreference):
     section = tab_release
     name = 'adjudicators_tab_shows'
     choices = (
-        ('test', _("Only shows test score")),
+        ('test', _("Only shows base score")),
         ('final', _("Only shows final score")),
-        ('all', _("Shows test, final, and per-round scores")),
+        ('all', _("Shows base, final, and per-round scores")),
     )
     default = 'final'
 
@@ -711,6 +751,15 @@ class AllResultsReleased(BooleanPreference):
     verbose_name = _("Release all round results to public")
     section = tab_release
     name = 'all_results_released'
+    default = False
+
+
+@tournament_preferences_registry.register
+class PrivateBallotsReleased(BooleanPreference):
+    help_text = _("Enables display of confirmed ballots through private URLs. Intended for use after the tournament.")
+    verbose_name = _("Release ballots through private URLs")
+    section = tab_release
+    name = 'private_ballots_released'
     default = False
 
 
@@ -775,12 +824,12 @@ class DisableBallotConfirmation(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class EnableMotions(BooleanPreference):
-    help_text = _("If checked, ballots require a motion to be entered")
-    verbose_name = _("Enable motions")
+class EnableBlindBallotConfirmation(BooleanPreference):
+    help_text = _("Requires scores of draft ballots to be re-entered as part of the confirmation stage (to create more stringent check). Only applies to BP formats.")
+    verbose_name = _("Enforce blind confirmations")
     section = data_entry
-    name = 'enable_motions'
-    default = True
+    name = 'enable_blind_checks'
+    default = False
 
 
 @tournament_preferences_registry.register
@@ -800,6 +849,15 @@ class AssistantAccess(ChoicePreference):
 
 
 @tournament_preferences_registry.register
+class CheckInParticipantSubmit(BooleanPreference):
+    help_text = _("Whether participants can check themselves in/out through their private URL.")
+    verbose_name = _("Participant self-checkin")
+    section = data_entry
+    name = 'public_checkins_submit'
+    default = False
+
+
+@tournament_preferences_registry.register
 class CheckInWindowPeople(FloatPreference):
     help_text = _("The amount of time (in hours) before a speaker or adjudicator's check-in event expires")
     section = data_entry
@@ -810,10 +868,10 @@ class CheckInWindowPeople(FloatPreference):
 
 @tournament_preferences_registry.register
 class CheckInWindowVenues(FloatPreference):
-    help_text = _("The amount of time (in hours) before a venue's check-in event expires")
+    help_text = _("The amount of time (in hours) before a room's check-in event expires")
     section = data_entry
     name = 'checkin_window_venues'
-    verbose_name = _("Check-In Window (Venues)")
+    verbose_name = _("Check-In Window (Rooms)")
     default = 2.0
 
 
@@ -823,7 +881,7 @@ class BallotsConfirmDigits(BooleanPreference):
     verbose_name = _("Ballot Digit Checks")
     section = data_entry
     name = 'ballots_confirm_digits'
-    default = False
+    default = True
 
 
 @tournament_preferences_registry.register
@@ -842,6 +900,15 @@ class FeedbackReturnLocation(StringPreference):
     section = data_entry
     name = 'feedback_return_location'
     default = 'TBA'
+
+
+@tournament_preferences_registry.register
+class EnablePostponements(BooleanPreference):
+    help_text = _("Lets debates have their status as postponed, as to not block draw generation.")
+    verbose_name = _("Enable postponements")
+    section = data_entry
+    name = 'enable_postponements'
+    default = False
 
 
 # ==============================================================================
@@ -878,7 +945,9 @@ class PublicDiversity(BooleanPreference):
 
 @tournament_preferences_registry.register
 class PublicCheckinStatuses(BooleanPreference):
-    help_text = _("Enables the public page showing checkin statuses for individuals, institutions, and teams")
+    help_text = _("Enables the public page showing checkin statuses for "
+                  "individuals, institutions, and teams. Note that this page "
+                  "can be slow when used at very large tournaments.")
     verbose_name = _("Enable public view of the checkin statuses")
     section = public_features
     name = 'public_checkins'
@@ -904,12 +973,17 @@ class PublicSideAllocations(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class PublicDraw(BooleanPreference):
+class PublicDraw(ChoicePreference):
     help_text = _("Enables the public page showing released draws")
     verbose_name = _("Enable public view of draw")
     section = public_features
     name = 'public_draw'
-    default = False
+    choices = (
+        ('off', _("Disabled")),
+        ('current', _("Show a single page for the current round's draw")),
+        ('all-released', _("Show individual pages for all released draws")),
+    )
+    default = 'off'
 
 
 @tournament_preferences_registry.register
@@ -982,7 +1056,7 @@ class TournamentStaff(LongStringPreference):
     section = public_features
     name = 'tournament_staff'
     default = ""
-    widget = SummernoteWidget(attrs={'height': 150})
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
     field_kwargs = {'required': False}
 
 
@@ -993,7 +1067,7 @@ class WelcomeMessage(LongStringPreference):
     section = public_features
     name = 'welcome_message'
     default = ""
-    widget = SummernoteWidget
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
     field_kwargs = {'required': False}
 
 
@@ -1008,15 +1082,6 @@ class ShowSplittingAdjudicators(BooleanPreference):
     verbose_name = _("Show splitting adjudicators")
     name = 'show_splitting_adjudicators'
     section = ui_options
-    default = False
-
-
-@tournament_preferences_registry.register
-class ShowMotionsInResults(BooleanPreference):
-    help_text = _("If showing results to public, show which motions were selected in the record")
-    verbose_name = _("Show motions in results")
-    section = ui_options
-    name = 'show_motions_in_results'
     default = False
 
 
@@ -1058,7 +1123,7 @@ class ShowTeamInstitutions(BooleanPreference):
 
 @tournament_preferences_registry.register
 class ShowAdjudicatorInstitutions(BooleanPreference):
-    help_text = _("In tables listing adjudicators, adds a column showing their institutions")
+    help_text = _("Hide the institutions of adjudicators on public pages and on printed ballots")
     verbose_name = _("Show adjudicator institutions")
     section = ui_options
     name = 'show_adjudicator_institutions'
@@ -1074,211 +1139,43 @@ class ShowSpeakersInDraw(BooleanPreference):
     default = True
 
 
-@tournament_preferences_registry.register
-class ShowAllDraws(BooleanPreference):
-    help_text = _("If showing draws to public, show all (past and future) released draws")
-    verbose_name = _("Show all draws")
-    section = ui_options
-    name = 'show_all_draws'
-    default = False
-
-
-@tournament_preferences_registry.register
-class PublicMotionsOrder(ChoicePreference):
-    help_text = _("Order in which are listed by round in the public view")
-    verbose_name = _("Order to display motions")
-    section = ui_options
-    name = 'public_motions_order'
-    choices = (
-        ('forward', _("Earliest round first")),
-        ('reverse', _("Latest round first")),
-    )
-    default = 'reverse'
-
-
-@tournament_preferences_registry.register
-class ShowIntroductionToAllocationUI(BooleanPreference):
-    help_text = _("Show an introduction screen when loading the allocation interface (this will automatically uncheck whenever the screen is shown)")
-    verbose_name = _("Show allocation UI intro")
-    section = ui_options
-    name = 'show_allocation_intro'
-    default = True
-
 # ==============================================================================
-league_options = Section('league_options', verbose_name=_("League Options"))
+email = Section('email', verbose_name=_("Notifications"))
 # ==============================================================================
 
 
 @tournament_preferences_registry.register
-class PublicDivisions(BooleanPreference):
-    help_text = _("Enables public interface to see divisions")
-    verbose_name = _("Show divisions to public")
-    section = league_options
-    name = 'public_divisions'
-    default = False
+class ReplyToEmailName(StringPreference):
+    help_text = _("The name of the organizer tasked with managing emails (in case of replies)")
+    verbose_name = _("Reply-to name")
+    section = email
+    name = 'reply_to_name'
+    default = "Tabulation Team"
 
 
 @tournament_preferences_registry.register
-class EnableDivisions(BooleanPreference):
-    help_text = _("Enables the sorting and display of teams into divisions")
-    verbose_name = _("Enable divisions")
-    section = league_options
-    name = 'enable_divisions'
-    default = False
+class ReplyToEmailAddress(StringPreference):
+    help_text = _("The email address for handling replies")
+    verbose_name = _("Reply-to address")
+    section = email
+    name = 'reply_to_address'
+    default = ""
 
 
 @tournament_preferences_registry.register
-class EnablePostponements(BooleanPreference):
-    help_text = _("Enables debates to have their status set to postponed")
-    verbose_name = _("Enable postponements")
-    section = league_options
-    name = 'enable_postponements'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableForfeits(BooleanPreference):
-    help_text = _("Allows debates to be marked as wins by forfeit")
-    verbose_name = _("Enable forfeits")
-    section = league_options
-    name = 'enable_forfeits'
-    default = False
-
-
-@tournament_preferences_registry.register
-class HideAdjudicators(BooleanPreference):
-    help_text = _("Hides the adjudicators in public views of the draw")
-    verbose_name = _("Mask adjudicators")
-    section = league_options
-    name = 'hide_adjudicators'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableDivisionMotions(BooleanPreference):
-    help_text = _("Enables assigning motions to a division")
-    verbose_name = _("Enable division motions")
-    section = league_options
-    name = 'enable_division_motions'
-    default = False
-
-
-@tournament_preferences_registry.register
-class MinimumDivisionSize(IntegerPreference):
-    help_text = _("Smallest allowed size for a division")
-    verbose_name = _("Minimum division size")
-    section = league_options
-    name = 'minimum_division_size'
-    default = 5
-
-
-@tournament_preferences_registry.register
-class IdealDivisionSize(IntegerPreference):
-    help_text = _("Ideal size for a division")
-    verbose_name = _("Ideal division size")
-    section = league_options
-    name = 'ideal_division_size'
-    default = 6
-
-
-@tournament_preferences_registry.register
-class MaximumDivisionSize(IntegerPreference):
-    help_text = _("Largest allowed size for a division")
-    verbose_name = _("Maximum division size")
-    section = league_options
-    name = 'maximum_division_size'
-    default = 8
-
-
-@tournament_preferences_registry.register
-class EnableFlaggedMotions(BooleanPreference):
-    help_text = _("Allow particular motions to be flagged as contentious")
-    verbose_name = _("Enable flagged motions")
-    section = league_options
-    name = 'enable_flagged_motions'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableAdjNotes(BooleanPreference):
-    help_text = _("Enables a general-purpose notes field for adjudicators")
-    verbose_name = _("Enable adjudicator notes")
-    section = league_options
-    name = 'enable_adj_notes'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableVenueTimes(BooleanPreference):
-    help_text = _("Enables specific dates and times to be set for debates")
-    verbose_name = _("Enable debate scheduling")
-    section = league_options
-    name = 'enable_debate_scheduling'
-    default = False
-
-
-@tournament_preferences_registry.register
-class ShareAdjs(BooleanPreference):
-    help_text = 'Use shared adjudicators (those without a set tournament) in this tournament'
-    verbose_name = _("Share adjudicators")
-    section = league_options
-    name = 'share_adjs'
-    default = False
-
-
-@tournament_preferences_registry.register
-class ShareVenues(BooleanPreference):
-    help_text = 'Use shared venues (those without a set tournament) in this tournament'
-    verbose_name = _("Share venues")
-    section = league_options
-    name = 'share_venues'
-    default = False
-
-
-@tournament_preferences_registry.register
-class DeriveVenueFromDivison(BooleanPreference):
-    help_text = 'Don\'t show individual venue names in public draws; instead show the division\'s Venue Category'
-    verbose_name = _("Use division venue categories")
-    section = league_options
-    name = 'division_venues'
-    default = False
-
-
-@tournament_preferences_registry.register
-class DuplicateAdjs(BooleanPreference):
-    help_text = _("If unchecked, adjudicators can only be given one room per round")
-    verbose_name = _("Allow adjudicators to be allocated to multiple rooms")
-    section = league_options
-    name = 'duplicate_adjs'
-    default = False
-
-
-@tournament_preferences_registry.register
-class AdjAllocationConfirmations(BooleanPreference):
-    help_text = _("Allow links to be sent to adjudicators that allow them to confirm shifts")
-    verbose_name = _("Adjudicator allocation confirmations")
-    section = league_options
-    name = 'allocation_confirmations'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableCrossTournamentDrawPages(BooleanPreference):
-    help_text = _("Enables pages that show draws across tournaments (ie by institution)")
-    verbose_name = _("Public cross draw pages")
-    section = league_options
-    name = 'enable_mass_draws'
-    default = False
-
-
-# ==============================================================================
-email = Section('email', verbose_name=_("Email Sending"))
-# ==============================================================================
+class EmailWebhookKey(StringPreference):
+    help_text = _("A secret key to accept email status events")
+    verbose_name = _("Email status secret key")
+    section = email
+    name = 'email_hook_key'
+    default = ""
+    required = False
+    field_kwargs = {'validators': [validate_slug]}
 
 
 @tournament_preferences_registry.register
 class EnableEmailBallotReceipts(BooleanPreference):
-    help_text = _("Enables judges' ballots to be sent to them by email after submission for confirmation")
+    help_text = _("Enables a copy of adjudicators' ballots to be automatically sent to them (by email) after they are entered in Tabbycat (for confirmation or checking)")
     verbose_name = _("Ballot receipts")
     section = email
     name = 'enable_ballot_receipts'
@@ -1297,88 +1194,243 @@ class BallotEmailSubjectLine(StringPreference):
 
 @tournament_preferences_registry.register
 class BallotEmailMessageBody(LongStringPreference):
-    help_text = _("The message body for emails sent to adjudicators with their submitted ballot. "
-                  "Use '{{ DEBATE }}' as a placeholder for the associated debate, '{{ USER }}' for the adjudicator, "
-                  "and '{{ SCORES }}' for the ballot values.")
+    help_text = _("The message body for emails sent to adjudicators with their submitted ballot.")
     verbose_name = _("Ballot receipt message")
     section = email
     name = 'ballot_email_message'
-    default = "Hi {{ USER }},\n\nYour ballot for {{ DEBATE }} has been successfully received, with these scores:\n\n{{ SCORES }}\n\nIf there are any problems, please contact the tab team."
+    default = ("<p>Hi {{ USER }},</p>"
+        "<p>Your ballot for {{ DEBATE }} has been successfully received, with these scores:</p>"
+        "{{ SCORES }}"
+        "<p>If there are any problems, please contact the tab team.</p>")
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
 
+
+# -----
+# Email-related but unattached for use in separate inline forms
+# -----
 
 @tournament_preferences_registry.register
 class PointsEmailSubjectLine(StringPreference):
-    help_text = _("The subject line for emails sent to speakers with their team points. "
-                  "Use '{{ TOURN }}' as a placeholder for the tournament, '{{ POINTS }}' for the team points, "
-                  "and '{{ TEAM }}' for the associated team.")
+    help_text = _("The subject line for emails sent to speakers with their team points.")
     verbose_name = _("Team points subject line")
-    section = email
     name = 'team_points_email_subject'
-    default = "Your current number of wins for {{ TEAM }} ({{ TOURN }}): {{ POINTS }}"
+    default = "{{ TEAM }}'s current wins after {{ ROUND }}: {{ POINTS }}"
 
 
 @tournament_preferences_registry.register
 class PointsEmailMessageBody(LongStringPreference):
-    help_text = _("The message body for emails sent to speakers with their team points. "
-                  "Use '{{ TOURN }}' as a placeholder for the tournament, '{{ POINTS }}' for the team points, "
-                  "'{{ USER }}' for the speaker, and '{{ TEAM }}' for the associated team.")
+    help_text = _("The message body for emails sent to speakers with their team points.")
     verbose_name = _("Team points message")
-    section = email
     name = 'team_points_email_message'
-    default = "Hi {{ USER }},\n\nYour team ({{ TEAM }}) currently has {{ POINTS }} wins in the {{ TOURN }}."
+    default = ("<p>Hi {{ USER }},</p>"
+        "After {{ ROUND }}, your team ({{ TEAM }}) currently has <strong>{{ POINTS }}</strong> wins in the {{ TOURN }}.</p>"
+        "<p>Current Standings: <a href='{{ URL }}'>{{ URL }}</a></p>")
 
 
 @tournament_preferences_registry.register
-class PointsEmailLinkText(StringPreference):
-    help_text = _("The text introducing the link to the current standings in the team points emails.")
-    verbose_name = _("Team points standings link text")
-    section = email
-    name = 'team_points_email_link_text'
-    default = "To consult the current team standings, visit:"
+class AdjudicatorDrawNotificationSubject(StringPreference):
+    help_text = _("The subject-line for emails sent to adjudicators with their assignments.")
+    verbose_name = _("Adjudicator draw subject line")
+    name = 'adj_email_subject'
+    default = "Your assigned debate for {{ ROUND }}: {{ VENUE }}"
+
+
+@tournament_preferences_registry.register
+class AdjudicatorDrawNotificationMessage(LongStringPreference):
+    help_text = _("The message body for emails sent to adjudicators with their assignments.")
+    verbose_name = _("Adjudicator draw message")
+    name = 'adj_email_message'
+    default = ("<p>Hi {{ USER }},</p>"
+        "<p>You have been assigned as <strong>{{ POSITION }}</strong> adjudicator for {{ ROUND }} in <strong>{{ VENUE }}</strong> with the following panel: {{ PANEL }}</p>"
+        "<p>The debate is between these teams: {{ DRAW }}</p>")
+
+
+@tournament_preferences_registry.register
+class TeamDrawNotificationSubject(StringPreference):
+    help_text = _("The subject-line for emails sent to teams with their draw.")
+    verbose_name = _("Team draw subject line")
+    name = 'team_draw_email_subject'
+    default = "Your assigned debate for {{ ROUND }}: {{ VENUE }}"
+
+
+@tournament_preferences_registry.register
+class TeamDrawNotificationMessage(LongStringPreference):
+    help_text = _("The message body for emails sent to participants with their private URLs.")
+    verbose_name = _("Private URL notification message")
+    name = 'team_draw_email_message'
+    default = ("<p>Hi {{ USER }},</p>"
+        "<p>You have been assigned as <strong>{{ SIDE }}</strong> for {{ ROUND }} in <strong>{{ VENUE }}</strong> with the following panel: {{ PANEL }}</p>"
+        "<p>The debate is between: {{ DRAW }}</p>")
+
+
+@tournament_preferences_registry.register
+class PrivateUrlEmailSubject(StringPreference):
+    help_text = _("The subject-line for emails sent to participants with their private URLs.")
+    verbose_name = _("Private URL notification subject line")
+    name = 'url_email_subject'
+    default = "Your personal private URL for {{ TOURN }}"
+
+
+@tournament_preferences_registry.register
+class PrivateUrlEmailMessage(LongStringPreference):
+    help_text = _("The message body for emails sent to participants with their private URLs.")
+    verbose_name = _("Private URL notification message")
+    name = 'url_email_message'
+    default = ("<p>Hi {{ USER }},</p>"
+        "<p>At {{ TOURN }}, we are using an online tabulation system. You can submit "
+        "your ballots and/or feedback at the following URL. This URL is unique to you — do not share it with "
+        "anyone, as anyone who knows it can submit forms on your behalf. This URL "
+        "will not change throughout this tournament, so we suggest bookmarking it.</p>"
+        "<p>Your personal private URL is:<br />"
+        "<a href='{{ URL }}'>{{ URL }}</a></p>")
+
+
+@tournament_preferences_registry.register
+class MotionReleaseEmailSubject(StringPreference):
+    help_text = _("The subject-line for emails sent to participants on motion release.")
+    verbose_name = _("Motion release notification subject line")
+    name = 'motion_email_subject'
+    default = "Motions for {{ ROUND }}"
+
+
+@tournament_preferences_registry.register
+class MotionReleaseEmailMessage(LongStringPreference):
+    help_text = _("The message body for emails sent to participants on motion release.")
+    verbose_name = _("Motion release notification message")
+    name = 'motion_email_message'
+    default = ("<p>The motion(s) for {{ ROUND }} are:</p>"
+        "{{ MOTIONS }}")
+
+
+@tournament_preferences_registry.register
+class TeamNameEmailSubject(StringPreference):
+    help_text = _("The subject-line for emails sent to participants informing them of their team registration.")
+    verbose_name = _("Team registration notification subject line")
+    name = 'team_email_subject'
+    default = "Registration for {{ SHORT }}"
+
+
+@tournament_preferences_registry.register
+class TeamNameEmailMessage(LongStringPreference):
+    help_text = _("The message body for emails sent to participants informing them of their team registration.")
+    verbose_name = _("Team registration notification message")
+    name = 'team_email_message'
+    default = ("<p>Hi {{ USER }},</p>"
+        "<p>You are registered as <strong>{{ LONG }}</strong> in {{ TOURN }} with {{ SPEAKERS }}.</p>")
+    default = ("Hi {{ USER }},\n\n"
+        "You are registered as {{ LONG }} in {{ TOURN }} with {{ SPEAKERS }}.")
 
 
 # ==============================================================================
-account_creation = Section('accounts', verbose_name=_('Account Creation'))
+motions = Section('motions', verbose_name=_("Motions"))
+# ==============================================================================
+
+
+@tournament_preferences_registry.register
+class EnableMotions(BooleanPreference):
+    help_text = _("If checked, ballots require a motion to be entered")
+    verbose_name = _("Enable motions")
+    section = motions
+    name = 'enable_motions'
+    default = True
+
+
+@tournament_preferences_registry.register
+class BallotsHideMotions(BooleanPreference):
+    help_text = _("Whether the printed scoresheets should hide the text of motions (even if they have been entered and released)")
+    verbose_name = _("Ballot Hide Motions")
+    section = data_entry
+    name = 'ballots_hide_motions'
+    default = False
+
+
+@tournament_preferences_registry.register
+class MotionVetoes(BooleanPreference):
+    help_text = _("Enables the motion veto field on ballots, to track veto statistics")
+    verbose_name = _("Motion vetoes")
+    section = motions
+    name = 'motion_vetoes_enabled'
+    default = True
+
+
+@tournament_preferences_registry.register
+class ShowMotionsInResults(BooleanPreference):
+    help_text = _("If showing results to public, show which motions were selected in the record")
+    verbose_name = _("Show motions in results")
+    section = motions
+    name = 'show_motions_in_results'
+    default = False
+
+
+@tournament_preferences_registry.register
+class PublicMotionsOrder(ChoicePreference):
+    help_text = _("Order in which are listed by round in the public view")
+    verbose_name = _("Order to display motions")
+    section = motions
+    name = 'public_motions_order'
+    choices = (
+        ('forward', _("Earliest round first")),
+        ('reverse', _("Latest round first")),
+    )
+    default = 'reverse'
+
+
+@tournament_preferences_registry.register
+class EnableMotionReuse(BooleanPreference):
+    help_text = _("Whether motions can be reused from one round to another.")
+    verbose_name = _("Allow motion reuse")
+    section = motions
+    name = 'enable_motion_reuse'
+    default = False
+
+
+# ==============================================================================
+global_settings = Section('global', verbose_name=_('Global Settings'))
 # ==============================================================================
 
 
 @global_preferences_registry.register
+class EnableAPIAccess(BooleanPreference):
+    help_text = _("Enables external applications to access the site through a dedicated interface, subject to public information settings.")
+    verbose_name = _("Enable API access")
+    section = global_settings
+    name = 'enable_api'
+    default = True
+
+
+@global_preferences_registry.register
 class EnableAssistantAccountCreation(BooleanPreference):
-    help_text = _("Enables Tabbycat assistant accounts to be created via the account creation key")
-    verbose_name = _("Enable Assistant Account Creation")
-    section = account_creation
+    help_text = _("Enables assistant user accounts to be created through an account creation key")
+    verbose_name = _("Enable assistant account creation")
+    section = global_settings
     name = 'enable_assistant_account_key'
     default = False
 
 
 @global_preferences_registry.register
 class EnableAdminAccountCreation(BooleanPreference):
-    help_text = _("Enables Tabbycat admin accounts to be created via the account creation key")
-    verbose_name = _("Enable Admin Account Creation")
-    section = account_creation
+    help_text = _("Enables administrator user accounts to be created through an account creation key")
+    verbose_name = _("Enable administrator account creation")
+    section = global_settings
     name = 'enable_admin_account_key'
     default = False
 
 
 @global_preferences_registry.register
 class AssistantAccountCreationKey(StringPreference):
-    help_text = _("Once a key is set you can send a private URL to people who "
-                  "you would like to be able to create an accounts. That URL "
-                  "takes the form of YOURAPPURL/accounts/signup/KEY/ — for "
-                  "example http://memeIV.herokuapp.com/accounts/signup/secretpassword")
-    section = account_creation
-    verbose_name = _('Key for creating an assistant account')
+    help_text = _("The key in the URL for creating an assistant user account")
+    verbose_name = _('Assistant account creation key')
+    section = global_settings
+    field_kwargs = {'validators': [validate_slug]}
     name = 'assistant_account_key'
-    default = 'REPLACE_ME(ASSIST)'
+    default = ''
 
 
 @global_preferences_registry.register
 class AdminAccountCreationKey(StringPreference):
-    help_text = _("Once a key is set you can send a private URL to people who "
-                  "you would like to be able to create an accounts. That URL "
-                  "takes the form of YOURAPPURL/accounts/signup/KEY/ — for "
-                  "example http://memeIV.herokuapp.com/accounts/signup/secretpassword")
-    section = account_creation
-    verbose_name = _('Key for creating an administrator account')
+    help_text = _("The key in the URL for creating an administrator user account")
+    section = global_settings
+    verbose_name = _('Administrator account creation key')
+    field_kwargs = {'validators': [validate_slug]}
     name = 'admin_account_key'
-    default = 'REPLACE_ME(ADMIN)'
+    default = ''

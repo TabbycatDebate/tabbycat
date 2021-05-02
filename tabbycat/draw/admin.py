@@ -16,7 +16,7 @@ from .models import Debate, DebateTeam
 class DebateTeamAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('team', 'side', 'debate', 'get_tournament', 'get_round')
     search_fields = ('team__long_name', 'team__short_name', 'team__institution__name', 'team__institution__code', 'flags')
-    raw_id_fields = ('debate', 'team', )
+    raw_id_fields = ('debate', 'team')
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related(
@@ -45,15 +45,14 @@ class DebateAdjudicatorInline(admin.TabularInline):
 @admin.register(Debate)
 class DebateAdmin(admin.ModelAdmin):
     list_display = ('id', 'round', 'bracket', 'matchup', 'result_status', 'sides_confirmed')
-    list_filter = ('round__tournament', 'round', 'division')
+    list_filter = ('round__tournament', 'round')
     list_editable = ('result_status', 'sides_confirmed')
     inlines = (DebateTeamInline, DebateAdjudicatorInline)
-    raw_id_fields = ('venue', 'division')
+    raw_id_fields = ('venue',)
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related(
             'round__tournament',
-            'division__tournament',
         ).prefetch_related(
             Prefetch('debateteam_set', queryset=DebateTeam.objects.select_related('team__tournament')),
             'venue__venuecategory_set',
@@ -84,7 +83,7 @@ class DebateAdmin(admin.ModelAdmin):
         message = ngettext(
             "%(count)d debate was marked as having its sides confirmed.",
             "%(count)d debates were marked as having their sides confirmed.",
-            updated
+            updated,
         ) % {'count': updated}
         self.message_user(request, message)
 
@@ -93,7 +92,7 @@ class DebateAdmin(admin.ModelAdmin):
         message = ngettext(
             "%(count)d debate was marked as having its sides not confirmed.",
             "%(count)d debates were marked as having their sides not confirmed.",
-            updated
+            updated,
         ) % {'count': updated}
         self.message_user(request, message)
 

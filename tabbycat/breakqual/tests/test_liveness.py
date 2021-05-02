@@ -1,6 +1,6 @@
-from unittest import TestCase
+from django.test import TestCase
 
-from ..liveness import liveness_bp, liveness_twoteam
+from ..liveness import get_bp_coefficients, liveness_bp, liveness_twoteam
 
 
 class TestLiveness(TestCase):
@@ -10,104 +10,117 @@ class TestLiveness(TestCase):
 
     # 2vs2
     def test_case_australs_2017_open_penultimate(self):
-        safe, dead = liveness_twoteam(True, 7, 16, 79, 8, None)
+        safe, dead = liveness_twoteam(True, 7, 16, 79, 8, [])
         self.assertGreaterEqual(safe, 6) # All on 6 broke
         self.assertLessEqual(dead, 2) # Some on 5 broke
 
     def test_case_australs_2017_open(self):
-        safe, dead = liveness_twoteam(True, 8, 16, 79, 8, None)
+        safe, dead = liveness_twoteam(True, 8, 16, 79, 8, [])
         self.assertGreaterEqual(safe, 6) # All on 6 broke
         self.assertLessEqual(dead, 3) # Some on 5 broke
 
     def test_case_australs_2017_esl_penultimate(self):
         # Note 2 teams bypassed ESL break; 8 eligible
-        safe, dead = liveness_twoteam(False, 7, 4, 79, 8, [5,4,3,3,1,1])
+        safe, dead = liveness_twoteam(False, 7, 4, 79, 8, [5, 4, 3, 3, 1, 1])
         self.assertGreaterEqual(safe, 4) # All on 4 broke
         self.assertLessEqual(dead, 0) # Some (all?) on 3 broke
 
     def test_case_australs_2017_esl(self):
         # Note 2 teams bypassed ESL break; 8 eligible
-        safe, dead = liveness_twoteam(False, 8, 4, 79, 8, [5,4,3,3,1,1])
+        safe, dead = liveness_twoteam(False, 8, 4, 79, 8, [5, 4, 3, 3, 1, 1])
         self.assertGreaterEqual(safe, 3) # All on 4 broke
         self.assertLessEqual(dead, 1) # Some (all?) on 3 broke
 
     def test_case_easters_2017_open_penultimate(self):
-        safe, dead = liveness_twoteam(True, 6, 16, 100, 6, None)
+        safe, dead = liveness_twoteam(True, 6, 16, 100, 6, [])
         self.assertGreaterEqual(safe, 5) # All on 5 broke
         self.assertLessEqual(dead, 2) # Some on 4 broke
 
     def test_case_easters_2017_open(self):
-        safe, dead = liveness_twoteam(True, 6, 16, 100, 6, None)
+        safe, dead = liveness_twoteam(True, 6, 16, 100, 6, [])
         self.assertGreaterEqual(safe, 5) # All on 5 broke
         self.assertLessEqual(dead, 2) # Some on 4 broke
 
     def test_case_australs_2016_open(self):
-        safe, dead = liveness_twoteam(True, 8, 16, 74, 8, None)
+        safe, dead = liveness_twoteam(True, 8, 16, 74, 8, [])
         self.assertGreaterEqual(safe, 6)
         self.assertLessEqual(dead, 3)
 
     def test_case_australs_2016_esl(self):
         # Note 2 teams bypassed ESL break
         # Worst case (-1 on finishing scores)
-        safe, dead = liveness_twoteam(False, 8, 4, 74, 8, [6,5,3,3,3,1])
+        safe, dead = liveness_twoteam(False, 8, 4, 74, 8, [6, 5, 3, 3, 3, 1])
         self.assertGreaterEqual(safe, 5)
         self.assertLessEqual(dead, 1)
 
     def test_case_australs_2015_open(self):
-        safe, dead = liveness_twoteam(True, 8, 16, 78, 8, None)
+        safe, dead = liveness_twoteam(True, 8, 16, 78, 8, [])
         self.assertGreaterEqual(safe, 6)
         self.assertLessEqual(dead, 3)
 
     # BP
     def test_case_abp_2017_open_penultimate(self):
-        safe, dead = liveness_bp(True, 5, 24, 100, 6, None)
+        safe, dead = liveness_bp(True, 5, 24, 100, 6, [])
         self.assertGreaterEqual(safe, 12) # All teams on 12 broke
         self.assertLessEqual(dead, 4) # Some teams on 11 broke
 
     def test_case_abp_2017_open(self):
-        safe, dead = liveness_bp(True, 6, 24, 100, 6, None)
+        safe, dead = liveness_bp(True, 6, 24, 100, 6, [])
         self.assertGreaterEqual(safe, 12) # All teams on 12 broke
         self.assertLessEqual(dead, 7) # Some teams on 11 broke
 
     def test_case_awdc_2017_open_penultimate(self):
-        safe, dead = liveness_bp(True, 5, 16, 68, 6, None)
+        safe, dead = liveness_bp(True, 5, 16, 68, 6, [])
         self.assertGreaterEqual(safe, 12) # All teams on 12 broke
         self.assertLessEqual(dead, 4) # Some teams on 11 broke
 
     def test_case_awdc_2017_open(self):
-        safe, dead = liveness_bp(True, 6, 16, 68, 6, None)
+        safe, dead = liveness_bp(True, 6, 16, 68, 6, [])
         self.assertGreaterEqual(safe, 12) # All teams on 12 broke
         self.assertLessEqual(dead, 7) # Some teams on 11 broke
 
     def test_case_yale_2017_open(self):
-        safe, dead = liveness_bp(True, 6, 16, 172, 6, None)
+        safe, dead = liveness_bp(True, 6, 16, 172, 6, [])
         self.assertGreaterEqual(safe, 14) # All teams on 14 broke
         self.assertLessEqual(dead, 9) # Some teams on 13 broke
 
     def test_case_melbourne_mini_2017_penultimate(self):
-        safe, dead = liveness_bp(True, 5, 8, 20, 6, None)
+        safe, dead = liveness_bp(True, 5, 8, 20, 6, [])
         self.assertGreaterEqual(safe, 11) # All teams on 13 will break (worst case)
         self.assertLessEqual(dead, 3) # Some teams on 10 will break (best case)
 
     def test_case_melbourne_mini_2017(self):
-        safe, dead = liveness_bp(True, 6, 8, 20, 6, None)
+        safe, dead = liveness_bp(True, 6, 8, 20, 6, [])
         self.assertGreaterEqual(safe, 11) # All teams on 13 will break (worst case)
         self.assertLessEqual(dead, 6) # Some teams on 10 will break (best case)
 
     def test_case_usu_iv_2016_penultimate(self):
-        safe, dead = liveness_bp(True, 4, 8, 30, 5, None)
+        safe, dead = liveness_bp(True, 4, 8, 30, 5, [])
         self.assertGreaterEqual(safe, 10) # All teams on 11 will break (worst case)
         self.assertLessEqual(dead, 2) # Some teams on 9 will break (best case)
 
     def test_case_usu_iv_2016(self):
-        safe, dead = liveness_bp(True, 5, 8, 30, 5, None)
+        safe, dead = liveness_bp(True, 5, 8, 30, 5, [])
         self.assertGreaterEqual(safe, 10) # All teams on 11 will break (worst case)
         self.assertLessEqual(dead, 5) # Some teams on 9 will break (best case)
 
     def test_case_abp_2017_efl(self):
-        safe, dead = liveness_bp(False, 6, 8, 21, 6, [10,9,9,8,7,7,7,6,6])
+        safe, dead = liveness_bp(False, 6, 8, 21, 6, [10, 9, 9, 8, 7, 7, 7, 6, 6])
         self.assertGreaterEqual(safe, 8) # All teams on 8 broke
         self.assertLessEqual(dead, 3) # Some teams on 7 broke
+
+    def test_bp_coefficients(self):
+        data = {
+            0: [1],
+            1: [1, 1, 1, 1],
+            2: [1, 2, 3, 4, 3, 2, 1],
+            10: [1, 10, 55, 220, 705, 1902, 4455, 9240, 17205, 29050, 44803, 63460, 82885, 100110, 112035, 116304, 112035, 100110, 82885, 63460, 44803, 29050, 17205, 9240, 4455, 1902, 705, 220, 55, 10, 1],  # noqa: E501
+        }
+
+        for nrounds, coeffs in data.items():
+            with self.subTest(row=nrounds):
+                calc_coeffs = get_bp_coefficients(nrounds)
+                self.assertListEqual(coeffs, calc_coeffs)
 
     # WUDC
 
@@ -115,7 +128,7 @@ class TestLiveness(TestCase):
         data = {9: (18, 13), 8: (18, 10), 7: (18, 7), 6: (18, 4), 5: (18, 1), 4: (18, -2)}
         for rd, (upper, lower) in data.items():
             with self.subTest(round=rd):
-                safe, dead = liveness_bp(True, rd, 48, 382, 9, None)
+                safe, dead = liveness_bp(True, rd, 48, 382, 9, [])
                 self.assertGreaterEqual(safe, upper)
                 self.assertLessEqual(dead, lower)
 
@@ -123,7 +136,7 @@ class TestLiveness(TestCase):
         data = {9: (18, 13), 8: (18, 10), 7: (18, 7), 6: (18, 4), 5: (18, 1), 4: (18, -2)}
         for rd, (upper, lower) in data.items():
             with self.subTest(round=rd):
-                safe, dead = liveness_bp(True, rd, 48, 371, 9, None)
+                safe, dead = liveness_bp(True, rd, 48, 371, 9, [])
                 self.assertGreaterEqual(safe, upper)
                 self.assertLessEqual(dead, lower)
 
@@ -131,7 +144,7 @@ class TestLiveness(TestCase):
         data = {9: (18, 13), 8: (18, 10), 7: (18, 7), 6: (18, 4), 5: (18, 1), 4: (18, -2)}
         for rd, (upper, lower) in data.items():
             with self.subTest(round=rd):
-                safe, dead = liveness_bp(True, rd, 48, 314, 9, None)
+                safe, dead = liveness_bp(True, rd, 48, 314, 9, [])
                 self.assertGreaterEqual(safe, upper)
                 self.assertLessEqual(dead, lower)
 

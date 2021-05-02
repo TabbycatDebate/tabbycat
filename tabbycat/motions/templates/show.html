@@ -13,18 +13,18 @@
     <div>
       {% if infos %}
         <button class="btn btn-lg btn-info btn-block mb-5" data-toggle="modal" data-target="#infoPop">
-          {% blocktrans trimmed with round_name=round.name count ninfos=infos|length %}
-            Reveal Info Slide for {{ round_name }}
+          {% blocktrans trimmed with round=round.name count ninfos=infos|length %}
+            Reveal Info Slide for {{ round }}
           {% plural %}
-            Reveal Info Slides for {{ round_name }}
+            Reveal Info Slides for {{ round }}
           {% endblocktrans %}
         </button>
       {% endif %}
       <button class="btn btn-lg btn-success btn-block" data-toggle="modal" data-target="#motionPop">
-        {% blocktrans trimmed with round_name=round.name count nmotions=motions|length %}
-          Reveal Motion for {{ round_name }}
+        {% blocktrans trimmed with round=round.name count nmotions=motions|length %}
+          Reveal Motion for {{ round }}
         {% plural %}
-          Reveal Motions for {{ round_name }}
+          Reveal Motions for {{ round }}
         {% endblocktrans %}
       </button>
     </div>
@@ -45,7 +45,7 @@
         {% elif motions|length == 1 %}
 
           <div class="modal-body d-flex align-items-center justify-content-center text-center">
-            {{ motions.0.text }}
+            {{ motions.0.motion.text }}
           </div>
 
         {% else %}
@@ -55,9 +55,9 @@
               <div class="d-flex align-items-center flex-grow-1">
                 <div>
                   {% if motions|length > 1 %}
-                    <span class="text-muted">{{ forloop.counter }}.</span>
+                    <span class="text-muted">{{ m.seq }}.</span>
                   {% endif %}
-                  {{ m.text }}
+                  {{ m.motion.text }}
                 </div>
               </div>
             {% endfor %}
@@ -75,7 +75,7 @@
         {% if infos|length == 1 %}
 
           <div class="modal-body d-flex align-items-center justify-content-center text-center">
-            <small>{{ infos.0.info_slide }}</small>
+            <small>{{ infos.0.info_slide|linebreaks }}</small>
           </div>
 
         {% else %}
@@ -87,7 +87,7 @@
                   {% if motions|length > 1 %}
                     <span class="text-muted">{{ info.seq }}.</span>
                   {% endif %}
-                  <small>{{ info.info_slide }}</small>
+                  <small>{{ info.motion.info_slide|linebreaks }}</small>
                 </p>
               </div>
             {% endfor %}

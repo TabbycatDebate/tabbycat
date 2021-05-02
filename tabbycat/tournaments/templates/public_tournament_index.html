@@ -2,17 +2,17 @@
 {% load debate_tags i18n %}
 
 {% block head-title %}<span class="emoji">👋</span>
-{% blocktrans trimmed with tournament_name=tournament.name %}
-    Welcome to {{ tournament_name }}
+{% blocktrans trimmed with tournament=tournament.name %}
+    Welcome to {{ tournament }}
 {% endblocktrans %}{% endblock %}
 {% block page-title %}
-  {% blocktrans trimmed with tournament_name=tournament.name %}
-    Welcome to {{ tournament_name }}
+  {% blocktrans trimmed with tournament=tournament.name %}
+    Welcome to {{ tournament }}
   {% endblocktrans %}
 {% endblock %}
 
 {% block page-alerts %}
-  {% if not pref.team_tab_released and not pref.motion_tab_released and not pref.public_draw and not pref.public_results and not pref.public_divisions and not pref.public_motions and not pref.public_team_standings and not pref.public_breaking_teams and not pref.public_breaking_adjs and not pref.public_participants and not pref.feedback_progress and pref.participant_ballots == 'off' and pref.participant_feedback == 'off' and not pref.show_all_draws %}
+  {% if not pref.team_tab_released and not pref.motion_tab_released and pref.public_draw == 'off' and not pref.public_results and not pref.public_motions and not pref.public_team_standings and not pref.public_breaking_teams and not pref.public_breaking_adjs and not pref.public_participants and not pref.feedback_progress and pref.participant_ballots == 'off' and pref.participant_feedback == 'off' %}
     <div class="alert alert-info">
       <i data-feather="alert-circle"></i>
       {% trans "There is currently no public information available for this tournament." %}
@@ -40,10 +40,10 @@
 
     {% if pref.break_category_tabs_released > 0 %}
       {% for category in tournament.break_categories_nongeneral %}
-        {% blocktrans asvar text trimmed with category_name=category.name %}
-          {{ category_name }} Team Tab
+        {% blocktrans asvar text trimmed with category=category.name %}
+          {{ category }} Team Tab
         {% endblocktrans %}
-        {% tournamenturl 'standings-public-tab-speaker-category' category=category.slug as url %}
+        {% tournamenturl 'standings-public-tab-break-category' category=category.slug as url %}
         {% include "components/item-action.html" with icon="users" %}
       {% endfor %}
     {% endif %}
@@ -57,8 +57,8 @@
     {% if pref.speaker_category_tabs_released > 0 %}
       {% for category in tournament.speakercategory_set.all %}
         {% if category.public %}
-          {% blocktrans asvar text trimmed with category_name=category.name %}
-            {{ category_name }} Speaker Tab
+          {% blocktrans asvar text trimmed with category=category.name %}
+            {{ category }} Speaker Tab
           {% endblocktrans %}
           {% tournamenturl 'standings-public-tab-speaker-category' category=category.slug as url %}
           {% include "components/item-action.html" with icon="user" %}
@@ -90,37 +90,39 @@
       {% include "components/item-action.html" with icon="shuffle" %}
     {% endif %}
 
-    {% if pref.public_draw > 0  and pref.team_tab_released == 0 and pref.show_all_draws == 0 %}
-      {% tournamenturl 'draw-public-current-round' as url %}
-      {% if current_round.draw_status == current_round.STATUS_RELEASED %}
-        {% blocktrans trimmed with round_name=current_round.name asvar draw_for_round_text %}
-          Draw for {{ round_name }}
-        {% endblocktrans %}
+    {% if pref.public_draw == 'current' and not pref.team_tab_released %}
+      {% tournamenturl 'draw-public-current-rounds' as url %}
+      {% if tournament.public_draws_available %}
+        {% if tournament.current_rounds|length == 1 %}
+          {% blocktrans trimmed with round=current_round.name asvar draw_for_round_text %}
+            Draw for {{ round }}
+          {% endblocktrans %}
+        {% else %}
+          {% trans "Draws for Current Rounds" as draw_for_round_text %}
+        {% endif %}
         {% include "components/item-action.html" with icon="eye" text=draw_for_round_text %}
       {% else %}
-        {% blocktrans trimmed with round_name=current_round.name asvar draw_for_round_text %}
-          {{ round_name }}'s draw has yet to be released
-        {% endblocktrans %}
-        {% include "components/item-info.html" with icon="eye-off" text=draw_for_round_text type="muted" %}
+        {% if tournament.current_rounds|length == 1 %}
+          {% blocktrans trimmed with round=current_round.name asvar draw_for_round_text %}
+            {{ round }}'s draw has yet to be released
+          {% endblocktrans %}
+        {% else %}
+          {% trans "The draw for the next round has yet to be released" as draw_for_round_text %}
+        {% endif %}
+        {% include "components/item-info.html" with icon="eye-off" text=draw_for_round_text type="muted" nopad=True %}
       {% endif %}
     {% endif %}
 
     {% if pref.public_checkins %}
       {% trans "Check-Ins" as text %}
-      {% tournamenturl 'public-checkin-status' as url %}
+      {% tournamenturl 'checkins-public-status' as url %}
       {% include "components/item-action.html" with icon="compass" %}
     {% endif %}
 
-    {% if pref.public_results and current_round.prev %}
+    {% if pref.public_results and tournament.rounds_with_released_results.exists %}
       {% trans "Results" as text %}
       {% tournamenturl 'results-public-index' as url %}
       {% include "components/item-action.html" with icon="trending-up" %}
-    {% endif %}
-
-    {% if pref.public_divisions > 0 %}
-      {% trans "Divisions" as text %}
-      {% tournamenturl 'public_divisions' as url %}
-      {% include "components/item-action.html" with icon="layers" %}
     {% endif %}
 
     {% if pref.public_motions %}
@@ -129,13 +131,13 @@
       {% include "components/item-action.html" with icon="file-text" %}
     {% endif %}
 
-    {% if pref.public_motions and pref.motion_tab_released == 0 and pref.draw_side_allocations == 'manual-ballot' %}
+    {% if pref.public_motions and not pref.motion_tab_released and pref.draw_side_allocations == 'manual-ballot' %}
       {% trans "Sides" as text %}
       {% tournamenturl 'draw-public-side-allocations' as url %}
       {% include "components/item-action.html" with icon="shuffle" %}
     {% endif %}
 
-    {% if pref.public_team_standings and current_round.prev and pref.team_tab_released == 0 %}
+    {% if pref.public_team_standings and current_round.prev and not pref.team_tab_released %}
       {% trans "Team Standings" as text %}
       {% tournamenturl 'standings-public-teams-current' as url %}
       {% include "components/item-action.html" with icon="bar-chart-2" %}
@@ -143,8 +145,8 @@
 
     {% if pref.public_breaking_teams %}
       {% for category in tournament.breakcategory_set.all %}
-        {% blocktrans trimmed asvar text with category_name=category.name %}
-          {{ category_name }} Break
+        {% blocktrans trimmed asvar text with category=category.name %}
+          {{ category }} Break
         {% endblocktrans %}
         {% tournamenturl 'breakqual-public-teams' category.slug as url %}
         {% include "components/item-action.html" with icon="pie-chart" %}
@@ -158,7 +160,7 @@
     {% endif %}
 
     {% if pref.public_diversity %}
-      {% trans "Diversity Overview" as text %}
+      {% trans "Diversity" as text %}
       {% tournamenturl 'standings-public-diversity' as url %}
       {% include "components/item-action.html" with icon="globe" %}
     {% endif %}
@@ -182,9 +184,11 @@
     {% endif %}
 
     {% if pref.participant_ballots == 'public' %}
-      {% trans "Enter Ballot" as text %}
-      {% tournamenturl 'results-public-ballot-submission-index' as url %}
-      {% include "components/item-action.html" with icon="plus-circle" %}
+      {% for round in tournament.current_rounds %}
+        {% blocktrans trimmed with round=round.name asvar text %}Enter Ballot for {{round }}{% endblocktrans %}
+        {% roundurl 'results-public-ballot-submission-index' as url %}
+        {% include "components/item-action.html" with icon="plus-circle" %}
+      {% endfor %}
     {% endif %}
 
     {% if pref.participant_feedback == 'public' %}
@@ -193,21 +197,16 @@
       {% include "components/item-action.html" with icon="plus-square" %}
     {% endif %}
 
-    {% if pref.show_all_draws > 0 %}
+    {% if pref.public_draw == 'all-released' %}
       {% for r in tournament.round_set.all %}
         {% if r.draw_status == r.STATUS_RELEASED %}
-          {% blocktrans trimmed asvar text with round_name=r.name %}
-            Draw for {{ round_name }}
+          {% blocktrans trimmed asvar text with round=r.name %}
+            Draw for {{ round }}
           {% endblocktrans %}
           {% roundurl 'draw-public-for-round' r as url %}
           {% include "components/item-action.html" with icon="eye" %}
         {% endif %}
       {% endfor %}
-      {% if pref.enable_mass_draws > 0 %}
-        {% trans "View All Draws" as text %}
-        {% tournamenturl 'draw-public-all-draws' as url %}
-        {% include "components/item-action.html" with icon="globe" %}
-      {% endif %}
     {% endif %}
 
   </div>

@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load i18n debate_tags %}
+
+{% block page-title %}{% trans "Confirm Round Completion" %}{% endblock %}
+{% block head-title %}
+  <span class="emoji">🙏</span> {% trans "Confirm Round Completion" %}
+{% endblock %}
+{% block sub-title %}{% blocktrans trimmed with round=round.name %}for {{ round }}{% endblocktrans %}{% endblock %}
+
+{% block page-subnav-actions %}
+
+  <a href="{% roundurl 'results-round-list' %}" class="btn btn-outline-primary">
+    <i data-feather="chevron-left"></i>{% trans "Enter Results" %}
+  </a>
+
+
+  {% if emails_sent %}
+    <a href="{% roundurl 'progress-email' %}" class="btn btn-outline-secondary" data-toggle="tooltip" title="{% trans "Emails have already been sent." %}">
+  {% else %}
+    <a href="{% roundurl 'progress-email' %}" class="btn btn-outline-primary active">
+  {% endif %}
+    {% if pref.teams_in_debate == "two" %}
+      {% trans "Email Team Wins/Losses" %}
+    {% else %}
+      {% trans "Email Team Points" %}
+    {% endif %}
+  </a>
+
+  {% if not round.completed %}
+    <form action="{% roundurl 'tournament-complete-round' %}" method="POST">
+      {% csrf_token %}
+        {% if increment_ok and not prior_rounds_not_completed %}
+          <button class="btn btn-success" id="completeRound" type="submit">
+            {% blocktrans trimmed with round=round.name %}
+              Mark {{ round }} as Completed
+            {% endblocktrans %}
+            <i data-feather="chevron-right"></i>
+          </button>
+        {% else %}
+          <button class="btn btn-danger" id="completeRound" type="submit">
+            {% blocktrans trimmed with round=round.name %}
+              Mark {{ round }} as Completed Anyway
+            {% endblocktrans %}
+            <i data-feather="chevron-right"></i>
+          </button>
+        {% endif %}
+    </form>
+  {% elif round.next %}
+    <a href="{% roundurl 'availability-index' round.next %}" class="btn btn-outline-primary">
+      {% blocktrans trimmed with round=round.next.name %}
+        Go to {{ round }}
+      {% endblocktrans %}
+      <i data-feather="chevron-right"></i>
+    </a>
+  {% endif %}
+
+{% endblock %}
+
+{% block page-alerts %}
+
+  {% if round.completed %}
+    {% blocktrans trimmed with round=round.name asvar message %}
+      {{ round }} has already been marked as completed!
+    {% endblocktrans %}
+    {% include 'components/alert.html' with type='danger' icon='alert-circle' %}
+  {% elif prior_rounds_not_completed %}
+    {% blocktrans trimmed count n=number_of_prior_rounds_not_completed asvar message %}
+      The following prior round has not yet been completed: {{ prior_rounds_not_completed }}.
+      You should complete it before marking this round as completed.
+    {% plural %}
+      The following prior rounds have not yet been completed: {{ prior_rounds_not_completed }}.
+      You should complete those before marking this round as completed.
+    {% endblocktrans %}
+    {% include 'components/alert.html' with type='danger' icon='alert-circle' %}
+
+  {% elif increment_ok %}
+    {% blocktrans trimmed with round=round.name asvar message %}
+      All ballots from {{ round }} are confirmed. You should be good to go!
+    {% endblocktrans %}
+    {% include 'components/alert.html' with type='success' icon='check-circle' %}
+
+  {% else %}
+    {% blocktrans trimmed count num_unconfirmed=num_unconfirmed asvar message %}
+      There is still {{ num_unconfirmed }} ballot that is not confirmed.
+      You should <strong>not</strong> proceed to the next round until all
+      ballots are confirmed.
+    {% plural %}
+      There are still {{ num_unconfirmed }} ballots that are not confirmed.
+      You should <strong>not</strong> proceed to the next round until all
+      ballots are confirmed.
+    {% endblocktrans %}
+    {% include 'components/alert.html' with type='danger' icon='alert-circle' %}
+  {% endif %}
+
+  {% if pref.public_results %}
+    {% url 'admin:tournaments_round_changelist' as round_changelist_url %}
+    {% tournamenturl 'options-tournament-section' section='public_features' as public_features_url %}
+    {% if round.silent %}
+      {% blocktrans trimmed asvar message %}
+        <p>This round is a silent round.</p>
+        <p>
+          Even though public view of results is enabled, results for
+          <em>this</em> round will still be hidden from public view after
+          completing this round.
+        <p>
+        <p>
+          You can change which rounds are silent in the
+          <a href="{{ round_changelist_url }}">Edit Database area</a>.
+        </p>
+      {% endblocktrans %}
+      {% include 'components/alert.html' with type='info' icon='eye-off' %}
+    {% else %}
+      {% blocktrans trimmed with round=round.name asvar message %}
+        <p><strong>
+          Results for {{ round }} will be published online once you mark
+          this round as complete!
+        </strong></p>
+        <p>
+          This round is <em>not</em> a silent round, and public view of results
+          is enabled.
+        </p>
+        <p>
+          If you want to keep the results for just this round hidden, you can
+          mark this round as silent in the
+          <a href="{{ round_changelist_url }}">Edit Database area</a>.
+        </p>
+        <p>
+          If you want to disable the public view of results, you can do so in
+          the <a href="{{ public_features_url }}">tournament configuration</a>.
+        </p>
+      {% endblocktrans %}
+      {% include 'components/alert.html' with type='warning' icon='alert-triangle' %}
+    {% endif %}
+  {% endif %}
+
+{% endblock %}

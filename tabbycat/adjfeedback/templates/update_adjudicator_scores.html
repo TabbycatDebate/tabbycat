@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static debate_tags add_field_css i18n %}
+{% load static debate_tags add_field_css i18n l10n %}
 
 {% block head-title %}<span class="emoji">🔟</span> {% trans "Update Adjudicator Scores" context "page title" %}
 {% endblock %}
@@ -32,7 +32,7 @@
     </div>
 
     <div class="list-group-item list-group-item-secondary pb-0">
-<pre><code>{% for adj, score in sample %}{{ adj }},{{ score }}
+<pre><code>{% for adj, score in sample %}{{ adj }},{{ score|unlocalize }}
 {% endfor %}</code></pre>
     </div>
 

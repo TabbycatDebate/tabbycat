@@ -1,0 +1,67 @@
+{% extends "ballot_entry_base.html" %}
+{% load debate_tags i18n %}
+
+{% block head-title %}<!-- Pass title to Vue instead -->{% endblock %}
+
+{% block page-alerts %}
+
+  {% if new %}
+    {% if user_role == "admin" %}
+      {% tournamenturl 'old-results-ballotset-new' debate_id=debate.id as old_url %}
+    {% else %}
+      {% tournamenturl 'old-results-assistant-ballotset-new' debate_id=debate.id as old_url %}
+    {% endif %}
+  {% else %}
+    {% if user_role == "admin" %}
+      {% tournamenturl 'old-results-ballotset-edit' pk=ballotsub.id as old_url %}
+    {% else %}
+      {% tournamenturl 'old-results-assistant-ballotset-edit' pk=ballotsub.id as old_url %}
+    {% endif %}
+  {% endif %}
+  {% blocktrans trimmed asvar message %}
+    This ballot entry interface is in beta, if you encounter any problems the older
+    version of the interface is <a href="{{ old_url }}" class="alert-link">available here</a>.
+  {% endblocktrans %}
+  {% include "components/alert.html" with type="info" %}
+  {{ block.super }}
+
+{% endblock %}
+
+{% block content %}
+
+  <form id="resultsForm" action="." method="POST">
+
+    {% csrf_token %}
+
+    <div id="ballot"><!-- Parsed by Vue for data and as a mirror input -->
+      {% include "ballot_entry_form.html" %}
+    </div>
+
+  </form>
+
+  <div id="vueMount">
+    <ballot-entry-container
+      :debate-name="'{{ debate_name|escapejs }}'"
+      :debate-venue="'{{ debate.venue }}'" :debate-round="'{{ debate.round.name }}'"
+      :is-new="{% if new %}true{% else %}false{% endif %}"
+      :is-admin="{% if for_admin %}true{% else %}false{% endif %}"
+      :is-confirmed="{% if new and not pref.disable_ballot_confirms %}false{% else %}true{% endif %}"
+      :is-discarded="{% if ballotsub.discarded %}true{% else %}false{% endif %}"
+      :current-status="{% if new and not pref.disable_ballot_confirms %}'{{ debate.STATUS_DRAFT }}'{% else %}'{{ debate.STATUS_CONFIRMED }}'{% endif %}"
+      :has-iron="{% if current_iron|length > 0 %}true{% else %}false{% endif %}"
+      :blind-entry="{% if pref.enable_blind_checks and not new and not ballotsub.confirmed and not for_admin %}true{% else %}false{% endif %}"
+      :total-ballotsubs="{{ all_ballotsubs.count }}"
+      :send-receipts="{% if pref.enable_ballot_receipts %}true{% else %}false{% endif %}"
+      :author="'{{ request.user|escapejs }}'" :ballot-author="'{{ ballotsub.submitter|escapejs }}'">
+    </ballot-entry-container>
+  </div>
+
+{% endblock content %}
+
+{% block js %}
+  <script>
+    window.vueData = {
+    }
+  </script>
+  {{ block.super }}
+{% endblock js %}

@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load static debate_tags add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">🎪</span> {% trans "Add Venues" context "page title" %}
+{% block head-title %}<span class="emoji">🎪</span> {% trans "Add Rooms" context "page title" %}
 {% blocktrans trimmed with step=wizard.steps.step1 count=wizard.steps.count %}(Step {{ step }} of {{ count }}){% endblocktrans %}{% endblock %}
-{% block page-title %}{% trans "Add Venues" context "page title" %}{% endblock %}
+{% block page-title %}{% trans "Add Rooms" context "page title" %}{% endblock %}
 
 {% block content %}
 
@@ -12,7 +12,7 @@
   {% csrf_token %}
 
     <div class="list-group-item text-info">
-      {% trans "Paste a list of venues with one venue per line and following the format of: <code>name,priority</code>. For example:" %}
+      {% trans "Paste a list of rooms with one room per line and following the format of: <code>name,priority</code>. For example:" %}
     </div>
 
     <div class="list-group-item list-group-item-secondary pb-0">

@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load static i18n %}
 
-{% block head-title %}{% blocktrans trimmed with adj_name=adjudicator.name %}
-  No Result to Enter ({{ adj_name }})
+{% block head-title %}{% blocktrans trimmed with adjudicator=adjudicator.name %}
+  No Result to Enter ({{ adjudicator }})
 {% endblocktrans %}{% endblock %}
 {% block page-title %}{% trans "No Result to Enter" %}{% endblock %}
 {% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}

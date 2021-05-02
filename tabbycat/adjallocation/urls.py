@@ -4,19 +4,16 @@ from . import views
 
 urlpatterns = [
     path('round/<int:round_seq>/', include([
-        path('edit/',
-            views.EditAdjudicatorAllocationView.as_view(),
-            name='adjallocation-round-edit'),
-        path('create/',
-            views.CreateAutoAllocation.as_view(),
-            name='adjallocation-auto-allocate'),
-        path('importance/set/',
-            views.SaveDebateImportance.as_view(),
-            name='adjallocation-save-debate-importance'),
-        path('panel/set/',
-            views.SaveDebatePanel.as_view(),
-            name='adjallocation-save-debate-panel'),
+        path('debates/edit/',
+            views.EditDebateAdjudicatorsView.as_view(),
+            name='edit-debate-adjudicators'),
+        path('panels/edit/',
+            views.EditPanelAdjudicatorsView.as_view(),
+            name='edit-panel-adjudicators'),
     ])),
+    path('panels/edit/',
+        views.PanelAdjudicatorsIndexView.as_view(),
+        name='panel-adjudicators-index'),
     path('conflicts/', include([
         path('adjudicator-team/',
             views.AdjudicatorTeamConflictsView.as_view(),
@@ -27,5 +24,8 @@ urlpatterns = [
         path('adjudicator-institution/',
             views.AdjudicatorInstitutionConflictsView.as_view(),
             name='adjallocation-conflicts-adj-inst'),
+        path('team-institution/',
+            views.TeamInstitutionConflictsView.as_view(),
+            name='adjallocation-conflicts-team-inst'),
     ])),
 ]

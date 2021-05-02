@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-01 01:45-0700\n"
+"POT-Creation-Date: 2020-12-30 01:01-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: motions/apps.py:7 motions/templates/public_motions.html:4
 #: motions/templates/public_motions.html:5
@@ -24,150 +23,139 @@ msgid "Motions"
 msgstr ""
 
 #: motions/models.py:9
-msgid "sequence number"
-msgstr ""
-
-#: motions/models.py:10
-msgid "The order in which motions are displayed"
-msgstr ""
-
-#: motions/models.py:12
 msgid "text"
 msgstr ""
 
-#: motions/models.py:13
+#: motions/models.py:10
 msgid "The full motion e.g., \"This House would straighten all bananas\""
 msgstr ""
 
-#: motions/models.py:15
+#: motions/models.py:12
 msgid "reference"
 msgstr ""
 
-#: motions/models.py:16
+#: motions/models.py:13
 msgid "Shortcode for the motion, e.g., \"Bananas\""
 msgstr ""
 
-#: motions/models.py:18
+#: motions/models.py:15
 msgid "info slide"
 msgstr ""
 
-#: motions/models.py:19
+#: motions/models.py:16
 msgid "The information slide for this topic; if it has one"
 msgstr ""
 
+#: motions/models.py:19
+msgid "tournament"
+msgstr ""
+
 #: motions/models.py:21
-msgid "flagged"
+msgid "rounds"
 msgstr ""
 
-#: motions/models.py:22
-msgid "For WADL: Allows for particular motions to be flagged as contentious"
-msgstr ""
-
-#: motions/models.py:24
-msgid "round"
-msgstr ""
-
-#: motions/models.py:26
-msgid "divisions"
-msgstr ""
-
-#: motions/models.py:30 motions/models.py:42
+#: motions/models.py:24 motions/models.py:37 motions/models.py:56
 msgid "motion"
 msgstr ""
 
-#: motions/models.py:31
+#: motions/models.py:25
 msgid "motions"
 msgstr ""
 
-#: motions/models.py:40
+#: motions/models.py:35
 msgid "debate team"
 msgstr ""
 
-#: motions/models.py:44
+#: motions/models.py:39
 msgid "preferences"
 msgstr ""
 
-#: motions/models.py:46
+#: motions/models.py:41
 msgid "ballot submission"
 msgstr ""
 
-#: motions/models.py:50
+#: motions/models.py:45
 msgid "debate team motion preference"
 msgstr ""
 
-#: motions/models.py:51
+#: motions/models.py:46
 msgid "debate team motion preferences"
 msgstr ""
 
-#: motions/statistics.py:90
+#: motions/models.py:58
+msgid "round"
+msgstr ""
+
+#: motions/models.py:61
+msgid "sequence number"
+msgstr ""
+
+#: motions/models.py:62
+msgid "The order in which motions are displayed"
+msgstr ""
+
+#: motions/models.py:67
+msgid "round motion"
+msgstr ""
+
+#: motions/models.py:68
+msgid "round motions"
+msgstr ""
+
+#: motions/statistics.py:86
 msgid "extremely strong evidence"
 msgstr ""
 
-#: motions/statistics.py:91
+#: motions/statistics.py:87
 msgid "strong evidence"
 msgstr ""
 
-#: motions/statistics.py:92
+#: motions/statistics.py:88
 msgid "moderate evidence"
 msgstr ""
 
-#: motions/statistics.py:93
+#: motions/statistics.py:89
 msgid "weak evidence"
 msgstr ""
 
-#: motions/statistics.py:94
+#: motions/statistics.py:90
 msgid "very weak evidence"
 msgstr ""
 
-#: motions/statistics.py:95
+#: motions/statistics.py:91
 msgid "extremely weak evidence"
 msgstr ""
 
-#: motions/statistics.py:118
+#: motions/statistics.py:114
 msgid "balance inconclusive"
 msgstr ""
 
-#: motions/statistics.py:119
+#: motions/statistics.py:115
 msgid "too few debates to get a meaningful statistic"
 msgstr ""
 
-#: motions/statistics.py:127
+#: motions/statistics.py:123
 #, python-format
 msgid "imbalanced at %(level)s level"
 msgstr ""
 
-#: motions/statistics.py:128
+#: motions/statistics.py:124
 #, python-format
-msgid ""
-"χ² statistic is %(chisq).3f, providing %(evidence)s to suggest that this "
-"motion was imbalanced — at a %(level)s level of significance."
+msgid "χ² statistic is %(chisq).3f, providing %(evidence)s to suggest that this motion was imbalanced — at a %(level)s level of significance."
 msgstr ""
 
-#: motions/statistics.py:133
+#: motions/statistics.py:129
 msgid "probably balanced"
 msgstr ""
 
-#: motions/statistics.py:134
+#: motions/statistics.py:130
 #, python-format
-msgid ""
-"χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that "
-"this motion was imbalanced at any level of significance."
+msgid "χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that this motion was imbalanced at any level of significance."
 msgstr ""
 
-#: motions/templates/assign.html:4 motions/templates/assign.html:5
-msgid "Assign Motions"
-msgstr ""
-
-#: motions/templates/assign.html:9
-msgid "Back to Display"
-msgstr ""
-
-#: motions/templates/assign.html:42
-msgid "Save Motion Assignments"
-msgstr ""
-
-#: motions/templates/motion_statistics.html:30
-#: motions/templates/public_motions.html:24
+#: motions/templates/motion_global_statistics.html:22
+#: motions/templates/motion_round_statistics.html:31
+#: motions/templates/public_motions.html:32
 msgid "View Info Slide"
 msgstr ""
 
@@ -180,21 +168,15 @@ msgstr[1] ""
 
 #: motions/templates/motion_statistics_bp_elim.html:26
 #, python-format
-msgid ""
-"%(advancing)s of %(ndebates)s team on %(side)s (%(percentage)s%%) advanced"
-msgid_plural ""
-"%(advancing)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) advanced"
+msgid "%(advancing)s of %(ndebates)s team on %(side)s (%(percentage)s%%) advanced"
+msgid_plural "%(advancing)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) advanced"
 msgstr[0] ""
 msgstr[1] ""
 
 #: motions/templates/motion_statistics_bp_elim.html:31
 #, python-format
-msgid ""
-"%(eliminated)s of %(ndebates)s team on %(side)s (%(percentage)s%%) were "
-"eliminated"
-msgid_plural ""
-"%(eliminated)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) were "
-"eliminated"
+msgid "%(eliminated)s of %(ndebates)s team on %(side)s (%(percentage)s%%) were eliminated"
+msgid_plural "%(eliminated)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) were eliminated"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -217,66 +199,56 @@ msgid "elim."
 msgstr ""
 
 #: motions/templates/motion_statistics_bp_elim.html:58
-#: motions/templates/motion_statistics_bp_prelim.html:80
 #, python-format
 msgid "%(side)s results distribution"
 msgstr ""
 
 #: motions/templates/motion_statistics_bp_elim.html:72
-#: motions/templates/motion_statistics_bp_prelim.html:94
+#: motions/templates/motion_statistics_bp_prelim.html:115
 msgid "No results for this motion"
 msgstr ""
 
-#: motions/templates/motion_statistics_bp_prelim.html:20
+#: motions/templates/motion_statistics_bp_prelim.html:13
+msgid "Government"
+msgstr ""
+
+#: motions/templates/motion_statistics_bp_prelim.html:17
+msgid "Opposition"
+msgstr ""
+
+#: motions/templates/motion_statistics_bp_prelim.html:21
+msgid "Average Points per bench"
+msgstr ""
+
+#: motions/templates/motion_statistics_bp_prelim.html:29
+msgid "Opening"
+msgstr ""
+
+#: motions/templates/motion_statistics_bp_prelim.html:33
+msgid "Closing"
+msgstr ""
+
+#: motions/templates/motion_statistics_bp_prelim.html:37
+msgid "Average Points per half"
+msgstr ""
+
+#: motions/templates/motion_statistics_bp_prelim.html:60
 #, python-format
-msgid "average points per position from %(ndebates)s debate"
-msgid_plural "average points per position from %(ndebates)s debates"
+msgid "average points per position (%(ndebates)s debate)"
+msgid_plural "average points per position (%(ndebates)s debates)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: motions/templates/motion_statistics_bp_prelim.html:38
+#: motions/templates/motion_statistics_bp_prelim.html:78
 #, python-format
-msgid ""
-"%(count)s result for %(side)s (%(percentage)s%%) were for %(points)s points"
-msgid_plural ""
-"%(count)s results for %(side)s (%(percentage)s%%) were for %(points)s points"
+msgid "%(count)s result for %(side)s (%(percentage)s%%) were for %(points)s points"
+msgid_plural "%(count)s results for %(side)s (%(percentage)s%%) were for %(points)s points"
 msgstr[0] ""
 msgstr[1] ""
 
-#: motions/templates/motion_statistics_bp_prelim.html:50
-msgid "1st"
-msgstr ""
-
-#: motions/templates/motion_statistics_bp_prelim.html:52
-msgctxt "used when there isn't enough space to display '1st'"
-msgid "1"
-msgstr ""
-
-#: motions/templates/motion_statistics_bp_prelim.html:56
-msgid "2nd"
-msgstr ""
-
-#: motions/templates/motion_statistics_bp_prelim.html:58
-msgctxt "used when there isn't enough space to display '2nd'"
-msgid "2"
-msgstr ""
-
-#: motions/templates/motion_statistics_bp_prelim.html:62
-msgid "3rd"
-msgstr ""
-
-#: motions/templates/motion_statistics_bp_prelim.html:64
-msgctxt "used when there isn't enough space to display '3rd'"
-msgid "3"
-msgstr ""
-
-#: motions/templates/motion_statistics_bp_prelim.html:68
-msgid "4th"
-msgstr ""
-
-#: motions/templates/motion_statistics_bp_prelim.html:70
-msgctxt "used when there isn't enough space to display '4th'"
-msgid "4"
+#: motions/templates/motion_statistics_bp_prelim.html:101
+#, python-format
+msgid "%(side)s results"
 msgstr ""
 
 #: motions/templates/motion_statistics_twoteam.html:31
@@ -313,41 +285,51 @@ msgstr[1] ""
 msgid "Display Draw"
 msgstr ""
 
-#: motions/templates/motions_edit.html:23
-msgid "Assign Motions to Divisions"
+#: motions/templates/motions_edit.html:28
+msgid "This will replace all existing motions for this round. The motions themselves will still be in the database."
 msgstr ""
 
-#: motions/templates/motions_edit.html:61
+#: motions/templates/motions_edit.html:30
+msgid "Reuse Motions from Last Round"
+msgstr ""
+
+#: motions/templates/motions_edit.html:35
+msgid "Use Existing Motions"
+msgstr ""
+
+#: motions/templates/motions_edit.html:74
 msgid "Save Motion"
 msgid_plural "Save Motions"
 msgstr[0] ""
 msgstr[1] ""
 
-#: motions/templates/public_motions.html:31
+#: motions/templates/motions_info.html:8
+msgid "Info Slide"
+msgstr ""
+
+#: motions/templates/public_motions.html:41
 msgid "There are no motions available for this round."
 msgstr ""
 
-#. Translators: Used when there are expected to be several motions per round (e.g. Australs)
-#: motions/templates/public_motions.html:35
+#: motions/templates/public_motions.html:47
 msgid "The motions for this round have not been released."
 msgstr ""
 
-#. Translators: Used when there is expected to be one motion per round (e.g. WUDC)
-#: motions/templates/public_motions.html:38
+#: motions/templates/public_motions.html:52
 msgid "The motion for this round has not been released."
 msgstr ""
 
 #: motions/templates/show.html:16
 #, python-format
-msgid "Reveal Info Slide for %(round_name)s"
-msgid_plural "Reveal Info Slides for %(round_name)s"
+msgid "Reveal Info Slide for %(round)s"
+msgid_plural "Reveal Info Slides for %(round)s"
 msgstr[0] ""
 msgstr[1] ""
 
 #: motions/templates/show.html:24
 #, python-format
-msgid "Reveal Motion for %(round_name)s"
-msgid_plural "Reveal Motions for %(round_name)s"
+msgid "Reveal Motion for %(round)s"
+msgid_plural "Reveal Motions for %(round)s"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -355,32 +337,43 @@ msgstr[1] ""
 msgid "There are no motions for this round entered into Tabbycat."
 msgstr ""
 
-#: motions/views.py:101
+#: motions/views.py:91
 msgid "The motion has been saved."
 msgstr ""
 
-#: motions/views.py:103
+#: motions/views.py:93
 #, python-format
 msgid "%(count)d motion has been saved."
 msgid_plural "%(count)d motions have been saved."
 msgstr[0] ""
 msgstr[1] ""
 
-#: motions/views.py:108
+#: motions/views.py:97
 #, python-format
 msgid "%(count)d motion has been deleted."
 msgid_plural "%(count)d motions have been deleted."
 msgstr[0] ""
 msgstr[1] ""
 
-#: motions/views.py:149
+#: motions/views.py:140
+#, python-format
+msgid "Reused the motion from the previous round."
+msgid_plural "Reused the %(count)d motions from the previous round."
+msgstr[0] ""
+msgstr[1] ""
+
+#: motions/views.py:164
 msgid "Released the motion(s)."
 msgstr ""
 
-#: motions/views.py:156
+#: motions/views.py:171
 msgid "Unreleased the motion(s)."
 msgstr ""
 
-#: motions/views.py:182
+#: motions/views.py:195
+msgid "Round Motions"
+msgstr ""
+
+#: motions/views.py:209
 msgid "Motion Statistics"
 msgstr ""

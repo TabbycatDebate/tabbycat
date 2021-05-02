@@ -1,15 +1,16 @@
 from django.contrib.auth import get_user_model
+from django.core.management.base import CommandError
 
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
-from results.models import BallotSubmission
-from utils.management.base import CommandError, RoundCommand
 from results.dbutils import add_result, add_results_to_round, add_results_to_round_partial, delete_all_ballotsubs_for_round, delete_ballotsub
+from results.models import BallotSubmission
+from utils.management.base import RoundCommand
 
 OBJECT_TYPE_CHOICES = ["round", "debate"]
 SUBMITTER_TYPE_MAP = {
     'tabroom': BallotSubmission.SUBMITTER_TABROOM,
-    'public':  BallotSubmission.SUBMITTER_PUBLIC
+    'public':  BallotSubmission.SUBMITTER_PUBLIC,
 }
 User = get_user_model()
 
@@ -18,15 +19,20 @@ class GenerateResultsCommandMixin:
 
     def add_arguments(self, parser):
         super(GenerateResultsCommandMixin, self).add_arguments(parser)
-        parser.add_argument("-T", "--submitter-type", type=str,
-                            help="Submitter type, either 'tabroom' or 'public'",
-                            choices=list(SUBMITTER_TYPE_MAP.keys()), default="tabroom")
-        parser.add_argument("-u", "--user", type=str,
-                            help="Username of submitter", default="random")
 
-        parser.add_argument("--create-user", help="Create user if it doesn't exist", action="store_true")
+        results_group = parser.add_argument_group("results generation")
 
-        status = parser.add_mutually_exclusive_group(required=True)
+        results_group.add_argument("-T", "--submitter-type", type=str,
+            choices=list(SUBMITTER_TYPE_MAP.keys()), default="tabroom",
+            help="Submitter type, either 'tabroom' or 'public'")
+        results_group.add_argument("-u", "--user", type=str, default="random",
+            help="Username of submitter")
+        results_group.add_argument("--create-user", action="store_true",
+            help="Create user if it doesn't exist")
+        results_group.add_argument("--reply-random", action="store_true", default=False,
+            help="Choose reply speaker at random (rather than always use first speaker)")
+
+        status = results_group.add_mutually_exclusive_group(required=True)
         status.add_argument("-D", "--discarded", action="store_true",
                             help="Make added ballot sets discarded")
         status.add_argument("-d", "--draft", action="store_true",
@@ -34,35 +40,23 @@ class GenerateResultsCommandMixin:
         status.add_argument("-c", "--confirmed", action="store_true",
                             help="Make added ballot sets confirmed")
 
-        parser.add_argument("-m", "--min-score", type=float,
-                            help="Minimum speaker score (for substantive)",
-                            default=72)
-        parser.add_argument("-M", "--max-score", type=float,
-                            help="Maximum speaker score (for substantive)",
-                            default=78)
-        parser.add_argument("--reply-random", action="store_true",
-                            help="Choose reply speaker at random (rather than always use first speaker",
-                            default=False)
-
-    @staticmethod
-    def _get_user(options):
+    def _get_user(self, options):
         try:
             return User.objects.get(username=options["user"])
         except User.DoesNotExist:
             if options["create_user"]:
+                self.stdout.write(self.style.MIGRATE_HEADING(
+                    f"Creating user: {options['user']}"))
                 return User.objects.create_user(options["user"], "", options["user"])
             else:
                 raise CommandError("There is no user called {user!r}. Use the --create-user option to create it.".format(user=options["user"]))
 
-    @classmethod
-    def result_kwargs(cls, options):
+    def result_kwargs(self, options):
         return {
             "submitter_type": SUBMITTER_TYPE_MAP[options["submitter_type"]],
-            "user"          : cls._get_user(options),
+            "user"          : self._get_user(options),
             "discarded"     : options["discarded"],
             "confirmed"     : options["confirmed"],
-            "min_score"     : options["min_score"],
-            "max_score"     : options["max_score"],
             "reply_random"  : options["reply_random"],
         }
 

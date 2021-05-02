@@ -8,7 +8,7 @@
 
           {% if threshold.count != 0 %}
             {% widthratio threshold.count c_total 100 as c_percentage %}
-            <div class="progress-bar ranking-display ranking-{{ threshold.class }}" role="progressbar"
+            <div class="progress-bar rank-display ranking-{{ threshold.class }}" role="progressbar"
                  style="width: {{ c_percentage }}%;" data-toggle="tooltip"
                  title="{% blocktrans trimmed with min=threshold.min max=threshold.max percent=c_percentage|floatformat:"0" count count=threshold.count %}
                    {{ count }} adjudicator currently has a score equal to or above
@@ -32,7 +32,7 @@
   </div>
 </div>
 
-<div class="col-md-2 col-12 mb-3">
+<div class="col-md-2 col-12 mb-3 px-0">
   <div class="card">
     <div class="card-body text-center pb-1 pt-2 px-2">
       <div class="row">
@@ -40,7 +40,7 @@
           <h5 class="mb-0 mt-2">
             {{ test_percent|floatformat:"0" }}%
           </h5>
-          <small>{% trans "Test" %}</small>
+          <small>{% trans "Base" %}</small>
         </div>
         <div class="col pl-0 mb-0">
           <h5 class="mb-0 mt-2">
@@ -52,9 +52,11 @@
       <h6 class="pt-2 text-secondary" data-toggle="tooltip"
           title="{% blocktrans trimmed with round=current_round.abbreviation %}
             The proportion of an adjudicator's score determined by feedback vs the
-            test is set on a per-round basis. This is the mix for the current round
-            ({{ round }}).
-          {% endblocktrans %}">{{ current_round.abbreviation }} {% trans "Score Ratio" %}</h6>
+            test is set on a per-round basis. Click this link and edit the 'Feedback weight' field to modify this ratio for {{ round }}.{% endblocktrans %}">
+        <a href="{% url 'admin:tournaments_round_change' current_round.id %}" target="_blank">
+          {{ current_round.abbreviation }} {% trans "Score Ratio" %}
+        </a>
+      </h6>
     </div>
   </div>
 </div>

@@ -9,11 +9,19 @@
 {% block content %}
   <div class="card">
     <div class="card-body">
-      {% tournamenturl 'tournament-public-index' as url %}
-      {% blocktrans trimmed %}
-        Whoops! This page isn't enabled for this tournament.
-        <a href="{{ url }}">Back to the tournament home page.</a>
-      {% endblocktrans %}
+      {% if tournament %}
+        {% tournamenturl 'tournament-public-index' as url %}
+        {% blocktrans trimmed %}
+          Whoops! This page isn't enabled for this tournament.
+          <a href="{{ url }}">Back to the tournament home page.</a>
+        {% endblocktrans %}
+      {% else %}
+        {% url 'tabbycat-index' as url %}
+        {% blocktrans trimmed %}
+          Whoops! This page isn't enabled for this tournament.
+          <a href="{{ url }}">Back to the home page.</a>
+        {% endblocktrans %}
+      {% endif %}
     </div>
   </div>
 {% endblock %}

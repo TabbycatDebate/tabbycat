@@ -1,5 +1,5 @@
 {% extends "feedback_base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
 {% block content %}
   <div class="row">
@@ -14,7 +14,8 @@
 
   {% if not feedbacks %}
     <!-- Can't use empty as card-columns div messes up the alert -->
-    {% include "components/alert.html" with type="info" message="No feedback has been submitted yet" %}
+    {% trans "No feedback has been submitted yet" as message %}
+    {% include "components/alert.html" with type="info" %}
   {% endif %}
 
 {% endblock content %}

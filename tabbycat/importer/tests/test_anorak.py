@@ -3,8 +3,6 @@
 import logging
 import os.path
 
-from settings import BASE_DIR
-
 from django.test import TestCase
 
 import adjallocation.models as am
@@ -14,9 +12,10 @@ import motions.models as mm
 import participants.models as pm
 import tournaments.models as tm
 import venues.models as vm
+from settings import BASE_DIR
 
-from ..importers.anorak import AnorakTournamentDataImporter
 from ..importers import TournamentDataImporterError
+from ..importers.anorak import AnorakTournamentDataImporter
 
 
 class TestImporterAnorak(TestCase):
@@ -31,12 +30,12 @@ class TestImporterAnorak(TestCase):
 
         # create tournament
         self.maxDiff = None
-        self.t = tm.Tournament(slug="import-test")
-        self.t.save()
+        self.tournament = tm.Tournament(slug="import-test")
+        self.tournament.save()
         self.logger = logging.getLogger(__name__)
         self.logger.propagate = False  # keep logs contained for tests
         self.logger.setLevel(logging.INFO)
-        self.importer = AnorakTournamentDataImporter(self.t, logger=self.logger)
+        self.importer = AnorakTournamentDataImporter(self.tournament, logger=self.logger)
 
     def _open_csv_file(self, dir, filename):
         path = os.path.join(dir, filename + ".csv")
@@ -78,7 +77,11 @@ class TestImporterAnorak(TestCase):
         self.importer.reset_counts()
         f = self._open_csv_file(self.TESTDIR, "speakers")
         self.importer.import_speakers(f)
-        self.assertCountsDictEqual(self.importer.counts, {pm.Team: 24, pm.Speaker: 72})
+        self.assertCountsDictEqual(self.importer.counts, {
+            pm.Team: 24,
+            pm.Speaker: 72,
+            am.TeamInstitutionConflict: 23,
+        })
         self.assertFalse(self.importer.errors)
 
     def test_adjudicators(self):
@@ -88,10 +91,10 @@ class TestImporterAnorak(TestCase):
         self.importer.import_adjudicators(f)
         self.assertCountsDictEqual(self.importer.counts, {
             pm.Adjudicator: 29,
-            fm.AdjudicatorTestScoreHistory: 29,
+            fm.AdjudicatorBaseScoreHistory: 29,
             am.AdjudicatorInstitutionConflict: 36,
             am.AdjudicatorAdjudicatorConflict: 6,
-            am.AdjudicatorConflict: 3,
+            am.AdjudicatorTeamConflict: 3,
         })
         self.assertFalse(self.importer.errors)
 
@@ -100,7 +103,7 @@ class TestImporterAnorak(TestCase):
         self.importer.reset_counts()
         f = self._open_csv_file(self.TESTDIR, "motions")
         self.importer.import_motions(f)
-        self.assertCountsDictEqual(self.importer.counts, {mm.Motion: 30})
+        self.assertCountsDictEqual(self.importer.counts, {mm.Motion: 30, mm.RoundMotion: 30})
         self.assertFalse(self.importer.errors)
 
     def test_adj_feedback_questions(self):
@@ -152,10 +155,10 @@ class TestImporterAnorak(TestCase):
         self.importer.import_adjudicators(f)
         self.assertCountsDictEqual(self.importer.counts, {
             pm.Adjudicator: 29,
-            fm.AdjudicatorTestScoreHistory: 29,
+            fm.AdjudicatorBaseScoreHistory: 29,
             am.AdjudicatorInstitutionConflict: 36,
             am.AdjudicatorAdjudicatorConflict: 6,
-            am.AdjudicatorConflict: 3,
+            am.AdjudicatorTeamConflict: 3,
         })
         self.assertFalse(self.importer.errors)
 

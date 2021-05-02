@@ -1,0 +1,323 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"PO-Revision-Date: 2020-06-16 23:15\n"
+"Last-Translator: \n"
+"Language-Team: Bengali\n"
+"Language: bn_BD\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: bn\n"
+"X-Crowdin-File: /develop/tabbycat/actionlog/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 920\n"
+
+#: actionlog/apps.py:7
+msgid "Action Log"
+msgstr "কর্ম লগ"
+
+#: actionlog/models.py:89
+msgid "Discarded ballot set"
+msgstr "প্রত্যাখ্যাত‌ ভোটপত্র সেট"
+
+#: actionlog/models.py:90
+msgid "Checked in ballot set"
+msgstr ""
+
+#: actionlog/models.py:91
+msgid "Created ballot set"
+msgstr "নির্মিত ভোটপত্র সেট"
+
+#: actionlog/models.py:92
+msgid "Edited ballot set"
+msgstr "সংশোধিত ভোটপত্র‌ সেট"
+
+#: actionlog/models.py:93
+msgid "Confirmed ballot set"
+msgstr "নিশ্চিত ভোটপত্র সেট"
+
+#: actionlog/models.py:94
+msgid "Submitted ballot set from the public form"
+msgstr "সাধারণ আবেদনপত্র হতে জমাকৃত ব্যালট সেট"
+
+#: actionlog/models.py:95
+msgid "Submitted feedback from the public form"
+msgstr "সাধারণ আবেদনপত্র হতে জমাকৃত ব্যালট সেট"
+
+#: actionlog/models.py:96
+msgid "Saved feedback"
+msgstr "সংরক্ষিত প্রতিক্রিয়া/ ফিডব্যাক"
+
+#: actionlog/models.py:97
+msgid "Edited adjudicator base score"
+msgstr "বিচারকের সম্পাদিত ভিত্তি স্কোর"
+
+#: actionlog/models.py:98
+msgid "Set adjudicator note"
+msgstr "বিচারক নোট সেট করুন"
+
+#: actionlog/models.py:99
+msgid "Saved adjudicator allocation"
+msgstr "সংরক্ষিত বিচারক এ্যলোকেশন"
+
+#: actionlog/models.py:100
+msgid "Auto-allocated adjudicators"
+msgstr "অটো বন্টনকৃত বিচারক"
+
+#: actionlog/models.py:101
+msgid "Saved a room manual edit"
+msgstr "সংরক্ষিত কক্ষের ম্যানুয়াল সংশোধন"
+
+#: actionlog/models.py:102
+msgid "Auto-allocated rooms"
+msgstr "অটো বন্টনকৃত কক্ষ"
+
+#: actionlog/models.py:103
+msgid "Edited room categories"
+msgstr "সংশোধিত কক্ষ বিভাগ"
+
+#: actionlog/models.py:104
+msgid "Edited room constraints"
+msgstr "সংশোধিত কক্ষ সীমাবদ্ধতা"
+
+#: actionlog/models.py:105
+msgid "Created draw"
+msgstr "নির্মিত অঙ্কন"
+
+#: actionlog/models.py:106
+msgid "Confirmed draw"
+msgstr "নিশ্চিত অঙ্কন"
+
+#: actionlog/models.py:107
+msgid "Regenerated draw"
+msgstr "পুনঃ উৎপন্ন অঙ্কন"
+
+#: actionlog/models.py:108
+msgid "Released draw"
+msgstr "মুক্ত অঙ্কন"
+
+#: actionlog/models.py:109
+msgid "Unreleased draw"
+msgstr "অপ্রকাশিত অঙ্কন"
+
+#: actionlog/models.py:110
+msgid "Saved a matchup manual edit"
+msgstr "সংরক্ষিত ম্যাচআপ ম্যানুয়াল সংশোধন"
+
+#: actionlog/models.py:111
+msgid "Saved the sides status of a matchup"
+msgstr "ম্যাচআপের সাইড স্ট্যাটাস সংরক্ষণ করা হয়েছে"
+
+#: actionlog/models.py:112
+msgid "Saved divisions"
+msgstr ""
+
+#: actionlog/models.py:113
+msgid "Added/edited motion"
+msgstr "সংযুক্ত/ সংশোধিত মোশন"
+
+#: actionlog/models.py:114
+msgid "Released motions"
+msgstr "মুক্ত মোশন"
+
+#: actionlog/models.py:115
+msgid "Unreleased motions"
+msgstr "অপ্রকাশিত মোশন"
+
+#: actionlog/models.py:116
+msgid "Auto-prioritized debate importance"
+msgstr "স্বয়ংক্রিয় অগ্রাধিকারের বির্তক গুরুত্ব"
+
+#: actionlog/models.py:117
+msgid "Edited debate importance"
+msgstr "সংশোধিত বির্তক গুরুত্ব"
+
+#: actionlog/models.py:118
+msgid "Changed adjudicator breaking status"
+msgstr "পরিবর্তিত বিচারকের ব্রেকিং স্ট্যাটাস"
+
+#: actionlog/models.py:119
+msgid "Edited break eligibility"
+msgstr "সংশোধিত ব্রেক পারদর্শিতা / যোগ্যতা"
+
+#: actionlog/models.py:120
+msgid "Edited break categories"
+msgstr "সংশোধিত ব্রেক বিভাগ"
+
+#: actionlog/models.py:121
+msgid "Generated the team break for all categories"
+msgstr "উৎপন্ন কৃত দলীয় ব্রেক সকল বিভাগের জন্য"
+
+#: actionlog/models.py:122
+msgid "Edited breaking team remarks and updated all team breaks"
+msgstr "সংশোধিত ব্রেকিং দলের মন্তব্য এবং আপডেটেড সকল দলের ব্রেক"
+
+#: actionlog/models.py:123
+msgid "Edited breaking team remarks and updated this team break"
+msgstr "সংশোধনকৃত ব্রেকিং দলের মন্তব্য সমূহ এবং আপডেটেড এই দলীয় ব্রেক"
+
+#: actionlog/models.py:124
+msgid "Edited breaking team remarks"
+msgstr "সংশোধিত ব্রেকিং দলের মন্তব্য"
+
+#: actionlog/models.py:125
+msgid "Set start time"
+msgstr "সেট শুরুর সময়"
+
+#: actionlog/models.py:126
+msgid "Advanced the current round to"
+msgstr "অ্যাডভানচ্ড‌ কারেন্ট রাউন্ড টু"
+
+#: actionlog/models.py:127
+msgid "Marked round as completed"
+msgstr "পর্ব শেষ হিসেবে চিহ্নিত করা হয়েছে"
+
+#: actionlog/models.py:128
+msgid "Edited teams availability"
+msgstr "সংশোধিত দলীয় উপস্থিতি"
+
+#: actionlog/models.py:129
+msgid "Edited adjudicators availability"
+msgstr "সংশোধিত বিচারক উপস্থিতি"
+
+#: actionlog/models.py:130
+msgid "Edited room availability"
+msgstr "সংশোধিত কক্ষ উপস্থিতি"
+
+#: actionlog/models.py:131
+msgid "Edited tournament options"
+msgstr "সংশোধিত প্রতিযোগিতার অপশন"
+
+#: actionlog/models.py:132
+msgid "Edited speaker category eligibility"
+msgstr "সংশোধিত বক্তার বিভাগীয় যোগ্যতা"
+
+#: actionlog/models.py:133
+msgid "Edited speaker categories"
+msgstr "সংশোধিত বক্তার বিভাগ সমূহ"
+
+#: actionlog/models.py:134
+msgid "Imported institutions using the simple importer"
+msgstr "আমদানিকৃত প্রতিষ্ঠান সাধারণ আমদানিকারক ব্যবহার করছে"
+
+#: actionlog/models.py:135
+msgid "Imported rooms using the simple importer"
+msgstr "আমদানিকৃত কক্ষ সমূহ সাধারণ আমদানিকারক ব্যবহার করছে"
+
+#: actionlog/models.py:136
+msgid "Imported teams using the simple importer"
+msgstr "আমদানিকৃত দল সমূহ সাধারণ আমদানিকারক ব্যবহার করছে"
+
+#: actionlog/models.py:137
+msgid "Imported adjudicators using the simple importer"
+msgstr "আমদানিকৃত বিচারকগণ সাধারণ আমদানিকারক ব্যবহার করছে"
+
+#: actionlog/models.py:138
+msgid "Updated adjudicator scores in bulk"
+msgstr "আপডেটেড বিচারকের স্কোর স্তূপের মধ্যে"
+
+#: actionlog/models.py:139
+msgid "Edited adjudicator-team conflicts"
+msgstr "সংশোধিত বিচারকের দলীয় দ্বন্দ্ব সমূহ"
+
+#: actionlog/models.py:140
+msgid "Edited adjudicator-adjudicator conflicts"
+msgstr "সংশোধিত বিচারক-বিচারক দ্বন্দ্ব সমূহ"
+
+#: actionlog/models.py:141
+msgid "Edited adjudicator-institution conflicts"
+msgstr "সংশোধিত বিচারক-প্রতিষ্ঠান দ্বন্দ্ব সমূহ"
+
+#: actionlog/models.py:142
+msgid "Edited team-institution conflicts"
+msgstr "সংশোধিত দল-প্রতিষ্ঠান দ্বন্দ্ব সমূহ"
+
+#: actionlog/models.py:143
+msgid "Generated check in identifiers for speakers"
+msgstr "জেনারেটেড চেক‌ইন‌ শনাক্তকারী বক্তাদের জন্য"
+
+#: actionlog/models.py:144
+msgid "Generated check in identifiers for adjudicators"
+msgstr "জেনারেটরের চেক ইন শনাক্তকারী বিচারক মন্ডলীর জন্য"
+
+#: actionlog/models.py:145
+msgid "Generated check in identifiers for rooms"
+msgstr "জেনারেটেড চেক‌ইন‌ শনাক্তকারী কক্ষের জন্য"
+
+#: actionlog/models.py:146
+msgid "Created preformed panels"
+msgstr "নির্মিত সম্পাদনকৃত প্যানেল সমূহ"
+
+#: actionlog/models.py:147
+msgid "Auto-prioritized preformed panels"
+msgstr "অটো অগ্রাধিকারের সম্পাদিত প্যানেল সমূহ"
+
+#: actionlog/models.py:148
+msgid "Edited preformed panel importance"
+msgstr "সংশোধিত সম্পাদনকৃত প্যানেল প্রয়োজনীয়তা"
+
+#: actionlog/models.py:149
+msgid "Auto-allocated adjudicators to preformed panels"
+msgstr "স্বয়ংক্রিয়ভাবে বন্টনকৃত বিচারক মন্ডলী হতে সম্পাদিত প্যানেল সমূহ"
+
+#: actionlog/models.py:150
+msgid "Edited preformed panel adjudicator"
+msgstr "সংশোধিত সম্পাদিত প্যানেল বিচারক"
+
+#: actionlog/models.py:151
+msgid "Auto-allocated preformed panels to debates"
+msgstr "স্বয়ংক্রিয় ভাবে বন্টনকৃত সম্পাদিত প্যানেল সমূহ হতে বিতর্ক"
+
+#: actionlog/models.py:155
+msgid "type"
+msgstr "ধরন / ছাপার অক্ষর"
+
+#: actionlog/models.py:157
+msgid "timestamp"
+msgstr "টাইমস্ট্যাম্প"
+
+#: actionlog/models.py:160
+msgid "user"
+msgstr "ব্যবহারকারী"
+
+#: actionlog/models.py:162
+msgid "IP address"
+msgstr ""
+
+#: actionlog/models.py:166
+msgid "tournament"
+msgstr "প্রতিযোগিতা"
+
+#: actionlog/models.py:168
+msgid "round"
+msgstr "পর্ব"
+
+#: actionlog/models.py:172
+msgid "content type"
+msgstr "বিষয় / সূচি টাইপ"
+
+#: actionlog/models.py:174
+msgid "object ID"
+msgstr "বিষয় আইডি"
+
+#: actionlog/models.py:180
+msgid "action log"
+msgstr "কর্ম লগ"
+
+#: actionlog/models.py:181
+msgid "action log entries"
+msgstr "কর্ম লগ প্রবেশ সমূহ"
+
+#: actionlog/models.py:189
+msgid "All log entries require at least one of a user and an IP address."
+msgstr "সকল প্রকার লগ প্রবেশ সমূহ কমপক্ষে একজন ব্যবহারকারী এবং একটি আইপি ঠিকানা/অ্যাডরেস দাবি করে."
+
+#: actionlog/models.py:228
+msgid "anonymous"
+msgstr "নামবিহীন"
+

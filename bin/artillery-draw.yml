@@ -1,0 +1,50 @@
+# Artillery installed as part of npm development requirements
+# Usage (note lack of trailing / on the URL):
+#   (setup 88-team BP tournament; enable public info; release R1 draw & motions)
+#   (restart dynos on heroku)
+#   $ npx artillery run bin/artillery-draw.yml --target APP
+# Testing Environment:
+#   DEBUG=0
+#   PUBLIC_FAST_CACHE_TIMEOUT=30
+#   PUBLIC_SLOW_CACHE_TIMEOUT=30
+#   TAB_PAGES_CACHE_TIMEOUT=30
+#   SCOUT_MONITOR=false
+#   Hobby dynos
+# Note that a single heroku dyno has a hard limit of 50 requests in its backlog;
+# testing limits should not exceed that (say 40 to account for latency?) else
+# pages will refuse to be served
+
+config:
+  target: 'https://tabbycatdevelop.herokuapp.com'
+  http:
+    timeout: 35 # Responses returned in 30 seconds or request is aborted
+  phases:
+    - duration: 30
+      arrivalRate: 0
+      name: "Wait for cache to expire"
+    - duration: 300
+      arrivalRate: 10
+      rampTo: 25
+      name: "Load test ramping to 25rps over 5 minutes"
+    - duration: 300
+      arrivalRate: 25
+      name: "Maintain load test maximum over 5 minutes"
+  defaults:
+    headers:
+      x-my-service-auth: '987401838271002188298567'
+scenarios:
+  - name: "Load main draw page"
+    weight: 6
+    flow:
+    - get:
+        url: "/bp88team/draw/"
+  - name: "Load motions occasionally"
+    weight: 2
+    flow:
+    - get:
+        url: "/bp88team/motions/"
+  - name: "Load home occasionally"
+    weight: 2
+    flow:
+    - get:
+        url: "/bp88team/"

@@ -5,6 +5,7 @@ from django import template
 from django.conf import settings
 from django.template.base import kwarg_re, TemplateSyntaxError, Variable
 from django.template.defaulttags import URLNode
+
 from tournaments.utils import get_side_name
 
 register = template.Library()
@@ -31,7 +32,7 @@ def version(path_string, base_url=settings.MEDIA_URL):
             version_cache[path_string] = mtime
 
         return base_url + rx.sub(r'\1.%d.\2' % mtime, path_string)
-    except:
+    except Exception:
         return base_url + path_string
 
 
@@ -40,6 +41,12 @@ def tournament_side_names(tournament, name_type):
     side_names = [get_side_name(tournament, 'aff', name_type),
                   get_side_name(tournament, 'neg', name_type)]
     return side_names
+
+
+@register.simple_tag
+def debate_team_side_name(debate_team, tournament):
+    # If returned directly from the object it will have to lookup tournament
+    return debate_team.get_side_name(tournament)
 
 
 class TournamentURLNode(URLNode):
@@ -175,23 +182,11 @@ def roundurl(parser, token):
     return RoundURLNode(*args)
 
 
-@register.tag
-def round_url(parser, token):
-    # Deprecated 16/6/2017, remove after 16/7/2017
-    raise RuntimeError("Then {% round_url %} tag is deprecated, use the new {% roundurl %} instead.")
-
-
-@register.tag
-def tournament_url(parser, token):
-    # Deprecated 16/6/2017, remove after 16/7/2017
-    raise RuntimeError("Then {% tournament_url %} tag is deprecated, use the new {% tournamenturl %} instead.")
-
-
 @register.filter
 def next_value(value, arg):
     try:
         return value[int(arg) + 1]
-    except:
+    except Exception:
         return None
 
 
@@ -199,7 +194,7 @@ def next_value(value, arg):
 def prev_value(value, arg):
     try:
         return value[int(arg) - 1]
-    except:
+    except Exception:
         return None
 
 
@@ -224,6 +219,13 @@ def percentage(number_a, number_b):
         return 0
 
 
-@register.simple_tag
-def subtract(number_a, number_b):
-    return number_a - number_b # Used in Feedback Overview
+@register.filter
+def subtract(value, arg):
+    return value - arg # Used in BP Motion Stats
+
+
+@register.filter(name='abbreviatename')
+def abbreviatename(name):
+    """Takes a two-part name and returns an abbreviation like 'E.Lučić'."""
+    parts = name.split(" ")
+    return "%s.%s" % (parts[0][:5], parts[-1][:5]) # Used for barcodes

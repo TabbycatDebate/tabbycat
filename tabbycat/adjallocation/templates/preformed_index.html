@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load debate_tags i18n %}
+
+{% block head-title %}
+  <span class="emoji">📦</span>{% trans "Preformed Panels" %}
+{% endblock %}
+
+{% block page-alerts %}
+
+  {% blocktrans trimmed asvar p1 %}
+    A preformed panel is a defined group of adjudicators that is specified for a round before its
+    draw has been generated. You can then manually or automatically apply these panels during the
+    normal adjudicator allocation process. This can make allocations faster or allow you
+    to create more considered panels of adjudicators.
+  {% endblocktrans %}
+  {% blocktrans trimmed asvar p2 %}
+    Note that only adjudicators who have been marked as 'available' for that round will be able to
+    be allocated for that round, so you may need to set their availability in advance.
+  {% endblocktrans %}
+
+  {% include "components/explainer-card.html" with type="info" %}
+
+{% endblock %}
+
+{% block content %}
+
+
+  <div class="list-group">
+    {% for r in tournament.round_set.all %}
+
+      {% ifchanged r.stage %}
+        {% if r.stage == 'E' %}
+          </div><div class="list-group mt-2">
+        {% endif %}
+      {% endifchanged %}
+
+      {% blocktrans trimmed asvar text with round=r.name %}
+        Edit Preformed Panels for {{ round }}
+      {% endblocktrans %}
+      {% roundurl 'edit-panel-adjudicators' r as url %}
+      {% if r.draw_status == r.STATUS_CONFIRMED %}
+        {% include "components/item-action.html" with type="dark" %}
+      {% else %}
+        {% include "components/item-action.html" with type="primary" %}
+      {% endif %}
+
+    {% endfor %}
+  </div>
+
+{% endblock %}

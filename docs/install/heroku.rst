@@ -4,7 +4,7 @@
 Installing on Heroku
 ====================
 
-When running Tabbycat on the internet, we set it up on `Heroku <http://www.heroku.com/>`_. The project is set up to be good to go on Heroku, and it works well for us, so if you'd like to run it online, we recommend that you do the same. Naturally, this requires you to have a Heroku account.
+`Heroku <http://www.heroku.com/>`_ is a platform as a service on which Tabbycat can be installed to be available on the internet. Naturally, this requires you to have a Heroku account.
 
 There are two ways to do this: a **short way** and a **long way**. Most people should use the short way. The long way requires some familiarity with command-line interfaces and Git, and requires a :ref:`local installation <install-local>` as a prerequisite, but makes it easier to :ref:`upgrade versions <upgrade-heroku>` later on and (unlike the short way) allows you to import data from CSV files.
 
@@ -15,13 +15,13 @@ Click this button:
 .. image:: https://www.herokucdn.com/deploy/button.svg
   :target: https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/master
 
-This is the easiest way to deploy an instance of Tabbycat online. It requires no technical background.
+It requires no technical background.
 
 If you don't already have a Heroku account, it'll prompt you to create one. Once you're logged in to Heroku, choose a name for your installation, then scroll down and click **Deploy**. Once it's finished, click **View** and follow the prompts. Once finished, open the site and from there you can easily set up a demo data set (if you just want to learn Tabbycat) or use the data importer to set up a real tournament.
 
 .. note:: During the setup process, Heroku will ask you to verify your account by adding a credit card. A standard Tabbycat site *will not charge* your card — charges only accrue if you deliberately add a paid service in the Heroku dashboard.
 
-  If you can't access a credit card, you can instead install a limited version, which we call "Tabbykitten". However, Tabbykitten cannot send any e-mails or handle as much public traffic. We therefore strongly recommend it only as a last resort, and even then only for small tournaments.  `Use this link to set up a Tabbykitten site <https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/kitten>`_.
+  If you can't access a credit card, you can instead install a limited version, which we call "Tabbykitten". However, Tabbykitten is out-of-date, cannot send e-mails, and is less able to serve lots of simultaneous users. We therefore strongly recommend it only as a last resort, and even then only for small tournaments.  `Use this link to set up a Tabbykitten site <https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/kitten>`_.
 
 The long way
 ============
@@ -39,29 +39,29 @@ When we say "command shell", on Windows we mean **Command Prompt**, and on Linux
 .. admonition:: Advanced users
   :class: tip
 
-  Tabbycat is a `Django <https://www.djangoproject.com/>`_ project. As such, it can be installed on any web platform that supports Django, using any SQL system that Django supports. Just be aware that we haven't tried any other platform.
+  Tabbycat is a `Django <https://www.djangoproject.com/>`_ project. As such, it can be installed on any web platform that supports Django, using PostgreSQL. Just be aware that requirements and installation may be slightly different.
 
 Short version of the long way
 -----------------------------
 
-.. warning:: We provide a "short version" for experienced users. Don't just copy-and-paste these commands before you understand what they do! If things aren't set up perfectly they can fail, so it's important to supervise them the first time you do them. If this is all new to you, read the long version of the instructions below.
+.. warning:: We provide a "short version" for experienced users. Don't just copy and paste these commands before you understand what they do! If things aren't set up perfectly they can fail, so it's important to supervise them the first time you do them. If this is all new to you, read the long version of the instructions below.
 
 .. parsed-literal::
 
   git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
   cd tabbycat
-  git checkout |vrelease|                               # or master
-  python deploy_heroku.py <yourappname>
+  git checkout master
+  python deploy_heroku.py yourappname
 
-If you want to :ref:`import tournament data <importing-initial-data>` from CSV files, :ref:`install Tabbycat locally <install-local>`, put your CSV files in ``data/<yourtournamentname>``, then::
+If you want to :ref:`import tournament data <importing-initial-data>` from CSV files, :ref:`install Tabbycat locally <install-local>`, put your CSV files in ``data/yourtournamentname``, then::
 
-  createdb <yourlocaldatabasename>     # Your local_settings.py file must point here from DATABASES
+  createdb yourlocaldatabasename     # Your settings_local.py file must point here from DATABASES
   dj migrate
   dj createsuperuser
-  dj importtournament <yourtournamentname> --name <Your Tournament Name> --short-name <Tournament>
+  dj importtournament yourtournamentname --name "Your Tournament Name" --short-name "Tournament"
   heroku maintenance:on
   heroku pg:reset
-  heroku pg:push <yourlocaldatabasename> DATABASE
+  heroku pg:push yourlocaldatabasename DATABASE
   heroku maintenance:off
 
 1. Install dependencies
@@ -81,7 +81,7 @@ If you don't already have a local installation, follow the instructions on the p
   .. parsed-literal::
 
       $ git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
-      $ git checkout |vrelease|                              # or master
+      $ git checkout master
 
   Do not download the .tar.gz or .zip file and extract it.
 
@@ -94,7 +94,8 @@ If you do already have a local installation, update to the latest version using:
 
 .. parsed-literal::
 
-    $ git checkout |vrelease|                              # or master
+    $ git checkout master
+    $ git pull
 
 .. admonition:: Advanced users
   :class: tip
@@ -110,11 +111,11 @@ a. Navigate to your Tabbycat directory::
 
     cd path/to/my/tabbycat/directory
 
-b. Run the script to deploy the app to Heroku. Replace ``<yourappname>`` with your preferred URL. Your website will be at ``<yourappname>.herokuapp.com``.
+b. Run the script to deploy the app to Heroku. Replace ``yourappname`` with your preferred URL. Your website will be at ``yourappname.herokuapp.com``.
 
   ::
 
-    python deploy_heroku.py <yourappname>
+    python deploy_heroku.py yourappname
 
   This script has other options that you might find useful. Run ``python deploy_heroku.py --help`` for details.
 
@@ -135,9 +136,11 @@ a. Place your CSV files in ``data/yourtournamentname``, as described in :ref:`im
 
 b. Create a new, blank local database::
 
-    createdb <yourlocaldatabasename>
+    createdb yourlocaldatabasename
 
-  Reconfigure ``DATABASES`` in your local_settings.py file to point to this new database.
+  It's normally easiest to name your local database after your app name, so that if you have multiple sites, you know which one relates to which.
+
+  Reconfigure ``DATABASES`` in your settings_local.py file to point to this new database.
 
 c. Activate your virtual environment::
 
@@ -150,7 +153,7 @@ d. Run initial migrations on your blank local database::
 
 e. Import your tournament data into your blank local database::
 
-    dj importtournament <yourtournamentname> --name <Your Tournament Name> --short-name <Tournament>
+    dj importtournament yourtournamentname --name "Your Tournament Name" --short-name "Tournament"
 
   If your data's not clean, it might take a few attempts to get this right. We recommend either destroying and recreating the database (``dropdb``, ``createdb``), or wiping it using ``dj flush``, before retrying.
 
@@ -165,7 +168,7 @@ Once you're happy with how your local import went, you can push the local databa
 
 .. danger:: This step wipes the Heroku database clean, and replaces it with the contents of your local database. If you have any data on the Heroku site that isn't also in your local database, **that data will be lost** and will not be recoverable.
 
-.. tip:: If you have multiple Heroku sites, you may find that the ``heroku`` commands refuse to run, prompting you to specify an app. If so, add ``--app <yourappname>`` to each ``heroku`` command.
+.. tip:: If you have multiple Heroku sites, you may find that the ``heroku`` commands refuse to run, prompting you to specify an app. If so, add ``--app yourappname`` to each ``heroku`` command.
 
 a. Enable maintenance mode. This takes the site offline, to ensure that no-one can possibly create or change any data on the site while you're pushing a new database up::
 
@@ -179,9 +182,9 @@ b. Reset the database. (Caution: This permanently deletes all information on you
 
 c. Push your local database to Heroku::
 
-    heroku pg:push <yourlocaldatabasename> DATABASE
+    heroku pg:push yourlocaldatabasename DATABASE
 
-  You might need to specify your local PostgreSQL credentials by adding ``PGUSER=<yourusername> PGPASSWORD=******** PGHOST=localhost`` to the *beginning* of that command. (This sets environment variables to those values for the duration of that one command.)
+  You might need to specify your local PostgreSQL credentials by adding ``PGUSER=yourusername PGPASSWORD=******** PGHOST=localhost`` to the *beginning* of that command. (This sets environment variables to those values for the duration of that one command.)
 
 d. Disable maintenance mode::
 
@@ -257,6 +260,18 @@ To set up your app to use your own SendGrid account:
   - ``SENDGRID_PASSWORD`` should be set to your API key, which will start with ``SG*******``.
 
   .. warning:: The `Heroku SendGrid instructions <https://devcenter.heroku.com/articles/sendgrid#setup-api-key-environment-variable>`_ to do something with ``SENDGRID_API_KEY`` are **incorrect**. We figured this out by contacting SendGrid support staff. Use the above config vars instead.
+
+Email settings
+--------------
+
+By default, Tabbycat uses a SendGrid add-on for sending emails, as explored in the previous section. To use another email service, such as `Mailchimp <https://mailchimp.com/>`_, you may add/change the following config vars:
+
+- ``DEFAULT_FROM_EMAIL``: Email to send from
+- ``EMAIL_HOST``: Host server
+- ``EMAIL_HOST_USER``: Username for authentification to host
+- ``EMAIL_HOST_PASSWORD``: Password with username
+- ``EMAIL_PORT`` (default 587): Port for server
+- ``EMAIL_USE_TLS`` (default True): Whether to use `Transport Layer Security <https://en.wikipedia.org/wiki/Transport_Layer_Security>`_ (True/False)
 
 
 .. _upgrade-heroku:

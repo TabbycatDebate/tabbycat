@@ -71,7 +71,7 @@ function refresh_totals(scoresheet) {
     var total_scores = {}
     var rank_elements = {}
 
-    for (var i = 0; i <= positions.length - 1; i++) {
+    for (var i = 0; i <= positions.length - 1; i += 1) {
       var team = positions[i];
       totals_elements[team] = $('.' + team + '_total', $scoresheet);
       margins_elements[team] = $('.' + team + '_margin', $scoresheet);
@@ -93,7 +93,7 @@ function refresh_totals(scoresheet) {
     });
 
     // Use sorted dictionary to assign relative margins and win indicators
-    for (var i = 0; i <= sortedScores.length - 1; i++) {
+    for (var i = 0; i <= sortedScores.length - 1; i += 1) {
 
       var team = sortedScores[i][0];
       if (total_scores[team] === 0) { continue }
@@ -246,27 +246,6 @@ $("#hasIron").change(function() {
     $('#id_neg_speaker_s{{ form.reply_position }}').val($(this).val());
     update_speakers();
   });
-
-{% endif %}
-
-{% if pref.enable_forfeits %}
-
-  function disable_required() {
-    $("#ballot_set").find(".scoresheet select").attr("disabled", true);
-    $("#ballot_set").find(".scoresheet input").attr("disabled", true);
-  }
-
-  $("#id_forfeit_0").click(function() {
-    disable_required();
-  });
-  $("#id_forfeit_1").click(function() {
-    disable_required();
-  });
-
-  if ($("#id_forfeit_0").is(':checked') || $("#id_forfeit_1").is(':checked')) {
-    // For when reloading initial form data
-    disable_required();
-  }
 
 {% endif %}
 

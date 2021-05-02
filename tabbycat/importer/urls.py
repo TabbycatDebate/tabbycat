@@ -20,4 +20,11 @@ urlpatterns = [
         views.ImportVenuesWizardView.as_view(),
         name='importer-simple-venues'),
 
+    path('export/',
+        views.ExportArchiveIndexView.as_view(),
+        name='exporter-xml-index'),
+    path('export/all/',
+        views.ExportArchiveAllView.as_view(),
+        name='exporter-archive-all'),
+
 ]

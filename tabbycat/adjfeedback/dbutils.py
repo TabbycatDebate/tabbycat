@@ -4,14 +4,15 @@ to adjudicator feedback.
 These are mainly used in management commands, but in principle could be used
 by a front-end interface as well."""
 
-import random
 import itertools
 import logging
+import random
 
+from django.contrib.auth import get_user_model
+
+from adjallocation.models import DebateAdjudicator
 from draw.models import DebateTeam
 from participants.models import Adjudicator, Team
-from django.contrib.auth import get_user_model
-from adjallocation.models import DebateAdjudicator
 
 from . import models as fm
 
@@ -27,11 +28,36 @@ WORDS = {
 }
 
 COMMENTS = {
-    5: ["Amazeballs.", "Saw it exactly how we did.", "Couldn't have been better.", "Really insightful feedback."],  # noqa: E501
-    4: ["Great adjudication but parts were unclear.", "Clear but a bit long. Should break.", "Understood debate but missed a couple of nuances.", "Agreed with adjudication but feedback wasn't super helpful."],  # noqa: E501
-    3: ["Identified all main issues, didn't see interactions between them.", "Solid, would trust to get right, but couldn't articulate some points.", "Pretty good for a novice adjudicator.", "Know what (s)he's doing but reasoning a bit convoluted."],  # noqa: E501
-    2: ["Missed some crucial points in the debate.", "Stepped into debate, but not too significantly.", "Didn't give the other team enough credit for decent points.", "Had some awareness of the debate but couldn't identify main points."],  # noqa: E501
-    1: ["It's as if (s)he was listening to a different debate.", "Worst adjudication I've ever seen.", "Give his/her own analysis to rebut our arguments.", "Should not be adjudicating at this tournament."]  # noqa: E501
+    5: [
+        "Amazeballs.",
+        "Saw it exactly how we did.",
+        "Couldn't have been better.",
+        "Really insightful feedback.",
+    ],
+    4: [
+        "Great adjudication but parts were unclear.",
+        "Clear but a bit long. Should break.",
+        "Understood debate but missed a couple of nuances.",
+        "Agreed with adjudication but feedback wasn't super helpful.",
+    ],
+    3: [
+        "Identified all main issues, didn't see interactions between them.",
+        "Solid, would trust to get right, but couldn't articulate some points.",
+        "Pretty good for a novice adjudicator.",
+        "Know what (s)he's doing but reasoning a bit convoluted.",
+    ],
+    2: [
+        "Missed some crucial points in the debate.",
+        "Stepped into debate, but not too significantly.",
+        "Didn't give the other team enough credit for decent points.",
+        "Had some awareness of the debate but couldn't identify main points.",
+    ],
+    1: [
+        "It's as if (s)he was listening to a different debate.",
+        "Worst adjudication I've ever seen.",
+        "Gave his/her own analysis to rebut our arguments.",
+        "Should not be adjudicating at this tournament.",
+    ],
 }
 
 
@@ -110,6 +136,11 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
         fb.save()
 
         for question in debate.round.tournament.adj_feedback_questions:
+            if fb.source_team and not question.from_team:
+                continue
+            if fb.source_adjudicator and not question.from_adj:
+                continue
+
             if question.answer_type_class == fm.AdjudicatorFeedbackBooleanAnswer:
                 answer = random.choice([None, True, False])
                 if answer is None:
@@ -126,12 +157,14 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
                 if question.answer_type == fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT:
                     answer = random.choice(COMMENTS[score])
                 elif question.answer_type == fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT:
-                    answer = random.choice(question.choices_for_field)[0]
-                elif question.answer_type == fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_MULTIPLE_SELECT:
-                    answers = random.sample(question.choices_for_field, random.randint(0, len(question.choices_for_field)))
-                    answer = fm.AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR.join(a[0] for a in answers)
+                    answer = random.choice(question.choices)
                 else:
                     answer = random.choice(WORDS[score])
+            elif question.answer_type_class == fm.AdjudicatorFeedbackManyAnswer:
+                answer = random.sample(question.choices, random.randint(0, len(question.choices_for_field)))
+            else:
+                raise TypeError("Answer type class not recognized: " + question.answer_type_class.__name__)
+
             question.answer_type_class(question=question, feedback=fb, answer=answer).save()
 
         name = source.name if isinstance(source, Adjudicator) else source.short_name

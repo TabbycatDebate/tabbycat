@@ -2,6 +2,8 @@ import itertools
 import logging
 import random
 
+from draw.models import Debate
+
 from .models import VenueConstraint
 
 logger = logging.getLogger(__name__)
@@ -56,8 +58,7 @@ class VenueAllocator:
         empty.
 
         The constraints for each debate are just all of the venue constraints
-        relating to the teams, adjudicators, institutions and division of the
-        debate."""
+        relating to the teams, adjudicators, and institutions of the debate."""
 
         all_constraints = {}
         for vc in VenueConstraint.objects.filter_for_debates(debates).prefetch_related('subject'):
@@ -70,7 +71,6 @@ class VenueAllocator:
                 debate.teams,
                 debate.adjudicators.all(),
                 [team.institution for team in debate.teams],
-                [] if debate.division is None else [debate.division]
             )
             constraints = [vc for subject in subjects for vc in all_constraints.get(subject, [])]
 
@@ -170,6 +170,5 @@ class VenueAllocator:
 
     def save_venues(self, debate_venues):
         for debate, venue in debate_venues.items():
-            logger.debug("Saving %s for %s", venue, debate)
             debate.venue = venue
-            debate.save()
+        Debate.objects.bulk_update(debate_venues.keys(), ['venue'])

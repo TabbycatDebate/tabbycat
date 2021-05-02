@@ -1,8 +1,11 @@
 
 .d3-graph {
 
-  .axis {
+  // Match the general typography
+  .axis text {
     font-size: 11px;
+    font-family: $font-family-sans-serif;
+    fill: $body-color;
   }
 
   // General Styles

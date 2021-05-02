@@ -6,9 +6,6 @@ urlpatterns = [
     path('prescan/',
         views.AssistantCheckInPreScanView.as_view(),
         name='assistant-checkin-prescan'),
-    path('scan/',
-        views.AssistantCheckInScanView.as_view(),
-        name='assistant-checkin-scan'),
 
     path('status/people/',
         views.AssistantCheckInPeopleStatusView.as_view(),

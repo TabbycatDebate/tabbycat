@@ -1,4 +1,6 @@
-<div class="list-group-item text-{% if type %}{{ type }}{% else %}info{% endif %}">
+<div class="list-group-item {% if not nopad %}mb-3{% endif %}
+            text-{% if type %}{{ type }}{% else %}info{% endif %}
+            {% if not nopad %}border-{% if type %}{{ type }}{% else %}info{% endif %}{% endif %}">
 
   <div class="row align-items-center">
 
@@ -27,12 +29,12 @@
         </p>
       {% endif %}
       {% if p2 %}
-        <p class="card-text mt-2 mb-0">
+        <p class="card-text {% if p1 %}mt-2{% endif %} mb-0">
           {{ p2|safe }}
         </p>
       {% endif %}
       {% if p3 %}
-        <p class="card-text mt-2 mb-0">
+        <p class="card-text {% if p1 or p2 %}mt-2{% endif %} mb-0">
           {{ p3|safe }}
         </p>
       {% endif %}

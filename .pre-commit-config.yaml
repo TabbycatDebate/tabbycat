@@ -1,0 +1,50 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+exclude: locale/|^tabbycat/static/
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v2.4.0
+  hooks:
+  - id: trailing-whitespace
+  - id: end-of-file-fixer
+    exclude_types:
+    - csv
+    - svg
+  - id: check-yaml
+  - id: check-added-large-files
+- repo: https://gitlab.com/pycqa/flake8
+  rev: 3.7.9
+  hooks:
+  - id: flake8
+    additional_dependencies:
+    - flake8-import-order
+    - flake8-quotes
+    - pep8-naming
+    - flake8-commas
+    exclude: migrations/
+- repo: https://github.com/awebdeveloper/pre-commit-stylelint
+  rev: '0.0.2' # Use the sha or tag you want to point at like 0.0.1
+  hooks:
+  - id: stylelint
+    files: '\.scss' # Only lint sass; not static assets
+    types: [file]
+    additional_dependencies:
+    - stylelint@13.6.1
+    - stylelint-config-standard@20.0.0
+    - stylelint-scss@3.18.0
+- repo: https://github.com/pre-commit/mirrors-eslint
+  rev: 'v7.3.1'  # Use the sha / tag you want to point at
+  hooks:
+  - id: eslint
+    files: '\.vue'
+    types: [file]
+    additional_dependencies:
+    - '@vue/eslint-config-standard@5.1.2'
+    - '@vue/cli-plugin-eslint@4.4.5'
+    - eslint@6.8.0
+    - eslint-plugin-import@2.20.2
+    - eslint-plugin-node@11.1.0
+    - eslint-plugin-promise@4.2.1
+    - eslint-plugin-standard@4.0.0
+    - eslint-plugin-vue@6.2.2
+    - babel-eslint@10.1.0

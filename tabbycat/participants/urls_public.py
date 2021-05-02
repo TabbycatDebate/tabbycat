@@ -16,8 +16,4 @@ urlpatterns = [
     path('adjudicator/<int:pk>/',
         views.PublicAdjudicatorRecordView.as_view(),
         name='participants-public-adjudicator-record'),
-
-    path('shifts/<slug:url_key>/',
-        views.PublicConfirmShiftView.as_view(),
-        name='participants-public-confirm-shift')
 ]

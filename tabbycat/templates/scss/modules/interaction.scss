@@ -2,9 +2,12 @@
 // Hover Items
 //------------------------------------------------------------------------------
 
-// Generic 'contains action'
 .hoverable:hover {
-  cursor: pointer;
+  cursor: pointer; // Generic 'contains action' indicator
+}
+
+.text-unselectable {
+  user-select: none; // Useful to prevent text selection during dragging
 }
 
 // Specific styling for tooltips/popovers
@@ -32,27 +35,33 @@
   }
 }
 
-// Expand hover target by taking up the cells padding
-td > .touch-target {
-  margin: -8px -4px -8px -4px;
-
-  > .hover-target {
-    padding: 8px 4px; // Transfer padding to the element that triggers hovers
-  }
-}
-
 .popover {
   max-width: none; // Bootstrap defaults to 270
+
+  h6 {
+    margin-bottom: -2px;
+    line-height: 1;
+  }
+
+  .popover-close {
+    height: 10px;
+  }
+
+  .feather.hoverable {
+    width: 16px;
+    height: 16px;
+    margin: -16px -4px 0 0;
+  }
 
   .list-group-item {
     padding: 0.5rem 0.75rem;
   }
+
   .bs-tether-element-attached-top::after,
-  .bs-tether-element-attached-top::before{
+  .bs-tether-element-attached-top::before {
     left: 25%;
   }
 }
-
 @media (max-width: breakpoint-min(sm, $grid-breakpoints)) {
 
   .popover {
@@ -65,11 +74,14 @@ td > .touch-target {
   padding: 0;
 
   .list-group-item:first-child {
-    border-top: 0;
+    border-radius: 0;
+  }
+
+  .list-group-item:last-child {
+    border-bottom: 0;
   }
 
   .list-group-item {
-    border-bottom: 0;
     border-left: 0;
     border-right: 0;
   }
@@ -129,12 +141,14 @@ td > .touch-target {
 //------------------------------------------------------------------------------
 
 // Addressses flickering issue in https://github.com/twbs/bootstrap/issues/25206
-.list-group-item, .list-group-item:hover {
+.list-group-item,
+.list-group-item:hover {
   z-index: auto;
 }
 
 .modal-sl { // For motions page; probably feedback also (want super big modals)
   @extend .modal-lg;
+
   max-width: 910px;
 }
 

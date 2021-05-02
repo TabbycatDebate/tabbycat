@@ -15,3 +15,11 @@
 {% block extra-css %}
   <link rel="stylesheet" type="text/css" href="/static/css/printables.css" />
 {% endblock extra-css %}
+
+{% block js %}
+  {{ block.super }}
+  <script src="{% static 'js/vendor/JsBarcode.all.min.js' %}"></script>
+  <script>
+    JsBarcode(".barcode-placeholder").init();
+  </script>
+{% endblock js %}

@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 
+from participants.models import Person
 from utils.management.base import TournamentCommand
 
 from ...utils import delete_url_keys, populate_url_keys
@@ -33,14 +34,13 @@ class Command(TournamentCommand):
 
         if options['subcommand'] == "delete":
             self.stdout.write("Deleting all private URLs...")
-            delete_url_keys(tournament.adjudicator_set.all())
-            delete_url_keys(tournament.team_set.all())
+            delete_url_keys(tournament.participants)
 
         elif options['subcommand'] == "generate":
             if not options['teams_only']:
-                self.populate_url_keys(tournament.adjudicator_set)
+                self.populate_url_keys(Person.objects.filter(adjudicator__tournament=tournament))
             if not options['adjs_only']:
-                self.populate_url_keys(tournament.team_set)
+                self.populate_url_keys(Person.objects.filter(speaker__team__tournament=tournament))
 
     def populate_url_keys(self, relatedmanager):
         if self.options['overwrite']:

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load add_field_css debate_tags static i18n team_name_for_data_entry %}
+
+{% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
+
+{% block head-title %}
+  {% if new %}
+    {% blocktrans trimmed with debate=debate_name %}
+      New Ballot Set for {{ debate }}
+    {% endblocktrans %}
+  {% else %}
+    {% blocktrans trimmed with debate=debate_name %}
+      Edit Ballot Set for {{ debate }}
+    {% endblocktrans %}
+  {% endif %}
+{% endblock %}
+
+{% block page-title %}
+  {% blocktrans trimmed with room=debate.venue.display_name debate=debate_name %}
+    {{ room }}: {{ debate }}
+  {% endblocktrans %}
+{% endblock %}
+
+{% block page-subnav-sections %}
+  {% if for_admin %}
+    <a class="btn btn-outline-primary" href="{% roundurl 'results-round-list' debate.round %}">
+  {% else %}
+    <a class="btn btn-outline-primary" href="{% tournamenturl 'results-assistant-round-list' %}">
+  {% endif %}
+      <i data-feather="chevron-left"></i>{% trans "Back to All Results" %}
+    </a>
+  {% if not new %}
+    {% if for_admin %}
+      <a class="btn btn-primary" href="{% tournamenturl 'old-results-ballotset-new' debate.id %}">
+        {% trans "Create a new ballot set for this debate" %}
+      </a>
+    {% else %}
+      <a class="btn btn-primary" href="{% tournamenturl 'old-results-assistant-ballotset-new' debate.id %}">
+        {% trans "Create a new ballot set for this debate" %}
+      </a>
+    {% endif %}
+  {% endif %}
+{% endblock %}
+
+{% block page-alerts %}
+
+  {% if round.ballots_per_debate == 'per-adj' and debate.adjudicators.is_even %}
+    {% blocktrans trimmed asvar message %}
+      This debate has a panel with an even number of voting adjudicators.
+      If the adjudicators split evenly, the debate will be awarded to the team
+      for which the chair voted.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="warning" %}
+  {% endif %}
+
+  {% if iron %}
+    {% for i in iron %}
+      {% team_name_for_data_entry i.team use_team_code_names as team %}
+      {% blocktrans trimmed asvar message %}
+        {{ team }} had speakers who spoke multiple times in the last round — i.e. an 'iron' person
+        speech. Please carefully check the ballot to see if that is still the case for this round.
+        If it is, ensure the speakers selected below reflect this.
+      {% endblocktrans %}
+      {% include "components/alert.html" with type="danger" icon="user-x" %}
+    {% endfor %}
+  {% endif %}
+
+  {% include "ballot/other_ballots_list.html" %}
+
+{% endblock %}

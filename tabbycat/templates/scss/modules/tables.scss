@@ -2,16 +2,8 @@
 // Overall Layout
 //------------------------------------------------------------------------------
 
-.table-container {
-  overflow-x: scroll;
-
-  .card-title {
-    margin-top: -8px;
-  }
-
-  .card-body {
-    @extend .px-2;
-  }
+.table-search {
+  padding-left: 21px; // Match margin of cards and titles
 }
 
 .table {
@@ -38,8 +30,9 @@
       border-bottom-color: #ccc;
     }
   }
+
   &.hide-hover .hover-target .tooltip-trigger {
-    border-bottom: none;
+    border-bottom: 0;
   }
 }
 
@@ -69,14 +62,14 @@ thead,
   .feather-chevrons-up,
   .feather-chevrons-down {
     display: none;
-    margin-bottom: -5px; // Align with text
+    margin-bottom: -3px; // Align with text
     margin-right: -4px; // Overwrite the padding as it acts as a spacer
   }
 
   &:hover {
     @extend .text-primary;
-    cursor: pointer;
 
+    cursor: pointer;
     // By default; if not sorting is active; show sort-desc
     .vue-sort-key .feather-chevrons-up {
       display: inline;
@@ -89,6 +82,7 @@ thead,
     .feather-chevrons-down {
       display: inline;
     }
+
     .feather-chevrons-up {
       display: none;
     }
@@ -99,6 +93,7 @@ thead,
     .feather-chevrons-up {
       display: inline;
     }
+
     .feather-chevrons-down {
       display: none;
     }
@@ -110,9 +105,8 @@ thead,
 //------------------------------------------------------------------------------
 
 .table > thead > tr > th,
-.table > tbody > tr > td,
-.draw-container .thead {
-  padding: 8px 4px; // Narrow spacing post-BP
+.table > tbody > tr > td {
+  padding: 8px 8px 8px 4px;
 }
 
 .table > thead > tr > th,
@@ -125,6 +119,7 @@ thead,
   > div {
     padding-bottom: 2px; // Offset tooltip underline to maintain baseline
   }
+
   .tooltip-trigger {
     margin-bottom: -4px; // Un-Offset tooltip underline
     padding-bottom: 2px; // Offset tooltip underline
@@ -132,8 +127,7 @@ thead,
 }
 
 // Icons in headers
-.table > thead > tr > th .header-icon,
-.draw-container .thead .header-icon {
+.table > thead > tr > th .header-icon {
   width: 16px;
   height: 16px; // Need to match font size of header text
   box-sizing: initial;
@@ -146,17 +140,19 @@ thead,
   }
 }
 
-
-.draw-container .thead .feather {
-  margin-top: -4px;
-}
-
 // Icons in cells (may as well make them big to match text size)
-.table > tbody > tr > td .feather {
-  width: 24px;
-  height: 24px;
-  margin-bottom: -6px;
-  margin-right: -3px;
+.table > tbody > tr > td {
+
+  i,
+  .feather {
+    width: 24px;
+    height: 24px;
+  }
+
+  .feather {
+    margin-bottom: -6px;
+    margin-left: -2px;
+  }
 }
 
 // Bump emoji size in tables
@@ -166,15 +162,24 @@ thead,
 }
 
 .team-name {
-  min-width: 125px; // BP team cells need a good width when using abbreviations
 
   .emoji {
-    padding-right: 2px;
+    text-align: center;
+    padding-top: 5px;
+    margin-left: -3px; // Sit flush to align with icon
   }
 }
 
 .venue-name {
   min-width: 75px; // With BP cells ensure venue names don't get squished
+}
+
+.no-wrap {
+  white-space: nowrap; // For cells that we want to force to display full width
+}
+
+.admin-redacted {
+  text-decoration: line-through;
 }
 
 .table > tbody > tr > th,
@@ -198,6 +203,12 @@ thead,
   &.highlight-col {
     border-left: 2px dotted $droppable-bg;
   }
+
+  .result-icon {
+    text-align: right;
+    margin-left: -4px;
+    margin-right: 0;
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -207,27 +218,38 @@ thead,
 // For Phones
 @media (max-width: breakpoint-min(sm, $grid-breakpoints)) {
 
-  .table > tbody > tr > th,
-  .table > tbody > tr > td {
-    padding-left: 4px;
-    padding-right: 4px;
-  }
-
-  .table > tbody > tr > td:first-child {
-    padding-left: 10px; // Compensate for reduced left margins on phones
-  }
-
   // Table widths on mobile devices should span the screen
   .table-container {
-    margin-left: -15px;
+    margin-left: -20px;
     margin-right: -15px;
     border-left: 0;
     border-right: 0;
     border-radius: 0;
 
     .card-body {
-      padding: 0.5rem 0;
+      padding-left: 0 !important; // Hard left border on mobile
     }
+
+    .table > thead > tr > th:first-child,
+    .table > tbody > tr > td:first-child {
+      padding-left: 8px; // Double padding to compensate for smushed borders
+    }
+  }
+
+  // Break venues into new lines on mobile
+  .venue-name {
+    min-width: auto;
+  }
+
+  // Reduce widths of team names on mobile
+  .team-name {
+    white-space: normal;
+  }
+
+  // To save horizontal space; put the emoji in a vertical orientation
+  .team-name .flex-vertical-center {
+    flex-direction: column;
+    align-items: start;
   }
 
   // But not in the admin interface
