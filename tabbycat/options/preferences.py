@@ -1399,24 +1399,6 @@ class EnableAPIAccess(BooleanPreference):
 
 
 @global_preferences_registry.register
-class EnableAssistantAccountCreation(BooleanPreference):
-    help_text = _("Enables assistant user accounts to be created through an account creation key")
-    verbose_name = _("Enable assistant account creation")
-    section = global_settings
-    name = 'enable_assistant_account_key'
-    default = False
-
-
-@global_preferences_registry.register
-class EnableAdminAccountCreation(BooleanPreference):
-    help_text = _("Enables administrator user accounts to be created through an account creation key")
-    verbose_name = _("Enable administrator account creation")
-    section = global_settings
-    name = 'enable_admin_account_key'
-    default = False
-
-
-@global_preferences_registry.register
 class AssistantAccountCreationKey(StringPreference):
     help_text = _("The key in the URL for creating an assistant user account")
     verbose_name = _('Assistant account creation key')
