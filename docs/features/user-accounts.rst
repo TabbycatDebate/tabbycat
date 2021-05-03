@@ -62,13 +62,11 @@ If you wish to allow select staff to create their own accounts, you can do so:
 
 1. Go to the Configuration area of any tournament.
 
-2. Select the **Accounts** option.
+2. Select the **Global Settings** section.
 
-3. Tick the **"Enable Assistant Account Creation"** box, or the **"Enable Admin Account Creation"** box (or both!).
+3. Specify a secret password for the types of account creation you wish to enable. This should be hard to guess (don't just use "Admin" or your tournament name).
 
-4. Specify a secret password for each type of account creation. This should be hard to guess (don't just use "Admin" or your tournament name).
-
-5. Provide anybody the link to the signup form. That URL takes the form of YOURAPPURL/accounts/signup/KEY/ — for example http://memeIV.herokuapp.com/accounts/signup/secretpassword
+4. Provide the password of the desired account type to people needing an account. This password is part of a link to the signup form. This form is available with the URL path ``/accounts/signup/KEY/``, replacing ``KEY`` with the password.
 
 .. note:: It is not possible to create a link that automatically gives super-user access. You should either manually create other superusers, or use the admin interface to promote them once they have created an account this way.
 
