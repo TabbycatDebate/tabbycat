@@ -45,7 +45,7 @@
     "jquery-validation": "^1.19.3",
     "jsbarcode": "^3.11.3",
     "livereload": "^0.9.1",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "node-sass": "^5.0.0",
     "npm-run-all": "^4.1.5",
     "popper.js": "^1.16.1",
