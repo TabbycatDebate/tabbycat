@@ -69,6 +69,16 @@
 
   {% endif %}
 
+  {% if global_preferences.accounts__admin_account_key or global_preferences.accounts__assistant_account_key %}
+    {% tournamenturl 'options-tournament-section' section='global' as url %}
+    {% blocktrans trimmed asvar text %}
+      You have enabled a URL that allows users to create new accounts. You should <strong>disable it once the tournament starts</strong>.
+    {% endblocktrans %}
+    <div class="mt-3">
+      {% include "components/item-action.html" with alone=True type="warning" icon="alert-triangle" to_complete=True %}
+    </div>
+  {% endif %}
+
   {{ block.super }}
 
 {% endblock content %}

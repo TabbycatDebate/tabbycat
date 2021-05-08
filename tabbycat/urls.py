@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.contrib import admin, messages
-from django.contrib.auth import views as auth_views
 from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
 from django.urls import include, path
@@ -63,14 +62,7 @@ urlpatterns = [
         admin.site.urls),
 
     # Accounts
-    path('accounts/', include([
-        path('logout/',
-            auth_views.LogoutView.as_view(),
-            {'next_page': '/'},  # override to specify next_page
-            name='logout'),
-        path('',
-            include('django.contrib.auth.urls')),
-    ])),
+    path('accounts/', include('users.urls')),
 
     # Notifications
     path('notifications/',
