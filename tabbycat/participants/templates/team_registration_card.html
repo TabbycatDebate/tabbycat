@@ -55,7 +55,7 @@
         {% for speaker in team.speakers %}
           {{ speaker.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
         {% empty %}
-          <span class="text-muted">{% trans "None" %}</span>
+          {% trans "None" %}
         {% endfor %}
       </div>
     {% endif %}
@@ -67,7 +67,7 @@
           {% for category in team.break_categories.all %}
             {{ category.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
           {% empty %}
-            <span class="text-muted">{% trans "None" %}</span>
+            {% trans "None" %}
           {% endfor %}
         </div>
         {% if participant %}
@@ -76,7 +76,7 @@
             {% for category in participant.categories.all %}
               {{ category.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
             {% empty %}
-              <span class="text-muted">{% trans "None" %}</span>
+              {% trans "None" %}
             {% endfor %}
           </div>
         {% endif %}
@@ -110,7 +110,7 @@
           {% for ic in team.teaminstitutionconflict_set.all %}
             {{ ic.institution.name }}{% if not forloop.last %}{% trans "; " %}{% endif %}
           {% empty %}
-            <span class="text-muted">{% trans "None" %}</span>
+            {% trans "None" %}
           {% endfor %}
         </div>
 
@@ -119,7 +119,7 @@
           {% for ac in team.adjudicatorteamconflict_set.all %}
             {{ ac.adjudicator.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
           {% empty %}
-            <span class="text-muted">{% trans "None" %}</span>
+            {% trans "None" %}
           {% endfor %}
         </div>
 
@@ -130,7 +130,7 @@
         {% for vc in team.venue_constraints.all %}
           {{ vc.category }}{% if not forloop.last %}{% trans ", " %}{% endif %}
         {% empty %}
-          <span class="text-muted">{% trans "None" %}</span>
+          {% trans "None" %}
         {% endfor %}
       </div>
 
