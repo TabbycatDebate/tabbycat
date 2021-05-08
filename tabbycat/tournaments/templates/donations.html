@@ -22,7 +22,7 @@
   </li>
   <li class="list-group-item">
     {% blocktrans trimmed %}
-      We suggest that tournaments budget for a donation of A$1 (Australian dollar)
+      We suggest that tournaments budget for a donation of C$1 (Canadian dollar)
       per team. For tournaments run for fundraising or for profit, whether partly
       or solely, this payment is <strong>required</strong> and your licence to
       use Tabbycat is conditional upon it. General donations from individuals or
@@ -33,8 +33,8 @@
     <li class="list-group-item">
       {% blocktrans trimmed with tournament=tournament.name nteams=tournament.billable_teams %}
         Our suggested donation from {{ tournament }}, based on its size, is
-        <strong>A${{ nteams }}</strong>. The easiest way to donate is
-        <a href="http://PayPal.Me/tabbycatproject/{{ nteams }}aud">via Paypal</a>,
+        <strong>C${{ nteams }}</strong>. The easiest way to donate is
+        <a href="http://PayPal.Me/tabbycatproject/{{ nteams }}cad">via Paypal</a>,
         but please don’t hesitate to
         <a href="http://tabbycat.readthedocs.io/en/stable/about/support.html#email">email us</a>
         if other methods would work better for you. Also, feel free to get in
@@ -44,7 +44,7 @@
   {% else %}
     <li class="list-group-item">
       {% blocktrans trimmed %}
-        The easiest way to donate is <a href="http://PayPal.Me/tabbycatproject/0aud">via Paypal</a>.
+        The easiest way to donate is <a href="http://PayPal.Me/tabbycatproject/0cad">via Paypal</a>.
         Please <a href="http://tabbycat.readthedocs.io/en/stable/about/support.html">contact us</a>
         if you require other options.
       {% endblocktrans %}
