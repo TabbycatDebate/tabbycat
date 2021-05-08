@@ -20,6 +20,10 @@ class SignUpView(CreateView):
         else:
             return HttpResponseForbidden()
 
+    def get_context_data(self, **kwargs):
+        kwargs['for_admin'] = self.admin_account
+        return super().get_context_data(**kwargs)
+
     def is_page_enabled(self):
         prefs = global_preferences_registry.manager()
         admin_key = prefs['global__admin_account_key']
