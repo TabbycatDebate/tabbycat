@@ -2,24 +2,24 @@
 {# This snippet is used as part of the team_record.html and adjudicator_record.html templates. #}
 
 
-<div class="card mt-3">
+<div class="card mt-4">
 
   <div class="list-group list-group-flush">
 
-    <div class="list-group-item">
+    <div class="list-group-item {% if not pref.feedback_progress %}list-group-item-secondary{% endif %}">
       <h4 class="card-title mb-0">{% trans "Feedback Returns" %}</h4>
     </div>
 
     {% for tracker in feedback_progress.trackers %}
       {% if tracker.fulfilled %}
-        <div class="list-group-item text-success">
+        <div class="list-group-item {% if not pref.feedback_progress %}list-group-item-secondary{% endif %} text-success">
           <span class="badge badge-secondary">{{ tracker.round.name }}</span>
           {% blocktrans trimmed with adjudicator=tracker.submission.adjudicator.name %}
             Has submitted feedback for <strong>{{ adjudicator }}</strong>
           {% endblocktrans %}
         </div>
       {% elif tracker.expected and tracker.count == 0 %}
-        <div class="list-group-item text-danger">
+        <div class="list-group-item {% if not pref.feedback_progress %}list-group-item-secondary{% endif %} text-danger">
           <span class="badge badge-secondary">{{ tracker.round.name }}</span>
           {% if tracker.acceptable_targets|length > 1 %}
             {% blocktrans trimmed with adjudicators=tracker.acceptable_target_names|join:", " %}
@@ -33,7 +33,7 @@
           {% endif %}
         </div>
       {% elif tracker.expected %}
-        <div class="list-group-item text-warning">
+        <div class="list-group-item {% if not pref.feedback_progress %}list-group-item-secondary{% endif %} text-warning">
           <span class="badge badge-secondary">{{ tracker.round.name }}</span>
           <i data-feather="info"></i>
           {% trans "More feedback submissions than expected for this debate:" %}
@@ -42,16 +42,15 @@
           {% endfor %}
         </div>
       {% else %} {# if not tracker.fulfilled and not tracker.expected #}
-        <div class="list-group-item text-warning">
+        <div class="list-group-item {% if not pref.feedback_progress %}list-group-item-secondary{% endif %} text-warning">
           <span class="badge badge-secondary">{{ tracker.round.name }}</span>
-          <i data-feather="info"></i>
           {% blocktrans trimmed with adjudicator=tracker.submission.adjudicator.name %}
             Unexpected feedback submission for <strong>{{ adjudicator }}</strong>
           {% endblocktrans %}
         </div>
       {% endif %}
     {% empty %}
-      <div class="list-group-item">
+      <div class="list-group-item {% if not pref.feedback_progress %}list-group-item-secondary{% endif %}">
         <em>{% blocktrans trimmed with name=participant_name %}
           {{ name }} doesn't have any feedback to submit.
         {% endblocktrans %}</em>
