@@ -805,6 +805,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for standing in standings:
             row = []
             for key, metric in zip(standings.metric_keys, standing.itermetrics()):
+                if metric is None:
+                    row.append({'text': '—', 'sort': 0})
+                    continue
+
                 if key in integer_score_columns and hasattr(metric, 'is_integer') and metric.is_integer():
                     metric = int(metric)
                 try:
