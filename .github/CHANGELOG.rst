@@ -12,13 +12,14 @@ Change Log
 - Personal redactions foro speakers and adjudicators are indicated in admin tables, but are not hidden. (`#1480 <https://github.com/TabbycatDebate/tabbycat/issues/1480>`_)
 - Unexpected team feedback is unconfirmed to avoid affecting the scores of unexpected adjudicators. (`#473 <https://github.com/TabbycatDebate/tabbycat/issues/473>`_)
 - Added some database area actions to assign emojis and code names, previously only available as commands.
-- Removed
+- Removed some obsolete management commands.
 - Implemented tournament import and export capabilities for `DebateXML <https://github.com/TabbycatDebate/DebateXML>`_.
 - Allow for participant ballot submissions during concurrent rounds.
 - Checkin API endpoints show the timestamp of the current event.
 - Team viewing of ballots can be restricted to their private URLs.
-- Added an optimised production-ready Docker config. Thanks to Sébastien Dunne Fulmer for this contribution!
-
+- Added an optimised production-ready Docker config. Thanks to Sébastien Dunne Fulmer for this contribution! (`#1690 <https://github.com/TabbycatDebate/tabbycat/pull/1690>`_)
+- Added a means to allow site administrators to send a private link to people they wish to add to the site as admins or assistants. Upon receiving that link, users can complete the signup process themselves. Thanks to Tom Kunc for the pull request! (`#685 <https://github.com/TabbycatDebate/tabbycat/pull/685>`_)
+- Uncalculable metrics now show as None rather than 0, and more standings configurations are now solely handled through the database. (`#1647 <https://github.com/TabbycatDebate/tabbycat/pull/1647>`_)
 
 2.5.8
 -----
