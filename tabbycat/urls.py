@@ -8,6 +8,7 @@ from django.views.i18n import JavaScriptCatalog
 
 import tournaments.views
 from importer.views import LoadDemoView
+from users.views import BlankSiteStartView
 
 admin.autodiscover()
 
@@ -22,7 +23,7 @@ urlpatterns = [
         tournaments.views.PublicSiteIndexView.as_view(),
         name='tabbycat-index'),
     path('start/',
-        tournaments.views.BlankSiteStartView.as_view(),
+        BlankSiteStartView.as_view(),
         name='blank-site-start'),
     path('create/',
         tournaments.views.CreateTournamentView.as_view(),
