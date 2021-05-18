@@ -37,6 +37,8 @@ class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
         count = q.count()
         for tournament, bss in groupby(q, lambda bs: bs.debate.round.tournament):
             populate_results(bss, tournament)
+            for bs in bss:
+                bs.result.save()
 
         self.message_user(request, ngettext_lazy(
             "Resaved results for %(count)d ballot submission.",

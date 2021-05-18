@@ -1,14 +1,12 @@
 import json
 import logging
 from collections import OrderedDict
-from threading import Lock
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
 from django.shortcuts import redirect, resolve_url
-from django.urls import reverse_lazy
 from django.utils.html import format_html_join
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateView
@@ -22,7 +20,6 @@ from notifications.models import BulkNotification
 from results.models import BallotSubmission
 from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
-from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin, WarnAboutDatabaseUseMixin
 from utils.views import PostOnlyRedirectView
@@ -188,41 +185,6 @@ class CompleteRoundView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnly
                 'this_round': self.round.name, 'next_round': self.round.next.name,
             })
             return redirect_round('availability-index', self.round.next)
-
-
-class BlankSiteStartView(FormView):
-    """This view is presented to the user when there are no tournaments and no
-    user accounts. It prompts the user to create a first superuser. It rejects
-    all requests, GET or POST, if there exists any user account in the
-    system."""
-
-    form_class = SuperuserCreationForm
-    template_name = "blank_site_start.html"
-    lock = Lock()
-    success_url = reverse_lazy('tabbycat-index')
-
-    def get(self, request):
-        if User.objects.exists():
-            logger.warning("Tried to get the blank-site-start view when a user account already exists.")
-            return redirect('tabbycat-index')
-
-        return super().get(request)
-
-    def post(self, request):
-        with self.lock:
-            if User.objects.exists():
-                logger.warning("Tried to post the blank-site-start view when a user account already exists.")
-                messages.error(request, _("Whoops! It looks like someone's already created the first user account. Please log in."))
-                return redirect('login')
-
-            return super().post(request)
-
-    def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        messages.info(self.request, _("Welcome! You've created an account for %s.") % user.username)
-
-        return super().form_valid(form)
 
 
 class CreateTournamentView(AdministratorMixin, WarnAboutDatabaseUseMixin, CreateView):

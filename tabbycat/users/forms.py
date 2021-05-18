@@ -1,19 +1,25 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
+
+
+class SuperuserCreationForm(UserCreationForm):
+    """A form that creates a superuser from the given username and password."""
+
+    class Meta(UserCreationForm.Meta):
+        fields = ("username", "email")
+        labels = {"email": _("Email address")}
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_staff = True
+        user.is_superuser = True
+        if commit:
+            user.save()
+        return user
 
 
 class TabRegistrationForm(UserCreationForm):
 
-    class Meta:
-        model = User
-
-        fields = ('email', 'username')
-
-    def save(self, commit=True):
-        user = super(TabRegistrationForm, self).save(commit=False)
-        user.email = self.cleaned_data['email']
-
-        if commit:
-            user.save()
-
-        return user
+    class Meta(UserCreationForm.Meta):
+        fields = ("username", "email")
+        labels = {"email": _("Email address")}
