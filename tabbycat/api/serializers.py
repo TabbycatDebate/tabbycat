@@ -536,11 +536,13 @@ class PerTournamentInstitutionSerializer(InstitutionSerializer):
         source='team_set',
         many=True,
         view_name='api-team-detail',
+        required=False,
     )
     adjudicators = fields.TournamentHyperlinkedRelatedField(
         source='adjudicator_set',
         many=True,
         view_name='api-adjudicator-detail',
+        required=False,
     )
 
     def __init__(self, *args, **kwargs):
