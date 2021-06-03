@@ -946,13 +946,18 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
     def teamscorebyadj_field_score(self, adj, side):
         return self.scoresheets[adj].get_total(side)
 
+    def _teamscore_score_component(self, adj, side):
+        if self.tournament.pref('teamscore_includes_ghosts'):
+            return sum(self.get_score(adj, side, pos) for pos in self.positions if not self.get_ghost(side, pos))
+        return self.scoresheets[adj].get_total(side)
+
     def teamscore_field_score(self, side):
         # Should be decision-decorated
         if not self.is_complete():
             return None
         if not self._decision_calculated:
             self._calculate_decision()
-        return mean(self.scoresheets[adj].get_total(side) for adj in self.relevant_adjudicators())
+        return mean(self._teamscore_score_component(adj, side) for adj in self.relevant_adjudicators())
 
     def speakerscorebyadj_field_score(self, adjudicator, side, position):
         return self.scoresheets[adjudicator].get_score(side, position)
