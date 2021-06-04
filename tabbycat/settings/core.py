@@ -95,12 +95,11 @@ MIDDLEWARE = [
     # User language preferences; must be after Session
     'django.middleware.locale.LocaleMiddleware',
     # Set Etags; i.e. cached requests not on network; must precede Common
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
     'django.middleware.common.CommonMiddleware',
     # Must be after SessionMiddleware
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    # Must be after SessionMiddleware
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'utils.middleware.DebateMiddleware',
@@ -149,6 +148,7 @@ INSTALLED_APPS = (
     'formtools',
     'statici18n', # Compile js translations as static file; saving requests
     'polymorphic',
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'django_better_admin_arrayfield',
@@ -336,3 +336,10 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 }
+
+# ----------------------------------------
+# CORS-related settings for REST framework
+# ----------------------------------------
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_URLS_REGEX = r'^/api(/.*)?$'
