@@ -383,8 +383,12 @@ def get_feedback_progress_statistics(tournament):
         num_submitted=Count('debateteam__adjudicatorfeedback', filter=Q(debateteam__adjudicatorfeedback__confirmed=True)),
     ).prefetch_related('speaker_set').all()
     by_team_id = {t.id: t for t in teams}
-    ts = tournament.team_set.filter(id__in=by_team_id.keys()).annotate(num_expected=Count('debateteam__debate__debateadjudicator', filter=Q(
-            debateteam__debate__round__stage=Round.STAGE_PRELIMINARY, debateteam__debate__round__silent=False) & teams_expected_filter))
+    ts = tournament.team_set.filter(id__in=by_team_id.keys()).annotate(
+        num_expected=Count('debateteam__debate__debateadjudicator', filter=Q(
+            debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
+            debateteam__debate__round__silent=False,
+            debateteam__debate__ballotsubmission__confirmed=True,
+        ) & teams_expected_filter))
     for t in ts.all():
         o_t = by_team_id[t.id]
         o_t.num_expected = t.num_expected
@@ -409,8 +413,10 @@ def get_feedback_progress_statistics(tournament):
         'all-adjs': Q(),
     }[tournament.pref('feedback_paths')]
     adjs = tournament.adjudicator_set.filter(id__in=by_adj_id.keys()).annotate(
-        num_expected=Count('debateadjudicator__debate__debateadjudicator',
-            filter=Q(debateadjudicator__debate__round__stage=Round.STAGE_PRELIMINARY) & exclude_self_filter & adj_expected_filter),
+        num_expected=Count('debateadjudicator__debate__debateadjudicator', filter=Q(
+            debateadjudicator__debate__round__stage=Round.STAGE_PRELIMINARY,
+            debateadjudicator__debate__ballotsubmission__confirmed=True,
+        ) & exclude_self_filter & adj_expected_filter),
     ).all()
     for adj in adjs:
         o_adj = by_adj_id[adj.id]
