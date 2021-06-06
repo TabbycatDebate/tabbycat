@@ -41,9 +41,15 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
     # Need to associate the feedback submission status with the Adjudicator object
     # directly to be passed onto AdjudicatorAllocation. Must use debateadj to assure
     # the prefetch is available.
-    if hasattr(debateadj.debate.debateadjudicator_set.first(), 'submitted'):
-        for dadj in debateadj.debate.debateadjudicator_set.all():
-            dadj.adjudicator.submitted = dadj.submitted
+    try:
+        test_dadj = debateadj.debate.debateadjudicator_set.all()[0]
+    except IndexError:
+        pass
+    else:
+        if hasattr(test_dadj, 'submitted'):
+            for dadj in debateadj.debate.debateadjudicator_set.all():
+                if hasattr(dadj, 'submitted'):
+                    dadj.adjudicator.submitted = dadj.submitted
 
     if debate is None:
         debate = debateadj.debate
