@@ -1,6 +1,7 @@
 import json
+import logging
 from datetime import datetime
-from smtplib import SMTPException
+from smtplib import SMTPException, SMTPResponseException
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -23,6 +24,8 @@ from utils.views import VueTableTemplateView
 from .forms import BasicEmailForm, TestEmailForm
 from .models import EmailStatus, SentMessage
 
+logger = logging.getLogger(__name__)
+
 
 class TestEmailView(WarnAboutLegacySendgridConfigVarsMixin, AdministratorMixin, FormView):
     form_class = TestEmailForm
@@ -32,23 +35,35 @@ class TestEmailView(WarnAboutLegacySendgridConfigVarsMixin, AdministratorMixin, 
 
     def form_valid(self, form):
         host = self.request.get_host()
+
         try:
             recipient = form.send_email(host)
-        except (ConnectionError, SMTPException) as e:
-            if getattr(e, 'errno', None) and getattr(e, 'strerror', None):
-                error_str = f"[{e.errno}] {e.strerror}"
+
+        except SMTPResponseException as e:
+            try:
+                smtp_error = e.smtp_error.decode()  # it seems to be a bytes object
+            except (AttributeError, UnicodeDecodeError):
+                smtp_error = str(e.smtp_error)      # but just in case it's not, fall back to generic str()
+            messages.error(self.request, _("The email (SMTP) server returned an error sending the test email: "
+                "[SMTP code %(code)d] %(error)s") % {
+                'code': e.smtp_code, 'error': smtp_error})
+            if e.smtp_code == 550 and "Sender Identity" in smtp_error:
+                messages.warning(self.request, _("Hint: If the error is about sender identity verification in SendGrid, "
+                    "and you've already completed the steps in SendGrid, it may be that you need to update "
+                    "the DEFAULT_FROM_EMAIL config var in Heroku to match your verified sender identity."))
+                logger.warning("Suspected SendGrid sender identity verification error in test email", exc_info=True)
             else:
-                error_str = str(e)
+                logger.warning("SMTP response exception in test email", exc_info=True)
+
+        except (ConnectionError, SMTPException) as e:
             messages.error(self.request,
-                _("There was an error sending the test email: %(error)s") % {'error': error_str})
-            if e.errno == 550 and b"Sender Identity" in e.strerror and b"sendgrid" in e.strerror:
-                messages.warning(self.request,
-                    _("Hint: As well as completing Sender Identity Verification on SendGrid, you also "
-                      "need to set the DEFAULT_FROM_EMAIL config var in Heroku to the email address "
-                      "that is verified in SendGrid."))
+                _("There was an error sending the test email: %(error)s") % {'error': str(e)})
+            logger.warning("Other error in test email", exc_info=True)
+
         else:
             messages.success(self.request,
                 _("A test email has been sent to %(recipient)s.") % {'recipient': recipient})
+
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
