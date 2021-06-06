@@ -4,6 +4,7 @@ from smtplib import SMTPException
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.conf import settings
 from django.contrib import messages
 from django.db.models import Prefetch, Q
 from django.http import HttpResponse
@@ -34,12 +35,25 @@ class TestEmailView(WarnAboutLegacySendgridConfigVarsMixin, AdministratorMixin, 
         try:
             recipient = form.send_email(host)
         except (ConnectionError, SMTPException) as e:
+            if getattr(e, 'errno', None) and getattr(e, 'strerror', None):
+                error_str = f"[{e.errno}] {e.strerror}"
+            else:
+                error_str = str(e)
             messages.error(self.request,
-                _("There was an error sending the test email: %(error)s") % {'error': str(e)})
+                _("There was an error sending the test email: %(error)s") % {'error': error_str})
+            if e.errno == 550 and b"Sender Identity" in e.strerror and b"sendgrid" in e.strerror:
+                messages.warning(self.request,
+                    _("Hint: As well as completing Sender Identity Verification on SendGrid, you also "
+                      "need to set the DEFAULT_FROM_EMAIL config var in Heroku to the email address "
+                      "that is verified in SendGrid."))
         else:
             messages.success(self.request,
                 _("A test email has been sent to %(recipient)s.") % {'recipient': recipient})
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        kwargs["default_from_email"] = settings.DEFAULT_FROM_EMAIL
+        return super().get_context_data(**kwargs)
 
 
 class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
