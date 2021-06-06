@@ -275,9 +275,17 @@ class TabbycatTableBuilder(BaseTableBuilder):
             cell['popover']['content'].append({'text': _("Real name: <strong>%(name)s</strong>") % {'name': team.short_name}})
 
         if self._show_speakers_in_draw:
-            cell['popover']['content'].append({'text': ", ".join([s.name for s in team.speakers])})
+            if self.admin:
+                speakers = ["<span class='admin-redacted'>%s</span>" % s.name if s.anonymous else s.name for s in team.speakers]
+            else:
+                speakers = [self.REDACTED_CELL['text'] if s.anonymous else s.name for s in team.speakers]
+
+            cell['popover']['content'].append({'text': ", ".join(speakers)})
         if self._show_record_links:
             cell['popover']['content'].append(self._team_record_link(team))
+
+        if self.admin and getattr(team, 'anonymise', False):
+            cell['class'] += ' admin-redacted'
 
         return cell
 
@@ -472,10 +480,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         adj_data = []
         for adj in adjudicators:
-            if adj.anonymous:
+            if adj.anonymous and not self.admin:
                 adj_data.append(self.REDACTED_CELL)
             else:
                 cell = {'text': adj.name}
+                if adj.anonymous:
+                    cell['class'] = 'admin-redacted'
                 if self._show_record_links:
                     cell['popover'] = {'title': adj.name, 'content': [self._adjudicator_record_link(adj)]}
                 if subtext == 'institution' and adj.institution is not None:
@@ -617,7 +627,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         """
 
         team_data = [self._team_cell(team, show_emoji=show_emoji)
-                     if not getattr(team, 'anonymise', False)
+                     if not (getattr(team, 'anonymise', False) and not self.admin)
                      else self.BLANK_TEXT for team in teams]
         if key:
             header = {'key': key, 'text': key}
@@ -646,13 +656,17 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def add_speaker_columns(self, speakers, categories=True):
         speaker_data = []
         for speaker in speakers:
-            if getattr(speaker, 'anonymise', False):
+            anonymous = getattr(speaker, 'anonymise', False) or speaker.anonymous
+            if anonymous and not self.admin:
                 speaker_data.append(self.REDACTED_CELL)
             else:
-                speaker_data.append({
+                cell = {
                     'text': speaker.name,
                     'class': 'no-wrap' if len(speaker.name) < 20 else '',
-                })
+                }
+                if anonymous:
+                    cell['class'] += ' admin-redacted'
+                speaker_data.append(cell)
 
         self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'}, speaker_data)
 

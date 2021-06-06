@@ -374,6 +374,7 @@ class FeedbackPaths(ChoicePreference):
     choices = (
         ('minimal', _("Chairs on panellists and trainees")),
         ('with-p-on-c', _("Panellists on chairs, chairs on panellists and trainees")),
+        ('with-t-on-c', _("Panellists and trainees on chairs, vice-versa")),
         ('all-adjs', _("All adjudicators (including trainees) on each other")),
     )
     default = 'with-p-on-c'

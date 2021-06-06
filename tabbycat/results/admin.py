@@ -1,10 +1,14 @@
+from itertools import groupby
+
 from django.contrib import admin
 from django.db.models import OuterRef, Prefetch, Subquery
+from django.utils.translation import gettext_lazy as _, ngettext_lazy
 
 from draw.models import DebateTeam
 from utils.admin import TabbycatModelAdminFieldsMixin
 
 from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore, TeamScoreByAdj
+from .prefetch import populate_results
 
 
 # ==============================================================================
@@ -21,11 +25,24 @@ class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_filter = ('debate__round', 'debate__round__tournament', 'submitter', 'confirmer')
     # This incurs a massive performance hit
     # inlines = (SpeakerScoreByAdjInline, SpeakerScoreInline, TeamScoreInline)
+    actions = ['resave_ballots']
 
     def get_queryset(self, request):
         return super(BallotSubmissionAdmin, self).get_queryset(request).select_related(
             'submitter', 'confirmer', 'debate__round__tournament').prefetch_related(
             Prefetch('debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')))
+
+    def resave_ballots(self, request, queryset):
+        q = queryset.select_related('debate__round__tournament').order_by('tournament_id')
+        count = q.count()
+        for tournament, bss in groupby(q, lambda bs: bs.debate.round.tournament):
+            populate_results(bss, tournament)
+
+        self.message_user(request, ngettext_lazy(
+            "Resaved results for %(count)d ballot submission.",
+            "Resaved results for %(count)d ballot submissions.",
+            count) % {'count': count})
+    resave_ballots.short_description = _("Resave results")
 
 
 # ==============================================================================

@@ -261,6 +261,18 @@ To set up your app to use your own SendGrid account:
 
   .. warning:: The `Heroku SendGrid instructions <https://devcenter.heroku.com/articles/sendgrid#setup-api-key-environment-variable>`_ to do something with ``SENDGRID_API_KEY`` are **incorrect**. We figured this out by contacting SendGrid support staff. Use the above config vars instead.
 
+Email settings
+--------------
+
+By default, Tabbycat uses a SendGrid add-on for sending emails, as explored in the previous section. To use another email service, such as `Mailchimp <https://mailchimp.com/>`_, you may add/change the following config vars:
+
+- ``DEFAULT_FROM_EMAIL``: Email to send from
+- ``EMAIL_HOST``: Host server
+- ``EMAIL_HOST_USER``: Username for authentification to host
+- ``EMAIL_HOST_PASSWORD``: Password with username
+- ``EMAIL_PORT`` (default 587): Port for server
+- ``EMAIL_USE_TLS`` (default True): Whether to use `Transport Layer Security <https://en.wikipedia.org/wiki/Transport_Layer_Security>`_ (True/False)
+
 
 .. _upgrade-heroku:
 

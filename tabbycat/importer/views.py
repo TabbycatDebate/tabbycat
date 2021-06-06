@@ -1,13 +1,18 @@
 import logging
+from xml.etree import ElementTree
 
+from defusedxml.ElementTree import fromstring
 from django.contrib import messages
 from django.core import management
 from django.forms import modelformset_factory
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _, ngettext
+from django.views import View
 from django.views.generic import TemplateView
+from django.views.generic.edit import FormView
 from formtools.wizard.views import SessionWizardView
 
 from actionlog.mixins import LogActionMixin
@@ -16,12 +21,13 @@ from participants.emoji import set_emoji
 from participants.models import Adjudicator, Institution, Team
 from tournaments.mixins import TournamentMixin
 from tournaments.models import Tournament
-from utils.misc import redirect_tournament
+from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import PostOnlyRedirectView
 from venues.models import Venue
 
-from .forms import (AdjudicatorDetailsForm, ImportAdjudicatorsNumbersForm,
+from .archive import Exporter, Importer
+from .forms import (AdjudicatorDetailsForm, ArchiveImportForm, ImportAdjudicatorsNumbersForm,
                     ImportInstitutionsRawForm, ImportTeamsNumbersForm,
                     ImportVenuesRawForm, TeamDetailsForm, TeamDetailsFormSet,
                     VenueDetailsForm)
@@ -234,3 +240,38 @@ class LoadDemoView(AdministratorMixin, PostOnlyRedirectView):
 
         new_tournament = Tournament.objects.get(slug=source)
         return redirect_tournament('tournament-configure', tournament=new_tournament)
+
+
+class TournamentImportArchiveView(AdministratorMixin, FormView):
+
+    form_class = ArchiveImportForm
+    success_url = reverse_lazy('tabbycat-index')
+    template_name = 'archive_importer.html'
+    view_role = ""
+
+    def form_valid(self, form):
+        self.importer = Importer(fromstring(form.cleaned_data['xml']))
+        self.importer.import_tournament()
+
+        messages.success(self.request, _("Tournament archive has been imported."))
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_tournament('tournament-admin-home', self.importer.tournament)
+
+
+class ExportArchiveIndexView(AdministratorMixin, TournamentMixin, TemplateView):
+
+    template_name = 'archive_export_index.html'
+
+
+class ExportArchiveAllView(AdministratorMixin, TournamentMixin, View):
+
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(self.get_xml(), content_type='text/xml; charset=utf-8')
+        response['Content-Disposition'] = 'attachment; filename="' + self.tournament.short_name + '.xml"'
+
+        return response
+
+    def get_xml(self):
+        return ElementTree.tostring(Exporter(self.tournament).create_all())

@@ -798,7 +798,7 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
     url = fields.AdjudicatorFeedbackIdentityField(view_name='api-feedback-detail')
     adjudicator = fields.TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail', queryset=Adjudicator.objects.all())
     source = SubmitterSourceField(source='*')
-    participant_submitter = ParticipantSourceField()
+    participant_submitter = ParticipantSourceField(allow_null=True)
     debate = DebateHyperlinkedRelatedField(view_name='api-pairing-detail', queryset=Debate.objects.all(), lookup_url_kwarg='debate_pk')
     answers = FeedbackAnswerSerializer(many=True, source='get_answers', required=False)
 
@@ -1013,7 +1013,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
     motion = fields.TournamentHyperlinkedRelatedField(view_name='api-motion-detail', required=False, queryset=Motion.objects.all())
     url = fields.DebateHyperlinkedIdentityField(view_name='api-ballot-detail')
     participant_submitter = fields.TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail',
-        queryset=Adjudicator.objects.all(), source='participant_submitter.adjudicator')
+        queryset=Adjudicator.objects.all(), source='participant_submitter.adjudicator', allow_null=True)
 
     class Meta:
         model = BallotSubmission

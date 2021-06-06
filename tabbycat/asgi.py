@@ -23,7 +23,7 @@ if not os.environ.get('DISABLE_SENTRY'):
     from sentry_sdk.integrations.redis import RedisIntegration
 
     sentry_sdk.init(
-        dsn="https://6bf2099f349542f4b9baf73ca9789597@sentry.io/185382",
+        dsn="https://6bf2099f349542f4b9baf73ca9789597@o85113.ingest.sentry.io/185382",
         integrations=[
             DjangoIntegration(),
             LoggingIntegration(event_level=logging.WARNING),
