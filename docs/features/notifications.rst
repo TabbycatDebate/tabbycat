@@ -13,6 +13,8 @@ Configuring an email provider
 
 Tabbycat does not come with an email provider. You will need to configure your app to use a third-party email provider. Your Tabbycat site will not be able to send emails until you have done this. There are a number of options for this. The right one for you will depend on your tournament size and budget.
 
+.. _configuring-sendgrid:
+
 SendGrid
 --------
 
@@ -37,6 +39,17 @@ Once you have a SendGrid account:
 4. Send a test email using the tool on your Tabbycat site's home page.
 
   *Changed in version 2.6:* The ``SENDGRID_USERNAME`` and ``SENDGRID_PASSWORD`` config vars are deprecated in favour of ``SENDGRID_API_KEY``.
+
+.. admonition:: Upgrading from legacy settings
+  :class: tip
+
+  If you've recently upgraded to version 2.6, and need to update your config vars, follow these instructions. First, check if the value of the config var ``SENDGRID_USERNAME`` is ``apikey``. If it is, you can do the following:
+
+  1. Create a new config var ``SENDGRID_API_KEY``, and copy the value from ``SENDGRID_PASSWORD`` to it. This value should start with ``SG.******``. Be sure you have the value saved (try sending a test email now) before you continue.
+  2. Delete the config vars ``SENDGRID_USERNAME`` and ``SENDGRID_PASSWORD`` (whose value you just copied over).
+  3. If it's not already set, set ``DEFAULT_FROM_EMAIL`` to the email address you want your emails to appears as coming from.
+
+  If the value of ``SENDGRID_USERNAME`` is anything other than ``apikey``, you'll need to convert your SendGrid configuration to use an API key instead. To do so, follow the instructions under :ref:`configuring-sendgrid` above. Then, delete the old ``SENDGRID_USERNAME`` and ``SENDGRID_PASSWORD`` config vars.
 
 Other email providers
 ---------------------
