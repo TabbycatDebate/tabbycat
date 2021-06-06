@@ -376,15 +376,15 @@ def get_feedback_progress_statistics(tournament):
     be too costly for use when only aggregate statistics are needed."""
 
     if tournament.pref('feedback_from_teams') == 'orallist':
-        teams_expected_annotation = Count('debateteam', filter=Q(debateteam__debate__round__stage=Round.STAGE_PRELIMINARY))
+        teams_expected_filter = Q(debateteam__debate__debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR)
     else:  # 'all-adjs'
-        teams_expected_annotation = Count('debateteam__debate__debateadjudicator', filter=Q(
-            debateteam__debate__round__stage=Round.STAGE_PRELIMINARY))
+        teams_expected_filter = Q()
     teams = tournament.team_set.annotate(
         num_submitted=Count('debateteam__adjudicatorfeedback', filter=Q(debateteam__adjudicatorfeedback__confirmed=True)),
     ).prefetch_related('speaker_set').all()
     by_team_id = {t.id: t for t in teams}
-    ts = tournament.team_set.filter(id__in=by_team_id.keys()).annotate(num_expected=teams_expected_annotation)
+    ts = tournament.team_set.filter(id__in=by_team_id.keys()).annotate(num_expected=Count('debateteam__debate__debateadjudicator', filter=Q(
+            debateteam__debate__round__stage=Round.STAGE_PRELIMINARY, debateteam__debate__round__silent=False) & teams_expected_filter))
     for t in ts.all():
         o_t = by_team_id[t.id]
         o_t.num_expected = t.num_expected
@@ -396,7 +396,7 @@ def get_feedback_progress_statistics(tournament):
     by_adj_id = {adj.id: adj for adj in adjudicators}
 
     exclude_self_filter = ~Q(debateadjudicator__debate__debateadjudicator__adjudicator_id=F('id'))
-    when_chair_filter = Q(debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR) & exclude_self_filter
+    when_chair_filter = Q(debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR)
     adj_expected_filter = {
         'minimal': when_chair_filter,
         'with-t-on-c': ~Q(debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR) & Q(
@@ -406,11 +406,11 @@ def get_feedback_progress_statistics(tournament):
             debateadjudicator__type=DebateAdjudicator.TYPE_PANEL,
             debateadjudicator__debate__debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR,
         ) | when_chair_filter,
-        'all-adjs': exclude_self_filter,
+        'all-adjs': Q(),
     }[tournament.pref('feedback_paths')]
     adjs = tournament.adjudicator_set.filter(id__in=by_adj_id.keys()).annotate(
         num_expected=Count('debateadjudicator__debate__debateadjudicator',
-            filter=Q(debateadjudicator__debate__round__stage=Round.STAGE_PRELIMINARY) & adj_expected_filter),
+            filter=Q(debateadjudicator__debate__round__stage=Round.STAGE_PRELIMINARY) & exclude_self_filter & adj_expected_filter),
     ).all()
     for adj in adjs:
         o_adj = by_adj_id[adj.id]
