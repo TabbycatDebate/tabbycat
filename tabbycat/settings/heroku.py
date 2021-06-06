@@ -121,7 +121,10 @@ elif environ.get('SENDGRID_API_KEY', ''):
     EMAIL_USE_TLS = True
 
 elif environ.get('SENDGRID_USERNAME', ''):
-    # these settings are deprecated as of Tabbycat 2.6.0 (Ocicat)
+    # These settings are deprecated as of Tabbycat 2.6.0 (Ocicat).
+    # When removing, also remove utils.mixins.WarnAboutLegacySendgridConfigVarsMixin and
+    # templates/errors/legacy_sendgrid_warning.html (and references thereto).
+    USING_LEGACY_SENDGRID_CONFIG_VARS = True
     SERVER_EMAIL = environ['SENDGRID_USERNAME']
     DEFAULT_FROM_EMAIL = environ.get('DEFAULT_FROM_EMAIL', environ['SENDGRID_USERNAME'])
     EMAIL_HOST = 'smtp.sendgrid.net'

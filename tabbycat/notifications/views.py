@@ -15,7 +15,7 @@ from django.views.generic.edit import FormView
 
 from participants.models import Person
 from tournaments.mixins import RoundMixin, TournamentMixin
-from utils.mixins import AdministratorMixin
+from utils.mixins import AdministratorMixin, WarnAboutLegacySendgridConfigVarsMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import VueTableTemplateView
 
@@ -23,7 +23,7 @@ from .forms import BasicEmailForm, TestEmailForm
 from .models import EmailStatus, SentMessage
 
 
-class TestEmailView(AdministratorMixin, FormView):
+class TestEmailView(WarnAboutLegacySendgridConfigVarsMixin, AdministratorMixin, FormView):
     form_class = TestEmailForm
     template_name = 'test_email.html'
     success_url = reverse_lazy('notifications-test-email')

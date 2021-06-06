@@ -5,6 +5,10 @@
 {% block page-title %}{% trans "Send Test Email" context "page title" %}{% endblock %}
 {% block nav %}{% endblock %}
 
+{% block page-alerts %}
+  {% include 'errors/legacy_sendgrid_warning.html' %}
+{% endblock %}
+
 {% block content %}
 
 <div class="row">
