@@ -269,19 +269,19 @@ class CustomEmailCreateView(RoleColumnMixin, BaseSelectPeopleEmailView):
     def default_send(self, p, default_send_queryset):
         return False
 
-    def post(self, request, *args, **kwargs):
-        people = Person.objects.filter(id__in=list(map(int, request.POST.getlist('recipients'))))
+    def form_valid(self, form):
+        people = Person.objects.filter(id__in=list(map(int, self.request.POST.getlist('recipients'))))
 
         async_to_sync(get_channel_layer().send)("notifications", {
             "type": "email_custom",
-            "subject": request.POST['subject_line'],
-            "body": request.POST['message_body'],
+            "subject": form.cleaned_data['subject_line'],
+            "body": form.cleaned_data['message_body'],
             "tournament": self.tournament.id,
             "send_to": [p.id for p in people],
         })
 
         self.add_sent_notification(len(people))
-        return super().post(request, *args, **kwargs)
+        return super().form_valid(form)
 
 
 class TemplateEmailCreateView(BaseSelectPeopleEmailView):
@@ -293,22 +293,22 @@ class TemplateEmailCreateView(BaseSelectPeopleEmailView):
 
         return initial
 
-    def post(self, request, *args, **kwargs):
-        self.tournament.preferences[self.subject_template] = request.POST['subject_line']
-        self.tournament.preferences[self.message_template] = request.POST['message_body']
-        email_recipients = list(map(int, request.POST.getlist('recipients')))
+    def form_valid(self, form):
+        self.tournament.preferences[self.subject_template] = form.cleaned_data['subject_line']
+        self.tournament.preferences[self.message_template] = form.cleaned_data['message_body']
+        email_recipients = list(map(int, self.request.POST.getlist('recipients')))
 
         async_to_sync(get_channel_layer().send)("notifications", {
             "type": "email",
             "message": self.event,
             "extra": self.get_extra(),
             "send_to": email_recipients,
-            "subject": request.POST['subject_line'],
-            "body": request.POST['message_body'],
+            "subject": form.cleaned_data['subject_line'],
+            "body": form.cleaned_data['message_body'],
         })
 
         self.add_sent_notification(len(email_recipients))
-        return super().post(request, *args, **kwargs)
+        return super().form_valid(form)
 
 
 class TournamentTemplateEmailCreateView(TemplateEmailCreateView):
