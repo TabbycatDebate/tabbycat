@@ -40,7 +40,7 @@
     "django-channels": "1.1.8",
     "eslint-plugin-html": "^6.1.1",
     "feather-icons": "^4.28.0",
-    "inter-ui": "^3.15.0",
+    "inter-ui": "^3.18.1",
     "jquery": "^3.5.1",
     "jquery-validation": "^1.19.3",
     "jsbarcode": "^3.11.3",
