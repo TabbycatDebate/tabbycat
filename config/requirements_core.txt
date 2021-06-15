@@ -36,7 +36,7 @@ munkres==1.1.2                          # Algorithm for adjudicator allocation
 redis==3.5.3
 qrcode==6.1                             # QR codes for printed private URL sheets
 html2text==2020.1.16                    # Compatibility with plain-text email clients
-defusedxml==0.6.0                       # Protection against XML vulnerabilities in import
+defusedxml==0.7.1                       # Protection against XML vulnerabilities in import
 
 # Django admin (Jet)
 # This is an unofficial fork of no-longer-maintained geex-arts/django-jet,
