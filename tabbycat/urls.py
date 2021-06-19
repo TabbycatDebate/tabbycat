@@ -1,3 +1,5 @@
+from urllib.parse import urlparse
+
 from django.conf import settings
 from django.contrib import admin, messages
 from django.contrib.auth.signals import user_logged_in
@@ -95,6 +97,9 @@ if settings.DEBUG and settings.ENABLE_DEBUG_TOOLBAR:  # Only serve debug toolbar
 
 @receiver(user_logged_in)
 def on_user_logged_in(sender, request, **kwargs):
+    if not urlparse(request.META.get('HTTP_REFERER')).path == '/accounts/login/':
+        # The message is extraneous when their account was just created
+        return
     if kwargs.get('user'):
         messages.info(request,
             _("Hi, %(user)s — you just logged in!")  % {'user': kwargs['user'].username},
