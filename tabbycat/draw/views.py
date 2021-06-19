@@ -203,14 +203,14 @@ class PublicDrawMixin(PublicTournamentPageMixin):
 
 class PublicDrawForRoundView(PublicDrawMixin, BaseDisplayDrawForSpecificRoundTableView):
 
-    def is_page_enabled(self, tournament):
-        return tournament.pref('public_draw') == 'all-released'
+    def is_page_enabled(self):
+        return self.tournament.pref('public_draw') == 'all-released'
 
 
 class PublicDrawForCurrentRoundsView(PublicDrawMixin, BaseDisplayDrawForCurrentRoundsTableView):
 
-    def is_page_enabled(self, tournament):
-        return tournament.pref('public_draw') == 'current'
+    def is_page_enabled(self):
+        return self.tournament.pref('public_draw') == 'current'
 
 
 class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, BaseDisplayDrawTableView):
@@ -300,16 +300,16 @@ class AssistantDrawDisplayForSpecificRoundByVenueView(OptionalAssistantTournamen
         BriefingRoomDrawByVenueTableMixin, BaseDisplayDrawForSpecificRoundTableView):
     assistant_page_permissions = ['all_areas', 'results_draw']
 
-    def is_page_enabled(self, tournament):
-        return self.round.is_current and super().is_page_enabled(tournament)
+    def is_page_enabled(self):
+        return self.round.is_current and super().is_page_enabled()
 
 
 class AssistantDrawDisplayForSpecificRoundByTeamView(OptionalAssistantTournamentPageMixin,
         BriefingRoomDrawByTeamTableMixin, BaseDisplayDrawForSpecificRoundTableView):
     assistant_page_permissions = ['all_areas', 'results_draw']
 
-    def is_page_enabled(self, tournament):
-        return self.round.is_current and super().is_page_enabled(tournament)
+    def is_page_enabled(self):
+        return self.round.is_current and super().is_page_enabled()
 
 
 class AssistantDrawDisplayForCurrentRoundsByVenueView(OptionalAssistantTournamentPageMixin,

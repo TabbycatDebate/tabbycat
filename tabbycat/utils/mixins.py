@@ -4,6 +4,7 @@ import os
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db import connection
+from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import ContextMixin
@@ -43,8 +44,30 @@ class TabbycatPageTitlesMixin(ContextMixin):
 
 
 # ==============================================================================
-# Mixins regulating access based on user account status
+# Mixins regulating access based on user account or page status
 # ==============================================================================
+
+class BaseAccessControlledPageMixin:
+    """Base mixin for views that can be enabled and disabled."""
+
+    def is_page_enabled(self):
+        raise NotImplementedError
+
+    def render_page_disabled_error_page(self):
+        return TemplateResponse(
+            request=self.request,
+            template=self.template_403_name,
+            context={'user_role': self._user_role},
+            status=403,
+        )
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.is_page_enabled():
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            logger.warning("Tried to access a disabled %s page" % (self._user_role,))
+            return self.render_page_disabled_error_page()
+
 
 class AdministratorMixin(UserPassesTestMixin, ContextMixin):
     """Mixin for views that are for administrators.

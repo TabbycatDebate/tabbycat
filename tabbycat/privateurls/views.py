@@ -180,7 +180,7 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
 
     table_title = _("Debates")
 
-    def is_page_enabled(self, tournament):
+    def is_page_enabled(self):
         return True
 
     def get_object(self, url_key):

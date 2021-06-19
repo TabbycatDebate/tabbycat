@@ -8,7 +8,6 @@ from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models import Prefetch, Q
 from django.shortcuts import get_object_or_404, redirect
-from django.template.response import TemplateResponse
 from django.urls import NoReverseMatch, reverse
 from django.utils.encoding import force_str
 from django.utils.translation import gettext as _
@@ -24,7 +23,7 @@ from participants.serializers import InstitutionSerializer
 from tournaments.serializers import RoundSerializer, TournamentSerializer
 from utils.misc import (add_query_string_parameter, redirect_tournament,
                         reverse_round, reverse_tournament)
-from utils.mixins import AssistantMixin, CacheMixin, TabbycatPageTitlesMixin
+from utils.mixins import AssistantMixin, BaseAccessControlledPageMixin, CacheMixin, TabbycatPageTitlesMixin
 from utils.serializers import django_rest_json_render
 
 from .models import Round, Tournament
@@ -279,28 +278,10 @@ class CurrentRoundMixin(RoundMixin, ContextMixin):
 # Mixins regulating public and assistant tournament views
 # ==============================================================================
 
-class TournamentAccessControlledPageMixin(TournamentMixin):
+class TournamentAccessControlledPageMixin(BaseAccessControlledPageMixin, TournamentMixin):
     """Base mixin for views that can be enabled and disabled by a tournament
     preference."""
-
-    def is_page_enabled(self, tournament):
-        raise NotImplementedError
-
-    def render_page_disabled_error_page(self):
-        return TemplateResponse(
-            request=self.request,
-            template=self.template_403_name,
-            context={'user_role': self._user_role},
-            status=403,
-        )
-
-    def dispatch(self, request, *args, **kwargs):
-        tournament = self.tournament
-        if self.is_page_enabled(tournament):
-            return super().dispatch(request, *args, **kwargs)
-        else:
-            logger.warning("Tried to access a disabled %s page" % (self._user_role,))
-            return self.render_page_disabled_error_page()
+    pass
 
 
 class PersonalizablePublicTournamentPageMixin(TournamentAccessControlledPageMixin):
@@ -312,10 +293,10 @@ class PersonalizablePublicTournamentPageMixin(TournamentAccessControlledPageMixi
     template_403_name = "errors/public_403.html"
     _user_role = "public"
 
-    def is_page_enabled(self, tournament):
+    def is_page_enabled(self):
         if self.public_page_preference is None:
             raise ImproperlyConfigured("public_page_preference isn't set on this view.")
-        return tournament.pref(self.public_page_preference)
+        return self.tournament.pref(self.public_page_preference)
 
 
 class PublicTournamentPageMixin(PersonalizablePublicTournamentPageMixin, CacheMixin):
@@ -356,12 +337,12 @@ class OptionalAssistantTournamentPageMixin(AssistantMixin, TournamentAccessContr
     template_403_name = "errors/assistant_403.html"
     _user_role = "assistant"
 
-    def is_page_enabled(self, tournament):
-        if tournament is None:
+    def is_page_enabled(self):
+        if self.tournament is None:
             return False
         if self.assistant_page_permissions is None:
             raise ImproperlyConfigured("assistant_page_permissions isn't set on this view.")
-        return tournament.pref('assistant_access') in self.assistant_page_permissions
+        return self.tournament.pref('assistant_access') in self.assistant_page_permissions
 
 
 # ==============================================================================

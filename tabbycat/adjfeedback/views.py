@@ -431,8 +431,8 @@ class PublicAddFeedbackIndexView(PublicTournamentPageMixin, BaseAddFeedbackIndex
     template_name = 'public_add_feedback.html'
     tabroom = False
 
-    def is_page_enabled(self, tournament):
-        return tournament.pref('participant_feedback') == 'public'
+    def is_page_enabled(self):
+        return self.tournament.pref('participant_feedback') == 'public'
 
     def get_from_adj_link(self, team):
         return reverse_tournament('adjfeedback-public-add-from-adjudicator-pk',
@@ -555,8 +555,8 @@ class PublicAddFeedbackByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, Pub
         # It's a private URL, so always show the team's real name.
         return team.short_name
 
-    def is_page_enabled(self, tournament):
-        return tournament.pref('participant_feedback') == 'private-urls'
+    def is_page_enabled(self):
+        return self.tournament.pref('participant_feedback') == 'private-urls'
 
     def get_submitter_fields(self):
         fields = super().get_submitter_fields()
@@ -593,8 +593,8 @@ class PublicAddFeedbackByIdUrlView(PublicAddFeedbackView):
         use_code_names = use_team_code_names(self.tournament, admin=False)
         return team.code_name if use_code_names else team.short_name
 
-    def is_page_enabled(self, tournament):
-        return tournament.pref('participant_feedback') == 'public'
+    def is_page_enabled(self):
+        return self.tournament.pref('participant_feedback') == 'public'
 
     def get_success_url(self):
         # Redirect to non-cached page: the public feedback form

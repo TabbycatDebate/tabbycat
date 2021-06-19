@@ -3,12 +3,13 @@ from threading import Lock
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
-from django.http import HttpResponseForbidden
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 from dynamic_preferences.registries import global_preferences_registry
+
+from utils.mixins import BaseAccessControlledPageMixin
 
 from .forms import SuperuserCreationForm, TabRegistrationForm
 
@@ -16,16 +17,10 @@ User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
-class SignUpView(FormView):
+class SignUpView(BaseAccessControlledPageMixin, FormView):
     form_class = TabRegistrationForm
     success_url = reverse_lazy('tabbycat-index')
     template_name = 'signup.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        if self.is_page_enabled():
-            return super().dispatch(request, *args, **kwargs)
-        else:
-            return HttpResponseForbidden()
 
     def get_context_data(self, **kwargs):
         kwargs['for_admin'] = self.admin_account
@@ -35,7 +30,7 @@ class SignUpView(FormView):
         prefs = global_preferences_registry.manager()
         admin_key = prefs['global__admin_account_key']
         assist_key = prefs['global__assistant_account_key']
-        if not (admin_key or assist_key):
+        if not (admin_key or assist_key):  # Don't allow blank passwords
             return False
         if admin_key == self.kwargs['key']:
             self.admin_account = True

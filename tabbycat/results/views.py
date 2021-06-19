@@ -557,8 +557,8 @@ class OldPublicNewBallotSetByIdUrlView(SingleObjectFromTournamentMixin, BasePubl
     def get_success_url(self):
         return reverse_tournament('post-results-public-ballotset-new', self.tournament)
 
-    def is_page_enabled(self, tournament):
-        return tournament.pref('participant_ballots') == 'public'
+    def is_page_enabled(self):
+        return self.tournament.pref('participant_ballots') == 'public'
 
 
 class OldPublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, BasePublicNewBallotSetView):
@@ -569,8 +569,8 @@ class OldPublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin,
     def get_success_url(self):
         return reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': self.kwargs['url_key']})
 
-    def is_page_enabled(self, tournament):
-        return tournament.pref('participant_ballots') == 'private-urls'
+    def is_page_enabled(self):
+        return self.tournament.pref('participant_ballots') == 'private-urls'
 
 
 class PostPublicBallotSetSubmissionURLView(TournamentMixin, TemplateView):
@@ -663,7 +663,7 @@ class AdjudicatorPrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandom
     slug_url_kwarg = 'url_key'
     slug_field = 'debateadjudicator__adjudicator__url_key'
 
-    def is_page_enabled(self, tournament):
+    def is_page_enabled(self):
         return True
 
     def check_permissions(self):
@@ -697,7 +697,7 @@ class SpeakerPrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomised
     slug_field = 'debateteam__team__speaker__url_key'
     public_page_preference = 'private_ballots_released'
 
-    def is_page_enabled(self, tournament):
+    def is_page_enabled(self):
         return True
 
     def get_queryset(self):
@@ -708,8 +708,8 @@ class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, RoundMixin, Vue
     """Public view listing all debate-adjudicators for the current round, as
     links for them to enter their ballots."""
 
-    def is_page_enabled(self, tournament):
-        return tournament.pref('participant_ballots') == 'public'
+    def is_page_enabled(self):
+        return self.tournament.pref('participant_ballots') == 'public'
 
     def is_draw_released(self):
         return self.round.draw_status == Round.STATUS_RELEASED and self.round.motions_good_for_public
