@@ -356,16 +356,15 @@ msgstr ""
 
 #: templates/footer.html:24
 #, python-format
-msgid "For a tournament of this size, we suggest a donation of <strong>$%(amount)s</strong>."
+msgid "For a tournament of this size, we suggest <a href=\"https://opencollective.com/tabbycat/contribute/licensing-29466/checkout?amount=%(amount)s\">a donation of <strong>$%(amount)s</strong></a>."
 msgstr ""
 
 #: templates/footer.html:28
 msgid "Learn more about donating."
 msgstr ""
 
-#: templates/footer.html:32
-#, python-format
-msgid "<a href=\"%(donations_link)s\">Donations to Tabbycat from individuals or organisations</a> are much appreciated."
+#: templates/footer.html:31
+msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated."
 msgstr ""
 
 #: templates/footer.html:40
@@ -377,12 +376,12 @@ msgstr ""
 msgid "Using an app designed for debate timekeeping makes speaking and adjudicating easier! Check out <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/iPad) or <a href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper</a> (Android)."
 msgstr ""
 
-#: templates/footer.html:51
-msgid "Need ballots?"
+#: templates/footer.html:50
+msgid "Our Organisation"
 msgstr ""
 
-#: templates/footer.html:53
-msgid "You can <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" rel=\"noreferrer\" target=\"_blank\"> customise and print</a> great ballots from your browser."
+#: templates/footer.html:52
+msgid "Tabbycat is supported by the <a href=\"http://tabbycat-debate.org/\">Tabbycat Debate Association</a>, a non-profit for advancing open debate technology."
 msgstr ""
 
 #: templates/footer.html:66

@@ -410,33 +410,6 @@ msgstr ""
 msgid "Cancel and go back to the site home page"
 msgstr ""
 
-#: tournaments/templates/donations.html:4
-#: tournaments/templates/donations.html:5
-msgctxt "title"
-msgid "Donate to Tabbycat"
-msgstr ""
-
-#: tournaments/templates/donations.html:11
-msgid "Tabbycat is a volunteer effort. Since 2012, its maintainers have spent thousands of hours working on it."
-msgstr ""
-
-#: tournaments/templates/donations.html:17
-msgid "Donating to Tabbycat helps the maintainers to meet recurring costs and justify our ongoing contributions in responding to support enquiries, keeping the software up to date, fixing bugs, and developing new features."
-msgstr ""
-
-#: tournaments/templates/donations.html:24
-msgid "We suggest that tournaments budget for a donation of A$1 (Australian dollar) per team. For tournaments run for fundraising or for profit, whether partly or solely, this payment is <strong>required</strong> and your licence to use Tabbycat is conditional upon it. General donations from individuals or organisations are of course also much appreciated."
-msgstr ""
-
-#: tournaments/templates/donations.html:34
-#, python-format
-msgid "Our suggested donation from %(tournament)s, based on its size, is <strong>A$%(nteams)s</strong>. The easiest way to donate is <a href=\"http://PayPal.Me/tabbycatproject/%(nteams)saud\">via Paypal</a>, but please don’t hesitate to <a href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html#email\">email us</a> if other methods would work better for you. Also, feel free to get in touch if you require an invoice or receipt for the payment."
-msgstr ""
-
-#: tournaments/templates/donations.html:46
-msgid "The easiest way to donate is <a href=\"http://PayPal.Me/tabbycatproject/0aud\">via Paypal</a>. Please <a href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html\">contact us</a> if you require other options."
-msgstr ""
-
 #: tournaments/templates/fix_debate_teams.html:6
 msgid "Debate Team Missing"
 msgstr ""
