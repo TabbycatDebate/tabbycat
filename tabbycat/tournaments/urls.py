@@ -71,7 +71,4 @@ urlpatterns = [
     path('admin/fix-debate-teams/',
         views.FixDebateTeamsView.as_view(),
         name='tournament-fix-debate-teams'),
-    path('donations/',
-        views.TournamentDonationsView.as_view(),
-        name='tournament-donations'),
 ]

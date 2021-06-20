@@ -2,6 +2,15 @@
 Change Log
 ==========
 
+2.5.9
+-----
+*Release date: 20 June 2021*
+
+- Replaced the paper ballot mention in the footer by a mention of the Tabbycat Debate Association
+- Linked to the Open Collective page for Tabbycat in the footer rather than have a donations page
+- Replaced use of Australian Dollars by Canadian Dollars
+
+
 2.5.8
 -----
 *Release date: 2 April 2021*

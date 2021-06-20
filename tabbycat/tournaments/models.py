@@ -19,7 +19,7 @@ PROHIBITED_TOURNAMENT_SLUGS = [
     'start', 'create', 'load-demo', # Setup Wizards
     'tournament', 'notifications', 'archive', 'api', # Cross-Tournament app's view roots
     'favicon.ico', 'robots.txt',  # Files that must be at top level
-    '__debug__', 'static', 'donations', 'style', 'i18n', 'jsi18n']  # Misc
+    '__debug__', 'static', 'style', 'i18n', 'jsi18n']  # Misc
 
 
 def validate_tournament_slug(value):
