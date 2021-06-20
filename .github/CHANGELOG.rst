@@ -21,6 +21,16 @@ Change Log
 - Added a means to allow site administrators to send a private link to people they wish to add to the site as admins or assistants. Upon receiving that link, users can complete the signup process themselves. Thanks to Tom Kunc for the pull request! (`#685 <https://github.com/TabbycatDebate/tabbycat/pull/685>`_)
 - Uncalculable metrics now show as None rather than 0, and more standings configurations are now solely handled through the database. (`#1647 <https://github.com/TabbycatDebate/tabbycat/pull/1647>`_)
 
+
+2.5.9
+-----
+*Release date: 20 June 2021*
+
+- Replaced the paper ballot mention in the footer by a mention of the Tabbycat Debate Association
+- Linked to the Open Collective page for Tabbycat in the footer rather than have a donations page
+- Replaced use of Australian Dollars by Canadian Dollars
+
+
 2.5.8
 -----
 *Release date: 2 April 2021*

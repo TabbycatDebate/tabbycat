@@ -38,9 +38,6 @@ urlpatterns = [
         name='tabbycat-inactive-tournaments'),
 
     # Top Level Pages
-    path('donations/',
-        tournaments.views.DonationsView.as_view(),
-        name='donations'),
     path('style/',
         tournaments.views.StyleGuideView.as_view(),
         name='style-guide'),

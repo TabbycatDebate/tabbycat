@@ -308,14 +308,6 @@ class FixDebateTeamsView(AdministratorMixin, TournamentMixin, TemplateView):
         return TemplateView.dispatch(self, request, *args, **kwargs)
 
 
-class DonationsView(CacheMixin, TemplateView):
-    template_name = 'donations.html'
-
-
-class TournamentDonationsView(TournamentMixin, TemplateView):
-    template_name = 'donations.html'
-
-
 class StyleGuideView(TemplateView, TabbycatPageTitlesMixin):
     template_name = 'admin/style_guide.html'
     page_subtitle = 'Contextual sub title'
