@@ -459,6 +459,7 @@ class TeamSerializer(serializers.ModelSerializer):
                 self.fields.pop('institution')
                 self.fields.pop('use_institution_prefix')
                 self.fields.pop('reference')
+                self.fields.pop('short_reference')
                 self.fields.pop('short_name')
                 self.fields.pop('long_name')
             elif not t.pref('show_team_institutions'):
@@ -483,7 +484,7 @@ class TeamSerializer(serializers.ModelSerializer):
             validated_data['short_reference'] = validated_data['reference'][:34]
 
         speakers_data = validated_data.pop('speakers', [])
-        break_categories = validated_data.pop('break_categories')
+        break_categories = validated_data.pop('break_categories', [])
 
         emoji, code_name = pick_unused_emoji()
         if 'emoji' not in validated_data or validated_data.get('emoji') is None:
