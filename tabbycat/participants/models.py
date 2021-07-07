@@ -4,7 +4,8 @@ from warnings import warn
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import Sum
+from django.db.models import Sum, Value
+from django.db.models.functions import Coalesce
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
@@ -273,7 +274,7 @@ class Team(models.Model):
         except AttributeError:
             from results.models import TeamScore
             self._points = TeamScore.objects.filter(ballot_submission__confirmed=True,
-                    debate_team__team=self).aggregate(Sum('points'))['points__sum']
+                    debate_team__team=self).aggregate(p=Coalesce(Sum('points'), Value(0)))['p']
             return self._points
 
     @cached_property
