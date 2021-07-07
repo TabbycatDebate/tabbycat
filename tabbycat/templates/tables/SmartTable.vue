@@ -86,7 +86,13 @@ export default {
       const cellData = _.isUndefined(cell.sort) ? cell.text : cell.sort
       return cellData
     },
+    async copyTableData () {
+      let tableCSV = this.tableHeaders.map(x => x.key).join('\t') + '\r\n'
+      for (const row of this.tableContent) {
+        tableCSV += row.map(x => x.text.replace(/<[^>]*>?/gm, '')).join('\t') + '\r\n'
+      }
+      await navigator.clipboard.writeText(tableCSV)
+    },
   },
-
 }
 </script>

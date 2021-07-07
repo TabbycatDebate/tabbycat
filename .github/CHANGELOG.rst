@@ -12,6 +12,7 @@ Change Log
 - Personal redactions foro speakers and adjudicators are indicated in admin tables, but are not hidden. (`#1480 <https://github.com/TabbycatDebate/tabbycat/issues/1480>`_)
 - Unexpected team feedback is unconfirmed to avoid affecting the scores of unexpected adjudicators. (`#473 <https://github.com/TabbycatDebate/tabbycat/issues/473>`_)
 - Added some database area actions to assign emojis and code names, previously only available as commands.
+- Added a button to copy each table to the clipboard in a CSV format
 - Removed some obsolete management commands.
 - Implemented tournament import and export capabilities for `DebateXML <https://github.com/TabbycatDebate/DebateXML>`_.
 - Allow for participant ballot submissions during concurrent rounds.
