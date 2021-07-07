@@ -44,7 +44,7 @@ Generating the draw
 
     If you *do* find something wrong with a draft draw, you can edit the match-ups, but please also let us know what the problem was! You can find our contact details in the :ref:`authors` section.
 
-2. Once on the confirmed draw page you can click **Edit Adjudicators**.
+2. Once on the confirmed draw page you can click **Allocate Adjudicators**.
 
   .. image:: images/draw-without-adjs.png
 
@@ -61,7 +61,7 @@ Releasing the draw
 
 Once you're happy with your adjudicator allocation, you're ready to start the round.
 
-1. **Release to general assembly.** From the *Display* page for that round, go to **Show by Venue** or **Show by Team** (whichever you prefer). Then put it up on the projector. There are automatic scroll buttons and buttons for changing text sizing.
+1. **Release to general assembly.** From the *Display* page for that round, go to **Display Draw ordered by Room** or **Display Draw ordered by Team** (whichever you prefer). Then put it up on the projector. There are automatic scroll buttons and buttons for changing text sizing.
 
   .. image:: images/draw-by-venue.png
 
