@@ -35,7 +35,6 @@
       {% elif tracker.expected %}
         <div class="list-group-item {% if not pref.feedback_progress %}list-group-item-secondary{% endif %} text-warning">
           <span class="badge badge-secondary">{{ tracker.round.name }}</span>
-          <i data-feather="info"></i>
           {% trans "More feedback submissions than expected for this debate:" %}
           {% for submission in tracker.acceptable_submissions %}
             <strong>{{ submission.adjudicator.name }}</strong>{% if not forloop.last %},{% endif %}
