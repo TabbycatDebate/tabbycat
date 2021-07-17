@@ -566,7 +566,7 @@ class Round(models.Model):
     @cached_property
     def is_last(self):
         """Returns a boolean if no next round in the sequence exists."""
-        return not self._rounds_in_same_sequence().filter(seq__gt=self.seq).order_by('seq').exists()
+        return not self._rounds_in_same_sequence().filter(seq__gt=self.seq).exists()
 
     @cached_property
     def is_break_round(self):

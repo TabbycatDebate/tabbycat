@@ -21,7 +21,8 @@ from results.models import BallotSubmission
 from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
 from utils.misc import redirect_round, redirect_tournament, reverse_round, reverse_tournament
-from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin, WarnAboutDatabaseUseMixin
+from utils.mixins import (AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin,
+                          WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin)
 from utils.views import PostOnlyRedirectView
 
 from .forms import (SetCurrentRoundMultipleBreakCategoriesForm,
@@ -35,7 +36,7 @@ User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
-class PublicSiteIndexView(WarnAboutDatabaseUseMixin, TemplateView):
+class PublicSiteIndexView(WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin, TemplateView):
     template_name = 'site_index.html'
 
     def get(self, request, *args, **kwargs):
@@ -67,7 +68,7 @@ class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
     template_name = 'public_tournament_index.html'
 
 
-class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin, TemplateView):
+class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         t = self.tournament
