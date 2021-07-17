@@ -3,7 +3,6 @@ import logging
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Exists, OuterRef, Q
-from django.shortcuts import get_object_or_404
 from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
@@ -178,14 +177,17 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
     template_name = 'public_url_landing.html'
     model = Person
 
+    slug_field = 'url_key'
+    slug_url_kwarg = 'url_key'
+
     table_title = _("Debates")
 
     def is_page_enabled(self, tournament):
         return True
 
-    def get_object(self, url_key):
-        q = self.model.objects.filter(Q(adjudicator__tournament=self.tournament) | Q(speaker__team__tournament=self.tournament))
-        return get_object_or_404(q, url_key=url_key)
+    def get_queryset(self):
+        return self.model.objects.filter(
+            Q(adjudicator__tournament=self.tournament) | Q(speaker__team__tournament=self.tournament))
 
     def get_table(self):
         if hasattr(self.object, 'adjudicator'):
@@ -194,8 +196,7 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
             return TeamDebateTable.get_table(self, self.object.speaker.team)
 
     def get_context_data(self, **kwargs):
-        self.private_url_key = kwargs['url_key']
-        self.object = self.get_object(kwargs['url_key'])
+        self.object = self.get_object()
         t = self.tournament
 
         try:
