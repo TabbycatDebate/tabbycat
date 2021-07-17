@@ -291,7 +291,7 @@ class Exporter:
                 institution_tag.set('region', institution.region.name)
 
     def add_motions(self):
-        for motion in Motion.objects.filter(round__tournament=self.t):
+        for motion in Motion.objects.filter(tournament=self.t):
             motion_tag = SubElement(self.root, 'motion', {
                 'id': MOTION_PREFIX + str(motion.id),
                 'reference': motion.reference,
