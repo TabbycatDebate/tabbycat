@@ -2,34 +2,6 @@ from django.db import migrations
 from django.db.models import Count, Prefetch
 
 
-def modify_ballotsubmission_motions(apps, schema_editor, reverse):
-    Tournament = apps.get_model('tournaments', 'Tournament')
-    BallotSubmission = apps.get_model('results', 'BallotSubmission')
-    Round = apps.get_model('tournaments', 'Round')
-    tournaments = Tournament.objects.prefetch_related(Prefetch(
-        'round_set', queryset=Round.objects.annotate(
-            num_motions=Count('roundmotion')).filter(num_motions=1
-        ).prefetch_related('debate_set', 'roundmotion_set')))
-    for t in tournaments.all():
-        pref, created = t.preferences.get_or_create(section='motions', name='enable_motions', defaults={'raw_value': 'False'})
-        if pref.raw_value == 'True':
-            continue
-        for r in t.round_set.all():
-            if r.roundmotion_set.count() != 1:
-                continue
-            motion_id = None if reverse else r.roundmotion_set.get().motion_id
-            BallotSubmission.objects.filter(
-                debate__in=list(r.debate_set.all()), motion__isnull=not reverse).update(motion_id=motion_id)
-
-
-def populate_ballotsubmission_motions(apps, schema_editor):
-    modify_ballotsubmission_motions(apps, schema_editor, False)
-
-
-def depopulate_ballotsubmission_motions(apps, schema_editor):
-    modify_ballotsubmission_motions(apps, schema_editor, True)
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -38,6 +10,31 @@ class Migration(migrations.Migration):
         ('options', '0009_create_motions_section'),
     ]
 
+# Complicated query, gets all motions from rounds with only one motion and
+# where the tournament has "enable_motions" false/null, and correlates them
+# to a debate and then sets the ballotsubmission motion field, if null.
     operations = [
-        migrations.RunPython(populate_ballotsubmission_motions, depopulate_ballotsubmission_motions),
+        migrations.RunSQL(
+            """
+UPDATE results_ballotsubmission bs SET motion_id=rm.motion_id
+    FROM draw_debate d
+    INNER JOIN tournaments_round r ON d.round_id=r.id
+    INNER JOIN tournaments_tournament t ON r.tournament_id=t.id
+    LEFT JOIN options_tournamentpreferencemodel p ON p.instance_id=t.id AND p.name = 'enable_motions'
+    INNER JOIN (
+        SELECT round_id, motion_id FROM motions_roundmotion WHERE round_id IN (
+            SELECT round_id FROM motions_roundmotion GROUP BY round_id HAVING COUNT(motion_id)=1)) rm
+        ON r.id=rm.round_id
+    WHERE d.id=bs.debate_id AND bs.motion_id IS NULL AND (p.raw_value='False' OR p.raw_value IS NULL)""",
+            """
+UPDATE results_ballotsubmission bs SET motion_id=NULL
+    FROM draw_debate d
+    INNER JOIN tournaments_round r ON d.round_id=r.id
+    INNER JOIN tournaments_tournament t ON r.tournament_id=t.id
+    LEFT JOIN options_tournamentpreferencemodel p ON p.instance_id=t.id AND p.name = 'enable_motions'
+    INNER JOIN (
+        SELECT round_id, motion_id FROM motions_roundmotion WHERE round_id IN (
+            SELECT round_id FROM motions_roundmotion GROUP BY round_id HAVING COUNT(motion_id)=1)) rm
+        ON r.id=rm.round_id
+    WHERE d.id=bs.debate_id AND (p.raw_value='False' OR p.raw_value IS NULL)"""),
     ]

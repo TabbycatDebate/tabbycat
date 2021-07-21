@@ -22,6 +22,7 @@ Change Log
 - Added a means to allow site administrators to send a private link to people they wish to add to the site as admins or assistants. Upon receiving that link, users can complete the signup process themselves. Thanks to Tom Kunc for the pull request! (`#685 <https://github.com/TabbycatDebate/tabbycat/pull/685>`_)
 - Uncalculable metrics now show as None rather than 0, and more standings configurations are now solely handled through the database. (`#1647 <https://github.com/TabbycatDebate/tabbycat/pull/1647>`_)
 - Removed automatic SendGrid provision, changed config var name to ``SENDGRID_API_KEY`` and updated documentation on email configuration (`#1752 <https://github.com/TabbycatDebate/tabbycat/pull/1752>`_)
+- Motions are associated to ballots even when motion selection is disabled, to consolidate motion statistics queries. A migration will attempt to associate motions to existing ballots where motion selection is deactivated and the round of the ballot only has one motion.
 
 
 2.5.9
