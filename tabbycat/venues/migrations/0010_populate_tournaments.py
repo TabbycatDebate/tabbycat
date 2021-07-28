@@ -76,7 +76,7 @@ def find_venue_tournament_via_category(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('venues', '0008_auto_20200705_1525'),
+        ('venues', '0009_auto_20210307_1810'),
     ]
 
     operations = [
