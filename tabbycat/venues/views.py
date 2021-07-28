@@ -78,6 +78,7 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
         if self.instances:
             for category in self.instances:
                 category.tournament = self.tournament
+                category.save()
 
             message = ngettext("Saved room category: %(list)s",
                 "Saved venue categories: %(list)s",
