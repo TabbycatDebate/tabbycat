@@ -23,6 +23,7 @@ Change Log
 - Uncalculable metrics now show as None rather than 0, and more standings configurations are now solely handled through the database. (`#1647 <https://github.com/TabbycatDebate/tabbycat/pull/1647>`_)
 - Removed automatic SendGrid provision, changed config var name to ``SENDGRID_API_KEY`` and updated documentation on email configuration (`#1752 <https://github.com/TabbycatDebate/tabbycat/pull/1752>`_)
 - Motions are associated to ballots even when motion selection is disabled, to consolidate motion statistics queries. A migration will attempt to associate motions to existing ballots where motion selection is deactivated and the round of the ballot only has one motion.
+- A migration will attempt to associate venues and venue categories to a tournament if currently unlinked.
 
 
 2.5.9
