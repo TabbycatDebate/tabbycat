@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-07-05 17:06\n"
+"POT-Creation-Date: 2021-04-02 01:40-0300\n"
+"PO-Revision-Date: 2021-04-02 04:46\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -23,7 +23,7 @@ msgid "Private URL Management"
 msgstr "Управление личным URL"
 
 #: privateurls/templates/private_urls.html:4
-#: privateurls/templates/private_urls.html:5 privateurls/views.py:144
+#: privateurls/templates/private_urls.html:5 privateurls/views.py:145
 msgid "Private URLs"
 msgstr "Личный URL"
 
@@ -124,41 +124,45 @@ msgstr "Вы были зарегистрированы в %(check_time)s"
 msgid "You are not currently checked in."
 msgstr "В настоящее время вы не зарегистрированы."
 
-#: privateurls/templates/public_url_landing.html:61
-msgid "Submit Ballot"
-msgstr "Отправить бэллот"
+#: privateurls/templates/public_url_landing.html:62
+#, python-format
+msgid "Submit Ballot for %(round)s"
+msgstr ""
 
-#: privateurls/templates/public_url_landing.html:67
-#: privateurls/templates/public_url_landing.html:73
+#: privateurls/templates/public_url_landing.html:65
+msgid "There are no current rounds"
+msgstr ""
+
+#: privateurls/templates/public_url_landing.html:71
 msgid "Submit Feedback"
 msgstr "Отправить форму обратной связи"
 
-#: privateurls/templates/public_url_landing.html:82
+#: privateurls/templates/public_url_landing.html:84
 #, python-format
 msgid "Registration (%(name)s)"
 msgstr "Регистрация (%(name)s)"
 
-#: privateurls/views.py:62
+#: privateurls/views.py:63 privateurls/views.py:164
 msgid "no URL"
 msgstr "нет URL"
 
-#: privateurls/views.py:75
+#: privateurls/views.py:76
 msgid "URL"
 msgstr "URL"
 
-#: privateurls/views.py:86
+#: privateurls/views.py:87
 msgid "Speakers"
 msgstr "Спикеры"
 
-#: privateurls/views.py:96
+#: privateurls/views.py:97
 msgid "Adjudicators"
 msgstr "Судьи"
 
-#: privateurls/views.py:118
+#: privateurls/views.py:119
 msgid "All participants already have private URLs. If you want to delete them, use the Edit Database area."
 msgstr "Все участники уже имеют личные URL. Если вы хотите удалить их, используйте область \"Редактировать базу данных\"."
 
-#: privateurls/views.py:125
+#: privateurls/views.py:126
 #, python-format
 msgid "A private URL was generated for %(nblank_people)d person."
 msgid_plural "Private URLs were generated for all %(nblank_people)d people."
@@ -167,7 +171,7 @@ msgstr[1] "Личные URL были созданы для %(nblank_people)d."
 msgstr[2] "Личные URL были созданы для %(nblank_people)d."
 msgstr[3] "Личные URL были созданы для %(nblank_people)d."
 
-#: privateurls/views.py:130
+#: privateurls/views.py:131
 #, python-format
 msgid "The already-existing private URL for %(nexisting_people)d person was left intact."
 msgid_plural "The already-existing private URLs for %(nexisting_people)d people were left intact."
@@ -176,11 +180,11 @@ msgstr[1] "Уже существующие личные URL для %(nexisting_p
 msgstr[2] "Уже существующие личные URL для %(nexisting_people)d остались неиспользованными."
 msgstr[3] "Уже существующие личные URL для %(nexisting_people)d остались неиспользованными."
 
-#: privateurls/views.py:161
+#: privateurls/views.py:172
 msgid "URL Key"
 msgstr "Ключ URL"
 
-#: privateurls/views.py:174
+#: privateurls/views.py:181
 msgid "Debates"
 msgstr "Дебаты"
 

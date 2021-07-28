@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-23 04:46\n"
+"PO-Revision-Date: 2021-04-15 05:44\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../../features/breaks.rst:5
 msgid "Breaks and Break Rounds"
-msgstr ""
+msgstr "Istirahat dan Babak Istirahat"
 
 #: ../../features/breaks.rst:7
 msgid "In Tabbycat, elimination rounds (sometimes called *outrounds* or the *final series*) are called \"break rounds\", and the qualification of teams to compete in the elimination phase of a tournament is called the \"break\"."
@@ -28,7 +28,7 @@ msgstr ""
 
 #: ../../features/breaks.rst:12
 msgid "About break categories"
-msgstr ""
+msgstr "Tentang kategori istirahat"
 
 #: ../../features/breaks.rst:14
 msgid "Tabbycat supports multiple and arbitrarily-named break categories. Most tournaments will have just one category, typically called \"Open\", leading to the grand final. Some tournaments also have restricted-eligibility break categories, for example, for novice teams or teams for whom English is a second language."
@@ -132,7 +132,7 @@ msgstr ""
 
 #: ../../features/breaks.rst:97
 msgid "1. Creating break categories"
-msgstr ""
+msgstr "1. Membuat kategori istirahat"
 
 #: ../../features/breaks.rst:99
 msgid "If using the `importtournament` command, there is an example file, *break_categories.csv*, that you can copy and adjust. If using **Edit Database**, add categories under **Break Qualification > Break categories**."
@@ -180,7 +180,7 @@ msgstr ""
 
 #: ../../features/breaks.rst:140
 msgid "Generating the break"
-msgstr ""
+msgstr "Menghasilkan Istirahat"
 
 #: ../../features/breaks.rst:142
 msgid "Unlike team or speaker standings, each category's break (and the break ranks of teams) are not determined automatically and updated continuously. Instead each can be generated (and regenerated) as desired."
@@ -200,7 +200,7 @@ msgstr ""
 
 #: ../../features/breaks.rst:160
 msgid "Creating draws for break rounds"
-msgstr ""
+msgstr "Membuat undian untuk istirahat"
 
 #: ../../features/breaks.rst:162
 msgid "Creating a draw for a break round proceeds as normal, except that the team availability process is skipped. Instead, when you visit the availability page for that round it will have automatically determined which teams should be debating based upon the determined break for that category. Once a draw has been generated it will then use the relevant break ranks to create the matchups (ie 1st-breaking vs 16th-breaking, 2nd vs 15th, *etc.*). Subsequent break rounds will then also automatically determine matchups based on the previous round's results and room ranks."

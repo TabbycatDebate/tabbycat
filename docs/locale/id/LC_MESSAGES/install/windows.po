@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-23 04:45\n"
+"PO-Revision-Date: 2021-04-18 16:34\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr ""
 
 #: ../../install/windows.rst:10
 msgid "In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`"
-msgstr ""
+msgstr "Dalam kebanyakan kasus, kami merekomendasikan melakukan: ref: `penginstalan berbasis internet di Heroku <install-heroku>` sebagai gantinya. Jika Anda memutuskan untuk melakukan instalasi lokal, pastikan untuk membaca halaman kami di: ref: `local installations <install-local>` untuk membantu Anda memahami apa yang terjadi, khususnya bagian ini:: ref: `install-decision`"
 
 #: ../../install/windows.rst:12
 msgid "If you just want to quickly set up a copy of Tabbycat to run locally on Windows, consider :ref:`installing using Docker<install-docker>`, which is a shorter process than the one below."
@@ -40,7 +40,7 @@ msgstr ""
 
 #: ../../install/windows.rst:17
 msgid "Requisite technical background"
-msgstr ""
+msgstr "Latar belakang teknis yang diperlukan"
 
 #: ../../install/windows.rst:19
 msgid "You need to be familiar with command-line interfaces to get through this comfortably. While a background in the specific tools Tabbycat uses (Python, PostgreSQL, *etc.*) will make things easier, it's not necessary: we'll talk you through the rest. You just need to be prepared to bear with us. It'll take a while the first time, but it gets easier after that."
@@ -53,7 +53,7 @@ msgstr ""
 #: ../../install/windows.rst:23 ../../install/windows.rst:81
 #: ../../install/windows.rst:104
 msgid "Advanced users"
-msgstr ""
+msgstr "Pengguna tingkat lanjut"
 
 #: ../../install/windows.rst:26
 msgid "If you wish to use an SQL engine other that PostgreSQL, most of Tabbycat should work, but a few features rely on SQL functions that aren't supported by all engines. To configure Tabbycat to use a different engine, set the ``DATABASES`` `Django setting <https://docs.djangoproject.com/en/2.2/ref/settings/#databases>`_ accordingly."
@@ -61,7 +61,7 @@ msgstr ""
 
 #: ../../install/windows.rst:29
 msgid "1. Install dependencies"
-msgstr ""
+msgstr "1. instal depedensi"
 
 #: ../../install/windows.rst:31
 msgid "First, you need to install all of the software on which Tabbycat depends, if you don't already have it installed."
@@ -81,7 +81,7 @@ msgstr ""
 
 #: ../../install/windows.rst:42
 msgid "Which file should I download?"
-msgstr ""
+msgstr "Berkas mana yang harus saya download?"
 
 #: ../../install/windows.rst:44
 msgid "Regardless of if you have 64-bit or 32-bit Windows, choose the \"Windows x86 executable installer\"."
@@ -161,19 +161,19 @@ msgstr ""
 
 #: ../../install/windows.rst:98
 msgid "2. Get the source code"
-msgstr ""
+msgstr "2. Dapatkan source codenya"
 
 #: ../../install/windows.rst:100
 msgid "`Go to the page for our latest release <https://github.com/TabbycatDebate/tabbycat/releases/latest>`_."
-msgstr ""
+msgstr "Buka halaman untuk rilis terbaru kami <https://github.com/TabbycatDebate/tabbycat/releases/latest>`_."
 
 #: ../../install/windows.rst:101
 msgid "Download the zip file."
-msgstr ""
+msgstr "Download berkas zip."
 
 #: ../../install/windows.rst:102
 msgid "Extract all files in it to a folder of your choice."
-msgstr ""
+msgstr "Ekstrak semua berkas ke dalam sebuah folder pilihan anda."
 
 #: ../../install/windows.rst:107
 msgid "If you've used Git before, you might prefer to clone `our GitHub repository`_ instead. Don't forget to check out the |vrelease| tag or the master branch."
@@ -185,7 +185,7 @@ msgstr ""
 
 #: ../../install/windows.rst:114
 msgid "3. Set up a new database"
-msgstr ""
+msgstr "3. Buat sebuah basisdata baru"
 
 #: ../../install/windows.rst:116
 msgid "You can skip steps 2 and 3 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like."
@@ -237,11 +237,11 @@ msgstr ""
 
 #: ../../install/windows.rst:143
 msgid "4. Install Tabbycat"
-msgstr ""
+msgstr "4. instal Tabbycat"
 
 #: ../../install/windows.rst:145
 msgid "Almost there!"
-msgstr ""
+msgstr "Hampir Selesai!"
 
 #: ../../install/windows.rst:147
 msgid "Open a Windows PowerShell. Navigate to the folder where you cloned/extracted Tabbycat. For example, if you installed it in ``C:\\Users\\myusername\\Documents\\GitHub\\tabbycat``, then run::"
@@ -273,11 +273,11 @@ msgstr ""
 
 #: ../../install/windows.rst:184
 msgid "Install Tabbycat's requirements."
-msgstr ""
+msgstr "Instal kebutuhan Tabbycat."
 
 #: ../../install/windows.rst:186
 msgid "If you installed **32-bit Python**::"
-msgstr ""
+msgstr "Jika anda telah menginstal **32-bit Python**::"
 
 #: ../../install/windows.rst:192
 msgid "You might be wondering: I thought I already installed the requirements. Why am I installing more? And the answer is: Before, you were installing the requirements to create a Python virtual environment for Tabbycat to live in. Now, you're *in* the virtual environment, and you're installing everything required for *Tabbycat* to operate."
@@ -289,7 +289,7 @@ msgstr ""
 
 #: ../../install/windows.rst:202
 msgid "Start Tabbycat!"
-msgstr ""
+msgstr "Mulai program Tabbycat!"
 
 #: ../../install/windows.rst:208
 msgid "It should show something like this::"
@@ -309,7 +309,7 @@ msgstr ""
 
 #: ../../install/windows.rst:221
 msgid "Starting up an existing Tabbycat instance"
-msgstr ""
+msgstr "Memulai instance Tabbycat yang ada"
 
 #: ../../install/windows.rst:223
 msgid "To start your Tabbycat instance up again next time you use your computer, open a PowerShell and::"

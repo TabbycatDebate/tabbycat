@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-18 17:59-0400\n"
-"PO-Revision-Date: 2020-11-18 22:18\n"
+"POT-Creation-Date: 2021-04-02 01:40-0300\n"
+"PO-Revision-Date: 2021-04-02 04:55\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -17,6 +17,17 @@ msgstr ""
 "X-Crowdin-File: /develop/tabbycat/results/locale/en/LC_MESSAGES/django.po\n"
 "X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-File-ID: 948\n"
+
+#: results/admin.py:42
+#, python-format
+msgid "Resaved results for %(count)d ballot submission."
+msgid_plural "Resaved results for %(count)d ballot submissions."
+msgstr[0] "crwdns51966:1%(count)dcrwdne51966:1"
+msgstr[1] "crwdns51966:5%(count)dcrwdne51966:5"
+
+#: results/admin.py:45
+msgid "Resave results"
+msgstr "crwdns51968:0crwdne51968:0"
 
 #: results/apps.py:7 results/templates/public_results_index.html:4
 #: results/templates/public_results_index.html:5 results/views.py:140
@@ -40,106 +51,106 @@ msgstr "crwdns32388:0crwdne32388:0"
 msgid "Please enter a multiple of %s."
 msgstr "crwdns32390:0%scrwdne32390:0"
 
-#: results/forms.py:160
+#: results/forms.py:162
 msgid "The ballot set can't be both discarded and confirmed."
 msgstr "crwdns32392:0crwdne32392:0"
 
-#: results/forms.py:167
+#: results/forms.py:169
 msgid "The debate status can't be confirmed unless one of the ballot sets is confirmed."
 msgstr "crwdns32394:0crwdne32394:0"
 
-#: results/forms.py:297 results/forms.py:331
+#: results/forms.py:299 results/forms.py:333
 msgid "---------"
 msgstr "crwdns32396:0crwdne32396:0"
 
-#: results/forms.py:299 results/forms.py:301
+#: results/forms.py:301 results/forms.py:303
 #, python-format
 msgid "%(aff_team)s affirmed, %(neg_team)s negated"
 msgstr "crwdns32398:0%(aff_team)scrwdnd32398:0%(neg_team)scrwdne32398:0"
 
-#: results/forms.py:318
+#: results/forms.py:320
 #, python-format
 msgid "%(side)s's motion veto"
 msgstr "crwdns51398:0%(side)scrwdne51398:0"
 
-#: results/forms.py:327 results/forms.py:895
+#: results/forms.py:329 results/forms.py:897
 #, python-format
 msgid "%(team)s (%(side)s)"
 msgstr "crwdns32424:0%(team)scrwdnd32424:0%(side)scrwdne32424:0"
 
-#: results/forms.py:330
+#: results/forms.py:332
 msgid "Winner"
 msgstr "crwdns51748:0crwdne51748:0"
 
-#: results/forms.py:483
+#: results/forms.py:485
 msgid "Mark as a duplicate speech"
 msgstr "crwdns32402:0crwdne32402:0"
 
-#: results/forms.py:543
+#: results/forms.py:545
 #, python-format
 msgid "The speaker %(speaker)s doesn't appear to be on team %(team)s."
 msgstr "crwdns32406:0%(speaker)scrwdnd32406:0%(team)scrwdne32406:0"
 
-#: results/forms.py:557
+#: results/forms.py:559
 #, python-format
 msgid "%(speaker)s appears to have given %(count)d substantive speech."
 msgid_plural "%(speaker)s appears to have given %(count)d substantive speeches."
 msgstr[0] "crwdns32408:1%(speaker)scrwdnd32408:1%(count)dcrwdne32408:1"
 msgstr[1] "crwdns32408:5%(speaker)scrwdnd32408:5%(count)dcrwdne32408:5"
 
-#: results/forms.py:574
+#: results/forms.py:576
 msgid "The last substantive speaker and reply speaker can't be the same."
 msgstr "crwdns32410:0crwdne32410:0"
 
-#: results/forms.py:581
+#: results/forms.py:583
 msgid "The reply speaker for this team did not give a substantive speech."
 msgstr "crwdns32412:0crwdne32412:0"
 
-#: results/forms.py:713
+#: results/forms.py:715
 msgid "The total scores for the teams are the same (i.e. a draw)."
 msgstr "crwdns32414:0crwdne32414:0"
 
-#: results/forms.py:718
+#: results/forms.py:720
 msgid "The declared winner does not correspond to the team with the highest score."
 msgstr "crwdns51750:0crwdne51750:0"
 
-#: results/forms.py:727
+#: results/forms.py:729
 #, python-format
 msgid "The total scores for the following teams are the same: %(teams)s"
 msgstr "crwdns32416:0%(teams)scrwdne32416:0"
 
-#: results/forms.py:737
+#: results/forms.py:739
 #, python-format
 msgid "The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_margin).1f)."
 msgstr "crwdns32418:0%(margin)crwdnd32418:0%(max_margin)crwdne32418:0"
 
-#: results/forms.py:840
+#: results/forms.py:842
 #, python-format
 msgid "The total scores for the teams are the same (i.e. a draw) for adjudicator %(adjudicator)s."
 msgstr "crwdns51400:0%(adjudicator)scrwdne51400:0"
 
-#: results/forms.py:845
+#: results/forms.py:847
 #, python-format
 msgid "The declared winner does not correspond to the team with the highest score for adjudicator %(adjudicator)s."
 msgstr "crwdns51752:0%(adjudicator)scrwdne51752:0"
 
-#: results/forms.py:853
+#: results/forms.py:855
 #, python-format
 msgid "The margin (%(margin).1f) in the ballot of adjudicator %(adjudicator)s exceeds the maximum allowable margin (%(max_margin).1f)."
 msgstr "crwdns51402:0%(margin)crwdnd51402:0%(adjudicator)scrwdnd51402:0%(max_margin)crwdne51402:0"
 
-#: results/forms.py:909
+#: results/forms.py:917
 msgid "Sides for this debate are not confirmed. You can't save a result for this debate until the sides have been confirmed in the draw."
 msgstr "crwdns32426:0crwdne32426:0"
 
-#: results/forms.py:952
+#: results/forms.py:960
 #, python-format
 msgid "There must be exactly %(n)d team advancing."
 msgid_plural "There must be exactly %(n)d teams advancing."
 msgstr[0] "crwdns51754:1%(n)dcrwdne51754:1"
 msgstr[1] "crwdns51754:5%(n)dcrwdne51754:5"
 
-#: results/forms.py:995
+#: results/forms.py:1003
 msgid "There must be exactly 1 team advancing."
 msgstr "crwdns51756:0crwdne51756:0"
 
@@ -187,131 +198,131 @@ msgstr "crwdns32450:0crwdne32450:0"
 msgid "IP address"
 msgstr "crwdns32452:0crwdne32452:0"
 
-#: results/models.py:97
+#: results/models.py:100
 msgid "A tab room ballot must have a user associated."
 msgstr "crwdns32454:0crwdne32454:0"
 
-#: results/models.py:105
+#: results/models.py:108
 msgid "debate"
 msgstr "crwdns32456:0crwdne32456:0"
 
-#: results/models.py:107
+#: results/models.py:110
 msgid "motion"
 msgstr "crwdns32458:0crwdne32458:0"
 
-#: results/models.py:109
+#: results/models.py:112
 msgid "discarded"
 msgstr "crwdns32460:0crwdne32460:0"
 
-#: results/models.py:113 results/models.py:199 results/models.py:238
-#: results/models.py:276 results/models.py:318
+#: results/models.py:116 results/models.py:211 results/models.py:250
+#: results/models.py:288 results/models.py:330
 msgid "ballot submission"
 msgstr "crwdns32464:0crwdne32464:0"
 
-#: results/models.py:114
+#: results/models.py:117
 msgid "ballot submissions"
 msgstr "crwdns32466:0crwdne32466:0"
 
-#: results/models.py:133
+#: results/models.py:136
 #, python-format
 msgid "Debate is in round %(round)d but motion (%(motion)s) is from round %(motion_round)d"
 msgstr "crwdns32468:0%(round)dcrwdnd32468:0%(motion)scrwdnd32468:0%(motion_round)dcrwdne32468:0"
 
-#: results/models.py:140
+#: results/models.py:143
 msgid "A ballot can't be both confirmed and discarded!"
 msgstr "crwdns32470:0crwdne32470:0"
 
-#: results/models.py:201 results/models.py:240
+#: results/models.py:213 results/models.py:252
 msgid "debate adjudicator"
 msgstr "crwdns32474:0crwdne32474:0"
 
-#: results/models.py:203 results/models.py:242 results/models.py:278
-#: results/models.py:320
+#: results/models.py:215 results/models.py:254 results/models.py:290
+#: results/models.py:332
 msgid "debate team"
 msgstr "crwdns32476:0crwdne32476:0"
 
-#: results/models.py:206 results/models.py:283
+#: results/models.py:218 results/models.py:295
 msgid "win"
 msgstr "crwdns32490:0crwdne32490:0"
 
-#: results/models.py:208 results/models.py:285
+#: results/models.py:220 results/models.py:297
 msgid "margin"
 msgstr "crwdns32492:0crwdne32492:0"
 
-#: results/models.py:210 results/models.py:243 results/models.py:287
-#: results/models.py:323
+#: results/models.py:222 results/models.py:255 results/models.py:299
+#: results/models.py:335
 msgid "score"
 msgstr "crwdns32478:0crwdne32478:0"
 
-#: results/models.py:215
+#: results/models.py:227
 msgid "team score by adjudicator"
 msgstr "crwdns51760:0crwdne51760:0"
 
-#: results/models.py:216
+#: results/models.py:228
 msgid "team scores by adjudicator"
 msgstr "crwdns51762:0crwdne51762:0"
 
-#: results/models.py:231 results/models.py:265
+#: results/models.py:243 results/models.py:277
 msgid "The debate team, debate adjudicator and ballot submission must all relate to the same debate."
 msgstr "crwdns32486:0crwdne32486:0"
 
-#: results/models.py:244 results/models.py:324
+#: results/models.py:256 results/models.py:336
 msgid "position"
 msgstr "crwdns32480:0crwdne32480:0"
 
-#: results/models.py:250
+#: results/models.py:262
 msgid "speaker score by adjudicator"
 msgstr "crwdns32482:0crwdne32482:0"
 
-#: results/models.py:251
+#: results/models.py:263
 msgid "speaker scores by adjudicator"
 msgstr "crwdns32484:0crwdne32484:0"
 
-#: results/models.py:281
+#: results/models.py:293
 msgid "points"
 msgstr "crwdns32488:0crwdne32488:0"
 
-#: results/models.py:289
+#: results/models.py:301
 msgid "votes given"
 msgstr "crwdns32494:0crwdne32494:0"
 
-#: results/models.py:291
+#: results/models.py:303
 msgid "votes possible"
 msgstr "crwdns32496:0crwdne32496:0"
 
-#: results/models.py:295
+#: results/models.py:307
 msgid "team score"
 msgstr "crwdns32498:0crwdne32498:0"
 
-#: results/models.py:296
+#: results/models.py:308
 msgid "team scores"
 msgstr "crwdns32500:0crwdne32500:0"
 
-#: results/models.py:322
+#: results/models.py:334
 msgid "speaker"
 msgstr "crwdns32502:0crwdne32502:0"
 
-#: results/models.py:326
+#: results/models.py:338
 msgid "ghost"
 msgstr "crwdns32504:0crwdne32504:0"
 
-#: results/models.py:327
+#: results/models.py:339
 msgid "If checked, this score does not count towards the speaker tab. This is typically checked for speeches where someone spoke twice to make up for an absent teammate (sometimes known as \"iron-person\" or \"iron-man\" speeches)."
 msgstr "crwdns32506:0crwdne32506:0"
 
-#: results/models.py:336
+#: results/models.py:348
 msgid "speaker score"
 msgstr "crwdns32508:0crwdne32508:0"
 
-#: results/models.py:337
+#: results/models.py:349
 msgid "speaker scores"
 msgstr "crwdns32510:0crwdne32510:0"
 
-#: results/models.py:346
+#: results/models.py:358
 msgid "The debate team and speaker must be from the same team."
 msgstr "crwdns32512:0crwdne32512:0"
 
-#: results/models.py:349
+#: results/models.py:361
 msgid "The ballot submission and debate team must relate to the same debate."
 msgstr "crwdns32514:0crwdne32514:0"
 
@@ -991,65 +1002,65 @@ msgstr "crwdns32800:0%(matchup)scrwdne32800:0"
 msgid "Thanks, %(user)s! Your ballot for %(debate)s has been recorded."
 msgstr "crwdns32802:0%(user)scrwdnd32802:0%(debate)scrwdne32802:0"
 
-#: results/views.py:509
+#: results/views.py:508
 msgid "The draw for this round hasn't been released yet."
 msgstr "crwdns32804:0crwdne32804:0"
 
-#: results/views.py:513
+#: results/views.py:512
 msgid "The motions for this round haven't been released yet."
 msgstr "crwdns32806:0crwdne32806:0"
 
-#: results/views.py:518
+#: results/views.py:517
 msgid "It looks like you don't have a debate this round."
 msgstr "crwdns32808:0crwdne32808:0"
 
-#: results/views.py:520
+#: results/views.py:519
 msgid "It looks like you're assigned to two or more debates this round. Please contact a tab room official."
 msgstr "crwdns32810:0crwdne32810:0"
 
-#: results/views.py:528
+#: results/views.py:530
 msgid "Your debate doesn't have a chair, so you can't enter results for it. Please contact a tab room official."
 msgstr "crwdns32812:0crwdne32812:0"
 
-#: results/views.py:533
+#: results/views.py:535
 msgid "It looks like the sides for this debate haven't yet been confirmed, so you can't enter results for it. Please contact a tab room official."
 msgstr "crwdns32814:0crwdne32814:0"
 
-#: results/views.py:624
+#: results/views.py:622
 msgid "It looks like you were assigned to two or more debates. Please contact a tab room official."
 msgstr "crwdns35504:0crwdne35504:0"
 
-#: results/views.py:642
+#: results/views.py:640
 #, python-format
 msgid "This debate is in %s, which is a silent round."
 msgstr "crwdns34526:0%scrwdne34526:0"
 
-#: results/views.py:645
+#: results/views.py:643
 #, python-format
 msgid "This debate is in %s, the results for which aren't available yet."
 msgstr "crwdns34528:0%scrwdne34528:0"
 
-#: results/views.py:649
+#: results/views.py:647
 #, python-format
 msgid "The result for debate %s is not confirmed."
 msgstr "crwdns34530:0%scrwdne34530:0"
 
-#: results/views.py:652
+#: results/views.py:650
 #, python-format
 msgid "The debate %s does not have a confirmed ballot."
 msgstr "crwdns34532:0%scrwdne34532:0"
 
-#: results/views.py:674
+#: results/views.py:672
 #, python-format
 msgid "There is no result yet for debate %s."
 msgstr "crwdns34534:0%scrwdne34534:0"
 
-#: results/views.py:730
+#: results/views.py:738
 #, python-format
 msgid "Add result from %(adjudicator)s"
 msgstr "crwdns32816:0%(adjudicator)scrwdne32816:0"
 
-#: results/views.py:734
+#: results/views.py:742
 msgid "Adjudicator"
 msgstr "crwdns32818:0crwdne32818:0"
 

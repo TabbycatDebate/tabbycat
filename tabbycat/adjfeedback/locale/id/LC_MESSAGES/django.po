@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-18 17:59-0400\n"
-"PO-Revision-Date: 2020-11-18 22:14\n"
+"POT-Creation-Date: 2021-04-02 01:40-0300\n"
+"PO-Revision-Date: 2021-05-23 06:54\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -17,64 +17,64 @@ msgstr ""
 "X-Crowdin-File: /develop/tabbycat/adjfeedback/locale/en/LC_MESSAGES/django.po\n"
 "X-Crowdin-File-ID: 924\n"
 
-#: adjfeedback/admin.py:43
+#: adjfeedback/admin.py:44
 msgid "Integer scales must have a minimum and maximum"
 msgstr "Skala bilangan bulat harus memiliki minimum dan maksimum"
 
-#: adjfeedback/admin.py:72 adjfeedback/admin.py:138
+#: adjfeedback/admin.py:73 adjfeedback/admin.py:139
 msgid "target"
 msgstr "tujuan"
 
-#: adjfeedback/admin.py:73 adjfeedback/admin.py:139 adjfeedback/models.py:235
+#: adjfeedback/admin.py:74 adjfeedback/admin.py:140 adjfeedback/models.py:236
 msgid "source adjudicator"
 msgstr "juri yang memberi penilaian"
 
-#: adjfeedback/admin.py:74 adjfeedback/admin.py:140 adjfeedback/models.py:237
+#: adjfeedback/admin.py:75 adjfeedback/admin.py:141 adjfeedback/models.py:238
 msgid "source team"
 msgstr "tim yang memberi penilaian"
 
-#: adjfeedback/admin.py:90
+#: adjfeedback/admin.py:91
 #, python-format
 msgid "%(timestamp)s (version %(version)s)"
 msgstr "%(timestamp)s (versi %(version)s)"
 
-#: adjfeedback/admin.py:95
+#: adjfeedback/admin.py:96
 msgid "Target"
 msgstr "Tujuan"
 
-#: adjfeedback/admin.py:96 adjfeedback/admin.py:161
+#: adjfeedback/admin.py:97 adjfeedback/admin.py:162
 msgid "Source"
 msgstr "Sumber"
 
-#: adjfeedback/admin.py:97
+#: adjfeedback/admin.py:98
 msgid "Feedback timestamp and version"
 msgstr "Waktu dan versi penilaian"
 
-#: adjfeedback/admin.py:179
+#: adjfeedback/admin.py:180
 #, python-format
 msgid "1 feedback submission was marked as confirmed. Note that this may have caused other feedback submissions to be marked as unconfirmed."
 msgid_plural "%(count)d feedback submissions were marked as confirmed. Note that this may have caused other feedback submissions to be marked as unconfirmed."
 msgstr[0] "%(count)d penilaian juri telah terkonfirmasi. Perhatikan bahwa ini dapat menyebabkan submisi penilaian juri yang lain menjadi tidak terkonfirmasi."
 
-#: adjfeedback/admin.py:191
+#: adjfeedback/admin.py:192
 #, python-format
 msgid "1 feedback submission was not marked as confirmed, probably because other feedback submissions that conflict with it were also marked as confirmed."
 msgid_plural "%(count)d feedback submissions were not marked as confirmed, probably because other feedback submissions that conflict with them were also marked as confirmed."
 msgstr[0] "%(count)d penilaian juri tidak terkonfirmasi, mungkin karena submisi penilaian juri yang lain berhubungan dengan ini ditandai sebagai terkonfirmasi."
 
-#: adjfeedback/admin.py:204
+#: adjfeedback/admin.py:205
 #, python-format
 msgid "1 feedback submission was marked as unconfirmed."
 msgid_plural "%(count)d feedback submissions were marked as unconfirmed."
 msgstr[0] "%(count)d submisi penilaian juri ditandai sebagai tidak terkonfirmasi."
 
-#: adjfeedback/admin.py:214
+#: adjfeedback/admin.py:215
 #, python-format
 msgid "1 feedback submission is now ignored."
 msgid_plural "%(count)d feedback submissions are now ignored."
 msgstr[0] "%(count)d submisi penilaian juri telah diabaikan."
 
-#: adjfeedback/admin.py:224
+#: adjfeedback/admin.py:225
 #, python-format
 msgid "1 feedback submission is now recognized."
 msgid_plural "%(count)d feedback submissions are now recognized."
@@ -187,7 +187,7 @@ msgstr "Nilai untuk %(adjudicator)s, \"%(score)s\", bukan angka"
 msgid "There were no scores to import."
 msgstr "Tidak ada nilai untuk diimpor."
 
-#: adjfeedback/models.py:13 adjfeedback/models.py:230
+#: adjfeedback/models.py:13 adjfeedback/models.py:231
 msgid "adjudicator"
 msgstr "juri debat"
 
@@ -195,7 +195,7 @@ msgstr "juri debat"
 msgid "round"
 msgstr "ronde"
 
-#: adjfeedback/models.py:17 adjfeedback/models.py:231
+#: adjfeedback/models.py:17 adjfeedback/models.py:232
 msgid "score"
 msgstr "skor"
 
@@ -258,11 +258,11 @@ msgstr "penilaian juri, jawaban frasa / kalimat singkat"
 
 #: adjfeedback/models.py:86
 msgid "adjudicator feedback multiple select answer"
-msgstr ""
+msgstr "jawaban pilihan berganda umpanbalik juri"
 
 #: adjfeedback/models.py:87
 msgid "adjudicator feedback multiple select answers"
-msgstr ""
+msgstr "jawaban pilihan berganda umpanbalik juri"
 
 #: adjfeedback/models.py:106
 msgid "checkbox"
@@ -284,7 +284,7 @@ msgstr "skala numerik"
 msgid "float"
 msgstr "bilangan desimal"
 
-#: adjfeedback/models.py:111 adjfeedback/models.py:144
+#: adjfeedback/models.py:111 adjfeedback/models.py:145
 msgid "text"
 msgstr "teks"
 
@@ -300,123 +300,123 @@ msgstr "pilih satu"
 msgid "select multiple"
 msgstr "pilih beberapa"
 
-#: adjfeedback/models.py:140
+#: adjfeedback/models.py:141
 msgid "tournament"
 msgstr "turnamen"
 
-#: adjfeedback/models.py:142
+#: adjfeedback/models.py:143
 msgid "sequence number"
 msgstr "nomor urut"
 
-#: adjfeedback/models.py:145
+#: adjfeedback/models.py:146
 msgid "The question displayed to participants, e.g., \"Did you agree with the decision?\""
 msgstr "Pertanyaan yang ditampilkan kepada partisipan, seperti \"Apakah anda setuju dengan keputusan yang diberikan?\""
 
-#: adjfeedback/models.py:147
+#: adjfeedback/models.py:148
 msgid "name"
 msgstr "nama"
 
-#: adjfeedback/models.py:148
+#: adjfeedback/models.py:149
 msgid "A short name for the question, e.g., \"Agree with decision\""
 msgstr "Nama pendek untuk pertanyaan ini seperti \"Setuju dengan keputusan\""
 
-#: adjfeedback/models.py:150
+#: adjfeedback/models.py:151
 msgid "reference"
 msgstr "referensi"
 
-#: adjfeedback/models.py:151
+#: adjfeedback/models.py:152
 msgid "Code-compatible reference, e.g., \"agree_with_decision\""
 msgstr "Referensi yang kompatibel dengan kode seperti \"setuju_dengan_keputusan\""
 
-#: adjfeedback/models.py:154
+#: adjfeedback/models.py:155
 msgid "from adjudicator"
 msgstr "dari juri"
 
-#: adjfeedback/models.py:155
+#: adjfeedback/models.py:156
 msgid "Adjudicators should be asked this question (about other adjudicators)"
 msgstr "Juri harus ditanyakan pertanyaan ini (tentang juri lain)"
 
-#: adjfeedback/models.py:157
+#: adjfeedback/models.py:158
 msgid "from team"
 msgstr "dari tim"
 
-#: adjfeedback/models.py:158
+#: adjfeedback/models.py:159
 msgid "Teams should be asked this question"
 msgstr "Tim harus ditanyakan pertanyaan ini"
 
-#: adjfeedback/models.py:161
+#: adjfeedback/models.py:162
 msgid "answer type"
 msgstr "tipe jawaban"
 
-#: adjfeedback/models.py:163
+#: adjfeedback/models.py:164
 msgid "required"
 msgstr "diwajibkan"
 
-#: adjfeedback/models.py:164
+#: adjfeedback/models.py:165
 msgid "Whether participants are required to fill out this field"
 msgstr "Apakah partisipan diwajibkan untuk mengisi kolom ini"
 
-#: adjfeedback/models.py:166
+#: adjfeedback/models.py:167
 msgid "minimum value"
 msgstr "nilai minimum"
 
-#: adjfeedback/models.py:167
+#: adjfeedback/models.py:168
 msgid "Minimum allowed value for numeric fields (ignored for text or boolean fields)"
 msgstr "Nilai minimum yang diijinkan untuk kolom numerik (abaikan untuk kolom teks dan boolean)"
 
-#: adjfeedback/models.py:169
+#: adjfeedback/models.py:170
 msgid "maximum value"
 msgstr "nilai maksimum"
 
-#: adjfeedback/models.py:170
+#: adjfeedback/models.py:171
 msgid "Maximum allowed value for numeric fields (ignored for text or boolean fields)"
 msgstr "Nilai maksimum yang diijinkan untuk kolom numerik (abaikan untuk kolom teks dan boolean)"
 
-#: adjfeedback/models.py:175
+#: adjfeedback/models.py:176
 msgid "choices"
 msgstr "pilihan"
 
-#: adjfeedback/models.py:176
+#: adjfeedback/models.py:177
 msgid "Permissible choices for select one/multiple fields (ignored for other fields)"
-msgstr ""
+msgstr "Pilihan yang diizinkan untuk memilih satu / beberapa bidang (diabaikan untuk bidang lain)"
 
-#: adjfeedback/models.py:181
+#: adjfeedback/models.py:182
 msgid "adjudicator feedback question"
 msgstr "pertanyaan penilaian juri"
 
-#: adjfeedback/models.py:182
+#: adjfeedback/models.py:183
 msgid "adjudicator feedback questions"
 msgstr "pertanyaan penilaian juri"
 
-#: adjfeedback/models.py:240 adjfeedback/views.py:768
+#: adjfeedback/models.py:241 adjfeedback/views.py:768
 msgid "ignored"
 msgstr "diabaikan"
 
-#: adjfeedback/models.py:241
+#: adjfeedback/models.py:242
 msgid "Whether the feedback should affect the adjudicator's score"
 msgstr "Apakah submisi penilaian juri mempengaruhi nilai juri tersebut"
 
-#: adjfeedback/models.py:245
+#: adjfeedback/models.py:246
 msgid "adjudicator feedback"
 msgstr "penilaian juri"
 
-#: adjfeedback/models.py:246
+#: adjfeedback/models.py:247
 msgid "adjudicator feedbacks"
 msgstr "penilaian Juri"
 
-#: adjfeedback/models.py:300
+#: adjfeedback/models.py:307
 msgid "Either the source adjudicator or source team wasn't specified."
 msgstr "Juri atau tim yang memberikan penilaian tidak disebutkan."
 
-#: adjfeedback/models.py:303
+#: adjfeedback/models.py:310
 msgid "There was both a source adjudicator and a source team."
 msgstr "Ada keduanya, juri dan tim yang memberikan penilaian."
 
-#: adjfeedback/models.py:305
+#: adjfeedback/models.py:312
 msgid "There is no adjudicator specified as the target for this feedback. Perhaps they were deleted?"
 msgstr "Tidak ada juri yang menjadi target penilaian ini. Apakah mereka telah dihapus?"
 
-#: adjfeedback/models.py:307
+#: adjfeedback/models.py:314
 msgid "Adjudicator did not see this debate."
 msgstr "Juri tidak melihat debat ini."
 
@@ -607,7 +607,7 @@ msgstr "%(round)s %(score)s"
 #: adjfeedback/templates/feedback_card.html:34
 #, python-format
 msgid "On %(adjudicator)s"
-msgstr ""
+msgstr "Pada %(adjudicator)s"
 
 #: adjfeedback/templates/feedback_card.html:39
 #, python-format
@@ -633,32 +633,32 @@ msgstr "Dari %(source)s <span class=\"text-secondary small\">(%(relationship)s s
 msgid "From unknown"
 msgstr "Asal tidak diketahui"
 
-#: adjfeedback/templates/feedback_card.html:85
+#: adjfeedback/templates/feedback_card.html:88
 #, python-format
 msgid "%(time)s"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:90
+#: adjfeedback/templates/feedback_card.html:93
 msgid "Unconfirmed feedback is not counted as having been submitted and does not affect this adjudicator's score."
 msgstr "Penilaian yang tidak terkonfirmasi tidak akan dianggap telah diserahkan dan tidak akan mempengaruhi skor juri tersebut."
 
-#: adjfeedback/templates/feedback_card.html:95
+#: adjfeedback/templates/feedback_card.html:98
 msgid "Un-confirm"
 msgstr "Tidak terkonfirmasi"
 
-#: adjfeedback/templates/feedback_card.html:95
+#: adjfeedback/templates/feedback_card.html:98
 msgid "Confirm"
 msgstr "Konfirmasi"
 
-#: adjfeedback/templates/feedback_card.html:100
+#: adjfeedback/templates/feedback_card.html:103
 msgid "Ignored feedback is counted as having been submitted, but does not affect this adjudicator's score."
 msgstr "Penilaian yang diabaikan dianggap telah diserahkan namun tidak mempengaruhi skor juri."
 
-#: adjfeedback/templates/feedback_card.html:105
+#: adjfeedback/templates/feedback_card.html:108
 msgid "Un-ignore"
 msgstr "Hiraukan"
 
-#: adjfeedback/templates/feedback_card.html:105
+#: adjfeedback/templates/feedback_card.html:108
 msgid "Ignore"
 msgstr "Abaikan"
 
@@ -678,15 +678,20 @@ msgstr "<a href=\"%(option_url)s\" class=\"alert-link\">Konfigurasi Penilaian </
 
 #: adjfeedback/templates/feedback_overview.html:14
 #, python-format
-msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects both chairs and panellists to submit feedback on each other, and also chairs to submit on trainees."
-msgstr "<a href=\"%(option_url)s\" class=\"alert-link\">Konfigurasi Penilaian </a> saat ini mengijinkan dan mengharuskan ketua panel dan panelis untuk memberikan penilaian terhadap satu sama lain, dan ketua panel terhadap trainee."
+msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects both chairs and panellists to submit feedback on each other, and also chairs to submit feedback on trainees."
+msgstr "<a href=\"%(option_url)s\" class=\"alert-link\"> Konfigurasi umpan balik </a> saat ini memungkinkan dan mengharapkan baik ketua maupun panelis untuk saling mengirimkan umpan balik, dan juga ketua untuk mengirimkan umpan balik pada peserta pelatihan.umpan balik."
 
-#: adjfeedback/templates/feedback_overview.html:20
+#: adjfeedback/templates/feedback_overview.html:18
+#, python-format
+msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects both panellists and trainees to submit feedback on chairs, and chairs to submit feedback on every other member of the panel (including trainees)."
+msgstr "<a href=\"%(option_url)s\" class=\"alert-link\"> Konfigurasi umpan balik </a> saat ini memungkinkan dan mengharapkan baik panelis maupun peserta pelatihan untuk mengirimkan umpan balik mengenai kursi, dan kursi untuk mengirimkan umpan balik kepada setiap anggota lain dari panel (termasuk peserta pelatihan)."
+
+#: adjfeedback/templates/feedback_overview.html:22
 #, python-format
 msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects all adjudicators (including trainees) to submit feedback on every other member of the panel (including trainees)."
 msgstr "<a href=\"%(option_url)s\" class=\"alert-link\">Konfigurasi Penilaian </a> saat ini mengijinkan dan mengharuskan semua juri (termasuk trainee) untuk memberikan penilaian terhadap satu sama lain."
 
-#: adjfeedback/templates/feedback_overview.html:31
+#: adjfeedback/templates/feedback_overview.html:30
 #, python-format
 msgid "There is <strong>%(nadjs_outside_range)s adjudicator</strong> with a score <strong>outside the permitted range</strong> of adjudicator scores, which is currently set as %(min_score)s to %(max_score)s. This can cause adjudicator auto-allocation to behave in unexpected ways. If you'd like to use a wider score range, you can configure this in <a href=\"%(feedback_settings_url)s\" class=\"alert-link\"> feedback settings</a>."
 msgid_plural "There are <strong>%(nadjs_outside_range)s adjudicators</strong> with scores <strong>outside the permitted range</strong> of adjudicator scores, which is currently set as %(min_score)s to %(max_score)s. This can cause adjudicator auto-allocation to behave in unexpected ways. If you'd like to use a wider score range, you can configure this in <a href=\"%(feedback_settings_url)s\" class=\"alert-link\"> feedback settings</a>."
