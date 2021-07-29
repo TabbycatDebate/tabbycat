@@ -670,7 +670,7 @@ class RoundPairingSerializer(serializers.ModelSerializer):
         return debate
 
     def update(self, instance, validated_data):
-        for team in validated_data.pop('debateteam_set'):
+        for team in validated_data.pop('debateteam_set', []):
             try:
                 DebateTeam.objects.update_or_create(debate=instance, side=team.get('side'), defaults={
                     'team': team.get('team'),
@@ -678,9 +678,10 @@ class RoundPairingSerializer(serializers.ModelSerializer):
             except (IntegrityError, TypeError) as e:
                 raise serializers.ValidationError(e)
 
-        adjudicators = self.DebateAdjudicatorSerializer()
-        adjudicators._validated_data = validated_data.pop('adjudicators')
-        adjudicators.save(debate=instance)
+        if 'adjudicators' in validated_data:
+            adjudicators = self.DebateAdjudicatorSerializer()
+            adjudicators._validated_data = validated_data.pop('adjudicators')
+            adjudicators.save(debate=instance)
 
         return super().update(instance, validated_data)
 
