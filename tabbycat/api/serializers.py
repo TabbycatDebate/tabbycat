@@ -147,7 +147,7 @@ class RoundSerializer(serializers.ModelSerializer):
         return super().validate(data)
 
     def create(self, validated_data):
-        motions_data = validated_data.pop('roundmotion_set')
+        motions_data = validated_data.pop('roundmotion_set', [])
         round = super().create(validated_data)
 
         if len(motions_data) > 0:
@@ -158,7 +158,7 @@ class RoundSerializer(serializers.ModelSerializer):
         return round
 
     def update(self, instance, validated_data):
-        motions_data = validated_data.pop('motion_set')
+        motions_data = validated_data.pop('motion_set', [])
         for roundmotion in motions_data:
             motion = roundmotion['motion'].get('pk')
             if motion is None:

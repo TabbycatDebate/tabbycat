@@ -8,7 +8,7 @@ pref_router = SimpleRouter(trailing_slash=False)
 pref_router.register('preferences', views.TournamentPreferenceViewSet)
 
 list_methods = {'get': 'list', 'post': 'create'}
-detail_methods = {'get': 'retrieve', 'post': 'update', 'delete': 'destroy'}
+detail_methods = {'get': 'retrieve', 'post': 'update', 'patch': 'partial_update', 'delete': 'destroy'}
 
 urlpatterns = [
 
