@@ -636,9 +636,10 @@ class RoundPairingSerializer(serializers.ModelSerializer):
             return aa
 
     url = fields.RoundHyperlinkedIdentityField(view_name='api-pairing-detail', lookup_url_kwarg='debate_pk')
-    venue = fields.TournamentHyperlinkedRelatedField(view_name='api-venue-detail', queryset=Venue.objects.all())
+    venue = fields.TournamentHyperlinkedRelatedField(view_name='api-venue-detail', queryset=Venue.objects.all(),
+        required=False, allow_null=True)
     teams = DebateTeamSerializer(many=True, source='debateteam_set')
-    adjudicators = DebateAdjudicatorSerializer()
+    adjudicators = DebateAdjudicatorSerializer(required=False, allow_null=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -654,7 +655,7 @@ class RoundPairingSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         teams_data = validated_data.pop('debateteam_set')
-        adjs_data = validated_data.pop('adjudicators')
+        adjs_data = validated_data.pop('adjudicators', None)
 
         validated_data['round'] = self.context['round']
         debate = super().create(validated_data)
@@ -663,9 +664,10 @@ class RoundPairingSerializer(serializers.ModelSerializer):
         teams._validated_data = teams_data  # Data was already validated
         teams.save(debate=debate)
 
-        adjudicators = self.DebateAdjudicatorSerializer()
-        adjudicators._validated_data = adjs_data
-        adjudicators.save(debate=debate)
+        if adjs_data is not None:
+            adjudicators = self.DebateAdjudicatorSerializer()
+            adjudicators._validated_data = adjs_data
+            adjudicators.save(debate=debate)
 
         return debate
 
@@ -678,7 +680,7 @@ class RoundPairingSerializer(serializers.ModelSerializer):
             except (IntegrityError, TypeError) as e:
                 raise serializers.ValidationError(e)
 
-        if 'adjudicators' in validated_data:
+        if 'adjudicators' in validated_data and validated_data['adjudicators'] is not None:
             adjudicators = self.DebateAdjudicatorSerializer()
             adjudicators._validated_data = validated_data.pop('adjudicators')
             adjudicators.save(debate=instance)
