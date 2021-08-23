@@ -419,9 +419,10 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
 class TeamSerializer(serializers.ModelSerializer):
     class TeamSpeakerSerializer(SpeakerSerializer):
-        class Meta:
+        team = None
+
+        class Meta(SpeakerSerializer.Meta):
             model = Speaker
-            exclude = ('team',)
 
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-team-detail')
     institution = serializers.HyperlinkedRelatedField(
