@@ -602,7 +602,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         motions = []
         for debate in debates:
             if self.tournament.pref('enable_motions') or debate.round.motions_released or round.tournament.pref('all_results_released'):
-                motions.append(getattr(debate.confirmed_ballot, 'motion'))
+                motions.append(getattr(debate.confirmed_ballot, 'motion', None))
             else:
                 motions.append(None)
         self.add_motion_column(motions)
