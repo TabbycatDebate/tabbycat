@@ -1286,6 +1286,12 @@ paths:
         - debates
       requestBody:
         $ref: '#/components/requestBodies/Debate'
+    delete:
+      operationId : v1_tournaments_rounds_pairings_delete_all
+      description: Delete all pairings of the round
+      responses:
+        '204':
+          description: 'All pairings have been deleted'
     parameters:
       - name: round_seq
         in: path

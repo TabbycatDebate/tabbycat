@@ -476,6 +476,10 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
             'debateadjudicator_set', 'debateadjudicator_set__adjudicator', 'debateadjudicator_set__adjudicator__tournament',
         )
 
+    def delete_all(self, request, *args, **kwargs):
+        self.get_queryset().delete()
+        return Response(status=204)  # No content
+
 
 class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.BallotSerializer

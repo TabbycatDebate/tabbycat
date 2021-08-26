@@ -72,7 +72,7 @@ urlpatterns = [
 
                         path('/pairings', include([
                             path('',
-                                views.PairingViewSet.as_view(list_methods),
+                                views.PairingViewSet.as_view({'get': 'list', 'post': 'create', 'delete': 'delete_all'}),
                                 name='api-pairing-list'),
                             path('/<int:debate_pk>', include([
                                 path('',
