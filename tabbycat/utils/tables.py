@@ -601,7 +601,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         not, then it's just attached to the round."""
         motions = []
         for debate in debates:
-            if self.tournament.pref('enable_motions') or debate.round.motions_released or round.tournament.pref('all_results_released'):
+            released = debate.round.motions_released or debate.round.tournament.pref('all_results_released')
+            if self.tournament.pref('enable_motions') or released:
                 motions.append(getattr(debate.confirmed_ballot, 'motion', None))
             else:
                 motions.append(None)
