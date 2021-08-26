@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-02 01:40-0300\n"
-"PO-Revision-Date: 2021-04-02 04:47\n"
+"PO-Revision-Date: 2021-08-26 06:06\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -27,11 +27,11 @@ msgstr "対象"
 
 #: adjfeedback/admin.py:74 adjfeedback/admin.py:140 adjfeedback/models.py:236
 msgid "source adjudicator"
-msgstr ""
+msgstr "ディベートのジャッジ"
 
 #: adjfeedback/admin.py:75 adjfeedback/admin.py:141 adjfeedback/models.py:238
 msgid "source team"
-msgstr ""
+msgstr "ディベートのチーム"
 
 #: adjfeedback/admin.py:91
 #, python-format
@@ -44,7 +44,7 @@ msgstr "対象"
 
 #: adjfeedback/admin.py:97 adjfeedback/admin.py:162
 msgid "Source"
-msgstr ""
+msgstr "ソース"
 
 #: adjfeedback/admin.py:98
 msgid "Feedback timestamp and version"
@@ -127,7 +127,7 @@ msgstr "反映されていません"
 #. Translators: e.g. "Megan Pearson (chair)", with adjpos="chair"
 #: adjfeedback/forms.py:228 adjfeedback/forms.py:291
 msgid "Submitted - "
-msgstr ""
+msgstr "提出済み "
 
 #. Translators: e.g. "Megan Pearson (panellist)", with round="Round 3", adjpos="panellist"
 #: adjfeedback/forms.py:229 adjfeedback/forms.py:296

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-30 01:01-0400\n"
-"PO-Revision-Date: 2020-12-30 05:11\n"
+"PO-Revision-Date: 2021-09-20 01:36\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -53,19 +53,19 @@ msgstr "トーナメント"
 
 #: motions/models.py:21
 msgid "rounds"
-msgstr ""
+msgstr "ラウンド"
 
 #: motions/models.py:24 motions/models.py:37 motions/models.py:56
 msgid "motion"
-msgstr ""
+msgstr "論題"
 
 #: motions/models.py:25
 msgid "motions"
-msgstr ""
+msgstr "論題"
 
 #: motions/models.py:35
 msgid "debate team"
-msgstr ""
+msgstr "ディベートチーム"
 
 #: motions/models.py:39
 msgid "preferences"
@@ -158,7 +158,7 @@ msgstr ""
 #: motions/templates/motion_round_statistics.html:31
 #: motions/templates/public_motions.html:32
 msgid "View Info Slide"
-msgstr ""
+msgstr "インフォスライドを表示"
 
 #: motions/templates/motion_statistics_bp_elim.html:10
 #, python-format
@@ -256,7 +256,7 @@ msgstr[0] ""
 
 #: motions/templates/motion_statistics_twoteam.html:53
 msgid "No teams debated this motion"
-msgstr ""
+msgstr "この論題について議論したチームはありません"
 
 #: motions/templates/motion_statistics_twoteam.html:91
 #: motions/templates/motion_statistics_twoteam.html:98
@@ -272,7 +272,7 @@ msgstr ""
 #: motions/templates/motions_edit.html:4 motions/templates/motions_edit.html:10
 msgid "Edit Motion"
 msgid_plural "Edit Motions"
-msgstr[0] ""
+msgstr[0] "論題の編集"
 
 #: motions/templates/motions_edit.html:18
 msgid "Display Draw"
@@ -284,24 +284,24 @@ msgstr ""
 
 #: motions/templates/motions_edit.html:30
 msgid "Reuse Motions from Last Round"
-msgstr ""
+msgstr "前回のラウンドからの論題を再利用する"
 
 #: motions/templates/motions_edit.html:35
 msgid "Use Existing Motions"
-msgstr ""
+msgstr "既存の論題を使用"
 
 #: motions/templates/motions_edit.html:74
 msgid "Save Motion"
 msgid_plural "Save Motions"
-msgstr[0] ""
+msgstr[0] "論題を保存"
 
 #: motions/templates/motions_info.html:8
 msgid "Info Slide"
-msgstr ""
+msgstr "インフォスライド"
 
 #: motions/templates/public_motions.html:41
 msgid "There are no motions available for this round."
-msgstr ""
+msgstr "このラウンドには利用可能な論題はありません。"
 
 #: motions/templates/public_motions.html:47
 msgid "The motions for this round have not been released."
