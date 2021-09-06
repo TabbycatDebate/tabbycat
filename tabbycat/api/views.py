@@ -549,7 +549,8 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
             if query_params.get('source'):
                 filters &= Q(source_team__team_id=query_params.get('source'))
         if query_params.get('round'):
-            filters &= Q(source_adjudicator__debate__round__seq=query_params.get('round')) | Q(source_team__debate__round__seq=query_params.get('round'))
+            filters &= (Q(source_adjudicator__debate__round__seq=query_params.get('round')) |
+                Q(source_team__debate__round__seq=query_params.get('round')))
         if query_params.get('target'):
             filters &= Q(adjudicator_id=query_params.get('target'))
 
@@ -569,3 +570,15 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
             'source_adjudicator__debate__round__tournament', 'source_team__debate__round__tournament',
             'participant_submitter__adjudicator__tournament', 'participant_submitter__speaker__team__tournament',
         ).prefetch_related(*answers_prefetch)
+
+
+class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
+
+    def get(self, request, *args, **kwargs):
+        pass
+
+    def patch(self, request, *args, **kwargs):
+        pass
+
+    def put(self, request, *args, **kwargs):
+        pass
