@@ -1,5 +1,8 @@
+from itertools import groupby
+
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Prefetch, Q
 from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
@@ -12,6 +15,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
+from availability.models import RoundAvailability
 from breakqual.models import BreakCategory
 from breakqual.views import GenerateBreakMixin
 from checkins.consumers import CheckInEventConsumer
@@ -27,6 +31,7 @@ from tournaments.models import Round, Tournament
 from venues.models import Venue, VenueCategory
 
 from . import serializers
+from .fields import ParticipantAvailabilityForeignKeyField
 from .mixins import AdministratorAPIMixin, PublicAPIMixin, RoundAPIMixin, TournamentAPIMixin, TournamentPublicAPIMixin
 from .permissions import APIEnabledPermission, PublicPreferencePermission
 
@@ -549,7 +554,8 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
             if query_params.get('source'):
                 filters &= Q(source_team__team_id=query_params.get('source'))
         if query_params.get('round'):
-            filters &= Q(source_adjudicator__debate__round__seq=query_params.get('round')) | Q(source_team__debate__round__seq=query_params.get('round'))
+            filters &= (Q(source_adjudicator__debate__round__seq=query_params.get('round')) |
+                Q(source_team__debate__round__seq=query_params.get('round')))
         if query_params.get('target'):
             filters &= Q(adjudicator_id=query_params.get('target'))
 
@@ -569,3 +575,73 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
             'source_adjudicator__debate__round__tournament', 'source_team__debate__round__tournament',
             'participant_submitter__adjudicator__tournament', 'participant_submitter__speaker__team__tournament',
         ).prefetch_related(*answers_prefetch)
+
+
+class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
+
+    def get_field(self):
+        field = ParticipantAvailabilityForeignKeyField(many=True, view_name='api-availability-list')  # Dummy view name
+        field.root._context = {'request': self.request}
+        return field
+
+    def get_filters(self):
+        filters = Q()
+        if self.request.query_params.get('adjudicators', 'false') == 'false':
+            filters |= Q(content_type__model='adjudicator')
+        if self.request.query_params.get('teams', 'false') == 'false':
+            filters |= Q(content_type__model='team')
+        if self.request.query_params.get('venues', 'false') == 'false':
+            filters |= Q(content_type__model='venue')
+        return filters
+
+    def get_queryset(self):
+        return RoundAvailability.objects.filter(
+            ~self.get_filters(), round=self.round).select_related('content_type', 'round__tournament')
+
+    def get(self, request, *args, **kwargs):
+        # Get all availabilities of the round
+        return Response(self.get_field().to_representation(self.get_queryset()))
+
+    def patch(self, request, *args, **kwargs):
+        # Toggle the availabilities of the included objects
+        objs = sorted(self.get_field().to_internal_value(request.data), key=lambda o: type(o).__name__)
+        for model, participants in groupby(objs, key=type):
+            contenttype = ContentType.objects.get_for_model(model)
+
+            ids = set(p.pk for p in participants)
+            existing_qs = RoundAvailability.objects.filter(
+                content_type=contenttype, round=self.round,
+                object_id__in=ids,
+            )
+            existing = set(p.object_id for p in existing_qs)
+            existing_qs.delete()
+
+            RoundAvailability.objects.bulk_create(
+                [RoundAvailability(content_type=contenttype, round=self.round, object_id=id) for id in ids - existing])
+
+        return self.get(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        # Mark objects as available
+        objs = sorted(self.get_field().to_internal_value(request.data), key=lambda o: type(o).__name__)
+        for model, participants in groupby(objs, key=type):
+            contenttype = ContentType.objects.get_for_model(model)
+            RoundAvailability.objects.bulk_create(
+                [RoundAvailability(content_type=contenttype, round=self.round, object_id=p.id) for p in participants])
+        return self.get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        # Mark objects as unavailable
+        objs = sorted(self.get_field().to_internal_value(request.data), key=lambda o: type(o).__name__)
+        for model, participants in groupby(objs, key=type):
+            contenttype = ContentType.objects.get_for_model(model)
+            RoundAvailability.objects.filter(
+                content_type=contenttype, round=self.round,
+                object_id__in=[p.id for p in participants],
+            ).delete()
+        return self.get(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        # Delete class of availabilities
+        self.get_queryset().delete()
+        return Response(status=204)

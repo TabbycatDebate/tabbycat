@@ -1485,6 +1485,161 @@ paths:
         required: true
         schema:
           type: string
+  '/v1/tournaments/{tournament_slug}/rounds/{round_seq}/availabilities':
+    get:
+      operationId: v1_tournaments_rounds_availabilities_list
+      description: List all participants marked as available for the round
+      parameters:
+        - name: adjudicators
+          in: query
+          description: Whether to list available adjudicators
+          required: false
+          schema:
+            type: boolean
+        - name: teams
+          in: query
+          description: Whether to list available teams
+          required: false
+          schema:
+            type: boolean
+        - name: venues
+          in: query
+          description: Whether to list available rooms
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  title: Participant
+                  type: string
+                  format: uri
+      tags:
+        - v1
+        - availabilities
+    post:
+      operationId: v1_tournaments_rounds_availabilities_post
+      description: Marks participants as unavailable for a round
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  title: Participant
+                  type: string
+                  format: uri
+      tags:
+        - v1
+        - availabilities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                title: Participant
+                type: string
+                format: uri
+    put:
+      operationId: v1_tournaments_rounds_availabilities_put
+      description: Marks participants as available for a round
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  title: Participant
+                  type: string
+                  format: uri
+      tags:
+        - v1
+        - availabilities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                title: Participant
+                type: string
+                format: uri
+    patch:
+      operationId: v1_tournaments_rounds_availabilities_patch
+      description: Toggles participants' availabilities for a round
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  title: Participant
+                  type: string
+                  format: uri
+      tags:
+        - v1
+        - availabilities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                title: Participant
+                type: string
+                format: uri
+    delete:
+      operationId: v1_tournaments_rounds_availabilities_delete
+      description: >-
+        Marks all participants of specified type as unavailable for the round
+      parameters:
+        - name: adjudicators
+          in: query
+          description: Whether to unmark available adjudicators
+          required: false
+          schema:
+            type: boolean
+        - name: teams
+          in: query
+          description: Whether to unmark available teams
+          required: false
+          schema:
+            type: boolean
+        - name: venues
+          in: query
+          description: Whether to unmark available rooms
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '204':
+          description: ''
+      tags:
+        - v1
+        - availabilities
+    parameters:
+      - name: round_seq
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: tournament_slug
+        in: path
+        required: true
+        schema:
+          type: string
   '/v1/tournaments/{tournament_slug}/speaker-categories':
     get:
       operationId: v1_tournaments_speaker-categories_list

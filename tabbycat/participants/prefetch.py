@@ -1,4 +1,5 @@
-from django.db.models import Avg
+from django.db.models import Avg, Value
+from django.db.models.functions import Coalesce
 
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
@@ -14,12 +15,12 @@ def populate_win_counts(teams, round=None):
 
     teams_annotated = Team.objects.filter(id__in=teams_by_id.keys()).annotate(
         win_count_annotation=WinsMetricAnnotator().get_annotation(round=round),
-        points_annotation=PointsMetricAnnotator().get_annotation(round=round),
+        points_annotation=Coalesce(PointsMetricAnnotator().get_annotation(round=round), Value(0)),
     )
 
     for team in teams_annotated:
-        teams_by_id[team.id]._wins_count = getattr(team, 'win_count_annotation', 0)
-        teams_by_id[team.id]._points = getattr(team, 'points_annotation', 0)
+        teams_by_id[team.id]._wins_count = team.win_count_annotation
+        teams_by_id[team.id]._points = team.points_annotation
 
 
 def populate_feedback_scores(adjudicators):

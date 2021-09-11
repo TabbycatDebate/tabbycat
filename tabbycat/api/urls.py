@@ -70,6 +70,10 @@ urlpatterns = [
                             views.RoundViewSet.as_view(detail_methods),
                             name='api-round-detail'),
 
+                        path('/availabilities',
+                            views.AvailabilitiesViewSet.as_view(),
+                            name='api-availability-list'),
+
                         path('/pairings', include([
                             path('',
                                 views.PairingViewSet.as_view({'get': 'list', 'post': 'create', 'delete': 'delete_all'}),
