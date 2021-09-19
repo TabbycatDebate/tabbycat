@@ -423,6 +423,8 @@ class BaseBallotSetForm(BaseResultForm):
         # 5. Save motions
         if self.using_motions:
             self.ballotsub.motion = self.cleaned_data['motion'].motion
+        elif self.motions.count() == 1:
+            self.ballotsub.motion = self.motions.get().motion
 
         if self.using_vetoes:
             for side in self.sides:

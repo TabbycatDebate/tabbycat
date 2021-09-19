@@ -5,22 +5,6 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
-def populate_answers(apps, schema_editor):
-    string_answers = apps.get_model('adjfeedback', 'adjudicatorfeedbackstringanswer')
-    many_answers = apps.get_model('adjfeedback', 'AdjudicatorFeedbackManyAnswer')
-    for sa in string_answers.objects.filter(question__answer_type='ms'):  # Multiple select
-        many_answers.objects.create(answer=sa.answer.split('//'), feedback_id=sa.feedback_id, question_id=sa.question_id)
-    string_answers.objects.filter(question__answer_type='ms').delete()
-
-
-def depopulate_answers(apps, schema_editor):
-    string_answers = apps.get_model('adjfeedback', 'adjudicatorfeedbackstringanswer')
-    many_answers = apps.get_model('adjfeedback', 'AdjudicatorFeedbackManyAnswer')
-    for ma in many_answers.objects.all():
-        string_answers.objects.create(answer='//'.join(ma.answer), feedback_id=ma.feedback_id, question_id=ma.question_id)
-    many_answers.objects.all().delete()
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -61,5 +45,12 @@ class Migration(migrations.Migration):
                 'unique_together': {('question', 'feedback')},
             },
         ),
-        migrations.RunPython(populate_answers, reverse_code=depopulate_answers),
+        migrations.RunSQL(
+            sql="INSERT INTO adjfeedback_adjudicatorfeedbackmanyanswer (answer, feedback_id, question_id) SELECT string_to_array(a.answer, '//'), a.feedback_id, q.id FROM adjfeedback_adjudicatorfeedbackstringanswer a INNER JOIN adjfeedback_adjudicatorfeedbackquestion q ON a.question_id=q.id WHERE q.answer_type='ms';",
+            reverse_sql="INSERT INTO adjfeedback_adjudicatorfeedbackstringanswer (answer, feedback_id, question_id) SELECT array_to_string(answers, '//'), feedback_id, question_id FROM (SELECT array_agg(answer) answers, feedback_id, question_id) FROM adjfeedback_adjudicatorfeedbackmanyanswer GROUP BY feedback_id, question_id;",
+        ),
+        migrations.RunSQL(
+            sql="DELETE FROM adjfeedback_adjudicatorfeedbackstringanswer WHERE question_id IN (SELECT id FROM adjfeedback_adjudicatorfeedbackquestion WHERE answer_type='ms');",
+            reverse_sql=migrations.RunSQL.noop,
+        ),
     ]

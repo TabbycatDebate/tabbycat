@@ -9,6 +9,12 @@
         <div class="input-group-append">
           <span class="input-group-text"><i data-feather="search"></i></span>
         </div>
+        <div v-for="(table, i) in tablesData">
+          <button class="btn btn-light border ml-2" @click.prevent="copyTableTrigger(i)"
+            data-toggle="tooltip" title="Copy table data to clipboard in a CSV format">
+            <i data-feather="clipboard"></i>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -26,7 +32,8 @@
             :table-class="table.class"
             :default-sort-key="table.sort_key"
             :default-sort-order="table.sort_order"
-            :empty-title="table.empty_title">
+            :empty-title="table.empty_title"
+            ref="table">
           </smart-table>
         </div>
       </div>
@@ -71,6 +78,9 @@ export default {
     },
     updateTableFilters: function () {
       this.$eventHub.$emit('update-table-filters', this.filterKey)
+    },
+    copyTableTrigger: function (i) {
+      this.$refs.table[i].copyTableData()
     },
   },
 }

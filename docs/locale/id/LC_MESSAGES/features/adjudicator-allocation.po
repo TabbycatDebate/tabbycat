@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-28 10:05\n"
+"PO-Revision-Date: 2021-04-15 06:55\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "MIME-Version: 1.0\n"
@@ -96,7 +96,7 @@ msgstr ""
 
 #: ../../features/adjudicator-allocation.rst:49
 msgid "Saving, Live Updates, and Sharing"
-msgstr ""
+msgstr "Menyimpan, Pembaruan Live, dan Berbagi"
 
 #: ../../features/adjudicator-allocation.rst:51
 msgid "Changes to your panels save automatically and you can exit the allocation page whenever you wish."

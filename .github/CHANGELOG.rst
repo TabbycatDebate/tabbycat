@@ -2,6 +2,59 @@
 Change Log
 ==========
 
+2.6.0 (Ocicat)
+--------------
+*Release date: TBD*
+
+- Tabbycat is now supported by a new non-profit, the Tabbycat Debate Association!
+- Motions can now be re-used between rounds, with statistics using the combined data from the rounds. Motion statistics queries are optimised. (`#739 <https://github.com/TabbycatDebate/tabbycat/pull/739>`_)
+- A new feedback paths allows for trainees to submit feedback on chairs, but not on panellists.
+- Personal redactions foro speakers and adjudicators are indicated in admin tables, but are not hidden. (`#1480 <https://github.com/TabbycatDebate/tabbycat/issues/1480>`_)
+- Unexpected team feedback is unconfirmed to avoid affecting the scores of unexpected adjudicators. (`#473 <https://github.com/TabbycatDebate/tabbycat/issues/473>`_)
+- Added some database area actions to assign emojis and code names, previously only available as commands.
+- Added a button to copy each table to the clipboard in a CSV format
+- Removed some obsolete management commands.
+- Implemented tournament import and export capabilities for `DebateXML <https://github.com/TabbycatDebate/DebateXML>`_.
+- Allow for participant ballot submissions during concurrent rounds.
+- Checkin API endpoints show the timestamp of the current event.
+- Team viewing of ballots can be restricted to their private URLs.
+- Added an optimised production-ready Docker config. Thanks to Sébastien Dunne Fulmer for this contribution! (`#1690 <https://github.com/TabbycatDebate/tabbycat/pull/1690>`_)
+- Added a means to allow site administrators to send a private link to people they wish to add to the site as admins or assistants. Upon receiving that link, users can complete the signup process themselves. Thanks to Tom Kunc for the pull request! (`#685 <https://github.com/TabbycatDebate/tabbycat/pull/685>`_)
+- Uncalculable metrics now show as None rather than 0, and more standings configurations are now solely handled through the database. (`#1647 <https://github.com/TabbycatDebate/tabbycat/pull/1647>`_)
+- Removed automatic SendGrid provision, changed config var name to ``SENDGRID_API_KEY`` and updated documentation on email configuration (`#1752 <https://github.com/TabbycatDebate/tabbycat/pull/1752>`_)
+- Motions are associated to ballots even when motion selection is disabled, to consolidate motion statistics queries. A migration will attempt to associate motions to existing ballots where motion selection is deactivated and the round of the ballot only has one motion.
+- A migration will attempt to associate venues and venue categories to a tournament if currently unlinked.
+
+
+2.5.9
+-----
+*Release date: 20 June 2021*
+
+- Replaced the paper ballot mention in the footer by a mention of the Tabbycat Debate Association
+- Linked to the Open Collective page for Tabbycat in the footer rather than have a donations page
+- Replaced use of Australian Dollars by Canadian Dollars
+
+
+2.5.8
+-----
+*Release date: 2 April 2021*
+
+- Fixed room constrainee dropdown for room constraints (`#1723 <https://github.com/TabbycatDebate/tabbycat/pull/1723>`_)
+- Filtered breaking teams API endpoint to return just teams breaking in the requested category
+- Fixed adjudicator record and private URL pages crashing when assigned to debates of different formats (`#1766 <https://github.com/TabbycatDebate/tabbycat/issues/1766>`_)
+
+
+2.5.7
+-----
+*Release date: 8 March 2021*
+
+- Fixed ballots API endpoint failing due to scoreless ballots
+- Fixed points emails not loading points
+- Fixed warning message for panellist demotion being shown in other warnings
+- Made results silently fail with trainee ballots (due to demotion)
+- Placed back the speaker name for the Speaker Score by Adj admin view, avoiding crashes
+
+
 2.5.6
 -----
 *Release date: 13 January 2021*

@@ -6,7 +6,7 @@ cd ..
 SET COMPOSE_CONVERT_WINDOWS_PATHS=1
 
 :: Run docker
-docker-compose up
+docker-compose -f docker-compose.yml up
 
 :: Don't just vanish after doing it
 cmd /k

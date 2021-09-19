@@ -1,6 +1,6 @@
 import itertools
 
-from django.db.models import Avg, Count, F, Q
+from django.db.models import Avg, CharField, Count, F, Q, Value
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
@@ -202,7 +202,8 @@ class MotionBPStatsCalculator:
             rounds__tournament=self.tournament,
             rounds__stage=Round.STAGE_PRELIMINARY,
             ballotsubmission__confirmed=True,
-        ).annotate(ndebates=Count('ballotsubmission', filter=Q(ballotsubmission__confirmed=True)))
+        ).annotate(ndebates=Count('ballotsubmission', filter=Q(ballotsubmission__confirmed=True)),
+            stage=Value('prelim', output_field=CharField()))
         self.prelim_motions_dict = {m.id: m for m in self.prelim_motions.all()}
 
         annotations = {}  # dict of keyword arguments to pass to .annotate()
@@ -268,7 +269,8 @@ class MotionBPStatsCalculator:
             rounds__tournament=self.tournament,
             rounds__stage=Round.STAGE_ELIMINATION,
             ballotsubmission__confirmed=True,
-        ).annotate(ndebates=Count('ballotsubmission', filter=Q(ballotsubmission__confirmed=True)))
+        ).annotate(ndebates=Count('ballotsubmission', filter=Q(ballotsubmission__confirmed=True)),
+            stage=Value('elim', output_field=CharField()))
         self.elim_motions_dict = {m.id: m for m in self.elim_motions.all()}
 
         annotations = {}  # dict of keyword arguments to pass to .annotate()
@@ -311,10 +313,11 @@ class RoundMotionBPStatsCalculator(MotionBPStatsCalculator):
             round__tournament=self.tournament,
             round__stage=Round.STAGE_PRELIMINARY,
             motion__ballotsubmission__confirmed=True,
-        ).order_by('round__seq', 'seq').select_related('motion').annotate(
+        ).order_by('round__seq', 'seq').select_related('motion', 'round').annotate(
             ndebates=Count('motion__ballotsubmission', filter=Q(
                 motion__ballotsubmission__confirmed=True,
-                motion__ballotsubmission__debate__round=F('round'))))
+                motion__ballotsubmission__debate__round=F('round'))),
+            stage=Value('prelim', output_field=CharField()))
         self.prelim_motions_dict = {m.id: m for m in self.prelim_motions}
 
         annotations = {}  # dict of keyword arguments to pass to .annotate()
@@ -348,10 +351,11 @@ class RoundMotionBPStatsCalculator(MotionBPStatsCalculator):
             round__tournament=self.tournament,
             round__stage=Round.STAGE_ELIMINATION,
             motion__ballotsubmission__confirmed=True,
-        ).order_by('round__seq', 'seq').select_related('motion').annotate(
+        ).order_by('round__seq', 'seq').select_related('motion', 'round').annotate(
             ndebates=Count('motion__ballotsubmission', filter=Q(
                 motion__ballotsubmission__confirmed=True,
-                motion__ballotsubmission__debate__round=F('round'))))
+                motion__ballotsubmission__debate__round=F('round'))),
+            stage=Value('elim', output_field=CharField()))
         self.elim_motions_dict = {m.id: m for m in self.elim_motions}
 
         annotations = {}  # dict of keyword arguments to pass to .annotate()

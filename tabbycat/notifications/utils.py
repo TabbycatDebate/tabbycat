@@ -157,11 +157,11 @@ def standings_email_generator(to, url, round):
     }
 
     teams = round.active_teams.filter(speaker__in=to).prefetch_related('speaker_set')
-    populate_win_counts(teams)
+    populate_win_counts(teams, round)
 
     for team in teams:
         context_team = context.copy()
-        context_team['POINTS'] = str(team.points_count)
+        context_team['POINTS'] = str(team._points)
         context_team['TEAM'] = team.short_name
 
         for speaker in team.speaker_set.all():

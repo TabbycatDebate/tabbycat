@@ -51,9 +51,6 @@ Participants > Speakers
   - Each speaker's gender is optional and is not displayed publicly; it is only shown in the adjudicator allocation interface.
   - Each speaker's pronoun is optional, and is only displayed if you use Tabbycat to print the ballots and feedback sheets for each round.
 
-Tournaments > Tournaments
-  - Note that tournaments can have a welcome message (useful for displaying maps and other information on the homepage).
-
 Venues > Venues
   - A venue's priority determines its priority in being allocated. If there are 20 debates, and 30 rooms, the 20 rooms with the highest priorities will be chosen. Furthermore, if particular debates are marked as important during the draw process, those debates will receive the rooms with the highest priorities. In this way you can give close rooms to members of the adj core, or give larger rooms to debates that will draw a large audience.
 

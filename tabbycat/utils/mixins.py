@@ -119,6 +119,20 @@ class WarnAboutDatabaseUseMixin(ContextMixin):
         return super().get_context_data(**kwargs)
 
 
+class WarnAboutLegacySendgridConfigVarsMixin(ContextMixin):
+    """Mixin for views that should warn about legacy SendGrid settings that were
+    removed in version 2.6.0 (Ocicat).
+
+    When removing, also remove the relevant block in settings/heroku.py, and
+    templates/errors/legacy_sendgrid_warning.html (and references thereto).
+    """
+
+    def get_context_data(self, **kwargs):
+        if self.request.user.is_authenticated and getattr(settings, 'USING_LEGACY_SENDGRID_CONFIG_VARS', False):
+            kwargs['using_legacy_sendgrid_config_vars'] = True
+        return super().get_context_data(**kwargs)
+
+
 class CacheMixin:
     """Mixin for views that cache the page and need to update quickly."""
 

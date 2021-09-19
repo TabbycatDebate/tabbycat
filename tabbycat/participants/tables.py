@@ -49,13 +49,13 @@ class AdjudicatorDebateTable:
 
         debateadjs = DebateAdjudicator.objects.filter(
             adjudicator=participant,
+            debate__round__tournament=view.tournament,
         ).select_related(
             'debate__round', 'debate__round__tournament',
         ).prefetch_related(
             Prefetch('debate__debateadjudicator_set',
                 queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
             'debate__debateteam_set__team__speaker_set',
-            'debate__round__motion_set',
         )
         if not table.admin and not view.tournament.pref('all_results_released') and not table.private_url:
             debateadjs = debateadjs.filter(
@@ -99,7 +99,6 @@ class TeamDebateTable:
             Prefetch('debate_team__debate__debateadjudicator_set',
                 queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
             'debate_team__debate__debateteam_set__team',
-            'debate_team__debate__round__motion_set',
             Prefetch('debate_team__speakerscore_set',
                 queryset=SpeakerScore.objects.filter(ballot_submission__confirmed=True).select_related('speaker').order_by('position'),
                 to_attr='speaker_scores'),
@@ -129,5 +128,7 @@ class TeamDebateTable:
 
         if not table.private_url:
             table.add_debate_ballot_link_column(debates)
+        elif tournament.pref('private_ballots_released'):
+            table.add_speaker_debate_ballot_link_column(debates)
 
         return table

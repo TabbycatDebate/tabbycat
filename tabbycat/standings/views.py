@@ -62,6 +62,7 @@ class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
         team_scores = TeamScore.objects.filter(
             ballot_submission__confirmed=True,
             debate_team__team__tournament=self.tournament,
+            score__isnull=False,
         ).select_related(
             'debate_team__team',
             'debate_team__debate__round',

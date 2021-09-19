@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-28 23:05\n"
+"PO-Revision-Date: 2021-03-01 04:55\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "MIME-Version: 1.0\n"
@@ -144,15 +144,15 @@ msgstr ""
 
 #: ../../features/preformed-panels.rst:83
 msgid ":math:`w_\\mathrm{mism}` is the \"Importance mismatch penalty\" in the \"Draw rules\" settings,"
-msgstr ""
+msgstr ":math:`w_\\mathrm{mism}` adalah \"Penalti ketidak cocokan kepentingan\" pada pengaturan \"Aturan Draw\","
 
 #: ../../features/preformed-panels.rst:84
 msgid ":math:`w_\\mathrm{hist}` is the \"Adjudicator conflict penalty\" in the \"Draw rules\" settings,"
-msgstr ""
+msgstr ":math:`w_\\mathrm{hist}` adalah \"Penalti konflik juri\" pada pengaturan \"Aturan Draw\","
 
 #: ../../features/preformed-panels.rst:85
 msgid ":math:`w_\\mathrm{conf}` is the \"Adjudicator history penalty\" in the \"Draw rules\" settings,"
-msgstr ""
+msgstr ":math:`w_\\mathrm{conf}` adalah \"Penalti riwayat penjurian\" pada pengaturan \"Aturan Draw\","
 
 #: ../../features/preformed-panels.rst:86
 msgid ":math:`\\mathrm{importance}(p)` is the importance of panel :math:`p`,"

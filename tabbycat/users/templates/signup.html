@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block page-title %}{% trans "Sign-Up" %}{% endblock %}
+{% block head-title %}{% trans "Sign-Up" %}{% endblock %}
+{% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
+
+{% block content %}
+
+  <form id="signupForm" method="POST">
+    {% csrf_token %}
+
+    <div class="card">
+      <div class="list-group list-group-flush">
+        {% if for_admin %}
+          {% trans "Create a New Administrator Account" context "page title" as title %}
+        {% else %}
+          {% trans "Create a New Assistant Account" context "page title" as title %}
+        {% endif %}
+
+        {% include "components/form-title.html" with icon="user-plus" %}
+
+        {% include "components/form-main.html" %}
+
+        {% trans "Create Account" as title %}
+        {% include "components/form-submit.html" %}
+
+      </div>
+    </div>
+  </form>
+
+{% endblock content %}

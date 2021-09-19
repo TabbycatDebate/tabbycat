@@ -8,7 +8,7 @@ pref_router = SimpleRouter(trailing_slash=False)
 pref_router.register('preferences', views.TournamentPreferenceViewSet)
 
 list_methods = {'get': 'list', 'post': 'create'}
-detail_methods = {'get': 'retrieve', 'post': 'update', 'delete': 'destroy'}
+detail_methods = {'get': 'retrieve', 'post': 'update', 'patch': 'partial_update', 'delete': 'destroy'}
 
 urlpatterns = [
 
@@ -70,9 +70,13 @@ urlpatterns = [
                             views.RoundViewSet.as_view(detail_methods),
                             name='api-round-detail'),
 
+                        path('/availabilities',
+                            views.AvailabilitiesViewSet.as_view(),
+                            name='api-availability-list'),
+
                         path('/pairings', include([
                             path('',
-                                views.PairingViewSet.as_view(list_methods),
+                                views.PairingViewSet.as_view({'get': 'list', 'post': 'create', 'delete': 'delete_all'}),
                                 name='api-pairing-list'),
                             path('/<int:debate_pk>', include([
                                 path('',

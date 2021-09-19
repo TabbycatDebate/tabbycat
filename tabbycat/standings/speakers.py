@@ -195,6 +195,10 @@ class SpeakerStandingsGenerator(BaseStandingsGenerator):
     TIEBREAK_FUNCTIONS["name"] = lambda x: x.sort(key=lambda y: y.speaker.name)
     TIEBREAK_FUNCTIONS["institution"] = lambda x: x.sort(key=lambda y: y.speaker.team.institution.name)
 
+    QUERYSET_TIEBREAK_FIELDS = BaseStandingsGenerator.QUERYSET_TIEBREAK_FIELDS.copy()
+    QUERYSET_TIEBREAK_FIELDS["name"] = 'name'
+    QUERYSET_TIEBREAK_FIELDS["institution"] = 'team__institution__name'
+
     metric_annotator_classes = {
         "total"         : TotalSpeakerScoreMetricAnnotator,
         "average"       : AverageSpeakerScoreMetricAnnotator,

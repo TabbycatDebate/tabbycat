@@ -374,6 +374,7 @@ class FeedbackPaths(ChoicePreference):
     choices = (
         ('minimal', _("Chairs on panellists and trainees")),
         ('with-p-on-c', _("Panellists on chairs, chairs on panellists and trainees")),
+        ('with-t-on-c', _("Panellists and trainees on chairs, vice-versa")),
         ('all-adjs', _("All adjudicators (including trainees) on each other")),
     )
     default = 'with-p-on-c'
@@ -750,6 +751,15 @@ class AllResultsReleased(BooleanPreference):
     verbose_name = _("Release all round results to public")
     section = tab_release
     name = 'all_results_released'
+    default = False
+
+
+@tournament_preferences_registry.register
+class PrivateBallotsReleased(BooleanPreference):
+    help_text = _("Enables display of confirmed ballots through private URLs. Intended for use after the tournament.")
+    verbose_name = _("Release ballots through private URLs")
+    section = tab_release
+    name = 'private_ballots_released'
     default = False
 
 
@@ -1395,3 +1405,23 @@ class EnableAPIAccess(BooleanPreference):
     section = global_settings
     name = 'enable_api'
     default = True
+
+
+@global_preferences_registry.register
+class AssistantAccountCreationKey(StringPreference):
+    help_text = _("A key that enables a secret URL that lets visitors create their own assistant user accounts. The URL takes the form of: YOUR_SITE'S_BASE_URL/accounts/signup/KEY/")
+    verbose_name = _('Assistant account creation key')
+    section = global_settings
+    field_kwargs = {'validators': [validate_slug]}
+    name = 'assistant_account_key'
+    default = ''
+
+
+@global_preferences_registry.register
+class AdminAccountCreationKey(StringPreference):
+    help_text = _("A key that enables a secret URL that lets visitors create their own administrator user accounts. The URL takes the form of: YOUR_SITE'S_BASE_URL/accounts/signup/KEY/")
+    section = global_settings
+    verbose_name = _('Administrator account creation key')
+    field_kwargs = {'validators': [validate_slug]}
+    name = 'admin_account_key'
+    default = ''

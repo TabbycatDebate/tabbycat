@@ -17,9 +17,7 @@ class BaseBPEliminationDrawGenerator(EliminationDrawMixin, BaseBPDrawGenerator):
             raise DrawFatalError("Tried to do a four-way fold with non-multiple of four: %d" % len(teams))
 
         n = len(teams) // 4  # number of debates
-        pools = (teams[0:n], teams[n:2*n], teams[2*n:3*n], teams[3*n:4*n])
-        pools[1].reverse()
-        pools[3].reverse()
+        pools = (teams[0:n], teams[n:2*n:-1], teams[2*n:3*n], teams[3*n:4*n:-1])  # Reverse 1 & 3
         pairings = list()
         for i, ts in enumerate(zip(*pools), start=start_rank+1):
             pairing = BPPairing(ts, bracket=0, room_rank=i)
@@ -79,8 +77,7 @@ class AfterPartialBPEliminationDrawGenerator(BaseBPEliminationDrawGenerator):
         # Fold the bypassing teams two-way
         bypassing = self.teams[:nbypassing]
         bypassing_top = bypassing[:ndebates]
-        bypassing_bottom = bypassing[ndebates:]
-        bypassing_bottom.reverse()
+        bypassing_bottom = bypassing[ndebates::-1]
 
         # Get (and check) the advancing teams
         advancing = self._get_advancing_teams()

@@ -37,6 +37,8 @@ class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
         count = q.count()
         for tournament, bss in groupby(q, lambda bs: bs.debate.round.tournament):
             populate_results(bss, tournament)
+            for bs in bss:
+                bs.result.save()
 
         self.message_user(request, ngettext_lazy(
             "Resaved results for %(count)d ballot submission.",
@@ -142,3 +144,7 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
             Prefetch('ballot_submission__debate__debateteam_set',
                 queryset=DebateTeam.objects.select_related('team')),
         ).annotate(speaker_name=Subquery(speaker_person.values('speaker__name')))
+
+    def get_speaker_name(self, obj):
+        return obj.speaker_name
+    get_speaker_name.short_description = "Speaker"

@@ -186,6 +186,9 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
 
     allow_null_tournament = True
 
+    def get_queryset(self):
+        return super().get_queryset().select_related('institution__region')
+
     def use_team_code_names(self):
         return use_team_code_names(self.tournament, self.admin)
 
@@ -226,6 +229,9 @@ class BaseTeamRecordView(BaseRecordView):
     template_name = 'team_record.html'
 
     table_title = _("Results")
+
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('break_categories')
 
     def get_page_title(self):
         # This has to be in Python so that the emoji can be team-dependent.
@@ -277,9 +283,23 @@ class BaseAdjudicatorRecordView(BaseRecordView):
 class TeamRecordView(AdministratorMixin, BaseTeamRecordView):
     admin = True
 
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related(
+            'teaminstitutionconflict_set__institution',
+            'adjudicatorteamconflict_set__adjudicator',
+            'venue_constraints__venuecategory',
+        )
+
 
 class AdjudicatorRecordView(AdministratorMixin, BaseAdjudicatorRecordView):
     admin = True
+
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related(
+            'adjudicatorinstitutionconflict_set__institution',
+            'adjudicatorteamconflict_set__team',
+            'venue_constraints__venuecategory',
+        )
 
 
 class PublicTeamRecordView(PublicTournamentPageMixin, BaseTeamRecordView):

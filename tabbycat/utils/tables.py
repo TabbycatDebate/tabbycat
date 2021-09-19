@@ -10,6 +10,7 @@ from django.utils.translation import ngettext
 from adjallocation.allocation import AdjudicatorAllocation
 from draw.generator import DRAW_FLAG_DESCRIPTIONS
 from options.utils import use_team_code_names
+from results.result import get_result_class
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.mixins import SingleObjectByRandomisedUrlMixin
 from tournaments.utils import get_side_name
@@ -275,9 +276,17 @@ class TabbycatTableBuilder(BaseTableBuilder):
             cell['popover']['content'].append({'text': _("Real name: <strong>%(name)s</strong>") % {'name': team.short_name}})
 
         if self._show_speakers_in_draw:
-            cell['popover']['content'].append({'text': ", ".join([s.name for s in team.speakers])})
+            if self.admin:
+                speakers = ["<span class='admin-redacted'>%s</span>" % s.name if s.anonymous else s.name for s in team.speakers]
+            else:
+                speakers = [self.REDACTED_CELL['text'] if s.anonymous else s.name for s in team.speakers]
+
+            cell['popover']['content'].append({'text': ", ".join(speakers)})
         if self._show_record_links:
             cell['popover']['content'].append(self._team_record_link(team))
+
+        if self.admin and getattr(team, 'anonymise', False):
+            cell['class'] += ' admin-redacted'
 
         return cell
 
@@ -472,10 +481,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         adj_data = []
         for adj in adjudicators:
-            if adj.anonymous:
+            if adj.anonymous and not self.admin:
                 adj_data.append(self.REDACTED_CELL)
             else:
                 cell = {'text': adj.name}
+                if adj.anonymous:
+                    cell['class'] = 'admin-redacted'
                 if self._show_record_links:
                     cell['popover'] = {'title': adj.name, 'content': [self._adjudicator_record_link(adj)]}
                 if subtext == 'institution' and adj.institution is not None:
@@ -588,18 +599,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
         The mechanism depends on whether the 'enable_motions' preferences is enabled:
         if it is, then the motion is attached to the debate's confirmed ballot; if
         not, then it's just attached to the round."""
-        if self.tournament.pref('enable_motions'):
-            motions = [debate.confirmed_ballot.motion if debate.confirmed_ballot else None
-                       for debate in debates]
-        else:
-            motions = []
-            for debate in debates:
-                round = debate.round
-                motion = round.motion_set.first()
-                if debate.round.motions_released or round.tournament.pref('all_results_released'):
-                    motions.append(motion)
-                else:
-                    motions.append(None)
+        motions = []
+        for debate in debates:
+            released = debate.round.motions_released or debate.round.tournament.pref('all_results_released')
+            if self.tournament.pref('enable_motions') or released:
+                motions.append(getattr(debate.confirmed_ballot, 'motion', None))
+            else:
+                motions.append(None)
         self.add_motion_column(motions)
 
     def add_motion_column(self, motions):
@@ -617,7 +623,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         """
 
         team_data = [self._team_cell(team, show_emoji=show_emoji)
-                     if not getattr(team, 'anonymise', False)
+                     if not (getattr(team, 'anonymise', False) and not self.admin)
                      else self.BLANK_TEXT for team in teams]
         if key:
             header = {'key': key, 'text': key}
@@ -646,13 +652,17 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def add_speaker_columns(self, speakers, categories=True):
         speaker_data = []
         for speaker in speakers:
-            if getattr(speaker, 'anonymise', False):
+            anonymous = getattr(speaker, 'anonymise', False) or speaker.anonymous
+            if anonymous and not self.admin:
                 speaker_data.append(self.REDACTED_CELL)
             else:
-                speaker_data.append({
+                cell = {
                     'text': speaker.name,
                     'class': 'no-wrap' if len(speaker.name) < 20 else '',
-                })
+                }
+                if anonymous:
+                    cell['class'] += ' admin-redacted'
+                speaker_data.append(cell)
 
         self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'}, speaker_data)
 
@@ -790,6 +800,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for standing in standings:
             row = []
             for key, metric in zip(standings.metric_keys, standing.itermetrics()):
+                if metric is None:
+                    row.append({'text': '—', 'sort': 0})
+                    continue
+
                 if key in integer_score_columns and hasattr(metric, 'is_integer') and metric.is_integer():
                     metric = int(metric)
                 try:
@@ -799,6 +813,22 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 row.append({'text': metricformat(metric), 'sort': sort})
             data.append(row)
         self.add_columns(headers, data)
+
+    def add_speaker_debate_ballot_link_column(self, debates):
+        ballot_links_header = {'key': "ballot", 'icon': 'search', 'tooltip': _("The confirmed ballot")}
+        ballot_links_data = []
+
+        for debate in debates:
+            if not debate.confirmed_ballot:
+                ballot_links_data.append(_("No ballot"))
+            elif not debate.confirmed_ballot.result.uses_speakers:
+                ballot_links_data.append(_("No scores"))
+            else:
+                ballot_links_data.append({
+                    'text': _("View Ballot"),
+                    'link': reverse_round('speaker-results-privateurl-scoresheet', debate.round, kwargs={'url_key': self.private_url_key}),
+                })
+        self.add_column(ballot_links_header, ballot_links_data)
 
     def add_debate_ballot_link_column(self, debates, show_ballot=False):
         ballot_links_header = {'key': "ballot", 'icon': 'search',
@@ -816,8 +846,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
             for debate in debates:
                 if not debate.ballotsubmission_set.exclude(discarded=True).exists():
                     ballot_links_data.append(_("No ballot"))
-                elif self.tournament.pref('teams_in_debate') == 'bp' and debate.round.is_break_round:
-                    ballot_links_data.append(_("Elimination"))
+                elif not get_result_class(debate.round, self.tournament).uses_speakers:
+                    ballot_links_data.append(_("No scores"))
                 else:
                     ballot_links_data.append({
                         'text': _("View Ballot"),

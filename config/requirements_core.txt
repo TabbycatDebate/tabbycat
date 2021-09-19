@@ -1,7 +1,7 @@
 # The necessary dependencies to run Tabbycat
 
 # Django
-Django==3.1.4
+Django==3.2.3
 django-appconf==1.0.4                   # Helper for handling app configs
 django-better-admin-arrayfield==1.4.2   # Admin widget for ArrayField
 django-dynamic-preferences==1.10.1      # Settings management
@@ -16,6 +16,7 @@ django-statici18n==2.0.1                # Compile translations files as static f
 django-summernote==0.8.11.6             # WYSIWYG editor
 dj-cmd==1.0                             # Provides the dj command alias
 django-redis==4.12.1                    # Use redis for cache (on heroku; local optional)
+django-cors-headers==3.7.0              # CORS headers for API endpoints
 
 # Database
 psycopg2==2.8.6                         # For Django to talk to postgres

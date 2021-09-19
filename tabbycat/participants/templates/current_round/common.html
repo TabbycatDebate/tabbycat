@@ -48,7 +48,7 @@
 
 {# Motions #}
 {% if pref.public_motions or admin_page %}
-  <div class="list-group-item">
+  <div class="list-group-item {% if not pref.public_motions or not current_round.motions_released %}list-group-item-dark{% endif %}">
     {% if current_round.motions_released or admin_page %}
       {% if not current_round.motions_released %}
         <em>{% trans "Motions are not released to public." %}</em><br />

@@ -22,17 +22,20 @@
     {% endif %}
 
     {% if pref.show_adjudicator_institutions or admin_page or private_url %}
-      <div class="list-group-item">
-        <strong>{% trans "Institution:" %}</strong>
-        {% if adjudicator.institution %}
-          {{ adjudicator.institution.name }}
-        {% else %}
-          <span class="text-muted">{% trans "Unaffiliated" %}</span>
-        {% endif %}
+      <div class="list-group-item {% if not pref.show_adjudicator_institutions %}list-group-item-secondary{% endif %}">
+        <div>
+          <strong>{% trans "Institution:" %}</strong>
+          {% if adjudicator.institution %}
+            {{ adjudicator.institution.name }}
+          {% else %}
+            <span class="text-muted">{% trans "Unaffiliated" %}</span>
+          {% endif %}
+        </div>
         {% if adjudicator.institution.region %}
-          <br />
-          <strong>{% trans "Region:" %}</strong>
-          {{ adjudicator.institution.region.name }}
+          <div>
+            <strong>{% trans "Region:" %}</strong>
+            {{ adjudicator.institution.region.name }}
+          </div>
         {% endif %}
       </div>
     {% else %}
@@ -42,23 +45,25 @@
     {% endif %}
 
     {% if admin_page %}
-      <div class="list-group-item">
-
+      <div class="list-group-item list-group-item-secondary">
+        <div>
           <strong>{% trans "Institutional Conflicts:" %}</strong>
           {% for ic in adjudicator.adjudicatorinstitutionconflict_set.all %}
             {{ ic.institution.name }}{% if not forloop.last %}{% trans "; " %}{% endif %}
           {% empty %}
-            <span class="text-muted">{% trans "None" %}</span>
+            {% trans "None" %}
           {% endfor %}
-
-          <strong><br>{% trans "Team Conflicts:" %}</strong>
+        </div>
+        <div>
+          <strong>{% trans "Team Conflicts:" %}</strong>
           {% for tc in adjudicator.adjudicatorteamconflict_set.all %}
             {% team_record_link tc.team admin_page tournament False %}{% if not forloop.last %}{% trans ", " %}{% endif %}
           {% empty %}
-            <span class="text-muted">{% trans "None" %}</span>
+            {% trans "None" %}
           {% endfor %}
-
-          <strong><br>{% trans "Adjudicator Conflicts:" %}</strong>
+        </div>
+        <div>
+          <strong>{% trans "Adjudicator Conflicts:" %}</strong>
           {% for adj in adjadj_conflicts %}
             {% if pref.public_record %}
               <a href="{% adj_record_link adj admin_page tournament %}">{{ adj.name }}</a>{% if not forloop.last %}{% trans ", " %}{% endif %}
@@ -66,17 +71,17 @@
               {{ adj.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
             {% endif %}
           {% empty %}
-            <span class="text-muted">{% trans "None" %}</span>
+            {% trans "None" %}
           {% endfor %}
-
+        </div>
       </div>
 
-      <div class="list-group-item">
+      <div class="list-group-item list-group-item-secondary">
         <strong>{% trans "Room Constraints:" %}</strong>
         {% for vc in adjudicator.venue_constraints.all %}
           {{ vc.category }}{% if not forloop.last %}{% trans ", " %}{% endif %}
         {% empty %}
-          <span class="text-muted">{% trans "None" %}</span>
+          {% trans "None" %}
         {% endfor %}
       </div>
 

@@ -68,5 +68,6 @@
     "npm": "6.14.x"
   },
   "license": "UNLICENSED",
-  "repository": "https://github.com/TabbycatDebate/tabbycat"
+  "repository": "https://github.com/TabbycatDebate/tabbycat",
+  "version": "3.18.1"
 }

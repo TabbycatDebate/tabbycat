@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-23 04:46\n"
+"PO-Revision-Date: 2021-04-07 17:57\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "MIME-Version: 1.0\n"
@@ -64,23 +64,23 @@ msgstr ""
 
 #: ../../features/team-code-names.rst:49
 msgid "Do not use code names"
-msgstr ""
+msgstr "Jangan mengunakan kode nama"
 
 #: ../../features/team-code-names.rst:50
 msgid "Use real names everywhere, and show code names in tooltips"
-msgstr ""
+msgstr "Gunakan nama asli di mana saja, dan tampilkan kode nama di keterangan alat"
 
 #: ../../features/team-code-names.rst:51
 msgid "Use code names for public; real names with code names in tooltips for admins"
-msgstr ""
+msgstr "Gunakan kode nama untuk publik; nama asli dengan kode nama di keterangan alat untuk admin"
 
 #: ../../features/team-code-names.rst:52
 msgid "Use code names for public; code names with real names in tooltips for admins"
-msgstr ""
+msgstr "Gunakan kode nama untuk publik; kode nama dengan nama asli di keterangan alat untuk admin"
 
 #: ../../features/team-code-names.rst:53
 msgid "Use code names everywhere; do not use tooltips (real names show in some admin views)"
-msgstr ""
+msgstr "Gunakan kode nama di mana saja; jangan gunakan tooltips (nama asli ditampilkan di beberapa tampilan admin)"
 
 #: ../../features/team-code-names.rst:55
 msgid "\"Code names in tooltips\" means that the code name will display in the details box that appears when you roll over a team's name, and similarly for real names."

@@ -223,14 +223,15 @@ class Standings:
         self.get_standing(instance).add_ranking(key, value)
 
     def sort_from_rankings(self, tiebreak_func=None):
-        """Sorts Standings by a SQL-provided ranking, requiring less treatment."""
+        """Sorts Standings by a SQL-provided ranking, and so sorting is not
+        affected by None values."""
         self._standings = list(self.infos.values())
 
         if tiebreak_func:
+            # If tiebreak is SQL-provided, this is skipped
             tiebreak_func(self._standings)
 
         self._standings.sort(key=lambda r: tuple(r.rankings[key] for key in self.ranking_keys))
-
         self.ranked = True
 
     def sort(self, precedence, tiebreak_func=None):
@@ -277,6 +278,10 @@ class BaseStandingsGenerator:
 
     TIEBREAK_FUNCTIONS = {
         "random"     : random.shuffle,
+    }
+
+    QUERYSET_TIEBREAK_FIELDS = {
+        "random"     : '?',
     }
 
     metric_annotator_classes = {}
@@ -368,8 +373,17 @@ class BaseStandingsGenerator:
             annotator.run_queryset(queryset, standings)
         logger.debug("Ranking queryset annotators done.")
 
-        standings.sort_from_rankings(self._tiebreak_func)
+        # Order by rank and tie-breaker if available.
+        tiebreak_func = None
+        ordering_keys = [a.key for a in self.ranking_annotators]
+        if self._qs_tiebreak_field is None:
+            # Pass to Standings-based if SQL doesn't exist; gives None if none given
+            tiebreak_func = self._tiebreak_func
+        else:
+            ordering_keys.append(self._qs_tiebreak_field)
+        queryset = queryset.order_by(*ordering_keys)
 
+        standings.sort_from_rankings(tiebreak_func)
         return standings
 
     @staticmethod
@@ -377,9 +391,7 @@ class BaseStandingsGenerator:
         """Checks the given list of annotators to ensure there are no conflicts.
         A conflict occurs if two annotators would add annotations of the same
         name."""
-        names = list()
-        for annotator in annotators:
-            names.append(annotator.key)
+        names = [a.key for a in annotators]
         if len(names) != len(set(names)):
             raise StandingsError(error_str + "\n" + repr(names))
 
@@ -443,6 +455,10 @@ class BaseStandingsGenerator:
             klass = self.ranking_annotator_classes[ranking]
             annotator = klass(self.precedence)
             self.ranking_annotators.append(annotator)
+
+    @property
+    def _qs_tiebreak_field(self):
+        return self.QUERYSET_TIEBREAK_FIELDS.get(self.options["tiebreak"])
 
     @property
     def _tiebreak_func(self):
