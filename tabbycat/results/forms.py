@@ -420,13 +420,13 @@ class BaseBallotSetForm(BaseResultForm):
 
         # 5. Save motions
         if self.using_motions:
-            self.ballotsub.motion = self.cleaned_data['motion']
+            self.ballotsub.motion = self.cleaned_data['motion'].motion
         elif self.motions.count() == 1:
             self.ballotsub.motion = self.motions.get().motion
 
         if self.using_vetoes:
             for side in self.sides:
-                motion_veto = self.cleaned_data[self._fieldname_motion_veto(side)]
+                motion_veto = self.cleaned_data[self._fieldname_motion_veto(side)].motion
                 debate_team = self.debate.get_dt(side)
                 if motion_veto:
                     self.ballotsub.debateteammotionpreference_set.update_or_create(
