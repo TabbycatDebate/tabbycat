@@ -58,7 +58,9 @@ class ResultError(RuntimeError):
     pass
 
 
-def get_result_class(ballotsub, round, tournament=None):
+def get_result_class(ballotsub, round=None, tournament=None):
+    if round is None:
+        round = ballotsub.round
     if tournament is None:
         tournament = round.tournament
 

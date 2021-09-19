@@ -15,9 +15,9 @@ def merge_motions(new_bs, bses):
 
 def merge_motion_vetos(new_bs, bses):
     vetos = {}
-    pref_lists = [list(bs.debateteammotionpreference_set.all().values_list(
+    pref_lists = [tuple(bs.debateteammotionpreference_set.all().values_list(
         'debate_team', 'debate_team__side', 'motion', 'preference')) for bs in bses]
-    preferences = {p for p in pref_lists}
+    preferences = {p for bs in pref_lists for p in bs}
 
     if len({p[0] for p in preferences}) != len(preferences):
         # If a team is repeated, means different values were given and the length of both sets would
