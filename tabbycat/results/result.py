@@ -888,9 +888,9 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
     get_score = speakerscore_field_score
 
     def teamscore_field_score(self, side):
-        if not self.tournament.pref('teamscore_includes_ghosts'):
-            return sum(self.get_score(side, pos) for pos in self.positions if not self.get_ghost(side, pos))
-        return self.scoresheet.get_total(side)
+        if self.tournament.pref('teamscore_includes_ghosts'):
+            return self.scoresheet.get_total(side)
+        return sum(self.get_score(side, pos) for pos in self.positions if not self.get_ghost(side, pos))
 
 
 class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateResultByAdjudicator):
@@ -948,8 +948,8 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
 
     def _teamscore_score_component(self, adj, side):
         if self.tournament.pref('teamscore_includes_ghosts'):
-            return sum(self.get_score(adj, side, pos) for pos in self.positions if not self.get_ghost(side, pos))
-        return self.scoresheets[adj].get_total(side)
+            return self.scoresheets[adj].get_total(side)
+        return sum(self.get_score(adj, side, pos) for pos in self.positions if not self.get_ghost(side, pos))
 
     def teamscore_field_score(self, side):
         # Should be decision-decorated
