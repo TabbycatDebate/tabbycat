@@ -1,13 +1,6 @@
 {% extends "base.html" %}
 {% load debate_tags add_field_css humanize static i18n %}
 
-
-{% block page-title %}{% blocktrans trimmed with debate=debate_name %}
-  Enter Results for {{ debate }}
-{% endblocktrans %}{% endblock %}
-{% block head-title %}{% blocktrans trimmed with debate=debate_name %}
-  Enter Results for {{ debate }}
-{% endblocktrans %}{% endblock %}
 {% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
 
 {% block page-alerts %}

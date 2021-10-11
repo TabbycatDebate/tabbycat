@@ -3,24 +3,6 @@
 
 {% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
 
-{% block head-title %}
-  {% if new %}
-    {% blocktrans trimmed with debate=debate_name %}
-      New Ballot Set for {{ debate }}
-    {% endblocktrans %}
-  {% else %}
-    {% blocktrans trimmed with debate=debate_name %}
-      Edit Ballot Set for {{ debate }}
-    {% endblocktrans %}
-  {% endif %}
-{% endblock %}
-
-{% block page-title %}
-  {% blocktrans trimmed with room=debate.venue.display_name debate=debate_name %}
-    {{ room }}: {{ debate }}
-  {% endblocktrans %}
-{% endblock %}
-
 {% block page-subnav-sections %}
   {% if for_admin %}
     <a class="btn btn-outline-primary" href="{% roundurl 'results-round-list' debate.round %}">

@@ -254,9 +254,10 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
             kwargs['debate_name'] = _(" vs ").join(self.debate.get_team(side).short_name for side in sides)
         else:
             kwargs['debate_name'] = _(" vs ").join(self.debate.get_team(side).code_name for side in sides)
-        kwargs['page_subtitle'] = _("%(round)s @ %(room)s") % {
+        kwargs['page_subtitle'] = _("%(matchup)s: %(round)s @ %(room)s") % {
             'round': self.debate.round.name,
             'room': getattr(self.debate.venue, 'display_name', _("N/A")),
+            'matchup': kwargs['debate_name'],
         }
 
         kwargs['iron'] = self.debate.debateteam_set.annotate(iron=Count('team__debateteam__speakerscore',
@@ -388,6 +389,7 @@ class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
     relates_to_new_ballotsub = True
     action_log_type = ActionLogEntry.ACTION_TYPE_BALLOT_CREATE
     pk_url_kwarg = 'debate_id'
+    page_title = gettext_lazy("New Ballot Set")
 
     def add_success_message(self):
         message = _("Ballot set for %(debate)s added.") % {'debate': self.matchup_description()}
@@ -438,14 +440,14 @@ class BaseEditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
     model = BallotSubmission
     tournament_field_name = 'debate__round__tournament'
     relates_to_new_ballotsub = False
+    page_title = gettext_lazy("Edit Ballot Set")
 
     def get_action_log_type(self):
         if self.ballotsub.discarded:
             return ActionLogEntry.ACTION_TYPE_BALLOT_DISCARD
         elif self.ballotsub.confirmed:
             return ActionLogEntry.ACTION_TYPE_BALLOT_CONFIRM
-        else:
-            return ActionLogEntry.ACTION_TYPE_BALLOT_EDIT
+        return ActionLogEntry.ACTION_TYPE_BALLOT_EDIT
 
     def get_success_url(self):
         return reverse_round('results-round-list', self.ballotsub.debate.round)
@@ -489,6 +491,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
     template_name = 'public_enter_results.html'
     relates_to_new_ballotsub = True
     action_log_type = ActionLogEntry.ACTION_TYPE_BALLOT_SUBMIT
+    page_title = gettext_lazy("Enter Results")
 
     def get_context_data(self, **kwargs):
         kwargs['private_url'] = self.private_url
@@ -816,6 +819,7 @@ class PostponeDebateView(AdministratorMixin, RoundMixin, PostOnlyRedirectView):
 
 class BaseMergeLatestBallotsView(BaseNewBallotSetView):
     tabroom = True
+    page_title = gettext_lazy("Merge Ballots")
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
