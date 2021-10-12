@@ -835,6 +835,7 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
             debate=self.debate, participant_submitter__isnull=False, discarded=False, partial=True,
         ).distinct('participant_submitter').select_related('participant_submitter').order_by('participant_submitter', '-version')
         populate_results(bses, self.tournament)
+        self.merged_ballots = bses
 
         # Handle result conflicts
         self.result = DebateResult(self.ballotsub, tournament=self.tournament)
@@ -873,6 +874,13 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
         except ValidationError as e:
             messages.error(self.request, e)
             return HttpResponseRedirect(reverse_round(self.ballot_list_url, self.debate.round))
+
+    def get_all_ballotsubs(self):
+        q = super().get_all_ballotsubs()
+        merged = {b.id for b in self.merged_ballots}
+        for b in q:
+            b.merged = b.id in merged
+        return q
 
 
 class AdminMergeLatestBallotsView(OldAdministratorBallotSetMixin, BaseMergeLatestBallotsView):
