@@ -7,6 +7,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from motions.models import RoundMotion
 from utils.misc import badge_datetime_format, reverse_tournament
 
 from .result import DebateResult
@@ -206,6 +207,15 @@ class BallotSubmission(Submission):
             'confirmed': self.confirmed,
             'discarded': self.discarded,
         }
+
+    @property
+    def roundmotion(self):
+        if not hasattr(self, "_roundmotion"):
+            if self.motion is not None:
+                self._roundmotion = RoundMotion.objects.get(motion=self.motion, round_id=self.debate.round_id)
+            else:
+                self._roundmotion = None
+        return self._roundmotion
 
 
 class TeamScoreByAdj(models.Model):

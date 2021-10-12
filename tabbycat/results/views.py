@@ -19,6 +19,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from draw.prefetch import populate_opponents
+from motions.models import RoundMotion
 from motions.utils import merge_motion_vetos, merge_motions
 from notifications.models import BulkNotification
 from options.utils import use_team_code_names, use_team_code_names_data_entry
@@ -468,6 +469,9 @@ class BaseEditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
     def populate_objects(self, prefill=True):
         self.ballotsub = self.object = self.get_object()
         self.debate = self.ballotsub.debate
+        self.round_motions = {}
+        for rm in RoundMotion.objects.filter(round_id=self.debate.round_id):
+            self.round_motions[rm.motion_id] = rm
 
 
 class AdminEditBallotSetView(AdministratorBallotSetMixin, BaseEditBallotSetView):
@@ -532,6 +536,10 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
             submitter_type=BallotSubmission.SUBMITTER_PUBLIC, partial=self.tournament.pref('individual_ballots'),
             private_url=self.private_url, participant_submitter=self.object)
 
+        self.round_motions = {}
+        for rm in RoundMotion.objects.filter(round_id=self.debate.round_id):
+            self.round_motions[rm.motion_id] = rm
+
         self.result = DebateResult(self.ballotsub, round=self.round, tournament=self.tournament)
         self.vetos = None
         self.prefilled = False
@@ -564,12 +572,13 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
 
     def set_motions(self, former_ballot):
         if self.tournament.pref('enable_motions'):
-            self.ballotsub.motion = former_ballot.motion
+            self.ballotsub._roundmotion = self.round_motions[former_ballot.motion_id]
             self.prefilled = True
         if self.tournament.pref('motion_vetoes_enabled'):
             self.vetos = {}
             for dtmp in former_ballot.debateteammotionpreference_set.all():
                 self.vetos[dtmp.debate_team.side] = dtmp
+                self.vetos[dtmp.debate_team.side]._roundmotion = self.round_motions[dtmp.motion_id]
             self.prefilled = True
 
     def error_page(self, message):

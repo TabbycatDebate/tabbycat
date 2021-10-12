@@ -362,7 +362,7 @@ class BaseBallotSetForm(BaseResultForm):
             if not self.ballotsub.motion and self.motions.count() == 1:
                 initial['motion'] = self.motions.get()
             else:
-                initial['motion'] = self.ballotsub.motion
+                initial['motion'] = self.ballotsub.roundmotion
 
         if self.using_vetoes:
             for side in self.sides:
@@ -372,7 +372,7 @@ class BaseBallotSetForm(BaseResultForm):
                 else:
                     dtmp = self.vetos.get(side)
                 if dtmp:
-                    initial[self._fieldname_motion_veto(side)] = dtmp.motion
+                    initial[self._fieldname_motion_veto(side)] = dtmp.roundmotion
 
         initial.update(self.initial_from_result(self.result))
 
