@@ -48,6 +48,12 @@ class DebateTeamMotionPreference(models.Model):
     def __str__(self):
         return "{0.motion.reference:s} ({0.preference:d}) by {0.debate_team!s}".format(self)
 
+    @property
+    def roundmotion(self):
+        if not hasattr(self, "_roundmotion"):
+            self._roundmotion = RoundMotion.objects.get(motion=self.motion, round_id=self.debate_team.debate.round_id)
+        return self._roundmotion
+
 
 class RoundMotion(models.Model):
     """Represents the relation between rounds and motions"""

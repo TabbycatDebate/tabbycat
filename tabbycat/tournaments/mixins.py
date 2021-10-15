@@ -213,6 +213,10 @@ class RoundFromUrlMixin(TournamentFromUrlMixin):
         self._round_from_url = round
         return round
 
+    @round.setter
+    def round(self, round):
+        self._round_from_url = round
+
 
 class RoundMixin(RoundFromUrlMixin, TournamentMixin):
     """Mixin for views that relate to a round, and are specified as relating

@@ -7,6 +7,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from motions.models import RoundMotion
 from utils.misc import badge_datetime_format, reverse_tournament
 
 from .result import DebateResult
@@ -43,6 +44,8 @@ class Submission(models.Model):
         verbose_name=_("confirmed"))
 
     # relevant for private URL submissions
+    private_url = models.BooleanField(default=False,
+        verbose_name=_("from private URL"))
     participant_submitter = models.ForeignKey('participants.Person', models.PROTECT,
         blank=True, null=True, related_name="%(app_label)s_%(class)s_participant_submitted",
         verbose_name=_("from participant"))
@@ -110,6 +113,10 @@ class BallotSubmission(Submission):
         verbose_name=_("motion"))
     discarded = models.BooleanField(default=False,
         verbose_name=_("discarded"))
+    single_adj = models.BooleanField(default=False,
+        verbose_name=_("single adjudicator"),
+        help_text=_("Whether this submission represents only the submitting adjudicator on a panel, "
+                    "when individual adjudicator ballots are enabled."))
 
     class Meta:
         unique_together = [('debate', 'version')]
@@ -201,7 +208,17 @@ class BallotSubmission(Submission):
             'version': self.version,
             'confirmed': self.confirmed,
             'discarded': self.discarded,
+            'single_adj': self.single_adj,
         }
+
+    @property
+    def roundmotion(self):
+        if not hasattr(self, "_roundmotion"):
+            if self.motion is not None:
+                self._roundmotion = RoundMotion.objects.get(motion=self.motion, round_id=self.debate.round_id)
+            else:
+                self._roundmotion = None
+        return self._roundmotion
 
 
 class TeamScoreByAdj(models.Model):

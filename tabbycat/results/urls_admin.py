@@ -28,4 +28,8 @@ urlpatterns = [
     path('debate/old/<int:debate_id>/new/',
         views.OldAdminNewBallotSetView.as_view(),
         name='old-results-ballotset-new'),
+
+    path('debate/<int:debate_id>/merge/latest/',
+        views.AdminMergeLatestBallotsView.as_view(),
+        name='results-merge-latest'),
 ]
