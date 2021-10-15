@@ -206,6 +206,7 @@ class BallotSubmission(Submission):
             'version': self.version,
             'confirmed': self.confirmed,
             'discarded': self.discarded,
+            'partial': self.partial,
         }
 
     @property
