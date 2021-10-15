@@ -1027,7 +1027,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         exclude = ('debate',)
         read_only_fields = ('timestamp', 'version',
             'submitter_type', 'submitter', 'participant_submitter',
-            'confirmer', 'confirm_timestamp', 'ip_address', 'partial', 'private_url')
+            'confirmer', 'confirm_timestamp', 'ip_address', 'single_adj', 'private_url')
 
     def get_request(self):
         return self.context['request']
@@ -1044,9 +1044,9 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
             if self.context['debate'].debateadjudicator_set.all().count() > 1:
                 if len(result_data['sheets']) == 1:
                     validated_data['participant_submitter'] = result_data['sheets'][0]['adjudicator']
-                    validated_data['partial'] = True
+                    validated_data['single_adj'] = True
                 else:
-                    raise serializers.ValidationError('Partial ballots must be individual')
+                    raise serializers.ValidationError('Single-adjudicator ballots must have only one scoresheet')
 
         ballot = super().create(validated_data)
 

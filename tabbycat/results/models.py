@@ -113,8 +113,10 @@ class BallotSubmission(Submission):
         verbose_name=_("motion"))
     discarded = models.BooleanField(default=False,
         verbose_name=_("discarded"))
-    partial = models.BooleanField(default=False,
-        verbose_name=_("partial"))
+    single_adj = models.BooleanField(default=False,
+        verbose_name=_("single adjudicator"),
+        help_text=_("Whether this submission represents only the submitting adjudicator on a panel, "
+                    "when individual adjudicator ballots are enabled."))
 
     class Meta:
         unique_together = [('debate', 'version')]
@@ -206,7 +208,7 @@ class BallotSubmission(Submission):
             'version': self.version,
             'confirmed': self.confirmed,
             'discarded': self.discarded,
-            'partial': self.partial,
+            'single_adj': self.single_adj,
         }
 
     @property

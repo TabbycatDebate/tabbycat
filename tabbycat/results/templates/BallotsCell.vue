@@ -67,9 +67,9 @@ export default {
       return this.viableBallotsCount === this.cellData.ballots.length
     },
     canMergeCreate: function () {
-      // it's mergeable if there is at least one partial non-discarded ballot
+      // it's mergeable if there is at least one single-adj non-discarded ballot
       // (ok to have just one, since user might want to fill in the others)
-      return this.cellData.ballots.some((b) => !b.discarded && b.partial)
+      return this.cellData.ballots.some((b) => !b.discarded && b.single_adj)
     },
   },
   methods: {

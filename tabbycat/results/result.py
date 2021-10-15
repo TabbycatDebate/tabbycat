@@ -68,7 +68,7 @@ def get_result_class(ballotsub, round=None, tournament=None):
     ballots_per_debate = round.ballots_per_debate
     scores_in_debate = tournament.pref('speakers_in_ballots')
 
-    if ballots_per_debate == 'per-debate' or ballotsub.partial:
+    if ballots_per_debate == 'per-debate' or ballotsub.single_adj:
         if ((teams_in_debate == 'bp' or scores_in_debate == 'prelim') and round.is_break_round) or scores_in_debate == 'never':
             return ConsensusDebateResult
         return ConsensusDebateResultWithScores

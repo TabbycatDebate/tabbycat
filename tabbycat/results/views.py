@@ -533,7 +533,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
 
         self.debate = self.debateadj.debate
         self.ballotsub = BallotSubmission(debate=self.debate, ip_address=get_ip_address(self.request),
-            submitter_type=BallotSubmission.SUBMITTER_PUBLIC, partial=self.tournament.pref('individual_ballots'),
+            submitter_type=BallotSubmission.SUBMITTER_PUBLIC, single_adj=self.tournament.pref('individual_ballots'),
             private_url=self.private_url, participant_submitter=self.object)
 
         self.round_motions = {}
@@ -543,7 +543,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
         self.result = DebateResult(self.ballotsub, round=self.round, tournament=self.tournament)
         self.vetos = None
         self.prefilled = False
-        if self.ballotsub.partial and prefill:
+        if self.ballotsub.single_adj and prefill:
             former_ballot = self.debate.ballotsubmission_set.filter(discarded=False).exclude(
                 participant_submitter=self.object,
             ).prefetch_related(
@@ -595,7 +595,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
 
     def get_all_ballotsubs(self):
         q = super().get_all_ballotsubs()
-        if self.ballotsub.partial:
+        if self.ballotsub.single_adj:
             return q.filter(participant_submitter=self.ballotsub.participant_submitter)
         return q
 
@@ -841,7 +841,7 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
         use_code_names = use_team_code_names_data_entry(self.tournament, True)
 
         bses = BallotSubmission.objects.filter(
-            debate=self.debate, participant_submitter__isnull=False, discarded=False, partial=True,
+            debate=self.debate, participant_submitter__isnull=False, discarded=False, single_adj=True,
         ).distinct('participant_submitter').select_related('participant_submitter').order_by('participant_submitter', '-version')
         populate_results(bses, self.tournament)
         self.merged_ballots = bses
