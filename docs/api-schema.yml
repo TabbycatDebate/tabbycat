@@ -4118,8 +4118,8 @@ components:
             private URL.
           type: boolean
           readOnly: true
-        partial:
-          title: Partial
+        single_adj:
+          title: Single adjudicator
           description: >-
             If the ballot only has the scores of one adjudicator,
             rather than from all.
