@@ -305,7 +305,7 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
 
     # Override default css to get a larger width for local build
     def setup(app):
-        app.add_stylesheet('theme_overrides.css')
+        app.add_css_file('theme_overrides.css')
 else:
     # Override default css to get a larger width for ReadTheDoc build
     html_context = {
