@@ -9,7 +9,7 @@ Change Log
 - Tabbycat is now supported by a new non-profit, the Tabbycat Debate Association!
 - Motions can now be re-used between rounds, with statistics using the combined data from the rounds. Motion statistics queries are optimised. (`#739 <https://github.com/TabbycatDebate/tabbycat/pull/739>`_)
 - A new feedback paths allows for trainees to submit feedback on chairs, but not on panellists.
-- Personal redactions foro speakers and adjudicators are indicated in admin tables, but are not hidden. (`#1480 <https://github.com/TabbycatDebate/tabbycat/issues/1480>`_)
+- Personal redactions for speakers and adjudicators are indicated in admin tables, but are not hidden. (`#1480 <https://github.com/TabbycatDebate/tabbycat/issues/1480>`_)
 - Unexpected team feedback is unconfirmed to avoid affecting the scores of unexpected adjudicators. (`#473 <https://github.com/TabbycatDebate/tabbycat/issues/473>`_)
 - Added some database area actions to assign emojis and code names, previously only available as commands.
 - Added a button to copy each table to the clipboard in a CSV format
@@ -24,6 +24,7 @@ Change Log
 - Removed automatic SendGrid provision, changed config var name to ``SENDGRID_API_KEY`` and updated documentation on email configuration (`#1752 <https://github.com/TabbycatDebate/tabbycat/pull/1752>`_)
 - Motions are associated to ballots even when motion selection is disabled, to consolidate motion statistics queries. A migration will attempt to associate motions to existing ballots where motion selection is deactivated and the round of the ballot only has one motion.
 - A migration will attempt to associate venues and venue categories to a tournament if currently unlinked.
+- Adjudicators may now submit ballots individually for non-conferral formats or as a redundancy check, with the ballots merged once all received.
 
 
 2.5.9
