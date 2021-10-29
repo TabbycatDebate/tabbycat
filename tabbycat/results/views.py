@@ -138,9 +138,12 @@ class AdminResultsEntryForRoundView(AdministratorMixin, BaseResultsEntryForRound
         # reasonably have. This is just an extra courtesy for users who try to
         # hack too much. Just check `exists()`, no further information---it's
         # not worth the performance hit to do this work for them.
-        kwargs["debates_with_multiple_confirmed_ballots_found"] = self.round.debate_set.annotate(
+        multiple_confirmed_ballots_found = self.round.debate_set.annotate(
             num_ballots=Count('ballotsubmission', filter=Q(ballotsubmission__confirmed=True)),
         ).filter(num_ballots__gt=1).exists()
+        if multiple_confirmed_ballots_found:
+            logger.error("Multiple confirmed ballots for a single debate found")
+        kwargs["debates_with_multiple_confirmed_ballots_found"] = multiple_confirmed_ballots_found
 
         return super().get_context_data(**kwargs)
 
