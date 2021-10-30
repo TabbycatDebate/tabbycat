@@ -4,7 +4,7 @@ Change Log
 
 2.6.0 (Ocicat)
 --------------
-*Release date: TBD*
+*Release date: 30 October 2021*
 
 - Tabbycat is now supported by a new non-profit, the Tabbycat Debate Association!
 - Motions can now be re-used between rounds, with statistics using the combined data from the rounds. Motion statistics queries are optimised. (`#739 <https://github.com/TabbycatDebate/tabbycat/pull/739>`_)
@@ -25,6 +25,7 @@ Change Log
 - Motions are associated to ballots even when motion selection is disabled, to consolidate motion statistics queries. A migration will attempt to associate motions to existing ballots where motion selection is deactivated and the round of the ballot only has one motion.
 - A migration will attempt to associate venues and venue categories to a tournament if currently unlinked.
 - Adjudicators may now submit ballots individually for non-conferral formats or as a redundancy check, with the ballots merged once all received.
+- Added a warning when multiple ballots are confirmed from the same debate, indicating a database consistency problem.
 
 
 2.5.9
