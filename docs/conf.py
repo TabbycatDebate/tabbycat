@@ -58,9 +58,9 @@ author = 'Philip Belesky, Chuan-Zheng Lee, Étienne Beaulé'
 # built documents.
 #
 # The short X.Y version.
-version = '2.6'
+version = '2.7'
 # The full version, including alpha/beta/rc tags.
-release = '2.6.0'
+release = '2.7.0-dev'
 
 rst_epilog = """
 .. |vrelease| replace:: v{release}

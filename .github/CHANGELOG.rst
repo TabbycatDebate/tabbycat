@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+2.7.0 (P)
+---------
+*Release date: TBD*
+
+
 2.6.0 (Ocicat)
 --------------
 *Release date: 30 October 2021*
