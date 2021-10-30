@@ -93,6 +93,15 @@ class MarginIncludesDissent(BooleanPreference):
     default = False
 
 
+@tournament_preferences_registry.register
+class TeamScoreIncludesGhost(BooleanPreference):
+    help_text = _("If checked, all speaker scores, including for duplicate speeches, will be counted for team scores")
+    verbose_name = _("Team score includes ghosts")
+    section = scoring
+    name = 'teamscore_includes_ghosts'
+    default = True
+
+
 # ==============================================================================
 draw_rules = Section('draw_rules', verbose_name=_("Draw Rules"))
 # ==============================================================================
@@ -374,6 +383,7 @@ class FeedbackPaths(ChoicePreference):
     choices = (
         ('minimal', _("Chairs on panellists and trainees")),
         ('with-p-on-c', _("Panellists on chairs, chairs on panellists and trainees")),
+        ('with-t-on-c', _("Panellists and trainees on chairs, vice-versa")),
         ('all-adjs', _("All adjudicators (including trainees) on each other")),
     )
     default = 'with-p-on-c'
@@ -528,15 +538,6 @@ class RequireSubstantiveForReply(BooleanPreference):
     verbose_name = _("Require reply speaker to have given a substantive speech")
     section = debate_rules
     name = 'require_substantive_for_reply'
-    default = True
-
-
-@tournament_preferences_registry.register
-class MotionVetoes(BooleanPreference):
-    help_text = _("Enables the motion veto field on ballots, to track veto statistics")
-    verbose_name = _("Motion vetoes")
-    section = debate_rules
-    name = 'motion_vetoes_enabled'
     default = True
 
 
@@ -762,6 +763,15 @@ class AllResultsReleased(BooleanPreference):
     default = False
 
 
+@tournament_preferences_registry.register
+class PrivateBallotsReleased(BooleanPreference):
+    help_text = _("Enables display of confirmed ballots through private URLs. Intended for use after the tournament.")
+    verbose_name = _("Release ballots through private URLs")
+    section = tab_release
+    name = 'private_ballots_released'
+    default = False
+
+
 # ==============================================================================
 data_entry = Section('data_entry', verbose_name=_("Data Entry"))
 # ==============================================================================
@@ -832,15 +842,6 @@ class EnableBlindBallotConfirmation(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class EnableMotions(BooleanPreference):
-    help_text = _("If checked, ballots require a motion to be selected from a list of options. ")
-    verbose_name = _("Enable motion selection")
-    section = data_entry
-    name = 'enable_motions'
-    default = True
-
-
-@tournament_preferences_registry.register
 class AssistantAccess(ChoicePreference):
     help_text = _("Whether assistants can access pages that can reveal matchups "
                   "and motions ahead of public release (these pages are useful for "
@@ -893,15 +894,6 @@ class BallotsConfirmDigits(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class BallotsHideMotions(BooleanPreference):
-    help_text = _("Whether the printed scoresheets should hide the text of motions (even if they have been entered and released)")
-    verbose_name = _("Ballot Hide Motions")
-    section = data_entry
-    name = 'ballots_hide_motions'
-    default = False
-
-
-@tournament_preferences_registry.register
 class ScoreReturnLocation(StringPreference):
     help_text = _("The location to return scoresheets to, printed on pre-printed ballots. Set to 'TBA' to hide.")
     verbose_name = _("Score return location")
@@ -925,6 +917,15 @@ class EnablePostponements(BooleanPreference):
     verbose_name = _("Enable postponements")
     section = data_entry
     name = 'enable_postponements'
+    default = False
+
+
+@tournament_preferences_registry.register
+class SplitVotingBallots(BooleanPreference):
+    help_text = _("Have each voting adjudicator submit a separate ballot.")
+    verbose_name = _("Individual voting ballots")
+    section = data_entry
+    name = 'individual_ballots'
     default = False
 
 
@@ -1103,15 +1104,6 @@ class ShowSplittingAdjudicators(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class ShowMotionsInResults(BooleanPreference):
-    help_text = _("If showing results to public, show which motions were selected in the record")
-    verbose_name = _("Show motions in results")
-    section = ui_options
-    name = 'show_motions_in_results'
-    default = False
-
-
-@tournament_preferences_registry.register
 class TeamCodeNames(ChoicePreference):
     help_text = _("Whether and how to use code names for teams")
     verbose_name = _("Team code names")
@@ -1163,19 +1155,6 @@ class ShowSpeakersInDraw(BooleanPreference):
     section = ui_options
     name = 'show_speakers_in_draw'
     default = True
-
-
-@tournament_preferences_registry.register
-class PublicMotionsOrder(ChoicePreference):
-    help_text = _("Order in which are listed by round in the public view")
-    verbose_name = _("Order to display motions")
-    section = ui_options
-    name = 'public_motions_order'
-    choices = (
-        ('forward', _("Earliest round first")),
-        ('reverse', _("Latest round first")),
-    )
-    default = 'reverse'
 
 
 # ==============================================================================
@@ -1356,6 +1335,71 @@ class TeamNameEmailMessage(LongStringPreference):
     name = 'team_email_message'
     default = ("<p>Hi {{ USER }},</p>"
         "<p>You are registered as <strong>{{ LONG }}</strong> in {{ TOURN }} with {{ SPEAKERS }}.</p>")
+    default = ("Hi {{ USER }},\n\n"
+        "You are registered as {{ LONG }} in {{ TOURN }} with {{ SPEAKERS }}.")
+
+
+# ==============================================================================
+motions = Section('motions', verbose_name=_("Motions"))
+# ==============================================================================
+
+
+@tournament_preferences_registry.register
+class EnableMotions(BooleanPreference):
+    help_text = _("If checked, ballots require a motion to be entered")
+    verbose_name = _("Enable motions")
+    section = motions
+    name = 'enable_motions'
+    default = True
+
+
+@tournament_preferences_registry.register
+class BallotsHideMotions(BooleanPreference):
+    help_text = _("Whether the printed scoresheets should hide the text of motions (even if they have been entered and released)")
+    verbose_name = _("Ballot Hide Motions")
+    section = data_entry
+    name = 'ballots_hide_motions'
+    default = False
+
+
+@tournament_preferences_registry.register
+class MotionVetoes(BooleanPreference):
+    help_text = _("Enables the motion veto field on ballots, to track veto statistics")
+    verbose_name = _("Motion vetoes")
+    section = motions
+    name = 'motion_vetoes_enabled'
+    default = True
+
+
+@tournament_preferences_registry.register
+class ShowMotionsInResults(BooleanPreference):
+    help_text = _("If showing results to public, show which motions were selected in the record")
+    verbose_name = _("Show motions in results")
+    section = motions
+    name = 'show_motions_in_results'
+    default = False
+
+
+@tournament_preferences_registry.register
+class PublicMotionsOrder(ChoicePreference):
+    help_text = _("Order in which are listed by round in the public view")
+    verbose_name = _("Order to display motions")
+    section = motions
+    name = 'public_motions_order'
+    choices = (
+        ('forward', _("Earliest round first")),
+        ('reverse', _("Latest round first")),
+    )
+    default = 'reverse'
+
+
+@tournament_preferences_registry.register
+class EnableMotionReuse(BooleanPreference):
+    help_text = _("Whether motions can be reused from one round to another.")
+    verbose_name = _("Allow motion reuse")
+    section = motions
+    name = 'enable_motion_reuse'
+    default = False
 
 
 # ==============================================================================
@@ -1370,3 +1414,23 @@ class EnableAPIAccess(BooleanPreference):
     section = global_settings
     name = 'enable_api'
     default = True
+
+
+@global_preferences_registry.register
+class AssistantAccountCreationKey(StringPreference):
+    help_text = _("A key that enables a secret URL that lets visitors create their own assistant user accounts. The URL takes the form of: YOUR_SITE'S_BASE_URL/accounts/signup/KEY/")
+    verbose_name = _('Assistant account creation key')
+    section = global_settings
+    field_kwargs = {'validators': [validate_slug]}
+    name = 'assistant_account_key'
+    default = ''
+
+
+@global_preferences_registry.register
+class AdminAccountCreationKey(StringPreference):
+    help_text = _("A key that enables a secret URL that lets visitors create their own administrator user accounts. The URL takes the form of: YOUR_SITE'S_BASE_URL/accounts/signup/KEY/")
+    section = global_settings
+    verbose_name = _('Administrator account creation key')
+    field_kwargs = {'validators': [validate_slug]}
+    name = 'admin_account_key'
+    default = ''

@@ -1,0 +1,42 @@
+{% load debate_tags static i18n %}
+
+{% for motion in statistics.motions %}
+  <div class="list-group mt-3">
+
+    <div class="list-group-item pb-0 text-center">
+
+      <h4 class="mb-3 mt-1">
+        {{ motion.text }} <small class="text-muted d-md-inline d-none">({{ motion.reference }})</small>
+        {% if motion.nrounds > 0 %}
+          {% for m_round in motion.rounds.all %}
+            <span class="badge mr-2 float-right badge-light">
+              {{ m_round.abbreviation }}
+            </span>
+          {% endfor %}
+        {% endif %}
+      </h4>
+
+      {% if motion.info_slide %}
+        <span class="h6 badge badge-light text-secondary mx-auto mb-3 mt-0 hover-target"
+              data-toggle="modal" data-target="#info_{{ motion.id }}">
+          {% trans "View Info Slide" %}
+        </span>
+        {% include 'motions_info.html' %}
+      {% endif %}
+
+      <div class="row">
+
+        {% if pref.teams_in_debate == 'two' %}
+          {% include "motion_statistics_twoteam.html" %}
+        {% elif pref.teams_in_debate == 'bp' and motion.stage == 'elim' %}
+          {% include "motion_statistics_bp_elim.html" %}
+        {% elif pref.teams_in_debate == 'bp' and motion.stage == 'prelim' %}
+          {% include "motion_statistics_bp_prelim.html" %}
+        {% endif %}
+
+      </div>
+
+    </div>
+
+  </div>
+{% endfor %}

@@ -1,4 +1,3 @@
-
 // When using anonymous speaker names prepopulate the form to save time
 aff_speakers = $("#id_aff_speaker_s1 option").text();
 neg_speakers = $("#id_neg_speaker_s1 option").text();
@@ -20,13 +19,7 @@ function refresh_totals(scoresheet) {
   // Fix the branching logic here into something cleaner
   var allClasses = 'btn-dark btn-secondary btn-success btn-primary btn-warning btn-danger btn-info';
 
-  {% if pref.teams_in_debate == 'two' %}
-    var isBP = true;
-  {% else %}
-    var isBP = false;
-  {% endif %}
-
-  if (isBP) {
+  if ("{{ pref.teams_in_debate }}" === 'two') {
     // 2-team
     $aff_total = $('.aff_total', $scoresheet);
     $neg_total = $('.neg_total', $scoresheet);
@@ -71,7 +64,7 @@ function refresh_totals(scoresheet) {
     var total_scores = {}
     var rank_elements = {}
 
-    for (var i = 0; i <= positions.length - 1; i += 1) {
+    for (var i = 0; i < positions.length; i++) {
       var team = positions[i];
       totals_elements[team] = $('.' + team + '_total', $scoresheet);
       margins_elements[team] = $('.' + team + '_margin', $scoresheet);
@@ -93,36 +86,25 @@ function refresh_totals(scoresheet) {
     });
 
     // Use sorted dictionary to assign relative margins and win indicators
-    for (var i = 0; i <= sortedScores.length - 1; i += 1) {
+    for (var i = 0; i < sortedScores.length; i++) {
 
       var team = sortedScores[i][0];
       if (total_scores[team] === 0) { continue }
 
       // Add winning class indicators; but not if there was a tie
       var tie = false;
-      for (var j = 0; j <= sortedScores.length - 1; j++) {
+      for (var j = 0; j < sortedScores.length; j++) {
         if (j === i) { continue }
-        if (total_scores[team] === total_scores[sortedScores[j][0]]) {
-          tie = true;
-        }
+        tie ||= total_scores[team] === total_scores[sortedScores[j][0]];
       }
 
       rank_elements[team].removeClass(allClasses);
       rank_elements[team].text("?");
       if (!tie && sortedScores.length > 3) {
-        if (i === 0) {
-          rank_elements[team].addClass('btn-success');
-          rank_elements[team].text("1st");
-        } else if (i === 1) {
-          rank_elements[team].addClass('btn-info');
-          rank_elements[team].text("2nd");
-        } else if (i === 2) {
-          rank_elements[team].addClass('btn-warning');
-          rank_elements[team].text("3rd");
-        } else if (i === 3) {
-          rank_elements[team].addClass('btn-danger');
-          rank_elements[team].text("4th");
-        }
+        const btn_classes = ['btn-success', 'btn-info', 'btn-warning', 'btn-danger'];
+        const ordinals = ['1st', '2nd', '3rd', '4th'];
+        rank_elements[team].addClass(btn_classes[i]);
+        rank_elements[team].text(ordinals[i]);
       } else if (tie) {
         rank_elements[team].addClass('btn-dark');
         rank_elements[team].text("TIE");

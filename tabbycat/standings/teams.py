@@ -368,6 +368,10 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
     TIEBREAK_FUNCTIONS["shortname"] = lambda x: x.sort(key=lambda y: y.team.short_name)
     TIEBREAK_FUNCTIONS["institution"] = lambda x: x.sort(key=lambda y: y.team.institution.name)
 
+    QUERYSET_TIEBREAK_FIELDS = BaseStandingsGenerator.QUERYSET_TIEBREAK_FIELDS.copy()
+    QUERYSET_TIEBREAK_FIELDS["shortname"] = 'short_name'
+    QUERYSET_TIEBREAK_FIELDS["institution"] = 'institution__name'
+
     metric_annotator_classes = {
         "points"              : PointsMetricAnnotator,
         "wins"                : WinsMetricAnnotator,

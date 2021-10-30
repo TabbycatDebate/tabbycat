@@ -27,7 +27,7 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
     def receive_json(self, content):
         """ Select the appropriate method given the indicated attribute in JSON
         i.e. from { "importance": { "73" : "1" }, "componentID": 2885 } """
-        for (key, value) in content.items():
+        for key in content.keys():
             if key == 'action':
                 self.receive_action(content['action'], content['settings'], self.scope["user"])
             elif key == 'importance':
@@ -86,11 +86,11 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
                 sent_allocation_ids.extend(adj_id for adj_id in position_ids)
 
             # Delete adjudicators in the posted information
-            delete_count, deleted = self.delete_adjudicators(d_or_p, sent_allocation_ids)
+            self.delete_adjudicators(d_or_p, sent_allocation_ids)
             # Re-create positions of adjudicators in debate
             for (position, position_ids) in sent_allocation.items():
                 for adjudicator_id in position_ids:
-                    obj, created = self.create_adjudicators(d_or_p, adjudicator_id, position)
+                    self.create_adjudicators(d_or_p, adjudicator_id, position)
 
         # Re-fetch the modified data
         # TODO: is it necessary to re-fetch? Or should the objects be returned?
@@ -124,11 +124,11 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
     teams_serializer = EditDebateTeamsDebateSerializer
 
     def receive_json(self, content):
-        for (key, value) in content.items():
+        for key in content.keys():
             if key == 'sides_confirmed':
-                self.receive_sides_status(content)
+                self.receive_debate_change(content, key, 'sides_confirmed', 'sides_confirmed', self.sides_status_serializer)
             elif key == 'venues':
-                self.receive_venues(content)
+                self.receive_debate_change(content, key, 'venue', 'venue_id', self.venues_serializer)
             elif key == 'teams':
                 self.receive_teams(content)
 
@@ -177,30 +177,17 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
         del content_to_return['teams']
         self.return_attributes(content_to_return, serialized)
 
-    def receive_sides_status(self, content):
-        changes = {int(c['id']): c for c in content['sides_confirmed']}
+    def receive_debate_change(self, content, key, content_name, field_name, serializer):
+        changes = {int(c['id']): c for c in content[key]}
         debates = self.get_debates_or_panels(changes)
         for debate in debates:
-            debate.sides_confirmed = changes[debate.id]['sides_confirmed']
+            setattr(debate, field_name, changes[debate.id][content_name])
             debate.save()
 
         debates = self.get_debates_or_panels(changes)
-        serialized = self.sides_status_serializer(debates, many=True)
+        serialized = serializer(debates, many=True)
         content_to_return = content.copy()
-        del content_to_return['sides_confirmed']
-        self.return_attributes(content_to_return, serialized)
-
-    def receive_venues(self, content):
-        changes = {int(c['id']): c for c in content['venues']}
-        debates = self.get_debates_or_panels(changes)
-        for debate in debates:
-            debate.venue_id = changes[debate.id]['venue']
-            debate.save()
-
-        debates = self.get_debates_or_panels(changes)
-        serialized = self.venues_serializer(debates, many=True)
-        content_to_return = content.copy()
-        del content_to_return['venues']
+        del content_to_return[key]
         self.return_attributes(content_to_return, serialized)
 
 

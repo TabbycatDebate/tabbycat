@@ -15,7 +15,7 @@
 
 Tabbycat is a draw tabulation system for British Parliamentary and a variety of two-team formats. It was used at Australs 2010 and 2012–2019, EUDC 2018, WUDC 2019–2020 and many other tournaments of all sizes and formats. To see an example of a post-tournament website, have a look at the [WUDC 2020 tab website](https://wudc2020.herokuapp.com).
 
-**Want to try it out?** The best way to trial Tabbycat is just to launch a new site, as described [in our user guide](https://tabbycat.readthedocs.io/en/stable/install/heroku.html) (or [below](#installation-and-user-guide)). It takes just a few clicks, costs nothing, requires no technical background, and you can always deploy a fresh copy when you're ready to run your tournament.
+**Want to try it out?** The best way to trial Tabbycat is just to launch a new site, as described [below](#%EF%B8%8F-installation)). It takes just a few clicks, requires no technical background, and you can always deploy a fresh copy when you're ready to run your tournament.
 
 ## 🔍 Features
 
@@ -35,11 +35,15 @@ Our user guide is at [tabbycat.readthedocs.io](http://tabbycat.readthedocs.io/).
 
 Tabbycat can be deployed in a number of ways. While you can set it up to [run on your own computer](https://tabbycat.readthedocs.io/en/stable/install/local.html) most users will want to run it as a website.
 
-Tabbycat is configured for a '1 click' install to the [Heroku](https://www.heroku.com) web platform. Click this button to begin:
+[Calico](https://calicotab.com/) is a managed hosting service run by one of Tabbycat's developers. For a flat fee, it will host tab websites, automatically manage their setup and performance, and provide ongoing access to the released tab. Click this button to deploy to Calico:
+
+[![Deploy](https://raw.githubusercontent.com/gist/tienne-B/fc04ecd3c11a38424b642b4bba60e8d9/raw/b2c71d7d6a0d368d3e9dfd8002af729d155ad09b/calicodeploy.svg)](https://calicotab.com/tournaments/new/)
+
+Tabbycat is also configured for a '1 click' install to the [Heroku](https://www.heroku.com) web platform. Click this button to begin:
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/master)
 
-While the baseline Heroku hosting is free, some features require additional setup and larger tournaments will likely need to pay for greater hosting capacities. As an alternative, the [Calico](https://calicotab.com/) service will host Tabbycat sites for a flat fee while also managing all scaling/configuration concerns and providing ongoing access to the released tab.
+While the baseline Heroku hosting is free, some features require additional setup and larger tournaments will likely need to pay for greater hosting capacities.
 
 ## 💪 Support and Contributing
 
@@ -57,8 +61,8 @@ We haven't released Tabbycat under an open-source licence, so there is no formal
 
 Tabbycat was authored by Qi-Shan Lim for Auckland Australs in 2010. The current active developers are:
 
-- Philip Belesky ([e-mail](mailto:contact@philipbelesky.com))
-- Chuan-Zheng Lee ([e-mail](mailto:czlee@stanford.edu))
-- Étienne Beaulé ([e-mail](mailto:tech@debatingsociety.ca))
+- Philip Belesky
+- Chuan-Zheng Lee
+- Étienne Beaulé
 
-Please don't hesitate to contact us with any questions, suggestions, or generally anything relating to Tabbycat.
+Please don't hesitate to contact us ([e-mail](mailto:contact@tabbycat-debate.org)) with any questions, suggestions, or generally anything relating to Tabbycat.

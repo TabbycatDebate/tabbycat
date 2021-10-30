@@ -48,7 +48,7 @@
 
 {# Motions #}
 {% if pref.public_motions or admin_page %}
-  <div class="list-group-item">
+  <div class="list-group-item {% if not pref.public_motions or not current_round.motions_released %}list-group-item-dark{% endif %}">
     {% if current_round.motions_released or admin_page %}
       {% if not current_round.motions_released %}
         <em>{% trans "Motions are not released to public." %}</em><br />
@@ -56,13 +56,13 @@
       {% if debate.round.motion_set.all|length == 1 %}
         <strong>{% trans "Motion:" %}</strong> {{ debate.round.motion_set.first.text }}
       {% else %}
-        {% for motion in debate.round.motion_set.all %}
+        {% for rm in debate.round.roundmotion_set.all %}
           <strong>
-            {% blocktrans trimmed with seq=motion.seq %}
+            {% blocktrans trimmed with seq=rm.seq %}
               Motion {{ seq }}:
             {% endblocktrans %}
           </strong>
-          {{ motion.text }}<br />
+          {{ rm.motion.text }}<br />
         {% endfor %}
       {% endif %}
     {% else %} {# elif not (current_round.motions_released or admin_page) #}

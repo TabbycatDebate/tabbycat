@@ -2,9 +2,13 @@ name: Django CI
 
 on:
   push:
-    branches: [ '**' ]
+    branches:
+    - '**'
+    - '!l10n_develop'
   pull_request:
-    branches: [ '**' ]
+    branches:
+    - '**'
+    - '!l10n_develop'
 
 jobs:
   build-ubuntu:
@@ -71,7 +75,7 @@ jobs:
     - name: Run Tests
       run: python tabbycat/manage.py test -v 2 --exclude-tag=selenium
 
-  build-docker:
+  build-docker-dev:
 
     runs-on: ubuntu-latest
 
@@ -79,5 +83,16 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
-      - name: Build Docker image
-        run: docker-compose build
+      - name: Build Docker image (dev)
+        run: docker-compose -f docker-compose.yml build
+
+  build-docker-prod:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Build Docker image (prod)
+        run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build

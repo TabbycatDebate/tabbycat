@@ -42,7 +42,7 @@ class AdjudicatorAdjudicatorConflictAdmin(admin.ModelAdmin):
     list_display = ('adjudicator1', 'adjudicator2')
     list_select_related = ('adjudicator1__institution', 'adjudicator2__institution')
     search_fields = ('adjudicator1__name', 'adjudicator2__name',
-                     'adjudicator1__institution', 'adjudicator2__institution')
+                     'adjudicator1__institution__name', 'adjudicator2__institution__name')
 
 
 @admin.register(AdjudicatorInstitutionConflict)

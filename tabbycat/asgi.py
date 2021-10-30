@@ -7,19 +7,21 @@ import logging
 import os
 
 import django
-import sentry_sdk
 
 from channels.routing import get_default_application
-from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
-from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.logging import LoggingIntegration
-from sentry_sdk.integrations.redis import RedisIntegration
 
 from settings.core import TABBYCAT_VERSION
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 
 if not os.environ.get('DISABLE_SENTRY'):
+    import sentry_sdk
+
+    from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+    from sentry_sdk.integrations.django import DjangoIntegration
+    from sentry_sdk.integrations.logging import LoggingIntegration
+    from sentry_sdk.integrations.redis import RedisIntegration
+
     sentry_sdk.init(
         dsn="https://6bf2099f349542f4b9baf73ca9789597@o85113.ingest.sentry.io/185382",
         integrations=[

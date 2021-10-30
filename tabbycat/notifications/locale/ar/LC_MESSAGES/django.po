@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-05 13:59-0300\n"
-"PO-Revision-Date: 2020-07-05 17:04\n"
+"POT-Creation-Date: 2020-12-30 01:01-0400\n"
+"PO-Revision-Date: 2020-12-30 05:09\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Arabic\n"
 "Language: ar_SA\n"
@@ -20,14 +20,6 @@ msgstr ""
 
 #: notifications/apps.py:7
 msgid "Notifications"
-msgstr ""
-
-#: notifications/consumers.py:37
-msgid "Failed to send emails."
-msgstr ""
-
-#: notifications/consumers.py:40
-msgid "Connection error sending emails."
 msgstr ""
 
 #: notifications/forms.py:11
@@ -52,160 +44,168 @@ msgstr ""
 msgid "Message"
 msgstr ""
 
-#: notifications/models.py:12 notifications/models.py:27
+#: notifications/models.py:11 notifications/models.py:26
 msgid "email"
 msgstr ""
 
-#: notifications/models.py:13
+#: notifications/models.py:12
 msgid "SMS"
 msgstr ""
 
-#: notifications/models.py:22
+#: notifications/models.py:21
 msgid "recipient"
 msgstr ""
 
-#: notifications/models.py:24
+#: notifications/models.py:23
 msgid "method"
 msgstr ""
 
-#: notifications/models.py:29 notifications/models.py:130
+#: notifications/models.py:28 notifications/models.py:134
 msgid "context"
 msgstr ""
 
 #: notifications/models.py:31
-msgid "message"
-msgstr ""
-
-#: notifications/models.py:34
 msgid "notification"
 msgstr ""
 
-#: notifications/models.py:36 notifications/models.py:75
-#: notifications/models.py:126
+#: notifications/models.py:33 notifications/models.py:74
+#: notifications/models.py:130
 msgid "timestamp"
 msgstr "الزمن "
 
-#: notifications/models.py:39
+#: notifications/models.py:36
 msgid "sent message"
 msgstr ""
 
-#: notifications/models.py:40
+#: notifications/models.py:37
 msgid "sent messages"
 msgstr ""
 
-#: notifications/models.py:60
+#: notifications/models.py:58
 msgid "team points"
 msgstr ""
 
-#: notifications/models.py:61
+#: notifications/models.py:59
 msgid "ballot confirmed"
 msgstr ""
 
-#: notifications/models.py:62
+#: notifications/models.py:60
 msgid "feedback URL"
 msgstr ""
 
-#: notifications/models.py:63
+#: notifications/models.py:61
 msgid "ballot URL"
 msgstr ""
 
-#: notifications/models.py:64
+#: notifications/models.py:62
 msgid "landing page URL"
 msgstr ""
 
-#: notifications/models.py:65
+#: notifications/models.py:63
 msgid "adjudicator draw released"
 msgstr ""
 
-#: notifications/models.py:66
+#: notifications/models.py:64
 msgid "team registration"
 msgstr ""
 
-#: notifications/models.py:67
+#: notifications/models.py:65
 msgid "adjudicator registration"
 msgstr ""
 
-#: notifications/models.py:68
+#: notifications/models.py:66
 msgid "motion(s) released"
 msgstr ""
 
-#: notifications/models.py:69
+#: notifications/models.py:67
 msgid "team draw released"
 msgstr ""
 
-#: notifications/models.py:73 notifications/models.py:128
+#: notifications/models.py:68
+msgid "custom message"
+msgstr ""
+
+#: notifications/models.py:72 notifications/models.py:132
 msgid "event"
 msgstr ""
 
-#: notifications/models.py:78
+#: notifications/models.py:77
 msgid "tournament"
 msgstr "بطولة"
 
-#: notifications/models.py:80
+#: notifications/models.py:79
 msgid "round"
 msgstr "جولة"
 
-#: notifications/models.py:83
-msgid "bulk notification"
+#: notifications/models.py:82
+msgid "subject template"
 msgstr ""
 
 #: notifications/models.py:84
+msgid "body template"
+msgstr ""
+
+#: notifications/models.py:87
+msgid "bulk notification"
+msgstr ""
+
+#: notifications/models.py:88
 msgid "bulk notifications"
 msgstr ""
 
-#: notifications/models.py:110
+#: notifications/models.py:114
 msgid "Processed"
 msgstr ""
 
-#: notifications/models.py:111
+#: notifications/models.py:115
 msgid "Dropped"
 msgstr ""
 
-#: notifications/models.py:112
+#: notifications/models.py:116
 msgid "Deferred"
 msgstr ""
 
-#: notifications/models.py:113
+#: notifications/models.py:117
 msgid "Delivered"
 msgstr ""
 
-#: notifications/models.py:114
+#: notifications/models.py:118
 msgid "Bounced"
 msgstr ""
 
-#: notifications/models.py:115
+#: notifications/models.py:119
 msgid "Opened"
 msgstr ""
 
-#: notifications/models.py:116
+#: notifications/models.py:120
 msgid "Clicked"
 msgstr ""
 
-#: notifications/models.py:117
+#: notifications/models.py:121
 msgid "Unsubscribed"
 msgstr ""
 
-#: notifications/models.py:118
+#: notifications/models.py:122
 msgid "Marked as spam"
 msgstr ""
 
-#: notifications/models.py:119
+#: notifications/models.py:123
 msgid "Unsubscribed from group"
 msgstr ""
 
-#: notifications/models.py:120
+#: notifications/models.py:124
 msgid "Resubscribed to group"
 msgstr ""
 
-#: notifications/models.py:124
+#: notifications/models.py:128
 msgid "email message"
 msgstr ""
 
-#: notifications/models.py:133
+#: notifications/models.py:137
 msgid "email status"
 msgstr ""
 
-#: notifications/models.py:134
+#: notifications/models.py:138
 msgid "email statuses"
 msgstr ""
 
@@ -227,7 +227,7 @@ msgstr ""
 msgid "Emails can be sent by Tabbycat for a variety of purposes. Emails are sent when specific preferences are enabled (i.e. enabling Ballot Receipts) or through actions available on specific pages (i.e. the Draw Display page for matchups; or the Participants page for team registration). This page shows the status of previously-sent emails."
 msgstr ""
 
-#: notifications/templates/notifications_nav.html:5 notifications/views.py:47
+#: notifications/templates/notifications_nav.html:5 notifications/views.py:46
 msgid "Email Statuses"
 msgstr ""
 
@@ -254,112 +254,116 @@ msgstr ""
 msgid "Go back to the site home page"
 msgstr ""
 
-#: notifications/utils.py:29
+#: notifications/utils.py:26
 msgid "the chair"
 msgstr ""
 
-#: notifications/utils.py:30
+#: notifications/utils.py:27
 msgid "the only"
 msgstr ""
 
-#: notifications/utils.py:31
+#: notifications/utils.py:28
 msgid "a panellist"
 msgstr ""
 
-#: notifications/utils.py:32
+#: notifications/utils.py:29
 msgid "a trainee"
 msgstr ""
 
-#: notifications/utils.py:55
+#: notifications/utils.py:59
 msgid "TBA"
 msgstr ""
 
-#: notifications/utils.py:101
+#: notifications/utils.py:88
 #, python-format
 msgid "%(tournament)s %(round)s @ %(room)s"
 msgstr ""
 
-#: notifications/utils.py:112
+#: notifications/utils.py:99
 #, python-format
 msgid "<li>%(side)s: %(team)s (%(points)d points with %(speaks)s total speaks)"
 msgstr ""
 
-#: notifications/utils.py:115
+#: notifications/utils.py:102
 #, python-format
 msgid "<li>%(side)s: %(team)s (%(points)s - %(speaks)s total speaks)"
 msgstr ""
 
-#: notifications/utils.py:116
+#: notifications/utils.py:103
 msgid "Win"
 msgstr ""
 
-#: notifications/utils.py:116
+#: notifications/utils.py:103
 msgid "Loss"
 msgstr ""
 
-#: notifications/utils.py:128
+#: notifications/utils.py:115
 #, python-format
 msgid "<li>%(pos)s: %(speaker)s (%(score)s)</li>"
 msgstr ""
 
-#: notifications/utils.py:202
+#: notifications/utils.py:183
 #, python-format
 msgid "<li>%(text)s (%(ref)s)</li>"
 msgstr ""
 
-#: notifications/utils.py:237 notifications/utils.py:238
+#: notifications/utils.py:206 notifications/utils.py:207
 msgid ", "
 msgstr ""
 
-#: notifications/views.py:39
+#: notifications/views.py:38
 #, python-format
 msgid "There was an error sending the test email: %(error)s"
 msgstr ""
 
-#: notifications/views.py:42
+#: notifications/views.py:41
 #, python-format
 msgid "A test email has been sent to %(recipient)s."
 msgstr ""
 
-#: notifications/views.py:53
+#: notifications/views.py:52
 msgid "N/A"
 msgstr ""
 
-#: notifications/views.py:54
+#: notifications/views.py:53
 msgid "Not known"
 msgstr ""
 
-#: notifications/views.py:59
+#: notifications/views.py:58
 #, python-format
 msgid "%(status)s @ %(time)s"
 msgstr ""
 
-#: notifications/views.py:102
+#: notifications/views.py:104
 #, python-format
 msgid "@ %s"
 msgstr ""
 
-#: notifications/views.py:119
+#: notifications/views.py:123
 msgid "Timeline"
 msgstr ""
 
-#: notifications/views.py:129 notifications/views.py:220
+#: notifications/views.py:133 notifications/views.py:231
 msgid "Participant"
 msgstr ""
 
-#: notifications/views.py:130
+#: notifications/views.py:134 notifications/views.py:236
+msgid "Email address"
+msgstr ""
+
+#: notifications/views.py:135
 msgid "Status"
 msgstr "الحالة"
 
-#: notifications/views.py:131
+#: notifications/views.py:136
 msgid "Time"
 msgstr "الوقت"
 
-#: notifications/views.py:170
+#: notifications/views.py:175
 msgid "Email Participants"
 msgstr ""
 
-#: notifications/views.py:196
+#: notifications/views.py:204
 #, python-format
 msgid "%(email_count)s email has been queued for sending."
 msgid_plural "%(email_count)s emails have been queued for sending."
@@ -370,39 +374,35 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: notifications/views.py:202
+#: notifications/views.py:210
 msgid "No emails were sent — likely because no recipients were selected."
 msgstr ""
 
-#: notifications/views.py:210
+#: notifications/views.py:221
 msgid "Send Email"
 msgstr ""
 
-#: notifications/views.py:225
-msgid "Email address"
-msgstr ""
-
-#: notifications/views.py:226
+#: notifications/views.py:237
 msgid "Not Provided"
 msgstr ""
 
-#: notifications/views.py:239
+#: notifications/views.py:250
 msgid "Role"
 msgstr ""
 
-#: notifications/views.py:240
+#: notifications/views.py:251
 msgid "Adjudicator"
 msgstr "محكم "
 
-#: notifications/views.py:240
+#: notifications/views.py:251
 msgid "Speaker"
 msgstr ""
 
-#: notifications/views.py:248
+#: notifications/views.py:259
 msgid "Speakers"
 msgstr "متحدثين"
 
-#: notifications/views.py:249
+#: notifications/views.py:260
 msgid "Adjudicators"
 msgstr "المحكمين"
 

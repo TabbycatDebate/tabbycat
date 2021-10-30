@@ -1,3 +1,5 @@
+from itertools import groupby
+
 from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
@@ -12,7 +14,7 @@ from draw.models import TeamSideAllocation
 from tournaments.models import Tournament
 from venues.admin import VenueConstraintInline
 
-from .emoji import pick_unused_emoji
+from .emoji import pick_unused_emoji, populate_code_names_from_emoji, set_emoji
 from .models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
 
 
@@ -117,13 +119,13 @@ class TeamAdmin(admin.ModelAdmin):
     form = TeamForm
     list_display = ('long_name', 'short_name', 'emoji', 'institution',
                     'tournament')
-    search_fields = ('reference', 'short_name', 'institution__name',
+    search_fields = ('reference', 'short_name', 'code_name', 'institution__name',
                      'institution__code', 'tournament__name')
     list_filter = ('tournament', 'institution', 'break_categories')
     inlines = (SpeakerInline, TeamSideAllocationInline, VenueConstraintInline,
                AdjudicatorTeamConflictInline, TeamInstitutionConflictInline,
                RoundAvailabilityInline)
-    actions = ['delete_url_key']
+    actions = ['delete_url_key', 'assign_emoji', 'assign_code_names']
 
     def get_queryset(self, request):
         # can't use select_related, because TeamManager always puts a select_related on this
@@ -148,6 +150,28 @@ class TeamAdmin(admin.ModelAdmin):
             num_speakers) % {'count': num_speakers}
         self.message_user(request, message)
     delete_url_key.short_description = _("Delete URL key")
+
+    def assign_emoji(self, request, queryset):
+        count = queryset.update(emoji=None)
+        for tournament, teams in groupby(queryset.select_related('tournament').order_by('tournament_id'), lambda t: t.tournament):
+            set_emoji(teams, tournament)
+
+        message = ngettext_lazy(
+            "%(count)d team had their emoji reset.",
+            "%(count)d teams had their emojis reset.",
+            count) % {'count': count}
+        self.message_user(request, message)
+    assign_emoji.short_description = _("Reset emoji")
+
+    def assign_code_names(self, request, queryset):
+        count = populate_code_names_from_emoji(queryset, overwrite=True)
+
+        message = ngettext_lazy(
+            "%(count)d team had their code name reset.",
+            "%(count)d teams had their code names reset.",
+            count) % {'count': count}
+        self.message_user(request, message)
+    assign_code_names.short_description = _("Reset code name")
 
 
 # ==============================================================================

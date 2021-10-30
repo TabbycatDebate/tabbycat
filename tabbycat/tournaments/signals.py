@@ -11,10 +11,7 @@ logger = logging.getLogger(__name__)
 
 @receiver(post_save, sender=Tournament)
 def update_tournament_cache(sender, instance, **kwargs):
-    cached_key = "%s_%s" % (instance.slug, 'object')
-    cache.delete(cached_key)
-    cached_key = "%s_%s" % (instance.slug, 'current_round_object')
-    cache.delete(cached_key)
+    cache.delete("%s_%s" % (instance.slug, 'object'))
 
 
 @receiver(post_delete, sender=Round)

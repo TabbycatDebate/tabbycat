@@ -4,12 +4,12 @@ info:
   description: Parliamentary debate tabulation software
   termsOfService: 'https://tabbycat.readthedocs.io/en/stable/'
   contact:
-    email: tech@debatingsociety.ca
+    email: ebeaule@tabbycat-debate.org
     name: Étienne Beaulé
   license:
     name: Tabbycat
     url: 'https://tabbycat.readthedocs.io/en/stable/about/licence.html'
-  version: 1.1.0
+  version: 1.2.0
 security:
   - Token: []
 paths:
@@ -1286,6 +1286,12 @@ paths:
         - debates
       requestBody:
         $ref: '#/components/requestBodies/Debate'
+    delete:
+      operationId : v1_tournaments_rounds_pairings_delete_all
+      description: Delete all pairings of the round
+      responses:
+        '204':
+          description: 'All pairings have been deleted'
     parameters:
       - name: round_seq
         in: path
@@ -1469,6 +1475,161 @@ paths:
         required: true
         schema:
           type: integer
+      - name: round_seq
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: tournament_slug
+        in: path
+        required: true
+        schema:
+          type: string
+  '/v1/tournaments/{tournament_slug}/rounds/{round_seq}/availabilities':
+    get:
+      operationId: v1_tournaments_rounds_availabilities_list
+      description: List all participants marked as available for the round
+      parameters:
+        - name: adjudicators
+          in: query
+          description: Whether to list available adjudicators
+          required: false
+          schema:
+            type: boolean
+        - name: teams
+          in: query
+          description: Whether to list available teams
+          required: false
+          schema:
+            type: boolean
+        - name: venues
+          in: query
+          description: Whether to list available rooms
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  title: Participant
+                  type: string
+                  format: uri
+      tags:
+        - v1
+        - availabilities
+    post:
+      operationId: v1_tournaments_rounds_availabilities_post
+      description: Marks participants as unavailable for a round
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  title: Participant
+                  type: string
+                  format: uri
+      tags:
+        - v1
+        - availabilities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                title: Participant
+                type: string
+                format: uri
+    put:
+      operationId: v1_tournaments_rounds_availabilities_put
+      description: Marks participants as available for a round
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  title: Participant
+                  type: string
+                  format: uri
+      tags:
+        - v1
+        - availabilities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                title: Participant
+                type: string
+                format: uri
+    patch:
+      operationId: v1_tournaments_rounds_availabilities_patch
+      description: Toggles participants' availabilities for a round
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  title: Participant
+                  type: string
+                  format: uri
+      tags:
+        - v1
+        - availabilities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                title: Participant
+                type: string
+                format: uri
+    delete:
+      operationId: v1_tournaments_rounds_availabilities_delete
+      description: >-
+        Marks all participants of specified type as unavailable for the round
+      parameters:
+        - name: adjudicators
+          in: query
+          description: Whether to unmark available adjudicators
+          required: false
+          schema:
+            type: boolean
+        - name: teams
+          in: query
+          description: Whether to unmark available teams
+          required: false
+          schema:
+            type: boolean
+        - name: venues
+          in: query
+          description: Whether to unmark available rooms
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '204':
+          description: ''
+      tags:
+        - v1
+        - availabilities
+    parameters:
       - name: round_seq
         in: path
         required: true
@@ -2705,6 +2866,12 @@ components:
           title: Checked
           type: boolean
           readOnly: true
+        timestamp:
+          title: Timestamp
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
     Adjudicator:
       required:
         - name
@@ -2830,6 +2997,10 @@ components:
         - priority
       type: object
       properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
         name:
           title: Name
           description: 'Name to be displayed, e.g., "ESL"'
@@ -2902,6 +3073,10 @@ components:
         - seq
       type: object
       properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
         name:
           title: Name
           description: 'Name to be displayed, e.g., "ESL"'
@@ -3063,12 +3238,17 @@ components:
           type: boolean
         participant_submitter:
           title: Participant submitter
-          description: >-
-            The submitting participant, adjudicator or speaker (if by private
-            URL)
+          description: The submitting participant, adjudicator or speaker
           type: string
           format: uri
           nullable: true
+          readOnly: true
+        private_url:
+          title: Private URL
+          description: >-
+            Whether the feedback was submitted through the participant's
+            private URL.
+          type: boolean
           readOnly: true
         submitter:
           title: Submitter
@@ -3363,9 +3543,7 @@ components:
           type: integer
     Debate:
       required:
-        - venue
         - teams
-        - adjudicators
       type: object
       properties:
         url:
@@ -3408,6 +3586,7 @@ components:
         adjudicators:
           title: Adjudicators
           type: object
+          nullable: true
           required:
             - chair
             - panellists
@@ -3555,8 +3734,8 @@ components:
         short_reference:
           title: Short name/suffix
           description: >-
-            The name shown in the draw. Do not include institution name (see
-            "uses institutional prefix" below)
+            The decoded name shown in the draw, not including institution name
+            (see "uses institutional prefix" below)
           type: string
           maxLength: 35
         code_name:
@@ -3573,8 +3752,8 @@ components:
         short_name:
           title: Short name
           description: >-
-            The name shown in the draw, including institution name. This is
-            autogenerated.
+            The decoded name shown in the draw, including institution name. This
+            is autogenerated.
           type: string
           readOnly: true
         long_name:
@@ -3931,6 +4110,20 @@ components:
           type: string
           format: uri
           nullable: true
+          readOnly: true
+        private_url:
+          title: Private URL
+          description: >-
+            Whether the ballot was submitted through the participant's
+            private URL.
+          type: boolean
+          readOnly: true
+        single_adj:
+          title: Single adjudicator
+          description: >-
+            If the ballot only has the scores of one adjudicator,
+            rather than from all.
+          type: boolean
           readOnly: true
         submitter:
           title: Submitter

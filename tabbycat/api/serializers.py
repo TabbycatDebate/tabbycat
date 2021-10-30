@@ -12,7 +12,7 @@ from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory, BreakingTeam
 from draw.models import Debate, DebateTeam
-from motions.models import Motion
+from motions.models import Motion, RoundMotion
 from participants.emoji import pick_unused_emoji
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
 from privateurls.utils import populate_url_keys
@@ -85,12 +85,31 @@ class TournamentSerializer(serializers.ModelSerializer):
 
 
 class RoundSerializer(serializers.ModelSerializer):
-    class RoundMotionsSerializer(serializers.ModelSerializer):
-        url = fields.MotionHyperlinkedIdentityField(view_name='api-motion-detail')
+    class RoundMotionSerializer(serializers.ModelSerializer):
+        id = serializers.IntegerField(source='motion.pk', read_only=True)
+        url = fields.TournamentHyperlinkedRelatedField(required=False,
+            view_name='api-motion-detail', queryset=Motion.objects.all(), source='motion')
+        text = serializers.CharField(source='motion.text', max_length=500, required=False)
+        reference = serializers.CharField(source='motion.reference', max_length=100, required=False)
+        info_slide = serializers.CharField(source='motion.info_slide', required=False)
 
         class Meta:
-            model = Motion
-            exclude = ('round',)
+            model = RoundMotion
+            exclude = ('round', 'motion')
+
+        def create(self, validated_data):
+            motion_data = validated_data.pop('motion')
+            if '' in motion_data:
+                validated_data['motion'] = motion_data['']
+            else:
+                validated_data['motion'] = Motion()
+
+            validated_data['motion'].text = motion_data['text']
+            validated_data['motion'].reference = motion_data['reference']
+            validated_data['motion'].info_slide = motion_data.get('info_slide', '')
+            validated_data['motion'].save()
+
+            return super().create(validated_data)
 
     class RoundLinksSerializer(serializers.Serializer):
         pairing = fields.TournamentHyperlinkedIdentityField(
@@ -104,7 +123,7 @@ class RoundSerializer(serializers.ModelSerializer):
         view_name='api-breakcategory-detail',
         queryset=BreakCategory.objects.all(),
         allow_null=True, required=False)
-    motions = RoundMotionsSerializer(many=True, source='motion_set')
+    motions = RoundMotionSerializer(many=True, source='roundmotion_set')
 
     _links = RoundLinksSerializer(source='*', read_only=True)
 
@@ -128,27 +147,32 @@ class RoundSerializer(serializers.ModelSerializer):
         return super().validate(data)
 
     def create(self, validated_data):
-        motions_data = validated_data.pop('motion_set')
+        motions_data = validated_data.pop('roundmotion_set', [])
         round = super().create(validated_data)
 
         if len(motions_data) > 0:
-            motions = self.RoundMotionsSerializer(many=True, context=self.context)
+            motions = self.RoundMotionSerializer(many=True, context=self.context)
             motions._validated_data = motions_data  # Data was already validated
             motions.save(round=round)
 
         return round
 
     def update(self, instance, validated_data):
-        motions_data = validated_data.pop('motion_set')
-        for motion in motions_data:
-            try:
-                Motion.objects.update_or_create(round=instance, seq=motion.get('seq'), defaults={
-                    'text': motion.get('text'),
-                    'reference': motion.get('reference'),
-                    'info_slide': motion.get('info_slide'),
-                })
-            except (IntegrityError, TypeError) as e:
-                raise serializers.ValidationError(e)
+        motions_data = validated_data.pop('motion_set', [])
+        for roundmotion in motions_data:
+            motion = roundmotion['motion'].get('pk')
+            if motion is None:
+                motion = Motion(
+                    text=roundmotion['motion']['text'],
+                    reference=roundmotion['motion']['reference'],
+                    info_slide=roundmotion['motion'].get('info_slide'),
+                )
+            else:
+                motion.text = roundmotion['motion']['text']
+                motion.reference = roundmotion['motion']['reference']
+                motion.info_slide = roundmotion['motion'].get('info_slide')
+            motion.save()
+            RoundMotion.objects.update_or_create(round=instance, motion=motion, defaults={'seq': roundmotion['seq']})
         return super().update(instance, validated_data)
 
 
@@ -159,25 +183,26 @@ class MotionSerializer(serializers.ModelSerializer):
             queryset=Round.objects.all())
 
         class Meta:
-            model = Motion
+            model = RoundMotion
             fields = ('round', 'seq')
 
-    url = fields.MotionHyperlinkedIdentityField(view_name='api-motion-detail')
-    rounds = RoundsSerializer(many=True, source='as_iterable')
+    url = fields.TournamentHyperlinkedIdentityField(view_name='api-motion-detail')
+    rounds = RoundsSerializer(many=True, source='roundmotion_set')
 
     class Meta:
         model = Motion
-        exclude = ('round', 'seq')
+        exclude = ('tournament',)
 
-    def validate(self, data):
-        """While the fields for the rounds is within a nested serializer,
-        as there isn't already a many-to-many relationship, there will
-        always only be one value. This method modifies validated_data in
-        place to directly have the fields from the nested serializer."""
-        rounds = data.pop('as_iterable')
-        data['round'] = rounds[0].get('round')
-        data['seq'] = rounds[0].get('seq')
-        return data
+    def create(self, validated_data):
+        rounds_data = validated_data.pop('roundmotion_set')
+        motion = super().create(validated_data)
+
+        if len(rounds_data) > 0:
+            rounds = self.RoundsSerializer(many=True, context=self.context)
+            rounds._validated_data = rounds_data  # Data was already validated
+            rounds.save(motion=motion)
+
+        return motion
 
 
 class BreakCategorySerializer(serializers.ModelSerializer):
@@ -195,8 +220,7 @@ class BreakCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BreakCategory
-        fields = ('name', 'slug', 'seq', 'break_size', 'is_general', 'priority',
-                  'limit', 'rule', 'url', '_links')
+        exclude = ('tournament', 'breaking_teams')
 
 
 class SpeakerCategorySerializer(serializers.ModelSerializer):
@@ -211,7 +235,7 @@ class SpeakerCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SpeakerCategory
-        fields = ('name', 'slug', 'seq', 'limit', 'public', 'url', '_links')
+        exclude = ('tournament',)
 
 
 class BaseEligibilitySerializer(serializers.ModelSerializer):
@@ -305,8 +329,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Speaker
-        fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
-                  'categories', 'url_key', '_links', 'team')
+        fields = '__all__'
 
     def create(self, validated_data):
         url_key = validated_data.pop('url_key', None)
@@ -376,9 +399,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Adjudicator
-        fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
-                  'institution', 'base_score', 'breaking', 'trainee', 'independent', 'adj_core',
-                  'institution_conflicts', 'team_conflicts', 'adjudicator_conflicts', 'url_key', '_links')
+        exclude = ('tournament',)
 
     def create(self, validated_data):
         url_key = validated_data.pop('url_key', None)
@@ -398,9 +419,10 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
 class TeamSerializer(serializers.ModelSerializer):
     class TeamSpeakerSerializer(SpeakerSerializer):
+        team = None
+
         class Meta(SpeakerSerializer.Meta):
-            fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
-                      'categories', 'url_key', '_links')
+            model = Speaker
 
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-team-detail')
     institution = serializers.HyperlinkedRelatedField(
@@ -422,9 +444,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = ('url', 'id', 'reference', 'short_reference', 'code_name', 'emoji', 'short_name', 'long_name',
-                  'institution', 'speakers', 'use_institution_prefix', 'break_categories',
-                  'institution_conflicts')
+        exclude = ('tournament', 'type')
 
     def __init__(self, *args, **kwargs):
         self.fields['speakers'] = self.TeamSpeakerSerializer(*args, many=True, required=False, **kwargs)
@@ -440,6 +460,7 @@ class TeamSerializer(serializers.ModelSerializer):
                 self.fields.pop('institution')
                 self.fields.pop('use_institution_prefix')
                 self.fields.pop('reference')
+                self.fields.pop('short_reference')
                 self.fields.pop('short_name')
                 self.fields.pop('long_name')
             elif not t.pref('show_team_institutions'):
@@ -460,11 +481,11 @@ class TeamSerializer(serializers.ModelSerializer):
         3. Create the speakers.
         4. Add institution conflict"""
 
-        if len(validated_data['short_reference']) == 0:
+        if len(validated_data.get('short_reference'), "") == 0:
             validated_data['short_reference'] = validated_data['reference'][:34]
 
         speakers_data = validated_data.pop('speakers', [])
-        break_categories = validated_data.pop('break_categories')
+        break_categories = validated_data.pop('break_categories', [])
 
         emoji, code_name = pick_unused_emoji()
         if 'emoji' not in validated_data or validated_data.get('emoji') is None:
@@ -517,11 +538,13 @@ class PerTournamentInstitutionSerializer(InstitutionSerializer):
         source='team_set',
         many=True,
         view_name='api-team-detail',
+        required=False,
     )
     adjudicators = fields.TournamentHyperlinkedRelatedField(
         source='adjudicator_set',
         many=True,
         view_name='api-adjudicator-detail',
+        required=False,
     )
 
     def __init__(self, *args, **kwargs):
@@ -614,9 +637,10 @@ class RoundPairingSerializer(serializers.ModelSerializer):
             return aa
 
     url = fields.RoundHyperlinkedIdentityField(view_name='api-pairing-detail', lookup_url_kwarg='debate_pk')
-    venue = fields.TournamentHyperlinkedRelatedField(view_name='api-venue-detail', queryset=Venue.objects.all())
+    venue = fields.TournamentHyperlinkedRelatedField(view_name='api-venue-detail', queryset=Venue.objects.all(),
+        required=False, allow_null=True)
     teams = DebateTeamSerializer(many=True, source='debateteam_set')
-    adjudicators = DebateAdjudicatorSerializer()
+    adjudicators = DebateAdjudicatorSerializer(required=False, allow_null=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -632,7 +656,7 @@ class RoundPairingSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         teams_data = validated_data.pop('debateteam_set')
-        adjs_data = validated_data.pop('adjudicators')
+        adjs_data = validated_data.pop('adjudicators', None)
 
         validated_data['round'] = self.context['round']
         debate = super().create(validated_data)
@@ -641,14 +665,15 @@ class RoundPairingSerializer(serializers.ModelSerializer):
         teams._validated_data = teams_data  # Data was already validated
         teams.save(debate=debate)
 
-        adjudicators = self.DebateAdjudicatorSerializer()
-        adjudicators._validated_data = adjs_data
-        adjudicators.save(debate=debate)
+        if adjs_data is not None:
+            adjudicators = self.DebateAdjudicatorSerializer()
+            adjudicators._validated_data = adjs_data
+            adjudicators.save(debate=debate)
 
         return debate
 
     def update(self, instance, validated_data):
-        for team in validated_data.pop('debateteam_set'):
+        for team in validated_data.pop('debateteam_set', []):
             try:
                 DebateTeam.objects.update_or_create(debate=instance, side=team.get('side'), defaults={
                     'team': team.get('team'),
@@ -656,9 +681,10 @@ class RoundPairingSerializer(serializers.ModelSerializer):
             except (IntegrityError, TypeError) as e:
                 raise serializers.ValidationError(e)
 
-        adjudicators = self.DebateAdjudicatorSerializer()
-        adjudicators._validated_data = validated_data.pop('adjudicators')
-        adjudicators.save(debate=instance)
+        if 'adjudicators' in validated_data and validated_data['adjudicators'] is not None:
+            adjudicators = self.DebateAdjudicatorSerializer()
+            adjudicators._validated_data = validated_data.pop('adjudicators')
+            adjudicators.save(debate=instance)
 
         return super().update(instance, validated_data)
 
@@ -788,7 +814,7 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
         exclude = ('source_adjudicator', 'source_team')
         read_only_fields = ('timestamp', 'version',
             'submitter_type', 'participant_submitter', 'submitter',
-            'confirmer', 'confirm_timestamp', 'ip_address')
+            'confirmer', 'confirm_timestamp', 'ip_address', 'private_url')
 
     def validate(self, data):
         source = data.pop('source')
@@ -991,8 +1017,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
             return result
 
     result = ResultSerializer(source='result.get_result_info')
-    motion = fields.MotionHyperlinkedRelatedField(view_name='api-motion-detail', required=False, tournament_field='round__tournament',
-        queryset=Motion.objects.all())
+    motion = fields.TournamentHyperlinkedRelatedField(view_name='api-motion-detail', required=False, queryset=Motion.objects.all())
     url = fields.DebateHyperlinkedIdentityField(view_name='api-ballot-detail')
     participant_submitter = fields.TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail',
         queryset=Adjudicator.objects.all(), source='participant_submitter.adjudicator', allow_null=True)
@@ -1002,8 +1027,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         exclude = ('debate',)
         read_only_fields = ('timestamp', 'version',
             'submitter_type', 'submitter', 'participant_submitter',
-            'confirmer', 'confirm_timestamp',
-            'ip_address')
+            'confirmer', 'confirm_timestamp', 'ip_address', 'single_adj', 'private_url')
 
     def get_request(self):
         return self.context['request']
@@ -1014,6 +1038,15 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         if validated_data.get('confirmed', False):
             validated_data['confirmer'] = self.context['request'].user
             validated_data['confirm_timestamp'] = timezone.now()
+
+        stage = 'elim' if self.round.stage == Round.STAGE_ELIMINATION else 'prelim'
+        if self.tournament.pref('ballots_per_debate_' + stage) == 'per-adj':
+            if self.context['debate'].debateadjudicator_set.all().count() > 1:
+                if len(result_data['sheets']) == 1:
+                    validated_data['participant_submitter'] = result_data['sheets'][0]['adjudicator']
+                    validated_data['single_adj'] = True
+                else:
+                    raise serializers.ValidationError('Single-adjudicator ballots must have only one scoresheet')
 
         ballot = super().create(validated_data)
 

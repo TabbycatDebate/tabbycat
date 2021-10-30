@@ -95,8 +95,10 @@ class BaseScoreField(forms.FloatField):
 
 
 class MotionModelChoiceField(forms.ModelChoiceField):
+    to_field_name = 'motion_id'
+
     def label_from_instance(self, obj):
-        return "%d. %s" % (obj.seq, obj.text)
+        return "%d. %s" % (obj.seq, obj.motion.text)
 
 
 class SubstantiveScoreField(BaseScoreField):
@@ -128,9 +130,13 @@ class BaseResultForm(forms.Form):
     confirmed = forms.BooleanField(required=False)
     discarded = forms.BooleanField(required=False)
 
+    result_class = None
+
     def __init__(self, ballotsub, password=False, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         self.ballotsub = ballotsub
+        self.result = kwargs.pop('result', self.result_class(self.ballotsub))
+        super().__init__(*args, **kwargs)
+
         self.debate = ballotsub.debate
         self.tournament = self.debate.round.tournament
 
@@ -241,13 +247,12 @@ class BaseBallotSetForm(BaseResultForm):
     (voting) or a single ballot for the debate (consensus), we use subclasses.
     """
 
-    result_class = None
-
     def __init__(self, ballotsub, *args, **kwargs):
+        self.vetos = kwargs.pop('vetos', None)
         super().__init__(ballotsub, *args, **kwargs)
 
         self.adjudicators = list(self.debate.adjudicators.voting())
-        self.motions = self.debate.round.motion_set
+        self.motions = self.debate.round.roundmotion_set.order_by('seq').select_related('motion')
 
         self.using_motions = self.tournament.pref('enable_motions')
         self.using_vetoes = self.tournament.pref('motion_vetoes_enabled')
@@ -357,17 +362,19 @@ class BaseBallotSetForm(BaseResultForm):
             if not self.ballotsub.motion and self.motions.count() == 1:
                 initial['motion'] = self.motions.get()
             else:
-                initial['motion'] = self.ballotsub.motion
+                initial['motion'] = self.ballotsub.roundmotion
 
         if self.using_vetoes:
             for side in self.sides:
-                dtmp = self.ballotsub.debateteammotionpreference_set.filter(
-                        debate_team__side=side, preference=3).first()
+                if self.vetos is None:
+                    dtmp = self.ballotsub.debateteammotionpreference_set.filter(
+                            debate_team__side=side, preference=3).first()
+                else:
+                    dtmp = self.vetos.get(side)
                 if dtmp:
-                    initial[self._fieldname_motion_veto(side)] = dtmp.motion
+                    initial[self._fieldname_motion_veto(side)] = dtmp.roundmotion
 
-        result = self.result_class(self.ballotsub)
-        initial.update(self.initial_from_result(result))
+        initial.update(self.initial_from_result(self.result))
 
         return initial
 
@@ -409,20 +416,19 @@ class BaseBallotSetForm(BaseResultForm):
     # --------------------------------------------------------------------------
 
     def save_ballot(self):
-
-        result = self.result_class(self.ballotsub)
-
         # 4. Save the sides
         if self.choosing_sides:
-            result.set_sides(*self.cleaned_data['choose_sides'])
+            self.result.set_sides(*self.cleaned_data['choose_sides'])
 
         # 5. Save motions
         if self.using_motions:
-            self.ballotsub.motion = self.cleaned_data['motion']
+            self.ballotsub.motion = self.cleaned_data['motion'].motion
+        elif self.motions.count() == 1:
+            self.ballotsub.motion = self.motions.get().motion
 
         if self.using_vetoes:
             for side in self.sides:
-                motion_veto = self.cleaned_data[self._fieldname_motion_veto(side)]
+                motion_veto = self.cleaned_data[self._fieldname_motion_veto(side)].motion
                 debate_team = self.debate.get_dt(side)
                 if motion_veto:
                     self.ballotsub.debateteammotionpreference_set.update_or_create(
@@ -433,9 +439,9 @@ class BaseBallotSetForm(BaseResultForm):
                         debate_team=debate_team, preference=3).delete()
 
         # 6. Save participant fields
-        self.save_participant_fields(result)
+        self.save_participant_fields(self.result)
 
-        result.save()
+        self.result.save()
 
     # --------------------------------------------------------------------------
     # Template access methods
@@ -903,6 +909,12 @@ class TeamsMixin:
 
     def clean(self):
         cleaned_data = super().clean()
+
+        if 'motion' not in cleaned_data:
+            if self.motions.count() == 1:
+                cleaned_data['motion'] = self.motions.get().motion
+            else: # Motions not enabled
+                cleaned_data['motion'] = None
 
         if not self.debate.sides_confirmed:
             self.add_error(None, forms.ValidationError(

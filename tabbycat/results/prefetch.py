@@ -70,7 +70,7 @@ def populate_checkins(debates, tournament):
     get_checkins(debates, tournament, None)
 
 
-def populate_results(ballotsubs):
+def populate_results(ballotsubs, tournament=None):
     """Populates the `_result` attribute of each BallotSubmission in
     `ballotsubs` with a populated DebateResult instance.
 
@@ -86,7 +86,8 @@ def populate_results(ballotsubs):
     if not ballotsubs:
         return
 
-    tournament = Tournament.objects.get(round__debate__ballotsubmission=ballotsubs[0])
+    if tournament is None:
+        tournament = Tournament.objects.get(round__debate__ballotsubmission=ballotsubs[0])
     positions = tournament.positions
     sides = tournament.sides
     ballotsubs = list(ballotsubs)  # set ballotsubs in stone to avoid race conditions in later queries

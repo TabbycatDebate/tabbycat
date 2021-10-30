@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-23 04:45\n"
+"PO-Revision-Date: 2021-04-18 16:34\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../../install/linux.rst:5
 msgid "Installing Locally on Linux"
-msgstr ""
+msgstr "Menginstal Secara Lokal di Linux"
 
 #: ../../install/linux.rst:7
 msgid "Is this the best installation method for you?"
@@ -28,7 +28,7 @@ msgstr ""
 
 #: ../../install/linux.rst:10
 msgid "In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`"
-msgstr ""
+msgstr "Dalam kebanyakan kasus, kami merekomendasikan melakukan: ref: `penginstalan berbasis internet di Heroku <install-heroku>` sebagai gantinya. Jika Anda memutuskan untuk melakukan instalasi lokal, pastikan untuk membaca halaman kami di: ref: `local installations <install-local>` untuk membantu Anda memahami apa yang terjadi, khususnya bagian ini:: ref: `install-decision`"
 
 #: ../../install/linux.rst:12
 msgid "If you just want to quickly set up a copy of Tabbycat to run locally on Linux, consider :ref:`installing using Docker<install-docker>`, which is a shorter process than the one below."
@@ -40,7 +40,7 @@ msgstr ""
 
 #: ../../install/linux.rst:17
 msgid "Requisite technical background"
-msgstr ""
+msgstr "Latar belakang teknis yang diperlukan"
 
 #: ../../install/linux.rst:19
 msgid "You need to be familiar with command-line interfaces to get through this comfortably. While a background in the specific tools Tabbycat uses (Python, PostgreSQL, *etc.*) will make things easier, it's not necessary: we'll talk you through the rest."
@@ -49,7 +49,7 @@ msgstr ""
 #: ../../install/linux.rst:21 ../../install/linux.rst:56
 #: ../../install/linux.rst:130
 msgid "Advanced users"
-msgstr ""
+msgstr "Pengguna tingkat lanjut"
 
 #: ../../install/linux.rst:24
 msgid "If you wish to use an SQL engine other that PostgreSQL, most of Tabbycat should work, but a few features rely on SQL functions that aren't supported by all engines. To configure Tabbycat to use a different engine, set the ``DATABASES`` `Django setting <https://docs.djangoproject.com/en/2.2/ref/settings/#databases>`_ accordingly."
@@ -57,7 +57,7 @@ msgstr ""
 
 #: ../../install/linux.rst:27
 msgid "Short version"
-msgstr ""
+msgstr "Versi pendek"
 
 #: ../../install/linux.rst:38
 msgid "Then create **settings/local.py** as described :ref:`below <local-settings-linux>`, then::"
@@ -65,7 +65,7 @@ msgstr ""
 
 #: ../../install/linux.rst:53
 msgid "1. Install dependencies"
-msgstr ""
+msgstr "1. instal depedensi"
 
 #: ../../install/linux.rst:54
 msgid "First, you need to install all of the software on which Tabbycat depends, if you don't already have it installed."
@@ -85,7 +85,7 @@ msgstr ""
 
 #: ../../install/linux.rst:69
 msgid "Check the version::"
-msgstr ""
+msgstr "Periksa versi::"
 
 #: ../../install/linux.rst:74
 msgid "Tabbycat does not support Python 2. You must use Python 3.6 or later."
@@ -125,7 +125,7 @@ msgstr ""
 
 #: ../../install/linux.rst:104
 msgid "1(d). Other development tools"
-msgstr ""
+msgstr "1 (d). Alat pengembangan lainnya"
 
 #: ../../install/linux.rst:105
 msgid "Some of the Python packages require GCC, G++ and Make in order to install::"
@@ -133,19 +133,19 @@ msgstr ""
 
 #: ../../install/linux.rst:112
 msgid "2. Get the source code"
-msgstr ""
+msgstr "2. Dapatkan source codenya"
 
 #: ../../install/linux.rst:114
 msgid "Choose either of the following two methods."
-msgstr ""
+msgstr "Pilih salah satu dari dua metode berikut."
 
 #: ../../install/linux.rst:117
 msgid "Method 1 (Git clone)"
-msgstr ""
+msgstr "Metode 1 (Git clone)"
 
 #: ../../install/linux.rst:119
 msgid "If you have Git, life will be easier if you clone `our GitHub repository`_:"
-msgstr ""
+msgstr "Jika Anda memiliki Git, hidup akan lebih mudah jika Anda mengkloning `repositori GitHub Anda`_:"
 
 #: ../../install/linux.rst:126
 msgid "(You can find out if you have Git using ``git --version``. If you don't, you can install it using ``sudo apt install git``.)"
@@ -161,7 +161,7 @@ msgstr ""
 
 #: ../../install/linux.rst:136
 msgid "Method 2 (tarball)"
-msgstr ""
+msgstr "Metode 2 (tarball)"
 
 #: ../../install/linux.rst:138
 msgid "If you don't want to use Git, simply download and extract:"
@@ -169,7 +169,7 @@ msgstr ""
 
 #: ../../install/linux.rst:147
 msgid "3. Set up a new database"
-msgstr ""
+msgstr "3. Siapkan database baru"
 
 #: ../../install/linux.rst:149
 msgid "You can skip step 1 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like."
@@ -189,15 +189,15 @@ msgstr ""
 
 #: ../../install/linux.rst:167
 msgid "4. Install Tabbycat"
-msgstr ""
+msgstr "4. Instal Tabbycat"
 
 #: ../../install/linux.rst:168
 msgid "Almost there!"
-msgstr ""
+msgstr "Hampir sampai!"
 
 #: ../../install/linux.rst:170
 msgid "Navigate to your Tabbycat directory::"
-msgstr ""
+msgstr "Arahkan ke direktori Tabbycat Anda::"
 
 #: ../../install/linux.rst:176
 msgid "Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like:"
@@ -225,7 +225,7 @@ msgstr ""
 
 #: ../../install/linux.rst:219
 msgid "Start Tabbycat!"
-msgstr ""
+msgstr "Mulai program Tabbycat!"
 
 #: ../../install/linux.rst:225
 msgid "It should show something like this::"
@@ -241,7 +241,7 @@ msgstr ""
 
 #: ../../install/linux.rst:237
 msgid "Starting up an existing Tabbycat instance"
-msgstr ""
+msgstr "Memulai instance Tabbycat yang ada"
 
 #: ../../install/linux.rst:238
 msgid "To start your Tabbycat instance up again next time you use your computer::"

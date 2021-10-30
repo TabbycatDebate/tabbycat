@@ -6,6 +6,7 @@
 
 {% block page-alerts %}
   {% include 'errors/database_limit_warning.html' %}
+  {% include 'errors/legacy_sendgrid_warning.html' %}
 {% endblock %}
 
 {% block content %}
@@ -59,6 +60,9 @@
 
     {% trans "Send a Test Email" as text %}{% url 'notifications-test-email' as url %}
     {% include "components/item-action.html" with icon="send" %}
+
+    {% trans "Import DebateXML" as text %}{% url 'importer-archive' as url %}
+    {% include "components/item-action.html" with icon="archive" %}
 
   {% endif %}
 </div>

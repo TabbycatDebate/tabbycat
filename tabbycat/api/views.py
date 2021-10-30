@@ -1,10 +1,13 @@
+from itertools import groupby
+
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Prefetch, Q
-from django.http.response import Http404
 from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
 from rest_framework.exceptions import NotFound
+from rest_framework.fields import DateTimeField
 from rest_framework.generics import GenericAPIView, get_object_or_404, RetrieveUpdateAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -12,6 +15,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
+from availability.models import RoundAvailability
 from breakqual.models import BreakCategory
 from breakqual.views import GenerateBreakMixin
 from checkins.consumers import CheckInEventConsumer
@@ -27,6 +31,7 @@ from tournaments.models import Round, Tournament
 from venues.models import Venue, VenueCategory
 
 from . import serializers
+from .fields import ParticipantAvailabilityForeignKeyField
 from .mixins import AdministratorAPIMixin, PublicAPIMixin, RoundAPIMixin, TournamentAPIMixin, TournamentPublicAPIMixin
 from .permissions import APIEnabledPermission, PublicPreferencePermission
 
@@ -85,12 +90,16 @@ class RoundViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     lookup_url_kwarg = 'round_seq'
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('motion_set')
+        return super().get_queryset().select_related(
+            'break_category', 'break_category__tournament',
+        ).prefetch_related('roundmotion_set', 'roundmotion_set__motion', 'roundmotion_set__motion__tournament')
 
 
 class MotionViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.MotionSerializer
-    tournament_field = 'round__tournament'
+
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('roundmotion_set', 'roundmotion_set__round')
 
 
 class BreakCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
@@ -295,6 +304,7 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
 
     def broadcast_checkin(self, obj, check):
         # Send result to websocket for treatment when opened; but perform the action here
+        checkin = None
         if check:
             checkin = Event.objects.create(identifier=obj.checkin_identifier,
                                            tournament=self.tournament)
@@ -306,16 +316,15 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
             checkin_dict = {'identifier': obj.checkin_identifier.barcode}
 
         group_name = CheckInEventConsumer.group_prefix + "_" + self.tournament.slug
-        async_to_sync(get_channel_layer().group_send)(
-            group_name, {
-                'type': 'send_json',
-                'data': {
-                    'checkins': [checkin_dict],
-                },
+        async_to_sync(get_channel_layer().group_send)(group_name, {
+            'type': 'send_json',
+            'data': {
+                'checkins': [checkin_dict],
             },
-        )
+        })
+        return checkin
 
-    def get_response_dict(self, request, obj, checked, **kwargs):
+    def get_response_dict(self, request, obj, checked, event, **kwargs):
         return {
             'object': reverse(
                 self.object_api_view,
@@ -325,6 +334,7 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
             ),
             'barcode': obj.checkin_identifier.barcode,
             'checked': checked,
+            'timestamp': DateTimeField().to_representation(event.time) if event is not None else None,
         }
 
     def get_queryset(self):
@@ -334,34 +344,36 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
         obj = self.get_object()
 
         event = get_unexpired_checkins(self.tournament, self.window_preference_pref).filter(identifier=obj.checkin_identifier)
-        return Response(self.get_response_dict(request, obj, event.exists()))
+        return Response(self.get_response_dict(request, obj, event.exists(), event.first()))
 
     def delete(self, request, *args, **kwargs):
         """Checks out"""
         obj = self.get_object()
         self.broadcast_checkin(obj, False)
-        return Response(self.get_response_dict(request, obj, False))
+        return Response(self.get_response_dict(request, obj, False, None))
 
     def put(self, request, *args, **kwargs):
         """Checks in"""
         obj = self.get_object()
-        self.broadcast_checkin(obj, True)
-        return Response(self.get_response_dict(request, obj, True))
+        e = self.broadcast_checkin(obj, True)
+        return Response(self.get_response_dict(request, obj, True, e))
 
     def patch(self, request, *args, **kwargs):
         """Toggles the check-in status"""
         obj = self.get_object()
-        check = get_unexpired_checkins(self.tournament, self.window_preference_pref).filter(identifier=obj.checkin_identifier).exists()
-        self.broadcast_checkin(obj, not check)
-        return Response(self.get_response_dict(request, obj, not check))
+        events = get_unexpired_checkins(self.tournament, self.window_preference_pref).filter(identifier=obj.checkin_identifier)
+        check = events.exists()
+        e = self.broadcast_checkin(obj, not check)
+        return Response(self.get_response_dict(request, obj, not check, e))
 
     def post(self, request, *args, **kwargs):
         """Creates an identifier"""
         obj = self.get_object_queryset()  # Don't .get() as create_identifiers expects a queryset
         if not obj.exists():
-            raise Http404
+            raise NotFound("Object could not be found")
+        status = 200 if hasattr(obj, 'checkin_identifier') else 201
         create_identifiers(self.model.checkin_identifier.related.related_model, obj)
-        return Response(self.get_response_dict(request, obj.get(), False))
+        return Response(self.get_response_dict(request, obj.get(), False, None), status=status)
 
 
 class AdjudicatorCheckinsView(BaseCheckinsView):
@@ -469,6 +481,10 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
             'debateadjudicator_set', 'debateadjudicator_set__adjudicator', 'debateadjudicator_set__adjudicator__tournament',
         )
 
+    def delete_all(self, request, *args, **kwargs):
+        self.get_queryset().delete()
+        return Response(status=204)  # No content
+
 
 class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.BallotSerializer
@@ -502,7 +518,9 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
         filters = Q()
         if self.request.query_params.get('confirmed') or not self.request.user.is_staff:
             filters &= Q(confirmed=True)
-        return super().get_queryset().filter(filters).select_related('participant_submitter__adjudicator__tournament')
+        return super().get_queryset().filter(filters).select_related(
+            'motion', 'motion__tournament',
+            'participant_submitter__adjudicator__tournament')
 
 
 class FeedbackQuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
@@ -536,7 +554,8 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
             if query_params.get('source'):
                 filters &= Q(source_team__team_id=query_params.get('source'))
         if query_params.get('round'):
-            filters &= Q(source_adjudicator__debate__round__seq=query_params.get('round')) | Q(source_team__debate__round__seq=query_params.get('round'))
+            filters &= (Q(source_adjudicator__debate__round__seq=query_params.get('round')) |
+                Q(source_team__debate__round__seq=query_params.get('round')))
         if query_params.get('target'):
             filters &= Q(adjudicator_id=query_params.get('target'))
 
@@ -556,3 +575,73 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
             'source_adjudicator__debate__round__tournament', 'source_team__debate__round__tournament',
             'participant_submitter__adjudicator__tournament', 'participant_submitter__speaker__team__tournament',
         ).prefetch_related(*answers_prefetch)
+
+
+class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
+
+    def get_field(self):
+        field = ParticipantAvailabilityForeignKeyField(many=True, view_name='api-availability-list')  # Dummy view name
+        field.root._context = {'request': self.request}
+        return field
+
+    def get_filters(self):
+        filters = Q()
+        if self.request.query_params.get('adjudicators', 'false') == 'false':
+            filters |= Q(content_type__model='adjudicator')
+        if self.request.query_params.get('teams', 'false') == 'false':
+            filters |= Q(content_type__model='team')
+        if self.request.query_params.get('venues', 'false') == 'false':
+            filters |= Q(content_type__model='venue')
+        return filters
+
+    def get_queryset(self):
+        return RoundAvailability.objects.filter(
+            ~self.get_filters(), round=self.round).select_related('content_type', 'round__tournament')
+
+    def get(self, request, *args, **kwargs):
+        # Get all availabilities of the round
+        return Response(self.get_field().to_representation(self.get_queryset()))
+
+    def patch(self, request, *args, **kwargs):
+        # Toggle the availabilities of the included objects
+        objs = sorted(self.get_field().to_internal_value(request.data), key=lambda o: type(o).__name__)
+        for model, participants in groupby(objs, key=type):
+            contenttype = ContentType.objects.get_for_model(model)
+
+            ids = set(p.pk for p in participants)
+            existing_qs = RoundAvailability.objects.filter(
+                content_type=contenttype, round=self.round,
+                object_id__in=ids,
+            )
+            existing = set(p.object_id for p in existing_qs)
+            existing_qs.delete()
+
+            RoundAvailability.objects.bulk_create(
+                [RoundAvailability(content_type=contenttype, round=self.round, object_id=id) for id in ids - existing])
+
+        return self.get(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        # Mark objects as available
+        objs = sorted(self.get_field().to_internal_value(request.data), key=lambda o: type(o).__name__)
+        for model, participants in groupby(objs, key=type):
+            contenttype = ContentType.objects.get_for_model(model)
+            RoundAvailability.objects.bulk_create(
+                [RoundAvailability(content_type=contenttype, round=self.round, object_id=p.id) for p in participants])
+        return self.get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        # Mark objects as unavailable
+        objs = sorted(self.get_field().to_internal_value(request.data), key=lambda o: type(o).__name__)
+        for model, participants in groupby(objs, key=type):
+            contenttype = ContentType.objects.get_for_model(model)
+            RoundAvailability.objects.filter(
+                content_type=contenttype, round=self.round,
+                object_id__in=[p.id for p in participants],
+            ).delete()
+        return self.get(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        # Delete class of availabilities
+        self.get_queryset().delete()
+        return Response(status=204)

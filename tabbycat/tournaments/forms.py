@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.forms import CharField, ChoiceField, Form, ModelChoiceField, ModelForm
 from django.forms.fields import IntegerField
 from django.forms.models import ModelChoiceIterator
@@ -13,6 +14,7 @@ from options.preferences import TournamentStaff
 from options.presets import all_presets, get_preferences_data, presets_for_form, public_presets_for_form
 
 from .models import Round, Tournament
+from .signals import update_tournament_cache
 from .utils import auto_make_rounds
 
 
@@ -162,6 +164,11 @@ class RoundWithCompleteOptionField(RoundField):
         return super().to_python(value)
 
 
+def clear_all_round_caches(tournament):
+    cache.delete_many(["%s_%s_%s" % (tournament.slug, r.seq, 'object') for r in tournament.round_set.all()])
+    update_tournament_cache(Tournament, tournament)
+
+
 class SetCurrentRoundSingleBreakCategoryForm(Form):
     """Form to set completed rounds in a tournament with a single break category."""
 
@@ -177,6 +184,7 @@ class SetCurrentRoundSingleBreakCategoryForm(Form):
         seq = self.cleaned_data['current_round'].seq
         self.tournament.round_set.filter(seq__lt=seq).update(completed=True)
         self.tournament.round_set.filter(seq__gte=seq).update(completed=False)
+        clear_all_round_caches(self.tournament)
 
 
 class SetCurrentRoundMultipleBreakCategoriesForm(Form):
@@ -229,7 +237,6 @@ class SetCurrentRoundMultipleBreakCategoriesForm(Form):
             self.tournament.prelim_rounds().filter(seq__lt=seq).update(completed=True)
             self.tournament.prelim_rounds().filter(seq__gte=seq).update(completed=False)
             self.tournament.break_rounds().update(completed=False)
-
         else:
             self.tournament.prelim_rounds().update(completed=True)
             for category in self.tournament.breakcategory_set.all():
@@ -240,3 +247,4 @@ class SetCurrentRoundMultipleBreakCategoriesForm(Form):
                     seq = self.cleaned_data['elim_' + category.slug].seq
                     category.round_set.filter(seq__lt=seq).update(completed=True)
                     category.round_set.filter(seq__gte=seq).update(completed=False)
+        clear_all_round_caches(self.tournament)

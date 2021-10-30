@@ -1,4 +1,5 @@
-from adjallocation.models import AdjudicatorInstitutionConflict, TeamInstitutionConflict
+from django.db.models import F
+
 from utils.management.base import TournamentCommand
 
 
@@ -15,46 +16,22 @@ class Command(TournamentCommand):
 
     def handle_tournament(self, tournament, **options):
         if not options["teams_only"]:
-            self.add_for_adjudicators(tournament)
+            self.add_for_queryset(tournament.adjudicator_set)
         if not options["adjudicators_only"]:
-            self.add_for_teams(tournament)
+            self.add_for_queryset(tournament.team_set)
 
-    def add_for_adjudicators(self, tournament):
-        existing = 0
-        missing = 0
+    def add_for_queryset(self, qs):
+        conflict_model = qs.model.institution_conflicts.through
+        field = qs.model.__name__.lower()
 
-        for adj in tournament.adjudicator_set.all():
-            if adj.institution is None:
-                continue
-            _, created = AdjudicatorInstitutionConflict.objects.get_or_create(
-                adjudicator=adj, institution=adj.institution,
-            )
-            if created:
-                missing += 1
-                self.stdout.write("Added self-institutional conflict for {adj.name} of "
-                        "{adj.institution.name}".format(adj=adj))
-            else:
-                existing += 1
+        existing = qs.filter(institution_conflicts=F('institution')).count()
+        qs = qs.filter(institution__isnull=False).exclude(institution_conflicts=F('institution'))
+        missing = qs.count()
 
-        self.stdout.write("Done, created {missing} previously-missing adjudicator own-institution conflicts.".format(missing=missing))
-        self.stdout.write("{existing} adjudicators already had own-institution conflicts defined.".format(existing=existing))
-
-    def add_for_teams(self, tournament):
-        existing = 0
-        missing = 0
-
-        for team in tournament.team_set.all():
-            if team.institution is None:
-                continue
-            _, created = TeamInstitutionConflict.objects.get_or_create(
-                team=team, institution=team.institution,
-            )
-            if created:
-                missing += 1
-                self.stdout.write("Added self-institutional conflict for {team.short_name} of "
-                        "{team.institution.name}".format(team=team))
-            else:
-                existing += 1
-
-        self.stdout.write("Done, created {missing} previously-missing team own-institution conflicts.".format(missing=missing))
-        self.stdout.write("{existing} teams already had own-institution conflicts defined.".format(existing=existing))
+        conflict_model.objects.bulk_create([
+            conflict_model(**{field: obj, "institution": obj.institution}) for obj in qs
+        ])
+        self.stdout.write("Done, created {missing} previously-missing {model} own-institution conflicts.".format(
+            missing=missing, model=qs.model._meta.verbose_name))
+        self.stdout.write("{existing} {models} already had own-institution conflicts defined.".format(
+            existing=existing, models=qs.model._meta.verbose_name_plural))

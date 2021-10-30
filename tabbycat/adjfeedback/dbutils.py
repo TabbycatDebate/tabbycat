@@ -157,12 +157,14 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
                 if question.answer_type == fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT:
                     answer = random.choice(COMMENTS[score])
                 elif question.answer_type == fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT:
-                    answer = random.choice(question.choices_for_field)[0]
-                elif question.answer_type == fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_MULTIPLE_SELECT:
-                    answers = random.sample(question.choices_for_field, random.randint(0, len(question.choices_for_field)))
-                    answer = [a[0] for a in answers]
+                    answer = random.choice(question.choices)
                 else:
                     answer = random.choice(WORDS[score])
+            elif question.answer_type_class == fm.AdjudicatorFeedbackManyAnswer:
+                answer = random.sample(question.choices, random.randint(0, len(question.choices_for_field)))
+            else:
+                raise TypeError("Answer type class not recognized: " + question.answer_type_class.__name__)
+
             question.answer_type_class(question=question, feedback=fb, answer=answer).save()
 
         name = source.name if isinstance(source, Adjudicator) else source.short_name

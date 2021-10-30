@@ -1,6 +1,5 @@
 import logging
 
-from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Count, Prefetch, Q
@@ -257,15 +256,6 @@ class Tournament(models.Model):
         ]
 
     @cached_property
-    def get_current_round_cached(self):
-        cached_key = "%s_current_round_object" % self.slug
-        if self.current_round:
-            cache.get_or_set(cached_key, self.current_round, None)
-            return cache.get(cached_key)
-        else:
-            return None
-
-    @cached_property
     def billable_teams(self):
         return self.team_set.count()
 
@@ -477,7 +467,8 @@ class Round(models.Model):
         if filter_kwargs:
             debates = debates.filter(**filter_kwargs)
         if results:
-            debates = debates.prefetch_related('ballotsubmission_set', 'ballotsubmission_set__submitter')
+            debates = debates.prefetch_related('ballotsubmission_set',
+                'ballotsubmission_set__submitter', 'ballotsubmission_set__participant_submitter')
         if adjudicators:
             debates = debates.prefetch_related(
                 Prefetch('debateadjudicator_set',
@@ -576,7 +567,7 @@ class Round(models.Model):
     @cached_property
     def is_last(self):
         """Returns a boolean if no next round in the sequence exists."""
-        return not self._rounds_in_same_sequence().filter(seq__gt=self.seq).order_by('seq').exists()
+        return not self._rounds_in_same_sequence().filter(seq__gt=self.seq).exists()
 
     @cached_property
     def is_break_round(self):

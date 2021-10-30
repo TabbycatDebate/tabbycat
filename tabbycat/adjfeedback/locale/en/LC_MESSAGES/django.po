@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-18 17:59-0400\n"
+"POT-Creation-Date: 2021-04-02 01:40-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,68 +17,68 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: adjfeedback/admin.py:43
+#: adjfeedback/admin.py:44
 msgid "Integer scales must have a minimum and maximum"
 msgstr ""
 
-#: adjfeedback/admin.py:72 adjfeedback/admin.py:138
+#: adjfeedback/admin.py:73 adjfeedback/admin.py:139
 msgid "target"
 msgstr ""
 
-#: adjfeedback/admin.py:73 adjfeedback/admin.py:139 adjfeedback/models.py:235
+#: adjfeedback/admin.py:74 adjfeedback/admin.py:140 adjfeedback/models.py:236
 msgid "source adjudicator"
 msgstr ""
 
-#: adjfeedback/admin.py:74 adjfeedback/admin.py:140 adjfeedback/models.py:237
+#: adjfeedback/admin.py:75 adjfeedback/admin.py:141 adjfeedback/models.py:238
 msgid "source team"
 msgstr ""
 
-#: adjfeedback/admin.py:90
+#: adjfeedback/admin.py:91
 #, python-format
 msgid "%(timestamp)s (version %(version)s)"
 msgstr ""
 
-#: adjfeedback/admin.py:95
+#: adjfeedback/admin.py:96
 msgid "Target"
 msgstr ""
 
-#: adjfeedback/admin.py:96 adjfeedback/admin.py:161
+#: adjfeedback/admin.py:97 adjfeedback/admin.py:162
 msgid "Source"
 msgstr ""
 
-#: adjfeedback/admin.py:97
+#: adjfeedback/admin.py:98
 msgid "Feedback timestamp and version"
 msgstr ""
 
-#: adjfeedback/admin.py:179
+#: adjfeedback/admin.py:180
 #, python-format
 msgid "1 feedback submission was marked as confirmed. Note that this may have caused other feedback submissions to be marked as unconfirmed."
 msgid_plural "%(count)d feedback submissions were marked as confirmed. Note that this may have caused other feedback submissions to be marked as unconfirmed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/admin.py:191
+#: adjfeedback/admin.py:192
 #, python-format
 msgid "1 feedback submission was not marked as confirmed, probably because other feedback submissions that conflict with it were also marked as confirmed."
 msgid_plural "%(count)d feedback submissions were not marked as confirmed, probably because other feedback submissions that conflict with them were also marked as confirmed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/admin.py:204
+#: adjfeedback/admin.py:205
 #, python-format
 msgid "1 feedback submission was marked as unconfirmed."
 msgid_plural "%(count)d feedback submissions were marked as unconfirmed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/admin.py:214
+#: adjfeedback/admin.py:215
 #, python-format
 msgid "1 feedback submission is now ignored."
 msgid_plural "%(count)d feedback submissions are now ignored."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/admin.py:224
+#: adjfeedback/admin.py:225
 #, python-format
 msgid "1 feedback submission is now recognized."
 msgid_plural "%(count)d feedback submissions are now recognized."
@@ -192,7 +192,7 @@ msgstr ""
 msgid "There were no scores to import."
 msgstr ""
 
-#: adjfeedback/models.py:13 adjfeedback/models.py:230
+#: adjfeedback/models.py:13 adjfeedback/models.py:231
 msgid "adjudicator"
 msgstr ""
 
@@ -200,7 +200,7 @@ msgstr ""
 msgid "round"
 msgstr ""
 
-#: adjfeedback/models.py:17 adjfeedback/models.py:231
+#: adjfeedback/models.py:17 adjfeedback/models.py:232
 msgid "score"
 msgstr ""
 
@@ -289,7 +289,7 @@ msgstr ""
 msgid "float"
 msgstr ""
 
-#: adjfeedback/models.py:111 adjfeedback/models.py:144
+#: adjfeedback/models.py:111 adjfeedback/models.py:145
 msgid "text"
 msgstr ""
 
@@ -305,123 +305,123 @@ msgstr ""
 msgid "select multiple"
 msgstr ""
 
-#: adjfeedback/models.py:140
+#: adjfeedback/models.py:141
 msgid "tournament"
 msgstr ""
 
-#: adjfeedback/models.py:142
+#: adjfeedback/models.py:143
 msgid "sequence number"
 msgstr ""
 
-#: adjfeedback/models.py:145
+#: adjfeedback/models.py:146
 msgid "The question displayed to participants, e.g., \"Did you agree with the decision?\""
 msgstr ""
 
-#: adjfeedback/models.py:147
+#: adjfeedback/models.py:148
 msgid "name"
 msgstr ""
 
-#: adjfeedback/models.py:148
+#: adjfeedback/models.py:149
 msgid "A short name for the question, e.g., \"Agree with decision\""
 msgstr ""
 
-#: adjfeedback/models.py:150
+#: adjfeedback/models.py:151
 msgid "reference"
 msgstr ""
 
-#: adjfeedback/models.py:151
+#: adjfeedback/models.py:152
 msgid "Code-compatible reference, e.g., \"agree_with_decision\""
 msgstr ""
 
-#: adjfeedback/models.py:154
+#: adjfeedback/models.py:155
 msgid "from adjudicator"
 msgstr ""
 
-#: adjfeedback/models.py:155
+#: adjfeedback/models.py:156
 msgid "Adjudicators should be asked this question (about other adjudicators)"
 msgstr ""
 
-#: adjfeedback/models.py:157
+#: adjfeedback/models.py:158
 msgid "from team"
 msgstr ""
 
-#: adjfeedback/models.py:158
+#: adjfeedback/models.py:159
 msgid "Teams should be asked this question"
 msgstr ""
 
-#: adjfeedback/models.py:161
+#: adjfeedback/models.py:162
 msgid "answer type"
 msgstr ""
 
-#: adjfeedback/models.py:163
+#: adjfeedback/models.py:164
 msgid "required"
 msgstr ""
 
-#: adjfeedback/models.py:164
+#: adjfeedback/models.py:165
 msgid "Whether participants are required to fill out this field"
 msgstr ""
 
-#: adjfeedback/models.py:166
+#: adjfeedback/models.py:167
 msgid "minimum value"
 msgstr ""
 
-#: adjfeedback/models.py:167
+#: adjfeedback/models.py:168
 msgid "Minimum allowed value for numeric fields (ignored for text or boolean fields)"
 msgstr ""
 
-#: adjfeedback/models.py:169
+#: adjfeedback/models.py:170
 msgid "maximum value"
 msgstr ""
 
-#: adjfeedback/models.py:170
+#: adjfeedback/models.py:171
 msgid "Maximum allowed value for numeric fields (ignored for text or boolean fields)"
 msgstr ""
 
-#: adjfeedback/models.py:175
+#: adjfeedback/models.py:176
 msgid "choices"
 msgstr ""
 
-#: adjfeedback/models.py:176
+#: adjfeedback/models.py:177
 msgid "Permissible choices for select one/multiple fields (ignored for other fields)"
 msgstr ""
 
-#: adjfeedback/models.py:181
+#: adjfeedback/models.py:182
 msgid "adjudicator feedback question"
 msgstr ""
 
-#: adjfeedback/models.py:182
+#: adjfeedback/models.py:183
 msgid "adjudicator feedback questions"
 msgstr ""
 
-#: adjfeedback/models.py:240 adjfeedback/views.py:768
+#: adjfeedback/models.py:241 adjfeedback/views.py:768
 msgid "ignored"
 msgstr ""
 
-#: adjfeedback/models.py:241
+#: adjfeedback/models.py:242
 msgid "Whether the feedback should affect the adjudicator's score"
 msgstr ""
 
-#: adjfeedback/models.py:245
+#: adjfeedback/models.py:246
 msgid "adjudicator feedback"
 msgstr ""
 
-#: adjfeedback/models.py:246
+#: adjfeedback/models.py:247
 msgid "adjudicator feedbacks"
 msgstr ""
 
-#: adjfeedback/models.py:300
+#: adjfeedback/models.py:307
 msgid "Either the source adjudicator or source team wasn't specified."
 msgstr ""
 
-#: adjfeedback/models.py:303
+#: adjfeedback/models.py:310
 msgid "There was both a source adjudicator and a source team."
 msgstr ""
 
-#: adjfeedback/models.py:305
+#: adjfeedback/models.py:312
 msgid "There is no adjudicator specified as the target for this feedback. Perhaps they were deleted?"
 msgstr ""
 
-#: adjfeedback/models.py:307
+#: adjfeedback/models.py:314
 msgid "Adjudicator did not see this debate."
 msgstr ""
 
@@ -639,32 +639,32 @@ msgstr ""
 msgid "From unknown"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:85
+#: adjfeedback/templates/feedback_card.html:88
 #, python-format
 msgid "%(time)s"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:90
+#: adjfeedback/templates/feedback_card.html:93
 msgid "Unconfirmed feedback is not counted as having been submitted and does not affect this adjudicator's score."
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:95
+#: adjfeedback/templates/feedback_card.html:98
 msgid "Un-confirm"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:95
+#: adjfeedback/templates/feedback_card.html:98
 msgid "Confirm"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:100
+#: adjfeedback/templates/feedback_card.html:103
 msgid "Ignored feedback is counted as having been submitted, but does not affect this adjudicator's score."
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:105
+#: adjfeedback/templates/feedback_card.html:108
 msgid "Un-ignore"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:105
+#: adjfeedback/templates/feedback_card.html:108
 msgid "Ignore"
 msgstr ""
 
@@ -684,15 +684,20 @@ msgstr ""
 
 #: adjfeedback/templates/feedback_overview.html:14
 #, python-format
-msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects both chairs and panellists to submit feedback on each other, and also chairs to submit on trainees."
+msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects both chairs and panellists to submit feedback on each other, and also chairs to submit feedback on trainees."
 msgstr ""
 
-#: adjfeedback/templates/feedback_overview.html:20
+#: adjfeedback/templates/feedback_overview.html:18
+#, python-format
+msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects both panellists and trainees to submit feedback on chairs, and chairs to submit feedback on every other member of the panel (including trainees)."
+msgstr ""
+
+#: adjfeedback/templates/feedback_overview.html:22
 #, python-format
 msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects all adjudicators (including trainees) to submit feedback on every other member of the panel (including trainees)."
 msgstr ""
 
-#: adjfeedback/templates/feedback_overview.html:31
+#: adjfeedback/templates/feedback_overview.html:30
 #, python-format
 msgid "There is <strong>%(nadjs_outside_range)s adjudicator</strong> with a score <strong>outside the permitted range</strong> of adjudicator scores, which is currently set as %(min_score)s to %(max_score)s. This can cause adjudicator auto-allocation to behave in unexpected ways. If you'd like to use a wider score range, you can configure this in <a href=\"%(feedback_settings_url)s\" class=\"alert-link\"> feedback settings</a>."
 msgid_plural "There are <strong>%(nadjs_outside_range)s adjudicators</strong> with scores <strong>outside the permitted range</strong> of adjudicator scores, which is currently set as %(min_score)s to %(max_score)s. This can cause adjudicator auto-allocation to behave in unexpected ways. If you'd like to use a wider score range, you can configure this in <a href=\"%(feedback_settings_url)s\" class=\"alert-link\"> feedback settings</a>."

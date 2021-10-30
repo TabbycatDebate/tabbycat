@@ -41,9 +41,15 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
     # Need to associate the feedback submission status with the Adjudicator object
     # directly to be passed onto AdjudicatorAllocation. Must use debateadj to assure
     # the prefetch is available.
-    if hasattr(debateadj.debate.debateadjudicator_set.first(), 'submitted'):
-        for dadj in debateadj.debate.debateadjudicator_set.all():
-            dadj.adjudicator.submitted = dadj.submitted
+    try:
+        test_dadj = debateadj.debate.debateadjudicator_set.all()[0]
+    except IndexError:
+        pass
+    else:
+        if hasattr(test_dadj, 'submitted'):
+            for dadj in debateadj.debate.debateadjudicator_set.all():
+                if hasattr(dadj, 'submitted'):
+                    dadj.adjudicator.submitted = dadj.submitted
 
     if debate is None:
         debate = debateadj.debate
@@ -51,7 +57,7 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
 
     if feedback_paths == 'all-adjs' or debateadj.type == DebateAdjudicator.TYPE_CHAIR:
         targets = [(adj, pos) for adj, pos in adjudicators.with_positions() if adj.id != debateadj.adjudicator_id]
-    elif feedback_paths == 'with-p-on-c' and debateadj.type == DebateAdjudicator.TYPE_PANEL:
+    elif feedback_paths == 'with-t-on-c' or (feedback_paths == 'with-p-on-c' and debateadj.type == DebateAdjudicator.TYPE_PANEL):
         if adjudicators.has_chair:
             targets = [(adjudicators.chair, AdjudicatorAllocation.POSITION_CHAIR)]
         else:

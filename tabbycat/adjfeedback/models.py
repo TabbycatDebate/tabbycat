@@ -1,8 +1,8 @@
-from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
 from django.utils.translation import gettext, gettext_lazy as _
+from django_better_admin_arrayfield.models.fields import ArrayField
 
 from adjallocation.models import DebateAdjudicator
 from results.models import Submission
@@ -135,6 +135,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
         AdjudicatorFeedbackBooleanAnswer:
         [ANSWER_TYPE_BOOLEAN_SELECT, ANSWER_TYPE_BOOLEAN_CHECKBOX],
     }
+    NUMERICAL_ANSWER_TYPES = [ANSWER_TYPE_INTEGER_TEXTBOX, ANSWER_TYPE_INTEGER_SCALE, ANSWER_TYPE_FLOAT]
 
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
         verbose_name=_("tournament"))
@@ -173,7 +174,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
         base_field=models.TextField(),
         blank=True,
         verbose_name=_("choices"),
-        help_text=_("Permissible choices for select one/multiple fields (ignored for other fields), delimit options with commas"),
+        help_text=_("Permissible choices for select one/multiple fields (ignored for other fields)"),
         default=list)
 
     class Meta:
@@ -252,6 +253,12 @@ class AdjudicatorFeedback(Submission):
             version=self.version,
             time=('<unknown>' if self.timestamp is None else str(
                 self.timestamp.isoformat())))
+
+    def _unique_unconfirm_args(self):
+        kwargs = super()._unique_unconfirm_args()
+        if self.source_team is not None and self.source_team.debate.round.tournament.pref('feedback_from_teams') != 'all-adjs':
+            kwargs.pop('adjudicator')
+        return kwargs
 
     @cached_property
     def source(self):

@@ -13,7 +13,7 @@ from django.views.generic.base import View
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
-from motions.models import Motion
+from motions.models import RoundMotion
 from notifications.models import BulkNotification
 from notifications.views import TournamentTemplateEmailCreateView
 from options.utils import use_team_code_names
@@ -186,6 +186,9 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
 
     allow_null_tournament = True
 
+    def get_queryset(self):
+        return super().get_queryset().select_related('institution__region')
+
     def use_team_code_names(self):
         return use_team_code_names(self.tournament, self.admin)
 
@@ -196,10 +199,12 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
             qs = getattr(obj, model_related).filter(
                 debate__round__in=obj.tournament.current_rounds).select_related('debate__round')
             if admin:
-                qs = qs.prefetch_related('debate__round__motion_set')
+                qs = qs.prefetch_related(Prefetch('debate__round__roundmotion_set',
+                    queryset=RoundMotion.objects.select_related('motion')))
             else:
                 qs = qs.filter(debate__round__draw_status=Round.STATUS_RELEASED).prefetch_related(
-                    Prefetch('debate__round__motion_set', queryset=Motion.objects.filter(round__motions_released=True)))
+                    Prefetch('debate__round__roundmotion_set',
+                        queryset=RoundMotion.objects.filter(round__motions_released=True).select_related('motion')))
             return qs
         except ObjectDoesNotExist:
             return None
@@ -224,6 +229,9 @@ class BaseTeamRecordView(BaseRecordView):
     template_name = 'team_record.html'
 
     table_title = _("Results")
+
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('break_categories')
 
     def get_page_title(self):
         # This has to be in Python so that the emoji can be team-dependent.
@@ -275,9 +283,23 @@ class BaseAdjudicatorRecordView(BaseRecordView):
 class TeamRecordView(AdministratorMixin, BaseTeamRecordView):
     admin = True
 
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related(
+            'teaminstitutionconflict_set__institution',
+            'adjudicatorteamconflict_set__adjudicator',
+            'venue_constraints__venuecategory',
+        )
+
 
 class AdjudicatorRecordView(AdministratorMixin, BaseAdjudicatorRecordView):
     admin = True
+
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related(
+            'adjudicatorinstitutionconflict_set__institution',
+            'adjudicatorteamconflict_set__team',
+            'venue_constraints__venuecategory',
+        )
 
 
 class PublicTeamRecordView(PublicTournamentPageMixin, BaseTeamRecordView):

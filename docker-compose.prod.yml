@@ -1,0 +1,26 @@
+# Docker-compose is a way to run multiple containers at once and connect them
+# This sets up and runs postgres, redis, honcho and the django worker as services
+# Reference: https://docs.docker.com/compose/compose-file/
+# Note that this file extends and overrides what is specified in docker-compose.yml
+
+# Initial setup with
+# $ docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
+
+# Can run management commands with
+# $ docker-compose run web /code/manage.py whatever
+
+version: '3'
+
+services:
+
+  web:
+    environment:
+      - DEBUG=0
+      - DOCKER_REDIS=1
+      - IN_DOCKER=1
+
+  worker:
+    environment:
+      - DEBUG=0
+      - DOCKER_REDIS=1
+      - IN_DOCKER=1

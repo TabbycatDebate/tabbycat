@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 15:04-0400\n"
-"PO-Revision-Date: 2020-11-18 21:01\n"
+"POT-Creation-Date: 2021-04-02 01:40-0300\n"
+"PO-Revision-Date: 2021-06-20 05:36\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -22,307 +22,307 @@ msgstr ""
 msgid "Tournaments"
 msgstr "crwdns33086:0crwdne33086:0"
 
-#: tournaments/forms.py:27
+#: tournaments/forms.py:29
 msgid "Number of preliminary rounds"
 msgstr "crwdns33088:0crwdne33088:0"
 
-#: tournaments/forms.py:32
+#: tournaments/forms.py:34
 msgid "Number of teams in the open break"
 msgstr "crwdns33090:0crwdne33090:0"
 
-#: tournaments/forms.py:33
+#: tournaments/forms.py:35
 msgid "Leave blank if there are no break rounds."
 msgstr "crwdns33092:0crwdne33092:0"
 
-#: tournaments/forms.py:39
+#: tournaments/forms.py:41
 msgid "Did you agree with their decision?"
 msgstr "crwdns33094:0crwdne33094:0"
 
-#: tournaments/forms.py:39
+#: tournaments/forms.py:41
 msgid "Agree?"
 msgstr "crwdns33096:0crwdne33096:0"
 
-#: tournaments/forms.py:45
+#: tournaments/forms.py:47
 msgid "Comments"
 msgstr "crwdns33098:0crwdne33098:0"
 
 #. Translators: This is the name given to the 'Open Break'.
-#: tournaments/forms.py:59
+#: tournaments/forms.py:61
 msgid "Open"
 msgstr "crwdns33100:0crwdne33100:0"
 
-#: tournaments/forms.py:84
+#: tournaments/forms.py:86
 msgid "Format Configuration"
 msgstr "crwdns33102:0crwdne33102:0"
 
-#: tournaments/forms.py:85
+#: tournaments/forms.py:87
 msgid "Apply a standard set of settings to match a common debate format"
 msgstr "crwdns33104:0crwdne33104:0"
 
-#: tournaments/forms.py:89
+#: tournaments/forms.py:91
 msgid "Public Configuration"
 msgstr "crwdns33106:0crwdne33106:0"
 
-#: tournaments/forms.py:90
+#: tournaments/forms.py:92
 msgid "Show non-sensitive information on the public-facing side of this site, like draws (once released) and the motions of previous rounds"
 msgstr "crwdns33108:0crwdne33108:0"
 
-#: tournaments/forms.py:96
+#: tournaments/forms.py:98
 msgid "<strong>Tabulation:</strong> [list tabulation staff here]<br /><strong>Organisation:</strong> [list organising committee members here]<br /><strong>Adjudication:</strong> [list chief adjudicators here]"
 msgstr "crwdns33110:0crwdne33110:0"
 
-#: tournaments/forms.py:186
+#: tournaments/forms.py:194
 msgid "Current preliminary round"
 msgstr "crwdns34546:0crwdne34546:0"
 
-#: tournaments/forms.py:187
+#: tournaments/forms.py:195
 msgid "All preliminary rounds have been completed"
 msgstr "crwdns34548:0crwdne34548:0"
 
-#: tournaments/forms.py:199
+#: tournaments/forms.py:207
 #, python-format
 msgid "Current elimination round in <strong>%(category)s</strong> <em>(only if all preliminary rounds have been completed)</em>"
 msgstr "crwdns34550:0%(category)scrwdne34550:0"
 
-#: tournaments/forms.py:205
+#: tournaments/forms.py:213
 #, python-format
 msgid "All elimination rounds in %(category)s have been completed"
 msgstr "crwdns34552:0%(category)scrwdne34552:0"
 
-#: tournaments/forms.py:217
+#: tournaments/forms.py:225
 msgid "If the current round is a preliminary round, this field must be blank."
 msgstr "crwdns34554:0crwdne34554:0"
 
-#: tournaments/forms.py:223
+#: tournaments/forms.py:231
 msgid "If all preliminary rounds have been completed, this field is required."
 msgstr "crwdns34556:0crwdne34556:0"
 
-#: tournaments/mixins.py:108
+#: tournaments/mixins.py:109
 #, python-format
 msgid "You've been redirected to this page because tournament %(tournament)s has no rounds. Please create some before returning to the admin site."
 msgstr "crwdns51438:0%(tournament)scrwdne51438:0"
 
-#: tournaments/mixins.py:116
+#: tournaments/mixins.py:117
 #, python-format
 msgid "There's a problem with the data for the tournament %(tournament)s. Please contact a tab director and ask them to investigate."
 msgstr "crwdns51440:0%(tournament)scrwdne51440:0"
 
-#: tournaments/mixins.py:129
+#: tournaments/mixins.py:130
 msgid "You've been redirected to this page because of a problem with how teams are assigned to sides in a debate."
 msgstr "crwdns33114:0crwdne33114:0"
 
-#: tournaments/mixins.py:136
+#: tournaments/mixins.py:137
 msgid "There's a problem with how teams are assigned to sides in a debate. The tab director will need to resolve this issue."
 msgstr "crwdns33116:0crwdne33116:0"
 
-#: tournaments/mixins.py:231 tournaments/templates/round_complete_check.html:8
+#: tournaments/mixins.py:232 tournaments/templates/round_complete_check.html:8
 #, python-format
 msgid "for %(round)s"
 msgstr "crwdns33118:0%(round)scrwdne33118:0"
 
-#: tournaments/mixins.py:431
+#: tournaments/mixins.py:433
 msgid "Return to Draw"
 msgstr "crwdns35320:0crwdne35320:0"
 
-#: tournaments/models.py:27
+#: tournaments/models.py:26
 msgid "You can't use this as a tournament slug, because it's reserved for a Tabbycat system URL. Please try another one."
 msgstr "crwdns33120:0crwdne33120:0"
 
-#: tournaments/models.py:34 tournaments/models.py:330
+#: tournaments/models.py:33 tournaments/models.py:320
 msgid "name"
 msgstr "crwdns33122:0crwdne33122:0"
 
-#: tournaments/models.py:35
+#: tournaments/models.py:34
 msgid "The full name, e.g. \"Australasian Intervarsity Debating Championships 2016\""
 msgstr "crwdns33124:0crwdne33124:0"
 
-#: tournaments/models.py:37
+#: tournaments/models.py:36
 msgid "short name"
 msgstr "crwdns33126:0crwdne33126:0"
 
-#: tournaments/models.py:38
+#: tournaments/models.py:37
 msgid "The name used in the menu, e.g. \"Australs 2016\""
 msgstr "crwdns33128:0crwdne33128:0"
 
-#: tournaments/models.py:40 tournaments/models.py:324
+#: tournaments/models.py:39 tournaments/models.py:314
 msgid "sequence number"
 msgstr "crwdns33130:0crwdne33130:0"
 
-#: tournaments/models.py:41
+#: tournaments/models.py:40
 msgid "A number that determines the relative order in which tournaments are displayed on the homepage."
 msgstr "crwdns33132:0crwdne33132:0"
 
-#: tournaments/models.py:43
+#: tournaments/models.py:42
 msgid "slug"
 msgstr "crwdns33134:0crwdne33134:0"
 
-#: tournaments/models.py:44
+#: tournaments/models.py:43
 msgid "The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\""
 msgstr "crwdns33136:0crwdne33136:0"
 
-#: tournaments/models.py:45
+#: tournaments/models.py:44
 msgid "active"
 msgstr "crwdns33142:0crwdne33142:0"
 
-#: tournaments/models.py:48 tournaments/models.py:323
+#: tournaments/models.py:47 tournaments/models.py:313
 msgid "tournament"
 msgstr "crwdns33144:0crwdne33144:0"
 
-#: tournaments/models.py:49
+#: tournaments/models.py:48
 msgid "tournaments"
 msgstr "crwdns33146:0crwdne33146:0"
 
-#: tournaments/models.py:295
+#: tournaments/models.py:285
 msgid "Random"
 msgstr "crwdns33148:0crwdne33148:0"
 
-#: tournaments/models.py:296
+#: tournaments/models.py:286
 msgid "Manual"
 msgstr "crwdns33150:0crwdne33150:0"
 
-#: tournaments/models.py:297
+#: tournaments/models.py:287
 msgid "Round-robin"
 msgstr "crwdns33152:0crwdne33152:0"
 
-#: tournaments/models.py:298
+#: tournaments/models.py:288
 msgid "Power-paired"
 msgstr "crwdns33154:0crwdne33154:0"
 
-#: tournaments/models.py:299 tournaments/models.py:306
+#: tournaments/models.py:289 tournaments/models.py:296
 msgid "Elimination"
 msgstr "crwdns33156:0crwdne33156:0"
 
-#: tournaments/models.py:305
+#: tournaments/models.py:295
 msgid "Preliminary"
 msgstr "crwdns33158:0crwdne33158:0"
 
-#: tournaments/models.py:315
+#: tournaments/models.py:305
 msgid "None"
 msgstr "crwdns33160:0crwdne33160:0"
 
-#: tournaments/models.py:316
+#: tournaments/models.py:306
 msgid "Draft"
 msgstr "crwdns33162:0crwdne33162:0"
 
-#: tournaments/models.py:317
+#: tournaments/models.py:307
 msgid "Confirmed"
 msgstr "crwdns33164:0crwdne33164:0"
 
-#: tournaments/models.py:318
+#: tournaments/models.py:308
 msgid "Released"
 msgstr "crwdns33166:0crwdne33166:0"
 
-#: tournaments/models.py:325
+#: tournaments/models.py:315
 msgid "A number that determines the order of the round, should count consecutively from 1 for the first round"
 msgstr "crwdns33168:0crwdne33168:0"
 
-#: tournaments/models.py:327
+#: tournaments/models.py:317
 msgid "completed"
 msgstr "crwdns34564:0crwdne34564:0"
 
-#: tournaments/models.py:328
+#: tournaments/models.py:318
 msgid "True if the round is over, which normally means all results have been entered and confirmed"
 msgstr "crwdns34566:0crwdne34566:0"
 
-#: tournaments/models.py:330
+#: tournaments/models.py:320
 msgid "e.g. \"Round 1\""
 msgstr "crwdns33170:0crwdne33170:0"
 
-#: tournaments/models.py:331
+#: tournaments/models.py:321
 msgid "abbreviation"
 msgstr "crwdns33172:0crwdne33172:0"
 
-#: tournaments/models.py:331
+#: tournaments/models.py:321
 msgid "e.g. \"R1\""
 msgstr "crwdns33174:0crwdne33174:0"
 
-#: tournaments/models.py:333
+#: tournaments/models.py:323
 msgid "stage"
 msgstr "crwdns33176:0crwdne33176:0"
 
-#: tournaments/models.py:334
+#: tournaments/models.py:324
 msgid "Preliminary = inrounds, elimination = outrounds"
 msgstr "crwdns33178:0crwdne33178:0"
 
-#: tournaments/models.py:336
+#: tournaments/models.py:326
 msgid "draw type"
 msgstr "crwdns33180:0crwdne33180:0"
 
-#: tournaments/models.py:337
+#: tournaments/models.py:327
 msgid "Which draw method to use"
 msgstr "crwdns33182:0crwdne33182:0"
 
-#: tournaments/models.py:340
+#: tournaments/models.py:330
 msgid "break category"
 msgstr "crwdns33184:0crwdne33184:0"
 
-#: tournaments/models.py:341
+#: tournaments/models.py:331
 msgid "If elimination round, which break category"
 msgstr "crwdns33186:0crwdne33186:0"
 
-#: tournaments/models.py:344
+#: tournaments/models.py:334
 msgid "draw status"
 msgstr "crwdns33188:0crwdne33188:0"
 
-#: tournaments/models.py:345
+#: tournaments/models.py:335
 msgid "The status of this round's draw"
 msgstr "crwdns33190:0crwdne33190:0"
 
-#: tournaments/models.py:348
+#: tournaments/models.py:338
 msgid "feedback weight"
 msgstr "crwdns33192:0crwdne33192:0"
 
-#: tournaments/models.py:350
+#: tournaments/models.py:340
 #, no-python-format
 msgid "The extent to which each adjudicator's overall score depends on feedback vs their base score. At 0, it is 100% drawn from their base score, at 1 it is 100% drawn from feedback."
 msgstr "crwdns35630:0crwdne35630:0"
 
 #. Translators: A silent round is a round for which results are not disclosed once the round is over.
-#: tournaments/models.py:353
+#: tournaments/models.py:343
 msgid "silent"
 msgstr "crwdns33196:0crwdne33196:0"
 
-#: tournaments/models.py:354
+#: tournaments/models.py:344
 msgid "If marked silent, information about this round (such as its results) will not be shown publicly."
 msgstr "crwdns33198:0crwdne33198:0"
 
-#: tournaments/models.py:356
+#: tournaments/models.py:346
 msgid "motions released"
 msgstr "crwdns33200:0crwdne33200:0"
 
-#: tournaments/models.py:357
+#: tournaments/models.py:347
 msgid "Whether motions will appear on the public website, assuming that feature is turned on"
 msgstr "crwdns33202:0crwdne33202:0"
 
-#: tournaments/models.py:358
+#: tournaments/models.py:348
 msgid "starts at"
 msgstr "crwdns33204:0crwdne33204:0"
 
-#: tournaments/models.py:361
+#: tournaments/models.py:351
 msgid "weight"
 msgstr "crwdns51786:0crwdne51786:0"
 
-#: tournaments/models.py:362
+#: tournaments/models.py:352
 msgid "A factor for the points received in the round. For example, if 2, all points are doubled."
 msgstr "crwdns51788:0crwdne51788:0"
 
-#: tournaments/models.py:365
+#: tournaments/models.py:355
 msgid "round"
 msgstr "crwdns33206:0crwdne33206:0"
 
-#: tournaments/models.py:366
+#: tournaments/models.py:356
 msgid "rounds"
 msgstr "crwdns33208:0crwdne33208:0"
 
-#: tournaments/models.py:379
+#: tournaments/models.py:369
 msgid "A round in the elimination stage must have its draw type set to \"Elimination\"."
 msgstr "crwdns33210:0crwdne33210:0"
 
-#: tournaments/models.py:382
+#: tournaments/models.py:372
 msgid "A round in the preliminary stage cannot have its draw type set to \"Elimination\"."
 msgstr "crwdns33212:0crwdne33212:0"
 
-#: tournaments/models.py:387
+#: tournaments/models.py:377
 msgid "Elimination rounds must have a break category."
 msgstr "crwdns33214:0crwdne33214:0"
 
@@ -411,33 +411,6 @@ msgstr "crwdns33258:0crwdne33258:0"
 #: tournaments/templates/create_tournament.html:70
 msgid "Cancel and go back to the site home page"
 msgstr "crwdns33260:0crwdne33260:0"
-
-#: tournaments/templates/donations.html:4
-#: tournaments/templates/donations.html:5
-msgctxt "title"
-msgid "Donate to Tabbycat"
-msgstr "crwdns33262:0crwdne33262:0"
-
-#: tournaments/templates/donations.html:11
-msgid "Tabbycat is a volunteer effort. Since 2012, its maintainers have spent thousands of hours working on it."
-msgstr "crwdns33264:0crwdne33264:0"
-
-#: tournaments/templates/donations.html:17
-msgid "Donating to Tabbycat helps the maintainers to meet recurring costs and justify our ongoing contributions in responding to support enquiries, keeping the software up to date, fixing bugs, and developing new features."
-msgstr "crwdns33266:0crwdne33266:0"
-
-#: tournaments/templates/donations.html:24
-msgid "We suggest that tournaments budget for a donation of A$1 (Australian dollar) per team. For tournaments run for fundraising or for profit, whether partly or solely, this payment is <strong>required</strong> and your licence to use Tabbycat is conditional upon it. General donations from individuals or organisations are of course also much appreciated."
-msgstr "crwdns33268:0crwdne33268:0"
-
-#: tournaments/templates/donations.html:34
-#, python-format
-msgid "Our suggested donation from %(tournament)s, based on its size, is <strong>A$%(nteams)s</strong>. The easiest way to donate is <a href=\"http://PayPal.Me/tabbycatproject/%(nteams)saud\">via Paypal</a>, but please don’t hesitate to <a href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html#email\">email us</a> if other methods would work better for you. Also, feel free to get in touch if you require an invoice or receipt for the payment."
-msgstr "crwdns33270:0%(tournament)scrwdnd33270:0%(nteams)scrwdnd33270:0%(nteams)scrwdne33270:0"
-
-#: tournaments/templates/donations.html:46
-msgid "The easiest way to donate is <a href=\"http://PayPal.Me/tabbycatproject/0aud\">via Paypal</a>. Please <a href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html\">contact us</a> if you require other options."
-msgstr "crwdns33272:0crwdne33272:0"
 
 #: tournaments/templates/fix_debate_teams.html:6
 msgid "Debate Team Missing"
@@ -560,7 +533,7 @@ msgid "Sides"
 msgstr "crwdns33326:0crwdne33326:0"
 
 #: tournaments/templates/public_tournament_index.html:97
-#: tournaments/templates/public_tournament_index.html:201
+#: tournaments/templates/public_tournament_index.html:203
 #, python-format
 msgid "Draw for %(round)s"
 msgstr "crwdns51458:0%(round)scrwdne51458:0"
@@ -619,15 +592,16 @@ msgstr "crwdns33350:0crwdne33350:0"
 msgid "Feedback Progress"
 msgstr "crwdns33352:0crwdne33352:0"
 
-#: tournaments/templates/public_tournament_index.html:187
-msgid "Enter Ballot"
-msgstr "crwdns33354:0crwdne33354:0"
+#: tournaments/templates/public_tournament_index.html:188
+#, python-format
+msgid "Enter Ballot for %(round)s"
+msgstr "crwdns51970:0%(round)scrwdne51970:0"
 
-#: tournaments/templates/public_tournament_index.html:193
+#: tournaments/templates/public_tournament_index.html:195
 msgid "Enter Feedback"
 msgstr "crwdns33356:0crwdne33356:0"
 
-#: tournaments/templates/public_tournament_index.html:215
+#: tournaments/templates/public_tournament_index.html:217
 msgid "Tournament Staff"
 msgstr "crwdns33360:0crwdne33360:0"
 
@@ -760,17 +734,21 @@ msgstr "crwdns33416:0crwdne33416:0"
 msgid "Send a Test Email"
 msgstr "crwdns34590:0crwdne34590:0"
 
-#: tournaments/templates/site_index.html:69
+#: tournaments/templates/site_index.html:63
+msgid "Import DebateXML"
+msgstr "crwdns51972:0crwdne51972:0"
+
+#: tournaments/templates/site_index.html:72
 #, python-format
 msgid "Get API Token / Change Password (%(user)s)"
 msgstr "crwdns51648:0%(user)scrwdne51648:0"
 
-#: tournaments/templates/site_index.html:73
+#: tournaments/templates/site_index.html:76
 #, python-format
 msgid "Log Out (%(user)s)"
 msgstr "crwdns33420:0%(user)scrwdne33420:0"
 
-#: tournaments/templates/site_index.html:79
+#: tournaments/templates/site_index.html:82
 msgid "Log In as Admin"
 msgstr "crwdns33422:0crwdne33422:0"
 

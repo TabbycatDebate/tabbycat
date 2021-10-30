@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-11-18 21:01\n"
+"POT-Creation-Date: 2020-12-30 01:01-0400\n"
+"PO-Revision-Date: 2020-12-30 05:08\n"
 "Last-Translator: \n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -23,46 +23,42 @@ msgid "Motions"
 msgstr "crwdns30960:0crwdne30960:0"
 
 #: motions/models.py:9
-msgid "sequence number"
-msgstr "crwdns30962:0crwdne30962:0"
-
-#: motions/models.py:10
-msgid "The order in which motions are displayed"
-msgstr "crwdns30964:0crwdne30964:0"
-
-#: motions/models.py:12
 msgid "text"
 msgstr "crwdns30966:0crwdne30966:0"
 
-#: motions/models.py:13
+#: motions/models.py:10
 msgid "The full motion e.g., \"This House would straighten all bananas\""
 msgstr "crwdns30968:0crwdne30968:0"
 
-#: motions/models.py:15
+#: motions/models.py:12
 msgid "reference"
 msgstr "crwdns30970:0crwdne30970:0"
 
-#: motions/models.py:16
+#: motions/models.py:13
 msgid "Shortcode for the motion, e.g., \"Bananas\""
 msgstr "crwdns30972:0crwdne30972:0"
 
-#: motions/models.py:18
+#: motions/models.py:15
 msgid "info slide"
 msgstr "crwdns30974:0crwdne30974:0"
 
-#: motions/models.py:19
+#: motions/models.py:16
 msgid "The information slide for this topic; if it has one"
 msgstr "crwdns30976:0crwdne30976:0"
 
-#: motions/models.py:21
-msgid "round"
-msgstr "crwdns30982:0crwdne30982:0"
+#: motions/models.py:19
+msgid "tournament"
+msgstr "crwdns51820:0crwdne51820:0"
 
-#: motions/models.py:25 motions/models.py:37
+#: motions/models.py:21
+msgid "rounds"
+msgstr "crwdns51822:0crwdne51822:0"
+
+#: motions/models.py:24 motions/models.py:37 motions/models.py:56
 msgid "motion"
 msgstr "crwdns30986:0crwdne30986:0"
 
-#: motions/models.py:26
+#: motions/models.py:25
 msgid "motions"
 msgstr "crwdns30988:0crwdne30988:0"
 
@@ -86,68 +82,80 @@ msgstr "crwdns30996:0crwdne30996:0"
 msgid "debate team motion preferences"
 msgstr "crwdns30998:0crwdne30998:0"
 
-#: motions/statistics.py:88
+#: motions/models.py:58
+msgid "round"
+msgstr "crwdns30982:0crwdne30982:0"
+
+#: motions/models.py:61
+msgid "sequence number"
+msgstr "crwdns30962:0crwdne30962:0"
+
+#: motions/models.py:62
+msgid "The order in which motions are displayed"
+msgstr "crwdns30964:0crwdne30964:0"
+
+#: motions/models.py:67
+msgid "round motion"
+msgstr "crwdns51824:0crwdne51824:0"
+
+#: motions/models.py:68
+msgid "round motions"
+msgstr "crwdns51826:0crwdne51826:0"
+
+#: motions/statistics.py:86
 msgid "extremely strong evidence"
 msgstr "crwdns31000:0crwdne31000:0"
 
-#: motions/statistics.py:89
+#: motions/statistics.py:87
 msgid "strong evidence"
 msgstr "crwdns31002:0crwdne31002:0"
 
-#: motions/statistics.py:90
+#: motions/statistics.py:88
 msgid "moderate evidence"
 msgstr "crwdns31004:0crwdne31004:0"
 
-#: motions/statistics.py:91
+#: motions/statistics.py:89
 msgid "weak evidence"
 msgstr "crwdns31006:0crwdne31006:0"
 
-#: motions/statistics.py:92
+#: motions/statistics.py:90
 msgid "very weak evidence"
 msgstr "crwdns31008:0crwdne31008:0"
 
-#: motions/statistics.py:93
+#: motions/statistics.py:91
 msgid "extremely weak evidence"
 msgstr "crwdns31010:0crwdne31010:0"
 
-#: motions/statistics.py:116
+#: motions/statistics.py:114
 msgid "balance inconclusive"
 msgstr "crwdns31012:0crwdne31012:0"
 
-#: motions/statistics.py:117
+#: motions/statistics.py:115
 msgid "too few debates to get a meaningful statistic"
 msgstr "crwdns31014:0crwdne31014:0"
 
-#: motions/statistics.py:125
+#: motions/statistics.py:123
 #, python-format
 msgid "imbalanced at %(level)s level"
 msgstr "crwdns31016:0%(level)scrwdne31016:0"
 
-#: motions/statistics.py:126
+#: motions/statistics.py:124
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing %(evidence)s to suggest that this motion was imbalanced — at a %(level)s level of significance."
 msgstr "crwdns31018:0%(chisq)crwdnd31018:0%(evidence)scrwdnd31018:0%(level)scrwdne31018:0"
 
-#: motions/statistics.py:131
+#: motions/statistics.py:129
 msgid "probably balanced"
 msgstr "crwdns31020:0crwdne31020:0"
 
-#: motions/statistics.py:132
+#: motions/statistics.py:130
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that this motion was imbalanced at any level of significance."
 msgstr "crwdns31022:0%(chisq)crwdne31022:0"
 
-#: motions/templates/motion_statistics.html:4
-#: motions/templates/motion_statistics.html:5 motions/views.py:165
-msgid "Motion Statistics"
-msgstr "crwdns31030:0crwdne31030:0"
-
-#: motions/templates/motion_statistics.html:12
-msgid "The results data displayed here is presented without tests for statistical significance. Correlations should not be automatically considered reliable; particularly at small tournaments and during elimination rounds."
-msgstr "crwdns34140:0crwdne34140:0"
-
-#: motions/templates/motion_statistics.html:39
-#: motions/templates/public_motions.html:31
+#: motions/templates/motion_global_statistics.html:22
+#: motions/templates/motion_round_statistics.html:31
+#: motions/templates/public_motions.html:32
 msgid "View Info Slide"
 msgstr "crwdns31032:0crwdne31032:0"
 
@@ -277,7 +285,19 @@ msgstr[1] "crwdns31080:5crwdne31080:5"
 msgid "Display Draw"
 msgstr "crwdns31082:0crwdne31082:0"
 
-#: motions/templates/motions_edit.html:55
+#: motions/templates/motions_edit.html:28
+msgid "This will replace all existing motions for this round. The motions themselves will still be in the database."
+msgstr "crwdns51828:0crwdne51828:0"
+
+#: motions/templates/motions_edit.html:30
+msgid "Reuse Motions from Last Round"
+msgstr "crwdns51830:0crwdne51830:0"
+
+#: motions/templates/motions_edit.html:35
+msgid "Use Existing Motions"
+msgstr "crwdns51832:0crwdne51832:0"
+
+#: motions/templates/motions_edit.html:74
 msgid "Save Motion"
 msgid_plural "Save Motions"
 msgstr[0] "crwdns31086:1crwdne31086:1"
@@ -287,15 +307,15 @@ msgstr[1] "crwdns31086:5crwdne31086:5"
 msgid "Info Slide"
 msgstr "crwdns31088:0crwdne31088:0"
 
-#: motions/templates/public_motions.html:39
+#: motions/templates/public_motions.html:41
 msgid "There are no motions available for this round."
 msgstr "crwdns31106:0crwdne31106:0"
 
-#: motions/templates/public_motions.html:45
+#: motions/templates/public_motions.html:47
 msgid "The motions for this round have not been released."
 msgstr "crwdns31108:0crwdne31108:0"
 
-#: motions/templates/public_motions.html:50
+#: motions/templates/public_motions.html:52
 msgid "The motion for this round has not been released."
 msgstr "crwdns31110:0crwdne31110:0"
 
@@ -317,33 +337,44 @@ msgstr[1] "crwdns51302:5%(round)scrwdne51302:5"
 msgid "There are no motions for this round entered into Tabbycat."
 msgstr "crwdns31116:0crwdne31116:0"
 
-#: motions/views.py:87
+#: motions/views.py:91
 msgid "The motion has been saved."
 msgstr "crwdns31118:0crwdne31118:0"
 
-#: motions/views.py:89
+#: motions/views.py:93
 #, python-format
 msgid "%(count)d motion has been saved."
 msgid_plural "%(count)d motions have been saved."
 msgstr[0] "crwdns31120:1%(count)dcrwdne31120:1"
 msgstr[1] "crwdns31120:5%(count)dcrwdne31120:5"
 
-#: motions/views.py:94
+#: motions/views.py:97
 #, python-format
 msgid "%(count)d motion has been deleted."
 msgid_plural "%(count)d motions have been deleted."
 msgstr[0] "crwdns31122:1%(count)dcrwdne31122:1"
 msgstr[1] "crwdns31122:5%(count)dcrwdne31122:5"
 
-#: motions/views.py:118
+#: motions/views.py:140
+#, python-format
+msgid "Reused the motion from the previous round."
+msgid_plural "Reused the %(count)d motions from the previous round."
+msgstr[0] "crwdns51856:1crwdne51856:1"
+msgstr[1] "crwdns51856:5%(count)dcrwdne51856:5"
+
+#: motions/views.py:164
 msgid "Released the motion(s)."
 msgstr "crwdns31124:0crwdne31124:0"
 
-#: motions/views.py:125
+#: motions/views.py:171
 msgid "Unreleased the motion(s)."
 msgstr "crwdns31126:0crwdne31126:0"
 
-#: motions/views.py:149
+#: motions/views.py:195
 msgid "Round Motions"
 msgstr "crwdns34158:0crwdne34158:0"
+
+#: motions/views.py:209
+msgid "Motion Statistics"
+msgstr "crwdns31030:0crwdne31030:0"
 

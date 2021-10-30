@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-23 04:55\n"
+"PO-Revision-Date: 2021-05-20 06:45\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "MIME-Version: 1.0\n"
@@ -20,167 +20,167 @@ msgstr ""
 
 #: ../../guide/tournament-logistics.rst:5
 msgid "Tournament Logistics"
-msgstr ""
+msgstr "Logistik Turnamen"
 
 #: ../../guide/tournament-logistics.rst:7
 msgid "Unlike the rest of our documentation, this section does not deal with particular features or technical concerns with Tabbycat itself. Instead it is an attempt to outline the logistics of tab direction and aims to be of general relevance for people running major tournaments. At present, it is organised by the various ‘stages' of tabbing a tournament, and most of the content takes the form of check-lists or comments designed to highlight and provide guidance on common issues."
-msgstr ""
+msgstr "Tidak seperti dokumentasi kami lainnya, bagian ini tidak membahas fitur tertentu atau masalah teknis dengan Tabbycat itu sendiri. Melainkan, upaya untuk menguraikan logistik arah tabulasi dan bertujuan agar menjadi relevan secara umum bagi orang-orang yang menjalankan turnamen besar. Saat ini, ini diatur oleh berbagai 'tahapan' dari menabulasi sebuah turnamen, dan sebagian besar konten berbentuk daftar-periksa atau komentar yang dirancang untuk menyoroti dan memberikan panduan tentang masalah umum."
 
 #: ../../guide/tournament-logistics.rst:9
 msgid "Whilst it aims for general relevance, we should note that this guide is relatively opinionated and mostly written from the perspective of people whose primary experience is tabbing at Australasian tournaments using Tabbycat. That said, we welcome feedback and additions that can account for different format and regional considerations. In the future, if the guide becomes more general and more extensive, it could be spun off into a separate project."
-msgstr ""
+msgstr "Meskipun bertujuan untuk relevansi umum, kami mesti tegaskan bahwa panduan ini relatif beropini dan sebagian besar ditulis dari perspektif orang-orang yang pengalaman utamanya adalah menabulasi di turnamen Australasia dengan Tabbycat. Karena itu, kami menyambut umpan balik dan tambahan yang dapat menjelaskan format yang berbeda dan pertimbangan regional. Di masa mendatang, jika panduannya menjadi lebih umum dan lebih luas, maka dapat dipisahkan menjadi proyek yang terpisah."
 
 #: ../../guide/tournament-logistics.rst:11
 msgid "As with the rest of our documentation, this page is source-available and we welcome :ref:`feedback and contributions <contributing>`. Note also that we've formatted this guide a single page to reduce clutter, but the sub-sections in the sidebar can be used to help navigate across sections."
-msgstr ""
+msgstr "Seperti dokumentasi kami lainnya, halaman ini sumber-tersedia dan kami menyambut :ref:`umpan balik dan kontribusi <contributing>`. Perhatikan juga bahwa kami telah memformat panduan ini menjadi satu halaman untuk mengurangi kepadatan, tetapi sub-bagian di sidebar dapat juga digunakan untuk membantu menavigasi lintas bagian."
 
 #: ../../guide/tournament-logistics.rst:14
 msgid "Planning and Preparation"
-msgstr ""
+msgstr "Perencanaan dan Persiapan"
 
 #: ../../guide/tournament-logistics.rst:16
 msgid "This section aims to outline concerns that occur in the months before the tournament: after you have agreed to help with tabbing and while the organising committee and adjudication core are deciding how they want to run key processes such as registration and feedback. It is organised in terms of who you should coordinate with in order to plan for a well-tabbed tournament."
-msgstr ""
+msgstr "Bagian ini bertujuan untuk menguraikan masalah yang terjadi pada bulan-bulan sebelum turnamen: setelah anda setuju untuk membantu tabbing dan selama panitia penyelenggara dan juri inti sedang memutuskan bagaimana mereka ingin menjalankan proses utama seperti registrasi dan umpan balik. Ini diatur dalam hal, dengan siapa anda harus berkoordinasi agar dapat merencanakan turnamen yang telah ditabulasi dengan baik."
 
 #: ../../guide/tournament-logistics.rst:19
 msgid "General Notes"
-msgstr ""
+msgstr "Catatan Umum"
 
 #: ../../guide/tournament-logistics.rst:21
 msgid "You should avoid being the sole person responsible for that tab unless it is a small tournament. There are many cases where you want to be in several places at once and the easiest way to accommodate that is by having co-directors or trusted assistants. Few tab decisions require a single source of authority; it is far better to have multiple people available to share responsibilities around."
-msgstr ""
+msgstr "Anda harus menghindari jadi satu-satunya orang yang bertanggung jawab atas tabulasi tersebut kecuali jika sebuah turnamen kecil. Ada banyak kasus di mana anda ingin berada di beberapa tempat sekaligus dan cara termudah untuk mengakomodasi itu adalah dengan memiliki rekan direktur atau asisten tepercaya. Beberapa keputusan tab membutuhkan satu sumber otoritas; jauh lebih baik untuk punya banyak orang tersedia agar bisa berbagi tanggung jawab."
 
 #: ../../guide/tournament-logistics.rst:23
 msgid "In a similar manner, it is worth considering how you can use the tournament to help train other people. Typically, knowledge of tabbing is concentrated in relatively few people and gained mostly through on-the-ground experience; meaning that every tournament should be approached as rare opportunity to help spread knowledge about tabbing more widely in a circuit. Consider reaching out to institutions or the tournament as a whole to see if they have anyone who would be interested in helping out."
-msgstr ""
+msgstr "Dengan cara yang sama, ada baiknya mempertimbangkan bagaimana anda dapat menggunakan turnamen untuk membantu melatih orang lain. Biasanya, pengetahuan tentang tabulasi terkonsentrasi pada relatif sedikit orang dan sebagian besar diperoleh melalui pengalaman di lapangan; Artinya, setiap turnamen harus ditangani sebagai kesempatan langka untuk membantu menyebarkan pengetahuan tentang tabulasi secara lebih luas di sebuah sirkuit. Pertimbangkan menghubungi institusi atau turnamen secara keseluruhan untuk mengetahui apakah mereka memiliki seseorang yang tertarik untuk membantu."
 
 #: ../../guide/tournament-logistics.rst:26
 msgid "Convenors"
-msgstr ""
+msgstr "Penyelenggara"
 
 #: ../../guide/tournament-logistics.rst:28
 msgid "It might sound obvious but it will pay to have a very thorough conversation about the tab process (more or less the contents of this document) with the convenors a few months out from the tournament. Do this even if you know the convenors to be knowledgeable or experienced debaters. Key concerns are:"
-msgstr ""
+msgstr "Ini mungkin terdengar jelas tapi akan bermanfaat untuk melakukan percakapan yang sangat menyeluruh tentang proses tabulasi (kurang lebih isi dokumen ini) dengan penyelenggara beberapa bulan setelah turnamen. Lakukan ini bahkan jika anda tahu penyelenggara nya ialah pendebat yang berpengetahuan atau berpengalaman. Perhatian utama adalah:"
 
 #: ../../guide/tournament-logistics.rst:32
 msgid "Whether internet access will be available and whether participants can be presumed to have smart phones. This has an obvious impact on how online feedback, ballots, and draw release is done. Note that Eduroam is not necessarily a reliable guarantee of access; many participants will come from universities who don't have access to it or will need to follow a setup process that is onerous or requires them to be at their home institution."
-msgstr ""
+msgstr "Apakah akses internet akan tersedia dan apakah peserta dapat dianggap mempunyai smartphone. Ini berdampak jelas pada bagaimana umpan balik, surat suara, dan rilis undian dilakukan secara daring. Perhatikan bahwa Eduroam belum tentu merupakan jaminan akses yang andal; banyak peserta akan datang dari universitas yang tidak punya akses ke sana atau harus mengikuti proses penyiapan yang berat atau mengharuskan mereka berada di institusi asal mereka."
 
 #: ../../guide/tournament-logistics.rst:33
 msgid "What kind of room is the tab room going to be? Is it possible to optimize its placement when the bookings for rooms are made? Key details include: How large is it? Does it have a sufficient amount of desk space (for data entry)? Does it have a good projector (for allocations)?"
-msgstr ""
+msgstr "Ruangan seperti apa ruang tabulasi itu? Apakah mungkin untuk mengoptimalkan penempatannya saat pemesanan ruang telah dibuat? Detail utamanya meliputi: Seberapa besar? Apakah ada cukup ruang meja (untuk entri data)? Apakah memiliki proyektor yang bagus (untuk alokasi)?"
 
 #: ../../guide/tournament-logistics.rst:34
 msgid "If they have the resources, having an adjacent room available for just the adjudication core to use can also be useful. While you want to work closely with the adjudication core, they may want to discuss sensitive information (motions, equity) in a space without volunteers present; or they might at times get in the way of things, such as by eating lunch in the middle of a frenetic ballot entry process."
-msgstr ""
+msgstr "Jika memiliki sumber daya, dengan ruang yang berdekatan yang tersedia hanya untuk juri inti bisa juga berguna. Meskipun anda ingin bekerja sama secara dekat dengan juri inti, mereka mungkin ingin mendiskusikan informasi sensitif (mosi, ekuitas) di ruang tanpa kehadiran sukarelawan; atau terkadang mereka menghalangi berbagai hal, seperti sedang makan siang di tengah proses masuk surat suara yang ingar-bingar."
 
 #: ../../guide/tournament-logistics.rst:35
 msgid "Ensure that plans are made for food to be brought to tab room. Otherwise you will starve and the adjudication core will swan off to lunch. Having regular access to caffeine can also be similarly essential to some adjudication and tab teams."
-msgstr ""
+msgstr "Pastikan bahwa rencana dibuat untuk makanan yang akan dibawa ke ruang tabulasi. Jika tidak, anda akan kelaparan dan juri inti akan pergi makan siang. Memiliki akses reguler ke kafein juga bisa menjadi hal yang sama penting untuk beberapa tim juri dan tabulasi."
 
 #: ../../guide/tournament-logistics.rst:36
 msgid "What kind of printers will be available? Can the tournament buy/borrow one? This is obviously a key consideration for pre-printed ballots. Also try and ensure there are back-up printing options if possible. Clearly stipulate your need for ink and paper; and try and opt for a black/white laserjet, over an inkjet, if possible."
-msgstr ""
+msgstr "Jenis printer apa yang akan tersedia? Bisakah turnamen membeli/meminjam satu? Ini jelas merupakan pertimbangan utama untuk surat suara yang sudah dicetak sebelumnya. Coba juga dan pastikan ada opsi pencetakan cadangan kalau mungkin. Tetapkan dengan jelas kebutuhan anda akan tinta dan kertas; dan coba dan pilih laserjet hitam/putih, di atas inkjet, kalau mungkin."
 
 #: ../../guide/tournament-logistics.rst:37
 msgid "What kind of volunteers will be available? How many, and what is their experience level? As a very broad recommendation, you probably want around 1 volunteer for every 10 rooms, assuming volunteers are performing a dual role as data-enterers and ballot-collectors."
-msgstr ""
+msgstr "Relawan seperti apa yang akan tersedia? Berapa banyak, dan bagaimana tingkat pengalaman mereka? Sebagai rekomendasi yang sangat luas, anda mungkin menginginkan sekitar 1 relawan untuk setiap 10 ruangan, dengan asumsi relawan menjalankan peran ganda sebagai pemasuk data dan pengumpul suara."
 
 #: ../../guide/tournament-logistics.rst:38
 msgid "Will the tournament make a donation to whoever maintains the tabbing software you are using? Depending on the license of your tabbing software and the nature of your tournament (for profit vs not for profit) this may be required. Also, if your tab is self-hosted or independently hosted (such as how Tabbycat is generally deployed on Heroku) accounting officers should also be aware that there will be some costs associated with hosting the tab."
-msgstr ""
+msgstr "Akankah turnamen memberikan sumbangan kepada siapa pun yang mengelola perangkat lunak tabulasi yang anda gunakan? Bergantung pada lisensi perangkat lunak tabulasi anda dan sifat turnamen anda (untuk untung vs nirlaba) ini mungkin diperlukan. Selain itu, jika tabulasi anda dihosting sendiri atau dihosting secara independen (seperti bagaimana Tabbycat umumnya diterapkan di Heroku), petugas akuntansi juga harus mengetahui bahwa akan ada beberapa biaya yang terkait dengan hosting tabulasi tersebut."
 
 #: ../../guide/tournament-logistics.rst:39
 msgid "You should also ensure that people helping with the tab are fairly compensated for their flights, registration, etc and that any volunteers are invited along to socials and/or given some other recompense."
-msgstr ""
+msgstr "Anda juga harus memastikan bahwa orang yang membantu tabulasi mendapatkan kompensasi yang adil untuk penerbangan, registrasi, dll. Dan setiap sukarelawan diundang ke acara sosial dan/atau diberi imbalan lain."
 
 #: ../../guide/tournament-logistics.rst:40
 msgid "Will Swing teams be available? You should plan to have at least one more than you need. For example, with 39 teams, you should have both an 40th swing team to fill in the draw, and the option to easily assemble an 41st swing team in case a team goes missing. At very large tournaments (say over 150 teams) you should plan for even more swing team capacity — it's not unheard of for say three teams to vanish all in a single round. In these cases, you should try and ensure that the swing teams are always ready to go — i.e. that that they are pre-formed, you have a clear communication channel with them, and that they distributed/waiting near the debating rooms so they can fill in at a moment's notice (often you will only find out that teams are missing right as debates are scheduled to start)."
-msgstr ""
+msgstr "Akankah tim Swing tersedia? Anda mesti merencanakan untuk setidaknya memiliki satu lebih dari yang anda butuhkan. Misalnya, dengan 39 tim, anda harus memiliki tim swing ke-40 untuk mengisi undian, dan opsi agar dapat dengan mudah mengumpulkan tim swing ke-41 jika tim hilang. Pada turnamen yang sangat besar (katakanlah lebih dari 150 tim) Anda harus merencanakan kapasitas tim swing yang lebih besar - tidak pernah terdengar bahwa tiga tim menghilang semuanya dalam satu ronde. Dalam kasus ini, anda harus mencoba dan memastikan bahwa tim swing selalu siap - bahwa mereka telah dibentuk sebelumnya, anda memiliki saluran komunikasi yang jelas dengan mereka, dan bahwa mereka didistribusikan/menunggu di dekat ruang debat sehingga mereka dapat mengisi di saat itu juga (kerap kali anda akan tahu bahwa tim hilang tepat saat debat dijadwalkan untuk dimulai)."
 
 #: ../../guide/tournament-logistics.rst:41
 msgid "How will critical information be communicated to participants? Consider that in general, Facebook announcements do not reach many people, although paying to boost the posts is often a very cheap way of dramatically raising their effectiveness. In particular also ensure or check how you manage to get in touch with teams or adjudicators who go missing: will they have reliable phone numbers? Can you get a list of institutional reps who can be reliably called? You want to have processes in place for chasing up adjudicators who do things such as make scoring mistakes as soon as possible in order to minimise delays."
-msgstr ""
+msgstr "Bagaimana informasi penting akan dikomunikasikan kepada peserta? Pertimbangkan bahwa secara umum, pengumuman Facebook tidak menjangkau banyak orang, meskipun membayar untuk menyebarkan posting seringkali sebuah cara yang sangat murah untuk meningkatkan efektivitasnya secara dramatis. Khususnya, pastikan juga atau periksa bagaimana anda berhasil menghubungi tim atau juri yang hilang: apa mereka mempunyai nomor telepon yang dapat diandalkan? Bisakah anda mendapatkan daftar perwakilan institusional yang dapat dihubungi dengan andal? Anda akan ingin memiliki proses untuk mengejar juri yang mungkin membuat kesalahan penilaian secepat mungkin untuk meminimalkan penundaan."
 
 #: ../../guide/tournament-logistics.rst:42
 msgid "How will critical information be shared between the tab team, adjudication core, and logistics/convening teams? For smaller/medium sized tournaments a group chat augmented by phone calls (assuming everyone knows everyone else's number) can be sufficient, but even then, you need to ensure that any critical information conveyed privately (i.e. in a call or in person) is conveyed back to the group channel. At very large tournaments (or if you have the resources) walkie-talkies are an excellent way to manage communication — just make sure you have (ahead of time) reserve the different channels to a distinct and known purpose (i.e. general discussion; just the tab team & adjudication core; just convenors)."
-msgstr ""
+msgstr "Bagaimana informasi penting akan dibagikan antara tim tabulasi, juri inti, dan tim logistik/penyelenggara? Untuk turnamen berukuran lebih kecil/sedang, obrolan grup yang ditambah dengan panggilan telepon (dengan asumsi semua orang tahu nomor orang lain) dapat mencukupi, tetapi meskipun demikian, anda perlu pastikan bahwa informasi penting apa pun yang disampaikan secara pribadi (yaitu lewat panggilan atau secara langsung) disampaikan kembali ke saluran grup. Pada turnamen yang sangat besar (atau jika anda memiliki sumber daya) walkie-talkie adalah cara terbaik untuk mengelola komunikasi - pastikan anda (sebelumnya) memesan saluran yang berbeda untuk tujuan yang berbeda dan yang diketahui (yaitu diskusi umum; hanya tim tabulasi & juri inti; hanya penyelenggara)."
 
 #: ../../guide/tournament-logistics.rst:43
 msgid "As part of this it is ideal if the organising committees can procure local SIM cards for members of the tab team and adjudication core who are not local. These should be relatively generous in their plans — you don't want to worry about running out of minutes or data if on a critical call or using a hotspot to make critical allocation adjustments."
-msgstr ""
+msgstr "Sebagai bagian dari ini, idealnya bila panitia dapat menyediakan kartu SIM lokal untuk anggota tim tabulasi dan juri inti yang tidak lokal. Ini harus relatif murah dalam perencanaannya - Anda tidak ingin khawatir kehabisan menit atau data jika dalam panggilan kritis atau menggunakan hotspot untuk penyesuaian alokasi yang penting."
 
 #: ../../guide/tournament-logistics.rst:44
 msgid "At major tournaments you want to arrive at least a day before check-in; and ideally whenever it is that the adjudication core is arriving for their own preparation."
-msgstr ""
+msgstr "Di turnamen besar, anda ingin datang setidaknya sehari sebelum cek-in; dan idealnya setiap kali juri inti tiba untuk persiapan mereka sendiri."
 
 #: ../../guide/tournament-logistics.rst:47
 msgid "Registration"
-msgstr ""
+msgstr "Registrasi"
 
 #: ../../guide/tournament-logistics.rst:49
 msgid "Having effective registration systems and processes is one of the most important aspects of preparing to tab a large tournament. Bad registration data *will* make setting up a tab extremely painful and introduces the chance for mistakes or inconsistencies in tab data that will only come to light in the first round. As such:"
-msgstr ""
+msgstr "Memiliki sistem dan proses registrasi yang efektif ialah salah satu aspek terpenting dalam persiapan untuk mengikuti turnamen besar. Data registrasi yang buruk *akan* membuat pengaturan tabulasi sangat menyusahkan dan menimbulkan kemungkinan kesalahan atau ketidakkonsistenan dalam data tabulasi yang hanya akan terungkap di ronde pertama. Dengan demikian:"
 
 #: ../../guide/tournament-logistics.rst:53
 msgid "You should check in with the registration team and see what they plan to do as soon as possible after being brought on-board. As part of this you should make it clear that you should be consulted on any decisions they make about what data to collect, when to collect it, and how to collect it."
-msgstr ""
+msgstr "Anda harus cek-in dengan tim registrasi dan melihat apa yang mereka rencanakan secepat mungkin setelah bergabung. Sebagai bagian dari ini, anda harus jelaskan bahwa anda harus diberi tahu tentang keputusan apa pun yang mereka buat mengenai data apa yang harus dikumpulkan, kapan harus mengumpulkannya, dan bagaimana cara mengumpulkannya."
 
 #: ../../guide/tournament-logistics.rst:54
 msgid "Registration data should be collected into a shared and live-updating source, such as a Google Sheet. There should be as few canonical sources (ideally one) of data as possible; i.e. there should be a single sheet for individual details, a single sheet for team details, etc; and these should be maintained all the way through to check-in. For both you, and the registration team, having multiple conflicting or outdated copies of data will lead to errors. However, for the registration team these errors can usually be easily sorted out in person (at check-in) but for you that information always needs to be reliable and up to date otherwise what is imported into the tab cannot be trusted."
-msgstr ""
+msgstr "Data registrasi harus dikumpulkan ke dalam sumber yang dibagikan dan diperbarui secara langsung, seperti Google Sheet. Harus ada sesedikit mungkin data sumber kanonik (idealnya satu); yaitu, harus ada satu lembar untuk detail individu, satu lembar untuk detail tim, dll; dan ini harus dijaga hingga cek-in. Bagi anda, dan tim registrasi, memiliki beberapa salinan data yang bentrok atau kedaluwarsa akan menyebabkan kesalahan. Namun, untuk tim registrasi kesalahan ini biasanya dapat diselesaikandengan mudah secara langsung (saat ceck-in) tapi bagi anda informasi itu harus selalu dapat diandalkan dan mutakhir, kalau tidak, apa yang diimpor ke tabulasi tidak dapat dipercaya."
 
 #: ../../guide/tournament-logistics.rst:56
 msgid "At this point our recommendation is to, in most cases, not use specialised registration systems as they are somewhat less intuitive and less flexible than setting up good Google Forms/Sheets."
-msgstr ""
+msgstr "Pada titik ini, rekomendasi kami ialah, untuk banyak kasus, tidak menggunakan sistem registrasi khusus karena sistem tersebut kurang intuitif dan kurang fleksibel daripada menyiapkan Google Formulir/Sheets yang baik."
 
 #: ../../guide/tournament-logistics.rst:58
 msgid "If, for whatever reason, the registration team are not able to give you 'live' access to the data they have on hand, make sure they send you copies of it (even if it is incomplete) well before you need it to setup the tab itself. You want to be able to verify what data is actually being collected and how it is formatted well in advance."
-msgstr ""
+msgstr "Jika, karena alasan tertentu, tim registrasi tidak bisa memberi anda akses 'langsung' ke data yang mereka miliki, pastikan mereka mengirimkan salinannya (meskipun tidak lengkap) sebelum anda memerlukannya untuk menyiapkan tabulasi itu sendiri. Anda ingin dapat memverifikasi data apa yang sebenarnya dikumpulkan dan bagaimana data diformat dengan baik dahulu."
 
 #: ../../guide/tournament-logistics.rst:60
 msgid "You should have access to *all* of the data collected; often registration teams will make (false) assumptions about what you do or do not need. It is better to have everything and then selectively filter out what is not relevant to the tab."
-msgstr ""
+msgstr "Anda harus punya akses ke *semua* data yang dikumpulkan; sering kali tim registrasi akan membuat asumsi (salah) tentang apa yang anda butuhkan atau tidak butuhkan. Lebih baik memiliki semuanya dan kemudian secara selektif menyaring apa yang tidak relevan dengan tabulasi."
 
 #: ../../guide/tournament-logistics.rst:61
 msgid "It is critical that the registration team should check in with you before setting up forms asking for information. Every additional time that registration asks for data there will be less and less participation in the process, so you should aim to gather all that you need at the first opportunity; typically during the canonical individual registration phase. Particular information that should not be overlooked for tab purposes:"
-msgstr ""
+msgstr "Tim registrasi harus menghubungi anda sebelum menyiapkan formulir yang butuh informasi. Tiap tambahan waktu saat registrasi meminta data, partisipasi akan semakin berkurang seiring proses itu, jadi anda harus berusaha mengumpulkan semua yang anda butuhkan pada kesempatan pertama; biasanya selama fase registrasi individu kanonik. Informasi khusus yang tidak boleh diabaikan demi tujuan tabulasi:"
 
 #: ../../guide/tournament-logistics.rst:63
 msgid "Individual registration should ask whether a participant is a speaker or an adjudicator."
-msgstr ""
+msgstr "Registrasi individu harus menanyakan apakah peserta seorang pembicara atau seorang juri."
 
 #: ../../guide/tournament-logistics.rst:64
 msgid "If that person is a speaker it should ask for their team name/number (reconciling these later is painful)."
-msgstr ""
+msgstr "Jika orang tersebut adalah seorang pembicara, ia harus menanyakan nama/nomor tim mereka (jika salah menyesuaikannya nanti akan sangat sulit)."
 
 #: ../../guide/tournament-logistics.rst:65
 msgid "Individual registration should ask for any accessibility requirements of both adjudicators and speakers."
-msgstr ""
+msgstr "Registrasi individu harus menanyakan persyaratan aksesibilitas apapun dari juri dan pembicara."
 
 #: ../../guide/tournament-logistics.rst:66
 msgid "Individual registration should ask for the previous institutions of both adjudicators and speakers."
-msgstr ""
+msgstr "Registrasi individu harus menanyakan institusi juri dan pembicara sebelumnya."
 
 #: ../../guide/tournament-logistics.rst:67
 msgid "Individual registration should ask for the email addresses of all participants."
-msgstr ""
+msgstr "Registrasi individu harus menanyakan alamat email semua peserta."
 
 #: ../../guide/tournament-logistics.rst:68
 msgid "Individual registration should ask for the phone numbers of adjudicators."
-msgstr ""
+msgstr "Registrasi individu harus menanyakan nomor telepon juri."
 
 #: ../../guide/tournament-logistics.rst:69
 msgid "Individual registration should ask for the gender identity of both adjudicators and speakers. Even if you are not *planning* on using this to inform processes, such as adjudicator allocations, you want it on hand in case plans change."
-msgstr ""
+msgstr "Registrasi individu harus menanyakan identitas kelamin dari juri dan pembicara. Meskipun anda tidak *berencana* menggunakan ini untuk menginformasikan proses, seperti alokasi juri, anda akan tetap ingin berjaga-jaga jika ada perubahan rencana."
 
 #: ../../guide/tournament-logistics.rst:71
 msgid "Independent adjudicators and the adjudication core should follow normal registration procedures. Having them not go through the normal process makes it easy to overlook their data or not get a complete picture of it. For example, adjudication core members might forget to nominate conflicts, or neglect to provide their previous institutions."
-msgstr ""
+msgstr "Juri independen dan juri inti harus mengikuti prosedur registrasi normal. Tidak melalui proses biasa akan membuat data mereka mudah terabaikan atau tidak mendapatkan gambaran lengkapnya. Misalnya, anggota juri inti mungkin lupa untuk menominasi konflik, atau lalai menyediakan institusi mereka sebelumnya."
 
 #: ../../guide/tournament-logistics.rst:72
 msgid "You should confirm how the registration team plans to manage how people check-in to the accommodation in particular. Check-in is when issues with registration data come to light and it is vital that these changes are noted and recorded. Some form of validation of registration data *must* occur at check-in — in particular all adjudicators should be (individually) verified as present and all members of a team should confirm their presence along with their team's name/number and speakers."
-msgstr ""
+msgstr "Anda mesti mengonfirmasi bagaimana registrasi tim berencana untuk mengatur bagaimana orang-orang cek-in ke akomodasi secara khusus. Cek-in ialah ketika masalah dengan data registrasi terungkap dan sangat penting untuk mencatat dan merekam perubahan ini. Beberapa bentuk validasi data registrasi *harus* dilakukan pada saat cek-in - khususnya semua juri harus (secara individu) diverifikasi sebagai hadir dan semua anggota tim harus mengkonfirmasi kehadiran mereka bersama dengan nama/nomor dan pembicara tim mereka."
 
 #: ../../guide/tournament-logistics.rst:73
 msgid "After check-in you need to have a definitive list of who is physically present at the tournament so you can run a first-round draw with confidence. Registration must know this and have processes in place for recording people individually as they arrive, and for that data to filter back to you."
@@ -1154,7 +1154,7 @@ msgstr ""
 
 #: ../../guide/tournament-logistics.rst:440
 msgid "Breaks and Break Rounds"
-msgstr ""
+msgstr "Istirahat dan Babak Istirahat"
 
 #: ../../guide/tournament-logistics.rst:443
 msgid "Generating the adjudicator's break"

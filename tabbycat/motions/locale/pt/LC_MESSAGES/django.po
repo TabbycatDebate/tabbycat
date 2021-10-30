@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-07-05 17:04\n"
+"POT-Creation-Date: 2020-12-30 01:01-0400\n"
+"PO-Revision-Date: 2020-12-30 05:11\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese\n"
 "Language: pt_PT\n"
@@ -23,46 +23,42 @@ msgid "Motions"
 msgstr "Moções"
 
 #: motions/models.py:9
-msgid "sequence number"
-msgstr "Número sequencial"
-
-#: motions/models.py:10
-msgid "The order in which motions are displayed"
-msgstr "A ordem a qual as moções são exibidas"
-
-#: motions/models.py:12
 msgid "text"
 msgstr "texto"
 
-#: motions/models.py:13
+#: motions/models.py:10
 msgid "The full motion e.g., \"This House would straighten all bananas\""
 msgstr "A moção completa, por exemplo, \"Esta Casa fortaleceria todas as bananas\""
 
-#: motions/models.py:15
+#: motions/models.py:12
 msgid "reference"
 msgstr "referência"
 
-#: motions/models.py:16
+#: motions/models.py:13
 msgid "Shortcode for the motion, e.g., \"Bananas\""
 msgstr "Código para a moção, por exemplo, \"Bananas\""
 
-#: motions/models.py:18
+#: motions/models.py:15
 msgid "info slide"
 msgstr "info slide"
 
-#: motions/models.py:19
+#: motions/models.py:16
 msgid "The information slide for this topic; if it has one"
 msgstr "O slide informativo para esta moção (se tiver)"
 
-#: motions/models.py:21
-msgid "round"
-msgstr "rodada"
+#: motions/models.py:19
+msgid "tournament"
+msgstr "torneio"
 
-#: motions/models.py:25 motions/models.py:37
+#: motions/models.py:21
+msgid "rounds"
+msgstr "rodadas"
+
+#: motions/models.py:24 motions/models.py:37 motions/models.py:56
 msgid "motion"
 msgstr "moção"
 
-#: motions/models.py:26
+#: motions/models.py:25
 msgid "motions"
 msgstr "moções"
 
@@ -86,68 +82,80 @@ msgstr "preferência de moção de uma dupla de debate"
 msgid "debate team motion preferences"
 msgstr "preferências de moção de uma dupla de debate"
 
-#: motions/statistics.py:88
+#: motions/models.py:58
+msgid "round"
+msgstr "rodada"
+
+#: motions/models.py:61
+msgid "sequence number"
+msgstr "Número sequencial"
+
+#: motions/models.py:62
+msgid "The order in which motions are displayed"
+msgstr "A ordem a qual as moções são exibidas"
+
+#: motions/models.py:67
+msgid "round motion"
+msgstr ""
+
+#: motions/models.py:68
+msgid "round motions"
+msgstr ""
+
+#: motions/statistics.py:86
 msgid "extremely strong evidence"
 msgstr "evidência muito forte"
 
-#: motions/statistics.py:89
+#: motions/statistics.py:87
 msgid "strong evidence"
 msgstr "evidência forte"
 
-#: motions/statistics.py:90
+#: motions/statistics.py:88
 msgid "moderate evidence"
 msgstr "evidência moderada"
 
-#: motions/statistics.py:91
+#: motions/statistics.py:89
 msgid "weak evidence"
 msgstr "evidência fraca"
 
-#: motions/statistics.py:92
+#: motions/statistics.py:90
 msgid "very weak evidence"
 msgstr "evidência muito fraca"
 
-#: motions/statistics.py:93
+#: motions/statistics.py:91
 msgid "extremely weak evidence"
 msgstr "evidência extremamente fraca"
 
-#: motions/statistics.py:116
+#: motions/statistics.py:114
 msgid "balance inconclusive"
 msgstr "equilíbrio inconclusivo"
 
-#: motions/statistics.py:117
+#: motions/statistics.py:115
 msgid "too few debates to get a meaningful statistic"
 msgstr "poucos debates para obter uma estatística significativa"
 
-#: motions/statistics.py:125
+#: motions/statistics.py:123
 #, python-format
 msgid "imbalanced at %(level)s level"
 msgstr "desequilibrado no nível %(level)s"
 
-#: motions/statistics.py:126
+#: motions/statistics.py:124
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing %(evidence)s to suggest that this motion was imbalanced — at a %(level)s level of significance."
 msgstr "o valor de χ² é %(chisq).3f, visto que há %(evidence)s que sugere que essa moção foi desequilibrada - em um nível significante de %(level)s."
 
-#: motions/statistics.py:131
+#: motions/statistics.py:129
 msgid "probably balanced"
 msgstr "provavelmente equilibrado"
 
-#: motions/statistics.py:132
+#: motions/statistics.py:130
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that this motion was imbalanced at any level of significance."
 msgstr "o valor de χ² é %(chisq).3f, visto que as evidências são insuficientes para sugerir que essa moção foi desequilibrada em qualquer nível significativo."
 
-#: motions/templates/motion_statistics.html:4
-#: motions/templates/motion_statistics.html:5 motions/views.py:165
-msgid "Motion Statistics"
-msgstr "Estatísticas das Moções"
-
-#: motions/templates/motion_statistics.html:12
-msgid "The results data displayed here is presented without tests for statistical significance. Correlations should not be automatically considered reliable; particularly at small tournaments and during elimination rounds."
-msgstr "Os resultados aqui dispostos são apresentados sem testes de significado estatístico. Correlação não devem ser automaticamente consideradas fiáveis; sobretudo em torneios pequenos ou durante rodadas eliminatórias."
-
-#: motions/templates/motion_statistics.html:39
-#: motions/templates/public_motions.html:31
+#: motions/templates/motion_global_statistics.html:22
+#: motions/templates/motion_round_statistics.html:31
+#: motions/templates/public_motions.html:32
 msgid "View Info Slide"
 msgstr "Ver o Info Slide"
 
@@ -277,7 +285,19 @@ msgstr[1] "Editar Moções"
 msgid "Display Draw"
 msgstr "Exibir Sorteio"
 
-#: motions/templates/motions_edit.html:55
+#: motions/templates/motions_edit.html:28
+msgid "This will replace all existing motions for this round. The motions themselves will still be in the database."
+msgstr ""
+
+#: motions/templates/motions_edit.html:30
+msgid "Reuse Motions from Last Round"
+msgstr ""
+
+#: motions/templates/motions_edit.html:35
+msgid "Use Existing Motions"
+msgstr ""
+
+#: motions/templates/motions_edit.html:74
 msgid "Save Motion"
 msgid_plural "Save Motions"
 msgstr[0] "Salvar Moção"
@@ -287,15 +307,15 @@ msgstr[1] "Salvar Moções"
 msgid "Info Slide"
 msgstr "Info Slide"
 
-#: motions/templates/public_motions.html:39
+#: motions/templates/public_motions.html:41
 msgid "There are no motions available for this round."
 msgstr "Não há moções disponíveis para esta rodada."
 
-#: motions/templates/public_motions.html:45
+#: motions/templates/public_motions.html:47
 msgid "The motions for this round have not been released."
 msgstr "As moções para esta rodada ainda não foram divulgadas."
 
-#: motions/templates/public_motions.html:50
+#: motions/templates/public_motions.html:52
 msgid "The motion for this round has not been released."
 msgstr "A moção para esta rodada ainda não foi divulgada."
 
@@ -317,33 +337,44 @@ msgstr[1] ""
 msgid "There are no motions for this round entered into Tabbycat."
 msgstr "Não há moções para esta rodada que estejam inseridas no Tabbycat."
 
-#: motions/views.py:87
+#: motions/views.py:91
 msgid "The motion has been saved."
 msgstr "A moção foi salva."
 
-#: motions/views.py:89
+#: motions/views.py:93
 #, python-format
 msgid "%(count)d motion has been saved."
 msgid_plural "%(count)d motions have been saved."
 msgstr[0] "%(count)d moção foi salva."
 msgstr[1] "%(count)d moções foram salvas."
 
-#: motions/views.py:94
+#: motions/views.py:97
 #, python-format
 msgid "%(count)d motion has been deleted."
 msgid_plural "%(count)d motions have been deleted."
 msgstr[0] "%(count)d moção foi deletada."
 msgstr[1] "%(count)d moções foram deletadas."
 
-#: motions/views.py:118
+#: motions/views.py:140
+#, python-format
+msgid "Reused the motion from the previous round."
+msgid_plural "Reused the %(count)d motions from the previous round."
+msgstr[0] ""
+msgstr[1] ""
+
+#: motions/views.py:164
 msgid "Released the motion(s)."
 msgstr "Divulgar a(s) moção(ões)."
 
-#: motions/views.py:125
+#: motions/views.py:171
 msgid "Unreleased the motion(s)."
 msgstr "Desfazer a divulgação da(s) moção(ões)."
 
-#: motions/views.py:149
+#: motions/views.py:195
 msgid "Round Motions"
 msgstr "Moções da Rodada"
+
+#: motions/views.py:209
+msgid "Motion Statistics"
+msgstr "Estatísticas das Moções"
 

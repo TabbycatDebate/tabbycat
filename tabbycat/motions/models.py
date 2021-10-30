@@ -5,9 +5,6 @@ from django.utils.translation import gettext_lazy as _
 class Motion(models.Model):
     """Represents a single motion (not a set of motions)."""
 
-    seq = models.IntegerField(default=1,
-        verbose_name=_("sequence number"),
-        help_text=_("The order in which motions are displayed"))
     text = models.TextField(max_length=500,
         verbose_name=_("text"),
         help_text=_("The full motion e.g., \"This House would straighten all bananas\""))
@@ -17,24 +14,23 @@ class Motion(models.Model):
     info_slide = models.TextField(
         verbose_name=_("info slide"), default="", blank=True,
         help_text=_("The information slide for this topic; if it has one"))
-    round = models.ForeignKey('tournaments.Round', models.CASCADE,
-        verbose_name=_("round"))
+
+    tournament = models.ForeignKey('tournaments.tournament', models.CASCADE,
+        verbose_name=_("tournament"))
+    rounds = models.ManyToManyField('tournaments.Round', through='motions.RoundMotion',
+        verbose_name=_("rounds"))
 
     class Meta:
-        ordering = ('seq', )
         verbose_name = _("motion")
         verbose_name_plural = _("motions")
 
     def __str__(self):
         return self.text
 
-    def as_iterable(self):
-        """For DRF; stopgap for many-to-many"""
-        return [self]
-
 
 class DebateTeamMotionPreference(models.Model):
     """Represents a motion preference submitted by a debate team."""
+
     debate_team = models.ForeignKey('draw.DebateTeam', models.CASCADE,
         verbose_name=_("debate team"))
     motion = models.ForeignKey(Motion, models.CASCADE, db_index=True,
@@ -51,3 +47,31 @@ class DebateTeamMotionPreference(models.Model):
 
     def __str__(self):
         return "{0.motion.reference:s} ({0.preference:d}) by {0.debate_team!s}".format(self)
+
+    @property
+    def roundmotion(self):
+        if not hasattr(self, "_roundmotion"):
+            self._roundmotion = RoundMotion.objects.get(motion=self.motion, round_id=self.debate_team.debate.round_id)
+        return self._roundmotion
+
+
+class RoundMotion(models.Model):
+    """Represents the relation between rounds and motions"""
+
+    motion = models.ForeignKey(Motion, models.CASCADE,
+        verbose_name=_("motion"))
+    round = models.ForeignKey('tournaments.Round', models.CASCADE,
+        verbose_name=_("round"))
+
+    seq = models.IntegerField(default=1,
+        verbose_name=_("sequence number"),
+        help_text=_("The order in which motions are displayed"))
+
+    class Meta:
+        ordering = ('round', 'seq')
+        unique_together = ('round', 'seq')
+        verbose_name = _("round motion")
+        verbose_name_plural = _("round motions")
+
+    def __str__(self):
+        return "%s: %s" % (self.motion.reference, self.round.name)

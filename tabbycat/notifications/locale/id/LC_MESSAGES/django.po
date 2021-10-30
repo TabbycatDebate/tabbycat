@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-05 13:59-0300\n"
-"PO-Revision-Date: 2020-11-04 02:06\n"
+"POT-Creation-Date: 2020-12-30 01:01-0400\n"
+"PO-Revision-Date: 2021-02-28 09:55\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -21,14 +21,6 @@ msgstr ""
 #: notifications/apps.py:7
 msgid "Notifications"
 msgstr "Notifikasi"
-
-#: notifications/consumers.py:37
-msgid "Failed to send emails."
-msgstr "Gagal mengirim email."
-
-#: notifications/consumers.py:40
-msgid "Connection error sending emails."
-msgstr "Connection error saat mengirim email."
 
 #: notifications/forms.py:11
 msgid "Recipient email address"
@@ -52,352 +44,360 @@ msgstr "Subjek"
 msgid "Message"
 msgstr "Pesan"
 
-#: notifications/models.py:12 notifications/models.py:27
+#: notifications/models.py:11 notifications/models.py:26
 msgid "email"
 msgstr "email"
 
-#: notifications/models.py:13
+#: notifications/models.py:12
 msgid "SMS"
 msgstr "SMS"
 
-#: notifications/models.py:22
+#: notifications/models.py:21
 msgid "recipient"
 msgstr "penerima"
 
-#: notifications/models.py:24
+#: notifications/models.py:23
 msgid "method"
 msgstr "metode"
 
-#: notifications/models.py:29 notifications/models.py:130
+#: notifications/models.py:28 notifications/models.py:134
 msgid "context"
 msgstr "konteks"
 
 #: notifications/models.py:31
-msgid "message"
-msgstr "pesan"
-
-#: notifications/models.py:34
 msgid "notification"
 msgstr "notifikasi"
 
-#: notifications/models.py:36 notifications/models.py:75
-#: notifications/models.py:126
+#: notifications/models.py:33 notifications/models.py:74
+#: notifications/models.py:130
 msgid "timestamp"
 msgstr "waktu"
 
-#: notifications/models.py:39
+#: notifications/models.py:36
 msgid "sent message"
 msgstr "pesan terkirim"
 
-#: notifications/models.py:40
+#: notifications/models.py:37
 msgid "sent messages"
 msgstr "pesan terkirim"
 
-#: notifications/models.py:60
+#: notifications/models.py:58
 msgid "team points"
 msgstr "poin tim"
 
-#: notifications/models.py:61
+#: notifications/models.py:59
 msgid "ballot confirmed"
 msgstr "lembar penjurian terkonfirmasi"
 
-#: notifications/models.py:62
+#: notifications/models.py:60
 msgid "feedback URL"
-msgstr ""
+msgstr "URL umpan balik"
 
-#: notifications/models.py:63
+#: notifications/models.py:61
 msgid "ballot URL"
 msgstr "URL lembar penjurian"
 
-#: notifications/models.py:64
+#: notifications/models.py:62
 msgid "landing page URL"
-msgstr ""
+msgstr "URL halaman utama"
+
+#: notifications/models.py:63
+msgid "adjudicator draw released"
+msgstr "draw juri dirilis"
+
+#: notifications/models.py:64
+msgid "team registration"
+msgstr "registrasi tim"
 
 #: notifications/models.py:65
-msgid "adjudicator draw released"
-msgstr ""
+msgid "adjudicator registration"
+msgstr "registrasi juri"
 
 #: notifications/models.py:66
-msgid "team registration"
-msgstr ""
+msgid "motion(s) released"
+msgstr "mosi dirilis"
 
 #: notifications/models.py:67
-msgid "adjudicator registration"
-msgstr ""
+msgid "team draw released"
+msgstr "draw tim dirilis"
 
 #: notifications/models.py:68
-msgid "motion(s) released"
-msgstr ""
+msgid "custom message"
+msgstr "pesan khusus"
 
-#: notifications/models.py:69
-msgid "team draw released"
-msgstr ""
-
-#: notifications/models.py:73 notifications/models.py:128
+#: notifications/models.py:72 notifications/models.py:132
 msgid "event"
-msgstr ""
+msgstr "event"
 
-#: notifications/models.py:78
+#: notifications/models.py:77
 msgid "tournament"
 msgstr "turnamen"
 
-#: notifications/models.py:80
+#: notifications/models.py:79
 msgid "round"
 msgstr "ronde"
 
-#: notifications/models.py:83
-msgid "bulk notification"
-msgstr ""
+#: notifications/models.py:82
+msgid "subject template"
+msgstr "template subjek"
 
 #: notifications/models.py:84
+msgid "body template"
+msgstr "template badan email"
+
+#: notifications/models.py:87
+msgid "bulk notification"
+msgstr "kumpulan notifikasi"
+
+#: notifications/models.py:88
 msgid "bulk notifications"
-msgstr ""
-
-#: notifications/models.py:110
-msgid "Processed"
-msgstr ""
-
-#: notifications/models.py:111
-msgid "Dropped"
-msgstr ""
-
-#: notifications/models.py:112
-msgid "Deferred"
-msgstr ""
-
-#: notifications/models.py:113
-msgid "Delivered"
-msgstr ""
+msgstr "kumpulan notifikasi"
 
 #: notifications/models.py:114
-msgid "Bounced"
-msgstr ""
+msgid "Processed"
+msgstr "Terproses"
 
 #: notifications/models.py:115
-msgid "Opened"
-msgstr ""
+msgid "Dropped"
+msgstr "Dibatalkan"
 
 #: notifications/models.py:116
-msgid "Clicked"
-msgstr ""
+msgid "Deferred"
+msgstr "Ditangguhkan"
 
 #: notifications/models.py:117
-msgid "Unsubscribed"
-msgstr ""
+msgid "Delivered"
+msgstr "Diterima"
 
 #: notifications/models.py:118
-msgid "Marked as spam"
-msgstr ""
+msgid "Bounced"
+msgstr "Tidak Terkirim"
 
 #: notifications/models.py:119
-msgid "Unsubscribed from group"
-msgstr ""
+msgid "Opened"
+msgstr "Dibuka"
 
 #: notifications/models.py:120
-msgid "Resubscribed to group"
-msgstr ""
+msgid "Clicked"
+msgstr "Diklik"
+
+#: notifications/models.py:121
+msgid "Unsubscribed"
+msgstr "Berhenti berlangganan"
+
+#: notifications/models.py:122
+msgid "Marked as spam"
+msgstr "Ditandai sebagai spam"
+
+#: notifications/models.py:123
+msgid "Unsubscribed from group"
+msgstr "Berhenti berlangganan dari grup"
 
 #: notifications/models.py:124
+msgid "Resubscribed to group"
+msgstr "Dilanggankan kembali ke grup"
+
+#: notifications/models.py:128
 msgid "email message"
-msgstr ""
+msgstr "pesan email"
 
-#: notifications/models.py:133
+#: notifications/models.py:137
 msgid "email status"
-msgstr ""
+msgstr "status email"
 
-#: notifications/models.py:134
+#: notifications/models.py:138
 msgid "email statuses"
-msgstr ""
+msgstr "status email"
 
 #: notifications/templates/email_participants.html:12
 #, python-format
 msgid "You have not specified a reply-to address. This means that participants may not reply to the message if they have questions. Please set one in the <a href=\"%(notifications_options_url)s\">Notifications section of the preferences</a>."
-msgstr ""
+msgstr "Anda belum memberikan alamat balasan. Ini berarti bahwa partisipan tidak dapat membalas pesan anda apabiila mereka memiliki pertanyaan. Beri alamat balasan di <a href=\"%(notifications_options_url)s\">Bagian notifikasi di pengaturan</a>."
 
 #: notifications/templates/email_participants.html:20
 #, python-format
 msgid "The webhook URL for use in SendGrid is <a href=\"%(notifications_webhook_url)s\">%(notifications_webhook_url)s</a>. Please point the HTTP POST URL in <a href=\"https://app.sendgrid.com/settings/mail_settings\">SendGrid</a> to that."
-msgstr ""
+msgstr "Webhook URL untuk digunakan pada SendGrid adalah <a href=\"%(notifications_webhook_url)s\">%(notifications_webhook_url)s</a>. Arahkan HTTP POST URL di <a href=\"https://app.sendgrid.com/settings/mail_settings\">SendGrid</a> ke Webhook tsb."
 
 #: notifications/templates/email_participants.html:50
 msgid "Send Message(s)"
-msgstr ""
+msgstr "Kirim Pesan"
 
 #: notifications/templates/email_statuses.html:10
 msgid "Emails can be sent by Tabbycat for a variety of purposes. Emails are sent when specific preferences are enabled (i.e. enabling Ballot Receipts) or through actions available on specific pages (i.e. the Draw Display page for matchups; or the Participants page for team registration). This page shows the status of previously-sent emails."
-msgstr ""
+msgstr "Email dapat dikirim menggunakan Tabbycat untuk berbagai tujuan. Email dapat dikirim saat pengaturan tertentu diaktifkan, seperti mengaktifkan Tanda Terima Balot, atau melalui aksi yang ada pada halaman tertentu, seperti laman Penayangan Draw untuk draw, Partisipan untuk registrasi tim. Laman ini menunjukkan status untuk email-email yang telah dikirim sebelumnya."
 
-#: notifications/templates/notifications_nav.html:5 notifications/views.py:47
+#: notifications/templates/notifications_nav.html:5 notifications/views.py:46
 msgid "Email Statuses"
-msgstr ""
+msgstr "Status email"
 
 #: notifications/templates/notifications_nav.html:11
 #: notifications/templates/test_email.html:24
 msgid "Send Test Email"
-msgstr ""
+msgstr "Kirim Email Percobaan"
 
 #: notifications/templates/notifications_nav.html:14
 msgid "Send Custom Email"
-msgstr ""
+msgstr "Kirim Email Khusus"
 
 #: notifications/templates/test_email.html:5
 #: notifications/templates/test_email.html:18
 msgctxt "page title"
 msgid "Send Test Email"
-msgstr ""
+msgstr "Kirim Email Percobaan"
 
 #: notifications/templates/test_email.html:19
 msgid "You can use this form to send a test email, to check that your email backend settings are working, before you try to send email notifications to participants."
-msgstr ""
+msgstr "Anda dapat menggunakan form ini untuk mengirimkan email percobaan, untuk menguji apakah pengaturan email anda bekerja sebelum mengirimkan email kepada partisipan."
 
 #: notifications/templates/test_email.html:25
 msgid "Go back to the site home page"
-msgstr ""
+msgstr "Kembali ke laman utama"
+
+#: notifications/utils.py:26
+msgid "the chair"
+msgstr "ketua juri"
+
+#: notifications/utils.py:27
+msgid "the only"
+msgstr "satu-satunya"
+
+#: notifications/utils.py:28
+msgid "a panellist"
+msgstr "panelis"
 
 #: notifications/utils.py:29
-msgid "the chair"
-msgstr ""
-
-#: notifications/utils.py:30
-msgid "the only"
-msgstr ""
-
-#: notifications/utils.py:31
-msgid "a panellist"
-msgstr ""
-
-#: notifications/utils.py:32
 msgid "a trainee"
-msgstr ""
+msgstr "trainee"
 
-#: notifications/utils.py:55
+#: notifications/utils.py:59
 msgid "TBA"
-msgstr ""
+msgstr "Akan diumumkan nanti"
 
-#: notifications/utils.py:101
+#: notifications/utils.py:88
 #, python-format
 msgid "%(tournament)s %(round)s @ %(room)s"
 msgstr ""
 
-#: notifications/utils.py:112
+#: notifications/utils.py:99
 #, python-format
 msgid "<li>%(side)s: %(team)s (%(points)d points with %(speaks)s total speaks)"
-msgstr ""
+msgstr "<li>%(side)s: %(team)s (%(points)d poin dengan %(speaks)s total skor)"
+
+#: notifications/utils.py:102
+#, python-format
+msgid "<li>%(side)s: %(team)s (%(points)s - %(speaks)s total speaks)"
+msgstr "<li>%(side)s: %(team)s (%(points)s - %(speaks)s total skor)"
+
+#: notifications/utils.py:103
+msgid "Win"
+msgstr "Menang"
+
+#: notifications/utils.py:103
+msgid "Loss"
+msgstr "Kalah"
 
 #: notifications/utils.py:115
 #, python-format
-msgid "<li>%(side)s: %(team)s (%(points)s - %(speaks)s total speaks)"
-msgstr ""
-
-#: notifications/utils.py:116
-msgid "Win"
-msgstr ""
-
-#: notifications/utils.py:116
-msgid "Loss"
-msgstr ""
-
-#: notifications/utils.py:128
-#, python-format
 msgid "<li>%(pos)s: %(speaker)s (%(score)s)</li>"
-msgstr ""
+msgstr "<li>%(pos)s: %(speaker)s (%(score)s)</li>"
 
-#: notifications/utils.py:202
+#: notifications/utils.py:183
 #, python-format
 msgid "<li>%(text)s (%(ref)s)</li>"
-msgstr ""
+msgstr "<li>%(text)s (%(ref)s)</li>"
 
-#: notifications/utils.py:237 notifications/utils.py:238
+#: notifications/utils.py:206 notifications/utils.py:207
 msgid ", "
-msgstr ""
+msgstr ", "
 
-#: notifications/views.py:39
+#: notifications/views.py:38
 #, python-format
 msgid "There was an error sending the test email: %(error)s"
-msgstr ""
+msgstr "Ada kesalahan saat mengirimkan email percobaan: %(error)s"
 
-#: notifications/views.py:42
+#: notifications/views.py:41
 #, python-format
 msgid "A test email has been sent to %(recipient)s."
-msgstr ""
+msgstr "Email percobaan telah dikirim ke %(recipient)s."
+
+#: notifications/views.py:52
+msgid "N/A"
+msgstr "N/A"
 
 #: notifications/views.py:53
-msgid "N/A"
-msgstr ""
-
-#: notifications/views.py:54
 msgid "Not known"
-msgstr ""
+msgstr "Tidak tersedia"
 
-#: notifications/views.py:59
+#: notifications/views.py:58
 #, python-format
 msgid "%(status)s @ %(time)s"
-msgstr ""
+msgstr "%(status)s @ %(time)s"
 
-#: notifications/views.py:102
+#: notifications/views.py:104
 #, python-format
 msgid "@ %s"
 msgstr ""
 
-#: notifications/views.py:119
+#: notifications/views.py:123
 msgid "Timeline"
-msgstr ""
+msgstr "Waktu"
 
-#: notifications/views.py:129 notifications/views.py:220
+#: notifications/views.py:133 notifications/views.py:231
 msgid "Participant"
-msgstr ""
+msgstr "Partisipan"
 
-#: notifications/views.py:130
-msgid "Status"
-msgstr "Status"
-
-#: notifications/views.py:131
-msgid "Time"
-msgstr ""
-
-#: notifications/views.py:170
-msgid "Email Participants"
-msgstr ""
-
-#: notifications/views.py:196
-#, python-format
-msgid "%(email_count)s email has been queued for sending."
-msgid_plural "%(email_count)s emails have been queued for sending."
-msgstr[0] ""
-
-#: notifications/views.py:202
-msgid "No emails were sent — likely because no recipients were selected."
-msgstr ""
-
-#: notifications/views.py:210
-msgid "Send Email"
-msgstr ""
-
-#: notifications/views.py:225
+#: notifications/views.py:134 notifications/views.py:236
 msgid "Email address"
 msgstr ""
 
-#: notifications/views.py:226
+#: notifications/views.py:135
+msgid "Status"
+msgstr "Status"
+
+#: notifications/views.py:136
+msgid "Time"
+msgstr "Waktu"
+
+#: notifications/views.py:175
+msgid "Email Participants"
+msgstr "Email Partisipan"
+
+#: notifications/views.py:204
+#, python-format
+msgid "%(email_count)s email has been queued for sending."
+msgid_plural "%(email_count)s emails have been queued for sending."
+msgstr[0] "%(email_count)s email telah disiapkan untuk dikirim."
+
+#: notifications/views.py:210
+msgid "No emails were sent — likely because no recipients were selected."
+msgstr "Tidak ada email yang dikirim -- mungkin karena tidak ada penerima yang dipilih."
+
+#: notifications/views.py:221
+msgid "Send Email"
+msgstr "Kirim Email"
+
+#: notifications/views.py:237
 msgid "Not Provided"
-msgstr ""
+msgstr "Tidak Tersedia"
 
-#: notifications/views.py:239
+#: notifications/views.py:250
 msgid "Role"
-msgstr ""
+msgstr "Peran"
 
-#: notifications/views.py:240
+#: notifications/views.py:251
 msgid "Adjudicator"
 msgstr "Juri"
 
-#: notifications/views.py:240
+#: notifications/views.py:251
 msgid "Speaker"
-msgstr ""
+msgstr "Pendebat"
 
-#: notifications/views.py:248
+#: notifications/views.py:259
 msgid "Speakers"
-msgstr ""
+msgstr "Pembicara"
 
-#: notifications/views.py:249
+#: notifications/views.py:260
 msgid "Adjudicators"
 msgstr "Juri"
 

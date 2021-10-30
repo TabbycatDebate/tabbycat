@@ -2,6 +2,32 @@
 Change Log
 ==========
 
+2.6.0 (Ocicat)
+--------------
+*Release date: 30 October 2021*
+
+- Tabbycat is now supported by a new non-profit, the Tabbycat Debate Association!
+- Motions can now be re-used between rounds, with statistics using the combined data from the rounds. Motion statistics queries are optimised. (`#739 <https://github.com/TabbycatDebate/tabbycat/pull/739>`_)
+- A new feedback paths allows for trainees to submit feedback on chairs, but not on panellists.
+- Personal redactions for speakers and adjudicators are indicated in admin tables, but are not hidden. (`#1480 <https://github.com/TabbycatDebate/tabbycat/issues/1480>`_)
+- Unexpected team feedback is unconfirmed to avoid affecting the scores of unexpected adjudicators. (`#473 <https://github.com/TabbycatDebate/tabbycat/issues/473>`_)
+- Added some database area actions to assign emojis and code names, previously only available as commands.
+- Added a button to copy each table to the clipboard in a CSV format
+- Removed some obsolete management commands.
+- Implemented tournament import and export capabilities for `DebateXML <https://github.com/TabbycatDebate/DebateXML>`_.
+- Allow for participant ballot submissions during concurrent rounds.
+- Checkin API endpoints show the timestamp of the current event.
+- Team viewing of ballots can be restricted to their private URLs.
+- Added an optimised production-ready Docker config. Thanks to Sébastien Dunne Fulmer for this contribution! (`#1690 <https://github.com/TabbycatDebate/tabbycat/pull/1690>`_)
+- Added a means to allow site administrators to send a private link to people they wish to add to the site as admins or assistants. Upon receiving that link, users can complete the signup process themselves. Thanks to Tom Kunc for the pull request! (`#685 <https://github.com/TabbycatDebate/tabbycat/pull/685>`_)
+- Uncalculable metrics now show as None rather than 0, and more standings configurations are now solely handled through the database. (`#1647 <https://github.com/TabbycatDebate/tabbycat/pull/1647>`_)
+- Removed automatic SendGrid provision, changed config var name to ``SENDGRID_API_KEY`` and updated documentation on email configuration (`#1752 <https://github.com/TabbycatDebate/tabbycat/pull/1752>`_)
+- Motions are associated to ballots even when motion selection is disabled, to consolidate motion statistics queries. A migration will attempt to associate motions to existing ballots where motion selection is deactivated and the round of the ballot only has one motion.
+- A migration will attempt to associate venues and venue categories to a tournament if currently unlinked.
+- Adjudicators may now submit ballots individually for non-conferral formats or as a redundancy check, with the ballots merged once all received.
+- Added a warning when multiple ballots are confirmed from the same debate, indicating a database consistency problem.
+
+
 2.5.9
 -----
 *Release date: 20 June 2021*

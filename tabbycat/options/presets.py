@@ -59,6 +59,13 @@ def get_preferences_data(selected_preset, tournament):
     return preset_preferences
 
 
+def save_presets(tournament, preset):
+    preset_preferences = get_preferences_data(preset, tournament)
+
+    for pref in preset_preferences:
+        tournament.preferences[pref['key']] = pref['new_value']
+
+
 class PreferencesPreset:
     show_in_list                               = False
 
@@ -90,9 +97,9 @@ class AustralsPreferences(PreferencesPreset):
     debate_rules__ballots_per_debate_elim      = 'per-adj'
     debate_rules__substantive_speakers         = 3
     debate_rules__reply_scores_enabled         = True
-    debate_rules__motion_vetoes_enabled        = True
     debate_rules__side_names                   = 'aff-neg'
-    data_entry__enable_motions                 = True
+    motions__motion_vetoes_enabled             = True
+    motions__enable_motions                    = True
     # Standings Rules
     standings__standings_missed_debates        = 2  # TODO= check this
     standings__team_standings_precedence       = ['wins', 'speaks_sum']
@@ -112,6 +119,7 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     scoring__score_max                         = 99.0
     scoring__score_step                        = 1.0
     scoring__maximum_margin                    = 0.0
+    scoring__teamscore_includes_ghosts         = False  # WUDC 34.9.3.2
     # Debate Rules
     debate_rules__substantive_speakers         = 2
     debate_rules__teams_in_debate              = 'bp'
@@ -120,8 +128,8 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     debate_rules__speakers_in_ballots          = 'prelim'
     debate_rules__side_names                   = 'gov-opp'
     debate_rules__reply_scores_enabled         = False
-    debate_rules__motion_vetoes_enabled        = False
-    data_entry__enable_motions                 = False
+    motions__motion_vetoes_enabled             = False
+    motions__enable_motions                    = False
     # Draw Rules
     draw_rules__avoid_same_institution         = False
     draw_rules__avoid_team_history             = False
@@ -157,10 +165,10 @@ class CanadianParliamentaryPreferences(PreferencesPreset):
     debate_rules__reply_scores_enabled         = False # Not scored
     debate_rules__substantive_speakers         = 2
     debate_rules__side_names                   = 'gov-opp'
-    debate_rules__motion_vetoes_enabled        = False
     debate_rules__ballots_per_debate_prelim    = 'per-debate'
     debate_rules__ballots_per_debate_elim      = 'per-debate'
-    data_entry__enable_motions                 = False
+    motions__motion_vetoes_enabled             = False
+    motions__enable_motions                    = False
     # Draws
     draw_rules__avoid_same_institution         = False # TBC
     draw_rules__avoid_team_history             = False # TBC
@@ -182,8 +190,8 @@ class AustralianEastersPreferences(AustralsPreferences):
     scoring__maximum_margin                    = 15.0
     # Debate Rules
     debate_rules__reply_scores_enabled         = False
-    debate_rules__motion_vetoes_enabled        = True
-    data_entry__enable_motions                 = True
+    motions__motion_vetoes_enabled             = True
+    motions__enable_motions                    = True
     debate_rules__ballots_per_debate_prelim    = 'per-debate'
     debate_rules__ballots_per_debate_elim      = 'per-adj'
     # Standings Rules
@@ -203,8 +211,8 @@ class NZEastersPreferences(AustralsPreferences):
     scoring__reply_score_max                   = 40.0
     # Debate Rules
     debate_rules__reply_scores_enabled         = True
-    debate_rules__motion_vetoes_enabled        = True
-    data_entry__enable_motions                 = True
+    motions__motion_vetoes_enabled             = True
+    motions__enable_motions                    = True
     debate_rules__substantive_speakers         = 2
     # Standings
     standings__team_standings_precedence       = ['wins', 'wbw', 'speaks_sum', 'wbw', 'draw_strength', 'wbw']
@@ -230,8 +238,8 @@ class JoyntPreferences(AustralsPreferences):
     scoring__reply_score_max                   = 40.0
     # Debate Rules
     debate_rules__reply_scores_enabled         = True
-    debate_rules__motion_vetoes_enabled        = False
-    data_entry__enable_motions                 = False
+    motions__motion_vetoes_enabled             = False
+    motions__enable_motions                    = False
     debate_rules__substantive_speakers         = 3
     # Draw Rules
     draw_rules__draw_side_allocations          = 'preallocated'
@@ -272,7 +280,7 @@ class UADCPreferences(AustralsPreferences):
     # Debate Rules
     debate_rules__substantive_speakers         = 3
     debate_rules__reply_scores_enabled         = True
-    debate_rules__motion_vetoes_enabled        = True
+    motions__motion_vetoes_enabled             = True
     debate_rules__side_names                   = 'gov-opp'
     # Standings Rules
     standings__team_standings_precedence       = ['wins', 'speaks_sum', 'margin_avg']
@@ -298,10 +306,9 @@ class WSDCPreferences(AustralsPreferences):
     scoring__reply_score_min                   = 30.0
     scoring__reply_score_max                   = 40.0
     scoring__reply_score_step                  = 0.5
-    # Data
-    data_entry__enable_motions                 = False # Single motions per round
     # Debates
-    debate_rules__motion_vetoes_enabled        = False # Single motions per round
+    motions__motion_vetoes_enabled             = False # Single motions per round
+    motions__enable_motions                    = False
     debate_rules__side_names                   = 'prop-opp'
     # Draws (exact mechanism is up to the host)
     draw_rules__avoid_same_institution         = False
@@ -322,8 +329,8 @@ class WADLPreferences(PreferencesPreset):
     # Debate Rules= no replies; singular motions
     debate_rules__substantive_speakers         = 3
     debate_rules__reply_scores_enabled         = False
-    debate_rules__motion_vetoes_enabled        = False
-    data_entry__enable_motions                 = False
+    motions__motion_vetoes_enabled             = False
+    motions__enable_motions                    = False
     # Standings Rules
     standings__standings_missed_debates        = 0
     standings__team_standings_precedence       = ['points', 'wbw', 'margin_avg', 'speaks_avg']
