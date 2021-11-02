@@ -11,7 +11,7 @@ from draw.models import Debate, DebateTeam
 from motions.models import DebateTeamMotionPreference, Motion
 from options.presets import (AustralianEastersPreferences, AustralsPreferences, BritishParliamentaryPreferences,
                              CanadianParliamentaryPreferences, JoyntPreferences, NZEastersPreferences, save_presets,
-                             UADCPreferences, WADLPreferences, WSDCPreferences)
+                             UADCPreferences, WSDCPreferences)
 from participants.emoji import EMOJI_BY_NAME
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
 from results.models import BallotSubmission, Submission
@@ -375,7 +375,6 @@ class Importer:
             "opd": None,
             "paris-v": None,
             "uadc": UADCPreferences,
-            "wadl": WADLPreferences,
             "wsdc": WSDCPreferences,
             "": None,
         }
