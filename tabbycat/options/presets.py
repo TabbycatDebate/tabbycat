@@ -320,41 +320,6 @@ class WSDCPreferences(AustralsPreferences):
     ui_options__show_adjudicator_institutions  = False
 
 
-class WADLPreferences(PreferencesPreset):
-    name         = "WADL Options"
-    show_in_list = False
-    description  = ("Example high school setup. Many features not "
-        "supported in conjunction with other settings.")
-
-    # Debate Rules= no replies; singular motions
-    debate_rules__substantive_speakers         = 3
-    debate_rules__reply_scores_enabled         = False
-    motions__motion_vetoes_enabled             = False
-    motions__enable_motions                    = False
-    # Standings Rules
-    standings__standings_missed_debates        = 0
-    standings__team_standings_precedence       = ['points', 'wbw', 'margin_avg', 'speaks_avg']
-    standings__speaker_standings_precedence    = ['average']
-    standings__speaker_standings_extra_metrics = ['stdev', 'count']
-    # Draws
-    draw_rules__avoid_same_institution         = False
-    draw_rules__avoid_team_history             = False
-    draw_rules__draw_odd_bracket               = 'intermediate_bubble_up_down'
-    draw_rules__draw_side_allocations          = 'balance'
-    draw_rules__draw_pairing_method            = 'slide'
-    draw_rules__draw_avoid_conflicts           = 'one_up_one_down'
-    # UI Options
-    ui_options__show_emoji                     = False
-    ui_options__show_team_institutions         = False
-    ui_options__show_adjudicator_institutions  = False
-    ui_options__show_speakers_in_draw          = False
-    ui_options__public_motions_order           = 'reverse'
-    public_features__public_draw               = 'all-released'
-    public_features__public_results            = True
-    public_features__public_motions            = True
-    public_features__public_record             = False
-
-
 class PublicInformation(PreferencesPreset):
     name         = _("Public Information Options")
     show_in_list = False
