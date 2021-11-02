@@ -1386,7 +1386,7 @@ paths:
           required: false
           schema:
             type: integer
-        - name: completed
+        - name: confirmed
           in: query
           description: Whether to include unconfirmed ballots
           required: false
