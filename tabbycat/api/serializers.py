@@ -421,8 +421,9 @@ class TeamSerializer(serializers.ModelSerializer):
     class TeamSpeakerSerializer(SpeakerSerializer):
         team = None
 
-        class Meta(SpeakerSerializer.Meta):
+        class Meta:
             model = Speaker
+            exclude = ('team',)
 
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-team-detail')
     institution = serializers.HyperlinkedRelatedField(
@@ -481,7 +482,7 @@ class TeamSerializer(serializers.ModelSerializer):
         3. Create the speakers.
         4. Add institution conflict"""
 
-        if len(validated_data.get('short_reference'), "") == 0:
+        if len(validated_data.get('short_reference', "")) == 0:
             validated_data['short_reference'] = validated_data['reference'][:34]
 
         speakers_data = validated_data.pop('speakers', [])

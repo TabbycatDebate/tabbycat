@@ -7,6 +7,15 @@ Change Log
 *Release date: TBD*
 
 
+2.6.1
+-----
+*Release date: 4 November 2021*
+
+- Removed deprecated WADL preset that caused a crash (BACKEND-66K, BACKEND-66T)
+- Corrected typo for the ``confirmed`` query parameter in the ballots endpoint
+- Fixed the Team API endpoint not being able to create a team
+
+
 2.6.0 (Ocicat)
 --------------
 *Release date: 30 October 2021*
