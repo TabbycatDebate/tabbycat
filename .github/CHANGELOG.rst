@@ -2,6 +2,15 @@
 Change Log
 ==========
 
+2.6.2
+-----
+*Release date: 5 November 2021*
+
+- Fixed motion sequences not appearing in the motions list
+- Made motion veto handling in results form more resilient where vetos are unexpected (BACKEND-676, BACKEND-679)
+- Fixed anorak importer not handling motions without sequence number (BACKEND-517)
+
+
 2.6.1
 -----
 *Release date: 4 November 2021*
