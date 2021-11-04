@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2021-04-15 06:55\n"
+"PO-Revision-Date: 2021-11-04 06:15\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "MIME-Version: 1.0\n"
@@ -24,15 +24,15 @@ msgstr "Alokasi juri"
 
 #: ../../features/adjudicator-allocation.rst:7
 msgid "The adjudicator allocation screen offers the ability to automatically generate an allocation and/or allow you to create or edit an allocation manually. This interface is somewhat complex as it attempts to provide all of the information needed to inform allocation while also providing a number of automatic and manual tools for the allocation process itself."
-msgstr ""
+msgstr "Pada tampilan alokasi juri, terdapat fitur untuk melakukan alokasi secara otomatis dan atau dapat dilakukan alokasi juri secara manual. Tampilan ini cukup rumit untuk dipahami karena tampilan tersebut berusaha menampilkan semua informasi yang dibutuhkan untuk melakukan alokasi juri dan disaat yang sama ingin menampilkan beberapa fitur otomatis maupun fitur untuk melakukan alokasi secara manual."
 
 #: ../../features/adjudicator-allocation.rst:10
 msgid "Assigning Debate Priority"
-msgstr ""
+msgstr "Menetapkan Prioritas Debat"
 
 #: ../../features/adjudicator-allocation.rst:12
 msgid "For tournaments with more than a few debates you generally want to begin the allocation process by applying a priority value to your debates. A debate's priority value is used by the automatic adjudicator allocator (or the preformed panel indicator) to match the strongest panels to the debates that need them most."
-msgstr ""
+msgstr "Pada turnamen dengan jumlah debat yang cukup banyak, alokasi juri biasanya akan dimulai dengan mengalokasikan nilai prioritas pada debat-debat tertentu. Nilai prioritas debat yang diberikan, secara otomatis akan menjadi dasar alokasi juri otomatis (atau menjadi indikator untuk alokasi panel juri yang sudah dibuat) untuk mengalokasikan panel juri yang kuat untuk debat yang membutuhkan panel juri yang kuat pula."
 
 #: ../../features/adjudicator-allocation.rst:16
 msgid "The prioritise button in the top-left allows you to assign a priority value automatically based on a debate's bracket or its 'liveness'. Remember that in early rounds there are usually not enough results for the liveness of each debate to be distinct and that Tabbycat measures liveness based on the sum of all live break categories — a debate can have more liveness points than it has teams if there are teams that are live in multiple categories."
