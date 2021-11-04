@@ -320,10 +320,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             if not line.get('rounds'):
                 return
             motion = motions[lineno]
-            for round_name, seq in zip(line['rounds'].split(";"), line['seq'].split(";")):
-                seq = seq or 1
+            for round_name, seq in zip(line['rounds'].split(";"), line.get('seq', "").split(";")):
                 yield {
-                    'seq'    : seq,
+                    'seq'    : seq or 1,
                     'motion' : motion,
                     'round'  : tm.Round.objects.get(abbreviation=round_name, tournament=self.tournament),
                 }
