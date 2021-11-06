@@ -342,7 +342,7 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
             points = [0] * len(self.standings)
         else:
             first_metric = self.standings.metric_keys[0]
-            points = [info.metrics[first_metric] for info in self.standings]
+            points = [info.metrics[first_metric] or 0 for info in self.standings]
             points.sort(reverse=True)
 
         pref = self.tournament.pref('bp_pullup_distribution')
