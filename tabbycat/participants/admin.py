@@ -154,7 +154,7 @@ class TeamAdmin(admin.ModelAdmin):
     def assign_emoji(self, request, queryset):
         count = queryset.update(emoji=None)
         for tournament, teams in groupby(queryset.select_related('tournament').order_by('tournament_id'), lambda t: t.tournament):
-            set_emoji(teams, tournament)
+            set_emoji(list(teams), tournament)
 
         message = ngettext_lazy(
             "%(count)d team had their emoji reset.",
