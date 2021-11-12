@@ -22,9 +22,9 @@ SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.6.2'
+TABBYCAT_VERSION = '2.6.3'
 TABBYCAT_CODENAME = 'Ocicat'
-READTHEDOCS_VERSION = 'v2.6.2'
+READTHEDOCS_VERSION = 'v2.6.3'
 
 # ==============================================================================
 # Internationalization and Localization
