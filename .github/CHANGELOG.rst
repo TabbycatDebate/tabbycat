@@ -7,6 +7,15 @@ Change Log
 *Release date: TBD*
 
 
+2.6.3
+-----
+*Release date: 12 November 2021*
+
+- Fixed motion import crashes when more than one motion added (`#1893 <https://github.com/TabbycatDebate/tabbycat/issues/1893>`_)
+- Fixed draw generation and position reports crashing when teams have null standings (BACKEND-65M)
+- Fixed Edit Database team emoji assignment action.
+
+
 2.6.2
 -----
 *Release date: 5 November 2021*

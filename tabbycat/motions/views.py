@@ -81,7 +81,7 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
             motion.delete()
 
         for i, motion in enumerate(motions, start=1):
-            RoundMotion(motion=motion, round=self.round, seq=1).save()
+            RoundMotion(motion=motion, round=self.round, seq=i).save()
             self.log_action(content_object=motion)
 
         return self.show_message(len(motions), len(formset.deleted_objects))
