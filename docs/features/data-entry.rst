@@ -45,7 +45,7 @@ Duplicate/Swing Speeches
 
 .. image:: images/iron-speakers.png
 
-When entering the ballots there is a toggle label *'Iron' speeches*. When set to "yes" this allows you to have the same speaker deliver multiple speeches provided their extra speeches are labelled on the form as 'duplicates'. Typically, most tournaments require that lesser 'iron man' speech is discarded from the tab, which would mean that you would mark the lower speaker of the two scores as the duplicate (note that this may require you to check each score's average across a panel).
+When entering the ballots there is a toggle label *'Iron' speeches*. When set to "yes" this allows you to have the same speaker deliver multiple speeches provided their extra speeches are labelled on the form as 'duplicates'. Typically, most tournaments require that the lesser 'iron-person' speech is discarded from the tab, which would mean that you would mark the lower speaker of the two scores as the duplicate (note that this may require you to check each score's average across a panel).
 
 Speeches marked as duplicates are not included in the speaker tab. This means that they can also be used to exclude swing speakers from the tab as needed; even if they do not actually speak twice. To do so, change the name of the swing speaker to be that of an existing team member and ensure that that speech is marked as a duplicate.
 

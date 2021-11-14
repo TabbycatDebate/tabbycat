@@ -924,13 +924,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
                     popover_text = []
                     if debateteam.iron > 0 and debateteam.iron_prev > 0:
-                        popover_text = _("Team iron-manned this round and the last.")
+                        popover_text = _("Team iron-personed this round and the last.")
                         warning_level = "text-info"
                     elif debateteam.iron > 0:
-                        popover_text = _("Team iron-manned this round.")
+                        popover_text = _("Team iron-personed this round.")
                         warning_level = "text-info"
                     else:
-                        popover_text = _("Team iron-manned last round.")
+                        popover_text = _("Team iron-personed last round.")
                         warning_level = "text-warning"
 
                     cell['class'] = "%s strong" % warning_level
