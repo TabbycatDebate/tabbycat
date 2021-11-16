@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2021-06-25 17:28\n"
+"PO-Revision-Date: 2022-04-19 11:41\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -73,7 +73,7 @@ msgstr ""
 #: ../../features/draw-generation-bp.rst:28
 #: ../../features/draw-generation-bp.rst:179
 msgid "Simple"
-msgstr ""
+msgstr "Semplice"
 
 #: ../../features/draw-generation-bp.rst:29
 msgid "**Rényi entropy**"
@@ -82,7 +82,7 @@ msgstr ""
 #: ../../features/draw-generation-bp.rst:30
 #: ../../features/draw-generation-bp.rst:254
 msgid "Population variance"
-msgstr ""
+msgstr "Varianza di popolazione"
 
 #: ../../features/draw-generation-bp.rst:31
 msgid ":ref:`Rényi order <draw-bp-renyi-order>`"
@@ -450,7 +450,7 @@ msgstr ""
 
 #: ../../features/draw-generation-bp.rst:190
 msgid "Rényi entropy"
-msgstr ""
+msgstr "Rényi entropy"
 
 #: ../../features/draw-generation-bp.rst:192
 msgid "Informally speaking, the `Rényi entropy <https://en.wikipedia.org/wiki/R%C3%A9nyi_entropy>`_ is a measure of the diversity of the positions in a team's history. A history consisting only of one position has *low* entropy, while a history that is perfectly evenly distributed has *high* entropy. The **Rényi entropy cost function** reverses this intuition, so that an even hypothetical history has low cost, while an uneven hypothetical history has high cost."
