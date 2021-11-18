@@ -65,6 +65,9 @@ urlpatterns = [
         name='tournament-set-current-round'),
 
     # Other pages
+    path('admin/set-round-weights/',
+        views.SetRoundWeightingsView.as_view(),
+        name='set-round-weights'),
     path('admin/configure/',
         views.ConfigureTournamentView.as_view(),
         name='tournament-configure'),
