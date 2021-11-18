@@ -2,7 +2,6 @@ import logging
 import warnings
 
 from django.contrib.humanize.templatetags.humanize import ordinal
-from django.db.models import Exists, OuterRef, Prefetch
 from django.template.loader import render_to_string
 from django.utils.encoding import force_str
 from django.utils.translation import gettext as _
@@ -10,9 +9,9 @@ from django.utils.translation import ngettext
 
 from adjallocation.allocation import AdjudicatorAllocation
 from draw.generator import DRAW_FLAG_DESCRIPTIONS
-from draw.models import Debate
 from options.utils import use_team_code_names
 from results.models import BallotSubmission
+from results.prefetch import populate_debate_has_ballots
 from results.result import get_result_class
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.mixins import SingleObjectByRandomisedUrlMixin
@@ -846,15 +845,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_column(ballot_links_header, ballot_links_data)
 
         elif self.private_url:
-            debates = Debate.objects.filter(pk__in=[d.pk for d in debates]).select_related('round').annotate(
-                has_ballot=Exists(BallotSubmission.objects.filter(debate_id=OuterRef('id')).exclude(discarded=True)),
-            ).prefetch_related(
-                Prefetch('ballotsubmission_set', queryset=BallotSubmission.objects.exclude(discarded=True), to_attr='nondiscard_ballots'))
+            populate_debate_has_ballots(debates)
             ballot_links_data = []
             for debate in debates:
-                if not debate.has_ballot:
+                dummy_bs = BallotSubmission(debate=debate, single_adj=self.tournament.pref('individual_ballots'))
+                if not debate._has_ballot:
                     ballot_links_data.append(_("No ballot"))
-                elif not get_result_class(debate.nondiscard_ballots[0], debate.round, self.tournament).uses_speakers:
+                elif not get_result_class(dummy_bs, debate.round, self.tournament).uses_speakers:
                     ballot_links_data.append(_("No scores"))
                 else:
                     ballot_links_data.append({
