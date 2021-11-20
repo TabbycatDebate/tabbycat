@@ -92,21 +92,41 @@
 
     {% block header %}
       <div class="row d-print-none {% if user_role == "admin" %}mb-md-3{% endif %}" id="pageTitle">
-        <div class="col mt-4 mb-3 h3">
 
-          {% if page_title %}
-            {% if page_emoji %}<span class="emoji">{{ page_emoji }}</span>{% endif %}
-            {{ page_title }}
-          {% else %}
-            {% block head-title %}{% endblock %}
-          {% endif %}
-          {% if page_subtitle %}
-            <small class="text-muted d-md-inline d-block">{{ page_subtitle }}</small>
-          {% else %}
-            <small class="text-muted d-md-inline d-block">{% block sub-title %}{% endblock %}</small>
-          {% endif %}
+        <div class="col-md m-3 h2 d-flex align-items-center">
+
+          <div class="min-height: 100px;">
+            {% if page_title %}
+              {% if page_emoji %}<span class="emoji">{{ page_emoji }}</span>{% endif %}
+              {{ page_title }}
+            {% else %}
+              {% block head-title %}{% endblock %}
+            {% endif %}
+            {% if page_subtitle %}
+              <small class="text-muted d-md-inline d-block">{{ page_subtitle }}</small>
+            {% else %}
+              <small class="text-muted d-md-inline d-block">{% block sub-title %}{% endblock %}</small>
+            {% endif %}
+          </div>
 
         </div>
+
+        {% if tournament and not public_index and not user_role == "admin" %}
+          <div class="col-md">
+            <div class="list-group mt-3 mb-3">
+              <div class="list-group-item px-3 pb-2">
+
+                <div class="bg-secondary" style="min-height: 100px;"></div>
+
+                <div class="text-right">
+                  <small>Advertisment by a <a href="">Tabbycat Sponsorsor</a></small>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
       </div>
     {% endblock header %}
 

@@ -67,6 +67,10 @@ class PublicSiteInactiveTournamentsView(ListView):
 class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
     template_name = 'public_tournament_index.html'
 
+    def get_context_data(self, **kwargs):
+        kwargs['public_index'] = True
+        return super().get_context_data(**kwargs)
+
 
 class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin, TemplateView):
 
