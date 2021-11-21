@@ -25,7 +25,7 @@ from utils.mixins import (AdministratorMixin, AssistantMixin, CacheMixin, Tabbyc
                           WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin)
 from utils.views import PostOnlyRedirectView
 
-from .forms import (SetCurrentRoundMultipleBreakCategoriesForm,
+from .forms import (RoundWeightForm, SetCurrentRoundMultipleBreakCategoriesForm,
                     SetCurrentRoundSingleBreakCategoryForm, TournamentConfigureForm,
                     TournamentStartForm)
 from .mixins import RoundMixin, TournamentMixin
@@ -272,6 +272,24 @@ class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
             self.redirect_field_name: self.get_redirect_to(use_default=False),
         })
         return context
+
+
+class SetRoundWeightingsView(AdministratorMixin, TournamentMixin, FormView):
+    template_name = 'set_round_weights.html'
+    form_class = RoundWeightForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['tournament'] = self.tournament
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, _("Successfully set round weights."))
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_tournament('options-tournament-index', self.tournament)
 
 
 class FixDebateTeamsView(AdministratorMixin, TournamentMixin, TemplateView):

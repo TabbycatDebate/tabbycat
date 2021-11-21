@@ -6,6 +6,8 @@ Change Log
 ---------
 *Release date: TBD*
 
+- Round weights can be modified within tournament preferences, rather than just by the Edit Database.
+
 
 2.6.3
 -----
