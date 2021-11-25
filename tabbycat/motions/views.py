@@ -74,6 +74,7 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
     def formset_valid(self, formset):
         motions = formset.save(commit=False)
         for motion in motions:
+            motion.created = motion.pk is None
             motion.tournament = self.tournament
             motion.save()
 
@@ -81,6 +82,9 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
             motion.delete()
 
         for i, motion in enumerate(motions, start=1):
+            if not motion.created:  # Do not re-create associated RoundMotion if merely modifying
+                continue
+
             RoundMotion(motion=motion, round=self.round, seq=i).save()
             self.log_action(content_object=motion)
 
