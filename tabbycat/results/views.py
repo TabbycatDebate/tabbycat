@@ -733,13 +733,19 @@ class AdjudicatorPrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandom
     def is_page_enabled(self, tournament):
         return True
 
+    def get_ballotsub(self):
+        filters = Q(discarded=False)
+        if self.tournament.pref('individual_ballots'):
+            filters &= Q(participant_submitter__url_key=self.kwargs.get('url_key'), single_adj=True)
+        return self.object.ballotsubmission_set.filter(filters)
+
     def check_permissions(self):
-        if not self.object.ballotsubmission_set.filter(discarded=False).exists():
+        if not self.get_ballotsub().exists():
             logger.warning("Refused public view of ballots for %s: no ballot", self.object)
             return (404, _("There is no result yet for debate %s.") % self.matchup_description())
 
     def get_context_data(self, **kwargs):
-        ballot = self.object.ballotsubmission_set.filter(discarded=False).order_by('version').last()
+        ballot = self.get_ballotsub().last()
         kwargs['motion'] = ballot.motion
         kwargs['result'] = ballot.result
         kwargs['use_code_names'] = use_team_code_names(self.tournament, False)
