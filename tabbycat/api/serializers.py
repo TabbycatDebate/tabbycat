@@ -1,12 +1,17 @@
+from collections import OrderedDict
+from collections.abc import Mapping
 from urllib import parse
 
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import IntegrityError
 from django.db.models import QuerySet
 from django.urls import get_script_prefix, resolve, Resolver404
 from django.utils import timezone
 from django.utils.encoding import uri_to_iri
 from rest_framework import serializers
+from rest_framework.fields import get_error_detail, SkipField
 from rest_framework.relations import Hyperlink
+from rest_framework.settings import api_settings
 
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
@@ -174,6 +179,65 @@ class RoundSerializer(serializers.ModelSerializer):
             motion.save()
             RoundMotion.objects.update_or_create(round=instance, motion=motion, defaults={'seq': roundmotion['seq']})
         return super().update(instance, validated_data)
+
+    """Remove once DRF supports the serializer's structure"""
+    def set_value(self, dictionary, keys, value):
+        """
+        Similar to Python's built in `dictionary[key] = value`,
+        but takes a list of nested keys instead of a single key.
+        set_value({'a': 1}, [], {'b': 2}) -> {'a': 1, 'b': 2}
+        set_value({'a': 1}, ['x'], 2) -> {'a': 1, 'x': 2}
+        set_value({'a': 1}, ['x', 'y'], 2) -> {'a': 1, 'x': {'y': 2}}
+        """
+        if not keys:
+            dictionary.update(value)
+            return
+        for key in keys[:-1]:
+            if key not in dictionary:
+                dictionary[key] = {}
+            elif type(dictionary[key]) is not dict:
+                dictionary[key] = {'': dictionary[key]}
+            dictionary = dictionary[key]
+
+        if keys[-1] in dictionary and type(dictionary[keys[-1]]) is dict:
+            dictionary[keys[-1]][''] = value
+        else:
+            dictionary[keys[-1]] = value
+
+    def to_internal_value(self, data):
+        """
+        Dict of native values <- Dict of primitive datatypes.
+
+        Copied from DRF while waiting for #8001/#7671 as the format is nested
+        differently from the stock "set_value"
+        """
+        if not isinstance(data, Mapping):
+            message = self.error_messages['invalid'].format(datatype=type(data).__name__)
+            raise serializers.ValidationError({
+                api_settings.NON_FIELD_ERRORS_KEY: [message],
+            }, code='invalid')
+        ret = OrderedDict()
+        errors = OrderedDict()
+        fields = self._writable_fields
+        for field in fields:
+            validate_method = getattr(self, 'validate_' + field.field_name, None)
+            primitive_value = field.get_value(data)
+            try:
+                validated_value = field.run_validation(primitive_value)
+                if validate_method is not None:
+                    validated_value = validate_method(validated_value)
+            except serializers.ValidationError as exc:
+                errors[field.field_name] = exc.detail
+            except DjangoValidationError as exc:
+                errors[field.field_name] = get_error_detail(exc)
+            except SkipField:
+                pass
+            else:
+                self.set_value(ret, field.source_attrs, validated_value)
+
+        if errors:
+            raise serializers.ValidationError(errors)
+        return ret
 
 
 class MotionSerializer(serializers.ModelSerializer):
