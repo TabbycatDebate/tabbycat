@@ -127,7 +127,6 @@ class BaseResultForm(forms.Form):
     """Base class for forms that report results. Contains fields and methods
     common to absolutely everything (which isn't very much)."""
 
-    confirmed = forms.BooleanField(required=False)
     discarded = forms.BooleanField(required=False)
 
     result_class = None
@@ -144,6 +143,7 @@ class BaseResultForm(forms.Form):
 
         status_choices = Debate.STATUS_CHOICES if self.tournament.pref('enable_postponements') else Debate.STATUS_CHOICES_RESTRICTED
         self.fields['debate_result_status'] = forms.ChoiceField(choices=status_choices)
+        self.fields['confirmed'] = forms.BooleanField(required=False, disabled=ballotsub.single_adj)
 
         self.initial.update({
             'debate_result_status': self.debate.result_status,
@@ -259,7 +259,7 @@ class BaseBallotSetForm(BaseResultForm):
         self.using_replies = self.tournament.pref('reply_scores_enabled')
         self.using_declared_winner = self.tournament.pref('winners_in_ballots') != 'none'
         self.declared_winner = self.tournament.pref('winners_in_ballots')
-        self.bypassing_checks = self.tournament.pref('disable_ballot_confirms')
+        self.bypassing_checks = self.tournament.pref('disable_ballot_confirms') and not ballotsub.single_adj
         self.max_margin = self.tournament.pref('maximum_margin')
         self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
                                self.tournament.pref('teams_in_debate') == 'two')
