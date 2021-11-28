@@ -287,7 +287,7 @@ class TeamRecordView(AdministratorMixin, BaseTeamRecordView):
         return super().get_queryset().prefetch_related(
             'teaminstitutionconflict_set__institution',
             'adjudicatorteamconflict_set__adjudicator',
-            'venue_constraints__venuecategory',
+            'venue_constraints__category',
         )
 
 
@@ -298,7 +298,7 @@ class AdjudicatorRecordView(AdministratorMixin, BaseAdjudicatorRecordView):
         return super().get_queryset().prefetch_related(
             'adjudicatorinstitutionconflict_set__institution',
             'adjudicatorteamconflict_set__team',
-            'venue_constraints__venuecategory',
+            'venue_constraints__category',
         )
 
 
