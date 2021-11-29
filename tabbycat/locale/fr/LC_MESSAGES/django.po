@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-02 01:40-0300\n"
-"PO-Revision-Date: 2021-07-28 03:04\n"
+"POT-Creation-Date: 2021-11-28 21:53-0400\n"
+"PO-Revision-Date: 2022-08-08 18:05\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -338,6 +338,10 @@ msgid_plural "You're currently using %(nrows)s rows in your database. If you hav
 msgstr[0] "Vous utilisez actuellement %(nrows)s rangée dans votre base de données. Si vous n’avez pas encore mis à niveau votre compte Heroku à un tier payant, le nombre de rangées est limité à 10 000 rangées. Comme vous approchez cette limite, vous ne devriez <strong>pas créer de nouveaux tournois</strong> sur ce site et jusqu’à temps que vous avez <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">mis à niveau votre base de données</a> à un tier payant."
 msgstr[1] "Vous utilisez actuellement %(nrows)s rangées dans votre base de données. Si vous n’avez pas encore mis à niveau votre compte Heroku à un tier payant, le nombre de rangées est limité à 10 000 rangées. Comme vous approchez cette limite, vous ne devriez <strong>pas créer de nouveaux tournois</strong> sur ce site et jusqu’à temps que vous avez <a href=« https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases »>mis à niveau votre base de données</a> à un tier payant."
 
+#: templates/errors/legacy_sendgrid_warning.html:11
+msgid "It looks like you're using the old SendGrid config vars on Heroku, <code>SENDGRID_USERNAME</code> and <code>SENDGRID_PASSWORD</code>. These are now deprecated (as of version 2.6), and will stop working in a future version of Tabbycat. Please change your config vars to use <code>SENDGRID_API_KEY</code> instead. For more information, please see <a href=\"https://tabbycat.readthedocs.io/en/stable/features/notifications.html#configuring-an-email-provider\"> our documentation on this topic</a>."
+msgstr "Il semble que vous utilisez les vieux variables d'environnement d'Heroku, <code>SENDGRID_USERNAME</code> et <code>SENDGRID_PASSWORD</code>. Ceux-ci sont désormais désuets (depuis la version 2.6) et cesseront de fonctionner dans une version future de Tabbycat. Veuillez changer vos variables d'environnement afin d'utiliser <code>SENDGRID_API_KEY</code>. Pour plus d'information, lisez <a href=\"https://tabbycat.readthedocs.io/en/stable/features/notifications.html#configuring-an-email-provider\">notre documentation au sujet</a>."
+
 #: templates/errors/public_403.html:14
 #, python-format
 msgid "Whoops! This page isn't enabled for this tournament. <a href=\"%(url)s\">Back to the tournament home page.</a>"
@@ -375,11 +379,11 @@ msgstr "En savoir plus à propos des donations."
 msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated."
 msgstr "<a href=\"https://opencollective.com/tabbycat\">Les dons à Tabbycat de personnes ou d'organisations</a> sont très appréciés."
 
-#: templates/footer.html:40
+#: templates/footer.html:39
 msgid "Still timing debates with the stopwatch app?"
 msgstr "Chronométrez-vous encore avec l'application chronomètre ?"
 
-#: templates/footer.html:42
+#: templates/footer.html:41
 #, python-format
 msgid "Using an app designed for debate timekeeping makes speaking and adjudicating easier! Check out <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/iPad) or <a href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper</a> (Android)."
 msgstr "Utiliser un application conçu pour le débat rend parler et juger plus facile ! Découvrez <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept (iPhone/iPad)</a> ou <a href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper (Android)</a>."
@@ -392,35 +396,35 @@ msgstr "Notre organisation"
 msgid "Tabbycat is supported by the <a href=\"http://tabbycat-debate.org/\">Tabbycat Debate Association</a>, a non-profit for advancing open debate technology."
 msgstr "Tabbycat est soutenu par l'<a href=\"http://tabbycat-debate.org/\">Association de débat Tabbycat</a>, un organisme à but non-lucratif pour la technologie de débat libre."
 
-#: templates/footer.html:66
+#: templates/footer.html:65
 msgid "Language"
 msgstr "Langue"
 
-#: templates/footer.html:73
+#: templates/footer.html:72
 msgid "GitHub"
 msgstr "GitHub"
 
-#: templates/footer.html:79
+#: templates/footer.html:78
 msgid "Documentation"
 msgstr "Documentation"
 
-#: templates/footer.html:85
+#: templates/footer.html:84
 msgid "Support"
 msgstr "Aide"
 
-#: templates/footer.html:91
+#: templates/footer.html:90
 msgid "Facebook"
 msgstr "Facebook"
 
-#: templates/footer.html:97
+#: templates/footer.html:96
 msgid "Set Up A Copy"
 msgstr "Installer une copie"
 
-#: templates/footer.html:111
+#: templates/footer.html:110
 msgid "Change Language"
 msgstr "Changer la langue"
 
-#: templates/footer.html:128
+#: templates/footer.html:127
 msgid "Use this language"
 msgstr "Utiliser cette langue"
 
@@ -876,7 +880,8 @@ msgstr "Saisissez votre adresse courriel ci-dessous, et nous vous enverrons un l
 msgid "Please enter a valid email address."
 msgstr "Veuillez saisir une adresse courriel valide."
 
-#: templates/registration/password_reset_form.html:39
+#: templates/registration/password_reset_form.html:39 users/forms.py:10
+#: users/forms.py:25
 msgid "Email address"
 msgstr ""
 
@@ -894,12 +899,12 @@ msgstr "Retour à la page de connexion"
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr "Réinitialisation de mot de passe sur le site Tabbycat à %(domain)s"
 
-#: urls.py:107
+#: urls.py:102
 #, python-format
 msgid "Hi, %(user)s — you just logged in!"
 msgstr "Bonjour, %(user)s , vous venez de vous connecter !"
 
-#: urls.py:110
+#: urls.py:105
 msgid "Welcome! You just logged in!"
 msgstr "Bienvenue ! Vous venez de vous connecter !"
 
@@ -914,4 +919,39 @@ msgstr "Les utilisateurs ayant le statut super-utilisateur ont l'accès plein à
 #: users/templates/admin/auth/delete_user_warning.html:6
 msgid "<strong>Warning:</strong> You shouldn't delete users from the database once they've done something, because the database logs actions taken by those users, and deleting the users also deletes the related logs. If you wish to deactivate a user account, go back to edit the user, click on the “Permissions” tab, unchecked the “Active” box, and save the user."
 msgstr "<strong>Attention :</strong> Vous ne devriez pas supprimer des utilisateurs de la base de données après qu'ils aient fait des actions, parce que la base de données enregistre les actions des utilisateurs, donc en supprimant des utilisateurs, le journal des actions de l'utilisateur serait aussi supprimé. Pour désactiver un utilisateur, retournez à l'utilisateur sous l'onglet « Permissions » et décochez « Actif », puis sauvegarder."
+
+#: users/templates/signup.html:4 users/templates/signup.html:5
+msgid "Sign-Up"
+msgstr "Inscription"
+
+#: users/templates/signup.html:16
+msgctxt "page title"
+msgid "Create a New Administrator Account"
+msgstr "Créer un nouveau compte administrateur"
+
+#: users/templates/signup.html:18
+msgctxt "page title"
+msgid "Create a New Assistant Account"
+msgstr "Créer un nouveau compte assistant"
+
+#: users/templates/signup.html:25
+msgid "Create Account"
+msgstr "Créer compte"
+
+#: users/views.py:54
+msgid "You have successfully created a new administrator account."
+msgstr "Vous avez créé un nouveau compte administateur avec succès."
+
+#: users/views.py:56
+msgid "You have successfully created a new assistant account."
+msgstr "Vous avez créé un nouveau compte assistant avec succès."
+
+#: users/views.py:84
+msgid "Whoops! It looks like someone's already created the first user account. Please log in."
+msgstr "Oups ! Il semble que quelqu'un a déjà créé le premier utilisateur. Veuillez vous connecter."
+
+#: users/views.py:92
+#, python-format
+msgid "Welcome! You've created an account for %s."
+msgstr "Bienvenue ! Vous avez créé un compte pour %s."
 
