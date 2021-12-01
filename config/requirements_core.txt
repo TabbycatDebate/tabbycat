@@ -19,7 +19,7 @@ django-redis==4.12.1                    # Use redis for cache (on heroku; local 
 django-cors-headers==3.7.0              # CORS headers for API endpoints
 
 # Database
-psycopg2==2.8.6                         # For Django to talk to postgres
+psycopg2==2.9.2                         # For Django to talk to postgres
 # Note: The Heroku instructions seem to advise using psycopg2-binary:
 #     https://devcenter.heroku.com/articles/heroku-postgresql#connecting-with-django
 # but the psycopg2 documentation advises against using the binary distribution
