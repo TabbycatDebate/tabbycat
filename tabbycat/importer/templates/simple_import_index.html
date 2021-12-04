@@ -68,5 +68,16 @@
     {% include "components/item-action.html" with emoji="🐒" %}
 
   </ul>
+  <ul class="list-group mt-3">
+
+    {% tournamenturl 'break-categories-edit' as url %}
+    {% trans "Add/Edit Break Categories" as text %}
+    {% include "components/item-action.html" with emoji="🎯" %}
+
+    {% tournamenturl 'participants-speaker-categories-edit' as url %}
+    {% trans "Add/Edit Speaker Categories" as text %}
+    {% include "components/item-action.html" with emoji="🏆" %}
+
+  </ul>
 
 {% endblock content %}

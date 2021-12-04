@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-06-16 23:14\n"
+"PO-Revision-Date: 2020-08-30 23:10\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../../about/support.rst:3
 msgid "Support"
-msgstr ""
+msgstr "সহায়তা"
 
 #: ../../about/support.rst:5
 msgid "There are a number of ways to report bugs, ask for help, or submit feedback."
@@ -28,7 +28,7 @@ msgstr ""
 
 #: ../../about/support.rst:8
 msgid "Facebook"
-msgstr ""
+msgstr "ফেসবুক"
 
 #: ../../about/support.rst:10
 msgid "`Our Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_ is a good place to ask for help. It's also a good place to keep up with new releases and participate in more general discussions of features and ideas."
@@ -36,7 +36,7 @@ msgstr ""
 
 #: ../../about/support.rst:13
 msgid "GitHub"
-msgstr "GitHub"
+msgstr "গিটহাব"
 
 #: ../../about/support.rst:15
 msgid "Adding an issue to our `GitHub repository <https://github.com/TabbycatDebate/tabbycat/issues>`_ is a great way to let us know about bugs or writeup suggestions for how to improve Tabbycat. Pull requests are also encouraged!"

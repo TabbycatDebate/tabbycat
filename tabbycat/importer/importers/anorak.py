@@ -311,9 +311,22 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
     def import_motions(self, f):
         motions_interpreter = make_interpreter(
-            round=lambda x: tm.Round.objects.lookup(x, tournament=self.tournament),
+            tournament=self.tournament,
+            DELETE=['rounds', 'seq'],
         )
-        self._import(f, mm.Motion, motions_interpreter)
+        motions = self._import(f, mm.Motion, motions_interpreter)
+
+        def round_motions_interpreter(lineno, line):
+            if not line.get('rounds'):
+                return
+            motion = motions[lineno]
+            for round_name, seq in zip(line['rounds'].split(";"), line.get('seq', "").split(";")):
+                yield {
+                    'seq'    : seq or 1,
+                    'motion' : motion,
+                    'round'  : tm.Round.objects.get(abbreviation=round_name, tournament=self.tournament),
+                }
+        self._import(f, mm.RoundMotion, round_motions_interpreter)
 
     def import_sides(self, f):
         def side_interpreter(lineno, line):

@@ -1,8 +1,14 @@
+from urllib import parse
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+from django.urls import get_script_prefix, resolve, Resolver404
+from django.utils.encoding import uri_to_iri
 from rest_framework.relations import HyperlinkedIdentityField, HyperlinkedRelatedField, SlugRelatedField
 from rest_framework.reverse import reverse
 
-from participants.models import Speaker
+from participants.models import Adjudicator, Speaker, Team
+from venues.models import Venue
 
 
 class TournamentHyperlinkedRelatedField(HyperlinkedRelatedField):
@@ -73,6 +79,25 @@ class RoundHyperlinkedIdentityField(RoundHyperlinkedRelatedField, HyperlinkedIde
     pass
 
 
+class DebateHyperlinkedIdentityField(RoundHyperlinkedIdentityField):
+    default_tournament_field = 'debate__round__tournament'
+    round_field = 'debate__round'
+
+    def get_round(self, obj):
+        return obj.debate.round
+
+    def get_url_kwargs(self, obj):
+        kwargs = super().get_url_kwargs(obj)
+        kwargs['debate_pk'] = obj.debate.pk
+        return kwargs
+
+    def lookup_kwargs(self):
+        return {'debate': self.context['debate']}
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('debate')
+
+
 class AnonymisingHyperlinkedTournamentRelatedField(TournamentHyperlinkedRelatedField):
     default_tournament_field = 'team__tournament'
 
@@ -84,14 +109,6 @@ class AnonymisingHyperlinkedTournamentRelatedField(TournamentHyperlinkedRelatedF
         if getattr(value, self.null_when, True):
             return None
         return super().to_representation(value)
-
-
-class MotionHyperlinkedIdentityField(RoundHyperlinkedIdentityField):
-
-    def get_url_kwargs(self, obj):
-        kwargs = super().get_url_kwargs(obj)
-        kwargs.pop('round_seq')
-        return kwargs
 
 
 class AdjudicatorFeedbackIdentityField(RoundHyperlinkedIdentityField):
@@ -118,3 +135,55 @@ class CreatableSlugRelatedField(SlugRelatedField):
             return self.get_queryset().get_or_create(**{self.slug_field: data})[0]
         except (TypeError, ValueError):
             self.fail('invalid')
+
+
+class ParticipantAvailabilityForeignKeyField(TournamentHyperlinkedRelatedField):
+    default_tournament_field = 'round__tournament'
+
+    def get_tournament(self, obj):
+        return obj.round.tournament
+
+    def get_url_kwargs(self, obj):
+        return {
+            'tournament_slug': self.get_tournament(obj).slug,
+            'pk': obj.object_id,
+        }
+
+    def get_url(self, obj, view_name, request, format):
+        view_name = 'api-%s-detail' % (obj.content_type.model)
+        return super().get_url(obj, view_name, request, format)
+
+    def get_object(self, view_name, view_args, view_kwargs):
+        return {
+            'api-adjudicator-detail': Adjudicator,
+            'api-team-detail': Team,
+            'api-venue-detail': Venue,
+        }[view_name].objects.get(tournament__slug=view_kwargs['tournament_slug'], pk=view_kwargs['pk'])
+
+    def to_internal_value(self, data):
+        try:
+            http_prefix = data.startswith(('http:', 'https:'))
+        except AttributeError:
+            self.fail('incorrect_type', data_type=type(data).__name__)
+
+        if http_prefix:
+            # If needed convert absolute URLs to relative path
+            data = parse.urlparse(data).path
+            prefix = get_script_prefix()
+            if data.startswith(prefix):
+                data = '/' + data[len(prefix):]
+
+        data = uri_to_iri(parse.unquote(data))
+
+        try:
+            match = resolve(data)
+        except Resolver404:
+            self.fail('no_match')
+
+        if match.view_name.split("-")[1] not in ['team', 'adjudicator', 'venue']:
+            self.fail('incorrect_match')
+
+        try:
+            return self.get_object(match.view_name, match.args, match.kwargs)
+        except (ObjectDoesNotExist, ValueError, TypeError):
+            self.fail('does_not_exist')

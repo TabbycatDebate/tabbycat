@@ -14,11 +14,12 @@
 
         {% include "components/form-title.html" with title=round.name %}
         {% if round.motions_released %}
-          {% for motion in round.motion_set.all %}
+          {% for r_motion in round.roundmotion_set.all %}
+          {% with motion=r_motion.motion %}
             <li class="list-group-item d-flex flex-column flex-md-row align-items-md-center">
               {% if pref.enable_motions %}
                 <div class="badge badge-info mr-3 d-none d-md-block">
-                  {{ motion.seq }}
+                  {{ r_motion.seq }}
                 </div>
               {% endif %}
               <div class="mr-auto pr-3 lead">
@@ -34,6 +35,7 @@
                 </div>
               {% endif %}
             </li>
+            {% endwith %}
           {% empty %}
             <li class="list-group-item list-group-item-secondary">
               {% trans "There are no motions available for this round." %}

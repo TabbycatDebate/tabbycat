@@ -4,7 +4,7 @@
 Installing on Heroku
 ====================
 
-When running Tabbycat on the internet, we set it up on `Heroku <http://www.heroku.com/>`_. The project is set up to be good to go on Heroku, and it works well for us, so if you'd like to run it online, we recommend that you do the same. Naturally, this requires you to have a Heroku account.
+`Heroku <http://www.heroku.com/>`_ is a platform as a service on which Tabbycat can be installed to be available on the internet. Naturally, this requires you to have a Heroku account.
 
 There are two ways to do this: a **short way** and a **long way**. Most people should use the short way. The long way requires some familiarity with command-line interfaces and Git, and requires a :ref:`local installation <install-local>` as a prerequisite, but makes it easier to :ref:`upgrade versions <upgrade-heroku>` later on and (unlike the short way) allows you to import data from CSV files.
 
@@ -15,13 +15,13 @@ Click this button:
 .. image:: https://www.herokucdn.com/deploy/button.svg
   :target: https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/master
 
-This is the easiest way to deploy an instance of Tabbycat online. It requires no technical background.
+It requires no technical background.
 
 If you don't already have a Heroku account, it'll prompt you to create one. Once you're logged in to Heroku, choose a name for your installation, then scroll down and click **Deploy**. Once it's finished, click **View** and follow the prompts. Once finished, open the site and from there you can easily set up a demo data set (if you just want to learn Tabbycat) or use the data importer to set up a real tournament.
 
 .. note:: During the setup process, Heroku will ask you to verify your account by adding a credit card. A standard Tabbycat site *will not charge* your card — charges only accrue if you deliberately add a paid service in the Heroku dashboard.
 
-  If you can't access a credit card, you can instead install a limited version, which we call "Tabbykitten". However, Tabbykitten cannot send any e-mails or handle as much public traffic. We therefore strongly recommend it only as a last resort, and even then only for small tournaments.  `Use this link to set up a Tabbykitten site <https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/kitten>`_.
+  If you can't access a credit card, you can instead install a limited version, which we call "Tabbykitten". However, Tabbykitten is out-of-date, cannot send e-mails, and is less able to serve lots of simultaneous users. We therefore strongly recommend it only as a last resort, and even then only for small tournaments.  `Use this link to set up a Tabbykitten site <https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/kitten>`_.
 
 The long way
 ============
@@ -39,7 +39,7 @@ When we say "command shell", on Windows we mean **Command Prompt**, and on Linux
 .. admonition:: Advanced users
   :class: tip
 
-  Tabbycat is a `Django <https://www.djangoproject.com/>`_ project. As such, it can be installed on any web platform that supports Django, using any SQL system that Django supports. Just be aware that we haven't tried any other platform.
+  Tabbycat is a `Django <https://www.djangoproject.com/>`_ project. As such, it can be installed on any web platform that supports Django, using PostgreSQL. Just be aware that requirements and installation may be slightly different.
 
 Short version of the long way
 -----------------------------
@@ -221,6 +221,8 @@ Your Heroku app will be available at ``yourappname.herokuapp.com``. You may want
 
 The custom domain name basically requires two things: a DNS ``CNAME`` entry on your website targeting ``yourappname.herokuapp.com``, and the custom domain configured on Heroku using ``heroku domains:add tab.yourwebsite.com``.  You'll also need to provide an SSL certificate for your custom domain and add it using the ``heroku certs:add`` command.
 
+If you're using Tabbycat's email notifications, you might also configure your email provider to use domain authentication---see :ref:`configuring-email-provider`.
+
 HTTPS
 -----
 
@@ -235,32 +237,21 @@ Time zone
 
 If you want to change the time zone you nominated during deployment, you can do so by going to the `Heroku Dashboard <https://dashboard.heroku.com/>`_, clicking on your app, going to the **Settings** tab, clicking **Reveal Config Vars** and changing the value of the ``TIME_ZONE`` variable. This value must be one of the names in the IANA tz database, *e.g.* ``Pacific/Auckland``, ``America/Mexico_City``, ``Asia/Kuala_Lumpur``.  You can find a `list of these on Wikipedia <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in the 'TZ\*' column.
 
-SendGrid account details
-------------------------
+Email provider
+--------------
 
-By default, Heroku will automatically create a SendGrid account for you. For small tournaments, this should work fine. For larger ones, though, SendGrid typically doesn't allow new accounts to send so many emails without additional vetting. This vetting is separate to the verification you did for your Heroku account, and as far as we're aware, it can't be done until you send your first email, by which time it's probably too late.
+  *Changed in version 2.6:* Tabbycat no longer automatically provisions SendGrid via Heroku.
 
-If you're running a large tournament, you may wish to use your own SendGrid account instead. The free tier probably won't suffice after the trial period, but the Essentials tier should be more than adequate. If you're a student and have the `GitHub Education Pack <https://education.github.com/pack>`_, you might find the SendGrid plan here useful.
+Tabbycat does not come with an email provider. Before Tabbycat will send emails, you will need to install a third-party email provider yourself. To do so, you may add/change the following config vars:
 
-If you set up and use your own SendGrid account, you can remove the SendGrid add-on from your Heroku app. The SendGrid add-on is only necessary if you wish to use Heroku's auto-created SendGrid account.
+- ``DEFAULT_FROM_EMAIL``: Email to send from
+- ``EMAIL_HOST``: Host server
+- ``EMAIL_HOST_USER``: Username for authentification to host
+- ``EMAIL_HOST_PASSWORD``: Password with username
+- ``EMAIL_PORT`` (default 587): Port for server
+- ``EMAIL_USE_TLS`` (default True): Whether to use `Transport Layer Security <https://en.wikipedia.org/wiki/Transport_Layer_Security>`_ (True/False)
 
-To set up your app to use your own SendGrid account:
-
-.. rst-class:: spaced-list
-
-1. `Sign up for a SendGrid account <https://sendgrid.com/pricing/>`_, if you don't already have one.
-
-2. `Create an API key <https://app.sendgrid.com/settings/api_keys>`_ in your SendGrid account.
-
-  There are `instructions for how to do this in the SendGrid documentation <https://sendgrid.com/docs/User_Guide/Settings/api_keys.html>`_. The only permission that is needed is the "Mail Send" permission, so you can turn off all others if you want to be safe.
-
-3. Set the following config vars in Heroku Dashboard (or using the Heroku CLI, if you have it):
-
-  - ``SENDGRID_USERNAME`` should be set to ``apikey`` (not your username).
-  - ``SENDGRID_PASSWORD`` should be set to your API key, which will start with ``SG*******``.
-
-  .. warning:: The `Heroku SendGrid instructions <https://devcenter.heroku.com/articles/sendgrid#setup-api-key-environment-variable>`_ to do something with ``SENDGRID_API_KEY`` are **incorrect**. We figured this out by contacting SendGrid support staff. Use the above config vars instead.
-
+See :ref:`configuring-email-provider` for more information, including a few options for email service providers.
 
 .. _upgrade-heroku:
 

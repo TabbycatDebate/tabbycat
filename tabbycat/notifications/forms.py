@@ -1,6 +1,7 @@
 from django import forms
 from django.conf import settings
 from django.core.mail import send_mail
+from django.template import Template, TemplateSyntaxError
 from django.utils.translation import gettext as _, gettext_lazy
 from django_summernote.widgets import SummernoteWidget
 
@@ -29,3 +30,16 @@ class BasicEmailForm(forms.Form):
     subject_line = forms.CharField(label=_("Subject"), required=True, max_length=78)
     message_body = forms.CharField(label=_("Message"), required=True, widget=SummernoteWidget(
         attrs={'height': 150, 'class': 'form-summernote'}))
+
+    def clean_as_template(self, field_name):
+        try:
+            Template(self.cleaned_data[field_name])
+        except TemplateSyntaxError as e:
+            raise forms.ValidationError(e)
+        return self.cleaned_data[field_name]
+
+    def clean_subject_line(self):
+        return self.clean_as_template('subject_line')
+
+    def clean_message_body(self):
+        return self.clean_as_template('message_body')

@@ -4,12 +4,12 @@ info:
   description: Parliamentary debate tabulation software
   termsOfService: 'https://tabbycat.readthedocs.io/en/stable/'
   contact:
-    email: tech@debatingsociety.ca
+    email: ebeaule@tabbycat-debate.org
     name: Étienne Beaulé
   license:
     name: Tabbycat
     url: 'https://tabbycat.readthedocs.io/en/stable/about/licence.html'
-  version: 1.0.0
+  version: 1.2.0
 security:
   - Token: []
 paths:
@@ -238,6 +238,13 @@ paths:
           required: false
           schema:
             type: integer
+        - name: break
+          in: query
+          description: >-
+            If present, only show breaking adjudicators, if permissions allow.
+          required: false
+          schema:
+            type: boolean
       responses:
         '200':
           description: ''
@@ -563,10 +570,80 @@ paths:
         required: true
         schema:
           type: string
+  '/v1/tournaments/{tournament_slug}/break-categories/{id}/break':
+    get:
+      operationId: v1_tournaments_break-categories_break_read
+      description: Get team breaks for the break category
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BreakingTeam'
+      tags:
+        - v1
+        - break-categories
+    post:
+      operationId: v1_tournaments_break-categories_break_create
+      description: Create a break for a break category
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BreakingTeam'
+      tags:
+        - v1
+        - break-categories
+    delete:
+      operationId: v1_tournaments_break-categories_break_delete
+      description: Delete a break category''s break
+      responses:
+        '204':
+          description: ''
+      tags:
+        - v1
+        - break-categories
+    patch:
+      operationId: v1_tournaments_break-categories_break_partial_update
+      description: Update remark on team and regenerate break
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BreakingTeam'
+      tags:
+        - v1
+        - break-categories
+      requestBody:
+        $ref: '#/components/requestBodies/PartialBreakingTeam'
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: tournament_slug
+        in: path
+        required: true
+        schema:
+          type: string
   '/v1/tournaments/{tournament_slug}/feedback':
     get:
       operationId: v1_tournaments_feedback_list
-      description: List all adjudicator feedback for a tournament
+      description: >-
+        List all adjudicator feedback for a tournament.
+        Warning: Expensive operation.
       parameters:
         - name: limit
           in: query
@@ -1209,6 +1286,12 @@ paths:
         - debates
       requestBody:
         $ref: '#/components/requestBodies/Debate'
+    delete:
+      operationId : v1_tournaments_rounds_pairings_delete_all
+      description: Delete all pairings of the round
+      responses:
+        '204':
+          description: 'All pairings have been deleted'
     parameters:
       - name: round_seq
         in: path
@@ -1220,7 +1303,7 @@ paths:
         required: true
         schema:
           type: string
-  '/v1/tournaments/{tournament_slug}/rounds/{round_seq}/pairings/{id}':
+  '/v1/tournaments/{tournament_slug}/rounds/{round_seq}/pairings/{debate_pk}':
     get:
       operationId: v1_tournaments_rounds_pairings_read
       description: Retrieve a debate in the round
@@ -1262,11 +1345,291 @@ paths:
         - v1
         - debates
     parameters:
+      - name: debate_pk
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: round_seq
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: tournament_slug
+        in: path
+        required: true
+        schema:
+          type: string
+  '/v1/tournaments/{tournament_slug}/rounds/{round_seq}/pairings/{debate_pk}/ballots':
+    get:
+      operationId: v1_tournaments_rounds_pairings_ballots_list
+      description: Retrieve ballots for a debate
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DebateResult'
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          required: false
+          schema:
+            type: integer
+        - name: confirmed
+          in: query
+          description: Whether to include unconfirmed ballots
+          required: false
+          schema:
+            type: boolean
+      tags:
+        - v1
+        - results
+    post:
+      operationId: v1_tournaments_rounds_pairings_ballots_create
+      description: Create a result for a debate
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DebateResult'
+      tags:
+        - v1
+        - results
+      requestBody:
+        $ref: '#/components/requestBodies/DebateResult'
+    parameters:
+      - name: debate_pk
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: round_seq
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: tournament_slug
+        in: path
+        required: true
+        schema:
+          type: string
+  '/v1/tournaments/{tournament_slug}/rounds/{round_seq}/pairings/{debate_pk}/ballots/{id}':
+    get:
+      operationId: v1_tournaments_rounds_pairings_ballots_read
+      description: Retrieve a ballot of a debate
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DebateResult'
+      tags:
+        - v1
+        - results
+    post:
+      operationId: v1_tournaments_rounds_pairings_ballots_update
+      description: Modify a debate ballot. Cannot re-edit scores.
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DebateResult'
+      tags:
+        - v1
+        - results
+      requestBody:
+        $ref: '#/components/requestBodies/DebateResult'
+    delete:
+      operationId: v1_tournaments_rounds_pairings_ballots_delete
+      description: Delete a ballot of the debate
+      responses:
+        '204':
+          description: ''
+      tags:
+        - v1
+        - results
+    parameters:
       - name: id
         in: path
         required: true
         schema:
           type: integer
+      - name: debate_pk
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: round_seq
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: tournament_slug
+        in: path
+        required: true
+        schema:
+          type: string
+  '/v1/tournaments/{tournament_slug}/rounds/{round_seq}/availabilities':
+    get:
+      operationId: v1_tournaments_rounds_availabilities_list
+      description: List all participants marked as available for the round
+      parameters:
+        - name: adjudicators
+          in: query
+          description: Whether to list available adjudicators
+          required: false
+          schema:
+            type: boolean
+        - name: teams
+          in: query
+          description: Whether to list available teams
+          required: false
+          schema:
+            type: boolean
+        - name: venues
+          in: query
+          description: Whether to list available rooms
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  title: Participant
+                  type: string
+                  format: uri
+      tags:
+        - v1
+        - availabilities
+    post:
+      operationId: v1_tournaments_rounds_availabilities_post
+      description: Marks participants as unavailable for a round
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  title: Participant
+                  type: string
+                  format: uri
+      tags:
+        - v1
+        - availabilities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                title: Participant
+                type: string
+                format: uri
+    put:
+      operationId: v1_tournaments_rounds_availabilities_put
+      description: Marks participants as available for a round
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  title: Participant
+                  type: string
+                  format: uri
+      tags:
+        - v1
+        - availabilities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                title: Participant
+                type: string
+                format: uri
+    patch:
+      operationId: v1_tournaments_rounds_availabilities_patch
+      description: Toggles participants' availabilities for a round
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  title: Participant
+                  type: string
+                  format: uri
+      tags:
+        - v1
+        - availabilities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                title: Participant
+                type: string
+                format: uri
+    delete:
+      operationId: v1_tournaments_rounds_availabilities_delete
+      description: >-
+        Marks all participants of specified type as unavailable for the round
+      parameters:
+        - name: adjudicators
+          in: query
+          description: Whether to unmark available adjudicators
+          required: false
+          schema:
+            type: boolean
+        - name: teams
+          in: query
+          description: Whether to unmark available teams
+          required: false
+          schema:
+            type: boolean
+        - name: venues
+          in: query
+          description: Whether to unmark available rooms
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '204':
+          description: ''
+      tags:
+        - v1
+        - availabilities
+    parameters:
       - name: round_seq
         in: path
         required: true
@@ -1728,7 +2091,7 @@ paths:
             type: integer
         - name: category
           in: query
-          description: Restrict the standings to a speaker category
+          description: Restrict the standings to a break category
           required: false
           schema:
             type: integer
@@ -2196,6 +2559,36 @@ components:
           schema:
             $ref: '#/components/schemas/Team'
       required: true
+    DebateResult:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DebateResult'
+      required: true
+    PartialBreakingTeam:
+      content:
+        application/json:
+          schema:
+            required:
+              - team
+            type: object
+            properties:
+              team:
+                title: Team
+                type: string
+                format: uri
+              remark:
+                title: Remark
+                type: string
+                nullable: true
+                enum:
+                  - C
+                  - I
+                  - D
+                  - d
+                  - t
+                  - w
+                  - null
   securitySchemes:
     Token:
       type: apiKey
@@ -2473,6 +2866,12 @@ components:
           title: Checked
           type: boolean
           readOnly: true
+        timestamp:
+          title: Timestamp
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
     Adjudicator:
       required:
         - name
@@ -2536,6 +2935,9 @@ components:
           title: Base score
           type: number
           format: float
+        breaking:
+          title: Breaking
+          type: boolean
         trainee:
           title: Always trainee
           description: >-
@@ -2595,6 +2997,10 @@ components:
         - priority
       type: object
       properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
         name:
           title: Name
           description: 'Name to be displayed, e.g., "ESL"'
@@ -2667,6 +3073,10 @@ components:
         - seq
       type: object
       properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
         name:
           title: Name
           description: 'Name to be displayed, e.g., "ESL"'
@@ -2826,6 +3236,20 @@ components:
           title: Ignored
           description: Whether the feedback should affect the judge's score
           type: boolean
+        participant_submitter:
+          title: Participant submitter
+          description: The submitting participant, adjudicator or speaker
+          type: string
+          format: uri
+          nullable: true
+          readOnly: true
+        private_url:
+          title: Private URL
+          description: >-
+            Whether the feedback was submitted through the participant's
+            private URL.
+          type: boolean
+          readOnly: true
         submitter:
           title: Submitter
           type: integer
@@ -3111,11 +3535,15 @@ components:
           title: Starts at
           type: string
           format: time
+        weight:
+          title: Weight
+          description: >-
+            A factor for the points received in the round. For example, if 2,
+            all points are doubled.
+          type: integer
     Debate:
       required:
-        - venue
         - teams
-        - adjudicators
       type: object
       properties:
         url:
@@ -3158,6 +3586,7 @@ components:
         adjudicators:
           title: Adjudicators
           type: object
+          nullable: true
           required:
             - chair
             - panellists
@@ -3305,8 +3734,8 @@ components:
         short_reference:
           title: Short name/suffix
           description: >-
-            The name shown in the draw. Do not include institution name (see
-            "uses institutional prefix" below)
+            The decoded name shown in the draw, not including institution name
+            (see "uses institutional prefix" below)
           type: string
           maxLength: 35
         code_name:
@@ -3323,8 +3752,8 @@ components:
         short_name:
           title: Short name
           description: >-
-            The name shown in the draw, including institution name. This is
-            autogenerated.
+            The decoded name shown in the draw, including institution name. This
+            is autogenerated.
           type: string
           readOnly: true
         long_name:
@@ -3548,3 +3977,189 @@ components:
             pages. The description, if not blank, will always show on admin
             pages.
           type: boolean
+    DebateResult:
+      required:
+        - result
+      type: object
+      properties:
+        url:
+          title: Url
+          type: string
+          format: uri
+          readOnly: true
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        result:
+          title: Result
+          type: object
+          properties:
+            sheets:
+              title: Sheets
+              type: array
+              items:
+                type: object
+                required:
+                  - teams
+                properties:
+                  adjudicator:
+                    title: Adjudicator
+                    type: string
+                    format: uri
+                    nullable: true
+                  teams:
+                    title: Teams
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - side
+                        - team
+                      properties:
+                        side:
+                          title: Side
+                          type: string
+                          enum:
+                            - aff
+                            - neg
+                            - og
+                            - oo
+                            - cg
+                            - co
+                        points:
+                          title: Points
+                          type: integer
+                        win:
+                          title: Win
+                          type: boolean
+                        score:
+                          title: Score
+                          type: number
+                        team:
+                          title: Team
+                          type: string
+                          format: uri
+                        speeches:
+                          title: Speeches
+                          description: Speeches must be given in speaker order.
+                          type: array
+                          items:
+                            type: object
+                            required:
+                              - score
+                              - speaker
+                            properties:
+                              ghost:
+                                title: Ghost
+                                description: >-
+                                  If checked, this score does not count towards
+                                  the speaker tab. This is typically checked
+                                  for speeches where someone spoke twice to
+                                  make up for an absent teammate (sometimes
+                                  known as iron-person or iron-man speeches).
+                                type: boolean
+                              score:
+                                title: Score
+                                type: number
+                              speaker:
+                                title: Speaker
+                                type: string
+                                format: uri
+        motion:
+          title: Motion
+          type: string
+          format: uri
+          nullable: true
+        timestamp:
+          title: Timestamp
+          type: string
+          format: date-time
+          readOnly: true
+        version:
+          title: Version
+          type: integer
+          readOnly: true
+        submitter_type:
+          title: Submitter type
+          type: string
+          enum:
+            - T
+            - P
+          readOnly: true
+        confirmed:
+          title: Confirmed
+          type: boolean
+        confirm_timestamp:
+          title: Confirm timestamp
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        ip_address:
+          title: IP address
+          type: string
+          format: ipv4
+          readOnly: true
+        discarded:
+          title: Discarded
+          type: boolean
+        participant_submitter:
+          title: Participant submitter
+          description: The submitting adjudicator (if by private URL)
+          type: string
+          format: uri
+          nullable: true
+          readOnly: true
+        private_url:
+          title: Private URL
+          description: >-
+            Whether the ballot was submitted through the participant's
+            private URL.
+          type: boolean
+          readOnly: true
+        single_adj:
+          title: Single adjudicator
+          description: >-
+            If the ballot only has the scores of one adjudicator,
+            rather than from all.
+          type: boolean
+          readOnly: true
+        submitter:
+          title: Submitter
+          type: integer
+          nullable: true
+          readOnly: true
+        confirmer:
+          title: Confirmer
+          type: integer
+          nullable: true
+          readOnly: true
+    BreakingTeam:
+      required:
+        - team
+        - rank
+      type: object
+      properties:
+        team:
+          title: Team
+          type: string
+          format: uri
+        rank:
+          title: Rank
+          type: integer
+        break_rank:
+          title: Break rank
+          type: integer
+        remark:
+          title: Remark
+          type: string
+          nullable: true
+          enum:
+            - C
+            - I
+            - D
+            - d
+            - t
+            - w
+            - null

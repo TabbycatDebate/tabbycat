@@ -1,5 +1,6 @@
+from django.core.cache import cache
 from django.forms import CharField, ChoiceField, Form, ModelChoiceField, ModelForm
-from django.forms.fields import IntegerField
+from django.forms.fields import IntegerField, NumberInput
 from django.forms.models import ModelChoiceIterator
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
@@ -13,6 +14,7 @@ from options.preferences import TournamentStaff
 from options.presets import all_presets, get_preferences_data, presets_for_form, public_presets_for_form
 
 from .models import Round, Tournament
+from .signals import update_tournament_cache
 from .utils import auto_make_rounds
 
 
@@ -87,7 +89,8 @@ class TournamentConfigureForm(ModelForm):
     public_info = ChoiceField(
         choices=public_presets_for_form(), # Tuple with (Present_Index, Preset_Name)
         label=_("Public Configuration"),
-        help_text=_("Show non-sensitive information on the public-facing side of this site, like draws (once released) and the motions of previous rounds"))
+        help_text=_("Show non-sensitive information on the public-facing side of this site, "
+            "like draws (once released) and the motions of previous rounds"))
 
     tournament_staff = CharField(
         label=TournamentStaff.verbose_name,
@@ -162,6 +165,11 @@ class RoundWithCompleteOptionField(RoundField):
         return super().to_python(value)
 
 
+def clear_all_round_caches(tournament):
+    cache.delete_many(["%s_%s_%s" % (tournament.slug, r.seq, 'object') for r in tournament.round_set.all()])
+    update_tournament_cache(Tournament, tournament)
+
+
 class SetCurrentRoundSingleBreakCategoryForm(Form):
     """Form to set completed rounds in a tournament with a single break category."""
 
@@ -177,6 +185,7 @@ class SetCurrentRoundSingleBreakCategoryForm(Form):
         seq = self.cleaned_data['current_round'].seq
         self.tournament.round_set.filter(seq__lt=seq).update(completed=True)
         self.tournament.round_set.filter(seq__gte=seq).update(completed=False)
+        clear_all_round_caches(self.tournament)
 
 
 class SetCurrentRoundMultipleBreakCategoriesForm(Form):
@@ -229,7 +238,6 @@ class SetCurrentRoundMultipleBreakCategoriesForm(Form):
             self.tournament.prelim_rounds().filter(seq__lt=seq).update(completed=True)
             self.tournament.prelim_rounds().filter(seq__gte=seq).update(completed=False)
             self.tournament.break_rounds().update(completed=False)
-
         else:
             self.tournament.prelim_rounds().update(completed=True)
             for category in self.tournament.breakcategory_set.all():
@@ -240,3 +248,30 @@ class SetCurrentRoundMultipleBreakCategoriesForm(Form):
                     seq = self.cleaned_data['elim_' + category.slug].seq
                     category.round_set.filter(seq__lt=seq).update(completed=True)
                     category.round_set.filter(seq__gte=seq).update(completed=False)
+        clear_all_round_caches(self.tournament)
+
+
+class RoundWeightForm(Form):
+
+    def __init__(self, tournament, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tournament = tournament
+        self._create_fields()
+
+    def _create_fields(self):
+        """Dynamically generate one integer field for each preliminary round, for the
+        user to indicate how many teams are from that institution."""
+        for round in self.tournament.round_set.filter(stage=Round.STAGE_PRELIMINARY):
+            self.fields['round_weight_%d' % round.id] = IntegerField(
+                    min_value=0,
+                    label=_("%(name)s (%(abbreviation)s)") % {'name': round.name, 'abbreviation': round.abbreviation},
+                    required=False, initial=round.weight,
+                    widget=NumberInput(attrs={'placeholder': 1}))
+
+    def save(self):
+        rounds = self.tournament.round_set.filter(stage=Round.STAGE_PRELIMINARY)
+        for round in rounds:
+            round.weight = self.cleaned_data['round_weight_%d' % round.id]
+        Round.objects.bulk_update(rounds, ['weight'])
+
+        return rounds

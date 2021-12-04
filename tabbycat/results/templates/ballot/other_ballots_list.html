@@ -41,6 +41,10 @@
           <span class="badge badge-success float-right">{% trans "CURRENTLY VIEWING" %}</span>
         {% endif %}
 
+        {% if other.merged %}
+          <span class="badge badge-success float-right">{% trans "MERGING" %}</span>
+        {% endif %}
+
         {% blocktrans trimmed with version=other.version %}
           Version <strong>{{ version }}</strong>,
         {% endblocktrans %}

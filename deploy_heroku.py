@@ -157,7 +157,7 @@ if sys.version_info >= (3, 3) and shutil.which("heroku") is None:
     exit(1)
 
 # Create the app with addons
-addons = ["papertrail", "sendgrid:starter", "heroku-postgresql:%s" % args.pg_plan, "rediscloud:30"]
+addons = ["papertrail", "heroku-postgresql:%s" % args.pg_plan, "rediscloud:30"]
 command = ["heroku", "apps:create", "--stack", "heroku-18"]
 
 if addons:

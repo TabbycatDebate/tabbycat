@@ -7,8 +7,7 @@
 [![Release](https://img.shields.io/github/release/tabbycatdebate/tabbycat.svg)](https://github.com/tabbycatdebate/tabbycat/releases)
 [![Crowdin](https://badges.crowdin.net/tabbycat/localized.svg)](https://crowdin.com/project/tabbycat)
 [![Docs](https://readthedocs.org/projects/tabbycat/badge/)](http://tabbycat.readthedocs.io/en/stable/)
-[![Build Status](https://travis-ci.org/TabbycatDebate/tabbycat.svg?branch=develop)](https://travis-ci.org/TabbycatDebate/tabbycat)
-[![Build status](https://ci.appveyor.com/api/projects/status/hcht4g5x2m5urr8y/branch/develop?svg=true)](https://ci.appveyor.com/project/philipbelesky/tabbycat-81705/branch/develop)
+![Build Status](https://github.com/TabbycatDebate/tabbycat/workflows/Django%20CI/badge.svg)
 [![Maintainability](https://api.codeclimate.com/v1/badges/33dc219dfb957ad658c2/maintainability)](https://codeclimate.com/github/TabbycatDebate/tabbycat/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/33dc219dfb957ad658c2/test_coverage)](https://codeclimate.com/github/TabbycatDebate/tabbycat/test_coverage)
 
@@ -16,7 +15,7 @@
 
 Tabbycat is a draw tabulation system for British Parliamentary and a variety of two-team formats. It was used at Australs 2010 and 2012–2019, EUDC 2018, WUDC 2019–2020 and many other tournaments of all sizes and formats. To see an example of a post-tournament website, have a look at the [WUDC 2020 tab website](https://wudc2020.herokuapp.com).
 
-**Want to try it out?** The best way to trial Tabbycat is just to launch a new site, as described [in our user guide](https://tabbycat.readthedocs.io/en/stable/install/heroku.html) (or [below](#installation-and-user-guide)). It takes just a few clicks, costs nothing, requires no technical background, and you can always deploy a fresh copy when you're ready to run your tournament.
+**Want to try it out?** The best way to trial Tabbycat is just to launch a new site, as described [below](#%EF%B8%8F-installation)). It takes just a few clicks, requires no technical background, and you can always deploy a fresh copy when you're ready to run your tournament.
 
 ## 🔍 Features
 
@@ -34,15 +33,17 @@ Our user guide is at [tabbycat.readthedocs.io](http://tabbycat.readthedocs.io/).
 
 ## ⬆️ Installation
 
-The fastest way to launch a Tabbycat site is to click this button:
+Tabbycat can be deployed in a number of ways. While you can set it up to [run on your own computer](https://tabbycat.readthedocs.io/en/stable/install/local.html) most users will want to run it as a website.
+
+[Calico](https://calicotab.com/) is a managed hosting service run by one of Tabbycat's developers. For a flat fee, it will host tab websites, automatically manage their setup and performance, and provide ongoing access to the released tab. Click this button to deploy to Calico:
+
+[![Deploy](https://raw.githubusercontent.com/gist/tienne-B/fc04ecd3c11a38424b642b4bba60e8d9/raw/b2c71d7d6a0d368d3e9dfd8002af729d155ad09b/calicodeploy.svg)](https://calicotab.com/tournaments/new/)
+
+Tabbycat is also configured for a '1 click' install to the [Heroku](https://www.heroku.com) web platform. Click this button to begin:
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/master)
 
-During the installation process Heroku will ask you to verify your account by adding a credit or debit card. A standard Tabbycat site *will not charge* your card without explicit permission — charges only accrue if you deliberately add a paid service in the Heroku dashboard.
-
-That said if you do not have access to a credit or debit card we offer a version of the software — 'Tabbykitten' — that does not require Heroku to verify your account. However, as a result, this version is limited: it cannot send emails and cannot be upgraded with extra database capacity or to better handle large amounts of traffic (although you can perform these upgrades later if you verify your Heroku account). We recommend using it only for small tournaments. [Use this link to set up a Tabbykitten version](https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/kitten).
-
-Our documentation also provides guides for how to run Tabbycat on your local machine.
+While the baseline Heroku hosting is free, some features require additional setup and larger tournaments will likely need to pay for greater hosting capacities.
 
 ## 💪 Support and Contributing
 
@@ -60,8 +61,8 @@ We haven't released Tabbycat under an open-source licence, so there is no formal
 
 Tabbycat was authored by Qi-Shan Lim for Auckland Australs in 2010. The current active developers are:
 
-- Philip Belesky ([e-mail](mailto:contact@philipbelesky.com))
-- Chuan-Zheng Lee ([e-mail](mailto:czlee@stanford.edu))
-- Étienne Beaulé ([e-mail](mailto:tech@debatingsociety.ca))
+- Philip Belesky
+- Chuan-Zheng Lee
+- Étienne Beaulé
 
-Please don't hesitate to contact us with any questions, suggestions, or generally anything relating to Tabbycat.
+Please don't hesitate to contact us ([e-mail](mailto:contact@tabbycat-debate.org)) with any questions, suggestions, or generally anything relating to Tabbycat.

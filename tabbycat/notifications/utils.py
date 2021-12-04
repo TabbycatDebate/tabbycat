@@ -17,9 +17,8 @@ from django.utils.translation import gettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
 from options.utils import use_team_code_names
-from participants.models import Person
 from participants.prefetch import populate_win_counts
-from results.result import BaseConsensusDebateResultWithSpeakers, DebateResult, VotingDebateResult
+from results.result import ConsensusDebateResultWithScores, DebateResult, DebateResultByAdjudicatorWithScores
 from results.utils import side_and_position_names
 
 
@@ -39,9 +38,18 @@ def _assemble_panel(adjs):
     return ", ".join(adj_string)
 
 
+def _check_in_to(pk, to_ids):
+    try:
+        to_ids.remove(pk)
+    except KeyError:
+        return False
+    return True
+
+
 def adjudicator_assignment_email_generator(to, url, round):
     emails = []
-    draw = round.debate_set_with_prefetches(speakers=False).all()
+    to_ids = {p.id for p in to}
+    draw = round.debate_set_with_prefetches(speakers=False).filter(debateadjudicator__adjudicator__in=to)
     use_codes = use_team_code_names(round.tournament, False)
 
     for debate in draw:
@@ -54,9 +62,7 @@ def adjudicator_assignment_email_generator(to, url, round):
         }
 
         for adj, pos in debate.adjudicators.with_positions():
-            try:
-                to.remove(adj.id)
-            except ValueError:
+            if not _check_in_to(adj.id, to_ids):
                 continue
 
             context_user = context.copy()
@@ -72,23 +78,10 @@ def adjudicator_assignment_email_generator(to, url, round):
 
 
 def randomized_url_email_generator(to, url, tournament):
-    emails = []
-
-    for instance in tournament.participants:
-        try:
-            to.remove(instance.id)
-        except ValueError:
-            continue
-        url_ind = url + instance.url_key + '/'
-
-        variables = {'USER': instance.name, 'URL': url_ind, 'KEY': instance.url_key, 'TOURN': str(tournament)}
-
-        emails.append((variables, instance))
-
-    return emails
+    return [({'USER': p.name, 'URL': url + p.url_key + '/', 'KEY': p.url_key, 'TOURN': str(tournament)}, p) for p in to]
 
 
-def ballots_email_generator(to, debate):
+def ballots_email_generator(to, debate):  # "to" is unused
     emails = []
     tournament = debate.round.tournament
     results = DebateResult(debate.confirmed_ballot)
@@ -107,7 +100,7 @@ def ballots_email_generator(to, debate):
                 points = 4 - scoresheet.rank(side)
             else:
                 side_string += _("<li>%(side)s: %(team)s (%(points)s - %(speaks)s total speaks)")
-                points = _("Win") if side == scoresheet.winner() else _("Loss")
+                points = _("Win") if side in scoresheet.winners() else _("Loss")
 
             ballot += side_string % {
                 'side': side_name,
@@ -131,17 +124,17 @@ def ballots_email_generator(to, debate):
 
         return mark_safe(ballot)
 
-    if isinstance(results, VotingDebateResult):
-        for (adj, ballot) in results.scoresheets.items():
-            if adj.email is None:
+    if isinstance(results, DebateResultByAdjudicatorWithScores):
+        for adj, ballot in results.scoresheets.items():
+            if adj.email is None:  # As "to" is None, must check if eligible email
                 continue
 
             context = {'DEBATE': round_name, 'USER': adj.name, 'SCORES': _create_ballot(results, ballot)}
             emails.append((context, adj))
-    elif isinstance(results, BaseConsensusDebateResultWithSpeakers):
+    elif isinstance(results, ConsensusDebateResultWithScores):
         context = {'DEBATE': round_name, 'SCORES': _create_ballot(results, results.scoresheet)}
 
-        for adj in debate.debateadjudicator_set.all():
+        for adj in debate.debateadjudicator_set.all().select_related('adjudicator'):
             if adj.adjudicator.email is None:
                 continue
 
@@ -155,24 +148,24 @@ def ballots_email_generator(to, debate):
 
 def standings_email_generator(to, url, round):
     emails = []
-    teams = round.active_teams.prefetch_related('speaker_set')
-    populate_win_counts(teams)
+    to_ids = {p.id for p in to}
 
     context = {
         'TOURN': str(round.tournament),
         'ROUND': round.name,
-        'URL': url if round.tournament.pref('public_team_standings') else "",
+        'URL': url,
     }
+
+    teams = round.active_teams.filter(speaker__in=to).prefetch_related('speaker_set')
+    populate_win_counts(teams, round)
 
     for team in teams:
         context_team = context.copy()
-        context_team['POINTS'] = str(team.points_count)
+        context_team['POINTS'] = str(team._points)
         context_team['TEAM'] = team.short_name
 
         for speaker in team.speaker_set.all():
-            try:
-                to.remove(speaker.id)
-            except ValueError:
+            if not _check_in_to(speaker.id, to_ids):
                 continue
 
             context_user = context_team.copy()
@@ -184,8 +177,6 @@ def standings_email_generator(to, url, round):
 
 
 def motion_release_email_generator(to, round):
-    emails = []
-
     def _create_motion_list():
         motion_list = "<ul>"
         for motion in round.motion_set.all():
@@ -198,26 +189,15 @@ def motion_release_email_generator(to, round):
 
         return mark_safe(motion_list)
 
-    context = {
-        'TOURN': str(round.tournament),
-        'ROUND': round.name,
-        'MOTIONS': _create_motion_list(),
-    }
-
-    people = Person.objects.filter(id__in=to)
-    for person in people:
-        context_user = context.copy()
-        context_user['USER'] = person.name
-
-        emails.append((context_user, person))
-
-    return emails
+    return [({'TOURN': str(round.tournament), 'ROUND': round.name, 'MOTIONS': _create_motion_list(), 'USER': p.name}, p) for p in to]
 
 
 def team_speaker_email_generator(to, tournament):
     emails = []
+    to_ids = {p.id for p in to}
 
-    for team in tournament.team_set.all().prefetch_related('speaker_set', 'break_categories').select_related('institution'):
+    teams = tournament.team_set.filter(speaker__in=to).prefetch_related('speaker_set', 'break_categories').select_related('institution')
+    for team in teams:
         context = {
             'TOURN': str(tournament),
             'SHORT': team.short_name,
@@ -230,9 +210,7 @@ def team_speaker_email_generator(to, tournament):
         }
 
         for speaker in team.speakers:
-            try:
-                to.remove(speaker.id)
-            except ValueError:
+            if not _check_in_to(speaker.id, to_ids):
                 continue
 
             context_user = context.copy()
@@ -245,8 +223,10 @@ def team_speaker_email_generator(to, tournament):
 
 def team_draw_email_generator(to, round):
     emails = []
-    draw = round.debate_set_with_prefetches(speakers=True).all()
-    use_codes = use_team_code_names(round.tournament, False)
+    to_ids = {p.id for p in to}
+    tournament = round.tournament
+    draw = round.debate_set_with_prefetches(speakers=True).filter(debateteam__team__speaker__in=to)
+    use_codes = use_team_code_names(tournament, False)
 
     for debate in draw:
         matchup = debate.matchup_codes if use_codes else debate.matchup
@@ -263,9 +243,7 @@ def team_draw_email_generator(to, round):
             context_team['SIDE'] = dt.get_side_name(tournament=round.tournament)
 
             for speaker in dt.team.speakers:
-                try:
-                    to.remove(speaker.id)
-                except ValueError:
+                if not _check_in_to(speaker.id, to_ids):
                     continue
 
                 context_user = context_team.copy()

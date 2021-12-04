@@ -1,12 +1,12 @@
 import logging
 
 from django.contrib.humanize.templatetags.humanize import ordinal
-from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import gettext, gettext_lazy as _
 
 from tournaments.utils import get_side_name
+from utils.fields import ChoiceArrayField
 
 from .generator import DRAW_FLAG_DESCRIPTIONS
 
@@ -49,7 +49,8 @@ class Debate(models.Model):
     room_rank = models.IntegerField(default=0,
         verbose_name=_("room rank"))
 
-    flags = ArrayField(base_field=models.CharField(max_length=15), blank=True, choices=DRAW_FLAG_DESCRIPTIONS, default=list)
+    flags = ChoiceArrayField(blank=True, default=list,
+        base_field=models.CharField(max_length=15, choices=DRAW_FLAG_DESCRIPTIONS))
 
     importance = models.IntegerField(default=0, choices=[(i, i) for i in range(-2, 3)],
         verbose_name=_("importance"))
@@ -274,7 +275,7 @@ class DebateTeam(models.Model):
     side = models.CharField(max_length=3, choices=SIDE_CHOICES,
         verbose_name=_("side"))
 
-    flags = ArrayField(base_field=models.CharField(max_length=15), blank=True, choices=DRAW_FLAG_DESCRIPTIONS, default=list)
+    flags = ChoiceArrayField(base_field=models.CharField(max_length=15, choices=DRAW_FLAG_DESCRIPTIONS), blank=True, default=list)
 
     class Meta:
         verbose_name = _("debate team")

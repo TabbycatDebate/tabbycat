@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-06-16 11:49\n"
+"PO-Revision-Date: 2020-12-31 14:47\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Language: bn_BD\n"
@@ -148,7 +148,7 @@ msgstr ""
 
 #: breakqual/models.py:93
 msgid "Different break"
-msgstr ""
+msgstr "ভিন্ন বিভাগে উন্নিত"
 
 #: breakqual/models.py:94
 msgid "Disqualified"
@@ -219,7 +219,7 @@ msgstr ""
 #: breakqual/templates/public_break_index.html:15 breakqual/views.py:73
 #, python-format
 msgid "%(category)s Break"
-msgstr ""
+msgstr "উন্নীতকরণ %(category)s"
 
 #: breakqual/templates/breaking_index.html:52
 #, python-format
@@ -507,7 +507,7 @@ msgstr ""
 
 #: breakqual/views.py:209
 msgid "Breaking Adjudicators"
-msgstr ""
+msgstr "উন্নিত বিচারকমণ্ডলী"
 
 #: breakqual/views.py:274
 msgid "Break Eligibility"

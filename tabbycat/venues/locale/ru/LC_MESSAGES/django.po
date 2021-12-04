@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-25 01:14\n"
+"POT-Creation-Date: 2020-07-05 15:26-0300\n"
+"PO-Revision-Date: 2020-07-10 17:00\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -15,9 +15,11 @@ msgstr ""
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: ru\n"
 "X-Crowdin-File: /develop/tabbycat/venues/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 956\n"
 
 #: venues/apps.py:7
-msgid "Venues"
+msgid "Rooms"
 msgstr "Аудитории"
 
 #: venues/consumers.py:18
@@ -32,11 +34,11 @@ msgstr "Сетка не подтверждена, подтвердите сет�
 msgid "Successfully auto-allocated rooms to debates."
 msgstr "Аудитории распределены."
 
-#: venues/models.py:9 venues/models.py:64
+#: venues/models.py:9 venues/models.py:66
 msgid "name"
 msgstr "название"
 
-#: venues/models.py:11 venues/models.py:118
+#: venues/models.py:11 venues/models.py:120
 msgid "priority"
 msgstr "приоритет"
 
@@ -44,83 +46,91 @@ msgstr "приоритет"
 msgid "Rooms with a higher priority number will be preferred when allocating rooms to debates"
 msgstr "При распределении аудиторий для дебатов боле предпочтительны будут аудитории с более высоким приоритетом"
 
-#: venues/models.py:15 venues/models.py:76
+#: venues/models.py:15 venues/models.py:78
 msgid "tournament"
 msgstr "турнир"
 
-#: venues/models.py:22
-msgid "room"
+#: venues/models.py:16
+msgid "URL"
+msgstr "URL"
+
+#: venues/models.py:17
+msgid "A URL that contains extra information about this room, e.g. a map or a meeting link (for online tournaments)"
 msgstr ""
 
-#: venues/models.py:23 venues/models.py:74
+#: venues/models.py:24
+msgid "room"
+msgstr "аудитория"
+
+#: venues/models.py:25 venues/models.py:76
 msgid "rooms"
 msgstr "аудитории"
 
-#: venues/models.py:59
+#: venues/models.py:61
 msgid "Don't display in room name"
-msgstr ""
+msgstr "Не показывать в названии аудитории"
 
-#: venues/models.py:60
+#: venues/models.py:62
 msgid "Display as prefix"
 msgstr "Отображать как префикс"
 
-#: venues/models.py:61
+#: venues/models.py:63
 msgid "Display as suffix"
 msgstr "Отображать как суффикс"
 
-#: venues/models.py:65
+#: venues/models.py:67
 msgid "Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room\". This name is shown when the category is prefixed or suffixed to a room name in the draw, e.g., \"Purple – G05\"."
 msgstr "Название категории, например, \"Фиолетовый\", \"Быстрый доступ\", \"Близко к аудитории тэбмастеров\". Это имя отображается, когда категория префиксована или суффиксована к названии аудитории в сетке, например, \"Фиолетовый - G05\"."
 
-#: venues/models.py:69
+#: venues/models.py:71
 msgid "description"
 msgstr "описание"
 
-#: venues/models.py:70
+#: venues/models.py:72
 msgid "Description, as the predicate of a sentence, e.g. \"has step-free access\", \"is close to the briefing hall\". This description follows \"This room\" when shown in tooltips, e.g., \"This room is close to the briefing hall.\"."
 msgstr "Описание, являющееся частью предложения, например, \"имеет доступ для инвалидных колясок\", \"расположена близко к аудитории общего сбора\". Это описание идет за \"Эта аудитория...\" в подсказках, например \"Эта аудитория расположена близко к аудитории общего сбора\"."
 
-#: venues/models.py:80
+#: venues/models.py:82
 msgid "display in room name"
-msgstr ""
+msgstr "показывать в названии аудитории"
 
-#: venues/models.py:81
+#: venues/models.py:83
 msgid "Prefix: \"Purple – G05\", Suffix: \"G05 – Purple\""
 msgstr "Префикс: \"Фиолетовый - G05\", Суффикс: \"G05 - фиолетовый\""
 
-#: venues/models.py:83
+#: venues/models.py:85
 msgid "display in public tooltip"
 msgstr "отображать в общедоступных подсказках"
 
-#: venues/models.py:84
+#: venues/models.py:86
 msgid "Displays the description in the tooltip for the room on public pages. The description, if not blank, will always show on admin pages."
-msgstr ""
+msgstr "Отображает описание в подсказке для аудитории на публичных страницах. Описание, если оно не является пустым, всегда будет отображаться на страницах администратора."
 
-#: venues/models.py:88
+#: venues/models.py:90
 msgid "room category"
 msgstr "категории аудиторий"
 
-#: venues/models.py:89
+#: venues/models.py:91
 msgid "room categories"
 msgstr "категории аудиторий"
 
-#: venues/models.py:117
+#: venues/models.py:119
 msgid "category"
 msgstr "категория"
 
-#: venues/models.py:121
+#: venues/models.py:123
 msgid "subject content type"
 msgstr "тип субъективного контента"
 
-#: venues/models.py:124
+#: venues/models.py:126
 msgid "subject ID"
 msgstr "iD субъекта"
 
-#: venues/models.py:130
+#: venues/models.py:132
 msgid "room constraint"
 msgstr "ограничения аудиторий"
 
-#: venues/models.py:131
+#: venues/models.py:133
 msgid "room constraints"
 msgstr "ограничения аудиторий"
 

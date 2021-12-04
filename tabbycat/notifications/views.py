@@ -1,29 +1,33 @@
 import json
+import logging
 from datetime import datetime
-from smtplib import SMTPException
+from smtplib import SMTPException, SMTPResponseException
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.conf import settings
 from django.contrib import messages
 from django.db.models import Prefetch, Q
 from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.utils import timezone
+from django.utils import formats, timezone
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.base import View
 from django.views.generic.edit import FormView
 
 from participants.models import Person
 from tournaments.mixins import RoundMixin, TournamentMixin
-from utils.mixins import AdministratorMixin
+from utils.mixins import AdministratorMixin, WarnAboutLegacySendgridConfigVarsMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import VueTableTemplateView
 
 from .forms import BasicEmailForm, TestEmailForm
 from .models import EmailStatus, SentMessage
 
+logger = logging.getLogger(__name__)
 
-class TestEmailView(AdministratorMixin, FormView):
+
+class TestEmailView(WarnAboutLegacySendgridConfigVarsMixin, AdministratorMixin, FormView):
     form_class = TestEmailForm
     template_name = 'test_email.html'
     success_url = reverse_lazy('notifications-test-email')
@@ -31,15 +35,40 @@ class TestEmailView(AdministratorMixin, FormView):
 
     def form_valid(self, form):
         host = self.request.get_host()
+
         try:
             recipient = form.send_email(host)
+
+        except SMTPResponseException as e:
+            try:
+                smtp_error = e.smtp_error.decode()  # it seems to be a bytes object
+            except (AttributeError, UnicodeDecodeError):
+                smtp_error = str(e.smtp_error)      # but just in case it's not, fall back to generic str()
+            messages.error(self.request, _("The email (SMTP) server returned an error sending the test email: "
+                "[SMTP code %(code)d] %(error)s") % {
+                'code': e.smtp_code, 'error': smtp_error})
+            if e.smtp_code == 550 and "Sender Identity" in smtp_error:
+                messages.warning(self.request, _("Hint: If the error is about sender identity verification in SendGrid, "
+                    "and you've already completed the steps in SendGrid, it may be that you need to update "
+                    "the DEFAULT_FROM_EMAIL config var in Heroku to match your verified sender identity."))
+                logger.warning("Suspected SendGrid sender identity verification error in test email", exc_info=True)
+            else:
+                logger.warning("SMTP response exception in test email", exc_info=True)
+
         except (ConnectionError, SMTPException) as e:
             messages.error(self.request,
                 _("There was an error sending the test email: %(error)s") % {'error': str(e)})
+            logger.warning("Other error in test email", exc_info=True)
+
         else:
             messages.success(self.request,
                 _("A test email has been sent to %(recipient)s.") % {'recipient': recipient})
+
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        kwargs["default_from_email"] = settings.DEFAULT_FROM_EMAIL
+        return super().get_context_data(**kwargs)
 
 
 class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
@@ -55,7 +84,10 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
     def _create_status_timeline(self, status):
         statuses = []
         for s in status:
-            text = _("%(status)s @ %(time)s") % {'status': s.get_event_display(), 'time': s.timestamp}
+            text = _("%(status)s @ %(time)s") % {
+                'status': s.get_event_display(),
+                'time': formats.time_format(timezone.localtime(s.timestamp), use_l10n=True),
+            }
             statuses.append({
                 'text': '<span class="%s">%s</span>' % (self._get_event_class(s.event), text),
             })
@@ -98,16 +130,18 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
             if notification.round is not None:
                 subtitle = notification.round.name
             else:
-                subtitle = _("@ %s") % timezone.localtime(notification.timestamp).strftime("%a, %d %b %Y %H:%M:%S")
+                subtitle = _("@ %s") % formats.time_format(timezone.localtime(notification.timestamp), use_l10n=True)
 
             table = TabbycatTableBuilder(view=self, title=notification.get_event_display().capitalize(), subtitle=subtitle)
 
             emails_recipient = []
+            emails_addresses = []
             emails_status = []
             emails_time = []
 
             for sentmessage in notification.sentmessage_set.all():
                 emails_recipient.append(sentmessage.recipient.name if sentmessage.recipient else self.UNKNOWN_RECIPIENT_CELL)
+                emails_addresses.append(sentmessage.email or self.UNKNOWN_RECIPIENT_CELL)
 
                 if len(sentmessage.statuses) > 0:
                     latest_status = sentmessage.statuses[0]  # already ordered
@@ -120,12 +154,13 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
                         },
                     }
                     emails_status.append(status_cell)
-                    emails_time.append(latest_status.timestamp)
+                    emails_time.append(formats.time_format(timezone.localtime(latest_status.timestamp), use_l10n=True))
                 else:
                     emails_status.append(self.NA_CELL)
                     emails_time.append(self.NA_CELL)
 
             table.add_column({'key': 'name', 'tooltip': _("Participant"), 'icon': 'user'}, emails_recipient)
+            table.add_column({'key': 'email', 'tooltip': _("Email address"), 'icon': 'mail'}, emails_addresses)
             table.add_column({'key': 'name', 'title': _("Status")}, emails_status)
             table.add_column({'key': 'name', 'title': _("Time")}, emails_time)
 
@@ -263,19 +298,19 @@ class CustomEmailCreateView(RoleColumnMixin, BaseSelectPeopleEmailView):
     def default_send(self, p, default_send_queryset):
         return False
 
-    def post(self, request, *args, **kwargs):
-        people = Person.objects.filter(id__in=list(map(int, request.POST.getlist('recipients'))))
+    def form_valid(self, form):
+        people = Person.objects.filter(id__in=list(map(int, self.request.POST.getlist('recipients'))))
 
         async_to_sync(get_channel_layer().send)("notifications", {
             "type": "email_custom",
-            "subject": request.POST['subject_line'],
-            "body": request.POST['message_body'],
+            "subject": form.cleaned_data['subject_line'],
+            "body": form.cleaned_data['message_body'],
             "tournament": self.tournament.id,
-            "send_to": [(p.id, p.email) for p in people],
+            "send_to": [p.id for p in people],
         })
 
         self.add_sent_notification(len(people))
-        return super().post(request, *args, **kwargs)
+        return super().form_valid(form)
 
 
 class TemplateEmailCreateView(BaseSelectPeopleEmailView):
@@ -287,22 +322,22 @@ class TemplateEmailCreateView(BaseSelectPeopleEmailView):
 
         return initial
 
-    def post(self, request, *args, **kwargs):
-        self.tournament.preferences[self.subject_template] = request.POST['subject_line']
-        self.tournament.preferences[self.message_template] = request.POST['message_body']
-        email_recipients = list(map(int, request.POST.getlist('recipients')))
+    def form_valid(self, form):
+        self.tournament.preferences[self.subject_template] = form.cleaned_data['subject_line']
+        self.tournament.preferences[self.message_template] = form.cleaned_data['message_body']
+        email_recipients = list(map(int, self.request.POST.getlist('recipients')))
 
         async_to_sync(get_channel_layer().send)("notifications", {
             "type": "email",
             "message": self.event,
             "extra": self.get_extra(),
             "send_to": email_recipients,
-            "subject": request.POST['subject_line'],
-            "body": request.POST['message_body'],
+            "subject": form.cleaned_data['subject_line'],
+            "body": form.cleaned_data['message_body'],
         })
 
         self.add_sent_notification(len(email_recipients))
-        return super().post(request, *args, **kwargs)
+        return super().form_valid(form)
 
 
 class TournamentTemplateEmailCreateView(TemplateEmailCreateView):

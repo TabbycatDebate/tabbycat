@@ -10,7 +10,7 @@
       <div class="popover bs-popover-bottom" role="tooltip" ref="popover"
            v-show="showingPopOver" @mouseenter="hoveringPopOver = true" @mouseleave="hidePopOver">
         <div class="popover-header d-flex">
-          <h6 class="flex-grow-1" v-if="cellData.title">{{ cellData.title }}</h6>
+          <h6 class="flex-grow-1" v-if="cellData.title" v-html="cellData.title"></h6>
           <div class="popover-close" v-on:click="hidePopOver(true)" v-on:tap="hidePopOver(true)">
             <i data-feather="x" class="hoverable text-danger"></i>
           </div>
@@ -18,8 +18,8 @@
         <div class="popover-body">
           <div class="list-group list-group-item-flush">
             <div class="list-group-item" v-for="item in cellData.content">
-              <a :href="item.link" v-if="item.link">{{ item.text }}</a>
-              <span v-else>{{ item.text }}</span>
+              <a :href="item.link" v-if="item.link" v-html="item.text"></a>
+              <span v-else v-html="item.text"></span>
             </div>
           </div>
         </div>

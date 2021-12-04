@@ -1,10 +1,10 @@
 .. _backups:
 
-=======
-Backups
-=======
+================
+Database Backups
+================
 
-Tabbycat doesn't provide an in-built backup system; instead you should create
+Tabbycat doesn't provide an in-built database backup system; instead you should create
 copies of your database directly. Heroku provides a very good backup utility for
 all sites hosted on Heroku which makes this easy, and for Heroku-based Tabbycat
 sites, we strongly recommend it.
@@ -37,9 +37,10 @@ You can capture backups from the Heroku Dashboard:
 
 1. Go to the `Heroku Dashboard <http://dashboard.heroku.com/>`_ and click
    on your app.
-2. Under *Installed add-ons*, go to **Heroku Postgres**.
-3. Scroll down, and click on the **Capture Backup** button.
-4. Once the capture has finished, a **Download** button will be available.
+2. Under *Installed add-ons*, click on **Heroku Postgres**.
+3. Near the top left of the screen, click on the **Durability** tab.
+4. Click on **Create Manual Backup**.
+5. Once the capture has finished, a **Download** button will be available.
 
 You can't restore a backup without the Heroku Command Line Interface (CLI), so
 if you end up needing your backup, you'll need to install the

@@ -62,6 +62,7 @@ class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
         team_scores = TeamScore.objects.filter(
             ballot_submission__confirmed=True,
             debate_team__team__tournament=self.tournament,
+            score__isnull=False,
         ).select_related(
             'debate_team__team',
             'debate_team__debate__round',
@@ -78,9 +79,9 @@ class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
 
         if self.tournament.pref('motion_vetoes_enabled'):
             motions = Motion.objects.filter(
-                round__seq__lte=self.round.seq,
-                round__tournament=self.tournament,
-            ).annotate(Count('ballotsubmission'))
+                rounds__seq__lte=self.round.seq,
+                rounds__tournament=self.tournament,
+            ).annotate(Count('ballotsubmission')).prefetch_related('rounds')
             kwargs["top_motions"] = motions.order_by('-ballotsubmission__count')[:4]
             kwargs["bottom_motions"] = motions.order_by('ballotsubmission__count')[:4]
 
@@ -200,6 +201,8 @@ class BaseSpeakerStandingsView(BaseStandingsView):
     """Base class for views that display speaker standings."""
 
     rankings = ('rank',)
+    missable_preference = None
+    missable_field = None
 
     def get_standings(self):
         if self.round is None:
@@ -261,7 +264,13 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         return []
 
     def get_rank_filter(self):
-        return None
+        missable = -1 if self.missable_preference is None else self.tournament.pref(self.missable_preference)
+        if missable < 0:
+            return (None, None)  # no limit
+        total_prelim_rounds = self.tournament.round_set.filter(
+            stage=Round.STAGE_PRELIMINARY, seq__lte=self.round.seq).count()
+        minimum_needed = total_prelim_rounds - missable
+        return (self.missable_field, minimum_needed)
 
     def populate_result_missing(self, standings):
         for info in standings:
@@ -282,6 +291,9 @@ class BaseSubstantiveSpeakerStandingsView(BaseSpeakerStandingsView):
     page_title = gettext_lazy("Speaker Standings")
     page_emoji = '💯'
 
+    missable_preference = 'standings_missed_debates'
+    missable_field = 'count'
+
     def get_speakers(self):
         return Speaker.objects.filter(team__tournament=self.tournament)
 
@@ -301,15 +313,6 @@ class BaseSubstantiveSpeakerStandingsView(BaseSpeakerStandingsView):
             return ['total']
         else:
             return []
-
-    def get_rank_filter(self):
-        missable_debates = self.tournament.pref('standings_missed_debates')
-        if missable_debates < 0:
-            return None  # no limit
-        total_prelim_rounds = self.tournament.round_set.filter(
-            stage=Round.STAGE_PRELIMINARY, seq__lte=self.round.seq).count()
-        minimum_debates_needed = total_prelim_rounds - missable_debates
-        return lambda info: info.metrics["count"] >= minimum_debates_needed
 
     def add_round_results(self, standings, rounds):
         add_speaker_round_results(standings, rounds, self.tournament)
@@ -370,6 +373,9 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
     page_title = gettext_lazy("Reply Speaker Standings")
     page_emoji = '💁'
 
+    missable_preference = 'standings_missed_replies'
+    missable_field = 'replies_count'
+
     def get_speakers(self):
         if self.tournament.reply_position is None:
             raise StandingsError(_("Reply speeches aren't enabled in this tournament."))
@@ -380,15 +386,6 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
 
     def get_metrics(self):
         return ('replies_avg',), ('replies_stddev', 'replies_count')
-
-    def get_rank_filter(self):
-        missable_replies = self.tournament.pref('standings_missed_replies')
-        if missable_replies < 0:
-            return None  # no limit
-        total_prelim_rounds = self.tournament.round_set.filter(
-            stage=Round.STAGE_PRELIMINARY, seq__lte=self.round.seq).count()
-        minimum_replies_needed = total_prelim_rounds - missable_replies
-        return lambda info: info.metrics["replies_count"] >= minimum_replies_needed
 
     def add_round_results(self, standings, rounds):
         add_speaker_round_results(standings, rounds, self.tournament, replies=True)
@@ -686,5 +683,8 @@ class EmailTeamStandingsView(RoundTemplateEmailCreateView):
 
     def get_extra(self):
         extra = super().get_extra()
-        extra['url'] = self.request.build_absolute_uri(reverse_tournament('standings-public-teams-current', self.tournament))
+        if self.tournament.pref('public_team_standings'):
+            extra['url'] = self.request.build_absolute_uri(reverse_tournament('standings-public-teams-current', self.tournament))
+        else:
+            extra['url'] = ""
         return extra

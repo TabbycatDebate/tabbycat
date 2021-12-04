@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-25 00:05\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2021-04-02 01:40-0300\n"
+"PO-Revision-Date: 2021-07-28 03:04\n"
+"Last-Translator: \n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
@@ -12,15 +12,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-Language: fr\n"
 "X-Crowdin-File: /develop/tabbycat/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 934\n"
 
 #: api/apps.py:7
 msgid "Application Programming Interface"
 msgstr "Interface de programmation"
 
 #: checkins/apps.py:7 templates/nav/admin_nav.html:117
-#: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:92
+#: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:105
 msgid "Check-Ins"
 msgstr "Enregistrements"
 
@@ -161,91 +163,111 @@ msgstr "%(speaker)s s'est enregistré à %(time)s."
 msgid "%(speaker)s is missing."
 msgstr "%(speaker)s est manquant(e)."
 
-#: checkins/views.py:29 templates/nav/admin_nav.html:128
+#: checkins/views.py:30 templates/nav/admin_nav.html:128
 #: templates/nav/assistant_nav.html:42
 msgid "Scan Identifiers"
 msgstr "Numériser les identifiants"
 
-#: checkins/views.py:62
+#: checkins/views.py:63
 msgid "People's Check-In Statuses"
 msgstr "Statuts d’enregistrement des personnes"
 
-#: checkins/views.py:119
+#: checkins/views.py:120
 msgid "Rooms' Check-In Statuses"
 msgstr "Statuts d’enregistrement des salles"
 
-#: checkins/views.py:168 templates/nav/admin_nav.html:124
+#: checkins/views.py:169 templates/nav/admin_nav.html:124
 msgid "Make Identifiers"
 msgstr "Créer les identifiants"
 
-#: checkins/views.py:175 templates/nav/admin_nav.html:210
+#: checkins/views.py:176 templates/nav/admin_nav.html:210
 msgid "Speakers"
 msgstr "Orateurs"
 
-#: checkins/views.py:180 templates/nav/public_nav.html:132
+#: checkins/views.py:181 templates/nav/public_nav.html:145
 msgid "Adjudicators"
 msgstr "Juges"
 
-#: checkins/views.py:185
+#: checkins/views.py:186
 msgid "Rooms"
 msgstr "Salles"
 
-#: checkins/views.py:226
+#: checkins/views.py:227
 #, python-format
 msgid "Generated identifiers for %s"
 msgstr "Identifiants générés฀pour %s"
 
-#: checkins/views.py:233
+#: checkins/views.py:234
 msgid "Identifiers"
 msgstr "Identifiants"
 
-#: checkins/views.py:269
+#: checkins/views.py:272
 msgid "Could not check you in as you do not have an identifying code — your tab director may need to make you an identifier."
 msgstr "N’a pas pu vous enregistrer parce que vous n’avez pas d’identifiant — le rapporteur pourrait devoir vous en créer."
 
-#: checkins/views.py:276
+#: checkins/views.py:280
 msgid "You have revoked your check-in."
 msgstr "Vous vous êtes dé-enregistré."
 
-#: checkins/views.py:278
+#: checkins/views.py:282
 msgid "Whoops! Looks like your check-in was already revoked."
 msgstr "Oups ! Vous étiez déjà désinscrit."
 
-#: checkins/views.py:281
+#: checkins/views.py:286
 msgid "Whoops! Looks like you're already checked in."
 msgstr "Oups ! Vous étiez déjà enregistré."
 
-#: checkins/views.py:283
+#: checkins/views.py:293
 msgid "You are now checked in."
 msgstr "Vous êtes désormais enregistré."
 
-#: settings/core.py:45
+#: settings/core.py:67
 msgid "Arabic"
 msgstr "arabe"
 
-#: settings/core.py:46
+#: settings/core.py:68
+msgid "Bengali"
+msgstr "bengali"
+
+#: settings/core.py:69
 msgid "English"
 msgstr "anglais"
 
-#: settings/core.py:47
+#: settings/core.py:70
 msgid "Spanish"
 msgstr "espagnol"
 
-#: settings/core.py:48
+#: settings/core.py:71
 msgid "French"
 msgstr "français"
 
-#: settings/core.py:49
+#: settings/core.py:72
+msgid "Indonesian"
+msgstr "Indonésien"
+
+#: settings/core.py:73
 msgid "Japanese"
 msgstr "japonais"
 
-#: settings/core.py:50
+#: settings/core.py:74
+msgid "Malay"
+msgstr "malay"
+
+#: settings/core.py:75
 msgid "Portuguese"
 msgstr "portugais"
 
-#: settings/core.py:51
+#: settings/core.py:76
 msgid "Russian"
 msgstr "russe"
+
+#: settings/core.py:77
+msgid "Simplified Chinese"
+msgstr "chinois simplifié"
+
+#: settings/core.py:78
+msgid "Translation"
+msgstr "Traduction"
 
 #: templates/admin/delete_protected_message.html:4
 msgid "You need to delete the above objects first."
@@ -342,17 +364,16 @@ msgstr "Tabbycat est un projet libre, développé par des bénévoles. Vous pouv
 
 #: templates/footer.html:24
 #, python-format
-msgid "For a tournament of this size, we suggest a donation of <strong>$%(amount)s</strong>."
-msgstr "Pour un tournoi de cette taille, nous suggérons une donation de <strong>%(amount)s$</strong>."
+msgid "For a tournament of this size, we suggest <a href=\"https://opencollective.com/tabbycat/contribute/licensing-29466/checkout?amount=%(amount)s\">a donation of <strong>$%(amount)s</strong></a>."
+msgstr "Pour un tournoi de cette taille, nous suggérons <a href=\"https://opencollective.com/tabbycat/contribute/licensing-29466/checkout?amount=%(amount)s\">un don de <strong>%(amount)s$</strong></a>."
 
 #: templates/footer.html:28
 msgid "Learn more about donating."
 msgstr "En savoir plus à propos des donations."
 
-#: templates/footer.html:32
-#, python-format
-msgid "<a href=\"%(donations_link)s\">Donations to Tabbycat from individuals or organisations</a> are much appreciated."
-msgstr "<a href=\"%(donations_link)s\">Donations à Tabbycat des individuels ou des organisations</a> sont très appréciées."
+#: templates/footer.html:31
+msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated."
+msgstr "<a href=\"https://opencollective.com/tabbycat\">Les dons à Tabbycat de personnes ou d'organisations</a> sont très appréciés."
 
 #: templates/footer.html:40
 msgid "Still timing debates with the stopwatch app?"
@@ -363,13 +384,13 @@ msgstr "Chronométrez-vous encore avec l'application chronomètre ?"
 msgid "Using an app designed for debate timekeeping makes speaking and adjudicating easier! Check out <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/iPad) or <a href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper</a> (Android)."
 msgstr "Utiliser un application conçu pour le débat rend parler et juger plus facile ! Découvrez <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept (iPhone/iPad)</a> ou <a href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper (Android)</a>."
 
-#: templates/footer.html:51
-msgid "Need ballots?"
-msgstr "Avez-vous besoin de feuilles ?"
+#: templates/footer.html:50
+msgid "Our Organisation"
+msgstr "Notre organisation"
 
-#: templates/footer.html:53
-msgid "You can <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" rel=\"noreferrer\" target=\"_blank\"> customise and print</a> great ballots from your browser."
-msgstr "Vous pouvez <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" rel=\"noreferrer\" target=\"_blank\">personnaliser et imprimer</a> de beaux feuilles à partir de votre navigateur."
+#: templates/footer.html:52
+msgid "Tabbycat is supported by the <a href=\"http://tabbycat-debate.org/\">Tabbycat Debate Association</a>, a non-profit for advancing open debate technology."
+msgstr "Tabbycat est soutenu par l'<a href=\"http://tabbycat-debate.org/\">Association de débat Tabbycat</a>, un organisme à but non-lucratif pour la technologie de débat libre."
 
 #: templates/footer.html:66
 msgid "Language"
@@ -449,7 +470,7 @@ msgid "Import Data"
 msgstr "Importer des données"
 
 #: templates/nav/admin_nav.html:81 templates/nav/assistant_nav.html:18
-#: templates/nav/public_nav.html:162
+#: templates/nav/public_nav.html:175
 msgid "Participants"
 msgstr "Participants"
 
@@ -465,15 +486,11 @@ msgstr "Courriels"
 msgid "Preformed Panels"
 msgstr "Jurys préformés"
 
-#: templates/nav/admin_nav.html:96
-msgid "It\\"
-msgstr ""
-
 #: templates/nav/admin_nav.html:97
-msgid "Where's Edit Database?"
-msgstr "Où est \"Modifier la Base des données?\""
+msgid "Export XML"
+msgstr "Exporter XML"
 
-#: templates/nav/admin_nav.html:107 templates/nav/public_nav.html:147
+#: templates/nav/admin_nav.html:107 templates/nav/public_nav.html:160
 msgid "Sides"
 msgstr "Côtés"
 
@@ -521,7 +538,7 @@ msgstr "Saisir des Évaluations"
 msgid "Bulk Update"
 msgstr "Mise à jour par lots"
 
-#: templates/nav/admin_nav.html:183 templates/nav/public_nav.html:152
+#: templates/nav/admin_nav.html:183 templates/nav/public_nav.html:165
 msgid "Standings"
 msgstr "Classement"
 
@@ -551,11 +568,11 @@ msgstr "Orateurs %(category)s"
 msgid "Replies"
 msgstr "Répliques"
 
-#: templates/nav/admin_nav.html:227 templates/nav/public_nav.html:142
+#: templates/nav/admin_nav.html:227 templates/nav/public_nav.html:155
 msgid "Motions"
 msgstr "Motions"
 
-#: templates/nav/admin_nav.html:230 templates/nav/public_nav.html:157
+#: templates/nav/admin_nav.html:230 templates/nav/public_nav.html:170
 msgid "Diversity"
 msgstr "Diversité"
 
@@ -588,7 +605,7 @@ msgstr "Déconnexion"
 msgid "Enter Results"
 msgstr "Saisie des résultats"
 
-#: templates/nav/assistant_nav.html:11 templates/nav/public_nav.html:182
+#: templates/nav/assistant_nav.html:11 templates/nav/public_nav.html:211
 msgid "Enter Feedback"
 msgstr "Saisie d'une évaluation"
 
@@ -596,7 +613,7 @@ msgstr "Saisie d'une évaluation"
 msgid "Participants List"
 msgstr "Liste de participants"
 
-#: templates/nav/assistant_nav.html:25 templates/nav/public_nav.html:167
+#: templates/nav/assistant_nav.html:25 templates/nav/public_nav.html:180
 msgid "Institutions"
 msgstr "Institutions"
 
@@ -632,40 +649,48 @@ msgstr "Tab des discours de réponse"
 msgid "Adjudicator Tab"
 msgstr "Tab des juges"
 
-#: templates/nav/public_nav.html:50
+#: templates/nav/public_nav.html:53 templates/nav/public_nav.html:62
 msgid "Motions Tab"
 msgstr "Tab des motions"
 
-#: templates/nav/public_nav.html:59
+#: templates/nav/public_nav.html:56
+msgid "By round"
+msgstr "Par joute"
+
+#: templates/nav/public_nav.html:57
+msgid "Globally"
+msgstr "Globalement"
+
+#: templates/nav/public_nav.html:72
 msgid "Draws"
 msgstr "Tirages"
 
-#: templates/nav/public_nav.html:70
+#: templates/nav/public_nav.html:83
 msgid "No Draws Available"
 msgstr "Aucun tirage disponible"
 
-#: templates/nav/public_nav.html:78
+#: templates/nav/public_nav.html:91
 #, python-format
 msgid "Draw for %(round)s"
 msgstr "Tirage de %(round)s"
 
-#: templates/nav/public_nav.html:82
+#: templates/nav/public_nav.html:95
 msgid "Current Draws"
 msgstr "Tirages actuelles"
 
-#: templates/nav/public_nav.html:102 templates/nav/round_panel.html:57
+#: templates/nav/public_nav.html:115 templates/nav/round_panel.html:57
 msgid "Results"
 msgstr "Résultats"
 
-#: templates/nav/public_nav.html:120
+#: templates/nav/public_nav.html:133
 msgid "Break"
 msgstr "Qualification"
 
-#: templates/nav/public_nav.html:172
+#: templates/nav/public_nav.html:185
 msgid "Feedback Progress"
 msgstr "Progrès des Évaluations"
 
-#: templates/nav/public_nav.html:177
+#: templates/nav/public_nav.html:191 templates/nav/public_nav.html:197
 msgid "Enter Ballot"
 msgstr "Saisie d'une feuille"
 
@@ -746,22 +771,32 @@ msgid "Go to the home page"
 msgstr "Aller sur la page d’accueil"
 
 #: templates/registration/password_change_form.html:4
-#: templates/registration/password_change_form.html:19
+#: templates/registration/password_change_form.html:27
 msgctxt "page title"
 msgid "Password Change"
 msgstr "Modification du mot de passe"
 
-#: templates/registration/password_change_form.html:20
+#: templates/registration/password_change_form.html:16
+#, python-format
+msgid "API Token: <samp>%(api_token)s</samp>"
+msgstr "Jeton IPA : <samp>%(api_token)s</samp>"
+
+#: templates/registration/password_change_form.html:19
+msgid "The API token will allow you to authorize external applications to access the site as staff."
+msgstr "Le jeton d'IPA vous permet d'autoriser des applications externes à accéder le site comme administrateur."
+
+#: templates/registration/password_change_form.html:28
 msgid "Please enter your old password, then enter a new one."
 msgstr "Veuillez saisir votre ancien mot de passe, puis saisissez un nouveau."
 
-#: templates/registration/password_change_form.html:25
-#: templates/registration/password_reset_confirm.html:38
+#: templates/registration/password_change_form.html:33
+#: templates/registration/password_reset_confirm.html:25
 msgctxt "button"
 msgid "Change my password"
 msgstr "Modifier mon mot de passe"
 
-#: templates/registration/password_change_form.html:26
+#: templates/registration/password_change_form.html:34
+#: templates/registration/password_reset_confirm.html:26
 msgid "Cancel and go back to the site home page"
 msgstr "Annuler et revenir à la page d’accueil du site"
 
@@ -771,47 +806,48 @@ msgctxt "page title"
 msgid "Password reset complete"
 msgstr "Réinitialisation du mot de passe effectuée"
 
-#: templates/registration/password_reset_complete.html:16
+#: templates/registration/password_reset_complete.html:11
 msgid "Your password has been reset."
 msgstr "Votre mot de passe a été réinitialisé."
 
-#. Translators: This text appears on a button that takes the user to the login page after a password reset.
-#: templates/registration/password_reset_complete.html:23
+#: templates/registration/password_reset_complete.html:14
+#: templates/registration/password_reset_done.html:15
 msgid "Go to the login page"
 msgstr "Aller à la page de connexion"
 
 #: templates/registration/password_reset_confirm.html:4
-#: templates/registration/password_reset_confirm.html:14
 msgctxt "page title"
 msgid "Password Reset Confirmation"
 msgstr "Confirmation de réinitialisation de mot de passe"
 
-#: templates/registration/password_reset_confirm.html:26
+#: templates/registration/password_reset_confirm.html:16
+#: templates/registration/password_reset_form.html:4
+#: templates/registration/password_reset_form.html:24
+msgctxt "page title"
+msgid "Password Reset"
+msgstr "Réinitialisation de mot de passe"
+
+#: templates/registration/password_reset_confirm.html:18
 msgid "Please enter a new password (twice):"
 msgstr "Veuillez saisir un nouveau mot de passe (deux fois) :"
 
-#: templates/registration/password_reset_confirm.html:44
+#: templates/registration/password_reset_confirm.html:33
 msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
 msgstr "Le lien de réinitialisation de mot de passe était invalide, peut-être parce qu'il a déjà été utilisé. Veuillez demander une nouvelle réinitialisation de mot de passe."
 
 #: templates/registration/password_reset_done.html:4
 #: templates/registration/password_reset_done.html:5
 msgctxt "page title"
-msgid "Password reset e-mail sent"
+msgid "Password reset email sent"
 msgstr "Courriel de réinitialisation de mot de passe envoyé"
 
-#: templates/registration/password_reset_done.html:16
-msgid "We've e-mailed you instructions for setting your password, if an account exists with the e-mail address you entered. You should receive them shortly."
+#: templates/registration/password_reset_done.html:11
+msgid "We've emailed you instructions for setting your password, if an account exists with the email address you entered. You should receive them shortly."
 msgstr "Un courriel contenant des instructions sur la manière de réinitialiser votre mot de passe a été envoyé à l'adresse électronique que vous avez fournie. Vous devriez le recevoir rapidement."
 
-#: templates/registration/password_reset_done.html:19
-msgid "If you don't receive an e-mail, please make sure you've entered the address you registered with, and check your spam folder."
+#: templates/registration/password_reset_done.html:12
+msgid "If you don't receive an email, please make sure you've entered the address you registered with, and check your spam folder."
 msgstr "Si vous ne recevez pas de courriel, assurez-vous d'avoir saisi la même adresse avec laquelle vous vous êtes inscrit et vérifiez votre dossier de courriers indésirables / pourriel."
-
-#. Translators: This text appears on a button that takes the user back to the login page from the password reset page.
-#: templates/registration/password_reset_done.html:26
-msgid "Return to the login page"
-msgstr "Retourner à la page de connexion"
 
 #: templates/registration/password_reset_email.html:2
 #, python-format
@@ -820,7 +856,7 @@ msgstr "Bonjour, %(user)s !"
 
 #: templates/registration/password_reset_email.html:6
 #, python-format
-msgid "Someone asked for a password reset for the e-mail address %(email)s on the Tabbycat site at %(protocol)s://%(domain)s."
+msgid "Someone asked for a password reset for the email address %(email)s on the Tabbycat site at %(protocol)s://%(domain)s."
 msgstr "Quelqu'un a demandé une réinitialisation de mot de passe pour l'adresse courriel %(email)s sur le site Tabbycat à %(protocol)s://%(domain)s."
 
 #: templates/registration/password_reset_email.html:10
@@ -829,26 +865,20 @@ msgstr "Si c’était vous, suivez le lien ci-dessous afin de réinitialiser vot
 
 #: templates/registration/password_reset_email.html:13
 #, python-format
-msgid "If this wasn't you, that probably means someone else typed your e-mail address into the password reset form on the Tabbycat site at %(protocol)s://%(domain)s."
+msgid "If this wasn't you, that probably means someone else typed your email address into the password reset form on the Tabbycat site at %(protocol)s://%(domain)s."
 msgstr "Si ce n’était pas vous, cela signifie probablement que quelqu'un d’autre a saisi votre adresse courriel dans le formulaire de réinitialisation de mot de passe sur le site Tabbycat à %(protocol)s://%(domain)s."
 
-#: templates/registration/password_reset_form.html:4
-#: templates/registration/password_reset_form.html:24
-msgctxt "page title"
-msgid "Password Reset"
-msgstr "Réinitialisation de mot de passe"
-
 #: templates/registration/password_reset_form.html:27
-msgid "Enter your e-mail address below, and we'll e-mail you a password reset link."
+msgid "Enter your email address below, and we'll email you a password reset link."
 msgstr "Saisissez votre adresse courriel ci-dessous, et nous vous enverrons un lien de réinitialisation de mot de passe."
 
 #: templates/registration/password_reset_form.html:34
-msgid "Please enter a valid e-mail address."
-msgstr "Veuillez saisir une adresse e-mail valide."
+msgid "Please enter a valid email address."
+msgstr "Veuillez saisir une adresse courriel valide."
 
 #: templates/registration/password_reset_form.html:39
-msgid "E-mail address"
-msgstr "Adresse de courriel"
+msgid "Email address"
+msgstr ""
 
 #: templates/registration/password_reset_form.html:50
 msgctxt "button"
@@ -864,12 +894,12 @@ msgstr "Retour à la page de connexion"
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr "Réinitialisation de mot de passe sur le site Tabbycat à %(domain)s"
 
-#: urls.py:101
+#: urls.py:107
 #, python-format
 msgid "Hi, %(user)s — you just logged in!"
 msgstr "Bonjour, %(user)s , vous venez de vous connecter !"
 
-#: urls.py:104
+#: urls.py:110
 msgid "Welcome! You just logged in!"
 msgstr "Bienvenue ! Vous venez de vous connecter !"
 
@@ -880,4 +910,8 @@ msgstr "Les utilisateurs ayant le status équipe peuvent voir et modifier la zon
 #: users/admin.py:22
 msgid "Superusers have full access all areas of Tabbycat necessary to run a tournament. Users who are not superusers are still able to perform data entry tasks such as adding results and feedback but can't access confidential areas such as the Breaks and Feedback sections. Chief adjudicators and their deputies are generally given superuser status if they know what they are doing."
 msgstr "Les utilisateurs ayant le statut super-utilisateur ont l'accès plein à tous les zones de Tabbycat dont ils ont besoin pour diriger un tournoi. Ceux qui ne sont pas super-utilisateurs peuvent néanmoins accomplir des tâches, telles que l'ajout des résultats et des évaluations, mais ils ne peuvent pas accéder les zones confidentielles, par examples les sections de la qualification et pour voir les évaluations. Les membres de l'équipe d'adjudications reçoivent en général ce status s'ils savent ce qu'ils font."
+
+#: users/templates/admin/auth/delete_user_warning.html:6
+msgid "<strong>Warning:</strong> You shouldn't delete users from the database once they've done something, because the database logs actions taken by those users, and deleting the users also deletes the related logs. If you wish to deactivate a user account, go back to edit the user, click on the “Permissions” tab, unchecked the “Active” box, and save the user."
+msgstr "<strong>Attention :</strong> Vous ne devriez pas supprimer des utilisateurs de la base de données après qu'ils aient fait des actions, parce que la base de données enregistre les actions des utilisateurs, donc en supprimant des utilisateurs, le journal des actions de l'utilisateur serait aussi supprimé. Pour désactiver un utilisateur, retournez à l'utilisateur sous l'onglet « Permissions » et décochez « Actif », puis sauvegarder."
 

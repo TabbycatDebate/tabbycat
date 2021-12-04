@@ -5,7 +5,7 @@ import random
 
 from django.utils.translation import gettext as _
 
-from .metrics import metricgetter, RepeatedMetricAnnotator
+from .metrics import metricgetter, QuerySetMetricAnnotator, RepeatedMetricAnnotator
 
 logger = logging.getLogger(__name__)
 
@@ -219,6 +219,21 @@ class Standings:
         assert not self.ranked, "Can't add metrics once standings object is sorted"
         self.get_standing(instance).add_metric(key, value)
 
+    def add_ranking(self, instance, key, value):
+        self.get_standing(instance).add_ranking(key, value)
+
+    def sort_from_rankings(self, tiebreak_func=None):
+        """Sorts Standings by a SQL-provided ranking, and so sorting is not
+        affected by None values."""
+        self._standings = list(self.infos.values())
+
+        if tiebreak_func:
+            # If tiebreak is SQL-provided, this is skipped
+            tiebreak_func(self._standings)
+
+        self._standings.sort(key=lambda r: tuple(r.rankings[key] for key in self.ranking_keys))
+        self.ranked = True
+
     def sort(self, precedence, tiebreak_func=None):
         self._standings = list(self.infos.values())
 
@@ -257,12 +272,16 @@ class BaseStandingsGenerator:
 
     DEFAULT_OPTIONS = {
         "tiebreak": "random",
-        "rank_filter": None,
+        "rank_filter": (None, None),  # (Field name, Min value)
         "include_filter": None,  # not currently used by other code,
     }
 
     TIEBREAK_FUNCTIONS = {
         "random"     : random.shuffle,
+    }
+
+    QUERYSET_TIEBREAK_FIELDS = {
+        "random"     : '?',
     }
 
     metric_annotator_classes = {}
@@ -283,6 +302,21 @@ class BaseStandingsGenerator:
         self._check_annotators(self.metric_annotators, _("The same metric would be added twice:"))
         self._check_annotators(self.ranking_annotators, _("The same ranking would be added twice:"))
 
+    def _annotate_metrics(self, queryset, annotators, standings, round):
+        """Runs the annotators to be added to the Standings. All annotators are
+        run, but SQL-based annotators merely add the field to the Standings,
+        as the annotation was already calculated in the SQL query."""
+        for annotator in annotators:
+            logger.debug("Running metric annotator: %s", annotator.name)
+            annotator.run(queryset, standings, round)
+        logger.debug("Metric annotators done.")
+
+        if self.options["include_filter"]:
+            standings.filter(self.options["include_filter"])
+
+    def get_rank_filter(self):
+        return lambda info: info.metrics[self.options["rank_filter"][0]] >= self.options["rank_filter"][1]
+
     def generate(self, queryset, round=None):
         """Generates standings for the objects in queryset. Returns a
         Standings object.
@@ -293,7 +327,8 @@ class BaseStandingsGenerator:
             (That is, rounds after `round` are excluded from the standings.)
         """
 
-        standings = Standings(queryset, rank_filter=self.options["rank_filter"])
+        rank_filter = self.get_rank_filter() if self.options["rank_filter"][0] is not None else None
+        standings = Standings(queryset, rank_filter=rank_filter)
 
         # The original queryset might have filtered out information relevant to
         # calculating the metrics (e.g., if it filters teams by participation in
@@ -301,13 +336,18 @@ class BaseStandingsGenerator:
         # relies on a nested ID selection instead.
         queryset_for_metrics = queryset.model.objects.filter(id__in=queryset.values_list('id', flat=True))
 
-        for annotator in self.metric_annotators:
-            logger.debug("Running metric annotator: %s", annotator.name)
-            annotator.run(queryset_for_metrics, standings, round)
-        logger.debug("Metric annotators done.")
+        self._annotate_metrics(queryset_for_metrics, self.distinct_queryset_metric_annotators, standings, round)
 
-        if self.options["include_filter"]:
-            standings.filter(self.options["include_filter"])
+        for annotator in self.queryset_metric_annotators:
+            queryset_for_metrics = annotator.get_annotated_queryset(queryset_for_metrics, round)
+
+        if len(self.precedence) > 0 and set(self.precedence) <= {a.key for a in self.queryset_metric_annotators}:
+            # If there is a precedence and all used metrics are combinable aggregation-based,
+            # we can use SQL window functions for rankings
+            return self.generate_from_queryset(queryset_for_metrics, standings, round)
+
+        # Otherwise (not all precedence metrics are SQL-based), need to sort Standings
+        self._annotate_metrics(queryset_for_metrics, self.non_queryset_annotators, standings, round)
 
         standings.sort(self.precedence, self._tiebreak_func)
 
@@ -318,14 +358,40 @@ class BaseStandingsGenerator:
 
         return standings
 
+    def generate_from_queryset(self, queryset, standings, round):
+        """Generates standings if rankings can be calculated through the
+        aggregations present from the queryset (no repeated metrics)"""
+
+        for annotator in self.ranking_annotators:
+            queryset = annotator.get_annotated_queryset(queryset, self.queryset_metric_annotators, *self.options["rank_filter"])
+
+        self._annotate_metrics(queryset, self.non_queryset_annotators, standings, round)
+
+        # Can use window functions to rank standings if all are from queryset
+        for annotator in self.ranking_annotators:
+            logger.debug("Running ranking queryset annotator: %s", annotator.name)
+            annotator.run_queryset(queryset, standings)
+        logger.debug("Ranking queryset annotators done.")
+
+        # Order by rank and tie-breaker if available.
+        tiebreak_func = None
+        ordering_keys = [a.key for a in self.ranking_annotators]
+        if self._qs_tiebreak_field is None:
+            # Pass to Standings-based if SQL doesn't exist; gives None if none given
+            tiebreak_func = self._tiebreak_func
+        else:
+            ordering_keys.append(self._qs_tiebreak_field)
+        queryset = queryset.order_by(*ordering_keys)
+
+        standings.sort_from_rankings(tiebreak_func)
+        return standings
+
     @staticmethod
     def _check_annotators(annotators, error_str):
         """Checks the given list of annotators to ensure there are no conflicts.
         A conflict occurs if two annotators would add annotations of the same
         name."""
-        names = list()
-        for annotator in annotators:
-            names.append(annotator.key)
+        names = [a.key for a in annotators]
         if len(names) != len(set(names)):
             raise StandingsError(error_str + "\n" + repr(names))
 
@@ -347,6 +413,8 @@ class BaseStandingsGenerator:
         """
         self.precedence = list()
         self.metric_annotators = list()
+        self.queryset_metric_annotators = list()
+        self.distinct_queryset_metric_annotators = list()
         repeated_metric_indices = {}
 
         all_metrics = [(m, True) for m in metrics] + [(m, False) for m in extra_metrics]
@@ -366,10 +434,17 @@ class BaseStandingsGenerator:
                 args = ()
 
             annotator = klass(*args)
+            if issubclass(klass, QuerySetMetricAnnotator):
+                if klass.combinable:
+                    self.queryset_metric_annotators.append(annotator)
+                else:
+                    self.distinct_queryset_metric_annotators.append(annotator)
             self.metric_annotators.append(annotator)
 
             if ranked:
                 self.precedence.append(annotator.key)
+
+        self.non_queryset_annotators = [a for a in self.metric_annotators if a not in self.distinct_queryset_metric_annotators]
 
     def _interpret_rankings(self, rankings):
         """Given a list of rankings, sets `self.ranking_annotators` to the
@@ -380,6 +455,10 @@ class BaseStandingsGenerator:
             klass = self.ranking_annotator_classes[ranking]
             annotator = klass(self.precedence)
             self.ranking_annotators.append(annotator)
+
+    @property
+    def _qs_tiebreak_field(self):
+        return self.QUERYSET_TIEBREAK_FIELDS.get(self.options["tiebreak"])
 
     @property
     def _tiebreak_func(self):

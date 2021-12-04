@@ -22,9 +22,9 @@ SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.5.0-dev'
-TABBYCAT_CODENAME = 'Nebelung'
-READTHEDOCS_VERSION = 'v2.5.0-dev'
+TABBYCAT_VERSION = '2.7.0'
+TABBYCAT_CODENAME = 'P'
+READTHEDOCS_VERSION = 'v2.7.0-dev'
 
 # ==============================================================================
 # Internationalization and Localization
@@ -48,6 +48,14 @@ EXTRA_LANG_INFO = {
         'name': 'Malay',
         'name_local': 'Bahasa Melayu', #unicode codepoints here
     },
+    'tzl': {
+        # Use code for Talossan; can't use proper reserved code...
+        # Talossan is a constructed language, without native speakers,
+        # so the odds of having a translation are low.
+        'code': 'tzl',
+        'name': 'Translation',
+        'name_local': 'Translation',
+    },
 }
 
 # Add custom languages not provided by Django
@@ -61,11 +69,13 @@ LANGUAGES = [
     ('en', _('English')),
     ('es', _('Spanish')),
     ('fr', _('French')),
+    ('id', _('Indonesian')),
     ('ja', _('Japanese')),
     ('ms', _('Malay')),
     ('pt', _('Portuguese')),
     ('ru', _('Russian')),
     ('zh-hans', _('Simplified Chinese')),
+    ('tzl', _('Translation')),
 ]
 
 STATICI18N_ROOT = os.path.join(BASE_DIR, "locale")
@@ -85,12 +95,11 @@ MIDDLEWARE = [
     # User language preferences; must be after Session
     'django.middleware.locale.LocaleMiddleware',
     # Set Etags; i.e. cached requests not on network; must precede Common
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
     'django.middleware.common.CommonMiddleware',
     # Must be after SessionMiddleware
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    # Must be after SessionMiddleware
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'utils.middleware.DebateMiddleware',
@@ -139,12 +148,15 @@ INSTALLED_APPS = (
     'formtools',
     'statici18n', # Compile js translations as static file; saving requests
     'polymorphic',
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_better_admin_arrayfield',
 )
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 FIXTURE_DIRS = (os.path.join(os.path.dirname(BASE_DIR), 'data', 'fixtures'), )
 SILENCED_SYSTEM_CHECKS = ('urls.W002',)
 
@@ -167,7 +179,8 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.template.context_processors.request',  # for Jet
                 'utils.context_processors.debate_context',  # for tournament config vars
-                'django.template.context_processors.i18n'  # for serving static language translations,
+                'django.template.context_processors.i18n',  # for serving static language translations
+                'dynamic_preferences.processors.global_preferences',
             ],
             'loaders': [
                 ('django.template.loaders.cached.Loader', [
@@ -276,6 +289,8 @@ SUMMERNOTE_CONFIG = {
     'iframe': True, # Necessary; if just to compartmentalise jQuery dependency,
 }
 
+X_FRAME_OPTIONS = 'SAMEORIGIN' # Necessary to get Django-Summernote working because of Django 3 changes
+
 # ==============================================================================
 # Database
 # ==============================================================================
@@ -285,6 +300,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
     },
 }
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # ==============================================================================
 # Channels
@@ -322,3 +339,10 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 }
+
+# ----------------------------------------
+# CORS-related settings for REST framework
+# ----------------------------------------
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_URLS_REGEX = r'^/api(/.*)?$'

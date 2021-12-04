@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load debate_tags i18n %}
+
+{% block head-title %}<span class="emoji">🗂️</span> {% trans "Export Tournament Archive" %}{% endblock %}
+{% block page-title %}{% trans "Export Tournament Archive" %}{% endblock %}
+
+{% block content %}
+
+  {% blocktrans trimmed asvar text %}
+    Tournaments can be exported in an <a href="https://en.wikipedia.org/wiki/XML">XML format</a> for use outside Tabbycat.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
+
+  <ul class="list-group mt-3">
+
+    {% tournamenturl 'exporter-archive-all' as url %}
+    {% trans "Export all data" as text %}
+    {% include "components/item-action.html" with emoji="🗂️"%}
+
+  </ul>
+
+{% endblock content %}

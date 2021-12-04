@@ -44,11 +44,11 @@
           </div>
           <div class="modal-body">
             <p class="lead">
-              {% blocktrans %}
-              Editing motions here will not save them permanently — it will only
-              update the text used in the printed ballots below. This can be useful if using
-              placeholder motions (to ensure confidentiality) in Tabbycat, but you still want to print
-              ballots with correct motions.
+              {% blocktrans trimmed %}
+                Editing motions here will not save them permanently — it will only
+                update the text used in the printed ballots below. This can be useful if using
+                placeholder motions (to ensure confidentiality) in Tabbycat, but you still want to print
+                ballots with correct motions.
               {% endblocktrans %}
             </p>
             <div v-for="motion in roundInfo.motions">

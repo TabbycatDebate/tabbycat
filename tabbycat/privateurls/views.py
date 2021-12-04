@@ -3,7 +3,6 @@ import logging
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Exists, OuterRef, Q
-from django.shortcuts import get_object_or_404
 from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
@@ -14,6 +13,7 @@ from notifications.models import BulkNotification, SentMessage
 from notifications.views import RoleColumnMixin, TournamentTemplateEmailCreateView
 from participants.models import Adjudicator, Person, Speaker
 from participants.tables import AdjudicatorDebateTable, TeamDebateTable
+from participants.views import BaseRecordView
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin, TournamentMixin
 from tournaments.models import Round
 from utils.misc import reverse_tournament
@@ -69,7 +69,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
                 return ''
             path = reverse_tournament('privateurls-person-index', self.tournament,
                 kwargs={'url_key': person.url_key})
-            return {'text': "🔗", 'link': request.build_absolute_uri(path)}
+            return {'text': "🔗", 'link': path}
 
         table.add_column(
             {'title': _("URL"), 'key': "url"},
@@ -157,11 +157,18 @@ class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView
     def get_table(self):
         table = super().get_table()
 
-        table.add_column({'key': 'url', 'tooltip': _("URL Key"), 'icon': 'terminal'}, [{
-            'text': p.url_key,
-            'link': self.request.build_absolute_uri(reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': p.url_key})),
-            'class': 'small',
-        } for p in self.get_queryset()])
+        data = []
+        for p in self.get_queryset():
+            cell = {
+                'text': p.url_key or _("no URL"),
+                'class': 'small' if p.url_key else 'small text-warning',
+            }
+            if p.url_key:
+                cell['link'] = self.request.build_absolute_uri(
+                    reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': p.url_key}))
+            data.append(cell)
+
+        table.add_column({'key': 'url', 'tooltip': _("URL Key"), 'icon': 'terminal'}, data)
 
         return table
 
@@ -170,14 +177,17 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
     template_name = 'public_url_landing.html'
     model = Person
 
+    slug_field = 'url_key'
+    slug_url_kwarg = 'url_key'
+
     table_title = _("Debates")
 
     def is_page_enabled(self, tournament):
         return True
 
-    def get_object(self, url_key):
-        q = self.model.objects.filter(Q(adjudicator__tournament=self.tournament) | Q(speaker__team__tournament=self.tournament))
-        return get_object_or_404(q, url_key=url_key)
+    def get_queryset(self):
+        return self.model.objects.filter(
+            Q(adjudicator__tournament=self.tournament) | Q(speaker__team__tournament=self.tournament))
 
     def get_table(self):
         if hasattr(self.object, 'adjudicator'):
@@ -186,8 +196,7 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
             return TeamDebateTable.get_table(self, self.object.speaker.team)
 
     def get_context_data(self, **kwargs):
-        self.private_url_key = kwargs['url_key']
-        self.object = self.get_object(kwargs['url_key'])
+        self.object = self.get_object()
         t = self.tournament
 
         try:
@@ -204,12 +213,9 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
             kwargs['checkins_used'] = False
 
         if hasattr(self.object, 'adjudicator'):
-            kwargs['debateadjudications'] = self.object.adjudicator.debateadjudicator_set.filter(
-                debate__round=t.current_round).select_related('debate__round').prefetch_related('debate__round__motion_set')
+            kwargs['debateadjudications'] = BaseRecordView.allocations_set(self.object.adjudicator, False)
         else:
-            kwargs['debateteams'] = self.object.speaker.team.debateteam_set.select_related(
-                'debate__round').prefetch_related('debate__round__motion_set').filter(
-                debate__round=t.current_round)
+            kwargs['debateteams'] = BaseRecordView.allocations_set(self.object.speaker.team, False)
 
         kwargs['draw_released'] = t.current_round.draw_status == Round.STATUS_RELEASED
         kwargs['feedback_pref'] = t.pref('participant_feedback') == 'private-urls'

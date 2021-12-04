@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-06-16 23:15\n"
+"POT-Creation-Date: 2020-11-18 17:59-0400\n"
+"PO-Revision-Date: 2020-11-18 22:15\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Language: bn_BD\n"
@@ -43,55 +43,55 @@ msgid_plural "%(count)d debates were marked as having their sides not confirmed.
 msgstr[0] ""
 msgstr[1] ""
 
-#: draw/apps.py:7 draw/views.py:429 draw/views.py:432
+#: draw/apps.py:7 draw/views.py:452 draw/views.py:455
 msgid "Draw"
 msgstr "ড্র"
 
-#: draw/generator/__init__.py:15
+#: draw/generator/__init__.py:14
 msgid "Too many swaps"
 msgstr ""
 
-#: draw/generator/__init__.py:16
+#: draw/generator/__init__.py:15
 msgid "One-up-one-down (history)"
 msgstr ""
 
-#: draw/generator/__init__.py:17
+#: draw/generator/__init__.py:16
 msgid "One-up-one-down (institution)"
 msgstr ""
 
-#: draw/generator/__init__.py:18
+#: draw/generator/__init__.py:17
 msgid "One-up-one-down (to accommodate)"
 msgstr ""
 
-#: draw/generator/__init__.py:19
+#: draw/generator/__init__.py:18
 msgid "Bubble up (history)"
 msgstr ""
 
-#: draw/generator/__init__.py:20
+#: draw/generator/__init__.py:19
 msgid "Bubble down (history)"
 msgstr ""
 
-#: draw/generator/__init__.py:21
+#: draw/generator/__init__.py:20
 msgid "Bubble up (institution)"
 msgstr ""
 
-#: draw/generator/__init__.py:22
+#: draw/generator/__init__.py:21
 msgid "Bubble down (institution)"
 msgstr ""
 
-#: draw/generator/__init__.py:23
+#: draw/generator/__init__.py:22
 msgid "Bubble up (to accommodate)"
 msgstr ""
 
-#: draw/generator/__init__.py:24
+#: draw/generator/__init__.py:23
 msgid "Bubble down (to accommodate)"
 msgstr ""
 
-#: draw/generator/__init__.py:25
+#: draw/generator/__init__.py:24
 msgid "Can't bubble up/down"
 msgstr ""
 
-#: draw/generator/__init__.py:26
+#: draw/generator/__init__.py:25
 msgid "Pull-up team"
 msgstr ""
 
@@ -173,77 +173,77 @@ msgstr ""
 msgid "Unrecognised \"teams in debate\" option: %(option)s"
 msgstr ""
 
-#: draw/manager.py:269
+#: draw/manager.py:276
 #, python-format
 msgid "The break size (%(size)d) for this break category was invalid. It must be either six times or four times a power of two."
 msgstr ""
 
-#: draw/models.py:27
+#: draw/models.py:29 draw/models.py:35
 msgid "none"
 msgstr ""
 
-#: draw/models.py:28
+#: draw/models.py:30
 msgid "postponed"
 msgstr ""
 
-#: draw/models.py:29
+#: draw/models.py:31 draw/models.py:36
 msgid "draft"
 msgstr ""
 
-#: draw/models.py:30
+#: draw/models.py:32 draw/models.py:37
 msgid "confirmed"
 msgstr ""
 
-#: draw/models.py:36 draw/models.py:389
+#: draw/models.py:43 draw/models.py:375
 msgid "round"
 msgstr "পর্ব"
 
-#: draw/models.py:38
-msgid "venue"
-msgstr "কক্ষ"
+#: draw/models.py:45
+msgid "room"
+msgstr ""
 
-#: draw/models.py:41
+#: draw/models.py:48
 msgid "bracket"
 msgstr "ব্র্যাকেট"
 
-#: draw/models.py:43
+#: draw/models.py:50
 msgid "room rank"
 msgstr ""
 
-#: draw/models.py:49
+#: draw/models.py:56
 msgid "importance"
 msgstr ""
 
-#: draw/models.py:51
+#: draw/models.py:58
 msgid "result status"
 msgstr ""
 
-#: draw/models.py:53
+#: draw/models.py:60
 msgid "sides confirmed"
 msgstr ""
 
-#: draw/models.py:54
+#: draw/models.py:61
 msgid "If unchecked, the sides assigned to teams in this debate are just placeholders."
 msgstr ""
 
-#: draw/models.py:57 draw/models.py:272
+#: draw/models.py:64 draw/models.py:272
 msgid "debate"
 msgstr "বিতর্ক"
 
-#: draw/models.py:58
+#: draw/models.py:65
 msgid "debates"
 msgstr "বিতর্ক"
 
 #. Translators: This is appended to a list of teams, e.g. "Auckland
 #. 1, Vic Wellington 1 (sides not confirmed)". Mind the leading
 #. space.
-#: draw/models.py:77 draw/models.py:102
+#: draw/models.py:84 draw/models.py:109
 msgid " (sides not confirmed)"
 msgstr ""
 
 #. Translators: This goes between teams in a debate, e.g. "Auckland 1
 #. vs Vic Wellington 1". Mind the leading and trailing spaces.
-#: draw/models.py:89 draw/models.py:106
+#: draw/models.py:96 draw/models.py:113
 msgid " vs "
 msgstr ""
 
@@ -271,55 +271,44 @@ msgstr ""
 msgid "closing opposition"
 msgstr ""
 
-#: draw/models.py:274 draw/models.py:391
+#: draw/models.py:274 draw/models.py:377
 msgid "team"
 msgstr "দল"
 
-#: draw/models.py:276 draw/models.py:393
+#: draw/models.py:276 draw/models.py:379
 msgid "side"
 msgstr "পক্ষ"
 
-#: draw/models.py:282
+#: draw/models.py:281
 msgid "debate team"
 msgstr ""
 
-#: draw/models.py:283
+#: draw/models.py:282
 msgid "debate teams"
 msgstr ""
 
-#: draw/models.py:311
-msgid "placed 1st"
+#: draw/models.py:303
+#, python-format
+msgid "placed %(place)s"
 msgstr ""
 
-#: draw/models.py:313
-msgid "placed 2nd"
-msgstr ""
-
-#: draw/models.py:315
-msgid "placed 3rd"
-msgstr ""
-
-#: draw/models.py:317
-msgid "placed 4th"
-msgstr ""
-
-#: draw/models.py:319 draw/models.py:326
+#: draw/models.py:305 draw/models.py:312
 msgid "result unknown"
 msgstr ""
 
-#: draw/models.py:322
+#: draw/models.py:308
 msgid "won"
 msgstr ""
 
-#: draw/models.py:324
+#: draw/models.py:310
 msgid "lost"
 msgstr ""
 
-#: draw/models.py:397
+#: draw/models.py:383
 msgid "team side allocation"
 msgstr ""
 
-#: draw/models.py:398
+#: draw/models.py:384
 msgid "team side allocations"
 msgstr ""
 
@@ -425,7 +414,7 @@ msgstr ""
 
 #: draw/tables.py:393
 msgid "Sides"
-msgstr ""
+msgstr "পক্ষ"
 
 #: draw/tables.py:398
 msgid "position cost"
@@ -996,151 +985,155 @@ msgstr ""
 msgid "Position balance reports aren't computed for the first round of a tournament."
 msgstr ""
 
-#: draw/views.py:66 draw/views.py:460
+#: draw/views.py:68 draw/views.py:483
 msgid "No debates in this round"
 msgstr ""
 
-#: draw/views.py:74
+#: draw/views.py:76
 #, python-format
 msgid "Draw for %(round)s"
 msgstr ""
 
-#: draw/views.py:76
+#: draw/views.py:78
 msgid "Draws for Current Rounds"
 msgstr ""
 
-#: draw/views.py:80
+#: draw/views.py:82
 #, python-format
 msgid "debates start at %(time)s (in %(time_zone)s)"
 msgstr ""
 
-#: draw/views.py:84
+#: draw/views.py:86
 #, python-format
 msgid "start times in time zone: %(time_zone)s"
 msgstr ""
 
-#: draw/views.py:122
+#: draw/views.py:124
 #, python-format
 msgid "debate starts at %(time)s"
 msgid_plural "debates start at %(time)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: draw/views.py:169
+#: draw/views.py:171
 msgid "The draw for this round hasn't been released."
 msgstr ""
 
-#: draw/views.py:222
+#: draw/views.py:224
 #, python-format
 msgid "All Debates for All Rounds of %(tournament)s"
 msgstr ""
 
-#: draw/views.py:380
+#: draw/views.py:382
 msgid "Adjudicator Assignments"
 msgstr ""
 
-#: draw/views.py:400
-msgid "Team Pairings"
+#: draw/views.py:404
+msgid "Position"
 msgstr ""
 
 #: draw/views.py:424
+msgid "Team Pairings"
+msgstr ""
+
+#: draw/views.py:447
 msgid "No Draw"
 msgstr ""
 
-#: draw/views.py:426
+#: draw/views.py:449
 msgid "Draft Draw"
 msgstr ""
 
 #. Translators: e.g. "Affirmative: Break rank"
-#: draw/views.py:518
+#: draw/views.py:541
 #, python-format
 msgid "%(side)s: Break rank"
 msgstr ""
 
 #. Translators: "BR" stands for "Break rank"
-#: draw/views.py:523
+#: draw/views.py:546
 msgid "BR"
 msgstr ""
 
-#: draw/views.py:548
+#: draw/views.py:571
 msgid "Draw with Details"
 msgstr ""
 
-#: draw/views.py:556
+#: draw/views.py:579
 msgid "Position Balance Report"
 msgstr ""
 
-#: draw/views.py:567
+#: draw/views.py:590
 #, python-format
 msgid "Rényi entropy of order %(order)s"
 msgstr ""
 
 #. Translators: This is appended to the string "Rényi entropy of order 1.0"
-#: draw/views.py:570
+#: draw/views.py:593
 msgid " (<i>i.e.</i>, Shannon entropy)"
 msgstr ""
 
-#: draw/views.py:600
+#: draw/views.py:623
 msgid "Teams with position imbalances"
 msgstr ""
 
-#: draw/views.py:601
+#: draw/views.py:624
 msgid "No teams with position imbalances! Hooray!"
 msgstr ""
 
-#: draw/views.py:604
+#: draw/views.py:627
 msgid "Annotated draw"
 msgstr ""
 
-#: draw/views.py:635
+#: draw/views.py:658
 #, python-format
 msgid "Could not create draw for %(round)s, there was already a draw!"
 msgstr ""
 
-#: draw/views.py:643
+#: draw/views.py:666
 #, python-format
 msgid "<p>The draw could not be created, for the following reason: <em>%(message)s</em></p>\n"
 "<p>Please fix this issue before attempting to create the draw.</p>"
 msgstr ""
 
-#: draw/views.py:651
+#: draw/views.py:674
 #, python-format
 msgid "<p>The draw could not be created, because the following error occurred: <em>%(message)s</em></p>\n"
 "<p>If this issue persists and you're not sure how to resolve it, please contact the developers.</p>"
 msgstr ""
 
-#: draw/views.py:660
+#: draw/views.py:683
 #, python-format
 msgid "<p>The team standings could not be generated, because the following error occurred: <em>%(message)s</em></p>\n"
 "<p>Because generating the draw uses the current team standings, this prevents the draw from being generated.</p>"
 msgstr ""
 
-#: draw/views.py:676
+#: draw/views.py:699
 msgid "Rooms were not auto-allocated because there are one or more adjudicator room constraints. You should run room allocations after allocating adjudicators."
 msgstr ""
 
-#: draw/views.py:703
+#: draw/views.py:726
 msgid "Deleted the draw. You can now recreate it as normal."
 msgstr ""
 
-#: draw/views.py:723
+#: draw/views.py:746
 msgid "Released the draw."
 msgstr ""
 
-#: draw/views.py:738
+#: draw/views.py:761
 msgid "Unreleased the draw."
 msgstr ""
 
-#: draw/views.py:751
+#: draw/views.py:774
 #, python-format
 msgid "Sorry, \"%(input)s\" isn't a valid time. It must be in 24-hour format, with a colon, for example: \"13:57\"."
 msgstr ""
 
-#: draw/views.py:770
+#: draw/views.py:793
 msgid "Side Pre-Allocations"
 msgstr ""
 
-#: draw/views.py:803
+#: draw/views.py:826
 msgid "Edit Matchups"
 msgstr ""
 

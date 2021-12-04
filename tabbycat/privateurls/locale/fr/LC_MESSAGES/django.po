@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-24 23:35\n"
+"POT-Creation-Date: 2021-04-02 01:40-0300\n"
+"PO-Revision-Date: 2021-04-02 05:45\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -15,13 +15,15 @@ msgstr ""
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: fr\n"
 "X-Crowdin-File: /develop/tabbycat/privateurls/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 946\n"
 
 #: privateurls/apps.py:7
 msgid "Private URL Management"
 msgstr "Gestion des URLs privées"
 
 #: privateurls/templates/private_urls.html:4
-#: privateurls/templates/private_urls.html:5 privateurls/views.py:144
+#: privateurls/templates/private_urls.html:5 privateurls/views.py:145
 msgid "Private URLs"
 msgstr "URLs Privées"
 
@@ -122,59 +124,63 @@ msgstr "Vous vous êtes enregistré à %(check_time)s"
 msgid "You are not currently checked in."
 msgstr "Vous n’êtes pas actuellement enregistré."
 
-#: privateurls/templates/public_url_landing.html:61
-msgid "Submit Ballot"
-msgstr "Saisir feuille"
+#: privateurls/templates/public_url_landing.html:62
+#, python-format
+msgid "Submit Ballot for %(round)s"
+msgstr "Saisir feuille pour %(round)s"
 
-#: privateurls/templates/public_url_landing.html:67
-#: privateurls/templates/public_url_landing.html:73
+#: privateurls/templates/public_url_landing.html:65
+msgid "There are no current rounds"
+msgstr "Il n'y a pas de joute actuelle"
+
+#: privateurls/templates/public_url_landing.html:71
 msgid "Submit Feedback"
 msgstr "Saisir Évaluations"
 
-#: privateurls/templates/public_url_landing.html:82
+#: privateurls/templates/public_url_landing.html:84
 #, python-format
 msgid "Registration (%(name)s)"
 msgstr "Enregistrement (%(name)s)"
 
-#: privateurls/views.py:62
+#: privateurls/views.py:63 privateurls/views.py:164
 msgid "no URL"
 msgstr "pas de URL"
 
-#: privateurls/views.py:75
+#: privateurls/views.py:76
 msgid "URL"
 msgstr "URL"
 
-#: privateurls/views.py:86
+#: privateurls/views.py:87
 msgid "Speakers"
 msgstr "Orateurs"
 
-#: privateurls/views.py:96
+#: privateurls/views.py:97
 msgid "Adjudicators"
 msgstr "Juges"
 
-#: privateurls/views.py:118
+#: privateurls/views.py:119
 msgid "All participants already have private URLs. If you want to delete them, use the Edit Database area."
 msgstr "Tous les participants ont déjà leurs URLs privées. Si vous voulez les imprimer, utilisez la zone de modifications de la base de données."
 
-#: privateurls/views.py:125
+#: privateurls/views.py:126
 #, python-format
 msgid "A private URL was generated for %(nblank_people)d person."
 msgid_plural "Private URLs were generated for all %(nblank_people)d people."
 msgstr[0] "Une URL privée à été généré pour %(nblank_people)d personne."
 msgstr[1] "Des URLs privées ont été générés pour %(nblank_people)d personnes."
 
-#: privateurls/views.py:130
+#: privateurls/views.py:131
 #, python-format
 msgid "The already-existing private URL for %(nexisting_people)d person was left intact."
 msgid_plural "The already-existing private URLs for %(nexisting_people)d people were left intact."
 msgstr[0] "L’URL privée n’est pas modifiée pour %(nexisting_people)d personne."
 msgstr[1] "Les URLs privées ne sont pas modifiées pour %(nexisting_people)d personnes."
 
-#: privateurls/views.py:161
+#: privateurls/views.py:172
 msgid "URL Key"
 msgstr "Clé d'URL"
 
-#: privateurls/views.py:174
+#: privateurls/views.py:181
 msgid "Debates"
 msgstr "Débats"
 

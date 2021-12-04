@@ -1,0 +1,338 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2021-04-28 12:30\n"
+"Last-Translator: \n"
+"Language-Team: Indonesian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: id\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/guide/comparisons.po\n"
+"X-Crowdin-File-ID: 1303\n"
+"Language: id_ID\n"
+
+#: ../../guide/comparisons.rst:5
+msgid "Tab Software Comparisons"
+msgstr "Tabulasi Perbandingan Perangkat Lunak"
+
+#: ../../guide/comparisons.rst:7
+msgid "If you're reading this, you're probably interested in using Tabbycat, and wondering how it compares to other options. Perhaps you're a long-time user of another tab system, and wondering what Tabbycat can do better. This page is our effort to help answer this. Tabbycat's been around since 2010, but since BP support is a recent addition (2017), we thought it would be useful to outline the differences between Tabbycat and other BP software."
+msgstr "Bila kamu sedang membaca ini, anda mungkin tertarik menggunakan Tabbycat, dan penasaran bagaimana perbandingannya dengan pilihan lain. Barangkali anda seorang pengguna lama dari sistem tabulasi lain, dan ingin tahu apakah Tabbycat bisa lebih baik. Halaman ini adalah upaya kami untuk membantu menjawabnya. Tabbycat sudah ada sejak 2010, tapi semenjak dukungan BP yang merupakan tambahan baru (2017), kami mengira akan berguna untuk menggaris bawahi perbedaan-perbedaan antar Tabbycat dan perangkat lunak BP lainnya."
+
+#: ../../guide/comparisons.rst:9
+msgid "Obviously, this page is written by the developers of Tabbycat, and naturally, we have our biases. But rarely is there a single best option for everyone and every situation: different tab programs imagine the tabbing process in a different ways and have made unique trade-offs in their development process and design decisions. So we've tried to be as fair and accurate as we can, and we've consulted experienced tab directors (other than us!) and chief adjudicators to help provide a balanced overview."
+msgstr "Tentunya, halaman ini dibuat oleh developer Tabbycat, and pastinya, kami punya bias sendiri. Namun jarang ada satu pilihan terbaik untuk semua orang dan segala situasi: program tabulasi berbeda andaikan proses menabulasi dengan cara yang berbeda dan membuat pertukaran unik dalam proses pengembangan dan putusan desain. Jadi kami telah mencoba untuk adil sebisa dan seakurat mungkin, dan kami berkonsiltasi pada direktur tabulasi yang berpengalaman (selain kami!) serta kepala juri untuk membantu menyediakan gambaran yang seimbang."
+
+#: ../../guide/comparisons.rst:11
+msgid "At present, this guide just focuses on the major options available for the British Parliamentary format, although we'd like to expand this to incorporate the other formats that Tabbycat supports at some point in the future. As with all of our documentation, the source for this page `is on GitHub <https://github.com/TabbycatDebate/tabbycat/blob/develop/docs/guide/comparisons.rst>`_, and we welcome feedback and contributions."
+msgstr "Kini, panduan ini hanya berfokus pada pilihan utama yang tersedia untuk format Parlemen Inggris, walau kami ingin memperluasnya agar menggabungkan dengan format lain yang didukung Tabbycat pada waktu tertentu di masa yang akan datang. Seperti layaknya dokumen kami yang lain, sumber untuk halaman ini ada pada GitHub <https://github.com/TabbycatDebate/tabbycat/blob/develop/docs/guide/comparisons.rst>`_, dan kami menerima masukan dan kontribusi."
+
+#: ../../guide/comparisons.rst:14
+msgid "On feature lists"
+msgstr "Pada daftar fitur"
+
+#: ../../guide/comparisons.rst:16
+msgid "In the first draft of this document, we had a table that listed every feature we could think of, along with which software does and doesn't support it. This ended up not being a great idea, for a couple of reasons."
+msgstr "Pada draf pertama di dokumen ini, kami punya tabel dengan daftar tiap fitur yang bisa kami pikirkan, serta perangkat lunak mana yang bisa dan tidak bisa mendukungnya. Ini berakhir tidak menjadi ide yang baik, karna beberapa alasan."
+
+#: ../../guide/comparisons.rst:18
+msgid "Firstly, the largest feature disparities are for relatively niche features. All of the software discussed can do the basics necessary to run a tournament: generate draws, allocate adjudicators, enter results, etc. As a result, we will — like a good whip speech — be comparative and note key feature disparities when discussing each alternative software directly."
+msgstr "Pertama, disparitas fitur terbesar ialah untuk fitur yang relatif khusus. Semua perangkat lunak yang telah didiskusikan dapat melakukan hal-hal dasar yang penting untuk menjalankan sebuah turnamen: membuat pengundian, mangalokasi juri, memasukkan hasil, dsb. Sebagai hasil, kami akan - seperti \"whip speech\" yang baik - menjadi komparatif dan mencatat perbedaan fitur kunci saat membahas tiap perangkat lunak alternatif langsung."
+
+#: ../../guide/comparisons.rst:20
+msgid "Secondly, we felt that the 'checklist' approach to comparing tab software would do a disservice to the reasons you would actually choose one software over another. Except where a niche capability is essential, raw technical specifications rarely define the experience of using a product such as a phone, a car, or indeed, tabbing software. With Tabbycat, we've spent eight years continuously refining the tabbing workflow and smoothing out rough edges, and we believe you'll find the result extremely user-friendly and robust. As always, the best way to check this out is by :ref:`setting up a demo site and taking it for a spin <install-heroku>`!"
+msgstr "Kedua, kami merasa pendekatan 'daftar periksa' untuk membandingkan tabulasi perangkat lunak akan bersifat merugikan untuk alasan bahwa kalian akan memilih sebuah perangkat lunak dan tidak yang satunya. Kecuali dimana kapabilitas khusus yang penting, spesifikasi teknis kasar jarang mengartikan pengalaman menggunakan produk seperti telepon, mobil, atau bahkan perangkat lunak tabulasi. Dengan Tabbycat, kami telah menghabiskan delapan tahun terus-menerus menyaring alur kerja dari tabulasi dan menghaluskan sisi-sisi kasar, dan kami percaya hasilnya akan sangat mudah-digunakan dan kuat. Seperti biasa, cara terbaik untuk memeriksa ialah dengan :ref:`memasang situs demo dan mencobanya <install-heroku>`!"
+
+#: ../../guide/comparisons.rst:23
+msgid "Comparison with Tabbie2"
+msgstr "Perbandingan dengan Tabbie2"
+
+#: ../../guide/comparisons.rst:26
+msgid "Centralised site vs individual sites"
+msgstr "Situs terpusat vs situs individual"
+
+#: ../../guide/comparisons.rst:28
+msgid "Tabbie2 and Tabbycat are both internet-based systems. Tabbie2 hosts all tournaments on a single site. However, when using Tabbycat, each tournament or organisation sets up its own site. Each model has its advantages and disadvantages in different areas:"
+msgstr "Tabbie2 dan Tabbycat sama-sama sistem berbasis-internet. Tabbie2 mengurus semua turnamen di sebuah situs tunggal. Akan tetapi, saat menggunakan Tabbycat, tiap turnamen atau organisasi mendirikan situsnya sendiri. Tiap model punya kelebihan dan kekurangannya masing-masing di area yang berbeda:"
+
+#: ../../guide/comparisons.rst:30
+msgid "**User identification**. Tabbie2's centralised model allows for site-wide user accounts for all tournament participants. This means that they can use the same login information for all tournaments, and perform tasks such as submitting ballots and feedback through that unified account. If you're in an established circuit, most of your participants probably already have user accounts which are identified and collected (via e-mail addresses) during registration. If you're in a newer circuit, or one where Tabbie2 is rarely used, most of your participants will probably need to create an account — a process which Tabbie2 handles by e-mailing them a request to do so when that person is added to your tournament."
+msgstr "**Identifikasi pengguna**. Model terpusat milik Tabbie2 memungkinkan akun pengguna site-wide untuk semua peserta turnamen. Ini artinya mereka bisa memakai informasi login sama untuk semua turnamen, dan melakukan perbuatan seperti memasukkan surat suara dan umpan balik lewat akun gabungan itu. Jika anda berada pada sirkuit yang sudah terjalin, kebanyakan peserta kemungkinan sudah memiliki akun pengguna yang teridentifikasi dan sudah dikumpulkan (melalui alamat email) pada pendaftaran. Bila anda dalam sirkuit yang lebih baru, atau di tempat dimana Tabbie2 jarang digunakan, kebanyakan dari pesertamu pasti akan perlu membuat sebuah akun - proses dimana Tabbie2 menangani dengan meng-email mereka permintaan untuk melakukannya saat orang tersebut telah ditambahkan ke turnamenmu."
+
+#: ../../guide/comparisons.rst:32
+msgid "In Tabbycat's decentralised model, there is no persistent 'account' for tournament participants on each tab site or across different tab sites. Indeed, the only people who can log in to the site are those who have been given accounts by the tab director, such as tab staff and members of the adjudication core."
+msgstr "Pada model Tabbycat yang telah didesentralisasi, tidak ada 'akun' tetap untuk peserta turnamen pada tiap situs tabulasi atau seberang situs tabulasi yang berbeda. Tentu, orang yang hanya dapat login ke situs ialah mereka yang telah diberi akun oleh direktur tabulasi, seperti staf tabulasi dan anggota dari juri inti."
+
+#: ../../guide/comparisons.rst:34
+msgid "For secure e-ballot and e-feedback submissions, Tabbycat assigns a \"private URL\" to each adjudicator or team. This is essentially a password that allows a participant to only submit data that they should have access to in that specific tournament. This means participants don't need user accounts and you don't need to collect user account information; however if your tournament uses e-ballots or e-feedback you will need to distribute those private URLs to participants. Tabbycat can e-mail these to participants for you, or print them to give them to participants, or you could distribute the URLs using your own means."
+msgstr "Untuk masukan kertas kertas suara elektronik dan umpan balik-elektronik yang aman, Tabbycat menetapkan \"URL privat\" untuk tiap peserta. Ini pada dasarnya sebuah kata sandi yang memungkinkan peserta untuk hanya memasukkan data yang mereka punya akses pada turnamen spesifik itu. Ini artinya peserta tidak memerlukan akun pengguna dan anda tidak perlu mengumpulkan informasi akun pengguna; akan tetapi bila turnamen anda memakai kertas kertas suara elektronik atau umpan balik-elektronik anda perlu mendistribusikan URL privat itu ke peserta-peserta. Tabbycat bisa meng-email peserta-peserta ini untuk anda, atau mencetaknya dan memberi ke peserta, atau anda bisa mendistribusikan URL dengan sarana sendiri."
+
+#: ../../guide/comparisons.rst:36
+msgid "**Control over data**. Some participant information in Tabbie2 is shared between tournaments, like their names and conflicts (discussed below). This means participants can manage it directly through their user accounts, without needing to go through you. On the other hand, this requires your participants to co-operate in keeping their accounts up to date, and to provide the correct e-mail address during registration (you'd be surprised how many don't). Furthermore, participants may look to you for assistance, and your ability to help is limited to directing them through Tabbie2 channels—easy enough if they forget their password, but not so much if they forget their account's e-mail address."
+msgstr "**Kontrol atas data**. Beberapa informasi peserta di Tabbie2 dibagikan antar turnamen, seperti nama dan konflik mereka (didiskusikan di bawah). Ini berarti peserta bisa mengaturnya secara langsung lewat akun pengguna mereka, tanpa perlu lewat anda. Di sisi lain, ini membutuhkan peserta anda untuk berkooperasi dalam mempertahankan akun mereka ke yang terkini, dan untuk menyediakan alamat e-mail yang tepat saat registrasi (anda akan terkejut seberapa banyak yang tidak). Selanjutnya, peserta dapat meminta bantuan dari anda, dan kemampuan anda untuk membantu terbatas pada mengarahkan mereka lewat saluran Tabbie2 - yang cukup mudah bila mereka tidak lupa kata sandi mereka, tapi secukup bila mereka lupa alamat e-mail mereka."
+
+#: ../../guide/comparisons.rst:38
+msgid "Because each Tabbycat site is its own, you'll need to collect and import all participant details yourself. This might seem like more to do, but it also means there's no need to match your data to existing accounts, which can be time-consuming and prone to participant error. It also means you can freely change data, for example, to correct a participant's name or institution, or to add data like conflicts on an ad-hoc basis."
+msgstr "Karena tiap situs Tabbycat adalah mereka sendiri, anda akan perlu mengumpulkan dan mengimpor semua detil peserta sendiri. Ini mungkin terlihat banyak hal yang mesti dilakukan, tapi ini juga berarti tidak perlu mencocokkan data anda dengan akun yang telah ada, yang mana bisa memakan waktu banyak dan rentan pada kesalahan peserta. Itu juga berarti anda bisa mengubah data dengan bebas, sebagai contoh, untuk mengoreksi nama seorang peserta atau institusi, atau menambahkan data seperti konflik pada basis ad-hoc."
+
+#: ../../guide/comparisons.rst:40
+msgid "**Data privacy**. Conflicts are typically entered into the tab, and are sensitive information. Tabbie2's centralisation allows for conflicts to be self-nominated by users and stored in their user accounts. This, in theory, saves the need for users to report conflicts to tab directors and other tournament staff. In practice, however, only special \"super\" users on Tabbie2 have access to the stored conflicts of users (otherwise anyone could access a user's conflicts by creating a new tournament and adding that user as a participant), so many tournaments need to collect this information from participants anyway."
+msgstr "**Privasi data**. Konflik biasanya dimasukkan ke tabulasi, dan ialah informasi yang sensitif. Sentralisasi Tabbie2 memungkinkan sebuah konflik agar bisa dicalonkan-sendiri oleh pengguna dan tersimpan di akun pengguna. Ini, dalam teori, memudahkan pengguna dengan tidak perlu melaporkan konflik ke direktur tabulasi dan staf turnamen. Namun, senyatanya, hanya pengguna \"super\" spesial di Tabbie2 punya akses untuk menyimpan konflik dari pengguna (kalau tidak siapapun dapat mengakses konflik seorang pengguna dengan membuat turnamen baru dan menambahkan pengguna tersebut sebagai peserta), banyak sekali turnamen yang tetap perlu mengumpulkan informasi ini dari peserta."
+
+#: ../../guide/comparisons.rst:42
+msgid "Tabbycat's decentralised model means that no-one will have access to conflict information except for the tab staff of each individual instance of Tabbycat. Unlike Tabbie2, Tabbycat's developers do not have any access to your tournament's data — conflicts or otherwise. However, to help us continually improve the software, Tabbycat does send error reports to its developers if there is a serious bug or crash in the code, which could potentially contain confidential information depending on which page triggered the report. As a result of Tabbycat's decentralised data storage, each tournament does need to collect and enter conflicts as part of their registration process."
+msgstr "Model Tabbycat yang didesentralisasi berarti tak seorangpun akan punya akses ke informasi konflik kecuali bagi staf tabulasi untuk tiap instansi individu dari Tabbycat. Tidak seperti Tabbie2, developer Tabbycattidak punya akses ke data turnamen anda - konflik atau sebaliknya. Namun, untuk terus-menerus membantu kami mambaguskan perangkat lunaknya, Tabbycat tidak mengirim laporan kesalahan ke developernya jika ada masalah serius atau crash pada kodenya, yang dapat berpotensi mengandung informasi rahasia bergantung pada halaman mana yang memicu laporannya. Sebagai hasil dari penyimpanan data Tabbycat yang terdesentralisasi, tiap turnamen perlu mengumpulkan dan memasukkan konflik sebagai bagian dari proses registrasi."
+
+#: ../../guide/comparisons.rst:44
+msgid "**When things go wrong**. In our view, this is probably the most important factor. Obviously, we all hope you never have to fix things. But no software is perfect, and software developed by volunteers in their spare time (as both Tabbie2 and Tabbycat are) is especially imperfect. On occasion, glitches or edge cases occur, and fixing them requires you to directly edit the offending data in the database. Being able to do this without assistance can be the difference between a delay of minutes and a delay of hours."
+msgstr "**Ketika ada yang salah**. Di pandangan kita, ini mungkin faktor yang paling penting. Tentunya, kita semua berharap anda tidak perlu memperbaiki banyak hal. Tapi tidak ada perangkat lunak yang sempurna, dan perangkat lunak terkembang oleh relawan di waktu luang mereka (seperti Tabbie2 dan Tabbycat) sudah tentu tidak sempurna. Kadang kala, glitch atau edge cases terjadi, dan memperbaikinya membutuhkan anda untuk secara langsung mengubah data yang salah di basisdata. Untuk bisa melakukan ini tanpa bantuan dapat menjadi perbedaan antara penundaan beberapa menit dan penundaan berjam-jam."
+
+#: ../../guide/comparisons.rst:46
+msgid "In Tabbycat, because it's your site, you have full control of the database, and can edit it through Tabbycat's \"Edit Database\" area. This allows you to fix things (or break things, if you're not careful!). Tabbie2's centralisation prevents this—for obvious reasons, only Tabbie2's developers have direct database access, which makes their intervention necessary if direct database access is required to resolve a problem."
+msgstr "Di Tabbycat, karna situs anda, anda punya kontrol penuh terhadap basisdata, dan bisa mengeditnya lewat area \"Edit Basisdata\" Tabbycat. Ini memungkinkan anda untuk memperbaiki (atau merusak, bila anda tidak berhati-hati!). Sentralisasi Tabbie2 mencegah ini-karna alasan yang jelas, hanya developer Tabbie2 punya akses langsung ke basisdata, yang membuat campur tangan mereka lebih penting bila akses basisdata langsung dibutuhkan untuk menyelesaikan suatu masalah."
+
+#: ../../guide/comparisons.rst:49 ../../guide/comparisons.rst:138
+msgid "Running your tournament"
+msgstr "Menjalankan turnamen mu"
+
+#: ../../guide/comparisons.rst:51
+msgid "Tabbie2 and Tabbycat have broadly similar workflows for running rounds; at least on paper. Key differences are discussed below:"
+msgstr "Tabbie2 dan Tabbycat punya alur kerja yang mirip secara luas untuk menjalankan ronde; setidaknya dalam teori. Perbedaan utamanya didiskusikan di bawah ini:"
+
+#: ../../guide/comparisons.rst:53
+msgid "**Data import**. Tabbie2 takes CSV files for import. Tabbycat has a CSV file importer, but it's (for now) only accessible through a command-line interface and is only expected to be used for large tournaments by experienced tab directors. As a more user-friendly alternative, Tabbycat also has an import wizard that's designed to make it easy to copy and paste CSV data. This works well for small and medium scale tournaments, but is cumbersome for large ones."
+msgstr "**Impor data**. Tabbie2 mengambil berkas CSV untuk diimpor. Tabbycat punya pengimpor berkas CSV, tapi itu (untuk sekarang) hanya dapat diakses lewat antarmuka command-line dan hanya terkira dipakai untuk turnamen besar oleh direktur tabulasi yang berpengalaman. Sebagai alternatif yang mudah-digunakan, Tabbycat juga punya wizard impor yang terdesain untuk lebih mudah untuk menyalin dan menempel data CSV. Ini berkerja dengan baik dengan turnamen dengan skala kecil dan sedang, tapi rumit bagi yang besar."
+
+#: ../../guide/comparisons.rst:55
+msgid "**Public interface**. Tabbycat can optionally publish the entire draw, as well as current team point standings and results of previous rounds, online. Tabbie2 shows to a logged-in user information about the debate that user is in for that round, but doesn't allow people to check up on people who are not themselves."
+msgstr "**Antarmuka publik**. Tabbycat dapat menerbitkan seluruh undian secara opsional, begitu juga dengan urutan poin tim saat ini dan hasil dari ronde sebelumnya, secara daring. Tabbie2 menunjukkan ke pengguna yang telah masuk informasi tentang debat yang pengguna tersebut sedang berada, tapi tidak memperbolehkan seseorang untuk mengecek orang lain yang bukan dirinya sendiri."
+
+#: ../../guide/comparisons.rst:57
+msgid "**Position rotation**. Tabbie2 uses an algorithm known as the \"Silver Line algorithm\", which keeps swapping pairs of teams until no further improvement is found. Because it stops at any 'local optimum', this method isn't guaranteed to be the best possible distribution of positions, and for large tournaments it often isn't. Tabbycat instead uses the `Hungarian algorithm <https://en.wikipedia.org/wiki/Hungarian_algorithm>`_, an well-known algorithm that finds the (globally) optimal allocation of positions. (One might describe this algorithm, in technical terms, as 'powerful'.) Tabbycat also produces a position balance report, so that in every round you can see which teams have unbalanced position histories."
+msgstr "**Rotasi posisi**. Tabbie2 memakai algoritma yang dikenal sebagai \"Algoritma Silver Line\", yang terus menukar pasangan tim sampai tidak ada perbaikan lebih lanjut yang ditemukan. Karena berhenti saat 'optimum lokal' apapun, metode ini tidak terjamin jadi distribusi posisi terbaik, dan untuk turnamen besar biasanya tidak. Tabbycat justru memakai `Algoritna Hungarian <https://en.wikipedia.org/wiki/Hungarian_algorithm>`_, sebuah algoritma terkenal yang mencarikan alokasi posisi optimal (secara global). (algoritma ini bisa dikatakan, dalam istilah teknis, sebagai 'kuat'.) Tabbycat juga membuat laporan posisi seimbang, supaya dalam tiap ronde anda bisa melihat tim mana yang memiliki sejarah posisi tak seimbang."
+
+#: ../../guide/comparisons.rst:59
+msgid "**Venue allocations**. Both Tabbie2 and Tabbycat allow for debate venues to be automatically assigned and manually edited. Tabbycat also allows you to specify 'venue constraints' that can automatically match particular participants with their accessibility requirements, or alternatively allow for tournament staff, such as a convenor or chief adjudicator, to be allocated rooms close to the briefing hall or tab room."
+msgstr "**Alokasi tempat**. Tabbie2 dan Tabbycat sama-sama memungkinkan tempat debat untuk secara otomatis ditetapkan dan diedit secara manual. Tabbycat juga memungkinkan anda untuk menentukan 'batasan tempat' yang bisa mencocokkan peserta tertentu secara otomatis dengan kebutuhan aksesibilitas, atau kalau tidak memungkinkan staf turnamen, seperti penyelenggara atau ketua juri, untuk dialokasikan ke ruangan yang dekat dengan aula briefing atau ruang tabulasi."
+
+#: ../../guide/comparisons.rst:61
+msgid "**Ballot entry**. Both Tabbie2 and Tabbycat support entering ballots online ('e-ballots') and entering ballots from paper from the tab room. Tabbie2 was built with e-ballots in mind, while Tabbycat was originally built for tab room staff, and the ballot entry paradigms reflect that. Both are flexible, just a little different—the best way to understand the difference is to try a demo of each. Also, Tabbycat takes note of the order in which speakers in a team spoke (i.e. who was PM and who was DPM), whereas Tabbie2 just records scores."
+msgstr "**Masukan suara**. Tabbie2 dan Tabbycat sama-sama mendukung memasukkan suara secara daring ('kertas suara elektronik') dan memasukkan kertas suara dari kertas dari ruang tabulasi. Tabbie2 dibangun dengan kertas suara elektronik di benak, selama Tabbycat awalnya dikembangkan untuk staf ruang tabulasi, dan paradigma masukan kertas suara mencerminkan itu. Keduanya fleksibel, hanya sedikit berbeda-cara terbaik untuk mengerti perbedaannya ialah dengan mencoba tiap masing-masing demo. Tabbycat juga mengambil catatan dari urutan pembicara dalam sebuah tim berbicara (misalkan, siapa PM dan siapa DPM), sedangkan Tabbie2 hanya menyimpan nilai."
+
+#: ../../guide/comparisons.rst:63
+msgid "As discussed earlier in *User identification*; Tabbie2's e-ballots are tied to unified user accounts, whereas Tabbycat's e-ballots are tied to per-tournament and per-adjudicator 'private URLs'."
+msgstr "Seperti yang sudah didiskusikan sebelumnya pada Identifikasi Pengguna; kertas suara elektronik Tabbie2 terikat dengan gabungan akun-akun pengguna, dimana kertas suara elektronik Tabbycat terikat dengan 'URL privat' tiap-turnamen dan tiap-juri."
+
+#: ../../guide/comparisons.rst:65
+msgid "**Break and speaker categories**. Tabbie2 has ESL, EFL and novice markers, which you can enable in a tournament's settings. Tabbycat supports user-defined break and speaker categories, so if your tournament has ESL, EFL, novice or any other form of category, you can define and customise those categories as needed."
+msgstr "**Kategori break dan pembicara**. Tabbie2 punya ESL, EFL dan marker pemula, yang anda bisa aktifkan di pengaturan turnamen. Tabbycat mendukung break yang ditetapkan pengguna dan kategori pembicara, jadi bila turnamen anda punya ESL, EFL, pemula atau bentuk kategori lainnya, anda bisa menetapkan dan merubah kategori itu sesuai kebutuhan."
+
+#: ../../guide/comparisons.rst:67
+msgid "**Adjudicator allocation algorithm**. Both Tabbie2 and Tabbycat use an algorithm to recommend an initial allocation of adjudicators to debates. In principle, they both work by assigning \"costs\" to allocations, and trying to find the minimum-cost assignment. Some notable differences:"
+msgstr "**Algoritma alokasi juri**. Tabbie2 dan Tabbycat sama-sama menggunakan sebuah algoritma untuk merekomendasikan alokasi awal dari juri untuk debat. Pada dasarnya, mereka sama-sama dengan menetapkan \"biaya\" untuk alokasi, dan mencoba untuk mencari penugasan biaya-terkecil. Beberapa perbedaan penting:"
+
+#: ../../guide/comparisons.rst:69
+msgid "Tabbie2 uses simulated annealing, which is not guaranteed to be optimal and technically needs to be tuned to be effective (which you're probably not doing). Tabbycat uses the Hungarian algorithm, which guarantees an optimal solution."
+msgstr "Tabbie2 memakai simulasi proses anil, yang tidak menjamin jadi optimal dan secara teknis perlu disetel jadi efektif (yang mungkin anda tidak lakukan). Tabbycat memakai algoritma hungarian yang menjamin solusi optimal."
+
+#: ../../guide/comparisons.rst:70
+msgid "On the other hand, the Hungarian algorithm can't account for relationships between adjudicators on a panel, so adjudicator-adjudicator conflicts aren't considered by Tabbycat's algorithm (though they are highlighted in the interface)."
+msgstr "Di sisi lain, algoritma Hungarian tidak bisa menjelaskan hubungan antar juri pada panel, jadi konflik juri-juri tidak dipertimbangkan dengan algoritma Tabbycat (walau mereka disoroti di antarmuka)."
+
+#: ../../guide/comparisons.rst:71
+msgid "Tabbycat's cost function is simpler and more naive. On the other hand, Tabbie2's is more complicated and can be rather opaque (even if you read its source code)."
+msgstr "Biaya fungsi Tabbycat lebih sederhana dan lebih naif. Di sisi lain, Tabbie2 lebih rumit dan bisa agak buram (walaupun anda melihat kode asalnya)."
+
+#: ../../guide/comparisons.rst:72
+msgid "Tabbie2 allows for single-gender panels to be charged an additional cost. Tabbycat's algorithm doesn't, but the interface does provide a way to easily check for this visually."
+msgstr "Tabbie2 memungkinkan untuk panel jenis kelamin-tunggal untuk dibebankan biaya tambahan. Algoritma Tabbycat tidak, tapi antarmukanya menyediakan cara untuk mengecek ini secara visual dengan mudah."
+
+#: ../../guide/comparisons.rst:73
+msgid "Tabbie2 automatically calculates the importance of a room based on its bracket (team points). In Tabbycat, debate importance can be assigned for all debates automatically based on on a room's bracket or the quantity of live break categories inside it. Instead of — or subsequent to — automatic classification any importance  value can be manually tweaked as desired. These options mean there is a greater flexibility in determining which debates the allocation algorithm should prioritise."
+msgstr "Tabbie2 secara otomatis mengalkulasi kepentingan dari sebuah ruang berdasarkan bracket nya (poin tim). Di Tabbycat, kepentingan debat bisa ditetapkan untuk semua debat secara otomatis berdasarkan pada bracket ruang atau kuantitas dari kategori break berlangsung di dalamnya. Sebagai gantinya - atau setelahnya - klasifikasi otomatis nilai kepentingan lainnya bisa disetel secara manual sesuka hati. Pilihan-pilihan ini berarti ada fleksibilitas yang lebih besar dalam menentukan debat mana yang harus diprioritaskan algoritma alokasinya."
+
+#: ../../guide/comparisons.rst:75
+msgid "**Adjudicator allocation interface**. While both interfaces use drag and drop interactions, and allow for color highlights to help identify adjudicators by gender, region, and feedback rating, Tabbycat's allocation interface was designed to be usable on both small screens and projectors, and has a number of extra features that can help inform allocations. These features include:"
+msgstr "**Antarmuka alokasi juri**. Selama kedua antarmuka menggunakan interaksi seret dan lepas, dan memungkinkan sorotan warna membantu mengenali juri dari jenis kelamin, wilayah, dan rating umpan balik, antarmuka alokasi Tabbycat didesain agar dapat digunakan pada layar kecil dan juga proyektor, dan mempunyai beberapa fitur tambahan yang dapat membantu memberitahukan alokasi. Fitur tersebut berupa:"
+
+#: ../../guide/comparisons.rst:77
+msgid "Clashes are shown directly in the interface when they apply, but dragging an adjudicator will also show you the potential conflicts that would occur if they were relocated in a new panel. This can make it much easier to avoid creating new clashes when shifting adjudicators around the draw."
+msgstr "Bentrokan diperlihatkan secara langsung di antarmuka saat mereka diterapkan, tapi menyeret sebuah juri juga akan menunjukkan anda potensi konflik yang mungkin terjadi bila mereka direlokasi di panel baru. Ini bisa membuat menghindari pembuatan bentrokan jadi lebih mudah saat menggeser juri sekitar pengundian."
+
+#: ../../guide/comparisons.rst:78
+msgid "An inline display of an estimate of whether a team is 'live' for each of their break categories — i.e. whether they are 'safe' (have enough points to break); 'dead' (cannot gain enough points to break); or 'live' (still in contention)."
+msgstr "Sebuah tampilan sebaris dari sebuah estimasi dari apakah sebuah tim 'hidup' untuk tiap kategori break mereka - misalkan apakah mereka 'aman' (punya poin cukup untuk break); 'mati' (tidak bisa mendapatkan poin cukup untuk break); atau 'hidup' (masih dalam anggapan)."
+
+#: ../../guide/comparisons.rst:79
+msgid "'History' conflicts (where an adjudicator has seen a team before, or previously was on a panel with another judge) are displayed so they can be avoided."
+msgstr "'Riwayat' konflik (dimana sebuah juri telah melihat tim sebelumnya, atau sebelumnya sedang di panel dengan juri lain) ditampilkan agar mereka bisa dihindari."
+
+#: ../../guide/comparisons.rst:80
+msgid "Each adjudicator is present as occupying a particular position (chair, panellist, trainee) rather than having those positions calculated automatically."
+msgstr "Tiap juri tersedia sebagai menempati posisi tertentu (ketua, panelis, trainee) daripada hanya punya posisi itu terhitung secara otomatis."
+
+#: ../../guide/comparisons.rst:81
+msgid "Chairs can be 'swapped' by dragging adjudicators on top of each other, and an 'unallocated' area can be used to view and store adjudicators that have not been allocated."
+msgstr "Ketua dapat 'menukarkan' dengan menyeret juri di atas satu sama lain, dan area 'tidak teralokasikan' bisa dipakai untuk melihat dan menyimpan juri yang belum dialokasikan."
+
+#: ../../guide/comparisons.rst:83
+msgid "**Adjudicator feedback customisation**. Both Tabbie2 and Tabbycat have built-in adjudicator feedback forms, and allow you to specify the questions on the feedback form. Notable differences:"
+msgstr "**Kustomasi umpan balik juri**. Tabbie2 dan Tabbycat sama-sama punya formulir umpan balik juri bawaan, dan memungkinkan anda untuk menentukan pertanyaan pada formulir umpan balik. Perbedaan penting:"
+
+#: ../../guide/comparisons.rst:85
+msgid "Setting up questions is painless on neither system. Tabbycat requires you to use the Edit Database area; Tabbie2 makes you click through a slightly more opaque maze of pages and forms."
+msgstr "Memasang pertanyaan ialah mudah untuk tidak kedua system. Tabbycat butuh anda untuk menggunakan area Edit Basisdata; Tabbie2 membuat anda mengeklik melewati lebih banyak labirin halaman dan formulir yang buram."
+
+#: ../../guide/comparisons.rst:86
+msgid "Tabbycat allows for a richer range of types of questions than Tabbie2 does."
+msgstr "Tabbycat memungkinkan jarak tipe pertanyaan yang lebih kaya dari Tabbie2."
+
+#: ../../guide/comparisons.rst:87
+msgid "Tabbie2 allows you to specify different questionnaires for team-on-chair, chair-on-panellist and panellist-on-chair. Tabbycat only differentiates between team-on-adjudicator and adjudicator-on-adjudicator."
+msgstr "Tabbie2 memungkinkan anda untuk menentukan kuesioner berbeda untuk tim-pada-ketua, ketua-pada-panelis dan panelis-pada-ketua. Tabbycat hanya membedakan antar tim-pada-juri dan juri-pada-juri."
+
+#: ../../guide/comparisons.rst:88
+msgid "Tabbycat gives you more control over who is expected to submit feedback on whom; e.g. whether teams submit on panellists, and whether panellists submit on each other. In Tabbie2, you can effect this with blank questionnaires, but only for the three options listed above."
+msgstr "Tabbycat memberi anda lebih banyak kontrol terhadap siapa yang terduga untuk menyerahkan umpan balik pada siapa; misalkan apakah tim menyampaikan pada panelis, dan apakah panel menyampaikan pada satu sama lain. Di Tabbie2, anda bisa mempengaruhi ini dengan kuesioner kosong, tapi hanya untuk tiga pilihan yang terdaftar diatas."
+
+#: ../../guide/comparisons.rst:89
+msgid "Tabbycat can, optionally, automatically incorporate feedback into adjudicator scores using a naive weighted average with the adjudicator base score. This can be disabled by simply setting feedback weight to zero, as some adjudication cores prefer. Tabbie2 has no ability to automatically incorporate feedback."
+msgstr "Tabbycat bisa, dengan opsional, menggabungkan umpan balik dengan nilai juri secara otomatis menggunakan rata-rata tertimbang naif dengan nilai dasar juri. Ini bisa dimatikan dengan mengatur berat umpan balik ke nol, sesuai dengan yang diinginkan beberapa juri inti. Tabbie2 tidak memiliki kemampuan untuk menggabungkan umpan balik secara otomatis."
+
+#: ../../guide/comparisons.rst:90
+msgid "Tabbycat produces a \"shame list\" of unsubmitted feedback, which you can optionally publish on the public-facing site to try to incentivise submission."
+msgstr "Tabbycat membuat \"daftar malu\" dari umpan balik yang tidak terkirim, yang anda bisa terbitkan secara opsional pada halaman yang dilihat publik untuk mencoba mendorong penyerahan."
+
+#: ../../guide/comparisons.rst:92
+msgid "(How participants access adjudicator feedback submission is discussed in *User identification* above.)"
+msgstr "(Bagaimana peserta mengakses masukan umpan balik juri didiskusikan pada identificasi Pengguna diatas.)"
+
+#: ../../guide/comparisons.rst:95 ../../guide/comparisons.rst:149
+msgid "Other considerations"
+msgstr "Pertimbangan lainnya"
+
+#: ../../guide/comparisons.rst:97
+msgid "**Offline availability**. If you like, you can also install Tabbycat on your own computer, rather than host it as website on a server. This means that you can use it offline. However installing Tabbycat in this manner will require the (at least brief) use of a command line interface."
+msgstr "**Ketersediaan Luring**. Bila anda mau, anda dapat juga menginstall Tabbycat di komputer sendiri, dibandingkan mengehost situs web pada sebuah server. Ini berarti anda dapat menggunakannya di luar jaringan. Akan tetapi menginstall Tabbycat dengan cara ini akan membutuhkan (pada saat terakhir) penggunaan antarmuka command line."
+
+#: ../../guide/comparisons.rst:99
+msgid "**Cost**. Tabbie2 is free to use. Tabbycat is free to use for not-for-profit, not-for-fundraising tournaments; tournaments for profit or fundraising must make a donation of A$1 per team. In addition, larger tournaments that run on Tabbycat's recommended web host (Heroku) may need to purchase an upgraded database service (the free tier has storage limits) which will cost around ~US$3 to use for the duration of a week-long tournament."
+msgstr "**Biaya**. Tabbie2 gratis digunakan. Tabbycat gratis digunakan untuk turnamen nirlaba, turnamen bukan-penanggalangan-dana; turnamen untuk profit atau penanggalangan-dana mesti membuat donasi sebanyak A$1 per tim. Sebagai tambahan, turnamen yang lebih besar yang dijalankan di situs host rekomendasi Tabbycat (Heroku) mungkin perlu membeli layanan basisdata yang telah ditingkatkan (tingkat gratis punya batas penyimpanan) yang mungkin sekitar ~US$3 untuk digunakan selama durasi turnamen seminggu."
+
+#: ../../guide/comparisons.rst:101
+msgid "**Documentation**. Tabbycat has `relatively extensive documentation <http://tabbycat.readthedocs.io/en/stable/>`_ that can be useful for learning how to use a particular feature or understanding what is happening at a technical level."
+msgstr "**Dokumentasi**. Tabbycat punya `dokumentasi yang relatif luas <http://tabbycat.readthedocs.io/en/stable/>`_ yang bisa berguna untuk belajar bagaimana cara sebuah fitur tertentu atau untuk memahami apa yang terjadi di tingkat teknis."
+
+#: ../../guide/comparisons.rst:103
+#, python-format
+msgid "**Hosting location**. Tabbycat recommends using Heroku, an established cloud platform service for deploying web applications. Heroku is in turn hosted on Amazon Web Services (AWS). Both Heroku and AWS are highly reliable and widely used; downtime for both has historically been (at worst) less than 0.05% over an annual period. Tabbie2 is hosted on `Uberspace <https://uberspace.de/>`_; a pay-what-you-want web hosting service. To the best of our knowledge, uptime statistics are not available."
+msgstr "**Lokasi Hosting**. Tabbycat merekomendasikan memakai Heroku, sebuah layanan platform cloud yang mapan untuk menyebarkan aplikasi web. Heroku pada gilirannya dihosting pada Layanan Web Amazon (LWA). Heroku dan LWA sangat terandalkan dan banyak digunakan; downtime untuk keduanya secara historis (paling buruknya) kurang dari 0,05% dalam periode tahunan. Tabbie2 dihosting pada `Uberspace <https://uberspace.de/>`_; sebuah layanan hosting web bayar-sesuai-keinginan-anda. Sepengetahuan kami, statistik uptime tidak tersedia."
+
+#: ../../guide/comparisons.rst:105
+msgid "**Multi-format support**. If you are interested in tabbing both four- and two- team formats there may be some value in using and learning Tabbycat as it will let you use the same software in both settings."
+msgstr "**Dukungan multi-format**. Jika anda tertarik dalam menabulasi baik empat- dan dua- format tim yang mungkin ada nilai dalam menggunakan dan mempelajari Tabbycat karena akan memungkinkan anda menggunakan perangkat lunak di kedua pengaturan."
+
+#: ../../guide/comparisons.rst:108
+msgid "Comparison with Tournaman"
+msgstr "Perbandingan dengan Turnamen"
+
+#: ../../guide/comparisons.rst:111
+msgid "Native app vs web app"
+msgstr "Aplikasi asli vs aplikasi web"
+
+#: ../../guide/comparisons.rst:113
+msgid "The crucial strength — and limitation — of Tournaman is that it is a Windows desktop application. Naturally, being a desktop app limits the features it can offer, relative to web apps like Tabbycat or Tabbie2, since it can't offer any online access. On the other hand, working with a desktop app can often be simpler than a web app."
+msgstr "Kekuatan penting - dan limitasi - dari Turnamen ialah itu sendiri merupakan aplikasi desktop Windows. Secara alamiah, menjadi aplikasi desktop membatasi fitur yang dapat dibagikan, relatif dengan aplikasi web seperti Tabbycat atau Tabbie2, karna tak bisa menawarkan akses daring apapun. Di sisi lain, menggunakan aplikasi desktop bisa jadi lebih simpel daripada aplikasi web."
+
+#: ../../guide/comparisons.rst:115
+msgid "**Installation**. You'll need to run (or emulate) a Windows machine to run Tournaman. Assuming you're using Windows, Tournaman's installation process is easy and familiar."
+msgstr "**Instalasi**. Anda akan perlu menjalankan (atau mengemulasi) sebuah mesin Windows dan menjalankan Turnamen. Mengasumsikan anda memakai Windows, proses instalasi Turnamen mudah dan familier."
+
+#: ../../guide/comparisons.rst:117
+#, python-format
+msgid "Tabbycat has a simple one-click installation process if you're deploying online (:ref:`to Heroku <install-heroku>`). However, if you want to run Tabbycat on your own computer rather than a website, this is substantially more complicated. Local installations of Tabbycat work by having your computer emulate a web server, and while we've tried to make this as accessible as possible, a technical background is definitely helpful for this. Using our :ref:`Docker-based method <install-docker>` should be simple, but it's not 100% reliable, and if it fails it can be difficult to figure out why. If internet access is available, we recommend running Tabbycat on Heroku."
+msgstr "Tabbycat punya proses instalasi klik-sekali yang simpel bila anda mendeploy secara dari (:ref:`to Heroku <install-heroku>`). Akan tetapi, bila anda ingin menjalankan Tabbycat di komputermu sendiri daripada di situs web, ini akan lebih rumit pada pokoknya. Instalasi Tabbycat lokal akan bekerja dengan cara komputer anda mengemulasi sebuah server web, dan selama kita telah mencoba membuat ini dapat diakses semudah mungkin, latar belakang teknis akan sangat membantu tahap ini. Menggunakan :ref:`Metode berbasis-Docker <install-docker>` kami seharusnya simpel, tapi tidak 100% dapat diandalkan, dan bila gagal bisa jadi sulit untuk mengetahui alasannya. Jika akses internet tersedia, kami merekomendasikan menjalankan Tabbycat di Heroku."
+
+#: ../../guide/comparisons.rst:119
+msgid "**Online features**. Because Tournaman runs fully offline, it naturally can't support many internet-based features: electronic ballots, online publication of draws and live team standings, and integrated tab release. Typically, if you wanted to publish anything online from Tournaman, you'd do so by publishing the files that Tournaman generates locally. In Tabbycat, all of these are built in, so there's a single website for all tab information."
+msgstr "**Fitur daring**. Karena turnamen beroperasi sepenuhnya luring, maka ia tak bisa mendukung fitur berbasis-internet yang banyak: kertas suara elektronik, publikasi pengundian daring dan urutan tim secara langsung. Biasanya, bila anda ingin menerbitkan apapun daring dari Turnamen, anda akan melakukannya dengan menerbitkan berkas yang dihasilkan Turnamen itu secara lokal. Di Tabbycat, ini semua sudah ada di dalamnya, jadi situs web tunggal untuk semua informasi tabulasi."
+
+#: ../../guide/comparisons.rst:121
+msgid "**Multi-user access**. Tournaman can be configured to allow networked ballot entry, but in order to set it up, you need to be comfortable with basic computer networking. This works best on small isolated networks that you control directly, e.g. a dedicated router set up in the tab room. It's not a great idea to set this up on computers connected to a university-wide network: many IT departments won't permit it, and even if they do, it's insecure, since anyone on the network can access it."
+msgstr "**Akses pengguna-ganda**. Turnamen dapat dikonfigurasikan untuk memungkinkan masukan jaringan kertas suara, tapi untuk mengaturnya, anda harus sudah terbiasa dengan jaringan komputer dasar. Ini akan bekerja dengan baik pada jaringan tersendiri yang anda kontrol secara langsung, misalkan ruter khusus yang disiapkan dalam ruang tabulasi. Menyiapkannya pada komputer yang terhubung ke jaringan seluas-universitas bukanlah ide yang bagus; banyak departemen TI tidak mengizinkannya, dan bahkan jika ya, akan tidak aman, sejak siapapun pada jaringan dapat mengaksesnya."
+
+#: ../../guide/comparisons.rst:123
+msgid "Tournaman's multi-user access is designed primarily to allow tab assistants to enter data. Key administrative tasks, such as draw generation and adjudicator allocation, must still be done on the computer on which Tournaman is installed. In contrast, web-based systems like Tabbycat and Tabbie2 allow users to login from any internet-connected device to access the functionality permitted by their account. This is often extremely useful if, say, you want to log in to a lectern computer, or have tab assistants work on mobile devices that they have with them."
+msgstr "Akses pengguna-ganda turnamen dirancang terutama untuk memungkinkan asisten tabulasi untuk memasukkan data. Kunci tugas administrasi, seperti pembentukan pengundian dan alokasi juri, mesti tetap diselesaikan pada komputer yang turnamennya telah terinstall. Sebaliknya, sistem berbasis-web seperti Tabbycat dan Tabbie2 memungkinkan pengguna untuk masuk dari perangkat terhubung-internet untuk mengakses fungsionalitas yang telah diizinkan oleh penggunanya. Ini biasanya berguna bila, misalkan, anda ingin masuk ke komputer podium, atau punya asisten tabulasi berkerja pada perangkat mobile yang ada pada mereka."
+
+#: ../../guide/comparisons.rst:125
+msgid "If you choose to install Tabbycat offline (rather than on Heroku), it's also possible to have the computer on which the local installation resides serve the website to other computers on the same network. This then permits anyone on the same network to access the \"local\" installation as if it were hosted on the internet. However, like Tournaman, such a configuration requires at least basic networking experience, and for security reasons is only advisable on small isolated networks that you control."
+msgstr "Bila anda memilih untuk menginstall Tabbycat secara luring (daripada di Heroku), mungkin juga komputer yang dimana tempat instalasi lokal terletak menyiapkan situs web ke komputer lain pada jaringan yang sama. Ini kemudian mengizinkan siapapun pada jaringan yang sama untuk mengakses instalasi \"lokal\" seakan dari internet. Akan tetapi, seperti Turnamen, konfigurasi semacam itu membutuhkan setidaknya pengalaman jaringan dasar, dan untuk alasan keamanan disarankan hanya pada jaringan tersendiri yang anda kendalikan."
+
+#: ../../guide/comparisons.rst:127
+msgid "**Backups and portability**. Both Tournaman and Tabbycat (unlike Tabbie2) store data in a way that is completely accessible to you. Tournaman does this by saving files on your computer's hard drive, while Tabbycat stores data in a SQL database that belongs to you."
+msgstr "**Cadangan dan portabilitas**. Tournaman dan Tabbycat (tidak seperti Tabbie2) menyimpan data dengan cara yang dapat anda akses sepenuhnya. Tournaman dapat melakukan ini dengan menyimpan berkas pada hard drive komputer, sedangkan Tabbycat menyimpan data pada basisdata SQL milik anda sendiri."
+
+#: ../../guide/comparisons.rst:129
+msgid "It should be emphasized that in both Tournaman and Tabbycat, actually needing to revert to a backup is extremely rare. Almost always, any glitch or error that breaks the tab can be resolved by editing data directly, without needing to \"roll back\" to a previous state. In Tournaman, this is done by editing the files that it writes to your hard drive (they're just XML files). In Tabbycat, this is done through the \"Edit Database\" area."
+msgstr "Perlu ditekankan bahwa pada Tournaman dan Tabbycat, sangat jarang mengharuskan untuk kembali ke sebuah cadangan. Hampir selalu, tiap glitch atau kesalahan lain yang merusak tabulasinya dapat diselesaikan dengan mengedit datanya secara langsung, tanpa harus \"kembali\" ke keadaan sebelumnya. Di Tournaman, ini dilakukan dengan mengedit berkas yang ditulisnya ke hard drive anda (hanyalah berkas XML). Di Tabbycat, ini dilakukan dengan area \"Edit Basisdata\"."
+
+#: ../../guide/comparisons.rst:131
+msgid "Tournaman's storage of data as XML files makes backups easy, although effort should be made to have backups stored on other computers or the cloud  (e.g. on Dropbox) in case the tab computer breaks or is lost. Restoring data from those backups (or transferring the tab to a different computer) is typically a simple process of copying the files back to the original location."
+msgstr "Penyimpanan data Tournaman sebagai berkas XML membuat penyimpanan jadi mudah, walaupun usaha harus dilakukan agar cadangan tersimpan pada komputer lain atau cloud (misalkan pada Dropbox) jikalau tabulasi komputernya rusak atau hilang. Memulihkan data dari cadangan tersebut (atau mentransfer tabulasinya ke komputer yang berbeda) biasanya proses penyalinan simpel terhadap berkas-berkas kembali ke lokasinya yang awal."
+
+#: ../../guide/comparisons.rst:133
+msgid "As for Tabbycat, in online installations, backups can be taken easily using Heroku's `database backup capability <http://tabbycat.readthedocs.io/en/stable/features/backups.html>`_. However, restoring backups requires you to have the Heroku command line interface installed. In offline installations, PostgreSQL's \"dump\" and \"restore\" commands are recommended, and may require some perseverance to get going reliability, particularly if you don't have prior SQL experience."
+msgstr "Seperti untuk Tabbycat, pada instalasi daring, cadangan dapat dijalankan dengan mudah menggunakan `kapabilitas cadangan basisdata Heroku <http://tabbycat.readthedocs.io/en/stable/features/backups.html>`_. Akan tetapi, memulihkan cadangan mengharuskan anda untuk menginstall antarmuka baris kode. Pada instalasi luring, perintah \"buang\" dan \"pulih\" PostgreSQL direkomendasikan, dan mungkin membutuhkan beberapa ketekunan untuk mewujudkannya, terutama bila anda tidak punya pengalaman SQL sebelumnya."
+
+#: ../../guide/comparisons.rst:135
+msgid "Generally there is no need for data portability when working with an online copy of Tabbycat — the website can be accessed anywhere. However if working with an offline/local copy, a tab can be transferred between machines by creating a backup of the database and restoring it to the other machine's database (doing so requires technical knowledge)."
+msgstr "Pada umumnya portabilitas data tidak dibutuhkan saat berurusan dengan jiplakan daring Tabbycat - situs webnya dapat diakses darimanapun. Tetapi bila berurusan dengan jiplakan yang luring, sebuah tabulasi dapat ditransfer antar mesin dengan membuat cadangan basisdata dan memungkinkannya ke basisdata mesin lain (melakukannya membutuhkan pengetahuan teknis)."
+
+#: ../../guide/comparisons.rst:140
+msgid "**Adjudicator feedback**. Tournaman lets you assign judges rankings, however it does not directly manage or assist the process of collecting judge feedback. As such tab directors generally need to run a parallel feedback system, and then manually copy over changes to an adjudicator's ranking into Tournaman itself. In contrast, Tabbycat has integrated methods for collecting judge feedback that allow it to be more easily issued, collected, viewed, and automatically translated into modifications to an adjudicator's rank."
+msgstr "**Umpan balik juri**. Tournaman membiarkan anda menetapkan ranking juri, tetapi tidak mengatur atau membantu proses mengumpulkan umpan balik juri secara langsung. Dengan demikian direktur tabulasi umumnya perlu menjalankan sistem umpan balik paralel, dan kemudian menyalin perubahan secara manual ke ranking juri ke Tournaman itu sendiri. Sebaliknya, Tabbycat punya metode terintegrasi untuk mengumpulkan umpan balik juri yang memungkinkannya jadi lebih mudah dikabarkan, dikumpulkan, dilihat, dan diterjemahkan secara otomatis ke modifikasi peringkat juri."
+
+#: ../../guide/comparisons.rst:142
+msgid "**Adjudicator allocation**. Tournaman has a fixed judge ranking scale and (from what we understand) has a relatively fixed procedure for allocating panels according to their absolute ranks. We are unsure about the exact mechanics of how this works, but broad details are `available here <https://www.facebook.com/notes/harry-mcevansoneya/tournaman-judge-ranking-scale-advice-for-future-cas/10151964404693002/>`_."
+msgstr "**Alokasi juri**. Tournaman memiliki skala ranking juri yang tetap dan (dari apa yang kita pahami) memiliki prosedur yang relatif tetap untuk mengalokasikan panel berdasarkan peringkat absolut mereka. Kami tidak yakin mengenai mekanisme yang tepat tentang cara kerjanya, namun detail yang luas `tersedia disini <https://www.facebook.com/notes/harry-mcevansoneya/tournaman-judge-ranking-scale-advice-for-future-cas/10151964404693002/>`_."
+
+#: ../../guide/comparisons.rst:144
+msgid "As with the discussion of allocation interfaces vis-à-vis Tabbie2, there are a number of features in the Tabbycat allocation interface that mean it is more easily used in a collaborative setting and can display additional information to inform draws."
+msgstr "Seperti diskusi mengenai alokasi antarmuka Tabbie2 vis-à-vis, ada sejumlah fitur pada antarmuka alokasi Tabbycat yang berarti lebih mudah digunakan pada pengaturan kolaboratif dan dapat menampilkan informasi tambahan untuk memberitahu pengundian."
+
+#: ../../guide/comparisons.rst:146
+msgid "**Flexibility in draw rules**. As we've said, all major tab systems are WUDC-compliant. But if you want to deviate from WUDC rules, Tournaman has a few more options. Whereas Tabbycat allows you to use intermediate brackets (rather than pull-ups), Tournaman allows you to sacrifice power-pairing integrity for position balance (though this generally isn't necessary to achieve position balance), fold within brackets and avoid teams hitting their own institution. On the other hand, Tabbycat allows you to tune how position balance trades off between teams (which the WUDC constitution doesn't precisely specify)."
+msgstr "**Fleksibilitas pada aturan pengundian**. Seperti yang telah kami katakan, semua sistem tabulasi utama sesuai dengan KDITU. Namun bila anda ingin menyimpang dari aturan KDITU, Tournaman punya beberapa pilihan. Sedangkan Tabbycat memungkinkan anda untuk menggunakan intermediate brackets (dibanding pull-up), Tournaman memungkinkan anda mengorbankan integritas power-pairing untuk keseimbangan posisi (meskipun ini umumnya tidak perlu untuk mencapai keseimbangan posisi), lipatan dalam brackets dan menghindari tim mengenai institusinya sendiri. Di sisi lain, Tabbycat memungkinkan anda menyesuaikan bagaimana keseimbangan posisi saling berkorban antar tim (yang tidak ditentukan dengan tepat oleh konstitusi KDITU)."
+
+#: ../../guide/comparisons.rst:151
+msgid "**Stability and development**. Tournaman has been in use for over a decade and is generally considered to be stable and reliable. However, new features are relatively rarely added, and its being a native app means that it doesn't boast as many features as Tabbycat or Tabbie2."
+msgstr "**Stabilitas dan perkembangan**. Tournaman telah digunakan selama lebih dari satu dekade dan umumnya dianggap stabil dan terandalkan. Namun, fitur baru relatif jarang ditambahkan, dan menjadi aplikasi asli berarti tidak membanggakan fitur sebanyak Tabbycat atau Tabbie2."
+
+#: ../../guide/comparisons.rst:153
+msgid "**Cost**. Tournaman is free to use. Tabbycat is free to use for not-for-profit, not-for-fundraising tournaments; tournaments for profit or fundraising must make a donation of A$1 per team. In addition, larger tournaments that run on Tabbycat's recommended web host (Heroku) may need to purchase an upgraded database service (the free tier has storage limits) which will cost around ~US$3 to use for the duration of a week-long tournament."
+msgstr "**Biaya**. Tournaman gratis digunakan. Tabbycat gratis digunakan untuk turnamen nirlaba, turnamen bukan-penanggalangan-dana; turnamen untuk profit atau penanggalangan-dana mesti membuat donasi sebanyak A$1 per tim. Sebagai tambahan, turnamen yang lebih besar yang berjalan di situs host rekomendasi Tabbycat (Heroku) mungkin perlu membeli layanan basisdata yang telah ditingkatkan (tingkat gratis punya batas penyimpanan) yang mungkin sekitar ~US$3 untuk digunakan selama durasi turnamen seminggu."
+
+#: ../../guide/comparisons.rst:155
+msgid "**Availability of source code**. Tournaman's code is closed-source, meaning it is not publicly available. If you do not have any coding experience this is probably not relevant to you, but if you do, having access to the source of Tabbycat can help you understand how the program works and customise it as needed."
+msgstr "**Ketersediaan kode asal**. Kode Tournaman ialah sumber-tertutup, yang berarti tidak tersedia untuk umum. Bila anda tidak memiliki pengalaman koding apapun ini mungkin tidak relevan bagi anda, tapi bila ya, punya akses ke sumber Tabbycat bisa membantu anda memahami bagaimana cara kerja programnya dan menyesuaikannya sesuai kebutuhan."
+
+#: ../../guide/comparisons.rst:158
+msgid "Comparison with hand tabbing"
+msgstr "Perbandingan dengan hand tabbing"
+
+#: ../../guide/comparisons.rst:160
+msgid "Hand tabbing is easy, until it isn't. Traditionally, using a spreadsheet has been the go-to option for smallish tournaments because, hey, you're pretty handy with Excel, right? Making draws in spreadsheets (or on paper) seems like a pretty approachable task; ultimately it's all cells and formulae and numbers unlike the more arcane underpinnings of actual tab software."
+msgstr "Hand Tabbing mudah, sampai tidak. Biasanya, menggunakan spreadsheet telah menjadi opsi paling biasa untuk turnamen yang kecil karena, hei, Anda cukup ahli dengan Excel, bukan? Membuat pengundian di spreadsheet (atau di kertas) seperti tugas yang cukup mudah dilakukan; pada akhirnya itu semua ialah sel-sel dan rumus-rumus dan angka yang tidak seperti perangkat lunak tabulasi yang sebenarnya."
+
+#: ../../guide/comparisons.rst:162
+msgid "However, hand tabbing does require you to have a good working knowledge of how your format's rules work and how your spreadsheet software of choice can be made to work them. That process might be easy for you, or it might not be. But, either way, we'd like to think that Tabbycat offers a better alternative to hand-tabbing; regardless of how well you can actually hand-tab. The setup costs of creating a copy of Tabbycat are pretty low and you can speed through the process of draw creation, adjudicator allocation, and result entry at a pace. It's still not going to be as fast a spreadsheet for a small tournament, but we think it's getting pretty close. And in exchange for a little speed you get a much stronger guarantee of your draws being correct, options for online data entry, a more comprehensive and shareable final tab, and much more. Give it a shot!"
+msgstr "Meskipun demikian, menabulasi dengan tangan memang mengharuskan anda punya pengetahuan kerja yang bagus mengenai bagaimana format Anda bekerja dan bagaimana perangkat lunak spreadsheet pilihan anda dapat dibuat untuk menjalankannya. Itu mungkin proses yang mudah bagi Anda, atau mungkin tidak. Tapi, bagaimanapun juga, kami ingin Tabbycat menawarkan alternatif yang lebih baik untuk menabulasi dengan tangan; terlepas dari seberapa baik anda menabulasi dengan tangan. Biaya penyiapan untuk membuat salinan dari Tabbycat cukup rendah dan anda bisa mempercepat proses pembuatan pengundian, alokasi juri, dan hasil entri dengan cepat. Ini masih tidak akan secepat spreadsheet untuk turnamen kecil, tapi kami pikir itu sudah cukup mendekati. Dan sebagai pengganti sedikit kecepatan, anda dapat jaminan lebih kuat bahwa hasil undian anda akan tepat, pilihan untuk masukan data daring, tabulasi akhir yang lebih komprehensif dan dapat dibagikan, dan banyak lainnya. Silahkan dicoba!"
+

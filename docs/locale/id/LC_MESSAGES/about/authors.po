@@ -1,0 +1,72 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2021-04-05 06:25\n"
+"Last-Translator: \n"
+"Language-Team: Indonesian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: id\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/about/authors.po\n"
+"X-Crowdin-File-ID: 1259\n"
+"Language: id_ID\n"
+
+#: ../../../AUTHORS.rst:3
+msgid "Authors & Acknowledgements"
+msgstr "Penulis dan Ucapan Terimakasih"
+
+#: ../../../AUTHORS.rst:6
+msgid "Authors"
+msgstr "Penulis"
+
+#: ../../../AUTHORS.rst:8
+msgid "Tabbycat was authored by Qi-Shan Lim for Auckland Australs 2010. The current active maintainers are:"
+msgstr "Tabbycat awalnya dibuat oleh Qi-Shan Lim untuk Auckland Australs 2010. Pengelola aktif pada saat ini adalah:"
+
+#: ../../../AUTHORS.rst:10
+msgid "Philip Belesky (`pb-e-mail <mailto:contact@philipbelesky.com>`_)"
+msgstr "Philip Belesky (`pb-e-mail <mailto:contact@philipbelesky.com>`_)"
+
+#: ../../../AUTHORS.rst:11
+msgid "Chuan-Zheng Lee (`cz-e-mail <mailto:czlee@stanford.edu>`_)"
+msgstr "Chuan-Zheng Lee (`cz-e-mail <mailto:czlee@stanford.edu>`_)"
+
+#: ../../../AUTHORS.rst:13
+msgid "Please don't hesitate to contact us with any suggestions, expressions of interest or generally anything relating to Tabbycat."
+msgstr "Harap jangan sungkan untuk menghubungi kami untuk memberitahukan saran, mengungkapkan ketertarikan atau apapun yang berhubungan dengan Tabbycat."
+
+#: ../../../AUTHORS.rst:16
+msgid "Contributors"
+msgstr "Kontributor"
+
+#: ../../../AUTHORS.rst:18
+msgid "Étienne Beaulé has contributed many features, fixes, and suggestions across many aspects of Tabbycat."
+msgstr "Étienne Beaulé sudah memberikan kontribusi banyak fitur, perbaikan, dan saran dalam banyak hal untuk Tabbycat."
+
+#: ../../../AUTHORS.rst:19
+msgid "Thevesh Theva contributed the algorithm for calculating the liveness of teams within a particular break category."
+msgstr "Thevesh Theva berkontribusi dalam pembuatan algoritma untuk menghitung keaktifan tim dalam kategori istirahat tertentu."
+
+#: ../../../AUTHORS.rst:20
+msgid "Viran Weerasekera contributed the statistical tests used to estimate the degree to which a motion's results and vetoes are balanced."
+msgstr "Viran Weerasekera berkontribusi dalam pembuatan tes statistik yang digunakan untuk mengestimasi setiap arah pergerakan hasil mosi dan veto agar seimbang."
+
+#: ../../../AUTHORS.rst:21
+msgid "Viran Weerasekera, Valerie Tierney, Molly Dale, Madeline Schultz, and Vail Bromberger contributed to the \"Tournament Logistics\" section of our documentation."
+msgstr "Viran Weerasekera, Valerie Tierney, Molly Dale, Madeline Schultz, dan Vail Bromberger sudah berkontribusi pada bagian \"Logistik Turnamen\" pada dokumentasi kami."
+
+#: ../../../AUTHORS.rst:24
+msgid "Sponsors"
+msgstr "Sponsor"
+
+#: ../../../AUTHORS.rst:26
+msgid "Thanks to the Western Australian Debating League for sponsoring various features related to organising division-based tournaments and round-robin based draw methods."
+msgstr "Terimakasih kami tujukan kepada Western Australian Debating League yang telah mensponsori berbagai fitur yang terkait dengan penyelenggaraan turnamen berbasis divisi dan metode undian berbasis round-robin."
+

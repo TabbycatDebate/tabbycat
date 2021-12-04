@@ -28,10 +28,15 @@
 
         <!-- Ballot metadata -->
         <span class="small text-muted ballot-info">
-          <span class="text-monospace">{{ ballot.short_time }}</span>
-          {{ ballot.submitter }}
+          <span class="text-monospace">{{ ballot.short_time }} </span>
+          <span class="text-info" v-if="ballot.private_url">{{ ballot.submitter }}</span>
+          <span v-else>{{ ballot.submitter }}</span>
         </span>
 
+      </div>
+
+      <div v-if="canMergeCreate">
+        <a :href="cellData.merge_ballot" v-text="gettext('Merge Ballot(s)')"></a>
       </div>
 
       <div v-if="needsNewBallot">
@@ -60,6 +65,11 @@ export default {
     },
     needsNewBallot: function () {
       return this.viableBallotsCount === this.cellData.ballots.length
+    },
+    canMergeCreate: function () {
+      // it's mergeable if there is at least one single-adj non-discarded ballot
+      // (ok to have just one, since user might want to fill in the others)
+      return this.cellData.ballots.some((b) => !b.discarded && b.single_adj)
     },
   },
   methods: {

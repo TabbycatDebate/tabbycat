@@ -3934,198 +3934,342 @@
     "model": "motions.motion",
     "pk": 1,
     "fields": {
-        "seq": 1,
         "text": "This House would abolish national days",
         "reference": "National days",
         "info_slide": "",
-        "round": 1
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 2,
     "fields": {
-        "seq": 2,
         "text": "This House regrets the existence of Valentine's Day",
         "reference": "Valentine’s Day",
         "info_slide": "",
-        "round": 1
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 3,
     "fields": {
-        "seq": 3,
         "text": "This House would rename Christmas with a name that is religiously neutral",
         "reference": "Christmas",
         "info_slide": "",
-        "round": 1
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 4,
     "fields": {
-        "seq": 1,
         "text": "This House would not buy Apple",
         "reference": "Apple",
         "info_slide": "",
-        "round": 2
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 5,
     "fields": {
-        "seq": 2,
         "text": "This House would end all research and development tax credits for highly profitable technology companies",
         "reference": "R&D tax credit",
         "info_slide": "",
-        "round": 2
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 6,
     "fields": {
-        "seq": 3,
         "text": "This House regrets the rise of computer science at the expense of the humanities",
         "reference": "Computer science",
         "info_slide": "",
-        "round": 2
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 7,
     "fields": {
-        "seq": 1,
         "text": "This House would favour creativity over intelligence",
         "reference": "Creativity and intelligence",
         "info_slide": "",
-        "round": 3
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 8,
     "fields": {
-        "seq": 2,
         "text": "This House believes that field hockey is better than ice hockey",
         "reference": "Hockey",
         "info_slide": "",
-        "round": 3
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 9,
     "fields": {
-        "seq": 3,
         "text": "This House would rather play with Lego than Barbie",
         "reference": "Lego and Barbie",
         "info_slide": "",
-        "round": 3
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 10,
     "fields": {
-        "seq": 1,
         "text": "This House would stop importing bananas from Latin America",
         "reference": "Bananas",
         "info_slide": "",
-        "round": 4
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 11,
     "fields": {
-        "seq": 2,
         "text": "This House believes that tomatoes are a fruit",
         "reference": "Tomatoes",
         "info_slide": "",
-        "round": 4
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 12,
     "fields": {
-        "seq": 3,
         "text": "This House would require all fruit to carry labels noting what pesticides are used on them",
         "reference": "Pesticide labelling",
         "info_slide": "",
-        "round": 4
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 13,
     "fields": {
-        "seq": 1,
         "text": "This House would make an exception to laws forbidding indecent exposure for days with hot temperatures",
         "reference": "Indecent exposure",
         "info_slide": "",
-        "round": 7
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 14,
     "fields": {
-        "seq": 2,
         "text": "This House regrets the development of different fashion lines for men and women",
         "reference": "Gender and fashion",
         "info_slide": "",
-        "round": 7
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 15,
     "fields": {
-        "seq": 3,
         "text": "This House believes that it is unprofessional to wear flip-flops (jandals, thongs) to work",
         "reference": "Flip-flops",
         "info_slide": "",
-        "round": 7
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 16,
     "fields": {
-        "seq": 1,
         "text": "This House would stop using cash",
         "reference": "Cash",
         "info_slide": "",
-        "round": 10
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 17,
     "fields": {
-        "seq": 2,
         "text": "This House supports Bitcoin",
         "reference": "Bitcoin",
         "info_slide": "",
-        "round": 10
+        "tournament": 1
     }
 },
 {
     "model": "motions.motion",
     "pk": 18,
     "fields": {
-        "seq": 3,
         "text": "This House would allow private organisations to compete in providing currency",
         "reference": "Private currency",
         "info_slide": "",
-        "round": 10
+        "tournament": 1
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 1,
+    "fields": {
+        "motion": 1,
+        "round": 1,
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 2,
+    "fields": {
+        "motion": 2,
+        "round": 1,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 3,
+    "fields": {
+        "motion": 3,
+        "round": 1,
+        "seq": 3
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 4,
+    "fields": {
+        "motion": 4,
+        "round": 2,
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 5,
+    "fields": {
+        "motion": 5,
+        "round": 2,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 6,
+    "fields": {
+        "motion": 6,
+        "round": 2,
+        "seq": 3
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 7,
+    "fields": {
+        "motion": 7,
+        "round": 3,
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 8,
+    "fields": {
+        "motion": 8,
+        "round": 3,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 9,
+    "fields": {
+        "motion": 9,
+        "round": 3,
+        "seq": 3
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 10,
+    "fields": {
+        "motion": 10,
+        "round": 4,
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 11,
+    "fields": {
+        "motion": 11,
+        "round": 4,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 12,
+    "fields": {
+        "motion": 12,
+        "round": 4,
+        "seq": 3
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 13,
+    "fields": {
+        "motion": 13,
+        "round": 7,
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 14,
+    "fields": {
+        "motion": 14,
+        "round": 7,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 15,
+    "fields": {
+        "motion": 15,
+        "round": 7,
+        "seq": 3
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 16,
+    "fields": {
+        "motion": 16,
+        "round": 10,
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 17,
+    "fields": {
+        "motion": 17,
+        "round": 10,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotion",
+    "pk": 18,
+    "fields": {
+        "motion": 18,
+        "round": 10,
+        "seq": 3
     }
 },
 {
@@ -8087,6 +8231,2118 @@
         "debate": 48,
         "motion": 12,
         "discarded": false
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 1,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_adjudicator": 1,
+        "debate_team": 23,
+        "win": false,
+        "margin": -2.5,
+        "score": 259.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 2,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_adjudicator": 1,
+        "debate_team": 24,
+        "win": true,
+        "margin": 2.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 3,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_adjudicator": 2,
+        "debate_team": 21,
+        "win": false,
+        "margin": -0.5,
+        "score": 266.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 4,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_adjudicator": 2,
+        "debate_team": 22,
+        "win": true,
+        "margin": 0.5,
+        "score": 267.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 5,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_adjudicator": 3,
+        "debate_team": 19,
+        "win": false,
+        "margin": -3.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 6,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_adjudicator": 3,
+        "debate_team": 20,
+        "win": true,
+        "margin": 3.5,
+        "score": 265.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 7,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_adjudicator": 4,
+        "debate_team": 17,
+        "win": false,
+        "margin": -4.5,
+        "score": 257.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 8,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_adjudicator": 4,
+        "debate_team": 18,
+        "win": true,
+        "margin": 4.5,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 9,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_adjudicator": 5,
+        "debate_team": 15,
+        "win": false,
+        "margin": -0.5,
+        "score": 260.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 10,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_adjudicator": 5,
+        "debate_team": 16,
+        "win": true,
+        "margin": 0.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 11,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_adjudicator": 6,
+        "debate_team": 13,
+        "win": false,
+        "margin": -7.5,
+        "score": 255.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 12,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_adjudicator": 6,
+        "debate_team": 14,
+        "win": true,
+        "margin": 7.5,
+        "score": 263.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 13,
+    "fields": {
+        "ballot_submission": 7,
+        "debate_adjudicator": 7,
+        "debate_team": 11,
+        "win": true,
+        "margin": 2.5,
+        "score": 267.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 14,
+    "fields": {
+        "ballot_submission": 7,
+        "debate_adjudicator": 7,
+        "debate_team": 12,
+        "win": false,
+        "margin": -2.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 15,
+    "fields": {
+        "ballot_submission": 8,
+        "debate_adjudicator": 8,
+        "debate_team": 9,
+        "win": true,
+        "margin": 8.0,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 16,
+    "fields": {
+        "ballot_submission": 8,
+        "debate_adjudicator": 8,
+        "debate_team": 10,
+        "win": false,
+        "margin": -8.0,
+        "score": 256.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 17,
+    "fields": {
+        "ballot_submission": 8,
+        "debate_adjudicator": 9,
+        "debate_team": 9,
+        "win": true,
+        "margin": 4.5,
+        "score": 269.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 18,
+    "fields": {
+        "ballot_submission": 8,
+        "debate_adjudicator": 9,
+        "debate_team": 10,
+        "win": false,
+        "margin": -4.5,
+        "score": 265.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 19,
+    "fields": {
+        "ballot_submission": 8,
+        "debate_adjudicator": 10,
+        "debate_team": 9,
+        "win": true,
+        "margin": 1.5,
+        "score": 264.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 20,
+    "fields": {
+        "ballot_submission": 8,
+        "debate_adjudicator": 10,
+        "debate_team": 10,
+        "win": false,
+        "margin": -1.5,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 21,
+    "fields": {
+        "ballot_submission": 9,
+        "debate_adjudicator": 11,
+        "debate_team": 7,
+        "win": true,
+        "margin": 2.5,
+        "score": 263.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 22,
+    "fields": {
+        "ballot_submission": 9,
+        "debate_adjudicator": 11,
+        "debate_team": 8,
+        "win": false,
+        "margin": -2.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 23,
+    "fields": {
+        "ballot_submission": 9,
+        "debate_adjudicator": 12,
+        "debate_team": 7,
+        "win": true,
+        "margin": 7.5,
+        "score": 268.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 24,
+    "fields": {
+        "ballot_submission": 9,
+        "debate_adjudicator": 12,
+        "debate_team": 8,
+        "win": false,
+        "margin": -7.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 25,
+    "fields": {
+        "ballot_submission": 9,
+        "debate_adjudicator": 13,
+        "debate_team": 7,
+        "win": false,
+        "margin": -1.0,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 26,
+    "fields": {
+        "ballot_submission": 9,
+        "debate_adjudicator": 13,
+        "debate_team": 8,
+        "win": true,
+        "margin": 1.0,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 27,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 14,
+        "debate_team": 5,
+        "win": true,
+        "margin": 3.0,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 28,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 14,
+        "debate_team": 6,
+        "win": false,
+        "margin": -3.0,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 29,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 15,
+        "debate_team": 5,
+        "win": true,
+        "margin": 5.0,
+        "score": 267.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 30,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 15,
+        "debate_team": 6,
+        "win": false,
+        "margin": -5.0,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 31,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 16,
+        "debate_team": 5,
+        "win": true,
+        "margin": 8.0,
+        "score": 268.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 32,
+    "fields": {
+        "ballot_submission": 10,
+        "debate_adjudicator": 16,
+        "debate_team": 6,
+        "win": false,
+        "margin": -8.0,
+        "score": 260.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 33,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 17,
+        "debate_team": 3,
+        "win": false,
+        "margin": -2.5,
+        "score": 265.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 34,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 17,
+        "debate_team": 4,
+        "win": true,
+        "margin": 2.5,
+        "score": 268.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 35,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 18,
+        "debate_team": 3,
+        "win": true,
+        "margin": 2.5,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 36,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 18,
+        "debate_team": 4,
+        "win": false,
+        "margin": -2.5,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 37,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 19,
+        "debate_team": 3,
+        "win": false,
+        "margin": -3.0,
+        "score": 258.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 38,
+    "fields": {
+        "ballot_submission": 11,
+        "debate_adjudicator": 19,
+        "debate_team": 4,
+        "win": true,
+        "margin": 3.0,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 39,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 20,
+        "debate_team": 1,
+        "win": true,
+        "margin": 1.0,
+        "score": 267.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 40,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 20,
+        "debate_team": 2,
+        "win": false,
+        "margin": -1.0,
+        "score": 266.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 41,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 21,
+        "debate_team": 1,
+        "win": true,
+        "margin": 1.5,
+        "score": 265.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 42,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 21,
+        "debate_team": 2,
+        "win": false,
+        "margin": -1.5,
+        "score": 264.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 43,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 22,
+        "debate_team": 1,
+        "win": false,
+        "margin": -12.0,
+        "score": 256.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 44,
+    "fields": {
+        "ballot_submission": 12,
+        "debate_adjudicator": 22,
+        "debate_team": 2,
+        "win": true,
+        "margin": 12.0,
+        "score": 268.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 45,
+    "fields": {
+        "ballot_submission": 13,
+        "debate_adjudicator": 33,
+        "debate_team": 47,
+        "win": true,
+        "margin": 1.5,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 46,
+    "fields": {
+        "ballot_submission": 13,
+        "debate_adjudicator": 33,
+        "debate_team": 48,
+        "win": false,
+        "margin": -1.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 47,
+    "fields": {
+        "ballot_submission": 13,
+        "debate_adjudicator": 34,
+        "debate_team": 47,
+        "win": true,
+        "margin": 3.5,
+        "score": 268.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 48,
+    "fields": {
+        "ballot_submission": 13,
+        "debate_adjudicator": 34,
+        "debate_team": 48,
+        "win": false,
+        "margin": -3.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 49,
+    "fields": {
+        "ballot_submission": 13,
+        "debate_adjudicator": 35,
+        "debate_team": 47,
+        "win": true,
+        "margin": 0.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 50,
+    "fields": {
+        "ballot_submission": 13,
+        "debate_adjudicator": 35,
+        "debate_team": 48,
+        "win": false,
+        "margin": -0.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 51,
+    "fields": {
+        "ballot_submission": 14,
+        "debate_adjudicator": 24,
+        "debate_team": 45,
+        "win": true,
+        "margin": 0.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 52,
+    "fields": {
+        "ballot_submission": 14,
+        "debate_adjudicator": 24,
+        "debate_team": 46,
+        "win": false,
+        "margin": -0.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 53,
+    "fields": {
+        "ballot_submission": 15,
+        "debate_adjudicator": 36,
+        "debate_team": 43,
+        "win": false,
+        "margin": -2.5,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 54,
+    "fields": {
+        "ballot_submission": 15,
+        "debate_adjudicator": 36,
+        "debate_team": 44,
+        "win": true,
+        "margin": 2.5,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 55,
+    "fields": {
+        "ballot_submission": 15,
+        "debate_adjudicator": 37,
+        "debate_team": 43,
+        "win": true,
+        "margin": 2.0,
+        "score": 258.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 56,
+    "fields": {
+        "ballot_submission": 15,
+        "debate_adjudicator": 37,
+        "debate_team": 44,
+        "win": false,
+        "margin": -2.0,
+        "score": 256.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 57,
+    "fields": {
+        "ballot_submission": 15,
+        "debate_adjudicator": 38,
+        "debate_team": 43,
+        "win": false,
+        "margin": -1.0,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 58,
+    "fields": {
+        "ballot_submission": 15,
+        "debate_adjudicator": 38,
+        "debate_team": 44,
+        "win": true,
+        "margin": 1.0,
+        "score": 263.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 59,
+    "fields": {
+        "ballot_submission": 16,
+        "debate_adjudicator": 39,
+        "debate_team": 41,
+        "win": true,
+        "margin": 1.0,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 60,
+    "fields": {
+        "ballot_submission": 16,
+        "debate_adjudicator": 39,
+        "debate_team": 42,
+        "win": false,
+        "margin": -1.0,
+        "score": 259.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 61,
+    "fields": {
+        "ballot_submission": 16,
+        "debate_adjudicator": 40,
+        "debate_team": 41,
+        "win": true,
+        "margin": 1.5,
+        "score": 263.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 62,
+    "fields": {
+        "ballot_submission": 16,
+        "debate_adjudicator": 40,
+        "debate_team": 42,
+        "win": false,
+        "margin": -1.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 63,
+    "fields": {
+        "ballot_submission": 16,
+        "debate_adjudicator": 41,
+        "debate_team": 41,
+        "win": true,
+        "margin": 3.5,
+        "score": 268.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 64,
+    "fields": {
+        "ballot_submission": 16,
+        "debate_adjudicator": 41,
+        "debate_team": 42,
+        "win": false,
+        "margin": -3.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 65,
+    "fields": {
+        "ballot_submission": 17,
+        "debate_adjudicator": 30,
+        "debate_team": 39,
+        "win": true,
+        "margin": 2.0,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 66,
+    "fields": {
+        "ballot_submission": 17,
+        "debate_adjudicator": 30,
+        "debate_team": 40,
+        "win": false,
+        "margin": -2.0,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 67,
+    "fields": {
+        "ballot_submission": 17,
+        "debate_adjudicator": 31,
+        "debate_team": 39,
+        "win": false,
+        "margin": -3.0,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 68,
+    "fields": {
+        "ballot_submission": 17,
+        "debate_adjudicator": 31,
+        "debate_team": 40,
+        "win": true,
+        "margin": 3.0,
+        "score": 263.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 69,
+    "fields": {
+        "ballot_submission": 17,
+        "debate_adjudicator": 32,
+        "debate_team": 39,
+        "win": false,
+        "margin": -1.0,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 70,
+    "fields": {
+        "ballot_submission": 17,
+        "debate_adjudicator": 32,
+        "debate_team": 40,
+        "win": true,
+        "margin": 1.0,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 71,
+    "fields": {
+        "ballot_submission": 18,
+        "debate_adjudicator": 23,
+        "debate_team": 37,
+        "win": true,
+        "margin": 0.5,
+        "score": 263.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 72,
+    "fields": {
+        "ballot_submission": 18,
+        "debate_adjudicator": 23,
+        "debate_team": 38,
+        "win": false,
+        "margin": -0.5,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 73,
+    "fields": {
+        "ballot_submission": 19,
+        "debate_adjudicator": 27,
+        "debate_team": 35,
+        "win": true,
+        "margin": 3.0,
+        "score": 265.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 74,
+    "fields": {
+        "ballot_submission": 19,
+        "debate_adjudicator": 27,
+        "debate_team": 36,
+        "win": false,
+        "margin": -3.0,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 75,
+    "fields": {
+        "ballot_submission": 20,
+        "debate_adjudicator": 26,
+        "debate_team": 33,
+        "win": true,
+        "margin": 2.0,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 76,
+    "fields": {
+        "ballot_submission": 20,
+        "debate_adjudicator": 26,
+        "debate_team": 34,
+        "win": false,
+        "margin": -2.0,
+        "score": 259.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 77,
+    "fields": {
+        "ballot_submission": 21,
+        "debate_adjudicator": 29,
+        "debate_team": 31,
+        "win": false,
+        "margin": -0.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 78,
+    "fields": {
+        "ballot_submission": 21,
+        "debate_adjudicator": 29,
+        "debate_team": 32,
+        "win": true,
+        "margin": 0.5,
+        "score": 265.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 79,
+    "fields": {
+        "ballot_submission": 22,
+        "debate_adjudicator": 28,
+        "debate_team": 29,
+        "win": false,
+        "margin": -6.0,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 80,
+    "fields": {
+        "ballot_submission": 22,
+        "debate_adjudicator": 28,
+        "debate_team": 30,
+        "win": true,
+        "margin": 6.0,
+        "score": 266.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 81,
+    "fields": {
+        "ballot_submission": 23,
+        "debate_adjudicator": 42,
+        "debate_team": 27,
+        "win": true,
+        "margin": 2.0,
+        "score": 266.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 82,
+    "fields": {
+        "ballot_submission": 23,
+        "debate_adjudicator": 42,
+        "debate_team": 28,
+        "win": false,
+        "margin": -2.0,
+        "score": 264.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 83,
+    "fields": {
+        "ballot_submission": 23,
+        "debate_adjudicator": 43,
+        "debate_team": 27,
+        "win": false,
+        "margin": -1.0,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 84,
+    "fields": {
+        "ballot_submission": 23,
+        "debate_adjudicator": 43,
+        "debate_team": 28,
+        "win": true,
+        "margin": 1.0,
+        "score": 263.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 85,
+    "fields": {
+        "ballot_submission": 23,
+        "debate_adjudicator": 44,
+        "debate_team": 27,
+        "win": false,
+        "margin": -2.0,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 86,
+    "fields": {
+        "ballot_submission": 23,
+        "debate_adjudicator": 44,
+        "debate_team": 28,
+        "win": true,
+        "margin": 2.0,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 87,
+    "fields": {
+        "ballot_submission": 24,
+        "debate_adjudicator": 25,
+        "debate_team": 25,
+        "win": true,
+        "margin": 7.5,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 88,
+    "fields": {
+        "ballot_submission": 24,
+        "debate_adjudicator": 25,
+        "debate_team": 26,
+        "win": false,
+        "margin": -7.5,
+        "score": 254.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 89,
+    "fields": {
+        "ballot_submission": 25,
+        "debate_adjudicator": 48,
+        "debate_team": 49,
+        "win": false,
+        "margin": -2.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 90,
+    "fields": {
+        "ballot_submission": 25,
+        "debate_adjudicator": 48,
+        "debate_team": 50,
+        "win": true,
+        "margin": 2.5,
+        "score": 264.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 91,
+    "fields": {
+        "ballot_submission": 26,
+        "debate_adjudicator": 47,
+        "debate_team": 51,
+        "win": false,
+        "margin": -2.5,
+        "score": 259.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 92,
+    "fields": {
+        "ballot_submission": 26,
+        "debate_adjudicator": 47,
+        "debate_team": 52,
+        "win": true,
+        "margin": 2.5,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 93,
+    "fields": {
+        "ballot_submission": 27,
+        "debate_adjudicator": 52,
+        "debate_team": 53,
+        "win": true,
+        "margin": 4.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 94,
+    "fields": {
+        "ballot_submission": 27,
+        "debate_adjudicator": 52,
+        "debate_team": 54,
+        "win": false,
+        "margin": -4.5,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 95,
+    "fields": {
+        "ballot_submission": 27,
+        "debate_adjudicator": 53,
+        "debate_team": 53,
+        "win": false,
+        "margin": -2.5,
+        "score": 258.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 96,
+    "fields": {
+        "ballot_submission": 27,
+        "debate_adjudicator": 53,
+        "debate_team": 54,
+        "win": true,
+        "margin": 2.5,
+        "score": 260.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 97,
+    "fields": {
+        "ballot_submission": 27,
+        "debate_adjudicator": 54,
+        "debate_team": 53,
+        "win": false,
+        "margin": -5.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 98,
+    "fields": {
+        "ballot_submission": 27,
+        "debate_adjudicator": 54,
+        "debate_team": 54,
+        "win": true,
+        "margin": 5.5,
+        "score": 266.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 99,
+    "fields": {
+        "ballot_submission": 28,
+        "debate_adjudicator": 55,
+        "debate_team": 55,
+        "win": false,
+        "margin": -0.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 100,
+    "fields": {
+        "ballot_submission": 28,
+        "debate_adjudicator": 55,
+        "debate_team": 56,
+        "win": true,
+        "margin": 0.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 101,
+    "fields": {
+        "ballot_submission": 28,
+        "debate_adjudicator": 56,
+        "debate_team": 55,
+        "win": false,
+        "margin": -6.0,
+        "score": 260.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 102,
+    "fields": {
+        "ballot_submission": 28,
+        "debate_adjudicator": 56,
+        "debate_team": 56,
+        "win": true,
+        "margin": 6.0,
+        "score": 266.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 103,
+    "fields": {
+        "ballot_submission": 28,
+        "debate_adjudicator": 57,
+        "debate_team": 55,
+        "win": true,
+        "margin": 9.5,
+        "score": 266.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 104,
+    "fields": {
+        "ballot_submission": 28,
+        "debate_adjudicator": 57,
+        "debate_team": 56,
+        "win": false,
+        "margin": -9.5,
+        "score": 257.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 105,
+    "fields": {
+        "ballot_submission": 29,
+        "debate_adjudicator": 64,
+        "debate_team": 57,
+        "win": false,
+        "margin": -8.5,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 106,
+    "fields": {
+        "ballot_submission": 29,
+        "debate_adjudicator": 64,
+        "debate_team": 58,
+        "win": true,
+        "margin": 8.5,
+        "score": 271.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 107,
+    "fields": {
+        "ballot_submission": 29,
+        "debate_adjudicator": 65,
+        "debate_team": 57,
+        "win": true,
+        "margin": 5.0,
+        "score": 264.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 108,
+    "fields": {
+        "ballot_submission": 29,
+        "debate_adjudicator": 65,
+        "debate_team": 58,
+        "win": false,
+        "margin": -5.0,
+        "score": 259.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 109,
+    "fields": {
+        "ballot_submission": 29,
+        "debate_adjudicator": 66,
+        "debate_team": 57,
+        "win": false,
+        "margin": -2.0,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 110,
+    "fields": {
+        "ballot_submission": 29,
+        "debate_adjudicator": 66,
+        "debate_team": 58,
+        "win": true,
+        "margin": 2.0,
+        "score": 264.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 111,
+    "fields": {
+        "ballot_submission": 30,
+        "debate_adjudicator": 50,
+        "debate_team": 59,
+        "win": true,
+        "margin": 7.0,
+        "score": 266.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 112,
+    "fields": {
+        "ballot_submission": 30,
+        "debate_adjudicator": 50,
+        "debate_team": 60,
+        "win": false,
+        "margin": -7.0,
+        "score": 259.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 113,
+    "fields": {
+        "ballot_submission": 31,
+        "debate_adjudicator": 45,
+        "debate_team": 61,
+        "win": false,
+        "margin": -5.5,
+        "score": 260.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 114,
+    "fields": {
+        "ballot_submission": 31,
+        "debate_adjudicator": 45,
+        "debate_team": 62,
+        "win": true,
+        "margin": 5.5,
+        "score": 266.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 115,
+    "fields": {
+        "ballot_submission": 32,
+        "debate_adjudicator": 49,
+        "debate_team": 63,
+        "win": true,
+        "margin": 5.5,
+        "score": 258.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 116,
+    "fields": {
+        "ballot_submission": 32,
+        "debate_adjudicator": 49,
+        "debate_team": 64,
+        "win": false,
+        "margin": -5.5,
+        "score": 253.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 117,
+    "fields": {
+        "ballot_submission": 33,
+        "debate_adjudicator": 46,
+        "debate_team": 65,
+        "win": false,
+        "margin": -6.5,
+        "score": 255.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 118,
+    "fields": {
+        "ballot_submission": 33,
+        "debate_adjudicator": 46,
+        "debate_team": 66,
+        "win": true,
+        "margin": 6.5,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 119,
+    "fields": {
+        "ballot_submission": 34,
+        "debate_adjudicator": 61,
+        "debate_team": 67,
+        "win": true,
+        "margin": 5.5,
+        "score": 265.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 120,
+    "fields": {
+        "ballot_submission": 34,
+        "debate_adjudicator": 61,
+        "debate_team": 68,
+        "win": false,
+        "margin": -5.5,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 121,
+    "fields": {
+        "ballot_submission": 34,
+        "debate_adjudicator": 62,
+        "debate_team": 67,
+        "win": false,
+        "margin": -1.0,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 122,
+    "fields": {
+        "ballot_submission": 34,
+        "debate_adjudicator": 62,
+        "debate_team": 68,
+        "win": true,
+        "margin": 1.0,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 123,
+    "fields": {
+        "ballot_submission": 34,
+        "debate_adjudicator": 63,
+        "debate_team": 67,
+        "win": true,
+        "margin": 10.0,
+        "score": 268.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 124,
+    "fields": {
+        "ballot_submission": 34,
+        "debate_adjudicator": 63,
+        "debate_team": 68,
+        "win": false,
+        "margin": -10.0,
+        "score": 258.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 125,
+    "fields": {
+        "ballot_submission": 35,
+        "debate_adjudicator": 58,
+        "debate_team": 69,
+        "win": false,
+        "margin": -1.0,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 126,
+    "fields": {
+        "ballot_submission": 35,
+        "debate_adjudicator": 58,
+        "debate_team": 70,
+        "win": true,
+        "margin": 1.0,
+        "score": 265.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 127,
+    "fields": {
+        "ballot_submission": 35,
+        "debate_adjudicator": 59,
+        "debate_team": 69,
+        "win": true,
+        "margin": 3.5,
+        "score": 265.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 128,
+    "fields": {
+        "ballot_submission": 35,
+        "debate_adjudicator": 59,
+        "debate_team": 70,
+        "win": false,
+        "margin": -3.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 129,
+    "fields": {
+        "ballot_submission": 35,
+        "debate_adjudicator": 60,
+        "debate_team": 69,
+        "win": true,
+        "margin": 5.0,
+        "score": 258.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 130,
+    "fields": {
+        "ballot_submission": 35,
+        "debate_adjudicator": 60,
+        "debate_team": 70,
+        "win": false,
+        "margin": -5.0,
+        "score": 253.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 131,
+    "fields": {
+        "ballot_submission": 36,
+        "debate_adjudicator": 51,
+        "debate_team": 71,
+        "win": false,
+        "margin": -1.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 132,
+    "fields": {
+        "ballot_submission": 36,
+        "debate_adjudicator": 51,
+        "debate_team": 72,
+        "win": true,
+        "margin": 1.5,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 133,
+    "fields": {
+        "ballot_submission": 37,
+        "debate_adjudicator": 73,
+        "debate_team": 73,
+        "win": false,
+        "margin": -5.5,
+        "score": 259.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 134,
+    "fields": {
+        "ballot_submission": 37,
+        "debate_adjudicator": 73,
+        "debate_team": 74,
+        "win": true,
+        "margin": 5.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 135,
+    "fields": {
+        "ballot_submission": 38,
+        "debate_adjudicator": 67,
+        "debate_team": 75,
+        "win": false,
+        "margin": -4.0,
+        "score": 258.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 136,
+    "fields": {
+        "ballot_submission": 38,
+        "debate_adjudicator": 67,
+        "debate_team": 76,
+        "win": true,
+        "margin": 4.0,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 137,
+    "fields": {
+        "ballot_submission": 39,
+        "debate_adjudicator": 77,
+        "debate_team": 77,
+        "win": false,
+        "margin": -2.5,
+        "score": 257.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 138,
+    "fields": {
+        "ballot_submission": 39,
+        "debate_adjudicator": 77,
+        "debate_team": 78,
+        "win": true,
+        "margin": 2.5,
+        "score": 259.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 139,
+    "fields": {
+        "ballot_submission": 39,
+        "debate_adjudicator": 78,
+        "debate_team": 77,
+        "win": false,
+        "margin": -10.5,
+        "score": 255.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 140,
+    "fields": {
+        "ballot_submission": 39,
+        "debate_adjudicator": 78,
+        "debate_team": 78,
+        "win": true,
+        "margin": 10.5,
+        "score": 266.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 141,
+    "fields": {
+        "ballot_submission": 39,
+        "debate_adjudicator": 79,
+        "debate_team": 77,
+        "win": false,
+        "margin": -5.0,
+        "score": 257.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 142,
+    "fields": {
+        "ballot_submission": 39,
+        "debate_adjudicator": 79,
+        "debate_team": 78,
+        "win": true,
+        "margin": 5.0,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 143,
+    "fields": {
+        "ballot_submission": 40,
+        "debate_adjudicator": 74,
+        "debate_team": 79,
+        "win": false,
+        "margin": -3.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 144,
+    "fields": {
+        "ballot_submission": 40,
+        "debate_adjudicator": 74,
+        "debate_team": 80,
+        "win": true,
+        "margin": 3.5,
+        "score": 268.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 145,
+    "fields": {
+        "ballot_submission": 40,
+        "debate_adjudicator": 75,
+        "debate_team": 79,
+        "win": false,
+        "margin": -1.5,
+        "score": 259.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 146,
+    "fields": {
+        "ballot_submission": 40,
+        "debate_adjudicator": 75,
+        "debate_team": 80,
+        "win": true,
+        "margin": 1.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 147,
+    "fields": {
+        "ballot_submission": 40,
+        "debate_adjudicator": 76,
+        "debate_team": 79,
+        "win": false,
+        "margin": -2.0,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 148,
+    "fields": {
+        "ballot_submission": 40,
+        "debate_adjudicator": 76,
+        "debate_team": 80,
+        "win": true,
+        "margin": 2.0,
+        "score": 263.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 149,
+    "fields": {
+        "ballot_submission": 41,
+        "debate_adjudicator": 80,
+        "debate_team": 81,
+        "win": false,
+        "margin": -4.0,
+        "score": 263.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 150,
+    "fields": {
+        "ballot_submission": 41,
+        "debate_adjudicator": 80,
+        "debate_team": 82,
+        "win": true,
+        "margin": 4.0,
+        "score": 267.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 151,
+    "fields": {
+        "ballot_submission": 41,
+        "debate_adjudicator": 81,
+        "debate_team": 81,
+        "win": true,
+        "margin": 7.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 152,
+    "fields": {
+        "ballot_submission": 41,
+        "debate_adjudicator": 81,
+        "debate_team": 82,
+        "win": false,
+        "margin": -7.5,
+        "score": 257.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 153,
+    "fields": {
+        "ballot_submission": 41,
+        "debate_adjudicator": 82,
+        "debate_team": 81,
+        "win": false,
+        "margin": -4.5,
+        "score": 261.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 154,
+    "fields": {
+        "ballot_submission": 41,
+        "debate_adjudicator": 82,
+        "debate_team": 82,
+        "win": true,
+        "margin": 4.5,
+        "score": 266.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 155,
+    "fields": {
+        "ballot_submission": 42,
+        "debate_adjudicator": 86,
+        "debate_team": 83,
+        "win": true,
+        "margin": 3.5,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 156,
+    "fields": {
+        "ballot_submission": 42,
+        "debate_adjudicator": 86,
+        "debate_team": 84,
+        "win": false,
+        "margin": -3.5,
+        "score": 259.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 157,
+    "fields": {
+        "ballot_submission": 42,
+        "debate_adjudicator": 87,
+        "debate_team": 83,
+        "win": true,
+        "margin": 2.5,
+        "score": 267.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 158,
+    "fields": {
+        "ballot_submission": 42,
+        "debate_adjudicator": 87,
+        "debate_team": 84,
+        "win": false,
+        "margin": -2.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 159,
+    "fields": {
+        "ballot_submission": 42,
+        "debate_adjudicator": 88,
+        "debate_team": 83,
+        "win": true,
+        "margin": 3.5,
+        "score": 264.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 160,
+    "fields": {
+        "ballot_submission": 42,
+        "debate_adjudicator": 88,
+        "debate_team": 84,
+        "win": false,
+        "margin": -3.5,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 161,
+    "fields": {
+        "ballot_submission": 43,
+        "debate_adjudicator": 83,
+        "debate_team": 85,
+        "win": false,
+        "margin": -10.0,
+        "score": 260.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 162,
+    "fields": {
+        "ballot_submission": 43,
+        "debate_adjudicator": 83,
+        "debate_team": 86,
+        "win": true,
+        "margin": 10.0,
+        "score": 270.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 163,
+    "fields": {
+        "ballot_submission": 43,
+        "debate_adjudicator": 84,
+        "debate_team": 85,
+        "win": false,
+        "margin": -1.0,
+        "score": 261.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 164,
+    "fields": {
+        "ballot_submission": 43,
+        "debate_adjudicator": 84,
+        "debate_team": 86,
+        "win": true,
+        "margin": 1.0,
+        "score": 262.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 165,
+    "fields": {
+        "ballot_submission": 43,
+        "debate_adjudicator": 85,
+        "debate_team": 85,
+        "win": false,
+        "margin": -6.5,
+        "score": 260.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 166,
+    "fields": {
+        "ballot_submission": 43,
+        "debate_adjudicator": 85,
+        "debate_team": 86,
+        "win": true,
+        "margin": 6.5,
+        "score": 267.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 167,
+    "fields": {
+        "ballot_submission": 44,
+        "debate_adjudicator": 71,
+        "debate_team": 87,
+        "win": true,
+        "margin": 10.0,
+        "score": 267.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 168,
+    "fields": {
+        "ballot_submission": 44,
+        "debate_adjudicator": 71,
+        "debate_team": 88,
+        "win": false,
+        "margin": -10.0,
+        "score": 257.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 169,
+    "fields": {
+        "ballot_submission": 45,
+        "debate_adjudicator": 72,
+        "debate_team": 89,
+        "win": false,
+        "margin": -1.0,
+        "score": 262.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 170,
+    "fields": {
+        "ballot_submission": 45,
+        "debate_adjudicator": 72,
+        "debate_team": 90,
+        "win": true,
+        "margin": 1.0,
+        "score": 263.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 171,
+    "fields": {
+        "ballot_submission": 46,
+        "debate_adjudicator": 68,
+        "debate_team": 91,
+        "win": false,
+        "margin": -1.0,
+        "score": 268.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 172,
+    "fields": {
+        "ballot_submission": 46,
+        "debate_adjudicator": 68,
+        "debate_team": 92,
+        "win": true,
+        "margin": 1.0,
+        "score": 269.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 173,
+    "fields": {
+        "ballot_submission": 47,
+        "debate_adjudicator": 70,
+        "debate_team": 93,
+        "win": false,
+        "margin": -7.5,
+        "score": 258.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 174,
+    "fields": {
+        "ballot_submission": 47,
+        "debate_adjudicator": 70,
+        "debate_team": 94,
+        "win": true,
+        "margin": 7.5,
+        "score": 266.0
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 175,
+    "fields": {
+        "ballot_submission": 48,
+        "debate_adjudicator": 69,
+        "debate_team": 95,
+        "win": true,
+        "margin": 8.0,
+        "score": 266.5
+    }
+},
+{
+    "model": "results.teamscorebyadj",
+    "pk": 176,
+    "fields": {
+        "ballot_submission": 48,
+        "debate_adjudicator": 69,
+        "debate_team": 96,
+        "win": false,
+        "margin": -8.0,
+        "score": 258.5
     }
 },
 {
@@ -21812,7 +24068,8 @@
         "feedback_weight": 0.7,
         "silent": false,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -21831,7 +24088,8 @@
         "feedback_weight": 0.7,
         "silent": false,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -21850,7 +24108,8 @@
         "feedback_weight": 0.7,
         "silent": false,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -21869,7 +24128,8 @@
         "feedback_weight": 0.7,
         "silent": false,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -21888,7 +24148,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -21907,7 +24168,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -21926,7 +24188,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -21945,7 +24208,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -21964,7 +24228,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {
@@ -21983,7 +24248,8 @@
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
-        "starts_at": null
+        "starts_at": null,
+        "weight": 1
     }
 },
 {

@@ -22,6 +22,7 @@
   <meta property="og:description" content="{{ meta_description }}" />
   <meta property="og:image" content="{% static 'logo-social.png' %}" />
 
+  <link rel="preload" href="{% static 'fonts/Inter-Regular.woff2' %}" as="font" type="font/woff2">
   <link rel="icon" type="image/png" href="{% static 'logo-32x32.png' %}" sizes="32x32" />
   <link rel="icon" type="image/png" href="{% static 'logo-16x16.png' %}" sizes="16x16" />
   <link rel="mask-icon" href="{% static 'safari-tab.svg' %}" color="rgb(102, 61, 160)">
@@ -53,6 +54,13 @@
     trackException:function q(r,s){return n("exception",null,null,null,null,r,s)}}})
     (window,"UA-314178-25",{anonymizeIp:true,colorDepth:true,characterSet:true,screenSize:true,language:true});
   </script>
+  {% endif %}
+  {% if LANGUAGE_CODE == 'tzl' %}<!-- In-context translations; use Talossan -->
+  <script>
+    var _jipt = [];
+    _jipt.push(['project', 'tabbycat']);
+  </script>
+  <script src="//cdn.crowdin.com/jipt/jipt.js"></script>
   {% endif %}
 </head>
 

@@ -37,7 +37,7 @@ def get_bp_coefficients(nrounds):
     return half_row + half_row[-2::-1]
 
 
-def liveness_twoteam(is_general, current_round, break_size, total_teams, total_rounds, team_scores=None):
+def liveness_twoteam(is_general, current_round, break_size, total_teams, total_rounds, team_scores=[]):
 
     if total_teams < break_size or (not is_general and len(team_scores) <= break_size):
         return 0, -1  # special case, everyone is safe
@@ -64,8 +64,6 @@ def liveness_twoteam(is_general, current_round, break_size, total_teams, total_r
         dead = highest_nonbreaking - rounds_to_go - 1
 
     else:
-        team_scores.sort(reverse=True)
-
         # Check if teams in breaking range can still be 'caught' by the team
         # just outside breaking range, and lower the safe score if so.
         safe = min(safe, team_scores[break_size] + rounds_to_go + 1)
@@ -77,7 +75,7 @@ def liveness_twoteam(is_general, current_round, break_size, total_teams, total_r
     return safe, dead
 
 
-def liveness_bp(is_general, current_round, break_size, total_teams, total_rounds, team_scores=None):
+def liveness_bp(is_general, current_round, break_size, total_teams, total_rounds, team_scores=[]):
 
     if total_teams < break_size or (not is_general and len(team_scores) <= break_size):
         return -1, -1  # special case, everyone is safe
@@ -110,8 +108,6 @@ def liveness_bp(is_general, current_round, break_size, total_teams, total_rounds
         dead = highest_nonbreaking - points_to_go - 1
 
     else:
-        team_scores.sort(reverse=True)
-
         # Check if teams in breaking range can still be 'caught' by the team
         # just outside breaking range, and lower the safe score if so.
         safe = min(safe, team_scores[break_size] + points_to_go + 1)

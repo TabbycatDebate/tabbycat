@@ -109,8 +109,22 @@ if environ.get('EMAIL_HOST', ''):
     EMAIL_HOST_USER = environ['EMAIL_HOST_USER']
     EMAIL_HOST_PASSWORD = environ['EMAIL_HOST_PASSWORD']
     EMAIL_PORT = int(environ.get('EMAIL_PORT', 587))
-    EMAIL_USE_TLS = bool(environ.get('EMAIL_USE_TLS', True))
+    EMAIL_USE_TLS = environ.get('EMAIL_USE_TLS', 'true').lower() == 'true'
+
+elif environ.get('SENDGRID_API_KEY', ''):
+    SERVER_EMAIL = environ.get('DEFAULT_FROM_EMAIL', 'root@localhost')
+    DEFAULT_FROM_EMAIL = environ.get('DEFAULT_FROM_EMAIL', 'notconfigured@tabbycatsite')
+    EMAIL_HOST = 'smtp.sendgrid.net'
+    EMAIL_HOST_USER = 'apikey'
+    EMAIL_HOST_PASSWORD = environ['SENDGRID_API_KEY']
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+
 elif environ.get('SENDGRID_USERNAME', ''):
+    # These settings are deprecated as of Tabbycat 2.6.0 (Ocicat).
+    # When removing, also remove utils.mixins.WarnAboutLegacySendgridConfigVarsMixin and
+    # templates/errors/legacy_sendgrid_warning.html (and references thereto).
+    USING_LEGACY_SENDGRID_CONFIG_VARS = True
     SERVER_EMAIL = environ['SENDGRID_USERNAME']
     DEFAULT_FROM_EMAIL = environ.get('DEFAULT_FROM_EMAIL', environ['SENDGRID_USERNAME'])
     EMAIL_HOST = 'smtp.sendgrid.net'
@@ -124,8 +138,9 @@ elif environ.get('SENDGRID_USERNAME', ''):
 # ==============================================================================
 
 if not environ.get('DISABLE_SENTRY'):
+    DISABLE_SENTRY = False
     sentry_sdk.init(
-        dsn="https://6bf2099f349542f4b9baf73ca9789597@sentry.io/185382",
+        dsn="https://6bf2099f349542f4b9baf73ca9789597@o85113.ingest.sentry.io/185382",
         integrations=[
             DjangoIntegration(),
             LoggingIntegration(event_level=logging.WARNING),
@@ -134,10 +149,6 @@ if not environ.get('DISABLE_SENTRY'):
         send_default_pii=True,
         release=TABBYCAT_VERSION,
     )
-
-    # Override dictionary trimming so that all preferences will be included in Sentry reports
-    # https://forum.sentry.io/t/python-sdk-extra-data-capped-at-400-characters/6909
-    sentry_sdk.serializer.MAX_DATABAG_BREADTH = 200
 
 # ==============================================================================
 # Scout

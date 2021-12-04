@@ -1,14 +1,12 @@
 import json
 import logging
 from collections import OrderedDict
-from threading import Lock
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
 from django.shortcuts import redirect, resolve_url
-from django.urls import reverse_lazy
 from django.utils.html import format_html_join
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateView
@@ -20,13 +18,14 @@ from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from notifications.models import BulkNotification
 from results.models import BallotSubmission
+from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
-from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_round, reverse_tournament
-from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin, WarnAboutDatabaseUseMixin
+from utils.mixins import (AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin,
+                          WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin)
 from utils.views import PostOnlyRedirectView
 
-from .forms import (SetCurrentRoundMultipleBreakCategoriesForm,
+from .forms import (RoundWeightForm, SetCurrentRoundMultipleBreakCategoriesForm,
                     SetCurrentRoundSingleBreakCategoryForm, TournamentConfigureForm,
                     TournamentStartForm)
 from .mixins import RoundMixin, TournamentMixin
@@ -37,7 +36,7 @@ User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
-class PublicSiteIndexView(WarnAboutDatabaseUseMixin, TemplateView):
+class PublicSiteIndexView(WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin, TemplateView):
     template_name = 'site_index.html'
 
     def get(self, request, *args, **kwargs):
@@ -69,7 +68,7 @@ class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
     template_name = 'public_tournament_index.html'
 
 
-class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin, TemplateView):
+class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         t = self.tournament
@@ -84,12 +83,11 @@ class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin
                     'content_object', 'user').order_by('-timestamp')[:updates]
         kwargs["initialActions"] = json.dumps([a.serialize for a in actions])
 
-        subs = BallotSubmission.objects.filter(
-            debate__round__tournament=t, confirmed=True).prefetch_related(
-            'teamscore_set__debate_team',
-            'teamscore_set__debate_team__team').select_related(
-            'debate__round__tournament').order_by('-timestamp')[:updates]
-        subs = [bs.serialize_like_actionlog for bs in subs]
+        debates = t.current_round.debate_set.filter(
+            ballotsubmission__confirmed=True,
+        ).order_by('-ballotsubmission__timestamp')[:updates]
+        populate_confirmed_ballots(debates, results=True)
+        subs = [d._confirmed_ballot.serialize_like_actionlog for d in debates]
         kwargs["initialBallots"] = json.dumps(subs)
 
         status = t.current_round.draw_status
@@ -190,41 +188,6 @@ class CompleteRoundView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnly
             return redirect_round('availability-index', self.round.next)
 
 
-class BlankSiteStartView(FormView):
-    """This view is presented to the user when there are no tournaments and no
-    user accounts. It prompts the user to create a first superuser. It rejects
-    all requests, GET or POST, if there exists any user account in the
-    system."""
-
-    form_class = SuperuserCreationForm
-    template_name = "blank_site_start.html"
-    lock = Lock()
-    success_url = reverse_lazy('tabbycat-index')
-
-    def get(self, request):
-        if User.objects.exists():
-            logger.warning("Tried to get the blank-site-start view when a user account already exists.")
-            return redirect('tabbycat-index')
-
-        return super().get(request)
-
-    def post(self, request):
-        with self.lock:
-            if User.objects.exists():
-                logger.warning("Tried to post the blank-site-start view when a user account already exists.")
-                messages.error(request, _("Whoops! It looks like someone's already created the first user account. Please log in."))
-                return redirect('login')
-
-            return super().post(request)
-
-    def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        messages.info(self.request, _("Welcome! You've created an account for %s.") % user.username)
-
-        return super().form_valid(form)
-
-
 class CreateTournamentView(AdministratorMixin, WarnAboutDatabaseUseMixin, CreateView):
     """This view allows a logged-in superuser to create a new tournament."""
 
@@ -311,6 +274,24 @@ class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
         return context
 
 
+class SetRoundWeightingsView(AdministratorMixin, TournamentMixin, FormView):
+    template_name = 'set_round_weights.html'
+    form_class = RoundWeightForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['tournament'] = self.tournament
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, _("Successfully set round weights."))
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_tournament('options-tournament-index', self.tournament)
+
+
 class FixDebateTeamsView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = "fix_debate_teams.html"
 
@@ -344,14 +325,6 @@ class FixDebateTeamsView(AdministratorMixin, TournamentMixin, TemplateView):
     def dispatch(self, request, *args, **kwargs):
         # bypass the TournamentMixin checks, to avoid potential redirect loops
         return TemplateView.dispatch(self, request, *args, **kwargs)
-
-
-class DonationsView(CacheMixin, TemplateView):
-    template_name = 'donations.html'
-
-
-class TournamentDonationsView(TournamentMixin, TemplateView):
-    template_name = 'donations.html'
 
 
 class StyleGuideView(TemplateView, TabbycatPageTitlesMixin):

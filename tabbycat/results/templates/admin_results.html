@@ -40,7 +40,7 @@
               {% endif %}
               {% if iron.current_round %}
                 <p class="text-info mt-3 mb-0">
-                  {% blocktrans with team=iron.team %}
+                  {% blocktrans trimmed with team=iron.team %}
                     A speaker from {{ team }} gave multiple speeches in the current round
                   {% endblocktrans %}
                 </p>
@@ -62,7 +62,7 @@
 
 {% block page-subnav-actions %}
   {% if round.is_current %}
-    <a class="btn {% if incomplete_ballots %}btn-outline-success{% else %}btn-danger disabled{% endif %} " href="{% roundurl 'tournament-complete-round-check' %}">
+    <a class="btn {% if incomplete_ballots %}btn-danger disabled{% else %}btn-outline-success{% endif %} " href="{% roundurl 'tournament-complete-round-check' %}">
       {% trans "Complete Round" %} <i data-feather="chevron-right"></i>
     </a>
   {% else %}
@@ -90,13 +90,32 @@
       The following {{ ndebates }} debates appear to have scoresheets from trainees: {{ debates_list }}.
     {% endblocktrans %}
     {% url 'admin:results_speakerscorebyadj_changelist' as editdb_speakerscorebyadj_url %}
-    {% blocktrans trimmed asvar extra %}
+    {% blocktrans trimmed asvar trainee_extra %}
       This can happen if you demote a panellist to trainee after a result has been
       submitted for that debate. This may indicate that there is an inconsistency
       in results data, which may cause unexpected results (or crashes). Please
       consider going to the Edit Database area and deleting the offending
       <a href="{{ editdb_speakerscorebyadj_url }}?debate_adjudicator__type__exact=T" class="alert-link">"speaker
       scores by adj" objects</a>, and then opening and resaving the result here.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="danger" icon="alert-octagon" extra=trainee_extra %}
+  {% endif %}
+
+  {% comment %}
+    Another warning about potential database inconsistency, but this one's only
+    ever happened as a consequence of direct database edits via SQL, so we've
+    probably already got all the consistency checks we can reasonably have. This
+    is just an extra courtesy for users who try to hack too much.
+  {% endcomment %}
+  {% if debates_with_multiple_confirmed_ballots_found %}
+    {% blocktrans trimmed asvar message %}
+      One or more debates in this round appear to have more than one confirmed
+      ballot submission. This can cause unexpected results (or crashes), because
+      Tabbycat assumes that each debate has at most one confirmed ballot
+      submission. This inconsistency can generally only arise if you manipulate
+      the database with SQL queries directly. You'll need to find the offending
+      debate(s) and ballot submissions yourself in the Edit Database area, or if
+      that doesn't work, you might need to find them using SQL queries directly.
     {% endblocktrans %}
     {% include "components/alert.html" with type="danger" icon="alert-octagon" %}
   {% endif %}

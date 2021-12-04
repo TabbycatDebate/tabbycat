@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-24 09:17\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2021-04-02 01:40-0300\n"
+"PO-Revision-Date: 2021-04-02 04:48\n"
+"Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
 "MIME-Version: 1.0\n"
@@ -12,8 +12,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-Language: ja\n"
 "X-Crowdin-File: /develop/tabbycat/importer/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 932\n"
 
 #: importer/forms.py:24
 #, python-format
@@ -143,6 +145,45 @@ msgid "Sorry, you can only import up to %(max_allowed)d adjudicator at a time. (
 msgid_plural "Sorry, you can only import up to %(max_allowed)d adjudicators at a time. (These numbers currently add to %(given)d.) Try splitting your import into smaller chunks."
 msgstr[0] ""
 
+#: importer/forms.py:396
+msgid "XML"
+msgstr ""
+
+#: importer/forms.py:397
+msgid "The Debate XML archive to parse"
+msgstr ""
+
+#: importer/templates/archive_export_index.html:4
+#: importer/templates/archive_export_index.html:5
+msgid "Export Tournament Archive"
+msgstr ""
+
+#: importer/templates/archive_export_index.html:9
+msgid "Tournaments can be exported in an <a href=\"https://en.wikipedia.org/wiki/XML\">XML format</a> for use outside Tabbycat."
+msgstr ""
+
+#: importer/templates/archive_export_index.html:17
+msgid "Export all data"
+msgstr ""
+
+#: importer/templates/archive_importer.html:6
+#: importer/templates/archive_importer.html:18
+msgctxt "page title"
+msgid "Import Tournament Archive"
+msgstr ""
+
+#: importer/templates/archive_importer.html:19
+msgid "This form will create a tournament with the data provided as a Debate XML format."
+msgstr ""
+
+#: importer/templates/archive_importer.html:24
+msgid "Import"
+msgstr ""
+
+#: importer/templates/archive_importer.html:25
+msgid "Go back to the site home page"
+msgstr ""
+
 #: importer/templates/simple_import_adjudicators_details.html:4
 #: importer/templates/simple_import_adjudicators_details.html:6
 #: importer/templates/simple_import_adjudicators_numbers.html:4
@@ -256,6 +297,14 @@ msgstr "ジャッジ - 大学間のコンフリクトを追加・修正する"
 msgid "Add/Edit Team-Institution Conflicts"
 msgstr ""
 
+#: importer/templates/simple_import_index.html:66
+msgid "Add/Edit Break Categories"
+msgstr ""
+
+#: importer/templates/simple_import_index.html:70
+msgid "Add/Edit Speaker Categories"
+msgstr ""
+
 #: importer/templates/simple_import_institutions_details.html:4
 #: importer/templates/simple_import_institutions_details.html:6
 #: importer/templates/simple_import_institutions_raw.html:4
@@ -334,40 +383,44 @@ msgstr "すべてのラウンド部屋を保存する"
 msgid "Paste a list of rooms with one room per line and following the format of: <code>name,priority</code>. For example:"
 msgstr ""
 
-#: importer/views.py:102
+#: importer/views.py:108
 #, python-format
 msgid "Added %(count)d institution."
 msgid_plural "Added %(count)d institutions."
 msgstr[0] "%(count)d大学追加しました。"
 
-#: importer/views.py:123
+#: importer/views.py:129
 #, python-format
 msgid "Added %(count)d room."
 msgid_plural "Added %(count)d rooms."
 msgstr[0] "ラウンド部屋を%(count)d追加しました。"
 
-#: importer/views.py:182
+#: importer/views.py:188
 #, python-format
 msgid "Added %(count)d team."
 msgid_plural "Added %(count)d teams."
 msgstr[0] "%(count)dチーム追加しました。"
 
-#: importer/views.py:203
+#: importer/views.py:209
 #, python-format
 msgid "Adjudicator %(number)d"
 msgstr ""
 
-#: importer/views.py:208
+#: importer/views.py:214
 #, python-format
 msgid "Added %(count)d adjudicator."
 msgid_plural "Added %(count)d adjudicators."
 msgstr[0] ""
 
-#: importer/views.py:224
+#: importer/views.py:230
 msgid "<p>There were one or more errors creating the demo tournament. Before retrying, please delete the existing demo tournament <strong>and</strong> the institutions in the Edit Database Area.</p><p><i>Technical information: The errors are as follows:</i></p>"
 msgstr ""
 
-#: importer/views.py:232
+#: importer/views.py:238
 msgid "Created new demo tournament. You can now configure it below."
+msgstr ""
+
+#: importer/views.py:256
+msgid "Tournament archive has been imported."
 msgstr ""
 

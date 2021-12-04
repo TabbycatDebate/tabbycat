@@ -48,6 +48,8 @@ thead,
   line-height: $font-size-base;
   background: $alt-bg; // Fixed header needs a background while scrolling
   min-height: 40px; // Must accomodate vue-sort key without resizing
+  position: sticky;
+  inset-block-start: 0;
 }
 
 .vue-sortable {
@@ -176,6 +178,10 @@ thead,
 
 .no-wrap {
   white-space: nowrap; // For cells that we want to force to display full width
+}
+
+.admin-redacted {
+  text-decoration: line-through;
 }
 
 .table > tbody > tr > th,

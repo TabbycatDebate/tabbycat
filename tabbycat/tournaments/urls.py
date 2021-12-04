@@ -65,13 +65,13 @@ urlpatterns = [
         name='tournament-set-current-round'),
 
     # Other pages
+    path('admin/set-round-weights/',
+        views.SetRoundWeightingsView.as_view(),
+        name='set-round-weights'),
     path('admin/configure/',
         views.ConfigureTournamentView.as_view(),
         name='tournament-configure'),
     path('admin/fix-debate-teams/',
         views.FixDebateTeamsView.as_view(),
         name='tournament-fix-debate-teams'),
-    path('donations/',
-        views.TournamentDonationsView.as_view(),
-        name='tournament-donations'),
 ]
