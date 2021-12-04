@@ -50,6 +50,9 @@ class TabbycatPageTitlesMixin(ContextMixin):
 class BaseAccessControlledPageMixin:
     """Base mixin for views that can be enabled and disabled."""
 
+    _user_role = 'public'
+    template_403_name = "errors/public_403.html"
+
     def is_page_enabled(self):
         raise NotImplementedError
 
