@@ -159,15 +159,12 @@ class Exporter:
             ballot_tag.set('adjudicators', adj)
             ballot_tag.set('ignored', 'false')
 
-        if hasattr(scoresheet, 'winner'):
-            ballot_tag.set('rank', str(1 if scoresheet.winner() == side else 2))
-        else:
-            ballot_tag.set('rank', str(scoresheet.rank(side)))
+        ballot_tag.set('rank', str(scoresheet.rank(side)))
 
         if hasattr(scoresheet, 'get_total'):
             ballot_tag.text = str(scoresheet.get_total(side))
         else:
-            ballot_tag.text = str(side in scoresheet.get_winner())
+            ballot_tag.text = str(side in scoresheet.winners())
 
     def add_speakers(self, side_tag, debate, result, side):
         for pos in self.t.positions:
