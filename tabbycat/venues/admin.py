@@ -25,15 +25,15 @@ class VenueAdmin(admin.ModelAdmin):
 
 @admin.register(VenueCategory)
 class VenueCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'display_in_venue_name',
-            'display_in_public_tooltip', 'venues_list')
+    list_display = ('name', 'tournament', 'description', 'display_in_venue_name',
+            'display_in_public_tooltip', 'venues_list', 'rotate')
     ordering = ('name',)
 
     def venues_list(self, obj):
         return ", ".join([v.name for v in obj.venues.all()])
 
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('venues')
+        return super().get_queryset(request).prefetch_related('venues').select_related('tournament')
 
 
 class VenueConstraintModelForm(forms.ModelForm):

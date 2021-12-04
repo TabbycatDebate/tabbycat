@@ -11,7 +11,7 @@
 
           <div class="text-left py-3">
             <div class="form-group row">
-              <div class="col-sm-3">
+              <div class="col-sm-5">
                 <select v-model="settings.draw_rules__venue_allocation_method" class="form-control">
                   <option v-text="gettext('Please select')" disabled value=""></option>
                   <option v-text="gettext('Naïve venue assignment')" value="naive"></option>
@@ -20,7 +20,7 @@
                   <option v-text="gettext('Stationary Hungarian')" value="stationary"></option>
                 </select>
               </div>
-              <label class="col-sm-9 col-form-label" v-text="gettext('The allocation method to use')"></label>
+              <label class="col-sm-7 col-form-label" v-text="gettext('The allocation method to use')"></label>
             </div>
             <div v-if="settings.draw_rules__venue_allocation_method != 'naive'">
               <div class="form-group row" v-if="settings.draw_rules__venue_allocation_method != 'hungarian'">

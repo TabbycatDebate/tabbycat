@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('venues', '0007_auto_20200608_1134'),
+        ('venues', '0010_populate_tournaments'),
     ]
 
     operations = [
