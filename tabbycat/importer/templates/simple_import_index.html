@@ -36,8 +36,16 @@
     {% trans "Add/Edit Room Categories" as text %}
     {% include "components/item-action.html" with emoji="🏪" %}
 
-    {% tournamenturl 'venues-constraints' as url %}
-    {% trans "Add/Edit Room Constraints" as text %}
+    {% tournamenturl 'venues-constraints-team' as url %}
+    {% trans "Add/Edit Room-Team Constraints" as text %}
+    {% include "components/item-action.html" with emoji="🏰" %}
+
+    {% tournamenturl 'venues-constraints-adjudicator' as url %}
+    {% trans "Add/Edit Room-Adjudicator Constraints" as text %}
+    {% include "components/item-action.html" with emoji="🏰" %}
+
+    {% tournamenturl 'venues-constraints-institution' as url %}
+    {% trans "Add/Edit Room-Institution Constraints" as text %}
     {% include "components/item-action.html" with emoji="🏰" %}
 
   </ul>

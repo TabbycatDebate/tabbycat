@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from . import views
 
@@ -10,7 +10,16 @@ urlpatterns = [
     path('categories/',
         views.VenueCategoriesView.as_view(),
         name='venues-categories'),
-    path('constraints/',
-        views.VenueConstraintsView.as_view(),
-        name='venues-constraints'),
+
+    path('constraints/', include([
+        path('team/',
+            views.VenueTeamConstraintsView.as_view(),
+            name='venues-constraints-team'),
+        path('adjudicator/',
+            views.VenueAdjudicatorConstraintsView.as_view(),
+            name='venues-constraints-adjudicator'),
+        path('institution/',
+            views.VenueInstitutionConstraintsView.as_view(),
+            name='venues-constraints-institution'),
+    ])),
 ]

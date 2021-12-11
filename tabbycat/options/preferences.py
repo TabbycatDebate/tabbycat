@@ -10,6 +10,7 @@ from dynamic_preferences.types import BooleanPreference, ChoicePreference, Float
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.utils import get_side_name_choices
+from venues.allocator import VenueAllocatorChoices
 
 from .models import tournament_preferences_registry
 from .types import MultiValueChoicePreference
@@ -349,6 +350,46 @@ class HideTraineePosition(BooleanPreference):
     section = draw_rules
     name = 'no_trainee_position'
     default = False
+
+
+@tournament_preferences_registry.register
+class VenueAllocationMethod(ChoicePreference):
+    help_text = _("Which allocation method to use when auto-assigning rooms")
+    verbose_name = _("Room allocation method")
+    section = draw_rules
+    name = 'venue_allocation_method'
+    choices = VenueAllocatorChoices.get_allocator_names()
+    default = 'naive'
+
+
+@tournament_preferences_registry.register
+class VenueHistoryCost(IntegerPreference):
+    help_text = _("Penalty applied to rooms if a team has been in a room in the category."
+        "Applicable for room rotation methods. Opposite effect in Stagnate method.")
+    verbose_name = _("Room history penalty")
+    section = draw_rules
+    name = 'venue_history_cost'
+    default = 100
+
+
+@tournament_preferences_registry.register
+class VenueConstraintCost(IntegerPreference):
+    help_text = _("Penalty multiplier to constraint priority applied to rooms if debate is constrained "
+        "to a subset of rooms. Applicable for Hungarian methods.")
+    verbose_name = _("Room constraint penalty")
+    section = draw_rules
+    name = 'venue_constraint_cost'
+    default = 1000000
+
+
+@tournament_preferences_registry.register
+class VenueScoreCost(IntegerPreference):
+    help_text = _("Penalty multiplier to room priority applied to rooms to prefer higher-ranking rooms. "
+        "Applicable for Hungarian methods.")
+    verbose_name = _("Room priority penalty")
+    section = draw_rules
+    name = 'venue_score_cost'
+    default = 10
 
 
 # ==============================================================================
