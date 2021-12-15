@@ -285,7 +285,7 @@ class SetRoundWeightingsView(AdministratorMixin, TournamentMixin, FormView):
 
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, _("Successfully set round weights."))
+        messages.success(self.request, _("Successfully set round weights for tapered scoring."))
         return super().form_valid(form)
 
     def get_success_url(self):
