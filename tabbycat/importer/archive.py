@@ -159,15 +159,12 @@ class Exporter:
             ballot_tag.set('adjudicators', adj)
             ballot_tag.set('ignored', 'false')
 
-        if hasattr(scoresheet, 'winner'):
-            ballot_tag.set('rank', str(1 if scoresheet.winner() == side else 2))
-        else:
-            ballot_tag.set('rank', str(scoresheet.rank(side)))
+        ballot_tag.set('rank', str(scoresheet.rank(side)))
 
         if hasattr(scoresheet, 'get_total'):
             ballot_tag.text = str(scoresheet.get_total(side))
         else:
-            ballot_tag.text = str(side in scoresheet.get_winner())
+            ballot_tag.text = str(side in scoresheet.winners())
 
     def add_speakers(self, side_tag, debate, result, side):
         for pos in self.t.positions:
@@ -338,8 +335,7 @@ class Importer:
             self.tournament.slug = slugify(self.root.get('name')[:50])
         self.tournament.save()
 
-        self.is_bp = self.root.get('style') == 'bp' or (
-            self.root.find('round/debate') is not None and len(self.root.find('round/debate').findall('side')) == 4)
+        self.is_bp = self.root.get('style') == 'bp' or len(self.root.findall('round/debate[1]/side')) == 4
 
         # Import all the separate parts
         self.set_preferences()
@@ -392,7 +388,7 @@ class Importer:
         else:
             self.preliminary_consensus = self._is_consensus_ballot('false')
             self.elimination_consensus = self._is_consensus_ballot('true')
-            substantive_speakers = len(self.root.find('round').find('debate').find('side').findall("speech[@reply='false']"))
+            substantive_speakers = len(self.root.findall("round[1]/debate[1]/side[1]/speech[@reply='false']"))
             reply_scores_enabled = len(self.root.findall("round/debate/side/speech[@reply='true']")) != 0
             margin_includes_dissenters = len(self.root.findall("round/debate/side/ballot[@minority='true'][@ignored='true']")) == 0
 
@@ -465,7 +461,7 @@ class Importer:
 
     def import_teams(self):
         self.teams = {}
-        for team in self.root.find('participants').findall('team'):
+        for team in self.root.findall('participants/team'):
             team_obj = Team(tournament=self.tournament, long_name=team.get('name'))
             self.teams[team.get('id')] = team_obj
 
@@ -505,7 +501,7 @@ class Importer:
     def import_speakers(self):
         self.speakers = {}
 
-        for team in self.root.find('participants').findall('team'):
+        for team in self.root.findall('participants/team'):
             for speaker in team.findall('speaker'):
                 speaker_obj = Speaker(
                     team=self.teams[team.get('id')],
@@ -519,7 +515,7 @@ class Importer:
         self.adjudicators = {}
         adj_adj_conflicts = []
 
-        for adj in self.root.find('participants').findall('adjudicator'):
+        for adj in self.root.findall('participants/adjudicator'):
             adj_obj = Adjudicator(
                 tournament=self.tournament, base_score=adj.get('score', 0),
                 institution=self.institutions.get(adj.get('institutions', "").split(" ")[0]),

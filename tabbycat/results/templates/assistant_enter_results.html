@@ -20,7 +20,7 @@
 
     <div class="card mt-3">
       <div class="card-body">
-        {% if new and not pref.disable_ballot_confirms %}
+        {% if new and not form.confirmed.value %}
           {# After a new ballot, always go into DRAFT, and the new ballot is neither discarded nor confirmed. #}
           <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_DRAFT }}" />
           <input id="id_discarded" type="hidden" name="discarded" value="False" />
@@ -33,12 +33,17 @@
               {% trans "You can't confirm this ballot set because you entered it." %}
             </div>
           {% endif %}
+          {% if ballotsub.single_adj %}
+            <div class="alert alert-danger">
+              {% trans "You can't confirm this ballot set because it is for a single adjudicator. Use the merge function." %}
+            </div>
+          {% endif %}
           <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_CONFIRMED }}" />
           <input id="id_discarded" type="hidden" name="discarded" value="False" />
           <input id="id_confirmed" type="hidden" name="confirmed" value="True" />
           <div class="row">
             <div class="col">
-              <input id="correct" {% if request.user == ballotsub.submitter %}disabled="disabled"{% endif %} class="btn {% if request.user != ballotsub.submitter %}btn-success{% endif %} btn-block" type="submit" value="{% trans "Confirm results" %}" tabindex="{{ form.nexttabindex }}" />
+              <input id="correct" {% if not new and request.user == ballotsub.submitter or form.confirmed.field.disabled %}disabled="disabled"{% endif %} class="btn btn-success btn-block" type="submit" value="{% trans "Confirm results" %}" tabindex="{{ form.nexttabindex }}" />
             </div>
             <div class="col">
               <input id="incorrect" class="btn btn-danger btn-block" type="button" value="{% trans "Results are incorrect" %}" tabindex="{{ form.nexttabindex|add:1 }}" />
