@@ -2,6 +2,21 @@
 Change Log
 ==========
 
+2.6.4
+-----
+*Release date: 24 December 2021*
+
+- Fix info-slide modal not showing in single-motion formats
+- Prevent crash when modifying existing motion (BACKEND-69F)
+- Simplified DebateXML XPaths for resiliency if elements missing (`#1903 <https://github.com/TabbycatDebate/tabbycat/issues/1903>`_)
+- Updated DebateXML methods for handling results (BACKEND-6G1)
+- Overwrode Round modification through the serializer to allow updating and patching.
+- Corrected incorrect queryset for venue constraints on participant record pages (BACKEND-6E2)
+- Handled checkins through a private URL without attached action (BACKEND-5YR)
+- Prevented single adjudicator ballots from being confirmed when using separate ballots (BACKEND-6EB)
+- Fixed assistant ballot entry when ballots are automatically confirmed. (`#1906 <https://github.com/TabbycatDebate/tabbycat/issues/1906>`_)
+
+
 2.6.3
 -----
 *Release date: 12 November 2021*

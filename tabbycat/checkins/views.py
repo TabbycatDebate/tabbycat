@@ -261,18 +261,18 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
     def post(self, request, *args, **kwargs):
         t = self.tournament
 
-        action = request.POST['action']
-
         try:
             person = Person.objects.get(url_key=kwargs['url_key'])
             identifier = person.checkin_identifier
         except Person.DoesNotExist:
             raise Http404("Person does not exist")
         except PersonIdentifier.DoesNotExist:
-            messages.error(request, _("Could not check you in as you do not have an identifying code — your tab director may need to make you an identifier."))
+            messages.error(request, _("Could not check you in as you do not have an identifying code — "
+                "your tab director may need to make you an identifier."))
             return super().post(request, *args, **kwargs)
 
         existing_checkin = get_unexpired_checkins(t, 'checkin_window_people').filter(identifier=identifier)
+        action = request.POST.get('action')
         if action == 'revoke':
             if existing_checkin.exists():
                 existing_checkin.delete()
@@ -286,8 +286,7 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
                 messages.error(request, _("Whoops! Looks like you're already checked in."))
                 return super().post(request, *args, **kwargs)
             else:
-                checkin = Event.objects.create(identifier=identifier,
-                                               tournament=self.tournament)
+                checkin = Event.objects.create(identifier=identifier, tournament=self.tournament)
                 checkin_dict = checkin.serialize()
                 checkin_dict['owner_name'] = person.name
                 messages.success(request, _("You are now checked in."))
