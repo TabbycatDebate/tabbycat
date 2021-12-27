@@ -27,7 +27,6 @@ services:
 
   web:
     build: .
-    image: tabbycat
     # Hack to wait until Postgres is up before running things
     command: ["./bin/docker-wait.sh", "--timeout=0", "db:5432", "--", "./bin/docker-run-honcho.sh"]
     depends_on:
@@ -46,7 +45,7 @@ services:
     working_dir: /tcd
 
   worker:
-    image: tabbycat
+    build: .
     # Hack to wait until migration is done before running things
     command: ["./bin/docker-wait.sh", "--timeout=0", "web:8000", "--", "./bin/docker-run-worker.sh"]
     depends_on:
