@@ -9,7 +9,7 @@
 pre-commit
 
 # Tests
-selenium==3.141.*                           # Functional testing (in here for CI tests)
+selenium==4.1.*                           # Functional testing (in here for CI tests)
 
 # Debug
 django-debug-toolbar==3.*
