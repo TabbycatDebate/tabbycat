@@ -12,7 +12,7 @@ def regions_ordered(t):
 
     regions = Region.objects.all().order_by('name')
     data = [{
-        'seq': count + 1,
+        'seq': count % 9,  # There are 9 available colours
         'name': r.name,
         'id': r.id,
     } for count, r in enumerate(regions)]
