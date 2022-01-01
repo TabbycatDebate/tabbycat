@@ -13,7 +13,7 @@ djangorestframework==3.12.4             # For serialising objects
 django-polymorphic==3.0.0               # Permits model polymorphism
 django-split-settings==1.0.1            # Modularise settings files
 django-statici18n==2.1.1                # Compile translations files as static file
-django-summernote==0.8.11.6             # WYSIWYG editor
+django-summernote==0.8.20.0             # WYSIWYG editor
 dj-cmd==1.0                             # Provides the dj command alias
 django-redis==5.1.0                     # Use redis for cache (on heroku; local optional)
 django-cors-headers==3.10.0             # CORS headers for API endpoints
