@@ -42,4 +42,4 @@ defusedxml==0.7.1                       # Protection against XML vulnerabilities
 # Django admin (Jet)
 # This is an unofficial fork of no-longer-maintained geex-arts/django-jet,
 # patched to support Django 3.
-r-django-jet==2.0.9
+git+https://github.com/czlee/django-jet@django-4.0
