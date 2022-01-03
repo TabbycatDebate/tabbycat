@@ -4,16 +4,16 @@
 Django==4.0
 django-appconf==1.0.4                   # Helper for handling app configs
 django-better-admin-arrayfield==1.4.2   # Admin widget for ArrayField
-django-dynamic-preferences==1.10.1      # Settings management
+django-dynamic-preferences==1.11.0      # Settings management
 django-extensions==3.1.5                # For the generate secret command
 django-formtools==2.3                   # Form wizards
 django-ipware==3.0.2                    # IP Address logging
 django-gfklookupwidget==1.0.9           # Replaces object_id field with a search link
 djangorestframework==3.12.4             # For serialising objects
-django-polymorphic==3.0.0               # Permits model polymorphism
+django-polymorphic==3.1                 # Permits model polymorphism
 django-split-settings==1.0.1            # Modularise settings files
 django-statici18n==2.1.1                # Compile translations files as static file
-django-summernote==0.8.11.6             # WYSIWYG editor
+django-summernote==0.8.20.0             # WYSIWYG editor
 dj-cmd==1.0                             # Provides the dj command alias
 django-redis==5.1.0                     # Use redis for cache (on heroku; local optional)
 django-cors-headers==3.10.0             # CORS headers for API endpoints
@@ -27,7 +27,7 @@ psycopg2==2.9.2                         # For Django to talk to postgres
 #     http://initd.org/psycopg/docs/install.html#binary-install-from-pypi
 
 # Channels
-asgiref==3.3.4                          # Must set version to avoid Channels bug #1713
+asgiref==3.4.1                          # Must set version to avoid Channels bug #1713
 channels==2.4.0                         # Channels; also includes the Daphne server
 channels_redis==3.2.0                   # Channels Layer
 
