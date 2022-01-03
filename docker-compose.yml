@@ -38,6 +38,7 @@ services:
       - DEBUG=1
       - IN_DOCKER=1
       - DISABLE_SENTRY=1
+      - DOCKER_REDIS=1
     ports:
       - "127.0.0.1:8000:8000"
     volumes:
@@ -55,6 +56,7 @@ services:
       - DEBUG=1
       - IN_DOCKER=1
       - DISABLE_SENTRY=1
+      - DOCKER_REDIS=1
     volumes:
       - ./tabbycat/settings:/tcd/tabbycat/settings
     working_dir: /tcd
