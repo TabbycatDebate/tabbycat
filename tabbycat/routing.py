@@ -1,6 +1,6 @@
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ChannelNameRouter, ProtocolTypeRouter, URLRouter
-from django.conf.urls import url
+from django.urls import path
 
 from actionlog.consumers import ActionLogEntryConsumer
 from adjallocation.consumers import AdjudicatorAllocationWorkerConsumer, PanelEditConsumer
@@ -23,14 +23,14 @@ application = ProtocolTypeRouter({
     "websocket": AuthMiddlewareStack(
         URLRouter([
             # TournamentOverviewContainer
-            url(r'^ws/(?P<tournament_slug>[-\w_]+)/action_logs/$', ActionLogEntryConsumer),
-            url(r'^ws/(?P<tournament_slug>[-\w_]+)/ballot_results/$', BallotResultConsumer),
-            url(r'^ws/(?P<tournament_slug>[-\w_]+)/ballot_statuses/$', BallotStatusConsumer),
+            path('ws/<slug:tournament_slug>/action_logs/', ActionLogEntryConsumer),
+            path('ws/<slug:tournament_slug>/ballot_results/', BallotResultConsumer),
+            path('ws/<slug:tournament_slug>/ballot_statuses/', BallotStatusConsumer),
             # CheckInStatusContainer
-            url(r'^ws/(?P<tournament_slug>[-\w_]+)/checkins/$', CheckInEventConsumer),
+            path('ws/<slug:tournament_slug>/checkins/', CheckInEventConsumer),
             # Draw and Preformed Panel Edits
-            url(r'^ws/(?P<tournament_slug>[-\w_]+)/round/(?P<round_seq>[-\w_]+)/debates/$', DebateEditConsumer),
-            url(r'^ws/(?P<tournament_slug>[-\w_]+)/round/(?P<round_seq>[-\w_]+)/panels/$', PanelEditConsumer),
+            path('ws/<slug:tournament_slug>/round/<int:round_seq>/debates/', DebateEditConsumer),
+            path('ws/<slug:tournament_slug>/round/<int:round_seq>/panels/', PanelEditConsumer),
         ]),
     ),
 
