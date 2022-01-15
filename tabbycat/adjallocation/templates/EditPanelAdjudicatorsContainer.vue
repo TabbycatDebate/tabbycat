@@ -69,8 +69,8 @@ export default {
     sockets: ['panels'], // Override the normal debate socket from DragAndDropContainerMixin
     shardIntro: `Sharding narrows the debates displayed to show only a specific subset of the
       overall draw`,
-    allocateIntro: `Using auto-allocate will remove adjudicators from panels and create a new
-      allocations in their place.`,
+    allocateIntro: `Auto-allocate will remove adjudicators from panels and create a new
+      allocation in their place.`,
     prioritiseIntro: `Using auto-prioritise will remove all existing panel priorities and
       assign new ones.`,
     createPanelsInline: `There are no Preformed Panels for this round. You will need to create

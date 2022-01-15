@@ -37,7 +37,8 @@
 
     <template slot="modals">
       <modal-for-sharding :intro-text="gettext(intro)"></modal-for-sharding>
-      <modal-for-allocating :intro-text="gettext(allocateIntro)"
+      <modal-for-allocating :intro-text="gettext(`Auto-allocate will remove adjudicators from all debates
+        and create new panels in their place.`)"
                             :context-of-action="'allocate_debate_adjs'"></modal-for-allocating>
       <modal-for-prioritising :intro-text="gettext(prioritiseIntro)"
                               :context-of-action="'prioritise_debates'"></modal-for-prioritising>
@@ -55,8 +56,6 @@ export default {
   data: () => ({
     intro: `Sharding narrows the panels displayed to show only a specific subset of all
       panels available.`,
-    allocateIntro: `Using auto-allocate will remove adjudicators from all debates and create a new
-      allocations in their place.`,
     prioritiseIntro: `Using auto-prioritise will remove all existing debate priorities and assign
       new ones.`,
     noDebatesInline: 'There are no debates created for this round.',
