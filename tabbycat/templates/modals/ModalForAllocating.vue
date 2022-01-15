@@ -19,9 +19,6 @@
                     v-text="loading ? gettext('Loading...') : gettext('Direct Allocate Preformed Panels')"></button>
             <button type="submit" @click="notUsingPreformed = true" class="btn btn-block btn-success mt-4"
                     v-text="gettext('Allocate Individual Adjudicators')"></button>
-            
-
-
           </div>
 
           <div v-if="notUsingPreformed || forPanels || !extra.hasPreformedPanels">
