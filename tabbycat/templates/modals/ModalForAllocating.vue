@@ -11,11 +11,17 @@
             <p v-text="gettext(`You can automatically allocate adjudicators to debates by either
                                 assigning preformed panels or by using the standard
                                 auto-allocator method that places individual adjudicators.`)"></p>
-            <button type="submit" @click="allocateWithPreformed"
+            <button type="submit" @click="smartAllocateWithPreformed"
                     :class="['btn btn-block btn-success', loading ? 'disabled': '']"
-                    v-text="loading ? gettext('Loading...') : gettext('Allocate Preformed Panels')"></button>
+                    v-text="loading ? gettext('Loading...') : gettext('Smart Allocate Preformed Panels')"></button>
+            <button type="submit" @click="directAllocateWithPreformed"
+                    :class="['btn btn-block btn-success', loading ? 'disabled': '']"
+                    v-text="loading ? gettext('Loading...') : gettext('Direct Allocate Preformed Panels')"></button>
             <button type="submit" @click="notUsingPreformed = true" class="btn btn-block btn-success mt-4"
                     v-text="gettext('Allocate Individual Adjudicators')"></button>
+            
+
+
           </div>
 
           <div v-if="notUsingPreformed || forPanels || !extra.hasPreformedPanels">
@@ -122,8 +128,14 @@ export default {
     this.settings = JSON.parse(JSON.stringify(this.extra.allocationSettings))
   },
   methods: {
-    allocateWithPreformed: function () {
+    smartAllocateWithPreformed: function () {
       this.settings.usePreformedPanels = true
+      this.settings.allocationMethod = 'hungarian'
+      this.performWSAction(this.settings)
+    },
+    directAllocateWithPreformed: function () {
+      this.settings.usePreformedPanels = true
+      this.settings.allocationMethod = 'direct'
       this.performWSAction(this.settings)
     },
     allocateWithInfill: function () {

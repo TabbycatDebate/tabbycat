@@ -18,6 +18,7 @@ from .models import PreformedPanel
 from .preformed import copy_panels_to_debates
 from .preformed.anticipated import calculate_anticipated_draw
 from .preformed.hungarian import HungarianPreformedPanelAllocator
+from .preformed.direct import DirectPreformedPanelAllocator
 from .serializers import (EditPanelAdjsPanelSerializer,
                           SimpleDebateAllocationSerializer, SimpleDebateImportanceSerializer,
                           SimplePanelAllocationSerializer, SimplePanelImportanceSerializer)
@@ -73,7 +74,10 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
 
             debates = round.debate_set.all()
             panels = round.preformedpanel_set.all()
-            allocator = HungarianPreformedPanelAllocator(debates, panels, round)
+            if event['extra']['settings']['allocationMethod'] == 'hungarian':
+                allocator = HungarianPreformedPanelAllocator(debates, panels, round)
+            else: 
+                allocator = DirectPreformedPanelAllocator(debates, panels, round)
 
             debates, panels = allocator.allocate()
             copy_panels_to_debates(debates, panels)
