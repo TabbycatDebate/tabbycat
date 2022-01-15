@@ -2,7 +2,7 @@
 Change Log
 ==========
 
-2.7.0 (P)
+2.7.0 (Pixie-bob)
 ---------
 *Release date: TBD*
 
