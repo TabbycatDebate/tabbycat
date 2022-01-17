@@ -7,6 +7,7 @@ Change Log
 *Release date: TBD*
 
 - Round weights can be modified within tournament preferences, rather than just by the Edit Database.
+- Preformed panels can now be applied 'directly', in a linear top-to-bottom fashion. However, this method will not account for soft or hard conflicts. Thanks to Enting Lee for the pull request!
 
 
 2.6.4
