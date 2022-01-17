@@ -39,7 +39,7 @@ To begin this process, click the *Allocate* button in the top-left. If you have 
 
 .. image:: images/allocation-modal.png
 
-Once you click *Auto-Allocate* the modal should disappear and your panels should appear. At large tournaments, and in the later rounds, it is not unheard of for this process to take a minute or longer.
+Once you click *Auto-Allocate Adjudicators* the modal should disappear and your panels should appear. At large tournaments, and in the later rounds, it is not unheard of for this process to take a minute or longer.
 
 .. note:: You can re-run the automatic allocation process on top of an existing allocation. Thus it is worth tweaking your priorities or allocation settings if the allocation does not seem optimal to you. Also note that the allocation process is not deterministic — if you rerun it the panels will be different.
 
