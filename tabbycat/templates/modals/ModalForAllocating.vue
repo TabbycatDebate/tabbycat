@@ -5,10 +5,10 @@
       <div class="modal-content">
         <div class="modal-body text-center p-4 bg-bg">
 
-          <p class="font-italic" v-text="introText"></p>
+          <p class="font-italic small" v-text="introText"></p>
 
           <div class="card">
-            <div class="card-body ">
+            <div class="card-body p-3">
               <h5 class="card-title mb-0" v-text="gettext(`Auto-Allocate Preformed Panels`)"></h5>
             </div>
             <div class="list-group list-group-item-flush" v-if="!forPanels && extra.hasPreformedPanels">
@@ -16,13 +16,13 @@
                 <button type="submit" @click="smartAllocateWithPreformed"
                       :class="['btn btn-block btn-success', loading ? 'disabled': '']"
                       v-text="loading ? gettext('Loading...') : gettext('Smart Allocate')"></button>
-                <p class="font-italic mt-1 mb-1" v-text="gettext(`Allocates the highest-priority preformed panels to the highest-priority matchups.`)"></p>
+                <p class="font-italic small mt-1 mb-1" v-text="gettext(`Allocates preformed panels to debates of similar priority level, while avoiding conflicts.`)"></p>
               </div>
               <div class="list-group-item p-3">
                 <button type="submit" @click="directAllocateWithPreformed"
                       :class="['btn btn-block btn-success', loading ? 'disabled': '']"
                       v-text="loading ? gettext('Loading...') : gettext('Direct Allocate')"></button>
-                <p class="font-italic mt-1 mb-1" v-text="gettext(`Allocates the highest-priority preformed panels to the draw going from top to bottom.`)"></p>
+                <p class="font-italic small mt-1 mb-1" v-text="gettext(`Allocates panels in exact order going from top to bottom (ignoring debate priority and conflicts.)`)"></p>
               </div>
             </div>
             <div v-if="!forPanels && !extra.hasPreformedPanels">
@@ -32,7 +32,7 @@
 
           <div class="card mt-3">
 
-            <div class="card-body">
+            <div class="card-body p-3">
               <h5 class="card-title mb-0" v-text="gettext(`Auto-Allocate Individual Adjudicators`)"></h5>
             </div>
 
@@ -99,9 +99,9 @@
               <button type="submit" @click="allocateIndividualAdjs"
                       :class="['btn btn-block btn-success my-2', loading ? 'disabled': '']"
                       v-text="loading ? gettext('Loading...') : gettext('Auto-Allocate Adjudicators')"></button>
-              <p class="font-italic" v-text="gettext(`The allocator creates stronger panels for debates that were given
+              <p class="font-italic small" v-text="gettext(`The allocator creates stronger panels for debates that were given
                                   higher importances. If importances have not been set it will allocate
-                                  stronger panels to debates in a higher bracket.`)"></p>
+                                  stronger panels to debates in higher brackets.`)"></p>
             </div>
           </div>
         </div>
