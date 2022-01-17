@@ -1,10 +1,10 @@
 <template>
 
-  <div class="d-flex flex-fill align-items-stretch align-items-center">
-    <!-- <div class="p-1 d-flex align-items-center">
-      <i class="d-none" data-feather="move"></i>
-    </div> -->
-    <div class="d-flex vc-chair-flex flex-truncate flex-nowrap border-left">
+  <div class="d-flex flex-fill align-items-stretch align-items-center draggable-panel">
+    <div class="p-1 d-flex align-items-center panel-handle">
+      <i data-feather="move"></i>
+    </div>
+    <div class="d-flex vc-chair-flex flex-truncate flex-nowrap">
       <droppable-item class="d-flex flex-grow-1" :handle-drop="handleDebateOrPanelDrop"
                       :drop-context="{ assignment: debateOrPanel.id, position: 'C'}">
         <div :class="['align-items-center flex-fill', chairID ? 'd-none' : 'd-flex panel-incomplete']">
@@ -31,7 +31,7 @@
       <droppable-item class="d-flex flex-grow-1 flex-wrap" :handle-drop="handleDebateOrPanelDrop"
                       :drop-context="{ assignment: debateOrPanel.id, position: 'T'}">
         <div :class="['align-items-center flex-fill', adjudicators.T.length > 0 ? 'd-none' : 'd-flex']">
-          <div class="mx-auto py-2 px-4">Ⓣ</div>
+          <div class="mx-auto py-2 px-4 trainee-indicator">Ⓣ</div>
         </div>
         <draggable-adjudicator v-for="adjID in adjudicators.T" :item="allAdjudicators[adjID]"
                                :debate-or-panel-id="debateOrPanel.id"

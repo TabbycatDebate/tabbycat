@@ -62,6 +62,39 @@
   @include hover-highlights(#000);
 }
 
+// Draggable Panels
+.draggable-panel {
+  border: 2px solid $gray-400;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  border-radius: $border-radius;
+
+  .panel-handle {
+    color: $gray-600;
+
+    &:hover {
+      background: $purple !important;
+      cursor: move;
+
+      .feather {
+        color: #fff;
+      }
+    }
+  }
+
+  .panel-handle:hover ~ div {
+    background: $purple !important;
+
+    .trainee-indicator {
+      color: #fff;
+    }
+
+    .vue-droppable {
+      background: none;
+    }
+  }
+}
+
 //------------------------------------------------------------------------------
 // Droppables
 //------------------------------------------------------------------------------
