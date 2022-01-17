@@ -7,11 +7,11 @@
 
           <p class="font-italic small" v-text="introText"></p>
 
-          <div class="card">
+          <div class="card" v-if="!forPanels">
             <div class="card-body p-3">
               <h5 class="card-title mb-0" v-text="gettext(`Auto-Allocate Preformed Panels`)"></h5>
             </div>
-            <div class="list-group list-group-item-flush" v-if="!forPanels && extra.hasPreformedPanels">
+            <div class="list-group list-group-item-flush" v-if="extra.hasPreformedPanels">
               <div class="list-group-item p-3">
                 <button type="submit" @click="smartAllocateWithPreformed"
                       :class="['btn btn-block btn-success', loading ? 'disabled': '']"
@@ -25,8 +25,8 @@
                 <p class="font-italic small mt-1 mb-1" v-text="gettext(`Allocates panels in exact order going from top to bottom (ignoring debate priority and conflicts.)`)"></p>
               </div>
             </div>
-            <div v-if="!forPanels && !extra.hasPreformedPanels">
-              <p class="font-italic mb-3" v-text="gettext(`No preformed panels exist for this round. You can create some by going to Setup, and then Preformed Panels.`)"></p>
+            <div class="list-group-item p-3" v-if="!forPanels && !extra.hasPreformedPanels">
+              <p class="font-italic mb-0" v-text="gettext(`No preformed panels exist for this round. You can create some by going to Setup, and then Preformed Panels.`)"></p>
             </div>
           </div>
 
