@@ -2,6 +2,7 @@ from itertools import groupby
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Prefetch, Q
 from dynamic_preferences.api.serializers import PreferenceSerializer
@@ -44,6 +45,7 @@ class APIRootView(PublicAPIMixin, GenericAPIView):
             "_links": {
                 "v1": reverse('api-v1-root', request=request, format=format),
             },
+            "version": settings.TABBYCAT_VERSION,
         })
 
 

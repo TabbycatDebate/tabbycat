@@ -32,6 +32,25 @@ paths:
       responses:
         '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _links:
+                    title: links
+                    type: object
+                    readOnly: true
+                    properties:
+                      v1:
+                        title: v1
+                        type: string
+                        format: uri
+                        readOnly: true
+                  version:
+                    title: Tabbycat version
+                    type: string
+                    readOnly: true
       tags:
         - v1
     parameters: []
