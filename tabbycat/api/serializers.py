@@ -32,7 +32,11 @@ from . import fields
 
 
 def _validate_field(self, field, value):
-    if value is not None and self.Meta.model.objects.filter(tournament=self.context['tournament'], **{field: value}).exists():
+    if value is None:
+        return None
+    qs = self.Meta.model.objects.filter(
+        tournament=self.context['tournament'], **{field: value}).exclude(id=getattr(self.instance, 'id', None))
+    if qs.exists():
         raise serializers.ValidationError("Object with same value exists in the tournament")
     return value
 
@@ -110,7 +114,9 @@ class RoundSerializer(serializers.ModelSerializer):
             exclude = ('round', 'motion')
 
         def validate_seq(self, value):
-            if self.Meta.model.objects.filter(round=self.context['round'], seq=value).exists():
+            qs = RoundMotion.objects.filter(
+                round=self.context['round'], seq=value).exclude(id=getattr(self.instance, 'id', None))
+            if qs.exists():
                 raise serializers.ValidationError("Object with same value exists in the round")
             return value
 
@@ -375,7 +381,9 @@ class BreakingTeamSerializer(serializers.ModelSerializer):
         exclude = ('id', 'break_category')
 
     def validate_team(self, value):
-        if self.Meta.model.objects.filter(**{'break_category': self.context['break_category'], 'team': value}).exists():
+        qs = BreakingTeam.objects.filter(
+            break_category=self.context['break_category'], team=value).exclude(id=getattr(self.instance, 'id', None))
+        if qs.exists():
             raise serializers.ValidationError("Object with same value already exists")
         return value
 
@@ -563,10 +571,12 @@ class TeamSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         t = self.context['tournament']
+        uniqueness_qs = Team.objects.filter(
+            tournament=t, reference=data['reference'], institution=data['institution']).exclude(id=getattr(self.instance, 'id', None))
         if data.get('institution') is None:
             if data.get('use_institution_prefix', False):
                 raise serializers.ValidationError("Cannot include institution prefix without institution.")
-        elif Team.objects.filter(tournament=t, reference=data['reference'], institution=data['institution']).exists():
+        elif uniqueness_qs.exists():
             raise serializers.ValidationError("Object with same reference and institution exists in the tournament")
         return super().validate(data)
 
@@ -1067,8 +1077,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
 
             def validate_adjudicator(self, value):
                 # Make sure adj is in debate
-                debate = self.context.get('debate')
-                if value is not None and not debate.debateadjudicator_set.filter(adjudicator=value).exists():
+                if not self.context.get('debate').debateadjudicator_set.filter(adjudicator=value).exists():
                     raise serializers.ValidationError('Adjudicator must be in debate')
                 return value
 
