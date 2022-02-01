@@ -27,7 +27,7 @@ psycopg2==2.9.2                         # For Django to talk to postgres
 #     http://initd.org/psycopg/docs/install.html#binary-install-from-pypi
 
 # Channels
-asgiref==3.3.4                          # Must set version to avoid Channels bug #1713
+asgiref==3.5.0                          # Must set version to avoid Channels bug #1713
 channels==2.4.0                         # Channels; also includes the Daphne server
 channels_redis==3.2.0                   # Channels Layer
 
