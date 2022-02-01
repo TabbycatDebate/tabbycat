@@ -2,6 +2,12 @@
 Change Log
 ==========
 
+2.6.5
+-----
+*Release date: TBC*
+
+- Fix broken link preventing public ballots list from loading (BACKEND-69E)
+
 2.6.4
 -----
 *Release date: 24 December 2021*
