@@ -7,6 +7,8 @@ Change Log
 *Release date: TBC*
 
 - Fix broken link preventing public ballots list from loading (BACKEND-69E)
+- Fix motions being incorrectly imported through DebateXML (BACKEND-6TZ)
+
 
 2.6.4
 -----
