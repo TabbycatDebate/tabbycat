@@ -1,7 +1,7 @@
 {
   "name": "Tabbycat",
   "description": "Debating tournament tabulation software for British Parliamentary and a variety of two-team parliamentary formats",
-  "repository": "https://github.com/TabbycatDebate/tabbycat",
+  "repository": "https://github.com/LnhSchools/tabbycat",
   "keywords": ["debate", "debating"],
   "website": "https://tabbycat.readthedocs.io/",
   "logo": "https://raw.githubusercontent.com/TabbycatDebate/tabbycat/develop/tabbycat/static/logo-48x48.png",
