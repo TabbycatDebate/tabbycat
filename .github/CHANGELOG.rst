@@ -9,6 +9,7 @@ Change Log
 - Fix broken link preventing public ballots list from loading (BACKEND-69E)
 - Fix motions being incorrectly imported through DebateXML (BACKEND-6TZ)
 - Fix broken link for assistants merging faulty ballots (BACKEND-6RD)
+- Changed filter for team draw notifications to be whether they are in a debate that round
 
 
 2.6.4
