@@ -18,7 +18,7 @@ if os.environ.get('CI', '') == 'true':
 if os.environ.get('IN_DOCKER', '') and bool(int(os.environ['IN_DOCKER'])):
     base_settings.append('docker.py')
 
-if os.environ.get('DJANGO_SECRET_KEY', ''):
+if os.environ.get('ON_HEROKU', ''):
     base_settings.append('heroku.py')
 
 if os.environ.get('LOCAL_DEVELOPMENT', ''):

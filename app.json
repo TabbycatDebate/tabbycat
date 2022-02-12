@@ -33,6 +33,10 @@
     "DISABLE_COLLECTSTATIC": {
       "description": "Leave this as-is.",
       "value": "1"
+    },
+    "ON_HEROKU": {
+      "description": "Leave this as-is.",
+      "value": "1"
     }
   },
   "formation": {
