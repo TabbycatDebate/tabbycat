@@ -214,7 +214,7 @@ def divide_to_int(number_a, number_b):
 
 @register.simple_tag
 def get_unit(type):
-    return "promotions/" + type + "-unit-" + str(randint(0, 1)) + ".png"
+    return "promotions/" + type + "-unit-" + str(randint(0, 1)) + ".jpg"
 
 
 @register.simple_tag

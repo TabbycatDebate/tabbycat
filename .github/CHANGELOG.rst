@@ -10,6 +10,7 @@ Change Log
 - Fix motions being incorrectly imported through DebateXML (BACKEND-6TZ)
 - Fix broken link for assistants merging faulty ballots (BACKEND-6RD)
 - Changed filter for team draw notifications to be whether they are in a debate that round
+- Launched our promotion program for sponsors of the Tabbycat Debate Organisation
 
 
 2.6.4
