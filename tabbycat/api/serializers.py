@@ -166,7 +166,9 @@ class RoundSerializer(serializers.ModelSerializer):
     validate_seq = partialmethod(_validate_field, 'seq')
 
     def validate(self, data):
-        if (data.get('break_category') is None) == (data.get('stage', Round.STAGE_ELIMINATION) == Round.STAGE_ELIMINATION):
+        bc = data.get('break_category', getattr(self.instance, 'break_category', None))
+        stage = data.get('stage', getattr(self.instance, 'stage', Round.STAGE_ELIMINATION))
+        if (bc is None) == (stage == Round.STAGE_ELIMINATION):
             # break category is None _XNOR_ stage is elimination
             raise serializers.ValidationError("Rounds are elimination iff they have a break category.")
         return super().validate(data)
