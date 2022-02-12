@@ -1,5 +1,6 @@
 import os
 import re
+from random import randint
 
 from django import template
 from django.conf import settings
@@ -209,6 +210,11 @@ def divide_to_int(number_a, number_b):
         return int(int(number_a) / int(number_b))
     except (ValueError, ZeroDivisionError):
         return None
+
+
+@register.simple_tag
+def get_unit(type):
+    return "promotions/" + type + "-unit-" + str(randint(0, 1)) + ".png"
 
 
 @register.simple_tag
