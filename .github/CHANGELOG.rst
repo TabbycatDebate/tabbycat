@@ -4,7 +4,7 @@ Change Log
 
 2.6.5
 -----
-*Release date: TBC*
+*Release date: 14 February 2022*
 
 - Fix broken link preventing public ballots list from loading (BACKEND-69E)
 - Fix motions being incorrectly imported through DebateXML (BACKEND-6TZ)
