@@ -2,12 +2,25 @@
 Change Log
 ==========
 
+<<<<<<< HEAD
 2.7.0 (Pixie-bob)
 ---------
 *Release date: TBD*
 
 - Round weights can be modified within tournament preferences, rather than just by the Edit Database.
 - Preformed panels can now be applied 'directly', in a linear top-to-bottom fashion. However, this method will not account for soft or hard conflicts. Thanks to Enting Lee for the pull request!
+=======
+2.6.5
+-----
+*Release date: 14 February 2022*
+
+- Fix broken link preventing public ballots list from loading (BACKEND-69E)
+- Fix motions being incorrectly imported through DebateXML (BACKEND-6TZ)
+- Fix broken link for assistants merging faulty ballots (BACKEND-6RD)
+- Changed filter for team draw notifications to be whether they are in a debate that round
+- Made round break category and stage validator work with partial updates
+- Launched our promotion program for sponsors of the Tabbycat Debate Organisation
+>>>>>>> master
 
 
 2.6.4

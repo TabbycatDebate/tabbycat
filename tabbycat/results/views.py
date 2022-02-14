@@ -803,7 +803,7 @@ class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, RoundMixin, Vue
 
         data = [{
             'text': _("Add result from %(adjudicator)s") % {'adjudicator': da.adjudicator.name},
-            'link': reverse_round('old-results-public-ballotset-new-pk', self.tournament, self.round,
+            'link': reverse_round('old-results-public-ballotset-new-pk', self.round,
                     kwargs={'adjudicator_pk': da.adjudicator_id}),
         } for da in debateadjs]
         header = {'key': 'adj', 'title': _("Adjudicator")}
