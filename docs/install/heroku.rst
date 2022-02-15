@@ -4,6 +4,15 @@
 Installing on Heroku
 ====================
 
+.. admonition:: IMPORTANT
+  :class: error
+
+  As of February 2022, the "Deploy to Heroku" button for Tabbycat will not work. If you are unable to use `Calico <https://calicotab.com>`_, you can try:
+
+  - Any of the Local installation methods
+  - Using the 'Long Way' instructions below. It may help to fork Tabbycat to your own GitHub account first
+  - Trying our `experimental support for Render <https://tabbycat.readthedocs.io/en/feature-render/install/render.html>`_, a Heroku-like platform
+
 `Heroku <http://www.heroku.com/>`_ is a platform as a service on which Tabbycat can be installed to be available on the internet. Naturally, this requires you to have a Heroku account.
 
 There are two ways to do this: a **short way** and a **long way**. Most people should use the short way. The long way requires some familiarity with command-line interfaces and Git, and requires a :ref:`local installation <install-local>` as a prerequisite, but makes it easier to :ref:`upgrade versions <upgrade-heroku>` later on and (unlike the short way) allows you to import data from CSV files.

@@ -39,11 +39,7 @@ Tabbycat can be deployed in a number of ways. While you can set it up to [run on
 
 [![Deploy](https://raw.githubusercontent.com/gist/tienne-B/fc04ecd3c11a38424b642b4bba60e8d9/raw/b2c71d7d6a0d368d3e9dfd8002af729d155ad09b/calicodeploy.svg)](https://calicotab.com/tournaments/new/)
 
-Tabbycat is also configured for a '1 click' install to the [Heroku](https://www.heroku.com) web platform. Click this button to begin:
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/master)
-
-While the baseline Heroku hosting is free, some features require additional setup and larger tournaments will likely need to pay for greater hosting capacities.
+Tabbycat is **currently unavailable as a 1-click installation** on the [Heroku](https://www.heroku.com) web platform. If you are unable to use Calico, we suggest [creating a local installation](https://tabbycat.readthedocs.io/en/stable/install/local.html). We hope to address this issue or [develop an alternate installation method](https://tabbycat.readthedocs.io/en/feature-render/index.html) in a future version of Tabbycat.
 
 ## 💪 Support and Contributing
 
