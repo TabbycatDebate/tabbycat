@@ -2,7 +2,7 @@
 Change Log
 ==========
 
-2.6.5
+2.6.6
 -----
 *Release date: 27 February 2022*
 
