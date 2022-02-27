@@ -4,6 +4,14 @@ Change Log
 
 2.6.5
 -----
+*Release date: 27 February 2022*
+
+- Updated Heroku install documentation to foreground the script-based install
+- Fixed reporting of Tabbycat's version and host
+
+
+2.6.5
+-----
 *Release date: 14 February 2022*
 
 - Fix broken link preventing public ballots list from loading (BACKEND-69E)
