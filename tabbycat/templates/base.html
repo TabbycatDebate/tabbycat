@@ -38,7 +38,7 @@
   <script>
     window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
     ga('create', 'UA-314178-25', 'auto');
-    ga('set', 'dimension1', {% if tabbycat_version %}{{ tabbycat_version }}{% else %}?{% endif %});
+    ga('set', 'dimension1', '{% if tabbycat_version %}{{ tabbycat_version }}{% else %}?{% endif %}');
     ga('set', 'dimension2', window.location.hostname);
     ga('send', 'pageview');
     </script>
