@@ -2,14 +2,22 @@
 Change Log
 ==========
 
-<<<<<<< HEAD
 2.7.0 (Pixie-bob)
 ---------
 *Release date: TBD*
 
 - Round weights can be modified within tournament preferences, rather than just by the Edit Database.
 - Preformed panels can now be applied 'directly', in a linear top-to-bottom fashion. However, this method will not account for soft or hard conflicts. Thanks to Enting Lee for the pull request!
-=======
+
+
+2.6.6
+-----
+*Release date: 27 February 2022*
+
+- Updated Heroku install documentation to foreground the script-based install
+- Fixed reporting of Tabbycat's version and host
+
+
 2.6.5
 -----
 *Release date: 14 February 2022*
@@ -20,7 +28,6 @@ Change Log
 - Changed filter for team draw notifications to be whether they are in a debate that round
 - Made round break category and stage validator work with partial updates
 - Launched our promotion program for sponsors of the Tabbycat Debate Organisation
->>>>>>> master
 
 
 2.6.4

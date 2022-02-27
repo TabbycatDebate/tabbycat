@@ -109,7 +109,31 @@ This script has a number of options. They're worth taking a look at before you r
 ``importtournament`` on Heroku installs
 ========================================
 
-Instructions for using the ``importtournament`` command on Heroku installations are in steps 4 and 5 of :ref:`install-heroku`. The recommended procedure is first to import the tournament into a local installation, :ref:`as described above <importtournament-command>`, and then to push the local database to Heroku using the ``heroku pg:push`` command.
+If you want to use the ``importtournament`` command locally but then upload that data to Heroku, you can do so with these instructions.
+
+.. danger:: This step wipes the Heroku database clean, and replaces it with the contents of your local database. If you have any data on the Heroku site that isn't also in your local database, **that data will be lost** and will not be recoverable.
+
+.. tip:: If you have multiple Heroku sites, you may find that the ``heroku`` commands refuse to run, prompting you to specify an app. If so, add ``--app yourappname`` to each ``heroku`` command.
+
+a. Enable maintenance mode on Heroku. This takes the site offline, to ensure that no-one can possibly create or change any data on the site while you're pushing a new database up::
+
+    heroku maintenance:on
+
+b. Reset the database. (Caution: This permanently deletes all information on your Heroku database!)
+
+  ::
+
+    heroku pg:reset
+
+c. Push your local database to Heroku::
+
+    heroku pg:push yourlocaldatabasename DATABASE
+
+  You might need to specify your local PostgreSQL credentials by adding ``PGUSER=yourusername PGPASSWORD=******** PGHOST=localhost`` to the *beginning* of that command. (This sets environment variables to those values for the duration of that one command.)
+
+d. Disable maintenance mode::
+
+    heroku maintenance:off
 
 Developing your own importer
 ============================
