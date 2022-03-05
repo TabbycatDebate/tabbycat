@@ -10,15 +10,15 @@
       <div class="progress">
         <div class="progress-bar progress-bar-gov"
              style="width: {% percentage motion.counts_by_bench.gov 3 %}%">
-          {% trans "Government" %} {{ motion.counts_by_bench.gov|floatformat:2 }}
+          {% translate "Government" %} {{ motion.counts_by_bench.gov|floatformat:2 }}
         </div>
         <div class="progress-bar progress-bar-opp"
              style="width: {% percentage motion.counts_by_bench.opp 3 %}%">
-          {% trans "Opposition" %} {{ motion.counts_by_bench.opp|floatformat:2 }}
+          {% translate "Opposition" %} {{ motion.counts_by_bench.opp|floatformat:2 }}
         </div>
       </div>
       <h6 class="mt-2 text-center text-muted">
-        {% trans "Average Points per bench" %}
+        {% translate "Average Points per bench" %}
       </h6>
     </div>
 
@@ -26,15 +26,15 @@
       <div class="progress">
         <div class="progress-bar progress-bar-opening"
              style="width: {% percentage motion.counts_by_half.top 3 %}%">
-          {% trans "Opening" %} {{ motion.counts_by_half.top|floatformat:2 }}
+          {% translate "Opening" %} {{ motion.counts_by_half.top|floatformat:2 }}
         </div>
         <div class="progress-bar progress-bar-closing"
              style="width: {% percentage motion.counts_by_half.bottom 3 %}%">
-          {% trans "Closing" %} {{ motion.counts_by_half.bottom|floatformat:2 }}
+          {% translate "Closing" %} {{ motion.counts_by_half.bottom|floatformat:2 }}
         </div>
       </div>
       <h6 class="mt-2 text-center text-muted">
-        {% trans "Average Points per half" %}
+        {% translate "Average Points per half" %}
       </h6>
     </div>
 
@@ -57,11 +57,11 @@
         {% endfor %}
       </div>
       <h6 class="mt-2 text-center text-muted">
-        {% blocktrans trimmed count ndebates=motion.ndebates %}
+        {% blocktranslate trimmed count ndebates=motion.ndebates %}
           average points per position ({{ ndebates }} debate)
         {% plural %}
           average points per position ({{ ndebates }} debates)
-        {% endblocktrans %}
+        {% endblocktranslate %}
       </h6>
     </div>
   </div>
@@ -75,11 +75,11 @@
 
           {% for points, count, percentage in counts_dict %}
 
-            {% blocktrans trimmed with side=side.upper percentage=percentage|floatformat count count=count asvar tooltip_text %}
+            {% blocktranslate trimmed with side=side.upper percentage=percentage|floatformat count count=count asvar tooltip_text %}
               {{ count }} result for {{ side }} ({{ percentage }}%) were for {{ points }} points
             {% plural %}
               {{ count }} results for {{ side }} ({{ percentage }}%) were for {{ points }} points
-            {% endblocktrans %}
+            {% endblocktranslate %}
 
             <div class="progress-bar progress-points-{{ points }}"
                  style="width: {{ percentage|unlocalize }}%" data-toggle="tooltip"
@@ -98,9 +98,9 @@
 
         </div>
         <h6 class="mt-2 text-center text-{{ side }}">
-          {% blocktrans trimmed with side=side.upper %}
+          {% blocktranslate trimmed with side=side.upper %}
             {{ side }} results
-          {% endblocktrans %}
+          {% endblocktranslate %}
         </h6>
       </div>
 
@@ -112,7 +112,7 @@
 
   <div class="row">
     <div class="col text-muted">
-      {% trans "No results for this motion" %}
+      {% translate "No results for this motion" %}
     </div>
   </div>
 

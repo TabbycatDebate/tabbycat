@@ -14,9 +14,9 @@
     {% if pref.public_participants or admin_page %}
 
       {# Just call it 'name' since this string is also used with teams #}
-      {% blocktrans trimmed with name=adjudicator.name asvar card_title %}
+      {% blocktranslate trimmed with name=adjudicator.name asvar card_title %}
         About {{ name }}
-      {% endblocktrans %}
+      {% endblocktranslate %}
 
       {% include "adjudicator_registration_card.html" %}
 

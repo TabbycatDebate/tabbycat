@@ -3,11 +3,11 @@
 {% with duplicates=round.duplicate_team_names %}
 
   {% if duplicates %}
-    {% blocktrans trimmed asvar text with teams=duplicates|join:", " count nteams=duplicates|length %}
+    {% blocktranslate trimmed asvar text with teams=duplicates|join:", " count nteams=duplicates|length %}
       <strong>{{ teams }}</strong> is competing in multiple debates.
     {% plural %}
       The following <strong>{{ nteams }}</strong> teams are competing in multiple debates: <strong>{{ teams }}</strong>
-    {% endblocktrans %}
+    {% endblocktranslate %}
     {% include "components/item-info.html" with type="danger" %}
   {% endif %}
 

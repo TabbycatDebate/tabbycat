@@ -4,11 +4,11 @@
 {% block page-subnav-sections %}
   <a class="btn btn-outline-primary" href="{% tournamenturl 'results-assistant-round-list' %}">
     <i data-feather="chevron-left"></i>
-    {% trans "Back to All Results" %}
+    {% translate "Back to All Results" %}
   </a>
   {% if not new %}
     <a class="btn btn-primary" href="{% tournamenturl 'results-assistant-ballotset-new' debate.id %}">
-      {% trans "Create a new ballot set for this debate" %}
+      {% translate "Create a new ballot set for this debate" %}
     </a>
   {% endif %}
 {% endblock %}
@@ -30,12 +30,12 @@
           {# If confirming, always go into CONFIRMED. If incorrect, go into DRAFT or NONE depending on whether there are still ballots left. #}
           {% if not new and request.user == ballotsub.submitter %}
             <div class="alert alert-danger">
-              {% trans "You can't confirm this ballot set because you entered it." %}
+              {% translate "You can't confirm this ballot set because you entered it." %}
             </div>
           {% endif %}
           {% if ballotsub.single_adj %}
             <div class="alert alert-danger">
-              {% trans "You can't confirm this ballot set because it is for a single adjudicator. Use the merge function." %}
+              {% translate "You can't confirm this ballot set because it is for a single adjudicator. Use the merge function." %}
             </div>
           {% endif %}
           <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_CONFIRMED }}" />
@@ -43,15 +43,15 @@
           <input id="id_confirmed" type="hidden" name="confirmed" value="True" />
           <div class="row">
             <div class="col">
-              <input id="correct" {% if not new and request.user == ballotsub.submitter or form.confirmed.field.disabled %}disabled="disabled"{% endif %} class="btn btn-success btn-block" type="submit" value="{% trans "Confirm results" %}" tabindex="{{ form.nexttabindex }}" />
+              <input id="correct" {% if not new and request.user == ballotsub.submitter or form.confirmed.field.disabled %}disabled="disabled"{% endif %} class="btn btn-success btn-block" type="submit" value="{% translate "Confirm results" %}" tabindex="{{ form.nexttabindex }}" />
             </div>
             <div class="col">
-              <input id="incorrect" class="btn btn-danger btn-block" type="button" value="{% trans "Results are incorrect" %}" tabindex="{{ form.nexttabindex|add:1 }}" />
+              <input id="incorrect" class="btn btn-danger btn-block" type="button" value="{% translate "Results are incorrect" %}" tabindex="{{ form.nexttabindex|add:1 }}" />
             </div>
           </div>
           <div class="text-center pt-3 small text-muted">
             {% if pref.enable_ballot_receipts and not request.user == ballotsub.submitter %}
-              {% trans "Emails will be sent to adjudicators when the ballot is confirmed." %}
+              {% translate "Emails will be sent to adjudicators when the ballot is confirmed." %}
             {% endif %}
           </div>
         {% endif %}

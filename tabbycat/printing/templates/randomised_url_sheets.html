@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load debate_tags i18n %}
 
-{% block page-title %}{% blocktrans trimmed with sheet=sheet_type|title %}Printable {{ sheet }} URLs{% endblocktrans %}{% endblock %}
+{% block page-title %}{% blocktranslate trimmed with sheet=sheet_type|title %}Printable {{ sheet }} URLs{% endblocktranslate %}{% endblock %}
 
 {% block header %}{% endblock %}
 {% block nav %}{% endblock %}
@@ -10,11 +10,11 @@
 
 {% block page-alerts %}
   <div class="alert alert-info d-print-none">
-    {% blocktrans trimmed %}
+    {% blocktranslate trimmed %}
     This page is designed to be printed as double sided A4 sheets, with the
     outside facing side showing the participant name and the inside facing side
     showing the URL. Use CTRL-P to print; for best results use Chrome.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   </div>
 {% endblock %}
 
@@ -24,20 +24,20 @@
     <div class="h1 text-center printable-page-break">
       <br>
       {% if p.institution__code %}
-        {% blocktrans trimmed with name=p.name group=p.institution__code %}
+        {% blocktranslate trimmed with name=p.name group=p.institution__code %}
           Private URL for {{ name }} ({{ group }})
-        {% endblocktrans %}
+        {% endblocktranslate %}
       {% else %}
-        {% blocktrans trimmed with name=p.name group=p.team__short_name %}
+        {% blocktranslate trimmed with name=p.name group=p.team__short_name %}
           Private URL for {{ name }} ({{ group }})
-        {% endblocktrans %}
+        {% endblocktranslate %}
       {% endif %}
     </div>
     <div class="h4 text-center printable-page-break">
       <p>
-        {% blocktrans trimmed %}
+        {% blocktranslate trimmed %}
           Please bookmark the following URL, you will use it to submit forms throughout the tournament:
-        {% endblocktrans %}
+        {% endblocktranslate %}
       </p>
       <p>{{ p.url }}</p>
       <svg version="1.1" viewBox="0 0 41 41" width="200px" xmlns="http://www.w3.org/2000/svg">

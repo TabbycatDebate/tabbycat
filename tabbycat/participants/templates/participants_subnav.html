@@ -3,35 +3,35 @@
 <div class="btn-group btn-group">
   <a class="btn btn-outline-primary {% if participants_nav %}active{% endif %}"
      href="{% tournamenturl 'participants-list' %}">
-    {% trans "Participants List" %}
+    {% translate "Participants List" %}
   </a>
   <a class="btn btn-outline-primary {% if institutions_nav %}active{% endif %}"
      href="{% tournamenturl 'participants-institutions-list' %}">
-    {% trans "Institutions List" %}
+    {% translate "Institutions List" %}
   </a>
 </div>
 <div class="btn-group btn-group">
   {% if email_sent %}
-    <a href="{% tournamenturl 'participants-email' %}" class="btn btn-outline-secondary" data-toggle="tooltip" title="{% trans "Emails have already been sent." %}">
+    <a href="{% tournamenturl 'participants-email' %}" class="btn btn-outline-secondary" data-toggle="tooltip" title="{% translate "Emails have already been sent." %}">
   {% else %}
     <a href="{% tournamenturl 'participants-email' %}" class="btn btn-outline-primary">
   {% endif %}
-    {% trans "Email Team Registrations" %}
+    {% translate "Email Team Registrations" %}
   </a>
 </div>
 <div class="btn-group btn-group">
   {% if pref.team_code_names != 'off' %}
     <a class="btn btn-outline-primary {% if code_names_nav %}active{% endif %}"
        href="{% tournamenturl 'participants-code-names-list' %}">
-      {% trans "Code Names" %}
+      {% translate "Code Names" %}
     </a>
   {% endif %}
   <a class="btn btn-outline-primary {% if speaker_cats_nav %}active{% endif %}"
      href="{% tournamenturl 'participants-speaker-categories-edit' %}">
-    {% trans "Speaker Categories" %}
+    {% translate "Speaker Categories" %}
   </a>
   <a class="btn btn-outline-primary {% if speaker_eligibility_nav %}active{% endif %}"
      href="{% tournamenturl 'participants-speaker-eligibility' %}">
-    {% trans "Speaker Eligibility" %}
+    {% translate "Speaker Eligibility" %}
   </a>
 </div>

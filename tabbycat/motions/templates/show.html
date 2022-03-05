@@ -13,19 +13,19 @@
     <div>
       {% if infos %}
         <button class="btn btn-lg btn-info btn-block mb-5" data-toggle="modal" data-target="#infoPop">
-          {% blocktrans trimmed with round=round.name count ninfos=infos|length %}
+          {% blocktranslate trimmed with round=round.name count ninfos=infos|length %}
             Reveal Info Slide for {{ round }}
           {% plural %}
             Reveal Info Slides for {{ round }}
-          {% endblocktrans %}
+          {% endblocktranslate %}
         </button>
       {% endif %}
       <button class="btn btn-lg btn-success btn-block" data-toggle="modal" data-target="#motionPop">
-        {% blocktrans trimmed with round=round.name count nmotions=motions|length %}
+        {% blocktranslate trimmed with round=round.name count nmotions=motions|length %}
           Reveal Motion for {{ round }}
         {% plural %}
           Reveal Motions for {{ round }}
-        {% endblocktrans %}
+        {% endblocktranslate %}
       </button>
     </div>
   </div>
@@ -38,7 +38,7 @@
 
           <div class="modal-body d-flex align-items-center justify-content-center">
             <div class="display-3 text-danger">
-              😳 {% trans "There are no motions for this round entered into Tabbycat." %}
+              😳 {% translate "There are no motions for this round entered into Tabbycat." %}
             </div>
           </div>
 
