@@ -5,9 +5,9 @@ Change Log
 
 2.6.7
 -----
-*Release date: TODO*
+*Release date: 4 April 2022*
 
-- Fixed the Heroku deploy script on Windows shells. Thanks to @thbsp for the Issue and syntax!
+- Fixed the Heroku deploy script on Windows shells. Thanks to @dcorks for the Issue!
 
 
 2.6.6
