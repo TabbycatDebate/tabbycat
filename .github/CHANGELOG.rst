@@ -10,6 +10,13 @@ Change Log
 - Preformed panels can now be applied 'directly', in a linear top-to-bottom fashion. However, this method will not account for soft or hard conflicts. Thanks to Enting Lee for the pull request!
 
 
+2.6.7
+-----
+*Release date: 4 April 2022*
+
+- Fixed the Heroku deploy script on Windows shells. Thanks to @dcorks for the Issue!
+
+
 2.6.6
 -----
 *Release date: 27 February 2022*
