@@ -43,7 +43,7 @@ def _validate_field(self, field, value):
 
 class VenueConstraintSerializer(serializers.ModelSerializer):
     category = fields.TournamentHyperlinkedRelatedField(view_name='api-venuecategory-detail', queryset=VenueCategory.objects.all())
-    
+
     class Meta:
         model = VenueConstraint
         fields = ('category', 'priority')
