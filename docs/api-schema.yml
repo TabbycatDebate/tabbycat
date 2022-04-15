@@ -2827,6 +2827,21 @@ components:
       name: Authorization
       in: header
   schemas:
+    VenueConstraint:
+      required:
+        - category
+        - priority
+      type: object
+      properties:
+        category:
+          title: Category
+          description: The venue category to constrain to
+          type: string
+          format: uri
+        priority:
+          title: Priority
+          description: How important is the constraint
+          type: integer
     Institution:
       required:
         - name
@@ -2863,6 +2878,10 @@ components:
           type: string
           maxLength: 100
           nullable: true
+        venue_constraints:
+          type: array
+          items:
+            $ref: '#/components/schemas/VenueConstraint'
     TournamentInstitution:
       required:
         - name
@@ -2911,6 +2930,10 @@ components:
           items:
             type: string
             format: uri
+        venue_constraints:
+          type: array
+          items:
+            $ref: '#/components/schemas/VenueConstraint'
     Tournament:
       required:
         - name
@@ -3219,6 +3242,10 @@ components:
               type: string
               format: uri
               readOnly: true
+        venue_constraints:
+          type: array
+          items:
+            $ref: '#/components/schemas/VenueConstraint'
     BreakCategory:
       required:
         - name
@@ -4023,6 +4050,10 @@ components:
           items:
             type: string
             format: uri
+        venue_constraints:
+          type: array
+          items:
+            $ref: '#/components/schemas/VenueConstraint'
     SpeakerStandings:
       type: array
       items:
