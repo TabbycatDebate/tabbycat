@@ -91,6 +91,7 @@ FORMAT_MODULE_PATH = [
 MIDDLEWARE = [
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     # User language preferences; must be after Session
     'django.middleware.locale.LocaleMiddleware',
@@ -223,7 +224,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ==============================================================================
 # Logging
@@ -307,7 +308,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Channels
 # ==============================================================================
 
-ASGI_APPLICATION = "routing.application"
+ASGI_APPLICATION = "asgi.application"
 
 CHANNEL_LAYERS = {
     "default": {

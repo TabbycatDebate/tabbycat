@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a895d9bbefea7c202e72f75017d156ca14565f38ba436e33bf0ace92517abbd8"
+            "sha256": "f510714667b637f0812245a2fbc62632c5f479846adb5baedc7e2788c8b0eb99"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -22,6 +22,14 @@
                 "sha256:b61808d7e97b7cd5a92ed574937a079c9387fdadd22bfbfa7ad2fd319ecc26e3"
             ],
             "version": "==1.3.1"
+        },
+        "appnope": {
+            "hashes": [
+                "sha256:02bd91c4de869fbb1e1c50aafc4098827a7a54ab2f39d9dcba6c9547ed920e24",
+                "sha256:265a455292d0bd8a72453494fa24df5a11eb18373a60c7c0430889f22548605e"
+            ],
+            "markers": "sys_platform == 'darwin'",
+            "version": "==0.1.3"
         },
         "asgiref": {
             "hashes": [
@@ -777,6 +785,14 @@
             ],
             "version": "==0.5.1"
         },
+        "whitenoise": {
+            "hashes": [
+                "sha256:08c42bc535f9777eea1a599289d9433f081921f97887eaf6f559446b2a080374",
+                "sha256:5a4aff543ee860fbe40d743e556adf92ccd41b7df45697cae074afdf657056b9"
+            ],
+            "index": "pypi",
+            "version": "==6.0.0"
+        },
         "wrapt": {
             "hashes": [
                 "sha256:00108411e0f34c52ce16f81f1d308a571df7784932cc7491d1e94be2ee93374b",
@@ -1371,7 +1387,7 @@
                 "sha256:fa2ba70284fa42c2a5ecb35e322e68823288a4251f9ba9cc77be04ae15eada68",
                 "sha256:fba85b6cd9c39be262fcd23865652920832b61583de2a2ca907dbd8e8a8c81e5"
             ],
-            "markers": "python_version > '2.7'",
+            "markers": "python_version >= '3.5'",
             "version": "==6.1"
         },
         "urllib3": {

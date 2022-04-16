@@ -35,6 +35,7 @@ dj-database-url = "*"
 honcho = "*"
 gunicorn = "*"
 sentry-sdk = "*"
+whitenoise = "*"
 
 [dev-packages]
 pre-commit = "*"
