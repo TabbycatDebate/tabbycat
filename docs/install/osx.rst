@@ -30,19 +30,20 @@ First, you need to install all of the software on which Tabbycat depends, if you
 
 1(a). Python
 --------------------------------------------------------------------------------
-Tabbycat requires Python 3.6 or later. macOS only comes with Python 2.7, so you'll need to install this. You can download the latest version from the `Python website <https://www.python.org/downloads/>`_.
+Tabbycat requires Python 3.9. macOS only comes with Python 2.7, so you'll need to install this. You can download the latest version from the `Python website <https://www.python.org/downloads/>`_.
 
 The executable will probably be called ``python3``, rather than ``python``. Check::
 
     $ python3 --version
-    Python 3.6.8
+    Python 3.9.12
 
-.. warning:: Tabbycat does not support Python 2. You must use Python 3.6 or later.
+.. warning:: Tabbycat does not support Python 2. You must use Python 3.9.
 
-.. admonition:: Advanced users
-  :class: tip
+You'll also need to install `Pipenv <https://pipenv.pypa.io/en/latest/>`_::
 
-  These instructions will use the ``venv`` module. If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead.
+    $ pip install --user pipenv
+
+(If you don't have `pip`, install it `here <https://pip.pypa.io/en/stable/installation/>`_.)
 
 1(b). Postgres.app
 --------------------------------------------------------------------------------
@@ -124,39 +125,34 @@ b. Copy **settings/local.example** to **settings/local.py**. Find this part in y
 
     TIME_ZONE = 'Australia/Melbourne'
 
-c. Ensure you are in the main Tabbycat directory (not the config folder where **settings_local.py** is and start a new virtual environment. We suggest the name ``venv``, though it can be any name you like::
+c. Ensure you are in the main Tabbycat directory (not the config folder where **settings_local.py** is). IInstall the Python packages specified in the Pipfile using `Pipenv <https://pipenv.pypa.io/en/latest/>`_ (this also creates a virtual environment), and install the Node.js packages specified in package.json using `npm`::
 
-    $ python3 -m venv venv
-
-d. Run the ``activate`` script. This puts you "into" the virtual environment::
-
-    $ source venv/bin/activate
-
-e. Install Tabbycat's requirements into your virtual environment::
-
-    $ pip install --upgrade pip
-    $ pip install -r ./config/requirements_core.txt
+    $ pipenv install
     $ npm install
 
-f. Navigate to the **tabbycat** sub folder, initialize the database, compile the assets, and create a user account for yourself::
+d. Start a Pipenv shell::
 
-    $ cd tabbycat
-    $ dj migrate
-    $ npm run build
-    $ dj collectstatic
-    $ dj createsuperuser
+    $ pipenv shell
 
-g. Start Tabbycat!
+  You'll notice a prefix that looks like ``(tabbycat-9BkbSRuB)`` (except the random characters for you will be different). That means you're inside the Pipenv shell. Everything from this point onwards will be inside the Pipenv shell.
+
+e. Navigate to the **tabbycat** sub-directory, initialize the database, compile the assets, and create a user account for yourself::
+
+    (tabbycat-9BkbSRuB) $ cd tabbycat
+    (tabbycat-9BkbSRuB) $ dj migrate
+    (tabbycat-9BkbSRuB) $ npm run build
+    (tabbycat-9BkbSRuB) $ dj collectstatic
+    (tabbycat-9BkbSRuB) $ dj createsuperuser
+
+f. Start Tabbycat!
 
   ::
 
-    $ dj runserver
+    (tabbycat-9BkbSRuB) $ npm run serve
 
-  It should show something like this::
+  Lots of text will flow by---this command starts up all of the processes necessary to run Tabbycat. But the app will be at http://127.0.0.1:8000/ or http://localhost:8000/ (not at any of the other addresses that will show).
 
-    serving on http://127.0.0.1:8000
-
-h. Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000.) It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
+g. Open your browser and go to http://127.0.0.1:8000/ or http://localhost:8000/. It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
 
   .. image:: images/tabbycat-bare-osx.png
       :alt: Bare Tabbycat installation
@@ -164,9 +160,10 @@ h. Open your browser and go to the URL printed above. (In the above example, it'
 Naturally, your database is currently empty, so proceed to :ref:`importing initial data <importing-initial-data>`.
 
 Starting up an existing Tabbycat instance
-================================================================================
+=========================================
 To start your Tabbycat instance up again next time you use your computer::
 
     $ cd path/to/my/tabbycat/directory
-    $ source venv/bin/activate
-    $ dj runserver
+    $ pipenv run npm run serve
+
+Or you can start a ``pipenv shell``, then run ``npm run serve`` from inside the Pipenv shell.

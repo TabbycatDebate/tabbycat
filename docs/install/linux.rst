@@ -25,23 +25,24 @@ You need to be familiar with command-line interfaces to get through this comfort
 
 Short version
 =============
-.. parsed-literal::
+::
 
-  curl -sL https\:\/\/deb.nodesource.com/setup_12.x | sudo -E bash -    # add Node.js source repository
-  sudo apt install python3-dev python3-venv postgresql libpq-dev nodejs gcc g++ make
-  git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
+  curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -    # add Node.js source repository
+  sudo apt install python3-dev pipenv postgresql libpq-dev nodejs gcc g++ make
+  git clone https://github.com/TabbycatDebate/tabbycat.git
   cd tabbycat
   git checkout master
-  sudo -u postgres createuser myusername --createdb --pwprompt    # skip if not first time
+  sudo -u postgres createuser myusername --createdb --pwprompt       # skip if not first time
   createdb mydatabasename
 
 Then create **settings/local.py** as described :ref:`below <local-settings-linux>`, then::
 
-  python3 -m venv venv
-  source venv/bin/activate
-  pip install --upgrade pip
-  pip install -r ./config/requirements_core.txt
+  pipenv install
   npm install
+  pipenv shell
+
+That should open your Pipenv shell, then inside it run::
+
   cd tabbycat
   dj migrate
   npm run build
@@ -62,16 +63,21 @@ First, you need to install all of the software on which Tabbycat depends, if you
 
 1(a). Python
 ------------
-Tabbycat requires Python 3.6 or later.  You probably already have Python 3, but you'll also need the development package in order to install Psycopg2 later.  The ``venv`` module will come in handy too.  Install::
+Tabbycat uses Python 3.9.  You probably already have Python 3, but you'll also need the development package in order to install Psycopg2 later.  You'll also want `Pipenv <https://pipenv.pypa.io/en/latest/>`_, if you don't already have it. Install::
 
-    $ sudo apt install python3-dev python3-venv
+    $ sudo apt install python3-dev pipenv
 
 Check the version::
 
     $ python3 --version
-    Python 3.6.2
+    Python 3.9.12
 
-.. warning:: Tabbycat does not support Python 2. You must use Python 3.6 or later.
+.. warning:: Tabbycat does not support Python 2. You must use Python 3.9.
+
+.. admonition:: Advanced users
+   :class: tip
+
+   If you prefer to use ``pip`` to install Python packages, you can use ``pip install --user pipenv`` to install Pipenv, instead of ``apt``.
 
 1(b). PostgreSQL
 ----------------
@@ -173,23 +179,12 @@ a. Navigate to your Tabbycat directory::
 
 .. _local-settings-linux:
 
-b. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like:
+b. Install the Python packages specified in the Pipfile using `Pipenv <https://pipenv.pypa.io/en/latest/>`_ (this also creates a virtual environment), and install the Node.js packages specified in package.json using `npm`::
 
-  .. code:: bash
-
-    $ python3 -m venv venv
-
-c. Run the ``activate`` script. This puts you "into" the virtual environment::
-
-    $ source venv/bin/activate
-
-d. Install Tabbycat's requirements into your virtual environment::
-
-    $ pip install --upgrade pip
-    $ pip install -r ./config/requirements_core.txt
+    $ pipenv install
     $ npm install
 
-e. Navigate to the **tabbycat/settings** sub folder and copy **local.example** to **local.py**. Find this part in your new **local.py**, and fill in the blanks as indicated:
+c. Navigate to the **tabbycat/settings** sub folder and copy **local.example** to **local.py**. Find this part in your new **local.py**, and fill in the blanks as indicated:
 
   .. code:: python
 
@@ -208,25 +203,29 @@ e. Navigate to the **tabbycat/settings** sub folder and copy **local.example** t
 
     TIME_ZONE = 'Australia/Melbourne'
 
-f. Navigate to the **tabbycat** sub-directory, initialize the database, compile the assets, and create a user account for yourself::
+d. Start a Pipenv shell::
 
-    $ cd tabbycat
-    $ dj migrate
-    $ npm run build
-    $ dj collectstatic
-    $ dj createsuperuser
+    $ pipenv shell
 
-g. Start Tabbycat!
+  You'll notice a prefix that looks like ``(tabbycat-9BkbSRuB)`` (except the random characters for you will be different). That means you're inside the Pipenv shell. Everything from this point onwards will be inside the Pipenv shell.
+
+e. Navigate to the **tabbycat** sub-directory, initialize the database, compile the assets, and create a user account for yourself::
+
+    (tabbycat-9BkbSRuB) $ cd tabbycat
+    (tabbycat-9BkbSRuB) $ dj migrate
+    (tabbycat-9BkbSRuB) $ npm run build
+    (tabbycat-9BkbSRuB) $ dj collectstatic
+    (tabbycat-9BkbSRuB) $ dj createsuperuser
+
+f. Start Tabbycat!
 
   ::
 
-    $ dj runserver
+    (tabbycat-9BkbSRuB) $ npm run serve
 
-  It should show something like this::
+  Lots of text will flow by---this command starts up all of the processes necessary to run Tabbycat. But the app will be at http://127.0.0.1:8000/ or http://localhost:8000/ (not at any of the other addresses that will show).
 
-    serving on http://127.0.0.1:8000
-
-h. Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000.) It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
+g. Open your browser and go to http://127.0.0.1:8000/ or http://localhost:8000/. It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
 
   .. image:: images/tabbycat-bare-linux.png
       :alt: Bare Tabbycat installation
@@ -238,5 +237,6 @@ Starting up an existing Tabbycat instance
 To start your Tabbycat instance up again next time you use your computer::
 
     $ cd path/to/my/tabbycat/directory
-    $ source venv/bin/activate
-    $ dj runserver
+    $ pipenv run npm run serve
+
+Or you can start a ``pipenv shell``, then run ``npm run serve`` from inside the Pipenv shell.
