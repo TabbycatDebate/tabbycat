@@ -11,7 +11,7 @@ Installing on Heroku
 
   - Any of the Local installation methods
   - Using the instructions below as an alternative way to create a Heroku site
-  - Our (in beta) `support for Render <https://tabbycat.readthedocs.io/en/feature-render/install/render.html>`_, which uses a similar 1-click method
+  - Our (in beta) `support for Render <https://tabbycat.readthedocs.io/en/latest/install/render.html>`_, which uses a similar 1-click method
 
 Heroku Deployments
 ==================
@@ -49,8 +49,7 @@ If you don't already have **Git**, follow the `instructions on the GitHub websit
 
 Once git is installed, you can use it to download a copy of Tabbycat with these commands in your command-line::
 
-    git clone https://github.com/TabbycatDebate/tabbycat.git
-    git checkout master
+    git clone -b master https://github.com/TabbycatDebate/tabbycat.git
 
 3. Run the Deploy Script
 ------------------------
