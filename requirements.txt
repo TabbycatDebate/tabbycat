@@ -1,5 +1,0 @@
-# Base Requirements File
-# This is auto-installed on Heroku, so must combine core and Heroku dependencies
-
--r config/requirements_core.txt
--r config/requirements_heroku.txt
