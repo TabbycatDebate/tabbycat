@@ -1,7 +1,6 @@
 import json
 import logging
 from contextlib import contextmanager
-from unittest import expectedFailure
 
 from django.contrib.auth import get_user, get_user_model
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -115,7 +114,6 @@ class AuthenticatedTournamentViewSimpleLoadTextMixin(SingleViewTestMixin):
     def authenticate(self):
         raise NotImplementedError
 
-    @expectedFailure
     def test_authenticated_response(self):
         self.authenticate()
         response = self.get_response()

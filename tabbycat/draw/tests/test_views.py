@@ -1,8 +1,11 @@
+import logging
+
 from django.test import TestCase
 
 from draw.models import DebateTeam
 from tournaments.models import Round
-from utils.tests import AdminTournamentViewSimpleLoadTestMixin, CompletedTournamentTestMixin, ConditionalTableViewTestsMixin, TableViewTestsMixin
+from utils.tests import (AdminTournamentViewSimpleLoadTestMixin, CompletedTournamentTestMixin,
+    ConditionalTableViewTestsMixin, suppress_logs, TableViewTestsMixin)
 
 
 class PublicDrawForSpecificRoundViewPermissionTest(ConditionalTableViewTestsMixin, TestCase):
@@ -182,3 +185,7 @@ class PublicDrawEliminationCurrentRoundTest(CompletedTournamentTestMixin, TableV
 class EditDebateTeamsViewTest(AdminTournamentViewSimpleLoadTestMixin, TestCase):
     view_name = 'edit-debate-teams'
     round_seq = 1
+
+    def test_authenticated_response(self):
+        with suppress_logs('breakqual.utils', logging.INFO):
+            super().test_authenticated_response()
