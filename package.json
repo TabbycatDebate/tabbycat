@@ -3,6 +3,7 @@
   "description": "Debating tabulation software for two-team parliamentary formats",
   "scripts": {
     "serve": "npm-run-all -p serve-*",
+    "serve-render": "npm-run-all -p render-*",
     "build": "NODE_ENV='production' npm-run-all -p build-* cp-*",
     "lint": "pre-commit run --all-files",
     "build-sass": "npx node-sass --output-style compressed --include-path node_modules/ --output tabbycat/static/css/ tabbycat/templates/scss/style.scss",
@@ -19,7 +20,9 @@
     "serve-sass": "npm run build-sass -- --watch --recursive --output-style expanded & npm run build-sass-print -- --watch --recursive --output-style expanded --sourcemap",
     "serve-vue": "npx vue-cli-service serve",
     "serve-worker": "dj runworker notifications adjallocation venues",
-    "windows-build": "SET NODE_ENV='production' & npm-run-all -p build-* cp-* && cpx \"tabbycat/static/vue/app.js\" \"tabbycat/static/vue/js/\""
+    "windows-build": "SET NODE_ENV='production' & npm-run-all -p build-* cp-* && cpx \"tabbycat/static/vue/app.js\" \"tabbycat/static/vue/js/\"",
+    "render-server": "python tabbycat/run-asgi.py",
+    "render-worker": "python manage.py runworker notifications adjallocation venues"
   },
   "dependencies": {
     "@babel/cli": "^7.16.0",

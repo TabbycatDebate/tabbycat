@@ -4,6 +4,8 @@
 
 import os
 
+print("Imported docker settings")
+
 ALLOWED_HOSTS = ["*"]
 
 DATABASES = {

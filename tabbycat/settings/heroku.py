@@ -9,18 +9,18 @@ from sentry_sdk.integrations.redis import RedisIntegration
 
 from .core import TABBYCAT_VERSION
 
+print("Imported heroku settings")
 
 # ==============================================================================
 # Heroku
 # ==============================================================================
 
 # Store Tab Director Emails for reporting purposes
-if 'TAB_DIRECTOR_EMAIL' in environ:
-    TAB_DIRECTOR_EMAIL = environ.get('TAB_DIRECTOR_EMAIL', '')
+if os.environ.get('TAB_DIRECTOR_EMAIL', ''):
+    TAB_DIRECTOR_EMAIL = environ.get('TAB_DIRECTOR_EMAIL')
 
-# Get key from heroku config env else use a fall back
-if environ.get('DJANGO_SECRET_KEY'):
-    SECRET_KEY = environ.get('DJANGO_SECRET_KEY')
+if os.environ.get('DJANGO_SECRET_KEY', ''):
+    SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
