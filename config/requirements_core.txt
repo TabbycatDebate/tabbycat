@@ -7,7 +7,7 @@ django-better-admin-arrayfield==1.4.2   # Admin widget for ArrayField
 django-dynamic-preferences==1.11.0      # Settings management
 django-extensions==3.1.5                # For the generate secret command
 django-formtools==2.3                   # Form wizards
-django-ipware==3.0.2                    # IP Address logging
+django-ipware==4.0.2                    # IP Address logging
 django-gfklookupwidget==1.0.9           # Replaces object_id field with a search link
 djangorestframework==3.13.1             # For serialising objects
 django-polymorphic==3.1                 # Permits model polymorphism
