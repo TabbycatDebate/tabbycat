@@ -149,13 +149,3 @@ if not environ.get('DISABLE_SENTRY'):
         send_default_pii=True,
         release=TABBYCAT_VERSION,
     )
-
-# ==============================================================================
-# Scout
-# ==============================================================================
-
-SCOUT_NAME = "Tabbycat"
-
-if environ.get('SCOUT_MONITOR'):
-    # Scout should be listed first; prepend it to the existing list if added
-    INSTALLED_APPS = ('scout_apm.django', *INSTALLED_APPS)
