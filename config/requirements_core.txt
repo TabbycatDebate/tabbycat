@@ -16,7 +16,7 @@ django-statici18n==2.1.1                # Compile translations files as static f
 django-summernote==0.8.20.0             # WYSIWYG editor
 dj-cmd==1.0                             # Provides the dj command alias
 django-redis==5.1.0                     # Use redis for cache (on heroku; local optional)
-django-cors-headers==3.10.0             # CORS headers for API endpoints
+django-cors-headers==3.11.0             # CORS headers for API endpoints
 
 # Database
 psycopg2==2.9.2                         # For Django to talk to postgres
