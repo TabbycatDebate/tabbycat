@@ -17,3 +17,15 @@ class ActionLogEntryAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super(ActionLogEntryAdmin, self).get_queryset(request).select_related(
             'tournament', 'round', 'round__tournament', 'user').prefetch_related('content_object')
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def delete_queryset(self, request, queryset):
+        return False

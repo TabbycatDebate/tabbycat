@@ -56,6 +56,13 @@
           <div class="dropdown-divider"></div>
         {% endfor %}
 
+        {% if user.is_staff %}
+          <a href="{% url 'admin:index' %}" target="_blank" class="dropdown-item px-2">
+            <i data-feather="database"></i>{% translate "Edit Database" %}
+          </a>
+          <div class="dropdown-divider"></div>
+        {% endif %}
+
         <a class="dropdown-item px-2" href="/"><i data-feather="home"></i>{% translate "Site Home" %}</a>
       </div>
 

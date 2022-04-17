@@ -26,7 +26,7 @@ from results.mixins import TabroomSubmissionFieldsMixin
 from results.models import BallotSubmission
 from results.result import DebateResult
 from tournaments.models import Round, Tournament
-from venues.models import Venue, VenueCategory
+from venues.models import Venue, VenueCategory, VenueConstraint
 
 from . import fields
 
@@ -39,6 +39,14 @@ def _validate_field(self, field, value):
     if qs.exists():
         raise serializers.ValidationError("Object with same value exists in the tournament")
     return value
+
+
+class VenueConstraintSerializer(serializers.ModelSerializer):
+    category = fields.TournamentHyperlinkedRelatedField(view_name='api-venuecategory-detail', queryset=VenueCategory.objects.all())
+
+    class Meta:
+        model = VenueConstraint
+        fields = ('category', 'priority')
 
 
 class TournamentSerializer(serializers.ModelSerializer):
@@ -470,6 +478,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         view_name='api-adjudicator-detail',
         queryset=Adjudicator.objects.all(),
     )
+    venue_constraints = VenueConstraintSerializer(many=True, required=False)
     _links = LinksSerializer(source='*', read_only=True)
 
     def __init__(self, *args, **kwargs):
@@ -480,6 +489,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
             self.fields.pop('institution_conflicts')
             self.fields.pop('team_conflicts')
             self.fields.pop('adjudicator_conflicts')
+            self.fields.pop('venue_constraints')
 
             t = kwargs['context']['tournament']
             if not t.pref('show_adjudicator_institutions'):
@@ -542,6 +552,8 @@ class TeamSerializer(serializers.ModelSerializer):
         queryset=Institution.objects.all(),
     )
 
+    venue_constraints = VenueConstraintSerializer(many=True, required=False)
+
     class Meta:
         model = Team
         exclude = ('tournament', 'type')
@@ -554,6 +566,7 @@ class TeamSerializer(serializers.ModelSerializer):
         # Remove private fields in the public endpoint if needed
         if not kwargs['context']['request'].user.is_staff:
             self.fields.pop('institution_conflicts')
+            self.fields.pop('venue_constraints')
 
             t = kwargs['context']['tournament']
             if t.pref('team_code_names') in ('admin-tooltips-code', 'admin-tooltips-real', 'everywhere'):
@@ -635,10 +648,17 @@ class TeamSerializer(serializers.ModelSerializer):
 class InstitutionSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='api-global-institution-detail')
     region = fields.CreatableSlugRelatedField(slug_field='name', queryset=Region.objects.all(), required=False)
+    venue_constraints = VenueConstraintSerializer(many=True, required=False)
 
     class Meta:
         model = Institution
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if not kwargs['context']['request'].user.is_staff:
+            self.fields.pop('venue_constraints')
 
 
 class PerTournamentInstitutionSerializer(InstitutionSerializer):

@@ -179,9 +179,16 @@ run_heroku_command(["buildpacks:add", "heroku/nodejs"])
 run_heroku_command(["buildpacks:add", "heroku/python"])
 
 # Set config variables
+command = ["config:set", "DISABLE_COLLECTSTATIC=1", "ON_HEROKU=1"]
 secret_key = get_random_secret_key()
-command = ["config:set", "DISABLE_COLLECTSTATIC=1", "ON_HEROKU=1", "DJANGO_SECRET_KEY=%s" % secret_key]
+
+if platform.system() == "Windows": # Windows shell needs escaping
+    command.append("DJANGO_SECRET_KEY=\"%s\"" % secret_key)
+else:
+    command.append("DJANGO_SECRET_KEY=%s" % secret_key)
+
 command.append("DEBUG=1" if args.enable_debug else "DEBUG=0")
+
 if args.fast_cache_timeout:
     command.append("PUBLIC_FAST_CACHE_TIMEOUT=%d" % args.fast_cache_timeout)
 if args.slow_cache_timeout:
