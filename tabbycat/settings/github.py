@@ -2,8 +2,6 @@
 # Github CI
 # ==============================================================================
 
-print("Imported CI settings")
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

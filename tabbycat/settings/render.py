@@ -9,8 +9,6 @@ from sentry_sdk.integrations.redis import RedisIntegration
 
 from .core import TABBYCAT_VERSION
 
-print("Imported render settings")
-
 # ==============================================================================
 # Render per https://render.com/docs/deploy-django
 # ==============================================================================
@@ -48,10 +46,6 @@ DATABASES = {
 # ==============================================================================
 # Redis
 # ==============================================================================
-
-REDIS_HOST = os.environ.get('REDIS_HOST')
-REDIS_PORT = os.environ.get('REDIS_PORT')
-print("render_debug_redis", "redis://" + REDIS_HOST + ":" + REDIS_PORT)
 
 CACHES = {
     "default": {
