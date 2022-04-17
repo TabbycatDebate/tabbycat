@@ -4,11 +4,11 @@
 {% block page-alerts %}
   {% if break_categories_length == 0 %}
     {% url 'admin:breakqual_breakcategory_changelist' as categories_url %}
-    {% blocktrans trimmed asvar message %}
+    {% blocktranslate trimmed asvar message %}
       It looks like there aren't any break categories are defined. If you'd like to create new
       break categories you'll need to first <a href="{{ categories_url }}" class="alert-link">
       add them in the Edit Database area</a>, then return to this page to set team's eligibility.
-    {% endblocktrans %}
+    {% endblocktranslate %}
     {% include 'components/alert.html' with type='warning' %}
   {% endif %}
 {% endblock %}

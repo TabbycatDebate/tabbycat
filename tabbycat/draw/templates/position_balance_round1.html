@@ -3,6 +3,6 @@
 
 {% block page-alerts %}
   {% roundurl 'availability-index' as checkins_url %}
-  {% trans "Position balance reports aren't computed for the first round of a tournament." as message %}
+  {% translate "Position balance reports aren't computed for the first round of a tournament." as message %}
   {% include 'components/alert.html' with type="info" %}
 {% endblock %}

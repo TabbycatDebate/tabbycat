@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load add_field_css static debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">🏫</span> {% trans "Add Institutions" context "page title" %}
-{% blocktrans trimmed with step=wizard.steps.step1 count=wizard.steps.count %}(Step {{ step }} of {{ count }}){% endblocktrans %}{% endblock %}
-{% block page-title %}{% trans "Add Institutions" context "page title" %}{% endblock %}
+{% block head-title %}<span class="emoji">🏫</span> {% translate "Add Institutions" context "page title" %}
+{% blocktranslate trimmed with step=wizard.steps.step1 count=wizard.steps.count %}(Step {{ step }} of {{ count }}){% endblocktranslate %}{% endblock %}
+{% block page-title %}{% translate "Add Institutions" context "page title" %}{% endblock %}
 
 {% block content %}
 
@@ -14,7 +14,7 @@
   {{ wizard.form.management_form }}
 
   <div class="mb-3">
-    <button type="submit" class="btn btn-outline-primary" name="wizard_goto_step" value="{{ wizard.steps.prev }}"><i data-feather="chevron-left"></i>{% trans "Previous Step" %}</button>
+    <button type="submit" class="btn btn-outline-primary" name="wizard_goto_step" value="{{ wizard.steps.prev }}"><i data-feather="chevron-left"></i>{% translate "Previous Step" %}</button>
   </div>
 
   <div class="row">
@@ -34,7 +34,7 @@
 
         {% endfor %}
 
-        {% trans "Save All Institutions" as title %}
+        {% translate "Save All Institutions" as title %}
         {% include "components/form-submit.html" %}
 
       </div>

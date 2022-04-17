@@ -3,6 +3,6 @@
 
 {% block page-alerts %}
   {% roundurl 'availability-index' as checkins_url %}
-  {% trans "Position balance reports are only available for British Parliamentary tournaments." as message %}
+  {% translate "Position balance reports are only available for British Parliamentary tournaments." as message %}
   {% include 'components/alert.html' with type="info" %}
 {% endblock %}

@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load static debate_tags add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">👯</span> {% trans 'Add Teams' context 'page title' %}
-{% blocktrans trimmed with step=wizard.steps.step1 count=wizard.steps.count %}(Step {{ step }} of {{ count }}){% endblocktrans %}{% endblock %}
-{% block page-title %}{% trans 'Add Teams' context 'page title' %}{% endblock %}
+{% block head-title %}<span class="emoji">👯</span> {% translate 'Add Teams' context 'page title' %}
+{% blocktranslate trimmed with step=wizard.steps.step1 count=wizard.steps.count %}(Step {{ step }} of {{ count }}){% endblocktranslate %}{% endblock %}
+{% block page-title %}{% translate 'Add Teams' context 'page title' %}{% endblock %}
 
 {% block content %}
 
@@ -12,24 +12,24 @@
   <div class="alert alert-warning" role="alert">
     <i data-feather="alert-circle"></i>
     {% tournamenturl 'importer-simple-institutions' as import_institutions_url %}
-    {% blocktrans trimmed %}
+    {% blocktranslate trimmed %}
       You need to
       <a href="{{ import_institutions_url }}" class="alert-link">add institutions</a>
       before adding teams.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   </div>
 
 {% else %}
 
-  {% blocktrans trimmed asvar p1 %}
+  {% blocktranslate trimmed asvar p1 %}
     Specify the number of new teams to add per institution. In the next step
     you can specify team and speaker names.
-  {% endblocktrans %}
-  {% blocktrans trimmed asvar p2 %}
+  {% endblocktranslate %}
+  {% blocktranslate trimmed asvar p2 %}
     You can add up to 141 teams at a time. If you have more than 141 teams,
     split them into chunks. (Please don't try to add more than 141 in one go;
     the system will crash and you will lose data.)
-  {% endblocktrans %}
+  {% endblocktranslate %}
   {% include "components/explainer-card.html" with type="info" %}
 
   <form method="POST">
@@ -57,7 +57,7 @@
           </li>
         {% endfor %}
 
-        {% trans "Next Step" context "button" as title %}
+        {% translate "Next Step" context "button" as title %}
         {% include "components/form-submit.html" %}
 
       </ul>

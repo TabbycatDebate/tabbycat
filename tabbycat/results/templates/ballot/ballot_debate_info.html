@@ -3,7 +3,7 @@
 <div class="card mt-3">
   <div class="list-group list-group-flush">
 
-    {% trans "Debate Information" as title %}
+    {% translate "Debate Information" as title %}
     {% include "components/form-title.html" %}
 
     {% if form.choose_sides %}
@@ -39,10 +39,10 @@
           <select class="required custom-select form-control" id="hasIron" name="iron"
                   tabindex="{{ form.irontabindex }}" required="" aria-required="true">
             <option value="0">
-              {% trans "No speakers spoke twice (no 'iron-person' speeches)" %}
+              {% translate "No speakers spoke twice (no 'iron-person' speeches)" %}
             </option>
             <option value="1">
-              {% trans "A speaker spoke twice (an 'iron-person' speech)" %}
+              {% translate "A speaker spoke twice (an 'iron-person' speech)" %}
             </option>
           </select>
         </div>

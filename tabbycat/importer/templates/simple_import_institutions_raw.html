@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load static debate_tags add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">🏫</span> {% trans "Add Institutions" context "page title" %}
-{% blocktrans trimmed with step=wizard.steps.step1 count=wizard.steps.count %}(Step {{ step }} of {{ count }}){% endblocktrans %}{% endblock %}
-{% block page-title %}{% trans "Add Institutions" context "page title" %}{% endblock %}
+{% block head-title %}<span class="emoji">🏫</span> {% translate "Add Institutions" context "page title" %}
+{% blocktranslate trimmed with step=wizard.steps.step1 count=wizard.steps.count %}(Step {{ step }} of {{ count }}){% endblocktranslate %}{% endblock %}
+{% block page-title %}{% translate "Add Institutions" context "page title" %}{% endblock %}
 
 {% block content %}
 
@@ -27,7 +27,7 @@ Universiti Teknologi MARA,UTMARA</code></pre>
 
         {% if wizard.form.institutions_raw.errors %}
           <div class="alert alert-danger">
-            <p>{% trans "There are some problems with the data on this form:" %}</p>
+            <p>{% translate "There are some problems with the data on this form:" %}</p>
             {{ wizard.form.institutions_raw.errors }}
           </div>
         {% endif %}
@@ -38,7 +38,7 @@ Universiti Teknologi MARA,UTMARA</code></pre>
 
       </div>
 
-      {% trans "Next Step" as title %}
+      {% translate "Next Step" as title %}
       {% include "components/form-submit.html" %}
 
     </div>

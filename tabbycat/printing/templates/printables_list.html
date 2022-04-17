@@ -6,9 +6,9 @@
 {% block body-class %}override-sidebar-offset{% endblock %}
 
 {% block page-alerts %}
-  {% blocktrans trimmed asvar p1 %}
+  {% blocktranslate trimmed asvar p1 %}
     Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate <strong>page orientation</strong>, to turn off <strong>headers/footers</strong> and turn on <strong>background graphics</strong>. Works best in Chrome.
-  {% endblocktrans %}
+  {% endblocktranslate %}
   {% include "components/explainer-card.html" with type="info" %}
 {% endblock %}
 
