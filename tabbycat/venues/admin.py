@@ -4,12 +4,13 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 from gfklookupwidget.widgets import GfkLookupWidget
 
 from availability.admin import RoundAvailabilityInline
+from utils.admin import ModelAdmin
 
 from .models import Venue, VenueCategory, VenueConstraint
 
 
 @admin.register(Venue)
-class VenueAdmin(admin.ModelAdmin):
+class VenueAdmin(ModelAdmin):
     list_display = ('display_name', 'priority', 'tournament', 'categories_list')
     list_filter = ('venuecategory', 'priority', 'tournament')
     search_fields = ('name',)
@@ -24,7 +25,7 @@ class VenueAdmin(admin.ModelAdmin):
 
 
 @admin.register(VenueCategory)
-class VenueCategoryAdmin(admin.ModelAdmin):
+class VenueCategoryAdmin(ModelAdmin):
     list_display = ('name', 'description', 'display_in_venue_name',
             'display_in_public_tooltip', 'venues_list')
     ordering = ('name',)
@@ -49,7 +50,7 @@ class VenueConstraintModelForm(forms.ModelForm):
 
 
 @admin.register(VenueConstraint)
-class VenueConstraintAdmin(admin.ModelAdmin):
+class VenueConstraintAdmin(ModelAdmin):
     form = VenueConstraintModelForm
     list_display = ('subject', 'category', 'priority')
     search_fields = ('adjudicator__name', 'adjudicator__institution__code',

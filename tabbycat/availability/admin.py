@@ -1,11 +1,13 @@
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline
 
+from utils.admin import ModelAdmin
+
 from .models import RoundAvailability
 
 
 @admin.register(RoundAvailability)
-class RoundAvailabilityAdmin(admin.ModelAdmin):
+class RoundAvailabilityAdmin(ModelAdmin):
     list_display = ('content_object', 'content_type', 'round')
     list_filter = ('content_type__model', 'round')
 

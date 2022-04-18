@@ -1,10 +1,41 @@
 from django.contrib import admin
+from django.contrib.admin.options import get_content_type_for_model
+
+from .misc import get_ip_address
 
 """ General utilities for extending filters/lists in the admin area """
 
 # ==============================================================================
 # Utilities
 # ==============================================================================
+
+
+class ModelAdmin(admin.ModelAdmin):
+
+    def add_ip_to_message(self, request, message):
+        ip_address = get_ip_address(request)
+        if type(message) is list:  # JSON
+            message.append({'identity': {'ip': ip_address}})
+        else:
+            message += "\nIP: %s" % (ip_address,)
+        return message
+
+    def log_addition(self, request, object, message):
+        return super().log_addition(request, object, self.add_ip_to_message(request, message))
+
+    def log_change(self, request, object, message):
+        return super().log_change(request, object, self.add_ip_to_message(request, message))
+
+    def log_deletion(self, request, object, object_repr, message=[]):
+        from django.contrib.admin.models import DELETION, LogEntry
+        return LogEntry.objects.log_action(
+            user_id=request.user.pk,
+            content_type_id=get_content_type_for_model(object).pk,
+            object_id=object.pk,
+            object_repr=object_repr,
+            action_flag=DELETION,
+            message=self.add_ip_to_message(request),
+        )
 
 
 class TabbycatModelAdminFieldsMixin:

@@ -1,10 +1,12 @@
 from django.contrib import admin
 
+from utils.admin import ModelAdmin
+
 from .models import DebateIdentifier, Event, PersonIdentifier, VenueIdentifier
 
 
 @admin.register(PersonIdentifier)
-class PersonIdentifierAdmin(admin.ModelAdmin):
+class PersonIdentifierAdmin(ModelAdmin):
     base_model = PersonIdentifier
     list_display = ('person', 'barcode')
     list_filter = ('person__adjudicator__institution', 'person__speaker__team__institution')
@@ -13,7 +15,7 @@ class PersonIdentifierAdmin(admin.ModelAdmin):
 
 
 @admin.register(DebateIdentifier)
-class DebateIdentifierAdmin(admin.ModelAdmin):
+class DebateIdentifierAdmin(ModelAdmin):
     base_model = DebateIdentifier
     list_display = ('debate', 'barcode')
     list_filter = ('debate__round',)
@@ -21,7 +23,7 @@ class DebateIdentifierAdmin(admin.ModelAdmin):
 
 
 @admin.register(VenueIdentifier)
-class VenueIdentifierAdmin(admin.ModelAdmin):
+class VenueIdentifierAdmin(ModelAdmin):
     base_model = VenueIdentifier
     list_display = ('venue', 'barcode')
     list_filter = ('venue__venuecategory',)
@@ -29,7 +31,7 @@ class VenueIdentifierAdmin(admin.ModelAdmin):
 
 
 @admin.register(Event)
-class CheckinEventAdmin(admin.ModelAdmin):
+class CheckinEventAdmin(ModelAdmin):
     list_display = ('identifier', 'polymorphic_ctype', 'checkin_time')
     list_filter = ('identifier', 'identifier__polymorphic_ctype')
 

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils import timezone
 
-from utils.admin import TabbycatModelAdminFieldsMixin
+from utils.admin import ModelAdmin, TabbycatModelAdminFieldsMixin
 
 from .models import BulkNotification, EmailStatus, SentMessage
 
@@ -14,7 +14,7 @@ def precise_timestamp_isoformat(model, field_name):
 
 
 @admin.register(SentMessage)
-class SentMessageAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
+class SentMessageAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_display = ('recipient', 'email', 'precise_timestamp', 'notification')
     list_filter = ('notification__round', 'method', 'notification__event')
     search_fields = ('message_id', 'recipient__name', 'email', 'recipient__email')
@@ -27,7 +27,7 @@ class SentMessageAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
 
 
 @admin.register(BulkNotification)
-class BulkNotificationAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
+class BulkNotificationAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_display = ('precise_timestamp', 'event', 'round', 'tournament')
     list_filter = ('tournament', 'round', 'event')
     ordering = ('-timestamp',)
@@ -39,7 +39,7 @@ class BulkNotificationAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
 
 
 @admin.register(EmailStatus)
-class EmailStatusAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
+class EmailStatusAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_display = ('email', 'event', 'precise_timestamp')
     list_filter = ('event',)
     ordering = ('-timestamp',)
