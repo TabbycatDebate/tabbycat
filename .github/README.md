@@ -19,7 +19,7 @@ Tabbycat is a draw tabulation system for British Parliamentary and a variety of 
 
 ## 🔍 Features
 
-- A range of deployment options — Tabbycat will run on Calico (a paid hosted service), Render or Heroku (free hosted services), and local installations (natively or via Docker)
+- A range of setup options. Tabbycat powers Calico, a paid service for hosting tournaments. Tabbycat can also run as a local installation (natively, or via Docker) and be deployed to the free-tiers of the Render or Heroku platforms.
 - Enter data from multiple computers simultaneously and (optionally) display results, draws, and other information online
 - Collect ballots and feedback online, or from printed forms customised for each round ( adjudicator feedback questions and rankings [are configurable](http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html))
 - Automated adjudicator allocations based on adjudicator ranking, debate priority, and conflicts/clashes
@@ -39,9 +39,9 @@ Tabbycat can be deployed in a number of ways.
 
 [![Deploy](https://raw.githubusercontent.com/gist/tienne-B/fc04ecd3c11a38424b642b4bba60e8d9/raw/b2c71d7d6a0d368d3e9dfd8002af729d155ad09b/calicodeploy.svg)](https://calicotab.com/tournaments/new/)
 
-Tabbycat is **no longer available as a 1-click Heroku installation** on the Heroku web platform. If you do not want to use Calico, you have a few alternate options:
+Tabbycat is **no longer available as a 1-click Heroku installation**. If you do not want to use Calico, you have a few alternate options:
 
-1. For online tournaments where long-term data preservation is unnecessary, we have [a 1-click installer that uses the Render platform](https://tabbycat.readthedocs.io/en/stable/install/render.html) and runs using its free tier of services
+1. For online tournaments where long-term data preservation is unnecessary, we have [a 1-click installer that uses the Render platform](https://tabbycat.readthedocs.io/en/stable/install/render.html) and runs within its free tier of services
 2. For tournaments where online access is unnecessary, you can [install and run Tabbycat from your own computer](https://tabbycat.readthedocs.io/en/stable/install/local.html)
 3. For online tournaments in general, you can still deploy to Heroku, [but will need to run a script from your computer's command line](https://tabbycat.readthedocs.io/en/stable/install/heroku.html)
 
