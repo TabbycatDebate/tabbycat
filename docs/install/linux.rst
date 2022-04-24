@@ -37,7 +37,7 @@ Short version
 
 Then create **settings/local.py** as described :ref:`below <local-settings-linux>`, then::
 
-  pipenv install
+  pipenv install --deploy
   npm ci
   pipenv shell
 
@@ -181,7 +181,7 @@ a. Navigate to your Tabbycat directory::
 
 b. Install the Python packages specified in the Pipfile using `Pipenv <https://pipenv.pypa.io/en/latest/>`_ (this also creates a virtual environment), and install the Node.js packages specified in package.json using `npm`::
 
-    $ pipenv install
+    $ pipenv install --deploy
     $ npm ci
 
 c. Navigate to the **tabbycat/settings** sub folder and copy **local.example** to **local.py**. Find this part in your new **local.py**, and fill in the blanks as indicated:

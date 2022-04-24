@@ -177,7 +177,7 @@ b. Make a copy of **settings\\local.example** and rename it to **settings\\local
 c. Install Pipenv. Then install the Python packages specified in the Pipfile using `Pipenv <https://pipenv.pypa.io/en/latest/>`_ (this also creates a virtual environment), and install the Node.js packages specified in package.json using `npm`::
 
     > pip install --user pipenv
-    > pipenv install
+    > pipenv install --deploy
     > npm ci
 
   .. attention:: If you get an error message saying that the script isn't digitally signed, open a PowerShell with administrator privileges by right-clicking PowerShell in the Start meny and clicking "Run as administrator". Then run this command::
