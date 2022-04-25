@@ -178,7 +178,7 @@ c. Install Pipenv. Then install the Python packages specified in the Pipfile usi
 
     > pip install --user pipenv
     > pipenv install
-    > npm install
+    > npm ci
 
   .. attention:: If you get an error message saying that the script isn't digitally signed, open a PowerShell with administrator privileges by right-clicking PowerShell in the Start meny and clicking "Run as administrator". Then run this command::
 
