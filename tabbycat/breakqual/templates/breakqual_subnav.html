@@ -2,16 +2,16 @@
 
 <div class="btn-group">
   <a class="btn btn-outline-primary" href="{% tournamenturl 'breakqual-index' %}">
-    {% trans "Overview" %}
+    {% translate "Overview" %}
   </a>
   {% for category in tournament.breakcategory_set.all %}
     <a class="btn btn-outline-primary" href="{% tournamenturl 'breakqual-teams' category.slug %}">
-      {% blocktrans trimmed with category=category.name %}
+      {% blocktranslate trimmed with category=category.name %}
         {{ category }} Break
-      {% endblocktrans %}
+      {% endblocktranslate %}
     </a>
   {% endfor %}
   <a class="btn btn-outline-primary" href="{% tournamenturl 'breakqual-adjudicators' %}">
-    {% trans "Adjudicators' Break" %}
+    {% translate "Adjudicators' Break" %}
   </a>
 </div>

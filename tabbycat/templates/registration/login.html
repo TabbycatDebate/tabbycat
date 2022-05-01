@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load add_field_css i18n %}
 
-{% block page-title %}🔓{% trans "Login" context "page title" %}{% endblock %}
+{% block page-title %}🔓{% translate "Login" context "page title" %}{% endblock %}
 {% block head-title %}{% endblock %}
 
 {% block nav %}{% endblock %}
@@ -26,7 +26,7 @@
         <div class="list-group list-group-flush">
         <form id="login" action="." method="POST">
 
-          {% trans "Log in to Tabbycat" context "page title" as title %}
+          {% translate "Log in to Tabbycat" context "page title" as title %}
           {% include "components/form-title.html" with icon="lock" %}
 
           <div class="list-group-item pt-4 pb-4">
@@ -34,7 +34,7 @@
             {% csrf_token %}
 
             {% if form.errors %}
-              {% trans "Your username and password didn't match." as message %}
+              {% translate "Your username and password didn't match." as message %}
               {% for error in form.errors %}
                 {% include "components/form-errors.html" with errors=form.errors %}
               {% endfor %}
@@ -43,10 +43,10 @@
             {% if next %}
 
               {% if user.is_authenticated %}
-                {% trans "Your account doesn't have access to this page. To proceed, please log in with an account that has access." as message %}
+                {% translate "Your account doesn't have access to this page. To proceed, please log in with an account that has access." as message %}
                 {% include "components/alert.html" with type="warning" %}
               {% else %}
-                {% trans "Please log in to see this page." as message %}
+                {% translate "Please log in to see this page." as message %}
                 {% include "components/alert.html" with type="danger" %}
               {% endif %}
             {% endif %}
@@ -58,8 +58,8 @@
           </div>
 
           <input type="hidden" name="next" value="{{ next }}" />
-          {% trans "Log In" context "button" as title %}
-          {% trans "I forgot my password" context "button" as subtitle %}
+          {% translate "Log In" context "button" as title %}
+          {% translate "I forgot my password" context "button" as subtitle %}
           {% url 'password_reset' as suburl %}
           {% include "components/form-submit.html" %}
 

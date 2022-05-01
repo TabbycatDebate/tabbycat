@@ -2,7 +2,7 @@
 # run the application specified. docker-compose does not use this.
 
 # Grab a python image
-FROM python:3.8
+FROM python:3.9
 
 # Just needed for all things python (note this is setting an env variable)
 ENV PYTHONUNBUFFERED 1

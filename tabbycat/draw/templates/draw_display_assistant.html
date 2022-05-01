@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load debate_tags i18n %}
 
-{% block head-title %}📺 {% trans "Display Draw" %}{% endblock %}
-{% block page-title %}{% trans "Display Draw" %}{% endblock %}
+{% block head-title %}📺 {% translate "Display Draw" %}{% endblock %}
+{% block page-title %}{% translate "Display Draw" %}{% endblock %}
 
 {% block content %}
 
@@ -10,40 +10,40 @@
   <div class="col-md-12">
     <ul class="list-group">
 
-      {% trans "(for the briefing room)" as briefing_room_subtext %}
+      {% translate "(for the briefing room)" as briefing_room_subtext %}
 
       {% if tournament.current_rounds|length == 1 %}
 
         {% tournamenturl 'draw-assistant-display-current-rounds-by-venue' as url %}
-        {% trans "Display Draw ordered by Room" as text %}
+        {% translate "Display Draw ordered by Room" as text %}
         {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="🏫" blank=True %}
 
         {% tournamenturl 'draw-assistant-display-current-rounds-by-team' as url %}
-        {% trans "Display Draw ordered by Team" as text %}
+        {% translate "Display Draw ordered by Team" as text %}
         {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="👭" blank=True %}
 
       {% else %}
 
         {% tournamenturl 'draw-assistant-display-current-rounds-by-venue' as url %}
-        {% trans "Display Draws for <strong>All Current Rounds</strong> ordered by Room" as text %}
+        {% translate "Display Draws for <strong>All Current Rounds</strong> ordered by Room" as text %}
         {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="🏫" blank=True %}
 
         {% tournamenturl 'draw-assistant-display-current-rounds-by-team' as url %}
-        {% trans "Display Draws for <strong>All Current Rounds</strong> ordered by Team" as text %}
+        {% translate "Display Draws for <strong>All Current Rounds</strong> ordered by Team" as text %}
         {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="👭" blank=True %}
 
         {% for round in tournament.current_rounds %}
 
           {% roundurl 'draw-assistant-display-specific-round-by-venue' round as url %}
-          {% blocktrans trimmed with round=round.name asvar text %}
+          {% blocktranslate trimmed with round=round.name asvar text %}
             Display Draw for <strong>{{ round }}</strong> ordered by Room
-          {% endblocktrans %}
+          {% endblocktranslate %}
           {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="🏫" blank=True %}
 
           {% roundurl 'draw-assistant-display-specific-round-by-team' round as url %}
-          {% blocktrans trimmed with round=round.name asvar text %}
+          {% blocktranslate trimmed with round=round.name asvar text %}
             Display Draw for <strong>{{ round }}</strong> ordered by Team
-          {% endblocktrans %}
+          {% endblocktranslate %}
           {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="👭" blank=True %}
 
         {% endfor %}
@@ -52,23 +52,23 @@
 
       {% if pref.assistant_access == "all_areas" %}
         {% tournamenturl 'motions-assistant-display' as url %}
-        {% trans "Display Motions" as text %}
+        {% translate "Display Motions" as text %}
         {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="📃" blank=True %}
       {% endif %}
 
     </ul>
     <ul class="list-group mt-3">
 
-      {% trans "(for printing)" as printing_subtext %}
+      {% translate "(for printing)" as printing_subtext %}
 
       {% if pref.assistant_access == "all_areas" %}
         {% tournamenturl 'printing-assistant-scoresheets' as url %}
-        {% trans "View Ballot Forms" as text %}
+        {% translate "View Ballot Forms" as text %}
         {% include "components/item-action.html" with subtext=printing_subtext emoji="💯" %}
       {% endif %}
 
       {% tournamenturl 'printing-assistant-feedback' as url %}
-      {% trans "View Feedback Forms" as text %}
+      {% translate "View Feedback Forms" as text %}
       {% include "components/item-action.html" with subtext=printing_subtext emoji="🙅" %}
 
     </ul>

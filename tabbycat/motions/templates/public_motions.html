@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load static i18n %}
 
-{% block head-title %}{% trans "Motions" %}{% endblock %}
-{% block page-title %}{% trans "Motions" %}{% endblock %}
+{% block head-title %}{% translate "Motions" %}{% endblock %}
+{% block page-title %}{% translate "Motions" %}{% endblock %}
 
 {% block content %}
 
@@ -29,7 +29,7 @@
                 <div class="pt-md-0 pt-2">
                   <button class="btn btn-sm btn-secondary btn-block"
                           data-toggle="modal" data-target="#info_{{ motion.id }}">
-                    {% trans "View Info Slide" %}
+                    {% translate "View Info Slide" %}
                   </button>
                   {% include 'motions_info.html' %}
                 </div>
@@ -38,18 +38,18 @@
             {% endwith %}
           {% empty %}
             <li class="list-group-item list-group-item-secondary">
-              {% trans "There are no motions available for this round." %}
+              {% translate "There are no motions available for this round." %}
             </li>
           {% endfor %}
         {% elif pref.enable_motions %}
           {# Translators: Used when there are expected to be several motions per round (e.g. Australs) #}
           <li class="list-group-item list-group-item-secondary">
-            {% trans "The motions for this round have not been released." %}
+            {% translate "The motions for this round have not been released." %}
           </li>
         {% else %}
           {# Translators: Used when there is expected to be one motion per round (e.g. WUDC) #}
           <li class="list-group-item list-group-item-secondary">
-            {% trans "The motion for this round has not been released." %}
+            {% translate "The motion for this round has not been released." %}
           </li>
         {% endif %}
       </div>

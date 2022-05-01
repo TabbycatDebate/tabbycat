@@ -3,24 +3,24 @@
 
 {% block page-subnav-sections %}
   <a class="btn btn-outline-primary " href="{% roundurl 'availability-index' %}">
-    <i data-feather="chevron-left"></i> {% trans "Availability" %}
+    <i data-feather="chevron-left"></i> {% translate "Availability" %}
   </a>
 
   <div class="btn-group flex-wrap" role="group">
     <a href="{% roundurl 'edit-debate-teams' round %}" class="btn btn-outline-primary">
-      {% trans "Edit Sides/Matchups" %}
+      {% translate "Edit Sides/Matchups" %}
     </a>
   </div>
   <div class="btn-group flex-wrap" role="group">
     <a href="{% roundurl 'draw-confirm-regenerate' %}" class="btn btn-outline-primary">
-      {% trans "Redo Draw" %}
+      {% translate "Redo Draw" %}
     </a>
     <a href="{% roundurl 'draw-details' %}" class="btn btn-outline-primary">
-      {% trans "Draw Details" %}
+      {% translate "Draw Details" %}
     </a>
     {% if pref.teams_in_debate == 'bp' and round.prev and not round.is_break_round %}
       <a href="{% roundurl 'draw-position-balance' %}" class="btn btn-outline-primary">
-        {% trans "Position Balance" %}
+        {% translate "Position Balance" %}
       </a>
     {% endif %}
   </div>
@@ -28,6 +28,6 @@
 
 {% block page-subnav-actions %}
   <a href="{% roundurl 'draw-display' %}" class="btn btn-outline-success">
-    {% trans "Display Draw" %}<i data-feather="chevron-right"></i>
+    {% translate "Display Draw" %}<i data-feather="chevron-right"></i>
   </a>
 {% endblock %}
