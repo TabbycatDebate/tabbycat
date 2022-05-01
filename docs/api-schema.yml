@@ -2680,7 +2680,10 @@ paths:
         schema:
           type: string
 servers:
-  - url: 'http://localhost:8000/api'
+  - url: 'https://{server}/api'
+    variables:
+      server:
+        default: localhost
 components:
   requestBodies:
     TournamentInstitution:
