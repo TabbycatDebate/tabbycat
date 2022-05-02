@@ -64,6 +64,8 @@ class DebateAdmin(admin.ModelAdmin):
         def _make_set_result_status(value, verbose_name): # noqa: N805
             def _set_result_status(modeladmin, request, queryset):
                 count = queryset.update(result_status=value)
+                for obj in queryset:
+                    modeladmin.log_change(request, obj, [{"changed": {"fields": ["result_status"]}}])
                 message = ngettext("%(count)d debate had its status set to %(status)s.",
                     "%(count)d debates had their statuses set to %(status)s.", count) % {
                         'count': count, 'status': verbose_name}
@@ -80,6 +82,8 @@ class DebateAdmin(admin.ModelAdmin):
 
     def mark_as_sides_confirmed(self, request, queryset):
         updated = queryset.update(sides_confirmed=True)
+        for obj in queryset:
+            self.log_change(request, obj, [{"changed": {"fields": ["sides_confirmed"]}}])
         message = ngettext(
             "%(count)d debate was marked as having its sides confirmed.",
             "%(count)d debates were marked as having their sides confirmed.",
@@ -89,6 +93,8 @@ class DebateAdmin(admin.ModelAdmin):
 
     def mark_as_sides_not_confirmed(self, request, queryset):
         updated = queryset.update(sides_confirmed=False)
+        for obj in queryset:
+            self.log_change(request, obj, [{"changed": {"fields": ["sides_confirmed"]}}])
         message = ngettext(
             "%(count)d debate was marked as having its sides not confirmed.",
             "%(count)d debates were marked as having their sides not confirmed.",

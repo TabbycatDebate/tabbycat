@@ -172,8 +172,10 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
     def mark_as_confirmed(self, request, queryset):
         original_count = queryset.count()
         for fb in queryset.order_by('version').all():
+            # Update them in order to override previous versions (prefer newer)
             fb.confirmed = True
             fb.save()
+            self.log_change(request, fb, [{"changed": {"fields": ["confirmed"]}}])
         final_count = queryset.filter(confirmed=True).count()
 
         message = ngettext(
@@ -201,6 +203,8 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
 
     def mark_as_unconfirmed(self, request, queryset):
         count = queryset.update(confirmed=False)
+        for fb in queryset:
+            self.log_change(request, fb, [{"changed": {"fields": ["confirmed"]}}])
         message = ngettext(
             "1 feedback submission was marked as unconfirmed.",
             "%(count)d feedback submissions were marked as unconfirmed.",
@@ -210,6 +214,8 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
 
     def ignore_feedback(self, request, queryset):
         count = queryset.update(ignored=True)
+        for fb in queryset:
+            self.log_change(request, fb, [{"changed": {"fields": ["ignored"]}}])
 
         message = ngettext(
             "1 feedback submission is now ignored.",
@@ -220,6 +226,8 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
 
     def recognize_feedback(self, request, queryset):
         count = queryset.update(ignored=False)
+        for fb in queryset:
+            self.log_change(request, fb, [{"changed": {"fields": ["ignored"]}}])
 
         message = ngettext(
             "1 feedback submission is now recognized.",
