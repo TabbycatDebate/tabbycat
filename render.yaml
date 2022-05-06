@@ -39,6 +39,8 @@ services:
         sync: false
       - key: ON_RENDER
         value: true
+      - key: USING_NGINX
+        value: 0 # Not 'false'; is cast
   - type: redis
     name: tabbycat_redis
     ipAllowList: # required

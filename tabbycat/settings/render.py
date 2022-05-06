@@ -15,7 +15,7 @@ from .core import TABBYCAT_VERSION
 
 # Store Tab Director Emails for reporting purposes
 if os.environ.get('TAB_DIRECTOR_EMAIL', ''):
-    TAB_DIRECTOR_EMAIL = environ.get('TAB_DIRECTOR_EMAIL')
+    TAB_DIRECTOR_EMAIL = os.environ.get('TAB_DIRECTOR_EMAIL')
 
 if os.environ.get('DJANGO_SECRET_KEY', ''):
     SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
@@ -46,6 +46,9 @@ DATABASES = {
 # ==============================================================================
 # Redis
 # ==============================================================================
+
+REDIS_HOST = os.environ.get('REDIS_HOST')
+REDIS_PORT = os.environ.get('REDIS_PORT')
 
 CACHES = {
     "default": {
