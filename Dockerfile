@@ -6,6 +6,8 @@ FROM python:3.9
 
 # Just needed for all things python (note this is setting an env variable)
 ENV PYTHONUNBUFFERED 1
+# Needed for correct settings input
+ENV IN_DOCKER 1
 
 # Setup Node/NPM
 RUN apt-get update

@@ -179,7 +179,7 @@ run_heroku_command(["buildpacks:add", "heroku/nodejs"])
 run_heroku_command(["buildpacks:add", "heroku/python"])
 
 # Set config variables
-command = ["config:set", "DISABLE_COLLECTSTATIC=1", "ON_HEROKU=1"]
+command = ["config:set", "DISABLE_COLLECTSTATIC=1", "ON_HEROKU=1", "USING_NGINX=1"]
 secret_key = get_random_secret_key()
 
 if platform.system() == "Windows": # Windows shell needs escaping

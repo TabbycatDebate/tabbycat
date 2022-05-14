@@ -18,9 +18,11 @@ services:
       - DEBUG=0
       - DOCKER_REDIS=1
       - IN_DOCKER=1
+      - USING_NGINX=1
 
   worker:
     environment:
       - DEBUG=0
       - DOCKER_REDIS=1
       - IN_DOCKER=1
+      - USING_NGINX=1

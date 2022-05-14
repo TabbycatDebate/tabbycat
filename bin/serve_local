@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-set -eo pipefail
-
-npm run build
-cd ./tabbycat/
-uvicorn asgi:application --port 8000
