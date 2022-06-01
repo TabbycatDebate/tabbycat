@@ -39,7 +39,7 @@ whitenoise = "*"
 
 [dev-packages]
 pre-commit = "*"
-selenium = "==3.141.*"
+selenium = "==4.2.*"
 django-debug-toolbar = "*"
 sphinx = "*"
 sphinx-autobuild = "*"
