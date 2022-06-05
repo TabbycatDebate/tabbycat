@@ -41,6 +41,82 @@ def _validate_field(self, field, value):
     return value
 
 
+class BaseSourceField(fields.TournamentHyperlinkedRelatedField):
+    """Taken from REST_Framework: rest_framework.relations.HyperlinkedRelatedField
+
+    This subclass adapts the framework in order to have a hyperlinked field which
+    is dynamic on the model of object given or taken; merging into one field, as
+    well as using an attribute from it, which would not be possible for fear of
+    nulls."""
+
+    view_name = ''  # View and model/queryset is dynamic on the object
+
+    def get_queryset(self):
+        return self.model.objects.all()
+
+    def get_attribute(self, obj):
+        return obj
+
+    def to_representation(self, value):
+        format = self.context.get('format', None)
+        if format and self.format and self.format != format:
+            format = self.format
+
+        # Return the hyperlink, or error if incorrectly configured.
+        url = self.get_url_options(value, format)
+
+        if url is None:
+            return None
+
+        return Hyperlink(url, value)
+
+    def to_internal_value(self, data):
+        self.source_attrs = [self.field_source_name]  # Must set
+
+        # Was the value already entered?
+        if isinstance(data, tuple(model for model, field in self.models.values())):
+            return data
+
+        try:
+            http_prefix = data.startswith(('http:', 'https:'))
+        except AttributeError:
+            self.fail('incorrect_type', data_type=type(data).__name__)
+
+        if http_prefix:
+            # If needed convert absolute URLs to relative path
+            data = parse.urlparse(data).path
+            prefix = get_script_prefix()
+            if data.startswith(prefix):
+                data = '/' + data[len(prefix):]
+
+        data = uri_to_iri(data)
+        try:
+            match = resolve(data)
+        except Resolver404:
+            self.fail('no_match')
+
+        self.model = {view: model for view, (model, field) in self.models.items()}[match.view_name]
+
+        try:
+            return self.get_object(match.view_name, match.args, match.kwargs)
+        except self.model.DoesNotExist:
+            self.fail('does_not_exist')
+
+
+class ParticipantSourceField(BaseSourceField):
+    field_source_name = 'participant_submitter'
+    models = {
+        'api-speaker-detail': (Speaker, 'participant_submitter'),
+        'api-adjudicator-detail': (Adjudicator, 'participant_submitter'),
+    }
+
+    def get_url_options(self, value, format):
+        for view_name, (model, field) in self.models.items():
+            obj = getattr(value.participant_submitter, model.__name__.lower(), None)
+            if obj is not None:
+                return self.get_url(obj, view_name, self.context['request'], format)
+
+
 class VenueConstraintSerializer(serializers.ModelSerializer):
     category = fields.TournamentHyperlinkedRelatedField(view_name='api-venuecategory-detail', queryset=VenueCategory.objects.all())
 
@@ -830,67 +906,6 @@ class FeedbackQuestionSerializer(serializers.ModelSerializer):
 
 class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer):
 
-    class BaseSourceField(fields.TournamentHyperlinkedRelatedField):
-        """Taken from REST_Framework: rest_framework.relations.HyperlinkedRelatedField
-
-        This subclass adapts the framework in order to have a hyperlinked field which
-        is dynamic on the model of object given or taken; merging into one field, as
-        well as using an attribute from it, which would not be possible for fear of
-        nulls."""
-
-        view_name = ''  # View and model/queryset is dynamic on the object
-
-        def get_queryset(self):
-            return self.model.objects.all()
-
-        def get_attribute(self, obj):
-            return obj
-
-        def to_representation(self, value):
-            format = self.context.get('format', None)
-            if format and self.format and self.format != format:
-                format = self.format
-
-            # Return the hyperlink, or error if incorrectly configured.
-            url = self.get_url_options(value, format)
-
-            if url is None:
-                return None
-
-            return Hyperlink(url, value)
-
-        def to_internal_value(self, data):
-            self.source_attrs = [self.field_source_name]  # Must set
-
-            # Was the value already entered?
-            if isinstance(data, tuple(model for model, field in self.models.values())):
-                return data
-
-            try:
-                http_prefix = data.startswith(('http:', 'https:'))
-            except AttributeError:
-                self.fail('incorrect_type', data_type=type(data).__name__)
-
-            if http_prefix:
-                # If needed convert absolute URLs to relative path
-                data = parse.urlparse(data).path
-                prefix = get_script_prefix()
-                if data.startswith(prefix):
-                    data = '/' + data[len(prefix):]
-
-            data = uri_to_iri(data)
-            try:
-                match = resolve(data)
-            except Resolver404:
-                self.fail('no_match')
-
-            self.model = {view: model for view, (model, field) in self.models.items()}[match.view_name]
-
-            try:
-                return self.get_object(match.view_name, match.args, match.kwargs)
-            except self.model.DoesNotExist:
-                self.fail('does_not_exist')
-
     class SubmitterSourceField(BaseSourceField):
         field_source_name = 'source'
         models = {
@@ -902,19 +917,6 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
             for view_name, (model, field) in self.models.items():
                 if getattr(value, field) is not None:
                     return self.get_url(getattr(getattr(value, field), model.__name__.lower()), view_name, self.context['request'], format)
-
-    class ParticipantSourceField(BaseSourceField):
-        field_source_name = 'participant_submitter'
-        models = {
-            'api-speaker-detail': (Speaker, 'participant_submitter'),
-            'api-adjudicator-detail': (Adjudicator, 'participant_submitter'),
-        }
-
-        def get_url_options(self, value, format):
-            for view_name, (model, field) in self.models.items():
-                obj = getattr(value.participant_submitter, model.__name__.lower(), None)
-                if obj is not None:
-                    return self.get_url(obj, view_name, self.context['request'], format)
 
     class DebateHyperlinkedRelatedField(fields.RoundHyperlinkedRelatedField):
         def lookup_kwargs(self):
@@ -1149,8 +1151,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
     result = ResultSerializer(source='result.get_result_info')
     motion = fields.TournamentHyperlinkedRelatedField(view_name='api-motion-detail', required=False, queryset=Motion.objects.all())
     url = fields.DebateHyperlinkedIdentityField(view_name='api-ballot-detail')
-    participant_submitter = fields.TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail',
-        queryset=Adjudicator.objects.all(), source='participant_submitter.adjudicator', allow_null=True)
+    participant_submitter = ParticipantSourceField(allow_null=True)
 
     class Meta:
         model = BallotSubmission
