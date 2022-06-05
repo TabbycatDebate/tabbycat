@@ -8,7 +8,7 @@ from adjallocation.models import AdjudicatorAdjudicatorConflict, DebateAdjudicat
 from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
 from draw.models import Debate, DebateTeam
-from motions.models import DebateTeamMotionPreference, Motion
+from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
 from options.presets import (AustralianEastersPreferences, AustralsPreferences, BritishParliamentaryPreferences,
                              CanadianParliamentaryPreferences, JoyntPreferences, NZEastersPreferences, save_presets,
                              UADCPreferences, WSDCPreferences)
@@ -602,13 +602,16 @@ class Importer:
                 motions_by_round[r_obj.id].add(debate.get('motion'))
 
         for motion in self.root.findall('motion'):
+            motion_obj = Motion(
+                text=motion.text, reference=motion.get('reference'),
+                info_slide=getattr(motion.find('info-slide'), 'text', ''), tournament=self.tournament)
+            motion_obj.save()
+            self.motions[motion.get('id')] = motion_obj
+
             for r, m_set in motions_by_round.items():
                 if motion.get('id') in m_set:
-                    motion_obj = Motion(
-                        seq=seq_by_round[r], text=motion.text, reference=motion.get('reference'),
-                        info_slide=getattr(motion.find('info-slide'), 'text', ''), round_id=r)
-                    motion_obj.save()
-                    self.motions[motion.get('id')] = motion_obj
+                    rmotion_obj = RoundMotion(motion=motion_obj, seq=seq_by_round[r], round_id=r)
+                    rmotion_obj.save()
 
     def import_results(self):
         for round in self.root.findall('round'):

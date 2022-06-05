@@ -1,8 +1,8 @@
 {% extends "add_feedback.html" %}
 {% load debate_tags i18n %}
 
-{% block head-title %}{% trans "Who are you?" %}{% endblock %}
-{% block sub-title %}{% trans "click your name or your team on this list" %}{% endblock %}
+{% block head-title %}{% translate "Who are you?" %}{% endblock %}
+{% block sub-title %}{% translate "click your name or your team on this list" %}{% endblock %}
 
 {% block page-subnav-sections %}{% endblock %}
 {% block page-subnav-actions %}{% endblock %}
@@ -10,15 +10,15 @@
 
 {% block enter-feedback-adj-link %}
   <a href="{% tournamenturl 'adjfeedback-public-add-from-adjudicator-pk' adj.id %}">
-    {% blocktrans trimmed with name=adj.name %}
+    {% blocktranslate trimmed with name=adj.name %}
       Add Feedback from {{ name }}
-    {% endblocktrans %}
+    {% endblocktranslate %}
   </a>
 {% endblock %}
 {% block enter-feedback-team-link %}
   <a href="{% tournamenturl 'adjfeedback-public-add-from-team-pk' team.id %}">
-    {% blocktrans trimmed with name=team.long_name %}
+    {% blocktranslate trimmed with name=team.long_name %}
       Add Feedback from {{ name }}
-    {% endblocktrans %}
+    {% endblocktranslate %}
   </a>
 {% endblock %}

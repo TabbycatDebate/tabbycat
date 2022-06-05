@@ -144,6 +144,8 @@ class TeamAdmin(admin.ModelAdmin):
 
     def delete_url_key(self, request, queryset):
         num_speakers = Speaker.objects.filter(team__in=queryset).update(url_key=None)
+        for obj in queryset:
+            self.log_change(request, obj, [{"changed": {"fields": [{"speaker": ["url_key"]}]}}])
         message = ngettext_lazy(
             "%(count)d speaker had their URL key removed.",
             "%(count)d speakers had their URL keys removed.",
@@ -155,6 +157,8 @@ class TeamAdmin(admin.ModelAdmin):
         count = queryset.update(emoji=None)
         for tournament, teams in groupby(queryset.select_related('tournament').order_by('tournament_id'), lambda t: t.tournament):
             set_emoji(list(teams), tournament)
+            for team in teams:
+                self.log_change(request, team, [{"changed": {"fields": ["emoji"]}}])
 
         message = ngettext_lazy(
             "%(count)d team had their emoji reset.",
@@ -165,6 +169,8 @@ class TeamAdmin(admin.ModelAdmin):
 
     def assign_code_names(self, request, queryset):
         count = populate_code_names_from_emoji(queryset, overwrite=True)
+        for obj in queryset:
+            self.log_change(request, obj, [{"changed": {"fields": ["code_name"]}}])
 
         message = ngettext_lazy(
             "%(count)d team had their code name reset.",
@@ -224,6 +230,8 @@ class AdjudicatorAdmin(admin.ModelAdmin):
 
     def delete_url_key(self, request, queryset):
         updated = queryset.update(url_key=None)
+        for obj in queryset:
+            self.log_change(request, obj, [{"changed": {"fields": ["url_key"]}}])
         message = ngettext(
             "%(count)d adjudicator had their URL key removed.",
             "%(count)d adjudicators had their URL keys removed.",

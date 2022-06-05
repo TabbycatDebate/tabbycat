@@ -6,21 +6,21 @@
     <div class="list-group-item">
       <h4 class="card-title mb-0">
         {% if tournament.current_rounds|length == 1 %}
-          {% blocktrans trimmed with round=current_round.name %}
+          {% blocktranslate trimmed with round=current_round.name %}
             In This Round ({{ round }})
-          {% endblocktrans %}
+          {% endblocktranslate %}
         {% else %}
-          {% trans "In This Round" %}
+          {% translate "In This Round" %}
         {% endif %}
         {% if admin_page and not draw_released %}
-          <em>{% trans "(Not Released to Public)" %}</em>
+          <em>{% translate "(Not Released to Public)" %}</em>
         {% endif %}
       </h4>
     </div>
 
     {% if draw_released or admin_page %}
 
-      {% trans "Room TBA" as venue_tba %}
+      {% translate "Room TBA" as venue_tba %}
 
       {% if debateadjudications != None %}
         {% for debateadjudicator in debateadjudications %}
@@ -32,13 +32,13 @@
         <div class="list-group-item">
           <em>
             {% if grammatical_person == "3" %}
-              {% blocktrans trimmed with adjudicator=adjudicator.name %}
+              {% blocktranslate trimmed with adjudicator=adjudicator.name %}
                 {{ adjudicator }} is not adjudicating this round.
-              {% endblocktrans %}
+              {% endblocktranslate %}
             {% else %}
-              {% blocktrans trimmed %}
+              {% blocktranslate trimmed %}
                 You are not adjudicating this round.
-              {% endblocktrans %}
+              {% endblocktranslate %}
             {% endif %}
           </em>
         </div>
@@ -51,13 +51,13 @@
           <div class="list-group-item">
             <em>
               {# This is never in the singular, it's just needed to make pluralization work with i18n. #}
-              {% blocktrans trimmed with team=team_short_name count ndebates=debateteams|length %}
+              {% blocktranslate trimmed with team=team_short_name count ndebates=debateteams|length %}
                 It looks like {{ team }} is competing in {{ ndebates }} debate this round.
               {% plural %}
                 It looks like {{ team }} is competing in {{ ndebates }} debates this round.
-              {% endblocktrans %}
+              {% endblocktranslate %}
               {% if not admin_page %}
-                {% trans "If this is an error, please contact a tab director immediately." %}
+                {% translate "If this is an error, please contact a tab director immediately." %}
               {% endif %}
             </em>
           </div>
@@ -72,13 +72,13 @@
         <div class="list-group-item">
           <em>
             {% if grammatical_person == "3" %}
-              {% blocktrans trimmed with team=team_short_name %}
+              {% blocktranslate trimmed with team=team_short_name %}
                 {{ team }} does not have a debate this round.
-              {% endblocktrans %}
+              {% endblocktranslate %}
             {% else %}
-              {% blocktrans trimmed %}
+              {% blocktranslate trimmed %}
                 You do not have a debate this round.
-              {% endblocktrans %}
+              {% endblocktranslate %}
             {% endif %}
           </em>
         </div>
@@ -88,7 +88,7 @@
     {% else %} {# elif not (draw_released or admin_page) #}
 
       <div class="list-group-item">
-        <em>{% trans "The draw for this round hasn't yet been released." %}</em>
+        <em>{% translate "The draw for this round hasn't yet been released." %}</em>
       </div>
 
     {% endif %} {# draw_released or admin_page #}

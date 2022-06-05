@@ -803,7 +803,7 @@ class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, RoundMixin, Vue
 
         data = [{
             'text': _("Add result from %(adjudicator)s") % {'adjudicator': da.adjudicator.name},
-            'link': reverse_round('old-results-public-ballotset-new-pk', self.tournament, self.round,
+            'link': reverse_round('old-results-public-ballotset-new-pk', self.round,
                     kwargs={'adjudicator_pk': da.adjudicator_id}),
         } for da in debateadjs]
         header = {'key': 'adj', 'title': _("Adjudicator")}
@@ -854,6 +854,7 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
     def populate_objects(self, prefill=True):
         super().populate_objects()
         use_code_names = use_team_code_names_data_entry(self.tournament, True)
+        self.round = self.debate.round
 
         bses = BallotSubmission.objects.filter(
             debate=self.debate, participant_submitter__isnull=False, discarded=False, single_adj=True,
@@ -879,7 +880,7 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
                 msg = _("Duplicate speeches are marked inconsistently, so could not be merged.")
             msg += _(" This error was caught in <a href='%(ballot_url)s'>%(adjudicator)s's ballot</a> for %(speaker)s (%(team)s).")
             messages.error(self.request, msg % args)
-            return HttpResponseRedirect(reverse_round(self.ballot_list_url, self.debate.round))
+            return HttpResponseRedirect(self.get_list_url())
 
         # Handle motion conflicts
         bs_motions = BallotSubmission.objects.filter(
@@ -890,14 +891,14 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
                 merge_motions(self.ballotsub, bs_motions)
             except ValidationError as e:
                 messages.error(self.request, e)
-                return HttpResponseRedirect(reverse_round(self.ballot_list_url, self.debate.round))
+                return HttpResponseRedirect(self.get_list_url())
 
         # Vetos
         try:
             self.vetos = merge_motion_vetos(self.ballotsub, bs_motions)
         except ValidationError as e:
             messages.error(self.request, e)
-            return HttpResponseRedirect(reverse_round(self.ballot_list_url, self.debate.round))
+            return HttpResponseRedirect(self.get_list_url())
 
     def get_all_ballotsubs(self):
         q = super().get_all_ballotsubs()
@@ -909,11 +910,15 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
 
 class AdminMergeLatestBallotsView(OldAdministratorBallotSetMixin, BaseMergeLatestBallotsView):
     edit_ballot_url = 'results-ballotset-edit'
-    ballot_list_url = 'results-round-list'
     for_admin = True
+
+    def get_list_url(self):
+        return reverse_round('results-round-list', self.round)
 
 
 class AssistantMergeLatestBallotsView(OldAssistantBallotSetMixin, BaseMergeLatestBallotsView):
     edit_ballot_url = 'results-assistant-ballotset-edit'
-    ballot_list_url = 'results-assistant-round-list'
     for_admin = False
+
+    def get_list_url(self):
+        return reverse_tournament('results-assistant-round-list', self.tournament)

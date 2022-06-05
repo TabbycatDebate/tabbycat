@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from collections.abc import Mapping
+from functools import partialmethod
 from urllib import parse
 
 from django.core.exceptions import ValidationError as DjangoValidationError
@@ -25,9 +26,27 @@ from results.mixins import TabroomSubmissionFieldsMixin
 from results.models import BallotSubmission
 from results.result import DebateResult
 from tournaments.models import Round, Tournament
-from venues.models import Venue, VenueCategory
+from venues.models import Venue, VenueCategory, VenueConstraint
 
 from . import fields
+
+
+def _validate_field(self, field, value):
+    if value is None:
+        return None
+    qs = self.Meta.model.objects.filter(
+        tournament=self.context['tournament'], **{field: value}).exclude(id=getattr(self.instance, 'id', None))
+    if qs.exists():
+        raise serializers.ValidationError("Object with same value exists in the tournament")
+    return value
+
+
+class VenueConstraintSerializer(serializers.ModelSerializer):
+    category = fields.TournamentHyperlinkedRelatedField(view_name='api-venuecategory-detail', queryset=VenueCategory.objects.all())
+
+    class Meta:
+        model = VenueConstraint
+        fields = ('category', 'priority')
 
 
 class TournamentSerializer(serializers.ModelSerializer):
@@ -102,6 +121,13 @@ class RoundSerializer(serializers.ModelSerializer):
             model = RoundMotion
             exclude = ('round', 'motion')
 
+        def validate_seq(self, value):
+            qs = RoundMotion.objects.filter(
+                round=self.context['round'], seq=value).exclude(id=getattr(self.instance, 'id', None))
+            if qs.exists():
+                raise serializers.ValidationError("Object with same value exists in the round")
+            return value
+
         def create(self, validated_data):
             motion_data = validated_data.pop('motion')
             if '' in motion_data:
@@ -145,8 +171,12 @@ class RoundSerializer(serializers.ModelSerializer):
         model = Round
         exclude = ('tournament',)
 
+    validate_seq = partialmethod(_validate_field, 'seq')
+
     def validate(self, data):
-        if (data.get('break_category') is None) == (data.get('stage', Round.STAGE_ELIMINATION) == Round.STAGE_ELIMINATION):
+        bc = data.get('break_category', getattr(self.instance, 'break_category', None))
+        stage = data.get('stage', getattr(self.instance, 'stage', Round.STAGE_ELIMINATION))
+        if (bc is None) == (stage == Round.STAGE_ELIMINATION):
             # break category is None _XNOR_ stage is elimination
             raise serializers.ValidationError("Rounds are elimination iff they have a break category.")
         return super().validate(data)
@@ -286,6 +316,9 @@ class BreakCategorySerializer(serializers.ModelSerializer):
         model = BreakCategory
         exclude = ('tournament', 'breaking_teams')
 
+    validate_slug = partialmethod(_validate_field, 'slug')
+    validate_seq = partialmethod(_validate_field, 'seq')
+
 
 class SpeakerCategorySerializer(serializers.ModelSerializer):
 
@@ -300,6 +333,9 @@ class SpeakerCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SpeakerCategory
         exclude = ('tournament',)
+
+    validate_slug = partialmethod(_validate_field, 'slug')
+    validate_seq = partialmethod(_validate_field, 'seq')
 
 
 class BaseEligibilitySerializer(serializers.ModelSerializer):
@@ -353,6 +389,13 @@ class BreakingTeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = BreakingTeam
         exclude = ('id', 'break_category')
+
+    def validate_team(self, value):
+        qs = BreakingTeam.objects.filter(
+            break_category=self.context['break_category'], team=value).exclude(id=getattr(self.instance, 'id', None))
+        if qs.exists():
+            raise serializers.ValidationError("Object with same value already exists")
+        return value
 
 
 class PartialBreakingTeamSerializer(BreakingTeamSerializer):
@@ -435,6 +478,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         view_name='api-adjudicator-detail',
         queryset=Adjudicator.objects.all(),
     )
+    venue_constraints = VenueConstraintSerializer(many=True, required=False)
     _links = LinksSerializer(source='*', read_only=True)
 
     def __init__(self, *args, **kwargs):
@@ -445,6 +489,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
             self.fields.pop('institution_conflicts')
             self.fields.pop('team_conflicts')
             self.fields.pop('adjudicator_conflicts')
+            self.fields.pop('venue_constraints')
 
             t = kwargs['context']['tournament']
             if not t.pref('show_adjudicator_institutions'):
@@ -507,6 +552,8 @@ class TeamSerializer(serializers.ModelSerializer):
         queryset=Institution.objects.all(),
     )
 
+    venue_constraints = VenueConstraintSerializer(many=True, required=False)
+
     class Meta:
         model = Team
         exclude = ('tournament', 'type')
@@ -519,6 +566,7 @@ class TeamSerializer(serializers.ModelSerializer):
         # Remove private fields in the public endpoint if needed
         if not kwargs['context']['request'].user.is_staff:
             self.fields.pop('institution_conflicts')
+            self.fields.pop('venue_constraints')
 
             t = kwargs['context']['tournament']
             if t.pref('team_code_names') in ('admin-tooltips-code', 'admin-tooltips-real', 'everywhere'):
@@ -534,9 +582,17 @@ class TeamSerializer(serializers.ModelSerializer):
             if not t.pref('public_break_categories'):
                 self.fields.pop('break_categories')
 
+    validate_emoji = partialmethod(_validate_field, 'emoji')
+
     def validate(self, data):
-        if data.get('use_institution_prefix', False) and data.get('institution') is None:
-            raise serializers.ValidationError("Cannot include institution prefix without institution.")
+        t = self.context['tournament']
+        uniqueness_qs = Team.objects.filter(
+            tournament=t, reference=data['reference'], institution=data['institution']).exclude(id=getattr(self.instance, 'id', None))
+        if data.get('institution') is None:
+            if data.get('use_institution_prefix', False):
+                raise serializers.ValidationError("Cannot include institution prefix without institution.")
+        elif uniqueness_qs.exists():
+            raise serializers.ValidationError("Object with same reference and institution exists in the tournament")
         return super().validate(data)
 
     def create(self, validated_data):
@@ -592,10 +648,17 @@ class TeamSerializer(serializers.ModelSerializer):
 class InstitutionSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='api-global-institution-detail')
     region = fields.CreatableSlugRelatedField(slug_field='name', queryset=Region.objects.all(), required=False)
+    venue_constraints = VenueConstraintSerializer(many=True, required=False)
 
     class Meta:
         model = Institution
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if not kwargs['context']['request'].user.is_staff:
+            self.fields.pop('venue_constraints')
 
 
 class PerTournamentInstitutionSerializer(InstitutionSerializer):
@@ -760,6 +823,9 @@ class FeedbackQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdjudicatorFeedbackQuestion
         exclude = ('tournament',)
+
+    validate_reference = partialmethod(_validate_field, 'reference')
+    validate_seq = partialmethod(_validate_field, 'seq')
 
 
 class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer):
@@ -1031,22 +1097,21 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                 required=False, allow_null=True,
             )
 
-            def validate(self, data):
+            def validate_adjudicator(self, value):
                 # Make sure adj is in debate
-                adj = data.get('adjudicator', None)
-                debate = self.context.get('debate')
-                if adj is not None and not debate.debateadjudicator_set.filter(adjudicator=adj).exists():
+                if not self.context.get('debate').debateadjudicator_set.filter(adjudicator=value).exists():
                     raise serializers.ValidationError('Adjudicator must be in debate')
+                return value
 
+            def validate_teams(self, value):
                 # Teams in their proper positions - this also checks having proper and consistent sides
-                teams = data.get('teams', {})
-                if len(teams) != debate.debateteam_set.count():
+                debate = self.context.get('debate')
+                if len(value) != debate.debateteam_set.count():
                     raise serializers.ValidationError('Incorrect number of teams')
-                for team in teams:
+                for team in value:
                     if debate.get_team(team['side']) != team['team']:
                         raise serializers.ValidationError('Inconsistent team')
-
-                return data
+                return value
 
             def save(self, **kwargs):
                 team_serializer = self.TeamResultSerializer(context=self.context)

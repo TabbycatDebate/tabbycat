@@ -1,73 +1,73 @@
 {% extends "base.html" %}
 {% load debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">📑</span> {% trans "Simple Importer" %}{% endblock %}
-{% block page-title %}{% trans "Simple Importer" %}{% endblock %}
+{% block head-title %}<span class="emoji">📑</span> {% translate "Simple Importer" %}{% endblock %}
+{% block page-title %}{% translate "Simple Importer" %}{% endblock %}
 
 {% block content %}
 
-  {% blocktrans trimmed asvar text %}
+  {% blocktranslate trimmed asvar text %}
     There are <a href="https://tabbycat.readthedocs.io/en/stable/use/importing-data.html" target="_blank">several ways to import data into Tabbycat</a>. Which one is best depends on the size of your tournament and your technical background. This <strong>simple importer</strong> is the easiest to use and works well for small- and medium-sized tournaments.
-  {% endblocktrans %}
+  {% endblocktranslate %}
   {% include "components/explainer-card.html" with type="info" %}
 
   <ul class="list-group mt-3">
 
-    {% trans "Add Institutions" as text %}
+    {% translate "Add Institutions" as text %}
     {% tournamenturl 'importer-simple-institutions' as url %}
     {% include "components/item-action.html" with emoji="🏫"%}
 
     {% tournamenturl 'importer-simple-teams' as url %}
-    {% trans "Add Teams" as text %}
+    {% translate "Add Teams" as text %}
     {% include "components/item-action.html" with emoji="👯" %}
 
     {% tournamenturl 'importer-simple-adjudicators' as url %}
-    {% trans "Add Adjudicators" as text %}
+    {% translate "Add Adjudicators" as text %}
     {% include "components/item-action.html" with emoji="👂" %}
 
     {% tournamenturl 'importer-simple-venues' as url %}
-    {% trans "Add Rooms" as text %}
+    {% translate "Add Rooms" as text %}
     {% include "components/item-action.html" with emoji="🎪" %}
 
   </ul>
   <ul class="list-group mt-3">
 
     {% tournamenturl 'venues-categories' as url %}
-    {% trans "Add/Edit Room Categories" as text %}
+    {% translate "Add/Edit Room Categories" as text %}
     {% include "components/item-action.html" with emoji="🏪" %}
 
     {% tournamenturl 'venues-constraints' as url %}
-    {% trans "Add/Edit Room Constraints" as text %}
+    {% translate "Add/Edit Room Constraints" as text %}
     {% include "components/item-action.html" with emoji="🏰" %}
 
   </ul>
   <ul class="list-group mt-3">
 
     {% tournamenturl 'adjallocation-conflicts-adj-team' as url %}
-    {% trans "Add/Edit Adjudicator-Team Conflicts" as text %}
+    {% translate "Add/Edit Adjudicator-Team Conflicts" as text %}
     {% include "components/item-action.html" with emoji="🙉" %}
 
     {% tournamenturl 'adjallocation-conflicts-adj-adj' as url %}
-    {% trans "Add/Edit Adjudicator-Adjudicator Conflicts" as text %}
+    {% translate "Add/Edit Adjudicator-Adjudicator Conflicts" as text %}
     {% include "components/item-action.html" with emoji="🙊" %}
 
     {% tournamenturl 'adjallocation-conflicts-adj-inst' as url %}
-    {% trans "Add/Edit Adjudicator-Institution Conflicts" as text %}
+    {% translate "Add/Edit Adjudicator-Institution Conflicts" as text %}
     {% include "components/item-action.html" with emoji="🙈" %}
 
     {% tournamenturl 'adjallocation-conflicts-team-inst' as url %}
-    {% trans "Add/Edit Team-Institution Conflicts" as text %}
+    {% translate "Add/Edit Team-Institution Conflicts" as text %}
     {% include "components/item-action.html" with emoji="🐒" %}
 
   </ul>
   <ul class="list-group mt-3">
 
     {% tournamenturl 'break-categories-edit' as url %}
-    {% trans "Add/Edit Break Categories" as text %}
+    {% translate "Add/Edit Break Categories" as text %}
     {% include "components/item-action.html" with emoji="🎯" %}
 
     {% tournamenturl 'participants-speaker-categories-edit' as url %}
-    {% trans "Add/Edit Speaker Categories" as text %}
+    {% translate "Add/Edit Speaker Categories" as text %}
     {% include "components/item-action.html" with emoji="🏆" %}
 
   </ul>

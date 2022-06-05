@@ -7,16 +7,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>{% if tournament %}{{ tournament.short_name }}{% else %}{% trans "Tabbycat" %}{% endif %} | {% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
+  <title>{% if tournament %}{{ tournament.short_name }}{% else %}{% translate "Tabbycat" %}{% endif %} | {% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
 
   {% if tournament %}
-    {% blocktrans trimmed with tournament=tournament.short_name asvar meta_description %}
+    {% blocktranslate trimmed with tournament=tournament.short_name asvar meta_description %}
       The tab for {{ tournament }} runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats
-    {% endblocktrans %}
+    {% endblocktranslate %}
   {% else %}
-    {% blocktrans trimmed asvar meta_description %}
+    {% blocktranslate trimmed asvar meta_description %}
       This tab runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats
-    {% endblocktrans %}
+    {% endblocktranslate %}
   {% endif %}
   <meta name="description" content="{{ meta_description }}" />
   <meta property="og:description" content="{{ meta_description }}" />
@@ -33,28 +33,19 @@
   {% if not hmr %}
   <link href="{% static 'vue/js/app.js' %}" rel=preload as=script>
   {% endif %}
+
   {% if not debug %}<!-- Analytics -->
   <script>
-    (function(a,b,c){var d=a.history,e=document,f=navigator||{},g=localStorage,
-    h=encodeURIComponent,i=d.pushState,k=function(){return Math.random().toString(36)},
-    l=function(){return g.cid||(g.cid=k()),g.cid},m=function(r){var s=[];for(var t in r)
-    r.hasOwnProperty(t)&&void 0!==r[t]&&s.push(h(t)+"="+h(r[t]));return s.join("&")},
-    n=function(r,s,t,u,v,w,x){var z="https://www.google-analytics.com/collect",
-    A=m({v:"1",ds:"web",aip:c.anonymizeIp?1:void 0,tid:b,cid:l(),t:r||"pageview",
-    sd:c.colorDepth&&screen.colorDepth?screen.colorDepth+"-bits":void 0,dr:e.referrer||
-    void 0,dt:e.title,dl:e.location.origin+e.location.pathname+e.location.search,ul:c.language?
-    (f.language||"").toLowerCase():void 0,de:c.characterSet?e.characterSet:void 0,
-    sr:c.screenSize?(a.screen||{}).width+"x"+(a.screen||{}).height:void 0,vp:c.screenSize&&
-    a.visualViewport?(a.visualViewport||{}).width+"x"+(a.visualViewport||{}).height:void 0,
-    ec:s||void 0,ea:t||void 0,el:u||void 0,ev:v||void 0,exd:w||void 0,exf:"undefined"!=typeof x&&
-    !1==!!x?0:void 0});if(f.sendBeacon)f.sendBeacon(z,A);else{var y=new XMLHttpRequest;
-    y.open("POST",z,!0),y.send(A)}};d.pushState=function(r){return"function"==typeof d.onpushstate&&
-    d.onpushstate({state:r}),setTimeout(n,c.delay||10),i.apply(d,arguments)},n(),
-    a.ma={trackEvent:function o(r,s,t,u){return n("event",r,s,t,u)},
-    trackException:function q(r,s){return n("exception",null,null,null,null,r,s)}}})
-    (window,"UA-314178-25",{anonymizeIp:true,colorDepth:true,characterSet:true,screenSize:true,language:true});
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-314178-25', 'auto');
+    ga('set', 'dimension1', '{% if tabbycat_version %}{{ tabbycat_version }}{% else %}?{% endif %}');
+    ga('set', 'dimension2', window.location.hostname);
+    ga('send', 'pageview');
+    </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
   </script>
   {% endif %}
+
   {% if LANGUAGE_CODE == 'tzl' %}<!-- In-context translations; use Talossan -->
   <script>
     var _jipt = [];
@@ -92,21 +83,49 @@
 
     {% block header %}
       <div class="row d-print-none {% if user_role == "admin" %}mb-md-3{% endif %}" id="pageTitle">
-        <div class="col mt-4 mb-3 h3">
 
-          {% if page_title %}
-            {% if page_emoji %}<span class="emoji">{{ page_emoji }}</span>{% endif %}
-            {{ page_title }}
-          {% else %}
-            {% block head-title %}{% endblock %}
-          {% endif %}
-          {% if page_subtitle %}
-            <small class="text-muted d-md-inline d-block">{{ page_subtitle }}</small>
-          {% else %}
-            <small class="text-muted d-md-inline d-block">{% block sub-title %}{% endblock %}</small>
-          {% endif %}
+        <div class="col-md m-3 h2 d-flex align-items-center">
+
+          <div class="min-height: 100px;">
+            {% if page_title %}
+              {% if page_emoji %}<span class="emoji">{{ page_emoji }}</span>{% endif %}
+              {{ page_title }}
+            {% else %}
+              {% block head-title %}{% endblock %}
+            {% endif %}
+            {% if page_subtitle %}
+              <small class="text-muted d-md-inline d-block">{{ page_subtitle }}</small>
+            {% else %}
+              <small class="text-muted d-md-inline d-block">{% block sub-title %}{% endblock %}</small>
+            {% endif %}
+          </div>
 
         </div>
+
+        {% if tournament and not public_index and not user_role == "admin" %}
+          <div class="col-md">
+            <div class="list-group mt-3 mb-3">
+              <div class="list-group-item px-3 pb-2">
+                <div class="bg-secondary d-none d-md-block">
+                  <a href="https://www.tasacademy.pl/signup?referall=tabbycat{{ version }}">
+                    {% get_unit 'wide' as unit_path %}
+                    <img style="max-width: 100%;" src="{% static unit_path %}" />
+                  </a>
+                </div>
+                <div class="bg-secondary d-md-none">
+                  <a href="https://www.tasacademy.pl/signup?referall=tabbycat{{ version }}">
+                    {% get_unit 'big' as unit_path %}
+                    <img style="max-width: 100%;" src="{% static unit_path %}" />
+                  </a>
+                </div>
+                <div class="text-right">
+                  <small>Advertisment by a <a href="https://opencollective.com/tabbycat#category-CONTRIBUTE">Tabbycat Sponsor</a></small>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
       </div>
     {% endblock header %}
 
@@ -191,14 +210,14 @@
 
     {% if hmr %}
       <!-- webpack dev server (live js) -->
-      <script src="http://localhost:8888/js/app.js"></script>
+      <script type="text/javascript" src="http://localhost:8888/js/app.js"></script>
       <!-- livereload (live css) -->
       <script>
         document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] +
         ':35729/livereload.js?snipver=1"></' + 'script>')
       </script>
     {% else %}
-      <script src="{% static 'vue/js/app.js' %}"></script>
+      <script type="text/javascript" src="{% static 'vue/js/app.js' %}"></script>
     {% endif %}
 
   {% endblock js %}

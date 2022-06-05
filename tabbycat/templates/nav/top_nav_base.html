@@ -3,9 +3,9 @@
 <nav class="navbar navbar-expand-lg navbar-light">
 
   {# Decisions about whether to show items in the menu are based on the role of the user (not the view). #}
-  {% blocktrans trimmed asvar logo_alt %}
+  {% blocktranslate trimmed asvar logo_alt %}
     Tabbycat Logo
-  {% endblocktrans %}
+  {% endblocktranslate %}
   {% if all_tournaments.count > 1 or user.is_authenticated %}
     <div class="nav-item dropdown">
 
@@ -26,27 +26,27 @@
           {% if user.is_superuser %}
             <a class="dropdown-item px-2" href="{% url 'tournament-admin-home' tournament_slug=tournament.slug %}">
               <i data-feather="settings"></i>
-              {% blocktrans trimmed %}
+              {% blocktranslate trimmed %}
                 Administrator area for <strong>{{ tournament }}</strong>
-              {% endblocktrans %}
+              {% endblocktranslate %}
             </a>
           {% endif %}
 
           {% if user.is_authenticated %}
             <a class="dropdown-item px-2" href="{% url 'tournament-assistant-home' tournament_slug=tournament.slug %}">
               <i data-feather="pocket"></i>
-              {% blocktrans trimmed %}
+              {% blocktranslate trimmed %}
                 Assistant area for <strong>{{ tournament }}</strong>
-              {% endblocktrans %}
+              {% endblocktranslate %}
             </a>
           {% endif %}
 
           <a class="dropdown-item px-2" href="{% url 'tournament-public-index' tournament_slug=tournament.slug %}">
             {% if user.is_authenticated %}
               <i data-feather="globe"></i>
-              {% blocktrans trimmed %}
+              {% blocktranslate trimmed %}
                 Public area for <strong>{{ tournament }}</strong>
-              {% endblocktrans %}
+              {% endblocktranslate %}
             {% else %}
               <i data-feather="award"></i>
               {{ tournament }}
@@ -56,7 +56,14 @@
           <div class="dropdown-divider"></div>
         {% endfor %}
 
-        <a class="dropdown-item px-2" href="/"><i data-feather="home"></i>{% trans "Site Home" %}</a>
+        {% if user.is_staff %}
+          <a href="{% url 'admin:index' %}" target="_blank" class="dropdown-item px-2">
+            <i data-feather="database"></i>{% translate "Edit Database" %}
+          </a>
+          <div class="dropdown-divider"></div>
+        {% endif %}
+
+        <a class="dropdown-item px-2" href="/"><i data-feather="home"></i>{% translate "Site Home" %}</a>
       </div>
 
     </div>
@@ -98,11 +105,11 @@
       <li class="nav-item">
         {% if user.is_authenticated %}
           <a class="nav-link" href="{% url 'logout' %}">
-            {% trans "Log Out" %} ({{ user }})
+            {% translate "Log Out" %} ({{ user }})
           </a>
         {% else %}
           <a class="nav-link" href="{% url 'login' %}">
-            {% trans "Login" %}
+            {% translate "Login" %}
           </a>
         {% endif %}
       </li>

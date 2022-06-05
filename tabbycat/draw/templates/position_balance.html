@@ -3,18 +3,18 @@
 
 {% block page-alerts %}
   {% if round.num_debates_with_sides_unconfirmed > 0 %}
-    {% blocktrans trimmed asvar message %}
+    {% blocktranslate trimmed asvar message %}
       It looks like sides aren't confirmed for some debates in this round. This position balance report is generated using the "unconfirmed sides" in the database, and as a consequence, may not make much sense. It's best to confirm sides in all debates before looking at this report.
-    {% endblocktrans %}
+    {% endblocktranslate %}
     {% include "components/alert.html" with type="warning" %}
   {% endif %}
 {% endblock %}
 
 {% block content %}
 
-  {% blocktrans trimmed asvar p1 with exponent=pref.bp_position_cost_exponent %}
+  {% blocktranslate trimmed asvar p1 with exponent=pref.bp_position_cost_exponent %}
     Your current position cost function is <strong>{{ cost_func }}</strong>, raised to an exponent of <strong>{{ exponent }}</strong>. <a href="http://tabbycat.readthedocs.io/en/latest/features/draw-generation-bp.html#position-cost-options" target=_"blank">Read more about how position cost functions work</a> in our documentation.
-  {% endblocktrans %}
+  {% endblocktranslate %}
   {% include "components/explainer-card.html" with type="info" %}
 
   {{ block.super }}

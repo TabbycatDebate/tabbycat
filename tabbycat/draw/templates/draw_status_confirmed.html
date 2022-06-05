@@ -15,7 +15,7 @@
       <div class="card">
 
         <div class="card-body">
-          <h5 class="card-title mb-0">{% trans "Adjudicator Allocations" %}</h5>
+          <h5 class="card-title mb-0">{% translate "Adjudicator Allocations" %}</h5>
         </div>
 
         <div class="list-group list-group-flush">
@@ -23,7 +23,7 @@
 
             {% if active_adjs < debates_in_round %}
 
-              {% trans "There are currently fewer adjudicators checked in than there are rooms." as message %}
+              {% translate "There are currently fewer adjudicators checked in than there are rooms." as message %}
               {% include "components/item-info.html" with nopad=True type="danger" text=message %}
 
             {% else %}
@@ -34,10 +34,10 @@
 
             {% roundurl 'edit-debate-adjudicators' as url %}
             {% if active_adjs < debates_in_round or no_chair > 0 or round.ballots_per_debate == 'per-adj' and even_panel > 0 %}
-              {% trans "Allocate adjudicators" as title %}
+              {% translate "Allocate adjudicators" as title %}
               {% include "components/item-action.html" with text=title type="success" to_complete=True %}
             {% else %}
-              {% trans "Edit adjudicator allocation" as title %}
+              {% translate "Edit adjudicator allocation" as title %}
               {% include "components/item-action.html" with text=title type="primary" %}
             {% endif %}
 
@@ -51,7 +51,7 @@
       <div class="card">
 
         <div class="card-body">
-          <h5 class="card-title mb-0">{% trans "Room Allocations" %}</h5>
+          <h5 class="card-title mb-0">{% translate "Room Allocations" %}</h5>
         </div>
         <div class="list-group list-group-flush">
 
@@ -59,10 +59,10 @@
 
           {% roundurl 'edit-debate-venues' round as url %}
           {% if round.num_debates_without_venue > 0 %}
-            {% trans "Allocate rooms" as title %}
+            {% translate "Allocate rooms" as title %}
             {% include "components/item-action.html" with text=title type="success" to_complete=True %}
           {% else %}
-            {% trans "Edit room allocation" as title %}
+            {% translate "Edit room allocation" as title %}
             {% include "components/item-action.html" with text=title type="primary" %}
           {% endif %}
 
@@ -75,34 +75,34 @@
       <div class="card">
 
         <div class="card-body">
-          <h5 class="card-title mb-0">{% trans "Preformed Panels" %}</h5>
+          <h5 class="card-title mb-0">{% translate "Preformed Panels" %}</h5>
         </div>
 
         <div class="list-group list-group-flush">
 
           {% if preformed_panels_in_round > 0 %}
-            {% blocktrans trimmed asvar message count npanels=preformed_panels_in_round %}
+            {% blocktranslate trimmed asvar message count npanels=preformed_panels_in_round %}
               There is {{ npanels }} preformed panel available for this round.
             {% plural %}
               There are {{ npanels }} preformed panels available for this round.
-            {% endblocktrans %}
+            {% endblocktranslate %}
             {% include "components/item-info.html" with nopad=True type="info" text=message %}
           {% else %}
-            {% trans "There are no preformed panels available for this round" as message %}
+            {% translate "There are no preformed panels available for this round" as message %}
             {% include "components/item-info.html" with nopad=True type="secondary" text=message %}
           {% endif %}
 
           {% roundurl 'edit-panel-adjudicators' as url %}
-          {% blocktrans trimmed asvar text with round=round.abbreviation %}
+          {% blocktranslate trimmed asvar text with round=round.abbreviation %}
             Edit preformed panels for {{ round }}
-          {% endblocktrans %}
+          {% endblocktranslate %}
           {% include "components/item-action.html" with text=text type="primary" %}
 
           {% if round.next %}
             {% roundurl 'edit-panel-adjudicators' round.next as url %}
-            {% blocktrans trimmed asvar text with round=round.next.abbreviation %}
+            {% blocktranslate trimmed asvar text with round=round.next.abbreviation %}
               Edit preformed panels for {{ round }}
-            {% endblocktrans %}
+            {% endblocktranslate %}
             {% include "components/item-action.html" with text=text type="primary" %}
           {% endif %}
 
@@ -117,16 +117,16 @@
           <div class="card">
 
             <div class="card-body">
-              <h5 class="card-title mb-0">{% trans "Side Allocations" %}</h5>
+              <h5 class="card-title mb-0">{% translate "Side Allocations" %}</h5>
             </div>
 
             <div class="list-group list-group-flush">
 
-              {% blocktrans trimmed asvar text count ndebates=sides_unconfirmed %}
+              {% blocktranslate trimmed asvar text count ndebates=sides_unconfirmed %}
                 1 debate does not have its sides confirmed.
               {% plural %}
                 {{ ndebates }} debates do not have their sides confirmed.
-              {% endblocktrans %}
+              {% endblocktranslate %}
               {% include "components/item-info.html" with  nopad=True type="danger" %}
 
               {% roundurl 'edit-debate-teams' as url %}

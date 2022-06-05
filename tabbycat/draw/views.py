@@ -430,7 +430,7 @@ class EmailTeamAssignmentsView(RoundTemplateEmailCreateView):
     round_redirect_pattern_name = 'draw-display'
 
     def get_queryset(self):
-        return Speaker.objects.filter(team__in=self.round.active_teams)
+        return Speaker.objects.filter(team__debateteam__round=self.round).select_related('team')
 
 
 # ==============================================================================

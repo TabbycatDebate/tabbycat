@@ -4,7 +4,7 @@
 {% block nav %}{% endblock %}
 
 {% block head-title %}{% endblock %}
-{% block page-title %}{% trans "Welcome to Tabbycat!" %}{% endblock %}
+{% block page-title %}{% translate "Welcome to Tabbycat!" %}{% endblock %}
 
 {% block content %}
 
@@ -17,27 +17,27 @@
       <form action="." method="POST">
       {% csrf_token %}
 
-        {% trans "Welcome to Tabbycat!" as title %}
+        {% translate "Welcome to Tabbycat!" as title %}
         {% include "components/form-title.html" with emoji="👋" %}
 
-        {% blocktrans trimmed asvar p1 %}
+        {% blocktranslate trimmed asvar p1 %}
           To get started, you'll need to create the first user account. This account
           is a "superuser" account: it will be able to edit anything on the site.
           Therefore, you should use a strong password.
-        {% endblocktrans %}
-         {% blocktrans trimmed asvar p2 %}
+        {% endblocktranslate %}
+         {% blocktranslate trimmed asvar p2 %}
           You can only create this account once, but if you like, you can change the
           username and password after it's created, or add new superusers afterwards.
-        {% endblocktrans %}
-        {% blocktrans trimmed asvar p3 %}
+        {% endblocktranslate %}
+        {% blocktranslate trimmed asvar p3 %}
           The email address is used for password resets. You don't have to
           provide one, but if you don't, you won't be able to reset your password
           if you forget it.
-        {% endblocktrans %}
+        {% endblocktranslate %}
         {% include "components/form-title.html" with title=None %}
 
         {% include "components/form-main.html" %}
-        {% trans "Create Account" as title %}
+        {% translate "Create Account" as title %}
         {% include "components/form-submit.html" %}
 
       </form>

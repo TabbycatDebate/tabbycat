@@ -2,6 +2,7 @@ from itertools import groupby
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Prefetch, Q
 from dynamic_preferences.api.serializers import PreferenceSerializer
@@ -44,6 +45,7 @@ class APIRootView(PublicAPIMixin, GenericAPIView):
             "_links": {
                 "v1": reverse('api-v1-root', request=request, format=format),
             },
+            "version": settings.TABBYCAT_VERSION,
         })
 
 
@@ -196,6 +198,7 @@ class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
         ).distinct().select_related('region').prefetch_related(
             Prefetch('team_set', queryset=self.tournament.team_set.all()),
             Prefetch('adjudicator_set', queryset=self.tournament.adjudicator_set.all()),
+            'venue_constraints__category__tournament',
         )
 
 
@@ -213,7 +216,7 @@ class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
                 'speaker_set',
                 queryset=Speaker.objects.all().prefetch_related(category_prefetch).select_related('team__tournament'),
             ),
-            'institution_conflicts',
+            'institution_conflicts', 'venue_constraints__category__tournament',
             'break_categories', 'break_categories__tournament',
         )
 
@@ -233,7 +236,7 @@ class AdjudicatorViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
         return super().get_queryset().prefetch_related(
             'team_conflicts', 'team_conflicts__tournament',
             'adjudicator_conflicts', 'adjudicator_conflicts__tournament',
-            'institution_conflicts',
+            'institution_conflicts', 'venue_constraints__category__tournament',
         ).filter(filters)
 
 
@@ -244,7 +247,7 @@ class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
         filters = Q()
         if self.request.query_params.get('region'):
             filters &= Q(region__name=self.request.query_params['region'])
-        return Institution.objects.filter(filters).select_related('region')
+        return Institution.objects.filter(filters).select_related('region', 'venue_constraints__category__tournament')
 
 
 class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):

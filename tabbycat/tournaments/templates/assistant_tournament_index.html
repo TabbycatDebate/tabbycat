@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load i18n debate_tags static %}
 
-{% block page-title %}{% trans "Dashboard" %}{% endblock %}
-{% block head-title %}<span class="emoji">⏰</span> {% trans "Overview" %}{% endblock %}
+{% block page-title %}{% translate "Dashboard" %}{% endblock %}
+{% block head-title %}<span class="emoji">⏰</span> {% translate "Overview" %}{% endblock %}
 
 {% block sub-title %}
-  {% blocktrans trimmed with round=round.name status=round.get_draw_status_display.lower %}
+  {% blocktranslate trimmed with round=round.name status=round.get_draw_status_display.lower %}
     current round: {{ round }}, status: {{ status }}
-  {% endblocktrans %}
+  {% endblocktranslate %}
 {% endblock %}
 
 {% block page-alerts %}

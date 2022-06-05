@@ -11,47 +11,47 @@
       <div class="col-lg-6 col-md-5">
         <h6 class="d-inline-block">
           {% if tournament and tabbycat_codename %}
-            {% blocktrans trimmed %}{{ tournament }} runs on Tabbycat {{ tabbycat_version }} ({{ tabbycat_codename }}) {% endblocktrans %}
+            {% blocktranslate trimmed %}{{ tournament }} runs on Tabbycat {{ tabbycat_version }} ({{ tabbycat_codename }}) {% endblocktranslate %}
           {% else %}
-            {% blocktrans trimmed %}This site runs on Tabbycat {{ tabbycat_version }} ({{ tabbycat_codename }}) {% endblocktrans %}
+            {% blocktranslate trimmed %}This site runs on Tabbycat {{ tabbycat_version }} ({{ tabbycat_codename }}) {% endblocktranslate %}
           {% endif %}
         </h6>
         <p class="text-muted">
-          {% blocktrans trimmed %}
+          {% blocktranslate trimmed %}
             Tabbycat is a source-available project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments.
-          {% endblocktrans %}
+          {% endblocktranslate %}
           {% if tournament and tournament.billable_teams > 0 %}
-            {% blocktrans trimmed with amount=tournament.billable_teams %}
+            {% blocktranslate trimmed with amount=tournament.billable_teams %}
               For a tournament of this size, we suggest <a href="https://opencollective.com/tabbycat/contribute/licensing-29466/checkout?amount={{ amount }}">a donation of <strong>${{ amount }}</strong></a>.
-            {% endblocktrans %}
+            {% endblocktranslate %}
             <a href="https://opencollective.com/tabbycat">
-              {% trans "Learn more about donating." %}
+              {% translate "Learn more about donating." %}
             </a>
           {% else %}
-            {% blocktrans trimmed %}
+            {% blocktranslate trimmed %}
               <a href="https://opencollective.com/tabbycat">Donations to Tabbycat from individuals or organisations</a> are much appreciated.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           {% endif %}
         </p>
       </div>
 
       <div class="col-lg-4 col-md-4 mt-2 mt-md-0">
-        <h6 class="d-inline-block">{% blocktrans trimmed %}Still timing debates with the stopwatch app?{% endblocktrans %}</h6>
+        <h6 class="d-inline-block">{% blocktranslate trimmed %}Still timing debates with the stopwatch app?{% endblocktranslate %}</h6>
         <p class="text-muted">
-          {% blocktrans trimmed %}
+          {% blocktranslate trimmed %}
             Using an app designed for debate timekeeping makes speaking and adjudicating easier!
             Check out <a href="https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%20Installs&mt=8">Timekept</a> (iPhone/iPad)
             or <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%3Dtabbycat%26utm_medium%3Dfooter">Debatekeeper</a> (Android).
-          {% endblocktrans %}
+          {% endblocktranslate %}
         </p>
       </div>
 
       <div class="col-lg-2 col-md-3 mt-2 mt-md-0">
-        <h6 class="d-inline-block">{% blocktrans trimmed %}Our Organisation{% endblocktrans %}</h6>
+        <h6 class="d-inline-block">{% blocktranslate trimmed %}Our Organisation{% endblocktranslate %}</h6>
         <p class="text-muted">
-          {% blocktrans trimmed %}
+          {% blocktranslate trimmed %}
             Tabbycat is supported by the <a href="http://tabbycat-debate.org/">Tabbycat Debate Association</a>, a non-profit for advancing open debate technology.
-          {% endblocktrans %}
+          {% endblocktranslate %}
         </p>
       </div>
 
@@ -62,38 +62,38 @@
           <li class="nav-item p-2">
             <i data-feather="globe"></i>
             <a class="nav-link p-0 d-inline-block" href="#" data-toggle="modal" data-target="#setLanguageModal">
-              {% trans "Language" as local_language_label %}
+              {% translate "Language" as local_language_label %}
               Language {% if LANGUAGE_CODE != 'en' and local_language_label != "Language" %} / {{ local_language_label }}{% endif %}
             </a>
           </li>
           <li class="nav-item p-2">
             <i data-feather="github"></i>
             <a class="nav-link p-0 d-inline-block" href="https://github.com/TabbycatDebate/tabbycat/">
-              {% trans "GitHub" %}
+              {% translate "GitHub" %}
             </a>
           </li>
           <li class="nav-item p-2">
             <i data-feather="book"></i>
             <a class="nav-link p-0 d-inline-block" href="http://tabbycat.readthedocs.io/en/stable/">
-              {% trans "Documentation" %}
+              {% translate "Documentation" %}
             </a>
           </li>
           <li class="nav-item p-2">
             <i data-feather="help-circle"></i>
             <a class="nav-link p-0 d-inline-block" href="http://tabbycat.readthedocs.io/en/stable/about/support.html">
-              {% trans "Support" %}
+              {% translate "Support" %}
             </a>
           </li>
           <li class="nav-item p-2">
             <i data-feather="facebook"></i>
             <a class="nav-link p-0 d-inline-block" href="https://www.facebook.com/TabbycatDebate/">
-              {% trans "Facebook" %}
+              {% translate "Facebook" %}
             </a>
           </li>
           <li class="nav-item p-2">
             <i data-feather="upload-cloud"></i>
             <a class="nav-link p-0 d-inline-block" href="https://github.com/TabbycatDebate/tabbycat#%EF%B8%8F-installation">
-              {% trans "Set Up A Copy" %}
+              {% translate "Set Up A Copy" %}
             </a>
           </li>
         </ul>
@@ -107,7 +107,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">{% trans "Change Language" %}</h5>
+        <h5 class="modal-title">{% translate "Change Language" %}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -124,7 +124,7 @@
                 </option>
               {% endfor %}
           </select>
-          <input class="btn btn-primary btn-block mt-3" type="submit" value="{% trans "Use this language" %}">
+          <input class="btn btn-primary btn-block mt-3" type="submit" value="{% translate "Use this language" %}">
         </form>
       </div>
     </div>

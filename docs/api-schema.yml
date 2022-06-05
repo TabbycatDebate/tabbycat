@@ -32,6 +32,25 @@ paths:
       responses:
         '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _links:
+                    title: links
+                    type: object
+                    readOnly: true
+                    properties:
+                      v1:
+                        title: v1
+                        type: string
+                        format: uri
+                        readOnly: true
+                  version:
+                    title: Tabbycat version
+                    type: string
+                    readOnly: true
       tags:
         - v1
     parameters: []
@@ -215,6 +234,21 @@ paths:
       tags:
         - v1
         - tournaments
+    patch:
+      operationId: v1_tournaments_partial_update
+      description: Update a tournament
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tournament'
+      tags:
+        - v1
+        - tournaments
+      requestBody:
+        $ref: '#/components/requestBodies/Tournament'
     parameters:
       - name: tournament_slug
         in: path
@@ -316,6 +350,21 @@ paths:
       tags:
         - v1
         - adjudicators
+    patch:
+      operationId: v1_tournaments_adjudicators_partial_update
+      description: Update an adjudicator
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Adjudicator'
+      tags:
+        - v1
+        - adjudicators
+      requestBody:
+        $ref: '#/components/requestBodies/Adjudicator'
     parameters:
       - name: id
         in: path
@@ -501,6 +550,21 @@ paths:
       tags:
         - v1
         - break-categories
+    patch:
+      operationId: v1_tournaments_break-categories_partial_update
+      description: Update a break category
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BreakCategory'
+      tags:
+        - v1
+        - break-categories
+      requestBody:
+        $ref: '#/components/requestBodies/BreakCategory'
     parameters:
       - name: id
         in: path
@@ -823,6 +887,21 @@ paths:
       tags:
         - v1
         - questions
+    patch:
+      operationId: v1_tournaments_feedback-questions_partial_update
+      description: Update a feedback question
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackQuestion'
+      tags:
+        - v1
+        - questions
+      requestBody:
+        $ref: '#/components/requestBodies/FeedbackQuestion'
     parameters:
       - name: id
         in: path
@@ -874,6 +953,21 @@ paths:
       tags:
         - v1
         - feedback
+    patch:
+      operationId: v1_tournaments_feedback_partial_update
+      description: Update feedback
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Feedback'
+      tags:
+        - v1
+        - feedback
+      requestBody:
+        $ref: '#/components/requestBodies/Feedback'
     parameters:
       - name: id
         in: path
@@ -1011,6 +1105,21 @@ paths:
       tags:
         - v1
         - motions
+    patch:
+      operationId: v1_tournaments_motions_partial_update
+      description: Update a motion
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Motion'
+      tags:
+        - v1
+        - motions
+      requestBody:
+        $ref: '#/components/requestBodies/Motion'
     parameters:
       - name: id
         in: path
@@ -1231,6 +1340,21 @@ paths:
       tags:
         - v1
         - rounds
+    patch:
+      operationId: v1_tournaments_rounds_partial_update
+      description: Update a round
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Round'
+      tags:
+        - v1
+        - rounds
+      requestBody:
+        $ref: '#/components/requestBodies/Round'
     parameters:
       - name: round_seq
         in: path
@@ -1292,6 +1416,9 @@ paths:
       responses:
         '204':
           description: 'All pairings have been deleted'
+      tags:
+        - v1
+        - debates
     parameters:
       - name: round_seq
         in: path
@@ -1344,6 +1471,21 @@ paths:
       tags:
         - v1
         - debates
+    patch:
+      operationId: v1_tournaments_rounds_pairings_partial_update
+      description: Update a pairing
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Debate'
+      tags:
+        - v1
+        - debates
+      requestBody:
+        $ref: '#/components/requestBodies/Debate'
     parameters:
       - name: debate_pk
         in: path
@@ -1464,6 +1606,21 @@ paths:
       tags:
         - v1
         - results
+    patch:
+      operationId: v1_tournaments_rounds_pairings_ballots_partial_update
+      description: Update a ballot
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DebateResult'
+      tags:
+        - v1
+        - results
+      requestBody:
+        $ref: '#/components/requestBodies/DebateResult'
     parameters:
       - name: id
         in: path
@@ -1728,6 +1885,21 @@ paths:
       tags:
         - v1
         - speaker-categories
+    patch:
+      operationId: v1_tournaments_speaker-categories_partial_update
+      description: Update a speaker category
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpeakerCategory'
+      tags:
+        - v1
+        - speaker-categories
+      requestBody:
+        $ref: '#/components/requestBodies/SpeakerCategory'
     parameters:
       - name: id
         in: path
@@ -1925,6 +2097,21 @@ paths:
       tags:
         - v1
         - speakers
+    patch:
+      operationId: v1_tournaments_speakers_partial_update
+      description: Update a speaker
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Speaker'
+      tags:
+        - v1
+        - speakers
+      requestBody:
+        $ref: '#/components/requestBodies/Speaker'
     parameters:
       - name: id
         in: path
@@ -2152,6 +2339,21 @@ paths:
       tags:
         - v1
         - teams
+    patch:
+      operationId: v1_tournaments_team_partial_update
+      description: Update a team
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+      tags:
+        - v1
+        - teams
+      requestBody:
+        $ref: '#/components/requestBodies/Team'
     parameters:
       - name: id
         in: path
@@ -2251,6 +2453,21 @@ paths:
       tags:
         - v1
         - venue-categories
+    patch:
+      operationId: v1_tournaments_venue-categories_partial_update
+      description: Update a venue category
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VenueCategory'
+      tags:
+        - v1
+        - venue-categories
+      requestBody:
+        $ref: '#/components/requestBodies/VenueCategory'
     parameters:
       - name: id
         in: path
@@ -2350,6 +2567,21 @@ paths:
       tags:
         - v1
         - venues
+    patch:
+      operationId: v1_tournaments_venues_partial_update
+      description: Update a venue
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Venue'
+      tags:
+        - v1
+        - venues
+      requestBody:
+        $ref: '#/components/requestBodies/Venue'
     parameters:
       - name: id
         in: path
@@ -2448,7 +2680,10 @@ paths:
         schema:
           type: string
 servers:
-  - url: 'http://localhost:8000/api'
+  - url: 'https://{server}/api'
+    variables:
+      server:
+        default: localhost
 components:
   requestBodies:
     TournamentInstitution:
@@ -2595,6 +2830,21 @@ components:
       name: Authorization
       in: header
   schemas:
+    VenueConstraint:
+      required:
+        - category
+        - priority
+      type: object
+      properties:
+        category:
+          title: Category
+          description: The venue category to constrain to
+          type: string
+          format: uri
+        priority:
+          title: Priority
+          description: How important is the constraint
+          type: integer
     Institution:
       required:
         - name
@@ -2631,6 +2881,10 @@ components:
           type: string
           maxLength: 100
           nullable: true
+        venue_constraints:
+          type: array
+          items:
+            $ref: '#/components/schemas/VenueConstraint'
     TournamentInstitution:
       required:
         - name
@@ -2679,6 +2933,10 @@ components:
           items:
             type: string
             format: uri
+        venue_constraints:
+          type: array
+          items:
+            $ref: '#/components/schemas/VenueConstraint'
     Tournament:
       required:
         - name
@@ -2987,6 +3245,10 @@ components:
               type: string
               format: uri
               readOnly: true
+        venue_constraints:
+          type: array
+          items:
+            $ref: '#/components/schemas/VenueConstraint'
     BreakCategory:
       required:
         - name
@@ -3791,6 +4053,10 @@ components:
           items:
             type: string
             format: uri
+        venue_constraints:
+          type: array
+          items:
+            $ref: '#/components/schemas/VenueConstraint'
     SpeakerStandings:
       type: array
       items:

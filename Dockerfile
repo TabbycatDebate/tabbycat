@@ -2,10 +2,12 @@
 # run the application specified. docker-compose does not use this.
 
 # Grab a python image
-FROM python:3.8
+FROM python:3.9
 
 # Just needed for all things python (note this is setting an env variable)
 ENV PYTHONUNBUFFERED 1
+# Needed for correct settings input
+ENV IN_DOCKER 1
 
 # Setup Node/NPM
 RUN apt-get update
@@ -23,9 +25,9 @@ ADD . /tcd/
 RUN git config --global url."https://".insteadOf git://
 
 # Install our node/python requirements
-RUN npm install -g npm@6.14.5
-RUN pip install -r ./config/requirements_docker.txt
-RUN npm install --only=production
+RUN pip install pipenv
+RUN pipenv install --system --deploy
+RUN npm ci --only=production
 
 # Compile all the static files
 RUN npm run build
