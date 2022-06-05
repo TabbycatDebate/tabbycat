@@ -57,20 +57,34 @@
   @include hover-highlights(#000);
 }
 
-.vue-is-dragging { // :active is the 'ghost' drag element
+.vue-is-dragging {
+  // :active is the 'ghost' drag element
   opacity: 0.66 !important;
   @include hover-highlights(#000);
 }
 
 // Draggable Panels
-.draggable-panel {
+.draggable-panel.vue-draggable {
   border: 2px solid $gray-400;
   margin-top: 1px;
   margin-bottom: 1px;
   border-radius: $border-radius;
 
+  &:hover {
+    background: inherit !important;
+    cursor: inherit;
+    color: inherit !important;
+
+    .panel-handle {
+      background: #fff;
+
+      .feather {
+        color: $purple;
+      }
+    }
+  }
+
   .panel-handle {
-    color: $gray-600;
 
     &:hover {
       background: $purple !important;
@@ -79,18 +93,6 @@
       .feather {
         color: #fff;
       }
-    }
-  }
-
-  .panel-handle:hover ~ div {
-    background: $purple !important;
-
-    .trainee-indicator {
-      color: #fff;
-    }
-
-    .vue-droppable {
-      background: none;
     }
   }
 }

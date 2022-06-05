@@ -11,8 +11,11 @@
         <span v-else class="text-muted" v-text="gettext('N/A')"></span>
       </div>
     </div>
-    <draggable-allocation :handle-debate-or-panel-drop="handleDebateOrPanelDrop"
-                          :debate-or-panel="debateOrPanel"></draggable-allocation>
+    <draggable-allocation
+      :handle-debate-or-panel-drop="handleDebateOrPanelDrop"
+      :handle-panel-swap="handlePanelSwap"
+      :debate-or-panel="debateOrPanel"
+    ></draggable-allocation>
   </div>
 
 </template>
@@ -24,7 +27,7 @@ import DraggableAllocation from './DraggableAllocation.vue'
 
 export default {
   components: { DraggableAllocation },
-  props: ['debateOrPanel', 'handleDebateOrPanelDrop'],
+  props: ['debateOrPanel', 'handleDebateOrPanelDrop', 'handlePanelSwap'],
   computed: {
     ...mapGetters(['allocatableItems']),
     adjudicatorScores: function () {
