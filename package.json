@@ -3,6 +3,7 @@
   "description": "Debating tabulation software for two-team parliamentary formats",
   "scripts": {
     "serve": "npm-run-all -p serve-*",
+    "serve-render": "npm-run-all -p render-*",
     "build": "NODE_ENV='production' npm-run-all -p build-* cp-*",
     "lint": "pre-commit run --all-files",
     "build-sass": "npx sass --style=compressed --load-path=node_modules/ tabbycat/templates/scss/style.scss tabbycat/static/css/style.css",
