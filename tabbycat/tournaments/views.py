@@ -11,7 +11,6 @@ from django.utils.html import format_html_join
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, FormView, UpdateView
-from django.views.generic.list import ListView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -54,14 +53,8 @@ class PublicSiteIndexView(WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConf
 
     def get_context_data(self, **kwargs):
         kwargs['tournaments'] = Tournament.objects.filter(active=True)
-        kwargs['has_inactive'] = Tournament.objects.filter(active=False).exists()
+        kwargs['inactive'] = Tournament.objects.filter(active=False)
         return super().get_context_data(**kwargs)
-
-
-class PublicSiteInactiveTournamentsView(ListView):
-    template_name = 'site_inactive_tournaments.html'
-    queryset = Tournament.objects.filter(active=False)
-    allow_empty = False
 
 
 class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
