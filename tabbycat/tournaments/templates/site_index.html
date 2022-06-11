@@ -43,10 +43,9 @@
 {% endfor %}
 
 {% if inactive %}
-  <div class="list-group mt-2">
-    <h3><span class="emoji">🗄️</span> {% translate "Inactive Tournaments" %}</h3>
+  <div class="list-group">
     {% for tournament in inactive %}
-      {% include "tournament_index_links.html" %}
+      {% include "tournament_index_links.html" with type="dark" subtext="(inactive)" %}
     {% endfor %}
   </div>
 {% endif %}
