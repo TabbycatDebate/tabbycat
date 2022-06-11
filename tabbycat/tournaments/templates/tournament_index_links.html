@@ -22,7 +22,7 @@
     {% blocktrans trimmed asvar text with tn=tournament.name %}
       Public area for <strong>{{ tn }}</strong>
     {% endblocktrans %}
-    {% include "components/item-action.html" with icon="globe" type=type subtext=subtext   url=public_url %}
+    {% include "components/item-action.html" with icon="globe" type=type subtext=subtext url=public_url %}
 
   {% else %}
 
