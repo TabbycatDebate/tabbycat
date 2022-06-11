@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load add_field_css debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">🗂</span>{% translate "Speaker Categories" %}{% endblock %}
-{% block page-title %}{% translate "Speaker Categories" %}{% endblock %}
+{% block head-title %}<span class="emoji">🗂</span>{% trans "Speaker Categories" %}{% endblock %}
+{% block page-title %}{% trans "Speaker Categories" %}{% endblock %}
 
 {% block page-subnav-sections %}
   {% include "participants_subnav.html" %}
@@ -13,20 +13,20 @@
   <div class="card text-info border-info">
     {# Translators: Translate "ESL" to the acronym "<target language> as a second/foreign language", not the translation of "English as a second language". #}
     <div class="card-body">
-      {% blocktranslate trimmed %}
+      {% blocktrans trimmed %}
         Speaker categories allow category-specific speaker tabs to be produced,
         <i>e.g.</i>, for novice or ESL categories. On this page, you can define
         what speaker categories exist. After you've defined the categories, you
         can set speaker eligibility on the Speaker Eligibility page.
-      {% endblocktranslate %}
+      {% endblocktrans %}
       {% url 'admin:participants_speakercategory_changelist' as edit_db_url %}
-      {% blocktranslate trimmed %}
+      {% blocktrans trimmed %}
         If you want to delete speaker categories, use the <a href="{{ edit_db_url }}" class="alert-link">Edit Database</a> area.
-      {% endblocktranslate %}
+      {% endblocktrans %}
     </div>
   </div>
 
-  {% translate "Save Speaker Categories" as save_text %}
+  {% trans "Save Speaker Categories" as save_text %}
   {% include "components/formset.html" with double=True %}
 
 {% endblock content %}

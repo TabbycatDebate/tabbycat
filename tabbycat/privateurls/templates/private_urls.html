@@ -1,8 +1,8 @@
 {% extends "tables/base_vue_table.html" %}
 {% load debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">🎲</span> {% translate "Private URLs" %}{% endblock %}
-{% block page-title %}{% translate "Private URLs" %}{% endblock %}
+{% block head-title %}<span class="emoji">🎲</span> {% trans "Private URLs" %}{% endblock %}
+{% block page-title %}{% trans "Private URLs" %}{% endblock %}
 
 {% block page-subnav-sections %}
   {% include 'private_urls_nav.html' %}
@@ -14,27 +14,27 @@
     <div class="card-body pb-0">
       <p>
         {% if exists %}
-          {% translate "The private URLs for ballot and/or feedback submission from participants are given below." %}
+          {% trans "The private URLs for ballot and/or feedback submission from participants are given below." %}
         {% else %}
-          {% blocktranslate trimmed %}
+          {% blocktrans trimmed %}
             Private URLs are used to allow participants to submit ballots and/or
             feedback online. You should use them if you have a means of
             distributing crazy-looking URLs to participants, and are too worried
             about fraud to use a publicly accessible page where <em>anyone</em>
             can enter <em>any</em> submission. The URLs will look something like
             this:
-          {% endblocktranslate %}
+          {% endblocktrans %}
         </p><p align="center">
           <strong><small>{% tournament_absurl 'adjfeedback-public-add-from-team-randomised' '9dnflp3z' %}</small></strong>
         </p><p>
         {% endif %}
-        {% blocktranslate trimmed %}
+        {% blocktrans trimmed %}
           Anyone with the URL can access the relevant data entry page. The idea is
           that it's hard to guess another key (the random-looking string), so you should
           make each URL accessible only to the participant in question.
           <a href="http://tabbycat.readthedocs.io/en/latest/features/data-entry.html#private-urls">
           Read more about private URLs.</a>
-        {% endblocktranslate %}
+        {% endblocktrans %}
       </p>
     </div>
 
@@ -44,13 +44,13 @@
     <div class="card border-warning text-warning mb-3">
       <div class="card-body">
         {% tournamenturl 'options-tournament-section' section='data_entry' as data_entry_options_url %}
-        {% blocktranslate trimmed %}
+        {% blocktrans trimmed %}
           Neither <strong>participant ballot submissions</strong>,
           <strong>participant feedback submissions</strong>, nor <strong>participant self-checkins</strong>
           are configured to be from private URLs. Any generated URLs will not be useful unless you
           configure those settings accordingly on the
           <a href="{{ data_entry_options_url }}">tournament configuration page</a>.
-        {% endblocktranslate %}
+        {% endblocktrans %}
       </div>
     </div>
   {% endif %}
@@ -64,13 +64,13 @@
     <div class="card">
       <div class="card-body">
         <div class="card-title">
-          <h5>{% translate "There are no private URLs assigned." %}</h5>
+          <h5>{% trans "There are no private URLs assigned." %}</h5>
         </div>
         <hr>
         <form action="{% tournamenturl 'privateurls-generate' %}" method="POST">
         {% csrf_token %}
         <button class="btn btn-success btn-block" id="generateRandomisedUrls" type="submit">
-          {% translate "Generate Private URLs" %}
+          {% trans "Generate Private URLs" %}
         </button>
         </form>
       </div>

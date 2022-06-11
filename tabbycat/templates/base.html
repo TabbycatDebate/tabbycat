@@ -7,16 +7,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>{% if tournament %}{{ tournament.short_name }}{% else %}{% translate "Tabbycat" %}{% endif %} | {% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
+  <title>{% if tournament %}{{ tournament.short_name }}{% else %}{% trans "Tabbycat" %}{% endif %} | {% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
 
   {% if tournament %}
-    {% blocktranslate trimmed with tournament=tournament.short_name asvar meta_description %}
+    {% blocktrans trimmed with tournament=tournament.short_name asvar meta_description %}
       The tab for {{ tournament }} runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats
-    {% endblocktranslate %}
+    {% endblocktrans %}
   {% else %}
-    {% blocktranslate trimmed asvar meta_description %}
+    {% blocktrans trimmed asvar meta_description %}
       This tab runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats
-    {% endblocktranslate %}
+    {% endblocktrans %}
   {% endif %}
   <meta name="description" content="{{ meta_description }}" />
   <meta property="og:description" content="{{ meta_description }}" />

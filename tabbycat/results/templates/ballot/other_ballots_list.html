@@ -6,11 +6,11 @@
     {% if new and nballotsubs > 0 or nballotsubs > 1 %}
       <li class="list-group-item list-group-item-warning">
         <h4 class="list-group-item-heading mb-0">
-          {% blocktranslate trimmed with number=nballotsubs|apnumber count nballotsubs=nballotsubs %}
+          {% blocktrans trimmed with number=nballotsubs|apnumber count nballotsubs=nballotsubs %}
             There is {{ number }} existing ballot set for this debate.
           {% plural %}
             There are {{ number }} existing ballot sets for this debate.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         </h4>
       </li>
     {% endif %}
@@ -18,12 +18,12 @@
 
   {% if ballotsub.confirmed %}
     <li class="list-group-item list-group-item-success">
-      {% translate "This ballot set is <strong>confirmed</strong>." %}
+      {% trans "This ballot set is <strong>confirmed</strong>." %}
     </li>
   {% endif %}
   {% if ballotsub.discarded %}
     <li class="list-group-item list-group-item-warning">
-      {% translate "This ballot set is <strong>discarded</strong>." %}
+      {% trans "This ballot set is <strong>discarded</strong>." %}
     </li>
   {% endif %}
 
@@ -38,56 +38,56 @@
       {% endif %}
 
         {% if other == ballotsub %}
-          <span class="badge badge-success float-right">{% translate "CURRENTLY VIEWING" %}</span>
+          <span class="badge badge-success float-right">{% trans "CURRENTLY VIEWING" %}</span>
         {% endif %}
 
         {% if other.merged %}
-          <span class="badge badge-success float-right">{% translate "MERGING" %}</span>
+          <span class="badge badge-success float-right">{% trans "MERGING" %}</span>
         {% endif %}
 
-        {% blocktranslate trimmed with version=other.version %}
+        {% blocktrans trimmed with version=other.version %}
           Version <strong>{{ version }}</strong>,
-        {% endblocktranslate %}
+        {% endblocktrans %}
 
         {% if other.submitter_type == ballotsub.SUBMITTER_TABROOM %}
-          {% blocktranslate trimmed with submitter=other.submitter %}
+          {% blocktrans trimmed with submitter=other.submitter %}
             entered by <strong>{{ submitter }}</strong>,
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% elif other.submitter_type == ballotsub.SUBMITTER_PUBLIC %}
           {% if other.participant_submitter %}
-            {% blocktranslate trimmed with adjudicator=other.participant_submitter %}
+            {% blocktrans trimmed with adjudicator=other.participant_submitter %}
               submitted from <strong>{{ adjudicator }}</strong>'s private URL,
-            {% endblocktranslate %}
+            {% endblocktrans %}
           {% else %}
-            {% blocktranslate trimmed with ip_address=other.ip_address %}
+            {% blocktrans trimmed with ip_address=other.ip_address %}
               submitted from the public form on {{ ip_address }},
-            {% endblocktranslate %}
+            {% endblocktrans %}
           {% endif %}
         {% endif %}
 
-        {% blocktranslate trimmed with timestamp=other.timestamp timeago=other.timestamp|timesince %}
+        {% blocktrans trimmed with timestamp=other.timestamp timeago=other.timestamp|timesince %}
           {{ timestamp }} ({{ timeago }} ago),
-        {% endblocktranslate %}
+        {% endblocktrans %}
 
         {% if other.confirmed %}
-          {% translate "unknown" as confirmer_unknown %}
-          {% blocktranslate trimmed with confirmer=other.confirmer|default:confirmer_unknown %}
+          {% trans "unknown" as confirmer_unknown %}
+          {% blocktrans trimmed with confirmer=other.confirmer|default:confirmer_unknown %}
             confirmed by <strong>{{ confirmer }}</strong>
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% else %}
-          {% translate "unconfirmed" %}
+          {% trans "unconfirmed" %}
         {% endif %}
 
         {% if other.discarded %}
-          {% translate "(discarded)" %}
+          {% trans "(discarded)" %}
         {% endif %}
 
         {% if other.identical_ballotsub_versions %}
-          {% blocktranslate trimmed with others=other.identical_ballotsub_versions|join:", " count n=other.identical_ballotsub_versions|length %}
+          {% blocktrans trimmed with others=other.identical_ballotsub_versions|join:", " count n=other.identical_ballotsub_versions|length %}
             <em>(identical to version {{ others }})</em>
           {% plural %}
             <em>(identical to versions {{ others }})</em>
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% endif %}
 
       {% if other != ballotsub %}

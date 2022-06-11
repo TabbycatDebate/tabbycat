@@ -12,10 +12,10 @@
       <div class="list-group-item">
         <ul>
           {% if adjudicator.independent %}
-            <li><em>{% translate "Independent adjudicator" %}</em></li>
+            <li><em>{% trans "Independent adjudicator" %}</em></li>
           {% endif %}
           {% if adjudicator.adj_core %}
-            <li><em>{% translate "Member of the adjudication core" %}</em></li>
+            <li><em>{% trans "Member of the adjudication core" %}</em></li>
           {% endif %}
         </ul>
       </div>
@@ -24,64 +24,64 @@
     {% if pref.show_adjudicator_institutions or admin_page or private_url %}
       <div class="list-group-item {% if not pref.show_adjudicator_institutions %}list-group-item-secondary{% endif %}">
         <div>
-          <strong>{% translate "Institution:" %}</strong>
+          <strong>{% trans "Institution:" %}</strong>
           {% if adjudicator.institution %}
             {{ adjudicator.institution.name }}
           {% else %}
-            <span class="text-muted">{% translate "Unaffiliated" %}</span>
+            <span class="text-muted">{% trans "Unaffiliated" %}</span>
           {% endif %}
         </div>
         {% if adjudicator.institution.region %}
           <div>
-            <strong>{% translate "Region:" %}</strong>
+            <strong>{% trans "Region:" %}</strong>
             {{ adjudicator.institution.region.name }}
           </div>
         {% endif %}
       </div>
     {% else %}
       <div class="list-group-item">
-        <em>{% translate "The institutional affiliations of adjudicators are not public at this tournament." %}</em>
+        <em>{% trans "The institutional affiliations of adjudicators are not public at this tournament." %}</em>
       </div>
     {% endif %}
 
     {% if admin_page %}
       <div class="list-group-item list-group-item-secondary">
         <div>
-          <strong>{% translate "Institutional Conflicts:" %}</strong>
+          <strong>{% trans "Institutional Conflicts:" %}</strong>
           {% for ic in adjudicator.adjudicatorinstitutionconflict_set.all %}
-            {{ ic.institution.name }}{% if not forloop.last %}{% translate "; " %}{% endif %}
+            {{ ic.institution.name }}{% if not forloop.last %}{% trans "; " %}{% endif %}
           {% empty %}
-            {% translate "None" %}
+            {% trans "None" %}
           {% endfor %}
         </div>
         <div>
-          <strong>{% translate "Team Conflicts:" %}</strong>
+          <strong>{% trans "Team Conflicts:" %}</strong>
           {% for tc in adjudicator.adjudicatorteamconflict_set.all %}
-            {% team_record_link tc.team admin_page tournament False %}{% if not forloop.last %}{% translate ", " %}{% endif %}
+            {% team_record_link tc.team admin_page tournament False %}{% if not forloop.last %}{% trans ", " %}{% endif %}
           {% empty %}
-            {% translate "None" %}
+            {% trans "None" %}
           {% endfor %}
         </div>
         <div>
-          <strong>{% translate "Adjudicator Conflicts:" %}</strong>
+          <strong>{% trans "Adjudicator Conflicts:" %}</strong>
           {% for adj in adjadj_conflicts %}
             {% if pref.public_record %}
-              <a href="{% adj_record_link adj admin_page tournament %}">{{ adj.name }}</a>{% if not forloop.last %}{% translate ", " %}{% endif %}
+              <a href="{% adj_record_link adj admin_page tournament %}">{{ adj.name }}</a>{% if not forloop.last %}{% trans ", " %}{% endif %}
             {% else %}
-              {{ adj.name }}{% if not forloop.last %}{% translate ", " %}{% endif %}
+              {{ adj.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
             {% endif %}
           {% empty %}
-            {% translate "None" %}
+            {% trans "None" %}
           {% endfor %}
         </div>
       </div>
 
       <div class="list-group-item list-group-item-secondary">
-        <strong>{% translate "Room Constraints:" %}</strong>
+        <strong>{% trans "Room Constraints:" %}</strong>
         {% for vc in adjudicator.venue_constraints.all %}
-          {{ vc.category }}{% if not forloop.last %}{% translate ", " %}{% endif %}
+          {{ vc.category }}{% if not forloop.last %}{% trans ", " %}{% endif %}
         {% empty %}
-          {% translate "None" %}
+          {% trans "None" %}
         {% endfor %}
       </div>
 

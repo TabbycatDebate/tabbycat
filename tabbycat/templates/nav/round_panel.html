@@ -24,7 +24,7 @@
         {% elif r.draw_status == r.STATUS_DRAFT %} circle-done
         {% elif r.draw_status == r.STATUS_CONFIRMED %} circle-done
         {% elif r.draw_status == r.STATUS_RELEASED %} circle-done
-        {% else %} circle-later{% endif %}"></i>{% translate "Availability" %}
+        {% else %} circle-later{% endif %}"></i>{% trans "Availability" %}
     </a>
 
     <a href="{% roundurl 'draw' r %}" data-parent="#rh{{ r.id }}"
@@ -34,7 +34,7 @@
         {% elif r.draw_status == r.STATUS_NONE %} circle-later
         {% elif r.draw_status == r.STATUS_CONFIRMED %} circle-done
         {% elif r.draw_status == r.STATUS_RELEASED %} circle-done
-        {% else %} circle-todo{% endif %}"></i>{% translate "Draw" %}
+        {% else %} circle-todo{% endif %}"></i>{% trans "Draw" %}
     </a>
 
     <a href="{% roundurl 'draw-display' r %}" data-parent="#rh{{ r.id }}"
@@ -45,7 +45,7 @@
         {% elif r.draw_status == r.STATUS_DRAFT %} circle-later
         {% elif r.draw_status == r.STATUS_CONFIRMED %} circle-todo
         {% elif r.draw_status == r.STATUS_RELEASED %} circle-done
-        {% else %} circle-todo{% endif %}"></i>{% translate "Display" %}
+        {% else %} circle-todo{% endif %}"></i>{% trans "Display" %}
     </a>
 
     <a href="{% roundurl 'results-round-list' r %}" data-parent="#rh{{ r.id }}"
@@ -54,7 +54,7 @@
         {% if r.completed %} circle-done
         {% elif r.draw_status == r.STATUS_CONFIRMED %}circle-todo
         {% elif r.draw_status == r.STATUS_RELEASED %}circle-todo
-        {% else %} circle-later{% endif %}"></i>{% translate "Results" %}
+        {% else %} circle-later{% endif %}"></i>{% trans "Results" %}
     </a>
 
   </div>

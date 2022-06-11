@@ -2,25 +2,25 @@
 {% load i18n %}
 
 {% block head-title %}
-  {% translate "Feedback Forms" %}
+  {% trans "Feedback Forms" %}
 {% endblock %}
-{% block page-title %}{% blocktranslate trimmed with round=round.name %}
+{% block page-title %}{% blocktrans trimmed with round=round.name %}
 Printable Feedback Forms for {{ round }}
-{% endblocktranslate %}{% endblock %}
+{% endblocktrans %}{% endblock %}
 
 {% block page-alerts %}
   {% if not team_questions_exist or not adj_questions_exist %}
     {% if not team_questions_exist and not adj_questions_exist %}
-      {% translate "No feedback questions have been added for either teams or adjudicators to answer." as first_sentence %}
+      {% trans "No feedback questions have been added for either teams or adjudicators to answer." as first_sentence %}
     {% elif not team_questions_exist %}
-      {% translate "No feedback questions have been added for teams to answer." as first_sentence %}
+      {% trans "No feedback questions have been added for teams to answer." as first_sentence %}
     {% elif not adj_questions_exist %}
-      {% translate "No feedback questions have been added for adjudicators to answer." as first_sentence %}
+      {% trans "No feedback questions have been added for adjudicators to answer." as first_sentence %}
     {% endif %}
-    {% blocktranslate trimmed asvar message %}
+    {% blocktrans trimmed asvar message %}
       {{ first_sentence }}
       Check the <a href="http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html" target="_blank">documentation</a> for information on how to add these (otherwise these forms will be quite bare).
-    {% endblocktranslate %}
+    {% endblocktrans %}
     {% include "components/alert.html" with type="warning" %}
   {% endif %}
   {{ block.super }}
@@ -38,7 +38,7 @@ Printable Feedback Forms for {{ round }}
       </div>
     </template>
     <div v-if="ballots.length === 0" class="alert alert-warning">
-      {% translate "There are no feedback sheets available — perhaps adjudicators have not been allocated?" %}
+      {% trans "There are no feedback sheets available — perhaps adjudicators have not been allocated?" %}
     </div>
   </div>
 

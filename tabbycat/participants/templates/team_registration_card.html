@@ -13,37 +13,37 @@
         {% if not use_code_names or private_url or admin_page %}
           {% if team.short_name == team.long_name %}
             <div>
-              <strong>{% translate "Team name:" %}</strong>
+              <strong>{% trans "Team name:" %}</strong>
               {{ team.long_name }}
             </div>
           {% else %}
             <div>
-              <strong>{% translate "Full team name:" %}</strong>
+              <strong>{% trans "Full team name:" %}</strong>
               {{ team.long_name }}
             </div>
             <div>
-              <strong>{% translate "Short team name:" %}</strong>
+              <strong>{% trans "Short team name:" %}</strong>
               {{ team.short_name }}
             </div>
           {% endif %}
         {% endif %}
         {% if pref.team_code_names != 'off' %}
           <div>
-            <strong>{% translate "Code name:" %}</strong>
+            <strong>{% trans "Code name:" %}</strong>
             {% if team.code_name %}
               {{ team.code_name }}
             {% else %}
-              <span class="text-muted">{% translate "No code name assigned" %}</span>
+              <span class="text-muted">{% trans "No code name assigned" %}</span>
             {% endif %}
           </div>
         {% endif %}
         {% if pref.show_emoji %}
           <div>
-            <strong>{% translate "Emoji:" %}</strong>
+            <strong>{% trans "Emoji:" %}</strong>
             {% if team.emoji %}
               {{ team.emoji }}
             {% else %}
-              <span class="text-muted">{% translate "No emoji assigned" %}</span>
+              <span class="text-muted">{% trans "No emoji assigned" %}</span>
             {% endif %}
           </div>
         {% endif %}
@@ -51,11 +51,11 @@
 
     {% if pref.show_speakers_in_draw %}
       <div class="list-group-item">
-        <strong>{% translate "Speakers:" %}</strong>
+        <strong>{% trans "Speakers:" %}</strong>
         {% for speaker in team.speakers %}
-          {{ speaker.name }}{% if not forloop.last %}{% translate ", " %}{% endif %}
+          {{ speaker.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
         {% empty %}
-          {% translate "None" %}
+          {% trans "None" %}
         {% endfor %}
       </div>
     {% endif %}
@@ -63,20 +63,20 @@
     {% if pref.public_break_categories or admin_page or private_url %}
       <div class="list-group-item {% if not pref.public_break_categories %} list-group-item-secondary{% endif %}">
         <div>
-          <strong>{% translate "Eligible for break categories:" %}</strong>
+          <strong>{% trans "Eligible for break categories:" %}</strong>
           {% for category in team.break_categories.all %}
-            {{ category.name }}{% if not forloop.last %}{% translate ", " %}{% endif %}
+            {{ category.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
           {% empty %}
-            {% translate "None" %}
+            {% trans "None" %}
           {% endfor %}
         </div>
         {% if participant %}
           <div>
-            <strong>{% translate "Speaker categories:" %}</strong>
+            <strong>{% trans "Speaker categories:" %}</strong>
             {% for category in participant.categories.all %}
-              {{ category.name }}{% if not forloop.last %}{% translate ", " %}{% endif %}
+              {{ category.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
             {% empty %}
-              {% translate "None" %}
+              {% trans "None" %}
             {% endfor %}
           </div>
         {% endif %}
@@ -86,16 +86,16 @@
     {% if pref.show_team_institutions or admin_page or private_url %}
       <div class="list-group-item {% if not pref.show_team_institutions %} list-group-item-secondary{% endif %}">
         <div>
-          <strong>{% translate "Institution:" %}</strong>
+          <strong>{% trans "Institution:" %}</strong>
           {% if team.institution %}
             {{ team.institution.name }}
           {% else %}
-            <span class="text-muted">{% translate "Unaffiliated" %}</span>
+            <span class="text-muted">{% trans "Unaffiliated" %}</span>
           {% endif %}
         </div>
         {% if team.institution.region %}
           <div>
-            <strong>{% translate "Region:" %}</strong>
+            <strong>{% trans "Region:" %}</strong>
             {{ team.institution.region.name }}
           </div>
         {% endif %}
@@ -106,31 +106,31 @@
       <div class="list-group-item list-group-item-secondary">
 
         <div>
-          <strong>{% translate "Institutional Conflicts:" %}</strong>
+          <strong>{% trans "Institutional Conflicts:" %}</strong>
           {% for ic in team.teaminstitutionconflict_set.all %}
-            {{ ic.institution.name }}{% if not forloop.last %}{% translate "; " %}{% endif %}
+            {{ ic.institution.name }}{% if not forloop.last %}{% trans "; " %}{% endif %}
           {% empty %}
-            {% translate "None" %}
+            {% trans "None" %}
           {% endfor %}
         </div>
 
         <div>
-          <strong>{% translate "Adjudicator Conflicts:" %}</strong>
+          <strong>{% trans "Adjudicator Conflicts:" %}</strong>
           {% for ac in team.adjudicatorteamconflict_set.all %}
-            {{ ac.adjudicator.name }}{% if not forloop.last %}{% translate ", " %}{% endif %}
+            {{ ac.adjudicator.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
           {% empty %}
-            {% translate "None" %}
+            {% trans "None" %}
           {% endfor %}
         </div>
 
       </div>
 
       <div class="list-group-item list-group-item-secondary">
-        <strong>{% translate "Room Constraints:" %}</strong>
+        <strong>{% trans "Room Constraints:" %}</strong>
         {% for vc in team.venue_constraints.all %}
-          {{ vc.category }}{% if not forloop.last %}{% translate ", " %}{% endif %}
+          {{ vc.category }}{% if not forloop.last %}{% trans ", " %}{% endif %}
         {% empty %}
-          {% translate "None" %}
+          {% trans "None" %}
         {% endfor %}
       </div>
 

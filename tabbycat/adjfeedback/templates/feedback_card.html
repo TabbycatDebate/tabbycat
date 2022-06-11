@@ -5,19 +5,19 @@
 
     {% if not feedback.confirmed %}
       <div class="list-group-item list-group-item-warning h6" data-toggle="tooltip"
-           title="{% translate 'This is most likely because the team or adjudicator who submitted this feedback has submitted several times on the same person; or because a team has submitted feedback on multiple panellists (rather than just the orallist).' %}">
-      {% translate "Unconfirmed; will not affect this adjudicator's score." %}
+           title="{% trans 'This is most likely because the team or adjudicator who submitted this feedback has submitted several times on the same person; or because a team has submitted feedback on multiple panellists (rather than just the orallist).' %}">
+      {% trans "Unconfirmed; will not affect this adjudicator's score." %}
       </div>
     {% endif %}
     {% if feedback.ignored %}
       <div class="list-group-item list-group-item-warning h6" data-toggle="tooltip"
-           title="{% translate 'The feedback is counted for the adjudicator, but is not taken into account when calculating scores.' %}">
-      {% translate "Ignored; will not affect this adjudicator's score." %}
+           title="{% trans 'The feedback is counted for the adjudicator, but is not taken into account when calculating scores.' %}">
+      {% trans "Ignored; will not affect this adjudicator's score." %}
       </div>
     {% endif %}
     {% if not feedback.debate_adjudicator.get_type_display %}
       <div class="list-group-item list-group-item-danger h6">
-        {% translate "This feedback is submitted on an adjudicator but it looks like they have been since been removed from the debate. You should probably go to the Edit Database area and delete this feedback." %}
+        {% trans "This feedback is submitted on an adjudicator but it looks like they have been since been removed from the debate. You should probably go to the Edit Database area and delete this feedback." %}
       </div>
     {% endif %}
     <div class="list-group-item h5">
@@ -26,36 +26,36 @@
             {% elif feedback.score <= score_thresholds.medium_score %}badge-warning
             {% elif feedback.score > score_thresholds.high_score %}badge-success
             {% else %}badge-primary{% endif %}" data-toggle="tooltip"
-            title="{% translate "The score given in this piece of feedback." %}">
-        {% blocktranslate trimmed with score=feedback.score round=feedback.round.abbreviation %}
+            title="{% trans "The score given in this piece of feedback." %}">
+        {% blocktrans trimmed with score=feedback.score round=feedback.round.abbreviation %}
           {{ round }} {{ score }}
-        {% endblocktranslate %}
+        {% endblocktrans %}
       </span>
-      {% blocktranslate trimmed with adjudicator=feedback.adjudicator.name %}
+      {% blocktrans trimmed with adjudicator=feedback.adjudicator.name %}
         On {{ adjudicator }}
-      {% endblocktranslate %}
+      {% endblocktrans %}
     </div>
     <div class="list-group-item h5">
-      {% blocktranslate trimmed with as=feedback.debate_adjudicator.get_type_display %}
+      {% blocktrans trimmed with as=feedback.debate_adjudicator.get_type_display %}
         <span class="text-secondary small">Received as {{ as }}</span>
-      {% endblocktranslate %}
+      {% endblocktrans %}
       <span class="badge float-right badge-secondary" data-toggle="tooltip">
-        {% blocktranslate trimmed with base=feedback.adjudicator.base_score|floatformat:"1" %}
+        {% blocktrans trimmed with base=feedback.adjudicator.base_score|floatformat:"1" %}
           Base {{ base }}
-        {% endblocktranslate %}
+        {% endblocktrans %}
       </span>
     </div>
     <div class="list-group-item h5">
       {% if feedback.source_adjudicator %}
-        {% blocktranslate trimmed with source=feedback.source_adjudicator.adjudicator.name relationship=feedback.source_adjudicator.get_type_display %}
+        {% blocktrans trimmed with source=feedback.source_adjudicator.adjudicator.name relationship=feedback.source_adjudicator.get_type_display %}
           From {{ source }} <span class="text-secondary small">(their {{ relationship }})</span>
-        {% endblocktranslate %}
+        {% endblocktrans %}
       {% elif feedback.source_team %}
-        {% blocktranslate trimmed with source=feedback.source_team.team.short_name relationship=feedback.source_team.get_result_display|safe side=feedback.source_team.get_side_abbr %}
+        {% blocktrans trimmed with source=feedback.source_team.team.short_name relationship=feedback.source_team.get_result_display|safe side=feedback.source_team.get_side_abbr %}
           From {{ source }} <span class="text-secondary small">({{ relationship }} from {{ side }})</span>
-        {% endblocktranslate %}
+        {% endblocktrans %}
       {% else %}
-        {% translate "From unknown" %}
+        {% trans "From unknown" %}
       {% endif %}
     </div>
     {% for item in feedback.items %}
@@ -85,27 +85,27 @@
     {% endfor %}
     <div class="list-group-item text-secondary">
       <span class="pt-3 small">
-        {% blocktranslate trimmed with time=feedback.timestamp|naturaltime %}
+        {% blocktrans trimmed with time=feedback.timestamp|naturaltime %}
           {{ time }}
-        {% endblocktranslate %}
+        {% endblocktrans %}
       </span>
       <span class="float-right" data-toggle="tooltip"
-            title="{% translate "Unconfirmed feedback is not counted as having been submitted and does not affect this adjudicator's score." %}">
+            title="{% trans "Unconfirmed feedback is not counted as having been submitted and does not affect this adjudicator's score." %}">
         <form method="POST" action="{% tournamenturl 'adjfeedback-confirm-feedback' feedback.id %}" class='text-secondary'>
           {% csrf_token %}
           <input type="hidden" name="next" value="{{ request.path }}">
           <button type="submit" class="btn btn-link text-muted pl-3 p-0">
-            <small>{% if feedback.confirmed %}{% translate "Un-confirm" %}{% else %}{% translate "Confirm" %}{% endif %}</small>
+            <small>{% if feedback.confirmed %}{% trans "Un-confirm" %}{% else %}{% trans "Confirm" %}{% endif %}</small>
           </button>
         </form>
       </span>
       <span class="float-right" data-toggle="tooltip"
-            title="{% translate "Ignored feedback is counted as having been submitted, but does not affect this adjudicator's score." %}">
+            title="{% trans "Ignored feedback is counted as having been submitted, but does not affect this adjudicator's score." %}">
         <form method="POST" action="{% tournamenturl 'adjfeedback-ignore-feedback' feedback.id %}" class='text-secondary'>
           {% csrf_token %}
           <input type="hidden" name="next" value="{{ request.path }}">
           <button type="submit" class="btn btn-link text-muted p-0">
-            <small>{% if feedback.ignored %}{% translate "Un-ignore" %}{% else %}{% translate "Ignore" %}{% endif %}</small>
+            <small>{% if feedback.ignored %}{% trans "Un-ignore" %}{% else %}{% trans "Ignore" %}{% endif %}</small>
           </button>
         </form>
       </span>

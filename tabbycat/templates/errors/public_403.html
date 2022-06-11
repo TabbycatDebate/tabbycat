@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load debate_tags i18n %}
 
-{% block page-title %}{% translate "Permission Denied (403)" %}{% endblock %}
+{% block page-title %}{% trans "Permission Denied (403)" %}{% endblock %}
 {% block head-title %}
-  <h2><span class="emoji">😾</span> {% translate "Permission Denied (403)" %}</h2>
+  <h2><span class="emoji">😾</span> {% trans "Permission Denied (403)" %}</h2>
 {% endblock %}
 
 {% block content %}
@@ -11,16 +11,16 @@
     <div class="card-body">
       {% if tournament %}
         {% tournamenturl 'tournament-public-index' as url %}
-        {% blocktranslate trimmed %}
+        {% blocktrans trimmed %}
           Whoops! This page isn't enabled for this tournament.
           <a href="{{ url }}">Back to the tournament home page.</a>
-        {% endblocktranslate %}
+        {% endblocktrans %}
       {% else %}
         {% url 'tabbycat-index' as url %}
-        {% blocktranslate trimmed %}
+        {% blocktrans trimmed %}
           Whoops! This page isn't enabled for this tournament.
           <a href="{{ url }}">Back to the home page.</a>
-        {% endblocktranslate %}
+        {% endblocktrans %}
       {% endif %}
     </div>
   </div>

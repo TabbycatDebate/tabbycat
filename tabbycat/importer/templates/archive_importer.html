@@ -3,7 +3,7 @@
 
 {% block head-title %}{% endblock %}
 {% block nav %}{% endblock %}
-{% block page-title %}{% translate "Import Tournament Archive" context "page title" %}{% endblock %}
+{% block page-title %}{% trans "Import Tournament Archive" context "page title" %}{% endblock %}
 
 {% block content %}
 
@@ -15,14 +15,14 @@
       <form action="." method="POST">
       {% csrf_token %}
 
-      {% translate "Import Tournament Archive" context "page title" as title %}
-      {% translate "This form will create a tournament with the data provided as a Debate XML format." as text %}
+      {% trans "Import Tournament Archive" context "page title" as title %}
+      {% trans "This form will create a tournament with the data provided as a Debate XML format." as text %}
       {% include "components/form-title.html" with emoji="🗂️" %}
 
       {% include "components/form-main.html" %}
 
-      {% translate "Import" as title %}
-      {% translate "Go back to the site home page" as subtitle %}
+      {% trans "Import" as title %}
+      {% trans "Go back to the site home page" as subtitle %}
       {% url 'tabbycat-index' as suburl %}
       {% include "components/form-submit.html" %}
 

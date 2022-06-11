@@ -3,20 +3,20 @@
 
 {% load add_field_css %}
 
-{% block page-title %}{% blocktranslate trimmed with section=section.verbose_name %}
+{% block page-title %}{% blocktrans trimmed with section=section.verbose_name %}
   Configuration: {{ section }}
-{% endblocktranslate %}{% endblock %}
+{% endblocktrans %}{% endblock %}
 {% block head-title %}<span class="emoji">🔧</span>
-  {% blocktranslate trimmed with section=section.verbose_name %}
+  {% blocktrans trimmed with section=section.verbose_name %}
     Edit Configuration: {{ section }}
-  {% endblocktranslate %}
+  {% endblocktrans %}
 {% endblock %}
 
 {% block page-subnav-sections %}
 
   <a class="btn btn-outline-primary"
      href="{% tournamenturl 'options-tournament-index' %}">
-    <i data-feather="chevron-left"></i> {% translate "Back to Configuration" %}
+    <i data-feather="chevron-left"></i> {% trans "Back to Configuration" %}
   </a>
 
 {% endblock %}

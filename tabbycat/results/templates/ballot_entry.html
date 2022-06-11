@@ -18,10 +18,10 @@
       {% tournamenturl 'old-results-assistant-ballotset-edit' pk=ballotsub.id as old_url %}
     {% endif %}
   {% endif %}
-  {% blocktranslate trimmed asvar message %}
+  {% blocktrans trimmed asvar message %}
     This ballot entry interface is in beta, if you encounter any problems the older
     version of the interface is <a href="{{ old_url }}" class="alert-link">available here</a>.
-  {% endblocktranslate %}
+  {% endblocktrans %}
   {% include "components/alert.html" with type="info" %}
   {{ block.super }}
 

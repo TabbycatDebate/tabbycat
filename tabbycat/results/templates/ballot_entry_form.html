@@ -20,28 +20,28 @@
 
     {% if sheet.adjudicator %}
       {% if sheet.adjudicator.institution %}
-        {% blocktranslate trimmed with name=sheet.adjudicator.name institution=sheet.adjudicator.institution.code asvar title %}
+        {% blocktrans trimmed with name=sheet.adjudicator.name institution=sheet.adjudicator.institution.code asvar title %}
           Ballot from {{ name }} ({{ institution }})
-        {% endblocktranslate %}
+        {% endblocktrans %}
       {% else %}
-        {% blocktranslate trimmed with name=sheet.adjudicator.name asvar title %}
+        {% blocktrans trimmed with name=sheet.adjudicator.name asvar title %}
           Ballot from {{ name }}
-        {% endblocktranslate %}
+        {% endblocktrans %}
       {% endif %}
       {% if sheet.adjudicator == debate.adjudicators.chair %}
-        {% blocktranslate trimmed asvar subtitle %}Chair{% endblocktranslate %}
+        {% blocktrans trimmed asvar subtitle %}Chair{% endblocktrans %}
       {% elif sheet.adjudicator != debate.adjudicators.chair %}
-        {% blocktranslate trimmed asvar subtitle %}Panellist{% endblocktranslate %}
+        {% blocktrans trimmed asvar subtitle %}Panellist{% endblocktrans %}
       {% endif %}
     {% else %}
       {% if debate.adjudicators.has_chair %}
-        {% blocktranslate trimmed with chair=debate.adjudicators.chair asvar title %}
+        {% blocktrans trimmed with chair=debate.adjudicators.chair asvar title %}
           Scoresheet from chair {{ chair }}
-        {% endblocktranslate %}
+        {% endblocktrans %}
       {% else %}
-        {% blocktranslate trimmed asvar title %}
+        {% blocktrans trimmed asvar title %}
           Scoresheet, no chair set
-        {% endblocktranslate %}
+        {% endblocktrans %}
       {% endif %}
     {% endif %}
 
@@ -60,21 +60,21 @@
             </div>
 
             {% for error in position.speaker.errors %}
-              {% blocktranslate trimmed asvar message with pos=position.name error=error %}
+              {% blocktrans trimmed asvar message with pos=position.name error=error %}
                 Error with {{ pos }}'s speaker field: {{ error }}
-              {% endblocktranslate %}
+              {% endblocktrans %}
               {% include "components/form-errors.html" %}
             {% endfor %}
             {% for error in position.ghost.errors %}
-              {% blocktranslate trimmed asvar message with pos=position.name error=error %}
+              {% blocktrans trimmed asvar message with pos=position.name error=error %}
                 Error with {{ pos }}'s duplicate speaker field: {{ error }}
-              {% endblocktranslate %}
+              {% endblocktrans %}
               {% include "components/form-errors.html" %}
             {% endfor %}
             {% for error in position.score.errors %}
-              {% blocktranslate trimmed asvar message with pos=position.name error=error %}
+              {% blocktrans trimmed asvar message with pos=position.name error=error %}
                 Error with {{ pos }}'s score field: {{ error }}
-              {% endblocktranslate %}
+              {% endblocktrans %}
               {% include "components/form-errors.html" %}
             {% endfor %}
 

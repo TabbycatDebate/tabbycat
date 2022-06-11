@@ -18,14 +18,12 @@
 
   <div class="alert alert-warning mt-3" id="error-reporting" style="display: none;">
       <strong>Tab Directors:</strong>
-      If you're running this on Heroku, an error report has been sent to the developers of Tabbycat (unless you've disabled this or are running Tabbykitten). If you encounter this error repeatedly, please let us know by posting in our <a href="https://www.facebook.com/groups/tabbycat.debate/">Facebook group</a> (preferred) or by
-      <a id="report-link" href="https://github.com/TabbycatDebate/tabbycat/issues/new/?title=Internal%20server%20error%20report&body=I%20hit%20an%20internal%20server%20error%20while%20trying%20to%20load%20this%20URL:%0A[please%20copy%20and%20paste%20the%20URL%20of%20the%20page%20here]%0A%0APlease%20describe%20what%20you%20were%20doing%20when%20the%20error%20happened,%20along%20with%20any%20other%20useful%20information:%0A&labels=error-report">
-      opening an issue on GitHub</a>, and we'll try our best to assist. Please be sure to include the URL of this page <span id="page-url"></span> in your post.
+      If you're running this on Heroku, an error report has been sent to the developers of Tabbycat (unless you've disabled this or are running Tabbykitten). If you encounter this error repeatedly, please let us know by posting in our <a href="https://www.facebook.com/groups/tabbycat.debate/">Facebook group</a> and people should try to help. Please be sure to explain what you were trying to do and include the URL of this page (<span id="page-url"></span>) in your post.
   </div>
 
   <script>
     document.getElementById("report-link").href = "https://github.com/TabbycatDebate/tabbycat/issues/new/?title=Internal%20server%20error%20report&body=I%20hit%20an%20internal%20server%20error%20while%20trying%20to%20load%20this%20URL:%0A" + window.location.href + "%0A%0APlease%20describe%20what%20you%20were%20doing%20when%20the%20error%20happened,%20along%20with%20any%20other%20useful%20information:%0A&labels=error-report";
-    document.getElementById("page-url").innerHTML = "(" + window.location.href + ")";
+    document.getElementById("page-url").innerText = window.location.href;
     if(window.location.href.indexOf("admin") > -1 || window.location.href.indexOf("database") > -1) {
       document.getElementById("error-reporting").style.display = "block";
     }

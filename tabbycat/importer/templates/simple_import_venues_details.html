@@ -1,21 +1,21 @@
 {% extends "base.html" %}
 {% load static debate_tags add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">🎪</span> {% translate "Add Rooms" context 'page title' %}
-{% blocktranslate trimmed with step=wizard.steps.step1 count=wizard.steps.count %}(Step {{ step }} of {{ count }}){% endblocktranslate %}{% endblock %}
-{% block page-title %}{% translate "Add Rooms" context 'page title' %}{% endblock %}
+{% block head-title %}<span class="emoji">🎪</span> {% trans "Add Rooms" context 'page title' %}
+{% blocktrans trimmed with step=wizard.steps.step1 count=wizard.steps.count %}(Step {{ step }} of {{ count }}){% endblocktrans %}{% endblock %}
+{% block page-title %}{% trans "Add Rooms" context 'page title' %}{% endblock %}
 
 {% block content %}
 
 <form method="POST">
 
   <div class="mb-3">
-    <button type="submit" class="btn btn-outline-primary" name="wizard_goto_step" value="{{ wizard.steps.prev }}"><i data-feather="chevron-left"></i>{% translate "Previous Step" %}</button>
+    <button type="submit" class="btn btn-outline-primary" name="wizard_goto_step" value="{{ wizard.steps.prev }}"><i data-feather="chevron-left"></i>{% trans "Previous Step" %}</button>
   </div>
 
-  {% blocktranslate trimmed asvar p1 %}
+  {% blocktrans trimmed asvar p1 %}
     Priorities indicate how much you want to use the room. Larger numbers indicate higher priority. If you have more rooms than debates, the rooms with the lowest priorities will not be used.
-  {% endblocktranslate %}
+  {% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" %}
 
   {% csrf_token %}
@@ -30,7 +30,7 @@
     {% for form in wizard.form.forms %}
       {% include "components/form-main.html" with double=True %}
     {% endfor %}
-    {% translate 'Save All Rooms' as title %}
+    {% trans 'Save All Rooms' as title %}
     {% include "components/form-submit.html" %}
   </div>
 

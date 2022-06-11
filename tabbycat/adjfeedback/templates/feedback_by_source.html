@@ -1,22 +1,22 @@
 {% extends "feedback_base.html" %}
 {% load debate_tags i18n %}
 
-{% block head-title %}{% blocktranslate trimmed %}Feedback {{ source_type }} {{ source_name }}{% endblocktranslate %}{% endblock %}
-{% block page-title %}{% blocktranslate trimmed %}Feedback {{ source_type }} {{ source_name }}{% endblocktranslate %}{% endblock %}
+{% block head-title %}{% blocktrans trimmed %}Feedback {{ source_type }} {{ source_name }}{% endblocktrans %}{% endblock %}
+{% block page-title %}{% blocktrans trimmed %}Feedback {{ source_type }} {{ source_name }}{% endblocktrans %}{% endblock %}
 
 {% block content %}
 
   {% if feedbacks.count == 0 %}
 
     {% if source_type == 'from' %}
-      {% blocktranslate trimmed asvar message %}
+      {% blocktrans trimmed asvar message %}
         {{ source_name }} hasn't submitted any feedback yet.
-      {% endblocktranslate %}
+      {% endblocktrans %}
     {% endif %}
     {% if source_type == 'on' %}
-      {% blocktranslate trimmed asvar message %}
+      {% blocktrans trimmed asvar message %}
         {{ source_name }} hasn't received any feedback yet.
-      {% endblocktranslate %}
+      {% endblocktrans %}
     {% endif %}
     {% include "components/alert.html" with type="info" %}
 

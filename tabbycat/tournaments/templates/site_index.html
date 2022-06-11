@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block head-title %}<span class="emoji">👋</span> {% translate "Welcome!" %}{% endblock %}
+{% block head-title %}<span class="emoji">👋</span> {% trans "Welcome!" %}{% endblock %}
 {% block page-title %}Home{% endblock %}
 
 {% block page-alerts %}
@@ -18,22 +18,22 @@
   <div class="list-group">
     {% if user.is_authenticated and not has_inactive %}
 
-      {% blocktranslate trimmed asvar text %}
+      {% blocktrans trimmed asvar text %}
         It looks like there aren't any tournaments on this site. Would you like to create one?
-      {% endblocktranslate %}
+      {% endblocktrans %}
       {% url 'tournament-create' as url %}
       {% include "components/item-action.html" with alone=True type="success" to_complete=True %}
 
     {% else %}
 
       {% if inactive %}
-        {% blocktranslate trimmed asvar p1 %}
+        {% blocktrans trimmed asvar p1 %}
           There are currently no active tournaments set up on this site.
-        {% endblocktranslate %}
+        {% endblocktrans %}
       {% else %}
-        {% blocktranslate trimmed asvar p1 %}
+        {% blocktrans trimmed asvar p1 %}
           There are currently no tournaments set up on this site.
-        {% endblocktranslate %}
+        {% endblocktrans %}
       {% endif %}
       {% include "components/explainer-card.html" with type="info" %}
 
@@ -53,16 +53,16 @@
 <div class="list-group mt-2">
   {% if user.is_superuser %}
 
-    {% translate "New Tournament" as text %}{% url 'tournament-create' as url %}
+    {% trans "New Tournament" as text %}{% url 'tournament-create' as url %}
     {% include "components/item-action.html" with icon="plus-circle" %}
 
-    {% translate "Edit Database Area" as text %}{% url 'admin:index' as url %}
+    {% trans "Edit Database Area" as text %}{% url 'admin:index' as url %}
     {% include "components/item-action.html" with icon="edit" %}
 
-    {% translate "Send a Test Email" as text %}{% url 'notifications-test-email' as url %}
+    {% trans "Send a Test Email" as text %}{% url 'notifications-test-email' as url %}
     {% include "components/item-action.html" with icon="send" %}
 
-    {% translate "Import DebateXML" as text %}{% url 'importer-archive' as url %}
+    {% trans "Import DebateXML" as text %}{% url 'importer-archive' as url %}
     {% include "components/item-action.html" with icon="archive" %}
 
   {% endif %}
@@ -71,17 +71,17 @@
 <div class="list-group mt-2">
   {% if user.is_authenticated %}
 
-    {% blocktranslate asvar text %}Get API Token / Change Password ({{ user }}){% endblocktranslate %}
+    {% blocktrans asvar text %}Get API Token / Change Password ({{ user }}){% endblocktrans %}
     {% url 'password_change' as url %}
     {% include "components/item-action.html" with icon="rotate-cw" %}
 
-    {% blocktranslate asvar text %}Log Out ({{ user }}){% endblocktranslate %}
+    {% blocktrans asvar text %}Log Out ({{ user }}){% endblocktrans %}
     {% url 'logout' as url %}
     {% include "components/item-action.html" with icon="log-out" %}
 
   {% else %}
 
-    {% translate "Log In as Admin" as text %}{% url 'login' as url %}
+    {% trans "Log In as Admin" as text %}{% url 'login' as url %}
     {% include "components/item-action.html" with icon="log-in" %}
 
   {% endif %}
