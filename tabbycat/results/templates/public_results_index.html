@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% load debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">💥</span> {% translate "Results" %}{% endblock %}
-{% block page-title %}💥 {% translate "Results" %}{% endblock %}
+{% block head-title %}<span class="emoji">💥</span> {% trans "Results" %}{% endblock %}
+{% block page-title %}💥 {% trans "Results" %}{% endblock %}
 
 {% block content %}
 
 <ul class="list-group">
   {% for r in tournament.rounds_with_released_results %}
     {% roundurl 'results-public-round' r as url %}
-    {% blocktranslate trimmed with round=r.name asvar text %}
+    {% blocktrans trimmed with round=r.name asvar text %}
       Results for {{ round }}
-    {% endblocktranslate %}
+    {% endblocktrans %}
     {% include "components/item-action.html" with icon="trending-up" %}
   {% endfor %}
 </ul>

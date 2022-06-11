@@ -5,40 +5,40 @@
   <div class="btn-group flex-wrap">
     <a class="btn btn-outline-primary {% if feedback_overview_nav %}active disabled{% endif %}"
        href="{% tournamenturl 'adjfeedback-overview' %}">
-      {% translate "Overview" %}
+      {% trans "Overview" %}
     </a>
     <a class="btn btn-outline-primary {% if feedback_latest_nav %}active disabled{% endif %}"
        href="{% tournamenturl 'adjfeedback-view-latest' %}">
-      {% translate "Latest" %}
+      {% trans "Latest" %}
     </a>
     <a class="btn btn-outline-primary {% if feedback_progress_nav %}active disabled{% endif %}"
        href="{% tournamenturl 'adjfeedback-progress' %}">
-      {% translate "Unsubmitted" %}
+      {% trans "Unsubmitted" %}
     </a>
     <a class="btn btn-outline-primary {% if feedback_important_nav %}active disabled{% endif %}"
        href="{% tournamenturl 'adjfeedback-view-important' %}">
-      {% translate "Important" %}
+      {% trans "Important" %}
     </a>
     <a class="btn btn-outline-primary {% if feedback_comments_nav %}active disabled{% endif %}"
        href="{% tournamenturl 'adjfeedback-view-comments' %}">
-      {% translate "Comments" %}
+      {% trans "Comments" %}
     </a>
     <a class="btn btn-outline-primary {% if feedback_source_nav %}active disabled{% endif %}"
        href="{% tournamenturl 'adjfeedback-view-by-source' %}">
-      {% translate "By Source" %}
+      {% trans "By Source" %}
     </a>
     <a class="btn btn-outline-primary {% if feedback_target_nav %}active disabled{% endif %}"
        href="{% tournamenturl 'adjfeedback-view-by-target' %}">
-      {% translate "By Target" %}
+      {% trans "By Target" %}
     </a>
   </div>
 {% endblock %}
 
 {% block page-subnav-actions %}
   <a class="btn btn-outline-success" href="{% tournamenturl 'adjfeedback-update-scores-bulk' %}">
-    {% translate "Bulk Update Scores" %}
+    {% trans "Bulk Update Scores" %}
   </a>
   <a class="btn btn-outline-success" href="{% tournamenturl 'adjfeedback-add-index' %}">
-    {% translate "Add Feedback" %}
+    {% trans "Add Feedback" %}
   </a>
 {% endblock %}

@@ -1,51 +1,51 @@
 {% extends "tables/base_vue_table.html" %}
 {% load humanize debate_tags i18n %}
 
-{% block page-title %}{% translate "Enter Results" %}{% endblock %}
-{% block head-title %}<span class="emoji">📩</span> {% translate "Enter Results" %}{% endblock %}
+{% block page-title %}{% trans "Enter Results" %}{% endblock %}
+{% block head-title %}<span class="emoji">📩</span> {% trans "Enter Results" %}{% endblock %}
 
 {% block page-alerts %}
 
   {% block page-alerts-role-specific %}
     {# Administrators have different alert that have links, see admin_results.html. #}
 
-    {% translate "This page automatically updates with the new ballot entries and checkins as they occur." as message %}
+    {% trans "This page automatically updates with the new ballot entries and checkins as they occur." as message %}
     {% include "components/alert.html" with type="info" %}
 
     {% if pref.teams_in_debate == "bp" and round.ballots_per_debate == "per-adj" %}
-      {% blocktranslate trimmed asvar message %}
+      {% blocktrans trimmed asvar message %}
         This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Results can't be entered while this configuration is in place. Please ask an administrator to change this configuration.
-      {% endblocktranslate %}
+      {% endblocktrans %}
       {% include "components/alert.html" with type="danger" %}
     {% endif %}
 
     {% if pref.enable_motions and round.motion_set.count == 0 %}
-      {% blocktranslate trimmed asvar message %}
+      {% blocktrans trimmed asvar message %}
         Currently there are no motions entered for this round, so debate results
         cannot be entered. Please ask an administrator to add motions.
-      {% endblocktranslate %}
+      {% endblocktrans %}
       {% include "components/alert.html" with type="danger" %}
     {% endif %}
   {% endblock %}
 
   {% with sides_unconfirmed=round.num_debates_with_sides_unconfirmed %}
     {% if sides_unconfirmed > 0 and pref.draw_side_allocations != 'manual-ballot' %}
-      {% blocktranslate trimmed asvar message count ndebates=sides_unconfirmed %}
+      {% blocktrans trimmed asvar message count ndebates=sides_unconfirmed %}
         One debate does not have its sides confirmed. Results for this debate cannot be entered until its side allocations are marked as confirmed.
       {% plural %}
         {{ ndebates }} debate do not have their sides confirmed. Results for these debates cannot be entered until their side allocations are marked as confirmed.
-      {% endblocktranslate %}
+      {% endblocktrans %}
       {% include "components/alert.html" with type="danger" %}
     {% endif %}
   {% endwith %}
 
   {% with num_even_panel=round.num_debates_with_even_panel %}
     {% if round.ballots_per_debate == 'per-adj' and num_even_panel > 0 %}
-      {% blocktranslate trimmed asvar message count num_even_panel=num_even_panel %}
+      {% blocktrans trimmed asvar message count num_even_panel=num_even_panel %}
         One debate has a panel with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted.
       {% plural %}
         {{ num_even_panel }} debates have panels with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted.
-      {% endblocktranslate %}
+      {% endblocktrans %}
       {% include "components/alert.html" with type="warning" %}
     {% endif %}
   {% endwith %}

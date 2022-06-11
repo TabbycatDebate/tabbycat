@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">❔</span>{% blocktranslate %}Confirm Presets: {{ preset_title }}{% endblocktranslate %}{% endblock %}
-{% block page-title %}{% blocktranslate %}Confirm Presets: {{ preset_title }}{% endblocktranslate %}{% endblock %}
+{% block head-title %}<span class="emoji">❔</span>{% blocktrans %}Confirm Presets: {{ preset_title }}{% endblocktrans %}{% endblock %}
+{% block page-title %}{% blocktrans %}Confirm Presets: {{ preset_title }}{% endblocktrans %}{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-outline-primary "
      href="{% tournamenturl 'options-tournament-index' %}">
-    <i data-feather="chevron-left"></i> {% translate "Back to Configuration" %}
+    <i data-feather="chevron-left"></i> {% trans "Back to Configuration" %}
   </a>
 {% endblock %}
 
@@ -15,19 +15,19 @@
 
   {% if unchanged_preferences|length > 0 %}
 
-    {% translate "Preferences that will not change" as title %}
+    {% trans "Preferences that will not change" as title %}
     {% include "preferences_state.html" with preferences=unchanged_preferences no_change=True %}
 
   {% endif %}
 
-  {% translate "Preferences that will change" as title %}
+  {% trans "Preferences that will change" as title %}
   {% include "preferences_state.html" with preferences=changed_preferences %}
 
   <div class="card mt-3">
     <ul class="list-group list-group-flush">
       <li class="list-group-item">
         <button id="applyPresets" class="btn btn-success btn-block">
-          {% blocktranslate %}Apply Presets: {{ preset_title }}{% endblocktranslate %}
+          {% blocktrans %}Apply Presets: {{ preset_title }}{% endblocktrans %}
         </button>
         <form id="applyPresetsForm" method="POST">
           {% csrf_token %}

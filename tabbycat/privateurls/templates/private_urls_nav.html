@@ -3,40 +3,40 @@
 {% if exists %}
   <a class="btn btn-outline-primary {% if private_urls_nav %}active{% endif %}"
      href="{% tournamenturl 'privateurls-list' %}">
-    {% translate "View URLs" %}
+    {% trans "View URLs" %}
   </a>
   <div class="btn-group">
     <a class="btn btn-outline-primary"
        href="{% tournamenturl 'printing-urls-teams' %}" target="_blank">
-      {% translate "Print Teams' URLs" %}
+      {% trans "Print Teams' URLs" %}
     </a>
     <a class="btn btn-outline-primary"
        href="{% tournamenturl 'printing-urls-adjudicators' %}" target="_blank">
-      {% translate "Print Adjudicators' URLs" %}
+      {% trans "Print Adjudicators' URLs" %}
     </a>
   </div>
   <div class="btn-group">
     {% if to_email_exists %}
       <a href="{% tournamenturl 'privateurls-email' %}" class="btn btn-outline-primary">
     {% else %}
-      <a href="{% tournamenturl 'privateurls-email' %}" class="btn btn-outline-secondary" data-toggle="tooltip" title="{% translate "All reachable participants have already been sent their private URLs." %}">
+      <a href="{% tournamenturl 'privateurls-email' %}" class="btn btn-outline-secondary" data-toggle="tooltip" title="{% trans "All reachable participants have already been sent their private URLs." %}">
     {% endif %}
-      {% translate "Email URLs" %}
+      {% trans "Email URLs" %}
     </a>
   </div>
   {% if blank_exists %}
     <div class="btn-group">
       <form action="{% tournamenturl 'privateurls-generate' %}" method="POST">
       {% csrf_token %}
-      <button class="btn btn-outline-success" id="generateRandomisedUrls" type="submit" data-toggle="tooltip" title="{% translate "This button only generates private URLs for participants who do not already have one." %}">
-        {% translate "Generate URLs" %}
+      <button class="btn btn-outline-success" id="generateRandomisedUrls" type="submit" data-toggle="tooltip" title="{% trans "This button only generates private URLs for participants who do not already have one." %}">
+        {% trans "Generate URLs" %}
       </button>
       </form>
     </div>
   {% else %}
     <div class="btn-group">
-      <button class="btn btn-outline-secondary" id="generateRandomisedUrls" data-toggle="tooltip" title="{% translate "All participants already have private URLs." %}">
-        {% translate "Generate URLs" %}
+      <button class="btn btn-outline-secondary" id="generateRandomisedUrls" data-toggle="tooltip" title="{% trans "All participants already have private URLs." %}">
+        {% trans "Generate URLs" %}
       </button>
     </div>
   {% endif %}

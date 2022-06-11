@@ -3,20 +3,20 @@
 <div class="btn-group flex-wrap">
   <a class="btn btn-outline-primary {% if standings_overview_nav %}active{% endif %}"
      href="{% roundurl 'standings-index' current_round %}">
-    {% translate "Overview" %}
+    {% trans "Overview" %}
   </a>
 </div>
 
 <div class="btn-group flex-wrap">
   {% if tournament.break_categories_nongeneral.count > 0 %}
-    <div class="btn btn-outline-primary disabled">{% translate "Teams" %}</div>
+    <div class="btn btn-outline-primary disabled">{% trans "Teams" %}</div>
   {% endif %}
   <a class="btn btn-outline-primary {% if standings_team_nav %}active{% endif %}"
      href="{% roundurl 'standings-team' current_round %}">
     {% if tournament.break_categories_nongeneral.count > 0 %}
-      {% translate "All" context "All [Teams]" %}
+      {% trans "All" context "All [Teams]" %}
     {% else %}
-      {% translate "Teams" %}
+      {% trans "Teams" %}
     {% endif %}
   </a>
   {% for category in tournament.break_categories_nongeneral %}
@@ -29,30 +29,30 @@
 
 <div class="btn-group flex-wrap">
   {% if tournament.speakercategory_set.all.count > 0 or pref.reply_scores_enabled %}
-    <div class="btn btn-outline-primary disabled">{% translate "Speakers" %}</div>
+    <div class="btn btn-outline-primary disabled">{% trans "Speakers" %}</div>
   {% endif %}
   <a class="btn btn-outline-primary {% if standings_speaker_nav %}active{% endif %}"
      href="{% roundurl 'standings-speaker' current_round %}">
     {% if pref.reply_scores_enabled %}
-      {% translate "Substantives" context "Substantive speeches" %}
+      {% trans "Substantives" context "Substantive speeches" %}
     {% elif tournament.speakercategory_set.all.count > 0 %}
-      {% translate "All" context "All [Speakers]" %}
+      {% trans "All" context "All [Speakers]" %}
     {% else %}
-      {% translate "Speakers " %}
+      {% trans "Speakers " %}
     {% endif %}
   </a>
   {% for category in tournament.speakercategory_set.all %}
     <a class="btn btn-outline-primary"
        href="{% roundurl 'standings-speaker-category' round=current_round category=category.slug %}">
-      {% blocktranslate trimmed with category=category.name %}
+      {% blocktrans trimmed with category=category.name %}
         {{ category }}
-      {% endblocktranslate %}
+      {% endblocktrans %}
     </a>
   {% endfor %}
   {% if pref.reply_scores_enabled %}
     <a class="btn btn-outline-primary {% if standings_reply_nav %}active{% endif %}"
        href="{% roundurl 'standings-reply' current_round %}">
-      {% translate "Replies" %}
+      {% trans "Replies" %}
     </a>
   {% endif %}
 </div>
@@ -60,10 +60,10 @@
 {% if pref.enable_motion_reuse %}
   <div class="btn-group">
     <a class="btn btn-outline-primary {% if motions_statistics_nav %}active{% endif %}" href="{% tournamenturl 'motions-global-statistics' %}">
-      {% translate "Motions" %}
+      {% trans "Motions" %}
     </a>
     <a class="btn btn-outline-primary {% if motions_statistics_nav %}active{% endif %}" href="{% tournamenturl 'motions-statistics' %}">
-      {% translate "By Round" %}
+      {% trans "By Round" %}
     </a>
   </div>
 {% endif %}
@@ -73,12 +73,12 @@
   {% if not pref.enable_motion_reuse %}
     <a class="btn btn-outline-primary {% if motions_statistics_nav %}active{% endif %}"
        href="{% tournamenturl 'motions-statistics' %}">
-      {% translate "Motions" %}
+      {% trans "Motions" %}
     </a>
   {% endif %}
   <a class="btn btn-outline-primary {% if standings_diversity_nav %}active{% endif %}"
      href="{% roundurl 'standings-diversity' current_round %}">
-    {% translate "Diversity" %}
+    {% trans "Diversity" %}
   </a>
 
 </div>

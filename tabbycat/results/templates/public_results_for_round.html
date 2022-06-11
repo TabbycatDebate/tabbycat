@@ -4,10 +4,10 @@
 {% block page-subnav-sections %}
   <div class="btn-group">
     <a class="btn btn-outline-primary {% if view_type == 'team' %}active{% endif %}" href="?view=team">
-      {% translate "View by Team" %}
+      {% trans "View by Team" %}
     </a>
     <a class="btn btn-outline-primary {% if view_type == 'debate' %}active{% endif %}" href="?view=debate">
-      {% translate "View by Debate" %}
+      {% trans "View by Debate" %}
     </a>
   </div>
   {{ block.super }}

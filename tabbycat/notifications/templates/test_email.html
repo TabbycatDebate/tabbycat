@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block head-title %}{% endblock %}
-{% block page-title %}{% translate "Send Test Email" context "page title" %}{% endblock %}
+{% block page-title %}{% trans "Send Test Email" context "page title" %}{% endblock %}
 {% block nav %}{% endblock %}
 
 {% block content %}
@@ -15,19 +15,19 @@
       <form action="." method="POST">
       {% csrf_token %}
 
-      {% translate "Send Test Email" context "page title" as title %}
-      {% translate "You can use this form to send a test email, to check that your email backend settings are working, before you try to send email notifications to participants." as text %}
-      {% blocktranslate trimmed asvar p1 %}
+      {% trans "Send Test Email" context "page title" as title %}
+      {% trans "You can use this form to send a test email, to check that your email backend settings are working, before you try to send email notifications to participants." as text %}
+      {% blocktrans trimmed asvar p1 %}
         The email will be sent from: <strong>{{ default_from_email }}</strong>. If this doesn't look right, change the <code>DEFAULT_FROM_EMAIL</code> config var in Heroku (or environment variable).
-      {% endblocktranslate %}
+      {% endblocktrans %}
       {% include "components/form-title.html" with emoji="📧" %}
 
       {% include 'errors/legacy_sendgrid_warning.html' %}
 
       {% include "components/form-main.html" %}
 
-      {% translate "Send Test Email" as title %}
-      {% translate "Go back to the site home page" as subtitle %}
+      {% trans "Send Test Email" as title %}
+      {% trans "Go back to the site home page" as subtitle %}
       {% url 'tabbycat-index' as suburl %}
       {% include "components/form-submit.html" %}
 

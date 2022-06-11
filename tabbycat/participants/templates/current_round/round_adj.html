@@ -11,67 +11,67 @@
     {% if debate.adjudicators|length > 1 and debateadjudicator.type == debateadjudicator.TYPE_CHAIR %}
       {% if grammatical_person == "3" %}
         {% if debate.venue.url %}
-          {% blocktranslate trimmed with adjudicator=adjudicator.name room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
+          {% blocktrans trimmed with adjudicator=adjudicator.name room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
             {{ adjudicator }} is the <strong>chair</strong> adjudicating {{ aff }} vs {{ neg }} in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% else %}
-          {% blocktranslate trimmed with adjudicator=adjudicator.name room=debate.venue.display_name|default:venue_tba %}
+          {% blocktrans trimmed with adjudicator=adjudicator.name room=debate.venue.display_name|default:venue_tba %}
             {{ adjudicator }} is the <strong>chair</strong> adjudicating {{ aff }} vs {{ neg }} in <strong>{{ room }}</strong>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% endif %}
       {% else %}
         {% if debate.venue.url %}
-          {% blocktranslate trimmed with room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
+          {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
             You are the <strong>chair</strong> adjudicating {{ aff }} vs {{ neg }} in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% else %}
-          {% blocktranslate trimmed with room=debate.venue.display_name|default:venue_tba %}
+          {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba %}
             You are the <strong>chair</strong> adjudicating {{ aff }} vs {{ neg }} in <strong>{{ room }}</strong>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% endif %}
       {% endif %}
     {% elif debate.adjudicators|length > 1 %}
       {% if grammatical_person == "3" %}
         {% if debate.venue.url %}
-          {% blocktranslate trimmed with adjudicator=adjudicator.name type=debateadjudicator.get_type_display room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
+          {% blocktrans trimmed with adjudicator=adjudicator.name type=debateadjudicator.get_type_display room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
             {{ adjudicator }} is a <strong>{{ type }}</strong> adjudicating {{ aff }} vs {{ neg }} in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% else %}
-          {% blocktranslate trimmed with adjudicator=adjudicator.name type=debateadjudicator.get_type_display room=debate.venue.display_name|default:venue_tba %}
+          {% blocktrans trimmed with adjudicator=adjudicator.name type=debateadjudicator.get_type_display room=debate.venue.display_name|default:venue_tba %}
             {{ adjudicator }} is a <strong>{{ type }}</strong> adjudicating {{ aff }} vs {{ neg }} in <strong>{{ room }}</strong>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% endif %}
       {% else %}
         {% if debate.venue.url %}
-          {% blocktranslate trimmed with type=debateadjudicator.get_type_display room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
+          {% blocktrans trimmed with type=debateadjudicator.get_type_display room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
             You are a <strong>{{ type }}</strong> adjudicating {{ aff }} vs {{ neg }} in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% else %}
-          {% blocktranslate trimmed with type=debateadjudicator.get_type_display room=debate.venue.display_name|default:venue_tba %}
+          {% blocktrans trimmed with type=debateadjudicator.get_type_display room=debate.venue.display_name|default:venue_tba %}
             You are a <strong>{{ type }}</strong> adjudicating {{ aff }} vs {{ neg }} in <strong>{{ room }}</strong>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% endif %}
       {% endif %}
     {% else %}
       {% if grammatical_person == "3" %}
         {% if debate.venue.url %}
-          {% blocktranslate trimmed with adjudicator=adjudicator.name room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
+          {% blocktrans trimmed with adjudicator=adjudicator.name room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
             {{ adjudicator }} is adjudicating {{ aff }} vs {{ neg }} in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% else %}
-          {% blocktranslate trimmed with adjudicator=adjudicator.name room=debate.venue.display_name|default:venue_tba %}
+          {% blocktrans trimmed with adjudicator=adjudicator.name room=debate.venue.display_name|default:venue_tba %}
             {{ adjudicator }} is adjudicating {{ aff }} vs {{ neg }} in <strong>{{ room }}</strong>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% endif %}
       {% else %}
         {% if debate.venue.url %}
-          {% blocktranslate trimmed with room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
+          {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
             You are adjudicating {{ aff }} vs {{ neg }} in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% else %}
-          {% blocktranslate trimmed with room=debate.venue.display_name|default:venue_tba %}
+          {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba %}
             You are adjudicating {{ aff }} vs {{ neg }} in <strong>{{ room }}</strong>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% endif %}
       {% endif %}
     {% endif %}
@@ -82,67 +82,67 @@
     {% if debate.adjudicators|length > 1 and debateadjudicator.type == debateadjudicator.TYPE_CHAIR %}
       {% if grammatical_person == "3" %}
         {% if debate.venue.url %}
-          {% blocktranslate trimmed with adjudicator=adjudicator.name room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
+          {% blocktrans trimmed with adjudicator=adjudicator.name room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
             {{ adjudicator }} is the <strong>chair</strong> adjudicating in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% else %}
-          {% blocktranslate trimmed with adjudicator=adjudicator.name room=debate.venue.display_name|default:venue_tba %}
+          {% blocktrans trimmed with adjudicator=adjudicator.name room=debate.venue.display_name|default:venue_tba %}
             {{ adjudicator }} is the <strong>chair</strong> adjudicating in <strong>{{ room }}</strong>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% endif %}
       {% else %}
         {% if debate.venue.url %}
-          {% blocktranslate trimmed with room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
+          {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
             You are the <strong>chair</strong> adjudicating in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% else %}
-          {% blocktranslate trimmed with room=debate.venue.display_name|default:venue_tba %}
+          {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba %}
             You are the <strong>chair</strong> adjudicating in <strong>{{ room }}</strong>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% endif %}
       {% endif %}
     {% elif debate.adjudicators|length > 1 %}
       {% if grammatical_person == "3" %}
         {% if debate.venue.url %}
-          {% blocktranslate trimmed with adjudicator=adjudicator.name type=debateadjudicator.get_type_display room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
+          {% blocktrans trimmed with adjudicator=adjudicator.name type=debateadjudicator.get_type_display room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
             {{ adjudicator }} is a <strong>{{ type }}</strong> adjudicating in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% else %}
-          {% blocktranslate trimmed with adjudicator=adjudicator.name type=debateadjudicator.get_type_display room=debate.venue.display_name|default:venue_tba %}
+          {% blocktrans trimmed with adjudicator=adjudicator.name type=debateadjudicator.get_type_display room=debate.venue.display_name|default:venue_tba %}
             {{ adjudicator }} is a <strong>{{ type }}</strong> adjudicating in <strong>{{ room }}</strong>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% endif %}
       {% else %}
         {% if debate.venue.url %}
-          {% blocktranslate trimmed with type=debateadjudicator.get_type_display room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
+          {% blocktrans trimmed with type=debateadjudicator.get_type_display room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
             You are a <strong>{{ type }}</strong> adjudicating in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% else %}
-          {% blocktranslate trimmed with type=debateadjudicator.get_type_display room=debate.venue.display_name|default:venue_tba %}
+          {% blocktrans trimmed with type=debateadjudicator.get_type_display room=debate.venue.display_name|default:venue_tba %}
             You are a <strong>{{ type }}</strong> adjudicating in <strong>{{ room }}</strong>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% endif %}
       {% endif %}
     {% else %}
       {% if grammatical_person == "3" %}
         {% if debate.venue.url %}
-          {% blocktranslate trimmed with adjudicator=adjudicator.name room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
+          {% blocktrans trimmed with adjudicator=adjudicator.name room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
             {{ adjudicator }} is adjudicating in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% else %}
-          {% blocktranslate trimmed with adjudicator=adjudicator.name room=debate.venue.display_name|default:venue_tba %}
+          {% blocktrans trimmed with adjudicator=adjudicator.name room=debate.venue.display_name|default:venue_tba %}
             {{ adjudicator }} is adjudicating in <strong>{{ room }}</strong>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% endif %}
       {% else %}
         {% if debate.venue.url %}
-          {% blocktranslate trimmed with room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
+          {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba url=debate.venue.url %}
             You are adjudicating in <a href="{{ url }}"><strong>{{ room }}</strong></a>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% else %}
-          {% blocktranslate trimmed with room=debate.venue.display_name|default:venue_tba %}
+          {% blocktrans trimmed with room=debate.venue.display_name|default:venue_tba %}
             You are adjudicating in <strong>{{ room }}</strong>.
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% endif %}
       {% endif %}
     {% endif %}

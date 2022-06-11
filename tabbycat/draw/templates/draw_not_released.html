@@ -4,11 +4,11 @@
 {% block page-alerts %}
 
   {% if round %}
-    {% blocktranslate trimmed with round=round.name asvar message %}
+    {% blocktrans trimmed with round=round.name asvar message %}
       The draw for {{ round }} has yet to be released.
-    {% endblocktranslate %}
+    {% endblocktrans %}
   {% else %}
-    {% translate "The draw for the next round has yet to be released." as message %}
+    {% trans "The draw for the next round has yet to be released." as message %}
   {% endif %}
   {% include "components/alert.html" with type="info" icon="alert-circle" %}
 

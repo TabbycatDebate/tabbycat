@@ -7,21 +7,21 @@
   {% url 'tournament-public-index' tournament_slug=tournament.slug as public_url %}
 
   {% if user.is_superuser %}
-    {% blocktranslate trimmed asvar text with tn=tournament.name %}
+    {% blocktrans trimmed asvar text with tn=tournament.name %}
       Administrator area for <strong>{{ tn }}</strong>
-    {% endblocktranslate %}
+    {% endblocktrans %}
     {% include "components/item-action.html" with icon="settings" url=admin_url %}
   {% endif %}
 
   {% if user.is_authenticated %}
-    {% blocktranslate trimmed asvar text with tn=tournament.name %}
+    {% blocktrans trimmed asvar text with tn=tournament.name %}
       Assistant area for <strong>{{ tn }}</strong>
-    {% endblocktranslate %}
+    {% endblocktrans %}
    {% include "components/item-action.html" with icon="pocket" url=assistant_url %}
 
-    {% blocktranslate trimmed asvar text with tn=tournament.name %}
+    {% blocktrans trimmed asvar text with tn=tournament.name %}
       Public area for <strong>{{ tn }}</strong>
-    {% endblocktranslate %}
+    {% endblocktrans %}
     {% include "components/item-action.html" with icon="globe" url=public_url %}
 
   {% else %}
