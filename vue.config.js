@@ -25,10 +25,6 @@ module.exports = {
     port: 8888,
     headers: {
       'Access-Control-Allow-Origin': '*' // Allow hot module reload
-    },
-    overlay: {
-      warnings: true,
-      errors: true
     }
   },
   pages: {
