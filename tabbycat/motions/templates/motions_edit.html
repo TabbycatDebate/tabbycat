@@ -1,21 +1,21 @@
 {% extends "base.html" %}
 {% load add_field_css debate_tags i18n %}
 
-{% block head-title %}{% blocktranslate trimmed count nmotions=formset|length %}
+{% block head-title %}{% blocktrans trimmed count nmotions=formset|length %}
   Edit Motion
 {% plural %}
   Edit Motions
-{% endblocktranslate %}{% endblock %}
+{% endblocktrans %}{% endblock %}
 
-{% block page-title %}{% blocktranslate trimmed count nmotions=formset|length %}
+{% block page-title %}{% blocktrans trimmed count nmotions=formset|length %}
   Edit Motion
 {% plural %}
   Edit Motions
-{% endblocktranslate %}{% endblock %}
+{% endblocktrans %}{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-outline-primary " href="{% roundurl 'draw-display' %}">
-    <i data-feather="chevron-left"></i> {% translate "Display Draw" %}
+    <i data-feather="chevron-left"></i> {% trans "Display Draw" %}
   </a>
 
   {% if pref.enable_motion_reuse %}
@@ -25,14 +25,14 @@
         {% if round.roundmotion_set.all.length == 0 %}
           <button class="btn btn-outline-primary" id="repeatMotions" type="submit">
         {% else %}
-          <button class="btn btn-outline-primary" id="repeatMotions" type="submit" data-toggle="tooltip" title="{% translate "This will replace all existing motions for this round. The motions themselves will still be in the database." %}">
+          <button class="btn btn-outline-primary" id="repeatMotions" type="submit" data-toggle="tooltip" title="{% trans "This will replace all existing motions for this round. The motions themselves will still be in the database." %}">
         {% endif %}
-          {% translate "Reuse Motions from Last Round" %}
+          {% trans "Reuse Motions from Last Round" %}
         </button>
       </form>
 
       <a href="{% roundurl 'motions-copy' %}" class="btn btn-outline-primary">
-        {% translate "Use Existing Motions" %}
+        {% trans "Use Existing Motions" %}
       </a>
     </div>
   {% endif %}
@@ -71,11 +71,11 @@
 
     </div>
 
-    {% blocktranslate trimmed asvar button_text count nmotions=formset|length %}
+    {% blocktrans trimmed asvar button_text count nmotions=formset|length %}
       Save Motion
     {% plural %}
       Save Motions
-    {% endblocktranslate %}
+    {% endblocktrans %}
     {% include "components/form-submit.html" with title=button_text %}
 
   </form>

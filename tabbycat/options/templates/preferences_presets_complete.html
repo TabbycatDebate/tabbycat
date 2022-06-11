@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 {% load debate_tags i18n %}
 
-{% block page-title %}{% blocktranslate %}Presets Applied: {{ preset_title }}{% endblocktranslate %}{% endblock %}
-{% block head-title %}<span class="emoji">✅</span> {% blocktranslate %}Presets Applied: {{ preset_title }}{% endblocktranslate %}{% endblock %}
+{% block page-title %}{% blocktrans %}Presets Applied: {{ preset_title }}{% endblocktrans %}{% endblock %}
+{% block head-title %}<span class="emoji">✅</span> {% blocktrans %}Presets Applied: {{ preset_title }}{% endblocktrans %}{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-primary "
      href="{% tournamenturl 'options-tournament-index' %}">
-    <i data-feather="chevron-left"></i> {% translate "Back to Configuration" %}
+    <i data-feather="chevron-left"></i> {% trans "Back to Configuration" %}
   </a>
 {% endblock %}
 
 {% block content %}
 
-  {% translate "Preferences that were changed" as title %}
+  {% trans "Preferences that were changed" as title %}
   {% include "preferences_state.html" with preferences=changed_preferences %}
 
 {% endblock content %}

@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% load static debate_tags add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">⚖️</span> {% translate 'Set Round Weights for Tapered Scoring' context 'page title' %}{% endblock %}
-{% block page-title %}{% translate 'Set Round Weights for Tapered Scoring' context 'page title' %}{% endblock %}
+{% block head-title %}<span class="emoji">⚖️</span> {% trans 'Set Round Weights for Tapered Scoring' context 'page title' %}{% endblock %}
+{% block page-title %}{% trans 'Set Round Weights for Tapered Scoring' context 'page title' %}{% endblock %}
 
 {% block page-alerts %}
-{% blocktranslate trimmed asvar p1 %}
+{% blocktrans trimmed asvar p1 %}
   Round weights are coefficients for the points received in each round.
   A team would get triple their team points obtained in a round with a weight of 3.
-{% endblocktranslate %}
+{% endblocktrans %}
 {% include "components/explainer-card.html" with p2="" type="info" %}
 {% endblock %}
 
@@ -38,7 +38,7 @@
           </li>
         {% endfor %}
 
-        {% translate "Set weights" context "button" as title %}
+        {% trans "Set weights" context "button" as title %}
         {% include "components/form-submit.html" %}
 
       </ul>

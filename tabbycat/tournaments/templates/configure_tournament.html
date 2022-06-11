@@ -2,11 +2,11 @@
 {% load add_field_css i18n %}
 
 {% block head-title %}<span class="emoji">🏆</span>
-  {% blocktranslate trimmed with tournament=tournament.short_name %}
+  {% blocktrans trimmed with tournament=tournament.short_name %}
     Configure Tournament {{ tournament }}
-  {% endblocktranslate %}
+  {% endblocktrans %}
 {% endblock %}
-{% block page-title %}{% translate "Tabbycat" %}{% endblock %}
+{% block page-title %}{% trans "Tabbycat" %}{% endblock %}
 {% block body-class %}override-sidebar-offset{% endblock %}
 
 {% block nav %}{% endblock %}
@@ -17,12 +17,12 @@
     <div class="list-group list-group-flush">
       <form action="." method="POST">
 
-        {% translate "To finish creating your tournament select a basic configuration options. Note that these can always be changed later (and with more precise control) if needed." as text %}
+        {% trans "To finish creating your tournament select a basic configuration options. Note that these can always be changed later (and with more precise control) if needed." as text %}
         {% include "components/form-title.html" %}
 
         {% include "components/form-main.html" %}
 
-        {% translate "Configure Tournament" as title %}
+        {% trans "Configure Tournament" as title %}
         {% include "components/form-submit.html" %}
 
       </form>

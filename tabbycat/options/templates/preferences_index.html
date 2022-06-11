@@ -1,43 +1,43 @@
 {% extends "base.html" %}
 {% load debate_tags add_field_css i18n %}
 
-{% block page-title %}{% translate "Configuration" %}{% endblock %}
-{% block head-title %}<span class="emoji">🔧</span> {% translate "Configuration" %}{% endblock %}
+{% block page-title %}{% trans "Configuration" %}{% endblock %}
+{% block head-title %}<span class="emoji">🔧</span> {% trans "Configuration" %}{% endblock %}
 
 {% block page-alerts %}
   {% if pref.teams_in_debate == 'bp' %}
     {% if pref.ballots_per_debate_prelim == 'per-adj' or pref.ballots_per_debate_elim == 'per-adj' %}
       {% tournamenturl 'options-tournament-section' section='debate_rules' as options_url %}
-      {% blocktranslate trimmed asvar message %}
+      {% blocktrans trimmed asvar message %}
         Your draw rules specify four teams per-debate but your ballot setting specifies that
         adjudicators submit independent ballots. These settings <strong>are not compatible
         and will cause results entry to crash</strong>. You need to go back to the
         <a href="{{ options_url }}" class="alert-link">Debate Rules section</a> and change
         your configuration to use consensus ballots.
-      {% endblocktranslate %}
+      {% endblocktrans %}
       {% include "components/alert.html" with type="danger" icon="alert-circle" %}
     {% endif %}
   {% endif %}
   {% if pref.draw_side_allocations != 'preallocated' %}
     {% if pref.draw_odd_bracket == 'intermediate1' or pref.draw_odd_bracket == 'intermediate2' %}
       {% tournamenturl 'options-tournament-section' section='draw_rules' as options_url %}
-      {% blocktranslate trimmed asvar message %}
+      {% blocktrans trimmed asvar message %}
         You do not use preallocated side allocation yet the odd bracket resolution method
         uses preallocated sides. This will cause draw generation to fail. You need to edit
         odd bracket resolution, avoiding <i>Intermediate 1</i> and <i>Intermediate 2</i> in
         the <a href="{{ options_url }}" class="alert-link">Draw Rules section</a>.
-      {% endblocktranslate %}
+      {% endblocktrans %}
       {% include "components/alert.html" with type="danger" icon="alert-circle" %}
     {% endif %}
   {% endif %}
   {% if pref.team_code_names != 'off' and pref.team_code_names != 'all-tooltips' and pref.show_team_institutions %}
     {% tournamenturl 'options-tournament-section' section='ui_options' as ui_url %}
-    {% blocktranslate trimmed asvar message %}
+    {% blocktrans trimmed asvar message %}
       You both have team code names enabled, and team institutions showing on public pages.
       If your objective in enabling team code names is to obscure team institutions, this
       probably defeats the purpose of code names. You can edit these settings in the
       <a href="{{ ui_url }}" class="alert-link">UI Options section</a>.
-    {% endblocktranslate %}
+    {% endblocktrans %}
     {% include "components/alert.html" with type="warning" icon="alert-circle" %}
   {% endif %}
 {% endblock %}
@@ -50,33 +50,33 @@
     <ul class="list-group">
 
       {% tournamenturl 'options-tournament-section' section='scoring' as url %}
-      {% translate "Score Rules" as title %}
-      {% translate "The range of scores that can awarded to speeches, replies, and teams" as description %}
+      {% trans "Score Rules" as title %}
+      {% trans "The range of scores that can awarded to speeches, replies, and teams" as description %}
       {% include "components/item-action.html" with type="primary" emoji="💯" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-section' section='draw_rules' as url %}
-      {% translate "Draw Rules" as title %}
-      {% translate "How teams are paired in the draw and how adjudicators are auto-allocated" as description %}
+      {% trans "Draw Rules" as title %}
+      {% trans "How teams are paired in the draw and how adjudicators are auto-allocated" as description %}
       {% include "components/item-action.html" with type="primary" emoji="📏" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-section' section='debate_rules' as url %}
-      {% translate "Debate Rules" as title %}
-      {% translate "How many speeches in a debate, how motions are decided, and whether reply speeches are used" as description %}
+      {% trans "Debate Rules" as title %}
+      {% trans "How many speeches in a debate, how motions are decided, and whether reply speeches are used" as description %}
       {% include "components/item-action.html" with type="primary" emoji="🛎" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-section' section='standings' as url %}
-      {% translate "Standings" as title %}
-      {% translate "How teams and speakers are ranked in the released tabs" as description %}
+      {% trans "Standings" as title %}
+      {% trans "How teams and speakers are ranked in the released tabs" as description %}
       {% include "components/item-action.html" with type="primary" emoji="📊" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-section' section='feedback' as url %}
-      {% translate "Feedback" as title %}
-      {% translate "How adjudicators are ranked and who can submit feedback" as description %}
+      {% trans "Feedback" as title %}
+      {% trans "How adjudicators are ranked and who can submit feedback" as description %}
       {% include "components/item-action.html" with type="primary" emoji="🙅" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-section' section='motions' as url %}
-      {% translate "Motions" as title %}
-      {% translate "How and where are motions used" as description %}
+      {% trans "Motions" as title %}
+      {% trans "How and where are motions used" as description %}
       {% include "components/item-action.html" with type="primary" emoji="📰" text=title extra=description %}
 
     </ul>
@@ -86,33 +86,33 @@
     <ul class="list-group">
 
       {% tournamenturl 'options-tournament-section' section='tab_release' as url %}
-      {% translate "Tab Release" as title %}
-      {% translate "When to release a public tab is made visible and what data it shows" as description %}
+      {% trans "Tab Release" as title %}
+      {% trans "When to release a public tab is made visible and what data it shows" as description %}
       {% include "components/item-action.html" with type="primary" emoji="🚨" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-section' section='data_entry' as url %}
-      {% translate "Data Entry" as title %}
-      {% translate "How ballots, feedback, and check-ins are entered, including online submission options" as description %}
+      {% trans "Data Entry" as title %}
+      {% trans "How ballots, feedback, and check-ins are entered, including online submission options" as description %}
       {% include "components/item-action.html" with type="primary" emoji="📝" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-section' section='public_features' as url %}
-      {% translate "Public Features" as title %}
-      {% translate "What information the site displays on the publicly accessible pages" as description %}
+      {% trans "Public Features" as title %}
+      {% trans "What information the site displays on the publicly accessible pages" as description %}
       {% include "components/item-action.html" with type="primary" emoji="📢" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-section' section='ui_options' as url %}
-      {% translate "UI Options" as title %}
-      {% translate "Small tweaks in what information is presented by the interface" as description %}
+      {% trans "UI Options" as title %}
+      {% trans "Small tweaks in what information is presented by the interface" as description %}
       {% include "components/item-action.html" with type="primary" emoji="💻" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-section' section='email' as url %}
-      {% translate "Notifications" as title %}
-      {% translate "Configures sending notifications, such as emails confirming ballot submissions or team points" as description %}
+      {% trans "Notifications" as title %}
+      {% trans "Configures sending notifications, such as emails confirming ballot submissions or team points" as description %}
       {% include "components/item-action.html" with type="primary" emoji="📧" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-section' section='global' as url %}
-      {% translate "Global Settings" as title %}
-      {% translate "Settings which can affect all tournaments on the site" as description %}
+      {% trans "Global Settings" as title %}
+      {% trans "Settings which can affect all tournaments on the site" as description %}
       {% include "components/item-action.html" with type="primary" emoji="🌏" text=title extra=description %}
 
     </ul>
@@ -124,34 +124,34 @@
 
     <ul class="list-group">
       {% tournamenturl 'tournament-set-current-round' as url %}
-      {% translate "Manually Set Current Round" as title %}
-      {% translate "Tabbycat will prompt you to advance the current round on each round's results page. However, if there are special circumstances that require you to override this and set the current round to something else, use this page." as description %}
+      {% trans "Manually Set Current Round" as title %}
+      {% trans "Tabbycat will prompt you to advance the current round on each round's results page. However, if there are special circumstances that require you to override this and set the current round to something else, use this page." as description %}
       {% include "components/item-action.html" with type="primary" icon="clock" text=title extra=description %}
 
       {% tournamenturl 'set-round-weights' as url %}
-      {% translate "Set Round Weights for Tapered Scoring" as text %}
-      {% translate "Rounds can be weighted so that certain rounds are worth more team points." as extra %}
+      {% trans "Set Round Weights for Tapered Scoring" as text %}
+      {% trans "Rounds can be weighted so that certain rounds are worth more team points." as extra %}
       {% include "components/item-action.html" with type="primary" icon="anchor" %}
     </ul>
 
     <div class="card mt-3">
 
       <div class="card-body text-info border-info">
-        <h4 class="card-title"><i data-feather="clipboard"></i> {% translate "Presets" %}</h4>
-        {% blocktranslate trimmed %}
+        <h4 class="card-title"><i data-feather="clipboard"></i> {% trans "Presets" %}</h4>
+        {% blocktrans trimmed %}
           These modify common settings for basic rules; double check our
           <a href="https://tabbycat.readthedocs.io/" target="_blank">documentation</a>
           to ensure they are correct for your tournament. Each links will display what
           settings it changes before applying them.
-        {% endblocktranslate %}
+        {% endblocktrans %}
       </div>
 
       <ul class="list-group list-group-flush">
         {% for preset in presets %}
           {% tournamenturl 'options-presets-confirm' preset.slugified_name as url %}
-          {% blocktranslate trimmed asvar title with preset=preset.name %}
+          {% blocktrans trimmed asvar title with preset=preset.name %}
             Apply {{ preset }}
-          {% endblocktranslate %}
+          {% endblocktrans %}
           {% include "components/item-action.html" with type="primary" icon="play" text=title extra=preset.description %}
         {% endfor %}
       </ul>

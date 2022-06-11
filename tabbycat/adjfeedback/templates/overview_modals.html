@@ -7,38 +7,38 @@
         <div class="modal-body pb-0 pt-0">
           <div class="list-group list-group-flush">
 
-            {% translate "Change Base Score" as title %}
+            {% trans "Change Base Score" as title %}
             {% include "components/form-title.html" %}
 
             {% csrf_token %}
 
             <div class="list-group-item text-info py-3">
               {% tournamenturl 'options-tournament-section' section='feedback' as feedback_options %}
-              {% blocktranslate trimmed with min_score=pref.adj_min_score max_score=pref.adj_max_score %}
+              {% blocktrans trimmed with min_score=pref.adj_min_score max_score=pref.adj_max_score %}
                 The score range for adjudicators is between <strong>{{ pref.adj_min_score }}</strong> and
                 <strong>{{ pref.adj_max_score }}</strong>. Decimals are permitted. This can be configured in
                 <a href="{{ feedback_options }}">Feedback settings</a>.
-              {% endblocktranslate %}
+              {% endblocktrans %}
             </div>
             <div class="list-group-item text-info py-3">
               {% tournamenturl 'options-tournament-section' section='draw_rules' as draw_rules %}
-              {% blocktranslate trimmed with min_voting_score=pref.adj_min_voting_score %}
+              {% blocktrans trimmed with min_voting_score=pref.adj_min_voting_score %}
                 The minimum score require to be allocated as a panellist or chair (when using the
                 auto-allocator) is <strong>{{ min_voting_score }}</strong>. This can be configured in
                 <a href="{{ draw_rules }}">Draw settings</a>.
-              {% endblocktranslate %}
+              {% endblocktrans %}
             </div>
             <div class="list-group-item">
               <input id="id_adj_id" name="adj_id" type="hidden" />
               <div class="form-group pb-3">
-                <label>{% translate "Base score" %}</label>
+                <label>{% trans "Base score" %}</label>
                 <input id="id_base_score" class="form-control" name="base_score" placeholder="3.5"
                        min="{{ pref.adj_min_score }}" max="{{ pref.adj_max_score }}"
                        type="number" step="any"></input>
               </div>
             </div>
 
-            {% translate "Save Base Score" as title %}
+            {% trans "Save Base Score" as title %}
             {% include "components/form-submit.html" %}
 
             </div>

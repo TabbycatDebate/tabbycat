@@ -2,8 +2,8 @@
 {% load static %}
 {% load debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">📊</span>{% translate "Standings" %}{% endblock %}
-{% block page-title %}{% translate "Standings" %}{% endblock %}
+{% block head-title %}<span class="emoji">📊</span>{% trans "Standings" %}{% endblock %}
+{% block page-title %}{% trans "Standings" %}{% endblock %}
 
 {% block standings_active %}active{% endblock %}
 
@@ -15,17 +15,17 @@
     <!-- List group -->
     <ul class="list-group list-group-flush">
       <li class="list-group-item">
-        <h5 class="card-title mb-0">{% translate "Top Speaks" %}</h5>
+        <h5 class="card-title mb-0">{% trans "Top Speaks" %}</h5>
       </li>
       {% for top_speak in top_speaks %}
         <li class="list-group-item">
-          {% blocktranslate trimmed with speaker=top_speak.speaker round=top_speak.debate_team.debate.round.abbreviation %}
+          {% blocktrans trimmed with speaker=top_speak.speaker round=top_speak.debate_team.debate.round.abbreviation %}
           {{ speaker }} in {{ round }}
-          {% endblocktranslate %}
+          {% endblocktrans %}
           <span class="badge badge-secondary float-right">{{ top_speak.score|floatformat }}</span>
         </li>
       {% empty %}
-        <li class="list-group-item">{% translate "No data yet" %}</li>
+        <li class="list-group-item">{% trans "No data yet" %}</li>
       {% endfor %}
     </ul>
   </div>
@@ -34,17 +34,17 @@
     <!-- List group -->
     <ul class="list-group list-group-flush">
       <li class="list-group-item">
-        <h5 class="card-title mb-0">{% translate "Bottom Speaks" %}</h5>
+        <h5 class="card-title mb-0">{% trans "Bottom Speaks" %}</h5>
       </li>
       {% for bottom_speak in bottom_speaks %}
         <li class="list-group-item">
-          {% blocktranslate trimmed with speaker=bottom_speak.speaker round=bottom_speak.debate_team.debate.round.abbreviation %}
+          {% blocktrans trimmed with speaker=bottom_speak.speaker round=bottom_speak.debate_team.debate.round.abbreviation %}
           {{ speaker }} in {{ round }}
-          {% endblocktranslate %}
+          {% endblocktrans %}
           <span class="badge badge-secondary float-right">{{ bottom_speak.score|floatformat }}</span>
         </li>
       {% empty %}
-      <li class="list-group-item">{% translate "No data yet" %}</li>{% endfor %}
+      <li class="list-group-item">{% trans "No data yet" %}</li>{% endfor %}
     </ul>
   </div>
 
@@ -53,17 +53,17 @@
       <!-- List group -->
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          <h5 class="card-title mb-0">{% translate "Largest Margins" %}</h5>
+          <h5 class="card-title mb-0">{% trans "Largest Margins" %}</h5>
         </li>
         {% for top_margin in top_margins %}
           <li class="list-group-item">
-            {% blocktranslate trimmed with team=top_margin.debate_team.team.short_name opp=top_margin.debate_team.opponent.team.short_name round=top_margin.debate_team.debate.round.abbreviation %}
+            {% blocktrans trimmed with team=top_margin.debate_team.team.short_name opp=top_margin.debate_team.opponent.team.short_name round=top_margin.debate_team.debate.round.abbreviation %}
             {{ team }} vs {{ opp }} in {{ round }}
-            {% endblocktranslate %}
+            {% endblocktrans %}
             <span class="badge badge-secondary float-right">{{ top_margin.margin|floatformat }}</span>
           </li>
         {% empty %}
-          <li class="list-group-item">{% translate "No data yet" %}</li>
+          <li class="list-group-item">{% trans "No data yet" %}</li>
         {% endfor %}
       </ul>
     </div>
@@ -74,17 +74,17 @@
       <!-- List group -->
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          <h5 class="card-title mb-0">{% translate "Closest Margins" %}</h5>
+          <h5 class="card-title mb-0">{% trans "Closest Margins" %}</h5>
         </li>
         {% for bottom_margin in bottom_margins %}
           <li class="list-group-item">
-            {% blocktranslate trimmed with team=bottom_margin.debate_team.team.short_name opp=bottom_margin.debate_team.opponent.team.short_name round=bottom_margin.debate_team.debate.round.abbreviation %}
+            {% blocktrans trimmed with team=bottom_margin.debate_team.team.short_name opp=bottom_margin.debate_team.opponent.team.short_name round=bottom_margin.debate_team.debate.round.abbreviation %}
             {{ team }} vs {{ opp }} in {{ round }}
-            {% endblocktranslate %}
+            {% endblocktrans %}
             <span class="badge badge-secondary float-right">{{ bottom_margin.margin|floatformat }}</span>
           </li>
         {% empty %}
-          <li class="list-group-item">{% translate "No data yet" %}</li>
+          <li class="list-group-item">{% trans "No data yet" %}</li>
         {% endfor %}
       </ul>
     </div>
@@ -95,17 +95,17 @@
       <!-- List group -->
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          <h5 class="card-title mb-0">{% translate "Top Team Scores" %}</h5>
+          <h5 class="card-title mb-0">{% trans "Top Team Scores" %}</h5>
         </li>
         {% for top_score in top_team_scores %}
           <li class="list-group-item">
-            {% blocktranslate trimmed with team=top_score.debate_team.team.short_name round=top_score.debate_team.debate.round.abbreviation %}
+            {% blocktrans trimmed with team=top_score.debate_team.team.short_name round=top_score.debate_team.debate.round.abbreviation %}
             {{ team }} in {{ round }}
-            {% endblocktranslate %}
+            {% endblocktrans %}
             <span class="badge badge-secondary float-right">{{ top_score.score }}</span>
           </li>
         {% empty %}
-          <li class="list-group-item">{% translate "No data yet" %}</li>
+          <li class="list-group-item">{% trans "No data yet" %}</li>
         {% endfor %}
       </ul>
     </div>
@@ -116,17 +116,17 @@
       <!-- List group -->
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          <h5 class="card-title mb-0">{% translate "Bottom Team Scores" %}</h5>
+          <h5 class="card-title mb-0">{% trans "Bottom Team Scores" %}</h5>
         </li>
         {% for bottom_score in bottom_team_scores %}
           <li class="list-group-item">
-            {% blocktranslate trimmed with team=bottom_score.debate_team.team.short_name round=bottom_score.debate_team.debate.round.abbreviation %}
+            {% blocktrans trimmed with team=bottom_score.debate_team.team.short_name round=bottom_score.debate_team.debate.round.abbreviation %}
             {{ team }} in {{ round }}
-            {% endblocktranslate %}
+            {% endblocktrans %}
             <span class="badge badge-secondary float-right">{{ bottom_score.score }}</span>
           </li>
         {% empty %}
-          <li class="list-group-item">{% translate "No data yet" %}</li>
+          <li class="list-group-item">{% trans "No data yet" %}</li>
         {% endfor %}
       </ul>
     </div>
@@ -137,7 +137,7 @@
       <!-- List group -->
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          <h5 class="card-title mb-0">{% translate "Most/Least Popular Motions" %}</h5>
+          <h5 class="card-title mb-0">{% trans "Most/Least Popular Motions" %}</h5>
         </li>
         {% for top_motion in top_motions %}
           <li class="list-group-item">
@@ -149,7 +149,7 @@
             <span class="badge badge-secondary float-right">{{ top_motion.ballotsubmission__count }}</span>
           </li>
         {% empty %}
-          <li class="list-group-item">{% translate "No data yet" %}</li>
+          <li class="list-group-item">{% trans "No data yet" %}</li>
         {% endfor %}
         <li class="list-group-item disabled">
         ...
@@ -164,7 +164,7 @@
             <span class="badge badge-secondary float-right">{{ bottom_motion.ballotsubmission__count }}</span>
           </li>
         {% empty %}
-          <li class="list-group-item">{% translate "No data yet" %}</li>
+          <li class="list-group-item">{% trans "No data yet" %}</li>
         {% endfor %}
       </ul>
     </div>
@@ -174,7 +174,7 @@
     <!-- List group -->
     <ul class="list-group list-group-flush">
       <li class="list-group-item">
-        <h5 class="card-title mb-0">{% translate "Average Speaks" %}</h5>
+        <h5 class="card-title mb-0">{% trans "Average Speaks" %}</h5>
       </li>
       {% if round_speaks %}
         {% for round_speak in round_speaks %}
@@ -183,7 +183,7 @@
             <span class="badge badge-secondary float-right">{{ round_speak.score|floatformat }}</span>
           </li>
         {% empty %}
-          <li class="list-group-item">{% translate "No data yet" %}</li>
+          <li class="list-group-item">{% trans "No data yet" %}</li>
         {% endfor %}
       {% endif %}
     </ul>

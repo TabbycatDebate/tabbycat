@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load static debate_tags add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">🎪</span> {% translate "Add Rooms" context "page title" %}
-{% blocktranslate trimmed with step=wizard.steps.step1 count=wizard.steps.count %}(Step {{ step }} of {{ count }}){% endblocktranslate %}{% endblock %}
-{% block page-title %}{% translate "Add Rooms" context "page title" %}{% endblock %}
+{% block head-title %}<span class="emoji">🎪</span> {% trans "Add Rooms" context "page title" %}
+{% blocktrans trimmed with step=wizard.steps.step1 count=wizard.steps.count %}(Step {{ step }} of {{ count }}){% endblocktrans %}{% endblock %}
+{% block page-title %}{% trans "Add Rooms" context "page title" %}{% endblock %}
 
 {% block content %}
 
@@ -12,7 +12,7 @@
   {% csrf_token %}
 
     <div class="list-group-item text-info">
-      {% translate "Paste a list of rooms with one room per line and following the format of: <code>name,priority</code>. For example:" %}
+      {% trans "Paste a list of rooms with one room per line and following the format of: <code>name,priority</code>. For example:" %}
     </div>
 
     <div class="list-group-item list-group-item-secondary pb-0">
@@ -27,7 +27,7 @@
 
       {% if wizard.form.venues_raw.errors %}
         <div class="alert alert-danger">
-          <p>{% translate "There are some problems with the data on this form:" %}</p>
+          <p>{% trans "There are some problems with the data on this form:" %}</p>
           {{ wizard.form.venues_raw.errors }}
         </div>
       {% endif %}
@@ -38,7 +38,7 @@
 
     </div>
 
-    {% translate "Next Step" as title %}
+    {% trans "Next Step" as title %}
     {% include "components/form-submit.html" %}
 
 </form>

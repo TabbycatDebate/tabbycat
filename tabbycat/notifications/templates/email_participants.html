@@ -9,17 +9,17 @@
 
 {% if pref.reply_to_address == "" %}
   {% tournamenturl 'options-tournament-section' section='email' as notifications_options_url %}
-  {% blocktranslate trimmed asvar p1 %}
+  {% blocktrans trimmed asvar p1 %}
     You have not specified a reply-to address. This means that participants may not reply to the message if they have questions. Please set one in the <a href="{{ notifications_options_url }}">Notifications section of the preferences</a>.
-  {% endblocktranslate %}
+  {% endblocktrans %}
   {% include "components/explainer-card.html" with type="warning" %}
 {% endif %}
 
 {% if pref.email_hook_key != "" and not sg_webhook %}
   {% tournament_absurl 'notifications-webhook' key=pref.email_hook_key as notifications_webhook_url %}
-  {% blocktranslate trimmed asvar p1 %}
+  {% blocktrans trimmed asvar p1 %}
     The webhook URL for use in SendGrid is <a href="{{ notifications_webhook_url }}">{{ notifications_webhook_url }}</a>. Please point the HTTP POST URL in <a href="https://app.sendgrid.com/settings/mail_settings">SendGrid</a> to that.
-  {% endblocktranslate %}
+  {% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" %}
 {% endif %}
 
@@ -47,7 +47,7 @@
       {% include "components/form-field.html" %}
     {% endfor %}
     <button type="submit" class="btn btn-block btn-success">
-      {% translate "Send Message(s)" %}
+      {% trans "Send Message(s)" %}
     </button>
   </form>
 

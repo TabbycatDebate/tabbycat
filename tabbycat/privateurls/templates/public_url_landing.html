@@ -1,26 +1,26 @@
 {% extends "tables/base_vue_table.html" %}
 {% load i18n debate_tags %}
 
-{% block page-title %}{% translate "Private URL" %}{% endblock %}
-{% block head-title %}{% translate "Private URL" %}{% endblock %}
+{% block page-title %}{% trans "Private URL" %}{% endblock %}
+{% block head-title %}{% trans "Private URL" %}{% endblock %}
 
 {% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
 
 {% block sub-title %}
-  {% blocktranslate trimmed with name=object.name %}for {{ name }}{% endblocktranslate %}
+  {% blocktrans trimmed with name=object.name %}for {{ name }}{% endblocktrans %}
   {% if object.speaker %}
-    {% blocktranslate trimmed with team=object.speaker.team.short_name %}({{ team }}){% endblocktranslate %}
+    {% blocktrans trimmed with team=object.speaker.team.short_name %}({{ team }}){% endblocktrans %}
   {% endif %}
 {% endblock %}
 
 {% block page-alerts %}
 
-  {% blocktranslate trimmed with name=object.name asvar p1 %}
+  {% blocktrans trimmed with name=object.name asvar p1 %}
     The URL of this page is personalised to you, {{ name }}. <strong>Do not
     share it with anyone;</strong> anyone who knows this URL can submit results and/or
     feedback for your debates. You may bookmark this page and return here after each
     debate for the available actions.
-  {% endblocktranslate %}
+  {% endblocktrans %}
   {% include "components/explainer-card.html" with type="warning" %}
 
 {% endblock %}
@@ -34,24 +34,24 @@
         {% csrf_token %}
         {% if event %}
           <input type="hidden" name="action" value="revoke" />
-          {% blocktranslate trimmed with check_time=event.time asvar text %}
+          {% blocktrans trimmed with check_time=event.time asvar text %}
             Revoke check-in from {{ check_time }}
-          {% endblocktranslate %}
+          {% endblocktrans %}
         {% else %}
           <input type="hidden" name="action" value="checkin" />
-          {% translate "Check in" as text %}
+          {% trans "Check in" as text %}
         {% endif %}
         {% include "components/item-action.html" with id="triggerCheckInForm" url="" child=True %}
       </form>
     {% elif checkins_used %}
       {% if event %}
         {# Translators: Include the full-stop; English doesn't because "a.m." already has a full stop. #}
-        {% blocktranslate trimmed with check_time=event.time asvar text %}
+        {% blocktrans trimmed with check_time=event.time asvar text %}
           You have been checked in at {{ check_time }}
-        {% endblocktranslate %}
+        {% endblocktrans %}
         {% include "components/item-info.html" with type='success' %}
       {% else %}
-        {% translate "You are not currently checked in." as text %}
+        {% trans "You are not currently checked in." as text %}
         {% include "components/item-info.html" with type='warning' %}
       {% endif %}
     {% endif %}
@@ -59,16 +59,16 @@
     {% if object.adjudicator and pref.participant_ballots == 'private-urls' %}
       {% for round in tournament.current_rounds %}
         {% roundurl 'results-public-ballotset-new-randomised' round url_key as url %}
-        {% blocktranslate trimmed with round=round.name asvar text %}Submit Ballot for {{ round }}{% endblocktranslate %}
+        {% blocktrans trimmed with round=round.name asvar text %}Submit Ballot for {{ round }}{% endblocktrans %}
         {% include "components/item-action.html" %}
       {% empty %}
-        {% translate "There are no current rounds" as text %}
+        {% trans "There are no current rounds" as text %}
         {% include "components/item-info.html" with type='info' %}
       {% endfor %}
     {% endif %}
 
     {% if pref.participant_feedback == 'private-urls' %}
-      {% translate "Submit Feedback" as text %}
+      {% trans "Submit Feedback" as text %}
       {% if object.adjudicator %}
         {% tournamenturl 'adjfeedback-public-add-from-adjudicator-randomised' url_key as url %}
       {% else %}
@@ -81,9 +81,9 @@
   <div class="card-deck">
     {% include "in_this_round.html" with grammatical_person="2" %}
 
-    {% blocktranslate trimmed with name=object.name asvar card_title %}
+    {% blocktrans trimmed with name=object.name asvar card_title %}
       Registration ({{ name }})
-    {% endblocktranslate %}
+    {% endblocktrans %}
     {% if object.adjudicator %}
       {% include "adjudicator_registration_card.html" with adjudicator=object.adjudicator %}
     {% else %}

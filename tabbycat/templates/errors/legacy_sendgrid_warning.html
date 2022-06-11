@@ -8,7 +8,7 @@ utils.mixins.WarnAboutLegacySendgridConfigVarsMixin, and references to this
 template.
 {% endcomment %}
 {% if using_legacy_sendgrid_config_vars %}
-  {% blocktranslate trimmed asvar legacy_sendgrid_warning_message %}
+  {% blocktrans trimmed asvar legacy_sendgrid_warning_message %}
     It looks like you're using the old SendGrid config vars on Heroku,
     <code>SENDGRID_USERNAME</code> and <code>SENDGRID_PASSWORD</code>.
     These are now deprecated (as of version 2.6), and will stop working in a
@@ -16,6 +16,6 @@ template.
     <code>SENDGRID_API_KEY</code> instead. For more information, please see
     <a href="https://tabbycat.readthedocs.io/en/stable/features/notifications.html#configuring-an-email-provider">
         our documentation on this topic</a>.
-  {% endblocktranslate %}
+  {% endblocktrans %}
   {% include "components/alert.html" with type="warning" icon="alert-circle" message=legacy_sendgrid_warning_message %}
 {% endif %}

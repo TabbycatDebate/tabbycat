@@ -1,33 +1,33 @@
 {% extends "feedback_base.html" %}
 {% load debate_tags i18n static %}
 
-{% block sub-title %}{% blocktranslate trimmed %}<span id="c_breaking">{{ c_breaking }}</span> marked as breaking{% endblocktranslate %}{% endblock %}
+{% block sub-title %}{% blocktrans trimmed %}<span id="c_breaking">{{ c_breaking }}</span> marked as breaking{% endblocktrans %}{% endblock %}
 
 {% block page-alerts %}
 
   {% tournamenturl 'options-tournament-section' section='feedback' as option_url %}
   {% if pref.feedback_paths == 'minimal' %}
-    {% blocktranslate trimmed asvar p1 %}
+    {% blocktrans trimmed asvar p1 %}
       The current <a href="{{ option_url }}" class="alert-link">feedback configuration</a> allows and expects only chairs to submit feedback (on their panellists and trainees).
-    {% endblocktranslate %}
+    {% endblocktrans %}
   {% elif pref.feedback_paths == 'with-p-on-c' %}
-    {% blocktranslate trimmed asvar p1 %}
+    {% blocktrans trimmed asvar p1 %}
       The current <a href="{{ option_url }}" class="alert-link">feedback configuration</a> allows and expects both chairs and panellists to submit feedback on each other, and also chairs to submit feedback on trainees.
-    {% endblocktranslate %}
+    {% endblocktrans %}
   {% elif pref.feedback_paths == 'with-t-on-c' %}
-    {% blocktranslate trimmed asvar p1 %}
+    {% blocktrans trimmed asvar p1 %}
       The current <a href="{{ option_url }}" class="alert-link">feedback configuration</a> allows and expects both panellists and trainees to submit feedback on chairs, and chairs to submit feedback on every other member of the panel (including trainees).
-    {% endblocktranslate %}
+    {% endblocktrans %}
   {% elif pref.feedback_paths == 'all-adjs' %}
-    {% blocktranslate trimmed asvar p1 %}
+    {% blocktrans trimmed asvar p1 %}
       The current <a href="{{ option_url }}" class="alert-link">feedback configuration</a> allows and expects all adjudicators (including trainees) to submit feedback on every other member of the panel (including trainees).
-    {% endblocktranslate %}
+    {% endblocktrans %}
   {% endif %}
   {% include "components/explainer-card.html" with type="info" %}
 
   {% if nadjs_outside_range > 0 %}
     {% tournamenturl 'options-tournament-section' section='feedback' as feedback_settings_url %}
-    {% blocktranslate trimmed with min_score=pref.adj_min_score max_score=pref.adj_max_score count nadjs_outside_range=nadjs_outside_range asvar message %}
+    {% blocktrans trimmed with min_score=pref.adj_min_score max_score=pref.adj_max_score count nadjs_outside_range=nadjs_outside_range asvar message %}
       There is <strong>{{ nadjs_outside_range }} adjudicator</strong> with
       a score <strong>outside the permitted range</strong> of adjudicator
       scores, which is currently set as {{ min_score }} to {{ max_score }}.
@@ -43,7 +43,7 @@
       If you'd like to use a wider score range, you can configure this in
       <a href="{{ feedback_settings_url }}" class="alert-link"> feedback
       settings</a>.
-    {% endblocktranslate %}
+    {% endblocktrans %}
     {% include "components/alert.html" with type="warning" %}
   {% endif %}
   {{ block.super }}

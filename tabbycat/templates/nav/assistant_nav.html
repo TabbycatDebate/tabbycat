@@ -2,31 +2,31 @@
 
 <li class="nav-item {% if results_nav %}active{% endif %}">
   <a class="nav-link" href="{% tournamenturl 'results-assistant-round-list' %}">
-    {% translate "Enter Results" %}
+    {% trans "Enter Results" %}
   </a>
 </li>
 
 <li class="nav-item {% if feedback_nav %}active{% endif %}">
   <a class="nav-link" href="{% tournamenturl 'adjfeedback-assistant-add-index' %}">
-    {% translate "Enter Feedback" %}
+    {% trans "Enter Feedback" %}
   </a>
 </li>
 
 <li class="nav-item dropdown {% if participants_nav or institutions_nav or code_names_nav %}active{% endif %}">
   <a class="nav-link dropdown-toggle" href="#" id="checkinsDrop"
      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    {% translate "Participants" %}
+    {% trans "Participants" %}
   </a>
   <div class="dropdown-menu" aria-labelledby="checkinsDrop">
     <a class="dropdown-item {% if participants_nav %}active{% endif %}" href="{% tournamenturl 'participants-assistant-list' %}">
-      {% translate "Participants List" %}
+      {% trans "Participants List" %}
     </a>
     <a class="dropdown-item {% if institutions_nav %}active{% endif %}" href="{% tournamenturl 'participants-assistant-institutions-list' %}">
-      {% translate "Institutions" %}
+      {% trans "Institutions" %}
     </a>
     {% if pref.team_code_names != 'off' %}
       <a class="dropdown-item {% if code_names_nav %}active{% endif %}" href="{% tournamenturl 'participants-assistant-code-names-list' %}">
-        {% translate "Code Names" %}
+        {% trans "Code Names" %}
       </a>
     {% endif %}
   </div>
@@ -35,20 +35,20 @@
 <li class="nav-item dropdown {% if checkins_nav %}active{% endif %}">
   <a class="nav-link dropdown-toggle" href="#" id="checkinsDrop"
      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    {% translate "Check-Ins" %}
+    {% trans "Check-Ins" %}
   </a>
   <div class="dropdown-menu" aria-labelledby="checkinsDrop">
     <a class="dropdown-item {% if checkins_scans %}active{% endif %}" href="{% tournamenturl 'assistant-checkin-prescan' %}">
-      {% translate "Scan Identifiers" %}
+      {% trans "Scan Identifiers" %}
     </a>
     <a class="dropdown-item {% if checkins_ids %}active{% endif %}" href="{% tournamenturl 'assistant-checkin-identifiers' %}">
-      {% translate "View Identifiers" %}
+      {% trans "View Identifiers" %}
     </a>
     <a class="dropdown-item {% if checkins_people_statuses %}active{% endif %}" href="{% tournamenturl 'assistant-people-statuses' %}">
-      {% translate "People's Status" %}
+      {% trans "People's Status" %}
     </a>
     <a class="dropdown-item {% if checkins_venues_statuses %}active{% endif %}" href="{% tournamenturl 'assistant-venues-statuses' %}">
-      {% translate "Room's Status" %}
+      {% trans "Room's Status" %}
     </a>
   </div>
 </li>
@@ -56,7 +56,7 @@
 {% if pref.assistant_access != "results_only" %}
   <li class="nav-item {% if draw_nav %}active{% endif %}">
     <a class="nav-link" href="{% tournamenturl 'draw-assistant-display' %}">
-      {% translate "Display/Print Draw" %}
+      {% trans "Display/Print Draw" %}
     </a>
   </li>
 {% endif %}

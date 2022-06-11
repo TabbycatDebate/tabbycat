@@ -16,9 +16,9 @@ names are relevant, or to the team's real name if it is not. #}
 
     {% if pref.public_participants or admin_page %}
       {# Just call it 'name' since this string is also used with adjudicators #}
-      {% blocktranslate trimmed with name=team_short_name asvar card_title %}
+      {% blocktrans trimmed with name=team_short_name asvar card_title %}
         About {{ name }}
-      {% endblocktranslate %}
+      {% endblocktrans %}
       {% include "team_registration_card.html" %}
     {% endif %} {# pref.public_participants or admin_page #}
 
