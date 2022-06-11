@@ -277,7 +277,7 @@ class Team(models.Model):
             self._points = TeamScore.objects.filter(
                 ballot_submission__confirmed=True,
                 debate_team__team=self,
-            ).aggregate(p=Coalesce(PointsMetricAnnotator().get_annotation(round=round), Value(0)))['p']
+            ).aggregate(p=Coalesce(PointsMetricAnnotator().get_annotation(), Value(0)))['p']
             return self._points
 
     @cached_property
