@@ -3,7 +3,7 @@ from django.db.models import Prefetch
 from django.utils.translation import gettext_lazy, ngettext
 
 from adjallocation.models import DebateAdjudicator
-from utils.admin import TabbycatModelAdminFieldsMixin
+from utils.admin import ModelAdmin, TabbycatModelAdminFieldsMixin
 
 from .models import Debate, DebateTeam
 
@@ -13,7 +13,7 @@ from .models import Debate, DebateTeam
 # ==============================================================================
 
 @admin.register(DebateTeam)
-class DebateTeamAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
+class DebateTeamAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_display = ('team', 'side', 'debate', 'get_tournament', 'get_round')
     search_fields = ('team__long_name', 'team__short_name', 'team__institution__name', 'team__institution__code', 'flags')
     raw_id_fields = ('debate', 'team')
@@ -43,7 +43,7 @@ class DebateAdjudicatorInline(admin.TabularInline):
 
 
 @admin.register(Debate)
-class DebateAdmin(admin.ModelAdmin):
+class DebateAdmin(ModelAdmin):
     list_display = ('id', 'round', 'bracket', 'matchup', 'result_status', 'sides_confirmed')
     list_filter = ('round__tournament', 'round')
     list_editable = ('result_status', 'sides_confirmed')
