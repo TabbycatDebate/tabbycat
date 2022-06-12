@@ -17,6 +17,7 @@ export default new Vuex.Store({
     institutions: {},
     regions: {},
     loading: false, // Used by modal windows when waiting for an allocation etc
+    draggingPanel: false, // Needed to switch UI affordances for whole-panel drops
     round: null,
     tournament: null,
     // For saving mechanisms
@@ -176,6 +177,9 @@ export default new Vuex.Store({
     setLoadingState (state, isLoading) {
       state.loading = isLoading
     },
+    setPanelDraggingTracker (state, status) {
+      state.draggingPanel = status;
+    },
   },
   getters: {
     allDebatesOrPanels: state => {
@@ -279,6 +283,9 @@ export default new Vuex.Store({
         }
       }
       return doubleAllocatedIDs
+    },
+    panelIsDragging: (state) => {
+      return state.draggingPanel;
     },
   },
   // Note actions are async

@@ -3,23 +3,11 @@
     :drag-payload="getPanelDragPayload()"
     class="d-flex flex-fill align-items-stretch align-items-center draggable-panel"
   >
-    <div class="p-1 d-flex align-items-center panel-handle">
-      <i data-feather="move"></i>
-      {{ debateOrPanel.id }}
-    </div>
-    <droppable-item
-      :class="['p-1 align-items-center d-flex']"
-      :handle-drop="handlePanelSwap"
-      :drop-context="{ assignment: debateOrPanel.id }"
-    >
-      <i data-feather="download"></i>
-    </droppable-item>
     <div class="d-flex vc-chair-flex flex-truncate flex-nowrap">
       <droppable-item
         class="d-flex flex-grow-1"
-        :handle-drop="handleDebateOrPanelDrop"
-        :drop-context="{ assignment: debateOrPanel.id, position: 'C' }"
-      >
+        :handle-drop="handleDebateOrPanelDrop" :locked="panelIsDragging"
+        :drop-context="{ assignment: debateOrPanel.id, position: 'C' }">
         <div
           :class="['align-items-center flex-fill', chairID ? 'd-none' : 'd-flex panel-incomplete']"
         >
@@ -42,7 +30,7 @@
           'd-flex flex-grow-1 flex-wrap',
           adjudicators.P.length % 2 ? 'panel-incomplete' : '',
         ]"
-        :handle-drop="handleDebateOrPanelDrop"
+        :handle-drop="handleDebateOrPanelDrop"  :locked="panelIsDragging"
         :drop-context="{ assignment: debateOrPanel.id, position: 'P' }"
       >
         <draggable-adjudicator
@@ -58,7 +46,7 @@
     <div class="d-flex flex-shrink-1 border-left">
       <droppable-item
         class="d-flex flex-grow-1 flex-wrap"
-        :handle-drop="handleDebateOrPanelDrop"
+        :handle-drop="handleDebateOrPanelDrop" :locked="panelIsDragging"
         :drop-context="{ assignment: debateOrPanel.id, position: 'T' }"
       >
         <div
@@ -97,6 +85,9 @@ export default {
     },
     adjudicators () {
       return this.debateOrPanel.adjudicators
+    },
+    panelIsDragging () {
+      return this.$store.getters.panelIsDragging
     },
   },
   methods: {

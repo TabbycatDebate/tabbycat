@@ -2,8 +2,8 @@
   <div
     draggable="true"
     @drag="drag"
-    @dragstart="dragStart"
-    @dragend="dragEnd"
+    @dragstart="dragStartPanel"
+    @dragend="dragEndPanel"
     :class="['', dragableClasses]"
   >
     <slot> </slot>
@@ -17,6 +17,15 @@ export default {
   mixins: [DraggableMixin],
   // Passed down from the parent because the trigger for the show/hide needs to be on this element
   props: {},
-  methods: {},
+  methods: { // Need to track panel drag state globally to mutate UI to hide individual-drop affordances
+    dragStartPanel: function (event) {
+      this.$store.commit('setPanelDraggingTracker', true)
+      this.dragStart(event)
+    },
+    dragEndPanel: function (event) {
+      this.$store.commit('setPanelDraggingTracker', false)
+      this.dragEnd(event)
+    },
+  },
 }
 </script>
