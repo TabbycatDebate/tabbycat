@@ -49,10 +49,10 @@
          v-text="gettext('No matching rooms found.')"></div>
     <div class="alert alert-info" v-if="entitiesByPresence.length === 0 && !isForVenues"
          v-text="gettext('No matching people found.')"></div>
-    <div class="alert alert-info"
-         v-text="gettext('This page will live-update with new check-ins as they occur although the initial list may be up to a minute old.')">
-
-      <template v-if="assistantUrl" v-text="gettext('If you want to view this page without the sidebar (i.e. for displaying to an auditorium) you can use the assistant version.')">
+    <div class="alert alert-info">
+      {{ gettext('This page will live-update with new check-ins as they occur although the initial list may be up to a minute old.') }}
+      <template v-if="assistantUrl">
+        {{ gettext('If you want to view this page without the sidebar (i.e. for displaying to an auditorium) you can use the assistant version.') }}
         <a :href="assistantUrl" target="_blank" v-text="gettext('Open the assistant version.')"></a></template>
     </div>
 
