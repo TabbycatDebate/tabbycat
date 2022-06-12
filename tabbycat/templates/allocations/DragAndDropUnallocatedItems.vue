@@ -36,11 +36,11 @@
 </template>
 
 <script>
-import DroppableMixin from './DroppableMixin.vue'
+import { mapMutations } from 'vuex'
+
 import DroppableItem from './DroppableItem.vue'
 
 export default {
-  mixins: [DroppableMixin],
   components: { DroppableItem },
   data: function () {
     return {
@@ -147,6 +147,7 @@ export default {
       }
       return height
     },
+    ...mapMutations(['unsetHoverPanel', 'unsetHoverConflicts']),
   },
 }
 </script>
