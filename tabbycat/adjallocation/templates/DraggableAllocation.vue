@@ -1,8 +1,31 @@
 <template>
   <draggable-collection
     :drag-payload="getPanelDragPayload()"
-    class="d-flex flex-fill align-items-stretch align-items-center draggable-panel"
+    class="mx-1 d-flex flex-fill align-items-stretch align-items-center draggable-panel"
   >
+
+    <div :class="['panel-stats small text-monospace text-center', panelIsDragging ? 'd-none' : '']">
+      <div class="py-1" data-toggle="tooltip" :title="gettext('Average score of panel (excluding trainees)')">
+        <span v-if="averageScore">{{ averageScore }}</span>
+        <span v-else class="text-muted" v-text="gettext('N/A')"></span>
+      </div>
+      <div class="py-1" data-toggle="tooltip" :title="gettext('Average score of voting majority in panel')">
+        <span v-if="averageVotingScore">{{ averageVotingScore }}</span>
+        <span v-else class="text-muted" v-text="gettext('N/A')"></span>
+      </div>
+    </div>
+
+    <div :class="['align-items-center justify-content-center panel-handle', ]">
+      <div class="d-flex"><i data-feather="move"></i></div>
+    </div>
+
+    <droppable-item
+      :class="['p-1 flex-shrink-1 align-items-center justify-content-center panel-pit', panelIsDragging ? 'd-flex' : 'd-none']"
+      :handle-drop="handlePanelSwap"
+      :drop-context="{ assignment: debateOrPanel.id }">
+      <div class="px-4 d-flex"><i data-feather="download"></i></div>
+    </droppable-item>
+
     <div class="d-flex vc-chair-flex flex-truncate flex-nowrap">
       <droppable-item
         class="d-flex flex-grow-1"
@@ -19,8 +42,7 @@
           :item="allAdjudicators[chairID]"
           :debate-or-panel-id="debateOrPanel.id"
           :drag-payload="getDragPayload(chairID, 'C')"
-          style="max-width: 160px"
-        >
+          style="max-width: 160px">
         </draggable-adjudicator>
       </droppable-item>
     </div>
@@ -65,6 +87,7 @@
         </draggable-adjudicator>
       </droppable-item>
     </div>
+
   </draggable-collection>
 </template>
 
@@ -75,7 +98,7 @@ import DraggableAdjudicator from './DraggableAdjudicator.vue'
 
 export default {
   components: { DraggableAdjudicator, DroppableItem, DraggableCollection },
-  props: ['debateOrPanel', 'handleDebateOrPanelDrop', 'handlePanelSwap'],
+  props: ['debateOrPanel', 'handleDebateOrPanelDrop', 'handlePanelSwap', 'averageScore', 'averageVotingScore'],
   computed: {
     chairID () {
       return this.adjudicators.C[0]

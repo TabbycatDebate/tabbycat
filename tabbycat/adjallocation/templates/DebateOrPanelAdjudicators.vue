@@ -1,20 +1,12 @@
 <template>
 
   <div class="d-flex flex-36 flex-truncate vue-droppable vue-droppable-parent">
-    <div class="d-flex flex-column pl-2 pr-2 justify-content-around bg-white small text-monospace">
-      <div class="py-1" data-toggle="tooltip" :title="gettext('Average score of panel (excluding trainees)')">
-        <span v-if="averageScore">{{ averageScore }}</span>
-        <span v-else class="text-muted" v-text="gettext('N/A')"></span>
-      </div>
-      <div class="py-1" data-toggle="tooltip" :title="gettext('Average score of voting majority in panel')">
-        <span v-if="averageVotingScore">{{ averageVotingScore }}</span>
-        <span v-else class="text-muted" v-text="gettext('N/A')"></span>
-      </div>
-    </div>
     <draggable-allocation
       :handle-debate-or-panel-drop="handleDebateOrPanelDrop"
       :handle-panel-swap="handlePanelSwap"
       :debate-or-panel="debateOrPanel"
+      :average-score="averageScore"
+      :average-voting-score="averageVotingScore"
     ></draggable-allocation>
   </div>
 
