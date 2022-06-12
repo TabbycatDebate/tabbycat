@@ -18,7 +18,7 @@ from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory, BreakingTeam
 from draw.models import Debate, DebateTeam
-from motions.models import Motion, RoundMotion
+from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
 from participants.emoji import pick_unused_emoji
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
 from privateurls.utils import populate_url_keys
@@ -916,7 +916,9 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
         def get_url_options(self, value, format):
             for view_name, (model, field) in self.models.items():
                 if getattr(value, field) is not None:
-                    return self.get_url(getattr(getattr(value, field), model.__name__.lower()), view_name, self.context['request'], format)
+                    return self.get_url(
+                        getattr(getattr(value, field), model.__name__.lower()),
+                        view_name, self.context['request'], format)
 
     class DebateHyperlinkedRelatedField(fields.RoundHyperlinkedRelatedField):
         def lookup_kwargs(self):
@@ -1148,10 +1150,27 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
             result.save()
             return result
 
+    class VetoSerializer(serializers.ModelSerializer):
+        team = fields.TournamentHyperlinkedRelatedField(
+            source='debate_team.team', view_name='api-team-detail', queryset=Team.objects.all())
+        motion = fields.TournamentHyperlinkedRelatedField(view_name='api-motion-detail', queryset=Motion.objects.all())
+
+        class Meta:
+            model = DebateTeamMotionPreference
+            exclude = ('id', 'ballot_submission', 'preference', 'debate_team')
+
+        def create(self, validated_data):
+            try:
+                validated_data['debate_team'] = DebateTeam.objects.get(debate=self.context['debate'], team=validated_data.pop('team'))
+            except (DebateTeam.DoesNotExist, DebateTeam.MultipleObjectsReturned):
+                raise serializers.ValidationError('Team is not in debate')
+            return super().create(validated_data)
+
     result = ResultSerializer(source='result.get_result_info')
     motion = fields.TournamentHyperlinkedRelatedField(view_name='api-motion-detail', required=False, queryset=Motion.objects.all())
     url = fields.DebateHyperlinkedIdentityField(view_name='api-ballot-detail')
     participant_submitter = ParticipantSourceField(allow_null=True)
+    vetos = VetoSerializer(many=True, source='debateteammotionpreference_set', required=False, allow_null=True)
 
     class Meta:
         model = BallotSubmission
@@ -1165,6 +1184,8 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
 
     def create(self, validated_data):
         result_data = validated_data.pop('result').pop('get_result_info')
+        veto_data = validated_data.pop('vetos', None)
+
         validated_data.update(self.get_submitter_fields())
         if validated_data.get('confirmed', False):
             validated_data['confirmer'] = self.context['request'].user
@@ -1185,6 +1206,10 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         result._validated_data = result_data
         result._errors = []
         result.save(ballot=ballot)
+
+        vetos = self.VetoSerializer(context=self.context)
+        vetos._validated_data = veto_data
+        vetos.save(ballot_submission=ballot, preference=3)
 
         return ballot
 

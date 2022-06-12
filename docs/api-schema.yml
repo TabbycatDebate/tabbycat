@@ -4337,6 +4337,21 @@ components:
           type: string
           format: uri
           nullable: true
+        vetos:
+          title: Vetos
+          type: array
+          items:
+            type: object
+            properties:
+              team:
+                title: Team
+                type: string
+                format: uri
+              motion:
+                title: Motion
+                type: string
+                format: uri
+          nullable: true
         timestamp:
           title: Timestamp
           type: string
