@@ -122,7 +122,7 @@
     });
     $(document).keydown(function(e) {
       e.stopPropagation();
-      if (e.keyCode === 27 || e.keyCode === 38) { stopScrolling() }
+      if (e.key === 'Escape' || e.key === 'ArrowUp') { stopScrolling() }
     });
     $('#stop_scrolling').click(function(event){ stopScrolling() });
   </script>
