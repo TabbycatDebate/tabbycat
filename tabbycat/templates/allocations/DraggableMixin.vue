@@ -38,12 +38,10 @@ export default {
         // Must also be a string; so we serialise to JSON
         event.dataTransfer.setData('text', JSON.stringify(this.dragPayload))
       }
-      event.stopPropagation() // Needed to not trigger enclosing items that are draggable
     },
     dragEnd: function (event) {
       this.isDragging = false
       this.scrollStop = true
-      event.stopPropagation() // Needed to not trigger enclosing items that are draggable
     },
     drag: function (event) {
       // Setup the top and bottom of the windows as hover zones so we can scroll while dragging

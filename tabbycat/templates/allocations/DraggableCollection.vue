@@ -2,8 +2,8 @@
   <div
     draggable="true"
     @drag="drag"
-    @dragstart="dragStartPanel"
-    @dragend="dragEndPanel"
+    @dragstart.stop="dragStartPanel"
+    @dragend.stop="dragEndPanel"
     :class="['', dragableClasses]"
   >
     <slot> </slot>
