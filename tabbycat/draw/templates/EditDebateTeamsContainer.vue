@@ -6,7 +6,7 @@
 
     <drag-and-drop-actions slot="actions" :count="debatesOrPanelsCount"></drag-and-drop-actions>
 
-   <template slot="extra-messages">
+   <template v-slot:extra-messages>
       <div id="alertdiv" class="alert alert-warning show">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">×</span></button>
@@ -15,7 +15,7 @@
       </div>
     </template>
 
-    <template slot="debates">
+    <template v-slot:debates>
       <drag-and-drop-debate v-for="debate in sortedDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
 
         <!-- Hide for space — things get stretched in BP sides editing-->

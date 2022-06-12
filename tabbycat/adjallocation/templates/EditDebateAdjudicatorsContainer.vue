@@ -6,7 +6,7 @@
 
     <drag-and-drop-actions slot="actions" :count="debatesOrPanelsCount" prioritise="true" allocate="true" shard="true"
                            @show-shard="showShard" @show-allocate="showAllocate" @show-prioritise="showPrioritise">
-      <template slot="default-highlights">
+      <template v-slot:default-highlights>
         <button class="btn conflictable conflicts-toolbar hover-histories-2-ago"
                 data-toggle="tooltip" v-text="gettext('Seen')"
                 :title="('Has judged this team or with this adjudicator previously')"></button>
@@ -22,20 +22,20 @@
       </template>
     </drag-and-drop-actions>
 
-    <template slot="debates">
+    <template v-slot:debates>
       <drag-and-drop-debate v-for="debate in sortedDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
         <debate-or-panel-importance slot="importance" :debate-or-panel="debate"></debate-or-panel-importance>
         <debate-or-panel-adjudicators slot="adjudicators" :debate-or-panel="debate"
                                       :handle-debate-or-panel-drop="moveAdjudicator">
         </debate-or-panel-adjudicators>
-        <template slot="venue"><span></span></template><!--Hide Venues-->
+        <template v-slot:venue><span></span></template><!--Hide Venues-->
       </drag-and-drop-debate>
       <div class="text-center lead mx-5 p-5" v-if="sortedDebatesOrPanels.length === 0">
         <p class="mx-5 lead mt-2 px-5" v-text="gettext(noDebatesInline)"></p>
       </div>
     </template>
 
-    <template slot="modals">
+    <template v-slot:modals>
       <modal-for-sharding :intro-text="gettext(intro)"></modal-for-sharding>
       <modal-for-allocating :intro-text="gettext(`Auto-allocate will remove adjudicators from all debates
         and create new panels in their place.`)"

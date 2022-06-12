@@ -6,11 +6,11 @@
 
     <drag-and-drop-actions slot="actions" :count="debatesOrPanelsCount" prioritise="true" allocate="true" shard="true"
                            @show-shard="showShard" @show-allocate="showAllocate" @show-prioritise="showPrioritise">
-      <template slot="extra-actions">
+      <template v-slot:extra-actions>
         <button :class="['btn', debatesOrPanelsCount > 0 ? 'btn-outline-primary' : 'btn-success']"
                 @click="showCreatePanels" v-text="gettext('Create Panels')"></button>
       </template>
-      <template slot="default-highlights">
+      <template v-slot:default-highlights>
         <button class="btn conflictable conflicts-toolbar hover-histories-2-ago"
                 data-toggle="tooltip" v-text="gettext('Seen')"
                 title="This adjudicator has judged with this adjudicator previously"></button>
@@ -26,22 +26,22 @@
       </template>
     </drag-and-drop-actions>
 
-    <template slot="debates">
+    <template v-slot:debates>
       <drag-and-drop-debate v-for="panel in sortedDebatesOrPanels" :key="panel.pk" :debateOrPanel="panel">
         <debate-or-panel-importance slot="importance"
                                     :debate-or-panel="panel"></debate-or-panel-importance>
         <debate-or-panel-adjudicators slot="adjudicators" :debate-or-panel="panel"
                                       :handle-debate-or-panel-drop="moveAdjudicator">
         </debate-or-panel-adjudicators>
-        <template slot="teams"><span></span></template><!--Hide Teams-->
-        <template slot="venue"><span></span></template><!--Hide Venues-->
+        <template v-slot:teams><span></span></template><!--Hide Teams-->
+        <template v-slot:venue><span></span></template><!--Hide Venues-->
       </drag-and-drop-debate>
       <div class="text-center lead mx-5 p-5" v-if="debatesOrPanelsCount === 0">
         <p class="mx-5 lead mt-2 px-5" v-text="gettext(createPanelsInline)"></p>
       </div>
     </template>
 
-    <template slot="modals">
+    <template v-slot:modals>
       <modal-for-creating-preformed-panels :context-of-action="'create_preformed_panels'">
       </modal-for-creating-preformed-panels>
       <modal-for-sharding :intro-text="gettext(shardIntro)"></modal-for-sharding>
