@@ -1,6 +1,5 @@
 // The base template with universal or near-universal functionality (imported on all pages)
 import Vue from 'vue'
-import VueTouch from 'vue-touch'
 import * as Sentry from '@sentry/browser'
 import * as Integrations from '@sentry/integrations'
 import feather from 'feather-icons'
@@ -251,8 +250,6 @@ Vue.prototype.$eventHub = eventHub
 
 // Make a global mixin to provide translation functions
 Vue.mixin(vueTranslationMixin)
-// Provide support for tab events
-Vue.use(VueTouch, { name: 'v-touch' })
 
 // Only instantiate Vue if there is set vueData; otherwise the mount is missing
 if (typeof vueData !== 'undefined') {
