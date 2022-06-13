@@ -26,7 +26,6 @@
       </div>
 
     </div>
-
   </div>
 
 </template>
@@ -54,7 +53,7 @@ export default {
     // Watch for events on the global event hub
   },
   mounted: function () {
-    this.popperInstance = createPopper(this.$refs.container.$el, this.$refs.popover, {
+    this.popperInstance = createPopper(this.$refs.container, this.$refs.popover, {
       placement: 'right-end',
       strategy: 'fixed',
       modifiers: [

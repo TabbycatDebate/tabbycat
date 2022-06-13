@@ -44,6 +44,7 @@
 
 .popover {
   max-width: none; // Bootstrap defaults to 270
+  margin: 0; // Necessary to avoid popper.js complaint
 
   h6 {
     margin-bottom: -2px;
