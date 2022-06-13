@@ -10,6 +10,13 @@
   user-select: none; // Useful to prevent text selection during dragging
 }
 
+.touch-target {
+  touch-action: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
 // Specific styling for tooltips/popovers
 [data-toggle='tooltip'],
 [data-toggle="popover"],
@@ -37,6 +44,7 @@
 
 .popover {
   max-width: none; // Bootstrap defaults to 270
+  margin: 0; // Necessary to avoid popper.js complaint
 
   h6 {
     margin-bottom: -2px;
