@@ -9,11 +9,11 @@
       </div>
 
       <div class="col mb-0 pr-md-1 pr-md-2 pr-1 pl-1 form-group">
-        <select v-model="speakerNameShadow" :disabled="blindReveal" v-bind="selectAttributes"
+        <select v-bind="selectAttributes" v-model="speakerNameShadow" :disabled="blindReveal"
           :class="['custom-select mb-2', !blindSpeakerMatches && blindReveal ? 'is-invalid bg-dark text-white' : '',
                                           blindSpeakerMatches && blindReveal ? 'is-valid' : '']">
-          <option v-bind:value="0" selected>{{ selectOptions[0].text }}</option>
-          <option v-for="option in selectOptions.slice(1)" v-bind:value="option.value">
+          <option :value="0" selected>{{ selectOptions[0].text }}</option>
+          <option v-for="option in selectOptions.slice(1)" :value="option.value">
             {{ option.text }}
           </option>
         </select>
@@ -35,9 +35,10 @@
       </div>
 
       <div class="col-3 form-group pr-1 pl-1">
-        <input :class="['form-control mb-2', !blindScoreMatches && blindReveal ? 'is-invalid bg-dark text-white' : '',
+        <input v-bind="scoreAttributes"
+               :class="['form-control mb-2', !blindScoreMatches && blindReveal ? 'is-invalid bg-dark text-white' : '',
                                               blindScoreMatches && blindReveal ? 'is-valid' : '']"
-               :readonly="blindReveal" v-model.number="speakerScoreShadow" v-bind="scoreAttributes"
+               :readonly="blindReveal" v-model.number="speakerScoreShadow"
                @change="setShadowScore(speakerScoreShadow)">
         <span class="text-danger" v-if="blindReveal && !blindScoreMatches">No match</span>
       </div>
@@ -54,12 +55,13 @@
 
       <div class="col mb-0 pr-md-1 pr-md-2 pr-1 pl-1 form-group">
 
-        <select :class="['custom-select', speakerError ? 'border-danger text-danger' : '',
+        <select v-bind="selectAttributes"
+                :class="['custom-select', speakerError ? 'border-danger text-danger' : '',
                                           !blindSpeakerMatches && blindEntry ? 'is-invalid' : '',
                                            blindSpeakerMatches && blindEntry ? 'is-valid' : '']"
-                v-model="speakerName" v-bind="selectAttributes" :disabled="!isNew && !isAdmin"
+                v-model="speakerName" :disabled="!isNew && !isAdmin"
                 @change="setShadowSpeaker(speakerName)">
-          <option v-for="option in selectOptions" v-bind:value="option.value"
+          <option v-for="option in selectOptions" :value="option.value"
                   :selected="speakerName === option.value">
             {{ option.text }}
           </option>
@@ -79,11 +81,12 @@
       </div>
 
       <div class="col-3 form-group pr-1 pl-1">
-        <input :class="['form-control', scoreError ? 'border-danger text-danger' : '',
+        <input v-bind="scoreAttributes"
+               :class="['form-control', scoreError ? 'border-danger text-danger' : '',
                                         blindScoreMatches && blindEntry ? 'is-valid' : '',
                                        !blindScoreMatches && blindEntry ? 'is-invalid' : '']"
                @change="setShadowScore(speakerScore)" :readonly="!isNew && !isAdmin"
-               v-model.number="speakerScore" v-bind="scoreAttributes">
+               v-model.number="speakerScore">
         <label v-if="scoreError" class="error pt-2">{{ scoreError }}</label>
       </div>
 
