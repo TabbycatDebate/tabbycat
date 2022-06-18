@@ -1,5 +1,5 @@
 // The base template with universal or near-universal functionality (imported on all pages)
-import Vue from 'vue'
+import Vue, { createApp } from 'vue'
 import * as Sentry from '@sentry/browser'
 import * as Integrations from '@sentry/integrations'
 import feather from 'feather-icons'
@@ -244,7 +244,7 @@ const vueTranslationMixin = {
 }
 
 // This is an coordinating instance used for inter-component pub/sub interfaces
-// Only needed by the legay drag and drop screens
+// Only needed by the legacy drag and drop screens
 const eventHub = new Vue()
 Vue.prototype.$eventHub = eventHub
 
@@ -257,11 +257,9 @@ if (typeof vueData !== 'undefined') {
   if ('tablesData' in vueData && vueData.tablesData === null) {
     // Is an empty table; do not mount
   } else {
-    new Vue({ // eslint-disable-line no-new
-      el: '#vueMount',
-      store, // Inject store into all root level components
+    createApp({ // eslint-disable-line no-new
       components: vueComponents,
-      data: vueData,
-    })
+      data: () => vueData,
+    }).use(store).mount('#vueMount')
   }
 }
