@@ -97,11 +97,16 @@ class RoundViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
         ).prefetch_related('roundmotion_set', 'roundmotion_set__motion', 'roundmotion_set__motion__tournament')
 
 
-class MotionViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+class MotionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.MotionSerializer
+    access_preference = ('public_motions', 'motion_tab_released')
+    access_operator = any
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('roundmotion_set', 'roundmotion_set__round')
+        filters = Q()
+        if self.tournament.pref('public_motions') and not (self.tournament.pref('motion_tab_released') or self.request.user.is_staff):
+            filters &= Q(rounds__motions_released=True)
+        return super().get_queryset().filter(filters).prefetch_related('roundmotion_set', 'roundmotion_set__round')
 
 
 class BreakCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
