@@ -1,6 +1,6 @@
 <template>
 
-  <div class="modal fade" :id="id" tabindex="-1" role="dialog" aria-hidden="true" ref="modal">
+  <div class="modal fade" id="confirmAllocateModal" tabindex="-1" role="dialog" aria-hidden="true" ref="modal">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-body text-center p-4">
@@ -23,10 +23,5 @@ import ModalActionMixin from '../../templates/modals/ModalActionMixin.vue'
 
 export default {
   mixins: [ModalActionMixin],
-  data: function () {
-    return {
-      id: 'confirmAllocateModal',
-    }
-  },
 }
 </script>
