@@ -26,25 +26,25 @@
           class="btn conflictable conflicts-toolbar hover-histories-2-ago"
           data-toggle="tooltip"
           v-text="gettext('Seen')"
-          title="This adjudicator has judged with this adjudicator previously"
+          :title="gettext('This adjudicator has judged with this adjudicator previously')"
         ></button>
         <button
           class="btn conflictable conflicts-toolbar hover-institution"
           data-toggle="tooltip"
           v-text="gettext('Institution')"
-          title="This adjudicator is from the same institution as this panelist."
+          :title="gettext('This adjudicator is from the same institution as this panelist.')"
         ></button>
         <button
           class="btn conflictable conflicts-toolbar hover-adjudicator"
           data-toggle="tooltip"
           v-text="gettext('Conflict')"
-          title="This adjudicator has a nominated conflict with this panelist."
+          :title="gettext('This adjudicator has a nominated conflict with this panelist.')"
         ></button>
         <button
           class="btn panel-incomplete"
           data-toggle="tooltip"
           v-text="gettext('Missing')"
-          title="Panel is either missing a chair or enough adjudicators for a voting majority."
+          :title="gettext('Panel is either missing a chair or enough adjudicators for a voting majority.')"
         ></button>
       </template>
     </drag-and-drop-actions>
@@ -58,14 +58,13 @@
         <debate-or-panel-importance
           slot="importance"
           :debate-or-panel="panel"
-        ></debate-or-panel-importance>
+        />
         <debate-or-panel-adjudicators
           slot="adjudicators"
           :debate-or-panel="panel"
           :handle-debate-or-panel-drop="moveAdjudicator"
           :handle-panel-swap="swapPanels"
-        >
-        </debate-or-panel-adjudicators>
+        />
         <template v-slot:teams><span></span></template><!--Hide Teams-->
         <template v-slot:venue><span></span></template><!--Hide Venues-->
       </drag-and-drop-debate>
@@ -75,17 +74,16 @@
     </template>
 
     <template v-slot:modals>
-      <modal-for-creating-preformed-panels :context-of-action="'create_preformed_panels'">
-      </modal-for-creating-preformed-panels>
-      <modal-for-sharding :intro-text="gettext(shardIntro)"></modal-for-sharding>
+      <modal-for-creating-preformed-panels context-of-action="create_preformed_panels"/>
+      <modal-for-sharding :intro-text="gettext(shardIntro)"/>
       <modal-for-allocating
         :intro-text="gettext(allocateIntro)"
         :for-panels="true"
-        :context-of-action="'allocate_panel_adjs'"
+        context-of-action="allocate_panel_adjs"
       ></modal-for-allocating>
       <modal-for-prioritising
         :intro-text="gettext(prioritiseIntro)"
-        :context-of-action="'prioritise_panels'"
+        context-of-action="prioritise_panels"
       ></modal-for-prioritising>
     </template>
   </drag-and-drop-layout>

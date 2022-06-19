@@ -20,25 +20,25 @@
           class="btn conflictable conflicts-toolbar hover-histories-2-ago"
           data-toggle="tooltip"
           v-text="gettext('Seen')"
-          :title="'Has judged this team or with this adjudicator previously'"
+          :title="gettext('Has judged this team or with this adjudicator previously')"
         ></button>
         <button
           class="btn conflictable conflicts-toolbar hover-institution"
           data-toggle="tooltip"
           v-text="gettext('Institution')"
-          :title="'Is from the same institution as this team or panelist.'"
+          :title="gettext('Is from the same institution as this team or panelist.')"
         ></button>
         <button
           class="btn conflictable conflicts-toolbar hover-adjudicator"
           data-toggle="tooltip"
           v-text="gettext('Conflict')"
-          :title="'Has a nominated conflict with this team or panelist.'"
+          :title="gettext('Has a nominated conflict with this team or panelist.')"
         ></button>
         <button
           class="btn panel-incomplete"
           data-toggle="tooltip"
           v-text="gettext('Missing')"
-          :title="'Panel is missing a chair or enough adjudicators for a voting majority.'"
+          :title="gettext('Panel is missing a chair or enough adjudicators for a voting majority.')"
         ></button>
       </template>
     </drag-and-drop-actions>
@@ -74,11 +74,11 @@
           gettext(`Auto-allocate will remove adjudicators from all debates
         and create new panels in their place.`)
         "
-        :context-of-action="'allocate_debate_adjs'"
+        context-of-action="allocate_debate_adjs"
       ></modal-for-allocating>
       <modal-for-prioritising
         :intro-text="gettext(prioritiseIntro)"
-        :context-of-action="'prioritise_debates'"
+        context-of-action="prioritise_debates"
       ></modal-for-prioritising>
     </template>
   </drag-and-drop-layout>
