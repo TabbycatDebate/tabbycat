@@ -12,7 +12,8 @@
     color: $text-muted; // Can't rely on text-muted as we need to override on hover
   }
 
-  &:hover {
+  &:hover,
+  &.vue-draggable-dragging {
     background: $purple !important; // Override availability mark
     border-color: darken($purple, 7.5%) !important; // Override trainee mark
     cursor: move;
@@ -44,7 +45,8 @@
   }
 }
 
-.vue-droppable:hover .vue-droppable:hover .vue-draggable:hover .vc-title {
+.vue-draggable:hover .vc-title,
+.vue-draggable-dragging .vc-title {
   color: #fff; // Addresses issue with nested droppables (panels) overriding hover
 }
 

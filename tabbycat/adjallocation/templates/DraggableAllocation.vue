@@ -15,7 +15,8 @@
       </div>
     </div>
 
-    <div :class="['align-items-center justify-content-center panel-handle', ]">
+    <div :class="['align-items-center justify-content-center panel-handle', ]"
+         @mouseenter="showPanelHoverConflicts" @mouseleave="hidePanelHoverConflicts">
       <div class="d-flex"><i data-feather="move"></i></div>
     </div>
 
@@ -38,7 +39,7 @@
         </div>
         <draggable-adjudicator
           v-if="chairID"
-          class="flex-fill"
+          :class="['flex-fill', isHovered ? 'vue-draggable-dragging' : '']"
           :item="allAdjudicators[chairID]"
           :debate-or-panel-id="debateOrPanel.id"
           :drag-payload="getDragPayload(chairID, 'C')"
@@ -56,6 +57,7 @@
         :drop-context="{ assignment: debateOrPanel.id, position: 'P' }"
       >
         <draggable-adjudicator
+          :class="[isHovered ? 'vue-draggable-dragging' : '']"
           v-for="adjID in adjudicators.P"
           :item="allAdjudicators[adjID]"
           :debate-or-panel-id="debateOrPanel.id"
@@ -77,6 +79,7 @@
           <div class="mx-auto py-2 px-4 trainee-indicator">Ⓣ</div>
         </div>
         <draggable-adjudicator
+          :class="[isHovered ? 'vue-draggable-dragging' : '']"
           v-for="adjID in adjudicators.T"
           :item="allAdjudicators[adjID]"
           :debate-or-panel-id="debateOrPanel.id"
@@ -95,10 +98,17 @@
 import DraggableCollection from '../../templates/allocations/DraggableCollection.vue'
 import DroppableItem from '../../templates/allocations/DroppableItem.vue'
 import DraggableAdjudicator from './DraggableAdjudicator.vue'
+import HoverableConflictMixin from '../../templates/allocations/HoverableConflictMixin.vue'
 
 export default {
   components: { DraggableAdjudicator, DroppableItem, DraggableCollection },
+  mixins: [HoverableConflictMixin],
   props: ['debateOrPanel', 'handleDebateOrPanelDrop', 'handlePanelSwap', 'averageScore', 'averageVotingScore'],
+  data: function () {
+    return {
+      isHovered: false, // Used to track and supress hover conflicts in-panel when over the drag handle
+    }
+  },
   computed: {
     chairID () {
       return this.adjudicators.C[0]
@@ -125,6 +135,14 @@ export default {
       return {
         panel: this.debateOrPanel.id,
       }
+    },
+    showPanelHoverConflicts: function () {
+      this.$data.isHovered = true
+      this.showHoverConflicts(this.debateOrPanel.id, 'panel')
+    },
+    hidePanelHoverConflicts: function () {
+      this.$data.isHovered = false
+      this.hideHoverConflicts()
     },
   },
 }
