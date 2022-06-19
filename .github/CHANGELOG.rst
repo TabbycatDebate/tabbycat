@@ -7,6 +7,7 @@ Change Log
 *Release date: TBD*
 
 - Added the ability to deploy to Render as a 1-click Heroku-like deployment option
+- Each debate's panel can now be dragged and dropped onto another debate, e.g. you can now swap panels in the same way you can swap individual adjudicators.
 - Round weights can be modified within tournament preferences, rather than just by the Edit Database.
 - Preformed panels can now be applied 'directly', in a linear top-to-bottom fashion. However, this method will not account for soft or hard conflicts. Thanks to Enting Lee for the pull request!
 

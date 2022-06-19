@@ -58,6 +58,16 @@ export default {
       allocation[position] = allocation[position].filter(id => id !== adjudicatorID)
       return allocation
     },
+    swapPanels: function (draggedPanelID, droppedPanelID) {
+      const fromPanellists = this.getAllocation(draggedPanelID.panel)
+      const toPanellists = this.getAllocation(droppedPanelID.assignment)
+
+      const allocationChanges = []
+      allocationChanges.push({ id: draggedPanelID.panel, adjudicators: toPanellists })
+      allocationChanges.push({ id: droppedPanelID.assignment, adjudicators: fromPanellists })
+
+      this.$store.dispatch('updateDebatesOrPanelsAttribute', { adjudicators: allocationChanges })
+    },
     moveAdjudicator: function (dragData, dropData) {
       if ((dragData.assignment === dropData.assignment && dragData.position === dropData.position) ||
           (dragData.assignment === null && dropData.assignment === null)) {
