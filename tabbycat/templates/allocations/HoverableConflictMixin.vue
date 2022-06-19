@@ -7,7 +7,6 @@ import { mapGetters, mapMutations } from 'vuex'
 export default {
   methods: {
     showHoverConflicts: function (itemId, itemType) {
-      // TODO get clashes and conflicts by type
       let clashes = null
       let histories = null
       if (itemType === 'team') {
@@ -16,6 +15,11 @@ export default {
       } else if (itemType === 'adjudicator') {
         clashes = this.adjudicatorClashesForItem(itemId)
         histories = this.adjudicatorHistoriesForItem(itemId)
+      } else if (itemType === 'panel') {
+        clashes = this.panelClashesForItem(itemId)
+        histories = this.panelHistoriesForItem(itemId)
+      } else {
+        console.error('Unrecognised conflict type provided to showHoverConflicts()')
       }
       this.setHoverConflicts({ clashes: clashes, histories: histories })
     },
@@ -25,8 +29,11 @@ export default {
     ...mapMutations(['setHoverConflicts', 'unsetHoverConflicts']),
   },
   computed: {
-    ...mapGetters(['adjudicatorClashesForItem', 'teamClashesForItem',
-      'adjudicatorHistoriesForItem', 'teamHistoriesForItem']),
+    ...mapGetters([
+      'adjudicatorClashesForItem', 'teamClashesForItem',
+      'adjudicatorHistoriesForItem', 'teamHistoriesForItem',
+      'panelClashesForItem', 'panelHistoriesForItem',
+    ]),
   },
 }
 </script>

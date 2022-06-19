@@ -348,6 +348,7 @@ class RoundSerializer(serializers.ModelSerializer):
 
 class MotionSerializer(serializers.ModelSerializer):
     class RoundsSerializer(serializers.ModelSerializer):
+        # Should these be filtered if unreleased?
         round = fields.TournamentHyperlinkedRelatedField(view_name='api-round-detail',
             lookup_field='seq', lookup_url_kwarg='round_seq',
             queryset=Round.objects.all())

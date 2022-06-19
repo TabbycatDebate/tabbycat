@@ -15,6 +15,7 @@ export default createStore({
     institutions: {},
     regions: {},
     loading: false, // Used by modal windows when waiting for an allocation etc
+    draggingPanel: false, // Needed to switch UI affordances for whole-panel drops
     round: null,
     tournament: null,
     // For saving mechanisms
@@ -174,6 +175,9 @@ export default createStore({
     setLoadingState (state, isLoading) {
       state.loading = isLoading
     },
+    setPanelDraggingTracker (state, status) {
+      state.draggingPanel = status;
+    },
   },
   getters: {
     allDebatesOrPanels: state => {
@@ -243,6 +247,21 @@ export default createStore({
       }
       return false
     },
+    panelClashesForItem: (state) => (id) => {
+      // Note; largely duplicates panelHistoriesForItem
+      let panelAdjs = state.debatesOrPanels[id].adjudicators
+      let panelAdjIds = Object.values(panelAdjs).map(position => position).flat()
+
+      let panelClashesCombined = { adjudicator: [], team: [], institution: []};
+      panelAdjIds.forEach((adjId) => {
+        const clashesForAdj = state.extra.clashes.adjudicators[adjId]
+        for (const [key, value] of Object.entries(clashesForAdj)) {
+          panelClashesCombined[key].push(...value);
+        }
+      })
+
+      return panelClashesCombined
+    },
     teamHistoriesForItem: (state) => (id) => {
       if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
         return state.extra.histories.teams[id]
@@ -254,6 +273,21 @@ export default createStore({
         return state.extra.histories.adjudicators[id]
       }
       return false
+    },
+    panelHistoriesForItem: (state) => (id) => {
+      // Note; largely duplicates panelClashesForItem
+      let panelAdjs = state.debatesOrPanels[id].adjudicators
+      let panelAdjIds = Object.values(panelAdjs).map(position => position).flat()
+
+      let panelHistoriesCombined = { adjudicator: [], team: [], institution: []};
+      panelAdjIds.forEach((adjId) => {
+        const clashesForAdj = state.extra.histories.adjudicators[adjId]
+        for (const [key, value] of Object.entries(clashesForAdj)) {
+          panelHistoriesCombined[key].push(...value);
+        }
+      })
+
+      return panelHistoriesCombined
     },
     currentHoverClashes: (state) => {
       return state.hoverClashes
@@ -277,6 +311,9 @@ export default createStore({
         }
       }
       return doubleAllocatedIDs
+    },
+    panelIsDragging: (state) => {
+      return state.draggingPanel;
     },
   },
   // Note actions are async

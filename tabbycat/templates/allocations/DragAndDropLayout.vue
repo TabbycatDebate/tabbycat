@@ -31,6 +31,6 @@ import HoverPanel from './HoverPanel.vue'
 
 export default {
   components: { DragAndDropUnallocatedItems, HoverPanel },
-  props: ['unallocatedItems', 'unallocatedComponent', 'handleUnusedDrop'],
+  props: ['unallocatedItems', 'unallocatedComponent', 'handleUnusedDrop', 'handlePanelSwap'],
 }
 </script>

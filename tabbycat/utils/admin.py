@@ -34,7 +34,7 @@ class ModelAdmin(admin.ModelAdmin):
             object_id=object.pk,
             object_repr=object_repr,
             action_flag=DELETION,
-            message=self.add_ip_to_message(request),
+            message=self.add_ip_to_message(request, message),
         )
 
 
