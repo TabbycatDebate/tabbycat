@@ -45,8 +45,13 @@
   }
 }
 
+.vue-draggable:hover .vue-draggable .vc-title {
+  color: inherit;
+}
+
 .vue-draggable:hover .vc-title,
-.vue-draggable-dragging .vc-title {
+.vue-draggable:hover .vue-draggable:hover .vc-title,
+.vue-draggable:hover .vue-draggable-dragging .vc-title {
   color: #fff; // Addresses issue with nested droppables (panels) overriding hover
 }
 
