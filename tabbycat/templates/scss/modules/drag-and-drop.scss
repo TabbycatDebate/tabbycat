@@ -87,6 +87,7 @@
   .panel-stats,
   .panel-pit {
     width: 50px;
+    height: 53px;
   }
 
   &:hover {
@@ -125,7 +126,9 @@
 // Droppables
 //------------------------------------------------------------------------------
 
-.vue-droppable-enter {
+// Inheritance hack below to address double-hovering when using draggable panels
+.vue-droppable-enter,
+.vue-droppable-enter .panel-incomplete {
   background: theme-color("success") !important;
 }
 
