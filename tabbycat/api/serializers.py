@@ -408,7 +408,11 @@ class SpeakerSerializer(serializers.ModelSerializer):
             populate_url_keys([speaker])
 
         return speaker
-
+class SpeakerRoundsSerializer(serializers.ModelSerializer):
+    participant = fields.TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-detail')
+    class Meta:
+        model = Speaker
+        fields = (['rounds', 'participant'])
 
 class AdjudicatorSerializer(serializers.ModelSerializer):
 

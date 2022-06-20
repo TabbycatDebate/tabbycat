@@ -432,6 +432,20 @@ class SubstantiveSpeakerStandingsView(BaseStandingsView):
     def get_max_round(self):
         return self.tournament.round_set.last()
 
+class SubstantiveSpeakerStandingsRoundsView(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
+    serializer_class = serializers.SpeakerRoundsSerializer
+    tournament_field = "team__tournament"
+    access_preference = 'public_participants'
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+    def get_queryset(self):
+        category_prefetch = Prefetch('categories', queryset=SpeakerCategory.objects.all().select_related('tournament'))
+        if not self.request.user or not self.request.user.is_staff:
+            category_prefetch.queryset = category_prefetch.queryset.filter(public=True)
+
+        return super().get_queryset().prefetch_related(category_prefetch)
 
 class ReplySpeakerStandingsView(SubstantiveSpeakerStandingsView):
     def get_metrics(self):
