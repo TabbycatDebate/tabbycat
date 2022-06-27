@@ -10,6 +10,14 @@ Change Log
 - Each debate's panel can now be dragged and dropped onto another debate, e.g. you can now swap panels in the same way you can swap individual adjudicators.
 - Round weights can be modified within tournament preferences, rather than just by the Edit Database.
 - Preformed panels can now be applied 'directly', in a linear top-to-bottom fashion. However, this method will not account for soft or hard conflicts. Thanks to Enting Lee for the pull request!
+- The 'Inactive Tournaments' page has been merged into the main page.
+- API improvements
+    - Allowed access to the Motions API endpoint for publicly-released motions.
+    - The ballot API now supports motion vetos.
+    - Venue contraints are added to Partipants' endpoints.
+- Security
+    - IP addresses are logged when performing actions through Edit Database.
+- \+ bug fixes!
 
 
 2.6.7
