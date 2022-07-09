@@ -10,25 +10,24 @@
     {% blocktrans trimmed asvar text with tn=tournament.name %}
       Administrator area for <strong>{{ tn }}</strong>
     {% endblocktrans %}
-    {% include "components/item-action.html" with icon="settings" url=admin_url %}
+    {% include "components/item-action.html" with icon="settings" type=type subtext=subtext url=admin_url %}
   {% endif %}
 
   {% if user.is_authenticated %}
     {% blocktrans trimmed asvar text with tn=tournament.name %}
       Assistant area for <strong>{{ tn }}</strong>
     {% endblocktrans %}
-   {% include "components/item-action.html" with icon="pocket" url=assistant_url %}
+   {% include "components/item-action.html" with icon="pocket" type=type subtext=subtext url=assistant_url %}
 
     {% blocktrans trimmed asvar text with tn=tournament.name %}
       Public area for <strong>{{ tn }}</strong>
     {% endblocktrans %}
-    {% include "components/item-action.html" with icon="globe" url=public_url %}
+    {% include "components/item-action.html" with icon="globe" type=type subtext=subtext url=public_url %}
 
   {% else %}
 
     {% include "components/item-action.html" with text=tournament.name icon="award" url=public_url%}
 
   {% endif %}
-
 
 </div>

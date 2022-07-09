@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
 from draw.models import DebateTeam
-from utils.admin import custom_titled_filter
+from utils.admin import custom_titled_filter, ModelAdmin
 
 from .models import (AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackBooleanAnswer,
     AdjudicatorFeedbackFloatAnswer, AdjudicatorFeedbackIntegerAnswer, AdjudicatorFeedbackManyAnswer,
@@ -18,7 +18,7 @@ from .models import (AdjudicatorBaseScoreHistory, AdjudicatorFeedback, Adjudicat
 # ==============================================================================
 
 @admin.register(AdjudicatorBaseScoreHistory)
-class AdjudicatorBaseScoreHistoryAdmin(admin.ModelAdmin):
+class AdjudicatorBaseScoreHistoryAdmin(ModelAdmin):
     list_display = ('adjudicator', 'round', 'score', 'timestamp')
     list_filter  = ('adjudicator', 'round')
     ordering     = ('timestamp',)
@@ -46,7 +46,7 @@ class QuestionForm(forms.ModelForm):
 
 
 @admin.register(AdjudicatorFeedbackQuestion)
-class AdjudicatorFeedbackQuestionAdmin(DynamicArrayMixin, admin.ModelAdmin):
+class AdjudicatorFeedbackQuestionAdmin(DynamicArrayMixin, ModelAdmin):
     form = QuestionForm
     list_display = ('reference', 'text', 'seq', 'tournament', 'answer_type',
                     'required', 'from_adj', 'from_team')
@@ -63,7 +63,7 @@ class AdjudicatorFeedbackQuestionAdmin(DynamicArrayMixin, admin.ModelAdmin):
 @admin.register(AdjudicatorFeedbackIntegerAnswer)
 @admin.register(AdjudicatorFeedbackManyAnswer)
 @admin.register(AdjudicatorFeedbackStringAnswer)
-class AdjudicatorFeedbackAnswerAdmin(admin.ModelAdmin):
+class AdjudicatorFeedbackAnswerAdmin(ModelAdmin):
     list_display = ('question', 'get_target', 'get_source', 'answer', 'get_feedback_description')
     list_select_related = ('question', 'feedback__adjudicator',
                            'feedback__source_adjudicator__adjudicator',
@@ -128,7 +128,7 @@ class RoundListFilter(admin.SimpleListFilter):
 # ==============================================================================
 
 @admin.register(AdjudicatorFeedback)
-class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
+class AdjudicatorFeedbackAdmin(ModelAdmin):
     list_display  = ('adjudicator', 'confirmed', 'ignored', 'score', 'version', 'get_source')
     search_fields = ('adjudicator__name', 'adjudicator__institution__name',
             'score', 'source_adjudicator__adjudicator__name',
@@ -172,8 +172,10 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
     def mark_as_confirmed(self, request, queryset):
         original_count = queryset.count()
         for fb in queryset.order_by('version').all():
+            # Update them in order to override previous versions (prefer newer)
             fb.confirmed = True
             fb.save()
+            self.log_change(request, fb, [{"changed": {"fields": ["confirmed"]}}])
         final_count = queryset.filter(confirmed=True).count()
 
         message = ngettext(
@@ -201,6 +203,8 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
 
     def mark_as_unconfirmed(self, request, queryset):
         count = queryset.update(confirmed=False)
+        for fb in queryset:
+            self.log_change(request, fb, [{"changed": {"fields": ["confirmed"]}}])
         message = ngettext(
             "1 feedback submission was marked as unconfirmed.",
             "%(count)d feedback submissions were marked as unconfirmed.",
@@ -210,6 +214,8 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
 
     def ignore_feedback(self, request, queryset):
         count = queryset.update(ignored=True)
+        for fb in queryset:
+            self.log_change(request, fb, [{"changed": {"fields": ["ignored"]}}])
 
         message = ngettext(
             "1 feedback submission is now ignored.",
@@ -220,6 +226,8 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
 
     def recognize_feedback(self, request, queryset):
         count = queryset.update(ignored=False)
+        for fb in queryset:
+            self.log_change(request, fb, [{"changed": {"fields": ["ignored"]}}])
 
         message = ngettext(
             "1 feedback submission is now recognized.",

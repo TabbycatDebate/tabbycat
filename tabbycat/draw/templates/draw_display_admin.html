@@ -87,7 +87,7 @@
             {% trans "Edit the motion" as edit_text %}
             {% include "components/item-action.html" with text=edit_text type="primary" %}
           {% else %}
-            {% trans "A motion should be added if you want to display it to the auditorium or print in on your ballots (using the links below) or to display it (later) on the public motions page." as text %}
+            {% trans "A motion should be added if you want to display it during announcements, print it on your ballots, or to display it (later) on the public motions/statistics pages." as text %}
             {% include "components/item-info.html" with nopad=True type="warning" %}
             {% trans "Enter a motion" as enter_text %}
             {% include "components/item-action.html" with text=enter_text type="success" to_complete=True %}

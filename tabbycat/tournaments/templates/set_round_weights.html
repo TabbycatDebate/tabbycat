@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static debate_tags add_field_css i18n %}
+
+{% block head-title %}<span class="emoji">⚖️</span> {% trans 'Set Round Weights for Tapered Scoring' context 'page title' %}{% endblock %}
+{% block page-title %}{% trans 'Set Round Weights for Tapered Scoring' context 'page title' %}{% endblock %}
+
+{% block page-alerts %}
+{% blocktrans trimmed asvar p1 %}
+  Round weights are coefficients for the points received in each round.
+  A team would get triple their team points obtained in a round with a weight of 3.
+{% endblocktrans %}
+{% include "components/explainer-card.html" with p2="" type="info" %}
+{% endblock %}
+
+{% block content %}
+
+  <form method="POST">
+    {% csrf_token %}
+
+    {% if form.errors %}
+      {% include "components/form-errors.html" with errors=form.non_field_errors %}
+    {% endif %}
+
+    <div class="card pt-3">
+      <ul class="list-group list-group-flush">
+
+        {% for field in form %}
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-sm-2">
+                {{ field|addcss:"form-control" }}
+                {{ field.errors }}
+              </div>
+              <label class="col-sm-10" for="{{ field.id_for_label }}">
+                {{ field.label }}
+              </label>
+            </div>
+          </li>
+        {% endfor %}
+
+        {% trans "Set weights" context "button" as title %}
+        {% include "components/form-submit.html" %}
+
+      </ul>
+    </div>
+  </form>
+
+{% endblock content %}

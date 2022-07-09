@@ -26,7 +26,7 @@
 
     {% else %}
 
-      {% if has_inactive %}
+      {% if inactive %}
         {% blocktrans trimmed asvar p1 %}
           There are currently no active tournaments set up on this site.
         {% endblocktrans %}
@@ -42,10 +42,12 @@
 
 {% endfor %}
 
-{% if has_inactive %}
-  <div class="list-group mt-2">
-    {% trans "Inactive Tournaments" as text %}{% url 'tabbycat-inactive-tournaments' as url %}
-    {% include "components/item-action.html" with icon="layers" %}
+{% if inactive %}
+  <div class="list-group">
+    {% trans '(inactive)' as subtext %}
+    {% for tournament in inactive %}
+      {% include "tournament_index_links.html" with type="dark" subtext=subtext %}
+    {% endfor %}
   </div>
 {% endif %}
 

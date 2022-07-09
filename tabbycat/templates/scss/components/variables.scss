@@ -47,7 +47,7 @@ $region-cat-8:            #777;
 $conflict-clash:          #e34e42;
 $conflict-institution:    #ef9b08;
 $conflict-history-base:   #3498db;
-$incomplete-panel:        rgba(100, 100, 100, 0.5); // Needs xparency
+$incomplete-panel:        rgba(155, 155, 155, 1); // Needs xparency
 
 // Adj Rankings
 $alpha-ranking-0:           hsla(175, 90%, 40%, 1); // A+
@@ -71,16 +71,16 @@ $neg:                     theme-color("danger");
 // i.e. red/green and yellow/blue opposites
 // Which then makes halves or benches a 45 degree rotation around that wheel
 // Along with tweaking to account for contrasts
-$og:                      hsla(82, 90, 32, 1); // Green
-$oo:                      hsla(28, 95, 39, 1); // Orange
-$cg:                      hsla(190, 95, 33, 1); // Teal-Blue
-$co:                      hsla(286, 50, 35, 1); // Pink
+$og:                      hsla(82, 90%, 32%, 1); // Green
+$oo:                      hsla(28, 95%, 39%, 1); // Orange
+$cg:                      hsla(190, 95%, 33%, 1); // Teal-Blue
+$co:                      hsla(286, 50%, 35%, 1); // Pink
 // Complementary pair
-$gov:                     hsla(136, 100, 44, 1); // Green (gren + blue)
-$opp:                     hsla(2, 80, 54, 0.8); // Rust Red (pink + orange)
+$gov:                     hsla(136, 100%, 44%, 1); // Green (gren + blue)
+$opp:                     hsla(2, 80%, 54%, 0.8); // Rust Red (pink + orange)
 // Complementary pair
-$front:                   hsla(43, 100, 50, 1); // Orange (green + orange)
-$back:                    hsla(217, 95, 60, 1); // Navy-Blue (blue + pink)
+$front:                   hsla(43, 100%, 50%, 1); // Orange (green + orange)
+$back:                    hsla(217, 95%, 60%, 1); // Navy-Blue (blue + pink)
 
 //------------------------------------------------------------------------------
 // Layout Details

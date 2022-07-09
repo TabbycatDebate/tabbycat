@@ -12,11 +12,11 @@
     color: $text-muted; // Can't rely on text-muted as we need to override on hover
   }
 
-  &:hover {
+  &:hover,
+  &.vue-draggable-dragging {
     background: $purple !important; // Override availability mark
     border-color: darken($purple, 7.5%) !important; // Override trainee mark
     cursor: move;
-    color: #fff;
 
     .vue-draggable-muted {
       color: #fff; // Can't rely on text-muted as we need to override on hover
@@ -24,9 +24,14 @@
 
     .vue-draggable {
       color: $body-color; // Don't highlight draggable items within this one
+
       .vue-draggable-muted {
         color: $text-muted;
       }
+    }
+
+    .panel-incomplete {
+      background-color: $incomplete-panel;
     }
   }
 
@@ -38,6 +43,16 @@
     opacity: 0.33;
     pointer-events: none;
   }
+}
+
+.vue-draggable:hover .vue-draggable .vc-title {
+  color: inherit;
+}
+
+.vue-draggable:hover .vc-title,
+.vue-draggable:hover .vue-draggable:hover .vc-title,
+.vue-draggable:hover .vue-draggable-dragging .vc-title {
+  color: #fff; // Addresses issue with nested droppables (panels) overriding hover
 }
 
 .vue-droppable {
@@ -57,16 +72,70 @@
   @include hover-highlights(#000);
 }
 
-.vue-is-dragging { // :active is the 'ghost' drag element
+.vue-is-dragging {
+  // :active is the 'ghost' drag element
   opacity: 0.66 !important;
   @include hover-highlights(#000);
+}
+
+// Draggable Panels
+.draggable-panel.vue-draggable {
+  border: 4px solid $gray-400;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  border-radius: $border-radius;
+
+  .panel-handle,
+  .panel-handle.panel-dragging {
+    display: none; // Second selector to suppress when other panel is being dragged
+  }
+
+  .panel-handle,
+  .panel-stats,
+  .panel-pit {
+    width: 50px;
+    height: 53px;
+  }
+
+  &:hover {
+    cursor: inherit;  // Override dragable classes unless on the handle
+    background-color: inherit; // Override dragable classes unless on the handle
+
+    .panel-handle {
+      display: flex;
+      background: #fff;
+
+      .feather {
+        color: #000; // for the icon
+      }
+    }
+
+    .panel-stats {
+      display: none;
+    }
+
+    .panel-pit {
+      display: none !important;
+    }
+  }
+
+  .panel-handle:hover {
+    cursor: move;
+    background: $purple;
+
+    .feather {
+      color: #fff; // for the icon
+    }
+  }
 }
 
 //------------------------------------------------------------------------------
 // Droppables
 //------------------------------------------------------------------------------
 
-.vue-droppable-enter {
+// Inheritance hack below to address double-hovering when using draggable panels
+.vue-droppable-enter,
+.vue-droppable-enter .panel-incomplete {
   background: theme-color("success") !important;
 }
 

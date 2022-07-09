@@ -2,6 +2,11 @@
 // V2 Screens (styled moved from inline vue styles as they don't load)
 //------------------------------------------------------------------------------
 
+// For ModalForAllocating.vue
+.bg-bg {
+  background-color: $body-bg; // Need contrast with button sections, so can't use white
+}
+
 // For DragAndDropDebate.vue
 .vc-bp-grid {
   display: inline-grid;

@@ -16,6 +16,8 @@ class PublicPreferencePermission(BasePermission):
             request.method in SAFE_METHODS and self.get_tournament_preference(view, view.access_operator))
 
     def get_tournament_preference(self, view, op):
+        if type(view.access_preference) is tuple:
+            return op(view.tournament.pref(pref) for pref in view.access_preference)
         return op(view.tournament.pref(view.access_preference), view.access_setting)
 
 

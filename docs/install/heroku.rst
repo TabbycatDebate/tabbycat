@@ -11,7 +11,7 @@ Installing on Heroku
 
   - Any of the Local installation methods
   - Using the instructions below as an alternative way to create a Heroku site
-  - Our (in beta) `support for Render <https://tabbycat.readthedocs.io/en/latest/install/render.html>`_, which uses a similar 1-click method
+  - Our (in beta) `support for Render <render.html>`_, which uses a similar 1-click method
 
 Heroku Deployments
 ==================

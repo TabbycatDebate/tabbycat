@@ -1,4 +1,3 @@
-from django.conf.urls import url
 from django.urls import include, path
 from rest_framework.routers import SimpleRouter
 
@@ -206,7 +205,7 @@ urlpatterns = [
                         name='api-venuecategory-detail'),
                 ])),
 
-                url('/', include(pref_router.urls)),  # Preferences
+                path('/', include(pref_router.urls)),  # Preferences
             ])),
 
 
