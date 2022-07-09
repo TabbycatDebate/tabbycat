@@ -359,6 +359,26 @@ class Speaker(Person):
     @property
     def tournament(self):
         return self.team.tournament
+        
+    def get_speaker_points(self, s):
+        try:
+            return int(s.score)
+        except TypeError:
+            return 0
+
+    @property
+    def rounds(self):
+        """Callers using this property for many teams should prefetch them
+        using `populate_win_counts()` in the `participants.prefetch` module.
+        (That's not a typo -- that function populates both `_wins_count` and
+        `_points`.)"""
+        try:
+            return self._rounds
+        except AttributeError:
+            from results.models import SpeakerScore
+            print(self)
+            self._rounds = map(self.get_speaker_points, SpeakerScore.objects.filter(ballot_submission__confirmed=True, speaker__name=self))
+            return self._rounds
 
 
 class AdjudicatorManager(models.Manager):
