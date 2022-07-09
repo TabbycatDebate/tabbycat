@@ -344,10 +344,6 @@ class Speaker(Person):
 
     @property
     def rounds(self):
-        """Callers using this property for many teams should prefetch them
-        using `populate_win_counts()` in the `participants.prefetch` module.
-        (That's not a typo -- that function populates both `_wins_count` and
-        `_points`.)"""
         try:
             return self._rounds
         except AttributeError:
