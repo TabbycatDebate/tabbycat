@@ -1222,3 +1222,9 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         instance.confirmed = validated_data['confirmed']
         instance.discarded = validated_data['discarded']
         instance.save()
+
+class SpeakerRoundsSerializer(serializers.ModelSerializer):
+    participant = fields.TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-detail')
+    class Meta:
+        model = Speaker
+        fields = (['rounds', 'participant'])

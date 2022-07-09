@@ -178,6 +178,9 @@ urlpatterns = [
                         path('/replies',
                             views.ReplySpeakerStandingsView.as_view(),
                             name='api-reply-speaker-standings'),
+                        path('/rounds',
+                            views.SubstantiveSpeakerStandingsRoundsView.as_view(list_methods),
+                            name='api-reply-speaker-standings'),
                     ])),
                 ])),
                 path('/venues', include([
