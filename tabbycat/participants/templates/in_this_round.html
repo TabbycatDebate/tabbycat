@@ -32,7 +32,8 @@
         <div class="list-group-item">
           <em>
             {% if grammatical_person == "3" %}
-              {% blocktrans trimmed with adjudicator=adjudicator.name %}
+              {% person_display_name adjudicator tournament as adjudicator_name %}
+              {% blocktrans trimmed with adjudicator=adjudicator_name %}
                 {{ adjudicator }} is not adjudicating this round.
               {% endblocktrans %}
             {% else %}

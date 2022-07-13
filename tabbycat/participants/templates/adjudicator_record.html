@@ -14,7 +14,8 @@
     {% if pref.public_participants or admin_page %}
 
       {# Just call it 'name' since this string is also used with teams #}
-      {% blocktrans trimmed with name=adjudicator.name asvar card_title %}
+      {% person_display_name adjudicator tournament as name %}
+      {% blocktrans trimmed with name=name asvar card_title %}
         About {{ name }}
       {% endblocktrans %}
 
@@ -25,7 +26,8 @@
   </div>
 
   {% if pref.feedback_progress or admin_page %}
-    {% include "feedback_progress_panel.html" with participant_name=adjudicator.name %}
+    {% person_display_name adjudicator tournament as participant_name %}
+    {% include "feedback_progress_panel.html" with participant_name=participant_name %}
   {% endif %}
 
   {% if pref.public_results or admin_page %}

@@ -226,7 +226,7 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
         value = '%d-%d' % (debate.id, adj.id)
         # Translators: e.g. "Megan Pearson (chair)", with adjpos="chair"
         display = _("Submitted - ") if adj.submitted else ""
-        display += _("%(name)s (%(adjpos)s)") % {'name': adj.name, 'adjpos': ADJUDICATOR_POSITION_NAMES[pos]}
+        display += _("%(name)s (%(adjpos)s)") % {'name': adj.get_public_name(tournament), 'adjpos': ADJUDICATOR_POSITION_NAMES[pos]}
         return (value, display)
 
     adjfeedback_query = AdjudicatorFeedback.objects.filter(
@@ -300,7 +300,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
         else:
             display += _("%(name)s (panellist gave oral as chair rolled)")
 
-        display %= {'name': adj.name, 'adjpos': ADJUDICATOR_POSITION_NAMES[pos]}
+        display %= {'name': adj.get_public_name(tournament), 'adjpos': ADJUDICATOR_POSITION_NAMES[pos]}
         return (value, display)
 
     # Only include non-silent rounds for teams.

@@ -15,12 +15,13 @@
     <div class="list-group list-group-flush">
 
       {% if sheet.adjudicator %}
+        {% person_display_name sheet.adjudicator tournament as adjudicator_name %}
         {% if sheet.adjudicator.institution %}
-          {% blocktrans trimmed with name=sheet.adjudicator.name institution=sheet.adjudicator.institution.code asvar title %}
+          {% blocktrans trimmed with name=adjudicator_name institution=sheet.adjudicator.institution.code asvar title %}
             Ballot from {{ name }} ({{ institution }})
           {% endblocktrans %}
         {% else %}
-          {% blocktrans trimmed with name=sheet.adjudicator.name asvar title %}
+          {% blocktrans trimmed with name=adjudicator_name asvar title %}
             Ballot from {{ name }}
           {% endblocktrans %}
         {% endif %}

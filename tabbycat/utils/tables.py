@@ -228,7 +228,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             return team.long_name
 
     def _adjudicator_record_link(self, adj, suffix=""):
-        adj_short_name = adj.name.split(" ")[0]
+        adj_short_name = adj.get_public_name(self.tournament).split(" ")[0]
         if self.admin:
             return {
                 'text': _("View %(a)s's %(d)s Record") % {'a': adj_short_name, 'd': suffix},
@@ -282,7 +282,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if self.admin:
                 speakers = ["<span class='admin-redacted'>%s</span>" % s.name if s.anonymous else s.name for s in team.speakers]
             else:
-                speakers = [self.REDACTED_CELL['text'] if s.anonymous else s.name for s in team.speakers]
+                speakers = [self.REDACTED_CELL['text'] if s.anonymous else s.get_public_name(self.tournament) for s in team.speakers]
 
             cell['popover']['content'].append({'text': ", ".join(speakers)})
         if self._show_record_links:
@@ -390,7 +390,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         if self._show_speakers_in_draw:
             cell['popover']['content'].append({
-                'text': ", ".join([s.name for s in opp.speakers]),
+                'text': ", ".join([s.get_public_name(self.tournament) for s in opp.speakers]),
             })
 
         if self._show_record_links:
@@ -487,11 +487,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if adj.anonymous and not self.admin:
                 adj_data.append(self.REDACTED_CELL)
             else:
-                cell = {'text': adj.name}
+                cell = {'text': adj.get_public_name(self.tournament)}
                 if adj.anonymous:
                     cell['class'] = 'admin-redacted'
                 if self._show_record_links:
-                    cell['popover'] = {'title': adj.name, 'content': [self._adjudicator_record_link(adj)]}
+                    cell['popover'] = {'title': adj.get_public_name(self.tournament), 'content': [self._adjudicator_record_link(adj)]}
                 if subtext == 'institution' and adj.institution is not None:
                     cell['subtext'] = adj.institution.code
                 adj_data.append(cell)
@@ -534,7 +534,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         def construct_text(adjs_data):
             adjs_list = []
             for a in adjs_data:
-                adj_str = '<span class="d-inline">' + a['adj'].name
+                adj_str = '<span class="d-inline">' + a['adj'].get_public_name(self.tournament)
                 symbol = self.ADJ_SYMBOLS.get(a['position'])
                 if symbol:
                     adj_str += "<i class='adj-symbol'>%s</i>" % symbol
@@ -558,7 +558,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     descriptors.append(a['adj'].institution.code)
                 if a.get('split', False):
                     descriptors.append("<span class='text-danger'>" + _("in minority") + "</span>")
-                text = a['adj'].name
+                text = a['adj'].get_public_name(self.tournament)
 
                 descriptors = " (%s)" % (", ".join(descriptors)) if descriptors else ""
 
@@ -660,8 +660,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 speaker_data.append(self.REDACTED_CELL)
             else:
                 cell = {
-                    'text': speaker.name,
-                    'class': 'no-wrap' if len(speaker.name) < 20 else '',
+                    'text': speaker.get_public_name(self.tournament),
+                    'class': 'no-wrap' if len(speaker.get_public_name(self.tournament)) < 20 else '',
                 }
                 if anonymous:
                     cell['class'] += ' admin-redacted'

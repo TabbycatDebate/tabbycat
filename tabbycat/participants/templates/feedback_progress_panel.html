@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load debate_tags i18n %}
 {# This snippet is used as part of the team_record.html and adjudicator_record.html templates. #}
 
 
@@ -14,7 +14,8 @@
       {% if tracker.fulfilled %}
         <div class="list-group-item {% if not pref.feedback_progress %}list-group-item-secondary{% endif %} text-success">
           <span class="badge badge-secondary">{{ tracker.round.name }}</span>
-          {% blocktrans trimmed with adjudicator=tracker.submission.adjudicator.name %}
+          {% person_display_name tracker.submission.adjudicator tournament as adjudicator %}
+          {% blocktrans trimmed with adjudicator=adjudicator %}
             Has submitted feedback for <strong>{{ adjudicator }}</strong>
           {% endblocktrans %}
         </div>
@@ -37,13 +38,14 @@
           <span class="badge badge-secondary">{{ tracker.round.name }}</span>
           {% trans "More feedback submissions than expected for this debate:" %}
           {% for submission in tracker.acceptable_submissions %}
-            <strong>{{ submission.adjudicator.name }}</strong>{% if not forloop.last %},{% endif %}
+            <strong>{% person_display_name submission.adjudicator tournament %}</strong>{% if not forloop.last %},{% endif %}
           {% endfor %}
         </div>
       {% else %} {# if not tracker.fulfilled and not tracker.expected #}
         <div class="list-group-item {% if not pref.feedback_progress %}list-group-item-secondary{% endif %} text-warning">
           <span class="badge badge-secondary">{{ tracker.round.name }}</span>
-          {% blocktrans trimmed with adjudicator=tracker.submission.adjudicator.name %}
+          {% person_display_name tracker.submission.adjudicator tournament as adjudicator %}
+          {% blocktrans trimmed with adjudicator=adjudicator %}
             Unexpected feedback submission for <strong>{{ adjudicator }}</strong>
           {% endblocktrans %}
         </div>

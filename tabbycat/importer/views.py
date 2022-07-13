@@ -18,7 +18,8 @@ from formtools.wizard.views import SessionWizardView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from participants.emoji import set_emoji
-from participants.models import Adjudicator, Institution, Team
+from participants.models import Adjudicator, Institution, Person, Team
+from participants.utils import populate_code_names
 from tournaments.mixins import TournamentMixin
 from tournaments.models import Tournament
 from utils.misc import redirect_tournament, reverse_tournament
@@ -179,9 +180,10 @@ class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
         return {'reference': str(i), 'use_institution_prefix': True}
 
     def done(self, form_list, form_dict, **kwargs):
-        # Also set emoji on teams
+        # Also set emoji on teams and code names on speakers
         redirect = super().done(form_list, form_dict, **kwargs)
         set_emoji(self.instances, self.tournament)
+        populate_code_names(Person.objects.filter(speaker__team__in=self.instances))
         return redirect
 
     def get_message(self, count):
@@ -209,6 +211,12 @@ class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
             'name': _("Adjudicator %(number)d") % {'number': i},
             'base_score': self.get_default_base_score(),
         }
+
+    def done(self, form_list, form_dict, **kwargs):
+        # Also set code names on adjudicators
+        redirect = super().done(form_list, form_dict, **kwargs)
+        populate_code_names(self.instances)
+        return redirect
 
     def get_message(self, count):
         return ngettext("Added %(count)d adjudicator.", "Added %(count)d adjudicators.", count)

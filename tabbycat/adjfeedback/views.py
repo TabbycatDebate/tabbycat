@@ -378,7 +378,7 @@ class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
         adjudicators = tournament.adjudicator_set.all()
 
         add_link_data = [{
-            'text': adj.name,
+            'text': adj.get_public_name(tournament),
             'link': self.get_from_adj_link(adj),
         } for adj in adjudicators]
         header = {'key': 'adjudicator', 'title': _("Adjudicator")}
@@ -472,7 +472,7 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormV
     def _populate_source(self):
         self.object = self.get_object()  # For compatibility with SingleObjectMixin
         if isinstance(self.object, Adjudicator):
-            self.source_name = self.object.name
+            self.source_name = self.object.get_public_name(self.tournament)
         elif isinstance(self.object, Speaker):
             self.source_name = self.get_team_short_name(self.object.team)
         elif isinstance(self.object, Team):
@@ -509,7 +509,7 @@ class BaseTabroomAddFeedbackView(TabroomSubmissionFieldsMixin, BaseAddFeedbackVi
     def form_valid(self, form):
         result = super().form_valid(form)
         messages.success(self.request, _("Feedback from %(source)s on %(target)s added.") % {
-            'source': self.source_name, 'target': self.adj_feedback.adjudicator.name})
+            'source': self.source_name, 'target': self.adj_feedback.adjudicator.get_public_name(self.tournament)})
         return result
 
     def get_success_url(self):
@@ -539,7 +539,7 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PersonalizablePublicTou
     def form_valid(self, form):
         result = super().form_valid(form)
         messages.success(self.request, _("Thanks, %(source)s! Your feedback on %(target)s has been recorded.") % {
-            'source': self.source_name, 'target': self.adj_feedback.adjudicator.name})
+            'source': self.source_name, 'target': self.adj_feedback.adjudicator.get_public_name(self.tournament)})
         return result
 
     def get_context_data(self, **kwargs):
@@ -733,13 +733,13 @@ class BaseFeedbackToggleView(AdministratorMixin, TournamentMixin, PostOnlyRedire
 
         # Make message
         if feedback.source_adjudicator:
-            source = feedback.source_adjudicator.adjudicator.name
+            source = feedback.source_adjudicator.adjudicator.get_public_name(self.tournament)
         else:
             source = feedback.source_team.team.short_name
         result = self.feedback_result(feedback)
         messages.success(self.request, _(
             "Feedback for %(adjudicator)s from %(source)s is now %(result)s.")
-            % {'adjudicator': feedback.adjudicator.name, 'source': source, 'result': result})
+            % {'adjudicator': feedback.adjudicator.get_public_name(self.tournament), 'source': source, 'result': result})
 
         return super().post(request, *args, **kwargs)
 

@@ -64,7 +64,8 @@
       <div class="card-body pb-1">
         <h4 class="card-title">
           {% if sheet.adjudicator %}
-            {% blocktrans trimmed with name=sheet.adjudicator.name institution=sheet.adjudicator.institution.code %}
+            {% person_display_name sheet.adjudicator tournament as adjudicator_name %}
+            {% blocktrans trimmed with name=adjudicator_name institution=sheet.adjudicator.institution.code %}
               From {{ name }} ({{ institution }})
             {% endblocktrans %}
           {% else %}
@@ -80,7 +81,7 @@
               {% for position in team.speakers %}
                 <li class="list-group-item">
                   <strong>{{ position.name }}</strong>
-                  {{ position.speaker }}
+                  {% person_display_name position.speaker tournament %}
                   <span class="badge badge-secondary float-right">
                     {{ position.score }}
                   </span>

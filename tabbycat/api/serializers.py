@@ -21,6 +21,7 @@ from draw.models import Debate, DebateTeam
 from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
 from participants.emoji import pick_unused_emoji
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
+from participants.utils import populate_code_names
 from privateurls.utils import populate_url_keys
 from results.mixins import TabroomSubmissionFieldsMixin
 from results.models import BallotSubmission
@@ -511,6 +512,9 @@ class SpeakerSerializer(serializers.ModelSerializer):
             self.fields.pop('anonymous')
             self.fields.pop('url_key')
 
+            if kwargs['context']['tournament'].pref('participant_code_names') == 'everywhere':
+                self.fields.pop('name')
+
     class Meta:
         model = Speaker
         fields = '__all__'
@@ -524,6 +528,9 @@ class SpeakerSerializer(serializers.ModelSerializer):
 
         if url_key is None:
             populate_url_keys([speaker])
+
+        if validated_data.get('code_name') is None:
+            populate_code_names([speaker])
 
         return speaker
 
@@ -573,6 +580,8 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
                 self.fields.pop('institution')
             if not t.pref('public_breaking_adjs'):
                 self.fields.pop('breaking')
+            if t.pref('participant_code_names') == 'everywhere':
+                self.fields.pop('name')
 
             self.fields.pop('base_score')
             self.fields.pop('trainee')
@@ -596,6 +605,9 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
         if url_key is None:  # If explicitly null (and not just an empty string)
             populate_url_keys([adj])
+
+        if validated_data.get('code_name') is None:
+            populate_code_names([adj])
 
         if adj.institution is not None:
             adj.adjudicatorinstitutionconflict_set.get_or_create(institution=adj.institution)
