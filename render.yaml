@@ -11,7 +11,7 @@ services:
     plan: free
     region: oregon
     buildCommand: "./bin/render-compile.sh"
-    startCommand: "npm run render-serve"
+    startCommand: "python tabbycat/run-asgi.py"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
