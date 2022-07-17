@@ -3,6 +3,14 @@ Change Log
 ==========
 
 
+2.6.8
+-----
+*Release date: 18 August 2022*
+
+- Minor bug fix
+- Rotation of sponsorship images
+
+
 2.6.7
 -----
 *Release date: 4 April 2022*
