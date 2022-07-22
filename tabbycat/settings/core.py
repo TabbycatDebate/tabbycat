@@ -11,7 +11,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Overwritten in local.py or heroku.py
 # ==============================================================================
 
-ADMINS = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
+ADMINS = ('Tabbycat Debate', 'contact@tabbycat-debate.org'),
 MANAGERS = ADMINS
 DEBUG = bool(int(os.environ['DEBUG'])) if 'DEBUG' in os.environ else False
 ENABLE_DEBUG_TOOLBAR = False # Must default to false; overriden in Dev config
