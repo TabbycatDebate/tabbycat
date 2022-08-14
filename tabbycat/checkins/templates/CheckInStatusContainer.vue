@@ -20,8 +20,8 @@
         <button v-for="(optionState, optionKey) in this.filterByType"
                 :key="optionKey" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
-                @click="setListContext('filterByType', optionKey, !optionState)">
-          {{ optionKey }}
+                @click="setListContext('filterByType', optionKey, !optionState)"
+                v-text="gettext(peopleFilterNames[optionKey])">
         </button>
       </div>
 
@@ -30,7 +30,7 @@
                 :key="optionKey" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
                 @click="setListContext('speakerGroupings', optionKey, !optionState)"
-                v-text="gettext('By ' + optionKey)"></button>
+                v-text="gettext(speakerGroupingNames[optionKey])"></button>
       </div>
 
       <div class="btn-group mb-md-0 mb-3">
