@@ -1133,3 +1133,4 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         instance.discarded = validated_data['discarded']
         instance.ignored = validated_data['ignored']
         instance.save()
+        return instance
