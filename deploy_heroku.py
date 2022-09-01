@@ -158,7 +158,7 @@ if sys.version_info >= (3, 3) and shutil.which("heroku") is None:
 
 # Create the app with addons
 addons = ["papertrail", "heroku-postgresql:%s" % args.pg_plan, "rediscloud:30"]
-command = ["heroku", "apps:create", "--stack", "heroku-18"]
+command = ["heroku", "apps:create", "--stack", "heroku-20"]
 
 if addons:
     command.extend(["--addons", ",".join(addons)])
