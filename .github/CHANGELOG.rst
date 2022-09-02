@@ -11,12 +11,16 @@ Change Log
 - Round weights can be modified within tournament preferences, rather than just by the Edit Database.
 - Preformed panels can now be applied 'directly', in a linear top-to-bottom fashion. However, this method will not account for soft or hard conflicts. Thanks to Enting Lee for the pull request!
 - The 'Inactive Tournaments' page has been merged into the main page.
+- The checkins filter buttons are now clearer in what they filter. Thank you to Giza Pavone for the pull request!
+- The British Parliamentary preset uses the new WUDC iron-person rule (both speeches count towards team score). Thank you to Alice Bertoni for the pull request!
 - API improvements
     - Allowed access to the Motions API endpoint for publicly-released motions.
     - The ballot API now supports motion vetos.
     - Venue contraints are added to Partipants' endpoints.
-- Security
+- Security (sponsored by the Debating Society of Pakistan)
     - IP addresses are logged when performing actions through Edit Database.
+    - Deletion of action logs is disabled.
+    - Password requirements are instituted against setting weak passwords.
 - \+ bug fixes!
 
 
