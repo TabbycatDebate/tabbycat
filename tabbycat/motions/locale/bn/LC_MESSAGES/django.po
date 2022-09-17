@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-30 01:01-0400\n"
-"PO-Revision-Date: 2020-12-30 05:07\n"
+"POT-Creation-Date: 2021-11-28 21:53-0400\n"
+"PO-Revision-Date: 2021-11-29 02:15\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Language: bn_BD\n"
@@ -54,7 +54,7 @@ msgstr "প্রতিযোগিতা"
 msgid "rounds"
 msgstr ""
 
-#: motions/models.py:24 motions/models.py:37 motions/models.py:56
+#: motions/models.py:24 motions/models.py:37 motions/models.py:62
 msgid "motion"
 msgstr "প্রস্তাব"
 
@@ -82,23 +82,23 @@ msgstr ""
 msgid "debate team motion preferences"
 msgstr ""
 
-#: motions/models.py:58
+#: motions/models.py:64
 msgid "round"
 msgstr "পর্ব"
 
-#: motions/models.py:61
+#: motions/models.py:67
 msgid "sequence number"
 msgstr "ক্রম সংখ্যা"
 
-#: motions/models.py:62
+#: motions/models.py:68
 msgid "The order in which motions are displayed"
 msgstr ""
 
-#: motions/models.py:67
+#: motions/models.py:73
 msgid "round motion"
 msgstr ""
 
-#: motions/models.py:68
+#: motions/models.py:74
 msgid "round motions"
 msgstr ""
 
@@ -335,6 +335,14 @@ msgstr[1] ""
 
 #: motions/templates/show.html:41
 msgid "There are no motions for this round entered into Tabbycat."
+msgstr ""
+
+#: motions/utils.py:11
+msgid "Not all latest ballots list the same motion, so could not be merged."
+msgstr ""
+
+#: motions/utils.py:29
+msgid "Motion vetos are inconsistent, so could not be merged."
 msgstr ""
 
 #: motions/views.py:91

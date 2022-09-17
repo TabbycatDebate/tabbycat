@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2021-06-25 17:28\n"
+"PO-Revision-Date: 2022-04-19 11:20\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -56,19 +56,19 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:24
 msgid "Pull up from top"
-msgstr ""
+msgstr "Prendi dall'alto"
 
 #: ../../features/draw-generation.rst:25
 msgid "Pull up from bottom"
-msgstr ""
+msgstr "Prendi dal basso"
 
 #: ../../features/draw-generation.rst:26
 msgid "Pull up from middle"
-msgstr ""
+msgstr "Prendi al centro"
 
 #: ../../features/draw-generation.rst:27
 msgid "Pull up at random"
-msgstr ""
+msgstr "Prendi a caso"
 
 #: ../../features/draw-generation.rst:29
 msgid "If sides are `Random` or `Balance`:"
@@ -104,15 +104,15 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:41 ../../features/draw-generation.rst:51
 msgid "Random"
-msgstr ""
+msgstr "Casuale"
 
 #: ../../features/draw-generation.rst:42
 msgid "Balance"
-msgstr ""
+msgstr "Bilanciato"
 
 #: ../../features/draw-generation.rst:43
 msgid "Pre-allocated"
-msgstr ""
+msgstr "Preassegnato"
 
 #: ../../features/draw-generation.rst:44
 msgid "Manual ballot"
@@ -128,15 +128,15 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:48
 msgid "Slide"
-msgstr ""
+msgstr "Scivola"
 
 #: ../../features/draw-generation.rst:49
 msgid "Fold"
-msgstr ""
+msgstr "Incrocia"
 
 #: ../../features/draw-generation.rst:50
 msgid "Adjacent"
-msgstr ""
+msgstr "Adiacente"
 
 #: ../../features/draw-generation.rst:53
 msgid ":ref:`Conflict avoidance method <draw-conflict-avoidance>`"
@@ -148,11 +148,11 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:55
 msgid "Off"
-msgstr ""
+msgstr "Off"
 
 #: ../../features/draw-generation.rst:56
 msgid "One-up-one-down"
-msgstr ""
+msgstr "Uno sù-uno giù"
 
 #: ../../features/draw-generation.rst:58
 msgid ":ref:`Pullup restriction <draw-pullup-restriction>`"
@@ -164,15 +164,15 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:60
 msgid "No restriction"
-msgstr ""
+msgstr "Nessuna limitazione"
 
 #: ../../features/draw-generation.rst:61
 msgid "Choose from teams who have been pulled up the fewest times so far"
-msgstr ""
+msgstr "Scegli tra le squadre che sono state tirate in alto il minor numero di volte finora"
 
 #: ../../features/draw-generation.rst:62
 msgid "Choose from teams with the lowest draw strength by speaks so far"
-msgstr ""
+msgstr "Scegli tra squadre con la forza sorteggio per ogni discorso finora"
 
 #: ../../features/draw-generation.rst:64
 msgid "The valid options for intermediate brackets change depending on whether sides are pre-allocated, but these are **not** checked for validity. If you choose an invalid combination, Tabbycat will just crash. This won't corrupt the database, but it might be momentarily annoying."
@@ -336,7 +336,7 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:153
 msgid "Pairing method"
-msgstr ""
+msgstr "Metodo di accoppiamento"
 
 #: ../../features/draw-generation.rst:154
 msgid "It's easiest to describe these by example, using a ten-team bracket:"
@@ -364,7 +364,7 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:166
 msgid "Conflict avoidance method"
-msgstr ""
+msgstr "Metodo di prevenzione dei conflitti"
 
 #: ../../features/draw-generation.rst:167
 msgid "A **conflict** is when two teams would face each other that have seen each other before, or are from the same institutions. Some tournaments have a preference against allowing this if it's avoidable within certain limits. The **draw avoid conflicts** option allows you to specify how."
@@ -404,7 +404,7 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:187
 msgid "Pullup restriction"
-msgstr ""
+msgstr "Limitaazioni a portare su"
 
 #: ../../features/draw-generation.rst:188
 msgid "You can restrict which teams can be pulled up by configuring the draw generator to choose a pullup team from among only those teams who are the \"best off\" according to a given metric. If several teams are equally \"best off\" within the lower bracket, the draw generator chooses among them using the same **pull-up method** already specified (*e.g.*, \"pull up from top\")"

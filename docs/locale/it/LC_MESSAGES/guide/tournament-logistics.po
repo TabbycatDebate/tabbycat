@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2021-06-25 17:28\n"
+"PO-Revision-Date: 2022-04-18 13:56\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -408,7 +408,7 @@ msgstr ""
 
 #: ../../guide/tournament-logistics.rst:166
 msgid "Round"
-msgstr ""
+msgstr "Round"
 
 #: ../../guide/tournament-logistics.rst:166
 msgid "1"

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-02 01:40-0300\n"
-"PO-Revision-Date: 2021-06-20 05:30\n"
+"POT-Creation-Date: 2021-11-28 21:53-0400\n"
+"PO-Revision-Date: 2021-11-29 02:16\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Language: bn_BD\n"
@@ -338,6 +338,10 @@ msgid_plural "You're currently using %(nrows)s rows in your database. If you hav
 msgstr[0] ""
 msgstr[1] ""
 
+#: templates/errors/legacy_sendgrid_warning.html:11
+msgid "It looks like you're using the old SendGrid config vars on Heroku, <code>SENDGRID_USERNAME</code> and <code>SENDGRID_PASSWORD</code>. These are now deprecated (as of version 2.6), and will stop working in a future version of Tabbycat. Please change your config vars to use <code>SENDGRID_API_KEY</code> instead. For more information, please see <a href=\"https://tabbycat.readthedocs.io/en/stable/features/notifications.html#configuring-an-email-provider\"> our documentation on this topic</a>."
+msgstr ""
+
 #: templates/errors/public_403.html:14
 #, python-format
 msgid "Whoops! This page isn't enabled for this tournament. <a href=\"%(url)s\">Back to the tournament home page.</a>"
@@ -375,11 +379,11 @@ msgstr "অনুদান প্রদান সম্পর্কে আরো
 msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated."
 msgstr ""
 
-#: templates/footer.html:40
+#: templates/footer.html:39
 msgid "Still timing debates with the stopwatch app?"
 msgstr "এখনো থামাঘড়ি দিয়ে বিতর্কের সময় রক্ষা করছেন?"
 
-#: templates/footer.html:42
+#: templates/footer.html:41
 #, python-format
 msgid "Using an app designed for debate timekeeping makes speaking and adjudicating easier! Check out <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/iPad) or <a href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper</a> (Android)."
 msgstr "বিতর্কের জন্যই তৈরি সময় রক্ষক অ্যাপ ব্যবহার বিতর্ক ও বিচারকার্য সহজ করবে! দেখে আসতে পারেন <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">টাইমকেপ্ট</a> (আইফোন/আইপ্যাড), <a href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">ডিবেটকিপার</a> (অ্যান্ড্রয়েড) বা <a href=\"https://top.gg/bot/706179030977740810r\">হিয়ার! হিয়ার! বট</a> (ডিস্কর্ড)"
@@ -392,35 +396,35 @@ msgstr ""
 msgid "Tabbycat is supported by the <a href=\"http://tabbycat-debate.org/\">Tabbycat Debate Association</a>, a non-profit for advancing open debate technology."
 msgstr ""
 
-#: templates/footer.html:66
+#: templates/footer.html:65
 msgid "Language"
 msgstr "ভাষা"
 
-#: templates/footer.html:73
+#: templates/footer.html:72
 msgid "GitHub"
 msgstr "গিটহাব"
 
-#: templates/footer.html:79
+#: templates/footer.html:78
 msgid "Documentation"
 msgstr "ব্যবহার বিধি"
 
-#: templates/footer.html:85
+#: templates/footer.html:84
 msgid "Support"
 msgstr "সহায়তা"
 
-#: templates/footer.html:91
+#: templates/footer.html:90
 msgid "Facebook"
 msgstr "ফেসবুক"
 
-#: templates/footer.html:97
+#: templates/footer.html:96
 msgid "Set Up A Copy"
 msgstr "একটি কপি তৈরী করুন।"
 
-#: templates/footer.html:111
+#: templates/footer.html:110
 msgid "Change Language"
 msgstr "ভাষা পরিবর্তন করুন"
 
-#: templates/footer.html:128
+#: templates/footer.html:127
 msgid "Use this language"
 msgstr "এই ভাষাটি সক্রিয় করুন"
 
@@ -876,7 +880,8 @@ msgstr ""
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: templates/registration/password_reset_form.html:39
+#: templates/registration/password_reset_form.html:39 users/forms.py:10
+#: users/forms.py:25
 msgid "Email address"
 msgstr ""
 
@@ -894,12 +899,12 @@ msgstr ""
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr ""
 
-#: urls.py:107
+#: urls.py:102
 #, python-format
 msgid "Hi, %(user)s — you just logged in!"
 msgstr ""
 
-#: urls.py:110
+#: urls.py:105
 msgid "Welcome! You just logged in!"
 msgstr ""
 
@@ -913,5 +918,40 @@ msgstr ""
 
 #: users/templates/admin/auth/delete_user_warning.html:6
 msgid "<strong>Warning:</strong> You shouldn't delete users from the database once they've done something, because the database logs actions taken by those users, and deleting the users also deletes the related logs. If you wish to deactivate a user account, go back to edit the user, click on the “Permissions” tab, unchecked the “Active” box, and save the user."
+msgstr ""
+
+#: users/templates/signup.html:4 users/templates/signup.html:5
+msgid "Sign-Up"
+msgstr ""
+
+#: users/templates/signup.html:16
+msgctxt "page title"
+msgid "Create a New Administrator Account"
+msgstr ""
+
+#: users/templates/signup.html:18
+msgctxt "page title"
+msgid "Create a New Assistant Account"
+msgstr ""
+
+#: users/templates/signup.html:25
+msgid "Create Account"
+msgstr ""
+
+#: users/views.py:54
+msgid "You have successfully created a new administrator account."
+msgstr ""
+
+#: users/views.py:56
+msgid "You have successfully created a new assistant account."
+msgstr ""
+
+#: users/views.py:84
+msgid "Whoops! It looks like someone's already created the first user account. Please log in."
+msgstr ""
+
+#: users/views.py:92
+#, python-format
+msgid "Welcome! You've created an account for %s."
 msgstr ""
 

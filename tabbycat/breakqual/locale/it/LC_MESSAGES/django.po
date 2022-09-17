@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2021-06-25 17:17\n"
+"PO-Revision-Date: 2022-04-17 08:28\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Language: it_IT\n"
@@ -32,7 +32,7 @@ msgstr ""
 
 #: breakqual/models.py:12
 msgid "name"
-msgstr ""
+msgstr "nome"
 
 #: breakqual/models.py:13
 msgid "Name to be displayed, e.g., \"ESL\""
@@ -48,7 +48,7 @@ msgstr ""
 
 #: breakqual/models.py:18
 msgid "sequence number"
-msgstr ""
+msgstr "numero sequenziale"
 
 #: breakqual/models.py:19
 msgid "The order in which the categories are displayed"
@@ -128,7 +128,7 @@ msgstr ""
 
 #: breakqual/models.py:78
 msgid "team"
-msgstr ""
+msgstr "squadra"
 
 #: breakqual/models.py:80
 msgid "rank"
@@ -314,7 +314,7 @@ msgstr ""
 
 #: breakqual/templates/breakqual_subnav.html:5
 msgid "Overview"
-msgstr ""
+msgstr "Panoramica"
 
 #: breakqual/templates/breakqual_subnav.html:15
 msgid "Adjudicators' Break"
