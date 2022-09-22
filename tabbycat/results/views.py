@@ -555,7 +555,9 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
         for rm in RoundMotion.objects.filter(round_id=self.debate.round_id):
             self.round_motions[rm.motion_id] = rm
 
-        self.result = DebateResult(self.ballotsub, round=self.round, tournament=self.tournament)
+        self.result = DebateResult(self.ballotsub, round=self.round, tournament=self.tournament, load=False)
+        self.result.init_blank_buffer()
+
         self.vetos = None
         self.prefilled = False
         if self.ballotsub.single_adj and prefill:
@@ -863,7 +865,8 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
         self.merged_ballots = bses
 
         # Handle result conflicts
-        self.result = DebateResult(self.ballotsub, tournament=self.tournament)
+        self.result = DebateResult(self.ballotsub, tournament=self.tournament, load=False)
+        self.result.init_blank_buffer()
         try:
             self.result.populate_from_merge(*[b.result for b in bses])
         except ResultError as e:
