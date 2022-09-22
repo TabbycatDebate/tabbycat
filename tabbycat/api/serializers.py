@@ -662,14 +662,17 @@ class TeamSerializer(serializers.ModelSerializer):
     validate_emoji = partialmethod(_validate_field, 'emoji')
 
     def validate(self, data):
-        t = self.context['tournament']
+        if data.get('institution') is None and data.get('use_institution_prefix', False):
+            raise serializers.ValidationError("Cannot include institution prefix without institution.")
+
         uniqueness_qs = Team.objects.filter(
-            tournament=t, reference=data['reference'], institution=data['institution']).exclude(id=getattr(self.instance, 'id', None))
-        if data.get('institution') is None:
-            if data.get('use_institution_prefix', False):
-                raise serializers.ValidationError("Cannot include institution prefix without institution.")
-        elif uniqueness_qs.exists():
-            raise serializers.ValidationError("Object with same reference and institution exists in the tournament")
+            tournament=self.context['tournament'],
+            reference=data.get('reference'),
+            institution=data.get('institution'),
+        ).exclude(id=getattr(self.instance, 'id', None))
+        if uniqueness_qs.exists() and not self.partial:
+            raise serializers.ValidationError("Team with same reference and institution exists in the tournament")
+
         return super().validate(data)
 
     def create(self, validated_data):
@@ -713,7 +716,7 @@ class TeamSerializer(serializers.ModelSerializer):
         return team
 
     def update(self, instance, validated_data):
-        speakers_data = validated_data.pop('speakers')
+        speakers_data = validated_data.pop('speakers', [])
         if len(speakers_data) > 0:
             speakers = SpeakerSerializer(many=True, context=self.context)
             speakers._validated_data = speakers_data  # Data was already validated
