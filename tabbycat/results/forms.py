@@ -369,7 +369,7 @@ class BaseBallotSetForm(BaseResultForm):
             else:
                 initial['motion'] = self.ballotsub.roundmotion
 
-        if self.using_vetoes:
+        if self.using_vetoes and self.ballotsub.id is not None:
             for side in self.sides:
                 if self.vetos is None:
                     dtmp = self.ballotsub.debateteammotionpreference_set.filter(
