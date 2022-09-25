@@ -133,7 +133,12 @@ class BaseResultForm(forms.Form):
 
     def __init__(self, ballotsub, password=False, *args, **kwargs):
         self.ballotsub = ballotsub
-        self.result = kwargs.pop('result', self.result_class(self.ballotsub))
+        self.result = kwargs.pop('result', self.result_class(self.ballotsub, load=False))
+        try:
+            self.result.assert_loaded()
+        except (AssertionError, AttributeError):
+            self.result.init_blank_buffer()
+            self.result.load_debateteams()
         super().__init__(*args, **kwargs)
 
         self.debate = ballotsub.debate
@@ -364,7 +369,7 @@ class BaseBallotSetForm(BaseResultForm):
             else:
                 initial['motion'] = self.ballotsub.roundmotion
 
-        if self.using_vetoes:
+        if self.using_vetoes and self.ballotsub.id is not None:
             for side in self.sides:
                 if self.vetos is None:
                     dtmp = self.ballotsub.debateteammotionpreference_set.filter(
