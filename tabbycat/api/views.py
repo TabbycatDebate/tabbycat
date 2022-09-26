@@ -252,7 +252,7 @@ class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
         filters = Q()
         if self.request.query_params.get('region'):
             filters &= Q(region__name=self.request.query_params['region'])
-        return Institution.objects.filter(filters).select_related('region', 'venue_constraints__category__tournament')
+        return Institution.objects.filter(filters).select_related('region').prefetch_related('venue_constraints__category__tournament')
 
 
 class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
