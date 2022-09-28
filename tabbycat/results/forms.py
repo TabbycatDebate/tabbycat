@@ -133,12 +133,7 @@ class BaseResultForm(forms.Form):
 
     def __init__(self, ballotsub, password=False, *args, **kwargs):
         self.ballotsub = ballotsub
-        self.result = kwargs.pop('result', self.result_class(self.ballotsub, load=False))
-        try:
-            self.result.assert_loaded()
-        except (AssertionError, AttributeError):
-            self.result.init_blank_buffer()
-            self.result.load_debateteams()
+        self.result = kwargs.pop('result', self.result_class(self.ballotsub))
         super().__init__(*args, **kwargs)
 
         self.debate = ballotsub.debate

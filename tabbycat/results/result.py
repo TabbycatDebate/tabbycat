@@ -171,7 +171,10 @@ class BaseDebateResult:
         self.scoresheet_class = self.get_scoresheet_class()
 
         if load:
-            self.full_load()
+            if self.ballotsub.id is None:
+                self.empty_load()
+            else:
+                self.full_load()
 
     def __repr__(self):
         return "<{classname} at {id:#x} for {bsub!s}>".format(
@@ -186,8 +189,12 @@ class BaseDebateResult:
 
     def full_load(self):
         self.init_blank_buffer()
-        self.load_from_db()
+        self.full_load_from_db()
         self.assert_loaded()
+
+    def empty_load(self):
+        self.init_blank_buffer()
+        self.load_from_db()
 
     def init_blank_buffer(self):
         """Initialises the data attributes. External initialisers might find
@@ -235,14 +242,16 @@ class BaseDebateResult:
     # Load and save methods
     # --------------------------------------------------------------------------
 
-    def load_from_db(self):
+    def full_load_from_db(self):
         """Populates the buffer from the database. Subclasses should extend this
         method as necessary."""
-        self.load_debateteams()
+        self.load_from_db()
         self.load_scoresheets()
 
-    def load_debateteams(self):
+    def load_from_db(self):
+        self.load_debateteams()
 
+    def load_debateteams(self):
         if not self.debate.sides_confirmed:
             return  # don't load if sides aren't confirmed
 
@@ -385,6 +394,10 @@ class DebateResultByAdjudicator(BaseDebateResult):
         self.debateadjs = {}
         self.scoresheets = {}
 
+    def load_from_db(self):
+        super().load_from_db()
+        self.load_debateadjs()
+
     def assert_loaded(self):
         super().assert_loaded()
         assert set(self.debate.adjudicators.voting()) == set(self.scoresheets)
@@ -411,7 +424,7 @@ class DebateResultByAdjudicator(BaseDebateResult):
     # Load and save methods
     # --------------------------------------------------------------------------
 
-    def load_scoresheets(self):
+    def load_debateadjs(self):
         self.debateadjs_query = self.debate.debateadjudicator_set.exclude(
             type=DebateAdjudicator.TYPE_TRAINEE).select_related('adjudicator', 'adjudicator__tournament')
         self.debateadjs = {da.adjudicator: da for da in self.debateadjs_query}
@@ -419,6 +432,7 @@ class DebateResultByAdjudicator(BaseDebateResult):
             positions=getattr(self, 'positions', None)) for adj in self.debateadjs.keys()
         }
 
+    def load_scoresheets(self):
         if not self.get_scoresheet_class().uses_declared_winners:
             return  # No need to add winners when already determined through scores
 
@@ -618,7 +632,10 @@ class DebateResultWithScoresMixin:
         self.positions = self.tournament.positions
 
         if load:
-            self.full_load()
+            if self.ballotsub.id is None:
+                self.empty_load()
+            else:
+                self.full_load()
 
     # --------------------------------------------------------------------------
     # Management methods
@@ -661,8 +678,8 @@ class DebateResultWithScoresMixin:
     # Load and save methods
     # --------------------------------------------------------------------------
 
-    def load_from_db(self):
-        super().load_from_db()
+    def full_load_from_db(self):
+        super().full_load_from_db()
         self.load_speakers()
 
     def load_speakers(self):
