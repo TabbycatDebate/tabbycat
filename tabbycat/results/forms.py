@@ -364,17 +364,18 @@ class BaseBallotSetForm(BaseResultForm):
             else:
                 initial['motion'] = self.ballotsub.roundmotion
 
-        if self.using_vetoes and self.ballotsub.id is not None:
-            for side in self.sides:
-                if self.vetos is None:
-                    dtmp = self.ballotsub.debateteammotionpreference_set.filter(
-                            debate_team__side=side, preference=3).first()
-                else:
-                    dtmp = self.vetos.get(side)
-                if dtmp:
-                    initial[self._fieldname_motion_veto(side)] = dtmp.roundmotion
+        if self.ballotsub.id is not None:
+            if self.using_vetoes:
+                for side in self.sides:
+                    if self.vetos is None:
+                        dtmp = self.ballotsub.debateteammotionpreference_set.filter(
+                                debate_team__side=side, preference=3).first()
+                    else:
+                        dtmp = self.vetos.get(side)
+                    if dtmp:
+                        initial[self._fieldname_motion_veto(side)] = dtmp.roundmotion
 
-        initial.update(self.initial_from_result(self.result))
+            initial.update(self.initial_from_result(self.result))
 
         return initial
 
