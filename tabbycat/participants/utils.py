@@ -54,7 +54,7 @@ def get_side_history(teams, sides, seq):
 
 
 def populate_code_names(people, length=8, num_attempts=10):
-    """Populates the URL key field for every instance in the given QuerySet."""
+    """Populates the code name field for every instance in the given QuerySet."""
     chars = string.digits
 
     existing_keys = list(Person.objects.exclude(code_name__isnull=True).values_list('code_name', flat=True))
@@ -62,7 +62,7 @@ def populate_code_names(people, length=8, num_attempts=10):
         for i in range(num_attempts):
             new_key = generate_identifier_string(chars, length)
             if new_key not in existing_keys:
-                person.url_key = new_key
+                person.code_name = new_key
                 existing_keys.append(new_key)
                 break
         Person.objects.bulk_update(people, ['code_name'])
