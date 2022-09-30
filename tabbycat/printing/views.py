@@ -162,7 +162,7 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
                     dt_dict['team'] = {
                         'short_name': team.short_name,
                         'code_name': team.code_name,
-                        'speakers': [{'name': s.name} for s in team.speakers],
+                        'speakers': [{'name': s.get_public_name(self.tournament)} for s in team.speakers],
                         'iron': debate.get_dt(side).iron_prev > 0,
                     }
                 except DebateTeam.DoesNotExist:
@@ -173,7 +173,7 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
             for adj, pos in debate.adjudicators.with_positions():
                 da_dict = {'position': pos}
                 da_dict['adjudicator'] = {
-                    'name': adj.name,
+                    'name': adj.get_public_name(self.tournament),
                     'institution': {'code': adj.institution.code if adj.institution else _("Unaffiliated")},
                 }
                 debate_dict['debateAdjudicators'].append(da_dict)

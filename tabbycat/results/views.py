@@ -803,7 +803,7 @@ class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, RoundMixin, Vue
         table = TabbycatTableBuilder(view=self, sort_key='adj')
 
         data = [{
-            'text': _("Add result from %(adjudicator)s") % {'adjudicator': da.adjudicator.name},
+            'text': _("Add result from %(adjudicator)s") % {'adjudicator': da.adjudicator.get_public_name(self.tournament)},
             'link': reverse_round('old-results-public-ballotset-new-pk', self.round,
                     kwargs={'adjudicator_pk': da.adjudicator_id}),
         } for da in debateadjs]
