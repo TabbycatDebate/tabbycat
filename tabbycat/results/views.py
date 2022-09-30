@@ -850,6 +850,7 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
         kwargs = super().get_form_kwargs()
         kwargs['result'] = self.result
         kwargs['vetos'] = self.vetos
+        kwargs['filled'] = True
         return kwargs
 
     def populate_objects(self, prefill=True):
