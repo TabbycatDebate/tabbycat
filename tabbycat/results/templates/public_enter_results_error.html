@@ -2,7 +2,7 @@
 {% load debate_tags static i18n %}
 
 {% block head-title %}
-{% person_display_name adjudicator tournament as adjudicator_name %}
+{% person_display_name adjudicator as adjudicator_name %}
 {% blocktrans trimmed with adjudicator=adjudicator_name %}
   No Result to Enter ({{ adjudicator }})
 {% endblocktrans %}{% endblock %}

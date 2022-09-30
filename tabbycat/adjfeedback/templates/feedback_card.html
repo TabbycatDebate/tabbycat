@@ -31,7 +31,7 @@
           {{ round }} {{ score }}
         {% endblocktrans %}
       </span>
-      {% person_display_name feedback.adjudicator tournament as adjudicator %}
+      {% person_display_name feedback.adjudicator as adjudicator %}
       {% blocktrans trimmed with adjudicator=adjudicator %}
         On {{ adjudicator }}
       {% endblocktrans %}

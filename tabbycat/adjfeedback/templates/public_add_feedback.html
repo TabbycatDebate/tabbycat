@@ -10,7 +10,7 @@
 
 {% block enter-feedback-adj-link %}
   <a href="{% tournamenturl 'adjfeedback-public-add-from-adjudicator-pk' adj.id %}">
-    {% person_display_name adj tournament as name %}
+    {% person_display_name adj as name %}
     {% blocktrans trimmed with name=name %}
       Add Feedback from {{ name }}
     {% endblocktrans %}

@@ -2,12 +2,12 @@
 <td class="adj-names">
   {% for adj, type in debate.adjudicators.with_positions %}
     {% if type == 'c' %}
-      <span class="adj-chair">{% person_display_name adj tournament %}</span> Ⓒ
+      <span class="adj-chair">{% person_display_name adj %}</span> Ⓒ
     {% elif type == 't' %}
-      <br><span class="adj-trainee">{% person_display_name adj tournament %}</span> Ⓣ
+      <br><span class="adj-trainee">{% person_display_name adj %}</span> Ⓣ
     {% else %}
       {% if debate.adjudicators.is_panel %}<br>{% endif %}
-      <span class="adj-normal">{% person_display_name adj tournament %}</span>
+      <span class="adj-normal">{% person_display_name adj %}</span>
     {% endif %}
     {% if debate.adjudicators.is_panel %}</li>{% endif %}
   {% endfor %}
