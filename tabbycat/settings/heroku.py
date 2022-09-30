@@ -9,18 +9,16 @@ from sentry_sdk.integrations.redis import RedisIntegration
 
 from .core import TABBYCAT_VERSION
 
-
 # ==============================================================================
 # Heroku
 # ==============================================================================
 
 # Store Tab Director Emails for reporting purposes
-if 'TAB_DIRECTOR_EMAIL' in environ:
-    TAB_DIRECTOR_EMAIL = environ.get('TAB_DIRECTOR_EMAIL', '')
+if os.environ.get('TAB_DIRECTOR_EMAIL', ''):
+    TAB_DIRECTOR_EMAIL = environ.get('TAB_DIRECTOR_EMAIL')
 
-# Get key from heroku config env else use a fall back
-if environ.get('DJANGO_SECRET_KEY'):
-    SECRET_KEY = environ.get('DJANGO_SECRET_KEY')
+if os.environ.get('DJANGO_SECRET_KEY', ''):
+    SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
@@ -149,13 +147,3 @@ if not environ.get('DISABLE_SENTRY'):
         send_default_pii=True,
         release=TABBYCAT_VERSION,
     )
-
-# ==============================================================================
-# Scout
-# ==============================================================================
-
-SCOUT_NAME = "Tabbycat"
-
-if environ.get('SCOUT_MONITOR'):
-    # Scout should be listed first; prepend it to the existing list if added
-    INSTALLED_APPS = ('scout_apm.django', *INSTALLED_APPS)

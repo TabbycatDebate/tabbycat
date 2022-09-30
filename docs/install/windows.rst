@@ -63,7 +63,7 @@ To check that Python is installed correctly, open Windows PowerShell, type ``pyt
 
 .. note:: **If you already have Python**, great! Some things to double-check:
 
-  - You must have at least Python 3.6. (Python 2 is not supported.)
+  - You must have at least Python 3.9.
   - Your installation path must not have any spaces in it.
   - If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\Python38;C:\Python38\Scripts`` (or as appropriate for your Python version and installation directory). Follow `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path.
 
@@ -174,13 +174,11 @@ b. Make a copy of **settings\\local.example** and rename it to **settings\\local
 
     TIME_ZONE = 'Australia/Melbourne'
 
-c. Start a new virtual environment. We suggest the name `venv`, though it can be any name you like::
+c. Install Pipenv. Then install the Python packages specified in the Pipfile using `Pipenv <https://pipenv.pypa.io/en/latest/>`_ (this also creates a virtual environment), and install the Node.js packages specified in package.json using `npm`::
 
-    > python -m venv venv
-
-d. Run the `Activate.ps1` script. This puts you "into" the virtual environment::
-
-    > .\venv\Scripts\Activate.ps1
+    > pip install --user pipenv
+    > pipenv install --deploy
+    > npm ci
 
   .. attention:: If you get an error message saying that the script isn't digitally signed, open a PowerShell with administrator privileges by right-clicking PowerShell in the Start meny and clicking "Run as administrator". Then run this command::
 
@@ -188,15 +186,13 @@ d. Run the `Activate.ps1` script. This puts you "into" the virtual environment::
 
     Read the warning message, then type ``y`` to confirm. By default, the execution policy on Windows is ``Restricted``, which does not permit scripts like ``activate`` to be run. Changing it to ``RemoteSigned`` relaxes it to allow local scripts to be run without checking the signature.
 
-e. Install Tabbycat's requirements.
-
-  If you installed **32-bit Python**::
-
-    > python -m pip install --upgrade pip
-    > pip install -r .\config\requirements_core.txt
-    > npm install
-
   .. hint:: You might be wondering: I thought I already installed the requirements. Why am I installing more? And the answer is: Before, you were installing the requirements to create a Python virtual environment for Tabbycat to live in. Now, you're *in* the virtual environment, and you're installing everything required for *Tabbycat* to operate.
+
+d. Start a Pipenv shell::
+
+    > pipenv shell
+
+  You'll notice a prefix that looks like ``(tabbycat-9BkbSRuB)`` (except the random characters for you will be different). That means you're inside the Pipenv shell. Everything from this point onwards will be inside the Pipenv shell.
 
 f. Initialize the database and create a user account for yourself::
 
@@ -210,17 +206,13 @@ g. Start Tabbycat!
 
   ::
 
-    > dj runserver
+    > npm run serve
 
-  It should show something like this::
+  Lots of text will flow by---this command starts up all of the processes necessary to run Tabbycat. But the app will be at http://127.0.0.1:8000/ or http://localhost:8000/ (not at any of the other addresses that will show).
 
-    Starting development server on http://127.0.0.1:8000
-
-h. Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000/). It should look something like this:
+g. Open your browser and go to http://127.0.0.1:8000/ or http://localhost:8000/. It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
 
   .. image:: images/tabbycat-bare-windows.png
-
-  If it does, great! You've successfully installed Tabbycat.
 
 Naturally, your database is currently empty, so proceed to :ref:`importing initial data <importing-initial-data>`.
 

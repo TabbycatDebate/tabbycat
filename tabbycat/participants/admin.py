@@ -12,6 +12,7 @@ from availability.admin import RoundAvailabilityInline
 from breakqual.models import BreakCategory
 from draw.models import TeamSideAllocation
 from tournaments.models import Tournament
+from utils.admin import ModelAdmin
 from venues.admin import VenueConstraintInline
 
 from .emoji import pick_unused_emoji, populate_code_names_from_emoji, set_emoji
@@ -23,7 +24,7 @@ from .models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, 
 # ==============================================================================
 
 @admin.register(Region)
-class RegionAdmin(admin.ModelAdmin):
+class RegionAdmin(ModelAdmin):
     pass
 
 
@@ -32,7 +33,7 @@ class RegionAdmin(admin.ModelAdmin):
 # ==============================================================================
 
 @admin.register(Institution)
-class InstitutionAdmin(admin.ModelAdmin):
+class InstitutionAdmin(ModelAdmin):
     list_display = ('name', 'code', 'region')
     list_select_related = ('region',)
     ordering = ('name', )
@@ -44,7 +45,7 @@ class InstitutionAdmin(admin.ModelAdmin):
 # ==============================================================================
 
 @admin.register(Speaker)
-class SpeakerAdmin(admin.ModelAdmin):
+class SpeakerAdmin(ModelAdmin):
     list_filter = ('team__tournament', 'team__institution')
     list_display = ('name', 'team', 'gender')
     search_fields = ('name', 'team__short_name', 'team__long_name',
@@ -57,7 +58,7 @@ class SpeakerAdmin(admin.ModelAdmin):
 # ==============================================================================
 
 @admin.register(SpeakerCategory)
-class SpeakerCategoryAdmin(admin.ModelAdmin):
+class SpeakerCategoryAdmin(ModelAdmin):
     list_display = ('name', 'slug', 'seq', 'tournament', 'limit', 'public')
     list_filter = ('tournament', )
     ordering = ('tournament', 'seq')
@@ -115,7 +116,7 @@ class AdjudicatorTeamConflictInline(admin.TabularInline):
 
 
 @admin.register(Team)
-class TeamAdmin(admin.ModelAdmin):
+class TeamAdmin(ModelAdmin):
     form = TeamForm
     list_display = ('long_name', 'short_name', 'emoji', 'institution',
                     'tournament')
@@ -144,6 +145,8 @@ class TeamAdmin(admin.ModelAdmin):
 
     def delete_url_key(self, request, queryset):
         num_speakers = Speaker.objects.filter(team__in=queryset).update(url_key=None)
+        for obj in queryset:
+            self.log_change(request, obj, [{"changed": {"fields": [{"speaker": ["url_key"]}]}}])
         message = ngettext_lazy(
             "%(count)d speaker had their URL key removed.",
             "%(count)d speakers had their URL keys removed.",
@@ -155,6 +158,8 @@ class TeamAdmin(admin.ModelAdmin):
         count = queryset.update(emoji=None)
         for tournament, teams in groupby(queryset.select_related('tournament').order_by('tournament_id'), lambda t: t.tournament):
             set_emoji(list(teams), tournament)
+            for team in teams:
+                self.log_change(request, team, [{"changed": {"fields": ["emoji"]}}])
 
         message = ngettext_lazy(
             "%(count)d team had their emoji reset.",
@@ -165,6 +170,8 @@ class TeamAdmin(admin.ModelAdmin):
 
     def assign_code_names(self, request, queryset):
         count = populate_code_names_from_emoji(queryset, overwrite=True)
+        for obj in queryset:
+            self.log_change(request, obj, [{"changed": {"fields": ["code_name"]}}])
 
         message = ngettext_lazy(
             "%(count)d team had their code name reset.",
@@ -206,7 +213,7 @@ class AdjudicatorForm(forms.ModelForm):
 
 
 @admin.register(Adjudicator)
-class AdjudicatorAdmin(admin.ModelAdmin):
+class AdjudicatorAdmin(ModelAdmin):
     form = AdjudicatorForm
     list_display = ('name', 'institution', 'tournament', 'trainee',
                     'independent', 'adj_core', 'gender', 'base_score')
@@ -224,6 +231,8 @@ class AdjudicatorAdmin(admin.ModelAdmin):
 
     def delete_url_key(self, request, queryset):
         updated = queryset.update(url_key=None)
+        for obj in queryset:
+            self.log_change(request, obj, [{"changed": {"fields": ["url_key"]}}])
         message = ngettext(
             "%(count)d adjudicator had their URL key removed.",
             "%(count)d adjudicators had their URL keys removed.",

@@ -6,9 +6,13 @@ Preformed Panels
 
 Preformed panels, also known as a 'shadow draw', allow adjudicator panels to be created *before* a round has been drawn and then applied once its draw is ready. This means that panel formation can be done during periods outside the normal time pressure of finalising a draw for release. This can save a lot of time at large tournaments, or at tournaments where the adjudication core wants to carefully control the specific combination of adjudicators within panels.
 
-Tabbycat's implementation of preformed panels is more powerful, but less simple, than many others. The chief difference is that our workflow does not simply transpose a linear set of preformed panels atop a draw. Instead we employ Tabbycat's existing allocation tools, primarily the notion of a debate's *priority*, to allow for a non-linear matching of preformed panels that avoids adjudicator conflicts and better adapts to a given draw — particularly when the most important debates do not strictly follow the highest debate brackets.
+Tabbycat's provides two distinct workflows for employing preformed panels.
 
-The central concept is that each preformed panel has a priority value. When applying preformed panels to a draw, the allocator ties to best match the priority value of each preformed panel to the priority of each actual debate. This is similar to how Tabbycat's normal auto-allocator matches the strength of each panel (as measured by adjudicators' ratings) to the priority of each debate.
+The first method, **Direct Allocation** is simple. A set of preformed panels as made ahead of time, and that collection of panels is transposed atop the draw. This allocation always applied panels linearly from top to bottom — it does not account for any information about each debate (e.g. conflicts) other than their position.
+
+The second method, **Smart Allocate** is more powerful, but less simple. It employs Tabbycat's existing allocation tools, primarily the notion of a debate's *priority*, to allow for a non-linear matching of preformed panels that avoids adjudicator conflicts and better adapts to a given draw — particularly when the most important debates do not strictly follow the highest debate brackets.
+
+This method relies on each preformed panel being assigned a priority value. When applying preformed panels to a draw, the allocator then ties to best match the priority value of each preformed panel to the priority of each actual debate. This is similar to how Tabbycat's normal auto-allocator matches the strength of each panel (as measured by adjudicators' ratings) to the priority of each debate.
 
 Step 1: Create preformed panels
 ===============================
@@ -35,6 +39,8 @@ It's important to remember to assign a range of priorities to the panels. Withou
 
 .. note:: In Round 1, each debate has a liveness and bracket of 0. If you are using preformed panels in this instance you may need to manually-differentiate their priorities.
 
+.. note:: This step is optional if you plan to use a **Direct Allocation**.
+
 Step 3: Allocate adjudicators to preformed panels
 =================================================
 
@@ -54,12 +60,14 @@ Step 5: Assign priorities to debates
 
 When allocating preformed panels, the priority levels are what connects the preformed panels to the actual debates. It is thus crucial that you assign priorities to the debates in the actual draw using automatic prioritisation or the manual sliders. Because the automatic prioritiser does not employ the highest priority value, it is worth having a look at the draw and seeing if any debates justify this before proceeding.
 
+.. note:: This step is optional if you plan to use a **Direct Allocation**, but can be useful as a way to tweak the order of debates before transposing the panels.
+
 Step 6: Allocate preformed panels to debates
 ============================================
 
-To allocate preformed panels to your debates, click the normal "Allocate" button and then select the *Preformed Panels* option.
+To allocate preformed panels to your debates, click the normal "Allocate" button and then select the *Smart Allocate* or *Direct Allocate* option.
 
-.. image:: images/preformed-apply.png
+.. image:: images/allocation-modal.png
 
 This will then allocate the preformed panels to debates.
 
@@ -67,8 +75,8 @@ This will then allocate the preformed panels to debates.
 
 You can the edit the allocation as normal. If needed, you can redo the allocation of the preformed panels at any point.
 
-How does the allocator work?
-============================
+How does the 'Smart Allocator' work?
+====================================
 
 Roughly speaking, the allocator tries to match panel priorities to debate priorities, while avoiding conflicts. It'll mostly try to swap panels within priority levels in order to avoid conflicts. If there aren't exactly as many panels at each priority level as there are debates, it'll do its best to match what it can.
 

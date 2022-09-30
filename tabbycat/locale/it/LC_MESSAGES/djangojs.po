@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-14 04:50+1100\n"
-"PO-Revision-Date: 2021-06-25 17:28\n"
+"PO-Revision-Date: 2022-04-18 13:55\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Language: it_IT\n"
@@ -36,7 +36,7 @@ msgstr ""
 
 #: checkins/templates/CheckInStatusContainer.vue:
 msgid "All"
-msgstr ""
+msgstr "Tutti"
 
 #. Translators: %1: Option name
 #: checkins/templates/CheckInStatusContainer.vue:
@@ -205,7 +205,7 @@ msgstr ""
 
 #: printing/templates/PrintableBallotHeader.vue:
 msgid "Team"
-msgstr ""
+msgstr "Team"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "Mark speeches %1 to %2; <strong>%3</strong>."
@@ -461,7 +461,7 @@ msgstr ""
 
 #: results/templates/ResultsStats.vue:26
 msgid "Unknown"
-msgstr ""
+msgstr "Sconosciuto"
 
 #: results/templates/ResultsStats.vue:31
 msgid "Unconfirmed"
@@ -526,7 +526,7 @@ msgstr ""
 #. Translators: Short for "Venue Category"
 #: utils/templates/DragAndDropActions.vue:65
 msgid "Category"
-msgstr ""
+msgstr "Categoria"
 
 #: utils/templates/DragAndDropDebate.vue:5
 msgid "The debate's bracket"

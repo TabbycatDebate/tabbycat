@@ -1,0 +1,50 @@
+databases:
+  - name: tabbycat_database
+    databaseName: tabbycat
+    user: tabbycat
+    plan: free
+
+services:
+  - type: web
+    name: tabbycat_website
+    env: python
+    plan: free
+    region: oregon
+    buildCommand: "./bin/render-compile.sh"
+    startCommand: "npm run render-serve"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tabbycat_database
+          property: connectionString
+      - key: REDIS_HOST
+        fromService:
+          type: redis
+          name: tabbycat_redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: redis
+          name: tabbycat_redis
+          property: port
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: "3.9.9"
+      - key: WEB_CONCURRENCY
+        value: 4
+      - key: TAB_DIRECTOR_EMAIL
+        sync: false
+      - key: TIME_ZONE
+        sync: false
+      - key: ON_RENDER
+        value: true
+      - key: USING_NGINX
+        value: 0 # Not 'false'; is cast
+  - type: redis
+    name: tabbycat_redis
+    ipAllowList: # required
+      - source: 0.0.0.0
+        description: everywhere
+    plan: free
+    maxmemoryPolicy: allkeys-lru # (default)

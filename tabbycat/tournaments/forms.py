@@ -1,6 +1,6 @@
 from django.core.cache import cache
 from django.forms import CharField, ChoiceField, Form, ModelChoiceField, ModelForm
-from django.forms.fields import IntegerField
+from django.forms.fields import IntegerField, NumberInput
 from django.forms.models import ModelChoiceIterator
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
@@ -89,13 +89,15 @@ class TournamentConfigureForm(ModelForm):
     public_info = ChoiceField(
         choices=public_presets_for_form(), # Tuple with (Present_Index, Preset_Name)
         label=_("Public Configuration"),
-        help_text=_("Show non-sensitive information on the public-facing side of this site, like draws (once released) and the motions of previous rounds"))
+        help_text=_("Show non-sensitive information on the public-facing side of this site, "
+            "like draws (once released) and the motions of previous rounds"))
 
     tournament_staff = CharField(
         label=TournamentStaff.verbose_name,
         required=False,
         help_text=TournamentStaff.help_text,
         initial=_("<strong>Tabulation:</strong> [list tabulation staff here]<br />"
+            "<strong>Equity:</strong> [list equity members here]<br />"
             "<strong>Organisation:</strong> [list organising committee members here]<br />"
             "<strong>Adjudication:</strong> [list chief adjudicators here]"),
         widget=SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'}),
@@ -248,3 +250,29 @@ class SetCurrentRoundMultipleBreakCategoriesForm(Form):
                     category.round_set.filter(seq__lt=seq).update(completed=True)
                     category.round_set.filter(seq__gte=seq).update(completed=False)
         clear_all_round_caches(self.tournament)
+
+
+class RoundWeightForm(Form):
+
+    def __init__(self, tournament, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tournament = tournament
+        self._create_fields()
+
+    def _create_fields(self):
+        """Dynamically generate one integer field for each preliminary round, for the
+        user to indicate how many teams are from that institution."""
+        for round in self.tournament.round_set.filter(stage=Round.STAGE_PRELIMINARY):
+            self.fields['round_weight_%d' % round.id] = IntegerField(
+                    min_value=0,
+                    label=_("%(name)s (%(abbreviation)s)") % {'name': round.name, 'abbreviation': round.abbreviation},
+                    required=False, initial=round.weight,
+                    widget=NumberInput(attrs={'placeholder': 1}))
+
+    def save(self):
+        rounds = self.tournament.round_set.filter(stage=Round.STAGE_PRELIMINARY)
+        for round in rounds:
+            round.weight = self.cleaned_data['round_weight_%d' % round.id]
+        Round.objects.bulk_update(rounds, ['weight'])
+
+        return rounds

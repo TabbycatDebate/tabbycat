@@ -2,6 +2,28 @@
 Change Log
 ==========
 
+2.7.0 (Pixie-bob)
+---------
+*Release date: 1 October 2022*
+
+- Added the ability to deploy to Render as a 1-click Heroku-like deployment option
+- Each debate's panel can now be dragged and dropped onto another debate, e.g. you can now swap panels in the same way you can swap individual adjudicators.
+- Round weights can be modified within tournament preferences, rather than just by the Edit Database.
+- Preformed panels can now be applied 'directly', in a linear top-to-bottom fashion. However, this method will not account for soft or hard conflicts. Thanks to Enting Lee for the pull request!
+- The 'Inactive Tournaments' page has been merged into the main page.
+- The checkins filter buttons are now clearer in what they filter. Thank you to Giza Pavone for the pull request!
+- The British Parliamentary preset uses the new WUDC iron-person rule (both speeches count towards team score). Thank you to Alice Bertoni for the pull request!
+- People can have code names to hide their real name within the tournament. Thank you to the South African Schools’ Debating Board for sponsoring the feature!
+- API improvements
+    - Allowed access to the Motions API endpoint for publicly-released motions.
+    - The ballot API now supports motion vetos.
+    - Venue contraints are added to Partipants' endpoints.
+- Security (sponsored by the Debating Society of Pakistan)
+    - IP addresses are logged when performing actions through Edit Database.
+    - Deletion of action logs is disabled.
+    - Password requirements are instituted against setting weak passwords.
+- \+ bug fixes!
+
 
 2.6.8
 -----

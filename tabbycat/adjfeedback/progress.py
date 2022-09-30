@@ -62,7 +62,7 @@ class BaseFeedbackExpectedSubmissionTracker:
             return None
 
     def acceptable_target_names(self):
-        return [adj.name for adj in self.acceptable_targets()]
+        return [adj.get_public_name(self.round.tournament) for adj in self.acceptable_targets()]
 
 
 class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTracker):

@@ -2,6 +2,7 @@ from itertools import groupby
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Prefetch, Q
 from dynamic_preferences.api.serializers import PreferenceSerializer
@@ -44,6 +45,7 @@ class APIRootView(PublicAPIMixin, GenericAPIView):
             "_links": {
                 "v1": reverse('api-v1-root', request=request, format=format),
             },
+            "version": settings.TABBYCAT_VERSION,
         })
 
 
@@ -95,11 +97,16 @@ class RoundViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
         ).prefetch_related('roundmotion_set', 'roundmotion_set__motion', 'roundmotion_set__motion__tournament')
 
 
-class MotionViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+class MotionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.MotionSerializer
+    access_preference = ('public_motions', 'motion_tab_released')
+    access_operator = any
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('roundmotion_set', 'roundmotion_set__round')
+        filters = Q()
+        if self.tournament.pref('public_motions') and not (self.tournament.pref('motion_tab_released') or self.request.user.is_staff):
+            filters &= Q(rounds__motions_released=True)
+        return super().get_queryset().filter(filters).prefetch_related('roundmotion_set', 'roundmotion_set__round')
 
 
 class BreakCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
@@ -196,6 +203,7 @@ class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
         ).distinct().select_related('region').prefetch_related(
             Prefetch('team_set', queryset=self.tournament.team_set.all()),
             Prefetch('adjudicator_set', queryset=self.tournament.adjudicator_set.all()),
+            'venue_constraints__category__tournament',
         )
 
 
@@ -213,7 +221,7 @@ class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
                 'speaker_set',
                 queryset=Speaker.objects.all().prefetch_related(category_prefetch).select_related('team__tournament'),
             ),
-            'institution_conflicts',
+            'institution_conflicts', 'venue_constraints__category__tournament',
             'break_categories', 'break_categories__tournament',
         )
 
@@ -233,7 +241,7 @@ class AdjudicatorViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
         return super().get_queryset().prefetch_related(
             'team_conflicts', 'team_conflicts__tournament',
             'adjudicator_conflicts', 'adjudicator_conflicts__tournament',
-            'institution_conflicts',
+            'institution_conflicts', 'venue_constraints__category__tournament',
         ).filter(filters)
 
 
@@ -244,7 +252,7 @@ class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
         filters = Q()
         if self.request.query_params.get('region'):
             filters &= Q(region__name=self.request.query_params['region'])
-        return Institution.objects.filter(filters).select_related('region')
+        return Institution.objects.filter(filters).select_related('region').prefetch_related('venue_constraints__category__tournament')
 
 
 class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
@@ -518,7 +526,10 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
         filters = Q()
         if self.request.query_params.get('confirmed') or not self.request.user.is_staff:
             filters &= Q(confirmed=True)
-        return super().get_queryset().filter(filters).select_related(
+        return super().get_queryset().filter(filters).prefetch_related(
+            'debateteammotionpreference_set__motion__tournament',
+            'debateteammotionpreference_set__debate_team__team__tournament',
+        ).select_related(
             'motion', 'motion__tournament',
             'participant_submitter__adjudicator__tournament')
 

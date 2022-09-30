@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-02 01:40-0300\n"
-"PO-Revision-Date: 2021-06-20 05:29\n"
+"POT-Creation-Date: 2021-11-28 21:53-0400\n"
+"PO-Revision-Date: 2021-11-29 02:17\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Malay\n"
 "Language: ms_MY\n"
@@ -67,34 +67,39 @@ msgstr ""
 msgid "Show non-sensitive information on the public-facing side of this site, like draws (once released) and the motions of previous rounds"
 msgstr ""
 
-#: tournaments/forms.py:98
+#: tournaments/forms.py:99
 msgid "<strong>Tabulation:</strong> [list tabulation staff here]<br /><strong>Organisation:</strong> [list organising committee members here]<br /><strong>Adjudication:</strong> [list chief adjudicators here]"
 msgstr ""
 
-#: tournaments/forms.py:194
+#: tournaments/forms.py:195
 msgid "Current preliminary round"
 msgstr ""
 
-#: tournaments/forms.py:195
+#: tournaments/forms.py:196
 msgid "All preliminary rounds have been completed"
 msgstr ""
 
-#: tournaments/forms.py:207
+#: tournaments/forms.py:208
 #, python-format
 msgid "Current elimination round in <strong>%(category)s</strong> <em>(only if all preliminary rounds have been completed)</em>"
 msgstr ""
 
-#: tournaments/forms.py:213
+#: tournaments/forms.py:214
 #, python-format
 msgid "All elimination rounds in %(category)s have been completed"
 msgstr ""
 
-#: tournaments/forms.py:225
+#: tournaments/forms.py:226
 msgid "If the current round is a preliminary round, this field must be blank."
 msgstr ""
 
-#: tournaments/forms.py:231
+#: tournaments/forms.py:232
 msgid "If all preliminary rounds have been completed, this field is required."
+msgstr ""
+
+#: tournaments/forms.py:267
+#, python-format
+msgid "%(name)s (%(abbreviation)s)"
 msgstr ""
 
 #: tournaments/mixins.py:109
@@ -115,12 +120,12 @@ msgstr ""
 msgid "There's a problem with how teams are assigned to sides in a debate. The tab director will need to resolve this issue."
 msgstr ""
 
-#: tournaments/mixins.py:232 tournaments/templates/round_complete_check.html:8
+#: tournaments/mixins.py:236 tournaments/templates/round_complete_check.html:8
 #, python-format
 msgid "for %(round)s"
 msgstr ""
 
-#: tournaments/mixins.py:433
+#: tournaments/mixins.py:437
 msgid "Return to Draw"
 msgstr ""
 
@@ -698,9 +703,24 @@ msgstr ""
 msgid "The tournament <strong>%(tournament)s</strong> has no rounds. You'll need to <a href=\"%(round_changelist_url)s\">add rounds and associate them with this tournament</a> before you can set the current round."
 msgstr ""
 
+#: tournaments/templates/set_round_weights.html:4
+#: tournaments/templates/set_round_weights.html:5
+msgctxt "page title"
+msgid "Set Round Weights"
+msgstr ""
+
+#: tournaments/templates/set_round_weights.html:8
+msgid "Round weights are coefficients for the points received in each round. A team would get triple their team points obtained in a round with a weight of 3."
+msgstr ""
+
+#: tournaments/templates/set_round_weights.html:41
+msgctxt "button"
+msgid "Set weights"
+msgstr ""
+
 #: tournaments/templates/site_inactive_tournaments.html:4
 #: tournaments/templates/site_inactive_tournaments.html:5
-#: tournaments/templates/site_index.html:46
+#: tournaments/templates/site_index.html:47
 msgid "Inactive Tournaments"
 msgstr ""
 
@@ -708,45 +728,45 @@ msgstr ""
 msgid "Welcome!"
 msgstr ""
 
-#: tournaments/templates/site_index.html:20
+#: tournaments/templates/site_index.html:21
 msgid "It looks like there aren't any tournaments on this site. Would you like to create one?"
 msgstr ""
 
-#: tournaments/templates/site_index.html:29
+#: tournaments/templates/site_index.html:30
 msgid "There are currently no active tournaments set up on this site."
 msgstr ""
 
-#: tournaments/templates/site_index.html:33
+#: tournaments/templates/site_index.html:34
 msgid "There are currently no tournaments set up on this site."
 msgstr ""
 
-#: tournaments/templates/site_index.html:54
+#: tournaments/templates/site_index.html:55
 msgid "New Tournament"
 msgstr ""
 
-#: tournaments/templates/site_index.html:57
+#: tournaments/templates/site_index.html:58
 msgid "Edit Database Area"
 msgstr ""
 
-#: tournaments/templates/site_index.html:60
+#: tournaments/templates/site_index.html:61
 msgid "Send a Test Email"
 msgstr ""
 
-#: tournaments/templates/site_index.html:63
+#: tournaments/templates/site_index.html:64
 msgid "Import DebateXML"
 msgstr ""
 
-#: tournaments/templates/site_index.html:72
+#: tournaments/templates/site_index.html:73
 #, python-format
 msgid "Get API Token / Change Password (%(user)s)"
 msgstr ""
 
-#: tournaments/templates/site_index.html:76
+#: tournaments/templates/site_index.html:77
 #, python-format
 msgid "Log Out (%(user)s)"
 msgstr ""
 
-#: tournaments/templates/site_index.html:82
+#: tournaments/templates/site_index.html:83
 msgid "Log In as Admin"
 msgstr ""
 
@@ -786,6 +806,10 @@ msgstr ""
 #: tournaments/templates/tournament_index.html:65
 #, python-format
 msgid "Go to the results area to begin entering ballots for %(round)s"
+msgstr ""
+
+#: tournaments/templates/tournament_index.html:74
+msgid "You have enabled a URL that allows users to create new accounts. You should <strong>disable it once the tournament starts</strong>."
 msgstr ""
 
 #: tournaments/templates/tournament_index_links.html:10
@@ -974,49 +998,44 @@ msgstr ""
 msgid "R%(number)d"
 msgstr ""
 
-#: tournaments/views.py:153
+#: tournaments/views.py:151
 #, python-format
 msgid "%(round)s has been marked as completed. All rounds are now completed, so you're done with the tournament! Congratulations!"
 msgstr ""
 
-#: tournaments/views.py:159
+#: tournaments/views.py:157
 #, python-format
 msgid "%(round)s has been marked as completed. That's the last round in that sequence! Going back to the first round that hasn't been marked as completed."
 msgstr ""
 
-#: tournaments/views.py:172
+#: tournaments/views.py:170
 #, python-format
 msgid "%(round)s has been marked as completed. You've made it to the end of the preliminary rounds! Congratulations! The next step is to generate the break."
 msgstr ""
 
-#: tournaments/views.py:178
+#: tournaments/views.py:176
 #, python-format
 msgid "%(round)s has been marked as completed. That was the last preliminary round, but one or more preliminary rounds are still not completed. Going back to the first incomplete preliminary round."
 msgstr ""
 
-#: tournaments/views.py:186
+#: tournaments/views.py:184
 #, python-format
 msgid "%(this_round)s has been marked as completed. Moving on to %(next_round)s! Woohoo! Keep it up!"
 msgstr ""
 
-#: tournaments/views.py:215
-msgid "Whoops! It looks like someone's already created the first user account. Please log in."
-msgstr ""
-
-#: tournaments/views.py:223
-#, python-format
-msgid "Welcome! You've created an account for %s."
-msgstr ""
-
-#: tournaments/views.py:238
+#: tournaments/views.py:201
 msgid "8-team generic dataset"
 msgstr ""
 
-#: tournaments/views.py:239
+#: tournaments/views.py:202
 msgid "24-team Australs dataset"
 msgstr ""
 
-#: tournaments/views.py:240
+#: tournaments/views.py:203
 msgid "88-team BP dataset"
+msgstr ""
+
+#: tournaments/views.py:288
+msgid "Successfully set round weights."
 msgstr ""
 

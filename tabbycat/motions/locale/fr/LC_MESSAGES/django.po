@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-30 01:01-0400\n"
-"PO-Revision-Date: 2020-12-30 18:30\n"
+"POT-Creation-Date: 2021-11-28 21:53-0400\n"
+"PO-Revision-Date: 2021-11-29 02:16\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -54,7 +54,7 @@ msgstr "tournoi"
 msgid "rounds"
 msgstr "joutes"
 
-#: motions/models.py:24 motions/models.py:37 motions/models.py:56
+#: motions/models.py:24 motions/models.py:37 motions/models.py:62
 msgid "motion"
 msgstr "motion"
 
@@ -82,23 +82,23 @@ msgstr "préférence de motion d'un débat-équipe"
 msgid "debate team motion preferences"
 msgstr "préférences de motion d'un débat-équipe"
 
-#: motions/models.py:58
+#: motions/models.py:64
 msgid "round"
 msgstr "tour"
 
-#: motions/models.py:61
+#: motions/models.py:67
 msgid "sequence number"
 msgstr "numéro de séquence"
 
-#: motions/models.py:62
+#: motions/models.py:68
 msgid "The order in which motions are displayed"
 msgstr "L’ordre dans lequel les motions sont affichées"
 
-#: motions/models.py:67
+#: motions/models.py:73
 msgid "round motion"
 msgstr "motion de joute"
 
-#: motions/models.py:68
+#: motions/models.py:74
 msgid "round motions"
 msgstr "motions de joute"
 
@@ -336,6 +336,14 @@ msgstr[1] "Révéler les motions de %(round)s"
 #: motions/templates/show.html:41
 msgid "There are no motions for this round entered into Tabbycat."
 msgstr "Aucune motion pour cette joute a été enregistrée dans Tabbycat."
+
+#: motions/utils.py:11
+msgid "Not all latest ballots list the same motion, so could not be merged."
+msgstr ""
+
+#: motions/utils.py:29
+msgid "Motion vetos are inconsistent, so could not be merged."
+msgstr ""
 
 #: motions/views.py:91
 msgid "The motion has been saved."

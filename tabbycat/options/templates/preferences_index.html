@@ -127,6 +127,11 @@
       {% trans "Manually Set Current Round" as title %}
       {% trans "Tabbycat will prompt you to advance the current round on each round's results page. However, if there are special circumstances that require you to override this and set the current round to something else, use this page." as description %}
       {% include "components/item-action.html" with type="primary" icon="clock" text=title extra=description %}
+
+      {% tournamenturl 'set-round-weights' as url %}
+      {% trans "Set Round Weights for Tapered Scoring" as text %}
+      {% trans "Rounds can be weighted so that certain rounds are worth more team points." as extra %}
+      {% include "components/item-action.html" with type="primary" icon="anchor" %}
     </ul>
 
     <div class="card mt-3">

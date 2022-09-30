@@ -6,7 +6,8 @@
 {% block page-alerts %}
 
   {% if form.scoresheets|length > 1 %}
-    {% blocktrans trimmed with adjudicator=adjudicator.name asvar message %}
+    {% person_display_name adjudicator as adjudicator_name %}
+    {% blocktrans trimmed with adjudicator=adjudicator_name asvar message %}
       {{ adjudicator }}, note that you must enter <strong>all of the ballots</strong> from your panel, not just your own!
     {% endblocktrans %}
     {% include "components/alert.html" with type="warning" %}

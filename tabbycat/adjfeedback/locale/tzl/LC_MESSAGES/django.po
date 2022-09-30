@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-02 01:40-0300\n"
-"PO-Revision-Date: 2021-04-02 04:54\n"
+"PO-Revision-Date: 2021-11-29 01:58\n"
 "Last-Translator: \n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -708,8 +708,8 @@ msgstr[1] "crwdns29532:5%(nadjs_outside_range)scrwdnd29532:5%(min_score)scrwdnd2
 #, python-format
 msgid "%(count)s adjudicator currently has a score equal to or above %(min)s and below %(max)s. That is %(percent)s%% of the adjudicator pool."
 msgid_plural "%(count)s adjudicators currently have a score equal to or above %(min)s and below %(max)s. That is %(percent)s%% of the adjudicator pool."
-msgstr[0] "crwdns29534:1%(count)scrwdnd29534:1%(min)scrwdnd29534:1%(max)scrwdnd29534:1%(percent)scrwdnd29534:1%%crwdne29534:1"
-msgstr[1] "crwdns29534:5%(count)scrwdnd29534:5%(min)scrwdnd29534:5%(max)scrwdnd29534:5%(percent)scrwdnd29534:5%%crwdne29534:5"
+msgstr[0] "crwdns29534:1%(count)scrwdnd29534:1%(min)scrwdnd29534:1%(max)scrwdnd29534:1%(percent)scrwdne29534:1"
+msgstr[1] "crwdns29534:5%(count)scrwdnd29534:5%(min)scrwdnd29534:5%(max)scrwdnd29534:5%(percent)scrwdne29534:5"
 
 #: adjfeedback/templates/overview_breakdowns.html:27
 #, python-format
@@ -941,8 +941,8 @@ msgstr "crwdns29636:0crwdne29636:0"
 #, python-format
 msgid "%(nmissing)d missing feedback submission (%(fulfilled).1f%% returned)"
 msgid_plural "%(nmissing)d missing feedback submissions (%(fulfilled).1f%% returned)"
-msgstr[0] "crwdns34000:1%(nmissing)dcrwdnd34000:1%(fulfilled)crwdnd34000:1%%crwdne34000:1"
-msgstr[1] "crwdns34000:5%(nmissing)dcrwdnd34000:5%(fulfilled)crwdnd34000:5%%crwdne34000:5"
+msgstr[0] "crwdns34000:1%(nmissing)dcrwdnd34000:1%(fulfilled)crwdne34000:1"
+msgstr[1] "crwdns34000:5%(nmissing)dcrwdnd34000:5%(fulfilled)crwdne34000:5"
 
 #: adjfeedback/views.py:741
 #, python-format

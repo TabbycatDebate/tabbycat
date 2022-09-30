@@ -1,5 +1,7 @@
 from django.contrib import admin
 
+from utils.admin import ModelAdmin
+
 from .models import Round, Tournament
 
 
@@ -8,7 +10,7 @@ from .models import Round, Tournament
 # ==============================================================================
 
 @admin.register(Tournament)
-class TournamentAdmin(admin.ModelAdmin):
+class TournamentAdmin(ModelAdmin):
     list_display = ('name', 'slug', 'seq', 'short_name', 'current_round', 'active')
     ordering = ('seq', )
 
@@ -18,7 +20,7 @@ class TournamentAdmin(admin.ModelAdmin):
 # ==============================================================================
 
 @admin.register(Round)
-class RoundAdmin(admin.ModelAdmin):
+class RoundAdmin(ModelAdmin):
     list_display = ('name', 'tournament', 'seq', 'abbreviation', 'stage',
                     'draw_type', 'draw_status', 'feedback_weight', 'silent',
                     'motions_released', 'starts_at', 'completed')

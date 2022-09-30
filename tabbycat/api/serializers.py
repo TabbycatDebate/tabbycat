@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from collections.abc import Mapping
+from functools import partialmethod
 from urllib import parse
 
 from django.core.exceptions import ValidationError as DjangoValidationError
@@ -17,17 +18,112 @@ from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory, BreakingTeam
 from draw.models import Debate, DebateTeam
-from motions.models import Motion, RoundMotion
+from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
 from participants.emoji import pick_unused_emoji
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
+from participants.utils import populate_code_names
 from privateurls.utils import populate_url_keys
 from results.mixins import TabroomSubmissionFieldsMixin
 from results.models import BallotSubmission
 from results.result import DebateResult
 from tournaments.models import Round, Tournament
-from venues.models import Venue, VenueCategory
+from venues.models import Venue, VenueCategory, VenueConstraint
 
 from . import fields
+
+
+def _validate_field(self, field, value):
+    if value is None:
+        return None
+    qs = self.Meta.model.objects.filter(
+        tournament=self.context['tournament'], **{field: value}).exclude(id=getattr(self.instance, 'id', None))
+    if qs.exists():
+        raise serializers.ValidationError("Object with same value exists in the tournament")
+    return value
+
+
+class BaseSourceField(fields.TournamentHyperlinkedRelatedField):
+    """Taken from REST_Framework: rest_framework.relations.HyperlinkedRelatedField
+
+    This subclass adapts the framework in order to have a hyperlinked field which
+    is dynamic on the model of object given or taken; merging into one field, as
+    well as using an attribute from it, which would not be possible for fear of
+    nulls."""
+
+    view_name = ''  # View and model/queryset is dynamic on the object
+
+    def get_queryset(self):
+        return self.model.objects.all()
+
+    def get_attribute(self, obj):
+        return obj
+
+    def to_representation(self, value):
+        format = self.context.get('format', None)
+        if format and self.format and self.format != format:
+            format = self.format
+
+        # Return the hyperlink, or error if incorrectly configured.
+        url = self.get_url_options(value, format)
+
+        if url is None:
+            return None
+
+        return Hyperlink(url, value)
+
+    def to_internal_value(self, data):
+        self.source_attrs = [self.field_source_name]  # Must set
+
+        # Was the value already entered?
+        if isinstance(data, tuple(model for model, field in self.models.values())):
+            return data
+
+        try:
+            http_prefix = data.startswith(('http:', 'https:'))
+        except AttributeError:
+            self.fail('incorrect_type', data_type=type(data).__name__)
+
+        if http_prefix:
+            # If needed convert absolute URLs to relative path
+            data = parse.urlparse(data).path
+            prefix = get_script_prefix()
+            if data.startswith(prefix):
+                data = '/' + data[len(prefix):]
+
+        data = uri_to_iri(data)
+        try:
+            match = resolve(data)
+        except Resolver404:
+            self.fail('no_match')
+
+        self.model = {view: model for view, (model, field) in self.models.items()}[match.view_name]
+
+        try:
+            return self.get_object(match.view_name, match.args, match.kwargs)
+        except self.model.DoesNotExist:
+            self.fail('does_not_exist')
+
+
+class ParticipantSourceField(BaseSourceField):
+    field_source_name = 'participant_submitter'
+    models = {
+        'api-speaker-detail': (Speaker, 'participant_submitter'),
+        'api-adjudicator-detail': (Adjudicator, 'participant_submitter'),
+    }
+
+    def get_url_options(self, value, format):
+        for view_name, (model, field) in self.models.items():
+            obj = getattr(value.participant_submitter, model.__name__.lower(), None)
+            if obj is not None:
+                return self.get_url(obj, view_name, self.context['request'], format)
+
+
+class VenueConstraintSerializer(serializers.ModelSerializer):
+    category = fields.TournamentHyperlinkedRelatedField(view_name='api-venuecategory-detail', queryset=VenueCategory.objects.all())
+
+    class Meta:
+        model = VenueConstraint
+        fields = ('category', 'priority')
 
 
 class TournamentSerializer(serializers.ModelSerializer):
@@ -102,6 +198,13 @@ class RoundSerializer(serializers.ModelSerializer):
             model = RoundMotion
             exclude = ('round', 'motion')
 
+        def validate_seq(self, value):
+            qs = RoundMotion.objects.filter(
+                round=self.context['round'], seq=value).exclude(id=getattr(self.instance, 'id', None))
+            if qs.exists():
+                raise serializers.ValidationError("Object with same value exists in the round")
+            return value
+
         def create(self, validated_data):
             motion_data = validated_data.pop('motion')
             if '' in motion_data:
@@ -144,6 +247,8 @@ class RoundSerializer(serializers.ModelSerializer):
     class Meta:
         model = Round
         exclude = ('tournament',)
+
+    validate_seq = partialmethod(_validate_field, 'seq')
 
     def validate(self, data):
         bc = data.get('break_category', getattr(self.instance, 'break_category', None))
@@ -244,6 +349,7 @@ class RoundSerializer(serializers.ModelSerializer):
 
 class MotionSerializer(serializers.ModelSerializer):
     class RoundsSerializer(serializers.ModelSerializer):
+        # Should these be filtered if unreleased?
         round = fields.TournamentHyperlinkedRelatedField(view_name='api-round-detail',
             lookup_field='seq', lookup_url_kwarg='round_seq',
             queryset=Round.objects.all())
@@ -288,6 +394,9 @@ class BreakCategorySerializer(serializers.ModelSerializer):
         model = BreakCategory
         exclude = ('tournament', 'breaking_teams')
 
+    validate_slug = partialmethod(_validate_field, 'slug')
+    validate_seq = partialmethod(_validate_field, 'seq')
+
 
 class SpeakerCategorySerializer(serializers.ModelSerializer):
 
@@ -302,6 +411,9 @@ class SpeakerCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SpeakerCategory
         exclude = ('tournament',)
+
+    validate_slug = partialmethod(_validate_field, 'slug')
+    validate_seq = partialmethod(_validate_field, 'seq')
 
 
 class BaseEligibilitySerializer(serializers.ModelSerializer):
@@ -356,6 +468,13 @@ class BreakingTeamSerializer(serializers.ModelSerializer):
         model = BreakingTeam
         exclude = ('id', 'break_category')
 
+    def validate_team(self, value):
+        qs = BreakingTeam.objects.filter(
+            break_category=self.context['break_category'], team=value).exclude(id=getattr(self.instance, 'id', None))
+        if qs.exists():
+            raise serializers.ValidationError("Object with same value already exists")
+        return value
+
 
 class PartialBreakingTeamSerializer(BreakingTeamSerializer):
     class Meta:
@@ -393,6 +512,9 @@ class SpeakerSerializer(serializers.ModelSerializer):
             self.fields.pop('anonymous')
             self.fields.pop('url_key')
 
+            if kwargs['context']['tournament'].pref('participant_code_names') == 'everywhere':
+                self.fields.pop('name')
+
     class Meta:
         model = Speaker
         fields = '__all__'
@@ -406,6 +528,9 @@ class SpeakerSerializer(serializers.ModelSerializer):
 
         if url_key is None:
             populate_url_keys([speaker])
+
+        if validated_data.get('code_name') is None:
+            populate_code_names([speaker])
 
         return speaker
 
@@ -437,6 +562,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         view_name='api-adjudicator-detail',
         queryset=Adjudicator.objects.all(),
     )
+    venue_constraints = VenueConstraintSerializer(many=True, required=False)
     _links = LinksSerializer(source='*', read_only=True)
 
     def __init__(self, *args, **kwargs):
@@ -447,12 +573,15 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
             self.fields.pop('institution_conflicts')
             self.fields.pop('team_conflicts')
             self.fields.pop('adjudicator_conflicts')
+            self.fields.pop('venue_constraints')
 
             t = kwargs['context']['tournament']
             if not t.pref('show_adjudicator_institutions'):
                 self.fields.pop('institution')
             if not t.pref('public_breaking_adjs'):
                 self.fields.pop('breaking')
+            if t.pref('participant_code_names') == 'everywhere':
+                self.fields.pop('name')
 
             self.fields.pop('base_score')
             self.fields.pop('trainee')
@@ -468,19 +597,37 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         exclude = ('tournament',)
 
     def create(self, validated_data):
+        venue_constraints = validated_data.pop('venue_constraints', [])
         url_key = validated_data.pop('url_key', None)
         if url_key is not None and len(url_key) != 0:  # Let an empty string be null for the uniqueness constraint
             validated_data['url_key'] = url_key
 
         adj = super().create(validated_data)
 
+        if len(venue_constraints) > 0:
+            vc = VenueConstraintSerializer(many=True, context=self.context)
+            vc._validated_data = venue_constraints  # Data was already validated
+            vc.save(adjudicator=adj)
+
         if url_key is None:  # If explicitly null (and not just an empty string)
             populate_url_keys([adj])
+
+        if validated_data.get('code_name') is None:
+            populate_code_names([adj])
 
         if adj.institution is not None:
             adj.adjudicatorinstitutionconflict_set.get_or_create(institution=adj.institution)
 
         return adj
+
+    def update(self, instance, validated_data):
+        venue_constraints = validated_data.pop('venue_constraints', [])
+        if len(venue_constraints) > 0:
+            vc = VenueConstraintSerializer(many=True, context=self.context)
+            vc._validated_data = venue_constraints  # Data was already validated
+            vc.save(adjudicator=instance)
+
+        return super().update(instance, validated_data)
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -509,6 +656,8 @@ class TeamSerializer(serializers.ModelSerializer):
         queryset=Institution.objects.all(),
     )
 
+    venue_constraints = VenueConstraintSerializer(many=True, required=False)
+
     class Meta:
         model = Team
         exclude = ('tournament', 'type')
@@ -521,6 +670,7 @@ class TeamSerializer(serializers.ModelSerializer):
         # Remove private fields in the public endpoint if needed
         if not kwargs['context']['request'].user.is_staff:
             self.fields.pop('institution_conflicts')
+            self.fields.pop('venue_constraints')
 
             t = kwargs['context']['tournament']
             if t.pref('team_code_names') in ('admin-tooltips-code', 'admin-tooltips-real', 'everywhere'):
@@ -536,9 +686,20 @@ class TeamSerializer(serializers.ModelSerializer):
             if not t.pref('public_break_categories'):
                 self.fields.pop('break_categories')
 
+    validate_emoji = partialmethod(_validate_field, 'emoji')
+
     def validate(self, data):
-        if data.get('use_institution_prefix', False) and data.get('institution') is None:
+        if data.get('institution') is None and data.get('use_institution_prefix', False):
             raise serializers.ValidationError("Cannot include institution prefix without institution.")
+
+        uniqueness_qs = Team.objects.filter(
+            tournament=self.context['tournament'],
+            reference=data.get('reference'),
+            institution=data.get('institution'),
+        ).exclude(id=getattr(self.instance, 'id', None))
+        if uniqueness_qs.exists() and not self.partial:
+            raise serializers.ValidationError("Team with same reference and institution exists in the tournament")
+
         return super().validate(data)
 
     def create(self, validated_data):
@@ -553,6 +714,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
         speakers_data = validated_data.pop('speakers', [])
         break_categories = validated_data.pop('break_categories', [])
+        venue_constraints = validated_data.pop('venue_constraints', [])
 
         emoji, code_name = pick_unused_emoji()
         if 'emoji' not in validated_data or validated_data.get('emoji') is None:
@@ -576,17 +738,27 @@ class TeamSerializer(serializers.ModelSerializer):
             speakers._validated_data = speakers_data  # Data was already validated
             speakers.save(team=team)
 
+        if len(venue_constraints) > 0:
+            vc = VenueConstraintSerializer(many=True, context=self.context)
+            vc._validated_data = venue_constraints  # Data was already validated
+            vc.save(team=team)
+
         if team.institution is not None:
             team.teaminstitutionconflict_set.get_or_create(institution=team.institution)
 
         return team
 
     def update(self, instance, validated_data):
-        speakers_data = validated_data.pop('speakers')
+        speakers_data = validated_data.pop('speakers', [])
+        venue_constraints = validated_data.pop('venue_constraints', [])
         if len(speakers_data) > 0:
             speakers = SpeakerSerializer(many=True, context=self.context)
             speakers._validated_data = speakers_data  # Data was already validated
             speakers.save(team=instance)
+        if len(venue_constraints) > 0:
+            vc = VenueConstraintSerializer(many=True, context=self.context)
+            vc._validated_data = venue_constraints  # Data was already validated
+            vc.save(institution=instance)
 
         return super().update(instance, validated_data)
 
@@ -594,10 +766,38 @@ class TeamSerializer(serializers.ModelSerializer):
 class InstitutionSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='api-global-institution-detail')
     region = fields.CreatableSlugRelatedField(slug_field='name', queryset=Region.objects.all(), required=False)
+    venue_constraints = VenueConstraintSerializer(many=True, required=False)
 
     class Meta:
         model = Institution
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if not kwargs['context']['request'].user.is_staff:
+            self.fields.pop('venue_constraints')
+
+    def create(self, validated_data):
+        venue_constraints = validated_data.pop('venue_constraints', [])
+
+        institution = super().create(validated_data)
+
+        if len(venue_constraints) > 0:
+            vc = VenueConstraintSerializer(many=True, context=self.context)
+            vc._validated_data = venue_constraints  # Data was already validated
+            vc.save(institution=institution)
+
+        return institution
+
+    def update(self, instance, validated_data):
+        venue_constraints = validated_data.pop('venue_constraints', [])
+        if len(venue_constraints) > 0:
+            vc = VenueConstraintSerializer(many=True, context=self.context)
+            vc._validated_data = venue_constraints  # Data was already validated
+            vc.save(institution=instance)
+
+        return super().update(instance, validated_data)
 
 
 class PerTournamentInstitutionSerializer(InstitutionSerializer):
@@ -763,69 +963,11 @@ class FeedbackQuestionSerializer(serializers.ModelSerializer):
         model = AdjudicatorFeedbackQuestion
         exclude = ('tournament',)
 
+    validate_reference = partialmethod(_validate_field, 'reference')
+    validate_seq = partialmethod(_validate_field, 'seq')
+
 
 class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer):
-
-    class BaseSourceField(fields.TournamentHyperlinkedRelatedField):
-        """Taken from REST_Framework: rest_framework.relations.HyperlinkedRelatedField
-
-        This subclass adapts the framework in order to have a hyperlinked field which
-        is dynamic on the model of object given or taken; merging into one field, as
-        well as using an attribute from it, which would not be possible for fear of
-        nulls."""
-
-        view_name = ''  # View and model/queryset is dynamic on the object
-
-        def get_queryset(self):
-            return self.model.objects.all()
-
-        def get_attribute(self, obj):
-            return obj
-
-        def to_representation(self, value):
-            format = self.context.get('format', None)
-            if format and self.format and self.format != format:
-                format = self.format
-
-            # Return the hyperlink, or error if incorrectly configured.
-            url = self.get_url_options(value, format)
-
-            if url is None:
-                return None
-
-            return Hyperlink(url, value)
-
-        def to_internal_value(self, data):
-            self.source_attrs = [self.field_source_name]  # Must set
-
-            # Was the value already entered?
-            if isinstance(data, tuple(model for model, field in self.models.values())):
-                return data
-
-            try:
-                http_prefix = data.startswith(('http:', 'https:'))
-            except AttributeError:
-                self.fail('incorrect_type', data_type=type(data).__name__)
-
-            if http_prefix:
-                # If needed convert absolute URLs to relative path
-                data = parse.urlparse(data).path
-                prefix = get_script_prefix()
-                if data.startswith(prefix):
-                    data = '/' + data[len(prefix):]
-
-            data = uri_to_iri(data)
-            try:
-                match = resolve(data)
-            except Resolver404:
-                self.fail('no_match')
-
-            self.model = {view: model for view, (model, field) in self.models.items()}[match.view_name]
-
-            try:
-                return self.get_object(match.view_name, match.args, match.kwargs)
-            except self.model.DoesNotExist:
-                self.fail('does_not_exist')
 
     class SubmitterSourceField(BaseSourceField):
         field_source_name = 'source'
@@ -837,20 +979,9 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
         def get_url_options(self, value, format):
             for view_name, (model, field) in self.models.items():
                 if getattr(value, field) is not None:
-                    return self.get_url(getattr(getattr(value, field), model.__name__.lower()), view_name, self.context['request'], format)
-
-    class ParticipantSourceField(BaseSourceField):
-        field_source_name = 'participant_submitter'
-        models = {
-            'api-speaker-detail': (Speaker, 'participant_submitter'),
-            'api-adjudicator-detail': (Adjudicator, 'participant_submitter'),
-        }
-
-        def get_url_options(self, value, format):
-            for view_name, (model, field) in self.models.items():
-                obj = getattr(value.participant_submitter, model.__name__.lower(), None)
-                if obj is not None:
-                    return self.get_url(obj, view_name, self.context['request'], format)
+                    return self.get_url(
+                        getattr(getattr(value, field), model.__name__.lower()),
+                        view_name, self.context['request'], format)
 
     class DebateHyperlinkedRelatedField(fields.RoundHyperlinkedRelatedField):
         def lookup_kwargs(self):
@@ -1033,22 +1164,21 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                 required=False, allow_null=True,
             )
 
-            def validate(self, data):
+            def validate_adjudicator(self, value):
                 # Make sure adj is in debate
-                adj = data.get('adjudicator', None)
-                debate = self.context.get('debate')
-                if adj is not None and not debate.debateadjudicator_set.filter(adjudicator=adj).exists():
+                if not self.context.get('debate').debateadjudicator_set.filter(adjudicator=value).exists():
                     raise serializers.ValidationError('Adjudicator must be in debate')
+                return value
 
+            def validate_teams(self, value):
                 # Teams in their proper positions - this also checks having proper and consistent sides
-                teams = data.get('teams', {})
-                if len(teams) != debate.debateteam_set.count():
+                debate = self.context.get('debate')
+                if len(value) != debate.debateteam_set.count():
                     raise serializers.ValidationError('Incorrect number of teams')
-                for team in teams:
+                for team in value:
                     if debate.get_team(team['side']) != team['team']:
                         raise serializers.ValidationError('Inconsistent team')
-
-                return data
+                return value
 
             def save(self, **kwargs):
                 team_serializer = self.TeamResultSerializer(context=self.context)
@@ -1083,11 +1213,27 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
             result.save()
             return result
 
+    class VetoSerializer(serializers.ModelSerializer):
+        team = fields.TournamentHyperlinkedRelatedField(
+            source='debate_team.team', view_name='api-team-detail', queryset=Team.objects.all())
+        motion = fields.TournamentHyperlinkedRelatedField(view_name='api-motion-detail', queryset=Motion.objects.all())
+
+        class Meta:
+            model = DebateTeamMotionPreference
+            exclude = ('id', 'ballot_submission', 'preference', 'debate_team')
+
+        def create(self, validated_data):
+            try:
+                validated_data['debate_team'] = DebateTeam.objects.get(debate=self.context['debate'], team=validated_data.pop('team'))
+            except (DebateTeam.DoesNotExist, DebateTeam.MultipleObjectsReturned):
+                raise serializers.ValidationError('Team is not in debate')
+            return super().create(validated_data)
+
     result = ResultSerializer(source='result.get_result_info')
     motion = fields.TournamentHyperlinkedRelatedField(view_name='api-motion-detail', required=False, queryset=Motion.objects.all())
     url = fields.DebateHyperlinkedIdentityField(view_name='api-ballot-detail')
-    participant_submitter = fields.TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail',
-        queryset=Adjudicator.objects.all(), source='participant_submitter.adjudicator', allow_null=True)
+    participant_submitter = ParticipantSourceField(allow_null=True)
+    vetos = VetoSerializer(many=True, source='debateteammotionpreference_set', required=False, allow_null=True)
 
     class Meta:
         model = BallotSubmission
@@ -1101,6 +1247,8 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
 
     def create(self, validated_data):
         result_data = validated_data.pop('result').pop('get_result_info')
+        veto_data = validated_data.pop('vetos', None)
+
         validated_data.update(self.get_submitter_fields())
         if validated_data.get('confirmed', False):
             validated_data['confirmer'] = self.context['request'].user
@@ -1122,6 +1270,10 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         result._errors = []
         result.save(ballot=ballot)
 
+        vetos = self.VetoSerializer(context=self.context)
+        vetos._validated_data = veto_data
+        vetos.save(ballot_submission=ballot, preference=3)
+
         return ballot
 
     def update(self, instance, validated_data):
@@ -1131,6 +1283,5 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
 
         instance.confirmed = validated_data['confirmed']
         instance.discarded = validated_data['discarded']
-        instance.ignored = validated_data['ignored']
         instance.save()
         return instance

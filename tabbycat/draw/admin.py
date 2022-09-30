@@ -3,7 +3,7 @@ from django.db.models import Prefetch
 from django.utils.translation import gettext_lazy, ngettext
 
 from adjallocation.models import DebateAdjudicator
-from utils.admin import TabbycatModelAdminFieldsMixin
+from utils.admin import ModelAdmin, TabbycatModelAdminFieldsMixin
 
 from .models import Debate, DebateTeam
 
@@ -13,7 +13,7 @@ from .models import Debate, DebateTeam
 # ==============================================================================
 
 @admin.register(DebateTeam)
-class DebateTeamAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
+class DebateTeamAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_display = ('team', 'side', 'debate', 'get_tournament', 'get_round')
     search_fields = ('team__long_name', 'team__short_name', 'team__institution__name', 'team__institution__code', 'flags')
     raw_id_fields = ('debate', 'team')
@@ -43,7 +43,7 @@ class DebateAdjudicatorInline(admin.TabularInline):
 
 
 @admin.register(Debate)
-class DebateAdmin(admin.ModelAdmin):
+class DebateAdmin(ModelAdmin):
     list_display = ('id', 'round', 'bracket', 'matchup', 'result_status', 'sides_confirmed')
     list_filter = ('round__tournament', 'round')
     list_editable = ('result_status', 'sides_confirmed')
@@ -64,6 +64,8 @@ class DebateAdmin(admin.ModelAdmin):
         def _make_set_result_status(value, verbose_name): # noqa: N805
             def _set_result_status(modeladmin, request, queryset):
                 count = queryset.update(result_status=value)
+                for obj in queryset:
+                    modeladmin.log_change(request, obj, [{"changed": {"fields": ["result_status"]}}])
                 message = ngettext("%(count)d debate had its status set to %(status)s.",
                     "%(count)d debates had their statuses set to %(status)s.", count) % {
                         'count': count, 'status': verbose_name}
@@ -80,6 +82,8 @@ class DebateAdmin(admin.ModelAdmin):
 
     def mark_as_sides_confirmed(self, request, queryset):
         updated = queryset.update(sides_confirmed=True)
+        for obj in queryset:
+            self.log_change(request, obj, [{"changed": {"fields": ["sides_confirmed"]}}])
         message = ngettext(
             "%(count)d debate was marked as having its sides confirmed.",
             "%(count)d debates were marked as having their sides confirmed.",
@@ -89,6 +93,8 @@ class DebateAdmin(admin.ModelAdmin):
 
     def mark_as_sides_not_confirmed(self, request, queryset):
         updated = queryset.update(sides_confirmed=False)
+        for obj in queryset:
+            self.log_change(request, obj, [{"changed": {"fields": ["sides_confirmed"]}}])
         message = ngettext(
             "%(count)d debate was marked as having its sides not confirmed.",
             "%(count)d debates were marked as having their sides not confirmed.",
