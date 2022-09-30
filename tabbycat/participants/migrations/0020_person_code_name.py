@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='person',
             name='code_name',
-            field=models.CharField(blank=True, help_text='Name used to obscure real name on public-facing pages', max_length=25, null=True, verbose_name='code name'),
+            field=models.CharField(blank=True, default='', help_text='Name used to obscure real name on public-facing pages', max_length=25, verbose_name='code name'),
         ),
     ]

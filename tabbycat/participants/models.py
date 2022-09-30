@@ -101,7 +101,7 @@ class Person(models.Model):
     anonymous = models.BooleanField(default=False,
         verbose_name=_("anonymous"),
         help_text=_("Anonymous persons will have their name and team redacted on public tab releases"))
-    code_name = models.CharField(max_length=25, blank=True, null=True,
+    code_name = models.CharField(max_length=25, blank=True,
         verbose_name=_("code name"),
         help_text=_("Name used to obscure real name on public-facing pages"))
 
