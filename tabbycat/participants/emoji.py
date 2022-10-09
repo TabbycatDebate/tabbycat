@@ -402,8 +402,7 @@ EMOJI_LIST = (
     ("🙉",	True , "Hear No Evil"),
     ("🙊",	True , "Speak No Evil"),
     ("🐒",	False, "Monkey"),                           # potentially offensive
-    ("🐶",	True , "
-     "),
+    ("🐶",	True , "Dog"),
     ("🐕",	False, "Dog"),                              # dull
     ("🐩",	False, "Poodle"),                           # dull
     ("🐺",	True , "Wolf"),
