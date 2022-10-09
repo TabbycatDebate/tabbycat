@@ -1596,7 +1596,7 @@ EMOJI_LIST = (
     ("🦪",	True , "Oyster"),
     ("🧃",	True , "Beverage Box"),
     ("🧉",	False, "Mate"),                             # too similar to another
-    ("🧊",	True , "Really Cold Cuboidal Figure"),
+    ("🧊",	True , "Cold Cuboid"),
     ("🛕",	False, "Hindu Temple"),                     # potentially offensive
     ("🦽",	False, "Manual Wheelchair"),                # potentially offensive
     ("🦼",	False, "Motorized Wheelchair"),             # potentially offensive
