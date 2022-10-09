@@ -170,7 +170,6 @@ Release checklist
 8. Shift remaining issues from the Github Milestone
 9. Create and finish the release branch as per git-flow
 10. Ensure the tag is correct (``vX.Y.Z``) and published to GitHub
-11. Back-merge ``master`` to the ``kitten`` branch
-12. Back-merge ``develop`` to the in-progress feature branches
-13. Issue a formal release with change notes on GitHub
-14. Post change notes on the Facebook page/group
+11. Back-merge ``develop`` to the in-progress feature branches
+12. Issue a formal release with change notes on GitHub
+13. Post change notes on the Facebook page/group
