@@ -1610,7 +1610,7 @@ EMOJI_LIST = (
     ("🥻",	True , "Sari"),
     ("🩱",	False, "One-Piece Swimsuit"),               # potentially offensive
     ("🩲",	False, "Briefs"),                           # potentially offensive
-    ("🩳",	True , "Shorts"),"
+    ("🩳",	True , "Shorts"),
     ("🩰",	True , "Ballet Shoes"),
     ("🪕",	True , "Banjo"),
     ("🪔",	False, "Diya Lamp"),                        # dull
