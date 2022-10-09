@@ -402,7 +402,8 @@ EMOJI_LIST = (
     ("🙉",	True , "Hear No Evil"),
     ("🙊",	True , "Speak No Evil"),
     ("🐒",	False, "Monkey"),                           # potentially offensive
-    ("🐶",	True , "Dog"),
+    ("🐶",	True , "
+     "),
     ("🐕",	False, "Dog"),                              # dull
     ("🐩",	False, "Poodle"),                           # dull
     ("🐺",	True , "Wolf"),
@@ -1583,7 +1584,7 @@ EMOJI_LIST = (
     ("🧍",	False, "Person Standing"),                  # too similar to another
     ("🧎",	False, "Person Kneeling"),                  # dull
     ("🦧",	False, "Orangutan"),                        # potentially offensive
-    ("🦮",	True , "Guide Dog"),"
+    ("🦮",	True , "Guide Dog"),
     ("🦥",	True , "Lazy Tree Dog"),
     ("🦦",	True , "Water Dog"),
     ("🦨",	True , "Stinky dog"),
