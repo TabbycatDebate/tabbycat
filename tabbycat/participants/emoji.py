@@ -1355,7 +1355,7 @@ EMOJI_LIST = (
     ("🦃",	True , "Turkey"),
     ("🦀",	True , "Crab"),
     ("🦂",	True , "Scorpion"),
-    ("🧀",	True , "Mouse Trap"),
+    ("🧀",	True , "Cheese"),
     ("🌭",	False, "Hot Dog"),                          # dull
     ("🌮",	True , "Taco"),
     ("🌯",	True , "Burrito"),
@@ -1570,6 +1570,126 @@ EMOJI_LIST = (
     ("🧼",	True , "Soap"),
     ("🧽",	True , "Fun sponge"),
     ("🧯",	True , "Anti-fire Can"),
+
+    # Unicode Version 12.0
+    ("🥱",	True , "Yawning Face"),
+    ("🤎",	False, "Brown Heart"),                      # too similar to another
+    ("🤍",	False, "White Heart"),                      # too similar to another
+    ("🤏",	True , "Pinching Hand"),
+    ("🦾",	False, "Mechanical Arm"),                   # potentially offensive
+    ("🦿",	False, "Mechanical Leg"),                   # potentially offensive
+    ("🦻",	False, "Ear with Hearing Aid"),             # potentially offensive
+    ("🧏",	False, "Deaf Person"),                      # potentially offensive
+    ("🧍",	False, "Person Standing"),                  # too similar to another
+    ("🧎",	False, "Person Kneeling"),                  # dull
+    ("🦧",	False, "Orangutan"),                        # potentially offensive
+    ("🦮",	True , "Guide Dog"),
+    ("🦥",	True , "Lazy Tree Dog"),
+    ("🦦",	True , "Water Dog"),
+    ("🦨",	True , "Stinky dog"),
+    ("🦩",	True , "Pink Dog"),
+    ("🧄",	False, "Garlic"),                           # dull
+    ("🧅",	False, "Onion"),                            # dull
+    ("🧇",	True , "Waffle"),
+    ("🧆",	True , "Falafel"),
+    ("🧈",	True , "Butter"),
+    ("🦪",	True , "Oyster"),
+    ("🧃",	True , "Beverage Box"),
+    ("🧉",	False, "Mate"),                             # too similar to another
+    ("🧊",	True , "Cold Cuboid"),
+    ("🛕",	False, "Hindu Temple"),                     # potentially offensive
+    ("🦽",	False, "Manual Wheelchair"),                # potentially offensive
+    ("🦼",	False, "Motorized Wheelchair"),             # potentially offensive
+    ("🛺",	True , "Auto Rickshaw"),
+    ("🪂",	True , "Parachute"),
+    ("🪐",	True , "Ringed Planet"),
+    ("🤿",	True , "Diving Mask"),
+    ("🪀",	False, "Yo-Yo"),                            # too similar to another
+    ("🪁",	True , "Kite"),
+    ("🦺",	True , "Safety Vest"),
+    ("🥻",	True , "Sari"),
+    ("🩱",	False, "One-Piece Swimsuit"),               # potentially offensive
+    ("🩲",	False, "Briefs"),                           # potentially offensive
+    ("🩳",	True , "Shorts"),
+    ("🩰",	True , "Ballet Shoes"),
+    ("🪕",	True , "Banjo"),
+    ("🪔",	False, "Diya Lamp"),                        # dull
+    ("🪓",	True , "Axe"),
+    ("🦯",	False, "White Cane"),                       # potentially offensive
+    ("🩸",	False, "Drop of Blood"),                    # potentially offensive
+    ("🩹",	False, "Adhesive Bandage"),                 # dull
+    ("🩺",	True , "Stethoscope"),
+    ("🪑",	True , "Chair"),
+    ("🪒",	True , "Razor"),
+    ("🟠",	False, "Orange Circle"),                    # dull
+    ("🟡",	False, "Yellow Circle"),                    # dull
+    ("🟢",	False, "Green Circle"),                     # dull
+    ("🟣",	False, "Purple Circle"),                    # dull
+    ("🟤",	False, "Brown Circle"),                     # dull
+    ("🟥",	False, "Red Square"),                       # dull
+    ("🟧",	False, "Orange Square"),                    # dull
+    ("🟨",	False, "Yellow Square"),                    # dull
+    ("🟩",	False, "Green Square"),                     # dull
+    ("🟦",	False, "Blue Square"),                      # dull
+    ("🟪",	False, "Purple Square"),                    # dull
+    ("🟫",	False, "Brown Square"),                     # dull
+
+    # Unicode Version 13.0
+    ("🥲",	False, "Smiling Face with Tear"),           # too similar to another
+    ("🥸",	True , "Disguised Face"),
+    ("🤌",	False, "Pinched Fingers"),                  # potentially offensive
+    ("🫀",	True , "Anatomical Heart"),
+    ("🫁",	True , "Lungs"),
+    ("🥷",	True , "Ninja"),
+    ("🫂",	True , "People Hugging"),
+    ("🦬",	True , "Bison"),
+    ("🦣",	True , "Mammoth"),
+    ("🦫",	True , "Beaver"),
+    ("🦤",	True , "Dodo"),
+    ("🪶",	True , "Feather"),
+    ("🦭",	True , "Seal"),
+    ("🪲",	False, "Beetle"),                           # potentially offensive
+    ("🪳",	False, "Cockroach"),                        # potentially offensive
+    ("🪰",	False, "Fly"),                              # potentially offensive
+    ("🪱",	False, "Worm"),                             # potentially offensive
+    ("🪴",	True , "Potted Plant"),
+    ("🫐",	True , "Blueberries"),
+    ("🫒",	True , "Olive"),
+    ("🫑",	True , "Bell Pepper"),
+    ("🫓",	True , "Flatbread"),
+    ("🫔",	True , "Tamale"),
+    ("🫕",	False, "Fondue"),                           # too similar to another
+    ("🫖",	True , "Teapot"),
+    ("🧋",	True , "Bubble Tea"),
+    ("🪨",	True , "Rock"),
+    ("🪵",	True , "Wood"),
+    ("🛖",	False, "Hut"),                              # potentially offensive
+    ("🛻",	True , "Pickup Truck"),
+    ("🛼",	True , "Roller Skate"),
+    ("🪄",	True , "Magic Wand"),
+    ("🪅",	True , "Piñata"),
+    ("🪆",	True , "Nesting Dolls"),
+    ("🪡",	False, "Sewing Needle"),                    # dull
+    ("🪢",	True , "Knot"),
+    ("🩴",	True , "Thong Sandal"),
+    ("🪖",	False, "Military Helmet"),                  # potentially offensive
+    ("🪗",	True , "Accordion"),
+    ("🪘",	True , "Long Drum"),
+    ("🪙",	True , "Coin"),
+    ("🪃",	True , "Boomerang"),
+    ("🪚",	True , "Carpentry Saw"),
+    ("🪛",	True , "Screwdriver"),
+    ("🪝",	True , "Hook"),
+    ("🪜",	True , "Ladder"),
+    ("🛗",	False, "Elevator"),                         # dull
+    ("🪞",	False, "Mirror"),                           # dull
+    ("🪟",	False, "Window"),                           # dull
+    ("🪠",	True , "Plunger"),
+    ("🪤",	True , "Mouse Trap"),
+    ("🪣",	True , "Bucket"),
+    ("🪥",	True , "Toothbrush"),
+    ("🪦",	False, "Headstone"),                        # potentially offensive
+    ("🪧",	False, "Placard"),                          # dull
 )
 
 # The field choices are the permissible values
