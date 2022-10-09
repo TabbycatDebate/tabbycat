@@ -1633,6 +1633,63 @@ EMOJI_LIST = (
     ("🟦",	False, "Blue Square"),                      # dull
     ("🟪",	False, "Purple Square"),                    # dull
     ("🟫",	False, "Brown Square"),                     # dull
+    
+    # Unicode Version 13.0
+    ("🥲",	False, "Smiling Face with Tear"),           # too similar to another
+    ("🥸",	True , "Disguised Face"),
+    ("🤌",	False, "Pinched Fingers"),                  # potentially offensive
+    ("🫀",	True , "Anatomical Heart"),
+    ("🫁",	True , "Lungs"),
+    ("🥷",	True , "Ninja"),
+    ("🫂",	True , "People Hugging"),
+    ("🦬",	True , "Bison"),
+    ("🦣",	True , "Mammoth"),
+    ("🦫",	True , "Beaver"),
+    ("🦤",	True , "Dodo"),
+    ("🪶",	True , "Feather"),
+    ("🦭",	True , "Seal"),
+    ("🪲",	False, "Beetle"),                           # potentially offensive
+    ("🪳",	False, "Cockroach"),                        # potentially offensive
+    ("🪰",	False, "Fly"),                              # potentially offensive
+    ("🪱",	False, "Worm"),                             # potentially offensive
+    ("🪴",	True , "Potted Plant"),
+    ("🫐",	True , "Blueberries"),
+    ("🫒",	True , "Olive"),
+    ("🫑",	True , "Bell Pepper"),
+    ("🫓",	True , "Flatbread"),
+    ("🫔",	True , "Tamale"),
+    ("🫕",	False, "Fondue"),                           # too similar to another
+    ("🫖",	True , "Teapot"),
+    ("🧋",	True , "Bubble Tea"),
+    ("🪨",	True , "Rock"),
+    ("🪵",	True , "Wood"),
+    ("🛖",	False, "Hut"),                              # potentially offensive
+    ("🛻",	True , "Pickup Truck"),
+    ("🛼",	True , "Roller Skate"),
+    ("🪄",	True , "Magic Wand"),
+    ("🪅",	True , "Piñata"),
+    ("🪆",	True , "Nesting Dolls"),
+    ("🪡",	False, "Sewing Needle"),                    # dull
+    ("🪢",	True , "Knot"),
+    ("🩴",	True , "Thong Sandal"),
+    ("🪖",	False, "Military Helmet"),                  # potentially offensive
+    ("🪗",	True , "Accordion"),
+    ("🪘",	True , "Long Drum"),
+    ("🪙",	True , "Coin"),
+    ("🪃",	True , "Boomerang"),
+    ("🪚",	True , "Carpentry Saw"),
+    ("🪛",	True , "Screwdriver"),
+    ("🪝",	True , "Hook"),
+    ("🪜",	True , "Ladder"),
+    ("🛗",	False, "Elevator"),                         # dull
+    ("🪞",	False, "Mirror"),                           # dull
+    ("🪟",	False, "Window"),                           # dull
+    ("🪠",	True , "Plunger"),
+    ("🪤",	True , "Mouse Trap"),
+    ("🪣",	True , "Bucket"),
+    ("🪥",	True , "Toothbrush"),
+    ("🪦",	False, "Headstone"),                        # potentially offensive
+    ("🪧",	False, "Placard"),                          # dull
 )
 
 # The field choices are the permissible values
