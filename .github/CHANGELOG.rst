@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+2.8.0 (Q)
+---------
+*Release date: TBD*
+
+
 2.7.0 (Pixie-bob)
 ---------
 *Release date: 1 October 2022*
