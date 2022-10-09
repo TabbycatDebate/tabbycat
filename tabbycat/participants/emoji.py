@@ -1683,7 +1683,7 @@ EMOJI_LIST = (
     ("🪜",	True , "Ladder"),
     ("🛗",	False, "Elevator"),                         # dull
     ("🪞",	False, "Mirror"),                           # dull
-    ("🪟",	False, "A"),                           # dull
+    ("🪟",	False, "Window"),                           # dull
     ("🪠",	True , "Plunger"),
     ("🪤",	True , "Mouse Trap"),
     ("🪣",	True , "Bucket"),
