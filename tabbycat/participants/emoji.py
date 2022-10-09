@@ -1355,7 +1355,7 @@ EMOJI_LIST = (
     ("🦃",	True , "Turkey"),
     ("🦀",	True , "Crab"),
     ("🦂",	True , "Scorpion"),
-    ("🧀",	True , "Mouse Trap"),
+    ("🧀",	True , "Cheese"),
     ("🌭",	False, "Hot Dog"),                          # dull
     ("🌮",	True , "Taco"),
     ("🌯",	True , "Burrito"),
@@ -1683,7 +1683,7 @@ EMOJI_LIST = (
     ("🪜",	True , "Ladder"),
     ("🛗",	False, "Elevator"),                         # dull
     ("🪞",	False, "Mirror"),                           # dull
-    ("🪟",	False, "Window"),                           # dull
+    ("🪟",	False, "A"),                           # dull
     ("🪠",	True , "Plunger"),
     ("🪤",	True , "Mouse Trap"),
     ("🪣",	True , "Bucket"),
