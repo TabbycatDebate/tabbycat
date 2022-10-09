@@ -1570,7 +1570,7 @@ EMOJI_LIST = (
     ("🧼",	True , "Soap"),
     ("🧽",	True , "Fun sponge"),
     ("🧯",	True , "Anti-fire Can"),
-    
+
     # Unicode Version 12.0
     ("🥱",	True , "Yawning Face"),
     ("🤎",	False, "Brown Heart"),                      # too similar to another
@@ -1633,7 +1633,7 @@ EMOJI_LIST = (
     ("🟦",	False, "Blue Square"),                      # dull
     ("🟪",	False, "Purple Square"),                    # dull
     ("🟫",	False, "Brown Square"),                     # dull
-    
+
     # Unicode Version 13.0
     ("🥲",	False, "Smiling Face with Tear"),           # too similar to another
     ("🥸",	True , "Disguised Face"),
