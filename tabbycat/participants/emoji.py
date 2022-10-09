@@ -1570,6 +1570,69 @@ EMOJI_LIST = (
     ("🧼",	True , "Soap"),
     ("🧽",	True , "Fun sponge"),
     ("🧯",	True , "Anti-fire Can"),
+    
+    # Unicode Version 12.0
+    ("🥱",	True , "Yawning Face"),
+    ("🤎",	False, "Brown Heart"),                      # too similar to another
+    ("🤍",	False, "White Heart"),                      # too similar to another
+    ("🤏",	True , "Pinching Hand"),
+    ("🦾",	False, "Mechanical Arm"),                   # potentially offensive
+    ("🦿",	False, "Mechanical Leg"),                   # potentially offensive
+    ("🦻",	False, "Ear with Hearing Aid"),             # potentially offensive
+    ("🧏",	False, "Deaf Person"),                      # potentially offensive
+    ("🧍",	False, "Person Standing"),                  # too similar to another
+    ("🧎",	False, "Person Kneeling"),                  # dull
+    ("🦧",	False, "Orangutan"),                        # potentially offensive
+    ("🦮",	True , "Guide Dog"),"
+    ("🦥",	True , "Lazy Tree Dog"),
+    ("🦦",	True , "Water Dog"),
+    ("🦨",	True , "Stinky dog"),
+    ("🦩",	True , "Pink Dog"),
+    ("🧄",	False, "Garlic"),                           # dull
+    ("🧅",	False, "Onion"),                            # dull
+    ("🧇",	True , "Waffle"),
+    ("🧆",	True , "Falafel"),
+    ("🧈",	True , "Butter"),
+    ("🦪",	True , "Oyster"),
+    ("🧃",	True , "Beverage Box"),
+    ("🧉",	False, "Mate"),                             # too similar to another
+    ("🧊",	True , "Really Cold Cuboidal Figure"),
+    ("🛕",	False, "Hindu Temple"),                     # potentially offensive
+    ("🦽",	False, "Manual Wheelchair"),                # potentially offensive
+    ("🦼",	False, "Motorized Wheelchair"),             # potentially offensive
+    ("🛺",	True , "Auto Rickshaw"),
+    ("🪂",	True , "Parachute"),
+    ("🪐",	True , "Ringed Planet"),
+    ("🤿",	True , "Diving Mask"),
+    ("🪀",	False, "Yo-Yo"),                            # too similar to another
+    ("🪁",	True , "Kite"),
+    ("🦺",	True , "Safety Vest"),
+    ("🥻",	True , "Sari"),
+    ("🩱",	False, "One-Piece Swimsuit"),               # potentially offensive
+    ("🩲",	False, "Briefs"),                           # potentially offensive
+    ("🩳",	True , "Shorts"),"
+    ("🩰",	True , "Ballet Shoes"),
+    ("🪕",	True , "Banjo"),
+    ("🪔",	False, "Diya Lamp"),                        # dull
+    ("🪓",	True , "Axe"),
+    ("🦯",	False, "White Cane"),                       # potentially offensive
+    ("🩸",	False, "Drop of Blood"),                    # potentially offensive
+    ("🩹",	False, "Adhesive Bandage"),                 # dull
+    ("🩺",	True , "Stethoscope"),
+    ("🪑",	True , "Chair"),
+    ("🪒",	True , "Razor"),
+    ("🟠",	False, "Orange Circle"),                    # dull
+    ("🟡",	False, "Yellow Circle"),                    # dull
+    ("🟢",	False, "Green Circle"),                     # dull
+    ("🟣",	False, "Purple Circle"),                    # dull
+    ("🟤",	False, "Brown Circle"),                     # dull
+    ("🟥",	False, "Red Square"),                       # dull
+    ("🟧",	False, "Orange Square"),                    # dull
+    ("🟨",	False, "Yellow Square"),                    # dull
+    ("🟩",	False, "Green Square"),                     # dull
+    ("🟦",	False, "Blue Square"),                      # dull
+    ("🟪",	False, "Purple Square"),                    # dull
+    ("🟫",	False, "Brown Square"),                     # dull
 )
 
 # The field choices are the permissible values
