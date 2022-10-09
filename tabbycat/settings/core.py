@@ -40,14 +40,8 @@ LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
 ]
 
-# Languages that should be available in the switcher
+# Add custom languages not provided by Django
 EXTRA_LANG_INFO = {
-    'ms': {
-        'bidi': False,
-        'code': 'ms',
-        'name': 'Malay',
-        'name_local': 'Bahasa Melayu', #unicode codepoints here
-    },
     'tzl': {
         # Use code for Talossan; can't use proper reserved code...
         # Talossan is a constructed language, without native speakers,
@@ -58,7 +52,7 @@ EXTRA_LANG_INFO = {
     },
 }
 
-# Add custom languages not provided by Django
+# Languages that should be available in the switcher
 import django.conf.locale
 LANG_INFO = dict(django.conf.locale.LANG_INFO, **EXTRA_LANG_INFO)
 django.conf.locale.LANG_INFO = LANG_INFO
