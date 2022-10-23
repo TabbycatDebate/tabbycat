@@ -66,6 +66,19 @@ def populate_confirmed_ballots(debates, motions=False, results=False):
         populate_results(confirmed_ballots)
 
 
+def populate_debate_has_ballots(debates):
+    """Sets an attribute `_has_ballot` on each Debate, a boolean if there is a
+    non-discarded ballot for the debate.
+
+    This can be used for efficiency, since it retrieves all of the
+    information in bulk in a single SQL query. Operates in-place.
+    """
+    ballots = BallotSubmission.objects.filter(debate__in=debates, discarded=False)
+    ballotsubs_by_debate_id = {ballotsub.debate_id for ballotsub in ballots}
+    for debate in debates:
+        debate._has_ballot = debate.id in ballotsubs_by_debate_id
+
+
 def populate_checkins(debates, tournament):
     get_checkins(debates, tournament, None)
 

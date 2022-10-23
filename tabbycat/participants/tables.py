@@ -56,7 +56,7 @@ class AdjudicatorDebateTable:
             Prefetch('debate__debateadjudicator_set',
                 queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
             'debate__debateteam_set__team__speaker_set',
-        )
+        ).order_by('debate__round__seq')
         if not table.admin and not view.tournament.pref('all_results_released') and not table.private_url:
             debateadjs = debateadjs.filter(
                 debate__round__draw_status=Round.STATUS_RELEASED,
