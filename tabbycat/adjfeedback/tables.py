@@ -63,11 +63,13 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
                 'modal': adj.id,
                 'class': 'edit-base-score',
                 'tooltip': _("Click to edit base score"),
+                'sort': adj.base_score,
             } for adj in adjudicators]
         else:
             test_data = [{
                 'text': self.get_formatted_adj_score(adj.base_score),
                 'tooltip': _("Assigned base score"),
+                'sort': adj.base_score,
             } for adj in adjudicators]
 
         self.add_column(test_header, test_data)
