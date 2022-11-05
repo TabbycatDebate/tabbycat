@@ -10,6 +10,7 @@ from django.db.models import Count, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
+from django.utils.html import escape
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 from django.views.generic import FormView, TemplateView
@@ -803,7 +804,7 @@ class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, RoundMixin, Vue
         table = TabbycatTableBuilder(view=self, sort_key='adj')
 
         data = [{
-            'text': _("Add result from %(adjudicator)s") % {'adjudicator': da.adjudicator.get_public_name(self.tournament)},
+            'text': _("Add result from %(adjudicator)s") % {'adjudicator': escape(da.adjudicator.get_public_name(self.tournament))},
             'link': reverse_round('old-results-public-ballotset-new-pk', self.round,
                     kwargs={'adjudicator_pk': da.adjudicator_id}),
         } for da in debateadjs]

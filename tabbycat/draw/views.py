@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.db.models import OuterRef, Subquery
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.utils.functional import cached_property
-from django.utils.html import format_html
+from django.utils.html import escape, format_html
 from django.utils.safestring import mark_safe
 from django.utils.timezone import get_current_timezone_name
 from django.utils.translation import gettext as _
@@ -806,7 +806,7 @@ class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
         table = TabbycatTableBuilder(view=self)
         table.add_team_columns(teams)
 
-        headers = [round.abbreviation for round in rounds]
+        headers = [escape(round.abbreviation) for round in rounds]
         data = [[tsas.get((team.id, round.seq), "—") for round in rounds] for team in teams]
         table.add_columns(headers, data)
 

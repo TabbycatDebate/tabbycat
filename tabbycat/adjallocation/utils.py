@@ -1,6 +1,7 @@
 import math
 from itertools import combinations, product
 
+from django.utils.html import escape
 from django.utils.translation import gettext as _
 
 from participants.models import Adjudicator, Team
@@ -27,16 +28,16 @@ def adjudicator_conflicts_display(debates):
                 conflict_messages[debate].append(("danger", _(
                     "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> "
                     "(personal)",
-                ) % {'adjudicator': adj.name, 'team': team.short_name}))
+                ) % {'adjudicator': escape(adj.name), 'team': escape(team.short_name)}))
 
             for institution in conflicts.conflicting_institutions_adj_team(adj, team):
                 conflict_messages[debate].append(("danger", _(
                     "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> "
                     "via institution <strong>%(institution)s</strong>",
                 ) % {
-                    'adjudicator': adj.name,
-                    'team': team.short_name,
-                    'institution': institution.code,
+                    'adjudicator': escape(adj.name),
+                    'team': escape(team.short_name),
+                    'institution': escape(institution.code),
                 }))
 
         for adj1, adj2 in combinations(debate.adjudicators.all(), 2):
@@ -45,16 +46,16 @@ def adjudicator_conflicts_display(debates):
                 conflict_messages[debate].append(("danger", _(
                     "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> "
                     "(personal)",
-                ) % {'adjudicator1': adj1.name, 'adjudicator2': adj2.name}))
+                ) % {'adjudicator1': escape(adj1.name), 'adjudicator2': escape(adj2.name)}))
 
             for institution in conflicts.conflicting_institutions_adj_adj(adj1, adj2):
                 conflict_messages[debate].append(("warning", _(
                     "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> "
                     "via institution <strong>%(institution)s</strong>",
                 ) % {
-                    'adjudicator1': adj1.name,
-                    'adjudicator2': adj2.name,
-                    'institution': institution.code,
+                    'adjudicator1': escape(adj1.name),
+                    'adjudicator2': escape(adj2.name),
+                    'institution': escape(institution.code),
                 }))
 
     return conflict_messages
