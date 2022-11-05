@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
+from django.utils.html import escape
 from django.utils.translation import gettext as _
 
 from venues.models import VenueConstraint
@@ -21,7 +22,7 @@ def venue_conflicts_display(debates):
             return
         for constraint in constraints[key]:
             if constraint.category in venue.venuecategory_set.all():
-                message_args['category'] = constraint.category.name
+                message_args['category'] = escape(constraint.category.name)
                 conflict_messages[debate].append(("success", success_message % message_args))
                 return
         else:
@@ -37,18 +38,18 @@ def venue_conflicts_display(debates):
             _add_constraint_message(debate, team, venue,
                 _("Room constraint of %(name)s met (%(category)s)"),
                 _("Room does not meet any constraint of %(name)s"),
-                {'name': team.short_name})
+                {'name': escape(team.short_name)})
 
             if team.institution is not None:
                 _add_constraint_message(debate, team.institution, venue,
                     _("Room constraint of %(team)s met (%(category)s, via institution %(institution)s)"),
                     _("Room does not meet any constraint of institution %(institution)s (%(team)s)"),
-                    {'institution': team.institution.code, 'team': team.short_name})
+                    {'institution': escape(team.institution.code), 'team': escape(team.short_name)})
 
         for adjudicator in debate.adjudicators.all():
             _add_constraint_message(debate, adjudicator, venue,
                 _("Room constraint of %(name)s met (%(category)s)"),
                 _("Room does not meet any constraint of %(name)s"),
-                {'name': adjudicator.name})
+                {'name': escape(adjudicator.name)})
 
     return conflict_messages

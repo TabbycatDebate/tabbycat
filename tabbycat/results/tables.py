@@ -1,3 +1,4 @@
+from django.utils.html import escape
 from django.utils.translation import gettext as _
 
 from utils.misc import reverse_tournament
@@ -63,7 +64,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         return {
             'component': 'ballots-cell',
             'ballots': [b.serialize(tournament) for b in ballotsubmissions],
-            'current_user': user.username,
+            'current_user': escape(user.username),
             'acting_role': view_role,
             'new_ballot': reverse_tournament(new_link, self.tournament,
                                              kwargs={'debate_id': debate.id}),

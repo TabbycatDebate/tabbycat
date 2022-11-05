@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.db.models import Count, Q
 from django.forms import HiddenInput
 from django.forms.models import BaseModelFormSet
+from django.utils.html import escape
 from django.utils.translation import gettext as _, ngettext
 from django.views.generic import FormView, TemplateView
 
@@ -61,7 +62,7 @@ class BaseBreakingTeamsView(SingleObjectFromTournamentMixin, VueTableTemplateVie
 
     def get_table(self):
         self.standings = self.get_standings()
-        table = TabbycatTableBuilder(view=self, title=self.object.name, sort_key='Rk')
+        table = TabbycatTableBuilder(view=self, title=escape(self.object.name), sort_key='Rk')
         table.add_ranking_columns(self.standings)
         table.add_column({'title': _("Break"), 'key': 'break'},
                          [tsi.break_rank for tsi in self.standings])
@@ -291,7 +292,7 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
 
         break_categories = t.breakcategory_set.order_by('seq')
         for bc in break_categories:
-            table.add_column({'title': bc.name, 'key': bc.slug}, [{
+            table.add_column({'title': escape(bc.name), 'key': escape(bc.slug)}, [{
                 'component': 'check-cell',
                 'checked': True if bc in team.break_categories.all() else False,
                 'sort': True if bc in team.break_categories.all() else False,
@@ -301,13 +302,13 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
 
         # Provide list of members within speaker categories for convenient entry
         for sc in speaker_categories:
-            table.add_column({'title': _('%s Speakers') % sc.name, 'key': sc.name + "_speakers"}, [{
+            table.add_column({'title': _('%s Speakers') % escape(sc.name), 'key': escape(sc.name) + "_speakers"}, [{
                 'text': getattr(team, 'nspeakers_%s' % sc.slug, 'N/A'),
                 'tooltip': ngettext(
                     'Team has %(nspeakers)s speaker with the %(category)s speaker category assigned',
                     'Team has %(nspeakers)s speakers with the %(category)s speaker category assigned',
                     getattr(team, 'nspeakers_%s' % sc.slug, 0),
-                ) % {'nspeakers': getattr(team, 'nspeakers_%s' % sc.slug, 'N/A'), 'category': sc.name},
+                ) % {'nspeakers': getattr(team, 'nspeakers_%s' % sc.slug, 'N/A'), 'category': escape(sc.name)},
             } for team in teams])
 
         return table

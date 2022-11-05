@@ -5,6 +5,7 @@ from django.contrib.humanize.templatetags.humanize import ordinal
 from django.db.models import Exists, OuterRef, Prefetch
 from django.template.loader import render_to_string
 from django.utils.encoding import force_str
+from django.utils.html import escape
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
@@ -216,28 +217,28 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def _team_short_name(self, team):
         """Returns the appropriate short name for the team, accounting for team code name preference."""
         if self._use_team_code_names:
-            return team.code_name
+            return escape(team.code_name)
         else:
-            return team.short_name
+            return escape(team.short_name)
 
     def _team_long_name(self, team):
         """Returns the appropriate long name for the team, accounting for team code name preference."""
         if self._use_team_code_names:
-            return team.code_name
+            return escape(team.code_name)
         else:
-            return team.long_name
+            return escape(team.long_name)
 
     def _adjudicator_record_link(self, adj, suffix=""):
         adj_short_name = adj.get_public_name(self.tournament).split(" ")[0]
         if self.admin:
             return {
-                'text': _("View %(a)s's %(d)s Record") % {'a': adj_short_name, 'd': suffix},
+                'text': _("View %(a)s's %(d)s Record") % {'a': escape(adj_short_name), 'd': suffix},
                 'link': reverse_tournament('participants-adjudicator-record',
                     self.tournament, kwargs={'pk': adj.pk}),
             }
         elif self.tournament.pref('public_record'):
             return {
-                'text': _("View %(a)s's %(d)s Record") % {'a': adj_short_name, 'd': suffix},
+                'text': _("View %(a)s's %(d)s Record") % {'a': escape(adj_short_name), 'd': suffix},
                 'link': reverse_tournament('participants-public-adjudicator-record',
                     self.tournament, kwargs={'pk': adj.pk}),
             }
@@ -261,7 +262,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def _team_cell(self, team, show_emoji=False, subtext=None, highlight=False):
         cell = {
             'text': self._team_short_name(team),
-            'emoji': team.emoji if show_emoji and self.tournament.pref('show_emoji') else None,
+            'emoji': escape(team.emoji) if show_emoji and self.tournament.pref('show_emoji') else None,
             'sort': self._team_short_name(team),
             'class': 'team-name no-wrap' if len(self._team_short_name(team)) < 18 else 'team-name',
             'popover': {'title': self._team_long_name(team), 'content': []},
@@ -274,15 +275,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         if (self.tournament.pref('team_code_names') == 'all-tooltips' or  # code names in tooltips
                 (self.tournament.pref('team_code_names') == 'admin-tooltips-code' and self.admin)):
-            cell['popover']['content'].append({'text': _("Code name: <strong>%(name)s</strong>") % {'name': team.code_name}})
+            cell['popover']['content'].append({'text': _("Code name: <strong>%(name)s</strong>") % {'name': escape(team.code_name)}})
         if self.tournament.pref('team_code_names') == 'admin-tooltips-real' and self.admin:
-            cell['popover']['content'].append({'text': _("Real name: <strong>%(name)s</strong>") % {'name': team.short_name}})
+            cell['popover']['content'].append({'text': _("Real name: <strong>%(name)s</strong>") % {'name': escape(team.short_name)}})
 
         if self._show_speakers_in_draw:
             if self.admin:
-                speakers = ["<span class='admin-redacted'>%s</span>" % s.name if s.anonymous else s.name for s in team.speakers]
+                speakers = ["<span class='admin-redacted'>%s</span>" % escape(s.name) if s.anonymous else escape(s.name) for s in team.speakers]
             else:
-                speakers = [self.REDACTED_CELL['text'] if s.anonymous else s.get_public_name(self.tournament) for s in team.speakers]
+                speakers = [self.REDACTED_CELL['text'] if s.anonymous else escape(s.get_public_name(self.tournament)) for s in team.speakers]
 
             cell['popover']['content'].append({'text': ", ".join(speakers)})
         if self._show_record_links:
@@ -366,7 +367,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             return {'text': self.BLANK_TEXT}
 
         opp = ts.debate_team.opponent.team
-        opp_vshort = '<i class="emoji">' + opp.emoji + '</i>' if opp.emoji else "…"
+        opp_vshort = '<i class="emoji">' + escape(opp.emoji) + '</i>' if opp.emoji else "…"
 
         cell = {
             'text': _(" vs %(opposition)s") % {'opposition': opp_vshort if compress else self._team_short_name(opp)},
@@ -390,7 +391,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         if self._show_speakers_in_draw:
             cell['popover']['content'].append({
-                'text': ", ".join([s.get_public_name(self.tournament) for s in opp.speakers]),
+                'text': ", ".join([escape(s.get_public_name(self.tournament)) for s in opp.speakers]),
             })
 
         if self._show_record_links:
@@ -466,7 +467,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'key': "tournament", 'icon': 'tag', 'tooltip': _("Tournament"),
         }
         data = [{
-            'sort': t.seq, 'text': t.short_name, 'tooltip': t.short_name,
+            'sort': t.seq, 'text': escape(t.short_name), 'tooltip': escape(t.short_name),
         } for t in tournaments]
         self.add_column(header, data)
 
@@ -475,7 +476,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'key': "round", 'icon': 'clock', 'tooltip': _("Round"),
         }
         data = [{
-            'sort': round.seq, 'text': round.abbreviation, 'tooltip': round.name,
+            'sort': round.seq, 'text': escape(round.abbreviation), 'tooltip': escape(round.name),
         } for round in rounds]
         self.add_column(header, data)
 
@@ -487,13 +488,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if adj.anonymous and not self.admin:
                 adj_data.append(self.REDACTED_CELL)
             else:
-                cell = {'text': adj.get_public_name(self.tournament)}
+                cell = {'text': escape(adj.get_public_name(self.tournament))}
                 if adj.anonymous:
                     cell['class'] = 'admin-redacted'
                 if self._show_record_links:
-                    cell['popover'] = {'title': adj.get_public_name(self.tournament), 'content': [self._adjudicator_record_link(adj)]}
+                    cell['popover'] = {'title': escape(adj.get_public_name(self.tournament)), 'content': [self._adjudicator_record_link(adj)]}
                 if subtext == 'institution' and adj.institution is not None:
-                    cell['subtext'] = adj.institution.code
+                    cell['subtext'] = escape(adj.institution.code)
                 adj_data.append(cell)
         self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'}, adj_data)
 
@@ -502,7 +503,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'key': "institution",
                 'icon': 'home',
                 'tooltip': _("Institution"),
-            }, [adj.institution.code if adj.institution else self.BLANK_TEXT for adj in adjudicators])
+            }, [escape(adj.institution.code) if adj.institution else self.BLANK_TEXT for adj in adjudicators])
 
         if show_metadata:
             adjcore_header = {
@@ -534,7 +535,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         def construct_text(adjs_data):
             adjs_list = []
             for a in adjs_data:
-                adj_str = '<span class="d-inline">' + a['adj'].get_public_name(self.tournament)
+                adj_str = '<span class="d-inline">' + escape(a['adj'].get_public_name(self.tournament))
                 symbol = self.ADJ_SYMBOLS.get(a['position'])
                 if symbol:
                     adj_str += "<i class='adj-symbol'>%s</i>" % symbol
@@ -555,10 +556,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     descriptors.append(self.ADJ_POSITION_NAMES[a['position']])
                 if (for_admin or self.tournament.pref('show_adjudicator_institutions')) and \
                         a['adj'].institution is not None:
-                    descriptors.append(a['adj'].institution.code)
+                    descriptors.append(escape(a['adj'].institution.code))
                 if a.get('split', False):
                     descriptors.append("<span class='text-danger'>" + _("in minority") + "</span>")
-                text = a['adj'].get_public_name(self.tournament)
+                text = escape(a['adj'].get_public_name(self.tournament))
 
                 descriptors = " (%s)" % (", ".join(descriptors)) if descriptors else ""
 
@@ -613,8 +614,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def add_motion_column(self, motions):
         motion_data = [{
-            'text': motion.reference if motion.reference else _('??'),
-            'popover': {'content' : [{'text': motion.text}]},
+            'text': escape(motion.reference) if motion.reference else _('??'),
+            'popover': {'content' : [{'text': escape(motion.text)}]},
         } if motion else self.BLANK_TEXT for motion in motions]
         self.add_column({'key': "motion", 'title': _("Motion")}, motion_data)
 
@@ -637,7 +638,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if show_break_categories and self.tournament.breakcategory_set.filter(is_general=False).exists():
             self.add_column(
                 {'key': 'categories', 'icon': 'user-check', 'tooltip': _("Categories")},
-                [", ".join(bc.name for bc in getattr(team, 'break_categories_nongeneral', []))
+                [", ".join(escape(bc.name) for bc in getattr(team, 'break_categories_nongeneral', []))
                     for team in teams],
             )
 
@@ -647,7 +648,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'icon': 'home',
                 'tooltip': _("Institution"),
             }, [
-                team.institution.code
+                escape(team.institution.code)
                 if not getattr(team, 'anonymise', False) and team.institution is not None
                 else self.BLANK_TEXT for team in teams
             ])
@@ -660,7 +661,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 speaker_data.append(self.REDACTED_CELL)
             else:
                 cell = {
-                    'text': speaker.get_public_name(self.tournament),
+                    'text': escape(speaker.get_public_name(self.tournament)),
                     'class': 'no-wrap' if len(speaker.get_public_name(self.tournament)) < 20 else '',
                 }
                 if anonymous:
@@ -680,9 +681,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     category_strs = []
                     for cat in speaker.categories.all():
                         if cat.public:
-                            category_strs.append(cat.name)
+                            category_strs.append(escape(cat.name))
                         elif self.admin:
-                            category_strs.append("<em>" + cat.name + "</em>")
+                            category_strs.append("<em>" + escape(cat.name) + "</em>")
                     categories_data.append(", ".join(category_strs))
 
                 self.add_column({
@@ -698,7 +699,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if not venue:
                 return {'text': ''}
 
-            cell = {'text': venue.display_name, 'class': 'venue-name', 'link': venue.url}
+            cell = {'text': escape(venue.display_name), 'class': 'venue-name', 'link': escape(venue.url)}
 
             categories = venue.venuecategory_set.all()
             if not for_admin:
@@ -708,7 +709,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if len(categories) == 0:
                 return cell
 
-            descriptions = [category.description.strip() for category in categories]
+            descriptions = [escape(category.description.strip()) for category in categories]
             descriptions = ["<strong>" + description + "</strong>"
                     for description in descriptions if len(description) > 0]
 
@@ -721,7 +722,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                         'last_predicate': descriptions[-1]}
 
                 cell['popover'] = {
-                    'title': venue.display_name,
+                    'title': escape(venue.display_name),
                     'content': [{'text': categories_sentence}]}
 
             return cell
@@ -757,8 +758,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 if len(set(institutions)) != len(institutions):
                     conflicts.append(("warning", _("Teams are from the same institution")))
 
-            conflicts.extend(adjudicator_conflicts[debate])
-            conflicts.extend(venue_conflicts[debate])
+            conflicts.extend(adjudicator_conflicts[debate])  # Escaped in adjallocation.utils
+            conflicts.extend(venue_conflicts[debate])  # Escaped in venues.utils
             conflicts_by_debate.append(conflicts)
 
         conflicts_header = {'title': _("Conflicts/Flags"), 'key': 'conflags'}
@@ -890,11 +891,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column(header, sides_data)
 
     def add_team_results_columns(self, teams, rounds):
-        """ Takes an iterable of Teams, assumes their round_results match rounds"""
+        """Takes an iterable of Teams, assumes their round_results match rounds"""
         for round_seq, round in enumerate(rounds):
             results = [self._result_cell(
                 t.round_results[round_seq]) for t in teams]
-            header = {'key': 'r%d' % round_seq, 'title': round.abbreviation}
+            # Should the key be the round abbreviation (like for standings_results_columns)?
+            header = {'key': 'r%d' % round_seq, 'title': escape(round.abbreviation)}
             self.add_column(header, results)
 
     def add_debate_results_columns(self, debates, iron=False):
@@ -961,7 +963,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def add_standings_results_columns(self, standings, rounds, show_ballots):
 
         for round_seq, round in enumerate(rounds):
-            header = {'title': round.abbreviation, 'key': round.abbreviation}
+            header = {'title': escape(round.abbreviation), 'key': escape(round.abbreviation)}
             results = [self._result_cell(
                 s.round_results[round_seq],
                 compress=True,

@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Prefetch, Q
 from django.forms import HiddenInput
 from django.http import JsonResponse
+from django.utils.html import escape
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.base import View
 
@@ -99,11 +100,11 @@ class BaseInstitutionsListView(TournamentMixin, VueTableTemplateView):
         ).distinct()
 
         table = TabbycatTableBuilder(view=self, sort_key='code')
-        table.add_column({'key': 'code', 'title': _("Code")}, [i.code for i in institutions])
-        table.add_column({'key': 'name', 'title': _("Full name")}, [i.name for i in institutions])
+        table.add_column({'key': 'code', 'title': _("Code")}, [escape(i.code) for i in institutions])
+        table.add_column({'key': 'name', 'title': _("Full name")}, [escape(i.name) for i in institutions])
         if any(i.region is not None for i in institutions):
             table.add_column({'key': 'region', 'title': _("Region")},
-                [i.region.name if i.region else "—" for i in institutions])
+                [escape(i.region.name) if i.region else "—" for i in institutions])
         table.add_column({'key': 'nteams', 'title': _("Teams"), 'tooltip': _("Number of teams")},
             [i.nteams for i in institutions])
         table.add_column({'key': 'nadjs', 'title': _("Adjs"),
@@ -141,7 +142,7 @@ class BaseCodeNamesListView(TournamentMixin, VueTableTemplateView):
         table = TabbycatTableBuilder(view=self, sort_key='code_name')
         table.add_column(
             {'key': 'code_name', 'title': _("Code name")},
-            [{'text': t.code_name or "—"} for t in teams],
+            [{'text': escape(t.code_name) or "—"} for t in teams],
         )
         table.add_team_columns(teams)
         return table
@@ -380,7 +381,7 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
         speaker_categories = self.tournament.speakercategory_set.all()
 
         for sc in speaker_categories:
-            table.add_column({'key': sc.name, 'title': sc.name}, [{
+            table.add_column({'key': escape(sc.name), 'title': escape(sc.name)}, [{
                 'component': 'check-cell',
                 'checked': True if sc in speaker.categories.all() else False,
                 'id': speaker.id,
