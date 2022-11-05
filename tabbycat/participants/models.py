@@ -280,11 +280,9 @@ class Team(models.Model):
         try:
             return self._points
         except AttributeError:
-            from results.models import TeamScore
             from standings.teams import PointsMetricAnnotator
-            self._points = TeamScore.objects.filter(
-                ballot_submission__confirmed=True,
-                debate_team__team=self,
+            self._points = self.__class__.objects.filter(
+                id=self.id,
             ).aggregate(p=Coalesce(PointsMetricAnnotator().get_annotation(), Value(0)))['p']
             return self._points
 

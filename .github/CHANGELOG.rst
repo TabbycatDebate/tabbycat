@@ -9,6 +9,19 @@ Change Log
 - Added new emoji from Unicode 12 and 13. Thank you to Daan Koning for the pull request! (`#2143 <https://github.com/TabbycatDebate/tabbycat/issues/2143>`_)
 
 
+2.7.1
+-----
+*Release date: TBD*
+
+- Escaped values in tables to avoid malicious data
+- Fixed crash on loading email dialog for team draws
+- Fixed team standing emails not being sent
+- Fixed sorting by venue name or priority in the allocator
+- Fixed adjudicator private URLs not loading
+- Adjudicator feedback tables now properly sortable by number of feedback
+- Checkboxes no longer overlap with table headers
+
+
 2.7.0 (Pixie-bob)
 ---------
 *Release date: 1 October 2022*

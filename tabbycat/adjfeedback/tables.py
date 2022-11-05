@@ -129,7 +129,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
                 len(adj.feedback_data) - 1,
             ) % {'count': len(adj.feedback_data) - 1}, # -1 to account for base score
             'class': 'view-feedback',
-            'sort': adj.debates,
+            'sort': len(adj.feedback_data) - 1,
             'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.pk}),
         } for adj in adjudicators]
         self.add_column(link_head, link_cell)

@@ -87,7 +87,10 @@ export default {
     },
   },
   computed: {
-    filtedUnallocatedItems: function () {
+    isVenue: function () {
+      return this.unallocatedItems[0] && 'priority' in this.unallocatedItems[0]
+    },
+    filteredUnallocatedItems: function () {
       return this.showUnavailable ? this.filteredAll : this.filteredAvailable
     },
     filteredAll: function () {
@@ -101,20 +104,30 @@ export default {
       return this[activeKey[0].property]
     },
     sortedUnallocatedItemsByOrder: function () {
-      return this.filtedUnallocatedItems.slice(0).sort((itemA, itemB) => {
-        return itemA.vue_last_modified - itemB.vue_last_modified
-      }).reverse()
+      return this.filteredUnallocatedItems.slice(0).sort((itemA, itemB) => {
+        return itemB.vue_last_modified - itemA.vue_last_modified
+      })
     },
     sortedUnallocatedItemsByName: function () {
       // Note slice makes a copy so we are not mutating
-      return this.filtedUnallocatedItems.slice(0).sort((itemA, itemB) => {
+      if (this.isVenue) {
+        return this.filteredUnallocatedItems.slice(0).sort((itemA, itemB) => {
+          return itemA.display_name.localeCompare(itemB.display_name)
+        })
+      }
+      return this.filteredUnallocatedItems.slice(0).sort((itemA, itemB) => {
         return itemA.name.localeCompare(itemB.name)
       })
     },
     sortedUnallocatedItemsByScore: function () {
-      return this.filtedUnallocatedItems.slice(0).sort((itemA, itemB) => {
-        return itemA.score - itemB.score
-      }).reverse()
+      if (this.isVenue) {
+        return this.filteredUnallocatedItems.slice(0).sort((itemA, itemB) => {
+          return itemB.priority - itemA.priority
+        })
+      }
+      return this.filteredUnallocatedItems.slice(0).sort((itemA, itemB) => {
+        return itemB.score - itemA.score
+      })
     },
   },
   methods: {

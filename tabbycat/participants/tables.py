@@ -1,4 +1,5 @@
 from django.db.models import Prefetch
+from django.utils.html import escape
 from django.utils.translation import gettext as _
 
 from adjallocation.models import DebateAdjudicator
@@ -34,7 +35,7 @@ class TeamResultTableBuilder(TabbycatTableBuilder):
     def add_speaker_scores_column(self, teamscores):
         data = [{
             'text': ", ".join([metricformat(ss.score) for ss in ts.debate_team.speaker_scores]) or "—",
-            'tooltip': "<br>".join(["%s for %s" % (metricformat(ss.score), ss.speaker) for ss in ts.debate_team.speaker_scores]),
+            'tooltip': "<br>".join(["%s for %s" % (metricformat(ss.score), escape(ss.speaker)) for ss in ts.debate_team.speaker_scores]),
         } for ts in teamscores]
         header = {'key': 'speaks', 'tooltip': _("Speaker scores<br>(in speaking order)"), 'text': _("Speaks")}
         self.add_column(header, data)
