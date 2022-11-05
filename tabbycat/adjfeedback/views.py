@@ -152,6 +152,7 @@ class FeedbackByTargetView(AdministratorMixin, TournamentMixin, VueTableTemplate
             count = adj.feedback_count
             feedback_data.append({
                 'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
+                'sort': count,
                 'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.id}),
             })
         table.add_column({'key': 'feedbacks', 'title': _("Feedbacks")}, feedback_data)
@@ -176,6 +177,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
             count = team.feedback_count
             team_feedback_data.append({
                 'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
+                'sort': count,
                 'link': reverse_tournament('adjfeedback-view-from-team',
                                            tournament,
                                            kwargs={'pk': team.id}),
@@ -191,6 +193,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
             count = adj.feedback_count
             adj_feedback_data.append({
                 'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
+                'sort': count,
                 'link': reverse_tournament('adjfeedback-view-from-adjudicator',
                                            tournament,
                                            kwargs={'pk': adj.id}),
