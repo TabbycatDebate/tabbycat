@@ -4,7 +4,7 @@ Change Log
 
 2.7.1
 -----
-*Release date: TBD*
+*Release date: 6 November 2022*
 
 - Escaped values in tables to avoid malicious data
 - Fixed crash on loading email dialog for team draws
