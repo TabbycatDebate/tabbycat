@@ -944,7 +944,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         if all_sides_confirmed:
             results_header = [{
-                'title': get_side_name(self.tournament, side, 'abbr').capitalize(),
+                'title': get_side_name(self.tournament, side, 'abbr'),
                 'key': get_side_name(self.tournament, side, 'abbr'),
             } for side in self.tournament.sides]
         else:
