@@ -92,6 +92,15 @@ urlpatterns = [
                                 ])),
                             ])),
                         ])),
+
+                        path('/preformed-panels', include([
+                            path('',
+                                views.PreformedPanelViewSet.as_view({'get': 'list', 'post': 'create', 'delete': 'delete_all', 'put': 'add_blank'}),
+                                name='api-preformedpanel-list'),
+                            path('/<int:debate_pk>',
+                                views.PreformedPanelViewSet.as_view(detail_methods),
+                                name='api-preformedpanel-detail'),
+                        ])),
                     ])),
                 ])),
 

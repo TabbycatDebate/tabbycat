@@ -9,7 +9,7 @@ info:
   license:
     name: Tabbycat
     url: 'https://tabbycat.readthedocs.io/en/stable/about/licence.html'
-  version: 1.2.0
+  version: 1.3.0
 security:
   - Token: []
 paths:
@@ -2679,6 +2679,152 @@ paths:
         required: true
         schema:
           type: string
+  '/v1/tournaments/{tournament_slug}/rounds/{round_seq}/preformed-panels':
+    get:
+      operationId: v1_tournaments_rounds_preformedpanel_list
+      description: List preformed panels in the round
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PreformedPanel'
+      tags:
+        - v1
+        - preformed
+    post:
+      operationId: v1_tournaments_rounds_preformedpanel_create
+      description: Create a preformed panel for the round
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreformedPanel'
+      tags:
+        - v1
+        - preformed
+      requestBody:
+        $ref: '#/components/requestBodies/PreformedPanel'
+    delete:
+      operationId : v1_tournaments_rounds_preformedpanel_delete_all
+      description: Delete all preformed panels in the round
+      responses:
+        '204':
+          description: 'All preformed panels have been deleted'
+      tags:
+        - v1
+        - preformed
+    put:
+      operationId: v1_tournaments_rounds_preformedpanel_put
+      description: Add blank preformed panels for the round
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreformedPanel'
+      tags:
+        - v1
+        - preformed
+    parameters:
+      - name: round_seq
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: tournament_slug
+        in: path
+        required: true
+        schema:
+          type: string
+  '/v1/tournaments/{tournament_slug}/rounds/{round_seq}/preformed-panels/{debate_pk}':
+    get:
+      operationId: v1_tournaments_rounds_preformedpanel_read
+      description: Retrieve a preformed panel of the round
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreformedPanel'
+      tags:
+        - v1
+        - preformed
+    post:
+      operationId: v1_tournaments_rounds_preformedpanel_update
+      description: Modify a preformed panel
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreformedPanel'
+      tags:
+        - v1
+        - preformed
+      requestBody:
+        $ref: '#/components/requestBodies/PreformedPanel'
+    delete:
+      operationId: v1_tournaments_rounds_preformedpanel_delete
+      description: Delete a preformed panel
+      responses:
+        '204':
+          description: ''
+      tags:
+        - v1
+        - preformed
+    patch:
+      operationId: v1_tournaments_rounds_preformedpanel_partial_update
+      description: Update a preformed panel
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreformedPanel'
+      tags:
+        - v1
+        - preformed
+      requestBody:
+        $ref: '#/components/requestBodies/PreformedPanel'
+    parameters:
+      - name: debate_pk
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: round_seq
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: tournament_slug
+        in: path
+        required: true
+        schema:
+          type: string
 servers:
   - url: 'https://{server}/api'
     variables:
@@ -2799,6 +2945,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/DebateResult'
+      required: true
+    PreformedPanel:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PreformedPanel'
       required: true
     PartialBreakingTeam:
       content:
@@ -4444,3 +4596,64 @@ components:
             - t
             - w
             - null
+    PreformedPanel:
+      required:
+        - teams
+      type: object
+      properties:
+        url:
+          title: Url
+          readOnly: true
+          type: string
+          format: uri
+        id:
+          title: ID
+          readOnly: true
+          type: integer
+        adjudicators:
+          title: Adjudicators
+          type: object
+          nullable: true
+          required:
+            - chair
+            - panellists
+            - trainees
+          properties:
+            chair:
+              title: Chair
+              type: string
+              format: uri
+              nullable: true
+            panellists:
+              title: Panellists
+              type: array
+              items:
+                type: string
+                format: uri
+            trainees:
+              title: Trainees
+              type: array
+              items:
+                type: string
+                format: uri
+        bracket_min:
+          title: Minimum Bracket
+          description: >-
+            Estimate of the lowest bracket for which this panel might be
+          type: number
+        bracket_max:
+          title: Maximum Bracket
+          description: >-
+            Estimate of the highest bracket for which this panel might be
+          type: number
+        room_rank:
+          title: room rank
+          description: Sequential number of panel, not used in any algorithms
+          type: integer
+        importance:
+          title: importance
+          type: integer
+        liveness:
+          title: Liveness
+          description: Number of categories this room is expected to be live for
+          type: integer

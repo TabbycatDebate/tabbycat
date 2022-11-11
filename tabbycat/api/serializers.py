@@ -14,7 +14,7 @@ from rest_framework.fields import get_error_detail, SkipField
 from rest_framework.relations import Hyperlink
 from rest_framework.settings import api_settings
 
-from adjallocation.models import DebateAdjudicator
+from adjallocation.models import DebateAdjudicator, PreformedPanel
 from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory, BreakingTeam
 from draw.models import Debate, DebateTeam
@@ -881,6 +881,21 @@ class SpeakerStandingsSerializer(BaseStandingsSerializer):
     speaker = fields.AnonymisingHyperlinkedTournamentRelatedField(view_name='api-speaker-detail', anonymous_source='anonymous')
 
 
+class DebateAdjudicatorSerializer(serializers.Serializer):
+    adjudicators = Adjudicator.objects.all()
+    chair = fields.TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail', queryset=adjudicators)
+    panellists = fields.TournamentHyperlinkedRelatedField(many=True, view_name='api-adjudicator-detail', queryset=adjudicators)
+    trainees = fields.TournamentHyperlinkedRelatedField(many=True, view_name='api-adjudicator-detail', queryset=adjudicators)
+
+    def save(self, **kwargs):
+        aa = kwargs['debate'].adjudicators
+        aa.chair = self.validated_data.get('chair')
+        aa.panellists = self.validated_data.get('panellists')
+        aa.trainees = self.validated_data.get('trainees')
+        aa.save()
+        return aa
+
+
 class RoundPairingSerializer(serializers.ModelSerializer):
     class DebateTeamSerializer(serializers.ModelSerializer):
         team = fields.TournamentHyperlinkedRelatedField(view_name='api-team-detail', queryset=Team.objects.all())
@@ -888,20 +903,6 @@ class RoundPairingSerializer(serializers.ModelSerializer):
         class Meta:
             model = DebateTeam
             fields = ('team', 'side')
-
-    class DebateAdjudicatorSerializer(serializers.Serializer):
-        adjudicators = Adjudicator.objects.all()
-        chair = fields.TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail', queryset=adjudicators)
-        panellists = fields.TournamentHyperlinkedRelatedField(many=True, view_name='api-adjudicator-detail', queryset=adjudicators)
-        trainees = fields.TournamentHyperlinkedRelatedField(many=True, view_name='api-adjudicator-detail', queryset=adjudicators)
-
-        def save(self, **kwargs):
-            aa = kwargs['debate'].adjudicators
-            aa.chair = self.validated_data.get('chair')
-            aa.panellists = self.validated_data.get('panellists')
-            aa.trainees = self.validated_data.get('trainees')
-            aa.save()
-            return aa
 
     url = fields.RoundHyperlinkedIdentityField(view_name='api-pairing-detail', lookup_url_kwarg='debate_pk')
     venue = fields.TournamentHyperlinkedRelatedField(view_name='api-venue-detail', queryset=Venue.objects.all(),
@@ -1285,3 +1286,33 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         instance.discarded = validated_data['discarded']
         instance.save()
         return instance
+
+
+class PreformedPanelSerializer(serializers.ModelSerializer):
+    url = fields.RoundHyperlinkedIdentityField(view_name='api-preformedpanel-detail', lookup_url_kwarg='debate_pk')
+    adjudicators = DebateAdjudicatorSerializer(required=False, allow_null=True)
+
+    class Meta:
+        model = PreformedPanel
+        exclude = ('round',)
+
+    def create(self, validated_data):
+        adjs_data = validated_data.pop('adjudicators', None)
+
+        validated_data['round'] = self.context['round']
+        debate = super().create(validated_data)
+
+        if adjs_data is not None:
+            adjudicators = self.DebateAdjudicatorSerializer()
+            adjudicators._validated_data = adjs_data
+            adjudicators.save(debate=debate)
+
+        return debate
+
+    def update(self, instance, validated_data):
+        if validated_data.get('adjudicators', None) is not None:
+            adjudicators = self.DebateAdjudicatorSerializer()
+            adjudicators._validated_data = validated_data.pop('adjudicators')
+            adjudicators.save(debate=instance)
+
+        return super().update(instance, validated_data)
