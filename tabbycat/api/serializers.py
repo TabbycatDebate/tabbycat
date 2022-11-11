@@ -1270,9 +1270,10 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         result._errors = []
         result.save(ballot=ballot)
 
-        vetos = self.VetoSerializer(context=self.context)
-        vetos._validated_data = veto_data
-        vetos.save(ballot_submission=ballot, preference=3)
+        if veto_data:
+            vetos = self.VetoSerializer(context=self.context)
+            vetos._validated_data = veto_data
+            vetos.save(ballot_submission=ballot, preference=3)
 
         return ballot
 
