@@ -80,14 +80,14 @@
     window.vueData = {
       // Strings to Fill In
       roundInfo: {
-        tournamentName: '{{ tournament.short_name }}',
-        returnLocation: '{{ pref.score_return_location }}',
+        tournamentName: '{{ tournament.short_name|force_escape }}',
+        returnLocation: '{{ pref.score_return_location|force_escape }}',
         votingBallots: {% if round.ballots_per_debate == 'per-adj' %}true{% else %}false{% endif %},
         // Formatting
         showTabRoomRow: true,
         showEmoji: {% if pref.show_emoji %}true{% else %}false{% endif %},
         // From Django
-        round: '{{ round.name }}',
+        round: '{{ round.name|force_escape }}',
         hasReplies: {% if pref.reply_scores_enabled %}true{% else %}false{% endif %},
         isBP: {% if pref.teams_in_debate == 'two' %}false{% else %}true{% endif %},
         speakersCount: {{ pref.substantive_speakers }},

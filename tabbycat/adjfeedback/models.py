@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
+from django.utils.html import escape
 from django.utils.translation import gettext, gettext_lazy as _
 from django_better_admin_arrayfield.models.fields import ArrayField
 
@@ -211,7 +212,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
 
     def serialize(self):
         question = {
-            'text': self.text.replace("'", ""), # Escaping ' characters
+            'text': escape(self.text),
             'seq': self.seq,
             'type': self.answer_type,
             'required': self.answer_type,
@@ -219,8 +220,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
             'from_adj': self.from_adj,
         }
         if self.choices:
-            choices = [c.replace("'", "") for c in self.choices]
-            question['choice_options'] = choices
+            question['choice_options'] = [escape(c) for c in self.choices]
         elif self.min_value is not None and self.max_value is not None:
             question['choice_options'] = self.choices_for_number_scale
         return question
