@@ -2,6 +2,16 @@
 Change Log
 ==========
 
+2.7.2
+-----
+*Release date: TBD*
+
+- Fixed crashes when creating ballots through the API (BACKEND-AM2)
+- Don't re-capitalize side names in results tables
+- Fixed printable ballots not appearing when in French
+- Prevented malicious strings from breaking printable pages
+
+
 2.7.1
 -----
 *Release date: 6 November 2022*
