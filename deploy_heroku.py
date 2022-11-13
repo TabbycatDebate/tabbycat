@@ -38,12 +38,12 @@ parser.add_argument(
     help="Git branch to push (defaults to current branch)")
 
 parser.add_argument(
-    "--pg-plan", "--postgresql-plan", type=str, default="hobby-dev",
-    help="Heroku Postgres plan (default hobby-dev)")
+    "--pg-plan", "--postgresql-plan", type=str, default="mini",
+    help="Heroku Postgres plan (default mini)")
 
 parser.add_argument(
-    "--web-dynos", type=str, default="1:free",
-    help="Web dyno specification, passed to heroku ps:scale web=[], e.g. 1:free, 1:hobby, 2:Standard-1X")
+    "--web-dynos", type=str, default="1:eco",
+    help="Web dyno specification, passed to heroku ps:scale web=[], e.g. 1:eco, 1:hobby, 2:Standard-1X")
 
 parser.add_argument(
     "--import-tournament", type=str, metavar="IMPORT_DIR",
@@ -158,7 +158,7 @@ if sys.version_info >= (3, 3) and shutil.which("heroku") is None:
 
 # Create the app with addons
 addons = ["papertrail", "heroku-postgresql:%s" % args.pg_plan, "rediscloud:30"]
-command = ["heroku", "apps:create", "--stack", "heroku-18"]
+command = ["heroku", "apps:create", "--stack", "heroku-22"]
 
 if addons:
     command.extend(["--addons", ",".join(addons)])
@@ -170,7 +170,7 @@ urlname = match.group(1)
 heroku_url = match.group(2)
 
 # Add the redis add-ons (the heroku one needs a config flag)
-run_heroku_command(["addons:create", "heroku-redis:hobby-dev",
+run_heroku_command(["addons:create", "heroku-redis:mini",
                     "--maxmemory_policy", "allkeys-lru", "--timeout", "1800"])
 
 # Set build packs

@@ -51,6 +51,7 @@
     "npm-run-all": "^4.1.5",
     "popper.js": "^1.16.1",
     "quagga": "0.12.x",
+    "sass": "^1.56.1",
     "stats-percentile": "^3.3.0",
     "vue": "^2.6.14",
     "vue-cli-plugin-webpack-bundle-analyzer": "^4.0.0",
@@ -60,8 +61,8 @@
   },
   "browserslist": [
     "> 1%",
-    "last 3 versions",
-    "not ie <= 11"
+    "last 1 version",
+    "not dead"
   ],
   "engines": {
     "node": "16.15.x",
@@ -71,7 +72,6 @@
   "repository": "https://github.com/TabbycatDebate/tabbycat",
   "version": "3.18.1",
   "devDependencies": {
-    "eslint-plugin-html": "^6.2.0",
-    "sass": "^1.52.2"
+    "eslint-plugin-html": "^6.2.0"
   }
 }
