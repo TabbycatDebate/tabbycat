@@ -7,14 +7,48 @@ Installing on Heroku
 .. admonition:: IMPORTANT
   :class: error
 
-  Unfortunately, due to Heroku policy, the "Deploy to Heroku" button for Tabbycat will not work. If you are unable to use `Calico <https://calicotab.com>`_, you can try:
+  Recent changes by Heroku have made this process more complicated. Heroku has also largely ended support for it's free hosting services, although students with an academic email address can easily apply for free credits (as detailed below).
 
-  - Any of the Local installation methods
-  - Using the instructions below as an alternative way to create a Heroku site
-  - Our (in beta) `support for Render <render.html>`_, which uses a similar 1-click method
+Heroku Deployments using Forks and Student Credits
+==================================================
 
-Heroku Deployments
-==================
+A 'one-click' and 'free' Heroku deployment is still possible; however it will require users to apply for the `GitHub Student Developer Pack <https://education.github.com/pack>`_ (to gain free hosting credits) and may also require access to a debit or credit card in order to verify your Heroku account.
+
+These instructions will also work for users willing to pay for Heroku services. A small tab site run for less than 1 month should cost $5 USD.
+
+GitHub Account Setup
+--------------------
+
+1. Create an account at `GitHub <https://github.com>`_. If you are a student, be sure to register with your academic email address.
+2. If you are a student, `sign-up to claim the Student Pack <https://education.github.com/pack>`_. Note that it may take several days for the claim to process.
+
+Heroku Account Setup
+--------------------
+
+1. Create an account at `Heroku <https://heroku.com>`_, or use an existing Heroku account.
+2. Once your GitHub student status has been confirmed, use `the button here <https://www.heroku.com/github-students>`_ to claim your free monthly credits.
+
+GitHub Fork and Deployment
+--------------------------
+
+While a '1-click deployment button' will no longer work when accessed from the main Tabbycat GitHub page, it should work if you 'fork' (make a personal copy) of Tabbycat. To do so:
+
+1. Login to GitHub and go to `the main Tabbycat project page <https://github.com/TabbycatDebate/tabbycat>`_
+2. Click the **Fork** button in the top-right
+3. On the next page, **Uncheck** the button that says *Copy the develop branch only* then click **Create Fork**
+4. The next page will show your copy of Tabbycat. Take note of your Github username and your fork's name in the top-left, e.g. **JaneSmith/tabbycat**
+5. Open a new tab in your web browser and copy-paste in this URL *without hitting enter*:
+
+  ::
+
+   https://heroku.com/deploy?template=https://github.com/YOUR_GITHUB_NAME/YOUR_FORK_NAME/tree/main
+
+6. In the URL address, replace ``YOUR_GITHUB_NAME`` with your GitHub username (e.g. **JaneSmith**) and replace ``YOUR_FORK_NAME`` with the name of your fork (e.g. **tabbycat**)
+7. Hit enter and fill out the details required. After the deployment process completes, you should have a new Tabbycat deployment
+
+
+Heroku Deployments using the Deploy Script
+==========================================
 
 *We've tested these instructions successfully on Windows, Linux and macOS.*
 
