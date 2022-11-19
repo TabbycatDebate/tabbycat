@@ -33,11 +33,13 @@ class VenueIdentifierAdmin(ModelAdmin):
 
 @admin.register(Event)
 class CheckinEventAdmin(ModelAdmin):
-    list_display = ('identifier', 'polymorphic_ctype', 'checkin_time')
+    list_display = ('identifier', 'checkin_type', 'checkin_time')
     list_filter = ('identifier', 'identifier__polymorphic_ctype')
 
-    def polymorphic_ctype(self, obj):
-        return obj.identifier.polymorphic_ctype.model
+    @admin.display(description=_("Type"))
+    def checkin_type(self, obj):
+        klass = obj.identifier.polymorphic_ctype.model_class()
+        return klass._meta.get_field(klass.instance_attr).remote_field.model._meta.verbose_name
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related(None).prefetch_related('identifier__polymorphic_ctype')
