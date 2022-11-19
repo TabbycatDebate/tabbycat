@@ -118,7 +118,7 @@ class AdjudicatorTeamConflictInline(admin.TabularInline):
 @admin.register(Team)
 class TeamAdmin(ModelAdmin):
     form = TeamForm
-    list_display = ('long_name', 'short_name', 'emoji', 'institution',
+    list_display = ('long_name', 'short_name', 'emoji_code', 'institution',
                     'tournament')
     search_fields = ('reference', 'short_name', 'code_name', 'institution__name',
                      'institution__code', 'tournament__name')
@@ -131,6 +131,10 @@ class TeamAdmin(ModelAdmin):
     def get_queryset(self, request):
         # can't use select_related, because TeamManager always puts a select_related on this
         return super().get_queryset(request).select_related('tournament')
+
+    def emoji_code(self, obj):
+        return "%s %s" % (obj.emoji or '-', obj.code_name)
+    emoji_code.short_description = _("Emoji & Code")
 
     def formfield_for_choice_field(self, db_field, request, **kwargs):
         if db_field.name == 'emoji' and kwargs.get("initial") is None:
