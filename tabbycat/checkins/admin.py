@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 
 from utils.admin import ModelAdmin
 
@@ -41,5 +42,6 @@ class CheckinEventAdmin(ModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).select_related(None).prefetch_related('identifier__polymorphic_ctype')
 
+    @admin.display(description=_("Checkin time"))
     def checkin_time(self, obj):
         return obj.time.strftime("%d %b %Y %H:%M:%S.%f")
