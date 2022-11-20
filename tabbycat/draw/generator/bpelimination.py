@@ -71,7 +71,7 @@ class AfterPartialBPEliminationDrawGenerator(BaseBPEliminationDrawGenerator):
         ndebates = nbypassing // 2
         if len(self.results) != ndebates:
             raise DrawUserError(_("The room ranks of the partial elimination round indicate "
-                "that %(nbypassing)d teams bypassed it, but %(advancing)d teams advanced from "
+                "that %(nbypassing)d teams bypassed it, but %(nadvancing)d teams advanced from "
                 "it." % {'nbypassing': nbypassing, 'nadvancing': ndebates * 2}))
 
         # Fold the bypassing teams two-way

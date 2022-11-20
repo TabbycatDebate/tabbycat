@@ -70,7 +70,7 @@ def make_lookup(name, choices):
     return staticmethod(lookup)
 
 
-class TournamentDataImporterFatal(Exception):
+class TournamentDataImporterFatalError(Exception):
     pass
 
 
@@ -289,7 +289,7 @@ class BaseTournamentDataImporter(object):
                         self.logger.error("If you're writing a new importer, it might be that you "
                                 "need to delete some columns from the dict in your interpreter.")
                         self.logger.error("If using construct_interpreter(), you can do this with the DELETE argument.")
-                        raise TournamentDataImporterFatal(message)
+                        raise TournamentDataImporterFatalError(message)
                     else:
                         raise
                 except ValueError as e:
