@@ -123,6 +123,26 @@ class ParticipantSourceField(BaseSourceField):
                 return self.get_url(obj, view_name, self.context['request'], format)
 
 
+class RootSerializer(serializers.Serializer):
+    class RootLinksSerializer(serializers.Serializer):
+        v1 = serializers.HyperlinkedIdentityField(view_name='api-v1-root')
+
+    _links = RootLinksSerializer(source='*', read_only=True)
+    version = serializers.CharField()
+
+
+class V1RootSerializer(serializers.Serializer):
+    class V1LinksSerializer(serializers.Serializer):
+        tournaments = serializers.HyperlinkedIdentityField(view_name='api-tournament-list')
+        institutions = serializers.HyperlinkedIdentityField(view_name='api-global-institution-list')
+
+    _links = V1LinksSerializer(source='*', read_only=True)
+
+
+class AvailabilitiesSerializer(serializers.ListSerializer):
+    child = fields.ParticipantAvailabilityForeignKeyField(view_name='api-availability-list')
+
+
 class VenueConstraintSerializer(serializers.ModelSerializer):
     category = fields.TournamentHyperlinkedRelatedField(view_name='api-venuecategory-detail', queryset=VenueCategory.objects.all())
 
@@ -495,7 +515,7 @@ class PartialBreakingTeamSerializer(BreakingTeamSerializer):
 
 class SpeakerSerializer(serializers.ModelSerializer):
 
-    class LinksSerializer(serializers.Serializer):
+    class SpeakerLinksSerializer(serializers.Serializer):
         checkin = fields.TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-checkin')
 
     url = fields.TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-detail')
@@ -505,7 +525,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
         view_name='api-speakercategory-detail',
         queryset=SpeakerCategory.objects.all(),
     )
-    _links = LinksSerializer(source='*', read_only=True)
+    _links = SpeakerLinksSerializer(source='*', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -542,7 +562,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
 
 class AdjudicatorSerializer(serializers.ModelSerializer):
 
-    class LinksSerializer(serializers.Serializer):
+    class AdjudicatorLinksSerializer(serializers.Serializer):
         checkin = fields.TournamentHyperlinkedIdentityField(view_name='api-adjudicator-checkin')
 
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-adjudicator-detail')
@@ -568,7 +588,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         queryset=Adjudicator.objects.all(),
     )
     venue_constraints = VenueConstraintSerializer(many=True, required=False)
-    _links = LinksSerializer(source='*', read_only=True)
+    _links = AdjudicatorLinksSerializer(source='*', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -829,7 +849,7 @@ class PerTournamentInstitutionSerializer(InstitutionSerializer):
 
 class VenueSerializer(serializers.ModelSerializer):
 
-    class LinksSerializer(serializers.Serializer):
+    class VenueLinksSerializer(serializers.Serializer):
         checkin = fields.TournamentHyperlinkedIdentityField(view_name='api-venue-checkin')
 
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-venue-detail')
@@ -840,7 +860,7 @@ class VenueSerializer(serializers.ModelSerializer):
     )
     display_name = serializers.ReadOnlyField()
     external_url = serializers.URLField(source='url', required=False, allow_blank=True)
-    _links = LinksSerializer(source='*', read_only=True)
+    _links = VenueLinksSerializer(source='*', read_only=True)
 
     class Meta:
         model = Venue
@@ -865,13 +885,13 @@ class BaseStandingsSerializer(serializers.Serializer):
     tied = serializers.SerializerMethodField()
     metrics = serializers.SerializerMethodField()
 
-    def get_rank(self, obj):
+    def get_rank(self, obj) -> int:
         return obj.rankings['rank'][0]
 
-    def get_tied(self, obj):
+    def get_tied(self, obj) -> bool:
         return obj.rankings['rank'][1]
 
-    def get_metrics(self, obj):
+    def get_metrics(self, obj) -> list:
         return [{'metric': s, 'value': v} for s, v in obj.metrics.items()]
 
     def __init__(self, *args, **kwargs):

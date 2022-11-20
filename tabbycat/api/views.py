@@ -41,6 +41,7 @@ from .permissions import APIEnabledPermission, PublicPreferencePermission
 
 class APIRootView(PublicAPIMixin, GenericAPIView):
     name = "API Root"
+    serializer_class = serializers.RootSerializer
 
     def get(self, request, format=None):
         return Response({
@@ -53,6 +54,7 @@ class APIRootView(PublicAPIMixin, GenericAPIView):
 
 class APIV1RootView(PublicAPIMixin, GenericAPIView):
     name = "API Version 1 Root"
+    serializer_class = serializers.V1RootSerializer
     lookup_field = 'slug'
     lookup_url_kwarg = 'tournament_slug'
 
@@ -591,6 +593,7 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
 
 
 class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
+    serializer_class = serializers.AvailabilitiesSerializer  # Isn't actually used
 
     def get_field(self):
         field = ParticipantAvailabilityForeignKeyField(many=True, view_name='api-availability-list')  # Dummy view name
