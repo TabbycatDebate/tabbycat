@@ -24,7 +24,7 @@ from participants.models import Adjudicator, Institution, Region, Speaker, Speak
 from participants.utils import populate_code_names
 from privateurls.utils import populate_url_keys
 from results.mixins import TabroomSubmissionFieldsMixin
-from results.models import BallotSubmission
+from results.models import BallotSubmission, SpeakerScore
 from results.result import DebateResult
 from tournaments.models import Round, Tournament
 from venues.models import Venue, VenueCategory, VenueConstraint
@@ -1109,7 +1109,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         class SheetSerializer(serializers.Serializer):
 
             class TeamResultSerializer(serializers.Serializer):
-                side = serializers.CharField()
+                side = serializers.ChoiceField(choices=DebateTeam.SIDE_CHOICES)
                 points = serializers.IntegerField(required=False)
                 win = serializers.BooleanField(required=False)
                 score = serializers.FloatField(required=False, allow_null=True)
@@ -1120,7 +1120,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                 )
 
                 class SpeechSerializer(serializers.Serializer):
-                    ghost = serializers.BooleanField(required=False)
+                    ghost = serializers.BooleanField(required=False, help_text=SpeakerScore._meta.get_field('ghost').help_text)
                     score = serializers.FloatField()
 
                     speaker = fields.TournamentHyperlinkedRelatedField(
