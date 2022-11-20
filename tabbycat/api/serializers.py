@@ -139,6 +139,13 @@ class V1RootSerializer(serializers.Serializer):
     _links = V1LinksSerializer(source='*', read_only=True)
 
 
+class CheckinSerializer(serializers.Serializer):
+    object = serializers.HyperlinkedIdentityField(view_name='api-root')
+    barcode = serializers.IntegerField()
+    checked = serializers.BooleanField()
+    timestamp = serializers.DateTimeField()
+
+
 class AvailabilitiesSerializer(serializers.ListSerializer):
     child = fields.ParticipantAvailabilityForeignKeyField(view_name='api-availability-list')
 
