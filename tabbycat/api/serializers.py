@@ -42,6 +42,11 @@ def _validate_field(self, field, value):
     return value
 
 
+def is_staff(context):
+    # OpenAPI generation uses a host called 'testserver' (sometimes context is also None in that circumstance)
+    return context is None or context['request'].get_host() == 'testserver' or context['request'].user.is_staff
+
+
 class BaseSourceField(fields.TournamentHyperlinkedRelatedField):
     """Taken from REST_Framework: rest_framework.relations.HyperlinkedRelatedField
 
@@ -237,7 +242,7 @@ class RoundSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if not kwargs['context']['request'].user.is_staff:
+        if not is_staff(kwargs.get('context')):
             self.fields.pop('feedback_weight')
 
             # Can't show in a ListSerializer
@@ -504,7 +509,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if not kwargs['context']['request'].user.is_staff:
+        if not is_staff(kwargs.get('context')):
             self.fields.pop('gender')
             self.fields.pop('email')
             self.fields.pop('phone')
@@ -569,7 +574,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
 
         # Remove private fields in the public endpoint if needed
-        if not kwargs['context']['request'].user.is_staff:
+        if not is_staff(kwargs.get('context')):
             self.fields.pop('institution_conflicts')
             self.fields.pop('team_conflicts')
             self.fields.pop('adjudicator_conflicts')
@@ -668,7 +673,7 @@ class TeamSerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
 
         # Remove private fields in the public endpoint if needed
-        if not kwargs['context']['request'].user.is_staff:
+        if not is_staff(kwargs.get('context')):
             self.fields.pop('institution_conflicts')
             self.fields.pop('venue_constraints')
 
@@ -775,7 +780,7 @@ class InstitutionSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if not kwargs['context']['request'].user.is_staff:
+        if not is_staff(kwargs.get('context')):
             self.fields.pop('venue_constraints')
 
     def create(self, validated_data):
@@ -817,7 +822,7 @@ class PerTournamentInstitutionSerializer(InstitutionSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if not kwargs['context']['request'].user.is_staff:
+        if not is_staff(kwargs.get('context')):
             self.fields.pop('teams')
             self.fields.pop('adjudicators')
 
@@ -912,7 +917,7 @@ class RoundPairingSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if not kwargs['context']['request'].user.is_staff:
+        if not is_staff(kwargs.get('context')):
             self.fields.pop('bracket')
             self.fields.pop('room_rank')
             self.fields.pop('importance')
