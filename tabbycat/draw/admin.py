@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.db.models import Prefetch
-from django.utils.translation import ngettext
+from django.utils.translation import gettext_lazy as _, ngettext
 
 from adjallocation.models import DebateAdjudicator
 from utils.admin import ModelAdmin, TabbycatModelAdminFieldsMixin
@@ -70,6 +70,7 @@ class DebateAdmin(ModelAdmin):
         ) % {'count': updated}
         self.message_user(request, message)
 
+    @admin.display(description=_("Mark sides as not confirmed"))
     def mark_as_sides_not_confirmed(self, request, queryset):
         updated = queryset.update(sides_confirmed=False)
         for obj in queryset:

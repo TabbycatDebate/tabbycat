@@ -7,9 +7,9 @@ from .models import BulkNotification, EmailStatus, SentMessage
 
 
 def precise_timestamp_isoformat(model, field_name):
+    @admin.display(description=model._meta.get_field(field_name).verbose_name)
     def precise_timestamp(self, obj):
         return timezone.localtime(getattr(obj, field_name)).isoformat()
-    precise_timestamp.short_description = model._meta.get_field(field_name).verbose_name
     return precise_timestamp
 
 

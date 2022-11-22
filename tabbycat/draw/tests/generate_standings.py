@@ -34,7 +34,7 @@ R = args.rounds
 T = args.teams
 K = args.insts
 
-assert(T % 2 == 0)
+assert T % 2 == 0
 
 teams = list()
 for i in range(1, T+1):
