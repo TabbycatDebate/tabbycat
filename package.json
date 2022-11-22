@@ -34,6 +34,7 @@
     "@sentry/integrations": "^5.30.0",
     "@vue/cli-plugin-babel": "^5.0.6",
     "@vue/cli-service": "^5.0.6",
+    "@vue/compat": "^3.1.0",
     "ajv": "7.0.0",
     "bootstrap": "^4.6.1",
     "browserify": "17.0.x",
@@ -54,8 +55,6 @@
     "quagga": "0.12.x",
     "stats-percentile": "^3.3.0",
     "vue": "^3.1.0",
-    "@vue/compat": "^3.1.0",
-    "vue-cli-plugin-webpack-bundle-analyzer": "^4.0.0",
     "vuex": "^4.0.0"
   },
   "devDependencies": {
