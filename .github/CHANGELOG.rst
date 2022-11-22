@@ -10,6 +10,7 @@ Change Log
 - Don't re-capitalize side names in results tables
 - Fixed printable ballots not appearing when in French
 - Prevented malicious strings from breaking printable pages
+- Added new instructions for deploying to Heroku using a fork and for applying for free student credits at Heroku
 
 
 2.7.1
@@ -26,7 +27,7 @@ Change Log
 
 
 2.7.0 (Pixie-bob)
----------
+-----------------
 *Release date: 1 October 2022*
 
 - Added the ability to deploy to Render as a 1-click Heroku-like deployment option

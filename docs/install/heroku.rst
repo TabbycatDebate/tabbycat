@@ -7,20 +7,28 @@ Installing on Heroku
 .. admonition:: IMPORTANT
   :class: error
 
-  Recent changes by Heroku have made this process more complicated. Heroku has also largely ended support for it's free hosting services, although students with an academic email address can easily apply for free credits (as detailed below).
+  Recent changes by Heroku have altered how Tabbycat can be deployed on their service.
 
-Heroku Deployments using Forks and Student Credits
-==================================================
+Heroku Deployments Overview
+===========================
 
-A 'one-click' and 'free' Heroku deployment is still possible; however it will require users to apply for the `GitHub Student Developer Pack <https://education.github.com/pack>`_ (to gain free hosting credits) and may also require access to a debit or credit card in order to verify your Heroku account.
+Tabbycat can be deployed to Heroku in two ways:
 
-These instructions will also work for users willing to pay for Heroku services. A small tab site run for less than 1 month should cost $5 USD.
+1. A fork-based method, that approximates a '1-click' install experience. Requires no technical background.
+2. A script-based method, which requires running a python script on your local machine. Requires some technical background.
+
+Regardless of method, please note that Heroku no longer offers a free tier of hosting services. However, students with an academic email address now have access to $13 USD worth of credits (per month) to use on the service if they enrol in the `GitHub Student Developer Pack <https://education.github.com/pack>`_. These credits will be sufficient to run 2-3 different tab sites simultaneously.
+
+Please also note Heroku will require a debit/credit card to be attached to your account for verification purposes — even if you have free credits available. If using free credits, you should make note of the (annual) expiration of your GitHub student status and plan to either renew your status or cancel any Heroku services you don't want to pay for.
+
+Heroku Deployments using a Fork
+===============================
 
 GitHub Account Setup
 --------------------
 
 1. Create an account at `GitHub <https://github.com>`_. If you are a student, be sure to register with your academic email address.
-2. If you are a student, `sign-up to claim the Student Pack <https://education.github.com/pack>`_. Note that it may take several days for the claim to process.
+2. If you are a student: `sign-up to claim the Student Pack <https://education.github.com/pack>`_ so you will receive free Heroku credits. Note that it may take several days for the claim to process.
 
 Heroku Account Setup
 --------------------
@@ -31,13 +39,13 @@ Heroku Account Setup
 GitHub Fork and Deployment
 --------------------------
 
-While a '1-click deployment button' will no longer work when accessed from the main Tabbycat GitHub page, it should work if you 'fork' (make a personal copy) of Tabbycat. To do so:
+In order to use a user-friendly '1-click deployment button', you will need to make a 'fork' (personal copy) of Tabbycat on Github. To do so:
 
 1. Login to GitHub and go to `the main Tabbycat project page <https://github.com/TabbycatDebate/tabbycat>`_
 2. Click the **Fork** button in the top-right
 3. On the next page, **Uncheck** the button that says *Copy the develop branch only* then click **Create Fork**
 4. The next page will show your copy of Tabbycat. Take note of your Github username and your fork's name in the top-left, e.g. **JaneSmith/tabbycat**
-5. Open a new tab in your web browser and copy-paste in this URL *without hitting enter*:
+5. Open a new tab in your web browser and copy-paste in this URL *without hitting enter (yet)*:
 
   ::
 
@@ -45,7 +53,6 @@ While a '1-click deployment button' will no longer work when accessed from the m
 
 6. In the URL address, replace ``YOUR_GITHUB_NAME`` with your GitHub username (e.g. **JaneSmith**) and replace ``YOUR_FORK_NAME`` with the name of your fork (e.g. **tabbycat**)
 7. Hit enter and fill out the details required. After the deployment process completes, you should have a new Tabbycat deployment
-
 
 Heroku Deployments using the Deploy Script
 ==========================================
