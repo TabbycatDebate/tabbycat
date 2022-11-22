@@ -8,6 +8,7 @@ from django.db import IntegrityError
 from django.db.models import Min
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
+from django.utils.html import escape
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
 from django.views.generic.base import TemplateView, View
@@ -188,7 +189,7 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
         } for inst in queryset])
 
         if self.round.prev:
-            title = _("Active in %(prev_round)s") % {'prev_round': self.round.prev.abbreviation}
+            title = _("Active in %(prev_round)s") % {'prev_round': escape(self.round.prev.abbreviation)}
             table.add_column({'key': 'active-prev', 'title': title}, [{
                 'sort': inst.prev_available,
                 'icon': 'check' if inst.prev_available else '',

@@ -8,7 +8,7 @@ from django.template.defaultfilters import slugify
 import participants.models as pm
 import venues.models as vm
 from draw.models import DebateTeam
-from importer.importers import DUPLICATE_INFO, importer_registry, TournamentDataImporterFatal
+from importer.importers import DUPLICATE_INFO, importer_registry, TournamentDataImporterFatalError
 from tournaments.models import Tournament
 from tournaments.utils import auto_make_rounds
 
@@ -117,7 +117,7 @@ class Command(BaseCommand):
                         message = "\033[1;32m" + message + "\033[0m\n"
                     self.stdout.write(message)
             count_strs = ("{1:d} {0}".format(model._meta.verbose_name_plural, count) for model, count in counts.items())
-            message = "Imported " + ", ".join(count_strs) + ", hit {1:d} errors".format(counts, len(errors))
+            message = "Imported " + ", ".join(count_strs) + ", hit {0:d} errors".format(len(errors))
             if self.color:
                 "\033[0;36m" + message + "\033[0m\n"
             self.stdout.write(message)
@@ -160,7 +160,7 @@ class Command(BaseCommand):
             self.importer.reset_counts()
             try:
                 import_method(f)
-            except TournamentDataImporterFatal as e:
+            except TournamentDataImporterFatalError as e:
                 raise CommandError(e)
             self._print_result()
 

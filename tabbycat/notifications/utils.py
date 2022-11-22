@@ -161,7 +161,7 @@ def standings_email_generator(to, url, round):
 
     for team in teams:
         context_team = context.copy()
-        context_team['POINTS'] = str(team._points)
+        context_team['POINTS'] = str(team.points_count)
         context_team['TEAM'] = team.short_name
 
         for speaker in team.speaker_set.all():

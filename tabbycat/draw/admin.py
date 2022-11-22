@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.db.models import Prefetch
-from django.utils.translation import gettext_lazy, ngettext
+from django.utils.translation import gettext_lazy as _, ngettext
 
 from adjallocation.models import DebateAdjudicator
 from utils.admin import ModelAdmin, TabbycatModelAdminFieldsMixin
@@ -73,13 +73,14 @@ class DebateAdmin(ModelAdmin):
 
             # so that they look different to DebateAdmin
             _set_result_status.__name__ = "set_result_status_%s" % verbose_name.lower()
-            _set_result_status.short_description = gettext_lazy("Set result status to "
+            _set_result_status.short_description = _("Set result status to "
                     "%(status)s") % {'status': verbose_name}
             return _set_result_status
 
         actions.append(_make_set_result_status(value, verbose_name))
     del value, verbose_name  # for fail-fast
 
+    @admin.display(description=_("Mark sides as confirmed"))
     def mark_as_sides_confirmed(self, request, queryset):
         updated = queryset.update(sides_confirmed=True)
         for obj in queryset:
@@ -91,6 +92,7 @@ class DebateAdmin(ModelAdmin):
         ) % {'count': updated}
         self.message_user(request, message)
 
+    @admin.display(description=_("Mark sides as not confirmed"))
     def mark_as_sides_not_confirmed(self, request, queryset):
         updated = queryset.update(sides_confirmed=False)
         for obj in queryset:

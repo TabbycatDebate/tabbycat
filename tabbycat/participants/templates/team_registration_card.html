@@ -53,7 +53,7 @@
       <div class="list-group-item">
         <strong>{% trans "Speakers:" %}</strong>
         {% for speaker in team.speakers %}
-          {{ speaker.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
+          {% person_display_name speaker %}{% if not forloop.last %}{% trans ", " %}{% endif %}
         {% empty %}
           {% trans "None" %}
         {% endfor %}
@@ -117,7 +117,7 @@
         <div>
           <strong>{% trans "Adjudicator Conflicts:" %}</strong>
           {% for ac in team.adjudicatorteamconflict_set.all %}
-            {{ ac.adjudicator.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
+            {% person_display_name ac.adjudicator %}{% if not forloop.last %}{% trans ", " %}{% endif %}
           {% empty %}
             {% trans "None" %}
           {% endfor %}

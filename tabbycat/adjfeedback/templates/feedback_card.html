@@ -31,7 +31,8 @@
           {{ round }} {{ score }}
         {% endblocktrans %}
       </span>
-      {% blocktrans trimmed with adjudicator=feedback.adjudicator.name %}
+      {% person_display_name feedback.adjudicator as adjudicator %}
+      {% blocktrans trimmed with adjudicator=adjudicator %}
         On {{ adjudicator }}
       {% endblocktrans %}
     </div>
@@ -47,7 +48,8 @@
     </div>
     <div class="list-group-item h5">
       {% if feedback.source_adjudicator %}
-        {% blocktrans trimmed with source=feedback.source_adjudicator.adjudicator.name relationship=feedback.source_adjudicator.get_type_display %}
+        {% person_display_name feedback.source_adjudicator.adjudicator as source %}
+        {% blocktrans trimmed with source=source relationship=feedback.source_adjudicator.get_type_display %}
           From {{ source }} <span class="text-secondary small">(their {{ relationship }})</span>
         {% endblocktrans %}
       {% elif feedback.source_team %}

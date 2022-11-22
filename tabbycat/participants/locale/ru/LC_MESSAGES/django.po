@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-02 01:40-0300\n"
-"PO-Revision-Date: 2021-04-02 04:46\n"
+"POT-Creation-Date: 2021-11-28 21:53-0400\n"
+"PO-Revision-Date: 2021-11-29 02:16\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -75,298 +75,298 @@ msgstr[3] "%(count)d URL-ключ этих судей был удален."
 msgid "Participants"
 msgstr "Участники"
 
-#: participants/models.py:20 participants/models.py:36
-#: participants/models.py:65 participants/models.py:95
+#: participants/models.py:21 participants/models.py:37
+#: participants/models.py:66 participants/models.py:96
 msgid "name"
 msgstr "название"
 
-#: participants/models.py:23 participants/models.py:44
+#: participants/models.py:24 participants/models.py:45
 msgid "region"
 msgstr "регион"
 
-#: participants/models.py:24
+#: participants/models.py:25
 msgid "regions"
 msgstr "регионы"
 
 #. Translators: Change the examples to institutions native to your language; keep consistent between strings
-#: participants/models.py:38
+#: participants/models.py:39
 msgid "The institution's full name, e.g., \"University of Cambridge\", \"Victoria University of Wellington\""
 msgstr "Полное название клуба, например \"Университет Кембриджа\" или \"Университет Виктории в Веллингтоне\""
 
-#: participants/models.py:40
+#: participants/models.py:41
 msgid "code"
 msgstr "код"
 
 #. Translators: Change the examples to institutions native to your language; keep consistent between strings
-#: participants/models.py:42
+#: participants/models.py:43
 msgid "What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\""
 msgstr "Как обычно кратко называют клуб, например \"Кембридж\" или \"Вик Веллингтон\""
 
-#: participants/models.py:54 participants/models.py:154
-#: participants/models.py:349
+#: participants/models.py:55 participants/models.py:155
+#: participants/models.py:353
 msgid "institution"
 msgstr "клуб"
 
-#: participants/models.py:55
+#: participants/models.py:56
 msgid "institutions"
 msgstr "клубы"
 
-#: participants/models.py:63 participants/models.py:156
-#: participants/models.py:352
+#: participants/models.py:64 participants/models.py:157
+#: participants/models.py:356
 msgid "tournament"
 msgstr "турнир"
 
 #. Translators: Translate ESL to the acronym for "<target language> as a second/foreign language", not "English"
-#: participants/models.py:67
+#: participants/models.py:68
 msgid "Name to be displayed, e.g., \"Novice\", \"ESL\""
 msgstr "Отображаемое название, например, \"ESL\", \"Новички\""
 
-#: participants/models.py:69
+#: participants/models.py:70
 msgid "slug"
 msgstr "краткое название"
 
 #. Translators: Translate esl to the acronym for "<target language> as a second/foreign language", not "English"
-#: participants/models.py:71
+#: participants/models.py:72
 msgid "Slug for URLs, e.g., \"novice\", \"esl\""
 msgstr "Краткое название для URL, например, \"esl\", \"новички\""
 
-#: participants/models.py:73
+#: participants/models.py:74
 msgid "sequence number"
 msgstr "порядковый номер"
 
-#: participants/models.py:74
+#: participants/models.py:75
 msgid "The order in which the categories are displayed"
 msgstr "Порядок, в котором демонстрируются категории"
 
-#: participants/models.py:76
+#: participants/models.py:77
 msgid "limit"
 msgstr "лимит"
 
-#: participants/models.py:77
+#: participants/models.py:78
 msgid "At most this many speakers will be shown on the public tab for this category, or use 0 for no limit"
 msgstr "Такое максимальное количество спикеров будет показано в публичном тэбе для этой категории или используйте 0 для отсутствия лимита"
 
-#: participants/models.py:79
+#: participants/models.py:80
 msgid "public"
 msgstr "публично"
 
-#: participants/models.py:80
+#: participants/models.py:81
 msgid "If checked, this category will be included in the speaker category tabs shown to the public"
 msgstr "При этом выборе эта категория будет включена в категории спикерских тэбов, которые будут показаны публично"
 
-#: participants/models.py:86
+#: participants/models.py:87
 msgid "speaker category"
 msgstr "категория спикера"
 
-#: participants/models.py:87 participants/models.py:326
+#: participants/models.py:88 participants/models.py:330
 msgid "speaker categories"
 msgstr "категории спикеров"
 
-#: participants/models.py:97
+#: participants/models.py:98
 msgid "email address"
 msgstr ""
 
-#: participants/models.py:99
+#: participants/models.py:100
 msgid "phone"
 msgstr "номер телефона"
 
-#: participants/models.py:101
+#: participants/models.py:102
 msgid "anonymous"
 msgstr "анонимно"
 
-#: participants/models.py:102
+#: participants/models.py:103
 msgid "Anonymous persons will have their name and team redacted on public tab releases"
 msgstr "Имена анонимных людей и названия их команд будут отредактированы при публикации тэба"
 
-#: participants/models.py:105
+#: participants/models.py:106
 msgid "URL key"
 msgstr "Ключ URL"
 
-#: participants/models.py:110
+#: participants/models.py:111
 msgid "male"
 msgstr "мужской"
 
-#: participants/models.py:111
+#: participants/models.py:112
 msgid "female"
 msgstr "женский"
 
-#: participants/models.py:112
+#: participants/models.py:113
 msgid "other"
 msgstr "другой"
 
-#: participants/models.py:114
+#: participants/models.py:115
 msgid "gender"
 msgstr "гендер"
 
-#: participants/models.py:115
+#: participants/models.py:116
 msgid "Gender is displayed in the adjudicator allocation interface, and nowhere else"
 msgstr "Гендер отображается в интерфейсе расстановки судей и больше нигде"
 
-#: participants/models.py:117
+#: participants/models.py:118
 msgid "pronoun"
 msgstr "произношение"
 
-#: participants/models.py:118
+#: participants/models.py:119
 msgid "If printing ballots using Tabbycat, there is the option to pre-print pronouns"
 msgstr "Если печатать бэллоты с помощью Tabbycat, то есть возможность предварительно распечатать произношения"
 
-#: participants/models.py:121
+#: participants/models.py:122
 msgid "person"
 msgstr "человек"
 
-#: participants/models.py:122
+#: participants/models.py:123
 msgid "persons"
 msgstr "люди"
 
-#: participants/models.py:137
+#: participants/models.py:138
 msgid "full name/suffix"
 msgstr "полное имя"
 
-#: participants/models.py:138
+#: participants/models.py:139
 msgid "Do not include institution name (see \"uses institutional prefix\" below)"
 msgstr "Не указывать название клуба (см. \"Клуб в названии команды\" ниже)"
 
-#: participants/models.py:140
+#: participants/models.py:141
 msgid "short name/suffix"
 msgstr "краткое название"
 
-#: participants/models.py:141
+#: participants/models.py:142
 msgid "The decoded name shown in the draw, not including institution name (see \"uses institutional prefix\" below)"
 msgstr ""
 
-#: participants/models.py:143
+#: participants/models.py:144
 msgid "code name"
 msgstr "кодовое имя"
 
-#: participants/models.py:144
+#: participants/models.py:145
 msgid "Name used to obscure institutional identity on public-facing pages"
 msgstr "Кодовое название, которое используется для того, чтобы скрыть, к какому клубу относится команда (на страницах в открытом доступе)"
 
-#: participants/models.py:147
+#: participants/models.py:148
 msgid "short name"
 msgstr "краткое название"
 
-#: participants/models.py:148
+#: participants/models.py:149
 msgid "The decoded name shown in the draw, including institution name. (This is autogenerated.)"
 msgstr ""
 
-#: participants/models.py:150
+#: participants/models.py:151
 msgid "long name"
 msgstr "длинное имя"
 
-#: participants/models.py:151
+#: participants/models.py:152
 msgid "The full name of the team, including institution name. (This is autogenerated.)"
 msgstr "Полное название команды, включая название клуба (генерируется автоматически)"
 
-#: participants/models.py:158
+#: participants/models.py:159
 msgid "Uses institutional prefix"
 msgstr "Клуб в названии команды"
 
-#: participants/models.py:159
+#: participants/models.py:160
 msgid "If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\""
 msgstr "Если стоит отметка, команда \"1\" из Виктории будет показана как \"Виктория 1\""
 
-#: participants/models.py:161
+#: participants/models.py:162
 msgid "break categories"
 msgstr "категории брейка"
 
-#: participants/models.py:166 participants/models.py:360
+#: participants/models.py:167 participants/models.py:364
 msgid "institution conflicts"
 msgstr "конфликты с клубами"
 
-#: participants/models.py:177
+#: participants/models.py:178
 msgid "none"
 msgstr "нет"
 
-#: participants/models.py:178
+#: participants/models.py:179
 msgid "swing"
 msgstr "свинг"
 
-#: participants/models.py:179
+#: participants/models.py:180
 msgid "composite"
 msgstr "составной"
 
-#: participants/models.py:180
+#: participants/models.py:181
 msgid "bye"
 msgstr ""
 
-#: participants/models.py:183
+#: participants/models.py:184
 msgid "type"
 msgstr "тип"
 
-#: participants/models.py:187
+#: participants/models.py:188
 msgid "emoji"
 msgstr "эмоджи"
 
-#: participants/models.py:201 participants/models.py:324
+#: participants/models.py:202 participants/models.py:328
 msgid "team"
 msgstr "команда"
 
-#: participants/models.py:202
+#: participants/models.py:203
 msgid "teams"
 msgstr "команды"
 
-#: participants/models.py:307
+#: participants/models.py:311
 msgid "Teams must have an institution if they are using the institutional prefix."
 msgstr "Если в названии команды указывается название клуба, для таких команд должен быть указан клуб."
 
-#: participants/models.py:309
+#: participants/models.py:313
 msgid "Teams must have a full name if they don't use the institutional prefix."
 msgstr "Если в названии команды не указывается название клуба, у команды должно быть полное название."
 
-#: participants/models.py:311
+#: participants/models.py:315
 msgid "Teams must have a short name if they don't use the institutional prefix."
 msgstr "Если в названии команды не указывается название клуба, у команды должно быть краткое название."
 
-#: participants/models.py:329
+#: participants/models.py:333
 msgid "speaker"
 msgstr "спикер"
 
-#: participants/models.py:330
+#: participants/models.py:334
 msgid "speakers"
 msgstr "спикеры"
 
-#: participants/models.py:353
+#: participants/models.py:357
 msgid "Adjudicators not assigned to any tournament can be shared between tournaments"
 msgstr "Аудитории, не привязанные ни к одному турниру, могут быть разделены между турнирами"
 
-#: participants/models.py:355
+#: participants/models.py:359
 msgid "base score"
 msgstr "исходный рейтинг"
 
-#: participants/models.py:364
+#: participants/models.py:368
 msgid "team conflicts"
 msgstr "конфликты команд"
 
-#: participants/models.py:368
+#: participants/models.py:372
 msgid "adjudicator conflicts"
 msgstr ""
 
-#: participants/models.py:371
+#: participants/models.py:375
 msgid "always trainee"
 msgstr "всегда винг без права голоса"
 
-#: participants/models.py:372
+#: participants/models.py:376
 msgid "If checked, this adjudicator will never be auto-allocated a voting position, regardless of their score"
 msgstr "При этом выборе этот судья никогда не будет автоматически распределен на позицию с правом голоса, независимо от его балла"
 
-#: participants/models.py:374
+#: participants/models.py:378
 msgid "breaking"
 msgstr "брейкающиеся"
 
-#: participants/models.py:376
+#: participants/models.py:380
 msgid "independent"
 msgstr "независимый"
 
-#: participants/models.py:378
+#: participants/models.py:382
 msgid "adjudication core"
 msgstr "судейский пул"
 
-#: participants/models.py:387
+#: participants/models.py:391
 msgid "adjudicator"
 msgstr "судья"
 
-#: participants/models.py:388
+#: participants/models.py:392
 msgid "adjudicators"
 msgstr "судьи"
 
@@ -400,71 +400,71 @@ msgstr "Независимый судья"
 msgid "Member of the adjudication core"
 msgstr "Член судейского пула"
 
-#: participants/templates/adjudicator_registration_card.html:26
-#: participants/templates/team_registration_card.html:60
+#: participants/templates/adjudicator_registration_card.html:27
+#: participants/templates/team_registration_card.html:89
 msgid "Institution:"
 msgstr "Клуб:"
 
-#: participants/templates/adjudicator_registration_card.html:30
-#: participants/templates/team_registration_card.html:64
+#: participants/templates/adjudicator_registration_card.html:31
+#: participants/templates/team_registration_card.html:93
 msgid "Unaffiliated"
 msgstr "Неаффилированный"
 
-#: participants/templates/adjudicator_registration_card.html:34
-#: participants/templates/team_registration_card.html:68
+#: participants/templates/adjudicator_registration_card.html:36
+#: participants/templates/team_registration_card.html:98
 msgid "Region:"
 msgstr "Регион:"
 
-#: participants/templates/adjudicator_registration_card.html:40
+#: participants/templates/adjudicator_registration_card.html:43
 msgid "The institutional affiliations of adjudicators are not public at this tournament."
 msgstr ""
 
-#: participants/templates/adjudicator_registration_card.html:47
-#: participants/templates/team_registration_card.html:77
+#: participants/templates/adjudicator_registration_card.html:50
+#: participants/templates/team_registration_card.html:109
 msgid "Institutional Conflicts:"
 msgstr "Конфликты с клубами:"
 
-#: participants/templates/adjudicator_registration_card.html:49
-#: participants/templates/team_registration_card.html:79
+#: participants/templates/adjudicator_registration_card.html:52
+#: participants/templates/team_registration_card.html:111
 msgid "; "
 msgstr "; "
 
-#: participants/templates/adjudicator_registration_card.html:51
-#: participants/templates/adjudicator_registration_card.html:58
-#: participants/templates/adjudicator_registration_card.html:69
-#: participants/templates/adjudicator_registration_card.html:79
-#: participants/templates/team_registration_card.html:33
-#: participants/templates/team_registration_card.html:44
-#: participants/templates/team_registration_card.html:52
-#: participants/templates/team_registration_card.html:81
-#: participants/templates/team_registration_card.html:88
-#: participants/templates/team_registration_card.html:98
+#: participants/templates/adjudicator_registration_card.html:54
+#: participants/templates/adjudicator_registration_card.html:62
+#: participants/templates/adjudicator_registration_card.html:74
+#: participants/templates/adjudicator_registration_card.html:84
+#: participants/templates/team_registration_card.html:58
+#: participants/templates/team_registration_card.html:70
+#: participants/templates/team_registration_card.html:79
+#: participants/templates/team_registration_card.html:113
+#: participants/templates/team_registration_card.html:122
+#: participants/templates/team_registration_card.html:133
 msgid "None"
 msgstr "Нет"
 
-#: participants/templates/adjudicator_registration_card.html:54
+#: participants/templates/adjudicator_registration_card.html:58
 msgid "Team Conflicts:"
 msgstr "Конфликты команд:"
 
-#: participants/templates/adjudicator_registration_card.html:56
-#: participants/templates/adjudicator_registration_card.html:64
-#: participants/templates/adjudicator_registration_card.html:66
-#: participants/templates/adjudicator_registration_card.html:77
-#: participants/templates/team_registration_card.html:31
-#: participants/templates/team_registration_card.html:42
-#: participants/templates/team_registration_card.html:50
-#: participants/templates/team_registration_card.html:86
-#: participants/templates/team_registration_card.html:96
+#: participants/templates/adjudicator_registration_card.html:60
+#: participants/templates/adjudicator_registration_card.html:69
+#: participants/templates/adjudicator_registration_card.html:71
+#: participants/templates/adjudicator_registration_card.html:82
+#: participants/templates/team_registration_card.html:56
+#: participants/templates/team_registration_card.html:68
+#: participants/templates/team_registration_card.html:77
+#: participants/templates/team_registration_card.html:120
+#: participants/templates/team_registration_card.html:131
 msgid ", "
 msgstr ", "
 
-#: participants/templates/adjudicator_registration_card.html:61
-#: participants/templates/team_registration_card.html:84
+#: participants/templates/adjudicator_registration_card.html:66
+#: participants/templates/team_registration_card.html:118
 msgid "Adjudicator Conflicts:"
 msgstr "Конфликты судей:"
 
-#: participants/templates/adjudicator_registration_card.html:75
-#: participants/templates/team_registration_card.html:94
+#: participants/templates/adjudicator_registration_card.html:80
+#: participants/templates/team_registration_card.html:129
 msgid "Room Constraints:"
 msgstr "Ограничения аудиторий:"
 
@@ -749,16 +749,16 @@ msgstr "Обратная связь не отправлена на одного 
 msgid "Has not submitted feedback for <strong>%(adjudicator)s</strong>"
 msgstr "Обратная связь не отправлена на <strong>%(adjudicator)s</strong>"
 
-#: participants/templates/feedback_progress_panel.html:39
+#: participants/templates/feedback_progress_panel.html:38
 msgid "More feedback submissions than expected for this debate:"
 msgstr "Получено больше форм обратной связи, чем ожидалось для этих дебатов:"
 
-#: participants/templates/feedback_progress_panel.html:48
+#: participants/templates/feedback_progress_panel.html:46
 #, python-format
 msgid "Unexpected feedback submission for <strong>%(adjudicator)s</strong>"
 msgstr "Непредвиденная форма обратной связи на <strong>%(adjudicator)s</strong>"
 
-#: participants/templates/feedback_progress_panel.html:55
+#: participants/templates/feedback_progress_panel.html:53
 #, python-format
 msgid "%(name)s doesn't have any feedback to submit."
 msgstr "%(name)s не имеет формы обратной связи для отправки."
@@ -858,27 +858,43 @@ msgstr "Если вы хотите удалить категории спике�
 msgid "Save Speaker Categories"
 msgstr "Сохранить категории спикеров"
 
-#: participants/templates/team_registration_card.html:14
+#: participants/templates/team_registration_card.html:16
 msgid "Team name:"
 msgstr "Название команды:"
 
-#: participants/templates/team_registration_card.html:14
-msgid "Full name:"
-msgstr "Полное имя:"
+#: participants/templates/team_registration_card.html:21
+msgid "Full team name:"
+msgstr ""
 
-#: participants/templates/team_registration_card.html:22
+#: participants/templates/team_registration_card.html:25
+msgid "Short team name:"
+msgstr ""
+
+#: participants/templates/team_registration_card.html:32
 msgid "Code name:"
 msgstr "Кодовое имя:"
 
-#: participants/templates/team_registration_card.html:29
+#: participants/templates/team_registration_card.html:36
+msgid "No code name assigned"
+msgstr ""
+
+#: participants/templates/team_registration_card.html:42
+msgid "Emoji:"
+msgstr ""
+
+#: participants/templates/team_registration_card.html:46
+msgid "No emoji assigned"
+msgstr ""
+
+#: participants/templates/team_registration_card.html:54
 msgid "Speakers:"
 msgstr "Спикеры:"
 
-#: participants/templates/team_registration_card.html:40
+#: participants/templates/team_registration_card.html:66
 msgid "Eligible for break categories:"
 msgstr "Доступны для брейковых категорий:"
 
-#: participants/templates/team_registration_card.html:48
+#: participants/templates/team_registration_card.html:75
 msgid "Speaker categories:"
 msgstr "Категории спикеров:"
 
@@ -943,20 +959,20 @@ msgstr "Кодовое имя"
 msgid "Team Registration"
 msgstr "Регистрация команд"
 
-#: participants/views.py:228
+#: participants/views.py:231
 msgid "Results"
 msgstr "Результаты"
 
-#: participants/views.py:233 participants/views.py:258
+#: participants/views.py:239 participants/views.py:264
 #, python-format
 msgid "Record for %(name)s"
 msgstr "Запись для %(name)s"
 
-#: participants/views.py:255
+#: participants/views.py:261
 msgid "Previous Rounds"
 msgstr "Предыдущие раунды"
 
-#: participants/views.py:332
+#: participants/views.py:352
 #, python-format
 msgid "Saved category: %(list)s"
 msgid_plural "Saved categories: %(list)s"
@@ -965,11 +981,11 @@ msgstr[1] "Сохранена категории: %(list)s"
 msgstr[2] "Сохранена категории: %(list)s"
 msgstr[3] "Сохранена категории: %(list)s"
 
-#: participants/views.py:338
+#: participants/views.py:358
 msgid "No changes were made to the categories."
 msgstr "В категории не было внесено никаких изменений."
 
-#: participants/views.py:351
+#: participants/views.py:371
 msgid "Speaker Category Eligibility"
 msgstr "Доступность спикера для категории"
 

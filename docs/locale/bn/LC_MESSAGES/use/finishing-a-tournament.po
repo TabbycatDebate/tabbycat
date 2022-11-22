@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-12-31 14:29\n"
+"PO-Revision-Date: 2021-12-12 05:29\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "MIME-Version: 1.0\n"
@@ -20,19 +20,19 @@ msgstr ""
 
 #: ../../use/finishing-a-tournament.rst:5
 msgid "Finishing a Tournament"
-msgstr ""
+msgstr "একটি টুর্নামেন্ট সমাপ্তি"
 
 #: ../../use/finishing-a-tournament.rst:7
 msgid "This page outlines some final steps to take after the conclusion of outrounds."
-msgstr ""
+msgstr "এই পৃষ্ঠাটি আউটগ্রাউন্ডের সমাপ্তির পরে নেওয়া কিছু চূড়ান্ত পদক্ষেপের রূপরেখা দেয়।"
 
 #: ../../use/finishing-a-tournament.rst:10
 msgid "Tab Release"
-msgstr ""
+msgstr "ট্যাব রিলিজ"
 
 #: ../../use/finishing-a-tournament.rst:12
 msgid "Tabs can be released using the *Tab released* option under **Setup** > **Configuration**. Tabbycat offers the following system tabs:"
-msgstr ""
+msgstr "**সেটআপ** > **কনফিগারেশন** এর অধীনে *ট্যাব রিলিজ* বিকল্প ব্যবহার করে ট্যাবগুলি প্রকাশ করা যেতে পারে। Tabbycat নিম্নলিখিত সিস্টেম ট্যাব অফার করে:"
 
 #: ../../use/finishing-a-tournament.rst:14
 msgid "Team Tab"
@@ -40,7 +40,7 @@ msgstr "দলসমূহ"
 
 #: ../../use/finishing-a-tournament.rst:15
 msgid "Speakers Tab"
-msgstr ""
+msgstr "স্পিকার ট্যাব"
 
 #: ../../use/finishing-a-tournament.rst:16
 msgid "Replies Tab"
@@ -52,29 +52,29 @@ msgstr "প্রস্তাব ট্যাব"
 
 #: ../../use/finishing-a-tournament.rst:19
 msgid "You can configure the team, speakers and replies tab to display only a certain number of speakers, *e.g.*, to show only a \"Top 10 Speakers\" tab."
-msgstr ""
+msgstr "আপনি শুধুমাত্র একটি নির্দিষ্ট সংখ্যক স্পিকার প্রদর্শন করতে দল, স্পিকার এবং উত্তর ট্যাব কনফিগার করতে পারেন, *যেমন*, শুধুমাত্র একটি \"শীর্ষ 10টি স্পিকার\" ট্যাব দেখাতে।."
 
 #: ../../use/finishing-a-tournament.rst:21
 msgid "If you defined any speaker categories (for example, Novice, ESL or EFL), a tab for each category marked \"public\" can also be released using the **Release speaker category tabs to public**. You can similarly limit each of these tabs to display just the top few speakers, in the definition of the speaker categories. The speaker categories not marked public are *not* released by this option."
-msgstr ""
+msgstr "আপনি যদি কোনো স্পিকারের বিভাগ সংজ্ঞায়িত করেন (উদাহরণস্বরূপ, Novice, ESL বা EFL), \"সর্বজনীন\" চিহ্নিত প্রতিটি বিভাগের জন্য একটি ট্যাবও **জনসাধারণের জন্য স্পীকার বিভাগ ট্যাব প্রকাশ করুন** ব্যবহার করে প্রকাশ করা যেতে পারে। আপনি একইভাবে স্পিকার বিভাগের সংজ্ঞায় শুধুমাত্র শীর্ষ কয়েকটি স্পিকার প্রদর্শন করতে এই ট্যাবগুলির প্রতিটিকে সীমাবদ্ধ করতে পারেন। স্পীকার বিভাগগুলিকে সর্বজনীন হিসাবে চিহ্নিত করা হয়নি এই বিকল্প দ্বারা *নট* প্রকাশিত হয়।."
 
 #: ../../use/finishing-a-tournament.rst:23
 msgid "You can also redact individual speaker's identifying details (name, team, and institution) from the public individual tabs. You can do so by going into the **Edit Database** area, going to *Participants > Speakers*, finding the speaker and clicking the **Anonymous** box (and saving)."
-msgstr ""
+msgstr "You can also redact individual speaker's identifying details (name, team, and institution) from the public individual tabs. You can do so by going into the **Edit Database** area, going to *Participants > Speakers*, finding the speaker and clicking the **Anonymous** box (and saving)."
 
 #: ../../use/finishing-a-tournament.rst:25
 msgid "Public tab pages are cached for performance reasons. This means that any changes that affect a tab page (say redacting a speaker or changing a speaker score) may not show up on the public site for up to an hour."
-msgstr ""
+msgstr "Public tab pages are cached for performance reasons. This means that any changes that affect a tab page (say redacting a speaker or changing a speaker score) may not show up on the public site for up to an hour."
 
 #: ../../use/finishing-a-tournament.rst:28
 msgid "Wrapping Up"
-msgstr ""
+msgstr "মোড়ক উম্মচন"
 
 #: ../../use/finishing-a-tournament.rst:30
 msgid "You probably want to turn off the *Public ballots*, *Public feedback*, *Feedback progress*, and *Public draw* features under **Configuration** at this stage as they no longer have any use."
-msgstr ""
+msgstr "আপনি সম্ভবত এই পর্যায়ে **কনফিগারেশন** এর অধীনে *পাবলিক ব্যালট*, *পাবলিক ফিডব্যাক*, *ফিডব্যাক প্রগতি*, এবং *পাবলিক ড্র* বৈশিষ্ট্যগুলি বন্ধ করতে চান কারণ সেগুলির আর কোনও ব্যবহার নেই৷."
 
 #: ../../use/finishing-a-tournament.rst:32
 msgid "You also want to go into the **Edit Database** area, find the tournament and hit \"release all\" so that the results for the final round can be released."
-msgstr ""
+msgstr "You also want to go into the **Edit Database** area, find the tournament and hit \"release all\" so that the results for the final round can be released."
 

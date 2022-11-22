@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib import admin, messages
 from django.db.models import Prefetch
-from django.utils.translation import gettext, ngettext
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _, ngettext
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
 from draw.models import DebateTeam
@@ -76,9 +75,11 @@ class AdjudicatorFeedbackAnswerAdmin(ModelAdmin):
     )
     raw_id_fields = ('feedback',)
 
+    @admin.display(description=_("Target"))
     def get_target(self, obj):
         return obj.feedback.adjudicator.name
 
+    @admin.display(description=_("Source"))
     def get_source(self, obj):
         if obj.feedback.source_team and obj.feedback.source_adjudicator:
             return "<ERROR: both source team and source adjudicator>"
@@ -87,15 +88,12 @@ class AdjudicatorFeedbackAnswerAdmin(ModelAdmin):
         elif obj.feedback.source_adjudicator:
             return obj.feedback.source_adjudicator.adjudicator.name
 
+    @admin.display(description=_("Feedback timestamp and version"))
     def get_feedback_description(self, obj):
         return gettext("%(timestamp)s (version %(version)s)") % {
             'timestamp': obj.feedback.timestamp.isoformat(),
             'version': obj.feedback.version,
         }
-
-    get_target.short_description = _("Target")
-    get_source.short_description = _("Source")
-    get_feedback_description.short_description = _("Feedback timestamp and version")
 
 
 class BaseAdjudicatorFeedbackAnswerInline(admin.TabularInline):
@@ -154,12 +152,12 @@ class AdjudicatorFeedbackAdmin(ModelAdmin):
             Prefetch('source_adjudicator__debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')),
         )
 
+    @admin.display(description=_("Source"))
     def get_source(self, obj):
         if obj.source_team and obj.source_adjudicator:
             return "<ERROR: both source team and source adjudicator>"
         else:
             return obj.source_team or obj.source_adjudicator
-    get_source.short_description = _("Source")
 
     # Dynamically generate inline tables for different answer types
     inlines = []

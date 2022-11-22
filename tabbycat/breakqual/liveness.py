@@ -3,30 +3,19 @@
 # blog and app.
 
 from itertools import accumulate
-from math import ceil, factorial, floor
-
-
-def ncr(n, r):
-    try:
-        binom = factorial(n) // factorial(r) // factorial(n - r)
-    except ValueError:
-        binom = 0
-    return binom
+from math import ceil, comb, floor
 
 
 def get_bp_coefficients(nrounds):
     """Get row of the number of rounds from the quadrinomial coefficients
-    triangle (similar to Pascal's triangle).
+    triangle (similar to Pascal's triangle). Only calculate half the row and mirror.
 
     See: https://oeis.org/A008287"""
 
     def get_coefficient(m, k):
-        coeff = 0
-        for i in range(0, floor(k / 2) + 1):
-            coeff += ncr(m, i) * ncr(m, k - 2 * i)
-        return coeff
+        return sum(comb(m, i) * comb(m, k - 2 * i) for i in range(k // 2 + 1))
 
-    half_row = [get_coefficient(nrounds, k) for k in range(0, ceil((3 * nrounds + 1) / 2))]
+    half_row = [get_coefficient(nrounds, k) for k in range(ceil((3 * nrounds + 1) / 2))]
 
     if nrounds == 0:
         return half_row
@@ -42,7 +31,7 @@ def liveness_twoteam(is_general, current_round, break_size, total_teams, total_r
     if total_teams < break_size or (not is_general and len(team_scores) <= break_size):
         return 0, -1  # special case, everyone is safe
 
-    coefficients = [ncr(total_rounds, i) for i in range(total_rounds+1)]
+    coefficients = [comb(total_rounds, i) for i in range(total_rounds+1)]
     originals = [total_teams / (2**total_rounds) * coeff for coeff in coefficients]
     ceilings = [ceil(x) for x in originals]
     floors = [floor(x) for x in originals]

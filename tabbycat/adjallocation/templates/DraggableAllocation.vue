@@ -21,7 +21,8 @@
     </div>
 
     <droppable-item
-      :class="['p-1 flex-shrink-1 align-items-center justify-content-center panel-pit', panelIsDragging ? 'd-flex' : 'd-none']"
+      :class="['p-1 flex-shrink-1 align-items-center justify-content-center panel-pit',
+               panelIsDragging ? 'd-flex' : 'd-none']"
       :handle-drop="handlePanelSwap"
       :drop-context="{ assignment: debateOrPanel.id }">
       <div class="px-4 d-flex"><i data-feather="download"></i></div>
@@ -53,7 +54,7 @@
           'd-flex flex-grow-1 flex-wrap',
           adjudicators.P.length % 2 ? 'panel-incomplete' : '',
         ]"
-        :handle-drop="handleDebateOrPanelDrop"  :locked="panelIsDragging"
+        :handle-drop="handleDebateOrPanelDrop" :locked="panelIsDragging"
         :drop-context="{ assignment: debateOrPanel.id, position: 'P' }"
       >
         <draggable-adjudicator
@@ -99,6 +100,7 @@ import DraggableCollection from '../../templates/allocations/DraggableCollection
 import DroppableItem from '../../templates/allocations/DroppableItem.vue'
 import DraggableAdjudicator from './DraggableAdjudicator.vue'
 import HoverableConflictMixin from '../../templates/allocations/HoverableConflictMixin.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   components: { DraggableAdjudicator, DroppableItem, DraggableCollection },
@@ -110,18 +112,16 @@ export default {
     }
   },
   computed: {
-    chairID () {
+    chairID: function () {
       return this.adjudicators.C[0]
     },
-    allAdjudicators () {
+    allAdjudicators: function () {
       return this.$store.getters.allocatableItems
     },
-    adjudicators () {
+    adjudicators: function () {
       return this.debateOrPanel.adjudicators
     },
-    panelIsDragging () {
-      return this.$store.getters.panelIsDragging
-    },
+    ...mapGetters(['panelIsDragging']),
   },
   methods: {
     getDragPayload: function (adjID, position) {

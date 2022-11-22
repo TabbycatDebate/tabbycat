@@ -1,5 +1,6 @@
+{% load debate_tags %}
 <td>
   {% for adj, type in debate.adjudicators.with_positions %}
-    {{ adj.name }}{% if type == 'c' %} Ⓒ{% elif type == 't' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+    {% person_display_name adj %}{% if type == 'c' %} Ⓒ{% elif type == 't' %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
   {% endfor %}
 </td>

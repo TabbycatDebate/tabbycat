@@ -1,4 +1,4 @@
-from .base import DUPLICATE_INFO, TournamentDataImporterFatal, TournamentDataImporterError
+from .base import DUPLICATE_INFO, TournamentDataImporterFatalError, TournamentDataImporterError
 
 from . import anorak
 from . import boots

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-30 01:01-0400\n"
-"PO-Revision-Date: 2020-12-30 05:08\n"
+"POT-Creation-Date: 2021-11-28 21:53-0400\n"
+"PO-Revision-Date: 2021-11-29 02:16\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -22,25 +22,25 @@ msgstr ""
 msgid "Notifications"
 msgstr "crwdns31128:0crwdne31128:0"
 
-#: notifications/forms.py:11
+#: notifications/forms.py:12
 msgid "Recipient email address"
 msgstr "crwdns34164:0crwdne34164:0"
 
-#: notifications/forms.py:15
+#: notifications/forms.py:16
 #, python-format
 msgid "Test email from %(host)s"
 msgstr "crwdns34166:0%(host)scrwdne34166:0"
 
-#: notifications/forms.py:16
+#: notifications/forms.py:17
 #, python-format
 msgid "Congratulations! If you're reading this message, your email backend on %(host)s looks all good to go!"
 msgstr "crwdns34168:0%(host)scrwdne34168:0"
 
-#: notifications/forms.py:29
+#: notifications/forms.py:30
 msgid "Subject"
 msgstr "crwdns34170:0crwdne34170:0"
 
-#: notifications/forms.py:30
+#: notifications/forms.py:31
 msgid "Message"
 msgstr "crwdns34172:0crwdne34172:0"
 
@@ -227,12 +227,12 @@ msgstr "crwdns34222:0crwdne34222:0"
 msgid "Emails can be sent by Tabbycat for a variety of purposes. Emails are sent when specific preferences are enabled (i.e. enabling Ballot Receipts) or through actions available on specific pages (i.e. the Draw Display page for matchups; or the Participants page for team registration). This page shows the status of previously-sent emails."
 msgstr "crwdns34224:0crwdne34224:0"
 
-#: notifications/templates/notifications_nav.html:5 notifications/views.py:46
+#: notifications/templates/notifications_nav.html:5 notifications/views.py:75
 msgid "Email Statuses"
 msgstr "crwdns34226:0crwdne34226:0"
 
 #: notifications/templates/notifications_nav.html:11
-#: notifications/templates/test_email.html:24
+#: notifications/templates/test_email.html:29
 msgid "Send Test Email"
 msgstr "crwdns34228:0crwdne34228:0"
 
@@ -250,7 +250,12 @@ msgstr "crwdns34232:0crwdne34232:0"
 msgid "You can use this form to send a test email, to check that your email backend settings are working, before you try to send email notifications to participants."
 msgstr "crwdns34234:0crwdne34234:0"
 
-#: notifications/templates/test_email.html:25
+#: notifications/templates/test_email.html:20
+#, python-format
+msgid "The email will be sent from: <strong>%(default_from_email)s</strong>. If this doesn't look right, change the <code>DEFAULT_FROM_EMAIL</code> config var in Heroku (or environment variable)."
+msgstr "crwdns52079:0%(default_from_email)scrwdne52079:0"
+
+#: notifications/templates/test_email.html:30
 msgid "Go back to the site home page"
 msgstr "crwdns34236:0crwdne34236:0"
 
@@ -311,94 +316,103 @@ msgstr "crwdns34260:0%(text)scrwdnd34260:0%(ref)scrwdne34260:0"
 msgid ", "
 msgstr "crwdns34262:0crwdne34262:0"
 
-#: notifications/views.py:38
+#: notifications/views.py:47
+#, python-format
+msgid "The email (SMTP) server returned an error sending the test email: [SMTP code %(code)d] %(error)s"
+msgstr "crwdns52081:0%(code)dcrwdnd52081:0%(error)scrwdne52081:0"
+
+#: notifications/views.py:51
+msgid "Hint: If the error is about sender identity verification in SendGrid, and you've already completed the steps in SendGrid, it may be that you need to update the DEFAULT_FROM_EMAIL config var in Heroku to match your verified sender identity."
+msgstr "crwdns52083:0crwdne52083:0"
+
+#: notifications/views.py:60
 #, python-format
 msgid "There was an error sending the test email: %(error)s"
 msgstr "crwdns34264:0%(error)scrwdne34264:0"
 
-#: notifications/views.py:41
+#: notifications/views.py:65
 #, python-format
 msgid "A test email has been sent to %(recipient)s."
 msgstr "crwdns34266:0%(recipient)scrwdne34266:0"
 
-#: notifications/views.py:52
+#: notifications/views.py:81
 msgid "N/A"
 msgstr "crwdns34272:0crwdne34272:0"
 
-#: notifications/views.py:53
+#: notifications/views.py:82
 msgid "Not known"
 msgstr "crwdns35194:0crwdne35194:0"
 
-#: notifications/views.py:58
+#: notifications/views.py:87
 #, python-format
 msgid "%(status)s @ %(time)s"
 msgstr "crwdns34268:0%(status)scrwdnd34268:0%(time)scrwdne34268:0"
 
-#: notifications/views.py:104
+#: notifications/views.py:133
 #, python-format
 msgid "@ %s"
 msgstr "crwdns34270:0%scrwdne34270:0"
 
-#: notifications/views.py:123
+#: notifications/views.py:152
 msgid "Timeline"
 msgstr "crwdns34274:0crwdne34274:0"
 
-#: notifications/views.py:133 notifications/views.py:231
+#: notifications/views.py:162 notifications/views.py:260
 msgid "Participant"
 msgstr "crwdns34276:0crwdne34276:0"
 
-#: notifications/views.py:134 notifications/views.py:236
+#: notifications/views.py:163 notifications/views.py:265
 msgid "Email address"
 msgstr "crwdns51600:0crwdne51600:0"
 
-#: notifications/views.py:135
+#: notifications/views.py:164
 msgid "Status"
 msgstr "crwdns34278:0crwdne34278:0"
 
-#: notifications/views.py:136
+#: notifications/views.py:165
 msgid "Time"
 msgstr "crwdns34280:0crwdne34280:0"
 
-#: notifications/views.py:175
+#: notifications/views.py:204
 msgid "Email Participants"
 msgstr "crwdns34282:0crwdne34282:0"
 
-#: notifications/views.py:204
+#: notifications/views.py:233
 #, python-format
 msgid "%(email_count)s email has been queued for sending."
 msgid_plural "%(email_count)s emails have been queued for sending."
 msgstr[0] "crwdns34284:1%(email_count)scrwdne34284:1"
 msgstr[1] "crwdns34284:5%(email_count)scrwdne34284:5"
 
-#: notifications/views.py:210
+#: notifications/views.py:239
 msgid "No emails were sent — likely because no recipients were selected."
 msgstr "crwdns34286:0crwdne34286:0"
 
-#: notifications/views.py:221
+#: notifications/views.py:250
 msgid "Send Email"
 msgstr "crwdns34288:0crwdne34288:0"
 
-#: notifications/views.py:237
+#: notifications/views.py:266
 msgid "Not Provided"
 msgstr "crwdns34292:0crwdne34292:0"
 
-#: notifications/views.py:250
+#: notifications/views.py:279
 msgid "Role"
 msgstr "crwdns34294:0crwdne34294:0"
 
-#: notifications/views.py:251
+#: notifications/views.py:280
 msgid "Adjudicator"
 msgstr "crwdns34296:0crwdne34296:0"
 
-#: notifications/views.py:251
+#: notifications/views.py:280
 msgid "Speaker"
 msgstr "crwdns34298:0crwdne34298:0"
 
-#: notifications/views.py:259
+#: notifications/views.py:288
 msgid "Speakers"
 msgstr "crwdns34300:0crwdne34300:0"
 
-#: notifications/views.py:260
+#: notifications/views.py:289
 msgid "Adjudicators"
 msgstr "crwdns34302:0crwdne34302:0"
 

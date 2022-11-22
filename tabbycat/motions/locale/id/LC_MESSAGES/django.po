@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-30 01:01-0400\n"
-"PO-Revision-Date: 2021-02-27 15:46\n"
+"POT-Creation-Date: 2021-11-28 21:53-0400\n"
+"PO-Revision-Date: 2021-12-01 12:28\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -54,7 +54,7 @@ msgstr "turnamen"
 msgid "rounds"
 msgstr "ronde"
 
-#: motions/models.py:24 motions/models.py:37 motions/models.py:56
+#: motions/models.py:24 motions/models.py:37 motions/models.py:62
 msgid "motion"
 msgstr "mosi"
 
@@ -82,23 +82,23 @@ msgstr "preferensi mosi tim debat"
 msgid "debate team motion preferences"
 msgstr "preferensi mosi tim debat"
 
-#: motions/models.py:58
+#: motions/models.py:64
 msgid "round"
 msgstr "ronde"
 
-#: motions/models.py:61
+#: motions/models.py:67
 msgid "sequence number"
 msgstr "nomor urut"
 
-#: motions/models.py:62
+#: motions/models.py:68
 msgid "The order in which motions are displayed"
 msgstr "Urutan mosi ditampilkan"
 
-#: motions/models.py:67
+#: motions/models.py:73
 msgid "round motion"
 msgstr "mosi ronde"
 
-#: motions/models.py:68
+#: motions/models.py:74
 msgid "round motions"
 msgstr "mosi ronde"
 
@@ -325,6 +325,14 @@ msgstr[0] "Tampilkan Mosi untuk %(round)s"
 #: motions/templates/show.html:41
 msgid "There are no motions for this round entered into Tabbycat."
 msgstr "Tidak ada mosi untuk ronde ini yang dimasukkan ke Tabbycat."
+
+#: motions/utils.py:11
+msgid "Not all latest ballots list the same motion, so could not be merged."
+msgstr "Tidak semua kertas suara menggunakan mosi yang sama sehingga tidak dapat disatukan."
+
+#: motions/utils.py:29
+msgid "Motion vetos are inconsistent, so could not be merged."
+msgstr "Veto mosi tidak konsisten sehingga tidak dapat disatukan."
 
 #: motions/views.py:91
 msgid "The motion has been saved."

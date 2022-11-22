@@ -15,6 +15,8 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
+from adjallocation.models import PreformedPanel
+from adjallocation.preformed.anticipated import calculate_anticipated_draw
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from availability.models import RoundAvailability
 from breakqual.models import BreakCategory
@@ -252,7 +254,7 @@ class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
         filters = Q()
         if self.request.query_params.get('region'):
             filters &= Q(region__name=self.request.query_params['region'])
-        return Institution.objects.filter(filters).select_related('region', 'venue_constraints__category__tournament')
+        return Institution.objects.filter(filters).select_related('region').prefetch_related('venue_constraints__category__tournament')
 
 
 class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
@@ -656,3 +658,52 @@ class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
         # Delete class of availabilities
         self.get_queryset().delete()
         return Response(status=204)
+
+
+class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
+
+    serializer_class = serializers.PreformedPanelSerializer
+    lookup_url_kwarg = 'debate_pk'
+
+    @property
+    def debate(self):
+        if hasattr(self, '_debate'):
+            return self._debate
+
+        self._debate = get_object_or_404(PreformedPanel, pk=self.kwargs.get('debate_pk'))
+        return self._debate
+
+    def perform_create(self, serializer):
+        serializer.save(**{'debate': self.debate})
+
+    def lookup_kwargs(self):
+        kwargs = super().lookup_kwargs()
+        kwargs['debate'] = self.debate
+        return kwargs
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['debate'] = self.debate
+        return context
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('round', 'round__tournament').prefetch_related(
+            'debateteam_set', 'debateteam_set__team', 'debateteam_set__team__tournament',
+            'preformedpaneladjudicator_set', 'preformedpaneladjudicator_set__adjudicator',
+            'preformedpaneladjudicator_set__adjudicator__tournament',
+        )
+
+    def delete_all(self, request, *args, **kwargs):
+        self.get_queryset().delete()
+        return Response(status=204)  # No content
+
+    def add_blank(self, request, *args, **kwargs):
+        """Add blank preformed panel objects with calculated bracket and liveness for round."""
+        for i, (bracket_min, bracket_max, liveness) in enumerate(calculate_anticipated_draw(self.round), start=1):
+            PreformedPanel.objects.update_or_create(round=self.round, room_rank=i, defaults={
+                'bracket_max': bracket_max,
+                'bracket_min': bracket_min,
+                'liveness': liveness,
+            })
+
+        return self.get(request, *args, **kwargs)

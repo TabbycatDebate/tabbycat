@@ -183,6 +183,12 @@ def roundurl(parser, token):
     return RoundURLNode(*args)
 
 
+@register.simple_tag(takes_context=True)
+def person_display_name(context, person):
+    # If returned directly from the object it will have to lookup tournament
+    return person.get_public_name(context['tournament'])
+
+
 @register.filter
 def next_value(value, arg):
     try:

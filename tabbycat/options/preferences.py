@@ -1122,6 +1122,19 @@ class TeamCodeNames(ChoicePreference):
 
 
 @tournament_preferences_registry.register
+class ParticipantCodeNames(ChoicePreference):
+    help_text = _("Whether and how to use code names for participants")
+    verbose_name = _("Participant code names")
+    section = ui_options
+    name = 'participant_code_names'
+    default = 'off'
+    choices = (
+        ('off',                 _("Do not use code names")),
+        ('everywhere',          _("Use code names everywhere; do not use tooltips (real names show in some admin views)")),
+    )
+
+
+@tournament_preferences_registry.register
 class ShowEmoji(BooleanPreference):
     help_text = _("Display team emoji in the public and admin interfaces")
     verbose_name = _("Show emoji")

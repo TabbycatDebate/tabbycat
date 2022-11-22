@@ -377,8 +377,8 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
             swaps = swapper.swaps
 
             for i, (pairing, orig, new) in enumerate(zip(bracket, pairs_orig, pairs_new)):
-                assert(tuple(pairing.teams) == orig)
-                assert((i in swaps or i-1 in swaps) == (orig != new))
+                assert tuple(pairing.teams) == orig
+                assert (i in swaps or i-1 in swaps) == (orig != new)
                 if orig != new:
                     if pairing.conflict_hist:
                         pairing.add_flag("1u1d_hist")

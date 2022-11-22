@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-07-28 23:15\n"
+"PO-Revision-Date: 2021-11-04 06:15\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -25,7 +25,7 @@ msgstr "Tidak ada juri yang tersedia. Pastikan bahwa ada juri yang telah ditanda
 #, python-format
 msgid "%(count)s score is larger than the maximum permitted adjudicator score (%(score).1f)."
 msgid_plural "%(count)s scores are larger than the maximum permitted adjudicator score (%(score).1f)."
-msgstr[0] "%(count)s nilai yang diberikan melewati batas maksimum skor juri yang diijinkan (%(score).1f)."
+msgstr[0] "%(count)s nilai yang diberikan melewati batas maksimum skor juri yang diizinkan (%(score).1f)."
 
 #: adjallocation/allocators/hungarian.py:59
 #, python-format
