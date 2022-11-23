@@ -32,10 +32,8 @@
     "@popperjs/core": "^2.6.0",
     "@sentry/browser": "^5.30.0",
     "@sentry/integrations": "^5.30.0",
-    "@vue/cli-plugin-babel": "^5.0.6",
-    "@vue/cli-service": "^5.0.6",
     "@vue/compat": "^3.1.0",
-    "ajv": "7.0.0",
+    "ajv": "^7.2.4",
     "bootstrap": "^4.6.1",
     "browserify": "17.0.x",
     "browserslist": "^4.18.1",
@@ -55,9 +53,12 @@
     "quagga": "0.12.x",
     "stats-percentile": "^3.3.0",
     "vue": "^3.1.0",
+    "vue-cli-plugin-webpack-bundle-analyzer": "^4.0.0",
     "vuex": "^4.0.0"
   },
   "devDependencies": {
+    "@vue/cli-plugin-babel": "^5.0.8",
+    "@vue/cli-service": "^5.0.8",
     "@vue/compiler-sfc": "^3.1.0",
     "eslint-plugin-html": "^6.2.0",
     "sass": "^1.52.2"
@@ -68,8 +69,8 @@
     "not ie <= 11"
   ],
   "engines": {
-    "node": "16.15.x",
-    "npm": "8.11.x"
+    "node": "16",
+    "npm": "8"
   },
   "license": "UNLICENSED",
   "repository": "https://github.com/TabbycatDebate/tabbycat"
