@@ -1,0 +1,328 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-02-12 02:04-0400\n"
+"PO-Revision-Date: 2023-07-02 00:46\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Catalan\n"
+"Language: ca_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ca\n"
+"X-Crowdin-File: /develop/tabbycat/utils/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 954\n"
+
+#: utils/admin.py utils/tables.py
+msgid "Round"
+msgstr "Ronda"
+
+#: utils/admin.py utils/tables.py
+msgid "Team"
+msgstr "Equip"
+
+#: utils/admin.py
+msgid "Speaker"
+msgstr "Orador"
+
+#: utils/admin.py utils/tables.py
+msgid "Tournament"
+msgstr "Torneig"
+
+#: utils/admin.py utils/tables.py
+msgid "Side"
+msgstr "Bancada"
+
+#: utils/admin.py utils/tables.py
+msgid "Motion"
+msgstr "Moció"
+
+#: utils/admin.py
+msgid "Confirmed"
+msgstr "Confirmat"
+
+#: utils/admin.py
+msgid "Adjudicator"
+msgstr "Jutge"
+
+#: utils/tables.py
+msgid "No Data Available"
+msgstr "Sense dades disponibles"
+
+#: utils/tables.py
+msgid "Ⓒ"
+msgstr "℗"
+
+#: utils/tables.py
+msgid "Ⓣ"
+msgstr "Ⓐ"
+
+#: utils/tables.py
+msgid "chair"
+msgstr "principal"
+
+#: utils/tables.py
+msgid "panellist"
+msgstr "panelista"
+
+#: utils/tables.py
+msgid "trainee"
+msgstr "jutge aprenent"
+
+#: utils/tables.py
+msgid "—"
+msgstr ""
+
+#: utils/tables.py
+msgid "Redacted"
+msgstr "Redactat"
+
+#: utils/tables.py
+#, python-format
+msgid "View %(a)s's %(d)s Record"
+msgstr "Veure el recorregut de %(a)s %(d)s"
+
+#: utils/tables.py
+#, python-format
+msgid "View %(team)s's Record"
+msgstr "Veure el recorregut de %(team)s"
+
+#: utils/tables.py
+#, python-format
+msgid "Code name: <strong>%(name)s</strong>"
+msgstr "Nom en clau: <strong>%(name)s</strong>"
+
+#: utils/tables.py
+#, python-format
+msgid "Real name: <strong>%(name)s</strong>"
+msgstr "Nom real: <strong>%(name)s</strong>"
+
+#: utils/tables.py
+#, python-format
+msgid "%(team)s won"
+msgstr "%(team)s va guanyar"
+
+#: utils/tables.py
+#, python-format
+msgid "%(team)s lost"
+msgstr "%(team)s va perdre"
+
+#: utils/tables.py
+#, python-format
+msgid "%(team)s—no result"
+msgstr ""
+
+#: utils/tables.py
+#, python-format
+msgid "%(team)s placed %(place)s"
+msgstr "%(team)s va resultar %(place)s"
+
+#: utils/tables.py
+#, python-format
+msgid "%(team)s is advancing"
+msgstr ""
+
+#: utils/tables.py
+#, python-format
+msgid "%(team)s was eliminated"
+msgstr "%(team)s va ser eliminat"
+
+#: utils/tables.py
+msgid "View/edit debate ballot"
+msgstr "Veure/Edita la Taula de resultats del Debat"
+
+#: utils/tables.py
+msgid "View debate ballot"
+msgstr "Veure la Taula de resultats del Debat"
+
+#: utils/tables.py
+#, python-format
+msgid " vs %(opposition)s"
+msgstr " vs. %(opposition)s"
+
+#: utils/tables.py
+#, python-format
+msgid "Won against %(team)s"
+msgstr "Va guanyar contra %(team)s"
+
+#: utils/tables.py
+#, python-format
+msgid "Lost to %(team)s"
+msgstr "Va perdre contra %(team)s"
+
+#: utils/tables.py
+#, python-format
+msgid "No result for debate against %(team)s"
+msgstr "Cap resultat per al Debat contra %(team)s"
+
+#: utils/tables.py
+#, python-format
+msgid "Total speaker score: <strong>%s</strong>"
+msgstr "Puntuació total dels oradors: <strong>%s</strong>"
+
+#: utils/tables.py
+msgid "Teams in debate:"
+msgstr "Equips al Debat:"
+
+#: utils/tables.py
+#, python-format
+msgid "%(team)s (%(side)s)"
+msgstr "%(team)s (%(side)s)"
+
+#: utils/tables.py
+msgid "??"
+msgstr "??"
+
+#: utils/tables.py
+msgid "advancing"
+msgstr "avançant"
+
+#: utils/tables.py
+msgid "Advancing"
+msgstr "Avançant"
+
+#: utils/tables.py
+msgid "eliminated"
+msgstr "eliminat"
+
+#: utils/tables.py
+msgid "Eliminated"
+msgstr "Eliminat"
+
+#: utils/tables.py
+msgid "No result for debate"
+msgstr ""
+
+#: utils/tables.py
+#, python-format
+msgid "Placed %(place)s"
+msgstr "Posicionat %(place)s"
+
+#: utils/tables.py
+msgid "Name"
+msgstr "Nom"
+
+#: utils/tables.py
+msgid "Institution"
+msgstr "Institució"
+
+#: utils/tables.py
+msgid "Member of the Adjudication Core"
+msgstr "Membre de l'Equip d'Adjudicació"
+
+#: utils/tables.py
+msgid "Independent Adjudicator"
+msgstr "Jutge Independent"
+
+#: utils/tables.py
+msgid "Always Trainee"
+msgstr "Sempre Jutge Aprenent"
+
+#: utils/tables.py
+msgid "in minority"
+msgstr "en minoria"
+
+#: utils/tables.py
+msgid "Debate Adjudicators"
+msgstr "Jutges del Debat"
+
+#: utils/tables.py
+msgid "Categories"
+msgstr "Categories"
+
+#: utils/tables.py
+msgid "Category"
+msgstr "Categoria"
+
+#: utils/tables.py
+#, python-format
+msgid "This room %(predicate)s."
+msgstr "Aquesta sala %(predicate)s."
+
+#: utils/tables.py
+#, python-format
+msgid "This room %(predicates)s, and %(last_predicate)s."
+msgstr "Aquesta sala %(predicates)s, i %(last_predicate)s."
+
+#: utils/tables.py
+msgid "Room"
+msgstr "Sala"
+
+#: utils/tables.py
+#, python-format
+msgid "Teams have met once"
+msgid_plural "Teams have met %(count)d times"
+msgstr[0] "Els equips s'han enfrontat un cop"
+msgstr[1] "Els equips s'han enfrontat %(count)d cops"
+
+#: utils/tables.py
+msgid "Teams are from the same institution"
+msgstr "Els equips són de la mateixa institució"
+
+#: utils/tables.py
+msgid "Conflicts/Flags"
+msgstr ""
+
+#: utils/tables.py
+msgid "The confirmed ballot"
+msgstr "La taula de resultats confirmada"
+
+#: utils/tables.py
+msgid "No ballot"
+msgstr "No Taula de resultats"
+
+#: utils/tables.py
+msgid "No scores"
+msgstr ""
+
+#: utils/tables.py
+msgid "View Ballot"
+msgstr "Veure Taula de resultats"
+
+#: utils/tables.py
+msgid "The ballot you submitted"
+msgstr "La Taula de Resultats associada"
+
+#: utils/tables.py
+msgid "View/Edit Ballot"
+msgstr "Veure/Edita Taula de Resultats"
+
+#: utils/tables.py
+msgid "Result"
+msgstr "Resultat"
+
+#. Translators: "TBC" stands for "to be confirmed".
+#: utils/tables.py
+msgid "TBC"
+msgstr "SC (ser confirmat)"
+
+#: utils/tables.py
+msgid "Team iron-personed this round and the last."
+msgstr ""
+
+#: utils/tables.py
+msgid "Team iron-personed this round."
+msgstr ""
+
+#: utils/tables.py
+msgid "Team iron-personed last round."
+msgstr ""
+
+#: utils/tables.py
+#, python-format
+msgid "Team %(num)d"
+msgstr "Equip %(num)d"
+
+#: utils/tables.py
+msgid "Postpone"
+msgstr ""
+
+#: utils/views.py
+msgid "Whoops! You're not meant to type that URL into your browser."
+msgstr "Vaja! No heu d'escriure aquest URL al vostre navegador."
+
