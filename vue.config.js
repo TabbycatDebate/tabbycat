@@ -30,6 +30,7 @@ module.exports = {
         return {
           ...options,
           compilerOptions: {
+            whitespace: 'preserve',
             compatConfig: {
               MODE: 2
             }

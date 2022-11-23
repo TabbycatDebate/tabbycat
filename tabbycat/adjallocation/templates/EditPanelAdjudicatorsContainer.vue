@@ -16,12 +16,15 @@
     >
       <template v-slot:extra-actions>
         <button
-          :class="['btn', debatesOrPanelsCount > 0 ? 'btn-outline-primary' : 'btn-success']"
+          :class="[
+            'btn',
+            debatesOrPanelsCount > 0 ? 'btn-outline-primary' : 'btn-success',
+          ]"
           @click="showCreatePanels"
           v-text="gettext('Create Panels')"
         ></button>
       </template>
-      <template slot:default-highlights>
+      <template v-slot:default-highlights>
         <button
           class="btn conflictable conflicts-toolbar hover-histories-2-ago"
           data-toggle="tooltip"
