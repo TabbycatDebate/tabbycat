@@ -20,6 +20,22 @@ module.exports = {
   // Don't split out vendors file
   chainWebpack: config => {
     config.optimization.splitChunks(false)
+
+    config.resolve.alias.set('vue', '@vue/compat')
+
+    config.module
+      .rule('vue')
+      .use('vue-loader')
+      .tap((options) => {
+        return {
+          ...options,
+          compilerOptions: {
+            compatConfig: {
+              MODE: 2
+            }
+          }
+        }
+      })
   },
   devServer: {
     port: 8888,

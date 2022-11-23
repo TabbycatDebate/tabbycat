@@ -26,8 +26,8 @@
         </div>
       </section>
       <section class="d-flex flex-wrap pb-2" ref="unallocatedHolder">
-        <div v-for="item in currentSortingMethod" :is="unallocatedComponent" :item="item" :key="item.id"
-             :drag-payload="{ 'item': item.id, 'assignment': null, 'position': null }"></div>
+        <component v-for="item in currentSortingMethod" :is="unallocatedComponent" :item="item" :key="item.id"
+             :drag-payload="{ 'item': item.id, 'assignment': null, 'position': null }"/>
       </section>
 
     </droppable-item>

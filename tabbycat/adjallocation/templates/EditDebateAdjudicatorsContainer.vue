@@ -15,35 +15,35 @@
       @show-allocate="showAllocate"
       @show-prioritise="showPrioritise"
     >
-      <template slot="default-highlights">
+    <template v-slot:default-highlights>
         <button
           class="btn conflictable conflicts-toolbar hover-histories-2-ago"
           data-toggle="tooltip"
           v-text="gettext('Seen')"
-          :title="'Has judged this team or with this adjudicator previously'"
+          :title="gettext('Has judged this team or with this adjudicator previously')"
         ></button>
         <button
           class="btn conflictable conflicts-toolbar hover-institution"
           data-toggle="tooltip"
           v-text="gettext('Institution')"
-          :title="'Is from the same institution as this team or panelist.'"
+          :title="gettext('Is from the same institution as this team or panelist.')"
         ></button>
         <button
           class="btn conflictable conflicts-toolbar hover-adjudicator"
           data-toggle="tooltip"
           v-text="gettext('Conflict')"
-          :title="'Has a nominated conflict with this team or panelist.'"
+          :title="gettext('Has a nominated conflict with this team or panelist.')"
         ></button>
         <button
           class="btn panel-incomplete"
           data-toggle="tooltip"
           v-text="gettext('Missing')"
-          :title="'Panel is missing a chair or enough adjudicators for a voting majority.'"
+          :title="gettext('Panel is missing a chair or enough adjudicators for a voting majority.')"
         ></button>
       </template>
     </drag-and-drop-actions>
 
-    <template slot="debates">
+    <template v-slot:debates>
       <drag-and-drop-debate
         v-for="debate in sortedDebatesOrPanels"
         :key="debate.id"
@@ -60,26 +60,25 @@
           :handle-panel-swap="swapPanels"
         >
         </debate-or-panel-adjudicators>
-        <template slot="venue"><span></span></template
-        ><!--Hide Venues-->
+        <template v-slot:venue><span></span></template><!--Hide Venues-->
       </drag-and-drop-debate>
       <div class="text-center lead mx-5 p-5" v-if="sortedDebatesOrPanels.length === 0">
         <p class="mx-5 lead mt-2 px-5" v-text="gettext(noDebatesInline)"></p>
       </div>
     </template>
 
-    <template slot="modals">
+    <template v-slot:modals>
       <modal-for-sharding :intro-text="gettext(intro)"></modal-for-sharding>
       <modal-for-allocating
         :intro-text="
           gettext(`Auto-allocate will remove adjudicators from all debates
         and create new panels in their place.`)
         "
-        :context-of-action="'allocate_debate_adjs'"
+        context-of-action="allocate_debate_adjs"
       ></modal-for-allocating>
       <modal-for-prioritising
         :intro-text="gettext(prioritiseIntro)"
-        :context-of-action="'prioritise_debates'"
+        context-of-action="prioritise_debates"
       ></modal-for-prioritising>
     </template>
   </drag-and-drop-layout>

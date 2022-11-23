@@ -4,12 +4,11 @@
 
       <thead>
         <tr>
-          <th v-for="header in headers" :key="header.key" @resort="updateSorting"
+          <SmartHeader v-for="header in headers" :key="header.key" @resort="updateSorting"
               :header="header"
               :sort-key="sortKey"
-              :sort-order="sortOrder"
-              is="smartHeader">
-          </th>
+              :sort-order="sortOrder">
+          </SmartHeader>
         </tr>
       </thead>
 
@@ -20,9 +19,9 @@
           </td>
         </tr>
         <tr v-for="row in dataFilteredByKey">
-          <td v-for="(cellData, cellIndex) in row" :key="cellIndex" :cell-data="cellData"
+          <component v-for="(cellData, cellIndex) in row" :key="cellIndex" :cell-data="cellData"
               :is="cellData['component'] ? cellData['component'] : 'SmartCell'">
-          </td>
+          </component>
         </tr>
       </tbody>
 

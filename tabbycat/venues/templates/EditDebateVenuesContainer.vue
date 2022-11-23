@@ -6,7 +6,7 @@
 
     <drag-and-drop-actions slot="actions" :count="debatesOrPanelsCount" allocate="true"
                            @show-allocate="showAllocate">
-      <template slot="default-highlights">
+      <template v-slot:default-highlights>
         <button class="btn conflictable conflicts-toolbar hover-adjudicator"
                 data-toggle="tooltip" v-text="gettext('Constraint')"
                 :title="gettext('This adjudicator or team has an unmet room constraint.')"></button>
@@ -16,7 +16,7 @@
       </template>
     </drag-and-drop-actions>
 
-    <template slot="debates">
+    <template v-slot:debates>
       <drag-and-drop-debate v-for="debate in sortedDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
         <droppable-item slot="venue" :handle-drop="moveVenue" :drop-context="{ 'assignment': debate.id }"
                         class="flex-12 flex-truncate border-right d-flex flex-wrap">
@@ -27,7 +27,7 @@
       </drag-and-drop-debate>
     </template>
 
-    <template slot="modals">
+    <template v-slot:modals>
       <modal-for-allocating-venues :intro-text="gettext(allocateIntro)"
                                    :context-of-action="'allocate_debate_venues'">
       </modal-for-allocating-venues>

@@ -6,7 +6,7 @@
     </span>
 
     <!-- Tooltip/Popovers Hovers Wrapper -->
-    <popover v-if="canSupportPopover" :cell-data="cellData['popover']">
+    <popover v-if="canSupportPopover" :cell-data="cellData.popover">
       <cell-content :cell-data="cellData"></cell-content>
     </popover>
 
@@ -26,12 +26,7 @@ export default {
   props: { cellData: Object },
   computed: {
     canSupportPopover: function () {
-      if (typeof this.cellData.popover !== 'undefined') {
-        if (Object.prototype.hasOwnProperty.call(this.cellData.popover, 'content')) {
-          return true
-        }
-      }
-      return false
+      return Boolean(this.cellData?.popover?.content)
     },
   },
 }

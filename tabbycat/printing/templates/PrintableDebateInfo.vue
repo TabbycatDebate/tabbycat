@@ -61,11 +61,10 @@
             </div>
           </div>
         </div>
+        <!-- There shouldn't only be one motion if selection is on; but useful as fallback? -->
         <div v-if="!roundInfo.hideMotions && roundInfo.motions.length === 1"
              class="db-flex-item db-align-vertical-center d-inline"
-             v-html="tct('The motion is <em>%s</em>', [roundInfo.motions[0].text])">
-          <!-- There shouldn't only be one motion if selection is on; but useful as fallback? -->
-        </div>
+             v-html="tct('The motion is <em>%s</em>', [roundInfo.motions[0].text])"></div>
         <div v-if="roundInfo.hideMotions || roundInfo.motions.length === 0"
              class="db-flex-item db-fill-in pt-3" v-text="gettext('Motion is:')"></div>
       </div>
