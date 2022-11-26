@@ -651,7 +651,6 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
     retrieve=extend_schema(parameters=[id_parameter]),
     update=extend_schema(parameters=[id_parameter]),
     partial_update=extend_schema(parameters=[id_parameter]),
-    destroy=extend_schema(parameters=[id_parameter]),
 )
 class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.BallotSerializer
@@ -691,6 +690,14 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
         ).select_related(
             'motion', 'motion__tournament',
             'participant_submitter__adjudicator__tournament')
+
+    @extend_schema(summary="Delete ballot", parameters=[id_parameter], responses={200: serializers.BallotSerializer})
+    def destroy(self, request, *args, **kwargs):
+        """Only mark as discarded; don't allow object deletion."""
+        instance = self.get_object()
+        instance.discarded = True
+        instance.save()
+        return self.retrieve(request, *args, **kwargs)
 
 
 @extend_schema(tags=['feedback'], parameters=[tournament_parameter])
