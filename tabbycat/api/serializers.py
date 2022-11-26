@@ -43,8 +43,9 @@ def _validate_field(self, field, value):
 
 
 def is_staff(context):
-    # OpenAPI generation uses a host called 'testserver' (sometimes context is also None in that circumstance)
-    return context is None or context['request'].get_host() == 'testserver' or context['request'].user.is_staff
+    # OpenAPI generation does not have a view (sometimes context is also None in that circumstance).
+    # Avoid redacting fields.
+    return context is None or 'view' not in context or context['request'].user.is_staff
 
 
 class BaseSourceField(fields.TournamentHyperlinkedRelatedField):
