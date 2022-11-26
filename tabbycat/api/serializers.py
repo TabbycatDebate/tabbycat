@@ -1321,6 +1321,13 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         return instance
 
 
+class UpdateBallotSerializer(serializers.ModelSerializer):
+    """Unused, just for OpenAPI with BallotSerializer.update()"""
+    class Meta:
+        model = BallotSubmission
+        fields = ('confirmed', 'discarded')
+
+
 class PreformedPanelSerializer(serializers.ModelSerializer):
     url = fields.RoundHyperlinkedIdentityField(view_name='api-preformedpanel-detail', lookup_url_kwarg='debate_pk')
     adjudicators = DebateAdjudicatorSerializer(required=False, allow_null=True)

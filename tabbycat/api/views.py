@@ -52,7 +52,7 @@ debate_parameters = [
 id_parameter = OpenApiParameter('id', description="The object's primary key", type=int, location="path")
 
 
-@extend_schema(tags=['root'])
+@extend_schema(tags=['root'], summary="API root")
 class APIRootView(PublicAPIMixin, GenericAPIView):
     name = "API Root"
     serializer_class = serializers.RootSerializer
@@ -67,7 +67,7 @@ class APIRootView(PublicAPIMixin, GenericAPIView):
         })
 
 
-@extend_schema(tags=['root'])
+@extend_schema(tags=['root'], summary="API v1 root")
 class APIV1RootView(PublicAPIMixin, GenericAPIView):
     name = "API Version 1 Root"
     serializer_class = serializers.V1RootSerializer
@@ -88,10 +88,12 @@ class APIV1RootView(PublicAPIMixin, GenericAPIView):
 
 @extend_schema(tags=['tournaments'])
 @extend_schema_view(
-    retrieve=extend_schema(parameters=[tournament_parameter]),
-    update=extend_schema(parameters=[tournament_parameter]),
-    partial_update=extend_schema(parameters=[tournament_parameter]),
-    destroy=extend_schema(parameters=[tournament_parameter]),
+    list=extend_schema(summary="List tournaments"),
+    create=extend_schema(summary="Create tournament"),
+    retrieve=extend_schema(summary="Get tournament", parameters=[tournament_parameter]),
+    update=extend_schema(summary="Change tournament", parameters=[tournament_parameter]),
+    partial_update=extend_schema(summary="Patch tournament", parameters=[tournament_parameter]),
+    destroy=extend_schema(summary="Delete tournament", parameters=[tournament_parameter]),
 )
 class TournamentViewSet(PublicAPIMixin, ModelViewSet):
     # Don't use TournamentAPIMixin here, it's not filtering objects by tournament.
@@ -107,7 +109,17 @@ class TournamentViewSet(PublicAPIMixin, ModelViewSet):
 
 
 @extend_schema(tags=['tournaments'], parameters=[tournament_parameter])
+@extend_schema_view(
+    list=extend_schema(summary="List tournament preferences"),
+    retrieve=extend_schema(summary="Get tournament preference"),
+    update=extend_schema(summary="Modify tournament preference"),
+    partial_update=extend_schema(summary="Patch tournament preference"),
+    bulk=extend_schema(summary="Update multiple tournament preferences"),
+)
 class TournamentPreferenceViewSet(TournamentFromUrlMixin, AdministratorAPIMixin, PerInstancePreferenceViewSet):
+    """
+    """
+    # Blank comment to avoid comment from TournamentFromUrlMixin appearing.
     queryset = TournamentPreferenceModel.objects.all()
     serializer_class = PreferenceSerializer
 
@@ -117,12 +129,12 @@ class TournamentPreferenceViewSet(TournamentFromUrlMixin, AdministratorAPIMixin,
 
 @extend_schema(tags=['rounds'])
 @extend_schema_view(
-    list=extend_schema(parameters=[tournament_parameter]),
-    create=extend_schema(parameters=[tournament_parameter]),
-    retrieve=extend_schema(parameters=round_parameters),
-    update=extend_schema(parameters=round_parameters),
-    partial_update=extend_schema(parameters=round_parameters),
-    destroy=extend_schema(parameters=round_parameters),
+    list=extend_schema(summary="List rounds of a tournament", parameters=[tournament_parameter]),
+    create=extend_schema(summary="Create round", parameters=[tournament_parameter]),
+    retrieve=extend_schema(summary="Get round", parameters=round_parameters),
+    update=extend_schema(summary="Update round", parameters=round_parameters),
+    partial_update=extend_schema(summary="Patch round", parameters=round_parameters),
+    destroy=extend_schema(summary="Delete round", parameters=round_parameters),
 )
 class RoundViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.RoundSerializer
@@ -137,10 +149,12 @@ class RoundViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
 
 @extend_schema(tags=['motions'], parameters=[tournament_parameter])
 @extend_schema_view(
-    retrieve=extend_schema(parameters=[id_parameter]),
-    update=extend_schema(parameters=[id_parameter]),
-    partial_update=extend_schema(parameters=[id_parameter]),
-    destroy=extend_schema(parameters=[id_parameter]),
+    list=extend_schema(summary="List tournament motions"),
+    create=extend_schema(summary="Create motion"),
+    retrieve=extend_schema(summary="Get motion", parameters=[id_parameter]),
+    update=extend_schema(summary="Update motion", parameters=[id_parameter]),
+    partial_update=extend_schema(summary="Patch motion", parameters=[id_parameter]),
+    destroy=extend_schema(summary="Delete motion", parameters=[id_parameter]),
 )
 class MotionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.MotionSerializer
@@ -156,10 +170,12 @@ class MotionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
 
 @extend_schema(tags=['break-categories'], parameters=[tournament_parameter])
 @extend_schema_view(
-    retrieve=extend_schema(parameters=[id_parameter]),
-    update=extend_schema(parameters=[id_parameter]),
-    partial_update=extend_schema(parameters=[id_parameter]),
-    destroy=extend_schema(parameters=[id_parameter]),
+    list=extend_schema(summary="List tournament break categories"),
+    create=extend_schema(summary="Create break category"),
+    retrieve=extend_schema(summary="Get break category", parameters=[id_parameter]),
+    update=extend_schema(summary="Update break category", parameters=[id_parameter]),
+    partial_update=extend_schema(summary="Patch break category", parameters=[id_parameter]),
+    destroy=extend_schema(summary="Delete break category", parameters=[id_parameter]),
 )
 class BreakCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.BreakCategorySerializer
@@ -167,10 +183,12 @@ class BreakCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
 
 @extend_schema(tags=['speaker-categories'], parameters=[tournament_parameter])
 @extend_schema_view(
-    retrieve=extend_schema(parameters=[id_parameter]),
-    update=extend_schema(parameters=[id_parameter]),
-    partial_update=extend_schema(parameters=[id_parameter]),
-    destroy=extend_schema(parameters=[id_parameter]),
+    list=extend_schema(summary="List tournament speaker categories"),
+    create=extend_schema(summary="Create speaker category"),
+    retrieve=extend_schema(summary="Get speaker category", parameters=[id_parameter]),
+    update=extend_schema(summary="Update speaker category", parameters=[id_parameter]),
+    partial_update=extend_schema(summary="Patch speaker category", parameters=[id_parameter]),
+    destroy=extend_schema(summary="Delete speaker category", parameters=[id_parameter]),
 )
 class SpeakerCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.SpeakerCategorySerializer
@@ -182,6 +200,11 @@ class SpeakerCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
 
 
 @extend_schema(tags=['break-categories'], parameters=[tournament_parameter, id_parameter])
+@extend_schema_view(
+    get=extend_schema(summary="Get break-eligible teams for category"),
+    put=extend_schema(summary="Update break eligibility of teams"),
+    patch=extend_schema(summary="Add teams as break-eligible"),
+)
 class BreakEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, RetrieveUpdateAPIView):
     serializer_class = serializers.BreakEligibilitySerializer
     access_preference = 'public_break_categories'
@@ -191,6 +214,11 @@ class BreakEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, Retriev
 
 
 @extend_schema(tags=['speaker-categories'], parameters=[tournament_parameter, id_parameter])
+@extend_schema_view(
+    get=extend_schema(summary="Get speaker category membership"),
+    put=extend_schema(summary="Update membership of speaker category"),
+    patch=extend_schema(summary="Add speakers to category"),
+)
 class SpeakerEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, RetrieveUpdateAPIView):
     serializer_class = serializers.SpeakerEligibilitySerializer
     access_preference = 'public_participants'
@@ -223,32 +251,30 @@ class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBr
         context['break_category'] = self.break_category
         return context
 
+    @extend_schema(summary="Get breaking teams")
     def list(self, request, *args, **kwargs):
         """
-        Get breaking teams
-        ---
         Pagination might be dangerous here, so disabled.
         """
         queryset = self.filter_queryset(self.get_queryset())
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    @extend_schema(summary="Generate break")
     def create(self, request, *args, **kwargs):
-        """Generate break"""
         self.generate_break((self.break_category,))
         return self.list(request, *args, **kwargs)
 
+    @extend_schema(summary="Delete break")
     def destroy(self, request, *args, **kwargs):
         """
-        Delete break
-        ---
         Destroy is normally for a specific instance, now QuerySet.
         """
         self.filter_queryset(self.get_queryset()).delete()
         return Response(status=204)  # No content
 
+    @extend_schema(summary="Update remark and regenerate break")
     def update(self, request, *args, **kwargs):
-        """Update team remark and then regenerate break."""
         serializer = serializers.PartialBreakingTeamSerializer(data=request.data, context=self.get_serializer_context())
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -258,7 +284,7 @@ class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBr
 
 @extend_schema(tags=['institutions'], parameters=[tournament_parameter])
 @extend_schema_view(
-    list=extend_schema(parameters=[
+    list=extend_schema(summary="List institutions in tournament", parameters=[
         OpenApiParameter('region', description='Only include institutions from the region', required=False, type=str),
     ]),
 )
@@ -286,10 +312,12 @@ class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
 
 @extend_schema(tags=['teams'], parameters=[tournament_parameter])
 @extend_schema_view(
-    retrieve=extend_schema(parameters=[id_parameter]),
-    update=extend_schema(parameters=[id_parameter]),
-    partial_update=extend_schema(parameters=[id_parameter]),
-    destroy=extend_schema(parameters=[id_parameter]),
+    list=extend_schema(summary="List teams in tournament"),
+    create=extend_schema(summary="Create team"),
+    retrieve=extend_schema(summary="Get team", parameters=[id_parameter]),
+    update=extend_schema(summary="Update team", parameters=[id_parameter]),
+    partial_update=extend_schema(summary="Patch team", parameters=[id_parameter]),
+    destroy=extend_schema(summary="Delete team", parameters=[id_parameter]),
 )
 class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.TeamSerializer
@@ -312,13 +340,14 @@ class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
 
 @extend_schema(tags=['adjudicators'], parameters=[tournament_parameter])
 @extend_schema_view(
-    list=extend_schema(parameters=[
+    list=extend_schema(summary="Get adjudicators in tournament", parameters=[
         OpenApiParameter('break', description='Only include breaking adjudicators', required=False, type=bool, default=False),
     ]),
-    retrieve=extend_schema(parameters=[id_parameter]),
-    update=extend_schema(parameters=[id_parameter]),
-    partial_update=extend_schema(parameters=[id_parameter]),
-    destroy=extend_schema(parameters=[id_parameter]),
+    create=extend_schema(summary="Create adjudicator"),
+    retrieve=extend_schema(summary="Get adjudicator", parameters=[id_parameter]),
+    update=extend_schema(summary="Update adjudicator", parameters=[id_parameter]),
+    partial_update=extend_schema(summary="Patch adjudicator", parameters=[id_parameter]),
+    destroy=extend_schema(summary="Delete adjudicator", parameters=[id_parameter]),
 )
 class AdjudicatorViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.AdjudicatorSerializer
@@ -341,13 +370,14 @@ class AdjudicatorViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
 
 @extend_schema(tags=['institutions'])
 @extend_schema_view(
-    list=extend_schema(parameters=[
+    list=extend_schema(summary="List all institutions", parameters=[
         OpenApiParameter('region', description='Only include institutions from the region', required=False, type=str),
     ]),
-    retrieve=extend_schema(parameters=[id_parameter]),
-    update=extend_schema(parameters=[id_parameter]),
-    partial_update=extend_schema(parameters=[id_parameter]),
-    destroy=extend_schema(parameters=[id_parameter]),
+    create=extend_schema(summary="Create institution"),
+    retrieve=extend_schema(summary="Get institution", parameters=[id_parameter]),
+    update=extend_schema(summary="Update institution", parameters=[id_parameter]),
+    partial_update=extend_schema(summary="Patch institution", parameters=[id_parameter]),
+    destroy=extend_schema(summary="Delete institution", parameters=[id_parameter]),
 )
 class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.InstitutionSerializer
@@ -361,10 +391,12 @@ class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
 
 @extend_schema(tags=['teams'], parameters=[tournament_parameter])
 @extend_schema_view(
-    retrieve=extend_schema(parameters=[id_parameter]),
-    update=extend_schema(parameters=[id_parameter]),
-    partial_update=extend_schema(parameters=[id_parameter]),
-    destroy=extend_schema(parameters=[id_parameter]),
+    list=extend_schema(summary="List speakers in tournament"),
+    create=extend_schema(summary="Add speaker"),
+    retrieve=extend_schema(summary="Get speaker", parameters=[id_parameter]),
+    update=extend_schema(summary="Update speaker", parameters=[id_parameter]),
+    partial_update=extend_schema(summary="Patch speaker", parameters=[id_parameter]),
+    destroy=extend_schema(summary="Delete speaker", parameters=[id_parameter]),
 )
 class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.SpeakerSerializer
@@ -384,10 +416,12 @@ class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet)
 
 @extend_schema(tags=['venues'], parameters=[tournament_parameter])
 @extend_schema_view(
-    retrieve=extend_schema(parameters=[id_parameter]),
-    update=extend_schema(parameters=[id_parameter]),
-    partial_update=extend_schema(parameters=[id_parameter]),
-    destroy=extend_schema(parameters=[id_parameter]),
+    list=extend_schema(summary="List rooms in tournament"),
+    create=extend_schema(summary="Create room"),
+    retrieve=extend_schema(summary="Get room", parameters=[id_parameter]),
+    update=extend_schema(summary="Update room", parameters=[id_parameter]),
+    partial_update=extend_schema(summary="Patch room", parameters=[id_parameter]),
+    destroy=extend_schema(summary="Delete room", parameters=[id_parameter]),
 )
 class VenueViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.VenueSerializer
@@ -400,10 +434,12 @@ class VenueViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
 
 @extend_schema(tags=['venues'], parameters=[tournament_parameter])
 @extend_schema_view(
-    retrieve=extend_schema(parameters=[id_parameter]),
-    update=extend_schema(parameters=[id_parameter]),
-    partial_update=extend_schema(parameters=[id_parameter]),
-    destroy=extend_schema(parameters=[id_parameter]),
+    list=extend_schema(summary="List tournament venue categories"),
+    create=extend_schema(summary="Create venue category"),
+    retrieve=extend_schema(summary="Get venue category", parameters=[id_parameter]),
+    update=extend_schema(summary="Update venue category", parameters=[id_parameter]),
+    partial_update=extend_schema(summary="Patch venue category", parameters=[id_parameter]),
+    destroy=extend_schema(summary="Delete venue category", parameters=[id_parameter]),
 )
 class VenueCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.VenueCategorySerializer
@@ -517,6 +553,13 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
 
 
 @extend_schema(tags=['adjudicators'])
+@extend_schema_view(
+    get=extend_schema(summary="Get adjudicator checkin status"),
+    delete=extend_schema(summary="Check out adjudicator"),
+    put=extend_schema(summary="Check in adjudicator"),
+    patch=extend_schema(summary="Toggle adjudicator checkin status"),
+    post=extend_schema(summary="Create adjudicator checkin identifier"),
+)
 class AdjudicatorCheckinsView(BaseCheckinsView):
     model = Adjudicator
     object_api_view = 'api-adjudicator-detail'
@@ -524,6 +567,13 @@ class AdjudicatorCheckinsView(BaseCheckinsView):
 
 
 @extend_schema(tags=['teams'])
+@extend_schema_view(
+    get=extend_schema(summary="Get speaker checkin status"),
+    delete=extend_schema(summary="Check out speaker"),
+    put=extend_schema(summary="Check in speaker"),
+    patch=extend_schema(summary="Toggle speaker checkin status"),
+    post=extend_schema(summary="Create speaker checkin identifier"),
+)
 class SpeakerCheckinsView(BaseCheckinsView):
     model = Speaker
     object_api_view = 'api-speaker-detail'
@@ -532,6 +582,13 @@ class SpeakerCheckinsView(BaseCheckinsView):
 
 
 @extend_schema(tags=['venues'])
+@extend_schema_view(
+    get=extend_schema(summary="Get room checkin status"),
+    delete=extend_schema(summary="Check out room"),
+    put=extend_schema(summary="Check in room"),
+    patch=extend_schema(summary="Toggle room checkin status"),
+    post=extend_schema(summary="Create room checkin identifier"),
+)
 class VenueCheckinsView(BaseCheckinsView):
     model = Venue
     object_api_view = 'api-venue-detail'
@@ -569,6 +626,9 @@ class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPI
         return Response(serializer.data)
 
 
+@extend_schema_view(
+    get=extend_schema(summary="Get substantive speaker standings", responses=serializers.SpeakerStandingsSerializer(many=True)),
+)
 class SubstantiveSpeakerStandingsView(BaseStandingsView):
     name = "Speaker Standings"
     serializer_class = serializers.SpeakerStandingsSerializer
@@ -581,11 +641,17 @@ class SubstantiveSpeakerStandingsView(BaseStandingsView):
         return self.tournament.round_set.last()
 
 
+@extend_schema_view(
+    get=extend_schema(summary="Get reply speaker standings", responses=serializers.SpeakerStandingsSerializer(many=True)),
+)
 class ReplySpeakerStandingsView(SubstantiveSpeakerStandingsView):
     def get_metrics(self):
         return ('replies_avg',), ('replies_stddev', 'replies_count')
 
 
+@extend_schema_view(
+    get=extend_schema(summary="Get team standings", responses=serializers.TeamStandingsSerializer(many=True)),
+)
 class TeamStandingsView(BaseStandingsView):
     name = 'Team Standings'
     serializer_class = serializers.TeamStandingsSerializer
@@ -596,11 +662,12 @@ class TeamStandingsView(BaseStandingsView):
 
 @extend_schema(tags=['debates'], parameters=round_parameters)
 @extend_schema_view(
-    list=extend_schema(parameters=round_parameters),
-    retrieve=extend_schema(parameters=debate_parameters),
-    update=extend_schema(parameters=debate_parameters),
-    partial_update=extend_schema(parameters=debate_parameters),
-    destroy=extend_schema(parameters=debate_parameters),
+    list=extend_schema(summary="List pairings in round"),
+    create=extend_schema(summary="Create pairing"),
+    retrieve=extend_schema(summary="Get pairing", parameters=debate_parameters),
+    update=extend_schema(summary="Update pairing", parameters=debate_parameters),
+    partial_update=extend_schema(summary="Patch pairing", parameters=debate_parameters),
+    destroy=extend_schema(summary="Delete pairing", parameters=debate_parameters),
 )
 class PairingViewSet(RoundAPIMixin, ModelViewSet):
 
@@ -637,20 +704,21 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
             'debateadjudicator_set', 'debateadjudicator_set__adjudicator', 'debateadjudicator_set__adjudicator__tournament',
         )
 
+    @extend_schema(summary="Delete all pairings in the round")
     def delete_all(self, request, *args, **kwargs):
-        """Deletes all pairings in the round"""
         self.get_queryset().delete()
         return Response(status=204)  # No content
 
 
 @extend_schema(tags=['results'], parameters=debate_parameters)
 @extend_schema_view(
-    list=extend_schema(parameters=[
+    list=extend_schema(summary="Get debate ballots", parameters=[
         OpenApiParameter('confirmed', description='Only include confirmed ballots', required=False, type=bool, default=False),
     ]),
-    retrieve=extend_schema(parameters=[id_parameter]),
-    update=extend_schema(parameters=[id_parameter]),
-    partial_update=extend_schema(parameters=[id_parameter]),
+    create=extend_schema(summary="Create ballot"),
+    retrieve=extend_schema(summary="Get ballot", parameters=[id_parameter]),
+    update=extend_schema(summary="Update ballot", parameters=[id_parameter], request=serializers.UpdateBallotSerializer),
+    partial_update=extend_schema(summary="Patch ballot", parameters=[id_parameter], request=serializers.UpdateBallotSerializer),
 )
 class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.BallotSerializer
@@ -702,14 +770,15 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
 
 @extend_schema(tags=['feedback'], parameters=[tournament_parameter])
 @extend_schema_view(
-    list=extend_schema(parameters=[
+    list=extend_schema(summary="List tournament feedback questions", parameters=[
         OpenApiParameter('from_adj', description='Only include questions given to adjudicators', required=False, type=bool, default=False),
         OpenApiParameter('from_team', description='Only include questions given to teams', required=False, type=bool, default=False),
     ]),
-    retrieve=extend_schema(parameters=[id_parameter]),
-    update=extend_schema(parameters=[id_parameter]),
-    partial_update=extend_schema(parameters=[id_parameter]),
-    destroy=extend_schema(parameters=[id_parameter]),
+    create=extend_schema(summary="Create feedback question"),
+    retrieve=extend_schema(summary="Get feedback question", parameters=[id_parameter]),
+    update=extend_schema(summary="Update feedback question", parameters=[id_parameter]),
+    partial_update=extend_schema(summary="Patch feedback question", parameters=[id_parameter]),
+    destroy=extend_schema(summary="Delete feedback question", parameters=[id_parameter]),
 )
 class FeedbackQuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.FeedbackQuestionSerializer
@@ -725,16 +794,17 @@ class FeedbackQuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
 
 @extend_schema(tags=['feedback'], parameters=[tournament_parameter])
 @extend_schema_view(
-    list=extend_schema(parameters=[
+    list=extend_schema(summary="List all tournament feedback", parameters=[
         OpenApiParameter('source_type', description='The type of participant submitter of the feedback', required=False, type=str, enum=['adjudicator', 'team']),
         OpenApiParameter('source', description='The ID of the participant submitting feedback; must be used in conjunction with `source_type`', required=False, type=int),
         OpenApiParameter('round', description='The sequence of the round of the submitted feedback', required=False, type=int),
         OpenApiParameter('target', description='The ID of the adjudicator receiving feedback', required=False, type=int),
     ]),
-    retrieve=extend_schema(parameters=[id_parameter]),
-    update=extend_schema(parameters=[id_parameter]),
-    partial_update=extend_schema(parameters=[id_parameter]),
-    destroy=extend_schema(parameters=[id_parameter]),
+    create=extend_schema(summary="Create feedback"),
+    retrieve=extend_schema(summary="Get feedback", parameters=[id_parameter]),
+    update=extend_schema(summary="Update feedback", parameters=[id_parameter]),
+    partial_update=extend_schema(summary="Patch feedback", parameters=[id_parameter]),
+    destroy=extend_schema(summary="Delete feedback", parameters=[id_parameter]),
 )
 class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.FeedbackSerializer
@@ -807,13 +877,12 @@ class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
         return RoundAvailability.objects.filter(
             ~self.get_filters(), round=self.round).select_related('content_type', 'round__tournament')
 
-    @extend_schema(parameters=extra_params)
+    @extend_schema(summary="Get all availabilities of the round", parameters=extra_params)
     def get(self, request, *args, **kwargs):
-        """Get all availabilities of the round"""
         return Response(self.get_field().to_representation(self.get_queryset()))
 
+    @extend_schema(summary="Toggle the availabilities of the included objects")
     def patch(self, request, *args, **kwargs):
-        """Toggle the availabilities of the included objects"""
         objs = sorted(self.get_field().to_internal_value(request.data), key=lambda o: type(o).__name__)
         for model, participants in groupby(objs, key=type):
             contenttype = ContentType.objects.get_for_model(model)
@@ -831,8 +900,8 @@ class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
 
         return self.get(request, *args, **kwargs)
 
+    @extend_schema(summary="Mark objects as available")
     def put(self, request, *args, **kwargs):
-        """Mark objects as available"""
         objs = sorted(self.get_field().to_internal_value(request.data), key=lambda o: type(o).__name__)
         for model, participants in groupby(objs, key=type):
             contenttype = ContentType.objects.get_for_model(model)
@@ -840,8 +909,8 @@ class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
                 [RoundAvailability(content_type=contenttype, round=self.round, object_id=p.id) for p in participants])
         return self.get(request, *args, **kwargs)
 
+    @extend_schema(summary="Mark objects as unavailable")
     def post(self, request, *args, **kwargs):
-        """Mark objects as unavailable"""
         objs = sorted(self.get_field().to_internal_value(request.data), key=lambda o: type(o).__name__)
         for model, participants in groupby(objs, key=type):
             contenttype = ContentType.objects.get_for_model(model)
@@ -851,20 +920,20 @@ class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
             ).delete()
         return self.get(request, *args, **kwargs)
 
-    @extend_schema(parameters=extra_params)
+    @extend_schema(summary="Delete class of availabilities", parameters=extra_params)
     def delete(self, request, *args, **kwargs):
-        """Delete class of availabilities"""
         self.get_queryset().delete()
         return Response(status=204)
 
 
 @extend_schema(tags=['debates'], parameters=round_parameters)
 @extend_schema_view(
-    list=extend_schema(parameters=round_parameters),
-    retrieve=extend_schema(parameters=debate_parameters),
-    update=extend_schema(parameters=debate_parameters),
-    partial_update=extend_schema(parameters=debate_parameters),
-    destroy=extend_schema(parameters=debate_parameters),
+    list=extend_schema(summary="List all preformed panels in the round"),
+    create=extend_schema(summary="Create preformed panel"),
+    retrieve=extend_schema(summary="Get preformed panel", parameters=debate_parameters),
+    update=extend_schema(summary="Update preformed panel", parameters=debate_parameters),
+    partial_update=extend_schema(summary="Patch preformed panel", parameters=debate_parameters),
+    destroy=extend_schema(summary="Delete preformed panel", parameters=debate_parameters),
 )
 class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
 
@@ -899,13 +968,14 @@ class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
             'preformedpaneladjudicator_set__adjudicator__tournament',
         )
 
+    @extend_schema(summary="Delete all preformed panels from round")
     def delete_all(self, request, *args, **kwargs):
-        """Delete all preformed panels from round"""
         self.get_queryset().delete()
         return Response(status=204)  # No content
 
+    @extend_schema(summary="Add blank preformed panels")
     def add_blank(self, request, *args, **kwargs):
-        """Add blank preformed panel objects with calculated bracket and liveness for round."""
+        """Adds new complete set of panels, with calculated bracket and liveness."""
         for i, (bracket_min, bracket_max, liveness) in enumerate(calculate_anticipated_draw(self.round), start=1):
             PreformedPanel.objects.update_or_create(round=self.round, room_rank=i, defaults={
                 'bracket_max': bracket_max,
