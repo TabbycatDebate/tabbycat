@@ -90,6 +90,9 @@ export default {
     isVenue: function () {
       return this.unallocatedItems[0] && 'priority' in this.unallocatedItems[0]
     },
+    isTeam: function () {
+      return this.unallocatedItems[0] && 'short_name' in this.unallocatedItems[0]
+    },
     filteredUnallocatedItems: function () {
       return this.showUnavailable ? this.filteredAll : this.filteredAvailable
     },
@@ -109,24 +112,16 @@ export default {
       })
     },
     sortedUnallocatedItemsByName: function () {
+      const field = this.isVenue ? 'display_name' : (this.isTeam ? 'short_name' : 'name')
       // Note slice makes a copy so we are not mutating
-      if (this.isVenue) {
-        return this.filteredUnallocatedItems.slice(0).sort((itemA, itemB) => {
-          return itemA.display_name.localeCompare(itemB.display_name)
-        })
-      }
       return this.filteredUnallocatedItems.slice(0).sort((itemA, itemB) => {
-        return itemA.name.localeCompare(itemB.name)
+        return itemA[field].localeCompare(itemB[field])
       })
     },
     sortedUnallocatedItemsByScore: function () {
-      if (this.isVenue) {
-        return this.filteredUnallocatedItems.slice(0).sort((itemA, itemB) => {
-          return itemB.priority - itemA.priority
-        })
-      }
+      const field = this.isVenue ? 'priority' : (this.isTeam ? 'points' : 'score')
       return this.filteredUnallocatedItems.slice(0).sort((itemA, itemB) => {
-        return itemB.score - itemA.score
+        return itemB[field] - itemA[field]
       })
     },
   },
