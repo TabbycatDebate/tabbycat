@@ -1,7 +1,9 @@
 <template>
 
   <td class="unpadded-cell">
-    <div class="d3-graph d3-feedback-trend"></div>
+    <div class="d3-graph d3-feedback-trend">
+      <svg ref="graph"></svg>
+    </div>
   </td>
 
 </template>
@@ -57,8 +59,7 @@ function initChart (vueContext) {
     .attr('class', 'd3-tooltip tooltip')
     .style('opacity', 0)
 
-  const element = $(vueContext.$el).children('.d3-graph')[0]
-  const svg = d3.select(element).insert('svg', ':first-child')
+  const svg = d3.select(vueContext.$refs.graph)
     .attr('width', vueContext.width + vueContext.padding + vueContext.padding)
     .attr('height', vueContext.height + vueContext.padding + vueContext.padding)
     .append('g')
@@ -137,11 +138,11 @@ export default {
     }
   },
   watch: {
-    graphData: function () {
+    'graphData.length': function () {
       if (typeof this.graphData !== 'undefined' && this.graphData.length > 0) {
         // Just remove and remake it as I cbf figuring out the in place update
-        const element = $(this.$el).children('.d3-graph')[0]
-        $(element).children('svg').remove()
+        const element = this.$refs.graph
+        $(element.value).children('svg').remove()
         initChart(this)
       }
     },

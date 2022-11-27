@@ -233,7 +233,6 @@ const vueTranslationMixin = {
 // This is an coordinating instance used for inter-component pub/sub interfaces
 // Only needed by the legacy drag and drop screens
 const eventHub = new Vue()
-Vue.prototype.$eventHub = eventHub
 
 // Make a global mixin to provide translation functions
 Vue.mixin(vueTranslationMixin)
@@ -248,6 +247,7 @@ if (typeof vueData !== 'undefined') {
       components: vueComponents,
       data: () => vueData,
     })
+    app.config.globalProperties.$eventHub = eventHub
     app.use(store)
     app.mount('#vueMount')
   }

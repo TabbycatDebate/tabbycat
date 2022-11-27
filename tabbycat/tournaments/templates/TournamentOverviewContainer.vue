@@ -59,6 +59,7 @@
 
 <script>
 import _ from 'lodash'
+import BallotsGraph from '../../templates/graphs/BallotsGraph.vue'
 import UpdatesList from '../../templates/graphs/UpdatesList.vue'
 import WebSocketMixin from '../../templates/ajax/WebSocketMixin.vue'
 
@@ -66,7 +67,7 @@ export default {
   mixins: [WebSocketMixin],
   components: {
     UpdatesList,
-    BallotsGraph: () => import('../../templates/graphs/BallotsGraph.vue'),
+    BallotsGraph,
   },
   props: ['tournamentSlug', 'totalDebates', 'initialActions', 'initialBallots', 'initialGraphData'],
   data: function () {

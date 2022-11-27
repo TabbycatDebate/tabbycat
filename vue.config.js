@@ -22,6 +22,9 @@ module.exports = {
     config.optimization.splitChunks(false)
 
     config.resolve.alias.set('vue', '@vue/compat')
+    config.compilerOptions = {
+      whitespace: 'condense',
+    }
 
     config.module
       .rule('vue')
@@ -30,7 +33,7 @@ module.exports = {
         return {
           ...options,
           compilerOptions: {
-            whitespace: 'preserve',
+            whitespace: 'condense',
             compatConfig: {
               MODE: 2
             }

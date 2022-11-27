@@ -269,7 +269,7 @@ export default {
     },
   },
   watch: {
-    ballotStream: function () {
+    'ballotStream.length': function () {
       initChart(this.padding, this.ballotStream, this.totalDebates, this.height)
     },
   },

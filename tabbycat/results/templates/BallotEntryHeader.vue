@@ -138,7 +138,7 @@ export default {
         for (const option of $(motionData[0]).find('option')) {
           if (option.getAttribute('value') != null && option.getAttribute('value')) {
             const optionID = option.getAttribute('value')
-            this.$set(this.motionOptions, optionID, option.innerText) // Must be reactive
+            this.motionOptions[optionID] = option.innerText
             if (option.getAttribute('selected') != null) {
               this.selectedMotion = optionID
             }
@@ -155,7 +155,7 @@ export default {
         for (const option of $(motionVetoes[0]).find('option')) {
           if (option.getAttribute('value') != null && option.getAttribute('value')) {
             const optionID = option.getAttribute('value')
-            this.$set(this.motionOptions, optionID, option.innerText) // Must be reactive
+            this.motionOptions[optionID] = option.innerText
           }
         }
       }
@@ -164,7 +164,7 @@ export default {
         for (const option of $(teamVeto).find('option')) {
           if (option.getAttribute('selected') != null) {
             const optionDictionary = { value: option.getAttribute('value'), element: teamVeto }
-            this.$set(this.motionVetoes, teamName, optionDictionary) // Must be reactive
+            this.motionVetoes[teamName] = optionDictionary
           }
         }
       }

@@ -36,6 +36,7 @@ import SmartCell from './SmartCell.vue'
 import SortableTableMixin from '../tables/SortableTableMixin.vue'
 import CheckCell from '../tables/CheckCell.vue'
 import BallotsCell from '../../results/templates/BallotsCell.vue'
+import FeedbackTrend from '../graphs/FeedbackTrend.vue'
 
 export default {
   mixins: [SortableTableMixin],
@@ -44,7 +45,7 @@ export default {
     SmartCell,
     CheckCell,
     BallotsCell,
-    FeedbackTrend: () => import('../graphs/FeedbackTrend.vue'),
+    FeedbackTrend,
   },
   props: {
     tableHeaders: Array,

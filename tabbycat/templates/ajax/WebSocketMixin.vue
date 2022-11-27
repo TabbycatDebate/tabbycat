@@ -21,12 +21,11 @@ export default {
     // Construct path
 
     const receiveFromSocket = this.receiveFromSocket
-    const self = this
 
     // Setup each websocket connection
     for (const socketLabel of this.sockets) {
       // Customise path per-socket
-      const socketPath = self.getPathAdditions(path, socketLabel)
+      const socketPath = this.getPathAdditions(path, socketLabel)
 
       // Open the connection
       const webSocketBridge = new WebSocketBridge()
@@ -44,20 +43,20 @@ export default {
 
       // Logs
       webSocketBridge.socket.addEventListener('open', (() => {
-        self.logConnectionInfo('connected to', socketPath)
-        self.dismissLostConnectionAlert()
-      }).bind(socketPath, self))
+        this.logConnectionInfo('connected to', socketPath)
+        this.dismissLostConnectionAlert()
+      }).bind(socketPath, this))
       webSocketBridge.socket.addEventListener('error', (() => {
-        self.logConnectionInfo('error in', socketPath)
-      }).bind(socketPath, self))
+        this.logConnectionInfo('error in', socketPath)
+      }).bind(socketPath, this))
       webSocketBridge.socket.addEventListener('close', (() => {
-        self.lostConnections += 1
-        self.logConnectionInfo('disconnected from', socketPath)
-        self.showLostConnectionAlert()
-      }).bind(socketPath, self))
+        this.lostConnections += 1
+        this.logConnectionInfo('disconnected from', socketPath)
+        this.showLostConnectionAlert()
+      }).bind(socketPath, this))
 
       // Set the data to contain the socket bridge so we can send to it
-      self.$set(self.bridges, socketLabel, webSocketBridge)
+      this.bridges[socketLabel] = webSocketBridge
     }
   },
   methods: {

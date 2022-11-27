@@ -1,13 +1,16 @@
 <template>
-  <div :style="{ width: '49.5%', display: 'inline-block' }">
+  <div>
+    <svg ref="graph"></svg>
+    <div :style="{ width: '49.5%', display: 'inline-block' }">
 
-    <h6 v-if="total > 0" class="text-center text-muted pt-0 mb-3">
-      {{ title }}<br>({{ total }})
-    </h6>
-    <h6 v-if="total === 0" class="text-center text-muted pt-1 mb-1">
-      no data for<br> {{ title }}
-    </h6>
+      <h6 v-if="total > 0" class="text-center text-muted pt-0 mb-3">
+        {{ title }}<br>({{ total }})
+      </h6>
+      <h6 v-if="total === 0" class="text-center text-muted pt-1 mb-1">
+        no data for<br> {{ title }}
+      </h6>
 
+    </div>
   </div>
 </template>
 
@@ -25,7 +28,7 @@ function InitChart (vueContext) {
     .innerRadius(vueContext.radius - (vueContext.radius / 2))
     .outerRadius(vueContext.radius - (vueContext.padding * 2))
 
-  const svg = d3.select(vueContext.$el).insert('svg', ':first-child')
+  const svg = d3.select(vueContext.$refs.graph)
     .attr('width', (vueContext.radius * 2) + vueContext.padding + vueContext.padding)
     .attr('height', (vueContext.radius * 2) + vueContext.padding + vueContext.padding)
     .append('g')
