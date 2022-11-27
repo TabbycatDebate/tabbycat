@@ -305,6 +305,18 @@ class NumberOfThirdsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     where_value = 1
 
 
+class IronsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for total number of times the team had a duplicate speech."""
+    key = "num_iron"
+    name = _("number of times ironed")
+    abbr = _("Irons")
+    ascending = True
+
+    function = Count
+    field = "has_ghost"
+    where_value = True
+
+
 class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
     """Metric annotator for who-beat-whom. Use once for every who-beat-whom in
     the precedence."""
@@ -388,6 +400,7 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "firsts"              : NumberOfFirstsMetricAnnotator,
         "seconds"             : NumberOfSecondsMetricAnnotator,
         "thirds"              : NumberOfThirdsMetricAnnotator,
+        "num_iron"            : IronsMetricAnnotator,
         "wbw"                 : WhoBeatWhomMetricAnnotator,
     }
 
