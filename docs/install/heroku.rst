@@ -7,14 +7,55 @@ Installing on Heroku
 .. admonition:: IMPORTANT
   :class: error
 
-  Unfortunately, due to Heroku policy, the "Deploy to Heroku" button for Tabbycat will not work. If you are unable to use `Calico <https://calicotab.com>`_, you can try:
+  Recent changes by Heroku have altered how Tabbycat can be deployed on their service.
 
-  - Any of the Local installation methods
-  - Using the instructions below as an alternative way to create a Heroku site
-  - Our (in beta) `support for Render <render.html>`_, which uses a similar 1-click method
+Heroku Deployments Overview
+===========================
 
-Heroku Deployments
-==================
+Tabbycat can be deployed to Heroku in two ways:
+
+1. A fork-based method, that approximates a '1-click' install experience. Requires no technical background.
+2. A script-based method, which requires running a python script on your local machine. Requires some technical background.
+
+Regardless of method, please note that Heroku no longer offers a free tier of hosting services. However, students with an academic email address now have access to $13 USD worth of credits (per month) to use on the service if they enrol in the `GitHub Student Developer Pack <https://education.github.com/pack>`_. These credits will be sufficient to run 2-3 different tab sites simultaneously.
+
+Please also note Heroku will require a debit/credit card to be attached to your account for verification purposes — even if you have free credits available. If using free credits, you should make note of the (annual) expiration of your GitHub student status and plan to either renew your status or cancel any Heroku services you don't want to pay for.
+
+Heroku Deployments using a Fork
+===============================
+
+GitHub Account Setup
+--------------------
+
+1. Create an account at `GitHub <https://github.com>`_. If you are a student, be sure to register with your academic email address.
+2. If you are a student: `sign-up to claim the Student Pack <https://education.github.com/pack>`_ so you will receive free Heroku credits. Note that it may take several days for the claim to process.
+
+Heroku Account Setup
+--------------------
+
+1. Create an account at `Heroku <https://heroku.com>`_, or use an existing Heroku account.
+2. Once your GitHub student status has been confirmed, use `the button here <https://www.heroku.com/github-students>`_ to claim your free monthly credits.
+
+GitHub Fork and Deployment
+--------------------------
+
+In order to use a user-friendly '1-click deployment button', you will need to make a 'fork' (personal copy) of Tabbycat on Github. To do so:
+
+1. Login to GitHub and go to `the main Tabbycat project page <https://github.com/TabbycatDebate/tabbycat>`_
+2. Click the **Fork** button in the top-right
+3. On the next page, **Uncheck** the button that says *Copy the develop branch only* then click **Create Fork**
+4. The next page will show your copy of Tabbycat. Take note of your Github username and your fork's name in the top-left, e.g. **JaneSmith/tabbycat**
+5. Open a new tab in your web browser and copy-paste in this URL *without hitting enter (yet)*:
+
+  ::
+
+   https://heroku.com/deploy?template=https://github.com/YOUR_GITHUB_NAME/YOUR_FORK_NAME/tree/main
+
+6. In the URL address, replace ``YOUR_GITHUB_NAME`` with your GitHub username (e.g. **JaneSmith**) and replace ``YOUR_FORK_NAME`` with the name of your fork (e.g. **tabbycat**)
+7. Hit enter and fill out the details required. After the deployment process completes, you should have a new Tabbycat deployment
+
+Heroku Deployments using the Deploy Script
+==========================================
 
 *We've tested these instructions successfully on Windows, Linux and macOS.*
 

@@ -33,17 +33,16 @@ Our user guide is at [tabbycat.readthedocs.io](http://tabbycat.readthedocs.io/).
 
 ## ⬆️ Installation
 
-Tabbycat can be deployed in a number of ways.
+Tabbycat can be used in a number of ways.
 
 [Calico](https://calicotab.com/) is a managed hosting service run by one of Tabbycat's developers. For a flat fee, it will host tab websites, automatically manage their setup and performance, and provide ongoing access to the released tab. Click this button to deploy to Calico:
 
 [![Deploy](https://raw.githubusercontent.com/gist/tienne-B/fc04ecd3c11a38424b642b4bba60e8d9/raw/b2c71d7d6a0d368d3e9dfd8002af729d155ad09b/calicodeploy.svg)](https://calicotab.com/tournaments/new/)
 
-Tabbycat is **no longer available as a 1-click Heroku installation**. If you do not want to use Calico, you have a few alternate options:
+If you do not want to use Calico, you will need to setup and manage your own copy of Tabbycat:
 
-1. For online tournaments where long-term data preservation is unnecessary, we have [a 1-click installer that uses the Render platform](https://tabbycat.readthedocs.io/en/stable/install/render.html) and runs within its free tier of services
+1. For tournaments that require online access, you can [install and run Tabbycat from Heroku](https://tabbycat.readthedocs.io/en/stable/install/heroku.html). However, this will cost a small amount of money _unless_ you are a student and have registered for free Heroku hosting credits
 2. For tournaments where online access is unnecessary, you can [install and run Tabbycat from your own computer](https://tabbycat.readthedocs.io/en/stable/install/local.html)
-3. For online tournaments in general, you can still deploy to Heroku, [but will need to run a script from your computer's command line](https://tabbycat.readthedocs.io/en/stable/install/heroku.html)
 
 ## 💪 Support and Contributing
 

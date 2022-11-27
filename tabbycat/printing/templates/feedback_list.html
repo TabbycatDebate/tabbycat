@@ -56,12 +56,12 @@ Printable Feedback Forms for {{ round }}
     window.vueData = {
       // Strings to Fill In
       roundInfo: {
-        tournamentName: '{{ tournament.short_name }}',
-        returnLocation: '{{ pref.feedback_return_location }}',
+        tournamentName: '{{ tournament.short_name|force_escape }}',
+        returnLocation: '{{ pref.feedback_return_location|force_escape }}',
         // Formatting
         showTabRoomRow: true,
         // From Django
-        round: '{{ round.abbreviation }}',
+        round: '{{ round.abbreviation|force_escape }}',
         questions: {{ questions|safe }},
         motions: [],
       },

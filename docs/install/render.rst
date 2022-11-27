@@ -4,6 +4,11 @@
 Installing on Render
 ====================
 
+.. admonition:: IMPORTANT
+  :class: error
+
+  Setting up Heroku on Render is currrently in beta and is somewhat unreliable. Use Heroku for a more reliable option.
+
 Render is a web hosting platform, similar to Heroku. Like Heroku, it provides a similar '1 click' method of deployment that should be approachable to people without experience in deploying web applications. Support for deploying Tabbycat to Render is currently **in beta**.
 
 .. admonition:: Warning
