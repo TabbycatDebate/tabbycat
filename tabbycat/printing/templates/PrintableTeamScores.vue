@@ -7,9 +7,7 @@
       </div>
       <div class="db-padding-horizontal db-align-vertical-center strong small" v-if="this.team.iron"
            v-text="gettext('IMPORTANT: Check and explicitly note if a speaker gives multiple speeches')"></div>
-      <div class="db-padding-horizontal db-align-vertical-center">
-        {{ speakersList }}
-      </div>
+      <div class="db-padding-horizontal db-align-vertical-center" v-html="speakersList"></div>
       <div class="db-padding-horizontal db-flex-static "></div>
     </div>
 
@@ -97,6 +95,7 @@ export default {
       return this.team.short_name
     },
     speakersList: function () {
+      // Is escaped within Django, so treat as HTML to avoid double escaping
       let speakersList = ''
       _.forEach(this.team.speakers, (speaker) => {
         speakersList += `${speaker.name}, `

@@ -2,6 +2,7 @@ import json
 
 import qrcode
 from django.contrib.humanize.templatetags.humanize import ordinal
+from django.utils.html import escape
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView
 from qrcode.image import svg
@@ -55,7 +56,7 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
         return questions
 
     def construct_info(self, venue, source, source_p, target, target_p):
-        if hasattr(source, 'name'):
+        if hasattr(source, 'name'): # Not a team
             source_n = source.name
         elif use_team_code_names(self.tournament, False):
             source_n = source.code_name
@@ -64,9 +65,9 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
 
         return {
             'venue': VenueSerializer(venue).data if venue else '',
-            'authorInstitution': source.institution.code if source.institution else _("Unaffiliated"),
-            'author': source_n, 'authorPosition': source_p,
-            'target': target.name, 'targetPosition': target_p,
+            'authorInstitution': escape(source.institution.code) if source.institution else _("Unaffiliated"),
+            'author': escape(source_n), 'authorPosition': source_p,
+            'target': escape(target.name), 'targetPosition': target_p,
         }
 
     def get_team_feedbacks(self, debate, team):
@@ -148,7 +149,7 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
             debate_dict = {}
 
             if debate.venue:
-                debate_dict['venue'] = {'display_name': debate.venue.display_name}
+                debate_dict['venue'] = {'display_name': escape(debate.venue.display_name)}
             else:
                 debate_dict['venue'] = None
 
@@ -160,9 +161,9 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
                 try:
                     team = debate.get_team(side)
                     dt_dict['team'] = {
-                        'short_name': team.short_name,
-                        'code_name': team.code_name,
-                        'speakers': [{'name': s.get_public_name(self.tournament)} for s in team.speakers],
+                        'short_name': escape(team.short_name),
+                        'code_name': escape(team.code_name),
+                        'speakers': [{'name': escape(s.get_public_name(self.tournament))} for s in team.speakers],
                         'iron': debate.get_dt(side).iron_prev > 0,
                     }
                 except DebateTeam.DoesNotExist:
@@ -173,8 +174,8 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
             for adj, pos in debate.adjudicators.with_positions():
                 da_dict = {'position': pos}
                 da_dict['adjudicator'] = {
-                    'name': adj.get_public_name(self.tournament),
-                    'institution': {'code': adj.institution.code if adj.institution else _("Unaffiliated")},
+                    'name': escape(adj.get_public_name(self.tournament)),
+                    'institution': {'code': escape(adj.institution.code) if adj.institution else _("Unaffiliated")},
                 }
                 debate_dict['debateAdjudicators'].append(da_dict)
 
@@ -193,8 +194,8 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
             for author, pos in authors:
                 if author:
                     ballot_dict = {
-                        'author': author.name,
-                        'authorInstitution': author.institution.code if author.institution else _("Unaffiliated"),
+                        'author': escape(author.name),
+                        'authorInstitution': escape(author.institution.code) if author.institution else _("Unaffiliated"),
                         'authorPosition': pos,
                     }
                 else:
@@ -214,7 +215,7 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
         kwargs['ballots'] = json.dumps(self.get_ballots_dicts())
         kwargs['ordinals'] = [ordinal(i) for i in range(1, 5)]
         motions = self.round.roundmotion_set.order_by('seq').select_related('motion')
-        kwargs['motions'] = json.dumps([{'seq': m.seq, 'text': m.motion.text} for m in motions])
+        kwargs['motions'] = json.dumps([{'seq': m.seq, 'text': escape(m.motion.text)} for m in motions])
         kwargs['use_team_code_names'] = use_team_code_names(self.tournament, False)
         return super().get_context_data(**kwargs)
 

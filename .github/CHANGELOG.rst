@@ -2,6 +2,19 @@
 Change Log
 ==========
 
+2.7.2
+-----
+*Release date: 27 November 2022*
+
+- Fixed crashes when creating ballots through the API (BACKEND-AM2)
+- Don't re-capitalize side names in results tables
+- Fixed printable ballots not appearing when in French
+- Prevented malicious strings from breaking printable pages
+- Added new instructions for deploying to Heroku using a fork and for applying for free student credits at Heroku
+- Fixed sorting of unallocated draggable items
+- Got regional colours to match between legend and donut charts
+
+
 2.7.1
 -----
 *Release date: 6 November 2022*
@@ -16,7 +29,7 @@ Change Log
 
 
 2.7.0 (Pixie-bob)
----------
+-----------------
 *Release date: 1 October 2022*
 
 - Added the ability to deploy to Render as a 1-click Heroku-like deployment option

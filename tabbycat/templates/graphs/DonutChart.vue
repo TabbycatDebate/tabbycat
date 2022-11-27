@@ -102,7 +102,7 @@ export default {
       } else if (label === 'Unknown') {
         return 'Unspecified or unrecorded'
       }
-      return this.regions[label - 1].name
+      return this.regions[label].name
     },
     percentage: function (quantity) {
       return ` (${Math.round((quantity / this.total) * 100)}%)`

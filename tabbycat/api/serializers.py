@@ -1254,8 +1254,8 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
             validated_data['confirmer'] = self.context['request'].user
             validated_data['confirm_timestamp'] = timezone.now()
 
-        stage = 'elim' if self.round.stage == Round.STAGE_ELIMINATION else 'prelim'
-        if self.tournament.pref('ballots_per_debate_' + stage) == 'per-adj':
+        stage = 'elim' if self.context['round'].stage == Round.STAGE_ELIMINATION else 'prelim'
+        if self.context['tournament'].pref('ballots_per_debate_' + stage) == 'per-adj':
             if self.context['debate'].debateadjudicator_set.all().count() > 1:
                 if len(result_data['sheets']) == 1:
                     validated_data['participant_submitter'] = result_data['sheets'][0]['adjudicator']
@@ -1270,9 +1270,10 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         result._errors = []
         result.save(ballot=ballot)
 
-        vetos = self.VetoSerializer(context=self.context)
-        vetos._validated_data = veto_data
-        vetos.save(ballot_submission=ballot, preference=3)
+        if veto_data:
+            vetos = self.VetoSerializer(context=self.context)
+            vetos._validated_data = veto_data
+            vetos.save(ballot_submission=ballot, preference=3)
 
         return ballot
 
