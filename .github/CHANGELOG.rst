@@ -2,6 +2,13 @@
 Change Log
 ==========
 
+2.7.3
+-----
+*Release date: 30 November 2022*
+
+- Fixed a mistake in the URL used to deploy a fork to Heroku
+
+
 2.7.2
 -----
 *Release date: 27 November 2022*
