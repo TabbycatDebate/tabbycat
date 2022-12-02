@@ -141,7 +141,7 @@ class BaseDebateResult:
     field, which normally means that the field will be left as null.
     """
 
-    teamscore_fields = ['points', 'win', 'margin', 'score', 'votes_given', 'votes_possible']
+    teamscore_fields = ['points', 'win', 'margin', 'score', 'votes_given', 'votes_possible', 'has_ghost']
 
     is_voting = False
     uses_declared_winners = True
@@ -579,6 +579,9 @@ class DebateResultByAdjudicator(BaseDebateResult):
     def teamscore_field_votes_possible(self, side):
         return len(self.scoresheets)
 
+    def teamscore_field_has_ghost(self, side):
+        return False
+
     def teamscorebyadj_field_win(self, adj, side):
         return side in self.scoresheets[adj].winners()
 
@@ -741,6 +744,9 @@ class DebateResultWithScoresMixin:
     def teamscore_field_margin(self, side):
         return self.calculate_full_margin(side)
 
+    def teamscore_field_has_ghost(self, side):
+        return any(self.ghosts[side].values())
+
     # --------------------------------------------------------------------------
     # Other common functionality (helper functions)
     # --------------------------------------------------------------------------
@@ -881,6 +887,9 @@ class ConsensusDebateResult(BaseDebateResult):
     def teamscore_field_score(self, side):
         return None  # Placeholder for subclasses with scores
 
+    def teamscore_field_has_ghost(self, side):
+        return False
+
     def as_dicts(self):
         yield {'teams': self.sheet_as_dicts(self.scoresheet)}
 
@@ -921,6 +930,9 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
         if self.tournament.pref('teamscore_includes_ghosts'):
             return self.scoresheet.get_total(side)
         return sum(self.get_score(side, pos) for pos in self.positions if not self.get_ghost(side, pos))
+
+    def teamscore_field_has_ghost(self, side):
+        return any(self.ghosts[side].values())
 
 
 class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateResultByAdjudicator):
@@ -1003,6 +1015,9 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
         if not self._decision_calculated:
             self._calculate_decision()
         return mean(self._teamscore_score_component(adj, side) for adj in self.relevant_adjudicators())
+
+    def teamscore_field_has_ghost(self, side):
+        return any(self.ghosts[side].values())
 
     def speakerscorebyadj_field_score(self, adjudicator, side, position):
         return self.scoresheets[adjudicator].get_score(side, position)
