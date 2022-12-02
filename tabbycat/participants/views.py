@@ -4,9 +4,10 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, Max, Prefetch, Q
+from django.db.models.functions import Coalesce
 from django.forms import HiddenInput
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.utils.html import escape
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.base import View
@@ -332,7 +333,7 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
 
     def get_formset_factory_kwargs(self):
         return {
-            'fields': ('name', 'tournament', 'slug', 'seq', 'limit', 'public'),
+            'fields': ('name', 'tournament', 'slug', 'limit', 'public'),
             'extra': 2,
             'widgets': {
                 'tournament': HiddenInput,
@@ -348,18 +349,27 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
         }
 
     def formset_valid(self, formset):
-        result = super().formset_valid(formset)
-        if self.instances:
+        cats = formset.save(commit=False)
+
+        for cat, fields in formset.changed_objects:
+            cat.save()
+
+        for i, cat in enumerate(formset.new_objects, start=self.get_formset_queryset().aggregate(m=Coalesce(Max('seq'), 0) + 1)['m']):
+            raise
+            cat.seq = i
+            cat.save()
+
+        if cats:
             message = ngettext("Saved category: %(list)s",
                 "Saved categories: %(list)s",
-                len(self.instances),
-            ) % {'list': ", ".join(category.name for category in self.instances)}
+                len(cats),
+            ) % {'list': ", ".join(category.name for category in cats)}
             messages.success(self.request, message)
         else:
             messages.success(self.request, _("No changes were made to the categories."))
         if "add_more" in self.request.POST:
             return redirect_tournament(self.url_name, self.tournament)
-        return result
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self, *args, **kwargs):
         return reverse_tournament(self.success_url, self.tournament)
