@@ -5,7 +5,7 @@
 {# (Two-team formats) #}
 {% if pref.teams_in_debate == 'two' %}
   <div class="list-group-item lead {% if draw_released %}active{% else %}list-group-item-dark{% endif %}">
-  {% team_record_link debateteam.opponent.team admin_page tournament as opponent %}
+  {% team_record_link debateteam.opponent.team admin_page as opponent %}
 
   {% if debate.sides_confirmed %}
     {% if grammatical_person == "3" %}
