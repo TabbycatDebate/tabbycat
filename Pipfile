@@ -36,6 +36,7 @@ honcho = "*"
 gunicorn = "*"
 sentry-sdk = "*"
 whitenoise = "*"
+drf-spectacular = "*"
 
 [dev-packages]
 pre-commit = "*"

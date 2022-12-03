@@ -146,6 +146,7 @@ INSTALLED_APPS = (
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    'drf_spectacular',
     'django_better_admin_arrayfield',
 )
 
@@ -332,7 +333,18 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    #'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Tabbycat API',
+    'DESCRIPTION': 'Parliamentary debate tabulation software',
+    'VERSION': '1.3.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SCHEMA_PATH_PREFIX': r'api/v\d+',
+    'CONTACT': {'name': 'Étienne Beaulé', 'email': 'ebeaule@tabbycat-debate.org'},
+    'LICENSE': {'name': 'AGPL 3', 'url': 'https://www.gnu.org/licenses/agpl-3.0.en.html'},
 }
 
 # ----------------------------------------

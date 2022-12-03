@@ -1,4 +1,5 @@
 from django.urls import include, path
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView
 from rest_framework.routers import SimpleRouter
 
 from . import views
@@ -14,6 +15,11 @@ urlpatterns = [
     path('',
         views.APIRootView.as_view(),
         name='api-root'),
+
+    path('/schema', include([
+        path('.yml', SpectacularAPIView.as_view(), name='api-schema'),
+        path('/redoc/', SpectacularRedocView.as_view(url_name='api-schema'), name='redoc'),
+    ])),
 
     path('/v1', include([
         path('',
