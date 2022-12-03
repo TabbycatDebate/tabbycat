@@ -9,6 +9,7 @@ from django.db.models import QuerySet
 from django.urls import get_script_prefix, resolve, Resolver404
 from django.utils import timezone
 from django.utils.encoding import uri_to_iri
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 from rest_framework.fields import get_error_detail, SkipField
 from rest_framework.relations import Hyperlink
@@ -26,6 +27,8 @@ from privateurls.utils import populate_url_keys
 from results.mixins import TabroomSubmissionFieldsMixin
 from results.models import BallotSubmission, SpeakerScore
 from results.result import DebateResult
+from standings.speakers import SpeakerStandingsGenerator
+from standings.teams import TeamStandingsGenerator
 from tournaments.models import Round, Tournament
 from venues.models import Venue, VenueCategory, VenueConstraint
 
@@ -888,6 +891,19 @@ class VenueCategorySerializer(serializers.ModelSerializer):
         exclude = ('tournament',)
 
 
+def get_metrics_field_type(generator):
+    return {
+        'type': 'array',
+        'items': {
+            'type': 'object',
+            'properties': {
+                'metric': {'type': 'string', 'enum': list(generator.metric_annotator_classes.keys())},
+                'value': {'type': 'number'},
+            },
+        },
+    }
+
+
 class BaseStandingsSerializer(serializers.Serializer):
     rank = serializers.SerializerMethodField()
     tied = serializers.SerializerMethodField()
@@ -909,9 +925,17 @@ class BaseStandingsSerializer(serializers.Serializer):
 class TeamStandingsSerializer(BaseStandingsSerializer):
     team = fields.TournamentHyperlinkedRelatedField(view_name='api-team-detail', queryset=Team.objects.all())
 
+    @extend_schema_field(get_metrics_field_type(TeamStandingsGenerator))
+    def get_metrics(self, obj) -> list:
+        return super().get_metrics(obj)
+
 
 class SpeakerStandingsSerializer(BaseStandingsSerializer):
     speaker = fields.AnonymisingHyperlinkedTournamentRelatedField(view_name='api-speaker-detail', anonymous_source='anonymous')
+
+    @extend_schema_field(get_metrics_field_type(SpeakerStandingsGenerator))
+    def get_metrics(self, obj) -> list:
+        return super().get_metrics(obj)
 
 
 class DebateAdjudicatorSerializer(serializers.Serializer):
