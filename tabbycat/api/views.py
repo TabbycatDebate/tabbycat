@@ -450,7 +450,7 @@ class VenueCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
             Prefetch('venues', queryset=Venue.objects.select_related('tournament').filter(tournament__isnull=False)))
 
 
-@extend_schema(tags=['checkins'], parameters=[tournament_parameter])
+@extend_schema(tags=['checkins'], parameters=[tournament_parameter, id_parameter])
 class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
     name = "Check-ins"
 
@@ -510,7 +510,7 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
     def get_queryset(self):
         return self.model.objects.filter(**self.lookup_kwargs()).select_related(self.tournament_field)
 
-    @extend_schema(request=None, responses=serializers.CheckinSerializer, parameters=[id_parameter])
+    @extend_schema(request=None, responses=serializers.CheckinSerializer)
     def get(self, request, *args, **kwargs):
         """Get checkin status"""
         obj = self.get_object()
@@ -518,21 +518,21 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
         event = get_unexpired_checkins(self.tournament, self.window_preference_pref).filter(identifier=obj.checkin_identifier)
         return Response(self.get_response_dict(request, obj, event.exists(), event.first()))
 
-    @extend_schema(request=None, responses=serializers.CheckinSerializer, parameters=[id_parameter])
+    @extend_schema(request=None, responses={200: serializers.CheckinSerializer})
     def delete(self, request, *args, **kwargs):
         """Checks out"""
         obj = self.get_object()
         self.broadcast_checkin(obj, False)
         return Response(self.get_response_dict(request, obj, False, None))
 
-    @extend_schema(request=None, responses=serializers.CheckinSerializer, parameters=[id_parameter])
+    @extend_schema(request=None, responses=serializers.CheckinSerializer)
     def put(self, request, *args, **kwargs):
         """Checks in"""
         obj = self.get_object()
         e = self.broadcast_checkin(obj, True)
         return Response(self.get_response_dict(request, obj, True, e))
 
-    @extend_schema(request=None, responses=serializers.CheckinSerializer, parameters=[id_parameter])
+    @extend_schema(request=None, responses=serializers.CheckinSerializer)
     def patch(self, request, *args, **kwargs):
         """Toggles the check-in status"""
         obj = self.get_object()
@@ -541,7 +541,7 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
         e = self.broadcast_checkin(obj, not check)
         return Response(self.get_response_dict(request, obj, not check, e))
 
-    @extend_schema(request=None, responses=serializers.CheckinSerializer, parameters=[id_parameter])
+    @extend_schema(request=None, responses=serializers.CheckinSerializer)
     def post(self, request, *args, **kwargs):
         """Creates an identifier"""
         obj = self.get_object_queryset()  # Don't .get() as create_identifiers expects a queryset
