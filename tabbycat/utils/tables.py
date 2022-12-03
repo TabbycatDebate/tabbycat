@@ -262,7 +262,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def _team_cell(self, team, show_emoji=False, subtext=None, highlight=False):
         cell = {
             'text': self._team_short_name(team),
-            'emoji': escape(team.emoji) if show_emoji and self.tournament.pref('show_emoji') else None,
+            'emoji': escape(team.emoji) if team.emoji and show_emoji and self.tournament.pref('show_emoji') else None,
             'sort': self._team_short_name(team),
             'class': 'team-name no-wrap' if len(self._team_short_name(team)) < 18 else 'team-name',
             'popover': {'title': self._team_long_name(team), 'content': []},
