@@ -18,7 +18,7 @@
         </h6>
         <p class="text-muted">
           {% blocktrans trimmed %}
-            Tabbycat is a source-available project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments.
+            Tabbycat is an open-source project developed by volunteers and is free to use.
           {% endblocktrans %}
           {% if tournament and tournament.billable_teams > 0 %}
             {% blocktrans trimmed with amount=tournament.billable_teams %}
@@ -28,8 +28,8 @@
               {% trans "Learn more about donating." %}
             </a>
           {% else %}
-            {% blocktrans trimmed %}
-              <a href="https://opencollective.com/tabbycat">Donations to Tabbycat from individuals or organisations</a> are much appreciated.
+            {% blocktrans trimmed  %}
+              <a href="https://opencollective.com/tabbycat">Donations to Tabbycat from individuals or organisations</a> are much appreciated and help us to continue to develop, support, and maintain Tabbycat.
             {% endblocktrans %}
           {% endif %}
         </p>
