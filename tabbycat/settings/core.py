@@ -345,6 +345,12 @@ SPECTACULAR_SETTINGS = {
     'SCHEMA_PATH_PREFIX': r'api/v\d+',
     'CONTACT': {'name': 'Étienne Beaulé', 'email': 'ebeaule@tabbycat-debate.org'},
     'LICENSE': {'name': 'AGPL 3', 'url': 'https://www.gnu.org/licenses/agpl-3.0.en.html'},
+    'EXTENSIONS_INFO': {
+        "x-logo": {
+            "url": "/static/logo.svg",
+            "altText": "Tabbycat logo",
+        },
+    }
 }
 
 # ----------------------------------------
