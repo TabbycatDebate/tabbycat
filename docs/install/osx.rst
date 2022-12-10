@@ -154,7 +154,7 @@ f. Start Tabbycat!
 
 g. Open your browser and go to http://127.0.0.1:8000/ or http://localhost:8000/. It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
 
-  .. image:: images/tabbycat-bare-osx.png
+  .. image:: images/tabbycat-bare.png
       :alt: Bare Tabbycat installation
 
 Naturally, your database is currently empty, so proceed to :ref:`importing initial data <importing-initial-data>`.
