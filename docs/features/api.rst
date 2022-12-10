@@ -27,4 +27,4 @@ Unauthenticated (public) endpoints are restricted in that they cannot perform mo
 Schema
 ======
 
-The schema is available on `Swagger <https://app.swaggerhub.com/apis/tienne-B/tabbycat-api/1.0.0>`_. The OpenAPI schema is also available in the ``docs`` directory of Tabbycat.
+The API schema documentation can be accessed on Tabbycat instances version 2.8+ through the ``/api/schema/redoc/`` path. The schemas for previous versions can be found in the ``docs`` directory of the Tabbycat repository at version-tagged points.
