@@ -37,6 +37,10 @@
     "ON_HEROKU": {
       "description": "Leave this as-is.",
       "value": "1"
+    },
+    "USING_NGINX": {
+      "description": "Leave this as-is.",
+      "value": "1"
     }
   },
   "formation": {
