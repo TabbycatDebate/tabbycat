@@ -22,9 +22,9 @@ SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.7.3'
+TABBYCAT_VERSION = '2.7.4'
 TABBYCAT_CODENAME = 'Pixie-bob'
-READTHEDOCS_VERSION = 'v2.7.3'
+READTHEDOCS_VERSION = 'v2.7.4'
 
 # ==============================================================================
 # Internationalization and Localization

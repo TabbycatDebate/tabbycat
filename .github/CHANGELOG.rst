@@ -2,6 +2,13 @@
 Change Log
 ==========
 
+2.7.4
+-----
+*Release date: 11 December 2022*
+
+- Fixed an issue that would cause "Connection Lost" errors on new Heroku deployments and prevent the auto-allocator from working
+
+
 2.7.3
 -----
 *Release date: 30 November 2022*
