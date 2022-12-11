@@ -273,6 +273,7 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
 
         existing_checkin = get_unexpired_checkins(t, 'checkin_window_people').filter(identifier=identifier)
         action = request.POST.get('action')
+        created = action == 'checkin'
         if action == 'revoke':
             if existing_checkin.exists():
                 existing_checkin.delete()
@@ -281,7 +282,7 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
             else:
                 messages.error(request, _("Whoops! Looks like your check-in was already revoked."))
                 return super().post(request, *args, **kwargs)
-        elif action == 'checkin':
+        elif created:
             if existing_checkin.exists():
                 messages.error(request, _("Whoops! Looks like you're already checked in."))
                 return super().post(request, *args, **kwargs)
@@ -298,9 +299,8 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
         async_to_sync(get_channel_layer().group_send)(
             group_name, {
                 'type': 'send_json',
-                'data': {
-                    'checkins': [checkin_dict],
-                },
+                'checkins': [checkin_dict],
+                'created': created,
             },
         )
 
