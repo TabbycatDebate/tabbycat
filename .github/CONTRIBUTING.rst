@@ -35,10 +35,6 @@ Development
 
   - A number of our tests use `Selenium <http://selenium-python.readthedocs.io>`_ and `ChromeDriver <https://sites.google.com/a/chromium.org/chromedriver/>`_ to simulate in-browser functionality. They will fail if you do not have the Chrome browser and ChromeDriver installed.
 
-- A number of extra dependencies are required for running tests, linting, and serving the documentation. These can be installed with::
-
-    $ pip install -r 'config/requirements_development.txt'
-
 - We use `pre-commit <https://pre-commit.com/>`_ to run code style checks (linters). To have them run as a git hook automatically before every commit::
 
     $ pre-commit install
