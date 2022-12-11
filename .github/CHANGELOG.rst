@@ -9,6 +9,20 @@ Change Log
 - Added new emoji from Unicode 12 and 13. Thank you to Daan Koning for the pull request! (`#2143 <https://github.com/TabbycatDebate/tabbycat/issues/2143>`_)
 
 
+2.7.4
+-----
+*Release date: 11 December 2022*
+
+- Fixed an issue that would cause "Connection Lost" errors on new Heroku deployments and prevent the auto-allocator from working
+
+
+2.7.3
+-----
+*Release date: 30 November 2022*
+
+- Fixed a mistake in the URL used to deploy a fork to Heroku
+
+
 2.7.2
 -----
 *Release date: 27 November 2022*
