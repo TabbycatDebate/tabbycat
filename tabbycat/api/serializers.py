@@ -1123,8 +1123,8 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                 def validate(self, data):
                     # Make sure the score is the sum of the speech scores
                     score = data.get('score', None)
-                    speeches = data.get('speeches', None)
-                    if speeches is None:
+                    speeches = data.get('speeches', [])
+                    if len(speeches) == 0:
                         if score is not None:
                             raise serializers.ValidationError("Speeches are required to assign scores.")
                     elif score is not None and score != sum(speech['score'] for speech in speeches):
