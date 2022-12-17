@@ -2,6 +2,7 @@ import json
 import logging
 from datetime import datetime
 from smtplib import SMTPException, SMTPResponseException
+from typing import Dict, List, Optional, TYPE_CHECKING, Union
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -25,6 +26,11 @@ from utils.views import VueTableTemplateView
 from .forms import BasicEmailForm, TestEmailForm
 from .models import EmailStatus, SentMessage
 
+if TYPE_CHECKING:
+    from django.http.response import HttpResponseRedirect
+    from django.db.models import QuerySet
+    from django.core.handlers.wsgi import WSGIRequest
+
 logger = logging.getLogger(__name__)
 
 
@@ -34,7 +40,7 @@ class TestEmailView(WarnAboutLegacySendgridConfigVarsMixin, AdministratorMixin, 
     success_url = reverse_lazy('notifications-test-email')
     view_role = ""
 
-    def form_valid(self, form):
+    def form_valid(self, form: TestEmailForm) -> 'HttpResponseRedirect':
         host = self.request.get_host()
 
         try:
@@ -67,7 +73,7 @@ class TestEmailView(WarnAboutLegacySendgridConfigVarsMixin, AdministratorMixin, 
 
         return super().form_valid(form)
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> Dict[str, Union[str, TestEmailForm, 'TestEmailView']]:
         kwargs["default_from_email"] = settings.DEFAULT_FROM_EMAIL
         return super().get_context_data(**kwargs)
 
@@ -82,7 +88,7 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
     NA_CELL = {'text': _("N/A"), 'class': 'text-muted'}
     UNKNOWN_RECIPIENT_CELL = {'text': _("Not known"), 'class': 'text-muted'}
 
-    def _create_status_timeline(self, status):
+    def _create_status_timeline(self, status) -> List[Dict[str, str]]:
         statuses = []
         for s in status:
             text = _("%(status)s @ %(time)s") % {
@@ -94,7 +100,7 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
             })
         return statuses
 
-    def _get_event_class(self, event):
+    def _get_event_class(self, event: str) -> Optional[str]:
         return {
             EmailStatus.EVENT_TYPE_BOUNCED: 'text-warning',
             EmailStatus.EVENT_TYPE_DROPPED: 'text-warning',
@@ -109,7 +115,7 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
             EmailStatus.EVENT_TYPE_ASM_RESUBSCRIBED: None,
         }[event]
 
-    def get_tables(self):
+    def get_tables(self) -> List[TabbycatTableBuilder]:
         tables = []
 
         # notifications.sentmessage_set.first().emailstatus_set.first().latest_statuses will be a list
@@ -172,7 +178,7 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
 
 class EmailEventWebhookView(TournamentMixin, View):
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request: 'WSGIRequest', *args, **kwargs) -> HttpResponse:
         if not self.tournament.pref('email_hook_key'):
             return HttpResponse(status=403) # 403: Forbidden
 
@@ -207,30 +213,30 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
 
     form_class = BasicEmailForm
 
-    def get_success_url(self, *args, **kwargs):
+    def get_success_url(self, *args, **kwargs) -> str:
         return self.get_redirect_url(*args, **kwargs)
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> Dict[str, Union[str, bool, List, BasicEmailForm, 'CustomEmailCreateView']]:
         context = super().get_context_data(**kwargs)
         context['sg_webhook'] = EmailStatus.objects.filter(email__notification__tournament=self.tournament).exists()
 
         context['categories'] = [{'id': 'spk', 'name': "Email"}]
         return context
 
-    def get_default_send_queryset(self):
+    def get_default_send_queryset(self) -> 'QuerySet[Person]':
         return self.get_queryset().filter(email__isnull=False).exclude(email__exact="")
 
-    def get_queryset(self):
+    def get_queryset(self) -> 'QuerySet[Person]':
         """All the people from the tournament who could receive the message"""
         queryset_filter = Q(speaker__team__tournament=self.tournament) | Q(adjudicator__tournament=self.tournament)
 
         return Person.objects.filter(queryset_filter).select_related('speaker', 'adjudicator')
 
-    def default_send(self, p, default_send_queryset=None):
+    def default_send(self, p: Person, default_send_queryset: Optional['QuerySet[Person]'] = None) -> bool:
         """Whether the person should be emailed by default"""
         return p in default_send_queryset
 
-    def add_sent_notification(self, email_count):
+    def add_sent_notification(self, email_count: int) -> None:
         text = ngettext("%(email_count)s email has been queued for sending.",
                         "%(email_count)s emails have been queued for sending.",
                         email_count) % {'email_count': email_count}
@@ -239,10 +245,10 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
         else:
             messages.warning(self.request, _("No emails were sent — likely because no recipients were selected."))
 
-    def get_person_type(self, person, **kwargs):
+    def get_person_type(self, person: Person, **kwargs) -> str:
         return 'adj' if kwargs['mixed'] and hasattr(person, 'adjudicator') else 'spk'
 
-    def get_table(self, mixed_participants=False):
+    def get_table(self, mixed_participants: bool = False) -> TabbycatTableBuilder:
         table = TabbycatTableBuilder(view=self, sort_key='name')
 
         queryset = self.get_queryset()
@@ -274,7 +280,7 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
 class RoleColumnMixin:
     """Mixin to have a column Adjudicator/Speaker for email"""
 
-    def get_table(self, mixed_participants=True):
+    def get_table(self, mixed_participants: bool = True) -> TabbycatTableBuilder:
         table = super().get_table(mixed_participants)
 
         table.add_column({'key': 'role', 'title': _("Role")}, [{
@@ -283,7 +289,7 @@ class RoleColumnMixin:
 
         return table
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> Dict[str, Union[str, bool, List, BasicEmailForm, 'CustomEmailCreateView']]:
         context = super().get_context_data(**kwargs)
         context['categories'] = [
             {'id': 'spk', 'name': _("Speakers")},
@@ -296,10 +302,10 @@ class CustomEmailCreateView(RoleColumnMixin, BaseSelectPeopleEmailView):
 
     tournament_redirect_pattern_name = 'notifications-email'
 
-    def default_send(self, p, default_send_queryset):
+    def default_send(self, p: Person, default_send_queryset: 'QuerySet[Person]') -> bool:
         return False
 
-    def form_valid(self, form):
+    def form_valid(self, form: BasicEmailForm) -> 'HttpResponseRedirect':
         people = Person.objects.filter(id__in=list(map(int, self.request.POST.getlist('recipients'))))
 
         async_to_sync(get_channel_layer().send)("notifications", {
@@ -316,14 +322,14 @@ class CustomEmailCreateView(RoleColumnMixin, BaseSelectPeopleEmailView):
 
 class TemplateEmailCreateView(BaseSelectPeopleEmailView):
 
-    def get_initial(self):
+    def get_initial(self) -> Dict[str, str]:
         initial = super().get_initial()
         initial['subject_line'] = self.tournament.pref(self.subject_template)
         initial['message_body'] = self.tournament.pref(self.message_template)
 
         return initial
 
-    def form_valid(self, form):
+    def form_valid(self, form: BasicEmailForm) -> 'HttpResponseRedirect':
         self.tournament.preferences[self.subject_template] = form.cleaned_data['subject_line']
         self.tournament.preferences[self.message_template] = form.cleaned_data['message_body']
         email_recipients = list(map(int, self.request.POST.getlist('recipients')))
@@ -343,21 +349,21 @@ class TemplateEmailCreateView(BaseSelectPeopleEmailView):
 
 class TournamentTemplateEmailCreateView(TemplateEmailCreateView):
 
-    def get_default_send_queryset(self):
+    def get_default_send_queryset(self) -> 'QuerySet[Person]':
         return super().get_default_send_queryset().exclude(
             sentmessage__notification__event=self.event, sentmessage__notification__tournament=self.tournament)
 
-    def get_extra(self):
+    def get_extra(self) -> Dict[str, int]:
         extra = {'tournament_id': self.tournament.id}
         return extra
 
 
 class RoundTemplateEmailCreateView(TemplateEmailCreateView, RoundMixin):
 
-    def get_default_send_queryset(self):
+    def get_default_send_queryset(self) -> 'QuerySet[Person]':
         return super().get_default_send_queryset().exclude(
             sentmessage__notification__event=self.event, sentmessage__notification__round=self.round)
 
-    def get_extra(self):
+    def get_extra(self) -> Dict[str, int]:
         extra = {'round_id': self.round.id}
         return extra

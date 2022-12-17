@@ -1,3 +1,5 @@
+from typing import Any, Callable, Type, TYPE_CHECKING
+
 from django.contrib import admin
 from django.utils import timezone
 
@@ -5,8 +7,12 @@ from utils.admin import ModelAdmin, TabbycatModelAdminFieldsMixin
 
 from .models import BulkNotification, EmailStatus, SentMessage
 
+if TYPE_CHECKING:
+    from django.db.models import QuerySet
+    from django.core.handlers.wsgi import WSGIRequest
 
-def precise_timestamp_isoformat(model, field_name):
+
+def precise_timestamp_isoformat(model: Type, field_name: str) -> Callable[[Any], str]:
     @admin.display(description=model._meta.get_field(field_name).verbose_name)
     def precise_timestamp(self, obj):
         return timezone.localtime(getattr(obj, field_name)).isoformat()
@@ -20,7 +26,7 @@ class SentMessageAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     search_fields = ('message_id', 'recipient__name', 'email', 'recipient__email')
     ordering = ('-notification',)
 
-    def get_queryset(self, request):
+    def get_queryset(self, request: 'WSGIRequest') -> 'QuerySet[SentMessage]':
         return super().get_queryset(request).select_related('recipient', 'notification__tournament')
 
     precise_timestamp = precise_timestamp_isoformat(SentMessage, 'timestamp')
@@ -32,7 +38,7 @@ class BulkNotificationAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_filter = ('tournament', 'round', 'event')
     ordering = ('-timestamp',)
 
-    def get_queryset(self, request):
+    def get_queryset(self, request: 'WSGIRequest') -> 'QuerySet[BulkNotification]':
         return super().get_queryset(request).select_related('round__tournament', 'tournament')
 
     precise_timestamp = precise_timestamp_isoformat(BulkNotification, 'timestamp')

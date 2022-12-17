@@ -10,6 +10,7 @@ using the participant object to fetch their email address and to record.
 Objects should be fetched from the database here as it is an asyncronous process,
 thus the object itself cannot be passed.
 """
+from typing import Dict, List, Tuple, TYPE_CHECKING
 
 from django.utils import formats
 from django.utils.safestring import mark_safe
@@ -21,6 +22,12 @@ from participants.prefetch import populate_win_counts
 from results.result import ConsensusDebateResultWithScores, DebateResult, DebateResultByAdjudicatorWithScores
 from results.utils import side_and_position_names
 
+if TYPE_CHECKING:
+    from django.db.models import QuerySet
+    from participants.models import Person
+    from tournaments.models import Round, Tournament
+    from draw.models import Debate
+
 
 adj_position_names = {
     AdjudicatorAllocation.POSITION_CHAIR: _("the chair"),
@@ -30,7 +37,7 @@ adj_position_names = {
 }
 
 
-def _assemble_panel(adjs):
+def _assemble_panel(adjs: List[Tuple['Person', str]]) -> str:
     adj_string = []
     for adj, pos in adjs:
         adj_string.append("%s (%s)" % (adj.name, adj_position_names[pos]))
@@ -38,7 +45,7 @@ def _assemble_panel(adjs):
     return ", ".join(adj_string)
 
 
-def _check_in_to(pk, to_ids):
+def _check_in_to(pk, to_ids) -> bool:
     try:
         to_ids.remove(pk)
     except KeyError:
@@ -46,7 +53,7 @@ def _check_in_to(pk, to_ids):
     return True
 
 
-def adjudicator_assignment_email_generator(to, url, round):
+def adjudicator_assignment_email_generator(to: 'QuerySet[Person]', url: str, round: 'Round') -> List[Tuple[Dict[str, str], 'Person']]:
     emails = []
     to_ids = {p.id for p in to}
     draw = round.debate_set_with_prefetches(speakers=False).filter(debateadjudicator__adjudicator__in=to)
@@ -77,11 +84,11 @@ def adjudicator_assignment_email_generator(to, url, round):
     return emails
 
 
-def randomized_url_email_generator(to, url, tournament):
+def randomized_url_email_generator(to: 'QuerySet[Person]', url: str, tournament: 'Tournament') -> List[Tuple[Dict[str, str], 'Person']]:
     return [({'USER': p.name, 'URL': url + p.url_key + '/', 'KEY': p.url_key, 'TOURN': str(tournament)}, p) for p in to]
 
 
-def ballots_email_generator(to, debate):  # "to" is unused
+def ballots_email_generator(to: 'QuerySet[Person]', debate: 'Debate') -> List[Tuple[Dict[str, str], 'Person']]:  # "to" is unused
     emails = []
     tournament = debate.round.tournament
     results = DebateResult(debate.confirmed_ballot)
@@ -146,7 +153,7 @@ def ballots_email_generator(to, debate):  # "to" is unused
     return emails
 
 
-def standings_email_generator(to, url, round):
+def standings_email_generator(to: 'QuerySet[Person]', url: str, round: 'Round') -> List[Tuple[Dict[str, str], 'Person']]:
     emails = []
     to_ids = {p.id for p in to}
 
@@ -176,7 +183,7 @@ def standings_email_generator(to, url, round):
     return emails
 
 
-def motion_release_email_generator(to, round):
+def motion_release_email_generator(to: 'QuerySet[Person]', round: 'Round') -> List[Tuple[Dict[str, str], 'Person']]:
     def _create_motion_list():
         motion_list = "<ul>"
         for motion in round.motion_set.all():
@@ -192,7 +199,7 @@ def motion_release_email_generator(to, round):
     return [({'TOURN': str(round.tournament), 'ROUND': round.name, 'MOTIONS': _create_motion_list(), 'USER': p.name}, p) for p in to]
 
 
-def team_speaker_email_generator(to, tournament):
+def team_speaker_email_generator(to: 'QuerySet[Person]', tournament: 'Tournament') -> List[Tuple[Dict[str, str], 'Person']]:
     emails = []
     to_ids = {p.id for p in to}
 
@@ -221,7 +228,7 @@ def team_speaker_email_generator(to, tournament):
     return emails
 
 
-def team_draw_email_generator(to, round):
+def team_draw_email_generator(to: 'QuerySet[Person]', round: 'Round') -> List[Tuple[Dict[str, str], 'Person']]:
     emails = []
     to_ids = {p.id for p in to}
     tournament = round.tournament
