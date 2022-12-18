@@ -33,7 +33,7 @@ class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
             Prefetch('debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')))
 
     def resave_ballots(self, request, queryset):
-        q = queryset.select_related('debate__round__tournament').order_by('tournament_id')
+        q = queryset.select_related('debate__round__tournament').order_by('debate__round__tournament_id')
         count = q.count()
         for tournament, bss in groupby(q, lambda bs: bs.debate.round.tournament):
             populate_results(bss, tournament)
