@@ -9,7 +9,7 @@ from .models import BulkNotification, EmailStatus, SentMessage
 
 if TYPE_CHECKING:
     from django.db.models import QuerySet
-    from django.core.handlers.wsgi import WSGIRequest
+    from django.http.request import HttpRequest
 
 
 def precise_timestamp_isoformat(model: Type, field_name: str) -> Callable[[Any], str]:
@@ -26,7 +26,7 @@ class SentMessageAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     search_fields = ('message_id', 'recipient__name', 'email', 'recipient__email')
     ordering = ('-notification',)
 
-    def get_queryset(self, request: 'WSGIRequest') -> 'QuerySet[SentMessage]':
+    def get_queryset(self, request: 'HttpRequest') -> 'QuerySet[SentMessage]':
         return super().get_queryset(request).select_related('recipient', 'notification__tournament')
 
     precise_timestamp = precise_timestamp_isoformat(SentMessage, 'timestamp')
@@ -38,7 +38,7 @@ class BulkNotificationAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_filter = ('tournament', 'round', 'event')
     ordering = ('-timestamp',)
 
-    def get_queryset(self, request: 'WSGIRequest') -> 'QuerySet[BulkNotification]':
+    def get_queryset(self, request: 'HttpRequest') -> 'QuerySet[BulkNotification]':
         return super().get_queryset(request).select_related('round__tournament', 'tournament')
 
     precise_timestamp = precise_timestamp_isoformat(BulkNotification, 'timestamp')

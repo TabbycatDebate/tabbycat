@@ -2,7 +2,7 @@ import json
 import logging
 from datetime import datetime
 from smtplib import SMTPException, SMTPResponseException
-from typing import Dict, List, Optional, TYPE_CHECKING, Union
+from typing import Any, Dict, List, Optional, TYPE_CHECKING, Union
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -29,7 +29,7 @@ from .models import EmailStatus, SentMessage
 if TYPE_CHECKING:
     from django.http.response import HttpResponseRedirect
     from django.db.models import QuerySet
-    from django.core.handlers.wsgi import WSGIRequest
+    from django.http.request import HttpRequest
 
 logger = logging.getLogger(__name__)
 
@@ -100,7 +100,7 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
             })
         return statuses
 
-    def _get_event_class(self, event: str) -> Optional[str]:
+    def _get_event_class(self, event: EmailStatus.EventType) -> Optional[str]:
         return {
             EmailStatus.EVENT_TYPE_BOUNCED: 'text-warning',
             EmailStatus.EVENT_TYPE_DROPPED: 'text-warning',
@@ -178,7 +178,7 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
 
 class EmailEventWebhookView(TournamentMixin, View):
 
-    def post(self, request: 'WSGIRequest', *args, **kwargs) -> HttpResponse:
+    def post(self, request: 'HttpRequest', *args, **kwargs) -> HttpResponse:
         if not self.tournament.pref('email_hook_key'):
             return HttpResponse(status=403) # 403: Forbidden
 
@@ -216,7 +216,7 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
     def get_success_url(self, *args, **kwargs) -> str:
         return self.get_redirect_url(*args, **kwargs)
 
-    def get_context_data(self, **kwargs) -> Dict[str, Union[str, bool, List, BasicEmailForm, 'CustomEmailCreateView']]:
+    def get_context_data(self, **kwargs) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['sg_webhook'] = EmailStatus.objects.filter(email__notification__tournament=self.tournament).exists()
 

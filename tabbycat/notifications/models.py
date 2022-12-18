@@ -110,25 +110,24 @@ class EmailStatus(models.Model):
     EVENT_TYPE_ASM_UNSUBSCRIBED = 'group_unsubscribe'
     EVENT_TYPE_ASM_RESUBSCRIBED = 'group_resubscribe'
 
-    EVENT_TYPE_CHOICES = (
-        (EVENT_TYPE_PROCESSED, _("Processed")),
-        (EVENT_TYPE_DROPPED, _("Dropped")),
-        (EVENT_TYPE_DEFERRED, _("Deferred")),
-        (EVENT_TYPE_DELIVERED, _("Delivered")),
-        (EVENT_TYPE_BOUNCED, _("Bounced")),
-        (EVENT_TYPE_OPENED, _("Opened")),
-        (EVENT_TYPE_CLICKED, _("Clicked")),
-        (EVENT_TYPE_UNSUBSCRIBED, _("Unsubscribed")),
-        (EVENT_TYPE_SPAM, _("Marked as spam")),
-        (EVENT_TYPE_ASM_UNSUBSCRIBED, _("Unsubscribed from group")),
-        (EVENT_TYPE_ASM_RESUBSCRIBED, _("Resubscribed to group")),
-    )
+    class EventType(models.TextChoices):
+        PROCESSED = 'processed', _("Processed")
+        DROPPED = 'dropped', _("Dropped")
+        DEFERRED = 'deferred', _("Deferred")
+        DELIVERED = 'delivered', _("Delivered")
+        BOUNCED = 'bounce', _("Bounced")
+        OPENED = 'open', _("Opened")
+        CLICKED = 'click', _("Clicked")
+        UNSUBSCRIBED = 'unsubscribe', _("Unsubscribed")
+        SPAM = 'spamreport', _("Marked as spam")
+        ASM_UNSUBSCRIBED = 'group_unsubscribe', _("Unsubscribed from group")
+        ASM_RESUBSCRIBED = 'group_resubscribe', _("Resubscribed to group")
 
     email = models.ForeignKey('notifications.SentMessage', models.CASCADE,
         verbose_name=_("email message"))
     timestamp = models.DateTimeField(auto_now_add=True,
         verbose_name=_("timestamp"))
-    event = models.CharField(max_length=20, choices=EVENT_TYPE_CHOICES,
+    event = models.CharField(max_length=20, choices=EventType.choices,
         verbose_name=_("event"))
     data = models.JSONField(blank=True, null=True,
         verbose_name=_("context"))

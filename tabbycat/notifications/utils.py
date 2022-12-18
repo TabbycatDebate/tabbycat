@@ -10,7 +10,7 @@ using the participant object to fetch their email address and to record.
 Objects should be fetched from the database here as it is an asyncronous process,
 thus the object itself cannot be passed.
 """
-from typing import Dict, List, Tuple, TYPE_CHECKING
+from typing import Dict, List, Set, Tuple, TYPE_CHECKING
 
 from django.utils import formats
 from django.utils.safestring import mark_safe
@@ -45,7 +45,7 @@ def _assemble_panel(adjs: List[Tuple['Person', str]]) -> str:
     return ", ".join(adj_string)
 
 
-def _check_in_to(pk, to_ids) -> bool:
+def _check_in_to(pk: int, to_ids: Set[int]) -> bool:
     try:
         to_ids.remove(pk)
     except KeyError:

@@ -26,8 +26,9 @@ from .utils import populate_url_keys
 
 if TYPE_CHECKING:
     from django.db.models import QuerySet
-    from django.core.handlers.wsgi import WSGIRequest
     from django.http.response import HttpResponseRedirect
+    from django.http.request import HttpRequest
+    from tournaments.models import Tournament
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +63,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
     template_name = 'private_urls.html'
     tables_orientation = 'columns'
 
-    def add_url_columns(self, table: TabbycatTableBuilder, people: 'QuerySet[Person]', request: 'WSGIRequest') -> TabbycatTableBuilder:
+    def add_url_columns(self, table: TabbycatTableBuilder, people: 'QuerySet[Person]', request: 'HttpRequest') -> TabbycatTableBuilder:
         def build_url(person):
             if person.url_key is None:
                 return {'text': _("no URL"), 'class': 'text-warning'}
@@ -113,7 +114,7 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
 
     tournament_redirect_pattern_name = 'privateurls-list'
 
-    def post(self, request: Any, *args, **kwargs) -> 'HttpResponseRedirect':
+    def post(self, request: 'HttpRequest', *args, **kwargs) -> 'HttpResponseRedirect':
         tournament = self.tournament
 
         nexisting_people = tournament.participants.filter(url_key__isnull=False).count()
@@ -188,7 +189,7 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
 
     table_title = _("Debates")
 
-    def is_page_enabled(self, tournament: Any) -> bool:
+    def is_page_enabled(self, tournament: 'Tournament') -> bool:
         return True
 
     def get_queryset(self) -> 'QuerySet[Person]':
