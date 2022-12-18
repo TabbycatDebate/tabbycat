@@ -796,7 +796,7 @@ class FeedbackQuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     list=extend_schema(summary="List all tournament feedback", parameters=[
         OpenApiParameter('source_type', description='The type of participant submitter of the feedback', required=False, type=str, enum=['adjudicator', 'team']),
         OpenApiParameter('source', description='The ID of the participant submitting feedback; must be used in conjunction with `source_type`', required=False, type=int),
-        OpenApiParameter('round', description='The sequence of the round of the submitted feedback', required=False, type=int),
+        OpenApiParameter('round', description='The sequence of the rounds of the submitted feedback', required=False, type={"type": "array", "items": {"type": "integer"}}, explode=False),
         OpenApiParameter('target', description='The ID of the adjudicator receiving feedback', required=False, type=int),
     ]),
     create=extend_schema(summary="Create feedback"),
@@ -824,7 +824,7 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
             if query_params.get('source'):
                 filters &= Q(source_team__team_id=query_params.get('source'))
         if query_params.get('round'):
-            filters &= (Q(source_adjudicator__debate__round__seq=query_params.get('round')) |
+            filters &= (Q(source_adjudicator__debate__round__seq__in=query_params.get('round').split(",")) |
                 Q(source_team__debate__round__seq=query_params.get('round')))
         if query_params.get('target'):
             filters &= Q(adjudicator_id=query_params.get('target'))
