@@ -34,7 +34,7 @@ class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
 
     @admin.display(description=_("Resave results"))
     def resave_ballots(self, request, queryset):
-        q = queryset.select_related('debate__round__tournament').order_by('tournament_id')
+        q = queryset.select_related('debate__round__tournament').order_by('debate__round__tournament_id')
         count = q.count()
         for tournament, bss in groupby(q, lambda bs: bs.debate.round.tournament):
             populate_results(bss, tournament)
