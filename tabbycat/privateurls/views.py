@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Dict, List, TYPE_CHECKING, Union
+from typing import Any, Dict, List, TYPE_CHECKING
 
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -45,7 +45,7 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
 
     def get_participants_to_email(self, already_sent: bool = False) -> 'QuerySet[Person]':
         subquery = SentMessage.objects.filter(
-            notification__event=BulkNotification.EVENT_TYPE_URL,
+            notification__event=BulkNotification.EventType.URL,
             notification__tournament=self.tournament, email=OuterRef('email'),
         )
         people = self.tournament.participants.filter(
@@ -150,13 +150,13 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
 class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView):
     page_subtitle = _("Private URLs")
 
-    event = BulkNotification.EVENT_TYPE_URL
+    event = BulkNotification.EventType.URL
     subject_template = 'url_email_subject'
     message_template = 'url_email_message'
 
     tournament_redirect_pattern_name = 'privateurls-list'
 
-    def get_extra(self) -> Dict[str, Union[int, str]]:
+    def get_extra(self) -> Dict[str, Any]:
         extra = super().get_extra()
         extra['url'] = self.request.build_absolute_uri(reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': '0'}))[:-2]
         return extra

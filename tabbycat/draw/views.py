@@ -381,7 +381,7 @@ class AssistantDrawDisplayView(CurrentRoundMixin, OptionalAssistantTournamentPag
 class EmailAdjudicatorAssignmentsView(RoundTemplateEmailCreateView):
     page_subtitle = _("Adjudicator Assignments")
 
-    event = BulkNotification.EVENT_TYPE_ADJ_DRAW
+    event = BulkNotification.EventType.ADJ_DRAW
     subject_template = 'adj_email_subject'
     message_template = 'adj_email_message'
 
@@ -423,7 +423,7 @@ class EmailAdjudicatorAssignmentsView(RoundTemplateEmailCreateView):
 class EmailTeamAssignmentsView(RoundTemplateEmailCreateView):
     page_subtitle = _("Team Pairings")
 
-    event = BulkNotification.EVENT_TYPE_TEAM_DRAW
+    event = BulkNotification.EventType.TEAM_DRAW
     subject_template = 'team_draw_email_subject'
     message_template = 'team_draw_email_message'
 

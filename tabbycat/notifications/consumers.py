@@ -24,18 +24,18 @@ if TYPE_CHECKING:
 
 class NotificationQueueConsumer(SyncConsumer):
 
-    NOTIFICATION_GENERATORS: Dict[str, Union[
+    NOTIFICATION_GENERATORS: Dict[BulkNotification.EventType, Union[
         Callable[['QuerySet[Person]', str, 'Model'], List[Tuple[Dict[str, str], Person]]],
         Callable[['QuerySet[Person]', 'Model'], List[Tuple[Dict[str, str], Person]]],
     ]]
     NOTIFICATION_GENERATORS = {
-        BulkNotification.EVENT_TYPE_ADJ_DRAW: adjudicator_assignment_email_generator,
-        BulkNotification.EVENT_TYPE_URL: randomized_url_email_generator,
-        BulkNotification.EVENT_TYPE_BALLOT_CONFIRMED: ballots_email_generator,
-        BulkNotification.EVENT_TYPE_POINTS: standings_email_generator,
-        BulkNotification.EVENT_TYPE_MOTIONS: motion_release_email_generator,
-        BulkNotification.EVENT_TYPE_TEAM_REG: team_speaker_email_generator,
-        BulkNotification.EVENT_TYPE_TEAM_DRAW: team_draw_email_generator,
+        BulkNotification.EventType.ADJ_DRAW: adjudicator_assignment_email_generator,
+        BulkNotification.EventType.URL: randomized_url_email_generator,
+        BulkNotification.EventType.BALLOTS_CONFIRMED: ballots_email_generator,
+        BulkNotification.EventType.POINTS: standings_email_generator,
+        BulkNotification.EventType.MOTIONS: motion_release_email_generator,
+        BulkNotification.EventType.TEAM_REG: team_speaker_email_generator,
+        BulkNotification.EventType.TEAM_DRAW: team_draw_email_generator,
     }
 
     def _send(self, event, messages, records) -> None:
@@ -48,7 +48,7 @@ class NotificationQueueConsumer(SyncConsumer):
             return from_email, [formataddr((t.pref('reply_to_name'), t.pref('reply_to_address')))]
         return from_email, None  # Shouldn't have array of None
 
-    def email(self, event: Dict[str, Union[str, List[int], Dict[str, Union[Round, Tournament, Debate, Any]]]]) -> None:
+    def email(self, event: Dict[str, Union[str, List[int], Dict[str, Any]]]) -> None:
         # Get database objects
         if 'debate_id' in event['extra']:
             event['extra']['debate'] = Debate.objects.select_related('round', 'round__tournament').get(pk=event['extra'].pop('debate_id'))
@@ -82,9 +82,9 @@ class NotificationQueueConsumer(SyncConsumer):
             'subject_template': event['subject'],
             'body_template': event['body'],
         }
-        if notification_type is BulkNotification.EVENT_TYPE_BALLOT_CONFIRMED:
+        if notification_type is BulkNotification.EventType.BALLOTS_CONFIRMED:
             bulk_notification, c = BulkNotification.objects.get_or_create(
-                event=BulkNotification.EVENT_TYPE_BALLOT_CONFIRMED, **creation_kwargs)
+                event=BulkNotification.EventType.BALLOTS_CONFIRMED, **creation_kwargs)
         else:
             bulk_notification = BulkNotification.objects.create(event=notification_type, **creation_kwargs)
 

@@ -1,4 +1,4 @@
-from typing import Any, Callable, Type, TYPE_CHECKING
+from typing import Callable, Type, TYPE_CHECKING
 
 from django.contrib import admin
 from django.utils import timezone
@@ -8,11 +8,11 @@ from utils.admin import ModelAdmin, TabbycatModelAdminFieldsMixin
 from .models import BulkNotification, EmailStatus, SentMessage
 
 if TYPE_CHECKING:
-    from django.db.models import QuerySet
+    from django.db.models import QuerySet, Model
     from django.http.request import HttpRequest
 
 
-def precise_timestamp_isoformat(model: Type, field_name: str) -> Callable[[Any], str]:
+def precise_timestamp_isoformat(model: Type, field_name: str) -> Callable[['Model'], str]:
     @admin.display(description=model._meta.get_field(field_name).verbose_name)
     def precise_timestamp(self, obj):
         return timezone.localtime(getattr(obj, field_name)).isoformat()

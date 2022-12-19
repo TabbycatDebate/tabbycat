@@ -42,33 +42,20 @@ class SentMessage(models.Model):
 
 class BulkNotification(models.Model):
 
-    EVENT_TYPE_POINTS = 'p'
-    EVENT_TYPE_BALLOT_CONFIRMED = 'c'
-    EVENT_TYPE_FEEDBACK_URL = 'f'
-    EVENT_TYPE_BALLOT_URL = 'b'
-    EVENT_TYPE_URL = 'u'
-    EVENT_TYPE_ADJ_DRAW = 'd'
-    EVENT_TYPE_TEAM_REG = 't'
-    EVENT_TYPE_ADJ_REG = 'a'
-    EVENT_TYPE_MOTIONS = 'm'
-    EVENT_TYPE_TEAM_DRAW = 'r'
-    EVENT_TYPE_CUSTOM = ''
+    class EventType(models.TextChoices):
+        POINTS = 'p', _("team points")
+        BALLOTS_CONFIRMED = 'c', _("ballot confirmed")
+        FEEDBACK_URL = 'f', _("feedback URL")
+        BALLOT_URL = 'b', _("ballot URL")
+        URL = 'u', _("landing page URL")
+        ADJ_DRAW = 'd', _("adjudicator draw released")
+        TEAM_REG = 't', _("team registration")
+        ADJ_REG = 'a', _("adjudicator registration")
+        MOTIONS = 'm', _("motion(s) released")
+        TEAM_DRAW = 'r', _("team draw released")
+        CUSTOM = '', _("custom message")
 
-    EVENT_TYPE_CHOICES = (
-        (EVENT_TYPE_POINTS, _("team points")),
-        (EVENT_TYPE_BALLOT_CONFIRMED, _("ballot confirmed")),
-        (EVENT_TYPE_FEEDBACK_URL, _("feedback URL")),
-        (EVENT_TYPE_BALLOT_URL, _("ballot URL")),
-        (EVENT_TYPE_URL, _("landing page URL")),
-        (EVENT_TYPE_ADJ_DRAW, _("adjudicator draw released")),
-        (EVENT_TYPE_TEAM_REG, _("team registration")),
-        (EVENT_TYPE_ADJ_REG, _("adjudicator registration")),
-        (EVENT_TYPE_MOTIONS, _("motion(s) released")),
-        (EVENT_TYPE_TEAM_DRAW, _("team draw released")),
-        (EVENT_TYPE_CUSTOM, _("custom message")),
-    )
-
-    event = models.CharField(max_length=1, choices=EVENT_TYPE_CHOICES, blank=True,
+    event = models.CharField(max_length=20, choices=EventType.choices,
         verbose_name=_("event"))
     timestamp = models.DateTimeField(auto_now_add=True,
         verbose_name=_("timestamp"))
@@ -97,19 +84,6 @@ class BulkNotification(models.Model):
 
 
 class EmailStatus(models.Model):
-
-    EVENT_TYPE_PROCESSED = 'processed'
-    EVENT_TYPE_DROPPED = 'dropped'
-    EVENT_TYPE_DEFERRED = 'deferred'
-    EVENT_TYPE_DELIVERED = 'delivered'
-    EVENT_TYPE_BOUNCED = 'bounce'
-    EVENT_TYPE_OPENED = 'open'
-    EVENT_TYPE_CLICKED = 'click'
-    EVENT_TYPE_UNSUBSCRIBED = 'unsubscribe'
-    EVENT_TYPE_SPAM = 'spamreport'
-    EVENT_TYPE_ASM_UNSUBSCRIBED = 'group_unsubscribe'
-    EVENT_TYPE_ASM_RESUBSCRIBED = 'group_resubscribe'
-
     class EventType(models.TextChoices):
         PROCESSED = 'processed', _("Processed")
         DROPPED = 'dropped', _("Dropped")

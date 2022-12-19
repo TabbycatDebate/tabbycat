@@ -2,7 +2,7 @@ import json
 import logging
 from datetime import datetime
 from smtplib import SMTPException, SMTPResponseException
-from typing import Any, Dict, List, Optional, TYPE_CHECKING, Union
+from typing import Any, Dict, List, Optional, TYPE_CHECKING
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -73,7 +73,7 @@ class TestEmailView(WarnAboutLegacySendgridConfigVarsMixin, AdministratorMixin, 
 
         return super().form_valid(form)
 
-    def get_context_data(self, **kwargs) -> Dict[str, Union[str, TestEmailForm, 'TestEmailView']]:
+    def get_context_data(self, **kwargs) -> Dict[str, Any]:
         kwargs["default_from_email"] = settings.DEFAULT_FROM_EMAIL
         return super().get_context_data(**kwargs)
 
@@ -88,7 +88,7 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
     NA_CELL = {'text': _("N/A"), 'class': 'text-muted'}
     UNKNOWN_RECIPIENT_CELL = {'text': _("Not known"), 'class': 'text-muted'}
 
-    def _create_status_timeline(self, status) -> List[Dict[str, str]]:
+    def _create_status_timeline(self, status: List[EmailStatus]) -> List[Dict[str, str]]:
         statuses = []
         for s in status:
             text = _("%(status)s @ %(time)s") % {
@@ -102,17 +102,17 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
 
     def _get_event_class(self, event: EmailStatus.EventType) -> Optional[str]:
         return {
-            EmailStatus.EVENT_TYPE_BOUNCED: 'text-warning',
-            EmailStatus.EVENT_TYPE_DROPPED: 'text-warning',
-            EmailStatus.EVENT_TYPE_SPAM: 'text-warning',
-            EmailStatus.EVENT_TYPE_DEFERRED: 'text-warning',
-            EmailStatus.EVENT_TYPE_PROCESSED: 'text-info',
-            EmailStatus.EVENT_TYPE_DELIVERED: 'text-info',
-            EmailStatus.EVENT_TYPE_OPENED: 'text-success',
-            EmailStatus.EVENT_TYPE_CLICKED: 'text-success',
-            EmailStatus.EVENT_TYPE_UNSUBSCRIBED: None,
-            EmailStatus.EVENT_TYPE_ASM_UNSUBSCRIBED: None,
-            EmailStatus.EVENT_TYPE_ASM_RESUBSCRIBED: None,
+            EmailStatus.EventType.BOUNCED: 'text-warning',
+            EmailStatus.EventType.DROPPED: 'text-warning',
+            EmailStatus.EventType.SPAM: 'text-warning',
+            EmailStatus.EventType.DEFERRED: 'text-warning',
+            EmailStatus.EventType.PROCESSED: 'text-info',
+            EmailStatus.EventType.DELIVERED: 'text-info',
+            EmailStatus.EventType.OPENED: 'text-success',
+            EmailStatus.EventType.CLICKED: 'text-success',
+            EmailStatus.EventType.UNSUBSCRIBED: None,
+            EmailStatus.EventType.ASM_UNSUBSCRIBED: None,
+            EmailStatus.EventType.ASM_RESUBSCRIBED: None,
         }[event]
 
     def get_tables(self) -> List[TabbycatTableBuilder]:
@@ -289,7 +289,7 @@ class RoleColumnMixin:
 
         return table
 
-    def get_context_data(self, **kwargs) -> Dict[str, Union[str, bool, List, BasicEmailForm, 'CustomEmailCreateView']]:
+    def get_context_data(self, **kwargs) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['categories'] = [
             {'id': 'spk', 'name': _("Speakers")},
@@ -353,7 +353,7 @@ class TournamentTemplateEmailCreateView(TemplateEmailCreateView):
         return super().get_default_send_queryset().exclude(
             sentmessage__notification__event=self.event, sentmessage__notification__tournament=self.tournament)
 
-    def get_extra(self) -> Dict[str, int]:
+    def get_extra(self) -> Dict[str, Any]:
         extra = {'tournament_id': self.tournament.id}
         return extra
 
@@ -364,6 +364,6 @@ class RoundTemplateEmailCreateView(TemplateEmailCreateView, RoundMixin):
         return super().get_default_send_queryset().exclude(
             sentmessage__notification__event=self.event, sentmessage__notification__round=self.round)
 
-    def get_extra(self) -> Dict[str, int]:
+    def get_extra(self) -> Dict[str, Any]:
         extra = {'round_id': self.round.id}
         return extra

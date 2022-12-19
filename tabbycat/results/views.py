@@ -343,7 +343,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
             if self.should_send_email_receipts():
                 async_to_sync(get_channel_layer().send)("notifications", {
                     "type": "email",
-                    "message": BulkNotification.EVENT_TYPE_BALLOT_CONFIRMED,
+                    "message": BulkNotification.EventType.BALLOTS_CONFIRMED,
                     "extra": {"debate_id": self.debate.id},
                     "subject": self.tournament.pref("ballot_email_subject"),
                     "body": self.tournament.pref("ballot_email_message"),

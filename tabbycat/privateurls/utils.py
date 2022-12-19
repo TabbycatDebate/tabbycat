@@ -28,6 +28,6 @@ def populate_url_keys(people: 'QuerySet[Person]', length: int = 8, num_attempts:
     Person.objects.bulk_update(people, ['url_key'])
 
 
-def delete_url_keys(queryset: 'QuerySet') -> None:
+def delete_url_keys(queryset: 'QuerySet[Person]') -> None:
     """Deletes URL keys from every instance in the given QuerySet."""
     queryset.update(url_key=None)
