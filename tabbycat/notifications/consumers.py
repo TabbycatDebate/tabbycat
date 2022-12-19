@@ -1,5 +1,6 @@
 import json
 import random
+from dataclasses import asdict
 from email.utils import formataddr
 from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING, Union
 
@@ -14,7 +15,7 @@ from participants.models import Person
 from tournaments.models import Round, Tournament
 
 from .models import BulkNotification, SentMessage
-from .utils import (adjudicator_assignment_email_generator, ballots_email_generator,
+from .utils import (adjudicator_assignment_email_generator, ballots_email_generator, EmailContextData,
                     motion_release_email_generator, randomized_url_email_generator,
                     standings_email_generator, team_draw_email_generator, team_speaker_email_generator)
 
@@ -25,8 +26,8 @@ if TYPE_CHECKING:
 class NotificationQueueConsumer(SyncConsumer):
 
     NOTIFICATION_GENERATORS: Dict[BulkNotification.EventType, Union[
-        Callable[['QuerySet[Person]', str, 'Model'], List[Tuple[Dict[str, str], Person]]],
-        Callable[['QuerySet[Person]', 'Model'], List[Tuple[Dict[str, str], Person]]],
+        Callable[['QuerySet[Person]', str, 'Model'], List[Tuple[EmailContextData, Person]]],
+        Callable[['QuerySet[Person]', 'Model'], List[Tuple[EmailContextData, Person]]],
     ]]
     NOTIFICATION_GENERATORS = {
         BulkNotification.EventType.ADJ_DRAW: adjudicator_assignment_email_generator,
@@ -48,7 +49,7 @@ class NotificationQueueConsumer(SyncConsumer):
             return from_email, [formataddr((t.pref('reply_to_name'), t.pref('reply_to_address')))]
         return from_email, None  # Shouldn't have array of None
 
-    def email(self, event: Dict[str, Union[str, List[int], Dict[str, Any]]]) -> None:
+    def email(self, event: Dict[str, Union[str, BulkNotification.EventType, List[int], Dict[str, Any]]]) -> None:
         # Get database objects
         if 'debate_id' in event['extra']:
             event['extra']['debate'] = Debate.objects.select_related('round', 'round__tournament').get(pk=event['extra'].pop('debate_id'))
@@ -91,6 +92,8 @@ class NotificationQueueConsumer(SyncConsumer):
         messages = []
         records = []
         for instance, recipient in data:
+            instance = asdict(instance)
+
             hook_id = str(bulk_notification.id) + "-" + str(recipient.id) + "-" + str(random.randint(1000, 9999))
             context = Context(instance)
             body = html_body.render(context)

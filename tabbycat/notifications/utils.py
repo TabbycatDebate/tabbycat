@@ -10,7 +10,8 @@ using the participant object to fetch their email address and to record.
 Objects should be fetched from the database here as it is an asyncronous process,
 thus the object itself cannot be passed.
 """
-from typing import Dict, List, Set, Tuple, TYPE_CHECKING
+from dataclasses import dataclass
+from typing import List, Set, Tuple, TYPE_CHECKING
 
 from django.utils import formats
 from django.utils.safestring import mark_safe
@@ -37,6 +38,72 @@ adj_position_names = {
 }
 
 
+@dataclass
+class EmailContextData:
+    USER: str
+
+
+@dataclass
+class AdjudicatorAssignmentContext(EmailContextData):
+    ROUND: str
+    VENUE: str
+    PANEL: str
+    DRAW: str
+    POSITION: str
+    URL: str
+
+
+@dataclass
+class RandomizedUrlContext(EmailContextData):
+    KEY: str
+    TOURN: str
+    URL: str
+
+
+@dataclass
+class BallotsContext(EmailContextData):
+    DEBATE: str
+    SCORES: str
+
+
+@dataclass
+class StandingsContext(EmailContextData):
+    TOURN: str
+    ROUND: str
+    URL: str
+    POINTS: str
+    TEAM: str
+
+
+@dataclass
+class MotionReleaseContext(EmailContextData):
+    TOURN: str
+    ROUND: str
+    MOTIONS: str
+
+
+@dataclass
+class TeamSpeakerContext(EmailContextData):
+    TOURN: str
+    SHORT: str
+    LONG: str
+    CODE: str
+    BREAK: str
+    SPEAKERS: str
+    INSTITUTION: str
+    EMOJI: str
+
+
+@dataclass
+class TeamDrawContext(EmailContextData):
+    ROUND: str
+    VENUE: str
+    PANEL: str
+    DRAW: str
+    TEAM: str
+    SIDE: str
+
+
 def _assemble_panel(adjs: List[Tuple['Person', str]]) -> str:
     adj_string = []
     for adj, pos in adjs:
@@ -53,7 +120,7 @@ def _check_in_to(pk: int, to_ids: Set[int]) -> bool:
     return True
 
 
-def adjudicator_assignment_email_generator(to: 'QuerySet[Person]', url: str, round: 'Round') -> List[Tuple[Dict[str, str], 'Person']]:
+def adjudicator_assignment_email_generator(to: 'QuerySet[Person]', url: str, round: 'Round') -> List[Tuple[AdjudicatorAssignmentContext, 'Person']]:
     emails = []
     to_ids = {p.id for p in to}
     draw = round.debate_set_with_prefetches(speakers=False).filter(debateadjudicator__adjudicator__in=to)
@@ -79,16 +146,17 @@ def adjudicator_assignment_email_generator(to: 'QuerySet[Person]', url: str, rou
             if adj.url_key:
                 context_user['URL'] = url + adj.url_key + '/'
 
+            context_user = AdjudicatorAssignmentContext(**context_user)
             emails.append((context_user, adj))
 
     return emails
 
 
-def randomized_url_email_generator(to: 'QuerySet[Person]', url: str, tournament: 'Tournament') -> List[Tuple[Dict[str, str], 'Person']]:
-    return [({'USER': p.name, 'URL': url + p.url_key + '/', 'KEY': p.url_key, 'TOURN': str(tournament)}, p) for p in to]
+def randomized_url_email_generator(to: 'QuerySet[Person]', url: str, tournament: 'Tournament') -> List[Tuple[RandomizedUrlContext, 'Person']]:
+    return [(RandomizedUrlContext(USER=p.name, URL=url + p.url_key + '/', KEY=p.url_key, TOURN=str(tournament)), p) for p in to]
 
 
-def ballots_email_generator(to: 'QuerySet[Person]', debate: 'Debate') -> List[Tuple[Dict[str, str], 'Person']]:  # "to" is unused
+def ballots_email_generator(to: 'QuerySet[Person]', debate: 'Debate') -> List[Tuple[BallotsContext, 'Person']]:  # "to" is unused
     emails = []
     tournament = debate.round.tournament
     results = DebateResult(debate.confirmed_ballot)
@@ -137,6 +205,8 @@ def ballots_email_generator(to: 'QuerySet[Person]', debate: 'Debate') -> List[Tu
                 continue
 
             context = {'DEBATE': round_name, 'USER': adj.name, 'SCORES': _create_ballot(results, ballot)}
+
+            context = BallotsContext(**context)
             emails.append((context, adj))
     elif isinstance(results, ConsensusDebateResultWithScores):
         context = {'DEBATE': round_name, 'SCORES': _create_ballot(results, results.scoresheet)}
@@ -148,12 +218,13 @@ def ballots_email_generator(to: 'QuerySet[Person]', debate: 'Debate') -> List[Tu
             context_user = context.copy()
             context_user['USER'] = adj.adjudicator.name
 
+            context_user = BallotsContext(**context_user)
             emails.append((context_user, adj.adjudicator))
 
     return emails
 
 
-def standings_email_generator(to: 'QuerySet[Person]', url: str, round: 'Round') -> List[Tuple[Dict[str, str], 'Person']]:
+def standings_email_generator(to: 'QuerySet[Person]', url: str, round: 'Round') -> List[Tuple[StandingsContext, 'Person']]:
     emails = []
     to_ids = {p.id for p in to}
 
@@ -178,12 +249,13 @@ def standings_email_generator(to: 'QuerySet[Person]', url: str, round: 'Round') 
             context_user = context_team.copy()
             context_user['USER'] = speaker.name
 
+            context_user = StandingsContext(**context_user)
             emails.append((context_user, speaker))
 
     return emails
 
 
-def motion_release_email_generator(to: 'QuerySet[Person]', round: 'Round') -> List[Tuple[Dict[str, str], 'Person']]:
+def motion_release_email_generator(to: 'QuerySet[Person]', round: 'Round') -> List[Tuple[MotionReleaseContext, 'Person']]:
     def _create_motion_list():
         motion_list = "<ul>"
         for motion in round.motion_set.all():
@@ -196,10 +268,10 @@ def motion_release_email_generator(to: 'QuerySet[Person]', round: 'Round') -> Li
 
         return mark_safe(motion_list)
 
-    return [({'TOURN': str(round.tournament), 'ROUND': round.name, 'MOTIONS': _create_motion_list(), 'USER': p.name}, p) for p in to]
+    return [(MotionReleaseContext(TOURN=str(round.tournament), ROUND=round.name, MOTIONS=_create_motion_list(), USER=p.name), p) for p in to]
 
 
-def team_speaker_email_generator(to: 'QuerySet[Person]', tournament: 'Tournament') -> List[Tuple[Dict[str, str], 'Person']]:
+def team_speaker_email_generator(to: 'QuerySet[Person]', tournament: 'Tournament') -> List[Tuple[TeamSpeakerContext, 'Person']]:
     emails = []
     to_ids = {p.id for p in to}
 
@@ -223,12 +295,13 @@ def team_speaker_email_generator(to: 'QuerySet[Person]', tournament: 'Tournament
             context_user = context.copy()
             context_user['USER'] = speaker.name
 
+            context_user = TeamSpeakerContext(**context_user)
             emails.append((context_user, speaker))
 
     return emails
 
 
-def team_draw_email_generator(to: 'QuerySet[Person]', round: 'Round') -> List[Tuple[Dict[str, str], 'Person']]:
+def team_draw_email_generator(to: 'QuerySet[Person]', round: 'Round') -> List[Tuple[TeamDrawContext, 'Person']]:
     emails = []
     to_ids = {p.id for p in to}
     tournament = round.tournament
@@ -256,6 +329,7 @@ def team_draw_email_generator(to: 'QuerySet[Person]', round: 'Round') -> List[Tu
                 context_user = context_team.copy()
                 context_user['USER'] = speaker.name
 
+                context_user = TeamDrawContext(**context_user)
                 emails.append((context_user, speaker))
 
     return emails
