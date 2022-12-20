@@ -135,26 +135,17 @@ class AdjudicatorAssignmentEmailGenerator(NotificationContextGenerator):
         use_codes = use_team_code_names(round.tournament, False)
 
         for debate in draw:
-            matchup = debate.matchup_codes if use_codes else debate.matchup
-            context = {
-                'ROUND': round.name,
-                'VENUE': debate.venue.display_name if debate.venue is not None else _("TBA"),
-                'PANEL': _assemble_panel(debate.adjudicators.with_positions()),
-                'DRAW': matchup,
-            }
-
             for adj, pos in debate.adjudicators.with_positions():
                 if not _check_in_to(adj.id, to_ids):
                     continue
 
-                context_user = context.copy()
-                context_user['USER'] = adj.name
-                context_user['POSITION'] = adj_position_names[pos]
-
-                if adj.url_key:
-                    context_user['URL'] = url + adj.url_key + '/'
-
-                context_user = AdjudicatorAssignmentContext(**context_user)
+                context_user = AdjudicatorAssignmentContext(
+                    ROUND=round.name, USER=adj.name, POSITION=adj_position_names[pos],
+                    VENUE=debate.venue.display_name if debate.venue is not None else _("TBA"),
+                    PANEL=_assemble_panel(debate.adjudicators.with_positions()),
+                    DRAW=debate.matchup_codes if use_codes else debate.matchup,
+                    URL=url + adj.url_key + '/' if adj.url_key else '',
+                )
                 emails.append((context_user, adj))
 
         return emails
@@ -214,21 +205,17 @@ class BallotsEmailGenerator(NotificationContextGenerator):
                 if adj.email is None:  # As "to" is None, must check if eligible email
                     continue
 
-                context = {'DEBATE': round_name, 'USER': adj.name, 'SCORES': _create_ballot(results, ballot)}
-
-                context = BallotsContext(**context)
+                context = BallotsContext(DEBATE=round_name, USER=adj.name, SCORES=_create_ballot(results, ballot))
                 emails.append((context, adj))
         elif isinstance(results, ConsensusDebateResultWithScores):
-            context = {'DEBATE': round_name, 'SCORES': _create_ballot(results, results.scoresheet)}
-
             for adj in debate.debateadjudicator_set.all().select_related('adjudicator'):
                 if adj.adjudicator.email is None:
                     continue
 
-                context_user = context.copy()
-                context_user['USER'] = adj.adjudicator.name
-
-                context_user = BallotsContext(**context_user)
+                context_user = BallotsContext(
+                    DEBATE=round_name, USER=adj.adjudicator.name,
+                    SCORES=_create_ballot(results, results.scoresheet),
+                )
                 emails.append((context_user, adj.adjudicator))
 
         return emails
@@ -239,28 +226,19 @@ class StandingsEmailGenerator(NotificationContextGenerator):
         emails = []
         to_ids = {p.id for p in to}
 
-        context = {
-            'TOURN': str(round.tournament),
-            'ROUND': round.name,
-            'URL': url,
-        }
-
         teams = round.active_teams.filter(speaker__in=to).prefetch_related('speaker_set')
         populate_win_counts(teams, round)
 
         for team in teams:
-            context_team = context.copy()
-            context_team['POINTS'] = str(team.points_count)
-            context_team['TEAM'] = team.short_name
-
             for speaker in team.speaker_set.all():
                 if not _check_in_to(speaker.id, to_ids):
                     continue
 
-                context_user = context_team.copy()
-                context_user['USER'] = speaker.name
-
-                context_user = StandingsContext(**context_user)
+                context_user = StandingsContext(
+                    TOURN=str(round.tournament), ROUND=round.name, URL=url,
+                    POINTS=str(team.points_count), TEAM=team.short_name,
+                    USER=speaker.name,
+                )
                 emails.append((context_user, speaker))
 
         return emails
@@ -290,25 +268,16 @@ class TeamSpeakerEmailGenerator(NotificationContextGenerator):
 
         teams = tournament.team_set.filter(speaker__in=to).prefetch_related('speaker_set', 'break_categories').select_related('institution')
         for team in teams:
-            context = {
-                'TOURN': str(tournament),
-                'SHORT': team.short_name,
-                'LONG': team.long_name,
-                'CODE': team.code_name,
-                'BREAK': _(", ").join([breakq.name for breakq in team.break_categories.all()]),
-                'SPEAKERS': _(", ").join([p.name for p in team.speaker_set.all()]),
-                'INSTITUTION': str(team.institution),
-                'EMOJI': team.emoji,
-            }
-
             for speaker in team.speakers:
                 if not _check_in_to(speaker.id, to_ids):
                     continue
 
-                context_user = context.copy()
-                context_user['USER'] = speaker.name
-
-                context_user = TeamSpeakerContext(**context_user)
+                context_user = TeamSpeakerContext(
+                    TOURN=str(tournament), SHORT=team.short_name, LONG=team.long_name, CODE=team.code_name,
+                    BREAK=_(", ").join([breakq.name for breakq in team.break_categories.all()]),
+                    SPEAKERS=_(", ").join([p.name for p in team.speaker_set.all()]),
+                    INSTITUTION=str(team.institution), EMOJI=team.emoji,
+                )
                 emails.append((context_user, speaker))
 
         return emails
@@ -323,27 +292,18 @@ class TeamDrawEmailGenerator(NotificationContextGenerator):
         use_codes = use_team_code_names(tournament, False)
 
         for debate in draw:
-            matchup = debate.matchup_codes if use_codes else debate.matchup
-            context = {
-                'ROUND': round.name,
-                'VENUE': debate.venue.name,
-                'PANEL': _assemble_panel(debate.adjudicators.with_positions()),
-                'DRAW': matchup,
-            }
-
             for dt in debate.debateteam_set.all():
-                context_team = context.copy()
-                context_team['TEAM'] = dt.team.code_name if use_codes else dt.team.short_name
-                context_team['SIDE'] = dt.get_side_name(tournament=round.tournament)
-
                 for speaker in dt.team.speakers:
                     if not _check_in_to(speaker.id, to_ids):
                         continue
 
-                    context_user = context_team.copy()
-                    context_user['USER'] = speaker.name
-
-                    context_user = TeamDrawContext(**context_user)
+                    context_user = TeamDrawContext(
+                        ROUND=round.name, VENUE=debate.venue.name, USER=speaker.name,
+                        TEAM=dt.team.code_name if use_codes else dt.team.short_name,
+                        SIDE=dt.get_side_name(tournament=round.tournament),
+                        DRAW=debate.matchup_codes if use_codes else debate.matchup,
+                        PANEL=_assemble_panel(debate.adjudicators.with_positions()),
+                    )
                     emails.append((context_user, speaker))
 
         return emails
