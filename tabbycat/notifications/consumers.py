@@ -2,7 +2,7 @@ import json
 import random
 from dataclasses import asdict
 from email.utils import formataddr
-from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from channels.consumer import SyncConsumer
 from django.conf import settings
@@ -15,28 +15,21 @@ from participants.models import Person
 from tournaments.models import Round, Tournament
 
 from .models import BulkNotification, SentMessage
-from .utils import (adjudicator_assignment_email_generator, ballots_email_generator, EmailContextData,
-                    motion_release_email_generator, randomized_url_email_generator,
-                    standings_email_generator, team_draw_email_generator, team_speaker_email_generator)
-
-if TYPE_CHECKING:
-    from django.db.models import QuerySet, Model
+from .utils import (AdjudicatorAssignmentEmailGenerator, BallotsEmailGenerator, MotionReleaseEmailGenerator,
+                    NotificationContextGenerator, RandomizedUrlEmailGenerator, StandingsEmailGenerator,
+                    TeamDrawEmailGenerator, TeamSpeakerEmailGenerator)
 
 
 class NotificationQueueConsumer(SyncConsumer):
 
-    NOTIFICATION_GENERATORS: Dict[BulkNotification.EventType, Union[
-        Callable[['QuerySet[Person]', str, 'Model'], List[Tuple[EmailContextData, Person]]],
-        Callable[['QuerySet[Person]', 'Model'], List[Tuple[EmailContextData, Person]]],
-    ]]
-    NOTIFICATION_GENERATORS = {
-        BulkNotification.EventType.ADJ_DRAW: adjudicator_assignment_email_generator,
-        BulkNotification.EventType.URL: randomized_url_email_generator,
-        BulkNotification.EventType.BALLOTS_CONFIRMED: ballots_email_generator,
-        BulkNotification.EventType.POINTS: standings_email_generator,
-        BulkNotification.EventType.MOTIONS: motion_release_email_generator,
-        BulkNotification.EventType.TEAM_REG: team_speaker_email_generator,
-        BulkNotification.EventType.TEAM_DRAW: team_draw_email_generator,
+    NOTIFICATION_GENERATORS: Dict[BulkNotification.EventType, NotificationContextGenerator] = {
+        BulkNotification.EventType.ADJ_DRAW: AdjudicatorAssignmentEmailGenerator(),
+        BulkNotification.EventType.URL: RandomizedUrlEmailGenerator(),
+        BulkNotification.EventType.BALLOTS_CONFIRMED: BallotsEmailGenerator(),
+        BulkNotification.EventType.POINTS: StandingsEmailGenerator(),
+        BulkNotification.EventType.MOTIONS: MotionReleaseEmailGenerator(),
+        BulkNotification.EventType.TEAM_REG: TeamSpeakerEmailGenerator(),
+        BulkNotification.EventType.TEAM_DRAW: TeamDrawEmailGenerator(),
     }
 
     def _send(self, event, messages, records) -> None:
