@@ -31,12 +31,10 @@ export default {
         if (entity.identifier[0]) {
           const substitutions = [entity.name, entity.identifier[0]]
           return this.tct('%s (no category) with identifier of %s', substitutions)
-        }
-        else {
+        } else {
           return this.tct('%s (no category) with no identifier', [entity.name])
         }
       }
-      return entity.name
     },
   },
   computed: {
