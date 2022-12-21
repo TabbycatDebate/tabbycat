@@ -30,26 +30,31 @@ export default {
   },
   methods: {
     getToolTipForPerson: function (entity) {
-      if (!this.teamCodes && entity.type !== 'Team' && entity.institution === null && entity.identifier[0] !== null) {
-        const subs = [entity.name, entity.type, entity.identifier[0]]
-        return this.tct('%s, a %s of no institutional affiliation with identifier of %s', subs)
-      }
-      if (!this.teamCodes && entity.type !== 'Team' && entity.institution === null) {
-        const subs = [entity.name, entity.type]
-        return this.tct('%s, a %s of no institutional affiliation with no assigned identifier', subs)
-      }
-      if (!this.teamCodes && entity.type !== 'Team' && entity.identifier[0] !== null) {
-        const subs = [entity.name, entity.type, entity.institution.name, entity.identifier[0]]
-        return this.tct('%s, a %s from %s with identifier of %s', subs)
-      }
       if (!this.teamCodes && entity.type !== 'Team') {
-        const subs = [entity.name, entity.type, entity.institution.name]
-        return this.tct('%s, a %s from %s with no assigned identifier', subs)
+        if (entity.institution === null) {
+          if (entity.identifier[0]) {
+            const subs = [entity.name, entity.type, entity.identifier[0]]
+            return this.tct('%s, a %s of no institutional affiliation with identifier of %s', subs)
+          } else {
+            const subs = [entity.name, entity.type]
+            return this.tct('%s, a %s of no institutional affiliation with no identifier', subs)
+          }
+        }
+        // Adjudicator
+        if (entity.identifier[0]) {
+          const subs = [entity.name, entity.type, entity.institution.name, entity.identifier[0]]
+          return this.tct('%s, a %s from %s with identifier of %s', subs)
+        } else {
+          const subs = [entity.name, entity.type, entity.institution.name]
+          return this.tct('%s, a %s from %s with no identifier', subs)
+        }
       }
-      if (entity.speakers !== null && entity.type === 'Team') {
+      if (entity.speakers && entity.type === 'Team') {
         const speakers = []
         _.forEach(entity.speakers, (speaker) => {
-          if (speaker.status) {
+          if (!speaker.identifier[0]) {
+            speakers.push(this.tct('%s (Absent; no id)', [speaker.name]))
+          } elseif (speaker.status) {
             speakers.push(this.tct('%s (Present; id=%s)', [speaker.name, speaker.identifier[0]]))
           } else {
             speakers.push(this.tct('%s (Absent; id=%s)', [speaker.name, speaker.identifier[0]]))
