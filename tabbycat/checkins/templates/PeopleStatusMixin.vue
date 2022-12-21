@@ -40,7 +40,6 @@ export default {
             return this.tct('%s, a %s of no institutional affiliation with no identifier', subs)
           }
         }
-        // Adjudicator
         if (entity.identifier[0]) {
           const subs = [entity.name, entity.type, entity.institution.name, entity.identifier[0]]
           return this.tct('%s, a %s from %s with identifier of %s', subs)
