@@ -53,7 +53,7 @@ export default {
         _.forEach(entity.speakers, (speaker) => {
           if (!speaker.identifier[0]) {
             speakers.push(this.tct('%s (Absent; no id)', [speaker.name]))
-          } elseif (speaker.status) {
+          } else if (speaker.status) {
             speakers.push(this.tct('%s (Present; id=%s)', [speaker.name, speaker.identifier[0]]))
           } else {
             speakers.push(this.tct('%s (Absent; id=%s)', [speaker.name, speaker.identifier[0]]))
