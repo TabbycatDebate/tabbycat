@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     getToolTipForPerson: function (entity) {
-      if (!this.teamCodes && entity.type !== 'Team' && entity.institution === null && entity.identifier !== null) {
+      if (!this.teamCodes && entity.type !== 'Team' && entity.institution === null && entity.identifier[0] !== null) {
         const subs = [entity.name, entity.type, entity.identifier[0]]
         return this.tct('%s, a %s of no institutional affiliation with identifier of %s', subs)
       }
@@ -38,7 +38,7 @@ export default {
         const subs = [entity.name, entity.type]
         return this.tct('%s, a %s of no institutional affiliation with no assigned identifier', subs)
       }
-      if (!this.teamCodes && entity.type !== 'Team' && entity.identifier !== null) {
+      if (!this.teamCodes && entity.type !== 'Team' && entity.identifier[0] !== null) {
         const subs = [entity.name, entity.type, entity.institution.name, entity.identifier[0]]
         return this.tct('%s, a %s from %s with identifier of %s', subs)
       }

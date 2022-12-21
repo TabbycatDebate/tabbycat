@@ -19,11 +19,11 @@ export default {
       _.forEach(entity.categories, (c) => {
         categories.push(c.name)
       })
-      if (entity.categories.length > 0 && entity.identifier !== null) {
+      if (entity.categories.length > 0 && entity.identifier[0] !== null) {
         const substitutions = [entity.name, categories.join(', '), entity.identifier[0]]
         return this.tct('%s (%s) with identifier of %s', substitutions)
       }
-      if (entity.categories.length === 0 && entity.identifier !== null) {
+      if (entity.categories.length === 0 && entity.identifier[0] !== null) {
         const substitutions = [entity.name, entity.identifier[0]]
         return this.tct('%s (no category) with identifier of %s', substitutions)
       }
