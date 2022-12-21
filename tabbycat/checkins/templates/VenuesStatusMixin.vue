@@ -23,16 +23,16 @@ export default {
         if (entity.identifier[0]){
           const substitutions = [entity.name, categories.join(', '), entity.identifier[0]]
           return this.tct('%s (%s) with identifier of %s', substitutions)
-        } else{
+        } else {
           const substitutions = [entity.name, categories.join(', ')]
           return this.tct('%s (%s) with no identifier', substitutions)
         }
-      } else{
+      } else {
         if (entity.identifier[0]){
           const substitutions = [entity.name, entity.identifier[0]]
           return this.tct('%s (no category) with identifier of %s', substitutions)
         }
-        else{
+        else {
           return this.tct('%s (no category) with no identifier', [entity.name])
         }
       }
