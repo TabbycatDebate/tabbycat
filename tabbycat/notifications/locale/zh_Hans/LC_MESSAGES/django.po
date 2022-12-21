@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-30 01:01-0400\n"
-"PO-Revision-Date: 2020-12-30 05:07\n"
+"POT-Creation-Date: 2021-11-28 21:53-0400\n"
+"PO-Revision-Date: 2021-11-29 02:16\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -22,25 +22,25 @@ msgstr ""
 msgid "Notifications"
 msgstr "通知栏"
 
-#: notifications/forms.py:11
+#: notifications/forms.py:12
 msgid "Recipient email address"
-msgstr ""
-
-#: notifications/forms.py:15
-#, python-format
-msgid "Test email from %(host)s"
 msgstr ""
 
 #: notifications/forms.py:16
 #, python-format
+msgid "Test email from %(host)s"
+msgstr ""
+
+#: notifications/forms.py:17
+#, python-format
 msgid "Congratulations! If you're reading this message, your email backend on %(host)s looks all good to go!"
 msgstr ""
 
-#: notifications/forms.py:29
+#: notifications/forms.py:30
 msgid "Subject"
 msgstr ""
 
-#: notifications/forms.py:30
+#: notifications/forms.py:31
 msgid "Message"
 msgstr ""
 
@@ -227,12 +227,12 @@ msgstr ""
 msgid "Emails can be sent by Tabbycat for a variety of purposes. Emails are sent when specific preferences are enabled (i.e. enabling Ballot Receipts) or through actions available on specific pages (i.e. the Draw Display page for matchups; or the Participants page for team registration). This page shows the status of previously-sent emails."
 msgstr ""
 
-#: notifications/templates/notifications_nav.html:5 notifications/views.py:46
+#: notifications/templates/notifications_nav.html:5 notifications/views.py:75
 msgid "Email Statuses"
 msgstr ""
 
 #: notifications/templates/notifications_nav.html:11
-#: notifications/templates/test_email.html:24
+#: notifications/templates/test_email.html:29
 msgid "Send Test Email"
 msgstr ""
 
@@ -250,7 +250,12 @@ msgstr ""
 msgid "You can use this form to send a test email, to check that your email backend settings are working, before you try to send email notifications to participants."
 msgstr ""
 
-#: notifications/templates/test_email.html:25
+#: notifications/templates/test_email.html:20
+#, python-format
+msgid "The email will be sent from: <strong>%(default_from_email)s</strong>. If this doesn't look right, change the <code>DEFAULT_FROM_EMAIL</code> config var in Heroku (or environment variable)."
+msgstr ""
+
+#: notifications/templates/test_email.html:30
 msgid "Go back to the site home page"
 msgstr ""
 
@@ -311,93 +316,102 @@ msgstr ""
 msgid ", "
 msgstr "，"
 
-#: notifications/views.py:38
+#: notifications/views.py:47
+#, python-format
+msgid "The email (SMTP) server returned an error sending the test email: [SMTP code %(code)d] %(error)s"
+msgstr ""
+
+#: notifications/views.py:51
+msgid "Hint: If the error is about sender identity verification in SendGrid, and you've already completed the steps in SendGrid, it may be that you need to update the DEFAULT_FROM_EMAIL config var in Heroku to match your verified sender identity."
+msgstr ""
+
+#: notifications/views.py:60
 #, python-format
 msgid "There was an error sending the test email: %(error)s"
 msgstr ""
 
-#: notifications/views.py:41
+#: notifications/views.py:65
 #, python-format
 msgid "A test email has been sent to %(recipient)s."
 msgstr ""
 
-#: notifications/views.py:52
+#: notifications/views.py:81
 msgid "N/A"
 msgstr "不适用"
 
-#: notifications/views.py:53
+#: notifications/views.py:82
 msgid "Not known"
 msgstr ""
 
-#: notifications/views.py:58
+#: notifications/views.py:87
 #, python-format
 msgid "%(status)s @ %(time)s"
 msgstr ""
 
-#: notifications/views.py:104
+#: notifications/views.py:133
 #, python-format
 msgid "@ %s"
 msgstr ""
 
-#: notifications/views.py:123
+#: notifications/views.py:152
 msgid "Timeline"
 msgstr ""
 
-#: notifications/views.py:133 notifications/views.py:231
+#: notifications/views.py:162 notifications/views.py:260
 msgid "Participant"
 msgstr ""
 
-#: notifications/views.py:134 notifications/views.py:236
+#: notifications/views.py:163 notifications/views.py:265
 msgid "Email address"
 msgstr ""
 
-#: notifications/views.py:135
+#: notifications/views.py:164
 msgid "Status"
 msgstr ""
 
-#: notifications/views.py:136
+#: notifications/views.py:165
 msgid "Time"
 msgstr "时间"
 
-#: notifications/views.py:175
+#: notifications/views.py:204
 msgid "Email Participants"
 msgstr ""
 
-#: notifications/views.py:204
+#: notifications/views.py:233
 #, python-format
 msgid "%(email_count)s email has been queued for sending."
 msgid_plural "%(email_count)s emails have been queued for sending."
 msgstr[0] ""
 
-#: notifications/views.py:210
+#: notifications/views.py:239
 msgid "No emails were sent — likely because no recipients were selected."
 msgstr ""
 
-#: notifications/views.py:221
+#: notifications/views.py:250
 msgid "Send Email"
 msgstr ""
 
-#: notifications/views.py:237
+#: notifications/views.py:266
 msgid "Not Provided"
 msgstr ""
 
-#: notifications/views.py:250
+#: notifications/views.py:279
 msgid "Role"
 msgstr ""
 
-#: notifications/views.py:251
+#: notifications/views.py:280
 msgid "Adjudicator"
 msgstr "裁判"
 
-#: notifications/views.py:251
+#: notifications/views.py:280
 msgid "Speaker"
 msgstr "讲员"
 
-#: notifications/views.py:259
+#: notifications/views.py:288
 msgid "Speakers"
 msgstr "讲员"
 
-#: notifications/views.py:260
+#: notifications/views.py:289
 msgid "Adjudicators"
 msgstr "裁判"
 

@@ -318,6 +318,7 @@ class TeamScore(models.Model):
         verbose_name=_("votes given"))
     votes_possible = models.PositiveSmallIntegerField(null=True, blank=True,
         verbose_name=_("votes possible"))
+    has_ghost = models.BooleanField(null=True, blank=True, verbose_name=_("has ghost score"))
 
     class Meta:
         unique_together = [('debate_team', 'ballot_submission')]

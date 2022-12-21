@@ -87,7 +87,13 @@ export default {
     },
   },
   computed: {
-    filtedUnallocatedItems: function () {
+    isVenue: function () {
+      return this.unallocatedItems[0] && 'priority' in this.unallocatedItems[0]
+    },
+    isTeam: function () {
+      return this.unallocatedItems[0] && 'short_name' in this.unallocatedItems[0]
+    },
+    filteredUnallocatedItems: function () {
       return this.showUnavailable ? this.filteredAll : this.filteredAvailable
     },
     filteredAll: function () {
@@ -101,20 +107,22 @@ export default {
       return this[activeKey[0].property]
     },
     sortedUnallocatedItemsByOrder: function () {
-      return this.filtedUnallocatedItems.slice(0).sort((itemA, itemB) => {
-        return itemA.vue_last_modified - itemB.vue_last_modified
-      }).reverse()
+      return this.filteredUnallocatedItems.slice(0).sort((itemA, itemB) => {
+        return itemB.vue_last_modified - itemA.vue_last_modified
+      })
     },
     sortedUnallocatedItemsByName: function () {
+      const field = this.isVenue ? 'display_name' : (this.isTeam ? 'short_name' : 'name')
       // Note slice makes a copy so we are not mutating
-      return this.filtedUnallocatedItems.slice(0).sort((itemA, itemB) => {
-        return itemA.name.localeCompare(itemB.name)
+      return this.filteredUnallocatedItems.slice(0).sort((itemA, itemB) => {
+        return itemA[field].localeCompare(itemB[field])
       })
     },
     sortedUnallocatedItemsByScore: function () {
-      return this.filtedUnallocatedItems.slice(0).sort((itemA, itemB) => {
-        return itemA.score - itemB.score
-      }).reverse()
+      const field = this.isVenue ? 'priority' : (this.isTeam ? 'points' : 'score')
+      return this.filteredUnallocatedItems.slice(0).sort((itemA, itemB) => {
+        return itemB[field] - itemA[field]
+      })
     },
   },
   methods: {

@@ -4,7 +4,7 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Avg, Count, Prefetch
-from django.utils.html import mark_safe
+from django.utils.html import escape, mark_safe
 from django.utils.translation import gettext as _, gettext_lazy
 from django.views.generic.base import TemplateView
 
@@ -248,7 +248,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         table.add_speaker_columns([info.speaker for info in standings])
         table.add_team_columns([info.speaker.team for info in standings])
 
-        scores_headers = [{'key': round.abbreviation, 'title': round.abbreviation} for round in rounds]
+        scores_headers = [{'key': escape(round.abbreviation), 'title': escape(round.abbreviation)} for round in rounds]
         scores_data = [[metricformat(x) if x is not None else '—' for x in standing.scores] for standing in standings]
         table.add_columns(scores_headers, scores_data)
         table.add_metric_columns(standings, integer_score_columns=self.integer_score_columns(rounds))

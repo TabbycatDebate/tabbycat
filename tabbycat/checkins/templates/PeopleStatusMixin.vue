@@ -13,6 +13,15 @@ export default {
       speakerGroupings: {
         Speaker: false, Team: true,
       },
+      peopleFilterNames: {
+        All: 'All',
+        Adjudicators: 'Only Adjudicators',
+        Debaters: 'Only Teams',
+      },
+      speakerGroupingNames: {
+        Speaker: 'By Person',
+        Team: 'By Team',
+      },
     }
   },
   props: {

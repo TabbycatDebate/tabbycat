@@ -27,7 +27,7 @@ class Venue(models.Model):
         verbose_name_plural = _("rooms")
 
     @property
-    def display_name(self):
+    def display_name(self) -> str:
         categories = self.venuecategory_set.all()
         prefixes = []
         suffixes = []

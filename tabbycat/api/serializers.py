@@ -9,22 +9,26 @@ from django.db.models import QuerySet
 from django.urls import get_script_prefix, resolve, Resolver404
 from django.utils import timezone
 from django.utils.encoding import uri_to_iri
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 from rest_framework.fields import get_error_detail, SkipField
 from rest_framework.relations import Hyperlink
 from rest_framework.settings import api_settings
 
-from adjallocation.models import DebateAdjudicator
+from adjallocation.models import DebateAdjudicator, PreformedPanel
 from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory, BreakingTeam
 from draw.models import Debate, DebateTeam
 from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
 from participants.emoji import pick_unused_emoji
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
+from participants.utils import populate_code_names
 from privateurls.utils import populate_url_keys
 from results.mixins import TabroomSubmissionFieldsMixin
-from results.models import BallotSubmission
+from results.models import BallotSubmission, SpeakerScore
 from results.result import DebateResult
+from standings.speakers import SpeakerStandingsGenerator
+from standings.teams import TeamStandingsGenerator
 from tournaments.models import Round, Tournament
 from venues.models import Venue, VenueCategory, VenueConstraint
 
@@ -39,6 +43,12 @@ def _validate_field(self, field, value):
     if qs.exists():
         raise serializers.ValidationError("Object with same value exists in the tournament")
     return value
+
+
+def is_staff(context):
+    # OpenAPI generation does not have a view (sometimes context is also None in that circumstance).
+    # Avoid redacting fields.
+    return context is None or 'view' not in context or context['request'].user.is_staff
 
 
 class BaseSourceField(fields.TournamentHyperlinkedRelatedField):
@@ -115,6 +125,33 @@ class ParticipantSourceField(BaseSourceField):
             obj = getattr(value.participant_submitter, model.__name__.lower(), None)
             if obj is not None:
                 return self.get_url(obj, view_name, self.context['request'], format)
+
+
+class RootSerializer(serializers.Serializer):
+    class RootLinksSerializer(serializers.Serializer):
+        v1 = serializers.HyperlinkedIdentityField(view_name='api-v1-root')
+
+    _links = RootLinksSerializer(source='*', read_only=True)
+    version = serializers.CharField()
+
+
+class V1RootSerializer(serializers.Serializer):
+    class V1LinksSerializer(serializers.Serializer):
+        tournaments = serializers.HyperlinkedIdentityField(view_name='api-tournament-list')
+        institutions = serializers.HyperlinkedIdentityField(view_name='api-global-institution-list')
+
+    _links = V1LinksSerializer(source='*', read_only=True)
+
+
+class CheckinSerializer(serializers.Serializer):
+    object = serializers.HyperlinkedIdentityField(view_name='api-root')
+    barcode = serializers.IntegerField()
+    checked = serializers.BooleanField()
+    timestamp = serializers.DateTimeField()
+
+
+class AvailabilitiesSerializer(serializers.ListSerializer):
+    child = fields.ParticipantAvailabilityForeignKeyField(view_name='api-availability-list')
 
 
 class VenueConstraintSerializer(serializers.ModelSerializer):
@@ -236,7 +273,7 @@ class RoundSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if not kwargs['context']['request'].user.is_staff:
+        if not is_staff(kwargs.get('context')):
             self.fields.pop('feedback_weight')
 
             # Can't show in a ListSerializer
@@ -489,7 +526,7 @@ class PartialBreakingTeamSerializer(BreakingTeamSerializer):
 
 class SpeakerSerializer(serializers.ModelSerializer):
 
-    class LinksSerializer(serializers.Serializer):
+    class SpeakerLinksSerializer(serializers.Serializer):
         checkin = fields.TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-checkin')
 
     url = fields.TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-detail')
@@ -499,17 +536,20 @@ class SpeakerSerializer(serializers.ModelSerializer):
         view_name='api-speakercategory-detail',
         queryset=SpeakerCategory.objects.all(),
     )
-    _links = LinksSerializer(source='*', read_only=True)
+    _links = SpeakerLinksSerializer(source='*', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if not kwargs['context']['request'].user.is_staff:
+        if not is_staff(kwargs.get('context')):
             self.fields.pop('gender')
             self.fields.pop('email')
             self.fields.pop('phone')
             self.fields.pop('pronoun')
             self.fields.pop('anonymous')
             self.fields.pop('url_key')
+
+            if kwargs['context']['tournament'].pref('participant_code_names') == 'everywhere':
+                self.fields.pop('name')
 
     class Meta:
         model = Speaker
@@ -525,12 +565,15 @@ class SpeakerSerializer(serializers.ModelSerializer):
         if url_key is None:
             populate_url_keys([speaker])
 
+        if validated_data.get('code_name') is None:
+            populate_code_names([speaker])
+
         return speaker
 
 
 class AdjudicatorSerializer(serializers.ModelSerializer):
 
-    class LinksSerializer(serializers.Serializer):
+    class AdjudicatorLinksSerializer(serializers.Serializer):
         checkin = fields.TournamentHyperlinkedIdentityField(view_name='api-adjudicator-checkin')
 
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-adjudicator-detail')
@@ -556,13 +599,13 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         queryset=Adjudicator.objects.all(),
     )
     venue_constraints = VenueConstraintSerializer(many=True, required=False)
-    _links = LinksSerializer(source='*', read_only=True)
+    _links = AdjudicatorLinksSerializer(source='*', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # Remove private fields in the public endpoint if needed
-        if not kwargs['context']['request'].user.is_staff:
+        if not is_staff(kwargs.get('context')):
             self.fields.pop('institution_conflicts')
             self.fields.pop('team_conflicts')
             self.fields.pop('adjudicator_conflicts')
@@ -573,6 +616,8 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
                 self.fields.pop('institution')
             if not t.pref('public_breaking_adjs'):
                 self.fields.pop('breaking')
+            if t.pref('participant_code_names') == 'everywhere':
+                self.fields.pop('name')
 
             self.fields.pop('base_score')
             self.fields.pop('trainee')
@@ -588,19 +633,37 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         exclude = ('tournament',)
 
     def create(self, validated_data):
+        venue_constraints = validated_data.pop('venue_constraints', [])
         url_key = validated_data.pop('url_key', None)
         if url_key is not None and len(url_key) != 0:  # Let an empty string be null for the uniqueness constraint
             validated_data['url_key'] = url_key
 
         adj = super().create(validated_data)
 
+        if len(venue_constraints) > 0:
+            vc = VenueConstraintSerializer(many=True, context=self.context)
+            vc._validated_data = venue_constraints  # Data was already validated
+            vc.save(adjudicator=adj)
+
         if url_key is None:  # If explicitly null (and not just an empty string)
             populate_url_keys([adj])
+
+        if validated_data.get('code_name') is None:
+            populate_code_names([adj])
 
         if adj.institution is not None:
             adj.adjudicatorinstitutionconflict_set.get_or_create(institution=adj.institution)
 
         return adj
+
+    def update(self, instance, validated_data):
+        venue_constraints = validated_data.pop('venue_constraints', [])
+        if len(venue_constraints) > 0:
+            vc = VenueConstraintSerializer(many=True, context=self.context)
+            vc._validated_data = venue_constraints  # Data was already validated
+            vc.save(adjudicator=instance)
+
+        return super().update(instance, validated_data)
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -641,7 +704,7 @@ class TeamSerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
 
         # Remove private fields in the public endpoint if needed
-        if not kwargs['context']['request'].user.is_staff:
+        if not is_staff(kwargs.get('context')):
             self.fields.pop('institution_conflicts')
             self.fields.pop('venue_constraints')
 
@@ -662,14 +725,17 @@ class TeamSerializer(serializers.ModelSerializer):
     validate_emoji = partialmethod(_validate_field, 'emoji')
 
     def validate(self, data):
-        t = self.context['tournament']
+        if data.get('institution') is None and data.get('use_institution_prefix', False):
+            raise serializers.ValidationError("Cannot include institution prefix without institution.")
+
         uniqueness_qs = Team.objects.filter(
-            tournament=t, reference=data['reference'], institution=data['institution']).exclude(id=getattr(self.instance, 'id', None))
-        if data.get('institution') is None:
-            if data.get('use_institution_prefix', False):
-                raise serializers.ValidationError("Cannot include institution prefix without institution.")
-        elif uniqueness_qs.exists():
-            raise serializers.ValidationError("Object with same reference and institution exists in the tournament")
+            tournament=self.context['tournament'],
+            reference=data.get('reference'),
+            institution=data.get('institution'),
+        ).exclude(id=getattr(self.instance, 'id', None))
+        if uniqueness_qs.exists() and not self.partial:
+            raise serializers.ValidationError("Team with same reference and institution exists in the tournament")
+
         return super().validate(data)
 
     def create(self, validated_data):
@@ -684,6 +750,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
         speakers_data = validated_data.pop('speakers', [])
         break_categories = validated_data.pop('break_categories', [])
+        venue_constraints = validated_data.pop('venue_constraints', [])
 
         emoji, code_name = pick_unused_emoji()
         if 'emoji' not in validated_data or validated_data.get('emoji') is None:
@@ -707,17 +774,27 @@ class TeamSerializer(serializers.ModelSerializer):
             speakers._validated_data = speakers_data  # Data was already validated
             speakers.save(team=team)
 
+        if len(venue_constraints) > 0:
+            vc = VenueConstraintSerializer(many=True, context=self.context)
+            vc._validated_data = venue_constraints  # Data was already validated
+            vc.save(team=team)
+
         if team.institution is not None:
             team.teaminstitutionconflict_set.get_or_create(institution=team.institution)
 
         return team
 
     def update(self, instance, validated_data):
-        speakers_data = validated_data.pop('speakers')
+        speakers_data = validated_data.pop('speakers', [])
+        venue_constraints = validated_data.pop('venue_constraints', [])
         if len(speakers_data) > 0:
             speakers = SpeakerSerializer(many=True, context=self.context)
             speakers._validated_data = speakers_data  # Data was already validated
             speakers.save(team=instance)
+        if len(venue_constraints) > 0:
+            vc = VenueConstraintSerializer(many=True, context=self.context)
+            vc._validated_data = venue_constraints  # Data was already validated
+            vc.save(institution=instance)
 
         return super().update(instance, validated_data)
 
@@ -734,8 +811,29 @@ class InstitutionSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if not kwargs['context']['request'].user.is_staff:
+        if not is_staff(kwargs.get('context')):
             self.fields.pop('venue_constraints')
+
+    def create(self, validated_data):
+        venue_constraints = validated_data.pop('venue_constraints', [])
+
+        institution = super().create(validated_data)
+
+        if len(venue_constraints) > 0:
+            vc = VenueConstraintSerializer(many=True, context=self.context)
+            vc._validated_data = venue_constraints  # Data was already validated
+            vc.save(institution=institution)
+
+        return institution
+
+    def update(self, instance, validated_data):
+        venue_constraints = validated_data.pop('venue_constraints', [])
+        if len(venue_constraints) > 0:
+            vc = VenueConstraintSerializer(many=True, context=self.context)
+            vc._validated_data = venue_constraints  # Data was already validated
+            vc.save(institution=instance)
+
+        return super().update(instance, validated_data)
 
 
 class PerTournamentInstitutionSerializer(InstitutionSerializer):
@@ -755,14 +853,14 @@ class PerTournamentInstitutionSerializer(InstitutionSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if not kwargs['context']['request'].user.is_staff:
+        if not is_staff(kwargs.get('context')):
             self.fields.pop('teams')
             self.fields.pop('adjudicators')
 
 
 class VenueSerializer(serializers.ModelSerializer):
 
-    class LinksSerializer(serializers.Serializer):
+    class VenueLinksSerializer(serializers.Serializer):
         checkin = fields.TournamentHyperlinkedIdentityField(view_name='api-venue-checkin')
 
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-venue-detail')
@@ -773,7 +871,7 @@ class VenueSerializer(serializers.ModelSerializer):
     )
     display_name = serializers.ReadOnlyField()
     external_url = serializers.URLField(source='url', required=False, allow_blank=True)
-    _links = LinksSerializer(source='*', read_only=True)
+    _links = VenueLinksSerializer(source='*', read_only=True)
 
     class Meta:
         model = Venue
@@ -793,18 +891,31 @@ class VenueCategorySerializer(serializers.ModelSerializer):
         exclude = ('tournament',)
 
 
+def get_metrics_field_type(generator):
+    return {
+        'type': 'array',
+        'items': {
+            'type': 'object',
+            'properties': {
+                'metric': {'type': 'string', 'enum': list(generator.metric_annotator_classes.keys())},
+                'value': {'type': 'number'},
+            },
+        },
+    }
+
+
 class BaseStandingsSerializer(serializers.Serializer):
     rank = serializers.SerializerMethodField()
     tied = serializers.SerializerMethodField()
     metrics = serializers.SerializerMethodField()
 
-    def get_rank(self, obj):
+    def get_rank(self, obj) -> int:
         return obj.rankings['rank'][0]
 
-    def get_tied(self, obj):
+    def get_tied(self, obj) -> bool:
         return obj.rankings['rank'][1]
 
-    def get_metrics(self, obj):
+    def get_metrics(self, obj) -> list:
         return [{'metric': s, 'value': v} for s, v in obj.metrics.items()]
 
     def __init__(self, *args, **kwargs):
@@ -814,9 +925,32 @@ class BaseStandingsSerializer(serializers.Serializer):
 class TeamStandingsSerializer(BaseStandingsSerializer):
     team = fields.TournamentHyperlinkedRelatedField(view_name='api-team-detail', queryset=Team.objects.all())
 
+    @extend_schema_field(get_metrics_field_type(TeamStandingsGenerator))
+    def get_metrics(self, obj) -> list:
+        return super().get_metrics(obj)
+
 
 class SpeakerStandingsSerializer(BaseStandingsSerializer):
     speaker = fields.AnonymisingHyperlinkedTournamentRelatedField(view_name='api-speaker-detail', anonymous_source='anonymous')
+
+    @extend_schema_field(get_metrics_field_type(SpeakerStandingsGenerator))
+    def get_metrics(self, obj) -> list:
+        return super().get_metrics(obj)
+
+
+class DebateAdjudicatorSerializer(serializers.Serializer):
+    adjudicators = Adjudicator.objects.all()
+    chair = fields.TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail', queryset=adjudicators)
+    panellists = fields.TournamentHyperlinkedRelatedField(many=True, view_name='api-adjudicator-detail', queryset=adjudicators)
+    trainees = fields.TournamentHyperlinkedRelatedField(many=True, view_name='api-adjudicator-detail', queryset=adjudicators)
+
+    def save(self, **kwargs):
+        aa = kwargs['debate'].adjudicators
+        aa.chair = self.validated_data.get('chair')
+        aa.panellists = self.validated_data.get('panellists')
+        aa.trainees = self.validated_data.get('trainees')
+        aa.save()
+        return aa
 
 
 class RoundPairingSerializer(serializers.ModelSerializer):
@@ -827,20 +961,6 @@ class RoundPairingSerializer(serializers.ModelSerializer):
             model = DebateTeam
             fields = ('team', 'side')
 
-    class DebateAdjudicatorSerializer(serializers.Serializer):
-        adjudicators = Adjudicator.objects.all()
-        chair = fields.TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail', queryset=adjudicators)
-        panellists = fields.TournamentHyperlinkedRelatedField(many=True, view_name='api-adjudicator-detail', queryset=adjudicators)
-        trainees = fields.TournamentHyperlinkedRelatedField(many=True, view_name='api-adjudicator-detail', queryset=adjudicators)
-
-        def save(self, **kwargs):
-            aa = kwargs['debate'].adjudicators
-            aa.chair = self.validated_data.get('chair')
-            aa.panellists = self.validated_data.get('panellists')
-            aa.trainees = self.validated_data.get('trainees')
-            aa.save()
-            return aa
-
     url = fields.RoundHyperlinkedIdentityField(view_name='api-pairing-detail', lookup_url_kwarg='debate_pk')
     venue = fields.TournamentHyperlinkedRelatedField(view_name='api-venue-detail', queryset=Venue.objects.all(),
         required=False, allow_null=True)
@@ -849,7 +969,7 @@ class RoundPairingSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if not kwargs['context']['request'].user.is_staff:
+        if not is_staff(kwargs.get('context')):
             self.fields.pop('bracket')
             self.fields.pop('room_rank')
             self.fields.pop('importance')
@@ -1021,7 +1141,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         class SheetSerializer(serializers.Serializer):
 
             class TeamResultSerializer(serializers.Serializer):
-                side = serializers.CharField()
+                side = serializers.ChoiceField(choices=DebateTeam.SIDE_CHOICES)
                 points = serializers.IntegerField(required=False)
                 win = serializers.BooleanField(required=False)
                 score = serializers.FloatField(required=False, allow_null=True)
@@ -1032,7 +1152,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                 )
 
                 class SpeechSerializer(serializers.Serializer):
-                    ghost = serializers.BooleanField(required=False)
+                    ghost = serializers.BooleanField(required=False, help_text=SpeakerScore._meta.get_field('ghost').help_text)
                     score = serializers.FloatField()
 
                     speaker = fields.TournamentHyperlinkedRelatedField(
@@ -1061,8 +1181,8 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                 def validate(self, data):
                     # Make sure the score is the sum of the speech scores
                     score = data.get('score', None)
-                    speeches = data.get('speeches', None)
-                    if speeches is None:
+                    speeches = data.get('speeches', [])
+                    if len(speeches) == 0:
                         if score is not None:
                             raise serializers.ValidationError("Speeches are required to assign scores.")
                     elif score is not None and score != sum(speech['score'] for speech in speeches):
@@ -1192,8 +1312,8 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
             validated_data['confirmer'] = self.context['request'].user
             validated_data['confirm_timestamp'] = timezone.now()
 
-        stage = 'elim' if self.round.stage == Round.STAGE_ELIMINATION else 'prelim'
-        if self.tournament.pref('ballots_per_debate_' + stage) == 'per-adj':
+        stage = 'elim' if self.context['round'].stage == Round.STAGE_ELIMINATION else 'prelim'
+        if self.context['tournament'].pref('ballots_per_debate_' + stage) == 'per-adj':
             if self.context['debate'].debateadjudicator_set.all().count() > 1:
                 if len(result_data['sheets']) == 1:
                     validated_data['participant_submitter'] = result_data['sheets'][0]['adjudicator']
@@ -1208,9 +1328,10 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         result._errors = []
         result.save(ballot=ballot)
 
-        vetos = self.VetoSerializer(context=self.context)
-        vetos._validated_data = veto_data
-        vetos.save(ballot_submission=ballot, preference=3)
+        if veto_data:
+            vetos = self.VetoSerializer(context=self.context)
+            vetos._validated_data = veto_data
+            vetos.save(ballot_submission=ballot, preference=3)
 
         return ballot
 
@@ -1222,6 +1343,50 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         instance.confirmed = validated_data['confirmed']
         instance.discarded = validated_data['discarded']
         instance.save()
+        return instance
+
+
+class UpdateBallotSerializer(serializers.ModelSerializer):
+    """Unused, just for OpenAPI with BallotSerializer.update()"""
+    class Meta:
+        model = BallotSubmission
+        fields = ('confirmed', 'discarded')
+
+
+class PreformedPanelSerializer(serializers.ModelSerializer):
+    url = fields.RoundHyperlinkedIdentityField(view_name='api-preformedpanel-detail', lookup_url_kwarg='debate_pk')
+    adjudicators = DebateAdjudicatorSerializer(required=False, allow_null=True)
+
+    class Meta:
+        model = PreformedPanel
+        exclude = ('round',)
+
+    def create(self, validated_data):
+        adjs_data = validated_data.pop('adjudicators', None)
+
+        validated_data['round'] = self.context['round']
+        debate = super().create(validated_data)
+
+        if adjs_data is not None:
+            adjudicators = self.DebateAdjudicatorSerializer()
+            adjudicators._validated_data = adjs_data
+            adjudicators.save(debate=debate)
+
+        return debate
+
+    def update(self, instance, validated_data):
+        if validated_data.get('adjudicators', None) is not None:
+            adjudicators = self.DebateAdjudicatorSerializer()
+            adjudicators._validated_data = validated_data.pop('adjudicators')
+            adjudicators.save(debate=instance)
+
+        return super().update(instance, validated_data)
+
+class SpeakerRoundsSerializer(serializers.ModelSerializer):
+    participant = fields.TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-detail')
+    class Meta:
+        model = Speaker
+        fields = (['rounds', 'participant'])
 
 class SpeakerRoundsSerializer(serializers.ModelSerializer):
     participant = fields.TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-detail')

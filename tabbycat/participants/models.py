@@ -101,6 +101,9 @@ class Person(models.Model):
     anonymous = models.BooleanField(default=False,
         verbose_name=_("anonymous"),
         help_text=_("Anonymous persons will have their name and team redacted on public tab releases"))
+    code_name = models.CharField(max_length=25, blank=True,
+        verbose_name=_("code name"),
+        help_text=_("Name used to obscure real name on public-facing pages"))
 
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24, # uses null=True to allow multiple people to have no URL key
         verbose_name=_("URL key"))
@@ -124,6 +127,11 @@ class Person(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+    def get_public_name(self, tournament):
+        if tournament.pref('participant_code_names') == 'off':
+            return self.name
+        return self.code_name
 
 
 class TeamManager(LookupByNameFieldsMixin, models.Manager):
@@ -272,11 +280,9 @@ class Team(models.Model):
         try:
             return self._points
         except AttributeError:
-            from results.models import TeamScore
             from standings.teams import PointsMetricAnnotator
-            self._points = TeamScore.objects.filter(
-                ballot_submission__confirmed=True,
-                debate_team__team=self,
+            self._points = self.__class__.objects.filter(
+                id=self.id,
             ).aggregate(p=Coalesce(PointsMetricAnnotator().get_annotation(), Value(0)))['p']
             return self._points
 

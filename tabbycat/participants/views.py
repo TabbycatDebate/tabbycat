@@ -4,9 +4,11 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, Max, Prefetch, Q
+from django.db.models.functions import Coalesce
 from django.forms import HiddenInput
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
+from django.utils.html import escape
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.base import View
 
@@ -99,11 +101,11 @@ class BaseInstitutionsListView(TournamentMixin, VueTableTemplateView):
         ).distinct()
 
         table = TabbycatTableBuilder(view=self, sort_key='code')
-        table.add_column({'key': 'code', 'title': _("Code")}, [i.code for i in institutions])
-        table.add_column({'key': 'name', 'title': _("Full name")}, [i.name for i in institutions])
+        table.add_column({'key': 'code', 'title': _("Code")}, [escape(i.code) for i in institutions])
+        table.add_column({'key': 'name', 'title': _("Full name")}, [escape(i.name) for i in institutions])
         if any(i.region is not None for i in institutions):
             table.add_column({'key': 'region', 'title': _("Region")},
-                [i.region.name if i.region else "—" for i in institutions])
+                [escape(i.region.name) if i.region else "—" for i in institutions])
         table.add_column({'key': 'nteams', 'title': _("Teams"), 'tooltip': _("Number of teams")},
             [i.nteams for i in institutions])
         table.add_column({'key': 'nadjs', 'title': _("Adjs"),
@@ -141,7 +143,7 @@ class BaseCodeNamesListView(TournamentMixin, VueTableTemplateView):
         table = TabbycatTableBuilder(view=self, sort_key='code_name')
         table.add_column(
             {'key': 'code_name', 'title': _("Code name")},
-            [{'text': t.code_name or "—"} for t in teams],
+            [{'text': escape(t.code_name) or "—"} for t in teams],
         )
         table.add_team_columns(teams)
         return table
@@ -261,7 +263,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
     table_title = _("Previous Rounds")
 
     def get_page_title(self):
-        return _("Record for %(name)s") % {'name': self.object.name}
+        return _("Record for %(name)s") % {'name': self.object.get_public_name(self.tournament)}
 
     def _get_adj_adj_conflicts(self):
         adjs = []
@@ -331,7 +333,7 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
 
     def get_formset_factory_kwargs(self):
         return {
-            'fields': ('name', 'tournament', 'slug', 'seq', 'limit', 'public'),
+            'fields': ('name', 'tournament', 'slug', 'limit', 'public'),
             'extra': 2,
             'widgets': {
                 'tournament': HiddenInput,
@@ -347,18 +349,27 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
         }
 
     def formset_valid(self, formset):
-        result = super().formset_valid(formset)
-        if self.instances:
+        cats = formset.save(commit=False)
+
+        for cat, fields in formset.changed_objects:
+            cat.save()
+
+        for i, cat in enumerate(formset.new_objects, start=self.get_formset_queryset().aggregate(m=Coalesce(Max('seq'), 0) + 1)['m']):
+            raise
+            cat.seq = i
+            cat.save()
+
+        if cats:
             message = ngettext("Saved category: %(list)s",
                 "Saved categories: %(list)s",
-                len(self.instances),
-            ) % {'list': ", ".join(category.name for category in self.instances)}
+                len(cats),
+            ) % {'list': ", ".join(category.name for category in cats)}
             messages.success(self.request, message)
         else:
             messages.success(self.request, _("No changes were made to the categories."))
         if "add_more" in self.request.POST:
             return redirect_tournament(self.url_name, self.tournament)
-        return result
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self, *args, **kwargs):
         return reverse_tournament(self.success_url, self.tournament)
@@ -380,7 +391,7 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
         speaker_categories = self.tournament.speakercategory_set.all()
 
         for sc in speaker_categories:
-            table.add_column({'key': sc.name, 'title': sc.name}, [{
+            table.add_column({'key': escape(sc.name), 'title': escape(sc.name)}, [{
                 'component': 'check-cell',
                 'checked': True if sc in speaker.categories.all() else False,
                 'id': speaker.id,

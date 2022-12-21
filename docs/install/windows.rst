@@ -212,7 +212,7 @@ g. Start Tabbycat!
 
 g. Open your browser and go to http://127.0.0.1:8000/ or http://localhost:8000/. It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
 
-  .. image:: images/tabbycat-bare-windows.png
+  .. image:: images/tabbycat-bare.png
 
 Naturally, your database is currently empty, so proceed to :ref:`importing initial data <importing-initial-data>`.
 

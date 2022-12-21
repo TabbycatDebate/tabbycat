@@ -141,7 +141,7 @@ class BaseDebateResult:
     field, which normally means that the field will be left as null.
     """
 
-    teamscore_fields = ['points', 'win', 'margin', 'score', 'votes_given', 'votes_possible']
+    teamscore_fields = ['points', 'win', 'margin', 'score', 'votes_given', 'votes_possible', 'has_ghost']
 
     is_voting = False
     uses_declared_winners = True
@@ -171,7 +171,10 @@ class BaseDebateResult:
         self.scoresheet_class = self.get_scoresheet_class()
 
         if load:
-            self.full_load()
+            if self.ballotsub.id is None:
+                self.empty_load()
+            else:
+                self.full_load()
 
     def __repr__(self):
         return "<{classname} at {id:#x} for {bsub!s}>".format(
@@ -186,8 +189,12 @@ class BaseDebateResult:
 
     def full_load(self):
         self.init_blank_buffer()
-        self.load_from_db()
+        self.full_load_from_db()
         self.assert_loaded()
+
+    def empty_load(self):
+        self.init_blank_buffer()
+        self.load_from_db()
 
     def init_blank_buffer(self):
         """Initialises the data attributes. External initialisers might find
@@ -235,14 +242,16 @@ class BaseDebateResult:
     # Load and save methods
     # --------------------------------------------------------------------------
 
-    def load_from_db(self):
+    def full_load_from_db(self):
         """Populates the buffer from the database. Subclasses should extend this
         method as necessary."""
-        self.load_debateteams()
+        self.load_from_db()
         self.load_scoresheets()
 
-    def load_debateteams(self):
+    def load_from_db(self):
+        self.load_debateteams()
 
+    def load_debateteams(self):
         if not self.debate.sides_confirmed:
             return  # don't load if sides aren't confirmed
 
@@ -385,6 +394,10 @@ class DebateResultByAdjudicator(BaseDebateResult):
         self.debateadjs = {}
         self.scoresheets = {}
 
+    def load_from_db(self):
+        super().load_from_db()
+        self.load_debateadjs()
+
     def assert_loaded(self):
         super().assert_loaded()
         assert set(self.debate.adjudicators.voting()) == set(self.scoresheets)
@@ -411,7 +424,7 @@ class DebateResultByAdjudicator(BaseDebateResult):
     # Load and save methods
     # --------------------------------------------------------------------------
 
-    def load_scoresheets(self):
+    def load_debateadjs(self):
         self.debateadjs_query = self.debate.debateadjudicator_set.exclude(
             type=DebateAdjudicator.TYPE_TRAINEE).select_related('adjudicator', 'adjudicator__tournament')
         self.debateadjs = {da.adjudicator: da for da in self.debateadjs_query}
@@ -419,6 +432,7 @@ class DebateResultByAdjudicator(BaseDebateResult):
             positions=getattr(self, 'positions', None)) for adj in self.debateadjs.keys()
         }
 
+    def load_scoresheets(self):
         if not self.get_scoresheet_class().uses_declared_winners:
             return  # No need to add winners when already determined through scores
 
@@ -565,6 +579,9 @@ class DebateResultByAdjudicator(BaseDebateResult):
     def teamscore_field_votes_possible(self, side):
         return len(self.scoresheets)
 
+    def teamscore_field_has_ghost(self, side):
+        return False
+
     def teamscorebyadj_field_win(self, adj, side):
         return side in self.scoresheets[adj].winners()
 
@@ -618,7 +635,10 @@ class DebateResultWithScoresMixin:
         self.positions = self.tournament.positions
 
         if load:
-            self.full_load()
+            if self.ballotsub.id is None:
+                self.empty_load()
+            else:
+                self.full_load()
 
     # --------------------------------------------------------------------------
     # Management methods
@@ -661,8 +681,8 @@ class DebateResultWithScoresMixin:
     # Load and save methods
     # --------------------------------------------------------------------------
 
-    def load_from_db(self):
-        super().load_from_db()
+    def full_load_from_db(self):
+        super().full_load_from_db()
         self.load_speakers()
 
     def load_speakers(self):
@@ -723,6 +743,9 @@ class DebateResultWithScoresMixin:
 
     def teamscore_field_margin(self, side):
         return self.calculate_full_margin(side)
+
+    def teamscore_field_has_ghost(self, side):
+        return any(self.ghosts[side].values())
 
     # --------------------------------------------------------------------------
     # Other common functionality (helper functions)
@@ -864,6 +887,9 @@ class ConsensusDebateResult(BaseDebateResult):
     def teamscore_field_score(self, side):
         return None  # Placeholder for subclasses with scores
 
+    def teamscore_field_has_ghost(self, side):
+        return False
+
     def as_dicts(self):
         yield {'teams': self.sheet_as_dicts(self.scoresheet)}
 
@@ -904,6 +930,9 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
         if self.tournament.pref('teamscore_includes_ghosts'):
             return self.scoresheet.get_total(side)
         return sum(self.get_score(side, pos) for pos in self.positions if not self.get_ghost(side, pos))
+
+    def teamscore_field_has_ghost(self, side):
+        return any(self.ghosts[side].values())
 
 
 class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateResultByAdjudicator):
@@ -986,6 +1015,9 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
         if not self._decision_calculated:
             self._calculate_decision()
         return mean(self._teamscore_score_component(adj, side) for adj in self.relevant_adjudicators())
+
+    def teamscore_field_has_ghost(self, side):
+        return any(self.ghosts[side].values())
 
     def speakerscorebyadj_field_score(self, adjudicator, side, position):
         return self.scoresheets[adjudicator].get_score(side, position)

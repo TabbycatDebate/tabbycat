@@ -11,7 +11,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Overwritten in local.py or heroku.py
 # ==============================================================================
 
-ADMINS = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
+ADMINS = ('Tabbycat Debate', 'contact@tabbycat-debate.org'),
 MANAGERS = ADMINS
 DEBUG = bool(int(os.environ['DEBUG'])) if 'DEBUG' in os.environ else False
 ENABLE_DEBUG_TOOLBAR = False # Must default to false; overriden in Dev config
@@ -22,9 +22,9 @@ SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.7.0-dev'
-TABBYCAT_CODENAME = 'Pixie-bob'
-READTHEDOCS_VERSION = 'v2.7.0'
+TABBYCAT_VERSION = '2.8.0-dev'
+TABBYCAT_CODENAME = 'Q'
+READTHEDOCS_VERSION = 'v2.8.0'
 
 # ==============================================================================
 # Internationalization and Localization
@@ -40,14 +40,8 @@ LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
 ]
 
-# Languages that should be available in the switcher
+# Add custom languages not provided by Django
 EXTRA_LANG_INFO = {
-    'ms': {
-        'bidi': False,
-        'code': 'ms',
-        'name': 'Malay',
-        'name_local': 'Bahasa Melayu', #unicode codepoints here
-    },
     'tzl': {
         # Use code for Talossan; can't use proper reserved code...
         # Talossan is a constructed language, without native speakers,
@@ -58,7 +52,7 @@ EXTRA_LANG_INFO = {
     },
 }
 
-# Add custom languages not provided by Django
+# Languages that should be available in the switcher
 import django.conf.locale
 LANG_INFO = dict(django.conf.locale.LANG_INFO, **EXTRA_LANG_INFO)
 django.conf.locale.LANG_INFO = LANG_INFO
@@ -152,6 +146,7 @@ INSTALLED_APPS = (
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    'drf_spectacular',
     'django_better_admin_arrayfield',
 )
 
@@ -338,7 +333,24 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    #'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Tabbycat API',
+    'DESCRIPTION': 'Parliamentary debate tabulation software',
+    'VERSION': '1.3.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SCHEMA_PATH_PREFIX': r'api/v\d+',
+    'CONTACT': {'name': 'Étienne Beaulé', 'email': 'ebeaule@tabbycat-debate.org'},
+    'LICENSE': {'name': 'AGPL 3', 'url': 'https://www.gnu.org/licenses/agpl-3.0.en.html'},
+    'EXTENSIONS_INFO': {
+        "x-logo": {
+            "url": "/static/logo.svg",
+            "altText": "Tabbycat logo",
+        },
+    }
 }
 
 # ----------------------------------------
@@ -347,3 +359,22 @@ REST_FRAMEWORK = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_URLS_REGEX = r'^/api(/.*)?$'
+
+# ==============================================================================
+# Password validators
+# ==============================================================================
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]

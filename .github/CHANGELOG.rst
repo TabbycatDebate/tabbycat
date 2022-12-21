@@ -2,22 +2,82 @@
 Change Log
 ==========
 
-2.7.0 (Pixie-bob)
+2.8.0 (Q)
 ---------
 *Release date: TBD*
+
+- Added new emoji from Unicode 12 and 13. Thank you to Daan Koning for the pull request! (`#2143 <https://github.com/TabbycatDebate/tabbycat/issues/2143>`_)
+
+
+2.7.4
+-----
+*Release date: 11 December 2022*
+
+- Fixed an issue that would cause "Connection Lost" errors on new Heroku deployments and prevent the auto-allocator from working
+
+
+2.7.3
+-----
+*Release date: 30 November 2022*
+
+- Fixed a mistake in the URL used to deploy a fork to Heroku
+
+
+2.7.2
+-----
+*Release date: 27 November 2022*
+
+- Fixed crashes when creating ballots through the API (BACKEND-AM2)
+- Don't re-capitalize side names in results tables
+- Fixed printable ballots not appearing when in French
+- Prevented malicious strings from breaking printable pages
+- Added new instructions for deploying to Heroku using a fork and for applying for free student credits at Heroku
+- Fixed sorting of unallocated draggable items
+- Got regional colours to match between legend and donut charts
+
+
+2.7.1
+-----
+*Release date: 6 November 2022*
+
+- Escaped values in tables to avoid malicious data
+- Fixed crash on loading email dialog for team draws
+- Fixed team standing emails not being sent
+- Fixed sorting by venue name or priority in the allocator
+- Fixed adjudicator private URLs not loading
+- Adjudicator feedback tables now properly sortable by number of feedback
+- Checkboxes no longer overlap with table headers
+
+
+2.7.0 (Pixie-bob)
+-----------------
+*Release date: 1 October 2022*
 
 - Added the ability to deploy to Render as a 1-click Heroku-like deployment option
 - Each debate's panel can now be dragged and dropped onto another debate, e.g. you can now swap panels in the same way you can swap individual adjudicators.
 - Round weights can be modified within tournament preferences, rather than just by the Edit Database.
 - Preformed panels can now be applied 'directly', in a linear top-to-bottom fashion. However, this method will not account for soft or hard conflicts. Thanks to Enting Lee for the pull request!
 - The 'Inactive Tournaments' page has been merged into the main page.
+- The checkins filter buttons are now clearer in what they filter. Thank you to Giza Pavone for the pull request!
+- The British Parliamentary preset uses the new WUDC iron-person rule (both speeches count towards team score). Thank you to Alice Bertoni for the pull request!
+- People can have code names to hide their real name within the tournament. Thank you to the South African Schools’ Debating Board for sponsoring the feature!
 - API improvements
     - Allowed access to the Motions API endpoint for publicly-released motions.
     - The ballot API now supports motion vetos.
     - Venue contraints are added to Partipants' endpoints.
-- Security
+- Security (sponsored by the Debating Society of Pakistan)
     - IP addresses are logged when performing actions through Edit Database.
+    - Deletion of action logs is disabled.
+    - Password requirements are instituted against setting weak passwords.
 - \+ bug fixes!
+
+
+2.6.8
+-----
+*Release date: 18 August 2022*
+
+- Minor bug fix
+- Rotation of sponsorship images
 
 
 2.6.7

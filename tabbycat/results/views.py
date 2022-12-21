@@ -10,6 +10,7 @@ from django.db.models import Count, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
+from django.utils.html import escape
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 from django.views.generic import FormView, TemplateView
@@ -276,12 +277,20 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
             'matchup': kwargs['debate_name'],
         }
 
-        kwargs['iron'] = self.debate.debateteam_set.annotate(iron=Count('team__debateteam__speakerscore',
-            filter=Q(team__debateteam__debate__round=self.debate.round.prev) & Q(team__debateteam__speakerscore__ghost=True),
-            distinct=True)).filter(iron__gt=0)
-        kwargs['current_iron'] = self.debate.debateteam_set.annotate(iron=Count('team__debateteam__speakerscore',
-            filter=Q(team__debateteam__debate__round=self.debate.round) & Q(team__debateteam__speakerscore__ghost=True),
-            distinct=True)).filter(iron__gt=0)
+        kwargs['iron'] = self.debate.debateteam_set.annotate(iron=Count('team__debateteam__teamscore',
+            filter=Q(team__debateteam__debate__round=self.debate.round.prev,
+                team__debateteam__teamscore__has_ghost=True,
+                team__debateteam__teamscore__ballot_submission__confirmed=True)),
+        ).filter(iron__gt=0)
+        if self.ballotsub.id is None:
+            kwargs['current_iron'] = 0
+        else:
+            kwargs['current_iron'] = self.debate.debateteam_set.annotate(iron=Count('team__debateteam__teamscore',
+                filter=Q(
+                    team__debateteam__debate__round=self.debate.round,
+                    team__debateteam__teamscore__has_ghost=True,
+                    team__debateteam__teamscore__ballot_submission=self.ballotsub)),
+            ).filter(iron__gt=0).count()
 
         return super().get_context_data(**kwargs)
 
@@ -556,6 +565,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
             self.round_motions[rm.motion_id] = rm
 
         self.result = DebateResult(self.ballotsub, round=self.round, tournament=self.tournament)
+
         self.vetos = None
         self.prefilled = False
         if self.ballotsub.single_adj and prefill:
@@ -802,7 +812,7 @@ class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, RoundMixin, Vue
         table = TabbycatTableBuilder(view=self, sort_key='adj')
 
         data = [{
-            'text': _("Add result from %(adjudicator)s") % {'adjudicator': da.adjudicator.name},
+            'text': _("Add result from %(adjudicator)s") % {'adjudicator': escape(da.adjudicator.get_public_name(self.tournament))},
             'link': reverse_round('old-results-public-ballotset-new-pk', self.round,
                     kwargs={'adjudicator_pk': da.adjudicator_id}),
         } for da in debateadjs]
@@ -849,6 +859,7 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
         kwargs = super().get_form_kwargs()
         kwargs['result'] = self.result
         kwargs['vetos'] = self.vetos
+        kwargs['filled'] = True
         return kwargs
 
     def populate_objects(self, prefill=True):

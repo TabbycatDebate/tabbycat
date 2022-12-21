@@ -1,0 +1,63 @@
+{
+  "name": "Tabbycat",
+  "description": "Debating tournament tabulation software for British Parliamentary and a variety of two-team parliamentary formats",
+  "repository": "https://github.com/TabbycatDebate/tabbycat",
+  "keywords": ["debate", "debating"],
+  "website": "https://tabbycat.readthedocs.io/",
+  "logo": "https://raw.githubusercontent.com/TabbycatDebate/tabbycat/develop/tabbycat/static/logo-48x48.png",
+  "addons": [
+    "papertrail",
+    "rediscloud:30",
+    "heroku-postgresql:mini",
+    {
+      "plan": "heroku-redis:mini",
+      "options": {
+        "maxmemory-policy": "allkeys-lru",
+        "timeout": 1800
+      }
+    }
+  ],
+  "env": {
+    "DJANGO_SECRET_KEY": {
+      "description": "A secret key for cryptographic signing of user sessions.",
+      "generator": "secret"
+    },
+    "TAB_DIRECTOR_EMAIL": {
+      "description": "Your email address. Tabbycat's developers may need to contact you to help diagnose any unexpected errors.",
+      "value": ""
+    },
+    "TIME_ZONE": {
+      "description": "The time zone name in the IANA tz database for the tournament's location. Examples: America/Los_Angeles, Europe/Dublin, Africa/Johannesburg. You can look up yours in the 'TZ*' column at http://wikipedia.org/wiki/List_of_tz_database_time_zones#List",
+      "value": "Australia/Melbourne"
+    },
+    "DISABLE_COLLECTSTATIC": {
+      "description": "Leave this as-is.",
+      "value": "1"
+    },
+    "ON_HEROKU": {
+      "description": "Leave this as-is.",
+      "value": "1"
+    },
+    "USING_NGINX": {
+      "description": "Leave this as-is.",
+      "value": "1"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "eco"
+    },
+    "worker": {
+      "quantity": 1,
+      "size": "eco"
+    }
+  },
+  "buildpacks": [
+    { "url": "https://github.com/heroku/heroku-buildpack-nginx.git" },
+    { "url": "heroku/nodejs" },
+    { "url": "heroku/python" }
+  ],
+  "stack": "heroku-22",
+  "success_url": "/start/"
+}

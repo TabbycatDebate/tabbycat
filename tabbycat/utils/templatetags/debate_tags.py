@@ -37,17 +37,17 @@ def version(path_string, base_url=settings.MEDIA_URL):
         return base_url + path_string
 
 
-@register.simple_tag
-def tournament_side_names(tournament, name_type):
-    side_names = [get_side_name(tournament, 'aff', name_type),
-                  get_side_name(tournament, 'neg', name_type)]
+@register.simple_tag(takes_context=True)
+def tournament_side_names(context, name_type):
+    side_names = [get_side_name(context['tournament'], 'aff', name_type),
+                  get_side_name(context['tournament'], 'neg', name_type)]
     return side_names
 
 
-@register.simple_tag
-def debate_team_side_name(debate_team, tournament):
+@register.simple_tag(takes_context=True)
+def debate_team_side_name(context, debate_team):
     # If returned directly from the object it will have to lookup tournament
-    return debate_team.get_side_name(tournament)
+    return debate_team.get_side_name(context['tournament'])
 
 
 class TournamentURLNode(URLNode):
@@ -181,6 +181,12 @@ def roundurl(parser, token):
     given."""
     args = get_url_args(parser, token)
     return RoundURLNode(*args)
+
+
+@register.simple_tag(takes_context=True)
+def person_display_name(context, person):
+    # If returned directly from the object it will have to lookup tournament
+    return person.get_public_name(context['tournament'])
 
 
 @register.filter

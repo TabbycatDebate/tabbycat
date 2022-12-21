@@ -77,7 +77,7 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
             institution = InstitutionSerializer(adj.institution).data if adj.institution else None
             adjudicators.append({
-                'id': adj.id, 'name': adj.name, 'type': 'Adjudicator',
+                'id': adj.id, 'name': adj.get_public_name(self.tournament), 'type': 'Adjudicator',
                 'identifier': [code], 'locked': False, 'independent': adj.independent,
                 'institution': institution,
             })
@@ -92,7 +92,7 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
             institution = InstitutionSerializer(speaker.team.institution).data if speaker.team.institution else None
             speakers.append({
-                'id': speaker.id, 'name': speaker.name, 'type': 'Speaker',
+                'id': speaker.id, 'name': speaker.get_public_name(self.tournament), 'type': 'Speaker',
                 'identifier': [code], 'locked': False,
                 'team': speaker.team.code_name if team_codes else speaker.team.short_name,
                 'institution': institution,
@@ -273,6 +273,7 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
 
         existing_checkin = get_unexpired_checkins(t, 'checkin_window_people').filter(identifier=identifier)
         action = request.POST.get('action')
+        created = action == 'checkin'
         if action == 'revoke':
             if existing_checkin.exists():
                 existing_checkin.delete()
@@ -281,14 +282,14 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
             else:
                 messages.error(request, _("Whoops! Looks like your check-in was already revoked."))
                 return super().post(request, *args, **kwargs)
-        elif action == 'checkin':
+        elif created:
             if existing_checkin.exists():
                 messages.error(request, _("Whoops! Looks like you're already checked in."))
                 return super().post(request, *args, **kwargs)
             else:
                 checkin = Event.objects.create(identifier=identifier, tournament=self.tournament)
                 checkin_dict = checkin.serialize()
-                checkin_dict['owner_name'] = person.name
+                checkin_dict['owner_name'] = person.get_public_name(self.tournament)
                 messages.success(request, _("You are now checked in."))
         else:
             return TemplateResponse(request=self.request, template='400.html', status=400)
@@ -298,9 +299,8 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
         async_to_sync(get_channel_layer().group_send)(
             group_name, {
                 'type': 'send_json',
-                'data': {
-                    'checkins': [checkin_dict],
-                },
+                'checkins': [checkin_dict],
+                'created': created,
             },
         )
 

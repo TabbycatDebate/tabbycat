@@ -1,7 +1,9 @@
 {% extends "base.html" %}
-{% load static i18n %}
+{% load debate_tags static i18n %}
 
-{% block head-title %}{% blocktrans trimmed with adjudicator=adjudicator.name %}
+{% block head-title %}
+{% person_display_name adjudicator as adjudicator_name %}
+{% blocktrans trimmed with adjudicator=adjudicator_name %}
   No Result to Enter ({{ adjudicator }})
 {% endblocktrans %}{% endblock %}
 {% block page-title %}{% trans "No Result to Enter" %}{% endblock %}

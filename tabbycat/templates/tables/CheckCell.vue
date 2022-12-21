@@ -5,7 +5,7 @@
     <span v-if="cellData.sort" hidden>
       {{ cellData.checked }}
     </span>
-    <div class="form-check">
+    <div class="table-check">
       <input type="checkbox" class="form-check-input position-static"
              :name="cellData.name" :value="cellData.value"
              @change="checkUpdate" v-model.lazy="cellData.checked">

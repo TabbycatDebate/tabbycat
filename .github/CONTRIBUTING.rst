@@ -35,10 +35,6 @@ Development
 
   - A number of our tests use `Selenium <http://selenium-python.readthedocs.io>`_ and `ChromeDriver <https://sites.google.com/a/chromium.org/chromedriver/>`_ to simulate in-browser functionality. They will fail if you do not have the Chrome browser and ChromeDriver installed.
 
-- A number of extra dependencies are required for running tests, linting, and serving the documentation. These can be installed with::
-
-    $ pip install -r 'config/requirements_development.txt'
-
 - We use `pre-commit <https://pre-commit.com/>`_ to run code style checks (linters). To have them run as a git hook automatically before every commit::
 
     $ pre-commit install
@@ -157,8 +153,8 @@ Release checklist
 
 1. Check that all migrations have been generated and committed into Git
 2. Merge translations from the Crowdin pull request and compile messages
-3. Bump version number in ``docs/conf.py`` and ``docs/api-schema.yml`` (if applicable)
-4. Bump version number and (if applicable) codename in ``tabbycat/settings/core.py``
+3. Bump version number in ``docs/conf.py``
+4. Bump version number, API version number and (if applicable) codename in ``tabbycat/settings/core.py``
 5. Update the main ``CHANGELOG.rst`` file (including release date)
 6. Check the major current deployment options, including:
     1. The ``deploy_heroku.py`` script
@@ -170,7 +166,6 @@ Release checklist
 8. Shift remaining issues from the Github Milestone
 9. Create and finish the release branch as per git-flow
 10. Ensure the tag is correct (``vX.Y.Z``) and published to GitHub
-11. Back-merge ``master`` to the ``kitten`` branch
-12. Back-merge ``develop`` to the in-progress feature branches
-13. Issue a formal release with change notes on GitHub
-14. Post change notes on the Facebook page/group
+11. Back-merge ``develop`` to the in-progress feature branches
+12. Issue a formal release with change notes on GitHub
+13. Post change notes on the Facebook page/group

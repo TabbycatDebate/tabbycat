@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-30 01:01-0400\n"
-"PO-Revision-Date: 2021-02-28 09:55\n"
+"POT-Creation-Date: 2021-11-28 21:53-0400\n"
+"PO-Revision-Date: 2021-12-01 12:39\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -22,25 +22,25 @@ msgstr ""
 msgid "Notifications"
 msgstr "Notifikasi"
 
-#: notifications/forms.py:11
+#: notifications/forms.py:12
 msgid "Recipient email address"
 msgstr "Alamat email penerima"
 
-#: notifications/forms.py:15
+#: notifications/forms.py:16
 #, python-format
 msgid "Test email from %(host)s"
 msgstr "Uji email dari %(host)s"
 
-#: notifications/forms.py:16
+#: notifications/forms.py:17
 #, python-format
 msgid "Congratulations! If you're reading this message, your email backend on %(host)s looks all good to go!"
 msgstr "Selamat! Apabila anda membaca pesan ini, email backend pada %(host)s sudah fungsional!"
 
-#: notifications/forms.py:29
+#: notifications/forms.py:30
 msgid "Subject"
 msgstr "Subjek"
 
-#: notifications/forms.py:30
+#: notifications/forms.py:31
 msgid "Message"
 msgstr "Pesan"
 
@@ -227,12 +227,12 @@ msgstr "Kirim Pesan"
 msgid "Emails can be sent by Tabbycat for a variety of purposes. Emails are sent when specific preferences are enabled (i.e. enabling Ballot Receipts) or through actions available on specific pages (i.e. the Draw Display page for matchups; or the Participants page for team registration). This page shows the status of previously-sent emails."
 msgstr "Email dapat dikirim menggunakan Tabbycat untuk berbagai tujuan. Email dapat dikirim saat pengaturan tertentu diaktifkan, seperti mengaktifkan Tanda Terima Balot, atau melalui aksi yang ada pada halaman tertentu, seperti laman Penayangan Draw untuk draw, Partisipan untuk registrasi tim. Laman ini menunjukkan status untuk email-email yang telah dikirim sebelumnya."
 
-#: notifications/templates/notifications_nav.html:5 notifications/views.py:46
+#: notifications/templates/notifications_nav.html:5 notifications/views.py:75
 msgid "Email Statuses"
 msgstr "Status email"
 
 #: notifications/templates/notifications_nav.html:11
-#: notifications/templates/test_email.html:24
+#: notifications/templates/test_email.html:29
 msgid "Send Test Email"
 msgstr "Kirim Email Percobaan"
 
@@ -250,7 +250,12 @@ msgstr "Kirim Email Percobaan"
 msgid "You can use this form to send a test email, to check that your email backend settings are working, before you try to send email notifications to participants."
 msgstr "Anda dapat menggunakan form ini untuk mengirimkan email percobaan, untuk menguji apakah pengaturan email anda bekerja sebelum mengirimkan email kepada partisipan."
 
-#: notifications/templates/test_email.html:25
+#: notifications/templates/test_email.html:20
+#, python-format
+msgid "The email will be sent from: <strong>%(default_from_email)s</strong>. If this doesn't look right, change the <code>DEFAULT_FROM_EMAIL</code> config var in Heroku (or environment variable)."
+msgstr "Surel akan dikirmkan melalui: <strong>%(default_from_email)s</strong>. Apabila terdapat kesalahan, silahkan ubah konfigurasi <code>DEFAULT_FROM_EMAIL</code> config var pada Heroku (atau environment variable)."
+
+#: notifications/templates/test_email.html:30
 msgid "Go back to the site home page"
 msgstr "Kembali ke laman utama"
 
@@ -311,93 +316,102 @@ msgstr "<li>%(text)s (%(ref)s)</li>"
 msgid ", "
 msgstr ", "
 
-#: notifications/views.py:38
+#: notifications/views.py:47
+#, python-format
+msgid "The email (SMTP) server returned an error sending the test email: [SMTP code %(code)d] %(error)s"
+msgstr "Server surel (SMTP) mengalami sebuah kesalahan dalam mengirimkan surel ujicoba: [SMTP code %(code)d%] %(error)s"
+
+#: notifications/views.py:51
+msgid "Hint: If the error is about sender identity verification in SendGrid, and you've already completed the steps in SendGrid, it may be that you need to update the DEFAULT_FROM_EMAIL config var in Heroku to match your verified sender identity."
+msgstr "Petunjuk: Apabila kesalahannya terdapat pada verifikasi identitas pengirim pada SendGrid dan anda sudah menyelesaikan tahapan pada SendGrid, mungkin anda butuh melakukan pembaharuan pada DEFAULT_FROM_EMAIL config var pada Heroku untuk mencocokkan identitas pengirim yang terverifikasi."
+
+#: notifications/views.py:60
 #, python-format
 msgid "There was an error sending the test email: %(error)s"
 msgstr "Ada kesalahan saat mengirimkan email percobaan: %(error)s"
 
-#: notifications/views.py:41
+#: notifications/views.py:65
 #, python-format
 msgid "A test email has been sent to %(recipient)s."
 msgstr "Email percobaan telah dikirim ke %(recipient)s."
 
-#: notifications/views.py:52
+#: notifications/views.py:81
 msgid "N/A"
 msgstr "N/A"
 
-#: notifications/views.py:53
+#: notifications/views.py:82
 msgid "Not known"
 msgstr "Tidak tersedia"
 
-#: notifications/views.py:58
+#: notifications/views.py:87
 #, python-format
 msgid "%(status)s @ %(time)s"
 msgstr "%(status)s @ %(time)s"
 
-#: notifications/views.py:104
+#: notifications/views.py:133
 #, python-format
 msgid "@ %s"
 msgstr ""
 
-#: notifications/views.py:123
+#: notifications/views.py:152
 msgid "Timeline"
 msgstr "Waktu"
 
-#: notifications/views.py:133 notifications/views.py:231
+#: notifications/views.py:162 notifications/views.py:260
 msgid "Participant"
 msgstr "Partisipan"
 
-#: notifications/views.py:134 notifications/views.py:236
+#: notifications/views.py:163 notifications/views.py:265
 msgid "Email address"
 msgstr ""
 
-#: notifications/views.py:135
+#: notifications/views.py:164
 msgid "Status"
 msgstr "Status"
 
-#: notifications/views.py:136
+#: notifications/views.py:165
 msgid "Time"
 msgstr "Waktu"
 
-#: notifications/views.py:175
+#: notifications/views.py:204
 msgid "Email Participants"
 msgstr "Email Partisipan"
 
-#: notifications/views.py:204
+#: notifications/views.py:233
 #, python-format
 msgid "%(email_count)s email has been queued for sending."
 msgid_plural "%(email_count)s emails have been queued for sending."
 msgstr[0] "%(email_count)s email telah disiapkan untuk dikirim."
 
-#: notifications/views.py:210
+#: notifications/views.py:239
 msgid "No emails were sent — likely because no recipients were selected."
 msgstr "Tidak ada email yang dikirim -- mungkin karena tidak ada penerima yang dipilih."
 
-#: notifications/views.py:221
+#: notifications/views.py:250
 msgid "Send Email"
 msgstr "Kirim Email"
 
-#: notifications/views.py:237
+#: notifications/views.py:266
 msgid "Not Provided"
 msgstr "Tidak Tersedia"
 
-#: notifications/views.py:250
+#: notifications/views.py:279
 msgid "Role"
 msgstr "Peran"
 
-#: notifications/views.py:251
+#: notifications/views.py:280
 msgid "Adjudicator"
 msgstr "Juri"
 
-#: notifications/views.py:251
+#: notifications/views.py:280
 msgid "Speaker"
 msgstr "Pendebat"
 
-#: notifications/views.py:259
+#: notifications/views.py:288
 msgid "Speakers"
 msgstr "Pembicara"
 
-#: notifications/views.py:260
+#: notifications/views.py:289
 msgid "Adjudicators"
 msgstr "Juri"
 

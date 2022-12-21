@@ -81,9 +81,9 @@ def multi_checkin(team, events, t):
     for speaker in team.speaker_set.all():
         speaker = single_checkin(speaker, events)
         if speaker.checked_in:
-            tooltip = _("%(speaker)s checked in at %(time)s.") % {'speaker': speaker.name, 'time': speaker.time.strftime('%H:%M')}
+            tooltip = _("%(speaker)s checked in at %(time)s.") % {'speaker': speaker.get_public_name(t), 'time': speaker.time.strftime('%H:%M')}
         else:
-            tooltip = _("%(speaker)s is missing.") % {'speaker': speaker.name}
+            tooltip = _("%(speaker)s is missing.") % {'speaker': speaker.get_public_name(t)}
         tooltips.append(tooltip)
 
     team.checked_tooltip = " ".join(tooltips)

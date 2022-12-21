@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.db.models import Count, F, Q
 from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
+from django.utils.html import conditional_escape, escape
 from django.utils.translation import gettext as _, gettext_lazy, ngettext, ngettext_lazy
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView
@@ -151,6 +152,7 @@ class FeedbackByTargetView(AdministratorMixin, TournamentMixin, VueTableTemplate
             count = adj.feedback_count
             feedback_data.append({
                 'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
+                'sort': count,
                 'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.id}),
             })
         table.add_column({'key': 'feedbacks', 'title': _("Feedbacks")}, feedback_data)
@@ -175,6 +177,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
             count = team.feedback_count
             team_feedback_data.append({
                 'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
+                'sort': count,
                 'link': reverse_tournament('adjfeedback-view-from-team',
                                            tournament,
                                            kwargs={'pk': team.id}),
@@ -190,6 +193,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
             count = adj.feedback_count
             adj_feedback_data.append({
                 'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
+                'sort': count,
                 'link': reverse_tournament('adjfeedback-view-from-adjudicator',
                                            tournament,
                                            kwargs={'pk': adj.id}),
@@ -361,7 +365,7 @@ class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
         use_code_names = use_team_code_names_data_entry(self.tournament, self.tabroom)
         teams_table = TabbycatTableBuilder(view=self, sort_key="team", title=_("A Team"))
         add_link_data = [{
-            'text': team_name_for_data_entry(team, use_code_names),
+            'text': conditional_escape(team_name_for_data_entry(team, use_code_names)),
             'link': self.get_from_team_link(team),
         } for team in tournament.team_set.all()]
         header = {'key': 'team', 'title': _("Team")}
@@ -372,13 +376,13 @@ class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
                 'key': 'institution',
                 'icon': 'home',
                 'tooltip': _("Institution"),
-            }, [team.institution.code if team.institution else TabbycatTableBuilder.BLANK_TEXT for team in tournament.team_set.all()])
+            }, [escape(team.institution.code) if team.institution else TabbycatTableBuilder.BLANK_TEXT for team in tournament.team_set.all()])
 
         adjs_table = TabbycatTableBuilder(view=self, sort_key="adjudicator", title=_("An Adjudicator"))
         adjudicators = tournament.adjudicator_set.all()
 
         add_link_data = [{
-            'text': adj.name,
+            'text': escape(adj.get_public_name(tournament)),
             'link': self.get_from_adj_link(adj),
         } for adj in adjudicators]
         header = {'key': 'adjudicator', 'title': _("Adjudicator")}
@@ -389,7 +393,7 @@ class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
                 'key': 'institution',
                 'icon': 'home',
                 'tooltip': _("Institution"),
-            }, [adj.institution.code if adj.institution else TabbycatTableBuilder.BLANK_TEXT for adj in adjudicators])
+            }, [escape(adj.institution.code) if adj.institution else TabbycatTableBuilder.BLANK_TEXT for adj in adjudicators])
 
         return [teams_table, adjs_table]
 
@@ -472,7 +476,7 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormV
     def _populate_source(self):
         self.object = self.get_object()  # For compatibility with SingleObjectMixin
         if isinstance(self.object, Adjudicator):
-            self.source_name = self.object.name
+            self.source_name = self.object.get_public_name(self.tournament)
         elif isinstance(self.object, Speaker):
             self.source_name = self.get_team_short_name(self.object.team)
         elif isinstance(self.object, Team):
@@ -509,7 +513,7 @@ class BaseTabroomAddFeedbackView(TabroomSubmissionFieldsMixin, BaseAddFeedbackVi
     def form_valid(self, form):
         result = super().form_valid(form)
         messages.success(self.request, _("Feedback from %(source)s on %(target)s added.") % {
-            'source': self.source_name, 'target': self.adj_feedback.adjudicator.name})
+            'source': self.source_name, 'target': self.adj_feedback.adjudicator.get_public_name(self.tournament)})
         return result
 
     def get_success_url(self):
@@ -539,7 +543,7 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PersonalizablePublicTou
     def form_valid(self, form):
         result = super().form_valid(form)
         messages.success(self.request, _("Thanks, %(source)s! Your feedback on %(target)s has been recorded.") % {
-            'source': self.source_name, 'target': self.adj_feedback.adjudicator.name})
+            'source': self.source_name, 'target': self.adj_feedback.adjudicator.get_public_name(self.tournament)})
         return result
 
     def get_context_data(self, **kwargs):
@@ -733,13 +737,13 @@ class BaseFeedbackToggleView(AdministratorMixin, TournamentMixin, PostOnlyRedire
 
         # Make message
         if feedback.source_adjudicator:
-            source = feedback.source_adjudicator.adjudicator.name
+            source = feedback.source_adjudicator.adjudicator.get_public_name(self.tournament)
         else:
             source = feedback.source_team.team.short_name
         result = self.feedback_result(feedback)
         messages.success(self.request, _(
             "Feedback for %(adjudicator)s from %(source)s is now %(result)s.")
-            % {'adjudicator': feedback.adjudicator.name, 'source': source, 'result': result})
+            % {'adjudicator': feedback.adjudicator.get_public_name(self.tournament), 'source': source, 'result': result})
 
         return super().post(request, *args, **kwargs)
 

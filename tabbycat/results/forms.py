@@ -9,7 +9,9 @@ from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
 from draw.models import Debate, DebateTeam
+from options.utils import use_team_code_names_data_entry
 from participants.models import Speaker, Team
+from participants.templatetags.team_name_for_data_entry import team_name_for_data_entry
 from tournaments.utils import get_side_name
 
 from .consumers import BallotResultConsumer, BallotStatusConsumer
@@ -134,6 +136,7 @@ class BaseResultForm(forms.Form):
     def __init__(self, ballotsub, password=False, *args, **kwargs):
         self.ballotsub = ballotsub
         self.result = kwargs.pop('result', self.result_class(self.ballotsub))
+        self.filled = kwargs.pop('filled', False)
         super().__init__(*args, **kwargs)
 
         self.debate = ballotsub.debate
@@ -364,17 +367,18 @@ class BaseBallotSetForm(BaseResultForm):
             else:
                 initial['motion'] = self.ballotsub.roundmotion
 
-        if self.using_vetoes:
-            for side in self.sides:
-                if self.vetos is None:
-                    dtmp = self.ballotsub.debateteammotionpreference_set.filter(
-                            debate_team__side=side, preference=3).first()
-                else:
-                    dtmp = self.vetos.get(side)
-                if dtmp:
-                    initial[self._fieldname_motion_veto(side)] = dtmp.roundmotion
+        if self.ballotsub.id is not None or self.filled:
+            if self.using_vetoes:
+                for side in self.sides:
+                    if self.vetos is None:
+                        dtmp = self.ballotsub.debateteammotionpreference_set.filter(
+                                debate_team__side=side, preference=3).first()
+                    else:
+                        dtmp = self.vetos.get(side)
+                    if dtmp:
+                        initial[self._fieldname_motion_veto(side)] = dtmp.roundmotion
 
-        initial.update(self.initial_from_result(self.result))
+            initial.update(self.initial_from_result(self.result))
 
         return initial
 
@@ -526,6 +530,8 @@ class ScoresMixin:
     def clean_speakers(self, cleaned_data):
         """Checks that the speaker selections are valid."""
 
+        use_codes = use_team_code_names_data_entry(self.tournament, True)
+
         # Pull team info again, in case it's changed since the form was loaded.
         if self.choosing_sides:
             teams = cleaned_data.get('choose_sides', [None] * len(self.sides))
@@ -547,7 +553,7 @@ class ScoresMixin:
                 if team is not None and speaker not in team.speakers:
                     self.add_error(self._fieldname_speaker(side, pos), forms.ValidationError(
                         _("The speaker %(speaker)s doesn't appear to be on team %(team)s."),
-                        params={'speaker': speaker.name, 'team': team.short_name},
+                        params={'speaker': speaker.get_public_name(self.tournament), 'team': team_name_for_data_entry(team, use_codes)},
                         code='speaker_wrongteam'),
                     )
 
@@ -564,7 +570,7 @@ class ScoresMixin:
                         "%(speaker)s appears to have given %(count)d substantive speeches.",
                         len(positions),
                     )
-                    params = {'speaker': speaker.name, 'count': len(positions)}
+                    params = {'speaker': speaker.get_public_name(self.tournament), 'count': len(positions)}
                     for pos in positions:
                         self.add_error(self._fieldname_speaker(side, pos), forms.ValidationError(
                             message, params=params, code='speaker_repeat'))
@@ -844,12 +850,12 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
                     if totals[0] == totals[1] and self.declared_winner in ['none', 'high-points']:
                         self.add_error(None, forms.ValidationError(
                             _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adjudicator)s."),
-                            params={'adjudicator': adj.name}, code='draw',
+                            params={'adjudicator': adj.get_public_name(self.tournament)}, code='draw',
                         ))
                     elif self.declared_winner in ['high-points', 'tied-points'] and not high_point_declared:
                         self.add_error(None, forms.ValidationError(
                             _("The declared winner does not correspond to the team with the highest score for adjudicator %(adjudicator)s."),
-                            params={'adjudicator': adj.name}, code='wrong_winner',
+                            params={'adjudicator': adj.get_public_name(self.tournament)}, code='wrong_winner',
                         ))
 
                 # Check that the margin did not exceed the maximum permissible.
@@ -857,7 +863,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 if self.max_margin and margin > self.max_margin:
                     self.add_error(None, forms.ValidationError(
                         _("The margin (%(margin).1f) in the ballot of adjudicator %(adjudicator)s exceeds the maximum allowable margin (%(max_margin).1f)."),
-                        params={'adjudicator': adj.name, 'margin': margin, 'max_margin': self.max_margin}, code='max_margin',
+                        params={'adjudicator': adj.get_public_name(self.tournament), 'margin': margin, 'max_margin': self.max_margin}, code='max_margin',
                     ))
 
     def populate_result_with_scores(self, result):

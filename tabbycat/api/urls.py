@@ -1,4 +1,5 @@
 from django.urls import include, path
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView
 from rest_framework.routers import SimpleRouter
 
 from . import views
@@ -14,6 +15,11 @@ urlpatterns = [
     path('',
         views.APIRootView.as_view(),
         name='api-root'),
+
+    path('/schema', include([
+        path('.yml', SpectacularAPIView.as_view(), name='api-schema'),
+        path('/redoc/', SpectacularRedocView.as_view(url_name='api-schema'), name='redoc'),
+    ])),
 
     path('/v1', include([
         path('',
@@ -91,6 +97,15 @@ urlpatterns = [
                                         name='api-ballot-detail'),
                                 ])),
                             ])),
+                        ])),
+
+                        path('/preformed-panels', include([
+                            path('',
+                                views.PreformedPanelViewSet.as_view({'get': 'list', 'post': 'create', 'delete': 'delete_all', 'put': 'add_blank'}),
+                                name='api-preformedpanel-list'),
+                            path('/<int:debate_pk>',
+                                views.PreformedPanelViewSet.as_view(detail_methods),
+                                name='api-preformedpanel-detail'),
                         ])),
                     ])),
                 ])),

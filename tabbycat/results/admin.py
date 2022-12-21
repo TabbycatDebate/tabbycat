@@ -20,7 +20,7 @@ class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_display = ('id', 'debate', 'version', 'get_round', 'timestamp',
             'submitter_type', 'submitter', 'confirmer', 'confirmed')
     list_editable = ('confirmed',)
-    search_fields = ('debate__debateteam__team__reference', 'debate__debateteam__team__institution__name')
+    search_fields = ('debate__debateteam__team__short_name', 'debate__debateteam__team__institution__name')
     raw_id_fields = ('debate', 'motion')
     list_filter = ('debate__round', 'debate__round__tournament', 'submitter', 'confirmer')
     # This incurs a massive performance hit
@@ -32,8 +32,9 @@ class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
             'submitter', 'confirmer', 'debate__round__tournament').prefetch_related(
             Prefetch('debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')))
 
+    @admin.display(description=_("Resave results"))
     def resave_ballots(self, request, queryset):
-        q = queryset.select_related('debate__round__tournament').order_by('tournament_id')
+        q = queryset.select_related('debate__round__tournament').order_by('debate__round__tournament_id')
         count = q.count()
         for tournament, bss in groupby(q, lambda bs: bs.debate.round.tournament):
             populate_results(bss, tournament)
@@ -44,7 +45,6 @@ class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
             "Resaved results for %(count)d ballot submission.",
             "Resaved results for %(count)d ballot submissions.",
             count) % {'count': count})
-    resave_ballots.short_description = _("Resave results")
 
 
 # ==============================================================================
@@ -55,7 +55,7 @@ class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
 class TeamScoreAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_display = ('id', 'ballot_submission', 'get_round', 'get_team', 'points', 'win', 'score')
     search_fields = ('debate_team__debate__round__seq', 'debate_team__debate__round__tournament__name',
-                     'debate_team__team__reference', 'debate_team__team__institution__name')
+                     'debate_team__team__short_name', 'debate_team__team__institution__name')
     list_filter = ('debate_team__debate__round', )
     raw_id_fields = ('ballot_submission', 'debate_team')
 
@@ -75,7 +75,7 @@ class TeamScoreAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
 class TeamScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_display = ('id', 'ballot_submission', 'get_round', 'get_adj_name', 'get_team', 'win', 'margin', 'score')
     search_fields = ('debate_team__debate__round__seq', 'debate_team__debate__round__tournament__name',
-                     'debate_team__team__reference', 'debate_team__team__institution__name')
+                     'debate_team__team__short_name', 'debate_team__team__institution__name')
     list_filter = ('debate_team__debate__round', 'debate_adjudicator__adjudicator__name')
     raw_id_fields = ('ballot_submission', 'debate_adjudicator', 'debate_team')
 
@@ -99,7 +99,7 @@ class SpeakerScoreAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_display = ('id', 'ballot_submission', 'get_round', 'get_team', 'position',
                     'get_speaker_name', 'score', 'ghost')
     search_fields = ('debate_team__debate__round__abbreviation',
-                     'debate_team__team__reference', 'debate_team__team__institution__name',
+                     'debate_team__team__short_name', 'debate_team__team__institution__name',
                      'speaker__name')
     list_filter = ('score', 'debate_team__debate__round', 'ghost')
     raw_id_fields = ('debate_team', 'ballot_submission')
@@ -122,7 +122,7 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_display = ('id', 'ballot_submission', 'get_round', 'get_adj_name', 'get_team',
                     'get_speaker_name', 'position', 'score')
     search_fields = ('debate_team__debate__round__seq',
-                     'debate_team__team__reference', 'debate_team__team__institution__name',
+                     'debate_team__team__short_name', 'debate_team__team__institution__name',
                      'debate_adjudicator__adjudicator__name')
 
     list_filter = ('debate_team__debate__round', 'debate_adjudicator__adjudicator__name',
@@ -144,7 +144,3 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
             Prefetch('ballot_submission__debate__debateteam_set',
                 queryset=DebateTeam.objects.select_related('team')),
         ).annotate(speaker_name=Subquery(speaker_person.values('speaker__name')))
-
-    def get_speaker_name(self, obj):
-        return obj.speaker_name
-    get_speaker_name.short_description = "Speaker"

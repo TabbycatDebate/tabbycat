@@ -35,10 +35,16 @@ export default {
       this.unsetHoverConflicts()
     },
     dragEnter: function (event) {
+      if (this.locked) {
+        return // Don't allow
+      }
       this.dragCounter += 1
       this.aboutToDrop = true
     },
     dragLeave: function (event) {
+      if (this.locked) {
+        return // Don't allow
+      }
       this.dragCounter -= 1
       if (this.dragCounter === 0) {
         this.aboutToDrop = false
