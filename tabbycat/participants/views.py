@@ -423,7 +423,7 @@ class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMi
                 self.set_category_eligibility(participant, posted_info[str(participant_id)])
             self.log_action()
         except Exception:
-            message = "Error handling eligiblity updates"
+            message = "Error handling eligibility updates"
             logger.exception(message)
             return JsonResponse({'status': 'false', 'message': message}, status=500)
 
