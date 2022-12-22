@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from django.http.request import HttpRequest
 
 
-def precise_timestamp_isoformat(model: Type, field_name: str) -> Callable[['Model'], str]:
+def precise_timestamp_isoformat(model: Type['Model'], field_name: str) -> Callable[['Model'], str]:
     @admin.display(description=model._meta.get_field(field_name).verbose_name)
     def precise_timestamp(self, obj):
         return timezone.localtime(getattr(obj, field_name)).isoformat()
