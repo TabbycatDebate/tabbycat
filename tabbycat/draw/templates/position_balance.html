@@ -13,7 +13,7 @@
 {% block content %}
 
   {% blocktrans trimmed asvar p1 with exponent=pref.bp_position_cost_exponent %}
-    Your current position cost function is <strong>{{ cost_func }}</strong>, raised to an exponent of <strong>{{ exponent }}</strong>. <a href="http://tabbycat.readthedocs.io/en/latest/features/draw-generation-bp.html#position-cost-options" target=_"blank">Read more about how position cost functions work</a> in our documentation.
+    Your current position cost function is <strong>{{ cost_func }}</strong>, raised to an exponent of <strong>{{ exponent }}</strong>. <a href="https://tabbycat.readthedocs.io/en/latest/features/draw-generation-bp.html#position-cost-options" target=_"blank">Read more about how position cost functions work</a> in our documentation.
   {% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" %}
 

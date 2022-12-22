@@ -658,7 +658,7 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
             " The current mix is specified below as the 'Score Components.' "
             "Feedback ratings are determined by averaging the results of all "
             "individual pieces of feedback across all rounds. "
-            "<a href='http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html#how-is-an-adjudicator-s-score-determined'>Read more</a>."))
+            "<a href='https://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html#how-is-an-adjudicator-s-score-determined'>Read more</a>."))
         return table
 
 
