@@ -30,6 +30,7 @@ class NotificationQueueConsumer(SyncConsumer):
         BulkNotification.EventType.MOTIONS: MotionReleaseEmailGenerator(),
         BulkNotification.EventType.TEAM_REG: TeamSpeakerEmailGenerator(),
         BulkNotification.EventType.TEAM_DRAW: TeamDrawEmailGenerator(),
+        BulkNotification.EventType.CUSTOM: NotificationContextGenerator(),
     }
 
     def _send(self, event, messages, records) -> None:
@@ -106,36 +107,5 @@ class NotificationQueueConsumer(SyncConsumer):
                             method=SentMessage.METHOD_TYPE_EMAIL,
                             context=instance, message_id=raw_message['Message-ID'],
                             hook_id=hook_id, notification=bulk_notification))
-
-        self._send(event, messages, records)
-
-    def email_custom(self, event: Dict[str, Union[str, int, List[Person]]]) -> None:
-        messages = []
-        records = []
-
-        t = Tournament.objects.get(id=event['tournament'])
-        from_email, reply_to = self._get_from_fields(t)
-
-        recipients = Person.objects.filter(pk__in=event['send_to'], email__isnull=False).exclude(email='')
-
-        bulk_notification = BulkNotification.objects.create(tournament=t, subject_template=event['subject'], body_template=event['body'])
-        for recipient in recipients:
-            hook_id = str(bulk_notification.id) + "-" + str(recipient.pk) + "-" + str(random.randint(1000, 9999))
-            email = mail.EmailMultiAlternatives(
-                subject=event['subject'], body=html2text(event['body']),
-                from_email=from_email, to=[formataddr((recipient.name, recipient.email))],
-                reply_to=reply_to, headers={
-                    'X-SMTPAPI': json.dumps({'unique_args': {'hook-id': hook_id}}),  # SendGrid-specific 'hook-id'
-                },
-            )
-            email.attach_alternative(event['body'], "text/html")
-            messages.append(email)
-
-            raw_message = email.message()
-            records.append(
-                SentMessage(recipient=recipient, email=recipient.email,
-                            method=SentMessage.METHOD_TYPE_EMAIL,
-                            message_id=raw_message['Message-ID'], hook_id=hook_id,
-                            notification=bulk_notification))
 
         self._send(event, messages, records)

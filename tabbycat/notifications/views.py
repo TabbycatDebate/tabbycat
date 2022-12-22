@@ -24,7 +24,7 @@ from utils.tables import TabbycatTableBuilder
 from utils.views import VueTableTemplateView
 
 from .forms import BasicEmailForm, TestEmailForm
-from .models import EmailStatus, SentMessage
+from .models import BulkNotification, EmailStatus, SentMessage
 
 if TYPE_CHECKING:
     from django.http.response import HttpResponseRedirect
@@ -298,28 +298,6 @@ class RoleColumnMixin:
         return context
 
 
-class CustomEmailCreateView(RoleColumnMixin, BaseSelectPeopleEmailView):
-
-    tournament_redirect_pattern_name = 'notifications-email'
-
-    def default_send(self, p: Person, default_send_queryset: 'QuerySet[Person]') -> bool:
-        return False
-
-    def form_valid(self, form: BasicEmailForm) -> 'HttpResponseRedirect':
-        people = Person.objects.filter(id__in=list(map(int, self.request.POST.getlist('recipients'))))
-
-        async_to_sync(get_channel_layer().send)("notifications", {
-            "type": "email_custom",
-            "subject": form.cleaned_data['subject_line'],
-            "body": form.cleaned_data['message_body'],
-            "tournament": self.tournament.id,
-            "send_to": [p.id for p in people],
-        })
-
-        self.add_sent_notification(len(people))
-        return super().form_valid(form)
-
-
 class TemplateEmailCreateView(BaseSelectPeopleEmailView):
 
     def get_initial(self) -> Dict[str, str]:
@@ -330,8 +308,9 @@ class TemplateEmailCreateView(BaseSelectPeopleEmailView):
         return initial
 
     def form_valid(self, form: BasicEmailForm) -> 'HttpResponseRedirect':
-        self.tournament.preferences[self.subject_template] = form.cleaned_data['subject_line']
-        self.tournament.preferences[self.message_template] = form.cleaned_data['message_body']
+        if self.subject_template:
+            self.tournament.preferences[self.subject_template] = form.cleaned_data['subject_line']
+            self.tournament.preferences[self.message_template] = form.cleaned_data['message_body']
         email_recipients = list(map(int, self.request.POST.getlist('recipients')))
 
         async_to_sync(get_channel_layer().send)("notifications", {
@@ -356,6 +335,21 @@ class TournamentTemplateEmailCreateView(TemplateEmailCreateView):
     def get_extra(self) -> Dict[str, Any]:
         extra = {'tournament_id': self.tournament.id}
         return extra
+
+
+class CustomEmailCreateView(RoleColumnMixin, TournamentTemplateEmailCreateView):
+    tournament_redirect_pattern_name = 'notifications-email'
+    event = BulkNotification.EventType.CUSTOM
+
+    def get_initial(self) -> Dict[str, str]:
+        return {}  # Have everything unset
+
+    def get_default_send_queryset(self) -> 'QuerySet[Person]':
+        # From TemplateEmailCreateView to avoid excluding if already got custom
+        return self.get_queryset().filter(email__isnull=False).exclude(email__exact="")
+
+    def default_send(self, p: Person, default_send_queryset: 'QuerySet[Person]') -> bool:
+        return False
 
 
 class RoundTemplateEmailCreateView(TemplateEmailCreateView, RoundMixin):

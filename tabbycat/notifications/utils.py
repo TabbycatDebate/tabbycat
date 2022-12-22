@@ -122,9 +122,7 @@ def _check_in_to(pk: int, to_ids: Set[int]) -> bool:
 
 class NotificationContextGenerator(Protocol):
     def __call__(self, to: 'QuerySet[Person]', *args: Any) -> List[Tuple[EmailContextData, 'Person']]:
-        raise NotImplementedError("The base NotificationContextGenerator class was called. This class only exists as a"
-                                  "base class for other the other generators to derive from and should not be called"
-                                  "itself.")
+        return [(EmailContextData(USER=person.name), person) for person in to]
 
 
 class AdjudicatorAssignmentEmailGenerator(NotificationContextGenerator):
