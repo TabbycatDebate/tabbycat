@@ -2,7 +2,7 @@ import json
 import random
 from dataclasses import asdict
 from email.utils import formataddr
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Type, Union
 
 from channels.consumer import SyncConsumer
 from django.conf import settings
@@ -22,22 +22,24 @@ from .utils import (AdjudicatorAssignmentEmailGenerator, BallotsEmailGenerator, 
 
 class NotificationQueueConsumer(SyncConsumer):
 
-    NOTIFICATION_GENERATORS: Dict[BulkNotification.EventType, NotificationContextGenerator] = {
-        BulkNotification.EventType.ADJ_DRAW: AdjudicatorAssignmentEmailGenerator(),
-        BulkNotification.EventType.URL: RandomizedUrlEmailGenerator(),
-        BulkNotification.EventType.BALLOTS_CONFIRMED: BallotsEmailGenerator(),
-        BulkNotification.EventType.POINTS: StandingsEmailGenerator(),
-        BulkNotification.EventType.MOTIONS: MotionReleaseEmailGenerator(),
-        BulkNotification.EventType.TEAM_REG: TeamSpeakerEmailGenerator(),
-        BulkNotification.EventType.TEAM_DRAW: TeamDrawEmailGenerator(),
-        BulkNotification.EventType.CUSTOM: NotificationContextGenerator(),
+    NOTIFICATION_GENERATORS: Dict[BulkNotification.EventType, Type[NotificationContextGenerator]] = {
+        BulkNotification.EventType.ADJ_DRAW: AdjudicatorAssignmentEmailGenerator,
+        BulkNotification.EventType.URL: RandomizedUrlEmailGenerator,
+        BulkNotification.EventType.BALLOTS_CONFIRMED: BallotsEmailGenerator,
+        BulkNotification.EventType.POINTS: StandingsEmailGenerator,
+        BulkNotification.EventType.MOTIONS: MotionReleaseEmailGenerator,
+        BulkNotification.EventType.TEAM_REG: TeamSpeakerEmailGenerator,
+        BulkNotification.EventType.TEAM_DRAW: TeamDrawEmailGenerator,
+        BulkNotification.EventType.CUSTOM: NotificationContextGenerator,
     }
 
-    def _send(self, event, messages, records) -> None:
+    @staticmethod
+    def _send(messages: List[mail.EmailMultiAlternatives], records: List[SentMessage]) -> None:
         mail.get_connection().send_messages(messages)
         SentMessage.objects.bulk_create(records)
 
-    def _get_from_fields(self, t: Tournament) -> Tuple[str, Optional[List[str]]]:
+    @staticmethod
+    def _get_from_fields(t: Tournament) -> Tuple[str, Optional[List[str]]]:
         from_email = formataddr((t.short_name, settings.DEFAULT_FROM_EMAIL))
         if t.pref('reply_to_address'):
             return from_email, [formataddr((t.pref('reply_to_name'), t.pref('reply_to_address')))]
@@ -46,7 +48,8 @@ class NotificationQueueConsumer(SyncConsumer):
     def email(self, event: Dict[str, Union[str, BulkNotification.EventType, List[int], Dict[str, Any]]]) -> None:
         # Get database objects
         if 'debate_id' in event['extra']:
-            event['extra']['debate'] = Debate.objects.select_related('round', 'round__tournament').get(pk=event['extra'].pop('debate_id'))
+            debate = Debate.objects.select_related('round__tournament').get(pk=event['extra'].pop('debate_id'))
+            event['extra']['debate'] = debate
             round = event['extra']['debate'].round
             t = round.tournament
         elif 'round_id' in event['extra']:
@@ -65,12 +68,11 @@ class NotificationQueueConsumer(SyncConsumer):
         html_body = Template(event['body'])
 
         recipients = Person.objects.filter(pk__in=event['send_to'] or [], email__isnull=False).exclude(email='')
-        data = self.NOTIFICATION_GENERATORS[notification_type](to=recipients, **event['extra'])
+        contexts = self.NOTIFICATION_GENERATORS[notification_type].generate(to=recipients, **event['extra'])
 
         # Prepare messages
 
         # Ballot receipts are grouped by round in the same BulkNotification
-        bulk_notification = BulkNotification.objects.none()
         creation_kwargs = {
             'round': round,
             'tournament': t,
@@ -85,11 +87,12 @@ class NotificationQueueConsumer(SyncConsumer):
 
         messages = []
         records = []
-        for instance, recipient in data:
-            instance = asdict(instance)
+        for instance, recipient in contexts:
+            data = asdict(instance)
+            data['USER'] = recipient.name
 
             hook_id = str(bulk_notification.id) + "-" + str(recipient.id) + "-" + str(random.randint(1000, 9999))
-            context = Context(instance)
+            context = Context(data)
             body = html_body.render(context)
             email = mail.EmailMultiAlternatives(
                 subject=subject.render(context), body=html2text(body),
@@ -105,7 +108,7 @@ class NotificationQueueConsumer(SyncConsumer):
             records.append(
                 SentMessage(recipient=recipient, email=recipient.email,
                             method=SentMessage.METHOD_TYPE_EMAIL,
-                            context=instance, message_id=raw_message['Message-ID'],
+                            context=data, message_id=raw_message['Message-ID'],
                             hook_id=hook_id, notification=bulk_notification))
 
-        self._send(event, messages, records)
+        self._send(messages, records)
