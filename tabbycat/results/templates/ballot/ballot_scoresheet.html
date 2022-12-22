@@ -24,16 +24,16 @@
 
         <div class="col-6 mr-0 col-mr-auto pl-md-2 pl-1 btn-group">
 
-          <button class="btn btn-outline-secondary btn-no-hover" readonly />
+          <button class="btn btn-outline-secondary btn-no-hover" readonly>
             {% if pref.teams_in_debate != 'bp' %}{% trans "Result" %}{% else %}{% trans "Rank" %}{% endif %}
           </button>
-          <button name="{{ team.side_code }}_rank" type="text"
-                  class="btn btn-secondary btn-no-hover {{ team.side_code }}_rank" readonly  />
+          <button name="{{ team.side_code }}_rank"
+                  class="btn btn-secondary btn-no-hover {{ team.side_code }}_rank" readonly>
             ?
           </button>
-          <button class="btn btn-outline-secondary btn-no-hover" readonly />{% trans "Margin" %}</button>
-          <button name="{{ team.side_code }}_margin" type="text"
-                  class="btn btn-secondary btn-no-hover {{ team.side_code }}_margin" readonly  />
+          <button class="btn btn-outline-secondary btn-no-hover" readonly>{% trans "Margin" %}</button>
+          <button name="{{ team.side_code }}_margin"
+                  class="btn btn-secondary btn-no-hover {{ team.side_code }}_margin" readonly>
             +0
           </button>
         </div>
@@ -41,8 +41,8 @@
         <div class="col"></div>
 
         <div class="col-4 btn-group pr-md-2 pr-1">
-          <button name="{{ team.side_code }}_total" type="text"
-                  class="btn btn-block btn-secondary btn-no-hover {{ team.side_code }}_total" readonly />00</button>
+          <button name="{{ team.side_code }}_total"
+                  class="btn btn-block btn-secondary btn-no-hover {{ team.side_code }}_total" readonly>00</button>
         </div>
 
       </div>
