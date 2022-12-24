@@ -157,9 +157,14 @@ urlpatterns = [
                     path('/<int:pk>',
                          views.TeamViewSet.as_view(detail_methods),
                          name='api-team-detail'),
-                    path('/standings',
-                         views.TeamStandingsView.as_view(),
-                         name='api-team-standings'),
+                    path('/standings', include([
+                        path('',
+                            views.TeamStandingsView.as_view(),
+                             name='api-team-standings'),
+                        path('/rounds',
+                            views.TeamRoundStandingsRoundsView.as_view({'get': 'list'}),
+                            name='api-team-round-standings'),
+                    ])),
                 ])),
                 path('/adjudicators', include([
                     path('',
@@ -194,8 +199,8 @@ urlpatterns = [
                             views.ReplySpeakerStandingsView.as_view(),
                             name='api-reply-speaker-standings'),
                         path('/rounds',
-                            views.SubstantiveSpeakerStandingsRoundsView.as_view(list_methods),
-                            name='api-reply-speaker-standings'),
+                            views.SpeakerRoundStandingsRoundsView.as_view({'get': 'list'}),
+                            name='api-speaker-round-standings'),
                     ])),
                 ])),
                 path('/venues', include([
