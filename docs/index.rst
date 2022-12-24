@@ -19,7 +19,6 @@ formats too. If you're looking for a general overview of the software, check out
    :maxdepth: 1
    :caption: Installation
 
-   install/render
    install/heroku
    install/local
    install/docker
