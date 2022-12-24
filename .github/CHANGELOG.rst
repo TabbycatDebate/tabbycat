@@ -2,6 +2,19 @@
 Change Log
 ==========
 
+2.7.5
+-----
+*Release date: TBD*
+
+- Fixed checkins not automatically updating through private URLs and API
+- Prevented API error when creating ballot with incorrect speakers (BACKEND-AVN)
+- Added ability to search results by team name, rather than by reference
+- Fixed ballot resaving through Edit Database (BACKEND-AVR)
+- Removed trailing commas after panels in room allocations. Thank you to Trần Trang Linh for the fix!
+- Corrected missing checkin identifiers showing as "null". Thanks again to Trần Trang Linh!
+- Corrected a few typos
+
+
 2.7.4
 -----
 *Release date: 11 December 2022*
