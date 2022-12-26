@@ -38,7 +38,7 @@
                 {% trans "Generate all identifiers" as text %}
               {% endif %}
               <div class="list-item-group">
-                <form action={% tournamenturl "admin-checkin-generate" kind=check_key %} method="POST">
+                <form action="{% tournamenturl 'admin-checkin-generate' kind=check_key %}">
                   {% csrf_token %}
                   <button type="submit" class="btn btn-primary btn-block">{{ text }}</button>
                 </form>

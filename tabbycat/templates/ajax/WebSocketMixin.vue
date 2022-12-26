@@ -106,7 +106,7 @@ export default {
     },
     dismissLostConnectionAlert: function () {
       if (this.lostConnections > 1) { // Only show modal when a connection is re-opened not opened
-        const explanation = `This page lost its connection to the server but has succesfully reopened
+        const explanation = `This page lost its connection to the server but has successfully reopened
                            it. Changes made to data on this page will now be saved. However, you may
                            want to refresh the page to verify that earlier changes were saved.`
         this.showErrorAlert(explanation, null, 'Connection Resumed', 'text-success', true, true)

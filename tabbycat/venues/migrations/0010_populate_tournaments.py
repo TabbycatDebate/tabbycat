@@ -70,7 +70,6 @@ def find_venue_tournament_via_category(apps, schema_editor):
                     v.save()
                 v.tournament_id = tournament_id
                 v.venuecategory_set.set(categories)
-                vc.save()
 
 
 class Migration(migrations.Migration):

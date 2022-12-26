@@ -69,9 +69,16 @@
     </slot>
     <slot name="adjudicators">
       <div class="flex-16 align-self-center p-2 small">
-        <span v-for="adj in debateOrPanel.adjudicators.C">{{ adj.name }} Ⓒ, </span>
-        <span v-for="adj in debateOrPanel.adjudicators.P">{{ adj.name }}, </span>
-        <span v-for="adj in debateOrPanel.adjudicators.T">{{ adj.name }} Ⓣ,</span>
+        <!-- Note that the use of comments below is not extranous, it prevents extra whitespace before the commas -->
+        <span v-for="adj in debateOrPanel.adjudicators.C">{{ adj.name }} Ⓒ<!--
+          --><span v-if="debateOrPanel.adjudicators.P.length + debateOrPanel.adjudicators.T.length > 0">,</span>
+        </span>
+        <span v-for="(adj, index) in debateOrPanel.adjudicators.P"> {{ adj.name }}<!--
+          --><span v-if="index !== debateOrPanel.adjudicators.P.length - 1  || debateOrPanel.adjudicators.T.length > 0">,</span>
+        </span>
+        <span v-for="(adj, index) in debateOrPanel.adjudicators.T"> {{ adj.name }} Ⓣ<!--
+          --><span v-if="debateOrPanel.adjudicators.T.length > 1 && index !== debateOrPanel.adjudicators.T.length - 1">,</span>
+        </span>
       </div>
     </slot>
   </div>
