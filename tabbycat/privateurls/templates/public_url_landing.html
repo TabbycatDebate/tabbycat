@@ -37,11 +37,12 @@
           {% blocktrans trimmed with check_time=event.time asvar text %}
             Revoke check-in from {{ check_time }}
           {% endblocktrans %}
+          {% include "components/item-action.html" with id="triggerCheckInForm" url="" child=True type="warning" %}
         {% else %}
           <input type="hidden" name="action" value="checkin" />
           {% trans "Check in" as text %}
+          {% include "components/item-action.html" with id="triggerCheckInForm" url="" child=True %}
         {% endif %}
-        {% include "components/item-action.html" with id="triggerCheckInForm" url="" child=True %}
       </form>
     {% elif checkins_used %}
       {% if event %}
