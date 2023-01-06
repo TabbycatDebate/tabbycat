@@ -132,6 +132,7 @@ class RootSerializer(serializers.Serializer):
         v1 = serializers.HyperlinkedIdentityField(view_name='api-v1-root')
 
     _links = RootLinksSerializer(source='*', read_only=True)
+    timezone = serializers.CharField(allow_blank=False, read_only=True)
     version = serializers.CharField()
 
 

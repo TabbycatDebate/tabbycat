@@ -65,6 +65,7 @@ class APIRootView(PublicAPIMixin, GenericAPIView):
             "_links": {
                 "v1": reverse('api-v1-root', request=request, format=format),
             },
+            "timezone": settings.TIME_ZONE,
             "version": settings.TABBYCAT_VERSION,
         })
 
