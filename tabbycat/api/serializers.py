@@ -141,6 +141,7 @@ class V1RootSerializer(serializers.Serializer):
         institutions = serializers.HyperlinkedIdentityField(view_name='api-global-institution-list')
 
     _links = V1LinksSerializer(source='*', read_only=True)
+    site_timezone = serializers.CharField(allow_blank=False, trim_whitespace=True, read_only=True)
 
 
 class CheckinSerializer(serializers.Serializer):

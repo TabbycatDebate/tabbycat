@@ -80,11 +80,13 @@ class APIV1RootView(PublicAPIMixin, GenericAPIView):
         """Entrypoint for version 1 of the API"""
         tournaments_create_url = reverse('api-tournament-list', request=request, format=format)
         institution_create_url = reverse('api-global-institution-list', request=request, format=format)
+        timezone = settings.TIME_ZONE
         return Response({
             "_links": {
                 "tournaments": tournaments_create_url,
                 "institutions": institution_create_url,
             },
+            "site_timezone": timezone,
         })
 
 
