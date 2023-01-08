@@ -57,7 +57,7 @@
       {% endif %}
     {% endif %}
 
-    {% if object.adjudicator and pref.participant_ballots == 'private-urls' %}
+    {% if object.adjudicator and pref.participant_ballots == 'private-urls' and debateadjudications|length > 0 %}
       {% for round in tournament.current_rounds %}
         {% roundurl 'results-public-ballotset-new-randomised' round url_key as url %}
         {% blocktrans trimmed with round=round.name asvar text %}Submit Ballot for {{ round }}{% endblocktrans %}
