@@ -22,7 +22,7 @@
 {# Adjudicators #}
 {% if not pref.no_panellist_position or not pref.no_trainee_position %}
   <div class="list-group-item">
-    {% if debate.adjudicators|length > 1 %}
+    {% if debate.adjudicators|length > 0 %}
       {% with adjudicators=debate.adjudicators %}
         <strong>
           {% blocktrans trimmed count counter=adjudicators|length %}
