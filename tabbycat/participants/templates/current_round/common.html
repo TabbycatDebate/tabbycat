@@ -22,7 +22,7 @@
 {# Adjudicators #}
 {% if not pref.no_panellist_position or not pref.no_trainee_position %}
   <div class="list-group-item">
-    {% if debate.adjudicators|length > 1 %}
+    {% if debate.adjudicators|length > 0 %}
       {% with adjudicators=debate.adjudicators %}
         <strong>
           {% blocktrans trimmed count counter=adjudicators|length %}
@@ -42,7 +42,7 @@
       {% endwith %}
     {% else %}
       <em>{% trans "There are no panellists or trainees assigned to this debate." %}</em>
-    {% endif %} {# debate.adjudicators|length > 1 #}
+    {% endif %} {# debate.adjudicators|length > 0 #}
   </div>
 {% endif %} {# not pref.no_panellist_position or not pref.no_trainee_position #}
 
