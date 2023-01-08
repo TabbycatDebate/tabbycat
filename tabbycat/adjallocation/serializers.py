@@ -1,3 +1,4 @@
+from django.utils.html import escape
 from rest_framework import serializers
 
 from participants.serializers import AdjudicatorSerializer
@@ -9,6 +10,10 @@ from .models import PreformedPanel
 class EditPanelOrDebateAdjSerializer(AdjudicatorSerializer, VueDraggableItemMixin):
     """ Returns adjudicators for use in views where they are allocated """
     score = serializers.SerializerMethodField(read_only=True)
+    name = serializers.SerializerMethodField(read_only=True)
+
+    def get_name(self, obj):
+        return escape(obj.name)
 
     def get_score(self, obj):
         return obj.weighted_score(self.context['feedback_weight'])
