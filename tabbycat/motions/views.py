@@ -157,7 +157,15 @@ class BaseReleaseMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, Pos
         round.save()
         self.log_action()
 
-        messages.success(request, self.message_text)
+        if round.motion_set.all().exists():  # Means that the round has at least one motion associated with it
+            messages.success(request, self.message_text)
+        elif self.motions_released:  # The (non-existent) motions were released
+            messages.warning(request, _("No motion(s) are set for this round. Are you sure you intended to already "
+                                        "release the motion(s)?"))
+        else:
+            messages.info(request, _("Returned to previous state. Feel free to enter your motion(s) now, they won't be "
+                                     "publicly displayed until you return to this page and release them."))
+
         return super().post(request, *args, **kwargs)
 
 
