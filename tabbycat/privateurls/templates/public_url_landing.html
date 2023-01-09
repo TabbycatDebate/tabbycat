@@ -57,11 +57,13 @@
       {% endif %}
     {% endif %}
 
-    {% if object.adjudicator and pref.participant_ballots == 'private-urls' and debateadjudications|length > 0 %}
+    {% if object.adjudicator and pref.participant_ballots == 'private-urls' %}
       {% for round in tournament.current_rounds %}
-        {% roundurl 'results-public-ballotset-new-randomised' round url_key as url %}
-        {% blocktrans trimmed with round=round.name asvar text %}Submit Ballot for {{ round }}{% endblocktrans %}
-        {% include "components/item-action.html" %}
+          {% if object.adjudicator in round.active_adjudicators and object.adjudicator not in round.unused_adjudicators %}
+            {% roundurl 'results-public-ballotset-new-randomised' round url_key as url %}
+            {% blocktrans trimmed with round=round.name asvar text %}Submit Ballot for {{ round }}{% endblocktrans %}
+            {% include "components/item-action.html" %}
+          {% endif %}
       {% empty %}
         {% trans "There are no current rounds" as text %}
         {% include "components/item-info.html" with type='info' %}
