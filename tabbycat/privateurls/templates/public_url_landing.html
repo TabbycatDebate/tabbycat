@@ -59,7 +59,7 @@
 
     {% if object.adjudicator and pref.participant_ballots == 'private-urls' %}
       {% for round in tournament.current_rounds %}
-          {% if object.adjudicator in round.active_adjudicators and object.adjudicator not in round.unused_adjudicators %}
+          {% if object.adjudicator in round.used_adjudicators %}
             {% roundurl 'results-public-ballotset-new-randomised' round url_key as url %}
             {% blocktrans trimmed with round=round.name asvar text %}Submit Ballot for {{ round }}{% endblocktrans %}
             {% include "components/item-action.html" %}
