@@ -211,8 +211,11 @@
 
           <form id="releaseMotionsForm" method="POST" hidden
                 action="{% roundurl 'motions-release' %}">{% csrf_token %}</form>
-
-          {% if pref.participant_ballots != 'off' and pref.enable_motions %}
+          {% if not round.motion_set.exists %}
+            {% trans "No motion(s) are currently set for this round." as text %}
+            {% include "components/item-info.html" with nopad=True type="danger" %}
+            {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
+          {% elif pref.participant_ballots != 'off' and pref.enable_motions %}
             {% trans "Your tournament is configured to require motions to be selected in ballots and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to be submitted." as text %}
             {% include "components/item-info.html" with nopad=True type="danger" %}
             {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
@@ -366,7 +369,7 @@
 {% block js %}
   {{ block.super }}
   <script>
-    $(document).ready( function() { // Use the fake submit buttons as real submissoin
+    $(document).ready( function() { // Use the fake submit buttons as real submission
       $("#triggerReleaseDrawForm").click( function() {
         $("#releaseDrawForm").submit();
         return false;
