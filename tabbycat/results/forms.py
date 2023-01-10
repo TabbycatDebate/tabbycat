@@ -294,6 +294,7 @@ class BaseBallotSetForm(BaseResultForm):
          - motion,               if there is more than one motion
          - <side>_motion_veto,   if motion vetoes are being noted, one for each team
          - <side>_speaker_s#,    one for each speaker
+         - <side>_srank_s#,      if speech ranks are enabled
          - <side>_ghost_s#,      whether score should be a duplicate
         """
 
@@ -470,6 +471,10 @@ class ScoresMixin:
         return '%(side)s_speaker_s%(pos)d' % {'side': side, 'pos': pos}
 
     @staticmethod
+    def _fieldname_srank(side, pos):
+        return '%(side)s_srank_s%(pos)d' % {'side': side, 'pos': pos}
+
+    @staticmethod
     def _fieldname_ghost(side, pos):
         return '%(side)s_ghost_s%(pos)d' % {'side': side, 'pos': pos}
 
@@ -478,6 +483,7 @@ class ScoresMixin:
     # --------------------------------------------------------------------------
 
     def create_participant_fields(self):
+        nspeeches = len(self.sides) * len(self.positions)
         for side, pos in product(self.sides, self.positions):
 
             # 3(a). Speaker identity
@@ -487,6 +493,9 @@ class ScoresMixin:
                 queryset = self.debate.get_team(side).speakers
             self.fields[self._fieldname_speaker(side, pos)] = forms.ModelChoiceField(
                 queryset=queryset, required=True)
+
+            if self.tournament.pref('speaker_ranks') != 'none':
+                self.fields[self._fieldname_srank(side, pos)] = forms.IntegerField(required=True, min_value=1, max_value=nspeeches, step_size=1)
 
             # 3(b). Ghost fields
             self.fields[self._fieldname_ghost(side, pos)] = forms.BooleanField(required=False,
@@ -498,6 +507,8 @@ class ScoresMixin:
         order = []
         for side, pos in product(self.sides, self.positions):
             order.append(self._fieldname_speaker(side, pos))
+            if self.tournament.pref('speaker_ranks') != 'none':
+                order.append(self._fieldname_srank(side, pos))
         return order
 
     def list_score_fields(self):
@@ -513,6 +524,8 @@ class ScoresMixin:
         for side, pos in product(self.sides, self.positions):
             initial[self._fieldname_speaker(side, pos)] = result.get_speaker(side, pos)
             initial[self._fieldname_ghost(side, pos)] = result.get_ghost(side, pos)
+            if self.tournament.pref('speaker_ranks') != 'none':
+                initial[self._fieldname_srank(side, pos)] = result.get_speaker_rank(side, pos)
         return initial
 
     # --------------------------------------------------------------------------
@@ -645,6 +658,7 @@ class ScoresMixin:
                     "speaker": self[self._fieldname_speaker(side, pos)],
                     "ghost": self[self._fieldname_ghost(side, pos)],
                     "score": self[fieldname_score_func(side, pos)],
+                    "srank": self[self._fieldname_srank(side, pos)],
                 })
             teams.append(side_dict)
         return teams
@@ -667,6 +681,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
         """Adds the speaker score fields:
          - <side>_score_s#,  one for each score
         """
+        nspeeches = len(self.sides) * len(self.positions)
         for side, pos in product(self.sides, self.positions):
             scorefield = ReplyScoreField if (pos == self.reply_position) else SubstantiveScoreField
             self.fields[self._fieldname_score(side, pos)] = scorefield(
@@ -674,6 +689,8 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 tournament=self.tournament,
                 required=True,
             )
+            if self.tournament.pref('speaker_ranks') != 'none':
+                self.fields[self._fieldname_srank(side, pos)] = forms.IntegerField(required=True, min_value=1, max_value=nspeeches, step_size=1)
 
         if self.using_declared_winner:
             self.fields[self._fieldname_declared_winner()] = self.create_declared_winner_dropdown()
@@ -685,6 +702,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
             score = result.get_score(side, pos)
             coerce_for_ui = self.fields[self._fieldname_score(side, pos)].coerce_for_ui
             initial[self._fieldname_score(side, pos)] = coerce_for_ui(score)
+            initial[self._fieldname_srank(side, pos)] = result.get_speaker_rank(side, pos)
 
         if self.using_declared_winner:
             initial[self._fieldname_declared_winner()] = result.winning_side()
@@ -695,6 +713,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
         """Lists all the score fields. Called by super().set_tab_indices()."""
         order = []
         for side, pos in product(self.sides, self.positions):
+            order.append(self._fieldname_srank(side, pos))
             order.append(self._fieldname_score(side, pos))
 
         if self.using_declared_winner:
@@ -750,10 +769,21 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                         params={'margin': margin, 'max_margin': self.max_margin}, code='max_margin',
                     ))
 
+        if self.tournament.pref('speaker_ranks') != 'none':
+            ranks = set()
+            for side, pos in product(self.sides, self.positions):
+                ranks.add(cleaned_data[self._fieldname_srank(side, pos)])
+
+            if len(ranks) < len(self.sides) * len(self.positions):
+                self.add_error(None, forms.ValidationError(_("Ranks cannot be tied.", code='ranks_tied')))
+
     def populate_result_with_scores(self, result):
         for side, pos in product(self.sides, self.positions):
             score = self.cleaned_data[self._fieldname_score(side, pos)]
             result.set_score(side, pos, score)
+
+            if self.tournament.pref('speaker_ranks') != 'none':
+                result.set_speaker_rank(side, pos, self.cleaned_data[self._fieldname_srank(side, pos)])
 
         if self.declared_winner not in ['none', 'high-points']:
             result.set_winners(set([self.cleaned_data[self._fieldname_declared_winner()]]))

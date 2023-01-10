@@ -541,6 +541,19 @@ class RequireSubstantiveForReply(BooleanPreference):
     default = True
 
 
+@tournament_preferences_registry.register
+class UseSpeakerRanks(ChoicePreference):
+    help_text = _("Whether and how to use speech ranks within a debate")
+    verbose_name = _("Use of speech ranks")
+    section = debate_rules
+    name = 'speaker_ranks'
+    choices = (
+        ('none', 'Do not rank speeches'),
+        ('any', 'Require ranking speeches, indepedently of speaker scores'),
+    )
+    default = 'none'
+
+
 # ==============================================================================
 standings = Section('standings', verbose_name=_("Standings"))
 # ==============================================================================

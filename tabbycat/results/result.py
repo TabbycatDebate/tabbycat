@@ -624,7 +624,7 @@ class DebateResultByAdjudicator(BaseDebateResult):
 class DebateResultWithScoresMixin:
     """Mixin to provide methods to interact with SpeakerScore."""
 
-    speakerscore_fields = ['score', 'speaker', 'ghost']
+    speakerscore_fields = ['score', 'speaker', 'ghost', 'rank']
 
     uses_declared_winners = False
     uses_speakers = True
@@ -656,14 +656,17 @@ class DebateResultWithScoresMixin:
         super().init_blank_buffer()
         self.speakers = {side: dict.fromkeys(self.positions, None) for side in self.sides}
         self.ghosts = {side: dict.fromkeys(self.positions, False) for side in self.sides}
+        self.speaker_ranks = {side: dict.fromkeys(self.positions, None) for side in self.sides}
 
     def assert_loaded(self):
         super().assert_loaded()
         assert set(self.speakers) == set(self.sides)
         assert set(self.ghosts) == set(self.sides)
+        assert set(self.speaker_ranks) == set(self.sides)
         for side in self.sides:
             assert set(self.speakers[side]) == set(self.positions)
             assert set(self.ghosts[side]) == set(self.positions)
+            assert set(self.speaker_ranks[side]) == set(self.positions)
 
     def is_complete(self):
         return super().is_complete() and not any(self.speakers[s][p] is None for s in self.sides for p in self.positions)
@@ -699,6 +702,7 @@ class DebateResultWithScoresMixin:
         for ss in speakerscores:
             self.speakers[ss.debate_team.side][ss.position] = ss.speaker
             self.ghosts[ss.debate_team.side][ss.position] = ss.ghost
+            self.speaker_ranks[ss.debate_team.side][ss.position] = ss.rank
 
     def save(self):
         super().save()
@@ -731,6 +735,12 @@ class DebateResultWithScoresMixin:
     def set_ghost(self, side, position, is_ghost):
         self.ghosts[side][position] = is_ghost
 
+    def get_speaker_rank(self, side, position):
+        return self.speaker_ranks[side].get(position)
+
+    def set_speaker_rank(self, side, position, rank):
+        self.speaker_ranks[side][position] = rank
+
     # --------------------------------------------------------------------------
     # Model fields
     # --------------------------------------------------------------------------
@@ -740,6 +750,9 @@ class DebateResultWithScoresMixin:
 
     def speakerscore_field_ghost(self, side, position):
         return self.ghosts[side][position]
+
+    def speakerscore_field_rank(self, side, position):
+        return self.speaker_ranks[side][position]
 
     def teamscore_field_margin(self, side):
         return self.calculate_full_margin(side)
@@ -788,6 +801,7 @@ class DebateResultWithScoresMixin:
                 "name": pos_name,
                 "speaker": self.get_speaker(side, pos),
                 "score": sheet.get_score(side, pos),
+                "rank": self.get_speaker_rank(side, pos),
             })
 
 
