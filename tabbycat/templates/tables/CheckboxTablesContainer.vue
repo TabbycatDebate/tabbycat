@@ -47,13 +47,13 @@
                     class="btn btn-primary" type="button" data-toggle="tooltip"
                     :title="gettext(`Set people who are checked in as available
                                      (leave people not checked in unchanged)`)">
-              <i data-feather="corner-up-right"></i> {{ gettext("Set from Check-Ins") }}
+              <i data-feather="corner-up-right"></i> {{ gettext(" Set Checked-In as Available") }}
             </button>
             <button @click="setFromCheckIns(false, true)"
                     class="btn btn-primary" type="button" data-toggle="tooltip"
                     :title="gettext(`Set people who are not checked in as unavailable
                                      (leave people who are checked in unchanged)`)">
-              <i data-feather="corner-down-left"></i> {{ gettext("Unset from Check-Ins") }}
+              <i data-feather="corner-down-left"></i> {{ gettext(" Set Not Checked-In as Unavailable") }}
             </button>
           </div>
         </template>
