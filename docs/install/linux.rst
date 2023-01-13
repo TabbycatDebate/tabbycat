@@ -126,7 +126,8 @@ If you have Git, life will be easier if you clone `our GitHub repository`_:
 
 .. parsed-literal::
 
-    $ git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
+    $ git clone https://github.com/TabbycatDebate/tabbycat.git
+    $ cd tabbycat
     $ git checkout master
 
 (You can find out if you have Git using ``git --version``. If you don't, you can install it using ``sudo apt install git``.)
