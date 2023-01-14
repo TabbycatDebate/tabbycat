@@ -534,9 +534,6 @@ class Round(models.Model):
     def unused_venues(self):
         return self.active_venues.exclude(debate__round=self)
 
-    def used_adjudicators(self):
-        return self.active_adjudicators.filter(debateadjudicator__debate__round=self)
-
     def unused_adjudicators(self):
         return self.active_adjudicators.exclude(debateadjudicator__debate__round=self)
 
