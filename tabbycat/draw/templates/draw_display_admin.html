@@ -192,15 +192,21 @@
   <div class="col-md col-12">
     <div class="card">
 
-      {% if pref.enable_motions or pref.motion_vetoes_enabled %}
-        {% trans "Release Motions" as release_motions_title %}
-        {% trans "Release motions to public" as release_text %}
-        {% trans "Unrelease motions to public" as unrelease_text %}
-      {% else %}
-        {% trans "Release Motion" as release_motions_title %}
-        {% trans "Release motion to public" as release_text %}
-        {% trans "Unrelease motion to public" as unrelease_text %}
-      {% endif %}
+      {% blocktranslate count counter=round.motion_set|length asvar release_motions_title%}
+        Release Motion
+      {% plural %}
+        Release Motions
+      {% endblocktranslate %}
+      {% blocktranslate count counter=round.motion_set|length asvar release_text%}
+        Release motion to public
+      {% plural %}
+        Release motions to public
+      {% endblocktranslate %}
+      {% blocktranslate count counter=round.motion_set|length asvar unrelease_text%}
+        Unrelease motion to public
+      {% plural %}
+        Unrelease motions to public
+      {% endblocktranslate %}
 
       <div class="card-body">
         <h5 class="card-title mb-0">{{ release_motions_title }}</h5>
@@ -239,11 +245,13 @@
                 action="{% roundurl 'motions-unrelease' %}">{% csrf_token %}</form>
           {# "and" takes precedence over "or" #}
           {% if pref.public_motions or pref.participant_ballots != 'off' and pref.enable_motions or pref.participant_ballots != 'off' and pref.motion_vetoes_enabled %}
-            {% if pref.enable_motions or pref.motion_vetoes_enabled %}
-              {% trans "Motions have been released publicly." as text %}
-            {% else %}
-              {% trans "The motion has been released publicly." as text %}
-            {% endif %}
+
+            {% blocktranslate count counter=round.motion_set|length asvar text %}
+              The motion has been released publicly.
+            {% plural %}
+              Motions have been released publicly.
+            {% endblocktranslate %} }
+
             {% include "components/item-info.html" with nopad=True type="" %}
             {% trans "View public motions page" as text %}
             {% tournamenturl 'motions-public' as public_link %}
