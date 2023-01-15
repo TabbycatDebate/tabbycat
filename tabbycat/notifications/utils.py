@@ -11,7 +11,7 @@ Objects should be fetched from the database here as it is an asynchronous proces
 thus the object itself cannot be passed.
 """
 from dataclasses import dataclass
-from typing import Any, List, Set, Tuple, TYPE_CHECKING
+from typing import Any, Dict, List, Set, Tuple, TYPE_CHECKING
 
 from django.utils import formats
 from django.utils.safestring import mark_safe
@@ -40,7 +40,7 @@ adj_position_names = {
 
 @dataclass
 class EmailContextData:
-    USER: str = ""  # Normally filled within the consumer
+    pass
 
 
 def _assemble_panel(adjs: List[Tuple['Person', str]]) -> str:
@@ -63,7 +63,7 @@ class NotificationContextGenerator:
     context_class = EmailContextData
 
     @classmethod
-    def generate(cls, to: 'QuerySet[Person]', *args: Any) -> List[Tuple[EmailContextData, 'Person']]:
+    def generate(cls, to: 'QuerySet[Person]', **kwargs: Dict[str, Any]) -> List[Tuple[EmailContextData, 'Person']]:
         return [(cls.context_class(), person) for person in to]
 
 
@@ -137,7 +137,7 @@ class BallotsEmailGenerator(NotificationContextGenerator):
         tournament = debate.round.tournament
         results = DebateResult(debate.confirmed_ballot)
         round_name = _("%(tournament)s %(round)s @ %(room)s") % {'tournament': str(tournament),
-            'round': debate.round.name, 'room': debate.venue.name}
+            'round': debate.round.name, 'room': debate.venue.display_name if debate.venue is not None else _("TBA")}
 
         use_codes = use_team_code_names(tournament, False)
 
@@ -319,7 +319,7 @@ class TeamDrawEmailGenerator(NotificationContextGenerator):
         use_codes = use_team_code_names(tournament, False)
 
         for debate in draw:
-            context_debate = {"ROUND": round.name, "VENUE": debate.venue.name,
+            context_debate = {"ROUND": round.name, "VENUE": debate.venue.display_name if debate.venue is not None else _("TBA"),
                 "DRAW": debate.matchup_codes if use_codes else debate.matchup,
                 "PANEL": _assemble_panel(debate.adjudicators.with_positions())}
             for dt in debate.debateteam_set.all():

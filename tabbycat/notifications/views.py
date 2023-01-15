@@ -308,7 +308,7 @@ class TemplateEmailCreateView(BaseSelectPeopleEmailView):
         return initial
 
     def form_valid(self, form: BasicEmailForm) -> 'HttpResponseRedirect':
-        if self.subject_template:
+        if hasattr(self, 'subject_template'):
             self.tournament.preferences[self.subject_template] = form.cleaned_data['subject_line']
             self.tournament.preferences[self.message_template] = form.cleaned_data['message_body']
         email_recipients = list(map(int, self.request.POST.getlist('recipients')))
