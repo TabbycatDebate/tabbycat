@@ -220,23 +220,24 @@
           {% if not round.motion_set.exists %}
             {% trans "No motion(s) are currently set for this round." as text %}
             {% include "components/item-info.html" with nopad=True type="warning" %}
-            {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
           {% elif pref.participant_ballots != 'off' and pref.enable_motions %}
             {% trans "Your tournament is configured to require motions to be selected in ballots and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to be submitted." as text %}
             {% include "components/item-info.html" with nopad=True type="danger" %}
-            {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
           {% elif pref.participant_ballots != 'off' and pref.motion_vetoes_enabled %}
             {% trans "Your tournament is configured to allow motions to be vetoed and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to nominate vetoes." as text %}
             {% include "components/item-info.html" with nopad=True type="danger" %}
-            {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
           {% elif pref.public_motions %}
             {% trans "Your tournament is configured to show the motion(s) for each round on the public site. You'll need to first release the motion(s) for it to show there." as text %}
             {% include "components/item-info.html" with nopad=True type="" %}
-            {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
           {% else %}
             {% trans "Your tournament is not configured to show the motion(s) for each round on the public site. There's no need to release the motion(s)." as text %}
             {% include "components/item-info.html" with nopad=True type="secondary" %}
-            {% include "components/item-action.html" with id="triggerReleaseMotionsForm" text=release_text url="" %}
+          {% endif %}
+
+          {% if not round.motion_set.exists or pref.enable_motions or pref.motion_vetoes_enabled or pref.public_motions %}
+              {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
+          {% else %}
+              {% include "components/item-action.html" with id="triggerReleaseMotionsForm" text=release_text url="" %}
           {% endif %}
 
         {% else %}
