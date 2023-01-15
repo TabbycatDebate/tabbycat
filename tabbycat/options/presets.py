@@ -354,3 +354,15 @@ class TabRelease(PreferencesPreset):
     public_features__public_team_standings     = False
     public_features__public_draw               = 'off'
     public_features__public_break_categories   = False
+
+
+class PrivateURLS(PreferencesPreset):
+    name = _("Private URL Usage Options")
+    show_in_list = False
+    description = _("Enables all features relating to private URLs. This will allow participants to manage a lot of "
+                    "things right from their private URLs.")
+
+    data_entry__participant_ballots             = 'private-urls'
+    data_entry__participant_feedback            = 'private-urls'
+    data_entry__public_checkins_submit          = True
+    # tab_release__private_ballots_released       = True  # only intended for use after tournament
