@@ -669,7 +669,7 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
 class EmailTeamStandingsView(RoundTemplateEmailCreateView):
     page_subtitle = _("Team Standings")
 
-    event = BulkNotification.EVENT_TYPE_POINTS
+    event = BulkNotification.EventType.POINTS
     subject_template = 'team_points_email_subject'
     message_template = 'team_points_email_message'
 

@@ -198,7 +198,7 @@ class AssistantDisplayMotionsView(CurrentRoundMixin, OptionalAssistantTournament
 class EmailMotionReleaseView(RoleColumnMixin, RoundTemplateEmailCreateView):
     page_subtitle = _("Round Motions")
 
-    event = BulkNotification.EVENT_TYPE_MOTIONS
+    event = BulkNotification.EventType.MOTIONS
     subject_template = 'motion_email_subject'
     message_template = 'motion_email_message'
 

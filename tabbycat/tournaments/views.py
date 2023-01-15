@@ -129,7 +129,7 @@ class CompleteRoundCheckView(AdministratorMixin, RoundMixin, TemplateView):
             result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
         kwargs['increment_ok'] = kwargs['num_unconfirmed'] == 0
         kwargs['emails_sent'] = BulkNotification.objects.filter(
-            tournament=self.tournament, round=self.round, event=BulkNotification.EVENT_TYPE_POINTS).exists()
+            tournament=self.tournament, round=self.round, event=BulkNotification.EventType.POINTS).exists()
         return super().get_context_data(**kwargs)
 
 

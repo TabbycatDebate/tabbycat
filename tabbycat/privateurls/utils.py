@@ -1,13 +1,17 @@
 import logging
 import string
+from typing import TYPE_CHECKING
 
 from participants.models import Person
 from utils.misc import generate_identifier_string
 
+if TYPE_CHECKING:
+    from django.db.models import QuerySet
+
 logger = logging.getLogger(__name__)
 
 
-def populate_url_keys(people, length=8, num_attempts=10):
+def populate_url_keys(people: 'QuerySet[Person]', length: int = 8, num_attempts: int = 10) -> None:
     """Populates the URL key field for every instance in the given QuerySet."""
     chars = string.ascii_lowercase + string.digits
 
@@ -24,6 +28,6 @@ def populate_url_keys(people, length=8, num_attempts=10):
     Person.objects.bulk_update(people, ['url_key'])
 
 
-def delete_url_keys(queryset):
+def delete_url_keys(queryset: 'QuerySet[Person]') -> None:
     """Deletes URL keys from every instance in the given QuerySet."""
     queryset.update(url_key=None)
