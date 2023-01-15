@@ -213,14 +213,16 @@
       </div>
       <div class="list-group list-group-flush">
 
+        {% if not round.motion_set.exists %}
+          {% trans "No motion(s) are currently set for this round." as text %}
+          {% include "components/item-info.html" with nopad=True type="warning" %}
+        {% endif %}
+
         {% if not round.motions_released %}
 
           <form id="releaseMotionsForm" method="POST" hidden
                 action="{% roundurl 'motions-release' %}">{% csrf_token %}</form>
-          {% if not round.motion_set.exists %}
-            {% trans "No motion(s) are currently set for this round." as text %}
-            {% include "components/item-info.html" with nopad=True type="warning" %}
-          {% elif pref.participant_ballots != 'off' and pref.enable_motions %}
+          {% if pref.participant_ballots != 'off' and pref.enable_motions %}
             {% trans "Your tournament is configured to require motions to be selected in ballots and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to be submitted." as text %}
             {% include "components/item-info.html" with nopad=True type="danger" %}
           {% elif pref.participant_ballots != 'off' and pref.motion_vetoes_enabled %}
@@ -234,7 +236,7 @@
             {% include "components/item-info.html" with nopad=True type="secondary" %}
           {% endif %}
 
-          {% if not round.motion_set.exists or pref.enable_motions or pref.motion_vetoes_enabled or pref.public_motions %}
+          {% if pref.enable_motions or pref.motion_vetoes_enabled or pref.public_motions %}
               {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
           {% else %}
               {% include "components/item-action.html" with id="triggerReleaseMotionsForm" text=release_text url="" %}
