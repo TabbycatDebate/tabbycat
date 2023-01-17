@@ -4,6 +4,7 @@ from django.db.models import OuterRef, Prefetch, Q, Subquery
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
 from django.views.generic.base import TemplateView
+from django_summernote.widgets import SummernoteWidget
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -59,7 +60,7 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
             extra = max(1 - nexisting, 0)
             delete = nexisting > 1  # if there's more than one, allow deletion
 
-        return {'can_delete': delete, 'exclude': excludes, 'extra': extra}
+        return {'can_delete': delete, 'exclude': excludes, 'extra': extra, 'widgets': {'info_slide': SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})}}
 
     def get_formset_kwargs(self):
         nexisting = self.get_formset_queryset().count()
