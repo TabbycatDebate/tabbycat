@@ -124,7 +124,7 @@ TLDR commands
 
 .. parsed-literal::
 
-  git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
+  git clone https://github.com/TabbycatDebate/tabbycat.git
   cd tabbycat
   git checkout master
   python deploy_heroku.py yourappname
@@ -203,7 +203,8 @@ You'll need both Git and the Heroku CLI, and you'll need to be logged in to the 
 
 2. If you haven't already, clone our Git repository and check out the master branch::
 
-    $ git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
+    $ git clone https://github.com/TabbycatDebate/tabbycat.git
+    $ cd tabbycat
     $ git checkout master
 
   If you've already cloned our Git repository, don't forget to pull so you're up to date::

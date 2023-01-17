@@ -11,7 +11,7 @@ class TestEmailForm(forms.Form):
 
     recipient = forms.EmailField(label=gettext_lazy("Recipient email address"), required=True)
 
-    def send_email(self, host):
+    def send_email(self, host: str) -> str:
         send_mail(
             _("Test email from %(host)s") % {'host': host},
             _("Congratulations! If you're reading this message, your email "
@@ -31,15 +31,15 @@ class BasicEmailForm(forms.Form):
     message_body = forms.CharField(label=_("Message"), required=True, widget=SummernoteWidget(
         attrs={'height': 150, 'class': 'form-summernote'}))
 
-    def clean_as_template(self, field_name):
+    def clean_as_template(self, field_name: str) -> str:
         try:
             Template(self.cleaned_data[field_name])
         except TemplateSyntaxError as e:
             raise forms.ValidationError(e)
         return self.cleaned_data[field_name]
 
-    def clean_subject_line(self):
+    def clean_subject_line(self) -> str:
         return self.clean_as_template('subject_line')
 
-    def clean_message_body(self):
+    def clean_message_body(self) -> str:
         return self.clean_as_template('message_body')

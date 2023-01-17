@@ -1,4 +1,5 @@
 import logging
+from typing import Any, Dict, List, TYPE_CHECKING
 
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -23,12 +24,18 @@ from utils.views import PostOnlyRedirectView, VueTableTemplateView
 
 from .utils import populate_url_keys
 
+if TYPE_CHECKING:
+    from django.db.models import QuerySet
+    from django.http.response import HttpResponseRedirect
+    from django.http.request import HttpRequest
+    from tournaments.models import Tournament
+
 logger = logging.getLogger(__name__)
 
 
 class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> Dict[str, Any]:
         # These are used to choose the nav display
         tournament = self.tournament
         kwargs['exists'] = tournament.participants.filter(url_key__isnull=False).exists()
@@ -36,9 +43,9 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
         kwargs['to_email_exists'] = self.get_participants_to_email().exists()
         return super().get_context_data(**kwargs)
 
-    def get_participants_to_email(self, already_sent=False):
+    def get_participants_to_email(self, already_sent: bool = False) -> 'QuerySet[Person]':
         subquery = SentMessage.objects.filter(
-            notification__event=BulkNotification.EVENT_TYPE_URL,
+            notification__event=BulkNotification.EventType.URL,
             notification__tournament=self.tournament, email=OuterRef('email'),
         )
         people = self.tournament.participants.filter(
@@ -56,7 +63,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
     template_name = 'private_urls.html'
     tables_orientation = 'columns'
 
-    def add_url_columns(self, table, people, request):
+    def add_url_columns(self, table: TabbycatTableBuilder, people: 'QuerySet[Person]', request: 'HttpRequest') -> TabbycatTableBuilder:
         def build_url(person):
             if person.url_key is None:
                 return {'text': _("no URL"), 'class': 'text-warning'}
@@ -81,7 +88,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
         )
         return table
 
-    def get_speakers_table(self):
+    def get_speakers_table(self) -> TabbycatTableBuilder:
         speakers = Speaker.objects.filter(team__tournament=self.tournament)
         table = TabbycatTableBuilder(view=self, title=_("Speakers"), sort_key="name")
         table.add_speaker_columns(speakers, categories=False)
@@ -89,7 +96,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
 
         return table
 
-    def get_adjudicators_table(self):
+    def get_adjudicators_table(self) -> TabbycatTableBuilder:
         tournament = self.tournament
 
         adjudicators = Adjudicator.objects.filter(tournament=tournament)
@@ -99,7 +106,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
 
         return table
 
-    def get_tables(self):
+    def get_tables(self) -> List[TabbycatTableBuilder]:
         return [self.get_adjudicators_table(), self.get_speakers_table()]
 
 
@@ -107,7 +114,7 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
 
     tournament_redirect_pattern_name = 'privateurls-list'
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request: 'HttpRequest', *args, **kwargs) -> 'HttpResponseRedirect':
         tournament = self.tournament
 
         nexisting_people = tournament.participants.filter(url_key__isnull=False).count()
@@ -143,18 +150,18 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
 class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView):
     page_subtitle = _("Private URLs")
 
-    event = BulkNotification.EVENT_TYPE_URL
+    event = BulkNotification.EventType.URL
     subject_template = 'url_email_subject'
     message_template = 'url_email_message'
 
     tournament_redirect_pattern_name = 'privateurls-list'
 
-    def get_extra(self):
+    def get_extra(self) -> Dict[str, Any]:
         extra = super().get_extra()
         extra['url'] = self.request.build_absolute_uri(reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': '0'}))[:-2]
         return extra
 
-    def get_table(self):
+    def get_table(self) -> TabbycatTableBuilder:
         table = super().get_table()
 
         data = []
@@ -182,20 +189,20 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
 
     table_title = _("Debates")
 
-    def is_page_enabled(self, tournament):
+    def is_page_enabled(self, tournament: 'Tournament') -> bool:
         return True
 
-    def get_queryset(self):
+    def get_queryset(self) -> 'QuerySet[Person]':
         return self.model.objects.filter(
             Q(adjudicator__tournament=self.tournament) | Q(speaker__team__tournament=self.tournament))
 
-    def get_table(self):
+    def get_table(self) -> TabbycatTableBuilder:
         if hasattr(self.object, 'adjudicator'):
             return AdjudicatorDebateTable.get_table(self, self.object.adjudicator)
         else:
             return TeamDebateTable.get_table(self, self.object.speaker.team)
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> Dict[str, Any]:
         self.object = self.get_object()
         t = self.tournament
 
