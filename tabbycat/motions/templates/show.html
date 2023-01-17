@@ -75,7 +75,13 @@
         {% if infos|length == 1 %}
 
           <div class="modal-body d-flex align-items-center justify-content-center text-center">
-            <small>{{ infos.0.motion.info_slide|linebreaks }}</small>
+            <small>
+              {% if infos.0.motion.info_slide|slice:":3" == "<p>" %}
+                {{ infos.0.motion.info_slide|safe }}
+              {% else %}
+                {{ infos.0.motion.info_slide|linebreaks }}
+              {% endif %}
+            </small>
           </div>
 
         {% else %}
@@ -87,7 +93,13 @@
                   {% if motions|length > 1 %}
                     <span class="text-muted">{{ info.seq }}.</span>
                   {% endif %}
-                  <small>{{ info.motion.info_slide|linebreaks }}</small>
+                  <small>
+                    {% if info.motion.info_slide|slice:":3" == "<p>" %}
+                      {{ info.motion.info_slide|safe }}
+                    {% else %}
+                      {{ info.motion.info_slide|linebreaks }}
+                    {% endif %}
+                  </small>
                 </p>
               </div>
             {% endfor %}
