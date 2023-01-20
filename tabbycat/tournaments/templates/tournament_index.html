@@ -47,7 +47,7 @@
 
     {% roundurl 'availability-index' round as url %}
     {% blocktrans trimmed with round=round.name asvar text %}
-      Go to the checkins area to begin creating a draw for {{ round }}
+      Mark participants as available to prepare a draw for {{ round }}
     {% endblocktrans %}
     {% include "components/item-action.html" with alone=True to_complete=True %}
 
@@ -63,7 +63,7 @@
 
     {% roundurl 'results-round-list' round as url %}
     {% blocktrans trimmed with round=round.name asvar text %}
-      Go to the results area to begin entering ballots for {{ round }}
+      Go to the results area to enter ballots for {{ round }}
     {% endblocktrans %}
     {% include "components/item-action.html" with alone=True to_complete=True %}
 
