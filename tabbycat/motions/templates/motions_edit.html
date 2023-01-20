@@ -20,16 +20,18 @@
 
   {% if pref.enable_motion_reuse %}
     <div class="btn-group">
-      <form action="{% roundurl 'motions-previous' %}" method="POST">
-        {% csrf_token %}
-        {% if round.roundmotion_set.all.length == 0 %}
-          <button class="btn btn-outline-primary" id="repeatMotions" type="submit">
-        {% else %}
-          <button class="btn btn-outline-primary" id="repeatMotions" type="submit" data-toggle="tooltip" title="{% trans "This will replace all existing motions for this round. The motions themselves will still be in the database." %}">
-        {% endif %}
-          {% trans "Reuse Motions from Last Round" %}
-        </button>
-      </form>
+      {% if round.prev %}
+        <form action="{% roundurl 'motions-previous' %}" method="POST">
+          {% csrf_token %}
+          {% if round.roundmotion_set.all.length == 0 %}
+            <button class="btn btn-outline-primary" id="repeatMotions" type="submit">
+          {% else %}
+            <button class="btn btn-outline-primary" id="repeatMotions" type="submit" data-toggle="tooltip" title="{% trans "This will replace all existing motions for this round. The motions themselves will still be in the database." %}">
+          {% endif %}
+            {% trans "Reuse Motions from Last Round" %}
+          </button>
+        </form>
+      {% endif %}
 
       <a href="{% roundurl 'motions-copy' %}" class="btn btn-outline-primary">
         {% trans "Use Existing Motions" %}

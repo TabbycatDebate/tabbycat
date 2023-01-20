@@ -132,6 +132,10 @@ class CopyPreviousMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, Po
 
     def post(self, request, *args, **kwargs):
         self.round.roundmotion_set.all().delete()
+        if self.round.prev is None:
+            messages.error(self.request, _("Motions cannot be copied to the first round."))
+            return super().post(request, *args, **kwargs)
+
         motions = self.round.prev.roundmotion_set.select_related('motion')
         new_motions = []
 
