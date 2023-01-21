@@ -117,7 +117,7 @@ class BaseStandingsView(RoundMixin, VueTableTemplateView):
         return _("as of %(round)s") % {'round': self.round.name}
 
     def get_rounds(self):
-        """Returns all of the rounds that should be included in the tab."""
+        """Returns all the rounds that should be included in the tab."""
         return self.tournament.prelim_rounds(until=self.round).order_by('seq')
 
     def get_standings_error_message(self, e):
@@ -266,11 +266,11 @@ class BaseSpeakerStandingsView(BaseStandingsView):
     def get_rank_filter(self):
         missable = -1 if self.missable_preference is None else self.tournament.pref(self.missable_preference)
         if missable < 0:
-            return (None, None)  # no limit
+            return None, None  # no limit
         total_prelim_rounds = self.tournament.round_set.filter(
             stage=Round.STAGE_PRELIMINARY, seq__lte=self.round.seq).count()
         minimum_needed = total_prelim_rounds - missable
-        return (self.missable_field, minimum_needed)
+        return self.missable_field, minimum_needed
 
     def populate_result_missing(self, standings):
         for info in standings:

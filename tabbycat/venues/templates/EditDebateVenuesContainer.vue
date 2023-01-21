@@ -100,7 +100,7 @@ export default {
         venueChanges.push({ id: toDebate.id, venue: toDebate.venue })
       }
       this.$store.dispatch('updateDebatesOrPanelsAttribute', { venues: venueChanges })
-      this.$store.dispatch('updateAllocableItemModified', [dragData.item])
+      this.$store.dispatch('updateAllocatableItemModified', [dragData.item])
     },
     getUnallocatedItemFromDebateOrPanel (debateOrPanel) {
       // Return the ID of the venue in this debate

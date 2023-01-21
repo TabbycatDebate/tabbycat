@@ -85,7 +85,7 @@ export default {
         // Filter through all rows; within each row check...
         let rowContainsMatch = false
         _.forEach(row, (cell) => {
-          // ...and see if  has cells whose text-string contains filterKey
+          // ...and see if it has cells whose text-string contains filterKey
           if (_.includes(_.lowerCase(cell.text), _.lowerCase(filterKey))) {
             rowContainsMatch = true
           }

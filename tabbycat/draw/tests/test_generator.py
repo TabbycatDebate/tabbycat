@@ -760,7 +760,7 @@ class BaseTestEliminationDrawGenerator(unittest.TestCase):
 class TestPartialEliminationDrawGenerator(BaseTestEliminationDrawGenerator):
 
     def test_even_numbers(self):
-        # Run a draw with break size of 2; expect the each team's ID to be paired up as follows
+        # Run a draw with break size of 2; expect each team's ID to be paired up as follows
         self.run_draw(2, [(1, 2)])
         self.run_draw(4, [(1, 4), (2, 3)])
         self.run_draw(8, [(1, 8), (2, 7), (3, 6), (4, 5)])

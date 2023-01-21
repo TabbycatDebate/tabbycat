@@ -13,7 +13,7 @@ from django.utils.translation import gettext_lazy as _
 admin.site.unregister(Group) # No need to show groups
 
 
-class CustomUserLabelsMixin():
+class CustomUserLabelsMixin:
     def __init__(self, *args, **kwargs):
         super(CustomUserLabelsMixin, self).__init__(*args, **kwargs)
         self.fields['is_staff'].help_text = _("Users with staff status can"

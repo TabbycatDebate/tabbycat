@@ -34,7 +34,7 @@ A few notes on error checking:
    `self.positions` to prevent queries from returning instances with invalid
    side and position arguments.
  - When scores aren't being used, `self.positions` should be set to an empty
-   list. It it assumed that this is sufficient to prevent it from calling
+   list. It is assumed that this is sufficient to prevent it from calling
    methods specific to classes inheriting `ScoreMixin` (in scoresheet.py).
 """
 

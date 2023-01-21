@@ -107,7 +107,7 @@ export default {
         allocationChanges.push({ id: dropData.assignment, adjudicators: toAllocation })
       }
       this.$store.dispatch('updateDebatesOrPanelsAttribute', { adjudicators: allocationChanges })
-      this.$store.dispatch('updateAllocableItemModified', adjudicatorsSetModified)
+      this.$store.dispatch('updateAllocatableItemModified', adjudicatorsSetModified)
     },
     showShard: function () {
       $('#confirmShardModal').modal('show')

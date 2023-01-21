@@ -70,7 +70,7 @@ class RandomDrawGenerator(RandomPairingsMixin, BasePairDrawGenerator):
                     pairing.flags.append("max_swapped")
 
     def _badness(self, *pairings):
-        """Returns a weighted conflict intensity for all of the pairings given."""
+        """Returns a weighted conflict intensity for all the pairings given."""
         score = 0
         if self.options["avoid_history"]:
             score += sum([x.conflict_hist for x in pairings]) * self.options["history_penalty"]
@@ -81,7 +81,7 @@ class RandomDrawGenerator(RandomPairingsMixin, BasePairDrawGenerator):
 
 class RandomWithAllocatedSidesDrawGenerator(RandomDrawGenerator):
     """Random draw with allocated sides.
-    Overrides functions of RandomDrawGenerator where sides need to be constrained.
+    Override functions of RandomDrawGenerator where sides need to be constrained.
     All teams must have an 'allocated_side' attribute which must be either
     'aff' or 'neg' (case-sensitive)."""
 

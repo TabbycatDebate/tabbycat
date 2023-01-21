@@ -192,7 +192,7 @@ export default {
             break
         }
         const substitutions = [a.adjudicator.name, position, this.getAdjudicatorInstitution(a)]
-        // Omitt adj's institutions as per preference
+        // Omit adj's institutions as per preference
         if (this.roundInfo.showAdjInstitutions === true) {
           adjs.push(this.tct('%s (%s, %s)', substitutions))
         } else {

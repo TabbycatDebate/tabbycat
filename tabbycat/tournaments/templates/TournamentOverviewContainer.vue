@@ -96,7 +96,7 @@ export default {
           return // Don't show new results unless they are confirmed/confirmed
         }
       }
-      // Check for duplicate log/results; do a inline replace if so
+      // Check for duplicate log/results; do an inline replace if so
       const duplicateIndex = _.findIndex(this[dataLabel], i => i.id === data.id)
       if (duplicateIndex !== -1) {
         this[dataLabel][duplicateIndex] = data

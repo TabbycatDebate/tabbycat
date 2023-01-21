@@ -55,7 +55,7 @@ def breakcategories_with_counts(tournament):
 def liveness(self, team, teams_count, prelims, current_round):
     live_info = {'text': team.wins_count, 'tooltip': ''}
 
-    # The actual calculation should be shifed to be a cached method on
+    # The actual calculation should be shifted to be a cached method on
     # the relevant break category
     highest_liveness = 3
     for bc in team.break_categories.all():
@@ -144,17 +144,17 @@ BREAK_ROUND_NAMES = [
 def get_break_category_round_names(bc):
     return [
         # Translators: abbreviation for "finals" - first character of category name
-        (_("%s Finals") % (bc.name), _("%sF") % (bc.name[:1])),
+        (_("%s Finals") % bc.name, _("%sF") % (bc.name[:1])),
         # Translators: abbreviation for "semifinals" - first character of category name
-        (_("%s Semifinals") % (bc.name), _("%sSF") % (bc.name[:1])),
+        (_("%s Semifinals") % bc.name, _("%sSF") % (bc.name[:1])),
         # Translators: abbreviation for "quarterfinals" - first character of category name
-        (_("%s Quarterfinals") % (bc.name), _("%sQF") % (bc.name[:1])),
+        (_("%s Quarterfinals") % bc.name, _("%sQF") % (bc.name[:1])),
         # Translators: abbreviation for "octofinals" - first character of category name
-        (_("%s Octofinals") % (bc.name), _("%sOF") % (bc.name[:1])),
+        (_("%s Octofinals") % bc.name, _("%sOF") % (bc.name[:1])),
         # Translators: abbreviation for "double-octofinals" - first character of category name
-        (_("%s Double-Octofinals") % (bc.name), _("%sDOF") % (bc.name[:1])),
+        (_("%s Double-Octofinals") % bc.name, _("%sDOF") % (bc.name[:1])),
         # Translators: abbreviation for "triple-octofinals" - first character of category name
-        (_("%s Triple-Octofinals") % (bc.name), _("%sTOF") % (bc.name[:1])),
+        (_("%s Triple-Octofinals") % bc.name, _("%sTOF") % (bc.name[:1])),
     ]
 
 
@@ -166,7 +166,7 @@ def auto_make_break_rounds(bc, tournament=None, prefix=False):
     round_names = get_break_category_round_names(bc) if prefix else BREAK_ROUND_NAMES
 
     # Translators: "UBR" stands for "unknown break round" (used as a fallback when we don't know what it's called)
-    unknown_round = (_("Unknown %s break round") % (bc.name), _("U%sBR") % (bc.name[:1])) if prefix \
+    unknown_round = (_("Unknown %s break round") % bc.name, _("U%sBR") % (bc.name[:1])) if prefix \
         else (_("Unknown break round"), _("UBR"))
 
     break_rounds = itertools.chain(round_names, itertools.repeat(unknown_round))

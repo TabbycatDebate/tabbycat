@@ -106,7 +106,7 @@ export default {
         // For preformed panel screens liveness is attached to the panel itself
         return this.debateOrPanel.liveness
       } else {
-        // For allocation screens its a property of the teams that is then summed
+        // For allocation screens, it's a property of the teams that is then summed
         let liveness = 0
         if ('teams' in this.debateOrPanel && this.debateOrPanel.teams) {
           for (const keyAndEntry of Object.entries(this.debateOrPanel.teams)) {

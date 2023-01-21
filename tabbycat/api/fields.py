@@ -150,7 +150,7 @@ class ParticipantAvailabilityForeignKeyField(TournamentHyperlinkedRelatedField):
         }
 
     def get_url(self, obj, view_name, request, format):
-        view_name = 'api-%s-detail' % (obj.content_type.model)
+        view_name = 'api-%s-detail' % obj.content_type.model
         return super().get_url(obj, view_name, request, format)
 
     def get_object(self, view_name, view_args, view_kwargs):
@@ -167,7 +167,7 @@ class ParticipantAvailabilityForeignKeyField(TournamentHyperlinkedRelatedField):
             self.fail('incorrect_type', data_type=type(data).__name__)
 
         if http_prefix:
-            # If needed convert absolute URLs to relative path
+            # If needed, convert absolute URLs to relative path
             data = parse.urlparse(data).path
             prefix = get_script_prefix()
             if data.startswith(prefix):

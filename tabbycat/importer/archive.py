@@ -573,8 +573,8 @@ class Importer:
                 self.debates[debate.get('id')] = debate_obj
 
                 # Debate-teams
-                for i, side in enumerate(debate.findall('side'), side_start):
-                    position = DebateTeam.SIDE_CHOICES[i][0]
+                for j, side in enumerate(debate.findall('side'), side_start):
+                    position = DebateTeam.SIDE_CHOICES[j][0]
                     debateteam_obj = DebateTeam(debate=debate_obj, team=self.teams[side.get('team')], side=position)
                     debateteam_obj.save()
                     self.debateteams[(debate.get('id'), side.get('team'))] = debateteam_obj

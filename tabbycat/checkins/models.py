@@ -11,7 +11,7 @@ from utils.misc import generate_identifier_string
 
 
 def generate_identifier():
-    # First number should not be 0 so it is easier import into Excel etc
+    # First number should not be 0 so that it is easier import into Excel etc
     new_id = str(random.choice([1, 2, 3, 4, 5, 6, 7, 8, 9])) + generate_identifier_string(digits, 5)
     if Identifier.objects.filter(barcode=new_id).count() == 0:
         return new_id

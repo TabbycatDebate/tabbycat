@@ -714,17 +714,17 @@ class PublicBallotScoresheetsView(BasePublicBallotScoresheetsView):
         round = debate.round
         if round.silent and not round.tournament.pref('all_results_released'):
             logger.warning("Refused public view of ballots for %s: %s is silent", debate, round.name)
-            return (403, _("This debate is in %s, which is a silent round.") % round.name)
+            return 403, _("This debate is in %s, which is a silent round.") % round.name
         if not round.completed and not round.tournament.pref('all_results_released'):
             logger.warning("Refused public view of ballots for %s: %s is not completed", debate, round.name)
-            return (403, _("This debate is in %s, the results for which aren't available yet.") % round.name)
+            return 403, _("This debate is in %s, the results for which aren't available yet.") % round.name
 
         if debate.result_status != Debate.STATUS_CONFIRMED:
             logger.warning("Refused public view of ballots for %s: not confirmed", debate)
-            return (404, _("The result for debate %s is not confirmed.") % self.matchup_description())
+            return 404, _("The result for debate %s is not confirmed.") % self.matchup_description()
         if debate.confirmed_ballot is None:
             logger.warning("Refused public view of ballots for %s: no confirmed ballot", debate)
-            return (404, _("The debate %s does not have a confirmed ballot.") % self.matchup_description())
+            return 404, _("The debate %s does not have a confirmed ballot.") % self.matchup_description()
 
     def get_context_data(self, **kwargs):
         kwargs['motion'] = self.object.confirmed_ballot.motion or self.object.round.motion_set.first()
@@ -746,7 +746,7 @@ class AdjudicatorPrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandom
     def check_permissions(self):
         if not self.object.ballotsubmission_set.filter(discarded=False).exists():
             logger.warning("Refused public view of ballots for %s: no ballot", self.object)
-            return (404, _("There is no result yet for debate %s.") % self.matchup_description())
+            return 404, _("There is no result yet for debate %s.") % self.matchup_description()
 
     def get_context_data(self, **kwargs):
         ballot = self.object.ballotsubmission_set.filter(discarded=False).order_by('version').last()

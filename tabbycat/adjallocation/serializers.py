@@ -44,7 +44,7 @@ class EditPanelAdjsPanelSerializer(EditDebateAdjsDebateSerializer):
                   'bracket_min', 'bracket_max', 'room_rank', 'liveness')
 
 # Below classes serialise only a specified field (i.e. allocated adjudicators);
-# i.e. they act as a a lightweight data update to be broadcast back over the
+# i.e. they act as a lightweight data update to be broadcast back over the
 # websocket in response to websocket actions or updates rather than needing to
 # construct a complete representation of the debate or panelfrom scratch
 

@@ -82,7 +82,7 @@ class BaseTableBuilder:
           not the first column, then there must be as many elements in `data` as
           there are in the existing columns.
         """
-        if len(self.data) > 0 and len(data) != len(self.data):
+        if 0 < len(self.data) != len(data):
             raise ValueError("data contains {new:d} rows, existing table has {existing:d}".format(
                 new=len(data), existing=len(self.data)))
 
@@ -123,7 +123,7 @@ class BaseTableBuilder:
           in the table, then there must be as many inner lists as there are
           existing columns.
         """
-        if len(self.data) > 0 and len(data) != len(self.data):
+        if 0 < len(self.data) != len(data):
             raise ValueError("data contains {new:d} rows, existing table has {existing:d}".format(
                 new=len(data), existing=len(self.data)))
 

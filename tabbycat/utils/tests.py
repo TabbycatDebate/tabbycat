@@ -203,7 +203,7 @@ class ConditionalTournamentViewSimpleLoadTestMixin(ConditionalTournamentTestsMix
 class TournamentTestCase(SingleViewTestMixin, TestCase):
     """Extension of django.test.TestCase that provides methods for testing a
     populated view on a tournament, with a prepopulated database.
-    Selenium tests can't inherit from this otherwise fixtures wont be loaded;
+    Selenium tests can't inherit from this otherwise fixtures won't be loaded;
     as per https://stackoverflow.com/questions/12041315/how-to-have-django-test-case-and-selenium-server-use-same-database"""
     pass
 

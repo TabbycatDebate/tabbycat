@@ -16,7 +16,7 @@ def populate_wins(debates):
     Prefetch('debateteam_set', queryset=DebateTeam.objects.select_related('team'))
     prefetched on the query set.
 
-    This can be used for efficiency, since it retrieves all of the
+    This can be used for efficiency, since it retrieves all the
     information in bulk in a single SQL query. Operates in-place.
     """
     debateteams = [dt for debate in debates for dt in debate.debateteam_set.all()]
@@ -42,9 +42,9 @@ def populate_confirmed_ballots(debates, motions=False, results=False):
     """Sets an attribute `_confirmed_ballot` on each Debate, each being the
     BallotSubmission instance for that debate.
 
-    All of the debates are assumed to be from the same tournament as the first.
+    All the debates are assumed to be from the same tournament as the first.
 
-    This can be used for efficiency, since it retrieves all of the
+    This can be used for efficiency, since it retrieves all the
     information in bulk in a single SQL query. Operates in-place.
 
     For best performance, the debates should already have
@@ -78,7 +78,7 @@ def populate_results(ballotsubs, tournament=None):
     debates prefetched (using select_related).
     """
 
-    # If the database is correct, some of the checks like `result.is_voting`,
+    # If the database is correct, some checks like `result.is_voting`,
     # `result.uses_speakers` etc. should be redundant. But it's best not to
     # assume this, so we always check these before calling a method that only
     # exists in some DebateResult subclasses.

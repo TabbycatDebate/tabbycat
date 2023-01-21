@@ -19,7 +19,7 @@ export default {
   },
   computed: {
     hasHoverClashConflict: function () {
-      // These are many to one; no need to lookup the target's conflicts as can be inferred via ID
+      // These are many to one; no need to look up the target's conflicts as can be inferred via ID
       const sourceClashes = this.currentHoverClashes
       if (!sourceClashes) { return false }
       // Hovered over an adj; highlight a team
@@ -57,7 +57,7 @@ export default {
       return false
     },
     hasHoverHistoryConflict: function () {
-      // These are many to one; no need to lookup the target's conflicts as can be inferred via ID
+      // These are many to one; no need to look up the target's conflicts as can be inferred via ID
       if (!this.currentHoverHistories) {
         return false // This is called by template directly; hence the need to check for null
       }

@@ -1,5 +1,5 @@
 <script>
-// Must provide a computer properaty of highlightData pointing to adj/team/etc
+// Must provide a computed property of highlightData pointing to adj/team/etc.
 // Then uses highlightsCSS within a :class property
 import { mapState, mapGetters } from 'vuex'
 

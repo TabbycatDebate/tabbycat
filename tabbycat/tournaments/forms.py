@@ -137,7 +137,7 @@ class RoundWithCompleteOptionChoiceIterator(ModelChoiceIterator):
 
     def __iter__(self):
         yield from super().__iter__()
-        yield (self.field.complete_value, self.field.complete_label)
+        yield self.field.complete_value, self.field.complete_label
 
     def __len__(self):
         return super().__len__() + 1

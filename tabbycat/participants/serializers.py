@@ -12,7 +12,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
 class SpeakerCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SpeakerCategory
-        fields = ('name')
+        fields = ('name',)
 
 
 class InstitutionSerializer(serializers.ModelSerializer):

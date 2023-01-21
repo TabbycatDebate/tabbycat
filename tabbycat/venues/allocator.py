@@ -57,7 +57,7 @@ class VenueAllocator:
         from the dict, so each list of constraints is guaranteed not to be
         empty.
 
-        The constraints for each debate are just all of the venue constraints
+        The constraints for each debate are just all the venue constraints
         relating to the teams, adjudicators, and institutions of the debate."""
 
         all_constraints = {}

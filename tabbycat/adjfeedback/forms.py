@@ -88,7 +88,7 @@ class RequiredTypedChoiceField(forms.TypedChoiceField):
 # Feedback Fields
 # ==============================================================================
 
-class BlockChecboxWidget(forms.CheckboxSelectMultiple):
+class BlockCheckboxWidget(forms.CheckboxSelectMultiple):
     template_name = 'spaced_choice_widget.html'
 
 
@@ -145,7 +145,7 @@ class BaseFeedbackForm(forms.Form):
         elif question.answer_type == question.ANSWER_TYPE_SINGLE_SELECT:
             field = OptionalChoiceField(choices=question.choices_for_field)
         elif question.answer_type == question.ANSWER_TYPE_MULTIPLE_SELECT:
-            field = forms.MultipleChoiceField(choices=question.choices_for_field, widget=BlockChecboxWidget())
+            field = forms.MultipleChoiceField(choices=question.choices_for_field, widget=BlockCheckboxWidget())
         field.label = question.text
 
         # Required checkbox fields don't really make sense; so override the behaviour?
@@ -227,7 +227,7 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
         # Translators: e.g. "Megan Pearson (chair)", with adjpos="chair"
         display = _("Submitted - ") if adj.submitted else ""
         display += _("%(name)s (%(adjpos)s)") % {'name': adj.get_public_name(tournament), 'adjpos': ADJUDICATOR_POSITION_NAMES[pos]}
-        return (value, display)
+        return value, display
 
     adjfeedback_query = AdjudicatorFeedback.objects.filter(
         source_adjudicator__adjudicator=source, source_adjudicator__debate=OuterRef('debate'),
@@ -301,7 +301,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
             display += _("%(name)s (panellist gave oral as chair rolled)")
 
         display %= {'name': adj.get_public_name(tournament), 'adjpos': ADJUDICATOR_POSITION_NAMES[pos]}
-        return (value, display)
+        return value, display
 
     # Only include non-silent rounds for teams.
     debates = Debate.objects.filter(

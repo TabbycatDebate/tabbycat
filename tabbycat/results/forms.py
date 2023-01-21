@@ -315,7 +315,7 @@ class BaseBallotSetForm(BaseResultForm):
             for team in self.debate.teams:
                 self.fields['team_%d' % team.id] = forms.ModelChoiceField(queryset=team.speakers, required=False)
 
-        # 2. Motions fields
+        # 2. Motion fields
         if self.using_motions:
             self.fields['motion'] = MotionModelChoiceField(queryset=self.motions,
                 required=True)
@@ -351,7 +351,7 @@ class BaseBallotSetForm(BaseResultForm):
             if self.debate.result_status == Debate.STATUS_NONE:
                 initial['debate_result_status'] = Debate.STATUS_CONFIRMED
 
-        # If sides are already confirmed, initialise the choose sides field
+        # If sides are already confirmed, initialise the sides choice field
         if self.choosing_sides and self.ballotsub.debate.sides_confirmed:
             try:
                 initial['choose_sides'] = str(self.debate.aff_team.id) + "," + str(self.debate.neg_team.id)

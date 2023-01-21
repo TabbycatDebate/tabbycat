@@ -333,7 +333,7 @@ export default new Vuex.Store({
       commit('updateSaveCounter')
       // TODO: error handling; locking; checking if the result matches sent data
     },
-    updateAllocableItemModified ({ commit }, unallocatedItemIDs) {
+    updateAllocatableItemModified ({ commit }, unallocatedItemIDs) {
       // To preserve the 'drag order' on the unallocated item we need to set the
       // modified attribute to be the current date time
       var changes = []

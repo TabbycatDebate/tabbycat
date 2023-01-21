@@ -326,7 +326,7 @@ class AssistantDrawDisplayForCurrentRoundsByTeamView(OptionalAssistantTournament
 # Draw Alerts Utilities (Admin)
 # ==============================================================================
 
-class AdminDrawUtiltiesMixin:
+class AdminDrawUtilitiesMixin:
     """Shared between the admin draw and admin display pages."""
 
     def get_draw(self):
@@ -365,7 +365,7 @@ class AdminDrawUtiltiesMixin:
 # Draw Display Index (Admin)
 # ==============================================================================
 
-class BaseDrawDisplayIndexView(AdminDrawUtiltiesMixin, RoundMixin, TemplateView):
+class BaseDrawDisplayIndexView(AdminDrawUtilitiesMixin, RoundMixin, TemplateView):
     pass
 
 
@@ -437,7 +437,7 @@ class EmailTeamAssignmentsView(RoundTemplateEmailCreateView):
 # Draw Creation (Admin)
 # ==============================================================================
 
-class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueTableTemplateView):
+class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, VueTableTemplateView):
     detailed = False
 
     def get_page_title(self):

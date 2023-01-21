@@ -25,7 +25,7 @@ class Region(models.Model):
         verbose_name_plural = _("regions")
 
     def __str__(self):
-        return '%s' % (self.name)
+        return '%s' % self.name
 
 
 class InstitutionManager(LookupByNameFieldsMixin, models.Manager):

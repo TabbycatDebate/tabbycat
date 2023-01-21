@@ -151,7 +151,7 @@ export default {
     if (motionVetoes.length > 0) {
       this.motionVetoesEnabled = true
       if (Object.keys(this.motionOptions).length === 0) {
-        // If motion selection is disabled but vetoes are enabled then grab motions list from vetos
+        // If motion selection is disabled but vetoes are enabled then grab motions list from vetoes
         for (const option of $(motionVetoes[0]).find('option')) {
           if (option.getAttribute('value') != null && option.getAttribute('value')) {
             const optionID = option.getAttribute('value')

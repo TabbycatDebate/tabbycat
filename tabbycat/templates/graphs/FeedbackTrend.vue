@@ -80,7 +80,7 @@ function initChart (vueContext) {
   const leastSquaresCoeff = leastSquares(xSeries, ySeries)
 
   if (!isNaN(leastSquaresCoeff[0]) && !isNaN(leastSquaresCoeff[1])) {
-    // Apply the reults of the least squares regression (if there are enough data points for it)
+    // Apply the results of the least squares regression (if there are enough data points for it)
     const x1 = xLabels[0]
     const y1 = leastSquaresCoeff[0] + leastSquaresCoeff[1]
 

@@ -33,7 +33,7 @@
 
 <script>
 import { createPopper } from '@popperjs/core'
-// Inheriting componets should provide a getPopOverTitle() method
+// Inheriting components should provide a getPopOverTitle() method
 // Along with providing an element with the "popover-raw" class as a direct
 // descendent of the component's root template
 // They can then trigger showPopover; ie "@mouseover="showPopover''

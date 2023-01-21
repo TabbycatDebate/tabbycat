@@ -22,7 +22,7 @@ class VueDraggableItemMixin(serializers.Serializer):
     available = serializers.SerializerMethodField(read_only=True)
 
     def get_available(self, debate_or_panel_adj):
-        """ Requires the queryset to be annotate with availabilities """
+        """ Requires the queryset to be annotated with availabilities """
         return debate_or_panel_adj.available
 
     def get_vue_last_modified(self, object):

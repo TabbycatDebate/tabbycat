@@ -178,7 +178,7 @@ export default {
     },
     scoreError: function () {
       if (this.speakerScore !== null && this.speakerScore > 9) {
-        // > 9 is so it doesn't flash up before the full score has been typed
+        // > 9 is so that it doesn't flash up before the full score has been typed
         if (this.speakerScore > this.scoreAttributes.max) {
           return 'Score larger than allowed'
         }

@@ -37,8 +37,8 @@
       {% endblocktrans %}
     </div>
     <div class="list-group-item h5">
-      {% blocktrans trimmed with as=feedback.debate_adjudicator.get_type_display %}
-        <span class="text-secondary small">Received as {{ as }}</span>
+      {% blocktrans trimmed with as_type=feedback.debate_adjudicator.get_type_display %}
+        <span class="text-secondary small">Received as {{ as_type }}</span>
       {% endblocktrans %}
       <span class="badge float-right badge-secondary" data-toggle="tooltip">
         {% blocktrans trimmed with base=feedback.adjudicator.base_score|floatformat:"1" %}

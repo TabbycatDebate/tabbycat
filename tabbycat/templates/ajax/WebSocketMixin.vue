@@ -15,7 +15,7 @@ export default {
     return { bridges: {}, lostConnections: 0, componentId: Math.floor(Math.random() * 10000) }
   },
   created: function () {
-    // Check if this is being run over HTTP(S); match the WS(S) procol
+    // Check if this is being run over HTTP(S); match the WS(S) protocol
     const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws'
     const path = `${scheme}://${window.location.host}/ws/`
     // Construct path
@@ -56,7 +56,7 @@ export default {
         self.showLostConnectionAlert()
       }).bind(socketPath, self))
 
-      // Set the data to contain the socket bridge so we can send to it
+      // Set the data to contain the socket bridge so that we can send to it
       self.$set(self.bridges, socketLabel, webSocketBridge)
     }
   },

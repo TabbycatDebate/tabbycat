@@ -30,7 +30,7 @@ class BaseRankAnnotator:
 
      - `name` is a name for display in the user interface
      - `abbr` is used instead of `name` when there is not enough space for `name`
-     - `icon`, optional, is the name of a icon to be used if possible
+     - `icon` (optional) is the name of an icon to be used if possible
 
     The default constructor does nothing, but subclasses may have constructors
     that initialise themselves with parameters."""

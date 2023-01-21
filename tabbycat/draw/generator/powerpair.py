@@ -112,7 +112,6 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         return brackets
 
     # Pullup restrictions
-
     PULLUP_RESTRICTION_METRICS = {
         "least_to_date": "npullups",
         "lowest_ds_wins": "draw_strength",
@@ -136,7 +135,6 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
             return [team for team in teams if getattr(team, metric) == least]
 
     # Odd bracket resolutions
-
     ODD_BRACKET_FUNCTIONS = {
         "pullup_top"                 : "_pullup_top",
         "pullup_bottom"              : "_pullup_bottom",
@@ -280,10 +278,10 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         for points, teams in brackets.items():
             bracket = list()
             top, bottom = subpool_func(teams)
-            for teams in zip(top, bottom):
-                pairing = Pairing(teams=teams, bracket=points, room_rank=i)
+            for p_teams in zip(top, bottom):
+                pairing = Pairing(teams=p_teams, bracket=points, room_rank=i)
                 bracket.append(pairing)
-                i = i + 1
+                i += 1
             pairings[points] = bracket
         return pairings
 
@@ -295,10 +293,10 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         for (points, teams), subpool_func in zip(brackets.items(), subpool_funcs):
             bracket = list()
             top, bottom = subpool_func(teams)
-            for teams in zip(top, bottom):
-                pairing = Pairing(teams=teams, bracket=points, room_rank=i)
+            for p_teams in zip(top, bottom):
+                pairing = Pairing(teams=p_teams, bracket=points, room_rank=i)
                 bracket.append(pairing)
-                i = i + 1
+                i += 1
             pairings[points] = bracket
         return pairings
 
@@ -391,7 +389,7 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
 
 class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
     """Power-paired draw with allocated sides.
-    Overrides functions of PowerPairedDrawGenerator where sides need to be constrained.
+    Override functions of PowerPairedDrawGenerator where sides need to be constrained.
     All teams must have an 'allocated_side' attribute which must be either
     'aff' or 'neg' (case-sensitive).
     Options are as for PowerPairedDrawGenerator, except that the allowable values

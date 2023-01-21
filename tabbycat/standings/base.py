@@ -51,7 +51,7 @@ class StandingInfo:
 
     Note that a ranking is not guaranteed to exist, and won't exist when the
     instance is ineligible for a rank. In this case, `info.rankings[key]` will
-    results in a KeyError, and `iterrankings()` will return `(None, False)`.
+    result in a KeyError, and `iterrankings()` will return `(None, False)`.
     Python code should be prepared to handle this scenario. Django templates
     should use {{ ranking|default:"n/a" }} to handle the `None`.
     """
@@ -90,7 +90,7 @@ class StandingInfo:
             try:
                 yield self.rankings[key]
             except KeyError:
-                yield (None, False)
+                yield None, False
 
     def get_ranking(self, key, default=None):
         """Returns the numeric rank (without equality information), or None (or

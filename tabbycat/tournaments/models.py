@@ -416,7 +416,7 @@ class Round(models.Model):
 
     @cached_property
     def num_debates_with_even_panel(self):
-        """Returns the number of debates in the round, in which there are an
+        """Returns the number of debates in the round, in which there are a
         positive and even number of voting judges."""
         from adjallocation.models import DebateAdjudicator
         debateadj_filter = ~Q(debateadjudicator__type=DebateAdjudicator.TYPE_TRAINEE)

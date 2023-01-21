@@ -272,7 +272,7 @@ export default {
       }
     },
     statusForGroup: function (entities) {
-      // Check if all entites within a group are checked in
+      // Check if all entities within a group are checked in
       const statuses = entities.map(e => e.status.time)
       const groupStatuses = statuses.every(time => time !== undefined)
       return groupStatuses
