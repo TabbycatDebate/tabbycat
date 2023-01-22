@@ -354,3 +354,13 @@ class TabRelease(PreferencesPreset):
     public_features__public_team_standings     = False
     public_features__public_draw               = 'off'
     public_features__public_break_categories   = False
+
+
+class PrivateURLS(PreferencesPreset):
+    name = _("Use Private URLs")
+    show_in_list = False
+    description = _("Enables participant data entry through private URLs.")
+
+    data_entry__participant_ballots             = 'private-urls'
+    data_entry__participant_feedback            = 'private-urls'
+    data_entry__public_checkins_submit          = True
