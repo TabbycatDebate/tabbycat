@@ -7,7 +7,7 @@ Change Log
 *Release date: TBD*
 
 - Added new emoji from Unicode 12 and 13. Thank you to Daan Koning for the pull request! (`#2143 <https://github.com/TabbycatDebate/tabbycat/issues/2143>`_)
-
+- Info Slides can now use rich-text formatting (e.g. bold, links, etc). Thanks to Trần Trang Linh for adding this feature!
 
 2.7.4
 -----
