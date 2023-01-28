@@ -236,10 +236,12 @@
             {% include "components/item-info.html" with nopad=True type="secondary" %}
           {% endif %}
 
-          {% if pref.enable_motions or pref.motion_vetoes_enabled or pref.public_motions %}
-              {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
-          {% else %}
-              {% include "components/item-action.html" with id="triggerReleaseMotionsForm" text=release_text url="" %}
+          {% if round.motion_set.exists %}
+              {% if pref.enable_motions or pref.motion_vetoes_enabled or pref.public_motions %}
+                  {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
+              {% else %}
+                  {% include "components/item-action.html" with id="triggerReleaseMotionsForm" text=release_text url="" %}
+              {% endif %}
           {% endif %}
 
         {% else %}

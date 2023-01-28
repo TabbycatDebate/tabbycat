@@ -159,14 +159,6 @@ class BaseReleaseMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, Pos
 
         messages.success(request, self.message_text)
 
-        if not round.motion_set.exists():
-            if self.motions_released:
-                messages.warning(request, _("No motion(s) are set for this round. Are you sure you intended to already "
-                                            "release the motion(s)?"))
-            else:
-                messages.info(request, _("Returned to previous state. Feel free to enter your motion(s) now, they won't"
-                                         "be publicly displayed until you return to this page and release them."))
-
         return super().post(request, *args, **kwargs)
 
 
