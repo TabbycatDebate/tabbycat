@@ -358,6 +358,7 @@ class AdminDrawUtilitiesMixin:
         data['preformed_panels_in_round'] = self.round.preformedpanel_set.count()
         if hasattr(self, 'highlighted_cells_exist'):
             data['highlighted_cells_exist'] = self.highlighted_cells_exist
+        data['expected_nmotions'] = 3 if self.tournament.pref('enable_motions') else (self.round.motion_set.count() or 1)
         return data
 
 

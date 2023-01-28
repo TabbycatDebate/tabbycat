@@ -170,14 +170,20 @@ class ReleaseMotionsView(BaseReleaseMotionsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE
     motions_released = True
-    message_text = _("Released the motion(s).")
+
+    @property
+    def message_text(self):
+        return ngettext("Released the motion.", "Released the motions.", self.round.motion_set.count())
 
 
 class UnreleaseMotionsView(BaseReleaseMotionsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_UNRELEASE
     motions_released = False
-    message_text = _("Unreleased the motion(s).")
+
+    @property
+    def message_text(self):
+        return ngettext("Unreleased the motion.", "Unreleased the motions.", self.round.motion_set.count())
 
 
 class BaseDisplayMotionsView(RoundMixin, TemplateView):
