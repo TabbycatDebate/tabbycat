@@ -158,7 +158,6 @@ class BaseReleaseMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, Pos
         self.log_action()
 
         messages.success(request, self.message_text)
-
         return super().post(request, *args, **kwargs)
 
 

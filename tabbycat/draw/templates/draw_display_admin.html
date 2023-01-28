@@ -192,12 +192,12 @@
   <div class="col-md col-12">
     <div class="card">
 
-      {% blocktranslate count counter=round.motion_set|length asvar release_motions_title%}
+      {% blocktranslate count counter=round.motion_set|length asvar release_motions_title %}
         Release Motion
       {% plural %}
         Release Motions
       {% endblocktranslate %}
-      {% blocktranslate count counter=round.motion_set|length asvar release_text%}
+      {% blocktranslate count counter=round.motion_set.count asvar release_text %}
         Release motion to public
       {% plural %}
         Release motions to public
