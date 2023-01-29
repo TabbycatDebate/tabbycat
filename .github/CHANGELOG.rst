@@ -13,7 +13,8 @@ Change Log
 - Removed trailing commas after panels in room allocations. Thank you to Trần Trang Linh for the fix!
 - Corrected missing checkin identifiers showing as "null". Thanks again to Trần Trang Linh!
 - Corrected a few typos
-- Removed Render installation instructions [until that servie can be reliably used]
+- Removed Render installation instructions [until that service can be reliably used]
+- Fixed conflicts not showing when dragging panels
 
 
 2.7.4
