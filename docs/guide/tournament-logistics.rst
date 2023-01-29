@@ -330,7 +330,7 @@ If at all feasible, you want to train the volunteers acting as runners and/or da
   - Run through this in the actual tab room; illustrating examples with actual ballots and going through the roles in the actual spots in which they will occur.
   - Run through how the seating/table/box arrangement works and the types of roles at different positions.
   - Emphasise that in general, any ambiguities should be raised with the tab directors/assistants; i.e. that you should never guess about ballots but instead always delegate resolving issues to someone else.
-  - Run through the different edge cases and things to check during entry. For example Iron Person speeches, mismatched totals, entering the wrong ballot for the wrong panellist, etc (see section below). Be sure to also go through what happens when the validation step fails; i.e. when a ballot needs to be re-entered.
+  - Run through the different edge cases and things to check during entry. For example, iron-person speeches, mismatched totals, entering the wrong ballot for the wrong panellist, etc. (see section below). Be sure to also go through what happens when the validation step fails; i.e. when a ballot needs to be re-entered.
 
 Training the adjudication core
 ------------------------------

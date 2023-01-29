@@ -70,7 +70,7 @@
         </div>
         <div class="alert alert-info mb-0" v-if="showDuplicates">
           Speeches marked as 'duplicates' are hidden from the speaker tab and often need to be
-          tracked in order to determine break eligibility. If a speaker is 'iron-manning' you would
+          tracked in order to determine break eligibility. If a speaker is 'iron-personing' you would
           typically set their lowest-scoring speech as the 'duplicate'.
         </div>
       </div>
