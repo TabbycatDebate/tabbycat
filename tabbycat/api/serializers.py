@@ -33,6 +33,7 @@ from tournaments.models import Round, Tournament
 from venues.models import Venue, VenueCategory, VenueConstraint
 
 from . import fields
+from .utils import is_staff
 
 
 def _validate_field(self, field, value):
@@ -43,12 +44,6 @@ def _validate_field(self, field, value):
     if qs.exists():
         raise serializers.ValidationError("Object with same value exists in the tournament")
     return value
-
-
-def is_staff(context):
-    # OpenAPI generation does not have a view (sometimes context is also None in that circumstance).
-    # Avoid redacting fields.
-    return context is None or 'view' not in context or context['request'].user.is_staff
 
 
 class BaseSourceField(fields.TournamentHyperlinkedRelatedField):
@@ -531,6 +526,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
         checkin = fields.TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-checkin')
 
     url = fields.TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-detail')
+    name = fields.AnonymisingParticipantNameField()
     team = fields.TournamentHyperlinkedRelatedField(view_name='api-team-detail', queryset=Team.objects.all())
     categories = fields.TournamentHyperlinkedRelatedField(
         many=True,
@@ -546,7 +542,6 @@ class SpeakerSerializer(serializers.ModelSerializer):
             self.fields.pop('email')
             self.fields.pop('phone')
             self.fields.pop('pronoun')
-            self.fields.pop('anonymous')
             self.fields.pop('url_key')
 
             if kwargs['context']['tournament'].pref('participant_code_names') == 'everywhere':
@@ -578,6 +573,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         checkin = fields.TournamentHyperlinkedIdentityField(view_name='api-adjudicator-checkin')
 
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-adjudicator-detail')
+    name = fields.AnonymisingParticipantNameField()
     institution = serializers.HyperlinkedRelatedField(
         allow_null=True,
         view_name='api-global-institution-detail',
@@ -626,7 +622,6 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
             self.fields.pop('email')
             self.fields.pop('phone')
             self.fields.pop('pronoun')
-            self.fields.pop('anonymous')
             self.fields.pop('url_key')
 
     class Meta:

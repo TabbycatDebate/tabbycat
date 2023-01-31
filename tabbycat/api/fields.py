@@ -6,9 +6,12 @@ from django.urls import get_script_prefix, resolve, Resolver404
 from django.utils.encoding import uri_to_iri
 from rest_framework.relations import HyperlinkedIdentityField, HyperlinkedRelatedField, SlugRelatedField
 from rest_framework.reverse import reverse
+from rest_framework.serializers import CharField
 
 from participants.models import Adjudicator, Speaker, Team
 from venues.models import Venue
+
+from .utils import is_staff
 
 
 class TournamentHyperlinkedRelatedField(HyperlinkedRelatedField):
@@ -96,6 +99,20 @@ class DebateHyperlinkedIdentityField(RoundHyperlinkedIdentityField):
 
     def get_queryset(self):
         return super().get_queryset().select_related('debate')
+
+
+class AnonymisingParticipantNameField(CharField):
+
+    def get_attribute(self, instance):
+        # Pass entire instance to use other fields (not just .name)
+        return instance
+
+    def to_representation(self, instance):
+        if not is_staff(self.context):
+            if instance.anonymous:
+                return None
+            return instance.get_public_name(self.context['tournament'])
+        return super().to_representation(instance.name)
 
 
 class AnonymisingHyperlinkedTournamentRelatedField(TournamentHyperlinkedRelatedField):
