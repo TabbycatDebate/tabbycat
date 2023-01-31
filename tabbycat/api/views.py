@@ -597,11 +597,33 @@ class VenueCheckinsView(BaseCheckinsView):
     window_preference_pref = 'checkin_window_venues'
 
 
+def get_metrics_params(generator):
+    metrics = {
+        'type': 'array',
+        'items': {
+            'type': 'string',
+            'enum': list(generator.metric_annotator_classes.keys()),
+        },
+    }
+    desc_default = '; default is tournament settings'
+    return [
+        OpenApiParameter('metrics',
+            description='Rank participants with these metrics' + desc_default,
+            required=False, type=metrics, explode=False),
+        OpenApiParameter('extra_metrics',
+            description='Include these unranked metrics for participants' + desc_default,
+            required=False, type=metrics, explode=False),
+    ]
+
+
 class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPIView):
     lookup_field = 'slug'
     lookup_url_kwarg = 'tournament_slug'
 
     def get_metrics(self):
+        if self.request.query_params.get('metrics'):
+            return self.request.query_params.get('metrics').split(","), self.request.query_params.get('extra_metrics').split(",")
+
         pref_model = self.model.__name__.lower()
         return self.tournament.pref(pref_model + '_standings_precedence'), self.tournament.pref(pref_model + '_standings_extra_metrics')
 
@@ -613,11 +635,14 @@ class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPI
         return qs
 
     def get_max_round(self):
+        if self.request.query_params.get('round'):
+            return Round.objects.get(tournament=self.tournament, seq=int(self.request.query_params.get('round')))
         return None
 
     @extend_schema(tags=['standings'], parameters=[
         tournament_parameter,
         OpenApiParameter('category', description='Only include participants in a category (ID)', required=False, type=int),
+        OpenApiParameter('round', description='Sequence of last round to take into account', required=False, type=int),
     ])
     def get(self, request, **kwargs):
         """Get current standings"""
@@ -629,7 +654,11 @@ class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPI
 
 
 @extend_schema_view(
-    get=extend_schema(summary="Get substantive speaker standings", responses=serializers.SpeakerStandingsSerializer(many=True)),
+    get=extend_schema(
+        summary="Get substantive speaker standings",
+        parameters=get_metrics_params(SpeakerStandingsGenerator),
+        responses=serializers.SpeakerStandingsSerializer(many=True),
+    ),
 )
 class SubstantiveSpeakerStandingsView(BaseStandingsView):
     name = "Speaker Standings"
@@ -638,9 +667,6 @@ class SubstantiveSpeakerStandingsView(BaseStandingsView):
     model = Speaker
     tournament_field = 'team__tournament'
     generator = SpeakerStandingsGenerator
-
-    def get_max_round(self):
-        return self.tournament.round_set.last()
 
 
 @extend_schema_view(
@@ -652,7 +678,11 @@ class ReplySpeakerStandingsView(SubstantiveSpeakerStandingsView):
 
 
 @extend_schema_view(
-    get=extend_schema(summary="Get team standings", responses=serializers.TeamStandingsSerializer(many=True)),
+    get=extend_schema(
+        summary="Get team standings",
+        parameters=get_metrics_params(TeamStandingsGenerator),
+        responses=serializers.TeamStandingsSerializer(many=True),
+    ),
 )
 class TeamStandingsView(BaseStandingsView):
     name = 'Team Standings'
