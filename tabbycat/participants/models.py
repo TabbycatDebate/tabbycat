@@ -7,6 +7,7 @@ from django.db import models
 from django.db.models import Value
 from django.db.models.functions import Coalesce
 from django.utils.functional import cached_property
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from utils.managers import LookupByNameFieldsMixin
@@ -129,6 +130,8 @@ class Person(models.Model):
         return str(self.name)
 
     def get_public_name(self, tournament):
+        if self.anonymous:
+            return mark_safe("<em>" + _("Redacted") + "</em>")
         if tournament.pref('participant_code_names') == 'off':
             return self.name
         return self.code_name
