@@ -5,7 +5,7 @@ import logging
 from itertools import groupby
 
 from django.utils.encoding import force_str
-from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from breakqual.models import BreakingTeam
 from standings.teams import TeamStandingsGenerator
@@ -90,11 +90,23 @@ class BaseBreakGenerator:
                     name = annotator_class.name
                 return force_str(name)
 
+            required_metrics_message = ngettext(
+                "The break qualification rule %(rule)s requires the following "
+                "metric to be in the team standings precedence in order to "
+                "work: %(required)s;",
+                "The break qualification rule %(rule)s requires the following "
+                "metrics to be in the team standings precedence in order to "
+                "work: %(required)s;",
+                len(self.required_metrics),
+            )
+            missing_metrics_message = ngettext(
+                " and the following is missing: %(missing)s.",
+                " and the following are missing: %(missing)s.",
+                len(missing_metrics),
+            )
+
             raise BreakGeneratorError(
-                _("The break qualification rule %(rule)s requires the following "
-                "metric(s) to be in the team standings precedence in order to "
-                "work: %(required)s; and the following are missing: "
-                "%(missing)s.") % {
+                (required_metrics_message + missing_metrics_message) % {
                     'rule': self.category.get_rule_display(),
                     'required': ", ".join(_metric_name(metric) for metric in self.required_metrics),
                     'missing': ", ".join(_metric_name(metric) for metric in missing_metrics),
