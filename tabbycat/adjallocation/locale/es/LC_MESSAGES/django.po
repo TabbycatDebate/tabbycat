@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-07-05 17:08\n"
+"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"PO-Revision-Date: 2023-02-05 00:56\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -17,436 +17,435 @@ msgstr ""
 "X-Crowdin-File: /develop/tabbycat/adjallocation/locale/en/LC_MESSAGES/django.po\n"
 "X-Crowdin-File-ID: 922\n"
 
-#: adjallocation/allocators/base.py:34
+#: adjallocation/allocators/base.py
 msgid "There are no available adjudicators. Ensure there are adjudicators who have been marked as available for this round before auto-allocating."
 msgstr "No hay jueces disponibles. Asegúrese de que haya jueces que se hayan marcado como disponibles para esta ronda antes de la asignación automática."
 
-#: adjallocation/allocators/hungarian.py:50
+#: adjallocation/allocators/hungarian.py
 #, python-format
 msgid "%(count)s score is larger than the maximum permitted adjudicator score (%(score).1f)."
 msgid_plural "%(count)s scores are larger than the maximum permitted adjudicator score (%(score).1f)."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjallocation/allocators/hungarian.py:59
+#: adjallocation/allocators/hungarian.py
 #, python-format
 msgid "%(count)s score is smaller than the minimum permitted adjudicator score (%(score).1f)."
 msgid_plural "%(count)s scores are smaller than the minimum permitted adjudicator score (%(score).1f)."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjallocation/allocators/hungarian.py:111
+#: adjallocation/allocators/hungarian.py
 msgid "There are no adjudicators eligible to be a chair or panellist. Try changing the \"Minimum feedback score required to be allocated as chair or panellist\" setting to something lower than at least some adjudicators' current scores, and try again."
 msgstr ""
 
-#: adjallocation/allocators/hungarian.py:119
+#: adjallocation/allocators/hungarian.py
 msgid "There are no debates for this round. Maybe you haven't created a draw yet?"
 msgstr "No hay debates para esta ronda. Tal vez aún no haz creado el enfrentamiento de equipos aún."
 
-#: adjallocation/allocators/hungarian.py:166
+#: adjallocation/allocators/hungarian.py
 #, python-format
 msgid "There are %(debate_count)s debates but only %(adj_count)s voting adjudicators."
 msgstr ""
 
-#: adjallocation/allocators/hungarian.py:172
+#: adjallocation/allocators/hungarian.py
 #, python-format
 msgid "There are %(panel_debates)s panel debates but only %(panellists)s available panellists (less than %(needed)s)."
 msgstr ""
 
-#: adjallocation/allocators/hungarian.py:282
+#: adjallocation/allocators/hungarian.py
 #, python-format
 msgid "There are %(debates_count)s debates but only %(voting_count)s voting adjudicators."
 msgstr ""
 
-#: adjallocation/apps.py:7
+#: adjallocation/apps.py
 msgid "Adjudicator Allocation"
 msgstr "Asignación de Jueces"
 
-#: adjallocation/consumers.py:59
+#: adjallocation/consumers.py
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
 msgstr "El cuadro ya fue publicado, despubliquelo para rehacer la asignación automática."
 
-#: adjallocation/consumers.py:63
+#: adjallocation/consumers.py
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
 msgstr "El cuadro no ha sido confirmado, confirma el cuadro para hacer la asignación automática."
 
-#: adjallocation/consumers.py:69
+#: adjallocation/consumers.py
 msgid "There are no preformed panels available to allocate."
 msgstr ""
 
-#: adjallocation/consumers.py:83
+#: adjallocation/consumers.py
 msgid "Successfully auto-allocated preformed panels to debates."
 msgstr ""
 
-#: adjallocation/consumers.py:109
+#: adjallocation/consumers.py
 #, python-format
 msgid "Successfully auto-allocated adjudicators to debates. However, there was a warning:"
 msgid_plural "Successfully auto-allocated adjudicators to debates. However, there were %(count)d warnings:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjallocation/consumers.py:115
+#: adjallocation/consumers.py
 msgid "Successfully auto-allocated adjudicators to debates."
 msgstr ""
 
-#: adjallocation/consumers.py:131
+#: adjallocation/consumers.py
 msgid "There aren't any panels to fill. Create panels first."
 msgstr ""
 
-#: adjallocation/consumers.py:155
+#: adjallocation/consumers.py
 #, python-format
 msgid "Successfully auto-allocated adjudicators to preformed panels. However, there was a warning:"
 msgid_plural "Successfully auto-allocated adjudicators to preformed panels. However, there were %(count)d warnings:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjallocation/consumers.py:161
+#: adjallocation/consumers.py
 msgid "Successfully auto-allocated adjudicators to preformed panels."
 msgstr ""
 
-#: adjallocation/consumers.py:207
+#: adjallocation/consumers.py
 msgid "You have no break category set as 'is general' so debate importances can't be calculated."
 msgstr ""
 
-#: adjallocation/consumers.py:215
+#: adjallocation/consumers.py
 msgid "Succesfully auto-prioritised debates."
 msgstr ""
 
-#: adjallocation/consumers.py:237
+#: adjallocation/consumers.py
 msgid "You have no break category set as 'is general' so panel importances can't be calculated."
 msgstr ""
 
-#: adjallocation/consumers.py:246
+#: adjallocation/consumers.py
 msgid "Succesfully auto-prioritised preformed panels."
 msgstr ""
 
-#: adjallocation/consumers.py:264
+#: adjallocation/consumers.py
 msgid "Since this is the first round, the preformed panels aren't annotated with brackets and liveness."
 msgstr ""
 
-#: adjallocation/consumers.py:267
+#: adjallocation/consumers.py
 msgid "The previous round's draw doesn't exist, so preformed panels can't be annotated with brackets and liveness."
 msgstr ""
 
-#: adjallocation/consumers.py:270
+#: adjallocation/consumers.py
 msgid "Succesfully created new preformed panels for this round."
 msgstr ""
 
-#: adjallocation/models.py:18
+#: adjallocation/models.py
 msgid "chair"
 msgstr "principal"
 
-#: adjallocation/models.py:19
+#: adjallocation/models.py
 msgid "panellist"
 msgstr "panelista"
 
-#: adjallocation/models.py:20
+#: adjallocation/models.py
 msgid "trainee"
 msgstr "sombra"
 
-#: adjallocation/models.py:26
+#: adjallocation/models.py
 msgid "debate"
 msgstr ""
 
-#: adjallocation/models.py:28 adjallocation/models.py:48
-#: adjallocation/models.py:80 adjallocation/models.py:169
+#: adjallocation/models.py
 msgid "adjudicator"
 msgstr "juez"
 
-#: adjallocation/models.py:30 adjallocation/models.py:171
+#: adjallocation/models.py
 msgid "type"
 msgstr "tipo"
 
-#: adjallocation/models.py:31
+#: adjallocation/models.py
 msgid "available?"
 msgstr "disponible?"
 
-#: adjallocation/models.py:34
+#: adjallocation/models.py
 msgid "debate adjudicator"
 msgstr "juez del debate"
 
-#: adjallocation/models.py:35
+#: adjallocation/models.py
 msgid "debate adjudicators"
 msgstr "jueces de los debates"
 
-#: adjallocation/models.py:50 adjallocation/models.py:95
+#: adjallocation/models.py
 msgid "team"
 msgstr "equipo"
 
-#: adjallocation/models.py:53
+#: adjallocation/models.py
 msgid "adjudicator-team conflict"
 msgstr "conflicto juez-equipo"
 
-#: adjallocation/models.py:54
+#: adjallocation/models.py
 msgid "adjudicator-team conflicts"
 msgstr "conflictos juez-equipo"
 
-#: adjallocation/models.py:64
+#: adjallocation/models.py
 msgid "adjudicator 1"
 msgstr "juez 1"
 
-#: adjallocation/models.py:67
+#: adjallocation/models.py
 msgid "adjudicator 2"
 msgstr "juez 2"
 
-#: adjallocation/models.py:70
+#: adjallocation/models.py
 msgid "adjudicator-adjudicator conflict"
 msgstr "conflicto juez-juez"
 
-#: adjallocation/models.py:71
+#: adjallocation/models.py
 msgid "adjudicator-adjudicator conflicts"
 msgstr "conflictos juez-juez"
 
-#: adjallocation/models.py:82 adjallocation/models.py:97
+#: adjallocation/models.py
 msgid "institution"
 msgstr "institución"
 
-#: adjallocation/models.py:85
+#: adjallocation/models.py
 msgid "adjudicator-institution conflict"
 msgstr "conflicto juez-institución"
 
-#: adjallocation/models.py:86
+#: adjallocation/models.py
 msgid "adjudicator-institution conflicts"
 msgstr "conflictos juez-institución"
 
-#: adjallocation/models.py:100
+#: adjallocation/models.py
 msgid "team-institution conflict"
 msgstr ""
 
-#: adjallocation/models.py:101
+#: adjallocation/models.py
 msgid "team-institution conflicts"
 msgstr ""
 
-#: adjallocation/models.py:114
+#: adjallocation/models.py
 msgid "round"
 msgstr "ronda"
 
-#: adjallocation/models.py:116
+#: adjallocation/models.py
 msgid "importance"
 msgstr "importancia"
 
-#: adjallocation/models.py:119
+#: adjallocation/models.py
 msgid "minimum bracket"
 msgstr ""
 
-#: adjallocation/models.py:120
+#: adjallocation/models.py
 msgid "Estimate of the lowest bracket for which this panel might be"
 msgstr ""
 
-#: adjallocation/models.py:122
+#: adjallocation/models.py
 msgid "maximum bracket"
 msgstr ""
 
-#: adjallocation/models.py:123
+#: adjallocation/models.py
 msgid "Estimate of the highest bracket for which this panel might be"
 msgstr ""
 
-#: adjallocation/models.py:125
+#: adjallocation/models.py
 msgid "room rank"
 msgstr "ranking de sala"
 
-#: adjallocation/models.py:126
+#: adjallocation/models.py
 msgid "Sequential number of panel, not used in any algorithms"
 msgstr ""
 
-#: adjallocation/models.py:128
+#: adjallocation/models.py
 msgid "liveness"
 msgstr ""
 
-#: adjallocation/models.py:129
+#: adjallocation/models.py
 msgid "Number of categories this room is expected to be live for"
 msgstr ""
 
-#: adjallocation/models.py:132
+#: adjallocation/models.py
 msgid "preformed panel"
 msgstr ""
 
-#: adjallocation/models.py:133
+#: adjallocation/models.py
 msgid "preformed panels"
 msgstr ""
 
-#: adjallocation/models.py:167
+#: adjallocation/models.py
 msgid "panel"
 msgstr ""
 
-#: adjallocation/models.py:174
+#: adjallocation/models.py
 msgid "preformed panel adjudicator"
 msgstr ""
 
-#: adjallocation/models.py:175
+#: adjallocation/models.py
 msgid "preformed panel adjudicators"
 msgstr ""
 
-#: adjallocation/preformed/base.py:41
+#: adjallocation/preformed/base.py
 msgid "There are no preformed panels to use. Have you allocated preformed panels for this round? If not, try just auto-allocating adjudicators instead."
 msgstr ""
 
-#: adjallocation/templates/preformed_index.html:5 adjallocation/views.py:128
+#: adjallocation/templates/preformed_index.html adjallocation/views.py
 msgid "Preformed Panels"
 msgstr ""
 
-#: adjallocation/templates/preformed_index.html:10
+#: adjallocation/templates/preformed_index.html
 msgid "A preformed panel is a defined group of adjudicators that is specified for a round before its draw has been generated. You can then manually or automatically apply these panels during the normal adjudicator allocation process. This can make allocations faster or allow you to create more considered panels of adjudicators."
 msgstr ""
 
-#: adjallocation/templates/preformed_index.html:16
+#: adjallocation/templates/preformed_index.html
 msgid "Note that only adjudicators who have been marked as 'available' for that round will be able to be allocated for that round, so you may need to set their availability in advance."
 msgstr ""
 
-#: adjallocation/templates/preformed_index.html:37
+#: adjallocation/templates/preformed_index.html
 #, python-format
 msgid "Edit Preformed Panels for %(round)s"
 msgstr ""
 
-#: adjallocation/utils.py:28
+#: adjallocation/utils.py
 #, python-format
 msgid "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> (personal)"
 msgstr ""
 
-#: adjallocation/utils.py:34
+#: adjallocation/utils.py
 #, python-format
 msgid "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> via institution <strong>%(institution)s</strong>"
 msgstr ""
 
-#: adjallocation/utils.py:46
+#: adjallocation/utils.py
 #, python-format
 msgid "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> (personal)"
 msgstr ""
 
-#: adjallocation/utils.py:52
+#: adjallocation/utils.py
 #, python-format
 msgid "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> via institution <strong>%(institution)s</strong>"
 msgstr ""
 
-#: adjallocation/views.py:35
+#: adjallocation/views.py
 msgid "Male"
 msgstr ""
 
-#: adjallocation/views.py:36
+#: adjallocation/views.py
 msgid "Female"
 msgstr ""
 
-#: adjallocation/views.py:37
+#: adjallocation/views.py
 msgid "Other"
 msgstr ""
 
-#: adjallocation/views.py:38
+#: adjallocation/views.py
 msgid "Unknown"
 msgstr ""
 
-#: adjallocation/views.py:90
+#: adjallocation/views.py
 msgid "Edit Allocation"
 msgstr ""
 
-#: adjallocation/views.py:105
+#: adjallocation/views.py
 msgid "Edit Panels"
 msgstr ""
 
-#: adjallocation/views.py:111
+#: adjallocation/views.py
 msgid "Return to Panels Overview"
 msgstr ""
 
-#: adjallocation/views.py:172
+#: adjallocation/views.py
 msgid "Adjudicator-Team Conflicts"
 msgstr "Incompatibilidad juez-equipo"
 
-#: adjallocation/views.py:173
+#: adjallocation/views.py
 msgid "Save Adjudicator-Team Conflicts"
 msgstr "Guardar incompatibilidad juez-equipo"
 
-#: adjallocation/views.py:198
+#: adjallocation/views.py
 #, python-format
 msgid "Saved %(count)d adjudicator-team conflict."
 msgid_plural "Saved %(count)d adjudicator-team conflicts."
 msgstr[0] "Se guardó %(count)dincompatibilidad juez-equipo."
 msgstr[1] "Se guardaron %(count)dincompatibilidades juez-equipo"
 
-#: adjallocation/views.py:204
+#: adjallocation/views.py
 #, python-format
 msgid "Deleted %(count)d adjudicator-team conflict."
 msgid_plural "Deleted %(count)d adjudicator-team conflicts."
 msgstr[0] "Se eliminó %(count)d incompatibilidad juez-equipo."
 msgstr[1] "Se eliminaron %(count)dincompatibilidades juez-equipo."
 
-#: adjallocation/views.py:209
+#: adjallocation/views.py
 msgid "No changes were made to adjudicator-team conflicts."
 msgstr "No se hicieron cambios en las incompatibilidades juez-equipo."
 
-#: adjallocation/views.py:216
+#: adjallocation/views.py
 msgid "Adjudicator-Adjudicator Conflicts"
 msgstr "Incompatibilidades Juez-Juez"
 
-#: adjallocation/views.py:217
+#: adjallocation/views.py
 msgid "Save Adjudicator-Adjudicator Conflicts"
 msgstr "Guardar incompatibilidades Juez-Juez"
 
-#: adjallocation/views.py:238
+#: adjallocation/views.py
 #, python-format
 msgid "Saved %(count)d adjudicator-adjudicator conflict."
 msgid_plural "Saved %(count)d adjudicator-adjudicator conflicts."
 msgstr[0] "Se guardó %(count)d incompatibilidad juez-juez."
 msgstr[1] "Se guardaron %(count)d incompatibilidades juez-juez."
 
-#: adjallocation/views.py:244
+#: adjallocation/views.py
 #, python-format
 msgid "Deleted %(count)d adjudicator-adjudicator conflict."
 msgid_plural "Deleted %(count)d adjudicator-adjudicator conflicts."
 msgstr[0] "Se eliminó %(count)d incompatibilidad juez-juez."
 msgstr[1] "Se eliminaron %(count)d incompatibilidades juez-juez."
 
-#: adjallocation/views.py:249
+#: adjallocation/views.py
 msgid "No changes were made to adjudicator-adjudicator conflicts."
 msgstr "No se hicieron cambios en las incompatibilidades juez-juez."
 
-#: adjallocation/views.py:256
+#: adjallocation/views.py
 msgid "Adjudicator-Institution Conflicts"
 msgstr "Incompatibilidades Juez-Institución"
 
-#: adjallocation/views.py:257
+#: adjallocation/views.py
 msgid "Save Adjudicator-Institution Conflicts"
 msgstr "Guardar incompatibilidades Juez-Institución "
 
-#: adjallocation/views.py:277
+#: adjallocation/views.py
 #, python-format
 msgid "Saved %(count)d adjudicator-institution conflict."
 msgid_plural "Saved %(count)d adjudicator-institution conflicts."
 msgstr[0] "Guardar %(count)d incompatibilidad juez-institución."
 msgstr[1] "Guardar %(count)d incompatibilidades juez-institución"
 
-#: adjallocation/views.py:283
+#: adjallocation/views.py
 #, python-format
 msgid "Deleted %(count)d adjudicator-institution conflict."
 msgid_plural "Deleted %(count)d adjudicator-institution conflicts."
 msgstr[0] "Eliminar %(count)dincompatibilidad juez-institución"
 msgstr[1] "Eliminar %(count)dincompatibilidades juez-institución"
 
-#: adjallocation/views.py:288
+#: adjallocation/views.py
 msgid "No changes were made to adjudicator-institution conflicts."
 msgstr "No se hizo ningún cambio en las incompatibilidades juez-institución"
 
-#: adjallocation/views.py:295
+#: adjallocation/views.py
 msgid "Team-Institution Conflicts"
 msgstr ""
 
-#: adjallocation/views.py:296
+#: adjallocation/views.py
 msgid "Save Team-Institution Conflicts"
 msgstr ""
 
-#: adjallocation/views.py:319
+#: adjallocation/views.py
 #, python-format
 msgid "Saved %(count)d team-institution conflict."
 msgid_plural "Saved %(count)d team-institution conflicts."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjallocation/views.py:325
+#: adjallocation/views.py
 #, python-format
 msgid "Deleted %(count)d team-institution conflict."
 msgid_plural "Deleted %(count)d team-institution conflicts."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjallocation/views.py:330
+#: adjallocation/views.py
 msgid "No changes were made to team-institution conflicts."
 msgstr ""
 
