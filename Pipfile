@@ -38,6 +38,7 @@ sentry-sdk = "*"
 whitenoise = "*"
 drf-spectacular = "*"
 daphne = "*"
+drf-link-header-pagination = "*"
 
 [dev-packages]
 pre-commit = "*"
