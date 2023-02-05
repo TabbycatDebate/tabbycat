@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-18 17:59-0400\n"
-"PO-Revision-Date: 2021-04-12 09:59\n"
+"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"PO-Revision-Date: 2023-02-05 01:00\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -18,109 +18,108 @@ msgstr ""
 "X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-File-ID: 944\n"
 
-#: printing/templates/feedback_list.html:5
+#: printing/templates/feedback_list.html
 msgid "Feedback Forms"
 msgstr "Form Penilaian"
 
-#: printing/templates/feedback_list.html:7
+#: printing/templates/feedback_list.html
 #, python-format
 msgid "Printable Feedback Forms for %(round)s"
 msgstr "Form Penilaian Dapat Di Cetak %(round)s"
 
-#: printing/templates/feedback_list.html:14
+#: printing/templates/feedback_list.html
 msgid "No feedback questions have been added for either teams or adjudicators to answer."
 msgstr "Tidak ada pertanyaan balik yang ditambahkan baik untuk tim atau juri untuk dijawab."
 
-#: printing/templates/feedback_list.html:16
+#: printing/templates/feedback_list.html
 msgid "No feedback questions have been added for teams to answer."
 msgstr "Tidak ada pertanyaan balik yang ditambahkan untuk tim untuk di jawab."
 
-#: printing/templates/feedback_list.html:18
+#: printing/templates/feedback_list.html
 msgid "No feedback questions have been added for adjudicators to answer."
 msgstr "Tidak ada pertanyaan balik yang ditambahkan untuk dijawab oleh juri."
 
-#: printing/templates/feedback_list.html:20
+#: printing/templates/feedback_list.html
 #, python-format
-msgid "%(first_sentence)s Check the <a href=\"http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html\" target=\"_blank\">documentation</a> for information on how to add these (otherwise these forms will be quite bare)."
-msgstr "%(first_sentence)s cek <a href=\"http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html\" target=\"_blank\"> dokumentasi </a> untuk informasi bagaimana menambahkannya (jikat tidak form akan dikosongkan)."
+msgid "%(first_sentence)s Check the <a href=\"https://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html\" target=\"_blank\">documentation</a> for information on how to add these (otherwise these forms will be quite bare)."
+msgstr ""
 
-#: printing/templates/feedback_list.html:41
+#: printing/templates/feedback_list.html
 msgid "There are no feedback sheets available — perhaps adjudicators have not been allocated?"
 msgstr "tidak ada lembar nilai tersedia - mungkin juri belum mengalokasikan nya?"
 
-#: printing/templates/printables_list.html:9
+#: printing/templates/printables_list.html
 msgid "Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate <strong>page orientation</strong>, to turn off <strong>headers/footers</strong> and turn on <strong>background graphics</strong>. Works best in Chrome."
 msgstr "Gunakan Ctrl+P untuk mencetak atau menyimpan ke PDF. Pastikan untuk set dengan tepat <strong>Orientasi halaman</strong>, to turn off <strong>headers/footers</strong> and turn on <strong>Grafik Latar Belakang</strong>. Berkerja paling baik di Chrome."
 
-#: printing/templates/randomised_url_sheets.html:4
+#: printing/templates/randomised_url_sheets.html
 #, python-format
 msgid "Printable %(sheet)s URLs"
 msgstr "Cetak %(sheet)s URLs"
 
-#: printing/templates/randomised_url_sheets.html:13
-msgid "This page is designed to be printed as double sided A4 sheets, with the outside facing side showing the participant name and the inside facing side showing the URL. Use CTRL-P to print; for best results use Chrome."
-msgstr "Halaman ini didesain untuk mencetak secara double pada 2 sisi lembar A4, dengan sisi menghadap luar menunjukkan nama peserta dan sisi menghadap ke dalam menunjukkan URL. Gunakan CTRL-P untuk mencetak; untuk hasil terbaik gunakan Chrome."
+#: printing/templates/randomised_url_sheets.html
+msgid "This page is designed to be printed as double-sided A4 sheets, with the outside facing side showing the participant name and the inside facing side showing the URL. Use CTRL-P to print; for best results use Chrome."
+msgstr ""
 
-#: printing/templates/randomised_url_sheets.html:27
-#: printing/templates/randomised_url_sheets.html:31
+#: printing/templates/randomised_url_sheets.html
 #, python-format
 msgid "Private URL for %(name)s (%(group)s)"
 msgstr "Private URL for %(name)s (%(group)s)"
 
-#: printing/templates/randomised_url_sheets.html:38
+#: printing/templates/randomised_url_sheets.html
 msgid "Please bookmark the following URL, you will use it to submit forms throughout the tournament:"
 msgstr "Mohon tandai URL, yang anda akan gunakan untuk menyerahkan form ke seluruh tournament:"
 
-#: printing/templates/scoresheet_list.html:7
+#: printing/templates/scoresheet_list.html
 msgid "Printable Scoresheets"
 msgstr "Cetak lembar nilai"
 
-#: printing/templates/scoresheet_list.html:8
+#: printing/templates/scoresheet_list.html
 #, python-format
 msgid "for %(round)s"
 msgstr "untuk %(round)s"
 
-#: printing/templates/scoresheet_list.html:14
+#: printing/templates/scoresheet_list.html
 msgid "Edit Motion(s)"
 msgstr "Edit mosi"
 
-#: printing/templates/scoresheet_list.html:33
+#: printing/templates/scoresheet_list.html
 msgid "There are no scoresheets available — perhaps the round has not been drawn?"
 msgstr "Tidak ada lembar nilai yang tersedia - mungkin ronde belum di tarik?"
 
-#: printing/templates/scoresheet_list.html:40
+#: printing/templates/scoresheet_list.html
 msgid "Edit Ballot Motions"
 msgstr "Edit Mosi Balot"
 
-#: printing/templates/scoresheet_list.html:42
+#: printing/templates/scoresheet_list.html
 msgid "&times;"
 msgstr ""
 
-#: printing/templates/scoresheet_list.html:47
+#: printing/templates/scoresheet_list.html
 msgid "Editing motions here will not save them permanently — it will only update the text used in the printed ballots below. This can be useful if using placeholder motions (to ensure confidentiality) in Tabbycat, but you still want to print ballots with correct motions."
 msgstr "Mengedit Mosi di sini tidak akan tersimpan secara permanen - ini hanya mengupdate teks yang digunakan dalam mencetak balot di bawah ini. ini akan berguna jika menggunakan mosi pengisi ruang (untuk memastikan konfidensial) di Tabbycat, tapi anda masih ingin mencetak balot dengan mosi yang benar."
 
-#: printing/templates/scoresheet_list.html:55
+#: printing/templates/scoresheet_list.html
 msgid "Motion"
 msgstr "Mosi"
 
-#: printing/templates/scoresheet_list.html:59
+#: printing/templates/scoresheet_list.html
 msgid "Changes to motions will update in the displayed ballots automatically"
 msgstr "Menganti mosi akan memperbarui tampilan balot secara otomatis"
 
-#: printing/templates/scoresheet_list.html:96
+#: printing/templates/scoresheet_list.html
 msgid "Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication."
 msgstr "Pidato x menit, rentan nilai skor pembicara dari x sampai x. anda memiliki x menit untuk mengajukan keputusan ke seorang juri."
 
-#: printing/views.py:40
+#: printing/views.py
 msgid "Overall Score"
 msgstr "Nilai Keseluruhan"
 
-#: printing/views.py:67 printing/views.py:177 printing/views.py:197
+#: printing/views.py
 msgid "Unaffiliated"
 msgstr "Tidak terafiliasi"
 
-#: printing/views.py:80 printing/views.py:84
+#: printing/views.py
 msgid "Team"
 msgstr "Tim"
 
