@@ -90,25 +90,15 @@ class BaseBreakGenerator:
                     name = annotator_class.name
                 return force_str(name)
 
-            required_metrics_message = ngettext(
-                "The break qualification rule %(rule)s requires the following "
-                "metric to be in the team standings precedence in order to "
-                "work: %(required)s;",
-                "The break qualification rule %(rule)s requires the following "
-                "metrics to be in the team standings precedence in order to "
-                "work: %(required)s;",
-                len(self.required_metrics),
-            )
-            missing_metrics_message = ngettext(
-                " and the following is missing: %(missing)s.",
-                " and the following are missing: %(missing)s.",
-                len(missing_metrics),
-            )
-
             raise BreakGeneratorError(
-                (required_metrics_message + missing_metrics_message) % {
+                ngettext(
+                    "The %(rule)s break qualification rule is missing the following "
+                    "required metric in the team standings precedence: %(missing)s",
+                    "The %(rule)s break qualification rule is missing the following "
+                    "required metrics in the team standings precedence: %(missing)s",
+                    len(missing_metrics),
+                ) % {
                     'rule': self.category.get_rule_display(),
-                    'required': ", ".join(_metric_name(metric) for metric in self.required_metrics),
                     'missing': ", ".join(_metric_name(metric) for metric in missing_metrics),
                 },
             )
