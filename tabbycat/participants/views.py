@@ -194,11 +194,11 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
         return use_team_code_names(self.tournament, self.admin)
 
     @staticmethod
-    def allocations_set(obj, admin):
+    def allocations_set(self, obj, admin, tournament):
         model_related = {'Team': 'debateteam_set', 'Adjudicator': 'debateadjudicator_set'}[type(obj).__name__]
         try:
             qs = getattr(obj, model_related).filter(
-                debate__round__in=obj.tournament.current_rounds).select_related('debate__round')
+                debate__round__in=tournament.current_rounds).select_related('debate__round')
             if admin:
                 qs = qs.prefetch_related(Prefetch('debate__round__roundmotion_set',
                     queryset=RoundMotion.objects.select_related('motion')))
@@ -214,7 +214,7 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
         kwargs['admin_page'] = self.admin
         kwargs['draw_released'] = self.tournament.current_round.draw_status == Round.STATUS_RELEASED
         kwargs['use_code_names'] = self.use_team_code_names()
-        kwargs[self.model_kwarg] = self.allocations_set(self.object, self.admin)
+        kwargs[self.model_kwarg] = self.allocations_set(self.object, self.admin, self.tournament)
 
         return super().get_context_data(**kwargs)
 
@@ -423,7 +423,7 @@ class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMi
                 self.set_category_eligibility(participant, posted_info[str(participant_id)])
             self.log_action()
         except Exception:
-            message = "Error handling eligiblity updates"
+            message = "Error handling eligibility updates"
             logger.exception(message)
             return JsonResponse({'status': 'false', 'message': message}, status=500)
 

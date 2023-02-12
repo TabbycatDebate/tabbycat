@@ -326,9 +326,8 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
         group_name = CheckInEventConsumer.group_prefix + "_" + self.tournament.slug
         async_to_sync(get_channel_layer().group_send)(group_name, {
             'type': 'send_json',
-            'data': {
-                'checkins': [checkin_dict],
-            },
+            'checkins': [checkin_dict],
+            'created': check,
         })
         return checkin
 

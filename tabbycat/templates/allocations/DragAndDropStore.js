@@ -256,7 +256,7 @@ export default new Vuex.Store({
 
       let panelClashesCombined = { adjudicator: [], team: [], institution: []};
       panelAdjIds.forEach((adjId) => {
-        const clashesForAdj = state.extra.clashes.adjudicators[adjId]
+        const clashesForAdj = state.extra.clashes.adjudicators[adjId] ?? { adjudicator: [], team: [], institution: []}
         for (const [key, value] of Object.entries(clashesForAdj)) {
           panelClashesCombined[key].push(...value);
         }
@@ -283,7 +283,7 @@ export default new Vuex.Store({
 
       let panelHistoriesCombined = { adjudicator: [], team: [], institution: []};
       panelAdjIds.forEach((adjId) => {
-        const clashesForAdj = state.extra.histories.adjudicators[adjId]
+        const clashesForAdj = state.extra.histories.adjudicators[adjId] ?? { adjudicator: [], team: [], institution: []}
         for (const [key, value] of Object.entries(clashesForAdj)) {
           panelHistoriesCombined[key].push(...value);
         }
