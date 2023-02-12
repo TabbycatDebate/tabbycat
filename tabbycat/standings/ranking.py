@@ -18,6 +18,18 @@ from .metrics import metricgetter
 logger = logging.getLogger(__name__)
 
 
+def _generate_ordering(metrics, annotators, min_field, min_rounds):
+    ordering = []
+    annotations = {a.key: a for a in annotators}
+    for key in metrics:
+        annotation = annotations[key]
+        if annotation.ascending:
+            ordering.append(annotation.get_ranking_annotation(min_field, min_rounds).asc(nulls_last=True))
+        else:
+            ordering.append(annotation.get_ranking_annotation(min_field, min_rounds).desc(nulls_last=True))
+    return ordering
+
+
 class BaseRankAnnotator:
     """Base class for all rank annotators.
 
@@ -57,15 +69,7 @@ class BaseRankAnnotator:
         raise NotImplementedError("BaseRankAnnotator subclasses must implement annotate()")
 
     def _get_ordering(self, annotators, min_field, min_rounds):
-        ordering = []
-        annotations = {a.key: a for a in annotators}
-        for key in self.metrics:
-            annotation = annotations[key]
-            if annotation.ascending:
-                ordering.append(annotation.get_ranking_annotation(min_field, min_rounds).asc(nulls_last=True))
-            else:
-                ordering.append(annotation.get_ranking_annotation(min_field, min_rounds).desc(nulls_last=True))
-        return ordering
+        return _generate_ordering(self.metrics, annotators, min_field, min_rounds)
 
     def get_annotated_queryset(self, queryset, annotators, min_field, min_rounds):
         self.queryset_annotated = True
@@ -150,15 +154,7 @@ class SubrankAnnotator(BaseRankWithinGroupAnnotator):
         self.rank_key = metricgetter(metrics[1:])
 
     def _get_ordering(self, annotators, min_field, min_rounds):
-        ordering = []
-        annotations = {a.key: a for a in annotators}
-        for key in self.metrics[1:]:
-            annotation = annotations[key]
-            if annotation.ascending:
-                ordering.append(annotation.get_ranking_annotation(min_field, min_rounds).asc(nulls_last=True))
-            else:
-                ordering.append(annotation.get_ranking_annotation(min_field, min_rounds).desc(nulls_last=True))
-        return ordering
+        return _generate_ordering(self.metrics[1:], annotators, min_field, min_rounds)
 
     def get_annotation(self, annotators, min_field, min_rounds):
         annotations = {a.key: a for a in annotators}
