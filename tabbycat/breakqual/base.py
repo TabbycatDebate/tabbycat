@@ -5,7 +5,7 @@ import logging
 from itertools import groupby
 
 from django.utils.encoding import force_str
-from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from breakqual.models import BreakingTeam
 from standings.teams import TeamStandingsGenerator
@@ -91,12 +91,14 @@ class BaseBreakGenerator:
                 return force_str(name)
 
             raise BreakGeneratorError(
-                _("The break qualification rule %(rule)s requires the following "
-                "metric(s) to be in the team standings precedence in order to "
-                "work: %(required)s; and the following are missing: "
-                "%(missing)s.") % {
+                ngettext(
+                    "The %(rule)s break qualification rule is missing the following "
+                    "required metric in the team standings precedence: %(missing)s",
+                    "The %(rule)s break qualification rule is missing the following "
+                    "required metrics in the team standings precedence: %(missing)s",
+                    len(missing_metrics),
+                ) % {
                     'rule': self.category.get_rule_display(),
-                    'required': ", ".join(_metric_name(metric) for metric in self.required_metrics),
                     'missing': ", ".join(_metric_name(metric) for metric in missing_metrics),
                 },
             )
