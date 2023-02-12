@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Tabbycat'
-copyright = '2022, Philip Belesky, Chuan-Zheng Lee, Étienne Beaulé'
+copyright = '2023, Philip Belesky, Chuan-Zheng Lee, Étienne Beaulé'
 author = 'Philip Belesky, Chuan-Zheng Lee, Étienne Beaulé'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -60,7 +60,7 @@ author = 'Philip Belesky, Chuan-Zheng Lee, Étienne Beaulé'
 # The short X.Y version.
 version = '2.7'
 # The full version, including alpha/beta/rc tags.
-release = '2.7.4'
+release = '2.7.5'
 
 rst_epilog = """
 .. |vrelease| replace:: v{release}
