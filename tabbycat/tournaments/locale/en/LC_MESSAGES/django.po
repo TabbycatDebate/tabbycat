@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"POT-Creation-Date: 2023-02-12 02:04-0400\n"
 "PO-Revision-Date: 2019-07-11 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -461,7 +461,7 @@ msgstr ""
 
 #: tournaments/templates/fix_debate_teams.html
 #, python-format
-msgid "Team(s) on %(side)s"
+msgid "Teams on %(side)s"
 msgstr ""
 
 #: tournaments/templates/fix_debate_teams.html

@@ -131,15 +131,15 @@ The `gettext <https://docs.djangoproject.com/en/2.2/topics/i18n/translation/>`_ 
 
 The backend's translation files can be updated from the ``tabbycat`` directory using one or more of the supporting language codes (see settings.py)::
 
-    $ dj makemessages -l es
+    $ dj makemessages -len --no-wrap --no-obsolete --add-location file
 
-To do more than one language, just specify ``-l`` multiple times, _e.g._ ``-les -lar``.
+Then our `Crowdin <https://crowdin.com/project/tabbycat>`_ project will find the updated strings and mark them for translation.
 
 These can then be compiled using::
 
     $ dj compilemessages -l es
 
-As it stands Heroku needs the .mo files pre-compiled (see `issue in Heroku Python buildpack <https://github.com/heroku/heroku-buildpack-python/issues/198>`_, so these are committed to Git. Note that the English (``en``) language files should not be compiled; their sole purpose is to provide a source language for `Crowdin <https://crowdin.com/project/tabbycat>`_.
+As it stands Heroku needs the .mo files pre-compiled (see `issue in Heroku Python buildpack <https://github.com/heroku/heroku-buildpack-python/issues/198>`_, so these are committed to Git. Note that the English (``en``) language files need not be compiled; their sole purpose is to provide a source language for `Crowdin <https://crowdin.com/project/tabbycat>`_.
 
 Strings defined in Vue files must similarily be marked with ``gettext`` but must be added manually to ``tabbycat/locale/LANGUAGE_CODE/djangojs.po``, for each language supported. These can then compiled to javascript bundles using::
 
