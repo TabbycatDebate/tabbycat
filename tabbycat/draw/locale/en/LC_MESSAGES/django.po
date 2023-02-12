@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"POT-Creation-Date: 2023-02-12 02:25-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -679,8 +679,10 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: draw/templates/draw_display_admin.html
-msgid "No motion(s) are currently set for this round."
-msgstr ""
+msgid "No motion is currently set for this round."
+msgid_plural "No motions are currently set for this round."
+msgstr[0] ""
+msgstr[1] ""
 
 #: draw/templates/draw_display_admin.html
 msgid "Your tournament is configured to require motions to be selected in ballots and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to be submitted."

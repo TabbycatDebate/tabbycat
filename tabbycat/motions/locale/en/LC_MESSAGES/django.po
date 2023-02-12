@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-29 01:04-0400\n"
+"POT-Creation-Date: 2023-02-12 02:25-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -295,8 +295,10 @@ msgid "Use Existing Motions"
 msgstr ""
 
 #: motions/templates/motions_edit.html
-msgid "The motion(s) for this round are currently publicly displayed because they were released. Any changes made here will be publicly visible as well as soon as they are saved."
-msgstr ""
+msgid "The motion for this round is currently publicly displayed because it was released. Any changes made here will be publicly visible as well as soon as they are saved."
+msgid_plural "The motions for this round are currently publicly displayed because they were released. Any changes made here will be publicly visible as well as soon as they are saved."
+msgstr[0] ""
+msgstr[1] ""
 
 #: motions/templates/motions_edit.html
 msgid "Save Motion"

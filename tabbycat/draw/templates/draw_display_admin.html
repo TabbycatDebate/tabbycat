@@ -195,7 +195,11 @@
       <div class="list-group list-group-flush">
 
         {% if not round.motion_set.exists %}
-          {% trans "No motion(s) are currently set for this round." as text %}
+          {% blocktranslate trimmed count counter=expected_nmotions asvar text %}
+            No motion is currently set for this round.
+          {% plural %}
+            No motions are currently set for this round.
+          {% endblocktranslate %}
           {% include "components/item-info.html" with nopad=True type="warning" %}
         {% endif %}
 
