@@ -220,9 +220,9 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
             kwargs['checkins_used'] = False
 
         if hasattr(self.object, 'adjudicator'):
-            kwargs['debateadjudications'] = BaseRecordView.allocations_set(self.object.adjudicator, False)
+            kwargs['debateadjudications'] = BaseRecordView.allocations_set(self.object.adjudicator, False, self.tournament)
         else:
-            kwargs['debateteams'] = BaseRecordView.allocations_set(self.object.speaker.team, False)
+            kwargs['debateteams'] = BaseRecordView.allocations_set(self.object.speaker.team, False, self.tournament)
 
         kwargs['draw_released'] = t.current_round.draw_status == Round.STATUS_RELEASED
         kwargs['feedback_pref'] = t.pref('participant_feedback') == 'private-urls'
