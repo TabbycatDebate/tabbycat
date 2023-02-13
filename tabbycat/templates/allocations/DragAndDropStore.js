@@ -278,7 +278,7 @@ export default new Vuex.Store({
       }
       return false
     },
-    panelHistoriesForItem: (state) => (id) => {
+    panelHistoriesForItem: (state, getters) => (id) => {
       return getters.panelClashesOrHistoriesForItem(id, 'histories')
     },
     currentHoverClashes: (state) => {
