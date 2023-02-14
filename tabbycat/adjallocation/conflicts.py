@@ -264,6 +264,7 @@ class HistoryInfo:
             history = adjudicators.setdefault(adj1_id, {'team': [], 'adjudicator': []})
             history['adjudicator'].extend([{'id': adj2_id, 'ago': now - r} for r in rseqs])
 
+            # Need to reverse the order so the second adj also has a record
             history = adjudicators.setdefault(adj2_id, {'team': [], 'adjudicator': []})
             history['adjudicator'].extend([{'id': adj1_id, 'ago': now - r} for r in rseqs])
 
