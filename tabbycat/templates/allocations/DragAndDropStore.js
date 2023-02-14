@@ -263,9 +263,6 @@ export default new Vuex.Store({
 
       return clashesOrHistoriesCombined
     },
-    panelClashesForItem: (state, getters) => (id) => {
-      return getters.panelClashesOrHistoriesForItem(id, 'clashes')
-    },
     teamHistoriesForItem: (state) => (id) => {
       if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
         return state.extra.histories.teams[id]
@@ -277,9 +274,6 @@ export default new Vuex.Store({
         return state.extra.histories.adjudicators[id]
       }
       return false
-    },
-    panelHistoriesForItem: (state, getters) => (id) => {
-      return getters.panelClashesOrHistoriesForItem(id, 'histories')
     },
     currentHoverClashes: (state) => {
       return state.hoverClashes
