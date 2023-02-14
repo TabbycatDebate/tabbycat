@@ -18,18 +18,6 @@ from .metrics import metricgetter
 logger = logging.getLogger(__name__)
 
 
-def _generate_ordering(metrics, annotators, min_field, min_rounds):
-    ordering = []
-    annotations = {a.key: a for a in annotators}
-    for key in metrics:
-        annotation = annotations[key]
-        if annotation.ascending:
-            ordering.append(annotation.get_ranking_annotation(min_field, min_rounds).asc(nulls_last=True))
-        else:
-            ordering.append(annotation.get_ranking_annotation(min_field, min_rounds).desc(nulls_last=True))
-    return ordering
-
-
 class BaseRankAnnotator:
     """Base class for all rank annotators.
 
@@ -68,8 +56,17 @@ class BaseRankAnnotator:
         """
         raise NotImplementedError("BaseRankAnnotator subclasses must implement annotate()")
 
-    def _get_ordering(self, annotators, min_field, min_rounds):
-        return _generate_ordering(self.metrics, annotators, min_field, min_rounds)
+    @staticmethod
+    def _get_ordering(metrics, annotators, min_field, min_rounds):
+        ordering = []
+        annotations = {a.key: a for a in annotators}
+        for key in metrics:
+            annotation = annotations[key]
+            if annotation.ascending:
+                ordering.append(annotation.get_ranking_annotation(min_field, min_rounds).asc(nulls_last=True))
+            else:
+                ordering.append(annotation.get_ranking_annotation(min_field, min_rounds).desc(nulls_last=True))
+        return ordering
 
     def get_annotated_queryset(self, queryset, annotators, min_field, min_rounds):
         self.queryset_annotated = True
@@ -121,7 +118,7 @@ class BasicRankAnnotator(BaseRankAnnotator):
     def get_annotation(self, annotators, min_field, min_rounds):
         return Window(
             expression=Rank(),
-            order_by=self._get_ordering(annotators, min_field, min_rounds),
+            order_by=self._get_ordering(self.metrics, annotators, min_field, min_rounds),
         )
 
 
@@ -153,14 +150,11 @@ class SubrankAnnotator(BaseRankWithinGroupAnnotator):
         self.group_key = metricgetter(metrics[:1])  # don't crash if there are no metrics
         self.rank_key = metricgetter(metrics[1:])
 
-    def _get_ordering(self, annotators, min_field, min_rounds):
-        return _generate_ordering(self.metrics[1:], annotators, min_field, min_rounds)
-
     def get_annotation(self, annotators, min_field, min_rounds):
         annotations = {a.key: a for a in annotators}
         return Window(
             expression=Rank(),
-            order_by=self._get_ordering(annotators, min_field, min_rounds),
+            order_by=self._get_ordering(self.metrics[1:], annotators, min_field, min_rounds),
             partition_by=[annotations[key].get_ranking_annotation(min_field, min_rounds) for key in self.metrics[:1]],
         )
 
@@ -182,7 +176,7 @@ class RankFromInstitutionAnnotator(BaseRankWithinGroupAnnotator):
     def get_annotation(self, annotators, min_field, min_rounds):
         return Window(
             expression=Rank(),
-            order_by=self._get_ordering(annotators, min_field, min_rounds),
+            order_by=self._get_ordering(self.metrics[1:], annotators, min_field, min_rounds),
             partition_by=F('institution_id'),
         )
 
