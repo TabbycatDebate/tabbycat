@@ -2,7 +2,7 @@
 participants."""
 import logging
 from itertools import combinations, product
-from typing import List, Tuple, TypedDict
+from typing import Dict, List, Tuple, TypedDict
 
 from adjallocation.models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
                      AdjudicatorTeamConflict, TeamInstitutionConflict)
@@ -249,7 +249,7 @@ class HistoryInfo:
         covered by this object."""
         return (adj1.id, adj2.id) in self.adjadjhistories
 
-    def serialized_by_participant(self) -> Tuple[List[TeamConflicts], List[AdjudicatorConflicts]]:
+    def serialized_by_participant(self) -> Tuple[Dict[int, TeamConflicts], Dict[int, AdjudicatorConflicts]]:
         """Returns a tuple of two dicts, mapping primary keys of teams and
         adjudicators respectively to a two-key dict
             {'team': [], 'adjudicator': []}
