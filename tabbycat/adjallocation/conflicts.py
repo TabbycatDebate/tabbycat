@@ -2,6 +2,7 @@
 participants."""
 import logging
 from itertools import combinations, product
+from typing import Dict, List, Tuple, TypedDict
 
 from adjallocation.models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
                      AdjudicatorTeamConflict, TeamInstitutionConflict)
@@ -9,6 +10,18 @@ from draw.models import Debate
 from participants.models import Adjudicator, Team
 
 logger = logging.getLogger(__name__)
+
+
+class AdjudicatorConflicts(TypedDict):
+    class Conflict(TypedDict):
+        ago: int
+        id: int
+
+    team: List[Conflict]
+    adjudicator: List[Conflict]
+
+
+TeamConflicts = AdjudicatorConflicts
 
 
 class ConflictsInfo:
@@ -235,7 +248,7 @@ class HistoryInfo:
         covered by this object."""
         return (adj1.id, adj2.id) in self.adjadjhistories
 
-    def serialized_by_participant(self):
+    def serialized_by_participant(self) -> Tuple[Dict[int, TeamConflicts], Dict[int, AdjudicatorConflicts]]:
         """Returns a tuple of two dicts, mapping primary keys of teams and
         adjudicators respectively to a two-key dict
             {'team': [], 'adjudicator': []}
@@ -260,9 +273,8 @@ class HistoryInfo:
             history = adjudicators.setdefault(adj1_id, {'team': [], 'adjudicator': []})
             history['adjudicator'].extend([{'id': adj2_id, 'ago': now - r} for r in rseqs])
 
-        # Need to reverse the order so the second adj also has a record
-        for (adj2_id, adj1_id), rseqs in self.adjadjhistories.items():
-            history = adjudicators.setdefault(adj1_id, {'team': [], 'adjudicator': []})
-            history['adjudicator'].extend([{'id': adj2_id, 'ago': now - r} for r in rseqs])
+            # Need to reverse the order so the second adj also has a record
+            history = adjudicators.setdefault(adj2_id, {'team': [], 'adjudicator': []})
+            history['adjudicator'].extend([{'id': adj1_id, 'ago': now - r} for r in rseqs])
 
         return teams, adjudicators

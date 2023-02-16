@@ -249,20 +249,19 @@ export default new Vuex.Store({
       }
       return false
     },
-    panelClashesForItem: (state) => (id) => {
-      // Note; largely duplicates panelHistoriesForItem
+    panelClashesOrHistoriesForItem: (state) => (id, type) => {
       let panelAdjs = state.debatesOrPanels[id].adjudicators
       let panelAdjIds = Object.values(panelAdjs).map(position => position).flat()
 
-      let panelClashesCombined = { adjudicator: [], team: [], institution: []};
+      let clashesOrHistoriesCombined = { adjudicator: [], team: [], institution: []};
       panelAdjIds.forEach((adjId) => {
-        const clashesForAdj = state.extra.clashes.adjudicators[adjId] ?? { adjudicator: [], team: [], institution: []}
+        const clashesForAdj = state.extra[type].adjudicators[adjId] ?? { adjudicator: [], team: [], institution: []}
         for (const [key, value] of Object.entries(clashesForAdj)) {
-          panelClashesCombined[key].push(...value);
+          clashesOrHistoriesCombined[key].push(...value);
         }
       })
 
-      return panelClashesCombined
+      return clashesOrHistoriesCombined
     },
     teamHistoriesForItem: (state) => (id) => {
       if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
@@ -275,21 +274,6 @@ export default new Vuex.Store({
         return state.extra.histories.adjudicators[id]
       }
       return false
-    },
-    panelHistoriesForItem: (state) => (id) => {
-      // Note; largely duplicates panelClashesForItem
-      let panelAdjs = state.debatesOrPanels[id].adjudicators
-      let panelAdjIds = Object.values(panelAdjs).map(position => position).flat()
-
-      let panelHistoriesCombined = { adjudicator: [], team: [], institution: []};
-      panelAdjIds.forEach((adjId) => {
-        const clashesForAdj = state.extra.histories.adjudicators[adjId] ?? { adjudicator: [], team: [], institution: []}
-        for (const [key, value] of Object.entries(clashesForAdj)) {
-          panelHistoriesCombined[key].push(...value);
-        }
-      })
-
-      return panelHistoriesCombined
     },
     currentHoverClashes: (state) => {
       return state.hoverClashes
