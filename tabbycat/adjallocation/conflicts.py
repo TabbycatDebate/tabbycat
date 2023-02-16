@@ -12,12 +12,11 @@ from participants.models import Adjudicator, Team
 logger = logging.getLogger(__name__)
 
 
-class Conflict(TypedDict):
-    ago: int
-    id: int
-
-
 class AdjudicatorConflicts(TypedDict):
+    class Conflict(TypedDict):
+        ago: int
+        id: int
+
     team: List[Conflict]
     adjudicator: List[Conflict]
 
