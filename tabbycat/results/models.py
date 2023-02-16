@@ -140,11 +140,9 @@ class BallotSubmission(Submission):
         # The motion must be from the relevant round
         super().clean()
         if self.motion is not None and self.debate.round not in self.motion.rounds.all():
-            raise ValidationError(_("Debate is in round %(round)d but motion (%(motion)s) is "
-                    "from round %(motion_round)d") % {
+            raise ValidationError(_("Debate is in round %(round)d but motion (%(motion)s) is not in round") % {
                     'round': self.debate.round,
-                    'motion': self.motion.reference,
-                    'motion_round': self.motion.round})
+                    'motion': self.motion.reference})
 
         if self.confirmed and self.discarded:
             raise ValidationError(_("A ballot can't be both confirmed and discarded!"))
