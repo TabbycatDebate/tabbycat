@@ -238,16 +238,10 @@ export default new Vuex.Store({
       return state.loading
     },
     teamClashesForItem: (state) => (id) => {
-      if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
-        return state.extra.clashes.teams[id]
-      }
-      return false
+      return state.extra.clashes?.teams?.[id] ?? false
     },
     adjudicatorClashesForItem: (state) => (id) => {
-      if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
-        return state.extra.clashes.adjudicators[id]
-      }
-      return false
+      return state.extra.clashes?.adjudicators?.[id] ?? false
     },
     panelClashesForItem: (state) => (id) => {
       // Note; largely duplicates panelHistoriesForItem
@@ -265,16 +259,10 @@ export default new Vuex.Store({
       return panelClashesCombined
     },
     teamHistoriesForItem: (state) => (id) => {
-      if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
-        return state.extra.histories.teams[id]
-      }
-      return false
+      return state.extra.histories?.teams?.[id] ?? false
     },
     adjudicatorHistoriesForItem: (state) => (id) => {
-      if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
-        return state.extra.histories.adjudicators[id]
-      }
-      return false
+      return state.extra.histories?.adjudicators?.[id] ?? false
     },
     panelHistoriesForItem: (state) => (id) => {
       // Note; largely duplicates panelClashesForItem
