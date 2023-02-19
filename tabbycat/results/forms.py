@@ -756,7 +756,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
             result.set_score(side, pos, score)
 
         if self.declared_winner not in ['none', 'high-points']:
-            result.set_winners(set([self.cleaned_data[self._fieldname_declared_winner()]]))
+            result.set_winners({self.cleaned_data[self._fieldname_declared_winner()]})
 
     # --------------------------------------------------------------------------
     # Template access methods
@@ -873,7 +873,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 result.set_score(adj, side, pos, score)
 
             if self.declared_winner not in ['none', 'high-points']:
-                result.set_winners(adj, set([self.cleaned_data.get(self._fieldname_declared_winner(adj))]))
+                result.set_winners(adj, {self.cleaned_data.get(self._fieldname_declared_winner(adj))})
 
     # --------------------------------------------------------------------------
     # Template access methods
