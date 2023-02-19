@@ -234,9 +234,11 @@ class SpeakerEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, Retri
 
 
 @extend_schema(tags=['break-categories'], parameters=[tournament_parameter, id_parameter])
+@extend_schema_view(list=extend_schema(summary="Get breaking teams"))
 class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBreakMixin, GenericViewSet):
     serializer_class = serializers.BreakingTeamSerializer
     tournament_field = 'break_category__tournament'
+    pagination_class = None
     access_preference = 'public_breaking_teams'
 
     @property
@@ -253,15 +255,6 @@ class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBr
         context = super().get_serializer_context()
         context['break_category'] = self.break_category
         return context
-
-    @extend_schema(summary="Get breaking teams")
-    def list(self, request, *args, **kwargs):
-        """
-        Pagination might be dangerous here, so disabled.
-        """
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
 
     @extend_schema(summary="Generate break")
     def create(self, request, *args, **kwargs):
