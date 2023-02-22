@@ -194,7 +194,7 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
         return use_team_code_names(self.tournament, self.admin)
 
     @staticmethod
-    def allocations_set(self, obj, admin, tournament):
+    def allocations_set(obj, admin, tournament):
         model_related = {'Team': 'debateteam_set', 'Adjudicator': 'debateadjudicator_set'}[type(obj).__name__]
         try:
             qs = getattr(obj, model_related).filter(
