@@ -33,7 +33,7 @@ Short version
   cd tabbycat
   git checkout master
   sudo -u postgres createuser myusername --createdb --pwprompt       # skip if not first time
-  createdb mydatabasename
+  createdb -O myusername mydatabasename                              # -O designates the owner of the database
 
 Then create **settings/local.py** as described :ref:`below <local-settings-linux>`, then::
 
@@ -163,9 +163,9 @@ a. Create a new user account with a password, replacing ``myusername`` with what
 
   .. tip:: If you'll be running multiple instances of Tabbycat, developing, or diving into the database yourself, you might find it convenient to set up client authentication so that you don't need to do all manual operations from ``sudo -u postgres``. See the `PostgreSQL documentation on client authentication <http://www.postgresql.org/docs/9.6/static/client-authentication.html>`_ for more information. For example, you could add a ``local all myusername md5`` line to the *pg_hba.conf* file, or you could define a mapping in *pg_ident.conf* and append the ``map=`` option to the ``local all all peer`` line in *pg_hba.conf*.
 
-b. Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running::
+b. Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running, and replace ``myusername`` with the username you used in the previous command::
 
-    $ createdb mydatabasename
+    $ createdb -O myusername mydatabasename
 
 
 .. _install-linux-tabbycat:
