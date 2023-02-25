@@ -2,6 +2,13 @@
 Change Log
 ==========
 
+2.7.6
+-----
+*Release date: 25 February 2023*
+
+- Fixed participant record tables causing a crash.
+
+
 2.7.5
 -----
 *Release date: 13 February 2023*
