@@ -10,6 +10,13 @@ Change Log
 - Info Slides can now use rich-text formatting (e.g. bold, links, etc). Thanks to Trần Trang Linh for adding this feature!
 
 
+2.7.6
+-----
+*Release date: 25 February 2023*
+
+- Fixed participant record tables causing a crash.
+
+
 2.7.5
 -----
 *Release date: 13 February 2023*
