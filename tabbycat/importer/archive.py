@@ -39,6 +39,8 @@ class Exporter:
     def __init__(self, tournament):
         self.t = tournament
         self.root = Element('tournament', {'name': tournament.name, 'short': tournament.short_name})
+        if tournament.pref('teams_in_debate') == 'bp':
+            self.root.set('style', 'bp')
 
     def create_all(self):
         self.add_rounds()
@@ -335,7 +337,7 @@ class Importer:
             self.tournament.slug = slugify(self.root.get('name')[:50])
         self.tournament.save()
 
-        self.is_bp = self.root.get('style') == 'bp' or len(self.root.findall('round/debate[1]/side')) == 4
+        self.is_bp = self.root.get('style') == 'bp' or len(self.root.findall('round[1]/debate[1]/side')) == 4
 
         # Import all the separate parts
         self.set_preferences()
