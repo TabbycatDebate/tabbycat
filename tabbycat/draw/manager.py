@@ -5,6 +5,7 @@ from django.utils.translation import gettext as _
 
 from draw.generator.powerpair import PowerPairedDrawGenerator
 from participants.utils import get_side_history
+from standings.base import Standings
 from standings.teams import TeamStandingsGenerator
 from tournaments.models import Round
 
@@ -197,9 +198,18 @@ class PowerPairedDrawManager(BaseDrawManager):
         metrics = self.round.tournament.pref('team_standings_precedence')
         pullup_metric = PowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.round.tournament.pref('draw_pullup_restriction')]
 
-        generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random",
-            extra_metrics=(pullup_metric,) if pullup_metric and pullup_metric not in metrics else ())
-        standings = generator.generate(teams, round=self.round.prev)
+        if self.round.prev is None:
+            standings = Standings(teams)
+            standings.record_added_metric('points', _("points"), _("Pts"), None, False)
+            standings.record_added_metric('seed', _("seed"), _("Seed"), None, False)
+            for team in teams:
+                standings.add_metric(team, 'points', 0)
+                standings.add_metric(team, 'seed', team.seed)
+            standings.sort(('points', 'seed'), random.shuffle)
+        else:
+            generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random",
+                extra_metrics=(pullup_metric,) if pullup_metric and pullup_metric not in metrics else ())
+            standings = generator.generate(teams, round=self.round.prev)
 
         ranked = []
         for standing in standings:

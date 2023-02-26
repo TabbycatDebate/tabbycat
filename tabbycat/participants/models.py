@@ -169,6 +169,9 @@ class Team(models.Model):
     break_categories = models.ManyToManyField('breakqual.BreakCategory', blank=True,
         verbose_name=_("break categories"))
 
+    seed = models.PositiveIntegerField(blank=True, null=True, verbose_name=_("seed"),
+        help_text=_("Used as initial ranking to power-pair the first round"))
+
     institution_conflicts = models.ManyToManyField('Institution',
         through='adjallocation.TeamInstitutionConflict',
         related_name='team_inst_conflicts',

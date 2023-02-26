@@ -132,15 +132,20 @@
   {% tournamenturl 'breakqual-teams' round.break_category.slug as breakqual_teams_url %}
 
   {% if not round.prev and round.draw_type == round.DRAW_POWERPAIRED %}
-    <div class="alert alert-warning">
-      <i data-feather="alert-circle"></i>
-      {% blocktrans trimmed with draw_type=round.get_draw_type_display|lower %}
-        This is the first round, but its draw type is
-        <strong>{{ draw_type }}</strong>. Did you intend for it
-        to be <strong>Random</strong> instead? You can
-        <a href="{{ change_round_url }}" class="alert-link">
-          edit this round's draw type in the Edit Database area.</a>
-      {% endblocktrans %}
+    <div class="alert alert-info">
+      <div class="row align-items-center">
+        <div class="col-auto pr-1">
+          <i data-feather="alert-circle"></i>
+        </div>
+        <div class="col pl-0 pr-0">
+          {% blocktrans trimmed %}
+            A power-paired first round will use the teams' seeds for ranking.
+            Did you intend for it to be <strong>Random</strong> instead? You can
+            <a href="{{ change_round_url }}" class="alert-link">edit this
+            round's draw type in the Edit Database area.</a>
+          {% endblocktrans %}
+        </div>
+      </div>
     </div>
   {% endif %}
 
