@@ -24,12 +24,14 @@ def set_emoji(teams, tournament):
         team.save()
 
 
-def pick_unused_emoji():
+def pick_unused_emoji(tournament_id=None):
     """Picks an emoji that is not already in use by any team in the database. If
     no emoji are left, it returns `None`."""
     from .models import Team
-    used_emoji = Team.objects.filter(emoji__isnull=False).values_list('emoji', flat=True)
-    unused_emoji = [e for e in EMOJI_RANDOM_OPTIONS if e[0] not in used_emoji]
+    teams = Team.objects.filter(emoji__isnull=False)
+    if tournament_id is not None:
+        teams = teams.filter(tournament_id=tournament_id)
+    unused_emoji = [e for e in EMOJI_RANDOM_OPTIONS if e[0] not in teams.values_list('emoji', flat=True)]
 
     try:
         return random.choice(unused_emoji)
