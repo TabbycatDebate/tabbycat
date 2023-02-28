@@ -177,7 +177,7 @@ class RoundSerializer(serializers.ModelSerializer):
         view_name='api-breakcategory-detail',
         queryset=BreakCategory.objects.all(),
         allow_null=True, required=False)
-    motions = RoundMotionSerializer(many=True, source='roundmotion_set')
+    motions = RoundMotionSerializer(many=True, source='roundmotion_set', required=False)
 
     _links = RoundLinksSerializer(source='*', read_only=True)
 
@@ -198,7 +198,7 @@ class RoundSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         bc = data.get('break_category', getattr(self.instance, 'break_category', None))
-        stage = data.get('stage', getattr(self.instance, 'stage', Round.STAGE_ELIMINATION))
+        stage = data.get('stage', getattr(self.instance, 'stage', Round.STAGE_PRELIMINARY))
         if (bc is None) == (stage == Round.STAGE_ELIMINATION):
             # break category is None _XNOR_ stage is elimination
             raise serializers.ValidationError("Rounds are elimination iff they have a break category.")
