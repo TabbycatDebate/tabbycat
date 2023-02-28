@@ -148,14 +148,7 @@ class RoundSerializer(serializers.ModelSerializer):
 
         class Meta:
             model = RoundMotion
-            exclude = ('round', 'motion')
-
-        def validate_seq(self, value):
-            qs = RoundMotion.objects.filter(
-                round=self.context['round'], seq=value).exclude(id=getattr(self.instance, 'id', None))
-            if qs.exists():
-                raise serializers.ValidationError("Object with same value exists in the round")
-            return value
+            exclude = ('round', 'motion', 'seq')
 
         def create(self, validated_data):
             motion_data = validated_data.pop('motion')
@@ -167,6 +160,7 @@ class RoundSerializer(serializers.ModelSerializer):
             validated_data['motion'].text = motion_data['text']
             validated_data['motion'].reference = motion_data['reference']
             validated_data['motion'].info_slide = motion_data.get('info_slide', '')
+            validated_data['motion'].tournament = self.context['tournament']
             validated_data['motion'].save()
 
             return super().create(validated_data)
@@ -215,6 +209,9 @@ class RoundSerializer(serializers.ModelSerializer):
         round = super().create(validated_data)
 
         if len(motions_data) > 0:
+            for i, motion in enumerate(motions_data, start=1):
+                motion['seq'] = i
+
             motions = self.RoundMotionSerializer(many=True, context=self.context)
             motions._validated_data = motions_data  # Data was already validated
             motions.save(round=round)
@@ -223,7 +220,9 @@ class RoundSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         motions_data = validated_data.pop('motion_set', [])
-        for roundmotion in motions_data:
+        for i, roundmotion in enumerate(motions_data, start=1):
+            roundmotion['seq'] = i
+
             motion = roundmotion['motion'].get('pk')
             if motion is None:
                 motion = Motion(
