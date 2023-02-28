@@ -771,11 +771,19 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
         if self.tournament.pref('speaker_ranks') != 'none':
             ranks = set()
+            rank_scores = []
             for side, pos in product(self.sides, self.positions):
-                ranks.add(cleaned_data[self._fieldname_srank(side, pos)])
+                rank = cleaned_data[self._fieldname_srank(side, pos)]
+                ranks.add(rank)
+                rank_scores.append((rank, cleaned_data[self._fieldname_score(side, pos)]))
 
             if len(ranks) < len(self.sides) * len(self.positions):
                 self.add_error(None, forms.ValidationError(_("Ranks cannot be tied.", code='ranks_tied')))
+
+            if self.tournament.pref('speaker_ranks') == 'high-points' and (
+                sorted(rank_scores, key=lambda s: (-s[1], s[0])) != sorted(rank_scores, key=lambda s: (s[0], -s[1]))
+            ):
+                self.add_error(None, forms.ValidationError(_("Ranks must correspond to speaker scores"), code='ranks_high'))
 
     def populate_result_with_scores(self, result):
         for side, pos in product(self.sides, self.positions):

@@ -550,6 +550,7 @@ class UseSpeakerRanks(ChoicePreference):
     choices = (
         ('none', 'Do not rank speeches'),
         ('any', 'Require ranking speeches, indepedently of speaker scores'),
+        ('high-points', 'Require ranking speeches, ranks congruent with speaker scores'),
     )
     default = 'none'
 
