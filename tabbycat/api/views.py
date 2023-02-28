@@ -12,6 +12,7 @@ from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
 from rest_framework.exceptions import NotFound
 from rest_framework.fields import DateTimeField
 from rest_framework.generics import GenericAPIView, get_object_or_404, RetrieveUpdateAPIView
+from rest_framework.mixins import ListModelMixin
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
@@ -235,7 +236,7 @@ class SpeakerEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, Retri
 
 @extend_schema(tags=['break-categories'], parameters=[tournament_parameter, id_parameter])
 @extend_schema_view(list=extend_schema(summary="Get breaking teams"))
-class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBreakMixin, GenericViewSet):
+class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBreakMixin, GenericViewSet, ListModelMixin):
     serializer_class = serializers.BreakingTeamSerializer
     tournament_field = 'break_category__tournament'
     pagination_class = None
