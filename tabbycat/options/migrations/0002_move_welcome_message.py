@@ -3,36 +3,6 @@
 from django.db import migrations
 
 
-def copy_welcome_message(apps, schema_editor):
-    Tournament = apps.get_model('tournaments', 'Tournament')
-    TournamentPreferenceModel = apps.get_model('options', 'TournamentPreferenceModel')
-
-    for tournament in Tournament.objects.all():
-
-        pref, created = TournamentPreferenceModel.objects.get_or_create(
-            section='public_features', name='welcome_message', instance_id=tournament.id)
-        if created or (not pref.raw_value and tournament.welcome_msg):
-            pref.raw_value = tournament.welcome_msg
-        pref.save()
-
-
-def reverse_copy_welcome_message(apps, schema_editor):
-    Tournament = apps.get_model('tournaments', 'Tournament')
-    TournamentPreferenceModel = apps.get_model('options', 'TournamentPreferenceModel')
-
-    for tournament in Tournament.objects.all():
-
-        try:
-            pref = TournamentPreferenceModel.objects.get(
-                section='public_features', name='welcome_message', instance_id=tournament.id)
-        except TournamentPreferenceModel.DoesNotExist:
-            continue
-
-        tournament.welcome_msg = pref.raw_value
-        tournament.save()
-        pref.delete()
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -41,5 +11,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(copy_welcome_message, reverse_copy_welcome_message, elidable=True),
+        migrations.RunSQL(
+            "INSERT INTO options_tournamentpreferencemodel (section, name, raw_value, instance_id) SELECT 'public_features', 'welcome_message', welcome_msg, id FROM tournaments_tournament ON CONFLICT (instance_id, section, name) DO UPDATE SET raw_value=EXCLUDED.raw_value;",
+            "UPDATE tournaments_tournament t SET welcome_msg=o.raw_value FROM options_tournamentpreferencemodel o WHERE o.instance_id=t.id AND o.section='public_features' AND o.name='welcome_message';",
+            elidable=True,
+        ),
     ]
