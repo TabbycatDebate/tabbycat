@@ -197,7 +197,7 @@ class PowerPairedDrawManager(BaseDrawManager):
         metrics = self.round.tournament.pref('team_standings_precedence')
         pullup_metric = PowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.round.tournament.pref('draw_pullup_restriction')]
 
-        generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random",
+        generator = TeamStandingsGenerator(metrics, (), tiebreak="random",
             extra_metrics=(pullup_metric,) if pullup_metric and pullup_metric not in metrics else ())
         standings = generator.generate(teams, round=self.round.prev)
 
