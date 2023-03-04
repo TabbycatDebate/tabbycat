@@ -668,7 +668,7 @@ class TeamSerializer(serializers.ModelSerializer):
         break_categories = validated_data.pop('break_categories', [])
         venue_constraints = validated_data.pop('venue_constraints', [])
 
-        emoji, code_name = pick_unused_emoji()
+        emoji, code_name = pick_unused_emoji(validated_data['tournament'].id)
         if 'emoji' not in validated_data or validated_data.get('emoji') is None:
             validated_data['emoji'] = emoji
         if 'code_name' not in validated_data or validated_data.get('code_name') is None:
