@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import random
 import logging
+from typing import Tuple, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +25,7 @@ def set_emoji(teams, tournament):
         team.save()
 
 
-def pick_unused_emoji(tournament_id=None):
+def pick_unused_emoji(tournament_id=None) -> Tuple[Optional[str], Optional[str]]:
     """Picks an emoji that is not already in use by any team in the database. If
     no emoji are left, it returns `None`."""
     from .models import Team
@@ -36,7 +37,7 @@ def pick_unused_emoji(tournament_id=None):
     try:
         return random.choice(unused_emoji)
     except IndexError:
-        return None
+        return None, None
 
 
 def populate_code_names_from_emoji(teams, overwrite=True):
