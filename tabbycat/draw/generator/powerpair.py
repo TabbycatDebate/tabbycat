@@ -3,7 +3,7 @@ from collections import OrderedDict
 
 from django.utils.translation import gettext as _
 
-from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError
+from .common import AllocatedSidesMixin, BasePairDrawGenerator, DrawFatalError, DrawUserError
 from .one_up_one_down import OneUpOneDownSwapper
 from .pairing import Pairing
 
@@ -56,6 +56,8 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
             "one_up_one_down" - Swap conflicted teams with the debate above or
                                 below, in accordance with Australasian
                                 Intervarsity Debating Association rules.
+            "graph"           - Find the minimum-cost matching in a generated
+                                graph of the teams in a bracket.
     """
 
     requires_even_teams = True
@@ -87,8 +89,14 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
     def generate(self):
         self._brackets = self._make_raw_brackets()
         self.resolve_odd_brackets(self._brackets)  # operates in-place
-        self._pairings = self.generate_pairings(self._brackets)
-        self.avoid_conflicts(self._pairings)  # operates in-place
+
+        if self.options["avoid_conflicts"] == 'graph':
+            # This algorithm both creates the pairings and minimizes conflicts simultaneously
+            self._pairings = self.optimise_pairings(self._brackets)
+        else:
+            self._pairings = self.generate_pairings(self._brackets)
+            self.avoid_conflicts(self._pairings)  # operates in-place
+
         self._draw = list()
         for bracket in self._pairings.values():
             self._draw.extend(bracket)
@@ -176,6 +184,8 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
                 pullup_team = pullup_eligible_teams[pos(len(pullup_eligible_teams))]
                 teams.remove(pullup_team)
                 self.add_team_flag(pullup_team, "pullup")
+                if hasattr(pullup_team, 'subrank'):
+                    pullup_team.subrank = None
                 pullup_needed_for.append(pullup_team)
                 pullup_needed_for = None
 
@@ -347,10 +357,56 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
     def _pairings_fold_top_adjacent_rest(cls, brackets):
         return cls._pairings_top_special(brackets, cls._subpool_fold, cls._subpool_adjacent)
 
-    # Conflict avoidance
+    PAIRING_PENALTY_FUNCTIONS = {
+        "fold"                  : "_subpool_penalty_fold",
+        "slide"                 : "_subpool_penalty_slide",
+        "random"                : "_subpool_penalty_random",
+        "adjacent"              : "_subpool_penalty_adjacent",
+        "fold_top_adjacent_rest": "_subpool_penalty_fold_top_adjacent_rest",
+    }
 
+    def assignment_cost(self, t1, t2, size):
+        penalty = super().assignment_cost(t1, t2, size)
+        if penalty is None:
+            return None
+
+        if self.options["pairing_method"] != "random":
+            subpool_penalty_func = self.get_option_function("pairing_method", self.PAIRING_PENALTY_FUNCTIONS)
+
+            # Set the subrank to be last for pulled-up teams
+            for team in [t1, t2]:
+                if team.subrank is None:
+                    team.subrank = size
+
+            penalty += subpool_penalty_func([t1, t2], size) * self.options["pairing_penalty"]
+        return penalty
+
+    @staticmethod
+    def _subpool_penalty_slide(teams, size):
+        return abs(teams[0].subrank - teams[1].subrank) - size // 2
+
+    @staticmethod
+    def _subpool_penalty_fold(teams, size):
+        return teams[0].subrank + teams[1].subrank - 1 - size
+
+    @staticmethod
+    def _subpool_random(teams, size):
+        return 0
+
+    @staticmethod
+    def _subpool_penalty_adjacent(teams, size):
+        return abs(teams[0].subrank - teams[1].subrank) - 1
+
+    @staticmethod
+    def _subpool_penalty_fold_top_adjacent_rest(teams, size):
+        if any(t.subrank == subrank for t in teams for subrank in [1, size]):
+            return PowerPairedDrawGenerator._subpool_penalty_fold(teams, size)
+        return PowerPairedDrawGenerator._subpool_penalty_adjacent(teams, size)
+
+    # Conflict avoidance
     AVOID_CONFLICT_FUNCTIONS = {
         "one_up_one_down": "_one_up_one_down",
+        "graph"          : None,
     }
 
     def avoid_conflicts(self, pairings):
@@ -387,7 +443,7 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
                     pairing.teams = list(new)
 
 
-class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
+class PowerPairedWithAllocatedSidesDrawGenerator(AllocatedSidesMixin, PowerPairedDrawGenerator):
     """Power-paired draw with allocated sides.
     Override functions of PowerPairedDrawGenerator where sides need to be constrained.
     All teams must have an 'allocated_side' attribute which must be either

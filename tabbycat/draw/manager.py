@@ -19,6 +19,8 @@ OPTIONS_TO_CONFIG_MAPPING = {
     "avoid_history"         : "draw_rules__avoid_team_history",
     "history_penalty"       : "draw_rules__team_history_penalty",
     "institution_penalty"   : "draw_rules__team_institution_penalty",
+    "side_penalty"          : "draw_rules__side_penalty",
+    "pairing_penalty"       : "draw_rules__pairing_penalty",
     "side_allocations"      : "draw_rules__draw_side_allocations",
     "avoid_conflicts"       : "draw_rules__draw_avoid_conflicts",
     "odd_bracket"           : "draw_rules__draw_odd_bracket",
@@ -59,7 +61,7 @@ class BaseDrawManager:
 
     def get_relevant_options(self):
         if self.teams_in_debate == 'two':
-            return ["avoid_institution", "avoid_history", "history_penalty", "institution_penalty"]
+            return ["avoid_institution", "avoid_history", "history_penalty", "institution_penalty", "side_penalty", "pairing_penalty"]
         else:
             return []
 
