@@ -1171,6 +1171,20 @@ class ShowSpeakersInDraw(BooleanPreference):
     default = True
 
 
+@tournament_preferences_registry.register
+class ShowSeedInImporter(ChoicePreference):
+    help_text = _("Input team seed in simple team importer")
+    verbose_name = _("Enable team seed in importer")
+    section = ui_options
+    name = 'show_seed_in_importer'
+    choices = (
+        ('off', _("Do not ask for team seed")),
+        ('numeric', _("Ask for numeric team seed")),
+        ('title', _("Ask for descriptive team seed name")),
+    )
+    default = 'off'
+
+
 # ==============================================================================
 email = Section('email', verbose_name=_("Notifications"))
 # ==============================================================================
