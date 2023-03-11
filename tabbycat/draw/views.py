@@ -5,7 +5,7 @@ from itertools import product
 
 from django.contrib import messages
 from django.db.models import OuterRef, Subquery
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.utils.functional import cached_property
 from django.utils.html import escape, format_html
 from django.utils.safestring import mark_safe
@@ -709,7 +709,11 @@ class ConfirmDrawCreationView(DrawStatusEdit):
 
     def post(self, request, *args, **kwargs):
         if self.round.draw_status != Round.STATUS_DRAFT:
-            return HttpResponseBadRequest("Draw status is not DRAFT")
+            if self.round.draw_status == Round.STATUS_NONE:
+                messages.error(request, _("There is no draw."))
+            else:
+                messages.info(request, _("The draw had already been confirmed."))
+            return HttpResponseRedirect(reverse_round('draw', self.round))
 
         self.round.draw_status = Round.STATUS_CONFIRMED
         self.round.save()
@@ -738,7 +742,11 @@ class DrawReleaseView(DrawStatusEdit):
 
     def post(self, request, *args, **kwargs):
         if self.round.draw_status != Round.STATUS_CONFIRMED:
-            return HttpResponseBadRequest("Draw status is not CONFIRMED")
+            if self.round.draw_status == Round.STATUS_RELEASED:
+                messages.info(request, _("The draw has already been released."))
+            else:
+                messages.error(request, _("The draw must be confirmed before being released."))
+            return HttpResponseRedirect(reverse_round('draw', self.round))
 
         self.round.draw_status = Round.STATUS_RELEASED
         self.round.save()
@@ -754,7 +762,8 @@ class DrawUnreleaseView(DrawStatusEdit):
 
     def post(self, request, *args, **kwargs):
         if self.round.draw_status != Round.STATUS_RELEASED:
-            return HttpResponseBadRequest("Draw status is not released")
+            messages.info(request, _("The draw had been unreleased."))
+            return HttpResponseRedirect(reverse_round('draw', self.round))
 
         self.round.draw_status = Round.STATUS_CONFIRMED
         self.round.save()
