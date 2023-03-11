@@ -22,7 +22,8 @@ standardized format, equivalent to:
                         {
                             "speaker": Speaker,
                             "score": float,
-                            "ghost": bool
+                            "ghost": bool,
+                            "rank": int
                         }
                     ]
                 }
@@ -40,8 +41,14 @@ class SpeechInfo:
 
         if adj is None:
             self.score = result.speakerscore_field_score(side, pos)
+            srank = result.get_speaker_rank(side, pos)
+            if srank is not None:
+                self.rank = srank
         else:
             self.score = result.speakerscorebyadj_field_score(adj, side, pos)
+            srank = result.get_speaker_rank(adj, side, pos)
+            if srank is not None:
+                self.rank = srank
 
 
 class TeamSheetInfo:

@@ -1155,6 +1155,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                 class SpeechSerializer(serializers.Serializer):
                     ghost = serializers.BooleanField(required=False, help_text=SpeakerScore._meta.get_field('ghost').help_text)
                     score = serializers.FloatField()
+                    rank = serializers.IntegerField(required=False)
 
                     speaker = fields.TournamentHyperlinkedRelatedField(
                         view_name='api-speaker-detail',
@@ -1174,6 +1175,8 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                         if kwargs.get('adjudicator') is not None:
                             speaker_args.insert(0, kwargs['adjudicator'])
                         result.set_score(*speaker_args, self.validated_data['score'])
+                        if kwargs.get('rank') is not None:
+                            result.set_speaker_rank(*speaker_args, self.validated_data['rank'])
 
                         return result
 
