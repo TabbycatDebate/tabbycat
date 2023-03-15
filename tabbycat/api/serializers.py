@@ -11,6 +11,7 @@ from rest_framework import serializers
 from rest_framework.fields import get_error_detail, SkipField
 from rest_framework.settings import api_settings
 
+from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator, PreformedPanel
 from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory, BreakingTeam
@@ -1344,3 +1345,17 @@ class TeamRoundScoresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = ('team', 'rounds')
+
+
+class ActionLogSerializer(serializers.ModelSerializer):
+
+    id = serializers.CharField(read_only=True)
+    user = serializers.CharField(read_only=True)
+    ip_address = serializers.IPAddressField(read_only=True)
+    timestamp = serializers.DateTimeField(read_only=True)
+    type = serializers.ChoiceField(choices=ActionLogEntry.ACTION_TYPE_CHOICES, read_only=True)
+    object_id = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = ActionLogEntry
+        fields = ('id', 'user', 'ip_address', 'timestamp', 'type', 'object_id')

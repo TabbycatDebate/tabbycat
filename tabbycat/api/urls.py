@@ -224,6 +224,14 @@ urlpatterns = [
                         views.VenueCategoryViewSet.as_view(detail_methods),
                         name='api-venuecategory-detail'),
                 ])),
+                path('/actionlog', include([
+                    path('',
+                        views.ActionLogViewSet.as_view(list_methods),
+                        name='api-actionlog-list'),
+                    path('/<int:pk>',
+                         views.ActionLogViewSet.as_view(detail_methods),
+                         name='api-actionlog-detail'),
+                ])),
 
                 path('/', include(pref_router.urls)),  # Preferences
             ])),

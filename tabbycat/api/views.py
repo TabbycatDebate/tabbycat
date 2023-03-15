@@ -1082,3 +1082,7 @@ class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
             })
 
         return self.get(request, *args, **kwargs)
+
+
+class ActionLogViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+    serializer_class = serializers.ActionLogSerializer
