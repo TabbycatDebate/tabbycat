@@ -368,7 +368,7 @@ class Round(models.Model):
 
         # Draw type must be consistent with stage
         if (self.stage == Round.STAGE_ELIMINATION) != (self.draw_type == Round.DRAW_ELIMINATION):
-            errors['draw_type'] = ValidationError(_("The \"Elimination\" draw type is only for elimination rounds, where it is mandatory."))
+            errors['draw_type'] = [ValidationError(_("The \"Elimination\" draw type is only for elimination rounds, where it is mandatory."))]
 
         # Break rounds must have a break category
         if (self.stage == Round.STAGE_ELIMINATION) == (self.break_category is None):
