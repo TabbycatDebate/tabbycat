@@ -1084,5 +1084,10 @@ class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
         return self.get(request, *args, **kwargs)
 
 
+@extend_schema(tags=['actionlog'], parameters=[tournament_parameter])
+@extend_schema_view(
+    list=extend_schema(summary="List all actionlog entries for this tournament"),
+    retrieve=extend_schema(summary="Get actionlog entry", parameters=[id_parameter]),
+)
 class ActionLogViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.ActionLogSerializer
