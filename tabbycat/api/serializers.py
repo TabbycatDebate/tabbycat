@@ -1352,13 +1352,6 @@ class TeamRoundScoresSerializer(serializers.ModelSerializer):
 
 class ActionLogSerializer(serializers.ModelSerializer):
 
-    id = serializers.CharField(read_only=True)
-    user = serializers.CharField(read_only=True)
-    ip_address = serializers.IPAddressField(read_only=True)
-    timestamp = serializers.DateTimeField(read_only=True)
-    type = serializers.ChoiceField(choices=ActionLogEntry.ACTION_TYPE_CHOICES, read_only=True)
-    object_id = serializers.CharField(read_only=True)
-
     class Meta:
         model = ActionLogEntry
         fields = ('id', 'user', 'ip_address', 'timestamp', 'type', 'object_id')

@@ -226,10 +226,10 @@ urlpatterns = [
                 ])),
                 path('/actionlog', include([
                     path('',
-                        views.ActionLogViewSet.as_view(list_methods),
+                        views.ActionLogViewSet.as_view({'get': 'list'}),
                         name='api-actionlog-list'),
                     path('/<int:pk>',
-                         views.ActionLogViewSet.as_view(detail_methods),
+                         views.ActionLogViewSet.as_view({'get': 'retrieve'}),
                          name='api-actionlog-detail'),
                 ])),
 
