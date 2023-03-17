@@ -1351,7 +1351,43 @@ class TeamRoundScoresSerializer(serializers.ModelSerializer):
 
 
 class ActionLogSerializer(serializers.ModelSerializer):
+    object = serializers.SerializerMethodField()
 
     class Meta:
         model = ActionLogEntry
-        fields = ('id', 'user', 'ip_address', 'timestamp', 'type', 'object_id')
+        fields = ('id', 'user', 'ip_address', 'timestamp', 'object')
+
+    def get_object(self, obj: ActionLogEntry):
+        url_format = {
+            'ba': '/rounds',  # TODO
+            'fb': '/feedback/%(id)s',
+            'ts': '/feedback/%(id)s',
+            'dr': '/rounds/%(round_number)s/pairings',
+            'aa': '/rounds/%(round_number)s/pairings',
+            'mu': '/rounds/%(round_number)s/pairings',
+            'ms': '/rounds/%(round_number)s/pairings',
+            've': '/venues/%(id)s',
+            'mo': '/motions/%(id)s',
+            'db': '',  # TODO
+            'rd': '/rounds/%(round_number)s',
+            'br': '/break_categories/%(id)s',
+            'av': '',  # TODO
+            'op': '/preferences',
+            'se': '/speaker-categories/%(id)s',
+            'si': '',  # TODO
+            'aj': '/adjudicators/%(id)s',
+            'ac': '',  # TODO
+            'ch': '',  # TODO
+            'pp': '/rounds/%(round_number)s/preformed-panels/%(id)s',
+        }[obj.type[:2]]
+
+        url_format = '/api/v1/tournaments/%(tournament_slug)s' + url_format
+
+        relative_url = url_format % {
+            'id': obj.object_id,
+            'tournament_slug': obj.tournament.slug,
+            'round_number': getattr(obj.round, 'seq', None),
+        }
+
+        request = self.context['request']
+        return request.build_absolute_uri(relative_url)
