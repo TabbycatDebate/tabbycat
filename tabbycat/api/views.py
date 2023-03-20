@@ -623,9 +623,6 @@ class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPI
 
     def get_queryset(self):
         qs = self.model.objects.filter(**{self.tournament_field: self.tournament}).select_related(self.tournament_field)
-        category = self.request.query_params.get('category', None)
-        if category is not None:
-            return qs.filter(categories__pk=category)
         return qs
 
     def get_max_round(self):
@@ -661,6 +658,12 @@ class SubstantiveSpeakerStandingsView(BaseStandingsView):
     model = Speaker
     tournament_field = 'team__tournament'
     generator = SpeakerStandingsGenerator
+    
+    def get_queryset(self):
+        category = self.request.query_params.get('category', None)
+        if category is not None:
+            return super().get_queryset().filter(categories__pk=category)
+        return super().get_queryset()
 
 
 @extend_schema_view(
@@ -684,6 +687,12 @@ class TeamStandingsView(BaseStandingsView):
     access_preference = 'team_tab_released'
     model = Team
     generator = TeamStandingsGenerator
+    
+    def get_queryset(self):
+        category = self.request.query_params.get('category', None)
+        if category is not None:
+            return super().get_queryset().filter(break_categories__pk=category)
+        return super().get_queryset()
 
 
 @extend_schema(tags=['standings'], parameters=[
