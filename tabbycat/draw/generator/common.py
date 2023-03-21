@@ -170,6 +170,8 @@ class BasePairDrawGenerator(BaseDrawGenerator):
         "history_penalty"    : 1e3,
         "institution_penalty": 1,
         "side_penalty"       : 0,
+        "saw_pullups_penalty": 0,
+        "pairing_penalty"    : 0,
     }
 
     TEAMS_PER_DEBATE = 2

@@ -19,6 +19,7 @@ OPTIONS_TO_CONFIG_MAPPING = {
     "avoid_history"         : "draw_rules__avoid_team_history",
     "history_penalty"       : "draw_rules__team_history_penalty",
     "institution_penalty"   : "draw_rules__team_institution_penalty",
+    "saw_pullups_penalty"   : "draw_rules__saw_pullups_penalty",
     "side_penalty"          : "draw_rules__side_penalty",
     "pairing_penalty"       : "draw_rules__pairing_penalty",
     "side_allocations"      : "draw_rules__draw_side_allocations",
@@ -61,7 +62,7 @@ class BaseDrawManager:
 
     def get_relevant_options(self):
         if self.teams_in_debate == 'two':
-            return ["avoid_institution", "avoid_history", "history_penalty", "institution_penalty", "side_penalty", "pairing_penalty"]
+            return ["avoid_institution", "avoid_history", "history_penalty", "institution_penalty", "saw_pullups_penalty", "side_penalty", "pairing_penalty"]
         else:
             return []
 
@@ -198,15 +199,23 @@ class PowerPairedDrawManager(BaseDrawManager):
 
         metrics = self.round.tournament.pref('team_standings_precedence')
         pullup_metric = PowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.round.tournament.pref('draw_pullup_restriction')]
+        extra_metrics = {pullup_metric} if pullup_metric is not None else set()
 
-        generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random",
-            extra_metrics=(pullup_metric,) if pullup_metric and pullup_metric not in metrics else ())
+        saw_pullups_penalty = self.round.tournament.pref("saw_pullups_penalty")
+        if saw_pullups_penalty > 0:
+            extra_metrics.add("saw_pullups")
+        extra_metrics -= set(metrics)
+
+        generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random", extra_metrics=list(extra_metrics))
         standings = generator.generate(teams, round=self.round.prev)
 
         ranked = []
         for standing in standings:
             team = standing.team
             team.points = next(standing.itermetrics(), 0) or 0
+            team.subrank = standing.get_ranking('subrank')
+            if saw_pullups_penalty > 0:
+                team.saw_pullups = standing.metrics.get("saw_pullups", 0)
             if pullup_metric:
                 setattr(team, pullup_metric, standing.metrics[pullup_metric])
             ranked.append(team)
