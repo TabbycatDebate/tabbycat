@@ -228,7 +228,7 @@ class TeamPullupsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     an associated DebateTeam object)."""
 
     key = "npullups"
-    name = _("number of pullups before this round")
+    name = _("number of pullups")
     abbr = _("PU")
 
     function = Count
@@ -240,6 +240,20 @@ class TeamPullupsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
     def get_where_field(self):
         return 'debateteam__flags__contains'
+
+
+class TeamSawPullupsMetricAnnotator(TeamPullupsMetricAnnotator):
+    """Metric annotator for number of times the team in a pull-up room.
+
+    How many teams the team has faced a pulled up team (i.e., has a pullup
+    flag in an associated Debate object)."""
+
+    key = "saw_pullups"
+    name = _("number of times in pullup debates")
+    abbr = _("SPu")
+
+    def get_where_field(self):
+        return 'debateteam__debate__flags__contains'
 
 
 class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -396,6 +410,7 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "margin_sum"          : SumMarginMetricAnnotator,
         "margin_avg"          : AverageMarginMetricAnnotator,
         "npullups"            : TeamPullupsMetricAnnotator,
+        "saw_pullups"         : TeamSawPullupsMetricAnnotator,
         "num_adjs"            : NumberOfAdjudicatorsMetricAnnotator,
         "firsts"              : NumberOfFirstsMetricAnnotator,
         "seconds"             : NumberOfSecondsMetricAnnotator,

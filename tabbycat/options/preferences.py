@@ -180,6 +180,15 @@ class AvoidTeamHistory(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class SawPullupsPenalty(IntegerPreference):
+    help_text = _("Penalty applied by conflict avoidance method for teams being in a pullup many times. Leave 0 for no penalty.")
+    verbose_name = _("Previously saw pullup penalty")
+    section = draw_rules
+    name = 'saw_pullups_penalty'
+    default = 0
+
+
+@tournament_preferences_registry.register
 class SideBalancePenalty(IntegerPreference):
     help_text = _("Penalty applied by minimum cost matching to prefer pairings that balance sides.")
     verbose_name = _("Side balance penalty")
