@@ -658,7 +658,7 @@ class SubstantiveSpeakerStandingsView(BaseStandingsView):
     model = Speaker
     tournament_field = 'team__tournament'
     generator = SpeakerStandingsGenerator
-    
+
     def get_queryset(self):
         category = self.request.query_params.get('category', None)
         if category is not None:
@@ -687,7 +687,7 @@ class TeamStandingsView(BaseStandingsView):
     access_preference = 'team_tab_released'
     model = Team
     generator = TeamStandingsGenerator
-    
+
     def get_queryset(self):
         category = self.request.query_params.get('category', None)
         if category is not None:
