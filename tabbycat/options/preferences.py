@@ -180,6 +180,15 @@ class AvoidTeamHistory(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class SawPullupsPenalty(IntegerPreference):
+    help_text = _("Penalty applied by conflict avoidance method for teams being in a pullup many times. Leave 0 for no penalty.")
+    verbose_name = _("Previously saw pullup penalty")
+    section = draw_rules
+    name = 'saw_pullups_penalty'
+    default = 0
+
+
+@tournament_preferences_registry.register
 class DrawOddBracket(ChoicePreference):
     help_text = _("How odd brackets are resolved (see documentation for further details)")
     verbose_name = _("Odd bracket resolution method")
