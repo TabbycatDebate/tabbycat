@@ -199,7 +199,7 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
         model_related = {'Team': 'debateteam_set', 'Adjudicator': 'debateadjudicator_set'}[type(obj).__name__]
         try:
             qs = getattr(obj, model_related).filter(
-                debate__round__in=tournament.current_rounds).select_related('debate__round')
+                debate__round__draw_status=Round.STATUS_RELEASED, debate__round__completed=False).select_related('debate__round')
             if admin:
                 qs = qs.prefetch_related(Prefetch('debate__round__roundmotion_set',
                     queryset=RoundMotion.objects.select_related('motion')))
