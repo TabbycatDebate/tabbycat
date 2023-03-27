@@ -5,6 +5,13 @@
 {% block header %}{% endblock %}
 {% block footer %}{% endblock %}
 {% block body-class %}override-sidebar-offset{% endblock %}
+{% block page-title %}
+  {% blocktranslate trimmed with round=round.name count counter=motions|length %}
+    Motion for {{ round }}
+  {% plural %}
+    Motions for {{ round }}
+  {% endblocktranslate %}
+{% endblock %}
 
 {% block content %}
 
