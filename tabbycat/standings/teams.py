@@ -242,13 +242,13 @@ class TeamPullupsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         return 'debateteam__flags__contains'
 
 
-class TeamSawPullupsMetricAnnotator(TeamPullupsMetricAnnotator):
-    """Metric annotator for number of times the team in a pull-up room.
+class PullupDebatesMetricAnnotator(TeamPullupsMetricAnnotator):
+    """Metric annotator for number of times the team has been in a pull-up room.
 
     How many teams the team has faced a pulled up team (i.e., has a pullup
     flag in an associated Debate object)."""
 
-    key = "saw_pullups"
+    key = "pullup_debates"
     name = _("number of times in pullup debates")
     abbr = _("SPu")
 
@@ -410,7 +410,7 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "margin_sum"          : SumMarginMetricAnnotator,
         "margin_avg"          : AverageMarginMetricAnnotator,
         "npullups"            : TeamPullupsMetricAnnotator,
-        "saw_pullups"         : TeamSawPullupsMetricAnnotator,
+        "pullup_debates"      : PullupDebatesMetricAnnotator,
         "num_adjs"            : NumberOfAdjudicatorsMetricAnnotator,
         "firsts"              : NumberOfFirstsMetricAnnotator,
         "seconds"             : NumberOfSecondsMetricAnnotator,

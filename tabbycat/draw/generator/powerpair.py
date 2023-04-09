@@ -68,7 +68,7 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         "pairing_method"        : "slide",
         "avoid_conflicts"       : "one_up_one_down",
         "pullup_restriction"    : "none",
-        "saw_pullups_penalty"   : 0,
+        "pullup_debates_penalty": 0,
     }
 
     def __init__(self, *args, **kwargs):
@@ -372,9 +372,9 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
             return None
 
         # Add penalty for seeing the pullup again
-        has_pullup = 'pullup' in self.team_flags.get(t1) or 'pullup' in self.team_flags.get(t2)
-        if self.options["saw_pullups_penalty"] and has_pullup:
-            penalty += max(t1.saw_pullups, t2.saw_pullups) * self.options["saw_pullups_penalty"]
+        has_pullup = 'pullup' in self.team_flags.get(t1, []) or 'pullup' in self.team_flags.get(t2, [])
+        if self.options["pullup_debates_penalty"] and has_pullup:
+            penalty += max(t1.pullup_debates, t2.pullup_debates) * self.options["pullup_debates_penalty"]
 
         if self.options["pairing_method"] != "random":
             subpool_penalty_func = self.get_option_function("pairing_method", self.PAIRING_PENALTY_FUNCTIONS)

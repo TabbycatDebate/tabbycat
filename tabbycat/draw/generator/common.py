@@ -164,14 +164,14 @@ class BasePairDrawGenerator(BaseDrawGenerator):
         """
 
     BASE_DEFAULT_OPTIONS = {
-        "side_allocations"   : "balance",
-        "avoid_history"      : True,
-        "avoid_institution"  : True,
-        "history_penalty"    : 1e3,
-        "institution_penalty": 1,
-        "side_penalty"       : 0,
-        "saw_pullups_penalty": 0,
-        "pairing_penalty"    : 0,
+        "side_allocations"      : "balance",
+        "avoid_history"         : True,
+        "avoid_institution"     : True,
+        "history_penalty"       : 1e3,
+        "institution_penalty"   : 1,
+        "side_penalty"          : 0,
+        "pullup_debates_penalty": 0,
+        "pairing_penalty"       : 0,
     }
 
     TEAMS_PER_DEBATE = 2
