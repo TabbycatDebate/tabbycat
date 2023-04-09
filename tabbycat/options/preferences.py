@@ -549,7 +549,7 @@ class UseSpeakerRanks(ChoicePreference):
     name = 'speaker_ranks'
     choices = (
         ('none', 'Do not rank speeches'),
-        ('any', 'Require ranking speeches, indepedently of speaker scores'),
+        ('any', 'Require ranking speeches, independently of speaker scores'),
         ('high-points', 'Require ranking speeches, ranks congruent with speaker scores'),
     )
     default = 'none'

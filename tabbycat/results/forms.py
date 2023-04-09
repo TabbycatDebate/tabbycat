@@ -266,6 +266,7 @@ class BaseBallotSetForm(BaseResultForm):
         self.max_margin = self.tournament.pref('maximum_margin')
         self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
                                self.tournament.pref('teams_in_debate') == 'two')
+        self.uses_speaker_ranks = self.tournament.pref('speaker_ranks') != 'none'
 
         self.sides = self.tournament.sides
         self.positions = self.tournament.positions
@@ -471,10 +472,6 @@ class ScoresMixin:
         return '%(side)s_speaker_s%(pos)d' % {'side': side, 'pos': pos}
 
     @staticmethod
-    def _fieldname_srank(side, pos):
-        return '%(side)s_srank_s%(pos)d' % {'side': side, 'pos': pos}
-
-    @staticmethod
     def _fieldname_ghost(side, pos):
         return '%(side)s_ghost_s%(pos)d' % {'side': side, 'pos': pos}
 
@@ -483,7 +480,6 @@ class ScoresMixin:
     # --------------------------------------------------------------------------
 
     def create_participant_fields(self):
-        nspeeches = len(self.sides) * len(self.positions)
         for side, pos in product(self.sides, self.positions):
 
             # 3(a). Speaker identity
@@ -493,9 +489,6 @@ class ScoresMixin:
                 queryset = self.debate.get_team(side).speakers
             self.fields[self._fieldname_speaker(side, pos)] = forms.ModelChoiceField(
                 queryset=queryset, required=True)
-
-            if self.tournament.pref('speaker_ranks') != 'none':
-                self.fields[self._fieldname_srank(side, pos)] = forms.IntegerField(required=True, min_value=1, max_value=nspeeches, step_size=1)
 
             # 3(b). Ghost fields
             self.fields[self._fieldname_ghost(side, pos)] = forms.BooleanField(required=False,
@@ -507,8 +500,6 @@ class ScoresMixin:
         order = []
         for side, pos in product(self.sides, self.positions):
             order.append(self._fieldname_speaker(side, pos))
-            if self.tournament.pref('speaker_ranks') != 'none':
-                order.append(self._fieldname_srank(side, pos))
         return order
 
     def list_score_fields(self):
@@ -524,8 +515,6 @@ class ScoresMixin:
         for side, pos in product(self.sides, self.positions):
             initial[self._fieldname_speaker(side, pos)] = result.get_speaker(side, pos)
             initial[self._fieldname_ghost(side, pos)] = result.get_ghost(side, pos)
-            if self.tournament.pref('speaker_ranks') != 'none':
-                initial[self._fieldname_srank(side, pos)] = result.get_speaker_rank(side, pos)
         return initial
 
     # --------------------------------------------------------------------------
@@ -638,7 +627,7 @@ class ScoresMixin:
         for team in self.debate.teams:
             yield self['team_%d' % team.id]
 
-    def scoresheet(self, fieldname_score_func):
+    def scoresheet(self, fieldname_score_func, fieldname_srank_func):
         """Returns a list of dictionaries for a single scoresheet, to allow for
         easy iteration of the form. The function `fieldname_score_func` should
         take two arguments `(side, pos)`. This function is called by the
@@ -652,14 +641,16 @@ class ScoresMixin:
                 "speakers": [],
             }
             for pos, pos_name in zip(self.positions, pos_names):
-                side_dict["speakers"].append({
+                spk_dict = {
                     "pos": pos,
                     "name": pos_name,
                     "speaker": self[self._fieldname_speaker(side, pos)],
                     "ghost": self[self._fieldname_ghost(side, pos)],
                     "score": self[fieldname_score_func(side, pos)],
-                    "srank": self[self._fieldname_srank(side, pos)],
-                })
+                }
+                if fieldname_srank_func:
+                    spk_dict["srank"] = self[fieldname_srank_func(side, pos)]
+                side_dict["speakers"].append(spk_dict)
             teams.append(side_dict)
         return teams
 
@@ -672,6 +663,10 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
     @staticmethod
     def _fieldname_score(side, pos):
         return '%(side)s_score_s%(pos)d' % {'side': side, 'pos': pos}
+
+    @staticmethod
+    def _fieldname_srank(side, pos):
+        return '%(side)s_srank_s%(pos)d' % {'side': side, 'pos': pos}
 
     @staticmethod
     def _fieldname_declared_winner():
@@ -689,7 +684,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 tournament=self.tournament,
                 required=True,
             )
-            if self.tournament.pref('speaker_ranks') != 'none':
+            if self.uses_speaker_ranks:
                 self.fields[self._fieldname_srank(side, pos)] = forms.IntegerField(required=True, min_value=1, max_value=nspeeches, step_size=1)
 
         if self.using_declared_winner:
@@ -769,7 +764,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                         params={'margin': margin, 'max_margin': self.max_margin}, code='max_margin',
                     ))
 
-        if self.tournament.pref('speaker_ranks') != 'none':
+        if self.uses_speaker_ranks:
             ranks = set()
             rank_scores = []
             for side, pos in product(self.sides, self.positions):
@@ -790,7 +785,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
             score = self.cleaned_data[self._fieldname_score(side, pos)]
             result.set_score(side, pos, score)
 
-            if self.tournament.pref('speaker_ranks') != 'none':
+            if self.uses_speaker_ranks:
                 result.set_speaker_rank(side, pos, self.cleaned_data[self._fieldname_srank(side, pos)])
 
         if self.declared_winner not in ['none', 'high-points']:
@@ -803,7 +798,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
     def scoresheets(self):
         """Generates a sequence of nested dicts that allows for easy iteration
         through the form. Used in the ballot_set.html.html template."""
-        sheets = [{"teams": self.scoresheet(self._fieldname_score)}]
+        sheets = [{"teams": self.scoresheet(self._fieldname_score, self._fieldname_srank)}]
 
         if self.using_declared_winner:
             sheets[0]['declared_winner'] = self[self._fieldname_declared_winner()]
