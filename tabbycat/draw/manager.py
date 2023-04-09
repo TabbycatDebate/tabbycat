@@ -3,7 +3,7 @@ import random
 
 from django.utils.translation import gettext as _
 
-from draw.generator.powerpair import PowerPairedDrawGenerator
+from draw.generator.powerpair import BasePowerPairedDrawGenerator
 from participants.utils import get_side_history
 from standings.teams import TeamStandingsGenerator
 from tournaments.models import Round
@@ -62,7 +62,7 @@ class BaseDrawManager:
 
     def get_relevant_options(self):
         if self.teams_in_debate == 'two':
-            return ["avoid_institution", "avoid_history", "history_penalty", "institution_penalty", "pullup_debates_penalty", "side_penalty", "pairing_penalty"]
+            return ["avoid_institution", "avoid_history", "history_penalty", "institution_penalty", "pullup_debates_penalty", "side_penalty", "pairing_penalty", "avoid_conflicts"]
         else:
             return []
 
@@ -198,7 +198,7 @@ class PowerPairedDrawManager(BaseDrawManager):
         teams = super().get_teams()
 
         metrics = self.round.tournament.pref('team_standings_precedence')
-        pullup_metric = PowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.round.tournament.pref('draw_pullup_restriction')]
+        pullup_metric = BasePowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.round.tournament.pref('draw_pullup_restriction')]
         extra_metrics = {pullup_metric} if pullup_metric is not None else set()
 
         pullup_debates_penalty = self.round.tournament.pref("pullup_debates_penalty")

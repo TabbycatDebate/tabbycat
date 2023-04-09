@@ -3,15 +3,16 @@ from collections import OrderedDict
 
 from django.utils.translation import gettext as _
 
-from .common import AllocatedSidesMixin, BasePairDrawGenerator, DrawFatalError, DrawUserError
+from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError
+from .graph import GraphAllocatedSidesMixin, GraphGeneratorMixin
 from .one_up_one_down import OneUpOneDownSwapper
 from .pairing import Pairing
 
 
-class PowerPairedDrawGenerator(BasePairDrawGenerator):
+class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
     """Power-paired draw.
 
-    If there are allocated sides, use PowerPairedWithAllocatedSidesDrawGenerator
+    If there are allocated sides, use BasePowerPairedWithAllocatedSidesDrawGenerator
     instead.
 
     Options:
@@ -71,6 +72,14 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         "pullup_debates_penalty": 0,
     }
 
+    PAIRING_FUNCTIONS = {
+        "fold"                  : "_pairings_fold",
+        "slide"                 : "_pairings_slide",
+        "random"                : "_pairings_random",
+        "adjacent"              : "_pairings_adjacent",
+        "fold_top_adjacent_rest": "_pairings_fold_top_adjacent_rest",
+    }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.check_teams_for_attribute("points")
@@ -91,12 +100,8 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         self._brackets = self._make_raw_brackets()
         self.resolve_odd_brackets(self._brackets)  # operates in-place
 
-        if self.options["avoid_conflicts"] == 'graph':
-            # This algorithm both creates the pairings and minimizes conflicts simultaneously
-            self._pairings = self.optimise_pairings(self._brackets)
-        else:
-            self._pairings = self.generate_pairings(self._brackets)
-            self.avoid_conflicts(self._pairings)  # operates in-place
+        self._pairings = self.generate_pairings(self._brackets)
+        self.avoid_conflicts(self._pairings)  # operates in-place
 
         self._draw = list()
         for bracket in self._pairings.values():
@@ -267,14 +272,54 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
             # if nothing worked, add a "didn't work" flag
             self.add_team_flag(teams[0], "no_bub_updn")
 
-    # Pairings generation
-    PAIRING_FUNCTIONS = {
-        "fold"                  : "_pairings_fold",
-        "slide"                 : "_pairings_slide",
-        "random"                : "_pairings_random",
-        "adjacent"              : "_pairings_adjacent",
-        "fold_top_adjacent_rest": "_pairings_fold_top_adjacent_rest",
-    }
+
+class GraphCostMixin:
+
+    def assignment_cost(self, t1, t2, size, bracket=None):
+        penalty = super().assignment_cost(t1, t2, size)
+        if penalty is None:
+            return None
+
+        # Add penalty for seeing the pullup again
+        has_pullup = 'pullup' in self.team_flags.get(t1, []) or 'pullup' in self.team_flags.get(t2, [])
+        if self.options["pullup_debates_penalty"] and has_pullup:
+            penalty += max(t1.pullup_debates, t2.pullup_debates) * self.options["pullup_debates_penalty"]
+
+        if self.options["pairing_method"] != "random":
+            subpool_penalty_func = self.get_option_function("pairing_method", self.PAIRING_FUNCTIONS)
+
+            # Set the subrank to be last for pulled-up teams
+            for team in [t1, t2]:
+                if team.subrank is None:
+                    team.subrank = size
+
+            penalty += subpool_penalty_func([t1, t2], size, bracket) * self.options["pairing_penalty"]
+        return penalty
+
+    @staticmethod
+    def _pairings_slide(teams, size, bracket=None):
+        return abs(teams[0].subrank - teams[1].subrank) - size // 2
+
+    @staticmethod
+    def _pairings_fold(teams, size, bracket=None):
+        return teams[0].subrank + teams[1].subrank - 1 - size
+
+    @staticmethod
+    def _pairings_random(teams, size, bracket=None):
+        return 0
+
+    @staticmethod
+    def _pairings_adjacent(teams, size, bracket=None):
+        return abs(teams[0].subrank - teams[1].subrank) - 1
+
+    @classmethod
+    def _pairings_fold_top_adjacent_rest(cls, teams, size, bracket=None):
+        if bracket == 0:
+            return cls._pairings_fold(teams, size)
+        return cls._pairings_adjacent(teams, size)
+
+
+class AustralsPairingMixin:
 
     def generate_pairings(self, brackets):
         """Returns a function taking an OrderedDict as returned by
@@ -358,57 +403,6 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
     def _pairings_fold_top_adjacent_rest(cls, brackets):
         return cls._pairings_top_special(brackets, cls._subpool_fold, cls._subpool_adjacent)
 
-    PAIRING_PENALTY_FUNCTIONS = {
-        "fold"                  : "_subpool_penalty_fold",
-        "slide"                 : "_subpool_penalty_slide",
-        "random"                : "_subpool_penalty_random",
-        "adjacent"              : "_subpool_penalty_adjacent",
-        "fold_top_adjacent_rest": "_subpool_penalty_fold_top_adjacent_rest",
-    }
-
-    def assignment_cost(self, t1, t2, size):
-        penalty = super().assignment_cost(t1, t2, size)
-        if penalty is None:
-            return None
-
-        # Add penalty for seeing the pullup again
-        has_pullup = 'pullup' in self.team_flags.get(t1, []) or 'pullup' in self.team_flags.get(t2, [])
-        if self.options["pullup_debates_penalty"] and has_pullup:
-            penalty += max(t1.pullup_debates, t2.pullup_debates) * self.options["pullup_debates_penalty"]
-
-        if self.options["pairing_method"] != "random":
-            subpool_penalty_func = self.get_option_function("pairing_method", self.PAIRING_PENALTY_FUNCTIONS)
-
-            # Set the subrank to be last for pulled-up teams
-            for team in [t1, t2]:
-                if team.subrank is None:
-                    team.subrank = size
-
-            penalty += subpool_penalty_func([t1, t2], size) * self.options["pairing_penalty"]
-        return penalty
-
-    @staticmethod
-    def _subpool_penalty_slide(teams, size):
-        return abs(teams[0].subrank - teams[1].subrank) - size // 2
-
-    @staticmethod
-    def _subpool_penalty_fold(teams, size):
-        return teams[0].subrank + teams[1].subrank - 1 - size
-
-    @staticmethod
-    def _subpool_random(teams, size):
-        return 0
-
-    @staticmethod
-    def _subpool_penalty_adjacent(teams, size):
-        return abs(teams[0].subrank - teams[1].subrank) - 1
-
-    @staticmethod
-    def _subpool_penalty_fold_top_adjacent_rest(teams, size):
-        if any(t.subrank == subrank for t in teams for subrank in [1, size]):
-            return PowerPairedDrawGenerator._subpool_penalty_fold(teams, size)
-        return PowerPairedDrawGenerator._subpool_penalty_adjacent(teams, size)
-
     # Conflict avoidance
     AVOID_CONFLICT_FUNCTIONS = {
         "one_up_one_down": "_one_up_one_down",
@@ -449,7 +443,15 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
                     pairing.teams = list(new)
 
 
-class PowerPairedWithAllocatedSidesDrawGenerator(AllocatedSidesMixin, PowerPairedDrawGenerator):
+class GraphPowerPairedDrawGenerator(GraphGeneratorMixin, GraphCostMixin, BasePowerPairedDrawGenerator):
+    pass
+
+
+class AustralsPowerPairedDrawGenerator(AustralsPairingMixin, BasePowerPairedDrawGenerator):
+    pass
+
+
+class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
     """Power-paired draw with allocated sides.
     Override functions of PowerPairedDrawGenerator where sides need to be constrained.
     All teams must have an 'allocated_side' attribute which must be either
@@ -715,6 +717,13 @@ class PowerPairedWithAllocatedSidesDrawGenerator(AllocatedSidesMixin, PowerPaire
         """This should never be called - the associated option string is removed
         from the allowable list above."""
         raise NotImplementedError("Intermediate brackets with conflict avoidance isn't supported with allocated sides.")
+
+
+class GraphPowerPairedWithAllocatedSidesDrawGenerator(GraphAllocatedSidesMixin, GraphCostMixin, PowerPairedWithAllocatedSidesDrawGenerator):
+    pass
+
+
+class AustralsPowerPairedWithAllocatedSidesDrawGenerator(AustralsPairingMixin, PowerPairedWithAllocatedSidesDrawGenerator):
 
     @staticmethod
     def _pairings(brackets, presort_func):

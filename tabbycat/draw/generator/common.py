@@ -1,11 +1,6 @@
 import logging
-from collections import OrderedDict
 
-import munkres
-import networkx as nx
 from django.utils.translation import gettext as _
-
-from .utils import sign
 
 logger = logging.getLogger(__name__)
 
@@ -202,55 +197,6 @@ class BasePairDrawGenerator(BaseDrawGenerator):
         elif self.options["side_allocations"] not in ["none", "preallocated"]:
             raise ValueError("side_allocations setting not recognized: {0!r}".format(self.options["side_allocations"]))
 
-    def assignment_cost(self, t1, t2, size):
-        if t1 is t2:  # Same team
-            return
-
-        penalty = 0
-        if self.options["avoid_history"]:
-            penalty += t1.seen(t2) * self.options["history_penalty"]
-        if self.options["avoid_institution"] and t1.same_institution(t2):
-            penalty += self.options["institution_penalty"]
-
-        # Add penalty of a side imbalance
-        if self.options["side_allocations"] == "balance" and self.options["side_penalty"] > 0:
-            t1_affs, t1_negs = t1.side_history
-            t2_affs, t2_negs = t2.side_history
-
-            # Only declare an imbalance if both sides have been on the same side more often
-            # Affs are positive, negs are negative. If teams have opposite signs, negative imbalance
-            # gets reduced to 0. Equalities have no restriction on the side to be allocated so
-            # cancel as well. neg*neg -> pos
-            imbalance = min(1, max(0, sign(t1_affs - t1_negs) * sign(t2_affs - t2_negs)))
-
-            # Get median imbalance between the two as a coefficient for the penalty to apply
-            # This would prefer an imbalance of (+5 - +1) becoming (+4 - +2) rather than
-            # (+5 - +4) becoming (+4 - +5), in a severe case.
-            magnitude = (abs(t1_affs - t1_negs) + abs(t2_affs - t2_negs)) // 2
-            penalty += imbalance * magnitude * self.options["side_penalty"]
-
-        return penalty
-
-    def optimise_pairings(self, brackets):
-        """Creates an undirected weighted graph for each bracket and gets the minimum weight matching"""
-        from .pairing import Pairing
-        pairings = OrderedDict()
-        i = 0
-        for points, teams in brackets.items():
-            pairings[points] = []
-            graph = nx.Graph()
-            n_teams = len(teams)
-            for t1 in teams:
-                for t2 in teams:
-                    penalty = self.assignment_cost(t1, t2, n_teams)
-                    if penalty is not None:
-                        graph.add_edge(t1, t2, weight=penalty)
-
-            for pairing in nx.min_weight_matching(graph):
-                i += 1
-                pairings[points].append(Pairing(teams=pairing, bracket=points, room_rank=i))
-        return pairings
-
 
 class BaseBPDrawGenerator(BaseDrawGenerator):
     BASE_DEFAULT_OPTIONS = {}
@@ -271,32 +217,6 @@ class EliminationDrawMixin:
 
     def make_pairings(self):
         raise NotImplementedError
-
-
-class AllocatedSidesMixin:
-    """Use Hungarian algorithm rather than Bloom.
-
-    This is possible as assigning the sides creates a bipartite graph rather than
-    a more complete graph."""
-    def assignment_cost(self, t1, t2, size):
-        penalty = super().assignment_cost(t1, t2, size)
-        if penalty is None:
-            return munkres.DISALLOWED
-        return penalty
-
-    def optimise_pairings(self, brackets):
-        from .pairing import Pairing
-        pairings = OrderedDict()
-        i = 0
-        for points, pool in brackets.items():
-            pairings[points] = []
-            n_teams = len(pool['aff']) + len(pool['neg'])
-            matrix = [[self.assignment_cost(aff, neg, n_teams) for neg in pool['neg']] for aff in pool['aff']]
-
-            for i_aff, i_neg in munkres.Munkres().compute(matrix):
-                i += 1
-                pairings[points].append(Pairing(teams=[pool['aff'][i_aff], pool['neg'][i_neg]], bracket=points, room_rank=i))
-        return pairings
 
 
 class ManualDrawGenerator(BaseDrawGenerator):

@@ -10,14 +10,6 @@ def nextpow2(n):
     return 1 << (n-1).bit_length()
 
 
-def sign(n: int) -> int:
-    """Sign function for integers, -1, 0, or 1"""
-    try:
-        return n // abs(n)
-    except ZeroDivisionError:
-        return 0
-
-
 def partial_break_round_split(break_size):
     """Returns a tuple `(debates, bypassing)`, where `debating` is how many
     debates there is in the first break round, and `bypassing` is how many
