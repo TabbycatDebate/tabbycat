@@ -260,10 +260,10 @@ def get_diversity_data_sets(t, for_public):
             data_sets['detailed_speakers_results'] = compile_grouped_means_by_gender(
                     titles, speakerscores, 'speaker__gender', 'position', t.positions)
 
-            if speakerscores.filter(debate_team__debate__round__stage=Round.STAGE_ELIMINATION).exists():
+            if speakerscores.filter(debate_team__debate__round__stage=Round.Stage.ELIMINATION).exists():
                 data_sets['detailed_speakers_results'].extend(compile_statistics_by_gender(
                     [_("Average Finals Score")],
-                    speakerscores.filter(debate_team__debate__round__stage=Round.STAGE_ELIMINATION).exclude(position=t.reply_position),
+                    speakerscores.filter(debate_team__debate__round__stage=Round.Stage.ELIMINATION).exclude(position=t.reply_position),
                     ['mean'], 'speaker__gender'))
 
     return data_sets

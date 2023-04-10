@@ -10,7 +10,7 @@ class RandomDrawTests(BaseMinimalTournamentTestCase):
 
     def setUp(self):
         super(RandomDrawTests, self).setUp()
-        self.round = Round(tournament=self.tournament, seq=2, draw_type=Round.DRAW_RANDOM)
+        self.round = Round(tournament=self.tournament, seq=2, draw_type=Round.DrawType.RANDOM)
         self.round.save()
         activate_all(self.round)
 

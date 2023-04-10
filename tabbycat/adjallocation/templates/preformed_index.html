@@ -38,7 +38,7 @@
         Edit Preformed Panels for {{ round }}
       {% endblocktrans %}
       {% roundurl 'edit-panel-adjudicators' r as url %}
-      {% if r.draw_status == r.STATUS_CONFIRMED %}
+      {% if r.draw_status == r.Status.CONFIRMED %}
         {% include "components/item-action.html" with type="dark" %}
       {% else %}
         {% include "components/item-action.html" with type="primary" %}

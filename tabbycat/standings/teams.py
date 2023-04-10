@@ -42,7 +42,7 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
 
     def get_annotation_filter(self, round=None):
         annotation_filter = Q(
-            debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
+            debateteam__debate__round__stage=Round.Stage.PRELIMINARY,
         )
         if round is not None:
             annotation_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
@@ -146,7 +146,7 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
     def get_annotation_filter(self, round=None):
         annotation_filter = Q(
-            debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
+            debateteam__debate__round__stage=Round.Stage.PRELIMINARY,
             debateteam__speakerscore__ballot_submission__confirmed=True,
             debateteam__speakerscore__ghost=False,
         )
@@ -183,7 +183,7 @@ class BaseDrawStrengthMetricAnnotator(BaseMetricAnnotator):
 
         # Make a copy of teams queryset and annotate with opponents
         opponents_filter = ~Q(debateteam__debate__debateteam__team_id=F('id'))
-        opponents_filter &= Q(debateteam__debate__round__stage=Round.STAGE_PRELIMINARY)
+        opponents_filter &= Q(debateteam__debate__round__stage=Round.Stage.PRELIMINARY)
         if round is not None:
             opponents_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
         opponents_annotation = ArrayAgg('debateteam__debate__debateteam__team_id',
@@ -333,7 +333,7 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
             ballot_submission__confirmed=True,
             debate_team__team=tsi.team,
             debate_team__debate__debateteam__team=other.team,
-            debate_team__debate__round__stage=Round.STAGE_PRELIMINARY,
+            debate_team__debate__round__stage=Round.Stage.PRELIMINARY,
         )
 
         if round is not None:

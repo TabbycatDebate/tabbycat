@@ -204,8 +204,8 @@ class RoundSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         bc = data.get('break_category', getattr(self.instance, 'break_category', None))
-        stage = data.get('stage', getattr(self.instance, 'stage', Round.STAGE_ELIMINATION))
-        if (bc is None) == (stage == Round.STAGE_ELIMINATION):
+        stage = data.get('stage', getattr(self.instance, 'stage', Round.Stage.ELIMINATION))
+        if (bc is None) == (stage == Round.Stage.ELIMINATION):
             # break category is None _XNOR_ stage is elimination
             raise serializers.ValidationError("Rounds are elimination iff they have a break category.")
         return super().validate(data)
@@ -1228,7 +1228,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
             validated_data['confirmer'] = self.context['request'].user
             validated_data['confirm_timestamp'] = timezone.now()
 
-        stage = 'elim' if self.context['round'].stage == Round.STAGE_ELIMINATION else 'prelim'
+        stage = 'elim' if self.context['round'].stage == Round.Stage.ELIMINATION else 'prelim'
         if self.context['tournament'].pref('ballots_per_debate_' + stage) == 'per-adj':
             if self.context['debate'].debateadjudicator_set.all().count() > 1:
                 if len(result_data['sheets']) == 1:

@@ -112,9 +112,9 @@ class Tournament(models.Model):
         """Returns the 'ballots per debate' setting for the stage of the
         tournament given. Callers can use this to avoid querying the round's
         tournament repeatedly."""
-        if stage == Round.STAGE_PRELIMINARY:
+        if stage == Round.Stage.PRELIMINARY:
             return self.pref('ballots_per_debate_prelim')
-        elif stage == Round.STAGE_ELIMINATION:
+        elif stage == Round.Stage.ELIMINATION:
             return self.pref('ballots_per_debate_elim')
         else:
             raise ValueError("Unrecognized stage: %r" % (stage,))
@@ -165,7 +165,7 @@ class Tournament(models.Model):
 
     def prelim_rounds(self, before=None, until=None):
         """Convenience function for retrieving preliminary rounds. Returns a QuerySet."""
-        qs = self.round_set.filter(stage=Round.STAGE_PRELIMINARY)
+        qs = self.round_set.filter(stage=Round.Stage.PRELIMINARY)
         if until:
             qs = qs.filter(seq__lte=until.seq)
         if before:
@@ -174,7 +174,7 @@ class Tournament(models.Model):
 
     def break_rounds(self):
         """Convenience function for retrieving break rounds. Returns a QuerySet."""
-        return self.round_set.filter(stage=Round.STAGE_ELIMINATION)
+        return self.round_set.filter(stage=Round.Stage.ELIMINATION)
 
     def rounds_for_nav(self):
         """Returns a Round QuerySet suitable for the admin nav bar.
@@ -263,7 +263,7 @@ class Tournament(models.Model):
     def public_draws_available(self):
         """Returns True if draws are available for public viewing. Used in
         public navigation menus."""
-        return any(r.draw_status == Round.STATUS_RELEASED for r in self.current_rounds)
+        return any(r.draw_status == Round.Status.RELEASED for r in self.current_rounds)
 
 
 class RoundManager(LookupByNameFieldsMixin, models.Manager):
@@ -275,38 +275,24 @@ class RoundManager(LookupByNameFieldsMixin, models.Manager):
 
 
 class Round(models.Model):
-    DRAW_RANDOM = 'R'
-    DRAW_MANUAL = 'M'
-    DRAW_ROUNDROBIN = 'D'
-    DRAW_POWERPAIRED = 'P'
-    DRAW_ELIMINATION = 'E'
-    # Translators: These are choices for the type of draw a round should have.
-    DRAW_CHOICES = (
-        (DRAW_RANDOM, _('Random')),
-        (DRAW_MANUAL, _('Manual')),
-        (DRAW_ROUNDROBIN, _('Round-robin')),
-        (DRAW_POWERPAIRED, _('Power-paired')),
-        (DRAW_ELIMINATION, _('Elimination')),
-    )
 
-    STAGE_PRELIMINARY = 'P'
-    STAGE_ELIMINATION = 'E'
-    STAGE_CHOICES = (
-        (STAGE_PRELIMINARY, _('Preliminary')),
-        (STAGE_ELIMINATION, _('Elimination')),
-    )
+    class DrawType(models.TextChoices):
+        RANDOM = 'R', _('Random')
+        MANUAL = 'M', _('Manual')
+        ROUNDROBIN = 'D', _('Round-robin')
+        POWERPAIRED = 'P', _('Power-paired')
+        ELIMINATION = 'E', _('Elimination')
+        SEEDED = 'S', _('Seeded')
 
-    STATUS_NONE = 'N'
-    STATUS_DRAFT = 'D'
-    STATUS_CONFIRMED = 'C'
-    STATUS_RELEASED = 'R'
-    # Translators: These are choices for the status of the draw for a round.
-    STATUS_CHOICES = (
-        (STATUS_NONE, _('None')),
-        (STATUS_DRAFT, _('Draft')),
-        (STATUS_CONFIRMED, _('Confirmed')),
-        (STATUS_RELEASED, _('Released')),
-    )
+    class Stage(models.TextChoices):
+        PRELIMINARY = 'P', _('Preliminary')
+        ELIMINATION = 'E', _('Elimination')
+
+    class Status(models.TextChoices):
+        NONE = 'N', _('None')
+        DRAFT = 'D', _('Draft')
+        CONFIRMED = 'C', _('Confirmed')
+        RELEASED = 'R', _('Released')
 
     objects = RoundManager()
 
@@ -319,10 +305,10 @@ class Round(models.Model):
 
     name = models.CharField(max_length=40, verbose_name=_("name"), help_text=_("e.g. \"Round 1\""))
     abbreviation = models.CharField(max_length=10, verbose_name=_("abbreviation"), help_text=_("e.g. \"R1\""))
-    stage = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY,
+    stage = models.CharField(max_length=1, choices=Stage.choices, default=Stage.PRELIMINARY,
         verbose_name=_("stage"),
         help_text=_("Preliminary = inrounds, elimination = outrounds"))
-    draw_type = models.CharField(max_length=1, choices=DRAW_CHOICES,
+    draw_type = models.CharField(max_length=1, choices=DrawType.choices,
         verbose_name=_("draw type"),
         help_text=_("Which draw method to use"))
     # cascade to avoid break rounds without break categories
@@ -330,7 +316,7 @@ class Round(models.Model):
         verbose_name=_("break category"),
         help_text=_("If elimination round, which break category"))
 
-    draw_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE,
+    draw_status = models.CharField(max_length=1, choices=Status.choices, default=Status.NONE,
         verbose_name=_("draw status"),
         help_text=_("The status of this round's draw"))
 
@@ -365,15 +351,15 @@ class Round(models.Model):
         errors = {}
 
         # Draw type must be consistent with stage
-        if self.stage == Round.STAGE_ELIMINATION and self.draw_type != Round.DRAW_ELIMINATION:
+        if self.stage == Round.Stage.ELIMINATION and self.draw_type != Round.DrawType.ELIMINATION:
             errors['draw_type'] = ValidationError(_("A round in the elimination stage must have "
                 "its draw type set to \"Elimination\"."))
-        elif self.stage == Round.STAGE_PRELIMINARY and self.draw_type == Round.DRAW_ELIMINATION:
+        elif self.stage == Round.Stage.PRELIMINARY and self.draw_type == Round.DrawType.ELIMINATION:
             errors['draw_type'] = ValidationError(_("A round in the preliminary stage cannot "
                 "have its draw type set to \"Elimination\"."))
 
         # Break rounds must have a break category
-        if self.stage == Round.STAGE_ELIMINATION and self.break_category is None:
+        if self.stage == Round.Stage.ELIMINATION and self.break_category is None:
             errors['break_category'] = ValidationError(_("Elimination rounds must have a break category."))
 
         if errors:
@@ -547,7 +533,7 @@ class Round(models.Model):
     def _rounds_in_same_sequence(self):
         rounds = self.tournament.round_set.all()
         if self.is_break_round:
-            rounds = rounds.filter(Q(stage=Round.STAGE_PRELIMINARY) | Q(break_category=self.break_category))
+            rounds = rounds.filter(Q(stage=Round.Stage.PRELIMINARY) | Q(break_category=self.break_category))
         return rounds
 
     @cached_property
@@ -571,7 +557,7 @@ class Round(models.Model):
 
     @cached_property
     def is_break_round(self):
-        return self.stage == self.STAGE_ELIMINATION
+        return self.stage == self.Stage.ELIMINATION
 
     @property
     def is_current(self):

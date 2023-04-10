@@ -35,7 +35,7 @@
 
 {% block page-subnav-actions %}
 
-  {% if round.draw_status != round.STATUS_NONE %}
+  {% if round.draw_status != round.Status.NONE %}
     <a class="btn btn-outline-success " href="{% roundurl 'draw' round %}">
       {% trans "View Draw" %} <i data-feather="chevron-right"></i>
     </a>
@@ -131,7 +131,7 @@
   {% url 'admin:tournaments_round_change' round.id as change_round_url %}
   {% tournamenturl 'breakqual-teams' round.break_category.slug as breakqual_teams_url %}
 
-  {% if not round.prev and round.draw_type == round.DRAW_POWERPAIRED %}
+  {% if not round.prev and round.draw_type == round.DrawType.POWERPAIRED %}
     <div class="alert alert-info">
       <div class="row align-items-center">
         <div class="col-auto pr-1">
@@ -161,7 +161,7 @@
     </div>
   {% endif %}
 
-  {% if round.is_break_round and round.draw_type != round.DRAW_ELIMINATION %}
+  {% if round.is_break_round and round.draw_type != round.DrawType.ELIMINATION %}
     <div class="alert alert-danger">
       <i data-feather="alert-circle"></i>
       {% blocktrans trimmed with draw_type=round.get_draw_type_display|lower %}

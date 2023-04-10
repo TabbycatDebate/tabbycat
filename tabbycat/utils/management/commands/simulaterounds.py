@@ -21,7 +21,7 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
     def handle_round(self, round, **options):
         self.stdout.write("Deleting all debates in round '{}'...".format(round.name))
         Debate.objects.filter(round=round).delete()
-        round.draw_status = Round.STATUS_NONE
+        round.draw_status = Round.Status.NONE
         round.save()
 
         self.stdout.write("Checking in all teams, adjudicators and rooms for round '{}'...".format(round.name))
@@ -29,7 +29,7 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
 
         self.stdout.write("Generating a draw for round '{}'...".format(round.name))
         DrawManager(round).create()
-        round.draw_status = Round.STATUS_CONFIRMED
+        round.draw_status = Round.Status.CONFIRMED
         round.save()
 
         # Limit to 7 adjudicators per debate (just to avoid panel sizes getting too out of hand)

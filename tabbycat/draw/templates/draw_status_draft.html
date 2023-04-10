@@ -48,7 +48,7 @@
     {% include "components/alert.html" with type="info" icon='alert-circle' %}
   {% endif %}
 
-  {% if round.draw_type == round.DRAW_MANUAL and round.debate_set.count == 0 %}
+  {% if round.draw_type == round.DrawType.MANUAL and round.debate_set.count == 0 %}
     {% roundurl 'edit-debate-teams' round as edit_matchups_url %}
     {% blocktrans trimmed asvar message %}
       The draw type for this round is set to <strong>manual</strong>, so Tabbycat has just made a

@@ -230,7 +230,7 @@ class BaseMotionStatisticsView(TournamentMixin, TemplateView):
         kwargs['statistics'] = self.get_statistics()
         kwargs['type'] = self.stats_type
         kwargs['for_public'] = self.for_public
-        kwargs['stage'] = {'PRELIM': Round.STAGE_PRELIMINARY, 'ELIM': Round.STAGE_ELIMINATION}
+        kwargs['stage'] = {'PRELIM': Round.Stage.PRELIMINARY, 'ELIM': Round.Stage.ELIMINATION}
         return super().get_context_data(**kwargs)
 
     def get_statistics(self, *args, **kwargs):

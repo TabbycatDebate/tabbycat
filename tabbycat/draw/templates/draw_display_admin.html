@@ -87,17 +87,17 @@
       </div>
       <div class="list-group list-group-flush">
 
-        {% if round.draw_status == round.STATUS_NONE %}
+        {% if round.draw_status == round.Status.NONE %}
 
           {% trans "You have not generated a draw for this round yet. There is nothing to release." as text %}
           {% include "components/item-info.html" with nopad=True type="info" %}
 
-        {% elif round.draw_status == round.STATUS_DRAFT %}
+        {% elif round.draw_status == round.Status.DRAFT %}
 
           {% trans "The draw for this round is still in a draft state. Confirm the draw before releasing it." as text %}
           {% include "components/item-info.html" with nopad=True type="warning" %}
 
-        {% elif round.draw_status == round.STATUS_RELEASED %}
+        {% elif round.draw_status == round.Status.RELEASED %}
 
           {% trans "Unrelease draw to public" as un_release_text %}
           <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-unrelease' %}">{% csrf_token %}</form>

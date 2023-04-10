@@ -33,7 +33,7 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
         annotation_filter = Q(
             speakerscore__ballot_submission__confirmed=True,
             speakerscore__debate_team__debate__round__seq__lte=round.seq,
-            speakerscore__debate_team__debate__round__stage=Round.STAGE_PRELIMINARY,
+            speakerscore__debate_team__debate__round__stage=Round.Stage.PRELIMINARY,
             speakerscore__ghost=False,
         )
         if self.replies:
@@ -75,7 +75,7 @@ class SpeakerTeamPointsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
 
         annotation_filter = Q(
             team__debateteam__teamscore__ballot_submission__confirmed=True,
-            team__debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
+            team__debateteam__debate__round__stage=Round.Stage.PRELIMINARY,
         )
         if round is not None:
             annotation_filter &= Q(team__debateteam__debate__round__seq__lte=round.seq)

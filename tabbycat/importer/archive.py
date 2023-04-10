@@ -71,11 +71,11 @@ class Exporter:
             round_tag = SubElement(self.root, 'round', {
                 'name': round.name,
                 'abbreviation': round.abbreviation,
-                'elimination': str(round.stage == Round.STAGE_ELIMINATION).lower(),
+                'elimination': str(round.stage == Round.Stage.ELIMINATION).lower(),
                 'feedback-weight': str(round.feedback_weight),
             })
 
-            if round.stage == Round.STAGE_ELIMINATION:
+            if round.stage == Round.Stage.ELIMINATION:
                 round_tag.set('break-category', BREAK_CATEGORY_PREFIX + str(round.break_category_id))
 
             if round.starts_at is not None and round.starts_at != "":
@@ -546,22 +546,22 @@ class Importer:
 
         rounds = []
         for i, round in enumerate(self.root.findall('round'), 1):
-            round_stage = Round.STAGE_ELIMINATION if round.get('elimination', 'false') == 'true' else Round.STAGE_PRELIMINARY
-            draw_type = Round.DRAW_ELIMINATION if round_stage == Round.STAGE_ELIMINATION else Round.DRAW_MANUAL
+            round_stage = Round.Stage.ELIMINATION if round.get('elimination', 'false') == 'true' else Round.Stage.PRELIMINARY
+            draw_type = Round.DrawType.ELIMINATION if round_stage == Round.Stage.ELIMINATION else Round.DrawType.MANUAL
 
             round_obj = Round(
                 tournament=self.tournament, seq=i, completed=True, name=round.get('name'),
                 abbreviation=round.get('abbreviation', round.get('name')[:10]), stage=round_stage, draw_type=draw_type,
-                draw_status=Round.STATUS_RELEASED, feedback_weight=round.get('feedback-weight', 0),
+                draw_status=Round.Status.RELEASED, feedback_weight=round.get('feedback-weight', 0),
                 starts_at=round.get('start'))
             rounds.append(round_obj)
 
             if round.find('debate') is None:
                 round_obj.completed = False
                 if round.find('debate/side/ballot') is None:
-                    round_obj.draw_status = Round.STATUS_NONE
+                    round_obj.draw_status = Round.Status.NONE
 
-            if round_stage == Round.STAGE_ELIMINATION:
+            if round_stage == Round.Stage.ELIMINATION:
                 round_obj.break_category = self.team_breaks.get(round.get('break-category'))
             round_obj.save()
 

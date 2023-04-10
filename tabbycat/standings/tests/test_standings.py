@@ -236,7 +236,7 @@ class TestStandingsWithEliminationRound(IgnorableDebateMixin, TestTrivialStandin
     def setUp(self):
         super().setUp()
         debate = self.set_up_ignorable_debate()
-        debate.round.stage = Round.STAGE_ELIMINATION
+        debate.round.stage = Round.Stage.ELIMINATION
         debate.round.save()
 
 

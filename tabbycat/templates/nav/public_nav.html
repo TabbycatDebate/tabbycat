@@ -73,7 +73,7 @@
     </a>
     <div class="dropdown-menu draw-dropdown-menu" aria-labelledby="drawsDrop">
       {% for r in tournament.round_set.all %}
-        {% if r.draw_status == r.STATUS_RELEASED %}
+        {% if r.draw_status == r.Status.RELEASED %}
           <a class="dropdown-item" href="{% roundurl 'draw-public-for-round' r %}">
             {{ r.name }}
           </a>

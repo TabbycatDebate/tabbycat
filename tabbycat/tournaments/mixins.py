@@ -430,7 +430,7 @@ class DragAndDropMixin(RoundMixin):
             }
             serialised_bcs.append(serialised_bc)
 
-        if self.round.stage == self.round.STAGE_PRELIMINARY:
+        if self.round.stage == self.round.Stage.PRELIMINARY:
             extra_info['highlights']['break'] = serialised_bcs
 
         extra_info['backUrl'] = reverse_round('draw', self.round)

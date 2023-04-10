@@ -21,7 +21,7 @@ class Command(TournamentCommand):
     def handle_tournament(self, tournament, **options):
 
         compare_tournament = Tournament.objects.get(slug=options['compare'])
-        debates = Debate.objects.filter(round__tournament=tournament, round__stage=Round.STAGE_PRELIMINARY)
+        debates = Debate.objects.filter(round__tournament=tournament, round__stage=Round.Stage.PRELIMINARY)
 
         no_original = 0
         no_check = 0

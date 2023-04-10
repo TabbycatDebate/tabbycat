@@ -60,12 +60,12 @@ class AdjudicatorDebateTable:
         )
         if not table.admin and not view.tournament.pref('all_results_released') and not table.private_url:
             debateadjs = debateadjs.filter(
-                debate__round__draw_status=Round.STATUS_RELEASED,
+                debate__round__draw_status=Round.Status.RELEASED,
                 debate__round__silent=False,
                 debate__round__completed=True,
             )
         elif table.private_url:
-            debateadjs = debateadjs.filter(debate__round__draw_status=Round.STATUS_RELEASED)
+            debateadjs = debateadjs.filter(debate__round__draw_status=Round.Status.RELEASED)
 
         debates = [da.debate for da in debateadjs]
         populate_wins(debates)
@@ -107,7 +107,7 @@ class TeamDebateTable:
 
         if not table.admin and not tournament.pref('all_results_released'):
             teamscores = teamscores.filter(
-                debate_team__debate__round__draw_status=Round.STATUS_RELEASED,
+                debate_team__debate__round__draw_status=Round.Status.RELEASED,
                 debate_team__debate__round__silent=False,
                 debate_team__debate__round__completed=True,
             )

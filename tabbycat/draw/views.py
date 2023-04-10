@@ -172,11 +172,11 @@ class PublicDrawMixin(PublicTournamentPageMixin):
 
     @cached_property
     def draws_available(self):
-        return any(r.draw_status == Round.STATUS_RELEASED for r in self.rounds)
+        return any(r.draw_status == Round.Status.RELEASED for r in self.rounds)
 
     @classmethod
     def get_debates_for_round(cls, round):
-        if round.draw_status != Round.STATUS_RELEASED:
+        if round.draw_status != Round.Status.RELEASED:
             return Debate.objects.none()
         return super().get_debates_for_round(round)
 
@@ -235,7 +235,7 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, BaseDisplayDra
 
     def get_draw(self):
         all_rounds = Round.objects.filter(tournament=self.tournament,
-                                          draw_status=Round.STATUS_RELEASED)
+                                          draw_status=Round.Status.RELEASED)
         draw = []
         for round in all_rounds:
             draw.extend(round.debate_set_with_prefetches())
@@ -444,11 +444,11 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
     def get_page_title(self):
         round = self.round
         self.page_emoji = '👀'
-        if round.draw_status == Round.STATUS_NONE:
+        if round.draw_status == Round.Status.NONE:
             title = _("No Draw")
-        elif round.draw_status == Round.STATUS_DRAFT:
+        elif round.draw_status == Round.Status.DRAFT:
             title = _("Draft Draw")
-        elif round.draw_status in [Round.STATUS_CONFIRMED, Round.STATUS_RELEASED]:
+        elif round.draw_status in [Round.Status.CONFIRMED, Round.Status.RELEASED]:
             self.page_emoji = '👏'
             title = _("Draw")
         else:
@@ -495,7 +495,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
         table.add_debate_team_columns(draw)
 
         # For draw details and draw draft pages
-        if (r.draw_status == Round.STATUS_DRAFT or self.detailed) and r.prev:
+        if (r.draw_status == Round.Status.DRAFT or self.detailed) and r.prev:
             teams = Team.objects.filter(debateteam__debate__round=r)
             metrics = self.tournament.pref('team_standings_precedence')
 
@@ -515,7 +515,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
                 self._add_break_rank_columns(table, draw, r.break_category)
             table.add_debate_metric_columns(draw, standings)
             table.add_debate_side_history_columns(draw, r.prev)
-        elif not (r.draw_status == Round.STATUS_DRAFT or self.detailed):
+        elif not (r.draw_status == Round.Status.DRAFT or self.detailed):
             table.add_debate_adjudicators_column(draw, show_splits=False, for_admin=True)
 
         table.add_draw_conflicts_columns(draw, self.venue_conflicts, self.adjudicator_conflicts)
@@ -527,10 +527,10 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
 
     def get_table(self):
         r = self.round
-        if r.draw_status == Round.STATUS_NONE:
+        if r.draw_status == Round.Status.NONE:
             return TabbycatTableBuilder(view=self)  # blank
         elif self.tournament.pref('teams_in_debate') == 'bp' and \
-                r.draw_status == Round.STATUS_DRAFT and r.prev is not None and \
+                r.draw_status == Round.Status.DRAFT and r.prev is not None and \
                 not r.is_break_round:
             return self.get_bp_position_balance_table()
         else:
@@ -552,11 +552,11 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
             )
 
     def get_template_names(self):
-        if self.round.draw_status == Round.STATUS_NONE:
+        if self.round.draw_status == Round.Status.NONE:
             return ["draw_status_none.html"]
-        elif self.round.draw_status == Round.STATUS_DRAFT:
+        elif self.round.draw_status == Round.Status.DRAFT:
             return ["draw_status_draft.html"]
-        elif self.round.draw_status in [Round.STATUS_CONFIRMED, Round.STATUS_RELEASED]:
+        elif self.round.draw_status in [Round.Status.CONFIRMED, Round.Status.RELEASED]:
             return ["draw_status_confirmed.html"]
         else:
             logger.error("Unrecognised draw status: %s", self.round.draw_status)
@@ -655,7 +655,7 @@ class CreateDrawView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_CREATE
 
     def post(self, request, *args, **kwargs):
-        if self.round.draw_status != Round.STATUS_NONE:
+        if self.round.draw_status != Round.Status.NONE:
             messages.error(request, _("Could not create draw for %(round)s, there was already a draw!") % {'round': self.round.name})
             return super().post(request, *args, **kwargs)
 
@@ -708,10 +708,10 @@ class ConfirmDrawCreationView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_CONFIRM
 
     def post(self, request, *args, **kwargs):
-        if self.round.draw_status != Round.STATUS_DRAFT:
+        if self.round.draw_status != Round.Status.DRAFT:
             return HttpResponseBadRequest("Draw status is not DRAFT")
 
-        self.round.draw_status = Round.STATUS_CONFIRMED
+        self.round.draw_status = Round.Status.CONFIRMED
         self.round.save()
         self.log_action()
         return super().post(request, *args, **kwargs)
@@ -737,10 +737,10 @@ class DrawReleaseView(DrawStatusEdit):
     round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
-        if self.round.draw_status != Round.STATUS_CONFIRMED:
+        if self.round.draw_status != Round.Status.CONFIRMED:
             return HttpResponseBadRequest("Draw status is not CONFIRMED")
 
-        self.round.draw_status = Round.STATUS_RELEASED
+        self.round.draw_status = Round.Status.RELEASED
         self.round.save()
         self.log_action()
 
@@ -753,10 +753,10 @@ class DrawUnreleaseView(DrawStatusEdit):
     round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
-        if self.round.draw_status != Round.STATUS_RELEASED:
+        if self.round.draw_status != Round.Status.RELEASED:
             return HttpResponseBadRequest("Draw status is not released")
 
-        self.round.draw_status = Round.STATUS_CONFIRMED
+        self.round.draw_status = Round.Status.CONFIRMED
         self.round.save()
         self.log_action()
         messages.success(request, _("Unreleased the draw."))

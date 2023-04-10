@@ -176,10 +176,10 @@ def auto_make_break_rounds(bc, tournament=None, prefix=False):
             tournament=tournament,
             break_category=bc,
             seq=num_rounds+bc.num_break_rounds-i,
-            stage=Round.STAGE_ELIMINATION,
+            stage=Round.Stage.ELIMINATION,
             name=name,
             abbreviation=abbr,
-            draw_type=Round.DRAW_ELIMINATION,
+            draw_type=Round.DrawType.ELIMINATION,
             feedback_weight=0.5,
             silent=True,
         ).save()

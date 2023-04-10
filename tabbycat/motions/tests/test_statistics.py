@@ -79,7 +79,7 @@ class TestMotionStatisticsBP(TestCase):
         self.tournament.delete()
 
     def test_prelim_statistics(self):
-        rd = Round.objects.create(tournament=self.tournament, seq=1, stage=Round.STAGE_PRELIMINARY)
+        rd = Round.objects.create(tournament=self.tournament, seq=1, stage=Round.Stage.PRELIMINARY)
         motion = Motion.objects.create(text="Prelim motion", reference="Prelim", tournament=self.tournament)
         rd.motion_set.add(motion)
         debate = Debate.objects.create(round=rd)
@@ -122,7 +122,7 @@ class TestMotionStatisticsBP(TestCase):
         self.assertAlmostEqual(motion.counts_by_bench['opp'], 2)
 
     def test_elim_statistics(self):
-        rd = Round.objects.create(tournament=self.tournament, seq=1, stage=Round.STAGE_ELIMINATION)
+        rd = Round.objects.create(tournament=self.tournament, seq=1, stage=Round.Stage.ELIMINATION)
         motion = Motion.objects.create(text="Elim motion", reference="Elim", tournament=self.tournament)
         rd.motion_set.add(motion)
         debate = Debate.objects.create(round=rd)

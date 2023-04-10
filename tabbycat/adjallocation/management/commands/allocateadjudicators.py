@@ -29,7 +29,7 @@ class Command(RoundCommand):
 
     def handle_round(self, round, **options):
         if (not options["preformed"] and not options["force"] and
-                round.draw_status != Round.STATUS_CONFIRMED):
+                round.draw_status != Round.Status.CONFIRMED):
             raise CommandError("Draw status isn't confirmed (it's {}), use "
                 "--force to run anyway".format(round.get_draw_status_display().lower()))
 

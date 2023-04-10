@@ -236,7 +236,7 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
     debateadjs = DebateAdjudicator.objects.filter(
         debate__round__tournament=tournament, adjudicator=source,
         debate__round__seq__lte=tournament.current_round.seq,
-        debate__round__stage=Round.STAGE_PRELIMINARY,
+        debate__round__stage=Round.Stage.PRELIMINARY,
     ).order_by('-debate__round__seq').select_related('debate__round').prefetch_related(
         Prefetch(
             'debate__debateadjudicator_set',
@@ -245,9 +245,9 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
     )
 
     if include_unreleased_draws:
-        debateadjs = debateadjs.filter(debate__round__draw_status__in=[Round.STATUS_CONFIRMED, Round.STATUS_RELEASED])
+        debateadjs = debateadjs.filter(debate__round__draw_status__in=[Round.Status.CONFIRMED, Round.Status.RELEASED])
     else:
-        debateadjs = debateadjs.filter(debate__round__draw_status=Round.STATUS_RELEASED)
+        debateadjs = debateadjs.filter(debate__round__draw_status=Round.Status.RELEASED)
 
     choices = [(None, _("-- Adjudicators --"))]
     for debateadj in debateadjs:
@@ -307,7 +307,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
     debates = Debate.objects.filter(
         debateteam__team=source, round__silent=False,
         round__seq__lte=tournament.current_round.seq,
-        round__stage=Round.STAGE_PRELIMINARY,
+        round__stage=Round.Stage.PRELIMINARY,
     ).order_by('-round__seq').prefetch_related(Prefetch(
         'debateadjudicator_set',
         queryset=DebateAdjudicator.objects.all().select_related('adjudicator').annotate(submitted=Exists(
@@ -319,9 +319,9 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
     ))
 
     if include_unreleased_draws:
-        debates = debates.filter(round__draw_status__in=[Round.STATUS_CONFIRMED, Round.STATUS_RELEASED])
+        debates = debates.filter(round__draw_status__in=[Round.Status.CONFIRMED, Round.Status.RELEASED])
     else:
-        debates = debates.filter(round__draw_status=Round.STATUS_RELEASED)
+        debates = debates.filter(round__draw_status=Round.Status.RELEASED)
 
     choices = [(None, _("-- Adjudicators --"))]
     for debate in debates:

@@ -14,10 +14,10 @@ class VenuesWorkerConsumer(EditDebateOrPanelWorkerMixin):
         round = Round.objects.get(pk=event['extra']['round_id'])
         group = event['extra']['group_name']
 
-        if round.draw_status == Round.STATUS_RELEASED:
+        if round.draw_status == Round.Status.RELEASED:
             self.return_error(group, _("Draw is already released, unrelease draw to assign rooms."))
             return
-        if round.draw_status != Round.STATUS_CONFIRMED:
+        if round.draw_status != Round.Status.CONFIRMED:
             self.return_error(group, _("Draw is not confirmed, confirm draw to assign rooms."))
             return
 
