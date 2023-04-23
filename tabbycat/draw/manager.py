@@ -223,6 +223,25 @@ class PowerPairedDrawManager(BaseDrawManager):
         return ranked
 
 
+class SeededDrawManager(BaseDrawManager):
+    generator_type = "power_paired"
+
+    def get_relevant_options(self):
+        options = super().get_relevant_options()
+        if self.teams_in_debate == 'two':
+            options.extend(["avoid_conflicts", "pairing_method", "side_allocations"])
+        elif self.teams_in_debate == 'bp':
+            options.extend(["assignment_method"])
+        return options
+
+    def get_teams(self):
+        """Get teams in seeded order."""
+        teams = super().get_teams().order_by('-seed')
+        for team in teams:
+            team.points = 0
+        return teams
+
+
 class RoundRobinDrawManager(BaseDrawManager):
     generator_type = "round_robin"
 
@@ -294,6 +313,7 @@ DRAW_MANAGER_CLASSES = {
     ('two', Round.DrawType.ROUNDROBIN): RoundRobinDrawManager,
     ('two', Round.DrawType.MANUAL): ManualDrawManager,
     ('two', Round.DrawType.ELIMINATION): EliminationDrawManager,
+    ('two', Round.DrawType.SEEDED): SeededDrawManager,
     ('bp', Round.DrawType.RANDOM): RandomDrawManager,
     ('bp', Round.DrawType.MANUAL): ManualDrawManager,
     ('bp', Round.DrawType.POWERPAIRED): PowerPairedDrawManager,
