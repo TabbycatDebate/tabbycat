@@ -10,6 +10,13 @@ Change Log
 - Info Slides can now use rich-text formatting (e.g. bold, links, etc). Thanks to Trần Trang Linh for adding this feature!
 
 
+2.7.7
+-----
+*Release date: 23 April 2023*
+
+- Removed expired ad campaign
+
+
 2.7.6
 -----
 *Release date: 25 February 2023*
