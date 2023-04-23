@@ -126,6 +126,7 @@ def populate_results(ballotsubs, tournament=None):
         if result.uses_speakers:
             result.speakers[ss.debate_team.side][ss.position] = ss.speaker
             result.ghosts[ss.debate_team.side][ss.position] = ss.ghost
+            result.speaker_ranks[ss.debate_team.side][ss.position] = ss.rank
 
             if not result.is_voting:
                 result.set_score(ss.debate_team.side, ss.position, ss.score)

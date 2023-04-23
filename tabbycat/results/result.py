@@ -735,11 +735,8 @@ class DebateResultWithScoresMixin:
     def set_ghost(self, side, position, is_ghost):
         self.ghosts[side][position] = is_ghost
 
-    def get_speaker_rank(self, side, position):
-        return self.speaker_ranks[side].get(position)
-
     def set_speaker_rank(self, side, position, rank):
-        self.speaker_ranks[side][position] = rank
+        self.scoresheet.set_speaker_rank(side, position, rank)
 
     # --------------------------------------------------------------------------
     # Model fields
@@ -801,7 +798,7 @@ class DebateResultWithScoresMixin:
                 "name": pos_name,
                 "speaker": self.get_speaker(side, pos),
                 "score": sheet.get_score(side, pos),
-                "rank": self.get_speaker_rank(side, pos),
+                "rank": sheet.get_speaker_rank(side, pos),
             })
 
 
