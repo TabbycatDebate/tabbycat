@@ -12,6 +12,7 @@ from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
 from rest_framework.exceptions import NotFound
 from rest_framework.fields import DateTimeField
 from rest_framework.generics import GenericAPIView, get_object_or_404, RetrieveUpdateAPIView
+from rest_framework.mixins import ListModelMixin
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
@@ -235,7 +236,7 @@ class SpeakerEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, Retri
 
 @extend_schema(tags=['break-categories'], parameters=[tournament_parameter, id_parameter])
 @extend_schema_view(list=extend_schema(summary="Get breaking teams"))
-class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBreakMixin, GenericViewSet):
+class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBreakMixin, GenericViewSet, ListModelMixin):
     serializer_class = serializers.BreakingTeamSerializer
     tournament_field = 'break_category__tournament'
     pagination_class = None
@@ -622,9 +623,6 @@ class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPI
 
     def get_queryset(self):
         qs = self.model.objects.filter(**{self.tournament_field: self.tournament}).select_related(self.tournament_field)
-        category = self.request.query_params.get('category', None)
-        if category is not None:
-            return qs.filter(categories__pk=category)
         return qs
 
     def get_max_round(self):
@@ -661,6 +659,12 @@ class SubstantiveSpeakerStandingsView(BaseStandingsView):
     tournament_field = 'team__tournament'
     generator = SpeakerStandingsGenerator
 
+    def get_queryset(self):
+        category = self.request.query_params.get('category', None)
+        if category is not None:
+            return super().get_queryset().filter(categories__pk=category)
+        return super().get_queryset()
+
 
 @extend_schema_view(
     get=extend_schema(summary="Get reply speaker standings", responses=serializers.SpeakerStandingsSerializer(many=True)),
@@ -683,6 +687,12 @@ class TeamStandingsView(BaseStandingsView):
     access_preference = 'team_tab_released'
     model = Team
     generator = TeamStandingsGenerator
+
+    def get_queryset(self):
+        category = self.request.query_params.get('category', None)
+        if category is not None:
+            return super().get_queryset().filter(break_categories__pk=category)
+        return super().get_queryset()
 
 
 @extend_schema(tags=['standings'], parameters=[

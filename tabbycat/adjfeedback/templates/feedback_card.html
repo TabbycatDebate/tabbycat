@@ -68,9 +68,7 @@
           {% else %}
             <i data-feather="x" class="text-danger"></i>
           {% endif %}
-          <span title="{{ item.question.text }}" class="text-heading" data-toggle="tooltip">
-            {{ item.question.reference }}
-          </span>
+          {{ item.question.text }}
         {% elif item.question.answer_type == item.question.ANSWER_TYPE_FLOAT %}
           <span class="text-secondary">{{ item.question.text }}</span>
           <div class="text-heading">{{ item.answer|floatformat:"2" }}</div>

@@ -48,16 +48,16 @@
       {% elif pref.teams_in_debate == 'two' and not availability_info.teams.in_now|divisibleby:2  %}
         {% trans "There is an uneven number of teams marked as available for this round." as text %}
         {% include "components/item-info.html" with type="danger" nopad=True %}
-        {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
+        {% include "components/item-action.html" with text=title_text type="success" to_complete=True %}
       {% elif pref.teams_in_debate == 'bp' and not availability_info.teams.in_now|divisibleby:4  %}
         {% trans "The number of teams marked as available for this round is not a multiple of 4." as text %}
         {% include "components/item-info.html" with type="danger" nopad=True %}
-        {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
+        {% include "components/item-action.html" with text=title_text type="success" to_complete=True %}
       {% elif info.in_now == 0 and not round.is_break_round %}
-        {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
+        {% include "components/item-action.html" with text=title_text type="success" to_complete=True %}
       {% else %}
         {% trans "Edit team availability" as title_text %}
-        {% include "components/item-action.html" with alone=True text=title_text type="primary" %}
+        {% include "components/item-action.html" with text=title_text type="primary" %}
       {% endif %}
 
     {% elif type == "adjs" %}
@@ -114,12 +114,12 @@
           There need to be at least {{ required_count }} adjudicators marked as available, given the number of debates.
         {% endblocktrans %}
         {% include "components/item-info.html" with type="danger" nopad=True %}
-        {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
+        {% include "components/item-action.html" with text=title_text type="success" to_complete=True %}
       {% elif info.in_now == 0 %}
-        {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
+        {% include "components/item-action.html" with text=title_text type="success" to_complete=True %}
       {% else %}
         {% trans "Edit adjudicator availability" as title_text %}
-        {% include "components/item-action.html" with alone=True text=title_text type="primary" %}
+        {% include "components/item-action.html" with text=title_text type="primary" %}
       {% endif %}
 
     {% elif type == "venues" %}
@@ -178,12 +178,12 @@
           the number of debates.
         {% endblocktrans %}
         {% include "components/item-info.html" with type="danger" nopad=True %}
-        {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
+        {% include "components/item-action.html" with text=title_text type="success" to_complete=True %}
       {% elif info.in_now == 0 %}
-        {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
+        {% include "components/item-action.html" with text=title_text type="success" to_complete=True %}
       {% else %}
         {% trans "Edit room availability" as title_text %}
-        {% include "components/item-action.html" with alone=True text=title_text type="primary" %}
+        {% include "components/item-action.html" with text=title_text type="primary" %}
       {% endif %}
 
     {% endif %}

@@ -3,9 +3,8 @@ import random
 
 from django.utils.translation import gettext as _
 
-from draw.generator.powerpair import PowerPairedDrawGenerator
+from draw.generator.powerpair import BasePowerPairedDrawGenerator
 from participants.utils import get_side_history
-from standings.base import Standings
 from standings.teams import TeamStandingsGenerator
 from tournaments.models import Round
 
@@ -20,6 +19,9 @@ OPTIONS_TO_CONFIG_MAPPING = {
     "avoid_history"         : "draw_rules__avoid_team_history",
     "history_penalty"       : "draw_rules__team_history_penalty",
     "institution_penalty"   : "draw_rules__team_institution_penalty",
+    "pullup_debates_penalty": "draw_rules__pullup_debates_penalty",
+    "side_penalty"          : "draw_rules__side_penalty",
+    "pairing_penalty"       : "draw_rules__pairing_penalty",
     "side_allocations"      : "draw_rules__draw_side_allocations",
     "avoid_conflicts"       : "draw_rules__draw_avoid_conflicts",
     "odd_bracket"           : "draw_rules__draw_odd_bracket",
@@ -60,7 +62,7 @@ class BaseDrawManager:
 
     def get_relevant_options(self):
         if self.teams_in_debate == 'two':
-            return ["avoid_institution", "avoid_history", "history_penalty", "institution_penalty"]
+            return ["avoid_institution", "avoid_history", "history_penalty", "institution_penalty", "pullup_debates_penalty", "side_penalty", "pairing_penalty", "avoid_conflicts"]
         else:
             return []
 
@@ -196,25 +198,24 @@ class PowerPairedDrawManager(BaseDrawManager):
         teams = super().get_teams()
 
         metrics = self.round.tournament.pref('team_standings_precedence')
-        pullup_metric = PowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.round.tournament.pref('draw_pullup_restriction')]
+        pullup_metric = BasePowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.round.tournament.pref('draw_pullup_restriction')]
+        extra_metrics = {pullup_metric} if pullup_metric is not None else set()
 
-        if self.round.prev is None:
-            standings = Standings(teams)
-            standings.record_added_metric('points', _("points"), _("Pts"), None, False)
-            standings.record_added_metric('seed', _("seed"), _("Seed"), None, False)
-            for team in teams:
-                standings.add_metric(team, 'points', 0)
-                standings.add_metric(team, 'seed', team.seed)
-            standings.sort(('points', 'seed'), random.shuffle)
-        else:
-            generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random",
-                extra_metrics=(pullup_metric,) if pullup_metric and pullup_metric not in metrics else ())
-            standings = generator.generate(teams, round=self.round.prev)
+        pullup_debates_penalty = self.round.tournament.pref("pullup_debates_penalty")
+        if pullup_debates_penalty > 0:
+            extra_metrics.add("pullup_debates")
+        extra_metrics -= set(metrics)
+
+        generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random", extra_metrics=list(extra_metrics))
+        standings = generator.generate(teams, round=self.round.prev)
 
         ranked = []
         for standing in standings:
             team = standing.team
             team.points = next(standing.itermetrics(), 0) or 0
+            team.subrank = standing.get_ranking('subrank')
+            if pullup_debates_penalty > 0:
+                team.pullup_debates = standing.metrics.get("pullup_debates", 0)
             if pullup_metric:
                 setattr(team, pullup_metric, standing.metrics[pullup_metric])
             ranked.append(team)

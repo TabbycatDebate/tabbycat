@@ -29,8 +29,8 @@ class TestTrivialStandings(TestCase):
         adj = Adjudicator.objects.create(tournament=self.tournament, name="Adjudicator")
         for i in [1, 2]:
             rd = Round.objects.create(tournament=self.tournament, seq=i)
-            debate = Debate.objects.create(round=rd)
-            dt1 = DebateTeam.objects.create(debate=debate, team=self.team1, side=DebateTeam.SIDE_AFF)
+            debate = Debate.objects.create(round=rd, flags=['pullup'])
+            dt1 = DebateTeam.objects.create(debate=debate, team=self.team1, side=DebateTeam.SIDE_AFF, flags=['pullup'])
             dt2 = DebateTeam.objects.create(debate=debate, team=self.team2, side=DebateTeam.SIDE_NEG)
             DebateAdjudicator.objects.create(debate=debate, adjudicator=adj, type=DebateAdjudicator.TYPE_CHAIR)
             ballotsub = BallotSubmission.objects.create(debate=debate, confirmed=True)
@@ -138,12 +138,18 @@ class TestTrivialStandings(TestCase):
         self._base_metric_test({'wbw': {'wbw1': [2, 0]}})
 
     def test_wbw_tied(self):
-        # npullups should be 0 for both teams, so is a tied first metric,
-        # allowing wbw to be tested as a second metric (the normal use case)
-        self._base_metric_test({'npullups': [0, 0], 'wbw': {'wbw1': [2, 0]}})
+        # firsts should be 0 for both teams as only applicable in BP, so is a tied
+        # first metric, allowing wbw to be tested as a second metric (the normal use case)
+        self._base_metric_test({'firsts': [0, 0], 'wbw': {'wbw1': [2, 0]}})
 
     def test_npullups(self):
-        self._base_metric_test({'npullups': [0, 0]})
+        self._base_metric_test({'npullups': [2, 0]})
+
+    def test_pullup_debates(self):
+        self._base_metric_test({'pullup_debates': [2, 2]})
+
+    def test_pullup_debates_combinable(self):
+        self._base_metric_test({'points': [2, 0], 'npullups': [2, 0], 'pullup_debates': [2, 2]})
 
     def test_points_ranked(self):
         generator = TeamStandingsGenerator(('points',), ('rank',))

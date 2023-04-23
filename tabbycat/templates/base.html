@@ -102,30 +102,6 @@
 
         </div>
 
-        {% if tournament and not public_index and not user_role == "admin" %}
-          <div class="col-md">
-            <div class="list-group mt-3 mb-3">
-              <div class="list-group-item px-3 pb-2">
-                <div class="bg-secondary d-none d-md-block">
-                  <a href="https://fdtacademy.com/fdtregistration/?referall=tabbycat{{ version }}">
-                    {% get_unit 'wide' as unit_path %}
-                    <img style="max-width: 100%;" src="{% static unit_path %}" />
-                  </a>
-                </div>
-                <div class="bg-secondary d-md-none">
-                  <a href="https://fdtacademy.com/fdtregistration/?referall=tabbycat{{ version }}">
-                    {% get_unit 'big' as unit_path %}
-                    <img style="max-width: 100%;" src="{% static unit_path %}" />
-                  </a>
-                </div>
-                <div class="text-right">
-                  <small>Advertisement by a <a href="https://opencollective.com/tabbycat#category-CONTRIBUTE">Tabbycat Sponsor</a></small>
-                </div>
-              </div>
-            </div>
-          </div>
-        {% endif %}
-
       </div>
     {% endblock header %}
 

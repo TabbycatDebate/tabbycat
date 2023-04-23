@@ -348,6 +348,9 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
             'initial': [{'tournament': self.tournament}] * 2,
         }
 
+    def prepare_related(self, cat):
+        pass
+
     def formset_valid(self, formset):
         cats = formset.save(commit=False)
 
@@ -355,9 +358,11 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
             cat.save()
 
         for i, cat in enumerate(formset.new_objects, start=self.get_formset_queryset().aggregate(m=Coalesce(Max('seq'), 0) + 1)['m']):
-            raise
             cat.seq = i
+            cat.tournament = self.tournament  # Even with the tournament in the form, avoid it being changed
             cat.save()
+
+            self.prepare_related(cat)
 
         if cats:
             message = ngettext("Saved category: %(list)s",

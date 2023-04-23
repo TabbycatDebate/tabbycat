@@ -5,7 +5,7 @@ from itertools import product
 
 from django.contrib import messages
 from django.db.models import OuterRef, Subquery
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.utils.functional import cached_property
 from django.utils.html import escape, format_html
 from django.utils.safestring import mark_safe
@@ -19,7 +19,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjallocation.utils import adjudicator_conflicts_display
 from availability.utils import annotate_availability
-from draw.generator.powerpair import PowerPairedDrawGenerator
+from draw.generator.powerpair import BasePowerPairedDrawGenerator
 from notifications.models import BulkNotification
 from notifications.views import RoundTemplateEmailCreateView
 from options.preferences import BPPositionCost
@@ -500,7 +500,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
             metrics = self.tournament.pref('team_standings_precedence')
 
             if self.tournament.pref('teams_in_debate') == 'two':
-                pullup_metric = PowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.tournament.pref('draw_pullup_restriction')]
+                pullup_metric = BasePowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.tournament.pref('draw_pullup_restriction')]
             else:
                 pullup_metric = None
 
@@ -709,7 +709,11 @@ class ConfirmDrawCreationView(DrawStatusEdit):
 
     def post(self, request, *args, **kwargs):
         if self.round.draw_status != Round.Status.DRAFT:
-            return HttpResponseBadRequest("Draw status is not DRAFT")
+            if self.round.draw_status == Round.Status.NONE:
+                messages.error(request, _("There is no draw."))
+            else:
+                messages.info(request, _("The draw had already been confirmed."))
+            return HttpResponseRedirect(reverse_round('draw', self.round))
 
         self.round.draw_status = Round.Status.CONFIRMED
         self.round.save()
@@ -738,7 +742,11 @@ class DrawReleaseView(DrawStatusEdit):
 
     def post(self, request, *args, **kwargs):
         if self.round.draw_status != Round.Status.CONFIRMED:
-            return HttpResponseBadRequest("Draw status is not CONFIRMED")
+            if self.round.draw_status == Round.Status.RELEASED:
+                messages.info(request, _("The draw has already been released."))
+            else:
+                messages.error(request, _("The draw must be confirmed before being released."))
+            return HttpResponseRedirect(reverse_round('draw', self.round))
 
         self.round.draw_status = Round.Status.RELEASED
         self.round.save()
@@ -754,7 +762,8 @@ class DrawUnreleaseView(DrawStatusEdit):
 
     def post(self, request, *args, **kwargs):
         if self.round.draw_status != Round.Status.RELEASED:
-            return HttpResponseBadRequest("Draw status is not released")
+            messages.info(request, _("The draw had been unreleased."))
+            return HttpResponseRedirect(reverse_round('draw', self.round))
 
         self.round.draw_status = Round.Status.CONFIRMED
         self.round.save()

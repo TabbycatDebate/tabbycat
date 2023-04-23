@@ -148,14 +148,7 @@ class RoundSerializer(serializers.ModelSerializer):
 
         class Meta:
             model = RoundMotion
-            exclude = ('round', 'motion')
-
-        def validate_seq(self, value):
-            qs = RoundMotion.objects.filter(
-                round=self.context['round'], seq=value).exclude(id=getattr(self.instance, 'id', None))
-            if qs.exists():
-                raise serializers.ValidationError("Object with same value exists in the round")
-            return value
+            exclude = ('round', 'motion', 'seq')
 
         def create(self, validated_data):
             motion_data = validated_data.pop('motion')
@@ -167,6 +160,7 @@ class RoundSerializer(serializers.ModelSerializer):
             validated_data['motion'].text = motion_data['text']
             validated_data['motion'].reference = motion_data['reference']
             validated_data['motion'].info_slide = motion_data.get('info_slide', '')
+            validated_data['motion'].tournament = self.context['tournament']
             validated_data['motion'].save()
 
             return super().create(validated_data)
@@ -183,7 +177,7 @@ class RoundSerializer(serializers.ModelSerializer):
         view_name='api-breakcategory-detail',
         queryset=BreakCategory.objects.all(),
         allow_null=True, required=False)
-    motions = RoundMotionSerializer(many=True, source='roundmotion_set')
+    motions = RoundMotionSerializer(many=True, source='roundmotion_set', required=False)
 
     _links = RoundLinksSerializer(source='*', read_only=True)
 
@@ -204,7 +198,7 @@ class RoundSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         bc = data.get('break_category', getattr(self.instance, 'break_category', None))
-        stage = data.get('stage', getattr(self.instance, 'stage', Round.Stage.ELIMINATION))
+        stage = data.get('stage', getattr(self.instance, 'stage', Round.Stage.PRELIMINARY))
         if (bc is None) == (stage == Round.Stage.ELIMINATION):
             # break category is None _XNOR_ stage is elimination
             raise serializers.ValidationError("Rounds are elimination iff they have a break category.")
@@ -215,6 +209,9 @@ class RoundSerializer(serializers.ModelSerializer):
         round = super().create(validated_data)
 
         if len(motions_data) > 0:
+            for i, motion in enumerate(motions_data, start=1):
+                motion['seq'] = i
+
             motions = self.RoundMotionSerializer(many=True, context=self.context)
             motions._validated_data = motions_data  # Data was already validated
             motions.save(round=round)
@@ -223,7 +220,9 @@ class RoundSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         motions_data = validated_data.pop('motion_set', [])
-        for roundmotion in motions_data:
+        for i, roundmotion in enumerate(motions_data, start=1):
+            roundmotion['seq'] = i
+
             motion = roundmotion['motion'].get('pk')
             if motion is None:
                 motion = Motion(
@@ -668,7 +667,7 @@ class TeamSerializer(serializers.ModelSerializer):
         break_categories = validated_data.pop('break_categories', [])
         venue_constraints = validated_data.pop('venue_constraints', [])
 
-        emoji, code_name = pick_unused_emoji()
+        emoji, code_name = pick_unused_emoji(validated_data['tournament'].id)
         if 'emoji' not in validated_data or validated_data.get('emoji') is None:
             validated_data['emoji'] = emoji
         if 'code_name' not in validated_data or validated_data.get('code_name') is None:

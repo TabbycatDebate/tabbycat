@@ -22,7 +22,7 @@ class BreakCategory(models.Model):
         help_text=_("Number of breaking teams in this category"))
     is_general = models.BooleanField(
         verbose_name=_("is general"),
-        help_text=_("True if most teams eligible for this category, e.g. Open, False otherwise"))
+        help_text=_("Are teams eligible for this break by default"))
     priority = models.IntegerField(
         verbose_name=_("priority"),
         help_text=_("If a team breaks in multiple categories, higher priority "

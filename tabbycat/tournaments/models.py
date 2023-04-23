@@ -348,22 +348,23 @@ class Round(models.Model):
         return "[%s] %s" % (self.tournament, self.name)
 
     def clean(self):
-        errors = {}
+        errors = {
+            'break_category': [],
+        }
 
         # Draw type must be consistent with stage
-        if self.stage == Round.Stage.ELIMINATION and self.draw_type != Round.DrawType.ELIMINATION:
-            errors['draw_type'] = ValidationError(_("A round in the elimination stage must have "
-                "its draw type set to \"Elimination\"."))
-        elif self.stage == Round.Stage.PRELIMINARY and self.draw_type == Round.DrawType.ELIMINATION:
-            errors['draw_type'] = ValidationError(_("A round in the preliminary stage cannot "
-                "have its draw type set to \"Elimination\"."))
+        if (self.stage == Round.Stage.ELIMINATION) != (self.draw_type == Round.DrawType.ELIMINATION):
+            errors['draw_type'] = [ValidationError(_("The \"Elimination\" draw type is only for elimination rounds, where it is mandatory."))]
 
         # Break rounds must have a break category
-        if self.stage == Round.Stage.ELIMINATION and self.break_category is None:
-            errors['break_category'] = ValidationError(_("Elimination rounds must have a break category."))
+        if (self.stage == Round.Stage.ELIMINATION) == (self.break_category is None):
+            errors['break_category'].append(ValidationError(_("An elimination round must have a break category and preliminary round must not.")))
 
-        if errors:
-            raise ValidationError(errors)
+        if self.break_category and self.break_category.tournament_id != self.tournament_id:
+            errors['break_category'].append(ValidationError(_("Break category must be for the same tournament.")))
+
+        if any(len(v) > 0 for v in errors.values()):
+            raise ValidationError({k: v for k, v in errors.items() if len(v) > 0})
 
     # --------------------------------------------------------------------------
     # Checks for potential errors

@@ -38,6 +38,12 @@ class BaseScoresheet:
             return set()
         return self._get_winners()
 
+    def add_declared_winner(self, winner):
+        pass
+
+    def set_declared_winners(self, winners):
+        pass
+
 
 class ScoresMixin:
     """Provides functionality for speaker scores.
