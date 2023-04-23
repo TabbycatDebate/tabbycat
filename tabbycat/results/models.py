@@ -348,6 +348,8 @@ class SpeakerScore(models.Model):
         verbose_name=_("debate team"))
     speaker = models.ForeignKey('participants.Speaker', models.CASCADE, db_index=True,
         verbose_name=_("speaker"))
+    rank = models.PositiveSmallIntegerField(null=True, blank=True,
+        verbose_name=_("rank"))
     score = ScoreField(verbose_name=_("score"))
     position = models.IntegerField(verbose_name=_("position"))
     ghost = models.BooleanField(default=False,

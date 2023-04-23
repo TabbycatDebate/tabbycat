@@ -57,6 +57,7 @@ class ScoresMixin:
         super().__init__(*args, **kwargs)
         self.positions = positions
         self.scores = {side: dict.fromkeys(self.positions, None) for side in self.sides}
+        self.speaker_ranks = {side: dict.fromkeys(self.positions, None) for side in self.sides}
 
     def is_complete(self):
         scores_complete = all(self.scores[s][p] is not None for s in self.sides
@@ -69,6 +70,12 @@ class ScoresMixin:
     def get_score(self, side, position):
         return self.scores[side][position]
 
+    def set_speaker_rank(self, side, position, score):
+        self.speaker_ranks[side][position] = score
+
+    def get_speaker_rank(self, side, position):
+        return self.speaker_ranks[side][position]
+
     def get_total(self, side):
         scores = [self.scores[side][p] for p in self.positions]
         if None in scores:
@@ -76,7 +83,7 @@ class ScoresMixin:
         return sum(scores)
 
     def identical(self, other):
-        return super().identical(other) and self.scores == other.scores
+        return super().identical(other) and self.scores == other.scores and self.speaker_ranks == other.speaker_ranks
 
 
 class DeclaredWinnersMixin:

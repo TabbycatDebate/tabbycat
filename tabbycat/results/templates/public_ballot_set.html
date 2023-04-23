@@ -82,9 +82,14 @@
                 <li class="list-group-item">
                   <strong>{{ position.name }}</strong>
                   {% person_display_name position.speaker %}
-                  <span class="badge badge-secondary float-right">
+                  <span class="badge mr-2 badge-secondary float-right">
                     {{ position.score }}
                   </span>
+                  {% if pref.speaker_ranks != 'none' %}
+                    <span class="badge mr-2 badge-secondary float-right">
+                      {{ position.rank }}
+                    </span>
+                  {% endif %}
                 </li>
               {% endfor %}
               <li class="list-group-item list-group-item-{{ team.win_style }}">
@@ -98,7 +103,7 @@
                       <em>Total for {{ name }} ({{ side }})</em>
                     {% endblocktrans %}
                   {% endif %}
-                  <span class="badge badge-secondary float-right">
+                  <span class="badge mr-2 badge-secondary float-right">
                     {{ team.total }}
                   </span>
                 {% else %}

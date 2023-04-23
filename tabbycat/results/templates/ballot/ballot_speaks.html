@@ -32,6 +32,13 @@
 
     </div>
 
+    {% if position.srank %}
+      <div class="col-4 form-group {{ team.side_code }} pr-md-2 pr-1 srank {{ position.srank_errors|yesno:'error,' }}">
+        {{ position.srank|addcss:"form-control" }}
+        {{ position.srank.errors }}
+      </div>
+    {% endif %}
+
     <div class="col-4 form-group {{ team.side_code }} pr-md-2 pr-1 score {{ position.score_errors|yesno:'error,' }}">
       {{ position.score|addcss:"form-control" }}
       {{ position.score.errors }}
