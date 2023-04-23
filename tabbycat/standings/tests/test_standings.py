@@ -145,11 +145,11 @@ class TestTrivialStandings(TestCase):
     def test_npullups(self):
         self._base_metric_test({'npullups': [2, 0]})
 
-    def test_saw_pullups(self):
-        self._base_metric_test({'saw_pullups': [2, 2]})
+    def test_pullup_debates(self):
+        self._base_metric_test({'pullup_debates': [2, 2]})
 
-    def test_saw_pullups_combinable(self):
-        self._base_metric_test({'points': [2, 0], 'npullups': [2, 0], 'saw_pullups': [2, 2]})
+    def test_pullup_debates_combinable(self):
+        self._base_metric_test({'points': [2, 0], 'npullups': [2, 0], 'pullup_debates': [2, 2]})
 
     def test_points_ranked(self):
         generator = TeamStandingsGenerator(('points',), ('rank',))
