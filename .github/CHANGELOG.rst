@@ -2,7 +2,7 @@
 Change Log
 ==========
 
-2.8.0 (Q)
+2.8.0 (Quokka)
 ---------
 *Release date: TBD*
 
