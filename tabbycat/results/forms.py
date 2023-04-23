@@ -257,25 +257,27 @@ class BaseBallotSetForm(BaseResultForm):
         self.adjudicators = list(self.debate.adjudicators.voting())
         self.motions = self.debate.round.roundmotion_set.order_by('seq').select_related('motion')
 
-        self.using_motions = self.tournament.pref('enable_motions')
-        self.using_vetoes = self.tournament.pref('motion_vetoes_enabled')
-        self.using_replies = self.tournament.pref('reply_scores_enabled')
-        self.using_declared_winner = self.tournament.pref('winners_in_ballots') != 'none'
-        self.declared_winner = self.tournament.pref('winners_in_ballots')
-        self.bypassing_checks = self.tournament.pref('disable_ballot_confirms') and not ballotsub.single_adj
-        self.max_margin = self.tournament.pref('maximum_margin')
-        self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
-                               self.tournament.pref('teams_in_debate') == 'two')
-        self.uses_speaker_ranks = self.tournament.pref('speaker_ranks') != 'none'
-
         self.sides = self.tournament.sides
         self.positions = self.tournament.positions
         self.last_substantive_position = self.tournament.last_substantive_position  # also used in template
         self.reply_position = self.tournament.reply_position  # also used in template
 
+        self.get_preferences_options()
+
         self.create_fields()
         self.set_tab_indices()
         self.initial.update(self.initial_data())
+
+    def get_preferences_options(self):
+        self.using_motions = self.tournament.pref('enable_motions')
+        self.using_vetoes = self.tournament.pref('motion_vetoes_enabled')
+        self.using_replies = self.tournament.pref('reply_scores_enabled')
+        self.using_declared_winner = self.tournament.pref('winners_in_ballots') != 'none'
+        self.declared_winner = self.tournament.pref('winners_in_ballots')
+        self.bypassing_checks = self.tournament.pref('disable_ballot_confirms') and not self.ballotsub.single_adj
+        self.max_margin = self.tournament.pref('maximum_margin')
+        self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
+                               self.tournament.pref('teams_in_debate') == 'two')
 
     # --------------------------------------------------------------------------
     # Field names and field convenience functions
@@ -627,7 +629,7 @@ class ScoresMixin:
         for team in self.debate.teams:
             yield self['team_%d' % team.id]
 
-    def scoresheet(self, fieldname_score_func, fieldname_srank_func):
+    def scoresheet(self, fieldname_score_func, fieldname_srank_func=None):
         """Returns a list of dictionaries for a single scoresheet, to allow for
         easy iteration of the form. The function `fieldname_score_func` should
         take two arguments `(side, pos)`. This function is called by the
@@ -658,6 +660,10 @@ class ScoresMixin:
 class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
     """Presents one ballot for the debate. Used for consensus adjudications."""
 
+    def get_preferences_options(self):
+        super().get_preferences_options()
+        self.using_speaker_ranks = self.tournament.pref('speaker_ranks') != 'none'
+
     result_class = ConsensusDebateResultWithScores
 
     @staticmethod
@@ -676,7 +682,6 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
         """Adds the speaker score fields:
          - <side>_score_s#,  one for each score
         """
-        nspeeches = len(self.sides) * len(self.positions)
         for side, pos in product(self.sides, self.positions):
             scorefield = ReplyScoreField if (pos == self.reply_position) else SubstantiveScoreField
             self.fields[self._fieldname_score(side, pos)] = scorefield(
@@ -685,6 +690,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 required=True,
             )
             if self.uses_speaker_ranks:
+                nspeeches = len(self.sides) * len(self.positions)
                 self.fields[self._fieldname_srank(side, pos)] = forms.IntegerField(required=True, min_value=1, max_value=nspeeches, step_size=1)
 
         if self.using_declared_winner:
@@ -697,7 +703,8 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
             score = result.get_score(side, pos)
             coerce_for_ui = self.fields[self._fieldname_score(side, pos)].coerce_for_ui
             initial[self._fieldname_score(side, pos)] = coerce_for_ui(score)
-            initial[self._fieldname_srank(side, pos)] = result.get_speaker_rank(side, pos)
+            if self.using_speaker_ranks:
+                initial[self._fieldname_srank(side, pos)] = result.get_speaker_rank(side, pos)
 
         if self.using_declared_winner:
             initial[self._fieldname_declared_winner()] = result.winning_side()
@@ -773,7 +780,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 rank_scores.append((rank, cleaned_data[self._fieldname_score(side, pos)]))
 
             if len(ranks) < len(self.sides) * len(self.positions):
-                self.add_error(None, forms.ValidationError(_("Ranks cannot be tied.", code='ranks_tied')))
+                self.add_error(None, forms.ValidationError(_("Ranks cannot be tied."), code='ranks_tied'))
 
             if self.tournament.pref('speaker_ranks') == 'high-points' and (
                 sorted(rank_scores, key=lambda s: (-s[1], s[0])) != sorted(rank_scores, key=lambda s: (s[0], -s[1]))
@@ -798,7 +805,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
     def scoresheets(self):
         """Generates a sequence of nested dicts that allows for easy iteration
         through the form. Used in the ballot_set.html.html template."""
-        sheets = [{"teams": self.scoresheet(self._fieldname_score, self._fieldname_srank)}]
+        sheets = [{"teams": self.scoresheet(self._fieldname_score, self._fieldname_srank if self.using_speaker_ranks else None)}]
 
         if self.using_declared_winner:
             sheets[0]['declared_winner'] = self[self._fieldname_declared_winner()]
