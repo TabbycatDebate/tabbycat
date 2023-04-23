@@ -2,6 +2,13 @@
 Change Log
 ==========
 
+2.7.7
+-----
+*Release date: 23 April 2023*
+
+- Removed expired ad campaign
+
+
 2.7.6
 -----
 *Release date: 25 February 2023*
