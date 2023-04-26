@@ -9,6 +9,7 @@ from django.db.models.functions import Coalesce
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+import privateurls
 from checkins.models import PersonIdentifier
 from utils.managers import LookupByNameFieldsMixin
 
@@ -139,6 +140,7 @@ class Person(models.Model):
 
         # create identifier for participant
         PersonIdentifier.objects.create(person=self)
+        privateurls.utils.populate_url_keys([self])
 
 
 class TeamManager(LookupByNameFieldsMixin, models.Manager):
