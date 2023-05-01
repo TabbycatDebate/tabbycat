@@ -3,7 +3,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from checkins.models import VenueIdentifier
 from utils.fields import LabelByNameForeignKey
 
 
@@ -52,12 +51,6 @@ class Venue(models.Model):
 
     def __repr__(self):
         return "<Venue: %s (%s) [%s]>" % (str(self), self.priority, self.id)
-
-    def save(self, **kwargs):
-        super().save(**kwargs)
-
-        # create identifier for venue
-        VenueIdentifier.objects.create(venue=self)
 
 
 class VenueCategory(models.Model):

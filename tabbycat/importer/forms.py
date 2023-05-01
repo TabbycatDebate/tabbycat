@@ -8,7 +8,9 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.utils.translation import gettext as _, ngettext, ngettext_lazy
 
+from checkins.models import PersonIdentifier, VenueIdentifier
 from participants.models import Adjudicator, Institution, Speaker, Team
+from privateurls.utils import populate_url_keys
 from venues.models import Venue
 
 logger = logging.getLogger(__name__)
@@ -150,6 +152,11 @@ class VenueDetailsForm(BaseTournamentObjectDetailsForm):
         model = Venue
         fields = ('name', 'priority')
 
+    def save(self, *args, **kwargs):
+        venue = super().save(*args, **kwargs)
+
+        VenueIdentifier.objects.create(venue=venue)
+
 
 class BaseInstitutionObjectDetailsForm(BaseTournamentObjectDetailsForm):
     """Adds a hidden input for the institution and automatic detection of the
@@ -280,7 +287,11 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
         if commit:
             team.save()
             for name, email in zip_longest(self.cleaned_data['speakers'], self.cleaned_data['emails']):
-                team.speaker_set.create(name=name, email=email)
+                speaker = team.speaker_set.create(name=name, email=email)
+
+                PersonIdentifier.objects.create(person=speaker)
+                populate_url_keys([speaker])
+
             team.break_categories.set(team.tournament.breakcategory_set.filter(is_general=True))
 
             if team.institution:
@@ -320,8 +331,12 @@ class AdjudicatorDetailsForm(BaseInstitutionObjectDetailsForm):
 
     def save(self, commit=True):
         adj = super().save(commit=commit)
+
         if commit and adj.institution:
             adj.adjudicatorinstitutionconflict_set.create(institution=adj.institution)
+        PersonIdentifier.objects.create(person=adj)
+        populate_url_keys([adj])
+
         return adj
 
 

@@ -9,8 +9,6 @@ from django.db.models.functions import Coalesce
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-import privateurls
-from checkins.models import PersonIdentifier
 from utils.managers import LookupByNameFieldsMixin
 
 from .emoji import EMOJI_FIELD_CHOICES
@@ -134,13 +132,6 @@ class Person(models.Model):
         if tournament.pref('participant_code_names') == 'off':
             return self.name
         return self.code_name
-
-    def save(self, **kwargs):
-        super().save(**kwargs)
-
-        # create identifier for participant
-        PersonIdentifier.objects.create(person=self)
-        privateurls.utils.populate_url_keys([self])
 
 
 class TeamManager(LookupByNameFieldsMixin, models.Manager):
