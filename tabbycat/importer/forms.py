@@ -154,8 +154,8 @@ class VenueDetailsForm(BaseTournamentObjectDetailsForm):
 
     def save(self, *args, **kwargs):
         venue = super().save(*args, **kwargs)
-
         VenueIdentifier.objects.create(venue=venue)
+        return venue
 
 
 class BaseInstitutionObjectDetailsForm(BaseTournamentObjectDetailsForm):
