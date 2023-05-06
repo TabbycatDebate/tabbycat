@@ -1,6 +1,6 @@
 import logging
 import string
-from typing import TYPE_CHECKING
+from typing import Iterable, TYPE_CHECKING
 
 from participants.models import Person
 from utils.misc import generate_identifier_string
@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def populate_url_keys(people: 'QuerySet[Person]', length: int = 8, num_attempts: int = 10) -> None:
+def populate_url_keys(people: 'Iterable[Person]', length: int = 8, num_attempts: int = 10) -> None:
     """Populates the URL key field for every instance in the given QuerySet."""
     chars = string.ascii_lowercase + string.digits
 
