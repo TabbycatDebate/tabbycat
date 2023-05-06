@@ -37,9 +37,9 @@
 
           {% if pref.teams_in_debate == 'two' %}
             {% include "motion_statistics_twoteam.html" with motion=r_motion %}
-          {% elif pref.teams_in_debate == 'bp' and round.stage == round.STAGE_ELIMINATION %}
+          {% elif pref.teams_in_debate == 'bp' and round.stage == round.Stage.ELIMINATION %}
             {% include "motion_statistics_bp_elim.html" with motion=r_motion %}
-          {% elif pref.teams_in_debate == 'bp' and round.stage == round.STAGE_PRELIMINARY %}
+          {% elif pref.teams_in_debate == 'bp' and round.stage == round.Stage.PRELIMINARY %}
             {% include "motion_statistics_bp_prelim.html" with motion=r_motion %}
           {% endif %}
 

@@ -45,7 +45,7 @@
       {% include "components/item-action.html" with to_complete=True %}
     </div>
 
-  {% elif round.draw_status == round.STATUS_NONE %}
+  {% elif round.draw_status == round.Status.NONE %}
 
     <div class="list-group">
       {% roundurl 'availability-index' round as url %}
@@ -55,7 +55,7 @@
       {% include "components/item-action.html" with to_complete=True %}
     </div>
 
-  {% elif round.draw_status == round.STATUS_CONFIRMED %}
+  {% elif round.draw_status == round.Status.CONFIRMED %}
 
     <div class="list-group">
       {% roundurl 'draw' round as url %}
@@ -65,7 +65,7 @@
       {% include "components/item-action.html" with to_complete=True %}
     </div>
 
-  {% elif round.draw_status == round.STATUS_RELEASED %}
+  {% elif round.draw_status == round.Status.RELEASED %}
 
     <div class="list-group">
       {% roundurl 'results-round-list' round as url %}

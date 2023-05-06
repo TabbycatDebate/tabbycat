@@ -262,7 +262,7 @@ class RoundWeightForm(Form):
     def _create_fields(self):
         """Dynamically generate one integer field for each preliminary round, for the
         user to indicate how many teams are from that institution."""
-        for round in self.tournament.round_set.filter(stage=Round.STAGE_PRELIMINARY):
+        for round in self.tournament.round_set.filter(stage=Round.Stage.PRELIMINARY):
             self.fields['round_weight_%d' % round.id] = IntegerField(
                     min_value=0,
                     label=_("%(name)s (%(abbreviation)s)") % {'name': round.name, 'abbreviation': round.abbreviation},
@@ -270,7 +270,7 @@ class RoundWeightForm(Form):
                     widget=NumberInput(attrs={'placeholder': 1}))
 
     def save(self):
-        rounds = self.tournament.round_set.filter(stage=Round.STAGE_PRELIMINARY)
+        rounds = self.tournament.round_set.filter(stage=Round.Stage.PRELIMINARY)
         for round in rounds:
             round.weight = self.cleaned_data['round_weight_%d' % round.id]
         Round.objects.bulk_update(rounds, ['weight'])

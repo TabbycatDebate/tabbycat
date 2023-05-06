@@ -801,7 +801,7 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
     access_preference = 'public_draw'
 
     round_released_field = 'draw_status'
-    round_released_value = Round.STATUS_RELEASED
+    round_released_value = Round.Status.RELEASED
 
     permission_classes = [APIEnabledPermission, Permission]
 

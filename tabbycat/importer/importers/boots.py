@@ -35,16 +35,16 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
     ]
 
     lookup_round_stage = make_lookup("round stage", {
-        ("preliminary", "p"): tm.Round.STAGE_PRELIMINARY,
-        ("elimination", "break", "e", "b"): tm.Round.STAGE_ELIMINATION,
+        ("preliminary", "p"): tm.Round.Stage.PRELIMINARY,
+        ("elimination", "break", "e", "b"): tm.Round.Stage.ELIMINATION,
     })
 
     lookup_draw_type = make_lookup("draw type", {
-        ("random", "r"): tm.Round.DRAW_RANDOM,
-        ("manual", "m"): tm.Round.DRAW_MANUAL,
-        ("round robin", "d"): tm.Round.DRAW_ROUNDROBIN,
-        ("power paired", "p"): tm.Round.DRAW_POWERPAIRED,
-        ("elimination", "break", "e", "b"): tm.Round.DRAW_ELIMINATION,
+        ("random", "r"): tm.Round.DrawType.RANDOM,
+        ("manual", "m"): tm.Round.DrawType.MANUAL,
+        ("round robin", "d"): tm.Round.DrawType.ROUNDROBIN,
+        ("power paired", "p"): tm.Round.DrawType.POWERPAIRED,
+        ("elimination", "break", "e", "b"): tm.Round.DrawType.ELIMINATION,
     })
 
     lookup_gender = make_lookup("gender", {

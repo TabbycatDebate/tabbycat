@@ -200,7 +200,7 @@ class MotionBPStatsCalculator:
 
         self.prelim_motions = Motion.objects.filter(
             rounds__tournament=self.tournament,
-            rounds__stage=Round.STAGE_PRELIMINARY,
+            rounds__stage=Round.Stage.PRELIMINARY,
             ballotsubmission__confirmed=True,
         ).annotate(ndebates=Count('ballotsubmission', filter=Q(ballotsubmission__confirmed=True)),
             stage=Value('prelim', output_field=CharField()))
@@ -267,7 +267,7 @@ class MotionBPStatsCalculator:
 
         self.elim_motions = Motion.objects.filter(
             rounds__tournament=self.tournament,
-            rounds__stage=Round.STAGE_ELIMINATION,
+            rounds__stage=Round.Stage.ELIMINATION,
             ballotsubmission__confirmed=True,
         ).annotate(ndebates=Count('ballotsubmission', filter=Q(ballotsubmission__confirmed=True)),
             stage=Value('elim', output_field=CharField()))
@@ -311,7 +311,7 @@ class RoundMotionBPStatsCalculator(MotionBPStatsCalculator):
 
         self.prelim_motions = RoundMotion.objects.filter(
             round__tournament=self.tournament,
-            round__stage=Round.STAGE_PRELIMINARY,
+            round__stage=Round.Stage.PRELIMINARY,
             motion__ballotsubmission__confirmed=True,
         ).order_by('round__seq', 'seq').select_related('motion', 'round').annotate(
             ndebates=Count('motion__ballotsubmission', filter=Q(
@@ -349,7 +349,7 @@ class RoundMotionBPStatsCalculator(MotionBPStatsCalculator):
 
         self.elim_motions = RoundMotion.objects.filter(
             round__tournament=self.tournament,
-            round__stage=Round.STAGE_ELIMINATION,
+            round__stage=Round.Stage.ELIMINATION,
             motion__ballotsubmission__confirmed=True,
         ).order_by('round__seq', 'seq').select_related('motion', 'round').annotate(
             ndebates=Count('motion__ballotsubmission', filter=Q(

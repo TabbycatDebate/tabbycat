@@ -35,7 +35,7 @@ def annotate_side_count_kwargs(sides, seq):
 
     return {'%s_count' % side: Count('debateteam', filter=Q(
         debateteam__side=side,
-        debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
+        debateteam__debate__round__stage=Round.Stage.PRELIMINARY,
         debateteam__debate__round__seq__lte=seq), distinct=True,
     ) for side in sides}
 

@@ -133,7 +133,7 @@ class BaseDrawManager:
     def create(self):
         """Generates a draw and populates the database with it."""
 
-        if self.round.draw_status != Round.STATUS_NONE:
+        if self.round.draw_status != Round.Status.NONE:
             raise RuntimeError("Tried to create a draw on round that already has a draw")
 
         self.delete()
@@ -158,7 +158,7 @@ class BaseDrawManager:
                 results=results, rrseq=rrseq, **options)
         pairings = drawer.generate()
         self._make_debates(pairings)
-        self.round.draw_status = Round.STATUS_DRAFT
+        self.round.draw_status = Round.Status.DRAFT
         self.round.save()
 
 
@@ -223,11 +223,30 @@ class PowerPairedDrawManager(BaseDrawManager):
         return ranked
 
 
+class SeededDrawManager(BaseDrawManager):
+    generator_type = "power_paired"
+
+    def get_relevant_options(self):
+        options = super().get_relevant_options()
+        if self.teams_in_debate == 'two':
+            options.extend(["avoid_conflicts", "pairing_method", "side_allocations"])
+        elif self.teams_in_debate == 'bp':
+            options.extend(["assignment_method"])
+        return options
+
+    def get_teams(self):
+        """Get teams in seeded order."""
+        teams = super().get_teams().order_by('-seed')
+        for team in teams:
+            team.points = 0
+        return teams
+
+
 class RoundRobinDrawManager(BaseDrawManager):
     generator_type = "round_robin"
 
     def get_rrseq(self):
-        prior_rrs = list(self.round.tournament.round_set.filter(draw_type=Round.DRAW_ROUNDROBIN).order_by('seq'))
+        prior_rrs = list(self.round.tournament.round_set.filter(draw_type=Round.DrawType.ROUNDROBIN).order_by('seq'))
         try:
             rr_seq = prior_rrs.index(self.round) + 1 # Dont 0-index
         except ValueError:
@@ -289,13 +308,14 @@ class BPEliminationDrawManager(BaseEliminationDrawManager):
 
 
 DRAW_MANAGER_CLASSES = {
-    ('two', Round.DRAW_RANDOM): RandomDrawManager,
-    ('two', Round.DRAW_POWERPAIRED): PowerPairedDrawManager,
-    ('two', Round.DRAW_ROUNDROBIN): RoundRobinDrawManager,
-    ('two', Round.DRAW_MANUAL): ManualDrawManager,
-    ('two', Round.DRAW_ELIMINATION): EliminationDrawManager,
-    ('bp', Round.DRAW_RANDOM): RandomDrawManager,
-    ('bp', Round.DRAW_MANUAL): ManualDrawManager,
-    ('bp', Round.DRAW_POWERPAIRED): PowerPairedDrawManager,
-    ('bp', Round.DRAW_ELIMINATION): BPEliminationDrawManager,
+    ('two', Round.DrawType.RANDOM): RandomDrawManager,
+    ('two', Round.DrawType.POWERPAIRED): PowerPairedDrawManager,
+    ('two', Round.DrawType.ROUNDROBIN): RoundRobinDrawManager,
+    ('two', Round.DrawType.MANUAL): ManualDrawManager,
+    ('two', Round.DrawType.ELIMINATION): EliminationDrawManager,
+    ('two', Round.DrawType.SEEDED): SeededDrawManager,
+    ('bp', Round.DrawType.RANDOM): RandomDrawManager,
+    ('bp', Round.DrawType.MANUAL): ManualDrawManager,
+    ('bp', Round.DrawType.POWERPAIRED): PowerPairedDrawManager,
+    ('bp', Round.DrawType.ELIMINATION): BPEliminationDrawManager,
 }

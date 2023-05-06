@@ -89,7 +89,7 @@ class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin
 
         status = t.current_round.draw_status
         kwargs["total_debates"] = t.current_round.debate_set.count()
-        if status == Round.STATUS_CONFIRMED or status == Round.STATUS_RELEASED:
+        if status == Round.Status.CONFIRMED or status == Round.Status.RELEASED:
             ballots = BallotSubmission.objects.filter(
                 debate__round=t.current_round, discarded=False).select_related(
                 'submitter', 'debate')
@@ -158,10 +158,10 @@ class CompleteRoundView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnly
             round_for_redirect = incomplete_rounds.order_by('seq').first()
             return redirect_round('availability-index', round_for_redirect)
 
-        if (self.round.stage == Round.STAGE_PRELIMINARY and
-                self.round.next.stage == Round.STAGE_ELIMINATION):
+        if (self.round.stage == Round.Stage.PRELIMINARY and
+                self.round.next.stage == Round.Stage.ELIMINATION):
 
-            incomplete_prelim_rounds = incomplete_rounds.filter(stage=Round.STAGE_PRELIMINARY)
+            incomplete_prelim_rounds = incomplete_rounds.filter(stage=Round.Stage.PRELIMINARY)
 
             if not incomplete_prelim_rounds.exists():
                 messages.success(request, _("%(round)s has been marked as completed. "

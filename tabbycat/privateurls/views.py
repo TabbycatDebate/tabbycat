@@ -224,7 +224,7 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
         else:
             kwargs['debateteams'] = BaseRecordView.allocations_set(self.object.speaker.team, False, self.tournament)
 
-        kwargs['draw_released'] = t.current_round.draw_status == Round.STATUS_RELEASED
+        kwargs['draw_released'] = t.current_round.draw_status == Round.Status.RELEASED
         kwargs['feedback_pref'] = t.pref('participant_feedback') == 'private-urls'
         kwargs['ballots_pref'] = t.pref('participant_ballots') == 'private-urls'
 

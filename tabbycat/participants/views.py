@@ -204,7 +204,7 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
                 qs = qs.prefetch_related(Prefetch('debate__round__roundmotion_set',
                     queryset=RoundMotion.objects.select_related('motion')))
             else:
-                qs = qs.filter(debate__round__draw_status=Round.STATUS_RELEASED).prefetch_related(
+                qs = qs.filter(debate__round__draw_status=Round.Status.RELEASED).prefetch_related(
                     Prefetch('debate__round__roundmotion_set',
                         queryset=RoundMotion.objects.filter(round__motions_released=True).select_related('motion')))
             return qs
@@ -213,7 +213,7 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs['admin_page'] = self.admin
-        kwargs['draw_released'] = self.tournament.current_round.draw_status == Round.STATUS_RELEASED
+        kwargs['draw_released'] = self.tournament.current_round.draw_status == Round.Status.RELEASED
         kwargs['use_code_names'] = self.use_team_code_names()
         kwargs[self.model_kwarg] = self.allocations_set(self.object, self.admin, self.tournament)
 

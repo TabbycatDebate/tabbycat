@@ -548,7 +548,7 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PersonalizablePublicTou
 
     def get_context_data(self, **kwargs):
         kwargs['no_rounds_released'] = not self.tournament.round_set.filter(
-                draw_status=Round.STATUS_RELEASED).exists()
+                draw_status=Round.Status.RELEASED).exists()
         return super().get_context_data(**kwargs)
 
 

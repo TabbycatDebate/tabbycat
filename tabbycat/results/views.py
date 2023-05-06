@@ -319,7 +319,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
         pass
 
     def should_send_email_receipts(self):
-        return self.tournament.pref('enable_ballot_receipts') and not (self.debate.round.stage == Round.STAGE_ELIMINATION and
+        return self.tournament.pref('enable_ballot_receipts') and not (self.debate.round.stage == Round.Stage.ELIMINATION and
             self.tournament.pref('teams_in_debate') == 'bp')
 
     def matchup_description(self):
@@ -540,7 +540,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
     def populate_objects(self, prefill=True):
         self.object = self.get_object() # must be populated before self.error_page() called
 
-        if self.round.draw_status != Round.STATUS_RELEASED:
+        if self.round.draw_status != Round.Status.RELEASED:
             return self.error_page(_("The draw for this round hasn't been released yet."))
 
         if (self.tournament.pref('enable_motions') or self.tournament.pref('motion_vetoes_enabled')) \
@@ -789,7 +789,7 @@ class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, RoundMixin, Vue
         return tournament.pref('participant_ballots') == 'public'
 
     def is_draw_released(self):
-        return self.round.draw_status == Round.STATUS_RELEASED and self.round.motions_good_for_public
+        return self.round.draw_status == Round.Status.RELEASED and self.round.motions_good_for_public
 
     def get_template_names(self):
         if self.is_draw_released():

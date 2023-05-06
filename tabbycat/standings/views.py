@@ -49,7 +49,7 @@ class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
         kwargs["bottom_speaks"] = speaks.order_by('score')[:9]
 
         overall = speaks.filter(
-            debate_team__debate__round__stage=Round.STAGE_PRELIMINARY,
+            debate_team__debate__round__stage=Round.Stage.PRELIMINARY,
         ).aggregate(Avg('score'))['score__avg']
         kwargs["round_speaks"] = [{'round': 'Overall (for in-rounds)',
                                    'score': overall}]
@@ -69,7 +69,7 @@ class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
             'debate_team__team__institution',
         )
         if self.tournament.pref('teams_in_debate') == 'bp':
-            team_scores.filter(debate_team__debate__round__stage=Round.STAGE_PRELIMINARY)
+            team_scores.filter(debate_team__debate__round__stage=Round.Stage.PRELIMINARY)
             kwargs["top_team_scores"] = team_scores.order_by('-score')[:9]
             kwargs["bottom_team_scores"] = team_scores.order_by('score')[:9]
         else:
@@ -268,7 +268,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         if missable < 0:
             return None, None  # no limit
         total_prelim_rounds = self.tournament.round_set.filter(
-            stage=Round.STAGE_PRELIMINARY, seq__lte=self.round.seq).count()
+            stage=Round.Stage.PRELIMINARY, seq__lte=self.round.seq).count()
         minimum_needed = total_prelim_rounds - missable
         return self.missable_field, minimum_needed
 

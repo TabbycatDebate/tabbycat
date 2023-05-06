@@ -78,8 +78,8 @@ def auto_make_rounds(tournament, num_rounds):
             name=gettext("Round %(number)d") % {'number': i},
             # Translators: This stands for "Round %(number)d".
             abbreviation=gettext("R%(number)d") % {'number': i},
-            stage=Round.STAGE_PRELIMINARY,
-            draw_type=Round.DRAW_RANDOM if (i == 1) else Round.DRAW_POWERPAIRED,
+            stage=Round.Stage.PRELIMINARY,
+            draw_type=Round.DrawType.RANDOM if (i == 1) else Round.DrawType.POWERPAIRED,
             feedback_weight=min((i-1)*0.1, 0.5),
             silent=(i == num_rounds),
         ).save()

@@ -188,14 +188,17 @@ class BaseInstitutionObjectDetailsForm(BaseTournamentObjectDetailsForm):
 class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
     """Adds provision for a textarea input for speakers."""
 
-    speakers = forms.CharField(required=True, label=_("Speakers' names")) # widget is set in form constructor
+    # widgets are set in form constructor
+    speakers = forms.CharField(required=True, label=_("Speakers' names"), help_text=_("Can be separated by newlines, tabs or commas"))
     emails = forms.CharField(required=False, label=_("Speakers' email addresses"),
-        help_text=_("Optional, useful to include if distributing private URLs, list in same order as speakers' names")) # widget is set in form constructor
+        help_text=_("Optional, useful to include if distributing private URLs, list in same order as speakers' names"))
     short_reference = forms.CharField(widget=forms.HiddenInput, required=False) # doesn't actually do anything, just placeholder to avoid validation failure
+
+    field_order = ['reference', 'use_institution_prefix', 'speakers', 'emails', 'seed']
 
     class Meta:
         model = Team
-        fields = ('reference', 'short_reference', 'use_institution_prefix', 'institution')
+        fields = ('reference', 'short_reference', 'use_institution_prefix', 'institution', 'seed')
         labels = {
             'reference': _("Name (excluding institution name)"),
             'use_institution_prefix': _("Prefix team name with institution name?"),
@@ -216,11 +219,24 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
         nspeakers = tournament.pref('substantive_speakers')
         self.fields['speakers'].widget = forms.Textarea(attrs={'rows': nspeakers,
                 'placeholder': _("One speaker's name per line")})
-        self.fields['speakers'].help_text = _("Can be separated by newlines, tabs or commas")
         self.initial.setdefault('speakers', "\n".join(
                 _("Speaker %d") % i for i in range(1, nspeakers+1)))
         self.fields['emails'].widget = forms.Textarea(attrs={'rows': nspeakers,
                 'placeholder': "\n".join(_("speaker%d@example.edu") % i for i in range(1, nspeakers+1))})
+
+        seed_label = self.fields['seed'].label
+        seed_help = self.fields['seed'].help_text
+        if tournament.pref('show_seed_in_importer') == 'numeric':
+            self.fields['seed'] = forms.IntegerField(required=False, label=seed_label, help_text=seed_help, min_value=0)
+        elif tournament.pref('show_seed_in_importer') == 'title':
+            self.fields['seed'] = forms.ChoiceField(required=False, label=seed_label, choices=(
+                (0, _("Unseeded")),
+                (1, _("Free seed")),
+                (2, _("Half seed")),
+                (3, _("Full seed")),
+            ), help_text=seed_help)
+        else:
+            self.fields.pop('seed')
 
     @staticmethod
     def _split_lines(data):
