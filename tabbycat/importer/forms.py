@@ -152,9 +152,10 @@ class VenueDetailsForm(BaseTournamentObjectDetailsForm):
         model = Venue
         fields = ('name', 'priority')
 
-    def save(self, *args, **kwargs):
-        venue = super().save(*args, **kwargs)
-        VenueIdentifier.objects.create(venue=venue)
+    def save(self, commit=True):
+        venue = super().save(commit=False)
+        if commit:
+            VenueIdentifier.objects.create(venue=venue)
         return venue
 
 
@@ -332,10 +333,11 @@ class AdjudicatorDetailsForm(BaseInstitutionObjectDetailsForm):
     def save(self, commit=True):
         adj = super().save(commit=commit)
 
-        if commit and adj.institution:
-            adj.adjudicatorinstitutionconflict_set.create(institution=adj.institution)
-        PersonIdentifier.objects.create(person=adj)
-        populate_url_keys([adj])
+        if commit:
+            if adj.institution:
+                adj.adjudicatorinstitutionconflict_set.create(institution=adj.institution)
+            PersonIdentifier.objects.create(person=adj)
+            populate_url_keys([adj])
 
         return adj
 
