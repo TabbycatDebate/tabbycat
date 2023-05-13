@@ -906,7 +906,7 @@ class RoundPairingSerializer(serializers.ModelSerializer):
         teams.save(debate=debate)
 
         if adjs_data is not None:
-            adjudicators = self.DebateAdjudicatorSerializer()
+            adjudicators = DebateAdjudicatorSerializer()
             adjudicators._validated_data = adjs_data
             adjudicators.save(debate=debate)
 
@@ -922,7 +922,7 @@ class RoundPairingSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(e)
 
         if 'adjudicators' in validated_data and validated_data['adjudicators'] is not None:
-            adjudicators = self.DebateAdjudicatorSerializer()
+            adjudicators = DebateAdjudicatorSerializer()
             adjudicators._validated_data = validated_data.pop('adjudicators')
             adjudicators.save(debate=instance)
 
@@ -1286,7 +1286,7 @@ class PreformedPanelSerializer(serializers.ModelSerializer):
         debate = super().create(validated_data)
 
         if adjs_data is not None:
-            adjudicators = self.DebateAdjudicatorSerializer()
+            adjudicators = DebateAdjudicatorSerializer()
             adjudicators._validated_data = adjs_data
             adjudicators.save(debate=debate)
 
@@ -1294,7 +1294,7 @@ class PreformedPanelSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         if validated_data.get('adjudicators', None) is not None:
-            adjudicators = self.DebateAdjudicatorSerializer()
+            adjudicators = DebateAdjudicatorSerializer()
             adjudicators._validated_data = validated_data.pop('adjudicators')
             adjudicators.save(debate=instance)
 
