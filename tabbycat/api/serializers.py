@@ -152,16 +152,11 @@ class RoundSerializer(serializers.ModelSerializer):
 
         def create(self, validated_data):
             motion_data = validated_data.pop('motion')
-            if '' in motion_data:
-                validated_data['motion'] = motion_data['']
+            if isinstance(motion_data, Motion):  # If passed in a URL - Becomes an object
+                validated_data['motion'] = motion_data
             else:
-                validated_data['motion'] = Motion()
-
-            validated_data['motion'].text = motion_data['text']
-            validated_data['motion'].reference = motion_data['reference']
-            validated_data['motion'].info_slide = motion_data.get('info_slide', '')
-            validated_data['motion'].tournament = self.context['tournament']
-            validated_data['motion'].save()
+                validated_data['motion'] = Motion(text=motion_data['text'], reference=motion_data['reference'], info_slide=motion_data.get('info_slide', ''), tournament=self.context['tournament'])
+                validated_data['motion'].save()
 
             return super().create(validated_data)
 
@@ -219,7 +214,7 @@ class RoundSerializer(serializers.ModelSerializer):
         return round
 
     def update(self, instance, validated_data):
-        motions_data = validated_data.pop('motion_set', [])
+        motions_data = validated_data.pop('roundmotion_set', [])
         for i, roundmotion in enumerate(motions_data, start=1):
             roundmotion['seq'] = i
 
@@ -228,15 +223,21 @@ class RoundSerializer(serializers.ModelSerializer):
                 motion = Motion(
                     text=roundmotion['motion']['text'],
                     reference=roundmotion['motion']['reference'],
-                    info_slide=roundmotion['motion'].get('info_slide'),
+                    info_slide=roundmotion['motion'].get('info_slide', ''),
+                    tournament=instance.tournament,
                 )
             else:
                 motion.text = roundmotion['motion']['text']
                 motion.reference = roundmotion['motion']['reference']
-                motion.info_slide = roundmotion['motion'].get('info_slide')
+                motion.info_slide = roundmotion['motion'].get('info_slide', '')
             motion.save()
             RoundMotion.objects.update_or_create(round=instance, motion=motion, defaults={'seq': roundmotion['seq']})
-        return super().update(instance, validated_data)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+        return instance
 
     """Remove once DRF supports the serializer's structure"""
     def set_value(self, dictionary, keys, value):
@@ -906,7 +907,7 @@ class RoundPairingSerializer(serializers.ModelSerializer):
         teams.save(debate=debate)
 
         if adjs_data is not None:
-            adjudicators = self.DebateAdjudicatorSerializer()
+            adjudicators = DebateAdjudicatorSerializer()
             adjudicators._validated_data = adjs_data
             adjudicators.save(debate=debate)
 
@@ -922,7 +923,7 @@ class RoundPairingSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(e)
 
         if 'adjudicators' in validated_data and validated_data['adjudicators'] is not None:
-            adjudicators = self.DebateAdjudicatorSerializer()
+            adjudicators = DebateAdjudicatorSerializer()
             adjudicators._validated_data = validated_data.pop('adjudicators')
             adjudicators.save(debate=instance)
 
@@ -1286,7 +1287,7 @@ class PreformedPanelSerializer(serializers.ModelSerializer):
         debate = super().create(validated_data)
 
         if adjs_data is not None:
-            adjudicators = self.DebateAdjudicatorSerializer()
+            adjudicators = DebateAdjudicatorSerializer()
             adjudicators._validated_data = adjs_data
             adjudicators.save(debate=debate)
 
@@ -1294,7 +1295,7 @@ class PreformedPanelSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         if validated_data.get('adjudicators', None) is not None:
-            adjudicators = self.DebateAdjudicatorSerializer()
+            adjudicators = DebateAdjudicatorSerializer()
             adjudicators._validated_data = validated_data.pop('adjudicators')
             adjudicators.save(debate=instance)
 
