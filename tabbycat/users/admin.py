@@ -5,6 +5,8 @@ from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 
+from .models import UserPermission
+
 
 # ==============================================================================
 # Authentication and Authorization
@@ -53,6 +55,11 @@ class UserAdmin(BaseUserAdmin):
 
     add_form = UserCreationFormExtended
     form = UserChangeFormExtended
+
+
+@admin.register(UserPermission)
+class UserPermissionAdmin(admin.ModelAdmin):
+    list_display = ('user', 'permission', 'tournament')
 
 
 User = get_user_model()
