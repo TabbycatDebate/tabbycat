@@ -13,6 +13,7 @@ from availability.utils import annotate_availability
 from participants.models import Adjudicator, Region
 from participants.prefetch import populate_feedback_scores
 from tournaments.mixins import DebateDragAndDropMixin, TournamentMixin
+from users.permissions import has_permission
 from utils.misc import ranks_dictionary, redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView
@@ -143,13 +144,32 @@ class BaseAdjudicatorConflictsView(LogActionMixin, AdministratorMixin, Tournamen
     template_name = 'edit_conflicts.html'
     page_emoji = "🔶"
 
-    formset_factory_kwargs = {
-        'extra': 10,
-        'can_delete': True,
-    }
+    formset_factory_kwargs = {}
+
+    def get_view_permission(self):
+        return 'view.%s' % (self.formset_model.__name__.lower())
+
+    def get_edit_permission(self):
+        return 'edit.%s' % (self.formset_model.__name__.lower())
+
+    def get_formset_factory_kwargs(self):
+        can_edit = has_permission(self.request.user, self.get_edit_permission(), self.tournament)
+        kwargs = super().get_formset_factory_kwargs()
+        kwargs['extra'] = 10 * int(can_edit)
+        kwargs['can_delete'] = can_edit
+        return kwargs
+
+    def get_formset(self):
+        formset = super().get_formset()
+        if not has_permission(self.request.user, self.get_edit_permission(), self.tournament):
+            for form in formset:
+                for field in form.fields.values():
+                    field.disabled = True
+        return formset
 
     def get_context_data(self, **kwargs):
         kwargs['save_text'] = self.save_text
+        kwargs['can_edit'] = has_permission(self.request.user, self.get_edit_permission(), self.tournament)
         return super().get_context_data(**kwargs)
 
     def get_success_url(self, *args, **kwargs):

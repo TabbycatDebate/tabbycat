@@ -8,6 +8,8 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import ContextMixin
 
+from users.permissions import has_permission
+
 logger = logging.getLogger(__name__)
 
 
@@ -51,12 +53,24 @@ class AdministratorMixin(UserPassesTestMixin, ContextMixin):
     Requires user to be a superuser."""
     view_role = "admin"
     for_admin = True
+    view_permission = None
+    edit_permission = None
 
     def get_context_data(self, **kwargs):
         kwargs["user_role"] = self.view_role
         return super().get_context_data(**kwargs)
 
+    def get_view_permission(self):
+        return self.view_permission
+
+    def get_edit_permission(self):
+        return self.edit_permission
+
     def test_func(self):
+        if self.request.method == 'GET' and self.get_view_permission() is not None:
+            return has_permission(self.request.user, self.get_view_permission(), self.tournament)
+        if self.request.method == 'POST' and self.get_edit_permission() is not None:
+            return has_permission(self.request.user, self.get_edit_permission(), self.tournament)
         return self.request.user.is_superuser
 
 
