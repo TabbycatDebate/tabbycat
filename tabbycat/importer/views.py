@@ -40,6 +40,7 @@ logger = logging.getLogger(__name__)
 
 class ImporterSimpleIndexView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = 'simple_import_index.html'
+    view_permission = True
 
 
 class BaseImportWizardView(AdministratorMixin, LogActionMixin, TournamentMixin, SessionWizardView):
