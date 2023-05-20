@@ -96,7 +96,7 @@ Other considerations
 
 **Offline availability**. If you like, you can also install Tabbycat on your own computer, rather than host it as website on a server. This means that you can use it offline. However installing Tabbycat in this manner will require the (at least brief) use of a command line interface.
 
-**Cost**. Tabbie2 is free to use. Tabbycat is free to use for not-for-profit, not-for-fundraising tournaments; tournaments for profit or fundraising must make a donation of A$1 per team. In addition, larger tournaments that run on Tabbycat's recommended web host (Heroku) may need to purchase an upgraded database service (the free tier has storage limits) which will cost around ~US$3 to use for the duration of a week-long tournament.
+**Cost**. Tabbycat and Tabbie2 are both free to use. Larger tournaments that run on Tabbycat's recommended web host (Heroku) may need to purchase an upgraded database service (the free tier has storage limits) which will cost around ~US$3 to use for the duration of a week-long tournament.
 
 **Documentation**. Tabbycat has `relatively extensive documentation <http://tabbycat.readthedocs.io/en/stable/>`_ that can be useful for learning how to use a particular feature or understanding what is happening at a technical level.
 
@@ -150,7 +150,7 @@ Other considerations
 
 **Stability and development**. Tournaman has been in use for over a decade and is generally considered to be stable and reliable. However, new features are relatively rarely added, and its being a native app means that it doesn't boast as many features as Tabbycat or Tabbie2.
 
-**Cost**. Tournaman is free to use. Tabbycat is free to use for not-for-profit, not-for-fundraising tournaments; tournaments for profit or fundraising must make a donation of A$1 per team. In addition, larger tournaments that run on Tabbycat's recommended web host (Heroku) may need to purchase an upgraded database service (the free tier has storage limits) which will cost around ~US$3 to use for the duration of a week-long tournament.
+**Cost**. Tournaman and Tabbycat are both free to use. Larger tournaments that run on Tabbycat's recommended web host (Heroku) may need to purchase an upgraded database service (the free tier has storage limits) which will cost around ~US$3 to use for the duration of a week-long tournament.
 
 **Availability of source code**. Tournaman's code is closed-source, meaning it is not publicly available. If you do not have any coding experience this is probably not relevant to you, but if you do, having access to the source of Tabbycat can help you understand how the program works and customise it as needed.
 

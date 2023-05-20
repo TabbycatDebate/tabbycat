@@ -68,7 +68,7 @@
     "node": "16.15.x",
     "npm": "8.11.x"
   },
-  "license": "UNLICENSED",
+  "license": "AGPL-3.0-only",
   "repository": "https://github.com/TabbycatDebate/tabbycat",
   "version": "3.18.1",
   "devDependencies": {
