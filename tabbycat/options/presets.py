@@ -143,6 +143,8 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     standings__team_standings_precedence       = ['points', 'speaks_sum', 'firsts', 'seconds']
     standings__speaker_standings_precedence    = ['total'] # constitutional
     standings__speaker_standings_extra_metrics = ['average', 'stdev']
+    # Feedback Rules
+    feedback__adj_max_score                    = 10.0
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
