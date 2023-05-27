@@ -68,9 +68,11 @@ BP_SIDE_NAMES = {  # stop-gap before this system gets refactored
 
 def auto_make_rounds(tournament, num_rounds):
     """Makes the number of rounds specified. The first one is random and the
-    rest are all power-paired. The last one is silent. This is intended as a
-    convenience function. For anything more complicated, a more advanced import
-    method should be used."""
+    rest are all power-paired. The last third of rounds (rounded down) are silent.
+    This is intended as a convenience function. For anything more complicated,
+    a more advanced import method should be used."""
+    silent_threshold = num_rounds * 2 / 3
+
     for i in range(1, num_rounds+1):
         Round(
             tournament=tournament,
@@ -81,7 +83,7 @@ def auto_make_rounds(tournament, num_rounds):
             stage=Round.Stage.PRELIMINARY,
             draw_type=Round.DrawType.RANDOM if (i == 1) else Round.DrawType.POWERPAIRED,
             feedback_weight=min((i-1)*0.1, 0.5),
-            silent=(i == num_rounds),
+            silent=(i > silent_threshold),
         ).save()
 
 
