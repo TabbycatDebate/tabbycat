@@ -278,6 +278,7 @@ class BaseBallotSetForm(BaseResultForm):
         self.max_margin = self.tournament.pref('maximum_margin')
         self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
                                self.tournament.pref('teams_in_debate') == 'two')
+        self.uses_speaker_ranks = self.tournament.pref('speaker_ranks') != 'none'
 
     # --------------------------------------------------------------------------
     # Field names and field convenience functions
@@ -689,7 +690,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 tournament=self.tournament,
                 required=True,
             )
-            if self.uses_speaker_ranks:
+            if self.using_speaker_ranks:
                 nspeeches = len(self.sides) * len(self.positions)
                 self.fields[self._fieldname_srank(side, pos)] = forms.IntegerField(required=True, min_value=1, max_value=nspeeches, step_size=1)
 
@@ -771,7 +772,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                         params={'margin': margin, 'max_margin': self.max_margin}, code='max_margin',
                     ))
 
-        if self.uses_speaker_ranks:
+        if self.using_speaker_ranks:
             ranks = set()
             rank_scores = []
             for side, pos in product(self.sides, self.positions):
@@ -792,7 +793,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
             score = self.cleaned_data[self._fieldname_score(side, pos)]
             result.set_score(side, pos, score)
 
-            if self.uses_speaker_ranks:
+            if self.using_speaker_ranks:
                 result.set_speaker_rank(side, pos, self.cleaned_data[self._fieldname_srank(side, pos)])
 
         if self.declared_winner not in ['none', 'high-points']:
