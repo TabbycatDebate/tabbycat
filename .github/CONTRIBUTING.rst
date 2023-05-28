@@ -76,11 +76,15 @@ For python code, we use `flake8 <http://flake8.readthedocs.io>`_ to check for a 
 
 For stylesheets, we use `stylelint <https://stylelint.io>`_. The relevant code can be checked by using::
 
-    $ npm run lint-sass
+    $ pre-commit run stylelint --all-files
 
 For javascript, we use `eslint <http://eslint.org/>`_ to enforce the `standardJS <https://standardjs.com>`_ style and the standard recommendation of the vue plugin for eslint. The relevant code can be checked by using::
 
-    $ npm run lint-vue
+    $ pre-commit run eslint --all-files
+
+You can also run all of the above style checkers, as well as a style checker for yaml and some non-language specific style checkers provided by `pre-commit-hooks <https://github.com/pre-commit/pre-commit-hooks>`_, by using::
+
+    $ pre-commit run --all-files
 
 Project organization
 ====================
