@@ -89,7 +89,14 @@ export default {
     async copyTableData () {
       let tableCSV = this.tableHeaders.map(x => x.key).join('\t') + '\r\n'
       for (const row of this.tableContent) {
-        tableCSV += row.map(x => x.text ? x.text.replace(/<[^>]*>?/gm, '') : '').join('\t') + '\r\n'
+        tableCSV += row.map(x => {
+          if (x.text?.startsWith('<select')) {
+            const selectedOption = x.text.split('\n').find((l) => l.includes('selected'))
+            return selectedOption?.trim().replace(/<.*?>/g, '') ?? ''
+          }
+
+          return x.text ? x.text.replace(/<[^>]*>?/gm, '') : ''
+        }).join('\t') + '\r\n'
       }
       await navigator.clipboard.writeText(tableCSV)
     },
