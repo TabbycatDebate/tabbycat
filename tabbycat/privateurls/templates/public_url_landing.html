@@ -65,7 +65,7 @@
       {% endfor %}
     {% endif %}
 
-    {% if pref.participant_feedback == 'private-urls' %}
+    {% if pref.participant_feedback == 'private-urls' and object.adjudicator or pref.feedback_from_teams != 'no-one' %}
       {% trans "Submit Feedback" as text %}
       {% if object.adjudicator %}
         {% tournamenturl 'adjfeedback-public-add-from-adjudicator-randomised' url_key as url %}

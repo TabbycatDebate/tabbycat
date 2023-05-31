@@ -427,6 +427,7 @@ class FeedbackFromTeams(ChoicePreference):
     choices = (
         ('orallist', _("Orallist only (voting panellists permitted, with prompts to select orallist)")),
         ('all-adjs', _("All adjudicators in their panels (including trainees)")),
+        ('no-one', _("No one")),
     )
     default = 'orallist'
 
