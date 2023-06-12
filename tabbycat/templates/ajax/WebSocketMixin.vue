@@ -38,8 +38,8 @@ export default {
       })
 
       // Listen for messages and pass to the defined handleSocketMessage()
-      webSocketBridge.listen((payload) => {
-        receiveFromSocket(socketLabel, payload)
+      webSocketBridge.addEventListener('message', (payload) => {
+        receiveFromSocket(socketLabel, payload.data)
       })
 
       // Logs
