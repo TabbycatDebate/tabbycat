@@ -133,6 +133,21 @@ class CompleteRoundCheckView(AdministratorMixin, RoundMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
+class CompleteRoundToggleSilentView(AdministratorMixin, RoundMixin, PostOnlyRedirectView):
+    round_redirect_pattern_name = 'tournament-complete-round-check'
+
+    def post(self, request, *args, **kwargs):
+        self.round.silent = request.POST["state"] != "True"
+        self.round.save()
+
+        if self.round.silent:
+            messages.success(request, _("%(round)s has been marked as silent.") % {'round': self.round.name})
+        else:
+            messages.success(request, _("%(round)s has been unmarked as silent.") % {'round': self.round.name})
+
+        return super().post(request, *args, **kwargs)
+
+
 class CompleteRoundView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnlyRedirectView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_COMPLETE
