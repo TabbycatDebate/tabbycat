@@ -68,7 +68,6 @@ class RoundSerializerTests(CompletedTournamentTestMixin, APITestCase):
             'abbreviation': 'R5',
             'draw_type': 'P',
         })
-        print(response.data)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(len(response.data['motions']), 1)
 
@@ -92,6 +91,46 @@ class RoundSerializerTests(CompletedTournamentTestMixin, APITestCase):
             ],
             'name': 'Round Five',
         })
-        print(response.data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['name'], 'Round Five')
+
+
+class MotionSerializerTests(CompletedTournamentTestMixin, APITestCase):
+
+    def test_create_motion_with_round(self):
+        client = APIClient()
+        client.login(username="admin", password="admin")
+        response = client.post(reverse_tournament('api-motion-list', self.tournament), {
+            'text': 'This House would straighten all bananas',
+            'reference': 'Bananas',
+            'info_slide': 'Get bent',
+            'rounds': [{'seq': 4, 'round': 'http://testserver/api/v1/tournaments/demo/rounds/1'}],
+        })
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(len(response.data['rounds']), 1)
+
+
+class AdjudicatorSerializerTests(CompletedTournamentTestMixin, APITestCase):
+
+    def test_create_adj_null_institution(self):
+        client = APIClient()
+        client.login(username="admin", password="admin")
+        response = client.post(reverse_tournament('api-adjudicator-list', self.tournament), {
+            "name": "string",
+            "gender": "M",
+            "email": "user@example.com",
+            "phone": "string",
+            "anonymous": True,
+            "pronoun": "string",
+            "institution": None,
+            "base_score": 0,
+            "breaking": False,
+            "trainee": False,
+            "independent": True,
+            "adj_core": False,
+            "institution_conflicts": [],
+            "team_conflicts": [],
+            "adjudicator_conflicts": [],
+            "url_key": "laZzBPo6FsGEr12VtB8LSHM8",
+        })
+        self.assertEqual(response.status_code, 201)
