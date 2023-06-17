@@ -125,10 +125,8 @@ class TournamentConfigureForm(ModelForm):
 
         # Apply data entry method preset
         data_entry_method = self.cleaned_data["data_entry"]
-        if data_entry_method == "private-urls":
-            save_presets(t, PrivateURLS)
-        elif data_entry_method == "public":
-            save_presets(t, PublicForms)
+        if data_entry_method:
+            save_presets(t, {"private-urls": PrivateURLS, "public": PublicForms}[data_entry_method])
 
         # Apply the credits
         if self.cleaned_data['tournament_staff'] != self.fields['tournament_staff'].initial:
