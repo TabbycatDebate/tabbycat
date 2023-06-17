@@ -29,8 +29,14 @@ def presets_for_form():
 
 
 def public_presets_for_form():
-    return [(_('Public Information Options'), _('Enable Public Information')),
+    return [(True, _('Enable Public Information')),
             (False, _('Disable Public Information'))]
+
+
+def data_entry_presets_for_form():
+    return [(False, _('Disabled (tab staff only)')),
+            ("private-urls", _('Use private URLs')),
+            ("public", _('Use publicly accessible form'))]
 
 
 def get_preferences_data(selected_preset, tournament):
@@ -363,6 +369,14 @@ class PrivateURLS(PreferencesPreset):
     show_in_list = False
     description = _("Enables participant data entry through private URLs.")
 
-    data_entry__participant_ballots             = 'private-urls'
-    data_entry__participant_feedback            = 'private-urls'
-    data_entry__public_checkins_submit          = True
+    data_entry__participant_ballots            = 'private-urls'
+    data_entry__participant_feedback           = 'private-urls'
+
+
+class PublicForms(PreferencesPreset):
+    name = _("Use Public Forms")
+    show_in_list = False
+    description = _("Enables participant data entry through public forms.")
+
+    data_entry__participant_ballots            = 'public'
+    data_entry__participant_feedback           = 'public'
