@@ -65,7 +65,7 @@ class PublicDrawTableBuilder(BaseDrawTableBuilder):
             if self.tournament.pref('teams_in_debate') == 'bp':
                 side_name = get_side_name(self.tournament, side, 'abbr')
             else:
-                side_name = get_side_name(self.tournament, side, 'full')
+                side_name = get_side_name(self.tournament, side, 'full').title()
 
             team_data = []
             for debate, hl in zip_longest(debates, highlight):
