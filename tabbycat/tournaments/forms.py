@@ -120,12 +120,12 @@ class TournamentConfigureForm(ModelForm):
 
         # Apply public info presets
         do_public = self.cleaned_data["public_info"]
-        if do_public:
+        if do_public == "True":
             save_presets(t, PublicInformation)
 
         # Apply data entry method preset
         data_entry_method = self.cleaned_data["data_entry"]
-        if data_entry_method:
+        if data_entry_method != "False":
             save_presets(t, {"private-urls": PrivateURLS, "public": PublicForms}[data_entry_method])
 
         # Apply the credits
