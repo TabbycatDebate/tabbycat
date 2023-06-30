@@ -87,13 +87,13 @@ class TournamentConfigureForm(ModelForm):
         help_text=_("Apply a standard set of settings to match a common debate format"))
 
     public_info = ChoiceField(
-        choices=public_presets_for_form(),
+        choices=public_presets_for_form,
         label=_("Public Configuration"),
         help_text=_("Show non-sensitive information on the public-facing side of this site, "
             "like draws (once released) and the motions of previous rounds"))
 
     data_entry = ChoiceField(
-        choices=data_entry_presets_for_form(),
+        choices=data_entry_presets_for_form,
         label=_("Participant Data Entry"),
         help_text=_("Whether participants can submit ballots and feedback themselves, and "
             "how they do so"))

@@ -28,15 +28,17 @@ def presets_for_form():
     return choices
 
 
-def public_presets_for_form():
-    return [(True, _('Enable Public Information')),
-            (False, _('Disable Public Information'))]
+public_presets_for_form = [
+    (True, _('Enable Public Information')),
+    (False, _('Disable Public Information')),
+]
 
 
-def data_entry_presets_for_form():
-    return [(False, _('Disabled (tab staff only)')),
-            ("private-urls", _('Use private URLs')),
-            ("public", _('Use publicly accessible form'))]
+data_entry_presets_for_form = [
+    (False, _('Disabled (tab staff only)')),
+    ("private-urls", _('Use private URLs')),
+    ("public", _('Use publicly accessible form')),
+]
 
 
 def get_preferences_data(selected_preset, tournament):
