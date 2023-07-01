@@ -59,24 +59,16 @@
   </div>
 {% endif %}
 
-<div class="card">
-  <div class="card-body">
+<form action="." method="POST">
+  <div class="card">
+    {% csrf_token %}
 
-    <form action="." method="POST">
+    {% include 'components/form-main.html' %}
 
-      {% csrf_token %}
-
-      {% include 'components/form-main.html' %}
-
-      <button type="submit" class="btn btn-block btn-success form-control">
-        {% trans "Set Current Round" %}
-      </button>
-
-    </form>
-
+    {% trans "Set Current Rounds" context "button" as title %}
+    {% include "components/form-submit.html" %}
   </div>
-</div>
-
+</form>
 {% endblock %}
 
 {% block js %}
