@@ -1,6 +1,4 @@
 from django.core.validators import MinValueValidator, validate_slug
-from django.forms import ValidationError
-from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 from dynamic_preferences.preferences import Section
@@ -13,6 +11,7 @@ from tournaments.utils import get_side_name_choices
 
 from .models import tournament_preferences_registry
 from .types import MultiValueChoicePreference
+from .utils import validate_metric_duplicates
 
 
 # ==============================================================================
@@ -620,14 +619,7 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
 
     def validate(self, value):
         super().validate(value)
-
-        # Check that non-repeatable metrics aren't listed twice
-        classes = [TeamStandingsGenerator.metric_annotator_classes[metric] for metric in value]
-        duplicates = [c for c in classes if c.repeatable is False and classes.count(c) > 1]
-        if duplicates:
-            duplicates_str = ", ".join(list(set(force_str(c.name) for c in duplicates)))
-            raise ValidationError(_("The following metrics can't be listed twice: "
-                    "%(duplicates)s") % {'duplicates': duplicates_str})
+        validate_metric_duplicates(TeamStandingsGenerator, value)
 
 
 @tournament_preferences_registry.register
@@ -655,14 +647,7 @@ class SpeakerStandingsPrecedence(MultiValueChoicePreference):
 
     def validate(self, value):
         super().validate(value)
-
-        # Check that non-repeatable metrics aren't listed twice
-        classes = [SpeakerStandingsGenerator.metric_annotator_classes[metric] for metric in value]
-        duplicates = [c for c in classes if c.repeatable is False and classes.count(c) > 1]
-        if duplicates:
-            duplicates_str = ", ".join(list(set(force_str(c.name) for c in duplicates)))
-            raise ValidationError(_("The following metrics can't be listed twice: "
-                    "%(duplicates)s") % {'duplicates': duplicates_str})
+        validate_metric_duplicates(SpeakerStandingsGenerator, value)
 
 
 @tournament_preferences_registry.register
