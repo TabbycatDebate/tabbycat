@@ -10,7 +10,7 @@ from breakqual.models import BreakCategory
 from draw.models import Debate, DebateTeam
 from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
 from options.presets import (AustralianEastersPreferences, AustralsPreferences, BritishParliamentaryPreferences,
-                             CanadianParliamentaryPreferences, JoyntPreferences, NZEastersPreferences, save_presets,
+                             CanadianParliamentaryPreferences, JoyntPreferences, NZEastersPreferences,
                              UADCPreferences, WSDCPreferences)
 from participants.emoji import EMOJI_BY_NAME
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
@@ -378,7 +378,7 @@ class Importer:
         }
         if self.root.get('style') is not None and styles[self.root.get('style', '')] is not None:
             style = styles[self.root.get('style')]
-            save_presets(self.tournament, style)
+            style.save(self.tournament)
             self.preliminary_consensus = style.debate_rules__ballots_per_debate_prelim == 'per-debate'
             self.elimination_consensus = style.debate_rules__ballots_per_debate_elim == 'per-debate'
             return True # Exit method
@@ -386,7 +386,7 @@ class Importer:
         if self.is_bp:
             self.preliminary_consensus = True
             self.elimination_consensus = True
-            save_presets(self.tournament, BritishParliamentaryPreferences)
+            BritishParliamentaryPreferences.save(self.tournament)
         else:
             self.preliminary_consensus = self._is_consensus_ballot('false')
             self.elimination_consensus = self._is_consensus_ballot('true')

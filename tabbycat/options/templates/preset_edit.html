@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load debate_tags i18n %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-outline-primary "
+     href="{% tournamenturl 'options-tournament-index' %}">
+    <i data-feather="chevron-left"></i> {% trans "Back to Configuration" %}
+  </a>
+{% endblock %}
+
+{% block content %}
+
+{% if form.errors %}
+  {% include "components/form-errors.html" with errors=form.non_field_errors %}
+{% endif %}
+
+<form id="applyPresetsForm" method="POST">
+
+  {% regroup form.visible_fields|dictsort:"changed" by changed as preferences_grouped %}
+  {% for changed, preferences in preferences_grouped reversed %}
+    {% if preferences|length > 0 %}
+      {% if changed %}
+        {% trans "Preferences that will change" as title %}
+      {% else %}
+        {% trans "Preferences that will not change" as title %}
+      {% endif %}
+      {% include "preferences_state.html" %}
+    {% endif %}
+  {% endfor %}
+
+  <div hidden>
+    {% for field in form.hidden_fields %}
+      {{ field }}
+    {% endfor %}
+  </div>
+
+  <div class="card mt-3">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        {% csrf_token %}
+        <button id="applyPresets" type="submit" class="btn btn-success btn-block">{% trans "Apply Changes" %}</button>
+      </li>
+    </ul>
+  </div>
+</form>
+{% endblock content %}

@@ -11,7 +11,7 @@ from adjfeedback.models import AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
 from breakqual.utils import auto_make_break_rounds
 from options.preferences import TournamentStaff
-from options.presets import all_presets, data_entry_presets_for_form, presets_for_form, PrivateURLS, public_presets_for_form, PublicForms, PublicInformation, save_presets
+from options.presets import all_presets, data_entry_presets_for_form, presets_for_form, PrivateURLS, public_presets_for_form, PublicForms, PublicInformation
 
 from .models import Round, Tournament
 from .signals import update_tournament_cache
@@ -116,17 +116,17 @@ class TournamentConfigureForm(ModelForm):
         # Identify + apply selected preset
         selected_index = self.cleaned_data["preset_rules"]
         selected_preset = next(p for p in presets if p.name == selected_index)
-        save_presets(t, selected_preset)
+        selected_preset.save(t)
 
         # Apply public info presets
         do_public = self.cleaned_data["public_info"]
         if do_public == "True":
-            save_presets(t, PublicInformation)
+            PublicInformation.save(t)
 
         # Apply data entry method preset
         data_entry_method = self.cleaned_data["data_entry"]
         if data_entry_method != "False":
-            save_presets(t, {"private-urls": PrivateURLS, "public": PublicForms}[data_entry_method])
+            {"private-urls": PrivateURLS, "public": PublicForms}[data_entry_method].save(t)
 
         # Apply the credits
         if self.cleaned_data['tournament_staff'] != self.fields['tournament_staff'].initial:

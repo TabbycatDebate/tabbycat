@@ -5,6 +5,7 @@ from django.http import Http404
 from django.utils.text import slugify
 from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
+from django.views.generic.edit import FormView
 from dynamic_preferences.registries import global_preferences_registry
 from dynamic_preferences.views import PreferenceFormView
 
@@ -16,7 +17,7 @@ from utils.mixins import AdministratorMixin
 
 from .forms import tournament_preference_form_builder
 from .preferences import tournament_preferences_registry
-from .presets import all_presets, get_preferences_data, save_presets
+from .presets import all_presets, get_preset_from_slug
 
 logger = logging.getLogger(__name__)
 
@@ -74,44 +75,29 @@ class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, Tournamen
         return form_class
 
 
-class ConfirmTournamentPreferencesView(AdministratorMixin, TournamentMixin, TemplateView):
-    template_name = "preferences_presets_confirm.html"
+class SetPresetPreferencesView(AdministratorMixin, LogActionMixin, TournamentMixin, FormView):
+    template_name = "preset_edit.html"
+    page_emoji = '❔'
+
+    action_log_type = ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT
+
+    def get_page_title(self):
+        return _("Apply Preset: %s") % self.get_selected_preset().name
+
+    def get_form(self):
+        return self.get_selected_preset().get_form(self.tournament, **self.get_form_kwargs())
 
     def get_selected_preset(self):
-        preset_name = self.kwargs["preset_name"]
-        # Retrieve the class that matches the name
-        selected_presets = [x for x in all_presets() if slugify(x.__name__) == preset_name]
-        if len(selected_presets) == 0:
-            logger.warning("Could not find preset: %s", preset_name)
-            raise Http404("Preset {!r} no found.".format(preset_name))
-        elif len(selected_presets) > 1:
-            logger.warning("Found more than one preset for %s", preset_name)
-        return selected_presets[0]
+        try:
+            return get_preset_from_slug(self.kwargs["preset_name"])
+        except ValueError as e:
+            raise Http404(str(e))
 
-    def get_context_data(self, **kwargs):
-        selected_preset = self.get_selected_preset()
-        preset_preferences = get_preferences_data(selected_preset, self.tournament)
-        kwargs["preset_title"] = selected_preset.name
-        kwargs["preset_name"] = self.kwargs["preset_name"]
-        kwargs["changed_preferences"] = [p for p in preset_preferences if p['changed']]
-        kwargs["unchanged_preferences"] = [p for p in preset_preferences if not p['changed']]
-        return super().get_context_data(**kwargs)
+    def get_success_url(self):
+        return reverse_tournament('options-tournament-index', self.tournament)
 
-    def get_template_names(self):
-        if self.request.method == 'GET':
-            return ["preferences_presets_confirm.html"]
-        else:
-            return ["preferences_presets_complete.html"]
-
-    def save_presets(self):
-        selected_preset = self.get_selected_preset()
-        save_presets(self.tournament, selected_preset)
-        ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT,
-                user=self.request.user, tournament=self.tournament, content_object=self.tournament)
-        messages.success(self.request, _("Tournament options saved according to preset "
-                "%(name)s.") % {'name': selected_preset.name})
-
-    def post(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-        self.save_presets()
-        return self.render_to_response(context)
+    def form_valid(self, form):
+        form.update_preferences()
+        messages.success(self.request, _("Tournament options saved based on preset "
+                "%(name)s.") % {'name': self.get_selected_preset().name})
+        return super().form_valid(form)
