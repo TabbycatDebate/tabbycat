@@ -25,7 +25,7 @@ ADD . /tcd/
 RUN git config --global url."https://".insteadOf git://
 
 # Install our node/python requirements
-RUN pip install pipenv
+RUN pip install pipenv==2023.6.26
 RUN pipenv install --system --deploy
 RUN npm ci --only=production
 
