@@ -20,9 +20,17 @@
   {% for changed, preferences in preferences_grouped reversed %}
     {% if preferences|length > 0 %}
       {% if changed %}
-        {% trans "Preferences that will change" as title %}
+        {% blocktranslate trimmed count counter=preferences|length asvar title %}
+          Preference that will change ({{ counter }})
+        {% plural %}
+          Preferences that will change ({{ counter }})
+        {% endblocktranslate %}
       {% else %}
-        {% trans "Preferences that will not change" as title %}
+        {% blocktranslate trimmed count counter=preferences|length asvar title %}
+          Preference that will not change ({{ counter }})
+        {% plural %}
+          Preferences that will not change ({{ counter }})
+        {% endblocktranslate %}
       {% endif %}
       {% include "preferences_state.html" %}
     {% endif %}
