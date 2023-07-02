@@ -1,0 +1,3 @@
+{% load i18n %}{% autoescape off %}
+{% blocktrans with name=tournament.name %}Invitation to join Tabbycat site for {{ name }}{% endblocktrans %}
+{% endautoescape %}

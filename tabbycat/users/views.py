@@ -3,8 +3,9 @@ from threading import Lock
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
-from django.contrib.auth.views import PasswordResetView
+from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetView
 from django.http import HttpResponseForbidden
+from django.http.response import Http404
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -14,9 +15,10 @@ from dynamic_preferences.registries import global_preferences_registry
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import TournamentMixin
+from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 
-from .forms import InviteUserForm, SuperuserCreationForm, TabRegistrationForm
+from .forms import AcceptInvitationForm, InviteUserForm, SuperuserCreationForm, TabRegistrationForm
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -110,3 +112,25 @@ class InviteUserView(LogActionMixin, AdministratorMixin, TournamentMixin, Passwo
     action_log_type = ActionLogEntry.ACTION_TYPE_USER_INVITE
     page_title = _("Invite User")
     page_emoji = '🔐'
+
+    subject_template_name = 'account_invitation_subject.txt'
+    email_template_name = 'account_invitation_email.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['tournament'] = self.tournament
+        return kwargs
+
+    def get_success_url(self):
+        return reverse_tournament('options-tournament-index', self.tournament)
+
+
+class AcceptInvitationView(TournamentMixin, PasswordResetConfirmView):
+    form_class = AcceptInvitationForm
+    success_url = reverse_lazy('tabbycat-index')
+    template_name = 'signup.html'
+
+    def get_context_data(self, **kwargs):
+        if not self.validlink:
+            raise Http404
+        return super().get_context_data(**kwargs)
