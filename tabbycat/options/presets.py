@@ -365,7 +365,7 @@ class TabRelease(PreferencesPreset):
     public_features__public_break_categories   = False
 
 
-class PrivateURLS(PreferencesPreset):
+class PrivateURLs(PreferencesPreset):
     name = _("Use Private URLs")
     show_in_list = False
     description = _("Enables participant data entry through private URLs.")
