@@ -2,11 +2,6 @@
 {% load debate_tags %}
 {% load add_field_css i18n %}
 
-{% block page-title %}{% trans "Set Current Round" %}{% endblock %}
-{% block head-title %}
-  <span class="emoji">🙏</span>{% trans "Set Current Round" %}
-{% endblock %}
-
 {% block page-subnav-sections %}
   {% if current_round %}
     <a class="btn btn-primary "

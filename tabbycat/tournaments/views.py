@@ -239,6 +239,8 @@ class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
     template_name = 'set_current_round.html'
     slug_url_kwarg = 'tournament_slug'
     redirect_field_name = 'next'
+    page_title = _('Set Current Round')
+    page_emoji = '🙏'
 
     def get_form_class(self):
         if self.tournament.breakcategory_set.count() <= 1:
