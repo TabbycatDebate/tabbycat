@@ -3,6 +3,7 @@ from threading import Lock
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
+from django.contrib.auth.views import PasswordResetView
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -10,7 +11,12 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 from dynamic_preferences.registries import global_preferences_registry
 
-from .forms import SuperuserCreationForm, TabRegistrationForm
+from actionlog.mixins import LogActionMixin
+from actionlog.models import ActionLogEntry
+from tournaments.mixins import TournamentMixin
+from utils.mixins import AdministratorMixin
+
+from .forms import InviteUserForm, SuperuserCreationForm, TabRegistrationForm
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -92,3 +98,15 @@ class BlankSiteStartView(FormView):
         messages.info(self.request, _("Welcome! You've created an account for %s.") % user.username)
 
         return super().form_valid(form)
+
+
+class InviteUserView(LogActionMixin, AdministratorMixin, TournamentMixin, PasswordResetView):
+    """This view is used by an administrator to invite an email address to
+    either create an account or to give them access to a particular tournament,
+    for when permissions will be created."""
+
+    form_class = InviteUserForm
+    template_name = "invite_user.html"
+    action_log_type = ActionLogEntry.ACTION_TYPE_USER_INVITE
+    page_title = _("Invite User")
+    page_emoji = '🔐'
