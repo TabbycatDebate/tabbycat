@@ -20,13 +20,6 @@ class SuperuserCreationForm(UserCreationForm):
         return user
 
 
-class TabRegistrationForm(UserCreationForm):
-
-    class Meta(UserCreationForm.Meta):
-        fields = ("username", "email")
-        labels = {"email": _("Email address")}
-
-
 class InviteUserForm(PasswordResetForm):
     role = forms.ChoiceField(label=_("User role"), choices=(
         ('assistant', _("Assistant")),

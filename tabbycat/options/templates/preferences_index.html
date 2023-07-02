@@ -132,6 +132,11 @@
       {% trans "Set Round Weights for Tapered Scoring" as text %}
       {% trans "Rounds can be weighted so that certain rounds are worth more team points." as extra %}
       {% include "components/item-action.html" with type="primary" icon="anchor" %}
+
+      {% tournamenturl 'invite-user' as url %}
+      {% trans "Invite user to create an account" as text %}
+      {% trans "Users can be created through an invitation link sent to their email, with associated permissions." as extra %}
+      {% include "components/item-action.html" with type="primary" icon="user-plus" %}
     </ul>
 
     <div class="card mt-3">

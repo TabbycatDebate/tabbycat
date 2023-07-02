@@ -1486,23 +1486,3 @@ class EnableAPIAccess(BooleanPreference):
     section = global_settings
     name = 'enable_api'
     default = True
-
-
-@global_preferences_registry.register
-class AssistantAccountCreationKey(StringPreference):
-    help_text = _("A key that enables a secret URL that lets visitors create their own assistant user accounts. The URL takes the form of: YOUR_SITE'S_BASE_URL/accounts/signup/KEY/")
-    verbose_name = _('Assistant account creation key')
-    section = global_settings
-    field_kwargs = {'validators': [validate_slug]}
-    name = 'assistant_account_key'
-    default = ''
-
-
-@global_preferences_registry.register
-class AdminAccountCreationKey(StringPreference):
-    help_text = _("A key that enables a secret URL that lets visitors create their own administrator user accounts. The URL takes the form of: YOUR_SITE'S_BASE_URL/accounts/signup/KEY/")
-    section = global_settings
-    verbose_name = _('Administrator account creation key')
-    field_kwargs = {'validators': [validate_slug]}
-    name = 'admin_account_key'
-    default = ''
