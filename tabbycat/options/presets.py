@@ -268,7 +268,7 @@ class UADCPreferences(AustralsPreferences):
     description  = _("3 vs 3 with replies, chosen motions, and all adjudicators "
         "can receive feedback from teams.")
 
-    # Rules source = http://www.alcheringa.in/pdrules.pdf
+    # Rules source = https://docs.google.com/document/d/10AVKBhev_OFRtorWsu2VB9B5V1a2f20425HYkC5ztMM/edit
     # Scoring
     scoring__score_min                         = 69.0  # From Rules Book
     scoring__score_max                         = 81.0  # From Rules Book
@@ -277,13 +277,14 @@ class UADCPreferences(AustralsPreferences):
     scoring__reply_score_max                   = 42.0  # Not specified; assuming  half of substantive
     scoring__reply_score_step                  = 0.5
     scoring__maximum_margin                    = 0.0   # TODO= check this
-    scoring__margin_includes_dissenters        = True  # From Rules:10.9.5
+    scoring__margin_includes_dissenters        = False  # From Rules 20.3.2
     # Draws
     draw_rules__avoid_same_institution         = False
     draw_rules__avoid_team_history             = True
-    draw_rules__draw_odd_bracket               = 'pullup_top'  # From Rules 10.3.1
-    draw_rules__draw_side_allocations          = 'balance'  # From Rules 10.6
-    draw_rules__draw_pairing_method            = 'slide'  # From rules 10.5
+    draw_rules__draw_odd_bracket               = 'pullup_top'  # From Rules 20.10
+    draw_rules__draw_pullup_restriction        = 'least_to_date'  # From Rules 20.11
+    draw_rules__draw_side_allocations          = 'balance'
+    draw_rules__draw_pairing_method            = 'slide'  # From rules 20.9
     draw_rules__draw_avoid_conflicts           = 'one_up_one_down'  # From rules 10.6.4
     # Debate Rules
     debate_rules__substantive_speakers         = 3

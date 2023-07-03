@@ -863,7 +863,8 @@ class PublicPassword(StringPreference):
     verbose_name = _("Password for public submission")
     section = data_entry
     name = 'public_password'
-    default = 'Enter Password'
+    default = ''
+    required = False
 
 
 @tournament_preferences_registry.register

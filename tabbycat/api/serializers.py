@@ -966,12 +966,25 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
             view_name='api-feedbackquestion-detail',
             queryset=AdjudicatorFeedbackQuestion.objects.all(),
         )
-        answer = serializers.CharField()
+        answer = fields.AnyField()
 
         def validate(self, data):
             # Convert answer to correct type
             model = AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[data['question'].answer_type]
+            if type(data['answer']) != model.ANSWER_TYPE:
+                raise serializers.ValidationError({'answer': 'The answer must be of type %s' % model.ANSWER_TYPE.__name__})
+
             data['answer'] = model.ANSWER_TYPE(data['answer'])
+
+            option_error = serializers.ValidationError({'answer': 'Answer must be in set of options'})
+            if len(data['question'].choices) > 0:
+                if model.ANSWER_TYPE is list and len(set(data['answer']) - set(data['question'].choices)) > 0:
+                    raise option_error
+                if data['answer'] not in data['question'].choices:
+                    raise option_error
+            if (data['question'].min_value is not None and data['answer'] < data['question'].min_value) or (data['question'].max_value is not None and data['answer'] > data['question'].max_value):
+                raise option_error
+
             return super().validate(data)
 
     url = fields.AdjudicatorFeedbackIdentityField(view_name='api-feedback-detail')
@@ -992,9 +1005,15 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
         source = data.pop('source')
         debate = data.pop('debate')
 
-        # Test answers for correct source
         source_type = 'from_team' if isinstance(source, Team) else 'from_adj'
-        for answer in data.get('get_answers'):
+        required_questions = self.context['tournament'].adjudicatorfeedbackquestion_set.filter(required=True, **{source_type: True})
+        answers = data.get('get_answers', [])
+
+        if len(set(required_questions) - set(a['question'] for a in answers)) > 0:
+            raise serializers.ValidationError("Answer to required question is missing")
+
+        # Test answers for correct source
+        for answer in answers:
             if not getattr(answer['question'], source_type, False):
                 raise serializers.ValidationError("Question is not permitted from source.")
 
