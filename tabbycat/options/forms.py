@@ -14,7 +14,7 @@ class TournamentPreferenceForm(PreferenceForm):
         t = self.manager.instance
 
         def get_pref(name, section=section):
-            return self.cleaned_data.get(section + "__" + name) or t.pref(name)
+            return self.cleaned_data.get(section + "__" + name) if (section + "__" + name) in self.cleaned_data else t.pref(name)
 
         score_range_msg = _("Mininum score must be less than maximum score")
 
@@ -36,6 +36,10 @@ class TournamentPreferenceForm(PreferenceForm):
         elif section == 'feedback':
             if get_pref('adj_min_score') > get_pref('adj_max_score'):
                 raise ValidationError({'feedback__adj_min_score': score_range_msg, 'feedback__adj_max_score': score_range_msg})
+
+        elif section == 'data_entry':
+            if get_pref('public_use_password') and len(get_pref('public_password')) == 0:
+                raise ValidationError({'data_entry__public_password': _("Must set a password if using a password is enabled")})
 
         elif section == 'ui_options':
             if get_pref('team_code_names') not in ['off', 'all-tooltips'] and get_pref('show_team_institutions'):
