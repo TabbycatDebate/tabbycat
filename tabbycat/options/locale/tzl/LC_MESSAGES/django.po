@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:59\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:59\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -21,6 +21,26 @@ msgstr ""
 #: options/apps.py
 msgid "Tournament Options"
 msgstr "crwdns51308:0crwdne51308:0"
+
+#: options/forms.py
+msgid "Mininum score must be less than maximum score"
+msgstr "crwdns52325:0crwdne52325:0"
+
+#: options/forms.py
+msgid "Intermediate 1 or 2 require preallocated sides"
+msgstr "crwdns52327:0crwdne52327:0"
+
+#: options/forms.py
+msgid "Four-team formats require consensus ballots"
+msgstr "crwdns52329:0crwdne52329:0"
+
+#: options/forms.py
+msgid "Must set a password if using a password is enabled"
+msgstr "crwdns52331:0crwdne52331:0"
+
+#: options/forms.py
+msgid "Showing team institutions defeats the purpose of code names"
+msgstr "crwdns52333:0crwdne52333:0"
 
 #: options/models.py
 msgid "instance"
@@ -179,6 +199,30 @@ msgid "Avoid team history"
 msgstr "crwdns31234:0crwdne31234:0"
 
 #: options/preferences.py
+msgid "Penalty applied by conflict avoidance method for teams being in a pullup many times. Leave 0 for no penalty."
+msgstr "crwdns52335:0crwdne52335:0"
+
+#: options/preferences.py
+msgid "Previously saw pullup penalty"
+msgstr "crwdns52337:0crwdne52337:0"
+
+#: options/preferences.py
+msgid "Penalty applied by minimum cost matching to prefer pairings that balance sides."
+msgstr "crwdns52339:0crwdne52339:0"
+
+#: options/preferences.py
+msgid "Side balance penalty"
+msgstr "crwdns52341:0crwdne52341:0"
+
+#: options/preferences.py
+msgid "Penalty applied by minimum cost matching to prefer pairings that follow the draw pairing method."
+msgstr "crwdns52343:0crwdne52343:0"
+
+#: options/preferences.py
+msgid "Pairing deviation penalty"
+msgstr "crwdns52345:0crwdne52345:0"
+
+#: options/preferences.py
 msgid "How odd brackets are resolved (see documentation for further details)"
 msgstr "crwdns31236:0crwdne31236:0"
 
@@ -281,6 +325,10 @@ msgstr "crwdns31284:0crwdne31284:0"
 #: options/preferences.py
 msgid "One-up-one-down"
 msgstr "crwdns31286:0crwdne31286:0"
+
+#: options/preferences.py
+msgid "Minimum cost matching"
+msgstr "crwdns52347:0crwdne52347:0"
 
 #: options/preferences.py
 msgid "If using pull-ups, restrict which teams can be pulled up. Two-team formats only. Has no effect on BP or intermediate brackets."
@@ -398,6 +446,42 @@ msgstr "crwdns31338:0crwdne31338:0"
 msgid "No trainee adjudicators"
 msgstr "crwdns31340:0crwdne31340:0"
 
+#: options/preferences.py
+msgid "How to handle teams who were marked available yet excluded froma round (a bye)"
+msgstr "crwdns52772:0crwdne52772:0"
+
+#: options/preferences.py
+msgid "Bye team results"
+msgstr "crwdns52774:0crwdne52774:0"
+
+#: options/preferences.py
+msgid "Treat bye teams as absent"
+msgstr "crwdns52776:0crwdne52776:0"
+
+#: options/preferences.py
+msgid "Attribute a win to bye teams, without speaks"
+msgstr "crwdns52778:0crwdne52778:0"
+
+#: options/preferences.py
+msgid "If creating a draw with an uneven number of teams, how to decide who gets the bye (won't be allocated)"
+msgstr "crwdns52780:0crwdne52780:0"
+
+#: options/preferences.py
+msgid "Bye team selection method"
+msgstr "crwdns52782:0crwdne52782:0"
+
+#: options/preferences.py
+msgid "Don't choose bye teams"
+msgstr "crwdns52784:0crwdne52784:0"
+
+#: options/preferences.py
+msgid "Choose bye teams randomly"
+msgstr "crwdns52786:0crwdne52786:0"
+
+#: options/preferences.py
+msgid "Choose lowest ranking teams"
+msgstr "crwdns52788:0crwdne52788:0"
+
 #: options/preferences.py options/templates/preferences_index.html
 msgid "Feedback"
 msgstr "crwdns31342:0crwdne31342:0"
@@ -443,6 +527,14 @@ msgid "All adjudicators (including trainees) on each other"
 msgstr "crwdns31360:0crwdne31360:0"
 
 #: options/preferences.py
+msgid "Panellists on eachother and chairs, trainees on chairs, chairs on everyone"
+msgstr "crwdns52349:0crwdne52349:0"
+
+#: options/preferences.py
+msgid "Neither chairs, nor panellists nor trainees"
+msgstr "crwdns52790:0crwdne52790:0"
+
+#: options/preferences.py
 msgid "Expect feedback to be submitted by teams on"
 msgstr "crwdns31362:0crwdne31362:0"
 
@@ -457,6 +549,10 @@ msgstr "crwdns31366:0crwdne31366:0"
 #: options/preferences.py
 msgid "All adjudicators in their panels (including trainees)"
 msgstr "crwdns31368:0crwdne31368:0"
+
+#: options/preferences.py
+msgid "No one"
+msgstr "crwdns52792:0crwdne52792:0"
 
 #: options/preferences.py
 msgid "Show unexpected feedback submissions in participants pages"
@@ -487,20 +583,12 @@ msgid "Debate Rules"
 msgstr "crwdns31382:0crwdne31382:0"
 
 #: options/preferences.py
-msgid "Two-team format (e.g. Australs, WSDC) or British Parliamentary"
-msgstr "crwdns31384:0crwdne31384:0"
+msgid "How many teams are in each debate (normally 2 but 4 for BP)"
+msgstr "crwdns52794:0crwdne52794:0"
 
 #: options/preferences.py
-msgid "Teams in debate"
-msgstr "crwdns31386:0crwdne31386:0"
-
-#: options/preferences.py
-msgid "Two-team format"
-msgstr "crwdns31388:0crwdne31388:0"
-
-#: options/preferences.py
-msgid "British Parliamentary (four teams)"
-msgstr "crwdns31390:0crwdne31390:0"
+msgid "Number of teams per debate"
+msgstr "crwdns52796:0crwdne52796:0"
 
 #: options/preferences.py
 msgid "Whether panels submit a ballot each or a single ballot for a debate during the preliminary rounds. Note: BP must use one per debate."
@@ -602,6 +690,22 @@ msgstr "crwdns51792:0crwdne51792:0"
 msgid "Require reply speaker to have given a substantive speech"
 msgstr "crwdns51734:0crwdne51734:0"
 
+#: options/preferences.py
+msgid "Whether and how to use speech ranks within a debate"
+msgstr "crwdns52351:0crwdne52351:0"
+
+#: options/preferences.py
+msgid "Use of speech ranks"
+msgstr "crwdns52353:0crwdne52353:0"
+
+#: options/preferences.py
+msgid "How long, in minutes, after motion release does the round start (-1 to deactivate"
+msgstr "crwdns52798:0crwdne52798:0"
+
+#: options/preferences.py
+msgid "Preparation Time"
+msgstr "crwdns52800:0crwdne52800:0"
+
 #: options/preferences.py options/templates/preferences_index.html
 msgid "Standings"
 msgstr "crwdns31420:0crwdne31420:0"
@@ -629,11 +733,6 @@ msgstr "crwdns31430:0crwdne31430:0"
 #: options/preferences.py
 msgid "Team standings precedence"
 msgstr "crwdns31432:0crwdne31432:0"
-
-#: options/preferences.py
-#, python-format
-msgid "The following metrics can't be listed twice: %(duplicates)s"
-msgstr "crwdns31434:0%(duplicates)scrwdne31434:0"
 
 #: options/preferences.py
 msgid "Metrics to calculate, but not used to rank teams"
@@ -783,15 +882,15 @@ msgstr "crwdns31504:0crwdne31504:0"
 msgid "Ballot submissions from adjudicators"
 msgstr "crwdns31506:0crwdne31506:0"
 
-#: options/preferences.py
+#: options/preferences.py options/presets.py
 msgid "Disabled (tab staff only)"
 msgstr "crwdns31508:0crwdne31508:0"
 
-#: options/preferences.py
+#: options/preferences.py options/presets.py
 msgid "Use private URLs"
 msgstr "crwdns31510:0crwdne31510:0"
 
-#: options/preferences.py
+#: options/preferences.py options/presets.py
 msgid "Use publicly accessible form"
 msgstr "crwdns31512:0crwdne31512:0"
 
@@ -1143,6 +1242,26 @@ msgstr "crwdns31680:0crwdne31680:0"
 msgid "Show speakers in draw"
 msgstr "crwdns31682:0crwdne31682:0"
 
+#: options/preferences.py
+msgid "Input team seed in simple team importer"
+msgstr "crwdns52355:0crwdne52355:0"
+
+#: options/preferences.py
+msgid "Enable team seed in importer"
+msgstr "crwdns52357:0crwdne52357:0"
+
+#: options/preferences.py
+msgid "Do not ask for team seed"
+msgstr "crwdns52359:0crwdne52359:0"
+
+#: options/preferences.py
+msgid "Ask for numeric team seed"
+msgstr "crwdns52361:0crwdne52361:0"
+
+#: options/preferences.py
+msgid "Ask for descriptive team seed name"
+msgstr "crwdns52363:0crwdne52363:0"
+
 #: options/preferences.py options/templates/preferences_index.html
 msgid "Notifications"
 msgstr "crwdns31764:0crwdne31764:0"
@@ -1194,94 +1313,6 @@ msgstr "crwdns35216:0crwdne35216:0"
 #: options/preferences.py
 msgid "Ballot receipt message"
 msgstr "crwdns31784:0crwdne31784:0"
-
-#: options/preferences.py
-msgid "The subject line for emails sent to speakers with their team points."
-msgstr "crwdns35218:0crwdne35218:0"
-
-#: options/preferences.py
-msgid "Team points subject line"
-msgstr "crwdns31788:0crwdne31788:0"
-
-#: options/preferences.py
-msgid "The message body for emails sent to speakers with their team points."
-msgstr "crwdns35220:0crwdne35220:0"
-
-#: options/preferences.py
-msgid "Team points message"
-msgstr "crwdns31792:0crwdne31792:0"
-
-#: options/preferences.py
-msgid "The subject-line for emails sent to adjudicators with their assignments."
-msgstr "crwdns35222:0crwdne35222:0"
-
-#: options/preferences.py
-msgid "Adjudicator draw subject line"
-msgstr "crwdns31804:0crwdne31804:0"
-
-#: options/preferences.py
-msgid "The message body for emails sent to adjudicators with their assignments."
-msgstr "crwdns35224:0crwdne35224:0"
-
-#: options/preferences.py
-msgid "Adjudicator draw message"
-msgstr "crwdns35226:0crwdne35226:0"
-
-#: options/preferences.py
-msgid "The subject-line for emails sent to teams with their draw."
-msgstr "crwdns35228:0crwdne35228:0"
-
-#: options/preferences.py
-msgid "Team draw subject line"
-msgstr "crwdns34346:0crwdne34346:0"
-
-#: options/preferences.py
-msgid "The message body for emails sent to participants with their private URLs."
-msgstr "crwdns35230:0crwdne35230:0"
-
-#: options/preferences.py
-msgid "Private URL notification message"
-msgstr "crwdns34350:0crwdne34350:0"
-
-#: options/preferences.py
-msgid "The subject-line for emails sent to participants with their private URLs."
-msgstr "crwdns35232:0crwdne35232:0"
-
-#: options/preferences.py
-msgid "Private URL notification subject line"
-msgstr "crwdns34354:0crwdne34354:0"
-
-#: options/preferences.py
-msgid "The subject-line for emails sent to participants on motion release."
-msgstr "crwdns34356:0crwdne34356:0"
-
-#: options/preferences.py
-msgid "Motion release notification subject line"
-msgstr "crwdns34358:0crwdne34358:0"
-
-#: options/preferences.py
-msgid "The message body for emails sent to participants on motion release."
-msgstr "crwdns34360:0crwdne34360:0"
-
-#: options/preferences.py
-msgid "Motion release notification message"
-msgstr "crwdns34362:0crwdne34362:0"
-
-#: options/preferences.py
-msgid "The subject-line for emails sent to participants informing them of their team registration."
-msgstr "crwdns34364:0crwdne34364:0"
-
-#: options/preferences.py
-msgid "Team registration notification subject line"
-msgstr "crwdns34366:0crwdne34366:0"
-
-#: options/preferences.py
-msgid "The message body for emails sent to participants informing them of their team registration."
-msgstr "crwdns34368:0crwdne34368:0"
-
-#: options/preferences.py
-msgid "Team registration notification message"
-msgstr "crwdns34370:0crwdne34370:0"
 
 #: options/preferences.py options/templates/preferences_index.html
 msgid "Motions"
@@ -1354,26 +1385,6 @@ msgstr "crwdns51604:0crwdne51604:0"
 #: options/preferences.py
 msgid "Enable API access"
 msgstr "crwdns51606:0crwdne51606:0"
-
-#: options/preferences.py
-msgid "A key that enables a secret URL that lets visitors create their own assistant user accounts. The URL takes the form of: YOUR_SITE'S_BASE_URL/accounts/signup/KEY/"
-msgstr "crwdns52093:0crwdne52093:0"
-
-#: options/preferences.py
-msgid "Assistant account creation key"
-msgstr "crwdns52095:0crwdne52095:0"
-
-#: options/preferences.py
-msgid "A key that enables a secret URL that lets visitors create their own administrator user accounts. The URL takes the form of: YOUR_SITE'S_BASE_URL/accounts/signup/KEY/"
-msgstr "crwdns52097:0crwdne52097:0"
-
-#: options/preferences.py
-msgid "Administrator account creation key"
-msgstr "crwdns52099:0crwdne52099:0"
-
-#: options/presets.py
-msgid "Public Information Options"
-msgstr "crwdns35582:0crwdne35582:0"
 
 #: options/presets.py
 msgid "Enable Public Information"
@@ -1448,6 +1459,26 @@ msgid "3 vs 3 with replies, chosen motions, prop/opp side labels, and all adjudi
 msgstr "crwdns35618:0crwdne35618:0"
 
 #: options/presets.py
+msgid "APDA Rules"
+msgstr "crwdns52802:0crwdne52802:0"
+
+#: options/presets.py
+msgid "2 vs 2 with speech rankings and byes"
+msgstr "crwdns52804:0crwdne52804:0"
+
+#: options/presets.py
+msgid "Public Speaking"
+msgstr "crwdns52806:0crwdne52806:0"
+
+#: options/presets.py
+msgid "Arbitrary number of teams per room, one speech each, no team points"
+msgstr "crwdns52808:0crwdne52808:0"
+
+#: options/presets.py
+msgid "Public Information Options"
+msgstr "crwdns35582:0crwdne35582:0"
+
+#: options/presets.py
 msgid "For tournaments hosted online: this sets it up so that people can access the draw and other generally useful information via the tab site."
 msgstr "crwdns35620:0crwdne35620:0"
 
@@ -1467,24 +1498,17 @@ msgstr "crwdns52207:0crwdne52207:0"
 msgid "Enables participant data entry through private URLs."
 msgstr "crwdns52209:0crwdne52209:0"
 
+#: options/presets.py
+msgid "Use Public Forms"
+msgstr "crwdns52365:0crwdne52365:0"
+
+#: options/presets.py
+msgid "Enables participant data entry through public forms."
+msgstr "crwdns52367:0crwdne52367:0"
+
 #: options/templates/preferences_index.html
 msgid "Configuration"
 msgstr "crwdns31810:0crwdne31810:0"
-
-#: options/templates/preferences_index.html
-#, python-format
-msgid "Your draw rules specify four teams per-debate but your ballot setting specifies that adjudicators submit independent ballots. These settings <strong>are not compatible and will cause results entry to crash</strong>. You need to go back to the <a href=\"%(options_url)s\" class=\"alert-link\">Debate Rules section</a> and change your configuration to use consensus ballots."
-msgstr "crwdns51740:0%(options_url)scrwdne51740:0"
-
-#: options/templates/preferences_index.html
-#, python-format
-msgid "You do not use preallocated side allocation yet the odd bracket resolution method uses preallocated sides. This will cause draw generation to fail. You need to edit odd bracket resolution, avoiding <i>Intermediate 1</i> and <i>Intermediate 2</i> in the <a href=\"%(options_url)s\" class=\"alert-link\">Draw Rules section</a>."
-msgstr "crwdns51742:0%(options_url)scrwdne51742:0"
-
-#: options/templates/preferences_index.html
-#, python-format
-msgid "You both have team code names enabled, and team institutions showing on public pages. If your objective in enabling team code names is to obscure team institutions, this probably defeats the purpose of code names. You can edit these settings in the <a href=\"%(ui_url)s\" class=\"alert-link\">UI Options section</a>."
-msgstr "crwdns31812:0%(ui_url)scrwdne31812:0"
 
 #: options/templates/preferences_index.html
 msgid "The range of scores that can awarded to speeches, replies, and teams"
@@ -1551,50 +1575,25 @@ msgid "Rounds can be weighted so that certain rounds are worth more team points.
 msgstr "crwdns52103:0crwdne52103:0"
 
 #: options/templates/preferences_index.html
+msgid "Invite User to Create an Account"
+msgstr "crwdns52810:0crwdne52810:0"
+
+#: options/templates/preferences_index.html
+msgid "Users can be created through an invitation link sent to their email, with associated permissions."
+msgstr "crwdns52812:0crwdne52812:0"
+
+#: options/templates/preferences_index.html
 msgid "Presets"
 msgstr "crwdns31840:0crwdne31840:0"
 
 #: options/templates/preferences_index.html
-msgid "These modify common settings for basic rules; double check our <a href=\"https://tabbycat.readthedocs.io/\" target=\"_blank\">documentation</a> to ensure they are correct for your tournament. Each links will display what settings it changes before applying them."
-msgstr "crwdns31842:0crwdne31842:0"
+msgid "These show changes to your configuration for common situations and debate formats. You may apply these settings or modify them for your tournament directly on the preset's page."
+msgstr "crwdns52814:0crwdne52814:0"
 
 #: options/templates/preferences_index.html
 #, python-format
 msgid "Apply %(preset)s"
 msgstr "crwdns51320:0%(preset)scrwdne51320:0"
-
-#: options/templates/preferences_presets_complete.html
-#, python-format
-msgid "Presets Applied: %(preset_title)s"
-msgstr "crwdns31846:0%(preset_title)scrwdne31846:0"
-
-#: options/templates/preferences_presets_complete.html
-#: options/templates/preferences_presets_confirm.html
-#: options/templates/preferences_section_set.html
-msgid "Back to Configuration"
-msgstr "crwdns31848:0crwdne31848:0"
-
-#: options/templates/preferences_presets_complete.html
-msgid "Preferences that were changed"
-msgstr "crwdns31850:0crwdne31850:0"
-
-#: options/templates/preferences_presets_confirm.html
-#, python-format
-msgid "Confirm Presets: %(preset_title)s"
-msgstr "crwdns31852:0%(preset_title)scrwdne31852:0"
-
-#: options/templates/preferences_presets_confirm.html
-msgid "Preferences that will not change"
-msgstr "crwdns31854:0crwdne31854:0"
-
-#: options/templates/preferences_presets_confirm.html
-msgid "Preferences that will change"
-msgstr "crwdns31856:0crwdne31856:0"
-
-#: options/templates/preferences_presets_confirm.html
-#, python-format
-msgid "Apply Presets: %(preset_title)s"
-msgstr "crwdns31858:0%(preset_title)scrwdne31858:0"
 
 #: options/templates/preferences_section_set.html
 #, python-format
@@ -1606,6 +1605,38 @@ msgstr "crwdns51322:0%(section)scrwdne51322:0"
 msgid "Edit Configuration: %(section)s"
 msgstr "crwdns51324:0%(section)scrwdne51324:0"
 
+#: options/templates/preferences_section_set.html
+#: options/templates/preset_edit.html
+msgid "Back to Configuration"
+msgstr "crwdns31848:0crwdne31848:0"
+
+#: options/templates/preset_edit.html
+#, python-format
+msgid "This preference will be changed"
+msgid_plural "These %(counter)s preferences will be changed"
+msgstr[0] "crwdns52816:1crwdne52816:1"
+msgstr[1] "crwdns52816:5%(counter)scrwdne52816:5"
+
+#: options/templates/preset_edit.html
+#, python-format
+msgid "This preference will not change"
+msgid_plural "These %(counter)s preferences will not change"
+msgstr[0] "crwdns52818:1crwdne52818:1"
+msgstr[1] "crwdns52818:5%(counter)scrwdne52818:5"
+
+#: options/templates/preset_edit.html
+msgid "Apply Changes"
+msgstr "crwdns52820:0crwdne52820:0"
+
+#: options/templates/preset_edit.html
+msgid "Presets are provided as a convenience only and may not be up to date with a debating format's rules or the expectations of your circuit. Please double-check everything to ensure it matches your needs."
+msgstr "crwdns52822:0crwdne52822:0"
+
+#: options/utils.py
+#, python-format
+msgid "The following metrics can't be listed twice: %(duplicates)s"
+msgstr "crwdns31434:0%(duplicates)scrwdne31434:0"
+
 #: options/views.py
 #, python-format
 msgid "Tournament options (%(section)s) saved."
@@ -1613,6 +1644,11 @@ msgstr "crwdns31866:0%(section)scrwdne31866:0"
 
 #: options/views.py
 #, python-format
-msgid "Tournament options saved according to preset %(name)s."
-msgstr "crwdns31868:0%(name)scrwdne31868:0"
+msgid "Apply Preset: %s"
+msgstr "crwdns52824:0%scrwdne52824:0"
+
+#: options/views.py
+#, python-format
+msgid "Tournament options saved based on preset %(name)s."
+msgstr "crwdns52826:0%(name)scrwdne52826:0"
 

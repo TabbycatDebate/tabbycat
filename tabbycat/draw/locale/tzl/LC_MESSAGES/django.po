@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:25-0400\n"
-"PO-Revision-Date: 2023-02-12 06:28\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:58\n"
 "Last-Translator: \n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -240,36 +240,12 @@ msgid " vs "
 msgstr "crwdns30046:0crwdne30046:0"
 
 #: draw/models.py
-msgid "affirmative"
-msgstr "crwdns30048:0crwdne30048:0"
-
-#: draw/models.py
-msgid "negative"
-msgstr "crwdns30050:0crwdne30050:0"
-
-#: draw/models.py
-msgid "opening government"
-msgstr "crwdns30052:0crwdne30052:0"
-
-#: draw/models.py
-msgid "opening opposition"
-msgstr "crwdns30054:0crwdne30054:0"
-
-#: draw/models.py
-msgid "closing government"
-msgstr "crwdns30056:0crwdne30056:0"
-
-#: draw/models.py
-msgid "closing opposition"
-msgstr "crwdns30058:0crwdne30058:0"
-
-#: draw/models.py
 msgid "team"
 msgstr "crwdns30060:0crwdne30060:0"
 
 #: draw/models.py
-msgid "side"
-msgstr "crwdns30062:0crwdne30062:0"
+msgid "side sequence"
+msgstr "crwdns52482:0crwdne52482:0"
 
 #: draw/models.py
 msgid "debate team"
@@ -297,6 +273,11 @@ msgid "lost"
 msgstr "crwdns30080:0crwdne30080:0"
 
 #: draw/models.py
+#, python-format
+msgid "Team %d"
+msgstr "crwdns52484:0%dcrwdne52484:0"
+
+#: draw/models.py
 msgid "team side allocation"
 msgstr "crwdns30082:0crwdne30082:0"
 
@@ -310,6 +291,10 @@ msgstr "crwdns30084:0crwdne30084:0"
 #, python-format
 msgid "%(side)s: %(metric)s"
 msgstr "crwdns51190:0%(side)scrwdnd51190:0%(metric)scrwdne51190:0"
+
+#: draw/tables.py
+msgid "Bye"
+msgstr "crwdns52486:0crwdne52486:0"
 
 #: draw/tables.py
 #, python-format
@@ -1093,12 +1078,32 @@ msgid "Rooms were not auto-allocated because there are one or more adjudicator r
 msgstr "crwdns51230:0crwdne51230:0"
 
 #: draw/views.py
+msgid "There is no draw."
+msgstr "crwdns52279:0crwdne52279:0"
+
+#: draw/views.py
+msgid "The draw had already been confirmed."
+msgstr "crwdns52281:0crwdne52281:0"
+
+#: draw/views.py
 msgid "Deleted the draw. You can now recreate it as normal."
 msgstr "crwdns30414:0crwdne30414:0"
 
 #: draw/views.py
+msgid "The draw has already been released."
+msgstr "crwdns52283:0crwdne52283:0"
+
+#: draw/views.py
+msgid "The draw must be confirmed before being released."
+msgstr "crwdns52285:0crwdne52285:0"
+
+#: draw/views.py
 msgid "Released the draw."
 msgstr "crwdns30422:0crwdne30422:0"
+
+#: draw/views.py
+msgid "The draw had been unreleased."
+msgstr "crwdns52287:0crwdne52287:0"
 
 #: draw/views.py
 msgid "Unreleased the draw."
