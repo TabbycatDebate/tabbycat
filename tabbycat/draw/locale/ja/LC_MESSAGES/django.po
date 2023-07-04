@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:25-0400\n"
-"PO-Revision-Date: 2023-07-02 13:44\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:57\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -238,36 +238,12 @@ msgid " vs "
 msgstr "対"
 
 #: draw/models.py
-msgid "affirmative"
-msgstr "肯定側"
-
-#: draw/models.py
-msgid "negative"
-msgstr "否定側"
-
-#: draw/models.py
-msgid "opening government"
-msgstr "Opening Government"
-
-#: draw/models.py
-msgid "opening opposition"
-msgstr "Opening Opposition"
-
-#: draw/models.py
-msgid "closing government"
-msgstr "Closing Government"
-
-#: draw/models.py
-msgid "closing opposition"
-msgstr "Closing Opposition"
-
-#: draw/models.py
 msgid "team"
 msgstr "チーム"
 
 #: draw/models.py
-msgid "side"
-msgstr "サイド"
+msgid "side sequence"
+msgstr ""
 
 #: draw/models.py
 msgid "debate team"
@@ -295,6 +271,11 @@ msgid "lost"
 msgstr "負け"
 
 #: draw/models.py
+#, python-format
+msgid "Team %d"
+msgstr ""
+
+#: draw/models.py
 msgid "team side allocation"
 msgstr "チームサイドのアロケーション"
 
@@ -307,6 +288,10 @@ msgstr "チームサイドのアロケーション"
 #: draw/tables.py
 #, python-format
 msgid "%(side)s: %(metric)s"
+msgstr ""
+
+#: draw/tables.py
+msgid "Bye"
 msgstr ""
 
 #: draw/tables.py
@@ -493,7 +478,7 @@ msgstr[0] ""
 
 #: draw/templates/draw_base.html
 msgid "Availability"
-msgstr ""
+msgstr "可用性"
 
 #: draw/templates/draw_base.html draw/templates/draw_status_draft.html
 msgid "Edit Sides/Matchups"
@@ -1069,12 +1054,32 @@ msgid "Rooms were not auto-allocated because there are one or more adjudicator r
 msgstr ""
 
 #: draw/views.py
+msgid "There is no draw."
+msgstr ""
+
+#: draw/views.py
+msgid "The draw had already been confirmed."
+msgstr ""
+
+#: draw/views.py
 msgid "Deleted the draw. You can now recreate it as normal."
+msgstr ""
+
+#: draw/views.py
+msgid "The draw has already been released."
+msgstr ""
+
+#: draw/views.py
+msgid "The draw must be confirmed before being released."
 msgstr ""
 
 #: draw/views.py
 msgid "Released the draw."
 msgstr "対戦表を公開する。"
+
+#: draw/views.py
+msgid "The draw had been unreleased."
+msgstr ""
 
 #: draw/views.py
 msgid "Unreleased the draw."

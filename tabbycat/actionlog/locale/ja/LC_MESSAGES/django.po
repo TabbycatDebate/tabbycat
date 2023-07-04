@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:56\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:53\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -22,11 +22,51 @@ msgid "Action Log"
 msgstr "動作履歴"
 
 #: actionlog/models.py
-msgid "Discarded ballot set"
-msgstr "破棄されたバロット一覧"
+msgid "Changed adjudicator breaking status"
+msgstr "ジャッジのブレイク状況を変更"
+
+#: actionlog/models.py
+msgid "Created adjudicator"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited adjudicator"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Set adjudicator note"
+msgstr "ジャッジについてNoteを設定"
+
+#: actionlog/models.py
+msgid "Auto-allocated adjudicators"
+msgstr "自動配置済みジャッジ"
+
+#: actionlog/models.py
+msgid "Saved adjudicator allocation"
+msgstr "保存済みジャッジアロケーション"
+
+#: actionlog/models.py
+msgid "Edited adjudicators availability"
+msgstr "ジャッジの有効/非有効を編集"
+
+#: actionlog/models.py
+msgid "Edited availability"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited teams availability"
+msgstr "チームの有効/非有効を編集"
+
+#: actionlog/models.py
+msgid "Edited room availability"
+msgstr "会場の有効/非有効を編集"
 
 #: actionlog/models.py
 msgid "Checked in ballot set"
+msgstr "確定済みバロット一覧"
+
+#: actionlog/models.py
+msgid "Confirmed ballot set"
 msgstr "確定済みバロット一覧"
 
 #: actionlog/models.py
@@ -34,64 +74,104 @@ msgid "Created ballot set"
 msgstr "生成済みバロット一覧"
 
 #: actionlog/models.py
-msgid "Edited ballot set"
-msgstr "編集済みバロット一覧"
+msgid "Discarded ballot set"
+msgstr "破棄されたバロット一覧"
 
 #: actionlog/models.py
-msgid "Confirmed ballot set"
-msgstr "確定済みバロット一覧"
+msgid "Edited ballot set"
+msgstr "編集済みバロット一覧"
 
 #: actionlog/models.py
 msgid "Submitted ballot set from the public form"
 msgstr "パブリックフォームから提出されたバロット一覧"
 
 #: actionlog/models.py
-msgid "Submitted feedback from the public form"
-msgstr "パブリックフォームから提出されたフィードバック一覧<br>"
+msgid "Edited break categories"
+msgstr "編集済ブレイクカテゴリー"
 
 #: actionlog/models.py
-msgid "Saved feedback"
-msgstr "保存済みフィードバック"
+msgid "Deleted team break for category"
+msgstr ""
 
 #: actionlog/models.py
-msgid "Edited adjudicator base score"
-msgstr "編集済みのジャッジの基礎スコア"
+msgid "Edited breaking team remarks"
+msgstr "ブレイクチームの情報を編集しました"
 
 #: actionlog/models.py
-msgid "Set adjudicator note"
-msgstr "ジャッジについてNoteを設定"
+msgid "Edited break eligibility"
+msgstr "ブレイク資格を編集"
 
 #: actionlog/models.py
-msgid "Saved adjudicator allocation"
-msgstr "保存済みジャッジアロケーション"
+msgid "Generated the team break for all categories"
+msgstr "作成済みの全カテゴリーにおけるチームブレイク"
 
 #: actionlog/models.py
-msgid "Auto-allocated adjudicators"
-msgstr "自動配置済みジャッジ"
+msgid "Generated the team break for one category"
+msgstr ""
 
 #: actionlog/models.py
-msgid "Saved a room manual edit"
-msgstr "会場のマニュアル編集を保存しました"
+msgid "Edited breaking team remarks and updated all team breaks"
+msgstr "ブレイクチームの情報を編集し、全てのチームブレイクを更新しました"
 
 #: actionlog/models.py
-msgid "Auto-allocated rooms"
-msgstr "自動配置済みのラウンド部屋"
+msgid "Edited breaking team remarks and updated this team break"
+msgstr "ブレイクチームの情報を編集し、このチームブレイクを更新しました"
 
 #: actionlog/models.py
-msgid "Edited room categories"
-msgstr "編集済みのラウンド部屋カテゴリー"
+msgid "Generated check in identifiers for adjudicators"
+msgstr "ジャッジの識別コードの照合を生成"
 
 #: actionlog/models.py
-msgid "Edited room constraints"
-msgstr "会場の各種制約を編集しました"
+msgid "Generated check in identifiers for speakers"
+msgstr "スピーカーの識別コードの照合を生成"
 
 #: actionlog/models.py
-msgid "Created draw"
-msgstr "作成済み対戦表<br>"
+msgid "Generated check in identifiers for rooms"
+msgstr "会場の識別コードの照合を生成"
+
+#: actionlog/models.py
+msgid "Edited adjudicator-adjudicator conflicts"
+msgstr "ジャッジ間コンフリクトを修正する"
+
+#: actionlog/models.py
+msgid "Edited adjudicator-institution conflicts"
+msgstr "ジャッジ・大学間のコンフリクト"
+
+#: actionlog/models.py
+msgid "Edited adjudicator-team conflicts"
+msgstr "ジャッジ・チーム間コンフリクトを修正する"
+
+#: actionlog/models.py
+msgid "Edited team-institution conflicts"
+msgstr "チーム・インスティチューション間のコンフリクトを編集"
+
+#: actionlog/models.py
+msgid "Created debate"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited debate"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Auto-prioritized debate importance"
+msgstr "ディベートの重要度に自動で優先順を設定する"
+
+#: actionlog/models.py
+msgid "Edited debate importance"
+msgstr "ディベートの重要度を編集する"
+
+#: actionlog/models.py
+msgid "Saved divisions"
+msgstr ""
 
 #: actionlog/models.py
 msgid "Confirmed draw"
 msgstr "確定済み対戦表"
+
+#: actionlog/models.py
+msgid "Created draw"
+msgstr "作成済み対戦表<br>"
 
 #: actionlog/models.py
 msgid "Regenerated draw"
@@ -106,16 +186,32 @@ msgid "Unreleased draw"
 msgstr "未公開の対戦表"
 
 #: actionlog/models.py
+msgid "Created feedback question"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited feedback question"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Saved feedback"
+msgstr "保存済みフィードバック"
+
+#: actionlog/models.py
+msgid "Submitted feedback from the public form"
+msgstr "パブリックフォームから提出されたフィードバック一覧<br>"
+
+#: actionlog/models.py
+msgid "Created institution"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited institution"
+msgstr ""
+
+#: actionlog/models.py
 msgid "Saved a matchup manual edit"
 msgstr "マッチアップのマニュアル編集を保存しました"
-
-#: actionlog/models.py
-msgid "Saved the sides status of a matchup"
-msgstr "マッチアップのサイドを保存しました"
-
-#: actionlog/models.py
-msgid "Saved divisions"
-msgstr ""
 
 #: actionlog/models.py
 msgid "Added/edited motion"
@@ -130,136 +226,8 @@ msgid "Unreleased motions"
 msgstr "未公開の論題"
 
 #: actionlog/models.py
-msgid "Auto-prioritized debate importance"
-msgstr "ディベートの重要度に自動で優先順を設定する"
-
-#: actionlog/models.py
-msgid "Edited debate importance"
-msgstr "ディベートの重要度を編集する"
-
-#: actionlog/models.py
-msgid "Changed adjudicator breaking status"
-msgstr "ジャッジのブレイク状況を変更"
-
-#: actionlog/models.py
-msgid "Edited break eligibility"
-msgstr "ブレイク資格を編集"
-
-#: actionlog/models.py
-msgid "Edited break categories"
-msgstr "編集済ブレイクカテゴリー"
-
-#: actionlog/models.py
-msgid "Generated the team break for all categories"
-msgstr "作成済みの全カテゴリーにおけるチームブレイク"
-
-#: actionlog/models.py
-msgid "Edited breaking team remarks and updated all team breaks"
-msgstr "ブレイクチームの情報を編集し、全てのチームブレイクを更新しました"
-
-#: actionlog/models.py
-msgid "Edited breaking team remarks and updated this team break"
-msgstr "ブレイクチームの情報を編集し、このチームブレイクを更新しました"
-
-#: actionlog/models.py
-msgid "Edited breaking team remarks"
-msgstr "ブレイクチームの情報を編集しました"
-
-#: actionlog/models.py
-msgid "Set start time"
-msgstr "試合開始時刻の設定"
-
-#: actionlog/models.py
-msgid "Advanced the current round to"
-msgstr "現在のラウンドへ進む<br>"
-
-#: actionlog/models.py
-msgid "Marked round as completed"
-msgstr "ラウンドを完了したとして記録しました"
-
-#: actionlog/models.py
-msgid "Edited teams availability"
-msgstr "チームの有効/非有効を編集"
-
-#: actionlog/models.py
-msgid "Edited adjudicators availability"
-msgstr "ジャッジの有効/非有効を編集"
-
-#: actionlog/models.py
-msgid "Edited room availability"
-msgstr "会場の有効/非有効を編集"
-
-#: actionlog/models.py
 msgid "Edited tournament options"
 msgstr "保存済みの大会各種設定"
-
-#: actionlog/models.py
-msgid "Edited speaker category eligibility"
-msgstr "スピーカーカテゴリーのブレイク資格を編集"
-
-#: actionlog/models.py
-msgid "Edited speaker categories"
-msgstr "編集済みスピーカーカテゴリー"
-
-#: actionlog/models.py
-msgid "Imported institutions using the simple importer"
-msgstr "簡易入力機能を用いて大学・機関の情報をインポートしました"
-
-#: actionlog/models.py
-msgid "Imported rooms using the simple importer"
-msgstr "簡易入力機能を用いて会場情報をインポートしました"
-
-#: actionlog/models.py
-msgid "Imported teams using the simple importer"
-msgstr "簡易入力機能を用いてチーム情報をインポートしました"
-
-#: actionlog/models.py
-msgid "Imported adjudicators using the simple importer"
-msgstr "簡易入力機能を用いてジャッジ情報の情報をインポートしました"
-
-#: actionlog/models.py
-msgid "Updated adjudicator scores in bulk"
-msgstr "ジャッジスコアを一括で更新しました"
-
-#: actionlog/models.py
-msgid "Edited adjudicator-team conflicts"
-msgstr "ジャッジ・チーム間コンフリクトを修正する"
-
-#: actionlog/models.py
-msgid "Edited adjudicator-adjudicator conflicts"
-msgstr "ジャッジ間コンフリクトを修正する"
-
-#: actionlog/models.py
-msgid "Edited adjudicator-institution conflicts"
-msgstr "ジャッジ・大学間のコンフリクト"
-
-#: actionlog/models.py
-msgid "Edited team-institution conflicts"
-msgstr "チーム・インスティチューション間のコンフリクトを編集"
-
-#: actionlog/models.py
-msgid "Generated check in identifiers for speakers"
-msgstr "スピーカーの識別コードの照合を生成"
-
-#: actionlog/models.py
-msgid "Generated check in identifiers for adjudicators"
-msgstr "ジャッジの識別コードの照合を生成"
-
-#: actionlog/models.py
-msgid "Generated check in identifiers for rooms"
-msgstr "会場の識別コードの照合を生成"
-
-#: actionlog/models.py
-msgid "Created preformed panels"
-msgstr "パネルを事前生成しました"
-
-#: actionlog/models.py
-msgid "Auto-prioritized preformed panels"
-msgstr "事前作成されたパネルに優先度を自動設定しました"
-
-#: actionlog/models.py
-msgid "Edited preformed panel importance"
-msgstr "事前作成されたパネルの重要度を編集しました"
 
 #: actionlog/models.py
 msgid "Auto-allocated adjudicators to preformed panels"
@@ -270,8 +238,144 @@ msgid "Edited preformed panel adjudicator"
 msgstr "事前作成されたパネルジャッジを編集しました"
 
 #: actionlog/models.py
+msgid "Created preformed panels"
+msgstr "パネルを事前生成しました"
+
+#: actionlog/models.py
 msgid "Auto-allocated preformed panels to debates"
 msgstr "事前作成されたパネルをディベートに自動配置しました"
+
+#: actionlog/models.py
+msgid "Deleted preformed panels"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Auto-prioritized preformed panels"
+msgstr "事前作成されたパネルに優先度を自動設定しました"
+
+#: actionlog/models.py
+msgid "Edited preformed panel importance"
+msgstr "事前作成されたパネルの重要度を編集しました"
+
+#: actionlog/models.py
+msgid "Advanced the current round to"
+msgstr "現在のラウンドへ進む<br>"
+
+#: actionlog/models.py
+msgid "Marked round as completed"
+msgstr "ラウンドを完了したとして記録しました"
+
+#: actionlog/models.py
+msgid "Created round"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited round"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Set start time"
+msgstr "試合開始時刻の設定"
+
+#: actionlog/models.py
+msgid "Saved the sides status of a matchup"
+msgstr "マッチアップのサイドを保存しました"
+
+#: actionlog/models.py
+msgid "Imported adjudicators using the simple importer"
+msgstr "簡易入力機能を用いてジャッジ情報の情報をインポートしました"
+
+#: actionlog/models.py
+msgid "Imported institutions using the simple importer"
+msgstr "簡易入力機能を用いて大学・機関の情報をインポートしました"
+
+#: actionlog/models.py
+msgid "Imported teams using the simple importer"
+msgstr "簡易入力機能を用いてチーム情報をインポートしました"
+
+#: actionlog/models.py
+msgid "Imported rooms using the simple importer"
+msgstr "簡易入力機能を用いて会場情報をインポートしました"
+
+#: actionlog/models.py
+msgid "Edited speaker categories"
+msgstr "編集済みスピーカーカテゴリー"
+
+#: actionlog/models.py
+msgid "Created speaker"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited speaker"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited speaker category eligibility"
+msgstr "スピーカーカテゴリーのブレイク資格を編集"
+
+#: actionlog/models.py
+msgid "Created team"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited team"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited adjudicator base score"
+msgstr "編集済みのジャッジの基礎スコア"
+
+#: actionlog/models.py
+msgid "Created tournament"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited tournament"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Updated adjudicator scores in bulk"
+msgstr "ジャッジスコアを一括で更新しました"
+
+#: actionlog/models.py
+msgid "Invited user to the instance"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited room categories"
+msgstr "編集済みのラウンド部屋カテゴリー"
+
+#: actionlog/models.py
+msgid "Created room category"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited room constraints"
+msgstr "会場の各種制約を編集しました"
+
+#: actionlog/models.py
+msgid "Created room"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited room"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Auto-allocated rooms"
+msgstr "自動配置済みのラウンド部屋"
+
+#: actionlog/models.py
+msgid "Saved a room manual edit"
+msgstr "会場のマニュアル編集を保存しました"
+
+#: actionlog/models.py
+msgid "API"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Web"
+msgstr ""
 
 #: actionlog/models.py
 msgid "type"
@@ -304,6 +408,10 @@ msgstr "コンテンツタイプ"
 #: actionlog/models.py
 msgid "object ID"
 msgstr "オブジェクトID"
+
+#: actionlog/models.py
+msgid "agent"
+msgstr ""
 
 #: actionlog/models.py
 msgid "action log"
