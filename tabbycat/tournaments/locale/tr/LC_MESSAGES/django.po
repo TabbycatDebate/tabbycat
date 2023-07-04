@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
-"PO-Revision-Date: 2023-05-25 23:54\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 22:00\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -56,8 +56,8 @@ msgid "Format Configuration"
 msgstr "Biçim Yapılandırması"
 
 #: tournaments/forms.py
-msgid "Apply a standard set of settings to match a common debate format"
-msgstr "Ortak bir tartışma biçimiyle eşleşmesi için standart bir ayar kümesi uygula"
+msgid "Apply a standard set of settings to match a common debate format. These can be changed afterwards and should be checked for your needs."
+msgstr ""
 
 #: tournaments/forms.py
 msgid "Public Configuration"
@@ -66,6 +66,14 @@ msgstr "Açık Yapılandırma"
 #: tournaments/forms.py
 msgid "Show non-sensitive information on the public-facing side of this site, like draws (once released) and the motions of previous rounds"
 msgstr "Sitenin herkese açık tarafında, kuralar (bir kez yayınlandıktan sonra) ve önceki turların hareketleri gibi hassas olmayan bilgileri gösterir"
+
+#: tournaments/forms.py
+msgid "Participant Data Entry"
+msgstr ""
+
+#: tournaments/forms.py
+msgid "Whether participants can submit ballots and feedback themselves, and how they do so"
+msgstr ""
 
 #: tournaments/forms.py
 msgid "<strong>Tabulation:</strong> [list tabulation staff here]<br /><strong>Equity:</strong> [list equity members here]<br /><strong>Organisation:</strong> [list organising committee members here]<br /><strong>Adjudication:</strong> [list chief adjudicators here]"
@@ -198,6 +206,10 @@ msgid "Elimination"
 msgstr "Eleme"
 
 #: tournaments/models.py
+msgid "Seeded"
+msgstr ""
+
+#: tournaments/models.py
 msgid "Preliminary"
 msgstr "Ön"
 
@@ -320,16 +332,16 @@ msgid "rounds"
 msgstr "turlar"
 
 #: tournaments/models.py
-msgid "A round in the elimination stage must have its draw type set to \"Elimination\"."
-msgstr "Eleme aşamasındaki bir turun kura türü \"Eleme\" olarak ayarlanmalıdır."
+msgid "The \"Elimination\" draw type is only for elimination rounds, where it is mandatory."
+msgstr ""
 
 #: tournaments/models.py
-msgid "A round in the preliminary stage cannot have its draw type set to \"Elimination\"."
-msgstr "Ön eleme aşamasındaki bir turun kura türü \"Eleme\" olarak ayarlanamaz."
+msgid "An elimination round must have a break category and preliminary round must not."
+msgstr ""
 
 #: tournaments/models.py
-msgid "Elimination rounds must have a break category."
-msgstr "Eleme turlarının bir break kategorisi olmalıdır."
+msgid "Break category must be for the same tournament."
+msgstr ""
 
 #: tournaments/templates/assistant_tournament_index.html
 msgid "Dashboard"
@@ -387,9 +399,8 @@ msgid "Create New Tournament"
 msgstr "Yeni Turnuva Oluştur"
 
 #: tournaments/templates/create_tournament.html
-#, python-format
-msgid "Tabbycat is free to use for non-profit and non-fundraising tournaments (although donations are encouraged). If your tournament is run for profit or for fundraising, please note that there is a <a href=\"%(donations_url)s\">required payment</a>. For more details, see the <a href=\"https://tabbycat.readthedocs.io/en/stable/about/licence.html\"> Tabbycat licence agreement</a>."
-msgstr "Tabbycat, kar amacı gütmeyen ve bağış toplama amaçlı olmayan turnuvalarda kullanmakta serbesttir (Ancak Tabbycat'e bağışlar teşvik edilir). Turnuvanız kâr amacı veya bağış toplama amacıyla düzenleniyorsa, lütfen <a href=\"%(donations_url)s\">ödeneme yapmanız</a> gerektiğini unutmayın. Daha fazla ayrıntı için <a href=\"https://tabbycat.readthedocs.io/en/stable/about/licence.html\">Tabbycat lisans sözleşmesini</a> inceleyin."
+msgid "Tabbycat is free to use, although <a href=\"https://opencollective.com/tabbycat\">donations</a> are encouraged."
+msgstr ""
 
 #: tournaments/templates/create_tournament.html
 msgid "Just trying out Tabbycat?"
@@ -627,6 +638,14 @@ msgid "Email Team Points"
 msgstr "Takım puanlarını e-postala."
 
 #: tournaments/templates/round_complete_check.html
+msgid "Unmark as Silent"
+msgstr ""
+
+#: tournaments/templates/round_complete_check.html
+msgid "Mark as Silent"
+msgstr ""
+
+#: tournaments/templates/round_complete_check.html
 #, python-format
 msgid "Mark %(round)s as Completed"
 msgstr "%(round)s turunu tamamlandı olarak işaretle"
@@ -666,18 +685,13 @@ msgstr[0] "Hala onaylanmamış %(num_unconfirmed) ballot var. Tüm ballotlar ona
 msgstr[1] "Hala onaylanmamış %(num_unconfirmed) ballot var. Tüm ballotlar onaylanana kadar bir sonraki tura <strong>geçmemelisiniz.</strong> "
 
 #: tournaments/templates/round_complete_check.html
-#, python-format
-msgid "<p>This round is a silent round.</p> <p> Even though public view of results is enabled, results for <em>this</em> round will still be hidden from public view after completing this round. <p> <p> You can change which rounds are silent in the <a href=\"%(round_changelist_url)s\">Edit Database area</a>. </p>"
-msgstr "<p>Bu tur sessiz bir turdur.</p> <p> Sonuçların herkese açık görünümü etkinleştirilse bile, <em>bu</em> turun sonuçları, bu tur tamamlandıktan sonra da herkese açık görünümden gizlenecektir. <p> <p> <a href=\"%(round_changelist_url)s\">Veritabanı Düzenle</a> bölgesinden hangi turların sessiz olacağını değiştirebilirsiniz. </p>"
+msgid "<p>This round is a silent round.</p> <p> Even though public view of results is enabled, results for <em>this</em> round will still be hidden from public view after completing this round. <p> <p> You can change whether this round is silent using the button above. </p>"
+msgstr ""
 
 #: tournaments/templates/round_complete_check.html
 #, python-format
-msgid "<p><strong> Results for %(round)s will be published online once you mark this round as complete! </strong></p> <p> This round is <em>not</em> a silent round, and public view of results is enabled. </p> <p> If you want to keep the results for just this round hidden, you can mark this round as silent in the <a href=\"%(round_changelist_url)s\">Edit Database area</a>. </p> <p> If you want to disable the public view of results, you can do so in the <a href=\"%(public_features_url)s\">tournament configuration</a>. </p>"
-msgstr "<p><strong> %(round)s sonuçları, bu turu tamamlandı olarak işaretlediğinizde çevrimiçi olarak yayınlanacaktır! </strong></p> <p> Bu tur sessiz bir tur <em>değildir</em> ve sonuçların herkese açık görünümü etkinleştirilir. </p> <p> Yalnızca bu turun sonuçlarını gizli tutmak istiyorsanız, bu turu <a href=\"%(round_changelist_url)s\">Veritabanı düzenle</a> bölümünden sessiz olarak işaretleyebilirsiniz. </p> <p> Sonuçların herkese açık görünümünü devre dışı bırakmak istiyorsanız, bunu <a href=\"%(public_features_url)s\">turnuva ayarları</a> bölümünden yapabilirsiniz. </p>"
-
-#: tournaments/templates/set_current_round.html
-msgid "Set Current Round"
-msgstr "Geçerli Turu Ayarla"
+msgid "<p><strong> Results for %(round)s will be published online once you mark this round as complete! </strong></p> <p> This round is <em>not</em> a silent round, and public view of results is enabled. </p> <p> If you want to keep the results for just this round hidden, you can mark this round as silent using the button above. </p> <p> If you want to disable the public view of results, you can do so in the <a href=\"%(public_features_url)s\">tournament configuration</a>. </p>"
+msgstr ""
 
 #: tournaments/templates/set_current_round.html
 msgid "Back to Configuration"
@@ -697,6 +711,11 @@ msgstr "Bu sayfada, <strong>%(tournament)s</strong> turnuvasının <strong>geçe
 #, python-format
 msgid "The tournament <strong>%(tournament)s</strong> has no rounds. You'll need to <a href=\"%(round_changelist_url)s\">add rounds and associate them with this tournament</a> before you can set the current round."
 msgstr "<strong>%(tournament)s</strong> turnuvasının turu yok. Geçerli turu ayarlayabilmeniz için <a href=\"%(round_changelist_url)s\"> tur eklemeniz ve bunları bu turnuvayla ilişkilendirmeniz</a> gerekir."
+
+#: tournaments/templates/set_current_round.html
+msgctxt "button"
+msgid "Set Current Rounds"
+msgstr ""
 
 #: tournaments/templates/set_round_weights.html
 msgctxt "page title"
@@ -764,8 +783,8 @@ msgstr "Yönetici olarak oturum aç"
 
 #: tournaments/templates/tournament_index.html
 #, python-format
-msgid "We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would make a donation to the project in order to support its ongoing development and maintenance. For a tournament of this size, we suggest a donation of <strong>$%(amount)s</strong>. Note that if your tournament is run for profit, or for fundraising, making this payment is a mandatory condition of Tabbycat's software license. <a href=\"%(url)s\">Learn more about donating.</a>"
-msgstr "Umarız turnuvanız için Tabbycat'i kullanmaktan keyif almışsınızdır. Devam eden gelişimini ve bakımını desteklemek için projeyemize bağışta bulunursanız seviniriz. Bu büyüklükte bir turnuva için <strong>%(amount)s$</strong> bağış yapmanızı öneririz. Turnuvanız kâr amacı gütmek veya bağış toplamak için yapılıyorsa, bu ödemeyi yapmanın Tabbycat'in yazılım lisansının zorunlu bir koşulu olduğunu unutmayın. <a href=\"%(url)s\">Bağış yapma hakkında daha fazla bilgi edinin.</a>"
+msgid "We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would make a donation to the project in order to support its ongoing development and maintenance. For a tournament of this size, we suggest a donation of <strong>$%(amount)s</strong>. <a href=\"https://opencollective.com/tabbycat\">Learn more about donating.</a>"
+msgstr ""
 
 #: tournaments/templates/tournament_index.html
 msgid "Welcome to your new tournament!"
@@ -799,10 +818,6 @@ msgstr "%(round)s için jüri tahsis etmek üzere kura alanına git"
 #, python-format
 msgid "Go to the results area to enter ballots for %(round)s"
 msgstr "%(round)s için ballot girmek üzere sonuçlar alanına git"
-
-#: tournaments/templates/tournament_index.html
-msgid "You have enabled a URL that allows users to create new accounts. You should <strong>disable it once the tournament starts</strong>."
-msgstr "Kullanıcıların yeni hesaplar oluşturmasına izin veren bir URL'yi etkinleştirdiniz. Turnuva başladıktan sonra <strong> devre dışı bırakmalısınız</strong>."
 
 #: tournaments/templates/tournament_index_links.html
 #, python-format
@@ -928,6 +943,14 @@ msgid "Res"
 msgstr "YAN"
 
 #: tournaments/utils.py
+msgid "1st team"
+msgstr ""
+
+#: tournaments/utils.py
+msgid "2nd team"
+msgstr ""
+
+#: tournaments/utils.py
 msgid "opening government"
 msgstr "hükümet açılış"
 
@@ -990,6 +1013,25 @@ msgstr "Tur %(number)d"
 msgid "R%(number)d"
 msgstr "T%(number)d"
 
+#: tournaments/utils.py
+msgid "bye"
+msgstr ""
+
+#: tournaments/utils.py
+#, python-format
+msgid "Team %d"
+msgstr ""
+
+#: tournaments/views.py
+#, python-format
+msgid "%(round)s has been marked as silent."
+msgstr ""
+
+#: tournaments/views.py
+#, python-format
+msgid "%(round)s has been unmarked as silent."
+msgstr ""
+
 #: tournaments/views.py
 #, python-format
 msgid "%(round)s has been marked as completed. All rounds are now completed, so you're done with the tournament! Congratulations!"
@@ -1026,6 +1068,10 @@ msgstr "24 takımlı Australs veri kümesi"
 #: tournaments/views.py
 msgid "88-team BP dataset"
 msgstr "88 takımlı İP veri kümesi"
+
+#: tournaments/views.py
+msgid "Set Current Round"
+msgstr "Geçerli Turu Ayarla"
 
 #: tournaments/views.py
 msgid "Successfully set round weights for tapered scoring."
