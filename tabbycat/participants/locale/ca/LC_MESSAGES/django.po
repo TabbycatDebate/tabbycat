@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-07-02 21:50\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:59\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Catalan\n"
 "Language: ca_ES\n"
@@ -21,15 +21,15 @@ msgstr ""
 #: participants/admin.py
 #, python-format
 msgid "The team can't be in a break category of a different tournament. Please remove: %(category)s"
-msgstr ""
+msgstr "L'equip no pot estar en una categoria de tall d'un torneig diferent. Si us plau, elimina: %(category)s"
 
 #: participants/admin.py
 msgid "Emoji & Code"
-msgstr ""
+msgstr "Emoji & Codi"
 
 #: participants/admin.py
 msgid "Delete URL Key"
-msgstr ""
+msgstr "Elimina la clau URL"
 
 #: participants/admin.py
 #, python-format
@@ -40,7 +40,7 @@ msgstr[1] ""
 
 #: participants/admin.py
 msgid "Reset emoji"
-msgstr ""
+msgstr "Reset emoji"
 
 #: participants/admin.py
 #, python-format
@@ -268,6 +268,14 @@ msgid "break categories"
 msgstr ""
 
 #: participants/models.py
+msgid "seed"
+msgstr ""
+
+#: participants/models.py
+msgid "Used as initial ranking to power-pair the first round"
+msgstr ""
+
+#: participants/models.py
 msgid "institution conflicts"
 msgstr ""
 
@@ -410,7 +418,7 @@ msgstr "Independent"
 #: participants/templates/adjudicator_registration_card.html
 #: participants/templates/team_registration_card.html
 msgid "Region:"
-msgstr ""
+msgstr "Regió:"
 
 #: participants/templates/adjudicator_registration_card.html
 msgid "The institutional affiliations of adjudicators are not public at this tournament."
@@ -525,9 +533,8 @@ msgid "Motion:"
 msgstr ""
 
 #: participants/templates/current_round/common.html
-#, python-format
-msgid "Motion %(seq)s:"
-msgstr ""
+msgid "View Info Slide"
+msgstr "Veure Diapositiva d'informació"
 
 #: participants/templates/current_round/common.html
 msgid "The motion(s) for this round haven't yet been released."
@@ -789,7 +796,7 @@ msgstr "No teniu debat aquesta ronda."
 
 #: participants/templates/in_this_round.html
 msgid "The draw for this round hasn't yet been released."
-msgstr ""
+msgstr "Els aparellaments d'aquesta ronda encara no s'han publicat."
 
 #: participants/templates/participants_subnav.html
 msgid "Participants List"
