@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-03-27 09:26\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:59\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Kazakh\n"
 "Language: kk_KZ\n"
@@ -69,11 +69,11 @@ msgstr[1] ""
 
 #: participants/apps.py participants/views.py
 msgid "Participants"
-msgstr ""
+msgstr "Қатысушылар"
 
 #: participants/models.py
 msgid "name"
-msgstr ""
+msgstr "аты"
 
 #: participants/models.py
 msgid "region"
@@ -185,19 +185,19 @@ msgstr ""
 
 #: participants/models.py
 msgid "male"
-msgstr ""
+msgstr "еркек"
 
 #: participants/models.py
 msgid "female"
-msgstr ""
+msgstr "әйел"
 
 #: participants/models.py
 msgid "other"
-msgstr ""
+msgstr "жасырын"
 
 #: participants/models.py
 msgid "gender"
-msgstr ""
+msgstr "жынысы"
 
 #: participants/models.py
 msgid "Gender is displayed in the adjudicator allocation interface, and nowhere else"
@@ -268,12 +268,20 @@ msgid "break categories"
 msgstr ""
 
 #: participants/models.py
+msgid "seed"
+msgstr ""
+
+#: participants/models.py
+msgid "Used as initial ranking to power-pair the first round"
+msgstr ""
+
+#: participants/models.py
 msgid "institution conflicts"
 msgstr ""
 
 #: participants/models.py
 msgid "none"
-msgstr ""
+msgstr "ешқайсысы"
 
 #: participants/models.py
 msgid "swing"
@@ -353,7 +361,7 @@ msgstr ""
 
 #: participants/models.py
 msgid "independent"
-msgstr ""
+msgstr "тәуелсіз"
 
 #: participants/models.py
 msgid "adjudication core"
@@ -499,18 +507,18 @@ msgstr ""
 #: participants/templates/current_round/common.html
 msgid "Adjudicator:"
 msgid_plural "Adjudicators:"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Төреші:"
+msgstr[1] "Төрешілер:"
 
 #: participants/templates/current_round/common.html
 msgctxt "chair icon"
 msgid "Ⓒ"
-msgstr ""
+msgstr "Ⓒ"
 
 #: participants/templates/current_round/common.html
 msgctxt "trainee icon"
 msgid "Ⓣ"
-msgstr ""
+msgstr "Ⓣ"
 
 #: participants/templates/current_round/common.html
 msgid "There are no panellists or trainees assigned to this debate."
@@ -522,11 +530,10 @@ msgstr ""
 
 #: participants/templates/current_round/common.html
 msgid "Motion:"
-msgstr ""
+msgstr "Қарар:"
 
 #: participants/templates/current_round/common.html
-#, python-format
-msgid "Motion %(seq)s:"
+msgid "View Info Slide"
 msgstr ""
 
 #: participants/templates/current_round/common.html
@@ -793,7 +800,7 @@ msgstr ""
 
 #: participants/templates/participants_subnav.html
 msgid "Participants List"
-msgstr ""
+msgstr "Қатысушылар тізімі"
 
 #: participants/templates/participants_subnav.html
 msgid "Institutions List"
@@ -880,15 +887,15 @@ msgstr ""
 
 #: participants/views.py
 msgid "Adjudicators"
-msgstr ""
+msgstr "Төрешілер"
 
 #: participants/views.py
 msgid "Speakers"
-msgstr ""
+msgstr "Ойыншылар"
 
 #: participants/views.py
 msgid "Institutions"
-msgstr ""
+msgstr "Қауымдастықтар"
 
 #: participants/views.py
 msgid "Code"
@@ -904,7 +911,7 @@ msgstr ""
 
 #: participants/views.py
 msgid "Teams"
-msgstr ""
+msgstr "Топтар"
 
 #: participants/views.py
 msgid "Number of teams"
@@ -932,11 +939,11 @@ msgstr ""
 
 #: participants/views.py
 msgid "Team Registration"
-msgstr ""
+msgstr "Топты тіркеу"
 
 #: participants/views.py
 msgid "Results"
-msgstr ""
+msgstr "Нәтиже"
 
 #: participants/views.py
 #, python-format
