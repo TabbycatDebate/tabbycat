@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2023-03-25 13:46\n"
+"PO-Revision-Date: 2023-12-28 07:56\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "MIME-Version: 1.0\n"
@@ -204,7 +204,7 @@ msgstr ""
 
 #: ../../features/standings-rules.rst:135
 msgid "Total"
-msgstr ""
+msgstr "Tổng"
 
 #: ../../features/standings-rules.rst:136
 msgid "The sum of all speaker scores attained by the speaker. Note that if a speaker misses a round, they'll typically be relegated to the bottom of the speaker standings by this metric."

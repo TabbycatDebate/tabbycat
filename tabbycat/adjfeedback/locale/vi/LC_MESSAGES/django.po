@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-03-22 12:33\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:56\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
@@ -27,7 +27,7 @@ msgstr "mục tiêu"
 
 #: adjfeedback/admin.py adjfeedback/models.py
 msgid "source adjudicator"
-msgstr ""
+msgstr "giám khảo nguồn"
 
 #: adjfeedback/admin.py adjfeedback/models.py
 msgid "source team"
@@ -43,12 +43,12 @@ msgstr "Nguồn"
 
 #: adjfeedback/admin.py
 msgid "Feedback timestamp and version"
-msgstr ""
+msgstr "Dấu thời gian và phiên bản nhận xét"
 
 #: adjfeedback/admin.py
 #, python-format
 msgid "%(timestamp)s (version %(version)s)"
-msgstr ""
+msgstr "%(timestamp)s (phiên bản %(version)s)"
 
 #: adjfeedback/admin.py
 #, python-format
@@ -78,7 +78,7 @@ msgstr[0] "Đã bỏ qua %(count)d lượt gửi phản hồi."
 #, python-format
 msgid "1 feedback submission is now recognized."
 msgid_plural "%(count)d feedback submissions are now recognized."
-msgstr[0] ""
+msgstr[0] "%(count)d lượt gửi phản hồi được ghi nhận."
 
 #: adjfeedback/apps.py
 msgid "Adjudicator Feedback"
@@ -86,7 +86,7 @@ msgstr "Phản hồi của giám khảo"
 
 #: adjfeedback/forms.py
 msgid "chair"
-msgstr "giám khảo chính"
+msgstr "chủ tọa"
 
 #: adjfeedback/forms.py
 msgid "solo"
@@ -94,7 +94,7 @@ msgstr "đơn"
 
 #: adjfeedback/forms.py
 msgid "panellist"
-msgstr "giám khảo phụ"
+msgstr "panellist"
 
 #: adjfeedback/forms.py
 msgid "trainee"
@@ -141,7 +141,7 @@ msgstr "-- Giám khảo --"
 
 #: adjfeedback/forms.py
 msgid "Adjudicator this feedback is about"
-msgstr ""
+msgstr "Giám khảo nhận xét này là về"
 
 #: adjfeedback/forms.py
 #, python-format
@@ -151,12 +151,12 @@ msgstr ""
 #: adjfeedback/forms.py
 #, python-format
 msgid "%(name)s (chair gave oral)"
-msgstr ""
+msgstr "%(name)s (chủ tọa đưa ra nhận xét)"
 
 #: adjfeedback/forms.py
 #, python-format
 msgid "%(name)s (panellist gave oral as chair rolled)"
-msgstr ""
+msgstr "%(name)s (giám khảo phụ đưa ra nhận xét được chủ tọa ủy quyền)"
 
 #: adjfeedback/forms.py
 #, python-format
@@ -181,7 +181,7 @@ msgstr "Không có giám khảo nào trong giải này mang tên \"%(adjudicator
 #: adjfeedback/forms.py
 #, python-format
 msgid "The score for %(adjudicator)s, \"%(score)s\", isn't a number"
-msgstr ""
+msgstr "Điểm cho %(adjudicator)s, \"%(score)s\", không phải là một số"
 
 #: adjfeedback/forms.py
 msgid "There were no scores to import."
@@ -205,11 +205,11 @@ msgstr "mốc thời gian"
 
 #: adjfeedback/models.py
 msgid "adjudicator base score history"
-msgstr ""
+msgstr "lịch sử điểm gốc của giám khảo"
 
 #: adjfeedback/models.py
 msgid "adjudicator base score histories"
-msgstr ""
+msgstr "lịch sử điểm gốc của giám khảo"
 
 #: adjfeedback/models.py
 msgid "question"
@@ -265,11 +265,11 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "checkbox"
-msgstr ""
+msgstr "ô lựa chọn"
 
 #: adjfeedback/models.py
 msgid "yes/no (dropdown)"
-msgstr ""
+msgstr "có/không (danh sách thả xuống)"
 
 #: adjfeedback/models.py
 msgid "integer (textbox)"
@@ -285,47 +285,47 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "text"
-msgstr ""
+msgstr "văn bản"
 
 #: adjfeedback/models.py
 msgid "long text"
-msgstr ""
+msgstr "văn bản dài"
 
 #: adjfeedback/models.py
 msgid "select one"
-msgstr ""
+msgstr "chọn một"
 
 #: adjfeedback/models.py
 msgid "select multiple"
-msgstr ""
+msgstr "chọn nhiều mục"
 
 #: adjfeedback/models.py
 msgid "tournament"
-msgstr ""
+msgstr "giải đấu"
 
 #: adjfeedback/models.py
 msgid "sequence number"
-msgstr ""
+msgstr "số thứ tự"
 
 #: adjfeedback/models.py
 msgid "The question displayed to participants, e.g., \"Did you agree with the decision?\""
-msgstr ""
+msgstr "Câu hỏi hiển thị cho người tham gia, ví dụ, \"Bạn đồng ý với quyết định này không?\""
 
 #: adjfeedback/models.py
 msgid "name"
-msgstr ""
+msgstr "tên"
 
 #: adjfeedback/models.py
 msgid "A short name for the question, e.g., \"Agree with decision\""
-msgstr ""
+msgstr "Bản ngắn của câu hỏi, ví dụ, \"Đồng ý với quyết định\""
 
 #: adjfeedback/models.py
 msgid "reference"
-msgstr ""
+msgstr "mẫu"
 
 #: adjfeedback/models.py
 msgid "Code-compatible reference, e.g., \"agree_with_decision\""
-msgstr ""
+msgstr "Tham chiếu mã tương tích, ví dụ, \"dong_y_voi_quyet_dinh\""
 
 #: adjfeedback/models.py
 msgid "from adjudicator"
@@ -333,31 +333,31 @@ msgstr "từ giám khảo"
 
 #: adjfeedback/models.py
 msgid "Adjudicators should be asked this question (about other adjudicators)"
-msgstr ""
+msgstr "Giám khảo nên được hỏi câu hỏi này (về các giám khảo khác)"
 
 #: adjfeedback/models.py
 msgid "from team"
-msgstr ""
+msgstr "từ đội"
 
 #: adjfeedback/models.py
 msgid "Teams should be asked this question"
-msgstr ""
+msgstr "Các đội nên được hỏi câu hỏi này"
 
 #: adjfeedback/models.py
 msgid "answer type"
-msgstr ""
+msgstr "loại trả lời"
 
 #: adjfeedback/models.py
 msgid "required"
-msgstr ""
+msgstr "bắt buộc"
 
 #: adjfeedback/models.py
 msgid "Whether participants are required to fill out this field"
-msgstr ""
+msgstr "Người tham gia bắt buộc điền mục này hay không"
 
 #: adjfeedback/models.py
 msgid "minimum value"
-msgstr ""
+msgstr "giá trị tối thiểu"
 
 #: adjfeedback/models.py
 msgid "Minimum allowed value for numeric fields (ignored for text or boolean fields)"
@@ -365,7 +365,7 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "maximum value"
-msgstr ""
+msgstr "giá trị tối đa"
 
 #: adjfeedback/models.py
 msgid "Maximum allowed value for numeric fields (ignored for text or boolean fields)"
@@ -479,15 +479,15 @@ msgstr[0] ""
 
 #: adjfeedback/tables.py
 msgid "Unsubmitted feedback ballots"
-msgstr ""
+msgstr "Số feedback bị thiếu"
 
 #: adjfeedback/tables.py
 msgid "View Missing Feedback"
-msgstr ""
+msgstr "Xem feedback bị thiếu"
 
 #: adjfeedback/templates/add_feedback.html
 msgid "Who is the feedback from?"
-msgstr ""
+msgstr "Feedback này từ ai?"
 
 #: adjfeedback/templates/add_feedback.html
 #: adjfeedback/templates/enter_feedback.html
@@ -515,6 +515,10 @@ msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
 msgid "This tournament expects you to submit feedback on all of the adjudicators on the panel (including trainees)."
+msgstr ""
+
+#: adjfeedback/templates/enter_feedback.html
+msgid "This tournament doesn't expect you to submit feedback on any of the adjudicators on the panel (including trainees)."
 msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
@@ -628,7 +632,7 @@ msgstr ""
 
 #: adjfeedback/templates/feedback_card.html
 msgid "From unknown"
-msgstr ""
+msgstr "Từ không xác định"
 
 #: adjfeedback/templates/feedback_card.html
 #, python-format
@@ -690,6 +694,11 @@ msgstr ""
 
 #: adjfeedback/templates/feedback_overview.html
 #, python-format
+msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> disallows adjudicators to submit feedback on other members of the panel (including trainees)."
+msgstr ""
+
+#: adjfeedback/templates/feedback_overview.html
+#, python-format
 msgid "There is <strong>%(nadjs_outside_range)s adjudicator</strong> with a score <strong>outside the permitted range</strong> of adjudicator scores, which is currently set as %(min_score)s to %(max_score)s. This can cause adjudicator auto-allocation to behave in unexpected ways. If you'd like to use a wider score range, you can configure this in <a href=\"%(feedback_settings_url)s\" class=\"alert-link\"> feedback settings</a>."
 msgid_plural "There are <strong>%(nadjs_outside_range)s adjudicators</strong> with scores <strong>outside the permitted range</strong> of adjudicator scores, which is currently set as %(min_score)s to %(max_score)s. This can cause adjudicator auto-allocation to behave in unexpected ways. If you'd like to use a wider score range, you can configure this in <a href=\"%(feedback_settings_url)s\" class=\"alert-link\"> feedback settings</a>."
 msgstr[0] ""
@@ -707,7 +716,7 @@ msgstr ""
 
 #: adjfeedback/templates/overview_breakdowns.html
 msgid "Base"
-msgstr "Sàn"
+msgstr "Điểm gốc"
 
 #: adjfeedback/templates/overview_breakdowns.html
 msgid "Feedback"
@@ -716,11 +725,11 @@ msgstr "Phản hồi"
 #: adjfeedback/templates/overview_breakdowns.html
 #, python-format
 msgid "The proportion of an adjudicator's score determined by feedback vs the test is set on a per-round basis. Click this link and edit the 'Feedback weight' field to modify this ratio for %(round)s."
-msgstr ""
+msgstr "Tỷ lệ điểm mỗi vòng của giám khảo được xác định bằng điểm nhận xét và điểm gốc. Nhấp vào liên kết này và chỉnh sửa 'Trọng lượng điểm nhận xét' để sửa đổi tỷ lệ này cho %(round)s."
 
 #: adjfeedback/templates/overview_breakdowns.html
 msgid "Score Ratio"
-msgstr ""
+msgstr "Tỷ lệ điểm"
 
 #: adjfeedback/templates/overview_breakdowns.html
 #, python-format
@@ -846,11 +855,11 @@ msgstr ""
 
 #: adjfeedback/views.py
 msgid "From Teams"
-msgstr ""
+msgstr "Từ đội thi"
 
 #: adjfeedback/views.py
 msgid "From Adjudicators"
-msgstr ""
+msgstr "Từ giám khảo"
 
 #: adjfeedback/views.py
 msgid "Latest Feedback"
@@ -878,7 +887,7 @@ msgstr ""
 
 #: adjfeedback/views.py
 msgid "A Team"
-msgstr ""
+msgstr "Đội thi đấu"
 
 #: adjfeedback/views.py
 msgid "Team"
@@ -890,26 +899,26 @@ msgstr "Tổ chức"
 
 #: adjfeedback/views.py
 msgid "An Adjudicator"
-msgstr ""
+msgstr "Giám khảo"
 
 #: adjfeedback/views.py
 msgid "Adjudicator"
-msgstr ""
+msgstr "Giám khảo"
 
 #: adjfeedback/views.py
 #, python-format
 msgid "Feedback from %(source)s on %(target)s added."
-msgstr ""
+msgstr "Nhận xét từ %(source)s về %(target)s đã được thêm."
 
 #: adjfeedback/views.py
 #, python-format
 msgid "Thanks, %(source)s! Your feedback on %(target)s has been recorded."
-msgstr ""
+msgstr "Cảm ơn, %(source)s! Nhận xét của bạn cho %(target)s đã được ghi lại."
 
 #: adjfeedback/views.py
 #, python-format
 msgid "Whoops! I didn't recognise that adjudicator: %(adjudicator)s"
-msgstr ""
+msgstr "Whoops! Tôi không biết giám khảo đó: %(adjudicator)s"
 
 #: adjfeedback/views.py
 msgid "Whoops! The value isn't a valid base score."
@@ -917,18 +926,18 @@ msgstr ""
 
 #: adjfeedback/views.py
 msgid "Feedback Progress"
-msgstr ""
+msgstr "Tiến độ Nhận xét"
 
 #: adjfeedback/views.py
 #, python-format
 msgid "%(nmissing)d missing feedback submission (%(fulfilled).1f%% returned)"
 msgid_plural "%(nmissing)d missing feedback submissions (%(fulfilled).1f%% returned)"
-msgstr[0] ""
+msgstr[0] "%(nmissing)d feedback bị thiếu (%(fulfilled).1f%% đã feedback)"
 
 #: adjfeedback/views.py
 #, python-format
 msgid "Feedback for %(adjudicator)s from %(source)s is now %(result)s."
-msgstr ""
+msgstr "Nhận xét cho %(adjudicator)s từ %(source)s là %(result)s."
 
 #: adjfeedback/views.py
 msgid "confirmed"

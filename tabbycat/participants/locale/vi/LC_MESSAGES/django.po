@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-03-25 13:45\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:59\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
@@ -69,7 +69,7 @@ msgstr "Người tham dự"
 
 #: participants/models.py
 msgid "name"
-msgstr ""
+msgstr "tên"
 
 #: participants/models.py
 msgid "region"
@@ -121,7 +121,7 @@ msgstr ""
 
 #: participants/models.py
 msgid "sequence number"
-msgstr ""
+msgstr "số thứ tự"
 
 #: participants/models.py
 msgid "The order in which the categories are displayed"
@@ -209,7 +209,7 @@ msgstr ""
 
 #: participants/models.py
 msgid "person"
-msgstr ""
+msgstr "người"
 
 #: participants/models.py
 msgid "persons"
@@ -261,6 +261,14 @@ msgstr ""
 
 #: participants/models.py
 msgid "break categories"
+msgstr ""
+
+#: participants/models.py
+msgid "seed"
+msgstr ""
+
+#: participants/models.py
+msgid "Used as initial ranking to power-pair the first round"
 msgstr ""
 
 #: participants/models.py
@@ -369,15 +377,15 @@ msgstr "Điểm sau mỗi trận"
 
 #: participants/tables.py
 msgid "Wins after this debate"
-msgstr ""
+msgstr "Số trận thắng sau trận"
 
 #: participants/tables.py
 msgid "Speaker scores<br>(in speaking order)"
-msgstr ""
+msgstr "Điểm nói<br>(theo thứ tự)"
 
 #: participants/tables.py
 msgid "Speaks"
-msgstr ""
+msgstr "Điểm nói"
 
 #: participants/templates/adjudicator_record.html
 #: participants/templates/team_record.html
@@ -520,8 +528,7 @@ msgid "Motion:"
 msgstr "Kiến nghị:"
 
 #: participants/templates/current_round/common.html
-#, python-format
-msgid "Motion %(seq)s:"
+msgid "View Info Slide"
 msgstr ""
 
 #: participants/templates/current_round/common.html
@@ -705,12 +712,12 @@ msgstr ""
 
 #: participants/templates/feedback_progress_panel.html
 msgid "Feedback Returns"
-msgstr ""
+msgstr "Tình trạng feedback"
 
 #: participants/templates/feedback_progress_panel.html
 #, python-format
 msgid "Has submitted feedback for <strong>%(adjudicator)s</strong>"
-msgstr ""
+msgstr "Đã nộp feedback cho <strong>%(adjudicator)s</strong>"
 
 #: participants/templates/feedback_progress_panel.html
 #, python-format
@@ -743,7 +750,7 @@ msgstr "Trong vòng này (%(round)s)"
 
 #: participants/templates/in_this_round.html
 msgid "In This Round"
-msgstr ""
+msgstr "Trong vòng này"
 
 #: participants/templates/in_this_round.html
 msgid "(Not Released to Public)"
@@ -775,7 +782,7 @@ msgstr ""
 #: participants/templates/in_this_round.html
 #, python-format
 msgid "%(team)s does not have a debate this round."
-msgstr ""
+msgstr "%(team)s không tham gia vòng này."
 
 #: participants/templates/in_this_round.html
 msgid "You do not have a debate this round."
@@ -787,7 +794,7 @@ msgstr "Bảng đấu cho vòng này chưa được công bố."
 
 #: participants/templates/participants_subnav.html
 msgid "Participants List"
-msgstr ""
+msgstr "Danh sách"
 
 #: participants/templates/participants_subnav.html
 msgid "Institutions List"
@@ -882,7 +889,7 @@ msgstr "Tranh biện viên"
 
 #: participants/views.py
 msgid "Institutions"
-msgstr ""
+msgstr "Đơn vị"
 
 #: participants/views.py
 msgid "Code"
