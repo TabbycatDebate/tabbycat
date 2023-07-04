@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-24 07:33\n"
+"POT-Creation-Date: 2023-02-12 02:04-0400\n"
+"PO-Revision-Date: 2023-05-25 23:54\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -15,971 +15,1081 @@ msgstr ""
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: tr\n"
 "X-Crowdin-File: /develop/tabbycat/results/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 948\n"
 
-#: results/apps.py:7 results/templates/public_results_index.html:4
-#: results/templates/public_results_index.html:5 results/views.py:112
+#: results/admin.py
+msgid "Resave results"
+msgstr "Sonuçları yeniden kaydet"
+
+#: results/admin.py
+#, python-format
+msgid "Resaved results for %(count)d ballot submission."
+msgid_plural "Resaved results for %(count)d ballot submissions."
+msgstr[0] "%(count)d ballot gönderimi için sonuçlar yeniden kaydedildi."
+msgstr[1] "%(count)d ballot gönderimi için sonuçlar yeniden kaydedildi."
+
+#: results/apps.py results/templates/public_results_index.html results/views.py
 msgid "Results"
-msgstr ""
+msgstr "Sonuçlar"
 
-#: results/forms.py:44
+#: results/forms.py
+msgid "Tournament password"
+msgstr "Turnuva Parolası"
+
+#: results/forms.py
 msgid "That password isn't correct."
-msgstr ""
+msgstr "Bu parola doğru değil."
 
-#: results/forms.py:76
+#: results/forms.py
 msgid "Please enter a whole number."
-msgstr ""
+msgstr "Lütfen bir tam sayı girin."
 
-#: results/forms.py:78
+#: results/forms.py
 #, python-format
 msgid "Please enter a multiple of %s."
-msgstr ""
+msgstr "Lütfen %s'in katını girin."
 
-#: results/forms.py:157
+#: results/forms.py
 msgid "The ballot set can't be both discarded and confirmed."
-msgstr ""
+msgstr "Ballotlar aynı anda hem ıskarta edilip hem de onaylanamaz."
 
-#: results/forms.py:163
+#: results/forms.py
 msgid "The debate status can't be confirmed unless one of the ballot sets is confirmed."
-msgstr ""
+msgstr "Ballotların biri onaylanmadıkça maç durumu onaylanamaz."
 
-#: results/forms.py:299
+#: results/forms.py
 msgid "---------"
 msgstr ""
 
-#: results/forms.py:301 results/forms.py:303
+#: results/forms.py
 #, python-format
 msgid "%(aff_team)s affirmed, %(neg_team)s negated"
-msgstr ""
+msgstr "%(aff_team)s onaylandı, %(neg_team)s reddedildi"
 
-#: results/forms.py:320
+#: results/forms.py
 #, python-format
 msgid "%(side)s's motion veto"
-msgstr ""
+msgstr "%(side)s tarafının önerge vetosu"
 
-#: results/forms.py:337
-msgid "Mark as a duplicate speech"
-msgstr ""
-
-#: results/forms.py:472
-#, python-format
-msgid "The speaker %(speaker)s doesn't appear to be on team %(team)s."
-msgstr ""
-
-#: results/forms.py:486
-#, python-format
-msgid "%(speaker)s appears to have given %(count)d substantive speech."
-msgid_plural "%(speaker)s appears to have given %(count)d substantive speeches."
-msgstr[0] ""
-msgstr[1] ""
-
-#: results/forms.py:503
-msgid "The last substantive speaker and reply speaker can't be the same."
-msgstr ""
-
-#: results/forms.py:510
-msgid "The reply speaker for this team did not give a substantive speech."
-msgstr ""
-
-#: results/forms.py:663
-msgid "The total scores for the teams are the same (i.e. a draw)."
-msgstr ""
-
-#: results/forms.py:672
-#, python-format
-msgid "The total scores for the following teams are the same: %(teams)s"
-msgstr ""
-
-#: results/forms.py:682
-#, python-format
-msgid "The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_margin).1f)."
-msgstr ""
-
-#: results/forms.py:759
-#, python-format
-msgid "The total scores for the teams are the same (i.e. a draw) for adjudicator %(adjudicator)s."
-msgstr ""
-
-#: results/forms.py:767
-#, python-format
-msgid "The margin (%(margin).1f) in the ballot of adjudicator %(adjudicator)s exceeds the maximum allowable margin (%(max_margin).1f)."
-msgstr ""
-
-#: results/forms.py:799
+#: results/forms.py
 #, python-format
 msgid "%(team)s (%(side)s)"
 msgstr "%(team)s (%(side)s)"
 
-#: results/forms.py:813
+#: results/forms.py
+msgid "Winner"
+msgstr "Galip"
+
+#: results/forms.py
+msgid "Mark as a duplicate speech"
+msgstr "Yinelenen konuşma olarak işaretle"
+
+#: results/forms.py
+#, python-format
+msgid "The speaker %(speaker)s doesn't appear to be on team %(team)s."
+msgstr "Konuşmacı %(speaker)s, %(team)s takımında görünmüyor."
+
+#: results/forms.py
+#, python-format
+msgid "%(speaker)s appears to have given %(count)d substantive speech."
+msgid_plural "%(speaker)s appears to have given %(count)d substantive speeches."
+msgstr[0] "%(speaker)s, %(count)d tane ana konuşma vermiş gibi görünüyor."
+msgstr[1] "%(speaker)s, %(count)d tane ana konuşma vermiş gibi görünüyor."
+
+#: results/forms.py
+msgid "The last substantive speaker and reply speaker can't be the same."
+msgstr "Son ana konuşmacı ve özet konuşmacı aynı olamaz."
+
+#: results/forms.py
+msgid "The reply speaker for this team did not give a substantive speech."
+msgstr "Bu takımın özet konuşmacısı ana konuşma yapmadı."
+
+#: results/forms.py
+msgid "The total scores for the teams are the same (i.e. a draw)."
+msgstr "Takımların toplam puanları aynı(yani beraberlik)."
+
+#: results/forms.py
+msgid "The declared winner does not correspond to the team with the highest score."
+msgstr "İlan edilen kazanan, en yüksek puana sahip takıma karşılık değil."
+
+#: results/forms.py
+#, python-format
+msgid "The total scores for the following teams are the same: %(teams)s"
+msgstr "Aşağıdaki takımların toplam puanları aynıdır: %(teams)s"
+
+#: results/forms.py
+#, python-format
+msgid "The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_margin).1f)."
+msgstr "Kenar boşluğu (%(margin).1f), izin verilen maksimum marjı (%(max_margin).1f) aşıyor."
+
+#: results/forms.py
+#, python-format
+msgid "The total scores for the teams are the same (i.e. a draw) for adjudicator %(adjudicator)s."
+msgstr "Jürilerin toplam puanları, %(adjudicator)s jürileri için aynıdır (yani beraberlik)."
+
+#: results/forms.py
+#, python-format
+msgid "The declared winner does not correspond to the team with the highest score for adjudicator %(adjudicator)s."
+msgstr "İlan edilen kazanan, en yüksek jüri %(adjudicator)s puanına sahip takıma karşılık değil."
+
+#: results/forms.py
+#, python-format
+msgid "The margin (%(margin).1f) in the ballot of adjudicator %(adjudicator)s exceeds the maximum allowable margin (%(max_margin).1f)."
+msgstr "adjudicator %(adjudicator)s'ın ballotundaki kenar boşluğu (%(margin).1f), izin verilen maksimum marjı (%(max_margin).1f) aşıyor."
+
+#: results/forms.py
 msgid "Sides for this debate are not confirmed. You can't save a result for this debate until the sides have been confirmed in the draw."
-msgstr ""
+msgstr "Bu tartışmanın tarafları doğrulanmadı. Taraflar kurada onaylanana kadar bu tartışma için bir sonuç kaydedemezsiniz."
 
-#: results/forms.py:820
-msgid "There must be exactly two teams advancing."
-msgstr ""
+#: results/forms.py
+#, python-format
+msgid "There must be exactly %(n)d team advancing."
+msgid_plural "There must be exactly %(n)d teams advancing."
+msgstr[0] "Tam olarak %(n)d takım ilerlemelidir."
+msgstr[1] "Tam olarak %(n)d takım ilerlemelidir."
 
-#: results/models.py:32
+#: results/forms.py
+msgid "There must be exactly 1 team advancing."
+msgstr "Tam olarak 1 takım ilerlemeli."
+
+#: results/models.py
 msgid "Tab room"
-msgstr ""
+msgstr "Tab odası"
 
-#: results/models.py:33
+#: results/models.py
 msgid "Public"
-msgstr ""
+msgstr "Herkese açık"
 
-#: results/models.py:37
+#: results/models.py
 msgid "timestamp"
-msgstr ""
+msgstr "Zaman damgası"
 
-#: results/models.py:39
+#: results/models.py
 msgid "version"
-msgstr ""
+msgstr "Sürüm"
 
-#: results/models.py:41
+#: results/models.py
 msgid "submitter type"
-msgstr ""
+msgstr "gönderen türü"
 
-#: results/models.py:43
+#: results/models.py
 msgid "confirmed"
-msgstr ""
+msgstr "onaylanmış"
 
-#: results/models.py:48
+#: results/models.py
+msgid "from private URL"
+msgstr "özel URL'den"
+
+#: results/models.py
+msgid "from participant"
+msgstr "katılımcıdan"
+
+#: results/models.py
 msgid "submitter"
-msgstr ""
+msgstr "gönderen"
 
-#: results/models.py:51
+#: results/models.py
 msgid "confirmer"
-msgstr ""
+msgstr "onaylayan"
 
-#: results/models.py:53
+#: results/models.py
 msgid "confirm timestamp"
-msgstr ""
+msgstr "zaman damgasını onayla"
 
-#: results/models.py:55
+#: results/models.py
 msgid "IP address"
 msgstr ""
 
-#: results/models.py:92
+#: results/models.py
 msgid "A tab room ballot must have a user associated."
-msgstr ""
+msgstr "Bir tab odası ballotunın ilişkili bir kullanıcısı bulunmalıdır."
 
-#: results/models.py:100
+#: results/models.py
 msgid "debate"
 msgstr "maç"
 
-#: results/models.py:102
+#: results/models.py
 msgid "motion"
 msgstr "önerge"
 
-#: results/models.py:104
+#: results/models.py
 msgid "discarded"
-msgstr ""
+msgstr "ıskarta edilmiş"
 
-#: results/models.py:108 results/models.py:188 results/models.py:226
-#: results/models.py:268
+#: results/models.py
+msgid "single adjudicator"
+msgstr "tek jüri"
+
+#: results/models.py
+msgid "Whether this submission represents only the submitting adjudicator on a panel, when individual adjudicator ballots are enabled."
+msgstr "Bu gönderimin, bireysel jüri ballotları etkinleştirildiğinde, bir panelde yalnızca gönderen jüriyi temsil edip etmediği."
+
+#: results/models.py
 msgid "ballot submission"
-msgstr ""
+msgstr "ballot teslimi"
 
-#: results/models.py:109
+#: results/models.py
 msgid "ballot submissions"
-msgstr ""
+msgstr "ballot başvuruları"
 
-#: results/models.py:128
+#: results/models.py
 #, python-format
 msgid "Debate is in round %(round)d but motion (%(motion)s) is from round %(motion_round)d"
-msgstr ""
+msgstr "Tartışma %(tur)d turundadır, ancak önerge (%(motion)s) %(motion_round)d turdan."
 
-#: results/models.py:135
+#: results/models.py
 msgid "A ballot can't be both confirmed and discarded!"
-msgstr ""
+msgstr "Bir ballot aynı anda hem onaylanıp hem de ıskarta edilemez!"
 
-#: results/models.py:190
+#: results/models.py
 msgid "debate adjudicator"
-msgstr ""
+msgstr "Maç jürisi"
 
-#: results/models.py:192 results/models.py:228 results/models.py:270
+#: results/models.py
 msgid "debate team"
-msgstr ""
+msgstr "tartışma ekibi"
 
-#: results/models.py:193 results/models.py:237 results/models.py:273
-msgid "score"
-msgstr ""
-
-#: results/models.py:194 results/models.py:274
-msgid "position"
-msgstr ""
-
-#: results/models.py:200
-msgid "speaker score by adjudicator"
-msgstr ""
-
-#: results/models.py:201
-msgid "speaker scores by adjudicator"
-msgstr ""
-
-#: results/models.py:215
-msgid "The debate team, debate adjudicator and ballot submission must all relate to the same debate."
-msgstr ""
-
-#: results/models.py:231
-msgid "points"
-msgstr "puanları"
-
-#: results/models.py:233
+#: results/models.py
 msgid "win"
-msgstr ""
+msgstr "galibiyet"
 
-#: results/models.py:235
+#: results/models.py
 msgid "margin"
-msgstr ""
+msgstr "marj"
 
-#: results/models.py:239
+#: results/models.py
+msgid "score"
+msgstr "Puan"
+
+#: results/models.py
+msgid "team score by adjudicator"
+msgstr "jüriye göre takım skoru"
+
+#: results/models.py
+msgid "team scores by adjudicator"
+msgstr "jüriye göre takım skorları"
+
+#: results/models.py
+msgid "The debate team, debate adjudicator and ballot submission must all relate to the same debate."
+msgstr "Maç takımı, maç jürisi ve ballot gönderimi aynı maçla ilgili olmalıdır."
+
+#: results/models.py
+msgid "position"
+msgstr "konum"
+
+#: results/models.py
+msgid "speaker score by adjudicator"
+msgstr "jüriye göre konuşmacı puanı"
+
+#: results/models.py
+msgid "speaker scores by adjudicator"
+msgstr "jüriye göre konuşmacı puanları"
+
+#: results/models.py
+msgid "points"
+msgstr "puanlar"
+
+#: results/models.py
 msgid "votes given"
-msgstr ""
+msgstr "verilen oylar"
 
-#: results/models.py:241
+#: results/models.py
 msgid "votes possible"
-msgstr ""
+msgstr "olası oylar"
 
-#: results/models.py:245
+#: results/models.py
+msgid "has ghost score"
+msgstr "gölge puanı var"
+
+#: results/models.py
 msgid "team score"
-msgstr ""
+msgstr "takım puanı"
 
-#: results/models.py:246
+#: results/models.py
 msgid "team scores"
-msgstr ""
+msgstr "takım puanları"
 
-#: results/models.py:272
+#: results/models.py
 msgid "speaker"
 msgstr "konuşmacı"
 
-#: results/models.py:276
+#: results/models.py
 msgid "ghost"
-msgstr ""
+msgstr "gölge"
 
-#: results/models.py:277
+#: results/models.py
 msgid "If checked, this score does not count towards the speaker tab. This is typically checked for speeches where someone spoke twice to make up for an absent teammate (sometimes known as \"iron-person\" or \"iron-man\" speeches)."
-msgstr ""
+msgstr "İşaretlenirse, bu puan konuşmacı tabına dahil edilmez. Bu genellikle birinin eksik bir takım arkadaşını telafi etmek için iki kez konuştuğu konuşmalar için kullanılır (bazen \"demir kişi\" veya \"demir adam\" konuşmaları olarak da bilinir)."
 
-#: results/models.py:286
+#: results/models.py
 msgid "speaker score"
-msgstr ""
+msgstr "konuşmacı puanı"
 
-#: results/models.py:287
+#: results/models.py
 msgid "speaker scores"
-msgstr ""
+msgstr "konuşmacı puanları"
 
-#: results/models.py:296
+#: results/models.py
 msgid "The debate team and speaker must be from the same team."
-msgstr ""
+msgstr "Tartışma takımı ve konuşmacı aynı takımdan olmalıdır."
 
-#: results/models.py:299
+#: results/models.py
 msgid "The ballot submission and debate team must relate to the same debate."
-msgstr ""
+msgstr "Ballot teslimi ve tartışma takımı aynı maçla ilgili olmalıdır."
 
-#: results/tables.py:17
+#: results/tables.py
 msgid "Whether this debate's ballot has been checked in"
-msgstr ""
+msgstr "Bu maçın ballotlarının kontrol edilip edilmediği"
 
-#: results/tables.py:38
+#: results/tables.py
 msgid "Status of this debate's ballot"
-msgstr ""
+msgstr "Bu maçın ballot durumu"
 
-#: results/templates/admin_results.html:6
+#: results/templates/admin_results.html
 msgid "Display Draw"
-msgstr ""
+msgstr "Kurayı Göster"
 
-#: results/templates/admin_results.html:9
+#: results/templates/admin_results.html
 msgid "Check-In Ballots"
-msgstr ""
+msgstr "Ballotları Giriş Yap"
 
-#: results/templates/admin_results.html:12
+#: results/templates/admin_results.html
 msgid "Recent 'Iron-Persons'"
-msgstr ""
+msgstr "Yakın zamanlardaki 'Demir Kişiler'"
 
-#: results/templates/admin_results.html:20
+#: results/templates/admin_results.html
 msgid "Teams who have recently missed a speaker"
-msgstr ""
+msgstr "Yakın zamanda bir konuşmacıyı kaçıran takımlar"
 
-#: results/templates/admin_results.html:36
+#: results/templates/admin_results.html
 #, python-format
 msgid "A speaker from %(team)s gave multiple speeches in the previous round"
-msgstr ""
+msgstr "%(team)s takımından bir konuşmacı bir önceki tur birden fazla konuşma yaptı"
 
-#: results/templates/admin_results.html:43
+#: results/templates/admin_results.html
 #, python-format
-msgid "\n"
-"                    A speaker from %(team)s gave multiple speeches in the current round\n"
-"                  "
-msgstr ""
+msgid "A speaker from %(team)s gave multiple speeches in the current round"
+msgstr "%(team)s takımından bir konuşmacı bu tur birden fazla konuşma yaptı"
 
-#: results/templates/admin_results.html:52
+#: results/templates/admin_results.html
 msgid "No known cases in the current or previous round"
-msgstr ""
+msgstr "Mevcut veya önceki turda bilinen vaka yok"
 
-#: results/templates/admin_results.html:66
+#: results/templates/admin_results.html
 msgid "Complete Round"
-msgstr ""
+msgstr "Turu Tamamla"
 
-#: results/templates/admin_results.html:76
+#: results/templates/admin_results.html
 msgid "This page automatically updates with the new ballot entries and checkins as they occur. You will, however, need to reload it once all ballots are completed in order to advance the round."
-msgstr ""
+msgstr "Bu sayfa, yeni ballot girişleri ve iadeler gerçekleştikçe otomatik olarak güncellenir. Bununla birlikte, turu ilerletmek için tüm ballotları tamamlandıktan sonra yeniden yüklemeniz gerekecektir."
 
-#: results/templates/admin_results.html:81
+#: results/templates/admin_results.html
+#, python-format
+msgid "The following debate appears to have scoresheets from trainees: %(debates_list)s."
+msgid_plural "The following %(ndebates)s debates appear to have scoresheets from trainees: %(debates_list)s."
+msgstr[0] "Aşağıdaki tartışmada acemilerin sonuç kağıtları var gibi görünüyor: %(debates_list)s."
+msgstr[1] "Aşağıdaki %(ndebates)s tartışmalarında stajyerlerin puan tabloları var gibi görünüyor: %(debates_list)s."
+
+#: results/templates/admin_results.html
+#, python-format
+msgid "This can happen if you demote a panellist to trainee after a result has been submitted for that debate. This may indicate that there is an inconsistency in results data, which may cause unexpected results (or crashes). Please consider going to the Edit Database area and deleting the offending <a href=\"%(editdb_speakerscorebyadj_url)s?debate_adjudicator__type__exact=T\" class=\"alert-link\">\"speaker scores by adj\" objects</a>, and then opening and resaving the result here."
+msgstr "Bu durum, bir panelisti bu tartışma için bir sonuç gönderildikten sonra acemi seviyesine indirirseniz gerçekleşebilir. Bu, sonuç verilerinde beklenmeyen sonuçlara (veya çökmelere) neden olabilecek bir tutarsızlık olduğunu gösterebilir. Lütfen Veritabanı Düzenle alanına gidip problem yaratan <a href=\"%(editdb_speakerscorebyadj_url)s?debate_adjudicator__type__exact=T\" class=\"alert-link\">\"jüri tarafından konuşmacı paunları\" nesnelerini</a> silmeyi ve ardından sonucu burada açıp yeniden kaydetmeyi düşünün."
+
+#: results/templates/admin_results.html
+msgid "One or more debates in this round appear to have more than one confirmed ballot submission. This can cause unexpected results (or crashes), because Tabbycat assumes that each debate has at most one confirmed ballot submission. This inconsistency can generally only arise if you manipulate the database with SQL queries directly. You'll need to find the offending debate(s) and ballot submissions yourself in the Edit Database area, or if that doesn't work, you might need to find them using SQL queries directly."
+msgstr "Bu turdaki bir veya daha fazla maçta birden fazla onaylanmış ballot gönderimi var gibi görünüyor. Bu, beklenmedik sonuçlara (veya çökmelere) neden olabilir, çünkü Tabbycat her maçın en fazla bir onaylanmış ballot gönderimine sahip olduğunu varsayar. Bu tutarsızlık genellikle yalnızca veritabanını doğrudan SQL sorgularıyla işlerseniz ortaya çıkabilir. Sıkıntı yaratan maçları ve ballot gönderimlerini Veritabanını Düzenle alanında kendiniz bulmanız gerekir veya bu işe yaramazsa, bunları doğrudan SQL sorgularını kullanarak bulmanız gerekebilir."
+
+#: results/templates/admin_results.html
 #, python-format
 msgid "This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Results can't be entered while this configuration is in place. Please <a href=\"%(debate_rules_url)s\">revise this tournament's configuration</a> before you try to enter results."
-msgstr ""
+msgstr "Bu turnuvanın yapılandırması <strong>İngiliz Parlamenteri</strong> ve <strong> oy veren jüri başına bir ballot</strong> olarak ayarlanmıştır. Bu kombinasyona izin verilmez: İP turnuvaları konsensüs oylarını kullanmalıdır. Bu yapılandırma yürürlükteyken sonuçlar girilemez. Lütfen sonuçları girmeye çalışmadan önce <a href=\"%(debate_rules_url)s\">Bu turnuvanın yapılandırmasını revize edin</a>."
 
-#: results/templates/admin_results.html:89
+#: results/templates/admin_results.html
 #, python-format
 msgid "Currently there are no motions entered for this round, so debate results cannot be entered. <a href=\"%(motions_url)s\" class=\"alert-link\">Add Motions.</a>"
-msgstr ""
+msgstr "Şu anda bu tur için herhangi bir önerge girilmemiştir, bu nedenle maç sonuçları girilemez. <a href=\"%(motions_url)s\" class=\"alert-link\">Önerge Ekle.</a>"
 
-#: results/templates/admin_results.html:98
+#: results/templates/admin_results.html
 #, python-format
 msgid "Your tournament configuration allows ballots to be submitted online by adjudicators. The draw <a href=\"%(display_url)s\" class=\"alert-link\">must be released</a> before they can do so for this round."
-msgstr ""
+msgstr "Turnuva yapılandırmanız, ballotların jüriler tarafından çevrimiçi olarak gönderilmesine izin verir. Bu turda kura <a href=\"%(display_url)s\" class=\"alert-link\">yayınlanmalıdır</a>."
 
-#: results/templates/admin_results.html:105
+#: results/templates/admin_results.html
 #, python-format
 msgid "Your tournament configuration allows feedback to be submitted online by participants. The draw <a href=\"%(display_url)s\" class=\"alert-link\">must be released</a> before they can do so for this round."
-msgstr ""
+msgstr "Turnuva yapılandırmanız, geri bildirimlerin katılımcılar tarafından çevrimiçi olarak gönderilmesine izin verir. Bu turda kura <a href=\"%(display_url)s\" class=\"alert-link\"> yayınlanmalıdır</a>."
 
-#: results/templates/assistant_enter_results.html:7
-#: results/templates/ballot_entry_base.html:30
+#: results/templates/assistant_enter_results.html
+#: results/templates/ballot_entry_base.html
 msgid "Back to All Results"
-msgstr ""
+msgstr "Tüm Sonuçlara Geri Dön"
 
-#: results/templates/assistant_enter_results.html:11
-#: results/templates/ballot_entry_base.html:35
-#: results/templates/ballot_entry_base.html:39
+#: results/templates/assistant_enter_results.html
+#: results/templates/ballot_entry_base.html
 msgid "Create a new ballot set for this debate"
-msgstr ""
+msgstr "Bu tartışma için yeni bir ballot seti oluştur"
 
-#: results/templates/assistant_enter_results.html:33
+#: results/templates/assistant_enter_results.html
 msgid "You can't confirm this ballot set because you entered it."
-msgstr ""
+msgstr "Bu ballot setini girdiğiniz için onaylayamazsınız."
 
-#: results/templates/assistant_enter_results.html:41
+#: results/templates/assistant_enter_results.html
+msgid "You can't confirm this ballot set because it is for a single adjudicator. Use the merge function."
+msgstr "Bu ballot setini onaylayamazsınız çünkü tek bir jüri için. Birleştirme işlevini kullanın."
+
+#: results/templates/assistant_enter_results.html
 msgid "Confirm results"
-msgstr ""
+msgstr "Sonuçları onayla"
 
-#: results/templates/assistant_enter_results.html:44
+#: results/templates/assistant_enter_results.html
 msgid "Results are incorrect"
-msgstr ""
+msgstr "Sonuçlar yanlış"
 
-#: results/templates/assistant_enter_results.html:49
-#: results/templates/enter_results.html:53
-#: results/templates/public_enter_results.html:74
+#: results/templates/assistant_enter_results.html
+#: results/templates/enter_results.html
+#: results/templates/public_enter_results.html
 msgid "Emails will be sent to adjudicators when the ballot is confirmed."
-msgstr ""
+msgstr "Ballot onaylandığında jürilere e-posta gönderilecektir."
 
-#: results/templates/assistant_results.html:4
-#: results/templates/assistant_results.html:5
+#: results/templates/assistant_results.html results/views.py
 msgid "Enter Results"
-msgstr ""
+msgstr "Sonuç Gir"
 
-#: results/templates/assistant_results.html:12
+#: results/templates/assistant_results.html
 msgid "This page automatically updates with the new ballot entries and checkins as they occur."
-msgstr ""
+msgstr "Bu sayfa, yeni ballot verileri ve girişler gerçekleştikçe otomatik olarak güncellenir."
 
-#: results/templates/assistant_results.html:16
+#: results/templates/assistant_results.html
 msgid "This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Results can't be entered while this configuration is in place. Please ask an administrator to change this configuration."
-msgstr ""
+msgstr "Bu turnuvanın yapılandırması <strong>İngiliz Parlamenteri</strong> ve <strong> oy veren jüri başına bir ballot</strong> olarak ayarlanmıştır. Bu kombinasyona izin verilmez: İP turnuvaları konsensüs oylarını kullanmalıdır. Bu yapılandırma yürürlükteyken sonuçlar girilemez. Lütfen bir yöneticiye danışın."
 
-#: results/templates/assistant_results.html:23
+#: results/templates/assistant_results.html
 msgid "Currently there are no motions entered for this round, so debate results cannot be entered. Please ask an administrator to add motions."
-msgstr ""
+msgstr "Şu anda bu tur için herhangi bir önerge girilmemiştir, bu nedenle maç sonuçları girilemez. Lütfen bir yöneticiye danışın."
 
-#: results/templates/assistant_results.html:33
+#: results/templates/assistant_results.html
 #, python-format
 msgid "One debate does not have its sides confirmed. Results for this debate cannot be entered until its side allocations are marked as confirmed."
 msgid_plural "%(ndebates)s debate do not have their sides confirmed. Results for these debates cannot be entered until their side allocations are marked as confirmed."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bir tartışmanın tarafları doğrulanmamıştır. Bu tartışmanın sonuçları, taraf tahsisleri onaylandı olarak işaretlenene kadar girilemez."
+msgstr[1] "%(ndebates)s tartışmasının tarafları doğrulanmamıştır. Bu tartışmanın sonuçları, taraf tahsisleri onaylandı olarak işaretlenene kadar girilemez."
 
-#: results/templates/assistant_results.html:44
+#: results/templates/assistant_results.html
 #, python-format
 msgid "One debate has a panel with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted."
 msgid_plural "%(num_even_panel)s debates have panels with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bir maçta, eşit sayıda oylayan jürinin bulunduğu bir panel var. Jüriler eşit olarak bölünürse, başkanın oy kullandığı takım kazanır."
+msgstr[1] "%(num_even_panel)s maçta, eşit sayıda oylayan jürinin bulunduğu bir panel var. Jüriler eşit olarak bölünürse, başkanın oy kullandığı takım kazanır."
 
-#: results/templates/ballot/ballot_debate_info.html:6
+#: results/templates/ballot/ballot_debate_info.html
 msgid "Debate Information"
-msgstr ""
+msgstr "Maç Bilgileri"
 
-#: results/templates/ballot/ballot_debate_info.html:41
+#: results/templates/ballot/ballot_debate_info.html
 msgid "No speakers spoke twice (no 'iron-person' speeches)"
-msgstr ""
+msgstr "Hiçbir konuşmacı iki kez konuşmadı ('demir kişi' konuşması yok)"
 
-#: results/templates/ballot/ballot_debate_info.html:44
+#: results/templates/ballot/ballot_debate_info.html
 msgid "A speaker spoke twice (an 'iron-person' speech)"
-msgstr ""
+msgstr "Bir konuşmacı iki kez konuştu ('demir kişi' konuşması)"
 
-#: results/templates/ballot/ballot_scoresheet.html:28
+#: results/templates/ballot/ballot_scoresheet.html
 msgid "Result"
-msgstr ""
+msgstr "Sonuç"
 
-#: results/templates/ballot/ballot_scoresheet.html:28
+#: results/templates/ballot/ballot_scoresheet.html
 msgid "Rank"
 msgstr "Sıralama"
 
-#: results/templates/ballot/ballot_scoresheet.html:34
+#: results/templates/ballot/ballot_scoresheet.html
 msgid "Margin"
-msgstr ""
+msgstr "Marj"
 
-#: results/templates/ballot/ballot_speaks.html:19
-msgid "Duplicate speeches are hidden from the speaker tab. If a speaker is 'iron-manning' you would typically mark only the lesser of their scores as a duplicate."
-msgstr ""
-
-#: results/templates/ballot/bp_elimination_ballot.html:6
-#: results/templates/ballot/standard_ballot_set.html:6
+#: results/templates/ballot/ballot_set.html
 msgid "There are some problems with this scoresheet. Please review and correct them."
-msgstr ""
+msgstr "Bu sonuç kağıdında bazı sorunlar var. Lütfen bunları gözden geçirin ve düzeltin."
 
-#: results/templates/ballot/bp_elimination_ballot.html:12
-msgid "Advancing Teams"
-msgstr ""
-
-#: results/templates/ballot/other_ballots_list.html:9
-#, python-format
-msgid "There is %(number)s existing ballot set for this debate."
-msgid_plural "There are %(number)s existing ballot sets for this debate."
-msgstr[0] ""
-msgstr[1] ""
-
-#: results/templates/ballot/other_ballots_list.html:19
-#, python-format
-msgid "There are %(number)s ballot sets for this debate."
-msgstr ""
-
-#: results/templates/ballot/other_ballots_list.html:29
-msgid "This ballot set is <strong>confirmed</strong>."
-msgstr ""
-
-#: results/templates/ballot/other_ballots_list.html:34
-msgid "This ballot set is <strong>discarded</strong>."
-msgstr ""
-
-#: results/templates/ballot/other_ballots_list.html:49
-msgid "CURRENTLY VIEWING"
-msgstr ""
-
-#: results/templates/ballot/other_ballots_list.html:52
-#, python-format
-msgid "Version <strong>%(version)s</strong>,"
-msgstr ""
-
-#: results/templates/ballot/other_ballots_list.html:57
-#, python-format
-msgid "entered by <strong>%(submitter)s</strong>,"
-msgstr ""
-
-#: results/templates/ballot/other_ballots_list.html:61
-#, python-format
-msgid "submitted from the public form on %(ip_address)s,"
-msgstr ""
-
-#: results/templates/ballot/other_ballots_list.html:66
-#, python-format
-msgid "%(timestamp)s (%(timeago)s ago),"
-msgstr ""
-
-#: results/templates/ballot/other_ballots_list.html:71
-#, python-format
-msgid "confirmed by <strong>%(confirmer)s</strong>"
-msgstr ""
-
-#: results/templates/ballot/other_ballots_list.html:75
-msgid "confirmed by <strong>unknown confirmer</strong>"
-msgstr ""
-
-#: results/templates/ballot/other_ballots_list.html:77
-msgid "unconfirmed"
-msgstr ""
-
-#: results/templates/ballot/other_ballots_list.html:81
-msgid "(discarded)"
-msgstr ""
-
-#: results/templates/ballot/other_ballots_list.html:85
-#, python-format
-msgid "<em>(identical to version %(others)s)</em>"
-msgid_plural "<em>(identical to versions %(others)s)</em>"
-msgstr[0] ""
-msgstr[1] ""
-
-#: results/templates/ballot/standard_ballot_set.html:19
-#: results/templates/ballot_entry_form.html:23
+#: results/templates/ballot/ballot_set.html
+#: results/templates/ballot_entry_form.html
 #, python-format
 msgid "Ballot from %(name)s (%(institution)s)"
-msgstr ""
+msgstr "%(name)s (%(institution)s) ballotu"
 
-#: results/templates/ballot/standard_ballot_set.html:23
-#: results/templates/ballot_entry_form.html:27
+#: results/templates/ballot/ballot_set.html
+#: results/templates/ballot_entry_form.html
 #, python-format
 msgid "Ballot from %(name)s"
-msgstr ""
+msgstr "%(name)s ballotu"
 
-#: results/templates/ballot/standard_ballot_set.html:31
-#: results/templates/public_ballot_set.html:71
+#: results/templates/ballot/ballot_set.html
+#: results/templates/public_ballot_set.html
 msgid "Scoresheet"
-msgstr ""
+msgstr "Sonuç kağıdı"
 
-#: results/templates/ballot/standard_ballot_set.html:35
+#: results/templates/ballot/ballot_set.html
 msgid "Solo Chair"
-msgstr ""
+msgstr "Tek Başkan"
 
-#: results/templates/ballot/standard_ballot_set.html:35
-#: results/templates/ballot_entry_form.html:32
+#: results/templates/ballot/ballot_set.html
+#: results/templates/ballot_entry_form.html
 msgid "Chair"
 msgstr "Başkan"
 
-#: results/templates/ballot/standard_ballot_set.html:35
-#: results/templates/ballot_entry_form.html:34
+#: results/templates/ballot/ballot_set.html
+#: results/templates/ballot_entry_form.html
 msgid "Panellist"
-msgstr ""
+msgstr "Panelist"
 
-#: results/templates/ballot/standard_ballot_set.html:35
+#: results/templates/ballot/ballot_set.html
 msgid "Trainee"
-msgstr ""
+msgstr "Acemi"
 
-#: results/templates/ballot/standard_ballot_set.html:44
+#: results/templates/ballot/ballot_set.html
 msgid "Assign sides before entering scores"
-msgstr ""
+msgstr "Puanları girmeden önce taraf atayın"
 
-#: results/templates/ballot_entry.html:21
+#: results/templates/ballot/ballot_speaks.html
+msgid "Duplicate speeches are hidden from the speaker tab. If a speaker is 'iron-personing' you would typically mark only the lesser of their scores as a duplicate."
+msgstr "Yinelenen konuşmalar konuşmacı tabından gizlenir. Bir konuşmacı 'demir kişilik' ise, genellikle puanlarının daha az olanını yineleme olarak işaretlersiniz."
+
+#: results/templates/ballot/other_ballots_list.html
+#, python-format
+msgid "There is %(number)s existing ballot set for this debate."
+msgid_plural "There are %(number)s existing ballot sets for this debate."
+msgstr[0] "Bu tartışma için %(number)s mevcut ballot seti var."
+msgstr[1] "Bu tartışma için %(number)s mevcut ballot seti var."
+
+#: results/templates/ballot/other_ballots_list.html
+msgid "This ballot set is <strong>confirmed</strong>."
+msgstr "Bu ballot seti <strong>onaylanmış</strong>."
+
+#: results/templates/ballot/other_ballots_list.html
+msgid "This ballot set is <strong>discarded</strong>."
+msgstr "Bu ballot seti <strong> ıskarta</strong>."
+
+#: results/templates/ballot/other_ballots_list.html
+msgid "CURRENTLY VIEWING"
+msgstr "ŞU ANDA GÖRÜNTÜLENİYOR"
+
+#: results/templates/ballot/other_ballots_list.html
+msgid "MERGING"
+msgstr "BİRLEŞTİRİLİYOR"
+
+#: results/templates/ballot/other_ballots_list.html
+#, python-format
+msgid "Version <strong>%(version)s</strong>,"
+msgstr "Sürüm <strong>%(version)s</strong>,"
+
+#: results/templates/ballot/other_ballots_list.html
+#, python-format
+msgid "entered by <strong>%(submitter)s</strong>,"
+msgstr "<strong>%(submitter)s</strong> tarafından girilmiş,"
+
+#: results/templates/ballot/other_ballots_list.html
+#, python-format
+msgid "submitted from <strong>%(adjudicator)s</strong>'s private URL,"
+msgstr "<strong>%(adjudicator)s</strong> özel URL'sinden gönderilen,"
+
+#: results/templates/ballot/other_ballots_list.html
+#, python-format
+msgid "submitted from the public form on %(ip_address)s,"
+msgstr "%(ip_address)s üzerinde herkese açık formdan gönderilen,"
+
+#: results/templates/ballot/other_ballots_list.html
+#, python-format
+msgid "%(timestamp)s (%(timeago)s ago),"
+msgstr "%(timestamp)s (%(timeago)s önce),"
+
+#: results/templates/ballot/other_ballots_list.html
+msgid "unknown"
+msgstr "bilinmeyen"
+
+#: results/templates/ballot/other_ballots_list.html
+#, python-format
+msgid "confirmed by <strong>%(confirmer)s</strong>"
+msgstr "<strong>%(confirmer)s</strong> tarafından onaylanmış"
+
+#: results/templates/ballot/other_ballots_list.html
+msgid "unconfirmed"
+msgstr "Onaylanmamış"
+
+#: results/templates/ballot/other_ballots_list.html
+msgid "(discarded)"
+msgstr "(ıskarta)"
+
+#: results/templates/ballot/other_ballots_list.html
+#, python-format
+msgid "<em>(identical to version %(others)s)</em>"
+msgid_plural "<em>(identical to versions %(others)s)</em>"
+msgstr[0] "<em>(%(others)s sürümüyle aynı)</em>"
+msgstr[1] "<em>(%(others)s sürümleriyle aynı)</em>"
+
+#: results/templates/ballot_entry.html
 #, python-format
 msgid "This ballot entry interface is in beta, if you encounter any problems the older version of the interface is <a href=\"%(old_url)s\" class=\"alert-link\">available here</a>."
-msgstr ""
+msgstr "Bu ballot giriş arayüzü beta sürümündedir, herhangi bir sorunla karşılaşırsanız, arayüzün eski sürümü <a href=\"%(old_url)s\" class=\"alert-link\">burada kullanılabilir</a>."
 
-#: results/templates/ballot_entry_base.html:8
-#, python-format
-msgid "New Ballot Set for %(debate)s"
-msgstr ""
-
-#: results/templates/ballot_entry_base.html:12
-#, python-format
-msgid "Edit Ballot Set for %(debate)s"
-msgstr ""
-
-#: results/templates/ballot_entry_base.html:19
-#, python-format
-msgid "%(room)s: %(debate)s"
-msgstr ""
-
-#: results/templates/ballot_entry_base.html:48
+#: results/templates/ballot_entry_base.html
 msgid "This debate has a panel with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted."
-msgstr ""
+msgstr "Bu maçta, eşit sayıda oylayan jürinin bulunduğu bir panel var. Jüriler eşit olarak bölünürse, başkanın oy kullandığı takım kazanır."
 
-#: results/templates/ballot_entry_base.html:58
-#, python-format
-msgid "In the grand-final rounds of a British Parliamentary format this form will not let you nominate a single winner. To work around this, you need to first nominate a second 'fake' winner in this ballot and save/complete the ballot as normal. To then correct this result, you go to the <a href=\"%(admin_fix)s\" target=\"_blank\">Team Scores page of the Edit Database area</a>, click the <em>Team Score</em> of the 'fake' winner of this debate, set the <em>Win</em> field to <strong>No</strong>, and then <em>Save</em> the change."
-msgstr ""
-
-#: results/templates/ballot_entry_base.html:72
+#: results/templates/ballot_entry_base.html
 #, python-format
 msgid "%(team)s had speakers who spoke multiple times in the last round — i.e. an 'iron' person speech. Please carefully check the ballot to see if that is still the case for this round. If it is, ensure the speakers selected below reflect this."
-msgstr ""
+msgstr "%(team)s son turda birden fazla kez konuşan konuşmacılara sahip - yani 'demir kişi' konuşmasına. Lütfen bu tur için hala geçerli olup olmadığını görmek için ballotları dikkatlice kontrol edin. Öyleyse, aşağıda seçilen konuşmacıların bunu yansıttığından emin olun."
 
-#: results/templates/ballot_entry_form.html:38
+#: results/templates/ballot_entry_form.html
 #, python-format
 msgid "Scoresheet from chair %(chair)s"
-msgstr ""
+msgstr "%(chair)s başkandan sonuç kağıdı"
 
-#: results/templates/ballot_entry_form.html:42
+#: results/templates/ballot_entry_form.html
 msgid "Scoresheet, no chair set"
-msgstr ""
+msgstr "sonuç kağıdı, başkan seti yok"
 
-#: results/templates/ballot_entry_form.html:63
+#: results/templates/ballot_entry_form.html
 #, python-format
 msgid "Error with %(pos)s's speaker field: %(error)s"
-msgstr ""
+msgstr "%(pos)s'un konuşmacı alanıyla ilgili hata: %(error)s"
 
-#: results/templates/ballot_entry_form.html:69
+#: results/templates/ballot_entry_form.html
 #, python-format
 msgid "Error with %(pos)s's duplicate speaker field: %(error)s"
-msgstr ""
+msgstr "%(pos)s'un yinelenen konuşmacı alanıyla ilgili hata: %(error)s"
 
-#: results/templates/ballot_entry_form.html:75
+#: results/templates/ballot_entry_form.html
 #, python-format
 msgid "Error with %(pos)s's score field: %(error)s"
-msgstr ""
+msgstr "%(pos)s'un puan alanıyla ilgili hata: %(error)s"
 
-#: results/templates/enter_results.html:15
+#: results/templates/debate_postponement_form.html
+msgid "Postponed"
+msgstr "Ertelenen"
+
+#: results/templates/debate_postponement_form.html
+msgid "Postpone"
+msgstr "Ertele"
+
+#: results/templates/enter_results.html
 msgid "Ballot Status"
-msgstr ""
+msgstr "Ballot Durumu"
 
-#: results/templates/enter_results.html:16
+#: results/templates/enter_results.html
 msgid "only the confirmed ballot set will affect this debate's result"
-msgstr ""
+msgstr "sadece onaylanmış ballot setleri bu maçın sonucunu etkileyecektir."
 
-#: results/templates/enter_results.html:32
+#: results/templates/enter_results.html
 msgid "Debate Status"
-msgstr ""
+msgstr "Maç Durumu"
 
-#: results/templates/enter_results.html:35
+#: results/templates/enter_results.html
 msgid "all debates must be confirmed to complete the round"
-msgstr ""
+msgstr "turu tamamlamak için tüm maçlar onaylanmalıdır"
 
-#: results/templates/enter_results.html:45
+#: results/templates/enter_results.html
 msgid "Save Ballot"
-msgstr ""
+msgstr "Ballotu kaydet"
 
-#: results/templates/enter_results.html:48
+#: results/templates/enter_results.html
 msgid "Cancel Entry"
-msgstr ""
+msgstr "Girişi İptal Et"
 
-#: results/templates/includes/public_enter_results_info.html:4
+#: results/templates/includes/public_enter_results_info.html
 #, python-format
-msgid "The URL of this page is personalised to you, %(adjudicator)s. <strong>Do not share it with anyone:</strong> anyone who knows this URL can submit results for your debates. If you bookmark this page and return here after each debate, it will always show the debate that you just adjudicated."
-msgstr ""
+msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can submit results and/or feedback for your debates. You may bookmark this page and return here after each debate for the available actions."
+msgstr "Bu sayfanın URL'si sizin için kişiseldir, %(name)s. <strong>Kimseyle paylaşmayın;</strong> bu URL'yi bilen herkes tartışmalarınız için sonuç ve/veya geri bildirim gönderebilir. Bu sayfayı yer imlerine ekleyebilir ve mevcut eylemler için her maçtan sonra buraya dönebilirsiniz."
 
-#: results/templates/privateurl_ballot_set.html:7
-#: results/templates/privateurl_ballot_set_error.html:12
+#: results/templates/privateurl_ballot_set.html
+#: results/templates/privateurl_ballot_set_error.html
 #, python-format
 msgid "The page is provided to allow you, <strong>%(name)s</strong>, to verify your own scoresheet. <strong>You must not share this URL with anyone.</strong> Sharing the URL will allow others to access <strong>all</strong> actions from your personal landing page."
-msgstr ""
+msgstr "Bu sayfa sizin (<strong>%(name)s</strong>) kendi sonuç kağıdınızı doğrulamanıza izin vermek için sağlanmıştır. <strong>Bu URL'yi kimseyle paylaşmamalısınız.</strong> URL'yi paylaşmak, başkalarının kişisel açılış sayfanızdan <strong>tüm</strong> eylemlere erişmesine olanak tanır."
 
-#: results/templates/privateurl_ballot_set_error.html:4
-#: results/templates/privateurl_ballot_set_error.html:6
-#: results/templates/public_ballot_set_error.html:4
-#: results/templates/public_ballot_set_error.html:6
+#: results/templates/privateurl_ballot_set_error.html
+#: results/templates/public_ballot_set_error.html
 msgid "Ballot Not Available"
-msgstr ""
+msgstr "Ballot Mevcut Değil"
 
-#: results/templates/privateurl_ballot_set_error.html:27
+#: results/templates/privateurl_ballot_set_error.html
 #, python-format
 msgid "<a href=\"%(url)s\">Back to your private landing page.</a>"
-msgstr ""
+msgstr "<a href=\"%(url)s\">Özel açılış sayfanıza geri dönün.</a>"
 
-#: results/templates/public_add_ballot.html:4
-#: results/templates/public_add_ballot_unreleased.html:4
-#: results/templates/public_add_ballot_unreleased.html:5
+#: results/templates/public_add_ballot.html
+#: results/templates/public_add_ballot_unreleased.html
 msgid "Enter Ballot"
-msgstr ""
+msgstr "Ballot Gir"
 
-#: results/templates/public_add_ballot.html:5
+#: results/templates/public_add_ballot.html
 msgid "Who are you?"
-msgstr ""
+msgstr "Kimsin?"
 
-#: results/templates/public_add_ballot.html:6
+#: results/templates/public_add_ballot.html
 msgid "(click your name on this list)"
-msgstr ""
+msgstr "(Bu listede adınıza tıklayın)"
 
-#: results/templates/public_add_ballot_unreleased.html:8
+#: results/templates/public_add_ballot_unreleased.html
 #, python-format
 msgid "The draw and/or motions for %(round)s have yet to be released."
-msgstr ""
+msgstr "%(round)s için kura ve/veya önergeler henüz yayınlanmadı."
 
-#: results/templates/public_ballot_set.html:6
-#: results/templates/public_ballot_set.html:10
-#: results/templates/public_ballot_set.html:17
-#: results/templates/public_ballot_set.html:21
+#: results/templates/public_ballot_set.html
 #, python-format
 msgid "Ballot for %(matchup)s"
-msgstr ""
+msgstr "%(matchup)s için ballot"
 
-#: results/templates/public_ballot_set.html:28
-#: results/templates/public_enter_results.html:14
+#: results/templates/public_ballot_set.html
 #, python-format
 msgid "%(round)s @ %(room)s"
-msgstr ""
+msgstr "%(round)s @ %(room)s"
 
-#: results/templates/public_ballot_set.html:37
+#: results/templates/public_ballot_set.html
 msgid "Return to landing page"
-msgstr ""
+msgstr "Açılış sayfasına geri dön"
 
-#: results/templates/public_ballot_set.html:42
+#: results/templates/public_ballot_set.html
 #, python-format
 msgid "Return to Results for %(round)s"
-msgstr ""
+msgstr "%(round)s için Sonuçlara Dön"
 
-#: results/templates/public_ballot_set.html:54
+#: results/templates/public_ballot_set.html
 msgid "Motion"
 msgstr "Önerge"
 
-#: results/templates/public_ballot_set.html:67
+#: results/templates/public_ballot_set.html
 #, python-format
 msgid "From %(name)s (%(institution)s)"
-msgstr ""
+msgstr "%(name)s (%(institution)s) kaynağından"
 
-#: results/templates/public_ballot_set.html:91
-#: results/templates/public_ballot_set.html:95
+#: results/templates/public_ballot_set.html
 #, python-format
 msgid "<em>Total for %(name)s (%(side)s)</em>"
-msgstr ""
+msgstr "<em>%(name)s (%(side)s) için toplam</em>"
 
-#: results/templates/public_ballot_set_error.html:14
+#: results/templates/public_ballot_set.html
+#, python-format
+msgid "<em>%(name)s (%(side)s)</em>"
+msgstr "<em>%(name)s (%(side)s)</em>"
+
+#: results/templates/public_ballot_set.html
+msgid "Won"
+msgstr "Galibiyet"
+
+#: results/templates/public_ballot_set.html
+msgid "Lost"
+msgstr "Mağlubiyet"
+
+#: results/templates/public_ballot_set_error.html
 #, python-format
 msgid "<a href=\"%(url)s\">Back to the tournament home page.</a>"
-msgstr ""
+msgstr "<a href=\"%(url)s\">Turnuva ana sayfasına geri dön.</a>"
 
-#: results/templates/public_enter_results.html:5
-#: results/templates/public_enter_results.html:8
-#, python-format
-msgid "Enter Results for %(debate)s"
-msgstr ""
-
-#: results/templates/public_enter_results.html:22
+#: results/templates/public_enter_results.html
 #, python-format
 msgid "%(adjudicator)s, note that you must enter <strong>all of the ballots</strong> from your panel, not just your own!"
-msgstr ""
+msgstr "%(adjudicator)s, sadece kendi ballotunuzu değil, <strong>tüm ballotları</strong> girmeniz gerektiğini unutmayın!"
 
-#: results/templates/public_enter_results.html:30
+#: results/templates/public_enter_results.html
+msgid "Some information, such as speaker order, shown is based on a previous ballot. If anything is incorrect, please correct it and contact the tab team."
+msgstr "Gösterilen konuşmacı sırası gibi bazı bilgiler önceki bir ballota dayanmaktadır. Bir şey yanlışsa, lütfen düzeltin ve tab ekibiyle iletişime geçin."
+
+#: results/templates/public_enter_results.html
 #, python-format
 msgid "This form has already been submitted <strong>once</strong>. Please contact a tab official after submitting your form."
 msgid_plural "This form has already been submitted <strong>%(nsubmissions)s</strong> times. Please contact a tab official after submitting your form."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bu form <strong>daha önce bir kez</strong> gönderilmiştir. Lütfen formunuzu gönderdikten sonra bir tab yetkilisiyle iletişime geçin."
+msgstr[1] "Bu form <strong>daha önce %(nsubmissions)s kez</strong> gönderilmiştir. Lütfen formunuzu gönderdikten sonra bir tab yetkilisiyle iletişime geçin."
 
-#: results/templates/public_enter_results.html:69
-msgid "Submit Ballot(s)"
-msgstr ""
+#: results/templates/public_enter_results.html
+msgid "Submit Ballot"
+msgid_plural "Submit Ballots"
+msgstr[0] "Ballotu Gönder"
+msgstr[1] "Ballotları Gönder"
 
-#: results/templates/public_enter_results.html:71
+#: results/templates/public_enter_results.html
 msgid "When submitting this form your IP address will be stored for logging purposes."
-msgstr ""
+msgstr "Bu formu gönderirken IP adresiniz kayıt amaçlı saklanacaktır."
 
-#: results/templates/public_enter_results_error.html:4
+#: results/templates/public_enter_results_error.html
 #, python-format
 msgid "No Result to Enter (%(adjudicator)s)"
-msgstr ""
+msgstr "Girilecek Sonuç Yok (%(adjudicator)s)"
 
-#: results/templates/public_enter_results_error.html:7
+#: results/templates/public_enter_results_error.html
 msgid "No Result to Enter"
-msgstr ""
+msgstr "Girilecek Sonuç Yok"
 
-#: results/templates/public_results_for_round.html:7
+#: results/templates/public_results_for_round.html
 msgid "View by Team"
-msgstr ""
+msgstr "Takıma Göre Görüntüle"
 
-#: results/templates/public_results_for_round.html:10
+#: results/templates/public_results_for_round.html
 msgid "View by Debate"
-msgstr ""
+msgstr "Maça Göre Görüntüle"
 
-#: results/templates/public_results_index.html:12
+#: results/templates/public_results_index.html
 #, python-format
 msgid "Results for %(round)s"
-msgstr ""
+msgstr "%(tur)s için sonuçlar"
 
-#: results/templates/public_results_not_available.html:4
-#: results/templates/public_results_not_available.html:6
-#: results/templates/public_results_silent.html:4
-#: results/templates/public_results_silent.html:6
+#: results/templates/public_results_not_available.html
+#: results/templates/public_results_silent.html
 msgid "Results Not Available"
-msgstr ""
+msgstr "Sonuçlar Mevcut Değil"
 
-#: results/templates/public_results_not_available.html:12
+#: results/templates/public_results_not_available.html
 #, python-format
 msgid "The results for %(round)s aren't yet available."
-msgstr ""
+msgstr "%(round)s için sonuçlar henüz mevcut değil."
 
-#: results/templates/public_results_silent.html:12
+#: results/templates/public_results_silent.html
 #, python-format
 msgid "%(round)s is a silent round."
-msgstr ""
+msgstr "%(round)s sessiz bir turdur."
 
-#: results/utils.py:18
+#: results/utils.py
 msgid "No Ballot"
-msgstr ""
+msgstr "Ballot yok"
 
-#: results/utils.py:20
+#: results/utils.py
+msgid "Debate was Postponed"
+msgstr "Maç ertelendi"
+
+#: results/utils.py
 msgid "Ballot is Unconfirmed"
-msgstr ""
+msgstr "Ballot Onaylanmamış"
 
-#: results/utils.py:22
+#: results/utils.py
 msgid "Ballot is Confirmed"
-msgstr ""
+msgstr "Ballot onaylandı"
 
 #. Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
-#: results/utils.py:32
+#: results/utils.py
 #, python-format
 msgid "%(team)s as %(side)s"
-msgstr ""
+msgstr "%(side)s olarak %(team)s"
 
-#: results/utils.py:51
+#: results/utils.py
 #, python-format
-msgid "%(winner)s (%(winner_side)s) won"
-msgstr ""
+msgid "%(team)s (%(side)s) won"
+msgstr "%(team)s (%(side)s) kazandı"
 
-#: results/utils.py:56
+#. Translators: The team here is the losing team
+#: results/utils.py
 #, python-format
-msgid "vs %(loser)s (%(loser_side)s)"
-msgstr ""
+msgid "vs %(team)s (%(side)s)"
+msgstr "%(team)s (%(side)s)'e karşı"
 
-#: results/utils.py:71
+#: results/utils.py
 #, python-format
-msgid "Advancing: %(advancing_list)s<br>\n"
-msgstr ""
+msgid "Advancing: %(advancing_list)s<br>"
+msgstr "İlerleyenler: %(advancing_list)s<br>"
 
-#: results/utils.py:75
+#: results/utils.py
 #, python-format
 msgid "Eliminated: %(eliminated_list)s"
-msgstr ""
+msgstr "Elenenler: %(eliminated_list)s"
 
-#: results/utils.py:85
+#: results/utils.py
 #, python-format
-msgid "1st: %(first_team)s<br>\n"
-msgstr ""
+msgid "1st: %(first_team)s<br>"
+msgstr "1.: %(first_team)s<br>"
 
-#: results/utils.py:87
+#: results/utils.py
 #, python-format
 msgid "2nd: %(second_team)s<br>\n"
 "3rd: %(third_team)s<br>\n"
 "4th: %(fourth_team)s"
-msgstr ""
+msgstr "2.: %(second_team)s<br>\n"
+"3.: %(third_team)s<br>\n"
+"4.: %(fourth_team)s"
 
-#: results/utils.py:102
+#: results/utils.py
 #, python-format
 msgid "Error with result for %(debate)s"
-msgstr ""
+msgstr "%(debate)s için sonuçla ilgili hata"
 
 #. Translators: Abbreviation for Prime Minister
-#: results/utils.py:162
+#: results/utils.py
 msgid "PM"
-msgstr ""
+msgstr "PM"
 
 #. Translators: Abbreviation for Deputy Prime Minister
-#: results/utils.py:164
+#: results/utils.py
 msgid "DPM"
-msgstr ""
+msgstr "DPM"
 
 #. Translators: Abbreviation for Leader of the Opposition
-#: results/utils.py:166
+#: results/utils.py
 msgid "LO"
-msgstr ""
+msgstr "LO"
 
 #. Translators: Abbreviation for Deputy Leader of the Opposition
-#: results/utils.py:168
+#: results/utils.py
 msgid "DLO"
-msgstr ""
+msgstr "DLO"
 
 #. Translators: Abbreviation for Member for the Government
-#: results/utils.py:170
+#: results/utils.py
 msgid "MG"
-msgstr ""
+msgstr "MG"
 
 #. Translators: Abbreviation for Government Whip
-#: results/utils.py:172
+#: results/utils.py
 msgid "GW"
-msgstr ""
+msgstr "GW"
 
 #. Translators: Abbreviation for Member for the Opposition
-#: results/utils.py:174
+#: results/utils.py
 msgid "MO"
-msgstr ""
+msgstr "MO"
 
 #. Translators: Abbreviation for Opposition Whip
-#: results/utils.py:176
+#: results/utils.py
 msgid "OW"
-msgstr ""
+msgstr "OW"
 
-#: results/utils.py:196
+#: results/utils.py
 msgid "Reply"
-msgstr ""
+msgstr "Özet"
 
-#: results/views.py:224 results/views.py:226
+#: results/views.py
 msgid " vs "
-msgstr ""
+msgstr " Vs "
 
-#: results/views.py:359
+#: results/views.py
+#, python-format
+msgid "%(matchup)s: %(round)s @ %(room)s"
+msgstr "%(matchup)s: %(round)s @ %(room)s"
+
+#: results/views.py
+msgid "N/A"
+msgstr "YOK"
+
+#: results/views.py
+msgid "New Ballot Set"
+msgstr "Yeni Ballot Seti"
+
+#: results/views.py
 #, python-format
 msgid "Ballot set for %(debate)s added."
-msgstr ""
+msgstr "%(debate)s için ballot seti eklendi."
 
-#: results/views.py:361 results/views.py:428
+#: results/views.py
 msgid " Email receipts queued to be sent."
-msgstr ""
+msgstr " E-posta makbuzları gönderilmek üzere sıraya alındı."
 
-#: results/views.py:375
+#: results/views.py
 #, python-format
 msgid "Whoops! The debate %(debate)s doesn't have a chair, so you can't enter results for it."
-msgstr ""
+msgstr "%(debate)s maçının başkanı yok, bu yüzden sonuçlarını giremezsiniz."
 
-#: results/views.py:381
+#: results/views.py
 #, python-format
 msgid "Whoops! The debate %(debate)s doesn't have its sides confirmed, so you can't enter results for it."
-msgstr ""
+msgstr "%(debate)s maçının tarafları doğrulanmamıştır, bu nedenle sonuçlarını giremezsiniz."
 
-#: results/views.py:421
+#: results/views.py
+msgid "Edit Ballot Set"
+msgstr "Ballot Setini Düzenle"
+
+#: results/views.py
 #, python-format
 msgid "Ballot set for %(matchup)s discarded."
-msgstr ""
+msgstr "%(matchup)s için ballot seti ıskarta edildi."
 
-#: results/views.py:423
+#: results/views.py
 #, python-format
 msgid "Ballot set for %(matchup)s confirmed."
-msgstr ""
+msgstr "%(matchup)s için ballot seti onaylandı."
 
-#: results/views.py:425
+#: results/views.py
 #, python-format
 msgid "Edits to ballot set for %(matchup)s saved."
-msgstr ""
+msgstr "%(matchup)s için ballotda yapılan düzenlemeler kaydedildi."
 
-#: results/views.py:469
+#: results/views.py
 #, python-format
 msgid "Thanks, %(user)s! Your ballot for %(debate)s has been recorded."
-msgstr ""
+msgstr "Teşekkürler, %(user)! %(debate)s için ballotunuz kaydedildi."
 
-#: results/views.py:477
+#: results/views.py
 msgid "The draw for this round hasn't been released yet."
-msgstr ""
+msgstr "Bu turun kura çekimi henüz yayınlanmadı."
 
-#: results/views.py:481
+#: results/views.py
 msgid "The motions for this round haven't been released yet."
-msgstr ""
+msgstr "Bu tur için önergeler henüz yayınlanmadı."
 
-#: results/views.py:486
+#: results/views.py
 msgid "It looks like you don't have a debate this round."
-msgstr ""
+msgstr "Bu turda maçınız yok."
 
-#: results/views.py:488
+#: results/views.py
 msgid "It looks like you're assigned to two or more debates this round. Please contact a tab room official."
-msgstr ""
+msgstr "Bu turda iki veya daha fazla maça atanmışsınız. Lütfen bir tab odası yetkilisiyle iletişime geçin."
 
-#: results/views.py:496
+#: results/views.py
 msgid "Your debate doesn't have a chair, so you can't enter results for it. Please contact a tab room official."
-msgstr ""
+msgstr "Maçın başkanı yok, bu yüzden sonuçlarını giremezsiniz. Lütfen bir tab odası yetkilisiyle iletişime geçin."
 
-#: results/views.py:501
+#: results/views.py
 msgid "It looks like the sides for this debate haven't yet been confirmed, so you can't enter results for it. Please contact a tab room official."
-msgstr ""
+msgstr "Bu maçın tarafları henüz onaylanmamış bu yüzden bunun için sonuç giremezsiniz. Lütfen bir tab odası yetkilisiyle iletişime geçin."
 
-#: results/views.py:588
+#: results/views.py
 msgid "It looks like you were assigned to two or more debates. Please contact a tab room official."
-msgstr ""
+msgstr "İki veya daha fazla maça atanmışsınız. Lütfen bir tab odası yetkilisiyle iletişime geçin."
 
-#: results/views.py:606
+#: results/views.py
 #, python-format
 msgid "This debate is in %s, which is a silent round."
-msgstr ""
+msgstr "Bu maç sessiz bir tur olan %s turunda."
 
-#: results/views.py:609
+#: results/views.py
 #, python-format
 msgid "This debate is in %s, the results for which aren't available yet."
-msgstr ""
+msgstr "Bu maç %s turunda ve sonuçları henüz mevcut değil."
 
-#: results/views.py:613
+#: results/views.py
 #, python-format
 msgid "The result for debate %s is not confirmed."
-msgstr ""
+msgstr "%s maçının sonucu doğrulanmadı."
 
-#: results/views.py:616
+#: results/views.py
 #, python-format
 msgid "The debate %s does not have a confirmed ballot."
-msgstr ""
+msgstr "%s maçının onaylanmış bir ballotu yok."
 
-#: results/views.py:638
+#: results/views.py
 #, python-format
 msgid "There is no result yet for debate %s."
-msgstr ""
+msgstr "%s maçı için henüz bir sonuç yok."
 
-#: results/views.py:694
+#: results/views.py
 #, python-format
 msgid "Add result from %(adjudicator)s"
-msgstr ""
+msgstr "%(adjudicator)s öğesinden sonuç ekle"
 
-#: results/views.py:698
+#: results/views.py
 msgid "Adjudicator"
 msgstr "Jüri"
+
+#: results/views.py
+msgid "Merge Ballots"
+msgstr "Ballotları Birleştir"
+
+#: results/views.py
+msgid "The speaking order in the ballots is inconsistent, so could not be merged."
+msgstr "Ballotlardaki konuşma sırası tutarsız, bu yüzden birleştirilemedi."
+
+#: results/views.py
+msgid "Duplicate speeches are marked inconsistently, so could not be merged."
+msgstr "Yinelenen konuşmalar tutarsız bir şekilde işaretli, bu nedenle birleştirilemez."
+
+#: results/views.py
+#, python-format
+msgid " This error was caught in <a href='%(ballot_url)s'>%(adjudicator)s's ballot</a> for %(speaker)s (%(team)s)."
+msgstr " Bu hata <a href='%(ballot_url)s'>%(adjudicator)s'ın %(speaker)s (%(team)s) için olan ballotunda</a> bulundu."
 

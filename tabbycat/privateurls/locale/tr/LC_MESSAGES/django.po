@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-24 07:36\n"
+"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"PO-Revision-Date: 2023-05-25 23:54\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -15,166 +15,165 @@ msgstr ""
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: tr\n"
 "X-Crowdin-File: /develop/tabbycat/privateurls/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 946\n"
 
-#: privateurls/apps.py:7
+#: privateurls/apps.py
 msgid "Private URL Management"
-msgstr ""
+msgstr "Özel URL Yönetimi"
 
-#: privateurls/templates/private_urls.html:4
-#: privateurls/templates/private_urls.html:5 privateurls/views.py:144
+#: privateurls/templates/private_urls.html privateurls/views.py
 msgid "Private URLs"
-msgstr ""
+msgstr "Özel URL'ler"
 
-#: privateurls/templates/private_urls.html:17
+#: privateurls/templates/private_urls.html
 msgid "The private URLs for ballot and/or feedback submission from participants are given below."
-msgstr ""
+msgstr "Ballot ve/veya katılımcılardan geri bildirim gönderimi için özel URL'ler aşağıda verilmiştir."
 
-#: privateurls/templates/private_urls.html:19
+#: privateurls/templates/private_urls.html
 msgid "Private URLs are used to allow participants to submit ballots and/or feedback online. You should use them if you have a means of distributing crazy-looking URLs to participants, and are too worried about fraud to use a publicly accessible page where <em>anyone</em> can enter <em>any</em> submission. The URLs will look something like this:"
-msgstr ""
+msgstr "Özel URL'ler, katılımcıların çevrimiçi ballot ve/veya geri bildirim göndermelerine izin vermek için kullanılır. Katılımcılara garip görünümlü URL'ler dağıtmanın bir yolu varsa ve sahtekarlık konusunda <em>herkesin</em> <em>herhangi bir</em> gönderimini girebileceği herkese açık bir sayfa kullanmak için çok endişeliyseniz bunları kullanmalısınız. URL'ler şuna benzer şekilde görünür:"
 
-#: privateurls/templates/private_urls.html:31
-msgid "Anyone with the URL can access the relevant data entry page. The idea is that it's hard to guess another key (the random-looking string), so you should make each URL accessible only to the participant in question. <a href=\"http://tabbycat.readthedocs.io/en/latest/features/data-entry.html#private-urls\"> Read more about private URLs.</a>"
-msgstr ""
+#: privateurls/templates/private_urls.html
+msgid "Anyone with the URL can access the relevant data entry page. The idea is that it's hard to guess another key (the random-looking string), so you should make each URL accessible only to the participant in question. <a href=\"https://tabbycat.readthedocs.io/en/latest/features/data-entry.html#private-urls\"> Read more about private URLs.</a>"
+msgstr "URL'ye sahip olan herkes ilgili veri giriş sayfasına erişebilir. Buradaki fikir, başka bir anahtarı (rastgele görünen dize) tahmin etmenin zor olmasıdır, bu nedenle her URL'yi yalnızca söz konusu katılımcı için erişilebilir hale getirmelisiniz. <a href=\"https://tabbycat.readthedocs.io/en/latest/features/data-entry.html#private-urls\"> Özel URL'ler hakkında daha fazla bilgi edinin.</a>"
 
-#: privateurls/templates/private_urls.html:47
+#: privateurls/templates/private_urls.html
 #, python-format
 msgid "Neither <strong>participant ballot submissions</strong>, <strong>participant feedback submissions</strong>, nor <strong>participant self-checkins</strong> are configured to be from private URLs. Any generated URLs will not be useful unless you configure those settings accordingly on the <a href=\"%(data_entry_options_url)s\">tournament configuration page</a>."
-msgstr ""
+msgstr "<strong>katılımcı ballot gönderimleri</strong>, <strong>katılımcı geri bildirim gönderimleri</strong> ve <strong> katılımcı kendi başına girişleri</strong> özel URL'lerden olacak şekilde yapılandırılmamıştır. Oluşturulan URL'ler, bu ayarları <a href=\"%(data_entry_options_url)s\">turnuva ayarlama</a> sayfasında uygun şekilde yapılandırmadığınız sürece yararlı olmayacaktır."
 
-#: privateurls/templates/private_urls.html:67
+#: privateurls/templates/private_urls.html
 msgid "There are no private URLs assigned."
-msgstr ""
+msgstr "Atanmış özel URL yoktur."
 
-#: privateurls/templates/private_urls.html:73
+#: privateurls/templates/private_urls.html
 msgid "Generate Private URLs"
-msgstr ""
+msgstr "Özel URL'ler oluştur"
 
-#: privateurls/templates/private_urls_nav.html:6
+#: privateurls/templates/private_urls_nav.html
 msgid "View URLs"
-msgstr ""
+msgstr "URL'leri görüntüle"
 
-#: privateurls/templates/private_urls_nav.html:11
+#: privateurls/templates/private_urls_nav.html
 msgid "Print Teams' URLs"
-msgstr ""
+msgstr "Takımların URL'lerini yazdır"
 
-#: privateurls/templates/private_urls_nav.html:15
+#: privateurls/templates/private_urls_nav.html
 msgid "Print Adjudicators' URLs"
-msgstr ""
+msgstr "Jürilerin URL'lerini yazdır"
 
-#: privateurls/templates/private_urls_nav.html:22
+#: privateurls/templates/private_urls_nav.html
 msgid "All reachable participants have already been sent their private URLs."
-msgstr ""
+msgstr "Ulaşılabilir tüm katılımcılara özel URL'leri zaten gönderildi."
 
-#: privateurls/templates/private_urls_nav.html:24
+#: privateurls/templates/private_urls_nav.html
 msgid "Email URLs"
-msgstr ""
+msgstr "URL'leri e-postala"
 
-#: privateurls/templates/private_urls_nav.html:31
+#: privateurls/templates/private_urls_nav.html
 msgid "This button only generates private URLs for participants who do not already have one."
-msgstr ""
+msgstr "Bu yalnızca henüz özel URL'si olmayan katılımcılar için özel URL oluşturur."
 
-#: privateurls/templates/private_urls_nav.html:32
-#: privateurls/templates/private_urls_nav.html:39
+#: privateurls/templates/private_urls_nav.html
 msgid "Generate URLs"
-msgstr ""
+msgstr "URL'ler oluştur"
 
-#: privateurls/templates/private_urls_nav.html:38
+#: privateurls/templates/private_urls_nav.html
 msgid "All participants already have private URLs."
-msgstr ""
+msgstr "Tüm katılımcıların zaten özel URL'leri var."
 
-#: privateurls/templates/public_url_landing.html:4
-#: privateurls/templates/public_url_landing.html:5
+#: privateurls/templates/public_url_landing.html
 msgid "Private URL"
-msgstr ""
+msgstr "Özel URL"
 
-#: privateurls/templates/public_url_landing.html:10
+#: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "for %(name)s"
-msgstr ""
+msgstr "%(name)s için"
 
-#: privateurls/templates/public_url_landing.html:12
+#: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "(%(team)s)"
 msgstr "(%(team)s)"
 
-#: privateurls/templates/public_url_landing.html:18
+#: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can submit results and/or feedback for your debates. You may bookmark this page and return here after each debate for the available actions."
-msgstr ""
+msgstr "Bu sayfanın URL'si sizin için kişiseldir, %(name)s. <strong>Kimseyle paylaşmayın;</strong> bu URL'yi bilen herkes tartışmalarınız için sonuç ve/veya geri bildirim gönderebilir. Bu sayfayı yer imlerine ekleyebilir ve mevcut eylemler için her maçtan sonra buraya dönebilirsiniz."
 
-#: privateurls/templates/public_url_landing.html:37
+#: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "Revoke check-in from %(check_time)s"
-msgstr ""
+msgstr "%(check_time)s'den itibaren girişleri iptal et"
 
-#: privateurls/templates/public_url_landing.html:42
+#: privateurls/templates/public_url_landing.html
 msgid "Check in"
-msgstr ""
+msgstr "Giriş"
 
 #. Translators: Include the full-stop; English doesn't because "a.m." already has a full stop.
-#: privateurls/templates/public_url_landing.html:49
+#: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "You have been checked in at %(check_time)s"
-msgstr ""
+msgstr "%(check_time)s zamanında giriş yaptınız."
 
-#: privateurls/templates/public_url_landing.html:54
+#: privateurls/templates/public_url_landing.html
 msgid "You are not currently checked in."
-msgstr ""
+msgstr "Şu anda giriş yapmadınız."
 
-#: privateurls/templates/public_url_landing.html:61
-msgid "Submit Ballot"
-msgstr ""
+#: privateurls/templates/public_url_landing.html
+#, python-format
+msgid "Submit Ballot for %(round)s"
+msgstr "%(round)s için ballot gönder"
 
-#: privateurls/templates/public_url_landing.html:67
-#: privateurls/templates/public_url_landing.html:73
+#: privateurls/templates/public_url_landing.html
 msgid "Submit Feedback"
 msgstr "Geri Bildirim Yolla"
 
-#: privateurls/templates/public_url_landing.html:82
+#: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "Registration (%(name)s)"
-msgstr ""
+msgstr "Kayıt (%(name)s)"
 
-#: privateurls/views.py:62
+#: privateurls/views.py
 msgid "no URL"
-msgstr ""
+msgstr "URL yok"
 
-#: privateurls/views.py:75
+#: privateurls/views.py
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
-#: privateurls/views.py:86
+#: privateurls/views.py
 msgid "Speakers"
 msgstr "Konuşmacılar"
 
-#: privateurls/views.py:96
+#: privateurls/views.py
 msgid "Adjudicators"
 msgstr "Jüriler"
 
-#: privateurls/views.py:118
+#: privateurls/views.py
 msgid "All participants already have private URLs. If you want to delete them, use the Edit Database area."
-msgstr ""
+msgstr "Tüm katılımcıların zaten özel URL'leri var. Bunları silmek istiyorsanız, Veritabanını Düzenle alanını kullanın."
 
-#: privateurls/views.py:125
+#: privateurls/views.py
 #, python-format
 msgid "A private URL was generated for %(nblank_people)d person."
 msgid_plural "Private URLs were generated for all %(nblank_people)d people."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(nblank_people)d kişisi için özel bir URL oluşturuldu."
+msgstr[1] "Özel URL'ler tüm %(nblank_people)d kişileri için oluşturulmuştur."
 
-#: privateurls/views.py:130
+#: privateurls/views.py
 #, python-format
 msgid "The already-existing private URL for %(nexisting_people)d person was left intact."
 msgid_plural "The already-existing private URLs for %(nexisting_people)d people were left intact."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(nexisting_people)d kişinin zaten var olan özel URL'si olduğu gibi bırakılmıştır."
+msgstr[1] "%(nexisting_people)d kişilerinin zaten var olan özel URL'si olduğu gibi bırakılmıştır."
 
-#: privateurls/views.py:161
+#: privateurls/views.py
 msgid "URL Key"
-msgstr ""
+msgstr "URL anahtarı"
 
-#: privateurls/views.py:174
+#: privateurls/views.py
 msgid "Debates"
-msgstr ""
+msgstr "Maçlar"
 

@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-14 04:50+1100\n"
-"PO-Revision-Date: 2020-03-08 17:40\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2023-05-25 23:54\n"
+"Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
 "MIME-Version: 1.0\n"
@@ -12,194 +12,196 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-Language: tr\n"
 "X-Crowdin-File: /develop/tabbycat/locale/en/LC_MESSAGES/djangojs.po\n"
+"X-Crowdin-File-ID: 962\n"
 
 #: checkins/templates/CheckInScanContainer.vue:
 msgid "Scan Using Camera"
-msgstr ""
+msgstr "Kamera Kullanarak Tara"
 
 #: checkins/templates/CheckInScanContainer.vue:
 msgid "Stop Camera Scan"
-msgstr ""
+msgstr "Kamera Taramasını Durdur"
 
 #: checkins/templates/CheckInScanContainer.vue:
 msgid "Turn On Sounds"
-msgstr ""
+msgstr "Sesleri Aç"
 
 #. Translators: %1: Time of checkin, %2: Barcode number, %3: Name of "owner"
 #: checkins/templates/CheckInScanContainer.vue:
 msgid "%1 checked in %2: %3"
-msgstr ""
+msgstr "%1 %2'ye giriş yaptı: %3"
 
 #: checkins/templates/CheckInStatusContainer.vue:
 msgid "All"
-msgstr ""
+msgstr "Tüm"
 
 #. Translators: %1: Option name
 #: checkins/templates/CheckInStatusContainer.vue:
 msgid "By %1"
-msgstr ""
+msgstr "%1'e göre"
 
 #: checkins/templates/CheckInStatusContainer.vue:
-msgid "No matching venues found."
-msgstr ""
+msgid "No matching rooms found."
+msgstr "Eşleşen oda bulunamadı."
 
 #: checkins/templates/CheckInStatusContainer.vue:
 msgid "No matching people found."
-msgstr ""
+msgstr "Eşleşen kişi bulunamadı."
 
 #: checkins/templates/CheckInStatusContainer.vue:
 msgid "This page will live-update with new check-ins as they occur although the initial list may be up to a minute old."
-msgstr ""
+msgstr "Bu sayfa, ilk liste en fazla bir dakika gecikmeli olsa da, gerçekleştikleri anda yeni girişlerle canlı olarak güncellenecektir."
 
 #: checkins/templates/CheckInStatusContainer.vue:
 msgid "<strong>✓</strong> All"
-msgstr ""
+msgstr "<strong>✓</strong> Tümü"
 
 #: checkins/templates/CheckInStatusContainer.vue:
 msgid "<strong>☓</strong> All"
-msgstr ""
+msgstr "<strong>☓</strong> Tümü"
 
 #: checkins/templates/CheckInStatusContainer.vue:
 msgid "Click to check-in manually"
-msgstr ""
+msgstr "Elle giriş yapmak için tıklayın"
 
 #: checkins/templates/CheckInStatusContainer.vue:
 msgid "saving..."
-msgstr ""
+msgstr "kaydediliyor..."
 
 #: checkins/templates/CheckInStatusContainer.vue:
 msgid "This person does not have a check-in identifier so they can't be checked in"
-msgstr ""
+msgstr "Bu kişinin bir giriş tanımlayıcısı yok, bu nedenle giriş yapamıyor"
 
 #: checkins/templates/CheckInStatusContainer.vue:
 msgid "If you want to view this page without the sidebar (i.e. for displaying to an auditorium) you can use the assistant version."
-msgstr ""
+msgstr "Bu sayfayı kenar çubuğu olmadan görüntülemek istiyorsanız (yani bir oditoryumda görüntülemek için) yardımcı sürümü kullanabilirsiniz."
 
 #: checkins/templates/CheckInStatusContainer.vue:
 msgid "Open the assistant version."
-msgstr ""
+msgstr "Yardımcı sürümünü açın."
 
 #: checkins/templates/CheckInStatusContainer.vue:
 msgid "Click to undo a check-in"
-msgstr ""
+msgstr "Girişi geri almak için tıklayın"
 
 #: checkins/templates/PeopleStatusMixin.vue:
 msgid "%1, a %2 of no institutional affiliation with identifier of %3"
-msgstr ""
+msgstr "%1, %3 tanımlayıcısı ile kurumsal bağlantısı olmayan %2'si"
 
 #: checkins/templates/PeopleStatusMixin.vue:
 msgid "%1, a %2 of no institutional affiliation with no assigned identifier"
-msgstr ""
+msgstr "%1, atanmış tanımlayıcısı olmayan kurumsal bir ilişkinin %2'si"
 
 #: checkins/templates/PeopleStatusMixin.vue:
 msgid "%1, a %2 from %3 with identifier of %4"
-msgstr ""
+msgstr "%1, %3'ten %4 tanımlayıcılı bir %2"
 
 #: checkins/templates/PeopleStatusMixin.vue:
 msgid "%1, a %2 from %3 with no assigned identifier"
-msgstr ""
+msgstr "%1, atanmış tanımlayıcı olmadan %3'ten bir %2"
 
 #: checkins/templates/PeopleStatusMixin.vue:
 msgid "%1 (Present; id=%2)"
-msgstr ""
+msgstr "%1 (Mevcut; id=%2)"
 
 #: checkins/templates/PeopleStatusMixin.vue:
 msgid "%1 (Absent; id=%2)"
-msgstr ""
+msgstr "%1 (Yok; id=%2)"
 
 #: checkins/templates/PeopleStatusMixin.vue:
 msgid "%1, a team with speakers %2"
-msgstr ""
+msgstr "%1, konuşmacılı bir ekip %2"
 
 #: checkins/templates/PeopleStatusMixin.vue:
 msgid "%1, a %2"
-msgstr ""
+msgstr "%1, bir %2"
 
 #: checkins/templates/PeopleStatusMixin.vue:
 msgid "Anonymous (due to team codes)"
-msgstr ""
+msgstr "Anonim (takım kodları nedeniyle)"
 
 #: checkins/templates/PeopleStatusMixin.vue:
 msgid "Anon"
-msgstr ""
+msgstr "Anon"
 
 #: checkins/templates/PeopleStatusMixin.vue:
 msgid "Independent"
-msgstr ""
+msgstr "Bağımsız"
 
 #: checkins/templates/VenuesStatusMixin.vue:
 msgid "%1 (%2) with identifier of %3"
-msgstr ""
+msgstr "%1 (%2), %3 tanımlayıcısı ile"
 
 #: checkins/templates/VenuesStatusMixin.vue:
 msgid "%1 (no category) with identifier of %2"
-msgstr ""
+msgstr "%1 (kategori yok) ve %2 tanımlayıcısı"
 
 #: checkins/templates/VenuesStatusMixin.vue:
 msgid "%1 (%2) with no assigned identifier"
-msgstr ""
+msgstr "%1 (%2) atanmış tanımlayıcı yok"
 
 #: checkins/templates/VenuesStatusMixin.vue:
 msgid "%1 (no category) with no assigned identifier"
-msgstr ""
+msgstr "%1 (kategori yok) atanmış tanımlayıcı yok"
 
 #: checkins/templates/VenuesStatusMixin.vue:
 msgid "Uncategorised"
-msgstr ""
+msgstr "Kategorize edilmemiş"
 
 #: checkins/templates/VenuesStatusMixin.vue:
 msgid "No Category"
-msgstr ""
+msgstr "Kategori Yok"
 
 #: checkins/templates/VenuesStatusMixin.vue:
 msgid "Priority %1"
-msgstr ""
+msgstr "Öncelik %1"
 
 #: printing/templates/PrintableBallotHeader.vue:
 msgid "%1 %2 from %3"
-msgstr ""
+msgstr "%1 %2'den %3"
 
 #: printing/templates/PrintableBallotHeader.vue:
 msgid "%1 %2 from %3 %4"
-msgstr ""
+msgstr "%1 %2'den %3 %4"
 
 #: printing/templates/PrintableBallotHeader.vue:
 msgid "%1 %2 from %3 on %4 (Chair)"
-msgstr ""
+msgstr "%1 %2'den %3'e %4 (Başkan)"
 
 #: printing/templates/PrintableBallotHeader.vue:
 msgid "%1 %2 from %3 on %4 (Panellist)"
-msgstr ""
+msgstr "%1 %2'den %3'e kadar% 4 (Panelist)"
 
 #: printing/templates/PrintableBallotHeader.vue:
 msgid "%1 %2 from %3 on %4 (Trainee)"
-msgstr ""
+msgstr "%1 %2'den %3'e %4 (Acem,)"
 
 #: printing/templates/PrintableBallotHeader.vue:
 msgid "ID %1,"
-msgstr ""
+msgstr "Kimlik %1,"
 
 #: printing/templates/PrintableBallotHeader.vue:
-msgid "Venue:"
-msgstr ""
+msgid "Room:"
+msgstr "Oda:"
 
 #: printing/templates/PrintableBallotHeader.vue:
 msgid "Chair for Panel of %1"
-msgstr ""
+msgstr "%1 Paneli Başkanı"
 
 #: printing/templates/PrintableBallotHeader.vue: printing/templates/PrintableDebateInfo.vue:
 msgid "Solo Chair"
-msgstr ""
+msgstr "Tek Başkan"
 
 #: printing/templates/PrintableBallotHeader.vue: printing/templates/PrintableDebateInfo.vue:
 msgid "Panellist"
-msgstr ""
+msgstr "Panelist"
 
 #: printing/templates/PrintableBallotHeader.vue: printing/templates/PrintableDebateInfo.vue:
 msgid "Trainee"
-msgstr ""
+msgstr "Acemi"
 
 #: printing/templates/PrintableBallotHeader.vue:
 msgid "Team"
@@ -207,27 +209,27 @@ msgstr "Takım"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "Mark speeches %1 to %2; <strong>%3</strong>."
-msgstr ""
+msgstr "Konuşmaları %1 ila %2 arasında puanlayın;<strong>%3</strong>."
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "Mark replies %1 to %2; <strong>%3</strong>."
-msgstr ""
+msgstr "Yanıtları %1 ile %2 arası puanlayın; <strong>%3</strong>."
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "Return ballots to %1."
-msgstr ""
+msgstr "Ballotları %1'e döndürün."
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "The motion is <em>%1</em>"
-msgstr ""
+msgstr "Önerge <em>%1</em'dir>"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "Debated"
-msgstr ""
+msgstr "Tartışılan"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "Circle %1"
-msgstr ""
+msgstr "%1 yuvarlak içine al"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "<strong>%1</strong>: %2"
@@ -235,11 +237,11 @@ msgstr "<strong>%1</strong>: %2"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "Aff Veto"
-msgstr ""
+msgstr "Hükumet Veto"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "Neg Veto"
-msgstr ""
+msgstr "Muhalefet Veto"
 
 #: printing/templates/PrintableDebateInfo.vue: printing/templates/PrintableTeamScores.vue:
 msgid "%1:"
@@ -247,27 +249,27 @@ msgstr "%1:"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "tab entry"
-msgstr ""
+msgstr "tab girişi"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "tab check"
-msgstr ""
+msgstr "tab kontrolü"
 
 #: printing/templates/PrintableDebateInfo.vue: checkins/templates/PeopleStatusMixin.vue:
 msgid "Unaffiliated"
-msgstr ""
+msgstr "Bağımsız"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "no ½ marks"
-msgstr ""
+msgstr "yarım puan yok"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "½ marks are allowed"
-msgstr ""
+msgstr "yarım puan var"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "decimal marks are allowed"
-msgstr ""
+msgstr "ondalık işaretlere izin verilir"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "%1 (%2, %3)"
@@ -275,7 +277,7 @@ msgstr "%1 (%2, %3)"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "Adjudicating with %1."
-msgstr ""
+msgstr "%1 ile jüri görevinde"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "; "
@@ -283,51 +285,51 @@ msgstr "; "
 
 #: printing/templates/PrintableFeedback.vue:
 msgid "Did %1 deliver the adjudication?"
-msgstr ""
+msgstr "%1'i kararı verdi mi?"
 
 #: printing/templates/PrintableFeedback.vue: printing/templates/PrintableFeedbackQuestion.vue:
 msgid "Yes"
-msgstr ""
+msgstr "Evet"
 
 #: printing/templates/PrintableFeedback.vue:
 msgid "No, I am submitting feedback on:"
-msgstr ""
+msgstr "Hayır, aşağıdakilerle ilgili geri bildirim gönderiyorum:"
 
 #: printing/templates/PrintableFeedbackQuestion.vue:
 msgid "Unsure"
-msgstr ""
+msgstr "Emin değilim"
 
 #: printing/templates/PrintableFeedbackQuestion.vue:
 msgid "No"
-msgstr ""
+msgstr "Hayır"
 
 #: printing/templates/PrintableScoresheet.vue:
 msgid "Which team won the debate:"
-msgstr ""
+msgstr "Tartışmayı hangi takımın kazandığı:"
 
 #: printing/templates/PrintableScoresheet.vue:
 msgid "By how many points did they win:"
-msgstr ""
+msgstr "Kaç puanla kazandığı:"
 
 #: printing/templates/PrintableTeamScores.vue:
 msgid "%1, %2"
-msgstr ""
+msgstr "%1, %2"
 
 #: printing/templates/PrintableTeamScores.vue:
 msgid "IMPORTANT: Check and explicitly note if a speaker gives multiple speeches"
-msgstr ""
+msgstr "ÖNEMLİ: Bir konuşmacının birden fazla konuşma yapıp yapmadığını kontrol edin ve açıkça not edin"
 
 #: printing/templates/PrintableTeamScores.vue:
 msgid "Score:"
-msgstr ""
+msgstr "Puan:"
 
 #: printing/templates/PrintableTeamScores.vue:
 msgid "Circle the last digit of the %1's score:"
-msgstr ""
+msgstr "%1'in puanının son basamağını daire içine alın:"
 
 #: printing/templates/PrintableTeamScores.vue:
 msgid "Circle Rank:"
-msgstr ""
+msgstr "Daire Sıralaması:"
 
 #: printing/templates/PrintableTeamScores.vue:
 msgid "Total:"
@@ -335,179 +337,179 @@ msgstr "Toplam:"
 
 #: printing/templates/PrintableTeamScores.vue:
 msgid "Circle the last digit of the team's total:"
-msgstr ""
+msgstr "Takımın toplamının son basamağını daire içine alın:"
 
 #: templates/tables/TablesContainer.vue:8
 msgid "Find in Table"
-msgstr ""
+msgstr "Tabloda Bul"
 
 #: templates/tables/CheckboxTables.vue:30
 msgid "Set All Breaking as Available"
-msgstr ""
+msgstr "Tüm Break'leri Kullanılabilir Olarak Ayarla"
 
 #: templates/tables/CheckboxTables.vue:36
 msgid "Set all the availabilities to exactly match what they were in the previous round."
-msgstr ""
+msgstr "Tüm kullanılabilirlikleri bir önceki turdakiyle tam olarak eşleşecek şekilde ayarla."
 
 #: templates/tables/CheckboxTables.vue:37
 msgid "Match"
-msgstr ""
+msgstr "Eşleştir"
 
 #: templates/tables/CheckboxTables.vue:41
 msgid "Set all availabilities to exactly match check-ins."
-msgstr ""
+msgstr "Tüm kullanılabilirlikleri girişlerle tam olarak eşleşecek şekilde ayarlayın."
 
 #: templates/tables/CheckboxTables.vue:44
 msgid "Match Check-Ins"
-msgstr ""
+msgstr "Girişlerle Eşleştir"
 
 #: templates/tables/CheckboxTables.vue:
 msgid "Set people as available only if they have a check-in and are currently unavailable — i.e. it will not overwrite any existing availabilities."
-msgstr ""
+msgstr "Kişileri yalnızca bir giriş işlemi varsa ve şu anda kullanılamıyorsa kullanılabilir olarak ayarlayın - yani mevcut kullanılabilirlikleri silmez."
 
 #: templates/tables/CheckboxTables.vue:47
 msgid "Copy From Check-Ins"
-msgstr ""
+msgstr "Girişlerdem Kopyala"
 
 #: tournaments/templates/TournamentOverviewContainer.vue:
 msgid "Ballots Status"
-msgstr ""
+msgstr "Ballotların Durumu"
 
 #: tournaments/templates/TournamentOverviewContainer.vue:
 msgid "Latest Actions"
-msgstr ""
+msgstr "Son Eylemler"
 
 #: tournaments/templates/TournamentOverviewContainer.vue:
 msgid "No Actions Yet"
-msgstr ""
+msgstr "Henüz İşlem Yok"
 
 #: tournaments/templates/TournamentOverviewContainer.vue:
 msgid "Latest Results"
-msgstr ""
+msgstr "Son Sonuçlar"
 
 #: tournaments/templates/TournamentOverviewContainer.vue:
 msgid "No Confirmed Results Yet"
-msgstr ""
+msgstr "Henüz Doğrulanmış Sonuç Yok"
 
 #: participants/templates/DiversityContainer.vue:6
 msgid "Speaker Demographics"
-msgstr ""
+msgstr "Konuşmacı Demografisi"
 
 #: participants/templates/DiversityContainer.vue:11
 msgid "No Gender Information"
-msgstr ""
+msgstr "Cinsiyet Bilgisi Yok"
 
 #: participants/templates/DiversityContainer.vue:18
 msgid "No Speaker Categories Information"
-msgstr ""
+msgstr "Konuşmacı Kategorisi Bilgisi Yok"
 
 #: participants/templates/DiversityContainer.vue:33
 msgid "Speaker Results"
-msgstr ""
+msgstr "Konuşmacı Sonuçları"
 
 #: participants/templates/DiversityContainer.vue:36
 msgid "speakers with gender data"
-msgstr ""
+msgstr "cinsiyet verileri olan konuşmacılar"
 
 #: participants/templates/DiversityContainer.vue:38
 msgid "speaker scores total"
-msgstr ""
+msgstr "konuşmacı puanları toplamı"
 
 #: participants/templates/DiversityContainer.vue:49
 msgid "No Region Information"
-msgstr ""
+msgstr "Bölge Bilgisi Yok"
 
 #: participants/templates/DiversityContainer.vue:56
 msgid "Adjudicator Demographics"
-msgstr ""
+msgstr "Jüri Demografisi"
 
 #: participants/templates/DiversityContainer.vue:68
 msgid "No Position Information"
-msgstr ""
+msgstr "Pozisyon bilgisi yok"
 
 #: participants/templates/DiversityContainer.vue:83
 msgid "Adjudicator Results"
-msgstr ""
+msgstr "Jüri Sonuçları"
 
 #: participants/templates/DiversityContainer.vue:86
 msgid "adjudicators with gender data"
-msgstr ""
+msgstr "cinsiyet verilerine sahip jüriler"
 
 #: participants/templates/DiversityContainer.vue:88
 msgid "feedback scores total"
-msgstr ""
+msgstr "geri bildirim puanları toplamı"
 
 #: participants/templates/DiversityContainer.vue:94
 msgid "No Adjudicator Ratings Information"
-msgstr ""
+msgstr "Jüri Derecelendirme Bilgileri Yok"
 
 #: participants/templates/DiversityContainer.vue:99
 msgid "No Adjudicator-Adjudicator Feedback Information"
-msgstr ""
+msgstr "Jüri-Jüri Geri Bildirim Bilgisi Yok"
 
 #: results/templates/ResultsStats.vue:10
 msgid "Checked-In"
-msgstr ""
+msgstr "Girişli"
 
 #: results/templates/ResultsStats.vue:15
 msgid "Not Checked-In"
-msgstr ""
+msgstr "Giriş Yapılmadı"
 
 #: results/templates/ResultsStats.vue:19
 msgid "Ballot Check-Ins"
-msgstr ""
+msgstr "Ballot Girişi"
 
 #: results/templates/ResultsStats.vue:26
 msgid "Unknown"
-msgstr ""
+msgstr "Bilinmeyen"
 
 #: results/templates/ResultsStats.vue:31
 msgid "Unconfirmed"
-msgstr ""
+msgstr "Onaylanmamış"
 
 #: results/templates/ResultsStats.vue:36
 msgid "Confirmed"
-msgstr ""
+msgstr "Onaylanmış"
 
 #: results/templates/ResultsStats.vue:40
 msgid "Ballot Statuses"
-msgstr ""
+msgstr "Ballot Durumları"
 
 #: results/templates/BallotsCell.vue:18
 msgid "You cannot confirm this ballot because you entered it"
-msgstr ""
+msgstr "Bu ballotu girdiğiniz için onaylayamazsınız"
 
 #: results/templates/BallotsCell.vue:34
 msgid "Add Ballot"
-msgstr ""
+msgstr "Ballot ekle"
 
 #: results/templates/BallotsCell.vue:79
 msgid "Re-Edit"
-msgstr ""
+msgstr "Yeniden Düzenle"
 
 #: results/templates/BallotsCell.vue:81
 msgid "Review"
-msgstr ""
+msgstr "İncele"
 
 #: utils/templates/AutoSaveCounter.vue:4
 msgid "No changes"
-msgstr ""
+msgstr "Değişiklik yok"
 
 #: utils/templates/DragAndDropActions.vue:8
 msgid "Return to Draw"
-msgstr ""
+msgstr "Kuraya Dön"
 
 #: utils/templates/DragAndDropActions.vue:15
 msgid "Auto-Prioritise"
-msgstr ""
+msgstr "Otomatik Önceliklendirme"
 
 #: utils/templates/DragAndDropActions.vue:17
 msgid "Auto-Allocate"
-msgstr ""
+msgstr "Otomatik Tahsis"
 
 #: utils/templates/DragAndDropActions.vue:65
 msgid "Break"
-msgstr ""
+msgstr "Break"
 
 #: utils/templates/DragAndDropActions.vue:65
 msgid "Gender"
@@ -528,25 +530,25 @@ msgstr "Kategori"
 
 #: utils/templates/DragAndDropDebate.vue:5
 msgid "The debate's bracket"
-msgstr ""
+msgstr "Bu maçın aşaması"
 
 #: utils/templates/DragAndDropDebate.vue:9
 msgid "The bracket range of the hypothetical debate"
-msgstr ""
+msgstr "Varsayımsal maçın aşama aralığı"
 
 #: utils/templates/DragAndDropDebate.vue:20
 msgid "The total number of live break categories across all teams"
-msgstr ""
+msgstr "Tüm takımlardaki mümkün break kategorilerinin toplam sayısı"
 
 #: utils/templates/DragAndDropDebate.vue:26
 msgid "The estimated total number of live break categories across all teams of the hypothetical debate"
-msgstr ""
+msgstr "Varsayımsal tartışmada tüm takımlardaki mümkün break kategorilerinin toplam sayısı"
 
 #: utils/templates/DragAndDropDebate.vue:33
 msgid "This debate's priority"
-msgstr ""
+msgstr "Bu maçın önceliği"
 
 #: draw/templates/InlineTeam.vue:41
 msgid "No code name set"
-msgstr ""
+msgstr "Kod adı ayarlanmadı"
 
