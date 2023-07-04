@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2021-06-25 17:28\n"
+"PO-Revision-Date: 2024-06-21 10:36\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../../features/check-ins.rst:5
 msgid "Check-Ins"
-msgstr ""
+msgstr "Check-In"
 
 #: ../../features/check-ins.rst:7
 msgid "A 'Check-in' is a record of a speaker, adjudicator, venue, or ballot's status at a particular point in time. Typically these are used at large tournaments to reliably track who is or is not present for the first round of each day."

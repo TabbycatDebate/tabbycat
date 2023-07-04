@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 01:00\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:51\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Italian\n"
 "Language: it_IT\n"
@@ -36,7 +36,7 @@ msgstr "Gli URL privati sono utilizzati per consentire ai partecipanti di inviar
 
 #: privateurls/templates/private_urls.html
 msgid "Anyone with the URL can access the relevant data entry page. The idea is that it's hard to guess another key (the random-looking string), so you should make each URL accessible only to the participant in question. <a href=\"https://tabbycat.readthedocs.io/en/latest/features/data-entry.html#private-urls\"> Read more about private URLs.</a>"
-msgstr ""
+msgstr "Chiunque abbia l'URL può accedere alla relativa pagina di inserimento dati. L'idea è che è difficile indovinare un'altra chiave (il testo dall'aspetto casuale), in modo da rendere ogni URL accessibile solo al partecipante in questione. <a href=\"https://tabbycat.readthedocs.io/en/latest/features/data-entry.html#private-urls\"> Per saperne di più sugli URL privati.</a>"
 
 #: privateurls/templates/private_urls.html
 #, python-format
@@ -120,6 +120,10 @@ msgstr "Hanno effettuato il check-in per te alle %(check_time)s"
 #: privateurls/templates/public_url_landing.html
 msgid "You are not currently checked in."
 msgstr "Attualmente non sei registrato."
+
+#: privateurls/templates/public_url_landing.html
+msgid "Show barcode for check-in"
+msgstr ""
 
 #: privateurls/templates/public_url_landing.html
 #, python-format

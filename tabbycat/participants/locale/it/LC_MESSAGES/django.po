@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 01:00\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-25 13:37\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Italian\n"
 "Language: it_IT\n"
@@ -116,7 +116,7 @@ msgstr ""
 
 #: participants/models.py
 msgid "slug"
-msgstr ""
+msgstr "abbreviazione"
 
 #. Translators: Translate esl to the acronym for "<target language> as a second/foreign language", not "English"
 #: participants/models.py
@@ -129,11 +129,11 @@ msgstr "numero sequenziale"
 
 #: participants/models.py
 msgid "The order in which the categories are displayed"
-msgstr ""
+msgstr "L'ordine di visualizzazione delle categorie"
 
 #: participants/models.py
 msgid "limit"
-msgstr ""
+msgstr "limite"
 
 #: participants/models.py
 msgid "At most this many speakers will be shown on the public tab for this category, or use 0 for no limit"
@@ -265,6 +265,14 @@ msgstr ""
 
 #: participants/models.py
 msgid "break categories"
+msgstr "categorie di break"
+
+#: participants/models.py
+msgid "seed"
+msgstr ""
+
+#: participants/models.py
+msgid "Used as initial ranking to power-pair the first round"
 msgstr ""
 
 #: participants/models.py
@@ -273,7 +281,7 @@ msgstr ""
 
 #: participants/models.py
 msgid "none"
-msgstr ""
+msgstr "nessuno"
 
 #: participants/models.py
 msgid "swing"
@@ -525,9 +533,8 @@ msgid "Motion:"
 msgstr ""
 
 #: participants/templates/current_round/common.html
-#, python-format
-msgid "Motion %(seq)s:"
-msgstr ""
+msgid "View Info Slide"
+msgstr "Visualizza la slide di informazioni"
 
 #: participants/templates/current_round/common.html
 msgid "The motion(s) for this round haven't yet been released."
@@ -880,7 +887,7 @@ msgstr ""
 
 #: participants/views.py
 msgid "Adjudicators"
-msgstr ""
+msgstr "Giudici"
 
 #: participants/views.py
 msgid "Speakers"
@@ -904,7 +911,7 @@ msgstr ""
 
 #: participants/views.py
 msgid "Teams"
-msgstr ""
+msgstr "Squadre"
 
 #: participants/views.py
 msgid "Number of teams"
