@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
-"PO-Revision-Date: 2023-02-12 06:15\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 22:00\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Bengali\n"
 "Language: bn_BD\n"
@@ -20,69 +20,77 @@ msgstr ""
 
 #: tournaments/apps.py
 msgid "Tournaments"
-msgstr ""
+msgstr "প্রতিযোগিতাসমূহ"
 
 #: tournaments/forms.py
 msgid "Number of preliminary rounds"
-msgstr ""
+msgstr "প্রাথমিক রাউন্ডসমূহের নাম্বার"
 
 #: tournaments/forms.py
 msgid "Number of teams in the open break"
-msgstr ""
+msgstr "ওপেন ব্রেক এ দলের সংখ্যা"
 
 #: tournaments/forms.py
 msgid "Leave blank if there are no break rounds."
-msgstr ""
+msgstr "কোনো ব্রেক রাউন্ড না থাকলে ফাঁকা ছেড়ে দিন."
 
 #: tournaments/forms.py
 msgid "Did you agree with their decision?"
-msgstr ""
+msgstr "আপনি কি তাদের সিদ্ধান্তের সাথে একমত?"
 
 #: tournaments/forms.py
 msgid "Agree?"
-msgstr ""
+msgstr "একমত?"
 
 #: tournaments/forms.py
 msgid "Comments"
-msgstr ""
+msgstr "মন্তব্য"
 
 #. Translators: This is the name given to the 'Open Break'.
 #: tournaments/forms.py
 msgid "Open"
-msgstr ""
+msgstr "ওপেন"
 
 #: tournaments/forms.py
 msgid "Format Configuration"
-msgstr ""
+msgstr "ফরমেট কনফিগারেশন"
 
 #: tournaments/forms.py
-msgid "Apply a standard set of settings to match a common debate format"
+msgid "Apply a standard set of settings to match a common debate format. These can be changed afterwards and should be checked for your needs."
 msgstr ""
 
 #: tournaments/forms.py
 msgid "Public Configuration"
-msgstr ""
+msgstr "পাবলিক মান নির্ধারণ"
 
 #: tournaments/forms.py
 msgid "Show non-sensitive information on the public-facing side of this site, like draws (once released) and the motions of previous rounds"
-msgstr ""
+msgstr "এই সাইটের সর্বজনীন-মুখী অংশে অ-সংবেদনশীল তথ্য দেখান, যেমন ড্র (একবার প্রকাশিত) এবং পূর্ববর্তী রাউন্ডের গতি"
+
+#: tournaments/forms.py
+msgid "Participant Data Entry"
+msgstr "অংশগ্রহণকারী ডেটা এন্ট্রি"
+
+#: tournaments/forms.py
+msgid "Whether participants can submit ballots and feedback themselves, and how they do so"
+msgstr "অংশগ্রহণকারীরা নিজেরাই ব্যালট এবং প্রতিক্রিয়া জমা দিতে পারে কিনা এবং তারা কীভাবে তা করে"
 
 #: tournaments/forms.py
 msgid "<strong>Tabulation:</strong> [list tabulation staff here]<br /><strong>Equity:</strong> [list equity members here]<br /><strong>Organisation:</strong> [list organising committee members here]<br /><strong>Adjudication:</strong> [list chief adjudicators here]"
-msgstr ""
+msgstr "<strong>টেবিউলেশন:</strong> [এখানে ট্যাবুলেশন কর্মীদের তালিকা করুন]<br /><strong>ইক্যুইটি:</strong> [এখানে ইক্যুইটি সদস্যদের তালিকা করুন]<br /><strong>সংগঠন:</strong> [তালিকা সংগঠিত কমিটির সদস্যরা এখানে]<br /><strong>বিচার:</strong> [প্রধান বিচারকদের তালিকা এখানে]"
 
 #: tournaments/forms.py
 msgid "Current preliminary round"
-msgstr ""
+msgstr "বর্তমান প্রাথমিক রাউন্ড"
 
 #: tournaments/forms.py
 msgid "All preliminary rounds have been completed"
-msgstr ""
+msgstr "সকল প্রাথমিক রাউন্ড সম্পন্ন হয়েছে"
 
 #: tournaments/forms.py
 #, python-format
 msgid "Current elimination round in <strong>%(category)s</strong> <em>(only if all preliminary rounds have been completed)</em>"
-msgstr ""
+msgstr "<strong>%(category)s</strong><em>এ বর্তমান নির্মূল রাউন্ড (শুধুমাত্র যদি সমস্ত প্রাথমিক রাউন্ড সম্পূর্ণ হয়ে থাকে)</em>"
 
 #: tournaments/forms.py
 #, python-format
@@ -198,6 +206,10 @@ msgid "Elimination"
 msgstr ""
 
 #: tournaments/models.py
+msgid "Seeded"
+msgstr ""
+
+#: tournaments/models.py
 msgid "Preliminary"
 msgstr ""
 
@@ -243,7 +255,7 @@ msgstr ""
 
 #: tournaments/models.py
 msgid "stage"
-msgstr ""
+msgstr "স্তর"
 
 #: tournaments/models.py
 msgid "Preliminary = inrounds, elimination = outrounds"
@@ -259,7 +271,7 @@ msgstr ""
 
 #: tournaments/models.py
 msgid "break category"
-msgstr ""
+msgstr "ব্রেক বিভাগ"
 
 #: tournaments/models.py
 msgid "If elimination round, which break category"
@@ -285,15 +297,15 @@ msgstr ""
 #. Translators: A silent round is a round for which results are not disclosed once the round is over.
 #: tournaments/models.py
 msgid "silent"
-msgstr ""
+msgstr "নীরব"
 
 #: tournaments/models.py
 msgid "If marked silent, information about this round (such as its results) will not be shown publicly."
-msgstr ""
+msgstr "নীরব চিহ্নিত হলে, এই রাউন্ড সম্পর্কে তথ্য (যেমন এর ফলাফল) সর্বজনীনভাবে দেখানো হবে না।"
 
 #: tournaments/models.py
 msgid "motions released"
-msgstr ""
+msgstr "প্রস্তাব রিলিজ"
 
 #: tournaments/models.py
 msgid "Whether motions will appear on the public website, assuming that feature is turned on"
@@ -320,15 +332,15 @@ msgid "rounds"
 msgstr ""
 
 #: tournaments/models.py
-msgid "A round in the elimination stage must have its draw type set to \"Elimination\"."
+msgid "The \"Elimination\" draw type is only for elimination rounds, where it is mandatory."
 msgstr ""
 
 #: tournaments/models.py
-msgid "A round in the preliminary stage cannot have its draw type set to \"Elimination\"."
+msgid "An elimination round must have a break category and preliminary round must not."
 msgstr ""
 
 #: tournaments/models.py
-msgid "Elimination rounds must have a break category."
+msgid "Break category must be for the same tournament."
 msgstr ""
 
 #: tournaments/templates/assistant_tournament_index.html
@@ -337,7 +349,7 @@ msgstr ""
 
 #: tournaments/templates/assistant_tournament_index.html
 msgid "Overview"
-msgstr ""
+msgstr "সংক্ষিপ্ত বিবরণ"
 
 #: tournaments/templates/assistant_tournament_index.html
 #, python-format
@@ -387,8 +399,7 @@ msgid "Create New Tournament"
 msgstr ""
 
 #: tournaments/templates/create_tournament.html
-#, python-format
-msgid "Tabbycat is free to use for non-profit and non-fundraising tournaments (although donations are encouraged). If your tournament is run for profit or for fundraising, please note that there is a <a href=\"%(donations_url)s\">required payment</a>. For more details, see the <a href=\"https://tabbycat.readthedocs.io/en/stable/about/licence.html\"> Tabbycat licence agreement</a>."
+msgid "Tabbycat is free to use, although <a href=\"https://opencollective.com/tabbycat\">donations</a> are encouraged."
 msgstr ""
 
 #: tournaments/templates/create_tournament.html
@@ -591,7 +602,7 @@ msgstr ""
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Feedback Progress"
-msgstr ""
+msgstr "প্রতিক্রিয়া অগ্রগতি"
 
 #: tournaments/templates/public_tournament_index.html
 #, python-format
@@ -600,7 +611,7 @@ msgstr ""
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Enter Feedback"
-msgstr ""
+msgstr "প্রতিক্রিয়া লিখুন"
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Tournament Staff"
@@ -624,6 +635,14 @@ msgstr ""
 
 #: tournaments/templates/round_complete_check.html
 msgid "Email Team Points"
+msgstr ""
+
+#: tournaments/templates/round_complete_check.html
+msgid "Unmark as Silent"
+msgstr ""
+
+#: tournaments/templates/round_complete_check.html
+msgid "Mark as Silent"
 msgstr ""
 
 #: tournaments/templates/round_complete_check.html
@@ -666,17 +685,12 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: tournaments/templates/round_complete_check.html
-#, python-format
-msgid "<p>This round is a silent round.</p> <p> Even though public view of results is enabled, results for <em>this</em> round will still be hidden from public view after completing this round. <p> <p> You can change which rounds are silent in the <a href=\"%(round_changelist_url)s\">Edit Database area</a>. </p>"
+msgid "<p>This round is a silent round.</p> <p> Even though public view of results is enabled, results for <em>this</em> round will still be hidden from public view after completing this round. <p> <p> You can change whether this round is silent using the button above. </p>"
 msgstr ""
 
 #: tournaments/templates/round_complete_check.html
 #, python-format
-msgid "<p><strong> Results for %(round)s will be published online once you mark this round as complete! </strong></p> <p> This round is <em>not</em> a silent round, and public view of results is enabled. </p> <p> If you want to keep the results for just this round hidden, you can mark this round as silent in the <a href=\"%(round_changelist_url)s\">Edit Database area</a>. </p> <p> If you want to disable the public view of results, you can do so in the <a href=\"%(public_features_url)s\">tournament configuration</a>. </p>"
-msgstr ""
-
-#: tournaments/templates/set_current_round.html
-msgid "Set Current Round"
+msgid "<p><strong> Results for %(round)s will be published online once you mark this round as complete! </strong></p> <p> This round is <em>not</em> a silent round, and public view of results is enabled. </p> <p> If you want to keep the results for just this round hidden, you can mark this round as silent using the button above. </p> <p> If you want to disable the public view of results, you can do so in the <a href=\"%(public_features_url)s\">tournament configuration</a>. </p>"
 msgstr ""
 
 #: tournaments/templates/set_current_round.html
@@ -696,6 +710,11 @@ msgstr ""
 #: tournaments/templates/set_current_round.html
 #, python-format
 msgid "The tournament <strong>%(tournament)s</strong> has no rounds. You'll need to <a href=\"%(round_changelist_url)s\">add rounds and associate them with this tournament</a> before you can set the current round."
+msgstr ""
+
+#: tournaments/templates/set_current_round.html
+msgctxt "button"
+msgid "Set Current Rounds"
 msgstr ""
 
 #: tournaments/templates/set_round_weights.html
@@ -764,7 +783,7 @@ msgstr "পরিচালক হিসেবে লুগ ইন করুন"
 
 #: tournaments/templates/tournament_index.html
 #, python-format
-msgid "We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would make a donation to the project in order to support its ongoing development and maintenance. For a tournament of this size, we suggest a donation of <strong>$%(amount)s</strong>. Note that if your tournament is run for profit, or for fundraising, making this payment is a mandatory condition of Tabbycat's software license. <a href=\"%(url)s\">Learn more about donating.</a>"
+msgid "We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would make a donation to the project in order to support its ongoing development and maintenance. For a tournament of this size, we suggest a donation of <strong>$%(amount)s</strong>. <a href=\"https://opencollective.com/tabbycat\">Learn more about donating.</a>"
 msgstr ""
 
 #: tournaments/templates/tournament_index.html
@@ -798,10 +817,6 @@ msgstr ""
 #: tournaments/templates/tournament_index.html
 #, python-format
 msgid "Go to the results area to enter ballots for %(round)s"
-msgstr ""
-
-#: tournaments/templates/tournament_index.html
-msgid "You have enabled a URL that allows users to create new accounts. You should <strong>disable it once the tournament starts</strong>."
 msgstr ""
 
 #: tournaments/templates/tournament_index_links.html
@@ -928,6 +943,14 @@ msgid "Res"
 msgstr ""
 
 #: tournaments/utils.py
+msgid "1st team"
+msgstr ""
+
+#: tournaments/utils.py
+msgid "2nd team"
+msgstr ""
+
+#: tournaments/utils.py
 msgid "opening government"
 msgstr ""
 
@@ -990,6 +1013,25 @@ msgstr ""
 msgid "R%(number)d"
 msgstr ""
 
+#: tournaments/utils.py
+msgid "bye"
+msgstr ""
+
+#: tournaments/utils.py
+#, python-format
+msgid "Team %d"
+msgstr ""
+
+#: tournaments/views.py
+#, python-format
+msgid "%(round)s has been marked as silent."
+msgstr ""
+
+#: tournaments/views.py
+#, python-format
+msgid "%(round)s has been unmarked as silent."
+msgstr ""
+
 #: tournaments/views.py
 #, python-format
 msgid "%(round)s has been marked as completed. All rounds are now completed, so you're done with the tournament! Congratulations!"
@@ -1025,6 +1067,10 @@ msgstr ""
 
 #: tournaments/views.py
 msgid "88-team BP dataset"
+msgstr ""
+
+#: tournaments/views.py
+msgid "Set Current Round"
 msgstr ""
 
 #: tournaments/views.py
