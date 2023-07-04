@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:25-0400\n"
-"PO-Revision-Date: 2023-02-12 06:28\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:58\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -297,7 +297,7 @@ msgstr "Utiliser des motions existantes"
 #: motions/templates/motions_edit.html
 msgid "The motion for this round is currently publicly displayed because it was released. Any changes made here will be publicly visible as well as soon as they are saved."
 msgid_plural "The motions for this round are currently publicly displayed because they were released. Any changes made here will be publicly visible as well as soon as they are saved."
-msgstr[0] ""
+msgstr[0] "La motion pour cette joute est actuellement visible publiquement, car elle a été publiée. N'importe modification sera aussi visible dès qu'elle sera enregistrée."
 msgstr[1] ""
 
 #: motions/templates/motions_edit.html
@@ -324,6 +324,13 @@ msgstr "La motion de cette joute n'a pas encore été publiée."
 
 #: motions/templates/show.html
 #, python-format
+msgid "Motion for %(round)s"
+msgid_plural "Motions for %(round)s"
+msgstr[0] ""
+msgstr[1] "Motions pour %(round)s"
+
+#: motions/templates/show.html
+#, python-format
 msgid "Reveal Info Slide for %(round)s"
 msgid_plural "Reveal Info Slides for %(round)s"
 msgstr[0] "Révéler la diapositive d'information de %(round)s"
@@ -341,11 +348,11 @@ msgid "There are no motions for this round entered into Tabbycat."
 msgstr "Aucune motion pour cette joute a été enregistrée dans Tabbycat."
 
 #: motions/utils.py
-msgid "Not all latest ballots list the same motion, so could not be merged."
+msgid "Not all latest ballots have the same motion. The correct motion must be set manually."
 msgstr ""
 
 #: motions/utils.py
-msgid "Motion vetos are inconsistent, so could not be merged."
+msgid "Motion vetos are inconsistent; they must be set manually."
 msgstr ""
 
 #: motions/views.py
@@ -368,7 +375,7 @@ msgstr[1] "%(count)d motions ont été supprimées."
 
 #: motions/views.py
 msgid "Motions cannot be copied to the first round."
-msgstr ""
+msgstr "Les motions ne peuvent pas être copiées vers la première joute."
 
 #: motions/views.py
 #, python-format
