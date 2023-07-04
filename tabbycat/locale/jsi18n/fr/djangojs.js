@@ -1,18 +1,26 @@
 
 
-(function(globals) {
-
-  var django = globals.django || (globals.django = {});
+'use strict';
+{
+  const globals = this;
+  const django = globals.django || (globals.django = {});
 
   
-  django.pluralidx = function(count) { return (count == 1) ? 0 : 1; };
+  django.pluralidx = function(n) {
+    const v = (n > 1);
+    if (typeof v === 'boolean') {
+      return v ? 1 : 0;
+    } else {
+      return v;
+    }
+  };
   
 
   /* gettext library */
 
   django.catalog = django.catalog || {};
   
-  var newcatalog = {
+  const newcatalog = {
     "%(sel)s of %(cnt)s selected": [
       "%(sel)s sur %(cnt)s s\u00e9lectionn\u00e9",
       "%(sel)s sur %(cnt)s s\u00e9lectionn\u00e9s"
@@ -38,13 +46,16 @@
     "%1, a %2 of no institutional affiliation with no assigned identifier": "%1, un %2 sans affiliation ni identifiant",
     "%1, a team with speakers %2": "%1, un \u00e9quipe avec orateurs %2",
     "%1:": "%1\u00a0:",
+    "%s selected option not visible": [
+      "%s option s\u00e9lectionn\u00e9e invisible",
+      "%s options s\u00e9lectionn\u00e9es invisibles"
+    ],
     "6 a.m.": "6:00",
     "6 p.m.": "18:00",
     "; ": " ; ",
     "<strong>%1</strong>: %2": "<strong>%1</strong>\u00a0: %2",
     "<strong>\u2613</strong> All": "<strong>\u2613</strong> Tous",
     "<strong>\u2713</strong> All": "<strong>\u2713</strong> Tous",
-    "Add": "Ajouter",
     "Add Ballot": "Ajouter feuille",
     "Adjudicating with %1.": "Jugeant avec %1.",
     "Adjudicator Demographics": "D\u00e9mographiques des juges",
@@ -86,13 +97,11 @@
     "Copy From Check-Ins": "Copier \u00e0 partir des enregistrements",
     "Debated": "D\u00e9battu",
     "December": "D\u00e9cembre",
-    "Delete": "\u00c9ffacer",
     "Did %1 deliver the adjudication?": "%1 a-t-il livr\u00e9 le jugement\u00a0?",
     "February": "F\u00e9vrier",
     "Filter": "Filtrer",
     "Find in Table": "Trouver dans la table",
     "Gender": "Genre",
-    "General": "G\u00e9n\u00e9ral",
     "Hide": "Masquer",
     "ID %1,": "ID %1,",
     "IMPORTANT: Check and explicitly note if a speaker gives multiple speeches": "IMPORTANT\u00a0: Cochez et notez explicitement si un orateur a donn\u00e9 plusieurs discours",
@@ -180,12 +189,12 @@
     "Trainee": "Stagiaire",
     "Turn On Sounds": "Activer les sons",
     "Type into this box to filter down the list of available %s.": "\u00c9crivez dans cette zone pour filtrer la liste des \u00ab\u00a0%s\u00a0\u00bb disponibles.",
+    "Type into this box to filter down the list of selected %s.": "\u00c9crivez dans cette zone pour filtrer la liste des \u00ab\u00a0%s\u00a0\u00bb s\u00e9lectionn\u00e9\u00b7e\u00b7s.",
     "Unaffiliated": "Non-affili\u00e9",
     "Uncategorised": "Non cat\u00e9goris\u00e9",
     "Unconfirmed": "Non-confirm\u00e9",
     "Unknown": "Inconnu",
     "Unsure": "Incertain",
-    "Warning: you have unsaved changes": "Attention: vous avez des modifications non sauvegard\u00e9es",
     "Which team won the debate:": "Quelle \u00e9quipe \u00e0 gagn\u00e9 le d\u00e9bat\u00a0:",
     "Yes": "Oui",
     "Yesterday": "Hier",
@@ -193,9 +202,20 @@
     "You have selected an action, and you haven\u2019t made any changes on individual fields. You\u2019re probably looking for the Go button rather than the Save button.": "Vous avez s\u00e9lectionn\u00e9 une action, et vous n'avez fait aucune modification sur des champs. Vous cherchez probablement le bouton Envoyer et non le bouton Enregistrer.",
     "You have selected an action, but you haven\u2019t saved your changes to individual fields yet. Please click OK to save. You\u2019ll need to re-run the action.": "Vous avez s\u00e9lectionn\u00e9 une action, mais vous n'avez pas encore enregistr\u00e9 certains champs modifi\u00e9s. Cliquez sur OK pour enregistrer. Vous devrez r\u00e9appliquer l'action.",
     "You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost.": "Vous avez des modifications non sauvegard\u00e9es sur certains champs \u00e9ditables. Si vous lancez une action, ces modifications vont \u00eatre perdues.",
+    "abbrev. month April\u0004Apr": "avr",
+    "abbrev. month August\u0004Aug": "ao\u00fb",
+    "abbrev. month December\u0004Dec": "d\u00e9c",
+    "abbrev. month February\u0004Feb": "f\u00e9v",
+    "abbrev. month January\u0004Jan": "jan",
+    "abbrev. month July\u0004Jul": "jui",
+    "abbrev. month June\u0004Jun": "jun",
+    "abbrev. month March\u0004Mar": "mar",
+    "abbrev. month May\u0004May": "mai",
+    "abbrev. month November\u0004Nov": "nov",
+    "abbrev. month October\u0004Oct": "oct",
+    "abbrev. month September\u0004Sep": "sep",
     "adjudicators with gender data": "juges avec donn\u00e9es de genre",
     "decimal marks are allowed": "demi-scores sont permises",
-    "deselect all": "d\u00e9s\u00e9lectionner tout",
     "feedback scores total": "totale des scores d\u2019\u00e9valuation",
     "no \u00bd marks": "pas de demi-points",
     "one letter Friday\u0004F": "V",
@@ -206,31 +226,30 @@
     "one letter Tuesday\u0004T": "M",
     "one letter Wednesday\u0004W": "M",
     "saving...": "enregistrement en cours...",
-    "select all": "s\u00e9lectionner tout",
     "speaker scores total": "total des scores d\u2019orateur",
     "speakers with gender data": "orateurs avec donn\u00e9es de genre",
     "tab check": "v\u00e9rification tab",
     "tab entry": "saisie tab",
     "\u00bd marks are allowed": "demi-points sont permises"
   };
-  for (var key in newcatalog) {
+  for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
   
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {
-      var value = django.catalog[msgid];
-      if (typeof(value) == 'undefined') {
+      const value = django.catalog[msgid];
+      if (typeof value === 'undefined') {
         return msgid;
       } else {
-        return (typeof(value) == 'string') ? value : value[0];
+        return (typeof value === 'string') ? value : value[0];
       }
     };
 
     django.ngettext = function(singular, plural, count) {
-      var value = django.catalog[singular];
-      if (typeof(value) == 'undefined') {
+      const value = django.catalog[singular];
+      if (typeof value === 'undefined') {
         return (count == 1) ? singular : plural;
       } else {
         return value.constructor === Array ? value[django.pluralidx(count)] : value;
@@ -240,16 +259,16 @@
     django.gettext_noop = function(msgid) { return msgid; };
 
     django.pgettext = function(context, msgid) {
-      var value = django.gettext(context + '\x04' + msgid);
-      if (value.indexOf('\x04') != -1) {
+      let value = django.gettext(context + '\x04' + msgid);
+      if (value.includes('\x04')) {
         value = msgid;
       }
       return value;
     };
 
     django.npgettext = function(context, singular, plural, count) {
-      var value = django.ngettext(context + '\x04' + singular, context + '\x04' + plural, count);
-      if (value.indexOf('\x04') != -1) {
+      let value = django.ngettext(context + '\x04' + singular, context + '\x04' + plural, count);
+      if (value.includes('\x04')) {
         value = django.ngettext(singular, plural, count);
       }
       return value;
@@ -305,8 +324,8 @@
   };
 
     django.get_format = function(format_type) {
-      var value = django.formats[format_type];
-      if (typeof(value) == 'undefined') {
+      const value = django.formats[format_type];
+      if (typeof value === 'undefined') {
         return format_type;
       } else {
         return value;
@@ -325,6 +344,5 @@
 
     django.jsi18n_initialized = true;
   }
-
-}(this));
+};
 

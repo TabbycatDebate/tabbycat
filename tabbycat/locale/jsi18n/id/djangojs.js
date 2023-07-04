@@ -1,13 +1,14 @@
 
 
-(function(globals) {
-
-  var django = globals.django || (globals.django = {});
+'use strict';
+{
+  const globals = this;
+  const django = globals.django || (globals.django = {});
 
   
   django.pluralidx = function(n) {
-    var v=0;
-    if (typeof(v) == 'boolean') {
+    const v = 0;
+    if (typeof v === 'boolean') {
       return v ? 1 : 0;
     } else {
       return v;
@@ -19,7 +20,7 @@
 
   django.catalog = django.catalog || {};
   
-  var newcatalog = {
+  const newcatalog = {
     "%(sel)s of %(cnt)s selected": [
       "%(sel)s dari %(cnt)s terpilih"
     ],
@@ -73,9 +74,22 @@
     "Type into this box to filter down the list of available %s.": "Ketik pada kotak ini untuk menyaring daftar %s yang tersedia.",
     "Unknown": "Tak diketahui",
     "Yesterday": "Kemarin",
-    "You have selected an action, and you haven't made any changes on individual fields. You're probably looking for the Go button rather than the Save button.": "Anda telah memilih sebuah aksi, tetapi belum mengubah bidang apapun. Kemungkinan Anda mencari tombol Buka dan bukan tombol Simpan.",
-    "You have selected an action, but you haven't saved your changes to individual fields yet. Please click OK to save. You'll need to re-run the action.": "Anda telah memilih sebuah aksi, tetapi belum menyimpan perubahan ke bidang yang ada. Klik OK untuk menyimpan perubahan ini. Anda akan perlu mengulangi aksi tersebut kembali.",
+    "You have already submitted this form. Are you sure you want to submit it again?": "Anda telah mengajukan formulir ini. Apakah anda yakin ingin mengajukannya kembali?",
+    "You have selected an action, and you haven\u2019t made any changes on individual fields. You\u2019re probably looking for the Go button rather than the Save button.": "Anda telah memilih tindakan, dan Anda belum membuat perubahan apa pun di setiap bidang. Anda mungkin mencari tombol Buka daripada tombol Simpan.",
+    "You have selected an action, but you haven\u2019t saved your changes to individual fields yet. Please click OK to save. You\u2019ll need to re-run the action.": "Anda telah memilih tindakan, tetapi Anda belum menyimpan perubahan ke masing-masing bidang. Silakan klik OK untuk menyimpan. Anda harus menjalankan kembali tindakan tersebut.",
     "You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost.": "Beberapa perubahan bidang yang Anda lakukan belum tersimpan. Perubahan yang telah dilakukan akan hilang.",
+    "abbrev. month April\u0004Apr": "Apr",
+    "abbrev. month August\u0004Aug": "Agu",
+    "abbrev. month December\u0004Dec": "Des",
+    "abbrev. month February\u0004Feb": "Feb",
+    "abbrev. month January\u0004Jan": "Jan",
+    "abbrev. month July\u0004Jul": "Jul",
+    "abbrev. month June\u0004Jun": "Jun",
+    "abbrev. month March\u0004Mar": "Mar",
+    "abbrev. month May\u0004May": "Mei",
+    "abbrev. month November\u0004Nov": "Nov",
+    "abbrev. month October\u0004Oct": "Okt",
+    "abbrev. month September\u0004Sep": "Sep",
     "one letter Friday\u0004F": "J",
     "one letter Monday\u0004M": "S",
     "one letter Saturday\u0004S": "S",
@@ -84,24 +98,24 @@
     "one letter Tuesday\u0004T": "S",
     "one letter Wednesday\u0004W": "R"
   };
-  for (var key in newcatalog) {
+  for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
   
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {
-      var value = django.catalog[msgid];
-      if (typeof(value) == 'undefined') {
+      const value = django.catalog[msgid];
+      if (typeof value === 'undefined') {
         return msgid;
       } else {
-        return (typeof(value) == 'string') ? value : value[0];
+        return (typeof value === 'string') ? value : value[0];
       }
     };
 
     django.ngettext = function(singular, plural, count) {
-      var value = django.catalog[singular];
-      if (typeof(value) == 'undefined') {
+      const value = django.catalog[singular];
+      if (typeof value === 'undefined') {
         return (count == 1) ? singular : plural;
       } else {
         return value.constructor === Array ? value[django.pluralidx(count)] : value;
@@ -111,16 +125,16 @@
     django.gettext_noop = function(msgid) { return msgid; };
 
     django.pgettext = function(context, msgid) {
-      var value = django.gettext(context + '\x04' + msgid);
-      if (value.indexOf('\x04') != -1) {
+      let value = django.gettext(context + '\x04' + msgid);
+      if (value.includes('\x04')) {
         value = msgid;
       }
       return value;
     };
 
     django.npgettext = function(context, singular, plural, count) {
-      var value = django.ngettext(context + '\x04' + singular, context + '\x04' + plural, count);
-      if (value.indexOf('\x04') != -1) {
+      let value = django.ngettext(context + '\x04' + singular, context + '\x04' + plural, count);
+      if (value.includes('\x04')) {
         value = django.ngettext(singular, plural, count);
       }
       return value;
@@ -188,8 +202,8 @@
   };
 
     django.get_format = function(format_type) {
-      var value = django.formats[format_type];
-      if (typeof(value) == 'undefined') {
+      const value = django.formats[format_type];
+      if (typeof value === 'undefined') {
         return format_type;
       } else {
         return value;
@@ -208,6 +222,5 @@
 
     django.jsi18n_initialized = true;
   }
-
-}(this));
+};
 

@@ -1,13 +1,14 @@
 
 
-(function(globals) {
-
-  var django = globals.django || (globals.django = {});
+'use strict';
+{
+  const globals = this;
+  const django = globals.django || (globals.django = {});
 
   
   django.pluralidx = function(n) {
-    var v=0;
-    if (typeof(v) == 'boolean') {
+    const v = 0;
+    if (typeof v === 'boolean') {
       return v ? 1 : 0;
     } else {
       return v;
@@ -19,7 +20,7 @@
 
   django.catalog = django.catalog || {};
   
-  var newcatalog = {
+  const newcatalog = {
     "%(sel)s of %(cnt)s selected": [
       "\u9009\u4e2d\u4e86 %(cnt)s \u4e2a\u4e2d\u7684 %(sel)s \u4e2a"
     ],
@@ -94,12 +95,25 @@
     "Tomorrow": "\u660e\u5929",
     "Trainee": "\u5b9e\u4e60\u751f",
     "Type into this box to filter down the list of available %s.": "\u5728\u6b64\u6846\u4e2d\u952e\u5165\u4ee5\u8fc7\u6ee4\u53ef\u7528\u7684%s\u5217\u8868",
+    "Type into this box to filter down the list of selected %s.": "\u5728\u8be5\u6846\u4e2d\u952e\u5165\u4ee5\u8fc7\u6ee4\u6240\u9009%s\u7684\u5217\u8868\u3002",
     "Unknown": "\u672a\u77e5",
     "Yes": "\u662f",
     "Yesterday": "\u6628\u5929",
     "You have selected an action, and you haven\u2019t made any changes on individual fields. You\u2019re probably looking for the Go button rather than the Save button.": "\u4f60\u5df2\u7ecf\u9009\u62e9\u4e00\u4e2a\u52a8\u4f5c\uff0c\u4f46\u662f\u6ca1\u6709\u5355\u72ec\u4fee\u6539\u4efb\u4f55\u4e00\u5904\u3002\u4f60\u53ef\u4ee5\u9009\u62e9'Go'\u6309\u952e\u800c\u4e0d\u662f'Save'\u6309\u952e\u3002",
     "You have selected an action, but you haven\u2019t saved your changes to individual fields yet. Please click OK to save. You\u2019ll need to re-run the action.": "\u4f60\u5df2\u7ecf\u9009\u62e9\u4e00\u4e2a\u52a8\u4f5c\uff0c\u4f46\u662f\u4f60\u6ca1\u6709\u4fdd\u5b58\u4f60\u5355\u72ec\u4fee\u6539\u7684\u5730\u65b9\u3002\u8bf7\u70b9\u51fbOK\u4fdd\u5b58\u3002\u4f60\u9700\u8981\u518d\u91cd\u65b0\u8dd1\u8fd9\u4e2a\u52a8\u4f5c\u3002",
     "You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost.": "\u4f60\u5c1a\u672a\u4fdd\u5b58\u4e00\u4e2a\u53ef\u7f16\u8f91\u680f\u4f4d\u7684\u53d8\u66f4. \u5982\u679c\u4f60\u8fdb\u884c\u522b\u7684\u52a8\u4f5c, \u672a\u4fdd\u5b58\u7684\u53d8\u66f4\u5c06\u4f1a\u4e22\u5931.",
+    "abbrev. month April\u0004Apr": "\u56db\u6708",
+    "abbrev. month August\u0004Aug": "\u516b\u6708",
+    "abbrev. month December\u0004Dec": "\u5341\u4e8c\u6708",
+    "abbrev. month February\u0004Feb": "\u4e8c\u6708",
+    "abbrev. month January\u0004Jan": "\u4e00\u6708",
+    "abbrev. month July\u0004Jul": "\u4e03\u6708",
+    "abbrev. month June\u0004Jun": "\u516d\u6708",
+    "abbrev. month March\u0004Mar": "\u4e09\u6708",
+    "abbrev. month May\u0004May": "\u4e94\u6708",
+    "abbrev. month November\u0004Nov": "\u5341\u4e00\u6708",
+    "abbrev. month October\u0004Oct": "\u5341\u6708",
+    "abbrev. month September\u0004Sep": "\u4e5d\u6708",
     "one letter Friday\u0004F": "F",
     "one letter Monday\u0004M": "M",
     "one letter Saturday\u0004S": "S",
@@ -109,24 +123,24 @@
     "one letter Wednesday\u0004W": "W",
     "saving...": "\u5728\u4fdd\u5b58..."
   };
-  for (var key in newcatalog) {
+  for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
   
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {
-      var value = django.catalog[msgid];
-      if (typeof(value) == 'undefined') {
+      const value = django.catalog[msgid];
+      if (typeof value === 'undefined') {
         return msgid;
       } else {
-        return (typeof(value) == 'string') ? value : value[0];
+        return (typeof value === 'string') ? value : value[0];
       }
     };
 
     django.ngettext = function(singular, plural, count) {
-      var value = django.catalog[singular];
-      if (typeof(value) == 'undefined') {
+      const value = django.catalog[singular];
+      if (typeof value === 'undefined') {
         return (count == 1) ? singular : plural;
       } else {
         return value.constructor === Array ? value[django.pluralidx(count)] : value;
@@ -136,16 +150,16 @@
     django.gettext_noop = function(msgid) { return msgid; };
 
     django.pgettext = function(context, msgid) {
-      var value = django.gettext(context + '\x04' + msgid);
-      if (value.indexOf('\x04') != -1) {
+      let value = django.gettext(context + '\x04' + msgid);
+      if (value.includes('\x04')) {
         value = msgid;
       }
       return value;
     };
 
     django.npgettext = function(context, singular, plural, count) {
-      var value = django.ngettext(context + '\x04' + singular, context + '\x04' + plural, count);
-      if (value.indexOf('\x04') != -1) {
+      let value = django.ngettext(context + '\x04' + singular, context + '\x04' + plural, count);
+      if (value.includes('\x04')) {
         value = django.ngettext(singular, plural, count);
       }
       return value;
@@ -199,8 +213,8 @@
   };
 
     django.get_format = function(format_type) {
-      var value = django.formats[format_type];
-      if (typeof(value) == 'undefined') {
+      const value = django.formats[format_type];
+      if (typeof value === 'undefined') {
         return format_type;
       } else {
         return value;
@@ -219,6 +233,5 @@
 
     django.jsi18n_initialized = true;
   }
-
-}(this));
+};
 

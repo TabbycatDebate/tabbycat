@@ -1,8 +1,9 @@
 
 
-(function(globals) {
-
-  var django = globals.django || (globals.django = {});
+'use strict';
+{
+  const globals = this;
+  const django = globals.django || (globals.django = {});
 
   
   django.pluralidx = function(count) { return (count == 1) ? 0 : 1; };
@@ -12,7 +13,7 @@
 
   django.catalog = django.catalog || {};
   
-  var newcatalog = {
+  const newcatalog = {
     "%(sel)s of %(cnt)s selected": [
       "\u0412\u044b\u0431\u0440\u0430\u043d %(sel)s \u0438\u0437 %(cnt)s",
       "\u0412\u044b\u0431\u0440\u0430\u043d\u043e %(sel)s \u0438\u0437 %(cnt)s"
@@ -190,9 +191,22 @@
     "Yes": "\u0414\u0430",
     "Yesterday": "\u0412\u0447\u0435\u0440\u0430",
     "You cannot confirm this ballot because you entered it": "\u0412\u044b \u043d\u0435 \u043c\u043e\u0436\u0435\u0442\u0435 \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044c \u044d\u0442\u043e\u0442 \u0431\u044d\u043b\u043b\u043e\u0442, \u043f\u043e\u0442\u043e\u043c\u0443 \u0447\u0442\u043e \u0441\u0430\u043c\u0438 \u0432\u0432\u0435\u043b\u0438 \u0435\u0433\u043e",
+    "You have already submitted this form. Are you sure you want to submit it again?": "\u0412\u044b \u0443\u0436\u0435 \u043e\u0442\u043f\u0440\u0430\u0432\u0438\u043b\u0438 \u044d\u0442\u0443 \u0444\u043e\u0440\u043c\u0443. \u0412\u044b \u0443\u0432\u0435\u0440\u0435\u043d\u044b, \u0447\u0442\u043e \u0445\u043e\u0442\u0438\u0442\u0435 \u043e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c \u0435\u0451 \u0435\u0449\u0451 \u0440\u0430\u0437?",
     "You have selected an action, and you haven\u2019t made any changes on individual fields. You\u2019re probably looking for the Go button rather than the Save button.": "\u0412\u044b \u0432\u044b\u0431\u0440\u0430\u043b\u0438 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0438 \u043d\u0435 \u0432\u043d\u0435\u0441\u043b\u0438 \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u0439 \u0432 \u0434\u0430\u043d\u043d\u044b\u0435. \u0412\u043e\u0437\u043c\u043e\u0436\u043d\u043e, \u0432\u044b \u0445\u043e\u0442\u0435\u043b\u0438 \u0432\u043e\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c\u0441\u044f \u043a\u043d\u043e\u043f\u043a\u043e\u0439 \"\u0412\u044b\u043f\u043e\u043b\u043d\u0438\u0442\u044c\", \u0430 \u043d\u0435 \u043a\u043d\u043e\u043f\u043a\u043e\u0439 \"\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c\". \u0415\u0441\u043b\u0438 \u044d\u0442\u043e \u0442\u0430\u043a, \u0442\u043e \u043d\u0430\u0436\u043c\u0438\u0442\u0435 \"\u041e\u0442\u043c\u0435\u043d\u0430\", \u0447\u0442\u043e\u0431\u044b \u0432\u0435\u0440\u043d\u0443\u0442\u044c\u0441\u044f \u0432 \u0438\u043d\u0442\u0435\u0440\u0444\u0435\u0439\u0441 \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f.",
     "You have selected an action, but you haven\u2019t saved your changes to individual fields yet. Please click OK to save. You\u2019ll need to re-run the action.": "\u0412\u044b \u0432\u044b\u0431\u0440\u0430\u043b\u0438 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435, \u043d\u043e \u0435\u0449\u0435 \u043d\u0435 \u0441\u043e\u0445\u0440\u0430\u043d\u0438\u043b\u0438 \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f, \u0432\u043d\u0435\u0441\u0435\u043d\u043d\u044b\u0435 \u0432 \u043d\u0435\u043a\u043e\u0442\u043e\u0440\u044b\u0445 \u043f\u043e\u043b\u044f\u0445 \u0434\u043b\u044f \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f. \u041d\u0430\u0436\u043c\u0438\u0442\u0435 OK, \u0447\u0442\u043e\u0431\u044b \u0441\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f. \u041f\u043e\u0441\u043b\u0435 \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u044f \u0432\u0430\u043c \u043f\u0440\u0438\u0434\u0435\u0442\u0441\u044f \u0437\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u044c \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0435\u0449\u0435 \u0440\u0430\u0437.",
     "You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost.": "\u0418\u043c\u0435\u044e\u0442\u0441\u044f \u043d\u0435\u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043d\u044b\u0435 \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f \u0432 \u043e\u0442\u0434\u0435\u043b\u044c\u043d\u044b\u0445 \u043f\u043e\u043b\u044f\u0445 \u0434\u043b\u044f \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f. \u0415\u0441\u043b\u0438 \u0432\u044b \u0437\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435, \u043d\u0435\u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043d\u044b\u0435 \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f \u0431\u0443\u0434\u0443\u0442 \u043f\u043e\u0442\u0435\u0440\u044f\u043d\u044b.",
+    "abbrev. month April\u0004Apr": "\u0410\u043f\u0440",
+    "abbrev. month August\u0004Aug": "\u0410\u0432\u0433",
+    "abbrev. month December\u0004Dec": "\u0414\u0435\u043a",
+    "abbrev. month February\u0004Feb": "\u0424\u0435\u0432",
+    "abbrev. month January\u0004Jan": "\u042f\u043d\u0432",
+    "abbrev. month July\u0004Jul": "\u0418\u044e\u043b",
+    "abbrev. month June\u0004Jun": "\u0418\u044e\u043d",
+    "abbrev. month March\u0004Mar": "\u041c\u0430\u0440",
+    "abbrev. month May\u0004May": "\u041c\u0430\u0439",
+    "abbrev. month November\u0004Nov": "\u041d\u043e\u044f",
+    "abbrev. month October\u0004Oct": "\u041e\u043a\u0442",
+    "abbrev. month September\u0004Sep": "\u0421\u0435\u043d",
     "adjudicators with gender data": "\u0441\u0443\u0434\u044c\u0438 \u0441 \u0434\u0430\u043d\u043d\u044b\u043c\u0438 \u043e \u0433\u0435\u043d\u0434\u0435\u0440\u0435",
     "decimal marks are allowed": "\u0434\u0435\u0441\u044f\u0442\u0438\u0447\u043d\u044b\u0435 \u043e\u0446\u0435\u043d\u043a\u0438 \u0440\u0430\u0437\u0440\u0435\u0448\u0435\u043d\u044b",
     "deselect all": "\u0443\u0431\u0440\u0430\u0442\u044c \u0432\u0441\u0435",
@@ -213,24 +227,24 @@
     "tab entry": "\u0432\u0432\u0435\u0434\u0435\u043d\u0438\u0435 \u0442\u044d\u0431\u0430",
     "\u00bd marks are allowed": "\u043e\u0446\u0435\u043d\u043a\u0438 1/2 \u0440\u0430\u0437\u0440\u0435\u0448\u0435\u043d\u044b"
   };
-  for (var key in newcatalog) {
+  for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
   
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {
-      var value = django.catalog[msgid];
-      if (typeof(value) == 'undefined') {
+      const value = django.catalog[msgid];
+      if (typeof value === 'undefined') {
         return msgid;
       } else {
-        return (typeof(value) == 'string') ? value : value[0];
+        return (typeof value === 'string') ? value : value[0];
       }
     };
 
     django.ngettext = function(singular, plural, count) {
-      var value = django.catalog[singular];
-      if (typeof(value) == 'undefined') {
+      const value = django.catalog[singular];
+      if (typeof value === 'undefined') {
         return (count == 1) ? singular : plural;
       } else {
         return value.constructor === Array ? value[django.pluralidx(count)] : value;
@@ -240,16 +254,16 @@
     django.gettext_noop = function(msgid) { return msgid; };
 
     django.pgettext = function(context, msgid) {
-      var value = django.gettext(context + '\x04' + msgid);
-      if (value.indexOf('\x04') != -1) {
+      let value = django.gettext(context + '\x04' + msgid);
+      if (value.includes('\x04')) {
         value = msgid;
       }
       return value;
     };
 
     django.npgettext = function(context, singular, plural, count) {
-      var value = django.ngettext(context + '\x04' + singular, context + '\x04' + plural, count);
-      if (value.indexOf('\x04') != -1) {
+      let value = django.ngettext(context + '\x04' + singular, context + '\x04' + plural, count);
+      if (value.includes('\x04')) {
         value = django.ngettext(singular, plural, count);
       }
       return value;
@@ -303,8 +317,8 @@
   };
 
     django.get_format = function(format_type) {
-      var value = django.formats[format_type];
-      if (typeof(value) == 'undefined') {
+      const value = django.formats[format_type];
+      if (typeof value === 'undefined') {
         return format_type;
       } else {
         return value;
@@ -323,6 +337,5 @@
 
     django.jsi18n_initialized = true;
   }
-
-}(this));
+};
 
