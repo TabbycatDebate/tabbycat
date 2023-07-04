@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:57\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-07-04 21:51\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -108,8 +108,8 @@ msgstr "Ini adalah halaman untuk <strong>%(round)s</strong>, tetapi ronde sebelu
 
 #: availability/templates/availability_index.html
 #, python-format
-msgid "This is the first round, but its draw type is <strong>%(draw_type)s</strong>. Did you intend for it to be <strong>Random</strong> instead? You can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's draw type in the Edit Database area.</a>"
-msgstr "Ini adalah ronde pertama, tetapi tipe pengundian adalah <strong>%(draw_type)s</strong>. Apakah maksud Anda adalah <strong>Acak</strong>? Anda dapat <a href=\"%(change_round_url)s\" class=\"alert-link\"> menyunting tipe pengundian ronde ini pada area Sunting Basisdata.</a>"
+msgid "This is the first round, but its draw type is <strong>%(draw_type)s</strong>. Did you intend for it to be <strong>Random</strong> or <strong>Seeded</strong> instead? You can <a href=\"%(change_round_url)s\" class=\"alert-link\">edit this round's draw type in the Edit Database area.</a>"
+msgstr ""
 
 #: availability/templates/availability_index.html
 #, python-format
