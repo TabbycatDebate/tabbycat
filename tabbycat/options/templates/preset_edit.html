@@ -15,21 +15,22 @@
 {% endif %}
 
 <form id="applyPresetsForm" method="POST">
+  {% csrf_token %}
 
   {% regroup form.visible_fields|dictsort:"changed" by changed as preferences_grouped %}
   {% for changed, preferences in preferences_grouped reversed %}
     {% if preferences|length > 0 %}
       {% if changed %}
         {% blocktranslate trimmed count counter=preferences|length asvar title %}
-          Preference that will change ({{ counter }})
+          This preference will be changed
         {% plural %}
-          Preferences that will change ({{ counter }})
+          These {{ counter }} preferences will be changed
         {% endblocktranslate %}
       {% else %}
         {% blocktranslate trimmed count counter=preferences|length asvar title %}
-          Preference that will not change ({{ counter }})
+          This preference will not change
         {% plural %}
-          Preferences that will not change ({{ counter }})
+          These {{ counter }} preferences will not change
         {% endblocktranslate %}
       {% endif %}
       {% include "preferences_state.html" %}
@@ -43,12 +44,9 @@
   </div>
 
   <div class="card mt-3">
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">
-        {% csrf_token %}
-        <button id="applyPresets" type="submit" class="btn btn-success btn-block">{% trans "Apply Changes" %}</button>
-      </li>
-    </ul>
+    {% trans "Apply Changes" as title %}
+    {% trans "Presets are provided as a convenience only and may not be up to date with a debating format's rules or the expectations of your circuit. Please double-check everything to ensure it matches your needs." as subtitle %}
+    {% include "components/form-submit.html" %}
   </div>
 </form>
 {% endblock content %}
