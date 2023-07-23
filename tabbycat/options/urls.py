@@ -10,7 +10,7 @@ urlpatterns = [
 
     # Presets
     path('presets/<slug:preset_name>/confirm/',
-        views.ConfirmTournamentPreferencesView.as_view(),
+        views.SetPresetPreferencesView.as_view(),
         name="options-presets-confirm"),
 
     # Per Type

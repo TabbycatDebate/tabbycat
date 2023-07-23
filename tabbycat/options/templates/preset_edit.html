@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load debate_tags i18n %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-outline-primary "
+     href="{% tournamenturl 'options-tournament-index' %}">
+    <i data-feather="chevron-left"></i> {% trans "Back to Configuration" %}
+  </a>
+{% endblock %}
+
+{% block content %}
+
+{% if form.errors %}
+  {% include "components/form-errors.html" with errors=form.non_field_errors %}
+{% endif %}
+
+<form id="applyPresetsForm" method="POST">
+  {% csrf_token %}
+
+  {% regroup form.visible_fields|dictsort:"changed" by changed as preferences_grouped %}
+  {% for changed, preferences in preferences_grouped reversed %}
+    {% if preferences|length > 0 %}
+      {% if changed %}
+        {% blocktranslate trimmed count counter=preferences|length asvar title %}
+          This preference will be changed
+        {% plural %}
+          These {{ counter }} preferences will be changed
+        {% endblocktranslate %}
+      {% else %}
+        {% blocktranslate trimmed count counter=preferences|length asvar title %}
+          This preference will not change
+        {% plural %}
+          These {{ counter }} preferences will not change
+        {% endblocktranslate %}
+      {% endif %}
+      {% include "preferences_state.html" %}
+    {% endif %}
+  {% endfor %}
+
+  <div hidden>
+    {% for field in form.hidden_fields %}
+      {{ field }}
+    {% endfor %}
+  </div>
+
+  <div class="card mt-3">
+    {% trans "Apply Changes" as title %}
+    {% trans "Presets are provided as a convenience only and may not be up to date with a debating format's rules or the expectations of your circuit. Please double-check everything to ensure it matches your needs." as subtitle %}
+    {% include "components/form-submit.html" %}
+  </div>
+</form>
+{% endblock content %}

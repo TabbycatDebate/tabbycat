@@ -1,8 +1,10 @@
 import logging
+from copy import copy
 
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-from .preferences import tournament_preferences_registry
+from .forms import tournament_preference_form_builder
 
 logger = logging.getLogger(__name__)
 
@@ -28,52 +30,51 @@ def presets_for_form():
     return choices
 
 
-def public_presets_for_form():
-    return [(True, _('Enable Public Information')),
-            (False, _('Disable Public Information'))]
+public_presets_for_form = [
+    (True, _('Enable Public Information')),
+    (False, _('Disable Public Information')),
+]
 
 
-def data_entry_presets_for_form():
-    return [(False, _('Disabled (tab staff only)')),
-            ("private-urls", _('Use private URLs')),
-            ("public", _('Use publicly accessible form'))]
+data_entry_presets_for_form = [
+    (False, _('Disabled (tab staff only)')),
+    ("private-urls", _('Use private URLs')),
+    ("public", _('Use publicly accessible form')),
+]
 
 
-def get_preferences_data(selected_preset, tournament):
-    preset_preferences = []
-    # Create an instance of the class and iterate over its properties for the UI
-    for key in dir(selected_preset):
-        value = getattr(selected_preset, key)
-        if '__' in key and not key.startswith('__'):
-            # Lookup the base object
-            section, name = key.split('__', 1)
-            try:
-                preset_object = tournament_preferences_registry[section][name]
-                current_value = tournament.preferences[key]
-            except KeyError:
-                logger.exception("Bad preference key: %s", key)
-                continue
-            preset_preferences.append({
-                'key': key,
-                'name': preset_object.verbose_name,
-                'current_value': current_value,
-                'new_value': value,
-                'help_text': preset_object.help_text,
-                'changed': current_value != value,
-            })
-    preset_preferences.sort(key=lambda x: x['key'])
-    return preset_preferences
-
-
-def save_presets(tournament, preset):
-    preset_preferences = get_preferences_data(preset, tournament)
-
-    for pref in preset_preferences:
-        tournament.preferences[pref['key']] = pref['new_value']
+def get_preset_from_slug(slug):
+    selected_presets = [x for x in all_presets() if slugify(x.__name__) == slug]
+    if len(selected_presets) == 0:
+        raise ValueError("Preset {!r} not found.".format(slug))
+    elif len(selected_presets) > 1:
+        logger.warning("Found more than one preset for %s", slug)
+    return selected_presets[0]
 
 
 class PreferencesPreset:
     show_in_list                               = False
+
+    @classmethod
+    def get_preferences(cls):
+        for key in dir(cls):
+            if '__' in key and not key.startswith('__'):
+                yield key
+
+    @classmethod
+    def get_form(cls, tournament, **kwargs):
+        form = tournament_preference_form_builder(tournament, [tuple(key.split('__', 1)[::-1]) for key in cls.get_preferences()])(**kwargs)
+        for field in form:
+            # Copying required to avoid blanks added to list fields
+            field.initial = copy(getattr(cls, field.name))
+            field.changed = tournament.preferences[field.name] != getattr(cls, field.name)
+        return form
+
+    @classmethod
+    def save(cls, tournament):
+        for pref in cls.get_preferences():
+            logger.info(f"Setting {pref} to {getattr(cls, pref)}")
+            tournament.preferences[pref] = getattr(cls, pref)
 
 
 class AustralsPreferences(PreferencesPreset):
@@ -365,7 +366,7 @@ class TabRelease(PreferencesPreset):
     public_features__public_break_categories   = False
 
 
-class PrivateURLS(PreferencesPreset):
+class PrivateURLs(PreferencesPreset):
     name = _("Use Private URLs")
     show_in_list = False
     description = _("Enables participant data entry through private URLs.")
