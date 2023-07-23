@@ -24,14 +24,14 @@ class ApplyPresetTests(TestCase):
     def test_preset_options(self, mock_all_presets):
         with self.assertRaises(CommandError) as cm:
             Command().create_parser('', '').parse_args(['notvalidpreset'])
-            self.assertEqual(str(cm), "Error: argument preset: invalid choice: 'notvalidpreset' (choose from 'testpreset')")
+        self.assertEqual(str(cm.exception), "Error: argument preset: invalid choice: 'notvalidpreset' (choose from 'testpreset')")
 
     @patch('options.management.commands.applypreset.all_presets', return_value=[TestPreset])
     def test_set_invalid_preset(self, mock_all_presets):
         tournament = Tournament.objects.create(slug="command", name="Command Testing")
         with self.assertRaises(CommandError) as cm:
             call_command('applypreset', ['-t', 'command', 'notvalidpreset'])
-            self.assertEqual(str(cm), "Error: argument preset: invalid choice: 'notvalidpreset' (choose from 'testpreset')")
+        self.assertEqual(str(cm.exception), "Error: argument preset: invalid choice: 'notvalidpreset' (choose from 'testpreset')")
         tournament.delete()
 
     @patch('options.management.commands.applypreset.all_presets', return_value=[TestPreset])
