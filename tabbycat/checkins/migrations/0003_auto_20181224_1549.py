@@ -6,13 +6,11 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
-def add_polymorphic_ctype_for_identifier(apps, schema_editor):
-    ContentType = apps.get_model('contenttypes', 'ContentType')
-
-    for model_name in ['PersonIdentifier', 'DebateIdentifier', 'VenueIdentifier']:
-        model = apps.get_model('checkins', model_name)
-        new_ct = ContentType.objects.get_for_model(model)
-        model.objects.filter(polymorphic_ctype__isnull=True).update(polymorphic_ctype=new_ct)
+def create_migration_sql_query(model):
+    return migrations.RunSQL(
+        "UPDATE checkins_identifier ci SET polymorphic_ctype_id=(SELECT id FROM django_content_type WHERE app_label='checkins' AND model='%s' LIMIT 1) FROM checkins_%s c WHERE c.identifier_ptr_id=ci.id AND ci.polymorphic_ctype_id IS NULL;" % (model, model),
+        migrations.RunSQL.noop,
+    )
 
 
 class Migration(migrations.Migration):
@@ -37,8 +35,7 @@ class Migration(migrations.Migration):
             name='barcode',
             field=models.CharField(default=checkins.models.generate_identifier, max_length=20, unique=True, validators=[django.core.validators.RegexValidator('^[0-9]{6}$', message='The barcode must contain exactly six digits.')], verbose_name='barcode'),
         ),
-        migrations.RunPython(
-            add_polymorphic_ctype_for_identifier,
-            migrations.RunPython.noop
-        ),
+        create_migration_sql_query('personidentifier'),
+        create_migration_sql_query('debateidentifier'),
+        create_migration_sql_query('venueidentifier'),
     ]

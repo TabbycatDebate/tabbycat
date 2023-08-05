@@ -84,6 +84,7 @@ class ActionLogEntry(models.Model):
     ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_AUTO = 'pp.aj.auto'
     ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_EDIT = 'pp.aj.auto'
     ACTION_TYPE_PREFORMED_PANELS_DEBATES_AUTO     = 'pp.db.auto'
+    ACTION_TYPE_USER_INVITE                       = 'ur.inv'
 
     ACTION_TYPE_CHOICES = (
         (ACTION_TYPE_BALLOT_DISCARD                   , _("Discarded ballot set")),
@@ -149,6 +150,7 @@ class ActionLogEntry(models.Model):
         (ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_AUTO, _("Auto-allocated adjudicators to preformed panels")),
         (ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_EDIT, _("Edited preformed panel adjudicator")),
         (ACTION_TYPE_PREFORMED_PANELS_DEBATES_AUTO    , _("Auto-allocated preformed panels to debates")),
+        (ACTION_TYPE_USER_INVITE                      , _("Invited user to the instance")),
     )
 
     type = models.CharField(max_length=10, choices=ACTION_TYPE_CHOICES,

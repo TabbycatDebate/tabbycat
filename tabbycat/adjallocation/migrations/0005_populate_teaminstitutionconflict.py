@@ -3,16 +3,6 @@
 from django.db import migrations
 
 
-def populate_teaminstitutionconflict(apps, schema_editor):
-
-    TeamInstitutionConflict = apps.get_model('adjallocation', 'TeamInstitutionConflict')  # noqa: N806
-    Team = apps.get_model('participants', 'Team')  # noqa: N806
-
-    for team in Team.objects.all():
-        if team.institution_id is not None:
-            TeamInstitutionConflict.objects.get_or_create(team=team, institution_id=team.institution_id)
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -20,7 +10,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(populate_teaminstitutionconflict,
-            migrations.RunPython.noop,
-            elidable=True)
+        migrations.RunSQL(
+            "INSERT INTO adjallocation_teaminstitutionconflict (team_id, institution_id) SELECT id, institution_id FROM participants_team WHERE institution_id IS NOT NULL ON CONFLICT DO NOTHING;",
+            migrations.RunSQL.noop,
+            elidable=True,
+        ),
     ]

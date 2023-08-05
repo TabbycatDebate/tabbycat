@@ -42,6 +42,7 @@ urlpatterns = [
     path('admin/privateurls/',      include('privateurls.urls_admin')),
     path('admin/results/',          include('results.urls_admin')),
     path('admin/standings/',        include('standings.urls_admin')),
+    path('admin/users/',            include('users.urls_admin')),
     path('admin/venues/',           include('venues.urls_admin')),
 
     # Application URLs for assistant pages

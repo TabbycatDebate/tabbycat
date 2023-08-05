@@ -8,7 +8,7 @@ from .models import DebateTeamMotionPreference, RoundMotion
 def merge_motions(new_bs, bses):
     n_motions = bses.aggregate(n_motions=Count('motion', distinct=True))['n_motions']
     if n_motions > 1:
-        raise ValidationError(_("Not all latest ballots list the same motion, so could not be merged."))
+        raise ValidationError(_("Not all latest ballots have the same motion. The correct motion must be set manually."))
     elif n_motions == 1:
         new_bs.motion = bses[0].motion
 
@@ -26,7 +26,7 @@ def merge_motion_vetos(new_bs, bses):
     if len({p[0] for p in preferences}) != len(preferences):
         # If a team is repeated, means different values were given and the length of both sets would
         # be different. First term could just be "2" (expected to be {'aff', 'neg'}).
-        raise ValidationError(_("Motion vetos are inconsistent, so could not be merged."))
+        raise ValidationError(_("Motion vetos are inconsistent; they must be set manually."))
 
     for dt, side, motion, preference in preferences:
         vetos[side] = DebateTeamMotionPreference(
