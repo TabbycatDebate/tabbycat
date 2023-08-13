@@ -3,11 +3,17 @@ Change Log
 ==========
 
 
-2.7.7
+2.7.8
 -----
 *Release date: 13 August 2023*
 
 - Fixed some issues with Docker-based deployments.
+
+2.7.7
+-----
+*Release date: 23 April 2023*
+
+- Removed expired ad campaign.
 
 
 2.7.6
