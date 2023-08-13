@@ -2,6 +2,14 @@
 Change Log
 ==========
 
+
+2.7.7
+-----
+*Release date: 13 August 2023*
+
+- Fixed some issues with Docker-based deployments.
+
+
 2.7.6
 -----
 *Release date: 25 February 2023*
