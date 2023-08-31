@@ -82,10 +82,12 @@ class APIV1RootView(PublicAPIMixin, GenericAPIView):
         """Entrypoint for version 1 of the API"""
         tournaments_create_url = reverse('api-tournament-list', request=request, format=format)
         institution_create_url = reverse('api-global-institution-list', request=request, format=format)
+        users_create_url = reverse('api-users-list', request=request, format=format)
         return Response({
             "_links": {
                 "tournaments": tournaments_create_url,
                 "institutions": institution_create_url,
+                "users": users_create_url,
             },
         })
 
@@ -1091,3 +1093,16 @@ class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
             })
 
         return self.get(request, *args, **kwargs)
+
+
+@extend_schema(tags=['users'])
+@extend_schema_view(
+    list=extend_schema(summary="Get users"),
+    create=extend_schema(summary="Create user"),
+    retrieve=extend_schema(summary="Get user", parameters=[id_parameter]),
+)
+class UserViewSet(AdministratorAPIMixin, ModelViewSet):
+    serializer_class = serializers.UserSerializer
+
+    def get_queryset(self):
+        return self.get_serializer_class().Meta.model.objects.all()

@@ -2,6 +2,7 @@ from collections import OrderedDict
 from collections.abc import Mapping
 from functools import partialmethod
 
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import IntegrityError
 from django.db.models import QuerySet
@@ -55,6 +56,7 @@ class V1RootSerializer(serializers.Serializer):
     class V1LinksSerializer(serializers.Serializer):
         tournaments = serializers.HyperlinkedIdentityField(view_name='api-tournament-list')
         institutions = serializers.HyperlinkedIdentityField(view_name='api-global-institution-list')
+        users = serializers.HyperlinkedIdentityField(view_name='api-users-list')
 
     _links = V1LinksSerializer(source='*', read_only=True)
 
@@ -1367,3 +1369,18 @@ class TeamRoundScoresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = ('team', 'rounds')
+
+
+class UserSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name='api-users-detail')
+
+    class Meta:
+        model = get_user_model()
+        fields = ('url', 'id', 'username', 'password', 'email', 'is_staff', 'is_superuser', 'is_active')
+
+    def create(self, validated_data):
+        user = self.Meta.model(**validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+
+        return user
