@@ -253,18 +253,15 @@ class DebateTeamManager(models.Manager):
 
 
 class DebateTeam(models.Model):
-    SIDE_AFF = 'aff'
-    SIDE_NEG = 'neg'
-    SIDE_OG = 'og'
-    SIDE_OO = 'oo'
-    SIDE_CG = 'cg'
-    SIDE_CO = 'co'
-    SIDE_CHOICES = ((SIDE_AFF, _("affirmative")),
-                    (SIDE_NEG, _("negative")),
-                    (SIDE_OG, _("opening government")),
-                    (SIDE_OO, _("opening opposition")),
-                    (SIDE_CG, _("closing government")),
-                    (SIDE_CO, _("closing opposition")))
+
+    class Side(models.TextChoices):
+        AFF = 'aff', _("affirmative")
+        NEG = 'neg', _("negative")
+        OG = 'og', _("opening government")
+        OO = 'oo', _("opening opposition")
+        CG = 'cg', _("closing government")
+        CO = 'co', _("closing opposition")
+        BYE = 'bye', _("bye")
 
     objects = DebateTeamManager()
 
@@ -272,7 +269,7 @@ class DebateTeam(models.Model):
         verbose_name=_("debate"))
     team = models.ForeignKey('participants.Team', models.PROTECT,
         verbose_name=_("team"))
-    side = models.CharField(max_length=3, choices=SIDE_CHOICES,
+    side = models.CharField(max_length=3, choices=Side.choices,
         verbose_name=_("side"))
 
     flags = ChoiceArrayField(base_field=models.CharField(max_length=15, choices=DRAW_FLAG_DESCRIPTIONS), blank=True, default=list)
@@ -289,6 +286,10 @@ class DebateTeam(models.Model):
         try:
             return self._opponent
         except AttributeError:
+            if self.side == self.Side.BYE:
+                self._opponent = None
+                return self._opponent
+
             try:
                 self._opponent = DebateTeam.objects.exclude(side=self.side).select_related(
                         'team', 'team__institution').get(debate=self.debate)
@@ -375,7 +376,7 @@ class TeamSideAllocation(models.Model):
         verbose_name=_("round"))
     team = models.ForeignKey('participants.Team', models.CASCADE,
         verbose_name=_("team"))
-    side = models.CharField(max_length=3, choices=DebateTeam.SIDE_CHOICES,
+    side = models.CharField(max_length=3, choices=DebateTeam.Side.choices,
         verbose_name=_("side"))
 
     class Meta:

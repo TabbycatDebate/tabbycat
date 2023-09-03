@@ -1087,7 +1087,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         class SheetSerializer(serializers.Serializer):
 
             class TeamResultSerializer(serializers.Serializer):
-                side = serializers.ChoiceField(choices=DebateTeam.SIDE_CHOICES)
+                side = serializers.ChoiceField(choices=DebateTeam.Side.choices)
                 points = serializers.IntegerField(required=False)
                 win = serializers.BooleanField(required=False)
                 score = serializers.FloatField(required=False, allow_null=True)

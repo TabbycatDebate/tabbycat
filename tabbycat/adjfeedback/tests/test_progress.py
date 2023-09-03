@@ -73,9 +73,9 @@ class TestFeedbackProgress(TestCase):
 
         aff, neg = teams
         aff_team = self._team(aff)
-        DebateTeam.objects.create(debate=debate, team=aff_team, side=DebateTeam.SIDE_AFF)
+        DebateTeam.objects.create(debate=debate, team=aff_team, side=DebateTeam.Side.AFF)
         neg_team = self._team(neg)
-        DebateTeam.objects.create(debate=debate, team=neg_team, side=DebateTeam.SIDE_NEG)
+        DebateTeam.objects.create(debate=debate, team=neg_team, side=DebateTeam.Side.NEG)
 
         chair = self._adj(adjs[0])
         DebateAdjudicator.objects.create(debate=debate, adjudicator=chair,
