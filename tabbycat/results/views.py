@@ -429,7 +429,7 @@ class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
     def populate_objects(self, prefill=True):
         self.debate = self.object = self.get_object()
         self.ballotsub = BallotSubmission(debate=self.debate, submitter=self.request.user,
-            submitter_type=BallotSubmission.SUBMITTER_TABROOM,
+            submitter_type=BallotSubmission.Submitter.TABROOM,
             ip_address=get_ip_address(self.request))
 
         if self.debate.round.ballots_per_debate == 'per-adj' and \
@@ -558,7 +558,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
 
         self.debate = self.debateadj.debate
         self.ballotsub = BallotSubmission(debate=self.debate, ip_address=get_ip_address(self.request),
-            submitter_type=BallotSubmission.SUBMITTER_PUBLIC, single_adj=self.tournament.pref('individual_ballots'),
+            submitter_type=BallotSubmission.Submitter.PUBLIC, single_adj=self.tournament.pref('individual_ballots'),
             private_url=self.private_url, participant_submitter=self.object)
 
         self.round_motions = {}

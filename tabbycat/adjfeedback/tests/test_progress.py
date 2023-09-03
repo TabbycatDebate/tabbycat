@@ -89,7 +89,7 @@ class TestFeedbackProgress(TestCase):
             DebateAdjudicator.objects.create(debate=debate, adjudicator=trainee,
                     type=DebateAdjudicator.TYPE_TRAINEE)
 
-        ballotsub = BallotSubmission(debate=debate, submitter_type=BallotSubmission.SUBMITTER_TABROOM)
+        ballotsub = BallotSubmission(debate=debate, submitter_type=BallotSubmission.Submitter.TABROOM)
         result = DebateResultByAdjudicatorWithScores(ballotsub)
 
         for t, side in zip(teams, ('aff', 'neg')):

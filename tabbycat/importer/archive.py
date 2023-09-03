@@ -621,7 +621,7 @@ class Importer:
 
             for debate in round.findall('debate'):
                 bs_obj = BallotSubmission(
-                    version=1, submitter_type=Submission.SUBMITTER_TABROOM, confirmed=True,
+                    version=1, submitter_type=Submission.Submitter.TABROOM, confirmed=True,
                     debate=self.debates[debate.get('id')], motion=self.motions.get(debate.get('motion')))
                 bs_obj.save()
                 dr = DebateResult(bs_obj)
@@ -668,7 +668,7 @@ class Importer:
                 d_team = self.debateteams.get((feedback.get('debate'), feedback.get('source-team')))
                 feedback_obj = AdjudicatorFeedback(adjudicator=adj_obj, score=feedback.get('score'), version=1,
                     source_adjudicator=d_adj, source_team=d_team,
-                    submitter_type=Submission.SUBMITTER_TABROOM, confirmed=True)
+                    submitter_type=Submission.Submitter.TABROOM, confirmed=True)
                 feedback_obj.save()
 
                 for answer in feedback.findall('answer'):

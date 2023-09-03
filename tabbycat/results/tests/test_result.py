@@ -141,7 +141,7 @@ class BaseTestDebateResult(TestCase):
         self.debate.ballotsubmission_set.update(confirmed=False)
 
         ballotsub = BallotSubmission.objects.create(debate=self.debate, confirmed=True,
-                submitter_type=BallotSubmission.SUBMITTER_TABROOM)
+                submitter_type=BallotSubmission.Submitter.TABROOM)
 
         return self.debate_result_class(ballotsub)
 
