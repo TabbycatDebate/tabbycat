@@ -581,6 +581,11 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
             vc._validated_data = venue_constraints  # Data was already validated
             vc.save(adjudicator=instance)
 
+        if self.partial:
+            # Avoid removing conflicts if merely PATCHing
+            for field in ['institution_conflicts', 'adjudicator_conflicts', 'team_conflicts']:
+                validated_data[field] = list(getattr(instance, field).all()) + validated_data.get(field, [])
+
         return super().update(instance, validated_data)
 
 
@@ -713,6 +718,10 @@ class TeamSerializer(serializers.ModelSerializer):
             vc = VenueConstraintSerializer(many=True, context=self.context)
             vc._validated_data = venue_constraints  # Data was already validated
             vc.save(institution=instance)
+
+        if self.partial:
+            # Avoid removing conflicts if merely PATCHing
+            validated_data['institution_conflicts'] = list(instance.institution_conflicts.all()) + validated_data.get('institution_conflicts', [])
 
         return super().update(instance, validated_data)
 
