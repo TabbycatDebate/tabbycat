@@ -266,7 +266,11 @@ class BriefingRoomDrawByTeamTableMixin(BriefingRoomDrawTableMixin):
 
     def populate_table(self, debates, table):
         # unicodedata.normalize gets accented characters (e.g. "Éothéod") to sort correctly
+        byes = [d for d in debates if d.is_bye]
+        debates = [d for d in debates if not d.is_bye]
+
         draw_by_team = [(debate, debate.get_team(side)) for debate, side in product(debates, self.tournament.sides)]
+        draw_by_team.extend([(debate, debate.get_team('bye')) for debate in byes])
         draw_by_team.sort(key=lambda x: unicodedata.normalize('NFKD', table._team_short_name(x[1])))
 
         if len(draw_by_team) == 0:

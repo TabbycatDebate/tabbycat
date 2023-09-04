@@ -2,7 +2,7 @@ import logging
 
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, F, Prefetch, Q
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -395,8 +395,9 @@ class Round(models.Model):
     def num_debates_without_chair(self):
         """Returns the number of debates in the round that lack a chair, or have
         more than one chair."""
+        from draw.models import DebateTeam
         from adjallocation.models import DebateAdjudicator
-        debates_in_round = self.debate_set.count()
+        debates_in_round = self.debate_set.exclude(debateteam__side=DebateTeam.Side.BYE).count()
         debates_with_one_chair = self.debate_set.filter(debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR).annotate(
                 num_chairs=Count('debateadjudicator')).filter(num_chairs=1).count()
         return debates_in_round - debates_with_one_chair
@@ -415,7 +416,8 @@ class Round(models.Model):
 
     @cached_property
     def num_debates_without_venue(self):
-        return self.debate_set.filter(venue__isnull=True).count()
+        from draw.models import DebateTeam
+        return self.debate_set.filter(venue__isnull=True).exclude(debateteam__side=DebateTeam.Side.BYE).count()
 
     @cached_property
     def num_debates_with_sides_unconfirmed(self):
@@ -439,7 +441,7 @@ class Round(models.Model):
     # Draw retrieval methods
     # --------------------------------------------------------------------------
 
-    def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',),
+    def debate_set_with_prefetches(self, filter_args=[], filter_kwargs={}, ordering=(F('venue__name').asc(nulls_last=True),),
             teams=True, adjudicators=True, speakers=True, wins=False,
             results=False, venues=True, institutions=False, check_ins=False, iron=False):
         """Returns the debate set, with aff_team and neg_team populated.
@@ -450,9 +452,7 @@ class Round(models.Model):
         from participants.models import Speaker
         from results.prefetch import populate_confirmed_ballots, populate_wins, populate_checkins
 
-        debates = self.debate_set.all()
-        if filter_kwargs:
-            debates = debates.filter(**filter_kwargs)
+        debates = self.debate_set.filter(*filter_args, **filter_kwargs)
         if results:
             debates = debates.prefetch_related('ballotsubmission_set',
                 'ballotsubmission_set__submitter', 'ballotsubmission_set__participant_submitter')

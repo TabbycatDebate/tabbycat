@@ -185,12 +185,14 @@ class Debate(models.Model):
 
     aff_team = _team_property('aff_team')
     neg_team = _team_property('neg_team')
+    bye_team = _team_property('bye_team')
     og_team = _team_property('og_team')
     oo_team = _team_property('oo_team')
     cg_team = _team_property('cg_team')
     co_team = _team_property('co_team')
     aff_dt = _team_property('aff_dt')
     neg_dt = _team_property('neg_dt')
+    bye_dt = _team_property('bye_dt')
     og_dt = _team_property('og_dt')
     oo_dt = _team_property('oo_dt')
     cg_dt = _team_property('cg_dt')
@@ -243,6 +245,12 @@ class Debate(models.Model):
             from adjallocation.allocation import AdjudicatorAllocation
             self._adjudicators = AdjudicatorAllocation(self, from_db=True)
             return self._adjudicators
+
+    @property
+    def is_bye(self):
+        if not hasattr(self, '_team_properties'):
+            self._populate_teams()
+        return 'bye_dt' in self._team_properties
 
 
 class DebateTeamManager(models.Manager):

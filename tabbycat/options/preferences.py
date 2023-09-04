@@ -378,6 +378,35 @@ class HideTraineePosition(BooleanPreference):
     default = False
 
 
+@tournament_preferences_registry.register
+class ByeTeamResults(ChoicePreference):
+    help_text = _("How to handle teams who were marked available yet excluded from"
+        "a round (a bye)")
+    verbose_name = _("Bye team results")
+    section = draw_rules
+    name = 'bye_team_results'
+    choices = (
+        ('none', _("Treat bye teams as absent")),
+        ('points', _("Attribute a win to bye teams, without speaks")),
+    )
+    default = 'none'
+
+
+@tournament_preferences_registry.register
+class ByeTeamSelection(ChoicePreference):
+    help_text = _("If creating a draw with an uneven number of teams, how to "
+        "decide who gets the bye (won't be allocated)")
+    verbose_name = _("Bye team selection method")
+    section = draw_rules
+    name = 'bye_team_selection'
+    choices = (
+        ('off', _("Don't choose bye teams")),
+        ('random', _("Choose bye teams randomly")),
+        ('lowest', _("Choose lowest ranking teams")),
+    )
+    default = 'off'
+
+
 # ==============================================================================
 feedback = Section('feedback', verbose_name=_("Feedback"))
 # ==============================================================================
