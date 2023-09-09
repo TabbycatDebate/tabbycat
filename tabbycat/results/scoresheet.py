@@ -73,7 +73,7 @@ class ScoresMixin:
     def set_speaker_rank(self, side, position, score):
         self.speaker_ranks[side][position] = score
 
-    def get_speaker_rank(self, side, position):
+    def get_speaker_rank(self, side: str, position: int) -> int:
         return self.speaker_ranks[side][position]
 
     def get_total(self, side):

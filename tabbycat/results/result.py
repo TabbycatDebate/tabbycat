@@ -770,6 +770,9 @@ class DebateResultWithScoresMixin:
     def set_ghost(self, side, position, is_ghost):
         self.ghosts[side][position] = is_ghost
 
+    def get_speaker_rank(self, side: str, position: int) -> int:
+        return self.scoresheet.get_speaker_rank(side, position)
+
     def set_speaker_rank(self, side, position, rank):
         self.scoresheet.set_speaker_rank(side, position, rank)
 
@@ -1067,6 +1070,9 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
             logger.exception("Tried to set score by adjudicator %s, but this adjudicator "
                 "doesn't have a scoresheet.", adjudicator)
             return
+
+    def get_speaker_rank(self, adjudicator: 'Adjudicator', side: str, position: int) -> int:
+        return self.scoresheets[adjudicator].get_speaker_rank(side, position)
 
     # --------------------------------------------------------------------------
     # Model fields
