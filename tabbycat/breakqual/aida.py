@@ -41,7 +41,7 @@ class Aida1996BreakGenerator(BaseAidaBreakGenerator):
         self.capped_teams = []
 
         for tsi in self.eligible_teams:
-            institution_rank = tsi.get_ranking("institution")
+            institution_rank = tsi.get_ranking("institution_rank")
             if institution_rank > self.institution_cap:
                 logger.info("Capped out, institution rank %d, cap %d: %s", institution_rank, self.institution_cap, tsi.team)
                 self.capped_teams.append(tsi)
@@ -71,7 +71,7 @@ class BaseAida2016BreakGenerator(BaseAidaBreakGenerator):
 
         # iii. Set aside teams that are capped out
         for tsi in self.eligible_teams:
-            institution_rank = tsi.get_ranking("institution")
+            institution_rank = tsi.get_ranking("institution_rank")
             if institution_rank is None:
                 continue
             elif institution_rank > 1 and tsi.get_ranking("rank") > natural_break_cutoff:
@@ -131,7 +131,7 @@ class Aida2016EastersBreakGenerator(BaseAida2016BreakGenerator):
     def reinsert_capped_teams(self):
         # Easters rules give teams capped out post-cutoff priority
         post_cutoff_capped_teams = [tsi for tsi in self.capped_teams
-            if tsi.get_ranking("institution") <= self.institution_cap]
+            if tsi.get_ranking("institution_rank") <= self.institution_cap]
         self._reinsert_capped_teams(post_cutoff_capped_teams)
         self._reinsert_capped_teams(self.capped_teams)
 
