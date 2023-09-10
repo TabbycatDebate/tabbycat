@@ -23,6 +23,7 @@ from results.prefetch import populate_wins_for_debateteams
 from tournaments.mixins import (PersonalizablePublicTournamentPageMixin, PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
+from users.permissions import Permission
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.tables import TabbycatTableBuilder
@@ -122,6 +123,7 @@ class FeedbackOverview(AdministratorMixin, BaseFeedbackOverview):
     sort_key = 'score'
     sort_order = 'desc'
     template_name = 'feedback_overview.html'
+    view_permission = Permission.VIEW_FEEDBACK_OVERVIEW
 
     def annotate_table(self, table, adjudicators):
         feedback_weight = self.tournament.current_round.feedback_weight
@@ -142,6 +144,7 @@ class FeedbackByTargetView(AdministratorMixin, TournamentMixin, VueTableTemplate
     template_name = "feedback_base.html"
     page_title = gettext_lazy("Find Feedback on Adjudicator")
     page_emoji = '🔍'
+    view_permission = Permission.VIEW_FEEDBACK
 
     def get_table(self):
         adjudicators = self.tournament.adjudicator_set.annotate(feedback_count=Count('adjudicatorfeedback'))
@@ -164,6 +167,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
     template_name = "feedback_base.html"
     page_title = gettext_lazy("Find Feedback")
     page_emoji = '🔍'
+    view_permission = Permission.VIEW_FEEDBACK
 
     def get_tables(self):
         tournament = self.tournament
@@ -252,6 +256,7 @@ class FeedbackMixin(TournamentMixin):
 class FeedbackCardsView(FeedbackMixin, AdministratorMixin, TournamentMixin, TemplateView):
     """Base class for views displaying feedback as cards."""
     template_name = "feedback_cards_list.html"
+    view_permission = Permission.VIEW_FEEDBACK
 
     def get_score_thresholds(self):
         tournament = self.tournament
@@ -404,6 +409,7 @@ class AdminAddFeedbackIndexView(AdministratorMixin, BaseAddFeedbackIndexView):
     of the feedback."""
     template_name = 'add_feedback.html'
     tabroom = True
+    view_permission = Permission.ADD_FEEDBACK
 
     def get_from_adj_link(self, adj):
         return reverse_tournament('adjfeedback-add-from-adjudicator',
@@ -521,6 +527,7 @@ class BaseTabroomAddFeedbackView(TabroomSubmissionFieldsMixin, BaseAddFeedbackVi
 
 
 class AdminAddFeedbackView(AdministratorMixin, BaseTabroomAddFeedbackView):
+    edit_permission = Permission.ADD_FEEDBACK
     pass
 
 
@@ -644,6 +651,7 @@ class SetAdjudicatorBaseScoreView(BaseAdjudicatorActionView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_TEST_SCORE_EDIT
     action_log_content_object_attr = 'atsh'
+    edit_permission = Permission.EDIT_BASEJUDGESCORES_IND
 
     def modify_adjudicator(self, request, adjudicator):
         try:
@@ -664,6 +672,7 @@ class SetAdjudicatorBaseScoreView(BaseAdjudicatorActionView):
 class SetAdjudicatorBreakingStatusView(AdministratorMixin, TournamentMixin, LogActionMixin, View):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATOR_BREAK_SET
+    edit_permission = Permission.EDIT_SETBREAKING
 
     def post(self, request, *args, **kwargs):
         body = self.request.body.decode('utf-8')
@@ -722,6 +731,7 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
 
 class FeedbackProgress(AdministratorMixin, BaseFeedbackProgressView):
     template_name = 'feedback_base.html'
+    view_permission = Permission.VIEW_FEEDBACK_UNSUBMITTED
 
 
 class PublicFeedbackProgress(PublicTournamentPageMixin, BaseFeedbackProgressView):
@@ -754,6 +764,7 @@ class BaseFeedbackToggleView(AdministratorMixin, TournamentMixin, PostOnlyRedire
 
 
 class ConfirmFeedbackView(BaseFeedbackToggleView):
+    edit_permission = Permission.EDIT_FEEDBACK_CONFIRM
 
     def feedback_result(self, feedback):
         return _("confirmed") if feedback.confirmed else _("un-confirmed")
@@ -767,6 +778,7 @@ class ConfirmFeedbackView(BaseFeedbackToggleView):
 
 
 class IgnoreFeedbackView(BaseFeedbackToggleView):
+    edit_permission = Permission.EDIT_FEEDBACK_IGNORE
 
     def feedback_result(self, feedback):
         return _("ignored") if feedback.ignored else _("un-ignored")
@@ -784,6 +796,7 @@ class UpdateAdjudicatorScoresView(AdministratorMixin, LogActionMixin, Tournament
     template_name = 'update_adjudicator_scores.html'
     form_class = UpdateAdjudicatorScoresForm
     action_log_type = ActionLogEntry.ACTION_TYPE_UPDATE_ADJUDICATOR_SCORES
+    edit_permission = Permission.EDIT_JUDGESCORES_BULK
 
     def get_context_data(self, **kwargs):
         sample_adjs = self.tournament.relevant_adjudicators.all()[:3]

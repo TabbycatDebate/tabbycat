@@ -16,6 +16,7 @@ from draw.generator.utils import ispow2
 from participants.models import Team
 from participants.views import EditSpeakerCategoriesView, UpdateEligibilityEditView as BaseUpdateEligibilityEditView
 from tournaments.mixins import PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TournamentMixin
+from users.permissions import Permission
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
@@ -39,6 +40,7 @@ class PublicBreakIndexView(PublicTournamentPageMixin, TemplateView):
 
 class AdminBreakIndexView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = 'breaking_index.html'
+    view_permission = Permission.VIEW_BREAK_OVERVIEW
 
     def get_context_data(self, **kwargs):
         tournament = self.tournament
@@ -109,6 +111,8 @@ class BreakingTeamsFormView(GenerateBreakMixin, LogActionMixin, AdministratorMix
     form_class = forms.BreakingTeamsForm
     template_name = 'breaking_teams.html'
     action_log_content_object_attr = 'object'
+    view_permission = Permission.VIEW_BREAK
+    edit_permission = Permission.GENERATE_BREAK
 
     def get_action_log_type(self):
         if 'save_update_all' in self.request.POST:
@@ -188,6 +192,7 @@ class GenerateAllBreaksView(GenerateBreakMixin, LogActionMixin, TournamentMixin,
 
     action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_GENERATE_ALL
     tournament_redirect_pattern_name = 'breakqual-teams'
+    edit_permission = Permission.GENERATE_BREAK
 
     def post(self, request, *args, **kwargs):
         BreakingTeam.objects.filter(break_category__tournament=self.tournament).delete()
@@ -219,6 +224,7 @@ class BaseBreakingAdjudicatorsView(TournamentMixin, VueTableTemplateView):
 
 class AdminBreakingAdjudicatorsView(AdministratorMixin, BaseBreakingAdjudicatorsView):
     template_name = 'breaking_adjs.html'
+    view_permission = Permission.VIEW_ADJ_BREAK
 
 
 class PublicBreakingAdjudicatorsView(PublicTournamentPageMixin, BaseBreakingAdjudicatorsView):
@@ -254,6 +260,8 @@ class EditBreakCategoriesView(EditSpeakerCategoriesView):
     template_name = 'break_categories_edit.html'
     formset_model = BreakCategory
     action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_CATEGORIES_EDIT
+    view_permission = Permission.VIEW_BREAK_CATEGORIES
+    edit_permission = Permission.EDIT_BREAK_CATEGORIES
 
     url_name = 'break-categories-edit'
     success_url = 'breakqual-index'
@@ -280,6 +288,8 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
     template_name = 'edit_break_eligibility.html'
     page_title = _("Break Eligibility")
     page_emoji = '🍯'
+    view_permission = Permission.VIEW_BREAK_ELIGIBILITY
+    edit_permission = Permission.EDIT_BREAK_ELIGIBILITY
 
     def get_table(self):
         t = self.tournament
@@ -331,3 +341,4 @@ class UpdateEligibilityEditView(BaseUpdateEligibilityEditView):
     action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT
     participant_model = Team
     many_to_many_field = 'break_categories'
+    edit_permission = Permission.EDIT_BREAK_ELIGIBILITY

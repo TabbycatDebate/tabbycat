@@ -1,34 +1,12 @@
+from typing import TYPE_CHECKING, Union
+
 from django.core.cache import cache
 from django.db.models import TextChoices
 from django.utils.translation import gettext_lazy as _
 
-
-def has_permission(user, permission, tournament):
-    if user.is_superuser:
-        return True
-
-    if isinstance(permission, bool):
-        return permission
-
-    if not hasattr(user, '_permissions'):
-        user._permissions = {}
-
-    if tournament.slug in user._permissions:
-        return permission in user._permissions[tournament.slug]
-    else:
-        user._permissions[tournament.slug] = set()
-
-    cached_perm = cache.get("user_%d_%s_%s_permission" % (user.pk, tournament.slug, str(permission)))
-    if cached_perm is not None:
-        if cached_perm:
-            user._permissions[tournament.slug].add(permission)
-        return cached_perm
-
-    perm = user.userpermission_set.filter(permission=permission, tournament=tournament).exists()
-    cache.set("user_%d_%s_%s_permission" % (user.pk, tournament.slug, str(permission)), perm)
-    if perm:
-        user._permissions[tournament.slug].add(permission)
-    return perm
+if TYPE_CHECKING:
+    from django.conf import settings
+    from tournaments.models import Tournament
 
 
 class Permission(TextChoices):
@@ -109,16 +87,12 @@ class Permission(TextChoices):
     EDIT_JUDGESCORES_BULK = 'edit.judgescoresbulk', _("bulk update judge scores")
     EDIT_BASEJUDGESCORES_IND = 'edit.judgescoresind', _("edit base scores of judges")
     EDIT_SETBREAKING = 'edit.setbreaking', _("edit breaking judges")
-    VIEW_FEEDBACK_LATEST = 'view.feedbacklatest', _("view the latest feedback tab")
-    VIEW_FEEDBACK_IMPORTANT = 'view.feedbackimportant', _("view the important feedback tab")
-    VIEW_FEEDBACK_COMMENTS = 'view.feedbackcomments', _("view the comments feedback tab")
-    VIEW_FEEDBACK_BYSOURCE = 'view.feedbackbysource', _("view feedback by source")
-    VIEW_FEEDBACK_BYTARGET = 'view.feedbackbytarget', _("view feedback by target")
-    EDIT_FEEDBACK_IGNORE = 'edit.feedbackignore', _("edit the ignore feedback feature")
-    EDIT_FEEDBACK_UNCONFIRM = 'edit.feedbackunconfirm', _("edit the unconfirm feedback feature")
+    VIEW_FEEDBACK = 'view.feedback', _("view feedback")
+    EDIT_FEEDBACK_IGNORE = 'edit.feedbackignore', _("toggle ignore feedback")
+    EDIT_FEEDBACK_CONFIRM = 'edit.feedbackconfirm', _("toggle confirm feedback")
     VIEW_FEEDBACK_UNSUBMITTED = 'view.feedbackunsubmitted', _("view feedback unsubmitted tab")
-    VIEW_FEEDBACK_ADD = 'view.feedbackadd', _("view add feedback tab")
-    EDIT_FEEDBACK_ADD = 'edit.feedbackadd', _("edit add feedback tab")
+    ADD_FEEDBACK = 'add.feedback', _("add feedback")
+    VIEW_ADJ_BREAK = 'view.adj.break', _("view adjudicator break")
     # idk if its possible for them to add feedback everywhere, considering there is add feedback on multiple pages
 
     # breaks
@@ -126,5 +100,38 @@ class Permission(TextChoices):
     VIEW_BREAK_ELIGIBILITY = 'view.breakeligibility', _("view break eligibility")
     EDIT_BREAK_CATEGORIES = 'edit.breakcategories', _("edit break categories")
     VIEW_BREAK_CATEGORIES = 'view.breakcategories', _("view break categories")
+    VIEW_BREAK_OVERVIEW = 'view.break.overview', _("view break overview")
+    VIEW_BREAK = 'view.break', _("view breaks")
     GENERATE_BREAK = 'generate.break', _("generate all breaks")
-    EDIT_BREAK_REMARKS = 'edit.breakremarks', _("edit break remarks")
+
+
+permission_type = Union[Permission, bool]
+
+
+def has_permission(user: 'settings.AUTH_USER_MODEL', permission: permission_type, tournament: 'Tournament') -> bool:
+    if user.is_superuser:
+        return True
+
+    if isinstance(permission, bool):
+        return permission
+
+    if not hasattr(user, '_permissions'):
+        user._permissions = {}
+
+    if tournament.slug in user._permissions:
+        if permission in user._permissions[tournament.slug]:
+            return True
+    else:
+        user._permissions[tournament.slug] = set()
+
+    cached_perm = cache.get("user_%d_%s_%s_permission" % (user.pk, tournament.slug, str(permission)))
+    if cached_perm is not None:
+        if cached_perm:
+            user._permissions[tournament.slug].add(permission)
+        return cached_perm
+
+    perm = user.userpermission_set.filter(permission=permission, tournament=tournament).exists()
+    cache.set("user_%d_%s_%s_permission" % (user.pk, tournament.slug, str(permission)), perm)
+    if perm:
+        user._permissions[tournament.slug].add(permission)
+    return perm

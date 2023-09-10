@@ -1,3 +1,5 @@
+from typing import List, Optional
+
 from django.utils.translation import gettext_lazy as _
 
 from options.presets import _all_subclasses
@@ -10,8 +12,8 @@ def all_groups():
 
 
 class BaseGroup:
-    name = None
-    permissions = []
+    name: Optional[str] = None
+    permissions: List[Permission] = []
 
 
 class Equity(BaseGroup):
