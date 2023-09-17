@@ -330,6 +330,37 @@ class WSDCPreferences(AustralsPreferences):
     ui_options__show_adjudicator_institutions  = False
 
 
+class APDAPreferences(PreferencesPreset):
+    name = _("APDA Rules")
+    show_in_list = True
+    description = _("2 vs 2 with speech rankings and byes")
+
+    scoring__score_min                         = 15
+    scoring__score_max                         = 40
+    motions__motion_vetoes_enabled             = False # Single motions per round
+    motions__enable_motions                    = False
+    draw_rules__draw_odd_bracket               = 'pullup_bottom'
+    draw_rules__team_institution_penalty       = 1000
+    draw_rules__team_history_penalty           = 100000
+    draw_rules__draw_pairing_method            = 'fold'
+    draw_rules__draw_pullup_restriction        = 'least_to_date'
+    draw_rules__bye_team_results               = 'points'
+    draw_rules__bye_team_selection             = 'lowest'
+    draw_rules__draw_avoid_conflicts           = 'graph'
+    draw_rules__pullup_debates_penalty         = 10000
+    draw_rules__side_penalty                   = 100
+    draw_rules__pairing_penalty                = 1
+    debate_rules__ballots_per_debate_prelim    = 'per-debate'
+    debate_rules__ballots_per_debate_elim      = 'per-debate'
+    debate_rules__winners_in_ballots           = 'tied-points'
+    debate_rules__speakers_in_ballots          = 'prelim'
+    debate_rules__substantive_speakers         = 2
+    debate_rules__side_names                   = 'gov-opp'
+    debate_rules__reply_scores_enabled         = False
+    debate_rules__speaker_ranks                = 'any'
+    standings__speaker_standings_precedence    = ['average', 'srank', 'trimmed_mean']
+
+
 class PublicInformation(PreferencesPreset):
     name         = _("Public Information Options")
     show_in_list = False
