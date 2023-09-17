@@ -185,12 +185,14 @@ class Debate(models.Model):
 
     aff_team = _team_property('aff_team')
     neg_team = _team_property('neg_team')
+    bye_team = _team_property('bye_team')
     og_team = _team_property('og_team')
     oo_team = _team_property('oo_team')
     cg_team = _team_property('cg_team')
     co_team = _team_property('co_team')
     aff_dt = _team_property('aff_dt')
     neg_dt = _team_property('neg_dt')
+    bye_dt = _team_property('bye_dt')
     og_dt = _team_property('og_dt')
     oo_dt = _team_property('oo_dt')
     cg_dt = _team_property('cg_dt')
@@ -244,6 +246,12 @@ class Debate(models.Model):
             self._adjudicators = AdjudicatorAllocation(self, from_db=True)
             return self._adjudicators
 
+    @property
+    def is_bye(self):
+        if not hasattr(self, '_team_properties'):
+            self._populate_teams()
+        return 'bye_dt' in self._team_properties
+
 
 class DebateTeamManager(models.Manager):
     use_for_related_fields = True
@@ -253,18 +261,15 @@ class DebateTeamManager(models.Manager):
 
 
 class DebateTeam(models.Model):
-    SIDE_AFF = 'aff'
-    SIDE_NEG = 'neg'
-    SIDE_OG = 'og'
-    SIDE_OO = 'oo'
-    SIDE_CG = 'cg'
-    SIDE_CO = 'co'
-    SIDE_CHOICES = ((SIDE_AFF, _("affirmative")),
-                    (SIDE_NEG, _("negative")),
-                    (SIDE_OG, _("opening government")),
-                    (SIDE_OO, _("opening opposition")),
-                    (SIDE_CG, _("closing government")),
-                    (SIDE_CO, _("closing opposition")))
+
+    class Side(models.TextChoices):
+        AFF = 'aff', _("affirmative")
+        NEG = 'neg', _("negative")
+        OG = 'og', _("opening government")
+        OO = 'oo', _("opening opposition")
+        CG = 'cg', _("closing government")
+        CO = 'co', _("closing opposition")
+        BYE = 'bye', _("bye")
 
     objects = DebateTeamManager()
 
@@ -272,7 +277,7 @@ class DebateTeam(models.Model):
         verbose_name=_("debate"))
     team = models.ForeignKey('participants.Team', models.PROTECT,
         verbose_name=_("team"))
-    side = models.CharField(max_length=3, choices=SIDE_CHOICES,
+    side = models.CharField(max_length=3, choices=Side.choices,
         verbose_name=_("side"))
 
     flags = ChoiceArrayField(base_field=models.CharField(max_length=15, choices=DRAW_FLAG_DESCRIPTIONS), blank=True, default=list)
@@ -289,6 +294,10 @@ class DebateTeam(models.Model):
         try:
             return self._opponent
         except AttributeError:
+            if self.side == self.Side.BYE:
+                self._opponent = None
+                return self._opponent
+
             try:
                 self._opponent = DebateTeam.objects.exclude(side=self.side).select_related(
                         'team', 'team__institution').get(debate=self.debate)
@@ -375,7 +384,7 @@ class TeamSideAllocation(models.Model):
         verbose_name=_("round"))
     team = models.ForeignKey('participants.Team', models.CASCADE,
         verbose_name=_("team"))
-    side = models.CharField(max_length=3, choices=DebateTeam.SIDE_CHOICES,
+    side = models.CharField(max_length=3, choices=DebateTeam.Side.choices,
         verbose_name=_("side"))
 
     class Meta:

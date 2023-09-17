@@ -64,9 +64,12 @@ export default {
       }
       // Sort the array of rows based on the value of the cell index
       // For DrawContainer row is the debate dictionary
-      const self = this
       return _.orderBy(this.sortableData, (row) => {
-        const cellData = self.getSortableProperty(row, orderedHeaderIndex)
+        const cellData = this.getSortableProperty(row, orderedHeaderIndex)
+        if (cellData === '') {
+          // Nulls last
+          return -1
+        }
         if (_.isString(cellData)) {
           return _.lowerCase(cellData)
         }

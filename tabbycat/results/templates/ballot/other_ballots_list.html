@@ -49,11 +49,11 @@
           Version <strong>{{ version }}</strong>,
         {% endblocktrans %}
 
-        {% if other.submitter_type == ballotsub.SUBMITTER_TABROOM %}
+        {% if other.submitter_type == ballotsub.Submitter.TABROOM %}
           {% blocktrans trimmed with submitter=other.submitter %}
             entered by <strong>{{ submitter }}</strong>,
           {% endblocktrans %}
-        {% elif other.submitter_type == ballotsub.SUBMITTER_PUBLIC %}
+        {% elif other.submitter_type == ballotsub.Submitter.PUBLIC %}
           {% if other.participant_submitter %}
             {% blocktrans trimmed with adjudicator=other.participant_submitter %}
               submitted from <strong>{{ adjudicator }}</strong>'s private URL,

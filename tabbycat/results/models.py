@@ -27,18 +27,16 @@ class Submission(models.Model):
     The unique_together class attribute of the Meta class MUST be set in
     all subclasses."""
 
-    SUBMITTER_TABROOM = 'T'
-    SUBMITTER_PUBLIC = 'P'
-    SUBMITTER_TYPE_CHOICES = (
-        (SUBMITTER_TABROOM, _("Tab room")),
-        (SUBMITTER_PUBLIC, _("Public")),
-    )
+    class Submitter(models.TextChoices):
+        TABROOM = 'T', _("Tab room")
+        PUBLIC = 'P', _("Public")
+        AUTOMATION = 'A', _("Automation")
 
     timestamp = models.DateTimeField(auto_now_add=True,
         verbose_name=_("timestamp"))
     version = models.PositiveIntegerField(
         verbose_name=_("version"))
-    submitter_type = models.CharField(max_length=1, choices=SUBMITTER_TYPE_CHOICES,
+    submitter_type = models.CharField(max_length=1, choices=Submitter.choices,
         verbose_name=_("submitter type"))
     confirmed = models.BooleanField(default=False,
         verbose_name=_("confirmed"))
@@ -99,7 +97,7 @@ class Submission(models.Model):
 
     def clean(self):
         super().clean()
-        if self.submitter_type == self.SUBMITTER_TABROOM and self.submitter is None:
+        if self.submitter_type == self.Submitter.TABROOM and self.submitter is None:
             raise ValidationError(_("A tab room ballot must have a user associated."))
 
 

@@ -172,8 +172,8 @@ class PublicDrawEliminationCurrentRoundTest(CompletedTournamentTestMixin, TableV
         ngf_debate = self.ngf.debate_set.create()
         aff = self.tournament.team_set.get(id=4)
         neg = self.tournament.team_set.get(id=6)
-        ngf_debate.debateteam_set.create(team=aff, side=DebateTeam.SIDE_AFF)
-        ngf_debate.debateteam_set.create(team=neg, side=DebateTeam.SIDE_NEG)
+        ngf_debate.debateteam_set.create(team=aff, side=DebateTeam.Side.AFF)
+        ngf_debate.debateteam_set.create(team=neg, side=DebateTeam.Side.NEG)
 
         response = self.get_response('draw-public-current-rounds')
         self.assertResponseTableRowCountsEqual(response, [4, 2, 1])

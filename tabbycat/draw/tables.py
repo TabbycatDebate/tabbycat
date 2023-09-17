@@ -69,9 +69,16 @@ class PublicDrawTableBuilder(BaseDrawTableBuilder):
 
             team_data = []
             for debate, hl in zip_longest(debates, highlight):
-                team = debate.get_team(side)
-                subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_name
-                team_data.append(self._team_cell(team, subtext=subtext, show_emoji=True, highlight=team == hl))
+                if debate.is_bye:
+                    if i == 1:  # 1-indexed loop
+                        team = debate.get_team('bye')
+                        team_data.append(self._team_cell(team, subtext=_("Bye"), show_emoji=True, highlight=team == hl))
+                    else:
+                        team_data.append({'text': self.BLANK_TEXT})
+                else:
+                    team = debate.get_team(side)
+                    subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_name
+                    team_data.append(self._team_cell(team, subtext=subtext, show_emoji=True, highlight=team == hl))
 
             title = side_name if all_sides_confirmed else _("Team %(num)d") % {'num': i}
             header = {'key': side, 'title': title}

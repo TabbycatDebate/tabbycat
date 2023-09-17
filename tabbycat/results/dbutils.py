@@ -90,7 +90,7 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False, r
 
     # Create a new BallotSubmission
     bsub = BallotSubmission(submitter_type=submitter_type, debate=debate)
-    if submitter_type == BallotSubmission.SUBMITTER_TABROOM:
+    if submitter_type == BallotSubmission.Submitter.TABROOM:
         bsub.submitter = user
     bsub.save()
 

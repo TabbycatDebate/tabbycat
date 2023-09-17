@@ -21,8 +21,8 @@ class TestMotionStatisticsTwoTeam(TestCase):
         rd = Round.objects.create(tournament=self.tournament, seq=1)
         motion = Motion.objects.create(text="Motion", reference="Motion", tournament=self.tournament)
         debate = Debate.objects.create(round=rd)
-        dt1 = DebateTeam.objects.create(debate=debate, team=team1, side=DebateTeam.SIDE_AFF)
-        dt2 = DebateTeam.objects.create(debate=debate, team=team2, side=DebateTeam.SIDE_NEG)
+        dt1 = DebateTeam.objects.create(debate=debate, team=team1, side=DebateTeam.Side.AFF)
+        dt2 = DebateTeam.objects.create(debate=debate, team=team2, side=DebateTeam.Side.NEG)
         ballotsub = BallotSubmission.objects.create(debate=debate, motion=motion, confirmed=True)
         TeamScore.objects.create(debate_team=dt1, ballot_submission=ballotsub,
             margin=+2, points=1, score=101, win=True,  votes_given=1, votes_possible=1)

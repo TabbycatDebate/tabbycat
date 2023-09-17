@@ -19,7 +19,7 @@ from django.views.generic import FormView, TemplateView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
-from draw.models import Debate
+from draw.models import Debate, DebateTeam
 from draw.prefetch import populate_opponents
 from motions.models import RoundMotion
 from motions.utils import merge_motion_vetos, merge_motions
@@ -69,7 +69,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
     def _get_draw(self):
         if not hasattr(self, '_draw'):
             self._draw = self.round.debate_set_with_prefetches(
-                    ordering=('room_rank',), results=True, wins=True, check_ins=True, iron=True)
+                filter_args=[~Q(debateteam__side=DebateTeam.Side.BYE)], ordering=('room_rank',), results=True, wins=True, check_ins=True, iron=True)
         return self._draw
 
     def get_table(self):
@@ -426,10 +426,13 @@ class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
     def get_error_url(self):
         return self.get_success_url()
 
+    def get_queryset(self):
+        return super().get_queryset().exclude(debateteam__side=DebateTeam.Side.BYE)
+
     def populate_objects(self, prefill=True):
         self.debate = self.object = self.get_object()
         self.ballotsub = BallotSubmission(debate=self.debate, submitter=self.request.user,
-            submitter_type=BallotSubmission.SUBMITTER_TABROOM,
+            submitter_type=BallotSubmission.Submitter.TABROOM,
             ip_address=get_ip_address(self.request))
 
         if self.debate.round.ballots_per_debate == 'per-adj' and \
@@ -477,6 +480,9 @@ class BaseEditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
 
     def get_success_url(self):
         return reverse_round('results-round-list', self.ballotsub.debate.round)
+
+    def get_queryset(self):
+        return super().get_queryset().exclude(debate__debateteam__side=DebateTeam.Side.BYE)
 
     def add_success_message(self):
         if self.ballotsub.discarded:
@@ -558,7 +564,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
 
         self.debate = self.debateadj.debate
         self.ballotsub = BallotSubmission(debate=self.debate, ip_address=get_ip_address(self.request),
-            submitter_type=BallotSubmission.SUBMITTER_PUBLIC, single_adj=self.tournament.pref('individual_ballots'),
+            submitter_type=BallotSubmission.Submitter.PUBLIC, single_adj=self.tournament.pref('individual_ballots'),
             private_url=self.private_url, participant_submitter=self.object)
 
         self.round_motions = {}
@@ -679,7 +685,7 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
             return self.object.matchup
 
     def get_queryset(self):
-        return self.model.objects.select_related(
+        return super().get_queryset().exclude(debateteam__side=DebateTeam.Side.BYE).select_related(
             'round',
         ).prefetch_related('debateteam_set__team')
 

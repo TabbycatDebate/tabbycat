@@ -15,7 +15,7 @@ class TabroomSubmissionFieldsMixin:
         request = self.get_request()
         return {
             'submitter': request.user,
-            'submitter_type': Submission.SUBMITTER_TABROOM,
+            'submitter_type': Submission.Submitter.TABROOM,
             'ip_address': get_ip_address(request),
         }
 
@@ -27,6 +27,6 @@ class PublicSubmissionFieldsMixin:
 
     def get_submitter_fields(self):
         return {
-            'submitter_type': Submission.SUBMITTER_PUBLIC,
+            'submitter_type': Submission.Submitter.PUBLIC,
             'ip_address': get_ip_address(self.request),
         }
