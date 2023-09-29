@@ -278,7 +278,7 @@ class BaseBallotSetForm(BaseResultForm):
         self.max_margin = self.tournament.pref('maximum_margin')
         self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
                                self.tournament.pref('teams_in_debate') == 'two')
-        self.uses_speaker_ranks = self.tournament.pref('speaker_ranks') != 'none'
+        self.using_speaker_ranks = self.tournament.pref('speaker_ranks') != 'none'
 
     # --------------------------------------------------------------------------
     # Field names and field convenience functions

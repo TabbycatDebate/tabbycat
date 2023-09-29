@@ -674,17 +674,14 @@ class DebateResultWithScoresMixin:
         super().init_blank_buffer()
         self.speakers = {side: dict.fromkeys(self.positions, None) for side in self.sides}
         self.ghosts = {side: dict.fromkeys(self.positions, False) for side in self.sides}
-        self.speaker_ranks = {side: dict.fromkeys(self.positions, None) for side in self.sides}
 
     def assert_loaded(self):
         super().assert_loaded()
         assert set(self.speakers) == set(self.sides)
         assert set(self.ghosts) == set(self.sides)
-        assert set(self.speaker_ranks) == set(self.sides)
         for side in self.sides:
             assert set(self.speakers[side]) == set(self.positions)
             assert set(self.ghosts[side]) == set(self.positions)
-            assert set(self.speaker_ranks[side]) == set(self.positions)
 
     def is_complete(self):
         return super().is_complete() and not any(self.speakers[s][p] is None for s in self.sides for p in self.positions)
@@ -737,7 +734,6 @@ class DebateResultWithScoresMixin:
         for ss in speakerscores:
             self.speakers[ss.debate_team.side][ss.position] = ss.speaker
             self.ghosts[ss.debate_team.side][ss.position] = ss.ghost
-            self.speaker_ranks[ss.debate_team.side][ss.position] = ss.rank
 
     def save(self):
         super().save()
@@ -764,8 +760,8 @@ class DebateResultWithScoresMixin:
             return
         self.speakers[side][position] = speaker
 
-    def get_ghost(self, side, position):
-        return self.ghosts[side].get(position)
+    def get_ghost(self, side: str, position: int) -> bool:
+        return self.ghosts[side].get(position, False)
 
     def set_ghost(self, side, position, is_ghost):
         self.ghosts[side][position] = is_ghost
@@ -783,11 +779,8 @@ class DebateResultWithScoresMixin:
     def speakerscore_field_speaker(self, side, position):
         return self.speakers[side][position]
 
-    def speakerscore_field_ghost(self, side, position):
-        return self.ghosts[side][position]
-
-    def speakerscore_field_rank(self, side, position):
-        return self.speaker_ranks[side][position]
+    speakerscore_field_ghost = get_ghost
+    speakerscore_field_rank = get_speaker_rank
 
     def teamscore_field_margin(self, side):
         return self.calculate_full_margin(side)
@@ -991,6 +984,7 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
 
         for ss in speakerscore:
             self.set_score(ss.debate_team.side, ss.position, ss.score)
+            self.set_speaker_rank(ss.debate_team.side, ss.position, ss.rank)
 
     def set_score(self, side, position, score):
         self.scoresheet.set_score(side, position, score)
