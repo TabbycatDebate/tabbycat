@@ -1,5 +1,6 @@
 import random
 from collections import OrderedDict
+from typing import Optional
 
 from django.utils.translation import gettext as _
 
@@ -297,23 +298,23 @@ class GraphCostMixin:
         return penalty
 
     @staticmethod
-    def _pairings_slide(teams, size, bracket=None):
-        return abs(teams[0].subrank - teams[1].subrank) - size // 2
+    def _pairings_slide(teams, size: int, bracket: Optional[int] = None) -> int:
+        return abs(abs(teams[0].subrank - teams[1].subrank) - size // 2)
 
     @staticmethod
-    def _pairings_fold(teams, size, bracket=None):
-        return teams[0].subrank + teams[1].subrank - 1 - size
+    def _pairings_fold(teams, size: int, bracket: Optional[int] = None) -> int:
+        return abs(teams[0].subrank + teams[1].subrank - 1 - size)
 
     @staticmethod
-    def _pairings_random(teams, size, bracket=None):
+    def _pairings_random(teams, size: int, bracket: Optional[int] = None) -> int:
         return 0
 
     @staticmethod
-    def _pairings_adjacent(teams, size, bracket=None):
+    def _pairings_adjacent(teams, size: int, bracket: Optional[int] = None) -> int:
         return abs(teams[0].subrank - teams[1].subrank) - 1
 
     @classmethod
-    def _pairings_fold_top_adjacent_rest(cls, teams, size, bracket=None):
+    def _pairings_fold_top_adjacent_rest(cls, teams, size: int, bracket: Optional[int] = None) -> int:
         if bracket == 0:
             return cls._pairings_fold(teams, size)
         return cls._pairings_adjacent(teams, size)
@@ -443,7 +444,7 @@ class AustralsPairingMixin:
                     pairing.teams = list(new)
 
 
-class GraphPowerPairedDrawGenerator(GraphGeneratorMixin, GraphCostMixin, BasePowerPairedDrawGenerator):
+class GraphPowerPairedDrawGenerator(GraphCostMixin, GraphGeneratorMixin, BasePowerPairedDrawGenerator):
     pass
 
 
@@ -719,7 +720,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
         raise NotImplementedError("Intermediate brackets with conflict avoidance isn't supported with allocated sides.")
 
 
-class GraphPowerPairedWithAllocatedSidesDrawGenerator(GraphAllocatedSidesMixin, GraphCostMixin, PowerPairedWithAllocatedSidesDrawGenerator):
+class GraphPowerPairedWithAllocatedSidesDrawGenerator(GraphCostMixin, GraphAllocatedSidesMixin, PowerPairedWithAllocatedSidesDrawGenerator):
     pass
 
 
