@@ -766,21 +766,12 @@ class DebateResultWithScoresMixin:
     def set_ghost(self, side, position, is_ghost):
         self.ghosts[side][position] = is_ghost
 
-    def get_speaker_rank(self, side: str, position: int) -> int:
-        return self.scoresheet.get_speaker_rank(side, position)
-
-    def set_speaker_rank(self, side, position, rank):
-        self.scoresheet.set_speaker_rank(side, position, rank)
-
     # --------------------------------------------------------------------------
     # Model fields
     # --------------------------------------------------------------------------
 
-    def speakerscore_field_speaker(self, side, position):
-        return self.speakers[side][position]
-
+    speakerscore_field_speaker = get_speaker
     speakerscore_field_ghost = get_ghost
-    speakerscore_field_rank = get_speaker_rank
 
     def teamscore_field_margin(self, side):
         return self.calculate_full_margin(side)
@@ -998,6 +989,12 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
                 errors.append(ResultError('Scores are not identical', 'scores', side, pos))
         return errors
 
+    def get_speaker_rank(self, side: str, position: int) -> int:
+        return self.scoresheet.get_speaker_rank(side, position)
+
+    def set_speaker_rank(self, side, position, rank):
+        self.scoresheet.set_speaker_rank(side, position, rank)
+
     # --------------------------------------------------------------------------
     # Model fields
     # --------------------------------------------------------------------------
@@ -1006,6 +1003,7 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
         return self.scoresheet.get_score(side, position)
 
     get_score = speakerscore_field_score
+    speakerscore_field_rank = get_speaker_rank
 
     def teamscore_field_score(self, side):
         if self.tournament.pref('teamscore_includes_ghosts'):
