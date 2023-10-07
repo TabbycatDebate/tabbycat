@@ -602,17 +602,20 @@ class TeamSerializer(serializers.ModelSerializer):
         allow_null=True,
         view_name='api-global-institution-detail',
         queryset=Institution.objects.all(),
+        required=False,
     )
     break_categories = fields.TournamentHyperlinkedRelatedField(
         many=True,
         view_name='api-breakcategory-detail',
         queryset=BreakCategory.objects.all(),
+        required=False,
     )
 
     institution_conflicts = serializers.HyperlinkedRelatedField(
         many=True,
         view_name='api-global-institution-detail',
         queryset=Institution.objects.all(),
+        required=False,
     )
 
     venue_constraints = VenueConstraintSerializer(many=True, required=False)
@@ -668,8 +671,8 @@ class TeamSerializer(serializers.ModelSerializer):
         3. Create the speakers.
         4. Add institution conflict"""
 
-        if len(validated_data.get('short_reference', "")) == 0:
-            validated_data['short_reference'] = validated_data['reference'][:34]
+        if validated_data.get('short_reference') is None:
+            validated_data['short_reference'] = validated_data.get('reference', '')[:34]
 
         speakers_data = validated_data.pop('speakers', [])
         break_categories = validated_data.pop('break_categories', [])
