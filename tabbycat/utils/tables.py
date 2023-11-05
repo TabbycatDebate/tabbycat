@@ -845,7 +845,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             ballot_links_data = [{
                 'text': no_ballot if debate.is_bye else _("View/Edit Ballot"),
                 'link': None if debate.is_bye else reverse_tournament('old-results-ballotset-edit', self.tournament, kwargs={'pk': debate.confirmed_ballot.id}),
-            } if debate.confirmed_ballot else "" for debate in debates if not debate.is_bye]
+            } if debate.confirmed_ballot else "" for debate in debates]
             self.add_column(ballot_links_header, ballot_links_data)
 
         elif self.private_url:

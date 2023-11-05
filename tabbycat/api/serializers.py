@@ -23,7 +23,7 @@ from participants.utils import populate_code_names
 from privateurls.utils import populate_url_keys
 from results.mixins import TabroomSubmissionFieldsMixin
 from results.models import BallotSubmission, SpeakerScore, TeamScore
-from results.result import DebateResult
+from results.result import DebateResult, ResultError
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.models import Round, Tournament
@@ -1152,8 +1152,8 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
 
                     if result.get_scoresheet_class().uses_declared_winners and self.validated_data.get('win', False):
                         args = [self.validated_data['side']]
-                        if self.validated_data.get('adjudicator') is not None:
-                            args.insert(0, self.validated_data['adjudicator'])
+                        if kwargs.get('adjudicator') is not None and not result.ballotsub.single_adj:
+                            args.insert(0, kwargs.get('adjudicator'))
                         result.add_winner(*args)
 
                     speech_serializer = self.SpeechSerializer(context=self.context)
@@ -1220,7 +1220,11 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                 sheets._validated_data = sheet
                 sheets.save(result=result)
 
-            result.save()
+            try:
+                result.save()
+            except ResultError as e:
+                raise serializers.ValidationError(str(e))
+
             return result
 
     class VetoSerializer(serializers.ModelSerializer):
@@ -1233,8 +1237,9 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
             exclude = ('id', 'ballot_submission', 'preference', 'debate_team')
 
         def create(self, validated_data):
+            team = validated_data.pop('debate_team').pop('team')
             try:
-                validated_data['debate_team'] = DebateTeam.objects.get(debate=self.context['debate'], team=validated_data.pop('team'))
+                validated_data['debate_team'] = DebateTeam.objects.get(debate=self.context['debate'], team=team)
             except (DebateTeam.DoesNotExist, DebateTeam.MultipleObjectsReturned):
                 raise serializers.ValidationError('Team is not in debate')
             return super().create(validated_data)
@@ -1242,7 +1247,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
     result = ResultSerializer(source='result.get_result_info')
     motion = fields.TournamentHyperlinkedRelatedField(view_name='api-motion-detail', required=False, queryset=Motion.objects.all())
     url = fields.DebateHyperlinkedIdentityField(view_name='api-ballot-detail')
-    participant_submitter = fields.ParticipantSourceField(allow_null=True)
+    participant_submitter = fields.ParticipantSourceField(allow_null=True, required=False)
     vetos = VetoSerializer(many=True, source='debateteammotionpreference_set', required=False, allow_null=True)
 
     class Meta:
@@ -1250,14 +1255,14 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         exclude = ('debate',)
         read_only_fields = ('timestamp', 'version',
             'submitter_type', 'submitter', 'participant_submitter',
-            'confirmer', 'confirm_timestamp', 'ip_address', 'single_adj', 'private_url')
+            'confirmer', 'confirm_timestamp', 'ip_address', 'private_url')
 
     def get_request(self):
         return self.context['request']
 
     def create(self, validated_data):
         result_data = validated_data.pop('result').pop('get_result_info')
-        veto_data = validated_data.pop('vetos', None)
+        veto_data = validated_data.pop('debateteammotionpreference_set', None)
 
         validated_data.update(self.get_submitter_fields())
         if validated_data.get('confirmed', False):
@@ -1266,12 +1271,19 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
 
         stage = 'elim' if self.context['round'].stage == Round.Stage.ELIMINATION else 'prelim'
         if self.context['tournament'].pref('ballots_per_debate_' + stage) == 'per-adj':
-            if self.context['debate'].debateadjudicator_set.all().count() > 1:
+            debateadj_count = self.context['debate'].debateadjudicator_set.exclude(type=DebateAdjudicator.TYPE_TRAINEE).count()
+            if debateadj_count > 1:
                 if len(result_data['sheets']) == 1:
                     validated_data['participant_submitter'] = result_data['sheets'][0]['adjudicator']
                     validated_data['single_adj'] = True
-                else:
-                    raise serializers.ValidationError('Single-adjudicator ballots must have only one scoresheet')
+                elif validated_data.get('single_adj', False):
+                    raise serializers.ValidationError({'single_adj': 'Single-adjudicator ballots can only have one scoresheet'})
+                elif len(result_data['sheets']) != debateadj_count:
+                    raise serializers.ValidationError({
+                        'result': 'Voting ballots must either have one scoresheet or ballots from all voting adjudicators',
+                    })
+        elif len(result_data['sheets']) > 1:
+            raise serializers.ValidationError({'result': 'Consensus ballots can only have one scoresheet'})
 
         ballot = super().create(validated_data)
 
@@ -1281,8 +1293,9 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         result.save(ballot=ballot)
 
         if veto_data:
-            vetos = self.VetoSerializer(context=self.context)
+            vetos = self.VetoSerializer(context=self.context, many=True)
             vetos._validated_data = veto_data
+            vetos._errors = []
             vetos.save(ballot_submission=ballot, preference=3)
 
         return ballot

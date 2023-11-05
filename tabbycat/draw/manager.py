@@ -272,7 +272,10 @@ class PowerPairedDrawManager(BaseDrawManager):
                 for i in range(n_byes):
                     byes.append(ranked.pop(random.randrange(len(ranked))))
                 return ranked, byes
-            return ranked[:-n_byes], ranked[-n_byes:]
+            elif self.round.tournament.pref('bye_team_selection') == 'lowest':
+                return ranked[:-n_byes], ranked[-n_byes:]
+            else:
+                raise RuntimeError("Bye team(s) created without recognized selection option")
 
         return ranked, []
 
