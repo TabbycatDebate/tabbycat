@@ -43,8 +43,8 @@ parser.add_argument(
     help="Heroku Postgres plan (default mini)")
 
 parser.add_argument(
-    "--web-dynos", type=str, default="1:eco",
-    help="Web dyno specification, passed to heroku ps:scale web=[], e.g. 1:eco, 1:hobby, 2:Standard-1X")
+    "--web-dynos", type=str, default="1",
+    help="Web dyno specification, passed to heroku ps:scale web=[], e.g. 1:eco, 1:basic, 2:Standard-1X")
 
 parser.add_argument(
     "--import-tournament", type=str, metavar="IMPORT_DIR",

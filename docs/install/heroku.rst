@@ -107,6 +107,8 @@ b. Run the script to deploy the app to Heroku. Replace ``yourappname`` with your
 
     python deploy_heroku.py yourappname
 
+  The script uses the default dyno type for your Heroku account. If you have a paid Heroku Eco plan, the script will use Eco dynos. If you do not have an Eco plan, it will use Basic dynos which are billed based on usage. You can use the ``--web-dynos`` option to use a specific type, such as ``--web-dynos 1:basic`` if you have an Eco plan but wish to use Basic dynos.
+
   This script has other options that you might find useful. Run ``python deploy_heroku.py --help`` for details.
 
   The script may work away on its own for 10-30 minutes before it asks you some questions to answer. When finished, it will open the app in your browser. It should look something like this:
@@ -121,6 +123,8 @@ TLDR commands
 -------------
 
 .. warning:: We provide a "short version" for experienced users. Don't just copy and paste these commands before you understand what they do! If things aren't set up perfectly they can fail, so it's important to supervise them the first time you do them. If this is all new to you, read the long version of the instructions below.
+
+The script uses the default dyno type for your Heroku account. If you have a paid Heroku Eco plan, the script will use Eco dynos. If you do not have an Eco plan, it will use Basic dynos which are billed based on usage. You can use the ``--web-dynos`` option with the last command to use a specific type, such as ``--web-dynos 1:basic`` if you have an Eco plan but wish to use Basic dynos.
 
 .. parsed-literal::
 
