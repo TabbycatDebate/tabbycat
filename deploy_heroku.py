@@ -8,6 +8,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 
 try:
     from django.core.management.utils import get_random_secret_key
@@ -42,8 +43,8 @@ parser.add_argument(
     help="Heroku Postgres plan (default mini)")
 
 parser.add_argument(
-    "--web-dynos", type=str, default="1:eco",
-    help="Web dyno specification, passed to heroku ps:scale web=[], e.g. 1:eco, 1:hobby, 2:Standard-1X")
+    "--web-dynos", type=str, default="1",
+    help="Web dyno specification, passed to heroku ps:scale web=[], e.g. 1:eco, 1:basic, 2:Standard-1X")
 
 parser.add_argument(
     "--import-tournament", type=str, metavar="IMPORT_DIR",
@@ -165,7 +166,7 @@ if addons:
 if args.urlname != "-":
     command.append(args.urlname)
 output = get_output_from_command(command)
-match = re.search(r"https://([\w_-]+)\.herokuapp\.com/\s+\|\s+(https://git.heroku.com/[\w_-]+.git)", output)
+match = re.search(r"https://([\w_-]+?)(?:-\w{12})?\.herokuapp\.com/\s+\|\s+(https://git.heroku.com/[\w_-]+.git)", output)
 urlname = match.group(1)
 heroku_url = match.group(2)
 
@@ -206,6 +207,18 @@ if args.git_remote:
     run_heroku_command(["git:remote", "--remote", remote_name])
 else:
     remote_name = heroku_url
+
+# Wait for Redis provisioning, which can take a significant amount of time
+redis_provisioned = False
+redis_status_command = make_heroku_command(["redis:info"])
+print_yellow("Waiting for Heroku Redis to provision (may take up to 5 minutes)...")
+
+while not redis_provisioned:
+    time.sleep(30)
+    redis_output = subprocess.check_output(redis_status_command).decode().split("\n")
+    redis_provisioned = "available" in redis_output[2]
+
+print("Heroku Redis is available, starting deployment")
 
 # Push source code to Heroku
 push_spec = get_git_push_spec()
