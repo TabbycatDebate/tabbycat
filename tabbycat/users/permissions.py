@@ -1,3 +1,4 @@
+from itertools import groupby
 from typing import TYPE_CHECKING, Union
 
 from django.core.cache import cache
@@ -130,8 +131,26 @@ def has_permission(user: 'settings.AUTH_USER_MODEL', permission: permission_type
             user._permissions[tournament.slug].add(permission)
         return cached_perm
 
-    perm = user.userpermission_set.filter(permission=permission, tournament=tournament).exists()
+    perm = (
+        user.userpermission_set.filter(permission=permission, tournament=tournament).exists() or
+        user.membership_set.filter(group__permissions__contains=[permission]).exists()
+    )
     cache.set("user_%d_%s_%s_permission" % (user.pk, tournament.slug, str(permission)), perm)
     if perm:
         user._permissions[tournament.slug].add(permission)
     return perm
+
+
+def get_permissions(user: 'settings.AUTH_USER_MODEL') -> dict:
+    groups = dict(groupby(user.membership_set.select_related('group', 'group__tournament').order_by('group__tournament').all(), key=lambda m: m.group.tournament))
+    permissions = dict(groupby(user.userpermission_set.select_related('tournament').order_by('tournament').all(), key=lambda p: p.tournament))
+
+    user_perms = []
+    for tournament in set(list(groups.keys()) + list(permissions.keys())):
+        user_perms.append({
+            'tournament': tournament,
+            'groups': [m.group for m in groups.get(tournament, [])],
+            'permissions': [p.permission for p in permissions.get(tournament, [])],
+        })
+
+    return user_perms

@@ -236,13 +236,14 @@ urlpatterns = [
                  views.GlobalInstitutionViewSet.as_view(detail_methods),
                  name='api-global-institution-detail'),
         ])),
+
         path('/users', include([
             path('',
-                views.UserViewSet.as_view(list_methods),
-                name='api-users-list'),
+                views.UsersViewSet.as_view(list_methods),
+                name='api-user-list'),
             path('/<int:pk>',
-                views.UserViewSet.as_view({'get': 'retrieve', 'delete': 'destroy'}),
-                name='api-users-detail'),
+                views.UsersViewSet.as_view(detail_methods),
+                name='api-user-detail'),
         ])),
     ])),
 ]

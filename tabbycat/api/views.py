@@ -4,6 +4,7 @@ from itertools import groupby
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Prefetch, Q
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
@@ -35,6 +36,7 @@ from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import TournamentFromUrlMixin
 from tournaments.models import Round, Tournament
+from users.permissions import get_permissions
 from venues.models import Venue, VenueCategory
 
 from . import serializers
@@ -82,7 +84,7 @@ class APIV1RootView(PublicAPIMixin, GenericAPIView):
         """Entrypoint for version 1 of the API"""
         tournaments_create_url = reverse('api-tournament-list', request=request, format=format)
         institution_create_url = reverse('api-global-institution-list', request=request, format=format)
-        users_create_url = reverse('api-users-list', request=request, format=format)
+        users_create_url = reverse('api-user-list', request=request, format=format)
         return Response({
             "_links": {
                 "tournaments": tournaments_create_url,
@@ -1097,12 +1099,27 @@ class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
 
 @extend_schema(tags=['users'])
 @extend_schema_view(
-    list=extend_schema(summary="Get users"),
+    list=extend_schema(summary="List all users"),
     create=extend_schema(summary="Create user"),
     retrieve=extend_schema(summary="Get user", parameters=[id_parameter]),
+    update=extend_schema(summary="Update user", parameters=[id_parameter]),
+    partial_update=extend_schema(summary="Patch user", parameters=[id_parameter]),
+    destroy=extend_schema(summary="Deactivate user", parameters=[id_parameter]),
 )
-class UserViewSet(AdministratorAPIMixin, ModelViewSet):
+class UsersViewSet(AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.UserSerializer
 
     def get_queryset(self):
-        return self.get_serializer_class().Meta.model.objects.all()
+        qs = get_user_model().objects.prefetch_related('membership_set__group__tournament', 'userpermission_set__tournament')
+        for user in qs:
+            user.tournaments = get_permissions(user)
+        return qs
+
+    def get_object(self):
+        obj = super().get_object()
+        obj.tournaments = get_permissions(obj)
+        return obj
+
+    def perform_destroy(self, instance):
+        instance.is_active = False
+        instance.save()
