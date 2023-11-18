@@ -1,5 +1,4 @@
 import logging
-from unittest import expectedFailure
 
 from django.test import TestCase
 
@@ -253,13 +252,15 @@ class TestStandingsWithUnconfirmedBallotSubmission(IgnorableDebateMixin, TestTri
         debate = self.set_up_ignorable_debate()
         debate.ballotsubmission_set.update(confirmed=False)
 
-    @expectedFailure
     def test_draw_strength(self):
-        super().test_draw_strength()
+        # The ignorable debate still counts as an opponent (because they definitely faced each
+        # other) but does not count as a win (because it's unconfirmed). So the losing team has
+        # faced the winning team 3 times (including ignorable debate), and the winning team has 2
+        # wins (excluding ignorable debate), for a losing team draw strength of 3 * 2 = 6.
+        self._base_metric_test({'draw_strength': [0, 6]})
 
-    @expectedFailure
     def test_draw_strength_speaks(self):
-        super().test_draw_strength_speaks()
+        self._base_metric_test({'draw_strength_speaks': [591, 609]})
 
 
 class TestBasicStandings(TestCase):
