@@ -4,9 +4,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.urls import get_script_prefix, resolve, Resolver404
 from django.utils.encoding import uri_to_iri
+from drf_spectacular.utils import extend_schema_field
 from rest_framework.relations import Hyperlink, HyperlinkedIdentityField, HyperlinkedRelatedField, SlugRelatedField
 from rest_framework.reverse import reverse
-from rest_framework.serializers import CharField
+from rest_framework.serializers import CharField, Field
+
 
 from participants.models import Adjudicator, Speaker, Team
 from venues.models import Venue
@@ -280,3 +282,12 @@ class ParticipantSourceField(BaseSourceField):
             obj = getattr(value.participant_submitter, model.__name__.lower(), None)
             if obj is not None:
                 return self.get_url(obj, view_name, self.context['request'], format)
+
+
+@extend_schema_field({'anyOf': [{"type": "number"}, {"type": "boolean"}, {"type": "string"}, {"type": "array", "items": {"type": "string"}}]})
+class AnyField(Field):
+    def to_representation(self, value):
+        return value
+
+    def to_internal_value(self, data):
+        return data

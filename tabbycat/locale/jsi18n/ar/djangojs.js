@@ -1,8 +1,9 @@
 
 
-(function(globals) {
-
-  var django = globals.django || (globals.django = {});
+'use strict';
+{
+  const globals = this;
+  const django = globals.django || (globals.django = {});
 
   
   django.pluralidx = function(count) { return (count == 1) ? 0 : 1; };
@@ -12,7 +13,7 @@
 
   django.catalog = django.catalog || {};
   
-  var newcatalog = {
+  const newcatalog = {
     "%(sel)s of %(cnt)s selected": [
       "\u0644\u0627 \u0634\u064a \u0645\u062d\u062f\u062f",
       "%(sel)s \u0645\u0646 %(cnt)s \u0645\u062d\u062f\u062f"
@@ -42,7 +43,7 @@
     "December": "\u062f\u064a\u0633\u0645\u0628\u0631",
     "Delete": "\u062d\u0630\u0641",
     "February": "\u0641\u0628\u0631\u0627\u064a\u0631",
-    "Filter": "\u0627\u0646\u062a\u0642\u0627\u0621",
+    "Filter": "\u062a\u0635\u0641\u064a\u0629",
     "Find in Table": "\u0627\u0644\u0628\u062d\u062b \u0641\u064a \u0627\u0644\u062c\u062f\u0648\u0644",
     "General": "\u0639\u0627\u0645",
     "Hide": "\u0627\u062e\u0641",
@@ -97,6 +98,18 @@
     "You have selected an action, and you haven\u2019t made any changes on individual fields. You\u2019re probably looking for the Go button rather than the Save button.": "\u0644\u0642\u062f \u062d\u062f\u062f\u062a \u0625\u062c\u0631\u0627\u0621 \u060c \u0648\u0644\u0645 \u062a\u0642\u0645 \u0628\u0625\u062c\u0631\u0627\u0621 \u0623\u064a \u062a\u063a\u064a\u064a\u0631\u0627\u062a \u0639\u0644\u0649 \u0627\u0644\u062d\u0642\u0648\u0644 \u0627\u0644\u0641\u0631\u062f\u064a\u0629. \u0645\u0646 \u0627\u0644\u0645\u062d\u062a\u0645\u0644 \u0623\u0646\u0643 \u062a\u0628\u062d\u062b \u0639\u0646 \u0627\u0644\u0632\u0631 \u0623\u0630\u0647\u0628 \u0628\u062f\u0644\u0627\u064b \u0645\u0646 \u0627\u0644\u0632\u0631 \u062d\u0641\u0638.",
     "You have selected an action, but you haven\u2019t saved your changes to individual fields yet. Please click OK to save. You\u2019ll need to re-run the action.": "\u0644\u0642\u062f \u062d\u062f\u062f\u062a \u0625\u062c\u0631\u0627\u0621\u064b \u060c \u0644\u0643\u0646\u0643 \u0644\u0645 \u062a\u062d\u0641\u0638 \u062a\u063a\u064a\u064a\u0631\u0627\u062a\u0643 \u0641\u064a \u0627\u0644\u062d\u0642\u0648\u0644 \u0627\u0644\u0641\u0631\u062f\u064a\u0629 \u062d\u062a\u0649 \u0627\u0644\u0622\u0646. \u064a\u0631\u062c\u0649 \u0627\u0644\u0646\u0642\u0631 \u0641\u0648\u0642 \u0645\u0648\u0627\u0641\u0642 \u0644\u0644\u062d\u0641\u0638. \u0633\u062a\u062d\u062a\u0627\u062c \u0625\u0644\u0649 \u0625\u0639\u0627\u062f\u0629 \u062a\u0634\u063a\u064a\u0644 \u0627\u0644\u0625\u062c\u0631\u0627\u0621.",
     "You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost.": "\u0644\u062f\u064a\u0643 \u062a\u0639\u062f\u064a\u0644\u0627\u062a \u063a\u064a\u0631 \u0645\u062d\u0641\u0648\u0638\u0629 \u0639\u0644\u0649 \u0628\u0639\u0636 \u0627\u0644\u062d\u0642\u0648\u0644 \u0627\u0644\u0642\u0627\u0628\u0644\u0629 \u0644\u0644\u062a\u0639\u062f\u064a\u0644. \u0625\u0646 \u0646\u0641\u0630\u062a \u0623\u064a \u0625\u062c\u0631\u0627\u0621 \u0641\u0633\u0648\u0641 \u062a\u062e\u0633\u0631 \u062a\u0639\u062f\u064a\u0644\u0627\u062a\u0643.",
+    "abbrev. month April\u0004Apr": "\u0625\u0628\u0631\u064a\u0644",
+    "abbrev. month August\u0004Aug": "\u0623\u063a\u0633\u0637\u0633",
+    "abbrev. month December\u0004Dec": "\u062f\u064a\u0633\u0645\u0628\u0631",
+    "abbrev. month February\u0004Feb": "\u0641\u0628\u0631\u0627\u064a\u0631",
+    "abbrev. month January\u0004Jan": "\u064a\u0646\u0627\u064a\u0631",
+    "abbrev. month July\u0004Jul": "\u064a\u0648\u0644\u064a\u0648",
+    "abbrev. month June\u0004Jun": "\u064a\u0648\u0646\u064a\u0648",
+    "abbrev. month March\u0004Mar": "\u0645\u0627\u0631\u0633",
+    "abbrev. month May\u0004May": "\u0645\u0627\u064a\u0648",
+    "abbrev. month November\u0004Nov": "\u0646\u0648\u0641\u0645\u0628\u0631",
+    "abbrev. month October\u0004Oct": "\u0623\u0643\u062a\u0648\u0628\u0631",
+    "abbrev. month September\u0004Sep": "\u0633\u0628\u062a\u0645\u0628\u0631",
     "adjudicators with gender data": "\u0627\u0644\u062d\u0643\u0627\u0645 \u0645\u0639 \u0628\u064a\u0627\u0646\u0627\u062a \u062c\u0646\u0633\u0647\u0645",
     "deselect all": "\u0625\u0644\u063a\u0627\u0621 \u062a\u062d\u062f\u064a\u062f \u0627\u0644\u0643\u0644",
     "feedback scores total": "\u0645\u062c\u0645\u0648\u0639 \u062f\u0631\u062c\u0627\u062a \u0627\u0644\u062a\u063a\u0630\u064a\u0629 \u0627\u0644\u0631\u0627\u062c\u0639\u0629 ",
@@ -111,24 +124,24 @@
     "speaker scores total": "\u0645\u062c\u0645\u0648\u0639 \u062f\u0631\u062c\u0627\u062a \u0627\u0644\u0645\u062a\u062d\u062f\u062b ",
     "speakers with gender data": "\u0627\u0644\u0645\u062a\u062d\u062f\u062b\u0648\u0646 \u0645\u0639 \u0628\u064a\u0627\u0646\u0627\u062a \u062c\u0646\u0633\u0647\u0645"
   };
-  for (var key in newcatalog) {
+  for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
   
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {
-      var value = django.catalog[msgid];
-      if (typeof(value) == 'undefined') {
+      const value = django.catalog[msgid];
+      if (typeof value === 'undefined') {
         return msgid;
       } else {
-        return (typeof(value) == 'string') ? value : value[0];
+        return (typeof value === 'string') ? value : value[0];
       }
     };
 
     django.ngettext = function(singular, plural, count) {
-      var value = django.catalog[singular];
-      if (typeof(value) == 'undefined') {
+      const value = django.catalog[singular];
+      if (typeof value === 'undefined') {
         return (count == 1) ? singular : plural;
       } else {
         return value.constructor === Array ? value[django.pluralidx(count)] : value;
@@ -138,16 +151,16 @@
     django.gettext_noop = function(msgid) { return msgid; };
 
     django.pgettext = function(context, msgid) {
-      var value = django.gettext(context + '\x04' + msgid);
-      if (value.indexOf('\x04') != -1) {
+      let value = django.gettext(context + '\x04' + msgid);
+      if (value.includes('\x04')) {
         value = msgid;
       }
       return value;
     };
 
     django.npgettext = function(context, singular, plural, count) {
-      var value = django.ngettext(context + '\x04' + singular, context + '\x04' + plural, count);
-      if (value.indexOf('\x04') != -1) {
+      let value = django.ngettext(context + '\x04' + singular, context + '\x04' + plural, count);
+      if (value.includes('\x04')) {
         value = django.ngettext(singular, plural, count);
       }
       return value;
@@ -208,8 +221,8 @@
   };
 
     django.get_format = function(format_type) {
-      var value = django.formats[format_type];
-      if (typeof(value) == 'undefined') {
+      const value = django.formats[format_type];
+      if (typeof value === 'undefined') {
         return format_type;
       } else {
         return value;
@@ -228,6 +241,5 @@
 
     django.jsi18n_initialized = true;
   }
-
-}(this));
+};
 

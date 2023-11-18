@@ -32,6 +32,7 @@ class RootTests(APITestCase):
             "_links": {
                 "tournaments": "http://testserver/api/v1/tournaments",
                 "institutions": "http://testserver/api/v1/institutions",
+                "users": "http://testserver/api/v1/users",
             },
         })
 

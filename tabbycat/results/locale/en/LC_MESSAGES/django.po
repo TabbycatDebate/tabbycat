@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
 "PO-Revision-Date: 2019-07-11 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -122,6 +122,14 @@ msgid "The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_mar
 msgstr ""
 
 #: results/forms.py
+msgid "Ranks cannot be tied."
+msgstr ""
+
+#: results/forms.py
+msgid "Ranks must correspond to speaker scores"
+msgstr ""
+
+#: results/forms.py
 #, python-format
 msgid "The total scores for the teams are the same (i.e. a draw) for adjudicator %(adjudicator)s."
 msgstr ""
@@ -233,7 +241,7 @@ msgstr ""
 
 #: results/models.py
 #, python-format
-msgid "Debate is in round %(round)d but motion (%(motion)s) is from round %(motion_round)d"
+msgid "Debate is in round %(round)d but motion (%(motion)s) is not in round"
 msgstr ""
 
 #: results/models.py
@@ -310,6 +318,10 @@ msgstr ""
 
 #: results/models.py
 msgid "speaker"
+msgstr ""
+
+#: results/models.py
+msgid "rank"
 msgstr ""
 
 #: results/models.py
@@ -456,10 +468,6 @@ msgstr ""
 
 #: results/templates/assistant_results.html
 msgid "This page automatically updates with the new ballot entries and checkins as they occur."
-msgstr ""
-
-#: results/templates/assistant_results.html
-msgid "This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Results can't be entered while this configuration is in place. Please ask an administrator to change this configuration."
 msgstr ""
 
 #: results/templates/assistant_results.html

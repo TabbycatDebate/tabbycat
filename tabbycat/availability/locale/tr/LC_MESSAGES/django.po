@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-24 07:28\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"PO-Revision-Date: 2023-05-25 23:54\n"
+"Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
 "MIME-Version: 1.0\n"
@@ -12,387 +12,381 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-Language: tr\n"
 "X-Crowdin-File: /develop/tabbycat/availability/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 926\n"
 
-#: availability/apps.py:7 availability/views.py:36
+#: availability/apps.py availability/views.py
 msgid "Availability"
-msgstr ""
+msgstr "Uygunluk"
 
-#: availability/models.py:15
+#: availability/models.py
 msgid "content type"
-msgstr ""
+msgstr "içerik türü"
 
-#: availability/models.py:16
+#: availability/models.py
 msgid "object id"
-msgstr ""
+msgstr "nesne kimliği"
 
-#: availability/models.py:20
+#: availability/models.py
 msgid "round"
 msgstr "tur"
 
-#: availability/models.py:24
+#: availability/models.py
 msgid "round availability"
-msgstr ""
+msgstr "maç kullanılabilirliği"
 
-#: availability/models.py:25
+#: availability/models.py
 msgid "round availabilities"
-msgstr ""
+msgstr "maç kullanılabilirlikleri"
 
-#: availability/templates/availability_index.html:11
+#: availability/templates/availability_index.html
 msgid "Mark All Breaking Adjs as Available"
-msgstr ""
+msgstr "Tüm Break Olmuş Jurileri Kullanılabilir İşaretle"
 
-#: availability/templates/availability_index.html:18
+#: availability/templates/availability_index.html
 msgid "Mark Everything as Available"
-msgstr ""
+msgstr "Her Şeyi Kullanılabilir Olarak İşaretle"
 
-#: availability/templates/availability_index.html:25
+#: availability/templates/availability_index.html
 #, python-format
 msgid "Copy Availability from %(prev_round)s"
-msgstr ""
+msgstr "%(prev_round)s kullanılabilirliğini kopyala"
 
-#: availability/templates/availability_index.html:40
+#: availability/templates/availability_index.html
 msgid "View Draw"
-msgstr ""
+msgstr "Kurayı Görüntüle"
 
-#: availability/templates/availability_index.html:45
+#: availability/templates/availability_index.html
 #, python-format
 msgid "%(previous_unconfirmed)s debates from %(round)s do not have a completed ballot — this may lead to a draw that fails or is incorrect"
-msgstr ""
+msgstr "%(round)s dan %(previous_unconfirmed) maçların ballotu eksik - bu, başarısız veya yanlış bir kuraya yol açabilir"
 
-#: availability/templates/availability_index.html:47
-#: availability/templates/availability_index.html:52
-#: availability/templates/availability_index.html:57
-#: availability/templates/availability_index.html:62
-#: availability/templates/availability_index.html:67
-#: availability/templates/availability_index.html:72
-#: availability/templates/availability_index.html:77
-#: availability/templates/availability_index.html:82
-#: availability/templates/availability_index.html:86
+#: availability/templates/availability_index.html
 msgid "Generate Draw"
-msgstr ""
+msgstr "Kura Oluştur"
 
-#: availability/templates/availability_index.html:51
+#: availability/templates/availability_index.html
 msgid "The draw cannot be generated until some teams have been marked as available."
-msgstr ""
+msgstr "Bazı takımlar müsait olarak işaretlenene kadar kura oluşturulamaz."
 
-#: availability/templates/availability_index.html:56
+#: availability/templates/availability_index.html
 msgid "The draw cannot be generated until some adjudicators have been marked as available."
-msgstr ""
+msgstr "Bazı jüriler müsait olarak işaretlenene kadar kura oluşturulamaz."
 
-#: availability/templates/availability_index.html:61
+#: availability/templates/availability_index.html
 msgid "The draw cannot be generated until some rooms have been marked as available."
-msgstr ""
+msgstr "Bazı odalar müsait olarak işaretlenene kadar kura oluşturulamaz."
 
-#: availability/templates/availability_index.html:66
+#: availability/templates/availability_index.html
 msgid "There aren't enough rooms marked as available for the number of debates — the draw may not generate properly."
-msgstr ""
+msgstr "Maç sayısı için uygun olarak işaretlenmiş yeterli oda yoktur - kura düzgün bir şekilde oluşturulmayabilir."
 
-#: availability/templates/availability_index.html:71
+#: availability/templates/availability_index.html
 msgid "There aren't enough adjudicators marked as available for the number of debates — the draw may not generate properly."
-msgstr ""
+msgstr "Maç sayısı için uygun olarak işaretlenmiş yeterli jüri yoktur - kura düzgün bir şekilde oluşturulmayabilir."
 
-#: availability/templates/availability_index.html:76
+#: availability/templates/availability_index.html
 msgid "There is an uneven number of teams marked as available — the draw may not generate properly."
-msgstr ""
+msgstr "Kullanılabilir olarak işaretlenmiş eşit olmayan sayıda takım var - kura düzgün bir şekilde üretilemeyebilir."
 
-#: availability/templates/availability_index.html:81
+#: availability/templates/availability_index.html
 msgid "The number of teams marked as available is not a multiple of 4 — the draw may not generate properly."
-msgstr ""
+msgstr "Mevcut olarak işaretlenen takım sayısı 4'ün katı değildir - kura düzgün üretilemeyebilir."
 
-#: availability/templates/availability_index.html:99
+#: availability/templates/availability_index.html
 #, python-format
 msgid "One debate from %(prev_round)s <strong>does not have a completed ballot</strong>. This may lead to a draw that fails or is incorrect, depending on your draw rules. <a href=\"%(prev_round_results_url)s\" class=\"alert-link\"> Enter results from %(prev_round)s. </a>"
 msgid_plural "%(previous_unconfirmed)s debates from %(prev_round)s <strong>do not have a completed ballot</strong>. This may lead to a draw that fails or is incorrect, depending on your draw rules. <a href=\"%(prev_round_results_url)s\" class=\"alert-link\"> Enter results from %(prev_round)s. </a>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(prev_round)'nin <strong>ballotu tamamlanmamış<strong> bir maçı var. Bu, kura kurallarınıza bağlı olarak başarısız veya yanlış bir kuraya yol açabilir. <a href=\"%(prev_round_results_url)s\" class=\"alert-link\">  %(prev_round)s. sonuçlarını gir. </a>"
+msgstr[1] "%(prev_round)'nin <strong>ballotu tamamlanmamış<strong> %(previous_unconfirmed)s maçı var. Bu, kura kurallarınıza bağlı olarak başarısız veya yanlış bir kuraya yol açabilir. <a href=\"%(prev_round_results_url)s\" class=\"alert-link\">  %(prev_round)s. sonuçlarını gir. </a>"
 
-#: availability/templates/availability_index.html:121
+#: availability/templates/availability_index.html
 #, python-format
 msgid "This is a page for <strong>%(round)s</strong>, but the previous round is still not marked as completed. Did you forget to <a href=\"%(complete_prev_round_url)s\" class=\"alert-link\"> mark %(prev_round)s as completed? </a>"
-msgstr ""
+msgstr "Bu, <strong>%(round)s</strong> için bir sayfa ancak önceki tur hala tamamlandı olarak işaretlenmemiş. <a href=\"%(complete_prev_round_url)s\" class=\"alert-link\"> %(prev_round)s tamamlanmış olarak işaretlemyi </a> unuttunuz mu?"
 
-#: availability/templates/availability_index.html:137
+#: availability/templates/availability_index.html
 #, python-format
 msgid "This is the first round, but its draw type is <strong>%(draw_type)s</strong>. Did you intend for it to be <strong>Random</strong> instead? You can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's draw type in the Edit Database area.</a>"
-msgstr ""
+msgstr "Bu ilk turdur, ancak kura türü <strong>%(draw_type)s</strong>. Bunun yerine <strong>Rastgele</strong> olmasını mı istediniz? <a href=\"%(change_round_url)s\" class=\"alert-link\"> Veri Tabanı düzenle kısmından bu turun kura tipini değiştirebilirsiniz.</a>"
 
-#: availability/templates/availability_index.html:150
+#: availability/templates/availability_index.html
 #, python-format
 msgid "This is an elimination round, but it doesn't have a break category. Elimination rounds must be associated with a break category. Please <a href=\"%(change_round_url)s\" class=\"alert-link\"> set this round's break category in the Edit Database area.</a>"
-msgstr ""
+msgstr "Bu bir eleme turudur, ancak bir break kategorisi yok. Eleme turları bir break kategorisiyle ilişkilendirilmelidir. Lütfen <a href=\"%(change_round_url)s\" class=\"alert-link\"> Veri Tabanı düzenle kısmından bu turun break ayarlarını değiştirin.</a>"
 
-#: availability/templates/availability_index.html:162
+#: availability/templates/availability_index.html
 #, python-format
 msgid "This is an elimination round, but its draw type is <strong>%(draw_type)s</strong>. The draw type of all elimination rounds must be \"Elimination\". Please <a href=\"%(change_round_url)s\" class=\"alert-link\"> change this round's draw type in the Edit Database area.</a>"
-msgstr ""
+msgstr "Bu bir eleme turudur, ancak kura türü  <strong>%(draw_type)s</strong>. Tüm eleme turlarının kura türü \"Eleme\" olmalıdır. <a href=\"%(change_round_url)s\" class=\"alert-link\"> Veri Tabanı düzenle kısmından bu turun kura tipini değiştirebilirsiniz.</a>"
 
-#: availability/templates/availability_index.html:175
+#: availability/templates/availability_index.html
 #, python-format
 msgid "There don't appear to be any teams breaking in the %(break_category)s Break. Have you <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> generated the break for the %(break_category)s Break</a> yet?"
-msgstr ""
+msgstr "%(break_category)s Break'inde herhangi bir takım break olmuyor. <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> %(break_category)s Breaki için break kategorisini belirlediniz mi?</a>"
 
-#: availability/templates/availability_index.html:187
+#: availability/templates/availability_index.html
 #, python-format
 msgid "There's only one team breaking in the %(break_category)s Break. You can't generate an elimination round draw with only one team — you might like to <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> review the break for the %(break_category)s Break</a>."
-msgstr ""
+msgstr "%(break_category)s Break'inde sadece bir takım break oluyor. Sadece bir takımla eleme turu kurası oluşturamazsınız — <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> %(break_category)s Breakinin break kurallarını incelemek isteyebilirsiniz.</a>."
 
-#: availability/templates/availability_index.html:199
+#: availability/templates/availability_index.html
 #, python-format
 msgid "The team standings precedence is empty. This means that teams aren't ranked according to any metrics, so all teams will be in a single bracket containing everyone. If this isn't what you intended, set the team standings precedence in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a> before creating the draw. In most tournaments, the first metric should be points or wins."
-msgstr ""
+msgstr "Takım sıralama önceliği boş. Bu, takımların herhangi bir metriğe göre sıralanmadığı anlamına gelir, bu nedenle tüm takımlar herkesi içeren tek bir aşamada olacaktır. İsteğiniz bu değilse, kurayı oluşturmadan önce <a href=\"%(standings_config_url)s\" class=\"alert-link\">Bu maçın ayarlarında sıralama önceliğininden</a> takım sıralama önceliğini ayarlayın. Çoğu turnuvada, ilk metrik puan veya galibiyetdir."
 
-#: availability/templates/base_availability.html:38
+#: availability/templates/base_availability.html
 msgid "Select All"
-msgstr ""
+msgstr "Tümünü Seç"
 
-#: availability/templates/base_availability.html:39
+#: availability/templates/base_availability.html
 msgid "Select None"
-msgstr ""
+msgstr "Hiçbiri seçin"
 
-#: availability/templates/base_availability.html:40
+#: availability/templates/base_availability.html
 msgid "Check-Ins"
-msgstr ""
+msgstr "Girişler"
 
-#: availability/templates/base_availability.html:41
+#: availability/templates/base_availability.html
 msgid "Check In All Breaking"
-msgstr ""
+msgstr "Breal Olanları Giriş Yap"
 
-#: availability/templates/base_availability.html:42
+#: availability/templates/base_availability.html
 msgid "Copy from Previous"
-msgstr ""
+msgstr "Öncekinden Kopyala"
 
-#: availability/templates/base_availability.html:43
+#: availability/templates/base_availability.html
 msgid "Save Selected"
-msgstr ""
+msgstr "Seçilenleri Kaydet"
 
-#: availability/templates/checkin_progress.html:7
+#: availability/templates/checkin_progress.html
 msgid "Teams"
 msgstr "Takımlar"
 
-#: availability/templates/checkin_progress.html:8
+#: availability/templates/checkin_progress.html
 msgid "Adjudicators"
 msgstr "Jüriler"
 
-#: availability/templates/checkin_progress.html:9
+#: availability/templates/checkin_progress.html
 msgid "Rooms"
-msgstr ""
+msgstr "Odalar"
 
-#: availability/templates/checkin_progress.html:43
+#: availability/templates/checkin_progress.html
 msgid "Mark teams as available"
-msgstr ""
+msgstr "Takımlaı kullanılabilir olarak işaretle"
 
-#: availability/templates/checkin_progress.html:46
+#: availability/templates/checkin_progress.html
 msgid "No need to set team availability"
-msgstr ""
+msgstr "Takım kullanılabilirliğini ayarlamanıza gerek yok"
 
-#: availability/templates/checkin_progress.html:49
+#: availability/templates/checkin_progress.html
 msgid "There is an uneven number of teams marked as available for this round."
-msgstr ""
+msgstr "Bu tur için kullanılabilir olarak işaretlenmiş eşit olmayan sayıda takım var."
 
-#: availability/templates/checkin_progress.html:53
+#: availability/templates/checkin_progress.html
 msgid "The number of teams marked as available for this round is not a multiple of 4."
-msgstr ""
+msgstr "Bu tur için kullanılabilir olarak işaretlenen takım sayısı 4'ün katı değildir."
 
-#: availability/templates/checkin_progress.html:59
+#: availability/templates/checkin_progress.html
 msgid "Edit team availability"
-msgstr ""
+msgstr "Takım kullanılabilirliğini düzenleme"
 
-#: availability/templates/checkin_progress.html:68
+#: availability/templates/checkin_progress.html
 #, python-format
 msgid "One adjudicator does not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available."
 msgid_plural "%(count)s adjudicators do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bir jürinin ilişkili bir turnuvası yoktur. Kullanılabilir olarak işaretlenmelerini istiyorsanız, Veritabanını Düzenle alanında 'Turnuva' alanlarını ayarlayın."
+msgstr[1] "%(count)s jürilerinin ilişkili bir turnuvası yoktur. Kullanılabilir olarak işaretlenmelerini istiyorsanız, Veritabanını Düzenle alanında 'Turnuva' alanlarını ayarlayın."
 
-#: availability/templates/checkin_progress.html:77
+#: availability/templates/checkin_progress.html
 #, python-format
 msgid "%(count)s adjudicator who was not available last round, is available this round."
 msgid_plural "%(count)s adjudicators who were not available last round, are available this round."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Geçen turda müsait olmayan %(count)s jüri bu turda müsait."
+msgstr[1] "Geçen turda müsait olmayan %(count)s jüri bu turda mevcuttur."
 
-#: availability/templates/checkin_progress.html:84
+#: availability/templates/checkin_progress.html
 #, python-format
 msgid "The following %(count)s adjudicator, who was not available last round, is available this round: %(adjs_list)s"
 msgid_plural "The following %(count)s adjudicators, who were not available last round, are available this round: %(adjs_list)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Geçen turda müsait olmayan aşağıdaki %(count)s jüri bu turda kullanılabilir: %(adjs_list)s"
+msgstr[1] "Geçen turda müsait olmayan aşağıdaki %(count)s jüri bu turda kullanılabilir: %(adjs_list)s"
 
-#: availability/templates/checkin_progress.html:93
+#: availability/templates/checkin_progress.html
 #, python-format
 msgid "%(count)s adjudicator who was available last round, is not available this round."
 msgid_plural "%(count)s adjudicators who were available last round, are not available this round."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Geçen turda müsait olan %(count)s jüri bu turda mevcut değildir."
+msgstr[1] "Geçen turda müsait olan %(count)s jüri bu turda mevcut değildir."
 
-#: availability/templates/checkin_progress.html:100
+#: availability/templates/checkin_progress.html
 #, python-format
 msgid "The following %(count)s adjudicator, who was available last round, is not available this round: %(adjs_list)s"
 msgid_plural "The following %(count)s adjudicators, who were available last round, are not available this round: %(adjs_list)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Geçen turda müsait olan aşağıdaki %(count)s jüri bu turda mevcut değildir: %(adjs_list)s"
+msgstr[1] "Geçen turda müsait olan aşağıdaki %(count)s jüri bu turda mevcut değildir: %(adjs_list)s"
 
-#: availability/templates/checkin_progress.html:108
+#: availability/templates/checkin_progress.html
 msgid "Mark adjudicators as available"
-msgstr ""
+msgstr "Jürileri mevcut olarak işaretle"
 
 #. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
-#: availability/templates/checkin_progress.html:111
+#: availability/templates/checkin_progress.html
 #, python-format
 msgid "There needs to be at least one adjudicator marked as available, given the number of debates."
 msgid_plural "There need to be at least %(required_count)s adjudicators marked as available, given the number of debates."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Maç sayısı göz önüne alındığında, mevcut olarak işaretlenmiş en az bir jüri olmalıdır."
+msgstr[1] "Maç sayısı göz önüne alındığında, mevcut olarak işaretlenmiş en az %(required_count)s jüri olmalıdır."
 
-#: availability/templates/checkin_progress.html:121
+#: availability/templates/checkin_progress.html
 msgid "Edit adjudicator availability"
-msgstr ""
+msgstr "Jüri kullanılabilirliğini düzenleme"
 
-#: availability/templates/checkin_progress.html:130
+#: availability/templates/checkin_progress.html
 #, python-format
 msgid "%(count)s room that was not available last round, is available this round."
 msgid_plural "%(count)s rooms that were not available last round, are available this round."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Geçen turda mevcut olmayan %(count)s oda bu turda kullanılabilir."
+msgstr[1] "Geçen turda mevcut olmayan %(count)s oda bu turda kullanılabilir."
 
-#: availability/templates/checkin_progress.html:137
+#: availability/templates/checkin_progress.html
 #, python-format
 msgid "The following %(count)s room, which was not available last round, is available this round: %(rooms_list)s"
 msgid_plural "The following %(count)s rooms, which were not available last round, are available this round: %(rooms_list)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Geçen turda mevcut olmayan aşağıdaki %(count)s oda bu turda kullanılabilir: %(rooms_list)s"
+msgstr[1] "Geçen turda mevcut olmayan aşağıdaki %(count)s oda bu turda kullanılabilir: %(rooms_list)s"
 
-#: availability/templates/checkin_progress.html:146
+#: availability/templates/checkin_progress.html
 #, python-format
 msgid "%(count)s room that was available last round, is not available this round."
 msgid_plural "%(count)s rooms that were available last round, are not available this round."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Geçen turda mevcut olan %(count)s oda bu turda mevcut değildir."
+msgstr[1] "Geçen turda mevcut olan %(count)s oda bu turda mevcut değildir."
 
-#: availability/templates/checkin_progress.html:153
+#: availability/templates/checkin_progress.html
 #, python-format
 msgid "The following %(count)s room, which was available last round, is not available this round: %(rooms_list)s"
 msgid_plural "The following %(count)s rooms, which were available last round, are not available this round: %(rooms_list)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Geçen turda mevcut olan aşağıdaki %(count)s oda bu turda değil: %(rooms_list)s"
+msgstr[1] "Geçen turda mevcut olan aşağıdaki %(count)s oda bu turda değil: %(rooms_list)s"
 
-#: availability/templates/checkin_progress.html:162
+#: availability/templates/checkin_progress.html
 #, python-format
 msgid "One room does not have an associated tournament. Set its 'Tournament' field in the Edit Database area if you want it to be marked as available."
 msgid_plural "%(count)s rooms do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Odanın ilişkili bir turnuvası yok. Kullanılabilir olarak işaretlenmesini istiyorsanız Veritabanını Düzenle alanında 'Turnuva' alanını ayarlayın."
+msgstr[1] "%(count)s odanın ilişkili bir turnuvası yok. Kullanılabilir olarak işaretlenmesini istiyorsanız Veritabanını Düzenle alanında 'Turnuva' alanını ayarlayın."
 
-#: availability/templates/checkin_progress.html:170
+#: availability/templates/checkin_progress.html
 msgid "Mark rooms as available"
-msgstr ""
+msgstr "Odaları kullanılabilir olarak işaretle"
 
 #. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
-#: availability/templates/checkin_progress.html:173
+#: availability/templates/checkin_progress.html
 #, python-format
 msgid "There needs to be at least one room marked as available, given the number of debates."
 msgid_plural "There need to be at least %(required_count)s rooms marked as available, given the number of debates."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Maç sayısı göz önüne alındığında, mevcut olarak işaretlenmiş en az bir oda olmalıdır."
+msgstr[1] "Maç sayısı göz önüne alındığında, mevcut olarak işaretlenmiş en az %(required_count)s oda olmalıdır."
 
-#: availability/templates/checkin_progress.html:185
+#: availability/templates/checkin_progress.html
 msgid "Edit room availability"
-msgstr ""
+msgstr "Oda kullanılabilirliğini düzenle"
 
-#: availability/views.py:95
+#: availability/views.py
 msgid "no teams are debating"
-msgstr ""
+msgstr "hiçbir takım maçta değil"
 
 #. Translators: nteams in this string can only be 0 or 1
-#: availability/views.py:105
+#: availability/views.py
 #, python-format
 msgid "%(nteams)d breaking team — no debates can happen"
 msgid_plural "%(nteams)d breaking teams — no debates can happen"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(nteams)d break olan takım — hiçbir maç olamaz"
+msgstr[1] "%(nteams)d break olan takımlar — hiçbir maç olamaz"
 
 #. Translators: ndebating in this string is always at least 2
-#: availability/views.py:113
+#: availability/views.py
 #, python-format
 msgid "%(ndebating)d breaking team is debating this round"
 msgid_plural "%(ndebating)d breaking teams are debating this round"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(ndebating)d break olan takım bu tur maçta"
+msgstr[1] "%(ndebating)d break olan takım bu tur maçta"
 
 #. Translators: This gets appended to the previous string (the one with
 #. ndebating in it) if (and only if) nbypassing is greater than 0.
 #. "It" refers to this round.
-#: availability/views.py:121
+#: availability/views.py
 #, python-format
 msgid "; %(nbypassing)d team is bypassing it"
 msgid_plural "; %(nbypassing)d teams are bypassing it"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "; %(nbypassing)d takım atlıyor"
+msgstr[1] "; %(nbypassing)d takım atlıyor"
 
 #. Translators: nadvancing in this string is always at least 2
-#: availability/views.py:140
+#: availability/views.py
 #, python-format
 msgid "%(nadvancing)s advancing team is debating this round"
 msgid_plural "%(nadvancing)s advancing teams are debating this round"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(nadvancing)s ilerleyen takım bu tur münazarada"
+msgstr[1] "%(nadvancing)s ilerleyen takım bu tur münazarada"
 
-#: availability/views.py:180
+#: availability/views.py
 msgid "Active Now"
-msgstr ""
+msgstr "Şuan Aktif"
 
-#: availability/views.py:191
+#: availability/views.py
 #, python-format
 msgid "Active in %(prev_round)s"
-msgstr ""
+msgstr "%(prev_round)s'da Aktif"
 
-#: availability/views.py:197
+#: availability/views.py
 msgid "Checked-In"
-msgstr ""
+msgstr "Girişli"
 
-#: availability/views.py:208
+#: availability/views.py
 msgid "Team Availability"
-msgstr ""
+msgstr "Takım Kullanılabilirliği"
 
-#: availability/views.py:227
+#: availability/views.py
 msgid "Adjudicator Availability"
-msgstr ""
+msgstr "Jüri Kullanılabilirliği"
 
-#: availability/views.py:246
+#: availability/views.py
 msgid "Room Availability"
-msgstr ""
+msgstr "Oda Kullanılabilirliği"
 
-#: availability/views.py:260
+#: availability/views.py
 msgid "Room"
-msgstr ""
+msgstr "Oda"
 
-#: availability/views.py:262
+#: availability/views.py
 msgid "Display Name (for the draw)"
-msgstr ""
+msgstr "Görünen Ad (kura için)"
 
-#: availability/views.py:265
+#: availability/views.py
 msgid "Categories"
-msgstr ""
+msgstr "Kategoriler"
 
-#: availability/views.py:266
+#: availability/views.py
 msgid "Priority"
-msgstr ""
+msgstr "Öncelik"
 
-#: availability/views.py:286
+#: availability/views.py
 msgid "Failed to update some or all availabilities due to an integrityerror. You should retry this action or make individual updates."
-msgstr ""
+msgstr "Bir bütünlük hatası nedeniyle kullanılabilirliklerin bir kısmı veya tamamı güncelleştirilemedi. Bu eylemi yeniden denemeli veya tek tek güncelleştirmelisiniz."
 
-#: availability/views.py:294
+#: availability/views.py
 msgid "Checked in all teams, adjudicators and rooms."
-msgstr ""
+msgstr "Tüm takımlar jüriler ve odalar giriş yapıldı."
 
-#: availability/views.py:301
+#: availability/views.py
 msgid "Checked in all breaking adjudicators."
-msgstr ""
+msgstr "Tüm break olan jüriler giriş yapıldı."
 
-#: availability/views.py:309
+#: availability/views.py
 msgid "Checked in all teams, adjudicators and rooms from previous round."
-msgstr ""
+msgstr "Tüm takımlar jüriler ve odalar giriş yapıldı."
 

@@ -9,8 +9,8 @@ from utils.management.base import RoundCommand
 
 OBJECT_TYPE_CHOICES = ["round", "debate"]
 SUBMITTER_TYPE_MAP = {
-    'tabroom': BallotSubmission.SUBMITTER_TABROOM,
-    'public':  BallotSubmission.SUBMITTER_PUBLIC,
+    'tabroom': BallotSubmission.Submitter.TABROOM,
+    'public':  BallotSubmission.Submitter.PUBLIC,
 }
 User = get_user_model()
 

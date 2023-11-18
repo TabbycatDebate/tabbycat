@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,7 +69,7 @@ msgid "is general"
 msgstr ""
 
 #: breakqual/models.py
-msgid "True if most teams eligible for this category, e.g. Open, False otherwise"
+msgid "Are teams eligible for this break by default"
 msgstr ""
 
 #: breakqual/models.py
@@ -505,6 +505,10 @@ msgstr ""
 
 #: breakqual/views.py
 msgid "Breaking Adjudicators"
+msgstr ""
+
+#: breakqual/views.py
+msgid "Four-team formats require the break size to be either six times or four times a power of two."
 msgstr ""
 
 #: breakqual/views.py

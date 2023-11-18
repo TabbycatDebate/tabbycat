@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-24 07:34\n"
+"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"PO-Revision-Date: 2023-05-25 23:54\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -15,590 +15,598 @@ msgstr ""
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: tr\n"
 "X-Crowdin-File: /develop/tabbycat/standings/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 950\n"
 
-#: standings/base.py:283
+#: standings/base.py
 msgid "The same metric would be added twice:"
-msgstr ""
+msgstr "Aynı metrik iki kez eklenmiş olur:"
 
-#: standings/base.py:284
+#: standings/base.py
 msgid "The same ranking would be added twice:"
-msgstr ""
+msgstr "Aynı sıralama iki kez eklenmiş olur:"
 
-#: standings/base.py:358
+#: standings/base.py
 #, python-format
 msgid "Unrecognized metric code: \"%(code)s\""
-msgstr ""
+msgstr "Tanınmayan metrik kodu: \"%(code)s\""
 
-#: standings/diversity.py:136 standings/diversity.py:166
-#: standings/diversity.py:187
+#: standings/diversity.py
 msgid "All"
-msgstr ""
+msgstr "Tüm"
 
-#: standings/diversity.py:140 standings/diversity.py:155
-#: standings/diversity.py:173 standings/diversity.py:191
+#: standings/diversity.py
 msgid "Breaking"
-msgstr ""
+msgstr "Break Olan"
 
-#: standings/diversity.py:147
+#: standings/diversity.py
 #, python-format
 msgid "Not %(category)s"
-msgstr ""
+msgstr "%(category)s değil"
 
-#: standings/diversity.py:151
+#: standings/diversity.py
 msgid "All Speakers"
-msgstr ""
+msgstr "Tüm Konuşmacılar"
 
-#: standings/diversity.py:169
+#: standings/diversity.py
 msgid "IAs"
-msgstr ""
+msgstr "BJ'ler"
 
-#: standings/diversity.py:177
+#: standings/diversity.py
 msgid "Chairs"
 msgstr "Başkanlar"
 
-#: standings/diversity.py:177
+#: standings/diversity.py
 msgid "Panellists"
-msgstr ""
+msgstr "Panelistler"
 
-#: standings/diversity.py:177
+#: standings/diversity.py
 msgid "Trainees"
-msgstr ""
+msgstr "Acemiler"
 
-#: standings/diversity.py:209
+#: standings/diversity.py
 msgid "Average Rating"
-msgstr ""
+msgstr "Ortalama Puan"
 
-#: standings/diversity.py:210
+#: standings/diversity.py
 msgid "Median Rating"
-msgstr ""
+msgstr "Medyan Puan"
 
-#: standings/diversity.py:211
+#: standings/diversity.py
 msgid "Upper Quartile Rating"
-msgstr ""
+msgstr "Üst Çeyrek Puanı"
 
-#: standings/diversity.py:212
+#: standings/diversity.py
 msgid "Lower Quartile Rating"
-msgstr ""
+msgstr "Alt Çeyrek Puanı"
 
-#: standings/diversity.py:218
+#: standings/diversity.py
 msgid "Average Rating From Teams"
-msgstr ""
+msgstr "Takımlardan Ortalama Puan"
 
-#: standings/diversity.py:219
+#: standings/diversity.py
 msgid "Average Rating From Chairs"
-msgstr ""
+msgstr "Başkanlardan Ortalama Puan"
 
-#: standings/diversity.py:220
+#: standings/diversity.py
 msgid "Average Rating From Panellists"
-msgstr ""
+msgstr "Panelistlerden Ortalama Puan"
 
-#: standings/diversity.py:221
+#: standings/diversity.py
 msgid "Average Rating From Trainees"
-msgstr ""
+msgstr "Acemilerden Ortalama Puan"
 
-#: standings/diversity.py:246
+#: standings/diversity.py
 msgid "Average Score"
-msgstr ""
+msgstr "Ortalama Puan"
 
-#: standings/diversity.py:247
+#: standings/diversity.py
 msgid "Median Score"
-msgstr ""
+msgstr "Medyan Puan"
 
-#: standings/diversity.py:248
+#: standings/diversity.py
 msgid "Upper Quartile Score"
-msgstr ""
+msgstr "Üst Çeyrek Puanı"
 
-#: standings/diversity.py:249
+#: standings/diversity.py
 msgid "Lower Quartile Score"
-msgstr ""
+msgstr "Alt Çeyrek Puanı"
 
-#: standings/diversity.py:256
+#: standings/diversity.py
 msgid "Reply Speaker Average"
-msgstr ""
+msgstr "Özet Konuşmacı Ortalaması"
 
-#: standings/diversity.py:257
+#: standings/diversity.py
 #, python-format
 msgid "Speaker %(num)d Average"
-msgstr ""
+msgstr "Konuşmacı %(num)d Ortalaması"
 
-#: standings/diversity.py:265
+#: standings/diversity.py
 msgid "Average Finals Score"
-msgstr ""
+msgstr "Ortalama Final Puanı"
 
-#: standings/speakers.py:50 standings/speakers.py:136
+#: standings/speakers.py
 msgid "total"
 msgstr "toplam"
 
-#: standings/speakers.py:51 standings/speakers.py:137
+#: standings/speakers.py
 msgid "Total"
 msgstr "Toplam"
 
-#: standings/speakers.py:58 standings/speakers.py:146
+#: standings/speakers.py
 msgid "average"
-msgstr ""
+msgstr "ortalama"
 
-#: standings/speakers.py:59 standings/speakers.py:147
+#: standings/speakers.py
 msgid "Avg"
-msgstr ""
+msgstr "Ort."
 
-#: standings/speakers.py:66
-msgid "trimmed mean (high-low drop)"
-msgstr ""
-
-#: standings/speakers.py:67
-msgid "Trim"
-msgstr ""
-
-#: standings/speakers.py:99
+#: standings/speakers.py
 msgid "team points"
-msgstr ""
+msgstr "takım puanları"
 
-#: standings/speakers.py:100
+#: standings/speakers.py
 msgid "Team"
 msgstr "Takım"
 
-#: standings/speakers.py:119 standings/speakers.py:156
+#: standings/speakers.py
 msgid "standard deviation"
-msgstr ""
+msgstr "standart sapma"
 
-#: standings/speakers.py:120 standings/speakers.py:157
+#: standings/speakers.py
 msgid "Stdev"
-msgstr ""
+msgstr "StSap"
 
-#: standings/speakers.py:128
+#: standings/speakers.py
 msgid "number of speeches given"
-msgstr ""
+msgstr "yapılan konuşma sayısı"
 
-#: standings/speakers.py:129 standings/speakers.py:168
+#: standings/speakers.py
 msgid "Num"
-msgstr ""
+msgstr "Sayı"
 
-#: standings/speakers.py:167
+#: standings/speakers.py
 msgid "replies given"
-msgstr ""
+msgstr "yapılan özetler"
 
-#: standings/teams.py:64
+#: standings/speakers.py
+msgid "trimmed mean (high-low drop)"
+msgstr "kesilmiş ortalama (yüksek-düşük damla)"
+
+#: standings/speakers.py
+msgid "Trim"
+msgstr "Kes"
+
+#: standings/teams.py
 msgid "points"
-msgstr "puanları"
+msgstr "puanlar"
 
-#: standings/teams.py:65
+#: standings/teams.py
 msgid "Pts"
-msgstr ""
+msgstr "Puan"
 
-#: standings/teams.py:74
+#: standings/teams.py
 msgid "wins"
-msgstr ""
+msgstr "galibiyetler"
 
-#: standings/teams.py:75 standings/views.py:596
+#: standings/teams.py standings/views.py
 msgid "Wins"
-msgstr ""
+msgstr "Galibiyetler"
 
-#: standings/teams.py:85
+#: standings/teams.py
 msgid "total speaker score"
-msgstr ""
+msgstr "toplam konuşmacı puanı"
 
-#: standings/teams.py:86
+#: standings/teams.py
 msgid "Spk"
-msgstr ""
+msgstr "Konuşmacı"
 
-#: standings/teams.py:95
+#: standings/teams.py
 msgid "average total speaker score"
-msgstr ""
+msgstr "ortalama toplam konuşmacı puanı"
 
-#: standings/teams.py:96
+#: standings/teams.py
 msgid "ATSS"
-msgstr ""
+msgstr "OTKP"
 
-#: standings/teams.py:105
+#: standings/teams.py
 msgid "speaker score standard deviation"
-msgstr ""
+msgstr "konuşmacı puanı standart sapması"
 
-#: standings/teams.py:106
+#: standings/teams.py
 msgid "SSD"
-msgstr ""
+msgstr "KPSS"
 
-#: standings/teams.py:116
+#: standings/teams.py
 msgid "sum of margins"
-msgstr ""
+msgstr "marjların toplamı"
 
-#: standings/teams.py:117
+#: standings/teams.py
 msgid "Marg"
-msgstr ""
+msgstr "Marj"
 
-#: standings/teams.py:126
+#: standings/teams.py
 msgid "average margin"
-msgstr ""
+msgstr "ortalama marj"
 
-#: standings/teams.py:127
+#: standings/teams.py
 msgid "AWM"
-msgstr ""
+msgstr "OMJ"
 
-#: standings/teams.py:136
+#: standings/teams.py
 msgid "average individual speaker score"
-msgstr ""
+msgstr "ortalama bireysel konuşmacı puanı"
 
-#: standings/teams.py:137
+#: standings/teams.py
 msgid "AISS"
-msgstr ""
+msgstr "OBKP"
 
-#: standings/teams.py:203
+#: standings/teams.py
 msgid "draw strength by wins"
-msgstr ""
+msgstr "galibiyete göre kura gücü"
 
-#: standings/teams.py:204
+#: standings/teams.py
 msgid "DS"
-msgstr ""
+msgstr "KG"
 
-#: standings/teams.py:211
+#: standings/teams.py
 msgid "draw strength by total speaker score"
-msgstr ""
+msgstr "toplam konuşmacı puanı ile kura gücü"
 
-#: standings/teams.py:212
+#: standings/teams.py
 msgid "DSS"
-msgstr ""
+msgstr "KPKG"
 
-#: standings/teams.py:223
+#: standings/teams.py
 msgid "number of pullups before this round"
-msgstr ""
+msgstr "Bu turdan önceki yukarı taşıma sayısı"
 
-#: standings/teams.py:224
+#: standings/teams.py
 msgid "PU"
-msgstr ""
+msgstr "YT"
 
-#: standings/teams.py:246
+#: standings/teams.py
 msgid "number of adjudicators who voted for this team"
-msgstr ""
+msgstr "Bu takıma oy veren jüri sayısı"
 
-#: standings/teams.py:247
+#: standings/teams.py
 msgid "Ballots"
-msgstr ""
+msgstr "Ballotlar"
 
-#: standings/teams.py:248
+#: standings/teams.py
 msgid "votes/ballots carried"
-msgstr ""
+msgstr "taşınan oylar/ballotlar"
 
-#: standings/teams.py:273
+#: standings/teams.py
 msgid "number of firsts"
-msgstr ""
+msgstr "ilkler sayısı"
 
-#: standings/teams.py:274
+#: standings/teams.py
 msgid "1sts"
-msgstr ""
+msgstr "1.ler"
 
-#: standings/teams.py:283
+#: standings/teams.py
 msgid "number of seconds"
-msgstr ""
+msgstr "ikinciler sayısı"
 
-#: standings/teams.py:284
+#: standings/teams.py
 msgid "2nds"
-msgstr ""
+msgstr "2.ler"
 
-#: standings/teams.py:296
+#: standings/teams.py
+msgid "number of thirds"
+msgstr "üçüncüler sayısı"
+
+#: standings/teams.py
+msgid "3rds"
+msgstr "3.ler"
+
+#: standings/teams.py
+msgid "number of times ironed"
+msgstr "demir konuşma sayısı"
+
+#: standings/teams.py
+msgid "Irons"
+msgstr "Demirler"
+
+#: standings/teams.py
 msgid "Who-beat-whom"
-msgstr ""
+msgstr "Kim kimi yendi"
 
-#: standings/teams.py:297
+#: standings/teams.py
 msgid "WBW"
-msgstr ""
+msgstr "KKY"
 
-#: standings/teams.py:298
+#: standings/teams.py
 msgid "who-beat-whom"
-msgstr ""
+msgstr "kim kimi yendi"
 
-#: standings/templates/current_standings.html:6
+#: standings/templates/current_standings.html
 msgid "It also excludes results from silent rounds (if any) and from the current round."
-msgstr ""
+msgstr "Ayrıca, sessiz turlardan (varsa) ve geçerli turdan gelen sonuçları da hariç tutar."
 
-#: standings/templates/current_standings.html:9
+#: standings/templates/current_standings.html
 #, python-format
 msgid "This list is sorted by team points, then alphabetically by team name. It does not indicate each team's ranking within each bracket. %(silent_round_sentence)s"
-msgstr ""
+msgstr "Bu liste takım puanlarına göre, ardından takım adına göre alfabetik olarak sıralanır. Her takımın parantez içindeki sıralamasını göstermez. %(silent_round_sentence)s"
 
-#: standings/templates/current_standings.html:15
+#: standings/templates/current_standings.html
 #, python-format
 msgid "This list is sorted by number of wins, then alphabetically by team name. It does not indicate each team's ranking within each bracket. %(silent_round_sentence)s"
-msgstr ""
+msgstr "Bu liste galibiyet sayısına, ardından takım adına göre alfabetik olarak sıralanır. Her takımın parantez içindeki sıralamasını göstermez. %(silent_round_sentence)s"
 
-#: standings/templates/current_standings_no_round.html:6
+#: standings/templates/current_standings_no_round.html
 msgid "There aren't any rounds for which results are available."
-msgstr ""
+msgstr "Sonuçların mevcut olduğu herhangi bir tur yoktur."
 
-#: standings/templates/reply_standings.html:6
+#: standings/templates/reply_standings.html
 msgid "Reply speakers are ranked by their <strong>average reply score</strong>."
-msgstr ""
+msgstr "Özet konuşmacılar <strong>ortalama yanıt puanına</strong> göre sıralanır."
 
-#: standings/templates/reply_standings.html:9
+#: standings/templates/reply_standings.html
 #, python-format
 msgid "Speakers can miss up to %(count)s reply speeches before they are omitted from the replies tab."
-msgstr ""
+msgstr "Konuşmacılar, özet tabından çıkarılmadan önce en fazla %(count)s özet konuşma kaçırabilir."
 
-#: standings/templates/reply_standings.html:14
+#: standings/templates/reply_standings.html
 msgid "All reply speakers appear in these standings, no matter how many replies they've missed."
-msgstr ""
+msgstr "Tüm özet konuşmacıları, kaç özet kaçırmış olurlarsa olsunlar, bu sıralamalarda görünürler."
 
-#: standings/templates/reply_standings.html:18
-#: standings/templates/speaker_standings.html:40
+#: standings/templates/reply_standings.html
+#: standings/templates/speaker_standings.html
 #, python-format
 msgid "These settings can be changed in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>."
-msgstr ""
+msgstr "Bu ayarlar <a href=\"%(standings_config_url)s\" class=\"alert-link\">turnuva ayarlarının sıralamalar kısmından</a> değiştirilebilir."
 
-#: standings/templates/speaker_standings.html:11
+#: standings/templates/speaker_standings.html
 #, python-format
 msgid "The speaker standings precedence is empty. This means that speakers aren't ranked according to any metrics, so everyone is first equal. If this isn't what you intended, set the speaker standings precedence in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>. In most tournaments, the first metric should be total or average."
-msgstr ""
+msgstr "Konuşmacı sıralama önceliği yok. Bu, konuşmacıların herhangi bir metriğe göre sıralanmadığı anlamına gelir, bu nedenle herkes eşit başlar. Amaçladığınız bu değilse, konuşmacı sıralama önceliğini <a href=\"%(standings_config_url)s\" class=\"alert-link\">turnuva ayarlarının sıralamalar kısmından</a> ayarlayın. Çoğu turnuvada, ilk metrik toplam veya ortalama olmalıdır."
 
-#: standings/templates/speaker_standings.html:23
+#: standings/templates/speaker_standings.html
 msgid "Speakers are ranked by their <strong>average score</strong>."
-msgstr ""
+msgstr "Konuşmacılar <strong>ortalama puanlarına</strong> göre sıralanır."
 
-#: standings/templates/speaker_standings.html:25
+#: standings/templates/speaker_standings.html
 msgid "Speakers are ranked by their <strong>total score</strong>. Any speaker who misses a single debate will be severely punished in these rankings."
-msgstr ""
+msgstr "Konuşmacılar <strong>toplam puanlarına</strong> göre sıralanır. Tek bir tartışmayı kaçıran herhangi bir konuşmacı bu sıralamalarda ciddi şekilde cezalandırılacaktır."
 
-#: standings/templates/speaker_standings.html:32
+#: standings/templates/speaker_standings.html
 #, python-format
 msgid "Speakers can miss up to %(count)s debates before they are omitted from the speaker tab."
-msgstr ""
+msgstr "Konuşmacılar, konuşmacı tabından çıkarılmadan önce %(count)s tane maç kaçırabilir."
 
-#: standings/templates/speaker_standings.html:37
+#: standings/templates/speaker_standings.html
 msgid "All speakers appear in these standings, no matter how many debates they've missed."
-msgstr ""
+msgstr "Tüm konuşmacılar, kaç tartışmayı kaçırmış olurlarsa olsunlar, bu sıralamalarda görünürler."
 
-#: standings/templates/speaker_standings.html:48
+#: standings/templates/speaker_standings.html
 #, python-format
 msgid "Enforcing the limit on the number of missed debates requires the \"number of speeches given\" metric to be included in the speaker standings calculations, so it's been automatically added. To remove this warning message, add <strong>Number of speeches given</strong> to the <strong>Speaker standings extra metrics</strong> in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>."
-msgstr ""
+msgstr "Kaçırılan tartışmaların sayısına ilişkin sınırın uygulanması, \"verilen konuşma sayısı\" metriğinin konuşmacı sıralama hesaplamalarına dahil edilmesini gerektirir, bu nedenle otomatik olarak eklenir. Bu uyarı mesajını kaldırmak için <a href=\"%(standings_config_url)s\" class=\"alert-link\">bu turnuva ayarlarının sıralama kısmından</a> <strong>yapılan konuşma sayısını</strong> <strong>konuşmacı sıralaması ekstra metriklerine</strong> ekleyin."
 
-#: standings/templates/standings_diversity.html:4
-#: standings/templates/standings_diversity.html:5
+#: standings/templates/standings_diversity.html
 msgid "Diversity Overview"
-msgstr ""
+msgstr "Çeşitliliğe Genel Bakış"
 
-#: standings/templates/standings_diversity.html:22
+#: standings/templates/standings_diversity.html
 msgid "The results data displayed here is presented without tests for statistical significance. Correlations should not be automatically considered reliable; particularly at small tournaments. A 'region' is a customisable category assigned to a set of institutions, and counted using the number of participants assigned to those institutions."
-msgstr ""
+msgstr "Burada görüntülenen sonuç verileri, istatistiksel anlamlılık testleri yapılmadan sunulmaktadır. Korelasyonlar otomatik olarak güvenilir olarak kabul edilmemelidir; özellikle küçük turnuvalarda. \"Bölge\", bir dizi kuruma atanan özelleştirilebilir bir kategoridir ve bu kurumlara atanan katılımcı sayısı kullanılarak sayılır."
 
-#: standings/templates/standings_diversity.html:37
+#: standings/templates/standings_diversity.html
 msgid "Non-cis male identifying"
-msgstr ""
+msgstr "Cis olmayan erkek olarak tanımlıyor"
 
-#: standings/templates/standings_diversity.html:40
+#: standings/templates/standings_diversity.html
 msgid "Cis-male identifying"
-msgstr ""
+msgstr "Cis-erkek olarak tanımlıyor"
 
-#: standings/templates/standings_diversity.html:43
+#: standings/templates/standings_diversity.html
 msgid "Unspecified/unrecorded"
-msgstr ""
+msgstr "Belirtilmemiş/kaydedilmemiş"
 
-#: standings/templates/standings_index.html:5
-#: standings/templates/standings_index.html:6
+#: standings/templates/standings_index.html
 msgid "Standings"
-msgstr ""
+msgstr "Sıralamalar"
 
-#: standings/templates/standings_index.html:18
+#: standings/templates/standings_index.html
 msgid "Top Speaks"
-msgstr ""
+msgstr "En İyi Konuşmacı Puanları"
 
-#: standings/templates/standings_index.html:22
-#: standings/templates/standings_index.html:41
+#: standings/templates/standings_index.html
 #, python-format
 msgid "%(speaker)s in %(round)s"
-msgstr ""
+msgstr "%(round)s içindeki %(speaker)s"
 
-#: standings/templates/standings_index.html:28
-#: standings/templates/standings_index.html:47
-#: standings/templates/standings_index.html:66
-#: standings/templates/standings_index.html:87
-#: standings/templates/standings_index.html:108
-#: standings/templates/standings_index.html:129
-#: standings/templates/standings_index.html:150
-#: standings/templates/standings_index.html:163
-#: standings/templates/standings_index.html:182
+#: standings/templates/standings_index.html
 msgid "No data yet"
-msgstr ""
+msgstr "Henüz veri yok"
 
-#: standings/templates/standings_index.html:37
+#: standings/templates/standings_index.html
 msgid "Bottom Speaks"
-msgstr ""
+msgstr "Alt Konuşmacı Puanları"
 
-#: standings/templates/standings_index.html:56
+#: standings/templates/standings_index.html
 msgid "Largest Margins"
-msgstr ""
+msgstr "En Büyük Marjlar"
 
-#: standings/templates/standings_index.html:60
-#: standings/templates/standings_index.html:81
+#: standings/templates/standings_index.html
 #, python-format
 msgid "%(team)s vs %(opp)s in %(round)s"
-msgstr ""
+msgstr "%(round)s turunda %(team)s vs %(opp)s"
 
-#: standings/templates/standings_index.html:77
+#: standings/templates/standings_index.html
 msgid "Closest Margins"
-msgstr ""
+msgstr "En Yakın Marjlar"
 
-#: standings/templates/standings_index.html:98
+#: standings/templates/standings_index.html
 msgid "Top Team Scores"
-msgstr ""
+msgstr "En İyi Takım Puanları"
 
-#: standings/templates/standings_index.html:102
-#: standings/templates/standings_index.html:123
+#: standings/templates/standings_index.html
 #, python-format
 msgid "%(team)s in %(round)s"
-msgstr ""
+msgstr "%(round)s içindeki %(team)s"
 
-#: standings/templates/standings_index.html:119
+#: standings/templates/standings_index.html
 msgid "Bottom Team Scores"
-msgstr ""
+msgstr "En Düşük Takım Puanları"
 
-#: standings/templates/standings_index.html:140
+#: standings/templates/standings_index.html
 msgid "Most/Least Popular Motions"
-msgstr ""
+msgstr "En Çok/En Az Popüler Önergeler"
 
-#: standings/templates/standings_index.html:144
-#: standings/templates/standings_index.html:157
-#, python-format
-msgid "%(reference)s in %(abbreviation)s"
-msgstr ""
-
-#: standings/templates/standings_index.html:173
+#: standings/templates/standings_index.html
 msgid "Average Speaks"
-msgstr ""
+msgstr "Ortalama Konuşma Puanları"
 
-#: standings/templates/standings_menu.html:6
+#: standings/templates/standings_menu.html
 msgid "Overview"
-msgstr ""
+msgstr "Genel bakış"
 
-#: standings/templates/standings_menu.html:12
-#: standings/templates/standings_menu.html:19
+#: standings/templates/standings_menu.html
 msgid "Teams"
 msgstr "Takımlar"
 
-#: standings/templates/standings_menu.html:17
+#: standings/templates/standings_menu.html
 msgctxt "All [Teams]"
 msgid "All"
-msgstr ""
+msgstr "Tüm"
 
-#: standings/templates/standings_menu.html:32
+#: standings/templates/standings_menu.html
 msgid "Speakers"
 msgstr "Konuşmacılar"
 
-#: standings/templates/standings_menu.html:37
+#: standings/templates/standings_menu.html
 msgctxt "Substantive speeches"
 msgid "Substantives"
-msgstr ""
+msgstr "Ana Konuşmalar"
 
-#: standings/templates/standings_menu.html:39
+#: standings/templates/standings_menu.html
 msgctxt "All [Speakers]"
 msgid "All"
-msgstr ""
+msgstr "Tüm"
 
-#: standings/templates/standings_menu.html:41
+#: standings/templates/standings_menu.html
 msgid "Speakers "
 msgstr "Konuşmacılar "
 
-#: standings/templates/standings_menu.html:47
+#: standings/templates/standings_menu.html
 #, python-format
 msgid "%(category)s"
 msgstr ""
 
-#: standings/templates/standings_menu.html:55
+#: standings/templates/standings_menu.html
 msgid "Replies"
-msgstr ""
+msgstr "Yanıtlar"
 
-#: standings/templates/standings_menu.html:64
+#: standings/templates/standings_menu.html
 msgid "Motions"
 msgstr "Önergeler"
 
-#: standings/templates/standings_menu.html:68
-msgid "Diversity"
-msgstr ""
+#: standings/templates/standings_menu.html
+msgid "By Round"
+msgstr "Tura göre"
 
-#: standings/templates/team_standings.html:10
+#: standings/templates/standings_menu.html
+msgid "Diversity"
+msgstr "Çeşitlilik"
+
+#: standings/templates/team_standings.html
 #, python-format
 msgid "The team standings precedence is empty. This means that teams aren't ranked according to any metrics, so everyone is first equal. If this isn't what you intended, set the team standings precedence in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>. In most tournaments, the first metric should be points or wins."
-msgstr ""
+msgstr "Takım sıralama önceliği yok. Bu, takımların herhangi bir metriğe göre sıralanmadığı anlamına gelir, bu nedenle herkes eşit başlar. Amaçladığınız bu değilse, konuşmacı sıralama önceliğini <a href=\"%(standings_config_url)s\" class=\"alert-link\">turnuva ayarlarının sıralamalar kısmından</a> ayarlayın. Çoğu turnuvada, ilk metrik puanlar veya galibiyetler olmalıdır."
 
-#: standings/views.py:99
+#: standings/views.py
 #, python-format
 msgid "<p>There was an error generating the standings: <em>%(message)s</em></p>"
-msgstr ""
+msgstr "<p>Sıralamaları oluştururken bir hata oluştu: <em>%(message)s</em></p>"
 
-#: standings/views.py:104
+#: standings/views.py
 #, python-format
 msgid "<p>You may need to double-check the <a href=\"%(standings_options_url)s\" class=\"alert-link\">standings configuration under the Setup section</a>. If this issue persists and you're not sure how to fix it, please contact the developers.</p>"
-msgstr ""
+msgstr "<p> Ayarlar bölümününde <a href=\"%(standings_options_url)s\" class=\"alert-link\">turnuva ayarlarının sıralamalar kısmını</a> kontrol etmeniz gerekebilir. Bu sorun devam ederse ve nasıl düzelteceğinizden emin değilseniz lütfen geliştiricilerle iletişime geçin.</p>"
 
-#: standings/views.py:112
+#: standings/views.py
 msgid "<p>The tab director will need to resolve this issue.</p>"
-msgstr ""
+msgstr "<p>Tab yöneticisinin bu sorunu çözmesi gerekir.</p>"
 
-#: standings/views.py:116
+#: standings/views.py
 #, python-format
 msgid "as of %(round)s"
-msgstr ""
+msgstr "%(round)s itibariyle"
 
 #. Translators: 'title' is the main title; "(Top 15 Only)" is just a suffix
-#: standings/views.py:181
+#: standings/views.py
 #, python-format
 msgid "%(title)s (Top %(limit)d Only)"
-msgstr ""
+msgstr "%(title)s (yalnızca en yüksek %(limit)d)"
 
-#: standings/views.py:206 standings/views.py:432
+#: standings/views.py
 msgid "The tab can't be displayed because all rounds so far in this tournament are silent."
-msgstr ""
+msgstr "Bu turnuvada şimdiye kadarki tüm turlar sessiz olduğundan tab görüntülenemiyor."
 
-#: standings/views.py:282
+#: standings/views.py
 msgid "Speaker Standings"
-msgstr ""
+msgstr "Konuşmacı Sıralamaları"
 
-#: standings/views.py:324
+#: standings/views.py
 msgid "Speaker Tab"
-msgstr ""
+msgstr "Konuşmacı Tabı"
 
-#: standings/views.py:339
+#: standings/views.py
 #, python-format
 msgid "%(category)s Speaker Standings"
-msgstr ""
+msgstr "%(category)s Konuşmacı Sıralamaları"
 
-#: standings/views.py:357
+#: standings/views.py
 #, python-format
 msgid "%(category)s Speaker Tab"
-msgstr ""
+msgstr "%(category)s Konuşmacı Tabı"
 
-#: standings/views.py:370
+#: standings/views.py
 msgid "Reply Speaker Standings"
-msgstr ""
+msgstr "Özet Konuşmacı Sıralamaları"
 
-#: standings/views.py:375
+#: standings/views.py
 msgid "Reply speeches aren't enabled in this tournament."
-msgstr ""
+msgstr "Özet konuşmaları bu turnuvada yoktur."
 
-#: standings/views.py:412
+#: standings/views.py
 msgid "Reply Speaker Tab"
-msgstr ""
+msgstr "Özet Konuşmacı Tabı"
 
-#: standings/views.py:424 standings/views.py:673
+#: standings/views.py
 msgid "Team Standings"
-msgstr ""
+msgstr "Takım Sıralamaları"
 
-#: standings/views.py:503
+#: standings/views.py
 msgid "Team Tab"
-msgstr ""
+msgstr "Takım Tabı"
 
-#: standings/views.py:522
+#: standings/views.py
 #, python-format
 msgid "%(category)s Team Standings"
-msgstr ""
+msgstr "%(category)s Takım Sıralamaları"
 
-#: standings/views.py:549
+#: standings/views.py
 #, python-format
 msgid "%(category)s Team Tab"
-msgstr ""
+msgstr "%(category)s Takım Tabı"
 
-#: standings/views.py:560
+#: standings/views.py
 msgid "Current Team Standings"
-msgstr ""
+msgstr "Mevcut Takım Sıralamaları"
 
-#: standings/views.py:596
+#: standings/views.py
 msgid "Points"
-msgstr "Puanları"
+msgstr "Puanlar"
+
+#: standings/views.py
+msgid "Feedback Overview"
+msgstr "Geri bildirim genel bakış"
+
+#: standings/views.py
+msgid "An adjudicator's score is determined by a customisable mix of their base score and their feedback ratings. The current mix is specified below as the 'Score Components.' Feedback ratings are determined by averaging the results of all individual pieces of feedback across all rounds. <a href='https://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html#how-is-an-adjudicator-s-score-determined'>Read more</a>."
+msgstr "Bir jürinin puanı, temel puanlarının ve geri bildirim derecelendirmelerinin ayarlanabilir bir karışımıyla belirlenir. Geçerli karışım aşağıda 'Puan Bileşenleri' olarak belirtilmiştir. Geri bildirim derecelendirmeleri, tüm turlardaki tüm bireysel geri bildirim parçalarının sonuçlarının ortalaması alınarak belirlenir. <a href='https://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html#how-is-an-adjudicator-s-score-determined'>Daha fazla bilgi</a>."
 

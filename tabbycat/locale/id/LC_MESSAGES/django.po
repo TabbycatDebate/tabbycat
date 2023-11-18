@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-28 21:53-0400\n"
-"PO-Revision-Date: 2021-12-01 12:28\n"
+"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"PO-Revision-Date: 2023-02-05 00:58\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -17,939 +17,939 @@ msgstr ""
 "X-Crowdin-File: /develop/tabbycat/locale/en/LC_MESSAGES/django.po\n"
 "X-Crowdin-File-ID: 934\n"
 
-#: api/apps.py:7
+#: api/apps.py
 msgid "Application Programming Interface"
 msgstr "Application Programming Interface"
 
-#: checkins/apps.py:7 templates/nav/admin_nav.html:117
-#: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:105
+#: checkins/admin.py
+msgid "Type"
+msgstr ""
+
+#: checkins/admin.py
+msgid "Checkin time"
+msgstr ""
+
+#: checkins/apps.py templates/nav/admin_nav.html
+#: templates/nav/assistant_nav.html templates/nav/public_nav.html
 msgid "Check-Ins"
 msgstr "Cek-In"
 
-#: checkins/consumers.py:73
+#: checkins/consumers.py
 msgid "Sent checkin identifier doesn't exist"
 msgstr "Pengenal cek-in yang terkirim tidak ada"
 
-#: checkins/consumers.py:74 checkins/consumers.py:79
+#: checkins/consumers.py
 msgid "Checkins"
 msgstr "Cek-in"
 
-#: checkins/consumers.py:78
+#: checkins/consumers.py
 msgid "No checkin identifiers exist for sent barcodes"
 msgstr "Tidak ada pengenal cek-in untuk barcode yang dikirim"
 
-#: checkins/models.py:29
+#: checkins/models.py
 msgid "The barcode must contain exactly six digits."
 msgstr "Barcode harus memiliki tepat enam dijit."
 
-#: checkins/models.py:32
+#: checkins/models.py
 msgid "barcode"
 msgstr "barcode"
 
-#: checkins/models.py:37
+#: checkins/models.py
 msgid "<Not the child instance>"
 msgstr "<Bukan instansiasi anak>"
 
-#: checkins/models.py:41
+#: checkins/models.py
 #, python-format
 msgid "%(classname)s %(barcode)s"
 msgstr ""
 
-#: checkins/models.py:52
+#: checkins/models.py
 msgid "person"
 msgstr "orang"
 
-#: checkins/models.py:55
+#: checkins/models.py
 msgid "person identifier"
 msgstr "pengenal orang"
 
-#: checkins/models.py:56
+#: checkins/models.py
 msgid "person identifiers"
 msgstr "pengenal orang"
 
-#: checkins/models.py:64
+#: checkins/models.py
 msgid "debate"
 msgstr "debat"
 
-#: checkins/models.py:67
+#: checkins/models.py
 msgid "debate identifier"
 msgstr "pengenal deba"
 
-#: checkins/models.py:68
+#: checkins/models.py
 msgid "debate identifiers"
 msgstr "pengenal deba"
 
-#: checkins/models.py:79
+#: checkins/models.py
 msgid "room identifier"
 msgstr "pengenal ruangan"
 
-#: checkins/models.py:80
+#: checkins/models.py
 msgid "room identifiers"
 msgstr "pengenal ruangan"
 
-#: checkins/models.py:87
+#: checkins/models.py
 msgid "identifier"
 msgstr "pengenal"
 
-#: checkins/models.py:90
+#: checkins/models.py
 msgid "check-in time"
 msgstr "waktu cek-in"
 
-#: checkins/models.py:92
+#: checkins/models.py
 msgid "tournament"
 msgstr "turnamen"
 
-#: checkins/models.py:95
+#: checkins/models.py
 msgid "check-in event"
 msgstr "kejadian cek-in"
 
-#: checkins/models.py:96
+#: checkins/models.py
 msgid "check-in events"
 msgstr "kejadian cek-in"
 
-#: checkins/templates/checkin_ids.html:18
+#: checkins/templates/checkin_ids.html
 msgid "With identifiers"
 msgstr "Dengan pengenal"
 
-#: checkins/templates/checkin_ids.html:30
+#: checkins/templates/checkin_ids.html
 msgid "View as barcodes"
 msgstr "Lihat sebagai barcode"
 
-#: checkins/templates/checkin_ids.html:36
+#: checkins/templates/checkin_ids.html
 msgid "Generate missing identifiers"
 msgstr "Bangkitkan pengenal yang hilang"
 
-#: checkins/templates/checkin_ids.html:38
+#: checkins/templates/checkin_ids.html
 msgid "Generate all identifiers"
 msgstr "Bangkitkan semua pengenal"
 
-#: checkins/templates/checkin_ids.html:49
+#: checkins/templates/checkin_ids.html
 msgid "There are no identifiers available to view. An admin will need to generate them."
 msgstr "Tidak ada pengenal yang tersedia untuk dilihat. Seorang admin perlu membangkitkannya."
 
-#: checkins/templates/checkin_printables.html:10
-msgid "Each of the barcodes below is also an image file that can be download individually. If you want to download them all at once try using a 'bulk downloader' extension/plugin for your browser, such as <a href=\"https://chrome.google.com/webstore/detail/svg-export/naeaaedieihlkmdajjefioajbbdbdjgp?hl=en-GB\">this one (for Chrome)</a>. To download them as a list you can go to Check-Ins section of the Edit Database area and copy/paste from the relevant table."
-msgstr "Setiap barcode di bawah adalah juga sebuah berkas gambar yang dapat diunduh secara individu. Jika anda ingin mengunduhnya semua cobalah gunakan ekstensi/plugin 'pengunduh sekaligus' pada peramban Anda, seperti <a href=\"https://chrome.google.com/webstore/detail/svg-export/naeaaedieihlkmdajjefioajbbdbdjgp?hl=en-GB\">ini (untuk Google Chrome)</a>. Untuk mengunduhnya sebagai sebuah daftar Anda dapat menuju seksi Cek-in pada area Sunting Basisdata dan salin/tempel dari tabel yang relevan."
+#: checkins/templates/checkin_printables.html
+msgid "Each of the barcodes below is also an image file that can be downloaded individually. If you want to download them all at once try using a 'bulk downloader' extension/plugin for your browser, such as <a href=\"https://chrome.google.com/webstore/detail/svg-export/naeaaedieihlkmdajjefioajbbdbdjgp?hl=en-GB\">this one (for Chrome)</a>. To download them as a list you can go to Check-Ins section of the Edit Database area and copy/paste from the relevant table."
+msgstr ""
 
-#: checkins/templates/checkin_printables.html:15
+#: checkins/templates/checkin_printables.html
 msgid "You can use Ctrl+P for printing or saving the barcodes PDF. Be sure to set the appropriate <strong>page orientation</strong>, to turn off <strong>headers/footers</strong> and turn on <strong>background graphics</strong>. Works best in Chrome."
 msgstr "Anda bisa menggunakan Ctrl+P untuk mencetak atau menyimpan PDF barcode. Jangan lupa untuk mengatur <strong>orientasi halaman</strong> yang sesuai, mematikan <strong>header/footer</strong>, dan menyalakan <strong>gambar latar belakang</strong>. Bekerja paling baik di Chrome."
 
-#: checkins/templates/checkin_scan.html:18
+#: checkins/templates/checkin_scan.html
 msgid "To scan an identifier type the number below (it will auto-submit). You can also use a barcode scanner (configured to work as a keyboard) or scan from a webcam or phone camera using the button below."
 msgstr "Untuk memindai sebuah penanda ketikkan angka di bawah (akan otomatis terkirim). Anda juga bisa menggunakan pemindai barcode (terkonfigurasi untuk bekerja sebagai keyboard) atau pindah dari webcam atau kamera ponsel dengan menggunakan tombol di bawah."
 
-#: checkins/utils.py:61
+#: checkins/utils.py
 #, python-format
 msgid "Not checked in (barcode %(barcode)s)"
 msgstr "Tidak tercek-in (barcode %(barcode)s)"
 
-#: checkins/utils.py:65
+#: checkins/utils.py
 msgid "Not checked in; no barcode assigned"
 msgstr "Tidak tercek-in; tidak ada barcode yang dipasangkan"
 
-#: checkins/utils.py:72
+#: checkins/utils.py
 #, python-format
 msgid "checked in at %(time)s"
 msgstr "cek-in pada %(time)s"
 
-#: checkins/utils.py:84
+#: checkins/utils.py
 #, python-format
 msgid "%(speaker)s checked in at %(time)s."
 msgstr "%(speaker)s cek-in pada %(time)s."
 
-#: checkins/utils.py:86
+#: checkins/utils.py
 #, python-format
 msgid "%(speaker)s is missing."
 msgstr "%(speaker)s tidak ada."
 
-#: checkins/views.py:30 templates/nav/admin_nav.html:128
-#: templates/nav/assistant_nav.html:42
+#: checkins/views.py templates/nav/admin_nav.html
+#: templates/nav/assistant_nav.html
 msgid "Scan Identifiers"
 msgstr "Pindah penanda"
 
-#: checkins/views.py:63
+#: checkins/views.py
 msgid "People's Check-In Statuses"
 msgstr "Status Cek-in Orang-Orang"
 
-#: checkins/views.py:120
+#: checkins/views.py
 msgid "Rooms' Check-In Statuses"
 msgstr "Status Cek-In Ruangan-Ruangan"
 
-#: checkins/views.py:169 templates/nav/admin_nav.html:124
+#: checkins/views.py templates/nav/admin_nav.html
 msgid "Make Identifiers"
 msgstr "Buat Penanda"
 
-#: checkins/views.py:176 templates/nav/admin_nav.html:210
+#: checkins/views.py templates/nav/admin_nav.html
 msgid "Speakers"
 msgstr "Pembicara"
 
-#: checkins/views.py:181 templates/nav/public_nav.html:145
+#: checkins/views.py templates/nav/public_nav.html
 msgid "Adjudicators"
 msgstr "Juri"
 
-#: checkins/views.py:186
+#: checkins/views.py
 msgid "Rooms"
 msgstr "Ruangan"
 
-#: checkins/views.py:227
+#: checkins/views.py
 #, python-format
 msgid "Generated identifiers for %s"
 msgstr "Penanda untuk %s dibangkitkan"
 
-#: checkins/views.py:234
+#: checkins/views.py
 msgid "Identifiers"
 msgstr "Penanda"
 
-#: checkins/views.py:272
+#: checkins/views.py
 msgid "Could not check you in as you do not have an identifying code — your tab director may need to make you an identifier."
 msgstr "Tidak dapat melakukan cek-in untuk Anda karena Anda tidak memiliki kode penanda — direktur tabulasi Anda mungkin perlu membuatkan Anda sebuah penanda."
 
-#: checkins/views.py:280
+#: checkins/views.py
 msgid "You have revoked your check-in."
 msgstr "Anda telah membatalkan cek-in Anda."
 
-#: checkins/views.py:282
+#: checkins/views.py
 msgid "Whoops! Looks like your check-in was already revoked."
 msgstr "Ups! Sepertinya cek-in Anda sudah dibatalkan sebelumnya."
 
-#: checkins/views.py:286
+#: checkins/views.py
 msgid "Whoops! Looks like you're already checked in."
 msgstr "Ups! Sepertinya Anda sudah cek-in sebelumnya."
 
-#: checkins/views.py:293
+#: checkins/views.py
 msgid "You are now checked in."
 msgstr "Anda sekarang tercek-in."
 
-#: settings/core.py:67
+#: settings/core.py
 msgid "Arabic"
 msgstr ""
 
-#: settings/core.py:68
+#: settings/core.py
 msgid "Bengali"
 msgstr "Bengali"
 
-#: settings/core.py:69
+#: settings/core.py
 msgid "English"
 msgstr ""
 
-#: settings/core.py:70
+#: settings/core.py
 msgid "Spanish"
 msgstr ""
 
-#: settings/core.py:71
+#: settings/core.py
 msgid "French"
 msgstr ""
 
-#: settings/core.py:72
+#: settings/core.py
 msgid "Indonesian"
 msgstr "Bahasa Indonesia"
 
-#: settings/core.py:73
+#: settings/core.py
 msgid "Japanese"
 msgstr ""
 
-#: settings/core.py:74
+#: settings/core.py
 msgid "Malay"
 msgstr ""
 
-#: settings/core.py:75
+#: settings/core.py
 msgid "Portuguese"
 msgstr ""
 
-#: settings/core.py:76
+#: settings/core.py
 msgid "Russian"
 msgstr ""
 
-#: settings/core.py:77
+#: settings/core.py
 msgid "Simplified Chinese"
 msgstr "Mandarin yang Disederhanakan"
 
-#: settings/core.py:78
+#: settings/core.py
 msgid "Translation"
 msgstr "Terjemahan"
 
-#: templates/admin/delete_protected_message.html:4
+#: templates/admin/delete_protected_message.html
 msgid "You need to delete the above objects first."
 msgstr "Anda perlu menghapus objek-objek di atas terlebih dahulu."
 
-#: templates/admin/style_guide.html:30
+#: templates/admin/style_guide.html
 msgid "This style of info card announces critical information. <a href=\"\">Link</a>."
 msgstr "Kartu informasi seperti ini mengumumkan informasi penting. <a href=\"\">Link</a>."
 
-#: templates/admin/style_guide.html:33
+#: templates/admin/style_guide.html
 msgid "This style of info card announces general <a href=\"\">information</a>."
 msgstr "Kartu informasi seperti ini mengumumkan <a href=\"\">informasi</a> umum."
 
-#: templates/admin/style_guide.html:160
+#: templates/admin/style_guide.html
 msgctxt "page title"
 msgid "Form Title"
 msgstr "Judul Formulir"
 
-#: templates/admin/style_guide.html:161
+#: templates/admin/style_guide.html
 msgid "Sub Title Title"
 msgstr "Subjudul Judul"
 
-#: templates/admin/style_guide.html:197 templates/registration/login.html:61
+#: templates/admin/style_guide.html templates/registration/login.html
 msgctxt "button"
 msgid "Log In"
 msgstr "Masuk"
 
-#: templates/admin/style_guide.html:198 templates/registration/login.html:62
+#: templates/admin/style_guide.html templates/registration/login.html
 msgctxt "button"
 msgid "I forgot my password"
 msgstr "Saya lupa password saya"
 
-#: templates/base.html:10
+#: templates/base.html
 msgid "Tabbycat"
 msgstr ""
 
-#: templates/base.html:13
+#: templates/base.html
 #, python-format
 msgid "The tab for %(tournament)s runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats"
 msgstr "Tabulasi untuk %(tournament)s berjalan di atas Tabbycat, sebuah sistem tabulasi kode-terbuka untuk berbagai macam format debat parlementer"
 
-#: templates/base.html:17
+#: templates/base.html
 msgid "This tab runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats"
 msgstr "Tabulasi ini berjalan di atas Tabbycat, sebuah sistem tabulasi kode-terbuka untuk berbagai macam format debat parlementer"
 
-#: templates/components/form-errors.html:4
+#: templates/components/form-errors.html
 msgid "Whoops! There was an error with one or more fields."
 msgstr "Ups! Sepertinya ada kesalahan pada satu atau lebih kolom."
 
-#: templates/components/formset.html:23
+#: templates/components/formset.html
 msgid "Save and Add More"
 msgstr "Simpan dan Tambahkan Lagi"
 
-#: templates/errors/assistant_403.html:4 templates/errors/assistant_403.html:6
-#: templates/errors/public_403.html:4 templates/errors/public_403.html:6
+#: templates/errors/assistant_403.html templates/errors/public_403.html
 msgid "Permission Denied (403)"
 msgstr "Akses Tidak Diijinkan (403)"
 
-#: templates/errors/assistant_403.html:13
+#: templates/errors/assistant_403.html
 #, python-format
 msgid "This assistant page isn't enabled for this tournament. <a href=\"%(url)s\">Back to the assistant home page.</a>"
 msgstr "Asisten halaman ini tidak dinyalakan untuk turnamen ini. <a href=\"%(url)s\">Kembali ke beranda halaman asisten.</a>"
 
-#: templates/errors/database_limit_warning.html:9
+#: templates/errors/database_limit_warning.html
 #, python-format
 msgid "You're currently using %(nrows)s row in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
 msgid_plural "You're currently using %(nrows)s rows in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
 msgstr[0] "Saat ini Anda menggunakan %(nrows)s baris di dalam basisdata Anda. Jika Anda belum meningkatkan basisdata Heroku Anda ke tingkat berbayar, ini akan dibatasi oleh 10.000 baris. Karena Anda dekat dengan batas ini, Anda sebaiknya <strong>tidak membuat turnamen baru</strong> pada situs ini kecuali dan sampai Anda <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">meningkatkan basisdata Anda</a> ke tingkat berbayar."
 
-#: templates/errors/legacy_sendgrid_warning.html:11
+#: templates/errors/legacy_sendgrid_warning.html
 msgid "It looks like you're using the old SendGrid config vars on Heroku, <code>SENDGRID_USERNAME</code> and <code>SENDGRID_PASSWORD</code>. These are now deprecated (as of version 2.6), and will stop working in a future version of Tabbycat. Please change your config vars to use <code>SENDGRID_API_KEY</code> instead. For more information, please see <a href=\"https://tabbycat.readthedocs.io/en/stable/features/notifications.html#configuring-an-email-provider\"> our documentation on this topic</a>."
 msgstr "Sepertinya anda menggunakan konfigurasi lama dari SendGrid config vars pada Heroku, <code>SENDGRID_USERNAME</code> dan <code>SENDGRID_PASSWORD</code>. Konfigurasi tersebut sudah tidak digunakan lagi (semenjak versi 2.6), dan akan berhenti digunakan untuk versi-versi terbaru Tabbycat. Mohon ubah config vars menjadi <code>SENDGRID_API_KEY</code>. Untuk informasi lebih lanjutkan, silahkan membaca <ahref=\"https://tabbycat.readthedocs.io/en/stable/features/notifications.html#configuring-an-email-provider\"> untuk dokumentasi dari kami mengenai topik ini."
 
-#: templates/errors/public_403.html:14
+#: templates/errors/public_403.html
 #, python-format
 msgid "Whoops! This page isn't enabled for this tournament. <a href=\"%(url)s\">Back to the tournament home page.</a>"
 msgstr "Ups! Halaman ini tidak dinyalakan untuk turnamen ini. <a href=\"%(url)s\">Kembali ke halaman beranda turnamen.</a>"
 
-#: templates/errors/public_403.html:20
+#: templates/errors/public_403.html
 #, python-format
 msgid "Whoops! This page isn't enabled for this tournament. <a href=\"%(url)s\">Back to the home page.</a>"
 msgstr "Ups! Halaman ini tidak dinyalakan untuk turnamen ini. <a href=\"%(url)s\">Kembali ke halaman beranda.</a>"
 
-#: templates/footer.html:14
+#: templates/footer.html
 #, python-format
 msgid "%(tournament)s runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 msgstr "%(tournament)s berjalan di atas Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 
-#: templates/footer.html:16
+#: templates/footer.html
 #, python-format
 msgid "This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 msgstr "Situs ini berjalan di atas %(tabbycat_version)s (%(tabbycat_codename)s)"
 
-#: templates/footer.html:20
+#: templates/footer.html
 msgid "Tabbycat is a source-available project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments."
 msgstr "Tabbycat adalah proyek kode-terbuka yang dibangun oleh relawan, dan gratis digunakan untuk tabulasi turnamen non-profit dan bukan bersifat penggalangan dana."
 
-#: templates/footer.html:24
+#: templates/footer.html
 #, python-format
 msgid "For a tournament of this size, we suggest <a href=\"https://opencollective.com/tabbycat/contribute/licensing-29466/checkout?amount=%(amount)s\">a donation of <strong>$%(amount)s</strong></a>."
 msgstr "Untuk turnamen seukuran ini, kami menyarankan<a href=\"https://opencollective.com/tabbycat/contribute/licensing-29466/checkout?amount=%(amount)s\"> donasi sebesar <strong>$%(amount)s</strong></a>."
 
-#: templates/footer.html:28
+#: templates/footer.html
 msgid "Learn more about donating."
 msgstr "Pelajari lebih lanjut tentang berdonasi."
 
-#: templates/footer.html:31
+#: templates/footer.html
 msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated."
 msgstr "<a href=\"https://opencollective.com/tabbycat\">Donasi untuk Tabbycat dari individu atau organisasi</a> sangat dihargai."
 
-#: templates/footer.html:39
+#: templates/footer.html
 msgid "Still timing debates with the stopwatch app?"
 msgstr "Masih mengukur waktu debat dengan aplikasi stopwatch?"
 
-#: templates/footer.html:41
+#: templates/footer.html
 #, python-format
 msgid "Using an app designed for debate timekeeping makes speaking and adjudicating easier! Check out <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/iPad) or <a href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper</a> (Android)."
 msgstr "Menggunakan aplikasi yang didesain untuk mengukur waktu debat membuat berbicara dan menjurikan lebih mudah! Cek <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/iPad) or <a href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper</a> (Android)."
 
-#: templates/footer.html:50
+#: templates/footer.html
 msgid "Our Organisation"
 msgstr "Organisasi Kami"
 
-#: templates/footer.html:52
-msgid "Tabbycat is supported by the <a href=\"http://tabbycat-debate.org/\">Tabbycat Debate Association</a>, a non-profit for advancing open debate technology."
-msgstr "Tabbycat didukung oleh <a href=\"http://tabbycat-debate.org/\">Tabbycat Debate Association</a>, sebuah organisasi non-profit untuk memajukan teknologi debat terbuka."
+#: templates/footer.html
+msgid "Tabbycat is supported by the <a href=\"https://tabbycat-debate.org/\">Tabbycat Debate Association</a>, a non-profit for advancing open debate technology."
+msgstr ""
 
-#: templates/footer.html:65
+#: templates/footer.html
 msgid "Language"
 msgstr "Bahasa"
 
-#: templates/footer.html:72
+#: templates/footer.html
 msgid "GitHub"
 msgstr ""
 
-#: templates/footer.html:78
+#: templates/footer.html
 msgid "Documentation"
 msgstr "Dokumentasi"
 
-#: templates/footer.html:84
+#: templates/footer.html
 msgid "Support"
 msgstr "Dukungan"
 
-#: templates/footer.html:90
+#: templates/footer.html
 msgid "Facebook"
 msgstr ""
 
-#: templates/footer.html:96
+#: templates/footer.html
 msgid "Set Up A Copy"
 msgstr "Buat Duplikatnya"
 
-#: templates/footer.html:110
+#: templates/footer.html
 msgid "Change Language"
 msgstr "Ubah Bahasa"
 
-#: templates/footer.html:127
+#: templates/footer.html
 msgid "Use this language"
 msgstr "Gunakan bahasa ini"
 
-#: templates/nav/admin_nav.html:9 templates/nav/top_nav_base.html:6
+#: templates/nav/admin_nav.html templates/nav/top_nav_base.html
 msgid "Tabbycat Logo"
 msgstr "Logo Tabbycat"
 
-#: templates/nav/admin_nav.html:28 templates/nav/top_nav_base.html:59
+#: templates/nav/admin_nav.html templates/nav/top_nav_base.html
 msgid "Site Home"
 msgstr "Beranda Situs"
 
-#: templates/nav/admin_nav.html:31
+#: templates/nav/admin_nav.html
 msgid "New Tournament"
 msgstr "Turnamen Baru"
 
-#: templates/nav/admin_nav.html:34
+#: templates/nav/admin_nav.html templates/nav/top_nav_base.html
 msgid "Edit Database"
 msgstr "Sunting Basisdata"
 
-#: templates/nav/admin_nav.html:42
+#: templates/nav/admin_nav.html
 msgid "Admin Area"
 msgstr "Area Admin"
 
-#: templates/nav/admin_nav.html:46
+#: templates/nav/admin_nav.html
 msgid "Assistant Area"
 msgstr "Area Asisten"
 
-#: templates/nav/admin_nav.html:50
+#: templates/nav/admin_nav.html
 msgid "Public Area"
 msgstr "Area Publik"
 
-#: templates/nav/admin_nav.html:60 templates/nav/admin_nav.html:150
-#: templates/nav/admin_nav.html:190 templates/nav/admin_nav.html:249
+#: templates/nav/admin_nav.html
 msgid "Overview"
 msgstr "Tinjauan"
 
-#: templates/nav/admin_nav.html:67
+#: templates/nav/admin_nav.html
 msgid "Setup"
 msgstr "Siapkan"
 
-#: templates/nav/admin_nav.html:74
+#: templates/nav/admin_nav.html
 msgid "Configuration"
 msgstr "Konfigurasi"
 
-#: templates/nav/admin_nav.html:77
+#: templates/nav/admin_nav.html
 msgid "Import Data"
 msgstr "Impor Data"
 
-#: templates/nav/admin_nav.html:81 templates/nav/assistant_nav.html:18
-#: templates/nav/public_nav.html:175
+#: templates/nav/admin_nav.html templates/nav/assistant_nav.html
+#: templates/nav/public_nav.html
 msgid "Participants"
 msgstr "Partisipan"
 
-#: templates/nav/admin_nav.html:85
+#: templates/nav/admin_nav.html
 msgid "Private URLs"
 msgstr "URL Privat"
 
-#: templates/nav/admin_nav.html:89
+#: templates/nav/admin_nav.html
 msgid "Emails"
 msgstr "Email"
 
-#: templates/nav/admin_nav.html:93
+#: templates/nav/admin_nav.html
 msgid "Preformed Panels"
 msgstr "Rancangan Panel"
 
-#: templates/nav/admin_nav.html:97
+#: templates/nav/admin_nav.html
 msgid "Export XML"
 msgstr "Ekspor XML"
 
-#: templates/nav/admin_nav.html:107 templates/nav/public_nav.html:160
+#: templates/nav/admin_nav.html templates/nav/public_nav.html
 msgid "Sides"
 msgstr "Sisi"
 
-#: templates/nav/admin_nav.html:132 templates/nav/assistant_nav.html:48
+#: templates/nav/admin_nav.html templates/nav/assistant_nav.html
 msgid "People's Status"
 msgstr "Status Orang"
 
-#: templates/nav/admin_nav.html:136
+#: templates/nav/admin_nav.html
 msgid "Rooms' Status"
 msgstr "Status Ruangan"
 
-#: templates/nav/admin_nav.html:144
+#: templates/nav/admin_nav.html
 msgid "Feedback"
 msgstr "Penilaian Juri"
 
-#: templates/nav/admin_nav.html:153
+#: templates/nav/admin_nav.html
 msgid "Latest"
 msgstr "Terbaru"
 
-#: templates/nav/admin_nav.html:156
+#: templates/nav/admin_nav.html
 msgid "Important"
 msgstr "Penting"
 
-#: templates/nav/admin_nav.html:159
+#: templates/nav/admin_nav.html
 msgid "Comments"
 msgstr "Komentar"
 
-#: templates/nav/admin_nav.html:162
+#: templates/nav/admin_nav.html
 msgid "Find by Source"
 msgstr "Temukan berdasarkan Sumber"
 
-#: templates/nav/admin_nav.html:165
+#: templates/nav/admin_nav.html
 msgid "Find by Target"
 msgstr "Temukan berdasarkan Target"
 
-#: templates/nav/admin_nav.html:168
+#: templates/nav/admin_nav.html
 msgid "Unsubmitted"
 msgstr "Belum Diterima"
 
-#: templates/nav/admin_nav.html:171
+#: templates/nav/admin_nav.html
 msgid "Add Feedback"
 msgstr "Tambahkan Penilaian"
 
-#: templates/nav/admin_nav.html:174
+#: templates/nav/admin_nav.html
 msgid "Bulk Update"
 msgstr "Pembaruan Sekaligus"
 
-#: templates/nav/admin_nav.html:183 templates/nav/public_nav.html:165
+#: templates/nav/admin_nav.html templates/nav/public_nav.html
 msgid "Standings"
 msgstr "Urutan"
 
-#: templates/nav/admin_nav.html:194
+#: templates/nav/admin_nav.html
 msgid "All Teams"
 msgstr "Semua Tim"
 
-#: templates/nav/admin_nav.html:196
+#: templates/nav/admin_nav.html
 msgid "Teams"
 msgstr "Tim"
 
-#: templates/nav/admin_nav.html:201 templates/nav/public_nav.html:13
+#: templates/nav/admin_nav.html templates/nav/public_nav.html
 #, python-format
 msgid "%(category)s Teams"
 msgstr "%(category)s Tim"
 
-#: templates/nav/admin_nav.html:208
+#: templates/nav/admin_nav.html
 msgid "All Speakers"
 msgstr "Semua Pembicara"
 
-#: templates/nav/admin_nav.html:215 templates/nav/public_nav.html:30
+#: templates/nav/admin_nav.html templates/nav/public_nav.html
 #, python-format
 msgid "%(category)s Speakers"
 msgstr "Pembicara kategori %(category)s"
 
-#: templates/nav/admin_nav.html:223
+#: templates/nav/admin_nav.html
 msgid "Replies"
 msgstr "Tanggapan"
 
-#: templates/nav/admin_nav.html:227 templates/nav/public_nav.html:155
+#: templates/nav/admin_nav.html templates/nav/public_nav.html
 msgid "Motions"
 msgstr "Mosi"
 
-#: templates/nav/admin_nav.html:230 templates/nav/public_nav.html:170
+#: templates/nav/admin_nav.html templates/nav/public_nav.html
 msgid "Diversity"
 msgstr "Keberagaman"
 
-#: templates/nav/admin_nav.html:243
+#: templates/nav/admin_nav.html
 msgid "Breaks"
 msgstr "Break"
 
-#: templates/nav/admin_nav.html:253
+#: templates/nav/admin_nav.html
 #, python-format
 msgid "%(category)s"
 msgstr ""
 
-#: templates/nav/admin_nav.html:257
+#: templates/nav/admin_nav.html
 msgid "Adjudicators'"
 msgstr "Milik Juri"
 
-#: templates/nav/admin_nav.html:260
+#: templates/nav/admin_nav.html
 msgid "Edit Categories"
 msgstr "Sunting Kategori"
 
-#: templates/nav/admin_nav.html:263
+#: templates/nav/admin_nav.html
 msgid "Edit Eligibility"
 msgstr "Sunting Kelayakan"
 
-#: templates/nav/admin_nav.html:278 templates/nav/top_nav_base.html:101
+#: templates/nav/admin_nav.html templates/nav/top_nav_base.html
 msgid "Log Out"
 msgstr "Keluar"
 
-#: templates/nav/assistant_nav.html:5
+#: templates/nav/assistant_nav.html
 msgid "Enter Results"
 msgstr "Masukkan Hasil"
 
-#: templates/nav/assistant_nav.html:11 templates/nav/public_nav.html:211
+#: templates/nav/assistant_nav.html templates/nav/public_nav.html
 msgid "Enter Feedback"
 msgstr "Berikan Penilaian"
 
-#: templates/nav/assistant_nav.html:22
+#: templates/nav/assistant_nav.html
 msgid "Participants List"
 msgstr "Daftar Partisipan"
 
-#: templates/nav/assistant_nav.html:25 templates/nav/public_nav.html:180
+#: templates/nav/assistant_nav.html templates/nav/public_nav.html
 msgid "Institutions"
 msgstr "Institusi"
 
-#: templates/nav/assistant_nav.html:29
+#: templates/nav/assistant_nav.html
 msgid "Code Names"
 msgstr "Nama Terkode"
 
-#: templates/nav/assistant_nav.html:45
+#: templates/nav/assistant_nav.html
 msgid "View Identifiers"
 msgstr "Lihat Pengenal"
 
-#: templates/nav/assistant_nav.html:51
+#: templates/nav/assistant_nav.html
 msgid "Room's Status"
 msgstr ""
 
-#: templates/nav/assistant_nav.html:59
+#: templates/nav/assistant_nav.html
 msgid "Display/Print Draw"
 msgstr "Tampilkan/Cetak Draw"
 
-#: templates/nav/public_nav.html:6
+#: templates/nav/public_nav.html
 msgid "Team Tab"
 msgstr "Tabulasi Tim"
 
-#: templates/nav/public_nav.html:22
+#: templates/nav/public_nav.html
 msgid "Speaker Tab"
 msgstr "Tabulasi Individu"
 
-#: templates/nav/public_nav.html:40
+#: templates/nav/public_nav.html
 msgid "Replies Tab"
 msgstr "Tabulasi Penyimpul"
 
-#: templates/nav/public_nav.html:45
+#: templates/nav/public_nav.html
 msgid "Adjudicator Tab"
 msgstr "Tabulasi Juri"
 
-#: templates/nav/public_nav.html:53 templates/nav/public_nav.html:62
+#: templates/nav/public_nav.html
 msgid "Motions Tab"
 msgstr "Tabulasi Mosi"
 
-#: templates/nav/public_nav.html:56
+#: templates/nav/public_nav.html
 msgid "By round"
 msgstr "Oleh ronde"
 
-#: templates/nav/public_nav.html:57
+#: templates/nav/public_nav.html
 msgid "Globally"
 msgstr "Secara global"
 
-#: templates/nav/public_nav.html:72
+#: templates/nav/public_nav.html
 msgid "Draws"
 msgstr "Draw"
 
-#: templates/nav/public_nav.html:83
+#: templates/nav/public_nav.html
 msgid "No Draws Available"
 msgstr "Tidak Ada Draw yang Tersedia"
 
-#: templates/nav/public_nav.html:91
+#: templates/nav/public_nav.html
 #, python-format
 msgid "Draw for %(round)s"
 msgstr "Draw untuk %(round)s"
 
-#: templates/nav/public_nav.html:95
+#: templates/nav/public_nav.html
 msgid "Current Draws"
 msgstr "Draw saat ini"
 
-#: templates/nav/public_nav.html:115 templates/nav/round_panel.html:57
+#: templates/nav/public_nav.html templates/nav/round_panel.html
 msgid "Results"
 msgstr "Hasil"
 
-#: templates/nav/public_nav.html:133
+#: templates/nav/public_nav.html
 msgid "Break"
 msgstr "Break"
 
-#: templates/nav/public_nav.html:185
+#: templates/nav/public_nav.html
 msgid "Feedback Progress"
 msgstr "Progres Penilaian Juri"
 
-#: templates/nav/public_nav.html:191 templates/nav/public_nav.html:197
+#: templates/nav/public_nav.html
 msgid "Enter Ballot"
 msgstr "Masukkan Lembar Penjurian"
 
-#: templates/nav/round_panel.html:27
+#: templates/nav/round_panel.html
 msgid "Availability"
 msgstr "Ketersediaan"
 
-#: templates/nav/round_panel.html:37
+#: templates/nav/round_panel.html
 msgid "Draw"
 msgstr "Draw"
 
-#: templates/nav/round_panel.html:48
+#: templates/nav/round_panel.html
 msgid "Display"
 msgstr "Tampilan"
 
-#: templates/nav/top_nav_base.html:29
+#: templates/nav/top_nav_base.html
 #, python-format
 msgid "Administrator area for <strong>%(tournament)s</strong>"
 msgstr "Area Administrator untuk <strong>%(tournament)s</strong>"
 
-#: templates/nav/top_nav_base.html:38
+#: templates/nav/top_nav_base.html
 #, python-format
 msgid "Assistant area for <strong>%(tournament)s</strong>"
 msgstr "Area Asisten untuk <strong>%(tournament)s</strong>"
 
-#: templates/nav/top_nav_base.html:47
+#: templates/nav/top_nav_base.html
 #, python-format
 msgid "Public area for <strong>%(tournament)s</strong>"
 msgstr "Area Publik untuk <strong>%(tournament)s</strong>"
 
-#: templates/nav/top_nav_base.html:105
+#: templates/nav/top_nav_base.html
 msgid "Login"
 msgstr "Masuk"
 
-#: templates/registration/logged_out.html:5
+#: templates/registration/logged_out.html
 msgid "Goodbye"
 msgstr "Selamat tinggal"
 
-#: templates/registration/logged_out.html:12
+#: templates/registration/logged_out.html
 #, python-format
 msgid "You have been logged out. <a href=\"%(login_url)s\">Log in again?</a>"
 msgstr "Anda telah keluar. <a href=\"%(login_url)s\">Masuk lagi?</a>"
 
-#: templates/registration/login.html:4
+#: templates/registration/login.html
 msgctxt "page title"
 msgid "Login"
 msgstr "Masuk"
 
-#: templates/registration/login.html:29
+#: templates/registration/login.html
 msgctxt "page title"
 msgid "Log in to Tabbycat"
 msgstr "Masuk ke Tabbycat"
 
-#: templates/registration/login.html:37
+#: templates/registration/login.html
 msgid "Your username and password didn't match."
 msgstr "Nama pengguna dan kata sandi tidak cocok."
 
-#: templates/registration/login.html:46
+#: templates/registration/login.html
 msgid "Your account doesn't have access to this page. To proceed, please log in with an account that has access."
 msgstr "Akun anda tidak memiliki akses ke laman ini. Silahkan masuk dengan akun yang memiliki akses untuk melanjutkan."
 
-#: templates/registration/login.html:49
+#: templates/registration/login.html
 msgid "Please log in to see this page."
 msgstr "Silakan masuk untuk melihat laman ini."
 
-#: templates/registration/password_change_done.html:4
-#: templates/registration/password_change_done.html:5
+#: templates/registration/password_change_done.html
 msgctxt "page title"
 msgid "Password changed"
 msgstr "Kata sandi diganti"
 
-#: templates/registration/password_change_done.html:11
+#: templates/registration/password_change_done.html
 msgid "Your password has been changed."
 msgstr "Kata sandi anda telah diubah."
 
-#: templates/registration/password_change_done.html:14
+#: templates/registration/password_change_done.html
 msgid "Go to the home page"
 msgstr "Balik ke laman awal"
 
-#: templates/registration/password_change_form.html:4
-#: templates/registration/password_change_form.html:27
+#: templates/registration/password_change_form.html
 msgctxt "page title"
 msgid "Password Change"
 msgstr "Pengubahan Kata Sandi"
 
-#: templates/registration/password_change_form.html:16
+#: templates/registration/password_change_form.html
 #, python-format
 msgid "API Token: <samp>%(api_token)s</samp>"
 msgstr "API Token: <samp>%(api_token)s</samp>"
 
-#: templates/registration/password_change_form.html:19
+#: templates/registration/password_change_form.html
 msgid "The API token will allow you to authorize external applications to access the site as staff."
 msgstr "API Token akan memberikan aplikasi eksternal otorisasi untuk mengakses situs sebagai staf."
 
-#: templates/registration/password_change_form.html:28
+#: templates/registration/password_change_form.html
 msgid "Please enter your old password, then enter a new one."
 msgstr "Masukkan kata sandi lama dan baru anda."
 
-#: templates/registration/password_change_form.html:33
-#: templates/registration/password_reset_confirm.html:25
+#: templates/registration/password_change_form.html
+#: templates/registration/password_reset_confirm.html
 msgctxt "button"
 msgid "Change my password"
 msgstr "Ubah kata sandi saya"
 
-#: templates/registration/password_change_form.html:34
-#: templates/registration/password_reset_confirm.html:26
+#: templates/registration/password_change_form.html
+#: templates/registration/password_reset_confirm.html
 msgid "Cancel and go back to the site home page"
 msgstr "Batalkan dan kembali ke laman awal"
 
-#: templates/registration/password_reset_complete.html:4
-#: templates/registration/password_reset_complete.html:5
+#: templates/registration/password_reset_complete.html
 msgctxt "page title"
 msgid "Password reset complete"
 msgstr ""
 
-#: templates/registration/password_reset_complete.html:11
+#: templates/registration/password_reset_complete.html
 msgid "Your password has been reset."
 msgstr "Kata sandi Anda telah di reset."
 
-#: templates/registration/password_reset_complete.html:14
-#: templates/registration/password_reset_done.html:15
+#: templates/registration/password_reset_complete.html
+#: templates/registration/password_reset_done.html
 msgid "Go to the login page"
 msgstr "Balik ke laman login"
 
-#: templates/registration/password_reset_confirm.html:4
+#: templates/registration/password_reset_confirm.html
 msgctxt "page title"
 msgid "Password Reset Confirmation"
 msgstr "Konfirmasi Reset Kata Sandi"
 
-#: templates/registration/password_reset_confirm.html:16
-#: templates/registration/password_reset_form.html:4
-#: templates/registration/password_reset_form.html:24
+#: templates/registration/password_reset_confirm.html
+#: templates/registration/password_reset_form.html
 msgctxt "page title"
 msgid "Password Reset"
 msgstr "Reset Kata Sandi"
 
-#: templates/registration/password_reset_confirm.html:18
+#: templates/registration/password_reset_confirm.html
 msgid "Please enter a new password (twice):"
 msgstr "Silakan masukkan password baru (dua kali):"
 
-#: templates/registration/password_reset_confirm.html:33
+#: templates/registration/password_reset_confirm.html
 msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
 msgstr "Tautan reset kata sandi tidak valid, mungkin karena telah digunakan sebelumnya. Silahkan meminta reset kata sandi baru."
 
-#: templates/registration/password_reset_done.html:4
-#: templates/registration/password_reset_done.html:5
+#: templates/registration/password_reset_done.html
 msgctxt "page title"
 msgid "Password reset email sent"
 msgstr "Email reset kata sandi dikirim"
 
-#: templates/registration/password_reset_done.html:11
+#: templates/registration/password_reset_done.html
 msgid "We've emailed you instructions for setting your password, if an account exists with the email address you entered. You should receive them shortly."
 msgstr "Kita telah mengirimkan email yang berisi instruksi bagaimana mengubah password anda, apabila ada akun dengan alamat email yang anda masukkan. Anda akan menerima email tersebut segera."
 
-#: templates/registration/password_reset_done.html:12
+#: templates/registration/password_reset_done.html
 msgid "If you don't receive an email, please make sure you've entered the address you registered with, and check your spam folder."
 msgstr "Apabila anda tidak menerima email, pastikan bahwa alamat yang anda masukkan benar, dan cek folder spam anda."
 
-#: templates/registration/password_reset_email.html:2
+#: templates/registration/password_reset_email.html
 #, python-format
 msgid "Hi, %(user)s!"
 msgstr "Hai, %(user)s!"
 
-#: templates/registration/password_reset_email.html:6
+#: templates/registration/password_reset_email.html
 #, python-format
 msgid "Someone asked for a password reset for the email address %(email)s on the Tabbycat site at %(protocol)s://%(domain)s."
 msgstr "Seseorang meminta reset kata sandi untuk email %(email)s pada situs Tabbycat %(protocol)s://%(domain)s."
 
-#: templates/registration/password_reset_email.html:10
+#: templates/registration/password_reset_email.html
 msgid "If this was you, follow the link below to reset your password:"
 msgstr "Apabila ini anda, silahkan ikuti tautan berikut untuk reset password anda:"
 
-#: templates/registration/password_reset_email.html:13
+#: templates/registration/password_reset_email.html
 #, python-format
 msgid "If this wasn't you, that probably means someone else typed your email address into the password reset form on the Tabbycat site at %(protocol)s://%(domain)s."
 msgstr "Apabila ini bukan anda, berarti orang lain memasukkan alamat email anda ke laman reset password di situs Tabbycat %(protocol)s://%(domain)s."
 
-#: templates/registration/password_reset_form.html:27
+#: templates/registration/password_reset_form.html
 msgid "Enter your email address below, and we'll email you a password reset link."
 msgstr "Masukkan alamat e-mail Anda di bawah, dan kami akan mengirimkan Anda tautan untuk reset password."
 
-#: templates/registration/password_reset_form.html:34
+#: templates/registration/password_reset_form.html
 msgid "Please enter a valid email address."
 msgstr "Mohon memasukkan alamat e-mail yang valid."
 
-#: templates/registration/password_reset_form.html:39 users/forms.py:10
-#: users/forms.py:25
+#: templates/registration/password_reset_form.html users/forms.py
 msgid "Email address"
 msgstr ""
 
-#: templates/registration/password_reset_form.html:50
+#: templates/registration/password_reset_form.html
 msgctxt "button"
 msgid "Reset my password"
 msgstr "Reset password saya"
 
-#: templates/registration/password_reset_form.html:53
+#: templates/registration/password_reset_form.html
 msgid "Back to the login page"
 msgstr "Kembali ke halaman login"
 
-#: templates/registration/password_reset_subject.txt:2
+#: templates/registration/password_reset_subject.txt
 #, python-format
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr "Reset password pada situs Tabbycat di %(domain)s"
 
-#: urls.py:102
+#: urls.py
 #, python-format
 msgid "Hi, %(user)s — you just logged in!"
 msgstr "Hi, %(user)s — Anda baru saja masuk!"
 
-#: urls.py:105
+#: urls.py
 msgid "Welcome! You just logged in!"
 msgstr "Selamat datang! Anda baru saja masuk!"
 
-#: users/admin.py:19
+#: users/admin.py
 msgid "Users with staff status can view and edit the Edit Database area. This is potentially dangerous and should be reserved for the actual tab director(s)."
 msgstr "Pengguna dengan status staf dapat melihat dan menyunting pada area Sunting Basisdata. Ini bisa berbahaya dan disisihkan untuk direktur tabulasi yang sesungguhnya."
 
-#: users/admin.py:22
+#: users/admin.py
 msgid "Superusers have full access all areas of Tabbycat necessary to run a tournament. Users who are not superusers are still able to perform data entry tasks such as adding results and feedback but can't access confidential areas such as the Breaks and Feedback sections. Chief adjudicators and their deputies are generally given superuser status if they know what they are doing."
 msgstr "Superuser memiliki akses penuh ke semua area dari Tabbycat yang dibutuhkan untuk menjalankan turnamen. Pengguna yang bukan merupakan superuser masih dapat melakukan pekerjaan memasukkan data seperti menambahkan hasil dan umpan balik tetapi tidak dapat mengakses area konfidensial seperti seksi Break dan Umpan balik. Ketua juri dan deputi mereka biasanya diberikan status superuser jika mereka tahu apa yang mereka lakukan."
 
-#: users/templates/admin/auth/delete_user_warning.html:6
+#: users/templates/admin/auth/delete_user_warning.html
 msgid "<strong>Warning:</strong> You shouldn't delete users from the database once they've done something, because the database logs actions taken by those users, and deleting the users also deletes the related logs. If you wish to deactivate a user account, go back to edit the user, click on the “Permissions” tab, unchecked the “Active” box, and save the user."
 msgstr "<strong>Perhatian:</strong> Anda tidak semestinya menghapus pengguna dari basisdata setelah mereka melakukan sesuatu, karena basisdata mencatat aksi-aksi yang dilakukan oleh pengguna tersebut, dan menghapus penggunanya berarti menghapus catatannya juga. Jika Anda ingin mendeaktivasi akun pengguna, kembali untuk menyuntin penggunanya, klik pada tab \"Hak akses\", hapus cek pada kotak \"Aktif\", dan simpan penggunanya."
 
-#: users/templates/signup.html:4 users/templates/signup.html:5
+#: users/templates/signup.html
 msgid "Sign-Up"
 msgstr "Mendaftar"
 
-#: users/templates/signup.html:16
+#: users/templates/signup.html
 msgctxt "page title"
 msgid "Create a New Administrator Account"
 msgstr "Membuat Sebuah Akun Administrator Baru"
 
-#: users/templates/signup.html:18
+#: users/templates/signup.html
 msgctxt "page title"
 msgid "Create a New Assistant Account"
 msgstr "Membukan Sebuah Akun Asisten Baru"
 
-#: users/templates/signup.html:25
+#: users/templates/signup.html
 msgid "Create Account"
 msgstr "Buat Akun"
 
-#: users/views.py:54
+#: users/views.py
 msgid "You have successfully created a new administrator account."
 msgstr "Anda telah berhasil membuat sebuah akun administrator baru."
 
-#: users/views.py:56
+#: users/views.py
 msgid "You have successfully created a new assistant account."
 msgstr "Anda telah berhasil membuat sebuah akun asisten baru."
 
-#: users/views.py:84
+#: users/views.py
 msgid "Whoops! It looks like someone's already created the first user account. Please log in."
 msgstr "Ups! Sepertinya seseorang telah membuat akun pengguna pertama. Silahkan masuk."
 
-#: users/views.py:92
+#: users/views.py
 #, python-format
 msgid "Welcome! You've created an account for %s."
 msgstr "Selamat datang! Anda telah membuat akun untuk %s."

@@ -1,6 +1,4 @@
 from django.core.validators import MinValueValidator, validate_slug
-from django.forms import ValidationError
-from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 from dynamic_preferences.preferences import Section
@@ -13,6 +11,7 @@ from tournaments.utils import get_side_name_choices
 
 from .models import tournament_preferences_registry
 from .types import MultiValueChoicePreference
+from .utils import validate_metric_duplicates
 
 
 # ==============================================================================
@@ -379,6 +378,35 @@ class HideTraineePosition(BooleanPreference):
     default = False
 
 
+@tournament_preferences_registry.register
+class ByeTeamResults(ChoicePreference):
+    help_text = _("How to handle teams who were marked available yet excluded from"
+        "a round (a bye)")
+    verbose_name = _("Bye team results")
+    section = draw_rules
+    name = 'bye_team_results'
+    choices = (
+        ('none', _("Treat bye teams as absent")),
+        ('points', _("Attribute a win to bye teams, without speaks")),
+    )
+    default = 'none'
+
+
+@tournament_preferences_registry.register
+class ByeTeamSelection(ChoicePreference):
+    help_text = _("If creating a draw with an uneven number of teams, how to "
+        "decide who gets the bye (won't be allocated)")
+    verbose_name = _("Bye team selection method")
+    section = draw_rules
+    name = 'bye_team_selection'
+    choices = (
+        ('off', _("Don't choose bye teams")),
+        ('random', _("Choose bye teams randomly")),
+        ('lowest', _("Choose lowest ranking teams")),
+    )
+    default = 'off'
+
+
 # ==============================================================================
 feedback = Section('feedback', verbose_name=_("Feedback"))
 # ==============================================================================
@@ -620,14 +648,7 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
 
     def validate(self, value):
         super().validate(value)
-
-        # Check that non-repeatable metrics aren't listed twice
-        classes = [TeamStandingsGenerator.metric_annotator_classes[metric] for metric in value]
-        duplicates = [c for c in classes if c.repeatable is False and classes.count(c) > 1]
-        if duplicates:
-            duplicates_str = ", ".join(list(set(force_str(c.name) for c in duplicates)))
-            raise ValidationError(_("The following metrics can't be listed twice: "
-                    "%(duplicates)s") % {'duplicates': duplicates_str})
+        validate_metric_duplicates(TeamStandingsGenerator, value)
 
 
 @tournament_preferences_registry.register
@@ -655,14 +676,7 @@ class SpeakerStandingsPrecedence(MultiValueChoicePreference):
 
     def validate(self, value):
         super().validate(value)
-
-        # Check that non-repeatable metrics aren't listed twice
-        classes = [SpeakerStandingsGenerator.metric_annotator_classes[metric] for metric in value]
-        duplicates = [c for c in classes if c.repeatable is False and classes.count(c) > 1]
-        if duplicates:
-            duplicates_str = ", ".join(list(set(force_str(c.name) for c in duplicates)))
-            raise ValidationError(_("The following metrics can't be listed twice: "
-                    "%(duplicates)s") % {'duplicates': duplicates_str})
+        validate_metric_duplicates(SpeakerStandingsGenerator, value)
 
 
 @tournament_preferences_registry.register
@@ -863,7 +877,8 @@ class PublicPassword(StringPreference):
     verbose_name = _("Password for public submission")
     section = data_entry
     name = 'public_password'
-    default = 'Enter Password'
+    default = ''
+    required = False
 
 
 @tournament_preferences_registry.register
@@ -1486,23 +1501,3 @@ class EnableAPIAccess(BooleanPreference):
     section = global_settings
     name = 'enable_api'
     default = True
-
-
-@global_preferences_registry.register
-class AssistantAccountCreationKey(StringPreference):
-    help_text = _("A key that enables a secret URL that lets visitors create their own assistant user accounts. The URL takes the form of: YOUR_SITE'S_BASE_URL/accounts/signup/KEY/")
-    verbose_name = _('Assistant account creation key')
-    section = global_settings
-    field_kwargs = {'validators': [validate_slug]}
-    name = 'assistant_account_key'
-    default = ''
-
-
-@global_preferences_registry.register
-class AdminAccountCreationKey(StringPreference):
-    help_text = _("A key that enables a secret URL that lets visitors create their own administrator user accounts. The URL takes the form of: YOUR_SITE'S_BASE_URL/accounts/signup/KEY/")
-    section = global_settings
-    verbose_name = _('Administrator account creation key')
-    field_kwargs = {'validators': [validate_slug]}
-    name = 'admin_account_key'
-    default = ''

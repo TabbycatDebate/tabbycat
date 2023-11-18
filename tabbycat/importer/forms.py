@@ -153,7 +153,7 @@ class VenueDetailsForm(BaseTournamentObjectDetailsForm):
         fields = ('name', 'priority')
 
     def save(self, commit=True):
-        venue = super().save(commit=False)
+        venue = super().save(commit=commit)
         if commit:
             VenueIdentifier.objects.create(venue=venue)
         return venue

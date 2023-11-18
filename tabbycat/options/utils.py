@@ -1,5 +1,9 @@
 import logging
 
+from django.forms import ValidationError
+from django.utils.encoding import force_str
+from django.utils.translation import gettext_lazy as _
+
 logger = logging.getLogger(__name__)
 
 
@@ -29,6 +33,13 @@ def use_team_code_names_data_entry(tournament, tabroom):
         return 'both' if tabroom else 'code'
     elif pref == 'everywhere':
         return 'code'
-    else:
-        logger.error("Unrecognized team code name preference: %s", pref)
-        return 'code'
+
+
+def validate_metric_duplicates(generator, value):
+    # Check that non-repeatable metrics aren't listed twice
+    classes = [generator.metric_annotator_classes[metric] for metric in value]
+    duplicates = [c for c in classes if not c.repeatable and classes.count(c) > 1]
+    if duplicates:
+        duplicates_str = ", ".join(list(set(force_str(c.name) for c in duplicates)))
+        raise ValidationError(_("The following metrics can't be listed twice: "
+                "%(duplicates)s") % {'duplicates': duplicates_str})

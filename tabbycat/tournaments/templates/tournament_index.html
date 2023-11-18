@@ -4,14 +4,11 @@
 {% block content %}
 
   {% if round.is_break_round %}
-    {% tournamenturl 'tournament-donations' as url %}
     {% blocktrans trimmed with amount=tournament.billable_teams asvar text %}
       We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would
       make a donation to the project in order to support its ongoing development and maintenance.
       For a tournament of this size, we suggest a donation of <strong>${{ amount }}</strong>.
-      Note that if your tournament is run for profit, or for fundraising, making this payment is a
-      mandatory condition of Tabbycat's software license.
-      <a href="{{ url }}">Learn more about donating.</a>
+      <a href="https://opencollective.com/tabbycat">Learn more about donating.</a>
     {% endblocktrans %}
     {% include "components/item-info.html" with type="info" icon="heart" %}
     <hr>
@@ -79,17 +76,6 @@
       {% include "components/item-action.html" with to_complete=True %}
     </div>
 
-  {% endif %}
-
-  {% haspermission "edit.tournamentoptionmodel" as options_perm %}
-  {% if global_preferences.accounts__admin_account_key or global_preferences.accounts__assistant_account_key and options_perm %}
-    {% tournamenturl 'options-tournament-section' section='global' as url %}
-    {% blocktrans trimmed asvar text %}
-      You have enabled a URL that allows users to create new accounts. You should <strong>disable it once the tournament starts</strong>.
-    {% endblocktrans %}
-    <div class="list-group">
-      {% include "components/item-action.html" with type="warning" icon="alert-triangle" to_complete=True %}
-    </div>
   {% endif %}
 
   {{ block.super }}

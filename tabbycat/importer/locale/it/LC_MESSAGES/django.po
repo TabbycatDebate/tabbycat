@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-02 01:40-0300\n"
-"PO-Revision-Date: 2022-04-16 19:46\n"
+"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"PO-Revision-Date: 2023-02-05 00:58\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Language: it_IT\n"
@@ -17,416 +17,405 @@ msgstr ""
 "X-Crowdin-File: /develop/tabbycat/importer/locale/en/LC_MESSAGES/django.po\n"
 "X-Crowdin-File-ID: 932\n"
 
-#: importer/forms.py:24
+#: importer/forms.py
 #, python-format
 msgid "line %(lineno)d: %(message)s"
 msgstr "riga %(lineno)d: %(message)s"
 
-#: importer/forms.py:51
+#: importer/forms.py
 #, python-format
 msgid "This line (for %(institution)s) didn't have a code"
 msgstr "Questa riga (per %(institution)s) non ha un codice"
 
-#: importer/forms.py:56
+#: importer/forms.py
 #, python-format
 msgid "This line (for %(institution)s) had too many columns"
 msgstr "Questa riga (per %(institution)s) ha troppe colonne"
 
-#: importer/forms.py:66
+#: importer/forms.py
 msgid "There were no institutions to import."
 msgstr "Nessun istituto da importare."
 
-#: importer/forms.py:71
+#: importer/forms.py
 #, python-format
 msgid "Sorry, you can only import up to %(max_allowed)d institution at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
 msgid_plural "Sorry, you can only import up to %(max_allowed)d institutions at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
 msgstr[0] "Siamo spiacenti, puoi importare solo %(max_allowed)d istituzione alla volta (al momento sono %(given)d). Prova a dividere la tua importazione in pezzi più piccoli."
 msgstr[1] "Siamo spiacenti, puoi importare massimo %(max_allowed)d istituzioni alla volta (al momento sono %(given)d). Prova a dividere la tua importazione in pezzi più piccoli."
 
-#: importer/forms.py:103
+#: importer/forms.py
 msgid "There were no rooms to import."
 msgstr "Non ci sono stanze da importare."
 
-#: importer/forms.py:108
+#: importer/forms.py
 #, python-format
 msgid "Sorry, you can only import up to %(max_allowed)d room at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
 msgid_plural "Sorry, you can only import up to %(max_allowed)d rooms at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
 msgstr[0] "Siamo spiacenti, puoi importare solo %(max_allowed)d stanza alla volta (al momento sono %(given)d). Prova a dividere la tua importazione in pezzi più piccoli."
 msgstr[1] "Siamo spiacenti, puoi importare massimo %(max_allowed)d stanze alla volta (al momento sono %(given)d). Prova a dividere la tua importazione in pezzi più piccoli."
 
-#: importer/forms.py:191
+#: importer/forms.py
 msgid "Speakers' names"
 msgstr "Nomi degli speaker"
 
-#: importer/forms.py:192
+#: importer/forms.py
 msgid "Speakers' email addresses"
 msgstr "Indirizzi mail degli speaker"
 
-#: importer/forms.py:193
+#: importer/forms.py
 msgid "Optional, useful to include if distributing private URLs, list in same order as speakers' names"
 msgstr "Facoltativo, utile da includere se si distribuiscono URL privati, elencati nello stesso ordine dei nomi degli speaker"
 
-#: importer/forms.py:200
+#: importer/forms.py
 msgid "Name (excluding institution name)"
 msgstr "Nome (escluso il nome dell'istituto)"
 
-#: importer/forms.py:201
+#: importer/forms.py
 msgid "Prefix team name with institution name?"
 msgstr "Prefisso del team con il nome dell'istituto?"
 
-#: importer/forms.py:204
+#: importer/forms.py
 msgid "Do not include institution name (check the \"Prefix team name with institution name?\" field instead)"
 msgstr "Non includere il nome dell'istituto (seleziona invece il campo \"Prefisso del team con il nome dell'istituto?\")"
 
-#: importer/forms.py:213
+#: importer/forms.py
 msgid "(Not applicable to unaffiliated teams)"
 msgstr "(Non applicabile alle squadre non affiliate)"
 
-#: importer/forms.py:218
+#: importer/forms.py
 msgid "One speaker's name per line"
 msgstr "Un nome di speaker per riga"
 
-#: importer/forms.py:219
+#: importer/forms.py
 msgid "Can be separated by newlines, tabs or commas"
 msgstr "Possono essere separati da nuova linea, tabulazione o virgola"
 
-#: importer/forms.py:221
+#: importer/forms.py
 #, python-format
 msgid "Speaker %d"
 msgstr "Speaker %d"
 
-#: importer/forms.py:223
+#: importer/forms.py
 #, python-format
 msgid "speaker%d@example.edu"
 msgstr "speaker%d@example.edu"
 
-#: importer/forms.py:237
+#: importer/forms.py
 msgid "There must be at least one speaker."
 msgstr "E' necessario avere almeno uno speaker."
 
-#: importer/forms.py:246
+#: importer/forms.py
 #, python-format
 msgid "%(email)s is not a valid email address."
 msgstr "%(email)s non è un indirizzo email valido."
 
-#: importer/forms.py:259
+#: importer/forms.py
 msgid "There are more email addresses than speakers."
 msgstr "Ci sono più indirizzi email che speaker."
 
-#: importer/forms.py:297
+#: importer/forms.py
 msgid "Every team in a single tournament from the same institution must have a different name. Please correct the duplicate data."
 msgstr "Le squadre dello stesso istituto in un torneo devono avere un nome diverso. Correggi i dati duplicati."
 
-#: importer/forms.py:309
+#: importer/forms.py
 msgid "Rating"
 msgstr "Punteggio"
 
-#: importer/forms.py:317
+#: importer/forms.py
 #, python-format
 msgid "This value must be between %(min)d and %(max)d."
 msgstr "Questo valore deve essere compreso tra %(min)d e %(max)d."
 
-#: importer/forms.py:339
+#: importer/forms.py
 msgid "Unaffiliated (no institution)"
 msgstr "Non affiliato (nessuna istituzione)"
 
-#: importer/forms.py:351
+#: importer/forms.py
 #, python-format
 msgid "%(name)s (%(code)s)"
 msgstr ""
 
-#: importer/forms.py:372
+#: importer/forms.py
 #, python-format
 msgid "Sorry, you can only import up to %(max_allowed)d team at a time. (These numbers currently add to %(given)d.) Try splitting your import into smaller chunks."
 msgid_plural "Sorry, you can only import up to %(max_allowed)d teams at a time. (These numbers currently add to %(given)d.) Try splitting your import into smaller chunks."
 msgstr[0] "Siamo spiacenti, puoi importare solo %(max_allowed)d team alla volta (al momento sono %(given)d.) Prova a dividere la tua importazione in pezzi più piccoli."
 msgstr[1] "Siamo spiacenti, puoi importare massimo %(max_allowed)d team alla volta (al momento sono %(given)d). Prova a dividere la tua importazione in pezzi più piccoli."
 
-#: importer/forms.py:385
+#: importer/forms.py
 #, python-format
 msgid "Sorry, you can only import up to %(max_allowed)d adjudicator at a time. (These numbers currently add to %(given)d.) Try splitting your import into smaller chunks."
 msgid_plural "Sorry, you can only import up to %(max_allowed)d adjudicators at a time. (These numbers currently add to %(given)d.) Try splitting your import into smaller chunks."
 msgstr[0] "Siamo spiacenti, puoi importare solo %(max_allowed)d giudice alla volta (al momento sono %(given)d). Prova a dividere la tua importazione in pezzi più piccoli."
 msgstr[1] "Siamo spiacenti, puoi importare massimo %(max_allowed)d giudici alla volta (al momento sono %(given)d). Prova a dividere la tua importazione in pezzi più piccoli."
 
-#: importer/forms.py:396
+#: importer/forms.py
 msgid "XML"
 msgstr ""
 
-#: importer/forms.py:397
+#: importer/forms.py
 msgid "The Debate XML archive to parse"
 msgstr "L'archivio XML di dibattito da analizzare"
 
-#: importer/templates/archive_export_index.html:4
-#: importer/templates/archive_export_index.html:5
+#: importer/templates/archive_export_index.html
 msgid "Export Tournament Archive"
 msgstr "Esporta Archivio Torneo"
 
-#: importer/templates/archive_export_index.html:9
+#: importer/templates/archive_export_index.html
 msgid "Tournaments can be exported in an <a href=\"https://en.wikipedia.org/wiki/XML\">XML format</a> for use outside Tabbycat."
 msgstr "I tornei possono essere esportati in un <a href=\"https://it.wikipedia.org/wiki/XML\">formato XML</a> Per essere usati all'esterno di tabbycat."
 
-#: importer/templates/archive_export_index.html:17
+#: importer/templates/archive_export_index.html
 msgid "Export all data"
 msgstr "Esporta tutti i dati"
 
-#: importer/templates/archive_importer.html:6
-#: importer/templates/archive_importer.html:18
+#: importer/templates/archive_importer.html
 msgctxt "page title"
 msgid "Import Tournament Archive"
 msgstr "Importa Archivio Del Torneo"
 
-#: importer/templates/archive_importer.html:19
+#: importer/templates/archive_importer.html
 msgid "This form will create a tournament with the data provided as a Debate XML format."
 msgstr "Questo modulo creerà un torneo con i dati forniti come formato XML di debate."
 
-#: importer/templates/archive_importer.html:24
+#: importer/templates/archive_importer.html
 msgid "Import"
 msgstr "Importa"
 
-#: importer/templates/archive_importer.html:25
+#: importer/templates/archive_importer.html
 msgid "Go back to the site home page"
 msgstr "Torna alla pagina iniziale"
 
-#: importer/templates/simple_import_adjudicators_details.html:4
-#: importer/templates/simple_import_adjudicators_details.html:6
-#: importer/templates/simple_import_adjudicators_numbers.html:4
-#: importer/templates/simple_import_adjudicators_numbers.html:6
+#: importer/templates/simple_import_adjudicators_details.html
+#: importer/templates/simple_import_adjudicators_numbers.html
 msgctxt "page title"
 msgid "Add Adjudicators"
 msgstr "Aggiungi giudici"
 
-#: importer/templates/simple_import_adjudicators_details.html:5
-#: importer/templates/simple_import_adjudicators_numbers.html:5
-#: importer/templates/simple_import_institutions_details.html:5
-#: importer/templates/simple_import_institutions_raw.html:5
-#: importer/templates/simple_import_teams_details.html:5
-#: importer/templates/simple_import_teams_numbers.html:5
-#: importer/templates/simple_import_venues_details.html:5
-#: importer/templates/simple_import_venues_raw.html:5
+#: importer/templates/simple_import_adjudicators_details.html
+#: importer/templates/simple_import_adjudicators_numbers.html
+#: importer/templates/simple_import_institutions_details.html
+#: importer/templates/simple_import_institutions_raw.html
+#: importer/templates/simple_import_teams_details.html
+#: importer/templates/simple_import_teams_numbers.html
+#: importer/templates/simple_import_venues_details.html
+#: importer/templates/simple_import_venues_raw.html
 #, python-format
 msgid "(Step %(step)s of %(count)s)"
 msgstr "(Passaggio %(step)s di %(count)s)"
 
-#: importer/templates/simple_import_adjudicators_details.html:13
-#: importer/templates/simple_import_institutions_details.html:17
-#: importer/templates/simple_import_teams_details.html:17
-#: importer/templates/simple_import_venues_details.html:13
+#: importer/templates/simple_import_adjudicators_details.html
+#: importer/templates/simple_import_institutions_details.html
+#: importer/templates/simple_import_teams_details.html
+#: importer/templates/simple_import_venues_details.html
 msgid "Previous Step"
 msgstr "Passaggio precedente"
 
-#: importer/templates/simple_import_adjudicators_details.html:18
+#: importer/templates/simple_import_adjudicators_details.html
 #, python-format
 msgid "As per <a href=\"%(options_feedback)s\" class=\"alert-link\">this tournament's configuration</a>, an adjudicator's rating must be between <strong>%(min)s</strong> and <strong>%(max)s</strong>. Providing email addresses is optional but can be useful if using <a href=\"%(privateurls_url)s\" class=\"alert-link\">private URLs</a> for feedback or ballots."
 msgstr "Secondo la <a href=\"%(options_feedback)s\" class=\"alert-link\">configurazione di questo torneo</a>, il punteggio di un giudice deve essere compreso tra <strong>%(min)s</strong> e <strong>%(max)s</strong>. Fornire indirizzi mail non è obbligatorio, ma può essere utile usando gli <a href=\"%(privateurls_url)s\" class=\"alert-link\">URL privati</a> Per i feedback o per i ballot."
 
-#: importer/templates/simple_import_adjudicators_details.html:48
+#: importer/templates/simple_import_adjudicators_details.html
 #, python-format
 msgid "Adjudicators for %(institution)s"
 msgstr "Giudici per %(institution)s"
 
-#: importer/templates/simple_import_adjudicators_details.html:52
+#: importer/templates/simple_import_adjudicators_details.html
 msgid "Unaffiliated Adjudicators"
 msgstr "Giudici non affiliati"
 
-#: importer/templates/simple_import_adjudicators_details.html:72
+#: importer/templates/simple_import_adjudicators_details.html
 msgid "Save All Adjudicators"
 msgstr "Salva tutti i giudici"
 
-#: importer/templates/simple_import_adjudicators_numbers.html:14
+#: importer/templates/simple_import_adjudicators_numbers.html
 #, python-format
 msgid "You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add institutions</a> before adding adjudicators."
 msgstr "È necessario <a href=\"%(import_institutions_url)s\" class=\"alert-link\">aggiungere istituti</a> Prima di aggiungere dei giudici."
 
-#: importer/templates/simple_import_adjudicators_numbers.html:23
+#: importer/templates/simple_import_adjudicators_numbers.html
 msgid "Specify the number of new adjudicators to add per institution. In the next step you can specify their names and ratings."
 msgstr "Specifica il numero di nuovi giudici da aggiungere per istituto. Nella fase successiva puoi specificare i loro nomi e punteggi."
 
-#: importer/templates/simple_import_adjudicators_numbers.html:27
-msgid "You can add up to 198 adjudicators at a time. If you have more than 198 adjudicators, split them into chunks. (Please don't try to add more than 198 in one go; the system will crash and you will lose data.)"
-msgstr "Puoi aggiungere fino a 198 giudici alla volta. Se hai più di 198 aggiudicatori, dividili in pezzi. (Si prega di non cercare di aggiungere più di 198 in una volta; il sistema si bloccherà e si perderanno i dati.)"
+#: importer/templates/simple_import_adjudicators_numbers.html
+msgid "You can add up to 198 adjudicators at a time. If you have more than 198 adjudicators, split them into chunks. (Please don't try to add more than 198 in one go; the system will crash, and you will lose data.)"
+msgstr ""
 
-#: importer/templates/simple_import_adjudicators_numbers.html:59
-#: importer/templates/simple_import_teams_numbers.html:60
+#: importer/templates/simple_import_adjudicators_numbers.html
+#: importer/templates/simple_import_teams_numbers.html
 msgctxt "button"
 msgid "Next Step"
 msgstr "Prossimo passo"
 
-#: importer/templates/simple_import_index.html:4
-#: importer/templates/simple_import_index.html:5
+#: importer/templates/simple_import_index.html
 msgid "Simple Importer"
 msgstr "Importatore Semplice"
 
-#: importer/templates/simple_import_index.html:9
+#: importer/templates/simple_import_index.html
 msgid "There are <a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-data.html\" target=\"_blank\">several ways to import data into Tabbycat</a>. Which one is best depends on the size of your tournament and your technical background. This <strong>simple importer</strong> is the easiest to use and works well for small- and medium-sized tournaments."
 msgstr "Esistono <a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-data.html\" target=\"_blank\">diversi metodi per importare dati in Tabbycat</a>. Quale sia il migliore dipende dalla dimensione del tuo torneo e dal tuo background tecnico. Questo <strong>importatore semplice</strong> è il più semplice da usare e funziona bene per tornei di piccole-medie dimensioni."
 
-#: importer/templates/simple_import_index.html:16
+#: importer/templates/simple_import_index.html
 msgid "Add Institutions"
 msgstr "Aggiungi istituti"
 
-#: importer/templates/simple_import_index.html:21
+#: importer/templates/simple_import_index.html
 msgid "Add Teams"
 msgstr "Aggiungi squadre"
 
-#: importer/templates/simple_import_index.html:25
+#: importer/templates/simple_import_index.html
 msgid "Add Adjudicators"
 msgstr "Aggiungi giudici"
 
-#: importer/templates/simple_import_index.html:29
+#: importer/templates/simple_import_index.html
 msgid "Add Rooms"
 msgstr "Aggiungi stanze"
 
-#: importer/templates/simple_import_index.html:36
+#: importer/templates/simple_import_index.html
 msgid "Add/Edit Room Categories"
 msgstr "Aggiungi/Modifica categorie della stanza"
 
-#: importer/templates/simple_import_index.html:40
+#: importer/templates/simple_import_index.html
 msgid "Add/Edit Room Constraints"
 msgstr "Aggiungi/Modifica vincoli di stanza"
 
-#: importer/templates/simple_import_index.html:47
+#: importer/templates/simple_import_index.html
 msgid "Add/Edit Adjudicator-Team Conflicts"
 msgstr "Aggiungi/Modifica conflitti giudice-squadra"
 
-#: importer/templates/simple_import_index.html:51
+#: importer/templates/simple_import_index.html
 msgid "Add/Edit Adjudicator-Adjudicator Conflicts"
 msgstr "Aggiungi/Modifica conflitti giudice-giudice"
 
-#: importer/templates/simple_import_index.html:55
+#: importer/templates/simple_import_index.html
 msgid "Add/Edit Adjudicator-Institution Conflicts"
 msgstr "Aggiungi/Modifica conflitti giudice-istituto"
 
-#: importer/templates/simple_import_index.html:59
+#: importer/templates/simple_import_index.html
 msgid "Add/Edit Team-Institution Conflicts"
 msgstr "Aggiungi/Modifica conflitti squadra-istituto"
 
-#: importer/templates/simple_import_index.html:66
+#: importer/templates/simple_import_index.html
 msgid "Add/Edit Break Categories"
 msgstr "Aggiungi/modifica categoria di break"
 
-#: importer/templates/simple_import_index.html:70
+#: importer/templates/simple_import_index.html
 msgid "Add/Edit Speaker Categories"
 msgstr "Aggiungi/modifica categorie di speaker"
 
-#: importer/templates/simple_import_institutions_details.html:4
-#: importer/templates/simple_import_institutions_details.html:6
-#: importer/templates/simple_import_institutions_raw.html:4
-#: importer/templates/simple_import_institutions_raw.html:6
+#: importer/templates/simple_import_institutions_details.html
+#: importer/templates/simple_import_institutions_raw.html
 msgctxt "page title"
 msgid "Add Institutions"
 msgstr "Aggiungi istituti"
 
-#: importer/templates/simple_import_institutions_details.html:37
+#: importer/templates/simple_import_institutions_details.html
 msgid "Save All Institutions"
 msgstr "Salva tutti gli istituti"
 
-#: importer/templates/simple_import_institutions_raw.html:30
-#: importer/templates/simple_import_venues_raw.html:30
+#: importer/templates/simple_import_institutions_raw.html
+#: importer/templates/simple_import_venues_raw.html
 msgid "There are some problems with the data on this form:"
 msgstr "Ci sono alcuni problemi con i dati su questo modulo:"
 
-#: importer/templates/simple_import_institutions_raw.html:41
-#: importer/templates/simple_import_venues_raw.html:41
+#: importer/templates/simple_import_institutions_raw.html
+#: importer/templates/simple_import_venues_raw.html
 msgid "Next Step"
 msgstr "Prossimo passo"
 
-#: importer/templates/simple_import_teams_details.html:4
-#: importer/templates/simple_import_teams_details.html:6
-#: importer/templates/simple_import_teams_numbers.html:4
-#: importer/templates/simple_import_teams_numbers.html:6
+#: importer/templates/simple_import_teams_details.html
+#: importer/templates/simple_import_teams_numbers.html
 msgctxt "page title"
 msgid "Add Teams"
 msgstr "Aggiungi squadre"
 
-#: importer/templates/simple_import_teams_details.html:33
+#: importer/templates/simple_import_teams_details.html
 #, python-format
 msgid "Teams for %(institution)s"
 msgstr "Squadre per %(institution)s"
 
-#: importer/templates/simple_import_teams_details.html:37
+#: importer/templates/simple_import_teams_details.html
 msgid "Unaffiliated Teams"
 msgstr "Squadre Non affiliate"
 
-#: importer/templates/simple_import_teams_details.html:51
+#: importer/templates/simple_import_teams_details.html
 msgid "Save All Teams"
 msgstr "Salva Tutte Le Squadre"
 
-#: importer/templates/simple_import_teams_numbers.html:15
+#: importer/templates/simple_import_teams_numbers.html
 #, python-format
 msgid "You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add institutions</a> before adding teams."
 msgstr "È necessario <a href=\"%(import_institutions_url)s\" class=\"alert-link\">aggiungere istituti</a> Prima di aggiungere delle squadre."
 
-#: importer/templates/simple_import_teams_numbers.html:24
+#: importer/templates/simple_import_teams_numbers.html
 msgid "Specify the number of new teams to add per institution. In the next step you can specify team and speaker names."
 msgstr "Specifica il numero di nuovi team da aggiungere per istituto. Nella fase successiva puoi specificare il team ed i nomi degli speaker."
 
-#: importer/templates/simple_import_teams_numbers.html:28
-msgid "You can add up to 141 teams at a time. If you have more than 141 teams, split them into chunks. (Please don't try to add more than 141 in one go; the system will crash and you will lose data.)"
-msgstr "Puoi aggiungere fino a 141 squadre alla volta. Se hai più di 141 squadre, dividile in pezzi. (Si prega di non cercare di aggiungerne più di 141 in una volta; il sistema si bloccherà e si perderanno i dati.)"
+#: importer/templates/simple_import_teams_numbers.html
+msgid "You can add up to 141 teams at a time. If you have more than 141 teams, split them into chunks. (Please don't try to add more than 141 in one go; the system will crash, and you will lose data.)"
+msgstr ""
 
-#: importer/templates/simple_import_venues_details.html:4
-#: importer/templates/simple_import_venues_details.html:6
-#: importer/templates/simple_import_venues_raw.html:4
-#: importer/templates/simple_import_venues_raw.html:6
+#: importer/templates/simple_import_venues_details.html
+#: importer/templates/simple_import_venues_raw.html
 msgctxt "page title"
 msgid "Add Rooms"
 msgstr "Aggiungi stanze"
 
-#: importer/templates/simple_import_venues_details.html:16
+#: importer/templates/simple_import_venues_details.html
 msgid "Priorities indicate how much you want to use the room. Larger numbers indicate higher priority. If you have more rooms than debates, the rooms with the lowest priorities will not be used."
 msgstr "Le priorità indicano quanto si desidera utilizzare la stanza. I numeri più grandi indicano una priorità maggiore. Se si dispone di più stanze che dibattiti, le stanze con le priorità più bassa non saranno utilizzate."
 
-#: importer/templates/simple_import_venues_details.html:33
+#: importer/templates/simple_import_venues_details.html
 msgid "Save All Rooms"
 msgstr "Salva Tutte Le Stanze"
 
-#: importer/templates/simple_import_venues_raw.html:15
+#: importer/templates/simple_import_venues_raw.html
 msgid "Paste a list of rooms with one room per line and following the format of: <code>name,priority</code>. For example:"
 msgstr "Incolla un elenco di stanze con una stanza per riga e seguendo il formato di: <code>nome,priorità</code>. Per esempio:"
 
-#: importer/views.py:108
+#: importer/views.py
 #, python-format
 msgid "Added %(count)d institution."
 msgid_plural "Added %(count)d institutions."
 msgstr[0] "Aggiunto %(count)d instituto."
 msgstr[1] "Aggiunti %(count)d instituti."
 
-#: importer/views.py:129
+#: importer/views.py
 #, python-format
 msgid "Added %(count)d room."
 msgid_plural "Added %(count)d rooms."
 msgstr[0] "Aggiunta %(count)d stanza."
 msgstr[1] "Aggiunte %(count)d stanze."
 
-#: importer/views.py:188
+#: importer/views.py
 #, python-format
 msgid "Added %(count)d team."
 msgid_plural "Added %(count)d teams."
 msgstr[0] "Aggiunta %(count)d squadra."
 msgstr[1] "Aggiunte %(count)d squadre."
 
-#: importer/views.py:209
+#: importer/views.py
 #, python-format
 msgid "Adjudicator %(number)d"
 msgstr "Giudice %(number)d"
 
-#: importer/views.py:214
+#: importer/views.py
 #, python-format
 msgid "Added %(count)d adjudicator."
 msgid_plural "Added %(count)d adjudicators."
 msgstr[0] "Aggiunto %(count)d giudice."
 msgstr[1] "Aggiunti %(count)d giudici."
 
-#: importer/views.py:230
+#: importer/views.py
 msgid "<p>There were one or more errors creating the demo tournament. Before retrying, please delete the existing demo tournament <strong>and</strong> the institutions in the Edit Database Area.</p><p><i>Technical information: The errors are as follows:</i></p>"
 msgstr "<p>Ci sono stati uno o più errori nella creazione del torneo demo. Prima di riprovare, si prega di eliminare il torneo demo esistente <strong>e</strong> le istituzioni nell'area Modifica Database.</p><p><i>Informazioni tecniche: gli errori sono i seguenti:</i></p>"
 
-#: importer/views.py:238
+#: importer/views.py
 msgid "Created new demo tournament. You can now configure it below."
 msgstr "Creato un nuovo torneo demo. Ora puoi configurarlo qui sotto."
 
-#: importer/views.py:256
+#: importer/views.py
 msgid "Tournament archive has been imported."
 msgstr "L'archivio del torneo è stato importato."
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:25-0400\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -321,6 +321,13 @@ msgstr ""
 #: motions/templates/public_motions.html
 msgid "The motion for this round has not been released."
 msgstr ""
+
+#: motions/templates/show.html
+#, python-format
+msgid "Motion for %(round)s"
+msgid_plural "Motions for %(round)s"
+msgstr[0] ""
+msgstr[1] ""
 
 #: motions/templates/show.html
 #, python-format

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
 "PO-Revision-Date: 2019-07-11 23:49\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -18,6 +18,26 @@ msgstr ""
 
 #: options/apps.py
 msgid "Tournament Options"
+msgstr ""
+
+#: options/forms.py
+msgid "Mininum score must be less than maximum score"
+msgstr ""
+
+#: options/forms.py
+msgid "Intermediate 1 or 2 require preallocated sides"
+msgstr ""
+
+#: options/forms.py
+msgid "Four-team formats require consensus ballots"
+msgstr ""
+
+#: options/forms.py
+msgid "Must set a password if using a password is enabled"
+msgstr ""
+
+#: options/forms.py
+msgid "Showing team institutions defeats the purpose of code names"
 msgstr ""
 
 #: options/models.py
@@ -177,6 +197,30 @@ msgid "Avoid team history"
 msgstr ""
 
 #: options/preferences.py
+msgid "Penalty applied by conflict avoidance method for teams being in a pullup many times. Leave 0 for no penalty."
+msgstr ""
+
+#: options/preferences.py
+msgid "Previously saw pullup penalty"
+msgstr ""
+
+#: options/preferences.py
+msgid "Penalty applied by minimum cost matching to prefer pairings that balance sides."
+msgstr ""
+
+#: options/preferences.py
+msgid "Side balance penalty"
+msgstr ""
+
+#: options/preferences.py
+msgid "Penalty applied by minimum cost matching to prefer pairings that follow the draw pairing method."
+msgstr ""
+
+#: options/preferences.py
+msgid "Pairing deviation penalty"
+msgstr ""
+
+#: options/preferences.py
 msgid "How odd brackets are resolved (see documentation for further details)"
 msgstr ""
 
@@ -278,6 +322,10 @@ msgstr ""
 
 #: options/preferences.py
 msgid "One-up-one-down"
+msgstr ""
+
+#: options/preferences.py
+msgid "Minimum cost matching"
 msgstr ""
 
 #: options/preferences.py
@@ -441,6 +489,10 @@ msgid "All adjudicators (including trainees) on each other"
 msgstr ""
 
 #: options/preferences.py
+msgid "Panellists on eachother and chairs, trainees on chairs, chairs on everyone"
+msgstr ""
+
+#: options/preferences.py
 msgid "Expect feedback to be submitted by teams on"
 msgstr ""
 
@@ -598,6 +650,14 @@ msgstr ""
 
 #: options/preferences.py
 msgid "Require reply speaker to have given a substantive speech"
+msgstr ""
+
+#: options/preferences.py
+msgid "Whether and how to use speech ranks within a debate"
+msgstr ""
+
+#: options/preferences.py
+msgid "Use of speech ranks"
 msgstr ""
 
 #: options/preferences.py options/templates/preferences_index.html
@@ -781,15 +841,15 @@ msgstr ""
 msgid "Ballot submissions from adjudicators"
 msgstr ""
 
-#: options/preferences.py
+#: options/preferences.py options/presets.py
 msgid "Disabled (tab staff only)"
 msgstr ""
 
-#: options/preferences.py
+#: options/preferences.py options/presets.py
 msgid "Use private URLs"
 msgstr ""
 
-#: options/preferences.py
+#: options/preferences.py options/presets.py
 msgid "Use publicly accessible form"
 msgstr ""
 
@@ -1141,6 +1201,26 @@ msgstr ""
 msgid "Show speakers in draw"
 msgstr ""
 
+#: options/preferences.py
+msgid "Input team seed in simple team importer"
+msgstr ""
+
+#: options/preferences.py
+msgid "Enable team seed in importer"
+msgstr ""
+
+#: options/preferences.py
+msgid "Do not ask for team seed"
+msgstr ""
+
+#: options/preferences.py
+msgid "Ask for numeric team seed"
+msgstr ""
+
+#: options/preferences.py
+msgid "Ask for descriptive team seed name"
+msgstr ""
+
 #: options/preferences.py options/templates/preferences_index.html
 msgid "Notifications"
 msgstr ""
@@ -1191,94 +1271,6 @@ msgstr ""
 
 #: options/preferences.py
 msgid "Ballot receipt message"
-msgstr ""
-
-#: options/preferences.py
-msgid "The subject line for emails sent to speakers with their team points."
-msgstr ""
-
-#: options/preferences.py
-msgid "Team points subject line"
-msgstr ""
-
-#: options/preferences.py
-msgid "The message body for emails sent to speakers with their team points."
-msgstr ""
-
-#: options/preferences.py
-msgid "Team points message"
-msgstr ""
-
-#: options/preferences.py
-msgid "The subject-line for emails sent to adjudicators with their assignments."
-msgstr ""
-
-#: options/preferences.py
-msgid "Adjudicator draw subject line"
-msgstr ""
-
-#: options/preferences.py
-msgid "The message body for emails sent to adjudicators with their assignments."
-msgstr ""
-
-#: options/preferences.py
-msgid "Adjudicator draw message"
-msgstr ""
-
-#: options/preferences.py
-msgid "The subject-line for emails sent to teams with their draw."
-msgstr ""
-
-#: options/preferences.py
-msgid "Team draw subject line"
-msgstr ""
-
-#: options/preferences.py
-msgid "The message body for emails sent to participants with their private URLs."
-msgstr ""
-
-#: options/preferences.py
-msgid "Private URL notification message"
-msgstr ""
-
-#: options/preferences.py
-msgid "The subject-line for emails sent to participants with their private URLs."
-msgstr ""
-
-#: options/preferences.py
-msgid "Private URL notification subject line"
-msgstr ""
-
-#: options/preferences.py
-msgid "The subject-line for emails sent to participants on motion release."
-msgstr ""
-
-#: options/preferences.py
-msgid "Motion release notification subject line"
-msgstr ""
-
-#: options/preferences.py
-msgid "The message body for emails sent to participants on motion release."
-msgstr ""
-
-#: options/preferences.py
-msgid "Motion release notification message"
-msgstr ""
-
-#: options/preferences.py
-msgid "The subject-line for emails sent to participants informing them of their team registration."
-msgstr ""
-
-#: options/preferences.py
-msgid "Team registration notification subject line"
-msgstr ""
-
-#: options/preferences.py
-msgid "The message body for emails sent to participants informing them of their team registration."
-msgstr ""
-
-#: options/preferences.py
-msgid "Team registration notification message"
 msgstr ""
 
 #: options/preferences.py options/templates/preferences_index.html
@@ -1370,10 +1362,6 @@ msgid "Administrator account creation key"
 msgstr ""
 
 #: options/presets.py
-msgid "Public Information Options"
-msgstr ""
-
-#: options/presets.py
 msgid "Enable Public Information"
 msgstr ""
 
@@ -1446,6 +1434,10 @@ msgid "3 vs 3 with replies, chosen motions, prop/opp side labels, and all adjudi
 msgstr ""
 
 #: options/presets.py
+msgid "Public Information Options"
+msgstr ""
+
+#: options/presets.py
 msgid "For tournaments hosted online: this sets it up so that people can access the draw and other generally useful information via the tab site."
 msgstr ""
 
@@ -1465,23 +1457,16 @@ msgstr ""
 msgid "Enables participant data entry through private URLs."
 msgstr ""
 
+#: options/presets.py
+msgid "Use Public Forms"
+msgstr ""
+
+#: options/presets.py
+msgid "Enables participant data entry through public forms."
+msgstr ""
+
 #: options/templates/preferences_index.html
 msgid "Configuration"
-msgstr ""
-
-#: options/templates/preferences_index.html
-#, python-format
-msgid "Your draw rules specify four teams per-debate but your ballot setting specifies that adjudicators submit independent ballots. These settings <strong>are not compatible and will cause results entry to crash</strong>. You need to go back to the <a href=\"%(options_url)s\" class=\"alert-link\">Debate Rules section</a> and change your configuration to use consensus ballots."
-msgstr ""
-
-#: options/templates/preferences_index.html
-#, python-format
-msgid "You do not use preallocated side allocation yet the odd bracket resolution method uses preallocated sides. This will cause draw generation to fail. You need to edit odd bracket resolution, avoiding <i>Intermediate 1</i> and <i>Intermediate 2</i> in the <a href=\"%(options_url)s\" class=\"alert-link\">Draw Rules section</a>."
-msgstr ""
-
-#: options/templates/preferences_index.html
-#, python-format
-msgid "You both have team code names enabled, and team institutions showing on public pages. If your objective in enabling team code names is to obscure team institutions, this probably defeats the purpose of code names. You can edit these settings in the <a href=\"%(ui_url)s\" class=\"alert-link\">UI Options section</a>."
 msgstr ""
 
 #: options/templates/preferences_index.html

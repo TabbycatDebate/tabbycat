@@ -26,6 +26,19 @@
     {% endif %}
   </a>
 
+  <form action="{% roundurl 'tournament-complete-round-toggle-silent' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="state" value="{{ round.silent }}" />
+    <button href="{% roundurl 'tournament-complete-round-toggle-silent' %}" class="btn btn-outline-primary">
+      {% if round.silent %}
+        {% trans "Unmark as Silent" %}
+      {% else %}
+        {% trans "Mark as Silent" %}
+      {% endif %}
+    </button>
+  </form>
+
+
   {% if not round.completed %}
     <form action="{% roundurl 'tournament-complete-round' %}" method="POST">
       {% csrf_token %}
@@ -104,8 +117,7 @@
           completing this round.
         <p>
         <p>
-          You can change which rounds are silent in the
-          <a href="{{ round_changelist_url }}">Edit Database area</a>.
+          You can change whether this round is silent using the button above.
         </p>
       {% endblocktrans %}
       {% include 'components/alert.html' with type='info' icon='eye-off' %}
@@ -121,8 +133,7 @@
         </p>
         <p>
           If you want to keep the results for just this round hidden, you can
-          mark this round as silent in the
-          <a href="{{ round_changelist_url }}">Edit Database area</a>.
+          mark this round as silent using the button above.
         </p>
         <p>
           If you want to disable the public view of results, you can do so in

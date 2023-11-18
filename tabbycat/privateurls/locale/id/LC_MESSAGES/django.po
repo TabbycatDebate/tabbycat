@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-02 01:40-0300\n"
-"PO-Revision-Date: 2021-04-28 12:11\n"
+"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"PO-Revision-Date: 2023-02-05 01:00\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -18,167 +18,160 @@ msgstr ""
 "X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-File-ID: 946\n"
 
-#: privateurls/apps.py:7
+#: privateurls/apps.py
 msgid "Private URL Management"
 msgstr "Manajemen URL Privat"
 
-#: privateurls/templates/private_urls.html:4
-#: privateurls/templates/private_urls.html:5 privateurls/views.py:145
+#: privateurls/templates/private_urls.html privateurls/views.py
 msgid "Private URLs"
 msgstr "URL Privat"
 
-#: privateurls/templates/private_urls.html:17
+#: privateurls/templates/private_urls.html
 msgid "The private URLs for ballot and/or feedback submission from participants are given below."
 msgstr "URL privat untuk kertas suara dan/atau masukan umpan balik dari para peserta, diberikan dibawah ini."
 
-#: privateurls/templates/private_urls.html:19
+#: privateurls/templates/private_urls.html
 msgid "Private URLs are used to allow participants to submit ballots and/or feedback online. You should use them if you have a means of distributing crazy-looking URLs to participants, and are too worried about fraud to use a publicly accessible page where <em>anyone</em> can enter <em>any</em> submission. The URLs will look something like this:"
 msgstr "URL privat dipakai untuk memungkinkan para peserta menyampaikan suara dan/atau umpan balik secara daring. Anda sebaiknya memakainya bila bermaksud untuk membagikan URL-URL gila ke para peserta, dan terlalu khawatir terhadap penipuan menggunakan laman umum yang mudah diakses dimana <em>siapapun</em> bisa mencantumkan masukan <em>apapun</em>. URLnya akan terlihat seperti ini:"
 
-#: privateurls/templates/private_urls.html:31
-msgid "Anyone with the URL can access the relevant data entry page. The idea is that it's hard to guess another key (the random-looking string), so you should make each URL accessible only to the participant in question. <a href=\"http://tabbycat.readthedocs.io/en/latest/features/data-entry.html#private-urls\"> Read more about private URLs.</a>"
-msgstr "Siapapun yang punya URL dapat mengakses laman masukan data yang relevan. Idenya ialah sulit untuk menebak kunci lainnya (string yang terlihat aneh), sehingga anda mesti membuat tiap URL mudah diakses hanya untuk peserta yang dibicarakan. <a href=\"http://tabbycat.readthedocs.io/en/latest/features/data-entry.html#private-urls\"> Baca lagi mengenai URL privat.</a>"
+#: privateurls/templates/private_urls.html
+msgid "Anyone with the URL can access the relevant data entry page. The idea is that it's hard to guess another key (the random-looking string), so you should make each URL accessible only to the participant in question. <a href=\"https://tabbycat.readthedocs.io/en/latest/features/data-entry.html#private-urls\"> Read more about private URLs.</a>"
+msgstr ""
 
-#: privateurls/templates/private_urls.html:47
+#: privateurls/templates/private_urls.html
 #, python-format
 msgid "Neither <strong>participant ballot submissions</strong>, <strong>participant feedback submissions</strong>, nor <strong>participant self-checkins</strong> are configured to be from private URLs. Any generated URLs will not be useful unless you configure those settings accordingly on the <a href=\"%(data_entry_options_url)s\">tournament configuration page</a>."
 msgstr "Bukan <strong>masukan kotak suara peserta</strong>, <strong>masukan umpan balik peserta</strong>, maupun <strong>daftar-mandiri peserta</strong> telah terkonfigurasi menjadi dari URL privat. URL apapun yang dihasilkan tidak akan berguna kecuali bila anda mengkonfigurasi pengaturan-pengaturan itu sedemikian rupa pada <a href=\"%(data_entry_options_url)s\">laman konfigurasi turnamen</a>."
 
-#: privateurls/templates/private_urls.html:67
+#: privateurls/templates/private_urls.html
 msgid "There are no private URLs assigned."
 msgstr "Tidak ada URL privat yang ditetapkan."
 
-#: privateurls/templates/private_urls.html:73
+#: privateurls/templates/private_urls.html
 msgid "Generate Private URLs"
 msgstr "Menghasilkan URL privat"
 
-#: privateurls/templates/private_urls_nav.html:6
+#: privateurls/templates/private_urls_nav.html
 msgid "View URLs"
 msgstr "Lihat URL"
 
-#: privateurls/templates/private_urls_nav.html:11
+#: privateurls/templates/private_urls_nav.html
 msgid "Print Teams' URLs"
 msgstr "Mencetak URL para tim"
 
-#: privateurls/templates/private_urls_nav.html:15
+#: privateurls/templates/private_urls_nav.html
 msgid "Print Adjudicators' URLs"
 msgstr "Mencetak URL para juri"
 
-#: privateurls/templates/private_urls_nav.html:22
+#: privateurls/templates/private_urls_nav.html
 msgid "All reachable participants have already been sent their private URLs."
 msgstr "Semua peserta yang terjangkau telah dikirimkan URL privat mereka."
 
-#: privateurls/templates/private_urls_nav.html:24
+#: privateurls/templates/private_urls_nav.html
 msgid "Email URLs"
 msgstr "URL Email"
 
-#: privateurls/templates/private_urls_nav.html:31
+#: privateurls/templates/private_urls_nav.html
 msgid "This button only generates private URLs for participants who do not already have one."
 msgstr "Tombol ini hanya mengahasilkan URL privat untuk para peserta yang sebelumnya belum punya."
 
-#: privateurls/templates/private_urls_nav.html:32
-#: privateurls/templates/private_urls_nav.html:39
+#: privateurls/templates/private_urls_nav.html
 msgid "Generate URLs"
 msgstr "Menghasilkan URL"
 
-#: privateurls/templates/private_urls_nav.html:38
+#: privateurls/templates/private_urls_nav.html
 msgid "All participants already have private URLs."
 msgstr "Semua peserta sudah mempunyai URL privat."
 
-#: privateurls/templates/public_url_landing.html:4
-#: privateurls/templates/public_url_landing.html:5
+#: privateurls/templates/public_url_landing.html
 msgid "Private URL"
 msgstr "URL Privat"
 
-#: privateurls/templates/public_url_landing.html:10
+#: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "for %(name)s"
 msgstr "untuk %(name)s"
 
-#: privateurls/templates/public_url_landing.html:12
+#: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "(%(team)s)"
 msgstr ""
 
-#: privateurls/templates/public_url_landing.html:18
+#: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can submit results and/or feedback for your debates. You may bookmark this page and return here after each debate for the available actions."
 msgstr "URL dari laman ini telah dipersonalisasi untukmu, %(name)s. <strong>Jangan dibagikan ke siapapun;</strong> siapapun yang tahu URL ini dapat mengirim hasil-hasil dan/atau umpan balik untuk debat-debatmu."
 
-#: privateurls/templates/public_url_landing.html:37
+#: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "Revoke check-in from %(check_time)s"
 msgstr "Mencabut lapor masuk dari %(check_time)s"
 
-#: privateurls/templates/public_url_landing.html:42
+#: privateurls/templates/public_url_landing.html
 msgid "Check in"
 msgstr "Lapor masuk"
 
 #. Translators: Include the full-stop; English doesn't because "a.m." already has a full stop.
-#: privateurls/templates/public_url_landing.html:49
+#: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "You have been checked in at %(check_time)s"
 msgstr "Anda telah dilaporkan masuk pada %(check_time)s"
 
-#: privateurls/templates/public_url_landing.html:54
+#: privateurls/templates/public_url_landing.html
 msgid "You are not currently checked in."
 msgstr "Saat ini anda belum lapor masuk."
 
-#: privateurls/templates/public_url_landing.html:62
+#: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "Submit Ballot for %(round)s"
 msgstr "Mengajukan Kotak suara selama %(round)s"
 
-#: privateurls/templates/public_url_landing.html:65
-msgid "There are no current rounds"
-msgstr "Tidak ada ronde saat ini"
-
-#: privateurls/templates/public_url_landing.html:71
+#: privateurls/templates/public_url_landing.html
 msgid "Submit Feedback"
 msgstr "Sampaikan Umpan balik"
 
-#: privateurls/templates/public_url_landing.html:84
+#: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "Registration (%(name)s)"
 msgstr "Registrasi (%(name)s)"
 
-#: privateurls/views.py:63 privateurls/views.py:164
+#: privateurls/views.py
 msgid "no URL"
 msgstr "tidak ada URL"
 
-#: privateurls/views.py:76
+#: privateurls/views.py
 msgid "URL"
 msgstr "URL"
 
-#: privateurls/views.py:87
+#: privateurls/views.py
 msgid "Speakers"
 msgstr "Pembicara"
 
-#: privateurls/views.py:97
+#: privateurls/views.py
 msgid "Adjudicators"
 msgstr "Juri"
 
-#: privateurls/views.py:119
+#: privateurls/views.py
 msgid "All participants already have private URLs. If you want to delete them, use the Edit Database area."
 msgstr "Semua para peserta sudah punya URL privat. Bila anda ingin menghapusnya, pakai area Edit Basisdata."
 
-#: privateurls/views.py:126
+#: privateurls/views.py
 #, python-format
 msgid "A private URL was generated for %(nblank_people)d person."
 msgid_plural "Private URLs were generated for all %(nblank_people)d people."
 msgstr[0] "URL-URL privat telah dihasilkan untuk semua %(nblank_people)d orang."
 
-#: privateurls/views.py:131
+#: privateurls/views.py
 #, python-format
 msgid "The already-existing private URL for %(nexisting_people)d person was left intact."
 msgid_plural "The already-existing private URLs for %(nexisting_people)d people were left intact."
 msgstr[0] "URL-URL privat yang telah ada untuk %(nexisting_people)d orang dibiarkan utuh."
 
-#: privateurls/views.py:172
+#: privateurls/views.py
 msgid "URL Key"
 msgstr "Kunci URL"
 
-#: privateurls/views.py:181
+#: privateurls/views.py
 msgid "Debates"
 msgstr "Debat-debat"
 

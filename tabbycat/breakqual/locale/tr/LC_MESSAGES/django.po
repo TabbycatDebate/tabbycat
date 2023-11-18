@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-24 07:27\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2023-02-12 02:04-0400\n"
+"PO-Revision-Date: 2023-05-25 23:54\n"
+"Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
 "MIME-Version: 1.0\n"
@@ -12,514 +12,514 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-Language: tr\n"
 "X-Crowdin-File: /develop/tabbycat/breakqual/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 928\n"
 
-#: breakqual/apps.py:7
+#: breakqual/apps.py
 msgid "Break Qualification"
-msgstr ""
+msgstr "Break Olma Şartları"
 
-#: breakqual/base.py:94
+#: breakqual/base.py
 #, python-format
-msgid "The break qualification rule %(rule)s requires the following metric(s) to be in the team standings precedence in order to work: %(required)s; and the following are missing: %(missing)s."
-msgstr ""
+msgid "The %(rule)s break qualification rule is missing the following required metric in the team standings precedence: %(missing)s"
+msgid_plural "The %(rule)s break qualification rule is missing the following required metrics in the team standings precedence: %(missing)s"
+msgstr[0] "%(rule)s'ın break olma şartı kuralı takım sıralamaları önceliğinde aşağıdaki gerekli metrikten yoksun: %(missing)s"
+msgstr[1] "%(rule)s'ın break olma şartı kuralı takım sıralamaları önceliğinde aşağıdaki gerekli metriklerden yoksun: %(missing)s"
 
-#: breakqual/models.py:10
+#: breakqual/models.py
 msgid "tournament"
 msgstr "turnuva"
 
-#: breakqual/models.py:12
+#: breakqual/models.py
 msgid "name"
 msgstr "isim"
 
-#: breakqual/models.py:13
+#: breakqual/models.py
 msgid "Name to be displayed, e.g., \"ESL\""
-msgstr ""
+msgstr "Görüntülenecek ad, örneğin, \"ESL\""
 
-#: breakqual/models.py:15
+#: breakqual/models.py
 msgid "slug"
-msgstr ""
+msgstr "jeton"
 
-#: breakqual/models.py:16
+#: breakqual/models.py
 msgid "Slug for URLs, e.g., \"esl\""
-msgstr ""
+msgstr "URL'ler için jeton, örneğin, \"esl\""
 
-#: breakqual/models.py:18
+#: breakqual/models.py
 msgid "sequence number"
-msgstr ""
+msgstr "sıra numarası"
 
-#: breakqual/models.py:19
+#: breakqual/models.py
 msgid "The order in which the categories are displayed"
-msgstr ""
+msgstr "Kategorilerin görüntülenme sırası"
 
-#: breakqual/models.py:21
+#: breakqual/models.py
 msgid "break size"
-msgstr ""
+msgstr "break olma boyutu"
 
-#: breakqual/models.py:22
+#: breakqual/models.py
 msgid "Number of breaking teams in this category"
-msgstr ""
+msgstr "Bu kategoride break olan takım sayısı"
 
-#: breakqual/models.py:24
+#: breakqual/models.py
 msgid "is general"
-msgstr ""
+msgstr "geneldir"
 
-#: breakqual/models.py:25
+#: breakqual/models.py
 msgid "True if most teams eligible for this category, e.g. Open, False otherwise"
-msgstr ""
+msgstr "Çoğu takım bu kategoriye uygunsa doğrudur, örneğin Açık, Aksi takdirde Yanlış"
 
-#: breakqual/models.py:27
+#: breakqual/models.py
 msgid "priority"
-msgstr ""
+msgstr "öncelik"
 
-#: breakqual/models.py:28
+#: breakqual/models.py
 msgid "If a team breaks in multiple categories, higher priority numbers take precedence; teams can break into multiple categories if and only if they all have the same priority"
-msgstr ""
+msgstr "Bir takım birden fazla kategoride break olursa, daha yüksek öncelik numaraları öncelikli olur; takımlar ancak hepsi aynı önceliğe sahipse birden fazla kategoriye break olabilir"
 
-#: breakqual/models.py:32
+#: breakqual/models.py
 msgid "limit"
-msgstr ""
+msgstr "sınır"
 
-#: breakqual/models.py:33
+#: breakqual/models.py
 msgid "At most this many teams will be shown on the public tab for this category, or use 0 for no limit"
-msgstr ""
+msgstr "En fazla bu kadar çok takım bu kategori için herkese açık tabda gösterilecek. Sınır istemiyorsanız 0 kullanın."
 
-#: breakqual/models.py:36
+#: breakqual/models.py
 msgid "Standard"
-msgstr ""
+msgstr "Standart"
 
-#: breakqual/models.py:37
+#: breakqual/models.py
 msgid "AIDA 1996"
 msgstr ""
 
-#: breakqual/models.py:38
+#: breakqual/models.py
 msgid "AIDA 2016 (Easters)"
 msgstr ""
 
-#: breakqual/models.py:39
+#: breakqual/models.py
 msgid "AIDA 2016 (Australs)"
 msgstr ""
 
-#: breakqual/models.py:40
+#: breakqual/models.py
 msgid "AIDA 2019 (Australs, Dynamic Cap)"
 msgstr ""
 
-#: breakqual/models.py:44
+#: breakqual/models.py
 msgid "rule"
-msgstr ""
+msgstr "kural"
 
-#: breakqual/models.py:45
+#: breakqual/models.py
 msgid "Rule for how the break is calculated (most tournaments should use \"Standard\")"
-msgstr ""
+msgstr "Break hesaplanması için kural (çoğu turnuvada \"Standart\" kullanılmalıdır)"
 
-#: breakqual/models.py:48 breakqual/models.py:105
+#: breakqual/models.py
 msgid "breaking teams"
-msgstr ""
+msgstr "break olan takımlar"
 
-#: breakqual/models.py:57 breakqual/models.py:76
+#: breakqual/models.py
 msgid "break category"
-msgstr ""
+msgstr "break kategorisi"
 
-#: breakqual/models.py:58
+#: breakqual/models.py
 msgid "break categories"
-msgstr ""
+msgstr "break kategorileri"
 
-#: breakqual/models.py:78
+#: breakqual/models.py
 msgid "team"
 msgstr "takım"
 
-#: breakqual/models.py:80
+#: breakqual/models.py
 msgid "rank"
 msgstr "sıralama"
 
-#: breakqual/models.py:82
+#: breakqual/models.py
 msgid "break rank"
-msgstr ""
+msgstr "Break sırası"
 
-#: breakqual/models.py:91
+#: breakqual/models.py
 msgid "Capped"
-msgstr ""
+msgstr "Sınırlı"
 
-#: breakqual/models.py:92
+#: breakqual/models.py
 msgid "Ineligible"
-msgstr ""
+msgstr "Uygun Değil"
 
-#: breakqual/models.py:93
+#: breakqual/models.py
 msgid "Different break"
-msgstr ""
+msgstr "Farklı Break"
 
-#: breakqual/models.py:94
+#: breakqual/models.py
 msgid "Disqualified"
-msgstr ""
+msgstr "Diskalifiye"
 
-#: breakqual/models.py:95
+#: breakqual/models.py
 msgid "Lost coin toss"
-msgstr ""
+msgstr "Yazı tura kaybedildi"
 
-#: breakqual/models.py:96
+#: breakqual/models.py
 msgid "Withdrawn"
-msgstr ""
+msgstr "Çekilmiş"
 
-#: breakqual/models.py:99
+#: breakqual/models.py
 msgid "remark"
-msgstr ""
+msgstr "Açıklama"
 
-#: breakqual/models.py:100
+#: breakqual/models.py
 msgid "Used to explain why an otherwise-qualified team didn't break"
-msgstr ""
+msgstr "Aksi takdirde kalifiye olmuş bir takımın neden break olmadığını açıklamak için kullanılır"
 
-#: breakqual/models.py:104
+#: breakqual/models.py
 msgid "breaking team"
-msgstr ""
+msgstr "break olan takım"
 
-#: breakqual/templates/break_categories_edit.html:4
-#: breakqual/templates/break_categories_edit.html:5
-#: breakqual/templates/breaking_index.html:30
+#: breakqual/templates/break_categories_edit.html
+#: breakqual/templates/breaking_index.html
 msgid "Break Categories"
-msgstr ""
+msgstr "break kategorileri"
 
-#: breakqual/templates/break_categories_edit.html:17
+#: breakqual/templates/break_categories_edit.html
 #, python-format
 msgid "Break categories allow category-specific break rounds, <i>e.g.</i>, for novice or ESL categories. On this page, you can define what break categories exist. After you've defined the categories, the break rounds will be automatically generated, and you can set team eligibility on the <a href=\"%(eligibility_url)s\">Eligibility</a> page."
-msgstr ""
+msgstr "Break kategorileri, kategoriye özel break turları yapmanızı sağlar, örneğin acemi veya ESL kategorileri. Bu sayfada, hangi break kategorilerinin bulunduğunu tanımlayabilirsiniz. Kategorileri tanımladıktan sonra, break turları otomatik olarak oluşturulur ve  <a href=\"%(eligibility_url)s\">Uygunluk</a>  sayfasında takım uygunluğunu ayarlayabilirsiniz."
 
-#: breakqual/templates/break_categories_edit.html:25
+#: breakqual/templates/break_categories_edit.html
 #, python-format
 msgid "If you want to delete break categories, use the <a href=\"%(edit_db_url)s\" class=\"alert-link\">Edit Database</a> area."
-msgstr ""
+msgstr "Ara kategorileri silmek istiyorsanız, <a href=\"%(edit_db_url)s\" class=\"alert-link\">Veritabanını Düzenle</a>  alanını kullanın."
 
-#: breakqual/templates/break_categories_edit.html:31
+#: breakqual/templates/break_categories_edit.html
 msgid "Save Break Categories"
-msgstr ""
+msgstr "Break Kategorilerini Kaydet"
 
-#: breakqual/templates/breaking_adjs.html:8
+#: breakqual/templates/breaking_adjs.html
 #, python-format
 msgid "Adjudicators can be marked as breaking in the <a href=\"%(feedback_url)s\">Feedback Overview</a> section."
-msgstr ""
+msgstr "Jürilerin break durumu <a href=\"%(feedback_url)s\">Geribildirim Genel Bakış</a> bölümünden işaretlenebilir."
 
-#: breakqual/templates/breaking_index.html:4
-#: breakqual/templates/breaking_index.html:5
+#: breakqual/templates/breaking_index.html
 msgid "Breaks"
-msgstr ""
+msgstr "Breakler"
 
-#: breakqual/templates/breaking_index.html:10
-msgid "This tournament does not have any break categories set up. You can read about how to create breaks <a href=\"http://tabbycat.readthedocs.io/en/stable/features/breaks.html\" class=\"alert-link\" target=\"_blank\"> at our documentation. </a>"
-msgstr ""
+#: breakqual/templates/breaking_index.html
+msgid "This tournament does not have any break categories set up. You can read about how to create breaks <a href=\"https://tabbycat.readthedocs.io/en/stable/features/breaks.html\" class=\"alert-link\" target=\"_blank\"> at our documentation. </a>"
+msgstr "Bu turnuvada herhangi bir break ayarlanmamıştır. Nasıl break oluşturabileceğinize <a href=\"https://tabbycat.readthedocs.io/en/stable/features/breaks.html\" class=\"alert-link\" target=\"_blank\"> buradan bakabilirsiniz. </a>"
 
-#: breakqual/templates/breaking_index.html:33
+#: breakqual/templates/breaking_index.html
 msgid "Team Eligibility"
-msgstr ""
+msgstr "Takım Uygunluğu"
 
-#: breakqual/templates/breaking_index.html:49
-#: breakqual/templates/breaking_teams.html:4
-#: breakqual/templates/breaking_teams.html:14
-#: breakqual/templates/breakqual_subnav.html:9
-#: breakqual/templates/public_break_index.html:15 breakqual/views.py:73
+#: breakqual/templates/breaking_index.html
+#: breakqual/templates/breaking_teams.html
+#: breakqual/templates/breakqual_subnav.html
+#: breakqual/templates/public_break_index.html breakqual/views.py
 #, python-format
 msgid "%(category)s Break"
-msgstr ""
+msgstr "%(category)s Break"
 
-#: breakqual/templates/breaking_index.html:52
+#: breakqual/templates/breaking_index.html
 #, python-format
 msgid "<span class=\"badge float-right badge-light\"> %(size)s Spots </span>"
-msgstr ""
+msgstr "<span class=\"badge float-right badge-light\"> %(size)s Konumlar </span>"
 
-#: breakqual/templates/breaking_index.html:64
+#: breakqual/templates/breaking_index.html
 msgid "Teams Eligible"
-msgstr ""
+msgstr "Uygun Takımlar"
 
-#: breakqual/templates/breaking_index.html:76
+#: breakqual/templates/breaking_index.html
 msgid "Breaking"
-msgstr ""
+msgstr "Break Olan"
 
-#: breakqual/templates/breaking_index.html:84
+#: breakqual/templates/breaking_index.html
 msgid "Excluded"
-msgstr ""
+msgstr "Dahil Değil"
 
-#: breakqual/templates/breaking_index.html:92
+#: breakqual/templates/breaking_index.html
 msgid "Eligible"
-msgstr ""
+msgstr "Uygun"
 
-#: breakqual/templates/breaking_index.html:104
+#: breakqual/templates/breaking_index.html
 msgid "Mark teams as eligible"
-msgstr ""
+msgstr "Takımları uygun olarak işaretle"
 
-#: breakqual/templates/breaking_index.html:109
+#: breakqual/templates/breaking_index.html
 msgid "Generate this break"
-msgstr ""
+msgstr "Bu breaki oluştur"
 
-#: breakqual/templates/breaking_index.html:112
+#: breakqual/templates/breaking_index.html
 msgid "View this break"
-msgstr ""
+msgstr "Bu breaki görüntüle"
 
-#: breakqual/templates/breaking_teams.html:9
+#: breakqual/templates/breaking_teams.html
 msgid "publicly visible"
-msgstr ""
+msgstr "herkese açık"
 
-#: breakqual/templates/breaking_teams.html:11
+#: breakqual/templates/breaking_teams.html
 msgid "not publicly visible"
-msgstr ""
+msgstr "herkese açık değil"
 
-#: breakqual/templates/breaking_teams.html:27
+#: breakqual/templates/breaking_teams.html
 msgid "Delete and Regenerate All Breaks"
-msgstr ""
+msgstr "Tüm breakleri Sil ve Yeniden Oluştur"
 
-#: breakqual/templates/breaking_teams.html:36
+#: breakqual/templates/breaking_teams.html
 msgid "Generate the Break for All Categories"
-msgstr ""
+msgstr "Tüm Kategoriler için Break Oluştur"
 
-#: breakqual/templates/breaking_teams.html:48
+#: breakqual/templates/breaking_teams.html
 #, python-format
 msgid "There are <strong>0 teams marked as eligible</strong> for this category — you will need to <a href=\"%(url)s\" class=\"alert-link\"> add some eligible teams</a> for this break to generate correctly."
-msgstr ""
+msgstr "Bu kategori için <strong> 0 takım uygun olarak işaretli. <strong> — bu breakin doğru şekilde oluşturulması için <a href=\"%(url)s\" class=\"alert-link\"> bazı uygun takımlar</a> eklemeniz gerekir."
 
-#: breakqual/templates/breaking_teams.html:60
+#: breakqual/templates/breaking_teams.html
 #, python-format
 msgid "This break uses the <strong>%(category)s</strong> rule — if you intended to use a different rule, you should <a href=\"%(url)s\"> edit the rule for this break category in the Edit Database area</a>, then delete and regenerate all breaks. Please double-check this before announcing the break or releasing it to the public. The code that generates the break is not robustly tested for corner cases."
-msgstr ""
+msgstr "Bu break <strong>%(category)s</strong> kuralını kullanır — farklı bir kural kullanmak isterseniz, <a href=\"%(url)s\"> bu break kategorisinin kuralını Veritabanını Düzenle</a>, alanında düzenlemeniz ve ardından tüm breakleri silip yeniden oluşturmanız gerekir. Lütfen breaki duyurmadan veya açıklamadan önce bunu kontrol edin. Break oluşturan kod her zaman iyi çalışmayabilir."
 
-#: breakqual/templates/breaking_teams.html:66
+#: breakqual/templates/breaking_teams.html
 #, python-format
 msgid "To edit the break use the remarks in the right-hand column. Any team with a remark will be excluded from this break (the break generator will sometimes insert its own remarks). Then, click the appropriate Save Remarks and Update button below. If you have complicated break rules (for example, if some teams are allowed to choose their preferred category) then you may have to update remarks a few times to get the correct break. As a last resort, you can <a href=\"%(url)s\"> edit the breaking teams list directly in the Edit Database area</a>."
-msgstr ""
+msgstr "Breaki düzenlemek için sağ sütundaki açıklamaları kullanın. Bir yorumu olan herhangi bir takım bu breakin dışında tutulacaktır (break üreteci bazen kendi açıklamalarını ekler). Ardından, aşağıdaki uygun Yorumları Kaydet ve Güncelle düğmesine tıklayın. Karmaşık break kurallarınız varsa (örneğin, bazı takımların tercih ettikleri kategoriyi seçmelerine izin veriliyorsa), doğru breaki elde etmek için açıklamaları birkaç kez güncellemeniz gerekebilir. Son çare olarak, <a href=\"%(url)s\"> break olan takımlar listesini doğrudan Veritabanını Düzenle alanından</a> ayarlayabilirsiniz."
 
-#: breakqual/templates/breaking_teams.html:76
+#: breakqual/templates/breaking_teams.html
 #, python-format
 msgid "The <strong>public breaking teams</strong> configuration setting is enabled. As soon as you click the button, the breaking teams list will be visible on the public site, before you have a chance to double-check it! It is strongly recommended that you disable this setting on the <a href=\"%(options_url)s\"> tournament configuration page</a> before generating the team breaks."
-msgstr ""
+msgstr "<strong>Dikkat!</strong> \"Herkese açık break olan ekipler\" seçeneği açıktır, break herkes tarafından görülebilir. Breakleri güncellerseniz, değişiklikler  <strong>hemen</strong> görünür hale gelir <strong>bunları gözden geçirme şansınız olmaz<strong>. Breakleri oluşturmadan önce <a href=\"%(options_url)s\"> turnuva ayarlama sayfasından</a> bu ayarı devre dışı bırakmanız önerilir."
 
-#: breakqual/templates/breaking_teams.html:88
+#: breakqual/templates/breaking_teams.html
 msgid "The break hasn't yet been generated. Would you like to generate the break for all categories? It's safe to generate the break before all preliminary rounds are complete, if you're curious — you can regenerate it later."
-msgstr ""
+msgstr "Break henüz oluşturulmadı. Tüm kategoriler için break oluşturmak ister misiniz? Tüm ön turlar tamamlanmadan önce break oluşturmak güvenlidir - daha sonra yeniden oluşturabilirsiniz."
 
-#: breakqual/templates/breaking_teams.html:107
+#: breakqual/templates/breaking_teams.html
 msgid "<strong>Caution!</strong> The \"public breaking teams\" option is turned on, so the break is publicly visible. If you update the break(s), the changes will become visible <strong>immediately</strong>, <strong>without a chance for you to review them</strong>."
-msgstr ""
+msgstr "<strong>Dikkat!</strong> \"Herkese açık break olan ekipler\" seçeneği açıktır, break herkes tarafından görülebilir. Breakleri güncellerseniz, değişiklikler  <strong>hemen</strong> görünür hale gelir <strong>bunları gözden geçirme şansınız olmaz<strong>."
 
-#: breakqual/templates/breaking_teams.html:120
+#: breakqual/templates/breaking_teams.html
 msgid "Save Remarks and Update All Breaks"
-msgstr ""
+msgstr "Açıklamaları Kaydet ve Tüm Breakleri Güncelle"
 
-#: breakqual/templates/breaking_teams.html:125
+#: breakqual/templates/breaking_teams.html
 #, python-format
 msgid "Save Remarks and Update the %(category)s Break"
-msgstr ""
+msgstr "Açıklamaları Kaydet ve %(category)s Breakini Güncelle"
 
-#: breakqual/templates/breaking_teams.html:137
+#: breakqual/templates/breaking_teams.html
 #, python-format
 msgid "There are <strong>%(count)s teams marked as eligible</strong> for this category. Would you like to add more eligible teams?"
-msgstr ""
+msgstr "Bu kategori için<strong>%(count)s takım uygun olarak işaretlenmiş</strong>. Daha fazla uygun takım eklemek ister misiniz?"
 
-#: breakqual/templates/breakqual_subnav.html:5
+#: breakqual/templates/breakqual_subnav.html
 msgid "Overview"
-msgstr ""
+msgstr "Genel bakış"
 
-#: breakqual/templates/breakqual_subnav.html:15
+#: breakqual/templates/breakqual_subnav.html
 msgid "Adjudicators' Break"
-msgstr ""
+msgstr "Jüri Breaki"
 
-#: breakqual/templates/edit_break_eligibility.html:7
+#: breakqual/templates/edit_break_eligibility.html
 #, python-format
 msgid "It looks like there aren't any break categories are defined. If you'd like to create new break categories you'll need to first <a href=\"%(categories_url)s\" class=\"alert-link\"> add them in the Edit Database area</a>, then return to this page to set team's eligibility."
-msgstr ""
+msgstr "Herhangi bir break kategorisi tanımlanmamış. Yeni mola kategorileri oluşturmak istiyorsanız öncelikle <a href=\"%(categories_url)s\" class=\"alert-link\"> veritabanı ayarla kısmında onları ekleyip</a> ardından ekibin uygunluğunu ayarlamak için bu sayfaya dönün."
 
-#: breakqual/templates/public_break_index.html:4
-#: breakqual/templates/public_break_index.html:5 breakqual/views.py:66
+#: breakqual/templates/public_break_index.html breakqual/views.py
 msgid "Break"
-msgstr ""
+msgstr "Break"
 
-#: breakqual/templates/public_break_index.html:23
+#: breakqual/templates/public_break_index.html
 msgid "Adjudicators"
 msgstr "Jüriler"
 
 #. Translators: abbreviation for "grand final"
-#: breakqual/utils.py:129
+#: breakqual/utils.py
 msgid "Grand Final"
-msgstr ""
+msgstr "Son Final"
 
-#: breakqual/utils.py:129
+#: breakqual/utils.py
 msgid "GF"
-msgstr ""
+msgstr "SF"
 
 #. Translators: abbreviation for "semifinals"
-#: breakqual/utils.py:131
+#: breakqual/utils.py
 msgid "Semifinals"
 msgstr "Yarı Final"
 
-#: breakqual/utils.py:131
+#: breakqual/utils.py
 msgid "SF"
 msgstr "YF"
 
 #. Translators: abbreviation for "quarterfinals"
-#: breakqual/utils.py:133
+#: breakqual/utils.py
 msgid "Quarterfinals"
 msgstr "Çeyrek Final"
 
-#: breakqual/utils.py:133
+#: breakqual/utils.py
 msgid "QF"
 msgstr "ÇF"
 
 #. Translators: abbreviation for "octofinals"
-#: breakqual/utils.py:135
+#: breakqual/utils.py
 msgid "Octofinals"
 msgstr "Ön Çeyrek Final"
 
-#: breakqual/utils.py:135
+#: breakqual/utils.py
 msgid "OF"
 msgstr "ÖF"
 
 #. Translators: abbreviation for "double-octofinals"
-#: breakqual/utils.py:137
+#: breakqual/utils.py
 msgid "Double-Octofinals"
-msgstr ""
+msgstr "Çift Ön Çeyrek Final"
 
-#: breakqual/utils.py:137
+#: breakqual/utils.py
 msgid "DOF"
-msgstr ""
+msgstr "ÇÖF"
 
 #. Translators: abbreviation for "triple-octofinals"
-#: breakqual/utils.py:139
+#: breakqual/utils.py
 msgid "Triple-Octofinals"
-msgstr ""
+msgstr "Üçlü Ön Çeyrek Final"
 
-#: breakqual/utils.py:139
+#: breakqual/utils.py
 msgid "TOF"
-msgstr ""
+msgstr "ÜÖF"
 
 #. Translators: abbreviation for "finals" - first character of category name
-#: breakqual/utils.py:146
+#: breakqual/utils.py
 #, python-format
 msgid "%s Finals"
-msgstr ""
+msgstr "%s Final"
 
-#: breakqual/utils.py:146
+#: breakqual/utils.py
 #, python-format
 msgid "%sF"
-msgstr ""
+msgstr "%sF"
 
 #. Translators: abbreviation for "semifinals" - first character of category name
-#: breakqual/utils.py:148
+#: breakqual/utils.py
 #, python-format
 msgid "%s Semifinals"
-msgstr ""
+msgstr "%s Yarı Final"
 
-#: breakqual/utils.py:148
+#: breakqual/utils.py
 #, python-format
 msgid "%sSF"
-msgstr ""
+msgstr "%sYF"
 
 #. Translators: abbreviation for "quarterfinals" - first character of category name
-#: breakqual/utils.py:150
+#: breakqual/utils.py
 #, python-format
 msgid "%s Quarterfinals"
-msgstr ""
+msgstr "%s Çeyrek Final"
 
-#: breakqual/utils.py:150
+#: breakqual/utils.py
 #, python-format
 msgid "%sQF"
-msgstr ""
+msgstr "%sÇF"
 
 #. Translators: abbreviation for "octofinals" - first character of category name
-#: breakqual/utils.py:152
+#: breakqual/utils.py
 #, python-format
 msgid "%s Octofinals"
-msgstr ""
+msgstr "%s Ön Çeyrek Final"
 
-#: breakqual/utils.py:152
+#: breakqual/utils.py
 #, python-format
 msgid "%sOF"
-msgstr ""
+msgstr "%sÖF"
 
 #. Translators: abbreviation for "double-octofinals" - first character of category name
-#: breakqual/utils.py:154
+#: breakqual/utils.py
 #, python-format
 msgid "%s Double-Octofinals"
-msgstr ""
+msgstr "%s Çift Ön Çeyrek Final"
 
-#: breakqual/utils.py:154
+#: breakqual/utils.py
 #, python-format
 msgid "%sDOF"
-msgstr ""
+msgstr "%sÇÖF"
 
 #. Translators: abbreviation for "triple-octofinals" - first character of category name
-#: breakqual/utils.py:156
+#: breakqual/utils.py
 #, python-format
 msgid "%s Triple-Octofinals"
-msgstr ""
+msgstr "%s Üçlü Ön Çeyrek Final"
 
-#: breakqual/utils.py:156
+#: breakqual/utils.py
 #, python-format
 msgid "%sTOF"
-msgstr ""
+msgstr "%sÜÖF"
 
 #. Translators: "UBR" stands for "unknown break round" (used as a fallback when we don't know what it's called)
-#: breakqual/utils.py:168
+#: breakqual/utils.py
 #, python-format
 msgid "Unknown %s break round"
-msgstr ""
+msgstr "Bilinmeyen %s break turu"
 
-#: breakqual/utils.py:168
+#: breakqual/utils.py
 #, python-format
 msgid "U%sBR"
-msgstr ""
+msgstr "B%sBT"
 
-#: breakqual/utils.py:169
+#: breakqual/utils.py
 msgid "Unknown break round"
-msgstr ""
+msgstr "Bilinmeyen break turu"
 
-#: breakqual/utils.py:169
+#: breakqual/utils.py
 msgid "UBR"
-msgstr ""
+msgstr "BBT"
 
-#: breakqual/views.py:97
+#: breakqual/views.py
 #, python-format
 msgid "There was an error generating the break for category %(category)s: %(message)s"
-msgstr ""
+msgstr "%(category)s kategorisi için break oluşturulurken bir hata oluştu: %(message)s"
 
-#: breakqual/views.py:140
+#: breakqual/views.py
 msgid "Eligible for"
-msgstr ""
+msgstr "Uygun"
 
-#: breakqual/views.py:144
+#: breakqual/views.py
 msgid "Edit Remark"
-msgstr ""
+msgstr "Açıklamayı Düzenle"
 
-#: breakqual/views.py:160
+#: breakqual/views.py
 #, python-format
 msgid "Changes to breaking team remarks saved and teams break updated for the following break categories: %(categories)s."
-msgstr ""
+msgstr "Break olan takım açıklamalarında yapılan değişiklikler kaydedilir ve takım breaki şu break kategorileri için güncelleştirilir: %(categories)s."
 
-#: breakqual/views.py:167
+#: breakqual/views.py
 #, python-format
 msgid "Changes to breaking team remarks saved and teams break updated for break category %(category)s."
-msgstr ""
+msgstr "Break olan takım açıklamalarında yapılan değişiklikler kaydedildi ve takım break kategorisi %(category)s için güncellendi."
 
-#: breakqual/views.py:172
+#: breakqual/views.py
 msgid "Changes to breaking team remarks saved."
-msgstr ""
+msgstr "Break olan takım açıklamalarında yapılan değişiklikler kaydedildi."
 
-#: breakqual/views.py:196
+#: breakqual/views.py
 #, python-format
 msgid "Teams break generated for the following break categories: %(categories)s."
-msgstr ""
+msgstr "Aşağıdaki break kategorileri için takım breakleri oluşturuldu: %(categories)s."
 
-#: breakqual/views.py:209
+#: breakqual/views.py
 msgid "Breaking Adjudicators"
-msgstr ""
+msgstr "Break Olan Jüriler"
 
-#: breakqual/views.py:274
+#: breakqual/views.py
 msgid "Break Eligibility"
-msgstr ""
+msgstr "Break Uygunluğu"
 
-#: breakqual/views.py:303
+#: breakqual/views.py
 #, python-format
 msgid "%s Speakers"
 msgstr "%s Konuşmacılar"
 
-#: breakqual/views.py:306
+#: breakqual/views.py
 #, python-format
 msgid "Team has %(nspeakers)s speaker with the %(category)s speaker category assigned"
 msgid_plural "Team has %(nspeakers)s speakers with the %(category)s speaker category assigned"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Takımın %(nspeakers)s tane  %(category)s konuşmacı kategorisinden konuşmacısı var."
+msgstr[1] "Takımın %(nspeakers)s tane  %(category)s konuşmacı kategorisinden konuşmacısı var."
 

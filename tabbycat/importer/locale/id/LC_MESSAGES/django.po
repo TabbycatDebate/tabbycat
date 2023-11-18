@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-02 01:40-0300\n"
-"PO-Revision-Date: 2021-05-23 06:54\n"
+"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"PO-Revision-Date: 2023-02-05 00:58\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -17,408 +17,397 @@ msgstr ""
 "X-Crowdin-File: /develop/tabbycat/importer/locale/en/LC_MESSAGES/django.po\n"
 "X-Crowdin-File-ID: 932\n"
 
-#: importer/forms.py:24
+#: importer/forms.py
 #, python-format
 msgid "line %(lineno)d: %(message)s"
 msgstr "baris %(lineno)d: %(message)s"
 
-#: importer/forms.py:51
+#: importer/forms.py
 #, python-format
 msgid "This line (for %(institution)s) didn't have a code"
 msgstr "Baris ini (untuk %(institution)s) tidak memiliki kode"
 
-#: importer/forms.py:56
+#: importer/forms.py
 #, python-format
 msgid "This line (for %(institution)s) had too many columns"
 msgstr "Baris ini (untuk %(institution)s) memiliki terlalu banyak kolom"
 
-#: importer/forms.py:66
+#: importer/forms.py
 msgid "There were no institutions to import."
 msgstr "Tidak ada institusi untuk diimpor."
 
-#: importer/forms.py:71
+#: importer/forms.py
 #, python-format
 msgid "Sorry, you can only import up to %(max_allowed)d institution at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
 msgid_plural "Sorry, you can only import up to %(max_allowed)d institutions at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
 msgstr[0] "Maaf, Anda hanya dapat mengimpor maksimal %(max_allowed)d institusi dalam satu waktu. (Anda saat ini memiliki %(given)d.) Cobalah membagi impor Anda menjadi pecahan kecil."
 
-#: importer/forms.py:103
+#: importer/forms.py
 msgid "There were no rooms to import."
 msgstr "Tidak ada ruangan untuk diimpor."
 
-#: importer/forms.py:108
+#: importer/forms.py
 #, python-format
 msgid "Sorry, you can only import up to %(max_allowed)d room at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
 msgid_plural "Sorry, you can only import up to %(max_allowed)d rooms at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
 msgstr[0] "Maaf, Anda hanya dapat mengimpor maksimal %(max_allowed)d ruangan dalam satu waktu. (Anda sat ini memiliki %(given)d.) Cobalah untuk membagi impor Anda menjadi pecahan yang lebih kecil."
 
-#: importer/forms.py:191
+#: importer/forms.py
 msgid "Speakers' names"
 msgstr "Nama-nama pembicara"
 
-#: importer/forms.py:192
+#: importer/forms.py
 msgid "Speakers' email addresses"
 msgstr "Alamat e-mail pembicara"
 
-#: importer/forms.py:193
+#: importer/forms.py
 msgid "Optional, useful to include if distributing private URLs, list in same order as speakers' names"
 msgstr "Opsional, berguna untuk diikutsertakan jika mendistribusikan URL privat, daftarkan dengan urutan yang sama dengan nama-nama pembicara"
 
-#: importer/forms.py:200
+#: importer/forms.py
 msgid "Name (excluding institution name)"
 msgstr "Nama (tidak termasuk nama institusi)"
 
-#: importer/forms.py:201
+#: importer/forms.py
 msgid "Prefix team name with institution name?"
 msgstr "Awali nama tim dengan nama institusi?"
 
-#: importer/forms.py:204
+#: importer/forms.py
 msgid "Do not include institution name (check the \"Prefix team name with institution name?\" field instead)"
 msgstr "Jangan ikutsertakan nama institusi (sebagai gantinya, cek kolom \"Awali nama tim dengan nama institusi?\")"
 
-#: importer/forms.py:213
+#: importer/forms.py
 msgid "(Not applicable to unaffiliated teams)"
 msgstr "(Tidak digunakan untuk tim yang tidak terafiliasi)"
 
-#: importer/forms.py:218
+#: importer/forms.py
 msgid "One speaker's name per line"
 msgstr "Satu nama pembicara per baris"
 
-#: importer/forms.py:219
+#: importer/forms.py
 msgid "Can be separated by newlines, tabs or commas"
 msgstr "Dapat dipisahkan dengan baris baru, tab, atau koma"
 
-#: importer/forms.py:221
+#: importer/forms.py
 #, python-format
 msgid "Speaker %d"
 msgstr "Pembicara %d"
 
-#: importer/forms.py:223
+#: importer/forms.py
 #, python-format
 msgid "speaker%d@example.edu"
 msgstr "pembicara%d@contoh.edu"
 
-#: importer/forms.py:237
+#: importer/forms.py
 msgid "There must be at least one speaker."
 msgstr "Paling tidak harus ada satu pembicara."
 
-#: importer/forms.py:246
+#: importer/forms.py
 #, python-format
 msgid "%(email)s is not a valid email address."
 msgstr "%(email)s bukan alamat email yang valid."
 
-#: importer/forms.py:259
+#: importer/forms.py
 msgid "There are more email addresses than speakers."
 msgstr "Ada lebih banyak alamat email daripada pembicara."
 
-#: importer/forms.py:297
+#: importer/forms.py
 msgid "Every team in a single tournament from the same institution must have a different name. Please correct the duplicate data."
 msgstr "Setiap tim pada satu turnamen dari institusi harus memiliki nama yang berbeda. Mohon perbaiki data duplikat."
 
-#: importer/forms.py:309
+#: importer/forms.py
 msgid "Rating"
 msgstr "Rating"
 
-#: importer/forms.py:317
+#: importer/forms.py
 #, python-format
 msgid "This value must be between %(min)d and %(max)d."
 msgstr "Nilai ini harus berada di antara %(min)d dan %(max)d."
 
-#: importer/forms.py:339
+#: importer/forms.py
 msgid "Unaffiliated (no institution)"
 msgstr "Tidak terafiliasi (tanpa institusi)"
 
-#: importer/forms.py:351
+#: importer/forms.py
 #, python-format
 msgid "%(name)s (%(code)s)"
 msgstr ""
 
-#: importer/forms.py:372
+#: importer/forms.py
 #, python-format
 msgid "Sorry, you can only import up to %(max_allowed)d team at a time. (These numbers currently add to %(given)d.) Try splitting your import into smaller chunks."
 msgid_plural "Sorry, you can only import up to %(max_allowed)d teams at a time. (These numbers currently add to %(given)d.) Try splitting your import into smaller chunks."
 msgstr[0] "Maaf, Anda hanya dapat mengimpor paling banyak %(max_allowed)d tim pada satu waktu. (Angka-angka tersebut saat ini ditambahkan ke %(given)d.) Coba pecah impor Anda ke bongkahan kecil."
 
-#: importer/forms.py:385
+#: importer/forms.py
 #, python-format
 msgid "Sorry, you can only import up to %(max_allowed)d adjudicator at a time. (These numbers currently add to %(given)d.) Try splitting your import into smaller chunks."
 msgid_plural "Sorry, you can only import up to %(max_allowed)d adjudicators at a time. (These numbers currently add to %(given)d.) Try splitting your import into smaller chunks."
 msgstr[0] "Maaf, Anda hanya dapat mengimpor paling banyak %(max_allowed)d juri pada satu waktu. (Angka-angka tersebut saat ini ditambahkan ke %(given)d.) Coba pecah impor Anda ke bongkahan kecil."
 
-#: importer/forms.py:396
+#: importer/forms.py
 msgid "XML"
 msgstr ""
 
-#: importer/forms.py:397
+#: importer/forms.py
 msgid "The Debate XML archive to parse"
 msgstr "Arsip XML Debat untuk diurai"
 
-#: importer/templates/archive_export_index.html:4
-#: importer/templates/archive_export_index.html:5
+#: importer/templates/archive_export_index.html
 msgid "Export Tournament Archive"
 msgstr "Ekspor Arsip Turnamen"
 
-#: importer/templates/archive_export_index.html:9
+#: importer/templates/archive_export_index.html
 msgid "Tournaments can be exported in an <a href=\"https://en.wikipedia.org/wiki/XML\">XML format</a> for use outside Tabbycat."
 msgstr "Turnamen dapat diekspor dalam <a href=\"https://en.wikipedia.org/wiki/XML\"> format XML </a> untuk digunakan di luar Tabbycat."
 
-#: importer/templates/archive_export_index.html:17
+#: importer/templates/archive_export_index.html
 msgid "Export all data"
 msgstr "Ekspor semua data"
 
-#: importer/templates/archive_importer.html:6
-#: importer/templates/archive_importer.html:18
+#: importer/templates/archive_importer.html
 msgctxt "page title"
 msgid "Import Tournament Archive"
 msgstr "Impor Arsip Turnamen"
 
-#: importer/templates/archive_importer.html:19
+#: importer/templates/archive_importer.html
 msgid "This form will create a tournament with the data provided as a Debate XML format."
 msgstr "Formulir ini akan membuat turnamen dengan data yang disediakan dalam format XML Debat."
 
-#: importer/templates/archive_importer.html:24
+#: importer/templates/archive_importer.html
 msgid "Import"
 msgstr "Impor"
 
-#: importer/templates/archive_importer.html:25
+#: importer/templates/archive_importer.html
 msgid "Go back to the site home page"
 msgstr "Kembali ke laman utama"
 
-#: importer/templates/simple_import_adjudicators_details.html:4
-#: importer/templates/simple_import_adjudicators_details.html:6
-#: importer/templates/simple_import_adjudicators_numbers.html:4
-#: importer/templates/simple_import_adjudicators_numbers.html:6
+#: importer/templates/simple_import_adjudicators_details.html
+#: importer/templates/simple_import_adjudicators_numbers.html
 msgctxt "page title"
 msgid "Add Adjudicators"
 msgstr "Tambah Juri"
 
-#: importer/templates/simple_import_adjudicators_details.html:5
-#: importer/templates/simple_import_adjudicators_numbers.html:5
-#: importer/templates/simple_import_institutions_details.html:5
-#: importer/templates/simple_import_institutions_raw.html:5
-#: importer/templates/simple_import_teams_details.html:5
-#: importer/templates/simple_import_teams_numbers.html:5
-#: importer/templates/simple_import_venues_details.html:5
-#: importer/templates/simple_import_venues_raw.html:5
+#: importer/templates/simple_import_adjudicators_details.html
+#: importer/templates/simple_import_adjudicators_numbers.html
+#: importer/templates/simple_import_institutions_details.html
+#: importer/templates/simple_import_institutions_raw.html
+#: importer/templates/simple_import_teams_details.html
+#: importer/templates/simple_import_teams_numbers.html
+#: importer/templates/simple_import_venues_details.html
+#: importer/templates/simple_import_venues_raw.html
 #, python-format
 msgid "(Step %(step)s of %(count)s)"
 msgstr "(Langkah %(step)s dari %(count)s)"
 
-#: importer/templates/simple_import_adjudicators_details.html:13
-#: importer/templates/simple_import_institutions_details.html:17
-#: importer/templates/simple_import_teams_details.html:17
-#: importer/templates/simple_import_venues_details.html:13
+#: importer/templates/simple_import_adjudicators_details.html
+#: importer/templates/simple_import_institutions_details.html
+#: importer/templates/simple_import_teams_details.html
+#: importer/templates/simple_import_venues_details.html
 msgid "Previous Step"
 msgstr "Lengkah Sebelumnya"
 
-#: importer/templates/simple_import_adjudicators_details.html:18
+#: importer/templates/simple_import_adjudicators_details.html
 #, python-format
 msgid "As per <a href=\"%(options_feedback)s\" class=\"alert-link\">this tournament's configuration</a>, an adjudicator's rating must be between <strong>%(min)s</strong> and <strong>%(max)s</strong>. Providing email addresses is optional but can be useful if using <a href=\"%(privateurls_url)s\" class=\"alert-link\">private URLs</a> for feedback or ballots."
 msgstr "Berdasarkan <a href=\"%(options_feedback)s\" class=\"alert-link\">konfigurasi turnamen ini</a>, rating seorang juri rating harus berada dalam rentang <strong>%(min)s</strong> dan <strong>%(max)s</strong>. Memberikan alamat email sifatnya opsional tetapi dapat berguna jika menggunakan <a href=\"%(privateurls_url)s\" class=\"alert-link\">URL privat</a> untuk umpanbalik atau kertas suara."
 
-#: importer/templates/simple_import_adjudicators_details.html:48
+#: importer/templates/simple_import_adjudicators_details.html
 #, python-format
 msgid "Adjudicators for %(institution)s"
 msgstr "Juri untuk %(institution)s"
 
-#: importer/templates/simple_import_adjudicators_details.html:52
+#: importer/templates/simple_import_adjudicators_details.html
 msgid "Unaffiliated Adjudicators"
 msgstr "Juri Non-Terafiliasi"
 
-#: importer/templates/simple_import_adjudicators_details.html:72
+#: importer/templates/simple_import_adjudicators_details.html
 msgid "Save All Adjudicators"
 msgstr "Simpan Seluruh Juri"
 
-#: importer/templates/simple_import_adjudicators_numbers.html:14
+#: importer/templates/simple_import_adjudicators_numbers.html
 #, python-format
 msgid "You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add institutions</a> before adding adjudicators."
 msgstr "Anda harus <a href=\"%(import_institutions_url)s\" class=\"alert-link\">menambahkan institusi</a> sebelum menambahkan juri."
 
-#: importer/templates/simple_import_adjudicators_numbers.html:23
+#: importer/templates/simple_import_adjudicators_numbers.html
 msgid "Specify the number of new adjudicators to add per institution. In the next step you can specify their names and ratings."
 msgstr "Tentukan jumlah juri baru untuk ditambahkan per institusi. Pada langkah berikutnya Anda dapat menentukan nama dan rating mereka."
 
-#: importer/templates/simple_import_adjudicators_numbers.html:27
-msgid "You can add up to 198 adjudicators at a time. If you have more than 198 adjudicators, split them into chunks. (Please don't try to add more than 198 in one go; the system will crash and you will lose data.)"
-msgstr "Anda dapat menambahkan sampai 198 juri pada satu waktu. Jika Anda memiliki lebih dari 198 juri, pecah mereka menjadi bongkahan-bongkahan kecil. (Jangan mencoba untuk menambahkan lenih dari 198 dalam satu waktu; sistem akan crash dan Anda akan kehilangan data.)"
+#: importer/templates/simple_import_adjudicators_numbers.html
+msgid "You can add up to 198 adjudicators at a time. If you have more than 198 adjudicators, split them into chunks. (Please don't try to add more than 198 in one go; the system will crash, and you will lose data.)"
+msgstr ""
 
-#: importer/templates/simple_import_adjudicators_numbers.html:59
-#: importer/templates/simple_import_teams_numbers.html:60
+#: importer/templates/simple_import_adjudicators_numbers.html
+#: importer/templates/simple_import_teams_numbers.html
 msgctxt "button"
 msgid "Next Step"
 msgstr "Langkah Berikutnya"
 
-#: importer/templates/simple_import_index.html:4
-#: importer/templates/simple_import_index.html:5
+#: importer/templates/simple_import_index.html
 msgid "Simple Importer"
 msgstr "Pengimpor Sederhana"
 
-#: importer/templates/simple_import_index.html:9
+#: importer/templates/simple_import_index.html
 msgid "There are <a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-data.html\" target=\"_blank\">several ways to import data into Tabbycat</a>. Which one is best depends on the size of your tournament and your technical background. This <strong>simple importer</strong> is the easiest to use and works well for small- and medium-sized tournaments."
 msgstr "Ada <a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-data.html\" target=\"_blank\">beberapa cara untuk mengimpor data ke dalam Tabbycat</a>. Mana yang paling baik bergantung pada ukuran turnamen Anda dan latar belakang teknis Anda. <strong>Pengimpor sederhana</strong> ini adalah yang termudah untuk digunakan dan berjalan dengan baik untuk turnamen berukuran kecil atau sedang."
 
-#: importer/templates/simple_import_index.html:16
+#: importer/templates/simple_import_index.html
 msgid "Add Institutions"
 msgstr "TamTambah Institusi"
 
-#: importer/templates/simple_import_index.html:21
+#: importer/templates/simple_import_index.html
 msgid "Add Teams"
 msgstr "Tambah Tim"
 
-#: importer/templates/simple_import_index.html:25
+#: importer/templates/simple_import_index.html
 msgid "Add Adjudicators"
 msgstr "Tambah Juri"
 
-#: importer/templates/simple_import_index.html:29
+#: importer/templates/simple_import_index.html
 msgid "Add Rooms"
 msgstr "Tambah Ruangan"
 
-#: importer/templates/simple_import_index.html:36
+#: importer/templates/simple_import_index.html
 msgid "Add/Edit Room Categories"
 msgstr "Tambah/Sunting Kategori Ruangan"
 
-#: importer/templates/simple_import_index.html:40
+#: importer/templates/simple_import_index.html
 msgid "Add/Edit Room Constraints"
 msgstr "Tambah/Sunting Batasan Ruangan"
 
-#: importer/templates/simple_import_index.html:47
+#: importer/templates/simple_import_index.html
 msgid "Add/Edit Adjudicator-Team Conflicts"
 msgstr "Tambah/Sunting Konflik Tim-Juri"
 
-#: importer/templates/simple_import_index.html:51
+#: importer/templates/simple_import_index.html
 msgid "Add/Edit Adjudicator-Adjudicator Conflicts"
 msgstr "Tambah/Sunting Konflik Juri-Juri"
 
-#: importer/templates/simple_import_index.html:55
+#: importer/templates/simple_import_index.html
 msgid "Add/Edit Adjudicator-Institution Conflicts"
 msgstr "Tambah/Sunting Konflik Juri-Institusi"
 
-#: importer/templates/simple_import_index.html:59
+#: importer/templates/simple_import_index.html
 msgid "Add/Edit Team-Institution Conflicts"
 msgstr "Tambah/Sunting Konflik Tim-Institusi"
 
-#: importer/templates/simple_import_index.html:66
+#: importer/templates/simple_import_index.html
 msgid "Add/Edit Break Categories"
 msgstr "ImportTambahkan / Ubah Kategori Break"
 
-#: importer/templates/simple_import_index.html:70
+#: importer/templates/simple_import_index.html
 msgid "Add/Edit Speaker Categories"
 msgstr "Tambahkan / Ubah Kategori Pembicara"
 
-#: importer/templates/simple_import_institutions_details.html:4
-#: importer/templates/simple_import_institutions_details.html:6
-#: importer/templates/simple_import_institutions_raw.html:4
-#: importer/templates/simple_import_institutions_raw.html:6
+#: importer/templates/simple_import_institutions_details.html
+#: importer/templates/simple_import_institutions_raw.html
 msgctxt "page title"
 msgid "Add Institutions"
 msgstr "TamTambah Institusi"
 
-#: importer/templates/simple_import_institutions_details.html:37
+#: importer/templates/simple_import_institutions_details.html
 msgid "Save All Institutions"
 msgstr "Simpan Semua Institusi"
 
-#: importer/templates/simple_import_institutions_raw.html:30
-#: importer/templates/simple_import_venues_raw.html:30
+#: importer/templates/simple_import_institutions_raw.html
+#: importer/templates/simple_import_venues_raw.html
 msgid "There are some problems with the data on this form:"
 msgstr "Ada beberapa masalah terkait data pada formulir ini:"
 
-#: importer/templates/simple_import_institutions_raw.html:41
-#: importer/templates/simple_import_venues_raw.html:41
+#: importer/templates/simple_import_institutions_raw.html
+#: importer/templates/simple_import_venues_raw.html
 msgid "Next Step"
 msgstr "Langkah Berikutnya"
 
-#: importer/templates/simple_import_teams_details.html:4
-#: importer/templates/simple_import_teams_details.html:6
-#: importer/templates/simple_import_teams_numbers.html:4
-#: importer/templates/simple_import_teams_numbers.html:6
+#: importer/templates/simple_import_teams_details.html
+#: importer/templates/simple_import_teams_numbers.html
 msgctxt "page title"
 msgid "Add Teams"
 msgstr "Tambah Tim"
 
-#: importer/templates/simple_import_teams_details.html:33
+#: importer/templates/simple_import_teams_details.html
 #, python-format
 msgid "Teams for %(institution)s"
 msgstr "Tim untuk %(institution)s"
 
-#: importer/templates/simple_import_teams_details.html:37
+#: importer/templates/simple_import_teams_details.html
 msgid "Unaffiliated Teams"
 msgstr "Tim Non-Terafiliasi"
 
-#: importer/templates/simple_import_teams_details.html:51
+#: importer/templates/simple_import_teams_details.html
 msgid "Save All Teams"
 msgstr "Simpan Semua Tim"
 
-#: importer/templates/simple_import_teams_numbers.html:15
+#: importer/templates/simple_import_teams_numbers.html
 #, python-format
 msgid "You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add institutions</a> before adding teams."
 msgstr "Anda harus <a href=\"%(import_institutions_url)s\" class=\"alert-link\">menambahkan institusi</a> sebelum menambahkan tim."
 
-#: importer/templates/simple_import_teams_numbers.html:24
+#: importer/templates/simple_import_teams_numbers.html
 msgid "Specify the number of new teams to add per institution. In the next step you can specify team and speaker names."
 msgstr "Tentukan jumlah tim baru untuk ditambahkan per institusi. Pada langkah berikutnya Anda dapat menentukan nama tim dan pembicara."
 
-#: importer/templates/simple_import_teams_numbers.html:28
-msgid "You can add up to 141 teams at a time. If you have more than 141 teams, split them into chunks. (Please don't try to add more than 141 in one go; the system will crash and you will lose data.)"
-msgstr "Anda bisa menambahkan sampai 141 tim dalam satu waktu. Jika Anda memiliki lebih dari 141 tim, pecah mereka menjadi bongkahan-bongkahan. (Mohon tidak mencoba menambahkan lebih dari 141 dalam satu waktu; sistem akan crash dan Anda akan kehilangan data.)"
+#: importer/templates/simple_import_teams_numbers.html
+msgid "You can add up to 141 teams at a time. If you have more than 141 teams, split them into chunks. (Please don't try to add more than 141 in one go; the system will crash, and you will lose data.)"
+msgstr ""
 
-#: importer/templates/simple_import_venues_details.html:4
-#: importer/templates/simple_import_venues_details.html:6
-#: importer/templates/simple_import_venues_raw.html:4
-#: importer/templates/simple_import_venues_raw.html:6
+#: importer/templates/simple_import_venues_details.html
+#: importer/templates/simple_import_venues_raw.html
 msgctxt "page title"
 msgid "Add Rooms"
 msgstr "Tambah Ruangan"
 
-#: importer/templates/simple_import_venues_details.html:16
+#: importer/templates/simple_import_venues_details.html
 msgid "Priorities indicate how much you want to use the room. Larger numbers indicate higher priority. If you have more rooms than debates, the rooms with the lowest priorities will not be used."
 msgstr "Prioritas mengindikasikan berapa banyak Anda ingin menggunakan ruangan. Nilai yang lebih besar mengindikasikan prioritas yang lebih tinggi. Jika anda memiliki lebih banyak ruangan dari debat, ruangan dengan prioritas terendah tidak akan digunakan."
 
-#: importer/templates/simple_import_venues_details.html:33
+#: importer/templates/simple_import_venues_details.html
 msgid "Save All Rooms"
 msgstr "Simpan Semua Ruangan"
 
-#: importer/templates/simple_import_venues_raw.html:15
+#: importer/templates/simple_import_venues_raw.html
 msgid "Paste a list of rooms with one room per line and following the format of: <code>name,priority</code>. For example:"
 msgstr "Tempel daftar ruangan dengan satu ruangan per baris dan mengikuti format dari: <code>nama,prioritas</code>. Sebagai contoh:"
 
-#: importer/views.py:108
+#: importer/views.py
 #, python-format
 msgid "Added %(count)d institution."
 msgid_plural "Added %(count)d institutions."
 msgstr[0] "%(count)d institusi ditambahkan."
 
-#: importer/views.py:129
+#: importer/views.py
 #, python-format
 msgid "Added %(count)d room."
 msgid_plural "Added %(count)d rooms."
 msgstr[0] "%(count)d ruangan ditambahkan."
 
-#: importer/views.py:188
+#: importer/views.py
 #, python-format
 msgid "Added %(count)d team."
 msgid_plural "Added %(count)d teams."
 msgstr[0] "%(count)d tim ditambahkan."
 
-#: importer/views.py:209
+#: importer/views.py
 #, python-format
 msgid "Adjudicator %(number)d"
 msgstr "Juri %(number)d"
 
-#: importer/views.py:214
+#: importer/views.py
 #, python-format
 msgid "Added %(count)d adjudicator."
 msgid_plural "Added %(count)d adjudicators."
 msgstr[0] "Juri %(count)d ditambahkan."
 
-#: importer/views.py:230
+#: importer/views.py
 msgid "<p>There were one or more errors creating the demo tournament. Before retrying, please delete the existing demo tournament <strong>and</strong> the institutions in the Edit Database Area.</p><p><i>Technical information: The errors are as follows:</i></p>"
 msgstr "<p>Ada satu atau lebih kesalahan membuat turnamen demo. Sebelum mencoba kembali, mohon haps turnamen demo yang sudah ada <strong>dan</strong> institusi di Area Sunting Basisdata.</p><p><i>Informasi teknis: Kesalahannya adalah sebagai berikut:</i></p>"
 
-#: importer/views.py:238
+#: importer/views.py
 msgid "Created new demo tournament. You can now configure it below."
 msgstr "Turnamen demo sudah terbuat. Anda dapat mengonfigurasikannya di bawah ini."
 
-#: importer/views.py:256
+#: importer/views.py
 msgid "Tournament archive has been imported."
 msgstr "Arsip turnamen telah diimpor."
 

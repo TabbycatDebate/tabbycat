@@ -12,13 +12,6 @@
     {% trans "This page automatically updates with the new ballot entries and checkins as they occur." as message %}
     {% include "components/alert.html" with type="info" %}
 
-    {% if pref.teams_in_debate == "bp" and round.ballots_per_debate == "per-adj" %}
-      {% blocktrans trimmed asvar message %}
-        This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Results can't be entered while this configuration is in place. Please ask an administrator to change this configuration.
-      {% endblocktrans %}
-      {% include "components/alert.html" with type="danger" %}
-    {% endif %}
-
     {% if pref.enable_motions and round.motion_set.count == 0 %}
       {% blocktrans trimmed asvar message %}
         Currently there are no motions entered for this round, so debate results

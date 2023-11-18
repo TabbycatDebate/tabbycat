@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,6 +59,10 @@ msgid "Speakers' names"
 msgstr ""
 
 #: importer/forms.py
+msgid "Can be separated by newlines, tabs or commas"
+msgstr ""
+
+#: importer/forms.py
 msgid "Speakers' email addresses"
 msgstr ""
 
@@ -87,10 +91,6 @@ msgid "One speaker's name per line"
 msgstr ""
 
 #: importer/forms.py
-msgid "Can be separated by newlines, tabs or commas"
-msgstr ""
-
-#: importer/forms.py
 #, python-format
 msgid "Speaker %d"
 msgstr ""
@@ -98,6 +98,22 @@ msgstr ""
 #: importer/forms.py
 #, python-format
 msgid "speaker%d@example.edu"
+msgstr ""
+
+#: importer/forms.py
+msgid "Unseeded"
+msgstr ""
+
+#: importer/forms.py
+msgid "Free seed"
+msgstr ""
+
+#: importer/forms.py
+msgid "Half seed"
+msgstr ""
+
+#: importer/forms.py
+msgid "Full seed"
 msgstr ""
 
 #: importer/forms.py

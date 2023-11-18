@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-28 21:53-0400\n"
-"PO-Revision-Date: 2021-11-29 02:15\n"
+"POT-Creation-Date: 2023-02-12 02:25-0400\n"
+"PO-Revision-Date: 2023-02-12 06:28\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -17,149 +17,148 @@ msgstr ""
 "X-Crowdin-File: /develop/tabbycat/motions/locale/en/LC_MESSAGES/django.po\n"
 "X-Crowdin-File-ID: 936\n"
 
-#: motions/apps.py:7 motions/templates/public_motions.html:4
-#: motions/templates/public_motions.html:5
+#: motions/apps.py motions/templates/public_motions.html
 msgid "Motions"
 msgstr "Темы"
 
-#: motions/models.py:9
+#: motions/models.py
 msgid "text"
 msgstr "текст"
 
-#: motions/models.py:10
+#: motions/models.py
 msgid "The full motion e.g., \"This House would straighten all bananas\""
 msgstr "Тема полностью, например \"Эта палата выпрямит все бананы\""
 
-#: motions/models.py:12
+#: motions/models.py
 msgid "reference"
 msgstr "ссылка"
 
-#: motions/models.py:13
+#: motions/models.py
 msgid "Shortcode for the motion, e.g., \"Bananas\""
 msgstr "Краткое название темы, например \"Бананы\""
 
-#: motions/models.py:15
+#: motions/models.py
 msgid "info slide"
 msgstr "инфослайд"
 
-#: motions/models.py:16
+#: motions/models.py
 msgid "The information slide for this topic; if it has one"
 msgstr "Информационный слайд для этой темы, если он есть"
 
-#: motions/models.py:19
+#: motions/models.py
 msgid "tournament"
 msgstr "турнир"
 
-#: motions/models.py:21
+#: motions/models.py
 msgid "rounds"
 msgstr "раунды"
 
-#: motions/models.py:24 motions/models.py:37 motions/models.py:62
+#: motions/models.py
 msgid "motion"
 msgstr "тема"
 
-#: motions/models.py:25
+#: motions/models.py
 msgid "motions"
 msgstr "темы"
 
-#: motions/models.py:35
+#: motions/models.py
 msgid "debate team"
 msgstr "команда"
 
-#: motions/models.py:39
+#: motions/models.py
 msgid "preferences"
 msgstr "предпочтения"
 
-#: motions/models.py:41
+#: motions/models.py
 msgid "ballot submission"
 msgstr "отправка бэллота"
 
-#: motions/models.py:45
+#: motions/models.py
 msgid "debate team motion preference"
 msgstr "предпочтение тем командой"
 
-#: motions/models.py:46
+#: motions/models.py
 msgid "debate team motion preferences"
 msgstr "предпочтения тем командой"
 
-#: motions/models.py:64
+#: motions/models.py
 msgid "round"
 msgstr "раунд"
 
-#: motions/models.py:67
+#: motions/models.py
 msgid "sequence number"
 msgstr "порядковый номер"
 
-#: motions/models.py:68
+#: motions/models.py
 msgid "The order in which motions are displayed"
 msgstr "Порядок, в котором представлены темы"
 
-#: motions/models.py:73
+#: motions/models.py
 msgid "round motion"
 msgstr ""
 
-#: motions/models.py:74
+#: motions/models.py
 msgid "round motions"
 msgstr ""
 
-#: motions/statistics.py:86
+#: motions/statistics.py
 msgid "extremely strong evidence"
 msgstr "очень сильное обоснование"
 
-#: motions/statistics.py:87
+#: motions/statistics.py
 msgid "strong evidence"
 msgstr "сильное обоснование"
 
-#: motions/statistics.py:88
+#: motions/statistics.py
 msgid "moderate evidence"
 msgstr "среднее обоснование"
 
-#: motions/statistics.py:89
+#: motions/statistics.py
 msgid "weak evidence"
 msgstr "слабое обоснование"
 
-#: motions/statistics.py:90
+#: motions/statistics.py
 msgid "very weak evidence"
 msgstr "очень слабое обоснование"
 
-#: motions/statistics.py:91
+#: motions/statistics.py
 msgid "extremely weak evidence"
 msgstr "невероятно слабое обоснование"
 
-#: motions/statistics.py:114
+#: motions/statistics.py
 msgid "balance inconclusive"
 msgstr "несовершенный баланс"
 
-#: motions/statistics.py:115
+#: motions/statistics.py
 msgid "too few debates to get a meaningful statistic"
 msgstr "слишком мало дебатов, чтобы получить значимую статистику"
 
-#: motions/statistics.py:123
+#: motions/statistics.py
 #, python-format
 msgid "imbalanced at %(level)s level"
 msgstr "небалансная на %(level)s уровне"
 
-#: motions/statistics.py:124
+#: motions/statistics.py
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing %(evidence)s to suggest that this motion was imbalanced — at a %(level)s level of significance."
 msgstr "статистика χ² %(chisq).3f, предоставляет %(evidence)s для того, чтобы предложить, что эта тема была небалансной — на уровне значения %(level)s."
 
-#: motions/statistics.py:129
+#: motions/statistics.py
 msgid "probably balanced"
 msgstr "возможно балансная"
 
-#: motions/statistics.py:130
+#: motions/statistics.py
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that this motion was imbalanced at any level of significance."
 msgstr "статистика χ² %(chisq).3f, предоставляет недостаточные доказательства, чтобы предположить, что эта тема было небалансной на любом уровне значений."
 
-#: motions/templates/motion_global_statistics.html:22
-#: motions/templates/motion_round_statistics.html:31
-#: motions/templates/public_motions.html:32
+#: motions/templates/motion_global_statistics.html
+#: motions/templates/motion_round_statistics.html
+#: motions/templates/public_motions.html
 msgid "View Info Slide"
 msgstr "Посмотреть инфослайд"
 
-#: motions/templates/motion_statistics_bp_elim.html:10
+#: motions/templates/motion_statistics_bp_elim.html
 #, python-format
 msgid "results from %(ndebates)s debate"
 msgid_plural "results from %(ndebates)s debates"
@@ -168,7 +167,7 @@ msgstr[1] "результаты %(ndebates)s дебатов"
 msgstr[2] "результаты %(ndebates)s дебатов"
 msgstr[3] "результаты %(ndebates)s дебатов"
 
-#: motions/templates/motion_statistics_bp_elim.html:26
+#: motions/templates/motion_statistics_bp_elim.html
 #, python-format
 msgid "%(advancing)s of %(ndebates)s team on %(side)s (%(percentage)s%%) advanced"
 msgid_plural "%(advancing)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) advanced"
@@ -177,7 +176,7 @@ msgstr[1] "%(advancing)s в %(ndebates)s команды на %(side)s (%(percent
 msgstr[2] "%(advancing)s в %(ndebates)s команды на %(side)s (%(percentage)s%%) прошли"
 msgstr[3] "%(advancing)s в %(ndebates)s команды на %(side)s (%(percentage)s%%) прошли"
 
-#: motions/templates/motion_statistics_bp_elim.html:31
+#: motions/templates/motion_statistics_bp_elim.html
 #, python-format
 msgid "%(eliminated)s of %(ndebates)s team on %(side)s (%(percentage)s%%) were eliminated"
 msgid_plural "%(eliminated)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) were eliminated"
@@ -186,59 +185,59 @@ msgstr[1] "%(eliminated)s из %(ndebates)s команд на %(side)s (%(percen
 msgstr[2] "%(eliminated)s из %(ndebates)s команд на %(side)s (%(percentage)s%%) не прошли"
 msgstr[3] "%(eliminated)s из %(ndebates)s команд на %(side)s (%(percentage)s%%) не прошли"
 
-#: motions/templates/motion_statistics_bp_elim.html:41
+#: motions/templates/motion_statistics_bp_elim.html
 msgid "advanced"
 msgstr "прошедший"
 
-#: motions/templates/motion_statistics_bp_elim.html:43
+#: motions/templates/motion_statistics_bp_elim.html
 msgctxt "abbreviation for 'advanced', used when not enough space"
 msgid "adv."
 msgstr "преим."
 
-#: motions/templates/motion_statistics_bp_elim.html:50
+#: motions/templates/motion_statistics_bp_elim.html
 msgid "eliminated"
 msgstr "исключен"
 
-#: motions/templates/motion_statistics_bp_elim.html:52
+#: motions/templates/motion_statistics_bp_elim.html
 msgctxt "abbreviation for 'eliminated', used when not enough space"
 msgid "elim."
 msgstr "искл."
 
-#: motions/templates/motion_statistics_bp_elim.html:58
+#: motions/templates/motion_statistics_bp_elim.html
 #, python-format
 msgid "%(side)s results distribution"
 msgstr "Распределение результатов %(side)s"
 
-#: motions/templates/motion_statistics_bp_elim.html:72
-#: motions/templates/motion_statistics_bp_prelim.html:115
+#: motions/templates/motion_statistics_bp_elim.html
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "No results for this motion"
 msgstr "Нет результатов по этой теме"
 
-#: motions/templates/motion_statistics_bp_prelim.html:13
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Government"
 msgstr "Правительство"
 
-#: motions/templates/motion_statistics_bp_prelim.html:17
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Opposition"
 msgstr "Оппозиция"
 
-#: motions/templates/motion_statistics_bp_prelim.html:21
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Average Points per bench"
 msgstr "Среднее количество баллов за сторону"
 
-#: motions/templates/motion_statistics_bp_prelim.html:29
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Opening"
 msgstr "Первые"
 
-#: motions/templates/motion_statistics_bp_prelim.html:33
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Closing"
 msgstr "Вторые"
 
-#: motions/templates/motion_statistics_bp_prelim.html:37
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Average Points per half"
 msgstr "Среднее количество баллов команд первых и вторых столов"
 
-#: motions/templates/motion_statistics_bp_prelim.html:60
+#: motions/templates/motion_statistics_bp_prelim.html
 #, python-format
 msgid "average points per position (%(ndebates)s debate)"
 msgid_plural "average points per position (%(ndebates)s debates)"
@@ -247,7 +246,7 @@ msgstr[1] "среднее количество баллов за позицию 
 msgstr[2] "среднее количество баллов за позицию в дебатах (%(ndebates)s"
 msgstr[3] "среднее количество баллов за позицию в дебатах (%(ndebates)s"
 
-#: motions/templates/motion_statistics_bp_prelim.html:78
+#: motions/templates/motion_statistics_bp_prelim.html
 #, python-format
 msgid "%(count)s result for %(side)s (%(percentage)s%%) were for %(points)s points"
 msgid_plural "%(count)s results for %(side)s (%(percentage)s%%) were for %(points)s points"
@@ -256,13 +255,12 @@ msgstr[1] "%(count)s результаты для%(side)s(%(percentage)s%%) со�
 msgstr[2] "%(count)s результаты для%(side)s(%(percentage)s%%) составили %(points)s баллов"
 msgstr[3] "%(count)s результаты для%(side)s(%(percentage)s%%) составили %(points)s баллов"
 
-#: motions/templates/motion_statistics_bp_prelim.html:101
+#: motions/templates/motion_statistics_bp_prelim.html
 #, python-format
 msgid "%(side)s results"
 msgstr "%(side)s результаты"
 
-#: motions/templates/motion_statistics_twoteam.html:31
-#: motions/templates/motion_statistics_twoteam.html:38
+#: motions/templates/motion_statistics_twoteam.html
 #, python-format
 msgid "%(count)s %(side)s win"
 msgid_plural "%(count)s %(side)s wins"
@@ -271,12 +269,11 @@ msgstr[1] "%(count)s %(side)s победы"
 msgstr[2] "%(count)s %(side)s победы"
 msgstr[3] "%(count)s %(side)s победы"
 
-#: motions/templates/motion_statistics_twoteam.html:53
+#: motions/templates/motion_statistics_twoteam.html
 msgid "No teams debated this motion"
 msgstr "Нет команд, дебатировавших эту тему"
 
-#: motions/templates/motion_statistics_twoteam.html:91
-#: motions/templates/motion_statistics_twoteam.html:98
+#: motions/templates/motion_statistics_twoteam.html
 #, python-format
 msgid "%(count)s %(side)s veto"
 msgid_plural "%(count)s %(side)s vetoes"
@@ -285,11 +282,11 @@ msgstr[1] "%(count)s %(side)s вето"
 msgstr[2] "%(count)s %(side)s вето"
 msgstr[3] "%(count)s %(side)s вето"
 
-#: motions/templates/motion_statistics_twoteam.html:113
+#: motions/templates/motion_statistics_twoteam.html
 msgid "No teams vetoed this motion"
 msgstr "Нет команд, наложивших вето на эту тему"
 
-#: motions/templates/motions_edit.html:4 motions/templates/motions_edit.html:10
+#: motions/templates/motions_edit.html
 msgid "Edit Motion"
 msgid_plural "Edit Motions"
 msgstr[0] "Редактировать тему"
@@ -297,23 +294,31 @@ msgstr[1] "Редактировать темы"
 msgstr[2] "Редактировать темы"
 msgstr[3] "Редактировать темы"
 
-#: motions/templates/motions_edit.html:18
+#: motions/templates/motions_edit.html
 msgid "Display Draw"
 msgstr "Показать сетку"
 
-#: motions/templates/motions_edit.html:28
+#: motions/templates/motions_edit.html
 msgid "This will replace all existing motions for this round. The motions themselves will still be in the database."
 msgstr ""
 
-#: motions/templates/motions_edit.html:30
+#: motions/templates/motions_edit.html
 msgid "Reuse Motions from Last Round"
 msgstr ""
 
-#: motions/templates/motions_edit.html:35
+#: motions/templates/motions_edit.html
 msgid "Use Existing Motions"
 msgstr ""
 
-#: motions/templates/motions_edit.html:74
+#: motions/templates/motions_edit.html
+msgid "The motion for this round is currently publicly displayed because it was released. Any changes made here will be publicly visible as well as soon as they are saved."
+msgid_plural "The motions for this round are currently publicly displayed because they were released. Any changes made here will be publicly visible as well as soon as they are saved."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: motions/templates/motions_edit.html
 msgid "Save Motion"
 msgid_plural "Save Motions"
 msgstr[0] "Сохранить тему"
@@ -321,23 +326,23 @@ msgstr[1] "Сохранить темы"
 msgstr[2] "Сохранить темы"
 msgstr[3] "Сохранить темы"
 
-#: motions/templates/motions_info.html:8
+#: motions/templates/motions_info.html
 msgid "Info Slide"
 msgstr "Инфослайд"
 
-#: motions/templates/public_motions.html:41
+#: motions/templates/public_motions.html
 msgid "There are no motions available for this round."
 msgstr "Для этого раунда нет доступных тем."
 
-#: motions/templates/public_motions.html:47
+#: motions/templates/public_motions.html
 msgid "The motions for this round have not been released."
 msgstr "Темы на этот раунд не опубликованы."
 
-#: motions/templates/public_motions.html:52
+#: motions/templates/public_motions.html
 msgid "The motion for this round has not been released."
 msgstr "Темы на этот раунд не опубликованы."
 
-#: motions/templates/show.html:16
+#: motions/templates/show.html
 #, python-format
 msgid "Reveal Info Slide for %(round)s"
 msgid_plural "Reveal Info Slides for %(round)s"
@@ -346,7 +351,7 @@ msgstr[1] "Показать инфослайд для %(round)s"
 msgstr[2] "Показать инфослайд для %(round)s"
 msgstr[3] "Показать инфослайд для %(round)s"
 
-#: motions/templates/show.html:24
+#: motions/templates/show.html
 #, python-format
 msgid "Reveal Motion for %(round)s"
 msgid_plural "Reveal Motions for %(round)s"
@@ -355,23 +360,23 @@ msgstr[1] "Показать темы для %(round)s"
 msgstr[2] "Показать темы для %(round)s"
 msgstr[3] "Показать темы для %(round)s"
 
-#: motions/templates/show.html:41
+#: motions/templates/show.html
 msgid "There are no motions for this round entered into Tabbycat."
 msgstr "Тема на этот раунд не введена в Tabbycat."
 
-#: motions/utils.py:11
+#: motions/utils.py
 msgid "Not all latest ballots list the same motion, so could not be merged."
 msgstr ""
 
-#: motions/utils.py:29
+#: motions/utils.py
 msgid "Motion vetos are inconsistent, so could not be merged."
 msgstr ""
 
-#: motions/views.py:91
+#: motions/views.py
 msgid "The motion has been saved."
 msgstr "Тема сохранена."
 
-#: motions/views.py:93
+#: motions/views.py
 #, python-format
 msgid "%(count)d motion has been saved."
 msgid_plural "%(count)d motions have been saved."
@@ -380,7 +385,7 @@ msgstr[1] "%(count)d темы сохранены."
 msgstr[2] "%(count)d темы сохранены."
 msgstr[3] "%(count)d темы сохранены."
 
-#: motions/views.py:97
+#: motions/views.py
 #, python-format
 msgid "%(count)d motion has been deleted."
 msgid_plural "%(count)d motions have been deleted."
@@ -389,7 +394,11 @@ msgstr[1] "%(count)d темы удалены."
 msgstr[2] "%(count)d темы удалены."
 msgstr[3] "%(count)d темы удалены."
 
-#: motions/views.py:140
+#: motions/views.py
+msgid "Motions cannot be copied to the first round."
+msgstr ""
+
+#: motions/views.py
 #, python-format
 msgid "Reused the motion from the previous round."
 msgid_plural "Reused the %(count)d motions from the previous round."
@@ -398,19 +407,27 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: motions/views.py:164
-msgid "Released the motion(s)."
-msgstr "Опубликовать тему(ы)."
+#: motions/views.py
+msgid "Released the motion."
+msgid_plural "Released the motions."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
-#: motions/views.py:171
-msgid "Unreleased the motion(s)."
-msgstr "Отменить публикацию тем."
+#: motions/views.py
+msgid "Unreleased the motion."
+msgid_plural "Unreleased the motions."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
-#: motions/views.py:195
+#: motions/views.py
 msgid "Round Motions"
 msgstr "Темы Раундов"
 
-#: motions/views.py:209
+#: motions/views.py
 msgid "Motion Statistics"
 msgstr "Статистика по темам"
 

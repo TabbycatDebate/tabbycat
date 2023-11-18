@@ -1,0 +1,439 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"PO-Revision-Date: 2023-02-05 00:56\n"
+"Last-Translator: \n"
+"Language-Team: Vietnamese\n"
+"Language: vi_VN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: vi\n"
+"X-Crowdin-File: /develop/tabbycat/adjallocation/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 922\n"
+
+#: adjallocation/allocators/base.py
+msgid "There are no available adjudicators. Ensure there are adjudicators who have been marked as available for this round before auto-allocating."
+msgstr "Hiện tại không có giám khảo nào sẵn sàng. Hãy chắc chắn rằng có giám khảo được đánh dấu sẵn sàng trong vòng này trước khi phân bổ tự động."
+
+#: adjallocation/allocators/hungarian.py
+#, python-format
+msgid "%(count)s score is larger than the maximum permitted adjudicator score (%(score).1f)."
+msgid_plural "%(count)s scores are larger than the maximum permitted adjudicator score (%(score).1f)."
+msgstr[0] "%(count)s điểm lớn hớn điểm cho phép của giám khảo (%(score).1f)."
+
+#: adjallocation/allocators/hungarian.py
+#, python-format
+msgid "%(count)s score is smaller than the minimum permitted adjudicator score (%(score).1f)."
+msgid_plural "%(count)s scores are smaller than the minimum permitted adjudicator score (%(score).1f)."
+msgstr[0] "%(count)s điểm nhỏ hơn điểm cho phép của giám khảo (%(score).1f)."
+
+#: adjallocation/allocators/hungarian.py
+msgid "There are no adjudicators eligible to be a chair or panellist. Try changing the \"Minimum feedback score required to be allocated as chair or panellist\" setting to something lower than at least some adjudicators' current scores, and try again."
+msgstr "Không có giám khảo nào hợp lệ để làm giám khảo chính hay giám khảo phụ. Hãy thử chỉnh \"điểm phản hồi thấp nhất để được phân bổ làm giám khảo chính hoặc giám khảo phụ\" xuống thấp hơn điểm của một số giám khảo hiện tại, rồi quay lại."
+
+#: adjallocation/allocators/hungarian.py
+msgid "There are no debates for this round. Maybe you haven't created a draw yet?"
+msgstr "Hiện tại chưa có trận debate nào trong vòng này. Có thể tại vì bạn chưa tạo bảng đấu?"
+
+#: adjallocation/allocators/hungarian.py
+#, python-format
+msgid "There are %(debate_count)s debates but only %(adj_count)s voting adjudicators."
+msgstr "Có %(debate_count)s trận tranh biện nhưng chỉ có %(adj_count)s giám khảo có khả năng bầu."
+
+#: adjallocation/allocators/hungarian.py
+#, python-format
+msgid "There are %(panel_debates)s panel debates but only %(panellists)s available panellists (less than %(needed)s)."
+msgstr "Hiện tại có %(panel_debates)s bàn giám khảo nhưng chỉ có %(panellists)s giám khảo phụ sẵn sàng (ít hơn %(needed)s)."
+
+#: adjallocation/allocators/hungarian.py
+#, python-format
+msgid "There are %(debates_count)s debates but only %(voting_count)s voting adjudicators."
+msgstr "Có %(debates_count)s trận tranh biện nhưng chỉ có %(voting_count)s giám khảo có khả năng bầu."
+
+#: adjallocation/apps.py
+msgid "Adjudicator Allocation"
+msgstr "Phân bổ giám khảo"
+
+#: adjallocation/consumers.py
+msgid "Draw is already released, unrelease draw to redo auto-allocations."
+msgstr "Bảng đấu đã được công bố, hủy công bố bảng đấu để tự động phân bổ lại."
+
+#: adjallocation/consumers.py
+msgid "Draw is not confirmed, confirm draw to run auto-allocations."
+msgstr "Bảng đấu chưa được xác nhận, xác nhận bảng đấu để tự động phân bổ."
+
+#: adjallocation/consumers.py
+msgid "There are no preformed panels available to allocate."
+msgstr "Hiện tại không có bàn giám khảo được chỉ định trước nào sẵn sàng để phân bổ."
+
+#: adjallocation/consumers.py
+msgid "Successfully auto-allocated preformed panels to debates."
+msgstr "Đã tự động phân bổ thành công bàn giám khảo cho các trận tranh biện."
+
+#: adjallocation/consumers.py
+#, python-format
+msgid "Successfully auto-allocated adjudicators to debates. However, there was a warning:"
+msgid_plural "Successfully auto-allocated adjudicators to debates. However, there were %(count)d warnings:"
+msgstr[0] "Tự động phân bổ các giám khảo cho các trận tranh biện thành công. Tuy nhiên, có %(count)d cảnh báo:"
+
+#: adjallocation/consumers.py
+msgid "Successfully auto-allocated adjudicators to debates."
+msgstr "Tự động phân bổ các giám khảo cho các trận tranh biện thành công."
+
+#: adjallocation/consumers.py
+msgid "There aren't any panels to fill. Create panels first."
+msgstr "Hiện tại không có bàn giám khảo nào để điền. Tạo các bàn giám khảo trước."
+
+#: adjallocation/consumers.py
+#, python-format
+msgid "Successfully auto-allocated adjudicators to preformed panels. However, there was a warning:"
+msgid_plural "Successfully auto-allocated adjudicators to preformed panels. However, there were %(count)d warnings:"
+msgstr[0] "Đã tự động phân bổ các giám khảo cho các trận tranh biện thành công. Tuy nhiên, có %(count)d cảnh báo:"
+
+#: adjallocation/consumers.py
+msgid "Successfully auto-allocated adjudicators to preformed panels."
+msgstr "Đã tự động phân bổ giám khảo cho các bàn giám khảo thành công."
+
+#: adjallocation/consumers.py
+msgid "You have no break category set as 'is general' so debate importances can't be calculated."
+msgstr ""
+
+#: adjallocation/consumers.py
+msgid "Succesfully auto-prioritised debates."
+msgstr "Đã tự động ưu tiên các trận tranh biện thành công."
+
+#: adjallocation/consumers.py
+msgid "You have no break category set as 'is general' so panel importances can't be calculated."
+msgstr ""
+
+#: adjallocation/consumers.py
+msgid "Succesfully auto-prioritised preformed panels."
+msgstr "Đã tự động ưu tiên các bàn giám khảo thành công."
+
+#: adjallocation/consumers.py
+msgid "Since this is the first round, the preformed panels aren't annotated with brackets and liveness."
+msgstr ""
+
+#: adjallocation/consumers.py
+msgid "The previous round's draw doesn't exist, so preformed panels can't be annotated with brackets and liveness."
+msgstr ""
+
+#: adjallocation/consumers.py
+msgid "Succesfully created new preformed panels for this round."
+msgstr "Đã tạo thành công bàn giám khảo cho vòng này."
+
+#: adjallocation/models.py
+msgid "chair"
+msgstr "giám khảo chính"
+
+#: adjallocation/models.py
+msgid "panellist"
+msgstr "giám khảo phụ"
+
+#: adjallocation/models.py
+msgid "trainee"
+msgstr "giám khảo thực tập"
+
+#: adjallocation/models.py
+msgid "debate"
+msgstr "trận tranh biện"
+
+#: adjallocation/models.py
+msgid "adjudicator"
+msgstr "giám khảo"
+
+#: adjallocation/models.py
+msgid "type"
+msgstr "loại"
+
+#: adjallocation/models.py
+msgid "available?"
+msgstr "sẵn sàng?"
+
+#: adjallocation/models.py
+msgid "debate adjudicator"
+msgstr "giám khảo tranh biện"
+
+#: adjallocation/models.py
+msgid "debate adjudicators"
+msgstr "các giám khảo tranh biện"
+
+#: adjallocation/models.py
+msgid "team"
+msgstr "đội"
+
+#: adjallocation/models.py
+msgid "adjudicator-team conflict"
+msgstr "xung đột giữa giám khảo và đội"
+
+#: adjallocation/models.py
+msgid "adjudicator-team conflicts"
+msgstr "xung đột giữa giám khảo và đội"
+
+#: adjallocation/models.py
+msgid "adjudicator 1"
+msgstr "giám khảo 1"
+
+#: adjallocation/models.py
+msgid "adjudicator 2"
+msgstr "giám khảo 2"
+
+#: adjallocation/models.py
+msgid "adjudicator-adjudicator conflict"
+msgstr "xung đột giữa các giám khảo"
+
+#: adjallocation/models.py
+msgid "adjudicator-adjudicator conflicts"
+msgstr "xung đột giữa các giám khảo"
+
+#: adjallocation/models.py
+msgid "institution"
+msgstr "tổ chức"
+
+#: adjallocation/models.py
+msgid "adjudicator-institution conflict"
+msgstr "xung đột giữa giám khảo và tổ chức"
+
+#: adjallocation/models.py
+msgid "adjudicator-institution conflicts"
+msgstr "xung đột giữa giám khảo và tổ chức"
+
+#: adjallocation/models.py
+msgid "team-institution conflict"
+msgstr "xung đột giữa đội và tổ chức"
+
+#: adjallocation/models.py
+msgid "team-institution conflicts"
+msgstr "xung đột giữa đội và tổ chức"
+
+#: adjallocation/models.py
+msgid "round"
+msgstr "vòng"
+
+#: adjallocation/models.py
+msgid "importance"
+msgstr "mức độ quan trọng"
+
+#: adjallocation/models.py
+msgid "minimum bracket"
+msgstr "bảng dưới"
+
+#: adjallocation/models.py
+msgid "Estimate of the lowest bracket for which this panel might be"
+msgstr ""
+
+#: adjallocation/models.py
+msgid "maximum bracket"
+msgstr "bảng trên"
+
+#: adjallocation/models.py
+msgid "Estimate of the highest bracket for which this panel might be"
+msgstr ""
+
+#: adjallocation/models.py
+msgid "room rank"
+msgstr "xếp hạng phòng"
+
+#: adjallocation/models.py
+msgid "Sequential number of panel, not used in any algorithms"
+msgstr "Số thứ tự của bàn giám khảo không được dùng trong bất cứ thuật toán nào"
+
+#: adjallocation/models.py
+msgid "liveness"
+msgstr "khả năng bước tiếp"
+
+#: adjallocation/models.py
+msgid "Number of categories this room is expected to be live for"
+msgstr ""
+
+#: adjallocation/models.py
+msgid "preformed panel"
+msgstr "bàn giám khảo chỉ định"
+
+#: adjallocation/models.py
+msgid "preformed panels"
+msgstr "bàn giám khảo được chỉ định trước"
+
+#: adjallocation/models.py
+msgid "panel"
+msgstr "bàn giám khảo"
+
+#: adjallocation/models.py
+msgid "preformed panel adjudicator"
+msgstr "giám khảo của bàn giám khảo được chỉ định trước"
+
+#: adjallocation/models.py
+msgid "preformed panel adjudicators"
+msgstr "giám khảo của bàn giám khảo được chỉ định trước"
+
+#: adjallocation/preformed/base.py
+msgid "There are no preformed panels to use. Have you allocated preformed panels for this round? If not, try just auto-allocating adjudicators instead."
+msgstr "Hiện tại không có bàn giám khảo nào được chỉ định trước để dùng. Bạn đã phân bổ bàn giám khảo đươc chỉ định trước cho vòng này chưa? Nếu chưa, hãy thử phân bổ giám khảo tự động."
+
+#: adjallocation/templates/preformed_index.html adjallocation/views.py
+msgid "Preformed Panels"
+msgstr "Bàn giám khảo chỉ định"
+
+#: adjallocation/templates/preformed_index.html
+msgid "A preformed panel is a defined group of adjudicators that is specified for a round before its draw has been generated. You can then manually or automatically apply these panels during the normal adjudicator allocation process. This can make allocations faster or allow you to create more considered panels of adjudicators."
+msgstr "Một bàn giám khảo được chỉ định trước là một nhóm các giám khảo được chỉ định chấm một vòng trước khi bảng đấu được tạo. Bạn có thể chọn bàn giám khảo bằng tay hoặc tự động trong quá trình phân bố giám khảo. Việc này có thể khiến việc phân bổ nhanh hơn hoặc khiến bạn cân nhắc hơn trong việc phân bổ giám khảo."
+
+#: adjallocation/templates/preformed_index.html
+msgid "Note that only adjudicators who have been marked as 'available' for that round will be able to be allocated for that round, so you may need to set their availability in advance."
+msgstr "Chú ý rằng chỉ có những giám khảo đã được đánh dấu 'sẵn sàng' cho vòng đó mới có thể được phân bổ cho vòng đó, nên bạn cần phải đánh dấu trước."
+
+#: adjallocation/templates/preformed_index.html
+#, python-format
+msgid "Edit Preformed Panels for %(round)s"
+msgstr "Chỉnh sửa bàn giám khảo cho vòng %(round)s"
+
+#: adjallocation/utils.py
+#, python-format
+msgid "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> (personal)"
+msgstr "Xung đột: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> (cá nhân)"
+
+#: adjallocation/utils.py
+#, python-format
+msgid "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> via institution <strong>%(institution)s</strong>"
+msgstr "Xung đột: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> với tổ chức <strong>%(institution)s</strong>"
+
+#: adjallocation/utils.py
+#, python-format
+msgid "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> (personal)"
+msgstr "Xung đột: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> (cá nhân)"
+
+#: adjallocation/utils.py
+#, python-format
+msgid "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> via institution <strong>%(institution)s</strong>"
+msgstr "Xung đột: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> với tổ chức <strong>%(institution)s</strong>"
+
+#: adjallocation/views.py
+msgid "Male"
+msgstr "Nam"
+
+#: adjallocation/views.py
+msgid "Female"
+msgstr "Nữ"
+
+#: adjallocation/views.py
+msgid "Other"
+msgstr "Khác"
+
+#: adjallocation/views.py
+msgid "Unknown"
+msgstr "Không xác định"
+
+#: adjallocation/views.py
+msgid "Edit Allocation"
+msgstr "Chỉnh sửa phân bổ"
+
+#: adjallocation/views.py
+msgid "Edit Panels"
+msgstr "Chỉnh sửa bàn giám khảo"
+
+#: adjallocation/views.py
+msgid "Return to Panels Overview"
+msgstr "Quay trở lại tổng quan bảng giám khảo"
+
+#: adjallocation/views.py
+msgid "Adjudicator-Team Conflicts"
+msgstr "Xung đột giữa giám khảo và đội"
+
+#: adjallocation/views.py
+msgid "Save Adjudicator-Team Conflicts"
+msgstr "Lưu xung đột giữa giám khảo và đội"
+
+#: adjallocation/views.py
+#, python-format
+msgid "Saved %(count)d adjudicator-team conflict."
+msgid_plural "Saved %(count)d adjudicator-team conflicts."
+msgstr[0] "Đã lưu %(count)d xung đột giữa giám khảo và đội."
+
+#: adjallocation/views.py
+#, python-format
+msgid "Deleted %(count)d adjudicator-team conflict."
+msgid_plural "Deleted %(count)d adjudicator-team conflicts."
+msgstr[0] "Đã xóa %(count)d xung đột giữa giám khảo và đội."
+
+#: adjallocation/views.py
+msgid "No changes were made to adjudicator-team conflicts."
+msgstr "Không có thay đổi nào được thực hiện với xung đột giữa giám khảo và đội."
+
+#: adjallocation/views.py
+msgid "Adjudicator-Adjudicator Conflicts"
+msgstr "Xung đột giữa các giám khảo"
+
+#: adjallocation/views.py
+msgid "Save Adjudicator-Adjudicator Conflicts"
+msgstr "Lưu xung đột giữa các giám khảo"
+
+#: adjallocation/views.py
+#, python-format
+msgid "Saved %(count)d adjudicator-adjudicator conflict."
+msgid_plural "Saved %(count)d adjudicator-adjudicator conflicts."
+msgstr[0] "Đã lưu %(count)d xung đột giữa các giám khảo."
+
+#: adjallocation/views.py
+#, python-format
+msgid "Deleted %(count)d adjudicator-adjudicator conflict."
+msgid_plural "Deleted %(count)d adjudicator-adjudicator conflicts."
+msgstr[0] "Đã xóa %(count)d xung đột giữa các giám khảo."
+
+#: adjallocation/views.py
+msgid "No changes were made to adjudicator-adjudicator conflicts."
+msgstr "Không có thay đổi nào được thực hiện với xung đột giữa các giám khảo."
+
+#: adjallocation/views.py
+msgid "Adjudicator-Institution Conflicts"
+msgstr "Xung đột giữa giám khảo và tổ chức"
+
+#: adjallocation/views.py
+msgid "Save Adjudicator-Institution Conflicts"
+msgstr "Lưu xung đột giữa giám khảo và tổ chức"
+
+#: adjallocation/views.py
+#, python-format
+msgid "Saved %(count)d adjudicator-institution conflict."
+msgid_plural "Saved %(count)d adjudicator-institution conflicts."
+msgstr[0] "Đã lưu %(count)d xung đột giữa giám khảo và tổ chức."
+
+#: adjallocation/views.py
+#, python-format
+msgid "Deleted %(count)d adjudicator-institution conflict."
+msgid_plural "Deleted %(count)d adjudicator-institution conflicts."
+msgstr[0] "Đã xóa %(count)d xung đột giữa giám khảo và tổ chức."
+
+#: adjallocation/views.py
+msgid "No changes were made to adjudicator-institution conflicts."
+msgstr "Không có thay đổi nào được thực hiện với xung đột giữa giám khảo và tổ chức."
+
+#: adjallocation/views.py
+msgid "Team-Institution Conflicts"
+msgstr "Xung đột giữa đội và tổ chức"
+
+#: adjallocation/views.py
+msgid "Save Team-Institution Conflicts"
+msgstr "Lưu xung đột giữa đội và tổ chức"
+
+#: adjallocation/views.py
+#, python-format
+msgid "Saved %(count)d team-institution conflict."
+msgid_plural "Saved %(count)d team-institution conflicts."
+msgstr[0] "Đã lưu %(count)d xung đột giữa đội và tổ chức."
+
+#: adjallocation/views.py
+#, python-format
+msgid "Deleted %(count)d team-institution conflict."
+msgid_plural "Deleted %(count)d team-institution conflicts."
+msgstr[0] "Đã xóa %(count)d xung đột giữa đội và tổ chức."
+
+#: adjallocation/views.py
+msgid "No changes were made to team-institution conflicts."
+msgstr "Không có thay đổi nào được thực hiện với xung đột giữa đội và tổ chức."
+

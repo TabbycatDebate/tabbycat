@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-28 21:53-0400\n"
-"PO-Revision-Date: 2021-11-29 02:15\n"
+"POT-Creation-Date: 2023-02-12 02:25-0400\n"
+"PO-Revision-Date: 2023-02-12 06:28\n"
 "Last-Translator: \n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -17,372 +17,383 @@ msgstr ""
 "X-Crowdin-File: /develop/tabbycat/motions/locale/en/LC_MESSAGES/django.po\n"
 "X-Crowdin-File-ID: 936\n"
 
-#: motions/apps.py:7 motions/templates/public_motions.html:4
-#: motions/templates/public_motions.html:5
+#: motions/apps.py motions/templates/public_motions.html
 msgid "Motions"
 msgstr "crwdns30960:0crwdne30960:0"
 
-#: motions/models.py:9
+#: motions/models.py
 msgid "text"
 msgstr "crwdns30966:0crwdne30966:0"
 
-#: motions/models.py:10
+#: motions/models.py
 msgid "The full motion e.g., \"This House would straighten all bananas\""
 msgstr "crwdns30968:0crwdne30968:0"
 
-#: motions/models.py:12
+#: motions/models.py
 msgid "reference"
 msgstr "crwdns30970:0crwdne30970:0"
 
-#: motions/models.py:13
+#: motions/models.py
 msgid "Shortcode for the motion, e.g., \"Bananas\""
 msgstr "crwdns30972:0crwdne30972:0"
 
-#: motions/models.py:15
+#: motions/models.py
 msgid "info slide"
 msgstr "crwdns30974:0crwdne30974:0"
 
-#: motions/models.py:16
+#: motions/models.py
 msgid "The information slide for this topic; if it has one"
 msgstr "crwdns30976:0crwdne30976:0"
 
-#: motions/models.py:19
+#: motions/models.py
 msgid "tournament"
 msgstr "crwdns51820:0crwdne51820:0"
 
-#: motions/models.py:21
+#: motions/models.py
 msgid "rounds"
 msgstr "crwdns51822:0crwdne51822:0"
 
-#: motions/models.py:24 motions/models.py:37 motions/models.py:62
+#: motions/models.py
 msgid "motion"
 msgstr "crwdns30986:0crwdne30986:0"
 
-#: motions/models.py:25
+#: motions/models.py
 msgid "motions"
 msgstr "crwdns30988:0crwdne30988:0"
 
-#: motions/models.py:35
+#: motions/models.py
 msgid "debate team"
 msgstr "crwdns30990:0crwdne30990:0"
 
-#: motions/models.py:39
+#: motions/models.py
 msgid "preferences"
 msgstr "crwdns30992:0crwdne30992:0"
 
-#: motions/models.py:41
+#: motions/models.py
 msgid "ballot submission"
 msgstr "crwdns30994:0crwdne30994:0"
 
-#: motions/models.py:45
+#: motions/models.py
 msgid "debate team motion preference"
 msgstr "crwdns30996:0crwdne30996:0"
 
-#: motions/models.py:46
+#: motions/models.py
 msgid "debate team motion preferences"
 msgstr "crwdns30998:0crwdne30998:0"
 
-#: motions/models.py:64
+#: motions/models.py
 msgid "round"
 msgstr "crwdns30982:0crwdne30982:0"
 
-#: motions/models.py:67
+#: motions/models.py
 msgid "sequence number"
 msgstr "crwdns30962:0crwdne30962:0"
 
-#: motions/models.py:68
+#: motions/models.py
 msgid "The order in which motions are displayed"
 msgstr "crwdns30964:0crwdne30964:0"
 
-#: motions/models.py:73
+#: motions/models.py
 msgid "round motion"
 msgstr "crwdns51824:0crwdne51824:0"
 
-#: motions/models.py:74
+#: motions/models.py
 msgid "round motions"
 msgstr "crwdns51826:0crwdne51826:0"
 
-#: motions/statistics.py:86
+#: motions/statistics.py
 msgid "extremely strong evidence"
 msgstr "crwdns31000:0crwdne31000:0"
 
-#: motions/statistics.py:87
+#: motions/statistics.py
 msgid "strong evidence"
 msgstr "crwdns31002:0crwdne31002:0"
 
-#: motions/statistics.py:88
+#: motions/statistics.py
 msgid "moderate evidence"
 msgstr "crwdns31004:0crwdne31004:0"
 
-#: motions/statistics.py:89
+#: motions/statistics.py
 msgid "weak evidence"
 msgstr "crwdns31006:0crwdne31006:0"
 
-#: motions/statistics.py:90
+#: motions/statistics.py
 msgid "very weak evidence"
 msgstr "crwdns31008:0crwdne31008:0"
 
-#: motions/statistics.py:91
+#: motions/statistics.py
 msgid "extremely weak evidence"
 msgstr "crwdns31010:0crwdne31010:0"
 
-#: motions/statistics.py:114
+#: motions/statistics.py
 msgid "balance inconclusive"
 msgstr "crwdns31012:0crwdne31012:0"
 
-#: motions/statistics.py:115
+#: motions/statistics.py
 msgid "too few debates to get a meaningful statistic"
 msgstr "crwdns31014:0crwdne31014:0"
 
-#: motions/statistics.py:123
+#: motions/statistics.py
 #, python-format
 msgid "imbalanced at %(level)s level"
 msgstr "crwdns31016:0%(level)scrwdne31016:0"
 
-#: motions/statistics.py:124
+#: motions/statistics.py
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing %(evidence)s to suggest that this motion was imbalanced — at a %(level)s level of significance."
 msgstr "crwdns31018:0%(chisq)crwdnd31018:0%(evidence)scrwdnd31018:0%(level)scrwdne31018:0"
 
-#: motions/statistics.py:129
+#: motions/statistics.py
 msgid "probably balanced"
 msgstr "crwdns31020:0crwdne31020:0"
 
-#: motions/statistics.py:130
+#: motions/statistics.py
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that this motion was imbalanced at any level of significance."
 msgstr "crwdns31022:0%(chisq)crwdne31022:0"
 
-#: motions/templates/motion_global_statistics.html:22
-#: motions/templates/motion_round_statistics.html:31
-#: motions/templates/public_motions.html:32
+#: motions/templates/motion_global_statistics.html
+#: motions/templates/motion_round_statistics.html
+#: motions/templates/public_motions.html
 msgid "View Info Slide"
 msgstr "crwdns31032:0crwdne31032:0"
 
-#: motions/templates/motion_statistics_bp_elim.html:10
+#: motions/templates/motion_statistics_bp_elim.html
 #, python-format
 msgid "results from %(ndebates)s debate"
 msgid_plural "results from %(ndebates)s debates"
 msgstr[0] "crwdns31034:1%(ndebates)scrwdne31034:1"
 msgstr[1] "crwdns31034:5%(ndebates)scrwdne31034:5"
 
-#: motions/templates/motion_statistics_bp_elim.html:26
+#: motions/templates/motion_statistics_bp_elim.html
 #, python-format
 msgid "%(advancing)s of %(ndebates)s team on %(side)s (%(percentage)s%%) advanced"
 msgid_plural "%(advancing)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) advanced"
 msgstr[0] "crwdns31036:1%(advancing)scrwdnd31036:1%(ndebates)scrwdnd31036:1%(side)scrwdnd31036:1%(percentage)scrwdne31036:1"
 msgstr[1] "crwdns31036:5%(advancing)scrwdnd31036:5%(ndebates)scrwdnd31036:5%(side)scrwdnd31036:5%(percentage)scrwdne31036:5"
 
-#: motions/templates/motion_statistics_bp_elim.html:31
+#: motions/templates/motion_statistics_bp_elim.html
 #, python-format
 msgid "%(eliminated)s of %(ndebates)s team on %(side)s (%(percentage)s%%) were eliminated"
 msgid_plural "%(eliminated)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) were eliminated"
 msgstr[0] "crwdns31038:1%(eliminated)scrwdnd31038:1%(ndebates)scrwdnd31038:1%(side)scrwdnd31038:1%(percentage)scrwdne31038:1"
 msgstr[1] "crwdns31038:5%(eliminated)scrwdnd31038:5%(ndebates)scrwdnd31038:5%(side)scrwdnd31038:5%(percentage)scrwdne31038:5"
 
-#: motions/templates/motion_statistics_bp_elim.html:41
+#: motions/templates/motion_statistics_bp_elim.html
 msgid "advanced"
 msgstr "crwdns31040:0crwdne31040:0"
 
-#: motions/templates/motion_statistics_bp_elim.html:43
+#: motions/templates/motion_statistics_bp_elim.html
 msgctxt "abbreviation for 'advanced', used when not enough space"
 msgid "adv."
 msgstr "crwdns31042:0crwdne31042:0"
 
-#: motions/templates/motion_statistics_bp_elim.html:50
+#: motions/templates/motion_statistics_bp_elim.html
 msgid "eliminated"
 msgstr "crwdns31044:0crwdne31044:0"
 
-#: motions/templates/motion_statistics_bp_elim.html:52
+#: motions/templates/motion_statistics_bp_elim.html
 msgctxt "abbreviation for 'eliminated', used when not enough space"
 msgid "elim."
 msgstr "crwdns31046:0crwdne31046:0"
 
-#: motions/templates/motion_statistics_bp_elim.html:58
+#: motions/templates/motion_statistics_bp_elim.html
 #, python-format
 msgid "%(side)s results distribution"
 msgstr "crwdns31048:0%(side)scrwdne31048:0"
 
-#: motions/templates/motion_statistics_bp_elim.html:72
-#: motions/templates/motion_statistics_bp_prelim.html:115
+#: motions/templates/motion_statistics_bp_elim.html
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "No results for this motion"
 msgstr "crwdns31050:0crwdne31050:0"
 
-#: motions/templates/motion_statistics_bp_prelim.html:13
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Government"
 msgstr "crwdns34142:0crwdne34142:0"
 
-#: motions/templates/motion_statistics_bp_prelim.html:17
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Opposition"
 msgstr "crwdns34144:0crwdne34144:0"
 
-#: motions/templates/motion_statistics_bp_prelim.html:21
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Average Points per bench"
 msgstr "crwdns34146:0crwdne34146:0"
 
-#: motions/templates/motion_statistics_bp_prelim.html:29
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Opening"
 msgstr "crwdns34148:0crwdne34148:0"
 
-#: motions/templates/motion_statistics_bp_prelim.html:33
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Closing"
 msgstr "crwdns34150:0crwdne34150:0"
 
-#: motions/templates/motion_statistics_bp_prelim.html:37
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Average Points per half"
 msgstr "crwdns34152:0crwdne34152:0"
 
-#: motions/templates/motion_statistics_bp_prelim.html:60
+#: motions/templates/motion_statistics_bp_prelim.html
 #, python-format
 msgid "average points per position (%(ndebates)s debate)"
 msgid_plural "average points per position (%(ndebates)s debates)"
 msgstr[0] "crwdns34154:1%(ndebates)scrwdne34154:1"
 msgstr[1] "crwdns34154:5%(ndebates)scrwdne34154:5"
 
-#: motions/templates/motion_statistics_bp_prelim.html:78
+#: motions/templates/motion_statistics_bp_prelim.html
 #, python-format
 msgid "%(count)s result for %(side)s (%(percentage)s%%) were for %(points)s points"
 msgid_plural "%(count)s results for %(side)s (%(percentage)s%%) were for %(points)s points"
 msgstr[0] "crwdns31054:1%(count)scrwdnd31054:1%(side)scrwdnd31054:1%(percentage)scrwdnd31054:1%(points)scrwdne31054:1"
 msgstr[1] "crwdns31054:5%(count)scrwdnd31054:5%(side)scrwdnd31054:5%(percentage)scrwdnd31054:5%(points)scrwdne31054:5"
 
-#: motions/templates/motion_statistics_bp_prelim.html:101
+#: motions/templates/motion_statistics_bp_prelim.html
 #, python-format
 msgid "%(side)s results"
 msgstr "crwdns34156:0%(side)scrwdne34156:0"
 
-#: motions/templates/motion_statistics_twoteam.html:31
-#: motions/templates/motion_statistics_twoteam.html:38
+#: motions/templates/motion_statistics_twoteam.html
 #, python-format
 msgid "%(count)s %(side)s win"
 msgid_plural "%(count)s %(side)s wins"
 msgstr[0] "crwdns31072:1%(count)scrwdnd31072:1%(side)scrwdne31072:1"
 msgstr[1] "crwdns31072:5%(count)scrwdnd31072:5%(side)scrwdne31072:5"
 
-#: motions/templates/motion_statistics_twoteam.html:53
+#: motions/templates/motion_statistics_twoteam.html
 msgid "No teams debated this motion"
 msgstr "crwdns31074:0crwdne31074:0"
 
-#: motions/templates/motion_statistics_twoteam.html:91
-#: motions/templates/motion_statistics_twoteam.html:98
+#: motions/templates/motion_statistics_twoteam.html
 #, python-format
 msgid "%(count)s %(side)s veto"
 msgid_plural "%(count)s %(side)s vetoes"
 msgstr[0] "crwdns31076:1%(count)scrwdnd31076:1%(side)scrwdne31076:1"
 msgstr[1] "crwdns31076:5%(count)scrwdnd31076:5%(side)scrwdne31076:5"
 
-#: motions/templates/motion_statistics_twoteam.html:113
+#: motions/templates/motion_statistics_twoteam.html
 msgid "No teams vetoed this motion"
 msgstr "crwdns31078:0crwdne31078:0"
 
-#: motions/templates/motions_edit.html:4 motions/templates/motions_edit.html:10
+#: motions/templates/motions_edit.html
 msgid "Edit Motion"
 msgid_plural "Edit Motions"
 msgstr[0] "crwdns31080:1crwdne31080:1"
 msgstr[1] "crwdns31080:5crwdne31080:5"
 
-#: motions/templates/motions_edit.html:18
+#: motions/templates/motions_edit.html
 msgid "Display Draw"
 msgstr "crwdns31082:0crwdne31082:0"
 
-#: motions/templates/motions_edit.html:28
+#: motions/templates/motions_edit.html
 msgid "This will replace all existing motions for this round. The motions themselves will still be in the database."
 msgstr "crwdns51828:0crwdne51828:0"
 
-#: motions/templates/motions_edit.html:30
+#: motions/templates/motions_edit.html
 msgid "Reuse Motions from Last Round"
 msgstr "crwdns51830:0crwdne51830:0"
 
-#: motions/templates/motions_edit.html:35
+#: motions/templates/motions_edit.html
 msgid "Use Existing Motions"
 msgstr "crwdns51832:0crwdne51832:0"
 
-#: motions/templates/motions_edit.html:74
+#: motions/templates/motions_edit.html
+msgid "The motion for this round is currently publicly displayed because it was released. Any changes made here will be publicly visible as well as soon as they are saved."
+msgid_plural "The motions for this round are currently publicly displayed because they were released. Any changes made here will be publicly visible as well as soon as they are saved."
+msgstr[0] "crwdns52271:1crwdne52271:1"
+msgstr[1] "crwdns52271:5crwdne52271:5"
+
+#: motions/templates/motions_edit.html
 msgid "Save Motion"
 msgid_plural "Save Motions"
 msgstr[0] "crwdns31086:1crwdne31086:1"
 msgstr[1] "crwdns31086:5crwdne31086:5"
 
-#: motions/templates/motions_info.html:8
+#: motions/templates/motions_info.html
 msgid "Info Slide"
 msgstr "crwdns31088:0crwdne31088:0"
 
-#: motions/templates/public_motions.html:41
+#: motions/templates/public_motions.html
 msgid "There are no motions available for this round."
 msgstr "crwdns31106:0crwdne31106:0"
 
-#: motions/templates/public_motions.html:47
+#: motions/templates/public_motions.html
 msgid "The motions for this round have not been released."
 msgstr "crwdns31108:0crwdne31108:0"
 
-#: motions/templates/public_motions.html:52
+#: motions/templates/public_motions.html
 msgid "The motion for this round has not been released."
 msgstr "crwdns31110:0crwdne31110:0"
 
-#: motions/templates/show.html:16
+#: motions/templates/show.html
 #, python-format
 msgid "Reveal Info Slide for %(round)s"
 msgid_plural "Reveal Info Slides for %(round)s"
 msgstr[0] "crwdns51300:1%(round)scrwdne51300:1"
 msgstr[1] "crwdns51300:5%(round)scrwdne51300:5"
 
-#: motions/templates/show.html:24
+#: motions/templates/show.html
 #, python-format
 msgid "Reveal Motion for %(round)s"
 msgid_plural "Reveal Motions for %(round)s"
 msgstr[0] "crwdns51302:1%(round)scrwdne51302:1"
 msgstr[1] "crwdns51302:5%(round)scrwdne51302:5"
 
-#: motions/templates/show.html:41
+#: motions/templates/show.html
 msgid "There are no motions for this round entered into Tabbycat."
 msgstr "crwdns31116:0crwdne31116:0"
 
-#: motions/utils.py:11
+#: motions/utils.py
 msgid "Not all latest ballots list the same motion, so could not be merged."
 msgstr "crwdns52075:0crwdne52075:0"
 
-#: motions/utils.py:29
+#: motions/utils.py
 msgid "Motion vetos are inconsistent, so could not be merged."
 msgstr "crwdns52077:0crwdne52077:0"
 
-#: motions/views.py:91
+#: motions/views.py
 msgid "The motion has been saved."
 msgstr "crwdns31118:0crwdne31118:0"
 
-#: motions/views.py:93
+#: motions/views.py
 #, python-format
 msgid "%(count)d motion has been saved."
 msgid_plural "%(count)d motions have been saved."
 msgstr[0] "crwdns31120:1%(count)dcrwdne31120:1"
 msgstr[1] "crwdns31120:5%(count)dcrwdne31120:5"
 
-#: motions/views.py:97
+#: motions/views.py
 #, python-format
 msgid "%(count)d motion has been deleted."
 msgid_plural "%(count)d motions have been deleted."
 msgstr[0] "crwdns31122:1%(count)dcrwdne31122:1"
 msgstr[1] "crwdns31122:5%(count)dcrwdne31122:5"
 
-#: motions/views.py:140
+#: motions/views.py
+msgid "Motions cannot be copied to the first round."
+msgstr "crwdns52197:0crwdne52197:0"
+
+#: motions/views.py
 #, python-format
 msgid "Reused the motion from the previous round."
 msgid_plural "Reused the %(count)d motions from the previous round."
 msgstr[0] "crwdns51856:1crwdne51856:1"
 msgstr[1] "crwdns51856:5%(count)dcrwdne51856:5"
 
-#: motions/views.py:164
-msgid "Released the motion(s)."
-msgstr "crwdns31124:0crwdne31124:0"
+#: motions/views.py
+msgid "Released the motion."
+msgid_plural "Released the motions."
+msgstr[0] "crwdns52199:1crwdne52199:1"
+msgstr[1] "crwdns52199:5crwdne52199:5"
 
-#: motions/views.py:171
-msgid "Unreleased the motion(s)."
-msgstr "crwdns31126:0crwdne31126:0"
+#: motions/views.py
+msgid "Unreleased the motion."
+msgid_plural "Unreleased the motions."
+msgstr[0] "crwdns52201:1crwdne52201:1"
+msgstr[1] "crwdns52201:5crwdne52201:5"
 
-#: motions/views.py:195
+#: motions/views.py
 msgid "Round Motions"
 msgstr "crwdns34158:0crwdne34158:0"
 
-#: motions/views.py:209
+#: motions/views.py
 msgid "Motion Statistics"
 msgstr "crwdns31030:0crwdne31030:0"
 

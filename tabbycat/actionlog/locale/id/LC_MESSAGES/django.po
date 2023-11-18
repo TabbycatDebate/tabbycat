@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-07-29 04:55\n"
+"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"PO-Revision-Date: 2023-02-05 00:56\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -17,307 +17,307 @@ msgstr ""
 "X-Crowdin-File: /develop/tabbycat/actionlog/locale/en/LC_MESSAGES/django.po\n"
 "X-Crowdin-File-ID: 920\n"
 
-#: actionlog/apps.py:7
+#: actionlog/apps.py
 msgid "Action Log"
 msgstr "Catatan Tindakan"
 
-#: actionlog/models.py:89
+#: actionlog/models.py
 msgid "Discarded ballot set"
 msgstr "Membuang balot"
 
-#: actionlog/models.py:90
+#: actionlog/models.py
 msgid "Checked in ballot set"
 msgstr "Melakukan check-in balot"
 
-#: actionlog/models.py:91
+#: actionlog/models.py
 msgid "Created ballot set"
 msgstr "Membuat balot"
 
-#: actionlog/models.py:92
+#: actionlog/models.py
 msgid "Edited ballot set"
 msgstr "Menyunting balot"
 
-#: actionlog/models.py:93
+#: actionlog/models.py
 msgid "Confirmed ballot set"
 msgstr "Mengkonfirmasi balot"
 
-#: actionlog/models.py:94
+#: actionlog/models.py
 msgid "Submitted ballot set from the public form"
 msgstr "Memasukkan balot melalui form publik"
 
-#: actionlog/models.py:95
+#: actionlog/models.py
 msgid "Submitted feedback from the public form"
 msgstr "Memasukkan penilaian juri melalui form publik"
 
-#: actionlog/models.py:96
+#: actionlog/models.py
 msgid "Saved feedback"
 msgstr "Menyimpan penilaian juri"
 
-#: actionlog/models.py:97
+#: actionlog/models.py
 msgid "Edited adjudicator base score"
 msgstr "Menyunting nilai awal juri"
 
-#: actionlog/models.py:98
+#: actionlog/models.py
 msgid "Set adjudicator note"
 msgstr "Menyimpan catatan juri"
 
-#: actionlog/models.py:99
+#: actionlog/models.py
 msgid "Saved adjudicator allocation"
 msgstr "Simpan alokasi juri"
 
-#: actionlog/models.py:100
+#: actionlog/models.py
 msgid "Auto-allocated adjudicators"
 msgstr "Mengalokasikan juri secara otomatis"
 
-#: actionlog/models.py:101
+#: actionlog/models.py
 msgid "Saved a room manual edit"
 msgstr "Menyimpan suntingan ruangan secara manual"
 
-#: actionlog/models.py:102
+#: actionlog/models.py
 msgid "Auto-allocated rooms"
 msgstr "Mengalokasikan ruangan secara otomatis"
 
-#: actionlog/models.py:103
+#: actionlog/models.py
 msgid "Edited room categories"
 msgstr "Menyunting kategori ruangan"
 
-#: actionlog/models.py:104
+#: actionlog/models.py
 msgid "Edited room constraints"
 msgstr "Menyunting pembatasan ruangan"
 
-#: actionlog/models.py:105
+#: actionlog/models.py
 msgid "Created draw"
 msgstr "Menciptakan draw"
 
-#: actionlog/models.py:106
+#: actionlog/models.py
 msgid "Confirmed draw"
 msgstr "Mengkonfirmasi draw"
 
-#: actionlog/models.py:107
+#: actionlog/models.py
 msgid "Regenerated draw"
 msgstr "Menciptakan ulang draw"
 
-#: actionlog/models.py:108
+#: actionlog/models.py
 msgid "Released draw"
 msgstr "Mempublikasikan draw"
 
-#: actionlog/models.py:109
+#: actionlog/models.py
 msgid "Unreleased draw"
 msgstr "Menarik publikasi draw"
 
-#: actionlog/models.py:110
+#: actionlog/models.py
 msgid "Saved a matchup manual edit"
 msgstr "Menyimpan suntingan matchup manual"
 
-#: actionlog/models.py:111
+#: actionlog/models.py
 msgid "Saved the sides status of a matchup"
 msgstr "Menyimpan status posisi sebuah matchup"
 
-#: actionlog/models.py:112
+#: actionlog/models.py
 msgid "Saved divisions"
 msgstr ""
 
-#: actionlog/models.py:113
+#: actionlog/models.py
 msgid "Added/edited motion"
 msgstr "Menambahkan/menyunting mosi"
 
-#: actionlog/models.py:114
+#: actionlog/models.py
 msgid "Released motions"
 msgstr "Mempublikasikan mosi"
 
-#: actionlog/models.py:115
+#: actionlog/models.py
 msgid "Unreleased motions"
 msgstr "Menarik publikasi mosi"
 
-#: actionlog/models.py:116
+#: actionlog/models.py
 msgid "Auto-prioritized debate importance"
 msgstr "Melakukan prioritasiasi tingkat kepentingan debat secara otomatis"
 
-#: actionlog/models.py:117
+#: actionlog/models.py
 msgid "Edited debate importance"
 msgstr "Menyunting prioritasiasi tingkat kepentingan debat"
 
-#: actionlog/models.py:118
+#: actionlog/models.py
 msgid "Changed adjudicator breaking status"
 msgstr "Mengubah status kelolosan (breaking) juri"
 
-#: actionlog/models.py:119
+#: actionlog/models.py
 msgid "Edited break eligibility"
 msgstr "Menyunting eligibilitas break"
 
-#: actionlog/models.py:120
+#: actionlog/models.py
 msgid "Edited break categories"
 msgstr "Menyunting kategori break"
 
-#: actionlog/models.py:121
+#: actionlog/models.py
 msgid "Generated the team break for all categories"
 msgstr "Membuat team break untuk semua kategori"
 
-#: actionlog/models.py:122
+#: actionlog/models.py
 msgid "Edited breaking team remarks and updated all team breaks"
 msgstr "Menyunting situasi breaking team dan memperbarui seluruh team break"
 
-#: actionlog/models.py:123
+#: actionlog/models.py
 msgid "Edited breaking team remarks and updated this team break"
 msgstr "Menyunting situasi breaking team dan memperbarui team break ini saja"
 
-#: actionlog/models.py:124
+#: actionlog/models.py
 msgid "Edited breaking team remarks"
 msgstr "Menyunting situasi breaking team"
 
-#: actionlog/models.py:125
+#: actionlog/models.py
 msgid "Set start time"
 msgstr "Mengatur waktu mulai"
 
-#: actionlog/models.py:126
+#: actionlog/models.py
 msgid "Advanced the current round to"
 msgstr "Melanjutkan ronde ini menuju"
 
-#: actionlog/models.py:127
+#: actionlog/models.py
 msgid "Marked round as completed"
 msgstr "Menandai ronde telah tuntas"
 
-#: actionlog/models.py:128
+#: actionlog/models.py
 msgid "Edited teams availability"
 msgstr "Menyunting kehadiran tim"
 
-#: actionlog/models.py:129
+#: actionlog/models.py
 msgid "Edited adjudicators availability"
 msgstr "Menyunting kehadiran juri"
 
-#: actionlog/models.py:130
+#: actionlog/models.py
 msgid "Edited room availability"
 msgstr "Menyunting ketersediaan ruangan"
 
-#: actionlog/models.py:131
+#: actionlog/models.py
 msgid "Edited tournament options"
 msgstr "Menyunting opsi turnamen"
 
-#: actionlog/models.py:132
+#: actionlog/models.py
 msgid "Edited speaker category eligibility"
 msgstr "Menyunting eligibilitas kategori pendebat"
 
-#: actionlog/models.py:133
+#: actionlog/models.py
 msgid "Edited speaker categories"
 msgstr "Menyunting kategori pembicara"
 
-#: actionlog/models.py:134
+#: actionlog/models.py
 msgid "Imported institutions using the simple importer"
 msgstr "Mengimpor institusi dengan importir sederhana"
 
-#: actionlog/models.py:135
+#: actionlog/models.py
 msgid "Imported rooms using the simple importer"
 msgstr "Mengimpor ruangan dengan importir sederhana"
 
-#: actionlog/models.py:136
+#: actionlog/models.py
 msgid "Imported teams using the simple importer"
 msgstr "Mengimpor tim dengan importir sederhana"
 
-#: actionlog/models.py:137
+#: actionlog/models.py
 msgid "Imported adjudicators using the simple importer"
 msgstr "Mengimpor juri dengan importir sederhana"
 
-#: actionlog/models.py:138
+#: actionlog/models.py
 msgid "Updated adjudicator scores in bulk"
 msgstr "Memperbarui nilai juri secara masal"
 
-#: actionlog/models.py:139
+#: actionlog/models.py
 msgid "Edited adjudicator-team conflicts"
 msgstr "Menyunting konflik juri dengan tim"
 
-#: actionlog/models.py:140
+#: actionlog/models.py
 msgid "Edited adjudicator-adjudicator conflicts"
 msgstr "Menyunting konflik juri dengan juri"
 
-#: actionlog/models.py:141
+#: actionlog/models.py
 msgid "Edited adjudicator-institution conflicts"
 msgstr "Menyunting konflik juri dengan institusi"
 
-#: actionlog/models.py:142
+#: actionlog/models.py
 msgid "Edited team-institution conflicts"
 msgstr "Menyunting konflik tim dengan institusi"
 
-#: actionlog/models.py:143
+#: actionlog/models.py
 msgid "Generated check in identifiers for speakers"
 msgstr "Membuat kode check-in unik untuk pendebat"
 
-#: actionlog/models.py:144
+#: actionlog/models.py
 msgid "Generated check in identifiers for adjudicators"
 msgstr "Membuat kode check-in unik untuk juri"
 
-#: actionlog/models.py:145
+#: actionlog/models.py
 msgid "Generated check in identifiers for rooms"
 msgstr "Membuat kode check-in unik untuk ruangan"
 
-#: actionlog/models.py:146
+#: actionlog/models.py
 msgid "Created preformed panels"
 msgstr "Membuat rancangan panel"
 
-#: actionlog/models.py:147
+#: actionlog/models.py
 msgid "Auto-prioritized preformed panels"
 msgstr "Prioritasisasi rancangan panel secara otomatis"
 
-#: actionlog/models.py:148
+#: actionlog/models.py
 msgid "Edited preformed panel importance"
 msgstr "Menyunting tingkat kepentingan rancangan panel"
 
-#: actionlog/models.py:149
+#: actionlog/models.py
 msgid "Auto-allocated adjudicators to preformed panels"
 msgstr "Alokasi juri ke rancangan panel secara otomatis"
 
-#: actionlog/models.py:150
+#: actionlog/models.py
 msgid "Edited preformed panel adjudicator"
 msgstr "Menyunting juri dalam rancangan panel"
 
-#: actionlog/models.py:151
+#: actionlog/models.py
 msgid "Auto-allocated preformed panels to debates"
 msgstr "Mengalokasikan rancangan panel kepada debat secara otomatis"
 
-#: actionlog/models.py:155
+#: actionlog/models.py
 msgid "type"
 msgstr "tipe"
 
-#: actionlog/models.py:157
+#: actionlog/models.py
 msgid "timestamp"
 msgstr "waktu"
 
-#: actionlog/models.py:160
+#: actionlog/models.py
 msgid "user"
 msgstr "pengguna"
 
-#: actionlog/models.py:162
+#: actionlog/models.py
 msgid "IP address"
 msgstr ""
 
-#: actionlog/models.py:166
+#: actionlog/models.py
 msgid "tournament"
 msgstr "turnamen"
 
-#: actionlog/models.py:168
+#: actionlog/models.py
 msgid "round"
 msgstr "ronde"
 
-#: actionlog/models.py:172
+#: actionlog/models.py
 msgid "content type"
 msgstr "tipe konten"
 
-#: actionlog/models.py:174
+#: actionlog/models.py
 msgid "object ID"
 msgstr "object ID"
 
-#: actionlog/models.py:180
+#: actionlog/models.py
 msgid "action log"
 msgstr "catatan tindakan"
 
-#: actionlog/models.py:181
+#: actionlog/models.py
 msgid "action log entries"
 msgstr "entri catatan tindakan"
 
-#: actionlog/models.py:189
+#: actionlog/models.py
 msgid "All log entries require at least one of a user and an IP address."
 msgstr "Seluruh catatan tindakan mengharuskan setidaknya satu pengguna dan sebuah alamat IP."
 
-#: actionlog/models.py:228
+#: actionlog/models.py
 msgid "anonymous"
 msgstr "anonim"
 

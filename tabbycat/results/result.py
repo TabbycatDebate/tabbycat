@@ -42,6 +42,7 @@ import logging
 from functools import wraps
 from itertools import product
 from statistics import mean
+from typing import TYPE_CHECKING
 
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
@@ -50,6 +51,9 @@ from .result_info import DebateResultInfo
 from .scoresheet import (BPEliminationScoresheet, BPScoresheet, HighPointWinsRequiredScoresheet, LowPointWinsAllowedScoresheet,
                          ResultOnlyScoresheet, TiedPointWinsAllowedScoresheet)
 from .utils import side_and_position_names
+
+if TYPE_CHECKING:
+    from participants.models import Adjudicator
 
 logger = logging.getLogger(__name__)
 
@@ -445,12 +449,26 @@ class DebateResultByAdjudicator(BaseDebateResult):
         for tsba in teamscorebyadjs:
             self.add_winner(tsba.debate_adjudicator.adjudicator, tsba.debate_team.side)
 
-    def populate_from_merge(self, *results):
+    def populate_from_merge(self, *results) -> list[ResultError]:
+        errors = []
         for result in results:
             adj = result.ballotsub.participant_submitter.adjudicator
-            self.merge_speaker_result(result, adj)
+            errors.extend(self.merge_speaker_result(result, adj))
             if self.get_scoresheet_class().uses_declared_winners:
                 self.set_winners(adj, result.scoresheet.winners())
+
+        for error in errors:
+            key, side, pos = error.args[1:]
+
+            # Clear ghosts for speaker order problems too
+            self.set_ghost(side, pos, False)
+
+            if key == 'speaker':
+                self.set_speaker(side, pos, None)
+                for adj in self.debateadjs:
+                    self.set_score(adj, side, pos, None)
+
+        return errors
 
     def merge_speaker_result(self, result, adj):
         pass
@@ -656,17 +674,14 @@ class DebateResultWithScoresMixin:
         super().init_blank_buffer()
         self.speakers = {side: dict.fromkeys(self.positions, None) for side in self.sides}
         self.ghosts = {side: dict.fromkeys(self.positions, False) for side in self.sides}
-        self.speaker_ranks = {side: dict.fromkeys(self.positions, None) for side in self.sides}
 
     def assert_loaded(self):
         super().assert_loaded()
         assert set(self.speakers) == set(self.sides)
         assert set(self.ghosts) == set(self.sides)
-        assert set(self.speaker_ranks) == set(self.sides)
         for side in self.sides:
             assert set(self.speakers[side]) == set(self.positions)
             assert set(self.ghosts[side]) == set(self.positions)
-            assert set(self.speaker_ranks[side]) == set(self.positions)
 
     def is_complete(self):
         return super().is_complete() and not any(self.speakers[s][p] is None for s in self.sides for p in self.positions)
@@ -679,6 +694,23 @@ class DebateResultWithScoresMixin:
         if self.ghosts != other.ghosts:
             return False
         return True
+
+    def merge_speaker_order(self, result: BaseDebateResult) -> list[ResultError]:
+        errors = []
+        for side, pos in product(self.sides, self.positions):
+            cur_speaker = self.get_speaker(side, pos)
+            if cur_speaker is None:
+                self.set_speaker(side, pos, result.get_speaker(side, pos))
+            elif result.get_speaker(side, pos) != cur_speaker:
+                errors.append(ResultError("Inconsistent speaker order", "speaker", side, pos))
+                continue  # Don't care about setting ghost/score if can't attribute to the correct speaker
+
+            if not self.get_ghost(side, pos) and result.get_ghost(side, pos):
+                self.set_ghost(side, pos, result.get_ghost(side, pos))
+            elif self.get_ghost(side, pos) and not result.get_ghost(side, pos):
+                errors.append(ResultError("Inconsistent ghost order", "ghost", side, pos))
+
+        return errors
 
     # --------------------------------------------------------------------------
     # Load and save methods
@@ -702,7 +734,6 @@ class DebateResultWithScoresMixin:
         for ss in speakerscores:
             self.speakers[ss.debate_team.side][ss.position] = ss.speaker
             self.ghosts[ss.debate_team.side][ss.position] = ss.ghost
-            self.speaker_ranks[ss.debate_team.side][ss.position] = ss.rank
 
     def save(self):
         super().save()
@@ -724,32 +755,23 @@ class DebateResultWithScoresMixin:
         if self.debateteams[side] is None:
             raise TypeError("Set sides using self.set_sides() before setting speakers")
         team = self.debateteams[side].team
-        if speaker not in team.speakers:
+        if speaker is not None and speaker not in team.speakers:
             logger.error("Speaker %s isn't in team %s", speaker.name, team.short_name)
             return
         self.speakers[side][position] = speaker
 
-    def get_ghost(self, side, position):
-        return self.ghosts[side].get(position)
+    def get_ghost(self, side: str, position: int) -> bool:
+        return self.ghosts[side].get(position, False)
 
     def set_ghost(self, side, position, is_ghost):
         self.ghosts[side][position] = is_ghost
-
-    def set_speaker_rank(self, side, position, rank):
-        self.scoresheet.set_speaker_rank(side, position, rank)
 
     # --------------------------------------------------------------------------
     # Model fields
     # --------------------------------------------------------------------------
 
-    def speakerscore_field_speaker(self, side, position):
-        return self.speakers[side][position]
-
-    def speakerscore_field_ghost(self, side, position):
-        return self.ghosts[side][position]
-
-    def speakerscore_field_rank(self, side, position):
-        return self.speaker_ranks[side][position]
+    speakerscore_field_speaker = get_speaker
+    speakerscore_field_ghost = get_ghost
 
     def teamscore_field_margin(self, side):
         return self.calculate_full_margin(side)
@@ -883,6 +905,35 @@ class ConsensusDebateResult(BaseDebateResult):
     def identical(self, other):
         return super().identical(other) and hasattr(other, 'scoresheet') and self.scoresheet.identical(other.scoresheet)
 
+    def populate_from_merge(self, *results) -> list[ResultError]:
+        errors = []
+        for result in results:
+            errors.extend(self.merge_speaker_result(result))
+            if self.get_scoresheet_class().uses_declared_winners:
+                if self.get_winner() is None:
+                    self.set_winners(result.scoresheet.winners())
+                elif self.get_winner() != result.scoresheet.winners():
+                    errors.append(ResultError("Winners are not identical", "winners", result.scoresheet.winners(), None))
+
+        for error in errors:
+            key, side, pos = error.args[1:]
+
+            if key == 'winners':
+                self.set_winners(set())
+
+            # Clear ghosts for speaker order problems too
+            if key in ('ghost', 'speaker', 'scores'):
+                self.set_ghost(side, pos, False)
+
+            if key in ('speaker', 'scores'):
+                self.set_speaker(side, pos, None)
+                self.set_score(side, pos, None)
+
+        return errors
+
+    def merge_speaker_result(self, result):
+        pass
+
     # --------------------------------------------------------------------------
     # Team score fields
     # --------------------------------------------------------------------------
@@ -924,9 +975,25 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
 
         for ss in speakerscore:
             self.set_score(ss.debate_team.side, ss.position, ss.score)
+            self.set_speaker_rank(ss.debate_team.side, ss.position, ss.rank)
 
     def set_score(self, side, position, score):
         self.scoresheet.set_score(side, position, score)
+
+    def merge_speaker_result(self, result: BaseDebateResult) -> list[ResultError]:
+        errors = self.merge_speaker_order(result)
+        for side, pos in product(self.sides, self.positions):
+            if self.get_score(side, pos) is None:
+                self.set_score(side, pos, result.get_score(side, pos))
+            elif self.get_score(side, pos) != result.get_score(side, pos):
+                errors.append(ResultError('Scores are not identical', 'scores', side, pos))
+        return errors
+
+    def get_speaker_rank(self, side: str, position: int) -> int:
+        return self.scoresheet.get_speaker_rank(side, position)
+
+    def set_speaker_rank(self, side, position, rank):
+        self.scoresheet.set_speaker_rank(side, position, rank)
 
     # --------------------------------------------------------------------------
     # Model fields
@@ -936,6 +1003,7 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
         return self.scoresheet.get_score(side, position)
 
     get_score = speakerscore_field_score
+    speakerscore_field_rank = get_speaker_rank
 
     def teamscore_field_score(self, side):
         if self.tournament.pref('teamscore_includes_ghosts'):
@@ -969,20 +1037,11 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
             self.set_score(ssba.debate_adjudicator.adjudicator,
                            ssba.debate_team.side, ssba.position, ssba.score)
 
-    def merge_speaker_result(self, result, adj):
+    def merge_speaker_result(self, result: BaseDebateResult, adj: 'Adjudicator') -> list[ResultError]:
+        errors = self.merge_speaker_order(result)
         for side, pos in product(self.sides, self.positions):
-            cur_speaker = self.get_speaker(side, pos)
-            if cur_speaker is None:
-                self.set_speaker(side, pos, result.get_speaker(side, pos))
-            elif result.get_speaker(side, pos) != cur_speaker:
-                raise ResultError("Inconsistent speaker order", "speaker", adj, result.ballotsub, side, cur_speaker)
-
-            if not self.get_ghost(side, pos):
-                self.set_ghost(side, pos, result.get_ghost(side, pos))
-            elif not result.get_ghost(side, pos):
-                raise ResultError("Inconsistent ghost order", "ghost", adj, result.ballotsub, side, cur_speaker)
-
             self.set_score(adj, side, pos, result.get_score(side, pos))
+        return errors
 
     def save(self):
         super().save()
@@ -1003,6 +1062,9 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
             logger.exception("Tried to set score by adjudicator %s, but this adjudicator "
                 "doesn't have a scoresheet.", adjudicator)
             return
+
+    def get_speaker_rank(self, adjudicator: 'Adjudicator', side: str, position: int) -> int:
+        return self.scoresheets[adjudicator].get_speaker_rank(side, position)
 
     # --------------------------------------------------------------------------
     # Model fields

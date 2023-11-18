@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-03-08 16:30\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2023-05-25 23:54\n"
+"Last-Translator: \n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -12,8 +12,10 @@ msgstr ""
 "Generated-By: Babel 2.7.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-Language: tr\n"
 "X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/features/draw-generation.po\n"
+"X-Crowdin-File-ID: 1287\n"
 "Language: tr_TR\n"
 
 #: ../../features/draw-generation.rst:5
@@ -54,19 +56,19 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:24
 msgid "Pull up from top"
-msgstr ""
+msgstr "Yukarıdan yukarı çek"
 
 #: ../../features/draw-generation.rst:25
 msgid "Pull up from bottom"
-msgstr ""
+msgstr "Alttan yukarı çek"
 
 #: ../../features/draw-generation.rst:26
 msgid "Pull up from middle"
-msgstr ""
+msgstr "Ortadan yukarı çek"
 
 #: ../../features/draw-generation.rst:27
 msgid "Pull up at random"
-msgstr ""
+msgstr "Rastgele yukarı çek"
 
 #: ../../features/draw-generation.rst:29
 msgid "If sides are `Random` or `Balance`:"
@@ -102,15 +104,15 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:41 ../../features/draw-generation.rst:51
 msgid "Random"
-msgstr ""
+msgstr "Rastgele"
 
 #: ../../features/draw-generation.rst:42
 msgid "Balance"
-msgstr ""
+msgstr "Denge"
 
 #: ../../features/draw-generation.rst:43
 msgid "Pre-allocated"
-msgstr ""
+msgstr "Önceden tahsis edilmiş"
 
 #: ../../features/draw-generation.rst:44
 msgid "Manual ballot"
@@ -126,15 +128,15 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:48
 msgid "Slide"
-msgstr ""
+msgstr "Kaydırma"
 
 #: ../../features/draw-generation.rst:49
 msgid "Fold"
-msgstr ""
+msgstr "Katla"
 
 #: ../../features/draw-generation.rst:50
 msgid "Adjacent"
-msgstr ""
+msgstr "Komşu"
 
 #: ../../features/draw-generation.rst:53
 msgid ":ref:`Conflict avoidance method <draw-conflict-avoidance>`"
@@ -146,11 +148,11 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:55
 msgid "Off"
-msgstr ""
+msgstr "Kapalı"
 
 #: ../../features/draw-generation.rst:56
 msgid "One-up-one-down"
-msgstr ""
+msgstr "Bir-yukarı-bir-aşağı"
 
 #: ../../features/draw-generation.rst:58
 msgid ":ref:`Pullup restriction <draw-pullup-restriction>`"
@@ -162,15 +164,15 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:60
 msgid "No restriction"
-msgstr ""
+msgstr "Kısıtlama yok"
 
 #: ../../features/draw-generation.rst:61
 msgid "Choose from teams who have been pulled up the fewest times so far"
-msgstr ""
+msgstr "Şimdiye kadar en az kez yukarı çekilen takımlar arasından seçim yap"
 
 #: ../../features/draw-generation.rst:62
 msgid "Choose from teams with the lowest draw strength by speaks so far"
-msgstr ""
+msgstr "Şimdiye kadarki en düşük kura gücüne sahip takımlar arasından seçim yap"
 
 #: ../../features/draw-generation.rst:64
 msgid "The valid options for intermediate brackets change depending on whether sides are pre-allocated, but these are **not** checked for validity. If you choose an invalid combination, Tabbycat will just crash. This won't corrupt the database, but it might be momentarily annoying."
@@ -334,7 +336,7 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:153
 msgid "Pairing method"
-msgstr ""
+msgstr "Eşleştirme yöntemi"
 
 #: ../../features/draw-generation.rst:154
 msgid "It's easiest to describe these by example, using a ten-team bracket:"
@@ -362,7 +364,7 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:166
 msgid "Conflict avoidance method"
-msgstr ""
+msgstr "Conflict kaçınma yöntemi"
 
 #: ../../features/draw-generation.rst:167
 msgid "A **conflict** is when two teams would face each other that have seen each other before, or are from the same institutions. Some tournaments have a preference against allowing this if it's avoidable within certain limits. The **draw avoid conflicts** option allows you to specify how."
@@ -402,7 +404,7 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:187
 msgid "Pullup restriction"
-msgstr ""
+msgstr "Yukarı çekme kısıtlaması"
 
 #: ../../features/draw-generation.rst:188
 msgid "You can restrict which teams can be pulled up by configuring the draw generator to choose a pullup team from among only those teams who are the \"best off\" according to a given metric. If several teams are equally \"best off\" within the lower bracket, the draw generator chooses among them using the same **pull-up method** already specified (*e.g.*, \"pull up from top\")"

@@ -150,6 +150,21 @@ class CompleteRoundCheckView(AdministratorMixin, RoundMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
+class CompleteRoundToggleSilentView(AdministratorMixin, RoundMixin, PostOnlyRedirectView):
+    round_redirect_pattern_name = 'tournament-complete-round-check'
+
+    def post(self, request, *args, **kwargs):
+        self.round.silent = request.POST["state"] != "True"
+        self.round.save()
+
+        if self.round.silent:
+            messages.success(request, _("%(round)s has been marked as silent.") % {'round': self.round.name})
+        else:
+            messages.success(request, _("%(round)s has been unmarked as silent.") % {'round': self.round.name})
+
+        return super().post(request, *args, **kwargs)
+
+
 class CompleteRoundView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnlyRedirectView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_COMPLETE
@@ -241,6 +256,8 @@ class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
     template_name = 'set_current_round.html'
     slug_url_kwarg = 'tournament_slug'
     redirect_field_name = 'next'
+    page_title = _('Set Current Round')
+    page_emoji = '🙏'
 
     def get_form_class(self):
         if self.tournament.breakcategory_set.count() <= 1:

@@ -227,8 +227,6 @@ urlpatterns = [
 
                 path('/', include(pref_router.urls)),  # Preferences
             ])),
-
-
         ])),
         path('/institutions', include([
             path('',
@@ -237,6 +235,14 @@ urlpatterns = [
             path('/<int:pk>',
                  views.GlobalInstitutionViewSet.as_view(detail_methods),
                  name='api-global-institution-detail'),
+        ])),
+        path('/users', include([
+            path('',
+                views.UserViewSet.as_view(list_methods),
+                name='api-users-list'),
+            path('/<int:pk>',
+                views.UserViewSet.as_view({'get': 'retrieve', 'delete': 'destroy'}),
+                name='api-users-detail'),
         ])),
     ])),
 ]

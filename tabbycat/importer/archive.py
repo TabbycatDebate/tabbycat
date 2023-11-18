@@ -10,7 +10,7 @@ from breakqual.models import BreakCategory
 from draw.models import Debate, DebateTeam
 from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
 from options.presets import (AustralianEastersPreferences, AustralsPreferences, BritishParliamentaryPreferences,
-                             CanadianParliamentaryPreferences, JoyntPreferences, NZEastersPreferences, save_presets,
+                             CanadianParliamentaryPreferences, JoyntPreferences, NZEastersPreferences,
                              UADCPreferences, WSDCPreferences)
 from participants.emoji import EMOJI_BY_NAME
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
@@ -378,7 +378,7 @@ class Importer:
         }
         if self.root.get('style') is not None and styles[self.root.get('style', '')] is not None:
             style = styles[self.root.get('style')]
-            save_presets(self.tournament, style)
+            style.save(self.tournament)
             self.preliminary_consensus = style.debate_rules__ballots_per_debate_prelim == 'per-debate'
             self.elimination_consensus = style.debate_rules__ballots_per_debate_elim == 'per-debate'
             return True # Exit method
@@ -386,7 +386,7 @@ class Importer:
         if self.is_bp:
             self.preliminary_consensus = True
             self.elimination_consensus = True
-            save_presets(self.tournament, BritishParliamentaryPreferences)
+            BritishParliamentaryPreferences.save(self.tournament)
         else:
             self.preliminary_consensus = self._is_consensus_ballot('false')
             self.elimination_consensus = self._is_consensus_ballot('true')
@@ -576,7 +576,7 @@ class Importer:
 
                 # Debate-teams
                 for j, side in enumerate(debate.findall('side'), side_start):
-                    position = DebateTeam.SIDE_CHOICES[j][0]
+                    position = list(DebateTeam.Side)[j][0]
                     debateteam_obj = DebateTeam(debate=debate_obj, team=self.teams[side.get('team')], side=position)
                     debateteam_obj.save()
                     self.debateteams[(debate.get('id'), side.get('team'))] = debateteam_obj
@@ -621,7 +621,7 @@ class Importer:
 
             for debate in round.findall('debate'):
                 bs_obj = BallotSubmission(
-                    version=1, submitter_type=Submission.SUBMITTER_TABROOM, confirmed=True,
+                    version=1, submitter_type=Submission.Submitter.TABROOM, confirmed=True,
                     debate=self.debates[debate.get('id')], motion=self.motions.get(debate.get('motion')))
                 bs_obj.save()
                 dr = DebateResult(bs_obj)
@@ -668,7 +668,7 @@ class Importer:
                 d_team = self.debateteams.get((feedback.get('debate'), feedback.get('source-team')))
                 feedback_obj = AdjudicatorFeedback(adjudicator=adj_obj, score=feedback.get('score'), version=1,
                     source_adjudicator=d_adj, source_team=d_team,
-                    submitter_type=Submission.SUBMITTER_TABROOM, confirmed=True)
+                    submitter_type=Submission.Submitter.TABROOM, confirmed=True)
                 feedback_obj.save()
 
                 for answer in feedback.findall('answer'):

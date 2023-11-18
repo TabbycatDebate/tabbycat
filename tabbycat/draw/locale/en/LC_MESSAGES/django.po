@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:25-0400\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1098,11 +1098,31 @@ msgid "Rooms were not auto-allocated because there are one or more adjudicator r
 msgstr ""
 
 #: draw/views.py
+msgid "There is no draw."
+msgstr ""
+
+#: draw/views.py
+msgid "The draw had already been confirmed."
+msgstr ""
+
+#: draw/views.py
 msgid "Deleted the draw. You can now recreate it as normal."
 msgstr ""
 
 #: draw/views.py
+msgid "The draw has already been released."
+msgstr ""
+
+#: draw/views.py
+msgid "The draw must be confirmed before being released."
+msgstr ""
+
+#: draw/views.py
 msgid "Released the draw."
+msgstr ""
+
+#: draw/views.py
+msgid "The draw had been unreleased."
 msgstr ""
 
 #: draw/views.py
