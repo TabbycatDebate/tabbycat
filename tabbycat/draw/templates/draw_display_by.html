@@ -94,10 +94,6 @@
       $('#stop_scrolling').hide();
       $(".scroll-speeds .btn").click(function(event){
         var speed = $(document).height() / $(this).attr('data-target');
-        
-        // first call stop scrolling so that we stop scrolling with
-        // previosul selected speed (if any) and then start scrolling
-        // with the new speed. (issue #2360)
         stopScrolling()
         startScrolling()
         $('html, body').animate(
