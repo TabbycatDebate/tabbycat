@@ -51,7 +51,7 @@ class BaseDrawTableBuilder(TabbycatTableBuilder):
         returns cells that can be used to show the side history for each team
         in `teams`."""
         # Note that the spaces used in the separator are nonbreaking spaces, not normal spaces
-        return [{'text': self.side_history_separator.join(map(str, side_histories[team.id]))}
+        return [{'text': self.side_history_separator.join(map(str, side_histories[team.id])) if team is not None else self.BLANK_TEXT}
                 for team in teams]
 
 
@@ -65,13 +65,20 @@ class PublicDrawTableBuilder(BaseDrawTableBuilder):
             if self.tournament.pref('teams_in_debate') == 'bp':
                 side_name = get_side_name(self.tournament, side, 'abbr')
             else:
-                side_name = get_side_name(self.tournament, side, 'full')
+                side_name = get_side_name(self.tournament, side, 'full').title()
 
             team_data = []
             for debate, hl in zip_longest(debates, highlight):
-                team = debate.get_team(side)
-                subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_name
-                team_data.append(self._team_cell(team, subtext=subtext, show_emoji=True, highlight=team == hl))
+                if debate.is_bye:
+                    if i == 1:  # 1-indexed loop
+                        team = debate.get_team('bye')
+                        team_data.append(self._team_cell(team, subtext=_("Bye"), show_emoji=True, highlight=team == hl))
+                    else:
+                        team_data.append({'text': self.BLANK_TEXT})
+                else:
+                    team = debate.get_team(side)
+                    subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_name
+                    team_data.append(self._team_cell(team, subtext=subtext, show_emoji=True, highlight=team == hl))
 
             title = side_name if all_sides_confirmed else _("Team %(num)d") % {'num': i}
             header = {'key': side, 'title': title}
@@ -114,18 +121,22 @@ class AdminDrawTableBuilder(PublicDrawTableBuilder):
 
     def _add_debate_standing_columns(self, debates, standings, itermethod, infomethod, formattext, formatsort, limit=None):
         standings_by_debate = [standings.get_standings(
-                [d.get_team(side) for side in self.tournament.sides]) for d in debates]
+                [d.get_team(side) for side in self.tournament.sides]) if not d.is_bye else None for d in debates]
         cells = []
 
+        ncols = len(list(getattr(standings, infomethod)())) * len(self.tournament.sides)
         for debate in standings_by_debate:
-            row = []
-            iterators = [islice(getattr(standing, itermethod)(), limit) for standing in debate]
-            for metrics in zip(*iterators):
-                for i, metric in enumerate(metrics):
-                    cell = {'text': formattext(metric), 'sort': formatsort(metric)}
-                    if i == 0:
-                        cell['class'] = 'highlight-col'
-                    row.append(cell)
+            if debate is None:
+                row = [self.BLANK_TEXT] * ncols
+            else:
+                row = []
+                iterators = [islice(getattr(standing, itermethod)(), limit) for standing in debate]
+                for metrics in zip(*iterators):
+                    for i, metric in enumerate(metrics):
+                        cell = {'text': formattext(metric), 'sort': formatsort(metric)}
+                        if i == 0:
+                            cell['class'] = 'highlight-col'
+                        row.append(cell)
             cells.append(row)
 
         headers = self._debate_standings_headers(standings, infomethod, limit)
@@ -157,7 +168,7 @@ class AdminDrawTableBuilder(PublicDrawTableBuilder):
 
     def add_debate_side_history_columns(self, debates, round):
         # Teams should be prefetched in debates, so don't use a new Team queryset to collate teams
-        teams_by_side = [[d.get_team(side) for d in debates] for side in self.tournament.sides]
+        teams_by_side = [[d.get_team(side) if not d.is_bye else None for d in debates] for side in self.tournament.sides]
         all_teams = [team for d in debates for team in d.teams]
         side_histories = get_side_history(all_teams, self.tournament.sides, round.seq)
 

@@ -25,7 +25,7 @@ class Region(models.Model):
         verbose_name_plural = _("regions")
 
     def __str__(self):
-        return '%s' % (self.name)
+        return '%s' % self.name
 
 
 class InstitutionManager(LookupByNameFieldsMixin, models.Manager):
@@ -168,6 +168,9 @@ class Team(models.Model):
         help_text=_("If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\""))
     break_categories = models.ManyToManyField('breakqual.BreakCategory', blank=True,
         verbose_name=_("break categories"))
+
+    seed = models.PositiveIntegerField(blank=True, null=True, verbose_name=_("seed"),
+        help_text=_("Used as initial ranking to power-pair the first round"))
 
     institution_conflicts = models.ManyToManyField('Institution',
         through='adjallocation.TeamInstitutionConflict',

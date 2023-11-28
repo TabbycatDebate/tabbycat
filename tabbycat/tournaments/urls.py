@@ -42,6 +42,7 @@ urlpatterns = [
     path('admin/privateurls/',      include('privateurls.urls_admin')),
     path('admin/results/',          include('results.urls_admin')),
     path('admin/standings/',        include('standings.urls_admin')),
+    path('admin/users/',            include('users.urls_admin')),
     path('admin/venues/',           include('venues.urls_admin')),
 
     # Application URLs for assistant pages
@@ -57,6 +58,9 @@ urlpatterns = [
     path('admin/round/<int:round_seq>/complete/check/',
         views.CompleteRoundCheckView.as_view(),
         name='tournament-complete-round-check'),
+    path('admin/round/<int:round_seq>/complete/toggle-silent/',
+        views.CompleteRoundToggleSilentView.as_view(),
+        name='tournament-complete-round-toggle-silent'),
     path('admin/round/<int:round_seq>/complete/',
         views.CompleteRoundView.as_view(),
         name='tournament-complete-round'),

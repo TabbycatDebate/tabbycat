@@ -94,6 +94,7 @@
       $('#stop_scrolling').hide();
       $(".scroll-speeds .btn").click(function(event){
         var speed = $(document).height() / $(this).attr('data-target');
+        stopScrolling()
         startScrolling()
         $('html, body').animate(
           { scrollTop: $(document).height() - $(window).height()},

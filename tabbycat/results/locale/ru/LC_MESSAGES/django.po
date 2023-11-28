@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-28 21:53-0400\n"
-"PO-Revision-Date: 2021-11-29 02:17\n"
+"POT-Creation-Date: 2023-02-12 02:04-0400\n"
+"PO-Revision-Date: 2023-02-12 06:14\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -18,7 +18,11 @@ msgstr ""
 "X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-File-ID: 948\n"
 
-#: results/admin.py:44
+#: results/admin.py
+msgid "Resave results"
+msgstr ""
+
+#: results/admin.py
 #, python-format
 msgid "Resaved results for %(count)d ballot submission."
 msgid_plural "Resaved results for %(count)d ballot submissions."
@@ -27,73 +31,68 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: results/admin.py:47
-msgid "Resave results"
-msgstr ""
-
-#: results/apps.py:7 results/templates/public_results_index.html:4
-#: results/templates/public_results_index.html:5 results/views.py:158
+#: results/apps.py results/templates/public_results_index.html results/views.py
 msgid "Results"
 msgstr "Результаты"
 
-#: results/forms.py:39
+#: results/forms.py
 msgid "Tournament password"
 msgstr ""
 
-#: results/forms.py:45
+#: results/forms.py
 msgid "That password isn't correct."
 msgstr "Неверный пароль."
 
-#: results/forms.py:77
+#: results/forms.py
 msgid "Please enter a whole number."
 msgstr "Пожалуйста, введите полное число."
 
-#: results/forms.py:79
+#: results/forms.py
 #, python-format
 msgid "Please enter a multiple of %s."
 msgstr "Пожалуйста, введите несколько %s."
 
-#: results/forms.py:166
+#: results/forms.py
 msgid "The ballot set can't be both discarded and confirmed."
 msgstr "Бэллот не может быть одновременно отклонен и подтвержден."
 
-#: results/forms.py:173
+#: results/forms.py
 msgid "The debate status can't be confirmed unless one of the ballot sets is confirmed."
 msgstr "Статус дебатов не может быть подтвержден, если ни один набор бэллотов не подтвержден."
 
-#: results/forms.py:302 results/forms.py:336
+#: results/forms.py
 msgid "---------"
 msgstr "-----------"
 
-#: results/forms.py:304 results/forms.py:306
+#: results/forms.py
 #, python-format
 msgid "%(aff_team)s affirmed, %(neg_team)s negated"
 msgstr "%(aff_team)s в утверждении, %(neg_team)s в отрицании"
 
-#: results/forms.py:323
+#: results/forms.py
 #, python-format
 msgid "%(side)s's motion veto"
 msgstr "%(side)s вето на тему"
 
-#: results/forms.py:332 results/forms.py:901
+#: results/forms.py
 #, python-format
 msgid "%(team)s (%(side)s)"
 msgstr "%(team)s (%(side)s)"
 
-#: results/forms.py:335
+#: results/forms.py
 msgid "Winner"
 msgstr ""
 
-#: results/forms.py:489
+#: results/forms.py
 msgid "Mark as a duplicate speech"
 msgstr "Отметить как дублирующую речь"
 
-#: results/forms.py:549
+#: results/forms.py
 #, python-format
 msgid "The speaker %(speaker)s doesn't appear to be on team %(team)s."
 msgstr "Спикер %(speaker)s, похоже, не из команды %(team)s."
 
-#: results/forms.py:563
+#: results/forms.py
 #, python-format
 msgid "%(speaker)s appears to have given %(count)d substantive speech."
 msgid_plural "%(speaker)s appears to have given %(count)d substantive speeches."
@@ -102,52 +101,52 @@ msgstr[1] "%(speaker)s, похоже, произнес %(count)d констру�
 msgstr[2] "%(speaker)s, похоже, произнес %(count)d конструктивных речей."
 msgstr[3] "%(speaker)s, похоже, произнес %(count)d конструктивных речей."
 
-#: results/forms.py:580
+#: results/forms.py
 msgid "The last substantive speaker and reply speaker can't be the same."
 msgstr "Последний конструктивный спикер и заключительный спикер не могут совпадать."
 
-#: results/forms.py:587
+#: results/forms.py
 msgid "The reply speaker for this team did not give a substantive speech."
 msgstr "Спикер, говоривший заключительную речь в этой команде нее давал конструктивную речь."
 
-#: results/forms.py:719
+#: results/forms.py
 msgid "The total scores for the teams are the same (i.e. a draw)."
 msgstr "Общие баллы команд одинаковы (т.е. ничья)."
 
-#: results/forms.py:724
+#: results/forms.py
 msgid "The declared winner does not correspond to the team with the highest score."
 msgstr ""
 
-#: results/forms.py:733
+#: results/forms.py
 #, python-format
 msgid "The total scores for the following teams are the same: %(teams)s"
 msgstr "Общая сумма баллов для следующих команд одинакова: %(teams)s"
 
-#: results/forms.py:743
+#: results/forms.py
 #, python-format
 msgid "The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_margin).1f)."
 msgstr "Предел (%(margin).1f) превышает максимально допустимый предел (%(max_margin).1f)."
 
-#: results/forms.py:846
+#: results/forms.py
 #, python-format
 msgid "The total scores for the teams are the same (i.e. a draw) for adjudicator %(adjudicator)s."
 msgstr "Общие баллы команд одинаковы (т.е. ничья) у судьи %(adjudicator)s."
 
-#: results/forms.py:851
+#: results/forms.py
 #, python-format
 msgid "The declared winner does not correspond to the team with the highest score for adjudicator %(adjudicator)s."
 msgstr ""
 
-#: results/forms.py:859
+#: results/forms.py
 #, python-format
 msgid "The margin (%(margin).1f) in the ballot of adjudicator %(adjudicator)s exceeds the maximum allowable margin (%(max_margin).1f)."
 msgstr "Предел (%(margin).1f) в бэллоте судьи %(adjudicator)s превышает максимально допустимый предел (%(max_margin).1f)."
 
-#: results/forms.py:921
+#: results/forms.py
 msgid "Sides for this debate are not confirmed. You can't save a result for this debate until the sides have been confirmed in the draw."
 msgstr "Стороны в этих дебатах не подтверждены. Вы не можете сохранить результат этих дебатов, пока стороны не будут подтверждены в сетке."
 
-#: results/forms.py:964
+#: results/forms.py
 #, python-format
 msgid "There must be exactly %(n)d team advancing."
 msgid_plural "There must be exactly %(n)d teams advancing."
@@ -156,241 +155,242 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: results/forms.py:1007
+#: results/forms.py
 msgid "There must be exactly 1 team advancing."
 msgstr ""
 
-#: results/models.py:33
+#: results/models.py
 msgid "Tab room"
 msgstr "Комната тэбмастеров"
 
-#: results/models.py:34
+#: results/models.py
 msgid "Public"
 msgstr "Публично"
 
-#: results/models.py:38
+#: results/models.py
 msgid "timestamp"
 msgstr "отметка времени"
 
-#: results/models.py:40
+#: results/models.py
 msgid "version"
 msgstr "версия"
 
-#: results/models.py:42
+#: results/models.py
 msgid "submitter type"
 msgstr "тип отправки"
 
-#: results/models.py:44
+#: results/models.py
 msgid "confirmed"
 msgstr "подтвержденные"
 
-#: results/models.py:48
+#: results/models.py
 msgid "from private URL"
 msgstr ""
 
-#: results/models.py:51
+#: results/models.py
 msgid "from participant"
 msgstr ""
 
-#: results/models.py:56
+#: results/models.py
 msgid "submitter"
 msgstr "отправитель"
 
-#: results/models.py:59
+#: results/models.py
 msgid "confirmer"
 msgstr "подтверждающий"
 
-#: results/models.py:61
+#: results/models.py
 msgid "confirm timestamp"
 msgstr "подтвердить временную отметку"
 
-#: results/models.py:63
+#: results/models.py
 msgid "IP address"
 msgstr "IP-адрес"
 
-#: results/models.py:103
+#: results/models.py
 msgid "A tab room ballot must have a user associated."
 msgstr "Бэллот тэбмастеров должен иметь привязанного пользователя."
 
-#: results/models.py:111
+#: results/models.py
 msgid "debate"
 msgstr "дебаты"
 
-#: results/models.py:113
+#: results/models.py
 msgid "motion"
 msgstr "тема"
 
-#: results/models.py:115
+#: results/models.py
 msgid "discarded"
 msgstr "отклонено"
 
-#: results/models.py:117
+#: results/models.py
 msgid "single adjudicator"
 msgstr ""
 
-#: results/models.py:118
+#: results/models.py
 msgid "Whether this submission represents only the submitting adjudicator on a panel, when individual adjudicator ballots are enabled."
 msgstr ""
 
-#: results/models.py:123 results/models.py:228 results/models.py:267
-#: results/models.py:305 results/models.py:347
+#: results/models.py
 msgid "ballot submission"
 msgstr "отправка бэллота"
 
-#: results/models.py:124
+#: results/models.py
 msgid "ballot submissions"
 msgstr "отправки бэллота"
 
-#: results/models.py:143
+#: results/models.py
 #, python-format
 msgid "Debate is in round %(round)d but motion (%(motion)s) is from round %(motion_round)d"
 msgstr "Дебаты проводятся в раунде %(round)d, но тема (%(motion)s) из раунда %(motion_round)d"
 
-#: results/models.py:150
+#: results/models.py
 msgid "A ballot can't be both confirmed and discarded!"
 msgstr "Бэллот не может быть одновременно подтвержден и отклонен!"
 
-#: results/models.py:230 results/models.py:269
+#: results/models.py
 msgid "debate adjudicator"
 msgstr "судья дебатов"
 
-#: results/models.py:232 results/models.py:271 results/models.py:307
-#: results/models.py:349
+#: results/models.py
 msgid "debate team"
 msgstr "команда"
 
-#: results/models.py:235 results/models.py:312
+#: results/models.py
 msgid "win"
 msgstr "победа"
 
-#: results/models.py:237 results/models.py:314
+#: results/models.py
 msgid "margin"
 msgstr "предел"
 
-#: results/models.py:239 results/models.py:272 results/models.py:316
-#: results/models.py:352
+#: results/models.py
 msgid "score"
 msgstr "балл"
 
-#: results/models.py:244
+#: results/models.py
 msgid "team score by adjudicator"
 msgstr ""
 
-#: results/models.py:245
+#: results/models.py
 msgid "team scores by adjudicator"
 msgstr ""
 
-#: results/models.py:260 results/models.py:294
+#: results/models.py
 msgid "The debate team, debate adjudicator and ballot submission must all relate to the same debate."
 msgstr "Команды, судья и отправка бэллота должны относиться к одним и тем же дебатам."
 
-#: results/models.py:273 results/models.py:353
+#: results/models.py
 msgid "position"
 msgstr "позиция"
 
-#: results/models.py:279
+#: results/models.py
 msgid "speaker score by adjudicator"
 msgstr "спикерский балл по судье"
 
-#: results/models.py:280
+#: results/models.py
 msgid "speaker scores by adjudicator"
 msgstr "спикерские баллы по судье"
 
-#: results/models.py:310
+#: results/models.py
 msgid "points"
 msgstr "баллы"
 
-#: results/models.py:318
+#: results/models.py
 msgid "votes given"
 msgstr "количество голосов"
 
-#: results/models.py:320
+#: results/models.py
 msgid "votes possible"
 msgstr "возможное количество голосов"
 
-#: results/models.py:324
+#: results/models.py
+msgid "has ghost score"
+msgstr ""
+
+#: results/models.py
 msgid "team score"
 msgstr "командный балл"
 
-#: results/models.py:325
+#: results/models.py
 msgid "team scores"
 msgstr "командные баллы"
 
-#: results/models.py:351
+#: results/models.py
 msgid "speaker"
 msgstr "спикер"
 
-#: results/models.py:355
+#: results/models.py
 msgid "ghost"
 msgstr "призрак"
 
-#: results/models.py:356
+#: results/models.py
 msgid "If checked, this score does not count towards the speaker tab. This is typically checked for speeches where someone spoke twice to make up for an absent teammate (sometimes known as \"iron-person\" or \"iron-man\" speeches)."
 msgstr "Если стоит отметка, этот балл не идет в спикерский тэб. Обычно это устанавливают для случаев, когда кто-то говорил две речи (одну за отсутствующего тиммейта (известно как речь \"айрон-мена\")."
 
-#: results/models.py:365
+#: results/models.py
 msgid "speaker score"
 msgstr "спикерский балл"
 
-#: results/models.py:366
+#: results/models.py
 msgid "speaker scores"
 msgstr "спикерские баллы"
 
-#: results/models.py:375
+#: results/models.py
 msgid "The debate team and speaker must be from the same team."
 msgstr "Команда и спикер должны быть из одной команды."
 
-#: results/models.py:378
+#: results/models.py
 msgid "The ballot submission and debate team must relate to the same debate."
 msgstr "Предоставление бэллота и команда должны относиться к одним и тем же дебатам."
 
-#: results/tables.py:15
+#: results/tables.py
 msgid "Whether this debate's ballot has been checked in"
 msgstr "Был ли бэллот этих дебатов проверен"
 
-#: results/tables.py:36
+#: results/tables.py
 msgid "Status of this debate's ballot"
 msgstr "Статус бэллота этих дебатов"
 
-#: results/templates/admin_results.html:6
+#: results/templates/admin_results.html
 msgid "Display Draw"
 msgstr "Показать сетку"
 
-#: results/templates/admin_results.html:9
+#: results/templates/admin_results.html
 msgid "Check-In Ballots"
 msgstr "Проверить бэллоты"
 
-#: results/templates/admin_results.html:12
+#: results/templates/admin_results.html
 msgid "Recent 'Iron-Persons'"
 msgstr "Текущие айрон-мены"
 
-#: results/templates/admin_results.html:20
+#: results/templates/admin_results.html
 msgid "Teams who have recently missed a speaker"
 msgstr "Команды, которым не сейчас хватает спикера"
 
-#: results/templates/admin_results.html:36
+#: results/templates/admin_results.html
 #, python-format
 msgid "A speaker from %(team)s gave multiple speeches in the previous round"
 msgstr "Спикер из %(team)s произнес несколько речей в предыдущем раунде"
 
-#: results/templates/admin_results.html:43
+#: results/templates/admin_results.html
 #, python-format
 msgid "A speaker from %(team)s gave multiple speeches in the current round"
 msgstr "Спикер из %(team)s произнес несколько речей в текущем раунде"
 
-#: results/templates/admin_results.html:52
+#: results/templates/admin_results.html
 msgid "No known cases in the current or previous round"
 msgstr "Нет известных случаев в текущем или предыдущем раунде"
 
-#: results/templates/admin_results.html:66
+#: results/templates/admin_results.html
 msgid "Complete Round"
 msgstr "Завершить раунд"
 
-#: results/templates/admin_results.html:76
+#: results/templates/admin_results.html
 msgid "This page automatically updates with the new ballot entries and checkins as they occur. You will, however, need to reload it once all ballots are completed in order to advance the round."
 msgstr "Эта страница автоматически обновляется с новыми бэллотами и регистрациями по мере их появления. Однако, вам нужно будет перезагрузить её после поступления всех бэллотов для перехода на следующий раунд."
 
-#: results/templates/admin_results.html:88
+#: results/templates/admin_results.html
 #, python-format
 msgid "The following debate appears to have scoresheets from trainees: %(debates_list)s."
 msgid_plural "The following %(ndebates)s debates appear to have scoresheets from trainees: %(debates_list)s."
@@ -399,82 +399,84 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: results/templates/admin_results.html:94
+#: results/templates/admin_results.html
 #, python-format
 msgid "This can happen if you demote a panellist to trainee after a result has been submitted for that debate. This may indicate that there is an inconsistency in results data, which may cause unexpected results (or crashes). Please consider going to the Edit Database area and deleting the offending <a href=\"%(editdb_speakerscorebyadj_url)s?debate_adjudicator__type__exact=T\" class=\"alert-link\">\"speaker scores by adj\" objects</a>, and then opening and resaving the result here."
 msgstr ""
 
-#: results/templates/admin_results.html:113
+#: results/templates/admin_results.html
 msgid "One or more debates in this round appear to have more than one confirmed ballot submission. This can cause unexpected results (or crashes), because Tabbycat assumes that each debate has at most one confirmed ballot submission. This inconsistency can generally only arise if you manipulate the database with SQL queries directly. You'll need to find the offending debate(s) and ballot submissions yourself in the Edit Database area, or if that doesn't work, you might need to find them using SQL queries directly."
 msgstr ""
 
-#: results/templates/admin_results.html:127
+#: results/templates/admin_results.html
 #, python-format
 msgid "This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Results can't be entered while this configuration is in place. Please <a href=\"%(debate_rules_url)s\">revise this tournament's configuration</a> before you try to enter results."
 msgstr "Настройки этого турнира установлены под <strong> Британский парламентский формат</strong> с <strong> одним бэллотом на одного судью с правом голоса</strong>. Такая комбинация не разрешена: турниры в БПФ должны использовать консенсусный бэллот. Результаты не могут быть введены при данных настройках. Пожалуйста, <a href=\"%(debate_rules_url)s\"> измените настройки турнира </a> перед вводом результатов."
 
-#: results/templates/admin_results.html:135
+#: results/templates/admin_results.html
 #, python-format
 msgid "Currently there are no motions entered for this round, so debate results cannot be entered. <a href=\"%(motions_url)s\" class=\"alert-link\">Add Motions.</a>"
 msgstr "В настоящее время для этого раунда не введена тема, поэтому результаты не могут быть введены. <a href=\"%(motions_url)s\" class=\"alert-link\"> Добавить темы</a>"
 
-#: results/templates/admin_results.html:144
+#: results/templates/admin_results.html
 #, python-format
 msgid "Your tournament configuration allows ballots to be submitted online by adjudicators. The draw <a href=\"%(display_url)s\" class=\"alert-link\">must be released</a> before they can do so for this round."
 msgstr "Настройки вашего турнира позволяют судьям отправлять бэллоты онлайн. Сетка <a href=\"%(display_url)s\" class=\"alert-link\"> должна быть опубликована</a>до то, как судьи смогут сделать это в текущем раунде."
 
-#: results/templates/admin_results.html:151
+#: results/templates/admin_results.html
 #, python-format
 msgid "Your tournament configuration allows feedback to be submitted online by participants. The draw <a href=\"%(display_url)s\" class=\"alert-link\">must be released</a> before they can do so for this round."
 msgstr "Настройки вашего турнира позволяют игрокам отправлять обратную связь онлайн. Сетка <a href=\"%(display_url)s\" class=\"alert-link\"> должна быть опубликована</a>до то, как игроки смогут сделать это в текущем раунде."
 
-#: results/templates/assistant_enter_results.html:7
-#: results/templates/ballot_entry_base.html:12
+#: results/templates/assistant_enter_results.html
+#: results/templates/ballot_entry_base.html
 msgid "Back to All Results"
 msgstr "Назад кр всем результатам"
 
-#: results/templates/assistant_enter_results.html:11
-#: results/templates/ballot_entry_base.html:17
-#: results/templates/ballot_entry_base.html:21
+#: results/templates/assistant_enter_results.html
+#: results/templates/ballot_entry_base.html
 msgid "Create a new ballot set for this debate"
 msgstr "Создать новый бэллот для этих дебатов"
 
-#: results/templates/assistant_enter_results.html:33
+#: results/templates/assistant_enter_results.html
 msgid "You can't confirm this ballot set because you entered it."
 msgstr "Вы не можете подтвердить этот набор бэллотов, потому что сами ввели его."
 
-#: results/templates/assistant_enter_results.html:41
+#: results/templates/assistant_enter_results.html
+msgid "You can't confirm this ballot set because it is for a single adjudicator. Use the merge function."
+msgstr ""
+
+#: results/templates/assistant_enter_results.html
 msgid "Confirm results"
 msgstr "Подтвердить результаты"
 
-#: results/templates/assistant_enter_results.html:44
+#: results/templates/assistant_enter_results.html
 msgid "Results are incorrect"
 msgstr "Неверные результаты"
 
-#: results/templates/assistant_enter_results.html:49
-#: results/templates/enter_results.html:53
-#: results/templates/public_enter_results.html:68
+#: results/templates/assistant_enter_results.html
+#: results/templates/enter_results.html
+#: results/templates/public_enter_results.html
 msgid "Emails will be sent to adjudicators when the ballot is confirmed."
 msgstr "Email будут отправлены судьям, когда бэллот будет подтвержден."
 
-#: results/templates/assistant_results.html:4
-#: results/templates/assistant_results.html:5 results/views.py:513
+#: results/templates/assistant_results.html results/views.py
 msgid "Enter Results"
 msgstr "Ввести результаты"
 
-#: results/templates/assistant_results.html:12
+#: results/templates/assistant_results.html
 msgid "This page automatically updates with the new ballot entries and checkins as they occur."
 msgstr "Эта страница автоматически обновляется с новыми бэллотами и регистрациями, по мере того как они приходят."
 
-#: results/templates/assistant_results.html:16
+#: results/templates/assistant_results.html
 msgid "This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Results can't be entered while this configuration is in place. Please ask an administrator to change this configuration."
 msgstr "Настройки этого турнира установлены под <strong> Британский парламентский формат</strong> с <strong> одним бэллотом на одного судью с правом голоса</strong>. Такая комбинация не разрешена: турниры в БПФ должны использовать консенсусный бэллот. Результаты не могут быть введены при данных настройках. Пожалуйста, свяжитесь с администратором для изменения этих настроек."
 
-#: results/templates/assistant_results.html:23
+#: results/templates/assistant_results.html
 msgid "Currently there are no motions entered for this round, so debate results cannot be entered. Please ask an administrator to add motions."
 msgstr "В настоящее время тема для этого раунда не введена, поэтому результаты дебатов не могут быть введены. Пожалуйста, попросите администратора добавить тему."
 
-#: results/templates/assistant_results.html:33
+#: results/templates/assistant_results.html
 #, python-format
 msgid "One debate does not have its sides confirmed. Results for this debate cannot be entered until its side allocations are marked as confirmed."
 msgid_plural "%(ndebates)s debate do not have their sides confirmed. Results for these debates cannot be entered until their side allocations are marked as confirmed."
@@ -483,7 +485,7 @@ msgstr[1] "У %(ndebates)s дебатов не подтверждены стор
 msgstr[2] "У %(ndebates)s дебатов не подтверждены стороны. Результаты этих дебатов не могут быть введены, пока распределение сторон не отмечено как подтвержденное."
 msgstr[3] "У %(ndebates)s дебатов не подтверждены стороны. Результаты этих дебатов не могут быть введены, пока распределение сторон не отмечено как подтвержденное."
 
-#: results/templates/assistant_results.html:44
+#: results/templates/assistant_results.html
 #, python-format
 msgid "One debate has a panel with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted."
 msgid_plural "%(num_even_panel)s debates have panels with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted."
@@ -492,78 +494,78 @@ msgstr[1] "%(num_even_panel)s дебатов в коллегиях четное 
 msgstr[2] "%(num_even_panel)s дебатов в коллегиях четное число судей с правом голоса. Если голоса судей распределятся поровну, победу получит команда, за которую проголосовал чэйр."
 msgstr[3] "%(num_even_panel)s дебатов в коллегиях четное число судей с правом голоса. Если голоса судей распределятся поровну, победу получит команда, за которую проголосовал чэйр."
 
-#: results/templates/ballot/ballot_debate_info.html:6
+#: results/templates/ballot/ballot_debate_info.html
 msgid "Debate Information"
 msgstr "Информация о дебатах"
 
-#: results/templates/ballot/ballot_debate_info.html:42
+#: results/templates/ballot/ballot_debate_info.html
 msgid "No speakers spoke twice (no 'iron-person' speeches)"
 msgstr "Ни один спикер не говорил дважды (никто не \"айрон-менил\")"
 
-#: results/templates/ballot/ballot_debate_info.html:45
+#: results/templates/ballot/ballot_debate_info.html
 msgid "A speaker spoke twice (an 'iron-person' speech)"
 msgstr "Спикер говорил дважды (играл айрон-меном)"
 
-#: results/templates/ballot/ballot_scoresheet.html:28
+#: results/templates/ballot/ballot_scoresheet.html
 msgid "Result"
 msgstr "Результат"
 
-#: results/templates/ballot/ballot_scoresheet.html:28
+#: results/templates/ballot/ballot_scoresheet.html
 msgid "Rank"
 msgstr "Место"
 
-#: results/templates/ballot/ballot_scoresheet.html:34
+#: results/templates/ballot/ballot_scoresheet.html
 msgid "Margin"
 msgstr "Предел"
 
-#: results/templates/ballot/ballot_set.html:6
+#: results/templates/ballot/ballot_set.html
 msgid "There are some problems with this scoresheet. Please review and correct them."
 msgstr "Есть проблемы с этим бэллотом. Пожалуйста, проверьте и исправьте их."
 
-#: results/templates/ballot/ballot_set.html:19
-#: results/templates/ballot_entry_form.html:23
+#: results/templates/ballot/ballot_set.html
+#: results/templates/ballot_entry_form.html
 #, python-format
 msgid "Ballot from %(name)s (%(institution)s)"
 msgstr "Бэллот от %(name)s (%(institution)s"
 
-#: results/templates/ballot/ballot_set.html:23
-#: results/templates/ballot_entry_form.html:27
+#: results/templates/ballot/ballot_set.html
+#: results/templates/ballot_entry_form.html
 #, python-format
 msgid "Ballot from %(name)s"
 msgstr "Бэллот от %(name)s"
 
-#: results/templates/ballot/ballot_set.html:31
-#: results/templates/public_ballot_set.html:71
+#: results/templates/ballot/ballot_set.html
+#: results/templates/public_ballot_set.html
 msgid "Scoresheet"
 msgstr "Бэллот"
 
-#: results/templates/ballot/ballot_set.html:35
+#: results/templates/ballot/ballot_set.html
 msgid "Solo Chair"
 msgstr "Чэйр один"
 
-#: results/templates/ballot/ballot_set.html:35
-#: results/templates/ballot_entry_form.html:32
+#: results/templates/ballot/ballot_set.html
+#: results/templates/ballot_entry_form.html
 msgid "Chair"
 msgstr "Чэйр"
 
-#: results/templates/ballot/ballot_set.html:35
-#: results/templates/ballot_entry_form.html:34
+#: results/templates/ballot/ballot_set.html
+#: results/templates/ballot_entry_form.html
 msgid "Panellist"
 msgstr "Винг"
 
-#: results/templates/ballot/ballot_set.html:35
+#: results/templates/ballot/ballot_set.html
 msgid "Trainee"
 msgstr "Винг без права голоса"
 
-#: results/templates/ballot/ballot_set.html:44
+#: results/templates/ballot/ballot_set.html
 msgid "Assign sides before entering scores"
 msgstr "Назначить стороны перед вводом баллов"
 
-#: results/templates/ballot/ballot_speaks.html:19
-msgid "Duplicate speeches are hidden from the speaker tab. If a speaker is 'iron-manning' you would typically mark only the lesser of their scores as a duplicate."
-msgstr "Дублирующие речи скрыты из спикерского тэба. Если спикер играет айрон-меном, то обычно только меньший из его баллов помечается как дублирующий."
+#: results/templates/ballot/ballot_speaks.html
+msgid "Duplicate speeches are hidden from the speaker tab. If a speaker is 'iron-personing' you would typically mark only the lesser of their scores as a duplicate."
+msgstr ""
 
-#: results/templates/ballot/other_ballots_list.html:9
+#: results/templates/ballot/other_ballots_list.html
 #, python-format
 msgid "There is %(number)s existing ballot set for this debate."
 msgid_plural "There are %(number)s existing ballot sets for this debate."
@@ -572,65 +574,65 @@ msgstr[1] "Есть %(number)s наборов бэллотов для этих �
 msgstr[2] "Есть %(number)s наборов бэллотов для этих дебатов."
 msgstr[3] "Есть %(number)s наборов бэллотов для этих дебатов."
 
-#: results/templates/ballot/other_ballots_list.html:21
+#: results/templates/ballot/other_ballots_list.html
 msgid "This ballot set is <strong>confirmed</strong>."
 msgstr "Этот набор бэллотов <strong> подтверждён</strong>."
 
-#: results/templates/ballot/other_ballots_list.html:26
+#: results/templates/ballot/other_ballots_list.html
 msgid "This ballot set is <strong>discarded</strong>."
 msgstr "Этот набор бэллотов <strong> отклонён</strong>."
 
-#: results/templates/ballot/other_ballots_list.html:41
+#: results/templates/ballot/other_ballots_list.html
 msgid "CURRENTLY VIEWING"
 msgstr "ПРОСМАТРИВАЕТСЯ ПРЯМО СЕЙЧАС"
 
-#: results/templates/ballot/other_ballots_list.html:45
+#: results/templates/ballot/other_ballots_list.html
 msgid "MERGING"
 msgstr ""
 
-#: results/templates/ballot/other_ballots_list.html:48
+#: results/templates/ballot/other_ballots_list.html
 #, python-format
 msgid "Version <strong>%(version)s</strong>,"
 msgstr "Версия <strong>%(version)s</strong>,"
 
-#: results/templates/ballot/other_ballots_list.html:53
+#: results/templates/ballot/other_ballots_list.html
 #, python-format
 msgid "entered by <strong>%(submitter)s</strong>,"
 msgstr "введено <strong>%(submitter)s</strong>,"
 
-#: results/templates/ballot/other_ballots_list.html:58
+#: results/templates/ballot/other_ballots_list.html
 #, python-format
 msgid "submitted from <strong>%(adjudicator)s</strong>'s private URL,"
 msgstr ""
 
-#: results/templates/ballot/other_ballots_list.html:62
+#: results/templates/ballot/other_ballots_list.html
 #, python-format
 msgid "submitted from the public form on %(ip_address)s,"
 msgstr "отправлено из публичной формы на %(ip_address)s,"
 
-#: results/templates/ballot/other_ballots_list.html:68
+#: results/templates/ballot/other_ballots_list.html
 #, python-format
 msgid "%(timestamp)s (%(timeago)s ago),"
 msgstr "%(timestamp)s (%(timeago)s назад),"
 
-#: results/templates/ballot/other_ballots_list.html:73
+#: results/templates/ballot/other_ballots_list.html
 msgid "unknown"
 msgstr ""
 
-#: results/templates/ballot/other_ballots_list.html:74
+#: results/templates/ballot/other_ballots_list.html
 #, python-format
 msgid "confirmed by <strong>%(confirmer)s</strong>"
 msgstr "подтверждено <strong>%(confirmer)s</strong>"
 
-#: results/templates/ballot/other_ballots_list.html:78
+#: results/templates/ballot/other_ballots_list.html
 msgid "unconfirmed"
 msgstr "не потверждено"
 
-#: results/templates/ballot/other_ballots_list.html:82
+#: results/templates/ballot/other_ballots_list.html
 msgid "(discarded)"
 msgstr "(отклонено)"
 
-#: results/templates/ballot/other_ballots_list.html:86
+#: results/templates/ballot/other_ballots_list.html
 #, python-format
 msgid "<em>(identical to version %(others)s)</em>"
 msgid_plural "<em>(identical to versions %(others)s)</em>"
@@ -639,184 +641,176 @@ msgstr[1] "<em>(идентичный версиям%(others)s)</em>"
 msgstr[2] "<em>(идентичный версиям%(others)s)</em>"
 msgstr[3] "<em>(идентичный версиям%(others)s)</em>"
 
-#: results/templates/ballot_entry.html:21
+#: results/templates/ballot_entry.html
 #, python-format
 msgid "This ballot entry interface is in beta, if you encounter any problems the older version of the interface is <a href=\"%(old_url)s\" class=\"alert-link\">available here</a>."
 msgstr "Этот интерфейс введения бэллотов в бета-версии, если у вас есть какие-то проблемы с ним, старая версия интерфейса <a href=\"%(old_url)s\" class=\"alert-link\"> доступна здесь.</a>."
 
-#: results/templates/ballot_entry_base.html:30
+#: results/templates/ballot_entry_base.html
 msgid "This debate has a panel with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted."
 msgstr "В этих дебатах коллегия состояла из четного числа судей с правом голоса. Если голоса распределились поровну, победителем станет команда, за которую голосовал чэйр."
 
-#: results/templates/ballot_entry_base.html:41
+#: results/templates/ballot_entry_base.html
 #, python-format
 msgid "%(team)s had speakers who spoke multiple times in the last round — i.e. an 'iron' person speech. Please carefully check the ballot to see if that is still the case for this round. If it is, ensure the speakers selected below reflect this."
 msgstr "В %(team)s есть спикеры, которые произнесли несколько речей в последнем раунде - то есть были айрон-менами. Пожалуйста, внимательно проверьте бэллот, чтобы уточнить, будет ли это происходить и в текущем раунде тоже. Если да, убедитесь, что выбранные ниже спикеры отражают это."
 
-#: results/templates/ballot_entry_form.html:38
+#: results/templates/ballot_entry_form.html
 #, python-format
 msgid "Scoresheet from chair %(chair)s"
 msgstr "Бэллот от чэйра %(chair)s"
 
-#: results/templates/ballot_entry_form.html:42
+#: results/templates/ballot_entry_form.html
 msgid "Scoresheet, no chair set"
 msgstr "Бэллот, чэйр не установлен"
 
-#: results/templates/ballot_entry_form.html:63
+#: results/templates/ballot_entry_form.html
 #, python-format
 msgid "Error with %(pos)s's speaker field: %(error)s"
 msgstr "Ошибка в %(pos)s поле спикера: %(error)s"
 
-#: results/templates/ballot_entry_form.html:69
+#: results/templates/ballot_entry_form.html
 #, python-format
 msgid "Error with %(pos)s's duplicate speaker field: %(error)s"
 msgstr "Ошибка в %(pos)s поле дублирующего спикера: %(error)s"
 
-#: results/templates/ballot_entry_form.html:75
+#: results/templates/ballot_entry_form.html
 #, python-format
 msgid "Error with %(pos)s's score field: %(error)s"
 msgstr "Ошибка в %(pos)s поле баллов: %(error)s"
 
-#: results/templates/debate_postponement_form.html:3
+#: results/templates/debate_postponement_form.html
 msgid "Postponed"
 msgstr ""
 
-#: results/templates/debate_postponement_form.html:8
+#: results/templates/debate_postponement_form.html
 msgid "Postpone"
 msgstr ""
 
-#: results/templates/enter_results.html:15
+#: results/templates/enter_results.html
 msgid "Ballot Status"
 msgstr "Статус бэллота"
 
-#: results/templates/enter_results.html:16
+#: results/templates/enter_results.html
 msgid "only the confirmed ballot set will affect this debate's result"
 msgstr "только подтвержденный набор бэллотовв повлияет на результат этих дебатов"
 
-#: results/templates/enter_results.html:32
+#: results/templates/enter_results.html
 msgid "Debate Status"
 msgstr "Статус дебатов"
 
-#: results/templates/enter_results.html:35
+#: results/templates/enter_results.html
 msgid "all debates must be confirmed to complete the round"
 msgstr "все дебаты должны быть подтверждены для завершения раунда"
 
-#: results/templates/enter_results.html:45
+#: results/templates/enter_results.html
 msgid "Save Ballot"
 msgstr "Сохранить бэллот"
 
-#: results/templates/enter_results.html:48
+#: results/templates/enter_results.html
 msgid "Cancel Entry"
 msgstr "Отменить ввод"
 
-#: results/templates/includes/public_enter_results_info.html:4
+#: results/templates/includes/public_enter_results_info.html
 #, python-format
 msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can submit results and/or feedback for your debates. You may bookmark this page and return here after each debate for the available actions."
 msgstr "URL этой страницы персонализирован для вас, %(name)s. <strong> Не делитесь им ни с кем:</strong> любой, кто знает это URL может отправлять за вас результаты дебатов и/или фидбэк. Если вы запомните эту страницу, вы можете возвращаться после каждого раунда для доступных действий."
 
-#: results/templates/privateurl_ballot_set.html:7
-#: results/templates/privateurl_ballot_set_error.html:12
+#: results/templates/privateurl_ballot_set.html
+#: results/templates/privateurl_ballot_set_error.html
 #, python-format
 msgid "The page is provided to allow you, <strong>%(name)s</strong>, to verify your own scoresheet. <strong>You must not share this URL with anyone.</strong> Sharing the URL will allow others to access <strong>all</strong> actions from your personal landing page."
 msgstr "Эта страница позволяет вам, <strong>%(name)s</strong>, подтвердить ваш бэллот. <strong>Вы не должны ни с кем делиться этим URL.</strong> Если вы сообщите кому-то этот URL, другие лица получат доступ ко<strong>всем</strong>действиям с вашей личной лэндинговой страницы."
 
-#: results/templates/privateurl_ballot_set_error.html:4
-#: results/templates/privateurl_ballot_set_error.html:6
-#: results/templates/public_ballot_set_error.html:4
-#: results/templates/public_ballot_set_error.html:6
+#: results/templates/privateurl_ballot_set_error.html
+#: results/templates/public_ballot_set_error.html
 msgid "Ballot Not Available"
 msgstr "Бэллот не доступен"
 
-#: results/templates/privateurl_ballot_set_error.html:27
+#: results/templates/privateurl_ballot_set_error.html
 #, python-format
 msgid "<a href=\"%(url)s\">Back to your private landing page.</a>"
 msgstr "<a href=\"%(url)s\">Вернуться на свою личную страницу.</a>"
 
-#: results/templates/public_add_ballot.html:4
-#: results/templates/public_add_ballot_unreleased.html:4
-#: results/templates/public_add_ballot_unreleased.html:5
+#: results/templates/public_add_ballot.html
+#: results/templates/public_add_ballot_unreleased.html
 msgid "Enter Ballot"
 msgstr "Ввести бэлллот"
 
-#: results/templates/public_add_ballot.html:5
+#: results/templates/public_add_ballot.html
 msgid "Who are you?"
 msgstr "Кто вы?"
 
-#: results/templates/public_add_ballot.html:6
+#: results/templates/public_add_ballot.html
 msgid "(click your name on this list)"
 msgstr "(нажмите на ваше имя в этом списке)"
 
-#: results/templates/public_add_ballot_unreleased.html:8
+#: results/templates/public_add_ballot_unreleased.html
 #, python-format
 msgid "The draw and/or motions for %(round)s have yet to be released."
 msgstr "Сетка и/или темы для %(round)s ещё не опубликована."
 
-#: results/templates/public_ballot_set.html:6
-#: results/templates/public_ballot_set.html:10
-#: results/templates/public_ballot_set.html:17
-#: results/templates/public_ballot_set.html:21
+#: results/templates/public_ballot_set.html
 #, python-format
 msgid "Ballot for %(matchup)s"
 msgstr "Бэллот для %(matchup)s"
 
-#: results/templates/public_ballot_set.html:28
+#: results/templates/public_ballot_set.html
 #, python-format
 msgid "%(round)s @ %(room)s"
 msgstr "%(round)s @ %(room)s"
 
-#: results/templates/public_ballot_set.html:37
+#: results/templates/public_ballot_set.html
 msgid "Return to landing page"
 msgstr "Назад на лэндинговую страницу"
 
-#: results/templates/public_ballot_set.html:42
+#: results/templates/public_ballot_set.html
 #, python-format
 msgid "Return to Results for %(round)s"
 msgstr "Вернуться к результатам за %(round)s"
 
-#: results/templates/public_ballot_set.html:54
+#: results/templates/public_ballot_set.html
 msgid "Motion"
 msgstr "Тема"
 
-#: results/templates/public_ballot_set.html:67
+#: results/templates/public_ballot_set.html
 #, python-format
 msgid "From %(name)s (%(institution)s)"
 msgstr "От %(name)s (%(institution)s)"
 
-#: results/templates/public_ballot_set.html:92
-#: results/templates/public_ballot_set.html:96
+#: results/templates/public_ballot_set.html
 #, python-format
 msgid "<em>Total for %(name)s (%(side)s)</em>"
 msgstr "<em>Всего для %(name)s (%(side)s)</em>"
 
-#: results/templates/public_ballot_set.html:105
-#: results/templates/public_ballot_set.html:109
+#: results/templates/public_ballot_set.html
 #, python-format
 msgid "<em>%(name)s (%(side)s)</em>"
 msgstr ""
 
-#: results/templates/public_ballot_set.html:117
+#: results/templates/public_ballot_set.html
 msgid "Won"
 msgstr ""
 
-#: results/templates/public_ballot_set.html:117
+#: results/templates/public_ballot_set.html
 msgid "Lost"
 msgstr ""
 
-#: results/templates/public_ballot_set_error.html:14
+#: results/templates/public_ballot_set_error.html
 #, python-format
 msgid "<a href=\"%(url)s\">Back to the tournament home page.</a>"
 msgstr "<a href=\"%(url)s\">Вернуться к домашней странице турнира.</a>"
 
-#: results/templates/public_enter_results.html:9
+#: results/templates/public_enter_results.html
 #, python-format
 msgid "%(adjudicator)s, note that you must enter <strong>all of the ballots</strong> from your panel, not just your own!"
 msgstr "%(adjudicator)s, обратите внимание, что вы должны ввести <strong> все бэллоты</strong>вашей коллегии, не только ваш личный!"
 
-#: results/templates/public_enter_results.html:16
+#: results/templates/public_enter_results.html
 msgid "Some information, such as speaker order, shown is based on a previous ballot. If anything is incorrect, please correct it and contact the tab team."
 msgstr ""
 
-#: results/templates/public_enter_results.html:24
+#: results/templates/public_enter_results.html
 #, python-format
 msgid "This form has already been submitted <strong>once</strong>. Please contact a tab official after submitting your form."
 msgid_plural "This form has already been submitted <strong>%(nsubmissions)s</strong> times. Please contact a tab official after submitting your form."
@@ -825,102 +819,104 @@ msgstr[1] "Эта форма уже была отправлена <strong> %(nsu
 msgstr[2] "Эта форма уже была отправлена <strong> %(nsubmissions)s</strong> раз. Пожалуйста, свяжитесь с тэбмастером после отправки вашей формы."
 msgstr[3] "Эта форма уже была отправлена <strong> %(nsubmissions)s</strong> раз. Пожалуйста, свяжитесь с тэбмастером после отправки вашей формы."
 
-#: results/templates/public_enter_results.html:63
-msgid "Submit Ballot(s)"
-msgstr "Отправить бэллот(ы)"
+#: results/templates/public_enter_results.html
+msgid "Submit Ballot"
+msgid_plural "Submit Ballots"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
-#: results/templates/public_enter_results.html:65
+#: results/templates/public_enter_results.html
 msgid "When submitting this form your IP address will be stored for logging purposes."
 msgstr "При отправке этой формы ваш IP-адрес будет сохраняться в целях авторизации."
 
-#: results/templates/public_enter_results_error.html:4
+#: results/templates/public_enter_results_error.html
 #, python-format
 msgid "No Result to Enter (%(adjudicator)s)"
 msgstr "Нет результатов для ввода (%(adjudicator)s)"
 
-#: results/templates/public_enter_results_error.html:7
+#: results/templates/public_enter_results_error.html
 msgid "No Result to Enter"
 msgstr "Нет результатов для введения"
 
-#: results/templates/public_results_for_round.html:7
+#: results/templates/public_results_for_round.html
 msgid "View by Team"
 msgstr "Посмотреть по командам"
 
-#: results/templates/public_results_for_round.html:10
+#: results/templates/public_results_for_round.html
 msgid "View by Debate"
 msgstr "Посмотреть по дебатам"
 
-#: results/templates/public_results_index.html:12
+#: results/templates/public_results_index.html
 #, python-format
 msgid "Results for %(round)s"
 msgstr "Результаты %(round)s"
 
-#: results/templates/public_results_not_available.html:4
-#: results/templates/public_results_not_available.html:6
-#: results/templates/public_results_silent.html:4
-#: results/templates/public_results_silent.html:6
+#: results/templates/public_results_not_available.html
+#: results/templates/public_results_silent.html
 msgid "Results Not Available"
 msgstr "Результаты не доступны"
 
-#: results/templates/public_results_not_available.html:12
+#: results/templates/public_results_not_available.html
 #, python-format
 msgid "The results for %(round)s aren't yet available."
 msgstr "Результаты для %(round)s еще не доступны."
 
-#: results/templates/public_results_silent.html:12
+#: results/templates/public_results_silent.html
 #, python-format
 msgid "%(round)s is a silent round."
 msgstr "%(round)s - это закрытый раунд."
 
-#: results/utils.py:18
+#: results/utils.py
 msgid "No Ballot"
 msgstr "Нет бэллота"
 
-#: results/utils.py:19
+#: results/utils.py
 msgid "Debate was Postponed"
 msgstr ""
 
-#: results/utils.py:20
+#: results/utils.py
 msgid "Ballot is Unconfirmed"
 msgstr "Бэллот не подтвержден"
 
-#: results/utils.py:21
+#: results/utils.py
 msgid "Ballot is Confirmed"
 msgstr "Бэллот подтвержден"
 
 #. Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
-#: results/utils.py:36
+#: results/utils.py
 #, python-format
 msgid "%(team)s as %(side)s"
 msgstr "%(team)s как %(side)s"
 
-#: results/utils.py:43
+#: results/utils.py
 #, python-format
 msgid "%(team)s (%(side)s) won"
 msgstr ""
 
 #. Translators: The team here is the losing team
-#: results/utils.py:45
+#: results/utils.py
 #, python-format
 msgid "vs %(team)s (%(side)s)"
 msgstr ""
 
-#: results/utils.py:47
+#: results/utils.py
 #, python-format
 msgid "Advancing: %(advancing_list)s<br>"
 msgstr "Проходят:%(advancing_list)s<br>"
 
-#: results/utils.py:50
+#: results/utils.py
 #, python-format
 msgid "Eliminated: %(eliminated_list)s"
 msgstr "Не проходят: %(eliminated_list)s"
 
-#: results/utils.py:58
+#: results/utils.py
 #, python-format
 msgid "1st: %(first_team)s<br>"
 msgstr "1: %(first_team)s<br>"
 
-#: results/utils.py:59
+#: results/utils.py
 #, python-format
 msgid "2nd: %(second_team)s<br>\n"
 "3rd: %(third_team)s<br>\n"
@@ -929,190 +925,190 @@ msgstr "2-е: %(second_team)s<br>\n"
 "3-е: %(third_team)s<br>\n"
 "4-е: %(fourth_team)s"
 
-#: results/utils.py:74
+#: results/utils.py
 #, python-format
 msgid "Error with result for %(debate)s"
 msgstr "Ошибка в результатах %(debate)s"
 
 #. Translators: Abbreviation for Prime Minister
-#: results/utils.py:134
+#: results/utils.py
 msgid "PM"
 msgstr "ПМ"
 
 #. Translators: Abbreviation for Deputy Prime Minister
-#: results/utils.py:136
+#: results/utils.py
 msgid "DPM"
 msgstr "ЗПМ"
 
 #. Translators: Abbreviation for Leader of the Opposition
-#: results/utils.py:138
+#: results/utils.py
 msgid "LO"
 msgstr "ЛО"
 
 #. Translators: Abbreviation for Deputy Leader of the Opposition
-#: results/utils.py:140
+#: results/utils.py
 msgid "DLO"
 msgstr "ЗЛО"
 
 #. Translators: Abbreviation for Member for the Government
-#: results/utils.py:142
+#: results/utils.py
 msgid "MG"
 msgstr "ЧП"
 
 #. Translators: Abbreviation for Government Whip
-#: results/utils.py:144
+#: results/utils.py
 msgid "GW"
 msgstr "СП"
 
 #. Translators: Abbreviation for Member for the Opposition
-#: results/utils.py:146
+#: results/utils.py
 msgid "MO"
 msgstr "ЧО"
 
 #. Translators: Abbreviation for Opposition Whip
-#: results/utils.py:148
+#: results/utils.py
 msgid "OW"
 msgstr "СО"
 
-#: results/utils.py:168
+#: results/utils.py
 msgid "Reply"
 msgstr "Ответ"
 
-#: results/views.py:270 results/views.py:272
+#: results/views.py
 msgid " vs "
 msgstr " против "
 
-#: results/views.py:273
+#: results/views.py
 #, python-format
 msgid "%(matchup)s: %(round)s @ %(room)s"
 msgstr ""
 
-#: results/views.py:275
+#: results/views.py
 msgid "N/A"
 msgstr "Н/Д"
 
-#: results/views.py:408
+#: results/views.py
 msgid "New Ballot Set"
 msgstr ""
 
-#: results/views.py:411
+#: results/views.py
 #, python-format
 msgid "Ballot set for %(debate)s added."
 msgstr "Набор бэллотов для %(debate)s добавлен."
 
-#: results/views.py:413 results/views.py:480
+#: results/views.py
 msgid " Email receipts queued to be sent."
 msgstr " Email поставлены в очередь на отправку."
 
-#: results/views.py:427
+#: results/views.py
 #, python-format
 msgid "Whoops! The debate %(debate)s doesn't have a chair, so you can't enter results for it."
 msgstr "Упс! У дебатов %(debate)s нет чэйра, так что вы не можете ввести для них результаты."
 
-#: results/views.py:433
+#: results/views.py
 #, python-format
 msgid "Whoops! The debate %(debate)s doesn't have its sides confirmed, so you can't enter results for it."
 msgstr "Упс! У дебатов %(debate)s не подтверждены стороны, так что вы не можете ввести их результаты."
 
-#: results/views.py:459
+#: results/views.py
 msgid "Edit Ballot Set"
 msgstr ""
 
-#: results/views.py:473
+#: results/views.py
 #, python-format
 msgid "Ballot set for %(matchup)s discarded."
 msgstr "Набор бэллотов для %(matchup)s отклонён."
 
-#: results/views.py:475
+#: results/views.py
 #, python-format
 msgid "Ballot set for %(matchup)s confirmed."
 msgstr "Набор бэллотов для %(matchup)s подтвержден."
 
-#: results/views.py:477
+#: results/views.py
 #, python-format
 msgid "Edits to ballot set for %(matchup)s saved."
 msgstr "Изменения в набор бэллотов %(matchup)s сохранены."
 
-#: results/views.py:528
+#: results/views.py
 #, python-format
 msgid "Thanks, %(user)s! Your ballot for %(debate)s has been recorded."
 msgstr "Спасибо, %(user)s! Ваш бэллот %(debate)s записан."
 
-#: results/views.py:535
+#: results/views.py
 msgid "The draw for this round hasn't been released yet."
 msgstr "Сетка на этот раунд не была опубликована."
 
-#: results/views.py:539
+#: results/views.py
 msgid "The motions for this round haven't been released yet."
 msgstr "Темы на этот раунд не опубликованы."
 
-#: results/views.py:544
+#: results/views.py
 msgid "It looks like you don't have a debate this round."
 msgstr "Похоже, что вы не участвуете в дебатах в этом раунде."
 
-#: results/views.py:546
+#: results/views.py
 msgid "It looks like you're assigned to two or more debates this round. Please contact a tab room official."
 msgstr "Похоже, вы привязаны к двум или более дебатам в этом раунде. Пожалуйста, свяжитесь с тэбмастером."
 
-#: results/views.py:573
+#: results/views.py
 msgid "Your debate doesn't have a chair, so you can't enter results for it. Please contact a tab room official."
 msgstr "В этих дебатах нет чэйра, поэтому вы не можете ввести их результаты. Пожалуйста, свяжитесь с тэбмастером."
 
-#: results/views.py:578
+#: results/views.py
 msgid "It looks like the sides for this debate haven't yet been confirmed, so you can't enter results for it. Please contact a tab room official."
 msgstr "Похоже, что стороны в этих дебатах ещё не подтверждены, так что вы не можете ввести их результаты. Пожалуйста, свяжитесь с тэбмастером."
 
-#: results/views.py:689
+#: results/views.py
 msgid "It looks like you were assigned to two or more debates. Please contact a tab room official."
 msgstr ""
 
-#: results/views.py:707
+#: results/views.py
 #, python-format
 msgid "This debate is in %s, which is a silent round."
 msgstr "Эти дебаты в %s, который является закрытым раундом."
 
-#: results/views.py:710
+#: results/views.py
 #, python-format
 msgid "This debate is in %s, the results for which aren't available yet."
 msgstr "Эти дебаты находятся в %s, результаты которых пока не доступны."
 
-#: results/views.py:714
+#: results/views.py
 #, python-format
 msgid "The result for debate %s is not confirmed."
 msgstr "Результат для дебатов %s не подтвержден."
 
-#: results/views.py:717
+#: results/views.py
 #, python-format
 msgid "The debate %s does not have a confirmed ballot."
 msgstr "У дебатов %s нет подтвержденного бэллота."
 
-#: results/views.py:739
+#: results/views.py
 #, python-format
 msgid "There is no result yet for debate %s."
 msgstr "Нет результатов для дебатов %s."
 
-#: results/views.py:805
+#: results/views.py
 #, python-format
 msgid "Add result from %(adjudicator)s"
 msgstr "Добавить результат от %(adjudicator)s"
 
-#: results/views.py:809
+#: results/views.py
 msgid "Adjudicator"
 msgstr "Судья"
 
-#: results/views.py:846
+#: results/views.py
 msgid "Merge Ballots"
 msgstr ""
 
-#: results/views.py:877
+#: results/views.py
 msgid "The speaking order in the ballots is inconsistent, so could not be merged."
 msgstr ""
 
-#: results/views.py:879
+#: results/views.py
 msgid "Duplicate speeches are marked inconsistently, so could not be merged."
 msgstr ""
 
-#: results/views.py:880
+#: results/views.py
 #, python-format
 msgid " This error was caught in <a href='%(ballot_url)s'>%(adjudicator)s's ballot</a> for %(speaker)s (%(team)s)."
 msgstr ""

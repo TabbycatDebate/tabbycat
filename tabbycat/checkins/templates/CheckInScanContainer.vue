@@ -99,7 +99,7 @@ export default {
       const promise = document.getElementById(elementID).play()
       if (promise !== undefined) {
         promise.catch(() => {
-          // Auto-play was prevented
+          // Autoplay was prevented
           // Show a UI element to let the user manually start playback
           console.debug('Safari autoplay ... needs permission for sound')
         })

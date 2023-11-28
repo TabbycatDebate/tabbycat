@@ -16,8 +16,8 @@ export default {
         clashes = this.adjudicatorClashesForItem(itemId)
         histories = this.adjudicatorHistoriesForItem(itemId)
       } else if (itemType === 'panel') {
-        clashes = this.panelClashesForItem(itemId)
-        histories = this.panelHistoriesForItem(itemId)
+        clashes = this.panelClashesOrHistoriesForItem(itemId, 'clashes')
+        histories = this.panelClashesOrHistoriesForItem(itemId, 'histories')
       } else {
         console.error('Unrecognised conflict type provided to showHoverConflicts()')
       }
@@ -32,7 +32,7 @@ export default {
     ...mapGetters([
       'adjudicatorClashesForItem', 'teamClashesForItem',
       'adjudicatorHistoriesForItem', 'teamHistoriesForItem',
-      'panelClashesForItem', 'panelHistoriesForItem',
+      'panelClashesOrHistoriesForItem',
     ]),
   },
 }

@@ -44,9 +44,9 @@
 
 {% if inactive %}
   <div class="list-group">
-    {% trans '(inactive)' as subtext %}
+    {% trans '(inactive)' as inactive_subtext %}
     {% for tournament in inactive %}
-      {% include "tournament_index_links.html" with type="dark" subtext=subtext %}
+      {% include "tournament_index_links.html" with type="dark" subtext=inactive_subtext %}
     {% endfor %}
   </div>
 {% endif %}

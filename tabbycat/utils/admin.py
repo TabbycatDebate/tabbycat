@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin.options import get_content_type_for_model
+from django.utils.translation import gettext_lazy as _
 
 from .misc import get_ip_address
 
@@ -40,44 +41,43 @@ class ModelAdmin(admin.ModelAdmin):
 
 class TabbycatModelAdminFieldsMixin:
 
+    @admin.display(description=_("Round"))
     def get_round(self, obj):
         if hasattr(obj, 'debate'):
             return obj.debate.round.name
         else:
             return obj.debate_team.debate.round.name
-    get_round.short_description = 'Round'
 
+    @admin.display(description=_("Team"))
     def get_team(self, obj):
         return obj.debate_team.team
-    get_team.short_description = 'Team'
 
+    @admin.display(description=_("Speaker"))
     def get_speaker_name(self, obj):
         return obj.speaker.name
-    get_speaker_name.short_description = 'Speaker'
 
+    @admin.display(description=_("Tournament"))
     def get_tournament(self, obj):
         if hasattr(obj, 'round'):
             return obj.round.tournament
         else:
             return obj.debate.round.tournament
 
-    get_tournament.short_description = 'Tournament'
-
+    @admin.display(description=_("Side"))
     def get_team_side(self, obj):
         return obj.debate_team.side
-    get_team_side.short_description = 'Side'
 
+    @admin.display(description=_("Motion"))
     def get_motion_ref(self, obj):
         return obj.motion.reference
-    get_motion_ref.short_description = 'Motion'
 
+    @admin.display(description=_("Confirmed"))
     def get_confirmed(self, obj):
         return obj.ballot_submission.confirmed
-    get_confirmed.short_description = 'Confirmed'
 
+    @admin.display(description=_("Adjudicator"))
     def get_adj_name(self, obj):
         return obj.debate_adjudicator.adjudicator.name
-    get_adj_name.short_description = "Adjudicator"
 
 
 def custom_titled_filter(title):

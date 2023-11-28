@@ -60,7 +60,7 @@ export default {
         return // Don't allow
       }
       this.aboutToDrop = false
-      // Send data to parent's handler method (after deserialising it)
+      // Send data to parent's handler method (after de-serialising it)
       const dragPayload = JSON.parse(event.dataTransfer.getData('text'))
       this.handleDrop(dragPayload, this.dropContext) // Call page-specific method handler passed down
       this.hideHovers()

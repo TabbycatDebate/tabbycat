@@ -25,9 +25,9 @@ Availability
 
 **Set availability.** For each round, you need to set the venue, team and adjudicator availability. If any of those are not marked as available they will not be used within the draw; so this feature is mostly useful for when adjudicators or venues are only available for certain rounds.
 
-To do this, click the round in the menu, then click **Check-Ins**. Here you can then go to the availability pages for venue, teams, and adjudicators, or check in everything at once. When you've set everything appropriately use the **Generate Draw** button in the top right to advance.
+To do this, click the round in the menu, then click **Availability**. Here you can then go to the availability pages for venue, teams, and adjudicators, or check in everything at once. When you've set everything appropriately use the **Generate Draw** button in the top right to advance.
 
-  .. image:: images/checkins-page.png
+  .. image:: images/availability-page.png
 
 .. _generating-the-draw:
 
@@ -105,7 +105,7 @@ See :ref:`data-entry` for more details about the data entry process.
 Advancing to the next round
 ===========================
 
-Once you've got all the results entered and confirmed, you're ready to progress to the next round. This can be done by going to the **Results** area, and then using the **Advance to Next Round** button.
+Once you've got all the results entered and confirmed, you're ready to progress to the next round. This can be done by going to the **Results** area, and then using the **Complete Round** button.
 
 .. image:: images/results-page.png
 

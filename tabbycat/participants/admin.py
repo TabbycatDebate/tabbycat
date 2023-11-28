@@ -118,7 +118,7 @@ class AdjudicatorTeamConflictInline(admin.TabularInline):
 @admin.register(Team)
 class TeamAdmin(ModelAdmin):
     form = TeamForm
-    list_display = ('long_name', 'short_name', 'emoji', 'institution',
+    list_display = ('long_name', 'short_name', 'emoji_code', 'institution',
                     'tournament')
     search_fields = ('reference', 'short_name', 'code_name', 'institution__name',
                      'institution__code', 'tournament__name')
@@ -132,6 +132,10 @@ class TeamAdmin(ModelAdmin):
         # can't use select_related, because TeamManager always puts a select_related on this
         return super().get_queryset(request).select_related('tournament')
 
+    @admin.display(description=_("Emoji & Code"))
+    def emoji_code(self, obj):
+        return "%s %s" % (obj.emoji or '-', obj.code_name)
+
     def formfield_for_choice_field(self, db_field, request, **kwargs):
         if db_field.name == 'emoji' and kwargs.get("initial") is None:
             kwargs["initial"] = pick_unused_emoji()[0]
@@ -143,6 +147,7 @@ class TeamAdmin(ModelAdmin):
             kwargs["initial"] = BreakCategory.objects.filter(is_general=True)
         return super().formfield_for_manytomany(db_field, request, **kwargs)
 
+    @admin.display(description=_("Delete URL Key"))
     def delete_url_key(self, request, queryset):
         num_speakers = Speaker.objects.filter(team__in=queryset).update(url_key=None)
         for obj in queryset:
@@ -152,8 +157,8 @@ class TeamAdmin(ModelAdmin):
             "%(count)d speakers had their URL keys removed.",
             num_speakers) % {'count': num_speakers}
         self.message_user(request, message)
-    delete_url_key.short_description = _("Delete URL key")
 
+    @admin.display(description=_("Reset emoji"))
     def assign_emoji(self, request, queryset):
         count = queryset.update(emoji=None)
         for tournament, teams in groupby(queryset.select_related('tournament').order_by('tournament_id'), lambda t: t.tournament):
@@ -166,8 +171,8 @@ class TeamAdmin(ModelAdmin):
             "%(count)d teams had their emojis reset.",
             count) % {'count': count}
         self.message_user(request, message)
-    assign_emoji.short_description = _("Reset emoji")
 
+    @admin.display(description=_("Reset code name"))
     def assign_code_names(self, request, queryset):
         count = populate_code_names_from_emoji(queryset, overwrite=True)
         for obj in queryset:
@@ -178,7 +183,6 @@ class TeamAdmin(ModelAdmin):
             "%(count)d teams had their code names reset.",
             count) % {'count': count}
         self.message_user(request, message)
-    assign_code_names.short_description = _("Reset code name")
 
 
 # ==============================================================================
@@ -229,6 +233,7 @@ class AdjudicatorAdmin(ModelAdmin):
         # can't use select_related, because TeamManager always puts a select_related on this
         return super().get_queryset(request).select_related('tournament')
 
+    @admin.display(description=_("Delete URL Key"))
     def delete_url_key(self, request, queryset):
         updated = queryset.update(url_key=None)
         for obj in queryset:
@@ -239,4 +244,3 @@ class AdjudicatorAdmin(ModelAdmin):
             updated,
         ) % {'count': updated}
         self.message_user(request, message)
-    delete_url_key.short_description = _("Delete URL key")

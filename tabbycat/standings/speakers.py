@@ -24,6 +24,7 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
 
     function = None  # Must be set by subclasses
     replies = False
+    field = 'speakerscore__score'
 
     def get_annotation(self, round):
         """Returns a QuerySet annotated with the metric given. All positional
@@ -33,7 +34,7 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
         annotation_filter = Q(
             speakerscore__ballot_submission__confirmed=True,
             speakerscore__debate_team__debate__round__seq__lte=round.seq,
-            speakerscore__debate_team__debate__round__stage=Round.STAGE_PRELIMINARY,
+            speakerscore__debate_team__debate__round__stage=Round.Stage.PRELIMINARY,
             speakerscore__ghost=False,
         )
         if self.replies:
@@ -41,7 +42,7 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
         else:
             annotation_filter &= Q(speakerscore__position__lte=round.tournament.last_substantive_position)
 
-        return self.function('speakerscore__score', filter=annotation_filter)
+        return self.function(self.field, filter=annotation_filter)
 
 
 class TotalSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -75,7 +76,7 @@ class SpeakerTeamPointsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
 
         annotation_filter = Q(
             team__debateteam__teamscore__ballot_submission__confirmed=True,
-            team__debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
+            team__debateteam__debate__round__stage=Round.Stage.PRELIMINARY,
         )
         if round is not None:
             annotation_filter &= Q(team__debateteam__debate__round__seq__lte=round.seq)
@@ -176,6 +177,16 @@ class TrimmedMeanSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator
         )
 
 
+class SpeakerScoreRankingsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
+    """Metric annotator for standard deviation of speaker score."""
+    key = "srank"
+    name = _("speech ranks")
+    abbr = _("SRank")
+    function = Sum
+    ascending = True
+    field = 'speakerscore__rank'
+
+
 # ==============================================================================
 # Standings generator
 # ==============================================================================
@@ -210,6 +221,7 @@ class SpeakerStandingsGenerator(BaseStandingsGenerator):
         "replies_avg"   : AverageReplyScoreMetricAnnotator,
         "replies_stddev": StandardDeviationReplyScoreMetricAnnotator,
         "replies_count" : NumberOfRepliesMetricAnnotator,
+        "srank"         : SpeakerScoreRankingsMetricAnnotator,
     }
 
     ranking_annotator_classes = {

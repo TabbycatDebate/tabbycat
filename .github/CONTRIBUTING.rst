@@ -35,10 +35,6 @@ Development
 
   - A number of our tests use `Selenium <http://selenium-python.readthedocs.io>`_ and `ChromeDriver <https://sites.google.com/a/chromium.org/chromedriver/>`_ to simulate in-browser functionality. They will fail if you do not have the Chrome browser and ChromeDriver installed.
 
-- A number of extra dependencies are required for running tests, linting, and serving the documentation. These can be installed with::
-
-    $ pip install -r 'config/requirements_development.txt'
-
 - We use `pre-commit <https://pre-commit.com/>`_ to run code style checks (linters). To have them run as a git hook automatically before every commit::
 
     $ pre-commit install
@@ -80,11 +76,15 @@ For python code, we use `flake8 <http://flake8.readthedocs.io>`_ to check for a 
 
 For stylesheets, we use `stylelint <https://stylelint.io>`_. The relevant code can be checked by using::
 
-    $ npm run lint-sass
+    $ pre-commit run stylelint --all-files
 
 For javascript, we use `eslint <http://eslint.org/>`_ to enforce the `standardJS <https://standardjs.com>`_ style and the standard recommendation of the vue plugin for eslint. The relevant code can be checked by using::
 
-    $ npm run lint-vue
+    $ pre-commit run eslint --all-files
+
+You can also run all of the above style checkers, as well as a style checker for yaml and some non-language specific style checkers provided by `pre-commit-hooks <https://github.com/pre-commit/pre-commit-hooks>`_, by using::
+
+    $ pre-commit run --all-files
 
 Project organization
 ====================
@@ -135,15 +135,15 @@ The `gettext <https://docs.djangoproject.com/en/2.2/topics/i18n/translation/>`_ 
 
 The backend's translation files can be updated from the ``tabbycat`` directory using one or more of the supporting language codes (see settings.py)::
 
-    $ dj makemessages -l es
+    $ dj makemessages -len --no-wrap --no-obsolete --add-location file
 
-To do more than one language, just specify ``-l`` multiple times, _e.g._ ``-les -lar``.
+Then our `Crowdin <https://crowdin.com/project/tabbycat>`_ project will find the updated strings and mark them for translation.
 
 These can then be compiled using::
 
     $ dj compilemessages -l es
 
-As it stands Heroku needs the .mo files pre-compiled (see `issue in Heroku Python buildpack <https://github.com/heroku/heroku-buildpack-python/issues/198>`_, so these are committed to Git. Note that the English (``en``) language files should not be compiled; their sole purpose is to provide a source language for `Crowdin <https://crowdin.com/project/tabbycat>`_.
+As it stands Heroku needs the .mo files pre-compiled (see `issue in Heroku Python buildpack <https://github.com/heroku/heroku-buildpack-python/issues/198>`_, so these are committed to Git. Note that the English (``en``) language files need not be compiled; their sole purpose is to provide a source language for `Crowdin <https://crowdin.com/project/tabbycat>`_.
 
 Strings defined in Vue files must similarily be marked with ``gettext`` but must be added manually to ``tabbycat/locale/LANGUAGE_CODE/djangojs.po``, for each language supported. These can then compiled to javascript bundles using::
 
@@ -157,8 +157,8 @@ Release checklist
 
 1. Check that all migrations have been generated and committed into Git
 2. Merge translations from the Crowdin pull request and compile messages
-3. Bump version number in ``docs/conf.py`` and ``docs/api-schema.yml`` (if applicable)
-4. Bump version number and (if applicable) codename in ``tabbycat/settings/core.py``
+3. Bump version number in ``docs/conf.py``
+4. Bump version number, API version number and (if applicable) codename in ``tabbycat/settings/core.py``
 5. Update the main ``CHANGELOG.rst`` file (including release date)
 6. Check the major current deployment options, including:
     1. The ``deploy_heroku.py`` script
@@ -170,7 +170,6 @@ Release checklist
 8. Shift remaining issues from the Github Milestone
 9. Create and finish the release branch as per git-flow
 10. Ensure the tag is correct (``vX.Y.Z``) and published to GitHub
-11. Back-merge ``master`` to the ``kitten`` branch
-12. Back-merge ``develop`` to the in-progress feature branches
-13. Issue a formal release with change notes on GitHub
-14. Post change notes on the Facebook page/group
+11. Back-merge ``develop`` to the in-progress feature branches
+12. Issue a formal release with change notes on GitHub
+13. Post change notes on the Facebook page/group

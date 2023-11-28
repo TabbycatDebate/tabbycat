@@ -88,7 +88,7 @@ class RequiredTypedChoiceField(forms.TypedChoiceField):
 # Feedback Fields
 # ==============================================================================
 
-class BlockChecboxWidget(forms.CheckboxSelectMultiple):
+class BlockCheckboxWidget(forms.CheckboxSelectMultiple):
     template_name = 'spaced_choice_widget.html'
 
 
@@ -145,7 +145,7 @@ class BaseFeedbackForm(forms.Form):
         elif question.answer_type == question.ANSWER_TYPE_SINGLE_SELECT:
             field = OptionalChoiceField(choices=question.choices_for_field)
         elif question.answer_type == question.ANSWER_TYPE_MULTIPLE_SELECT:
-            field = forms.MultipleChoiceField(choices=question.choices_for_field, widget=BlockChecboxWidget())
+            field = forms.MultipleChoiceField(choices=question.choices_for_field, widget=BlockCheckboxWidget())
         field.label = question.text
 
         # Required checkbox fields don't really make sense; so override the behaviour?
@@ -227,7 +227,7 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
         # Translators: e.g. "Megan Pearson (chair)", with adjpos="chair"
         display = _("Submitted - ") if adj.submitted else ""
         display += _("%(name)s (%(adjpos)s)") % {'name': adj.get_public_name(tournament), 'adjpos': ADJUDICATOR_POSITION_NAMES[pos]}
-        return (value, display)
+        return value, display
 
     adjfeedback_query = AdjudicatorFeedback.objects.filter(
         source_adjudicator__adjudicator=source, source_adjudicator__debate=OuterRef('debate'),
@@ -236,7 +236,7 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
     debateadjs = DebateAdjudicator.objects.filter(
         debate__round__tournament=tournament, adjudicator=source,
         debate__round__seq__lte=tournament.current_round.seq,
-        debate__round__stage=Round.STAGE_PRELIMINARY,
+        debate__round__stage=Round.Stage.PRELIMINARY,
     ).order_by('-debate__round__seq').select_related('debate__round').prefetch_related(
         Prefetch(
             'debate__debateadjudicator_set',
@@ -245,9 +245,9 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
     )
 
     if include_unreleased_draws:
-        debateadjs = debateadjs.filter(debate__round__draw_status__in=[Round.STATUS_CONFIRMED, Round.STATUS_RELEASED])
+        debateadjs = debateadjs.filter(debate__round__draw_status__in=[Round.Status.CONFIRMED, Round.Status.RELEASED])
     else:
-        debateadjs = debateadjs.filter(debate__round__draw_status=Round.STATUS_RELEASED)
+        debateadjs = debateadjs.filter(debate__round__draw_status=Round.Status.RELEASED)
 
     choices = [(None, _("-- Adjudicators --"))]
     for debateadj in debateadjs:
@@ -301,13 +301,13 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
             display += _("%(name)s (panellist gave oral as chair rolled)")
 
         display %= {'name': adj.get_public_name(tournament), 'adjpos': ADJUDICATOR_POSITION_NAMES[pos]}
-        return (value, display)
+        return value, display
 
     # Only include non-silent rounds for teams.
     debates = Debate.objects.filter(
         debateteam__team=source, round__silent=False,
         round__seq__lte=tournament.current_round.seq,
-        round__stage=Round.STAGE_PRELIMINARY,
+        round__stage=Round.Stage.PRELIMINARY,
     ).order_by('-round__seq').prefetch_related(Prefetch(
         'debateadjudicator_set',
         queryset=DebateAdjudicator.objects.all().select_related('adjudicator').annotate(submitted=Exists(
@@ -319,9 +319,9 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
     ))
 
     if include_unreleased_draws:
-        debates = debates.filter(round__draw_status__in=[Round.STATUS_CONFIRMED, Round.STATUS_RELEASED])
+        debates = debates.filter(round__draw_status__in=[Round.Status.CONFIRMED, Round.Status.RELEASED])
     else:
-        debates = debates.filter(round__draw_status=Round.STATUS_RELEASED)
+        debates = debates.filter(round__draw_status=Round.Status.RELEASED)
 
     choices = [(None, _("-- Adjudicators --"))]
     for debate in debates:

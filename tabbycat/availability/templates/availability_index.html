@@ -35,7 +35,7 @@
 
 {% block page-subnav-actions %}
 
-  {% if round.draw_status != round.STATUS_NONE %}
+  {% if round.draw_status != round.Status.NONE %}
     <a class="btn btn-outline-success " href="{% roundurl 'draw' round %}">
       {% trans "View Draw" %} <i data-feather="chevron-right"></i>
     </a>
@@ -131,16 +131,21 @@
   {% url 'admin:tournaments_round_change' round.id as change_round_url %}
   {% tournamenturl 'breakqual-teams' round.break_category.slug as breakqual_teams_url %}
 
-  {% if not round.prev and round.draw_type == round.DRAW_POWERPAIRED %}
-    <div class="alert alert-warning">
-      <i data-feather="alert-circle"></i>
-      {% blocktrans trimmed with draw_type=round.get_draw_type_display|lower %}
-        This is the first round, but its draw type is
-        <strong>{{ draw_type }}</strong>. Did you intend for it
-        to be <strong>Random</strong> instead? You can
-        <a href="{{ change_round_url }}" class="alert-link">
-          edit this round's draw type in the Edit Database area.</a>
-      {% endblocktrans %}
+  {% if not round.prev and round.draw_type == round.DrawType.POWERPAIRED %}
+    <div class="alert alert-info">
+      <div class="row align-items-center">
+        <div class="col-auto pr-1">
+          <i data-feather="alert-circle"></i>
+        </div>
+        <div class="col pl-0 pr-0">
+          {% blocktrans trimmed %}
+            This is the first round, but its draw type is <strong>{{ draw_type }}</strong>.
+            Did you intend for it to be <strong>Random</strong> or <strong>Seeded</strong> instead?
+            You can <a href="{{ change_round_url }}" class="alert-link">edit this round's draw type
+            in the Edit Database area.</a>
+          {% endblocktrans %}
+        </div>
+      </div>
     </div>
   {% endif %}
 
@@ -156,7 +161,7 @@
     </div>
   {% endif %}
 
-  {% if round.is_break_round and round.draw_type != round.DRAW_ELIMINATION %}
+  {% if round.is_break_round and round.draw_type != round.DrawType.ELIMINATION %}
     <div class="alert alert-danger">
       <i data-feather="alert-circle"></i>
       {% blocktrans trimmed with draw_type=round.get_draw_type_display|lower %}

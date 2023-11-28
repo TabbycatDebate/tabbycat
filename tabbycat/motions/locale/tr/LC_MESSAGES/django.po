@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 04:15-0300\n"
-"PO-Revision-Date: 2020-05-24 07:32\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2023-02-12 02:25-0400\n"
+"PO-Revision-Date: 2023-05-25 23:54\n"
+"Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
 "MIME-Version: 1.0\n"
@@ -12,336 +12,388 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-Language: tr\n"
 "X-Crowdin-File: /develop/tabbycat/motions/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 936\n"
 
-#: motions/apps.py:7 motions/templates/public_motions.html:4
-#: motions/templates/public_motions.html:5
+#: motions/apps.py motions/templates/public_motions.html
 msgid "Motions"
 msgstr "Önergeler"
 
-#: motions/models.py:9
-msgid "sequence number"
-msgstr ""
-
-#: motions/models.py:10
-msgid "The order in which motions are displayed"
-msgstr ""
-
-#: motions/models.py:12
+#: motions/models.py
 msgid "text"
-msgstr ""
+msgstr "metin"
 
-#: motions/models.py:13
+#: motions/models.py
 msgid "The full motion e.g., \"This House would straighten all bananas\""
-msgstr ""
+msgstr "Önergenin tamamı örneğin, \"Bu Ev tüm muzları düzeltir.\""
 
-#: motions/models.py:15
+#: motions/models.py
 msgid "reference"
-msgstr ""
+msgstr "referans"
 
-#: motions/models.py:16
+#: motions/models.py
 msgid "Shortcode for the motion, e.g., \"Bananas\""
-msgstr ""
+msgstr "Önergenin kısa kodu, örneğin \"Muzlar\""
 
-#: motions/models.py:18
+#: motions/models.py
 msgid "info slide"
 msgstr "bilgi Slaydı"
 
-#: motions/models.py:19
+#: motions/models.py
 msgid "The information slide for this topic; if it has one"
-msgstr ""
+msgstr "Eğer varsa bu konu için bilgi slaytı:"
 
-#: motions/models.py:21
-msgid "round"
-msgstr "tur"
+#: motions/models.py
+msgid "tournament"
+msgstr "turnuva"
 
-#: motions/models.py:25 motions/models.py:37
+#: motions/models.py
+msgid "rounds"
+msgstr "turlar"
+
+#: motions/models.py
 msgid "motion"
 msgstr "önerge"
 
-#: motions/models.py:26
+#: motions/models.py
 msgid "motions"
 msgstr "önergeler"
 
-#: motions/models.py:35
+#: motions/models.py
 msgid "debate team"
-msgstr ""
+msgstr "tartışma ekibi"
 
-#: motions/models.py:39
+#: motions/models.py
 msgid "preferences"
-msgstr ""
+msgstr "tercihler"
 
-#: motions/models.py:41
+#: motions/models.py
 msgid "ballot submission"
-msgstr ""
+msgstr "ballot teslimi"
 
-#: motions/models.py:45
+#: motions/models.py
 msgid "debate team motion preference"
-msgstr ""
+msgstr "tartışma ekibi önerge tercihi"
 
-#: motions/models.py:46
+#: motions/models.py
 msgid "debate team motion preferences"
-msgstr ""
+msgstr "tartışma ekibi önerge tercihleri"
 
-#: motions/statistics.py:88
+#: motions/models.py
+msgid "round"
+msgstr "tur"
+
+#: motions/models.py
+msgid "sequence number"
+msgstr "sıra numarası"
+
+#: motions/models.py
+msgid "The order in which motions are displayed"
+msgstr "Önergelerin görüntülenme sırası"
+
+#: motions/models.py
+msgid "round motion"
+msgstr "tur önergesi"
+
+#: motions/models.py
+msgid "round motions"
+msgstr "tur önergeleri"
+
+#: motions/statistics.py
 msgid "extremely strong evidence"
-msgstr ""
+msgstr "çok güçlü kanıt"
 
-#: motions/statistics.py:89
+#: motions/statistics.py
 msgid "strong evidence"
-msgstr ""
+msgstr "güçlü kanıt"
 
-#: motions/statistics.py:90
+#: motions/statistics.py
 msgid "moderate evidence"
-msgstr ""
+msgstr "orta güçlü kanıt"
 
-#: motions/statistics.py:91
+#: motions/statistics.py
 msgid "weak evidence"
-msgstr ""
+msgstr "zayıf kanıt"
 
-#: motions/statistics.py:92
+#: motions/statistics.py
 msgid "very weak evidence"
-msgstr ""
+msgstr "çok zayıf kanıt"
 
-#: motions/statistics.py:93
+#: motions/statistics.py
 msgid "extremely weak evidence"
-msgstr ""
+msgstr "çok zayıf kanıt"
 
-#: motions/statistics.py:116
+#: motions/statistics.py
 msgid "balance inconclusive"
-msgstr ""
+msgstr "denge sonuçsuz"
 
-#: motions/statistics.py:117
+#: motions/statistics.py
 msgid "too few debates to get a meaningful statistic"
-msgstr ""
+msgstr "anlamlı bir istatistik elde etmek için çok az maç"
 
-#: motions/statistics.py:125
+#: motions/statistics.py
 #, python-format
 msgid "imbalanced at %(level)s level"
-msgstr ""
+msgstr "%(level)s seviyesinde dengesiz"
 
-#: motions/statistics.py:126
+#: motions/statistics.py
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing %(evidence)s to suggest that this motion was imbalanced — at a %(level)s level of significance."
-msgstr ""
+msgstr "χ² istatistiği %(chisq).3f ve bu önergenin dengesiz olduğunu gösteren %(level)s anlamlılık seviyesinde %(evidence)s sağlar."
 
-#: motions/statistics.py:131
+#: motions/statistics.py
 msgid "probably balanced"
-msgstr ""
+msgstr "muhtemelen dengeli"
 
-#: motions/statistics.py:132
+#: motions/statistics.py
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that this motion was imbalanced at any level of significance."
-msgstr ""
+msgstr "χ² istatistiği %(chisq).3f ve bu önergenin dengesiz olduğunu herhangi bir önemlilikle göstermek için yetersiz."
 
-#: motions/templates/motion_statistics.html:4
-#: motions/templates/motion_statistics.html:5 motions/views.py:165
-msgid "Motion Statistics"
-msgstr ""
-
-#: motions/templates/motion_statistics.html:12
-msgid "The results data displayed here is presented without tests for statistical significance. Correlations should not be automatically considered reliable; particularly at small tournaments and during elimination rounds."
-msgstr ""
-
-#: motions/templates/motion_statistics.html:39
-#: motions/templates/public_motions.html:31
+#: motions/templates/motion_global_statistics.html
+#: motions/templates/motion_round_statistics.html
+#: motions/templates/public_motions.html
 msgid "View Info Slide"
-msgstr ""
+msgstr "Bilgi Slaytını Görüntüle"
 
-#: motions/templates/motion_statistics_bp_elim.html:10
+#: motions/templates/motion_statistics_bp_elim.html
 #, python-format
 msgid "results from %(ndebates)s debate"
 msgid_plural "results from %(ndebates)s debates"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(ndebates)s tartışmasından elde edilen sonuçlar"
+msgstr[1] "%(ndebates)s tartışmalarından elde edilen sonuçlar"
 
-#: motions/templates/motion_statistics_bp_elim.html:26
+#: motions/templates/motion_statistics_bp_elim.html
 #, python-format
 msgid "%(advancing)s of %(ndebates)s team on %(side)s (%(percentage)s%%) advanced"
 msgid_plural "%(advancing)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) advanced"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(side)sdan %(ndebates)s takımdan %(advancing)s ilerledi. (%(percentage)s%%)"
+msgstr[1] "%(side)sdan %(ndebates)s takımdan %(advancing)s ilerledi. (%(percentage)s%%)"
 
-#: motions/templates/motion_statistics_bp_elim.html:31
+#: motions/templates/motion_statistics_bp_elim.html
 #, python-format
 msgid "%(eliminated)s of %(ndebates)s team on %(side)s (%(percentage)s%%) were eliminated"
 msgid_plural "%(eliminated)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) were eliminated"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(side)sdan %(ndebates)s takımdan %(advancing)s elendi. (%(percentage)s%%)"
+msgstr[1] "%(side)sdan %(ndebates)s takımdan %(advancing)s elendi. (%(percentage)s%%)"
 
-#: motions/templates/motion_statistics_bp_elim.html:41
+#: motions/templates/motion_statistics_bp_elim.html
 msgid "advanced"
-msgstr ""
+msgstr "ilerleyen"
 
-#: motions/templates/motion_statistics_bp_elim.html:43
+#: motions/templates/motion_statistics_bp_elim.html
 msgctxt "abbreviation for 'advanced', used when not enough space"
 msgid "adv."
-msgstr ""
+msgstr "ile."
 
-#: motions/templates/motion_statistics_bp_elim.html:50
+#: motions/templates/motion_statistics_bp_elim.html
 msgid "eliminated"
-msgstr ""
+msgstr "elenen"
 
-#: motions/templates/motion_statistics_bp_elim.html:52
+#: motions/templates/motion_statistics_bp_elim.html
 msgctxt "abbreviation for 'eliminated', used when not enough space"
 msgid "elim."
-msgstr ""
+msgstr "ele."
 
-#: motions/templates/motion_statistics_bp_elim.html:58
+#: motions/templates/motion_statistics_bp_elim.html
 #, python-format
 msgid "%(side)s results distribution"
-msgstr ""
+msgstr "%(side)s sonuç dağılımı"
 
-#: motions/templates/motion_statistics_bp_elim.html:72
-#: motions/templates/motion_statistics_bp_prelim.html:115
+#: motions/templates/motion_statistics_bp_elim.html
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "No results for this motion"
-msgstr ""
+msgstr "Bu önerge için sonuç yok"
 
-#: motions/templates/motion_statistics_bp_prelim.html:13
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Government"
-msgstr ""
+msgstr "Hükümet"
 
-#: motions/templates/motion_statistics_bp_prelim.html:17
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Opposition"
-msgstr ""
+msgstr "Muhalefet"
 
-#: motions/templates/motion_statistics_bp_prelim.html:21
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Average Points per bench"
-msgstr ""
+msgstr "Kürsü başına ortalama puan"
 
-#: motions/templates/motion_statistics_bp_prelim.html:29
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Opening"
-msgstr ""
+msgstr "Açılış"
 
-#: motions/templates/motion_statistics_bp_prelim.html:33
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Closing"
-msgstr ""
+msgstr "Kapanış"
 
-#: motions/templates/motion_statistics_bp_prelim.html:37
+#: motions/templates/motion_statistics_bp_prelim.html
 msgid "Average Points per half"
-msgstr ""
+msgstr "Yarım başına ortalama puan"
 
-#: motions/templates/motion_statistics_bp_prelim.html:60
+#: motions/templates/motion_statistics_bp_prelim.html
 #, python-format
 msgid "average points per position (%(ndebates)s debate)"
 msgid_plural "average points per position (%(ndebates)s debates)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "pozisyon başına ortalama puan (%(ndebates)s maç)"
+msgstr[1] "pozisyon başına ortalama puan (%(ndebates)s maç)"
 
-#: motions/templates/motion_statistics_bp_prelim.html:78
+#: motions/templates/motion_statistics_bp_prelim.html
 #, python-format
 msgid "%(count)s result for %(side)s (%(percentage)s%%) were for %(points)s points"
 msgid_plural "%(count)s results for %(side)s (%(percentage)s%%) were for %(points)s points"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(side)s için %(count)s sonuç (%(percentage)s%%) %(points)s puandı."
+msgstr[1] "%(side)s için %(count)s sonuç (%(percentage)s%%) %(points)s puandı."
 
-#: motions/templates/motion_statistics_bp_prelim.html:101
+#: motions/templates/motion_statistics_bp_prelim.html
 #, python-format
 msgid "%(side)s results"
-msgstr ""
+msgstr "%(side)s sonuçları"
 
-#: motions/templates/motion_statistics_twoteam.html:31
-#: motions/templates/motion_statistics_twoteam.html:38
+#: motions/templates/motion_statistics_twoteam.html
 #, python-format
 msgid "%(count)s %(side)s win"
 msgid_plural "%(count)s %(side)s wins"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)s %(side)s galibiyet"
+msgstr[1] "%(count)s %(side)s galibiyet"
 
-#: motions/templates/motion_statistics_twoteam.html:53
+#: motions/templates/motion_statistics_twoteam.html
 msgid "No teams debated this motion"
-msgstr ""
+msgstr "Hiçbir takım bu önergeyi tartışmadı"
 
-#: motions/templates/motion_statistics_twoteam.html:91
-#: motions/templates/motion_statistics_twoteam.html:98
+#: motions/templates/motion_statistics_twoteam.html
 #, python-format
 msgid "%(count)s %(side)s veto"
 msgid_plural "%(count)s %(side)s vetoes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)s %(side)s veto"
+msgstr[1] "%(count)s %(side)s veto"
 
-#: motions/templates/motion_statistics_twoteam.html:113
+#: motions/templates/motion_statistics_twoteam.html
 msgid "No teams vetoed this motion"
-msgstr ""
+msgstr "Hiçbir takım bu önergeyi veto etmedi"
 
-#: motions/templates/motions_edit.html:4 motions/templates/motions_edit.html:10
+#: motions/templates/motions_edit.html
 msgid "Edit Motion"
 msgid_plural "Edit Motions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Önergeyi Düzenle"
+msgstr[1] "Önergeleri Düzenle"
 
-#: motions/templates/motions_edit.html:18
+#: motions/templates/motions_edit.html
 msgid "Display Draw"
-msgstr ""
+msgstr "Kurayı Göster"
 
-#: motions/templates/motions_edit.html:55
+#: motions/templates/motions_edit.html
+msgid "This will replace all existing motions for this round. The motions themselves will still be in the database."
+msgstr "Bu, bu tur için mevcut tüm önergelerin yerini alacak. Önergeler veritabanında kalacaktır."
+
+#: motions/templates/motions_edit.html
+msgid "Reuse Motions from Last Round"
+msgstr "Geçen Turdaki Önergeleri Yeniden Kullan"
+
+#: motions/templates/motions_edit.html
+msgid "Use Existing Motions"
+msgstr "Mevcut Önergeleri Kullan"
+
+#: motions/templates/motions_edit.html
+msgid "The motion for this round is currently publicly displayed because it was released. Any changes made here will be publicly visible as well as soon as they are saved."
+msgid_plural "The motions for this round are currently publicly displayed because they were released. Any changes made here will be publicly visible as well as soon as they are saved."
+msgstr[0] "Bu turun önergesi şu anda herkese açık gösteriliyor, çünkü yayınlandı. Burada yapılan tüm değişiklikler, kaydedildikleri anda herkes tarafından görülebilir."
+msgstr[1] "Bu turun önergeleri şu anda herkese açık gösteriliyor, çünkü yayınlandı. Burada yapılan tüm değişiklikler, kaydedildikleri anda herkes tarafından görülebilir."
+
+#: motions/templates/motions_edit.html
 msgid "Save Motion"
 msgid_plural "Save Motions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Önergeyi Kaydet"
+msgstr[1] "Önergeleri Kaydet"
 
-#: motions/templates/motions_info.html:8
+#: motions/templates/motions_info.html
 msgid "Info Slide"
 msgstr "Bilgi Slaydı"
 
-#: motions/templates/public_motions.html:39
+#: motions/templates/public_motions.html
 msgid "There are no motions available for this round."
-msgstr ""
+msgstr "Bu tur için herhangi bir önerge bulunmamaktadır."
 
-#: motions/templates/public_motions.html:45
+#: motions/templates/public_motions.html
 msgid "The motions for this round have not been released."
-msgstr ""
+msgstr "Bu turun önergeleri henüz yayınlanmadı."
 
-#: motions/templates/public_motions.html:50
+#: motions/templates/public_motions.html
 msgid "The motion for this round has not been released."
-msgstr ""
+msgstr "Bu turun önergesi henüz yayınlanmadı."
 
-#: motions/templates/show.html:16
+#: motions/templates/show.html
 #, python-format
 msgid "Reveal Info Slide for %(round)s"
 msgid_plural "Reveal Info Slides for %(round)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(round)s için Bilgi Slaytını Göster"
+msgstr[1] "%(round)s için Bilgi Slaytlarını Göster"
 
-#: motions/templates/show.html:24
+#: motions/templates/show.html
 #, python-format
 msgid "Reveal Motion for %(round)s"
 msgid_plural "Reveal Motions for %(round)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(round)s için Önerge Yayınla"
+msgstr[1] "%(round)s için Önergeleri Yayınla"
 
-#: motions/templates/show.html:41
+#: motions/templates/show.html
 msgid "There are no motions for this round entered into Tabbycat."
-msgstr ""
+msgstr "Bu tur için Tabbycat'e girilmiş herhangi bir önerge yoktur."
 
-#: motions/views.py:87
+#: motions/utils.py
+msgid "Not all latest ballots list the same motion, so could not be merged."
+msgstr "En son ballotların hepsinde aynı önerge yok, bu nedenle birleştirilemezler."
+
+#: motions/utils.py
+msgid "Motion vetos are inconsistent, so could not be merged."
+msgstr "Önerge vetoları tutarsızdır, bu nedenle birleştirilemez."
+
+#: motions/views.py
 msgid "The motion has been saved."
-msgstr ""
+msgstr "Önerge kaydedildi."
 
-#: motions/views.py:89
+#: motions/views.py
 #, python-format
 msgid "%(count)d motion has been saved."
 msgid_plural "%(count)d motions have been saved."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)d önerge kaydedildi."
+msgstr[1] "%(count)d önerge kaydedildi."
 
-#: motions/views.py:94
+#: motions/views.py
 #, python-format
 msgid "%(count)d motion has been deleted."
 msgid_plural "%(count)d motions have been deleted."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)d önerge silindi."
+msgstr[1] "%(count)d önerge silindi."
 
-#: motions/views.py:118
-msgid "Released the motion(s)."
-msgstr ""
+#: motions/views.py
+msgid "Motions cannot be copied to the first round."
+msgstr "Önergeler ilk tura kopyalanamaz."
 
-#: motions/views.py:125
-msgid "Unreleased the motion(s)."
-msgstr ""
+#: motions/views.py
+#, python-format
+msgid "Reused the motion from the previous round."
+msgid_plural "Reused the %(count)d motions from the previous round."
+msgstr[0] "Önceki turdaki önerge yeniden kullandı."
+msgstr[1] "Önceki turdaki %(count)d önerge yeniden kullanıldı."
 
-#: motions/views.py:149
+#: motions/views.py
+msgid "Released the motion."
+msgid_plural "Released the motions."
+msgstr[0] "Önerge yayınlandı."
+msgstr[1] "Önergeler yayınlandı."
+
+#: motions/views.py
+msgid "Unreleased the motion."
+msgid_plural "Unreleased the motions."
+msgstr[0] "Önerge yayından kaldırıldı."
+msgstr[1] "Önergeler yayından kaldırıldı."
+
+#: motions/views.py
 msgid "Round Motions"
-msgstr ""
+msgstr "tur önergeleri"
+
+#: motions/views.py
+msgid "Motion Statistics"
+msgstr "Önerge İstatistikleri"
 

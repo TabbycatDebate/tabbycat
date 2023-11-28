@@ -64,9 +64,12 @@ export default {
       }
       // Sort the array of rows based on the value of the cell index
       // For DrawContainer row is the debate dictionary
-      const self = this
       return _.orderBy(this.sortableData, (row) => {
-        const cellData = self.getSortableProperty(row, orderedHeaderIndex)
+        const cellData = this.getSortableProperty(row, orderedHeaderIndex)
+        if (cellData === '') {
+          // Nulls last
+          return -1
+        }
         if (_.isString(cellData)) {
           return _.lowerCase(cellData)
         }
@@ -85,7 +88,7 @@ export default {
         // Filter through all rows; within each row check...
         let rowContainsMatch = false
         _.forEach(row, (cell) => {
-          // ...and see if  has cells whose text-string contains filterKey
+          // ...and see if it has cells whose text-string contains filterKey
           if (_.includes(_.lowerCase(cell.text), _.lowerCase(filterKey))) {
             rowContainsMatch = true
           }

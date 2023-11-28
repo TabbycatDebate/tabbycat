@@ -102,7 +102,7 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CONSTRAINTS_EDIT
 
     def get_formset_factory_kwargs(self):
-        # Need to built a dynamic choices list for the widget; so override the
+        # Need to build a dynamic choices list for the widget; so override the
         # standard method of getting args
         formset_factory_kwargs = {
             'fields': ('subject_content_type', 'subject_id', 'category', 'priority'),

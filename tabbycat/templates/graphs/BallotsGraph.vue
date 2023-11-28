@@ -125,11 +125,11 @@ export default {
       return 0
     },
     timePadding: function () {
-      // Ammount to pad the start and end of the graph by to show state
+      // Amount to pad the start and end of the graph by to show state
       const defaultTime = 1000 * 60
-      if (this.earliestBallotTime && this.lastestBallotTime) {
+      if (this.earliestBallotTime && this.lastBallotTime) {
         return Math.max(
-          Math.abs((this.lastestBallotTime - this.earliestBallotTime) * 0.02),
+          Math.abs((this.lastBallotTime - this.earliestBallotTime) * 0.02),
           defaultTime,
         )
       }
@@ -188,7 +188,7 @@ export default {
       }
       return this.ballots[0].created_timestamp
     },
-    lastestBallotTime: function () {
+    lastBallotTime: function () {
       if (this.ballots.length === 0) {
         return null
       }

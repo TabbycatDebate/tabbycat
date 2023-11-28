@@ -74,7 +74,7 @@ Account Setup
 
 `Heroku <http://www.heroku.com/>`_ is a platform as a service on which Tabbycat can be installed to be available on the internet. Naturally, this requires you to have a Heroku account. Head to the site and sign-up for one.
 
-.. note:: During the setup process, Heroku will ask you to verify your account by adding a credit card. A standard Tabbycat site *will not charge* your card — charges only accrue if you deliberately add a paid service in the Heroku dashboard.
+.. note:: During the setup process, Heroku will ask you to verify your account by adding a credit card. A standard Tabbycat site *may charge* your card. If you have a paid Heroku Eco plan Tabbycat will use your Eco hours and you will not be charged, otherwise Tabbycat will use 2 Basic dynos which cost roughly $0.25/day or $7/month each.
 
 1. Install dependencies
 -----------------------
@@ -101,11 +101,15 @@ a. Navigate on the command-line your Tabbycat directory. If you have not changed
 
     cd tabbycat
 
-b. Run the script to deploy the app to Heroku. Replace ``yourappname`` with your preferred URL. Your website will be at ``yourappname.herokuapp.com``.
+b. Run the script to deploy the app to Heroku. Replace ``yourappname`` with your preferred URL. Your website will be at ``yourappname-suffix.herokuapp.com``.
+
+  .. warning:: On June 14th, 2023, Heroku started appending 12-character random suffixes to subdomains to prevent domain takeover when an app is renamed or deleted. Tabs created before this point will keep their ``yourappname.herokuapp.com`` domain, but new tabs will have the random suffix after ``yourappname``.
 
   ::
 
     python deploy_heroku.py yourappname
+
+  The script uses the default dyno type for your Heroku account. If you have a paid Heroku Eco plan, the script will use Eco dynos. If you do not have an Eco plan, it will use Basic dynos which are billed based on usage. You can use the ``--web-dynos`` option to use a specific type, such as ``--web-dynos 1:basic`` if you have an Eco plan but wish to use Basic dynos.
 
   This script has other options that you might find useful. Run ``python deploy_heroku.py --help`` for details.
 
@@ -122,9 +126,11 @@ TLDR commands
 
 .. warning:: We provide a "short version" for experienced users. Don't just copy and paste these commands before you understand what they do! If things aren't set up perfectly they can fail, so it's important to supervise them the first time you do them. If this is all new to you, read the long version of the instructions below.
 
+The script uses the default dyno type for your Heroku account. If you have a paid Heroku Eco plan, the script will use Eco dynos. If you do not have an Eco plan, it will use Basic dynos which are billed based on usage. You can use the ``--web-dynos`` option with the last command to use a specific type, such as ``--web-dynos 1:basic`` if you have an Eco plan but wish to use Basic dynos.
+
 .. parsed-literal::
 
-  git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
+  git clone https://github.com/TabbycatDebate/tabbycat.git
   cd tabbycat
   git checkout master
   python deploy_heroku.py yourappname
@@ -139,20 +145,20 @@ If you have a large tournament, you may want to customize your Heroku app. This 
 Upgrading your database size
 ----------------------------
 
-The free plan of `Heroku Postgres <https://elements.heroku.com/addons/heroku-postgresql>`_, "Hobby Dev", should work for most small tournaments. For large tournaments, however, you may find that you exceed the 10,000-row limit of this plan. It's difficult to give general guidance on how many rows you're likely to use, because it depends on which features of Tabbycat you use (*e.g.*, if you use adjudicator feedback). But to give some idea:
+The Mini plan of `Heroku Postgres <https://elements.heroku.com/addons/heroku-postgresql>`_, should work for most small tournaments. For large tournaments, however, you may find that you exceed the 10,000-row limit of this plan. It's difficult to give general guidance on how many rows you're likely to use, because it depends on which features of Tabbycat you use (*e.g.*, if you use adjudicator feedback). But to give some idea:
 
 - Australs 2016, which had 74 teams, 8 preliminary rounds and heavily used adjudicator feedback, ended up at around 30,000 rows.
 - The Asia BP championships 2017 had 100 teams, 6 preliminary rounds, and mandatory feedback (i.e. 100% return rates) used 15,000 rows.
 - A 3 vs 3 tournament with 54 teams, 5 preliminary rounds, and which only lightly used adjudicator feedback ended up using around 4,500 rows
 
-If you need more than 10,000 rows, you'll need to upgrade to a paid Heroku Postgres Plan. The 10,000,000 rows allowed in the lowest paid plan, "Hobby Basic", should certainly be more than sufficient.
+If you need more than 10,000 rows, you'll need to upgrade to a larger Heroku Postgres Plan. The 10,000,000 rows allowed in the lowest paid plan, "Basic", should certainly be more than sufficient.
 
-If you're not sure, you can always start at Hobby Dev—just be prepared to `upgrade <https://devcenter.heroku.com/articles/upgrade-heroku-postgres-with-pgbackups>`_ during the tournament if you run close to capacity.
+If you're not sure, you can always start at Mini—just be prepared to `upgrade <https://devcenter.heroku.com/articles/upgrade-heroku-postgres-with-pgbackups>`_ during the tournament if you run close to capacity.
 
 Custom domain names
 -------------------
 
-Your Heroku app will be available at ``yourappname.herokuapp.com``. You may want it to be a subdomain of your tournament's website, like ``tab.australasians2015.org``. If so, you'll need to configure your custom domain and SSL. Instructions for both are in the Heroku Dev Center:
+Your Heroku app will be available at ``yourappname-suffix.herokuapp.com``. You may want it to be a subdomain of your tournament's website, like ``tab.australasians2015.org``. If so, you'll need to configure your custom domain and SSL. Instructions for both are in the Heroku Dev Center:
 
 - `Custom Domain Names for Apps <https://devcenter.heroku.com/articles/custom-domains>`_
 - `Heroku SSL <https://devcenter.heroku.com/articles/ssl>`_
@@ -203,7 +209,8 @@ You'll need both Git and the Heroku CLI, and you'll need to be logged in to the 
 
 2. If you haven't already, clone our Git repository and check out the master branch::
 
-    $ git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
+    $ git clone https://github.com/TabbycatDebate/tabbycat.git
+    $ cd tabbycat
     $ git checkout master
 
   If you've already cloned our Git repository, don't forget to pull so you're up to date::
@@ -214,17 +221,17 @@ You'll need both Git and the Heroku CLI, and you'll need to be logged in to the 
 3. Check to see if you have a Git remote already in place::
 
     $ git remote -v
-    heroku  https://git.heroku.com/mytournament2018.git (fetch)
-    heroku  https://git.heroku.com/mytournament2018.git (push)
+    heroku  https://git.heroku.com/yourappname.git (fetch)
+    heroku  https://git.heroku.com/yourappname.git (push)
 
-  If you do, the name of the remote will be on the left (``heroku`` in the above example), and the URL of your Git repository will be on the right. In the example above, our Tabbycat site URL would be ``mytournament2018.herokuapp.com``; the Git remote URL is then ``https://git.heroku.com/mytournament2018.git``.
+  If you do, the name of the remote will be on the left (``heroku`` in the above example), and the URL of your Git repository will be on the right. In the example above, our Tabbycat site URL would be ``yourappname-suffix.herokuapp.com``; the Git remote URL is then ``https://git.heroku.com/yourappname.git``.
 
   If a Git remote URL for your Tabbycat site *doesn't* appear, then create one::
 
-    $ heroku git:remote --app mytournament2018 --remote heroku
-    set git remote heroku to https://git.heroku.com/mytournament2018.git
+    $ heroku git:remote --app yourappname --remote heroku
+    set git remote heroku to https://git.heroku.com/yourappname.git
 
-  .. tip:: If you tab many tournaments, it'll probably be helpful to use a name other than ``heroku`` (say, ``mytournament2018``), so that you can manage multiple tournaments.
+  .. tip:: If you tab many tournaments, it'll probably be helpful to use a name other than ``heroku`` (say, ``yourappname``), so that you can manage multiple tournaments.
 
 4. Push to Heroku::
 

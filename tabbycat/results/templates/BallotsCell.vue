@@ -67,7 +67,7 @@ export default {
       return this.viableBallotsCount === this.cellData.ballots.length
     },
     canMergeCreate: function () {
-      // it's mergeable if there is at least one single-adj non-discarded ballot
+      // it's merge-able if there is at least one single-adj non-discarded ballot
       // (ok to have just one, since user might want to fill in the others)
       return this.cellData.ballots.some((b) => !b.discarded && b.single_adj)
     },

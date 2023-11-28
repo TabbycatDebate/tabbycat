@@ -75,39 +75,45 @@ export default {
       }
       const allocationChanges = []
       const adjudicatorsSetModified = [dragData.item]
-      let fromAllocation = this.getAllocation(dragData.assignment)
+      let fromAllocation = dragData.assignment === undefined
+        ? this.getAllocation(dragData.panel) : this.getAllocation(dragData.assignment)
       let toAllocation = this.getAllocation(dropData.assignment)
       if (dragData.assignment === dropData.assignment) {
         toAllocation = fromAllocation // If repositioning we don't want two distinct allocations
       }
 
-      // Re-form the assignments
-      if (fromAllocation !== null) { // Not moving FROM Unused
-        fromAllocation = this.removeFromAllocation(fromAllocation, dragData.item, dragData.position)
-      }
-      if (toAllocation !== null) { // Not moving TO Unused
-        toAllocation = this.addToAllocation(toAllocation, dragData.item, dropData.position)
-        // If the adj was moved to a chair position there are now two; need to move or swap
-        if (toAllocation.C.length > 1) {
-          const existingChair = toAllocation.C[0]
-          adjudicatorsSetModified.push(existingChair)
-          toAllocation = this.removeFromAllocation(toAllocation, existingChair, 'C')
-          if (dragData.assignment !== null) {
-            // Dragging from a chair to chair; thus move existing chair to chair in original debate
-            fromAllocation = this.addToAllocation(fromAllocation, existingChair, dragData.position)
+      if (dragData.panel) {
+        // Delete panel
+        allocationChanges.push({ id: dragData.panel, adjudicators: { C: [], P: [], T: [] } })
+      } else {
+        // Re-form the assignments
+        if (fromAllocation !== null) { // Not moving FROM Unused
+          fromAllocation = this.removeFromAllocation(fromAllocation, dragData.item, dragData.position)
+        }
+        if (toAllocation !== null) { // Not moving TO Unused
+          toAllocation = this.addToAllocation(toAllocation, dragData.item, dropData.position)
+          // If the adj was moved to a chair position there are now two; need to move or swap
+          if (toAllocation.C.length > 1) {
+            const existingChair = toAllocation.C[0]
+            adjudicatorsSetModified.push(existingChair)
+            toAllocation = this.removeFromAllocation(toAllocation, existingChair, 'C')
+            if (dragData.assignment !== null) {
+              // Dragging from a chair to chair; thus move existing chair to chair in original debate
+              fromAllocation = this.addToAllocation(fromAllocation, existingChair, dragData.position)
+            }
           }
         }
-      }
 
-      // Send results
-      if (fromAllocation !== null) {
-        allocationChanges.push({ id: dragData.assignment, adjudicators: fromAllocation })
-      }
-      if (toAllocation !== null && dragData.assignment !== dropData.assignment) {
-        allocationChanges.push({ id: dropData.assignment, adjudicators: toAllocation })
+        // Send results
+        if (fromAllocation !== null) {
+          allocationChanges.push({ id: dragData.assignment ?? dragData.panel, adjudicators: fromAllocation })
+        }
+        if (toAllocation !== null && dragData.assignment !== dropData.assignment) {
+          allocationChanges.push({ id: dropData.assignment, adjudicators: toAllocation })
+        }
       }
       this.$store.dispatch('updateDebatesOrPanelsAttribute', { adjudicators: allocationChanges })
-      this.$store.dispatch('updateAllocableItemModified', adjudicatorsSetModified)
+      this.$store.dispatch('updateAllocatableItemModified', adjudicatorsSetModified)
     },
     showShard: function () {
       $('#confirmShardModal').modal('show')

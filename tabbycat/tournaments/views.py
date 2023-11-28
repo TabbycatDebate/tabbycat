@@ -89,7 +89,7 @@ class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin
 
         status = t.current_round.draw_status
         kwargs["total_debates"] = t.current_round.debate_set.count()
-        if status == Round.STATUS_CONFIRMED or status == Round.STATUS_RELEASED:
+        if status == Round.Status.CONFIRMED or status == Round.Status.RELEASED:
             ballots = BallotSubmission.objects.filter(
                 debate__round=t.current_round, discarded=False).select_related(
                 'submitter', 'debate')
@@ -129,8 +129,23 @@ class CompleteRoundCheckView(AdministratorMixin, RoundMixin, TemplateView):
             result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
         kwargs['increment_ok'] = kwargs['num_unconfirmed'] == 0
         kwargs['emails_sent'] = BulkNotification.objects.filter(
-            tournament=self.tournament, round=self.round, event=BulkNotification.EVENT_TYPE_POINTS).exists()
+            tournament=self.tournament, round=self.round, event=BulkNotification.EventType.POINTS).exists()
         return super().get_context_data(**kwargs)
+
+
+class CompleteRoundToggleSilentView(AdministratorMixin, RoundMixin, PostOnlyRedirectView):
+    round_redirect_pattern_name = 'tournament-complete-round-check'
+
+    def post(self, request, *args, **kwargs):
+        self.round.silent = request.POST["state"] != "True"
+        self.round.save()
+
+        if self.round.silent:
+            messages.success(request, _("%(round)s has been marked as silent.") % {'round': self.round.name})
+        else:
+            messages.success(request, _("%(round)s has been unmarked as silent.") % {'round': self.round.name})
+
+        return super().post(request, *args, **kwargs)
 
 
 class CompleteRoundView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnlyRedirectView):
@@ -158,10 +173,10 @@ class CompleteRoundView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnly
             round_for_redirect = incomplete_rounds.order_by('seq').first()
             return redirect_round('availability-index', round_for_redirect)
 
-        if (self.round.stage == Round.STAGE_PRELIMINARY and
-                self.round.next.stage == Round.STAGE_ELIMINATION):
+        if (self.round.stage == Round.Stage.PRELIMINARY and
+                self.round.next.stage == Round.Stage.ELIMINATION):
 
-            incomplete_prelim_rounds = incomplete_rounds.filter(stage=Round.STAGE_PRELIMINARY)
+            incomplete_prelim_rounds = incomplete_rounds.filter(stage=Round.Stage.PRELIMINARY)
 
             if not incomplete_prelim_rounds.exists():
                 messages.success(request, _("%(round)s has been marked as completed. "
@@ -224,6 +239,8 @@ class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
     template_name = 'set_current_round.html'
     slug_url_kwarg = 'tournament_slug'
     redirect_field_name = 'next'
+    page_title = _('Set Current Round')
+    page_emoji = '🙏'
 
     def get_form_class(self):
         if self.tournament.breakcategory_set.count() <= 1:

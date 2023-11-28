@@ -101,7 +101,7 @@ class WarnAboutDatabaseUseMixin(ContextMixin):
 
     If a user has hit 8000 rows they have received Heroku's shut down
     notification. They are probably fine to finish current tournament even if it
-    exceeds these limits because of the one-week grace period. However they
+    exceeds these limits because of the one-week grace period. However, they
     should not create new tournaments as this typically happens after the grace
     period and is thus subject to major disruptions."""
 

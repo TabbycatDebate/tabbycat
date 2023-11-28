@@ -8,7 +8,9 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.utils.translation import gettext as _, ngettext, ngettext_lazy
 
+from checkins.models import PersonIdentifier, VenueIdentifier
 from participants.models import Adjudicator, Institution, Speaker, Team
+from privateurls.utils import populate_url_keys
 from venues.models import Venue
 
 logger = logging.getLogger(__name__)
@@ -150,6 +152,12 @@ class VenueDetailsForm(BaseTournamentObjectDetailsForm):
         model = Venue
         fields = ('name', 'priority')
 
+    def save(self, commit=True):
+        venue = super().save(commit=commit)
+        if commit:
+            VenueIdentifier.objects.create(venue=venue)
+        return venue
+
 
 class BaseInstitutionObjectDetailsForm(BaseTournamentObjectDetailsForm):
     """Adds a hidden input for the institution and automatic detection of the
@@ -188,14 +196,17 @@ class BaseInstitutionObjectDetailsForm(BaseTournamentObjectDetailsForm):
 class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
     """Adds provision for a textarea input for speakers."""
 
-    speakers = forms.CharField(required=True, label=_("Speakers' names")) # widget is set in form constructor
+    # widgets are set in form constructor
+    speakers = forms.CharField(required=True, label=_("Speakers' names"), help_text=_("Can be separated by newlines, tabs or commas"))
     emails = forms.CharField(required=False, label=_("Speakers' email addresses"),
-        help_text=_("Optional, useful to include if distributing private URLs, list in same order as speakers' names")) # widget is set in form constructor
+        help_text=_("Optional, useful to include if distributing private URLs, list in same order as speakers' names"))
     short_reference = forms.CharField(widget=forms.HiddenInput, required=False) # doesn't actually do anything, just placeholder to avoid validation failure
+
+    field_order = ['reference', 'use_institution_prefix', 'speakers', 'emails', 'seed']
 
     class Meta:
         model = Team
-        fields = ('reference', 'short_reference', 'use_institution_prefix', 'institution')
+        fields = ('reference', 'short_reference', 'use_institution_prefix', 'institution', 'seed')
         labels = {
             'reference': _("Name (excluding institution name)"),
             'use_institution_prefix': _("Prefix team name with institution name?"),
@@ -216,11 +227,24 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
         nspeakers = tournament.pref('substantive_speakers')
         self.fields['speakers'].widget = forms.Textarea(attrs={'rows': nspeakers,
                 'placeholder': _("One speaker's name per line")})
-        self.fields['speakers'].help_text = _("Can be separated by newlines, tabs or commas")
         self.initial.setdefault('speakers', "\n".join(
                 _("Speaker %d") % i for i in range(1, nspeakers+1)))
         self.fields['emails'].widget = forms.Textarea(attrs={'rows': nspeakers,
                 'placeholder': "\n".join(_("speaker%d@example.edu") % i for i in range(1, nspeakers+1))})
+
+        seed_label = self.fields['seed'].label
+        seed_help = self.fields['seed'].help_text
+        if tournament.pref('show_seed_in_importer') == 'numeric':
+            self.fields['seed'] = forms.IntegerField(required=False, label=seed_label, help_text=seed_help, min_value=0)
+        elif tournament.pref('show_seed_in_importer') == 'title':
+            self.fields['seed'] = forms.ChoiceField(required=False, label=seed_label, choices=(
+                (0, _("Unseeded")),
+                (1, _("Free seed")),
+                (2, _("Half seed")),
+                (3, _("Full seed")),
+            ), help_text=seed_help)
+        else:
+            self.fields.pop('seed')
 
     @staticmethod
     def _split_lines(data):
@@ -280,7 +304,11 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
         if commit:
             team.save()
             for name, email in zip_longest(self.cleaned_data['speakers'], self.cleaned_data['emails']):
-                team.speaker_set.create(name=name, email=email)
+                speaker = team.speaker_set.create(name=name, email=email)
+
+                PersonIdentifier.objects.create(person=speaker)
+                populate_url_keys([speaker])
+
             team.break_categories.set(team.tournament.breakcategory_set.filter(is_general=True))
 
             if team.institution:
@@ -320,8 +348,13 @@ class AdjudicatorDetailsForm(BaseInstitutionObjectDetailsForm):
 
     def save(self, commit=True):
         adj = super().save(commit=commit)
-        if commit and adj.institution:
-            adj.adjudicatorinstitutionconflict_set.create(institution=adj.institution)
+
+        if commit:
+            if adj.institution:
+                adj.adjudicatorinstitutionconflict_set.create(institution=adj.institution)
+            PersonIdentifier.objects.create(person=adj)
+            populate_url_keys([adj])
+
         return adj
 
 

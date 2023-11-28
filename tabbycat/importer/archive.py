@@ -10,7 +10,7 @@ from breakqual.models import BreakCategory
 from draw.models import Debate, DebateTeam
 from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
 from options.presets import (AustralianEastersPreferences, AustralsPreferences, BritishParliamentaryPreferences,
-                             CanadianParliamentaryPreferences, JoyntPreferences, NZEastersPreferences, save_presets,
+                             CanadianParliamentaryPreferences, JoyntPreferences, NZEastersPreferences,
                              UADCPreferences, WSDCPreferences)
 from participants.emoji import EMOJI_BY_NAME
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
@@ -39,6 +39,8 @@ class Exporter:
     def __init__(self, tournament):
         self.t = tournament
         self.root = Element('tournament', {'name': tournament.name, 'short': tournament.short_name})
+        if tournament.pref('teams_in_debate') == 'bp':
+            self.root.set('style', 'bp')
 
     def create_all(self):
         self.add_rounds()
@@ -71,11 +73,11 @@ class Exporter:
             round_tag = SubElement(self.root, 'round', {
                 'name': round.name,
                 'abbreviation': round.abbreviation,
-                'elimination': str(round.stage == Round.STAGE_ELIMINATION).lower(),
+                'elimination': str(round.stage == Round.Stage.ELIMINATION).lower(),
                 'feedback-weight': str(round.feedback_weight),
             })
 
-            if round.stage == Round.STAGE_ELIMINATION:
+            if round.stage == Round.Stage.ELIMINATION:
                 round_tag.set('break-category', BREAK_CATEGORY_PREFIX + str(round.break_category_id))
 
             if round.starts_at is not None and round.starts_at != "":
@@ -335,7 +337,7 @@ class Importer:
             self.tournament.slug = slugify(self.root.get('name')[:50])
         self.tournament.save()
 
-        self.is_bp = self.root.get('style') == 'bp' or len(self.root.findall('round/debate[1]/side')) == 4
+        self.is_bp = self.root.get('style') == 'bp' or len(self.root.findall('round[1]/debate[1]/side')) == 4
 
         # Import all the separate parts
         self.set_preferences()
@@ -376,7 +378,7 @@ class Importer:
         }
         if self.root.get('style') is not None and styles[self.root.get('style', '')] is not None:
             style = styles[self.root.get('style')]
-            save_presets(self.tournament, style)
+            style.save(self.tournament)
             self.preliminary_consensus = style.debate_rules__ballots_per_debate_prelim == 'per-debate'
             self.elimination_consensus = style.debate_rules__ballots_per_debate_elim == 'per-debate'
             return True # Exit method
@@ -384,7 +386,7 @@ class Importer:
         if self.is_bp:
             self.preliminary_consensus = True
             self.elimination_consensus = True
-            save_presets(self.tournament, BritishParliamentaryPreferences)
+            BritishParliamentaryPreferences.save(self.tournament)
         else:
             self.preliminary_consensus = self._is_consensus_ballot('false')
             self.elimination_consensus = self._is_consensus_ballot('true')
@@ -546,22 +548,22 @@ class Importer:
 
         rounds = []
         for i, round in enumerate(self.root.findall('round'), 1):
-            round_stage = Round.STAGE_ELIMINATION if round.get('elimination', 'false') == 'true' else Round.STAGE_PRELIMINARY
-            draw_type = Round.DRAW_ELIMINATION if round_stage == Round.STAGE_ELIMINATION else Round.DRAW_MANUAL
+            round_stage = Round.Stage.ELIMINATION if round.get('elimination', 'false') == 'true' else Round.Stage.PRELIMINARY
+            draw_type = Round.DrawType.ELIMINATION if round_stage == Round.Stage.ELIMINATION else Round.DrawType.MANUAL
 
             round_obj = Round(
                 tournament=self.tournament, seq=i, completed=True, name=round.get('name'),
                 abbreviation=round.get('abbreviation', round.get('name')[:10]), stage=round_stage, draw_type=draw_type,
-                draw_status=Round.STATUS_RELEASED, feedback_weight=round.get('feedback-weight', 0),
+                draw_status=Round.Status.RELEASED, feedback_weight=round.get('feedback-weight', 0),
                 starts_at=round.get('start'))
             rounds.append(round_obj)
 
             if round.find('debate') is None:
                 round_obj.completed = False
                 if round.find('debate/side/ballot') is None:
-                    round_obj.draw_status = Round.STATUS_NONE
+                    round_obj.draw_status = Round.Status.NONE
 
-            if round_stage == Round.STAGE_ELIMINATION:
+            if round_stage == Round.Stage.ELIMINATION:
                 round_obj.break_category = self.team_breaks.get(round.get('break-category'))
             round_obj.save()
 
@@ -573,8 +575,8 @@ class Importer:
                 self.debates[debate.get('id')] = debate_obj
 
                 # Debate-teams
-                for i, side in enumerate(debate.findall('side'), side_start):
-                    position = DebateTeam.SIDE_CHOICES[i][0]
+                for j, side in enumerate(debate.findall('side'), side_start):
+                    position = list(DebateTeam.Side)[j][0]
                     debateteam_obj = DebateTeam(debate=debate_obj, team=self.teams[side.get('team')], side=position)
                     debateteam_obj.save()
                     self.debateteams[(debate.get('id'), side.get('team'))] = debateteam_obj
@@ -619,7 +621,7 @@ class Importer:
 
             for debate in round.findall('debate'):
                 bs_obj = BallotSubmission(
-                    version=1, submitter_type=Submission.SUBMITTER_TABROOM, confirmed=True,
+                    version=1, submitter_type=Submission.Submitter.TABROOM, confirmed=True,
                     debate=self.debates[debate.get('id')], motion=self.motions.get(debate.get('motion')))
                 bs_obj.save()
                 dr = DebateResult(bs_obj)
@@ -666,7 +668,7 @@ class Importer:
                 d_team = self.debateteams.get((feedback.get('debate'), feedback.get('source-team')))
                 feedback_obj = AdjudicatorFeedback(adjudicator=adj_obj, score=feedback.get('score'), version=1,
                     source_adjudicator=d_adj, source_team=d_team,
-                    submitter_type=Submission.SUBMITTER_TABROOM, confirmed=True)
+                    submitter_type=Submission.Submitter.TABROOM, confirmed=True)
                 feedback_obj.save()
 
                 for answer in feedback.findall('answer'):

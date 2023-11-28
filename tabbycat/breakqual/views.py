@@ -3,15 +3,16 @@ import logging
 
 from django.conf import settings
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.db.models import Count, Q
-from django.forms import HiddenInput
-from django.forms.models import BaseModelFormSet
+from django.forms import HiddenInput, ModelForm
 from django.utils.html import escape
 from django.utils.translation import gettext as _, ngettext
 from django.views.generic import FormView, TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from draw.generator.utils import ispow2
 from participants.models import Team
 from participants.views import EditSpeakerCategoriesView, UpdateEligibilityEditView as BaseUpdateEligibilityEditView
 from tournaments.mixins import PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TournamentMixin
@@ -230,19 +231,18 @@ class PublicBreakingAdjudicatorsView(PublicTournamentPageMixin, BaseBreakingAdju
 # ==============================================================================
 
 
-class BreakCategoryModelFormSet(BaseModelFormSet):
-    """Class to handle the different procedures for creation and modification
-    in BreakCategory objects."""
+class BreakCategoryModelForm(ModelForm):
+    """Class to handle validating the break size, as can't add validator"""
 
-    def save_new(self, form, commit=True):
-        """Create break rounds for new break categories"""
-        bc = super().save_new(form, commit)
-        auto_make_break_rounds(bc, prefix=True)
-        return bc
+    def __init__(self, *args, **kwargs):
+        self.tournament = kwargs.pop('tournament')
+        super().__init__(*args, **kwargs)
 
-    def save_existing(self, form, instance, commit=True):
-        """Stub for deleting/creating break rounds if break size changes"""
-        return super().save_existing(form, instance, commit)
+    def clean_break_size(self):
+        bs = self.cleaned_data['break_size']
+        if self.tournament.pref('teams_in_debate') == 'bp' and not ((bs % 6 == 0 and ispow2(bs // 6)) or (bs >= 4 and ispow2(bs))):
+            raise ValidationError(_("Four-team formats require the break size to be either six times or four times a power of two."))
+        return bs
 
 
 class EditBreakCategoriesView(EditSpeakerCategoriesView):
@@ -260,13 +260,19 @@ class EditBreakCategoriesView(EditSpeakerCategoriesView):
 
     def get_formset_factory_kwargs(self):
         return {
-            'fields': ('name', 'tournament', 'slug', 'seq', 'break_size', 'is_general', 'priority', 'limit'),
+            'fields': ('name', 'tournament', 'slug', 'break_size', 'is_general', 'priority', 'limit'),
             'extra': 2,
             'widgets': {
                 'tournament': HiddenInput,
             },
-            'formset': BreakCategoryModelFormSet,
+            'form': BreakCategoryModelForm,
         }
+
+    def get_formset_kwargs(self):
+        return {'form_kwargs': {'tournament': self.tournament}}
+
+    def prepare_related(self, cat):
+        auto_make_break_rounds(cat, prefix=True)
 
 
 class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTemplateView):

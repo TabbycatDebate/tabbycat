@@ -32,6 +32,7 @@ class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
             'submitter', 'confirmer', 'debate__round__tournament').prefetch_related(
             Prefetch('debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')))
 
+    @admin.display(description=_("Resave results"))
     def resave_ballots(self, request, queryset):
         q = queryset.select_related('debate__round__tournament').order_by('debate__round__tournament_id')
         count = q.count()
@@ -44,7 +45,6 @@ class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
             "Resaved results for %(count)d ballot submission.",
             "Resaved results for %(count)d ballot submissions.",
             count) % {'count': count})
-    resave_ballots.short_description = _("Resave results")
 
 
 # ==============================================================================
@@ -144,7 +144,3 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
             Prefetch('ballot_submission__debate__debateteam_set',
                 queryset=DebateTeam.objects.select_related('team')),
         ).annotate(speaker_name=Subquery(speaker_person.values('speaker__name')))
-
-    def get_speaker_name(self, obj):
-        return obj.speaker_name
-    get_speaker_name.short_description = "Speaker"

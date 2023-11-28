@@ -49,7 +49,7 @@ class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
         kwargs["bottom_speaks"] = speaks.order_by('score')[:9]
 
         overall = speaks.filter(
-            debate_team__debate__round__stage=Round.STAGE_PRELIMINARY,
+            debate_team__debate__round__stage=Round.Stage.PRELIMINARY,
         ).aggregate(Avg('score'))['score__avg']
         kwargs["round_speaks"] = [{'round': 'Overall (for in-rounds)',
                                    'score': overall}]
@@ -69,7 +69,7 @@ class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
             'debate_team__team__institution',
         )
         if self.tournament.pref('teams_in_debate') == 'bp':
-            team_scores.filter(debate_team__debate__round__stage=Round.STAGE_PRELIMINARY)
+            team_scores.filter(debate_team__debate__round__stage=Round.Stage.PRELIMINARY)
             kwargs["top_team_scores"] = team_scores.order_by('-score')[:9]
             kwargs["bottom_team_scores"] = team_scores.order_by('score')[:9]
         else:
@@ -117,7 +117,7 @@ class BaseStandingsView(RoundMixin, VueTableTemplateView):
         return _("as of %(round)s") % {'round': self.round.name}
 
     def get_rounds(self):
-        """Returns all of the rounds that should be included in the tab."""
+        """Returns all the rounds that should be included in the tab."""
         return self.tournament.prelim_rounds(until=self.round).order_by('seq')
 
     def get_standings_error_message(self, e):
@@ -266,11 +266,11 @@ class BaseSpeakerStandingsView(BaseStandingsView):
     def get_rank_filter(self):
         missable = -1 if self.missable_preference is None else self.tournament.pref(self.missable_preference)
         if missable < 0:
-            return (None, None)  # no limit
+            return None, None  # no limit
         total_prelim_rounds = self.tournament.round_set.filter(
-            stage=Round.STAGE_PRELIMINARY, seq__lte=self.round.seq).count()
+            stage=Round.Stage.PRELIMINARY, seq__lte=self.round.seq).count()
         minimum_needed = total_prelim_rounds - missable
-        return (self.missable_field, minimum_needed)
+        return self.missable_field, minimum_needed
 
     def populate_result_missing(self, standings):
         for info in standings:
@@ -658,7 +658,7 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
             " The current mix is specified below as the 'Score Components.' "
             "Feedback ratings are determined by averaging the results of all "
             "individual pieces of feedback across all rounds. "
-            "<a href='http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html#how-is-an-adjudicator-s-score-determined'>Read more</a>."))
+            "<a href='https://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html#how-is-an-adjudicator-s-score-determined'>Read more</a>."))
         return table
 
 
@@ -669,7 +669,7 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
 class EmailTeamStandingsView(RoundTemplateEmailCreateView):
     page_subtitle = _("Team Standings")
 
-    event = BulkNotification.EVENT_TYPE_POINTS
+    event = BulkNotification.EventType.POINTS
     subject_template = 'team_points_email_subject'
     message_template = 'team_points_email_message'
 

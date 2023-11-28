@@ -16,7 +16,7 @@ export default {
     }
   },
   computed: {
-    dragableClasses: function () {
+    draggableClasses: function () {
       let classes = 'vue-draggable '
       if (this.locked) {
         classes += ' vue-draggable-locked'
@@ -46,7 +46,7 @@ export default {
       event.stopPropagation() // Needed to not trigger enclosing items that are draggable
     },
     drag: function (event) {
-      // Setup the top and bottom of the windows as hover zones so we can scroll while dragging
+      // Set up the top and bottom of the windows as hover zones so that we can scroll while dragging
       this.scrollStop = true
       if (event.clientY < this.windowThresholds) {
         this.scrollStop = false

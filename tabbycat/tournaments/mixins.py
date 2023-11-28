@@ -430,7 +430,7 @@ class DragAndDropMixin(RoundMixin):
             }
             serialised_bcs.append(serialised_bc)
 
-        if self.round.stage == self.round.STAGE_PRELIMINARY:
+        if self.round.stage == self.round.Stage.PRELIMINARY:
             extra_info['highlights']['break'] = serialised_bcs
 
         extra_info['backUrl'] = reverse_round('draw', self.round)
@@ -497,7 +497,7 @@ class DebateDragAndDropMixin(DragAndDropMixin):
                 )),
             )
 
-        draw = self.round.debate_set.select_related(*selects).prefetch_related(*prefetches)
+        draw = self.round.debate_set.exclude(debateteam__side=DebateTeam.Side.BYE).select_related(*selects).prefetch_related(*prefetches)
 
         if self.prefetch_teams:
             populate_win_counts([dt.team for debate in draw for dt in debate.debateteam_set.all()])

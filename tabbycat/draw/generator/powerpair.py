@@ -1,17 +1,19 @@
 import random
 from collections import OrderedDict
+from typing import Optional
 
 from django.utils.translation import gettext as _
 
 from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError
+from .graph import GraphAllocatedSidesMixin, GraphGeneratorMixin
 from .one_up_one_down import OneUpOneDownSwapper
 from .pairing import Pairing
 
 
-class PowerPairedDrawGenerator(BasePairDrawGenerator):
+class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
     """Power-paired draw.
 
-    If there are allocated sides, use PowerPairedWithAllocatedSidesDrawGenerator
+    If there are allocated sides, use BasePowerPairedWithAllocatedSidesDrawGenerator
     instead.
 
     Options:
@@ -56,6 +58,8 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
             "one_up_one_down" - Swap conflicted teams with the debate above or
                                 below, in accordance with Australasian
                                 Intervarsity Debating Association rules.
+            "graph"           - Find the minimum-cost matching in a generated
+                                graph of the teams in a bracket.
     """
 
     requires_even_teams = True
@@ -66,6 +70,15 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         "pairing_method"        : "slide",
         "avoid_conflicts"       : "one_up_one_down",
         "pullup_restriction"    : "none",
+        "pullup_debates_penalty": 0,
+    }
+
+    PAIRING_FUNCTIONS = {
+        "fold"                  : "_pairings_fold",
+        "slide"                 : "_pairings_slide",
+        "random"                : "_pairings_random",
+        "adjacent"              : "_pairings_adjacent",
+        "fold_top_adjacent_rest": "_pairings_fold_top_adjacent_rest",
     }
 
     def __init__(self, *args, **kwargs):
@@ -87,8 +100,10 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
     def generate(self):
         self._brackets = self._make_raw_brackets()
         self.resolve_odd_brackets(self._brackets)  # operates in-place
+
         self._pairings = self.generate_pairings(self._brackets)
         self.avoid_conflicts(self._pairings)  # operates in-place
+
         self._draw = list()
         for bracket in self._pairings.values():
             self._draw.extend(bracket)
@@ -112,7 +127,6 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         return brackets
 
     # Pullup restrictions
-
     PULLUP_RESTRICTION_METRICS = {
         "least_to_date": "npullups",
         "lowest_ds_wins": "draw_strength",
@@ -136,7 +150,6 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
             return [team for team in teams if getattr(team, metric) == least]
 
     # Odd bracket resolutions
-
     ODD_BRACKET_FUNCTIONS = {
         "pullup_top"                 : "_pullup_top",
         "pullup_bottom"              : "_pullup_bottom",
@@ -178,6 +191,8 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
                 pullup_team = pullup_eligible_teams[pos(len(pullup_eligible_teams))]
                 teams.remove(pullup_team)
                 self.add_team_flag(pullup_team, "pullup")
+                if hasattr(pullup_team, 'subrank'):
+                    pullup_team.subrank = None
                 pullup_needed_for.append(pullup_team)
                 pullup_needed_for = None
 
@@ -258,14 +273,54 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
             # if nothing worked, add a "didn't work" flag
             self.add_team_flag(teams[0], "no_bub_updn")
 
-    # Pairings generation
-    PAIRING_FUNCTIONS = {
-        "fold"                  : "_pairings_fold",
-        "slide"                 : "_pairings_slide",
-        "random"                : "_pairings_random",
-        "adjacent"              : "_pairings_adjacent",
-        "fold_top_adjacent_rest": "_pairings_fold_top_adjacent_rest",
-    }
+
+class GraphCostMixin:
+
+    def assignment_cost(self, t1, t2, size, bracket=None):
+        penalty = super().assignment_cost(t1, t2, size)
+        if penalty is None:
+            return None
+
+        # Add penalty for seeing the pullup again
+        has_pullup = 'pullup' in self.team_flags.get(t1, []) or 'pullup' in self.team_flags.get(t2, [])
+        if self.options["pullup_debates_penalty"] and has_pullup:
+            penalty += max(t1.pullup_debates, t2.pullup_debates) * self.options["pullup_debates_penalty"]
+
+        if self.options["pairing_method"] != "random":
+            subpool_penalty_func = self.get_option_function("pairing_method", self.PAIRING_FUNCTIONS)
+
+            # Set the subrank to be last for pulled-up teams
+            for team in [t1, t2]:
+                if team.subrank is None:
+                    team.subrank = size
+
+            penalty += subpool_penalty_func([t1, t2], size, bracket) * self.options["pairing_penalty"]
+        return penalty
+
+    @staticmethod
+    def _pairings_slide(teams, size: int, bracket: Optional[int] = None) -> int:
+        return abs(abs(teams[0].subrank - teams[1].subrank) - size // 2)
+
+    @staticmethod
+    def _pairings_fold(teams, size: int, bracket: Optional[int] = None) -> int:
+        return abs(teams[0].subrank + teams[1].subrank - 1 - size)
+
+    @staticmethod
+    def _pairings_random(teams, size: int, bracket: Optional[int] = None) -> int:
+        return 0
+
+    @staticmethod
+    def _pairings_adjacent(teams, size: int, bracket: Optional[int] = None) -> int:
+        return abs(teams[0].subrank - teams[1].subrank) - 1
+
+    @classmethod
+    def _pairings_fold_top_adjacent_rest(cls, teams, size: int, bracket: Optional[int] = None) -> int:
+        if bracket == 0:
+            return cls._pairings_fold(teams, size)
+        return cls._pairings_adjacent(teams, size)
+
+
+class AustralsPairingMixin:
 
     def generate_pairings(self, brackets):
         """Returns a function taking an OrderedDict as returned by
@@ -280,10 +335,10 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         for points, teams in brackets.items():
             bracket = list()
             top, bottom = subpool_func(teams)
-            for teams in zip(top, bottom):
-                pairing = Pairing(teams=teams, bracket=points, room_rank=i)
+            for p_teams in zip(top, bottom):
+                pairing = Pairing(teams=p_teams, bracket=points, room_rank=i)
                 bracket.append(pairing)
-                i = i + 1
+                i += 1
             pairings[points] = bracket
         return pairings
 
@@ -295,10 +350,10 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         for (points, teams), subpool_func in zip(brackets.items(), subpool_funcs):
             bracket = list()
             top, bottom = subpool_func(teams)
-            for teams in zip(top, bottom):
-                pairing = Pairing(teams=teams, bracket=points, room_rank=i)
+            for p_teams in zip(top, bottom):
+                pairing = Pairing(teams=p_teams, bracket=points, room_rank=i)
                 bracket.append(pairing)
-                i = i + 1
+                i += 1
             pairings[points] = bracket
         return pairings
 
@@ -350,9 +405,9 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         return cls._pairings_top_special(brackets, cls._subpool_fold, cls._subpool_adjacent)
 
     # Conflict avoidance
-
     AVOID_CONFLICT_FUNCTIONS = {
         "one_up_one_down": "_one_up_one_down",
+        "graph"          : None,
     }
 
     def avoid_conflicts(self, pairings):
@@ -377,8 +432,8 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
             swaps = swapper.swaps
 
             for i, (pairing, orig, new) in enumerate(zip(bracket, pairs_orig, pairs_new)):
-                assert(tuple(pairing.teams) == orig)
-                assert((i in swaps or i-1 in swaps) == (orig != new))
+                assert tuple(pairing.teams) == orig
+                assert (i in swaps or i-1 in swaps) == (orig != new)
                 if orig != new:
                     if pairing.conflict_hist:
                         pairing.add_flag("1u1d_hist")
@@ -389,9 +444,17 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
                     pairing.teams = list(new)
 
 
-class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
+class GraphPowerPairedDrawGenerator(GraphCostMixin, GraphGeneratorMixin, BasePowerPairedDrawGenerator):
+    pass
+
+
+class AustralsPowerPairedDrawGenerator(AustralsPairingMixin, BasePowerPairedDrawGenerator):
+    pass
+
+
+class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
     """Power-paired draw with allocated sides.
-    Overrides functions of PowerPairedDrawGenerator where sides need to be constrained.
+    Override functions of PowerPairedDrawGenerator where sides need to be constrained.
     All teams must have an 'allocated_side' attribute which must be either
     'aff' or 'neg' (case-sensitive).
     Options are as for PowerPairedDrawGenerator, except that the allowable values
@@ -655,6 +718,13 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         """This should never be called - the associated option string is removed
         from the allowable list above."""
         raise NotImplementedError("Intermediate brackets with conflict avoidance isn't supported with allocated sides.")
+
+
+class GraphPowerPairedWithAllocatedSidesDrawGenerator(GraphCostMixin, GraphAllocatedSidesMixin, PowerPairedWithAllocatedSidesDrawGenerator):
+    pass
+
+
+class AustralsPowerPairedWithAllocatedSidesDrawGenerator(AustralsPairingMixin, PowerPairedWithAllocatedSidesDrawGenerator):
 
     @staticmethod
     def _pairings(brackets, presort_func):

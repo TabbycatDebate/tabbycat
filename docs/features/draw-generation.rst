@@ -51,9 +51,10 @@ Options are set in the **Configuration** page as described in :ref:`starting a t
       - Random
 
   * - :ref:`Conflict avoidance method <draw-conflict-avoidance>`
-    - How to avoid history/institution conflicts
+    - How to avoid conflicts
     - - Off
       - One-up-one-down
+      - Minimum cost matching
 
   * - :ref:`Pullup restriction <draw-pullup-restriction>`
     - Whether and how to restrict pullups
@@ -70,7 +71,7 @@ When generating a power-paired draw, Tabbycat goes through five steps:
 1. First, it divides teams into "raw brackets", grouping them by the number of wins.
 2. Second, it resolves odd brackets, applying the odd brackets rule to make sure there is an even number of teams in each bracket. This is often called "pulling up" teams.
 3. Third, within each bracket, it pairs teams into debates using the pairing method.
-4. Fourth, if enabled, it adjusts pairings to avoid history or institution conflicts.
+4. Fourth, if enabled, it adjusts pairings to avoid conflicts.
 5. Finally, it assigns sides to teams in each debate.
 
 For each of these steps except the first, Tabbycat allows you to choose between
@@ -164,11 +165,11 @@ Teams are always paired within their brackets, after resolving odd brackets.
 
 Conflict avoidance method
 -------------------------
-A **conflict** is when two teams would face each other that have seen each other before, or are from the same institutions. Some tournaments have a preference against allowing this if it's avoidable within certain limits. The **draw avoid conflicts** option allows you to specify how.
+A **conflict** is when two teams could face each other but should not, possibly for a variety of reasons. Some tournaments have a preference against allowing this if it's avoidable within certain limits. The **draw avoid conflicts** option allows you to specify how.
 
-You can turn this off by using **Off**. Other than this, there is currently one conflict avoidance method implemented.
+You can turn this off by using **Off**. Other than this, there are currently two conflict avoidance methods implemented.
 
-**One-up-one-down** is the method specified in the Australs constitution. Broadly speaking, if there is a debate with a conflict:
+**One-up-one-down** is the method specified in the Australs constitution. This method only considers conflicts for teams that have seen each other before, or are from the same institution. Broadly speaking, if there is a debate with a conflict:
 
 * It tries to swap teams with the debate "one up" from it in the draw.
 * If that doesn't work, it tries to swap teams with the debate "one down" from it in the draw.
@@ -180,6 +181,8 @@ It's a bit more complicated than that, for two reasons:
 
 * History conflicts are prioritised over (*i.e.*, "worse than") institution conflicts. So it's fine to resolve a history conflict by creating an institution conflict, but not the vice versa.
 * Each swap obviously affects the debates around it, so it's not legal to have two adjacent swaps. (Otherwise, in theory, a team could "one down" all the way to the bottom of the draw!) So there is an optimization algorithm that finds the best combination of swaps, *i.e.* the one that minimises conflict, and if there are two profiles that have the same least conflict, then it chooses the one with fewer swaps.
+
+**Minimum cost matching** is a more flexible method designed for APDA and other formats. This method creates a graph between teams in a bracket, weighing all possible pairings for conflicts, and finding the minimum weight matching with the `Blossom algorithm <https://en.wikipedia.org/wiki/Blossom_algorithm>`_. In addition to history and institution conflicts, it can try to minimize the number of times teams have seen a pulled-up team, and stabilize side balance.
 
 .. _draw-pullup-restriction:
 

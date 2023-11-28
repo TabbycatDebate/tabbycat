@@ -4,9 +4,10 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, Max, Prefetch, Q
+from django.db.models.functions import Coalesce
 from django.forms import HiddenInput
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.utils.html import escape
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.base import View
@@ -63,7 +64,7 @@ class BaseParticipantsListView(TournamentMixin, VueTableTemplateView):
     def get_context_data(self, **kwargs):
         # These are used to choose the nav display
         kwargs['email_sent'] = BulkNotification.objects.filter(
-            tournament=self.tournament, event=BulkNotification.EVENT_TYPE_TEAM_REG).exists()
+            tournament=self.tournament, event=BulkNotification.EventType.TEAM_REG).exists()
         return super().get_context_data(**kwargs)
 
 
@@ -163,7 +164,7 @@ class AssistantCodeNamesListView(AssistantMixin, BaseCodeNamesListView):
 class EmailTeamRegistrationView(TournamentTemplateEmailCreateView):
     page_subtitle = _("Team Registration")
 
-    event = BulkNotification.EVENT_TYPE_TEAM_REG
+    event = BulkNotification.EventType.TEAM_REG
     subject_template = 'team_email_subject'
     message_template = 'team_email_message'
 
@@ -203,7 +204,7 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
                 qs = qs.prefetch_related(Prefetch('debate__round__roundmotion_set',
                     queryset=RoundMotion.objects.select_related('motion')))
             else:
-                qs = qs.filter(debate__round__draw_status=Round.STATUS_RELEASED).prefetch_related(
+                qs = qs.filter(debate__round__draw_status=Round.Status.RELEASED).prefetch_related(
                     Prefetch('debate__round__roundmotion_set',
                         queryset=RoundMotion.objects.filter(round__motions_released=True).select_related('motion')))
             return qs
@@ -212,7 +213,7 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs['admin_page'] = self.admin
-        kwargs['draw_released'] = self.tournament.current_round.draw_status == Round.STATUS_RELEASED
+        kwargs['draw_released'] = self.tournament.current_round.draw_status == Round.Status.RELEASED
         kwargs['use_code_names'] = self.use_team_code_names()
         kwargs[self.model_kwarg] = self.allocations_set(self.object, self.admin, self.tournament)
 
@@ -332,7 +333,7 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
 
     def get_formset_factory_kwargs(self):
         return {
-            'fields': ('name', 'tournament', 'slug', 'seq', 'limit', 'public'),
+            'fields': ('name', 'tournament', 'slug', 'limit', 'public'),
             'extra': 2,
             'widgets': {
                 'tournament': HiddenInput,
@@ -347,19 +348,33 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
             'initial': [{'tournament': self.tournament}] * 2,
         }
 
+    def prepare_related(self, cat):
+        pass
+
     def formset_valid(self, formset):
-        result = super().formset_valid(formset)
-        if self.instances:
+        cats = formset.save(commit=False)
+
+        for cat, fields in formset.changed_objects:
+            cat.save()
+
+        for i, cat in enumerate(formset.new_objects, start=self.get_formset_queryset().aggregate(m=Coalesce(Max('seq'), 0) + 1)['m']):
+            cat.seq = i
+            cat.tournament = self.tournament  # Even with the tournament in the form, avoid it being changed
+            cat.save()
+
+            self.prepare_related(cat)
+
+        if cats:
             message = ngettext("Saved category: %(list)s",
                 "Saved categories: %(list)s",
-                len(self.instances),
-            ) % {'list': ", ".join(category.name for category in self.instances)}
+                len(cats),
+            ) % {'list': ", ".join(category.name for category in cats)}
             messages.success(self.request, message)
         else:
             messages.success(self.request, _("No changes were made to the categories."))
         if "add_more" in self.request.POST:
             return redirect_tournament(self.url_name, self.tournament)
-        return result
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self, *args, **kwargs):
         return reverse_tournament(self.success_url, self.tournament)

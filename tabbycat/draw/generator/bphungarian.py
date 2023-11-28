@@ -40,7 +40,7 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
                          empirical distribution associated with the position
                          history of the team, H_α(p) is the Rényi entropy of
                          order α thereof, and n is the number of rounds the team
-                         has competed in). See the "renyi_order" option below.
+                         has competed in. See the "renyi_order" option below.
 
             "variance" - The population variance of multiplicities in the
                          history.

@@ -4,14 +4,11 @@
 {% block content %}
 
   {% if round.is_break_round %}
-    {% tournamenturl 'tournament-donations' as url %}
     {% blocktrans trimmed with amount=tournament.billable_teams asvar text %}
       We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would
       make a donation to the project in order to support its ongoing development and maintenance.
       For a tournament of this size, we suggest a donation of <strong>${{ amount }}</strong>.
-      Note that if your tournament is run for profit, or for fundraising, making this payment is a
-      mandatory condition of Tabbycat's software license.
-      <a href="{{ url }}">Learn more about donating.</a>
+      <a href="https://opencollective.com/tabbycat">Learn more about donating.</a>
     {% endblocktrans %}
     {% include "components/item-info.html" with type="info" icon="heart" %}
     <hr>
@@ -39,44 +36,42 @@
       </div>
     </div>
 
-    {% tournamenturl 'importer-simple-index' as url %}
-    {% trans "Use the simple importer to add your initial data." as text %}
-    {% include "components/item-action.html" with alone=True to_complete=True %}
-
-  {% elif round.draw_status == round.STATUS_NONE %}
-
-    {% roundurl 'availability-index' round as url %}
-    {% blocktrans trimmed with round=round.name asvar text %}
-      Go to the checkins area to begin creating a draw for {{ round }}
-    {% endblocktrans %}
-    {% include "components/item-action.html" with alone=True to_complete=True %}
-
-  {% elif round.draw_status == round.STATUS_CONFIRMED %}
-
-    {% roundurl 'draw' round as url %}
-    {% blocktrans trimmed with round=round.name asvar text %}
-      Go to the draw area to allocate adjudicators for {{ round }}
-    {% endblocktrans %}
-    {% include "components/item-action.html" with alone=True to_complete=True %}
-
-  {% elif round.draw_status == round.STATUS_RELEASED %}
-
-    {% roundurl 'results-round-list' round as url %}
-    {% blocktrans trimmed with round=round.name asvar text %}
-      Go to the results area to begin entering ballots for {{ round }}
-    {% endblocktrans %}
-    {% include "components/item-action.html" with alone=True to_complete=True %}
-
-  {% endif %}
-
-  {% if global_preferences.accounts__admin_account_key or global_preferences.accounts__assistant_account_key %}
-    {% tournamenturl 'options-tournament-section' section='global' as url %}
-    {% blocktrans trimmed asvar text %}
-      You have enabled a URL that allows users to create new accounts. You should <strong>disable it once the tournament starts</strong>.
-    {% endblocktrans %}
-    <div class="mt-3">
-      {% include "components/item-action.html" with alone=True type="warning" icon="alert-triangle" to_complete=True %}
+    <div class="list-group">
+      {% tournamenturl 'importer-simple-index' as url %}
+      {% trans "Use the simple importer to add your initial data." as text %}
+      {% include "components/item-action.html" with to_complete=True %}
     </div>
+
+  {% elif round.draw_status == round.Status.NONE %}
+
+    <div class="list-group">
+      {% roundurl 'availability-index' round as url %}
+      {% blocktrans trimmed with round=round.name asvar text %}
+        Mark participants as available to prepare a draw for {{ round }}
+      {% endblocktrans %}
+      {% include "components/item-action.html" with to_complete=True %}
+    </div>
+
+  {% elif round.draw_status == round.Status.CONFIRMED %}
+
+    <div class="list-group">
+      {% roundurl 'draw' round as url %}
+      {% blocktrans trimmed with round=round.name asvar text %}
+        Go to the draw area to allocate adjudicators for {{ round }}
+      {% endblocktrans %}
+      {% include "components/item-action.html" with to_complete=True %}
+    </div>
+
+  {% elif round.draw_status == round.Status.RELEASED %}
+
+    <div class="list-group">
+      {% roundurl 'results-round-list' round as url %}
+      {% blocktrans trimmed with round=round.name asvar text %}
+        Go to the results area to enter ballots for {{ round }}
+      {% endblocktrans %}
+      {% include "components/item-action.html" with to_complete=True %}
+    </div>
+
   {% endif %}
 
   {{ block.super }}

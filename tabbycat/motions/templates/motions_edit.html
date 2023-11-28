@@ -20,16 +20,18 @@
 
   {% if pref.enable_motion_reuse %}
     <div class="btn-group">
-      <form action="{% roundurl 'motions-previous' %}" method="POST">
-        {% csrf_token %}
-        {% if round.roundmotion_set.all.length == 0 %}
-          <button class="btn btn-outline-primary" id="repeatMotions" type="submit">
-        {% else %}
-          <button class="btn btn-outline-primary" id="repeatMotions" type="submit" data-toggle="tooltip" title="{% trans "This will replace all existing motions for this round. The motions themselves will still be in the database." %}">
-        {% endif %}
-          {% trans "Reuse Motions from Last Round" %}
-        </button>
-      </form>
+      {% if round.prev %}
+        <form action="{% roundurl 'motions-previous' %}" method="POST">
+          {% csrf_token %}
+          {% if round.roundmotion_set.all.length == 0 %}
+            <button class="btn btn-outline-primary" id="repeatMotions" type="submit">
+          {% else %}
+            <button class="btn btn-outline-primary" id="repeatMotions" type="submit" data-toggle="tooltip" title="{% trans "This will replace all existing motions for this round. The motions themselves will still be in the database." %}">
+          {% endif %}
+            {% trans "Reuse Motions from Last Round" %}
+          </button>
+        </form>
+      {% endif %}
 
       <a href="{% roundurl 'motions-copy' %}" class="btn btn-outline-primary">
         {% trans "Use Existing Motions" %}
@@ -42,6 +44,15 @@
 
   {% if formset.errors %}
     {% include "components/form-errors.html" with errors=formset.non_form_errors %}
+  {% endif %}
+
+  {% if round.motions_released %}
+    {% blocktranslate trimmed count nmotions=formset|length asvar p1 %}
+      The motion for this round is currently publicly displayed because it was released. Any changes made here will be publicly visible as well as soon as they are saved.
+    {% plural %}
+      The motions for this round are currently publicly displayed because they were released. Any changes made here will be publicly visible as well as soon as they are saved.
+    {% endblocktranslate %}
+    {% include "components/explainer-card.html" with type="warning" %}
   {% endif %}
 
   <form method="POST">

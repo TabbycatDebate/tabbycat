@@ -5,7 +5,7 @@ from itertools import product
 
 from django.contrib import messages
 from django.db.models import OuterRef, Subquery
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.utils.functional import cached_property
 from django.utils.html import escape, format_html
 from django.utils.safestring import mark_safe
@@ -19,7 +19,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjallocation.utils import adjudicator_conflicts_display
 from availability.utils import annotate_availability
-from draw.generator.powerpair import PowerPairedDrawGenerator
+from draw.generator.powerpair import BasePowerPairedDrawGenerator
 from notifications.models import BulkNotification
 from notifications.views import RoundTemplateEmailCreateView
 from options.preferences import BPPositionCost
@@ -172,11 +172,11 @@ class PublicDrawMixin(PublicTournamentPageMixin):
 
     @cached_property
     def draws_available(self):
-        return any(r.draw_status == Round.STATUS_RELEASED for r in self.rounds)
+        return any(r.draw_status == Round.Status.RELEASED for r in self.rounds)
 
     @classmethod
     def get_debates_for_round(cls, round):
-        if round.draw_status != Round.STATUS_RELEASED:
+        if round.draw_status != Round.Status.RELEASED:
             return Debate.objects.none()
         return super().get_debates_for_round(round)
 
@@ -235,7 +235,7 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, BaseDisplayDra
 
     def get_draw(self):
         all_rounds = Round.objects.filter(tournament=self.tournament,
-                                          draw_status=Round.STATUS_RELEASED)
+                                          draw_status=Round.Status.RELEASED)
         draw = []
         for round in all_rounds:
             draw.extend(round.debate_set_with_prefetches())
@@ -266,7 +266,11 @@ class BriefingRoomDrawByTeamTableMixin(BriefingRoomDrawTableMixin):
 
     def populate_table(self, debates, table):
         # unicodedata.normalize gets accented characters (e.g. "Éothéod") to sort correctly
+        byes = [d for d in debates if d.is_bye]
+        debates = [d for d in debates if not d.is_bye]
+
         draw_by_team = [(debate, debate.get_team(side)) for debate, side in product(debates, self.tournament.sides)]
+        draw_by_team.extend([(debate, debate.get_team('bye')) for debate in byes])
         draw_by_team.sort(key=lambda x: unicodedata.normalize('NFKD', table._team_short_name(x[1])))
 
         if len(draw_by_team) == 0:
@@ -326,7 +330,7 @@ class AssistantDrawDisplayForCurrentRoundsByTeamView(OptionalAssistantTournament
 # Draw Alerts Utilities (Admin)
 # ==============================================================================
 
-class AdminDrawUtiltiesMixin:
+class AdminDrawUtilitiesMixin:
     """Shared between the admin draw and admin display pages."""
 
     def get_draw(self):
@@ -358,6 +362,7 @@ class AdminDrawUtiltiesMixin:
         data['preformed_panels_in_round'] = self.round.preformedpanel_set.count()
         if hasattr(self, 'highlighted_cells_exist'):
             data['highlighted_cells_exist'] = self.highlighted_cells_exist
+        data['expected_nmotions'] = 3 if self.tournament.pref('enable_motions') else (self.round.motion_set.count() or 1)
         return data
 
 
@@ -365,7 +370,7 @@ class AdminDrawUtiltiesMixin:
 # Draw Display Index (Admin)
 # ==============================================================================
 
-class BaseDrawDisplayIndexView(AdminDrawUtiltiesMixin, RoundMixin, TemplateView):
+class BaseDrawDisplayIndexView(AdminDrawUtilitiesMixin, RoundMixin, TemplateView):
     pass
 
 
@@ -381,7 +386,7 @@ class AssistantDrawDisplayView(CurrentRoundMixin, OptionalAssistantTournamentPag
 class EmailAdjudicatorAssignmentsView(RoundTemplateEmailCreateView):
     page_subtitle = _("Adjudicator Assignments")
 
-    event = BulkNotification.EVENT_TYPE_ADJ_DRAW
+    event = BulkNotification.EventType.ADJ_DRAW
     subject_template = 'adj_email_subject'
     message_template = 'adj_email_message'
 
@@ -423,7 +428,7 @@ class EmailAdjudicatorAssignmentsView(RoundTemplateEmailCreateView):
 class EmailTeamAssignmentsView(RoundTemplateEmailCreateView):
     page_subtitle = _("Team Pairings")
 
-    event = BulkNotification.EVENT_TYPE_TEAM_DRAW
+    event = BulkNotification.EventType.TEAM_DRAW
     subject_template = 'team_draw_email_subject'
     message_template = 'team_draw_email_message'
 
@@ -437,17 +442,17 @@ class EmailTeamAssignmentsView(RoundTemplateEmailCreateView):
 # Draw Creation (Admin)
 # ==============================================================================
 
-class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueTableTemplateView):
+class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, VueTableTemplateView):
     detailed = False
 
     def get_page_title(self):
         round = self.round
         self.page_emoji = '👀'
-        if round.draw_status == Round.STATUS_NONE:
+        if round.draw_status == Round.Status.NONE:
             title = _("No Draw")
-        elif round.draw_status == Round.STATUS_DRAFT:
+        elif round.draw_status == Round.Status.DRAFT:
             title = _("Draft Draw")
-        elif round.draw_status in [Round.STATUS_CONFIRMED, Round.STATUS_RELEASED]:
+        elif round.draw_status in [Round.Status.CONFIRMED, Round.Status.RELEASED]:
             self.page_emoji = '👏'
             title = _("Draw")
         else:
@@ -494,12 +499,12 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
         table.add_debate_team_columns(draw)
 
         # For draw details and draw draft pages
-        if (r.draw_status == Round.STATUS_DRAFT or self.detailed) and r.prev:
+        if (r.draw_status == Round.Status.DRAFT or self.detailed) and r.prev:
             teams = Team.objects.filter(debateteam__debate__round=r)
             metrics = self.tournament.pref('team_standings_precedence')
 
             if self.tournament.pref('teams_in_debate') == 'two':
-                pullup_metric = PowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.tournament.pref('draw_pullup_restriction')]
+                pullup_metric = BasePowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.tournament.pref('draw_pullup_restriction')]
             else:
                 pullup_metric = None
 
@@ -514,7 +519,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
                 self._add_break_rank_columns(table, draw, r.break_category)
             table.add_debate_metric_columns(draw, standings)
             table.add_debate_side_history_columns(draw, r.prev)
-        elif not (r.draw_status == Round.STATUS_DRAFT or self.detailed):
+        elif not (r.draw_status == Round.Status.DRAFT or self.detailed):
             table.add_debate_adjudicators_column(draw, show_splits=False, for_admin=True)
 
         table.add_draw_conflicts_columns(draw, self.venue_conflicts, self.adjudicator_conflicts)
@@ -526,10 +531,10 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
 
     def get_table(self):
         r = self.round
-        if r.draw_status == Round.STATUS_NONE:
+        if r.draw_status == Round.Status.NONE:
             return TabbycatTableBuilder(view=self)  # blank
         elif self.tournament.pref('teams_in_debate') == 'bp' and \
-                r.draw_status == Round.STATUS_DRAFT and r.prev is not None and \
+                r.draw_status == Round.Status.DRAFT and r.prev is not None and \
                 not r.is_break_round:
             return self.get_bp_position_balance_table()
         else:
@@ -551,11 +556,11 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
             )
 
     def get_template_names(self):
-        if self.round.draw_status == Round.STATUS_NONE:
+        if self.round.draw_status == Round.Status.NONE:
             return ["draw_status_none.html"]
-        elif self.round.draw_status == Round.STATUS_DRAFT:
+        elif self.round.draw_status == Round.Status.DRAFT:
             return ["draw_status_draft.html"]
-        elif self.round.draw_status in [Round.STATUS_CONFIRMED, Round.STATUS_RELEASED]:
+        elif self.round.draw_status in [Round.Status.CONFIRMED, Round.Status.RELEASED]:
             return ["draw_status_confirmed.html"]
         else:
             logger.error("Unrecognised draw status: %s", self.round.draw_status)
@@ -654,7 +659,7 @@ class CreateDrawView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_CREATE
 
     def post(self, request, *args, **kwargs):
-        if self.round.draw_status != Round.STATUS_NONE:
+        if self.round.draw_status != Round.Status.NONE:
             messages.error(request, _("Could not create draw for %(round)s, there was already a draw!") % {'round': self.round.name})
             return super().post(request, *args, **kwargs)
 
@@ -707,10 +712,14 @@ class ConfirmDrawCreationView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_CONFIRM
 
     def post(self, request, *args, **kwargs):
-        if self.round.draw_status != Round.STATUS_DRAFT:
-            return HttpResponseBadRequest("Draw status is not DRAFT")
+        if self.round.draw_status != Round.Status.DRAFT:
+            if self.round.draw_status == Round.Status.NONE:
+                messages.error(request, _("There is no draw."))
+            else:
+                messages.info(request, _("The draw had already been confirmed."))
+            return HttpResponseRedirect(reverse_round('draw', self.round))
 
-        self.round.draw_status = Round.STATUS_CONFIRMED
+        self.round.draw_status = Round.Status.CONFIRMED
         self.round.save()
         self.log_action()
         return super().post(request, *args, **kwargs)
@@ -736,10 +745,14 @@ class DrawReleaseView(DrawStatusEdit):
     round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
-        if self.round.draw_status != Round.STATUS_CONFIRMED:
-            return HttpResponseBadRequest("Draw status is not CONFIRMED")
+        if self.round.draw_status != Round.Status.CONFIRMED:
+            if self.round.draw_status == Round.Status.RELEASED:
+                messages.info(request, _("The draw has already been released."))
+            else:
+                messages.error(request, _("The draw must be confirmed before being released."))
+            return HttpResponseRedirect(reverse_round('draw', self.round))
 
-        self.round.draw_status = Round.STATUS_RELEASED
+        self.round.draw_status = Round.Status.RELEASED
         self.round.save()
         self.log_action()
 
@@ -752,10 +765,11 @@ class DrawUnreleaseView(DrawStatusEdit):
     round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
-        if self.round.draw_status != Round.STATUS_RELEASED:
-            return HttpResponseBadRequest("Draw status is not released")
+        if self.round.draw_status != Round.Status.RELEASED:
+            messages.info(request, _("The draw had been unreleased."))
+            return HttpResponseRedirect(reverse_round('draw', self.round))
 
-        self.round.draw_status = Round.STATUS_CONFIRMED
+        self.round.draw_status = Round.Status.CONFIRMED
         self.round.save()
         self.log_action()
         messages.success(request, _("Unreleased the draw."))

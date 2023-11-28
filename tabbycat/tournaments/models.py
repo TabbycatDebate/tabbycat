@@ -2,7 +2,7 @@ import logging
 
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, F, Prefetch, Q
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -112,9 +112,9 @@ class Tournament(models.Model):
         """Returns the 'ballots per debate' setting for the stage of the
         tournament given. Callers can use this to avoid querying the round's
         tournament repeatedly."""
-        if stage == Round.STAGE_PRELIMINARY:
+        if stage == Round.Stage.PRELIMINARY:
             return self.pref('ballots_per_debate_prelim')
-        elif stage == Round.STAGE_ELIMINATION:
+        elif stage == Round.Stage.ELIMINATION:
             return self.pref('ballots_per_debate_elim')
         else:
             raise ValueError("Unrecognized stage: %r" % (stage,))
@@ -165,7 +165,7 @@ class Tournament(models.Model):
 
     def prelim_rounds(self, before=None, until=None):
         """Convenience function for retrieving preliminary rounds. Returns a QuerySet."""
-        qs = self.round_set.filter(stage=Round.STAGE_PRELIMINARY)
+        qs = self.round_set.filter(stage=Round.Stage.PRELIMINARY)
         if until:
             qs = qs.filter(seq__lte=until.seq)
         if before:
@@ -174,7 +174,7 @@ class Tournament(models.Model):
 
     def break_rounds(self):
         """Convenience function for retrieving break rounds. Returns a QuerySet."""
-        return self.round_set.filter(stage=Round.STAGE_ELIMINATION)
+        return self.round_set.filter(stage=Round.Stage.ELIMINATION)
 
     def rounds_for_nav(self):
         """Returns a Round QuerySet suitable for the admin nav bar.
@@ -263,7 +263,7 @@ class Tournament(models.Model):
     def public_draws_available(self):
         """Returns True if draws are available for public viewing. Used in
         public navigation menus."""
-        return any(r.draw_status == Round.STATUS_RELEASED for r in self.current_rounds)
+        return any(r.draw_status == Round.Status.RELEASED for r in self.current_rounds)
 
 
 class RoundManager(LookupByNameFieldsMixin, models.Manager):
@@ -275,38 +275,24 @@ class RoundManager(LookupByNameFieldsMixin, models.Manager):
 
 
 class Round(models.Model):
-    DRAW_RANDOM = 'R'
-    DRAW_MANUAL = 'M'
-    DRAW_ROUNDROBIN = 'D'
-    DRAW_POWERPAIRED = 'P'
-    DRAW_ELIMINATION = 'E'
-    # Translators: These are choices for the type of draw a round should have.
-    DRAW_CHOICES = (
-        (DRAW_RANDOM, _('Random')),
-        (DRAW_MANUAL, _('Manual')),
-        (DRAW_ROUNDROBIN, _('Round-robin')),
-        (DRAW_POWERPAIRED, _('Power-paired')),
-        (DRAW_ELIMINATION, _('Elimination')),
-    )
 
-    STAGE_PRELIMINARY = 'P'
-    STAGE_ELIMINATION = 'E'
-    STAGE_CHOICES = (
-        (STAGE_PRELIMINARY, _('Preliminary')),
-        (STAGE_ELIMINATION, _('Elimination')),
-    )
+    class DrawType(models.TextChoices):
+        RANDOM = 'R', _('Random')
+        MANUAL = 'M', _('Manual')
+        ROUNDROBIN = 'D', _('Round-robin')
+        POWERPAIRED = 'P', _('Power-paired')
+        ELIMINATION = 'E', _('Elimination')
+        SEEDED = 'S', _('Seeded')
 
-    STATUS_NONE = 'N'
-    STATUS_DRAFT = 'D'
-    STATUS_CONFIRMED = 'C'
-    STATUS_RELEASED = 'R'
-    # Translators: These are choices for the status of the draw for a round.
-    STATUS_CHOICES = (
-        (STATUS_NONE, _('None')),
-        (STATUS_DRAFT, _('Draft')),
-        (STATUS_CONFIRMED, _('Confirmed')),
-        (STATUS_RELEASED, _('Released')),
-    )
+    class Stage(models.TextChoices):
+        PRELIMINARY = 'P', _('Preliminary')
+        ELIMINATION = 'E', _('Elimination')
+
+    class Status(models.TextChoices):
+        NONE = 'N', _('None')
+        DRAFT = 'D', _('Draft')
+        CONFIRMED = 'C', _('Confirmed')
+        RELEASED = 'R', _('Released')
 
     objects = RoundManager()
 
@@ -319,10 +305,10 @@ class Round(models.Model):
 
     name = models.CharField(max_length=40, verbose_name=_("name"), help_text=_("e.g. \"Round 1\""))
     abbreviation = models.CharField(max_length=10, verbose_name=_("abbreviation"), help_text=_("e.g. \"R1\""))
-    stage = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY,
+    stage = models.CharField(max_length=1, choices=Stage.choices, default=Stage.PRELIMINARY,
         verbose_name=_("stage"),
         help_text=_("Preliminary = inrounds, elimination = outrounds"))
-    draw_type = models.CharField(max_length=1, choices=DRAW_CHOICES,
+    draw_type = models.CharField(max_length=1, choices=DrawType.choices,
         verbose_name=_("draw type"),
         help_text=_("Which draw method to use"))
     # cascade to avoid break rounds without break categories
@@ -330,7 +316,7 @@ class Round(models.Model):
         verbose_name=_("break category"),
         help_text=_("If elimination round, which break category"))
 
-    draw_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE,
+    draw_status = models.CharField(max_length=1, choices=Status.choices, default=Status.NONE,
         verbose_name=_("draw status"),
         help_text=_("The status of this round's draw"))
 
@@ -362,22 +348,23 @@ class Round(models.Model):
         return "[%s] %s" % (self.tournament, self.name)
 
     def clean(self):
-        errors = {}
+        errors = {
+            'break_category': [],
+        }
 
         # Draw type must be consistent with stage
-        if self.stage == Round.STAGE_ELIMINATION and self.draw_type != Round.DRAW_ELIMINATION:
-            errors['draw_type'] = ValidationError(_("A round in the elimination stage must have "
-                "its draw type set to \"Elimination\"."))
-        elif self.stage == Round.STAGE_PRELIMINARY and self.draw_type == Round.DRAW_ELIMINATION:
-            errors['draw_type'] = ValidationError(_("A round in the preliminary stage cannot "
-                "have its draw type set to \"Elimination\"."))
+        if (self.stage == Round.Stage.ELIMINATION) != (self.draw_type == Round.DrawType.ELIMINATION):
+            errors['draw_type'] = [ValidationError(_("The \"Elimination\" draw type is only for elimination rounds, where it is mandatory."))]
 
         # Break rounds must have a break category
-        if self.stage == Round.STAGE_ELIMINATION and self.break_category is None:
-            errors['break_category'] = ValidationError(_("Elimination rounds must have a break category."))
+        if (self.stage == Round.Stage.ELIMINATION) == (self.break_category is None):
+            errors['break_category'].append(ValidationError(_("An elimination round must have a break category and preliminary round must not.")))
 
-        if errors:
-            raise ValidationError(errors)
+        if self.break_category and self.break_category.tournament_id != self.tournament_id:
+            errors['break_category'].append(ValidationError(_("Break category must be for the same tournament.")))
+
+        if any(len(v) > 0 for v in errors.values()):
+            raise ValidationError({k: v for k, v in errors.items() if len(v) > 0})
 
     # --------------------------------------------------------------------------
     # Checks for potential errors
@@ -408,15 +395,16 @@ class Round(models.Model):
     def num_debates_without_chair(self):
         """Returns the number of debates in the round that lack a chair, or have
         more than one chair."""
+        from draw.models import DebateTeam
         from adjallocation.models import DebateAdjudicator
-        debates_in_round = self.debate_set.count()
+        debates_in_round = self.debate_set.exclude(debateteam__side=DebateTeam.Side.BYE).count()
         debates_with_one_chair = self.debate_set.filter(debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR).annotate(
                 num_chairs=Count('debateadjudicator')).filter(num_chairs=1).count()
         return debates_in_round - debates_with_one_chair
 
     @cached_property
     def num_debates_with_even_panel(self):
-        """Returns the number of debates in the round, in which there are an
+        """Returns the number of debates in the round, in which there are a
         positive and even number of voting judges."""
         from adjallocation.models import DebateAdjudicator
         debateadj_filter = ~Q(debateadjudicator__type=DebateAdjudicator.TYPE_TRAINEE)
@@ -428,7 +416,8 @@ class Round(models.Model):
 
     @cached_property
     def num_debates_without_venue(self):
-        return self.debate_set.filter(venue__isnull=True).count()
+        from draw.models import DebateTeam
+        return self.debate_set.filter(venue__isnull=True).exclude(debateteam__side=DebateTeam.Side.BYE).count()
 
     @cached_property
     def num_debates_with_sides_unconfirmed(self):
@@ -452,7 +441,7 @@ class Round(models.Model):
     # Draw retrieval methods
     # --------------------------------------------------------------------------
 
-    def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',),
+    def debate_set_with_prefetches(self, filter_args=[], filter_kwargs={}, ordering=(F('venue__name').asc(nulls_last=True),),
             teams=True, adjudicators=True, speakers=True, wins=False,
             results=False, venues=True, institutions=False, check_ins=False, iron=False):
         """Returns the debate set, with aff_team and neg_team populated.
@@ -463,9 +452,7 @@ class Round(models.Model):
         from participants.models import Speaker
         from results.prefetch import populate_confirmed_ballots, populate_wins, populate_checkins
 
-        debates = self.debate_set.all()
-        if filter_kwargs:
-            debates = debates.filter(**filter_kwargs)
+        debates = self.debate_set.filter(*filter_args, **filter_kwargs)
         if results:
             debates = debates.prefetch_related('ballotsubmission_set',
                 'ballotsubmission_set__submitter', 'ballotsubmission_set__participant_submitter')
@@ -488,13 +475,13 @@ class Round(models.Model):
                     Prefetch('team__speaker_set', queryset=Speaker.objects.order_by('name')))
             if iron:
                 debateteam_prefetch_queryset = debateteam_prefetch_queryset.annotate(
-                    iron=Count('speakerscore', filter=Q(
-                        speakerscore__ghost=True,
-                        speakerscore__ballot_submission__confirmed=True,
+                    iron=Count('teamscore', filter=Q(
+                        teamscore__has_ghost=True,
+                        teamscore__ballot_submission__confirmed=True,
                     ), distinct=True),
-                    iron_prev=Count('team__debateteam__speakerscore', filter=Q(
-                        team__debateteam__speakerscore__ghost=True,
-                        team__debateteam__speakerscore__ballot_submission__confirmed=True,
+                    iron_prev=Count('team__debateteam__teamscore', filter=Q(
+                        team__debateteam__teamscore__has_ghost=True,
+                        team__debateteam__teamscore__ballot_submission__confirmed=True,
                         team__debateteam__debate__round=self.prev,
                     ), distinct=True),
                 )
@@ -547,7 +534,7 @@ class Round(models.Model):
     def _rounds_in_same_sequence(self):
         rounds = self.tournament.round_set.all()
         if self.is_break_round:
-            rounds = rounds.filter(Q(stage=Round.STAGE_PRELIMINARY) | Q(break_category=self.break_category))
+            rounds = rounds.filter(Q(stage=Round.Stage.PRELIMINARY) | Q(break_category=self.break_category))
         return rounds
 
     @cached_property
@@ -571,7 +558,7 @@ class Round(models.Model):
 
     @cached_property
     def is_break_round(self):
-        return self.stage == self.STAGE_ELIMINATION
+        return self.stage == self.Stage.ELIMINATION
 
     @property
     def is_current(self):

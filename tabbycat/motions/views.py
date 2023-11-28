@@ -4,6 +4,7 @@ from django.db.models import OuterRef, Prefetch, Q, Subquery
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
 from django.views.generic.base import TemplateView
+from django_summernote.widgets import SummernoteWidget
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -59,7 +60,7 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
             extra = max(1 - nexisting, 0)
             delete = nexisting > 1  # if there's more than one, allow deletion
 
-        return {'can_delete': delete, 'exclude': excludes, 'extra': extra}
+        return {'can_delete': delete, 'exclude': excludes, 'extra': extra, 'widgets': {'info_slide': SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})}}
 
     def get_formset_kwargs(self):
         nexisting = self.get_formset_queryset().count()
@@ -132,6 +133,10 @@ class CopyPreviousMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, Po
 
     def post(self, request, *args, **kwargs):
         self.round.roundmotion_set.all().delete()
+        if self.round.prev is None:
+            messages.error(self.request, _("Motions cannot be copied to the first round."))
+            return super().post(request, *args, **kwargs)
+
         motions = self.round.prev.roundmotion_set.select_related('motion')
         new_motions = []
 
@@ -165,14 +170,20 @@ class ReleaseMotionsView(BaseReleaseMotionsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE
     motions_released = True
-    message_text = _("Released the motion(s).")
+
+    @property
+    def message_text(self):
+        return ngettext("Released the motion.", "Released the motions.", self.round.motion_set.count())
 
 
 class UnreleaseMotionsView(BaseReleaseMotionsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_UNRELEASE
     motions_released = False
-    message_text = _("Unreleased the motion(s).")
+
+    @property
+    def message_text(self):
+        return ngettext("Unreleased the motion.", "Unreleased the motions.", self.round.motion_set.count())
 
 
 class BaseDisplayMotionsView(RoundMixin, TemplateView):
@@ -198,7 +209,7 @@ class AssistantDisplayMotionsView(CurrentRoundMixin, OptionalAssistantTournament
 class EmailMotionReleaseView(RoleColumnMixin, RoundTemplateEmailCreateView):
     page_subtitle = _("Round Motions")
 
-    event = BulkNotification.EVENT_TYPE_MOTIONS
+    event = BulkNotification.EventType.MOTIONS
     subject_template = 'motion_email_subject'
     message_template = 'motion_email_message'
 
@@ -219,7 +230,7 @@ class BaseMotionStatisticsView(TournamentMixin, TemplateView):
         kwargs['statistics'] = self.get_statistics()
         kwargs['type'] = self.stats_type
         kwargs['for_public'] = self.for_public
-        kwargs['stage'] = {'PRELIM': Round.STAGE_PRELIMINARY, 'ELIM': Round.STAGE_ELIMINATION}
+        kwargs['stage'] = {'PRELIM': Round.Stage.PRELIMINARY, 'ELIM': Round.Stage.ELIMINATION}
         return super().get_context_data(**kwargs)
 
     def get_statistics(self, *args, **kwargs):

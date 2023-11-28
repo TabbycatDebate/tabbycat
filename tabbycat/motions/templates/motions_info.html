@@ -2,7 +2,7 @@
 
 <div class="modal fade" id="info_{{ motion.id }}" tabindex="-1" role="dialog"
      aria-labelledby="" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+  <div class="modal-dialog modal-dialog-centered modal-lg text-left" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">{% trans "Info Slide" %}</h5>
@@ -11,7 +11,11 @@
         </button>
       </div>
       <div class="modal-body lead">
-        {{ motion.info_slide|linebreaks }}
+        {% if motion.info_slide|slice:":3" == "<p>" %}
+          {{ motion.info_slide|safe }}
+        {% else %}
+          {{ motion.info_slide|linebreaks }}
+        {% endif %}
       </div>
     </div>
   </div>

@@ -11,7 +11,7 @@ from adjfeedback.models import AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
 from breakqual.utils import auto_make_break_rounds
 from options.preferences import TournamentStaff
-from options.presets import all_presets, get_preferences_data, presets_for_form, public_presets_for_form
+from options.presets import all_presets, data_entry_presets_for_form, presets_for_form, PrivateURLs, public_presets_for_form, PublicForms, PublicInformation
 
 from .models import Round, Tournament
 from .signals import update_tournament_cache
@@ -82,15 +82,22 @@ class TournamentConfigureForm(ModelForm):
         fields = ('preset_rules', 'public_info')
 
     preset_rules = ChoiceField(
-        choices=presets_for_form(), # Tuple with (Present_Index, Preset_Name)
+        choices=presets_for_form(), # Tuple with (Preset_Index, Preset_Name)
         label=_("Format Configuration"),
-        help_text=_("Apply a standard set of settings to match a common debate format"))
+        help_text=_("Apply a standard set of settings to match a common debate format. "
+            "These can be changed afterwards and should be checked for your needs."))
 
     public_info = ChoiceField(
-        choices=public_presets_for_form(), # Tuple with (Present_Index, Preset_Name)
+        choices=public_presets_for_form,
         label=_("Public Configuration"),
         help_text=_("Show non-sensitive information on the public-facing side of this site, "
             "like draws (once released) and the motions of previous rounds"))
+
+    data_entry = ChoiceField(
+        choices=data_entry_presets_for_form,
+        label=_("Participant Data Entry"),
+        help_text=_("Whether participants can submit ballots and feedback themselves, and "
+            "how they do so"))
 
     tournament_staff = CharField(
         label=TournamentStaff.verbose_name,
@@ -110,17 +117,17 @@ class TournamentConfigureForm(ModelForm):
         # Identify + apply selected preset
         selected_index = self.cleaned_data["preset_rules"]
         selected_preset = next(p for p in presets if p.name == selected_index)
-        selected_preferences = get_preferences_data(selected_preset, t)
-        for preference in selected_preferences:
-            t.preferences[preference['key']] = preference['new_value']
+        selected_preset.save(t)
 
         # Apply public info presets
         do_public = self.cleaned_data["public_info"]
-        public_preset = next((p for p in presets if p.name == do_public), False)
-        if public_preset:
-            public_preferences = get_preferences_data(public_preset, t)
-            for preference in public_preferences:
-                t.preferences[preference['key']] = preference['new_value']
+        if do_public == "True":
+            PublicInformation.save(t)
+
+        # Apply data entry method preset
+        data_entry_method = self.cleaned_data["data_entry"]
+        if data_entry_method != "False":
+            {"private-urls": PrivateURLs, "public": PublicForms}[data_entry_method].save(t)
 
         # Apply the credits
         if self.cleaned_data['tournament_staff'] != self.fields['tournament_staff'].initial:
@@ -137,7 +144,7 @@ class RoundWithCompleteOptionChoiceIterator(ModelChoiceIterator):
 
     def __iter__(self):
         yield from super().__iter__()
-        yield (self.field.complete_value, self.field.complete_label)
+        yield self.field.complete_value, self.field.complete_label
 
     def __len__(self):
         return super().__len__() + 1
@@ -262,7 +269,7 @@ class RoundWeightForm(Form):
     def _create_fields(self):
         """Dynamically generate one integer field for each preliminary round, for the
         user to indicate how many teams are from that institution."""
-        for round in self.tournament.round_set.filter(stage=Round.STAGE_PRELIMINARY):
+        for round in self.tournament.round_set.filter(stage=Round.Stage.PRELIMINARY):
             self.fields['round_weight_%d' % round.id] = IntegerField(
                     min_value=0,
                     label=_("%(name)s (%(abbreviation)s)") % {'name': round.name, 'abbreviation': round.abbreviation},
@@ -270,7 +277,7 @@ class RoundWeightForm(Form):
                     widget=NumberInput(attrs={'placeholder': 1}))
 
     def save(self):
-        rounds = self.tournament.round_set.filter(stage=Round.STAGE_PRELIMINARY)
+        rounds = self.tournament.round_set.filter(stage=Round.Stage.PRELIMINARY)
         for round in rounds:
             round.weight = self.cleaned_data['round_weight_%d' % round.id]
         Round.objects.bulk_update(rounds, ['weight'])

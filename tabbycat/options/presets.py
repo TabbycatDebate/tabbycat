@@ -1,8 +1,10 @@
 import logging
+from copy import copy
 
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-from .preferences import tournament_preferences_registry
+from .forms import tournament_preference_form_builder
 
 logger = logging.getLogger(__name__)
 
@@ -28,46 +30,51 @@ def presets_for_form():
     return choices
 
 
-def public_presets_for_form():
-    return [(_('Public Information Options'), _('Enable Public Information')),
-            (False, _('Disable Public Information'))]
+public_presets_for_form = [
+    (True, _('Enable Public Information')),
+    (False, _('Disable Public Information')),
+]
 
 
-def get_preferences_data(selected_preset, tournament):
-    preset_preferences = []
-    # Create an instance of the class and iterate over its properties for the UI
-    for key in dir(selected_preset):
-        value = getattr(selected_preset, key)
-        if '__' in key and not key.startswith('__'):
-            # Lookup the base object
-            section, name = key.split('__', 1)
-            try:
-                preset_object = tournament_preferences_registry[section][name]
-                current_value = tournament.preferences[key]
-            except KeyError:
-                logger.exception("Bad preference key: %s", key)
-                continue
-            preset_preferences.append({
-                'key': key,
-                'name': preset_object.verbose_name,
-                'current_value': current_value,
-                'new_value': value,
-                'help_text': preset_object.help_text,
-                'changed': current_value != value,
-            })
-    preset_preferences.sort(key=lambda x: x['key'])
-    return preset_preferences
+data_entry_presets_for_form = [
+    (False, _('Disabled (tab staff only)')),
+    ("private-urls", _('Use private URLs')),
+    ("public", _('Use publicly accessible form')),
+]
 
 
-def save_presets(tournament, preset):
-    preset_preferences = get_preferences_data(preset, tournament)
-
-    for pref in preset_preferences:
-        tournament.preferences[pref['key']] = pref['new_value']
+def get_preset_from_slug(slug):
+    selected_presets = [x for x in all_presets() if slugify(x.__name__) == slug]
+    if len(selected_presets) == 0:
+        raise ValueError("Preset {!r} not found.".format(slug))
+    elif len(selected_presets) > 1:
+        logger.warning("Found more than one preset for %s", slug)
+    return selected_presets[0]
 
 
 class PreferencesPreset:
     show_in_list                               = False
+
+    @classmethod
+    def get_preferences(cls):
+        for key in dir(cls):
+            if '__' in key and not key.startswith('__'):
+                yield key
+
+    @classmethod
+    def get_form(cls, tournament, **kwargs):
+        form = tournament_preference_form_builder(tournament, [tuple(key.split('__', 1)[::-1]) for key in cls.get_preferences()])(**kwargs)
+        for field in form:
+            # Copying required to avoid blanks added to list fields
+            field.initial = copy(getattr(cls, field.name))
+            field.changed = tournament.preferences[field.name] != getattr(cls, field.name)
+        return form
+
+    @classmethod
+    def save(cls, tournament):
+        for pref in cls.get_preferences():
+            logger.info(f"Setting {pref} to {getattr(cls, pref)}")
+            tournament.preferences[pref] = getattr(cls, pref)
 
 
 class AustralsPreferences(PreferencesPreset):
@@ -143,6 +150,8 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     standings__team_standings_precedence       = ['points', 'speaks_sum', 'firsts', 'seconds']
     standings__speaker_standings_precedence    = ['total'] # constitutional
     standings__speaker_standings_extra_metrics = ['average', 'stdev']
+    # Feedback Rules
+    feedback__adj_max_score                    = 10.0
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
@@ -260,7 +269,7 @@ class UADCPreferences(AustralsPreferences):
     description  = _("3 vs 3 with replies, chosen motions, and all adjudicators "
         "can receive feedback from teams.")
 
-    # Rules source = http://www.alcheringa.in/pdrules.pdf
+    # Rules source = https://docs.google.com/document/d/10AVKBhev_OFRtorWsu2VB9B5V1a2f20425HYkC5ztMM/edit
     # Scoring
     scoring__score_min                         = 69.0  # From Rules Book
     scoring__score_max                         = 81.0  # From Rules Book
@@ -269,13 +278,14 @@ class UADCPreferences(AustralsPreferences):
     scoring__reply_score_max                   = 42.0  # Not specified; assuming  half of substantive
     scoring__reply_score_step                  = 0.5
     scoring__maximum_margin                    = 0.0   # TODO= check this
-    scoring__margin_includes_dissenters        = True  # From Rules:10.9.5
+    scoring__margin_includes_dissenters        = False  # From Rules 20.3.2
     # Draws
     draw_rules__avoid_same_institution         = False
     draw_rules__avoid_team_history             = True
-    draw_rules__draw_odd_bracket               = 'pullup_top'  # From Rules 10.3.1
-    draw_rules__draw_side_allocations          = 'balance'  # From Rules 10.6
-    draw_rules__draw_pairing_method            = 'slide'  # From rules 10.5
+    draw_rules__draw_odd_bracket               = 'pullup_top'  # From Rules 20.10
+    draw_rules__draw_pullup_restriction        = 'least_to_date'  # From Rules 20.11
+    draw_rules__draw_side_allocations          = 'balance'
+    draw_rules__draw_pairing_method            = 'slide'  # From rules 20.9
     draw_rules__draw_avoid_conflicts           = 'one_up_one_down'  # From rules 10.6.4
     # Debate Rules
     debate_rules__substantive_speakers         = 3
@@ -320,6 +330,37 @@ class WSDCPreferences(AustralsPreferences):
     ui_options__show_adjudicator_institutions  = False
 
 
+class APDAPreferences(PreferencesPreset):
+    name = _("APDA Rules")
+    show_in_list = True
+    description = _("2 vs 2 with speech rankings and byes")
+
+    scoring__score_min                         = 15
+    scoring__score_max                         = 40
+    motions__motion_vetoes_enabled             = False # Single motions per round
+    motions__enable_motions                    = False
+    draw_rules__draw_odd_bracket               = 'pullup_bottom'
+    draw_rules__team_institution_penalty       = 1000
+    draw_rules__team_history_penalty           = 100000
+    draw_rules__draw_pairing_method            = 'fold'
+    draw_rules__draw_pullup_restriction        = 'least_to_date'
+    draw_rules__bye_team_results               = 'points'
+    draw_rules__bye_team_selection             = 'lowest'
+    draw_rules__draw_avoid_conflicts           = 'graph'
+    draw_rules__pullup_debates_penalty         = 10000
+    draw_rules__side_penalty                   = 100
+    draw_rules__pairing_penalty                = 1
+    debate_rules__ballots_per_debate_prelim    = 'per-debate'
+    debate_rules__ballots_per_debate_elim      = 'per-debate'
+    debate_rules__winners_in_ballots           = 'tied-points'
+    debate_rules__speakers_in_ballots          = 'prelim'
+    debate_rules__substantive_speakers         = 2
+    debate_rules__side_names                   = 'gov-opp'
+    debate_rules__reply_scores_enabled         = False
+    debate_rules__speaker_ranks                = 'any'
+    standings__speaker_standings_precedence    = ['average', 'srank', 'trimmed_mean']
+
+
 class PublicInformation(PreferencesPreset):
     name         = _("Public Information Options")
     show_in_list = False
@@ -354,3 +395,21 @@ class TabRelease(PreferencesPreset):
     public_features__public_team_standings     = False
     public_features__public_draw               = 'off'
     public_features__public_break_categories   = False
+
+
+class PrivateURLs(PreferencesPreset):
+    name = _("Use Private URLs")
+    show_in_list = False
+    description = _("Enables participant data entry through private URLs.")
+
+    data_entry__participant_ballots            = 'private-urls'
+    data_entry__participant_feedback           = 'private-urls'
+
+
+class PublicForms(PreferencesPreset):
+    name = _("Use Public Forms")
+    show_in_list = False
+    description = _("Enables participant data entry through public forms.")
+
+    data_entry__participant_ballots            = 'public'
+    data_entry__participant_feedback           = 'public'

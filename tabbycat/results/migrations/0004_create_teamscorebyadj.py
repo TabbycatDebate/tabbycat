@@ -5,37 +5,6 @@ import django.db.models.deletion
 import results.models
 
 
-def populate_teamscorebyadj(apps, schema_editor):
-    SpeakerScoreByAdj = apps.get_model("results", "speakerscorebyadj")
-    TeamScoreByAdj = apps.get_model("results", "teamscorebyadj")
-
-    ss_query = SpeakerScoreByAdj.objects.all().order_by(
-        'ballot_submission_id', 'debate_adjudicator_id', 'debate_team_id'
-    ).values()
-
-    # Create nested dicts {ballot: {adj: {team: score, ...}, ...}, ...}
-    ss_by_ballot = {}
-    for key, group in itertools.groupby(ss_query, lambda ss: ss["ballot_submission_id"]):
-        ss_by_adj = {}
-        for adj_key, adj_group in itertools.groupby(group, lambda ss: ss["debate_adjudicator_id"]):
-            s = {team_key: sum(t["score"] for t in team_group) for team_key, team_group in itertools.groupby(adj_group, lambda ss: ss["debate_team_id"])}
-            ss_by_adj[adj_key] = s
-        ss_by_ballot[key] = ss_by_adj
-
-    # Calculate win/margin (2-team formats only) & add TSA object
-    teamscores = []
-    for ballot, adjs_scores in ss_by_ballot.items():
-        for adj, teams in adjs_scores.items():
-            winner = max(teams.items(), key=(lambda v: v[1]))[0]
-            margin = max(teams.values()) - min(teams.values())
-            for team, score in teams.items():
-                tsa = TeamScoreByAdj(ballot_submission_id=ballot, debate_adjudicator_id=adj, debate_team_id=team, score=score)
-                tsa.win = team == winner
-                tsa.margin = margin if tsa.win else -margin
-                teamscores.append(tsa)
-    TeamScoreByAdj.objects.bulk_create(teamscores)
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -69,8 +38,8 @@ class Migration(migrations.Migration):
             name='teamscorebyadj',
             index_together={('ballot_submission', 'debate_adjudicator')},
         ),
-        migrations.RunPython(
-            populate_teamscorebyadj,
-            lambda apps, schema_editor: apps.get_model("results", "teamscorebyadj").objects.all().delete(),
+        migrations.RunSQL(
+            "WITH tadj AS (SELECT SUM(score) score, ballot_submission_id, debate_adjudicator_id, debate_team_id FROM results_speakerscorebyadj GROUP BY ballot_submission_id, debate_adjudicator_id, debate_team_id) INSERT INTO results_teamscorebyadj (win, margin, score, ballot_submission_id, debate_adjudicator_id, debate_team_id) SELECT score = max_score, CASE WHEN score = max_score THEN max_score - min_score ELSE min_score - max_score END, t.score, t.ballot_submission_id, t.debate_adjudicator_id, debate_team_id FROM tadj t INNER JOIN (SELECT MAX(score) max_score, MIN(score) min_score, ballot_submission_id, debate_adjudicator_id FROM tadj GROUP BY ballot_submission_id, debate_adjudicator_id) b ON t.ballot_submission_id=b.ballot_submission_id AND t.debate_adjudicator_id=b.debate_adjudicator_id;",
+            migrations.RunSQL.noop,
         ),
     ]

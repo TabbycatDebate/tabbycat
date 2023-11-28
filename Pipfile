@@ -36,6 +36,10 @@ honcho = "*"
 gunicorn = "*"
 sentry-sdk = "*"
 whitenoise = "*"
+drf-spectacular = "*"
+daphne = "*"
+drf-link-header-pagination = "*"
+networkx = "*" # Avoid its dependencies (SciPy)
 
 [dev-packages]
 pre-commit = "*"

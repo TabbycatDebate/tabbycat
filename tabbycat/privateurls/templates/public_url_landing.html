@@ -37,11 +37,12 @@
           {% blocktrans trimmed with check_time=event.time asvar text %}
             Revoke check-in from {{ check_time }}
           {% endblocktrans %}
+          {% include "components/item-action.html" with id="triggerCheckInForm" url="" child=True type="warning" %}
         {% else %}
           <input type="hidden" name="action" value="checkin" />
           {% trans "Check in" as text %}
+          {% include "components/item-action.html" with id="triggerCheckInForm" url="" child=True %}
         {% endif %}
-        {% include "components/item-action.html" with id="triggerCheckInForm" url="" child=True %}
       </form>
     {% elif checkins_used %}
       {% if event %}
@@ -57,13 +58,10 @@
     {% endif %}
 
     {% if object.adjudicator and pref.participant_ballots == 'private-urls' %}
-      {% for round in tournament.current_rounds %}
-        {% roundurl 'results-public-ballotset-new-randomised' round url_key as url %}
-        {% blocktrans trimmed with round=round.name asvar text %}Submit Ballot for {{ round }}{% endblocktrans %}
-        {% include "components/item-action.html" %}
-      {% empty %}
-        {% trans "There are no current rounds" as text %}
-        {% include "components/item-info.html" with type='info' %}
+      {% for dadj in debateadjudications %}
+          {% roundurl 'results-public-ballotset-new-randomised' dadj.debate.round url_key as url %}
+          {% blocktrans trimmed with round=dadj.debate.round.name asvar text %}Submit Ballot for {{ round }}{% endblocktrans %}
+          {% include "components/item-action.html" %}
       {% endfor %}
     {% endif %}
 
@@ -101,7 +99,7 @@
 {% block js %}
   {{ block.super }}
   <script>
-    $(document).ready( function() { // Use the fake submit buttons as real submissoin
+    $(document).ready( function() { // Use the fake submit buttons as real submission
       $("#triggerCheckInForm").click( function() {
         $("#checkInForm").submit();
         return false;

@@ -3,8 +3,8 @@ name: Django CI
 on:
   push:
     branches:
-    - '**'
-    - '!l10n_develop'
+    - 'develop'
+    - 'master'
   pull_request:
     branches:
     - '**'
@@ -17,7 +17,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:11
+        image: postgres:12
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -34,13 +34,13 @@ jobs:
     - name: Set up Python
       # The actions/cache step below uses this id to get the exact python version
       id: setup-python
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
-        python-version: 3.9
+        python-version-file: '.python-version' # Read python version from a file .python-version
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 12.x
+        node-version-file: '.nvmrc'
     - name: Cache node modules
       uses: actions/cache@v3
       env:

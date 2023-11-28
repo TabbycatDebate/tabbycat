@@ -155,14 +155,19 @@ class BasePairDrawGenerator(BaseDrawGenerator):
         "history_penalty" -
         "avoid_institution" - if True, draw tries to avoid pairing teams that
             are from the same institution.
+        "side_penalty" - A penalty to apply when optimizing with side balance
         """
 
     BASE_DEFAULT_OPTIONS = {
-        "side_allocations"   : "balance",
-        "avoid_history"      : True,
-        "avoid_institution"  : True,
-        "history_penalty"    : 1e3,
-        "institution_penalty": 1,
+        "side_allocations"      : "balance",
+        "avoid_history"         : True,
+        "avoid_institution"     : True,
+        "history_penalty"       : 1e3,
+        "institution_penalty"   : 1,
+        "side_penalty"          : 0,
+        "pullup_debates_penalty": 0,
+        "pairing_penalty"       : 0,
+        "avoid_conflicts"       : "off",
     }
 
     TEAMS_PER_DEBATE = 2

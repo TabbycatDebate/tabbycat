@@ -99,7 +99,7 @@ export default {
         teamChanges.push({ id: dropData.assignment, teams: toDebateTeams })
       }
       this.$store.dispatch('updateDebatesOrPanelsAttribute', { teams: teamChanges })
-      this.$store.dispatch('updateAllocableItemModified', [dragData.item])
+      this.$store.dispatch('updateAllocatableItemModified', [dragData.item])
     },
     getUnallocatedItemFromDebateOrPanel (debateOrPanel) {
       // Provide an array of IDs representing teams in this debate

@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block page-title %}{% trans "Sign-Up" %}{% endblock %}
-{% block head-title %}{% trans "Sign-Up" %}{% endblock %}
 {% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
 
 {% block content %}
@@ -12,11 +10,7 @@
 
     <div class="card">
       <div class="list-group list-group-flush">
-        {% if for_admin %}
-          {% trans "Create a New Administrator Account" context "page title" as title %}
-        {% else %}
-          {% trans "Create a New Assistant Account" context "page title" as title %}
-        {% endif %}
+        {% trans "Create a new Account" context "page title" as title %}
 
         {% include "components/form-title.html" with icon="user-plus" %}
 

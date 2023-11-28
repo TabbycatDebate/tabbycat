@@ -47,52 +47,32 @@
       </div>
       <div class="list-group list-group-flush">
         {% roundurl 'motions-edit' round as url %}
-        {% if pref.enable_motions %}
-
-          {# Motions enabled, so we expect there to be several. #}
-          {% if round.motion_set.exists %}
-            {% blocktrans trimmed asvar text count motions_count=round.motion_set.count %}
-              {{ motions_count }} motion has been entered.
-            {% plural %}
-              {{ motions_count }} motions have been entered.
-            {% endblocktrans %}
-            {% include "components/item-info.html" with nopad=True type="secondary" %}
-            {% trans "Edit motions" as edit_text %}
-            {% include "components/item-action.html" with text=edit_text type="primary" %}
-          {% else %}
-            {% trans "Your configuration/format requires motions to be specified as part of ballot entry. Make sure they are added before results come in!" as text %}
-            {% include "components/item-info.html" with nopad=True type="danger" %}
-            {% trans "Enter motions" as enter_text %}
-            {% include "components/item-action.html" with text=enter_text type="success" to_complete=True  %}
-          {% endif %}
-
+        {% if round.motion_set.exists %}
+          {% blocktrans trimmed asvar text count motions_count=round.motion_set.count %}
+            {{ motions_count }} motion has been entered.
+          {% plural %}
+            {{ motions_count }} motions have been entered.
+          {% endblocktrans %}
+          {% include "components/item-info.html" with nopad=True type="secondary" %}
+          {% blocktrans trimmed asvar edit_text count counter=expected_nmotions %}
+            Edit the motion
+          {% plural %}
+            Edit motions
+          {% endblocktrans %}
+          {% include "components/item-action.html" with text=edit_text type="primary" %}
         {% else %}
-
-          {# Motions disabled, so we expect there to be exactly one. #}
-          {% if round.motion_set.exists %}
-            {% if round.motion_set.count == 1 %}
-              {# As expected. #}
-              {% trans "The motion has been entered." as text %}
-              {% include "components/item-info.html" with nopad=True type="" %}
-            {% else %}
-              {# The singular below never gets used, but is required for i18n. #}
-              {# Translators: Used when only one motion is expected, but there is more than one. #}
-              {% blocktrans trimmed asvar text count motions_count=round.motion_set.count %}
-                {{ motions_count }} motion has been entered.
-              {% plural %}
-                {{ motions_count }} motions have been entered.
-              {% endblocktrans %}
-              {% include "components/item-info.html" with nopad=True type="secondary" %}
-            {% endif %}
-            {% trans "Edit the motion" as edit_text %}
-            {% include "components/item-action.html" with text=edit_text type="primary" %}
+          {% if pref.enable_motions %}
+            {% trans "Your configuration/format requires motions to be specified as part of ballot entry. Make sure they are added before results come in!" as text %}
           {% else %}
             {% trans "A motion should be added if you want to display it during announcements, print it on your ballots, or to display it (later) on the public motions/statistics pages." as text %}
-            {% include "components/item-info.html" with nopad=True type="warning" %}
-            {% trans "Enter a motion" as enter_text %}
-            {% include "components/item-action.html" with text=enter_text type="success" to_complete=True %}
           {% endif %}
-
+          {% include "components/item-info.html" with nopad=True type=pref.enable_motions|yesno:"danger,warning" %}
+          {% blocktranslate trimmed asvar enter_text count counter=expected_nmotions %}
+            Enter a motion
+          {% plural %}
+            Enter motions
+          {% endblocktranslate %}
+          {% include "components/item-action.html" with text=enter_text type="success" to_complete=True  %}
         {% endif %}
       </div>
 
@@ -107,17 +87,17 @@
       </div>
       <div class="list-group list-group-flush">
 
-        {% if round.draw_status == round.STATUS_NONE %}
+        {% if round.draw_status == round.Status.NONE %}
 
           {% trans "You have not generated a draw for this round yet. There is nothing to release." as text %}
           {% include "components/item-info.html" with nopad=True type="info" %}
 
-        {% elif round.draw_status == round.STATUS_DRAFT %}
+        {% elif round.draw_status == round.Status.DRAFT %}
 
           {% trans "The draw for this round is still in a draft state. Confirm the draw before releasing it." as text %}
           {% include "components/item-info.html" with nopad=True type="warning" %}
 
-        {% elif round.draw_status == round.STATUS_RELEASED %}
+        {% elif round.draw_status == round.Status.RELEASED %}
 
           {% trans "Unrelease draw to public" as un_release_text %}
           <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-unrelease' %}">{% csrf_token %}</form>
@@ -192,42 +172,69 @@
   <div class="col-md col-12">
     <div class="card">
 
-      {% if pref.enable_motions or pref.motion_vetoes_enabled %}
-        {% trans "Release Motions" as release_motions_title %}
-        {% trans "Release motions to public" as release_text %}
-        {% trans "Unrelease motions to public" as unrelease_text %}
-      {% else %}
-        {% trans "Release Motion" as release_motions_title %}
-        {% trans "Release motion to public" as release_text %}
-        {% trans "Unrelease motion to public" as unrelease_text %}
-      {% endif %}
+      {% blocktranslate trimmed count counter=expected_nmotions asvar release_text %}
+        Release motion to public
+      {% plural %}
+        Release motions to public
+      {% endblocktranslate %}
+      {% blocktranslate trimmed count counter=expected_nmotions asvar unrelease_text %}
+        Unrelease motion to public
+      {% plural %}
+        Unrelease motions to public
+      {% endblocktranslate %}
 
       <div class="card-body">
-        <h5 class="card-title mb-0">{{ release_motions_title }}</h5>
+        <h5 class="card-title mb-0">
+          {% blocktranslate trimmed count counter=expected_nmotions %}
+            Release Motion
+          {% plural %}
+            Release Motions
+          {% endblocktranslate %}
+        </h5>
       </div>
       <div class="list-group list-group-flush">
+
+        {% if not round.motion_set.exists %}
+          {% blocktranslate trimmed count counter=expected_nmotions asvar text %}
+            No motion is currently set for this round.
+          {% plural %}
+            No motions are currently set for this round.
+          {% endblocktranslate %}
+          {% include "components/item-info.html" with nopad=True type="warning" %}
+        {% endif %}
 
         {% if not round.motions_released %}
 
           <form id="releaseMotionsForm" method="POST" hidden
                 action="{% roundurl 'motions-release' %}">{% csrf_token %}</form>
-
           {% if pref.participant_ballots != 'off' and pref.enable_motions %}
             {% trans "Your tournament is configured to require motions to be selected in ballots and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to be submitted." as text %}
             {% include "components/item-info.html" with nopad=True type="danger" %}
-            {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
           {% elif pref.participant_ballots != 'off' and pref.motion_vetoes_enabled %}
             {% trans "Your tournament is configured to allow motions to be vetoed and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to nominate vetoes." as text %}
             {% include "components/item-info.html" with nopad=True type="danger" %}
-            {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
           {% elif pref.public_motions %}
-            {% trans "Your tournament is configured to show the motion(s) for each round on the public site. You'll need to first release the motion(s) for it to show there." as text %}
+            {% blocktranslate trimmed count counter=expected_nmotions asvar text %}
+              Your tournament is configured to show the motion for each round on the public site. You'll need to first release the motion for it to show there.
+            {% plural %}
+              Your tournament is configured to show the motions for each round on the public site. You'll need to first release the motions for it to show there.
+            {% endblocktranslate %}
             {% include "components/item-info.html" with nopad=True type="" %}
-            {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
           {% else %}
-            {% trans "Your tournament is not configured to show the motion(s) for each round on the public site. There's no need to release the motion(s)." as text %}
+            {% blocktranslate trimmed count counter=expected_nmotions asvar text %}
+              Your tournament is not configured to show the motion for each round on the public site. There's no need to release the motion.
+            {% plural %}
+              Your tournament is not configured to show the motions for each round on the public site. There's no need to release the motions.
+            {% endblocktranslate %}
             {% include "components/item-info.html" with nopad=True type="secondary" %}
-            {% include "components/item-action.html" with id="triggerReleaseMotionsForm" text=release_text url="" %}
+          {% endif %}
+
+          {% if round.motion_set.exists %}
+              {% if pref.enable_motions or pref.motion_vetoes_enabled or pref.public_motions %}
+                  {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
+              {% else %}
+                  {% include "components/item-action.html" with id="triggerReleaseMotionsForm" text=release_text url="" %}
+              {% endif %}
           {% endif %}
 
         {% else %}
@@ -236,11 +243,13 @@
                 action="{% roundurl 'motions-unrelease' %}">{% csrf_token %}</form>
           {# "and" takes precedence over "or" #}
           {% if pref.public_motions or pref.participant_ballots != 'off' and pref.enable_motions or pref.participant_ballots != 'off' and pref.motion_vetoes_enabled %}
-            {% if pref.enable_motions or pref.motion_vetoes_enabled %}
-              {% trans "Motions have been released publicly." as text %}
-            {% else %}
-              {% trans "The motion has been released publicly." as text %}
-            {% endif %}
+
+            {% blocktranslate trimmed count counter=expected_nmotions asvar text %}
+              The motion has been released publicly.
+            {% plural %}
+              Motions have been released publicly.
+            {% endblocktranslate %}
+
             {% include "components/item-info.html" with nopad=True type="" %}
             {% trans "View public motions page" as text %}
             {% tournamenturl 'motions-public' as public_link %}
@@ -348,7 +357,7 @@
           <div class="list-group-item pb-3">
             <div class="form-group">
               <label>{% trans "Start at" %}</label>
-              <input class="form-control" placeholder="{{ round.starts_at|time:'H:i' }}" name="start_time"></input>
+              <input class="form-control" placeholder="{{ round.starts_at|time:'H:i' }}" name="start_time"/>
             </div>
           </div>
 
@@ -366,7 +375,7 @@
 {% block js %}
   {{ block.super }}
   <script>
-    $(document).ready( function() { // Use the fake submit buttons as real submissoin
+    $(document).ready( function() { // Use the fake submit buttons as real submission
       $("#triggerReleaseDrawForm").click( function() {
         $("#releaseDrawForm").submit();
         return false;

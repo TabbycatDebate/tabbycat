@@ -2,6 +2,29 @@
 Change Log
 ==========
 
+2.8.0 (Quokka)
+---------
+*Release date: 28 November 2023*
+
+- The term "iron person" is now used throughout the platform for consistency and inclusivity. Thanks to @dcorks for the pull request!
+    - The number of times a team has had an iron-speaker is now tracked as a team metric.
+- Added new emoji from Unicode 12 and 13. Thank you to Daan Koning for the pull request! (`#2143 <https://github.com/TabbycatDebate/tabbycat/issues/2143>`_)
+- Info Slides can now use rich-text formatting (e.g. bold, links, etc). Thanks to Trần Trang Linh for adding this feature!
+- Speaker and break category forms have better validation and fewer fields.
+- Tournaments can be created specifying private URL use directly. Thanks to Sébastien Dunne Fulmer!
+- Implemented support for APDA-style tournaments with:
+    - Avoidance for a team to repeatedly meet pulled-up teams,
+    - A new two-team draw generator to minimize penalties globally within brackets,
+    - Team seeding for the first round,
+    - The ability to give ranks to speeches in addition to speaker scores, and
+    - A preset to enable these options.
+- API Updates:
+    - Documentation is now automatically generated and available under the ``/api/schema/redoc/`` path on all sites.
+    - Preformed panels are now accessible using the API.
+    - Team and speaker scores by round has a new endpoint. Thanks to Ido Wolf for the feature!
+    - The site's timezone is shown in the root endpoint. Thanks to Daan Koning!
+- \+ so many more little improvements and fixes!
+
 
 2.7.8
 -----
@@ -9,11 +32,12 @@ Change Log
 
 - Fixed some issues with Docker-based deployments.
 
+
 2.7.7
 -----
 *Release date: 23 April 2023*
 
-- Removed expired ad campaign.
+- Removed expired ad campaign
 
 
 2.7.6

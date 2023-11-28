@@ -21,8 +21,8 @@ class TestMotionStatisticsTwoTeam(TestCase):
         rd = Round.objects.create(tournament=self.tournament, seq=1)
         motion = Motion.objects.create(text="Motion", reference="Motion", tournament=self.tournament)
         debate = Debate.objects.create(round=rd)
-        dt1 = DebateTeam.objects.create(debate=debate, team=team1, side=DebateTeam.SIDE_AFF)
-        dt2 = DebateTeam.objects.create(debate=debate, team=team2, side=DebateTeam.SIDE_NEG)
+        dt1 = DebateTeam.objects.create(debate=debate, team=team1, side=DebateTeam.Side.AFF)
+        dt2 = DebateTeam.objects.create(debate=debate, team=team2, side=DebateTeam.Side.NEG)
         ballotsub = BallotSubmission.objects.create(debate=debate, motion=motion, confirmed=True)
         TeamScore.objects.create(debate_team=dt1, ballot_submission=ballotsub,
             margin=+2, points=1, score=101, win=True,  votes_given=1, votes_possible=1)
@@ -79,9 +79,9 @@ class TestMotionStatisticsBP(TestCase):
         self.tournament.delete()
 
     def test_prelim_statistics(self):
-        rd = Round.objects.create(tournament=self.tournament, seq=1, stage=Round.STAGE_PRELIMINARY)
+        rd = Round.objects.create(tournament=self.tournament, seq=1, stage=Round.Stage.PRELIMINARY)
         motion = Motion.objects.create(text="Prelim motion", reference="Prelim", tournament=self.tournament)
-        rd.motion_set.add(motion)
+        rd.roundmotion_set.create(motion=motion, seq=1)
         debate = Debate.objects.create(round=rd)
         ballotsub = BallotSubmission.objects.create(debate=debate, motion=motion, confirmed=True)
 
@@ -122,9 +122,9 @@ class TestMotionStatisticsBP(TestCase):
         self.assertAlmostEqual(motion.counts_by_bench['opp'], 2)
 
     def test_elim_statistics(self):
-        rd = Round.objects.create(tournament=self.tournament, seq=1, stage=Round.STAGE_ELIMINATION)
+        rd = Round.objects.create(tournament=self.tournament, seq=1, stage=Round.Stage.ELIMINATION)
         motion = Motion.objects.create(text="Elim motion", reference="Elim", tournament=self.tournament)
-        rd.motion_set.add(motion)
+        rd.roundmotion_set.create(motion=motion, seq=1)
         debate = Debate.objects.create(round=rd)
         ballotsub = BallotSubmission.objects.create(debate=debate, motion=motion, confirmed=True)
 

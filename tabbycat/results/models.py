@@ -27,18 +27,16 @@ class Submission(models.Model):
     The unique_together class attribute of the Meta class MUST be set in
     all subclasses."""
 
-    SUBMITTER_TABROOM = 'T'
-    SUBMITTER_PUBLIC = 'P'
-    SUBMITTER_TYPE_CHOICES = (
-        (SUBMITTER_TABROOM, _("Tab room")),
-        (SUBMITTER_PUBLIC, _("Public")),
-    )
+    class Submitter(models.TextChoices):
+        TABROOM = 'T', _("Tab room")
+        PUBLIC = 'P', _("Public")
+        AUTOMATION = 'A', _("Automation")
 
     timestamp = models.DateTimeField(auto_now_add=True,
         verbose_name=_("timestamp"))
     version = models.PositiveIntegerField(
         verbose_name=_("version"))
-    submitter_type = models.CharField(max_length=1, choices=SUBMITTER_TYPE_CHOICES,
+    submitter_type = models.CharField(max_length=1, choices=Submitter.choices,
         verbose_name=_("submitter type"))
     confirmed = models.BooleanField(default=False,
         verbose_name=_("confirmed"))
@@ -99,7 +97,7 @@ class Submission(models.Model):
 
     def clean(self):
         super().clean()
-        if self.submitter_type == self.SUBMITTER_TABROOM and self.submitter is None:
+        if self.submitter_type == self.Submitter.TABROOM and self.submitter is None:
             raise ValidationError(_("A tab room ballot must have a user associated."))
 
 
@@ -140,11 +138,9 @@ class BallotSubmission(Submission):
         # The motion must be from the relevant round
         super().clean()
         if self.motion is not None and self.debate.round not in self.motion.rounds.all():
-            raise ValidationError(_("Debate is in round %(round)d but motion (%(motion)s) is "
-                    "from round %(motion_round)d") % {
+            raise ValidationError(_("Debate is in round %(round)d but motion (%(motion)s) is not in round") % {
                     'round': self.debate.round,
-                    'motion': self.motion.reference,
-                    'motion_round': self.motion.round})
+                    'motion': self.motion.reference})
 
         if self.confirmed and self.discarded:
             raise ValidationError(_("A ballot can't be both confirmed and discarded!"))
@@ -318,6 +314,7 @@ class TeamScore(models.Model):
         verbose_name=_("votes given"))
     votes_possible = models.PositiveSmallIntegerField(null=True, blank=True,
         verbose_name=_("votes possible"))
+    has_ghost = models.BooleanField(null=True, blank=True, verbose_name=_("has ghost score"))
 
     class Meta:
         unique_together = [('debate_team', 'ballot_submission')]
@@ -349,6 +346,8 @@ class SpeakerScore(models.Model):
         verbose_name=_("debate team"))
     speaker = models.ForeignKey('participants.Speaker', models.CASCADE, db_index=True,
         verbose_name=_("speaker"))
+    rank = models.PositiveSmallIntegerField(null=True, blank=True,
+        verbose_name=_("rank"))
     score = ScoreField(verbose_name=_("score"))
     position = models.IntegerField(verbose_name=_("position"))
     ghost = models.BooleanField(default=False,

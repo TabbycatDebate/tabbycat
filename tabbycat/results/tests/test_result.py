@@ -105,7 +105,7 @@ class BaseTestDebateResult(TestCase):
         rd = Round.objects.create(tournament=self.tournament, seq=1, abbreviation="R1")
         self.debate = Debate.objects.create(round=rd, venue=venue)
 
-        sides = [DebateTeam.SIDE_AFF, DebateTeam.SIDE_NEG]
+        sides = [DebateTeam.Side.AFF, DebateTeam.Side.NEG]
         for team, side in zip(Team.objects.all(), sides):
             DebateTeam.objects.create(debate=self.debate, team=team, side=side)
 
@@ -141,7 +141,7 @@ class BaseTestDebateResult(TestCase):
         self.debate.ballotsubmission_set.update(confirmed=False)
 
         ballotsub = BallotSubmission.objects.create(debate=self.debate, confirmed=True,
-                submitter_type=BallotSubmission.SUBMITTER_TABROOM)
+                submitter_type=BallotSubmission.Submitter.TABROOM)
 
         return self.debate_result_class(ballotsub)
 

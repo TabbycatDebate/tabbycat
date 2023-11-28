@@ -5,6 +5,7 @@ import random
 from django.utils.translation import gettext as _
 
 from .common import BaseBPDrawGenerator, BasePairDrawGenerator, DrawUserError
+from .graph import GraphAllocatedSidesMixin, GraphGeneratorMixin
 from .pairing import BPPairing, Pairing
 
 
@@ -21,7 +22,7 @@ class RandomPairingsMixin:
         return pairings
 
 
-class RandomDrawGenerator(RandomPairingsMixin, BasePairDrawGenerator):
+class BaseRandomDrawGenerator(RandomPairingsMixin, BasePairDrawGenerator):
     """Random draw.
     If there are allocated sides, use RandomDrawWithSideConstraints instead.
     Options:
@@ -43,6 +44,17 @@ class RandomDrawGenerator(RandomPairingsMixin, BasePairDrawGenerator):
         self.avoid_conflicts(self._draw)  # Operates in-place
         self.allocate_sides(self._draw)  # Operates in-place
         return self._draw
+
+    def _get_pools(self):
+        return list(self.teams)
+
+
+class GraphRandomDrawMixin:
+    def make_random_pairings(self):
+        return self.generate_pairings({0: self._get_pools()})[0]
+
+
+class SwapRandomDrawMixin:
 
     def avoid_conflicts(self, pairings):
         # Don't swap sides! The child class RandomDrawWithSideConstraints assumes
@@ -70,7 +82,7 @@ class RandomDrawGenerator(RandomPairingsMixin, BasePairDrawGenerator):
                     pairing.flags.append("max_swapped")
 
     def _badness(self, *pairings):
-        """Returns a weighted conflict intensity for all of the pairings given."""
+        """Returns a weighted conflict intensity for all the pairings given."""
         score = 0
         if self.options["avoid_history"]:
             score += sum([x.conflict_hist for x in pairings]) * self.options["history_penalty"]
@@ -79,15 +91,33 @@ class RandomDrawGenerator(RandomPairingsMixin, BasePairDrawGenerator):
         return score
 
 
-class RandomWithAllocatedSidesDrawGenerator(RandomDrawGenerator):
+class GraphRandomDrawGenerator(GraphGeneratorMixin, GraphRandomDrawMixin, BaseRandomDrawGenerator):
+    pass
+
+
+class SwapRandomDrawGenerator(SwapRandomDrawMixin, BaseRandomDrawGenerator):
+    pass
+
+
+class BaseRandomWithAllocatedSidesDrawGenerator(BaseRandomDrawGenerator):
     """Random draw with allocated sides.
-    Overrides functions of RandomDrawGenerator where sides need to be constrained.
+    Override functions of RandomDrawGenerator where sides need to be constrained.
     All teams must have an 'allocated_side' attribute which must be either
     'aff' or 'neg' (case-sensitive)."""
 
     def __init__(self, *args, **kwargs):
-        super(RandomWithAllocatedSidesDrawGenerator, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.check_teams_for_attribute("allocated_side", choices=["aff", "neg"])
+
+    def _get_pools(self):
+        return {side: [t for t in self.teams if t.allocated_side == side] for side in ['aff', 'neg']}
+
+
+class GraphRandomWithAllocatedSidesDrawGenerator(GraphAllocatedSidesMixin, GraphRandomDrawMixin, BaseRandomWithAllocatedSidesDrawGenerator):
+    pass
+
+
+class SwapRandomWithAllocatedSidesDrawGenerator(SwapRandomDrawMixin, BaseRandomWithAllocatedSidesDrawGenerator):
 
     def make_random_pairings(self):
         aff_teams = [t for t in self.teams if t.allocated_side == "aff"]

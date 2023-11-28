@@ -56,8 +56,8 @@ export default {
   props: { checks: Object, statuses: Object },
   methods: {
     widthForType: function (value, type) {
-      const sumValues = obj => Object.values(obj).reduce((a, b) => a + b)
-      return `${String((value / sumValues(type)) * 100)}%`
+      const sumValues = obj => (Object.values(obj).reduce((a, b) => a + b) || 1)
+      return `${value / sumValues(type) * 100}%`
     },
   },
   computed: {

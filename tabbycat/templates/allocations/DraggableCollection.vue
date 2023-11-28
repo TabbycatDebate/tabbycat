@@ -4,7 +4,7 @@
     @drag="drag"
     @dragstart="dragStartPanel"
     @dragend="dragEndPanel"
-    :class="['', dragableClasses]"
+    :class="['', draggableClasses]"
   >
     <slot> </slot>
   </div>

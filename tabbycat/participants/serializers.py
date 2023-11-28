@@ -1,3 +1,4 @@
+from django.utils.html import escape
 from rest_framework import serializers
 
 from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
@@ -12,7 +13,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
 class SpeakerCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SpeakerCategory
-        fields = ('name')
+        fields = ('name',)
 
 
 class InstitutionSerializer(serializers.ModelSerializer):
@@ -25,6 +26,10 @@ class InstitutionSerializer(serializers.ModelSerializer):
 
 class AdjudicatorSerializer(serializers.ModelSerializer):
     institution = serializers.PrimaryKeyRelatedField(read_only=True)
+    name = serializers.SerializerMethodField(read_only=True)
+
+    def get_name(self, obj):
+        return escape(obj.name)
 
     class Meta:
         model = Adjudicator

@@ -7,8 +7,8 @@
 
   {# (Two-team formats) #}
   {% if pref.teams_in_debate == 'two' %}
-    {% team_record_link debate.aff_team admin_page tournament as aff %}
-    {% team_record_link debate.neg_team admin_page tournament as neg %}
+    {% team_record_link debate.aff_team admin_page as aff %}
+    {% team_record_link debate.neg_team admin_page as neg %}
 
     {% if debate.adjudicators|length > 1 and debateadjudicator.type == debateadjudicator.TYPE_CHAIR %}
       {% if grammatical_person == "3" %}

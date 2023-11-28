@@ -55,11 +55,11 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         round = Round.objects.get(pk=event['extra']['round_id'])
         self._apply_allocation_settings(round, event['extra']['settings'])
 
-        if round.draw_status == round.STATUS_RELEASED:
+        if round.draw_status == round.Status.RELEASED:
             self.return_error(event['extra']['group_name'],
                 _("Draw is already released, unrelease draw to redo auto-allocations."))
             return
-        if round.draw_status != round.STATUS_CONFIRMED:
+        if round.draw_status != round.Status.CONFIRMED:
             self.return_error(event['extra']['group_name'],
                 _("Draw is not confirmed, confirm draw to run auto-allocations."))
             return

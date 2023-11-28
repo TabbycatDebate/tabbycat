@@ -238,58 +238,30 @@ export default new Vuex.Store({
       return state.loading
     },
     teamClashesForItem: (state) => (id) => {
-      if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
-        return state.extra.clashes.teams[id]
-      }
-      return false
+      return state.extra.clashes?.teams?.[id] ?? false
     },
     adjudicatorClashesForItem: (state) => (id) => {
-      if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
-        return state.extra.clashes.adjudicators[id]
-      }
-      return false
+      return state.extra.clashes?.adjudicators?.[id] ?? false
     },
-    panelClashesForItem: (state) => (id) => {
-      // Note; largely duplicates panelHistoriesForItem
+    panelClashesOrHistoriesForItem: (state) => (id, type) => {
       let panelAdjs = state.debatesOrPanels[id].adjudicators
       let panelAdjIds = Object.values(panelAdjs).map(position => position).flat()
 
-      let panelClashesCombined = { adjudicator: [], team: [], institution: []};
+      let clashesOrHistoriesCombined = { adjudicator: [], team: [], institution: []};
       panelAdjIds.forEach((adjId) => {
-        const clashesForAdj = state.extra.clashes.adjudicators[adjId] ?? { adjudicator: [], team: [], institution: []}
+        const clashesForAdj = state.extra[type].adjudicators[adjId] ?? { adjudicator: [], team: [], institution: []}
         for (const [key, value] of Object.entries(clashesForAdj)) {
-          panelClashesCombined[key].push(...value);
+          clashesOrHistoriesCombined[key].push(...value);
         }
       })
 
-      return panelClashesCombined
+      return clashesOrHistoriesCombined
     },
     teamHistoriesForItem: (state) => (id) => {
-      if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
-        return state.extra.histories.teams[id]
-      }
-      return false
+      return state.extra.histories?.teams?.[id] ?? false
     },
     adjudicatorHistoriesForItem: (state) => (id) => {
-      if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
-        return state.extra.histories.adjudicators[id]
-      }
-      return false
-    },
-    panelHistoriesForItem: (state) => (id) => {
-      // Note; largely duplicates panelClashesForItem
-      let panelAdjs = state.debatesOrPanels[id].adjudicators
-      let panelAdjIds = Object.values(panelAdjs).map(position => position).flat()
-
-      let panelHistoriesCombined = { adjudicator: [], team: [], institution: []};
-      panelAdjIds.forEach((adjId) => {
-        const clashesForAdj = state.extra.histories.adjudicators[adjId] ?? { adjudicator: [], team: [], institution: []}
-        for (const [key, value] of Object.entries(clashesForAdj)) {
-          panelHistoriesCombined[key].push(...value);
-        }
-      })
-
-      return panelHistoriesCombined
+      return state.extra.histories?.adjudicators?.[id] ?? false
     },
     currentHoverClashes: (state) => {
       return state.hoverClashes
@@ -333,7 +305,7 @@ export default new Vuex.Store({
       commit('updateSaveCounter')
       // TODO: error handling; locking; checking if the result matches sent data
     },
-    updateAllocableItemModified ({ commit }, unallocatedItemIDs) {
+    updateAllocatableItemModified ({ commit }, unallocatedItemIDs) {
       // To preserve the 'drag order' on the unallocated item we need to set the
       // modified attribute to be the current date time
       var changes = []

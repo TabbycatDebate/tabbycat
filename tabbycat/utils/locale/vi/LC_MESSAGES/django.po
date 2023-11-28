@@ -1,0 +1,327 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-02-12 02:04-0400\n"
+"PO-Revision-Date: 2023-03-25 04:12\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Vietnamese\n"
+"Language: vi_VN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: vi\n"
+"X-Crowdin-File: /develop/tabbycat/utils/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 954\n"
+
+#: utils/admin.py utils/tables.py
+msgid "Round"
+msgstr "Vòng"
+
+#: utils/admin.py utils/tables.py
+msgid "Team"
+msgstr "Đội"
+
+#: utils/admin.py
+msgid "Speaker"
+msgstr ""
+
+#: utils/admin.py utils/tables.py
+msgid "Tournament"
+msgstr "Giải"
+
+#: utils/admin.py utils/tables.py
+msgid "Side"
+msgstr "Phe"
+
+#: utils/admin.py utils/tables.py
+msgid "Motion"
+msgstr "Kiến nghị"
+
+#: utils/admin.py
+msgid "Confirmed"
+msgstr ""
+
+#: utils/admin.py
+msgid "Adjudicator"
+msgstr ""
+
+#: utils/tables.py
+msgid "No Data Available"
+msgstr "Không có dữ liệu khả dụng"
+
+#: utils/tables.py
+msgid "Ⓒ"
+msgstr "Ⓒ"
+
+#: utils/tables.py
+msgid "Ⓣ"
+msgstr "Ⓣ"
+
+#: utils/tables.py
+msgid "chair"
+msgstr "giám khảo chính"
+
+#: utils/tables.py
+msgid "panellist"
+msgstr "giám khảo phụ"
+
+#: utils/tables.py
+msgid "trainee"
+msgstr "giám khảo thực tập"
+
+#: utils/tables.py
+msgid "—"
+msgstr ""
+
+#: utils/tables.py
+msgid "Redacted"
+msgstr "Ẩn bớt"
+
+#: utils/tables.py
+#, python-format
+msgid "View %(a)s's %(d)s Record"
+msgstr "Xem %(d)s hồ sơ của %(a)s"
+
+#: utils/tables.py
+#, python-format
+msgid "View %(team)s's Record"
+msgstr "Xem hồ sơ của %(team)s"
+
+#: utils/tables.py
+#, python-format
+msgid "Code name: <strong>%(name)s</strong>"
+msgstr "Tên ký hiệu: <strong>%(name)s</strong>"
+
+#: utils/tables.py
+#, python-format
+msgid "Real name: <strong>%(name)s</strong>"
+msgstr "Tên thật: <strong>%(name)s</strong>"
+
+#: utils/tables.py
+#, python-format
+msgid "%(team)s won"
+msgstr "%(team)s thắng"
+
+#: utils/tables.py
+#, python-format
+msgid "%(team)s lost"
+msgstr "%(team)s thua"
+
+#: utils/tables.py
+#, python-format
+msgid "%(team)s—no result"
+msgstr "%(team)s không có kết quả"
+
+#: utils/tables.py
+#, python-format
+msgid "%(team)s placed %(place)s"
+msgstr "Đội %(team)s xếp thứ %(place)s"
+
+#: utils/tables.py
+#, python-format
+msgid "%(team)s is advancing"
+msgstr "Đội %(team)s được đi tiếp"
+
+#: utils/tables.py
+#, python-format
+msgid "%(team)s was eliminated"
+msgstr "Đội %(team)s đã bị loại"
+
+#: utils/tables.py
+msgid "View/edit debate ballot"
+msgstr "Xem/chỉnh sửa phiếu kết quả"
+
+#: utils/tables.py
+msgid "View debate ballot"
+msgstr "Xem phiếu kết quả của trận tranh biện"
+
+#: utils/tables.py
+#, python-format
+msgid " vs %(opposition)s"
+msgstr " đấu với %(opposition)s"
+
+#: utils/tables.py
+#, python-format
+msgid "Won against %(team)s"
+msgstr "Thắng %(team)s"
+
+#: utils/tables.py
+#, python-format
+msgid "Lost to %(team)s"
+msgstr "Thua %(team)s"
+
+#: utils/tables.py
+#, python-format
+msgid "No result for debate against %(team)s"
+msgstr "Không có kết quả cho trận tranh biện nào với đội %(team)s"
+
+#: utils/tables.py
+#, python-format
+msgid "Total speaker score: <strong>%s</strong>"
+msgstr "Tổng điểm lượt nói: <strong>%s</strong>"
+
+#: utils/tables.py
+msgid "Teams in debate:"
+msgstr "Các đội trong trận tranh biện:"
+
+#: utils/tables.py
+#, python-format
+msgid "%(team)s (%(side)s)"
+msgstr "%(team)s (%(side)s)"
+
+#: utils/tables.py
+msgid "??"
+msgstr "??"
+
+#: utils/tables.py
+msgid "advancing"
+msgstr "đi tiếp"
+
+#: utils/tables.py
+msgid "Advancing"
+msgstr "Đi tiếp"
+
+#: utils/tables.py
+msgid "eliminated"
+msgstr "loại"
+
+#: utils/tables.py
+msgid "Eliminated"
+msgstr "Loại"
+
+#: utils/tables.py
+msgid "No result for debate"
+msgstr "Không có kết quả cho trận tranh biện"
+
+#: utils/tables.py
+#, python-format
+msgid "Placed %(place)s"
+msgstr "Xếp thứ %(place)s"
+
+#: utils/tables.py
+msgid "Name"
+msgstr "Tên"
+
+#: utils/tables.py
+msgid "Institution"
+msgstr "Tổ chức"
+
+#: utils/tables.py
+msgid "Member of the Adjudication Core"
+msgstr "Thành viên của ban chuyên môn"
+
+#: utils/tables.py
+msgid "Independent Adjudicator"
+msgstr "Giám khảo độc lập"
+
+#: utils/tables.py
+msgid "Always Trainee"
+msgstr "Luôn là giám khảo thực tập"
+
+#: utils/tables.py
+msgid "in minority"
+msgstr "là thiểu số"
+
+#: utils/tables.py
+msgid "Debate Adjudicators"
+msgstr "Giám khảo tranh biện"
+
+#: utils/tables.py
+msgid "Categories"
+msgstr "Các thể loại"
+
+#: utils/tables.py
+msgid "Category"
+msgstr "Thể loại"
+
+#: utils/tables.py
+#, python-format
+msgid "This room %(predicate)s."
+msgstr "Phòng này %(predicate)s."
+
+#: utils/tables.py
+#, python-format
+msgid "This room %(predicates)s, and %(last_predicate)s."
+msgstr "Phòng này %(predicates)s và %(last_predicate)s."
+
+#: utils/tables.py
+msgid "Room"
+msgstr "Phòng"
+
+#: utils/tables.py
+#, python-format
+msgid "Teams have met once"
+msgid_plural "Teams have met %(count)d times"
+msgstr[0] "Các đội đã gặp %(count)d lần"
+
+#: utils/tables.py
+msgid "Teams are from the same institution"
+msgstr "Hai đội có chung tổ chức"
+
+#: utils/tables.py
+msgid "Conflicts/Flags"
+msgstr "Xung đột/Chú ý"
+
+#: utils/tables.py
+msgid "The confirmed ballot"
+msgstr "Phiếu kết quả được xác nhận"
+
+#: utils/tables.py
+msgid "No ballot"
+msgstr "Không có phiếu kết quả"
+
+#: utils/tables.py
+msgid "No scores"
+msgstr "Không có điểm"
+
+#: utils/tables.py
+msgid "View Ballot"
+msgstr "Xem phiếu kết quả"
+
+#: utils/tables.py
+msgid "The ballot you submitted"
+msgstr "Phiếu kết quả mà bạn đã gửi"
+
+#: utils/tables.py
+msgid "View/Edit Ballot"
+msgstr "Xem/chỉnh sửa phiếu kết quả"
+
+#: utils/tables.py
+msgid "Result"
+msgstr "Kết quả"
+
+#. Translators: "TBC" stands for "to be confirmed".
+#: utils/tables.py
+msgid "TBC"
+msgstr "đang xác nhận"
+
+#: utils/tables.py
+msgid "Team iron-personed this round and the last."
+msgstr ""
+
+#: utils/tables.py
+msgid "Team iron-personed this round."
+msgstr ""
+
+#: utils/tables.py
+msgid "Team iron-personed last round."
+msgstr ""
+
+#: utils/tables.py
+#, python-format
+msgid "Team %(num)d"
+msgstr "Đội %(num)d"
+
+#: utils/tables.py
+msgid "Postpone"
+msgstr "Tạm hoãn"
+
+#: utils/views.py
+msgid "Whoops! You're not meant to type that URL into your browser."
+msgstr "Bạn không được nhập URL đó vào trình duyệt của bạn."
+

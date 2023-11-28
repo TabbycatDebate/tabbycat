@@ -18,7 +18,7 @@
         </h6>
         <p class="text-muted">
           {% blocktrans trimmed %}
-            Tabbycat is a source-available project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments.
+            Tabbycat is an open-source project developed by volunteers and is free to use.
           {% endblocktrans %}
           {% if tournament and tournament.billable_teams > 0 %}
             {% blocktrans trimmed with amount=tournament.billable_teams %}
@@ -29,7 +29,7 @@
             </a>
           {% else %}
             {% blocktrans trimmed %}
-              <a href="https://opencollective.com/tabbycat">Donations to Tabbycat from individuals or organisations</a> are much appreciated.
+              <a href="https://opencollective.com/tabbycat">Donations to Tabbycat from individuals or organisations</a> are much appreciated and help us to continue to develop, support, and maintain Tabbycat.
             {% endblocktrans %}
           {% endif %}
         </p>
@@ -50,7 +50,7 @@
         <h6 class="d-inline-block">{% blocktrans trimmed %}Our Organisation{% endblocktrans %}</h6>
         <p class="text-muted">
           {% blocktrans trimmed %}
-            Tabbycat is supported by the <a href="http://tabbycat-debate.org/">Tabbycat Debate Association</a>, a non-profit for advancing open debate technology.
+            Tabbycat is supported by the <a href="https://tabbycat-debate.org/">Tabbycat Debate Association</a>, a non-profit for advancing open debate technology.
           {% endblocktrans %}
         </p>
       </div>
@@ -74,13 +74,13 @@
           </li>
           <li class="nav-item p-2">
             <i data-feather="book"></i>
-            <a class="nav-link p-0 d-inline-block" href="http://tabbycat.readthedocs.io/en/stable/">
+            <a class="nav-link p-0 d-inline-block" href="https://tabbycat.readthedocs.io/en/stable/">
               {% trans "Documentation" %}
             </a>
           </li>
           <li class="nav-item p-2">
             <i data-feather="help-circle"></i>
-            <a class="nav-link p-0 d-inline-block" href="http://tabbycat.readthedocs.io/en/stable/about/support.html">
+            <a class="nav-link p-0 d-inline-block" href="https://tabbycat.readthedocs.io/en/stable/about/support.html">
               {% trans "Support" %}
             </a>
           </li>

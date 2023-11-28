@@ -83,7 +83,7 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
         for (band_min, band_max), threshold_class in zip(bands, threshold_classes):
             band_specs.append({
                 'min': band_min, 'max': band_max, 'class': threshold_class,
-                'count': [x >= band_min and x < band_max for x in scores].count(True),
+                'count': [band_min <= x < band_max for x in scores].count(True),
             })
         band_specs[0]['count'] += [x == max_score for x in scores].count(True)
 
@@ -548,7 +548,7 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PersonalizablePublicTou
 
     def get_context_data(self, **kwargs):
         kwargs['no_rounds_released'] = not self.tournament.round_set.filter(
-                draw_status=Round.STATUS_RELEASED).exists()
+                draw_status=Round.Status.RELEASED).exists()
         return super().get_context_data(**kwargs)
 
 

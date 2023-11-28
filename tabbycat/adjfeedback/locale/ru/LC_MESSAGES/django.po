@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-02 01:40-0300\n"
-"PO-Revision-Date: 2021-04-02 04:47\n"
+"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"PO-Revision-Date: 2023-02-05 00:57\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -17,40 +17,40 @@ msgstr ""
 "X-Crowdin-File: /develop/tabbycat/adjfeedback/locale/en/LC_MESSAGES/django.po\n"
 "X-Crowdin-File-ID: 924\n"
 
-#: adjfeedback/admin.py:44
+#: adjfeedback/admin.py
 msgid "Integer scales must have a minimum and maximum"
 msgstr "Целые шкалы должны иметь минимум и максимум"
 
-#: adjfeedback/admin.py:73 adjfeedback/admin.py:139
+#: adjfeedback/admin.py
 msgid "target"
 msgstr "цель"
 
-#: adjfeedback/admin.py:74 adjfeedback/admin.py:140 adjfeedback/models.py:236
+#: adjfeedback/admin.py adjfeedback/models.py
 msgid "source adjudicator"
 msgstr "судья-источник"
 
-#: adjfeedback/admin.py:75 adjfeedback/admin.py:141 adjfeedback/models.py:238
+#: adjfeedback/admin.py adjfeedback/models.py
 msgid "source team"
 msgstr "команда-источник"
 
-#: adjfeedback/admin.py:91
+#: adjfeedback/admin.py
+msgid "Target"
+msgstr "Цель"
+
+#: adjfeedback/admin.py
+msgid "Source"
+msgstr "Источник"
+
+#: adjfeedback/admin.py
+msgid "Feedback timestamp and version"
+msgstr ""
+
+#: adjfeedback/admin.py
 #, python-format
 msgid "%(timestamp)s (version %(version)s)"
 msgstr ""
 
-#: adjfeedback/admin.py:96
-msgid "Target"
-msgstr "Цель"
-
-#: adjfeedback/admin.py:97 adjfeedback/admin.py:162
-msgid "Source"
-msgstr "Источник"
-
-#: adjfeedback/admin.py:98
-msgid "Feedback timestamp and version"
-msgstr ""
-
-#: adjfeedback/admin.py:180
+#: adjfeedback/admin.py
 #, python-format
 msgid "1 feedback submission was marked as confirmed. Note that this may have caused other feedback submissions to be marked as unconfirmed."
 msgid_plural "%(count)d feedback submissions were marked as confirmed. Note that this may have caused other feedback submissions to be marked as unconfirmed."
@@ -59,7 +59,7 @@ msgstr[1] "%(count)d переданных форм обратной связи �
 msgstr[2] "%(count)d переданных форм обратной связи не были отмечены как подтвержденные. Заметьте, что это может привести к тому, что остальные формы обратной связи не будут отмечены как подтвержденные."
 msgstr[3] "%(count)d переданных форм обратной связи не были отмечены как подтвержденные. Заметьте, что это может привести к тому, что остальные формы обратной связи не будут отмечены как подтвержденные."
 
-#: adjfeedback/admin.py:192
+#: adjfeedback/admin.py
 #, python-format
 msgid "1 feedback submission was not marked as confirmed, probably because other feedback submissions that conflict with it were also marked as confirmed."
 msgid_plural "%(count)d feedback submissions were not marked as confirmed, probably because other feedback submissions that conflict with them were also marked as confirmed."
@@ -68,7 +68,7 @@ msgstr[1] "%(count)d переданных форм обратной связи �
 msgstr[2] "%(count)d переданных форм обратной связи не были отмечены как подтвержденные, возможно, потому, что были переданы противоречащие им формы обратной связи, которые были отмечены как подтвержденные."
 msgstr[3] "%(count)d переданных форм обратной связи не были отмечены как подтвержденные, возможно, потому, что были переданы противоречащие им формы обратной связи, которые были отмечены как подтвержденные."
 
-#: adjfeedback/admin.py:205
+#: adjfeedback/admin.py
 #, python-format
 msgid "1 feedback submission was marked as unconfirmed."
 msgid_plural "%(count)d feedback submissions were marked as unconfirmed."
@@ -77,7 +77,7 @@ msgstr[1] "%(count)d переданных форм обратной связи �
 msgstr[2] "%(count)d переданных форм обратной связи были отмечены как неподтвержденные."
 msgstr[3] "%(count)d переданных форм обратной связи были отмечены как неподтвержденные."
 
-#: adjfeedback/admin.py:215
+#: adjfeedback/admin.py
 #, python-format
 msgid "1 feedback submission is now ignored."
 msgid_plural "%(count)d feedback submissions are now ignored."
@@ -86,7 +86,7 @@ msgstr[1] "%(count)d переданных форм обратной связи �
 msgstr[2] "%(count)d переданных форм обратной связи теперь игнорируются."
 msgstr[3] "%(count)d переданных форм обратной связи теперь игнорируются."
 
-#: adjfeedback/admin.py:225
+#: adjfeedback/admin.py
 #, python-format
 msgid "1 feedback submission is now recognized."
 msgid_plural "%(count)d feedback submissions are now recognized."
@@ -95,399 +95,398 @@ msgstr[1] "%(count)d переданных форм обратной связи �
 msgstr[2] "%(count)d переданных форм обратной связи теперь приняты."
 msgstr[3] "%(count)d переданных форм обратной связи теперь приняты."
 
-#: adjfeedback/apps.py:7
+#: adjfeedback/apps.py
 msgid "Adjudicator Feedback"
 msgstr "Форма обратной связи на судью"
 
-#: adjfeedback/forms.py:26
+#: adjfeedback/forms.py
 msgid "chair"
 msgstr "чэйр"
 
-#: adjfeedback/forms.py:27
+#: adjfeedback/forms.py
 msgid "solo"
 msgstr "одиночно"
 
-#: adjfeedback/forms.py:28
+#: adjfeedback/forms.py
 msgid "panellist"
 msgstr "винг"
 
-#: adjfeedback/forms.py:29
+#: adjfeedback/forms.py
 msgid "trainee"
 msgstr "винг без права голоса"
 
 #. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py:57
+#: adjfeedback/forms.py
 msgid "Yes"
 msgstr "Да"
 
 #. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py:59
+#: adjfeedback/forms.py
 msgid "No"
 msgstr "Нет"
 
 #. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py:74 adjfeedback/forms.py:83
+#: adjfeedback/forms.py
 msgid "This field is required."
 msgstr "Это поле является обязательным."
 
-#: adjfeedback/forms.py:164
+#: adjfeedback/forms.py
 #, python-format
 msgid "Overall score (%(min)d=worst; %(max)d=best)*"
 msgstr "Общий балл (%(min)d=минимальный, %(max)d=максимальный)*"
 
-#: adjfeedback/forms.py:176
+#: adjfeedback/forms.py
 msgid "Ignored"
 msgstr "Проигнорированна"
 
 #. Translators: e.g. "Megan Pearson (chair)", with adjpos="chair"
-#: adjfeedback/forms.py:228 adjfeedback/forms.py:291
+#: adjfeedback/forms.py
 msgid "Submitted - "
 msgstr ""
 
 #. Translators: e.g. "Megan Pearson (panellist)", with round="Round 3", adjpos="panellist"
-#: adjfeedback/forms.py:229 adjfeedback/forms.py:296
+#: adjfeedback/forms.py
 #, python-format
 msgid "%(name)s (%(adjpos)s)"
 msgstr "%(name)s (%(adjpos)s)"
 
-#: adjfeedback/forms.py:252 adjfeedback/forms.py:326
+#: adjfeedback/forms.py
 msgid "-- Adjudicators --"
 msgstr "-- Судьи --"
 
-#: adjfeedback/forms.py:269
+#: adjfeedback/forms.py
 msgid "Adjudicator this feedback is about"
 msgstr "Судья, на которого эта форма"
 
-#: adjfeedback/forms.py:293
+#: adjfeedback/forms.py
 #, python-format
 msgid "%(name)s"
 msgstr ""
 
-#: adjfeedback/forms.py:299
+#: adjfeedback/forms.py
 #, python-format
 msgid "%(name)s (chair gave oral)"
 msgstr "%(name)s (чэйр дал устный разбор)"
 
-#: adjfeedback/forms.py:301
+#: adjfeedback/forms.py
 #, python-format
 msgid "%(name)s (panellist gave oral as chair rolled)"
 msgstr "%(name)s (этот член коллегии давал разбор вместо чеира)"
 
-#: adjfeedback/forms.py:392
+#: adjfeedback/forms.py
 #, python-format
 msgid "This line (for %(adjudicator)s) didn't have a score"
 msgstr "Эта строка (для %(adjudicator)s) не имеет балла"
 
-#: adjfeedback/forms.py:397
+#: adjfeedback/forms.py
 #, python-format
 msgid "This line (for %(adjudicator)s) had too many columns"
 msgstr "Эта строка (для %(adjudicator)s) имеет слишком много столбцов"
 
-#: adjfeedback/forms.py:410
+#: adjfeedback/forms.py
 #, python-format
 msgid "There are several adjudicators called \"%(adjudicator)s\", so you can't use the bulk importer to update their score. Please do so in the Feedback Overview page instead."
 msgstr "Существует несколько судей, называемых \"%(adjudicator)s\", поэтому вы не можете использовать импортер для обновления их баллов. Пожалуйста, сделайте это на странице Обзор обратной связи."
 
-#: adjfeedback/forms.py:416
+#: adjfeedback/forms.py
 #, python-format
 msgid "There is no adjudicator in this tournament with the name \"%(adjudicator)s\""
 msgstr "В этом турнире нет судьи с именем \"%(adjudicator)s\""
 
-#: adjfeedback/forms.py:424
+#: adjfeedback/forms.py
 #, python-format
 msgid "The score for %(adjudicator)s, \"%(score)s\", isn't a number"
 msgstr "Балл для %(adjudicator)s, \"%(score)s\", не является числом"
 
-#: adjfeedback/forms.py:439
+#: adjfeedback/forms.py
 msgid "There were no scores to import."
 msgstr "Не было баллов для импорта."
 
-#: adjfeedback/models.py:13 adjfeedback/models.py:231
+#: adjfeedback/models.py
 msgid "adjudicator"
 msgstr "судья"
 
-#: adjfeedback/models.py:16
+#: adjfeedback/models.py
 msgid "round"
 msgstr "раунд"
 
-#: adjfeedback/models.py:17 adjfeedback/models.py:232
+#: adjfeedback/models.py
 msgid "score"
 msgstr "балл"
 
-#: adjfeedback/models.py:18
+#: adjfeedback/models.py
 msgid "timestamp"
 msgstr "отметка времени"
 
-#: adjfeedback/models.py:21
+#: adjfeedback/models.py
 msgid "adjudicator base score history"
 msgstr "история изменений исходного рейтинга судьи"
 
-#: adjfeedback/models.py:22
+#: adjfeedback/models.py
 msgid "adjudicator base score histories"
 msgstr "история изменений исходного рейтинга судей"
 
-#: adjfeedback/models.py:30
+#: adjfeedback/models.py
 msgid "question"
 msgstr "вопрос"
 
-#: adjfeedback/models.py:32
+#: adjfeedback/models.py
 msgid "feedback"
 msgstr "обратная связь"
 
-#: adjfeedback/models.py:45 adjfeedback/models.py:55 adjfeedback/models.py:65
-#: adjfeedback/models.py:74
+#: adjfeedback/models.py
 msgid "answer"
 msgstr "ответ"
 
-#: adjfeedback/models.py:48
+#: adjfeedback/models.py
 msgid "adjudicator feedback boolean answer"
 msgstr "булевой ответ формы обратной связи на судью"
 
-#: adjfeedback/models.py:49
+#: adjfeedback/models.py
 msgid "adjudicator feedback boolean answers"
 msgstr "булевые ответы формы обратной связи на судью"
 
-#: adjfeedback/models.py:58
+#: adjfeedback/models.py
 msgid "adjudicator feedback integer answer"
 msgstr "целый ответ формы обратной связи на судью"
 
-#: adjfeedback/models.py:59
+#: adjfeedback/models.py
 msgid "adjudicator feedback integer answers"
 msgstr "целые ответы формы обратной связи на судей"
 
-#: adjfeedback/models.py:68
+#: adjfeedback/models.py
 msgid "adjudicator feedback float answer"
 msgstr "численный ответ формы обратной связи на судью"
 
-#: adjfeedback/models.py:69
+#: adjfeedback/models.py
 msgid "adjudicator feedback float answers"
 msgstr "численные ответы формы обратной связи на судью"
 
-#: adjfeedback/models.py:77
+#: adjfeedback/models.py
 msgid "adjudicator feedback string answer"
 msgstr "строчный ответ формы обратной связи на судью"
 
-#: adjfeedback/models.py:78
+#: adjfeedback/models.py
 msgid "adjudicator feedback string answers"
 msgstr "строчные ответ формы обратной связи на судью"
 
-#: adjfeedback/models.py:86
+#: adjfeedback/models.py
 msgid "adjudicator feedback multiple select answer"
 msgstr ""
 
-#: adjfeedback/models.py:87
+#: adjfeedback/models.py
 msgid "adjudicator feedback multiple select answers"
 msgstr ""
 
-#: adjfeedback/models.py:106
+#: adjfeedback/models.py
 msgid "checkbox"
 msgstr "отметка"
 
-#: adjfeedback/models.py:107
+#: adjfeedback/models.py
 msgid "yes/no (dropdown)"
 msgstr "да/нет (выпадающий список)"
 
-#: adjfeedback/models.py:108
+#: adjfeedback/models.py
 msgid "integer (textbox)"
 msgstr "целое число (текстовое поле)"
 
-#: adjfeedback/models.py:109
+#: adjfeedback/models.py
 msgid "integer scale"
 msgstr "целое число"
 
-#: adjfeedback/models.py:110
+#: adjfeedback/models.py
 msgid "float"
 msgstr "десятичное число"
 
-#: adjfeedback/models.py:111 adjfeedback/models.py:145
+#: adjfeedback/models.py
 msgid "text"
 msgstr "текст"
 
-#: adjfeedback/models.py:112
+#: adjfeedback/models.py
 msgid "long text"
 msgstr "длинный текст"
 
-#: adjfeedback/models.py:113
+#: adjfeedback/models.py
 msgid "select one"
 msgstr "выберите один"
 
-#: adjfeedback/models.py:114
+#: adjfeedback/models.py
 msgid "select multiple"
 msgstr "выбрать несколько"
 
-#: adjfeedback/models.py:141
+#: adjfeedback/models.py
 msgid "tournament"
 msgstr "турнир"
 
-#: adjfeedback/models.py:143
+#: adjfeedback/models.py
 msgid "sequence number"
 msgstr "порядковый номер"
 
-#: adjfeedback/models.py:146
+#: adjfeedback/models.py
 msgid "The question displayed to participants, e.g., \"Did you agree with the decision?\""
 msgstr "Вопрос, который отображается участникам, например, \"Вы согласны с решением?\""
 
-#: adjfeedback/models.py:148
+#: adjfeedback/models.py
 msgid "name"
 msgstr "название"
 
-#: adjfeedback/models.py:149
+#: adjfeedback/models.py
 msgid "A short name for the question, e.g., \"Agree with decision\""
 msgstr "Краткое название вопроса, например, \"Согласие с решением\""
 
-#: adjfeedback/models.py:151
+#: adjfeedback/models.py
 msgid "reference"
 msgstr "ссылка"
 
-#: adjfeedback/models.py:152
+#: adjfeedback/models.py
 msgid "Code-compatible reference, e.g., \"agree_with_decision\""
 msgstr "Совместимая с кодом ссылка, например, \"согласны__с_решением\""
 
-#: adjfeedback/models.py:155
+#: adjfeedback/models.py
 msgid "from adjudicator"
 msgstr "от судьи"
 
-#: adjfeedback/models.py:156
+#: adjfeedback/models.py
 msgid "Adjudicators should be asked this question (about other adjudicators)"
 msgstr "Судьям следует задавать этот вопрос (о других судьях)"
 
-#: adjfeedback/models.py:158
+#: adjfeedback/models.py
 msgid "from team"
 msgstr "от команды"
 
-#: adjfeedback/models.py:159
+#: adjfeedback/models.py
 msgid "Teams should be asked this question"
 msgstr "Командам нужно задать этот вопрос"
 
-#: adjfeedback/models.py:162
+#: adjfeedback/models.py
 msgid "answer type"
 msgstr "тип ответа"
 
-#: adjfeedback/models.py:164
+#: adjfeedback/models.py
 msgid "required"
 msgstr "обязательно"
 
-#: adjfeedback/models.py:165
+#: adjfeedback/models.py
 msgid "Whether participants are required to fill out this field"
 msgstr "Необходимо ли участникам заполнить это поле"
 
-#: adjfeedback/models.py:167
+#: adjfeedback/models.py
 msgid "minimum value"
 msgstr "минимальное значение"
 
-#: adjfeedback/models.py:168
+#: adjfeedback/models.py
 msgid "Minimum allowed value for numeric fields (ignored for text or boolean fields)"
 msgstr "Минимальное допустимое значение для числовых полей (игнорируется для текстовых или булевых полей)"
 
-#: adjfeedback/models.py:170
+#: adjfeedback/models.py
 msgid "maximum value"
 msgstr "максимальное значение"
 
-#: adjfeedback/models.py:171
+#: adjfeedback/models.py
 msgid "Maximum allowed value for numeric fields (ignored for text or boolean fields)"
 msgstr "Максимальное допустимое значение для числовых полей (игнорируется для текстовых или булевых полей)"
 
-#: adjfeedback/models.py:176
+#: adjfeedback/models.py
 msgid "choices"
 msgstr "выборы"
 
-#: adjfeedback/models.py:177
+#: adjfeedback/models.py
 msgid "Permissible choices for select one/multiple fields (ignored for other fields)"
 msgstr ""
 
-#: adjfeedback/models.py:182
+#: adjfeedback/models.py
 msgid "adjudicator feedback question"
 msgstr "вопрос обратной связи"
 
-#: adjfeedback/models.py:183
+#: adjfeedback/models.py
 msgid "adjudicator feedback questions"
 msgstr "вопросы обратной связи"
 
-#: adjfeedback/models.py:241 adjfeedback/views.py:768
+#: adjfeedback/models.py adjfeedback/views.py
 msgid "ignored"
 msgstr "проигнорированна"
 
-#: adjfeedback/models.py:242
+#: adjfeedback/models.py
 msgid "Whether the feedback should affect the adjudicator's score"
 msgstr "Должна ли обратная связь повлиять на оценку судьи"
 
-#: adjfeedback/models.py:246
+#: adjfeedback/models.py
 msgid "adjudicator feedback"
 msgstr "форма обратной связи на судью"
 
-#: adjfeedback/models.py:247
+#: adjfeedback/models.py
 msgid "adjudicator feedbacks"
 msgstr "формы обратной связи на судью"
 
-#: adjfeedback/models.py:307
+#: adjfeedback/models.py
 msgid "Either the source adjudicator or source team wasn't specified."
 msgstr "Не указан либо судья-источник, либо команда-источник."
 
-#: adjfeedback/models.py:310
+#: adjfeedback/models.py
 msgid "There was both a source adjudicator and a source team."
 msgstr "Есть и судья-источник и команда-источник."
 
-#: adjfeedback/models.py:312
+#: adjfeedback/models.py
 msgid "There is no adjudicator specified as the target for this feedback. Perhaps they were deleted?"
 msgstr "В этой форме обратной связи ни указан ни один судья. Возможно, они были удалены?"
 
-#: adjfeedback/models.py:314
+#: adjfeedback/models.py
 msgid "Adjudicator did not see this debate."
 msgstr "Судья не видел этих дебатов."
 
-#: adjfeedback/tables.py:19
+#: adjfeedback/tables.py
 msgid "Whether the adj is marked as breaking (click to mark)"
 msgstr "Был ли судья отмечен как брейкающийся (нажмите чтобы отметить)"
 
-#: adjfeedback/tables.py:35
+#: adjfeedback/tables.py
 msgid "N/A"
 msgstr "Н/Д"
 
-#: adjfeedback/tables.py:45
+#: adjfeedback/tables.py
 msgid "Current weighted score"
 msgstr "Текущий взвешенный балл"
 
-#: adjfeedback/tables.py:50
+#: adjfeedback/tables.py
 msgid "This adjudicator's current rating."
 msgstr "Текущий рейтинг этого судьи."
 
-#: adjfeedback/tables.py:58
+#: adjfeedback/tables.py
 msgid "Base score result"
 msgstr "Исходный рейтинг"
 
-#: adjfeedback/tables.py:65
+#: adjfeedback/tables.py
 msgid "Click to edit base score"
 msgstr "Щелкните, чтобы изменить исходный рейтинг"
 
-#: adjfeedback/tables.py:70
+#: adjfeedback/tables.py
 msgid "Assigned base score"
 msgstr "Исходный рейтинг"
 
-#: adjfeedback/tables.py:79
+#: adjfeedback/tables.py
 msgid "The current difference between an adjudicator's base score and current score"
 msgstr "Различие между исходным и текущим рейтингом судьи"
 
-#: adjfeedback/tables.py:84
+#: adjfeedback/tables.py
 msgid "The difference between this adjudicator's base score and current score"
 msgstr "Различие между исходным и текущим рейтингом этого судьи"
 
-#: adjfeedback/tables.py:93
+#: adjfeedback/tables.py
 msgid "The standard deviation of this adjudicator's current scores; with larger numbers meaning less consistent feedback scores."
 msgstr "Стандартное отклонение текущих оценок этого судьи; более большие числа означают менее последовательные оценки в обратной связи."
 
-#: adjfeedback/tables.py:97
+#: adjfeedback/tables.py
 msgid "The standard deviation of this adjudicator's current scores"
 msgstr "Стандартное отклонение текущих оценок этого судьи"
 
-#: adjfeedback/tables.py:106
+#: adjfeedback/tables.py
 msgid "Feedback Per Round"
 msgstr "Обратная связь за раунд"
 
-#: adjfeedback/tables.py:107
+#: adjfeedback/tables.py
 msgid "Hover over the data points to show the average score received in that round"
 msgstr "Наведите на числовые данных, чтобы показать средний результат, полученный в этом раунде"
 
-#: adjfeedback/tables.py:125
+#: adjfeedback/tables.py
 #, python-format
 msgid "View %(count)s<br>feedback"
 msgid_plural "View %(count)s<br>feedbacks"
@@ -496,220 +495,218 @@ msgstr[1] "Посмотреть%(count)s<br> обратную связь"
 msgstr[2] "Посмотреть%(count)s<br> обратную связь"
 msgstr[3] "Посмотреть%(count)s<br> обратную связь"
 
-#: adjfeedback/tables.py:148
+#: adjfeedback/tables.py
 msgid "Unsubmitted feedback ballots"
 msgstr "Не отправленные формы обратной связи"
 
-#: adjfeedback/tables.py:172
+#: adjfeedback/tables.py
 msgid "View Missing Feedback"
 msgstr "Посмотреть, какие формы обратной связи отсутствуют"
 
-#: adjfeedback/templates/add_feedback.html:5
+#: adjfeedback/templates/add_feedback.html
 msgid "Who is the feedback from?"
 msgstr "От кого эта форма?"
 
-#: adjfeedback/templates/add_feedback.html:6
-#: adjfeedback/templates/enter_feedback.html:5
+#: adjfeedback/templates/add_feedback.html
+#: adjfeedback/templates/enter_feedback.html
 msgid "Enter Feedback"
 msgstr "Введите обратную связь"
 
-#: adjfeedback/templates/enter_feedback.html:9
-#: adjfeedback/templates/public_add_feedback.html:13
-#: adjfeedback/templates/public_add_feedback.html:20
+#: adjfeedback/templates/enter_feedback.html
+#: adjfeedback/templates/public_add_feedback.html
 #, python-format
 msgid "Add Feedback from %(name)s"
 msgstr "Добавить обратную связь от %(name)s"
 
-#: adjfeedback/templates/enter_feedback.html:13
-#: adjfeedback/templates/feedback_base.html:42
+#: adjfeedback/templates/enter_feedback.html
+#: adjfeedback/templates/feedback_base.html
 msgid "Add Feedback"
 msgstr "Добавить обратную связь"
 
-#: adjfeedback/templates/enter_feedback.html:21
+#: adjfeedback/templates/enter_feedback.html
 msgid "There are no feedback options because no rounds have been released to the public yet. Check back when they have!"
 msgstr "Нет возможностей сдать обратную связь, так как ни один раунд ни опубликован. Вернитесь сюда, когда они будут опубликованы!"
 
-#: adjfeedback/templates/enter_feedback.html:27
+#: adjfeedback/templates/enter_feedback.html
 msgid "This tournament expects you to submit feedback <strong>only on the adjudicator who delivered the adjudication</strong>. Do not submit feedback on other adjudicators."
 msgstr "Этот турнир ожидает, что вы отправите обратную связь <strong>только на судью, который вынес решение</strong>. Не отправляйте обратную связь на других судей."
 
-#: adjfeedback/templates/enter_feedback.html:29
+#: adjfeedback/templates/enter_feedback.html
 msgid "This tournament expects you to submit feedback on all of the adjudicators on the panel (including trainees)."
 msgstr "Этот турнир ожидает, что вы представите обратную связь о всех судьях коллегии (включая вингов без права голоса)."
 
-#: adjfeedback/templates/enter_feedback.html:43
+#: adjfeedback/templates/enter_feedback.html
 msgid "There are some problems with this feedback submission. Please review and correct them."
 msgstr "Есть проблемы с отправкой этой формы обратной связи. Пожалуйста, проверьте и исправьте их."
 
-#: adjfeedback/templates/enter_feedback.html:58
+#: adjfeedback/templates/enter_feedback.html
 msgid "When submitting this form your IP address will be stored for logging purposes."
 msgstr "При отправке этой формы ваш IP-адрес будет сохраняться в целях авторизации."
 
-#: adjfeedback/templates/feedback_base.html:8
+#: adjfeedback/templates/feedback_base.html
 msgid "Overview"
 msgstr "Обзор"
 
-#: adjfeedback/templates/feedback_base.html:12
+#: adjfeedback/templates/feedback_base.html
 msgid "Latest"
 msgstr "Последние"
 
-#: adjfeedback/templates/feedback_base.html:16
+#: adjfeedback/templates/feedback_base.html
 msgid "Unsubmitted"
 msgstr "Неотправленные"
 
-#: adjfeedback/templates/feedback_base.html:20
+#: adjfeedback/templates/feedback_base.html
 msgid "Important"
 msgstr "Важное"
 
-#: adjfeedback/templates/feedback_base.html:24
+#: adjfeedback/templates/feedback_base.html
 msgid "Comments"
 msgstr "Комментарии"
 
-#: adjfeedback/templates/feedback_base.html:28
+#: adjfeedback/templates/feedback_base.html
 msgid "By Source"
 msgstr "По источнику"
 
-#: adjfeedback/templates/feedback_base.html:32
+#: adjfeedback/templates/feedback_base.html
 msgid "By Target"
 msgstr "По цели"
 
-#: adjfeedback/templates/feedback_base.html:39
+#: adjfeedback/templates/feedback_base.html
 msgid "Bulk Update Scores"
 msgstr "Массово обновить рейтинг"
 
-#: adjfeedback/templates/feedback_by_source.html:4
-#: adjfeedback/templates/feedback_by_source.html:5
+#: adjfeedback/templates/feedback_by_source.html
 #, python-format
 msgid "Feedback %(source_type)s %(source_name)s"
 msgstr "Обратная связь %(source_type)s %(source_name)s"
 
-#: adjfeedback/templates/feedback_by_source.html:12
+#: adjfeedback/templates/feedback_by_source.html
 #, python-format
 msgid "%(source_name)s hasn't submitted any feedback yet."
 msgstr "%(source_name)s ещё не оставил обратную связь."
 
-#: adjfeedback/templates/feedback_by_source.html:17
+#: adjfeedback/templates/feedback_by_source.html
 #, python-format
 msgid "%(source_name)s hasn't received any feedback yet."
 msgstr "%(source_name)s ещё не получил обратную связь."
 
-#: adjfeedback/templates/feedback_card.html:8
+#: adjfeedback/templates/feedback_card.html
 msgid "This is most likely because the team or adjudicator who submitted this feedback has submitted several times on the same person; or because a team has submitted feedback on multiple panellists (rather than just the orallist)."
 msgstr "Это скорее всего потому, что команда или судья, которая представила эту обратную связь, несколько раз представила её на одно и том же лицо; или потому, что команда представила обратную связь на нескольких членов судейской коллегии (а не только на того, кто давал разбор)."
 
-#: adjfeedback/templates/feedback_card.html:9
+#: adjfeedback/templates/feedback_card.html
 msgid "Unconfirmed; will not affect this adjudicator's score."
 msgstr "Не потверждено; не повлияет на оценку этого судьи."
 
-#: adjfeedback/templates/feedback_card.html:14
+#: adjfeedback/templates/feedback_card.html
 msgid "The feedback is counted for the adjudicator, but is not taken into account when calculating scores."
 msgstr "Обратная связь подсчитывается для этого судьи, но не учитывается при расчете баллов."
 
-#: adjfeedback/templates/feedback_card.html:15
+#: adjfeedback/templates/feedback_card.html
 msgid "Ignored; will not affect this adjudicator's score."
 msgstr "Проигнорировано; не повлияет на оценку этого судьи."
 
-#: adjfeedback/templates/feedback_card.html:20
+#: adjfeedback/templates/feedback_card.html
 msgid "This feedback is submitted on an adjudicator but it looks like they have been since been removed from the debate. You should probably go to the Edit Database area and delete this feedback."
 msgstr "Эта форма обратной связи отправлена на судью, но, похоже, он был удален из этих дебатов. Возможно, вы должны перейти в область Редактировать базу данных и удалить этот отзыв."
 
-#: adjfeedback/templates/feedback_card.html:29
+#: adjfeedback/templates/feedback_card.html
 msgid "The score given in this piece of feedback."
 msgstr "Оценка, указанная в этой части формы обратной связи."
 
-#: adjfeedback/templates/feedback_card.html:30
+#: adjfeedback/templates/feedback_card.html
 #, python-format
 msgid "%(round)s %(score)s"
 msgstr "%(round)s %(score)s"
 
-#: adjfeedback/templates/feedback_card.html:34
+#: adjfeedback/templates/feedback_card.html
 #, python-format
 msgid "On %(adjudicator)s"
 msgstr "На %(adjudicator)s"
 
-#: adjfeedback/templates/feedback_card.html:39
+#: adjfeedback/templates/feedback_card.html
 #, python-format
-msgid "<span class=\"text-secondary small\">Received as %(as)s</span>"
-msgstr "<span class=\"text-secondary small\"> Получено как %(as)s</span>"
+msgid "<span class=\"text-secondary small\">Received as %(as_type)s</span>"
+msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:43
+#: adjfeedback/templates/feedback_card.html
 #, python-format
 msgid "Base %(base)s"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:50
+#: adjfeedback/templates/feedback_card.html
 #, python-format
 msgid "From %(source)s <span class=\"text-secondary small\">(their %(relationship)s)</span>"
 msgstr "От %(source)s <span class=\"text-secondary small\">их %(relationship)s</span>"
 
-#: adjfeedback/templates/feedback_card.html:54
+#: adjfeedback/templates/feedback_card.html
 #, python-format
 msgid "From %(source)s <span class=\"text-secondary small\">(%(relationship)s from %(side)s)</span>"
 msgstr "От %(source)s <span class=\"text-secondary small\">%(relationship)s от %(side)s</span>"
 
-#: adjfeedback/templates/feedback_card.html:58
+#: adjfeedback/templates/feedback_card.html
 msgid "From unknown"
 msgstr "От неизвестного"
 
-#: adjfeedback/templates/feedback_card.html:88
+#: adjfeedback/templates/feedback_card.html
 #, python-format
 msgid "%(time)s"
 msgstr "%(time)s"
 
-#: adjfeedback/templates/feedback_card.html:93
+#: adjfeedback/templates/feedback_card.html
 msgid "Unconfirmed feedback is not counted as having been submitted and does not affect this adjudicator's score."
 msgstr "Не подтвержденная обратная связь не считается поданной и не влияет на оценку этого судьи."
 
-#: adjfeedback/templates/feedback_card.html:98
+#: adjfeedback/templates/feedback_card.html
 msgid "Un-confirm"
 msgstr "Отменить подтверждение"
 
-#: adjfeedback/templates/feedback_card.html:98
+#: adjfeedback/templates/feedback_card.html
 msgid "Confirm"
 msgstr "Подтвердить"
 
-#: adjfeedback/templates/feedback_card.html:103
+#: adjfeedback/templates/feedback_card.html
 msgid "Ignored feedback is counted as having been submitted, but does not affect this adjudicator's score."
 msgstr "Игнорируемая обратная связь считается поданной, но не влияет на оценку этого судьи."
 
-#: adjfeedback/templates/feedback_card.html:108
+#: adjfeedback/templates/feedback_card.html
 msgid "Un-ignore"
 msgstr "Не игнорировать"
 
-#: adjfeedback/templates/feedback_card.html:108
+#: adjfeedback/templates/feedback_card.html
 msgid "Ignore"
 msgstr "Игнорировать"
 
-#: adjfeedback/templates/feedback_cards_list.html:17
+#: adjfeedback/templates/feedback_cards_list.html
 msgid "No feedback has been submitted yet"
 msgstr "Ни одна форма обратной связи пока не отправлена"
 
-#: adjfeedback/templates/feedback_overview.html:4
+#: adjfeedback/templates/feedback_overview.html
 #, python-format
 msgid "<span id=\"c_breaking\">%(c_breaking)s</span> marked as breaking"
 msgstr "<span id=\"c_breaking\">%(c_breaking)s</span> отмечен как брейкающийся"
 
-#: adjfeedback/templates/feedback_overview.html:10
+#: adjfeedback/templates/feedback_overview.html
 #, python-format
 msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects only chairs to submit feedback (on their panellists and trainees)."
 msgstr "Текущая <a href=\"%(option_url)s\" class=\"alert-link\"> настройка форм обратной связи</a> позволяет только чэйрам предоставлять обратную связь (на их вингов и вингов без права голоса)."
 
-#: adjfeedback/templates/feedback_overview.html:14
+#: adjfeedback/templates/feedback_overview.html
 #, python-format
 msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects both chairs and panellists to submit feedback on each other, and also chairs to submit feedback on trainees."
 msgstr ""
 
-#: adjfeedback/templates/feedback_overview.html:18
+#: adjfeedback/templates/feedback_overview.html
 #, python-format
 msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects both panellists and trainees to submit feedback on chairs, and chairs to submit feedback on every other member of the panel (including trainees)."
 msgstr ""
 
-#: adjfeedback/templates/feedback_overview.html:22
+#: adjfeedback/templates/feedback_overview.html
 #, python-format
 msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects all adjudicators (including trainees) to submit feedback on every other member of the panel (including trainees)."
 msgstr "Текущая <a href=\"%(option_url)s\" class=\"alert-link\"> настройка форм обратной связи</a> позволяет всем судьям (включая вингов без права голоса) предоставлять обратную связь на всех членов судейской коллегии (включая вингов без права голоса)."
 
-#: adjfeedback/templates/feedback_overview.html:30
+#: adjfeedback/templates/feedback_overview.html
 #, python-format
 msgid "There is <strong>%(nadjs_outside_range)s adjudicator</strong> with a score <strong>outside the permitted range</strong> of adjudicator scores, which is currently set as %(min_score)s to %(max_score)s. This can cause adjudicator auto-allocation to behave in unexpected ways. If you'd like to use a wider score range, you can configure this in <a href=\"%(feedback_settings_url)s\" class=\"alert-link\"> feedback settings</a>."
 msgid_plural "There are <strong>%(nadjs_outside_range)s adjudicators</strong> with scores <strong>outside the permitted range</strong> of adjudicator scores, which is currently set as %(min_score)s to %(max_score)s. This can cause adjudicator auto-allocation to behave in unexpected ways. If you'd like to use a wider score range, you can configure this in <a href=\"%(feedback_settings_url)s\" class=\"alert-link\"> feedback settings</a>."
@@ -718,7 +715,7 @@ msgstr[1] "Есть <strong>%(nadjs_outside_range)s судей </strong> с ба
 msgstr[2] "Есть <strong>%(nadjs_outside_range)s судей </strong> с баллами <strong>выходящими за пределы разрешенного диапазона </strong> судейских баллов, который установлен от %(min_score)s до %(max_score)s. Это может привести к сбоям в автоматическом распределении судей. Если вы хотите использовать более широкий диапазон, вы можете настроить его в <a href=\"%(feedback_settings_url)s\" class=\"alert-link\"> настройках обратной связи</a>."
 msgstr[3] "Есть <strong>%(nadjs_outside_range)s судей </strong> с баллами <strong>выходящими за пределы разрешенного диапазона </strong> судейских баллов, который установлен от %(min_score)s до %(max_score)s. Это может привести к сбоям в автоматическом распределении судей. Если вы хотите использовать более широкий диапазон, вы можете настроить его в <a href=\"%(feedback_settings_url)s\" class=\"alert-link\"> настройках обратной связи</a>."
 
-#: adjfeedback/templates/overview_breakdowns.html:13
+#: adjfeedback/templates/overview_breakdowns.html
 #, python-format
 msgid "%(count)s adjudicator currently has a score equal to or above %(min)s and below %(max)s. That is %(percent)s%% of the adjudicator pool."
 msgid_plural "%(count)s adjudicators currently have a score equal to or above %(min)s and below %(max)s. That is %(percent)s%% of the adjudicator pool."
@@ -727,29 +724,29 @@ msgstr[1] "%(count)s судей имеют балл равный или боль
 msgstr[2] "%(count)s судей имеют балл равный или больший %(min)s и ниже %(max)s. Это %(percent)s %% судейского пула."
 msgstr[3] "%(count)s судей имеют балл равный или больший %(min)s и ниже %(max)s. Это %(percent)s %% судейского пула."
 
-#: adjfeedback/templates/overview_breakdowns.html:27
+#: adjfeedback/templates/overview_breakdowns.html
 #, python-format
 msgid "Score Distributions (range is %(min_score)s–%(max_score)s)"
 msgstr "Распределение баллов (диапазон: %(min_score)s–%(max_score)s)"
 
-#: adjfeedback/templates/overview_breakdowns.html:43
+#: adjfeedback/templates/overview_breakdowns.html
 msgid "Base"
 msgstr ""
 
-#: adjfeedback/templates/overview_breakdowns.html:49
+#: adjfeedback/templates/overview_breakdowns.html
 msgid "Feedback"
 msgstr "Обратная связь"
 
-#: adjfeedback/templates/overview_breakdowns.html:53
+#: adjfeedback/templates/overview_breakdowns.html
 #, python-format
 msgid "The proportion of an adjudicator's score determined by feedback vs the test is set on a per-round basis. Click this link and edit the 'Feedback weight' field to modify this ratio for %(round)s."
 msgstr "Доля балла судьи, определяемая обратной связью и тестом, устанавливается на каждый раунд. Нажмите на эту ссылку и отредактируйте поле \"вес обратной связи\", чтобы изменить это соотношение для %(round)s."
 
-#: adjfeedback/templates/overview_breakdowns.html:57
+#: adjfeedback/templates/overview_breakdowns.html
 msgid "Score Ratio"
 msgstr "Рейтинг баллов"
 
-#: adjfeedback/templates/overview_breakdowns.html:72
+#: adjfeedback/templates/overview_breakdowns.html
 #, python-format
 msgid "There is %(c_chairs)s debate per round, so there needs to be %(c_chairs)s chair."
 msgid_plural "There are %(c_chairs)s debates per round, so there need to be %(c_chairs)s chairs."
@@ -758,7 +755,7 @@ msgstr[1] "Есть %(c_chairs)s дебатов в этом раунде, так
 msgstr[2] "Есть %(c_chairs)s дебатов в этом раунде, так что должно быть %(c_chairs)s чэйров."
 msgstr[3] "Есть %(c_chairs)s дебатов в этом раунде, так что должно быть %(c_chairs)s чэйров."
 
-#: adjfeedback/templates/overview_breakdowns.html:78
+#: adjfeedback/templates/overview_breakdowns.html
 #, python-format
 msgid "There is %(c_debates)s debate per round, but only %(c_chairs)s above the minimum voting score."
 msgid_plural "There are %(c_debates)s debates per round, but only %(c_chairs)s above the minimum voting score."
@@ -767,7 +764,7 @@ msgstr[1] "Есть %(c_debates)s дебатов в этом раунде, но 
 msgstr[2] "Есть %(c_debates)s дебатов в этом раунде, но только %(c_chairs)s, имеющих балл выше минимально допустимого для голосования."
 msgstr[3] "Есть %(c_debates)s дебатов в этом раунде, но только %(c_chairs)s, имеющих балл выше минимально допустимого для голосования."
 
-#: adjfeedback/templates/overview_breakdowns.html:85
+#: adjfeedback/templates/overview_breakdowns.html
 #, python-format
 msgid "%(c_chairs)s chair"
 msgid_plural "%(c_chairs)s chairs"
@@ -776,11 +773,11 @@ msgstr[1] "%(c_chairs)s чэйры"
 msgstr[2] "%(c_chairs)s чэйры"
 msgstr[3] "%(c_chairs)s чэйры"
 
-#: adjfeedback/templates/overview_breakdowns.html:95
+#: adjfeedback/templates/overview_breakdowns.html
 msgid "All adjudicators with a score high enough to vote, but who aren't allocated as chairs, are allocated as panellists by the auto-allocator."
 msgstr "Все судьи, чей рейтинг достаточен для того, чтобы иметь право голоса, но недостаточен, чтобы быть назначенным чэйром, буду автоматически назначены вингами."
 
-#: adjfeedback/templates/overview_breakdowns.html:99
+#: adjfeedback/templates/overview_breakdowns.html
 #, python-format
 msgid "%(c_panellists)s panellist"
 msgid_plural "%(c_panellists)s panellists"
@@ -789,12 +786,12 @@ msgstr[1] "%(c_panellists)s винги"
 msgstr[2] "%(c_panellists)s винги"
 msgstr[3] "%(c_panellists)s винги"
 
-#: adjfeedback/templates/overview_breakdowns.html:109
+#: adjfeedback/templates/overview_breakdowns.html
 #, python-format
 msgid "Adjudicators are allocated as trainees by the auto-allocator if their score is less than the 'minimum voting score' (currently %(min_voting)s) set in this tournament's Draw Rules configuration."
 msgstr "Судьи автоматически распределяются как винги без права голоса, если их балл меньше чем \"минимальный балл для права голоса\" (текущий %(min_voting)s установлен в настройках сетки этого турнира)."
 
-#: adjfeedback/templates/overview_breakdowns.html:114
+#: adjfeedback/templates/overview_breakdowns.html
 #, python-format
 msgid "%(c_trainees)s trainee"
 msgid_plural "%(c_trainees)s trainees"
@@ -803,77 +800,76 @@ msgstr[1] "%(c_trainees)s винги без права голоса"
 msgstr[2] "%(c_trainees)s винги без права голоса"
 msgstr[3] "%(c_trainees)s винги без права голоса"
 
-#: adjfeedback/templates/overview_breakdowns.html:123
+#: adjfeedback/templates/overview_breakdowns.html
 #, python-format
 msgid "Auto-Allocate Distributions (%(min_voting_score)s+ to vote)"
 msgstr "Автораспределение (%(min_voting_score)s+для голосования)"
 
-#: adjfeedback/templates/overview_modals.html:10
+#: adjfeedback/templates/overview_modals.html
 msgid "Change Base Score"
 msgstr "Изменить исходный рейтинг"
 
-#: adjfeedback/templates/overview_modals.html:17
+#: adjfeedback/templates/overview_modals.html
 #, python-format
 msgid "The score range for adjudicators is between <strong>%(pref.adj_min_score)s</strong> and <strong>%(pref.adj_max_score)s</strong>. Decimals are permitted. This can be configured in <a href=\"%(feedback_options)s\">Feedback settings</a>."
 msgstr "Диапазон баллов для судей между <strong>%(pref.adj_min_score)s</strong> и <strong>%(pref.adj_max_score)s</strong>. Десятичные оценки разрешены. Это можно настроить в настройках <a href=\"%(feedback_options)s\">обратной связи</a>."
 
-#: adjfeedback/templates/overview_modals.html:25
+#: adjfeedback/templates/overview_modals.html
 #, python-format
 msgid "The minimum score require to be allocated as a panellist or chair (when using the auto-allocator) is <strong>%(min_voting_score)s</strong>. This can be configured in <a href=\"%(draw_rules)s\">Draw settings</a>."
 msgstr "Минимальный балл, необходимый для того чтобы автоматически быть распределенным как винг или чэйр <strong>%(min_voting_score)s</strong>. Это может быть настроено в <a href=\"%(draw_rules)s\">настройках сетки</a>."
 
-#: adjfeedback/templates/overview_modals.html:34
+#: adjfeedback/templates/overview_modals.html
 msgid "Base score"
 msgstr "Исходный рейтинг"
 
-#: adjfeedback/templates/overview_modals.html:41
+#: adjfeedback/templates/overview_modals.html
 msgid "Save Base Score"
 msgstr "Сохранить исходный рейтинг"
 
-#: adjfeedback/templates/public_add_feedback.html:4
+#: adjfeedback/templates/public_add_feedback.html
 msgid "Who are you?"
 msgstr "Кто вы?"
 
-#: adjfeedback/templates/public_add_feedback.html:5
+#: adjfeedback/templates/public_add_feedback.html
 msgid "click your name or your team on this list"
 msgstr "нажмите на ваше имя или команду в этом списке"
 
-#: adjfeedback/templates/update_adjudicator_scores.html:4
-#: adjfeedback/templates/update_adjudicator_scores.html:6
+#: adjfeedback/templates/update_adjudicator_scores.html
 msgctxt "page title"
 msgid "Update Adjudicator Scores"
 msgstr "Обновить баллы для судей"
 
-#: adjfeedback/templates/update_adjudicator_scores.html:11
+#: adjfeedback/templates/update_adjudicator_scores.html
 #, python-format
 msgid "There aren't any adjudicators in this tournament, so you can't update any scores. You might want to <a href=\"%(import_url)s\" class=\"alert-link\">import some adjudicators</a> first."
 msgstr "На этом турнире нет судей, поэтому вы не можете обновить какие-либо оценки. Вы можете сначала импортировать <a href=\"%(import_url)s\" class=\"alert-link\">некоторых судей</a>."
 
-#: adjfeedback/templates/update_adjudicator_scores.html:28
+#: adjfeedback/templates/update_adjudicator_scores.html
 msgid "Paste a list of adjudicators' names and their new scores, in the format: <code>adjudicator,score</code>. For example:"
 msgstr "Вставьте список имен судей и их новых оценок в формате: <code>судья,балл</code>. Например:"
 
-#: adjfeedback/templates/update_adjudicator_scores.html:40
+#: adjfeedback/templates/update_adjudicator_scores.html
 msgid "The adjudicators' names must match their names in the tab system exactly."
 msgstr "Имена судей должны точно соответствовать их именам в тэбе."
 
-#: adjfeedback/templates/update_adjudicator_scores.html:47
+#: adjfeedback/templates/update_adjudicator_scores.html
 msgid "There are some problems with the data on this form:"
 msgstr "Есть некоторые проблемы с данными в этой форме:"
 
-#: adjfeedback/templates/update_adjudicator_scores.html:58
+#: adjfeedback/templates/update_adjudicator_scores.html
 msgid "Submit"
 msgstr "Отправить"
 
-#: adjfeedback/views.py:118
+#: adjfeedback/views.py
 msgid "Feedback Overview"
 msgstr "Обзор обратной связи"
 
-#: adjfeedback/views.py:142
+#: adjfeedback/views.py
 msgid "Find Feedback on Adjudicator"
 msgstr "Найти обратную связь на судью"
 
-#: adjfeedback/views.py:153 adjfeedback/views.py:177 adjfeedback/views.py:192
+#: adjfeedback/views.py
 #, python-format
 msgid "%(count)d feedback"
 msgid_plural "%(count)d feedbacks"
@@ -882,90 +878,90 @@ msgstr[1] "%(count)d обратная связь"
 msgstr[2] "%(count)d обратная связь"
 msgstr[3] "%(count)d обратная связь"
 
-#: adjfeedback/views.py:156 adjfeedback/views.py:182 adjfeedback/views.py:197
+#: adjfeedback/views.py
 msgid "Feedbacks"
 msgstr "Обратная связь"
 
-#: adjfeedback/views.py:163
+#: adjfeedback/views.py
 msgid "Find Feedback"
 msgstr "Найти обратную связь"
 
-#: adjfeedback/views.py:171 adjfeedback/views.py:710
+#: adjfeedback/views.py
 msgid "From Teams"
 msgstr "От команд"
 
-#: adjfeedback/views.py:186 adjfeedback/views.py:704
+#: adjfeedback/views.py
 msgid "From Adjudicators"
 msgstr "От судей"
 
-#: adjfeedback/views.py:271
+#: adjfeedback/views.py
 msgid "Latest Feedback"
 msgstr "Последняя обратная связь"
 
-#: adjfeedback/views.py:272
+#: adjfeedback/views.py
 msgid "(30 most recent)"
 msgstr "(30 последних)"
 
-#: adjfeedback/views.py:282
+#: adjfeedback/views.py
 msgid "Only Comments"
 msgstr "Только комментарии"
 
-#: adjfeedback/views.py:283
+#: adjfeedback/views.py
 msgid "(250 most recent)"
 msgstr "(250 последних)"
 
-#: adjfeedback/views.py:294
+#: adjfeedback/views.py
 msgid "Important Feedback"
 msgstr "Важная форма обратной связи"
 
-#: adjfeedback/views.py:295
+#: adjfeedback/views.py
 msgid "(rating was much higher/lower than expected)"
 msgstr "(рейтинг был гораздо выше/ниже, чем ожидалось)"
 
-#: adjfeedback/views.py:362
+#: adjfeedback/views.py
 msgid "A Team"
 msgstr "Команда"
 
-#: adjfeedback/views.py:367
+#: adjfeedback/views.py
 msgid "Team"
 msgstr "Команда"
 
-#: adjfeedback/views.py:374 adjfeedback/views.py:391
+#: adjfeedback/views.py
 msgid "Institution"
 msgstr "Клуб"
 
-#: adjfeedback/views.py:377
+#: adjfeedback/views.py
 msgid "An Adjudicator"
 msgstr "Судья"
 
-#: adjfeedback/views.py:384
+#: adjfeedback/views.py
 msgid "Adjudicator"
 msgstr "Судьяя"
 
-#: adjfeedback/views.py:511
+#: adjfeedback/views.py
 #, python-format
 msgid "Feedback from %(source)s on %(target)s added."
 msgstr "Обратная связь от %(source)s на %(target)s добавлена."
 
-#: adjfeedback/views.py:541
+#: adjfeedback/views.py
 #, python-format
 msgid "Thanks, %(source)s! Your feedback on %(target)s has been recorded."
 msgstr "Спасибо, %(source)s! Ваша обратная связь на %(target)s была записана."
 
-#: adjfeedback/views.py:625
+#: adjfeedback/views.py
 #, python-format
 msgid "Whoops! I didn't recognise that adjudicator: %(adjudicator)s"
 msgstr "Упс! Я не узнал, этого судью: %(adjudicator)s"
 
-#: adjfeedback/views.py:648
+#: adjfeedback/views.py
 msgid "Whoops! The value isn't a valid base score."
 msgstr "Упс! Это значение исходного рейтинга не является допустимым."
 
-#: adjfeedback/views.py:675
+#: adjfeedback/views.py
 msgid "Feedback Progress"
 msgstr "Прогресс отправки форм обратной связи"
 
-#: adjfeedback/views.py:696
+#: adjfeedback/views.py
 #, python-format
 msgid "%(nmissing)d missing feedback submission (%(fulfilled).1f%% returned)"
 msgid_plural "%(nmissing)d missing feedback submissions (%(fulfilled).1f%% returned)"
@@ -974,24 +970,24 @@ msgstr[1] "%(nmissing)d оправка отсутствующей обратно
 msgstr[2] "%(nmissing)d оправка отсутствующей обратной связи (%(fulfilled).1f%% возвращена)"
 msgstr[3] "%(nmissing)d оправка отсутствующей обратной связи (%(fulfilled).1f%% возвращена)"
 
-#: adjfeedback/views.py:741
+#: adjfeedback/views.py
 #, python-format
 msgid "Feedback for %(adjudicator)s from %(source)s is now %(result)s."
 msgstr "Обратная связь на %(adjudicator)s от %(source)s составляет %(result)s."
 
-#: adjfeedback/views.py:755
+#: adjfeedback/views.py
 msgid "confirmed"
 msgstr "подтвержденные"
 
-#: adjfeedback/views.py:755
+#: adjfeedback/views.py
 msgid "un-confirmed"
 msgstr "не подтверждено"
 
-#: adjfeedback/views.py:768
+#: adjfeedback/views.py
 msgid "un-ignored"
 msgstr "не-игнорированно"
 
-#: adjfeedback/views.py:804
+#: adjfeedback/views.py
 #, python-format
 msgid "Updated base score for %(count)d adjudicator."
 msgid_plural "Updated base scores for %(count)d adjudicators."

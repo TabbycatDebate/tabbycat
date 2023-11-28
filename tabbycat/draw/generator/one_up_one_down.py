@@ -29,7 +29,7 @@ class OneUpOneDownSwapper(object):
         The second item is the indices of the elements in data that have the
         maximum possible sum, subject to the constraint that you can't pick two
         adjacent elements. Note that negative elements will never be included,
-        since they always reduce the sum so it is better to exclude them.  (The
+        since they always reduce the sum so that it is better to exclude them.  (The
         constraint does not say that you must pick every other element.) For
         example, if 'data' is a list of "swap scores", this would return a list
         of indices of the optimal swap combinations. The first item is the
@@ -117,7 +117,7 @@ class OneUpOneDownSwapper(object):
         representing the entire draw"""
 
         # Find a list of integers representing how much better you get by
-        # executing the each team with the team below.
+        # executing each team with the team below.
         swap_scores = [(self.score_swap(draw[i], draw[i+1])) for i in range(len(draw) - 1)]
 
         # Adjust scores so that if there are two equivalent ways to resolve a

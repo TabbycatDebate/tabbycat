@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-28 21:53-0400\n"
-"PO-Revision-Date: 2021-11-29 02:16\n"
+"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"PO-Revision-Date: 2023-02-05 00:58\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Language: bn_BD\n"
@@ -17,940 +17,940 @@ msgstr ""
 "X-Crowdin-File: /develop/tabbycat/locale/en/LC_MESSAGES/django.po\n"
 "X-Crowdin-File-ID: 934\n"
 
-#: api/apps.py:7
+#: api/apps.py
 msgid "Application Programming Interface"
 msgstr ""
 
-#: checkins/apps.py:7 templates/nav/admin_nav.html:117
-#: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:105
+#: checkins/admin.py
+msgid "Type"
+msgstr ""
+
+#: checkins/admin.py
+msgid "Checkin time"
+msgstr ""
+
+#: checkins/apps.py templates/nav/admin_nav.html
+#: templates/nav/assistant_nav.html templates/nav/public_nav.html
 msgid "Check-Ins"
 msgstr "চেক ইন"
 
-#: checkins/consumers.py:73
+#: checkins/consumers.py
 msgid "Sent checkin identifier doesn't exist"
 msgstr ""
 
-#: checkins/consumers.py:74 checkins/consumers.py:79
+#: checkins/consumers.py
 msgid "Checkins"
 msgstr ""
 
-#: checkins/consumers.py:78
+#: checkins/consumers.py
 msgid "No checkin identifiers exist for sent barcodes"
 msgstr ""
 
-#: checkins/models.py:29
+#: checkins/models.py
 msgid "The barcode must contain exactly six digits."
 msgstr ""
 
-#: checkins/models.py:32
+#: checkins/models.py
 msgid "barcode"
 msgstr ""
 
-#: checkins/models.py:37
+#: checkins/models.py
 msgid "<Not the child instance>"
 msgstr ""
 
-#: checkins/models.py:41
+#: checkins/models.py
 #, python-format
 msgid "%(classname)s %(barcode)s"
 msgstr ""
 
-#: checkins/models.py:52
+#: checkins/models.py
 msgid "person"
 msgstr ""
 
-#: checkins/models.py:55
+#: checkins/models.py
 msgid "person identifier"
 msgstr ""
 
-#: checkins/models.py:56
+#: checkins/models.py
 msgid "person identifiers"
 msgstr ""
 
-#: checkins/models.py:64
+#: checkins/models.py
 msgid "debate"
 msgstr "বিতর্ক"
 
-#: checkins/models.py:67
+#: checkins/models.py
 msgid "debate identifier"
 msgstr ""
 
-#: checkins/models.py:68
+#: checkins/models.py
 msgid "debate identifiers"
 msgstr ""
 
-#: checkins/models.py:79
+#: checkins/models.py
 msgid "room identifier"
 msgstr ""
 
-#: checkins/models.py:80
+#: checkins/models.py
 msgid "room identifiers"
 msgstr ""
 
-#: checkins/models.py:87
+#: checkins/models.py
 msgid "identifier"
 msgstr ""
 
-#: checkins/models.py:90
+#: checkins/models.py
 msgid "check-in time"
 msgstr ""
 
-#: checkins/models.py:92
+#: checkins/models.py
 msgid "tournament"
 msgstr "প্রতিযোগিতা"
 
-#: checkins/models.py:95
+#: checkins/models.py
 msgid "check-in event"
 msgstr ""
 
-#: checkins/models.py:96
+#: checkins/models.py
 msgid "check-in events"
 msgstr ""
 
-#: checkins/templates/checkin_ids.html:18
+#: checkins/templates/checkin_ids.html
 msgid "With identifiers"
 msgstr ""
 
-#: checkins/templates/checkin_ids.html:30
+#: checkins/templates/checkin_ids.html
 msgid "View as barcodes"
 msgstr ""
 
-#: checkins/templates/checkin_ids.html:36
+#: checkins/templates/checkin_ids.html
 msgid "Generate missing identifiers"
 msgstr ""
 
-#: checkins/templates/checkin_ids.html:38
+#: checkins/templates/checkin_ids.html
 msgid "Generate all identifiers"
 msgstr ""
 
-#: checkins/templates/checkin_ids.html:49
+#: checkins/templates/checkin_ids.html
 msgid "There are no identifiers available to view. An admin will need to generate them."
 msgstr ""
 
-#: checkins/templates/checkin_printables.html:10
-msgid "Each of the barcodes below is also an image file that can be download individually. If you want to download them all at once try using a 'bulk downloader' extension/plugin for your browser, such as <a href=\"https://chrome.google.com/webstore/detail/svg-export/naeaaedieihlkmdajjefioajbbdbdjgp?hl=en-GB\">this one (for Chrome)</a>. To download them as a list you can go to Check-Ins section of the Edit Database area and copy/paste from the relevant table."
+#: checkins/templates/checkin_printables.html
+msgid "Each of the barcodes below is also an image file that can be downloaded individually. If you want to download them all at once try using a 'bulk downloader' extension/plugin for your browser, such as <a href=\"https://chrome.google.com/webstore/detail/svg-export/naeaaedieihlkmdajjefioajbbdbdjgp?hl=en-GB\">this one (for Chrome)</a>. To download them as a list you can go to Check-Ins section of the Edit Database area and copy/paste from the relevant table."
 msgstr ""
 
-#: checkins/templates/checkin_printables.html:15
+#: checkins/templates/checkin_printables.html
 msgid "You can use Ctrl+P for printing or saving the barcodes PDF. Be sure to set the appropriate <strong>page orientation</strong>, to turn off <strong>headers/footers</strong> and turn on <strong>background graphics</strong>. Works best in Chrome."
 msgstr ""
 
-#: checkins/templates/checkin_scan.html:18
+#: checkins/templates/checkin_scan.html
 msgid "To scan an identifier type the number below (it will auto-submit). You can also use a barcode scanner (configured to work as a keyboard) or scan from a webcam or phone camera using the button below."
 msgstr ""
 
-#: checkins/utils.py:61
+#: checkins/utils.py
 #, python-format
 msgid "Not checked in (barcode %(barcode)s)"
 msgstr ""
 
-#: checkins/utils.py:65
+#: checkins/utils.py
 msgid "Not checked in; no barcode assigned"
 msgstr ""
 
-#: checkins/utils.py:72
+#: checkins/utils.py
 #, python-format
 msgid "checked in at %(time)s"
 msgstr ""
 
-#: checkins/utils.py:84
+#: checkins/utils.py
 #, python-format
 msgid "%(speaker)s checked in at %(time)s."
 msgstr ""
 
-#: checkins/utils.py:86
+#: checkins/utils.py
 #, python-format
 msgid "%(speaker)s is missing."
 msgstr ""
 
-#: checkins/views.py:30 templates/nav/admin_nav.html:128
-#: templates/nav/assistant_nav.html:42
+#: checkins/views.py templates/nav/admin_nav.html
+#: templates/nav/assistant_nav.html
 msgid "Scan Identifiers"
 msgstr ""
 
-#: checkins/views.py:63
+#: checkins/views.py
 msgid "People's Check-In Statuses"
 msgstr ""
 
-#: checkins/views.py:120
+#: checkins/views.py
 msgid "Rooms' Check-In Statuses"
 msgstr ""
 
-#: checkins/views.py:169 templates/nav/admin_nav.html:124
+#: checkins/views.py templates/nav/admin_nav.html
 msgid "Make Identifiers"
 msgstr ""
 
-#: checkins/views.py:176 templates/nav/admin_nav.html:210
+#: checkins/views.py templates/nav/admin_nav.html
 msgid "Speakers"
 msgstr ""
 
-#: checkins/views.py:181 templates/nav/public_nav.html:145
+#: checkins/views.py templates/nav/public_nav.html
 msgid "Adjudicators"
 msgstr "বিচারকমন্ডলী"
 
-#: checkins/views.py:186
+#: checkins/views.py
 msgid "Rooms"
 msgstr ""
 
-#: checkins/views.py:227
+#: checkins/views.py
 #, python-format
 msgid "Generated identifiers for %s"
 msgstr ""
 
-#: checkins/views.py:234
+#: checkins/views.py
 msgid "Identifiers"
 msgstr ""
 
-#: checkins/views.py:272
+#: checkins/views.py
 msgid "Could not check you in as you do not have an identifying code — your tab director may need to make you an identifier."
 msgstr ""
 
-#: checkins/views.py:280
+#: checkins/views.py
 msgid "You have revoked your check-in."
 msgstr ""
 
-#: checkins/views.py:282
+#: checkins/views.py
 msgid "Whoops! Looks like your check-in was already revoked."
 msgstr ""
 
-#: checkins/views.py:286
+#: checkins/views.py
 msgid "Whoops! Looks like you're already checked in."
 msgstr ""
 
-#: checkins/views.py:293
+#: checkins/views.py
 msgid "You are now checked in."
 msgstr ""
 
-#: settings/core.py:67
+#: settings/core.py
 msgid "Arabic"
 msgstr ""
 
-#: settings/core.py:68
+#: settings/core.py
 msgid "Bengali"
 msgstr ""
 
-#: settings/core.py:69
+#: settings/core.py
 msgid "English"
 msgstr ""
 
-#: settings/core.py:70
+#: settings/core.py
 msgid "Spanish"
 msgstr ""
 
-#: settings/core.py:71
+#: settings/core.py
 msgid "French"
 msgstr ""
 
-#: settings/core.py:72
+#: settings/core.py
 msgid "Indonesian"
 msgstr ""
 
-#: settings/core.py:73
+#: settings/core.py
 msgid "Japanese"
 msgstr ""
 
-#: settings/core.py:74
+#: settings/core.py
 msgid "Malay"
 msgstr ""
 
-#: settings/core.py:75
+#: settings/core.py
 msgid "Portuguese"
 msgstr ""
 
-#: settings/core.py:76
+#: settings/core.py
 msgid "Russian"
 msgstr ""
 
-#: settings/core.py:77
+#: settings/core.py
 msgid "Simplified Chinese"
 msgstr ""
 
-#: settings/core.py:78
+#: settings/core.py
 msgid "Translation"
 msgstr ""
 
-#: templates/admin/delete_protected_message.html:4
+#: templates/admin/delete_protected_message.html
 msgid "You need to delete the above objects first."
 msgstr ""
 
-#: templates/admin/style_guide.html:30
+#: templates/admin/style_guide.html
 msgid "This style of info card announces critical information. <a href=\"\">Link</a>."
 msgstr ""
 
-#: templates/admin/style_guide.html:33
+#: templates/admin/style_guide.html
 msgid "This style of info card announces general <a href=\"\">information</a>."
 msgstr ""
 
-#: templates/admin/style_guide.html:160
+#: templates/admin/style_guide.html
 msgctxt "page title"
 msgid "Form Title"
 msgstr ""
 
-#: templates/admin/style_guide.html:161
+#: templates/admin/style_guide.html
 msgid "Sub Title Title"
 msgstr ""
 
-#: templates/admin/style_guide.html:197 templates/registration/login.html:61
+#: templates/admin/style_guide.html templates/registration/login.html
 msgctxt "button"
 msgid "Log In"
 msgstr ""
 
-#: templates/admin/style_guide.html:198 templates/registration/login.html:62
+#: templates/admin/style_guide.html templates/registration/login.html
 msgctxt "button"
 msgid "I forgot my password"
 msgstr ""
 
-#: templates/base.html:10
+#: templates/base.html
 msgid "Tabbycat"
 msgstr ""
 
-#: templates/base.html:13
+#: templates/base.html
 #, python-format
 msgid "The tab for %(tournament)s runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats"
 msgstr ""
 
-#: templates/base.html:17
+#: templates/base.html
 msgid "This tab runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats"
 msgstr ""
 
-#: templates/components/form-errors.html:4
+#: templates/components/form-errors.html
 msgid "Whoops! There was an error with one or more fields."
 msgstr ""
 
-#: templates/components/formset.html:23
+#: templates/components/formset.html
 msgid "Save and Add More"
 msgstr ""
 
-#: templates/errors/assistant_403.html:4 templates/errors/assistant_403.html:6
-#: templates/errors/public_403.html:4 templates/errors/public_403.html:6
+#: templates/errors/assistant_403.html templates/errors/public_403.html
 msgid "Permission Denied (403)"
 msgstr ""
 
-#: templates/errors/assistant_403.html:13
+#: templates/errors/assistant_403.html
 #, python-format
 msgid "This assistant page isn't enabled for this tournament. <a href=\"%(url)s\">Back to the assistant home page.</a>"
 msgstr ""
 
-#: templates/errors/database_limit_warning.html:9
+#: templates/errors/database_limit_warning.html
 #, python-format
 msgid "You're currently using %(nrows)s row in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
 msgid_plural "You're currently using %(nrows)s rows in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/errors/legacy_sendgrid_warning.html:11
+#: templates/errors/legacy_sendgrid_warning.html
 msgid "It looks like you're using the old SendGrid config vars on Heroku, <code>SENDGRID_USERNAME</code> and <code>SENDGRID_PASSWORD</code>. These are now deprecated (as of version 2.6), and will stop working in a future version of Tabbycat. Please change your config vars to use <code>SENDGRID_API_KEY</code> instead. For more information, please see <a href=\"https://tabbycat.readthedocs.io/en/stable/features/notifications.html#configuring-an-email-provider\"> our documentation on this topic</a>."
 msgstr ""
 
-#: templates/errors/public_403.html:14
+#: templates/errors/public_403.html
 #, python-format
 msgid "Whoops! This page isn't enabled for this tournament. <a href=\"%(url)s\">Back to the tournament home page.</a>"
 msgstr ""
 
-#: templates/errors/public_403.html:20
+#: templates/errors/public_403.html
 #, python-format
 msgid "Whoops! This page isn't enabled for this tournament. <a href=\"%(url)s\">Back to the home page.</a>"
 msgstr ""
 
-#: templates/footer.html:14
+#: templates/footer.html
 #, python-format
 msgid "%(tournament)s runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 msgstr "%(tournament)s Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s) ভিত্তি করে চলছে"
 
-#: templates/footer.html:16
+#: templates/footer.html
 #, python-format
 msgid "This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 msgstr ""
 
-#: templates/footer.html:20
+#: templates/footer.html
 msgid "Tabbycat is a source-available project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments."
 msgstr ""
 
-#: templates/footer.html:24
+#: templates/footer.html
 #, python-format
 msgid "For a tournament of this size, we suggest <a href=\"https://opencollective.com/tabbycat/contribute/licensing-29466/checkout?amount=%(amount)s\">a donation of <strong>$%(amount)s</strong></a>."
 msgstr ""
 
-#: templates/footer.html:28
+#: templates/footer.html
 msgid "Learn more about donating."
 msgstr "অনুদান প্রদান সম্পর্কে আরো জানুন।"
 
-#: templates/footer.html:31
+#: templates/footer.html
 msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated."
 msgstr ""
 
-#: templates/footer.html:39
+#: templates/footer.html
 msgid "Still timing debates with the stopwatch app?"
 msgstr "এখনো থামাঘড়ি দিয়ে বিতর্কের সময় রক্ষা করছেন?"
 
-#: templates/footer.html:41
+#: templates/footer.html
 #, python-format
 msgid "Using an app designed for debate timekeeping makes speaking and adjudicating easier! Check out <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/iPad) or <a href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper</a> (Android)."
 msgstr "বিতর্কের জন্যই তৈরি সময় রক্ষক অ্যাপ ব্যবহার বিতর্ক ও বিচারকার্য সহজ করবে! দেখে আসতে পারেন <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">টাইমকেপ্ট</a> (আইফোন/আইপ্যাড), <a href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">ডিবেটকিপার</a> (অ্যান্ড্রয়েড) বা <a href=\"https://top.gg/bot/706179030977740810r\">হিয়ার! হিয়ার! বট</a> (ডিস্কর্ড)"
 
-#: templates/footer.html:50
+#: templates/footer.html
 msgid "Our Organisation"
 msgstr ""
 
-#: templates/footer.html:52
-msgid "Tabbycat is supported by the <a href=\"http://tabbycat-debate.org/\">Tabbycat Debate Association</a>, a non-profit for advancing open debate technology."
+#: templates/footer.html
+msgid "Tabbycat is supported by the <a href=\"https://tabbycat-debate.org/\">Tabbycat Debate Association</a>, a non-profit for advancing open debate technology."
 msgstr ""
 
-#: templates/footer.html:65
+#: templates/footer.html
 msgid "Language"
 msgstr "ভাষা"
 
-#: templates/footer.html:72
+#: templates/footer.html
 msgid "GitHub"
 msgstr "গিটহাব"
 
-#: templates/footer.html:78
+#: templates/footer.html
 msgid "Documentation"
 msgstr "ব্যবহার বিধি"
 
-#: templates/footer.html:84
+#: templates/footer.html
 msgid "Support"
 msgstr "সহায়তা"
 
-#: templates/footer.html:90
+#: templates/footer.html
 msgid "Facebook"
 msgstr "ফেসবুক"
 
-#: templates/footer.html:96
+#: templates/footer.html
 msgid "Set Up A Copy"
 msgstr "একটি কপি তৈরী করুন।"
 
-#: templates/footer.html:110
+#: templates/footer.html
 msgid "Change Language"
 msgstr "ভাষা পরিবর্তন করুন"
 
-#: templates/footer.html:127
+#: templates/footer.html
 msgid "Use this language"
 msgstr "এই ভাষাটি সক্রিয় করুন"
 
-#: templates/nav/admin_nav.html:9 templates/nav/top_nav_base.html:6
+#: templates/nav/admin_nav.html templates/nav/top_nav_base.html
 msgid "Tabbycat Logo"
 msgstr ""
 
-#: templates/nav/admin_nav.html:28 templates/nav/top_nav_base.html:59
+#: templates/nav/admin_nav.html templates/nav/top_nav_base.html
 msgid "Site Home"
 msgstr "মূল পাতা"
 
-#: templates/nav/admin_nav.html:31
+#: templates/nav/admin_nav.html
 msgid "New Tournament"
 msgstr ""
 
-#: templates/nav/admin_nav.html:34
+#: templates/nav/admin_nav.html templates/nav/top_nav_base.html
 msgid "Edit Database"
 msgstr ""
 
-#: templates/nav/admin_nav.html:42
+#: templates/nav/admin_nav.html
 msgid "Admin Area"
 msgstr ""
 
-#: templates/nav/admin_nav.html:46
+#: templates/nav/admin_nav.html
 msgid "Assistant Area"
 msgstr ""
 
-#: templates/nav/admin_nav.html:50
+#: templates/nav/admin_nav.html
 msgid "Public Area"
 msgstr ""
 
-#: templates/nav/admin_nav.html:60 templates/nav/admin_nav.html:150
-#: templates/nav/admin_nav.html:190 templates/nav/admin_nav.html:249
+#: templates/nav/admin_nav.html
 msgid "Overview"
 msgstr ""
 
-#: templates/nav/admin_nav.html:67
+#: templates/nav/admin_nav.html
 msgid "Setup"
 msgstr ""
 
-#: templates/nav/admin_nav.html:74
+#: templates/nav/admin_nav.html
 msgid "Configuration"
 msgstr ""
 
-#: templates/nav/admin_nav.html:77
+#: templates/nav/admin_nav.html
 msgid "Import Data"
 msgstr ""
 
-#: templates/nav/admin_nav.html:81 templates/nav/assistant_nav.html:18
-#: templates/nav/public_nav.html:175
+#: templates/nav/admin_nav.html templates/nav/assistant_nav.html
+#: templates/nav/public_nav.html
 msgid "Participants"
 msgstr "অংশগ্রহণকারী"
 
-#: templates/nav/admin_nav.html:85
+#: templates/nav/admin_nav.html
 msgid "Private URLs"
 msgstr ""
 
-#: templates/nav/admin_nav.html:89
+#: templates/nav/admin_nav.html
 msgid "Emails"
 msgstr ""
 
-#: templates/nav/admin_nav.html:93
+#: templates/nav/admin_nav.html
 msgid "Preformed Panels"
 msgstr "পূর্বগঠিত প্যানেল"
 
-#: templates/nav/admin_nav.html:97
+#: templates/nav/admin_nav.html
 msgid "Export XML"
 msgstr ""
 
-#: templates/nav/admin_nav.html:107 templates/nav/public_nav.html:160
+#: templates/nav/admin_nav.html templates/nav/public_nav.html
 msgid "Sides"
 msgstr "পক্ষ"
 
-#: templates/nav/admin_nav.html:132 templates/nav/assistant_nav.html:48
+#: templates/nav/admin_nav.html templates/nav/assistant_nav.html
 msgid "People's Status"
 msgstr ""
 
-#: templates/nav/admin_nav.html:136
+#: templates/nav/admin_nav.html
 msgid "Rooms' Status"
 msgstr ""
 
-#: templates/nav/admin_nav.html:144
+#: templates/nav/admin_nav.html
 msgid "Feedback"
 msgstr "প্রতিক্রিয়া"
 
-#: templates/nav/admin_nav.html:153
+#: templates/nav/admin_nav.html
 msgid "Latest"
 msgstr ""
 
-#: templates/nav/admin_nav.html:156
+#: templates/nav/admin_nav.html
 msgid "Important"
 msgstr ""
 
-#: templates/nav/admin_nav.html:159
+#: templates/nav/admin_nav.html
 msgid "Comments"
 msgstr ""
 
-#: templates/nav/admin_nav.html:162
+#: templates/nav/admin_nav.html
 msgid "Find by Source"
 msgstr ""
 
-#: templates/nav/admin_nav.html:165
+#: templates/nav/admin_nav.html
 msgid "Find by Target"
 msgstr ""
 
-#: templates/nav/admin_nav.html:168
+#: templates/nav/admin_nav.html
 msgid "Unsubmitted"
 msgstr ""
 
-#: templates/nav/admin_nav.html:171
+#: templates/nav/admin_nav.html
 msgid "Add Feedback"
 msgstr ""
 
-#: templates/nav/admin_nav.html:174
+#: templates/nav/admin_nav.html
 msgid "Bulk Update"
 msgstr ""
 
-#: templates/nav/admin_nav.html:183 templates/nav/public_nav.html:165
+#: templates/nav/admin_nav.html templates/nav/public_nav.html
 msgid "Standings"
 msgstr ""
 
-#: templates/nav/admin_nav.html:194
+#: templates/nav/admin_nav.html
 msgid "All Teams"
 msgstr ""
 
-#: templates/nav/admin_nav.html:196
+#: templates/nav/admin_nav.html
 msgid "Teams"
 msgstr "দলসমূহ"
 
-#: templates/nav/admin_nav.html:201 templates/nav/public_nav.html:13
+#: templates/nav/admin_nav.html templates/nav/public_nav.html
 #, python-format
 msgid "%(category)s Teams"
 msgstr "%(category)s দলসমূহ"
 
-#: templates/nav/admin_nav.html:208
+#: templates/nav/admin_nav.html
 msgid "All Speakers"
 msgstr ""
 
-#: templates/nav/admin_nav.html:215 templates/nav/public_nav.html:30
+#: templates/nav/admin_nav.html templates/nav/public_nav.html
 #, python-format
 msgid "%(category)s Speakers"
 msgstr "%(category)s বক্তাসমূহ"
 
-#: templates/nav/admin_nav.html:223
+#: templates/nav/admin_nav.html
 msgid "Replies"
 msgstr ""
 
-#: templates/nav/admin_nav.html:227 templates/nav/public_nav.html:155
+#: templates/nav/admin_nav.html templates/nav/public_nav.html
 msgid "Motions"
 msgstr "প্রস্তাবসমূহ"
 
-#: templates/nav/admin_nav.html:230 templates/nav/public_nav.html:170
+#: templates/nav/admin_nav.html templates/nav/public_nav.html
 msgid "Diversity"
 msgstr ""
 
-#: templates/nav/admin_nav.html:243
+#: templates/nav/admin_nav.html
 msgid "Breaks"
 msgstr ""
 
-#: templates/nav/admin_nav.html:253
+#: templates/nav/admin_nav.html
 #, python-format
 msgid "%(category)s"
 msgstr ""
 
-#: templates/nav/admin_nav.html:257
+#: templates/nav/admin_nav.html
 msgid "Adjudicators'"
 msgstr ""
 
-#: templates/nav/admin_nav.html:260
+#: templates/nav/admin_nav.html
 msgid "Edit Categories"
 msgstr ""
 
-#: templates/nav/admin_nav.html:263
+#: templates/nav/admin_nav.html
 msgid "Edit Eligibility"
 msgstr ""
 
-#: templates/nav/admin_nav.html:278 templates/nav/top_nav_base.html:101
+#: templates/nav/admin_nav.html templates/nav/top_nav_base.html
 msgid "Log Out"
 msgstr "লগ আউট"
 
-#: templates/nav/assistant_nav.html:5
+#: templates/nav/assistant_nav.html
 msgid "Enter Results"
 msgstr ""
 
-#: templates/nav/assistant_nav.html:11 templates/nav/public_nav.html:211
+#: templates/nav/assistant_nav.html templates/nav/public_nav.html
 msgid "Enter Feedback"
 msgstr ""
 
-#: templates/nav/assistant_nav.html:22
+#: templates/nav/assistant_nav.html
 msgid "Participants List"
 msgstr ""
 
-#: templates/nav/assistant_nav.html:25 templates/nav/public_nav.html:180
+#: templates/nav/assistant_nav.html templates/nav/public_nav.html
 msgid "Institutions"
 msgstr ""
 
-#: templates/nav/assistant_nav.html:29
+#: templates/nav/assistant_nav.html
 msgid "Code Names"
 msgstr ""
 
-#: templates/nav/assistant_nav.html:45
+#: templates/nav/assistant_nav.html
 msgid "View Identifiers"
 msgstr ""
 
-#: templates/nav/assistant_nav.html:51
+#: templates/nav/assistant_nav.html
 msgid "Room's Status"
 msgstr ""
 
-#: templates/nav/assistant_nav.html:59
+#: templates/nav/assistant_nav.html
 msgid "Display/Print Draw"
 msgstr ""
 
-#: templates/nav/public_nav.html:6
+#: templates/nav/public_nav.html
 msgid "Team Tab"
 msgstr "দলসমূহ"
 
-#: templates/nav/public_nav.html:22
+#: templates/nav/public_nav.html
 msgid "Speaker Tab"
 msgstr "বক্তাসমূহ"
 
-#: templates/nav/public_nav.html:40
+#: templates/nav/public_nav.html
 msgid "Replies Tab"
 msgstr "যুক্তি খন্ডন ট্যাব"
 
-#: templates/nav/public_nav.html:45
+#: templates/nav/public_nav.html
 msgid "Adjudicator Tab"
 msgstr "বিচারকমণ্ডলী"
 
-#: templates/nav/public_nav.html:53 templates/nav/public_nav.html:62
+#: templates/nav/public_nav.html
 msgid "Motions Tab"
 msgstr "প্রস্তাব ট্যাব"
 
-#: templates/nav/public_nav.html:56
+#: templates/nav/public_nav.html
 msgid "By round"
 msgstr ""
 
-#: templates/nav/public_nav.html:57
+#: templates/nav/public_nav.html
 msgid "Globally"
 msgstr ""
 
-#: templates/nav/public_nav.html:72
+#: templates/nav/public_nav.html
 msgid "Draws"
 msgstr ""
 
-#: templates/nav/public_nav.html:83
+#: templates/nav/public_nav.html
 msgid "No Draws Available"
 msgstr ""
 
-#: templates/nav/public_nav.html:91
+#: templates/nav/public_nav.html
 #, python-format
 msgid "Draw for %(round)s"
 msgstr ""
 
-#: templates/nav/public_nav.html:95
+#: templates/nav/public_nav.html
 msgid "Current Draws"
 msgstr ""
 
-#: templates/nav/public_nav.html:115 templates/nav/round_panel.html:57
+#: templates/nav/public_nav.html templates/nav/round_panel.html
 msgid "Results"
 msgstr "ফলাফল"
 
-#: templates/nav/public_nav.html:133
+#: templates/nav/public_nav.html
 msgid "Break"
 msgstr "ব্রেক"
 
-#: templates/nav/public_nav.html:185
+#: templates/nav/public_nav.html
 msgid "Feedback Progress"
 msgstr ""
 
-#: templates/nav/public_nav.html:191 templates/nav/public_nav.html:197
+#: templates/nav/public_nav.html
 msgid "Enter Ballot"
 msgstr ""
 
-#: templates/nav/round_panel.html:27
+#: templates/nav/round_panel.html
 msgid "Availability"
 msgstr "উপস্থিতি"
 
-#: templates/nav/round_panel.html:37
+#: templates/nav/round_panel.html
 msgid "Draw"
 msgstr "ড্র"
 
-#: templates/nav/round_panel.html:48
+#: templates/nav/round_panel.html
 msgid "Display"
 msgstr ""
 
-#: templates/nav/top_nav_base.html:29
+#: templates/nav/top_nav_base.html
 #, python-format
 msgid "Administrator area for <strong>%(tournament)s</strong>"
 msgstr "প্রশাসক অঞ্চল <strong>%(tournament)s</strong>"
 
-#: templates/nav/top_nav_base.html:38
+#: templates/nav/top_nav_base.html
 #, python-format
 msgid "Assistant area for <strong>%(tournament)s</strong>"
 msgstr "সহায়ক অঞ্চল <strong>%(tournament)s</strong>"
 
-#: templates/nav/top_nav_base.html:47
+#: templates/nav/top_nav_base.html
 #, python-format
 msgid "Public area for <strong>%(tournament)s</strong>"
 msgstr "গণ অঞ্চল <strong>%(tournament)s</strong>"
 
-#: templates/nav/top_nav_base.html:105
+#: templates/nav/top_nav_base.html
 msgid "Login"
 msgstr ""
 
-#: templates/registration/logged_out.html:5
+#: templates/registration/logged_out.html
 msgid "Goodbye"
 msgstr ""
 
-#: templates/registration/logged_out.html:12
+#: templates/registration/logged_out.html
 #, python-format
 msgid "You have been logged out. <a href=\"%(login_url)s\">Log in again?</a>"
 msgstr ""
 
-#: templates/registration/login.html:4
+#: templates/registration/login.html
 msgctxt "page title"
 msgid "Login"
 msgstr ""
 
-#: templates/registration/login.html:29
+#: templates/registration/login.html
 msgctxt "page title"
 msgid "Log in to Tabbycat"
 msgstr ""
 
-#: templates/registration/login.html:37
+#: templates/registration/login.html
 msgid "Your username and password didn't match."
 msgstr ""
 
-#: templates/registration/login.html:46
+#: templates/registration/login.html
 msgid "Your account doesn't have access to this page. To proceed, please log in with an account that has access."
 msgstr ""
 
-#: templates/registration/login.html:49
+#: templates/registration/login.html
 msgid "Please log in to see this page."
 msgstr ""
 
-#: templates/registration/password_change_done.html:4
-#: templates/registration/password_change_done.html:5
+#: templates/registration/password_change_done.html
 msgctxt "page title"
 msgid "Password changed"
 msgstr ""
 
-#: templates/registration/password_change_done.html:11
+#: templates/registration/password_change_done.html
 msgid "Your password has been changed."
 msgstr ""
 
-#: templates/registration/password_change_done.html:14
+#: templates/registration/password_change_done.html
 msgid "Go to the home page"
 msgstr ""
 
-#: templates/registration/password_change_form.html:4
-#: templates/registration/password_change_form.html:27
+#: templates/registration/password_change_form.html
 msgctxt "page title"
 msgid "Password Change"
 msgstr ""
 
-#: templates/registration/password_change_form.html:16
+#: templates/registration/password_change_form.html
 #, python-format
 msgid "API Token: <samp>%(api_token)s</samp>"
 msgstr ""
 
-#: templates/registration/password_change_form.html:19
+#: templates/registration/password_change_form.html
 msgid "The API token will allow you to authorize external applications to access the site as staff."
 msgstr ""
 
-#: templates/registration/password_change_form.html:28
+#: templates/registration/password_change_form.html
 msgid "Please enter your old password, then enter a new one."
 msgstr ""
 
-#: templates/registration/password_change_form.html:33
-#: templates/registration/password_reset_confirm.html:25
+#: templates/registration/password_change_form.html
+#: templates/registration/password_reset_confirm.html
 msgctxt "button"
 msgid "Change my password"
 msgstr ""
 
-#: templates/registration/password_change_form.html:34
-#: templates/registration/password_reset_confirm.html:26
+#: templates/registration/password_change_form.html
+#: templates/registration/password_reset_confirm.html
 msgid "Cancel and go back to the site home page"
 msgstr ""
 
-#: templates/registration/password_reset_complete.html:4
-#: templates/registration/password_reset_complete.html:5
+#: templates/registration/password_reset_complete.html
 msgctxt "page title"
 msgid "Password reset complete"
 msgstr ""
 
-#: templates/registration/password_reset_complete.html:11
+#: templates/registration/password_reset_complete.html
 msgid "Your password has been reset."
 msgstr ""
 
-#: templates/registration/password_reset_complete.html:14
-#: templates/registration/password_reset_done.html:15
+#: templates/registration/password_reset_complete.html
+#: templates/registration/password_reset_done.html
 msgid "Go to the login page"
 msgstr ""
 
-#: templates/registration/password_reset_confirm.html:4
+#: templates/registration/password_reset_confirm.html
 msgctxt "page title"
 msgid "Password Reset Confirmation"
 msgstr ""
 
-#: templates/registration/password_reset_confirm.html:16
-#: templates/registration/password_reset_form.html:4
-#: templates/registration/password_reset_form.html:24
+#: templates/registration/password_reset_confirm.html
+#: templates/registration/password_reset_form.html
 msgctxt "page title"
 msgid "Password Reset"
 msgstr ""
 
-#: templates/registration/password_reset_confirm.html:18
+#: templates/registration/password_reset_confirm.html
 msgid "Please enter a new password (twice):"
 msgstr ""
 
-#: templates/registration/password_reset_confirm.html:33
+#: templates/registration/password_reset_confirm.html
 msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
 msgstr ""
 
-#: templates/registration/password_reset_done.html:4
-#: templates/registration/password_reset_done.html:5
+#: templates/registration/password_reset_done.html
 msgctxt "page title"
 msgid "Password reset email sent"
 msgstr ""
 
-#: templates/registration/password_reset_done.html:11
+#: templates/registration/password_reset_done.html
 msgid "We've emailed you instructions for setting your password, if an account exists with the email address you entered. You should receive them shortly."
 msgstr ""
 
-#: templates/registration/password_reset_done.html:12
+#: templates/registration/password_reset_done.html
 msgid "If you don't receive an email, please make sure you've entered the address you registered with, and check your spam folder."
 msgstr ""
 
-#: templates/registration/password_reset_email.html:2
+#: templates/registration/password_reset_email.html
 #, python-format
 msgid "Hi, %(user)s!"
 msgstr ""
 
-#: templates/registration/password_reset_email.html:6
+#: templates/registration/password_reset_email.html
 #, python-format
 msgid "Someone asked for a password reset for the email address %(email)s on the Tabbycat site at %(protocol)s://%(domain)s."
 msgstr ""
 
-#: templates/registration/password_reset_email.html:10
+#: templates/registration/password_reset_email.html
 msgid "If this was you, follow the link below to reset your password:"
 msgstr ""
 
-#: templates/registration/password_reset_email.html:13
+#: templates/registration/password_reset_email.html
 #, python-format
 msgid "If this wasn't you, that probably means someone else typed your email address into the password reset form on the Tabbycat site at %(protocol)s://%(domain)s."
 msgstr ""
 
-#: templates/registration/password_reset_form.html:27
+#: templates/registration/password_reset_form.html
 msgid "Enter your email address below, and we'll email you a password reset link."
 msgstr ""
 
-#: templates/registration/password_reset_form.html:34
+#: templates/registration/password_reset_form.html
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: templates/registration/password_reset_form.html:39 users/forms.py:10
-#: users/forms.py:25
+#: templates/registration/password_reset_form.html users/forms.py
 msgid "Email address"
 msgstr ""
 
-#: templates/registration/password_reset_form.html:50
+#: templates/registration/password_reset_form.html
 msgctxt "button"
 msgid "Reset my password"
 msgstr ""
 
-#: templates/registration/password_reset_form.html:53
+#: templates/registration/password_reset_form.html
 msgid "Back to the login page"
 msgstr ""
 
-#: templates/registration/password_reset_subject.txt:2
+#: templates/registration/password_reset_subject.txt
 #, python-format
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr ""
 
-#: urls.py:102
+#: urls.py
 #, python-format
 msgid "Hi, %(user)s — you just logged in!"
 msgstr ""
 
-#: urls.py:105
+#: urls.py
 msgid "Welcome! You just logged in!"
 msgstr ""
 
-#: users/admin.py:19
+#: users/admin.py
 msgid "Users with staff status can view and edit the Edit Database area. This is potentially dangerous and should be reserved for the actual tab director(s)."
 msgstr ""
 
-#: users/admin.py:22
+#: users/admin.py
 msgid "Superusers have full access all areas of Tabbycat necessary to run a tournament. Users who are not superusers are still able to perform data entry tasks such as adding results and feedback but can't access confidential areas such as the Breaks and Feedback sections. Chief adjudicators and their deputies are generally given superuser status if they know what they are doing."
 msgstr ""
 
-#: users/templates/admin/auth/delete_user_warning.html:6
+#: users/templates/admin/auth/delete_user_warning.html
 msgid "<strong>Warning:</strong> You shouldn't delete users from the database once they've done something, because the database logs actions taken by those users, and deleting the users also deletes the related logs. If you wish to deactivate a user account, go back to edit the user, click on the “Permissions” tab, unchecked the “Active” box, and save the user."
 msgstr ""
 
-#: users/templates/signup.html:4 users/templates/signup.html:5
+#: users/templates/signup.html
 msgid "Sign-Up"
 msgstr ""
 
-#: users/templates/signup.html:16
+#: users/templates/signup.html
 msgctxt "page title"
 msgid "Create a New Administrator Account"
 msgstr ""
 
-#: users/templates/signup.html:18
+#: users/templates/signup.html
 msgctxt "page title"
 msgid "Create a New Assistant Account"
 msgstr ""
 
-#: users/templates/signup.html:25
+#: users/templates/signup.html
 msgid "Create Account"
 msgstr ""
 
-#: users/views.py:54
+#: users/views.py
 msgid "You have successfully created a new administrator account."
 msgstr ""
 
-#: users/views.py:56
+#: users/views.py
 msgid "You have successfully created a new assistant account."
 msgstr ""
 
-#: users/views.py:84
+#: users/views.py
 msgid "Whoops! It looks like someone's already created the first user account. Please log in."
 msgstr ""
 
-#: users/views.py:92
+#: users/views.py
 #, python-format
 msgid "Welcome! You've created an account for %s."
 msgstr ""

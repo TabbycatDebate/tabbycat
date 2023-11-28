@@ -1,3 +1,4 @@
+from django.utils.html import escape
 from rest_framework import serializers
 
 from participants.serializers import AdjudicatorSerializer
@@ -9,6 +10,10 @@ from .models import PreformedPanel
 class EditPanelOrDebateAdjSerializer(AdjudicatorSerializer, VueDraggableItemMixin):
     """ Returns adjudicators for use in views where they are allocated """
     score = serializers.SerializerMethodField(read_only=True)
+    name = serializers.SerializerMethodField(read_only=True)
+
+    def get_name(self, obj):
+        return escape(obj.name)
 
     def get_score(self, obj):
         return obj.weighted_score(self.context['feedback_weight'])
@@ -39,7 +44,7 @@ class EditPanelAdjsPanelSerializer(EditDebateAdjsDebateSerializer):
                   'bracket_min', 'bracket_max', 'room_rank', 'liveness')
 
 # Below classes serialise only a specified field (i.e. allocated adjudicators);
-# i.e. they act as a a lightweight data update to be broadcast back over the
+# i.e. they act as a lightweight data update to be broadcast back over the
 # websocket in response to websocket actions or updates rather than needing to
 # construct a complete representation of the debate or panelfrom scratch
 

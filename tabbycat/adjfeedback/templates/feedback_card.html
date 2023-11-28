@@ -37,8 +37,8 @@
       {% endblocktrans %}
     </div>
     <div class="list-group-item h5">
-      {% blocktrans trimmed with as=feedback.debate_adjudicator.get_type_display %}
-        <span class="text-secondary small">Received as {{ as }}</span>
+      {% blocktrans trimmed with as_type=feedback.debate_adjudicator.get_type_display %}
+        <span class="text-secondary small">Received as {{ as_type }}</span>
       {% endblocktrans %}
       <span class="badge float-right badge-secondary" data-toggle="tooltip">
         {% blocktrans trimmed with base=feedback.adjudicator.base_score|floatformat:"1" %}
@@ -68,9 +68,7 @@
           {% else %}
             <i data-feather="x" class="text-danger"></i>
           {% endif %}
-          <span title="{{ item.question.text }}" class="text-heading" data-toggle="tooltip">
-            {{ item.question.reference }}
-          </span>
+          {{ item.question.text }}
         {% elif item.question.answer_type == item.question.ANSWER_TYPE_FLOAT %}
           <span class="text-secondary">{{ item.question.text }}</span>
           <div class="text-heading">{{ item.answer|floatformat:"2" }}</div>

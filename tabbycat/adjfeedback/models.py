@@ -204,7 +204,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
 
     def construct_number_scale(self, min_value, max_value):
         """Used to build up a semi-intelligent range of options for numeric scales.
-        Shifted here rather than the class so it can be more easily used to
+        Shifted here rather than the class so that it can be more easily used to
         construct the default values for printed forms."""
         step = max((int(max_value) - int(min_value)) / 10, 1)
         options = list(range(int(min_value), int(max_value + 1), int(step)))

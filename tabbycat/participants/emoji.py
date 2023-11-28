@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import random
 import logging
+from typing import Tuple, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -24,17 +25,19 @@ def set_emoji(teams, tournament):
         team.save()
 
 
-def pick_unused_emoji():
+def pick_unused_emoji(tournament_id=None) -> Tuple[Optional[str], Optional[str]]:
     """Picks an emoji that is not already in use by any team in the database. If
     no emoji are left, it returns `None`."""
     from .models import Team
-    used_emoji = Team.objects.filter(emoji__isnull=False).values_list('emoji', flat=True)
-    unused_emoji = [e for e in EMOJI_RANDOM_OPTIONS if e[0] not in used_emoji]
+    teams = Team.objects.filter(emoji__isnull=False)
+    if tournament_id is not None:
+        teams = teams.filter(tournament_id=tournament_id)
+    unused_emoji = [e for e in EMOJI_RANDOM_OPTIONS if e[0] not in teams.values_list('emoji', flat=True)]
 
     try:
         return random.choice(unused_emoji)
     except IndexError:
-        return None
+        return None, None
 
 
 def populate_code_names_from_emoji(teams, overwrite=True):
@@ -1355,7 +1358,7 @@ EMOJI_LIST = (
     ("🦃",	True , "Turkey"),
     ("🦀",	True , "Crab"),
     ("🦂",	True , "Scorpion"),
-    ("🧀",	True , "Mouse Trap"),
+    ("🧀",	True , "Cheese"),
     ("🌭",	False, "Hot Dog"),                          # dull
     ("🌮",	True , "Taco"),
     ("🌯",	True , "Burrito"),
@@ -1570,6 +1573,126 @@ EMOJI_LIST = (
     ("🧼",	True , "Soap"),
     ("🧽",	True , "Fun sponge"),
     ("🧯",	True , "Anti-fire Can"),
+
+    # Unicode Version 12.0
+    ("🥱",	True , "Yawning Face"),
+    ("🤎",	False, "Brown Heart"),                      # too similar to another
+    ("🤍",	False, "White Heart"),                      # too similar to another
+    ("🤏",	True , "Pinching Hand"),
+    ("🦾",	False, "Mechanical Arm"),                   # potentially offensive
+    ("🦿",	False, "Mechanical Leg"),                   # potentially offensive
+    ("🦻",	False, "Ear with Hearing Aid"),             # potentially offensive
+    ("🧏",	False, "Deaf Person"),                      # potentially offensive
+    ("🧍",	False, "Person Standing"),                  # too similar to another
+    ("🧎",	False, "Person Kneeling"),                  # dull
+    ("🦧",	False, "Orangutan"),                        # potentially offensive
+    ("🦮",	True , "Guide Dog"),
+    ("🦥",	True , "Lazy Tree Dog"),
+    ("🦦",	True , "Water Dog"),
+    ("🦨",	True , "Stinky dog"),
+    ("🦩",	True , "Pink Dog"),
+    ("🧄",	False, "Garlic"),                           # dull
+    ("🧅",	False, "Onion"),                            # dull
+    ("🧇",	True , "Waffle"),
+    ("🧆",	True , "Falafel"),
+    ("🧈",	True , "Butter"),
+    ("🦪",	True , "Oyster"),
+    ("🧃",	True , "Beverage Box"),
+    ("🧉",	False, "Mate"),                             # too similar to another
+    ("🧊",	True , "Cold Cuboid"),
+    ("🛕",	False, "Hindu Temple"),                     # potentially offensive
+    ("🦽",	False, "Manual Wheelchair"),                # potentially offensive
+    ("🦼",	False, "Motorized Wheelchair"),             # potentially offensive
+    ("🛺",	True , "Auto Rickshaw"),
+    ("🪂",	True , "Parachute"),
+    ("🪐",	True , "Ringed Planet"),
+    ("🤿",	True , "Diving Mask"),
+    ("🪀",	False, "Yo-Yo"),                            # too similar to another
+    ("🪁",	True , "Kite"),
+    ("🦺",	True , "Safety Vest"),
+    ("🥻",	True , "Sari"),
+    ("🩱",	False, "One-Piece Swimsuit"),               # potentially offensive
+    ("🩲",	False, "Briefs"),                           # potentially offensive
+    ("🩳",	True , "Shorts"),
+    ("🩰",	True , "Ballet Shoes"),
+    ("🪕",	True , "Banjo"),
+    ("🪔",	False, "Diya Lamp"),                        # dull
+    ("🪓",	True , "Axe"),
+    ("🦯",	False, "White Cane"),                       # potentially offensive
+    ("🩸",	False, "Drop of Blood"),                    # potentially offensive
+    ("🩹",	False, "Adhesive Bandage"),                 # dull
+    ("🩺",	True , "Stethoscope"),
+    ("🪑",	True , "Chair"),
+    ("🪒",	True , "Razor"),
+    ("🟠",	False, "Orange Circle"),                    # dull
+    ("🟡",	False, "Yellow Circle"),                    # dull
+    ("🟢",	False, "Green Circle"),                     # dull
+    ("🟣",	False, "Purple Circle"),                    # dull
+    ("🟤",	False, "Brown Circle"),                     # dull
+    ("🟥",	False, "Red Square"),                       # dull
+    ("🟧",	False, "Orange Square"),                    # dull
+    ("🟨",	False, "Yellow Square"),                    # dull
+    ("🟩",	False, "Green Square"),                     # dull
+    ("🟦",	False, "Blue Square"),                      # dull
+    ("🟪",	False, "Purple Square"),                    # dull
+    ("🟫",	False, "Brown Square"),                     # dull
+
+    # Unicode Version 13.0
+    ("🥲",	False, "Smiling Face with Tear"),           # too similar to another
+    ("🥸",	True , "Disguised Face"),
+    ("🤌",	False, "Pinched Fingers"),                  # potentially offensive
+    ("🫀",	True , "Anatomical Heart"),
+    ("🫁",	True , "Lungs"),
+    ("🥷",	True , "Ninja"),
+    ("🫂",	True , "People Hugging"),
+    ("🦬",	True , "Bison"),
+    ("🦣",	True , "Mammoth"),
+    ("🦫",	True , "Beaver"),
+    ("🦤",	True , "Dodo"),
+    ("🪶",	True , "Feather"),
+    ("🦭",	True , "Seal"),
+    ("🪲",	False, "Beetle"),                           # potentially offensive
+    ("🪳",	False, "Cockroach"),                        # potentially offensive
+    ("🪰",	False, "Fly"),                              # potentially offensive
+    ("🪱",	False, "Worm"),                             # potentially offensive
+    ("🪴",	True , "Potted Plant"),
+    ("🫐",	True , "Blueberries"),
+    ("🫒",	True , "Olive"),
+    ("🫑",	True , "Bell Pepper"),
+    ("🫓",	True , "Flatbread"),
+    ("🫔",	True , "Tamale"),
+    ("🫕",	False, "Fondue"),                           # too similar to another
+    ("🫖",	True , "Teapot"),
+    ("🧋",	True , "Bubble Tea"),
+    ("🪨",	True , "Rock"),
+    ("🪵",	True , "Wood"),
+    ("🛖",	False, "Hut"),                              # potentially offensive
+    ("🛻",	True , "Pickup Truck"),
+    ("🛼",	True , "Roller Skate"),
+    ("🪄",	True , "Magic Wand"),
+    ("🪅",	True , "Piñata"),
+    ("🪆",	True , "Nesting Dolls"),
+    ("🪡",	False, "Sewing Needle"),                    # dull
+    ("🪢",	True , "Knot"),
+    ("🩴",	True , "Thong Sandal"),
+    ("🪖",	False, "Military Helmet"),                  # potentially offensive
+    ("🪗",	True , "Accordion"),
+    ("🪘",	True , "Long Drum"),
+    ("🪙",	True , "Coin"),
+    ("🪃",	True , "Boomerang"),
+    ("🪚",	True , "Carpentry Saw"),
+    ("🪛",	True , "Screwdriver"),
+    ("🪝",	True , "Hook"),
+    ("🪜",	True , "Ladder"),
+    ("🛗",	False, "Elevator"),                         # dull
+    ("🪞",	False, "Mirror"),                           # dull
+    ("🪟",	False, "Window"),                           # dull
+    ("🪠",	True , "Plunger"),
+    ("🪤",	True , "Mouse Trap"),
+    ("🪣",	True , "Bucket"),
+    ("🪥",	True , "Toothbrush"),
+    ("🪦",	False, "Headstone"),                        # potentially offensive
+    ("🪧",	False, "Placard"),                          # dull
 )
 
 # The field choices are the permissible values

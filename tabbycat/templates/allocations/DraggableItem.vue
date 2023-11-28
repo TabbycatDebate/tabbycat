@@ -1,7 +1,7 @@
 <template>
 
   <div draggable=true @drag="drag" @dragstart="dragStart" @dragend="dragEnd"
-       :class="['d-flex m-1 align-items-center align-self-center', dragableClasses]"
+       :class="['d-flex m-1 align-items-center align-self-center', draggableClasses]"
        @mouseenter="showHovers" @mouseleave="hideHovers">
 
     <slot>

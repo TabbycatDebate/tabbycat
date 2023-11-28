@@ -22,9 +22,9 @@ SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.7.8'
-TABBYCAT_CODENAME = 'Pixie-bob'
-READTHEDOCS_VERSION = 'v2.7.8'
+TABBYCAT_VERSION = '2.8.0'
+TABBYCAT_CODENAME = 'Quokka'
+READTHEDOCS_VERSION = 'v2.8.0'
 
 # ==============================================================================
 # Internationalization and Localization
@@ -40,14 +40,8 @@ LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
 ]
 
-# Languages that should be available in the switcher
+# Add custom languages not provided by Django
 EXTRA_LANG_INFO = {
-    'ms': {
-        'bidi': False,
-        'code': 'ms',
-        'name': 'Malay',
-        'name_local': 'Bahasa Melayu', #unicode codepoints here
-    },
     'tzl': {
         # Use code for Talossan; can't use proper reserved code...
         # Talossan is a constructed language, without native speakers,
@@ -58,7 +52,7 @@ EXTRA_LANG_INFO = {
     },
 }
 
-# Add custom languages not provided by Django
+# Languages that should be available in the switcher
 import django.conf.locale
 LANG_INFO = dict(django.conf.locale.LANG_INFO, **EXTRA_LANG_INFO)
 django.conf.locale.LANG_INFO = LANG_INFO
@@ -66,14 +60,25 @@ django.conf.locale.LANG_INFO = LANG_INFO
 LANGUAGES = [
     ('ar', _('Arabic')),
     ('bn', _('Bengali')),
+    ('bg', _('Bulgarian')),
+    ('ca', _('Catalan')),
+    ('cs', _('Czech')),
+    ('de', _('German')),
     ('en', _('English')),
     ('es', _('Spanish')),
     ('fr', _('French')),
+    ('he', _('Hebrew')),
+    ('hi', _('Hindi')),
     ('id', _('Indonesian')),
+    ('it', _('Italian')),
     ('ja', _('Japanese')),
+    ('kk', _('Kazakh')),
     ('ms', _('Malay')),
     ('pt', _('Portuguese')),
+    ('ro', _('Romanian')),
     ('ru', _('Russian')),
+    ('tr', _('Turkish')),
+    ('vi', _('Vietnamese')),
     ('zh-hans', _('Simplified Chinese')),
     ('tzl', _('Translation')),
 ]
@@ -132,6 +137,7 @@ TABBYCAT_APPS = (
 )
 
 INSTALLED_APPS = (
+    'daphne',
     'jet',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -152,6 +158,7 @@ INSTALLED_APPS = (
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    'drf_spectacular',
     'django_better_admin_arrayfield',
 )
 
@@ -337,8 +344,30 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_PAGINATION_CLASS': 'drf_link_header_pagination.LinkHeaderLimitOffsetPagination',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'TEST_REQUEST_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Tabbycat API',
+    'DESCRIPTION': 'Parliamentary debate tabulation software',
+    'VERSION': '1.3.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SCHEMA_PATH_PREFIX': r'api/v\d+',
+    'CONTACT': {'name': 'Étienne Beaulé', 'email': 'ebeaule@tabbycat-debate.org'},
+    'LICENSE': {'name': 'AGPL 3', 'url': 'https://www.gnu.org/licenses/agpl-3.0.en.html'},
+    'EXTENSIONS_INFO': {
+        "x-logo": {
+            "url": "/static/logo.svg",
+            "altText": "Tabbycat logo",
+        },
+    }
 }
 
 # ----------------------------------------
