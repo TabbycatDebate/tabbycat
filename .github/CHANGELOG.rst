@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+2.9.0 (R)
+---------
+*Release date: TBD*
+
+
 2.8.0 (Quokka)
 ---------
 *Release date: 28 November 2023*
