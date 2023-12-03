@@ -24,6 +24,7 @@ import logging
 import random
 
 from .common import DrawFatalError
+from ..types import DebateSide
 
 logger = logging.getLogger(__name__)
 
@@ -92,7 +93,7 @@ class BasePairing:
 class Pairing(BasePairing):
     """Pairing class for two-team formats."""
 
-    sides = ['aff', 'neg']
+    sides = [DebateSide.AFF, DebateSide.NEG]
 
     def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}):
         super().__init__(teams, bracket, room_rank, flags, team_flags)
@@ -175,7 +176,7 @@ class ResultPairing(Pairing):
 class BPPairing(BasePairing):
     """Pairing class for British Parliamentary."""
 
-    sides = ['og', 'oo', 'cg', 'co']
+    sides = [DebateSide.OG, DebateSide.OO, DebateSide.CG, DebateSide.CO]
 
     def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}):
         super().__init__(teams, bracket, room_rank, flags, team_flags)

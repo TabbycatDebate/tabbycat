@@ -59,7 +59,7 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
         ntotal = len(scores)
         ntrainees = [x < t.pref('adj_min_voting_score') for x in scores].count(True)
         nvoting = ntotal - ntrainees
-        ndebates = t.team_set.count() // (4 if t.pref('teams_in_debate') == 'bp' else 2)
+        ndebates = t.team_set.count() // t.pref('teams_in_debate')
         nchairs = min(nvoting, ndebates)
         npanellists = nvoting - nchairs
 

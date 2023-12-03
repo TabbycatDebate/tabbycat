@@ -10,6 +10,8 @@ since the scoresheet classes don't know about team identities, the word "team"
 should not appear in any of them.
 """
 
+from draw.types import DebateSide
+
 
 class BaseScoresheet:
 
@@ -32,7 +34,7 @@ class BaseScoresheet:
         return True
 
     def winners(self):
-        """Returns {'aff'} is the affirmative team won, and {'neg'} if the negative
+        """Returns {DebateSide.AFF} is the affirmative team won, and {DebateSide.NEG} if the negative
         team won. `self._get_winners()` must be implemented by subclasses."""
         if not self.is_complete():
             return set()
@@ -117,7 +119,7 @@ class DeclaredWinnersMixin:
 
 class BaseTwoTeamScoresheet(BaseScoresheet):
 
-    sides = ['aff', 'neg']
+    sides = [DebateSide.AFF, DebateSide.NEG]
     number_winners = 1
 
     def is_valid(self):
@@ -139,12 +141,12 @@ class HighPointWinsRequiredScoresheet(ScoresMixin, BaseTwoTeamScoresheet):
     This is the standard type of scoresheet in Asia and Oceania."""
 
     def _get_winners(self):
-        aff_total = self.get_total('aff')
-        neg_total = self.get_total('neg')
+        aff_total = self.get_total(DebateSide.AFF)
+        neg_total = self.get_total(DebateSide.NEG)
         if aff_total > neg_total:
-            return {'aff'}
+            return {DebateSide.AFF}
         elif neg_total > aff_total:
-            return {'neg'}
+            return {DebateSide.NEG}
         else:
             return set()
 
@@ -156,12 +158,12 @@ class TiedPointWinsAllowedScoresheet(DeclaredWinnersMixin, ScoresMixin, BaseTwoT
     (e.g. aff has higher score but neg declared), the winners is None."""
 
     def _get_winners(self):
-        aff_total = self.get_total('aff')
-        neg_total = self.get_total('neg')
-        if aff_total >= neg_total and 'aff' in self.declared_winners:
-            return {'aff'}
-        elif neg_total >= aff_total and 'neg' in self.declared_winners:
-            return {'neg'}
+        aff_total = self.get_total(DebateSide.AFF)
+        neg_total = self.get_total(DebateSide.NEG)
+        if aff_total >= neg_total and DebateSide.AFF in self.declared_winners:
+            return {DebateSide.AFF}
+        elif neg_total >= aff_total and DebateSide.NEG in self.declared_winners:
+            return {DebateSide.NEG}
         else:
             return set()
 
@@ -176,7 +178,7 @@ class BaseBPScoresheet(BaseScoresheet):
     """This is a stub scoresheet for BP with only its sides as the scoresheet
     class changes by stage."""
 
-    sides = ['og', 'oo', 'cg', 'co']
+    sides = [DebateSide.OG, DebateSide.OO, DebateSide.CG, DebateSide.CO]
 
 
 class BPScoresheet(ScoresMixin, BaseBPScoresheet):

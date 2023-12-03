@@ -36,7 +36,7 @@
     {% include "components/alert.html" with type="info" icon="alert-circle" %}
   {% endif %}
 
-  {% if pref.teams_in_debate == 'bp' and pref.team_standings_precedence|length > 0 and pref.team_standings_precedence.0 != 'points' %}
+  {% if pref.teams_in_debate == 4 and pref.team_standings_precedence|length > 0 and pref.team_standings_precedence.0 != 'points' %}
     {% tournamenturl 'options-tournament-section' section='standings' as standings_config_url %}
     {% blocktrans trimmed asvar message with metric=pref.team_standings_precedence.0|teammetricname %}
       Brackets are formed using the first metric in the team standings precedence, which is currently
@@ -77,7 +77,7 @@
     {% include "components/explainer-card.html" with type="warning" %}
   {% endif %}
 
-  {% if round.draw_status == 'D' and round.prev and not round.is_break_round and pref.teams_in_debate == 'bp' and highlighted_cells_exist %}
+  {% if round.draw_status == 'D' and round.prev and not round.is_break_round and pref.teams_in_debate == 4 and highlighted_cells_exist %}
       {% blocktrans trimmed asvar p1 %}
         Highlighted cells relate to changes in position balance, as follows:
         <ul>

@@ -8,14 +8,14 @@
     <div class="col">
 
       <div class="progress">
-        <div class="progress-bar progress-bar-aff" style="width: {{ motion.aff_win_percentage|unlocalize }}%">
-          {% if motion.aff_win_percentage >= 5 %}
-            {{ motion.aff_win_percentage|floatformat:"0" }}%
+        <div class="progress-bar progress-bar-aff" style="width: {{ motion.s0_win_percentage|unlocalize }}%">
+          {% if motion.s0_win_percentage >= 5 %}
+            {{ motion.s0_win_percentage|floatformat:"0" }}%
           {% endif %}
         </div>
-        <div class="progress-bar progress-bar-neg" style="width: {{ motion.neg_win_percentage|unlocalize }}%">
-          {% if motion.neg_win_percentage >= 5 %}
-            {{ motion.neg_win_percentage|floatformat:"0" }}%
+        <div class="progress-bar progress-bar-neg" style="width: {{ motion.s1_win_percentage|unlocalize }}%">
+          {% if motion.s1_win_percentage >= 5 %}
+            {{ motion.s1_win_percentage|floatformat:"0" }}%
           {% endif %}
         </div>
       </div>
@@ -28,14 +28,14 @@
 
       <div class="col text-left h6">
         <span class="text-aff pr-1 d-md-inline d-block">
-          {% blocktrans trimmed with side=side_names.0 count count=motion.aff_wins %}
+          {% blocktrans trimmed with side=side_names.0 count count=motion.s0_wins %}
             {{ count }} {{ side }} win
           {% plural %}
             {{ count }} {{ side }} wins
           {% endblocktrans %}
         </span>
         <span class="text-neg pr-1 d-md-inline d-block">
-          {% blocktrans trimmed with side=side_names.1 count count=motion.neg_wins %}
+          {% blocktrans trimmed with side=side_names.1 count count=motion.s1_wins %}
             {{ count }} {{ side }} win
           {% plural %}
             {{ count }} {{ side }} wins
@@ -64,17 +64,17 @@
     <div class="row">
       <div class="col">
         <div class="progress">
-          {% if motion.aff_veto_percentage %}
-            <div class="progress-bar progress-bar-aff" style="width: {{ motion.aff_veto_percentage|unlocalize }}%">
-              {% if motion.aff_veto_percentage >= 5 %}
-                {{ motion.aff_veto_percentage|floatformat:"0" }}%
+          {% if motion.s0_veto_percentage %}
+            <div class="progress-bar progress-bar-aff" style="width: {{ motion.s0_veto_percentage|unlocalize }}%">
+              {% if motion.s0_veto_percentage >= 5 %}
+                {{ motion.s0_veto_percentage|floatformat:"0" }}%
               {% endif %}
             </div>
           {% endif %}
-          {% if motion.neg_veto_percentage %}
-            <div class="progress-bar progress-bar-neg" style="width: {{ motion.neg_veto_percentage|unlocalize }}%">
-              {% if motion.neg_veto_percentage >= 5 %}
-                {{ motion.neg_veto_percentage|floatformat:"0" }}%
+          {% if motion.s1_veto_percentage %}
+            <div class="progress-bar progress-bar-neg" style="width: {{ motion.s1_veto_percentage|unlocalize }}%">
+              {% if motion.s1_veto_percentage >= 5 %}
+                {{ motion.s1_veto_percentage|floatformat:"0" }}%
               {% endif %}
             </div>
           {% endif %}
@@ -84,18 +84,18 @@
     </div>
 
     <div class="row pb-3 mt-2">
-      {% if motion.aff_vetoes or motion.neg_vetoes %}
+      {% if motion.s0_vetoes or motion.s1_vetoes %}
 
         <div class="col text-left h6">
           <span class="text-aff pr-1 d-md-inline d-block">
-            {% blocktrans trimmed with side=side_names.0 count count=motion.aff_vetoes %}
+            {% blocktrans trimmed with side=side_names.0 count count=motion.s0_vetoes %}
               {{ count }} {{ side }} veto
             {% plural %}
               {{ count }} {{ side }} vetoes
             {% endblocktrans %}
           </span>
           <span class="text-neg pr-1 d-md-inline d-block">
-            {% blocktrans trimmed with side=side_names.1 count count=motion.neg_vetoes %}
+            {% blocktrans trimmed with side=side_names.1 count count=motion.s1_vetoes %}
               {{ count }} {{ side }} veto
             {% plural %}
               {{ count }} {{ side }} vetoes

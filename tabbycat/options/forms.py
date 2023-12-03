@@ -30,7 +30,7 @@ class TournamentPreferenceForm(PreferenceForm):
                 raise ValidationError({'draw_rules__draw_odd_bracket': _("Intermediate 1 or 2 require preallocated sides")})
 
         elif section == 'debate_rules':
-            if get_pref('teams_in_debate') == 'bp' and (get_pref('ballots_per_debate_prelim') == 'per-adj' or get_pref('ballots_per_debate_elim') == 'per-adj'):
+            if get_pref('teams_in_debate') == 4 and (get_pref('ballots_per_debate_prelim') == 'per-adj' or get_pref('ballots_per_debate_elim') == 'per-adj'):
                 raise ValidationError({'debate_rules__teams_in_debate': _("Four-team formats require consensus ballots")})
 
         elif section == 'feedback':

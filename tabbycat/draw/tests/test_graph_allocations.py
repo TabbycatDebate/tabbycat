@@ -2,8 +2,9 @@ import unittest
 
 from .utils import TestTeam
 from ..generator.powerpair import GraphCostMixin, GraphPowerPairedDrawGenerator
+from ..types import DebateSide
 
-DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side="aff"), TestTeam(2, 'B', allocated_side="neg")]
+DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side=DebateSide.AFF), TestTeam(2, 'B', allocated_side=DebateSide.NEG)]
 
 
 class TestPowerPairedDrawGeneratorParts(unittest.TestCase):

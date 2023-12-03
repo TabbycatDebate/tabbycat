@@ -81,10 +81,10 @@ def DrawGenerator(teams_per_debate, draw_type, teams, results=None, rrseq=None, 
     if draw_type == "manual":
         klass = ManualDrawGenerator
 
-    elif teams_per_debate == 'two':
+    elif teams_per_debate == 2:
         klass = get_two_team_generator(draw_type, **kwargs)
 
-    elif teams_per_debate == 'bp':
+    elif teams_per_debate == 4:
         klass = get_bp_generator(draw_type)
 
     else:

@@ -5,6 +5,8 @@ import pprint
 import random
 from statistics import mean
 
+from draw.types import DebateSide
+
 SPEAKERS_PER_TEAM = 3
 ADJS_PER_DEBATE = 3
 TEAMS_PER_DEBATE = 2
@@ -14,7 +16,7 @@ TEAMS_PER_DEBATE = 2
 scores = [[[float(random.randint(70, 80)) for pos in range(SPEAKERS_PER_TEAM)] +
           [float(random.randint(70, 80))/2] for team in range(TEAMS_PER_DEBATE)]
           for adj in range(ADJS_PER_DEBATE)]
-declared_winners = [random.choice(['aff', 'neg']) for adj in range(ADJS_PER_DEBATE)]
+declared_winners = [random.choice([DebateSide.AFF, DebateSide.NEG]) for adj in range(ADJS_PER_DEBATE)]
 
 testdata = dict()
 
@@ -39,16 +41,16 @@ common_fields['everyone_margins'] = [aff_margin, -aff_margin]
 
 # Winners, according to scoresheet type
 testdata['high-required'] = {
-    'winner_by_adj': ['aff' if (adj[0] > adj[1]) else
-                      'neg' if (adj[1] > adj[0]) else None
+    'winner_by_adj': [DebateSide.AFF if (adj[0] > adj[1]) else
+                      DebateSide.NEG if (adj[1] > adj[0]) else None
                       for adj in totals_by_adj],
 }
 testdata['low-allowed'] = {
     'winner_by_adj': declared_winners,
 }
 testdata['tied-allowed'] = {
-    'winner_by_adj': ['aff' if (adj[0] >= adj[1]) and declared == 'aff' else
-                      'neg' if (adj[1] >= adj[0]) and declared == 'neg' else
+    'winner_by_adj': [DebateSide.AFF if (adj[0] >= adj[1]) and declared == DebateSide.AFF else
+                      DebateSide.NEG if (adj[1] >= adj[0]) and declared == DebateSide.NEG else
                       None for adj, declared in zip(totals_by_adj, declared_winners)],
 }
 
@@ -64,8 +66,8 @@ for scoresheet_type in ['high-required', 'low-allowed', 'tied-allowed']:
         continue
 
     # Decision
-    fields['num_adjs_for_team'] = [winner_by_adj.count('aff'), winner_by_adj.count('neg')]
-    fields['winner'] = winner = 'aff' if (winner_by_adj.count('aff') > winner_by_adj.count('neg')) else 'neg'
+    fields['num_adjs_for_team'] = [winner_by_adj.count(DebateSide.AFF), winner_by_adj.count(DebateSide.NEG)]
+    fields['winner'] = winner = DebateSide.AFF if (winner_by_adj.count(DebateSide.AFF) > winner_by_adj.count(DebateSide.NEG)) else DebateSide.NEG
 
     # Scores excluding dissenters
     majority = [adj for winner_by_adj, adj in zip(winner_by_adj, scores) if winner_by_adj == winner]

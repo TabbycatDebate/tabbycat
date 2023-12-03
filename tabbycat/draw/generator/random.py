@@ -7,6 +7,7 @@ from django.utils.translation import gettext as _
 from .common import BaseBPDrawGenerator, BasePairDrawGenerator, DrawUserError
 from .graph import GraphAllocatedSidesMixin, GraphGeneratorMixin
 from .pairing import BPPairing, Pairing
+from ..types import DebateSide
 
 
 class RandomPairingsMixin:
@@ -107,10 +108,10 @@ class BaseRandomWithAllocatedSidesDrawGenerator(BaseRandomDrawGenerator):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.check_teams_for_attribute("allocated_side", choices=["aff", "neg"])
+        self.check_teams_for_attribute("allocated_side", choices=[DebateSide.AFF, DebateSide.NEG])
 
     def _get_pools(self):
-        return {side: [t for t in self.teams if t.allocated_side == side] for side in ['aff', 'neg']}
+        return [[t for t in self.teams if t.allocated_side == side] for side in [DebateSide.AFF, DebateSide.NEG]]
 
 
 class GraphRandomWithAllocatedSidesDrawGenerator(GraphAllocatedSidesMixin, GraphRandomDrawMixin, BaseRandomWithAllocatedSidesDrawGenerator):
@@ -120,8 +121,8 @@ class GraphRandomWithAllocatedSidesDrawGenerator(GraphAllocatedSidesMixin, Graph
 class SwapRandomWithAllocatedSidesDrawGenerator(SwapRandomDrawMixin, BaseRandomWithAllocatedSidesDrawGenerator):
 
     def make_random_pairings(self):
-        aff_teams = [t for t in self.teams if t.allocated_side == "aff"]
-        neg_teams = [t for t in self.teams if t.allocated_side == "neg"]
+        aff_teams = [t for t in self.teams if t.allocated_side == DebateSide.AFF]
+        neg_teams = [t for t in self.teams if t.allocated_side == DebateSide.NEG]
 
         if len(aff_teams) != len(neg_teams):
             raise DrawUserError(_("There were %(aff_count)d affirmative teams but %(neg_count)d negative "

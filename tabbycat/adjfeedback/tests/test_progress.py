@@ -5,6 +5,7 @@ from django.test import TestCase
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
 from draw.models import Debate, DebateTeam
+from draw.types import DebateSide
 from participants.models import Adjudicator, Institution, Speaker, Team
 from results.models import BallotSubmission
 from results.result import DebateResultByAdjudicatorWithScores
@@ -73,9 +74,9 @@ class TestFeedbackProgress(TestCase):
 
         aff, neg = teams
         aff_team = self._team(aff)
-        DebateTeam.objects.create(debate=debate, team=aff_team, side=DebateTeam.Side.AFF)
+        DebateTeam.objects.create(debate=debate, team=aff_team, side=0)
         neg_team = self._team(neg)
-        DebateTeam.objects.create(debate=debate, team=neg_team, side=DebateTeam.Side.NEG)
+        DebateTeam.objects.create(debate=debate, team=neg_team, side=1)
 
         chair = self._adj(adjs[0])
         DebateAdjudicator.objects.create(debate=debate, adjudicator=chair,
@@ -92,7 +93,7 @@ class TestFeedbackProgress(TestCase):
         ballotsub = BallotSubmission(debate=debate, submitter_type=BallotSubmission.Submitter.TABROOM)
         result = DebateResultByAdjudicatorWithScores(ballotsub)
 
-        for t, side in zip(teams, ('aff', 'neg')):
+        for t, side in zip(teams, (DebateSide.AFF, DebateSide.NEG)):
             team = self._team(t)
             speakers = team.speaker_set.all()
             for pos, speaker in enumerate(speakers, start=1):
@@ -104,9 +105,9 @@ class TestFeedbackProgress(TestCase):
         for a, vote in zip(adjs, votes):
             adj = self._adj(a)
             if vote == 'a':
-                sides = ('aff', 'neg')
+                sides = (DebateSide.AFF, DebateSide.NEG)
             elif vote == 'n':
-                sides = ('neg', 'aff')
+                sides = (DebateSide.NEG, DebateSide.AFF)
             else:
                 raise ValueError
             for side, score in zip(sides, (76, 74)):

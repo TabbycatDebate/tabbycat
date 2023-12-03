@@ -503,7 +503,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
             teams = Team.objects.filter(debateteam__debate__round=r)
             metrics = self.tournament.pref('team_standings_precedence')
 
-            if self.tournament.pref('teams_in_debate') == 'two':
+            if self.tournament.pref('teams_in_debate') == 2:
                 pullup_metric = BasePowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.tournament.pref('draw_pullup_restriction')]
             else:
                 pullup_metric = None
@@ -533,7 +533,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
         r = self.round
         if r.draw_status == Round.Status.NONE:
             return TabbycatTableBuilder(view=self)  # blank
-        elif self.tournament.pref('teams_in_debate') == 'bp' and \
+        elif self.tournament.pref('teams_in_debate') == 4 and \
                 r.draw_status == Round.Status.DRAFT and r.prev is not None and \
                 not r.is_break_round:
             return self.get_bp_position_balance_table()
@@ -606,7 +606,7 @@ class PositionBalanceReportView(RoundMixin, AdministratorMixin, VueTableTemplate
                 return "Unknown"  # don't translate, should never happen
 
     def get_tables(self):
-        if self.tournament.pref('teams_in_debate') != 'bp':
+        if self.tournament.pref('teams_in_debate') != 4:
             logger.warning("Tried to access position balance report for a non-BP tournament")
             return []
         if self.round.prev is None:
@@ -636,7 +636,7 @@ class PositionBalanceReportView(RoundMixin, AdministratorMixin, VueTableTemplate
 
     def get_template_names(self):
         # Show an error page if this isn't a BP tournament or if it's the first round
-        if self.tournament.pref('teams_in_debate') != 'bp':
+        if self.tournament.pref('teams_in_debate') != 4:
             return ['position_balance_nonbp.html']
         elif self.round.prev is None:
             return ['position_balance_round1.html']

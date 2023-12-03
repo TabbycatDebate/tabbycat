@@ -6,11 +6,11 @@
     <div class="list-group-item pb-0">
       <div class="row">
         <!-- team-name class used by unknown sides switcher -->
-        <div class="col mr-auto card-title pl-md-2 pl-1 {{ team.side_code }}-team-name">
+        <div class="col mr-auto card-title pl-md-2 pl-1 {{ team.side_code.value }}-team-name">
           {% team_name_for_data_entry team.team use_team_code_names %}
         </div>
         <div class="col-auto card-subtitle text-muted text-right pt-2 pr-md-2 pr-1">
-          <h6>{{ team.side_code }}</h6>
+          <h6>{{ team.side_name }}</h6>
         </div>
       </div>
     </div>
@@ -25,15 +25,15 @@
         <div class="col-6 mr-0 col-mr-auto pl-md-2 pl-1 btn-group">
 
           <button class="btn btn-outline-secondary btn-no-hover" readonly>
-            {% if pref.teams_in_debate != 'bp' %}{% trans "Result" %}{% else %}{% trans "Rank" %}{% endif %}
+            {% if pref.teams_in_debate != 4 %}{% trans "Result" %}{% else %}{% trans "Rank" %}{% endif %}
           </button>
-          <button name="{{ team.side_code }}_rank"
-                  class="btn btn-secondary btn-no-hover {{ team.side_code }}_rank" readonly>
+          <button name="{{ team.side_code.value }}_rank"
+                  class="btn btn-secondary btn-no-hover {{ team.side_code.value }}_rank" readonly>
             ?
           </button>
           <button class="btn btn-outline-secondary btn-no-hover" readonly>{% trans "Margin" %}</button>
-          <button name="{{ team.side_code }}_margin"
-                  class="btn btn-secondary btn-no-hover {{ team.side_code }}_margin" readonly>
+          <button name="{{ team.side_code.value }}_margin"
+                  class="btn btn-secondary btn-no-hover {{ team.side_code.value }}_margin" readonly>
             +0
           </button>
         </div>
@@ -41,8 +41,8 @@
         <div class="col"></div>
 
         <div class="col-4 btn-group pr-md-2 pr-1">
-          <button name="{{ team.side_code }}_total"
-                  class="btn btn-block btn-secondary btn-no-hover {{ team.side_code }}_total" readonly>00</button>
+          <button name="{{ team.side_code.value }}_total"
+                  class="btn btn-block btn-secondary btn-no-hover {{ team.side_code.value }}_total" readonly>00</button>
         </div>
 
       </div>

@@ -19,8 +19,9 @@ from django.views.generic import FormView, TemplateView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
-from draw.models import Debate, DebateTeam
+from draw.models import Debate
 from draw.prefetch import populate_opponents
+from draw.types import DebateSide
 from motions.models import RoundMotion
 from motions.utils import merge_motion_vetos, merge_motions
 from notifications.models import BulkNotification
@@ -69,7 +70,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
     def _get_draw(self):
         if not hasattr(self, '_draw'):
             self._draw = self.round.debate_set_with_prefetches(
-                filter_args=[~Q(debateteam__side=DebateTeam.Side.BYE)], ordering=('room_rank',), results=True, wins=True, check_ins=True, iron=True)
+                filter_args=[~Q(debateteam__side=DebateSide.BYE)], ordering=('room_rank',), results=True, wins=True, check_ins=True, iron=True)
         return self._draw
 
     def get_table(self):
@@ -178,7 +179,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         table = TabbycatTableBuilder(view=self, sort_key="venue")
         table.add_debate_venue_columns(debates)
         table.add_debate_results_columns(debates)
-        if not (self.tournament.pref('teams_in_debate') == 'bp' and self.round.is_break_round):
+        if not (self.tournament.pref('teams_in_debate') == 4 and self.round.is_break_round):
             table.add_debate_ballot_link_column(debates)
         table.add_debate_adjudicators_column(debates, show_splits=True)
 
@@ -200,7 +201,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
             'debate_team__debate__round')
         debates = [ts.debate_team.debate for ts in teamscores]
 
-        if self.tournament.pref('teams_in_debate') == 'two':
+        if self.tournament.pref('teams_in_debate') == 2:
             populate_opponents([ts.debate_team for ts in teamscores])
         populate_confirmed_ballots(debates, motions=True,
             results=self.round.ballots_per_debate == 'per-adj')
@@ -209,7 +210,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         table.add_team_columns([ts.debate_team.team for ts in teamscores])
         table.add_debate_result_by_team_column(teamscores)
         table.add_debate_side_by_team_column(teamscores, self.tournament)
-        if not (self.tournament.pref('teams_in_debate') == 'bp' and self.round.is_break_round):
+        if not (self.tournament.pref('teams_in_debate') == 4 and self.round.is_break_round):
             table.add_debate_ballot_link_column(debates)
         table.add_debate_adjudicators_column(debates, show_splits=True)
 
@@ -321,7 +322,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 
     def should_send_email_receipts(self):
         return self.tournament.pref('enable_ballot_receipts') and not (self.debate.round.stage == Round.Stage.ELIMINATION and
-            self.tournament.pref('teams_in_debate') == 'bp')
+            self.tournament.pref('teams_in_debate') == 4)
 
     def matchup_description(self):
         """This is primarily shown in messages, some of which are public. This
@@ -427,7 +428,7 @@ class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
         return self.get_success_url()
 
     def get_queryset(self):
-        return super().get_queryset().exclude(debateteam__side=DebateTeam.Side.BYE)
+        return super().get_queryset().exclude(debateteam__side=DebateSide.BYE)
 
     def populate_objects(self, prefill=True):
         self.debate = self.object = self.get_object()
@@ -442,7 +443,7 @@ class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
             return HttpResponseRedirect(self.get_error_url())
 
         if not (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
-                self.tournament.pref('teams_in_debate') == 'two') and not self.debate.sides_confirmed:
+                self.tournament.pref('teams_in_debate') == 2) and not self.debate.sides_confirmed:
             messages.error(self.request, _("Whoops! The debate %(debate)s doesn't have its "
                 "sides confirmed, so you can't enter results for it.") % {'debate': self.matchup_description()})
             return HttpResponseRedirect(self.get_error_url())
@@ -482,7 +483,7 @@ class BaseEditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
         return reverse_round('results-round-list', self.ballotsub.debate.round)
 
     def get_queryset(self):
-        return super().get_queryset().exclude(debate__debateteam__side=DebateTeam.Side.BYE)
+        return super().get_queryset().exclude(debate__debateteam__side=DebateSide.BYE)
 
     def add_success_message(self):
         if self.ballotsub.discarded:
@@ -591,7 +592,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
                     "Please contact a tab room official."))
 
         if not (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
-                self.tournament.pref('teams_in_debate') == 'two') and not self.debate.sides_confirmed:
+                self.tournament.pref('teams_in_debate') == 2) and not self.debate.sides_confirmed:
             return self.error_page(_("It looks like the sides for this debate haven't yet been confirmed, "
                     "so you can't enter results for it. Please contact a tab room official."))
 
@@ -685,7 +686,7 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
             return self.object.matchup
 
     def get_queryset(self):
-        return super().get_queryset().exclude(debateteam__side=DebateTeam.Side.BYE).select_related(
+        return super().get_queryset().exclude(debateteam__side=DebateSide.BYE).select_related(
             'round',
         ).prefetch_related('debateteam_set__team')
 

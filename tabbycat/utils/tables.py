@@ -195,7 +195,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         else:
             self.private_url = kwargs.get('private_url', False)
 
-        if self.tournament.pref('teams_in_debate') == 'bp':
+        if self.tournament.pref('teams_in_debate') == 4:
             self._result_cell = self._result_cell_bp
         else:
             self._result_cell = self._result_cell_two
@@ -870,7 +870,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         elif self.tournament.pref('ballots_released'):
             ballot_links_data = []
             for debate in debates:
-                if self.tournament.pref('teams_in_debate') == 'bp' and debate.round.is_break_round:
+                if self.tournament.pref('teams_in_debate') == 4 and debate.round.is_break_round:
                     ballot_links_data.append("")
                 elif debate.is_bye:
                     ballot_links_data.append(no_ballot)
@@ -937,7 +937,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_abbrs[side]
                 cell = self._team_cell(team, show_emoji=False, subtext=subtext)
 
-                if self.tournament.pref('teams_in_debate') == 'two':
+                if self.tournament.pref('teams_in_debate') == 2:
                     cell = self._result_cell_class_two(debateteam.win, cell)
                 elif debate.round.is_break_round:
                     cell = self._result_cell_class_four_elim(debateteam.win, cell)

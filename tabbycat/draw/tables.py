@@ -17,7 +17,7 @@ class BaseDrawTableBuilder(TabbycatTableBuilder):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.side_history_separator = " " if self.tournament.pref('teams_in_debate') == 'bp' else " / "
+        self.side_history_separator = " " if self.tournament.pref('teams_in_debate') == 4 else " / "
 
     def highlight_rows_by_column_value(self, column):
         highlighted_rows = [i for i in range(1, len(self.data))
@@ -62,7 +62,7 @@ class PublicDrawTableBuilder(BaseDrawTableBuilder):
 
         for i, side in enumerate(self.tournament.sides, start=1):
             # For BP team names are often longer than the full position label
-            if self.tournament.pref('teams_in_debate') == 'bp':
+            if self.tournament.pref('teams_in_debate') == 4:
                 side_name = get_side_name(self.tournament, side, 'abbr')
             else:
                 side_name = get_side_name(self.tournament, side, 'full').title()
@@ -155,7 +155,7 @@ class AdminDrawTableBuilder(PublicDrawTableBuilder):
                 return 99999
 
         # In BP, only list first two metrics, there's not enough space for more
-        limit = 2 if self.tournament.pref('teams_in_debate') == 'bp' else None
+        limit = 2 if self.tournament.pref('teams_in_debate') == 4 else None
 
         return self._add_debate_standing_columns(debates, standings, 'itermetrics',
                 'metrics_info', metricformat, formatsort, limit)

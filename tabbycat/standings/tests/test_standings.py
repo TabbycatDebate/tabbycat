@@ -29,8 +29,8 @@ class TestTrivialStandings(TestCase):
         for i in [1, 2]:
             rd = Round.objects.create(tournament=self.tournament, seq=i)
             debate = Debate.objects.create(round=rd, flags=['pullup'])
-            dt1 = DebateTeam.objects.create(debate=debate, team=self.team1, side=DebateTeam.Side.AFF, flags=['pullup'])
-            dt2 = DebateTeam.objects.create(debate=debate, team=self.team2, side=DebateTeam.Side.NEG)
+            dt1 = DebateTeam.objects.create(debate=debate, team=self.team1, side=0, flags=['pullup'])
+            dt2 = DebateTeam.objects.create(debate=debate, team=self.team2, side=1)
             DebateAdjudicator.objects.create(debate=debate, adjudicator=adj, type=DebateAdjudicator.TYPE_CHAIR)
             ballotsub = BallotSubmission.objects.create(debate=debate, confirmed=True)
             TeamScore.objects.create(debate_team=dt1, ballot_submission=ballotsub,
@@ -212,8 +212,8 @@ class IgnorableDebateMixin:
         adj = Adjudicator.objects.get()
         rd = Round.objects.create(tournament=self.tournament, seq=3)
         debate = Debate.objects.create(round=rd)
-        dt1 = DebateTeam.objects.create(debate=debate, team=self.team1, side=DebateTeam.Side.AFF)
-        dt2 = DebateTeam.objects.create(debate=debate, team=self.team2, side=DebateTeam.Side.NEG)
+        dt1 = DebateTeam.objects.create(debate=debate, team=self.team1, side=0)
+        dt2 = DebateTeam.objects.create(debate=debate, team=self.team2, side=1)
         DebateAdjudicator.objects.create(debate=debate, adjudicator=adj, type=DebateAdjudicator.TYPE_CHAIR)
         ballotsub = BallotSubmission.objects.create(debate=debate, confirmed=True)
         TeamScore.objects.create(debate_team=dt1, ballot_submission=ballotsub,
@@ -320,7 +320,7 @@ class TestBasicStandings(TestCase):
             Venue.objects.create(name="Venue {:d}".format(i), priority=10)
         adjs = list(Adjudicator.objects.all())
         venues = list(Venue.objects.all())
-        sides = [DebateTeam.Side.AFF, DebateTeam.Side.NEG]
+        sides = [0, 1]
 
         for r, debatedict in enumerate(testdata["teamscores"]):
             rd = Round.objects.create(tournament=tournament, seq=r, abbreviation="R{:d}".format(r))

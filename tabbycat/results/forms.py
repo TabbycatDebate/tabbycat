@@ -277,7 +277,7 @@ class BaseBallotSetForm(BaseResultForm):
         self.bypassing_checks = self.tournament.pref('disable_ballot_confirms') and not self.ballotsub.single_adj
         self.max_margin = self.tournament.pref('maximum_margin')
         self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
-                               self.tournament.pref('teams_in_debate') == 'two')
+                               self.tournament.pref('teams_in_debate') == 2)
         self.using_speaker_ranks = self.tournament.pref('speaker_ranks') != 'none'
 
     # --------------------------------------------------------------------------
@@ -286,7 +286,7 @@ class BaseBallotSetForm(BaseResultForm):
 
     @staticmethod
     def _fieldname_motion_veto(side):
-        return '%(side)s_motion_veto' % {'side': side}
+        return '%(side)d_motion_veto' % {'side': side}
 
     # --------------------------------------------------------------------------
     # Form set-up
@@ -472,11 +472,11 @@ class ScoresMixin:
 
     @staticmethod
     def _fieldname_speaker(side, pos):
-        return '%(side)s_speaker_s%(pos)d' % {'side': side, 'pos': pos}
+        return '%(side)d_speaker_s%(pos)d' % {'side': side, 'pos': pos}
 
     @staticmethod
     def _fieldname_ghost(side, pos):
-        return '%(side)s_ghost_s%(pos)d' % {'side': side, 'pos': pos}
+        return '%(side)d_ghost_s%(pos)d' % {'side': side, 'pos': pos}
 
     # --------------------------------------------------------------------------
     # Form set-up
@@ -669,11 +669,11 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
     @staticmethod
     def _fieldname_score(side, pos):
-        return '%(side)s_score_s%(pos)d' % {'side': side, 'pos': pos}
+        return '%(side)d_score_s%(pos)d' % {'side': side, 'pos': pos}
 
     @staticmethod
     def _fieldname_srank(side, pos):
-        return '%(side)s_srank_s%(pos)d' % {'side': side, 'pos': pos}
+        return '%(side)d_srank_s%(pos)d' % {'side': side, 'pos': pos}
 
     @staticmethod
     def _fieldname_declared_winner():
@@ -821,7 +821,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
     @staticmethod
     def _fieldname_score(adj, side, pos):
-        return '%(side)s_score_a%(adj)d_s%(pos)d' % {'adj': adj.id, 'side': side, 'pos': pos}
+        return '%(side)d_score_a%(adj)d_s%(pos)d' % {'adj': adj.id, 'side': side, 'pos': pos}
 
     @staticmethod
     def _fieldname_declared_winner(adj):
@@ -1004,7 +1004,7 @@ class SingleEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        num_advancing = int(self.tournament.pref('teams_in_debate') == 'bp' and not self.debate.round.is_last) + 1
+        num_advancing = int(self.tournament.pref('teams_in_debate') == 4 and not self.debate.round.is_last) + 1
         if self._fieldname_advancing() in cleaned_data and len(cleaned_data[self._fieldname_advancing()]) != num_advancing:
             self.add_error(self._fieldname_advancing(), forms.ValidationError(
                 ngettext(

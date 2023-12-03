@@ -46,6 +46,7 @@ from typing import TYPE_CHECKING
 
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
+from draw.types import DebateSide
 
 from .result_info import DebateResultInfo
 from .scoresheet import (BPEliminationScoresheet, BPScoresheet, HighPointWinsRequiredScoresheet, LowPointWinsAllowedScoresheet,
@@ -73,10 +74,10 @@ def get_result_class(ballotsub, round=None, tournament=None):
     scores_in_debate = tournament.pref('speakers_in_ballots')
 
     if ballots_per_debate == 'per-debate' or ballotsub.single_adj:
-        if ((teams_in_debate == 'bp' or scores_in_debate == 'prelim') and round.is_break_round) or scores_in_debate == 'never':
+        if ((teams_in_debate == 4 or scores_in_debate == 'prelim') and round.is_break_round) or scores_in_debate == 'never':
             return ConsensusDebateResult
         return ConsensusDebateResultWithScores
-    elif ballots_per_debate == 'per-adj' and teams_in_debate == 'two':
+    elif ballots_per_debate == 'per-adj' and teams_in_debate == 2:
         if scores_in_debate == 'prelim' and round.is_break_round or scores_in_debate == 'never':
             return DebateResultByAdjudicator
         return DebateResultByAdjudicatorWithScores
@@ -138,7 +139,7 @@ class BaseDebateResult:
     Subclasses should implement a `teamscore_field_<fieldname>` method for each
     field of TeamScore that is relevant to them, for example,
     `teamscore_field_win(side)` or `teamscore_field_margin(side)`. These methods
-    take one argument, a side string, e.g. `'aff'` or `'og'`, and return the
+    take one argument, a side string, e.g. `DebateSide.AFF` or `DebateSide.OG`, and return the
     value that should be saved to that field. When saving TeamScore objects to
     the database, the base class calls these methods to get the value it should
     save to that field. If the method does not exist, it does not write to that
@@ -406,7 +407,7 @@ class DebateResultByAdjudicator(BaseDebateResult):
         super().assert_loaded()
         assert set(self.debate.adjudicators.voting()) == set(self.scoresheets)
         assert set(self.debateadjs) == set(self.scoresheets)
-        assert self.sides == ['aff', 'neg'], "VotingDebateResult can only be used for two-team formats."
+        assert self.sides == [DebateSide.AFF, DebateSide.NEG], "VotingDebateResult can only be used for two-team formats."
 
     def is_complete(self):
         return super().is_complete() and self.debate.adjudicators.has_chair and all(sheet.is_complete() for sheet in self.scoresheets.values())
@@ -539,13 +540,13 @@ class DebateResultByAdjudicator(BaseDebateResult):
             winner = self.get_winner(adj)
             self._adjs_by_side[winner].add(adj)
 
-        votes_aff = len(self._adjs_by_side['aff'])
-        votes_neg = len(self._adjs_by_side['neg'])
+        votes_aff = len(self._adjs_by_side[DebateSide.AFF])
+        votes_neg = len(self._adjs_by_side[DebateSide.NEG])
 
         if votes_aff > votes_neg:
-            self._winner = 'aff'
+            self._winner = DebateSide.AFF
         elif votes_neg > votes_aff:
-            self._winner = 'neg'
+            self._winner = DebateSide.NEG
         else:
             logger.warning("Adjudicators split %d-%d in debate %s, awarding by chair casting vote.",
                            votes_aff, votes_neg, self.debate)
@@ -787,20 +788,20 @@ class DebateResultWithScoresMixin:
         if len(self.sides) == 4:
             return None
 
-        aff_total = self.teamscore_field_score('aff')
-        neg_total = self.teamscore_field_score('neg')
+        aff_total = self.teamscore_field_score(DebateSide.AFF)
+        neg_total = self.teamscore_field_score(DebateSide.NEG)
         return self.calculate_margin(side, aff_total, neg_total)
 
     def calculate_margin(self, side, aff_total, neg_total):
         if aff_total is None or neg_total is None:
             return None
 
-        if side == 'aff':
+        if side == DebateSide.AFF:
             return aff_total - neg_total
-        elif side == 'neg':
+        elif side == DebateSide.NEG:
             return neg_total - aff_total
         else:
-            raise ValueError("side must be 'aff' or 'neg'")
+            raise ValueError("side must be DebateSide.AFF or DebateSide.NEG")
 
     # --------------------------------------------------------------------------
     # Method for UI display
@@ -1111,6 +1112,6 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
     def calculate_margin_by_adj(self, adj, side):
         # The purpose of this function is to prevent code duplication between
         # other functions that require a teamscore_field_margin() method.
-        aff_total = self.teamscorebyadj_field_score(adj, 'aff')
-        neg_total = self.teamscorebyadj_field_score(adj, 'neg')
+        aff_total = self.teamscorebyadj_field_score(adj, DebateSide.AFF)
+        neg_total = self.teamscorebyadj_field_score(adj, DebateSide.NEG)
         self.calculate_margin(side, aff_total, neg_total)
