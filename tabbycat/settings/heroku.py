@@ -100,6 +100,14 @@ CHANNEL_LAYERS = {
 # Email / SendGrid
 # ==============================================================================
 
+if environ.get('EMAIL_HOST', ''):
+    SERVER_EMAIL = environ['DEFAULT_FROM_EMAIL']
+    DEFAULT_FROM_EMAIL = environ['DEFAULT_FROM_EMAIL']
+    EMAIL_HOST = environ['EMAIL_HOST']
+    EMAIL_HOST_USER = environ['EMAIL_HOST_USER']
+    EMAIL_HOST_PASSWORD = environ['EMAIL_HOST_PASSWORD']
+    EMAIL_PORT = int(environ.get('EMAIL_PORT', 587))
+
 if environ.get('MAILGUN_SMTP_SERVER', ''):
     SERVER_EMAIL = environ['MAILGUN_SMTP_LOGIN']
     DEFAULT_FROM_EMAIL = environ['MAILGUN_SMTP_LOGIN']
