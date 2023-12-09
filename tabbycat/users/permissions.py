@@ -110,6 +110,8 @@ permission_type = Union[Permission, bool]
 
 
 def has_permission(user: 'settings.AUTH_USER_MODEL', permission: permission_type, tournament: 'Tournament') -> bool:
+    if user.is_anonymous:
+        return False
     if user.is_superuser:
         return True
 

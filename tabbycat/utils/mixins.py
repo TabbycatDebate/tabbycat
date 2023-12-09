@@ -53,8 +53,7 @@ class TabbycatPageTitlesMixin(ContextMixin):
 # ==============================================================================
 
 class AdministratorMixin(UserPassesTestMixin, ContextMixin):
-    """Mixin for views that are for administrators.
-    Requires user to be a superuser."""
+    """Mixin for views that are for administrators."""
     view_role = "admin"
     for_admin = True
     view_permission: Optional['permission_type'] = None
@@ -73,7 +72,7 @@ class AdministratorMixin(UserPassesTestMixin, ContextMixin):
     def test_func(self) -> bool:
         if self.request.method == 'GET' and self.get_view_permission() is not None:
             return has_permission(self.request.user, self.get_view_permission(), self.tournament)
-        if self.request.method == 'POST' and self.get_edit_permission() is not None:
+        if self.request.method in ['POST', 'PUT'] and self.get_edit_permission() is not None:
             return has_permission(self.request.user, self.get_edit_permission(), self.tournament)
         return self.request.user.is_superuser
 
