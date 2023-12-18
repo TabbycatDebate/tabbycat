@@ -413,7 +413,7 @@ class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
     model = Debate
     tournament_field_name = 'round__tournament'
     relates_to_new_ballotsub = True
-    action_log_type = ActionLogEntry.ACTION_TYPE_BALLOT_CREATE
+    action_log_type = ActionLogEntry.ActionType.BALLOT_CREATE
     pk_url_kwarg = 'debate_id'
     page_title = gettext_lazy("New Ballot Set")
 
@@ -473,10 +473,10 @@ class BaseEditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
 
     def get_action_log_type(self):
         if self.ballotsub.discarded:
-            return ActionLogEntry.ACTION_TYPE_BALLOT_DISCARD
+            return ActionLogEntry.ActionType.BALLOT_DISCARD
         elif self.ballotsub.confirmed:
-            return ActionLogEntry.ACTION_TYPE_BALLOT_CONFIRM
-        return ActionLogEntry.ACTION_TYPE_BALLOT_EDIT
+            return ActionLogEntry.ActionType.BALLOT_CONFIRM
+        return ActionLogEntry.ActionType.BALLOT_EDIT
 
     def get_success_url(self):
         return reverse_round('results-round-list', self.ballotsub.debate.round)
@@ -525,7 +525,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
 
     template_name = 'public_enter_results.html'
     relates_to_new_ballotsub = True
-    action_log_type = ActionLogEntry.ACTION_TYPE_BALLOT_SUBMIT
+    action_log_type = ActionLogEntry.ActionType.BALLOT_SUBMIT
     page_title = gettext_lazy("Enter Results")
 
     def get_context_data(self, **kwargs):

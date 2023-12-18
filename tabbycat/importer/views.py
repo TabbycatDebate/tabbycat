@@ -100,7 +100,7 @@ class ImportInstitutionsWizardView(BaseImportWizardView):
         ('raw', ImportInstitutionsRawForm),
         ('details', modelformset_factory(Institution, fields=('name', 'code'), extra=0)),
     ]
-    action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_INSTITUTIONS
+    action_log_type = ActionLogEntry.ActionType.SIMPLE_IMPORT_INSTITUTIONS
 
     def get_details_form_initial(self):
         return self.get_cleaned_data_for_step('raw')['institutions_raw']
@@ -115,7 +115,7 @@ class ImportVenuesWizardView(BaseImportWizardView):
         ('raw', ImportVenuesRawForm),
         ('details', modelformset_factory(Venue, form=VenueDetailsForm, extra=0)),
     ]
-    action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_VENUES
+    action_log_type = ActionLogEntry.ActionType.SIMPLE_IMPORT_VENUES
 
     def get_form_kwargs(self, step):
         if step == 'details':
@@ -174,7 +174,7 @@ class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
         ('numbers', ImportTeamsNumbersForm),
         ('details', modelformset_factory(Team, form=TeamDetailsForm, formset=TeamDetailsFormSet, extra=0)),
     ]
-    action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_TEAMS
+    action_log_type = ActionLogEntry.ActionType.SIMPLE_IMPORT_TEAMS
 
     def get_details_instance_initial(self, i):
         return {'reference': str(i), 'use_institution_prefix': True}
@@ -196,7 +196,7 @@ class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
         ('numbers', ImportAdjudicatorsNumbersForm),
         ('details', modelformset_factory(Adjudicator, form=AdjudicatorDetailsForm, extra=0)),
     ]
-    action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_ADJUDICATORS
+    action_log_type = ActionLogEntry.ActionType.SIMPLE_IMPORT_ADJUDICATORS
 
     def get_default_base_score(self):
         """Returns the midpoint of the configured allowable score range."""

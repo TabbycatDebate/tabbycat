@@ -60,7 +60,7 @@ class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, Tournamen
     section = None
     template_name = "preferences_section_set.html"
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT
+    action_log_type = ActionLogEntry.ActionType.OPTIONS_EDIT
 
     def form_valid(self, *args, **kwargs):
         messages.success(self.request, _("Tournament options (%(section)s) saved.") % {'section': self.section.verbose_name})
@@ -79,7 +79,7 @@ class SetPresetPreferencesView(AdministratorMixin, LogActionMixin, TournamentMix
     template_name = "preset_edit.html"
     page_emoji = '❔'
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT
+    action_log_type = ActionLogEntry.ActionType.OPTIONS_EDIT
 
     def get_page_title(self):
         return _("Apply Preset: %s") % self.get_selected_preset().name

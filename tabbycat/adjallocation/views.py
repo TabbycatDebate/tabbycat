@@ -167,7 +167,7 @@ class BaseAdjudicatorConflictsView(LogActionMixin, AdministratorMixin, Tournamen
 
 class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_ADJ_TEAM_EDIT
+    action_log_type = ActionLogEntry.ActionType.CONFLICTS_ADJ_TEAM_EDIT
     formset_model = AdjudicatorTeamConflict
     page_title = gettext_lazy("Adjudicator-Team Conflicts")
     save_text = gettext_lazy("Save Adjudicator-Team Conflicts")
@@ -211,7 +211,7 @@ class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
 
 class AdjudicatorAdjudicatorConflictsView(BaseAdjudicatorConflictsView):
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_ADJ_ADJ_EDIT
+    action_log_type = ActionLogEntry.ActionType.CONFLICTS_ADJ_ADJ_EDIT
     formset_model = AdjudicatorAdjudicatorConflict
     page_title = gettext_lazy("Adjudicator-Adjudicator Conflicts")
     save_text = gettext_lazy("Save Adjudicator-Adjudicator Conflicts")
@@ -251,7 +251,7 @@ class AdjudicatorAdjudicatorConflictsView(BaseAdjudicatorConflictsView):
 
 class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_ADJ_INST_EDIT
+    action_log_type = ActionLogEntry.ActionType.CONFLICTS_ADJ_INST_EDIT
     formset_model = AdjudicatorInstitutionConflict
     page_title = gettext_lazy("Adjudicator-Institution Conflicts")
     save_text = gettext_lazy("Save Adjudicator-Institution Conflicts")
@@ -290,7 +290,7 @@ class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
 
 class TeamInstitutionConflictsView(BaseAdjudicatorConflictsView):
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_TEAM_INST_EDIT
+    action_log_type = ActionLogEntry.ActionType.CONFLICTS_TEAM_INST_EDIT
     formset_model = TeamInstitutionConflict
     page_title = gettext_lazy("Team-Institution Conflicts")
     save_text = gettext_lazy("Save Team-Institution Conflicts")
