@@ -18,6 +18,7 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
+from actionlog.models import ActionLogEntry
 from adjallocation.models import PreformedPanel
 from adjallocation.preformed.anticipated import calculate_anticipated_draw
 from adjfeedback.models import AdjudicatorFeedbackQuestion
@@ -39,7 +40,7 @@ from venues.models import Venue, VenueCategory
 
 from . import serializers
 from .fields import ParticipantAvailabilityForeignKeyField
-from .mixins import AdministratorAPIMixin, PublicAPIMixin, RoundAPIMixin, TournamentAPIMixin, TournamentPublicAPIMixin
+from .mixins import AdministratorAPIMixin, APILogActionMixin, PublicAPIMixin, RoundAPIMixin, TournamentAPIMixin, TournamentPublicAPIMixin
 from .permissions import APIEnabledPermission, PublicPreferencePermission
 
 
@@ -101,7 +102,7 @@ class APIV1RootView(PublicAPIMixin, GenericAPIView):
     partial_update=extend_schema(summary="Patch tournament", parameters=[tournament_parameter]),
     destroy=extend_schema(summary="Delete tournament", parameters=[tournament_parameter]),
 )
-class TournamentViewSet(PublicAPIMixin, ModelViewSet):
+class TournamentViewSet(PublicAPIMixin, APILogActionMixin, ModelViewSet):
     # Don't use TournamentAPIMixin here, it's not filtering objects by tournament.
     queryset = Tournament.objects.all().prefetch_related(
         'breakcategory_set',
@@ -112,6 +113,8 @@ class TournamentViewSet(PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.TournamentSerializer
     lookup_field = 'slug'
     lookup_url_kwarg = 'tournament_slug'
+    action_log_type_created = ActionLogEntry.ActionType.TOURNAMENT_CREATE
+    action_log_type_updated = ActionLogEntry.ActionType.TOURNAMENT_EDIT
 
 
 @extend_schema(tags=['tournaments'], parameters=[tournament_parameter])
@@ -122,12 +125,15 @@ class TournamentViewSet(PublicAPIMixin, ModelViewSet):
     partial_update=extend_schema(summary="Patch tournament preference"),
     bulk=extend_schema(summary="Update multiple tournament preferences"),
 )
-class TournamentPreferenceViewSet(TournamentFromUrlMixin, AdministratorAPIMixin, PerInstancePreferenceViewSet):
+class TournamentPreferenceViewSet(TournamentFromUrlMixin, AdministratorAPIMixin, APILogActionMixin, PerInstancePreferenceViewSet):
     """
     """
     # Blank comment to avoid comment from TournamentFromUrlMixin appearing.
     queryset = TournamentPreferenceModel.objects.all()
     serializer_class = PreferenceSerializer
+
+    action_log_content_object_attr = 'obj'
+    action_log_type_updated = ActionLogEntry.ActionType.OPTIONS_EDIT
 
     def get_related_instance(self):
         return self.tournament
@@ -146,6 +152,8 @@ class RoundViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.RoundSerializer
     lookup_field = 'seq'
     lookup_url_kwarg = 'round_seq'
+    action_log_type_created = ActionLogEntry.ActionType.ROUND_CREATE
+    action_log_type_updated = ActionLogEntry.ActionType.ROUND_EDIT
 
     def get_queryset(self):
         return super().get_queryset().select_related(
@@ -166,6 +174,8 @@ class MotionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.MotionSerializer
     access_preference = ('public_motions', 'motion_tab_released')
     access_operator = any
+    action_log_type_created = ActionLogEntry.ActionType.MOTION_EDIT
+    action_log_type_updated = ActionLogEntry.ActionType.MOTION_EDIT
 
     def get_queryset(self):
         filters = Q()
@@ -185,6 +195,8 @@ class MotionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
 )
 class BreakCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.BreakCategorySerializer
+    action_log_type_created = ActionLogEntry.ActionType.BREAK_CATEGORIES_EDIT
+    action_log_type_updated = ActionLogEntry.ActionType.BREAK_CATEGORIES_EDIT
 
 
 @extend_schema(tags=['speaker-categories'], parameters=[tournament_parameter])
@@ -198,6 +210,8 @@ class BreakCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
 )
 class SpeakerCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.SpeakerCategorySerializer
+    action_log_type_created = ActionLogEntry.ActionType.SPEAKER_CATEGORIES_EDIT
+    action_log_type_updated = ActionLogEntry.ActionType.SPEAKER_CATEGORIES_EDIT
 
     def get_queryset(self):
         if not self.request.user or not self.request.user.is_staff:
@@ -214,6 +228,7 @@ class SpeakerCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
 class BreakEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, RetrieveUpdateAPIView):
     serializer_class = serializers.BreakEligibilitySerializer
     access_preference = 'public_break_categories'
+    action_log_type_updated = ActionLogEntry.ActionType.BREAK_ELIGIBILITY_EDIT
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related('team_set')
@@ -228,6 +243,7 @@ class BreakEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, Retriev
 class SpeakerEligibilityView(TournamentAPIMixin, TournamentPublicAPIMixin, RetrieveUpdateAPIView):
     serializer_class = serializers.SpeakerEligibilitySerializer
     access_preference = 'public_participants'
+    action_log_type_updated = ActionLogEntry.ActionType.SPEAKER_ELIGIBILITY_EDIT
 
     def get_queryset(self):
         qs = super().get_queryset().prefetch_related('speaker_set')
@@ -243,6 +259,7 @@ class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBr
     tournament_field = 'break_category__tournament'
     pagination_class = None
     access_preference = 'public_breaking_teams'
+    action_log_content_object_attr = 'break_category'
 
     @property
     def break_category(self):
@@ -262,6 +279,7 @@ class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBr
     @extend_schema(summary="Generate break")
     def create(self, request, *args, **kwargs):
         self.generate_break((self.break_category,))
+        self.log_action(type=ActionLogEntry.ActionType.BREAK_GENERATE_ONE)
         return self.list(request, *args, **kwargs)
 
     @extend_schema(summary="Delete break")
@@ -270,6 +288,7 @@ class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBr
         Destroy is normally for a specific instance, now QuerySet.
         """
         self.filter_queryset(self.get_queryset()).delete()
+        self.log_action(type=ActionLogEntry.ActionType.BREAK_DELETE)
         return Response(status=204)  # No content
 
     @extend_schema(summary="Update remark and regenerate break")
@@ -277,6 +296,7 @@ class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBr
         serializer = serializers.PartialBreakingTeamSerializer(data=request.data, context=self.get_serializer_context())
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        self.log_action(type=ActionLogEntry.ActionType.BREAK_UPDATE_ONE)
 
         return self.create(request, *args, **kwargs)
 
@@ -290,9 +310,12 @@ class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBr
 class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.PerTournamentInstitutionSerializer
     access_preference = 'public_institutions_list'
+    action_log_type_created = ActionLogEntry.ActionType.INSTITUTION_CREATE
+    action_log_type_updated = ActionLogEntry.ActionType.INSTITUTION_EDIT
 
     def perform_create(self, serializer):
         serializer.save()
+        self.log_action(type=self.action_log_type_created)
 
     def get_queryset(self):
         filters = Q()
@@ -321,6 +344,8 @@ class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
 class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.TeamSerializer
     access_preference = 'public_participants'
+    action_log_type_created = ActionLogEntry.ActionType.TEAM_CREATE
+    action_log_type_updated = ActionLogEntry.ActionType.TEAM_EDIT
 
     def get_queryset(self):
         category_prefetch = Prefetch('categories', queryset=SpeakerCategory.objects.all().select_related('tournament'))
@@ -351,6 +376,8 @@ class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
 class AdjudicatorViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     serializer_class = serializers.AdjudicatorSerializer
     access_preference = 'public_participants'
+    action_log_type_created = ActionLogEntry.ActionType.ADJUDICATOR_CREATE
+    action_log_type_updated = ActionLogEntry.ActionType.ADJUDICATOR_EDIT
 
     def get_break_permission(self):
         return self.request.user.is_staff or self.tournament.pref('public_breaking_adjs')
@@ -380,6 +407,8 @@ class AdjudicatorViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
 )
 class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.InstitutionSerializer
+    action_log_type_created = ActionLogEntry.ActionType.INSTITUTION_CREATE
+    action_log_type_updated = ActionLogEntry.ActionType.INSTITUTION_EDIT
 
     def get_queryset(self):
         filters = Q()
@@ -401,9 +430,12 @@ class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet)
     serializer_class = serializers.SpeakerSerializer
     tournament_field = "team__tournament"
     access_preference = 'public_participants'
+    action_log_type_created = ActionLogEntry.ActionType.SPEAKER_CREATE
+    action_log_type_updated = ActionLogEntry.ActionType.SPEAKER_EDIT
 
     def perform_create(self, serializer):
         serializer.save()
+        self.log_action(type=self.action_log_type_created)
 
     def get_queryset(self):
         category_prefetch = Prefetch('categories', queryset=SpeakerCategory.objects.all().select_related('tournament'))
@@ -424,6 +456,8 @@ class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet)
 )
 class VenueViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.VenueSerializer
+    action_log_type_created = ActionLogEntry.ActionType.VENUE_CREATE
+    action_log_type_updated = ActionLogEntry.ActionType.VENUE_EDIT
 
     def get_queryset(self):
         # Tournament must exist for URLs
@@ -442,6 +476,8 @@ class VenueViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
 )
 class VenueCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.VenueCategorySerializer
+    action_log_type_created = ActionLogEntry.ActionType.VENUE_CATEGORY_CREATE
+    action_log_type_updated = ActionLogEntry.ActionType.VENUE_CATEGORIES_EDIT
 
     def get_queryset(self):
         # Tournament must exist for URLs
@@ -750,9 +786,6 @@ class TeamRoundStandingsRoundsView(TournamentAPIMixin, TournamentPublicAPIMixin,
     serializer_class = serializers.TeamRoundScoresSerializer
     access_preference = 'team_tab_released'
 
-    def perform_create(self, serializer):
-        serializer.save()
-
     def get_queryset(self):
         ts_pf = Prefetch('teamscore_set', queryset=TeamScore.objects.filter(ballot_submission__confirmed=True), to_attr='round_scores')
         qs = super().get_queryset().prefetch_related(
@@ -807,6 +840,9 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
 
     permission_classes = [APIEnabledPermission, Permission]
 
+    action_log_type_created = ActionLogEntry.ActionType.DEBATE_CREATE
+    action_log_type_updated = ActionLogEntry.ActionType.DEBATE_EDIT
+
     def get_queryset(self):
         return super().get_queryset().select_related('round', 'round__tournament', 'venue', 'venue__tournament').prefetch_related(
             'debateteam_set', 'debateteam_set__team', 'debateteam_set__team__tournament',
@@ -816,6 +852,7 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
     @extend_schema(summary="Delete all pairings in the round")
     def delete_all(self, request, *args, **kwargs):
         self.get_queryset().delete()
+        self.log_action(ActionLogEntry.ActionType.DRAW_REGENERATE)
         return Response(status=204)  # No content
 
 
@@ -835,6 +872,9 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
 
     tournament_field = 'debate__round__tournament'
     round_field = 'debate__round'
+
+    action_log_type_created = ActionLogEntry.ActionType.BALLOT_CREATE
+    action_log_type_updated = ActionLogEntry.ActionType.BALLOT_EDIT
 
     @property
     def debate(self):
@@ -869,6 +909,7 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
         instance = self.get_object()
         instance.discarded = True
         instance.save()
+        self.log_action(ActionLogEntry.ActionType.BALLOT_DISCARD)
         return self.retrieve(request, *args, **kwargs)
 
 
@@ -886,6 +927,8 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
 )
 class FeedbackQuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.FeedbackQuestionSerializer
+    action_log_type_created = ActionLogEntry.ActionType.FEEDBACK_QUESTION_CREATE
+    action_log_type_updated = ActionLogEntry.ActionType.FEEDBACK_QUESTION_EDIT
 
     def get_queryset(self):
         filters = Q()
@@ -913,6 +956,8 @@ class FeedbackQuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
 class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.FeedbackSerializer
     tournament_field = 'adjudicator__tournament'
+    action_log_type_created = ActionLogEntry.ActionType.FEEDBACK_SAVE
+    action_log_type_updated = ActionLogEntry.ActionType.FEEDBACK_SAVE
 
     def perform_create(self, serializer):
         serializer.save()
@@ -955,6 +1000,7 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
 @extend_schema(tags=['availabilities'], parameters=round_parameters)
 class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
     serializer_class = serializers.AvailabilitiesSerializer  # Isn't actually used
+    action_log_type_updated = ActionLogEntry.ActionType.AVAIL_SAVE
 
     extra_params = [
         OpenApiParameter('adjudicators', description='Only include adjudicators', required=False, type=bool, default=False),
@@ -1001,6 +1047,7 @@ class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
 
             RoundAvailability.objects.bulk_create(
                 [RoundAvailability(content_type=contenttype, round=self.round, object_id=id) for id in ids - existing])
+        self.log_action(type=self.action_log_type_updated)
 
         return self.get(request, *args, **kwargs)
 
@@ -1011,6 +1058,7 @@ class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
             contenttype = ContentType.objects.get_for_model(model)
             RoundAvailability.objects.bulk_create(
                 [RoundAvailability(content_type=contenttype, round=self.round, object_id=p.id) for p in participants])
+        self.log_action(type=self.action_log_type_updated)
         return self.get(request, *args, **kwargs)
 
     @extend_schema(summary="Mark objects as unavailable")
@@ -1022,11 +1070,13 @@ class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
                 content_type=contenttype, round=self.round,
                 object_id__in=[p.id for p in participants],
             ).delete()
+        self.log_action(type=self.action_log_type_updated)
         return self.get(request, *args, **kwargs)
 
     @extend_schema(summary="Delete class of availabilities", parameters=extra_params)
     def delete(self, request, *args, **kwargs):
         self.get_queryset().delete()
+        self.log_action(type=self.action_log_type_updated)
         return Response(status=204)
 
 
@@ -1043,6 +1093,8 @@ class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
 
     serializer_class = serializers.PreformedPanelSerializer
     lookup_url_kwarg = 'debate_pk'
+    action_log_type_created = ActionLogEntry.ActionType.PREFORMED_PANELS_CREATE
+    action_log_type_updated = ActionLogEntry.ActionType.PREFORMED_PANELS_ADJUDICATOR_EDIT
 
     @property
     def debate(self):
@@ -1070,6 +1122,7 @@ class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
     @extend_schema(summary="Delete all preformed panels from round")
     def delete_all(self, request, *args, **kwargs):
         self.get_queryset().delete()
+        self.log_action(ActionLogEntry.ActionType.PREFORMED_PANELS_DELETE)
         return Response(status=204)  # No content
 
     @extend_schema(summary="Add blank preformed panels")
@@ -1081,6 +1134,7 @@ class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
                 'bracket_min': bracket_min,
                 'liveness': liveness,
             })
+        self.log_action(self.action_log_type_created)
 
         return self.get(request, *args, **kwargs)
 
