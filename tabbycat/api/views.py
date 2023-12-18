@@ -844,13 +844,8 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
         self._debate = get_object_or_404(Debate, pk=self.kwargs.get('debate_pk'))
         return self._debate
 
-    def perform_create(self, serializer):
-        serializer.save(**{'debate': self.debate})
-
     def lookup_kwargs(self):
-        kwargs = super().lookup_kwargs()
-        kwargs['debate'] = self.debate
-        return kwargs
+        return {'debate': self.debate}
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -1057,13 +1052,8 @@ class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
         self._debate = get_object_or_404(PreformedPanel, pk=self.kwargs.get('debate_pk'))
         return self._debate
 
-    def perform_create(self, serializer):
-        serializer.save(**{'debate': self.debate})
-
     def lookup_kwargs(self):
-        kwargs = super().lookup_kwargs()
-        kwargs['debate'] = self.debate
-        return kwargs
+        return {'debate': self.debate}
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
