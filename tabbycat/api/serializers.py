@@ -63,7 +63,7 @@ class V1RootSerializer(serializers.Serializer):
 
 class CheckinSerializer(serializers.Serializer):
     object = serializers.HyperlinkedIdentityField(view_name='api-root')
-    barcode = serializers.IntegerField()
+    barcode = serializers.CharField()
     checked = serializers.BooleanField()
     timestamp = serializers.DateTimeField()
 
@@ -456,6 +456,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
         queryset=SpeakerCategory.objects.all(),
     )
     _links = SpeakerLinksSerializer(source='*', read_only=True)
+    barcode = serializers.CharField(source='checkin_identifier.barcode', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -465,6 +466,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
             self.fields.pop('phone')
             self.fields.pop('pronoun')
             self.fields.pop('url_key')
+            self.fields.pop('barcode')
 
             if kwargs['context']['tournament'].pref('participant_code_names') == 'everywhere':
                 self.fields.pop('name')
@@ -519,6 +521,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
     )
     venue_constraints = VenueConstraintSerializer(many=True, required=False)
     _links = AdjudicatorLinksSerializer(source='*', read_only=True)
+    barcode = serializers.CharField(source='checkin_identifier.barcode', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -545,6 +548,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
             self.fields.pop('phone')
             self.fields.pop('pronoun')
             self.fields.pop('url_key')
+            self.fields.pop('barcode')
 
     class Meta:
         model = Adjudicator

@@ -330,7 +330,7 @@ class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
         return super().get_queryset().select_related('tournament').prefetch_related(
             Prefetch(
                 'speaker_set',
-                queryset=Speaker.objects.all().prefetch_related(category_prefetch).select_related('team__tournament'),
+                queryset=Speaker.objects.all().prefetch_related(category_prefetch).select_related('team__tournament', 'checkin_identifier'),
             ),
             'institution_conflicts', 'venue_constraints__category__tournament',
             'break_categories', 'break_categories__tournament',
@@ -360,7 +360,7 @@ class AdjudicatorViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
         if self.request.query_params.get('break') and self.get_break_permission():
             filters &= Q(breaking=True)
 
-        return super().get_queryset().prefetch_related(
+        return super().get_queryset().select_related('checkin_identifier').prefetch_related(
             'team_conflicts', 'team_conflicts__tournament',
             'adjudicator_conflicts', 'adjudicator_conflicts__tournament',
             'institution_conflicts', 'venue_constraints__category__tournament',
@@ -410,7 +410,7 @@ class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet)
         if not self.request.user or not self.request.user.is_staff:
             category_prefetch.queryset = category_prefetch.queryset.filter(public=True)
 
-        return super().get_queryset().prefetch_related(category_prefetch)
+        return super().get_queryset().select_related('checkin_identifier').prefetch_related(category_prefetch)
 
 
 @extend_schema(tags=['venues'], parameters=[tournament_parameter])
