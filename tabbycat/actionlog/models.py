@@ -87,6 +87,10 @@ class ActionLogEntry(models.Model):
         VENUES_AUTOALLOCATE               = 've.auto', _("Auto-allocated rooms")
         VENUES_SAVE                       = 've.save', _("Saved a room manual edit")
 
+    class Agent(models.TextChoices):
+        API = 'a', _("API")
+        WEB = 'w', _("Web")
+
     type = models.CharField(max_length=10, choices=ActionType.choices,
         verbose_name=_("type"))
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True,
@@ -109,6 +113,8 @@ class ActionLogEntry(models.Model):
     object_id = models.PositiveIntegerField(blank=True, null=True,
         verbose_name=_("object ID"))
     content_object = GenericForeignKey('content_type', 'object_id')
+    agent = models.CharField(max_length=1, choices=Agent.choices, default=Agent.WEB,
+        verbose_name=_("agent"))
 
     objects = ActionLogManager()
 
