@@ -1,11 +1,14 @@
 from copy import deepcopy
+from datetime import timedelta
 from itertools import groupby
+from typing import TYPE_CHECKING, Union
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Prefetch, Q
+from django.db.models.functions import Now
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
 from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
@@ -41,6 +44,11 @@ from . import serializers
 from .fields import ParticipantAvailabilityForeignKeyField
 from .mixins import AdministratorAPIMixin, PublicAPIMixin, RoundAPIMixin, TournamentAPIMixin, TournamentPublicAPIMixin
 from .permissions import APIEnabledPermission, PublicPreferencePermission
+
+if TYPE_CHECKING:
+    from django.db.models import QuerySet
+    from django.http.request import HttpRequest
+    from checkins.models import Identifier
 
 
 tournament_parameter = OpenApiParameter('tournament_slug', description="The tournament's slug", type=str, location="path")
@@ -508,7 +516,7 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
     def get_queryset(self):
         return self.model.objects.filter(**self.lookup_kwargs()).select_related(self.tournament_field)
 
-    @extend_schema(request=None, responses=serializers.CheckinSerializer)
+    @extend_schema(request=None, responses=serializers.MockCheckinSerializer)
     def get(self, request, *args, **kwargs):
         """Get checkin status"""
         obj = self.get_object()
@@ -516,21 +524,21 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
         event = get_unexpired_checkins(self.tournament, self.window_preference_pref).filter(identifier=obj.checkin_identifier)
         return Response(self.get_response_dict(request, obj, event.exists(), event.first()))
 
-    @extend_schema(request=None, responses={200: serializers.CheckinSerializer})
+    @extend_schema(request=None, responses={200: serializers.MockCheckinSerializer})
     def delete(self, request, *args, **kwargs):
         """Checks out"""
         obj = self.get_object()
         self.broadcast_checkin(obj, False)
         return Response(self.get_response_dict(request, obj, False, None))
 
-    @extend_schema(request=None, responses=serializers.CheckinSerializer)
+    @extend_schema(request=None, responses=serializers.MockCheckinSerializer)
     def put(self, request, *args, **kwargs):
         """Checks in"""
         obj = self.get_object()
         e = self.broadcast_checkin(obj, True)
         return Response(self.get_response_dict(request, obj, True, e))
 
-    @extend_schema(request=None, responses=serializers.CheckinSerializer)
+    @extend_schema(request=None, responses=serializers.MockCheckinSerializer)
     def patch(self, request, *args, **kwargs):
         """Toggles the check-in status"""
         obj = self.get_object()
@@ -539,7 +547,7 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
         e = self.broadcast_checkin(obj, not check)
         return Response(self.get_response_dict(request, obj, not check, e))
 
-    @extend_schema(request=None, responses=serializers.CheckinSerializer)
+    @extend_schema(request=None, responses=serializers.MockCheckinSerializer)
     def post(self, request, *args, **kwargs):
         """Creates an identifier"""
         obj = self.get_object_queryset()  # Don't .get() as create_identifiers expects a queryset
@@ -1106,3 +1114,97 @@ class UserViewSet(AdministratorAPIMixin, ModelViewSet):
 
     def get_queryset(self):
         return self.get_serializer_class().Meta.model.objects.all()
+
+
+@extend_schema(tags=['checkins'], parameters=[tournament_parameter])
+@extend_schema_view(
+    list=extend_schema(summary="List checked-in objects in tournament", parameters=[
+        OpenApiParameter('adjudicators', description='Include adjudicators', required=False, type=bool, default=False),
+        OpenApiParameter('speakers', description='Include speakers', required=False, type=bool, default=False),
+        OpenApiParameter('debates', description='Include debates', required=False, type=bool, default=False),
+        OpenApiParameter('venues', description='Include rooms; if used in conjunction with other parameters, the shorter of the two checkin windows will be used.',
+            required=False, type=bool, default=False),
+    ]),
+)
+class CheckinViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+    serializer_class = serializers.CheckinSerializer
+
+    def get_filters(self) -> Q:
+        filters = Q()
+        if self.request.query_params.get('adjudicators', 'false') == 'false':
+            filters |= Q(identifier__personidentifier__person__adjudicator__isnull=False)
+        if self.request.query_params.get('speakers', 'false') == 'false':
+            filters |= Q(identifier__personidentifier__person__speaker__isnull=False)
+        if self.request.query_params.get('debates', 'false') == 'false':
+            filters |= Q(identifier__debateidentifier__debate__isnull=False)
+        if self.request.query_params.get('venues', 'false') == 'false':
+            filters |= Q(identifier__venueidentifier__venue__isnull=False)
+        return filters
+
+    def get_time_filter(self, has_venues: bool) -> Q:
+        time_filter = Q(time__gte=Now() - timedelta(hours=self.tournament.pref('checkin_window_people')))
+        if has_venues:
+            time_filter &= Q(time__gte=Now() - timedelta(hours=self.tournament.pref('checkin_window_venues')))
+        return time_filter
+
+    def get_queryset(self) -> 'QuerySet[Event]':
+        return super().get_queryset().filter(
+            ~self.get_filters(), self.get_time_filter(self.request.query_params.get('venues', 'false') == 'true'),
+        ).select_related(
+            'identifier__personidentifier__person__adjudicator', 'identifier__personidentifier__person__speaker',
+            'identifier__venueidentifier__venue', 'identifier__debateidentifier__debate',
+        ).order_by('time')
+
+    def broadcast_checkin(self, objs: Union[Event, 'Identifier'], check: bool) -> None:
+        # Send result to websocket for treatment when opened; but perform the action here
+        group_name = CheckInEventConsumer.group_prefix + "_" + self.tournament.slug
+
+        if check:
+            async_to_sync(get_channel_layer().group_send)(group_name, {
+                'type': 'send_json',
+                'checkins': [obj.serialize() for obj in objs],
+                'created': check,
+            })
+        else:
+            async_to_sync(get_channel_layer().group_send)(group_name, {
+                'type': 'send_json',
+                'checkins': [{'identifier': obj.barcode} for obj in objs],
+                'created': check,
+            })
+
+    @extend_schema(summary="Toggle the checkin statuses of the included objects")
+    def patch(self, request: 'HttpRequest', *args, **kwargs) -> Response:
+        serializer = self.get_serializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+
+        identifiers = {obj['identifier'] for obj in serializer._validated_data}
+        events = Event.objects.filter(self.get_time_filter(any(ident.instance_attr == 'venue' for ident in identifiers)), identifier__in=list(identifiers))
+        existing = {e.identifier for e in events}
+        identifiers -= existing
+        events.delete()
+        self.broadcast_checkin(existing, False)
+
+        serializer._validated_data = [vd for vd in serializer._validated_data if vd['identifier'] in identifiers]
+        self.perform_create(serializer)
+        self.broadcast_checkin(identifiers, True)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=200, headers=headers)
+
+    @extend_schema(summary="Check in a list of objects", description='Checks in objects identified by URL or barcode (in that order) at current time (by default)',
+        request=serializers.CheckinSerializer(many=True), responses={201: serializers.CheckinSerializer(many=True)})
+    def put(self, request: 'HttpRequest', *args, **kwargs) -> Response:
+        serializer = self.get_serializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        self.broadcast_checkin([obj['identifier'].serialize() for obj in serializer._validated_data], True)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=201, headers=headers)
+
+    @extend_schema(summary="Check-out a list of objects")
+    def post(self, request: 'HttpRequest', *args, **kwargs) -> Response:
+        serializer = self.get_serializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+
+        Event.objects.filter(identifier__in=[obj['identifier'] for obj in serializer._validated_data]).delete()
+        self.broadcast_checkin([obj['identifier'] for obj in serializer._validated_data], False)
+        return Response(status=204)
