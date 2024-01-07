@@ -442,6 +442,7 @@ class FeedbackPaths(ChoicePreference):
         ('with-t-on-c', _("Panellists and trainees on chairs, vice-versa")),
         ('all-adjs', _("All adjudicators (including trainees) on each other")),
         ('with-p-on-p', _("Panellists on eachother and chairs, trainees on chairs, chairs on everyone")),
+        ('no-adjs', _("Neither chairs, nor panellists nor trainees")),
     )
     default = 'with-p-on-c'
 
@@ -455,6 +456,7 @@ class FeedbackFromTeams(ChoicePreference):
     choices = (
         ('orallist', _("Orallist only (voting panellists permitted, with prompts to select orallist)")),
         ('all-adjs', _("All adjudicators in their panels (including trainees)")),
+        ('no-one', _("No one")),
     )
     default = 'orallist'
 
