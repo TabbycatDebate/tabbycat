@@ -13,7 +13,7 @@ from rest_framework.fields import get_error_detail, SkipField
 from rest_framework.settings import api_settings
 
 from adjallocation.models import DebateAdjudicator, PreformedPanel
-from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
+from adjfeedback.models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory, BreakingTeam
 from draw.models import Debate, DebateTeam
 from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
@@ -580,6 +580,10 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
             vc = VenueConstraintSerializer(many=True, context=self.context)
             vc._validated_data = venue_constraints  # Data was already validated
             vc.save(adjudicator=instance)
+
+        if 'base_score' in validated_data and validated_data['base_score'] != instance.base_score:
+            AdjudicatorBaseScoreHistory.objects.create(
+                adjudicator=instance, round=self.context['tournament'].current_round, score=validated_data['base_score'])
 
         if self.partial:
             # Avoid removing conflicts if merely PATCHing
