@@ -5,6 +5,7 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ValidationError
 from django.db.models import Count, Prefetch, Q
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
 from dynamic_preferences.api.serializers import PreferenceSerializer
@@ -27,15 +28,19 @@ from breakqual.views import GenerateBreakMixin
 from checkins.consumers import CheckInEventConsumer
 from checkins.models import Event
 from checkins.utils import create_identifiers, get_unexpired_checkins
+from draw.generator.common import DrawFatalError, DrawUserError
+from draw.manager import DrawManager
 from draw.models import Debate, DebateTeam
 from options.models import TournamentPreferenceModel
 from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
+from standings.base import StandingsError
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import TournamentFromUrlMixin
 from tournaments.models import Round, Tournament
-from venues.models import Venue, VenueCategory
+from venues.allocator import allocate_venues
+from venues.models import Venue, VenueCategory, VenueConstraint
 
 from . import serializers
 from .fields import ParticipantAvailabilityForeignKeyField
@@ -817,6 +822,27 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
     def delete_all(self, request, *args, **kwargs):
         self.get_queryset().delete()
         return Response(status=204)  # No content
+
+    @extend_schema(summary="Generate draw", parameters=[
+        OpenApiParameter('allocate_venues', description='Automatically allocate venues if possible', required=False, type=bool, default=True),
+    ])
+    def generate(self, request, *args, **kwargs):
+        if self.round.draw_status != Round.Status.NONE:
+            raise ValidationError("Draw already exists for the round")
+
+        try:
+            manager = DrawManager(self.round)
+            manager.create()
+        except (DrawUserError, DrawFatalError, StandingsError) as e:
+            raise ValidationError(str(e))
+
+        if self.request.query_params.get('allocate_venues', 'true') == 'true':
+            relevant_adj_venue_constraints = VenueConstraint.objects.filter(
+                    adjudicator__in=self.tournament.relevant_adjudicators)
+            if not relevant_adj_venue_constraints.exists():
+                allocate_venues(self.round)
+
+        return self.list(request, *args, **kwargs)
 
 
 @extend_schema(tags=['results'], parameters=debate_parameters)
