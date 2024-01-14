@@ -435,8 +435,14 @@ class PartialBreakingTeamSerializer(BreakingTeamSerializer):
         model = BreakingTeam
         fields = ('team', 'remark')
 
+    def validate_team(self, value):
+        try:
+            return self.context['break_category'].breakingteam_set.get(team=value)
+        except BreakingTeam.DoesNotExist:
+            raise serializers.ValidationError('Team is not included in break')
+
     def save(self, **kwargs):
-        bt = self.context['break_category'].breakingteam_set.get(team=self.validated_data['team'])
+        bt = self.validated_data['team']
         bt.remark = self.validated_data.get('remark', '')
         bt.save()
         return bt
