@@ -16,10 +16,8 @@ RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get install -y nodejs npm
 
 # Copy all our files into the baseimage and cd to that directory
-RUN mkdir /tcd
 WORKDIR /tcd
-# Can this be skipped? Takes ages
-ADD . /tcd/
+COPY . /tcd/
 
 # Set git to use HTTPS (SSH is often blocked by firewalls)
 RUN git config --global url."https://".insteadOf git://
