@@ -269,7 +269,10 @@ class EditBreakCategoriesView(EditSpeakerCategoriesView):
         }
 
     def get_formset_kwargs(self):
-        return {'form_kwargs': {'tournament': self.tournament}}
+        return {
+            'initial': [{'tournament': self.tournament}] * 2,
+            'form_kwargs': {'tournament': self.tournament},
+        }
 
     def prepare_related(self, cat):
         auto_make_break_rounds(cat, prefix=True)
