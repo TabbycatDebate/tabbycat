@@ -313,6 +313,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['ballotsub'] = self.ballotsub
+        kwargs['tabroom'] = self.tabroom
         return kwargs
 
     def add_success_message(self):
