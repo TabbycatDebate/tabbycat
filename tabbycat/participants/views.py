@@ -22,6 +22,7 @@ from options.utils import use_team_code_names
 from tournaments.mixins import (PublicTournamentPageMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
+from users.permissions import Permission
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.tables import TabbycatTableBuilder
@@ -69,6 +70,7 @@ class BaseParticipantsListView(TournamentMixin, VueTableTemplateView):
 
 
 class AdminParticipantsListView(AdministratorMixin, BaseParticipantsListView):
+    view_permission = [Permission.VIEW_TEAMS, Permission.VIEW_ADJS]
     template_name = 'participants_list.html'
     admin = True
 
@@ -118,6 +120,7 @@ class BaseInstitutionsListView(TournamentMixin, VueTableTemplateView):
 
 
 class AdminInstitutionsListView(AdministratorMixin, BaseInstitutionsListView):
+    view_permission = Permission.VIEW_INSTS
     template_name = 'participants_list.html'
     admin = True
 
@@ -323,7 +326,7 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
     # uniqueness checks will work. Since this is a superuser form, they can
     # access all tournaments anyway, so tournament forgery wouldn't be a
     # security risk.
-
+    view_permission = Permission.VIEW_SPEAKER_CATEGORIES
     template_name = 'speaker_categories_edit.html'
     formset_model = SpeakerCategory
     action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_CATEGORIES_EDIT
@@ -386,6 +389,7 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
     template_name = 'edit_speaker_eligibility.html'
     page_title = _("Speaker Category Eligibility")
     page_emoji = '🍯'
+    edit_permission = Permission.EDIT_SPEAKER_CATEGORIES
 
     def get_table(self):
         table = TabbycatTableBuilder(view=self, sort_key='team')

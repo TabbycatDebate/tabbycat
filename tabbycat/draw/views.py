@@ -34,6 +34,7 @@ from tournaments.mixins import (CurrentRoundMixin, DebateDragAndDropMixin,
     TournamentMixin)
 from tournaments.models import Round
 from tournaments.utils import get_side_name
+from users.permissions import Permission
 from utils.misc import reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
@@ -445,6 +446,8 @@ class EmailTeamAssignmentsView(RoundTemplateEmailCreateView):
 class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, VueTableTemplateView):
     detailed = False
 
+    view_permission = Permission.VIEW_ADMIN_DRAW
+
     def get_page_title(self):
         round = self.round
         self.page_emoji = '👀'
@@ -571,6 +574,7 @@ class AdminDrawWithDetailsView(AdminDrawView):
     detailed = True
     page_emoji = '👀'
     use_template_subtitle = False  # Use the "for Round n" subtitle
+    view_permission = Permission.VIEW_ADMIN_DRAW
 
     def get_page_title(self):
         return _("Draw with Details")
@@ -655,7 +659,7 @@ class DrawStatusEdit(LogActionMixin, AdministratorMixin, RoundMixin, PostOnlyRed
 
 
 class CreateDrawView(DrawStatusEdit):
-
+    edit_permission = Permission.GENERATE_DEBATE
     action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_CREATE
 
     def post(self, request, *args, **kwargs):
@@ -741,6 +745,7 @@ class ConfirmDrawRegenerationView(AdministratorMixin, TemplateView):
 
 
 class DrawReleaseView(DrawStatusEdit):
+    edit_permission = Permission.RELEASE_DRAW
     action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_RELEASE
     round_redirect_pattern_name = 'draw-display'
 
@@ -761,6 +766,7 @@ class DrawReleaseView(DrawStatusEdit):
 
 
 class DrawUnreleaseView(DrawStatusEdit):
+    edit_permission = Permission.UNRELEASE_DRAW
     action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_UNRELEASE
     round_redirect_pattern_name = 'draw-display'
 
@@ -777,6 +783,7 @@ class DrawUnreleaseView(DrawStatusEdit):
 
 
 class SetRoundStartTimeView(DrawStatusEdit):
+    edit_permission = Permission.EDIT_STARTTIME
     action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_START_TIME_SET
     round_redirect_pattern_name = 'draw-display'
 
@@ -828,6 +835,7 @@ class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
 
 
 class SideAllocationsView(AdministratorMixin, BaseSideAllocationsView):
+    edit_permission = Permission.EDIT_ALLOCATESIDES
     pass
 
 
@@ -839,6 +847,7 @@ class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateVi
     template_name = "edit_debate_teams.html"
     page_title = gettext_lazy("Edit Matchups")
     prefetch_teams = False # Fetched in full as get_serialised
+    edit_permission = Permission.EDIT_DEBATETEAMS
 
     def get_serialised_allocatable_items(self):
         # TODO: account for shared teams

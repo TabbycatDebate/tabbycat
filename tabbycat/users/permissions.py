@@ -25,6 +25,12 @@ class Permission(TextChoices):
 
     VIEW_TEAMS = 'view.team', _("view teams")
     ADD_TEAMS = 'add.team', _("add teams")
+    VIEW_ADJS = 'view.adj', _("view adjudicators")
+    ADD_ADJS = 'add.adj', _("add adjudicators")
+    VIEW_ROOMS = 'view.room', _("view rooms")
+    ADD_ROOMS = 'add.room', _("add rooms")
+    VIEW_INSTS = 'view.inst', _("view institutions")
+    ADD_INSTS = 'add.inst', _("add institutions")
 
     VIEW_ROUNDAVAILABILITIES_TEAM = 'view.roundavailability.team', _("view round availabilities for teams")
     VIEW_ROUNDAVAILABILITIES_ADJ = 'view.roundavailability.adjudicator', _("view round availabilities for adjudicators")
@@ -32,6 +38,11 @@ class Permission(TextChoices):
     EDIT_ROUNDAVAILABILITIES_TEAM = 'edit.roundavailability.team', _("edit round availabilities for teams")
     EDIT_ROUNDAVAILABILITIES_ADJ = 'edit.roundavailability.adjudicator', _("edit round availabilities for adjudicators")
     EDIT_ROUNDAVAILABILITIES_VENUE = 'edit.roundavailability.venue', _("edit round availabilities for rooms")
+
+    VIEW_ROOMCONSTRAINTS = 'view.roomconstraints', _("view room constraints")
+    VIEW_ROOMCATEGORIES = 'view.roomcategories', _("view room categories")
+    EDIT_ROOMCONSTRAINTS = 'edit.roomconstraints', _("edit room constraints")
+    EDIT_ROOMCATEGORIES = 'edit.roomcategories', _("edit room categories")
 
     VIEW_DEBATES = 'view.debate', _("view debates (draw)")
     VIEW_ADMIN_DRAW = 'view.debate.admin', _("view debates (detailed draw)")
@@ -57,21 +68,18 @@ class Permission(TextChoices):
 
     VIEW_MOTION = 'view.roundmotion', _("view motion per round")
     EDIT_MOTION = 'edit.roundmotion', _("edit motion per round")
-    EDIT_RELEASEDRAW = 'edit.releasedraw', _("release draw to public")
-    EDIT_RELEASEMOTION = 'edit.releasemotion', _("release motion to public")
+    RELEASE_DRAW = 'release.draw', _("release draw to public")
+    RELEASE_MOTION = 'release.motion', _("release motion to public")
+    UNRELEASE_DRAW = 'unrelease.draw', _("unrelease draw to public")
+    UNRELEASE_MOTION = 'unrelease.motion', _("unrelease motion to public")
     EDIT_STARTTIME = 'edit.starttime', _("add debate start time")
-    # these permissions are already assigned to the assistants
-    VIEW_ALLCURRENTDRAWS_ROOM = 'view.allcurrentdrawsroom', _("view all current draws by room")
-    VIEW_ALLCURRENTDRAWS_TEAM = 'view.allcurrentdrawsteam', _("view all current draws by team")
-    VIEW_ROUNDDRAW_ROOM = 'view.rounddrawroom', _("view current round draw by room")
-    VIEW_ROUNDDRAW_TEAM = 'view.rounddrawteam', _("view current round draw by team")
-    VIEW_DISPLAYMOTION = 'view.displaymotion', _("view display room motion page")
+    VIEW_DRAW = 'view.draw', _("view draws")
 
     VIEW_TOURNAMENTPREFERENCEMODEL = 'view.tournamentpreferencemodel', _("view tournament configuration")
     EDIT_TOURNAMENTPREFERENCEMODEL = 'edit.tournamentpreferencemodel', _("edit tournament configuration")
 
     VIEW_PREFORMEDPANELS = 'view.preformedpanels', _("view existing preformed panels")
-    EDIT_PREFORMEDPANELS = 'edit.preformedpanels', _("edit existing preformed panels")
+    EDIT_PREFORMEDPANELS = 'edit.preformedpanels', _("edit preformed panels")
 
     # standings tab
     VIEW_STANDINGS_OVERVIEW = 'view.standingsoverview', _("view the overviews of standings")
@@ -82,9 +90,7 @@ class Permission(TextChoices):
     VIEW_DIVERSITYTAB = 'view.diversitytab', _("view the diversity tab")
 
     # Feedback tab
-    VIEW_FEEDBACK_OVERVIEW = 'view.feedbackoverview', _("view overview of judge feedback scores")
-    EDIT_FEEDBACK_OVERVIEW = 'edit.feedbackoverview', _("edit overview of judge feedback scores")
-    # not sure what the right most column of the overview page is called, but I'm calling it comments for now
+    VIEW_FEEDBACK_OVERVIEW = 'view.feedbackoverview', _("view overview of judge feedback")
     EDIT_JUDGESCORES_BULK = 'edit.judgescoresbulk', _("bulk update judge scores")
     EDIT_BASEJUDGESCORES_IND = 'edit.judgescoresind', _("edit base scores of judges")
     EDIT_SETBREAKING = 'edit.setbreaking', _("edit breaking judges")
@@ -94,6 +100,7 @@ class Permission(TextChoices):
     VIEW_FEEDBACK_UNSUBMITTED = 'view.feedbackunsubmitted', _("view feedback unsubmitted tab")
     ADD_FEEDBACK = 'add.feedback', _("add feedback")
     VIEW_ADJ_BREAK = 'view.adj.break', _("view adjudicator break")
+    EDIT_ADJ_BREAK = 'edit.adj.break', _("edit adjudicator break")
     # idk if its possible for them to add feedback everywhere, considering there is add feedback on multiple pages
 
     # breaks
@@ -101,10 +108,16 @@ class Permission(TextChoices):
     VIEW_BREAK_ELIGIBILITY = 'view.breakeligibility', _("view break eligibility")
     EDIT_BREAK_CATEGORIES = 'edit.breakcategories', _("edit break categories")
     VIEW_BREAK_CATEGORIES = 'view.breakcategories', _("view break categories")
+    VIEW_SPEAKER_CATEGORIES = 'view.speakercategories', _("view speaker categories")
+    EDIT_SPEAKER_CATEGORIES = 'edit.speakercategories', _("edit speaker categories")
     VIEW_BREAK_OVERVIEW = 'view.break.overview', _("view break overview")
     VIEW_BREAK = 'view.break', _("view breaks")
     GENERATE_BREAK = 'generate.break', _("generate all breaks")
 
+    VIEW_PRIVATE_URLS = 'view.privateurls', _("view private urls")
+    GENERATE_PRIVATE_URLS = 'generate.privateurls', _("generate private urls") 
+    # need to get rid of generate private urls soons
+    SEND_PRIVATE_URLS = 'send.privateurls', _("send private urls")
 
 permission_type = Union[Permission, bool]
 
