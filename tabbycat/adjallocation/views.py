@@ -13,7 +13,7 @@ from availability.utils import annotate_availability
 from participants.models import Adjudicator, Region
 from participants.prefetch import populate_feedback_scores
 from tournaments.mixins import DebateDragAndDropMixin, TournamentMixin
-from users.permissions import Permission, has_permission
+from users.permissions import has_permission, Permission
 from utils.misc import ranks_dictionary, redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView

@@ -119,6 +119,7 @@ class Permission(TextChoices):
     # need to get rid of generate private urls soons
     SEND_PRIVATE_URLS = 'send.privateurls', _("send private urls")
 
+
 permission_type = Union[Permission, bool]
 
 
