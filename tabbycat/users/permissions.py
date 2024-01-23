@@ -115,7 +115,7 @@ class Permission(TextChoices):
     GENERATE_BREAK = 'generate.break', _("generate all breaks")
 
     VIEW_PRIVATE_URLS = 'view.privateurls', _("view private urls")
-    GENERATE_PRIVATE_URLS = 'generate.privateurls', _("generate private urls") 
+    GENERATE_PRIVATE_URLS = 'generate.privateurls', _("generate private urls")
     # need to get rid of generate private urls soons
     SEND_PRIVATE_URLS = 'send.privateurls', _("send private urls")
 

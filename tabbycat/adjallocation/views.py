@@ -91,7 +91,7 @@ class EditDebateAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
     page_title = gettext_lazy("Edit Allocation")
     prefetch_adjs = True # Fetched in full as get_serialised
 
-    view_permission = Permission.VIEW_DEBATEADJUDICATORS 
+    view_permission = Permission.VIEW_DEBATEADJUDICATORS
     edit_permission = Permission.EDIT_DEBATEADJUDICATORS
 
     def get_extra_info(self):
