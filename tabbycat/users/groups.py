@@ -96,7 +96,7 @@ class TabAssistant(BaseGroup):
         Permission.EDIT_SPEAKER_CATEGORIES,
         Permission.VIEW_PRIVATE_URLS,
         Permission.GENERATE_PRIVATE_URLS,
-        Permission.SEND_PRIVATE_URLS
+        Permission.SEND_PRIVATE_URLS,
     ]
 
 
