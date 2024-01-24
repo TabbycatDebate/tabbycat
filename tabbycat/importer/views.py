@@ -98,7 +98,7 @@ class BaseImportWizardView(AdministratorMixin, LogActionMixin, TournamentMixin, 
 
 class ImportInstitutionsWizardView(BaseImportWizardView):
     model = Institution
-    edit_permission = Permission.ADD_INSTS
+    edit_permission = Permission.ADD_INSTITUTIONS
     form_list = [
         ('raw', ImportInstitutionsRawForm),
         ('details', modelformset_factory(Institution, fields=('name', 'code'), extra=0)),
@@ -197,7 +197,7 @@ class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
 
 class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
     model = Adjudicator
-    edit_permission = Permission.ADD_ADJS
+    edit_permission = Permission.ADD_ADJUDICATORS
     form_list = [
         ('numbers', ImportAdjudicatorsNumbersForm),
         ('details', modelformset_factory(Adjudicator, form=AdjudicatorDetailsForm, extra=0)),
