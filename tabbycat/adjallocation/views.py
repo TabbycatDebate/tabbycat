@@ -92,7 +92,6 @@ class EditDebateAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
     prefetch_adjs = True # Fetched in full as get_serialised
 
     view_permission = Permission.VIEW_DEBATEADJUDICATORS
-    edit_permission = Permission.EDIT_DEBATEADJUDICATORS
 
     def get_extra_info(self):
         info = super().get_extra_info()
@@ -109,7 +108,6 @@ class EditPanelAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
     page_title = gettext_lazy("Edit Panels")
 
     view_permission = Permission.VIEW_PREFORMEDPANELS
-    edit_permission = Permission.EDIT_PREFORMEDPANELS
 
     def get_extra_info(self):
         info = super().get_extra_info()
@@ -151,12 +149,6 @@ class BaseAdjudicatorConflictsView(LogActionMixin, AdministratorMixin, Tournamen
     page_emoji = "🔶"
 
     formset_factory_kwargs = {}
-
-    def get_view_permission(self):
-        return 'view.%s' % (self.formset_model.__name__.lower())
-
-    def get_edit_permission(self):
-        return 'edit.%s' % (self.formset_model.__name__.lower())
 
     def get_formset_factory_kwargs(self):
         can_edit = has_permission(self.request.user, self.get_edit_permission(), self.tournament)

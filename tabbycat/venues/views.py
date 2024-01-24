@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
-    edit_permission = Permission.ADD_ROOMS
+    view_permission = Permission.VIEW_ROOMALLOCATIONS
     template_name = "edit_debate_venues.html"
     page_title = gettext_lazy("Edit Rooms")
     prefetch_venues = False # Fetched in full as get_serialised

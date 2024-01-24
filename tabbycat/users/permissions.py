@@ -25,12 +25,12 @@ class Permission(TextChoices):
 
     VIEW_TEAMS = 'view.team', _("view teams")
     ADD_TEAMS = 'add.team', _("add teams")
-    VIEW_ADJS = 'view.adj', _("view adjudicators")
-    ADD_ADJS = 'add.adj', _("add adjudicators")
+    VIEW_ADJUDICATORS = 'view.adj', _("view adjudicators")
+    ADD_ADJUDICATORS = 'add.adj', _("add adjudicators")
     VIEW_ROOMS = 'view.room', _("view rooms")
     ADD_ROOMS = 'add.room', _("add rooms")
-    VIEW_INSTS = 'view.inst', _("view institutions")
-    ADD_INSTS = 'add.inst', _("add institutions")
+    VIEW_INSTITUTIONS = 'view.inst', _("view institutions")
+    ADD_INSTITUTIONS = 'add.inst', _("add institutions")
 
     VIEW_ROUNDAVAILABILITIES_TEAM = 'view.roundavailability.team', _("view round availabilities for teams")
     VIEW_ROUNDAVAILABILITIES_ADJ = 'view.roundavailability.adjudicator', _("view round availabilities for adjudicators")
@@ -115,9 +115,9 @@ class Permission(TextChoices):
     GENERATE_BREAK = 'generate.break', _("generate all breaks")
 
     VIEW_PRIVATE_URLS = 'view.privateurls', _("view private urls")
-    GENERATE_PRIVATE_URLS = 'generate.privateurls', _("generate private urls")
+    GENERATE_PRIVATE_URLS = 'generate.privateurls', _("generate private URLs")
     # need to get rid of generate private urls soons
-    SEND_PRIVATE_URLS = 'send.privateurls', _("send private urls")
+    SEND_PRIVATE_URLS = 'send.privateurls', _("send private URLs")
 
 
 permission_type = Union[Permission, bool]

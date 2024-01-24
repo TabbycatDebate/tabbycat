@@ -12,7 +12,6 @@ from dynamic_preferences.views import PreferenceFormView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import TournamentMixin
-from users.permissions import Permission
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 
@@ -24,8 +23,6 @@ logger = logging.getLogger(__name__)
 
 
 class TournamentConfigIndexView(AdministratorMixin, TournamentMixin, TemplateView):
-    view_permission = Permission.VIEW_TOURNAMENTPREFERENCEMODEL
-    edit_permission = Permission.EDIT_TOURNAMENTPREFERENCEMODEL
     template_name = "preferences_index.html"
 
     def get_preset_options(self):

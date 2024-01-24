@@ -574,7 +574,6 @@ class AdminDrawWithDetailsView(AdminDrawView):
     detailed = True
     page_emoji = '👀'
     use_template_subtitle = False  # Use the "for Round n" subtitle
-    view_permission = Permission.VIEW_ADMIN_DRAW
 
     def get_page_title(self):
         return _("Draw with Details")
@@ -835,7 +834,7 @@ class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
 
 
 class SideAllocationsView(AdministratorMixin, BaseSideAllocationsView):
-    edit_permission = Permission.EDIT_ALLOCATESIDES
+    view_permission = Permission.EDIT_ALLOCATESIDES
     pass
 
 
