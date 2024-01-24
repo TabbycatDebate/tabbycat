@@ -19,13 +19,49 @@ class BaseGroup:
 class Equity(BaseGroup):
     # Permissions to manage conflicts/constraints, view feedback + participant info
     name = _("Equity")
-    permissions = []
+    permissions = [
+        Permission.EDIT_ROOMCATEGORIES,
+        Permission.EDIT_ROOMCONSTRAINTS,
+        Permission.EDIT_ADJ_ADJ_CONFLICTS,
+        Permission.EDIT_ADJ_INST_CONFLICTS,
+        Permission.EDIT_ADJ_INST_CONFLICTS,
+        Permission.EDIT_TEAM_INST_CONFLICTS,
+    ]
 
 
 class AdjudicationCore(BaseGroup):
     # Permissions to make [preformed] allocations, view feedback, and create motions
     name = _("Adjudication Core")
-    permissions = []
+    permissions = [
+        Permission.EDIT_BASEJUDGESCORES_IND,
+        Permission.EDIT_DEBATEADJUDICATORS,
+        Permission.EDIT_FEEDBACK_CONFIRM,
+        Permission.EDIT_FEEDBACK_IGNORE,
+        Permission.EDIT_FEEDBACK_OVERVIEW,
+        Permission.EDIT_JUDGESCORES_BULK,
+        Permission.EDIT_MOTION,
+        Permission.EDIT_RELEASEDRAW,
+        Permission.EDIT_UNRELEASEDRAW,
+        Permission.EDIT_SETBREAKING,
+        Permission.EDIT_STARTTIME,
+        Permission.EDIT_RELEASEDRAW,
+        Permission.EDIT_PREFORMEDPANELS,
+        Permission.EDIT_RELEASEMOTION,
+        Permission.EDIT_UNRELEASEMOTION,
+        Permission.EDIT_ROOMALLOCATIONS,
+        Permission.EDIT_ALLOCATESIDES,
+        Permission.EDIT_ADJ_BREAK,
+        Permission.VIEW_BREAK,
+        Permission.VIEW_BREAK_OVERVIEW,
+        Permission.VIEW_MOTIONSTAB,
+        Permission.VIEW_DIVERSITYTAB,
+        Permission.VIEW_STANDINGS_OVERVIEW,
+        Permission.VIEW_TEAMSTANDINGS,
+        Permission.VIEW_SPEAKERSSTANDINGS,
+        Permission.VIEW_REPLIESSTANDINGS,
+        Permission.VIEW_FEEDBACK,
+        Permission.ADD_FEEDBACK,
+    ]
 
 
 class TabDirector(BaseGroup):
@@ -37,4 +73,36 @@ class TabDirector(BaseGroup):
 class TabAssistant(BaseGroup):
     # Permissions to match the Assistant interface
     name = _("Tabulation Assistant")
-    permissions = []
+    permissions = [
+        Permission.EDIT_ROUNDAVAILABILITIES_ADJ,
+        Permission.EDIT_ROUNDAVAILABILITIES_TEAM,
+        Permission.EDIT_ROUNDAVAILABILITIES_VENUE,
+        Permission.EDIT_ROOMCATEGORIES,
+        Permission.EDIT_ROOMCONSTRAINTS,
+        Permission.VIEW_ADMIN_DRAW,
+        Permission.EDIT_OLD_BALLOTSUBMISSIONS,
+        Permission.EDIT_BALLOTSUBMISSIONS,
+        Permission.ADD_BALLOTSUBMISSIONS,
+        Permission.MARK_BALLOTSUBMISSIONS,
+        Permission.MARK_OTHERS_BALLOTSUBMISSIONS,
+        Permission.VIEW_BALLOTSUBMISSION_GRAPH,
+        Permission.VIEW_FEEDBACK,
+        Permission.VIEW_FEEDBACK_OVERVIEW,
+        Permission.VIEW_FEEDBACK_UNSUBMITTED,
+        Permission.EDIT_FEEDBACK_CONFIRM,
+        Permission.EDIT_FEEDBACK_IGNORE,
+        Permission.ADD_FEEDBACK,
+        Permission.EDIT_BREAK_ELIGIBILITY,
+        Permission.EDIT_SPEAKER_CATEGORIES,
+        Permission.VIEW_PRIVATE_URLS,
+        Permission.GENERATE_PRIVATE_URLS,
+        Permission.SEND_PRIVATE_URLS
+    ]
+
+
+class Language(BaseGroup):
+    name = _("Language")
+    permissions = [
+        Permission.EDIT_BREAK_ELIGIBILITY,
+        Permission.EDIT_SPEAKER_CATEGORIES,
+    ]
