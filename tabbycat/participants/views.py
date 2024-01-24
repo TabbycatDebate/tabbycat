@@ -70,7 +70,7 @@ class BaseParticipantsListView(TournamentMixin, VueTableTemplateView):
 
 
 class AdminParticipantsListView(AdministratorMixin, BaseParticipantsListView):
-    view_permission = Permission.VIEW_TEAMS and Permission.VIEW_ADJS
+    view_permission = Permission.VIEW_TEAMS and Permission.VIEW_ADJUDICATORS
     template_name = 'participants_list.html'
     admin = True
 
@@ -120,7 +120,7 @@ class BaseInstitutionsListView(TournamentMixin, VueTableTemplateView):
 
 
 class AdminInstitutionsListView(AdministratorMixin, BaseInstitutionsListView):
-    view_permission = Permission.VIEW_INSTS
+    view_permission = Permission.VIEW_INSTITUTIONS
     template_name = 'participants_list.html'
     admin = True
 
