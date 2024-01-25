@@ -147,10 +147,11 @@ class RoundSerializer(serializers.ModelSerializer):
         text = serializers.CharField(source='motion.text', max_length=500, required=False)
         reference = serializers.CharField(source='motion.reference', max_length=100, required=False)
         info_slide = serializers.CharField(source='motion.info_slide', required=False)
+        seq = serializers.IntegerField(read_only=True)
 
         class Meta:
             model = RoundMotion
-            exclude = ('round', 'motion', 'seq')
+            exclude = ('round', 'motion')
 
         def create(self, validated_data):
             motion_data = validated_data.pop('motion')
