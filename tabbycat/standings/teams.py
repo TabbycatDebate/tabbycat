@@ -189,7 +189,7 @@ class BaseDrawStrengthMetricAnnotator(BaseMetricAnnotator):
         opponents_annotation = ArrayAgg('debateteam__debate__debateteam__team_id',
                 filter=opponents_filter)
         logger.info("Opponents annotation: %s", str(opponents_annotation))
-        teams_with_opponents = queryset.all().annotate(opponent_ids=opponents_annotation)
+        teams_with_opponents = queryset.model.objects.annotate(opponent_ids=opponents_annotation)
         opponents_by_team = {team.id: team.opponent_ids for team in teams_with_opponents}
 
         opp_metric_queryset = self.opponent_annotator().get_annotated_queryset(
