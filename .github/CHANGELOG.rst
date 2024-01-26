@@ -2,6 +2,19 @@
 Change Log
 ==========
 
+2.8.1
+-----
+*Release date: 27 January 2024*
+
+- Fixed failing draw generation with byes (BACKEND-BWA)
+- Avoided showing points in private URL table for uncredited rounds (BACKEND-BVY)
+- Corrected ordering of ballots in private URL tables (#2369)
+- Fixed draw strength metrics counting unconfirmed ballots
+- API: Re-added ``seq`` for motions in Round endpoint
+- Hid real names from ballot forms if code names used
+- Fixed break category form showing general error
+
+
 2.8.0 (Quokka)
 ---------
 *Release date: 28 November 2023*

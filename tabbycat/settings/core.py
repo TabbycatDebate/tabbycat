@@ -22,9 +22,9 @@ SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.8.0'
+TABBYCAT_VERSION = '2.8.1'
 TABBYCAT_CODENAME = 'Quokka'
-READTHEDOCS_VERSION = 'v2.8.0'
+READTHEDOCS_VERSION = 'v2.8.1'
 
 # ==============================================================================
 # Internationalization and Localization
