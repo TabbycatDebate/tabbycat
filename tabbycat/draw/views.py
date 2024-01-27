@@ -251,6 +251,8 @@ class BriefingRoomDrawTableMixin:
     """Mixin for views that get projected in the briefing room, to be accessed
     only by admins and assistants."""
 
+    view_permission = Permission.VIEW_BRIEFING_DRAW
+
     def get_context_data(self, **kwargs):
         kwargs['no_popovers'] = True
         return super().get_context_data(**kwargs)

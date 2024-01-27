@@ -75,6 +75,8 @@ class Permission(TextChoices):
     UNRELEASE_MOTION = 'unrelease.motion', _("unrelease motion to public")
     EDIT_STARTTIME = 'edit.starttime', _("add debate start time")
     VIEW_DRAW = 'view.draw', _("view draws")
+    VIEW_BRIEFING_DRAW = 'view.briefingdraw', _("view draws (for the briefing room)")
+    DISPLAY_MOTION = 'display.motion', _("display motion (for the briefing room)")
 
     VIEW_TOURNAMENTPREFERENCEMODEL = 'view.tournamentpreferencemodel', _("view tournament configuration")
     EDIT_TOURNAMENTPREFERENCEMODEL = 'edit.tournamentpreferencemodel', _("edit tournament configuration")
@@ -115,6 +117,7 @@ class Permission(TextChoices):
     GENERATE_BREAK = 'generate.break', _("generate all breaks")
 
     VIEW_PRIVATE_URLS = 'view.privateurls', _("view private urls")
+    VIEW_PRIVATE_URLS_EMAIL_LIST = 'view.privateurls.emaillist', _("view private urls email list")
     GENERATE_PRIVATE_URLS = 'generate.privateurls', _("generate private URLs")
     # need to get rid of generate private urls soons
     SEND_PRIVATE_URLS = 'send.privateurls', _("send private URLs")

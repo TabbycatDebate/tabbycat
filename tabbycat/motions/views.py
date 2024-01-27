@@ -201,6 +201,7 @@ class BaseDisplayMotionsView(RoundMixin, TemplateView):
 
 
 class AdminDisplayMotionsView(AdministratorMixin, BaseDisplayMotionsView):
+    view_permission = Permission.DISPLAY_MOTION
     pass
 
 
