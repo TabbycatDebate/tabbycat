@@ -83,7 +83,7 @@
 
           <div class="modal-body d-flex align-items-center justify-content-center text-center">
             <small>
-              {% if infos.0.motion.info_slide|slice:":3" == "<p>" %}
+              {% if infos.0.motion.info_slide|slice:":2" == "<p" %}
                 {{ infos.0.motion.info_slide|safe }}
               {% else %}
                 {{ infos.0.motion.info_slide|linebreaks }}
@@ -101,7 +101,7 @@
                     <span class="text-muted">{{ info.seq }}.</span>
                   {% endif %}
                   <small>
-                    {% if info.motion.info_slide|slice:":3" == "<p>" %}
+                    {% if info.motion.info_slide|slice:":2" == "<p" %}
                       {{ info.motion.info_slide|safe }}
                     {% else %}
                       {{ info.motion.info_slide|linebreaks }}
