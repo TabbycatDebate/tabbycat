@@ -31,6 +31,7 @@ class Permission(TextChoices):
     ADD_ROOMS = 'add.room', _("add rooms")
     VIEW_INSTITUTIONS = 'view.inst', _("view institutions")
     ADD_INSTITUTIONS = 'add.inst', _("add institutions")
+    VIEW_PARTICIPANTS = 'view.particpants', _("view participants")
 
     VIEW_ROUNDAVAILABILITIES_TEAM = 'view.roundavailability.team', _("view round availabilities for teams")
     VIEW_ROUNDAVAILABILITIES_ADJ = 'view.roundavailability.adjudicator', _("view round availabilities for adjudicators")
@@ -93,7 +94,6 @@ class Permission(TextChoices):
     VIEW_FEEDBACK_OVERVIEW = 'view.feedbackoverview', _("view overview of judge feedback")
     EDIT_JUDGESCORES_BULK = 'edit.judgescoresbulk', _("bulk update judge scores")
     EDIT_BASEJUDGESCORES_IND = 'edit.judgescoresind', _("edit base scores of judges")
-    EDIT_SETBREAKING = 'edit.setbreaking', _("edit breaking judges")
     VIEW_FEEDBACK = 'view.feedback', _("view feedback")
     EDIT_FEEDBACK_IGNORE = 'edit.feedbackignore', _("toggle ignore feedback")
     EDIT_FEEDBACK_CONFIRM = 'edit.feedbackconfirm', _("toggle confirm feedback")
@@ -118,6 +118,9 @@ class Permission(TextChoices):
     GENERATE_PRIVATE_URLS = 'generate.privateurls', _("generate private URLs")
     # need to get rid of generate private urls soons
     SEND_PRIVATE_URLS = 'send.privateurls', _("send private URLs")
+
+    EDIT_PARTICIPANT_CHECKIN = 'edit.participantcheckin', _("edit participant check-in")
+    EDIT_ROOM_CHECKIN = 'edit.roomcheckin', _("edit room check-in")
 
 
 permission_type = Union[Permission, bool]

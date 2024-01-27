@@ -15,6 +15,7 @@ from options.utils import use_team_code_names
 from participants.models import Person, Speaker
 from participants.serializers import InstitutionSerializer
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
+from users.permissions import Permission
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import PostOnlyRedirectView
@@ -62,6 +63,8 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
     page_emoji = '⌚️'
     page_title = _("People's Check-In Statuses")
     window_preference = 'checkin_window_people'
+
+    edit_permission = Permission.EDIT_PARTICIPANT_CHECKIN
 
     def get_context_data(self, **kwargs):
 
@@ -119,6 +122,8 @@ class CheckInVenuesStatusView(BaseCheckInStatusView):
     page_emoji = '👜'
     page_title = _("Rooms' Check-In Statuses")
     window_preference = 'checkin_window_venues'
+
+    edit_permission = Permission.EDIT_ROOM_CHECKIN
 
     def get_context_data(self, **kwargs):
         venues = []

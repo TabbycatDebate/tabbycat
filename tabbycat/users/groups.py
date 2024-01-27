@@ -26,6 +26,11 @@ class Equity(BaseGroup):
         Permission.EDIT_ADJ_INST_CONFLICTS,
         Permission.EDIT_ADJ_INST_CONFLICTS,
         Permission.EDIT_TEAM_INST_CONFLICTS,
+        Permission.VIEW_PARTICIPANTS,
+        Permission.VIEW_TEAMS,
+        Permission.VIEW_ADJUDICATORS,
+        Permission.VIEW_ROOMS,
+        Permission.VIEW_INSTITUTIONS,
     ]
 
 
@@ -40,11 +45,7 @@ class AdjudicationCore(BaseGroup):
         Permission.EDIT_FEEDBACK_OVERVIEW,
         Permission.EDIT_JUDGESCORES_BULK,
         Permission.EDIT_MOTION,
-        Permission.EDIT_RELEASEDRAW,
-        Permission.EDIT_UNRELEASEDRAW,
-        Permission.EDIT_SETBREAKING,
         Permission.EDIT_STARTTIME,
-        Permission.EDIT_RELEASEDRAW,
         Permission.EDIT_PREFORMEDPANELS,
         Permission.EDIT_RELEASEMOTION,
         Permission.EDIT_UNRELEASEMOTION,
@@ -61,6 +62,11 @@ class AdjudicationCore(BaseGroup):
         Permission.VIEW_REPLIESSTANDINGS,
         Permission.VIEW_FEEDBACK,
         Permission.ADD_FEEDBACK,
+        Permission.VIEW_PARTICIPANTS,
+        Permission.VIEW_TEAMS,
+        Permission.VIEW_ADJUDICATORS,
+        Permission.VIEW_ROOMS,
+        Permission.VIEW_INSTITUTIONS,
     ]
 
 
@@ -97,6 +103,18 @@ class TabAssistant(BaseGroup):
         Permission.VIEW_PRIVATE_URLS,
         Permission.GENERATE_PRIVATE_URLS,
         Permission.SEND_PRIVATE_URLS,
+        Permission.EDIT_PARTICIPANT_CHECKIN,
+        Permission.EDIT_ROOM_CHECKIN,
+        Permission.VIEW_TEAMS,
+        Permission.VIEW_ADJUDICATORS,
+        Permission.VIEW_ROOMS,
+        Permission.VIEW_INSTITUTIONS,
+        Permission.VIEW_PARTICIPANTS,
+        Permission.VIEW_ADMIN_DRAW,
+        Permission.VIEW_DEBATES,
+        Permission.RELEASE_DRAW,
+        Permission.UNRELEASE_DRAW,
+        Permission.EDIT_STARTTIME,
     ]
 
 
@@ -105,4 +123,9 @@ class Language(BaseGroup):
     permissions = [
         Permission.EDIT_BREAK_ELIGIBILITY,
         Permission.EDIT_SPEAKER_CATEGORIES,
+        Permission.VIEW_PARTICIPANTS,
+        Permission.VIEW_TEAMS,
+        Permission.VIEW_ADJUDICATORS,
+        Permission.VIEW_ROOMS,
+        Permission.VIEW_INSTITUTIONS,
     ]
