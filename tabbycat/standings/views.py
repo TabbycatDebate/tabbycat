@@ -18,6 +18,7 @@ from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
+from users.permissions import Permission
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
@@ -483,6 +484,7 @@ class BaseTeamStandingsView(BaseStandingsView):
 
 
 class TeamStandingsView(AdministratorMixin, BaseTeamStandingsView):
+    view_permission = Permission.VIEW_TEAMSTANDINGS
     """Superuser team standings view."""
     template_name = 'team_standings.html'  # add info alerts
     rankings = ('rank',)
@@ -621,6 +623,7 @@ class BaseDiversityStandingsView(TournamentMixin, TemplateView):
 class DiversityStandingsView(AdministratorMixin, BaseDiversityStandingsView):
 
     for_public = False
+    view_permission = Permission.VIEW_DIVERSITYTAB
 
 
 class PublicDiversityStandingsView(PublicTournamentPageMixin, BaseDiversityStandingsView):

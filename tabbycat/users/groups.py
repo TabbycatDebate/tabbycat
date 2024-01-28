@@ -19,13 +19,55 @@ class BaseGroup:
 class Equity(BaseGroup):
     # Permissions to manage conflicts/constraints, view feedback + participant info
     name = _("Equity")
-    permissions = []
+    permissions = [
+        Permission.EDIT_ROOMCATEGORIES,
+        Permission.EDIT_ROOMCONSTRAINTS,
+        Permission.EDIT_ADJ_ADJ_CONFLICTS,
+        Permission.EDIT_ADJ_INST_CONFLICTS,
+        Permission.EDIT_ADJ_INST_CONFLICTS,
+        Permission.EDIT_TEAM_INST_CONFLICTS,
+        Permission.VIEW_PARTICIPANTS,
+        Permission.VIEW_TEAMS,
+        Permission.VIEW_ADJUDICATORS,
+        Permission.VIEW_ROOMS,
+        Permission.VIEW_INSTITUTIONS,
+    ]
 
 
 class AdjudicationCore(BaseGroup):
     # Permissions to make [preformed] allocations, view feedback, and create motions
     name = _("Adjudication Core")
-    permissions = []
+    permissions = [
+        Permission.EDIT_BASEJUDGESCORES_IND,
+        Permission.EDIT_DEBATEADJUDICATORS,
+        Permission.EDIT_FEEDBACK_CONFIRM,
+        Permission.EDIT_FEEDBACK_IGNORE,
+        Permission.EDIT_FEEDBACK_OVERVIEW,
+        Permission.EDIT_JUDGESCORES_BULK,
+        Permission.EDIT_MOTION,
+        Permission.EDIT_STARTTIME,
+        Permission.EDIT_PREFORMEDPANELS,
+        Permission.EDIT_RELEASEMOTION,
+        Permission.EDIT_UNRELEASEMOTION,
+        Permission.EDIT_ROOMALLOCATIONS,
+        Permission.EDIT_ALLOCATESIDES,
+        Permission.EDIT_ADJ_BREAK,
+        Permission.VIEW_BREAK,
+        Permission.VIEW_BREAK_OVERVIEW,
+        Permission.VIEW_MOTIONSTAB,
+        Permission.VIEW_DIVERSITYTAB,
+        Permission.VIEW_STANDINGS_OVERVIEW,
+        Permission.VIEW_TEAMSTANDINGS,
+        Permission.VIEW_SPEAKERSSTANDINGS,
+        Permission.VIEW_REPLIESSTANDINGS,
+        Permission.VIEW_FEEDBACK,
+        Permission.ADD_FEEDBACK,
+        Permission.VIEW_PARTICIPANTS,
+        Permission.VIEW_TEAMS,
+        Permission.VIEW_ADJUDICATORS,
+        Permission.VIEW_ROOMS,
+        Permission.VIEW_INSTITUTIONS,
+    ]
 
 
 class TabDirector(BaseGroup):
@@ -37,4 +79,25 @@ class TabDirector(BaseGroup):
 class TabAssistant(BaseGroup):
     # Permissions to match the Assistant interface
     name = _("Tabulation Assistant")
-    permissions = []
+    permissions = [
+        Permission.ADD_BALLOTSUBMISSIONS,
+        Permission.MARK_OTHERS_BALLOTSUBMISSIONS,
+        Permission.VIEW_BALLOTSUBMISSION_GRAPH,
+        Permission.ADD_FEEDBACK,
+        Permission.VIEW_INSTITUTIONS,
+        Permission.VIEW_PARTICIPANTS,
+        Permission.EDIT_PARTICIPANT_CHECKIN,
+        Permission.EDIT_ROOM_CHECKIN,
+        Permission.VIEW_BRIEFING_DRAW,
+        Permission.DISPLAY_MOTION,
+    ]
+
+
+class Language(BaseGroup):
+    name = _("Language")
+    permissions = [
+        Permission.EDIT_BREAK_ELIGIBILITY,
+        Permission.EDIT_SPEAKER_CATEGORIES,
+        Permission.VIEW_PARTICIPANTS,
+        Permission.VIEW_TEAMS,
+    ]

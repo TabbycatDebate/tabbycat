@@ -672,7 +672,7 @@ class SetAdjudicatorBaseScoreView(BaseAdjudicatorActionView):
 class SetAdjudicatorBreakingStatusView(AdministratorMixin, TournamentMixin, LogActionMixin, View):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATOR_BREAK_SET
-    edit_permission = Permission.EDIT_SETBREAKING
+    edit_permission = Permission.EDIT_ADJ_BREAK
 
     def post(self, request, *args, **kwargs):
         body = self.request.body.decode('utf-8')

@@ -22,6 +22,7 @@ from participants.models import Adjudicator, Institution, Person, Team
 from participants.utils import populate_code_names
 from tournaments.mixins import TournamentMixin
 from tournaments.models import Tournament
+from users.permissions import Permission
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import PostOnlyRedirectView
@@ -97,6 +98,7 @@ class BaseImportWizardView(AdministratorMixin, LogActionMixin, TournamentMixin, 
 
 class ImportInstitutionsWizardView(BaseImportWizardView):
     model = Institution
+    edit_permission = Permission.ADD_INSTITUTIONS
     form_list = [
         ('raw', ImportInstitutionsRawForm),
         ('details', modelformset_factory(Institution, fields=('name', 'code'), extra=0)),
@@ -112,6 +114,7 @@ class ImportInstitutionsWizardView(BaseImportWizardView):
 
 class ImportVenuesWizardView(BaseImportWizardView):
     model = Venue
+    edit_permission = Permission.ADD_ROOMS
     form_list = [
         ('raw', ImportVenuesRawForm),
         ('details', modelformset_factory(Venue, form=VenueDetailsForm, extra=0)),
@@ -171,6 +174,7 @@ class BaseImportByInstitutionWizardView(BaseImportWizardView):
 
 class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
     model = Team
+    edit_permission = Permission.ADD_TEAMS
     form_list = [
         ('numbers', ImportTeamsNumbersForm),
         ('details', modelformset_factory(Team, form=TeamDetailsForm, formset=TeamDetailsFormSet, extra=0)),
@@ -193,6 +197,7 @@ class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
 
 class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
     model = Adjudicator
+    edit_permission = Permission.ADD_ADJUDICATORS
     form_list = [
         ('numbers', ImportAdjudicatorsNumbersForm),
         ('details', modelformset_factory(Adjudicator, form=AdjudicatorDetailsForm, extra=0)),
