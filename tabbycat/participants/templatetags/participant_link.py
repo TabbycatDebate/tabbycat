@@ -15,7 +15,7 @@ def team_record_link(context, team, admin, style=True):
     if not team or not context['tournament']:
         return ""
 
-    if use_team_code_names(context['tournament'], admin):
+    if use_team_code_names(context['tournament'], admin, user=context['user']):
         name = team.code_name
     else:
         name = team.short_name

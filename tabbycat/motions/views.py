@@ -202,7 +202,6 @@ class BaseDisplayMotionsView(RoundMixin, TemplateView):
 
 class AdminDisplayMotionsView(AdministratorMixin, BaseDisplayMotionsView):
     view_permission = Permission.DISPLAY_MOTION
-    pass
 
 
 class AssistantDisplayMotionsView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDisplayMotionsView):
@@ -265,12 +264,11 @@ class BasePublicMotionStatisticsView(PublicTournamentPageMixin):
 
 
 class AdminRoundMotionStatisticsView(AdministratorMixin, RoundMotionStatisticsView):
-    pass
+    view_permission = Permission.VIEW_MOTIONSTAB
 
 
 class AdminGlobalMotionStatisticsView(AdministratorMixin, GlobalMotionStatisticsView):
     view_permission = Permission.VIEW_MOTIONSTAB
-    pass
 
 
 class PublicRoundMotionStatisticsView(BasePublicMotionStatisticsView, RoundMotionStatisticsView):

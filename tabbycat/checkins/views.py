@@ -68,7 +68,7 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
     def get_context_data(self, **kwargs):
 
-        team_codes = use_team_code_names(self.tournament, admin=self.for_admin)
+        team_codes = use_team_code_names(self.tournament, admin=self.for_admin, user=self.request.user)
         kwargs["team_codes"] = json.dumps(team_codes)
 
         adjudicators = []

@@ -528,7 +528,6 @@ class BaseTabroomAddFeedbackView(TabroomSubmissionFieldsMixin, BaseAddFeedbackVi
 
 class AdminAddFeedbackView(AdministratorMixin, BaseTabroomAddFeedbackView):
     edit_permission = Permission.ADD_FEEDBACK
-    pass
 
 
 class AssistantAddFeedbackView(AssistantMixin, BaseTabroomAddFeedbackView):
@@ -601,7 +600,7 @@ class PublicAddFeedbackByIdUrlView(PublicAddFeedbackView):
     tabroom = False
 
     def get_team_short_name(self, team):
-        use_code_names = use_team_code_names(self.tournament, admin=False)
+        use_code_names = use_team_code_names(self.tournament, admin=False, user=self.request.user)
         return team.code_name if use_code_names else team.short_name
 
     def is_page_enabled(self, tournament):

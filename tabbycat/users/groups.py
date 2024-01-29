@@ -31,6 +31,8 @@ class Equity(BaseGroup):
         Permission.VIEW_ADJUDICATORS,
         Permission.VIEW_ROOMS,
         Permission.VIEW_INSTITUTIONS,
+        Permission.VIEW_DECODED_TEAMS,
+        Permission.VIEW_ANONYMOUS,
     ]
 
 
@@ -67,6 +69,8 @@ class AdjudicationCore(BaseGroup):
         Permission.VIEW_ADJUDICATORS,
         Permission.VIEW_ROOMS,
         Permission.VIEW_INSTITUTIONS,
+        Permission.VIEW_DECODED_TEAMS,
+        Permission.VIEW_ANONYMOUS,
     ]
 
 

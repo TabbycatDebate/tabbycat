@@ -51,7 +51,7 @@ class BaseParticipantsListView(TournamentMixin, VueTableTemplateView):
 
         speakers = Speaker.objects.filter(team__tournament=self.tournament).select_related(
                 'team', 'team__institution').prefetch_related('team__speaker_set', 'categories')
-        if use_team_code_names(self.tournament, self.admin):
+        if use_team_code_names(self.tournament, self.admin, user=self.request.user):
             speakers = speakers.order_by('team__code_name')
         else:
             speakers = speakers.order_by('team__short_name')
@@ -195,7 +195,7 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
         return super().get_queryset().select_related('institution__region')
 
     def use_team_code_names(self):
-        return use_team_code_names(self.tournament, self.admin)
+        return use_team_code_names(self.tournament, self.admin, user=self.request.user)
 
     @staticmethod
     def allocations_set(obj, admin, tournament):

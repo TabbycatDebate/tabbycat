@@ -837,7 +837,6 @@ class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
 
 class SideAllocationsView(AdministratorMixin, BaseSideAllocationsView):
     view_permission = Permission.EDIT_ALLOCATESIDES
-    pass
 
 
 class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsView):
