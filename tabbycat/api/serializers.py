@@ -1404,14 +1404,10 @@ class TeamRoundScoresSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    class TournamentPermissionsSerializer(serializers.Serializer):
-        class UserGroupSerializer(serializers.ModelSerializer):
-            class Meta:
-                model = Group
-                fields = ('name', 'permissions')
 
-        tournament = serializers.HyperlinkedIdentityField(view_name='api-tournament-detail')
-        groups = UserGroupSerializer(many=True, required=False)
+    class TournamentPermissionsSerializer(serializers.Serializer):
+        tournament = serializers.HyperlinkedIdentityField(view_name='api-tournament-detail', lookup_field='slug', lookup_url_kwarg='tournament_slug')
+        groups = fields.TournamentHyperlinkedRelatedField(many=True, view_name='api-group-detail', queryset=Group.objects.all(), default=[])
         permissions = serializers.ListField(child=serializers.ChoiceField(choices=Permission.choices), required=False)
 
     url = serializers.HyperlinkedIdentityField(view_name='api-user-detail')
@@ -1428,3 +1424,11 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    url = fields.TournamentHyperlinkedIdentityField(view_name='api-group-detail')
+
+    class Meta:
+        model = Group
+        exclude = ('tournament',)

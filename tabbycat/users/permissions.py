@@ -1,5 +1,5 @@
 from itertools import groupby
-from typing import TYPE_CHECKING, Union
+from typing import List, TYPE_CHECKING, Union
 
 from django.core.cache import cache
 from django.db.models import TextChoices
@@ -165,16 +165,17 @@ def has_permission(user: 'settings.AUTH_USER_MODEL', permission: permission_type
     return perm
 
 
-def get_permissions(user: 'settings.AUTH_USER_MODEL') -> dict:
-    groups = dict(groupby(user.membership_set.select_related('group', 'group__tournament').order_by('group__tournament').all(), key=lambda m: m.group.tournament))
-    permissions = dict(groupby(user.userpermission_set.select_related('tournament').order_by('tournament').all(), key=lambda p: p.tournament))
+def get_permissions(user: 'settings.AUTH_USER_MODEL') -> List['Tournament']:
+    user_perms = {}
+    for t, groups in groupby(user.membership_set.select_related('group', 'group__tournament').order_by('group__tournament').all(), key=lambda m: m.group.tournament):
+        tournament = user_perms.setdefault(t.id, t)
+        tournament.groups = [m.group for m in groups]
+        permissions = set()
+        for g in tournament.groups:
+            permissions |= set(g.permissions)
+        setattr(tournament, 'permissions', getattr(tournament, 'permissions', set()) | permissions)
+    for t, perms in groupby(user.userpermission_set.select_related('tournament').order_by('tournament').all(), key=lambda p: p.tournament):
+        tournament = user_perms.setdefault(t.id, t)
+        setattr(tournament, 'permissions', getattr(tournament, 'permissions', set()) | {p.permission for p in perms})
 
-    user_perms = []
-    for tournament in set(list(groups.keys()) + list(permissions.keys())):
-        user_perms.append({
-            'tournament': tournament,
-            'groups': [m.group for m in groups.get(tournament, [])],
-            'permissions': [p.permission for p in permissions.get(tournament, [])],
-        })
-
-    return user_perms
+    return list(user_perms.values())

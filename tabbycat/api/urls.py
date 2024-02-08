@@ -225,6 +225,15 @@ urlpatterns = [
                         name='api-venuecategory-detail'),
                 ])),
 
+                path('/user-groups', include([
+                    path('',
+                        views.GroupViewSet.as_view(list_methods),
+                        name='api-group-list'),
+                    path('/<int:pk>',
+                        views.GroupViewSet.as_view(detail_methods),
+                        name='api-group-detail'),
+                ])),
+
                 path('/', include(pref_router.urls)),  # Preferences
             ])),
         ])),
@@ -239,10 +248,10 @@ urlpatterns = [
 
         path('/users', include([
             path('',
-                views.UsersViewSet.as_view(list_methods),
+                views.UserViewSet.as_view(list_methods),
                 name='api-user-list'),
             path('/<int:pk>',
-                views.UsersViewSet.as_view(detail_methods),
+                views.UserViewSet.as_view(detail_methods),
                 name='api-user-detail'),
         ])),
     ])),

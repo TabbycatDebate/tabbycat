@@ -1106,7 +1106,7 @@ class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
     partial_update=extend_schema(summary="Patch user", parameters=[id_parameter]),
     destroy=extend_schema(summary="Deactivate user", parameters=[id_parameter]),
 )
-class UsersViewSet(AdministratorAPIMixin, ModelViewSet):
+class UserViewSet(AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.UserSerializer
 
     def get_queryset(self):
@@ -1123,3 +1123,16 @@ class UsersViewSet(AdministratorAPIMixin, ModelViewSet):
     def perform_destroy(self, instance):
         instance.is_active = False
         instance.save()
+
+
+@extend_schema(tags=['users'], parameters=[tournament_parameter])
+@extend_schema_view(
+    list=extend_schema(summary="List all permission groups in tournament"),
+    create=extend_schema(summary="Create group"),
+    retrieve=extend_schema(summary="Get group", parameters=[id_parameter]),
+    update=extend_schema(summary="Update group", parameters=[id_parameter]),
+    partial_update=extend_schema(summary="Patch group", parameters=[id_parameter]),
+    destroy=extend_schema(summary="Delete group", parameters=[id_parameter]),
+)
+class GroupViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+    serializer_class = serializers.GroupSerializer
