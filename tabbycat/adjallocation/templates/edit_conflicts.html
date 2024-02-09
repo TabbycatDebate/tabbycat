@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-  {% include "components/formset.html" with triple=True %}
+  {% if can_edit %}
+    {% include "components/formset.html" with triple=True %}
+  {% else %}
+    {% include "components/formset.html" with double=True %}
+  {% endif %}
 {% endblock content %}

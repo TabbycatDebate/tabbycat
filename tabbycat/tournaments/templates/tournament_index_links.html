@@ -6,14 +6,12 @@
   {% url 'tournament-assistant-home' tournament_slug=tournament.slug as assistant_url %}
   {% url 'tournament-public-index' tournament_slug=tournament.slug as public_url %}
 
-  {% if user.is_superuser %}
+  {% if user.is_authenticated %}
     {% blocktrans trimmed asvar text with tn=tournament.name %}
       Administrator area for <strong>{{ tn }}</strong>
     {% endblocktrans %}
     {% include "components/item-action.html" with icon="settings" type=type subtext=subtext url=admin_url %}
-  {% endif %}
 
-  {% if user.is_authenticated %}
     {% blocktrans trimmed asvar text with tn=tournament.name %}
       Assistant area for <strong>{{ tn }}</strong>
     {% endblocktrans %}

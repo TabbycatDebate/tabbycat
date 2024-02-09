@@ -27,6 +27,8 @@ from results.result import DebateResult, ResultError
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.models import Round, Tournament
+from users.models import Group
+from users.permissions import Permission
 from venues.models import Venue, VenueCategory, VenueConstraint
 
 from . import fields
@@ -56,7 +58,7 @@ class V1RootSerializer(serializers.Serializer):
     class V1LinksSerializer(serializers.Serializer):
         tournaments = serializers.HyperlinkedIdentityField(view_name='api-tournament-list')
         institutions = serializers.HyperlinkedIdentityField(view_name='api-global-institution-list')
-        users = serializers.HyperlinkedIdentityField(view_name='api-users-list')
+        users = serializers.HyperlinkedIdentityField(view_name='api-user-list')
 
     _links = V1LinksSerializer(source='*', read_only=True)
 
@@ -158,7 +160,12 @@ class RoundSerializer(serializers.ModelSerializer):
             if isinstance(motion_data, Motion):  # If passed in a URL - Becomes an object
                 validated_data['motion'] = motion_data
             else:
-                validated_data['motion'] = Motion(text=motion_data['text'], reference=motion_data['reference'], info_slide=motion_data.get('info_slide', ''), tournament=self.context['tournament'])
+                validated_data['motion'] = Motion(
+                    text=motion_data['text'],
+                    reference=motion_data['reference'],
+                    info_slide=motion_data.get('info_slide', ''),
+                    tournament=self.context['tournament'],
+                )
                 validated_data['motion'].save()
 
             return super().create(validated_data)
@@ -1408,11 +1415,22 @@ class TeamRoundScoresSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name='api-users-detail')
+
+    class TournamentPermissionsSerializer(serializers.Serializer):
+        tournament = serializers.HyperlinkedIdentityField(view_name='api-tournament-detail', lookup_field='slug', lookup_url_kwarg='tournament_slug')
+        groups = fields.TournamentHyperlinkedRelatedField(many=True, view_name='api-group-detail', queryset=Group.objects.all(), default=[])
+        permissions = serializers.ListField(child=serializers.ChoiceField(choices=Permission.choices), required=False)
+
+    url = serializers.HyperlinkedIdentityField(view_name='api-user-detail')
+    tournaments = TournamentPermissionsSerializer(many=True, required=False)
 
     class Meta:
         model = get_user_model()
-        fields = ('url', 'id', 'username', 'password', 'email', 'is_staff', 'is_superuser', 'is_active')
+        fields = ('id', 'url', 'username', 'password', 'is_superuser', 'is_staff', 'email', 'is_active', 'date_joined', 'last_login', 'tournaments')
+        read_only_fields = ('date_joined', 'last_login')
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
 
     def create(self, validated_data):
         user = self.Meta.model(**validated_data)
@@ -1420,3 +1438,11 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    url = fields.TournamentHyperlinkedIdentityField(view_name='api-group-detail')
+
+    class Meta:
+        model = Group
+        exclude = ('tournament',)

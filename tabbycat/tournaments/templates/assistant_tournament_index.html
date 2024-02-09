@@ -22,7 +22,8 @@
                                    :initial-actions="initialActions"
                                    :initial-ballots="initialBallots"
                                    :initial-graph-data="initialGraphData"
-                                   :total-debates="totalDebates">
+                                   :total-debates="totalDebates"
+                                   :permissions="permissions">
     </tournament-overview-container>
   </div>
 
@@ -36,6 +37,7 @@
       initialActions: {{ initialActions|safe }},
       initialBallots: {{ initialBallots|safe }},
       initialGraphData: {{ initial_graph_data|safe }},
+      permissions: {{ overview_permissions|safe }}
     }
   </script>
   {{ block.super }}

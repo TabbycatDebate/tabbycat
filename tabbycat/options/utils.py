@@ -1,20 +1,23 @@
 import logging
 
+from django.contrib.auth.models import AnonymousUser
 from django.forms import ValidationError
 from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 
+from users.permissions import has_permission, Permission
+
 logger = logging.getLogger(__name__)
 
 
-def use_team_code_names(tournament, admin):
+def use_team_code_names(tournament, admin, user=AnonymousUser()):
     """Returns True if team code names should be used, given the tournament
     preferences of `tournament` and whether the request is for an admin view.
     `admin` should be True if the request is for an admin view and False if not.
     """
     if tournament.pref('team_code_names') in ['admin-tooltips-real', 'everywhere']:
         return True
-    if tournament.pref('team_code_names') == 'admin-tooltips-code' and not admin:
+    if tournament.pref('team_code_names') == 'admin-tooltips-code' and not (admin and has_permission(user, Permission.VIEW_DECODED_TEAMS, tournament)):
         return True
     return False
 
