@@ -1417,6 +1417,9 @@ class UserSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = ('id', 'url', 'username', 'password', 'is_superuser', 'is_staff', 'email', 'is_active', 'date_joined', 'last_login', 'tournaments')
         read_only_fields = ('date_joined', 'last_login')
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
 
     def create(self, validated_data):
         user = self.Meta.model(**validated_data)
