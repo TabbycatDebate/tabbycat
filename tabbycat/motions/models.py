@@ -33,6 +33,12 @@ class Motion(models.Model):
         if html2text(self.info_slide or '').isspace() and 'info_slide' not in exclude:
             self.info_slide = ''
 
+    @property
+    def info_slide_plain(self):
+        if (self.info_slide or '').startswith('<p'):
+            return html2text(self.info_slide).strip()
+        return self.info_slide
+
 
 class DebateTeamMotionPreference(models.Model):
     """Represents a motion preference submitted by a debate team."""

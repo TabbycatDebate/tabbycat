@@ -147,6 +147,7 @@ class RoundSerializer(serializers.ModelSerializer):
         text = serializers.CharField(source='motion.text', max_length=500, required=False)
         reference = serializers.CharField(source='motion.reference', max_length=100, required=False)
         info_slide = serializers.CharField(source='motion.info_slide', required=False)
+        info_slide_plain = serializers.CharField(source='motion.info_slide_plain', read_only=True)
         seq = serializers.IntegerField(read_only=True)
 
         class Meta:
@@ -315,6 +316,7 @@ class MotionSerializer(serializers.ModelSerializer):
 
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-motion-detail')
     rounds = RoundsSerializer(many=True, source='roundmotion_set')
+    info_slide_plain = serializers.CharField(read_only=True)
 
     class Meta:
         model = Motion
