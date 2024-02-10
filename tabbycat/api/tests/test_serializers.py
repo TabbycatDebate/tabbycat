@@ -181,6 +181,7 @@ class BallotSerializerTests(APITestCase):
 
     def tearDown(self):
         self.debate.delete()
+        self.tournament.actionlogentry_set.all().delete()
         self.tournament.delete()
         self.user.delete()
         logging.disable(logging.NOTSET)

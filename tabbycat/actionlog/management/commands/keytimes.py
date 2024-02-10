@@ -38,35 +38,35 @@ class Command(TournamentCommand):
             queryset = round.actionlogentry_set.order_by('timestamp')
 
             # Find the last adj save before venue allocation
-            venues_last_allocated = queryset.filter(type=ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE).last()
-            adj_saves = queryset.filter(type=ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE)
+            venues_last_allocated = queryset.filter(type=ActionLogEntry.ActionType.VENUES_AUTOALLOCATE).last()
+            adj_saves = queryset.filter(type=ActionLogEntry.ActionType.ADJUDICATORS_SAVE)
             if venues_last_allocated:
                 adj_saves = adj_saves.filter(timestamp__lte=venues_last_allocated.timestamp)
             last_adj_save = adj_saves.last()
 
             entries = [
-                queryset.filter(type=ActionLogEntry.ACTION_TYPE_DRAW_CREATE).first(),
+                queryset.filter(type=ActionLogEntry.ActionType.DRAW_CREATE).first(),
                 queryset.filter(type__in=[
-                    ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT,
-                    ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_AUTO,
+                    ActionLogEntry.ActionType.DEBATE_IMPORTANCE_EDIT,
+                    ActionLogEntry.ActionType.DEBATE_IMPORTANCE_AUTO,
                 ]).first(),
                 queryset.filter(type__in=[
-                    ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO,
-                    ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_DEBATES_AUTO,
+                    ActionLogEntry.ActionType.ADJUDICATORS_AUTO,
+                    ActionLogEntry.ActionType.PREFORMED_PANELS_DEBATES_AUTO,
                 ]).first(),
                 last_adj_save,
                 venues_last_allocated,
                 # "start at" times goes here
                 queryset.filter(type__in=[
-                    ActionLogEntry.ACTION_TYPE_BALLOT_CREATE,
-                    ActionLogEntry.ACTION_TYPE_BALLOT_SUBMIT,
+                    ActionLogEntry.ActionType.BALLOT_CREATE,
+                    ActionLogEntry.ActionType.BALLOT_SUBMIT,
                 ]).first(),
-                queryset.filter(type=ActionLogEntry.ACTION_TYPE_BALLOT_CONFIRM).first(),
+                queryset.filter(type=ActionLogEntry.ActionType.BALLOT_CONFIRM).first(),
                 queryset.filter(type__in=[
-                    ActionLogEntry.ACTION_TYPE_BALLOT_CREATE,
-                    ActionLogEntry.ACTION_TYPE_BALLOT_SUBMIT,
+                    ActionLogEntry.ActionType.BALLOT_CREATE,
+                    ActionLogEntry.ActionType.BALLOT_SUBMIT,
                 ]).last(),
-                queryset.filter(type=ActionLogEntry.ACTION_TYPE_BALLOT_CONFIRM).last(),
+                queryset.filter(type=ActionLogEntry.ActionType.BALLOT_CONFIRM).last(),
             ]
             times = [timezone.localtime(entry.timestamp) if entry else None for entry in entries]
             date = next((t for t in times[:5][::-1] if t is not None), None)

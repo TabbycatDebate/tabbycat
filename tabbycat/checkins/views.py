@@ -204,11 +204,11 @@ class AdminCheckInGenerateView(AdministratorMixin, LogActionMixin,
 
     def get_action_log_type(self):
         if self.kwargs["kind"] == "speakers":
-            return ActionLogEntry.ACTION_TYPE_CHECKIN_SPEAK_GENERATE
+            return ActionLogEntry.ActionType.CHECKIN_SPEAK_GENERATE
         elif self.kwargs["kind"] == "adjudicators":
-            return ActionLogEntry.ACTION_TYPE_CHECKIN_ADJ_GENERATE
+            return ActionLogEntry.ActionType.CHECKIN_ADJ_GENERATE
         elif self.kwargs["kind"] == "venues":
-            return ActionLogEntry.ACTION_TYPE_CHECKIN_VENUES_GENERATE
+            return ActionLogEntry.ActionType.CHECKIN_VENUES_GENERATE
 
     # Providing tournament_slug_url_kwarg isn't working for some reason; so use:
     def get_redirect_url(self, *args, **kwargs):

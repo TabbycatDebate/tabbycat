@@ -326,7 +326,7 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
 
     template_name = 'speaker_categories_edit.html'
     formset_model = SpeakerCategory
-    action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_CATEGORIES_EDIT
+    action_log_type = ActionLogEntry.ActionType.SPEAKER_CATEGORIES_EDIT
 
     url_name = 'participants-speaker-categories-edit'
     success_url = 'participants-list'
@@ -414,7 +414,7 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
 
 
 class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMixin, View):
-    action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT
+    action_log_type = ActionLogEntry.ActionType.SPEAKER_ELIGIBILITY_EDIT
     participant_model = Speaker
     many_to_many_field = 'categories'
 
