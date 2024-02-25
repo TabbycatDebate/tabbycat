@@ -49,8 +49,8 @@ from adjallocation.models import DebateAdjudicator
 from draw.types import DebateSide
 
 from .result_info import DebateResultInfo
-from .scoresheet import (BPEliminationScoresheet, BPScoresheet, HighPointWinsRequiredScoresheet, LowPointWinsAllowedScoresheet,
-                         ResultOnlyScoresheet, TiedPointWinsAllowedScoresheet)
+from .scoresheet import (HighPointWinsRequiredScoresheet, LowPointWinsAllowedScoresheet, PolyEliminationScoresheet,
+    PolyScoresheet, ResultOnlyScoresheet, TiedPointWinsAllowedScoresheet)
 from .utils import side_and_position_names
 
 if TYPE_CHECKING:
@@ -74,7 +74,7 @@ def get_result_class(ballotsub, round=None, tournament=None):
     scores_in_debate = tournament.pref('speakers_in_ballots')
 
     if ballots_per_debate == 'per-debate' or ballotsub.single_adj:
-        if ((teams_in_debate == 4 or scores_in_debate == 'prelim') and round.is_break_round) or scores_in_debate == 'never':
+        if ((teams_in_debate > 2 or scores_in_debate == 'prelim') and round.is_break_round) or scores_in_debate == 'never':
             return ConsensusDebateResult
         return ConsensusDebateResultWithScores
     elif ballots_per_debate == 'per-adj' and teams_in_debate == 2:
@@ -785,7 +785,7 @@ class DebateResultWithScoresMixin:
     # --------------------------------------------------------------------------
 
     def calculate_full_margin(self, side):
-        if len(self.sides) == 4:
+        if len(self.sides) > 2:
             return None
 
         aff_total = self.teamscore_field_score(DebateSide.AFF)
@@ -830,8 +830,8 @@ class ConsensusDebateResult(BaseDebateResult):
 
     def init_blank_buffer(self):
         super().init_blank_buffer()
-        self.scoresheet = self.scoresheet_class(positions=getattr(self, 'positions', None))
-        if self.scoresheet_class is BPEliminationScoresheet and self.debate.round.is_last:
+        self.scoresheet = self.scoresheet_class(sides=self.sides, positions=getattr(self, 'positions', None))
+        if type(self.scoresheet) is PolyEliminationScoresheet and self.debate.round.is_last:
             self.scoresheet.number_winners = 1
 
     def is_complete(self):
@@ -843,8 +843,8 @@ class ConsensusDebateResult(BaseDebateResult):
     def get_scoresheet_class(self):
         if len(self.sides) == 2:
             return super().get_scoresheet_class()
-        elif len(self.sides) == 4:
-            return BPEliminationScoresheet
+        elif len(self.sides) > 2:
+            return PolyEliminationScoresheet
 
     def load_scoresheets(self):
         super().load_scoresheets()
@@ -963,8 +963,8 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
     def get_scoresheet_class(self):
         if len(self.sides) == 2:
             return super().get_scoresheet_class()
-        elif len(self.sides) == 4:
-            return BPScoresheet
+        elif len(self.sides) > 4:
+            return PolyScoresheet
 
     def load_scoresheets(self):
         super().load_scoresheets()

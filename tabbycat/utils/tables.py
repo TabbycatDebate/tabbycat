@@ -324,9 +324,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
             cell['sort'] = 0
             return cell
 
-        cell['popover']['title'] = _("%(team)s placed %(place)s") % {'team': team_name, 'place': ordinal(4 - points)}
-        cell['icon'] = self.BP_POINT_ICONS[points]
-        cell['iconClass'] = self.BP_POINT_ICONCLASSES[points]
+        cell['popover']['title'] = _("%(team)s placed %(place)s") % {'team': team_name, 'place': ordinal(self.tournament.pref('teams_in_debate') - points)}
+        if self.tournament.pref('teams_in_debate') <= 4:
+            cell['icon'] = self.BP_POINT_ICONS[points]
+            cell['iconClass'] = self.BP_POINT_ICONCLASSES[points]
         cell['sort'] = points + 1
         return cell
 

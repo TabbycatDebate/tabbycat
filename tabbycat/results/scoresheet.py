@@ -174,14 +174,16 @@ class LowPointWinsAllowedScoresheet(ScoresMixin, ResultOnlyScoresheet):
     pass
 
 
-class BaseBPScoresheet(BaseScoresheet):
-    """This is a stub scoresheet for BP with only its sides as the scoresheet
+class BasePolyScoresheet(BaseScoresheet):
+    """This is a stub scoresheet for >2-team formats with only its sides as the scoresheet
     class changes by stage."""
 
-    sides = [DebateSide.OG, DebateSide.OO, DebateSide.CG, DebateSide.CO]
+    def __init__(self, sides, *args, **kwargs):
+        self.sides = sides
+        super().__init__(*args, **kwargs)
 
 
-class BPScoresheet(ScoresMixin, BaseBPScoresheet):
+class PolyScoresheet(ScoresMixin, BasePolyScoresheet):
 
     def is_valid(self):
         if not super().is_valid():
@@ -208,7 +210,7 @@ class BPScoresheet(ScoresMixin, BaseBPScoresheet):
         return set()
 
 
-class BPEliminationScoresheet(DeclaredWinnersMixin, BaseBPScoresheet):
+class PolyEliminationScoresheet(DeclaredWinnersMixin, BasePolyScoresheet):
 
     def __init__(self, *args, **kwargs):
         """Initializer for BP elimination scoresheets.

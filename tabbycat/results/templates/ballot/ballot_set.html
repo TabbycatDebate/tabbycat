@@ -28,7 +28,7 @@
         {% include "components/form-title.html" %}
       {% else %}
         <div class="list-group-item pt-4">
-          <h4 class="card-title  float-left mt-0 {% if not text %}mb-2{% endif %}">
+          <h4 class="card-title float-left mt-0 {% if not text %}mb-2{% endif %}">
             {% trans "Scoresheet" %}
           </h4>
             {% for da in debate.adjudicators.voting_with_positions reversed %}
@@ -46,34 +46,25 @@
         </div>
       {% endif %}
 
-      <div class="list-group-item scoresheet px-md-3 py-md-2 p-0">
-        <div class="card-deck px-md-2 p-0">
-          {% if form.has_scores %}
+      <div class="scoresheet list-group-item px-md-3 py-md-2 p-0">
+        {% if form.has_scores %}
 
-            {% for team in sheet.teams %}
-              {# Break for four team formats #}
-              {% if forloop.counter == 3 %}
-                </div><div class="card-deck px-md-2 p-0">
-              {% endif %}
-              {% include "ballot/ballot_scoresheet.html" %}
-            {% endfor %}
+          {% for team in sheet.teams %}
+            {% include "ballot/ballot_scoresheet.html" %}
+          {% endfor %}
 
-          {% else %}
+        {% else %}
 
-            {% for checkbox in sheet.advancing %}
-              {% if forloop.counter == 3 %}
-                {# Break for four team formats #}
-                </div><div class="card-deck px-2">
-              {% endif %}
-              <div class="card m-2 px-3">
-                <div class="form-check pl-4 pt-1 h6">
-                  {{ checkbox|addboundwidgetcss:"form-check-input" }}
-                </div>
+          {% for checkbox in sheet.advancing %}
+            <div class="card px-3">
+              <div class="form-check pl-4 pt-1 h6">
+                {{ checkbox|addboundwidgetcss:"form-check-input" }}
               </div>
-            {% endfor %}
+            </div>
+          {% endfor %}
 
-          {% endif %}
-        </div>
+        {% endif %}
+
         {% if sheet.advancing.errors %}
           <div class="list-group-item">
             {{ sheet.advancing.errors }}

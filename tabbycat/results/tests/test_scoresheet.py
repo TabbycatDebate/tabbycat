@@ -2,9 +2,8 @@ import unittest
 
 from draw.types import DebateSide
 
-from ..scoresheet import (BPScoresheet, HighPointWinsRequiredScoresheet,
-    LowPointWinsAllowedScoresheet, ResultOnlyScoresheet,
-    TiedPointWinsAllowedScoresheet)
+from ..scoresheet import (HighPointWinsRequiredScoresheet, LowPointWinsAllowedScoresheet,
+    PolyScoresheet, ResultOnlyScoresheet, TiedPointWinsAllowedScoresheet)
 
 
 def on_all_testdata(test_fn):
@@ -140,7 +139,7 @@ class TestTwoTeamScoresheets(unittest.TestCase):
         self.assertRaises(AssertionError, scoresheet.set_declared_winners, set(['hello']))
 
 
-class TestBPScoresheets(unittest.TestCase):
+class TestPolyScoresheets(unittest.TestCase):
 
     sides = [DebateSide.OG, DebateSide.OO, DebateSide.CG, DebateSide.CO]
     positions = [1, 2]
@@ -179,7 +178,7 @@ class TestBPScoresheets(unittest.TestCase):
 
     @on_all_testdata
     def test_bp_scoresheet(self, testdata):
-        scoresheet = BPScoresheet(self.positions)
+        scoresheet = PolyScoresheet(self.positions)
         self.load_scores(scoresheet, testdata)
         self.assertEqual(scoresheet.is_complete(), testdata['complete'])
         self.assertEqual(scoresheet.ranked_sides(), testdata['ranks'])
