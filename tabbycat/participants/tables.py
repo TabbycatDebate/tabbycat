@@ -25,7 +25,7 @@ class TeamResultTableBuilder(TabbycatTableBuilder):
                 cumul += teamscore.points * teamscore.debate_team.debate.round.weight
                 data.append(cumul)
 
-        if self.tournament.pref('teams_in_debate') == 'bp':
+        if self.tournament.pref('teams_in_debate') == 4:
             tooltip = _("Points after this debate")
         else:
             tooltip = _("Wins after this debate")

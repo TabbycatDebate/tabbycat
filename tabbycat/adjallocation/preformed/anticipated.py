@@ -25,7 +25,7 @@ def calculate_anticipated_draw(round):
     "next round").
     """
 
-    nteamsindebate = 4 if round.tournament.pref('teams_in_debate') == 'bp' else 2
+    nteamsindebate = round.tournament.pref('teams_in_debate')
 
     if round.prev is None or not round.prev.debate_set.exists() or round.is_break_round:
         # Special cases: If this is the first round, everyone will be on zero.

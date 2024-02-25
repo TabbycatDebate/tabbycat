@@ -79,7 +79,7 @@ class DebateSerializerMixin(serializers.ModelSerializer):
         sides = {side: None for (side) in self.context['sides']}
         for debate_team in obj.debateteam_set.all():
             sides[debate_team.side] = self.team_representation(debate_team)
-        return sides
+        return [sides[side] for side in self.context['sides']]
 
     def get_sort_index(self, obj):
         return 1 # Set on front-end; just need the attr set at load time for reactivity triggers

@@ -7,6 +7,7 @@ from django.conf import settings
 from django.template.base import kwarg_re, TemplateSyntaxError, Variable
 from django.template.defaulttags import URLNode
 
+from draw.types import DebateSide
 from tournaments.utils import get_side_name
 
 register = template.Library()
@@ -39,8 +40,8 @@ def version(path_string, base_url=settings.MEDIA_URL):
 
 @register.simple_tag(takes_context=True)
 def tournament_side_names(context, name_type):
-    side_names = [get_side_name(context['tournament'], 'aff', name_type),
-                  get_side_name(context['tournament'], 'neg', name_type)]
+    side_names = [get_side_name(context['tournament'], DebateSide.AFF, name_type),
+                  get_side_name(context['tournament'], DebateSide.NEG, name_type)]
     return side_names
 
 

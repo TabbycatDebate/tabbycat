@@ -77,7 +77,7 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
         kwargs['availability_info'] = OrderedDict([('teams', teams), ('adjs', adjs), ('venues', venues)])
 
         # Check the number of teams/adjudicators is sufficient
-        if self.tournament.pref('teams_in_debate') == 'two':
+        if self.tournament.pref('teams_in_debate') == 2:
             per_room_divisor = 2
         else:
             per_room_divisor = 4
@@ -126,7 +126,7 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
 
         else:
             nadvancing = self.round.prev.debate_set.count()
-            if self.tournament.pref('teams_in_debate') == 'bp':
+            if self.tournament.pref('teams_in_debate') == 4:
                 nadvancing *= 2
 
             # add teams that bypassed the last round

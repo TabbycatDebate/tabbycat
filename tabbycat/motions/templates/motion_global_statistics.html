@@ -26,11 +26,11 @@
 
       <div class="row">
 
-        {% if pref.teams_in_debate == 'two' %}
+        {% if pref.teams_in_debate == 2 %}
           {% include "motion_statistics_twoteam.html" %}
-        {% elif pref.teams_in_debate == 'bp' and motion.stage == 'elim' %}
+        {% elif pref.teams_in_debate == 4 and motion.stage == 'elim' %}
           {% include "motion_statistics_bp_elim.html" %}
-        {% elif pref.teams_in_debate == 'bp' and motion.stage == 'prelim' %}
+        {% elif pref.teams_in_debate == 4 and motion.stage == 'prelim' %}
           {% include "motion_statistics_bp_prelim.html" %}
         {% endif %}
 

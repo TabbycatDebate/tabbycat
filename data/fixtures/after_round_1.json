@@ -1534,7 +1534,7 @@
     "fields": {
         "debate": 1,
         "team": 12,
-        "side": "aff",
+        "side": 0,
         "flags": "[]"
     }
 },
@@ -1544,7 +1544,7 @@
     "fields": {
         "debate": 1,
         "team": 18,
-        "side": "neg",
+        "side": 1,
         "flags": "[]"
     }
 },
@@ -1554,7 +1554,7 @@
     "fields": {
         "debate": 2,
         "team": 4,
-        "side": "aff",
+        "side": 0,
         "flags": "[]"
     }
 },
@@ -1564,7 +1564,7 @@
     "fields": {
         "debate": 2,
         "team": 17,
-        "side": "neg",
+        "side": 1,
         "flags": "[]"
     }
 },
@@ -1574,7 +1574,7 @@
     "fields": {
         "debate": 3,
         "team": 16,
-        "side": "aff",
+        "side": 0,
         "flags": "[]"
     }
 },
@@ -1584,7 +1584,7 @@
     "fields": {
         "debate": 3,
         "team": 13,
-        "side": "neg",
+        "side": 1,
         "flags": "[]"
     }
 },
@@ -1594,7 +1594,7 @@
     "fields": {
         "debate": 4,
         "team": 20,
-        "side": "aff",
+        "side": 0,
         "flags": "[]"
     }
 },
@@ -1604,7 +1604,7 @@
     "fields": {
         "debate": 4,
         "team": 1,
-        "side": "neg",
+        "side": 1,
         "flags": "[]"
     }
 },
@@ -1614,7 +1614,7 @@
     "fields": {
         "debate": 5,
         "team": 3,
-        "side": "aff",
+        "side": 0,
         "flags": "[]"
     }
 },
@@ -1624,7 +1624,7 @@
     "fields": {
         "debate": 5,
         "team": 8,
-        "side": "neg",
+        "side": 1,
         "flags": "[]"
     }
 },
@@ -1634,7 +1634,7 @@
     "fields": {
         "debate": 6,
         "team": 9,
-        "side": "aff",
+        "side": 0,
         "flags": "[]"
     }
 },
@@ -1644,7 +1644,7 @@
     "fields": {
         "debate": 6,
         "team": 23,
-        "side": "neg",
+        "side": 1,
         "flags": "[]"
     }
 },
@@ -1654,7 +1654,7 @@
     "fields": {
         "debate": 7,
         "team": 11,
-        "side": "aff",
+        "side": 0,
         "flags": "[]"
     }
 },
@@ -1664,7 +1664,7 @@
     "fields": {
         "debate": 7,
         "team": 19,
-        "side": "neg",
+        "side": 1,
         "flags": "[]"
     }
 },
@@ -1674,7 +1674,7 @@
     "fields": {
         "debate": 8,
         "team": 7,
-        "side": "aff",
+        "side": 0,
         "flags": "[]"
     }
 },
@@ -1684,7 +1684,7 @@
     "fields": {
         "debate": 8,
         "team": 22,
-        "side": "neg",
+        "side": 1,
         "flags": "[]"
     }
 },
@@ -1694,7 +1694,7 @@
     "fields": {
         "debate": 9,
         "team": 2,
-        "side": "aff",
+        "side": 0,
         "flags": "[]"
     }
 },
@@ -1704,7 +1704,7 @@
     "fields": {
         "debate": 9,
         "team": 10,
-        "side": "neg",
+        "side": 1,
         "flags": "[]"
     }
 },
@@ -1714,7 +1714,7 @@
     "fields": {
         "debate": 10,
         "team": 24,
-        "side": "aff",
+        "side": 0,
         "flags": "[]"
     }
 },
@@ -1724,7 +1724,7 @@
     "fields": {
         "debate": 10,
         "team": 14,
-        "side": "neg",
+        "side": 1,
         "flags": "[]"
     }
 },
@@ -1734,7 +1734,7 @@
     "fields": {
         "debate": 11,
         "team": 6,
-        "side": "aff",
+        "side": 0,
         "flags": "[]"
     }
 },
@@ -1744,7 +1744,7 @@
     "fields": {
         "debate": 11,
         "team": 21,
-        "side": "neg",
+        "side": 1,
         "flags": "[]"
     }
 },
@@ -1754,7 +1754,7 @@
     "fields": {
         "debate": 12,
         "team": 5,
-        "side": "aff",
+        "side": 0,
         "flags": "[]"
     }
 },
@@ -1764,7 +1764,7 @@
     "fields": {
         "debate": 12,
         "team": 15,
-        "side": "neg",
+        "side": 1,
         "flags": "[]"
     }
 },

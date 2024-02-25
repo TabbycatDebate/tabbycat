@@ -19,7 +19,7 @@
   {% else %}
     <a href="{% roundurl 'progress-email' %}" class="btn btn-outline-primary active">
   {% endif %}
-    {% if pref.teams_in_debate == "two" %}
+    {% if pref.teams_in_debate == 2 %}
       {% trans "Email Team Wins/Losses" %}
     {% else %}
       {% trans "Email Team Points" %}

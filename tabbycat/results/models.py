@@ -176,7 +176,7 @@ class BallotSubmission(Submission):
         if self.confirm_timestamp and self.confirmed:
             confirmed = timezone.localtime(self.confirm_timestamp).isoformat()
 
-        if tournament.pref('enable_blind_checks') and tournament.pref('teams_in_debate') == 'bp':
+        if tournament.pref('enable_blind_checks') and tournament.pref('teams_in_debate') == 4:
             admin_url = 'results-ballotset-edit'
             assistant_url = 'results-assistant-ballotset-edit'
         else:

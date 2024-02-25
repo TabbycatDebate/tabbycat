@@ -149,6 +149,8 @@ class AdjudicatorFeedbackIdentityField(RoundHyperlinkedIdentityField):
 
 class CreatableSlugRelatedField(SlugRelatedField):
     def to_internal_value(self, data):
+        if data is None:
+            return None
         try:
             # get_or_create returns (obj, created?) - only want the object
             return self.get_queryset().get_or_create(**{self.slug_field: data})[0]

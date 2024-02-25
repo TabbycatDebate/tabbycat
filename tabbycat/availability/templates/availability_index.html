@@ -71,12 +71,12 @@
         data-toggle="tooltip" title="{% trans "There aren't enough adjudicators marked as available for the number of debates — the draw may not generate properly." %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
-    {% elif pref.teams_in_debate == 'two' and not availability_info.teams.in_now|divisibleby:2  %}
+    {% elif pref.teams_in_debate == 2 and not availability_info.teams.in_now|divisibleby:2  %}
       <button class="btn btn-warning" id="createDraw"
         data-toggle="tooltip" title="{% trans "There is an uneven number of teams marked as available — the draw may not generate properly." %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
-    {% elif pref.teams_in_debate == 'bp' and not availability_info.teams.in_now|divisibleby:4  %}
+    {% elif pref.teams_in_debate == 4 and not availability_info.teams.in_now|divisibleby:4  %}
       <button class="btn btn-warning" id="createDraw"
         data-toggle="tooltip" title="{% trans "The number of teams marked as available is not a multiple of 4 — the draw may not generate properly." %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>

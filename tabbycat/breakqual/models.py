@@ -65,7 +65,7 @@ class BreakCategory(models.Model):
 
     @property
     def num_break_rounds(self):
-        if self.tournament.pref('teams_in_debate') == 'bp':
+        if self.tournament.pref('teams_in_debate') == 4:
             return math.ceil(math.log2(self.break_size / 2))
         else:
             return math.ceil(math.log2(self.break_size))

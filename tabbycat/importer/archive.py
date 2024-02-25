@@ -39,7 +39,7 @@ class Exporter:
     def __init__(self, tournament):
         self.t = tournament
         self.root = Element('tournament', {'name': tournament.name, 'short': tournament.short_name})
-        if tournament.pref('teams_in_debate') == 'bp':
+        if tournament.pref('teams_in_debate') == 4:
             self.root.set('style', 'bp')
 
     def create_all(self):
@@ -567,17 +567,14 @@ class Importer:
                 round_obj.break_category = self.team_breaks.get(round.get('break-category'))
             round_obj.save()
 
-            side_start = 2 if self.is_bp else 0
-
             for debate in round.findall('debate'):
                 debate_obj = Debate(round=round_obj, venue=self.venues.get(debate.get('venue')), result_status=Debate.STATUS_CONFIRMED)
                 debate_obj.save()
                 self.debates[debate.get('id')] = debate_obj
 
                 # Debate-teams
-                for j, side in enumerate(debate.findall('side'), side_start):
-                    position = list(DebateTeam.Side)[j][0]
-                    debateteam_obj = DebateTeam(debate=debate_obj, team=self.teams[side.get('team')], side=position)
+                for j, side in enumerate(debate.findall('side')):
+                    debateteam_obj = DebateTeam(debate=debate_obj, team=self.teams[side.get('team')], side=j)
                     debateteam_obj.save()
                     self.debateteams[(debate.get('id'), side.get('team'))] = debateteam_obj
 

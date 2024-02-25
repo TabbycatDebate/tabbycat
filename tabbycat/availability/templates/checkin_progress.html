@@ -45,11 +45,11 @@
       {% if round.is_break_round %}
         {% trans "No need to set team availability" as title_text %}
         {% include "components/item-info.html" with text=title_text type="secondary" nopad=True %}
-      {% elif pref.teams_in_debate == 'two' and not availability_info.teams.in_now|divisibleby:2  %}
+      {% elif pref.teams_in_debate == 2 and not availability_info.teams.in_now|divisibleby:2  %}
         {% trans "There is an uneven number of teams marked as available for this round." as text %}
         {% include "components/item-info.html" with type="danger" nopad=True %}
         {% include "components/item-action.html" with text=title_text type="success" to_complete=True %}
-      {% elif pref.teams_in_debate == 'bp' and not availability_info.teams.in_now|divisibleby:4  %}
+      {% elif pref.teams_in_debate == 4 and not availability_info.teams.in_now|divisibleby:4  %}
         {% trans "The number of teams marked as available for this round is not a multiple of 4." as text %}
         {% include "components/item-info.html" with type="danger" nopad=True %}
         {% include "components/item-action.html" with text=title_text type="success" to_complete=True %}

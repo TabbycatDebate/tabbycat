@@ -10,14 +10,14 @@
 {% endif %} {# current_round.starts_at #}
 
 {# Teams (only in BP -- in two-team, it's displayed above) #}
-{% if pref.teams_in_debate == 'bp' %}
+{% if pref.teams_in_debate == 4 %}
   <div class="list-group-item">
     <strong>{% trans "Teams:" %}</strong>
     {% for dt in debate.debateteams_ordered %}
       {% team_record_link dt.team admin_page %}{% if debate.sides_confirmed %} ({% debate_team_side_name dt %}){% endif %}{% if not forloop.last %},{% endif %}
     {% endfor %}
   </div>
-{% endif %} {# pref.teams_in_debate == 'bp' #}
+{% endif %} {# pref.teams_in_debate == 4 #}
 
 {# Adjudicators #}
 {% if not pref.no_panellist_position or not pref.no_trainee_position %}

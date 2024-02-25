@@ -5,6 +5,7 @@ from rest_framework.test import APIClient, APITestCase
 
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
+from draw.types import DebateSide
 from motions.models import Motion, RoundMotion
 from options.presets import CanadianParliamentaryPreferences
 from participants.models import Adjudicator, Speaker, Team
@@ -169,7 +170,9 @@ class BallotSerializerTests(APITestCase):
         self.a2 = Adjudicator.objects.create(name='A2', tournament=self.tournament)
         self.a3 = Adjudicator.objects.create(name='A3', tournament=self.tournament)
 
-        DebateTeam.objects.bulk_create([DebateTeam(side=side, team=team, debate=self.debate) for side, team in zip(['aff', 'neg'], [self.t1, self.t2])])
+        DebateTeam.objects.bulk_create([
+            DebateTeam(side=side, team=team, debate=self.debate) for side, team in zip([DebateSide.AFF, DebateSide.NEG], [self.t1, self.t2])
+        ])
         DebateAdjudicator.objects.bulk_create([
             DebateAdjudicator(adjudicator=self.a1, debate=self.debate, type='C'), DebateAdjudicator(adjudicator=self.a2, debate=self.debate, type='P'),
         ])

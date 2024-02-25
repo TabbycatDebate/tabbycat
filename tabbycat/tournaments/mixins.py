@@ -18,6 +18,7 @@ from django.views.generic.detail import SingleObjectMixin
 from adjallocation.models import DebateAdjudicator
 from breakqual.utils import calculate_live_thresholds
 from draw.models import DebateTeam, MultipleDebateTeamsError, NoDebateTeamFoundError
+from draw.types import DebateSide
 from participants.models import Institution, Speaker
 from participants.prefetch import populate_win_counts
 from participants.serializers import InstitutionSerializer
@@ -497,7 +498,7 @@ class DebateDragAndDropMixin(DragAndDropMixin):
                 )),
             )
 
-        draw = self.round.debate_set.exclude(debateteam__side=DebateTeam.Side.BYE).select_related(*selects).prefetch_related(*prefetches)
+        draw = self.round.debate_set.exclude(debateteam__side=DebateSide.BYE).select_related(*selects).prefetch_related(*prefetches)
 
         if self.prefetch_teams:
             populate_win_counts([dt.team for debate in draw for dt in debate.debateteam_set.all()])

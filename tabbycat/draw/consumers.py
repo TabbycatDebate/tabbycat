@@ -135,10 +135,6 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
         return super().receive_json(content)
 
     def modify_debate_teams(self, debate, sent_teams):
-        if set(sent_teams.keys()) != set(self.tournament.sides):
-            # TODO: raise error; "Sides in JSON object weren't correct"
-            print("Sides in JSON object weren't correct")
-
         # Delete existing entries that won't be wanted (there shouldn't be any, but just in case)
         delete_count, deleted = debate.debateteam_set.exclude(side__in=self.tournament.sides).delete()
         logger.debug("Deleted %d debate teams from [%s]", deleted.get('draw.DebateTeam', 0), debate.matchup)
@@ -149,7 +145,7 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
         #     pass
 
         # Update other DebateTeam objects
-        for side, team_id in sent_teams.items():
+        for side, team_id in enumerate(sent_teams):
             if team_id is None:
                 DebateTeam.objects.filter(debate=debate, side=side).delete()
                 logger.debug("position %s in [%s] is now vacant",

@@ -240,7 +240,7 @@ class BreakCategoryModelForm(ModelForm):
 
     def clean_break_size(self):
         bs = self.cleaned_data['break_size']
-        if self.tournament.pref('teams_in_debate') == 'bp' and not ((bs % 6 == 0 and ispow2(bs // 6)) or (bs >= 4 and ispow2(bs))):
+        if self.tournament.pref('teams_in_debate') == 4 and not ((bs % 6 == 0 and ispow2(bs // 6)) or (bs >= 4 and ispow2(bs))):
             raise ValidationError(_("Four-team formats require the break size to be either six times or four times a power of two."))
         return bs
 
