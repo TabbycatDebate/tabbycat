@@ -4,7 +4,7 @@ The pairing classes hold basic information about pairings for communication to
 and from other modules.
 
 Draw generators always return a list of pairings (`Pairing` for two-team formats,
-`BPPairing` for BP).
+`PolyPairing` for BP).
 
 Draw generators that take results from the previous round, namely elimination
 rounds after the first elimination round, expect to be given a list of pairings.
@@ -173,27 +173,25 @@ class ResultPairing(Pairing):
         return self.teams[self._winner_index]
 
 
-class BPPairing(BasePairing):
-    """Pairing class for British Parliamentary."""
+class PolyPairing(BasePairing):
+    """Pairing class for British Parliamentary and Public Speaking."""
 
-    sides = [DebateSide.OG, DebateSide.OO, DebateSide.CG, DebateSide.CO]
-
-    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}):
+    def __init__(self, teams, bracket, room_rank, num_sides=4, flags=[], team_flags={}):
         super().__init__(teams, bracket, room_rank, flags, team_flags)
-        assert len(self.teams) == 4, "There must be four teams in a BPPairing"
+        assert len(self.teams) == num_sides, f"There must be {num_sides} teams in a PolyPairing"
 
     def __repr__(self):
         return "<{p.__class__.__name__}: {teams} ({p.bracket}/{p.room_rank})>".format(
             teams=", ".join(map(str, self.teams)), p=self)
 
 
-class BPEliminationResultPairing(BPPairing):
+class BPEliminationResultPairing(PolyPairing):
     """Adds functionality for storing information about the advancing teams.
     This class is the data structure expected by DrawGenerator classes, when
     taking information about the results of the previous round."""
 
     def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}, advancing=[]):
-        super().__init__(teams, bracket, room_rank, flags, team_flags)
+        super().__init__(teams, bracket, room_rank, 4, flags, team_flags)
         self.set_advancing(advancing)
 
     @classmethod

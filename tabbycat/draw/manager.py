@@ -46,7 +46,10 @@ OPTIONS_TO_CONFIG_MAPPING = {
 def DrawManager(round, active_only=True):  # noqa: N802 (factory function)
     teams_in_debate = round.tournament.pref('teams_in_debate')
     try:
-        klass = DRAW_MANAGER_CLASSES[(teams_in_debate, round.draw_type)]
+        if teams_in_debate in [2, 4]:
+            klass = DRAW_MANAGER_CLASSES[(teams_in_debate, round.draw_type)]
+        else:
+            klass = DRAW_MANAGER_CLASSES[(None, round.draw_type)]
     except KeyError:
         if teams_in_debate == 2:
             raise DrawUserError(_("The draw type %(type)s can't be used with two-team formats.") % {'type': round.get_draw_type_display()})
@@ -389,4 +392,7 @@ DRAW_MANAGER_CLASSES = {
     (4, Round.DrawType.MANUAL): ManualDrawManager,
     (4, Round.DrawType.POWERPAIRED): PowerPairedDrawManager,
     (4, Round.DrawType.ELIMINATION): BPEliminationDrawManager,
+    (None, Round.DrawType.RANDOM): RandomDrawManager,
+    (None, Round.DrawType.MANUAL): ManualDrawManager,
+    (None, Round.DrawType.ELIMINATION): EliminationDrawManager,
 }

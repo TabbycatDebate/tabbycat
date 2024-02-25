@@ -6,20 +6,20 @@ from django.utils.translation import gettext as _
 
 from .common import BaseBPDrawGenerator, BasePairDrawGenerator, DrawUserError
 from .graph import GraphAllocatedSidesMixin, GraphGeneratorMixin
-from .pairing import BPPairing, Pairing
+from .pairing import Pairing, PolyPairing
 from ..types import DebateSide
 
 
 class RandomPairingsMixin:
     """Provides actual random part of it, generic to pair and BP draws.
-    Classes using this mixin must define self.TEAMS_PER_DEBATE.
+    Classes using this mixin must define self.teams_in_debate.
     """
 
     def make_random_pairings(self):
         teams = list(self.teams)  # Make a copy
         random.shuffle(teams)
-        args = [iter(teams)] * self.TEAMS_PER_DEBATE  # recipe from Python itertools docs
-        pairings = [self.pairing_class(teams=t, bracket=0, room_rank=0) for t in zip(*args)]
+        args = [iter(teams)] * self.teams_in_debate  # recipe from Python itertools docs
+        pairings = [self.pairing_class(teams=t, bracket=0, room_rank=0, num_sides=self.teams_in_debate) for t in zip(*args)]
         return pairings
 
 
@@ -140,7 +140,7 @@ class RandomBPDrawGenerator(RandomPairingsMixin, BaseBPDrawGenerator):
 
     requires_even_teams = True
     requires_prev_result = False
-    pairing_class = BPPairing
+    pairing_class = PolyPairing
 
     DEFAULT_OPTIONS = {}
 

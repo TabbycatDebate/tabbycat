@@ -71,7 +71,7 @@ def get_bp_generator(draw_type):
         raise ValueError("Unrecognised draw type for BP draw: {}".format(draw_type))
 
 
-def DrawGenerator(teams_per_debate, draw_type, teams, results=None, rrseq=None, **kwargs):  # noqa: N802 (factory function)
+def DrawGenerator(teams_in_debate, draw_type, teams, results=None, rrseq=None, **kwargs):  # noqa: N802 (factory function)
     """Factory for draw objects.
     Takes a list of options and returns an appropriate subclass of BaseDrawGenerator.
     'draw_type' is mandatory and can be any of 'random', 'power_paired',
@@ -81,13 +81,13 @@ def DrawGenerator(teams_per_debate, draw_type, teams, results=None, rrseq=None, 
     if draw_type == "manual":
         klass = ManualDrawGenerator
 
-    elif teams_per_debate == 2:
+    elif teams_in_debate == 2:
         klass = get_two_team_generator(draw_type, **kwargs)
 
-    elif teams_per_debate == 4:
+    elif teams_in_debate > 2:
         klass = get_bp_generator(draw_type)
 
     else:
-        raise ValueError("Unrecognised teams-per-debate option: {}".format(teams_per_debate))
+        raise ValueError("Unrecognised teams-per-debate option: {}".format(teams_in_debate))
 
-    return klass(teams, results, rrseq, **kwargs)
+    return klass(teams, results, rrseq, teams_in_debate, **kwargs)

@@ -40,16 +40,17 @@ class BaseDrawGenerator:
     requires_prev_results = False
     requires_rrseq = False
 
-    def __init__(self, teams, results=None, rrseq=None, **kwargs):
+    def __init__(self, teams, results=None, rrseq=None, teams_in_debate=2, **kwargs):
         self.teams = teams
         self.team_flags = dict()
         self.results = results
         self.rrseq = rrseq
+        self.teams_in_debate = teams_in_debate
 
         if self.requires_even_teams:
-            if not len(self.teams) % self.TEAMS_PER_DEBATE == 0:
+            if not len(self.teams) % self.teams_in_debate == 0:
                 raise DrawUserError(_("The number of teams presented for the draw was not "
-                        "a multiple of %(num)d.") % {'num': self.TEAMS_PER_DEBATE})
+                        "a multiple of %(num)d.") % {'num': self.teams_in_debate})
             if not self.teams:
                 raise DrawUserError(_("There were no teams for the draw."))
 
@@ -170,7 +171,7 @@ class BasePairDrawGenerator(BaseDrawGenerator):
         "avoid_conflicts"       : "off",
     }
 
-    TEAMS_PER_DEBATE = 2
+    teams_in_debate = 2
 
     requires_even_teams = True
     requires_prev_results = False
@@ -201,7 +202,6 @@ class BasePairDrawGenerator(BaseDrawGenerator):
 
 class BaseBPDrawGenerator(BaseDrawGenerator):
     BASE_DEFAULT_OPTIONS = {}
-    TEAMS_PER_DEBATE = 4
 
 
 class EliminationDrawMixin:
