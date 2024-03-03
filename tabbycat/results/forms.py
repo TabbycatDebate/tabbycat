@@ -490,8 +490,11 @@ class ScoresMixin:
                 queryset = Speaker.objects.filter(team__in=self.debate.teams)
             else:
                 queryset = self.debate.get_team(side).speakers
+
             self.fields[self._fieldname_speaker(side, pos)] = forms.ModelChoiceField(
                 queryset=queryset, required=True)
+            if len(queryset) == 1:
+                self.fields[self._fieldname_speaker(side, pos)].initial = queryset[0]
 
             # 3(b). Ghost fields
             self.fields[self._fieldname_ghost(side, pos)] = forms.BooleanField(required=False,
