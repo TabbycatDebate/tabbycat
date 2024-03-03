@@ -1,5 +1,4 @@
 import logging
-from itertools import groupby
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -870,6 +869,24 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
         kwargs['filled'] = True
         return kwargs
 
+    def get_form(self):
+        form = super().get_form()
+        for error in self.errors:
+            msg, t, side, pos, values = error.args
+            if t == 'speaker':
+                field = form._fieldname_speaker(side, pos)
+            elif t == 'ghost':
+                field = form._fieldname_ghost(side, pos)
+            elif t == 'winners':
+                field = form._fieldname_declared_winner()
+            elif t == 'scores':
+                field = form._fieldname_score(side, pos)
+            elif t == 'speaker_ranks':
+                field = form._fieldname_srank(side, pos)
+            form.cleaned_data = {}
+            form.add_error(field, ValidationError(msg))
+        return form
+
     def populate_objects(self, prefill=True):
         super().populate_objects()
         self.round = self.debate.round
@@ -882,15 +899,7 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
 
         # Handle result conflicts
         self.result = DebateResult(self.ballotsub, tournament=self.tournament)
-        errors = self.result.populate_from_merge(*[b.result for b in bses])
-        for t, errors in groupby(errors, key=lambda e: e.args[1]):
-            if t == 'speaker':
-                msg = _("The speaking order in the ballots is inconsistent. Affected speakers are blanked. Make sure the speaker order and scores are correct.")
-            elif t == 'ghost':
-                msg = _("Duplicate speeches are marked inconsistently, so could not be consolidated. Make sure speeches are marked according to the tournament's rules.")
-            elif t == 'scores':
-                msg = _("Some scores were not identical, and so are left blank. Make sure the speaker order and scores are correct.")
-            messages.error(self.request, msg)
+        self.errors = self.result.populate_from_merge(*[b.result for b in bses])
 
         # Handle motion conflicts
         bs_motions = BallotSubmission.objects.filter(

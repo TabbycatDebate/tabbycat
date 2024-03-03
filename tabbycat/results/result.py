@@ -460,18 +460,16 @@ class DebateResultByAdjudicator(BaseDebateResult):
         for error in errors:
             key, side, pos = error.args[1:]
 
-            # Clear ghosts for speaker order problems too
-            self.set_ghost(side, pos, False)
+            if key == 'ghost':
+                self.set_ghost(side, pos, False)
 
             if key == 'speaker':
                 self.set_speaker(side, pos, None)
-                for adj in self.debateadjs:
-                    self.set_score(adj, side, pos, None)
 
         return errors
 
-    def merge_speaker_result(self, result, adj):
-        pass
+    def merge_speaker_result(self, result, adj) -> list[ResultError]:
+        return []
 
     def save(self):
         super().save()
@@ -703,7 +701,6 @@ class DebateResultWithScoresMixin:
                 self.set_speaker(side, pos, result.get_speaker(side, pos))
             elif result.get_speaker(side, pos) != cur_speaker:
                 errors.append(ResultError("Inconsistent speaker order", "speaker", side, pos))
-                continue  # Don't care about setting ghost/score if can't attribute to the correct speaker
 
             if not self.get_ghost(side, pos) and result.get_ghost(side, pos):
                 self.set_ghost(side, pos, result.get_ghost(side, pos))
@@ -922,17 +919,22 @@ class ConsensusDebateResult(BaseDebateResult):
                 self.set_winners(set())
 
             # Clear ghosts for speaker order problems too
-            if key in ('ghost', 'speaker', 'scores'):
+            if key == 'ghost':
                 self.set_ghost(side, pos, False)
 
-            if key in ('speaker', 'scores'):
+            if key == 'speaker':
                 self.set_speaker(side, pos, None)
+
+            if key == 'scores':
                 self.set_score(side, pos, None)
+
+            if key == 'speaker_ranks':
+                self.set_speaker_rank(side, pos, None)
 
         return errors
 
-    def merge_speaker_result(self, result):
-        pass
+    def merge_speaker_result(self, result) -> list[ResultError]:
+        return []
 
     # --------------------------------------------------------------------------
     # Team score fields
@@ -987,6 +989,11 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
                 self.set_score(side, pos, result.get_score(side, pos))
             elif self.get_score(side, pos) != result.get_score(side, pos):
                 errors.append(ResultError('Scores are not identical', 'scores', side, pos))
+
+            if self.get_speaker_rank(side, pos) is None:
+                self.set_speaker_rank(side, pos, result.get_speaker_rank(side, pos))
+            elif self.get_speaker_rank(side, pos) != result.get_speaker_rank(side, pos):
+                errors.append(ResultError('Speech ranks are not identical', 'speaker_ranks', side, pos))
         return errors
 
     def get_speaker_rank(self, side: str, position: int) -> int:
