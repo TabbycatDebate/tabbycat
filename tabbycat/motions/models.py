@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from html2text import html2text
 
 
 class Motion(models.Model):
@@ -26,6 +27,17 @@ class Motion(models.Model):
 
     def __str__(self):
         return self.text
+
+    def clean_fields(self, exclude=None):
+        super().clean_fields(exclude=exclude)
+        if html2text(self.info_slide or '').isspace() and 'info_slide' not in exclude:
+            self.info_slide = ''
+
+    @property
+    def info_slide_plain(self):
+        if (self.info_slide or '').startswith('<p'):
+            return html2text(self.info_slide).strip()
+        return self.info_slide
 
 
 class DebateTeamMotionPreference(models.Model):

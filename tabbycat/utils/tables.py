@@ -849,12 +849,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_column(ballot_links_header, ballot_links_data)
 
         elif self.private_url:
-            debates = Debate.objects.filter(pk__in=[d.pk for d in debates]).select_related('round').annotate(
+            debateqs = Debate.objects.filter(pk__in=[d.pk for d in debates]).select_related('round').annotate(
                 has_ballot=Exists(BallotSubmission.objects.filter(debate_id=OuterRef('id')).exclude(discarded=True)),
             ).prefetch_related(
-                Prefetch('ballotsubmission_set', queryset=BallotSubmission.objects.exclude(discarded=True), to_attr='nondiscard_ballots'))
+                Prefetch('ballotsubmission_set', queryset=BallotSubmission.objects.exclude(discarded=True), to_attr='nondiscard_ballots'),
+            ).all()
+            annotated_debates = {d.pk: d for d in debateqs}
             ballot_links_data = []
-            for debate in debates:
+            for o_debate in debates:
+                debate = annotated_debates[o_debate.pk]
                 if not debate.has_ballot:
                     ballot_links_data.append(no_ballot)
                 elif not get_result_class(debate.nondiscard_ballots[0], debate.round, self.tournament).uses_speakers:
