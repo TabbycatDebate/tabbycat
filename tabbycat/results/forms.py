@@ -1,6 +1,5 @@
 import logging
 from itertools import product
-from math import log10
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -49,12 +48,12 @@ class TournamentPasswordField(forms.CharField):
         return value
 
 
-class BaseScoreField(forms.FloatField):
+class BaseScoreField(forms.DecimalField):
     def __init__(self, *args, **kwargs):
         """Takes an additional optional keyword argument: tournament,
         the Tournament used to configure the field."""
 
-        tournament = kwargs.pop('tournament')
+        tournament = kwargs.pop('tournament', None)
         if tournament:
             min_value  = tournament.pref(self.CONFIG_MIN_VALUE_FIELD)
             max_value  = tournament.pref(self.CONFIG_MAX_VALUE_FIELD)
@@ -65,36 +64,11 @@ class BaseScoreField(forms.FloatField):
             step_value = self.DEFAULT_STEP_VALUE
         self.step_value = kwargs.get('step_value', step_value)
 
-        kwargs.setdefault('min_value', self.coerce_for_ui(min_value))
-        kwargs.setdefault('max_value', self.coerce_for_ui(max_value))
+        kwargs.setdefault('min_value', min_value)
+        kwargs.setdefault('max_value', max_value)
+        kwargs.setdefault('step_size', self.step_value)
 
         super().__init__(*args, **kwargs)
-
-    def validate(self, value):
-        super().validate(value)
-        self.check_value(value)
-
-    def check_value(self, value):
-        if value and self.step_value and round(value % self.step_value, -(round(log10(self.step_value)) - 1)) != 0:
-            if self.step_value == 1:
-                msg = _("Please enter a whole number.")
-            else:
-                msg = _("Please enter a multiple of %s.") % self.step_value
-            raise forms.ValidationError(msg, code='decimal')
-
-    def widget_attrs(self, widget):
-        attrs = super().widget_attrs(widget)
-        if isinstance(widget, forms.NumberInput):
-            attrs['step'] = self.coerce_for_ui(self.step_value) # override
-        return attrs
-
-    def coerce_for_ui(self, x):
-        if x is None:
-            return None
-        if self.step_value % 1 == 0:
-            return int(x)
-        else:
-            return float(x)
 
 
 class MotionModelChoiceField(forms.ModelChoiceField):
@@ -704,8 +678,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
         for side, pos in product(self.sides, self.positions):
             score = result.get_score(side, pos)
-            coerce_for_ui = self.fields[self._fieldname_score(side, pos)].coerce_for_ui
-            initial[self._fieldname_score(side, pos)] = coerce_for_ui(score)
+            initial[self._fieldname_score(side, pos)] = score
             if self.using_speaker_ranks:
                 initial[self._fieldname_srank(side, pos)] = result.get_speaker_rank(side, pos)
 
@@ -851,8 +824,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
         for adj in self.adjudicators:
             for side, pos in product(self.sides, self.positions):
                 score = result.get_score(adj, side, pos)
-                coerce_for_ui = self.fields[self._fieldname_score(adj, side, pos)].coerce_for_ui
-                initial[self._fieldname_score(adj, side, pos)] = coerce_for_ui(score)
+                initial[self._fieldname_score(adj, side, pos)] = score
 
             if self.using_declared_winner:
                 initial[self._fieldname_declared_winner(adj)] = result.get_winner(adj)
