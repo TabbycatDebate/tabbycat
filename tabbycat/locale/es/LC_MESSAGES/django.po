@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:58\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-08-24 08:46\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -77,7 +77,7 @@ msgstr "identificadores de persona"
 
 #: checkins/models.py
 msgid "debate"
-msgstr ""
+msgstr "debate"
 
 #: checkins/models.py
 msgid "debate identifier"
@@ -238,6 +238,22 @@ msgid "Bengali"
 msgstr ""
 
 #: settings/core.py
+msgid "Bulgarian"
+msgstr ""
+
+#: settings/core.py
+msgid "Catalan"
+msgstr ""
+
+#: settings/core.py
+msgid "Czech"
+msgstr ""
+
+#: settings/core.py
+msgid "German"
+msgstr ""
+
+#: settings/core.py
 msgid "English"
 msgstr "inglés"
 
@@ -250,12 +266,28 @@ msgid "French"
 msgstr "francés"
 
 #: settings/core.py
+msgid "Hebrew"
+msgstr ""
+
+#: settings/core.py
+msgid "Hindi"
+msgstr ""
+
+#: settings/core.py
 msgid "Indonesian"
+msgstr ""
+
+#: settings/core.py
+msgid "Italian"
 msgstr ""
 
 #: settings/core.py
 msgid "Japanese"
 msgstr "japonés"
+
+#: settings/core.py
+msgid "Kazakh"
+msgstr ""
 
 #: settings/core.py
 msgid "Malay"
@@ -266,8 +298,20 @@ msgid "Portuguese"
 msgstr "portugués"
 
 #: settings/core.py
+msgid "Romanian"
+msgstr ""
+
+#: settings/core.py
 msgid "Russian"
 msgstr "Ruso"
+
+#: settings/core.py
+msgid "Turkish"
+msgstr ""
+
+#: settings/core.py
+msgid "Vietnamese"
+msgstr ""
 
 #: settings/core.py
 msgid "Simplified Chinese"
@@ -370,8 +414,8 @@ msgid "This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 msgstr "Este sitio funciona con Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 
 #: templates/footer.html
-msgid "Tabbycat is a source-available project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments."
-msgstr "Tabbycat es un proyecto de código abierto, desarrollado por voluntarios, y es gratis para utilizar para tabular los torneos sin fines de lucro y sin fines de recaudación de fondos."
+msgid "Tabbycat is an open-source project developed by volunteers and is free to use."
+msgstr ""
 
 #: templates/footer.html
 #, python-format
@@ -383,7 +427,7 @@ msgid "Learn more about donating."
 msgstr "Aprender más sobre las donaciones."
 
 #: templates/footer.html
-msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated."
+msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated and help us to continue to develop, support, and maintain Tabbycat."
 msgstr ""
 
 #: templates/footer.html

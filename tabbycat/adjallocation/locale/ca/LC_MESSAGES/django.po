@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-06-22 12:35\n"
+"PO-Revision-Date: 2024-01-19 09:52\n"
 "Last-Translator: \n"
 "Language-Team: Catalan\n"
 "Language: ca_ES\n"
@@ -19,25 +19,25 @@ msgstr ""
 
 #: adjallocation/allocators/base.py
 msgid "There are no available adjudicators. Ensure there are adjudicators who have been marked as available for this round before auto-allocating."
-msgstr ""
+msgstr "No hi ha jutges disponibles. Assegura't que hi ha jutges marcats com a disponibles abans de fer l'autoubicació."
 
 #: adjallocation/allocators/hungarian.py
 #, python-format
 msgid "%(count)s score is larger than the maximum permitted adjudicator score (%(score).1f)."
 msgid_plural "%(count)s scores are larger than the maximum permitted adjudicator score (%(score).1f)."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)s punts superen el màxim permès per puntuar a un jutge (%(score).1f)."
+msgstr[1] "%(count)s punts superen el màxim permès per puntuar a un jutge (%(score).1f)."
 
 #: adjallocation/allocators/hungarian.py
 #, python-format
 msgid "%(count)s score is smaller than the minimum permitted adjudicator score (%(score).1f)."
 msgid_plural "%(count)s scores are smaller than the minimum permitted adjudicator score (%(score).1f)."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)s punts no arriben al mínim permès per puntuar a un jutge (%(score).1f)."
+msgstr[1] "%(count)s punts no arriben al mínim permès per puntuar a un jutge (%(score).1f)."
 
 #: adjallocation/allocators/hungarian.py
 msgid "There are no adjudicators eligible to be a chair or panellist. Try changing the \"Minimum feedback score required to be allocated as chair or panellist\" setting to something lower than at least some adjudicators' current scores, and try again."
-msgstr ""
+msgstr "No hi ha jutges disponibles per ser principals o panelistes. Prova de canviar la nota mínima de retroalimentació necessària per ser ubicat com a principal o panelista a un valor prou baix, almenys a les notes d'alguns jutges, i torna-ho a provar."
 
 #: adjallocation/allocators/hungarian.py
 msgid "There are no debates for this round. Maybe you haven't created a draw yet?"
@@ -46,17 +46,17 @@ msgstr "No hi ha debats per aquesta ronda. Potser no has creat l'emparellament e
 #: adjallocation/allocators/hungarian.py
 #, python-format
 msgid "There are %(debate_count)s debates but only %(adj_count)s voting adjudicators."
-msgstr ""
+msgstr "Hi ha %(debate_count)s debats previstos, però només %(adj_count)s jutges amb vot disponibles."
 
 #: adjallocation/allocators/hungarian.py
 #, python-format
 msgid "There are %(panel_debates)s panel debates but only %(panellists)s available panellists (less than %(needed)s)."
-msgstr ""
+msgstr "Hi ha %(panel_debates)s panells de jutges, però només %(panellists)s panelistes disponibles (menys dels %(needed)s necessaris)."
 
 #: adjallocation/allocators/hungarian.py
 #, python-format
 msgid "There are %(debates_count)s debates but only %(voting_count)s voting adjudicators."
-msgstr ""
+msgstr "Hi ha %(debates_count)s debats previstos, però només %(voting_count)s jutges amb vot."
 
 #: adjallocation/apps.py
 msgid "Adjudicator Allocation"
@@ -64,11 +64,11 @@ msgstr "Assignació de Jutges"
 
 #: adjallocation/consumers.py
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
-msgstr "Els empajeraments han estat revelats, oculta els aparellaments per refer autocol·locacions."
+msgstr "Els aparellaments han estat revelats, oculta els aparellaments per refer autoubicacions."
 
 #: adjallocation/consumers.py
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
-msgstr "Els empajeraments no han estat confirmats, confirma els aparellaments per executar autoaparellaments."
+msgstr "Els aparellaments no han estat confirmats, confirma els aparellaments per executar autoubicacions de jutges."
 
 #: adjallocation/consumers.py
 msgid "There are no preformed panels available to allocate."
@@ -76,61 +76,61 @@ msgstr "No hi ha Grups de Jutges preformats disponibles per col·locar."
 
 #: adjallocation/consumers.py
 msgid "Successfully auto-allocated preformed panels to debates."
-msgstr ""
+msgstr "Els grups de jutges pels debats s'han autoubicat correctament."
 
 #: adjallocation/consumers.py
 #, python-format
 msgid "Successfully auto-allocated adjudicators to debates. However, there was a warning:"
 msgid_plural "Successfully auto-allocated adjudicators to debates. However, there were %(count)d warnings:"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Els grups de jutges pels debats s'han autoubicat correctament. Així i tot, hi ha un avís:"
+msgstr[1] "Els grups de jutges pels debats s'han autoubicat correctament. Així i tot, hi ha %(count)d avisos:"
 
 #: adjallocation/consumers.py
 msgid "Successfully auto-allocated adjudicators to debates."
-msgstr ""
+msgstr "Els grups de jutges pels debats s'han autoubicat correctament."
 
 #: adjallocation/consumers.py
 msgid "There aren't any panels to fill. Create panels first."
-msgstr ""
+msgstr "No hi ha panells de jutges per omplir. Crea primer els panells."
 
 #: adjallocation/consumers.py
 #, python-format
 msgid "Successfully auto-allocated adjudicators to preformed panels. However, there was a warning:"
 msgid_plural "Successfully auto-allocated adjudicators to preformed panels. However, there were %(count)d warnings:"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Els grups de jutges pels debats s'han autoubicat correctament als panells prefabricats. Així i tot, hi ha un avís:"
+msgstr[1] "Els grups de jutges pels debats s'han autoubicat correctament als panells prefabricats. Així i tot, hi ha %(count)d avisos:"
 
 #: adjallocation/consumers.py
 msgid "Successfully auto-allocated adjudicators to preformed panels."
-msgstr ""
+msgstr "Els grups de jutges pels debats s'han autoubicat correctament als panells prefabricats."
 
 #: adjallocation/consumers.py
 msgid "You have no break category set as 'is general' so debate importances can't be calculated."
-msgstr ""
+msgstr "No tens cap categoria de tall configurada com a “general”, i per tant la importància dels debats no pot ser calculada."
 
 #: adjallocation/consumers.py
 msgid "Succesfully auto-prioritised debates."
-msgstr ""
+msgstr "Els debats han estat autoprioritzats satisfactòriament."
 
 #: adjallocation/consumers.py
 msgid "You have no break category set as 'is general' so panel importances can't be calculated."
-msgstr ""
+msgstr "No tens cap categoria de tall configurada com a “general”, i per tant la importància dels panells de jutges no pot ser calculada."
 
 #: adjallocation/consumers.py
 msgid "Succesfully auto-prioritised preformed panels."
-msgstr ""
+msgstr "Els panells de jutges han estat autoprioritzats satisfactòriament."
 
 #: adjallocation/consumers.py
 msgid "Since this is the first round, the preformed panels aren't annotated with brackets and liveness."
-msgstr ""
+msgstr "Com que aquesta és la primera ronda, els panells prefabricats no poden ser generats en grups i vivacitat."
 
 #: adjallocation/consumers.py
 msgid "The previous round's draw doesn't exist, so preformed panels can't be annotated with brackets and liveness."
-msgstr ""
+msgstr "Els emparellaments de la ronda anterior no existeixen, i per això els panells prefabricats no poden ser generats en grups i vivacitat."
 
 #: adjallocation/consumers.py
 msgid "Succesfully created new preformed panels for this round."
-msgstr ""
+msgstr "Els panells prefabricats de jutges per aquesta ronda han estat creats satisfactòriament."
 
 #: adjallocation/models.py
 msgid "chair"
@@ -234,11 +234,11 @@ msgstr "Estimació del grup inferior en què aquests jutges podrien estar"
 
 #: adjallocation/models.py
 msgid "maximum bracket"
-msgstr ""
+msgstr "grup superior"
 
 #: adjallocation/models.py
 msgid "Estimate of the highest bracket for which this panel might be"
-msgstr ""
+msgstr "Estimació del grup superior en què aquests jutges podrien estar"
 
 #: adjallocation/models.py
 msgid "room rank"
@@ -246,15 +246,15 @@ msgstr "rang de sala"
 
 #: adjallocation/models.py
 msgid "Sequential number of panel, not used in any algorithms"
-msgstr ""
+msgstr "Número seqüencial de panell, no utilitzat en cap algoritme"
 
 #: adjallocation/models.py
 msgid "liveness"
-msgstr ""
+msgstr "vivacitat"
 
 #: adjallocation/models.py
 msgid "Number of categories this room is expected to be live for"
-msgstr ""
+msgstr "Nombre de categories en què aquesta sala encara pot competir"
 
 #: adjallocation/models.py
 msgid "preformed panel"

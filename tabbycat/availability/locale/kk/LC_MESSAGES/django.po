@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-03-27 09:26\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-11-27 13:39\n"
 "Last-Translator: \n"
 "Language-Team: Kazakh\n"
 "Language: kk_KZ\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: availability/apps.py availability/views.py
 msgid "Availability"
-msgstr ""
+msgstr "Түгендеу"
 
 #: availability/models.py
 msgid "content type"
@@ -56,7 +56,7 @@ msgstr ""
 
 #: availability/templates/availability_index.html
 msgid "View Draw"
-msgstr ""
+msgstr "Ойын кестесін көру"
 
 #: availability/templates/availability_index.html
 #, python-format
@@ -65,7 +65,7 @@ msgstr ""
 
 #: availability/templates/availability_index.html
 msgid "Generate Draw"
-msgstr ""
+msgstr "Ойын кестесін құру"
 
 #: availability/templates/availability_index.html
 msgid "The draw cannot be generated until some teams have been marked as available."
@@ -109,7 +109,7 @@ msgstr ""
 
 #: availability/templates/availability_index.html
 #, python-format
-msgid "This is the first round, but its draw type is <strong>%(draw_type)s</strong>. Did you intend for it to be <strong>Random</strong> instead? You can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's draw type in the Edit Database area.</a>"
+msgid "This is the first round, but its draw type is <strong>%(draw_type)s</strong>. Did you intend for it to be <strong>Random</strong> or <strong>Seeded</strong> instead? You can <a href=\"%(change_round_url)s\" class=\"alert-link\">edit this round's draw type in the Edit Database area.</a>"
 msgstr ""
 
 #: availability/templates/availability_index.html
@@ -139,11 +139,11 @@ msgstr ""
 
 #: availability/templates/base_availability.html
 msgid "Select All"
-msgstr ""
+msgstr "Барлығын таңдау"
 
 #: availability/templates/base_availability.html
 msgid "Select None"
-msgstr ""
+msgstr "Ешқайсысын таңдамау"
 
 #: availability/templates/base_availability.html
 msgid "Check-Ins"
@@ -163,19 +163,19 @@ msgstr ""
 
 #: availability/templates/checkin_progress.html
 msgid "Teams"
-msgstr ""
+msgstr "Топтар"
 
 #: availability/templates/checkin_progress.html
 msgid "Adjudicators"
-msgstr ""
+msgstr "Төрешілер"
 
 #: availability/templates/checkin_progress.html
 msgid "Rooms"
-msgstr ""
+msgstr "Аудиториялар"
 
 #: availability/templates/checkin_progress.html
 msgid "Mark teams as available"
-msgstr ""
+msgstr "Топтарды бар деп белгілеу"
 
 #: availability/templates/checkin_progress.html
 msgid "No need to set team availability"
@@ -230,7 +230,7 @@ msgstr[1] ""
 
 #: availability/templates/checkin_progress.html
 msgid "Mark adjudicators as available"
-msgstr ""
+msgstr "Төрешілерді бар деп белгілеу"
 
 #. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
 #: availability/templates/checkin_progress.html

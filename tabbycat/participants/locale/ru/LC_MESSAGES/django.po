@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 01:00\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-07-04 21:49\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -274,6 +274,14 @@ msgstr "Если стоит отметка, команда \"1\" из Викто
 #: participants/models.py
 msgid "break categories"
 msgstr "категории брейка"
+
+#: participants/models.py
+msgid "seed"
+msgstr ""
+
+#: participants/models.py
+msgid "Used as initial ranking to power-pair the first round"
+msgstr ""
 
 #: participants/models.py
 msgid "institution conflicts"

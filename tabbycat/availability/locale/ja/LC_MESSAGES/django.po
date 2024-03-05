@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:57\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-09-10 09:45\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: availability/apps.py availability/views.py
 msgid "Availability"
-msgstr ""
+msgstr "可用性"
 
 #: availability/models.py
 msgid "content type"
@@ -27,7 +27,7 @@ msgstr "コンテンツタイプ"
 
 #: availability/models.py
 msgid "object id"
-msgstr ""
+msgstr "オブジェクトID"
 
 #: availability/models.py
 msgid "round"
@@ -35,11 +35,11 @@ msgstr "ラウンド"
 
 #: availability/models.py
 msgid "round availability"
-msgstr ""
+msgstr "ラウンドの空き状況"
 
 #: availability/models.py
 msgid "round availabilities"
-msgstr ""
+msgstr "ラウンドの空き状況"
 
 #: availability/templates/availability_index.html
 msgid "Mark All Breaking Adjs as Available"
@@ -61,7 +61,7 @@ msgstr "対戦表を確認する"
 #: availability/templates/availability_index.html
 #, python-format
 msgid "%(previous_unconfirmed)s debates from %(round)s do not have a completed ballot — this may lead to a draw that fails or is incorrect"
-msgstr ""
+msgstr "%(previous_unconfirmed)s のディベート %(round)s は投票が完了していません。これにより、次戦における抽選が失敗または不正確になる可能性があります。"
 
 #: availability/templates/availability_index.html
 msgid "Generate Draw"
@@ -104,22 +104,22 @@ msgstr[0] "<strong>ラウンド%(prev_round)sの%(previous_unconfirmed)s試合�
 #: availability/templates/availability_index.html
 #, python-format
 msgid "This is a page for <strong>%(round)s</strong>, but the previous round is still not marked as completed. Did you forget to <a href=\"%(complete_prev_round_url)s\" class=\"alert-link\"> mark %(prev_round)s as completed? </a>"
-msgstr ""
+msgstr "このページは<strong>%(round)s</strong>ですが、前回の試合が完了とされていません。<a href=\"%(complete_prev_round_url)s\" class=\"alert-link\"> %(prev_round)sが完了されているか確認してください。</a>"
 
 #: availability/templates/availability_index.html
 #, python-format
-msgid "This is the first round, but its draw type is <strong>%(draw_type)s</strong>. Did you intend for it to be <strong>Random</strong> instead? You can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's draw type in the Edit Database area.</a>"
-msgstr ""
+msgid "This is the first round, but its draw type is <strong>%(draw_type)s</strong>. Did you intend for it to be <strong>Random</strong> or <strong>Seeded</strong> instead? You can <a href=\"%(change_round_url)s\" class=\"alert-link\">edit this round's draw type in the Edit Database area.</a>"
+msgstr "これは第1試合ですが、組み合わせ方式が<strong>%(draw_type)s</strong>に設定されています。<strong>ランダム方式</strong>か<strong>シード方式</strong>に設定したい場合は、<a href=\"%(change_round_url)s\" class=\"alert-link\">ラウンド組み合わせ形式をデータベース編集画面で修正することができます。</a>"
 
 #: availability/templates/availability_index.html
 #, python-format
 msgid "This is an elimination round, but it doesn't have a break category. Elimination rounds must be associated with a break category. Please <a href=\"%(change_round_url)s\" class=\"alert-link\"> set this round's break category in the Edit Database area.</a>"
-msgstr ""
+msgstr "これは勝ち残り式のラウンドですが、本戦出場枠が有効ではありません。勝ち残り式では本戦出場枠の設定が必要です。<a href=\"%(change_round_url)s\" class=\"alert-link\">データベース編集画面で、本戦出場枠を設定してください。</a>"
 
 #: availability/templates/availability_index.html
 #, python-format
 msgid "This is an elimination round, but its draw type is <strong>%(draw_type)s</strong>. The draw type of all elimination rounds must be \"Elimination\". Please <a href=\"%(change_round_url)s\" class=\"alert-link\"> change this round's draw type in the Edit Database area.</a>"
-msgstr ""
+msgstr "これは勝ち残り式のラウンドですが、組み合わせ方式が<strong>%(draw_type)s</strong>となっています。勝ち残り式では「勝ち残り方式」を設定する必要があります。<a href=\"%(change_round_url)s\" class=\"alert-link\">ラウンドの組み合わせ方式をデータベース編集画面で変更してください。</a>"
 
 #: availability/templates/availability_index.html
 #, python-format

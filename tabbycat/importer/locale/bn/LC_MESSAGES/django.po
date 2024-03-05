@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:58\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2024-01-22 12:34\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Language: bn_BD\n"
@@ -20,21 +20,21 @@ msgstr ""
 #: importer/forms.py
 #, python-format
 msgid "line %(lineno)d: %(message)s"
-msgstr ""
+msgstr "লাইন %(lineno)d: %(message)s"
 
 #: importer/forms.py
 #, python-format
 msgid "This line (for %(institution)s) didn't have a code"
-msgstr ""
+msgstr "এই লাইনে ( %(institution)s) এর কোনো স্কোর ছিল না"
 
 #: importer/forms.py
 #, python-format
 msgid "This line (for %(institution)s) had too many columns"
-msgstr ""
+msgstr "এই লাইনটির (%(institution)s জন্য জন্য) অনেক বেশি তালিকা ছিল"
 
 #: importer/forms.py
 msgid "There were no institutions to import."
-msgstr ""
+msgstr "ইমপোর্ট করার মতো কোনো প্রতিষ্ঠান ছিল না।"
 
 #: importer/forms.py
 #, python-format
@@ -45,7 +45,7 @@ msgstr[1] ""
 
 #: importer/forms.py
 msgid "There were no rooms to import."
-msgstr ""
+msgstr "ইমপোর্ট করার মতো কোনো রুম ছিল না।"
 
 #: importer/forms.py
 #, python-format
@@ -56,19 +56,23 @@ msgstr[1] ""
 
 #: importer/forms.py
 msgid "Speakers' names"
-msgstr ""
+msgstr "বক্তাদের নাম"
+
+#: importer/forms.py
+msgid "Can be separated by newlines, tabs or commas"
+msgstr "নতুন লাইন, ট্যাব বা কমা দ্বারা পৃথক করা যেতে পারে"
 
 #: importer/forms.py
 msgid "Speakers' email addresses"
-msgstr ""
+msgstr "বক্তার ইমেইল ঠিকানা"
 
 #: importer/forms.py
 msgid "Optional, useful to include if distributing private URLs, list in same order as speakers' names"
-msgstr ""
+msgstr "ঐচ্ছিক, ব্যক্তিগত ইউআরএল বিতরণ করা হলে অন্তর্ভুক্ত করার জন্য উপযোগী, স্পিকারদের নামের মতো একই ক্রমে তালিকা করুন"
 
 #: importer/forms.py
 msgid "Name (excluding institution name)"
-msgstr ""
+msgstr "নাম (প্রতিষ্ঠানের নাম ব্যতীত)"
 
 #: importer/forms.py
 msgid "Prefix team name with institution name?"
@@ -87,10 +91,6 @@ msgid "One speaker's name per line"
 msgstr ""
 
 #: importer/forms.py
-msgid "Can be separated by newlines, tabs or commas"
-msgstr ""
-
-#: importer/forms.py
 #, python-format
 msgid "Speaker %d"
 msgstr ""
@@ -98,6 +98,22 @@ msgstr ""
 #: importer/forms.py
 #, python-format
 msgid "speaker%d@example.edu"
+msgstr ""
+
+#: importer/forms.py
+msgid "Unseeded"
+msgstr "বীজহীন"
+
+#: importer/forms.py
+msgid "Free seed"
+msgstr "বিনামূল্যে বীজ"
+
+#: importer/forms.py
+msgid "Half seed"
+msgstr ""
+
+#: importer/forms.py
+msgid "Full seed"
 msgstr ""
 
 #: importer/forms.py
@@ -317,7 +333,7 @@ msgstr ""
 #: importer/templates/simple_import_institutions_raw.html
 #: importer/templates/simple_import_venues_raw.html
 msgid "There are some problems with the data on this form:"
-msgstr ""
+msgstr "এই ফর্মের ডেটাতে কিছু সমস্যা আছে:"
 
 #: importer/templates/simple_import_institutions_raw.html
 #: importer/templates/simple_import_venues_raw.html

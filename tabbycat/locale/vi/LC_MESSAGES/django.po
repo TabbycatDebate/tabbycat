@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-03-25 13:45\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-12-28 07:56\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
@@ -19,44 +19,44 @@ msgstr ""
 
 #: api/apps.py
 msgid "Application Programming Interface"
-msgstr ""
+msgstr "Giao diện Lập trình Ứng dụng"
 
 #: checkins/admin.py
 msgid "Type"
-msgstr ""
+msgstr "Loại"
 
 #: checkins/admin.py
 msgid "Checkin time"
-msgstr ""
+msgstr "Giờ điểm danh"
 
 #: checkins/apps.py templates/nav/admin_nav.html
 #: templates/nav/assistant_nav.html templates/nav/public_nav.html
 msgid "Check-Ins"
-msgstr ""
+msgstr "Check-In"
 
 #: checkins/consumers.py
 msgid "Sent checkin identifier doesn't exist"
-msgstr ""
+msgstr "Định danh checkin được gửi không tồn tại"
 
 #: checkins/consumers.py
 msgid "Checkins"
-msgstr ""
+msgstr "Điểm danh"
 
 #: checkins/consumers.py
 msgid "No checkin identifiers exist for sent barcodes"
-msgstr ""
+msgstr "Không có định danh checkin tồn tại với mã vạch được gửi"
 
 #: checkins/models.py
 msgid "The barcode must contain exactly six digits."
-msgstr ""
+msgstr "Mã vạch phải có 6 ký tự."
 
 #: checkins/models.py
 msgid "barcode"
-msgstr ""
+msgstr "mã vạch"
 
 #: checkins/models.py
 msgid "<Not the child instance>"
-msgstr ""
+msgstr "<Not the child instance>"
 
 #: checkins/models.py
 #, python-format
@@ -65,15 +65,15 @@ msgstr ""
 
 #: checkins/models.py
 msgid "person"
-msgstr ""
+msgstr "người"
 
 #: checkins/models.py
 msgid "person identifier"
-msgstr ""
+msgstr "định danh người"
 
 #: checkins/models.py
 msgid "person identifiers"
-msgstr ""
+msgstr "định danh người"
 
 #: checkins/models.py
 msgid "debate"
@@ -81,59 +81,59 @@ msgstr "trận tranh biện"
 
 #: checkins/models.py
 msgid "debate identifier"
-msgstr ""
+msgstr "định danh tranh biện"
 
 #: checkins/models.py
 msgid "debate identifiers"
-msgstr ""
+msgstr "định danh tranh biện"
 
 #: checkins/models.py
 msgid "room identifier"
-msgstr ""
+msgstr "định danh phòng"
 
 #: checkins/models.py
 msgid "room identifiers"
-msgstr ""
+msgstr "định danh phòng"
 
 #: checkins/models.py
 msgid "identifier"
-msgstr ""
+msgstr "định danh"
 
 #: checkins/models.py
 msgid "check-in time"
-msgstr ""
+msgstr "giờ điểm danh"
 
 #: checkins/models.py
 msgid "tournament"
-msgstr ""
+msgstr "giải đấu"
 
 #: checkins/models.py
 msgid "check-in event"
-msgstr ""
+msgstr "sự kiện check-in"
 
 #: checkins/models.py
 msgid "check-in events"
-msgstr ""
+msgstr "sự kiện check-in"
 
 #: checkins/templates/checkin_ids.html
 msgid "With identifiers"
-msgstr ""
+msgstr "Với định danh"
 
 #: checkins/templates/checkin_ids.html
 msgid "View as barcodes"
-msgstr ""
+msgstr "Xem như mã vạch"
 
 #: checkins/templates/checkin_ids.html
 msgid "Generate missing identifiers"
-msgstr ""
+msgstr "Tạo định danh còn thiếu"
 
 #: checkins/templates/checkin_ids.html
 msgid "Generate all identifiers"
-msgstr ""
+msgstr "Tạo tất cả định danh"
 
 #: checkins/templates/checkin_ids.html
 msgid "There are no identifiers available to view. An admin will need to generate them."
-msgstr ""
+msgstr "Không có định danh tương thích để xem. Một quản trị viên cần phải tạo chúng."
 
 #: checkins/templates/checkin_printables.html
 msgid "Each of the barcodes below is also an image file that can be downloaded individually. If you want to download them all at once try using a 'bulk downloader' extension/plugin for your browser, such as <a href=\"https://chrome.google.com/webstore/detail/svg-export/naeaaedieihlkmdajjefioajbbdbdjgp?hl=en-GB\">this one (for Chrome)</a>. To download them as a list you can go to Check-Ins section of the Edit Database area and copy/paste from the relevant table."
@@ -174,7 +174,7 @@ msgstr ""
 #: checkins/views.py templates/nav/admin_nav.html
 #: templates/nav/assistant_nav.html
 msgid "Scan Identifiers"
-msgstr ""
+msgstr "Quét định danh"
 
 #: checkins/views.py
 msgid "People's Check-In Statuses"
@@ -186,7 +186,7 @@ msgstr ""
 
 #: checkins/views.py templates/nav/admin_nav.html
 msgid "Make Identifiers"
-msgstr ""
+msgstr "Tạo định danh"
 
 #: checkins/views.py templates/nav/admin_nav.html
 msgid "Speakers"
@@ -219,7 +219,7 @@ msgstr ""
 
 #: checkins/views.py
 msgid "Whoops! Looks like your check-in was already revoked."
-msgstr ""
+msgstr "Whoops! Có vẻ check-in của bạn đã bị thu hồi."
 
 #: checkins/views.py
 msgid "Whoops! Looks like you're already checked in."
@@ -227,7 +227,7 @@ msgstr ""
 
 #: checkins/views.py
 msgid "You are now checked in."
-msgstr ""
+msgstr "Bạn đã được điểm danh."
 
 #: settings/core.py
 msgid "Arabic"
@@ -235,6 +235,22 @@ msgstr ""
 
 #: settings/core.py
 msgid "Bengali"
+msgstr ""
+
+#: settings/core.py
+msgid "Bulgarian"
+msgstr ""
+
+#: settings/core.py
+msgid "Catalan"
+msgstr ""
+
+#: settings/core.py
+msgid "Czech"
+msgstr ""
+
+#: settings/core.py
+msgid "German"
 msgstr ""
 
 #: settings/core.py
@@ -250,11 +266,27 @@ msgid "French"
 msgstr ""
 
 #: settings/core.py
+msgid "Hebrew"
+msgstr ""
+
+#: settings/core.py
+msgid "Hindi"
+msgstr ""
+
+#: settings/core.py
 msgid "Indonesian"
 msgstr ""
 
 #: settings/core.py
+msgid "Italian"
+msgstr ""
+
+#: settings/core.py
 msgid "Japanese"
+msgstr ""
+
+#: settings/core.py
+msgid "Kazakh"
 msgstr ""
 
 #: settings/core.py
@@ -266,7 +298,19 @@ msgid "Portuguese"
 msgstr ""
 
 #: settings/core.py
+msgid "Romanian"
+msgstr ""
+
+#: settings/core.py
 msgid "Russian"
+msgstr ""
+
+#: settings/core.py
+msgid "Turkish"
+msgstr ""
+
+#: settings/core.py
+msgid "Vietnamese"
 msgstr ""
 
 #: settings/core.py
@@ -366,10 +410,10 @@ msgstr "%(tournament)s đang chạy trên Tabbycat %(tabbycat_version)s (%(tabby
 #: templates/footer.html
 #, python-format
 msgid "This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
-msgstr ""
+msgstr "Trang này chạy trên Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 
 #: templates/footer.html
-msgid "Tabbycat is a source-available project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments."
+msgid "Tabbycat is an open-source project developed by volunteers and is free to use."
 msgstr ""
 
 #: templates/footer.html
@@ -382,7 +426,7 @@ msgid "Learn more about donating."
 msgstr "Tìm hiểu về donate."
 
 #: templates/footer.html
-msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated."
+msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated and help us to continue to develop, support, and maintain Tabbycat."
 msgstr ""
 
 #: templates/footer.html
@@ -444,7 +488,7 @@ msgstr "Trang chủ"
 
 #: templates/nav/admin_nav.html
 msgid "New Tournament"
-msgstr ""
+msgstr "Tạo giải đấu"
 
 #: templates/nav/admin_nav.html templates/nav/top_nav_base.html
 msgid "Edit Database"
@@ -452,15 +496,15 @@ msgstr "Chỉnh sửa dữ liệu"
 
 #: templates/nav/admin_nav.html
 msgid "Admin Area"
-msgstr ""
+msgstr "Khu vực điều hành"
 
 #: templates/nav/admin_nav.html
 msgid "Assistant Area"
-msgstr ""
+msgstr "Khu vực hỗ trợ"
 
 #: templates/nav/admin_nav.html
 msgid "Public Area"
-msgstr ""
+msgstr "Khu vực công khai"
 
 #: templates/nav/admin_nav.html
 msgid "Overview"
@@ -468,15 +512,15 @@ msgstr "Tổng quan"
 
 #: templates/nav/admin_nav.html
 msgid "Setup"
-msgstr ""
+msgstr "Cài đặt"
 
 #: templates/nav/admin_nav.html
 msgid "Configuration"
-msgstr ""
+msgstr "Cấu hình"
 
 #: templates/nav/admin_nav.html
 msgid "Import Data"
-msgstr ""
+msgstr "Thêm dữ liệu"
 
 #: templates/nav/admin_nav.html templates/nav/assistant_nav.html
 #: templates/nav/public_nav.html
@@ -485,11 +529,11 @@ msgstr "Người tham dự"
 
 #: templates/nav/admin_nav.html
 msgid "Private URLs"
-msgstr ""
+msgstr "URL cá nhân"
 
 #: templates/nav/admin_nav.html
 msgid "Emails"
-msgstr ""
+msgstr "Email"
 
 #: templates/nav/admin_nav.html
 msgid "Preformed Panels"
@@ -505,11 +549,11 @@ msgstr ""
 
 #: templates/nav/admin_nav.html templates/nav/assistant_nav.html
 msgid "People's Status"
-msgstr ""
+msgstr "Tình trạng người"
 
 #: templates/nav/admin_nav.html
 msgid "Rooms' Status"
-msgstr ""
+msgstr "Tình trạng phòng"
 
 #: templates/nav/admin_nav.html
 msgid "Feedback"
@@ -517,23 +561,23 @@ msgstr "Phản hồi"
 
 #: templates/nav/admin_nav.html
 msgid "Latest"
-msgstr ""
+msgstr "Mới nhất"
 
 #: templates/nav/admin_nav.html
 msgid "Important"
-msgstr ""
+msgstr "Quan trọng"
 
 #: templates/nav/admin_nav.html
 msgid "Comments"
-msgstr ""
+msgstr "Bình luận"
 
 #: templates/nav/admin_nav.html
 msgid "Find by Source"
-msgstr ""
+msgstr "Tìm theo nguồn"
 
 #: templates/nav/admin_nav.html
 msgid "Find by Target"
-msgstr ""
+msgstr "Tìm theo mục"
 
 #: templates/nav/admin_nav.html
 msgid "Unsubmitted"
@@ -562,7 +606,7 @@ msgstr "Đội"
 #: templates/nav/admin_nav.html templates/nav/public_nav.html
 #, python-format
 msgid "%(category)s Teams"
-msgstr ""
+msgstr "Đội %(category)s"
 
 #: templates/nav/admin_nav.html
 msgid "All Speakers"
@@ -575,7 +619,7 @@ msgstr ""
 
 #: templates/nav/admin_nav.html
 msgid "Replies"
-msgstr ""
+msgstr "Lượt phản hồi"
 
 #: templates/nav/admin_nav.html templates/nav/public_nav.html
 msgid "Motions"
@@ -587,7 +631,7 @@ msgstr ""
 
 #: templates/nav/admin_nav.html
 msgid "Breaks"
-msgstr ""
+msgstr "Break"
 
 #: templates/nav/admin_nav.html
 #, python-format
@@ -620,11 +664,11 @@ msgstr "Nhập phản hồi"
 
 #: templates/nav/assistant_nav.html
 msgid "Participants List"
-msgstr ""
+msgstr "Danh sách"
 
 #: templates/nav/assistant_nav.html templates/nav/public_nav.html
 msgid "Institutions"
-msgstr ""
+msgstr "Đơn vị"
 
 #: templates/nav/assistant_nav.html
 msgid "Code Names"
@@ -632,7 +676,7 @@ msgstr ""
 
 #: templates/nav/assistant_nav.html
 msgid "View Identifiers"
-msgstr ""
+msgstr "Xem định danh"
 
 #: templates/nav/assistant_nav.html
 msgid "Room's Status"
@@ -644,11 +688,11 @@ msgstr "Hiển thị/In bảng đấu"
 
 #: templates/nav/public_nav.html
 msgid "Team Tab"
-msgstr ""
+msgstr "Đội thi"
 
 #: templates/nav/public_nav.html
 msgid "Speaker Tab"
-msgstr ""
+msgstr "Bảng người nói"
 
 #: templates/nav/public_nav.html
 msgid "Replies Tab"
@@ -656,11 +700,11 @@ msgstr ""
 
 #: templates/nav/public_nav.html
 msgid "Adjudicator Tab"
-msgstr ""
+msgstr "Giám khảo"
 
 #: templates/nav/public_nav.html
 msgid "Motions Tab"
-msgstr ""
+msgstr "Kiến nghị"
 
 #: templates/nav/public_nav.html
 msgid "By round"
@@ -697,7 +741,7 @@ msgstr ""
 
 #: templates/nav/public_nav.html
 msgid "Feedback Progress"
-msgstr ""
+msgstr "Tình trạng feedback"
 
 #: templates/nav/public_nav.html
 msgid "Enter Ballot"
@@ -705,7 +749,7 @@ msgstr ""
 
 #: templates/nav/round_panel.html
 msgid "Availability"
-msgstr "Tính khả dụng"
+msgstr "Khả dụng"
 
 #: templates/nav/round_panel.html
 msgid "Draw"
@@ -713,22 +757,22 @@ msgstr "Bảng đấu"
 
 #: templates/nav/round_panel.html
 msgid "Display"
-msgstr ""
+msgstr "Hiển thị"
 
 #: templates/nav/top_nav_base.html
 #, python-format
 msgid "Administrator area for <strong>%(tournament)s</strong>"
-msgstr ""
+msgstr "Khu vực điều hành của <strong>%(tournament)s</strong>"
 
 #: templates/nav/top_nav_base.html
 #, python-format
 msgid "Assistant area for <strong>%(tournament)s</strong>"
-msgstr ""
+msgstr "Khu vực trợ lý của <strong>%(tournament)s</strong>"
 
 #: templates/nav/top_nav_base.html
 #, python-format
 msgid "Public area for <strong>%(tournament)s</strong>"
-msgstr ""
+msgstr "Khu vực công khai của <strong>%(tournament)s</strong>"
 
 #: templates/nav/top_nav_base.html
 msgid "Login"

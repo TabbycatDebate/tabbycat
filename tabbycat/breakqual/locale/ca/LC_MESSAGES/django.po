@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
-"PO-Revision-Date: 2023-07-02 00:46\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2024-01-19 09:52\n"
 "Last-Translator: \n"
 "Language-Team: Catalan\n"
 "Language: ca_ES\n"
@@ -69,7 +69,7 @@ msgid "is general"
 msgstr ""
 
 #: breakqual/models.py
-msgid "True if most teams eligible for this category, e.g. Open, False otherwise"
+msgid "Are teams eligible for this break by default"
 msgstr ""
 
 #: breakqual/models.py
@@ -313,7 +313,7 @@ msgstr ""
 
 #: breakqual/templates/breakqual_subnav.html
 msgid "Overview"
-msgstr ""
+msgstr "Visió general"
 
 #: breakqual/templates/breakqual_subnav.html
 msgid "Adjudicators' Break"
@@ -506,6 +506,10 @@ msgstr ""
 #: breakqual/views.py
 msgid "Breaking Adjudicators"
 msgstr "Jutges que passen el tall"
+
+#: breakqual/views.py
+msgid "Four-team formats require the break size to be either six times or four times a power of two."
+msgstr ""
 
 #: breakqual/views.py
 msgid "Break Eligibility"

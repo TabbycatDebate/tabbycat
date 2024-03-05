@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:25-0400\n"
-"PO-Revision-Date: 2023-02-12 06:28\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-07-04 21:43\n"
 "Last-Translator: \n"
 "Language-Team: Arabic\n"
 "Language: ar_SA\n"
@@ -361,6 +361,17 @@ msgstr "القضايا التي تم رفضها في هذه الجولة "
 #: motions/templates/public_motions.html
 msgid "The motion for this round has not been released."
 msgstr "القضايا التي تم رفضها في هذه الجولة "
+
+#: motions/templates/show.html
+#, python-format
+msgid "Motion for %(round)s"
+msgid_plural "Motions for %(round)s"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: motions/templates/show.html
 #, python-format

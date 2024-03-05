@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:56\n"
+"PO-Revision-Date: 2023-07-23 17:29\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
@@ -191,7 +191,7 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Edited tournament options"
-msgstr ""
+msgstr "Chỉnh sửa tùy chọn giải đấu"
 
 #: actionlog/models.py
 msgid "Edited speaker category eligibility"
@@ -211,7 +211,7 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Imported teams using the simple importer"
-msgstr ""
+msgstr "Nhập dữ liệu đội"
 
 #: actionlog/models.py
 msgid "Imported adjudicators using the simple importer"

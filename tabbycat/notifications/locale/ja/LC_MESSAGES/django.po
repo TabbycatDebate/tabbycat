@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-07-02 13:44\n"
+"PO-Revision-Date: 2023-08-09 13:27\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -46,15 +46,15 @@ msgstr ""
 
 #: notifications/models.py
 msgid "email"
-msgstr ""
+msgstr "メール"
 
 #: notifications/models.py
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #: notifications/models.py
 msgid "recipient"
-msgstr ""
+msgstr "受取人"
 
 #: notifications/models.py
 msgid "method"
@@ -220,7 +220,7 @@ msgstr ""
 
 #: notifications/templates/email_participants.html
 msgid "Send Message(s)"
-msgstr ""
+msgstr "メッセージを送信"
 
 #: notifications/templates/email_statuses.html
 msgid "Emails can be sent by Tabbycat for a variety of purposes. Emails are sent when specific preferences are enabled (i.e. enabling Ballot Receipts) or through actions available on specific pages (i.e. the Draw Display page for matchups; or the Participants page for team registration). This page shows the status of previously-sent emails."

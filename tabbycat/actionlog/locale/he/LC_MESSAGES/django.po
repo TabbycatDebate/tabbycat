@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:56\n"
+"PO-Revision-Date: 2023-08-10 17:16\n"
 "Last-Translator: \n"
 "Language-Team: Hebrew\n"
 "Language: he_IL\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: actionlog/apps.py
 msgid "Action Log"
-msgstr ""
+msgstr "יומן פעולות"
 
 #: actionlog/models.py
 msgid "Discarded ballot set"
@@ -47,15 +47,15 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Submitted feedback from the public form"
-msgstr ""
+msgstr "משוב נשלח מהטופס הפומבי"
 
 #: actionlog/models.py
 msgid "Saved feedback"
-msgstr ""
+msgstr "משוב נשמר"
 
 #: actionlog/models.py
 msgid "Edited adjudicator base score"
-msgstr ""
+msgstr "ציון שיפוט בסיסי נערך"
 
 #: actionlog/models.py
 msgid "Set adjudicator note"
@@ -63,7 +63,7 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Saved adjudicator allocation"
-msgstr ""
+msgstr "הקצאת שופט נשמרה"
 
 #: actionlog/models.py
 msgid "Auto-allocated adjudicators"
@@ -75,15 +75,15 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Auto-allocated rooms"
-msgstr ""
+msgstr "חדרים הוקצו אוטומטית"
 
 #: actionlog/models.py
 msgid "Edited room categories"
-msgstr ""
+msgstr "קטגוריות חדרים נערכו"
 
 #: actionlog/models.py
 msgid "Edited room constraints"
-msgstr ""
+msgstr "אילוצי חדרים נערכו"
 
 #: actionlog/models.py
 msgid "Created draw"
@@ -123,11 +123,11 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Released motions"
-msgstr ""
+msgstr "מושנים שוחררו"
 
 #: actionlog/models.py
 msgid "Unreleased motions"
-msgstr ""
+msgstr "שחרור המושנים בוטל"
 
 #: actionlog/models.py
 msgid "Auto-prioritized debate importance"
@@ -143,7 +143,7 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Edited break eligibility"
-msgstr ""
+msgstr "זכאות לברייק נערכה"
 
 #: actionlog/models.py
 msgid "Edited break categories"

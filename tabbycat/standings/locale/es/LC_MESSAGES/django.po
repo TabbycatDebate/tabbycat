@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 01:01\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2024-02-19 18:00\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -127,11 +127,11 @@ msgstr "Promedio puntajes finales"
 
 #: standings/speakers.py
 msgid "total"
-msgstr ""
+msgstr "total"
 
 #: standings/speakers.py
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #: standings/speakers.py
 msgid "average"
@@ -143,11 +143,11 @@ msgstr "Prom."
 
 #: standings/speakers.py
 msgid "team points"
-msgstr ""
+msgstr "puntos del equipo"
 
 #: standings/speakers.py
 msgid "Team"
-msgstr ""
+msgstr "Equipo"
 
 #: standings/speakers.py
 msgid "standard deviation"
@@ -177,6 +177,14 @@ msgstr "media recortada"
 msgid "Trim"
 msgstr "Recorte"
 
+#: standings/speakers.py
+msgid "speech ranks"
+msgstr ""
+
+#: standings/speakers.py
+msgid "SRank"
+msgstr ""
+
 #: standings/teams.py
 msgid "points"
 msgstr "puntos"
@@ -187,15 +195,15 @@ msgstr "Pts."
 
 #: standings/teams.py
 msgid "wins"
-msgstr ""
+msgstr "victorias"
 
 #: standings/teams.py standings/views.py
 msgid "Wins"
-msgstr ""
+msgstr "Victorias"
 
 #: standings/teams.py
 msgid "total speaker score"
-msgstr ""
+msgstr "puntuación total de orador"
 
 #: standings/teams.py
 msgid "Spk"
@@ -258,11 +266,19 @@ msgid "DSS"
 msgstr ""
 
 #: standings/teams.py
-msgid "number of pullups before this round"
+msgid "number of pullups"
 msgstr ""
 
 #: standings/teams.py
 msgid "PU"
+msgstr ""
+
+#: standings/teams.py
+msgid "number of times in pullup debates"
+msgstr ""
+
+#: standings/teams.py
+msgid "SPu"
 msgstr ""
 
 #: standings/teams.py
@@ -279,27 +295,27 @@ msgstr ""
 
 #: standings/teams.py
 msgid "number of firsts"
-msgstr ""
+msgstr "número de primeros"
 
 #: standings/teams.py
 msgid "1sts"
-msgstr ""
+msgstr "1eros"
 
 #: standings/teams.py
 msgid "number of seconds"
-msgstr ""
+msgstr "número de segundos"
 
 #: standings/teams.py
 msgid "2nds"
-msgstr ""
+msgstr "2dos"
 
 #: standings/teams.py
 msgid "number of thirds"
-msgstr ""
+msgstr "número de terceros"
 
 #: standings/teams.py
 msgid "3rds"
-msgstr ""
+msgstr "3eros"
 
 #: standings/teams.py
 msgid "number of times ironed"
@@ -311,7 +327,7 @@ msgstr ""
 
 #: standings/teams.py
 msgid "Who-beat-whom"
-msgstr ""
+msgstr "Quién-venció-a-quién"
 
 #: standings/teams.py
 msgid "WBW"

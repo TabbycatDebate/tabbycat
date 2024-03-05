@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-14 04:50+1100\n"
-"PO-Revision-Date: 2023-03-27 08:04\n"
+"PO-Revision-Date: 2023-11-27 12:08\n"
 "Last-Translator: \n"
 "Language-Team: Kazakh\n"
 "Language: kk_KZ\n"
@@ -36,7 +36,7 @@ msgstr ""
 
 #: checkins/templates/CheckInStatusContainer.vue:
 msgid "All"
-msgstr ""
+msgstr "Барлығы"
 
 #. Translators: %1: Option name
 #: checkins/templates/CheckInStatusContainer.vue:
@@ -201,11 +201,11 @@ msgstr ""
 
 #: printing/templates/PrintableBallotHeader.vue: printing/templates/PrintableDebateInfo.vue:
 msgid "Trainee"
-msgstr ""
+msgstr "Үйренуші"
 
 #: printing/templates/PrintableBallotHeader.vue:
 msgid "Team"
-msgstr ""
+msgstr "Топ"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "Mark speeches %1 to %2; <strong>%3</strong>."
@@ -469,7 +469,7 @@ msgstr ""
 
 #: results/templates/ResultsStats.vue:36
 msgid "Confirmed"
-msgstr ""
+msgstr "Бекітілген"
 
 #: results/templates/ResultsStats.vue:40
 msgid "Ballot Statuses"
@@ -509,15 +509,15 @@ msgstr ""
 
 #: utils/templates/DragAndDropActions.vue:65
 msgid "Break"
-msgstr ""
+msgstr "Іріктеуден өткендер"
 
 #: utils/templates/DragAndDropActions.vue:65
 msgid "Gender"
-msgstr ""
+msgstr "Жынысы"
 
 #: utils/templates/DragAndDropActions.vue:65
 msgid "Rank"
-msgstr ""
+msgstr "Орны"
 
 #: utils/templates/DragAndDropActions.vue:65
 msgid "Region"

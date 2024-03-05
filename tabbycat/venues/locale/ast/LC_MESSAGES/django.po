@@ -1,0 +1,222 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"PO-Revision-Date: 2023-09-14 20:05\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Asturian\n"
+"Language: ast_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ast\n"
+"X-Crowdin-File: /develop/tabbycat/venues/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-File-ID: 956\n"
+
+#: venues/apps.py
+msgid "Rooms"
+msgstr ""
+
+#: venues/consumers.py
+msgid "Draw is already released, unrelease draw to assign rooms."
+msgstr ""
+
+#: venues/consumers.py
+msgid "Draw is not confirmed, confirm draw to assign rooms."
+msgstr ""
+
+#: venues/consumers.py
+msgid "Successfully auto-allocated rooms to debates."
+msgstr ""
+
+#: venues/models.py
+msgid "name"
+msgstr ""
+
+#: venues/models.py
+msgid "priority"
+msgstr ""
+
+#: venues/models.py
+msgid "Rooms with a higher priority number will be preferred when allocating rooms to debates"
+msgstr ""
+
+#: venues/models.py
+msgid "tournament"
+msgstr ""
+
+#: venues/models.py
+msgid "URL"
+msgstr ""
+
+#: venues/models.py
+msgid "A URL that contains extra information about this room, e.g. a map or a meeting link (for online tournaments)"
+msgstr ""
+
+#: venues/models.py
+msgid "room"
+msgstr ""
+
+#: venues/models.py
+msgid "rooms"
+msgstr ""
+
+#: venues/models.py
+msgid "Don't display in room name"
+msgstr ""
+
+#: venues/models.py
+msgid "Display as prefix"
+msgstr ""
+
+#: venues/models.py
+msgid "Display as suffix"
+msgstr ""
+
+#: venues/models.py
+msgid "Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room\". This name is shown when the category is prefixed or suffixed to a room name in the draw, e.g., \"Purple – G05\"."
+msgstr ""
+
+#: venues/models.py
+msgid "description"
+msgstr ""
+
+#: venues/models.py
+msgid "Description, as the predicate of a sentence, e.g. \"has step-free access\", \"is close to the briefing hall\". This description follows \"This room\" when shown in tooltips, e.g., \"This room is close to the briefing hall.\"."
+msgstr ""
+
+#: venues/models.py
+msgid "display in room name"
+msgstr ""
+
+#: venues/models.py
+msgid "Prefix: \"Purple – G05\", Suffix: \"G05 – Purple\""
+msgstr ""
+
+#: venues/models.py
+msgid "display in public tooltip"
+msgstr ""
+
+#: venues/models.py
+msgid "Displays the description in the tooltip for the room on public pages. The description, if not blank, will always show on admin pages."
+msgstr ""
+
+#: venues/models.py
+msgid "room category"
+msgstr ""
+
+#: venues/models.py
+msgid "room categories"
+msgstr ""
+
+#: venues/models.py
+msgid "category"
+msgstr ""
+
+#: venues/models.py
+msgid "subject content type"
+msgstr ""
+
+#: venues/models.py
+msgid "subject ID"
+msgstr ""
+
+#: venues/models.py
+msgid "room constraint"
+msgstr ""
+
+#: venues/models.py
+msgid "room constraints"
+msgstr ""
+
+#: venues/templates/venue_categories_edit.html
+msgid "Room Categories"
+msgstr ""
+
+#: venues/templates/venue_categories_edit.html
+msgid "Room categories allow you to group rooms together into \"zones\" to display in the draw and make navigation easier for participants, and/or specify constraints on room allocation that require teams, adjudicators or institutions to be put in a room in a particular category."
+msgstr ""
+
+#: venues/templates/venue_categories_edit.html
+#, python-format
+msgid "If you want to delete room categories, use the <a href=\"%(edit_db_url)s\" class=\"alert-link\">Edit Database</a> area."
+msgstr ""
+
+#: venues/templates/venue_categories_edit.html
+msgid "Save Room Categories"
+msgstr ""
+
+#: venues/templates/venue_constraints_edit.html
+msgid "Room Constraints"
+msgstr ""
+
+#: venues/templates/venue_constraints_edit.html
+msgid "Room constraints tell the room allocator to try to keep the specified team or adjudicator, or all teams (but not adjudicators) from the specified institution, in a room in the given category. The \"priority\" field resolves conflicting constraints: the higher priority takes precedence. You can also use the priority field to specify \"lower-preference\" constraints, which are taken if a higher-priority constraint couldn't be met."
+msgstr ""
+
+#: venues/templates/venue_constraints_edit.html
+msgid "Save Room Constraints"
+msgstr ""
+
+#: venues/utils.py
+#, python-format
+msgid "Room constraint of %(name)s met (%(category)s)"
+msgstr ""
+
+#: venues/utils.py
+#, python-format
+msgid "Room does not meet any constraint of %(name)s"
+msgstr ""
+
+#: venues/utils.py
+#, python-format
+msgid "Room constraint of %(team)s met (%(category)s, via institution %(institution)s)"
+msgstr ""
+
+#: venues/utils.py
+#, python-format
+msgid "Room does not meet any constraint of institution %(institution)s (%(team)s)"
+msgstr ""
+
+#: venues/views.py
+msgid "Edit Rooms"
+msgstr ""
+
+#: venues/views.py
+#, python-format
+msgid "Saved room category: %(list)s"
+msgid_plural "Saved venue categories: %(list)s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venues/views.py
+msgid "No changes were made to the room categories."
+msgstr ""
+
+#: venues/views.py
+#, python-format
+msgid "%s (Adjudicator)"
+msgstr ""
+
+#: venues/views.py
+#, python-format
+msgid "%s (Team)"
+msgstr ""
+
+#: venues/views.py
+#, python-format
+msgid "%s (Institution)"
+msgstr ""
+
+#: venues/views.py
+#, python-format
+msgid "Saved %(count)d room constraint."
+msgid_plural "Saved %(count)d room constraints."
+msgstr[0] ""
+msgstr[1] ""
+

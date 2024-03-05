@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
-"PO-Revision-Date: 2023-02-12 06:14\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-08-24 08:46\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -125,6 +125,14 @@ msgid "The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_mar
 msgstr "El margen (%(margin).1f) excede el margen máximo permitido (%(max_margin).1f)"
 
 #: results/forms.py
+msgid "Ranks cannot be tied."
+msgstr ""
+
+#: results/forms.py
+msgid "Ranks must correspond to speaker scores"
+msgstr ""
+
+#: results/forms.py
 #, python-format
 msgid "The total scores for the teams are the same (i.e. a draw) for adjudicator %(adjudicator)s."
 msgstr "Los puntajes de equipo son los mismos (i.e. hay un empate) para el adjudicar %(adjudicator)s."
@@ -208,7 +216,7 @@ msgstr "Una ballot de la sala de tabulación debe tener un usuario asociado."
 
 #: results/models.py
 msgid "debate"
-msgstr ""
+msgstr "debate"
 
 #: results/models.py
 msgid "motion"
@@ -236,8 +244,8 @@ msgstr "Envíos de la ballor"
 
 #: results/models.py
 #, python-format
-msgid "Debate is in round %(round)d but motion (%(motion)s) is from round %(motion_round)d"
-msgstr "El debate esta en la ronda %(round)d pero la moción (%(motion)s) es de la ronda %(motion_round)d"
+msgid "Debate is in round %(round)d but motion (%(motion)s) is not in round"
+msgstr ""
 
 #: results/models.py
 msgid "A ballot can't be both confirmed and discarded!"
@@ -314,6 +322,10 @@ msgstr "puntajes de equipo"
 #: results/models.py
 msgid "speaker"
 msgstr "orador"
+
+#: results/models.py
+msgid "rank"
+msgstr ""
 
 #: results/models.py
 msgid "ghost"
@@ -460,10 +472,6 @@ msgstr "Entrar resultados "
 #: results/templates/assistant_results.html
 msgid "This page automatically updates with the new ballot entries and checkins as they occur."
 msgstr ""
-
-#: results/templates/assistant_results.html
-msgid "This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Results can't be entered while this configuration is in place. Please ask an administrator to change this configuration."
-msgstr "La configuración de este torneo está ajustada a <strong>Parlamentario Británico </strong> con <strong> una ballor por adjudicar con voto </strong>. Está combinación no está permitida: Los torneos BP deben usar ballots de consenso. Los resultados no pueden ser ingresados mientras esta configuración este. Por favor pregunte a un administrador para que cambie esta configuración."
 
 #: results/templates/assistant_results.html
 msgid "Currently there are no motions entered for this round, so debate results cannot be entered. Please ask an administrator to add motions."

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:58\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-07-04 21:55\n"
 "Last-Translator: \n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -59,6 +59,10 @@ msgid "Speakers' names"
 msgstr "crwdns30454:0crwdne30454:0"
 
 #: importer/forms.py
+msgid "Can be separated by newlines, tabs or commas"
+msgstr "crwdns30470:0crwdne30470:0"
+
+#: importer/forms.py
 msgid "Speakers' email addresses"
 msgstr "crwdns30456:0crwdne30456:0"
 
@@ -87,10 +91,6 @@ msgid "One speaker's name per line"
 msgstr "crwdns30468:0crwdne30468:0"
 
 #: importer/forms.py
-msgid "Can be separated by newlines, tabs or commas"
-msgstr "crwdns30470:0crwdne30470:0"
-
-#: importer/forms.py
 #, python-format
 msgid "Speaker %d"
 msgstr "crwdns30472:0%dcrwdne30472:0"
@@ -99,6 +99,22 @@ msgstr "crwdns30472:0%dcrwdne30472:0"
 #, python-format
 msgid "speaker%d@example.edu"
 msgstr "crwdns30474:0%dcrwdne30474:0"
+
+#: importer/forms.py
+msgid "Unseeded"
+msgstr "crwdns52289:0crwdne52289:0"
+
+#: importer/forms.py
+msgid "Free seed"
+msgstr "crwdns52291:0crwdne52291:0"
+
+#: importer/forms.py
+msgid "Half seed"
+msgstr "crwdns52293:0crwdne52293:0"
+
+#: importer/forms.py
+msgid "Full seed"
+msgstr "crwdns52295:0crwdne52295:0"
 
 #: importer/forms.py
 msgid "There must be at least one speaker."

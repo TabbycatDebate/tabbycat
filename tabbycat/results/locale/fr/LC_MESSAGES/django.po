@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
-"PO-Revision-Date: 2023-02-12 15:51\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-08-05 13:02\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -124,6 +124,14 @@ msgid "The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_mar
 msgstr "La marge (%(margin).1f) excède la marge maximale admissible (%(max_margin).1f)."
 
 #: results/forms.py
+msgid "Ranks cannot be tied."
+msgstr ""
+
+#: results/forms.py
+msgid "Ranks must correspond to speaker scores"
+msgstr ""
+
+#: results/forms.py
 #, python-format
 msgid "The total scores for the teams are the same (i.e. a draw) for adjudicator %(adjudicator)s."
 msgstr "Les scores totals pour les équipes sont les mêmes (c'est-a-dire, un nul) pour le/la juge %(adjudicator)s."
@@ -235,8 +243,8 @@ msgstr "soumissions de feuille"
 
 #: results/models.py
 #, python-format
-msgid "Debate is in round %(round)d but motion (%(motion)s) is from round %(motion_round)d"
-msgstr "Le débat est dans la joute %(round)d mais la motion (%(motion)s) vient de la joute %(motion_round)d"
+msgid "Debate is in round %(round)d but motion (%(motion)s) is not in round"
+msgstr ""
 
 #: results/models.py
 msgid "A ballot can't be both confirmed and discarded!"
@@ -300,7 +308,7 @@ msgstr "voix possibles"
 
 #: results/models.py
 msgid "has ghost score"
-msgstr ""
+msgstr "a une note fantôme"
 
 #: results/models.py
 msgid "team score"
@@ -313,6 +321,10 @@ msgstr "scores d'équipe"
 #: results/models.py
 msgid "speaker"
 msgstr "orateur"
+
+#: results/models.py
+msgid "rank"
+msgstr "rang"
 
 #: results/models.py
 msgid "ghost"
@@ -459,10 +471,6 @@ msgstr "Saisie des résultats"
 #: results/templates/assistant_results.html
 msgid "This page automatically updates with the new ballot entries and checkins as they occur."
 msgstr "Cette page est mis à jour automatiquement avec les nouveaux feuilles et enregistrements au fur et à mesure qu’ils viennent."
-
-#: results/templates/assistant_results.html
-msgid "This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Results can't be entered while this configuration is in place. Please ask an administrator to change this configuration."
-msgstr "La configuration de ce tournoi spécifie <strong>Parlementaire britannique</strong> avec <strong>une feuille par juge votant</strong> . Cette combinaison n'est pas possible: les tournois BP doivent utiliser les feuilles par consensus. Les résultats ne peuvent pas être saisis tant que cette configuration est en place. Veuillez demander à un administrateur de changer cette configuration."
 
 #: results/templates/assistant_results.html
 msgid "Currently there are no motions entered for this round, so debate results cannot be entered. Please ask an administrator to add motions."
@@ -804,8 +812,8 @@ msgstr[1] "Cette formulaire a déjà été soumise <strong>%(nsubmissions)s</str
 #: results/templates/public_enter_results.html
 msgid "Submit Ballot"
 msgid_plural "Submit Ballots"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Soumettre Feuille"
+msgstr[1] "Soumettre Feuilles"
 
 #: results/templates/public_enter_results.html
 msgid "When submitting this form your IP address will be stored for logging purposes."

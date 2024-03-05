@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:57\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-08-24 10:32\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -43,11 +43,11 @@ msgstr "disponibilidad de las rondas"
 
 #: availability/templates/availability_index.html
 msgid "Mark All Breaking Adjs as Available"
-msgstr ""
+msgstr "Marcar todos los jueces que han pasado el break como disponibles"
 
 #: availability/templates/availability_index.html
 msgid "Mark Everything as Available"
-msgstr ""
+msgstr "Marcar todo como disponible"
 
 #: availability/templates/availability_index.html
 #, python-format
@@ -69,11 +69,11 @@ msgstr "Generar Cuadro"
 
 #: availability/templates/availability_index.html
 msgid "The draw cannot be generated until some teams have been marked as available."
-msgstr ""
+msgstr "El draw no puede ser generado hasta que algunos equipos aparezcan como disponibles."
 
 #: availability/templates/availability_index.html
 msgid "The draw cannot be generated until some adjudicators have been marked as available."
-msgstr ""
+msgstr "El draw no puede ser generado hasta que algunos jueces aparezcan como disponibles."
 
 #: availability/templates/availability_index.html
 msgid "The draw cannot be generated until some rooms have been marked as available."
@@ -89,7 +89,7 @@ msgstr ""
 
 #: availability/templates/availability_index.html
 msgid "There is an uneven number of teams marked as available — the draw may not generate properly."
-msgstr ""
+msgstr "Hay un número impar de equipos marcados como disponibles - es posible que el draw no se genere adecuadamente."
 
 #: availability/templates/availability_index.html
 msgid "The number of teams marked as available is not a multiple of 4 — the draw may not generate properly."
@@ -109,8 +109,8 @@ msgstr ""
 
 #: availability/templates/availability_index.html
 #, python-format
-msgid "This is the first round, but its draw type is <strong>%(draw_type)s</strong>. Did you intend for it to be <strong>Random</strong> instead? You can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's draw type in the Edit Database area.</a>"
-msgstr "Esta es la primera ronda, pero el tipo de cuadro es <strong>%(draw_type)s</strong>. Era tut intención que fuera  en cambio <strong>aleatorio</strong>? Puedes <a href=\"%(change_round_url)s\" class=\"alert-link\"> editar el tipo de cuadro de esta ronda en la parte de Editar la base de datos.</a>"
+msgid "This is the first round, but its draw type is <strong>%(draw_type)s</strong>. Did you intend for it to be <strong>Random</strong> or <strong>Seeded</strong> instead? You can <a href=\"%(change_round_url)s\" class=\"alert-link\">edit this round's draw type in the Edit Database area.</a>"
+msgstr ""
 
 #: availability/templates/availability_index.html
 #, python-format
@@ -175,11 +175,11 @@ msgstr "Salas"
 
 #: availability/templates/checkin_progress.html
 msgid "Mark teams as available"
-msgstr ""
+msgstr "Marcar equipos como disponibles"
 
 #: availability/templates/checkin_progress.html
 msgid "No need to set team availability"
-msgstr ""
+msgstr "No es necesario establecer la disponibilidad de este equipo"
 
 #: availability/templates/checkin_progress.html
 msgid "There is an uneven number of teams marked as available for this round."
@@ -191,7 +191,7 @@ msgstr ""
 
 #: availability/templates/checkin_progress.html
 msgid "Edit team availability"
-msgstr ""
+msgstr "Editar la disponibilidad del equipo"
 
 #: availability/templates/checkin_progress.html
 #, python-format
@@ -230,7 +230,7 @@ msgstr[1] ""
 
 #: availability/templates/checkin_progress.html
 msgid "Mark adjudicators as available"
-msgstr ""
+msgstr "Marcar jueces como disponibles"
 
 #. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
 #: availability/templates/checkin_progress.html
@@ -242,7 +242,7 @@ msgstr[1] ""
 
 #: availability/templates/checkin_progress.html
 msgid "Edit adjudicator availability"
-msgstr ""
+msgstr "Editar la disponibilidad del juez"
 
 #: availability/templates/checkin_progress.html
 #, python-format
@@ -281,19 +281,19 @@ msgstr[1] ""
 
 #: availability/templates/checkin_progress.html
 msgid "Mark rooms as available"
-msgstr ""
+msgstr "Marcar salas como disponibles"
 
 #. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
 #: availability/templates/checkin_progress.html
 #, python-format
 msgid "There needs to be at least one room marked as available, given the number of debates."
 msgid_plural "There need to be at least %(required_count)s rooms marked as available, given the number of debates."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Debe haber al menos una sala marcada como disponible, dado el número de debates."
+msgstr[1] "Debe haber al menos %(required_count)s salas marcadas como disponibles, dado el número de debates."
 
 #: availability/templates/checkin_progress.html
 msgid "Edit room availability"
-msgstr ""
+msgstr "Editar la disponibilidad de la sala"
 
 #: availability/views.py
 msgid "no teams are debating"
@@ -344,7 +344,7 @@ msgstr "Activo en %(prev_round)s"
 
 #: availability/views.py
 msgid "Checked-In"
-msgstr ""
+msgstr "Disponible"
 
 #: availability/views.py
 msgid "Team Availability"
@@ -376,7 +376,7 @@ msgstr "Prioridad"
 
 #: availability/views.py
 msgid "Failed to update some or all availabilities due to an integrityerror. You should retry this action or make individual updates."
-msgstr ""
+msgstr "No ha sido posible actualizar algunas o todas las disponibilidades debido a un error de tipo intergrityerror. Te recomendamos que vuelvas a intentarlo, y en caso de que el error persista, actualizar individualmente."
 
 #: availability/views.py
 msgid "Checked in all teams, adjudicators and rooms."

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:58\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-07-04 21:55\n"
 "Last-Translator: \n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -238,6 +238,22 @@ msgid "Bengali"
 msgstr "crwdns51570:0crwdne51570:0"
 
 #: settings/core.py
+msgid "Bulgarian"
+msgstr "crwdns52297:0crwdne52297:0"
+
+#: settings/core.py
+msgid "Catalan"
+msgstr "crwdns52299:0crwdne52299:0"
+
+#: settings/core.py
+msgid "Czech"
+msgstr "crwdns52301:0crwdne52301:0"
+
+#: settings/core.py
+msgid "German"
+msgstr "crwdns52303:0crwdne52303:0"
+
+#: settings/core.py
 msgid "English"
 msgstr "crwdns30686:0crwdne30686:0"
 
@@ -250,12 +266,28 @@ msgid "French"
 msgstr "crwdns30690:0crwdne30690:0"
 
 #: settings/core.py
+msgid "Hebrew"
+msgstr "crwdns52305:0crwdne52305:0"
+
+#: settings/core.py
+msgid "Hindi"
+msgstr "crwdns52307:0crwdne52307:0"
+
+#: settings/core.py
 msgid "Indonesian"
 msgstr "crwdns51810:0crwdne51810:0"
 
 #: settings/core.py
+msgid "Italian"
+msgstr "crwdns52309:0crwdne52309:0"
+
+#: settings/core.py
 msgid "Japanese"
 msgstr "crwdns30692:0crwdne30692:0"
+
+#: settings/core.py
+msgid "Kazakh"
+msgstr "crwdns52311:0crwdne52311:0"
 
 #: settings/core.py
 msgid "Malay"
@@ -266,8 +298,20 @@ msgid "Portuguese"
 msgstr "crwdns30694:0crwdne30694:0"
 
 #: settings/core.py
+msgid "Romanian"
+msgstr "crwdns52313:0crwdne52313:0"
+
+#: settings/core.py
 msgid "Russian"
 msgstr "crwdns35540:0crwdne35540:0"
+
+#: settings/core.py
+msgid "Turkish"
+msgstr "crwdns52315:0crwdne52315:0"
+
+#: settings/core.py
+msgid "Vietnamese"
+msgstr "crwdns52317:0crwdne52317:0"
 
 #: settings/core.py
 msgid "Simplified Chinese"
@@ -370,8 +414,8 @@ msgid "This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 msgstr "crwdns30728:0%(tabbycat_version)scrwdnd30728:0%(tabbycat_codename)scrwdne30728:0"
 
 #: templates/footer.html
-msgid "Tabbycat is a source-available project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments."
-msgstr "crwdns51272:0crwdne51272:0"
+msgid "Tabbycat is an open-source project developed by volunteers and is free to use."
+msgstr "crwdns52319:0crwdne52319:0"
 
 #: templates/footer.html
 #, python-format
@@ -383,8 +427,8 @@ msgid "Learn more about donating."
 msgstr "crwdns30734:0crwdne30734:0"
 
 #: templates/footer.html
-msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated."
-msgstr "crwdns52056:0crwdne52056:0"
+msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated and help us to continue to develop, support, and maintain Tabbycat."
+msgstr "crwdns52321:0crwdne52321:0"
 
 #: templates/footer.html
 msgid "Still timing debates with the stopwatch app?"

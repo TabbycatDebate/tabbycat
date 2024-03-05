@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2023-03-15 13:14\n"
+"PO-Revision-Date: 2023-11-27 13:39\n"
 "Last-Translator: \n"
 "Language-Team: Kazakh\n"
 "MIME-Version: 1.0\n"
@@ -64,7 +64,7 @@ msgstr ""
 
 #: ../../use/running-a-tournament.rst:24
 msgid "Availability"
-msgstr ""
+msgstr "Түгендеу"
 
 #: ../../use/running-a-tournament.rst:26
 msgid "**Set availability.** For each round, you need to set the venue, team and adjudicator availability. If any of those are not marked as available they will not be used within the draw; so this feature is mostly useful for when adjudicators or venues are only available for certain rounds."
@@ -80,7 +80,7 @@ msgstr ""
 
 #: ../../use/running-a-tournament.rst:37
 msgid "Generating the draw"
-msgstr ""
+msgstr "Ойын кестесін құру"
 
 #: ../../use/running-a-tournament.rst:39
 msgid "**Confirm the draft draw**. After advancing from availability section you will first be shown a draft draw that details how the draw was formulated, pointing out pull-ups and conflict swaps and the like."
@@ -108,7 +108,7 @@ msgstr ""
 
 #: ../../use/running-a-tournament.rst:60
 msgid "Releasing the draw"
-msgstr ""
+msgstr "Ойын кестесін жариялау"
 
 #: ../../use/running-a-tournament.rst:62
 msgid "Once you're happy with your adjudicator allocation, you're ready to start the round."
@@ -132,7 +132,7 @@ msgstr ""
 
 #: ../../use/running-a-tournament.rst:78
 msgid "Entering and Releasing Motions"
-msgstr ""
+msgstr "Қарарларды жазу және жариялау"
 
 #: ../../use/running-a-tournament.rst:80
 msgid "Tabbycat is agnostic as to whether you enter motions into Tabbycat before or after they are shown publicly. However, they must be entered *at some point* before ballots are entered."
@@ -152,7 +152,7 @@ msgstr ""
 
 #: ../../use/running-a-tournament.rst:91
 msgid "Entering Results"
-msgstr ""
+msgstr "Нәтижелерді толтыру"
 
 #: ../../use/running-a-tournament.rst:93
 msgid "Enter debate results and feedback as they come in (and/or allow online entry of results and feedback)."
@@ -176,7 +176,7 @@ msgstr ""
 
 #: ../../use/running-a-tournament.rst:106
 msgid "Advancing to the next round"
-msgstr ""
+msgstr "Келесі ойынға өту"
 
 #: ../../use/running-a-tournament.rst:108
 msgid "Once you've got all the results entered and confirmed, you're ready to progress to the next round. This can be done by going to the **Results** area, and then using the **Advance to Next Round** button."

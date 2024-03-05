@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:58\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2024-01-21 17:38\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Language: bn_BD\n"
@@ -238,6 +238,22 @@ msgid "Bengali"
 msgstr ""
 
 #: settings/core.py
+msgid "Bulgarian"
+msgstr ""
+
+#: settings/core.py
+msgid "Catalan"
+msgstr ""
+
+#: settings/core.py
+msgid "Czech"
+msgstr ""
+
+#: settings/core.py
+msgid "German"
+msgstr ""
+
+#: settings/core.py
 msgid "English"
 msgstr ""
 
@@ -250,11 +266,27 @@ msgid "French"
 msgstr ""
 
 #: settings/core.py
+msgid "Hebrew"
+msgstr ""
+
+#: settings/core.py
+msgid "Hindi"
+msgstr ""
+
+#: settings/core.py
 msgid "Indonesian"
 msgstr ""
 
 #: settings/core.py
+msgid "Italian"
+msgstr ""
+
+#: settings/core.py
 msgid "Japanese"
+msgstr ""
+
+#: settings/core.py
+msgid "Kazakh"
 msgstr ""
 
 #: settings/core.py
@@ -266,7 +298,19 @@ msgid "Portuguese"
 msgstr ""
 
 #: settings/core.py
+msgid "Romanian"
+msgstr ""
+
+#: settings/core.py
 msgid "Russian"
+msgstr ""
+
+#: settings/core.py
+msgid "Turkish"
+msgstr ""
+
+#: settings/core.py
+msgid "Vietnamese"
 msgstr ""
 
 #: settings/core.py
@@ -370,7 +414,7 @@ msgid "This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 msgstr ""
 
 #: templates/footer.html
-msgid "Tabbycat is a source-available project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments."
+msgid "Tabbycat is an open-source project developed by volunteers and is free to use."
 msgstr ""
 
 #: templates/footer.html
@@ -383,7 +427,7 @@ msgid "Learn more about donating."
 msgstr "অনুদান প্রদান সম্পর্কে আরো জানুন।"
 
 #: templates/footer.html
-msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated."
+msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated and help us to continue to develop, support, and maintain Tabbycat."
 msgstr ""
 
 #: templates/footer.html
@@ -465,7 +509,7 @@ msgstr ""
 
 #: templates/nav/admin_nav.html
 msgid "Overview"
-msgstr ""
+msgstr "সংক্ষিপ্ত বিবরণ"
 
 #: templates/nav/admin_nav.html
 msgid "Setup"
@@ -518,15 +562,15 @@ msgstr "প্রতিক্রিয়া"
 
 #: templates/nav/admin_nav.html
 msgid "Latest"
-msgstr ""
+msgstr "সর্বশেষ:"
 
 #: templates/nav/admin_nav.html
 msgid "Important"
-msgstr ""
+msgstr "গুরুত্বপূর্ণ"
 
 #: templates/nav/admin_nav.html
 msgid "Comments"
-msgstr ""
+msgstr "মন্তব্য"
 
 #: templates/nav/admin_nav.html
 msgid "Find by Source"
@@ -538,11 +582,11 @@ msgstr ""
 
 #: templates/nav/admin_nav.html
 msgid "Unsubmitted"
-msgstr ""
+msgstr "জমাকৃত নয়"
 
 #: templates/nav/admin_nav.html
 msgid "Add Feedback"
-msgstr ""
+msgstr "প্রতিক্রিয়া যোগ করুন"
 
 #: templates/nav/admin_nav.html
 msgid "Bulk Update"
@@ -617,7 +661,7 @@ msgstr ""
 
 #: templates/nav/assistant_nav.html templates/nav/public_nav.html
 msgid "Enter Feedback"
-msgstr ""
+msgstr "প্রতিক্রিয়া লিখুন"
 
 #: templates/nav/assistant_nav.html
 msgid "Participants List"
@@ -698,7 +742,7 @@ msgstr "ব্রেক"
 
 #: templates/nav/public_nav.html
 msgid "Feedback Progress"
-msgstr ""
+msgstr "প্রতিক্রিয়া অগ্রগতি"
 
 #: templates/nav/public_nav.html
 msgid "Enter Ballot"

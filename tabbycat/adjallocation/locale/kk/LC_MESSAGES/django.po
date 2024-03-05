@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-03-27 09:26\n"
+"PO-Revision-Date: 2023-11-27 13:39\n"
 "Last-Translator: \n"
 "Language-Team: Kazakh\n"
 "Language: kk_KZ\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: adjallocation/allocators/base.py
 msgid "There are no available adjudicators. Ensure there are adjudicators who have been marked as available for this round before auto-allocating."
-msgstr ""
+msgstr "Бос төрешілер жоқ. Төрешілерді ойынға автоматты түрде қоймастан бұрын, олардың осы ойынға қатысу мүмкіншілігі белгіленгеніне көз жеткізіңіз."
 
 #: adjallocation/allocators/hungarian.py
 #, python-format
@@ -60,7 +60,7 @@ msgstr ""
 
 #: adjallocation/apps.py
 msgid "Adjudicator Allocation"
-msgstr ""
+msgstr "Төрешілерді бекіту"
 
 #: adjallocation/consumers.py
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
@@ -174,7 +174,7 @@ msgstr "топ"
 
 #: adjallocation/models.py
 msgid "adjudicator-team conflict"
-msgstr ""
+msgstr "төреші мен ойыншылар арасындағы шектеу"
 
 #: adjallocation/models.py
 msgid "adjudicator-team conflicts"
@@ -357,95 +357,95 @@ msgstr "Төреші мен ойыншылар арасындағы шектеу
 #, python-format
 msgid "Saved %(count)d adjudicator-team conflict."
 msgid_plural "Saved %(count)d adjudicator-team conflicts."
-msgstr[0] ""
+msgstr[0] "Төреші мен топ арасындағы сақталған шектеулер %(count)d."
 msgstr[1] ""
 
 #: adjallocation/views.py
 #, python-format
 msgid "Deleted %(count)d adjudicator-team conflict."
 msgid_plural "Deleted %(count)d adjudicator-team conflicts."
-msgstr[0] ""
+msgstr[0] "Төреші мен топ арасындағы өшірілген шектеулер %(count)d."
 msgstr[1] ""
 
 #: adjallocation/views.py
 msgid "No changes were made to adjudicator-team conflicts."
-msgstr ""
+msgstr "Төреші мен топ арасындағы шектеулерде өзгеріс болмады."
 
 #: adjallocation/views.py
 msgid "Adjudicator-Adjudicator Conflicts"
-msgstr ""
+msgstr "Төреші мен төреші арасындағы шектеу"
 
 #: adjallocation/views.py
 msgid "Save Adjudicator-Adjudicator Conflicts"
-msgstr ""
+msgstr "Төреші мен төреші арасындағы шектеуді сақтау"
 
 #: adjallocation/views.py
 #, python-format
 msgid "Saved %(count)d adjudicator-adjudicator conflict."
 msgid_plural "Saved %(count)d adjudicator-adjudicator conflicts."
-msgstr[0] ""
+msgstr[0] "Төреші мен төреші арасындағы сақталған шектеулер %(count)d."
 msgstr[1] ""
 
 #: adjallocation/views.py
 #, python-format
 msgid "Deleted %(count)d adjudicator-adjudicator conflict."
 msgid_plural "Deleted %(count)d adjudicator-adjudicator conflicts."
-msgstr[0] ""
+msgstr[0] "Төреші мен төреші арасындағы өшірілген шектеулер %(count)d."
 msgstr[1] ""
 
 #: adjallocation/views.py
 msgid "No changes were made to adjudicator-adjudicator conflicts."
-msgstr ""
+msgstr "Төреші мен төреші арасындағы шектеулерде өзгеріс болмады."
 
 #: adjallocation/views.py
 msgid "Adjudicator-Institution Conflicts"
-msgstr ""
+msgstr "Төреші мен қауымдастық арасындағы шектеулер"
 
 #: adjallocation/views.py
 msgid "Save Adjudicator-Institution Conflicts"
-msgstr ""
+msgstr "Төреші мен қауымдастық арасындағы шектеулер"
 
 #: adjallocation/views.py
 #, python-format
 msgid "Saved %(count)d adjudicator-institution conflict."
 msgid_plural "Saved %(count)d adjudicator-institution conflicts."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Төреші мен қауымдастық арасындағы сақталған шектеулер %(count)d."
+msgstr[1] "Төреші мен қауымдастық арасындағы сақталған шектеулер %(count)d."
 
 #: adjallocation/views.py
 #, python-format
 msgid "Deleted %(count)d adjudicator-institution conflict."
 msgid_plural "Deleted %(count)d adjudicator-institution conflicts."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Төреші мен қауымдастық арасындағы өшірілген шектеу %(count)d."
+msgstr[1] "Төреші мен қауымдастық арасындағы өшірілген шектеулер %(count)d."
 
 #: adjallocation/views.py
 msgid "No changes were made to adjudicator-institution conflicts."
-msgstr ""
+msgstr "Төреші мен қауымдастық арасындағы шектеулерде өзгеріс болмады."
 
 #: adjallocation/views.py
 msgid "Team-Institution Conflicts"
-msgstr ""
+msgstr "Ойыншылар мен қауымдастық арасындағы шектеулер"
 
 #: adjallocation/views.py
 msgid "Save Team-Institution Conflicts"
-msgstr ""
+msgstr "Ойыншылар мен қауымдастық арасындағы шектеулер"
 
 #: adjallocation/views.py
 #, python-format
 msgid "Saved %(count)d team-institution conflict."
 msgid_plural "Saved %(count)d team-institution conflicts."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Топ пен қауымдастық арасындағы сақталған шектеу %(count)d."
+msgstr[1] "Топ пен қауымдастық арасындағы сақталған шектеулер %(count)d."
 
 #: adjallocation/views.py
 #, python-format
 msgid "Deleted %(count)d team-institution conflict."
 msgid_plural "Deleted %(count)d team-institution conflicts."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Топ пен қауымдастық арасындағы өшірілген шектеу %(count)d."
+msgstr[1] "Топ пен қауымдастық арасындағы өшірілген шектеулер %(count)d."
 
 #: adjallocation/views.py
 msgid "No changes were made to team-institution conflicts."
-msgstr ""
+msgstr "Топ пен қауымдастық арасындағы шектеуде өзгеріс бомлады."
 

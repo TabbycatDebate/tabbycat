@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
-"PO-Revision-Date: 2023-02-12 06:12\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-07-04 21:55\n"
 "Last-Translator: \n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -69,8 +69,8 @@ msgid "is general"
 msgstr "crwdns29800:0crwdne29800:0"
 
 #: breakqual/models.py
-msgid "True if most teams eligible for this category, e.g. Open, False otherwise"
-msgstr "crwdns29802:0crwdne29802:0"
+msgid "Are teams eligible for this break by default"
+msgstr "crwdns52275:0crwdne52275:0"
 
 #: breakqual/models.py
 msgid "priority"
@@ -506,6 +506,10 @@ msgstr "crwdns29936:0%(categories)scrwdne29936:0"
 #: breakqual/views.py
 msgid "Breaking Adjudicators"
 msgstr "crwdns29938:0crwdne29938:0"
+
+#: breakqual/views.py
+msgid "Four-team formats require the break size to be either six times or four times a power of two."
+msgstr "crwdns52277:0crwdne52277:0"
 
 #: breakqual/views.py
 msgid "Break Eligibility"

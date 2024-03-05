@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
-"PO-Revision-Date: 2023-05-25 23:54\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-07-04 21:50\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -124,6 +124,14 @@ msgid "The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_mar
 msgstr "Kenar boşluğu (%(margin).1f), izin verilen maksimum marjı (%(max_margin).1f) aşıyor."
 
 #: results/forms.py
+msgid "Ranks cannot be tied."
+msgstr ""
+
+#: results/forms.py
+msgid "Ranks must correspond to speaker scores"
+msgstr ""
+
+#: results/forms.py
 #, python-format
 msgid "The total scores for the teams are the same (i.e. a draw) for adjudicator %(adjudicator)s."
 msgstr "Jürilerin toplam puanları, %(adjudicator)s jürileri için aynıdır (yani beraberlik)."
@@ -235,8 +243,8 @@ msgstr "ballot başvuruları"
 
 #: results/models.py
 #, python-format
-msgid "Debate is in round %(round)d but motion (%(motion)s) is from round %(motion_round)d"
-msgstr "Tartışma %(tur)d turundadır, ancak önerge (%(motion)s) %(motion_round)d turdan."
+msgid "Debate is in round %(round)d but motion (%(motion)s) is not in round"
+msgstr ""
 
 #: results/models.py
 msgid "A ballot can't be both confirmed and discarded!"
@@ -313,6 +321,10 @@ msgstr "takım puanları"
 #: results/models.py
 msgid "speaker"
 msgstr "konuşmacı"
+
+#: results/models.py
+msgid "rank"
+msgstr "sıralama"
 
 #: results/models.py
 msgid "ghost"
@@ -459,10 +471,6 @@ msgstr "Sonuç Gir"
 #: results/templates/assistant_results.html
 msgid "This page automatically updates with the new ballot entries and checkins as they occur."
 msgstr "Bu sayfa, yeni ballot verileri ve girişler gerçekleştikçe otomatik olarak güncellenir."
-
-#: results/templates/assistant_results.html
-msgid "This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Results can't be entered while this configuration is in place. Please ask an administrator to change this configuration."
-msgstr "Bu turnuvanın yapılandırması <strong>İngiliz Parlamenteri</strong> ve <strong> oy veren jüri başına bir ballot</strong> olarak ayarlanmıştır. Bu kombinasyona izin verilmez: İP turnuvaları konsensüs oylarını kullanmalıdır. Bu yapılandırma yürürlükteyken sonuçlar girilemez. Lütfen bir yöneticiye danışın."
 
 #: results/templates/assistant_results.html
 msgid "Currently there are no motions entered for this round, so debate results cannot be entered. Please ask an administrator to add motions."

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
-"PO-Revision-Date: 2023-03-27 09:26\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-11-27 13:39\n"
 "Last-Translator: \n"
 "Language-Team: Kazakh\n"
 "Language: kk_KZ\n"
@@ -34,7 +34,7 @@ msgstr "турнир"
 
 #: breakqual/models.py
 msgid "name"
-msgstr ""
+msgstr "аты"
 
 #: breakqual/models.py
 msgid "Name to be displayed, e.g., \"ESL\""
@@ -69,12 +69,12 @@ msgid "is general"
 msgstr ""
 
 #: breakqual/models.py
-msgid "True if most teams eligible for this category, e.g. Open, False otherwise"
+msgid "Are teams eligible for this break by default"
 msgstr ""
 
 #: breakqual/models.py
 msgid "priority"
-msgstr ""
+msgstr "басымдық"
 
 #: breakqual/models.py
 msgid "If a team breaks in multiple categories, higher priority numbers take precedence; teams can break into multiple categories if and only if they all have the same priority"
@@ -110,7 +110,7 @@ msgstr ""
 
 #: breakqual/models.py
 msgid "rule"
-msgstr ""
+msgstr "ереже"
 
 #: breakqual/models.py
 msgid "Rule for how the break is calculated (most tournaments should use \"Standard\")"
@@ -118,7 +118,7 @@ msgstr ""
 
 #: breakqual/models.py
 msgid "breaking teams"
-msgstr ""
+msgstr "іріктелген топтар"
 
 #: breakqual/models.py
 msgid "break category"
@@ -134,7 +134,7 @@ msgstr "топ"
 
 #: breakqual/models.py
 msgid "rank"
-msgstr ""
+msgstr "орын"
 
 #: breakqual/models.py
 msgid "break rank"
@@ -231,7 +231,7 @@ msgstr ""
 
 #: breakqual/templates/breaking_index.html
 msgid "Breaking"
-msgstr ""
+msgstr "Іріктеуден өткендер"
 
 #: breakqual/templates/breaking_index.html
 msgid "Excluded"
@@ -255,11 +255,11 @@ msgstr ""
 
 #: breakqual/templates/breaking_teams.html
 msgid "publicly visible"
-msgstr ""
+msgstr "көпшілікке көрінетін"
 
 #: breakqual/templates/breaking_teams.html
 msgid "not publicly visible"
-msgstr ""
+msgstr "көпшілікке көрінбейтін"
 
 #: breakqual/templates/breaking_teams.html
 msgid "Delete and Regenerate All Breaks"
@@ -317,7 +317,7 @@ msgstr ""
 
 #: breakqual/templates/breakqual_subnav.html
 msgid "Adjudicators' Break"
-msgstr ""
+msgstr "Іріктеуден өткен төрешілер"
 
 #: breakqual/templates/edit_break_eligibility.html
 #, python-format
@@ -326,38 +326,38 @@ msgstr ""
 
 #: breakqual/templates/public_break_index.html breakqual/views.py
 msgid "Break"
-msgstr ""
+msgstr "Іріктеуден өткендер"
 
 #: breakqual/templates/public_break_index.html
 msgid "Adjudicators"
-msgstr ""
+msgstr "Төрешілер"
 
 #. Translators: abbreviation for "grand final"
 #: breakqual/utils.py
 msgid "Grand Final"
-msgstr ""
+msgstr "Финал"
 
 #: breakqual/utils.py
 msgid "GF"
-msgstr ""
+msgstr "Ф"
 
 #. Translators: abbreviation for "semifinals"
 #: breakqual/utils.py
 msgid "Semifinals"
-msgstr ""
+msgstr "Жартылай финал"
 
 #: breakqual/utils.py
 msgid "SF"
-msgstr ""
+msgstr "ЖФ"
 
 #. Translators: abbreviation for "quarterfinals"
 #: breakqual/utils.py
 msgid "Quarterfinals"
-msgstr ""
+msgstr "Ширек финал"
 
 #: breakqual/utils.py
 msgid "QF"
-msgstr ""
+msgstr "ШФ"
 
 #. Translators: abbreviation for "octofinals"
 #: breakqual/utils.py
@@ -395,13 +395,13 @@ msgstr ""
 #: breakqual/utils.py
 #, python-format
 msgid "%sF"
-msgstr ""
+msgstr "Финал %s"
 
 #. Translators: abbreviation for "semifinals" - first character of category name
 #: breakqual/utils.py
 #, python-format
 msgid "%s Semifinals"
-msgstr ""
+msgstr "Жартылай финал %s"
 
 #: breakqual/utils.py
 #, python-format
@@ -412,23 +412,23 @@ msgstr ""
 #: breakqual/utils.py
 #, python-format
 msgid "%s Quarterfinals"
-msgstr ""
+msgstr "Ширек финал %s"
 
 #: breakqual/utils.py
 #, python-format
 msgid "%sQF"
-msgstr ""
+msgstr "ШФ %s"
 
 #. Translators: abbreviation for "octofinals" - first character of category name
 #: breakqual/utils.py
 #, python-format
 msgid "%s Octofinals"
-msgstr ""
+msgstr "Әшмүшке финал %s"
 
 #: breakqual/utils.py
 #, python-format
 msgid "%sOF"
-msgstr ""
+msgstr "Әф %s"
 
 #. Translators: abbreviation for "double-octofinals" - first character of category name
 #: breakqual/utils.py
@@ -505,6 +505,10 @@ msgstr ""
 
 #: breakqual/views.py
 msgid "Breaking Adjudicators"
+msgstr "Іріктеуден өткен төрешілер"
+
+#: breakqual/views.py
+msgid "Four-team formats require the break size to be either six times or four times a power of two."
 msgstr ""
 
 #: breakqual/views.py

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-03-27 09:26\n"
+"PO-Revision-Date: 2023-11-27 12:08\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Kazakh\n"
 "Language: kk_KZ\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: venues/apps.py
 msgid "Rooms"
-msgstr ""
+msgstr "Аудиториялар"
 
 #: venues/consumers.py
 msgid "Draw is already released, unrelease draw to assign rooms."
@@ -36,11 +36,11 @@ msgstr ""
 
 #: venues/models.py
 msgid "name"
-msgstr ""
+msgstr "аты"
 
 #: venues/models.py
 msgid "priority"
-msgstr ""
+msgstr "басымдық"
 
 #: venues/models.py
 msgid "Rooms with a higher priority number will be preferred when allocating rooms to debates"
@@ -52,7 +52,7 @@ msgstr "турнир"
 
 #: venues/models.py
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: venues/models.py
 msgid "A URL that contains extra information about this room, e.g. a map or a meeting link (for online tournaments)"
@@ -60,7 +60,7 @@ msgstr ""
 
 #: venues/models.py
 msgid "room"
-msgstr ""
+msgstr "аудитория"
 
 #: venues/models.py
 msgid "rooms"
@@ -185,7 +185,7 @@ msgstr ""
 
 #: venues/views.py
 msgid "Edit Rooms"
-msgstr ""
+msgstr "Аудиторияларды өзгерту"
 
 #: venues/views.py
 #, python-format

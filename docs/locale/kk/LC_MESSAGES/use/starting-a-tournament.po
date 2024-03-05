@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2023-03-15 13:14\n"
+"PO-Revision-Date: 2023-11-08 06:26\n"
 "Last-Translator: \n"
 "Language-Team: Kazakh\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../../use/starting-a-tournament.rst:5
 msgid "Starting a Tournament"
-msgstr ""
+msgstr "Турнирді бастау"
 
 #: ../../use/starting-a-tournament.rst:7
 msgid "This page outlines a few things you should do at the start of a tournament, after you've :ref:`imported the initial data <importing-initial-data>`. Once you've done these, proceed to :ref:`running a tournament <running-a-tournament>`."
@@ -52,7 +52,7 @@ msgstr ""
 
 #: ../../use/starting-a-tournament.rst:25
 msgid "Adjudicator Feedback > Adj Feedback Questions"
-msgstr ""
+msgstr "Төрешілерге кері байланыс > Төрешілерге кері байланыс сұрақтары"
 
 #: ../../use/starting-a-tournament.rst:25
 msgid "As described in :ref:`adjudicator-feedback`, the types of questions that can be posed for adjudicator feedback are able to be heavily customised. If you are customising your feedback form it should be done here, and before the tournament starts."
@@ -60,7 +60,7 @@ msgstr ""
 
 #: ../../use/starting-a-tournament.rst:30
 msgid "Authentication and Authorisation > Users"
-msgstr ""
+msgstr "Растау және Бекіту > Қолданушылар"
 
 #: ../../use/starting-a-tournament.rst:28
 msgid "Here you can add new admin users (those with full access) as well as new assistant users those (who can only do common data-entry tasks but not edit or view the full tab interface). See :ref:`user-accounts` for information on how to do this."
@@ -72,7 +72,7 @@ msgstr ""
 
 #: ../../use/starting-a-tournament.rst:33
 msgid "Participants > Regions"
-msgstr ""
+msgstr "Қатысушылар > Аймақтар"
 
 #: ../../use/starting-a-tournament.rst:33
 msgid "Optionally, each institution may belong to a *Region*. An institution's region is used within the adjudicator allocation process to visually identify teams and adjudicators for the purposes of highlighting diversity issues.  These have traditionally been used for geographic regions (such as Oceania), although could be repurposed as arbitrary markers of information — for example they could be used to denote teams from a particular State, institutional size, or circuit."
@@ -80,7 +80,7 @@ msgstr ""
 
 #: ../../use/starting-a-tournament.rst:41
 msgid "Participants > Adjudicators"
-msgstr ""
+msgstr "Қатысушылар > Төрешілер"
 
 #: ../../use/starting-a-tournament.rst:36
 msgid "An adjudicators *Base Score* represents their relative ability to judge important rooms, where adjudicators with higher numbers will, relative to the other adjudicators, be placed in better roles (ie as Chairs) and in the rooms you deem most important in each round. If you are running a small tournament, and plan to do your allocations manually, you can set everyone's number to the same amount."
@@ -108,7 +108,7 @@ msgstr ""
 
 #: ../../use/starting-a-tournament.rst:48
 msgid "Participants > Teams"
-msgstr ""
+msgstr "Қатысушылар > Топтар"
 
 #: ../../use/starting-a-tournament.rst:44
 msgid "Note the distinction here between full name and short name. The latter is used on pages where space is tight, such as the draw displays or the adjudicator allocation interface."
@@ -132,7 +132,7 @@ msgstr ""
 
 #: ../../use/starting-a-tournament.rst:52
 msgid "Participants > Speakers"
-msgstr ""
+msgstr "Қатысушылар > Ойыншылар"
 
 #: ../../use/starting-a-tournament.rst:51
 msgid "Each speaker's gender is optional and is not displayed publicly; it is only shown in the adjudicator allocation interface"
@@ -152,7 +152,7 @@ msgstr ""
 
 #: ../../use/starting-a-tournament.rst:58
 msgid "Tournaments > Tournaments"
-msgstr ""
+msgstr "Турнирлер > Турнирлер"
 
 #: ../../use/starting-a-tournament.rst:58
 msgid "Note that tournaments can have a welcome message (useful for displaying maps and other information on the homepage)."
@@ -160,7 +160,7 @@ msgstr ""
 
 #: ../../use/starting-a-tournament.rst:61
 msgid "Venues > Venues"
-msgstr ""
+msgstr "Өткізу орындары > Өткізу орындары"
 
 #: ../../use/starting-a-tournament.rst:61
 msgid "A venue's priority determines its priority in being allocated. If there are 20 debates, and 30 rooms, the 20 rooms with the highest priorities will be chosen. Furthermore, if particular debates are marked as important during the draw process, those debates will receive the rooms with the highest priorities. In this way you can give close rooms to members of the adj core, or give larger rooms to debates that will draw a large audience."
@@ -168,7 +168,7 @@ msgstr ""
 
 #: ../../use/starting-a-tournament.rst:64
 msgid "Venues > Venue Categories"
-msgstr ""
+msgstr "Өткізу орындары > Өткізу орындарының түрлері"
 
 #: ../../use/starting-a-tournament.rst:64
 msgid "Venue categories are not needed for most kinds of tournaments. Their purpose is to classify particular venues, such as venues all within one building or venues that are accessible. Once assigned these categories can display in the venue's name — ie \"Red 01.01\" or be used to assign Venue Constraints that match particular teams, institutions, or adjudicators to particular types of venues."
@@ -176,7 +176,7 @@ msgstr ""
 
 #: ../../use/starting-a-tournament.rst:67
 msgid "Information for the briefing"
-msgstr ""
+msgstr "Брифингке арналған ақпарат"
 
 #: ../../use/starting-a-tournament.rst:69
 msgid "If you're using the online submissions feature, some things you should probably mention in the briefing:"

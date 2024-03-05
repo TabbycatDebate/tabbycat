@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
-"PO-Revision-Date: 2023-03-15 14:16\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-11-27 13:39\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Kazakh\n"
 "Language: kk_KZ\n"
@@ -31,7 +31,7 @@ msgstr[1] ""
 
 #: results/apps.py results/templates/public_results_index.html results/views.py
 msgid "Results"
-msgstr ""
+msgstr "Нәтиже"
 
 #: results/forms.py
 msgid "Tournament password"
@@ -124,6 +124,14 @@ msgid "The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_mar
 msgstr ""
 
 #: results/forms.py
+msgid "Ranks cannot be tied."
+msgstr ""
+
+#: results/forms.py
+msgid "Ranks must correspond to speaker scores"
+msgstr ""
+
+#: results/forms.py
 #, python-format
 msgid "The total scores for the teams are the same (i.e. a draw) for adjudicator %(adjudicator)s."
 msgstr ""
@@ -175,7 +183,7 @@ msgstr ""
 
 #: results/models.py
 msgid "confirmed"
-msgstr ""
+msgstr "бекітілген"
 
 #: results/models.py
 msgid "from private URL"
@@ -211,7 +219,7 @@ msgstr "пікірсайыс"
 
 #: results/models.py
 msgid "motion"
-msgstr ""
+msgstr "қарар"
 
 #: results/models.py
 msgid "discarded"
@@ -227,7 +235,7 @@ msgstr ""
 
 #: results/models.py
 msgid "ballot submission"
-msgstr ""
+msgstr "төреші парағын тапсыру"
 
 #: results/models.py
 msgid "ballot submissions"
@@ -235,7 +243,7 @@ msgstr ""
 
 #: results/models.py
 #, python-format
-msgid "Debate is in round %(round)d but motion (%(motion)s) is from round %(motion_round)d"
+msgid "Debate is in round %(round)d but motion (%(motion)s) is not in round"
 msgstr ""
 
 #: results/models.py
@@ -248,11 +256,11 @@ msgstr "ойын төрешісі"
 
 #: results/models.py
 msgid "debate team"
-msgstr ""
+msgstr "пікірталастырушы топ"
 
 #: results/models.py
 msgid "win"
-msgstr ""
+msgstr "жеңіс"
 
 #: results/models.py
 msgid "margin"
@@ -260,7 +268,7 @@ msgstr ""
 
 #: results/models.py
 msgid "score"
-msgstr ""
+msgstr "ұпай"
 
 #: results/models.py
 msgid "team score by adjudicator"
@@ -288,7 +296,7 @@ msgstr ""
 
 #: results/models.py
 msgid "points"
-msgstr ""
+msgstr "ұпайлар"
 
 #: results/models.py
 msgid "votes given"
@@ -313,6 +321,10 @@ msgstr ""
 #: results/models.py
 msgid "speaker"
 msgstr ""
+
+#: results/models.py
+msgid "rank"
+msgstr "орын"
 
 #: results/models.py
 msgid "ghost"
@@ -348,7 +360,7 @@ msgstr ""
 
 #: results/templates/admin_results.html
 msgid "Display Draw"
-msgstr ""
+msgstr "Кестені көрсету"
 
 #: results/templates/admin_results.html
 msgid "Check-In Ballots"
@@ -454,14 +466,10 @@ msgstr ""
 
 #: results/templates/assistant_results.html results/views.py
 msgid "Enter Results"
-msgstr ""
+msgstr "Нәтижелерді толтыру"
 
 #: results/templates/assistant_results.html
 msgid "This page automatically updates with the new ballot entries and checkins as they occur."
-msgstr ""
-
-#: results/templates/assistant_results.html
-msgid "This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Results can't be entered while this configuration is in place. Please ask an administrator to change this configuration."
 msgstr ""
 
 #: results/templates/assistant_results.html
@@ -496,11 +504,11 @@ msgstr ""
 
 #: results/templates/ballot/ballot_scoresheet.html
 msgid "Result"
-msgstr ""
+msgstr "Нәтиже"
 
 #: results/templates/ballot/ballot_scoresheet.html
 msgid "Rank"
-msgstr ""
+msgstr "Орын"
 
 #: results/templates/ballot/ballot_scoresheet.html
 msgid "Margin"
@@ -954,7 +962,7 @@ msgstr ""
 
 #: results/views.py
 msgid " vs "
-msgstr ""
+msgstr " қарсы "
 
 #: results/views.py
 #, python-format
@@ -1072,7 +1080,7 @@ msgstr ""
 
 #: results/views.py
 msgid "Adjudicator"
-msgstr ""
+msgstr "Төреші"
 
 #: results/views.py
 msgid "Merge Ballots"

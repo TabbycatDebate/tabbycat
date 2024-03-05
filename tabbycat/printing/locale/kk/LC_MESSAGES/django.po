@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-03-15 13:13\n"
+"PO-Revision-Date: 2023-11-27 12:08\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Kazakh\n"
 "Language: kk_KZ\n"
@@ -101,7 +101,7 @@ msgstr ""
 
 #: printing/templates/scoresheet_list.html
 msgid "Motion"
-msgstr ""
+msgstr "Қарар"
 
 #: printing/templates/scoresheet_list.html
 msgid "Changes to motions will update in the displayed ballots automatically"
@@ -121,5 +121,5 @@ msgstr ""
 
 #: printing/views.py
 msgid "Team"
-msgstr ""
+msgstr "Топ"
 

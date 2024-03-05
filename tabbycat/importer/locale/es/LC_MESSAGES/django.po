@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:58\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-08-24 11:53\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -59,6 +59,10 @@ msgid "Speakers' names"
 msgstr "Nombres de los oradores"
 
 #: importer/forms.py
+msgid "Can be separated by newlines, tabs or commas"
+msgstr "Puede ser separado por nuevas líneas, tablas o comas "
+
+#: importer/forms.py
 msgid "Speakers' email addresses"
 msgstr "e-mail de los oradores"
 
@@ -87,10 +91,6 @@ msgid "One speaker's name per line"
 msgstr "Un nombre de orador por línea"
 
 #: importer/forms.py
-msgid "Can be separated by newlines, tabs or commas"
-msgstr "Puede ser separado por nuevas líneas, tablas o comas "
-
-#: importer/forms.py
 #, python-format
 msgid "Speaker %d"
 msgstr "Orador %d"
@@ -99,6 +99,22 @@ msgstr "Orador %d"
 #, python-format
 msgid "speaker%d@example.edu"
 msgstr "Orador%d@example.edu"
+
+#: importer/forms.py
+msgid "Unseeded"
+msgstr ""
+
+#: importer/forms.py
+msgid "Free seed"
+msgstr ""
+
+#: importer/forms.py
+msgid "Half seed"
+msgstr ""
+
+#: importer/forms.py
+msgid "Full seed"
+msgstr ""
 
 #: importer/forms.py
 msgid "There must be at least one speaker."
@@ -155,11 +171,11 @@ msgstr ""
 
 #: importer/forms.py
 msgid "The Debate XML archive to parse"
-msgstr ""
+msgstr "El archivo XML del debate a analizar"
 
 #: importer/templates/archive_export_index.html
 msgid "Export Tournament Archive"
-msgstr ""
+msgstr "Exportar el archivo del torneo"
 
 #: importer/templates/archive_export_index.html
 msgid "Tournaments can be exported in an <a href=\"https://en.wikipedia.org/wiki/XML\">XML format</a> for use outside Tabbycat."
@@ -167,7 +183,7 @@ msgstr ""
 
 #: importer/templates/archive_export_index.html
 msgid "Export all data"
-msgstr ""
+msgstr "Exportar todos los datos"
 
 #: importer/templates/archive_importer.html
 msgctxt "page title"
@@ -180,11 +196,11 @@ msgstr ""
 
 #: importer/templates/archive_importer.html
 msgid "Import"
-msgstr ""
+msgstr "Importar"
 
 #: importer/templates/archive_importer.html
 msgid "Go back to the site home page"
-msgstr ""
+msgstr "Volver a la página principal"
 
 #: importer/templates/simple_import_adjudicators_details.html
 #: importer/templates/simple_import_adjudicators_numbers.html
@@ -354,7 +370,7 @@ msgstr "Especifique el número de nuevos equipos a añadir por institución. En 
 
 #: importer/templates/simple_import_teams_numbers.html
 msgid "You can add up to 141 teams at a time. If you have more than 141 teams, split them into chunks. (Please don't try to add more than 141 in one go; the system will crash, and you will lose data.)"
-msgstr ""
+msgstr "Puedes añadir hasta 141 equipos a la vez. Si tienes más de 141 equipos, divídelos en trozos. (Intenta por favor no añadir más de 141 equipos al mismo tiempo; el sistema se bloqueará y perderás toda la información.)"
 
 #: importer/templates/simple_import_venues_details.html
 #: importer/templates/simple_import_venues_raw.html

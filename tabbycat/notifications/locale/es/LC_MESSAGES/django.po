@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:59\n"
+"PO-Revision-Date: 2023-08-24 11:53\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -20,11 +20,11 @@ msgstr ""
 
 #: notifications/apps.py
 msgid "Notifications"
-msgstr ""
+msgstr "Notificaciones"
 
 #: notifications/forms.py
 msgid "Recipient email address"
-msgstr ""
+msgstr "Correo electrónico del orador/juez"
 
 #: notifications/forms.py
 #, python-format
@@ -38,23 +38,23 @@ msgstr ""
 
 #: notifications/forms.py
 msgid "Subject"
-msgstr ""
+msgstr "Asunto"
 
 #: notifications/forms.py
 msgid "Message"
-msgstr ""
+msgstr "Mensaje"
 
 #: notifications/models.py
 msgid "email"
-msgstr ""
+msgstr "Correo electrónico"
 
 #: notifications/models.py
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #: notifications/models.py
 msgid "recipient"
-msgstr ""
+msgstr "Destinatario"
 
 #: notifications/models.py
 msgid "method"
@@ -66,7 +66,7 @@ msgstr ""
 
 #: notifications/models.py
 msgid "notification"
-msgstr ""
+msgstr "notificación"
 
 #: notifications/models.py
 msgid "timestamp"
@@ -74,7 +74,7 @@ msgstr "marca de tiempo"
 
 #: notifications/models.py
 msgid "sent message"
-msgstr ""
+msgstr "mensaje enviado"
 
 #: notifications/models.py
 msgid "sent messages"
@@ -82,7 +82,7 @@ msgstr ""
 
 #: notifications/models.py
 msgid "team points"
-msgstr ""
+msgstr "puntos del equipo"
 
 #: notifications/models.py
 msgid "ballot confirmed"
@@ -114,7 +114,7 @@ msgstr ""
 
 #: notifications/models.py
 msgid "motion(s) released"
-msgstr ""
+msgstr "moción(es) liberadas"
 
 #: notifications/models.py
 msgid "team draw released"
@@ -126,7 +126,7 @@ msgstr ""
 
 #: notifications/models.py
 msgid "event"
-msgstr ""
+msgstr "evento"
 
 #: notifications/models.py
 msgid "tournament"
@@ -220,7 +220,7 @@ msgstr ""
 
 #: notifications/templates/email_participants.html
 msgid "Send Message(s)"
-msgstr ""
+msgstr "Enviar mensaje(s)"
 
 #: notifications/templates/email_statuses.html
 msgid "Emails can be sent by Tabbycat for a variety of purposes. Emails are sent when specific preferences are enabled (i.e. enabling Ballot Receipts) or through actions available on specific pages (i.e. the Draw Display page for matchups; or the Participants page for team registration). This page shows the status of previously-sent emails."
@@ -255,11 +255,11 @@ msgstr ""
 
 #: notifications/templates/test_email.html
 msgid "Go back to the site home page"
-msgstr ""
+msgstr "Volver a la página principal"
 
 #: notifications/utils.py
 msgid "the chair"
-msgstr ""
+msgstr "el juez principal"
 
 #: notifications/utils.py
 msgid "the only"
@@ -267,15 +267,15 @@ msgstr ""
 
 #: notifications/utils.py
 msgid "a panellist"
-msgstr ""
+msgstr "un panelista"
 
 #: notifications/utils.py
 msgid "a trainee"
-msgstr ""
+msgstr "un trainee"
 
 #: notifications/utils.py
 msgid "TBA"
-msgstr ""
+msgstr "Por anunciar"
 
 #: notifications/utils.py
 #, python-format

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:58\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-07-04 21:49\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -238,6 +238,22 @@ msgid "Bengali"
 msgstr ""
 
 #: settings/core.py
+msgid "Bulgarian"
+msgstr ""
+
+#: settings/core.py
+msgid "Catalan"
+msgstr ""
+
+#: settings/core.py
+msgid "Czech"
+msgstr ""
+
+#: settings/core.py
+msgid "German"
+msgstr ""
+
+#: settings/core.py
 msgid "English"
 msgstr "Английский"
 
@@ -250,12 +266,28 @@ msgid "French"
 msgstr "Французский"
 
 #: settings/core.py
+msgid "Hebrew"
+msgstr ""
+
+#: settings/core.py
+msgid "Hindi"
+msgstr ""
+
+#: settings/core.py
 msgid "Indonesian"
+msgstr ""
+
+#: settings/core.py
+msgid "Italian"
 msgstr ""
 
 #: settings/core.py
 msgid "Japanese"
 msgstr "Японский"
+
+#: settings/core.py
+msgid "Kazakh"
+msgstr ""
 
 #: settings/core.py
 msgid "Malay"
@@ -266,8 +298,20 @@ msgid "Portuguese"
 msgstr "Португальский"
 
 #: settings/core.py
+msgid "Romanian"
+msgstr ""
+
+#: settings/core.py
 msgid "Russian"
 msgstr "Русский"
+
+#: settings/core.py
+msgid "Turkish"
+msgstr ""
+
+#: settings/core.py
+msgid "Vietnamese"
+msgstr ""
 
 #: settings/core.py
 msgid "Simplified Chinese"
@@ -372,8 +416,8 @@ msgid "This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 msgstr "Этот сайт работает на Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 
 #: templates/footer.html
-msgid "Tabbycat is a source-available project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments."
-msgstr "Tabbycat - это проект с открытым исходным кодом, разработанный добровольцами, и свободно и бесплатно используемый для тэбмастеринга турниров."
+msgid "Tabbycat is an open-source project developed by volunteers and is free to use."
+msgstr ""
 
 #: templates/footer.html
 #, python-format
@@ -385,7 +429,7 @@ msgid "Learn more about donating."
 msgstr "Узнать больше о донатах."
 
 #: templates/footer.html
-msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated."
+msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated and help us to continue to develop, support, and maintain Tabbycat."
 msgstr ""
 
 #: templates/footer.html
