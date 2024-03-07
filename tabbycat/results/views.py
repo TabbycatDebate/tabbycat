@@ -428,7 +428,7 @@ class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
         return self.get_success_url()
 
     def get_queryset(self):
-        return super().get_queryset().exclude(debateteam__side=DebateSide.BYE)
+        return super().get_queryset().prefetch_related('debateteam_set__team__speaker_set').exclude(debateteam__side=DebateSide.BYE)
 
     def populate_objects(self, prefill=True):
         self.debate = self.object = self.get_object()
@@ -483,7 +483,7 @@ class BaseEditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
         return reverse_round('results-round-list', self.ballotsub.debate.round)
 
     def get_queryset(self):
-        return super().get_queryset().exclude(debate__debateteam__side=DebateSide.BYE)
+        return super().get_queryset().prefetch_related('debate__debateteam_set__team__speaker_set').exclude(debate__debateteam__side=DebateSide.BYE)
 
     def add_success_message(self):
         if self.ballotsub.discarded:
@@ -556,7 +556,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
             return self.error_page(_("The motions for this round haven't been released yet."))
 
         try:
-            self.debateadj = DebateAdjudicator.objects.get(adjudicator=self.object, debate__round=self.round)
+            self.debateadj = DebateAdjudicator.objects.prefetch_related('debate__debateteam_set__team__speaker_set').get(adjudicator=self.object, debate__round=self.round)
         except DebateAdjudicator.DoesNotExist:
             return self.error_page(_("It looks like you don't have a debate this round."))
         except DebateAdjudicator.MultipleObjectsReturned:
@@ -688,7 +688,7 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
     def get_queryset(self):
         return super().get_queryset().exclude(debateteam__side=DebateSide.BYE).select_related(
             'round',
-        ).prefetch_related('debateteam_set__team')
+        ).prefetch_related('debateteam_set__team__speaker_set')
 
     def response_error(self, error):
         status, message = error

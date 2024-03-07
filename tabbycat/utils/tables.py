@@ -315,7 +315,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
     BP_POINT_ICONS = ("chevrons-down", "chevron-down", "chevron-up", "chevrons-up")
     BP_POINT_ICONCLASSES = ("text-danger result-icon", "text-warning result-icon", "text-info result-icon", "text-success result-icon")
 
-    def _result_cell_class_four(self, points, cell):
+    def _result_cell_class_four(self, points, cell, n_teams):
         team_name = cell['popover']['title']
 
         if points is None:
@@ -324,8 +324,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
             cell['sort'] = 0
             return cell
 
-        cell['popover']['title'] = _("%(team)s placed %(place)s") % {'team': team_name, 'place': ordinal(self.tournament.pref('teams_in_debate') - points)}
-        if self.tournament.pref('teams_in_debate') <= 4:
+        cell['popover']['title'] = _("%(team)s placed %(place)s") % {'team': team_name, 'place': ordinal(n_teams - points)}
+        if n_teams <= 4:
             cell['icon'] = self.BP_POINT_ICONS[points]
             cell['iconClass'] = self.BP_POINT_ICONCLASSES[points]
         cell['sort'] = points + 1
@@ -414,8 +414,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
             return {'text': self.BLANK_TEXT}
 
         other_teams = {dt.side: self._team_short_name(dt.team) for dt in ts.debate_team.debate.debateteam_set.all()}
+        n_teams = max(other_teams.keys())
         other_team_strs = [_("Teams in debate:")]
-        for side in self.tournament.sides:
+        for side in range(n_teams):
             if ts.debate_team.debate.sides_confirmed:
                 line = _("%(team)s (%(side)s)") % {
                     'team': other_teams.get(side, _("??")),
@@ -445,7 +446,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 cell['text'] = "–"
                 cell['popover']['title'] = _("No result for debate")
         else:
-            cell = self._result_cell_class_four(ts.points, cell)
+            cell = self._result_cell_class_four(ts.points, cell, n_teams)
             places = [ordinal(n) for n in reversed(range(1, 5))]
             if ts.points is not None:
                 place = places[ts.points] if ts.points < 4 else _("??")
@@ -943,7 +944,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 elif debate.round.is_break_round:
                     cell = self._result_cell_class_four_elim(debateteam.win, cell)
                 else:
-                    cell = self._result_cell_class_four(debateteam.points, cell)
+                    cell = self._result_cell_class_four(debateteam.points, cell, len(debate.teams))
 
                 if iron and (debateteam.iron > 0 or debateteam.iron_prev > 0):
                     cell['text'] = "🗣️" + cell['text']

@@ -257,7 +257,7 @@ class BaseBallotSetForm(BaseResultForm):
         self.adjudicators = list(self.debate.adjudicators.voting())
         self.motions = self.debate.round.roundmotion_set.order_by('seq').select_related('motion')
 
-        self.sides = self.tournament.sides
+        self.sides = sorted([dt.side for dt in self.debate.debateteam_set.all()])
         self.positions = self.tournament.positions
         self.last_substantive_position = self.tournament.last_substantive_position  # also used in template
         self.reply_position = self.tournament.reply_position  # also used in template
@@ -948,9 +948,9 @@ class TeamsMixin:
 
     def create_team_selector(self):
         # 3(a). List of teams in multiple-select
-        side_choices = [(side, _("%(team)s (%(side)s)") % {
+        side_choices = [(side.value, _("%(team)s (%(side)s)") % {
             'team': self.debate.get_team(side).short_name,
-            'side': self._side_name(side)}) for side in self.tournament.sides]
+            'side': self._side_name(side)}) for side in self.sides]
         return forms.MultipleChoiceField(choices=side_choices,
                 widget=forms.CheckboxSelectMultiple)
 

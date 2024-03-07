@@ -10,6 +10,7 @@ from tournaments.utils import get_side_name
 from utils.fields import ChoiceArrayField
 
 from .generator import DRAW_FLAG_DESCRIPTIONS
+from .types import DebateSide
 
 if TYPE_CHECKING:
     from participants.models import Team
@@ -292,7 +293,7 @@ class DebateTeam(models.Model):
         try:
             return self._opponent
         except AttributeError:
-            if self.side == self.Side.BYE:
+            if self.side == DebateSide.BYE:
                 self._opponent = None
                 return self._opponent
 

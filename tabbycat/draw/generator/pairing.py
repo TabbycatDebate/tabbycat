@@ -178,7 +178,6 @@ class PolyPairing(BasePairing):
 
     def __init__(self, teams, bracket, room_rank, num_sides=4, flags=[], team_flags={}):
         super().__init__(teams, bracket, room_rank, flags, team_flags)
-        assert len(self.teams) == num_sides, f"There must be {num_sides} teams in a PolyPairing"
 
     def __repr__(self):
         return "<{p.__class__.__name__}: {teams} ({p.bracket}/{p.room_rank})>".format(
