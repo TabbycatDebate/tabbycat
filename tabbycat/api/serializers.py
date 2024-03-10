@@ -1,6 +1,6 @@
 from collections import OrderedDict
 from collections.abc import Mapping
-from functools import partialmethod
+from functools import partial, partialmethod
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError as DjangoValidationError
@@ -28,7 +28,7 @@ from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.models import Round, Tournament
 from users.models import Group
-from users.permissions import Permission
+from users.permissions import has_permission, Permission
 from venues.models import Venue, VenueCategory, VenueConstraint
 
 from . import fields
@@ -188,10 +188,12 @@ class RoundSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if not is_staff(kwargs.get('context')):
-            self.fields.pop('feedback_weight')
+            with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=kwargs['context']['tournament'])
+            if not with_permission(Permission.VIEW_FEEDBACK_OVERVIEW):
+                self.fields.pop('feedback_weight')
 
             # Can't show in a ListSerializer
-            if isinstance(self.instance, QuerySet) or not self.instance.motions_released:
+            if not with_permission(Permission.VIEW_MOTION) and (isinstance(self.instance, QuerySet) or not self.instance.motions_released):
                 self.fields.pop('motions')
 
     class Meta:
@@ -210,6 +212,9 @@ class RoundSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         motions_data = validated_data.pop('roundmotion_set', [])
+        if len(motions_data) > 0 and not has_permission(self.context['request'].user, Permission.EDIT_MOTION):
+            raise serializers.PermissionDenied('Editing motions disallowed')
+
         round = super().create(validated_data)
 
         if len(motions_data) > 0:
@@ -224,6 +229,8 @@ class RoundSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         motions_data = validated_data.pop('roundmotion_set', [])
+        if len(motions_data) > 0 and not has_permission(self.context['request'].user, Permission.EDIT_MOTION):
+            raise serializers.PermissionDenied('Editing motions disallowed')
         for i, roundmotion in enumerate(motions_data, start=1):
             roundmotion['seq'] = i
 
@@ -467,13 +474,18 @@ class SpeakerSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if not is_staff(kwargs.get('context')):
-            self.fields.pop('gender')
-            self.fields.pop('email')
-            self.fields.pop('phone')
-            self.fields.pop('pronoun')
-            self.fields.pop('url_key')
+            t = kwargs['context']['tournament']
+            with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=t)
+            if not with_permission(Permission.VIEW_PARTICIPANT_CONTACT):
+                self.fields.pop('email')
+                self.fields.pop('phone')
+            if not with_permission(Permission.VIEW_PARTICIPANT_GENDER):
+                self.fields.pop('gender')
+                self.fields.pop('pronoun')
+            if not with_permission(Permission.VIEW_PRIVATE_URLS):
+                self.fields.pop('url_key')
 
-            if kwargs['context']['tournament'].pref('participant_code_names') == 'everywhere':
+            if not with_permission(Permission.VIEW_PARTICIPANT_DECODED) and t.pref('participant_code_names') == 'everywhere':
                 self.fields.pop('name')
 
     class Meta:
@@ -532,26 +544,37 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
         # Remove private fields in the public endpoint if needed
         if not is_staff(kwargs.get('context')):
-            self.fields.pop('institution_conflicts')
-            self.fields.pop('team_conflicts')
-            self.fields.pop('adjudicator_conflicts')
-            self.fields.pop('venue_constraints')
-
             t = kwargs['context']['tournament']
-            if not t.pref('show_adjudicator_institutions'):
+            with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=t)
+
+            if not with_permission(Permission.VIEW_ADJ_INST_CONFLICTS):
+                self.fields.pop('institution_conflicts')
+            if not with_permission(Permission.VIEW_ADJ_TEAM_CONFLICTS):
+                self.fields.pop('team_conflicts')
+            if not with_permission(Permission.VIEW_ADJ_ADJ_CONFLICTS):
+                self.fields.pop('adjudicator_conflicts')
+            if not with_permission(Permission.VIEW_ROOMCONSTRAINTS):
+                self.fields.pop('venue_constraints')
+
+            if not with_permission(Permission.VIEW_PARTICIPANT_INST) and not t.pref('show_adjudicator_institutions'):
                 self.fields.pop('institution')
-            if not t.pref('public_breaking_adjs'):
+            if not with_permission(Permission.VIEW_ADJ_BREAK) and not t.pref('public_breaking_adjs'):
                 self.fields.pop('breaking')
-            if t.pref('participant_code_names') == 'everywhere':
+            if not with_permission(Permission.VIEW_PARTICIPANT_DECODED) and not t.pref('participant_code_names') == 'everywhere':
                 self.fields.pop('name')
 
-            self.fields.pop('base_score')
-            self.fields.pop('trainee')
-            self.fields.pop('gender')
-            self.fields.pop('email')
-            self.fields.pop('phone')
-            self.fields.pop('pronoun')
-            self.fields.pop('url_key')
+            if not with_permission(Permission.VIEW_FEEDBACK_OVERVIEW):
+                self.fields.pop('base_score')
+                self.fields.pop('trainee')
+
+            if not with_permission(Permission.VIEW_PARTICIPANT_CONTACT):
+                self.fields.pop('email')
+                self.fields.pop('phone')
+            if not with_permission(Permission.VIEW_PARTICIPANT_GENDER):
+                self.fields.pop('gender')
+                self.fields.pop('pronoun')
+            if not with_permission(Permission.VIEW_PRIVATE_URLS):
+                self.fields.pop('url_key')
 
     class Meta:
         model = Adjudicator
@@ -638,20 +661,25 @@ class TeamSerializer(serializers.ModelSerializer):
 
         # Remove private fields in the public endpoint if needed
         if not is_staff(kwargs.get('context')):
-            self.fields.pop('institution_conflicts')
-            self.fields.pop('venue_constraints')
-
             t = kwargs['context']['tournament']
-            if t.pref('team_code_names') in ('admin-tooltips-code', 'admin-tooltips-real', 'everywhere'):
+            with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=t)
+
+            if not with_permission(Permission.VIEW_TEAM_INST_CONFLICTS):
+                self.fields.pop('institution_conflicts')
+            if not with_permission(Permission.VIEW_ROOMCONSTRAINTS):
+                self.fields.pop('venue_constraints')
+
+            if not with_permission(Permission.VIEW_DECODED_TEAMS) and t.pref('team_code_names') in ('admin-tooltips-code', 'admin-tooltips-real', 'everywhere'):
                 self.fields.pop('institution')
                 self.fields.pop('use_institution_prefix')
                 self.fields.pop('reference')
                 self.fields.pop('short_reference')
                 self.fields.pop('short_name')
                 self.fields.pop('long_name')
-            elif not t.pref('show_team_institutions'):
+            elif not with_permission(Permission.VIEW_PARTICIPANT_INST) and not t.pref('show_team_institutions'):
                 self.fields.pop('institution')
                 self.fields.pop('use_institution_prefix')
+
             if not t.pref('public_break_categories'):
                 self.fields.pop('break_categories')
 
@@ -749,7 +777,9 @@ class InstitutionSerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
 
         if not is_staff(kwargs.get('context')):
-            self.fields.pop('venue_constraints')
+            with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=kwargs['context']['tournament'])
+            if not with_permission(Permission.VIEW_ROOMCONSTRAINTS):
+                self.fields.pop('venue_constraints')
 
     def create(self, validated_data):
         venue_constraints = validated_data.pop('venue_constraints', [])
@@ -791,8 +821,10 @@ class PerTournamentInstitutionSerializer(InstitutionSerializer):
         super().__init__(*args, **kwargs)
 
         if not is_staff(kwargs.get('context')):
-            self.fields.pop('teams')
-            self.fields.pop('adjudicators')
+            with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=kwargs['context']['tournament'])
+            if not with_permission(Permission.VIEW_PARTICIPANT_INST):
+                self.fields.pop('teams')
+                self.fields.pop('adjudicators')
 
 
 class VenueSerializer(serializers.ModelSerializer):
@@ -907,10 +939,12 @@ class RoundPairingSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if not is_staff(kwargs.get('context')):
-            self.fields.pop('bracket')
-            self.fields.pop('room_rank')
-            self.fields.pop('importance')
-            self.fields.pop('result_status')
+            with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=kwargs['context']['tournament'])
+            if not with_permission(Permission.VIEW_ADMIN_DRAW):
+                self.fields.pop('bracket')
+                self.fields.pop('room_rank')
+                self.fields.pop('importance')
+                self.fields.pop('result_status')
 
     class Meta:
         model = Debate

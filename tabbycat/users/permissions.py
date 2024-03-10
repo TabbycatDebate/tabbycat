@@ -34,6 +34,10 @@ class Permission(TextChoices):
     VIEW_INSTITUTIONS = 'view.inst', _("view institutions")
     ADD_INSTITUTIONS = 'add.inst', _("add institutions")
     VIEW_PARTICIPANTS = 'view.particpants', _("view participants")
+    VIEW_PARTICIPANT_GENDER = 'view.participants.gender', _("view participants' gender information")
+    VIEW_PARTICIPANT_CONTACT = 'view.participants.contact', _("view participants' contact information")
+    VIEW_PARTICIPANT_DECODED = 'view.participants.decoded', _("view participants' real names")
+    VIEW_PARTICIPANT_INST = 'view.participants.inst', _("view participants' institution")
 
     VIEW_ROUNDAVAILABILITIES_TEAM = 'view.roundavailability.team', _("view round availabilities for teams")
     VIEW_ROUNDAVAILABILITIES_ADJ = 'view.roundavailability.adjudicator', _("view round availabilities for adjudicators")
@@ -41,13 +45,15 @@ class Permission(TextChoices):
     EDIT_ROUNDAVAILABILITIES_TEAM = 'edit.roundavailability.team', _("edit round availabilities for teams")
     EDIT_ROUNDAVAILABILITIES_ADJ = 'edit.roundavailability.adjudicator', _("edit round availabilities for adjudicators")
     EDIT_ROUNDAVAILABILITIES_VENUE = 'edit.roundavailability.venue', _("edit round availabilities for rooms")
+    VIEW_ROUNDAVAILABILITIES = 'view.roundavailability', _("view round availabilities")
+    EDIT_ROUNDAVAILABILITIES = 'edit.roundavailability', _("edit round availabilities")
 
     VIEW_ROOMCONSTRAINTS = 'view.roomconstraints', _("view room constraints")
     VIEW_ROOMCATEGORIES = 'view.roomcategories', _("view room categories")
     EDIT_ROOMCONSTRAINTS = 'edit.roomconstraints', _("edit room constraints")
     EDIT_ROOMCATEGORIES = 'edit.roomcategories', _("edit room categories")
 
-    VIEW_DEBATES = 'view.debate', _("view debates (draw)")
+    VIEW_DEBATE = 'view.debate', _("view debates (draw)")
     VIEW_ADMIN_DRAW = 'view.debate.admin', _("view debates (detailed draw)")
     GENERATE_DEBATE = 'generate.debate', _("generate debates (draw)")
     EDIT_DEBATETEAMS = 'edit.debateteam', _("edit debate teams (pairings)")
@@ -107,6 +113,8 @@ class Permission(TextChoices):
     EDIT_ADJ_BREAK = 'edit.adj.break', _("edit adjudicator break")
     # idk if its possible for them to add feedback everywhere, considering there is add feedback on multiple pages
 
+    EDIT_FEEDBACKQUESTION = 'edit.feedbackquestion', _("edit feedback questions")
+
     # breaks
     EDIT_BREAK_ELIGIBILITY = 'edit.breakeligibility', _("edit break eligibility")
     VIEW_BREAK_ELIGIBILITY = 'view.breakeligibility', _("view break eligibility")
@@ -114,6 +122,8 @@ class Permission(TextChoices):
     VIEW_BREAK_CATEGORIES = 'view.breakcategories', _("view break categories")
     VIEW_SPEAKER_CATEGORIES = 'view.speakercategories', _("view speaker categories")
     EDIT_SPEAKER_CATEGORIES = 'edit.speakercategories', _("edit speaker categories")
+    VIEW_SPEAKER_ELIGIBILITY = 'view.speakereligibility', _("view speaker eligibility")
+    EDIT_SPEAKER_ELIGIBILITY = 'edit.speakereligibility', _("edit speaker eligibility")
     VIEW_BREAK_OVERVIEW = 'view.break.overview', _("view break overview")
     VIEW_BREAK = 'view.break', _("view breaks")
     GENERATE_BREAK = 'generate.break', _("generate all breaks")
@@ -124,8 +134,13 @@ class Permission(TextChoices):
     # need to get rid of generate private urls soons
     SEND_PRIVATE_URLS = 'send.privateurls', _("send private URLs")
 
+    VIEW_CHECKIN = 'view.checkin', _("view checkins")
     EDIT_PARTICIPANT_CHECKIN = 'edit.participantcheckin', _("edit participant check-in")
     EDIT_ROOM_CHECKIN = 'edit.roomcheckin', _("edit room check-in")
+
+    EDIT_ROUND = 'edit.round', _("edit round attributes")
+    DELETE_ROUND = 'delete.round', _("delete rounds")
+    CREATE_ROUND = 'add.round', _("create rounds")
 
 
 permission_type = Union[Permission, bool]

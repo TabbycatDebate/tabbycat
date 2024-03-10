@@ -1,6 +1,8 @@
 from dynamic_preferences.registries import global_preferences_registry
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
+from users.permissions import has_permission
+
 
 class APIEnabledPermission(BasePermission):
     message = "The API has been disabled on this site."
@@ -30,3 +32,25 @@ class PublicIfReleasedPermission(PublicPreferencePermission):
 class IsAdminOrReadOnly(BasePermission):
     def has_permission(self, request, view):
         return request.method in SAFE_METHODS or (request.user and request.user.is_staff)
+
+
+class PerTournamentPermissionRequired(BasePermission):
+    def get_required_permissions(self, view):
+        """
+        Given a model and an HTTP method, return the list of permission
+        codes that the user is required to have.
+        """
+        return ({
+            'list': view.list_permission,
+            'create': view.create_permission,
+            'retrieve': view.list_permission,
+            'update': view.update_permission,
+            'partial_update': view.update_permission,
+            'destroy': view.destroy_permission,
+            'delete_all': view.destroy_permission,
+            'add_blank': view.create_permission,
+        }).get(view.action, False)
+
+    def has_permission(self, request, view):
+        perm = self.get_required_permission(view, request.method)
+        return has_permission(request.user, perm, view.tournament)
