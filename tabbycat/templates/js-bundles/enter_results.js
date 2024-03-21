@@ -64,10 +64,10 @@ function refresh_totals(scoresheet) {
     var rank_elements = []
 
     for (var i = 0; i < 4; i++) {
-      totals_elements[i] = $('.' + String(i) + '_total', $scoresheet);
-      margins_elements[i] = $('.' + String(i) + '_margin', $scoresheet);
-      rank_elements[i] = $('.' + String(i) + '_rank', $scoresheet);
-      var team_total = sum($('.side-' + String(i) + '.score input', $scoresheet));
+      totals_elements[i] = $(`.${i}_total`, $scoresheet);
+      margins_elements[i] = $(`.${i}_margin`, $scoresheet);
+      rank_elements[i] = $(`.${i}_rank`, $scoresheet);
+      var team_total = sum($(`.side-${i}.score input`, $scoresheet));
       // Update totals scores only if both speaker scores have been entered
       if (team_total > 99) {
         total_scores[i] = team_total

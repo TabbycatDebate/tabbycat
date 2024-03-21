@@ -746,9 +746,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
             conflicts = [("secondary", _draw_flags_dict.get(flag, flag)) for flag in debate.flags]
             if not debate.is_bye:
                 conflicts += [("secondary", "%(team)s: %(flag)s" % {
-                            'team': self._team_short_name(debate.get_team(side)),
+                            'team': self._team_short_name(dt.team),
                             'flag': _draw_flags_dict.get(flag, flag),
-                        }) for side in self.tournament.sides for flag in debate.get_dt(side).flags]
+                        }) for dt in debate.debateteams for flag in dt.flags]
 
             if self.tournament.pref('avoid_team_history'):
                 history = debate.history
@@ -914,10 +914,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
             header = {'key': 'r%d' % round_seq, 'title': escape(round.abbreviation)}
             self.add_column(header, results)
 
-    def add_debate_results_columns(self, debates, iron=False):
+    def add_debate_results_columns(self, debates, iron=False, n_cols=None):
         all_sides_confirmed = all(debate.sides_confirmed for debate in debates)  # should already be fetched
+        n_cols = n_cols or len(self.tournament.sides)
         side_abbrs = {side: get_side_name(self.tournament, side, 'abbr')
-            for side in self.tournament.sides}
+            for side in range(n_cols)}
 
         results_data = []
         for debate in debates:
@@ -928,11 +929,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 cell['popover']['content'].append({'text': "<span class='%s'>%s</span>"
                         % ('text-info', _("Team was given a bye this round"))})
                 row.append(cell)
-                row += [{'text': self.BLANK_TEXT} for i in range(len(self.tournament.sides) - 1)]
+                row += [{'text': self.BLANK_TEXT} for i in range(n_cols - 1)]
                 results_data.append(row)
                 continue
 
-            for side in self.tournament.sides:
+            for side in range(n_cols):
+                if side >= len(debate.teams):
+                    row += [{'text': self.BLANK_TEXT} for i in range(n_cols - side)]
+                    break
+
                 debateteam = debate.get_dt(side)
                 team = debate.get_team(side)
 

@@ -148,10 +148,12 @@ class Debate(models.Model):
             dts = dts.select_related('team')
 
         self._teams = []
+        self._dts = []
         self._multiple_found = []
         self._team_properties = {}
 
         for dt in dts:
+            self._dts.append(dt)
             self._teams.append(dt.team)
             team_key = '%d_team' % dt.side
             dt_key = '%d_dt' % dt.side
@@ -183,6 +185,12 @@ class Debate(models.Model):
         if not hasattr(self, '_teams'):
             self._populate_teams()
         return self._teams
+
+    @property
+    def debateteams(self):
+        if not hasattr(self, '_teams'):
+            self._populate_teams()
+        return sorted(self._dts, key=lambda dt: dt.side)
 
     def debateteams_ordered(self):
         for side in self.round.tournament.sides:

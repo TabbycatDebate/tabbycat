@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.db import ProgrammingError
-from django.db.models import Count, Q
+from django.db.models import Count, Max, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
@@ -82,7 +82,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
         if self.tournament.pref('enable_postponements'):
             table.add_debate_postponement_column(draw)
         table.add_debate_venue_columns(draw, for_admin=True)
-        table.add_debate_results_columns(draw, iron=True)
+        table.add_debate_results_columns(draw, iron=True, n_cols=self._get_draw().aggregate(n=Max('debateteam__side'))['n']+1)
         table.add_debate_adjudicators_column(draw, show_splits=True, for_admin=True)
         return table
 
@@ -178,7 +178,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
 
         table = TabbycatTableBuilder(view=self, sort_key="venue")
         table.add_debate_venue_columns(debates)
-        table.add_debate_results_columns(debates)
+        table.add_debate_results_columns(debates, n_cols=debates.aggregate(n=Max('debateteam__side'))['n']+1)
         if not (self.tournament.pref('teams_in_debate') == 4 and self.round.is_break_round):
             table.add_debate_ballot_link_column(debates)
         table.add_debate_adjudicators_column(debates, show_splits=True)

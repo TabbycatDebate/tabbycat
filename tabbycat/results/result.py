@@ -841,6 +841,7 @@ class ConsensusDebateResult(BaseDebateResult):
         return super().is_valid() and self.scoresheet.is_valid()
 
     def get_scoresheet_class(self):
+        raise
         if len(self.sides) == 2:
             return super().get_scoresheet_class()
         elif len(self.sides) > 2:
@@ -963,7 +964,7 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
     def get_scoresheet_class(self):
         if len(self.sides) == 2:
             return super().get_scoresheet_class()
-        elif len(self.sides) > 4:
+        elif len(self.sides) > 2:
             return PolyScoresheet
 
     def load_scoresheets(self):
