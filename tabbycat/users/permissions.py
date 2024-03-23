@@ -172,11 +172,11 @@ def has_permission(user: 'settings.AUTH_USER_MODEL', permission: permission_type
 
     perm = (
         user.userpermission_set.filter(permission=permission, tournament=tournament).exists() or
-        user.membership_set.filter(group__permissions__contains=[permission]).exists()
+        user.membership_set.filter(group__permissions__contains=[permission], group__tournament=tournament).exists()
     )
-    cache.set("user_%d_%s_%s_permission" % (user.pk, tournament.slug, str(permission)), perm)
     if perm:
         user._permissions[tournament.slug].add(permission)
+        cache.set("user_%d_%s_%s_permission" % (user.pk, tournament.slug, str(permission)), perm)
     return perm
 
 
