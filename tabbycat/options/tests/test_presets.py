@@ -1,3 +1,4 @@
+from decimal import Decimal
 from unittest.mock import patch
 
 from django.test import TestCase
@@ -12,15 +13,15 @@ class TestPreset(PreferencesPreset):
     show_in_list = False
 
     # Scoring
-    scoring__score_min = 70
-    scoring__score_max = 80
+    scoring__score_min = Decimal('70')
+    scoring__score_max = Decimal('80')
 
 
 class TestPresets(TestCase):
     def set_up_tournament(self):
         tournament = Tournament.objects.create(slug="preset", name="Preset Testing")
-        tournament.preferences['scoring__score_min'] = 0
-        tournament.preferences['scoring__score_max'] = 100
+        tournament.preferences['scoring__score_min'] = Decimal('0')
+        tournament.preferences['scoring__score_max'] = Decimal('100')
         return tournament
 
     @patch('options.presets.all_presets', return_value=[TestPreset])
@@ -48,7 +49,7 @@ class TestPresets(TestCase):
         tournament = self.set_up_tournament()
         TestPreset.save(tournament)
 
-        for pref, new_val in [('scoring__score_min', 70), ('scoring__score_max', 80)]:
+        for pref, new_val in [('scoring__score_min', Decimal('70')), ('scoring__score_max', Decimal('80'))]:
             self.assertEqual(tournament.preferences[pref], new_val)
 
         tournament.delete()
@@ -58,7 +59,7 @@ class TestPresets(TestCase):
 
         form = TestPreset.get_form(tournament)
 
-        for pref, new_val in [('scoring__score_min', 70), ('scoring__score_max', 80)]:
+        for pref, new_val in [('scoring__score_min', Decimal('70')), ('scoring__score_max', Decimal('80'))]:
             self.assertTrue(pref in form.fields)
             self.assertEqual(form[pref].initial, new_val)
             self.assertEqual(form[pref].changed, True)
@@ -68,11 +69,11 @@ class TestPresets(TestCase):
     def test_can_save_preset_form(self):
         tournament = self.set_up_tournament()
 
-        form = TestPreset.get_form(tournament, data={'scoring__score_min': 70, 'scoring__score_max': 80})
+        form = TestPreset.get_form(tournament, data={'scoring__score_min': Decimal('70'), 'scoring__score_max': Decimal('80')})
         form.is_valid()
         form.update_preferences()
 
-        for pref, new_val in [('scoring__score_min', 70), ('scoring__score_max', 80)]:
+        for pref, new_val in [('scoring__score_min', Decimal('70')), ('scoring__score_max', Decimal('80'))]:
             self.assertEqual(tournament.preferences[pref], new_val)
 
         tournament.delete()

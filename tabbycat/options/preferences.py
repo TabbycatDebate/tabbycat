@@ -1,9 +1,11 @@
+from decimal import Decimal
+
 from django.core.validators import MinValueValidator, validate_slug
 from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 from dynamic_preferences.preferences import Section
 from dynamic_preferences.registries import global_preferences_registry
-from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, LongStringPreference, StringPreference
+from dynamic_preferences.types import BooleanPreference, ChoicePreference, DecimalPreference, FloatPreference, IntegerPreference, LongStringPreference, StringPreference
 
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
@@ -20,30 +22,30 @@ scoring = Section('scoring', verbose_name=_("Score Rules"))
 
 
 @tournament_preferences_registry.register
-class MinimumSpeakerScore(FloatPreference):
+class MinimumSpeakerScore(DecimalPreference):
     help_text = _("Minimum allowed score for substantive speeches")
     section = scoring
     name = 'score_min'
     verbose_name = _("Minimum speaker score")
-    default = 68.0
+    default = Decimal('68')
 
 
 @tournament_preferences_registry.register
-class MaximumSpeakerScore(FloatPreference):
+class MaximumSpeakerScore(DecimalPreference):
     verbose_name = _("Maximum speaker score")
     help_text = _("Maximum allowed score for substantive speeches")
     section = scoring
     name = 'score_max'
-    default = 82.0
+    default = Decimal('82')
 
 
 @tournament_preferences_registry.register
-class SpeakerScoreStep(FloatPreference):
+class SpeakerScoreStep(DecimalPreference):
     verbose_name = _("Speaker score step")
     help_text = _("Score steps allowed for substantive speeches, e.g. full points (1) or half points (0.5)")
     section = scoring
     name = 'score_step'
-    default = 1.0
+    default = Decimal('1')
 
 
 @tournament_preferences_registry.register
@@ -57,30 +59,30 @@ class MaximumMargin(FloatPreference):
 
 
 @tournament_preferences_registry.register
-class MinimumReplyScore(FloatPreference):
+class MinimumReplyScore(DecimalPreference):
     help_text = _("Minimum allowed score for reply speeches")
     verbose_name = _("Minimum reply score")
     section = scoring
     name = 'reply_score_min'
-    default = 34.0
+    default = Decimal('34.0')
 
 
 @tournament_preferences_registry.register
-class MaximumReplyScore(FloatPreference):
+class MaximumReplyScore(DecimalPreference):
     help_text = _("Maximum allowed score for reply speeches")
     verbose_name = _("Maximum reply score")
     section = scoring
     name = 'reply_score_max'
-    default = 41.0
+    default = Decimal('41.0')
 
 
 @tournament_preferences_registry.register
-class ReplyScoreStep(FloatPreference):
+class ReplyScoreStep(DecimalPreference):
     help_text = _("Score steps allowed for reply speeches, e.g. full points (1) or half points (0.5)")
     verbose_name = _("Reply score step")
     section = scoring
     name = 'reply_score_step'
-    default = 0.5
+    default = Decimal('0.5')
 
 
 @tournament_preferences_registry.register
