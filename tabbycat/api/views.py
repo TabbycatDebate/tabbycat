@@ -14,6 +14,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework.fields import DateTimeField
 from rest_framework.generics import GenericAPIView, get_object_or_404, RetrieveUpdateAPIView
 from rest_framework.mixins import ListModelMixin
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
@@ -1225,6 +1226,7 @@ class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
 )
 class UserViewSet(AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.UserSerializer
+    permission_classes = [IsAdminUser]
 
     def get_queryset(self):
         qs = get_user_model().objects.prefetch_related('membership_set__group__tournament', 'userpermission_set__tournament')

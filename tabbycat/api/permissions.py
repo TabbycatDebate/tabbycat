@@ -35,7 +35,7 @@ class IsAdminOrReadOnly(BasePermission):
 
 
 class PerTournamentPermissionRequired(BasePermission):
-    def get_required_permissions(self, view):
+    def get_required_permission(self, view):
         """
         Given a model and an HTTP method, return the list of permission
         codes that the user is required to have.
@@ -52,5 +52,5 @@ class PerTournamentPermissionRequired(BasePermission):
         }).get(view.action, False)
 
     def has_permission(self, request, view):
-        perm = self.get_required_permission(view, request.method)
+        perm = self.get_required_permission(view)
         return has_permission(request.user, perm, view.tournament)
