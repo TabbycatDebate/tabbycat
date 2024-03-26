@@ -15,6 +15,5 @@ def on_change(sender, instance: TournamentPreferenceModel, **kwargs):
     else:
         previous = TournamentPreferenceModel.objects.get(id=instance.id)
         if instance.name == 'all_results_released' and previous.value is False and instance.value is True:
-            print("MYTAG setting published time to: %s" % instance)
             instance.instance.published_time = now()
             instance.instance.save()
