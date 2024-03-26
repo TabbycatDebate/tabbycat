@@ -65,6 +65,10 @@ urlpatterns = [
                         name='api-feedback-detail'),
                 ])),
 
+                path('/checkins',
+                    views.CheckinViewSet.as_view({'get': 'list', 'put': 'put', 'patch': 'patch', 'post': 'post'}),
+                    name='api-checkins-list'),
+
                 path('/rounds', include([
                     path('',
                         views.RoundViewSet.as_view(list_methods),
