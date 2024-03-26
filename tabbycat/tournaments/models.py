@@ -29,6 +29,7 @@ def validate_tournament_slug(value):
 
 
 class Tournament(models.Model):
+    published_time = models.DateTimeField(null=True, blank=True)
     name = models.CharField(max_length=100,
         verbose_name=_("name"),
         help_text=_("The full name, e.g. \"Australasian Intervarsity Debating Championships 2016\""))
