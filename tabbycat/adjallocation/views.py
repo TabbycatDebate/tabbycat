@@ -128,9 +128,10 @@ class EditPanelAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
                                             context={'round': self.round})
 
 
-class PanelAdjudicatorsIndexView(TemplateView, AdministratorMixin):
+class PanelAdjudicatorsIndexView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = "preformed_index.html"
     page_title = gettext_lazy("Preformed Panels")
+    view_permission = True
 
 
 # ==============================================================================

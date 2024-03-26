@@ -154,6 +154,7 @@ class BaseCodeNamesListView(TournamentMixin, VueTableTemplateView):
 
 class AdminCodeNamesListView(AdministratorMixin, BaseCodeNamesListView):
     template_name = 'participants_list.html'
+    view_permission = Permission.VIEW_DECODED_TEAMS
 
 
 class AssistantCodeNamesListView(AssistantMixin, BaseCodeNamesListView):
@@ -287,6 +288,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
 
 class TeamRecordView(AdministratorMixin, BaseTeamRecordView):
     admin = True
+    view_permission = Permission.VIEW_TEAMS
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related(
@@ -298,6 +300,7 @@ class TeamRecordView(AdministratorMixin, BaseTeamRecordView):
 
 class AdjudicatorRecordView(AdministratorMixin, BaseAdjudicatorRecordView):
     admin = True
+    view_permission = Permission.VIEW_ADJUDICATORS
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related(

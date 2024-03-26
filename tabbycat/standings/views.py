@@ -37,6 +37,7 @@ logger = logging.getLogger(__name__)
 class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
 
     template_name = 'standings_index.html'
+    view_permission = Permission.VIEW_STANDINGS_OVERVIEW
 
     def get_context_data(self, **kwargs):
         speaks = SpeakerScore.objects.filter(
@@ -322,6 +323,7 @@ class BaseSubstantiveSpeakerStandingsView(BaseSpeakerStandingsView):
 
 class SpeakerStandingsView(AdministratorMixin, BaseSubstantiveSpeakerStandingsView):
     template_name = 'speaker_standings.html'  # add info alerts
+    view_permission = Permission.VIEW_SPEAKERSSTANDINGS
 
 
 class PublicSpeakerTabView(PublicTabMixin, BaseSubstantiveSpeakerStandingsView):
@@ -348,7 +350,7 @@ class BaseSpeakerCategoryStandingsView(SingleObjectFromTournamentMixin, BaseSubs
 
 
 class SpeakerCategoryStandingsView(AdministratorMixin, BaseSpeakerCategoryStandingsView):
-    pass
+    view_permission = Permission.VIEW_SPEAKERSSTANDINGS
 
 
 class PublicSpeakerCategoryTabView(PublicTabMixin, BaseSpeakerCategoryStandingsView):
@@ -404,6 +406,7 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
 
 class ReplyStandingsView(AdministratorMixin, BaseReplyStandingsView):
     template_name = 'reply_standings.html'  # add an info alert
+    view_permission = Permission.VIEW_REPLIESSTANDINGS
 
 
 class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
@@ -484,10 +487,10 @@ class BaseTeamStandingsView(BaseStandingsView):
 
 
 class TeamStandingsView(AdministratorMixin, BaseTeamStandingsView):
-    view_permission = Permission.VIEW_TEAMSTANDINGS
     """Superuser team standings view."""
     template_name = 'team_standings.html'  # add info alerts
     rankings = ('rank',)
+    view_permission = Permission.VIEW_TEAMSTANDINGS
 
     def show_ballots(self):
         return True
@@ -528,6 +531,7 @@ class BaseBreakCategoryStandingsView(SingleObjectFromTournamentMixin, BaseTeamSt
 class BreakCategoryStandingsView(AdministratorMixin, BaseBreakCategoryStandingsView):
     """Superuser team standings view for a break category."""
     rankings = ('rank',)
+    view_permission = Permission.VIEW_TEAMSTANDINGS
 
     def show_ballots(self):
         return True

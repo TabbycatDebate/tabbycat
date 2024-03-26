@@ -74,6 +74,7 @@ class Permission(TextChoices):
     MARK_BALLOTSUBMISSIONS = 'mark.ballotsubmission', _("confirm/discard any ballot")
     MARK_OTHERS_BALLOTSUBMISSIONS = 'mark.ballotsubmission.others', _("confirm/discard others' ballots")
     VIEW_BALLOTSUBMISSION_GRAPH = 'view.ballotsubmission.graph', _("view ballot graph")
+    VIEW_RESULTS = 'view.results', _("view results entry page")
 
     VIEW_MOTION = 'view.roundmotion', _("view motion per round")
     EDIT_MOTION = 'edit.roundmotion', _("edit motion per round")
@@ -83,6 +84,7 @@ class Permission(TextChoices):
     UNRELEASE_MOTION = 'unrelease.motion', _("unrelease motion to public")
     EDIT_STARTTIME = 'edit.starttime', _("add debate start time")
     VIEW_DRAW = 'view.draw', _("view draws")
+
     VIEW_BRIEFING_DRAW = 'view.briefingdraw', _("view draws (for the briefing room)")
     DISPLAY_MOTION = 'display.motion', _("display motion (for the briefing room)")
 
@@ -141,6 +143,14 @@ class Permission(TextChoices):
     EDIT_ROUND = 'edit.round', _("edit round attributes")
     DELETE_ROUND = 'delete.round', _("delete rounds")
     CREATE_ROUND = 'add.round', _("create rounds")
+
+    VIEW_EMAIL_STATUSES = 'view.emails', _("view email statuses")
+    SEND_EMAILS = 'send.emails', _("send participants email messages")
+
+    EXPORT_XML = 'export.xml', _("export DebateXML")
+
+    VIEW_SETTINGS = 'view.settings', _("view settings")
+    EDIT_SETTINGS = 'edit.settings', _("edit settings")
 
 
 permission_type = Union[Permission, bool]

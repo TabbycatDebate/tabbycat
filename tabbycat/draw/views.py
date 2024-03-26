@@ -251,8 +251,6 @@ class BriefingRoomDrawTableMixin:
     """Mixin for views that get projected in the briefing room, to be accessed
     only by admins and assistants."""
 
-    view_permission = Permission.VIEW_BRIEFING_DRAW
-
     def get_context_data(self, **kwargs):
         kwargs['no_popovers'] = True
         return super().get_context_data(**kwargs)
@@ -285,22 +283,22 @@ class BriefingRoomDrawByTeamTableMixin(BriefingRoomDrawTableMixin):
 
 class AdminDrawDisplayForSpecificRoundByVenueView(AdministratorMixin,
         BriefingRoomDrawByVenueTableMixin, BaseDisplayDrawForSpecificRoundTableView):
-    pass
+    view_permission = Permission.VIEW_BRIEFING_DRAW
 
 
 class AdminDrawDisplayForSpecificRoundByTeamView(AdministratorMixin,
         BriefingRoomDrawByTeamTableMixin, BaseDisplayDrawForSpecificRoundTableView):
-    pass
+    view_permission = Permission.VIEW_BRIEFING_DRAW
 
 
 class AdminDrawDisplayForCurrentRoundsByVenueView(AdministratorMixin,
         BriefingRoomDrawByVenueTableMixin, BaseDisplayDrawForCurrentRoundsTableView):
-    pass
+    view_permission = Permission.VIEW_BRIEFING_DRAW
 
 
 class AdminDrawDisplayForCurrentRoundsByTeamView(AdministratorMixin,
         BriefingRoomDrawByTeamTableMixin, BaseDisplayDrawForCurrentRoundsTableView):
-    pass
+    view_permission = Permission.VIEW_BRIEFING_DRAW
 
 
 class AssistantDrawDisplayForSpecificRoundByVenueView(OptionalAssistantTournamentPageMixin,
@@ -379,6 +377,7 @@ class BaseDrawDisplayIndexView(AdminDrawUtilitiesMixin, RoundMixin, TemplateView
 
 class AdminDrawDisplayView(AdministratorMixin, BaseDrawDisplayIndexView):
     template_name = 'draw_display_admin.html'
+    view_permission = True
 
 
 class AssistantDrawDisplayView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDrawDisplayIndexView):
@@ -657,6 +656,7 @@ class PositionBalanceReportView(RoundMixin, AdministratorMixin, VueTableTemplate
 
 class DrawStatusEdit(LogActionMixin, AdministratorMixin, RoundMixin, PostOnlyRedirectView):
     round_redirect_pattern_name = 'draw'
+    view_permission = Permission.GENERATE_DEBATE
 
 
 class CreateDrawView(DrawStatusEdit):
@@ -743,6 +743,7 @@ class DrawRegenerateView(DrawStatusEdit):
 
 class ConfirmDrawRegenerationView(AdministratorMixin, TemplateView):
     template_name = "draw_confirm_regeneration.html"
+    view_permission = Permission.GENERATE_DEBATE
 
 
 class DrawReleaseView(DrawStatusEdit):

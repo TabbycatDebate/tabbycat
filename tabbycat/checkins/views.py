@@ -38,6 +38,7 @@ class CheckInPreScanView(TournamentMixin, TemplateView):
 
 class AdminCheckInPreScanView(AdministratorMixin, CheckInPreScanView):
     scan_view = 'admin-checkin-scan'
+    edit_permission = Permission.EDIT_PARTICIPANT_CHECKIN
 
 
 class AssistantCheckInPreScanView(AssistantMixin, CheckInPreScanView):
@@ -107,6 +108,8 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
 class AdminCheckInPeopleStatusView(AdministratorMixin, CheckInPeopleStatusView):
     scan_view = 'admin-checkin-scan'
+    view_permission = Permission.VIEW_CHECKIN
+    edit_permission = Permission.EDIT_PARTICIPANT_CHECKIN
 
 
 class AssistantCheckInPeopleStatusView(AssistantMixin, CheckInPeopleStatusView):
@@ -122,8 +125,6 @@ class CheckInVenuesStatusView(BaseCheckInStatusView):
     page_emoji = '👜'
     page_title = _("Rooms' Check-In Statuses")
     window_preference = 'checkin_window_venues'
-
-    edit_permission = Permission.EDIT_ROOM_CHECKIN
 
     def get_context_data(self, **kwargs):
         venues = []
@@ -143,6 +144,8 @@ class CheckInVenuesStatusView(BaseCheckInStatusView):
 
 class AdminCheckInVenuesStatusView(AdministratorMixin, CheckInVenuesStatusView):
     scan_view = 'admin-checkin-scan'
+    view_permission = Permission.VIEW_CHECKIN
+    edit_permission = Permission.EDIT_ROOM_CHECKIN
 
 
 class AssistantCheckInVenuesStatusView(AssistantMixin, CheckInVenuesStatusView):
@@ -197,7 +200,7 @@ class CheckInIdentifiersView(SegregatedCheckinsMixin, TemplateView):
 
 
 class AdminCheckInIdentifiersView(AdministratorMixin, CheckInIdentifiersView):
-    pass
+    view_permission = Permission.VIEW_CHECKIN
 
 
 class AssistantCheckInIdentifiersView(AssistantMixin, CheckInIdentifiersView):
@@ -206,6 +209,7 @@ class AssistantCheckInIdentifiersView(AssistantMixin, CheckInIdentifiersView):
 
 class AdminCheckInGenerateView(AdministratorMixin, LogActionMixin,
                                TournamentMixin, PostOnlyRedirectView):
+    edit_permission = Permission.VIEW_CHECKIN
 
     def get_action_log_type(self):
         if self.kwargs["kind"] == "speakers":
@@ -252,7 +256,7 @@ class CheckInPrintablesView(SegregatedCheckinsMixin, TemplateView):
 
 
 class AdminCheckInPrintablesView(AdministratorMixin, CheckInPrintablesView):
-    pass
+    view_permission = Permission.VIEW_CHECKIN
 
 
 class AssistantCheckInPrintablesView(AssistantMixin, CheckInPrintablesView):

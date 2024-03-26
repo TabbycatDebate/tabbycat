@@ -37,6 +37,7 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
     template_name = 'availability_index.html'
     page_title = gettext_lazy("Availability")
     page_emoji = '📍'
+    view_permission = Permission.VIEW_ROUNDAVAILABILITIES
 
     def get_context_data(self, **kwargs):
         if self.round.prev:
@@ -291,6 +292,7 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
 class BaseBulkActivationView(RoundMixin, AdministratorMixin, PostOnlyRedirectView):
 
     round_redirect_pattern_name = 'availability-index'
+    edit_permission = Permission.EDIT_ROUNDAVAILABILITIES
 
     def post(self, request, *args, **kwargs):
         try:
@@ -343,6 +345,7 @@ class CheckInAllFromPreviousRoundView(BaseBulkActivationView):
 # ==============================================================================
 
 class BaseAvailabilityUpdateView(RoundMixin, AdministratorMixin, LogActionMixin, View):
+    edit_permission = Permission.EDIT_ROUNDAVAILABILITIES
 
     def post(self, request, *args, **kwargs):
         body = self.request.body.decode('utf-8')

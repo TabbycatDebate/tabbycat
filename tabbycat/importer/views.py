@@ -277,9 +277,11 @@ class TournamentImportArchiveView(AdministratorMixin, FormView):
 class ExportArchiveIndexView(AdministratorMixin, TournamentMixin, TemplateView):
 
     template_name = 'archive_export_index.html'
+    view_permission = Permission.EXPORT_XML
 
 
 class ExportArchiveAllView(AdministratorMixin, TournamentMixin, View):
+    view_permission = Permission.EXPORT_XML
 
     def get(self, request, *args, **kwargs):
         response = HttpResponse(self.get_xml(), content_type='text/xml; charset=utf-8')

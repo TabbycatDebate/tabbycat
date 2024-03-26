@@ -53,6 +53,7 @@ class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateV
 
 class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, ModelFormSetView):
     view_permission = Permission.VIEW_ROOMCATEGORIES
+    edit_permission = Permission.EDIT_ROOMCATEGORIES
     template_name = 'venue_categories_edit.html'
     formset_model = VenueCategory
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CATEGORIES_EDIT
@@ -101,6 +102,7 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
 
 class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, ModelFormSetView):
     view_permission = Permission.VIEW_ROOMCONSTRAINTS
+    edit_permission = Permission.EDIT_ROOMCONSTRAINTS
     template_name = 'venue_constraints_edit.html'
     formset_model = VenueConstraint
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CONSTRAINTS_EDIT

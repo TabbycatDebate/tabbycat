@@ -17,6 +17,7 @@ from participants.models import Adjudicator, Speaker
 from results.utils import side_and_position_names
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 RoundMixin, TournamentMixin)
+from users.permissions import Permission
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from venues.serializers import VenueSerializer
@@ -120,7 +121,7 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
 
 
 class AdminPrintFeedbackFormsView(AdministratorMixin, BasePrintFeedbackFormsView):
-    pass
+    view_permission = Permission.VIEW_DEBATE
 
 
 class AssistantPrintFeedbackFormsView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BasePrintFeedbackFormsView):
@@ -221,7 +222,7 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
 
 
 class AdminPrintScoresheetsView(AdministratorMixin, BasePrintScoresheetsView):
-    pass
+    view_permission = Permission.VIEW_DEBATE
 
 
 class AssistantPrintScoresheetsView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BasePrintScoresheetsView):
@@ -229,6 +230,7 @@ class AssistantPrintScoresheetsView(CurrentRoundMixin, OptionalAssistantTourname
 
 
 class BasePrintableRandomisedURLs(TournamentMixin, AdministratorMixin, TemplateView):
+    view_permission = Permission.VIEW_PRIVATE_URLS
 
     template_name = 'randomised_url_sheets.html'
 

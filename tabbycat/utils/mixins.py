@@ -61,6 +61,7 @@ class AdministratorMixin(UserPassesTestMixin, ContextMixin):
 
     def get_context_data(self, **kwargs):
         kwargs["user_role"] = self.view_role
+        kwargs['can_edit'] = has_permission(self.request.user, self.get_edit_permission(), self.tournament) if hasattr(self, 'tournament') else None
         return super().get_context_data(**kwargs)
 
     def get_view_permission(self) -> Optional['permission_type']:
@@ -70,6 +71,8 @@ class AdministratorMixin(UserPassesTestMixin, ContextMixin):
         return self.edit_permission
 
     def test_func(self) -> bool:
+        if not hasattr(self, 'tournament'):
+            return self.request.user.is_superuser
         if self.request.method == 'GET' and self.get_view_permission() is not None:
             return has_permission(self.request.user, self.get_view_permission(), self.tournament)
         if self.request.method in ['POST', 'PUT'] and self.get_edit_permission() is not None:
