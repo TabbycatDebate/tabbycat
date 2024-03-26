@@ -10,5 +10,6 @@ class OptionsConfig(AppConfig):
     verbose_name = _("Tournament Options")
 
     def ready(self):
+        from . import signals  # noqa: F401
         TournamentPreferenceModel = self.get_model('TournamentPreferenceModel')  # noqa: N806
         preference_models.register(TournamentPreferenceModel, tournament_preferences_registry)
