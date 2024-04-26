@@ -48,6 +48,14 @@ SIDE_NAMES = {
         "0_abbr": _("App"),
         "1_abbr": _("Res"),
     },
+    '1-2': {
+        '0_full': '1',
+        '1_full': '2',
+        "0_team": _("1st team"),
+        "1_team": _("2nd team"),
+        "0_abbr": '1',
+        "1_abbr": '2',
+    },
 }
 
 BP_SIDE_NAMES = {  # stop-gap before this system gets refactored
@@ -108,7 +116,7 @@ def get_side_name(tournament, side: int, name_type) -> str:
     elif tournament is None or tournament.pref('teams_in_debate') == 2:
         names = SIDE_NAMES.get(tournament.pref('side_names'), SIDE_NAMES['aff-neg'])
         return force_str(names["%d_%s" % (side, name_type)])
-    elif tournament.pref('teams_in_debate') == 4:
+    elif tournament.pref('teams_in_debate') == 4 and tournament.pref('side_names') != '1-2':
         return force_str(BP_SIDE_NAMES.get("%d_%s" % (side, name_type), '%d' % (side + 1)))
     else:
         return gettext('Team %d') % (side + 1)
