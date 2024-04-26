@@ -25,7 +25,7 @@
         <div slot="teams" :class="[sides.count > 2 ? 'flex-36' : 'flex-52',
                                    'flex-truncate border-right d-flex flex-nowrap']">
 
-          <droppable-item v-for="(team, side) in allDebatesOrPanels[debate.id].teams" :handle-drop="moveTeam" :key="team.id"
+          <droppable-item v-for="(team, side) in allDebatesOrPanels[debate.id].teams" :handle-drop="moveTeam" :key="side"
                           :drop-context="{ 'assignment': debate.id, 'position': side }"
                           class="flex-5 flex-truncate">
             <draggable-team v-if="team" :item="allTeams[team]" class="flex-fill"

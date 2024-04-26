@@ -195,7 +195,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         else:
             self.private_url = kwargs.get('private_url', False)
 
-        if self.tournament.pref('teams_in_debate') == 4:
+        if self.tournament.pref('teams_in_debate') > 2:
             self._result_cell = self._result_cell_bp
         else:
             self._result_cell = self._result_cell_two

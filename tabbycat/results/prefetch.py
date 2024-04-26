@@ -1,4 +1,5 @@
 """Functions that prefetch data for efficiency."""
+from itertools import groupby
 
 from adjallocation.models import DebateAdjudicator
 from checkins.utils import get_checkins
@@ -89,7 +90,6 @@ def populate_results(ballotsubs, tournament=None):
     if tournament is None:
         tournament = Tournament.objects.get(round__debate__ballotsubmission=ballotsubs[0])
     positions = tournament.positions
-    sides = tournament.sides
     ballotsubs = list(ballotsubs)  # set ballotsubs in stone to avoid race conditions in later queries
 
     results_by_debate_id = {}
@@ -107,8 +107,9 @@ def populate_results(ballotsubs, tournament=None):
     # Populate debateteams (load_debateteams)
     debateteams = DebateTeam.objects.filter(
         debate__ballotsubmission__in=ballotsubs,
-        side__in=sides,
-    ).select_related('team', 'team__tournament').distinct()
+    ).select_related('team', 'team__tournament').order_by('debate_id').distinct()
+
+    nsides_per_debate = {d_id: max(*[dt.side for dt in dts]) + 1 for d_id, dts in groupby(debateteams, key=lambda dt: dt.debate_id)}
 
     for dt in debateteams:
         for result in results_by_debate_id[dt.debate_id]:
@@ -117,7 +118,6 @@ def populate_results(ballotsubs, tournament=None):
     # Populate speaker positions (load_speakers)
     speakerscores = SpeakerScore.objects.filter(
         ballot_submission__in=ballotsubs,
-        debate_team__side__in=sides,
         position__in=positions,
     ).select_related('speaker', 'speaker__team__tournament', 'debate_team')
 
@@ -132,7 +132,6 @@ def populate_results(ballotsubs, tournament=None):
                 result.set_speaker_rank(ss.debate_team.side, ss.position, ss.rank)
 
     # Populate scoresheets (load_scoresheets)
-
     debateadjs = DebateAdjudicator.objects.filter(
         debate__ballotsubmission__in=ballotsubs,
     ).exclude(
@@ -143,11 +142,10 @@ def populate_results(ballotsubs, tournament=None):
         for result in results_by_debate_id[da.debate_id]:
             if result.is_voting:
                 result.debateadjs[da.adjudicator] = da
-                result.scoresheets[da.adjudicator] = result.scoresheet_class(positions)
+                result.scoresheets[da.adjudicator] = result.scoresheet_class(positions, sides=range(nsides_per_debate[da.debate_id]))
 
     ssbas = SpeakerScoreByAdj.objects.filter(
         ballot_submission__in=ballotsubs,
-        debate_team__side__in=sides,
         position__in=positions,
     ).select_related('debate_adjudicator__adjudicator__institution', 'debate_team')
 
@@ -160,7 +158,6 @@ def populate_results(ballotsubs, tournament=None):
     # Populate advancing (load_advancing)
     teamscores = TeamScore.objects.filter(
         ballot_submission__in=ballotsubs,
-        debate_team__side__in=sides,
     ).select_related('debate_team')
 
     for ts in teamscores:
@@ -171,7 +168,6 @@ def populate_results(ballotsubs, tournament=None):
     # Populate advancing (load_advancing)
     teamscoresbyadj = TeamScoreByAdj.objects.filter(
         ballot_submission__in=ballotsubs,
-        debate_team__side__in=sides,
     ).select_related('debate_team')
 
     for tsba in teamscoresbyadj:

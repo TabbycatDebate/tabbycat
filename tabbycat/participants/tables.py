@@ -23,7 +23,7 @@ class TeamResultTableBuilder(TabbycatTableBuilder):
             if teamscore.debate_team.debate.round.is_break_round:
                 data.append("—")
             else:
-                cumul += teamscore.points * teamscore.debate_team.debate.round.weight
+                cumul += (teamscore.points or 0) * teamscore.debate_team.debate.round.weight
                 data.append(cumul)
 
         if self.tournament.pref('teams_in_debate') == 4:

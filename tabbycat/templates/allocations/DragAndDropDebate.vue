@@ -48,7 +48,7 @@
     <slot name="teams">
       <div class="teams-list" :style="{ flex: (maxTeams + maxTeams % 2) * 3, 'flex-direction': 'row !important', 'flex-wrap': 'wrap' }" v-if="debateOrPanel.teams">
         <div :class="['d-flex flex-fill flex-truncate align-items-center']" v-for="team in debateOrPanel.teams">
-          <inline-team :debate-id="debateOrPanel.id" :is-elimination="isElimination" :team="team" :key="team.id"/>
+          <inline-team :debate-id="debateOrPanel.id" :is-elimination="isElimination" :team="team" :key="team.id" v-if="team !== null"/>
         </div>
       </div>
     </slot>

@@ -71,11 +71,7 @@ class Debate(models.Model):
 
     def __str__(self):
         description = "[{}/{}/{}] ".format(self.round.tournament.slug, self.round.abbreviation, self.id)
-        try:
-            description += self.matchup
-        except Exception:
-            logger.exception("Error rendering Debate.matchup in Debate.__str__")
-            description += "<error showing teams>"
+        description += self.matchup
         return description
 
     @property
@@ -99,11 +95,11 @@ class Debate(models.Model):
             # Translators: This goes between teams in a debate, e.g. "Auckland 1
             # vs Vic Wellington 1". Mind the leading and trailing spaces.
             return gettext(" vs ").join(self.get_team(side).short_name for side in sides)
-        except (ObjectDoesNotExist, MultipleObjectsReturned):
+        except (ObjectDoesNotExist, MultipleObjectsReturned, KeyError):
             return self._teams_and_sides_display()
 
     def _teams_and_sides_display(self):
-        return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_side_display())
+        return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_side_name())
                 for dt in self.debateteam_set.all()])
 
     @property
@@ -117,7 +113,7 @@ class Debate(models.Model):
             sides = self.round.tournament.sides
             return gettext(" vs ").join(self.get_team(side).code_name for side in sides)
         except (IndexError, ObjectDoesNotExist, MultipleObjectsReturned):
-            return ", ".join(["%s (%s)" % (dt.team.code_name, dt.get_side_display())
+            return ", ".join(["%s (%s)" % (dt.team.code_name, dt.get_side_name())
                 for dt in self.debateteam_set.all()])
 
     # --------------------------------------------------------------------------

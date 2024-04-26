@@ -201,7 +201,7 @@ class PolyScoresheet(ScoresMixin, BasePolyScoresheet):
 
     def ranked_sides(self):
         if not self.is_valid():
-            return None
+            return []
         total_by_side = [(self.get_total(side), side) for side in self.sides]
         total_by_side.sort(reverse=True)
         return [side for total, side in total_by_side]

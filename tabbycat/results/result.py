@@ -77,7 +77,7 @@ def get_result_class(ballotsub, round=None, tournament=None):
         if ((teams_in_debate > 2 or scores_in_debate == 'prelim') and round.is_break_round) or scores_in_debate == 'never':
             return ConsensusDebateResult
         return ConsensusDebateResultWithScores
-    elif ballots_per_debate == 'per-adj' and teams_in_debate == 2:
+    elif ballots_per_debate == 'per-adj' and (teams_in_debate == 2 or tournament.pref('margin_includes_dissenters')):
         if scores_in_debate == 'prelim' and round.is_break_round or scores_in_debate == 'never':
             return DebateResultByAdjudicator
         return DebateResultByAdjudicatorWithScores
@@ -170,10 +170,8 @@ class BaseDebateResult:
         self.tournament = self.debate.round.tournament
         self.sides = self.tournament.sides
 
-        # Needed here (not in ScoresMixin) as is called by `.get_scoresheet_class()`
+        # Needed here (not in ScoresMixin) as is called by `.scoresheet_class`
         self.winners_declared = self.tournament.pref('winners_in_ballots')
-
-        self.scoresheet_class = self.get_scoresheet_class()
 
         if load:
             if self.ballotsub.id is None:
@@ -189,7 +187,8 @@ class BaseDebateResult:
     # Management methods
     # --------------------------------------------------------------------------
 
-    def get_scoresheet_class(self):
+    @property
+    def scoresheet_class(self):
         return ResultOnlyScoresheet
 
     def full_load(self):
@@ -407,7 +406,6 @@ class DebateResultByAdjudicator(BaseDebateResult):
         super().assert_loaded()
         assert set(self.debate.adjudicators.voting()) == set(self.scoresheets)
         assert set(self.debateadjs) == set(self.scoresheets)
-        assert self.sides == [DebateSide.AFF, DebateSide.NEG], "VotingDebateResult can only be used for two-team formats."
 
     def is_complete(self):
         return super().is_complete() and self.debate.adjudicators.has_chair and all(sheet.is_complete() for sheet in self.scoresheets.values())
@@ -433,17 +431,16 @@ class DebateResultByAdjudicator(BaseDebateResult):
         self.debateadjs_query = self.debate.debateadjudicator_set.exclude(
             type=DebateAdjudicator.TYPE_TRAINEE).select_related('adjudicator', 'adjudicator__tournament')
         self.debateadjs = {da.adjudicator: da for da in self.debateadjs_query}
-        self.scoresheets = {adj: self.scoresheet_class(
+        self.scoresheets = {adj: self.scoresheet_class(sides=self.sides,
             positions=getattr(self, 'positions', None)) for adj in self.debateadjs.keys()
         }
 
     def load_scoresheets(self):
-        if not self.get_scoresheet_class().uses_declared_winners:
+        if not self.scoresheet_class.uses_declared_winners:
             return  # No need to add winners when already determined through scores
 
         teamscorebyadjs = self.ballotsub.teamscorebyadj_set.filter(
             debate_adjudicator__in=self.debateadjs_query,
-            debate_team__side__in=self.sides,
             win=True,
         ).select_related('debate_adjudicator__adjudicator', 'debate_team')
 
@@ -455,7 +452,7 @@ class DebateResultByAdjudicator(BaseDebateResult):
         for result in results:
             adj = result.ballotsub.participant_submitter.adjudicator
             errors.extend(self.merge_speaker_result(result, adj))
-            if self.get_scoresheet_class().uses_declared_winners:
+            if self.scoresheet_class.uses_declared_winners:
                 self.set_winners(adj, result.scoresheet.winners())
 
         for error in errors:
@@ -512,7 +509,7 @@ class DebateResultByAdjudicator(BaseDebateResult):
         def wrap(func):
             @wraps(func)
             def wrapped(self, *args, **kwargs):
-                if not self.is_complete():
+                if not self.is_complete() or len(self.sides) > 2:
                     return default
                 if not self._decision_calculated:
                     self._calculate_decision()
@@ -621,7 +618,8 @@ class DebateResultByAdjudicator(BaseDebateResult):
 
         Raises a ResultError if the scoresheet is invalid."""
 
-        self._calculate_decision()
+        if not self._decision_calculated and len(self.sides) == 2:
+            self._calculate_decision()
         majority = self.majority_adjudicators()
         for adj, adjtype in self.debate.adjudicators.with_positions():
             split = adj not in majority and adjtype != AdjudicatorAllocation.POSITION_TRAINEE
@@ -663,7 +661,10 @@ class DebateResultWithScoresMixin:
     # Management methods
     # --------------------------------------------------------------------------
 
-    def get_scoresheet_class(self):
+    @property
+    def scoresheet_class(self):
+        if len(self.sides) > 4:
+            return PolyScoresheet
         return {
             'none': HighPointWinsRequiredScoresheet,
             'high-points': HighPointWinsRequiredScoresheet,
@@ -840,10 +841,11 @@ class ConsensusDebateResult(BaseDebateResult):
     def is_valid(self):
         return super().is_valid() and self.scoresheet.is_valid()
 
-    def get_scoresheet_class(self):
+    @property
+    def scoresheet_class(self):
         raise
         if len(self.sides) == 2:
-            return super().get_scoresheet_class()
+            return super().scoresheet_class
         elif len(self.sides) > 2:
             return PolyEliminationScoresheet
 
@@ -911,7 +913,7 @@ class ConsensusDebateResult(BaseDebateResult):
         errors = []
         for result in results:
             errors.extend(self.merge_speaker_result(result))
-            if self.get_scoresheet_class().uses_declared_winners:
+            if self.scoresheet_class.uses_declared_winners:
                 if self.get_winner() is None:
                     self.set_winners(result.scoresheet.winners())
                 elif self.get_winner() != result.scoresheet.winners():
@@ -961,9 +963,10 @@ class ConsensusDebateResult(BaseDebateResult):
 class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDebateResult):
     """Consensus debate result including speaker scores"""
 
-    def get_scoresheet_class(self):
+    @property
+    def scoresheet_class(self):
         if len(self.sides) == 2:
-            return super().get_scoresheet_class()
+            return super().scoresheet_class
         elif len(self.sides) > 2:
             return PolyScoresheet
 
@@ -1073,6 +1076,8 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
     # --------------------------------------------------------------------------
 
     def teamscorebyadj_field_margin(self, adj, side):
+        if len(self.sides) > 2:
+            return None
         return self.calculate_margin_by_adj(adj, side)
 
     def teamscorebyadj_field_score(self, adj, side):
@@ -1087,7 +1092,7 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
         # Should be decision-decorated
         if not self.is_complete():
             return None
-        if not self._decision_calculated:
+        if not self._decision_calculated and len(self.sides) == 2:
             self._calculate_decision()
         return mean(self._teamscore_score_component(adj, side) for adj in self.relevant_adjudicators())
 
@@ -1102,7 +1107,7 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
         # Should be decision-decorated
         if not self.is_complete():
             return None
-        if not self._decision_calculated:
+        if not self._decision_calculated and len(self.sides) == 2:
             self._calculate_decision()
         return mean(self.scoresheets[adj].get_score(side, position) for adj in self.relevant_adjudicators())
 
