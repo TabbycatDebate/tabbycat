@@ -63,7 +63,7 @@ class V1RootSerializer(serializers.Serializer):
 
 class CheckinSerializer(serializers.Serializer):
     object = serializers.HyperlinkedIdentityField(view_name='api-root')
-    barcode = serializers.IntegerField()
+    barcode = serializers.CharField()
     checked = serializers.BooleanField()
     timestamp = serializers.DateTimeField()
 
@@ -168,6 +168,8 @@ class RoundSerializer(serializers.ModelSerializer):
         pairing = fields.TournamentHyperlinkedIdentityField(
             view_name='api-pairing-list',
             lookup_field='seq', lookup_url_kwarg='round_seq')
+        availabilities = fields.TournamentHyperlinkedIdentityField(view_name='api-availability-list', lookup_field='seq', lookup_url_kwarg='round_seq')
+        preformed_panels = fields.TournamentHyperlinkedIdentityField(view_name='api-preformedpanel-list', lookup_field='seq', lookup_url_kwarg='round_seq')
 
     url = fields.TournamentHyperlinkedIdentityField(
         view_name='api-round-detail',
@@ -465,6 +467,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
         queryset=SpeakerCategory.objects.all(),
     )
     _links = SpeakerLinksSerializer(source='*', read_only=True)
+    barcode = serializers.CharField(source='checkin_identifier.barcode', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -474,6 +477,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
             self.fields.pop('phone')
             self.fields.pop('pronoun')
             self.fields.pop('url_key')
+            self.fields.pop('barcode')
 
             if kwargs['context']['tournament'].pref('participant_code_names') == 'everywhere':
                 self.fields.pop('name')
@@ -528,6 +532,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
     )
     venue_constraints = VenueConstraintSerializer(many=True, required=False)
     _links = AdjudicatorLinksSerializer(source='*', read_only=True)
+    barcode = serializers.CharField(source='checkin_identifier.barcode', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -554,6 +559,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
             self.fields.pop('phone')
             self.fields.pop('pronoun')
             self.fields.pop('url_key')
+            self.fields.pop('barcode')
 
     class Meta:
         model = Adjudicator
@@ -904,11 +910,18 @@ class RoundPairingSerializer(serializers.ModelSerializer):
             model = DebateTeam
             fields = ('team', 'side')
 
+    class PairingLinksSerializer(serializers.Serializer):
+        ballots = fields.RoundHyperlinkedIdentityField(
+            view_name='api-ballot-list',
+            lookup_field='pk', lookup_url_kwarg='debate_pk')
+
     url = fields.RoundHyperlinkedIdentityField(view_name='api-pairing-detail', lookup_url_kwarg='debate_pk')
     venue = fields.TournamentHyperlinkedRelatedField(view_name='api-venue-detail', queryset=Venue.objects.all(),
         required=False, allow_null=True)
     teams = DebateTeamSerializer(many=True, source='debateteam_set')
     adjudicators = DebateAdjudicatorSerializer(required=False, allow_null=True)
+
+    _links = PairingLinksSerializer(source='*', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

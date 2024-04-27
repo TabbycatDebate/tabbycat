@@ -1,3 +1,4 @@
+from decimal import Decimal
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
@@ -17,8 +18,8 @@ class TestPreset(PreferencesPreset):
     show_in_list = False
 
     # Scoring
-    scoring__score_min = 70
-    scoring__score_max = 80
+    scoring__score_min = Decimal('70')
+    scoring__score_max = Decimal('80')
 
 
 class TournamentConfigIndexViewTests(TestCase):
@@ -67,7 +68,7 @@ class TournamentPreferenceFormViewTests(TestCase):
         view.setup(request, tournament_slug=tournament.slug, section='scoring')
         view.section = scoring
 
-        form = TestPreset.get_form(tournament, data={'scoring__score_min': 70, 'scoring__score_max': 80})
+        form = TestPreset.get_form(tournament, data={'scoring__score_min': Decimal('70'), 'scoring__score_max': Decimal('80')})
         form.is_valid()
         view.form_valid(form)
         mock_success.assert_called()
@@ -79,8 +80,8 @@ class TournamentPreferenceFormViewTests(TestCase):
 class TestSetPresetPreferencesView(TestCase):
     def set_up_tournament(self):
         tournament = Tournament.objects.create(slug="preset", name="Preset Testing")
-        tournament.preferences['scoring__score_min'] = 0
-        tournament.preferences['scoring__score_max'] = 100
+        tournament.preferences['scoring__score_min'] = Decimal('0')
+        tournament.preferences['scoring__score_max'] = Decimal('100')
         return tournament
 
     @patch('options.presets.all_presets', return_value=[TestPreset])
@@ -113,7 +114,7 @@ class TestSetPresetPreferencesView(TestCase):
         view = SetPresetPreferencesView()
         view.setup(request, tournament_slug=tournament.slug, preset_name='testpreset')
 
-        form = TestPreset.get_form(tournament, data={'scoring__score_min': 70, 'scoring__score_max': 80})
+        form = TestPreset.get_form(tournament, data={'scoring__score_min': Decimal('70'), 'scoring__score_max': Decimal('80')})
         form.is_valid()
         view.form_valid(form)
         mock_redirect.assert_called_with(reverse_tournament('options-tournament-index', tournament))
