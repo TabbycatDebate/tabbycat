@@ -77,15 +77,6 @@ def readable_ballotsub_result(debateresult):
     return result_winner, result
 
 
-def set_float_or_int(number, step_value):
-    """Used to ensure the values sent through to the frontend <input> are
-    either Ints or Floats such that the validation can handle them properly"""
-    if step_value.is_integer():
-        return int(number)
-    else:
-        return number
-
-
 def get_result_status_stats(round):
     """Returns a dict where keys are result statuses of debates; values are the
     number of debates in the round with that status.
