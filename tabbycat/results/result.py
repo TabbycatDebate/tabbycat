@@ -831,7 +831,7 @@ class ConsensusDebateResult(BaseDebateResult):
 
     def init_blank_buffer(self):
         super().init_blank_buffer()
-        self.scoresheet = self.scoresheet_class(sides=self.sides, positions=getattr(self, 'positions', None))
+        self.scoresheet = self.scoresheet_class(sides=self.sides, positions=getattr(self, 'positions', None), num_winners=len(self.sides) // 2)
         if type(self.scoresheet) is PolyEliminationScoresheet and self.debate.round.is_last:
             self.scoresheet.number_winners = 1
 
