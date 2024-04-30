@@ -2,9 +2,15 @@
 Change Log
 ==========
 
-2.9.0 (R)
+2.9.0 (Ragdoll)
 ---------
 *Release date: TBD*
+
+- Added a setting to expect no feedback from teams or adjudicators. Thanks Daan Koning!
+- Allowed scores to be given in any increments.
+- Actions taken through the API are now logged.
+- Participants' private URLs now show their barcode for checkin. Thank you to Miha Frangež!
+  - The API includes participants' barcode numbers on participant endpoints.
 
 
 2.8.1
