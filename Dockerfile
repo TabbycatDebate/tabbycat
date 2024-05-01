@@ -16,8 +16,10 @@ RUN apt-get install -y curl nginx
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
 # Copy all our files into the baseimage and cd to that directory
+RUN mkdir /tcd
 WORKDIR /tcd
-COPY . /tcd/
+# Can this be skipped? Takes ages
+ADD . /tcd/
 
 RUN nvm install && nvm use
 
