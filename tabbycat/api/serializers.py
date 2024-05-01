@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from collections.abc import Mapping
 from functools import partialmethod
+from typing import Dict, Optional, TYPE_CHECKING, TypeVar, Union
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError as DjangoValidationError
@@ -15,6 +16,7 @@ from rest_framework.settings import api_settings
 from adjallocation.models import DebateAdjudicator, PreformedPanel
 from adjfeedback.models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory, BreakingTeam
+from checkins.models import Event, Identifier
 from draw.models import Debate, DebateTeam
 from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
 from participants.emoji import pick_unused_emoji
@@ -31,6 +33,11 @@ from venues.models import Venue, VenueCategory, VenueConstraint
 
 from . import fields
 from .utils import is_staff
+
+if TYPE_CHECKING:
+    from participants.models import Person
+
+T = TypeVar('T', 'Person', Debate, Venue)
 
 
 def _validate_field(self, field, value):
@@ -61,7 +68,7 @@ class V1RootSerializer(serializers.Serializer):
     _links = V1LinksSerializer(source='*', read_only=True)
 
 
-class CheckinSerializer(serializers.Serializer):
+class MockCheckinSerializer(serializers.Serializer):
     object = serializers.HyperlinkedIdentityField(view_name='api-root')
     barcode = serializers.CharField()
     checked = serializers.BooleanField()
@@ -130,6 +137,9 @@ class TournamentSerializer(serializers.ModelSerializer):
             lookup_field='slug', lookup_url_kwarg='tournament_slug')
         preferences = serializers.HyperlinkedIdentityField(
             view_name='tournamentpreferencemodel-list',
+            lookup_field='slug', lookup_url_kwarg='tournament_slug')
+        checkins = serializers.HyperlinkedIdentityField(
+            view_name='api-checkins-list',
             lookup_field='slug', lookup_url_kwarg='tournament_slug')
 
     _links = TournamentLinksSerializer(source='*', read_only=True)
@@ -1435,3 +1445,49 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+
+class CheckinSerializer(serializers.ModelSerializer):
+
+    class IdentifierField(fields.BaseSourceField):
+        field_source_name = 'identifier'
+        models = {
+            'api-speaker-detail': (Speaker, ('personidentifier', 'person', 'speaker')),
+            'api-adjudicator-detail': (Adjudicator, ('personidentifier', 'person', 'adjudicator')),
+            'api-venue-detail': (Venue, ('venueidentifier', 'venue')),
+            'api-pairing-detail': (Debate, ('debateidentifier', 'debate')),
+        }
+
+        def get_url_options(self, value: Event, format) -> str:
+            for view_name, (model, through_fields) in self.models.items():
+                obj = value.identifier
+                for field in through_fields:
+                    obj = getattr(obj, field, None)
+                    if obj is None:
+                        break
+                else:
+                    return self.get_url(obj, view_name, self.context['request'], format)
+
+    target = IdentifierField(allow_null=True, required=False)
+    barcode = serializers.CharField(source='identifier.barcode', allow_null=True, required=False)
+
+    class Meta:
+        model = Event
+        fields = ('target', 'barcode', 'time')
+
+    def validate_target(self, value: Optional[T]) -> Optional[T]:
+        if value is None:
+            return None
+        identifier = getattr(value, 'checkin_identifier', None)
+        if identifier is None:
+            raise serializers.ValidationError("Object does not have a checkin identifier")
+        return value
+
+    def validate(self, data: Dict[str, Union[str, str]]) -> Dict[str, str]:
+        if not isinstance(target := data.pop('identifier', {}), dict):
+            data['identifier'] = target.checkin_identifier
+        else:
+            data['identifier'] = Identifier.objects.get(barcode=target.pop('barcode'))
+        if data.get('identifier') is None:
+            raise serializers.ValidationError("A target for checkin must be specified through a barcode or URL.")
+        return data
