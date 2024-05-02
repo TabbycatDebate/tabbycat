@@ -17,7 +17,7 @@ class BaseGroup:
 
 
 class Equity(BaseGroup):
-    # Permissions to manage conflicts/constraints, view feedback + participant info
+    # Permissions to manage conflicts/constraints, view participant info
     name = _("Equity")
     permissions = [
         Permission.EDIT_ROOMCATEGORIES,
@@ -33,6 +33,7 @@ class Equity(BaseGroup):
         Permission.VIEW_INSTITUTIONS,
         Permission.VIEW_DECODED_TEAMS,
         Permission.VIEW_ANONYMOUS,
+        Permission.VIEW_ADMIN_DRAW,
     ]
 
 
@@ -44,8 +45,8 @@ class AdjudicationCore(BaseGroup):
         Permission.EDIT_DEBATEADJUDICATORS,
         Permission.EDIT_FEEDBACK_CONFIRM,
         Permission.EDIT_FEEDBACK_IGNORE,
-        Permission.EDIT_FEEDBACK_OVERVIEW,
         Permission.EDIT_JUDGESCORES_BULK,
+        Permission.EDIT_BASEJUDGESCORES_IND,
         Permission.EDIT_MOTION,
         Permission.EDIT_STARTTIME,
         Permission.EDIT_PREFORMEDPANELS,
