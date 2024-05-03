@@ -95,7 +95,7 @@ class Pairing(BasePairing):
 
     sides = [DebateSide.AFF, DebateSide.NEG]
 
-    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}):
+    def __init__(self, teams, bracket, room_rank, num_sides=2, flags=[], team_flags={}):
         super().__init__(teams, bracket, room_rank, flags, team_flags)
         assert len(self.teams) == 2, "There must be two teams in a Pairing"
 

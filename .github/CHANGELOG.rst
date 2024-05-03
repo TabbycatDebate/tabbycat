@@ -2,9 +2,28 @@
 Change Log
 ==========
 
-2.9.0 (R)
+2.9.0 (Ragdoll)
 ---------
 *Release date: TBD*
+
+- Added a setting to expect no feedback from teams or adjudicators. Thanks Daan Koning!
+- Allowed scores to be given in any increments.
+- Actions taken through the API are now logged.
+- Participants' private URLs now show their barcode for checkin. Thank you to Miha Frangež!
+  - The API includes participants' barcode numbers on participant endpoints.
+
+
+2.8.1
+-----
+*Release date: 27 January 2024*
+
+- Fixed failing draw generation with byes (BACKEND-BWA)
+- Avoided showing points in private URL table for uncredited rounds (BACKEND-BVY)
+- Corrected ordering of ballots in private URL tables (#2369)
+- Fixed draw strength metrics counting unconfirmed ballots
+- API: Re-added ``seq`` for motions in Round endpoint
+- Hid real names from ballot forms if code names used
+- Fixed break category form showing general error
 
 
 2.8.0 (Quokka)
@@ -29,6 +48,13 @@ Change Log
     - Team and speaker scores by round has a new endpoint. Thanks to Ido Wolf for the feature!
     - The site's timezone is shown in the root endpoint. Thanks to Daan Koning!
 - \+ so many more little improvements and fixes!
+
+
+2.7.8
+-----
+*Release date: 13 August 2023*
+
+- Fixed some issues with Docker-based deployments.
 
 
 2.7.7

@@ -279,7 +279,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
     def cast_round_results(self, standings, rounds, step_preference):
         """For use by subclasses. Casts round results to integers if appropriate
         according to tournament preferences."""
-        if self.tournament.pref(step_preference).is_integer():
+        if self.tournament.pref(step_preference) % 1 == 0:
             is_consensus_by_round = [self.tournament.ballots_per_debate(r.stage) == 'per-debate' for r in rounds]
             for info in standings:
                 for i, is_consensus in enumerate(is_consensus_by_round):

@@ -90,4 +90,4 @@ def DrawGenerator(teams_in_debate, draw_type, teams, results=None, rrseq=None, *
     else:
         raise ValueError("Unrecognised teams-per-debate option: {}".format(teams_in_debate))
 
-    return klass(teams, results, rrseq, teams_in_debate, **kwargs)
+    return klass(teams, results, rrseq, teams_in_debate=teams_in_debate, **kwargs)

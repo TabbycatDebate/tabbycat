@@ -1,5 +1,6 @@
 import logging
 from copy import copy
+from decimal import Decimal
 
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
@@ -84,12 +85,12 @@ class AustralsPreferences(PreferencesPreset):
     show_in_list = True
 
     # Scoring
-    scoring__score_min                         = 70.0 # Technically the speaks
-    scoring__score_max                         = 80.0 # range is at the adj
-    scoring__score_step                        = 1.0  # core's discretion (it's
-    scoring__reply_score_min                   = 35.0 # not in the constitution)
-    scoring__reply_score_max                   = 40.0
-    scoring__reply_score_step                  = 0.5
+    scoring__score_min                         = Decimal('70') # Technically the speaks
+    scoring__score_max                         = Decimal('80') # range is at the adj
+    scoring__score_step                        = Decimal('1')  # core's discretion (it's
+    scoring__reply_score_min                   = Decimal('35.0') # not in the constitution)
+    scoring__reply_score_max                   = Decimal('40.0')
+    scoring__reply_score_step                  = Decimal('0.5')
     scoring__maximum_margin                    = 0.0  # Rob Confirmed
     # Draws
     draw_rules__avoid_same_institution         = True
@@ -122,9 +123,9 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     description  = _("2 vs 2 vs 2 vs 2. Compliant with WUDC rules.")
     show_in_list = True
 
-    scoring__score_min                         = 50.0
-    scoring__score_max                         = 99.0
-    scoring__score_step                        = 1.0
+    scoring__score_min                         = Decimal('50')
+    scoring__score_max                         = Decimal('99')
+    scoring__score_step                        = Decimal('1')
     scoring__maximum_margin                    = 0.0
     scoring__teamscore_includes_ghosts         = True  # WUDC 34.9.3.2
     # Debate Rules
@@ -168,8 +169,8 @@ class CanadianParliamentaryPreferences(PreferencesPreset):
     description  = _("2 vs 2 with replies (unscored) and POIs. May require "
         "additional configuration depending on regional variations.")
     # Scoring
-    scoring__score_min                         = 50.0
-    scoring__score_max                         = 100.0
+    scoring__score_min                         = Decimal('50')
+    scoring__score_max                         = Decimal('100')
     # Debate Rules
     debate_rules__reply_scores_enabled         = False # Not scored
     debate_rules__substantive_speakers         = 2
@@ -194,8 +195,8 @@ class AustralianEastersPreferences(AustralsPreferences):
         "bubbles, one-up-one-down. Compliant with AIDA rules.")
 
     # Scoring
-    scoring__score_min                         = 70.0
-    scoring__score_max                         = 80.0
+    scoring__score_min                         = Decimal('70')
+    scoring__score_max                         = Decimal('80')
     scoring__maximum_margin                    = 15.0
     # Debate Rules
     debate_rules__reply_scores_enabled         = False
@@ -214,10 +215,10 @@ class NZEastersPreferences(AustralsPreferences):
         "novice statuses.")
 
     # Scoring
-    scoring__score_min                         = 60.0
-    scoring__score_max                         = 80.0
-    scoring__reply_score_min                   = 30.0
-    scoring__reply_score_max                   = 40.0
+    scoring__score_min                         = Decimal('60')
+    scoring__score_max                         = Decimal('80')
+    scoring__reply_score_min                   = Decimal('30.0')
+    scoring__reply_score_max                   = Decimal('40.0')
     # Debate Rules
     debate_rules__reply_scores_enabled         = True
     motions__motion_vetoes_enabled             = True
@@ -241,10 +242,10 @@ class JoyntPreferences(AustralsPreferences):
         "and motions, and novice statuses.")
 
     # Scoring
-    scoring__score_min                         = 60.0
-    scoring__score_max                         = 80.0
-    scoring__reply_score_min                   = 30.0
-    scoring__reply_score_max                   = 40.0
+    scoring__score_min                         = Decimal('60')
+    scoring__score_max                         = Decimal('80')
+    scoring__reply_score_min                   = Decimal('30.0')
+    scoring__reply_score_max                   = Decimal('40.0')
     # Debate Rules
     debate_rules__reply_scores_enabled         = True
     motions__motion_vetoes_enabled             = False
@@ -271,12 +272,12 @@ class UADCPreferences(AustralsPreferences):
 
     # Rules source = https://docs.google.com/document/d/10AVKBhev_OFRtorWsu2VB9B5V1a2f20425HYkC5ztMM/edit
     # Scoring
-    scoring__score_min                         = 69.0  # From Rules Book
-    scoring__score_max                         = 81.0  # From Rules Book
-    scoring__score_step                        = 1.0
-    scoring__reply_score_min                   = 34.5  # Not specified; assuming half of substantive
-    scoring__reply_score_max                   = 42.0  # Not specified; assuming  half of substantive
-    scoring__reply_score_step                  = 0.5
+    scoring__score_min                         = Decimal('69')  # From Rules Book
+    scoring__score_max                         = Decimal('81')  # From Rules Book
+    scoring__score_step                        = Decimal('1')
+    scoring__reply_score_min                   = Decimal('34.5')  # Not specified; assuming half of substantive
+    scoring__reply_score_max                   = Decimal('42.0')  # Not specified; assuming half of substantive
+    scoring__reply_score_step                  = Decimal('0.5')
     scoring__maximum_margin                    = 0.0   # TODO= check this
     scoring__margin_includes_dissenters        = False  # From Rules 20.3.2
     # Draws
@@ -310,12 +311,12 @@ class WSDCPreferences(AustralsPreferences):
 
     # Rules source = http://mkf2v40tlr04cjqkt2dtlqbr.wpengine.netdna-cdn.com/wp-content/uploads/2014/05/WSDC-Debate-Rules-U-2015.pdf
     # Score (strictly specified in the rules)
-    scoring__score_min                         = 60.0
-    scoring__score_max                         = 80.0
-    scoring__score_step                        = 1.0
-    scoring__reply_score_min                   = 30.0
-    scoring__reply_score_max                   = 40.0
-    scoring__reply_score_step                  = 0.5
+    scoring__score_min                         = Decimal('60')
+    scoring__score_max                         = Decimal('80')
+    scoring__score_step                        = Decimal('1')
+    scoring__reply_score_min                   = Decimal('30.0')
+    scoring__reply_score_max                   = Decimal('40.0')
+    scoring__reply_score_step                  = Decimal('0.5')
     # Debates
     motions__motion_vetoes_enabled             = False # Single motions per round
     motions__enable_motions                    = False
@@ -335,8 +336,8 @@ class APDAPreferences(PreferencesPreset):
     show_in_list = True
     description = _("2 vs 2 with speech rankings and byes")
 
-    scoring__score_min                         = 15
-    scoring__score_max                         = 40
+    scoring__score_min                         = Decimal('15')
+    scoring__score_max                         = Decimal('40')
     motions__motion_vetoes_enabled             = False # Single motions per round
     motions__enable_motions                    = False
     draw_rules__draw_odd_bracket               = 'pullup_bottom'

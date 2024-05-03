@@ -357,15 +357,15 @@ class BaseAvailabilityUpdateView(RoundMixin, AdministratorMixin, LogActionMixin,
 
 
 class UpdateAdjudicatorsAvailabilityView(BaseAvailabilityUpdateView):
-    action_log_type = ActionLogEntry.ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE
+    action_log_type = ActionLogEntry.ActionType.AVAIL_ADJUDICATORS_SAVE
     model = Adjudicator
 
 
 class UpdateTeamsAvailabilityView(BaseAvailabilityUpdateView):
-    action_log_type = ActionLogEntry.ACTION_TYPE_AVAIL_TEAMS_SAVE
+    action_log_type = ActionLogEntry.ActionType.AVAIL_TEAMS_SAVE
     model = Team
 
 
 class UpdateVenuesAvailabilityView(BaseAvailabilityUpdateView):
-    action_log_type = ActionLogEntry.ACTION_TYPE_AVAIL_VENUES_SAVE
+    action_log_type = ActionLogEntry.ActionType.AVAIL_VENUES_SAVE
     model = Venue

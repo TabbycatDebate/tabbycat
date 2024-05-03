@@ -22,7 +22,7 @@ class VenuesWorkerConsumer(EditDebateOrPanelWorkerMixin):
             return
 
         allocate_venues(round)
-        self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE)
+        self.log_action(event['extra'], round, ActionLogEntry.ActionType.VENUES_AUTOALLOCATE)
 
         content = self.reserialize_debates(SimpleDebateVenueSerializer, round)
         msg = _("Successfully auto-allocated rooms to debates.")

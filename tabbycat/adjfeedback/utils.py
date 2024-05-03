@@ -55,7 +55,9 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
         debate = debateadj.debate
     adjudicators = debate.adjudicators
 
-    if feedback_paths == 'all-adjs' or debateadj.type == DebateAdjudicator.TYPE_CHAIR:
+    if feedback_paths == 'no-adjs':
+        targets = []
+    elif feedback_paths == 'all-adjs' or debateadj.type == DebateAdjudicator.TYPE_CHAIR:
         targets = [(adj, pos) for adj, pos in adjudicators.with_positions() if adj.id != debateadj.adjudicator_id]
     elif feedback_paths == 'with-p-on-p' and debateadj.type == DebateAdjudicator.TYPE_PANEL:
         targets = [(adj, pos) for adj, pos in adjudicators.with_positions() if adj.id != debateadj.adjudicator_id and pos != AdjudicatorAllocation.POSITION_TRAINEE]

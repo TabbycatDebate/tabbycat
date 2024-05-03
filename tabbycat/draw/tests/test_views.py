@@ -99,8 +99,8 @@ class PublicDrawPreliminaryCurrentRoundTest(CompletedTournamentTestMixin, TableV
 
         keys = [c['key'] for c in table['head']]
         venue_column_index = keys.index('venue')
-        aff_column_index = keys.index("DebateSide.AFF")
-        neg_column_index = keys.index("DebateSide.NEG")
+        aff_column_index = keys.index('0')
+        neg_column_index = keys.index('1')
 
         venues = [c[venue_column_index]['text'] for c in table['data']]
         pairings = [

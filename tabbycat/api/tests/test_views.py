@@ -3,6 +3,7 @@ from django.urls import reverse
 from dynamic_preferences.registries import global_preferences_registry
 from rest_framework.test import APITestCase
 
+from breakqual.models import BreakingTeam
 from utils.tests import CompletedTournamentTestMixin
 
 
@@ -87,3 +88,54 @@ class SpeakerCategoryViewsetTests(CompletedTournamentTestMixin, APITestCase):
         self.client.login(username="admin", password="admin")
         response = self.client.get(reverse('api-speakercategory-list', kwargs={'tournament_slug': self.tournament.slug}))
         self.assertEqual(len(response.data), 2)
+
+
+class BreakEligibilityViewsetTests(CompletedTournamentTestMixin, APITestCase):
+
+    def test_get_eligible_teams(self):
+        self.client.login(username="admin", password="admin")
+        response = self.client.get(reverse('api-breakcategory-eligibility', kwargs={'tournament_slug': self.tournament.slug, 'pk': 1}))
+        self.assertEqual(len(response.data), 2)
+
+
+class SpeakerEligibilityViewsetTests(CompletedTournamentTestMixin, APITestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.sc = self.tournament.speakercategory_set.create(name='sc1', slug='sc1', seq=1, public=False)
+        self.sc.speaker_set.set(self.tournament.team_set.first().speaker_set.all())
+
+    def test_get_eligible_speakers(self):
+        self.client.login(username="admin", password="admin")
+        response = self.client.get(reverse('api-speakercategory-eligibility', kwargs={'tournament_slug': self.tournament.slug, 'pk': self.sc.pk}))
+        self.assertEqual(len(response.data), 2)
+
+    def test_unauthorized_if_private(self):
+        response = self.client.get(reverse('api-speakercategory-eligibility', kwargs={'tournament_slug': self.tournament.slug, 'pk': self.sc.pk}))
+        self.assertEqual(response.status_code, 401)
+
+
+class BreakingTeamsViewsetTests(CompletedTournamentTestMixin, APITestCase):
+
+    def test_get_breaking_teams(self):
+        self.client.login(username="admin", password="admin")
+        response = self.client.get(reverse('api-breakcategory-break', kwargs={'tournament_slug': self.tournament.slug, 'pk': 1}))
+        self.assertEqual(len(response.data), 8)
+
+    def test_generate_break(self):
+        self.client.login(username="admin", password="admin")
+        response = self.client.post(reverse('api-breakcategory-break', kwargs={'tournament_slug': self.tournament.slug, 'pk': 1}))
+        self.assertEqual(len(response.data), 13)
+
+    def test_delete_break(self):
+        self.client.login(username="admin", password="admin")
+        response = self.client.delete(reverse('api-breakcategory-break', kwargs={'tournament_slug': self.tournament.slug, 'pk': 1}))
+        self.assertEqual(response.status_code, 204)
+
+    def test_remove_breaking_team(self):
+        self.client.login(username="admin", password="admin")
+        response = self.client.patch(reverse('api-breakcategory-break', kwargs={'tournament_slug': self.tournament.slug, 'pk': 1}), {
+            'team': 'http://testserver/api/v1/tournaments/demo/teams/7',
+            'remark': BreakingTeam.REMARK_WITHDRAWN,
+        }, content_type='application/json')
+        self.assertEqual(len(response.data), 16)

@@ -161,13 +161,13 @@ class TestPolyScoresheets(unittest.TestCase):
     testdata[1] = {  # tie-point
         'scores': [[84, 81], [80, 69], [81, 68], [85, 68]],
         'complete': True,
-        'ranks': None,
+        'ranks': [],
         'totals': [165, 149, 149, 153],
     }
     testdata[2] = { # incomplete
         'scores': [[84, None], [80, 69], [None, 68], [85, 68]],
         'complete': False,
-        'ranks': None,
+        'ranks': [],
         'totals': [None, 149, None, 153],
     }
 
@@ -178,7 +178,7 @@ class TestPolyScoresheets(unittest.TestCase):
 
     @on_all_testdata
     def test_bp_scoresheet(self, testdata):
-        scoresheet = PolyScoresheet(self.positions)
+        scoresheet = PolyScoresheet(self.positions, self.sides)
         self.load_scores(scoresheet, testdata)
         self.assertEqual(scoresheet.is_complete(), testdata['complete'])
         self.assertEqual(scoresheet.ranked_sides(), testdata['ranks'])
@@ -193,4 +193,4 @@ class TestPolyScoresheets(unittest.TestCase):
         for side, scores_for_side in zip(self.sides, testdata['scores']):
             for position, score in zip(self.positions, scores_for_side):
                 self.assertEqual(scoresheet.get_score(side, position), score)
-        self.assertEqual(scoresheet.is_valid(), testdata['ranks'] is not None)
+        self.assertEqual(scoresheet.is_valid(), len(testdata['ranks']) > 0)

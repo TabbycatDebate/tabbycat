@@ -23,7 +23,7 @@ SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 # ==============================================================================
 
 TABBYCAT_VERSION = '2.9.0-dev'
-TABBYCAT_CODENAME = 'R'
+TABBYCAT_CODENAME = 'Ragdoll'
 READTHEDOCS_VERSION = 'v2.9.0'
 
 # ==============================================================================

@@ -656,7 +656,7 @@ class DrawStatusEdit(LogActionMixin, AdministratorMixin, RoundMixin, PostOnlyRed
 
 class CreateDrawView(DrawStatusEdit):
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_CREATE
+    action_log_type = ActionLogEntry.ActionType.DRAW_CREATE
 
     def post(self, request, *args, **kwargs):
         if self.round.draw_status != Round.Status.NONE:
@@ -709,7 +709,7 @@ class CreateDrawView(DrawStatusEdit):
 
 
 class ConfirmDrawCreationView(DrawStatusEdit):
-    action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_CONFIRM
+    action_log_type = ActionLogEntry.ActionType.DRAW_CONFIRM
 
     def post(self, request, *args, **kwargs):
         if self.round.draw_status != Round.Status.DRAFT:
@@ -726,7 +726,7 @@ class ConfirmDrawCreationView(DrawStatusEdit):
 
 
 class DrawRegenerateView(DrawStatusEdit):
-    action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_REGENERATE
+    action_log_type = ActionLogEntry.ActionType.DRAW_REGENERATE
     round_redirect_pattern_name = 'availability-index'
 
     def post(self, request, *args, **kwargs):
@@ -741,7 +741,7 @@ class ConfirmDrawRegenerationView(AdministratorMixin, TemplateView):
 
 
 class DrawReleaseView(DrawStatusEdit):
-    action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_RELEASE
+    action_log_type = ActionLogEntry.ActionType.DRAW_RELEASE
     round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
@@ -761,7 +761,7 @@ class DrawReleaseView(DrawStatusEdit):
 
 
 class DrawUnreleaseView(DrawStatusEdit):
-    action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_UNRELEASE
+    action_log_type = ActionLogEntry.ActionType.DRAW_UNRELEASE
     round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
@@ -777,7 +777,7 @@ class DrawUnreleaseView(DrawStatusEdit):
 
 
 class SetRoundStartTimeView(DrawStatusEdit):
-    action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_START_TIME_SET
+    action_log_type = ActionLogEntry.ActionType.ROUND_START_TIME_SET
     round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):

@@ -126,10 +126,10 @@ class Tournament(models.Model):
         the value in question is in fact an integer before casting."""
         if self.ballots_per_debate(stage) == 'per-adj':
             return False
-        if not self.pref('score_step').is_integer():
+        if not self.pref('score_step').as_integer_ratio()[1] == 1:
             return False
         if (self.pref('reply_scores_enabled') and
-                not self.pref('reply_score_step').is_integer()):
+                not self.pref('reply_score_step').as_integer_ratio()[1] == 1):
             return False
         return True
 

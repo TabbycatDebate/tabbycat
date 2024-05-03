@@ -11,7 +11,7 @@
         </button>
       </div>
       <div class="modal-body lead">
-        {% if motion.info_slide|slice:":3" == "<p>" %}
+        {% if motion.info_slide|slice:":2" == "<p" %}
           {{ motion.info_slide|safe }}
         {% else %}
           {{ motion.info_slide|linebreaks }}
