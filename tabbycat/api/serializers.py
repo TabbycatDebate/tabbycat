@@ -16,7 +16,6 @@ from adjallocation.models import DebateAdjudicator, PreformedPanel
 from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory, BreakingTeam
 from draw.models import Debate, DebateTeam
-from draw.types import DebateSide
 from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
 from participants.emoji import pick_unused_emoji
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
@@ -31,7 +30,7 @@ from tournaments.models import Round, Tournament
 from venues.models import Venue, VenueCategory, VenueConstraint
 
 from . import fields
-from .utils import get_side, is_staff
+from .utils import is_staff
 
 
 def _validate_field(self, field, value):
@@ -887,14 +886,14 @@ class DebateAdjudicatorSerializer(serializers.Serializer):
 class RoundPairingSerializer(serializers.ModelSerializer):
     class DebateTeamSerializer(serializers.ModelSerializer):
         team = fields.TournamentHyperlinkedRelatedField(view_name='api-team-detail', queryset=Team.objects.all())
-        side = serializers.ChoiceField(choices=[s.name.lower() for s in DebateSide], required=False, write_only=True)
+        side = fields.SideChoiceField(required=False)
 
         class Meta:
             model = DebateTeam
             fields = ('team', 'side')
 
         def save(self, **kwargs):
-            kwargs['side'] = get_side(kwargs.get('side', None), kwargs['seq'])
+            kwargs['side'] = kwargs.get('side', kwargs['seq'])
             return super().save(**kwargs)
 
     url = fields.RoundHyperlinkedIdentityField(view_name='api-pairing-detail', lookup_url_kwarg='debate_pk')
@@ -1097,7 +1096,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         class SheetSerializer(serializers.Serializer):
 
             class TeamResultSerializer(serializers.Serializer):
-                side = serializers.ChoiceField(choices=[s.name.lower() for s in DebateSide], required=False, write_only=True)
+                side = fields.SideChoiceField(required=False)
                 points = serializers.IntegerField(required=False)
                 win = serializers.BooleanField(required=False)
                 score = serializers.FloatField(required=False, allow_null=True)
@@ -1156,7 +1155,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
 
                 def save(self, **kwargs):
                     result = kwargs['result']
-                    side = get_side(self.validated_data.get('side', None), kwargs['seq'])
+                    side = self.validated_data.get('side', kwargs['seq'])
 
                     if result.get_scoresheet_class().uses_declared_winners and self.validated_data.get('win', False):
                         args = [side]
