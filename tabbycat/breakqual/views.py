@@ -116,11 +116,11 @@ class BreakingTeamsFormView(GenerateBreakMixin, LogActionMixin, AdministratorMix
 
     def get_action_log_type(self):
         if 'save_update_all' in self.request.POST:
-            return ActionLogEntry.ACTION_TYPE_BREAK_UPDATE_ALL
+            return ActionLogEntry.ActionType.BREAK_UPDATE_ALL
         elif 'save_update_one' in self.request.POST:
-            return ActionLogEntry.ACTION_TYPE_BREAK_UPDATE_ONE
+            return ActionLogEntry.ActionType.BREAK_UPDATE_ONE
         else:
-            return ActionLogEntry.ACTION_TYPE_BREAK_EDIT_REMARKS
+            return ActionLogEntry.ActionType.BREAK_EDIT_REMARKS
 
     def get_success_url(self):
         return reverse_tournament('breakqual-teams', self.tournament, kwargs={'category': self.object.slug})
@@ -190,7 +190,7 @@ class BreakingTeamsFormView(GenerateBreakMixin, LogActionMixin, AdministratorMix
 
 class GenerateAllBreaksView(GenerateBreakMixin, LogActionMixin, TournamentMixin, AdministratorMixin, PostOnlyRedirectView):
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_GENERATE_ALL
+    action_log_type = ActionLogEntry.ActionType.BREAK_GENERATE_ALL
     tournament_redirect_pattern_name = 'breakqual-teams'
     edit_permission = Permission.GENERATE_BREAK
 
@@ -259,9 +259,9 @@ class EditBreakCategoriesView(EditSpeakerCategoriesView):
 
     template_name = 'break_categories_edit.html'
     formset_model = BreakCategory
-    action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_CATEGORIES_EDIT
     view_permission = Permission.VIEW_BREAK_CATEGORIES
     edit_permission = Permission.EDIT_BREAK_CATEGORIES
+    action_log_type = ActionLogEntry.ActionType.BREAK_CATEGORIES_EDIT
 
     url_name = 'break-categories-edit'
     success_url = 'breakqual-index'
@@ -277,7 +277,10 @@ class EditBreakCategoriesView(EditSpeakerCategoriesView):
         }
 
     def get_formset_kwargs(self):
-        return {'form_kwargs': {'tournament': self.tournament}}
+        return {
+            'initial': [{'tournament': self.tournament}] * 2,
+            'form_kwargs': {'tournament': self.tournament},
+        }
 
     def prepare_related(self, cat):
         auto_make_break_rounds(cat, prefix=True)
@@ -338,7 +341,7 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
 
 
 class UpdateEligibilityEditView(BaseUpdateEligibilityEditView):
-    action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT
+    action_log_type = ActionLogEntry.ActionType.BREAK_ELIGIBILITY_EDIT
     participant_model = Team
     many_to_many_field = 'break_categories'
     edit_permission = Permission.EDIT_BREAK_ELIGIBILITY

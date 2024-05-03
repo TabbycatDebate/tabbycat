@@ -64,7 +64,7 @@ class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, Tournamen
     view_permission = Permission.VIEW_SETTINGS
     edit_permission = Permission.EDIT_SETTINGS
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT
+    action_log_type = ActionLogEntry.ActionType.OPTIONS_EDIT
 
     def form_valid(self, *args, **kwargs):
         messages.success(self.request, _("Tournament options (%(section)s) saved.") % {'section': self.section.verbose_name})
@@ -85,7 +85,7 @@ class SetPresetPreferencesView(AdministratorMixin, LogActionMixin, TournamentMix
     view_permission = Permission.VIEW_SETTINGS
     edit_permission = Permission.EDIT_SETTINGS
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT
+    action_log_type = ActionLogEntry.ActionType.OPTIONS_EDIT
 
     def get_page_title(self):
         return _("Apply Preset: %s") % self.get_selected_preset().name

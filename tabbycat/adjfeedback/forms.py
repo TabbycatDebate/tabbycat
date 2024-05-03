@@ -331,8 +331,10 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
             da.adjudicator.submitted = da.submitted
         if tournament.pref('feedback_from_teams') == 'all-adjs':
             das = debate.adjudicators.with_positions()
-        else:
+        elif tournament.pref('feedback_from_teams') == 'orallist':
             das = debate.adjudicators.voting_with_positions()
+        else:
+            das = []
 
         round_choices = []
         for adj, pos in das:

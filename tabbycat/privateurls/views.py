@@ -213,6 +213,7 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
         try:
             checkin_id = PersonIdentifier.objects.get(person=self.object)
             kwargs['checkins_used'] = True
+            kwargs['identifier'] = checkin_id
 
             checkins = get_unexpired_checkins(t, 'checkin_window_people')
 

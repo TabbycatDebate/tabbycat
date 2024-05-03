@@ -13,7 +13,7 @@ from rest_framework.fields import get_error_detail, SkipField
 from rest_framework.settings import api_settings
 
 from adjallocation.models import DebateAdjudicator, PreformedPanel
-from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
+from adjfeedback.models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory, BreakingTeam
 from draw.models import Debate, DebateTeam
 from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
@@ -65,7 +65,7 @@ class V1RootSerializer(serializers.Serializer):
 
 class CheckinSerializer(serializers.Serializer):
     object = serializers.HyperlinkedIdentityField(view_name='api-root')
-    barcode = serializers.IntegerField()
+    barcode = serializers.CharField()
     checked = serializers.BooleanField()
     timestamp = serializers.DateTimeField()
 
@@ -149,10 +149,12 @@ class RoundSerializer(serializers.ModelSerializer):
         text = serializers.CharField(source='motion.text', max_length=500, required=False)
         reference = serializers.CharField(source='motion.reference', max_length=100, required=False)
         info_slide = serializers.CharField(source='motion.info_slide', required=False)
+        info_slide_plain = serializers.CharField(source='motion.info_slide_plain', read_only=True)
+        seq = serializers.IntegerField(read_only=True)
 
         class Meta:
             model = RoundMotion
-            exclude = ('round', 'motion', 'seq')
+            exclude = ('round', 'motion')
 
         def create(self, validated_data):
             motion_data = validated_data.pop('motion')
@@ -173,6 +175,8 @@ class RoundSerializer(serializers.ModelSerializer):
         pairing = fields.TournamentHyperlinkedIdentityField(
             view_name='api-pairing-list',
             lookup_field='seq', lookup_url_kwarg='round_seq')
+        availabilities = fields.TournamentHyperlinkedIdentityField(view_name='api-availability-list', lookup_field='seq', lookup_url_kwarg='round_seq')
+        preformed_panels = fields.TournamentHyperlinkedIdentityField(view_name='api-preformedpanel-list', lookup_field='seq', lookup_url_kwarg='round_seq')
 
     url = fields.TournamentHyperlinkedIdentityField(
         view_name='api-round-detail',
@@ -189,11 +193,11 @@ class RoundSerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
         if not is_staff(kwargs.get('context')):
             with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=kwargs['context']['tournament'])
-            if not with_permission(Permission.VIEW_FEEDBACK_OVERVIEW):
+            if not with_permission(permission=Permission.VIEW_FEEDBACK_OVERVIEW):
                 self.fields.pop('feedback_weight')
 
             # Can't show in a ListSerializer
-            if not with_permission(Permission.VIEW_MOTION) and (isinstance(self.instance, QuerySet) or not self.instance.motions_released):
+            if not with_permission(permission=Permission.VIEW_MOTION) and (isinstance(self.instance, QuerySet) or not self.instance.motions_released):
                 self.fields.pop('motions')
 
     class Meta:
@@ -212,7 +216,7 @@ class RoundSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         motions_data = validated_data.pop('roundmotion_set', [])
-        if len(motions_data) > 0 and not has_permission(self.context['request'].user, Permission.EDIT_MOTION):
+        if len(motions_data) > 0 and not has_permission(self.context['request'].user, Permission.EDIT_MOTION, self.context['tournament']):
             raise serializers.PermissionDenied('Editing motions disallowed')
 
         round = super().create(validated_data)
@@ -229,7 +233,7 @@ class RoundSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         motions_data = validated_data.pop('roundmotion_set', [])
-        if len(motions_data) > 0 and not has_permission(self.context['request'].user, Permission.EDIT_MOTION):
+        if len(motions_data) > 0 and not has_permission(self.context['request'].user, Permission.EDIT_MOTION, self.context['tournament']):
             raise serializers.PermissionDenied('Editing motions disallowed')
         for i, roundmotion in enumerate(motions_data, start=1):
             roundmotion['seq'] = i
@@ -328,6 +332,7 @@ class MotionSerializer(serializers.ModelSerializer):
 
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-motion-detail')
     rounds = RoundsSerializer(many=True, source='roundmotion_set')
+    info_slide_plain = serializers.CharField(read_only=True)
 
     class Meta:
         model = Motion
@@ -449,8 +454,14 @@ class PartialBreakingTeamSerializer(BreakingTeamSerializer):
         model = BreakingTeam
         fields = ('team', 'remark')
 
+    def validate_team(self, value):
+        try:
+            return self.context['break_category'].breakingteam_set.get(team=value)
+        except BreakingTeam.DoesNotExist:
+            raise serializers.ValidationError('Team is not included in break')
+
     def save(self, **kwargs):
-        bt = self.context['break_category'].breakingteam_set.get(team=self.validated_data['team'])
+        bt = self.validated_data['team']
         bt.remark = self.validated_data.get('remark', '')
         bt.save()
         return bt
@@ -470,22 +481,25 @@ class SpeakerSerializer(serializers.ModelSerializer):
         queryset=SpeakerCategory.objects.all(),
     )
     _links = SpeakerLinksSerializer(source='*', read_only=True)
+    barcode = serializers.CharField(source='checkin_identifier.barcode', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if not is_staff(kwargs.get('context')):
             t = kwargs['context']['tournament']
             with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=t)
-            if not with_permission(Permission.VIEW_PARTICIPANT_CONTACT):
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_CONTACT):
                 self.fields.pop('email')
                 self.fields.pop('phone')
-            if not with_permission(Permission.VIEW_PARTICIPANT_GENDER):
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_GENDER):
                 self.fields.pop('gender')
                 self.fields.pop('pronoun')
-            if not with_permission(Permission.VIEW_PRIVATE_URLS):
+            if not with_permission(permission=Permission.VIEW_PRIVATE_URLS):
                 self.fields.pop('url_key')
+            if not with_permission(permission=Permission.VIEW_CHECKIN):
+                self.fields.pop('barcode')
 
-            if not with_permission(Permission.VIEW_PARTICIPANT_DECODED) and t.pref('participant_code_names') == 'everywhere':
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_DECODED) and t.pref('participant_code_names') == 'everywhere':
                 self.fields.pop('name')
 
     class Meta:
@@ -538,6 +552,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
     )
     venue_constraints = VenueConstraintSerializer(many=True, required=False)
     _links = AdjudicatorLinksSerializer(source='*', read_only=True)
+    barcode = serializers.CharField(source='checkin_identifier.barcode', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -547,34 +562,36 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
             t = kwargs['context']['tournament']
             with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=t)
 
-            if not with_permission(Permission.VIEW_ADJ_INST_CONFLICTS):
+            if not with_permission(permission=Permission.VIEW_ADJ_INST_CONFLICTS):
                 self.fields.pop('institution_conflicts')
-            if not with_permission(Permission.VIEW_ADJ_TEAM_CONFLICTS):
+            if not with_permission(permission=Permission.VIEW_ADJ_TEAM_CONFLICTS):
                 self.fields.pop('team_conflicts')
-            if not with_permission(Permission.VIEW_ADJ_ADJ_CONFLICTS):
+            if not with_permission(permission=Permission.VIEW_ADJ_ADJ_CONFLICTS):
                 self.fields.pop('adjudicator_conflicts')
-            if not with_permission(Permission.VIEW_ROOMCONSTRAINTS):
+            if not with_permission(permission=Permission.VIEW_ROOMCONSTRAINTS):
                 self.fields.pop('venue_constraints')
 
-            if not with_permission(Permission.VIEW_PARTICIPANT_INST) and not t.pref('show_adjudicator_institutions'):
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_INST) and not t.pref('show_adjudicator_institutions'):
                 self.fields.pop('institution')
-            if not with_permission(Permission.VIEW_ADJ_BREAK) and not t.pref('public_breaking_adjs'):
+            if not with_permission(permission=Permission.VIEW_ADJ_BREAK) and not t.pref('public_breaking_adjs'):
                 self.fields.pop('breaking')
-            if not with_permission(Permission.VIEW_PARTICIPANT_DECODED) and not t.pref('participant_code_names') == 'everywhere':
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_DECODED) and not t.pref('participant_code_names') == 'everywhere':
                 self.fields.pop('name')
 
-            if not with_permission(Permission.VIEW_FEEDBACK_OVERVIEW):
+            if not with_permission(permission=Permission.VIEW_FEEDBACK_OVERVIEW):
                 self.fields.pop('base_score')
                 self.fields.pop('trainee')
 
-            if not with_permission(Permission.VIEW_PARTICIPANT_CONTACT):
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_CONTACT):
                 self.fields.pop('email')
                 self.fields.pop('phone')
-            if not with_permission(Permission.VIEW_PARTICIPANT_GENDER):
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_GENDER):
                 self.fields.pop('gender')
                 self.fields.pop('pronoun')
-            if not with_permission(Permission.VIEW_PRIVATE_URLS):
+            if not with_permission(permission=Permission.VIEW_PRIVATE_URLS):
                 self.fields.pop('url_key')
+            if not with_permission(permission=Permission.VIEW_CHECKIN):
+                self.fields.pop('barcode')
 
     class Meta:
         model = Adjudicator
@@ -610,6 +627,10 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
             vc = VenueConstraintSerializer(many=True, context=self.context)
             vc._validated_data = venue_constraints  # Data was already validated
             vc.save(adjudicator=instance)
+
+        if 'base_score' in validated_data and validated_data['base_score'] != instance.base_score:
+            AdjudicatorBaseScoreHistory.objects.create(
+                adjudicator=instance, round=self.context['tournament'].current_round, score=validated_data['base_score'])
 
         if self.partial:
             # Avoid removing conflicts if merely PATCHing
@@ -664,19 +685,19 @@ class TeamSerializer(serializers.ModelSerializer):
             t = kwargs['context']['tournament']
             with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=t)
 
-            if not with_permission(Permission.VIEW_TEAM_INST_CONFLICTS):
+            if not with_permission(permission=Permission.VIEW_TEAM_INST_CONFLICTS):
                 self.fields.pop('institution_conflicts')
-            if not with_permission(Permission.VIEW_ROOMCONSTRAINTS):
+            if not with_permission(permission=Permission.VIEW_ROOMCONSTRAINTS):
                 self.fields.pop('venue_constraints')
 
-            if not with_permission(Permission.VIEW_DECODED_TEAMS) and t.pref('team_code_names') in ('admin-tooltips-code', 'admin-tooltips-real', 'everywhere'):
+            if not with_permission(permission=Permission.VIEW_DECODED_TEAMS) and t.pref('team_code_names') in ('admin-tooltips-code', 'admin-tooltips-real', 'everywhere'):
                 self.fields.pop('institution')
                 self.fields.pop('use_institution_prefix')
                 self.fields.pop('reference')
                 self.fields.pop('short_reference')
                 self.fields.pop('short_name')
                 self.fields.pop('long_name')
-            elif not with_permission(Permission.VIEW_PARTICIPANT_INST) and not t.pref('show_team_institutions'):
+            elif not with_permission(permission=Permission.VIEW_PARTICIPANT_INST) and not t.pref('show_team_institutions'):
                 self.fields.pop('institution')
                 self.fields.pop('use_institution_prefix')
 
@@ -778,7 +799,7 @@ class InstitutionSerializer(serializers.ModelSerializer):
 
         if not is_staff(kwargs.get('context')):
             with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=kwargs['context']['tournament'])
-            if not with_permission(Permission.VIEW_ROOMCONSTRAINTS):
+            if not with_permission(permission=Permission.VIEW_ROOMCONSTRAINTS):
                 self.fields.pop('venue_constraints')
 
     def create(self, validated_data):
@@ -822,7 +843,7 @@ class PerTournamentInstitutionSerializer(InstitutionSerializer):
 
         if not is_staff(kwargs.get('context')):
             with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=kwargs['context']['tournament'])
-            if not with_permission(Permission.VIEW_PARTICIPANT_INST):
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_INST):
                 self.fields.pop('teams')
                 self.fields.pop('adjudicators')
 
@@ -930,17 +951,24 @@ class RoundPairingSerializer(serializers.ModelSerializer):
             model = DebateTeam
             fields = ('team', 'side')
 
+    class PairingLinksSerializer(serializers.Serializer):
+        ballots = fields.RoundHyperlinkedIdentityField(
+            view_name='api-ballot-list',
+            lookup_field='pk', lookup_url_kwarg='debate_pk')
+
     url = fields.RoundHyperlinkedIdentityField(view_name='api-pairing-detail', lookup_url_kwarg='debate_pk')
     venue = fields.TournamentHyperlinkedRelatedField(view_name='api-venue-detail', queryset=Venue.objects.all(),
         required=False, allow_null=True)
     teams = DebateTeamSerializer(many=True, source='debateteam_set')
     adjudicators = DebateAdjudicatorSerializer(required=False, allow_null=True)
 
+    _links = PairingLinksSerializer(source='*', read_only=True)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if not is_staff(kwargs.get('context')):
             with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=kwargs['context']['tournament'])
-            if not with_permission(Permission.VIEW_ADMIN_DRAW):
+            if not with_permission(permission=Permission.VIEW_ADMIN_DRAW):
                 self.fields.pop('bracket')
                 self.fields.pop('room_rank')
                 self.fields.pop('importance')

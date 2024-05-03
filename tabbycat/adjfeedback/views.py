@@ -503,7 +503,7 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormV
 class BaseTabroomAddFeedbackView(TabroomSubmissionFieldsMixin, BaseAddFeedbackView):
     """View for tabroom officials to add feedback."""
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_FEEDBACK_SAVE
+    action_log_type = ActionLogEntry.ActionType.FEEDBACK_SAVE
     feedback_form_class_kwargs = {
         'confirm_on_submit': True,
         'enforce_required': False,
@@ -537,7 +537,7 @@ class AssistantAddFeedbackView(AssistantMixin, BaseTabroomAddFeedbackView):
 class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PersonalizablePublicTournamentPageMixin, BaseAddFeedbackView):
     """Base class for views for public users to add feedback."""
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_FEEDBACK_SUBMIT
+    action_log_type = ActionLogEntry.ActionType.FEEDBACK_SUBMIT
     feedback_form_class_kwargs = {
         'confirm_on_submit': True,
         'enforce_required': True,
@@ -648,7 +648,7 @@ class BaseAdjudicatorActionView(LogActionMixin, AdministratorMixin, TournamentMi
 
 class SetAdjudicatorBaseScoreView(BaseAdjudicatorActionView):
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_TEST_SCORE_EDIT
+    action_log_type = ActionLogEntry.ActionType.TEST_SCORE_EDIT
     action_log_content_object_attr = 'atsh'
     edit_permission = Permission.EDIT_BASEJUDGESCORES_IND
 
@@ -670,8 +670,8 @@ class SetAdjudicatorBaseScoreView(BaseAdjudicatorActionView):
 
 class SetAdjudicatorBreakingStatusView(AdministratorMixin, TournamentMixin, LogActionMixin, View):
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATOR_BREAK_SET
     edit_permission = Permission.EDIT_ADJ_BREAK
+    action_log_type = ActionLogEntry.ActionType.ADJUDICATOR_BREAK_SET
 
     def post(self, request, *args, **kwargs):
         body = self.request.body.decode('utf-8')
@@ -794,8 +794,8 @@ class IgnoreFeedbackView(BaseFeedbackToggleView):
 class UpdateAdjudicatorScoresView(AdministratorMixin, LogActionMixin, TournamentMixin, FormView):
     template_name = 'update_adjudicator_scores.html'
     form_class = UpdateAdjudicatorScoresForm
-    action_log_type = ActionLogEntry.ACTION_TYPE_UPDATE_ADJUDICATOR_SCORES
     edit_permission = Permission.EDIT_JUDGESCORES_BULK
+    action_log_type = ActionLogEntry.ActionType.UPDATE_ADJUDICATOR_SCORES
 
     def get_context_data(self, **kwargs):
         sample_adjs = self.tournament.relevant_adjudicators.all()[:3]

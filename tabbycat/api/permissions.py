@@ -41,16 +41,23 @@ class PerTournamentPermissionRequired(BasePermission):
         codes that the user is required to have.
         """
         return ({
-            'list': view.list_permission,
-            'create': view.create_permission,
-            'retrieve': view.list_permission,
-            'update': view.update_permission,
-            'partial_update': view.update_permission,
-            'destroy': view.destroy_permission,
-            'delete_all': view.destroy_permission,
-            'add_blank': view.create_permission,
-        }).get(view.action, False)
+            'list': getattr(view, 'list_permission', False),
+            'create': getattr(view, 'create_permission', False),
+            'retrieve': getattr(view, 'list_permission', False),
+            'update': getattr(view, 'update_permission', False),
+            'partial_update': getattr(view, 'update_permission', False),
+            'destroy': getattr(view, 'destroy_permission', False),
+            'delete_all': getattr(view, 'destroy_permission', False),
+            'add_blank': getattr(view, 'create_permission', False),
+            'GET': getattr(view, 'list_permission', False),
+            'POST': getattr(view, 'update_permission', False),
+            'PUT': getattr(view, 'update_permission', False),
+            'PATCH': getattr(view, 'update_permission', False),
+            'DELETE': getattr(view, 'destroy_permission', False),
+        }).get(getattr(view, 'action', view.request.method), False)
 
     def has_permission(self, request, view):
+        if not hasattr(view, 'tournament'):
+            return True
         perm = self.get_required_permission(view)
         return has_permission(request.user, perm, view.tournament)

@@ -47,7 +47,7 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
     view_permission = Permission.VIEW_MOTION
     edit_permission = Permission.EDIT_MOTION
     template_name = 'motions_edit.html'
-    action_log_type = ActionLogEntry.ACTION_TYPE_MOTION_EDIT
+    action_log_type = ActionLogEntry.ActionType.MOTION_EDIT
     formset_model = Motion
 
     def get_formset_factory_kwargs(self):
@@ -131,7 +131,7 @@ class CopyMotionsView(EditMotionsView):
 
 class CopyPreviousMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
     round_redirect_pattern_name = 'draw-display'
-    action_log_type = ActionLogEntry.ACTION_TYPE_MOTION_EDIT
+    action_log_type = ActionLogEntry.ActionType.MOTION_EDIT
 
     def post(self, request, *args, **kwargs):
         self.round.roundmotion_set.all().delete()
@@ -170,7 +170,8 @@ class BaseReleaseMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, Pos
 
 class ReleaseMotionsView(BaseReleaseMotionsView):
     edit_permission = Permission.RELEASE_MOTION
-    action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE
+
+    action_log_type = ActionLogEntry.ActionType.MOTIONS_RELEASE
     motions_released = True
 
     @property
@@ -180,7 +181,7 @@ class ReleaseMotionsView(BaseReleaseMotionsView):
 
 class UnreleaseMotionsView(BaseReleaseMotionsView):
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_UNRELEASE
+    action_log_type = ActionLogEntry.ActionType.MOTIONS_UNRELEASE
     motions_released = False
 
     @property

@@ -119,8 +119,7 @@ class SpeakerScoreAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
 
 @admin.register(SpeakerScoreByAdj)
 class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
-    list_display = ('id', 'ballot_submission', 'get_round', 'get_adj_name', 'get_team',
-                    'get_speaker_name', 'position', 'score')
+    list_display = ('id', 'ballot_submission', 'get_round', 'get_adj_name', 'get_team', 'position', 'get_speaker_name', 'score')
     search_fields = ('debate_team__debate__round__seq',
                      'debate_team__team__short_name', 'debate_team__team__institution__name',
                      'debate_adjudicator__adjudicator__name')
@@ -128,6 +127,10 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_filter = ('debate_team__debate__round', 'debate_adjudicator__adjudicator__name',
                    'debate_adjudicator__type')
     raw_id_fields = ('debate_team', 'debate_adjudicator', 'ballot_submission')
+
+    @admin.display(description=_("Speaker"))
+    def get_speaker_name(self, obj):
+        return obj.speaker_name
 
     def get_queryset(self, request):
         speaker_person = SpeakerScore.objects.filter(
@@ -140,6 +143,7 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
             'ballot_submission__debate__round__tournament',
             'debate_adjudicator__adjudicator',
             'debate_team__team__tournament',
+            'debate_team__debate__round__tournament',
         ).prefetch_related(
             Prefetch('ballot_submission__debate__debateteam_set',
                 queryset=DebateTeam.objects.select_related('team')),

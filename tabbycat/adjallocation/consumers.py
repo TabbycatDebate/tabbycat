@@ -82,7 +82,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
             debates, panels = allocator.allocate()
             copy_panels_to_debates(debates, panels)
 
-            self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_DEBATES_AUTO)
+            self.log_action(event['extra'], round, ActionLogEntry.ActionType.PREFORMED_PANELS_DEBATES_AUTO)
 
             msg = _("Successfully auto-allocated preformed panels to debates.")
             level = 'success'
@@ -106,7 +106,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
             for alloc in allocation:
                 alloc.save()
 
-            self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO)
+            self.log_action(event['extra'], round, ActionLogEntry.ActionType.ADJUDICATORS_AUTO)
 
             if user_warnings:
                 msg = ngettext(
@@ -151,7 +151,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         for alloc in allocation:
             alloc.save()
 
-        self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_AUTO)
+        self.log_action(event['extra'], round, ActionLogEntry.ActionType.PREFORMED_PANELS_ADJUDICATOR_AUTO)
         content = self.reserialize_panels(SimplePanelAllocationSerializer, round)
 
         if user_warnings:
@@ -214,7 +214,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         elif priority_method == 'bracket':
             self._prioritise_by_bracket(debates, 'bracket')
 
-        self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_AUTO)
+        self.log_action(event['extra'], round, ActionLogEntry.ActionType.DEBATE_IMPORTANCE_AUTO)
         content = self.reserialize_debates(SimpleDebateImportanceSerializer, round, debates)
         msg = _("Succesfully auto-prioritised debates.")
         self.return_response(content, event['extra']['group_name'], msg, 'success')
@@ -245,7 +245,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
             panels = panels.annotate(bracket_mid=(F('bracket_max') + F('bracket_min')) / 2)
             self._prioritise_by_bracket(panels, 'bracket_mid')
 
-        self.log_action(event['extra'], rd, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_IMPORTANCE_AUTO)
+        self.log_action(event['extra'], rd, ActionLogEntry.ActionType.PREFORMED_PANELS_IMPORTANCE_AUTO)
         content = self.reserialize_panels(SimplePanelImportanceSerializer, rd, panels)
         msg = _("Succesfully auto-prioritised preformed panels.")
         self.return_response(content, event['extra']['group_name'], msg, 'success')
@@ -261,7 +261,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
                     'liveness': liveness,
                 })
 
-        self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_CREATE)
+        self.log_action(event['extra'], round, ActionLogEntry.ActionType.PREFORMED_PANELS_CREATE)
         content = self.reserialize_panels(EditPanelAdjsPanelSerializer, round)
 
         if round.prev is None:

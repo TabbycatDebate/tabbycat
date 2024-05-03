@@ -56,7 +56,7 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
     edit_permission = Permission.EDIT_ROOMCATEGORIES
     template_name = 'venue_categories_edit.html'
     formset_model = VenueCategory
-    action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CATEGORIES_EDIT
+    action_log_type = ActionLogEntry.ActionType.VENUE_CATEGORIES_EDIT
 
     def get_formset_factory_kwargs(self):
         queryset = self.tournament.relevant_venues.prefetch_related('venuecategory_set')
@@ -105,7 +105,7 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
     edit_permission = Permission.EDIT_ROOMCONSTRAINTS
     template_name = 'venue_constraints_edit.html'
     formset_model = VenueConstraint
-    action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CONSTRAINTS_EDIT
+    action_log_type = ActionLogEntry.ActionType.VENUE_CONSTRAINTS_EDIT
 
     def get_formset_factory_kwargs(self):
         # Need to build a dynamic choices list for the widget; so override the

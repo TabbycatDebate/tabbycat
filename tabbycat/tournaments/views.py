@@ -167,7 +167,7 @@ class CompleteRoundToggleSilentView(AdministratorMixin, RoundMixin, PostOnlyRedi
 
 class CompleteRoundView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnlyRedirectView):
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_COMPLETE
+    action_log_type = ActionLogEntry.ActionType.ROUND_COMPLETE
 
     def post(self, request, *args, **kwargs):
         self.round.completed = True
