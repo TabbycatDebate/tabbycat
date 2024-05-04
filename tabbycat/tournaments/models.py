@@ -9,6 +9,7 @@ from django.utils.translation import gettext_lazy as _
 
 from participants.models import Person
 from utils.managers import LookupByNameFieldsMixin
+from utils.models import UniqueConstraint
 
 logger = logging.getLogger(__name__)
 
@@ -338,11 +339,10 @@ class Round(models.Model):
         help_text=_("A factor for the points received in the round. For example, if 2, all points are doubled."))
 
     class Meta:
+        constraints = [UniqueConstraint(fields=['tournament', 'seq'])]
         verbose_name = _('round')
         verbose_name_plural = _('rounds')
-        unique_together = [('tournament', 'seq')]
         ordering = ['tournament', 'seq']
-        index_together = ['tournament', 'seq']
 
     def __str__(self):
         return "[%s] %s" % (self.tournament, self.name)

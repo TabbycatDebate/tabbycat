@@ -195,7 +195,7 @@ class EmailEventWebhookView(TournamentMixin, View):
 
         for obj in data:
             dt = datetime.fromtimestamp(obj['timestamp'])
-            timestamp = timezone.make_aware(dt, timezone.utc)
+            timestamp = timezone.make_aware(dt, datetime.timezone.utc)
             email_id = record_lookup.get(obj['hook-id'], None)
             if email_id is None:
                 continue

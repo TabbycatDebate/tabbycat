@@ -7,6 +7,7 @@ from django_better_admin_arrayfield.models.fields import ArrayField
 
 from adjallocation.models import DebateAdjudicator
 from results.models import Submission
+from utils.models import UniqueConstraint
 
 
 class AdjudicatorBaseScoreHistory(models.Model):
@@ -34,7 +35,7 @@ class AdjudicatorFeedbackAnswer(models.Model):
 
     class Meta:
         abstract = True
-        unique_together = [('question', 'feedback')]
+        constraints = [UniqueConstraint(fields=['question', 'feedback'])]
 
 
 class AdjudicatorFeedbackBooleanAnswer(AdjudicatorFeedbackAnswer):
@@ -179,7 +180,10 @@ class AdjudicatorFeedbackQuestion(models.Model):
         default=list)
 
     class Meta:
-        unique_together = [('tournament', 'reference'), ('tournament', 'seq')]
+        constraints = [
+            UniqueConstraint(fields=['tournament', 'reference']),
+            UniqueConstraint(fields=['tournament', 'seq']),
+        ]
         verbose_name = _("adjudicator feedback question")
         verbose_name_plural = _("adjudicator feedback questions")
 
@@ -242,7 +246,9 @@ class AdjudicatorFeedback(Submission):
         help_text=_("Whether the feedback should affect the adjudicator's score"))
 
     class Meta:
-        unique_together = [('adjudicator', 'source_adjudicator', 'source_team', 'version')]
+        constraints = [
+            UniqueConstraint(fields=['adjudicator', 'source_adjudicator', 'source_team', 'version']),
+        ]
         verbose_name = _("adjudicator feedback")
         verbose_name_plural = _("adjudicator feedbacks")
 
