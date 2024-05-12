@@ -924,7 +924,7 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
     def get_form(self):
         form = super().get_form()
         for error in self.errors:
-            msg, t, side, pos, values = error.args
+            msg, t, side, pos = error.args
             if t == 'speaker':
                 field = form._fieldname_speaker(side, pos)
             elif t == 'ghost':
