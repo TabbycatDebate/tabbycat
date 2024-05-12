@@ -544,6 +544,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
         kwargs['password'] = True
         kwargs['result'] = self.result
         kwargs['vetos'] = self.vetos
+        kwargs['filled'] = self.prefilled
         return kwargs
 
     def add_success_message(self):
@@ -602,10 +603,10 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
                     "so you can't enter results for it. Please contact a tab room official."))
 
     def set_speakers(self, former_ballot):
-        if former_ballot.speakerscore_set.exists():
-            for ss in former_ballot.speakerscore_set.all():
-                self.result.set_speaker(ss.debate_team.side, ss.position, ss.speaker)
-                self.result.set_ghost(ss.debate_team.side, ss.position, ss.ghost)
+        for ss in former_ballot.speakerscore_set.all():
+            self.result.set_speaker(ss.debate_team.side, ss.position, ss.speaker)
+            self.result.set_ghost(ss.debate_team.side, ss.position, ss.ghost)
+        else:
             self.prefilled = True
 
     def set_motions(self, former_ballot):
@@ -614,7 +615,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
             self.prefilled = True
         if self.tournament.pref('motion_vetoes_enabled'):
             self.vetos = {}
-            for dtmp in former_ballot.debateteammotionpreference_set.all():
+            for dtmp in former_ballot.debateteammotionpreference_set.filter(preference=3):
                 self.vetos[dtmp.debate_team.side] = dtmp
                 self.vetos[dtmp.debate_team.side]._roundmotion = self.round_motions[dtmp.motion_id]
             self.prefilled = True
