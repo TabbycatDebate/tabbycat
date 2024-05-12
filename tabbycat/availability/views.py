@@ -21,6 +21,7 @@ from draw.generator.utils import partial_break_round_split
 from draw.models import Debate
 from participants.models import Adjudicator, Team
 from tournaments.mixins import RoundMixin
+from users.permissions import Permission
 from utils.misc import reverse_round
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
@@ -36,6 +37,7 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
     template_name = 'availability_index.html'
     page_title = gettext_lazy("Availability")
     page_emoji = '📍'
+    view_permission = Permission.VIEW_ROUNDAVAILABILITIES
 
     def get_context_data(self, **kwargs):
         if self.round.prev:
@@ -206,6 +208,10 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
 
 
 class AvailabilityTypeTeamView(AvailabilityTypeBase):
+
+    view_permission = Permission.VIEW_ROUNDAVAILABILITIES_TEAM
+    edit_permission = Permission.EDIT_ROUNDAVAILABILITIES_TEAM
+
     page_title = gettext_lazy("Team Availability")
     page_emoji = '👂'
     model = Team
@@ -225,6 +231,10 @@ class AvailabilityTypeTeamView(AvailabilityTypeBase):
 
 
 class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
+
+    view_permission = Permission.VIEW_ROUNDAVAILABILITIES_ADJ
+    edit_permission = Permission.EDIT_ROUNDAVAILABILITIES_ADJ
+
     page_title = gettext_lazy("Adjudicator Availability")
     page_emoji = '👂'
     model = Adjudicator
@@ -244,6 +254,10 @@ class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
 
 
 class AvailabilityTypeVenueView(AvailabilityTypeBase):
+
+    view_permission = Permission.VIEW_ROUNDAVAILABILITIES_VENUE
+    edit_permission = Permission.EDIT_ROUNDAVAILABILITIES_VENUE
+
     page_title = gettext_lazy("Room Availability")
     page_emoji = '🎪'
     model = Venue
@@ -278,6 +292,7 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
 class BaseBulkActivationView(RoundMixin, AdministratorMixin, PostOnlyRedirectView):
 
     round_redirect_pattern_name = 'availability-index'
+    edit_permission = Permission.EDIT_ROUNDAVAILABILITIES
 
     def post(self, request, *args, **kwargs):
         try:
@@ -330,6 +345,7 @@ class CheckInAllFromPreviousRoundView(BaseBulkActivationView):
 # ==============================================================================
 
 class BaseAvailabilityUpdateView(RoundMixin, AdministratorMixin, LogActionMixin, View):
+    edit_permission = Permission.EDIT_ROUNDAVAILABILITIES
 
     def post(self, request, *args, **kwargs):
         body = self.request.body.decode('utf-8')

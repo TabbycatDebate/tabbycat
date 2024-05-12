@@ -1,6 +1,8 @@
 from dynamic_preferences.registries import global_preferences_registry
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
+from users.permissions import has_permission
+
 
 class APIEnabledPermission(BasePermission):
     message = "The API has been disabled on this site."
@@ -30,3 +32,32 @@ class PublicIfReleasedPermission(PublicPreferencePermission):
 class IsAdminOrReadOnly(BasePermission):
     def has_permission(self, request, view):
         return request.method in SAFE_METHODS or (request.user and request.user.is_staff)
+
+
+class PerTournamentPermissionRequired(BasePermission):
+    def get_required_permission(self, view):
+        """
+        Given a model and an HTTP method, return the list of permission
+        codes that the user is required to have.
+        """
+        return ({
+            'list': getattr(view, 'list_permission', False),
+            'create': getattr(view, 'create_permission', False),
+            'retrieve': getattr(view, 'list_permission', False),
+            'update': getattr(view, 'update_permission', False),
+            'partial_update': getattr(view, 'update_permission', False),
+            'destroy': getattr(view, 'destroy_permission', False),
+            'delete_all': getattr(view, 'destroy_permission', False),
+            'add_blank': getattr(view, 'create_permission', False),
+            'GET': getattr(view, 'list_permission', False),
+            'POST': getattr(view, 'update_permission', False),
+            'PUT': getattr(view, 'update_permission', False),
+            'PATCH': getattr(view, 'update_permission', False),
+            'DELETE': getattr(view, 'destroy_permission', False),
+        }).get(getattr(view, 'action', view.request.method), False)
+
+    def has_permission(self, request, view):
+        if not hasattr(view, 'tournament'):
+            return True
+        perm = self.get_required_permission(view)
+        return has_permission(request.user, perm, view.tournament)

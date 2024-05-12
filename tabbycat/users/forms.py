@@ -21,23 +21,20 @@ class SuperuserCreationForm(UserCreationForm):
 
 
 class InviteUserForm(PasswordResetForm):
-    role = forms.ChoiceField(label=_("User role"), choices=(
-        ('assistant', _("Assistant")),
-        ('administrator', _("Administrator")),
-    ))
-
     def __init__(self, tournament, *args, **kwargs):
         self.tournament = tournament
         super().__init__(*args, **kwargs)
+
+        self.fields['role'] = forms.ModelChoiceField(queryset=tournament.group_set.all())
 
     def get_users(self, email):
         user, created = get_user_model().objects.get_or_create(
             email=email,
             defaults={
-                'is_superuser': self.cleaned_data['role'] == 'administrator',
                 'username': email.split("@")[0],
             },
         )
+        user.membership_set.create(group=self.cleaned_data['role'])
         return [user]
 
     def save(self, *args, **kwargs):

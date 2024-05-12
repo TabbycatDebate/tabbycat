@@ -30,6 +30,7 @@ from tournaments.mixins import (CurrentRoundMixin, PersonalizablePublicTournamen
                                 RoundMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin,
                                 TournamentMixin)
 from tournaments.models import Round
+from users.permissions import Permission
 from utils.misc import get_ip_address, reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.tables import TabbycatTableBuilder
@@ -112,6 +113,7 @@ class AssistantResultsEntryView(AssistantMixin, CurrentRoundMixin, BaseResultsEn
 
 class AdminResultsEntryForRoundView(AdministratorMixin, BaseResultsEntryForRoundView):
     template_name = 'admin_results.html'
+    view_permission = Permission.VIEW_RESULTS
 
     def get_context_data(self, **kwargs):
         # Stopgap to warn user about potential database inconsistency, when
@@ -378,6 +380,8 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 
 class AdministratorBallotSetMixin(AdministratorMixin):
     template_name = 'ballot_entry.html'
+    view_permission = Permission.VIEW_BALLOTSUBMISSIONS
+    edit_permission = Permission.ADD_BALLOTSUBMISSIONS
     tabroom = True
 
     def get_success_url(self):
@@ -386,6 +390,8 @@ class AdministratorBallotSetMixin(AdministratorMixin):
 
 class OldAdministratorBallotSetMixin(AdministratorMixin):
     template_name = 'enter_results.html'
+    view_permission = Permission.VIEW_BALLOTSUBMISSIONS
+    edit_permission = Permission.ADD_BALLOTSUBMISSIONS
     tabroom = True
 
     def get_success_url(self):
