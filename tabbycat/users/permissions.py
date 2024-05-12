@@ -9,6 +9,8 @@ if TYPE_CHECKING:
     from django.conf import settings
     from tournaments.models import Tournament
 
+PERM_CACHE_KEY = "user_%d_%s_%s_permission"
+
 
 class Permission(TextChoices):
     VIEW_ADJ_TEAM_CONFLICTS = 'view.adjudicatorteamconflict', _("view adjudicator-team conflicts")
@@ -174,7 +176,7 @@ def has_permission(user: 'settings.AUTH_USER_MODEL', permission: permission_type
     else:
         user._permissions[tournament.slug] = set()
 
-    cached_perm = cache.get("user_%d_%s_%s_permission" % (user.pk, tournament.slug, str(permission)))
+    cached_perm = cache.get(PERM_CACHE_KEY % (user.pk, tournament.slug, str(permission)))
     if cached_perm is not None:
         if cached_perm:
             user._permissions[tournament.slug].add(permission)
@@ -186,7 +188,7 @@ def has_permission(user: 'settings.AUTH_USER_MODEL', permission: permission_type
     )
     if perm:
         user._permissions[tournament.slug].add(permission)
-        cache.set("user_%d_%s_%s_permission" % (user.pk, tournament.slug, str(permission)), perm)
+        cache.set(PERM_CACHE_KEY % (user.pk, tournament.slug, str(permission)), perm)
     return perm
 
 
@@ -194,13 +196,12 @@ def get_permissions(user: 'settings.AUTH_USER_MODEL') -> List['Tournament']:
     user_perms = {}
     for t, groups in groupby(user.membership_set.select_related('group', 'group__tournament').order_by('group__tournament').all(), key=lambda m: m.group.tournament):
         tournament = user_perms.setdefault(t.id, t)
+        tournament.permissions = set()
         tournament.groups = [m.group for m in groups]
-        permissions = set()
         for g in tournament.groups:
-            permissions |= set(g.permissions)
-        setattr(tournament, 'permissions', getattr(tournament, 'permissions', set()) | permissions)
+            tournament.permissions |= set(g.permissions)
     for t, perms in groupby(user.userpermission_set.select_related('tournament').order_by('tournament').all(), key=lambda p: p.tournament):
         tournament = user_perms.setdefault(t.id, t)
-        setattr(tournament, 'permissions', getattr(tournament, 'permissions', set()) | {p.permission for p in perms})
+        tournament.permissions = getattr(tournament, 'permissions', set()) | {p.permission for p in perms}
 
     return list(user_perms.values())

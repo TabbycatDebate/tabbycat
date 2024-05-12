@@ -1,10 +1,11 @@
 from django.conf import settings
+from django.core.cache import cache
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from utils.fields import ChoiceArrayField
 
-from .permissions import Permission
+from .permissions import PERM_CACHE_KEY, Permission
 
 
 class UserPermission(models.Model):
@@ -19,6 +20,14 @@ class UserPermission(models.Model):
 
     def __str__(self):
         return "%s: %s (%s)" % (self.user.username, self.permission, self.tournament.slug)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.set(PERM_CACHE_KEY % (self.user_id, self.tournament.slug, str(self.permission)), True)
+
+    def delete(self, *args, **kwargs):
+        cache.delete(PERM_CACHE_KEY % (self.user_id, self.tournament.slug, str(self.permission)))
+        return super().delete(*args, **kwargs)
 
 
 class Group(models.Model):
@@ -44,3 +53,11 @@ class Membership(models.Model):
         verbose_name = _("group membership")
         verbose_name_plural = _("group memberships")
         unique_together = [('user', 'group')]
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.set_many({PERM_CACHE_KEY % (self.user_id, self.group.tournament.slug, str(perm)): True for perm in self.group.permissions})
+
+    def delete(self, *args, **kwargs):
+        cache.delete_many([PERM_CACHE_KEY % (self.user_id, self.group.tournament.slug, str(perm)) for perm in self.group.permissions])
+        return super().delete(*args, **kwargs)
