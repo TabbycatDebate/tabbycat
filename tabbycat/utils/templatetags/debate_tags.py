@@ -1,5 +1,6 @@
 import os
 import re
+from datetime import datetime, timedelta
 from random import randint
 
 from django import template
@@ -242,6 +243,11 @@ def abbreviatename(name):
     """Takes a two-part name and returns an abbreviation like 'E.Lučić'."""
     parts = name.split(" ")
     return "%s.%s" % (parts[0][:5], parts[-1][:5]) # Used for barcodes
+
+
+@register.simple_tag
+def prep_time():
+    return (datetime.now() + timedelta(minutes=15)).strftime('%Y-%m-%dT%H:%M')
 
 
 @register.simple_tag(takes_context=True)

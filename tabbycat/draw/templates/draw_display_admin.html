@@ -357,7 +357,7 @@
           <div class="list-group-item pb-3">
             <div class="form-group">
               <label>{% trans "Start at" %}</label>
-              <input class="form-control" placeholder="{{ round.starts_at|time:'H:i' }}" name="start_time"/>
+              <input type="datetime-local" class="form-control" name="start_time" value="{% prep_time %}"/>
             </div>
           </div>
 
