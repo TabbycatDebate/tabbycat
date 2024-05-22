@@ -1,5 +1,6 @@
 import logging
 from itertools import product
+from typing import TYPE_CHECKING
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -18,6 +19,9 @@ from .consumers import BallotResultConsumer, BallotStatusConsumer
 from .result import (ConsensusDebateResult, ConsensusDebateResultWithScores,
                      DebateResultByAdjudicator, DebateResultByAdjudicatorWithScores)
 from .utils import get_status_meta, side_and_position_names
+
+if TYPE_CHECKING:
+    from .models import BallotSubmission
 
 logger = logging.getLogger(__name__)
 
@@ -48,12 +52,12 @@ class TournamentPasswordField(forms.CharField):
         return value
 
 
-class BaseScoreField(forms.FloatField):
+class BaseScoreField(forms.DecimalField):
     def __init__(self, *args, **kwargs):
         """Takes an additional optional keyword argument: tournament,
         the Tournament used to configure the field."""
 
-        tournament = kwargs.pop('tournament')
+        tournament = kwargs.pop('tournament', None)
         if tournament:
             min_value  = tournament.pref(self.CONFIG_MIN_VALUE_FIELD)
             max_value  = tournament.pref(self.CONFIG_MAX_VALUE_FIELD)
@@ -64,36 +68,11 @@ class BaseScoreField(forms.FloatField):
             step_value = self.DEFAULT_STEP_VALUE
         self.step_value = kwargs.get('step_value', step_value)
 
-        kwargs.setdefault('min_value', self.coerce_for_ui(min_value))
-        kwargs.setdefault('max_value', self.coerce_for_ui(max_value))
+        kwargs.setdefault('min_value', min_value)
+        kwargs.setdefault('max_value', max_value)
+        kwargs.setdefault('step_size', self.step_value)
 
         super().__init__(*args, **kwargs)
-
-    def validate(self, value):
-        super().validate(value)
-        self.check_value(value)
-
-    def check_value(self, value):
-        if value and self.step_value and value % self.step_value != 0:
-            if self.step_value == 1:
-                msg = _("Please enter a whole number.")
-            else:
-                msg = _("Please enter a multiple of %s.") % self.step_value
-            raise forms.ValidationError(msg, code='decimal')
-
-    def widget_attrs(self, widget):
-        attrs = super().widget_attrs(widget)
-        if isinstance(widget, forms.NumberInput):
-            attrs['step'] = self.coerce_for_ui(self.step_value) # override
-        return attrs
-
-    def coerce_for_ui(self, x):
-        if x is None:
-            return None
-        if self.step_value % 1 == 0:
-            return int(x)
-        else:
-            return float(x)
 
 
 class MotionModelChoiceField(forms.ModelChoiceField):
@@ -121,6 +100,33 @@ class ReplyScoreField(BaseScoreField):
     DEFAULT_STEP_VALUE = 0.5
 
 
+def broadcast_results(ballotsub: 'BallotSubmission', debate: Debate):
+    t = debate.round.tournament
+
+    # 5. Notify the Latest Results consumer (for results/overview)
+    if ballotsub.confirmed and debate.result_status == Debate.STATUS_CONFIRMED:
+        group_name = BallotResultConsumer.group_prefix + "_" + t.slug
+        async_to_sync(get_channel_layer().group_send)(group_name, {
+            "type": "send_json",
+            "data": ballotsub.serialize_like_actionlog,
+        })
+
+    # 6. Notify the Results Page/Ballots Status Graph
+    group_name = BallotStatusConsumer.group_prefix + "_" + t.slug
+    meta = get_status_meta(debate)
+    async_to_sync(get_channel_layer().group_send)(group_name, {
+        "type": "send_json",
+        "data": {
+            'status': debate.result_status,
+            'icon': meta[0],
+            'class': meta[1],
+            'sort': meta[2],
+            'ballot': ballotsub.serialize(t),
+            'round': debate.round_id,
+        },
+    })
+
+
 # ==============================================================================
 # Result/ballot forms
 # ==============================================================================
@@ -133,7 +139,7 @@ class BaseResultForm(forms.Form):
 
     result_class = None
 
-    def __init__(self, ballotsub, password=False, *args, **kwargs):
+    def __init__(self, ballotsub, tabroom, password=False, *args, **kwargs):
         self.ballotsub = ballotsub
         self.result = kwargs.pop('result', self.result_class(self.ballotsub))
         self.filled = kwargs.pop('filled', False)
@@ -143,6 +149,8 @@ class BaseResultForm(forms.Form):
         self.tournament = self.debate.round.tournament
 
         self.has_tournament_password = password and self.tournament.pref('public_use_password')
+        self.tabroom = tabroom
+        self.use_codes = use_team_code_names_data_entry(self.tournament, tabroom)
 
         status_choices = Debate.STATUS_CHOICES if self.tournament.pref('enable_postponements') else Debate.STATUS_CHOICES_RESTRICTED
         self.fields['debate_result_status'] = forms.ChoiceField(choices=status_choices)
@@ -202,34 +210,12 @@ class BaseResultForm(forms.Form):
         self.debate.result_status = self.cleaned_data['debate_result_status']
         self.debate.save()
 
-        t = self.debate.round.tournament
         # Need to provide a timestamp immediately for BallotStatusConsumer
         # as it will broadcast before the view finishes assigning one
         if self.ballotsub.confirmed:
             self.ballotsub.confirm_timestamp = timezone.now()
 
-            # 5. Notify the Latest Results consumer (for results/overview)
-            if self.debate.result_status == Debate.STATUS_CONFIRMED:
-                group_name = BallotResultConsumer.group_prefix + "_" + t.slug
-                async_to_sync(get_channel_layer().group_send)(group_name, {
-                    "type": "send_json",
-                    "data": self.ballotsub.serialize_like_actionlog,
-                })
-
-        # 6. Notify the Results Page/Ballots Status Graph
-        group_name = BallotStatusConsumer.group_prefix + "_" + t.slug
-        meta = get_status_meta(self.debate)
-        async_to_sync(get_channel_layer().group_send)(group_name, {
-            "type": "send_json",
-            "data": {
-                'status': self.debate.result_status,
-                'icon': meta[0],
-                'class': meta[1],
-                'sort': meta[2],
-                'ballot': self.ballotsub.serialize(t),
-                'round': self.debate.round_id,
-            },
-        })
+        broadcast_results(self.ballotsub, self.debate)
 
         return self.ballotsub
 
@@ -308,10 +294,11 @@ class BaseBallotSetForm(BaseResultForm):
             assert len(teams) == 2
             side_choices = [
                 (None, _("---------")),
-                (str(teams[0].id) + "," + str(teams[1].id),
-                    _("%(aff_team)s affirmed, %(neg_team)s negated") % {'aff_team': teams[0].short_name, 'neg_team': teams[1].short_name}),
-                (str(teams[1].id) + "," + str(teams[0].id),
-                    _("%(aff_team)s affirmed, %(neg_team)s negated") % {'aff_team': teams[1].short_name, 'neg_team': teams[0].short_name}),
+                *[(str(teams[i].id) + "," + str(teams[(i+1) % 2].id),
+                    _("%(aff_team)s affirmed, %(neg_team)s negated") % {
+                        'aff_team': team_name_for_data_entry(teams[i], self.use_codes),
+                        'neg_team': team_name_for_data_entry(teams[(i+1) % 2], self.use_codes),
+                }) for i in range(2)],
             ]
             self.fields['choose_sides'] = forms.TypedChoiceField(
                 choices=side_choices,
@@ -338,7 +325,7 @@ class BaseBallotSetForm(BaseResultForm):
     def create_declared_winner_dropdown(self):
         """This method creates a drop-down with a list of the teams in the debate"""
         teams = [(s, _("%(team)s (%(side)s)") % {
-            'team': self.debate.get_team(s).short_name, 'side': get_side_name(self.tournament, s, 'full')}) for s in self.sides]
+            'team': team_name_for_data_entry(self.debate.get_team(s), self.use_codes), 'side': get_side_name(self.tournament, s, 'full')}) for s in self.sides]
         return forms.TypedChoiceField(
             label=_("Winner"), required=True, empty_value=None,
             choices=[(None, _("---------"))] + teams,
@@ -535,8 +522,6 @@ class ScoresMixin:
     def clean_speakers(self, cleaned_data):
         """Checks that the speaker selections are valid."""
 
-        use_codes = use_team_code_names_data_entry(self.tournament, True)
-
         # Pull team info again, in case it's changed since the form was loaded.
         if self.choosing_sides:
             teams = cleaned_data.get('choose_sides', [None] * len(self.sides))
@@ -558,7 +543,7 @@ class ScoresMixin:
                 if team is not None and speaker not in team.speakers:
                     self.add_error(self._fieldname_speaker(side, pos), forms.ValidationError(
                         _("The speaker %(speaker)s doesn't appear to be on team %(team)s."),
-                        params={'speaker': speaker.get_public_name(self.tournament), 'team': team_name_for_data_entry(team, use_codes)},
+                        params={'speaker': speaker.get_public_name(self.tournament), 'team': team_name_for_data_entry(team, self.use_codes)},
                         code='speaker_wrongteam'),
                     )
 
@@ -702,8 +687,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
         for side, pos in product(self.sides, self.positions):
             score = result.get_score(side, pos)
-            coerce_for_ui = self.fields[self._fieldname_score(side, pos)].coerce_for_ui
-            initial[self._fieldname_score(side, pos)] = coerce_for_ui(score)
+            initial[self._fieldname_score(side, pos)] = score
             if self.using_speaker_ranks:
                 initial[self._fieldname_srank(side, pos)] = result.get_speaker_rank(side, pos)
 
@@ -849,8 +833,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
         for adj in self.adjudicators:
             for side, pos in product(self.sides, self.positions):
                 score = result.get_score(adj, side, pos)
-                coerce_for_ui = self.fields[self._fieldname_score(adj, side, pos)].coerce_for_ui
-                initial[self._fieldname_score(adj, side, pos)] = coerce_for_ui(score)
+                initial[self._fieldname_score(adj, side, pos)] = score
 
             if self.using_declared_winner:
                 initial[self._fieldname_declared_winner(adj)] = result.get_winner(adj)
@@ -946,7 +929,7 @@ class TeamsMixin:
     def create_team_selector(self):
         # 3(a). List of teams in multiple-select
         side_choices = [(side, _("%(team)s (%(side)s)") % {
-            'team': self.debate.get_team(side).short_name,
+            'team': team_name_for_data_entry(self.debate.get_team(side), self.use_codes),
             'side': self._side_name(side)}) for side in self.tournament.sides]
         return forms.MultipleChoiceField(choices=side_choices,
                 widget=forms.CheckboxSelectMultiple)

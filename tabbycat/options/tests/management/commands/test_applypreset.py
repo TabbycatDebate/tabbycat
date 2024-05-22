@@ -1,3 +1,4 @@
+from decimal import Decimal
 from unittest.mock import patch
 
 from django.core.management import call_command
@@ -15,8 +16,8 @@ class TestPreset(PreferencesPreset):
     show_in_list = False
 
     # Scoring
-    scoring__score_min = 70
-    scoring__score_max = 80
+    scoring__score_min = Decimal('70')
+    scoring__score_max = Decimal('80')
 
 
 class ApplyPresetTests(TestCase):
@@ -37,9 +38,9 @@ class ApplyPresetTests(TestCase):
     @patch('options.management.commands.applypreset.all_presets', return_value=[TestPreset])
     def test_set_valid_preset(self, mock_all_presets):
         tournament = Tournament.objects.create(slug="command", name="Command Testing")
-        tournament.preferences['scoring__score_min'] = 0
-        tournament.preferences['scoring__score_max'] = 100
+        tournament.preferences['scoring__score_min'] = Decimal('0')
+        tournament.preferences['scoring__score_max'] = Decimal('100')
 
         call_command('applypreset', ['-t', 'command', 'testpreset'])
-        for pref, val in [('scoring__score_min', 70), ('scoring__score_max', 80)]:
+        for pref, val in [('scoring__score_min', Decimal('70')), ('scoring__score_max', Decimal('80'))]:
             self.assertEqual(tournament.preferences[pref], val)

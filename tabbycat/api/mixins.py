@@ -3,12 +3,29 @@ import operator
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAdminUser
 
+from actionlog.mixins import LogActionMixin
+from actionlog.models import ActionLogEntry
 from tournaments.models import Round, Tournament
 
-from .permissions import APIEnabledPermission, IsAdminOrReadOnly, PublicIfReleasedPermission, PublicPreferencePermission
+from .permissions import APIEnabledPermission, IsAdminOrReadOnly, PerTournamentPermissionRequired, PublicIfReleasedPermission, PublicPreferencePermission
 
 
-class TournamentAPIMixin:
+class APILogActionMixin(LogActionMixin):
+    action_log_content_object_attr = 'obj'
+
+    def perform_create(self, serializer):
+        self.obj = serializer.save(**self.lookup_kwargs())
+        self.log_action(type=self.action_log_type_created, agent=ActionLogEntry.Agent.API)
+
+    def perform_update(self, serializer):
+        self.obj = serializer.save()
+        self.log_action(type=self.action_log_type_updated, agent=ActionLogEntry.Agent.API)
+
+    def lookup_kwargs(self):
+        return {}
+
+
+class TournamentAPIMixin(APILogActionMixin):
     tournament_field = 'tournament'
 
     access_operator = operator.eq
@@ -22,9 +39,6 @@ class TournamentAPIMixin:
 
     def lookup_kwargs(self):
         return {self.tournament_field: self.tournament}
-
-    def perform_create(self, serializer):
-        serializer.save(**self.lookup_kwargs())
 
     def get_queryset(self):
         return self.get_serializer_class().Meta.model.objects.filter(**self.lookup_kwargs()).select_related(self.tournament_field)
@@ -45,13 +59,8 @@ class RoundAPIMixin(TournamentAPIMixin):
             self._round = get_object_or_404(Round, tournament=self.tournament, seq=self.kwargs['round_seq'])
         return self._round
 
-    def perform_create(self, serializer):
-        serializer.save(**{self.round_field: self.round})
-
     def lookup_kwargs(self):
-        kwargs = super().lookup_kwargs()
-        kwargs[self.round_field] = self.round
-        return kwargs
+        return {self.round_field: self.round}
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -60,16 +69,16 @@ class RoundAPIMixin(TournamentAPIMixin):
 
 
 class AdministratorAPIMixin:
-    permission_classes = [APIEnabledPermission, IsAdminUser]
+    permission_classes = [APIEnabledPermission, IsAdminUser | PerTournamentPermissionRequired]
 
 
 class TournamentPublicAPIMixin:
-    permission_classes = [APIEnabledPermission, PublicPreferencePermission]
+    permission_classes = [APIEnabledPermission, PublicPreferencePermission | PerTournamentPermissionRequired]
 
 
 class OnReleasePublicAPIMixin(TournamentPublicAPIMixin):
-    permission_classes = [APIEnabledPermission, PublicIfReleasedPermission]
+    permission_classes = [APIEnabledPermission, PublicIfReleasedPermission | PerTournamentPermissionRequired]
 
 
 class PublicAPIMixin:
-    permission_classes = [APIEnabledPermission, IsAdminOrReadOnly]
+    permission_classes = [APIEnabledPermission, IsAdminOrReadOnly | PerTournamentPermissionRequired]

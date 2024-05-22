@@ -21,139 +21,100 @@ class ActionLogEntry(models.Model):
     # These aren't generated automatically - all generations of these should
     # be done in views (not models).
 
-    ACTION_TYPE_BALLOT_CHECKIN                    = 'ba.ckin'
-    ACTION_TYPE_BALLOT_CREATE                     = 'ba.crea'
-    ACTION_TYPE_BALLOT_CONFIRM                    = 'ba.conf'
-    ACTION_TYPE_BALLOT_DISCARD                    = 'ba.disc'
-    ACTION_TYPE_BALLOT_SUBMIT                     = 'ba.subm'
-    ACTION_TYPE_BALLOT_EDIT                       = 'ba.edit'
-    ACTION_TYPE_FEEDBACK_SUBMIT                   = 'fb.subm'
-    ACTION_TYPE_FEEDBACK_SAVE                     = 'fb.save'
-    ACTION_TYPE_TEST_SCORE_EDIT                   = 'ts.edit'
-    ACTION_TYPE_ADJUDICATOR_NOTE_SET              = 'aj.note'   # obsolete
-    ACTION_TYPE_DRAW_CREATE                       = 'dr.crea'
-    ACTION_TYPE_DRAW_CONFIRM                      = 'dr.conf'
-    ACTION_TYPE_DRAW_REGENERATE                   = 'dr.rege'
-    ACTION_TYPE_ADJUDICATORS_SAVE                 = 'aa.save'
-    ACTION_TYPE_ADJUDICATORS_AUTO                 = 'aa.auto'
-    ACTION_TYPE_VENUES_SAVE                       = 've.save'
-    ACTION_TYPE_VENUES_AUTOALLOCATE               = 've.auto'
-    ACTION_TYPE_VENUE_CATEGORIES_EDIT             = 've.ca.edit'
-    ACTION_TYPE_VENUE_CONSTRAINTS_EDIT            = 've.co.edit'
-    ACTION_TYPE_MATCHUP_SAVE                      = 'mu.save'
-    ACTION_TYPE_SIDES_SAVE                        = 'ms.save'
-    ACTION_TYPE_DRAW_RELEASE                      = 'dr.rele'
-    ACTION_TYPE_DRAW_UNRELEASE                    = 'dr.unre'
-    ACTION_TYPE_DIVISIONS_SAVE                    = 'dv.save'   # obsolete
-    ACTION_TYPE_MOTION_EDIT                       = 'mo.edit'
-    ACTION_TYPE_MOTIONS_RELEASE                   = 'mo.rele'
-    ACTION_TYPE_MOTIONS_UNRELEASE                 = 'mo.unre'
-    ACTION_TYPE_DEBATE_IMPORTANCE_AUTO            = 'db.im.auto'
-    ACTION_TYPE_DEBATE_IMPORTANCE_EDIT            = 'db.im.edit'
-    ACTION_TYPE_ROUND_START_TIME_SET              = 'rd.st.set'
-    ACTION_TYPE_ROUND_ADVANCE                     = 'rd.adva'   # obsolete, kept to avoid breaking old sites
-    ACTION_TYPE_ROUND_COMPLETE                    = 'rd.comp'
-    ACTION_TYPE_ADJUDICATOR_BREAK_SET             = 'br.aj.set'
-    ACTION_TYPE_BREAK_ELIGIBILITY_EDIT            = 'br.el.edit'
-    ACTION_TYPE_BREAK_CATEGORIES_EDIT             = 'br.ca.edit'
-    ACTION_TYPE_BREAK_GENERATE_ALL                = 'br.gene'
-    ACTION_TYPE_BREAK_UPDATE_ALL                  = 'br.upda'
-    ACTION_TYPE_BREAK_UPDATE_ONE                  = 'br.upd1'
-    ACTION_TYPE_BREAK_EDIT_REMARKS                = 'br.rm.edit'
-    ACTION_TYPE_AVAIL_TEAMS_SAVE                  = 'av.tm.save'
-    ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE           = 'av.aj.save'
-    ACTION_TYPE_AVAIL_VENUES_SAVE                 = 'av.ve.save'
-    ACTION_TYPE_OPTIONS_EDIT                      = 'op.edit'
-    ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT          = 'se.edit'
-    ACTION_TYPE_SPEAKER_CATEGORIES_EDIT           = 'se.ca.edit'
-    ACTION_TYPE_SIMPLE_IMPORT_INSTITUTIONS        = 'si.inst'
-    ACTION_TYPE_SIMPLE_IMPORT_VENUES              = 'si.venu'
-    ACTION_TYPE_SIMPLE_IMPORT_TEAMS               = 'si.team'
-    ACTION_TYPE_SIMPLE_IMPORT_ADJUDICATORS        = 'si.adju'
-    ACTION_TYPE_UPDATE_ADJUDICATOR_SCORES         = 'aj.sc.upda'
-    ACTION_TYPE_CONFLICTS_ADJ_TEAM_EDIT           = 'ac.at.edit'
-    ACTION_TYPE_CONFLICTS_ADJ_ADJ_EDIT            = 'ac.aa.edit'
-    ACTION_TYPE_CONFLICTS_ADJ_INST_EDIT           = 'ac.ai.edit'
-    ACTION_TYPE_CONFLICTS_TEAM_INST_EDIT          = 'ac.ti.edit'
-    ACTION_TYPE_CHECKIN_SPEAK_GENERATE            = 'ch.sp.gene'
-    ACTION_TYPE_CHECKIN_ADJ_GENERATE              = 'ch.aj.gene'
-    ACTION_TYPE_CHECKIN_VENUES_GENERATE           = 'ch.ve.gene'
-    ACTION_TYPE_PREFORMED_PANELS_CREATE           = 'pp.crea'
-    ACTION_TYPE_PREFORMED_PANELS_IMPORTANCE_AUTO  = 'pp.im.auto'
-    ACTION_TYPE_PREFORMED_PANELS_IMPORTANCE_EDIT  = 'pp.im.edit'
-    ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_AUTO = 'pp.aj.auto'
-    ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_EDIT = 'pp.aj.auto'
-    ACTION_TYPE_PREFORMED_PANELS_DEBATES_AUTO     = 'pp.db.auto'
-    ACTION_TYPE_USER_INVITE                       = 'ur.inv'
+    class ActionType(models.TextChoices):
+        ADJUDICATOR_BREAK_SET             = 'br.aj.set', _("Changed adjudicator breaking status")
+        ADJUDICATOR_CREATE                = 'aj.crea', _("Created adjudicator")
+        ADJUDICATOR_EDIT                  = 'aj.edit', _("Edited adjudicator")
+        ADJUDICATOR_NOTE_SET              = 'aj.note', _("Set adjudicator note")   # obsolete
+        ADJUDICATORS_AUTO                 = 'aa.auto', _("Auto-allocated adjudicators")
+        ADJUDICATORS_SAVE                 = 'aa.save', _("Saved adjudicator allocation")
+        AVAIL_ADJUDICATORS_SAVE           = 'av.aj.save', _("Edited adjudicators availability")
+        AVAIL_SAVE                        = 'av.save', _("Edited availability")
+        AVAIL_TEAMS_SAVE                  = 'av.tm.save', _("Edited teams availability")
+        AVAIL_VENUES_SAVE                 = 'av.ve.save', _("Edited room availability")
+        BALLOT_CHECKIN                    = 'ba.ckin', _("Checked in ballot set")
+        BALLOT_CONFIRM                    = 'ba.conf', _("Confirmed ballot set")
+        BALLOT_CREATE                     = 'ba.crea', _("Created ballot set")
+        BALLOT_DISCARD                    = 'ba.disc', _("Discarded ballot set")
+        BALLOT_EDIT                       = 'ba.edit', _("Edited ballot set")
+        BALLOT_SUBMIT                     = 'ba.subm', _("Submitted ballot set from the public form")
+        BREAK_CATEGORIES_EDIT             = 'br.ca.edit', _("Edited break categories")
+        BREAK_DELETE                      = 'br.del', _("Deleted team break for category")
+        BREAK_EDIT_REMARKS                = 'br.rm.edit', _("Edited breaking team remarks")
+        BREAK_ELIGIBILITY_EDIT            = 'br.el.edit', _("Edited break eligibility")
+        BREAK_GENERATE_ALL                = 'br.gene', _("Generated the team break for all categories")
+        BREAK_GENERATE_ONE                = 'br.gen1', _("Generated the team break for one category")
+        BREAK_UPDATE_ALL                  = 'br.upda', _("Edited breaking team remarks and updated all team breaks")
+        BREAK_UPDATE_ONE                  = 'br.upd1', _("Edited breaking team remarks and updated this team break")
+        CHECKIN_ADJ_GENERATE              = 'ch.aj.gene', _("Generated check in identifiers for adjudicators")
+        CHECKIN_SPEAK_GENERATE            = 'ch.sp.gene', _("Generated check in identifiers for speakers")
+        CHECKIN_VENUES_GENERATE           = 'ch.ve.gene', _("Generated check in identifiers for rooms")
+        CONFLICTS_ADJ_ADJ_EDIT            = 'ac.aa.edit', _("Edited adjudicator-adjudicator conflicts")
+        CONFLICTS_ADJ_INST_EDIT           = 'ac.ai.edit', _("Edited adjudicator-institution conflicts")
+        CONFLICTS_ADJ_TEAM_EDIT           = 'ac.at.edit', _("Edited adjudicator-team conflicts")
+        CONFLICTS_TEAM_INST_EDIT          = 'ac.ti.edit', _("Edited team-institution conflicts")
+        DEBATE_CREATE                     = 'db.crea', _("Created debate")
+        DEBATE_EDIT                       = 'db.edit', _("Edited debate")
+        DEBATE_IMPORTANCE_AUTO            = 'db.im.auto', _("Auto-prioritized debate importance")
+        DEBATE_IMPORTANCE_EDIT            = 'db.im.edit', _("Edited debate importance")
+        DIVISIONS_SAVE                    = 'dv.save', _("Saved divisions")   # obsolete
+        DRAW_CONFIRM                      = 'dr.conf', _("Confirmed draw")
+        DRAW_CREATE                       = 'dr.crea', _("Created draw")
+        DRAW_REGENERATE                   = 'dr.rege', _("Regenerated draw")
+        DRAW_RELEASE                      = 'dr.rele', _("Released draw")
+        DRAW_UNRELEASE                    = 'dr.unre', _("Unreleased draw")
+        FEEDBACK_QUESTION_CREATE          = 'fq.crea', _("Created feedback question")
+        FEEDBACK_QUESTION_EDIT            = 'fq.edit', _("Edited feedback question")
+        FEEDBACK_SAVE                     = 'fb.save', _("Saved feedback")
+        FEEDBACK_SUBMIT                   = 'fb.subm', _("Submitted feedback from the public form")
+        INSTITUTION_CREATE                = 'in.crea', _("Created institution")
+        INSTITUTION_EDIT                  = 'in.edit', _("Edited institution")
+        MATCHUP_SAVE                      = 'mu.save', _("Saved a matchup manual edit")
+        MOTION_EDIT                       = 'mo.edit', _("Added/edited motion")
+        MOTIONS_RELEASE                   = 'mo.rele', _("Released motions")
+        MOTIONS_UNRELEASE                 = 'mo.unre', _("Unreleased motions")
+        OPTIONS_EDIT                      = 'op.edit', _("Edited tournament options")
+        PREFORMED_PANELS_ADJUDICATOR_AUTO = 'pp.aj.auto', _("Auto-allocated adjudicators to preformed panels")
+        PREFORMED_PANELS_ADJUDICATOR_EDIT = 'pp.aj.edit', _("Edited preformed panel adjudicator")
+        PREFORMED_PANELS_CREATE           = 'pp.crea', _("Created preformed panels")
+        PREFORMED_PANELS_DEBATES_AUTO     = 'pp.db.auto', _("Auto-allocated preformed panels to debates")
+        PREFORMED_PANELS_DELETE           = 'pp.del', _("Deleted preformed panels")
+        PREFORMED_PANELS_IMPORTANCE_AUTO  = 'pp.im.auto', _("Auto-prioritized preformed panels")
+        PREFORMED_PANELS_IMPORTANCE_EDIT  = 'pp.im.edit', _("Edited preformed panel importance")
+        ROUND_ADVANCE                     = 'rd.adva', _("Advanced the current round to")   # obsolete
+        ROUND_COMPLETE                    = 'rd.comp', _("Marked round as completed")
+        ROUND_CREATE                      = 'rd.crea', _("Created round")
+        ROUND_EDIT                        = 'rd.edit', _("Edited round")
+        ROUND_START_TIME_SET              = 'rd.st.set', _("Set start time")
+        SIDES_SAVE                        = 'ms.save', _("Saved the sides status of a matchup")
+        SIMPLE_IMPORT_ADJUDICATORS        = 'si.adju', _("Imported adjudicators using the simple importer")
+        SIMPLE_IMPORT_INSTITUTIONS        = 'si.inst', _("Imported institutions using the simple importer")
+        SIMPLE_IMPORT_TEAMS               = 'si.team', _("Imported teams using the simple importer")
+        SIMPLE_IMPORT_VENUES              = 'si.venu', _("Imported rooms using the simple importer")
+        SPEAKER_CATEGORIES_EDIT           = 'se.ca.edit', _("Edited speaker categories")
+        SPEAKER_CREATE                    = 'sp.crea', _("Created speaker")
+        SPEAKER_EDIT                      = 'sp.edit', _("Edited speaker")
+        SPEAKER_ELIGIBILITY_EDIT          = 'se.edit', _("Edited speaker category eligibility")
+        TEAM_CREATE                       = 'te.crea', _("Created team")
+        TEAM_EDIT                         = 'te.edit', _("Edited team")
+        TEST_SCORE_EDIT                   = 'ts.edit', _("Edited adjudicator base score")
+        TOURNAMENT_CREATE                 = 'to.crea', _("Created tournament")
+        TOURNAMENT_EDIT                   = 'to.edit', _("Edited tournament")
+        UPDATE_ADJUDICATOR_SCORES         = 'aj.sc.upda', _("Updated adjudicator scores in bulk")
+        USER_INVITE                       = 'ur.inv', _("Invited user to the instance")
+        VENUE_CATEGORIES_EDIT             = 've.ca.edit', _("Edited room categories")
+        VENUE_CATEGORY_CREATE             = 've.ca.crea', _("Created room category")
+        VENUE_CONSTRAINTS_EDIT            = 've.co.edit', _("Edited room constraints")
+        VENUE_CREATE                      = 've.crea', _("Created room")
+        VENUE_EDIT                        = 've.edit', _("Edited room")
+        VENUES_AUTOALLOCATE               = 've.auto', _("Auto-allocated rooms")
+        VENUES_SAVE                       = 've.save', _("Saved a room manual edit")
 
-    ACTION_TYPE_CHOICES = (
-        (ACTION_TYPE_BALLOT_DISCARD                   , _("Discarded ballot set")),
-        (ACTION_TYPE_BALLOT_CHECKIN                   , _("Checked in ballot set")),
-        (ACTION_TYPE_BALLOT_CREATE                    , _("Created ballot set")),  # For tab assistants, not debaters
-        (ACTION_TYPE_BALLOT_EDIT                      , _("Edited ballot set")),
-        (ACTION_TYPE_BALLOT_CONFIRM                   , _("Confirmed ballot set")),
-        (ACTION_TYPE_BALLOT_SUBMIT                    , _("Submitted ballot set from the public form")),  # For debaters, not tab assistants
-        (ACTION_TYPE_FEEDBACK_SUBMIT                  , _("Submitted feedback from the public form")),  # For debaters, not tab assistants
-        (ACTION_TYPE_FEEDBACK_SAVE                    , _("Saved feedback")),  # For tab assistants, not debaters
-        (ACTION_TYPE_TEST_SCORE_EDIT                  , _("Edited adjudicator base score")),
-        (ACTION_TYPE_ADJUDICATOR_NOTE_SET             , _("Set adjudicator note")),
-        (ACTION_TYPE_ADJUDICATORS_SAVE                , _("Saved adjudicator allocation")),
-        (ACTION_TYPE_ADJUDICATORS_AUTO                , _("Auto-allocated adjudicators")),
-        (ACTION_TYPE_VENUES_SAVE                      , _("Saved a room manual edit")),
-        (ACTION_TYPE_VENUES_AUTOALLOCATE              , _("Auto-allocated rooms")),
-        (ACTION_TYPE_VENUE_CATEGORIES_EDIT            , _("Edited room categories")),
-        (ACTION_TYPE_VENUE_CONSTRAINTS_EDIT           , _("Edited room constraints")),
-        (ACTION_TYPE_DRAW_CREATE                      , _("Created draw")),
-        (ACTION_TYPE_DRAW_CONFIRM                     , _("Confirmed draw")),
-        (ACTION_TYPE_DRAW_REGENERATE                  , _("Regenerated draw")),
-        (ACTION_TYPE_DRAW_RELEASE                     , _("Released draw")),
-        (ACTION_TYPE_DRAW_UNRELEASE                   , _("Unreleased draw")),
-        (ACTION_TYPE_MATCHUP_SAVE                     , _("Saved a matchup manual edit")),
-        (ACTION_TYPE_SIDES_SAVE                       , _("Saved the sides status of a matchup")),
-        (ACTION_TYPE_DIVISIONS_SAVE                   , _("Saved divisions")),
-        (ACTION_TYPE_MOTION_EDIT                      , _("Added/edited motion")),
-        (ACTION_TYPE_MOTIONS_RELEASE                  , _("Released motions")),
-        (ACTION_TYPE_MOTIONS_UNRELEASE                , _("Unreleased motions")),
-        (ACTION_TYPE_DEBATE_IMPORTANCE_AUTO           , _("Auto-prioritized debate importance")),
-        (ACTION_TYPE_DEBATE_IMPORTANCE_EDIT           , _("Edited debate importance")),
-        (ACTION_TYPE_ADJUDICATOR_BREAK_SET            , _("Changed adjudicator breaking status")),
-        (ACTION_TYPE_BREAK_ELIGIBILITY_EDIT           , _("Edited break eligibility")),
-        (ACTION_TYPE_BREAK_CATEGORIES_EDIT            , _("Edited break categories")),
-        (ACTION_TYPE_BREAK_GENERATE_ALL               , _("Generated the team break for all categories")),
-        (ACTION_TYPE_BREAK_UPDATE_ALL                 , _("Edited breaking team remarks and updated all team breaks")),
-        (ACTION_TYPE_BREAK_UPDATE_ONE                 , _("Edited breaking team remarks and updated this team break")),
-        (ACTION_TYPE_BREAK_EDIT_REMARKS               , _("Edited breaking team remarks")),
-        (ACTION_TYPE_ROUND_START_TIME_SET             , _("Set start time")),
-        (ACTION_TYPE_ROUND_ADVANCE                    , _("Advanced the current round to")),
-        (ACTION_TYPE_ROUND_COMPLETE                   , _("Marked round as completed")),
-        (ACTION_TYPE_AVAIL_TEAMS_SAVE                 , _("Edited teams availability")),
-        (ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE          , _("Edited adjudicators availability")),
-        (ACTION_TYPE_AVAIL_VENUES_SAVE                , _("Edited room availability")),
-        (ACTION_TYPE_OPTIONS_EDIT                     , _("Edited tournament options")),
-        (ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT         , _("Edited speaker category eligibility")),
-        (ACTION_TYPE_SPEAKER_CATEGORIES_EDIT          , _("Edited speaker categories")),
-        (ACTION_TYPE_SIMPLE_IMPORT_INSTITUTIONS       , _("Imported institutions using the simple importer")),
-        (ACTION_TYPE_SIMPLE_IMPORT_VENUES             , _("Imported rooms using the simple importer")),
-        (ACTION_TYPE_SIMPLE_IMPORT_TEAMS              , _("Imported teams using the simple importer")),
-        (ACTION_TYPE_SIMPLE_IMPORT_ADJUDICATORS       , _("Imported adjudicators using the simple importer")),
-        (ACTION_TYPE_UPDATE_ADJUDICATOR_SCORES        , _("Updated adjudicator scores in bulk")),
-        (ACTION_TYPE_CONFLICTS_ADJ_TEAM_EDIT          , _("Edited adjudicator-team conflicts")),
-        (ACTION_TYPE_CONFLICTS_ADJ_ADJ_EDIT           , _("Edited adjudicator-adjudicator conflicts")),
-        (ACTION_TYPE_CONFLICTS_ADJ_INST_EDIT          , _("Edited adjudicator-institution conflicts")),
-        (ACTION_TYPE_CONFLICTS_TEAM_INST_EDIT         , _("Edited team-institution conflicts")),
-        (ACTION_TYPE_CHECKIN_SPEAK_GENERATE           , _("Generated check in identifiers for speakers")),
-        (ACTION_TYPE_CHECKIN_ADJ_GENERATE             , _("Generated check in identifiers for adjudicators")),
-        (ACTION_TYPE_CHECKIN_VENUES_GENERATE          , _("Generated check in identifiers for rooms")),
-        (ACTION_TYPE_PREFORMED_PANELS_CREATE          , _("Created preformed panels")),
-        (ACTION_TYPE_PREFORMED_PANELS_IMPORTANCE_AUTO , _("Auto-prioritized preformed panels")),
-        (ACTION_TYPE_PREFORMED_PANELS_IMPORTANCE_EDIT , _("Edited preformed panel importance")),
-        (ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_AUTO, _("Auto-allocated adjudicators to preformed panels")),
-        (ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_EDIT, _("Edited preformed panel adjudicator")),
-        (ACTION_TYPE_PREFORMED_PANELS_DEBATES_AUTO    , _("Auto-allocated preformed panels to debates")),
-        (ACTION_TYPE_USER_INVITE                      , _("Invited user to the instance")),
-    )
+    class Agent(models.TextChoices):
+        API = 'a', _("API")
+        WEB = 'w', _("Web")
 
-    type = models.CharField(max_length=10, choices=ACTION_TYPE_CHOICES,
+    type = models.CharField(max_length=10, choices=ActionType.choices,
         verbose_name=_("type"))
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True,
         verbose_name=_("timestamp"))
@@ -175,6 +136,8 @@ class ActionLogEntry(models.Model):
     object_id = models.PositiveIntegerField(blank=True, null=True,
         verbose_name=_("object ID"))
     content_object = GenericForeignKey('content_type', 'object_id')
+    agent = models.CharField(max_length=1, choices=Agent.choices, default=Agent.WEB,
+        verbose_name=_("agent"))
 
     objects = ActionLogManager()
 
@@ -190,7 +153,7 @@ class ActionLogEntry(models.Model):
         if self.user is None and self.ip_address is None:
             raise ValidationError(_("All log entries require at least one of a user and an IP address."))
 
-    def get_content_object_display(self, omit_tournament=False):
+    def get_content_object_display(self, omit_tournament=False, user=None):
         obj = self.content_object
 
         if obj is None:
@@ -199,12 +162,12 @@ class ActionLogEntry(models.Model):
         model_name = self.content_type.model
         try:
             if model_name == 'ballotsubmission':
-                if use_team_code_names(self.tournament, True):
+                if use_team_code_names(self.tournament, True, user):
                     return obj.debate.matchup_codes
                 else:
                     return obj.debate.matchup
             elif model_name == 'debate':
-                if use_team_code_names(self.tournament, True):
+                if use_team_code_names(self.tournament, True, user):
                     return obj.debate.matchup_codes
                 else:
                     return obj.debate.matchup
@@ -229,6 +192,8 @@ class ActionLogEntry(models.Model):
             'id': self.id,
             'user': self.user.username if self.user else self.ip_address or _("anonymous"),
             'type': self.get_type_display(),
-            'param': self.get_content_object_display(omit_tournament=True),
+            # As the team names are passed in the content of the message for all users,
+            # must assume they don't have permission for real names
+            'param': self.get_content_object_display(omit_tournament=True, user=None),
             'timestamp': badge_datetime_format(self.timestamp),
         }

@@ -256,7 +256,7 @@ class AdjudicatorFeedback(Submission):
 
     def _unique_unconfirm_args(self):
         kwargs = super()._unique_unconfirm_args()
-        if self.source_team is not None and self.source_team.debate.round.tournament.pref('feedback_from_teams') != 'all-adjs':
+        if self.source_team is not None and self.source_team.debate.round.tournament.pref('feedback_from_teams') == 'orallist':
             kwargs.pop('adjudicator')
         return kwargs
 

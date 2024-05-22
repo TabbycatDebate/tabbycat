@@ -200,7 +200,7 @@ class BaseDrawManager:
         pairings = drawer.generate()
         self._make_debates(pairings)
 
-        self._make_bye_debates(byes, max([p.room_rank for p in pairings]))
+        self._make_bye_debates(byes, max([p.room_rank for p in pairings], default=0))
 
         self.round.draw_status = Round.Status.DRAFT
         self.round.save()

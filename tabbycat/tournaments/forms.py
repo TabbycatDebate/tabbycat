@@ -12,6 +12,8 @@ from breakqual.models import BreakCategory
 from breakqual.utils import auto_make_break_rounds
 from options.preferences import TournamentStaff
 from options.presets import all_presets, data_entry_presets_for_form, presets_for_form, PrivateURLs, public_presets_for_form, PublicForms, PublicInformation
+from users.groups import all_groups
+from users.models import Group
 
 from .models import Round, Tournament
 from .signals import update_tournament_cache
@@ -49,6 +51,11 @@ class TournamentStartForm(ModelForm):
             answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT)
         comments.save()
 
+    @staticmethod
+    def add_default_permission_groups(tournament: Tournament):
+        for group in all_groups():
+            Group.objects.create(name=group.name, permissions=group.permissions, tournament=tournament)
+
     def save(self):
         tournament = super(TournamentStartForm, self).save()
         auto_make_rounds(tournament, self.cleaned_data["num_prelim_rounds"])
@@ -68,6 +75,7 @@ class TournamentStartForm(ModelForm):
             open_break.full_clean()
             open_break.save()
 
+        self.add_default_permission_groups(tournament)
         self.add_default_feedback_questions(tournament)
         tournament.current_round = tournament.round_set.order_by('seq').first()
         tournament.save()

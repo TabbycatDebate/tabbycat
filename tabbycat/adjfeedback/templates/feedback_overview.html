@@ -22,6 +22,10 @@
     {% blocktrans trimmed asvar p1 %}
       The current <a href="{{ option_url }}" class="alert-link">feedback configuration</a> allows and expects all adjudicators (including trainees) to submit feedback on every other member of the panel (including trainees).
     {% endblocktrans %}
+  {% elif pref.feedback_paths == 'no-adjs' %}
+    {% blocktrans trimmed asvar p1 %}
+      The current <a href="{{ option_url }}" class="alert-link">feedback configuration</a> disallows adjudicators to submit feedback on other members of the panel (including trainees).
+    {% endblocktrans %}
   {% endif %}
   {% include "components/explainer-card.html" with type="info" %}
 

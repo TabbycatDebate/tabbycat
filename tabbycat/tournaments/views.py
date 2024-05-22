@@ -19,6 +19,7 @@ from notifications.models import BulkNotification
 from results.models import BallotSubmission
 from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
+from users.permissions import has_permission
 from utils.misc import redirect_round, redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import (AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin,
                           WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin)
@@ -76,20 +77,29 @@ class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin
         kwargs["readthedocs_version"] = settings.READTHEDOCS_VERSION
         kwargs["blank"] = not (t.team_set.exists() or t.adjudicator_set.exists() or t.venue_set.exists())
 
-        actions = ActionLogEntry.objects.filter(tournament=t).prefetch_related(
-                    'content_object', 'user').order_by('-timestamp')[:updates]
-        kwargs["initialActions"] = json.dumps([a.serialize for a in actions])
+        action_perm = has_permission(self.request.user, 'view.actionlogentry', self.tournament)
+        if action_perm:
+            actions = ActionLogEntry.objects.filter(tournament=t).prefetch_related(
+                        'content_object', 'user').order_by('-timestamp')[:updates]
+            kwargs["initialActions"] = json.dumps([a.serialize for a in actions])
+        else:
+            kwargs["initialActions"] = json.dumps([])
 
-        debates = t.current_round.debate_set.filter(
-            ballotsubmission__confirmed=True,
-        ).order_by('-ballotsubmission__timestamp')[:updates]
-        populate_confirmed_ballots(debates, results=True)
-        subs = [d._confirmed_ballot.serialize_like_actionlog for d in debates]
-        kwargs["initialBallots"] = json.dumps(subs)
+        results_perm = has_permission(self.request.user, 'view.ballotsubmission', self.tournament)
+        if results_perm:
+            debates = t.current_round.debate_set.filter(
+                ballotsubmission__confirmed=True,
+            ).order_by('-ballotsubmission__timestamp')[:updates]
+            populate_confirmed_ballots(debates, results=True)
+            subs = [d._confirmed_ballot.serialize_like_actionlog for d in debates]
+            kwargs["initialBallots"] = json.dumps(subs)
+        else:
+            kwargs["initialBallots"] = json.dumps([])
 
         status = t.current_round.draw_status
         kwargs["total_debates"] = t.current_round.debate_set.count()
-        if status == Round.Status.CONFIRMED or status == Round.Status.RELEASED:
+        graph_perm = has_permission(self.request.user, 'view.ballotsubmission.graph', self.tournament)
+        if (status == Round.Status.CONFIRMED or status == Round.Status.RELEASED) and graph_perm:
             ballots = BallotSubmission.objects.filter(
                 debate__round=t.current_round, discarded=False).select_related(
                 'submitter', 'debate')
@@ -97,6 +107,12 @@ class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin
             kwargs["initial_graph_data"] = json.dumps(stats)
         else:
             kwargs["initial_graph_data"] = json.dumps([])
+
+        kwargs["overview_permissions"] = json.dumps({
+            "graph": graph_perm,
+            "actionlog": action_perm,
+            "results": results_perm,
+        })
 
         return super().get_context_data(**kwargs)
 
@@ -107,6 +123,7 @@ class TournamentAssistantHomeView(AssistantMixin, BaseTournamentDashboardHomeVie
 
 class TournamentAdminHomeView(AdministratorMixin, BaseTournamentDashboardHomeView):
     template_name = 'tournament_index.html'
+    view_permission = True
 
 
 class CompleteRoundCheckView(AdministratorMixin, RoundMixin, TemplateView):
@@ -150,7 +167,7 @@ class CompleteRoundToggleSilentView(AdministratorMixin, RoundMixin, PostOnlyRedi
 
 class CompleteRoundView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnlyRedirectView):
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_COMPLETE
+    action_log_type = ActionLogEntry.ActionType.ROUND_COMPLETE
 
     def post(self, request, *args, **kwargs):
         self.round.completed = True

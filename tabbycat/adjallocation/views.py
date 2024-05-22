@@ -13,6 +13,7 @@ from availability.utils import annotate_availability
 from participants.models import Adjudicator, Region
 from participants.prefetch import populate_feedback_scores
 from tournaments.mixins import DebateDragAndDropMixin, TournamentMixin
+from users.permissions import has_permission, Permission
 from utils.misc import ranks_dictionary, redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView
@@ -90,6 +91,8 @@ class EditDebateAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
     page_title = gettext_lazy("Edit Allocation")
     prefetch_adjs = True # Fetched in full as get_serialised
 
+    view_permission = Permission.VIEW_DEBATEADJUDICATORS
+
     def get_extra_info(self):
         info = super().get_extra_info()
         return info
@@ -103,6 +106,8 @@ class EditDebateAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
 class EditPanelAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
     template_name = "edit_panel_adjudicators.html"
     page_title = gettext_lazy("Edit Panels")
+
+    view_permission = Permission.VIEW_PREFORMEDPANELS
 
     def get_extra_info(self):
         info = super().get_extra_info()
@@ -123,9 +128,10 @@ class EditPanelAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
                                             context={'round': self.round})
 
 
-class PanelAdjudicatorsIndexView(TemplateView, AdministratorMixin):
+class PanelAdjudicatorsIndexView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = "preformed_index.html"
     page_title = gettext_lazy("Preformed Panels")
+    view_permission = True
 
 
 # ==============================================================================
@@ -143,13 +149,26 @@ class BaseAdjudicatorConflictsView(LogActionMixin, AdministratorMixin, Tournamen
     template_name = 'edit_conflicts.html'
     page_emoji = "🔶"
 
-    formset_factory_kwargs = {
-        'extra': 10,
-        'can_delete': True,
-    }
+    formset_factory_kwargs = {}
+
+    def get_formset_factory_kwargs(self):
+        can_edit = has_permission(self.request.user, self.get_edit_permission(), self.tournament)
+        kwargs = super().get_formset_factory_kwargs()
+        kwargs['extra'] = 10 * int(can_edit)
+        kwargs['can_delete'] = can_edit
+        return kwargs
+
+    def get_formset(self):
+        formset = super().get_formset()
+        if not has_permission(self.request.user, self.get_edit_permission(), self.tournament):
+            for form in formset:
+                for field in form.fields.values():
+                    field.disabled = True
+        return formset
 
     def get_context_data(self, **kwargs):
         kwargs['save_text'] = self.save_text
+        kwargs['can_edit'] = has_permission(self.request.user, self.get_edit_permission(), self.tournament)
         return super().get_context_data(**kwargs)
 
     def get_success_url(self, *args, **kwargs):
@@ -167,7 +186,10 @@ class BaseAdjudicatorConflictsView(LogActionMixin, AdministratorMixin, Tournamen
 
 class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_ADJ_TEAM_EDIT
+    view_permission = Permission.VIEW_ADJ_TEAM_CONFLICTS
+    edit_permission = Permission.EDIT_ADJ_TEAM_CONFLICTS
+
+    action_log_type = ActionLogEntry.ActionType.CONFLICTS_ADJ_TEAM_EDIT
     formset_model = AdjudicatorTeamConflict
     page_title = gettext_lazy("Adjudicator-Team Conflicts")
     save_text = gettext_lazy("Save Adjudicator-Team Conflicts")
@@ -211,7 +233,10 @@ class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
 
 class AdjudicatorAdjudicatorConflictsView(BaseAdjudicatorConflictsView):
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_ADJ_ADJ_EDIT
+    view_permission = Permission.VIEW_ADJ_ADJ_CONFLICTS
+    edit_permission = Permission.EDIT_ADJ_ADJ_CONFLICTS
+
+    action_log_type = ActionLogEntry.ActionType.CONFLICTS_ADJ_ADJ_EDIT
     formset_model = AdjudicatorAdjudicatorConflict
     page_title = gettext_lazy("Adjudicator-Adjudicator Conflicts")
     save_text = gettext_lazy("Save Adjudicator-Adjudicator Conflicts")
@@ -251,7 +276,10 @@ class AdjudicatorAdjudicatorConflictsView(BaseAdjudicatorConflictsView):
 
 class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_ADJ_INST_EDIT
+    view_permission = Permission.VIEW_ADJ_INST_CONFLICTS
+    edit_permission = Permission.EDIT_ADJ_INST_CONFLICTS
+
+    action_log_type = ActionLogEntry.ActionType.CONFLICTS_ADJ_INST_EDIT
     formset_model = AdjudicatorInstitutionConflict
     page_title = gettext_lazy("Adjudicator-Institution Conflicts")
     save_text = gettext_lazy("Save Adjudicator-Institution Conflicts")
@@ -290,7 +318,10 @@ class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
 
 class TeamInstitutionConflictsView(BaseAdjudicatorConflictsView):
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_TEAM_INST_EDIT
+    view_permission = Permission.VIEW_TEAM_INST_CONFLICTS
+    edit_permission = Permission.EDIT_TEAM_INST_CONFLICTS
+
+    action_log_type = ActionLogEntry.ActionType.CONFLICTS_TEAM_INST_EDIT
     formset_model = TeamInstitutionConflict
     page_title = gettext_lazy("Team-Institution Conflicts")
     save_text = gettext_lazy("Save Team-Institution Conflicts")
