@@ -30,7 +30,7 @@ from utils.tables import TabbycatTableBuilder
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
 
 from .forms import make_feedback_form_class, UpdateAdjudicatorScoresForm
-from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
+from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AnswerType
 from .prefetch import populate_debate_adjudicators
 from .progress import get_feedback_progress
 from .tables import FeedbackTableBuilder
@@ -219,8 +219,7 @@ class FeedbackMixin(TournamentMixin):
         # Can't prefetch an abstract model effectively; so get all answers...
         questions = list(self.tournament.adj_feedback_questions)
         if self.only_comments:
-            long_text = AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT
-            questions = [q for q in questions if q.answer_type == long_text]
+            questions = [q for q in questions if q.answer_type is AnswerType.LONGTEXT]
 
         for question in questions:
             question.answers = list(question.answer_set.values())
@@ -272,6 +271,7 @@ class FeedbackCardsView(FeedbackMixin, AdministratorMixin, TournamentMixin, Temp
     def get_context_data(self, **kwargs):
         kwargs['feedbacks'] = self.get_feedbacks()
         kwargs['score_thresholds'] = self.get_score_thresholds()
+        kwargs['AnswerType'] = AnswerType
         return super().get_context_data(**kwargs)
 
 

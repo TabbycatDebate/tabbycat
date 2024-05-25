@@ -88,56 +88,19 @@ class AdjudicatorFeedbackManyAnswer(AdjudicatorFeedbackAnswer):
         verbose_name_plural = _("adjudicator feedback multiple select answers")
 
 
-class AdjudicatorFeedbackQuestion(models.Model):
-    # When adding or changing an answer type, here are the other places you need
-    # to edit:
-    #   - forms.py : BaseFeedbackForm._make_question_field()
-    #   - importer/importers/anorak.py : AnorakTournamentDataImporter.FEEDBACK_ANSWER_TYPES
+class AnswerType(models.TextChoices):
+    BOOLEAN_CHECKBOX = 'bc', _("checkbox")
+    BOOLEAN_SELECT = 'bs', _("yes/no (dropdown)")
+    INTEGER_TEXTBOX = 'i', _("integer (textbox)")
+    INTEGER_SCALE = 'is', _("integer scale")
+    FLOAT = 'f', _("float")
+    TEXT = 't', _("text")
+    LONGTEXT = 'tl', _("long text")
+    SINGLE_SELECT = 'ss', _("select one")
+    MULTIPLE_SELECT = 'ms', _("select multiple")
 
-    ANSWER_TYPE_BOOLEAN_CHECKBOX = 'bc'
-    ANSWER_TYPE_BOOLEAN_SELECT = 'bs'
-    ANSWER_TYPE_INTEGER_TEXTBOX = 'i'
-    ANSWER_TYPE_INTEGER_SCALE = 'is'
-    ANSWER_TYPE_FLOAT = 'f'
-    ANSWER_TYPE_TEXT = 't'
-    ANSWER_TYPE_LONGTEXT = 'tl'
-    ANSWER_TYPE_SINGLE_SELECT = 'ss'
-    ANSWER_TYPE_MULTIPLE_SELECT = 'ms'
-    ANSWER_TYPE_CHOICES = (
-        (ANSWER_TYPE_BOOLEAN_CHECKBOX, _("checkbox")),
-        (ANSWER_TYPE_BOOLEAN_SELECT, _("yes/no (dropdown)")),
-        (ANSWER_TYPE_INTEGER_TEXTBOX, _("integer (textbox)")),
-        (ANSWER_TYPE_INTEGER_SCALE, _("integer scale")),
-        (ANSWER_TYPE_FLOAT, _("float")),
-        (ANSWER_TYPE_TEXT, _("text")),
-        (ANSWER_TYPE_LONGTEXT, _("long text")),
-        (ANSWER_TYPE_SINGLE_SELECT, _("select one")),
-        (ANSWER_TYPE_MULTIPLE_SELECT, _("select multiple")),
-    )
-    ANSWER_TYPE_CLASSES = {
-        ANSWER_TYPE_BOOLEAN_CHECKBOX: AdjudicatorFeedbackBooleanAnswer,
-        ANSWER_TYPE_BOOLEAN_SELECT: AdjudicatorFeedbackBooleanAnswer,
-        ANSWER_TYPE_INTEGER_TEXTBOX: AdjudicatorFeedbackIntegerAnswer,
-        ANSWER_TYPE_INTEGER_SCALE: AdjudicatorFeedbackIntegerAnswer,
-        ANSWER_TYPE_FLOAT: AdjudicatorFeedbackFloatAnswer,
-        ANSWER_TYPE_TEXT: AdjudicatorFeedbackStringAnswer,
-        ANSWER_TYPE_LONGTEXT: AdjudicatorFeedbackStringAnswer,
-        ANSWER_TYPE_SINGLE_SELECT: AdjudicatorFeedbackStringAnswer,
-        ANSWER_TYPE_MULTIPLE_SELECT: AdjudicatorFeedbackManyAnswer,
-    }
-    ANSWER_TYPE_CLASSES_REVERSE = {
-        AdjudicatorFeedbackStringAnswer: [ANSWER_TYPE_TEXT,
-                                          ANSWER_TYPE_LONGTEXT,
-                                          ANSWER_TYPE_SINGLE_SELECT],
-        AdjudicatorFeedbackManyAnswer: [ANSWER_TYPE_MULTIPLE_SELECT],
-        AdjudicatorFeedbackIntegerAnswer:
-        [ANSWER_TYPE_INTEGER_SCALE, ANSWER_TYPE_INTEGER_TEXTBOX],
-        AdjudicatorFeedbackFloatAnswer: [ANSWER_TYPE_FLOAT],
-        AdjudicatorFeedbackBooleanAnswer:
-        [ANSWER_TYPE_BOOLEAN_SELECT, ANSWER_TYPE_BOOLEAN_CHECKBOX],
-    }
-    NUMERICAL_ANSWER_TYPES = [ANSWER_TYPE_INTEGER_TEXTBOX, ANSWER_TYPE_INTEGER_SCALE, ANSWER_TYPE_FLOAT]
 
+class BaseQuestion(models.Model):
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
         verbose_name=_("tournament"))
     seq = models.IntegerField(help_text="The order in which questions are displayed",
@@ -148,18 +111,8 @@ class AdjudicatorFeedbackQuestion(models.Model):
     name = models.CharField(max_length=30,
         verbose_name=_("name"),
         help_text=_("A short name for the question, e.g., \"Agree with decision\""))
-    reference = models.SlugField(
-        verbose_name=_("reference"),
-        help_text=_("Code-compatible reference, e.g., \"agree_with_decision\""))
 
-    from_adj = models.BooleanField(
-        verbose_name=_("from adjudicator"),
-        help_text=_("Adjudicators should be asked this question (about other adjudicators)"))
-    from_team = models.BooleanField(
-        verbose_name=_("from team"),
-        help_text=_("Teams should be asked this question"))
-
-    answer_type = models.CharField(max_length=2, choices=ANSWER_TYPE_CHOICES,
+    answer_type = models.CharField(max_length=2, choices=AnswerType.choices,
         verbose_name=_("answer type"))
     required = models.BooleanField(default=True,
         verbose_name=_("required"),
@@ -179,6 +132,51 @@ class AdjudicatorFeedbackQuestion(models.Model):
         default=list)
 
     class Meta:
+        abstract = True
+
+
+class AdjudicatorFeedbackQuestion(BaseQuestion):
+    # When adding or changing an answer type, here are the other places you need
+    # to edit:
+    #   - forms.py : BaseFeedbackForm._make_question_field()
+    #   - importer/importers/anorak.py : AnorakTournamentDataImporter.FEEDBACK_ANSWER_TYPES
+
+    ANSWER_CLASSES = {
+        AnswerType.BOOLEAN_CHECKBOX: AdjudicatorFeedbackBooleanAnswer,
+        AnswerType.BOOLEAN_SELECT: AdjudicatorFeedbackBooleanAnswer,
+        AnswerType.INTEGER_TEXTBOX: AdjudicatorFeedbackIntegerAnswer,
+        AnswerType.INTEGER_SCALE: AdjudicatorFeedbackIntegerAnswer,
+        AnswerType.FLOAT: AdjudicatorFeedbackFloatAnswer,
+        AnswerType.TEXT: AdjudicatorFeedbackStringAnswer,
+        AnswerType.LONGTEXT: AdjudicatorFeedbackStringAnswer,
+        AnswerType.SINGLE_SELECT: AdjudicatorFeedbackStringAnswer,
+        AnswerType.MULTIPLE_SELECT: AdjudicatorFeedbackManyAnswer,
+    }
+    ANSWER_CLASSES_REVERSE = {
+        AdjudicatorFeedbackStringAnswer: [AnswerType.TEXT,
+                                          AnswerType.LONGTEXT,
+                                          AnswerType.SINGLE_SELECT],
+        AdjudicatorFeedbackManyAnswer: [AnswerType.MULTIPLE_SELECT],
+        AdjudicatorFeedbackIntegerAnswer:
+        [AnswerType.INTEGER_SCALE, AnswerType.INTEGER_TEXTBOX],
+        AdjudicatorFeedbackFloatAnswer: [AnswerType.FLOAT],
+        AdjudicatorFeedbackBooleanAnswer:
+        [AnswerType.BOOLEAN_SELECT, AnswerType.BOOLEAN_CHECKBOX],
+    }
+    NUMERICAL_ANSWER_TYPES = [AnswerType.INTEGER_TEXTBOX, AnswerType.INTEGER_SCALE, AnswerType.FLOAT]
+
+    reference = models.SlugField(
+        verbose_name=_("reference"),
+        help_text=_("Code-compatible reference, e.g., \"agree_with_decision\""))
+
+    from_adj = models.BooleanField(
+        verbose_name=_("from adjudicator"),
+        help_text=_("Adjudicators should be asked this question (about other adjudicators)"))
+    from_team = models.BooleanField(
+        verbose_name=_("from team"),
+        help_text=_("Teams should be asked this question"))
+
+    class Meta:
         unique_together = [('tournament', 'reference'), ('tournament', 'seq')]
         verbose_name = _("adjudicator feedback question")
         verbose_name_plural = _("adjudicator feedback questions")
@@ -192,7 +190,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
 
     @property
     def answer_type_class(self):
-        return self.ANSWER_TYPE_CLASSES[self.answer_type]
+        return self.ANSWER_CLASSES[self.answer_type]
 
     @property
     def choices_for_field(self):
@@ -297,7 +295,7 @@ class AdjudicatorFeedback(Submission):
     def get_answers(self):
         return [
             {'question': q.question, 'answer': q.answer}
-            for typ in AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE.keys()
+            for typ in AdjudicatorFeedbackQuestion.ANSWER_CLASSES_REVERSE.keys()
             for q in getattr(self, typ.__name__.lower() + '_set').all()
         ]
 

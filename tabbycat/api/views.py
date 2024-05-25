@@ -1094,7 +1094,7 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
                 typ.__name__.lower() + "_set",
                 queryset=typ.objects.all().select_related('question', 'question__tournament'),
             )
-            for typ in AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE.keys()
+            for typ in AdjudicatorFeedbackQuestion.ANSWER_CLASSES_REVERSE.keys()
         ]
         return super().get_queryset().filter(filters).select_related(
             'adjudicator', 'adjudicator__tournament',

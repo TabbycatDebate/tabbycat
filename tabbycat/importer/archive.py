@@ -245,7 +245,7 @@ class Exporter:
 
                 for question in self.t.adjudicatorfeedbackquestion_set.all():
                     try:
-                        answer = AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[question.answer_type].objects.get(
+                        answer = AdjudicatorFeedbackQuestion.ANSWER_CLASSES[question.answer_type].objects.get(
                             feedback=feedback,
                             question=question,
                         )
@@ -678,5 +678,5 @@ class Importer:
                     # if question.answer_type in AdjudicatorFeedbackQuestion.NUMERICAL_ANSWER_TYPES:
                     #     cast_answer = float(cast_answer)
 
-                    answer = AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[question.answer_type](
+                    answer = AdjudicatorFeedbackQuestion.ANSWER_CLASSES[question.answer_type](
                         question=question, answer=cast_answer, feedback=feedback_obj)

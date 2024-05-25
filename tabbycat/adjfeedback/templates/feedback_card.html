@@ -62,19 +62,19 @@
     </div>
     {% for item in feedback.items %}
       <div class="list-group-item small">
-        {% if item.question.answer_type == item.question.ANSWER_TYPE_BOOLEAN_CHECKBOX or item.question.answer_type == item.question.ANSWER_TYPE_BOOLEAN_SELECT %}
+        {% if item.question.answer_type == AnswerType.BOOLEAN_CHECKBOX or item.question.answer_type == AnswerType.BOOLEAN_SELECT %}
           {% if item.answer %}
             <i data-feather="check" class="text-success"></i>
           {% else %}
             <i data-feather="x" class="text-danger"></i>
           {% endif %}
           {{ item.question.text }}
-        {% elif item.question.answer_type == item.question.ANSWER_TYPE_FLOAT %}
+        {% elif item.question.answer_type == AnswerType.FLOAT %}
           <span class="text-secondary">{{ item.question.text }}</span>
           <div class="text-heading">{{ item.answer|floatformat:"2" }}</div>
-        {% elif item.question.answer_type == item.question.ANSWER_TYPE_LONGTEXT %}
+        {% elif item.question.answer_type == AnswerType.LONGTEXT %}
           <div class="text-heading">{{ item.answer }}</div>
-        {% elif item.question.answer_type == item.question.ANSWER_TYPE_MULTIPLE_SELECT %}
+        {% elif item.question.answer_type == AnswerType.MULTIPLE_SELECT %}
           <span class="text-secondary">{{ item.question.text }}</span>
           <div class="text-heading">{{ item.answer|join:", " }}</div>
         {% else %}

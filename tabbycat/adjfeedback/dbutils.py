@@ -156,9 +156,9 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
                 max_value = question.max_value or 10
                 answer = random.uniform(min_value, max_value)
             elif question.answer_type_class == fm.AdjudicatorFeedbackStringAnswer:
-                if question.answer_type == fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT:
+                if question.answer_type == fm.AnswerType.LONGTEXT:
                     answer = random.choice(COMMENTS[score])
-                elif question.answer_type == fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT:
+                elif question.answer_type == fm.AnswerType.SINGLE_SELECT:
                     answer = random.choice(question.choices)
                 else:
                     answer = random.choice(WORDS[score])

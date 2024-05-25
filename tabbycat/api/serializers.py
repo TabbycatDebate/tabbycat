@@ -1053,7 +1053,7 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
 
         def validate(self, data):
             # Convert answer to correct type
-            model = AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[data['question'].answer_type]
+            model = AdjudicatorFeedbackQuestion.ANSWER_CLASSES[data['question'].answer_type]
             if type(data['answer']) != model.ANSWER_TYPE:
                 raise serializers.ValidationError({'answer': 'The answer must be of type %s' % model.ANSWER_TYPE.__name__})
 
@@ -1134,7 +1134,7 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
         # Create answers
         for answer in answers:
             question = answer['question']
-            model = AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[question.answer_type]
+            model = AdjudicatorFeedbackQuestion.ANSWER_CLASSES[question.answer_type]
             obj = model(question=question, feedback=feedback, answer=answer['answer'])
             try:
                 obj.save()

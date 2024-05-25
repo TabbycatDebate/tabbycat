@@ -17,7 +17,7 @@ from results.forms import TournamentPasswordField
 from tournaments.models import Round
 from utils.forms import OptionalChoiceField
 
-from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback
+from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AnswerType
 from .utils import expected_feedback_targets
 
 logger = logging.getLogger(__name__)
@@ -120,36 +120,37 @@ class BaseFeedbackForm(forms.Form):
         return debate, adjudicator
 
     def _make_question_field(self, question):
-        if question.answer_type == question.ANSWER_TYPE_BOOLEAN_SELECT:
-            field = BooleanSelectField()
-        elif question.answer_type == question.ANSWER_TYPE_BOOLEAN_CHECKBOX:
-            field = forms.BooleanField(required=False)
-        elif question.answer_type == question.ANSWER_TYPE_INTEGER_TEXTBOX:
-            min_value = int(question.min_value) if question.min_value else None
-            max_value = int(question.max_value) if question.max_value else None
-            field = forms.IntegerField(min_value=min_value, max_value=max_value)
-        elif question.answer_type == question.ANSWER_TYPE_INTEGER_SCALE:
-            min_value = int(question.min_value) if question.min_value is not None else None
-            max_value = int(question.max_value) if question.max_value is not None else None
-            if min_value is None or max_value is None:
-                logger.error("Integer scale %r has no min_value or no max_value" % question.reference)
-                field = forms.IntegerField()
-            else:
-                field = IntegerScaleField(min_value=min_value, max_value=max_value)
-        elif question.answer_type == question.ANSWER_TYPE_FLOAT:
-            field = forms.FloatField(min_value=question.min_value, max_value=question.max_value)
-        elif question.answer_type == question.ANSWER_TYPE_TEXT:
-            field = forms.CharField()
-        elif question.answer_type == question.ANSWER_TYPE_LONGTEXT:
-            field = forms.CharField(widget=forms.Textarea)
-        elif question.answer_type == question.ANSWER_TYPE_SINGLE_SELECT:
-            field = OptionalChoiceField(choices=question.choices_for_field)
-        elif question.answer_type == question.ANSWER_TYPE_MULTIPLE_SELECT:
-            field = forms.MultipleChoiceField(choices=question.choices_for_field, widget=BlockCheckboxWidget())
+        match question.answer_type:
+            case AnswerType.BOOLEAN_SELECT:
+                field = BooleanSelectField()
+            case AnswerType.BOOLEAN_CHECKBOX:
+                field = forms.BooleanField(required=False)
+            case AnswerType.INTEGER_TEXTBOX:
+                min_value = int(question.min_value) if question.min_value else None
+                max_value = int(question.max_value) if question.max_value else None
+                field = forms.IntegerField(min_value=min_value, max_value=max_value)
+            case AnswerType.INTEGER_SCALE:
+                min_value = int(question.min_value) if question.min_value is not None else None
+                max_value = int(question.max_value) if question.max_value is not None else None
+                if min_value is None or max_value is None:
+                    logger.error("Integer scale %r has no min_value or no max_value" % question.reference)
+                    field = forms.IntegerField()
+                else:
+                    field = IntegerScaleField(min_value=min_value, max_value=max_value)
+            case AnswerType.FLOAT:
+                field = forms.FloatField(min_value=question.min_value, max_value=question.max_value)
+            case AnswerType.TEXT:
+                field = forms.CharField()
+            case AnswerType.LONGTEXT:
+                field = forms.CharField(widget=forms.Textarea)
+            case AnswerType.SINGLE_SELECT:
+                field = OptionalChoiceField(choices=question.choices_for_field)
+            case AnswerType.MULTIPLE_SELECT:
+                field = forms.MultipleChoiceField(choices=question.choices_for_field, widget=BlockCheckboxWidget())
         field.label = question.text
 
         # Required checkbox fields don't really make sense; so override the behaviour?
-        if question.answer_type != question.ANSWER_TYPE_BOOLEAN_CHECKBOX:
+        if question.answer_type != AnswerType.BOOLEAN_CHECKBOX:
             if question.required:
                 field.label += "*"
             field.required = self._enforce_required and question.required

@@ -7,7 +7,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 
-from adjfeedback.models import AdjudicatorFeedbackQuestion
+from adjfeedback.models import AdjudicatorFeedbackQuestion, AnswerType
 from breakqual.models import BreakCategory
 from breakqual.utils import auto_make_break_rounds
 from options.preferences import TournamentStaff
@@ -42,13 +42,13 @@ class TournamentStartForm(ModelForm):
             tournament=tournament, seq=2, required=True,
             text=_("Did you agree with their decision?"), name=_("Agree?"),
             reference="agree", from_adj=True, from_team=True,
-            answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_SELECT)
+            answer_type=AnswerType.BOOLEAN_SELECT)
         agree.save()
         comments = AdjudicatorFeedbackQuestion(
             tournament=tournament, seq=3, required=False,
             text=_("Comments"), name=_("Comments"),
             reference="comments", from_adj=True, from_team=True,
-            answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT)
+            answer_type=AnswerType.LONGTEXT)
         comments.save()
 
     @staticmethod

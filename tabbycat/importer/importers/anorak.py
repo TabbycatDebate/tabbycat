@@ -58,15 +58,15 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     })
 
     lookup_feedback_answer_type = make_lookup("feedback answer type", {
-        "checkbox": fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_CHECKBOX,
-        ("yes no select", "yesno"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_SELECT,
-        ("integer textbox", "int", "integer"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_TEXTBOX,
-        ("integer scale", "scale"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE,
-        "float": fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_FLOAT,
-        "text": fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_TEXT,
-        ("textbox", "long text", "longtext"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT,
-        ("select single", "single select"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT,
-        ("select multiple", "multiple select"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_MULTIPLE_SELECT,
+        "checkbox": fm.AnswerType.BOOLEAN_CHECKBOX,
+        ("yes no select", "yesno"): fm.AnswerType.BOOLEAN_SELECT,
+        ("integer textbox", "int", "integer"): fm.AnswerType.INTEGER_TEXTBOX,
+        ("integer scale", "scale"): fm.AnswerType.INTEGER_SCALE,
+        "float": fm.AnswerType.FLOAT,
+        "text": fm.AnswerType.TEXT,
+        ("textbox", "long text", "longtext"): fm.AnswerType.LONGTEXT,
+        ("select single", "single select"): fm.AnswerType.SINGLE_SELECT,
+        ("select multiple", "multiple select"): fm.AnswerType.MULTIPLE_SELECT,
     })
 
     lookup_venue_category_display = make_lookup("venue category display", {

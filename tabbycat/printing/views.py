@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView
 from qrcode.image import svg
 
-from adjfeedback.models import AdjudicatorFeedbackQuestion
+from adjfeedback.models import AdjudicatorFeedbackQuestion, AnswerType
 from adjfeedback.utils import expected_feedback_targets
 from checkins.models import DebateIdentifier
 from checkins.utils import create_identifiers
@@ -40,7 +40,7 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
 
         default_scale_question = AdjudicatorFeedbackQuestion(
             text=_("Overall Score"), seq=0,
-            answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE,
+            answer_type=AnswerType.INTEGER_SCALE,
             required=True, from_team=True, from_adj=True,
             min_value=self.tournament.pref('adj_min_score'),
             max_value=self.tournament.pref('adj_max_score'),
