@@ -3,6 +3,7 @@ from django.test import TestCase
 from adjallocation.models import DebateAdjudicator
 from availability.utils import set_availability
 from draw.models import Debate, DebateTeam
+from draw.types import DebateSide
 from participants.models import Adjudicator, Team
 from tournaments.models import Round, Tournament
 from venues.models import Venue
@@ -24,8 +25,8 @@ class TestRoundChecks(TestCase):
             team1 = Team.objects.create(tournament=self.tournament, reference=f"Team {i}A", use_institution_prefix=False)
             team2 = Team.objects.create(tournament=self.tournament, reference=f"Team {i}B", use_institution_prefix=False)
             adj = Adjudicator.objects.create(tournament=self.tournament, name=f"Adjudicator {i}")
-            DebateTeam.objects.create(debate=debate, team=team1, side=0)
-            DebateTeam.objects.create(debate=debate, team=team2, side=1)
+            DebateTeam.objects.create(debate=debate, team=team1, side=DebateSide.AFF)
+            DebateTeam.objects.create(debate=debate, team=team2, side=DebateSide.NEG)
             DebateAdjudicator.objects.create(debate=debate, adjudicator=adj, type=DebateAdjudicator.TYPE_CHAIR)
             self.debates.append(debate)
             self.venues.append(venue)

@@ -20,7 +20,7 @@ class BaseBPEliminationDrawGenerator(EliminationDrawMixin, BaseBPDrawGenerator):
         pools = (teams[0:n], teams[n:2*n][::-1], teams[2*n:3*n], teams[3*n:4*n][::-1])  # Reverse 1 & 3
         pairings = list()
         for i, ts in enumerate(zip(*pools), start=start_rank+1):
-            pairing = PolyPairing(ts, bracket=0, room_rank=i, num_sides=self.teams_in_debate)
+            pairing = PolyPairing(ts, bracket=0, room_rank=i, num_sides=4)
             pairings.append(pairing)
         return pairings
 

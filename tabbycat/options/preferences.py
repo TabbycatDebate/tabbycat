@@ -499,7 +499,7 @@ debate_rules = Section('debate_rules', verbose_name=_("Debate Rules"))
 
 @tournament_preferences_registry.register
 class TeamsInDebate(IntegerPreference):
-    help_text = _("How many teams are in each debate (normally 2 for AP or 4 for BP)")
+    help_text = _("How many teams are in each debate (normally 2 but 4 for BP)")
     verbose_name = _("Number of teams per debate")
     section = debate_rules
     name = 'teams_in_debate'
