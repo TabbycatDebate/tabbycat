@@ -9,6 +9,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
 from draw.models import Debate, DebateTeam
+from draw.types import DebateSide
 from options.utils import use_team_code_names_data_entry
 from participants.models import Speaker, Team
 from participants.templatetags.team_name_for_data_entry import team_name_for_data_entry
@@ -337,7 +338,7 @@ class BaseBallotSetForm(BaseResultForm):
         # If sides are already confirmed, initialise the sides choice field
         if self.choosing_sides and self.ballotsub.debate.sides_confirmed:
             try:
-                initial['choose_sides'] = str(self.debate.aff_team.id) + "," + str(self.debate.neg_team.id)
+                initial['choose_sides'] = str(self.debate.teams[DebateSide.AFF].id) + "," + str(self.debate.teams[DebateSide.NEG].id)
             except DebateTeam.DoesNotExist:
                 pass
 

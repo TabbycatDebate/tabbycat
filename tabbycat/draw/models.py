@@ -158,22 +158,6 @@ class Debate(models.Model):
             self._team_properties[team_key] = dt.team
             self._team_properties[dt_key] = dt
 
-    def _team_property(attr):  # noqa: N805
-        """Used to construct properties that rely on self._populate_teams()."""
-        @property
-        def _property(self):
-            if not hasattr(self, '_team_properties'):
-                self._populate_teams()
-            if attr in self._multiple_found:
-                raise MultipleDebateTeamsError("Multiple debate teams found for '%s' in debate ID %d. "
-                    "Teams in debate are: %s." % (attr, self.id, self._teams_and_sides_display()))
-            try:
-                return self._team_properties[attr]
-            except KeyError:
-                raise NoDebateTeamFoundError("No debate team found for '%s' in debate ID %d. "
-                    "Teams in debate are: %s." % (attr, self.id, self._teams_and_sides_display()))
-        return _property
-
     @property
     def teams(self):
         # No need for _team_property overhead, this list is guaranteed to exist
@@ -192,25 +176,10 @@ class Debate(models.Model):
         for side in self.round.tournament.sides:
             yield self.get_dt(side)
 
-    aff_team = _team_property('0_team')
-    neg_team = _team_property('1_team')
-    bye_team = _team_property('-1_team')
-    og_team = _team_property('0_team')
-    oo_team = _team_property('1_team')
-    cg_team = _team_property('2_team')
-    co_team = _team_property('3_team')
-    aff_dt = _team_property('0_dt')
-    neg_dt = _team_property('1_dt')
-    bye_dt = _team_property('-1_dt')
-    og_dt = _team_property('0_dt')
-    oo_dt = _team_property('1_dt')
-    cg_dt = _team_property('2_dt')
-    co_dt = _team_property('3_dt')
-
     def get_team(self, side: int) -> 'Team':
         if not hasattr(self, '_team_properties'):
             self._populate_teams()
-        return self._team_properties['%d_team' % side]
+        return self.teams[side]
 
     def get_dt(self, side: int) -> 'DebateTeam':
         """dt = DebateTeam"""
@@ -240,7 +209,7 @@ class Debate(models.Model):
         try:
             return self._history
         except AttributeError:
-            self._history = self.aff_team.seen(self.neg_team, before_round=self.round.seq)
+            self._history = self.teams[DebateSide.AFF].seen(self.teams[DebateSide.NEG], before_round=self.round.seq)
             return self._history
 
     @property
@@ -263,7 +232,7 @@ class Debate(models.Model):
     def is_bye(self):
         if not hasattr(self, '_team_properties'):
             self._populate_teams()
-        return 'bye_dt' in self._team_properties
+        return '-1_dt' in self._team_properties
 
 
 class DebateTeamManager(models.Manager):

@@ -53,8 +53,8 @@ class TestRoundChecks(TestCase):
 
     def test_duplicate_team_names(self):
         self.assertEqual(self.round.duplicate_team_names.count(), 0)
-        self.debates[0].aff_dt.team = self.teams[1][0]
-        self.debates[0].aff_dt.save()
+        self.debates[0].debateteams[DebateSide.AFF].team = self.teams[1][0]
+        self.debates[0].debateteams[DebateSide.AFF].save()
         self.assertEqual(self.round.duplicate_team_names.count(), 1)
         self.assertEqual(self.round.duplicate_team_names.first(), self.teams[1][0].short_name)
 
