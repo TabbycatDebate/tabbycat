@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('breakqual', '0006_alter_breakcategory_unique_together_and_more'),
-        ('tournaments', '0010_alter_round_draw_type'),
+        ('tournaments', '0011_alter_round_starts_at'),
     ]
 
     operations = [
