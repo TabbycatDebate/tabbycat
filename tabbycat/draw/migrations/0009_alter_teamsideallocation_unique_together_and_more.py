@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('draw', '0008_alter_debateteam_side_alter_teamsideallocation_side'),
         ('participants', '0022_rename_team_tournament_institution_short_reference_participant_tournam_160efa_idx_and_more'),
-        ('tournaments', '0011_alter_round_unique_together_and_more'),
+        ('tournaments', '0012_alter_round_unique_together_and_more'),
     ]
 
     operations = [

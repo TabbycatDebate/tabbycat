@@ -332,7 +332,7 @@ class Round(models.Model):
     motions_released = models.BooleanField(default=False,
         verbose_name=_("motions released"),
         help_text=_("Whether motions will appear on the public website, assuming that feature is turned on"))
-    starts_at = models.TimeField(verbose_name=_("starts at"), blank=True, null=True)
+    starts_at = models.DateTimeField(verbose_name=_("starts at"), blank=True, null=True)
 
     weight = models.IntegerField(default=1,
         verbose_name=_("weight"),

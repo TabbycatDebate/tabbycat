@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
         ('draw', '0009_alter_teamsideallocation_unique_together_and_more'),
         ('motions', '0005_motions_mtm'),
         ('results', '0015_alter_ballotsubmission_submitter_type'),
-        ('tournaments', '0011_alter_round_unique_together_and_more'),
+        ('tournaments', '0012_alter_round_unique_together_and_more'),
     ]
 
     operations = [

@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tournaments', '0011_alter_round_unique_together_and_more'),
+        ('tournaments', '0012_alter_round_unique_together_and_more'),
         ('venues', '0010_populate_tournaments'),
     ]
 

@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
         ('adjallocation', '0010_alter_adjudicatoradjudicatorconflict_unique_together_and_more'),
         ('breakqual', '0006_alter_breakcategory_unique_together_and_more'),
         ('participants', '0021_team_seed'),
-        ('tournaments', '0011_alter_round_unique_together_and_more'),
+        ('tournaments', '0012_alter_round_unique_together_and_more'),
     ]
 
     operations = [
