@@ -1693,6 +1693,87 @@ EMOJI_LIST = (
     ("🪥",	True , "Toothbrush"),
     ("🪦",	False, "Headstone"),                        # potentially offensive
     ("🪧",	False, "Placard"),                          # dull
+
+    # Unicode Version 13.1
+    ("😶‍🌫",	True , "Cloudy Face"),
+    ("😮‍💨",	True , "Hot Air"),
+    ("😵‍💫",	True , "Hypnotised"),
+    ("❤‍🔥",	True , "Fiery Heart"),
+    ("❤‍🩹",	True , "Mending Heart"),
+    ("🧔‍♂",	False, "Bearded Man"),                      # dull
+    ("🧔‍♀",	False, "Bearded Woman"),                    # potentially offensive
+
+    # Unicode Version 14.0
+    ("🫠",	True , "Melting Face"),
+    ("🫢",	True , "Oops Face"),
+    ("🫣",	True , "Peekaboo"),
+    ("🫡",	False, "Saluting Face"),                    # potentially offensive
+    ("🫥",	True , "Invisible Face"),
+    ("🫤",	True , "Diagonal Mouth"),
+    ("🥹",	True , "Grateful Face"),
+    ("🫱",	False, "Rightwards Hand"),                  # dull
+    ("🫲",	False, "Leftwards Hand"),                   # dull
+    ("🫳",	False, "Palm Down Hand"),                   # dull
+    ("🫴",	False, "Palm Up Hand"),                     # dull
+    ("🫰",	True , "Love Gesture"),
+    ("🫵",	True , "YOU"),
+    ("🫶",	True , "Heart Hands"),
+    ("🫦",	True , "Biting Lip"),
+    ("🫅",	True , "Crowned"),
+    ("🫃",	False, "Pregnant Man"),                     # potentially offensive
+    ("🫄",	False, "Pregnant Person"),                  # potentially offensive
+    ("🧌",	True , "Bridgekeeper"),
+    ("🪸",	True , "Coral"),
+    ("🪷",	True , "Lotus"),
+    ("🪹",	False, "Empty Nest"),                       # dull
+    ("🪺",	True , "Unladen Swallow"),
+    ("🫘",	True , "Beans"),
+    ("🫗",	False, "Leak"),                             # dull
+    ("🫙",	False, "Jar"),                              # dull
+    ("🛝",	True , "Slide"),
+    ("🛞",	True , "Wheel"),
+    ("🛟",	True , "Buoy"),
+    ("🪩",	True , "Mirror Ball"),
+    ("🪫",	True , "Low Battery"),
+    ("🩼",	False, "Crutch"),                           # potentially offensive
+    ("🩻",	True , "X-Ray"),
+    ("🫧",	True , "Bubbles"),
+    ("🪬",	False, "Hamsa"),                            # potentially offensive
+    ("🪪",	True , "Identification Card"),
+    ("🟰",	False, "Heavy Equals Sign"),                # dull
+
+    # Unicode Version 15.0
+    ("🫨",	True , "Car Sick Face"),
+    ("🩷",	False, "Pink Heart"),                       # too similar to another
+    ("🩵",	False, "Light Blue Heart"),                 # too similar to another
+    ("🩶",	False, "Grey Heart"),                       # too similar to another
+    ("🫷",	True , "No Thanks Hand"),
+    ("🫸",	False, "Rightwards Pushing Hand"),          # too similar to another
+    ("🫎",	True , "Moose"),
+    ("🫏",	True , "Donkey"),
+    ("🪽",	True , "Wing"),
+    ("🪿",	True , "Honking Bird"),
+    ("🪼",	True , "Jellyfish"),
+    ("🪻",	True , "Hyacinth"),
+    ("🫚",	True , "Ginger"),
+    ("🫛",	True , "Pea Pod"),
+    ("🪭",	True , "Folding Hand Fan"),
+    ("🪮",	True , "Hair Pick"),
+    ("🪇",	True , "Maracas"),
+    ("🪈",	True , "Flute"),
+    ("🪯",	False, "Khanda"),                           # potentially offensive
+    ("🛜",	True , "Wireless"),
+
+    # Unicode Version 15.1
+    ("🙂‍↔",	True , "Headshake"),
+    ("🙂‍↕",	True , "Nodding Face"),
+    ("🚶‍➡",	False, "Walking"),                          # dull
+    ("🧎‍➡",	False, "Person Kneeling"),                  # dull
+    ("🏃‍➡",	False, "Person Running"),                   # dull
+    ("🐦‍🔥",	True , "Phoenix"),
+    ("🍋‍🟩",	True , "Lime"),
+    ("🍄‍🟫",	True , "Brown Mushroom"),
+    ("⛓‍💥",	True , "Broken Chain"),
 )
 
 # The field choices are the permissible values

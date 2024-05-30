@@ -1,5 +1,6 @@
 import logging
 from itertools import product
+from typing import TYPE_CHECKING
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -18,6 +19,9 @@ from .consumers import BallotResultConsumer, BallotStatusConsumer
 from .result import (ConsensusDebateResult, ConsensusDebateResultWithScores,
                      DebateResultByAdjudicator, DebateResultByAdjudicatorWithScores)
 from .utils import get_status_meta, side_and_position_names
+
+if TYPE_CHECKING:
+    from .models import BallotSubmission
 
 logger = logging.getLogger(__name__)
 
@@ -94,6 +98,33 @@ class ReplyScoreField(BaseScoreField):
     DEFAULT_MIN_VALUE = 34.0
     DEFAULT_MAX_VALUE = 41.0
     DEFAULT_STEP_VALUE = 0.5
+
+
+def broadcast_results(ballotsub: 'BallotSubmission', debate: Debate):
+    t = debate.round.tournament
+
+    # 5. Notify the Latest Results consumer (for results/overview)
+    if ballotsub.confirmed and debate.result_status == Debate.STATUS_CONFIRMED:
+        group_name = BallotResultConsumer.group_prefix + "_" + t.slug
+        async_to_sync(get_channel_layer().group_send)(group_name, {
+            "type": "send_json",
+            "data": ballotsub.serialize_like_actionlog,
+        })
+
+    # 6. Notify the Results Page/Ballots Status Graph
+    group_name = BallotStatusConsumer.group_prefix + "_" + t.slug
+    meta = get_status_meta(debate)
+    async_to_sync(get_channel_layer().group_send)(group_name, {
+        "type": "send_json",
+        "data": {
+            'status': debate.result_status,
+            'icon': meta[0],
+            'class': meta[1],
+            'sort': meta[2],
+            'ballot': ballotsub.serialize(t),
+            'round': debate.round_id,
+        },
+    })
 
 
 # ==============================================================================
@@ -179,34 +210,12 @@ class BaseResultForm(forms.Form):
         self.debate.result_status = self.cleaned_data['debate_result_status']
         self.debate.save()
 
-        t = self.debate.round.tournament
         # Need to provide a timestamp immediately for BallotStatusConsumer
         # as it will broadcast before the view finishes assigning one
         if self.ballotsub.confirmed:
             self.ballotsub.confirm_timestamp = timezone.now()
 
-            # 5. Notify the Latest Results consumer (for results/overview)
-            if self.debate.result_status == Debate.STATUS_CONFIRMED:
-                group_name = BallotResultConsumer.group_prefix + "_" + t.slug
-                async_to_sync(get_channel_layer().group_send)(group_name, {
-                    "type": "send_json",
-                    "data": self.ballotsub.serialize_like_actionlog,
-                })
-
-        # 6. Notify the Results Page/Ballots Status Graph
-        group_name = BallotStatusConsumer.group_prefix + "_" + t.slug
-        meta = get_status_meta(self.debate)
-        async_to_sync(get_channel_layer().group_send)(group_name, {
-            "type": "send_json",
-            "data": {
-                'status': self.debate.result_status,
-                'icon': meta[0],
-                'class': meta[1],
-                'sort': meta[2],
-                'ballot': self.ballotsub.serialize(t),
-                'round': self.debate.round_id,
-            },
-        })
+        broadcast_results(self.ballotsub, self.debate)
 
         return self.ballotsub
 

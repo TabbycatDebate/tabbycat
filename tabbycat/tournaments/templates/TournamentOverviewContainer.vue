@@ -9,11 +9,12 @@
             <h5 class="mb-0 text-center" v-text="gettext('Ballots Status')"></h5>
           </div>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item text-secondary px-2">
+            <li class="list-group-item text-secondary px-2" v-if="permissions.graph">
               <ballots-graph :graph-data="ballotStatuses"
                              :total-debates="totalDebates">
               </ballots-graph>
             </li>
+            <li v-else class="list-group-item text-secondary text-center" v-text="gettext('No Results Yet')"></li>
           </ul>
         </div>
       </div>
@@ -27,12 +28,13 @@
           <div class="card-body">
             <h5 class="mb-0" v-text="gettext('Latest Actions')"></h5>
           </div>
-          <ul class="list-group list-group-flush">
+          <ul class="list-group list-group-flush" v-if="permissions.actionlog">
             <updates-list v-for="action in actionLogs"
                           :key="action.id"
                           :item="action"></updates-list>
-            <li class="list-group-item text-secondary" v-if="actionLogs.length === 0"
-                v-text="gettext('No Actions Yet')"></li>
+          </ul>
+          <ul class="list-group list-group-flush" v-else>
+            <li class="list-group-item text-secondary" v-text="gettext('No Actions Yet')"></li>
           </ul>
         </div>
       </div>
@@ -42,12 +44,13 @@
           <div class="card-body">
             <h5 class="mb-0" v-text="gettext('Latest Results')"></h5>
           </div>
-          <ul class="list-group list-group-flush">
+          <ul class="list-group list-group-flush" v-if="permissions.results">
             <updates-list v-for="ballot in ballotResults"
                           :key="ballot.id"
                           :item="ballot"></updates-list>
-            <li class="list-group-item text-secondary" v-if="ballotResults.length === 0"
-                v-text="gettext('No Confirmed Results Yet')"></li>
+          </ul>
+          <ul class="list-group list-group-flush" v-else>
+            <li class="list-group-item text-secondary" v-text="gettext('No Confirmed Results Yet')"></li>
           </ul>
         </div>
       </div>
@@ -68,18 +71,30 @@ export default {
     UpdatesList,
     BallotsGraph: () => import('../../templates/graphs/BallotsGraph.vue'),
   },
-  props: ['tournamentSlug', 'totalDebates', 'initialActions', 'initialBallots', 'initialGraphData'],
+  props: ['tournamentSlug', 'totalDebates', 'initialActions', 'initialBallots', 'initialGraphData', 'permissions'],
   data: function () {
     return {
       actionLogs: this.initialActions,
       ballotResults: this.initialBallots,
       ballotStatuses: this.initialGraphData,
-      sockets: ['action_logs', 'ballot_results', 'ballot_statuses'],
     }
   },
   computed: {
     tournamentSlugForWSPath: function () {
       return this.tournamentSlug
+    },
+    sockets: function () {
+      const sockets = []
+      if (this.permissions.actionlog) {
+        sockets.push('action_logs')
+      }
+      if (this.permissions.graph) {
+        sockets.push('ballot_statuses')
+      }
+      if (this.permissions.results) {
+        sockets.push('ballot_results')
+      }
+      return sockets
     },
   },
   methods: {

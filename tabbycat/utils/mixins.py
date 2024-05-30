@@ -1,5 +1,6 @@
 import logging
 import os
+from typing import Optional, TYPE_CHECKING
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -7,6 +8,11 @@ from django.db import connection
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import ContextMixin
+
+from users.permissions import has_permission
+
+if TYPE_CHECKING:
+    from users.permissions import permission_type
 
 logger = logging.getLogger(__name__)
 
@@ -47,16 +53,30 @@ class TabbycatPageTitlesMixin(ContextMixin):
 # ==============================================================================
 
 class AdministratorMixin(UserPassesTestMixin, ContextMixin):
-    """Mixin for views that are for administrators.
-    Requires user to be a superuser."""
+    """Mixin for views that are for administrators."""
     view_role = "admin"
     for_admin = True
+    view_permission: Optional['permission_type'] = None
+    edit_permission: Optional['permission_type'] = None
 
     def get_context_data(self, **kwargs):
         kwargs["user_role"] = self.view_role
+        kwargs['can_edit'] = has_permission(self.request.user, self.get_edit_permission(), self.tournament) if hasattr(self, 'tournament') else None
         return super().get_context_data(**kwargs)
 
-    def test_func(self):
+    def get_view_permission(self) -> Optional['permission_type']:
+        return self.view_permission or self.edit_permission
+
+    def get_edit_permission(self) -> Optional['permission_type']:
+        return self.edit_permission
+
+    def test_func(self) -> bool:
+        if not hasattr(self, 'tournament'):
+            return self.request.user.is_superuser
+        if self.request.method == 'GET' and self.get_view_permission() is not None:
+            return has_permission(self.request.user, self.get_view_permission(), self.tournament)
+        if self.request.method in ['POST', 'PUT'] and self.get_edit_permission() is not None:
+            return has_permission(self.request.user, self.get_edit_permission(), self.tournament)
         return self.request.user.is_superuser
 
 

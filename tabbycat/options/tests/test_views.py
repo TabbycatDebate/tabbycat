@@ -25,8 +25,11 @@ class TestPreset(PreferencesPreset):
 class TournamentConfigIndexViewTests(TestCase):
 
     def test_order_presets(self):
+        tournament = Tournament.objects.create(slug="optionform", name="Option Form Testing")
         view = TournamentConfigIndexView()
-        view.setup(RequestFactory())
+        request = RequestFactory()
+        request.user = get_user_model()(is_superuser=True)
+        view.setup(request, tournament_slug=tournament.slug)
 
         presets = view.get_context_data()['presets']
         self.assertEqual(presets[0], PublicInformation)

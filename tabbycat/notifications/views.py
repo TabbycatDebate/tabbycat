@@ -19,6 +19,7 @@ from django.views.generic.edit import FormView
 
 from participants.models import Person
 from tournaments.mixins import RoundMixin, TournamentMixin
+from users.permissions import Permission
 from utils.mixins import AdministratorMixin, WarnAboutLegacySendgridConfigVarsMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import VueTableTemplateView
@@ -82,6 +83,7 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
     page_title = gettext_lazy("Email Statuses")
     page_emoji = '📤'
     template_name = 'email_statuses.html'
+    view_permission = Permission.VIEW_EMAIL_STATUSES
 
     tables_orientation = 'rows'
 
@@ -210,6 +212,7 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
     template_name = "email_participants.html"
     page_title = gettext_lazy("Email Participants")
     page_emoji = '📤'
+    edit_permission = Permission.SEND_EMAILS
 
     form_class = BasicEmailForm
 

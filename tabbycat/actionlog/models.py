@@ -153,7 +153,7 @@ class ActionLogEntry(models.Model):
         if self.user is None and self.ip_address is None:
             raise ValidationError(_("All log entries require at least one of a user and an IP address."))
 
-    def get_content_object_display(self, omit_tournament=False):
+    def get_content_object_display(self, omit_tournament=False, user=None):
         obj = self.content_object
 
         if obj is None:
@@ -162,12 +162,12 @@ class ActionLogEntry(models.Model):
         model_name = self.content_type.model
         try:
             if model_name == 'ballotsubmission':
-                if use_team_code_names(self.tournament, True):
+                if use_team_code_names(self.tournament, True, user):
                     return obj.debate.matchup_codes
                 else:
                     return obj.debate.matchup
             elif model_name == 'debate':
-                if use_team_code_names(self.tournament, True):
+                if use_team_code_names(self.tournament, True, user):
                     return obj.debate.matchup_codes
                 else:
                     return obj.debate.matchup
@@ -192,6 +192,8 @@ class ActionLogEntry(models.Model):
             'id': self.id,
             'user': self.user.username if self.user else self.ip_address or _("anonymous"),
             'type': self.get_type_display(),
-            'param': self.get_content_object_display(omit_tournament=True),
+            # As the team names are passed in the content of the message for all users,
+            # must assume they don't have permission for real names
+            'param': self.get_content_object_display(omit_tournament=True, user=None),
             'timestamp': badge_datetime_format(self.timestamp),
         }
