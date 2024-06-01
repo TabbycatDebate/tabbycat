@@ -6,7 +6,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("draw", "0008_alter_debateteam_side_alter_teamsideallocation_side"),
+        ("draw", "0009_alter_teamsideallocation_unique_together_and_more"),
     ]
 
     operations = list(chain(*[

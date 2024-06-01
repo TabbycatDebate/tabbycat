@@ -1,6 +1,7 @@
 import logging
 import warnings
 
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.humanize.templatetags.humanize import ordinal
 from django.db.models import Exists, OuterRef, Prefetch
 from django.template.loader import render_to_string
@@ -18,6 +19,7 @@ from results.result import get_result_class
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.mixins import SingleObjectByRandomisedUrlMixin
 from tournaments.utils import get_side_name
+from users.permissions import has_permission, Permission
 from utils.misc import reverse_round, reverse_tournament
 
 from .mixins import AdministratorMixin
@@ -151,6 +153,10 @@ class BaseTableBuilder:
         }
 
 
+class FakeRequest(object):
+    user = AnonymousUser()
+
+
 class TabbycatTableBuilder(BaseTableBuilder):
     """Extends TableBuilder to add convenience functions specific to
     Tabbycat."""
@@ -189,6 +195,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         else:
             self.admin = kwargs.get('admin', False)
 
+        self.user = kwargs.get('user', getattr(view, 'request', FakeRequest()).user)
+
         if isinstance(view, SingleObjectByRandomisedUrlMixin):
             self.private_url = True
             self.private_url_key = view.kwargs.get('url_key')
@@ -212,7 +220,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     @property
     def _use_team_code_names(self):
-        return use_team_code_names(self.tournament, self.admin)
+        return use_team_code_names(self.tournament, self.admin, user=self.user)
 
     def _team_short_name(self, team):
         """Returns the appropriate short name for the team, accounting for team code name preference."""
@@ -280,7 +288,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             cell['popover']['content'].append({'text': _("Real name: <strong>%(name)s</strong>") % {'name': escape(team.short_name)}})
 
         if self._show_speakers_in_draw:
-            if self.admin:
+            if self.admin and has_permission(self.user, Permission.VIEW_ANONYMOUS, self.tournament):
                 speakers = ["<span class='admin-redacted'>%s</span>" % escape(s.name) if s.anonymous else escape(s.name) for s in team.speakers]
             else:
                 speakers = [self.REDACTED_CELL['text'] if s.anonymous else escape(s.get_public_name(self.tournament)) for s in team.speakers]
@@ -487,7 +495,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         adj_data = []
         for adj in adjudicators:
-            if adj.anonymous and not self.admin:
+            if adj.anonymous and not (self.admin and has_permission(self.user, Permission.VIEW_ANONYMOUS, self.tournament)):
                 adj_data.append(self.REDACTED_CELL)
             else:
                 cell = {'text': escape(adj.get_public_name(self.tournament))}
@@ -659,7 +667,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         speaker_data = []
         for speaker in speakers:
             anonymous = getattr(speaker, 'anonymise', False) or speaker.anonymous
-            if anonymous and not self.admin:
+            if anonymous and not (self.admin and has_permission(self.user, Permission.VIEW_ANONYMOUS, self.tournament)):
                 speaker_data.append(self.REDACTED_CELL)
             else:
                 cell = {

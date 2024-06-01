@@ -1,4 +1,6 @@
 import logging
+import zoneinfo
+from datetime import date, datetime, time
 
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient, APITestCase
@@ -14,6 +16,7 @@ from utils.misc import reverse_round, reverse_tournament
 from utils.tests import CompletedTournamentTestMixin
 
 User = get_user_model()
+tz = zoneinfo.ZoneInfo('Australia/Melbourne')
 
 
 class RoundSerializerTests(CompletedTournamentTestMixin, APITestCase):
@@ -102,6 +105,37 @@ class RoundSerializerTests(CompletedTournamentTestMixin, APITestCase):
         })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['name'], 'Round Five')
+
+    def test_can_give_start_datetime(self):
+        client = APIClient()
+        client.login(username="admin", password="admin")
+        self.tournament.round_set.get(seq=5).delete()
+        response = client.post(reverse_tournament('api-round-list', self.tournament), {
+            'motions': [],
+            'seq': 5,
+            'name': 'Round 5',
+            'abbreviation': 'R5',
+            'draw_type': 'P',
+            'starts_at': '2023-11-18T00:00:00Z',
+        })
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(datetime.fromisoformat(response.data['starts_at']), datetime(2023, 11, 18, 11, 0, 0, tzinfo=tz))
+
+    def test_can_give_start_time(self):
+        client = APIClient()
+        client.login(username="admin", password="admin")
+        self.tournament.round_set.get(seq=5).delete()
+        response = client.post(reverse_tournament('api-round-list', self.tournament), {
+            'motions': [],
+            'seq': 5,
+            'name': 'Round 5',
+            'abbreviation': 'R5',
+            'draw_type': 'P',
+            'starts_at': '00:00:00',
+        })
+        print(response.data)
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(datetime.fromisoformat(response.data['starts_at']), datetime.combine(date.today(), time(0, 0, 0, tzinfo=tz)))
 
 
 class MotionSerializerTests(CompletedTournamentTestMixin, APITestCase):

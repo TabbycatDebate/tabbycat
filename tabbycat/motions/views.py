@@ -14,6 +14,7 @@ from participants.models import Speaker
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 PublicTournamentPageMixin, RoundMixin, TournamentMixin)
 from tournaments.models import Round
+from users.permissions import Permission
 from utils.misc import redirect_round
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView, PostOnlyRedirectView
@@ -43,7 +44,8 @@ class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
 class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormSetView):
     # Django doesn't have a class-based view for formsets, so this implements
     # the form processing analogously to FormView, with less decomposition.
-
+    view_permission = Permission.VIEW_MOTION
+    edit_permission = Permission.EDIT_MOTION
     template_name = 'motions_edit.html'
     action_log_type = ActionLogEntry.ActionType.MOTION_EDIT
     formset_model = Motion
@@ -167,6 +169,7 @@ class BaseReleaseMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, Pos
 
 
 class ReleaseMotionsView(BaseReleaseMotionsView):
+    edit_permission = Permission.RELEASE_MOTION
 
     action_log_type = ActionLogEntry.ActionType.MOTIONS_RELEASE
     motions_released = True
@@ -199,7 +202,7 @@ class BaseDisplayMotionsView(RoundMixin, TemplateView):
 
 
 class AdminDisplayMotionsView(AdministratorMixin, BaseDisplayMotionsView):
-    pass
+    view_permission = Permission.DISPLAY_MOTION
 
 
 class AssistantDisplayMotionsView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDisplayMotionsView):
@@ -262,11 +265,11 @@ class BasePublicMotionStatisticsView(PublicTournamentPageMixin):
 
 
 class AdminRoundMotionStatisticsView(AdministratorMixin, RoundMotionStatisticsView):
-    pass
+    view_permission = Permission.VIEW_MOTIONSTAB
 
 
 class AdminGlobalMotionStatisticsView(AdministratorMixin, GlobalMotionStatisticsView):
-    pass
+    view_permission = Permission.VIEW_MOTIONSTAB
 
 
 class PublicRoundMotionStatisticsView(BasePublicMotionStatisticsView, RoundMotionStatisticsView):

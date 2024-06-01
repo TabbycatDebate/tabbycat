@@ -32,7 +32,6 @@ READTHEDOCS_VERSION = 'v2.9.0'
 
 USE_I18N = True
 USE_TZ = True
-USE_L10N = True
 LANGUAGE_CODE = 'en'
 TIME_ZONE = os.environ.get('TIME_ZONE', 'Australia/Melbourne')
 
@@ -231,7 +230,14 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
 
 # ==============================================================================
 # Logging

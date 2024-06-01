@@ -18,6 +18,7 @@ from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
+from users.permissions import Permission
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
@@ -36,6 +37,7 @@ logger = logging.getLogger(__name__)
 class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
 
     template_name = 'standings_index.html'
+    view_permission = Permission.VIEW_STANDINGS_OVERVIEW
 
     def get_context_data(self, **kwargs):
         speaks = SpeakerScore.objects.filter(
@@ -321,6 +323,7 @@ class BaseSubstantiveSpeakerStandingsView(BaseSpeakerStandingsView):
 
 class SpeakerStandingsView(AdministratorMixin, BaseSubstantiveSpeakerStandingsView):
     template_name = 'speaker_standings.html'  # add info alerts
+    view_permission = Permission.VIEW_SPEAKERSSTANDINGS
 
 
 class PublicSpeakerTabView(PublicTabMixin, BaseSubstantiveSpeakerStandingsView):
@@ -347,7 +350,7 @@ class BaseSpeakerCategoryStandingsView(SingleObjectFromTournamentMixin, BaseSubs
 
 
 class SpeakerCategoryStandingsView(AdministratorMixin, BaseSpeakerCategoryStandingsView):
-    pass
+    view_permission = Permission.VIEW_SPEAKERSSTANDINGS
 
 
 class PublicSpeakerCategoryTabView(PublicTabMixin, BaseSpeakerCategoryStandingsView):
@@ -403,6 +406,7 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
 
 class ReplyStandingsView(AdministratorMixin, BaseReplyStandingsView):
     template_name = 'reply_standings.html'  # add an info alert
+    view_permission = Permission.VIEW_REPLIESSTANDINGS
 
 
 class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
@@ -486,6 +490,7 @@ class TeamStandingsView(AdministratorMixin, BaseTeamStandingsView):
     """Superuser team standings view."""
     template_name = 'team_standings.html'  # add info alerts
     rankings = ('rank',)
+    view_permission = Permission.VIEW_TEAMSTANDINGS
 
     def show_ballots(self):
         return True
@@ -526,6 +531,7 @@ class BaseBreakCategoryStandingsView(SingleObjectFromTournamentMixin, BaseTeamSt
 class BreakCategoryStandingsView(AdministratorMixin, BaseBreakCategoryStandingsView):
     """Superuser team standings view for a break category."""
     rankings = ('rank',)
+    view_permission = Permission.VIEW_TEAMSTANDINGS
 
     def show_ballots(self):
         return True
@@ -621,6 +627,7 @@ class BaseDiversityStandingsView(TournamentMixin, TemplateView):
 class DiversityStandingsView(AdministratorMixin, BaseDiversityStandingsView):
 
     for_public = False
+    view_permission = Permission.VIEW_DIVERSITYTAB
 
 
 class PublicDiversityStandingsView(PublicTournamentPageMixin, BaseDiversityStandingsView):
