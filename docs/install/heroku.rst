@@ -49,7 +49,7 @@ In order to use a user-friendly '1-click deployment button', you will need to ma
 
   ::
 
-   https://heroku.com/deploy?template=https://github.com/YOUR_GITHUB_NAME/YOUR_FORK_NAME/tree/master
+   https://dashboard.heroku.com/new-app?template=https://github.com/YOUR_GITHUB_NAME/YOUR_FORK_NAME/tree/master
 
 6. In the URL address, replace ``YOUR_GITHUB_NAME`` with your GitHub username (e.g. **JaneSmith**) and replace ``YOUR_FORK_NAME`` with the name of your fork (e.g. **tabbycat**)
 7. Hit enter and fill out the details required. After the deployment process completes, you should have a new Tabbycat deployment
