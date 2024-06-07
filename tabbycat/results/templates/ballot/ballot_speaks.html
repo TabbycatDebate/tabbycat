@@ -40,7 +40,14 @@
     {% endif %}
 
     <div class="col-4 form-group {{ team.side_code }} pr-md-2 pr-1 score {{ position.score_errors|yesno:'error,' }}">
-      {{ position.score|addcss:"form-control" }}
+      {% for criterion, field in position.criteria %}
+      <div class="criterion">
+        {{ criterion.name }}
+        {{ field|addcss:"form-control" }}
+        {{ field.errors }}
+      </div>
+      {% endfor %}
+      {{ position.score|addcss:"form-control total" }}
       {{ position.score.errors }}
     </div>
 

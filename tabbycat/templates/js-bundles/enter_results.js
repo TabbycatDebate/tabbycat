@@ -27,8 +27,18 @@ function refresh_totals(scoresheet) {
     $neg_rank = $('.neg_rank', $scoresheet);
     $aff_margin = $('.aff_margin', $scoresheet);
     $neg_margin = $('.neg_margin', $scoresheet);
-    var aff = sum($('.aff.score input', $scoresheet));
-    var neg = sum($('.neg.score input', $scoresheet));
+    if ($('.criteria', $scoresheet)) {
+      for (const side of ['aff', 'neg']) {
+        for (const speaker of [...$(`.${side}.score`, $scoresheet)]) {
+          const criteria = $('.criterion input', speaker);
+          var weighted = 0;
+          criteria.each((i, c) => {weighted += c.value * c.attributes.weight.value})
+          speaker.querySelector('input.total').value = weighted;
+        }
+      }
+    }
+    var aff = sum($('.aff.score input.total', $scoresheet));
+    var neg = sum($('.neg.score input.total', $scoresheet));
     $aff_total.text(aff);
     $neg_total.text(neg);
 
@@ -69,7 +79,17 @@ function refresh_totals(scoresheet) {
       totals_elements[team] = $('.' + team + '_total', $scoresheet);
       margins_elements[team] = $('.' + team + '_margin', $scoresheet);
       rank_elements[team] = $('.' + team + '_rank', $scoresheet);
-      var team_total = sum($('.' + team + '.score input', $scoresheet));
+      if ($('.criteria', $scoresheet)) {
+        for (const side of positions) {
+          for (const speaker of [...$(`.${side}.score`, $scoresheet)]) {
+            const criteria = $('.criterion input', speaker);
+            var weighted = 0;
+            criteria.each((i, c) => {weighted += c.value * c.attributes.weight.value})
+            speaker.querySelector('input.total').value = weighted;
+          }
+        }
+      }
+      var team_total = sum($('.' + team + '.score input.total', $scoresheet));
       // Update totals scores only if both speaker scores have been entered
       if (team_total > 99) {
         total_scores[team] = team_total
