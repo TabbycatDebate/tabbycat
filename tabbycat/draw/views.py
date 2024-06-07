@@ -6,6 +6,7 @@ from itertools import product
 from django.contrib import messages
 from django.db.models import OuterRef, Subquery
 from django.http import HttpResponseRedirect
+from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.html import escape, format_html
 from django.utils.safestring import mark_safe
@@ -792,11 +793,10 @@ class SetRoundStartTimeView(DrawStatusEdit):
     def post(self, request, *args, **kwargs):
         time_text = request.POST["start_time"]
         try:
-            time = datetime.datetime.strptime(time_text, "%H:%M").time()
+            time = timezone.make_aware(datetime.datetime.strptime(time_text, "%Y-%m-%dT%H:%M"))
         except ValueError:
             messages.error(request, _("Sorry, \"%(input)s\" isn't a valid time. It must "
-                           "be in 24-hour format, with a colon, for "
-                           "example: \"13:57\".") % {'input': time_text})
+                           "be in ISO format, for example: \"2024-06-07T13:57\".") % {'input': time_text})
             return super().post(request, *args, **kwargs)
 
         self.round.starts_at = time
