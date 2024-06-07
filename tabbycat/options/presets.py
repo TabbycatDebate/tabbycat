@@ -136,6 +136,7 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     debate_rules__speakers_in_ballots          = 'prelim'
     debate_rules__side_names                   = 'gov-opp'
     debate_rules__reply_scores_enabled         = False
+    debate_rules__preparation_time             = 15
     motions__motion_vetoes_enabled             = False
     motions__enable_motions                    = False
     # Draw Rules
