@@ -796,7 +796,8 @@ class SetRoundStartTimeView(DrawStatusEdit):
             time = timezone.make_aware(datetime.datetime.strptime(time_text, "%Y-%m-%dT%H:%M"))
         except ValueError:
             messages.error(request, _("Sorry, \"%(input)s\" isn't a valid time. It must "
-                           "be in ISO format, for example: \"2024-06-07T13:57\".") % {'input': time_text})
+                           "be in 24-hour format, with a colon, for "
+                           "example: \"13:57\".") % {'input': time_text})
             return super().post(request, *args, **kwargs)
 
         self.round.starts_at = time
