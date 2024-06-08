@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from utils.models import UniqueConstraint
+
 
 class DebateAdjudicatorManager(models.Manager):
     use_for_related_fields = True
@@ -31,9 +33,9 @@ class DebateAdjudicator(models.Model):
     timing_confirmed = models.BooleanField(null=True, verbose_name=_("available?"))
 
     class Meta:
+        constraints = [UniqueConstraint(fields=['debate', 'adjudicator'])]
         verbose_name = _("debate adjudicator")
         verbose_name_plural = _("debate adjudicators")
-        unique_together = ('debate', 'adjudicator')
 
     def __str__(self):
         return '{} in {} ({})'.format(self.adjudicator, self.debate, self.get_type_display())
@@ -50,9 +52,9 @@ class AdjudicatorTeamConflict(models.Model):
         verbose_name=_("team"))
 
     class Meta:
+        constraints = [UniqueConstraint(fields=['adjudicator', 'team'])]
         verbose_name = _("adjudicator-team conflict")
         verbose_name_plural = _("adjudicator-team conflicts")
-        unique_together = ('adjudicator', 'team')
 
     def __str__(self):
         return '{} with {}'.format(self.adjudicator, self.team)
@@ -67,9 +69,9 @@ class AdjudicatorAdjudicatorConflict(models.Model):
         verbose_name=_("adjudicator 2"))
 
     class Meta:
+        constraints = [UniqueConstraint(fields=['adjudicator1', 'adjudicator2'])]
         verbose_name = _("adjudicator-adjudicator conflict")
         verbose_name_plural = _("adjudicator-adjudicator conflicts")
-        unique_together = ('adjudicator1', 'adjudicator2')
 
     def __str__(self):
         return '{} with {}'.format(self.adjudicator1, self.adjudicator2)
@@ -82,9 +84,9 @@ class AdjudicatorInstitutionConflict(models.Model):
         verbose_name=_("institution"))
 
     class Meta:
+        constraints = [UniqueConstraint(fields=['adjudicator', 'institution'])]
         verbose_name = _("adjudicator-institution conflict")
         verbose_name_plural = _("adjudicator-institution conflicts")
-        unique_together = ('adjudicator', 'institution')
 
     def __str__(self):
         return '{} with {}'.format(self.adjudicator, self.institution)
@@ -97,9 +99,9 @@ class TeamInstitutionConflict(models.Model):
         verbose_name=_("institution"))
 
     class Meta:
+        constraints = [UniqueConstraint(fields=['team', 'institution'])]
         verbose_name = _("team-institution conflict")
         verbose_name_plural = _("team-institution conflicts")
-        unique_together = ('team', 'institution')
 
     def __str__(self):
         return '{} with {}'.format(self.team, self.institution)

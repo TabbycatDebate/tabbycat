@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from html2text import html2text
 
+from utils.models import UniqueConstraint
+
 
 class Motion(models.Model):
     """Represents a single motion (not a set of motions)."""
@@ -53,7 +55,7 @@ class DebateTeamMotionPreference(models.Model):
         verbose_name=_("ballot submission"))
 
     class Meta:
-        unique_together = [('debate_team', 'preference', 'ballot_submission')]
+        constraints = [UniqueConstraint(fields=['debate_team', 'preference', 'ballot_submission'])]
         verbose_name = _("debate team motion preference")
         verbose_name_plural = _("debate team motion preferences")
 
@@ -80,8 +82,8 @@ class RoundMotion(models.Model):
         help_text=_("The order in which motions are displayed"))
 
     class Meta:
+        constraints = [UniqueConstraint(fields=['round', 'seq'])]
         ordering = ('round', 'seq')
-        unique_together = ('round', 'seq')
         verbose_name = _("round motion")
         verbose_name_plural = _("round motions")
 

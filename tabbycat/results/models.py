@@ -9,6 +9,7 @@ from django.utils.translation import gettext_lazy as _
 
 from motions.models import RoundMotion
 from utils.misc import badge_datetime_format, reverse_tournament
+from utils.models import UniqueConstraint
 
 from .result import DebateResult
 from .utils import readable_ballotsub_result
@@ -67,7 +68,7 @@ class Submission(models.Model):
 
     @property
     def _unique_filter_args(self):
-        return dict((arg, getattr(self, arg)) for arg in self._meta.unique_together[0]
+        return dict((arg, getattr(self, arg)) for arg in self._meta.constraints[0].fields
                     if arg != 'version')
 
     def _unique_unconfirm_args(self):
@@ -117,7 +118,7 @@ class BallotSubmission(Submission):
                     "when individual adjudicator ballots are enabled."))
 
     class Meta:
-        unique_together = [('debate', 'version')]
+        constraints = [UniqueConstraint(fields=['debate', 'version'])]
         verbose_name = _("ballot submission")
         verbose_name_plural = _("ballot submissions")
 
@@ -235,8 +236,10 @@ class TeamScoreByAdj(models.Model):
         verbose_name=_("score"))
 
     class Meta:
-        unique_together = [('debate_adjudicator', 'debate_team', 'ballot_submission')]
-        index_together = ['ballot_submission', 'debate_adjudicator']
+        constraints = [
+            UniqueConstraint(fields=['debate_adjudicator', 'debate_team', 'ballot_submission']),
+        ]
+        indexes = [models.Index(fields=['ballot_submission', 'debate_adjudicator'])]
         verbose_name = _("team score by adjudicator")
         verbose_name_plural = _("team scores by adjudicator")
 
@@ -269,9 +272,10 @@ class SpeakerScoreByAdj(models.Model):
     position = models.IntegerField(verbose_name=_("position"))
 
     class Meta:
-        unique_together = [('debate_adjudicator', 'debate_team', 'position',
-                            'ballot_submission')]
-        index_together = ['ballot_submission', 'debate_adjudicator']
+        constraints = [
+            UniqueConstraint(fields=['debate_adjudicator', 'debate_team', 'position', 'ballot_submission']),
+        ]
+        indexes = [models.Index(fields=['ballot_submission', 'debate_adjudicator'])]
         verbose_name = _("speaker score by adjudicator")
         verbose_name_plural = _("speaker scores by adjudicator")
 
@@ -317,7 +321,7 @@ class TeamScore(models.Model):
     has_ghost = models.BooleanField(null=True, blank=True, verbose_name=_("has ghost score"))
 
     class Meta:
-        unique_together = [('debate_team', 'ballot_submission')]
+        constraints = [UniqueConstraint(fields=['debate_team', 'ballot_submission'])]
         verbose_name = _("team score")
         verbose_name_plural = _("team scores")
 
@@ -360,7 +364,7 @@ class SpeakerScore(models.Model):
     objects = SpeakerScoreManager()
 
     class Meta:
-        unique_together = [('debate_team', 'position', 'ballot_submission')]
+        constraints = [UniqueConstraint(fields=['debate_team', 'position', 'ballot_submission'])]
         verbose_name = _("speaker score")
         verbose_name_plural = _("speaker scores")
 

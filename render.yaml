@@ -30,7 +30,7 @@ services:
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: PYTHON_VERSION
-        value: "3.9.9"
+        value: "3.12.3"
       - key: WEB_CONCURRENCY
         value: 4
       - key: TAB_DIRECTOR_EMAIL

@@ -10,6 +10,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from utils.managers import LookupByNameFieldsMixin
+from utils.models import UniqueConstraint
 
 from .emoji import EMOJI_FIELD_CHOICES
 
@@ -50,7 +51,9 @@ class Institution(models.Model):
     objects = InstitutionManager()
 
     class Meta:
-        unique_together = [('name', 'code')]
+        constraints = [
+            UniqueConstraint(fields=['name', 'code']),
+        ]
         ordering = ['name']
         verbose_name = _("institution")
         verbose_name_plural = _("institutions")
@@ -81,9 +84,11 @@ class SpeakerCategory(models.Model):
         help_text=_("If checked, this category will be included in the speaker category tabs shown to the public"))
 
     class Meta:
-        unique_together = [('tournament', 'seq'), ('tournament', 'slug')]
+        constraints = [
+            UniqueConstraint(fields=['tournament', 'seq']),
+            UniqueConstraint(fields=['tournament', 'slug']),
+        ]
         ordering = ['tournament', 'seq']
-        index_together = ['tournament', 'seq']
         verbose_name = _("speaker category")
         verbose_name_plural = _("speaker categories")
 
@@ -199,17 +204,17 @@ class Team(models.Model):
         verbose_name=_("emoji"))
 
     class Meta:
-        unique_together = [
+        constraints = [
             # Enforce for blank references also - two teams from the same
             # institution can't both be unlabelled. However, Django won't
             # enforce this for null institutions.
-            ('reference', 'institution', 'tournament'),
+            UniqueConstraint(fields=['reference', 'institution', 'tournament']),
 
             # Not enforced for blank emoji (null=True is set on emoji)
-            ('emoji', 'tournament'),
+            UniqueConstraint(fields=['emoji', 'tournament']),
         ]
+        indexes = [models.Index(fields=['tournament', 'institution', 'short_reference'])]
         ordering = ['tournament', 'institution', 'short_reference']
-        index_together = ['tournament', 'institution', 'short_reference']
         verbose_name = _("team")
         verbose_name_plural = _("teams")
 

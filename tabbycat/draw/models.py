@@ -7,6 +7,7 @@ from django.utils.translation import gettext, gettext_lazy as _
 
 from tournaments.utils import get_side_name
 from utils.fields import ChoiceArrayField
+from utils.models import UniqueConstraint
 
 from .generator import DRAW_FLAG_DESCRIPTIONS
 
@@ -388,6 +389,6 @@ class TeamSideAllocation(models.Model):
         verbose_name=_("side"))
 
     class Meta:
-        unique_together = [('round', 'team')]
+        constraints = [UniqueConstraint(fields=['round', 'team'])]
         verbose_name = _("team side allocation")
         verbose_name_plural = _("team side allocations")
