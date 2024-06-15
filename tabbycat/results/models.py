@@ -398,7 +398,7 @@ class ScoreCriterion(models.Model):
         verbose_name="required")
 
     class Meta:
-        unique_together = [('tournament', 'seq')]
+        constraints = [UniqueConstraint(fields=['tournament', 'seq'])]
         verbose_name = _("score criterion")
         verbose_name_plural = _("score criteria")
 
@@ -415,7 +415,7 @@ class SpeakerCriterionScore(models.Model):
         verbose_name="speaker score")
 
     class Meta:
-        unique_together = [('speaker_score', 'criterion')]
+        constraints = [UniqueConstraint(fields=['speaker_score', 'criterion'])]
         verbose_name = _("speaker score for criterion")
         verbose_name_plural = _("speaker scores for criteria")
 
@@ -432,7 +432,7 @@ class SpeakerCriterionScoreByAdj(models.Model):
         verbose_name="speaker score")
 
     class Meta:
-        unique_together = [('speaker_score_by_adj', 'criterion')]
+        constraints = [UniqueConstraint(fields=['speaker_score_by_adj', 'criterion'])]
         verbose_name = _("speaker score for criterion by adjudicator")
         verbose_name_plural = _("speaker scores for criteria by adjudicator")
 
