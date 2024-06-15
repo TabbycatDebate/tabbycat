@@ -10,11 +10,11 @@ from django.db.models import Count, Prefetch, Q
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
 from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.fields import DateTimeField
 from rest_framework.generics import GenericAPIView, get_object_or_404, RetrieveUpdateAPIView
 from rest_framework.mixins import ListModelMixin
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import BasePermission, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
@@ -32,7 +32,7 @@ from checkins.models import Event
 from checkins.utils import create_identifiers, get_unexpired_checkins
 from draw.models import Debate, DebateTeam
 from options.models import TournamentPreferenceModel
-from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
+from participants.models import Adjudicator, Institution, Person, Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
@@ -44,7 +44,7 @@ from venues.models import Venue, VenueCategory
 from . import serializers
 from .fields import ParticipantAvailabilityForeignKeyField
 from .mixins import AdministratorAPIMixin, APILogActionMixin, PublicAPIMixin, RoundAPIMixin, TournamentAPIMixin, TournamentPublicAPIMixin
-from .permissions import APIEnabledPermission, PerTournamentPermissionRequired, PublicPreferencePermission
+from .permissions import APIEnabledPermission, PerTournamentPermissionRequired, PublicPreferencePermission, URLKeyAuthentication
 
 
 tournament_parameter = OpenApiParameter('tournament_slug', description="The tournament's slug", type=str, location="path")
@@ -664,6 +664,23 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
         return Response(self.get_response_dict(request, obj.get(), False, None), status=status)
 
 
+class PersonCheckinMixin:
+    class CustomPermission(BasePermission):
+        def has_permission(self, request, view):
+            return view.tournament.pref('participant_ballots') == 'private-urls' and view.participant_requester and request.method != 'POST'
+
+    authentication_classes = [URLKeyAuthentication]
+    permission_classes = [APIEnabledPermission, CustomPermission | PerTournamentPermissionRequired | IsAdminUser]
+
+    @property
+    def participant_requester(self):
+        if isinstance(person := self.request.auth, Person):
+            return person
+
+    def get_queryset(self):
+        return super().get_queryset().filter(id=self.participant_requester.id)
+
+
 @extend_schema(tags=['adjudicators'])
 @extend_schema_view(
     get=extend_schema(summary="Get adjudicator checkin status"),
@@ -672,7 +689,7 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
     patch=extend_schema(summary="Toggle adjudicator checkin status"),
     post=extend_schema(summary="Create adjudicator checkin identifier"),
 )
-class AdjudicatorCheckinsView(BaseCheckinsView):
+class AdjudicatorCheckinsView(PersonCheckinMixin, BaseCheckinsView):
     model = Adjudicator
     object_api_view = 'api-adjudicator-detail'
     window_preference_pref = 'checkin_window_people'
@@ -686,7 +703,7 @@ class AdjudicatorCheckinsView(BaseCheckinsView):
     patch=extend_schema(summary="Toggle speaker checkin status"),
     post=extend_schema(summary="Create speaker checkin identifier"),
 )
-class SpeakerCheckinsView(BaseCheckinsView):
+class SpeakerCheckinsView(PersonCheckinMixin, BaseCheckinsView):
     model = Speaker
     object_api_view = 'api-speaker-detail'
     window_preference_pref = 'checkin_window_people'
@@ -962,11 +979,23 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
     partial_update=extend_schema(summary="Patch ballot", parameters=[id_parameter], request=serializers.UpdateBallotSerializer),
 )
 class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
+
+    class CustomPermission(BasePermission):
+        def has_permission(self, request, view):
+            return (
+                (view.action in ['list', 'retrieve', 'create'] and view.tournament.pref('participant_ballots') == 'private-urls' and view.participant_requester) or
+                (view.action == 'create' and view.tournament.pref('participant_ballots') == 'public') or
+                (view.action in ['list', 'retrieve'] and view.tournament.pref('private_ballots_released') is True)
+            )
+
     serializer_class = serializers.BallotSerializer
     access_preference = 'ballots_released'
 
     tournament_field = 'debate__round__tournament'
     round_field = 'debate__round'
+
+    authentication_classes = [URLKeyAuthentication]
+    permission_classes = [APIEnabledPermission, PublicPreferencePermission | CustomPermission | PerTournamentPermissionRequired]
 
     list_permission = Permission.VIEW_BALLOTSUBMISSIONS
     create_permission = Permission.ADD_BALLOTSUBMISSIONS
@@ -975,6 +1004,23 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
 
     action_log_type_created = ActionLogEntry.ActionType.BALLOT_CREATE
     action_log_type_updated = ActionLogEntry.ActionType.BALLOT_EDIT
+
+    @property
+    def participant_requester(self):
+        if isinstance(person := self.request.auth, Person):
+            try:
+                return person.adjudicator
+            except Adjudicator.DoesNotExist:
+                if self.action == 'create':
+                    raise PermissionDenied('URL key for submitting ballot must be for an adjudicator')
+                else:
+                    return person.speaker.team
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['participant_requester'] = self.participant_requester
+        context['debate'] = self.debate
+        return context
 
     @property
     def debate(self):
@@ -987,14 +1033,15 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     def lookup_kwargs(self):
         return {'debate': self.debate}
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['debate'] = self.debate
-        return context
-
     def get_queryset(self):
         filters = Q()
-        if self.request.query_params.get('confirmed') or not self.request.user.is_staff:
+
+        if isinstance(self.participant_requester, Adjudicator):
+            filters &= Q(debate__debateadjudicator_set__adjudicator_id=self.participant_requester.id)
+        if isinstance(self.participant_requester, Team):
+            filters &= Q(debate__debateteam_set__team_id=self.participant_requester.id)
+
+        if self.request.query_params.get('confirmed') or not (self.request.user.is_staff or self.participant_requester):
             filters &= Q(confirmed=True)
         return super().get_queryset().filter(filters).prefetch_related(
             'debateteammotionpreference_set__motion__tournament',
@@ -1059,22 +1106,53 @@ class FeedbackQuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     destroy=extend_schema(summary="Delete feedback", parameters=[id_parameter]),
 )
 class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+
+    class CustomPermission(BasePermission):
+        def has_permission(self, request, view):
+            return (
+                (view.action in ['list', 'retrieve', 'create'] and view.tournament.pref('participant_feedback') == 'private-urls' and view.participant_requester) or
+                (view.action == 'create' and view.tournament.pref('participant_feedback') == 'public')
+            )
+
     serializer_class = serializers.FeedbackSerializer
     tournament_field = 'adjudicator__tournament'
     action_log_type_created = ActionLogEntry.ActionType.FEEDBACK_SAVE
     action_log_type_updated = ActionLogEntry.ActionType.FEEDBACK_SAVE
+
+    authentication_classes = [URLKeyAuthentication]
+    permission_classes = [APIEnabledPermission, CustomPermission | PerTournamentPermissionRequired | IsAdminUser]
 
     list_permission = Permission.VIEW_FEEDBACK
     create_permission = Permission.ADD_FEEDBACK
     update_permission = Permission.EDIT_FEEDBACK_IGNORE
     destroy_permission = Permission.EDIT_FEEDBACK_CONFIRM
 
+    @property
+    def participant_requester(self):
+        if isinstance(person := self.request.auth, Person):
+            try:
+                return person.adjudicator
+            except Adjudicator.DoesNotExist:
+                return person.speaker.team
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['participant_requester'] = self.participant_requester
+        return context
+
     def perform_create(self, serializer):
         serializer.save()
+        self.log_action(type=self.action_log_type_created, agent=ActionLogEntry.Agent.API)
 
     def get_queryset(self):
         query_params = self.request.query_params
         filters = Q()
+
+        # Disallow querying for feedback that they didn't submit
+        if (person := self.participant_requester) is not None:
+            if self.action == 'list' and (query_params.get('source_type') != type(person).__name__.lower() or query_params.get('source') != str(person.id)):
+                raise PermissionDenied("URL key-authorized requests may only get the participants' objects")
+
         if query_params.get('source_type') == 'adjudicator':
             filters &= Q(source_team__isnull=True)
             if query_params.get('source'):
