@@ -8,7 +8,7 @@
   "addons": [
     "papertrail",
     "rediscloud:30",
-    "heroku-postgresql:mini",
+    "heroku-postgresql:essential-0",
     {
       "plan": "heroku-redis:mini",
       "options": {

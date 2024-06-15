@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from collections.abc import Mapping
+from datetime import date, datetime, time
 from functools import partial, partialmethod
 
 from django.contrib.auth import get_user_model
@@ -178,6 +179,16 @@ class RoundSerializer(serializers.ModelSerializer):
         availabilities = fields.TournamentHyperlinkedIdentityField(view_name='api-availability-list', lookup_field='seq', lookup_url_kwarg='round_seq')
         preformed_panels = fields.TournamentHyperlinkedIdentityField(view_name='api-preformedpanel-list', lookup_field='seq', lookup_url_kwarg='round_seq')
 
+    class TimeOrDateTimeField(serializers.DateTimeField):
+        def to_internal_value(self, value):
+            try:
+                value = time.fromisoformat(value)
+            except ValueError:
+                return super().to_internal_value(value)
+
+            value = datetime.combine(date.today(), value)
+            return super().to_internal_value(value)
+
     url = fields.TournamentHyperlinkedIdentityField(
         view_name='api-round-detail',
         lookup_field='seq', lookup_url_kwarg='round_seq')
@@ -186,6 +197,7 @@ class RoundSerializer(serializers.ModelSerializer):
         queryset=BreakCategory.objects.all(),
         allow_null=True, required=False)
     motions = RoundMotionSerializer(many=True, source='roundmotion_set', required=False)
+    starts_at = TimeOrDateTimeField(required=False, allow_null=True)
 
     _links = RoundLinksSerializer(source='*', read_only=True)
 
@@ -787,7 +799,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
 class InstitutionSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='api-global-institution-detail')
-    region = fields.CreatableSlugRelatedField(slug_field='name', queryset=Region.objects.all(), required=False)
+    region = fields.CreatableSlugRelatedField(slug_field='name', queryset=Region.objects.all(), required=False, allow_null=True)
     venue_constraints = VenueConstraintSerializer(many=True, required=False)
 
     class Meta:

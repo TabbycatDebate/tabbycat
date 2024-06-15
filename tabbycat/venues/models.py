@@ -21,8 +21,8 @@ class Venue(models.Model):
     round_availabilities = GenericRelation('availability.RoundAvailability')
 
     class Meta:
-        ordering = ['name']
-        index_together = ['name']
+        indexes = [models.Index(fields=['tournament', 'name'])]
+        ordering = ['tournament', 'name']
         verbose_name = _("room")
         verbose_name_plural = _("rooms")
 

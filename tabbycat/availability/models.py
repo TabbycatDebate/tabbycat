@@ -3,6 +3,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from utils.models import UniqueConstraint
+
 
 class RoundAvailability(models.Model):
 
@@ -20,7 +22,9 @@ class RoundAvailability(models.Model):
         verbose_name=_("round"))
 
     class Meta:
-        unique_together = [('round', 'content_type', 'object_id')]
+        constraints = [
+            UniqueConstraint(fields=['round', 'content_type', 'object_id']),
+        ]
         verbose_name = _("round availability")
         verbose_name_plural = _("round availabilities")
 
