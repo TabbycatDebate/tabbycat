@@ -6,21 +6,27 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tournaments', '0012_alter_round_unique_together_and_more'),
-        ('venues', '0010_populate_tournaments'),
+        ("tournaments", "0012_alter_round_unique_together_and_more"),
+        ("venues", "0010_populate_tournaments"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='venue',
-            options={'ordering': ['tournament', 'name'], 'verbose_name': 'room', 'verbose_name_plural': 'rooms'},
+            name="venue",
+            options={
+                "ordering": ["tournament", "name"],
+                "verbose_name": "room",
+                "verbose_name_plural": "rooms",
+            },
         ),
         migrations.AlterIndexTogether(
-            name='venue',
+            name="venue",
             index_together=set(),
         ),
         migrations.AddIndex(
-            model_name='venue',
-            index=models.Index(fields=['tournament', 'name'], name='venues_venu_tournam_401b28_idx'),
+            model_name="venue",
+            index=models.Index(
+                fields=["tournament", "name"], name="venues_venu_tournam_401b28_idx"
+            ),
         ),
     ]

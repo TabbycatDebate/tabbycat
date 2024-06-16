@@ -21,9 +21,9 @@ class TabbycatPageTitlesMixin(ContextMixin):
     """Allows all views to set header information in their subclassess obviating
     the need for page template boilerplate and/or page specific templates"""
 
-    page_title = ''
-    page_subtitle = ''
-    page_emoji = ''
+    page_title = ""
+    page_subtitle = ""
+    page_emoji = ""
 
     def get_page_title(self):
         return self.page_title
@@ -52,36 +52,43 @@ class TabbycatPageTitlesMixin(ContextMixin):
 # Mixins regulating access based on user account status
 # ==============================================================================
 
+
 class AdministratorMixin(UserPassesTestMixin, ContextMixin):
     """Mixin for views that are for administrators."""
+
     view_role = "admin"
     for_admin = True
-    view_permission: Optional['permission_type'] = None
-    edit_permission: Optional['permission_type'] = None
+    view_permission: Optional["permission_type"] = None
+    edit_permission: Optional["permission_type"] = None
 
     def get_context_data(self, **kwargs):
         kwargs["user_role"] = self.view_role
-        kwargs['can_edit'] = has_permission(self.request.user, self.get_edit_permission(), self.tournament) if hasattr(self, 'tournament') else None
+        kwargs["can_edit"] = (
+            has_permission(self.request.user, self.get_edit_permission(), self.tournament)
+            if hasattr(self, "tournament")
+            else None
+        )
         return super().get_context_data(**kwargs)
 
-    def get_view_permission(self) -> Optional['permission_type']:
+    def get_view_permission(self) -> Optional["permission_type"]:
         return self.view_permission or self.edit_permission
 
-    def get_edit_permission(self) -> Optional['permission_type']:
+    def get_edit_permission(self) -> Optional["permission_type"]:
         return self.edit_permission
 
     def test_func(self) -> bool:
-        if not hasattr(self, 'tournament'):
+        if not hasattr(self, "tournament"):
             return self.request.user.is_superuser
-        if self.request.method == 'GET' and self.get_view_permission() is not None:
+        if self.request.method == "GET" and self.get_view_permission() is not None:
             return has_permission(self.request.user, self.get_view_permission(), self.tournament)
-        if self.request.method in ['POST', 'PUT'] and self.get_edit_permission() is not None:
+        if self.request.method in ["POST", "PUT"] and self.get_edit_permission() is not None:
             return has_permission(self.request.user, self.get_edit_permission(), self.tournament)
         return self.request.user.is_superuser
 
 
 class AssistantMixin(LoginRequiredMixin, ContextMixin):
     """Mixin for views that are for assistants."""
+
     view_role = "assistant"
 
     def get_context_data(self, **kwargs):
@@ -116,6 +123,7 @@ class SuperuserRequiredWebsocketMixin(AccessWebsocketMixin):
 # Miscellaneous mixins
 # ==============================================================================
 
+
 class WarnAboutDatabaseUseMixin(ContextMixin):
     """Mixin for views that should stop people exceeding database counts.
 
@@ -131,10 +139,10 @@ class WarnAboutDatabaseUseMixin(ContextMixin):
         return cursor.fetchone()[0]
 
     def get_context_data(self, **kwargs):
-        if 'DATABASE_URL' in os.environ and self.request.user.is_authenticated:
+        if "DATABASE_URL" in os.environ and self.request.user.is_authenticated:
             rows = self.get_database_row_count()
             if rows >= 8000:
-                kwargs['database_rows_used'] = rows
+                kwargs["database_rows_used"] = rows
 
         return super().get_context_data(**kwargs)
 
@@ -148,8 +156,10 @@ class WarnAboutLegacySendgridConfigVarsMixin(ContextMixin):
     """
 
     def get_context_data(self, **kwargs):
-        if self.request.user.is_authenticated and getattr(settings, 'USING_LEGACY_SENDGRID_CONFIG_VARS', False):
-            kwargs['using_legacy_sendgrid_config_vars'] = True
+        if self.request.user.is_authenticated and getattr(
+            settings, "USING_LEGACY_SENDGRID_CONFIG_VARS", False
+        ):
+            kwargs["using_legacy_sendgrid_config_vars"] = True
         return super().get_context_data(**kwargs)
 
 

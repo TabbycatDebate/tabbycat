@@ -11,14 +11,18 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('participants', '0001_initial'),
-        ('adjallocation', '0001_initial'),
+        ("participants", "0001_initial"),
+        ("adjallocation", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='debateadjudicator',
-            name='adjudicator',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='participants.Adjudicator', verbose_name='adjudicator'),
+            model_name="debateadjudicator",
+            name="adjudicator",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="participants.Adjudicator",
+                verbose_name="adjudicator",
+            ),
         ),
     ]

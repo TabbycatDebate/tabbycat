@@ -98,15 +98,20 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
     if debate.adjudicators.chair is None:
         raise ValueError("This debate ({}) doesn't have a chair.".format(debate.matchup))
 
-    if debate.round.tournament.pref('feedback_from_teams') == 'all-adjs':
-        sources_and_subjects = [(team, adj) for team in debate.teams for adj in debate.adjudicators.all()]
-    elif debate.round.tournament.pref('feedback_from_teams') == 'orallist':
+    if debate.round.tournament.pref("feedback_from_teams") == "all-adjs":
+        sources_and_subjects = [
+            (team, adj) for team in debate.teams for adj in debate.adjudicators.all()
+        ]
+    elif debate.round.tournament.pref("feedback_from_teams") == "orallist":
         sources_and_subjects = [(team, debate.adjudicators.chair) for team in debate.teams]
     else:
         sources_and_subjects = []
 
-    sources_and_subjects.extend(itertools.permutations(
-        (adj for adj, position in debate.adjudicators.with_debateadj_types()), 2))
+    sources_and_subjects.extend(
+        itertools.permutations(
+            (adj for adj, position in debate.adjudicators.with_debateadj_types()), 2
+        )
+    )
 
     fbs = list()
 
@@ -122,11 +127,9 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
 
         fb.adjudicator = adj
         if isinstance(source, Adjudicator):
-            fb.source_adjudicator = DebateAdjudicator.objects.get(
-                debate=debate, adjudicator=source)
+            fb.source_adjudicator = DebateAdjudicator.objects.get(debate=debate, adjudicator=source)
         elif isinstance(source, Team):
-            fb.source_team = DebateTeam.objects.get(
-                debate=debate, team=source)
+            fb.source_team = DebateTeam.objects.get(debate=debate, team=source)
         else:
             raise TypeError("source must be an Adjudicator or a Team")
 
@@ -150,7 +153,7 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
             elif question.answer_type_class == fm.AdjudicatorFeedbackIntegerAnswer:
                 min_value = int(question.min_value) or 0
                 max_value = int(question.max_value) or 10
-                answer = random.randrange(min_value, max_value+1)
+                answer = random.randrange(min_value, max_value + 1)
             elif question.answer_type_class == fm.AdjudicatorFeedbackFloatAnswer:
                 min_value = question.min_value or 0
                 max_value = question.max_value or 10
@@ -158,14 +161,20 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
             elif question.answer_type_class == fm.AdjudicatorFeedbackStringAnswer:
                 if question.answer_type == fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT:
                     answer = random.choice(COMMENTS[score])
-                elif question.answer_type == fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT:
+                elif (
+                    question.answer_type == fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT
+                ):
                     answer = random.choice(question.choices)
                 else:
                     answer = random.choice(WORDS[score])
             elif question.answer_type_class == fm.AdjudicatorFeedbackManyAnswer:
-                answer = random.sample(question.choices, random.randint(0, len(question.choices_for_field)))
+                answer = random.sample(
+                    question.choices, random.randint(0, len(question.choices_for_field))
+                )
             else:
-                raise TypeError("Answer type class not recognized: " + question.answer_type_class.__name__)
+                raise TypeError(
+                    "Answer type class not recognized: " + question.answer_type_class.__name__
+                )
 
             question.answer_type_class(question=question, feedback=fb, answer=answer).save()
 

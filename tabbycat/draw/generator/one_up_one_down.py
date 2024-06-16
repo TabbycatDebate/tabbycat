@@ -1,10 +1,10 @@
 class OneUpOneDownSwapper(object):
 
     DEFAULT_OPTIONS = {
-        "exclude_penalty"    : -1e10,
-        "avoid_history"      : True,
-        "avoid_institution"  : True,
-        "history_penalty"    : 1e3,
+        "exclude_penalty": -1e10,
+        "avoid_history": True,
+        "avoid_institution": True,
+        "history_penalty": 1e3,
         "institution_penalty": 1,
     }
 
@@ -51,13 +51,13 @@ class OneUpOneDownSwapper(object):
         # and only if, adding this element to the cumulative sum as of *two*
         # elements ago (to form the potential cumulative sum of this element)
         # would beat the cumulative sum as of last element.
-        for i in range(2, n+1):
-            if (state[i-2] + data[i-2]) > state[i-1]:
+        for i in range(2, n + 1):
+            if (state[i - 2] + data[i - 2]) > state[i - 1]:
                 action[i] = 1
-                state[i] = state[i-2] + data[i-2]
+                state[i] = state[i - 2] + data[i - 2]
             else:
                 action[i] = 0
-                state[i] = state[i-1]
+                state[i] = state[i - 1]
 
         j = n
         k = []
@@ -71,8 +71,8 @@ class OneUpOneDownSwapper(object):
         # nullified).
         while j >= 2:
             if action[j]:
-                k.insert(0, j-2)  # Insert index corresponding to start of swap
-            j -= (action[j] + 1)
+                k.insert(0, j - 2)  # Insert index corresponding to start of swap
+            j -= action[j] + 1
         return state[n], k
 
     def score_swap(self, debate1, debate2):
@@ -81,16 +81,18 @@ class OneUpOneDownSwapper(object):
         do the swap."""
         (a1, n1) = debate1
         (a2, n2) = debate2
-        inst = (a1.institution == n1.institution and a1.institution is not None,
-                a2.institution == n2.institution and a2.institution is not None)
+        inst = (
+            a1.institution == n1.institution and a1.institution is not None,
+            a2.institution == n2.institution and a2.institution is not None,
+        )
         hist = (a1.seen(n1), a2.seen(n2))
 
-        if not ((inst[0] or inst[1]) and self.avoid_institution) and \
-                (sum(hist) == 0 and self.avoid_history):
+        if not ((inst[0] or inst[1]) and self.avoid_institution) and (
+            sum(hist) == 0 and self.avoid_history
+        ):
             return self.exclude_penalty
 
-        inst_swap = (a1.institution == n2.institution,
-                     a2.institution == n1.institution)
+        inst_swap = (a1.institution == n2.institution, a2.institution == n1.institution)
         hist_swap = (a1.seen(n2), a2.seen(n1))
 
         # Definitely don't swap if you'd have more history conflicts by swapping
@@ -98,8 +100,7 @@ class OneUpOneDownSwapper(object):
             return self.exclude_penalty
 
         def badness(i, h):
-            return i.count(True) * self.institution_penalty + sum(h) \
-                * self.history_penalty
+            return i.count(True) * self.institution_penalty + sum(h) * self.history_penalty
 
         # Discount by 1e-3 so that, if there are two otherwise-equivalent
         # swap combinations, fewer swaps is preferred to more swaps
@@ -107,10 +108,10 @@ class OneUpOneDownSwapper(object):
 
     @staticmethod
     def one_up_down_swap(draw, i):
-        m1 = (draw[i][0], draw[i+1][1])
-        m2 = (draw[i+1][0], draw[i][1])
+        m1 = (draw[i][0], draw[i + 1][1])
+        m2 = (draw[i + 1][0], draw[i][1])
         draw[i] = m1
-        draw[i+1] = m2
+        draw[i + 1] = m2
 
     def run(self, draw):
         """'draw' is a list of 2-tuples of Teams [(aff, neg), (aff, neg)...]
@@ -118,7 +119,7 @@ class OneUpOneDownSwapper(object):
 
         # Find a list of integers representing how much better you get by
         # executing each team with the team below.
-        swap_scores = [(self.score_swap(draw[i], draw[i+1])) for i in range(len(draw) - 1)]
+        swap_scores = [(self.score_swap(draw[i], draw[i + 1])) for i in range(len(draw) - 1)]
 
         # Adjust scores so that if there are two equivalent ways to resolve a
         # conflict, swaps higher in the ranking are preferred to those lower.

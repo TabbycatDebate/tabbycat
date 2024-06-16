@@ -4,7 +4,8 @@ from utils.serializers import DebateSerializerMixin, VenueSerializer, VueDraggab
 
 
 class EditDebateVenuesDebateSerializer(DebateSerializerMixin):
-    """ Returns debates for the Edit Debate Teams view"""
+    """Returns debates for the Edit Debate Teams view"""
+
     # Only need the PK of the venues as they are fetched separately
     venue = serializers.PrimaryKeyRelatedField(read_only=True)
 
@@ -14,14 +15,12 @@ class SimpleDebateVenueSerializer(DebateSerializerMixin):
 
     class Meta:
         model = DebateSerializerMixin.Meta.model
-        fields = ('id', 'venue')
+        fields = ("id", "venue")
 
 
 class EditDebateVenuesVenueSerializer(VenueSerializer, VueDraggableItemMixin):
-    """ Returns venues for use in the allocate Debate Venues view """
+    """Returns venues for use in the allocate Debate Venues view"""
 
     class Meta:
         model = VenueSerializer.Meta.model
-        fields = (*VenueSerializer.Meta.fields,
-                  *VueDraggableItemMixin.Meta.fields,
-                  'priority')
+        fields = (*VenueSerializer.Meta.fields, *VueDraggableItemMixin.Meta.fields, "priority")

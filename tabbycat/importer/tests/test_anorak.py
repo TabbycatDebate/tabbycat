@@ -21,9 +21,9 @@ from ..importers.anorak import AnorakTournamentDataImporter
 class TestImporterAnorak(TestCase):
 
     # BASE_DIR is /tabbycat this allows tests to run from there or project root
-    TESTDIR = os.path.join(BASE_DIR, '../data/test/standard')
-    TESTDIR_CHOICES = os.path.join(BASE_DIR, '../data/test/choices')
-    TESTDIR_ERRORS = os.path.join(BASE_DIR, '../data/test/errors')
+    TESTDIR = os.path.join(BASE_DIR, "../data/test/standard")
+    TESTDIR_CHOICES = os.path.join(BASE_DIR, "../data/test/choices")
+    TESTDIR_ERRORS = os.path.join(BASE_DIR, "../data/test/errors")
 
     def setUp(self):
         super(TestImporterAnorak, self).setUp()
@@ -39,9 +39,9 @@ class TestImporterAnorak(TestCase):
 
     def _open_csv_file(self, dir, filename):
         path = os.path.join(dir, filename + ".csv")
-        return open(path, 'r')
+        return open(path, "r")
 
-    def assertCountsDictEqual(self, counts, expected): # noqa
+    def assertCountsDictEqual(self, counts, expected):  # noqa
         counts = dict(counts)
         self.assertEqual(counts, expected)
 
@@ -62,8 +62,10 @@ class TestImporterAnorak(TestCase):
     def test_venues(self):
         f = self._open_csv_file(self.TESTDIR, "venues")
         self.importer.import_venues(f)
-        self.assertCountsDictEqual(self.importer.counts, {vm.VenueCategory: 7, vm.Venue: 25,
-                vm.VenueCategory.venues.through: 25})
+        self.assertCountsDictEqual(
+            self.importer.counts,
+            {vm.VenueCategory: 7, vm.Venue: 25, vm.VenueCategory.venues.through: 25},
+        )
         self.assertFalse(self.importer.errors)
 
     def test_institutions(self):
@@ -77,11 +79,14 @@ class TestImporterAnorak(TestCase):
         self.importer.reset_counts()
         f = self._open_csv_file(self.TESTDIR, "speakers")
         self.importer.import_speakers(f)
-        self.assertCountsDictEqual(self.importer.counts, {
-            pm.Team: 24,
-            pm.Speaker: 72,
-            am.TeamInstitutionConflict: 23,
-        })
+        self.assertCountsDictEqual(
+            self.importer.counts,
+            {
+                pm.Team: 24,
+                pm.Speaker: 72,
+                am.TeamInstitutionConflict: 23,
+            },
+        )
         self.assertFalse(self.importer.errors)
 
     def test_adjudicators(self):
@@ -89,13 +94,16 @@ class TestImporterAnorak(TestCase):
         self.importer.reset_counts()
         f = self._open_csv_file(self.TESTDIR, "adjudicators")
         self.importer.import_adjudicators(f)
-        self.assertCountsDictEqual(self.importer.counts, {
-            pm.Adjudicator: 29,
-            fm.AdjudicatorBaseScoreHistory: 29,
-            am.AdjudicatorInstitutionConflict: 36,
-            am.AdjudicatorAdjudicatorConflict: 6,
-            am.AdjudicatorTeamConflict: 3,
-        })
+        self.assertCountsDictEqual(
+            self.importer.counts,
+            {
+                pm.Adjudicator: 29,
+                fm.AdjudicatorBaseScoreHistory: 29,
+                am.AdjudicatorInstitutionConflict: 36,
+                am.AdjudicatorAdjudicatorConflict: 6,
+                am.AdjudicatorTeamConflict: 3,
+            },
+        )
         self.assertFalse(self.importer.errors)
 
     def test_motions(self):
@@ -142,9 +150,14 @@ class TestImporterAnorak(TestCase):
         self.test_speakers()
         self.importer.reset_counts()
         f = self._open_csv_file(self.TESTDIR_ERRORS, "judges_invalid_line")
-        with self.assertRaises(TournamentDataImporterError) as raisescm, self.assertLogs(self.logger, logging.ERROR) as logscm:
+        with (
+            self.assertRaises(TournamentDataImporterError) as raisescm,
+            self.assertLogs(self.logger, logging.ERROR) as logscm,
+        ):
             self.importer.import_adjudicators(f)
-        self.assertCountEqual([e.lineno for e in raisescm.exception.entries], (2, 9, 10, 15, 16, 23, 24, 25, 26, 28))
+        self.assertCountEqual(
+            [e.lineno for e in raisescm.exception.entries], (2, 9, 10, 15, 16, 23, 24, 25, 26, 28)
+        )
         self.assertEqual(len(raisescm.exception), 10)
         self.assertEqual(len(logscm.records), 10)
 
@@ -153,18 +166,24 @@ class TestImporterAnorak(TestCase):
         self.importer.reset_counts()
         f = self._open_csv_file(self.TESTDIR_CHOICES, "judges")
         self.importer.import_adjudicators(f)
-        self.assertCountsDictEqual(self.importer.counts, {
-            pm.Adjudicator: 29,
-            fm.AdjudicatorBaseScoreHistory: 29,
-            am.AdjudicatorInstitutionConflict: 36,
-            am.AdjudicatorAdjudicatorConflict: 6,
-            am.AdjudicatorTeamConflict: 3,
-        })
+        self.assertCountsDictEqual(
+            self.importer.counts,
+            {
+                pm.Adjudicator: 29,
+                fm.AdjudicatorBaseScoreHistory: 29,
+                am.AdjudicatorInstitutionConflict: 36,
+                am.AdjudicatorAdjudicatorConflict: 6,
+                am.AdjudicatorTeamConflict: 3,
+            },
+        )
         self.assertFalse(self.importer.errors)
 
     def test_blank_entry_strict(self):
         f = self._open_csv_file(self.TESTDIR_ERRORS, "venues")
-        with self.assertRaises(TournamentDataImporterError) as raisescm, self.assertLogs(self.logger, logging.ERROR) as logscm:
+        with (
+            self.assertRaises(TournamentDataImporterError) as raisescm,
+            self.assertLogs(self.logger, logging.ERROR) as logscm,
+        ):
             self.importer.import_venues(f)
         # There are three bad lines in the CSV file, and because this raises
         # the exception straight after the Venue creation loop, it bad line
@@ -178,8 +197,10 @@ class TestImporterAnorak(TestCase):
         self.importer.strict = False
         with self.assertLogs(self.logger, logging.WARNING) as logscm:
             self.importer.import_venues(f)
-        self.assertCountsDictEqual(self.importer.counts, {vm.VenueCategory: 7, vm.Venue: 20,
-                vm.VenueCategory.venues.through: 20})
+        self.assertCountsDictEqual(
+            self.importer.counts,
+            {vm.VenueCategory: 7, vm.Venue: 20, vm.VenueCategory.venues.through: 20},
+        )
         # There are three bad lines in the CSV file, but each one generates
         # two errors: one creating the venue itself, and one creating the
         # venuecategory-venue relationship (because the venue doesn't exist).

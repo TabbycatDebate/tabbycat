@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tournaments', '0005_remove_tournament_current_round'),
+        ("tournaments", "0005_remove_tournament_current_round"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='round',
-            name='feedback_weight',
-            field=models.FloatField(default=0, help_text="The extent to which each adjudicator's overall score depends on feedback vs their base score. At 0, it is 100% drawn from their base score, at 1 it is 100% drawn from feedback.", verbose_name='feedback weight'),
+            model_name="round",
+            name="feedback_weight",
+            field=models.FloatField(
+                default=0,
+                help_text="The extent to which each adjudicator's overall score depends on feedback vs their base score. At 0, it is 100% drawn from their base score, at 1 it is 100% drawn from feedback.",
+                verbose_name="feedback weight",
+            ),
         ),
     ]

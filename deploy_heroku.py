@@ -16,72 +16,129 @@ except ImportError:
     from random import SystemRandom
 
     def get_random_secret_key():
-        chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
-        return ''.join(SystemRandom().choice(chars) for _ in range(50))
+        chars = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)"
+        return "".join(SystemRandom().choice(chars) for _ in range(50))
+
 
 # Arguments
 parser = argparse.ArgumentParser(description="Deploy Tabbycat to a new Heroku app.")
 
 parser.add_argument(
-    "urlname", type=str,
-    help="Name of the Heroku app. The app will be at urlname.herokuapp.com. Use '-' to use a Heroku-generated default.")
+    "urlname",
+    type=str,
+    help="Name of the Heroku app. The app will be at urlname.herokuapp.com. Use '-' to use a Heroku-generated default.",
+)
 
 parser.add_argument(
-    "--no-open", action="store_false", default=True, dest="open",
-    help="Don't open the Heroku website in your browser at the end")
+    "--no-open",
+    action="store_false",
+    default=True,
+    dest="open",
+    help="Don't open the Heroku website in your browser at the end",
+)
 
 parser.add_argument(
-    "--git-remote", type=str, default=None,
-    help="Name of Git remote to use. Use '-' to use the urlname. If omitted, reverts to default Heroku behaviour.")
+    "--git-remote",
+    type=str,
+    default=None,
+    help="Name of Git remote to use. Use '-' to use the urlname. If omitted, reverts to default Heroku behaviour.",
+)
 
 parser.add_argument(
-    "--git-branch", type=str, default=None,
-    help="Git branch to push (defaults to current branch)")
+    "--git-branch", type=str, default=None, help="Git branch to push (defaults to current branch)"
+)
 
 parser.add_argument(
-    "--pg-plan", "--postgresql-plan", type=str, default="essential-0",
-    help="Heroku Postgres plan (default essential-0)")
+    "--pg-plan",
+    "--postgresql-plan",
+    type=str,
+    default="essential-0",
+    help="Heroku Postgres plan (default essential-0)",
+)
 
 parser.add_argument(
-    "--web-dynos", type=str, default="1",
-    help="Web dyno specification, passed to heroku ps:scale web=[], e.g. 1:eco, 1:basic, 2:Standard-1X")
+    "--web-dynos",
+    type=str,
+    default="1",
+    help="Web dyno specification, passed to heroku ps:scale web=[], e.g. 1:eco, 1:basic, 2:Standard-1X",
+)
 
 parser.add_argument(
-    "--import-tournament", type=str, metavar="IMPORT_DIR",
-    help="Also run the importtournament command, importing from IMPORT_DIR")
+    "--import-tournament",
+    type=str,
+    metavar="IMPORT_DIR",
+    help="Also run the importtournament command, importing from IMPORT_DIR",
+)
 
 parser.add_argument(
-    "--dry-run", action="store_true", default=False,
-    help="Print commands, don't run them.")
+    "--dry-run", action="store_true", default=False, help="Print commands, don't run them."
+)
 
 config_group = parser.add_argument_group("heroku configuration settings")
-config_group.add_argument("--fast-cache-timeout", type=int, default=None, metavar="TIMEOUT",
-                          help="Set the faster public page cache timeout to TIMEOUT")
-config_group.add_argument("--slow-cache-timeout", type=int, default=None, metavar="TIMEOUT",
-                          help="Set the slower public page cache timeout to TIMEOUT")
-config_group.add_argument("--tab-cache-timeout", type=int, default=None, metavar="TIMEOUT",
-                          help="Set the tab page cache timeout to TIMEOUT")
-config_group.add_argument("--enable-debug", action="store_true", default=False,
-                          help="Enable Django debug pages")
-config_group.add_argument("--time-zone", type=str, default="Australia/Melbourne",
-                          help="Time zone name from the IANA tz database")
+config_group.add_argument(
+    "--fast-cache-timeout",
+    type=int,
+    default=None,
+    metavar="TIMEOUT",
+    help="Set the faster public page cache timeout to TIMEOUT",
+)
+config_group.add_argument(
+    "--slow-cache-timeout",
+    type=int,
+    default=None,
+    metavar="TIMEOUT",
+    help="Set the slower public page cache timeout to TIMEOUT",
+)
+config_group.add_argument(
+    "--tab-cache-timeout",
+    type=int,
+    default=None,
+    metavar="TIMEOUT",
+    help="Set the tab page cache timeout to TIMEOUT",
+)
+config_group.add_argument(
+    "--enable-debug", action="store_true", default=False, help="Enable Django debug pages"
+)
+config_group.add_argument(
+    "--time-zone",
+    type=str,
+    default="Australia/Melbourne",
+    help="Time zone name from the IANA tz database",
+)
 
 # Import tournament arguments are copied from importtournament.py, and should be
 # updated when these options in importtournament.py change.
 import_tournament_group = parser.add_argument_group(
     "import tournament options",
-    "Passed to the importtournament command. Ignored unless " +
-    "--import-tournament is used. Provided for convenience; to use other " +
-    "importtournament options, run the importtournament command separately instead.")
+    "Passed to the importtournament command. Ignored unless "
+    + "--import-tournament is used. Provided for convenience; to use other "
+    + "importtournament options, run the importtournament command separately instead.",
+)
 import_tournament_group.add_argument(
-    '-s', '--slug', type=str, action='store', default=None, dest="tournament_slug",
-    help='Override tournament slug. (Default: use name of directory.)')
+    "-s",
+    "--slug",
+    type=str,
+    action="store",
+    default=None,
+    dest="tournament_slug",
+    help="Override tournament slug. (Default: use name of directory.)",
+)
 import_tournament_group.add_argument(
-    '--name', type=str, action='store', default=None, dest="tournament_name",
-    help='Override tournament name. (Default: use name of directory.)')
+    "--name",
+    type=str,
+    action="store",
+    default=None,
+    dest="tournament_name",
+    help="Override tournament name. (Default: use name of directory.)",
+)
 import_tournament_group.add_argument(
-    '--short-name', type=str, action='store', default=None, dest="tournament_short_name",
-    help='Override tournament short name. (Default: use name of directory.)')
+    "--short-name",
+    type=str,
+    action="store",
+    default=None,
+    dest="tournament_short_name",
+    help="Override tournament short name. (Default: use name of directory.)",
+)
 
 args = parser.parse_args()
 
@@ -136,15 +193,22 @@ def get_git_push_spec():
     if args.git_branch:
         return "master" if args.git_branch == "master" else args.git_branch + ":master"
     try:
-        branch = get_output_from_command(["git", "symbolic-ref", "--short", "--quiet", "HEAD"]).strip()
+        branch = get_output_from_command(
+            ["git", "symbolic-ref", "--short", "--quiet", "HEAD"]
+        ).strip()
     except subprocess.CalledProcessError:
         print_yellow("Attempt to find git branch name failed, trying for commit instead...")
     else:
         return "master" if branch == "master" else branch + ":master"
     try:
-        return get_output_from_command(["git", "rev-parse", "--short", "--quiet", "HEAD"]).strip() + ":refs/heads/master"
+        return (
+            get_output_from_command(["git", "rev-parse", "--short", "--quiet", "HEAD"]).strip()
+            + ":refs/heads/master"
+        )
     except subprocess.CalledProcessError:
-        print_yellow("Could not determine current git commit or branch. Use --git-branch to specify a git branch to push.")
+        print_yellow(
+            "Could not determine current git commit or branch. Use --git-branch to specify a git branch to push."
+        )
     exit(1)
 
 
@@ -154,7 +218,7 @@ if sys.version_info >= (3, 3) and shutil.which("heroku") is None:
     print_yellow("Error: heroku not found.")
     print("You'll need to install the Heroku CLI before you can use this script.")
     print("Go to https://devcenter.heroku.com/articles/heroku-cli, or search the")
-    print("internet for \"Heroku CLI\".")
+    print('internet for "Heroku CLI".')
     exit(1)
 
 # Create the app with addons
@@ -166,13 +230,17 @@ if addons:
 if args.urlname != "-":
     command.append(args.urlname)
 output = get_output_from_command(command)
-match = re.search(r"https://([\w_-]+?)(?:-\w{12})?\.herokuapp\.com/\s+\|\s+(https://git.heroku.com/[\w_-]+.git)", output)
+match = re.search(
+    r"https://([\w_-]+?)(?:-\w{12})?\.herokuapp\.com/\s+\|\s+(https://git.heroku.com/[\w_-]+.git)",
+    output,
+)
 urlname = match.group(1)
 heroku_url = match.group(2)
 
 # Add the redis add-ons (the heroku one needs a config flag)
-run_heroku_command(["addons:create", "heroku-redis:mini",
-                    "--maxmemory_policy", "allkeys-lru", "--timeout", "1800"])
+run_heroku_command(
+    ["addons:create", "heroku-redis:mini", "--maxmemory_policy", "allkeys-lru", "--timeout", "1800"]
+)
 
 # Set build packs
 run_heroku_command(["buildpacks:set", "https://github.com/heroku/heroku-buildpack-nginx.git"])
@@ -183,8 +251,8 @@ run_heroku_command(["buildpacks:add", "heroku/python"])
 command = ["config:set", "DISABLE_COLLECTSTATIC=1", "ON_HEROKU=1", "USING_NGINX=1"]
 secret_key = get_random_secret_key()
 
-if platform.system() == "Windows": # Windows shell needs escaping
-    command.append("DJANGO_SECRET_KEY=\"%s\"" % secret_key)
+if platform.system() == "Windows":  # Windows shell needs escaping
+    command.append('DJANGO_SECRET_KEY="%s"' % secret_key)
 else:
     command.append("DJANGO_SECRET_KEY=%s" % secret_key)
 
@@ -248,6 +316,8 @@ if args.open:
     try:
         run_heroku_command(["open"])
     except subprocess.CalledProcessError:
-        print_yellow("There was a problem automatically opening your browser, but your new Tabbycat")
+        print_yellow(
+            "There was a problem automatically opening your browser, but your new Tabbycat"
+        )
         print_yellow("site itself did deploy successfully. Just visit this URL in your browser:")
         print_yellow("http://%s.herokuapp.com/" % urlname)

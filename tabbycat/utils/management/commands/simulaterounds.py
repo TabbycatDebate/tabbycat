@@ -24,7 +24,9 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
         round.draw_status = Round.Status.NONE
         round.save()
 
-        self.stdout.write("Checking in all teams, adjudicators and rooms for round '{}'...".format(round.name))
+        self.stdout.write(
+            "Checking in all teams, adjudicators and rooms for round '{}'...".format(round.name)
+        )
         activate_all(round)
 
         self.stdout.write("Generating a draw for round '{}'...".format(round.name))
@@ -35,13 +37,13 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
         # Limit to 7 adjudicators per debate (just to avoid panel sizes getting too out of hand)
         max_nadjudicators = round.debate_set.count() * 7
         if round.active_adjudicators.count() > max_nadjudicators:
-            adjs = round.tournament.relevant_adjudicators.order_by('?')[:max_nadjudicators]
+            adjs = round.tournament.relevant_adjudicators.order_by("?")[:max_nadjudicators]
             set_availability(adjs, round)
 
         self.stdout.write("Auto-allocating adjudicators for round '{}'...".format(round.name))
         debates = round.debate_set.all()
         adjs = round.active_adjudicators.all()
-        if round.ballots_per_debate == 'per-adj':
+        if round.ballots_per_debate == "per-adj":
             allocator = VotingHungarianAllocator(debates, adjs, round)
         else:
             allocator = ConsensusHungarianAllocator(debates, adjs, round)

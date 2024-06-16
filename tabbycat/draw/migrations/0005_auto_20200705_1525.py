@@ -7,14 +7,20 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('venues', '0008_auto_20200705_1525'),
-        ('draw', '0004_remove_league_fields'),
+        ("venues", "0008_auto_20200705_1525"),
+        ("draw", "0004_remove_league_fields"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='debate',
-            name='venue',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='venues.Venue', verbose_name='room'),
+            model_name="debate",
+            name="venue",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="venues.Venue",
+                verbose_name="room",
+            ),
         ),
     ]

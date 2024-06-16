@@ -70,13 +70,19 @@ class SwapRandomDrawMixin:
                     if swap_pairing == pairing:
                         continue
                     badness_orig = self._badness(pairing, swap_pairing)
-                    pairing.teams[1], swap_pairing.teams[1] = swap_pairing.teams[1], pairing.teams[1]
+                    pairing.teams[1], swap_pairing.teams[1] = (
+                        swap_pairing.teams[1],
+                        pairing.teams[1],
+                    )
                     badness_new = self._badness(pairing, swap_pairing)
                     if badness_new == 0:
                         break  # yay!
                     elif badness_new >= badness_orig or self._badness(swap_pairing) > 0:
                         # swap back and try again
-                        pairing.teams[1], swap_pairing.teams[1] = swap_pairing.teams[1], pairing.teams[1]
+                        pairing.teams[1], swap_pairing.teams[1] = (
+                            swap_pairing.teams[1],
+                            pairing.teams[1],
+                        )
                     # else, if improvement but not perfect, keep swap and try again
                 else:
                     pairing.flags.append("max_swapped")
@@ -110,24 +116,34 @@ class BaseRandomWithAllocatedSidesDrawGenerator(BaseRandomDrawGenerator):
         self.check_teams_for_attribute("allocated_side", choices=["aff", "neg"])
 
     def _get_pools(self):
-        return {side: [t for t in self.teams if t.allocated_side == side] for side in ['aff', 'neg']}
+        return {
+            side: [t for t in self.teams if t.allocated_side == side] for side in ["aff", "neg"]
+        }
 
 
-class GraphRandomWithAllocatedSidesDrawGenerator(GraphAllocatedSidesMixin, GraphRandomDrawMixin, BaseRandomWithAllocatedSidesDrawGenerator):
+class GraphRandomWithAllocatedSidesDrawGenerator(
+    GraphAllocatedSidesMixin, GraphRandomDrawMixin, BaseRandomWithAllocatedSidesDrawGenerator
+):
     pass
 
 
-class SwapRandomWithAllocatedSidesDrawGenerator(SwapRandomDrawMixin, BaseRandomWithAllocatedSidesDrawGenerator):
+class SwapRandomWithAllocatedSidesDrawGenerator(
+    SwapRandomDrawMixin, BaseRandomWithAllocatedSidesDrawGenerator
+):
 
     def make_random_pairings(self):
         aff_teams = [t for t in self.teams if t.allocated_side == "aff"]
         neg_teams = [t for t in self.teams if t.allocated_side == "neg"]
 
         if len(aff_teams) != len(neg_teams):
-            raise DrawUserError(_("There were %(aff_count)d affirmative teams but %(neg_count)d negative "
-                    "teams.") % {'aff_count': len(aff_teams), 'neg_count': len(neg_teams)})
+            raise DrawUserError(
+                _("There were %(aff_count)d affirmative teams but %(neg_count)d negative " "teams.")
+                % {"aff_count": len(aff_teams), "neg_count": len(neg_teams)}
+            )
         if len(aff_teams) + len(neg_teams) != len(self.teams):
-            raise DrawUserError(_("One or more teams had an allocated side that wasn't affirmative or negative."))
+            raise DrawUserError(
+                _("One or more teams had an allocated side that wasn't affirmative or negative.")
+            )
 
         random.shuffle(aff_teams)
         random.shuffle(neg_teams)

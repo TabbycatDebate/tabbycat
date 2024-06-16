@@ -26,7 +26,7 @@ class BaseEliminationDrawGenerator(EliminationDrawMixin, BasePairDrawGenerator):
         bottom = teams[debates:]
         bottom.reverse()
         pairings = list()
-        for i, ts in enumerate(zip(top, bottom), start=num_bye_rooms+1):
+        for i, ts in enumerate(zip(top, bottom), start=num_bye_rooms + 1):
             pairing = Pairing(ts, bracket=0, room_rank=i)
             pairings.append(pairing)
         return pairings
@@ -40,15 +40,22 @@ class FirstEliminationDrawGenerator(BaseEliminationDrawGenerator):
 
     def make_pairings(self):
         if len(self.teams) < 2:
-            raise DrawUserError(_("There are only %d teams breaking in this category; "
-                    "there need to be at least two to generate an elimination round draw.") % len(self.teams))
+            raise DrawUserError(
+                _(
+                    "There are only %d teams breaking in this category; "
+                    "there need to be at least two to generate an elimination round draw."
+                )
+                % len(self.teams)
+            )
 
         try:
             debates, bypassing = partial_break_round_split(len(self.teams))
         except AssertionError as e:
             raise DrawFatalError(e)
 
-        logger.info("There will be %d debates in this round and %d teams bypassing it.", debates, bypassing)
+        logger.info(
+            "There will be %d debates in this round and %d teams bypassing it.", debates, bypassing
+        )
         teams = self.teams[bypassing:]
         return self._make_pairings(teams, bypassing)
 
@@ -65,13 +72,22 @@ class SubsequentEliminationDrawGenerator(BaseEliminationDrawGenerator):
         self.results.sort(key=lambda x: x.room_rank)
         winners = [pairing.winner for pairing in self.results]
         if winners.count(None) > 0:
-            raise DrawUserError(_("%d debates in the previous round don't have a result.") % winners.count(None))
+            raise DrawUserError(
+                _("%d debates in the previous round don't have a result.") % winners.count(None)
+            )
 
-        bypassing = self.results[0].room_rank - 1  # e.g. if lowest room rank was 7, then 6 teams should bypass
+        bypassing = (
+            self.results[0].room_rank - 1
+        )  # e.g. if lowest room rank was 7, then 6 teams should bypass
         teams = self.teams[:bypassing] + winners
-        logger.info("%d teams bypassed the previous round and %d teams won the last round" % (bypassing, len(winners)))
+        logger.info(
+            "%d teams bypassed the previous round and %d teams won the last round"
+            % (bypassing, len(winners))
+        )
 
         if not ispow2(len(teams)):
-            raise DrawUserError(_("The number of teams (%d) in this round is not a power of two.") % len(teams))
+            raise DrawUserError(
+                _("The number of teams (%d) in this round is not a power of two.") % len(teams)
+            )
 
         return self._make_pairings(teams, 0)

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('results', '0013_teamscore_has_ghost'),
+        ("results", "0013_teamscore_has_ghost"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='speakerscore',
-            name='rank',
-            field=models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='rank'),
+            model_name="speakerscore",
+            name="rank",
+            field=models.PositiveSmallIntegerField(blank=True, null=True, verbose_name="rank"),
         ),
     ]

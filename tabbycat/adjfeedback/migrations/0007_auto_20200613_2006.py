@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('adjfeedback', '0006_auto_20191109_1240'),
+        ("adjfeedback", "0006_auto_20191109_1240"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='adjudicatorfeedback',
-            name='ignored',
-            field=models.BooleanField(default=False, help_text="Whether the feedback should affect the adjudicator's score", verbose_name='ignored'),
+            model_name="adjudicatorfeedback",
+            name="ignored",
+            field=models.BooleanField(
+                default=False,
+                help_text="Whether the feedback should affect the adjudicator's score",
+                verbose_name="ignored",
+            ),
         ),
     ]

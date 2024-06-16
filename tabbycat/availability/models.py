@@ -8,22 +8,26 @@ from utils.models import UniqueConstraint
 
 class RoundAvailability(models.Model):
 
-    CONTENT_TYPE_CHOICES = models.Q(app_label='participants', model='team') | \
-        models.Q(app_label='participants', model='adjudicator') | \
-        models.Q(app_label='venues', model='venue')
+    CONTENT_TYPE_CHOICES = (
+        models.Q(app_label="participants", model="team")
+        | models.Q(app_label="participants", model="adjudicator")
+        | models.Q(app_label="venues", model="venue")
+    )
 
-    content_type = models.ForeignKey(ContentType, models.CASCADE,
+    content_type = models.ForeignKey(
+        ContentType,
+        models.CASCADE,
         limit_choices_to=CONTENT_TYPE_CHOICES,
-        verbose_name=_("content type"))
+        verbose_name=_("content type"),
+    )
     object_id = models.PositiveIntegerField(verbose_name=_("object id"))
-    content_object = GenericForeignKey('content_type', 'object_id')
+    content_object = GenericForeignKey("content_type", "object_id")
 
-    round = models.ForeignKey('tournaments.Round', models.CASCADE,
-        verbose_name=_("round"))
+    round = models.ForeignKey("tournaments.Round", models.CASCADE, verbose_name=_("round"))
 
     class Meta:
         constraints = [
-            UniqueConstraint(fields=['round', 'content_type', 'object_id']),
+            UniqueConstraint(fields=["round", "content_type", "object_id"]),
         ]
         verbose_name = _("round availability")
         verbose_name_plural = _("round availabilities")

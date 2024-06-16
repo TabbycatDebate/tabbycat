@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('participants', '0012_auto_20190907_1144'),
+        ("participants", "0012_auto_20190907_1144"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='adjudicator',
-            old_name='test_score',
-            new_name='base_score',
+            model_name="adjudicator",
+            old_name="test_score",
+            new_name="base_score",
         ),
         migrations.AlterField(
-            model_name='adjudicator',
-            name='base_score',
-            field=models.FloatField(default=0, verbose_name='base score'),
+            model_name="adjudicator",
+            name="base_score",
+            field=models.FloatField(default=0, verbose_name="base score"),
         ),
     ]

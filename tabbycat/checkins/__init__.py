@@ -1,1 +1,1 @@
-default_app_config = 'checkins.apps.CheckinsConfig'
+default_app_config = "checkins.apps.CheckinsConfig"

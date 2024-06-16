@@ -4,7 +4,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('options', '0008_auto_20190906_1310'),
+        ("options", "0008_auto_20190906_1310"),
     ]
 
     operations = [

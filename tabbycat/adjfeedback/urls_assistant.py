@@ -5,13 +5,19 @@ from participants.models import Adjudicator, Team
 from . import views
 
 urlpatterns = [
-    path('add/',
+    path(
+        "add/",
         views.AssistantAddFeedbackIndexView.as_view(),
-        name='adjfeedback-assistant-add-index'),
-    path('add/team/<int:source_id>/',
+        name="adjfeedback-assistant-add-index",
+    ),
+    path(
+        "add/team/<int:source_id>/",
         views.AssistantAddFeedbackView.as_view(model=Team),
-        name='adjfeedback-assistant-add-from-team'),
-    path('add/adjudicator/<int:source_id>/',
+        name="adjfeedback-assistant-add-from-team",
+    ),
+    path(
+        "add/adjudicator/<int:source_id>/",
         views.AssistantAddFeedbackView.as_view(model=Adjudicator),
-        name='adjfeedback-assistant-add-from-adjudicator'),
+        name="adjfeedback-assistant-add-from-adjudicator",
+    ),
 ]

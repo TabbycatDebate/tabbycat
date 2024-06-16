@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class ApiConfig(AppConfig):
-    name = 'api'
+    name = "api"
     verbose_name = _("Application Programming Interface")
 
     def ready(self):

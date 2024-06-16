@@ -14,8 +14,10 @@ class LookupByNameFieldsMixin:
 
     def lookup(self, name, **kwargs):
         if len(self.name_fields) < 1:
-            raise ImproperlyConfigured("There must be at least one name field in name_fields "
-                "when using LookupByNameFieldsMixin.")
+            raise ImproperlyConfigured(
+                "There must be at least one name field in name_fields "
+                "when using LookupByNameFieldsMixin."
+            )
 
         q = Q(**{self.name_fields[0]: name})
         for field in self.name_fields[1:]:

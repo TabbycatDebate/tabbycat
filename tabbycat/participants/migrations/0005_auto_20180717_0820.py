@@ -24,28 +24,30 @@ def populate_participant_urls(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tournaments', '0002_remove_tournament_welcome_msg'),
-        ('participants', '0004_auto_20180420_2040'),
+        ("tournaments", "0002_remove_tournament_welcome_msg"),
+        ("participants", "0004_auto_20180420_2040"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='person',
-            name='url_key_',
-            field=models.SlugField(blank=True, max_length=24, null=True, unique=True, verbose_name='URL key'),
+            model_name="person",
+            name="url_key_",
+            field=models.SlugField(
+                blank=True, max_length=24, null=True, unique=True, verbose_name="URL key"
+            ),
         ),
         migrations.RunPython(populate_participant_urls),
         migrations.RemoveField(
-            model_name='adjudicator',
-            name='url_key',
+            model_name="adjudicator",
+            name="url_key",
         ),
         migrations.RemoveField(
-            model_name='team',
-            name='url_key',
+            model_name="team",
+            name="url_key",
         ),
         migrations.RenameField(
-            model_name='person',
-            old_name='url_key_',
-            new_name='url_key',
+            model_name="person",
+            old_name="url_key_",
+            new_name="url_key",
         ),
     ]

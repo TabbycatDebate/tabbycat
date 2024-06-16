@@ -18,17 +18,21 @@ def populate_opponents(debateteams, speakers=True):
     """
 
     ids = [dt.id for dt in debateteams]
-    opponent_subq = DebateTeam.objects.filter(
-        debate=OuterRef('debate')).exclude(id=OuterRef('id')).values('id')[:1]
+    opponent_subq = (
+        DebateTeam.objects.filter(debate=OuterRef("debate"))
+        .exclude(id=OuterRef("id"))
+        .values("id")[:1]
+    )
     debateteams_annotated = DebateTeam.objects.filter(id__in=ids).annotate(
-        opponent_id=Subquery(opponent_subq))
+        opponent_id=Subquery(opponent_subq)
+    )
 
     debateteams_annotated_by_id = {dt.id: dt for dt in debateteams_annotated}
     opponent_ids = [dt.opponent_id for dt in debateteams_annotated]
 
-    opponent_dts = DebateTeam.objects.select_related('team')
+    opponent_dts = DebateTeam.objects.select_related("team")
     if speakers:
-        opponent_dts = opponent_dts.prefetch_related('team__speaker_set')
+        opponent_dts = opponent_dts.prefetch_related("team__speaker_set")
     opponent_dts = opponent_dts.in_bulk(opponent_ids)
 
     for dt in debateteams:
@@ -47,7 +51,8 @@ def populate_history(debates):
     debates_by_id = {debate.id: debate for debate in debates}
 
     debates_annotated = Debate.objects.filter(id__in=debates_by_id.keys()).annotate(
-        past_debates=RawSQL("""
+        past_debates=RawSQL(
+            """
             SELECT DISTINCT COUNT(past_debate.id)
             FROM draw_debate AS past_debate
             JOIN draw_debateteam AS this_aff_dt ON this_aff_dt.debate_id = draw_debate.id
@@ -61,7 +66,8 @@ def populate_history(debates):
             AND   past_aff_dt.team_id = this_aff_dt.team_id
             AND   past_neg_dt.team_id = this_neg_dt.team_id
             AND   past_round.seq < this_round.seq""",
-            ()),
+            (),
+        ),
     )
 
     for debate in debates_annotated:

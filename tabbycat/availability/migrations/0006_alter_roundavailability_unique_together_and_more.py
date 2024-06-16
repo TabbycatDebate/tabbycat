@@ -7,18 +7,21 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('availability', '0005_auto_20180307_2217'),
-        ('contenttypes', '0002_remove_content_type_name'),
-        ('tournaments', '0010_alter_round_draw_type'),
+        ("availability", "0005_auto_20180307_2217"),
+        ("contenttypes", "0002_remove_content_type_name"),
+        ("tournaments", "0010_alter_round_draw_type"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='roundavailability',
+            name="roundavailability",
             unique_together=set(),
         ),
         migrations.AddConstraint(
-            model_name='roundavailability',
-            constraint=utils.models.UniqueConstraint(fields=('round', 'content_type', 'object_id'), name='availab_roundavailability_round__content_type__object_id_uniq'),
+            model_name="roundavailability",
+            constraint=utils.models.UniqueConstraint(
+                fields=("round", "content_type", "object_id"),
+                name="availab_roundavailability_round__content_type__object_id_uniq",
+            ),
         ),
     ]

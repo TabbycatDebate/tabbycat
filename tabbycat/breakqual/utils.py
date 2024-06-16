@@ -12,7 +12,7 @@ from .liveness import liveness_bp, liveness_twoteam
 logger = logging.getLogger(__name__)
 
 
-def get_breaking_teams(category, prefetch=(), rankings=('rank',)):
+def get_breaking_teams(category, prefetch=(), rankings=("rank",)):
     """Returns a list of StandingInfo objects, one for each team, with one
     additional attribute populated: for each StandingInfo `tsi`,
     `tsi.break_rank` is the rank of the team out of those that are in the break.
@@ -21,7 +21,7 @@ def get_breaking_teams(category, prefetch=(), rankings=('rank',)):
     `rankings` is passed to `rankings` in the TeamStandingsGenerator.
     """
     teams = category.breaking_teams.all().prefetch_related(*prefetch)
-    metrics = category.tournament.pref('team_standings_precedence')
+    metrics = category.tournament.pref("team_standings_precedence")
     generator = TeamStandingsGenerator(metrics, rankings)
     standings = generator.generate(teams)
 
@@ -43,9 +43,13 @@ def get_breaking_teams(category, prefetch=(), rankings=('rank',)):
 
 def breakcategories_with_counts(tournament):
     categories = tournament.breakcategory_set.annotate(
-        eligible=Count('team', distinct=True),
-        breaking=Count('breakingteam', filter=Q(breakingteam__break_rank__isnull=False), distinct=True),
-        excluded=Count('breakingteam', filter=Q(breakingteam__break_rank__isnull=True), distinct=True),
+        eligible=Count("team", distinct=True),
+        breaking=Count(
+            "breakingteam", filter=Q(breakingteam__break_rank__isnull=False), distinct=True
+        ),
+        excluded=Count(
+            "breakingteam", filter=Q(breakingteam__break_rank__isnull=True), distinct=True
+        ),
     )
     for category in categories:
         category.nonbreaking = category.eligible - category.breaking
@@ -53,47 +57,48 @@ def breakcategories_with_counts(tournament):
 
 
 def liveness(self, team, teams_count, prelims, current_round):
-    live_info = {'text': team.wins_count, 'tooltip': ''}
+    live_info = {"text": team.wins_count, "tooltip": ""}
 
     # The actual calculation should be shifted to be a cached method on
     # the relevant break category
     highest_liveness = 3
     for bc in team.break_categories.all():
         import random
+
         status = random.choice([1, 2, 3])
         highest_liveness = 3
         if status == 1:
-            live_info['tooltip'] += 'Definitely in for the %s break<br>test' % bc.name
+            live_info["tooltip"] += "Definitely in for the %s break<br>test" % bc.name
             if highest_liveness != 2:
                 highest_liveness = 1  # Live not ins are the most important highlight
         elif status == 2:
-            live_info['tooltip'] += 'Still live for the %s break<br>test' % bc.name
+            live_info["tooltip"] += "Still live for the %s break<br>test" % bc.name
             highest_liveness = 2
         elif status == 3:
-            live_info['tooltip'] += 'Cannot break in %s break<br>test' % bc.name
+            live_info["tooltip"] += "Cannot break in %s break<br>test" % bc.name
 
     if highest_liveness == 1:
-        live_info['class'] = 'bg-success'
+        live_info["class"] = "bg-success"
     elif highest_liveness == 2:
-        live_info['class'] = 'bg-warning'
+        live_info["class"] = "bg-warning"
 
     return live_info
 
 
 def determine_liveness(thresholds, points):
-    """ Thresholds should be calculated using calculate_live_thresholds."""
+    """Thresholds should be calculated using calculate_live_thresholds."""
     safe, dead = thresholds
     if points is None:
-        points = 0 # For when a results-less team (i.e. swings) is subbing in
+        points = 0  # For when a results-less team (i.e. swings) is subbing in
 
     if safe is None and dead is None:
-        return '?'
+        return "?"
     elif points >= safe:
-        return 'safe'
+        return "safe"
     elif points <= dead:
-        return 'dead'
+        return "dead"
     else:
-        return 'live'
+        return "live"
 
 
 def calculate_live_thresholds(bc, tournament, round):
@@ -101,27 +106,42 @@ def calculate_live_thresholds(bc, tournament, round):
     total_rounds = tournament.prelim_rounds().count()
 
     if not bc.is_general:
-        team_scores = bc.team_set.filter(
-            debateteam__debate__round__seq__lt=round.seq,
-            debateteam__teamscore__ballot_submission__confirmed=True,
-            debateteam__teamscore__points__isnull=False,
-        ).annotate(score=Sum('debateteam__teamscore__points')).order_by('-score').values_list('score', flat=True)
+        team_scores = (
+            bc.team_set.filter(
+                debateteam__debate__round__seq__lt=round.seq,
+                debateteam__teamscore__ballot_submission__confirmed=True,
+                debateteam__teamscore__points__isnull=False,
+            )
+            .annotate(score=Sum("debateteam__teamscore__points"))
+            .order_by("-score")
+            .values_list("score", flat=True)
+        )
         team_scores = list(team_scores)
         team_scores += [0] * (bc.team_set.count() - len(team_scores))
     else:
         team_scores = []
 
     if bc.break_size <= 1 or total_teams == 0:
-        return None, None # Bad input
-    elif tournament.pref('teams_in_debate') == 'bp':
-        safe, dead = liveness_bp(bc.is_general, round.seq, bc.break_size,
-                            total_teams, total_rounds, team_scores)
+        return None, None  # Bad input
+    elif tournament.pref("teams_in_debate") == "bp":
+        safe, dead = liveness_bp(
+            bc.is_general, round.seq, bc.break_size, total_teams, total_rounds, team_scores
+        )
     else:
-        safe, dead = liveness_twoteam(bc.is_general, round.seq, bc.break_size,
-                              total_teams, total_rounds, team_scores)
+        safe, dead = liveness_twoteam(
+            bc.is_general, round.seq, bc.break_size, total_teams, total_rounds, team_scores
+        )
 
-    logger.info("Liveness in %s R%d/%d with break size %d, %d teams: safe at %d, dead at %d",
-        tournament.short_name, round.seq, total_rounds, bc.break_size, total_teams, safe, dead)
+    logger.info(
+        "Liveness in %s R%d/%d with break size %d, %d teams: safe at %d, dead at %d",
+        tournament.short_name,
+        round.seq,
+        total_rounds,
+        bc.break_size,
+        total_teams,
+        safe,
+        dead,
+    )
     return safe, dead
 
 
@@ -162,12 +182,15 @@ def auto_make_break_rounds(bc, tournament=None, prefix=False):
     if tournament is None:
         tournament = bc.tournament
 
-    num_rounds = tournament.round_set.all().aggregate(Max('seq'))['seq__max']
+    num_rounds = tournament.round_set.all().aggregate(Max("seq"))["seq__max"]
     round_names = get_break_category_round_names(bc) if prefix else BREAK_ROUND_NAMES
 
     # Translators: "UBR" stands for "unknown break round" (used as a fallback when we don't know what it's called)
-    unknown_round = (_("Unknown %s break round") % bc.name, _("U%sBR") % (bc.name[:1])) if prefix \
+    unknown_round = (
+        (_("Unknown %s break round") % bc.name, _("U%sBR") % (bc.name[:1]))
+        if prefix
         else (_("Unknown break round"), _("UBR"))
+    )
 
     break_rounds = itertools.chain(round_names, itertools.repeat(unknown_round))
 
@@ -175,7 +198,7 @@ def auto_make_break_rounds(bc, tournament=None, prefix=False):
         Round(
             tournament=tournament,
             break_category=bc,
-            seq=num_rounds+bc.num_break_rounds-i,
+            seq=num_rounds + bc.num_break_rounds - i,
             stage=Round.Stage.ELIMINATION,
             name=name,
             abbreviation=abbr,

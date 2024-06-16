@@ -11,11 +11,16 @@ class Command(TournamentCommand):
 
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)
-        parser.add_argument("--dry-run", action="store_true", help="Show what it would delete, but do not actually delete")
+        parser.add_argument(
+            "--dry-run",
+            action="store_true",
+            help="Show what it would delete, but do not actually delete",
+        )
 
     def handle_tournament(self, tournament, **options):
         qs = BallotSubmission.objects.filter(debate__round__tournament=tournament).exclude(
-            Exists(SpeakerScoreByAdj.objects.filter(ballot_submission=OuterRef('pk'))))
+            Exists(SpeakerScoreByAdj.objects.filter(ballot_submission=OuterRef("pk")))
+        )
         for bsub in qs:
             if not options["dry_run"]:
                 self.stdout.write("Deleting {:s}".format(str(bsub)))

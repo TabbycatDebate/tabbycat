@@ -11,11 +11,13 @@ from utils.models import UniqueConstraint
 
 
 class AdjudicatorBaseScoreHistory(models.Model):
-    adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE,
-        verbose_name=_("adjudicator"))
+    adjudicator = models.ForeignKey(
+        "participants.Adjudicator", models.CASCADE, verbose_name=_("adjudicator")
+    )
     # cascade to avoid ambiguity, null round indicates beginning of tournament
-    round = models.ForeignKey('tournaments.Round', models.CASCADE, blank=True, null=True,
-        verbose_name=_("round"))
+    round = models.ForeignKey(
+        "tournaments.Round", models.CASCADE, blank=True, null=True, verbose_name=_("round")
+    )
     score = models.FloatField(verbose_name=_("score"))
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name=_("timestamp"))
 
@@ -28,14 +30,14 @@ class AdjudicatorBaseScoreHistory(models.Model):
 
 
 class AdjudicatorFeedbackAnswer(models.Model):
-    question = models.ForeignKey('AdjudicatorFeedbackQuestion', models.CASCADE,
-        verbose_name=_("question"))
-    feedback = models.ForeignKey('AdjudicatorFeedback', models.CASCADE,
-        verbose_name=_("feedback"))
+    question = models.ForeignKey(
+        "AdjudicatorFeedbackQuestion", models.CASCADE, verbose_name=_("question")
+    )
+    feedback = models.ForeignKey("AdjudicatorFeedback", models.CASCADE, verbose_name=_("feedback"))
 
     class Meta:
         abstract = True
-        constraints = [UniqueConstraint(fields=['question', 'feedback'])]
+        constraints = [UniqueConstraint(fields=["question", "feedback"])]
 
 
 class AdjudicatorFeedbackBooleanAnswer(AdjudicatorFeedbackAnswer):
@@ -95,15 +97,15 @@ class AdjudicatorFeedbackQuestion(models.Model):
     #   - forms.py : BaseFeedbackForm._make_question_field()
     #   - importer/importers/anorak.py : AnorakTournamentDataImporter.FEEDBACK_ANSWER_TYPES
 
-    ANSWER_TYPE_BOOLEAN_CHECKBOX = 'bc'
-    ANSWER_TYPE_BOOLEAN_SELECT = 'bs'
-    ANSWER_TYPE_INTEGER_TEXTBOX = 'i'
-    ANSWER_TYPE_INTEGER_SCALE = 'is'
-    ANSWER_TYPE_FLOAT = 'f'
-    ANSWER_TYPE_TEXT = 't'
-    ANSWER_TYPE_LONGTEXT = 'tl'
-    ANSWER_TYPE_SINGLE_SELECT = 'ss'
-    ANSWER_TYPE_MULTIPLE_SELECT = 'ms'
+    ANSWER_TYPE_BOOLEAN_CHECKBOX = "bc"
+    ANSWER_TYPE_BOOLEAN_SELECT = "bs"
+    ANSWER_TYPE_INTEGER_TEXTBOX = "i"
+    ANSWER_TYPE_INTEGER_SCALE = "is"
+    ANSWER_TYPE_FLOAT = "f"
+    ANSWER_TYPE_TEXT = "t"
+    ANSWER_TYPE_LONGTEXT = "tl"
+    ANSWER_TYPE_SINGLE_SELECT = "ss"
+    ANSWER_TYPE_MULTIPLE_SELECT = "ms"
     ANSWER_TYPE_CHOICES = (
         (ANSWER_TYPE_BOOLEAN_CHECKBOX, _("checkbox")),
         (ANSWER_TYPE_BOOLEAN_SELECT, _("yes/no (dropdown)")),
@@ -127,62 +129,95 @@ class AdjudicatorFeedbackQuestion(models.Model):
         ANSWER_TYPE_MULTIPLE_SELECT: AdjudicatorFeedbackManyAnswer,
     }
     ANSWER_TYPE_CLASSES_REVERSE = {
-        AdjudicatorFeedbackStringAnswer: [ANSWER_TYPE_TEXT,
-                                          ANSWER_TYPE_LONGTEXT,
-                                          ANSWER_TYPE_SINGLE_SELECT],
+        AdjudicatorFeedbackStringAnswer: [
+            ANSWER_TYPE_TEXT,
+            ANSWER_TYPE_LONGTEXT,
+            ANSWER_TYPE_SINGLE_SELECT,
+        ],
         AdjudicatorFeedbackManyAnswer: [ANSWER_TYPE_MULTIPLE_SELECT],
-        AdjudicatorFeedbackIntegerAnswer:
-        [ANSWER_TYPE_INTEGER_SCALE, ANSWER_TYPE_INTEGER_TEXTBOX],
+        AdjudicatorFeedbackIntegerAnswer: [ANSWER_TYPE_INTEGER_SCALE, ANSWER_TYPE_INTEGER_TEXTBOX],
         AdjudicatorFeedbackFloatAnswer: [ANSWER_TYPE_FLOAT],
-        AdjudicatorFeedbackBooleanAnswer:
-        [ANSWER_TYPE_BOOLEAN_SELECT, ANSWER_TYPE_BOOLEAN_CHECKBOX],
+        AdjudicatorFeedbackBooleanAnswer: [
+            ANSWER_TYPE_BOOLEAN_SELECT,
+            ANSWER_TYPE_BOOLEAN_CHECKBOX,
+        ],
     }
-    NUMERICAL_ANSWER_TYPES = [ANSWER_TYPE_INTEGER_TEXTBOX, ANSWER_TYPE_INTEGER_SCALE, ANSWER_TYPE_FLOAT]
+    NUMERICAL_ANSWER_TYPES = [
+        ANSWER_TYPE_INTEGER_TEXTBOX,
+        ANSWER_TYPE_INTEGER_SCALE,
+        ANSWER_TYPE_FLOAT,
+    ]
 
-    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
-        verbose_name=_("tournament"))
-    seq = models.IntegerField(help_text="The order in which questions are displayed",
-        verbose_name=_("sequence number"))
-    text = models.CharField(max_length=255,
+    tournament = models.ForeignKey(
+        "tournaments.Tournament", models.CASCADE, verbose_name=_("tournament")
+    )
+    seq = models.IntegerField(
+        help_text="The order in which questions are displayed", verbose_name=_("sequence number")
+    )
+    text = models.CharField(
+        max_length=255,
         verbose_name=_("text"),
-        help_text=_("The question displayed to participants, e.g., \"Did you agree with the decision?\""))
-    name = models.CharField(max_length=30,
+        help_text=_(
+            'The question displayed to participants, e.g., "Did you agree with the decision?"'
+        ),
+    )
+    name = models.CharField(
+        max_length=30,
         verbose_name=_("name"),
-        help_text=_("A short name for the question, e.g., \"Agree with decision\""))
+        help_text=_('A short name for the question, e.g., "Agree with decision"'),
+    )
     reference = models.SlugField(
         verbose_name=_("reference"),
-        help_text=_("Code-compatible reference, e.g., \"agree_with_decision\""))
+        help_text=_('Code-compatible reference, e.g., "agree_with_decision"'),
+    )
 
     from_adj = models.BooleanField(
         verbose_name=_("from adjudicator"),
-        help_text=_("Adjudicators should be asked this question (about other adjudicators)"))
+        help_text=_("Adjudicators should be asked this question (about other adjudicators)"),
+    )
     from_team = models.BooleanField(
-        verbose_name=_("from team"),
-        help_text=_("Teams should be asked this question"))
+        verbose_name=_("from team"), help_text=_("Teams should be asked this question")
+    )
 
-    answer_type = models.CharField(max_length=2, choices=ANSWER_TYPE_CHOICES,
-        verbose_name=_("answer type"))
-    required = models.BooleanField(default=True,
+    answer_type = models.CharField(
+        max_length=2, choices=ANSWER_TYPE_CHOICES, verbose_name=_("answer type")
+    )
+    required = models.BooleanField(
+        default=True,
         verbose_name=_("required"),
-        help_text=_("Whether participants are required to fill out this field"))
-    min_value = models.FloatField(blank=True, null=True,
+        help_text=_("Whether participants are required to fill out this field"),
+    )
+    min_value = models.FloatField(
+        blank=True,
+        null=True,
         verbose_name=_("minimum value"),
-        help_text=_("Minimum allowed value for numeric fields (ignored for text or boolean fields)"))
-    max_value = models.FloatField(blank=True, null=True,
+        help_text=_(
+            "Minimum allowed value for numeric fields (ignored for text or boolean fields)"
+        ),
+    )
+    max_value = models.FloatField(
+        blank=True,
+        null=True,
         verbose_name=_("maximum value"),
-        help_text=_("Maximum allowed value for numeric fields (ignored for text or boolean fields)"))
+        help_text=_(
+            "Maximum allowed value for numeric fields (ignored for text or boolean fields)"
+        ),
+    )
 
     choices = ArrayField(
         base_field=models.TextField(),
         blank=True,
         verbose_name=_("choices"),
-        help_text=_("Permissible choices for select one/multiple fields (ignored for other fields)"),
-        default=list)
+        help_text=_(
+            "Permissible choices for select one/multiple fields (ignored for other fields)"
+        ),
+        default=list,
+    )
 
     class Meta:
         constraints = [
-            UniqueConstraint(fields=['tournament', 'reference']),
-            UniqueConstraint(fields=['tournament', 'seq']),
+            UniqueConstraint(fields=["tournament", "reference"]),
+            UniqueConstraint(fields=["tournament", "seq"]),
         ]
         verbose_name = _("adjudicator feedback question")
         verbose_name_plural = _("adjudicator feedback questions")
@@ -216,38 +251,49 @@ class AdjudicatorFeedbackQuestion(models.Model):
 
     def serialize(self):
         question = {
-            'text': escape(self.text),
-            'seq': self.seq,
-            'type': self.answer_type,
-            'required': self.answer_type,
-            'from_team': self.from_team,
-            'from_adj': self.from_adj,
+            "text": escape(self.text),
+            "seq": self.seq,
+            "type": self.answer_type,
+            "required": self.answer_type,
+            "from_team": self.from_team,
+            "from_adj": self.from_adj,
         }
         if self.choices:
-            question['choice_options'] = [escape(c) for c in self.choices]
+            question["choice_options"] = [escape(c) for c in self.choices]
         elif self.min_value is not None and self.max_value is not None:
-            question['choice_options'] = self.choices_for_number_scale
+            question["choice_options"] = self.choices_for_number_scale
         return question
 
 
 class AdjudicatorFeedback(Submission):
-    adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE, db_index=True,
-        verbose_name=_("adjudicator"))
+    adjudicator = models.ForeignKey(
+        "participants.Adjudicator", models.CASCADE, db_index=True, verbose_name=_("adjudicator")
+    )
     score = models.FloatField(verbose_name=_("score"))
 
     # cascade to avoid double-null sources, each feedback must have exactly one source
-    source_adjudicator = models.ForeignKey('adjallocation.DebateAdjudicator', models.CASCADE, blank=True, null=True,
-        verbose_name=_("source adjudicator"))
-    source_team = models.ForeignKey('draw.DebateTeam', models.CASCADE, blank=True, null=True,
-        verbose_name=_("source team"))
+    source_adjudicator = models.ForeignKey(
+        "adjallocation.DebateAdjudicator",
+        models.CASCADE,
+        blank=True,
+        null=True,
+        verbose_name=_("source adjudicator"),
+    )
+    source_team = models.ForeignKey(
+        "draw.DebateTeam", models.CASCADE, blank=True, null=True, verbose_name=_("source team")
+    )
 
-    ignored = models.BooleanField(default=False,
+    ignored = models.BooleanField(
+        default=False,
         verbose_name=_("ignored"),
-        help_text=_("Whether the feedback should affect the adjudicator's score"))
+        help_text=_("Whether the feedback should affect the adjudicator's score"),
+    )
 
     class Meta:
         constraints = [
-            UniqueConstraint(fields=['adjudicator', 'source_adjudicator', 'source_team', 'version']),
+            UniqueConstraint(
+                fields=["adjudicator", "source_adjudicator", "source_team", "version"]
+            ),
         ]
         verbose_name = _("adjudicator feedback")
         verbose_name_plural = _("adjudicator feedbacks")
@@ -257,13 +303,16 @@ class AdjudicatorFeedback(Submission):
             source=self.source,
             adj=self.adjudicator.name,
             version=self.version,
-            time=('<unknown>' if self.timestamp is None else str(
-                self.timestamp.isoformat())))
+            time=("<unknown>" if self.timestamp is None else str(self.timestamp.isoformat())),
+        )
 
     def _unique_unconfirm_args(self):
         kwargs = super()._unique_unconfirm_args()
-        if self.source_team is not None and self.source_team.debate.round.tournament.pref('feedback_from_teams') == 'orallist':
-            kwargs.pop('adjudicator')
+        if (
+            self.source_team is not None
+            and self.source_team.debate.round.tournament.pref("feedback_from_teams") == "orallist"
+        ):
+            kwargs.pop("adjudicator")
         return kwargs
 
     @cached_property
@@ -282,10 +331,9 @@ class AdjudicatorFeedback(Submission):
 
     @cached_property
     def debate_adjudicator(self):
-        if not hasattr(self, '_debateadj'):
+        if not hasattr(self, "_debateadj"):
             try:
-                self._debateadj = self.adjudicator.debateadjudicator_set.get(
-                    debate=self.debate)
+                self._debateadj = self.adjudicator.debateadjudicator_set.get(debate=self.debate)
             except DebateAdjudicator.DoesNotExist:
                 self._debateadj = None
         return self._debateadj
@@ -302,20 +350,24 @@ class AdjudicatorFeedback(Submission):
 
     def get_answers(self):
         return [
-            {'question': q.question, 'answer': q.answer}
+            {"question": q.question, "answer": q.answer}
             for typ in AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE.keys()
-            for q in getattr(self, typ.__name__.lower() + '_set').all()
+            for q in getattr(self, typ.__name__.lower() + "_set").all()
         ]
 
     def clean(self):
         if not (self.source_adjudicator or self.source_team):
             raise ValidationError(
-                gettext("Either the source adjudicator or source team wasn't specified."))
+                gettext("Either the source adjudicator or source team wasn't specified.")
+            )
         if self.source_adjudicator and self.source_team:
-            raise ValidationError(
-                gettext("There was both a source adjudicator and a source team."))
+            raise ValidationError(gettext("There was both a source adjudicator and a source team."))
         if not self.adjudicator:
-            raise ValidationError(gettext("There is no adjudicator specified as the target for this feedback. Perhaps they were deleted?"))
+            raise ValidationError(
+                gettext(
+                    "There is no adjudicator specified as the target for this feedback. Perhaps they were deleted?"
+                )
+            )
         if self.adjudicator not in self.debate.adjudicators:
             raise ValidationError(gettext("Adjudicator did not see this debate."))
         return super(AdjudicatorFeedback, self).clean()

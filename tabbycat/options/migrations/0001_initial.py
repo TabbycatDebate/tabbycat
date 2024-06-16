@@ -11,27 +11,45 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('tournaments', '0001_initial'),
+        ("tournaments", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='TournamentPreferenceModel',
+            name="TournamentPreferenceModel",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('section', models.CharField(blank=True, db_index=True, default=None, max_length=150, null=True)),
-                ('name', models.CharField(db_index=True, max_length=150)),
-                ('raw_value', models.TextField(blank=True, null=True)),
-                ('instance', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='preferences', to='tournaments.Tournament', verbose_name='instance')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "section",
+                    models.CharField(
+                        blank=True, db_index=True, default=None, max_length=150, null=True
+                    ),
+                ),
+                ("name", models.CharField(db_index=True, max_length=150)),
+                ("raw_value", models.TextField(blank=True, null=True)),
+                (
+                    "instance",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="preferences",
+                        to="tournaments.Tournament",
+                        verbose_name="instance",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'tournament preference',
-                'verbose_name_plural': 'tournament preferences',
-                'abstract': False,
+                "verbose_name": "tournament preference",
+                "verbose_name_plural": "tournament preferences",
+                "abstract": False,
             },
         ),
         migrations.AlterUniqueTogether(
-            name='tournamentpreferencemodel',
-            unique_together=set([('instance', 'section', 'name')]),
+            name="tournamentpreferencemodel",
+            unique_together=set([("instance", "section", "name")]),
         ),
     ]

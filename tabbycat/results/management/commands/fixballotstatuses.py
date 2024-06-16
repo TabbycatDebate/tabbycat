@@ -6,9 +6,11 @@ from ...models import BallotSubmission
 
 class Command(TournamentCommand):
 
-    help = "Makes discarded/confirmed fields of BallotSubmissions consistent " \
-        "with result_status field of Debates. Not guaranteed to be " \
+    help = (
+        "Makes discarded/confirmed fields of BallotSubmissions consistent "
+        "with result_status field of Debates. Not guaranteed to be "
         "minimalist with changes."
+    )
 
     def handle_tournament(self, tournament, **options):
         for bsub in BallotSubmission.objects.filter(debate__round__tournament=tournament):

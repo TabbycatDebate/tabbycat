@@ -13,19 +13,21 @@ from utils.tests import suppress_logs, TournamentTestCase
 
 class TestCreateDrawViewErrors(TournamentTestCase):
 
-    fixtures = ['after_round_1.json']
+    fixtures = ["after_round_1.json"]
     round_seq = 2
 
     def setUp(self):
         super().setUp()
         self.client.login(username="admin", password="admin")
         self.round = self.tournament.round_set.get(seq=self.round_seq)
-        self.tournament.preferences['standings__team_standings_precedence'] = ['wins', 'speaks_sum']
+        self.tournament.preferences["standings__team_standings_precedence"] = ["wins", "speaks_sum"]
 
     def run_test_for_error_response(self, expected_loglevel, error_type):
-        url = self.reverse_round('draw-create')
-        with self.assertLogs('draw.views', level=expected_loglevel) as cm, \
-                suppress_logs('standings.metrics', logging.INFO):
+        url = self.reverse_round("draw-create")
+        with (
+            self.assertLogs("draw.views", level=expected_loglevel) as cm,
+            suppress_logs("standings.metrics", logging.INFO),
+        ):
             response = self.client.post(url, follow=True)
 
         # Check that it logged something at the correct level (WARNING or ERROR), depending on the error
@@ -33,10 +35,10 @@ class TestCreateDrawViewErrors(TournamentTestCase):
         self.assertEqual(cm.records[0].exc_info[0], error_type)
 
         # Check that it redirects appropriately
-        self.assertRedirects(response, self.reverse_round('availability-index'))
+        self.assertRedirects(response, self.reverse_round("availability-index"))
 
         # Check that there is a message at level ERROR
-        messages = response.context.get('messages', [])
+        messages = response.context.get("messages", [])
         self.assertEqual(len(messages), 1)
         message = list(messages)[0]
         self.assertEqual(message.level, ERROR)
@@ -53,10 +55,18 @@ class TestCreateDrawViewErrors(TournamentTestCase):
         self.run_test_for_error_response(logging.WARNING, DrawUserError)
 
     def test_bad_standings(self):
-        TournamentPreferenceModel.objects.update_or_create(instance=self.tournament, section='standings',
-                name='team_standings_precedence',
-                defaults={'raw_value': MultiValueSerializer.separator.join(['wins', 'speaks_sum', 'wins'])})
+        TournamentPreferenceModel.objects.update_or_create(
+            instance=self.tournament,
+            section="standings",
+            name="team_standings_precedence",
+            defaults={
+                "raw_value": MultiValueSerializer.separator.join(["wins", "speaks_sum", "wins"])
+            },
+        )
         self.run_test_for_error_response(logging.ERROR, StandingsError)
-        TournamentPreferenceModel.objects.update_or_create(instance=self.tournament, section='standings',
-                name='team_standings_precedence',
-                defaults={'raw_value': MultiValueSerializer.separator.join(['wins', 'speaks_sum'])})
+        TournamentPreferenceModel.objects.update_or_create(
+            instance=self.tournament,
+            section="standings",
+            name="team_standings_precedence",
+            defaults={"raw_value": MultiValueSerializer.separator.join(["wins", "speaks_sum"])},
+        )

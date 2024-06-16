@@ -8,13 +8,32 @@ import django.db.models.query_utils
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('venues', '0002_auto_20180218_1311'),
+        ("venues", "0002_auto_20180218_1311"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='venueconstraint',
-            name='subject_content_type',
-            field=models.ForeignKey(limit_choices_to=django.db.models.query_utils.Q(django.db.models.query_utils.Q(('model', 'team'), ('app_label', 'participants'), _connector='AND'), django.db.models.query_utils.Q(('model', 'adjudicator'), ('app_label', 'participants'), _connector='AND'), django.db.models.query_utils.Q(('model', 'institution'), ('app_label', 'participants'), _connector='AND'), django.db.models.query_utils.Q(('model', 'division'), ('app_label', 'divisions'), _connector='AND'), _connector='OR'), on_delete=django.db.models.deletion.CASCADE, to='contenttypes.ContentType', verbose_name='subject content type'),
+            model_name="venueconstraint",
+            name="subject_content_type",
+            field=models.ForeignKey(
+                limit_choices_to=django.db.models.query_utils.Q(
+                    django.db.models.query_utils.Q(
+                        ("model", "team"), ("app_label", "participants"), _connector="AND"
+                    ),
+                    django.db.models.query_utils.Q(
+                        ("model", "adjudicator"), ("app_label", "participants"), _connector="AND"
+                    ),
+                    django.db.models.query_utils.Q(
+                        ("model", "institution"), ("app_label", "participants"), _connector="AND"
+                    ),
+                    django.db.models.query_utils.Q(
+                        ("model", "division"), ("app_label", "divisions"), _connector="AND"
+                    ),
+                    _connector="OR",
+                ),
+                on_delete=django.db.models.deletion.CASCADE,
+                to="contenttypes.ContentType",
+                verbose_name="subject content type",
+            ),
         ),
     ]

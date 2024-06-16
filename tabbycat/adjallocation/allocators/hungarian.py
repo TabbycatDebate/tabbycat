@@ -17,13 +17,13 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
         super().__init__(*args, **kwargs)
 
         t = self.tournament
-        self.min_score = t.pref('adj_min_score')
-        self.max_score = t.pref('adj_max_score')
-        self.min_voting_score = t.pref('adj_min_voting_score')
-        self.conflict_penalty = t.pref('adj_conflict_penalty')
-        self.history_penalty = t.pref('adj_history_penalty')
-        self.no_panellists = t.pref('no_panellist_position')
-        self.no_trainees = t.pref('no_trainee_position')
+        self.min_score = t.pref("adj_min_score")
+        self.max_score = t.pref("adj_max_score")
+        self.min_voting_score = t.pref("adj_min_voting_score")
+        self.conflict_penalty = t.pref("adj_conflict_penalty")
+        self.history_penalty = t.pref("adj_history_penalty")
+        self.no_panellists = t.pref("no_panellist_position")
+        self.no_trainees = t.pref("no_trainee_position")
         self.feedback_weight = self.round.feedback_weight
         self.user_warnings = []  # Surfaced to users for non-error disclosures
 
@@ -38,9 +38,13 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
         score_range = self.max_score - score_min
 
         for adj in adjudicators:
-            adj._weighted_score = adj.weighted_score(self.feedback_weight)  # used in min_voting_score filter
+            adj._weighted_score = adj.weighted_score(
+                self.feedback_weight
+            )  # used in min_voting_score filter
             try:
-                adj._normalized_score = (adj._weighted_score - score_min) / score_range * 5  # to 0-5 range
+                adj._normalized_score = (
+                    (adj._weighted_score - score_min) / score_range * 5
+                )  # to 0-5 range
             except ZeroDivisionError:
                 adj._normalized_score = 0.0
 
@@ -50,7 +54,7 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
                 "%(count)s score is larger than the maximum permitted adjudicator score (%(score).1f).",
                 "%(count)s scores are larger than the maximum permitted adjudicator score (%(score).1f).",
                 ntoolarge,
-            ) % {'count': ntoolarge, 'score': self.max_score}
+            ) % {"count": ntoolarge, "score": self.max_score}
             self.user_warnings.append(warning_msg)
             logger.warning(warning_msg)
         ntoosmall = [adj._normalized_score < 0.0 for adj in adjudicators].count(True)
@@ -59,7 +63,7 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
                 "%(count)s score is smaller than the minimum permitted adjudicator score (%(score).1f).",
                 "%(count)s scores are smaller than the minimum permitted adjudicator score (%(score).1f).",
                 ntoosmall,
-            ) % {'count': ntoosmall, 'score': self.min_score}
+            ) % {"count": ntoosmall, "score": self.min_score}
             self.user_warnings.append(warning_msg)
             logger.warning(warning_msg)
 
@@ -93,13 +97,19 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
             cost_matrix = []
             for debate in debates:
                 chair = allocation_by_debate[debate].chair
-                row = [self.calc_cost(debate, adj, adjustment=-2.0, chair=chair) for adj in trainees]
+                row = [
+                    self.calc_cost(debate, adj, adjustment=-2.0, chair=chair) for adj in trainees
+                ]
                 cost_matrix.append(row)
 
-            logger.info("optimizing trainees (matrix size: %d positions by %d trainees)", len(cost_matrix), len(cost_matrix[0]))
+            logger.info(
+                "optimizing trainees (matrix size: %d positions by %d trainees)",
+                len(cost_matrix),
+                len(cost_matrix[0]),
+            )
             indices = self.munkres.compute(cost_matrix)
             total_cost = sum(cost_matrix[i][j] for i, j in indices)
-            logger.info('total cost for %d trainees: %f', len(indices), total_cost)
+            logger.info("total cost for %d trainees: %f", len(indices), total_cost)
 
             result = ((debates[i], trainees[j]) for i, j in indices if i < len(debates))
             for debate, trainee in result:
@@ -108,16 +118,19 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
 
     def check_matrix_exists(self, n_debates, n_voting):
         if n_voting == 0:
-            info = _("There are no adjudicators eligible to be a chair or "
-                     "panellist. Try changing the \"Minimum feedback score "
-                     "required to be allocated as chair or panellist\" setting "
-                     "to something lower than at least some adjudicators' "
-                     "current scores, and try again.")
+            info = _(
+                "There are no adjudicators eligible to be a chair or "
+                'panellist. Try changing the "Minimum feedback score '
+                'required to be allocated as chair or panellist" setting '
+                "to something lower than at least some adjudicators' "
+                "current scores, and try again."
+            )
             logger.info("No adjudicators able to panel or chair")
             raise AdjudicatorAllocationError(info)
         if n_debates == 0:
-            info = _("There are no debates for this round. "
-                     "Maybe you haven't created a draw yet?")
+            info = _(
+                "There are no debates for this round. " "Maybe you haven't created a draw yet?"
+            )
             logger.info("No debates available for allocator")
             raise AdjudicatorAllocationError(info)
 
@@ -130,7 +143,11 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
     def run_allocation(self):
 
         # Sort voting adjudicators in descending order by score
-        voting = [a for a in self.adjudicators if a._weighted_score >= self.min_voting_score and not a.trainee]
+        voting = [
+            a
+            for a in self.adjudicators
+            if a._weighted_score >= self.min_voting_score and not a.trainee
+        ]
         random.shuffle(voting)
         voting.sort(key=lambda a: a._normalized_score, reverse=True)
 
@@ -156,25 +173,35 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
 
         # Divide debates into solo-chaired debates and panel debates
         debates_sorted = sorted(self.debates, key=lambda d: (-d.importance, d.room_rank))
-        solo_debates = debates_sorted[:len(solos)]
-        panel_debates = debates_sorted[len(solos):]
+        solo_debates = debates_sorted[: len(solos)]
+        panel_debates = debates_sorted[len(solos) :]
 
-        logger.info("There are %d debates (%d solo, %d panel), %d solos, %d panellists "
-                "(including chairs) and %d trainees.", len(debates_sorted), len(solo_debates),
-                len(panel_debates), len(solos), len(panellists), len(trainees))
+        logger.info(
+            "There are %d debates (%d solo, %d panel), %d solos, %d panellists "
+            "(including chairs) and %d trainees.",
+            len(debates_sorted),
+            len(solo_debates),
+            len(panel_debates),
+            len(solos),
+            len(panellists),
+            len(trainees),
+        )
         if n_voting < n_debates:
-            warning_msg = _("There are %(debate_count)s debates but only %(adj_count)s "
-                    "voting adjudicators.") % {'debate_count': n_debates, 'adj_count': n_voting}
+            warning_msg = _(
+                "There are %(debate_count)s debates but only %(adj_count)s " "voting adjudicators."
+            ) % {"debate_count": n_debates, "adj_count": n_voting}
             self.user_warnings.append(warning_msg)
             logger.warning(warning_msg)
 
         if len(panellists) < len(panel_debates) * 3:
-            warning_msg = _("There are %(panel_debates)s panel debates but only %(panellists)s "
-                    "available panellists (less than %(needed)s).") % {
-                        'panel_debates': len(panel_debates),
-                        'panellists': len(panellists),
-                        'needed': len(panel_debates) * 3,
-                    }
+            warning_msg = _(
+                "There are %(panel_debates)s panel debates but only %(panellists)s "
+                "available panellists (less than %(needed)s)."
+            ) % {
+                "panel_debates": len(panel_debates),
+                "panellists": len(panellists),
+                "needed": len(panel_debates) * 3,
+            }
             self.user_warnings.append(warning_msg)
             logger.warning(warning_msg)
 
@@ -185,10 +212,14 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
                 row = [self.calc_cost(debate, adj) for adj in solos]
                 cost_matrix.append(row)
 
-            logger.info("optimizing solos (matrix size: %d positions by %d adjudicators)", len(cost_matrix), len(cost_matrix[0]))
+            logger.info(
+                "optimizing solos (matrix size: %d positions by %d adjudicators)",
+                len(cost_matrix),
+                len(cost_matrix[0]),
+            )
             indices = self.munkres.compute(cost_matrix)
             total_cost = sum(cost_matrix[i][j] for i, j in indices)
-            logger.info('total cost for %d solo debates: %f', len(solos), total_cost)
+            logger.info("total cost for %d solo debates: %f", len(solos), total_cost)
 
             result = ((solo_debates[i], solos[j]) for i, j in indices if i < len(solo_debates))
             alloc = [AdjudicatorAllocation(d, c) for d, c in result]
@@ -207,20 +238,24 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
                 for j in range(3):
                     # for the top half of these debates, the final panellist
                     # can be of lower quality than the other 2
-                    adjustment = -1.0 if i < len(panel_debates)/2 and j == 2 else 0.0
+                    adjustment = -1.0 if i < len(panel_debates) / 2 and j == 2 else 0.0
                     row = [self.calc_cost(debate, adj, adjustment) for adj in panellists]
                     cost_matrix.append(row)
 
-            logger.info("optimizing panellists (matrix size: %d positions by %d adjudicators)", len(cost_matrix), len(cost_matrix[0]))
+            logger.info(
+                "optimizing panellists (matrix size: %d positions by %d adjudicators)",
+                len(cost_matrix),
+                len(cost_matrix[0]),
+            )
             indices = self.munkres.compute(cost_matrix)
             total_cost = sum(cost_matrix[i][j] for i, j in indices)
-            logger.info('total cost for %d panel debates: %f', len(panel_debates), total_cost)
+            logger.info("total cost for %d panel debates: %f", len(panel_debates), total_cost)
 
             # transfer the indices to the debates
             # the debate corresponding to row r is floor(r/3) (i.e. r // 3)
             n = len(panel_debates)
             panels = [[] for i in range(n)]
-            for r, c in indices[:n*3]:
+            for r, c in indices[: n * 3]:
                 panels[r // 3].append(panellists[c])
 
             # create the corresponding adjudicator allocations, making sure that
@@ -234,8 +269,13 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
                 aa.panellists = panels[i]
                 alloc.append(aa)
 
-        for aa in alloc[len(solos):]:
-            logger.info("allocating to %s: %s (c), %s", aa.container, aa.chair, ", ".join([str(p) for p in aa.panellists]))
+        for aa in alloc[len(solos) :]:
+            logger.info(
+                "allocating to %s: %s (c), %s",
+                aa.container,
+                aa.chair,
+                ", ".join([str(p) for p in aa.panellists]),
+            )
 
         # Allocate trainees, one per solo debate (leave the rest unallocated)
         self.allocate_trainees(trainees, alloc, solo_debates)
@@ -251,7 +291,11 @@ class ConsensusHungarianAllocator(BaseHungarianAllocator):
     def run_allocation(self):
 
         # Sort voting adjudicators in descending order by score
-        voting = [a for a in self.adjudicators if a._weighted_score >= self.min_voting_score and not a.trainee]
+        voting = [
+            a
+            for a in self.adjudicators
+            if a._weighted_score >= self.min_voting_score and not a.trainee
+        ]
         random.shuffle(voting)
         voting.sort(key=lambda a: a._normalized_score, reverse=True)
 
@@ -274,16 +318,24 @@ class ConsensusHungarianAllocator(BaseHungarianAllocator):
         # Figure out how many judges per room, prioritising the most important
         judges_per_room_floor = n_voting // n_debates
         n_bigger_panels = n_voting % n_debates
-        judges_per_room = [judges_per_room_floor+1] * n_bigger_panels + [judges_per_room_floor] * (n_debates - n_bigger_panels)
+        judges_per_room = [judges_per_room_floor + 1] * n_bigger_panels + [
+            judges_per_room_floor
+        ] * (n_debates - n_bigger_panels)
 
-        logger.info("There are %d debates, %d voting adjudicators and %d trainees",
-                len(debates_sorted), len(voting), len(trainees))
+        logger.info(
+            "There are %d debates, %d voting adjudicators and %d trainees",
+            len(debates_sorted),
+            len(voting),
+            len(trainees),
+        )
         if n_voting < n_debates:
-            warning_msg = _("There are %(debates_count)s debates but only "
-                    "%(voting_count)s voting adjudicators.") % {
-                        'debates_count': n_debates,
-                        'voting_count': n_voting,
-                    }
+            warning_msg = _(
+                "There are %(debates_count)s debates but only "
+                "%(voting_count)s voting adjudicators."
+            ) % {
+                "debates_count": n_debates,
+                "voting_count": n_voting,
+            }
             self.user_warnings.append(warning_msg)
             logger.warning(warning_msg)
 
@@ -295,12 +347,15 @@ class ConsensusHungarianAllocator(BaseHungarianAllocator):
                 row = [self.calc_cost(debate, adj, adjustment=-i) for adj in voting]
                 cost_matrix.append(row)
 
-        logger.info("optimizing voting adjudicators (matrix size: %d positions by %d adjudicators)",
-                len(cost_matrix), len(cost_matrix[0]))
+        logger.info(
+            "optimizing voting adjudicators (matrix size: %d positions by %d adjudicators)",
+            len(cost_matrix),
+            len(cost_matrix[0]),
+        )
         indices = self.munkres.compute(cost_matrix)
         indices.sort()
         total_cost = sum(cost_matrix[i][j] for i, j in indices)
-        logger.info('total cost for %d debates: %f', n_debates, total_cost)
+        logger.info("total cost for %d debates: %f", n_debates, total_cost)
 
         # transfer the indices to the debates
         alloc = []
@@ -317,7 +372,12 @@ class ConsensusHungarianAllocator(BaseHungarianAllocator):
             alloc.append(aa)
             del indices[0:njudges]
 
-            logger.info("allocating to %s: %s (c), %s", aa.container, aa.chair, ", ".join([str(p) for p in aa.panellists]))
+            logger.info(
+                "allocating to %s: %s (c), %s",
+                aa.container,
+                aa.chair,
+                ", ".join([str(p) for p in aa.panellists]),
+            )
 
         # Allocate trainees
         self.allocate_trainees(trainees, alloc, debates_sorted)

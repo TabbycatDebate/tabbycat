@@ -11,8 +11,8 @@ class ChoiceArrayField(ArrayField):
 
     def formfield(self, **kwargs):
         defaults = {
-            'form_class': forms.TypedMultipleChoiceField,
-            'choices': self.base_field.choices,
+            "form_class": forms.TypedMultipleChoiceField,
+            "choices": self.base_field.choices,
         }
         defaults.update(kwargs)
 
@@ -32,6 +32,6 @@ class LabelByNameForeignKey(ForeignKey):
     """ForeignKey that uses `obj.name` rather than `str(obj)` for labels."""
 
     def formfield(self, **kwargs):
-        defaults = {'form_class': LabelByNameModelChoiceField}
+        defaults = {"form_class": LabelByNameModelChoiceField}
         defaults.update(kwargs)
         return super().formfield(**defaults)

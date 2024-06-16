@@ -6,8 +6,8 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('options', '0001_initial'),
-        ('tournaments', '0001_initial'),
+        ("options", "0001_initial"),
+        ("tournaments", "0001_initial"),
     ]
 
     operations = [

@@ -70,10 +70,10 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
     requires_prev_result = False
 
     DEFAULT_OPTIONS = {
-        "pullup"           : "anywhere",
-        "position_cost"    : "entropy",
-        "renyi_order"      : 1.0,
-        "exponent"         : 4.0,
+        "pullup": "anywhere",
+        "position_cost": "entropy",
+        "renyi_order": 1.0,
+        "exponent": 4.0,
         "assignment_method": "hungarian_preshuffled",
     }
 
@@ -118,7 +118,7 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
         level = None
         pullups_needed = 0
         for p in sorted(counts.keys(), reverse=True):
-            if pullups_needed < counts[p]: # complete the bracket
+            if pullups_needed < counts[p]:  # complete the bracket
                 if pullups_needed:
                     allowed.add(p)
                     counts[p] -= pullups_needed
@@ -152,7 +152,7 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
     # Cost matrix
 
     POSITION_COST_FUNCTIONS = {
-        "simple" : "_position_cost_simple",
+        "simple": "_position_cost_simple",
         "variance": "_position_cost_variance",
     }
 
@@ -168,8 +168,10 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
             logger.info("Using Rényi entropy with α = %f", α)
             return BPHungarianDrawGenerator._get_position_cost_renyi_entropy_function(α)
         else:
-            raise DrawUserError(_("The Rényi order can't be negative, and it's currently set "
-                "to %(alpha)f.") % {'alpha': α})
+            raise DrawUserError(
+                _("The Rényi order can't be negative, and it's currently set " "to %(alpha)f.")
+                % {"alpha": α}
+            )
 
     def get_position_cost_function(self):
         """Extension of self.get_option_function() that includes special
@@ -199,8 +201,8 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
     def _position_cost_shannon_entropy(pos, history):
         history = BPHungarianDrawGenerator._update_history(pos, history)
         n = sum(history)
-        probs = [p/n for p in history]
-        selfinfo = [0 if p == 0 else -p*log2(p) for p in probs]
+        probs = [p / n for p in history]
+        selfinfo = [0 if p == 0 else -p * log2(p) for p in probs]
         return (2 - sum(selfinfo)) * n
 
     @staticmethod
@@ -213,8 +215,9 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
         def _position_cost_renyi_entropy(pos, history):
             history = BPHungarianDrawGenerator._update_history(pos, history)
             n = sum(history)
-            probs = [p/n for p in history]
-            return (2 - log2(sum([p ** α for p in probs])) / (1 - α)) * n
+            probs = [p / n for p in history]
+            return (2 - log2(sum([p**α for p in probs])) / (1 - α)) * n
+
         return _position_cost_renyi_entropy
 
     def generate_cost_matrix(self, rooms):
@@ -249,7 +252,7 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
     # Assignment algorithms
 
     ASSIGNMENT_ALGORITHM_FUNCTIONS = {
-        "hungarian"            : "_assign_hungarian",
+        "hungarian": "_assign_hungarian",
         "hungarian_preshuffled": "_assign_hungarian_preshuffled",
     }
 
@@ -257,7 +260,9 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
         """Solves the assignment problem presented by the cost matrix `costs`.
         Returns a list of indices (row, col) describing the optimal assignment.
         """
-        function = self.get_option_function("assignment_method", self.ASSIGNMENT_ALGORITHM_FUNCTIONS)
+        function = self.get_option_function(
+            "assignment_method", self.ASSIGNMENT_ALGORITHM_FUNCTIONS
+        )
         start = time.perf_counter()
         logger.info("Running assignment algorithm for %d teams...", len(costs))
         indices = function(costs)
@@ -271,8 +276,8 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
 
     def _assign_hungarian_preshuffled(self, costs):
         n = len(costs)
-        K = random.sample(range(n), n)             # noqa: N806
-        J = random.sample(range(n), n)             # noqa: N806
+        K = random.sample(range(n), n)  # noqa: N806
+        J = random.sample(range(n), n)  # noqa: N806
         C = [[costs[i][j] for j in J] for i in K]  # noqa: N806
         indices = self.munkres.compute(C)
         return [(K[i], J[j]) for i, j in indices]
@@ -289,7 +294,9 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
         for i, ((level, allowed), teams) in enumerate(zip(rooms, teams_in_room), start=1):
             points_in_room = set(team.points for team in teams)
             if not all([x in allowed for x in points_in_room]):
-                logger.error("Teams with points %s in room that should only have %s", allowed, points_in_room)
+                logger.error(
+                    "Teams with points %s in room that should only have %s", allowed, points_in_room
+                )
             pairing = BPPairing(teams=teams, bracket=level, room_rank=i)
             pairings.append(pairing)
 

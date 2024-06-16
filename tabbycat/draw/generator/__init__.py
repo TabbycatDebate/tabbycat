@@ -3,11 +3,26 @@ from django.utils.translation import gettext_lazy as _
 from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError, ManualDrawGenerator
 from .pairing import ResultPairing, BPEliminationResultPairing
 from .elimination import FirstEliminationDrawGenerator, SubsequentEliminationDrawGenerator
-from .powerpair import AustralsPowerPairedDrawGenerator, GraphPowerPairedDrawGenerator, AustralsPowerPairedWithAllocatedSidesDrawGenerator, GraphPowerPairedWithAllocatedSidesDrawGenerator
-from .random import RandomBPDrawGenerator, GraphRandomDrawGenerator, GraphRandomWithAllocatedSidesDrawGenerator, SwapRandomDrawGenerator, SwapRandomWithAllocatedSidesDrawGenerator
+from .powerpair import (
+    AustralsPowerPairedDrawGenerator,
+    GraphPowerPairedDrawGenerator,
+    AustralsPowerPairedWithAllocatedSidesDrawGenerator,
+    GraphPowerPairedWithAllocatedSidesDrawGenerator,
+)
+from .random import (
+    RandomBPDrawGenerator,
+    GraphRandomDrawGenerator,
+    GraphRandomWithAllocatedSidesDrawGenerator,
+    SwapRandomDrawGenerator,
+    SwapRandomWithAllocatedSidesDrawGenerator,
+)
 from .bphungarian import BPHungarianDrawGenerator
-from .bpelimination import (PartialBPEliminationDrawGenerator, AfterPartialBPEliminationDrawGenerator,
-    FirstBPEliminationDrawGenerator, SubsequentBPEliminationDrawGenerator)
+from .bpelimination import (
+    PartialBPEliminationDrawGenerator,
+    AfterPartialBPEliminationDrawGenerator,
+    FirstBPEliminationDrawGenerator,
+    SubsequentBPEliminationDrawGenerator,
+)
 
 
 DRAW_FLAG_DESCRIPTIONS = (
@@ -25,13 +40,14 @@ DRAW_FLAG_DESCRIPTIONS = (
     ("pullup", _("Pull-up team")),
 )
 
-def get_two_team_generator(draw_type, avoid_conflicts='australs', side_allocations=None, **kwargs):
+
+def get_two_team_generator(draw_type, avoid_conflicts="australs", side_allocations=None, **kwargs):
 
     if draw_type == "first_elimination":
         return FirstEliminationDrawGenerator
     elif draw_type == "elimination":
         return SubsequentEliminationDrawGenerator
-    elif avoid_conflicts == 'graph':
+    elif avoid_conflicts == "graph":
         if draw_type == "random":
             if side_allocations == "preallocated":
                 return GraphRandomWithAllocatedSidesDrawGenerator
@@ -65,13 +81,15 @@ def get_bp_generator(draw_type):
             "partial_elimination": PartialBPEliminationDrawGenerator,
             "after_partial_elimination": AfterPartialBPEliminationDrawGenerator,
             "first_elimination": FirstBPEliminationDrawGenerator,
-            "elimination": SubsequentBPEliminationDrawGenerator
+            "elimination": SubsequentBPEliminationDrawGenerator,
         }[draw_type]
     except KeyError:
         raise ValueError("Unrecognised draw type for BP draw: {}".format(draw_type))
 
 
-def DrawGenerator(teams_per_debate, draw_type, teams, results=None, rrseq=None, **kwargs):  # noqa: N802 (factory function)
+def DrawGenerator(
+    teams_per_debate, draw_type, teams, results=None, rrseq=None, **kwargs
+):  # noqa: N802 (factory function)
     """Factory for draw objects.
     Takes a list of options and returns an appropriate subclass of BaseDrawGenerator.
     'draw_type' is mandatory and can be any of 'random', 'power_paired',
@@ -81,10 +99,10 @@ def DrawGenerator(teams_per_debate, draw_type, teams, results=None, rrseq=None, 
     if draw_type == "manual":
         klass = ManualDrawGenerator
 
-    elif teams_per_debate == 'two':
+    elif teams_per_debate == "two":
         klass = get_two_team_generator(draw_type, **kwargs)
 
-    elif teams_per_debate == 'bp':
+    elif teams_per_debate == "bp":
         klass = get_bp_generator(draw_type)
 
     else:

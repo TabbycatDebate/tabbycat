@@ -12,6 +12,11 @@ repos:
     - svg
   - id: check-yaml
   - id: check-added-large-files
+- repo: https://github.com/psf/black-pre-commit-mirror
+  rev: 24.4.2
+  hooks:
+  - id: black
+    language_version: python3.11
 - repo: https://github.com/PyCQA/flake8
   rev: 5.0.4
   hooks:
@@ -20,7 +25,6 @@ repos:
     - flake8-import-order
     - flake8-quotes
     - pep8-naming
-    - flake8-commas
     exclude: migrations/
 - repo: https://github.com/awebdeveloper/pre-commit-stylelint
   rev: '0.0.2' # Use the sha or tag you want to point at like 0.0.1

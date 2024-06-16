@@ -7,50 +7,85 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     replaces = [
-        ('motions', '0005_round_motions'),
-        ('motions', '0006_auto_20201101_0138'),
+        ("motions", "0005_round_motions"),
+        ("motions", "0006_auto_20201101_0138"),
     ]
 
     dependencies = [
-        ('tournaments', '0002_remove_tournament_welcome_msg'),
-        ('motions', '0004_remove_league_fields'),
+        ("tournaments", "0002_remove_tournament_welcome_msg"),
+        ("motions", "0004_remove_league_fields"),
     ]
 
     operations = [
         # Add tournament field to Motion and populate
         migrations.AddField(
-            model_name='motion',
-            name='tournament',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='tournaments.Tournament', verbose_name='tournament'),
+            model_name="motion",
+            name="tournament",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="tournaments.Tournament",
+                verbose_name="tournament",
+            ),
         ),
         migrations.RunSQL(
             "UPDATE motions_motion AS m SET tournament_id=r.tournament_id FROM tournaments_round AS r WHERE m.round_id = r.id",
             migrations.RunSQL.noop,
         ),
         migrations.AlterField(
-            model_name='motion',
-            name='tournament',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tournaments.Tournament', verbose_name='tournament'),
+            model_name="motion",
+            name="tournament",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="tournaments.Tournament",
+                verbose_name="tournament",
+            ),
         ),
         # Add other fields to Motion
         migrations.AlterModelOptions(
-            name='motion',
-            options={'verbose_name': 'motion', 'verbose_name_plural': 'motions'},
+            name="motion",
+            options={"verbose_name": "motion", "verbose_name_plural": "motions"},
         ),
         # Create RoundMotion and populate
         migrations.CreateModel(
-            name='RoundMotion',
+            name="RoundMotion",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('seq', models.IntegerField(default=1, help_text='The order in which motions are displayed', verbose_name='sequence number')),
-                ('motion', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='motions.Motion', verbose_name='motion')),
-                ('round', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tournaments.Round', verbose_name='round')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "seq",
+                    models.IntegerField(
+                        default=1,
+                        help_text="The order in which motions are displayed",
+                        verbose_name="sequence number",
+                    ),
+                ),
+                (
+                    "motion",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="motions.Motion",
+                        verbose_name="motion",
+                    ),
+                ),
+                (
+                    "round",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="tournaments.Round",
+                        verbose_name="round",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'round motion',
-                'verbose_name_plural': 'round motions',
-                'ordering': ('round', 'seq'),
-                'unique_together': {('round', 'seq')},
+                "verbose_name": "round motion",
+                "verbose_name_plural": "round motions",
+                "ordering": ("round", "seq"),
+                "unique_together": {("round", "seq")},
             },
         ),
         migrations.RunSQL(
@@ -59,16 +94,18 @@ class Migration(migrations.Migration):
         ),
         # Clean up Motion
         migrations.AddField(
-            model_name='motion',
-            name='rounds',
-            field=models.ManyToManyField(through='motions.RoundMotion', to='tournaments.Round', verbose_name='rounds'),
+            model_name="motion",
+            name="rounds",
+            field=models.ManyToManyField(
+                through="motions.RoundMotion", to="tournaments.Round", verbose_name="rounds"
+            ),
         ),
         migrations.RemoveField(
-            model_name='motion',
-            name='round',
+            model_name="motion",
+            name="round",
         ),
         migrations.RemoveField(
-            model_name='motion',
-            name='seq',
+            model_name="motion",
+            name="seq",
         ),
     ]

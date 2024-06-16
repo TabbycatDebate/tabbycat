@@ -4,7 +4,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('options', '0003_split_up_ballots_per_debate'),
+        ("options", "0003_split_up_ballots_per_debate"),
     ]
 
     operations = [

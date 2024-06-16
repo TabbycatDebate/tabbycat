@@ -8,13 +8,29 @@ import django.db.models.query_utils
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('availability', '0003_auto_20180218_1311'),
+        ("availability", "0003_auto_20180218_1311"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='roundavailability',
-            name='content_type',
-            field=models.ForeignKey(limit_choices_to=django.db.models.query_utils.Q(django.db.models.query_utils.Q(('model', 'team'), ('app_label', 'participants'), _connector='AND'), django.db.models.query_utils.Q(('model', 'adjudicator'), ('app_label', 'participants'), _connector='AND'), django.db.models.query_utils.Q(('model', 'venue'), ('app_label', 'venues'), _connector='AND'), _connector='OR'), on_delete=django.db.models.deletion.CASCADE, to='contenttypes.ContentType', verbose_name='content type'),
+            model_name="roundavailability",
+            name="content_type",
+            field=models.ForeignKey(
+                limit_choices_to=django.db.models.query_utils.Q(
+                    django.db.models.query_utils.Q(
+                        ("model", "team"), ("app_label", "participants"), _connector="AND"
+                    ),
+                    django.db.models.query_utils.Q(
+                        ("model", "adjudicator"), ("app_label", "participants"), _connector="AND"
+                    ),
+                    django.db.models.query_utils.Q(
+                        ("model", "venue"), ("app_label", "venues"), _connector="AND"
+                    ),
+                    _connector="OR",
+                ),
+                on_delete=django.db.models.deletion.CASCADE,
+                to="contenttypes.ContentType",
+                verbose_name="content type",
+            ),
         ),
     ]

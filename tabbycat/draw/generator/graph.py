@@ -49,6 +49,7 @@ class GraphGeneratorMixin:
     def generate_pairings(self, brackets):
         """Creates an undirected weighted graph for each bracket and gets the minimum weight matching"""
         from .pairing import Pairing
+
         pairings = OrderedDict()
         i = 0
         for j, (points, teams) in enumerate(brackets.items()):
@@ -82,15 +83,23 @@ class GraphAllocatedSidesMixin(GraphGeneratorMixin):
 
     def generate_pairings(self, brackets):
         from .pairing import Pairing
+
         pairings = OrderedDict()
         i = 0
         for points, pool in brackets.items():
             pairings[points] = []
-            n_teams = len(pool['aff']) + len(pool['neg'])
-            matrix = [[self.assignment_cost(aff, neg, n_teams) for neg in pool['neg']] for aff in pool['aff']]
+            n_teams = len(pool["aff"]) + len(pool["neg"])
+            matrix = [
+                [self.assignment_cost(aff, neg, n_teams) for neg in pool["neg"]]
+                for aff in pool["aff"]
+            ]
 
             for i_aff, i_neg in munkres.Munkres().compute(matrix):
                 i += 1
-                pairings[points].append(Pairing(teams=[pool['aff'][i_aff], pool['neg'][i_neg]], bracket=points, room_rank=i))
+                pairings[points].append(
+                    Pairing(
+                        teams=[pool["aff"][i_aff], pool["neg"][i_neg]], bracket=points, room_rank=i
+                    )
+                )
 
         return pairings

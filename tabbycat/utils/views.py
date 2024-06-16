@@ -34,7 +34,7 @@ class PostOnlyRedirectView(View):
     to this base class for this purpose.
     """
 
-    redirect_url = reverse_lazy('tabbycat-index')
+    redirect_url = reverse_lazy("tabbycat-index")
     not_post_message = _("Whoops! You're not meant to type that URL into your browser.")
 
     def get_redirect_url(self, *args, **kwargs):
@@ -56,8 +56,8 @@ class VueTableTemplateView(TemplateView):
     (emoji, links, etc). Functions below return blocks of content (ie not just
      a team name row, but also institution/category status as needed)."""
 
-    template_name = 'tables/base_vue_table.html'
-    tables_orientation = 'columns' # Layout option: tables as rows or as columns
+    template_name = "tables/base_vue_table.html"
+    tables_orientation = "columns"  # Layout option: tables as rows or as columns
 
     def get_context_data(self, **kwargs):
         tables = self.get_tables()
@@ -83,8 +83,8 @@ class FormSetMixin(ContextMixin):
     success_url = None
 
     def get_context_data(self, **kwargs):
-        if 'formset' not in kwargs:
-            kwargs['formset'] = self.get_formset()
+        if "formset" not in kwargs:
+            kwargs["formset"] = self.get_formset()
         return super().get_context_data(**kwargs)
 
     def formset_valid(self, formset):
@@ -123,10 +123,11 @@ class ModelFormSetMixin(FormSetMixin):
 
     def get_formset(self):
         formset_class = self.get_formset_class()
-        if self.request.method in ('POST', 'PUT'):
-            return formset_class(data=self.request.POST, files=self.request.FILES,
-                    **self.get_formset_kwargs())
-        elif self.request.method == 'GET':
+        if self.request.method in ("POST", "PUT"):
+            return formset_class(
+                data=self.request.POST, files=self.request.FILES, **self.get_formset_kwargs()
+            )
+        elif self.request.method == "GET":
             return formset_class(queryset=self.get_formset_queryset(), **self.get_formset_kwargs())
 
     def formset_valid(self, formset):

@@ -10,12 +10,22 @@ class Command(RoundCommand):
 
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)
-        parser.add_argument("-a", "--allocator", choices=registry.keys(), default="hungarian",
-            help="Which allocator to use (default: hungarian)")
-        parser.add_argument("-q", "--quiet", action="store_true",
-            help="Don't print the final full allocation out at the end")
-        parser.add_argument("-n", "--dry-run", action="store_true",
-            help="Don't write allocation to database")
+        parser.add_argument(
+            "-a",
+            "--allocator",
+            choices=registry.keys(),
+            default="hungarian",
+            help="Which allocator to use (default: hungarian)",
+        )
+        parser.add_argument(
+            "-q",
+            "--quiet",
+            action="store_true",
+            help="Don't print the final full allocation out at the end",
+        )
+        parser.add_argument(
+            "-n", "--dry-run", action="store_true", help="Don't write allocation to database"
+        )
 
     def handle_round(self, round, **options):
         panels = round.preformedpanel_set.all()
@@ -41,7 +51,8 @@ class Command(RoundCommand):
                     print("   - no panel")
                 else:
                     for adj, pos in panel.adjudicators.with_positions():
-                        print("   - {pos} {score:.1f} {adj.name}".format(
-                            adj=adj, pos=pos,
-                            score=adj.weighted_score(feedback_weight)),
+                        print(
+                            "   - {pos} {score:.1f} {adj.name}".format(
+                                adj=adj, pos=pos, score=adj.weighted_score(feedback_weight)
+                            ),
                         )

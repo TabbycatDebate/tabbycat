@@ -26,7 +26,9 @@ class TestAvailability(BaseMinimalTournamentTestCase):
         self.assertEqual(7, self.round.active_adjudicators.count())
 
     def test_activate_all(self):
-        Adjudicator.objects.create(institution=Institution.objects.get(code="INS0"), name="Unattached")
+        Adjudicator.objects.create(
+            institution=Institution.objects.get(code="INS0"), name="Unattached"
+        )
         activate_all(self.round)
         self.assertEqual(8, self.round.active_adjudicators.count())
         self.assertEqual(12, self.round.active_teams.count())

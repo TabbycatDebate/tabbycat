@@ -11,22 +11,27 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('venues', '0001_initial'),
-        ('divisions', '0001_initial'),
+        ("venues", "0001_initial"),
+        ("divisions", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='division',
-            name='venue_category',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='venues.VenueCategory'),
+            model_name="division",
+            name="venue_category",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="venues.VenueCategory",
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='division',
-            unique_together=set([('tournament', 'name')]),
+            name="division",
+            unique_together=set([("tournament", "name")]),
         ),
         migrations.AlterIndexTogether(
-            name='division',
-            index_together=set([('tournament', 'seq')]),
+            name="division",
+            index_together=set([("tournament", "seq")]),
         ),
     ]

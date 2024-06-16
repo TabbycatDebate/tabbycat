@@ -4,5 +4,5 @@ from utils.tests import AdminTournamentViewSimpleLoadTestMixin
 
 
 class EditDebateVenuesViewTest(AdminTournamentViewSimpleLoadTestMixin, TestCase):
-    view_name = 'edit-debate-venues'
+    view_name = "edit-debate-venues"
     round_seq = 4

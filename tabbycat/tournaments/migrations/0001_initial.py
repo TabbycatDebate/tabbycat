@@ -12,61 +12,211 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('breakqual', '0001_initial'),
+        ("breakqual", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Round',
+            name="Round",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('seq', models.IntegerField(help_text='A number that determines the order of the round, should count consecutively from 1 for the first round', verbose_name='sequence number')),
-                ('name', models.CharField(help_text='e.g. "Round 1"', max_length=40, verbose_name='name')),
-                ('abbreviation', models.CharField(help_text='e.g. "R1"', max_length=10, verbose_name='abbreviation')),
-                ('stage', models.CharField(choices=[('P', 'Preliminary'), ('E', 'Elimination')], default='P', help_text='Preliminary = inrounds, elimination = outrounds', max_length=1, verbose_name='stage')),
-                ('draw_type', models.CharField(choices=[('R', 'Random'), ('M', 'Manual'), ('D', 'Round-robin'), ('P', 'Power-paired'), ('E', 'Elimination')], help_text='Which draw method to use', max_length=1, verbose_name='draw type')),
-                ('draw_status', models.CharField(choices=[('N', 'None'), ('D', 'Draft'), ('C', 'Confirmed'), ('R', 'Released')], default='N', help_text="The status of this round's draw", max_length=1, verbose_name='draw status')),
-                ('feedback_weight', models.FloatField(default=0, help_text="The extent to which each adjudicator's overall score depends on feedback vs their test score. At 0, it is 100% drawn from their test score, at 1 it is 100% drawn from feedback.", verbose_name='feedback weight')),
-                ('silent', models.BooleanField(default=False, help_text='If marked silent, information about this round (such as its results) will not be shown publicly.', verbose_name='silent')),
-                ('motions_released', models.BooleanField(default=False, help_text='Whether motions will appear on the public website, assuming that feature is turned on', verbose_name='motions released')),
-                ('starts_at', models.TimeField(blank=True, null=True, verbose_name='starts at')),
-                ('break_category', models.ForeignKey(blank=True, help_text='If elimination round, which break category', null=True, on_delete=django.db.models.deletion.CASCADE, to='breakqual.BreakCategory', verbose_name='break category')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "seq",
+                    models.IntegerField(
+                        help_text="A number that determines the order of the round, should count consecutively from 1 for the first round",
+                        verbose_name="sequence number",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        help_text='e.g. "Round 1"', max_length=40, verbose_name="name"
+                    ),
+                ),
+                (
+                    "abbreviation",
+                    models.CharField(
+                        help_text='e.g. "R1"', max_length=10, verbose_name="abbreviation"
+                    ),
+                ),
+                (
+                    "stage",
+                    models.CharField(
+                        choices=[("P", "Preliminary"), ("E", "Elimination")],
+                        default="P",
+                        help_text="Preliminary = inrounds, elimination = outrounds",
+                        max_length=1,
+                        verbose_name="stage",
+                    ),
+                ),
+                (
+                    "draw_type",
+                    models.CharField(
+                        choices=[
+                            ("R", "Random"),
+                            ("M", "Manual"),
+                            ("D", "Round-robin"),
+                            ("P", "Power-paired"),
+                            ("E", "Elimination"),
+                        ],
+                        help_text="Which draw method to use",
+                        max_length=1,
+                        verbose_name="draw type",
+                    ),
+                ),
+                (
+                    "draw_status",
+                    models.CharField(
+                        choices=[
+                            ("N", "None"),
+                            ("D", "Draft"),
+                            ("C", "Confirmed"),
+                            ("R", "Released"),
+                        ],
+                        default="N",
+                        help_text="The status of this round's draw",
+                        max_length=1,
+                        verbose_name="draw status",
+                    ),
+                ),
+                (
+                    "feedback_weight",
+                    models.FloatField(
+                        default=0,
+                        help_text="The extent to which each adjudicator's overall score depends on feedback vs their test score. At 0, it is 100% drawn from their test score, at 1 it is 100% drawn from feedback.",
+                        verbose_name="feedback weight",
+                    ),
+                ),
+                (
+                    "silent",
+                    models.BooleanField(
+                        default=False,
+                        help_text="If marked silent, information about this round (such as its results) will not be shown publicly.",
+                        verbose_name="silent",
+                    ),
+                ),
+                (
+                    "motions_released",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Whether motions will appear on the public website, assuming that feature is turned on",
+                        verbose_name="motions released",
+                    ),
+                ),
+                ("starts_at", models.TimeField(blank=True, null=True, verbose_name="starts at")),
+                (
+                    "break_category",
+                    models.ForeignKey(
+                        blank=True,
+                        help_text="If elimination round, which break category",
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="breakqual.BreakCategory",
+                        verbose_name="break category",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'round',
-                'ordering': ['tournament', 'seq'],
-                'verbose_name_plural': 'rounds',
+                "verbose_name": "round",
+                "ordering": ["tournament", "seq"],
+                "verbose_name_plural": "rounds",
             },
         ),
         migrations.CreateModel(
-            name='Tournament',
+            name="Tournament",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text='The full name, e.g. "Australasian Intervarsity Debating Championships 2016"', max_length=100, verbose_name='name')),
-                ('short_name', models.CharField(blank=True, default='', help_text='The name used in the menu, e.g. "Australs 2016"', max_length=25, verbose_name='short name')),
-                ('seq', models.IntegerField(blank=True, help_text='A number that determines the relative order in which tournaments are displayed on the homepage.', null=True, verbose_name='sequence number')),
-                ('slug', models.SlugField(help_text='The sub-URL of the tournament, cannot have spaces, e.g. "australs2016"', unique=True, validators=[tournaments.models.validate_tournament_slug], verbose_name='slug')),
-                ('welcome_msg', models.TextField(blank=True, default='', help_text='Text/html entered here shows on the homepage for this tournament', null=True, verbose_name='welcome message')),
-                ('active', models.BooleanField(default=True, verbose_name='active')),
-                ('current_round', models.ForeignKey(blank=True, help_text='Must be set for the tournament to start! (Set after rounds are inputted)', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='current_tournament', to='tournaments.Round', verbose_name='current round')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        help_text='The full name, e.g. "Australasian Intervarsity Debating Championships 2016"',
+                        max_length=100,
+                        verbose_name="name",
+                    ),
+                ),
+                (
+                    "short_name",
+                    models.CharField(
+                        blank=True,
+                        default="",
+                        help_text='The name used in the menu, e.g. "Australs 2016"',
+                        max_length=25,
+                        verbose_name="short name",
+                    ),
+                ),
+                (
+                    "seq",
+                    models.IntegerField(
+                        blank=True,
+                        help_text="A number that determines the relative order in which tournaments are displayed on the homepage.",
+                        null=True,
+                        verbose_name="sequence number",
+                    ),
+                ),
+                (
+                    "slug",
+                    models.SlugField(
+                        help_text='The sub-URL of the tournament, cannot have spaces, e.g. "australs2016"',
+                        unique=True,
+                        validators=[tournaments.models.validate_tournament_slug],
+                        verbose_name="slug",
+                    ),
+                ),
+                (
+                    "welcome_msg",
+                    models.TextField(
+                        blank=True,
+                        default="",
+                        help_text="Text/html entered here shows on the homepage for this tournament",
+                        null=True,
+                        verbose_name="welcome message",
+                    ),
+                ),
+                ("active", models.BooleanField(default=True, verbose_name="active")),
+                (
+                    "current_round",
+                    models.ForeignKey(
+                        blank=True,
+                        help_text="Must be set for the tournament to start! (Set after rounds are inputted)",
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="current_tournament",
+                        to="tournaments.Round",
+                        verbose_name="current round",
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'tournaments',
-                'verbose_name': 'tournament',
-                'ordering': ['seq'],
+                "verbose_name_plural": "tournaments",
+                "verbose_name": "tournament",
+                "ordering": ["seq"],
             },
         ),
         migrations.AddField(
-            model_name='round',
-            name='tournament',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tournaments.Tournament', verbose_name='tournament'),
+            model_name="round",
+            name="tournament",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="tournaments.Tournament",
+                verbose_name="tournament",
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='round',
-            unique_together=set([('tournament', 'seq')]),
+            name="round",
+            unique_together=set([("tournament", "seq")]),
         ),
         migrations.AlterIndexTogether(
-            name='round',
-            index_together=set([('tournament', 'seq')]),
+            name="round",
+            index_together=set([("tournament", "seq")]),
         ),
     ]

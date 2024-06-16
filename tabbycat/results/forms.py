@@ -16,8 +16,12 @@ from participants.templatetags.team_name_for_data_entry import team_name_for_dat
 from tournaments.utils import get_side_name
 
 from .consumers import BallotResultConsumer, BallotStatusConsumer
-from .result import (ConsensusDebateResult, ConsensusDebateResultWithScores,
-                     DebateResultByAdjudicator, DebateResultByAdjudicatorWithScores)
+from .result import (
+    ConsensusDebateResult,
+    ConsensusDebateResultWithScores,
+    DebateResultByAdjudicator,
+    DebateResultByAdjudicatorWithScores,
+)
 from .utils import get_status_meta, side_and_position_names
 
 if TYPE_CHECKING:
@@ -34,15 +38,16 @@ class FormConstructionError(Exception):
 # Result/ballot custom fields
 # ==============================================================================
 
+
 class TournamentPasswordField(forms.CharField):
 
     def __init__(self, *args, **kwargs):
-        if 'tournament' in kwargs:
-            tournament = kwargs.pop('tournament')
-            self.password = tournament.pref('public_password')
+        if "tournament" in kwargs:
+            tournament = kwargs.pop("tournament")
+            self.password = tournament.pref("public_password")
         else:
             raise TypeError("'tournament' is a required keyword argument")
-        kwargs.setdefault('label', _("Tournament password"))
+        kwargs.setdefault("label", _("Tournament password"))
         super().__init__(*args, **kwargs)
 
     def clean(self, value):
@@ -57,79 +62,86 @@ class BaseScoreField(forms.DecimalField):
         """Takes an additional optional keyword argument: tournament,
         the Tournament used to configure the field."""
 
-        tournament = kwargs.pop('tournament', None)
+        tournament = kwargs.pop("tournament", None)
         if tournament:
-            min_value  = tournament.pref(self.CONFIG_MIN_VALUE_FIELD)
-            max_value  = tournament.pref(self.CONFIG_MAX_VALUE_FIELD)
+            min_value = tournament.pref(self.CONFIG_MIN_VALUE_FIELD)
+            max_value = tournament.pref(self.CONFIG_MAX_VALUE_FIELD)
             step_value = tournament.pref(self.CONFIG_STEP_VALUE_FIELD)
         else:
-            min_value  = self.DEFAULT_MIN_VALUE
-            max_value  = self.DEFAULT_MAX_VALUE
+            min_value = self.DEFAULT_MIN_VALUE
+            max_value = self.DEFAULT_MAX_VALUE
             step_value = self.DEFAULT_STEP_VALUE
-        self.step_value = kwargs.get('step_value', step_value)
+        self.step_value = kwargs.get("step_value", step_value)
 
-        kwargs.setdefault('min_value', min_value)
-        kwargs.setdefault('max_value', max_value)
-        kwargs.setdefault('step_size', self.step_value)
+        kwargs.setdefault("min_value", min_value)
+        kwargs.setdefault("max_value", max_value)
+        kwargs.setdefault("step_size", self.step_value)
 
         super().__init__(*args, **kwargs)
 
 
 class MotionModelChoiceField(forms.ModelChoiceField):
-    to_field_name = 'motion_id'
+    to_field_name = "motion_id"
 
     def label_from_instance(self, obj):
         return "%d. %s" % (obj.seq, obj.motion.text)
 
 
 class SubstantiveScoreField(BaseScoreField):
-    CONFIG_MIN_VALUE_FIELD  = 'score_min'
-    CONFIG_MAX_VALUE_FIELD  = 'score_max'
-    CONFIG_STEP_VALUE_FIELD = 'score_step'
+    CONFIG_MIN_VALUE_FIELD = "score_min"
+    CONFIG_MAX_VALUE_FIELD = "score_max"
+    CONFIG_STEP_VALUE_FIELD = "score_step"
     DEFAULT_MIN_VALUE = 68
     DEFAULT_MAX_VALUE = 82
     DEFAULT_STEP_VALUE = 1
 
 
 class ReplyScoreField(BaseScoreField):
-    CONFIG_MIN_VALUE_FIELD  = 'reply_score_min'
-    CONFIG_MAX_VALUE_FIELD  = 'reply_score_max'
-    CONFIG_STEP_VALUE_FIELD = 'reply_score_step'
+    CONFIG_MIN_VALUE_FIELD = "reply_score_min"
+    CONFIG_MAX_VALUE_FIELD = "reply_score_max"
+    CONFIG_STEP_VALUE_FIELD = "reply_score_step"
     DEFAULT_MIN_VALUE = 34.0
     DEFAULT_MAX_VALUE = 41.0
     DEFAULT_STEP_VALUE = 0.5
 
 
-def broadcast_results(ballotsub: 'BallotSubmission', debate: Debate):
+def broadcast_results(ballotsub: "BallotSubmission", debate: Debate):
     t = debate.round.tournament
 
     # 5. Notify the Latest Results consumer (for results/overview)
     if ballotsub.confirmed and debate.result_status == Debate.STATUS_CONFIRMED:
         group_name = BallotResultConsumer.group_prefix + "_" + t.slug
-        async_to_sync(get_channel_layer().group_send)(group_name, {
-            "type": "send_json",
-            "data": ballotsub.serialize_like_actionlog,
-        })
+        async_to_sync(get_channel_layer().group_send)(
+            group_name,
+            {
+                "type": "send_json",
+                "data": ballotsub.serialize_like_actionlog,
+            },
+        )
 
     # 6. Notify the Results Page/Ballots Status Graph
     group_name = BallotStatusConsumer.group_prefix + "_" + t.slug
     meta = get_status_meta(debate)
-    async_to_sync(get_channel_layer().group_send)(group_name, {
-        "type": "send_json",
-        "data": {
-            'status': debate.result_status,
-            'icon': meta[0],
-            'class': meta[1],
-            'sort': meta[2],
-            'ballot': ballotsub.serialize(t),
-            'round': debate.round_id,
+    async_to_sync(get_channel_layer().group_send)(
+        group_name,
+        {
+            "type": "send_json",
+            "data": {
+                "status": debate.result_status,
+                "icon": meta[0],
+                "class": meta[1],
+                "sort": meta[2],
+                "ballot": ballotsub.serialize(t),
+                "round": debate.round_id,
+            },
         },
-    })
+    )
 
 
 # ==============================================================================
 # Result/ballot forms
 # ==============================================================================
+
 
 class BaseResultForm(forms.Form):
     """Base class for forms that report results. Contains fields and methods
@@ -141,57 +153,76 @@ class BaseResultForm(forms.Form):
 
     def __init__(self, ballotsub, tabroom, password=False, *args, **kwargs):
         self.ballotsub = ballotsub
-        self.result = kwargs.pop('result', self.result_class(self.ballotsub))
-        self.filled = kwargs.pop('filled', False)
+        self.result = kwargs.pop("result", self.result_class(self.ballotsub))
+        self.filled = kwargs.pop("filled", False)
         super().__init__(*args, **kwargs)
 
         self.debate = ballotsub.debate
         self.tournament = self.debate.round.tournament
 
-        self.has_tournament_password = password and self.tournament.pref('public_use_password')
+        self.has_tournament_password = password and self.tournament.pref("public_use_password")
         self.tabroom = tabroom
         self.use_codes = use_team_code_names_data_entry(self.tournament, tabroom)
 
-        status_choices = Debate.STATUS_CHOICES if self.tournament.pref('enable_postponements') else Debate.STATUS_CHOICES_RESTRICTED
-        self.fields['debate_result_status'] = forms.ChoiceField(choices=status_choices)
-        self.fields['confirmed'] = forms.BooleanField(required=False, disabled=ballotsub.single_adj)
+        status_choices = (
+            Debate.STATUS_CHOICES
+            if self.tournament.pref("enable_postponements")
+            else Debate.STATUS_CHOICES_RESTRICTED
+        )
+        self.fields["debate_result_status"] = forms.ChoiceField(choices=status_choices)
+        self.fields["confirmed"] = forms.BooleanField(required=False, disabled=ballotsub.single_adj)
 
-        self.initial.update({
-            'debate_result_status': self.debate.result_status,
-            'confirmed': self.ballotsub.confirmed,
-            'discarded': self.ballotsub.discarded,
-        })
+        self.initial.update(
+            {
+                "debate_result_status": self.debate.result_status,
+                "confirmed": self.ballotsub.confirmed,
+                "discarded": self.ballotsub.discarded,
+            }
+        )
 
         if self.has_tournament_password:
-            self.fields['password'] = TournamentPasswordField(tournament=self.tournament)
+            self.fields["password"] = TournamentPasswordField(tournament=self.tournament)
 
     def _side_name(self, side):
-        return get_side_name(self.tournament, side, 'full')
+        return get_side_name(self.tournament, side, "full")
 
     def clean(self):
         cleaned_data = super().clean()
 
-        if cleaned_data.get('discarded') and cleaned_data.get('confirmed'):
-            for field in ('discarded', 'confirmed'):
-                self.add_error(field, forms.ValidationError(
-                    _("The ballot set can't be both discarded and confirmed."),
-                    code='discard_confirm',
-                ))
+        if cleaned_data.get("discarded") and cleaned_data.get("confirmed"):
+            for field in ("discarded", "confirmed"):
+                self.add_error(
+                    field,
+                    forms.ValidationError(
+                        _("The ballot set can't be both discarded and confirmed."),
+                        code="discard_confirm",
+                    ),
+                )
 
-        data_confirmed = cleaned_data.get('debate_result_status') == Debate.STATUS_CONFIRMED and not cleaned_data.get('confirmed')
+        data_confirmed = cleaned_data.get(
+            "debate_result_status"
+        ) == Debate.STATUS_CONFIRMED and not cleaned_data.get("confirmed")
         if data_confirmed and self.debate.confirmed_ballot is None:
-            self.add_error('debate_result_status', forms.ValidationError(
-                _("The debate status can't be confirmed unless one of the ballot sets is confirmed."),
-                code='status_confirm',
-            ))
+            self.add_error(
+                "debate_result_status",
+                forms.ValidationError(
+                    _(
+                        "The debate status can't be confirmed unless one of the ballot sets is confirmed."
+                    ),
+                    code="status_confirm",
+                ),
+            )
 
         return cleaned_data
 
     def save(self):
 
         # 1. Unconfirm the other, if necessary
-        if self.cleaned_data['confirmed']:
-            if self.debate.confirmed_ballot != self.ballotsub and self.debate.confirmed_ballot is not None:
+        if self.cleaned_data["confirmed"]:
+            if (
+                self.debate.confirmed_ballot != self.ballotsub
+                and self.debate.confirmed_ballot is not None
+            ):
                 self.debate.confirmed_ballot.confirmed = False
                 self.debate.confirmed_ballot.save()
 
@@ -203,11 +234,11 @@ class BaseResultForm(forms.Form):
         self.save_ballot()
 
         # 4. Save ballot and result status
-        self.ballotsub.discarded = self.cleaned_data['discarded']
-        self.ballotsub.confirmed = self.cleaned_data['confirmed']
+        self.ballotsub.discarded = self.cleaned_data["discarded"]
+        self.ballotsub.confirmed = self.cleaned_data["confirmed"]
         self.ballotsub.save()
 
-        self.debate.result_status = self.cleaned_data['debate_result_status']
+        self.debate.result_status = self.cleaned_data["debate_result_status"]
         self.debate.save()
 
         # Need to provide a timestamp immediately for BallotStatusConsumer
@@ -237,15 +268,17 @@ class BaseBallotSetForm(BaseResultForm):
     """
 
     def __init__(self, ballotsub, *args, **kwargs):
-        self.vetos = kwargs.pop('vetos', None)
+        self.vetos = kwargs.pop("vetos", None)
         super().__init__(ballotsub, *args, **kwargs)
 
         self.adjudicators = list(self.debate.adjudicators.voting())
-        self.motions = self.debate.round.roundmotion_set.order_by('seq').select_related('motion')
+        self.motions = self.debate.round.roundmotion_set.order_by("seq").select_related("motion")
 
         self.sides = self.tournament.sides
         self.positions = self.tournament.positions
-        self.last_substantive_position = self.tournament.last_substantive_position  # also used in template
+        self.last_substantive_position = (
+            self.tournament.last_substantive_position
+        )  # also used in template
         self.reply_position = self.tournament.reply_position  # also used in template
 
         self.get_preferences_options()
@@ -255,16 +288,20 @@ class BaseBallotSetForm(BaseResultForm):
         self.initial.update(self.initial_data())
 
     def get_preferences_options(self):
-        self.using_motions = self.tournament.pref('enable_motions')
-        self.using_vetoes = self.tournament.pref('motion_vetoes_enabled')
-        self.using_replies = self.tournament.pref('reply_scores_enabled')
-        self.using_declared_winner = self.tournament.pref('winners_in_ballots') != 'none'
-        self.declared_winner = self.tournament.pref('winners_in_ballots')
-        self.bypassing_checks = self.tournament.pref('disable_ballot_confirms') and not self.ballotsub.single_adj
-        self.max_margin = self.tournament.pref('maximum_margin')
-        self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
-                               self.tournament.pref('teams_in_debate') == 'two')
-        self.using_speaker_ranks = self.tournament.pref('speaker_ranks') != 'none'
+        self.using_motions = self.tournament.pref("enable_motions")
+        self.using_vetoes = self.tournament.pref("motion_vetoes_enabled")
+        self.using_replies = self.tournament.pref("reply_scores_enabled")
+        self.using_declared_winner = self.tournament.pref("winners_in_ballots") != "none"
+        self.declared_winner = self.tournament.pref("winners_in_ballots")
+        self.bypassing_checks = (
+            self.tournament.pref("disable_ballot_confirms") and not self.ballotsub.single_adj
+        )
+        self.max_margin = self.tournament.pref("maximum_margin")
+        self.choosing_sides = (
+            self.tournament.pref("draw_side_allocations") == "manual-ballot"
+            and self.tournament.pref("teams_in_debate") == "two"
+        )
+        self.using_speaker_ranks = self.tournament.pref("speaker_ranks") != "none"
 
     # --------------------------------------------------------------------------
     # Field names and field convenience functions
@@ -272,7 +309,7 @@ class BaseBallotSetForm(BaseResultForm):
 
     @staticmethod
     def _fieldname_motion_veto(side):
-        return '%(side)s_motion_veto' % {'side': side}
+        return "%(side)s_motion_veto" % {"side": side}
 
     # --------------------------------------------------------------------------
     # Form set-up
@@ -280,12 +317,12 @@ class BaseBallotSetForm(BaseResultForm):
 
     def create_fields(self):
         """Dynamically generate fields for this ballot:
-         - choose_sides,         if sides need to be chosen by the user
-         - motion,               if there is more than one motion
-         - <side>_motion_veto,   if motion vetoes are being noted, one for each team
-         - <side>_speaker_s#,    one for each speaker
-         - <side>_srank_s#,      if speech ranks are enabled
-         - <side>_ghost_s#,      whether score should be a duplicate
+        - choose_sides,         if sides need to be chosen by the user
+        - motion,               if there is more than one motion
+        - <side>_motion_veto,   if motion vetoes are being noted, one for each team
+        - <side>_speaker_s#,    one for each speaker
+        - <side>_srank_s#,      if speech ranks are enabled
+        - <side>_ghost_s#,      whether score should be a duplicate
         """
 
         # 1. Choose sides field
@@ -294,29 +331,40 @@ class BaseBallotSetForm(BaseResultForm):
             assert len(teams) == 2
             side_choices = [
                 (None, _("---------")),
-                *[(str(teams[i].id) + "," + str(teams[(i+1) % 2].id),
-                    _("%(aff_team)s affirmed, %(neg_team)s negated") % {
-                        'aff_team': team_name_for_data_entry(teams[i], self.use_codes),
-                        'neg_team': team_name_for_data_entry(teams[(i+1) % 2], self.use_codes),
-                }) for i in range(2)],
+                *[
+                    (
+                        str(teams[i].id) + "," + str(teams[(i + 1) % 2].id),
+                        _("%(aff_team)s affirmed, %(neg_team)s negated")
+                        % {
+                            "aff_team": team_name_for_data_entry(teams[i], self.use_codes),
+                            "neg_team": team_name_for_data_entry(
+                                teams[(i + 1) % 2], self.use_codes
+                            ),
+                        },
+                    )
+                    for i in range(2)
+                ],
             ]
-            self.fields['choose_sides'] = forms.TypedChoiceField(
+            self.fields["choose_sides"] = forms.TypedChoiceField(
                 choices=side_choices,
                 coerce=lambda x: tuple(Team.objects.get(id=int(v)) for v in x.split(",")),
             )
             for team in self.debate.teams:
-                self.fields['team_%d' % team.id] = forms.ModelChoiceField(queryset=team.speakers, required=False)
+                self.fields["team_%d" % team.id] = forms.ModelChoiceField(
+                    queryset=team.speakers, required=False
+                )
 
         # 2. Motion fields
         if self.using_motions:
-            self.fields['motion'] = MotionModelChoiceField(queryset=self.motions,
-                required=True)
+            self.fields["motion"] = MotionModelChoiceField(queryset=self.motions, required=True)
 
         if self.using_vetoes:
             for side in self.sides:
                 self.fields[self._fieldname_motion_veto(side)] = MotionModelChoiceField(
-                    label=_("%(side)s's motion veto") % {'side': get_side_name(self.tournament, side, 'full').title()},
-                    queryset=self.motions, required=False,
+                    label=_("%(side)s's motion veto")
+                    % {"side": get_side_name(self.tournament, side, "full").title()},
+                    queryset=self.motions,
+                    required=False,
                 )
 
         # 3. Speaker fields
@@ -324,10 +372,21 @@ class BaseBallotSetForm(BaseResultForm):
 
     def create_declared_winner_dropdown(self):
         """This method creates a drop-down with a list of the teams in the debate"""
-        teams = [(s, _("%(team)s (%(side)s)") % {
-            'team': team_name_for_data_entry(self.debate.get_team(s), self.use_codes), 'side': get_side_name(self.tournament, s, 'full')}) for s in self.sides]
+        teams = [
+            (
+                s,
+                _("%(team)s (%(side)s)")
+                % {
+                    "team": team_name_for_data_entry(self.debate.get_team(s), self.use_codes),
+                    "side": get_side_name(self.tournament, s, "full"),
+                },
+            )
+            for s in self.sides
+        ]
         return forms.TypedChoiceField(
-            label=_("Winner"), required=True, empty_value=None,
+            label=_("Winner"),
+            required=True,
+            empty_value=None,
             choices=[(None, _("---------"))] + teams,
         )
 
@@ -338,15 +397,17 @@ class BaseBallotSetForm(BaseResultForm):
 
         # When bypassing confirmations we just pre-check
         if self.bypassing_checks:
-            initial['confirmed'] = True
+            initial["confirmed"] = True
             # For new ballots default to confirmed status
             if self.debate.result_status == Debate.STATUS_NONE:
-                initial['debate_result_status'] = Debate.STATUS_CONFIRMED
+                initial["debate_result_status"] = Debate.STATUS_CONFIRMED
 
         # If sides are already confirmed, initialise the sides choice field
         if self.choosing_sides and self.ballotsub.debate.sides_confirmed:
             try:
-                initial['choose_sides'] = str(self.debate.aff_team.id) + "," + str(self.debate.neg_team.id)
+                initial["choose_sides"] = (
+                    str(self.debate.aff_team.id) + "," + str(self.debate.neg_team.id)
+                )
             except DebateTeam.DoesNotExist:
                 pass
 
@@ -355,16 +416,17 @@ class BaseBallotSetForm(BaseResultForm):
         # the database for this round, then default to the only motion there is.
         if self.using_motions:
             if not self.ballotsub.motion and self.motions.count() == 1:
-                initial['motion'] = self.motions.get()
+                initial["motion"] = self.motions.get()
             else:
-                initial['motion'] = self.ballotsub.roundmotion
+                initial["motion"] = self.ballotsub.roundmotion
 
         if self.ballotsub.id is not None or self.filled:
             if self.using_vetoes:
                 for side in self.sides:
                     if self.vetos is None:
                         dtmp = self.ballotsub.debateteammotionpreference_set.filter(
-                                debate_team__side=side, preference=3).first()
+                            debate_team__side=side, preference=3
+                        ).first()
                     else:
                         dtmp = self.vetos.get(side)
                     if dtmp:
@@ -379,29 +441,29 @@ class BaseBallotSetForm(BaseResultForm):
         # make a list for field names, then set them all at the end
         order = list()
 
-        if 'choose_sides' in self.fields:
-            order.append('choose_sides')
+        if "choose_sides" in self.fields:
+            order.append("choose_sides")
 
         if self.motions.count() > 1:
-            order.append('motion')
+            order.append("motion")
             order.extend(self._fieldname_motion_veto(side) for side in self.sides)
 
         order.extend(self.list_participant_fields())
         order.extend(self.list_score_fields())
 
-        if 'password' in self.fields:
-            order.append('password')
+        if "password" in self.fields:
+            order.append("password")
 
-        order.extend(['confirmed', 'discarded', 'debate_result_status'])
+        order.extend(["confirmed", "discarded", "debate_result_status"])
 
         if self.motions.count() <= 1:
-            order.append('motion')
+            order.append("motion")
             order.extend(self._fieldname_motion_veto(side) for side in self.sides)
 
         # now, set
-        for i, name in enumerate(order, start=3): # Start at 3 to account for front-end only fields
+        for i, name in enumerate(order, start=3):  # Start at 3 to account for front-end only fields
             try:
-                self.fields[name].widget.attrs['tabindex'] = i
+                self.fields[name].widget.attrs["tabindex"] = i
             except KeyError as e:
                 logger.debug("Skipping tab index for field not found: %s", e)
 
@@ -414,11 +476,11 @@ class BaseBallotSetForm(BaseResultForm):
     def save_ballot(self):
         # 4. Save the sides
         if self.choosing_sides:
-            self.result.set_sides(*self.cleaned_data['choose_sides'])
+            self.result.set_sides(*self.cleaned_data["choose_sides"])
 
         # 5. Save motions
-        if self.using_motions and self.cleaned_data.get('motion'):
-            self.ballotsub.motion = self.cleaned_data['motion'].motion
+        if self.using_motions and self.cleaned_data.get("motion"):
+            self.ballotsub.motion = self.cleaned_data["motion"].motion
         elif self.motions.count() == 1:
             self.ballotsub.motion = self.motions.get().motion
 
@@ -428,11 +490,14 @@ class BaseBallotSetForm(BaseResultForm):
                 debate_team = self.debate.get_dt(side)
                 if motion_veto:
                     self.ballotsub.debateteammotionpreference_set.update_or_create(
-                        debate_team=debate_team, preference=3,
-                        defaults=dict(motion=motion_veto.motion))
+                        debate_team=debate_team,
+                        preference=3,
+                        defaults=dict(motion=motion_veto.motion),
+                    )
                 else:
                     self.ballotsub.debateteammotionpreference_set.filter(
-                        debate_team=debate_team, preference=3).delete()
+                        debate_team=debate_team, preference=3
+                    ).delete()
 
         # 6. Save participant fields
         self.save_participant_fields(self.result)
@@ -459,11 +524,11 @@ class ScoresMixin:
 
     @staticmethod
     def _fieldname_speaker(side, pos):
-        return '%(side)s_speaker_s%(pos)d' % {'side': side, 'pos': pos}
+        return "%(side)s_speaker_s%(pos)d" % {"side": side, "pos": pos}
 
     @staticmethod
     def _fieldname_ghost(side, pos):
-        return '%(side)s_ghost_s%(pos)d' % {'side': side, 'pos': pos}
+        return "%(side)s_ghost_s%(pos)d" % {"side": side, "pos": pos}
 
     # --------------------------------------------------------------------------
     # Form set-up
@@ -478,11 +543,13 @@ class ScoresMixin:
             else:
                 queryset = self.debate.get_team(side).speakers
             self.fields[self._fieldname_speaker(side, pos)] = forms.ModelChoiceField(
-                queryset=queryset, required=True)
+                queryset=queryset, required=True
+            )
 
             # 3(b). Ghost fields
-            self.fields[self._fieldname_ghost(side, pos)] = forms.BooleanField(required=False,
-                label=_("Mark as a duplicate speech"), label_suffix="")
+            self.fields[self._fieldname_ghost(side, pos)] = forms.BooleanField(
+                required=False, label=_("Mark as a duplicate speech"), label_suffix=""
+            )
 
         self.create_score_fields()
 
@@ -524,7 +591,7 @@ class ScoresMixin:
 
         # Pull team info again, in case it's changed since the form was loaded.
         if self.choosing_sides:
-            teams = cleaned_data.get('choose_sides', [None] * len(self.sides))
+            teams = cleaned_data.get("choose_sides", [None] * len(self.sides))
         else:
             teams = [self.debate.get_team(side) for side in self.sides]
         if None in teams:
@@ -541,10 +608,16 @@ class ScoresMixin:
 
                 # The speaker must be on the relevant team.
                 if team is not None and speaker not in team.speakers:
-                    self.add_error(self._fieldname_speaker(side, pos), forms.ValidationError(
-                        _("The speaker %(speaker)s doesn't appear to be on team %(team)s."),
-                        params={'speaker': speaker.get_public_name(self.tournament), 'team': team_name_for_data_entry(team, self.use_codes)},
-                        code='speaker_wrongteam'),
+                    self.add_error(
+                        self._fieldname_speaker(side, pos),
+                        forms.ValidationError(
+                            _("The speaker %(speaker)s doesn't appear to be on team %(team)s."),
+                            params={
+                                "speaker": speaker.get_public_name(self.tournament),
+                                "team": team_name_for_data_entry(team, self.use_codes),
+                            },
+                            code="speaker_wrongteam",
+                        ),
                     )
 
                 # Don't count this speaker if the speech is marked as a ghost
@@ -560,29 +633,47 @@ class ScoresMixin:
                         "%(speaker)s appears to have given %(count)d substantive speeches.",
                         len(positions),
                     )
-                    params = {'speaker': speaker.get_public_name(self.tournament), 'count': len(positions)}
+                    params = {
+                        "speaker": speaker.get_public_name(self.tournament),
+                        "count": len(positions),
+                    }
                     for pos in positions:
-                        self.add_error(self._fieldname_speaker(side, pos), forms.ValidationError(
-                            message, params=params, code='speaker_repeat'))
+                        self.add_error(
+                            self._fieldname_speaker(side, pos),
+                            forms.ValidationError(message, params=params, code="speaker_repeat"),
+                        )
 
             # Check reply speaker only if not marked as a ghost
-            if self.using_replies and not cleaned_data.get(self._fieldname_ghost(side, self.reply_position)):
+            if self.using_replies and not cleaned_data.get(
+                self._fieldname_ghost(side, self.reply_position)
+            ):
                 reply_speaker = cleaned_data.get(self._fieldname_speaker(side, self.reply_position))
-                last_speaker = cleaned_data.get(self._fieldname_speaker(side, self.last_substantive_position))
+                last_speaker = cleaned_data.get(
+                    self._fieldname_speaker(side, self.last_substantive_position)
+                )
 
                 # The last speaker can't give the reply.
                 if reply_speaker == last_speaker and reply_speaker is not None:
-                    self.add_error(self._fieldname_speaker(side, self.reply_position), forms.ValidationError(
-                        _("The last substantive speaker and reply speaker can't be the same."),
-                        code='reply_speaker_consecutive',
-                    ))
+                    self.add_error(
+                        self._fieldname_speaker(side, self.reply_position),
+                        forms.ValidationError(
+                            _("The last substantive speaker and reply speaker can't be the same."),
+                            code="reply_speaker_consecutive",
+                        ),
+                    )
 
                 # The reply speaker must have given a substantive speech.
-                if self.tournament.pref('require_substantive_for_reply') and len(speaker_positions.get(reply_speaker, [])) == 0:
-                    self.add_error(self._fieldname_speaker(side, self.reply_position), forms.ValidationError(
-                        _("The reply speaker for this team did not give a substantive speech."),
-                        code='reply_speaker_not_repeat',
-                    ))
+                if (
+                    self.tournament.pref("require_substantive_for_reply")
+                    and len(speaker_positions.get(reply_speaker, [])) == 0
+                ):
+                    self.add_error(
+                        self._fieldname_speaker(side, self.reply_position),
+                        forms.ValidationError(
+                            _("The reply speaker for this team did not give a substantive speech."),
+                            code="reply_speaker_not_repeat",
+                        ),
+                    )
 
     def clean_scoresheet(self, cleaned_data):
         """Cleans the speaker score fields.
@@ -613,7 +704,7 @@ class ScoresMixin:
 
     def fake_speaker_selects(self):
         for team in self.debate.teams:
-            yield self['team_%d' % team.id]
+            yield self["team_%d" % team.id]
 
     def scoresheet(self, fieldname_score_func, fieldname_srank_func=None):
         """Returns a list of dictionaries for a single scoresheet, to allow for
@@ -621,7 +712,9 @@ class ScoresMixin:
         take two arguments `(side, pos)`. This function is called by the
         `.scoresheets()` methods of both subclasses."""
         teams = []
-        for side, (side_name, pos_names) in zip(self.sides, side_and_position_names(self.tournament)):
+        for side, (side_name, pos_names) in zip(
+            self.sides, side_and_position_names(self.tournament)
+        ):
             side_dict = {
                 "side_code": side,
                 "side_name": side_name,
@@ -648,36 +741,38 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
     def get_preferences_options(self):
         super().get_preferences_options()
-        self.using_speaker_ranks = self.tournament.pref('speaker_ranks') != 'none'
+        self.using_speaker_ranks = self.tournament.pref("speaker_ranks") != "none"
 
     result_class = ConsensusDebateResultWithScores
 
     @staticmethod
     def _fieldname_score(side, pos):
-        return '%(side)s_score_s%(pos)d' % {'side': side, 'pos': pos}
+        return "%(side)s_score_s%(pos)d" % {"side": side, "pos": pos}
 
     @staticmethod
     def _fieldname_srank(side, pos):
-        return '%(side)s_srank_s%(pos)d' % {'side': side, 'pos': pos}
+        return "%(side)s_srank_s%(pos)d" % {"side": side, "pos": pos}
 
     @staticmethod
     def _fieldname_declared_winner():
-        return 'declared_winner'
+        return "declared_winner"
 
     def create_score_fields(self):
         """Adds the speaker score fields:
-         - <side>_score_s#,  one for each score
+        - <side>_score_s#,  one for each score
         """
         for side, pos in product(self.sides, self.positions):
             scorefield = ReplyScoreField if (pos == self.reply_position) else SubstantiveScoreField
             self.fields[self._fieldname_score(side, pos)] = scorefield(
-                widget=forms.NumberInput(attrs={'class': 'required number'}),
+                widget=forms.NumberInput(attrs={"class": "required number"}),
                 tournament=self.tournament,
                 required=True,
             )
             if self.using_speaker_ranks:
                 nspeeches = len(self.sides) * len(self.positions)
-                self.fields[self._fieldname_srank(side, pos)] = forms.IntegerField(required=True, min_value=1, max_value=nspeeches, step_size=1)
+                self.fields[self._fieldname_srank(side, pos)] = forms.IntegerField(
+                    required=True, min_value=1, max_value=nspeeches, step_size=1
+                )
 
         if self.using_declared_winner:
             self.fields[self._fieldname_declared_winner()] = self.create_declared_winner_dropdown()
@@ -713,8 +808,10 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
     def clean_scoresheet(self, cleaned_data):
         try:
-            side_totals = {side: sum(cleaned_data[self._fieldname_score(side, pos)]
-                           for pos in self.positions) for side in self.sides}
+            side_totals = {
+                side: sum(cleaned_data[self._fieldname_score(side, pos)] for pos in self.positions)
+                for side in self.sides
+            }
             totals = list(side_totals.values())
 
         except KeyError as e:
@@ -723,38 +820,64 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
         else:
             if len(totals) == 2:
                 max_teams = [side for side, total in side_totals.items() if total == max(totals)]
-                high_point_declared = cleaned_data.get(self._fieldname_declared_winner()) in max_teams
+                high_point_declared = (
+                    cleaned_data.get(self._fieldname_declared_winner()) in max_teams
+                )
 
                 # Check that no teams had the same total
-                if totals[0] == totals[1] and self.declared_winner in ['none', 'high-points']:
-                    self.add_error(None, forms.ValidationError(
-                        _("The total scores for the teams are the same (i.e. a draw)."),
-                        code='draw',
-                    ))
-                elif self.declared_winner in ['high-points', 'tied-points'] and not high_point_declared:
-                    self.add_error(None, forms.ValidationError(
-                        _("The declared winner does not correspond to the team with the highest score."),
-                        code='wrong_winner',
-                    ))
+                if totals[0] == totals[1] and self.declared_winner in ["none", "high-points"]:
+                    self.add_error(
+                        None,
+                        forms.ValidationError(
+                            _("The total scores for the teams are the same (i.e. a draw)."),
+                            code="draw",
+                        ),
+                    )
+                elif (
+                    self.declared_winner in ["high-points", "tied-points"]
+                    and not high_point_declared
+                ):
+                    self.add_error(
+                        None,
+                        forms.ValidationError(
+                            _(
+                                "The declared winner does not correspond to the team with the highest score."
+                            ),
+                            code="wrong_winner",
+                        ),
+                    )
 
             elif len(totals) > 2:
                 for total in set(totals):
                     sides = [s for s, t in zip(self.sides, totals) if t == total]
                     if len(sides) > 1:
-                        self.add_error(None, forms.ValidationError(
-                            _("The total scores for the following teams are the same: %(teams)s"),
-                            params={'teams': ", ".join(self._side_name(side) for side in sides)},
-                            code='tied_score',
-                        ))
+                        self.add_error(
+                            None,
+                            forms.ValidationError(
+                                _(
+                                    "The total scores for the following teams are the same: %(teams)s"
+                                ),
+                                params={
+                                    "teams": ", ".join(self._side_name(side) for side in sides)
+                                },
+                                code="tied_score",
+                            ),
+                        )
 
             # Check that the margin did not exceed the maximum permissible.
             if len(totals) == 2 and self.max_margin:
                 margin = abs(totals[0] - totals[1])
                 if margin > self.max_margin:
-                    self.add_error(None, forms.ValidationError(
-                        _("The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_margin).1f)."),
-                        params={'margin': margin, 'max_margin': self.max_margin}, code='max_margin',
-                    ))
+                    self.add_error(
+                        None,
+                        forms.ValidationError(
+                            _(
+                                "The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_margin).1f)."
+                            ),
+                            params={"margin": margin, "max_margin": self.max_margin},
+                            code="max_margin",
+                        ),
+                    )
 
         if self.using_speaker_ranks:
             ranks = set()
@@ -765,12 +888,20 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 rank_scores.append((rank, cleaned_data[self._fieldname_score(side, pos)]))
 
             if len(ranks) < len(self.sides) * len(self.positions):
-                self.add_error(None, forms.ValidationError(_("Ranks cannot be tied."), code='ranks_tied'))
+                self.add_error(
+                    None, forms.ValidationError(_("Ranks cannot be tied."), code="ranks_tied")
+                )
 
-            if self.tournament.pref('speaker_ranks') == 'high-points' and (
-                sorted(rank_scores, key=lambda s: (-s[1], s[0])) != sorted(rank_scores, key=lambda s: (s[0], -s[1]))
+            if self.tournament.pref("speaker_ranks") == "high-points" and (
+                sorted(rank_scores, key=lambda s: (-s[1], s[0]))
+                != sorted(rank_scores, key=lambda s: (s[0], -s[1]))
             ):
-                self.add_error(None, forms.ValidationError(_("Ranks must correspond to speaker scores"), code='ranks_high'))
+                self.add_error(
+                    None,
+                    forms.ValidationError(
+                        _("Ranks must correspond to speaker scores"), code="ranks_high"
+                    ),
+                )
 
     def populate_result_with_scores(self, result):
         for side, pos in product(self.sides, self.positions):
@@ -778,9 +909,11 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
             result.set_score(side, pos, score)
 
             if self.using_speaker_ranks:
-                result.set_speaker_rank(side, pos, self.cleaned_data[self._fieldname_srank(side, pos)])
+                result.set_speaker_rank(
+                    side, pos, self.cleaned_data[self._fieldname_srank(side, pos)]
+                )
 
-        if self.declared_winner not in ['none', 'high-points']:
+        if self.declared_winner not in ["none", "high-points"]:
             result.set_winners({self.cleaned_data[self._fieldname_declared_winner()]})
 
     # --------------------------------------------------------------------------
@@ -790,10 +923,17 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
     def scoresheets(self):
         """Generates a sequence of nested dicts that allows for easy iteration
         through the form. Used in the ballot_set.html.html template."""
-        sheets = [{"teams": self.scoresheet(self._fieldname_score, self._fieldname_srank if self.using_speaker_ranks else None)}]
+        sheets = [
+            {
+                "teams": self.scoresheet(
+                    self._fieldname_score,
+                    self._fieldname_srank if self.using_speaker_ranks else None,
+                )
+            }
+        ]
 
         if self.using_declared_winner:
-            sheets[0]['declared_winner'] = self[self._fieldname_declared_winner()]
+            sheets[0]["declared_winner"] = self[self._fieldname_declared_winner()]
         return sheets
 
 
@@ -805,27 +945,29 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
     @staticmethod
     def _fieldname_score(adj, side, pos):
-        return '%(side)s_score_a%(adj)d_s%(pos)d' % {'adj': adj.id, 'side': side, 'pos': pos}
+        return "%(side)s_score_a%(adj)d_s%(pos)d" % {"adj": adj.id, "side": side, "pos": pos}
 
     @staticmethod
     def _fieldname_declared_winner(adj):
-        return 'declared_winner_a%(adj)d' % {'adj': adj.id}
+        return "declared_winner_a%(adj)d" % {"adj": adj.id}
 
     def create_score_fields(self):
         """Adds the speaker score fields:
-         - <side>_score_a#_s#,  one for each score
+        - <side>_score_a#_s#,  one for each score
         """
         for side, pos in product(self.sides, self.positions):
             scorefield = ReplyScoreField if (pos == self.reply_position) else SubstantiveScoreField
             for adj in self.adjudicators:
                 self.fields[self._fieldname_score(adj, side, pos)] = scorefield(
-                    widget=forms.NumberInput(attrs={'class': 'required number'}),
+                    widget=forms.NumberInput(attrs={"class": "required number"}),
                     tournament=self.tournament,
                     required=True,
                 )
         if self.using_declared_winner:
             for adj in self.adjudicators:
-                self.fields[self._fieldname_declared_winner(adj)] = self.create_declared_winner_dropdown()
+                self.fields[self._fieldname_declared_winner(adj)] = (
+                    self.create_declared_winner_dropdown()
+                )
 
     def initial_from_result(self, result):
         initial = super().initial_from_result(result)
@@ -858,8 +1000,13 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
     def clean_scoresheet(self, cleaned_data):
         for adj in self.adjudicators:
             try:
-                side_totals = {side: sum(cleaned_data[self._fieldname_score(adj, side, pos)]
-                           for pos in self.positions) for side in self.sides}
+                side_totals = {
+                    side: sum(
+                        cleaned_data[self._fieldname_score(adj, side, pos)]
+                        for pos in self.positions
+                    )
+                    for side in self.sides
+                }
                 totals = list(side_totals.values())
 
             except KeyError as e:
@@ -867,28 +1014,57 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
             else:
                 if len(totals) == 2:
-                    max_teams = [side for side, total in side_totals.items() if total == max(totals)]
-                    high_point_declared = cleaned_data.get(self._fieldname_declared_winner(adj)) in max_teams
+                    max_teams = [
+                        side for side, total in side_totals.items() if total == max(totals)
+                    ]
+                    high_point_declared = (
+                        cleaned_data.get(self._fieldname_declared_winner(adj)) in max_teams
+                    )
 
                     # Check that it was not a draw.
-                    if totals[0] == totals[1] and self.declared_winner in ['none', 'high-points']:
-                        self.add_error(None, forms.ValidationError(
-                            _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adjudicator)s."),
-                            params={'adjudicator': adj.get_public_name(self.tournament)}, code='draw',
-                        ))
-                    elif self.declared_winner in ['high-points', 'tied-points'] and not high_point_declared:
-                        self.add_error(None, forms.ValidationError(
-                            _("The declared winner does not correspond to the team with the highest score for adjudicator %(adjudicator)s."),
-                            params={'adjudicator': adj.get_public_name(self.tournament)}, code='wrong_winner',
-                        ))
+                    if totals[0] == totals[1] and self.declared_winner in ["none", "high-points"]:
+                        self.add_error(
+                            None,
+                            forms.ValidationError(
+                                _(
+                                    "The total scores for the teams are the same (i.e. a draw) for adjudicator %(adjudicator)s."
+                                ),
+                                params={"adjudicator": adj.get_public_name(self.tournament)},
+                                code="draw",
+                            ),
+                        )
+                    elif (
+                        self.declared_winner in ["high-points", "tied-points"]
+                        and not high_point_declared
+                    ):
+                        self.add_error(
+                            None,
+                            forms.ValidationError(
+                                _(
+                                    "The declared winner does not correspond to the team with the highest score for adjudicator %(adjudicator)s."
+                                ),
+                                params={"adjudicator": adj.get_public_name(self.tournament)},
+                                code="wrong_winner",
+                            ),
+                        )
 
                 # Check that the margin did not exceed the maximum permissible.
                 margin = abs(totals[0] - totals[1])
                 if self.max_margin and margin > self.max_margin:
-                    self.add_error(None, forms.ValidationError(
-                        _("The margin (%(margin).1f) in the ballot of adjudicator %(adjudicator)s exceeds the maximum allowable margin (%(max_margin).1f)."),
-                        params={'adjudicator': adj.get_public_name(self.tournament), 'margin': margin, 'max_margin': self.max_margin}, code='max_margin',
-                    ))
+                    self.add_error(
+                        None,
+                        forms.ValidationError(
+                            _(
+                                "The margin (%(margin).1f) in the ballot of adjudicator %(adjudicator)s exceeds the maximum allowable margin (%(max_margin).1f)."
+                            ),
+                            params={
+                                "adjudicator": adj.get_public_name(self.tournament),
+                                "margin": margin,
+                                "max_margin": self.max_margin,
+                            },
+                            code="max_margin",
+                        ),
+                    )
 
     def populate_result_with_scores(self, result):
         for adj in self.adjudicators:
@@ -896,8 +1072,10 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
                 result.set_score(adj, side, pos, score)
 
-            if self.declared_winner not in ['none', 'high-points']:
-                result.set_winners(adj, {self.cleaned_data.get(self._fieldname_declared_winner(adj))})
+            if self.declared_winner not in ["none", "high-points"]:
+                result.set_winners(
+                    adj, {self.cleaned_data.get(self._fieldname_declared_winner(adj))}
+                )
 
     # --------------------------------------------------------------------------
     # Template access methods
@@ -914,7 +1092,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 ),
             }
             if self.using_declared_winner:
-                sheet_dict['declared_winner'] = self[self._fieldname_declared_winner(adj)]
+                sheet_dict["declared_winner"] = self[self._fieldname_declared_winner(adj)]
             yield sheet_dict
 
 
@@ -928,11 +1106,18 @@ class TeamsMixin:
 
     def create_team_selector(self):
         # 3(a). List of teams in multiple-select
-        side_choices = [(side, _("%(team)s (%(side)s)") % {
-            'team': team_name_for_data_entry(self.debate.get_team(side), self.use_codes),
-            'side': self._side_name(side)}) for side in self.tournament.sides]
-        return forms.MultipleChoiceField(choices=side_choices,
-                widget=forms.CheckboxSelectMultiple)
+        side_choices = [
+            (
+                side,
+                _("%(team)s (%(side)s)")
+                % {
+                    "team": team_name_for_data_entry(self.debate.get_team(side), self.use_codes),
+                    "side": self._side_name(side),
+                },
+            )
+            for side in self.tournament.sides
+        ]
+        return forms.MultipleChoiceField(choices=side_choices, widget=forms.CheckboxSelectMultiple)
 
     def initial_from_result(self, result):
         return {}
@@ -940,18 +1125,23 @@ class TeamsMixin:
     def clean(self):
         cleaned_data = super().clean()
 
-        if 'motion' not in cleaned_data:
+        if "motion" not in cleaned_data:
             if self.motions.count() == 1:
-                cleaned_data['motion'] = self.motions.get().motion
-            else: # Motions not enabled
-                cleaned_data['motion'] = None
+                cleaned_data["motion"] = self.motions.get().motion
+            else:  # Motions not enabled
+                cleaned_data["motion"] = None
 
         if not self.debate.sides_confirmed:
-            self.add_error(None, forms.ValidationError(
-                _("Sides for this debate are not confirmed. You can't save a result "
-                  "for this debate until the sides have been confirmed in the draw."),
-                code='sides_unconfirmed',
-            ))
+            self.add_error(
+                None,
+                forms.ValidationError(
+                    _(
+                        "Sides for this debate are not confirmed. You can't save a result "
+                        "for this debate until the sides have been confirmed in the draw."
+                    ),
+                    code="sides_unconfirmed",
+                ),
+            )
 
         return cleaned_data
 
@@ -968,11 +1158,11 @@ class SingleEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
 
     @staticmethod
     def _fieldname_advancing():
-        return 'advancing'
+        return "advancing"
 
     def create_score_fields(self):
         """Adds the speaker score fields:
-         - <side>_score_s#,  one for each score
+        - <side>_score_s#,  one for each score
         """
         self.fields[self._fieldname_advancing()] = self.create_team_selector()
 
@@ -987,16 +1177,26 @@ class SingleEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        num_advancing = int(self.tournament.pref('teams_in_debate') == 'bp' and not self.debate.round.is_last) + 1
-        if self._fieldname_advancing() in cleaned_data and len(cleaned_data[self._fieldname_advancing()]) != num_advancing:
-            self.add_error(self._fieldname_advancing(), forms.ValidationError(
-                ngettext(
-                    "There must be exactly %(n)d team advancing.",
-                    "There must be exactly %(n)d teams advancing.",
-                    num_advancing,
-                ) % {'n': num_advancing},
-                code='num_advancing',
-            ))
+        num_advancing = (
+            int(self.tournament.pref("teams_in_debate") == "bp" and not self.debate.round.is_last)
+            + 1
+        )
+        if (
+            self._fieldname_advancing() in cleaned_data
+            and len(cleaned_data[self._fieldname_advancing()]) != num_advancing
+        ):
+            self.add_error(
+                self._fieldname_advancing(),
+                forms.ValidationError(
+                    ngettext(
+                        "There must be exactly %(n)d team advancing.",
+                        "There must be exactly %(n)d teams advancing.",
+                        num_advancing,
+                    )
+                    % {"n": num_advancing},
+                    code="num_advancing",
+                ),
+            )
 
         return cleaned_data
 
@@ -1004,7 +1204,7 @@ class SingleEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
         result.set_winners(set(self.cleaned_data[self._fieldname_advancing()]))
 
     def scoresheets(self):
-        return [{'advancing': self[self._fieldname_advancing()]}]
+        return [{"advancing": self[self._fieldname_advancing()]}]
 
 
 class PerAdjudicatorEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
@@ -1013,7 +1213,7 @@ class PerAdjudicatorEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
 
     @staticmethod
     def _fieldname_advancing(adj):
-        return 'advancing_a%(adj)d' % {'adj': adj.id}
+        return "advancing_a%(adj)d" % {"adj": adj.id}
 
     def create_score_fields(self):
         for adj in self.adjudicators:
@@ -1032,11 +1232,17 @@ class PerAdjudicatorEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
         cleaned_data = super().clean()
 
         for adj in self.adjudicators:
-            if self._fieldname_advancing(adj) in cleaned_data and len(cleaned_data[self._fieldname_advancing(adj)]) != 1:
-                self.add_error(self._fieldname_advancing(adj), forms.ValidationError(
-                    _("There must be exactly 1 team advancing."),
-                    code='num_advancing',
-                ))
+            if (
+                self._fieldname_advancing(adj) in cleaned_data
+                and len(cleaned_data[self._fieldname_advancing(adj)]) != 1
+            ):
+                self.add_error(
+                    self._fieldname_advancing(adj),
+                    forms.ValidationError(
+                        _("There must be exactly 1 team advancing."),
+                        code="num_advancing",
+                    ),
+                )
 
     def populate_result_with_wins(self, result):
         for adj in self.adjudicators:
@@ -1044,4 +1250,4 @@ class PerAdjudicatorEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
 
     def scoresheets(self):
         for adj in self.adjudicators:
-            yield {'adjudicator': adj, 'advancing': self[self._fieldname_advancing(adj)]}
+            yield {"adjudicator": adj, "advancing": self[self._fieldname_advancing(adj)]}

@@ -9,50 +9,76 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='AdjudicatorAdjudicatorConflict',
+            name="AdjudicatorAdjudicatorConflict",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'adjudicator-adjudicator conflict',
-                'verbose_name_plural': 'adjudicator-adjudicator conflicts',
+                "verbose_name": "adjudicator-adjudicator conflict",
+                "verbose_name_plural": "adjudicator-adjudicator conflicts",
             },
         ),
         migrations.CreateModel(
-            name='AdjudicatorConflict',
+            name="AdjudicatorConflict",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'adjudicator-team conflict',
-                'verbose_name_plural': 'adjudicator-team conflicts',
+                "verbose_name": "adjudicator-team conflict",
+                "verbose_name_plural": "adjudicator-team conflicts",
             },
         ),
         migrations.CreateModel(
-            name='AdjudicatorInstitutionConflict',
+            name="AdjudicatorInstitutionConflict",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'adjudicator-institution conflict',
-                'verbose_name_plural': 'adjudicator-institution conflicts',
+                "verbose_name": "adjudicator-institution conflict",
+                "verbose_name_plural": "adjudicator-institution conflicts",
             },
         ),
         migrations.CreateModel(
-            name='DebateAdjudicator',
+            name="DebateAdjudicator",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('type', models.CharField(choices=[('C', 'chair'), ('P', 'panellist'), ('T', 'trainee')], max_length=2, verbose_name='type')),
-                ('timing_confirmed', models.NullBooleanField(verbose_name='available?')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[("C", "chair"), ("P", "panellist"), ("T", "trainee")],
+                        max_length=2,
+                        verbose_name="type",
+                    ),
+                ),
+                ("timing_confirmed", models.NullBooleanField(verbose_name="available?")),
             ],
             options={
-                'verbose_name': 'debate adjudicator',
-                'verbose_name_plural': 'debate adjudicators',
+                "verbose_name": "debate adjudicator",
+                "verbose_name_plural": "debate adjudicators",
             },
         ),
     ]

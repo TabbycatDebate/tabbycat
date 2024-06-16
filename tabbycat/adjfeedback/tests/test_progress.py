@@ -12,7 +12,10 @@ from tournaments.models import Round, Tournament
 from utils.tests import suppress_logs
 from venues.models import Venue
 
-from ..progress import FeedbackExpectedSubmissionFromAdjudicatorTracker, FeedbackExpectedSubmissionFromTeamTracker
+from ..progress import (
+    FeedbackExpectedSubmissionFromAdjudicatorTracker,
+    FeedbackExpectedSubmissionFromTeamTracker,
+)
 from ..progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 
 
@@ -78,21 +81,26 @@ class TestFeedbackProgress(TestCase):
         DebateTeam.objects.create(debate=debate, team=neg_team, side=DebateTeam.Side.NEG)
 
         chair = self._adj(adjs[0])
-        DebateAdjudicator.objects.create(debate=debate, adjudicator=chair,
-                type=DebateAdjudicator.TYPE_CHAIR)
+        DebateAdjudicator.objects.create(
+            debate=debate, adjudicator=chair, type=DebateAdjudicator.TYPE_CHAIR
+        )
         for p in adjs[1:]:
             panellist = self._adj(p)
-            DebateAdjudicator.objects.create(debate=debate, adjudicator=panellist,
-                    type=DebateAdjudicator.TYPE_PANEL)
+            DebateAdjudicator.objects.create(
+                debate=debate, adjudicator=panellist, type=DebateAdjudicator.TYPE_PANEL
+            )
         for tr in trainees:
             trainee = self._adj(tr)
-            DebateAdjudicator.objects.create(debate=debate, adjudicator=trainee,
-                    type=DebateAdjudicator.TYPE_TRAINEE)
+            DebateAdjudicator.objects.create(
+                debate=debate, adjudicator=trainee, type=DebateAdjudicator.TYPE_TRAINEE
+            )
 
-        ballotsub = BallotSubmission(debate=debate, submitter_type=BallotSubmission.Submitter.TABROOM)
+        ballotsub = BallotSubmission(
+            debate=debate, submitter_type=BallotSubmission.Submitter.TABROOM
+        )
         result = DebateResultByAdjudicatorWithScores(ballotsub)
 
-        for t, side in zip(teams, ('aff', 'neg')):
+        for t, side in zip(teams, ("aff", "neg")):
             team = self._team(t)
             speakers = team.speaker_set.all()
             for pos, speaker in enumerate(speakers, start=1):
@@ -103,10 +111,10 @@ class TestFeedbackProgress(TestCase):
 
         for a, vote in zip(adjs, votes):
             adj = self._adj(a)
-            if vote == 'a':
-                sides = ('aff', 'neg')
-            elif vote == 'n':
-                sides = ('neg', 'aff')
+            if vote == "a":
+                sides = ("aff", "neg")
+            elif vote == "n":
+                sides = ("neg", "aff")
             else:
                 raise ValueError
             for side, score in zip(sides, (76, 74)):
@@ -126,14 +134,17 @@ class TestFeedbackProgress(TestCase):
         else:
             source_kwargs = dict(source_adjudicator=source)
         target_adj = self._adj(target)
-        return AdjudicatorFeedback.objects.create(confirmed=confirmed, ignored=ignored, adjudicator=target_adj, score=3,
-                **source_kwargs)
+        return AdjudicatorFeedback.objects.create(
+            confirmed=confirmed, ignored=ignored, adjudicator=target_adj, score=3, **source_kwargs
+        )
 
     # ==========================================================================
     # From team
     # ==========================================================================
 
-    def assertExpectedFromTeamTracker(self, debate, t, expected, fulfilled, count, submissions, targets, tracker_kwargs={}): # noqa
+    def assertExpectedFromTeamTracker(  # noqa: N802
+        self, debate, t, expected, fulfilled, count, submissions, targets, tracker_kwargs={}
+    ):
         tracker = FeedbackExpectedSubmissionFromTeamTracker(self._dt(debate, t), **tracker_kwargs)
         self.assertIs(tracker.expected, expected)
         self.assertIs(tracker.fulfilled, fulfilled)
@@ -157,10 +168,12 @@ class TestFeedbackProgress(TestCase):
         for t in (0, 1):
             feedback = self._create_feedback(self._dt(debate, t), 1)
             self.assertExpectedFromTeamTracker(debate, t, True, False, 0, [], [0])
-            self.assertExpectedFromTeamTracker(debate, t, True, True, 1, [feedback], [0, 1, 2], {'enforce_orallist': False})
+            self.assertExpectedFromTeamTracker(
+                debate, t, True, True, 1, [feedback], [0, 1, 2], {"enforce_orallist": False}
+            )
 
     def test_chair_oral_multiple_submissions(self):
-        self.tournament.preferences['feedback__feedback_from_teams'] = 'all-adjs'
+        self.tournament.preferences["feedback__feedback_from_teams"] = "all-adjs"
         debate = self._create_debate((0, 1), (0, 1, 2), "aan")
         for t in (0, 1):
             feedback1 = self._create_feedback(self._dt(debate, t), 0)
@@ -169,7 +182,16 @@ class TestFeedbackProgress(TestCase):
             # (It should appear as "unexpected" in the FeedbackProgressForTeam.)
             self.assertExpectedFromTeamTracker(debate, t, True, True, 1, [feedback1], [0])
             # If the orallist is not enforced, though, both submissions are relevant.
-            self.assertExpectedFromTeamTracker(debate, t, True, False, 2, [feedback1, feedback2], [0, 1, 2], {'enforce_orallist': False})
+            self.assertExpectedFromTeamTracker(
+                debate,
+                t,
+                True,
+                False,
+                2,
+                [feedback1, feedback2],
+                [0, 1, 2],
+                {"enforce_orallist": False},
+            )
 
     def test_chair_rolled_no_submission(self):
         debate = self._create_debate((0, 1), (0, 1, 2), "ann")
@@ -187,15 +209,19 @@ class TestFeedbackProgress(TestCase):
         for t in (0, 1):
             feedback = self._create_feedback(self._dt(debate, t), 0)
             self.assertExpectedFromTeamTracker(debate, t, True, False, 0, [], [1, 2])
-            self.assertExpectedFromTeamTracker(debate, t, True, True, 1, [feedback], [0, 1, 2], {'enforce_orallist': False})
+            self.assertExpectedFromTeamTracker(
+                debate, t, True, True, 1, [feedback], [0, 1, 2], {"enforce_orallist": False}
+            )
 
     def test_chair_rolled_multiple_submissions(self):
-        self.tournament.preferences['feedback__feedback_from_teams'] = 'all-adjs'
+        self.tournament.preferences["feedback__feedback_from_teams"] = "all-adjs"
         debate = self._create_debate((0, 1), (0, 1, 2), "ann")
         for t in (0, 1):
             feedback1 = self._create_feedback(self._dt(debate, t), 1)
             feedback2 = self._create_feedback(self._dt(debate, t), 2)
-            self.assertExpectedFromTeamTracker(debate, t, True, False, 2, [feedback1, feedback2], [1, 2])
+            self.assertExpectedFromTeamTracker(
+                debate, t, True, False, 2, [feedback1, feedback2], [1, 2]
+            )
 
     def test_sole_adjudicator_no_submissions(self):
         debate = self._create_debate((0, 1), (0,), "n")
@@ -215,7 +241,7 @@ class TestFeedbackProgress(TestCase):
             self.assertExpectedFromTeamTracker(debate, t, True, False, 0, [], [0])
 
     def test_sole_adjudicator_multiple_submissions(self):
-        self.tournament.preferences['feedback__feedback_from_teams'] = 'all-adjs'
+        self.tournament.preferences["feedback__feedback_from_teams"] = "all-adjs"
         debate = self._create_debate((0, 1), (0,), "n")
         for t in (0, 1):
             feedback1 = self._create_feedback(self._dt(debate, t), 0)
@@ -224,14 +250,20 @@ class TestFeedbackProgress(TestCase):
             # The submissions on adjs 3 and 4 are irrelevant, so shouldn't appear at all.
             # (They should appear as "unexpected" in the FeedbackProgressForTeam.)
             self.assertExpectedFromTeamTracker(debate, t, True, True, 1, [feedback1], [0])
-            self.assertExpectedFromTeamTracker(debate, t, True, True, 1, [feedback1], [0], {'enforce_orallist': False})
+            self.assertExpectedFromTeamTracker(
+                debate, t, True, True, 1, [feedback1], [0], {"enforce_orallist": False}
+            )
 
     # ==========================================================================
     # From adjudicator
     # ==========================================================================
 
-    def assertExpectedFromAdjudicatorTracker(self, debate, source, target, expected, fulfilled, count, submissions): # noqa
-        tracker = FeedbackExpectedSubmissionFromAdjudicatorTracker(self._da(debate, source), self._adj(target))
+    def assertExpectedFromAdjudicatorTracker(  # noqa: N802
+        self, debate, source, target, expected, fulfilled, count, submissions
+    ):
+        tracker = FeedbackExpectedSubmissionFromAdjudicatorTracker(
+            self._da(debate, source), self._adj(target)
+        )
         self.assertIs(tracker.expected, expected)
         self.assertIs(tracker.fulfilled, fulfilled)
         self.assertEqual(tracker.count, count)
@@ -252,7 +284,7 @@ class TestFeedbackProgress(TestCase):
     def test_adj_on_adj_bad_submission(self):
         debate = self._create_debate((0, 1), (0, 1, 2), "aan")
         for a in (1, 2):
-            self._create_feedback(self._da(debate, 0), a+2)
+            self._create_feedback(self._da(debate, 0), a + 2)
             self.assertExpectedFromAdjudicatorTracker(debate, 0, a, True, False, 0, [])
 
     def test_submitted_feedback_ignored_score(self):
@@ -276,7 +308,9 @@ class TestFeedbackProgress(TestCase):
     def test_adj_on_adj_multiple_submission(self):
         debate = self._create_debate((0, 1), (0, 1, 2), "aan")
         for a in (1, 2):
-            with suppress_logs('results.models', logging.WARNING):  # suppress duplicate confirmed warning
+            with suppress_logs(
+                "results.models", logging.WARNING
+            ):  # suppress duplicate confirmed warning
                 self._create_feedback(self._da(debate, 0), a)
                 feedback2 = self._create_feedback(self._da(debate, 0), a)
             self.assertExpectedFromAdjudicatorTracker(debate, 0, a, True, True, 1, [feedback2])
@@ -305,10 +339,19 @@ class TestFeedbackProgress(TestCase):
         if adj3 is not None:
             self._create_feedback(self._dt(debate3, 0), adj3)
 
-    def assertTeamProgress(self, feedback_paths, show_splits, t, submitted, # noqa
-                           expected, fulfilled, unsubmitted, coverage):
-        self.tournament.preferences['feedback__feedback_from_teams'] = feedback_paths
-        self.tournament.preferences['ui_options__show_splitting_adjudicators'] = show_splits
+    def assertTeamProgress(  # noqa: N802
+        self,
+        feedback_paths,
+        show_splits,
+        t,
+        submitted,
+        expected,
+        fulfilled,
+        unsubmitted,
+        coverage,
+    ):
+        self.tournament.preferences["feedback__feedback_from_teams"] = feedback_paths
+        self.tournament.preferences["ui_options__show_splitting_adjudicators"] = show_splits
         progress = FeedbackProgressForTeam(self._team(t))
         self.assertEqual(progress.num_submitted(), submitted)
         self.assertEqual(progress.num_expected(), expected)
@@ -318,13 +361,13 @@ class TestFeedbackProgress(TestCase):
         return progress
 
     def test_team_progress_all_good_orallist(self):
-        self.tournament.preferences['feedback__feedback_from_teams'] = 'all-adjs'
+        self.tournament.preferences["feedback__feedback_from_teams"] = "all-adjs"
         self._create_team_progress_dataset(0, 4, 6)
-        self.assertTeamProgress('orallist', True, 0, 3, 3, 3, 0, 1.0)
-        self.assertTeamProgress('orallist', False, 0, 3, 3, 3, 0, 1.0)
+        self.assertTeamProgress("orallist", True, 0, 3, 3, 3, 0, 1.0)
+        self.assertTeamProgress("orallist", False, 0, 3, 3, 3, 0, 1.0)
 
     def test_team_progress_all_good_all_adjs(self):
-        self.tournament.preferences['feedback__feedback_from_teams'] = 'all-adjs'
+        self.tournament.preferences["feedback__feedback_from_teams"] = "all-adjs"
         debate1 = self._create_debate((0, 1), (0, 1, 2), "nnn")
         debate2 = self._create_debate((0, 2), (3, 4, 5), "ann")
         debate3 = self._create_debate((0, 3), (6,), "a")
@@ -335,55 +378,55 @@ class TestFeedbackProgress(TestCase):
         self._create_feedback(self._dt(debate2, 0), 4)
         self._create_feedback(self._dt(debate2, 0), 5)
         self._create_feedback(self._dt(debate3, 0), 6)
-        self.assertTeamProgress('all-adjs', True, 0, 7, 7, 7, 0, 1.0)
-        self.assertTeamProgress('all-adjs', False, 0, 7, 7, 7, 0, 1.0)
+        self.assertTeamProgress("all-adjs", True, 0, 7, 7, 7, 0, 1.0)
+        self.assertTeamProgress("all-adjs", False, 0, 7, 7, 7, 0, 1.0)
 
     def test_team_progress_no_submissions(self):
-        self.tournament.preferences['feedback__feedback_from_teams'] = 'all-adjs'
+        self.tournament.preferences["feedback__feedback_from_teams"] = "all-adjs"
         self._create_team_progress_dataset(None, None, None)
-        self.assertTeamProgress('orallist', True, 0, 0, 3, 0, 3, 0.0)
-        self.assertTeamProgress('all-adjs', True, 0, 0, 7, 0, 7, 0.0)
-        self.assertTeamProgress('orallist', False, 0, 0, 3, 0, 3, 0.0)
-        self.assertTeamProgress('all-adjs', False, 0, 0, 7, 0, 7, 0.0)
+        self.assertTeamProgress("orallist", True, 0, 0, 3, 0, 3, 0.0)
+        self.assertTeamProgress("all-adjs", True, 0, 0, 7, 0, 7, 0.0)
+        self.assertTeamProgress("orallist", False, 0, 0, 3, 0, 3, 0.0)
+        self.assertTeamProgress("all-adjs", False, 0, 0, 7, 0, 7, 0.0)
 
     def test_team_progress_no_debates(self):
-        self.tournament.preferences['feedback__feedback_from_teams'] = 'all-adjs'
+        self.tournament.preferences["feedback__feedback_from_teams"] = "all-adjs"
         FeedbackProgressForTeam(self._team(4))
-        self.assertTeamProgress('orallist', True, 4, 0, 0, 0, 0, 1.0)
-        self.assertTeamProgress('all-adjs', True, 4, 0, 0, 0, 0, 1.0)
+        self.assertTeamProgress("orallist", True, 4, 0, 0, 0, 0, 1.0)
+        self.assertTeamProgress("all-adjs", True, 4, 0, 0, 0, 0, 1.0)
 
     def test_team_progress_missing_submission(self):
-        self.tournament.preferences['feedback__feedback_from_teams'] = 'all-adjs'
+        self.tournament.preferences["feedback__feedback_from_teams"] = "all-adjs"
         self._create_team_progress_dataset(0, None, 6)
-        self.assertTeamProgress('orallist', True, 0, 2, 3, 2, 1, 2/3)
-        self.assertTeamProgress('all-adjs', True, 0, 2, 7, 2, 5, 2/7)
-        self.assertTeamProgress('orallist', False, 0, 2, 3, 2, 1, 2/3)
-        self.assertTeamProgress('all-adjs', False, 0, 2, 7, 2, 5, 2/7)
+        self.assertTeamProgress("orallist", True, 0, 2, 3, 2, 1, 2 / 3)
+        self.assertTeamProgress("all-adjs", True, 0, 2, 7, 2, 5, 2 / 7)
+        self.assertTeamProgress("orallist", False, 0, 2, 3, 2, 1, 2 / 3)
+        self.assertTeamProgress("all-adjs", False, 0, 2, 7, 2, 5, 2 / 7)
 
     def test_team_progress_wrong_target_on_unanimous(self):
-        self.tournament.preferences['feedback__feedback_from_teams'] = 'all-adjs'
+        self.tournament.preferences["feedback__feedback_from_teams"] = "all-adjs"
         self._create_team_progress_dataset(2, 4, 6)
-        progress = self.assertTeamProgress('orallist', True, 0, 3, 3, 2, 1, 2/3)
+        progress = self.assertTeamProgress("orallist", True, 0, 3, 3, 2, 1, 2 / 3)
         self.assertEqual(len(progress.unexpected_trackers()), 1)
-        progress = self.assertTeamProgress('orallist', False, 0, 3, 3, 3, 0, 1.0)
+        progress = self.assertTeamProgress("orallist", False, 0, 3, 3, 3, 0, 1.0)
         self.assertEqual(len(progress.unexpected_trackers()), 0)
 
     def test_team_progress_wrong_target_on_rolled_chair(self):
-        self.tournament.preferences['feedback__feedback_from_teams'] = 'all-adjs'
+        self.tournament.preferences["feedback__feedback_from_teams"] = "all-adjs"
         self._create_team_progress_dataset(0, 3, 6)
-        progress = self.assertTeamProgress('orallist', True, 0, 3, 3, 2, 1, 2/3)
+        progress = self.assertTeamProgress("orallist", True, 0, 3, 3, 2, 1, 2 / 3)
         self.assertEqual(len(progress.unexpected_trackers()), 1)
-        progress = self.assertTeamProgress('orallist', False, 0, 3, 3, 3, 0, 1.0)
+        progress = self.assertTeamProgress("orallist", False, 0, 3, 3, 3, 0, 1.0)
         self.assertEqual(len(progress.unexpected_trackers()), 0)
 
     def test_team_progress_unexpected(self):
-        self.tournament.preferences['feedback__feedback_from_teams'] = 'all-adjs'
+        self.tournament.preferences["feedback__feedback_from_teams"] = "all-adjs"
         self._create_team_progress_dataset(5, 3, None)
-        progress = self.assertTeamProgress('orallist', True, 0, 2, 3, 0, 3, 0.0)
+        progress = self.assertTeamProgress("orallist", True, 0, 2, 3, 0, 3, 0.0)
         self.assertEqual(len(progress.unexpected_trackers()), 2)
 
-        self.tournament.preferences['feedback__show_unexpected_feedback'] = False
-        progress = self.assertTeamProgress('orallist', True, 0, 2, 3, 0, 3, 0.0)
+        self.tournament.preferences["feedback__show_unexpected_feedback"] = False
+        progress = self.assertTeamProgress("orallist", True, 0, 2, 3, 0, 3, 0.0)
         self.assertEqual(len(progress.unexpected_trackers()), 0)
 
     # ==========================================================================
@@ -401,8 +444,10 @@ class TestFeedbackProgress(TestCase):
         for adj in adjs3:
             self._create_feedback(self._da(debate3, 0), adj)
 
-    def assertAdjudicatorProgress(self, feedback_paths, a, submitted, expected, fulfilled, unsubmitted, coverage): # noqa
-        self.tournament.preferences['feedback__feedback_paths'] = feedback_paths
+    def assertAdjudicatorProgress(  # noqa: N802
+        self, feedback_paths, a, submitted, expected, fulfilled, unsubmitted, coverage
+    ):
+        self.tournament.preferences["feedback__feedback_paths"] = feedback_paths
         progress = FeedbackProgressForAdjudicator(self._adj(a))
         self.assertEqual(progress.num_submitted(), submitted)
         self.assertEqual(progress.num_expected(), expected)
@@ -413,49 +458,49 @@ class TestFeedbackProgress(TestCase):
 
     def test_adjudicator_progress_all_good(self):
         self._create_adjudicator_progress_dataset([1, 2], [3, 4], [])
-        self.assertAdjudicatorProgress('minimal', 0, 4, 2, 2, 0, 1.0)
-        self.assertAdjudicatorProgress('with-p-on-c', 0, 4, 3, 3, 0, 1.0)
-        self.assertAdjudicatorProgress('all-adjs', 0, 4, 4, 4, 0, 1.0)
+        self.assertAdjudicatorProgress("minimal", 0, 4, 2, 2, 0, 1.0)
+        self.assertAdjudicatorProgress("with-p-on-c", 0, 4, 3, 3, 0, 1.0)
+        self.assertAdjudicatorProgress("all-adjs", 0, 4, 4, 4, 0, 1.0)
 
     def test_adjudicator_progress_missing_p_on_p(self):
         self._create_adjudicator_progress_dataset([1, 2], [3], [])
-        self.assertAdjudicatorProgress('minimal', 0, 3, 2, 2, 0, 1.0)
-        self.assertAdjudicatorProgress('with-p-on-c', 0, 3, 3, 3, 0, 1.0)
-        self.assertAdjudicatorProgress('all-adjs', 0, 3, 4, 3, 1, 3/4)
+        self.assertAdjudicatorProgress("minimal", 0, 3, 2, 2, 0, 1.0)
+        self.assertAdjudicatorProgress("with-p-on-c", 0, 3, 3, 3, 0, 1.0)
+        self.assertAdjudicatorProgress("all-adjs", 0, 3, 4, 3, 1, 3 / 4)
 
     def test_adjudicator_progress_no_submissions(self):
         self._create_adjudicator_progress_dataset([], [], [])
-        self.assertAdjudicatorProgress('minimal', 0, 0, 2, 0, 2, 0.0)
-        self.assertAdjudicatorProgress('with-p-on-c', 0, 0, 3, 0, 3, 0.0)
-        self.assertAdjudicatorProgress('all-adjs', 0, 0, 4, 0, 4, 0.0)
+        self.assertAdjudicatorProgress("minimal", 0, 0, 2, 0, 2, 0.0)
+        self.assertAdjudicatorProgress("with-p-on-c", 0, 0, 3, 0, 3, 0.0)
+        self.assertAdjudicatorProgress("all-adjs", 0, 0, 4, 0, 4, 0.0)
 
     def test_adjudicator_progress_no_debates(self):
         FeedbackProgressForAdjudicator(self._adj(5))
-        self.assertAdjudicatorProgress('minimal', 5, 0, 0, 0, 0, 1.0)
-        self.assertAdjudicatorProgress('with-p-on-c', 5, 0, 0, 0, 0, 1.0)
-        self.assertAdjudicatorProgress('all-adjs', 5, 0, 0, 0, 0, 1.0)
+        self.assertAdjudicatorProgress("minimal", 5, 0, 0, 0, 0, 1.0)
+        self.assertAdjudicatorProgress("with-p-on-c", 5, 0, 0, 0, 0, 1.0)
+        self.assertAdjudicatorProgress("all-adjs", 5, 0, 0, 0, 0, 1.0)
 
     def test_adjudicator_progress_missing_submission(self):
         self._create_adjudicator_progress_dataset([1], [3], [])
-        self.assertAdjudicatorProgress('minimal', 0, 2, 2, 1, 1, 1/2)
-        self.assertAdjudicatorProgress('with-p-on-c', 0, 2, 3, 2, 1, 2/3)
-        self.assertAdjudicatorProgress('all-adjs', 0, 2, 4, 2, 2, 1/2)
+        self.assertAdjudicatorProgress("minimal", 0, 2, 2, 1, 1, 1 / 2)
+        self.assertAdjudicatorProgress("with-p-on-c", 0, 2, 3, 2, 1, 2 / 3)
+        self.assertAdjudicatorProgress("all-adjs", 0, 2, 4, 2, 2, 1 / 2)
 
     def test_adjudicator_progress_wrong_target(self):
         self._create_adjudicator_progress_dataset([1, 2], [4], [])
-        progress = self.assertAdjudicatorProgress('with-p-on-c', 0, 3, 3, 2, 1, 2/3)
+        progress = self.assertAdjudicatorProgress("with-p-on-c", 0, 3, 3, 2, 1, 2 / 3)
         self.assertEqual(len(progress.unexpected_trackers()), 1)
 
     def test_adjudicator_progress_extra_target(self):
         self._create_adjudicator_progress_dataset([1, 2], [3, 4], [])
-        progress = self.assertAdjudicatorProgress('with-p-on-c', 0, 4, 3, 3, 0, 1.0)
+        progress = self.assertAdjudicatorProgress("with-p-on-c", 0, 4, 3, 3, 0, 1.0)
         self.assertEqual(len(progress.unexpected_trackers()), 1)
 
     def test_adjudicator_progress_unexpected(self):
         self._create_adjudicator_progress_dataset([5], [1], [2])
-        progress = self.assertAdjudicatorProgress('with-p-on-c', 0, 3, 3, 0, 3, 0.0)
+        progress = self.assertAdjudicatorProgress("with-p-on-c", 0, 3, 3, 0, 3, 0.0)
         self.assertEqual(len(progress.unexpected_trackers()), 3)
 
-        self.tournament.preferences['feedback__show_unexpected_feedback'] = False
-        progress = self.assertAdjudicatorProgress('with-p-on-c', 0, 3, 3, 0, 3, 0.0)
+        self.tournament.preferences["feedback__show_unexpected_feedback"] = False
+        progress = self.assertAdjudicatorProgress("with-p-on-c", 0, 3, 3, 0, 3, 0.0)
         self.assertEqual(len(progress.unexpected_trackers()), 0)

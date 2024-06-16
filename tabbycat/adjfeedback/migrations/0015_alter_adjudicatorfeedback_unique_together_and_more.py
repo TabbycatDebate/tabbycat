@@ -8,73 +8,97 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('adjallocation', '0010_alter_adjudicatoradjudicatorconflict_unique_together_and_more'),
-        ('adjfeedback', '0014_alter_adjudicatorfeedback_submitter_type'),
-        ('draw', '0008_alter_debateteam_side_alter_teamsideallocation_side'),
-        ('participants', '0021_team_seed'),
-        ('tournaments', '0010_alter_round_draw_type'),
+        ("adjallocation", "0010_alter_adjudicatoradjudicatorconflict_unique_together_and_more"),
+        ("adjfeedback", "0014_alter_adjudicatorfeedback_submitter_type"),
+        ("draw", "0008_alter_debateteam_side_alter_teamsideallocation_side"),
+        ("participants", "0021_team_seed"),
+        ("tournaments", "0010_alter_round_draw_type"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='adjudicatorfeedback',
+            name="adjudicatorfeedback",
             unique_together=set(),
         ),
         migrations.AlterUniqueTogether(
-            name='adjudicatorfeedbackbooleananswer',
+            name="adjudicatorfeedbackbooleananswer",
             unique_together=set(),
         ),
         migrations.AlterUniqueTogether(
-            name='adjudicatorfeedbackfloatanswer',
+            name="adjudicatorfeedbackfloatanswer",
             unique_together=set(),
         ),
         migrations.AlterUniqueTogether(
-            name='adjudicatorfeedbackintegeranswer',
+            name="adjudicatorfeedbackintegeranswer",
             unique_together=set(),
         ),
         migrations.AlterUniqueTogether(
-            name='adjudicatorfeedbackmanyanswer',
+            name="adjudicatorfeedbackmanyanswer",
             unique_together=set(),
         ),
         migrations.AlterUniqueTogether(
-            name='adjudicatorfeedbackquestion',
+            name="adjudicatorfeedbackquestion",
             unique_together=set(),
         ),
         migrations.AlterUniqueTogether(
-            name='adjudicatorfeedbackstringanswer',
+            name="adjudicatorfeedbackstringanswer",
             unique_together=set(),
         ),
         migrations.AddConstraint(
-            model_name='adjudicatorfeedback',
-            constraint=utils.models.UniqueConstraint(fields=('adjudicator', 'source_adjudicator', 'source_team', 'version'), name='adjfeed_adjudicatorfeedback_adjudicator__source_adjudicator__source_team__version_uniq'),
+            model_name="adjudicatorfeedback",
+            constraint=utils.models.UniqueConstraint(
+                fields=("adjudicator", "source_adjudicator", "source_team", "version"),
+                name="adjfeed_adjudicatorfeedback_adjudicator__source_adjudicator__source_team__version_uniq",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='adjudicatorfeedbackbooleananswer',
-            constraint=utils.models.UniqueConstraint(fields=('question', 'feedback'), name='adjfeed_adjudicatorfeedbackbooleananswer_question__feedback_uniq'),
+            model_name="adjudicatorfeedbackbooleananswer",
+            constraint=utils.models.UniqueConstraint(
+                fields=("question", "feedback"),
+                name="adjfeed_adjudicatorfeedbackbooleananswer_question__feedback_uniq",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='adjudicatorfeedbackfloatanswer',
-            constraint=utils.models.UniqueConstraint(fields=('question', 'feedback'), name='adjfeed_adjudicatorfeedbackfloatanswer_question__feedback_uniq'),
+            model_name="adjudicatorfeedbackfloatanswer",
+            constraint=utils.models.UniqueConstraint(
+                fields=("question", "feedback"),
+                name="adjfeed_adjudicatorfeedbackfloatanswer_question__feedback_uniq",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='adjudicatorfeedbackintegeranswer',
-            constraint=utils.models.UniqueConstraint(fields=('question', 'feedback'), name='adjfeed_adjudicatorfeedbackintegeranswer_question__feedback_uniq'),
+            model_name="adjudicatorfeedbackintegeranswer",
+            constraint=utils.models.UniqueConstraint(
+                fields=("question", "feedback"),
+                name="adjfeed_adjudicatorfeedbackintegeranswer_question__feedback_uniq",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='adjudicatorfeedbackmanyanswer',
-            constraint=utils.models.UniqueConstraint(fields=('question', 'feedback'), name='adjfeed_adjudicatorfeedbackmanyanswer_question__feedback_uniq'),
+            model_name="adjudicatorfeedbackmanyanswer",
+            constraint=utils.models.UniqueConstraint(
+                fields=("question", "feedback"),
+                name="adjfeed_adjudicatorfeedbackmanyanswer_question__feedback_uniq",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='adjudicatorfeedbackquestion',
-            constraint=utils.models.UniqueConstraint(fields=('tournament', 'reference'), name='adjfeed_adjudicatorfeedbackquestion_tournament__reference_uniq'),
+            model_name="adjudicatorfeedbackquestion",
+            constraint=utils.models.UniqueConstraint(
+                fields=("tournament", "reference"),
+                name="adjfeed_adjudicatorfeedbackquestion_tournament__reference_uniq",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='adjudicatorfeedbackquestion',
-            constraint=utils.models.UniqueConstraint(fields=('tournament', 'seq'), name='adjfeed_adjudicatorfeedbackquestion_tournament__seq_uniq'),
+            model_name="adjudicatorfeedbackquestion",
+            constraint=utils.models.UniqueConstraint(
+                fields=("tournament", "seq"),
+                name="adjfeed_adjudicatorfeedbackquestion_tournament__seq_uniq",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='adjudicatorfeedbackstringanswer',
-            constraint=utils.models.UniqueConstraint(fields=('question', 'feedback'), name='adjfeed_adjudicatorfeedbackstringanswer_question__feedback_uniq'),
+            model_name="adjudicatorfeedbackstringanswer",
+            constraint=utils.models.UniqueConstraint(
+                fields=("question", "feedback"),
+                name="adjfeed_adjudicatorfeedbackstringanswer_question__feedback_uniq",
+            ),
         ),
     ]

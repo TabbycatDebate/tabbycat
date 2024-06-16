@@ -7,50 +7,65 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('adjallocation', '0009_auto_20200902_1208'),
-        ('draw', '0008_alter_debateteam_side_alter_teamsideallocation_side'),
-        ('participants', '0021_team_seed'),
+        ("adjallocation", "0009_auto_20200902_1208"),
+        ("draw", "0008_alter_debateteam_side_alter_teamsideallocation_side"),
+        ("participants", "0021_team_seed"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='adjudicatoradjudicatorconflict',
+            name="adjudicatoradjudicatorconflict",
             unique_together=set(),
         ),
         migrations.AlterUniqueTogether(
-            name='adjudicatorinstitutionconflict',
+            name="adjudicatorinstitutionconflict",
             unique_together=set(),
         ),
         migrations.AlterUniqueTogether(
-            name='adjudicatorteamconflict',
+            name="adjudicatorteamconflict",
             unique_together=set(),
         ),
         migrations.AlterUniqueTogether(
-            name='debateadjudicator',
+            name="debateadjudicator",
             unique_together=set(),
         ),
         migrations.AlterUniqueTogether(
-            name='teaminstitutionconflict',
+            name="teaminstitutionconflict",
             unique_together=set(),
         ),
         migrations.AddConstraint(
-            model_name='adjudicatoradjudicatorconflict',
-            constraint=utils.models.UniqueConstraint(fields=('adjudicator1', 'adjudicator2'), name='adjallo_adjudicatoradjudicatorconflict_adjudicator1__adjudicator2_uniq'),
+            model_name="adjudicatoradjudicatorconflict",
+            constraint=utils.models.UniqueConstraint(
+                fields=("adjudicator1", "adjudicator2"),
+                name="adjallo_adjudicatoradjudicatorconflict_adjudicator1__adjudicator2_uniq",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='adjudicatorinstitutionconflict',
-            constraint=utils.models.UniqueConstraint(fields=('adjudicator', 'institution'), name='adjallo_adjudicatorinstitutionconflict_adjudicator__institution_uniq'),
+            model_name="adjudicatorinstitutionconflict",
+            constraint=utils.models.UniqueConstraint(
+                fields=("adjudicator", "institution"),
+                name="adjallo_adjudicatorinstitutionconflict_adjudicator__institution_uniq",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='adjudicatorteamconflict',
-            constraint=utils.models.UniqueConstraint(fields=('adjudicator', 'team'), name='adjallo_adjudicatorteamconflict_adjudicator__team_uniq'),
+            model_name="adjudicatorteamconflict",
+            constraint=utils.models.UniqueConstraint(
+                fields=("adjudicator", "team"),
+                name="adjallo_adjudicatorteamconflict_adjudicator__team_uniq",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='debateadjudicator',
-            constraint=utils.models.UniqueConstraint(fields=('debate', 'adjudicator'), name='adjallo_debateadjudicator_debate__adjudicator_uniq'),
+            model_name="debateadjudicator",
+            constraint=utils.models.UniqueConstraint(
+                fields=("debate", "adjudicator"),
+                name="adjallo_debateadjudicator_debate__adjudicator_uniq",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='teaminstitutionconflict',
-            constraint=utils.models.UniqueConstraint(fields=('team', 'institution'), name='adjallo_teaminstitutionconflict_team__institution_uniq'),
+            model_name="teaminstitutionconflict",
+            constraint=utils.models.UniqueConstraint(
+                fields=("team", "institution"),
+                name="adjallo_teaminstitutionconflict_team__institution_uniq",
+            ),
         ),
     ]

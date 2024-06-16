@@ -53,9 +53,9 @@ class LogActionMixin:
         """
         if self.action_log_content_object_attr is not None:
             return getattr(self, self.action_log_content_object_attr)
-        elif hasattr(self, 'round') and isinstance(self.round, Round):
+        elif hasattr(self, "round") and isinstance(self.round, Round):
             return self.round
-        elif hasattr(self, 'tournament') and isinstance(self.tournament, Tournament):
+        elif hasattr(self, "tournament") and isinstance(self.tournament, Tournament):
             return self.tournament
         else:
             return None
@@ -75,17 +75,17 @@ class LogActionMixin:
 
         Note that the `ip_address` field is filled in `log_action()` calls.
         """
-        kwargs.setdefault('type', self.get_action_log_type())
-        kwargs.setdefault('content_object', self.get_action_log_content_object())
+        kwargs.setdefault("type", self.get_action_log_type())
+        kwargs.setdefault("content_object", self.get_action_log_content_object())
 
-        if hasattr(self, 'round') and isinstance(self.round, Round):
-            kwargs.setdefault('round', self.round)
+        if hasattr(self, "round") and isinstance(self.round, Round):
+            kwargs.setdefault("round", self.round)
 
-        if hasattr(self, 'tournament') and isinstance(self.tournament, Tournament):
-            kwargs.setdefault('tournament', self.tournament)
+        if hasattr(self, "tournament") and isinstance(self.tournament, Tournament):
+            kwargs.setdefault("tournament", self.tournament)
 
-        if hasattr(self.request, 'user') and isinstance(self.request.user, User):
-            kwargs.setdefault('user', self.request.user)
+        if hasattr(self.request, "user") and isinstance(self.request.user, User):
+            kwargs.setdefault("user", self.request.user)
 
         return kwargs
 
@@ -101,13 +101,16 @@ class LogActionMixin:
         log = ActionLogEntry.objects.log(ip_address=ip_address, **action_log_fields)
 
         # Notify the actionlog consumer to broadcast the event
-        if tournament := action_log_fields.get('tournament'):
-            print('Broadcasting notification of ActionLogEntryConsumer')
+        if tournament := action_log_fields.get("tournament"):
+            print("Broadcasting notification of ActionLogEntryConsumer")
             group_name = ActionLogEntryConsumer.group_prefix + "_" + tournament.slug
-            async_to_sync(get_channel_layer().group_send)(group_name, {
-                "type": "send_json",
-                "data": log.serialize,
-            })
+            async_to_sync(get_channel_layer().group_send)(
+                group_name,
+                {
+                    "type": "send_json",
+                    "data": log.serialize,
+                },
+            )
 
     # If these methods exist, add `self.log_action()` to them.
     # (If they don't, this should be harmless.)

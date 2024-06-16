@@ -1,11 +1,16 @@
 """Utilities for querying and listing conflicts and history between
 participants."""
+
 import logging
 from itertools import combinations, product
 from typing import Dict, List, Tuple, TypedDict
 
-from adjallocation.models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
-                     AdjudicatorTeamConflict, TeamInstitutionConflict)
+from adjallocation.models import (
+    AdjudicatorAdjudicatorConflict,
+    AdjudicatorInstitutionConflict,
+    AdjudicatorTeamConflict,
+    TeamInstitutionConflict,
+)
 from draw.models import Debate
 from participants.models import Adjudicator, Team
 
@@ -85,27 +90,41 @@ class ConflictsInfo:
         # quickly from them. They're sets to allow the use of the set
         # intersection operator to check for institution overlap.
 
-        teaminstconflict_instances = TeamInstitutionConflict.objects.filter(
-            team__in=self.teams,
-        ).select_related('institution').distinct()
+        teaminstconflict_instances = (
+            TeamInstitutionConflict.objects.filter(
+                team__in=self.teams,
+            )
+            .select_related("institution")
+            .distinct()
+        )
         self.teaminstconflicts = {team_id: set() for team_id in self.team_ids}
         for conflict in teaminstconflict_instances:
             if conflict.team_id in self.teaminstconflicts:
                 self.teaminstconflicts[conflict.team_id].add(conflict.institution)
             else:
-                logger.warning("Couldnt add conflict for team ID %s to \
-                                institution %s" % (conflict.team_id, conflict.institution))
+                logger.warning(
+                    "Couldnt add conflict for team ID %s to \
+                                institution %s"
+                    % (conflict.team_id, conflict.institution)
+                )
 
-        adjinstconflict_instances = AdjudicatorInstitutionConflict.objects.filter(
-            adjudicator__in=self.adjudicators,
-        ).select_related('institution').distinct()
+        adjinstconflict_instances = (
+            AdjudicatorInstitutionConflict.objects.filter(
+                adjudicator__in=self.adjudicators,
+            )
+            .select_related("institution")
+            .distinct()
+        )
         self.adjinstconflicts = {adj_id: set() for adj_id in self.adjudicator_ids}
         for conflict in adjinstconflict_instances:
             if conflict.adjudicator_id in self.adjinstconflicts:
                 self.adjinstconflicts[conflict.adjudicator_id].add(conflict.institution)
             else:
-                logger.warning("Couldnt add conflict for adjudicator ID %s to \
-                                institution %s" % (conflict.adjudicator_id, conflict.institution))
+                logger.warning(
+                    "Couldnt add conflict for adjudicator ID %s to \
+                                institution %s"
+                    % (conflict.adjudicator_id, conflict.institution)
+                )
 
     def personal_conflict_adj_team(self, adj, team):
         """Returns True if the adjudicator and team personally conflict."""
@@ -137,13 +156,15 @@ class ConflictsInfo:
 
     def conflict_adj_team(self, adj, team):
         """Returns True if the adjudicator and team conflict."""
-        return (self.personal_conflict_adj_team(adj, team) or
-                self.institutional_conflict_adj_team(adj, team))
+        return self.personal_conflict_adj_team(adj, team) or self.institutional_conflict_adj_team(
+            adj, team
+        )
 
     def conflict_adj_adj(self, adj1, adj2):
         """Returns True if the two adjudicators conflict."""
-        return (self.personal_conflict_adj_adj(adj1, adj2) or
-                self.institutional_conflict_adj_adj(adj1, adj2))
+        return self.personal_conflict_adj_adj(adj1, adj2) or self.institutional_conflict_adj_adj(
+            adj1, adj2
+        )
 
     def serialized_by_participant(self):
         """Returns a tuple of two dicts, mapping primary keys of teams and
@@ -152,23 +173,26 @@ class ConflictsInfo:
         where each list contains single-key dicts {'id': id} containing the
         primary key of conflicting objects."""
 
-        teams = {team_id: {'team': [], 'adjudicator': [], 'institution': []}
-                 for team_id in self.team_ids}
-        adjudicators = {adj_id: {'team': [], 'adjudicator': [], 'institution': []}
-                        for adj_id in self.adjudicator_ids}
+        teams = {
+            team_id: {"team": [], "adjudicator": [], "institution": []} for team_id in self.team_ids
+        }
+        adjudicators = {
+            adj_id: {"team": [], "adjudicator": [], "institution": []}
+            for adj_id in self.adjudicator_ids
+        }
 
         for adj_id, team_id in self.adjteamconflicts:
-            teams[team_id]['adjudicator'].append({'id': adj_id})
-            adjudicators[adj_id]['team'].append({'id': team_id})
+            teams[team_id]["adjudicator"].append({"id": adj_id})
+            adjudicators[adj_id]["team"].append({"id": team_id})
 
         for adj1_id, adj2_id in self.adjadjconflicts:
-            adjudicators[adj1_id]['adjudicator'].append({'id': adj2_id})
+            adjudicators[adj1_id]["adjudicator"].append({"id": adj2_id})
 
         for team_id, institutions in self.teaminstconflicts.items():
-            teams[team_id]['institution'] = [{'id': inst.id} for inst in institutions]
+            teams[team_id]["institution"] = [{"id": inst.id} for inst in institutions]
 
         for adj_id, institutions in self.adjinstconflicts.items():
-            adjudicators[adj_id]['institution'] = [{'id': inst.id} for inst in institutions]
+            adjudicators[adj_id]["institution"] = [{"id": inst.id} for inst in institutions]
 
         return teams, adjudicators
 
@@ -204,13 +228,17 @@ class HistoryInfo:
         # `.select_related('team')`, because we only deal with the primary keys
         # of adjudicators and teams.
 
-        debates = Debate.objects.filter(
-            round__tournament=self.tournament,
-            round__seq__lt=self.round.seq,
-        ).prefetch_related(
-            'debateadjudicator_set',
-            'debateteam_set',
-        ).select_related('round')
+        debates = (
+            Debate.objects.filter(
+                round__tournament=self.tournament,
+                round__seq__lt=self.round.seq,
+            )
+            .prefetch_related(
+                "debateadjudicator_set",
+                "debateteam_set",
+            )
+            .select_related("round")
+        )
 
         # Histories are stored in a dict, where keys are (adj.id, team.id) or
         # (adj1.id, adj2.id) tuples, and values are lists of `seq` integers
@@ -248,7 +276,9 @@ class HistoryInfo:
         covered by this object."""
         return (adj1.id, adj2.id) in self.adjadjhistories
 
-    def serialized_by_participant(self) -> Tuple[Dict[int, TeamConflicts], Dict[int, AdjudicatorConflicts]]:
+    def serialized_by_participant(
+        self,
+    ) -> Tuple[Dict[int, TeamConflicts], Dict[int, AdjudicatorConflicts]]:
         """Returns a tuple of two dicts, mapping primary keys of teams and
         adjudicators respectively to a two-key dict
             {'team': [], 'adjudicator': []}
@@ -263,18 +293,18 @@ class HistoryInfo:
         now = self.round.seq
 
         for (adj_id, team_id), rseqs in self.adjteamhistories.items():
-            history = adjudicators.setdefault(adj_id, {'team': [], 'adjudicator': []})
-            history['team'].extend([{'id': team_id, 'ago': now - r} for r in rseqs])
+            history = adjudicators.setdefault(adj_id, {"team": [], "adjudicator": []})
+            history["team"].extend([{"id": team_id, "ago": now - r} for r in rseqs])
 
-            history = teams.setdefault(team_id, {'team': [], 'adjudicator': []})
-            history['adjudicator'].extend([{'id': adj_id, 'ago': now - r} for r in rseqs])
+            history = teams.setdefault(team_id, {"team": [], "adjudicator": []})
+            history["adjudicator"].extend([{"id": adj_id, "ago": now - r} for r in rseqs])
 
         for (adj1_id, adj2_id), rseqs in self.adjadjhistories.items():
-            history = adjudicators.setdefault(adj1_id, {'team': [], 'adjudicator': []})
-            history['adjudicator'].extend([{'id': adj2_id, 'ago': now - r} for r in rseqs])
+            history = adjudicators.setdefault(adj1_id, {"team": [], "adjudicator": []})
+            history["adjudicator"].extend([{"id": adj2_id, "ago": now - r} for r in rseqs])
 
             # Need to reverse the order so the second adj also has a record
-            history = adjudicators.setdefault(adj2_id, {'team': [], 'adjudicator': []})
-            history['adjudicator'].extend([{'id': adj1_id, 'ago': now - r} for r in rseqs])
+            history = adjudicators.setdefault(adj2_id, {"team": [], "adjudicator": []})
+            history["adjudicator"].extend([{"id": adj1_id, "ago": now - r} for r in rseqs])
 
         return teams, adjudicators

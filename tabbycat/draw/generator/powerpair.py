@@ -66,18 +66,18 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
     requires_prev_results = False
 
     DEFAULT_OPTIONS = {
-        "odd_bracket"           : "intermediate_bubble_up_down",
-        "pairing_method"        : "slide",
-        "avoid_conflicts"       : "one_up_one_down",
-        "pullup_restriction"    : "none",
+        "odd_bracket": "intermediate_bubble_up_down",
+        "pairing_method": "slide",
+        "avoid_conflicts": "one_up_one_down",
+        "pullup_restriction": "none",
         "pullup_debates_penalty": 0,
     }
 
     PAIRING_FUNCTIONS = {
-        "fold"                  : "_pairings_fold",
-        "slide"                 : "_pairings_slide",
-        "random"                : "_pairings_random",
-        "adjacent"              : "_pairings_adjacent",
+        "fold": "_pairings_fold",
+        "slide": "_pairings_slide",
+        "random": "_pairings_random",
+        "adjacent": "_pairings_adjacent",
         "fold_top_adjacent_rest": "_pairings_fold_top_adjacent_rest",
     }
 
@@ -88,14 +88,20 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
         if self.options["odd_bracket"].startswith("intermediate"):
             noninteger = [team.points == int(team.points) for team in self.teams].count(False)
             if noninteger > 0:
-                raise DrawUserError(_("%(noninteger)d out of %(total)d teams have a noninteger "
-                    "first metric in the team standings. Intermediate brackets require the first "
-                    "team standings metric to be an integer (typically points or wins).") % {
-                    'noninteger': noninteger, 'total': len(self.teams)})
+                raise DrawUserError(
+                    _(
+                        "%(noninteger)d out of %(total)d teams have a noninteger "
+                        "first metric in the team standings. Intermediate brackets require the first "
+                        "team standings metric to be an integer (typically points or wins)."
+                    )
+                    % {"noninteger": noninteger, "total": len(self.teams)}
+                )
 
         pullup_metric = self.PULLUP_RESTRICTION_METRICS[self.options["pullup_restriction"]]
         if pullup_metric is not None:
-            self.check_teams_for_attribute(pullup_metric, checkfunc=lambda x: isinstance(x, (int, float)))
+            self.check_teams_for_attribute(
+                pullup_metric, checkfunc=lambda x: isinstance(x, (int, float))
+            )
 
     def generate(self):
         self._brackets = self._make_raw_brackets()
@@ -151,11 +157,11 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
 
     # Odd bracket resolutions
     ODD_BRACKET_FUNCTIONS = {
-        "pullup_top"                 : "_pullup_top",
-        "pullup_bottom"              : "_pullup_bottom",
-        "pullup_middle"              : "_pullup_middle",
-        "pullup_random"              : "_pullup_random",
-        "intermediate"               : "_intermediate_brackets",
+        "pullup_top": "_pullup_top",
+        "pullup_bottom": "_pullup_bottom",
+        "pullup_middle": "_pullup_middle",
+        "pullup_random": "_pullup_random",
+        "intermediate": "_intermediate_brackets",
         "intermediate_bubble_up_down": "_intermediate_brackets_with_bubble_up_down",
     }
 
@@ -191,7 +197,7 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
                 pullup_team = pullup_eligible_teams[pos(len(pullup_eligible_teams))]
                 teams.remove(pullup_team)
                 self.add_team_flag(pullup_team, "pullup")
-                if hasattr(pullup_team, 'subrank'):
+                if hasattr(pullup_team, "subrank"):
                     pullup_team.subrank = None
                 pullup_needed_for.append(pullup_team)
                 pullup_needed_for = None
@@ -209,7 +215,7 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
         odd_team = None
         for points, teams in brackets.items():
             if odd_team:
-                new[points+0.5] = [odd_team, teams.pop(0)]
+                new[points + 0.5] = [odd_team, teams.pop(0)]
                 odd_team = None
             if len(teams) % 2 != 0:
                 odd_team = teams.pop()
@@ -237,7 +243,9 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
                 if team1.seen(team2):
                     return 2  # History
             except AttributeError:
-                raise DrawFatalError("For conflict avoidance, teams must have attributes 'institution' and 'seen'.")
+                raise DrawFatalError(
+                    "For conflict avoidance, teams must have attributes 'institution' and 'seen'."
+                )
             return 0  # No conflict
 
         for points, teams in brackets.items():
@@ -248,26 +256,26 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
             assert teams[0].points > teams[1].points
             conflict = _check_conflict(*teams)
             if not conflict:
-                continue # leave alone if no conflict
+                continue  # leave alone if no conflict
 
             # bubble up, if there exists such a bubble
             # swap bottom team from higher bracket with top team from
             # intermediate bracket.
-            if points+0.5 in brackets:
-                swap_team = brackets[points+0.5][-1] # bottom team
+            if points + 0.5 in brackets:
+                swap_team = brackets[points + 0.5][-1]  # bottom team
                 if not _check_conflict(swap_team, teams[1]):
                     self.add_team_flag(teams[0], (conflict == 1) and "bub_up_inst" or "bub_up_hist")
                     self.add_team_flag(swap_team, "bub_up_accom")
-                    teams[0], brackets[points+0.5][-1] = swap_team, teams[0]
+                    teams[0], brackets[points + 0.5][-1] = swap_team, teams[0]
                     continue
 
             # bubble down, if bubble up didn't work
-            if points-0.5 in brackets:
-                swap_team = brackets[points-0.5][0]  # Bottom team
+            if points - 0.5 in brackets:
+                swap_team = brackets[points - 0.5][0]  # Bottom team
                 if not _check_conflict(swap_team, teams[0]):
                     self.add_team_flag(teams[1], (conflict == 1) and "bub_dn_inst" or "bub_dn_hist")
                     self.add_team_flag(swap_team, "bub_dn_accom")
-                    teams[1], brackets[points-0.5][0] = swap_team, teams[1]
+                    teams[1], brackets[points - 0.5][0] = swap_team, teams[1]
                     continue
 
             # if nothing worked, add a "didn't work" flag
@@ -282,19 +290,27 @@ class GraphCostMixin:
             return None
 
         # Add penalty for seeing the pullup again
-        has_pullup = 'pullup' in self.team_flags.get(t1, []) or 'pullup' in self.team_flags.get(t2, [])
+        has_pullup = "pullup" in self.team_flags.get(t1, []) or "pullup" in self.team_flags.get(
+            t2, []
+        )
         if self.options["pullup_debates_penalty"] and has_pullup:
-            penalty += max(t1.pullup_debates, t2.pullup_debates) * self.options["pullup_debates_penalty"]
+            penalty += (
+                max(t1.pullup_debates, t2.pullup_debates) * self.options["pullup_debates_penalty"]
+            )
 
         if self.options["pairing_method"] != "random":
-            subpool_penalty_func = self.get_option_function("pairing_method", self.PAIRING_FUNCTIONS)
+            subpool_penalty_func = self.get_option_function(
+                "pairing_method", self.PAIRING_FUNCTIONS
+            )
 
             # Set the subrank to be last for pulled-up teams
             for team in [t1, t2]:
                 if team.subrank is None:
                     team.subrank = size
 
-            penalty += subpool_penalty_func([t1, t2], size, bracket) * self.options["pairing_penalty"]
+            penalty += (
+                subpool_penalty_func([t1, t2], size, bracket) * self.options["pairing_penalty"]
+            )
         return penalty
 
     @staticmethod
@@ -314,7 +330,9 @@ class GraphCostMixin:
         return abs(teams[0].subrank - teams[1].subrank) - 1
 
     @classmethod
-    def _pairings_fold_top_adjacent_rest(cls, teams, size: int, bracket: Optional[int] = None) -> int:
+    def _pairings_fold_top_adjacent_rest(
+        cls, teams, size: int, bracket: Optional[int] = None
+    ) -> int:
         if bracket == 0:
             return cls._pairings_fold(teams, size)
         return cls._pairings_adjacent(teams, size)
@@ -407,7 +425,7 @@ class AustralsPairingMixin:
     # Conflict avoidance
     AVOID_CONFLICT_FUNCTIONS = {
         "one_up_one_down": "_one_up_one_down",
-        "graph"          : None,
+        "graph": None,
     }
 
     def avoid_conflicts(self, pairings):
@@ -425,7 +443,12 @@ class AustralsPairingMixin:
         for bracket in pairings.values():
             pairs = [tuple(p.teams) for p in bracket]
             pairs_orig = list(pairs)  # Keep a copy for comparison
-            option_names = ["avoid_history", "avoid_institution", "history_penalty", "institution_penalty"]
+            option_names = [
+                "avoid_history",
+                "avoid_institution",
+                "history_penalty",
+                "institution_penalty",
+            ]
             options = dict((key, self.options[key]) for key in option_names)
             swapper = OneUpOneDownSwapper(**options)
             pairs_new = swapper.run(pairs)
@@ -433,7 +456,7 @@ class AustralsPairingMixin:
 
             for i, (pairing, orig, new) in enumerate(zip(bracket, pairs_orig, pairs_new)):
                 assert tuple(pairing.teams) == orig
-                assert (i in swaps or i-1 in swaps) == (orig != new)
+                assert (i in swaps or i - 1 in swaps) == (orig != new)
                 if orig != new:
                     if pairing.conflict_hist:
                         pairing.add_flag("1u1d_hist")
@@ -444,7 +467,9 @@ class AustralsPairingMixin:
                     pairing.teams = list(new)
 
 
-class GraphPowerPairedDrawGenerator(GraphCostMixin, GraphGeneratorMixin, BasePowerPairedDrawGenerator):
+class GraphPowerPairedDrawGenerator(
+    GraphCostMixin, GraphGeneratorMixin, BasePowerPairedDrawGenerator
+):
     pass
 
 
@@ -477,10 +502,10 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
     """
 
     DEFAULT_OPTIONS = {
-        "odd_bracket"           : "intermediate1",
-        "pairing_method"        : "fold",
-        "avoid_conflicts"       : None,
-        "pullup_restriction"    : "none",
+        "odd_bracket": "intermediate1",
+        "pairing_method": "fold",
+        "avoid_conflicts": None,
+        "pullup_restriction": "none",
     }
 
     def __init__(self, *args, **kwargs):
@@ -506,11 +531,11 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
         return brackets
 
     ODD_BRACKET_FUNCTIONS = {
-        "pullup_top"                  : "_pullup_top",
-        "pullup_bottom"               : "_pullup_bottom",
-        "pullup_random"               : "_pullup_random",
-        "intermediate1"               : "_intermediate_brackets_1",
-        "intermediate2"               : "_intermediate_brackets_2",
+        "pullup_top": "_pullup_top",
+        "pullup_bottom": "_pullup_bottom",
+        "pullup_random": "_pullup_random",
+        "intermediate1": "_intermediate_brackets_1",
+        "intermediate2": "_intermediate_brackets_2",
     }
 
     def _pullup_top(self, brackets):
@@ -546,7 +571,9 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
                     # If there are an unsufficient number of teams, pull up all of them
                     # and add to next pullups needed list.
                     pullup_indices = range(len(pool[side]))
-                    new_pullups_needed_for.append((pullups_needed_teams, side, number_needed - len(pool[side])))
+                    new_pullups_needed_for.append(
+                        (pullups_needed_teams, side, number_needed - len(pool[side]))
+                    )
                 else:
                     # Otherwise, pull up the number required.
                     pullup_indices = indices(len(pool[side]), number_needed)
@@ -626,10 +653,12 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
 
             # Assign the intermediate bracket, if any
             if m > n:
-                unfilled[points-0.5] = {"aff": pool["aff"][n:], "neg": pool["neg"][n:]}
+                unfilled[points - 0.5] = {"aff": pool["aff"][n:], "neg": pool["neg"][n:]}
 
         if unfilled:
-            raise DrawFatalError("There are still unfilled intermediate brackets!\n" + repr(unfilled))
+            raise DrawFatalError(
+                "There are still unfilled intermediate brackets!\n" + repr(unfilled)
+            )
 
         # Currently, the brackets are out of order, since e.g. 3.5 would have been
         # inserted after 3 (or maybe even after 2). Let's change that:
@@ -657,24 +686,30 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
             for unfilled_points, unfilled_pool in unfilled.items():
                 intermediates.setdefault(unfilled_points, list())
                 if unfilled_pool["aff"] and unfilled_pool["neg"]:
-                    raise DrawFatalError("An unfilled pool unexpectedly had both affirmative and negative teams.")
+                    raise DrawFatalError(
+                        "An unfilled pool unexpectedly had both affirmative and negative teams."
+                    )
                 elif unfilled_pool["aff"]:
                     # In a new bracket, take the lesser of how many excess affirmative
                     # teams there are, and how many negative teams in the pool we have.
                     num_teams = min(len(unfilled_pool["aff"]), len(pool["neg"]))
-                    intermediates[unfilled_points].append({
-                        "aff": unfilled_pool["aff"][:num_teams],
-                        "neg": pool["neg"][:num_teams],
-                    })
+                    intermediates[unfilled_points].append(
+                        {
+                            "aff": unfilled_pool["aff"][:num_teams],
+                            "neg": pool["neg"][:num_teams],
+                        }
+                    )
                     del unfilled_pool["aff"][:num_teams]
                     del pool["neg"][:num_teams]
                 elif unfilled_pool["neg"]:
                     # Take the top teams from affirmative pool as appropriate.
                     num_teams = min(len(unfilled_pool["neg"]), len(pool["aff"]))
-                    intermediates[unfilled_points].append({
-                        "aff": pool["aff"][:num_teams],
-                        "neg": unfilled_pool["neg"][:num_teams],
-                    })
+                    intermediates[unfilled_points].append(
+                        {
+                            "aff": pool["aff"][:num_teams],
+                            "neg": unfilled_pool["neg"][:num_teams],
+                        }
+                    )
                     del pool["aff"][:num_teams]
                     del unfilled_pool["neg"][:num_teams]
                 # If we've exhausted the unfilled pool, add all these
@@ -704,7 +739,9 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
                 unfilled[points] = {"aff": pool["aff"][n:], "neg": pool["neg"][n:]}
 
         if unfilled:
-            raise DrawFatalError("There are still unfilled intermediate brackets!\n" + repr(unfilled))
+            raise DrawFatalError(
+                "There are still unfilled intermediate brackets!\n" + repr(unfilled)
+            )
 
         # Currently, the brackets are out of order, since e.g. 3.5 would have been
         # inserted after 3 (or maybe even after 2). Let's change that:
@@ -717,14 +754,20 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
     def _intermediate_brackets_with_up_down():
         """This should never be called - the associated option string is removed
         from the allowable list above."""
-        raise NotImplementedError("Intermediate brackets with conflict avoidance isn't supported with allocated sides.")
+        raise NotImplementedError(
+            "Intermediate brackets with conflict avoidance isn't supported with allocated sides."
+        )
 
 
-class GraphPowerPairedWithAllocatedSidesDrawGenerator(GraphCostMixin, GraphAllocatedSidesMixin, PowerPairedWithAllocatedSidesDrawGenerator):
+class GraphPowerPairedWithAllocatedSidesDrawGenerator(
+    GraphCostMixin, GraphAllocatedSidesMixin, PowerPairedWithAllocatedSidesDrawGenerator
+):
     pass
 
 
-class AustralsPowerPairedWithAllocatedSidesDrawGenerator(AustralsPairingMixin, PowerPairedWithAllocatedSidesDrawGenerator):
+class AustralsPowerPairedWithAllocatedSidesDrawGenerator(
+    AustralsPairingMixin, PowerPairedWithAllocatedSidesDrawGenerator
+):
 
     @staticmethod
     def _pairings(brackets, presort_func):
@@ -745,12 +788,14 @@ class AustralsPowerPairedWithAllocatedSidesDrawGenerator(AustralsPairingMixin, P
     def _pairings_slide(cls, brackets):
         def slide(pool):
             pass  # Do nothing
+
         return cls._pairings(brackets, slide)
 
     @classmethod
     def _pairings_fold(cls, brackets):
         def fold(pool):
             pool["neg"].reverse()
+
         return cls._pairings(brackets, fold)
 
     @classmethod
@@ -758,4 +803,5 @@ class AustralsPowerPairedWithAllocatedSidesDrawGenerator(AustralsPairingMixin, P
         def shuffle(pool):
             random.shuffle(pool["aff"])
             random.shuffle(pool["neg"])
+
         return cls._pairings(brackets, shuffle)

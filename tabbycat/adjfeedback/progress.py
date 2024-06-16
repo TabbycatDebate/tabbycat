@@ -44,7 +44,7 @@ class BaseFeedbackExpectedSubmissionTracker:
         return self.count == 1
 
     def acceptable_submissions(self):
-        if not hasattr(self, '_acceptable_submissions'):
+        if not hasattr(self, "_acceptable_submissions"):
             self._acceptable_submissions = self.get_acceptable_submissions()
         return self._acceptable_submissions
 
@@ -96,13 +96,14 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
             return list(self.source.debate.adjudicators.voting())
 
     def get_acceptable_submissions(self):
-        return self.source.adjudicatorfeedback_set.filter(confirmed=True,
-                source_team=self.source,
-                adjudicator__in=self.acceptable_targets()).select_related(
-                'source_team', 'adjudicator', 'adjudicator__institution')
+        return self.source.adjudicatorfeedback_set.filter(
+            confirmed=True, source_team=self.source, adjudicator__in=self.acceptable_targets()
+        ).select_related("source_team", "adjudicator", "adjudicator__institution")
 
 
-class FeedbackExpectedSubmissionFromTeamOnSingleAdjudicatorTracker(BaseFeedbackExpectedSubmissionTracker):
+class FeedbackExpectedSubmissionFromTeamOnSingleAdjudicatorTracker(
+    BaseFeedbackExpectedSubmissionTracker
+):
     """Represents a single piece of expected feedback from a team on a single
     adjudicator."""
 
@@ -114,9 +115,9 @@ class FeedbackExpectedSubmissionFromTeamOnSingleAdjudicatorTracker(BaseFeedbackE
         return [self.target]
 
     def get_acceptable_submissions(self):
-        return self.source.adjudicatorfeedback_set.filter(confirmed=True,
-                source_team=self.source, adjudicator=self.target).select_related(
-                'source_team', 'adjudicator', 'adjudicator__institution')
+        return self.source.adjudicatorfeedback_set.filter(
+            confirmed=True, source_team=self.source, adjudicator=self.target
+        ).select_related("source_team", "adjudicator", "adjudicator__institution")
 
 
 class FeedbackExpectedSubmissionFromAdjudicatorTracker(BaseFeedbackExpectedSubmissionTracker):
@@ -130,9 +131,9 @@ class FeedbackExpectedSubmissionFromAdjudicatorTracker(BaseFeedbackExpectedSubmi
         return [self.target]
 
     def get_acceptable_submissions(self):
-        return self.source.adjudicatorfeedback_set.filter(confirmed=True,
-                source_adjudicator=self.source, adjudicator=self.target).select_related(
-                'source_adjudicator', 'adjudicator', 'adjudicator__institution')
+        return self.source.adjudicatorfeedback_set.filter(
+            confirmed=True, source_adjudicator=self.source, adjudicator=self.target
+        ).select_related("source_adjudicator", "adjudicator", "adjudicator__institution")
 
 
 class FeedbackUnexpectedSubmissionTracker:
@@ -165,7 +166,7 @@ class BaseFeedbackProgress:
     expected."""
 
     def __init__(self, tournament):
-        self.show_unexpected = tournament.pref('show_unexpected_feedback')
+        self.show_unexpected = tournament.pref("show_unexpected_feedback")
 
     def get_expected_trackers(self):
         raise NotImplementedError
@@ -186,15 +187,21 @@ class BaseFeedbackProgress:
     def expected_feedback(self):
         """Returns a list of AdjudicatorFeedback objects that are submitted
         as expected (including where more are submitted than expected)."""
-        return [feedback for tracker in self.expected_trackers()
-                for feedback in tracker.acceptable_submissions()]
+        return [
+            feedback
+            for tracker in self.expected_trackers()
+            for feedback in tracker.acceptable_submissions()
+        ]
 
     def unexpected_trackers(self):
         """Returns a list of trackers for feedback that was submitted but not
         expected to be there."""
         if self.show_unexpected:
-            return [FeedbackUnexpectedSubmissionTracker(feedback) for feedback in
-                self.submitted_feedback() if feedback not in self.expected_feedback()]
+            return [
+                FeedbackUnexpectedSubmissionTracker(feedback)
+                for feedback in self.submitted_feedback()
+                if feedback not in self.expected_feedback()
+            ]
         else:
             return []
 
@@ -204,8 +211,9 @@ class BaseFeedbackProgress:
 
     def trackers(self):
         """Returns a list of all trackers, sorted by round."""
-        return sorted(self.expected_trackers() + self.unexpected_trackers(),
-                key=lambda x: x.round.seq)
+        return sorted(
+            self.expected_trackers() + self.unexpected_trackers(), key=lambda x: x.round.seq
+        )
 
     def num_submitted(self):
         """Returns the number of feedbacks that were submitted, including
@@ -232,7 +240,9 @@ class BaseFeedbackProgress:
             return 1.0
         return self.num_fulfilled() / self.num_expected()
 
-    def _prefetch_tracker_acceptable_submissions(self, trackers, tracker_identifier, feedback_identifier):
+    def _prefetch_tracker_acceptable_submissions(
+        self, trackers, tracker_identifier, feedback_identifier
+    ):
         trackers_by_identifier = {}
         for tracker in trackers:
             tracker._acceptable_submissions = []
@@ -255,18 +265,20 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         self.team = team
         if tournament is None:
             tournament = team.tournament
-        self.enforce_orallist = (tournament.pref("show_splitting_adjudicators") and
-                                 tournament.pref("ballots_per_debate_prelim") == 'per-adj')
-        self.expect_orallists = tournament.pref("feedback_from_teams") in ['orallist', 'all-adjs']
-        self.expect_all_adjs = tournament.pref("feedback_from_teams") == 'all-adjs'
+        self.enforce_orallist = (
+            tournament.pref("show_splitting_adjudicators")
+            and tournament.pref("ballots_per_debate_prelim") == "per-adj"
+        )
+        self.expect_orallists = tournament.pref("feedback_from_teams") in ["orallist", "all-adjs"]
+        self.expect_all_adjs = tournament.pref("feedback_from_teams") == "all-adjs"
         super().__init__(tournament)
 
     @staticmethod
     def _submitted_feedback_queryset_operations(queryset):
         # this is also used by get_feedback_progress
-        return queryset.filter(confirmed=True,
-            source_team__debate__round__stage=Round.Stage.PRELIMINARY).select_related(
-            'adjudicator', 'adjudicator__institution', 'source_team__debate__round')
+        return queryset.filter(
+            confirmed=True, source_team__debate__round__stage=Round.Stage.PRELIMINARY
+        ).select_related("adjudicator", "adjudicator__institution", "source_team__debate__round")
 
     def get_submitted_feedback(self):
         queryset = AdjudicatorFeedback.objects.filter(source_team__team=self.team)
@@ -275,17 +287,20 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
     @staticmethod
     def _debateteam_queryset_operations(queryset):
         # this is also used by get_feedback_progress
-        debateteams = queryset.filter(
-            debate__ballotsubmission__confirmed=True,
-            debate__round__silent=False,
-            debate__round__stage=Round.Stage.PRELIMINARY,
-        ).select_related('debate', 'debate__round').prefetch_related(
-            'debate__debateadjudicator_set__adjudicator')
+        debateteams = (
+            queryset.filter(
+                debate__ballotsubmission__confirmed=True,
+                debate__round__silent=False,
+                debate__round__stage=Round.Stage.PRELIMINARY,
+            )
+            .select_related("debate", "debate__round")
+            .prefetch_related("debate__debateadjudicator_set__adjudicator")
+        )
         populate_confirmed_ballots([dt.debate for dt in debateteams], results=True)
         return debateteams
 
     def _get_debateteams(self):
-        if not hasattr(self, '_debateteams'):
+        if not hasattr(self, "_debateteams"):
             self._debateteams = self._debateteam_queryset_operations(self.team.debateteam_set)
         return self._debateteams
 
@@ -295,21 +310,26 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
             # If teams submit on all adjudicators, there is one tracker for each
             # adjudicator in each debate for which there is a confirmed ballot
             # and the round is not silent.
-            trackers = [FeedbackExpectedSubmissionFromTeamOnSingleAdjudicatorTracker(dt, adj)
-                        for dt in debateteams
-                        for adj in dt.debate.adjudicators.all()]
-            self._prefetch_tracker_acceptable_submissions(trackers,
-                    attrgetter('source', 'target'),
-                    attrgetter('source_team', 'adjudicator'))
+            trackers = [
+                FeedbackExpectedSubmissionFromTeamOnSingleAdjudicatorTracker(dt, adj)
+                for dt in debateteams
+                for adj in dt.debate.adjudicators.all()
+            ]
+            self._prefetch_tracker_acceptable_submissions(
+                trackers, attrgetter("source", "target"), attrgetter("source_team", "adjudicator")
+            )
 
         elif self.expect_orallists:
             # If teams submit only on orallists, there is one tracker for each
             # debate for which there is a confirmed ballot, and the round is not
             # silent.
-            trackers = [FeedbackExpectedSubmissionFromTeamTracker(dt, self.enforce_orallist)
-                        for dt in debateteams]
-            self._prefetch_tracker_acceptable_submissions(trackers,
-                        attrgetter('source'), attrgetter('source_team'))
+            trackers = [
+                FeedbackExpectedSubmissionFromTeamTracker(dt, self.enforce_orallist)
+                for dt in debateteams
+            ]
+            self._prefetch_tracker_acceptable_submissions(
+                trackers, attrgetter("source"), attrgetter("source_team")
+            )
         else:
             trackers = []
 
@@ -324,40 +344,51 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
         if tournament is None:
             tournament = adjudicator.tournament
         if tournament is None:
-            logger.warning("No tournament specified and adjudicator %s has no tournament", adjudicator)
+            logger.warning(
+                "No tournament specified and adjudicator %s has no tournament", adjudicator
+            )
         else:
-            self.feedback_paths = tournament.pref('feedback_paths')
+            self.feedback_paths = tournament.pref("feedback_paths")
         super().__init__(tournament)
 
     @staticmethod
     def _submitted_feedback_queryset_operations(queryset):
         # this is also used by get_feedback_progress
-        return queryset.filter(confirmed=True,
-            source_adjudicator__debate__round__stage=Round.Stage.PRELIMINARY).select_related(
-            'adjudicator', 'adjudicator__institution', 'source_adjudicator__debate__round')
+        return queryset.filter(
+            confirmed=True, source_adjudicator__debate__round__stage=Round.Stage.PRELIMINARY
+        ).select_related(
+            "adjudicator", "adjudicator__institution", "source_adjudicator__debate__round"
+        )
 
     def get_submitted_feedback(self):
-        queryset = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=self.adjudicator)
+        queryset = AdjudicatorFeedback.objects.filter(
+            source_adjudicator__adjudicator=self.adjudicator
+        )
         return self._submitted_feedback_queryset_operations(queryset)
 
     @staticmethod
     def _debateadjudicator_queryset_operations(queryset):
         # this is also used by get_feedback_progress
-        return queryset.filter(
-            debate__ballotsubmission__confirmed=True,
-            debate__round__stage=Round.Stage.PRELIMINARY,
-        ).select_related('debate', 'debate__round').prefetch_related(
-            'debate__debateadjudicator_set__adjudicator')
+        return (
+            queryset.filter(
+                debate__ballotsubmission__confirmed=True,
+                debate__round__stage=Round.Stage.PRELIMINARY,
+            )
+            .select_related("debate", "debate__round")
+            .prefetch_related("debate__debateadjudicator_set__adjudicator")
+        )
 
     def _get_debateadjudicators(self):
-        if not hasattr(self, '_debateadjudicators'):
-            self._debateadjudicators = self._debateadjudicator_queryset_operations(self.adjudicator.debateadjudicator_set)
+        if not hasattr(self, "_debateadjudicators"):
+            self._debateadjudicators = self._debateadjudicator_queryset_operations(
+                self.adjudicator.debateadjudicator_set
+            )
         return self._debateadjudicators
 
     def get_expected_trackers(self):
         """Trackers are as follows:
-          - Chairs owe on everyone in their panel.
-          - Panellists owe on chairs if the relevant tournament preference is enabled.
+        - Chairs owe on everyone in their panel.
+        - Panellists owe on chairs if the relevant tournament preference is enabled.
         """
         debateadjs = self._get_debateadjudicators()
 
@@ -366,8 +397,11 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
             for target, _ in expected_feedback_targets(debateadj, self.feedback_paths):
                 trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, target))
 
-        self._prefetch_tracker_acceptable_submissions(trackers,
-                attrgetter('source', 'target'), attrgetter('source_adjudicator', 'adjudicator'))
+        self._prefetch_tracker_acceptable_submissions(
+            trackers,
+            attrgetter("source", "target"),
+            attrgetter("source_adjudicator", "adjudicator"),
+        )
 
         return trackers
 
@@ -384,12 +418,15 @@ def get_feedback_progress(tournament):
     teams_progress = []
     adjs_progress = []
 
-    teams = tournament.team_set.prefetch_related('speaker_set').all()
+    teams = tournament.team_set.prefetch_related("speaker_set").all()
 
     submitted_feedback_by_team_id = {team.id: [] for team in teams}
     submitted_feedback_teams = AdjudicatorFeedback.objects.filter(
-            source_team__team__in=teams).select_related('source_team')
-    submitted_feedback_teams = FeedbackProgressForTeam._submitted_feedback_queryset_operations(submitted_feedback_teams)
+        source_team__team__in=teams
+    ).select_related("source_team")
+    submitted_feedback_teams = FeedbackProgressForTeam._submitted_feedback_queryset_operations(
+        submitted_feedback_teams
+    )
     for feedback in submitted_feedback_teams:
         submitted_feedback_by_team_id[feedback.source_team.team_id].append(feedback)
 
@@ -409,8 +446,13 @@ def get_feedback_progress(tournament):
 
     submitted_feedback_by_adj_id = {adj.id: [] for adj in adjudicators}
     submitted_feedback_adjs = AdjudicatorFeedback.objects.filter(
-            source_adjudicator__adjudicator__in=adjudicators).select_related('source_adjudicator')
-    submitted_feedback_adjs = FeedbackProgressForAdjudicator._submitted_feedback_queryset_operations(submitted_feedback_adjs)
+        source_adjudicator__adjudicator__in=adjudicators
+    ).select_related("source_adjudicator")
+    submitted_feedback_adjs = (
+        FeedbackProgressForAdjudicator._submitted_feedback_queryset_operations(
+            submitted_feedback_adjs
+        )
+    )
     for feedback in submitted_feedback_adjs:
         submitted_feedback_by_adj_id[feedback.source_adjudicator.adjudicator_id].append(feedback)
 

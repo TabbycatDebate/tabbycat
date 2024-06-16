@@ -3,5 +3,5 @@ from django.utils.translation import gettext_lazy as _
 
 
 class MotionsConfig(AppConfig):
-    name = 'motions'
+    name = "motions"
     verbose_name = _("Motions")

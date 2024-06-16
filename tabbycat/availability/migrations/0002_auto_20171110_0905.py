@@ -11,18 +11,22 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('availability', '0001_initial'),
-        ('tournaments', '0001_initial'),
+        ("availability", "0001_initial"),
+        ("tournaments", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='roundavailability',
-            name='round',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tournaments.Round', verbose_name='round'),
+            model_name="roundavailability",
+            name="round",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="tournaments.Round",
+                verbose_name="round",
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='roundavailability',
-            unique_together=set([('round', 'content_type', 'object_id')]),
+            name="roundavailability",
+            unique_together=set([("round", "content_type", "object_id")]),
         ),
     ]

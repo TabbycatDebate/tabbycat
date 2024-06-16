@@ -25,19 +25,32 @@ class TeamResultTableBuilder(TabbycatTableBuilder):
                 cumul += teamscore.points * teamscore.debate_team.debate.round.weight
                 data.append(cumul)
 
-        if self.tournament.pref('teams_in_debate') == 'bp':
+        if self.tournament.pref("teams_in_debate") == "bp":
             tooltip = _("Points after this debate")
         else:
             tooltip = _("Wins after this debate")
-        header = {'key': 'cumulative', 'tooltip': tooltip, 'icon': 'trending-up'}
+        header = {"key": "cumulative", "tooltip": tooltip, "icon": "trending-up"}
         self.add_column(header, data)
 
     def add_speaker_scores_column(self, teamscores):
-        data = [{
-            'text': ", ".join([metricformat(ss.score) for ss in ts.debate_team.speaker_scores]) or "—",
-            'tooltip': "<br>".join(["%s for %s" % (metricformat(ss.score), escape(ss.speaker)) for ss in ts.debate_team.speaker_scores]),
-        } for ts in teamscores]
-        header = {'key': 'speaks', 'tooltip': _("Speaker scores<br>(in speaking order)"), 'text': _("Speaks")}
+        data = [
+            {
+                "text": ", ".join([metricformat(ss.score) for ss in ts.debate_team.speaker_scores])
+                or "—",
+                "tooltip": "<br>".join(
+                    [
+                        "%s for %s" % (metricformat(ss.score), escape(ss.speaker))
+                        for ss in ts.debate_team.speaker_scores
+                    ]
+                ),
+            }
+            for ts in teamscores
+        ]
+        header = {
+            "key": "speaks",
+            "tooltip": _("Speaker scores<br>(in speaking order)"),
+            "text": _("Speaks"),
+        }
         self.add_column(header, data)
 
 
@@ -48,17 +61,28 @@ class AdjudicatorDebateTable:
         """On adjudicator record pages, the table is the previous debates table."""
         table = TabbycatTableBuilder(view=view, title=view.table_title, sort_key="round")
 
-        debateadjs = DebateAdjudicator.objects.filter(
-            adjudicator=participant,
-            debate__round__tournament=view.tournament,
-        ).select_related(
-            'debate__round', 'debate__round__tournament',
-        ).prefetch_related(
-            Prefetch('debate__debateadjudicator_set',
-                queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
-            'debate__debateteam_set__team__speaker_set',
+        debateadjs = (
+            DebateAdjudicator.objects.filter(
+                adjudicator=participant,
+                debate__round__tournament=view.tournament,
+            )
+            .select_related(
+                "debate__round",
+                "debate__round__tournament",
+            )
+            .prefetch_related(
+                Prefetch(
+                    "debate__debateadjudicator_set",
+                    queryset=DebateAdjudicator.objects.select_related("adjudicator__institution"),
+                ),
+                "debate__debateteam_set__team__speaker_set",
+            )
         )
-        if not table.admin and not view.tournament.pref('all_results_released') and not table.private_url:
+        if (
+            not table.admin
+            and not view.tournament.pref("all_results_released")
+            and not table.private_url
+        ):
             debateadjs = debateadjs.filter(
                 debate__round__draw_status=Round.Status.RELEASED,
                 debate__round__silent=False,
@@ -75,7 +99,7 @@ class AdjudicatorDebateTable:
         table.add_debate_results_columns(debates)
         table.add_debate_adjudicators_column(debates, show_splits=True, highlight_adj=participant)
 
-        if table.admin or view.tournament.pref('public_motions'):
+        if table.admin or view.tournament.pref("public_motions"):
             table.add_debate_motion_column(debates)
 
         table.add_debate_ballot_link_column(debates)
@@ -91,21 +115,32 @@ class TeamDebateTable:
         table = TeamResultTableBuilder(view=view, title=view.table_title, sort_key="round")
 
         tournament = view.tournament
-        teamscores = TeamScore.objects.filter(
-            debate_team__team=participant,
-            ballot_submission__confirmed=True,
-        ).select_related(
-            'debate_team__debate__round__tournament',
-        ).prefetch_related(
-            Prefetch('debate_team__debate__debateadjudicator_set',
-                queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
-            'debate_team__debate__debateteam_set__team',
-            Prefetch('debate_team__speakerscore_set',
-                queryset=SpeakerScore.objects.filter(ballot_submission__confirmed=True).select_related('speaker').order_by('position'),
-                to_attr='speaker_scores'),
-        ).order_by('debate_team__debate__round__seq')
+        teamscores = (
+            TeamScore.objects.filter(
+                debate_team__team=participant,
+                ballot_submission__confirmed=True,
+            )
+            .select_related(
+                "debate_team__debate__round__tournament",
+            )
+            .prefetch_related(
+                Prefetch(
+                    "debate_team__debate__debateadjudicator_set",
+                    queryset=DebateAdjudicator.objects.select_related("adjudicator__institution"),
+                ),
+                "debate_team__debate__debateteam_set__team",
+                Prefetch(
+                    "debate_team__speakerscore_set",
+                    queryset=SpeakerScore.objects.filter(ballot_submission__confirmed=True)
+                    .select_related("speaker")
+                    .order_by("position"),
+                    to_attr="speaker_scores",
+                ),
+            )
+            .order_by("debate_team__debate__round__seq")
+        )
 
-        if not table.admin and not tournament.pref('all_results_released'):
+        if not table.admin and not tournament.pref("all_results_released"):
             teamscores = teamscores.filter(
                 debate_team__debate__round__draw_status=Round.Status.RELEASED,
                 debate_team__debate__round__silent=False,
@@ -119,17 +154,22 @@ class TeamDebateTable:
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_result_by_team_column(teamscores)
         table.add_cumulative_team_points_column(teamscores)
-        if table.admin or tournament.pref('all_results_released') and tournament.pref('speaker_tab_released') and tournament.pref('speaker_tab_limit') == 0:
+        if (
+            table.admin
+            or tournament.pref("all_results_released")
+            and tournament.pref("speaker_tab_released")
+            and tournament.pref("speaker_tab_limit") == 0
+        ):
             table.add_speaker_scores_column(teamscores)
         table.add_debate_side_by_team_column(teamscores)
         table.add_debate_adjudicators_column(debates, show_splits=True)
 
-        if table.admin or tournament.pref('public_motions'):
+        if table.admin or tournament.pref("public_motions"):
             table.add_debate_motion_column(debates)
 
         if not table.private_url:
             table.add_debate_ballot_link_column(debates)
-        elif tournament.pref('private_ballots_released'):
+        elif tournament.pref("private_ballots_released"):
             table.add_speaker_debate_ballot_link_column(debates)
 
         return table

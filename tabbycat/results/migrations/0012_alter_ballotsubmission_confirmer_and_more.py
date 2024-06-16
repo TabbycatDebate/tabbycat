@@ -9,24 +9,45 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('participants', '0019_auto_20201216_1415'),
-        ('results', '0011_rename_single_adj'),
+        ("participants", "0019_auto_20201216_1415"),
+        ("results", "0011_rename_single_adj"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='ballotsubmission',
-            name='confirmer',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='%(app_label)s_%(class)s_confirmed', to=settings.AUTH_USER_MODEL, verbose_name='confirmer'),
+            model_name="ballotsubmission",
+            name="confirmer",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="%(app_label)s_%(class)s_confirmed",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="confirmer",
+            ),
         ),
         migrations.AlterField(
-            model_name='ballotsubmission',
-            name='participant_submitter',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='%(app_label)s_%(class)s_participant_submitted', to='participants.person', verbose_name='from participant'),
+            model_name="ballotsubmission",
+            name="participant_submitter",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="%(app_label)s_%(class)s_participant_submitted",
+                to="participants.person",
+                verbose_name="from participant",
+            ),
         ),
         migrations.AlterField(
-            model_name='ballotsubmission',
-            name='submitter',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='%(app_label)s_%(class)s_submitted', to=settings.AUTH_USER_MODEL, verbose_name='submitter'),
+            model_name="ballotsubmission",
+            name="submitter",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="%(app_label)s_%(class)s_submitted",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="submitter",
+            ),
         ),
     ]

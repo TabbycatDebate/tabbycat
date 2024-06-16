@@ -15,39 +15,72 @@ logger = logging.getLogger(__name__)
 
 
 PROHIBITED_TOURNAMENT_SLUGS = [
-    'jet', 'database', 'admin', 'accounts', 'summernote',  # System
-    'start', 'create', 'load-demo', # Setup Wizards
-    'tournament', 'notifications', 'archive', 'api', # Cross-Tournament app's view roots
-    'favicon.ico', 'robots.txt',  # Files that must be at top level
-    '__debug__', 'static', 'style', 'i18n', 'jsi18n']  # Misc
+    "jet",
+    "database",
+    "admin",
+    "accounts",
+    "summernote",  # System
+    "start",
+    "create",
+    "load-demo",  # Setup Wizards
+    "tournament",
+    "notifications",
+    "archive",
+    "api",  # Cross-Tournament app's view roots
+    "favicon.ico",
+    "robots.txt",  # Files that must be at top level
+    "__debug__",
+    "static",
+    "style",
+    "i18n",
+    "jsi18n",
+]  # Misc
 
 
 def validate_tournament_slug(value):
     if value in PROHIBITED_TOURNAMENT_SLUGS:
-        raise ValidationError(_("You can't use this as a tournament slug, "
-            "because it's reserved for a Tabbycat system URL. Please try "
-            "another one."))
+        raise ValidationError(
+            _(
+                "You can't use this as a tournament slug, "
+                "because it's reserved for a Tabbycat system URL. Please try "
+                "another one."
+            )
+        )
 
 
 class Tournament(models.Model):
-    name = models.CharField(max_length=100,
+    name = models.CharField(
+        max_length=100,
         verbose_name=_("name"),
-        help_text=_("The full name, e.g. \"Australasian Intervarsity Debating Championships 2016\""))
-    short_name = models.CharField(max_length=25, blank=True, default="",
+        help_text=_('The full name, e.g. "Australasian Intervarsity Debating Championships 2016"'),
+    )
+    short_name = models.CharField(
+        max_length=25,
+        blank=True,
+        default="",
         verbose_name=_("short name"),
-        help_text=_("The name used in the menu, e.g. \"Australs 2016\""))
-    seq = models.IntegerField(blank=True, null=True,
+        help_text=_('The name used in the menu, e.g. "Australs 2016"'),
+    )
+    seq = models.IntegerField(
+        blank=True,
+        null=True,
         verbose_name=_("sequence number"),
-        help_text=_("A number that determines the relative order in which tournaments are displayed on the homepage."))
-    slug = models.SlugField(unique=True, validators=[validate_tournament_slug],
+        help_text=_(
+            "A number that determines the relative order in which tournaments are displayed on the homepage."
+        ),
+    )
+    slug = models.SlugField(
+        unique=True,
+        validators=[validate_tournament_slug],
         verbose_name=_("slug"),
-        help_text=_("The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\""))
+        help_text=_('The sub-URL of the tournament, cannot have spaces, e.g. "australs2016"'),
+    )
     active = models.BooleanField(verbose_name=_("active"), default=True)
 
     class Meta:
-        verbose_name = _('tournament')
-        verbose_name_plural = _('tournaments')
-        ordering = ['seq']
+        verbose_name = _("tournament")
+        verbose_name_plural = _("tournaments")
+        ordering = ["seq"]
 
     def __init__(self, *args, **kwargs):
         self._prefs = {}
@@ -77,26 +110,26 @@ class Tournament(models.Model):
     @property
     def sides(self):
         """Returns a list of side codes."""
-        option = self.pref('teams_in_debate')
-        if option == 'two':
-            return ['aff', 'neg']
-        elif option == 'bp':
-            return ['og', 'oo', 'cg', 'co']
+        option = self.pref("teams_in_debate")
+        if option == "two":
+            return ["aff", "neg"]
+        elif option == "bp":
+            return ["og", "oo", "cg", "co"]
         else:
             logger.error("Invalid sides option: %s", option)
-            return ['aff', 'neg']  # return default, just to keep it going
+            return ["aff", "neg"]  # return default, just to keep it going
 
     @property
     def last_substantive_position(self):
         """Returns the number of substantive speakers."""
-        return self.pref('substantive_speakers')
+        return self.pref("substantive_speakers")
 
     @property
     def reply_position(self):
         """If there is a reply position, returns one more than the number of
         substantive speakers. If there is no reply position, returns None."""
-        if self.pref('reply_scores_enabled'):
-            return self.pref('substantive_speakers') + 1
+        if self.pref("reply_scores_enabled"):
+            return self.pref("substantive_speakers") + 1
         else:
             return None
 
@@ -104,8 +137,8 @@ class Tournament(models.Model):
     def positions(self):
         """Guaranteed to be consecutive numbers starting at one. Includes the
         reply speaker."""
-        speaker_positions = 1 + self.pref('substantive_speakers')
-        if self.pref('reply_scores_enabled') is True:
+        speaker_positions = 1 + self.pref("substantive_speakers")
+        if self.pref("reply_scores_enabled") is True:
             speaker_positions = speaker_positions + 1
         return list(range(1, speaker_positions))
 
@@ -114,9 +147,9 @@ class Tournament(models.Model):
         tournament given. Callers can use this to avoid querying the round's
         tournament repeatedly."""
         if stage == Round.Stage.PRELIMINARY:
-            return self.pref('ballots_per_debate_prelim')
+            return self.pref("ballots_per_debate_prelim")
         elif stage == Round.Stage.ELIMINATION:
-            return self.pref('ballots_per_debate_elim')
+            return self.pref("ballots_per_debate_elim")
         else:
             raise ValueError("Unrecognized stage: %r" % (stage,))
 
@@ -124,12 +157,14 @@ class Tournament(models.Model):
         """Returns True if all total speaker scores will be integers, at least
         according to tournament preferences. Callers should still check that
         the value in question is in fact an integer before casting."""
-        if self.ballots_per_debate(stage) == 'per-adj':
+        if self.ballots_per_debate(stage) == "per-adj":
             return False
-        if not self.pref('score_step').as_integer_ratio()[1] == 1:
+        if not self.pref("score_step").as_integer_ratio()[1] == 1:
             return False
-        if (self.pref('reply_scores_enabled') and
-                not self.pref('reply_score_step').as_integer_ratio()[1] == 1):
+        if (
+            self.pref("reply_scores_enabled")
+            and not self.pref("reply_score_step").as_integer_ratio()[1] == 1
+        ):
             return False
         return True
 
@@ -138,10 +173,10 @@ class Tournament(models.Model):
     # --------------------------------------------------------------------------
 
     def get_absolute_url(self):
-        return reverse('tournament-admin-home', kwargs={'tournament_slug': self.slug})
+        return reverse("tournament-admin-home", kwargs={"tournament_slug": self.slug})
 
     def get_public_url(self):
-        return reverse('tournament-public-index', kwargs={'tournament_slug': self.slug})
+        return reverse("tournament-public-index", kwargs={"tournament_slug": self.slug})
 
     # --------------------------------------------------------------------------
     # Convenience querysets
@@ -162,7 +197,9 @@ class Tournament(models.Model):
     @property
     def participants(self):
         """Convenience function for retrieving all participants. Returns a QuerySet."""
-        return Person.objects.filter(Q(adjudicator__tournament=self) | Q(speaker__team__tournament=self))
+        return Person.objects.filter(
+            Q(adjudicator__tournament=self) | Q(speaker__team__tournament=self)
+        )
 
     def prelim_rounds(self, before=None, until=None):
         """Convenience function for retrieving preliminary rounds. Returns a QuerySet."""
@@ -182,9 +219,14 @@ class Tournament(models.Model):
         This annotates the QuerySet with information used to determine bubble
         colours in the admin nav bar."""
 
-        rounds = self.round_set.order_by('-stage', 'seq').annotate(
-            Count('motion'), Count('debate'),
-        ).select_related('break_category')
+        rounds = (
+            self.round_set.order_by("-stage", "seq")
+            .annotate(
+                Count("motion"),
+                Count("debate"),
+            )
+            .select_related("break_category")
+        )
         categories_where_current_found = []
         prelim_current_found = False
 
@@ -217,16 +259,16 @@ class Tournament(models.Model):
 
     @cached_property
     def rounds_with_released_results(self):
-        if self.pref('all_results_released'):
+        if self.pref("all_results_released"):
             return self.round_set.all()
         else:
             return self.round_set.filter(completed=True, silent=False)
 
     @cached_property
     def current_round(self):
-        current = self.round_set.filter(completed=False).order_by('seq').first()
+        current = self.round_set.filter(completed=False).order_by("seq").first()
         if current is None:
-            return self.round_set.order_by('seq').last()
+            return self.round_set.order_by("seq").last()
         return current
 
     @cached_property
@@ -242,8 +284,11 @@ class Tournament(models.Model):
 
         # For something this complicated it's easier just to get the entire
         # round set from the database, and process it in Python.
-        rounds = getattr(self, 'current_round_set',
-            self.round_set.filter(completed=False).annotate(Count('debate')).order_by('seq'))
+        rounds = getattr(
+            self,
+            "current_round_set",
+            self.round_set.filter(completed=False).annotate(Count("debate")).order_by("seq"),
+        )
         current_elim_rounds = {}
         for r in rounds:
             if not r.is_break_round:
@@ -252,7 +297,7 @@ class Tournament(models.Model):
                 current_elim_rounds.setdefault(r.break_category_id, r)
         return [
             current_elim_rounds.get(category.pk)
-            for category in self.breakcategory_set.order_by('seq')  # Order by break, then seq
+            for category in self.breakcategory_set.order_by("seq")  # Order by break, then seq
             if category.pk in current_elim_rounds
         ]
 
@@ -269,99 +314,157 @@ class Tournament(models.Model):
 
 class RoundManager(LookupByNameFieldsMixin, models.Manager):
     use_for_related_fields = True
-    name_fields = ['name', 'abbreviation']
+    name_fields = ["name", "abbreviation"]
 
     def get_queryset(self):
-        return super().get_queryset().select_related('tournament').order_by('seq')
+        return super().get_queryset().select_related("tournament").order_by("seq")
 
 
 class Round(models.Model):
 
     class DrawType(models.TextChoices):
-        RANDOM = 'R', _('Random')
-        MANUAL = 'M', _('Manual')
-        ROUNDROBIN = 'D', _('Round-robin')
-        POWERPAIRED = 'P', _('Power-paired')
-        ELIMINATION = 'E', _('Elimination')
-        SEEDED = 'S', _('Seeded')
+        RANDOM = "R", _("Random")
+        MANUAL = "M", _("Manual")
+        ROUNDROBIN = "D", _("Round-robin")
+        POWERPAIRED = "P", _("Power-paired")
+        ELIMINATION = "E", _("Elimination")
+        SEEDED = "S", _("Seeded")
 
     class Stage(models.TextChoices):
-        PRELIMINARY = 'P', _('Preliminary')
-        ELIMINATION = 'E', _('Elimination')
+        PRELIMINARY = "P", _("Preliminary")
+        ELIMINATION = "E", _("Elimination")
 
     class Status(models.TextChoices):
-        NONE = 'N', _('None')
-        DRAFT = 'D', _('Draft')
-        CONFIRMED = 'C', _('Confirmed')
-        RELEASED = 'R', _('Released')
+        NONE = "N", _("None")
+        DRAFT = "D", _("Draft")
+        CONFIRMED = "C", _("Confirmed")
+        RELEASED = "R", _("Released")
 
     objects = RoundManager()
 
     tournament = models.ForeignKey(Tournament, models.CASCADE, verbose_name=_("tournament"))
-    seq = models.PositiveIntegerField(verbose_name=_("sequence number"),
-        help_text=_("A number that determines the order of the round, should count consecutively from 1 for the first round"))
-    completed = models.BooleanField(default=False,
+    seq = models.PositiveIntegerField(
+        verbose_name=_("sequence number"),
+        help_text=_(
+            "A number that determines the order of the round, should count consecutively from 1 for the first round"
+        ),
+    )
+    completed = models.BooleanField(
+        default=False,
         verbose_name=_("completed"),
-        help_text=_("True if the round is over, which normally means all results have been entered and confirmed"))
+        help_text=_(
+            "True if the round is over, which normally means all results have been entered and confirmed"
+        ),
+    )
 
-    name = models.CharField(max_length=40, verbose_name=_("name"), help_text=_("e.g. \"Round 1\""))
-    abbreviation = models.CharField(max_length=10, verbose_name=_("abbreviation"), help_text=_("e.g. \"R1\""))
-    stage = models.CharField(max_length=1, choices=Stage.choices, default=Stage.PRELIMINARY,
+    name = models.CharField(max_length=40, verbose_name=_("name"), help_text=_('e.g. "Round 1"'))
+    abbreviation = models.CharField(
+        max_length=10, verbose_name=_("abbreviation"), help_text=_('e.g. "R1"')
+    )
+    stage = models.CharField(
+        max_length=1,
+        choices=Stage.choices,
+        default=Stage.PRELIMINARY,
         verbose_name=_("stage"),
-        help_text=_("Preliminary = inrounds, elimination = outrounds"))
-    draw_type = models.CharField(max_length=1, choices=DrawType.choices,
+        help_text=_("Preliminary = inrounds, elimination = outrounds"),
+    )
+    draw_type = models.CharField(
+        max_length=1,
+        choices=DrawType.choices,
         verbose_name=_("draw type"),
-        help_text=_("Which draw method to use"))
+        help_text=_("Which draw method to use"),
+    )
     # cascade to avoid break rounds without break categories
-    break_category = models.ForeignKey('breakqual.BreakCategory', models.CASCADE, blank=True, null=True,
+    break_category = models.ForeignKey(
+        "breakqual.BreakCategory",
+        models.CASCADE,
+        blank=True,
+        null=True,
         verbose_name=_("break category"),
-        help_text=_("If elimination round, which break category"))
+        help_text=_("If elimination round, which break category"),
+    )
 
-    draw_status = models.CharField(max_length=1, choices=Status.choices, default=Status.NONE,
+    draw_status = models.CharField(
+        max_length=1,
+        choices=Status.choices,
+        default=Status.NONE,
         verbose_name=_("draw status"),
-        help_text=_("The status of this round's draw"))
+        help_text=_("The status of this round's draw"),
+    )
 
-    feedback_weight = models.FloatField(default=0,
+    feedback_weight = models.FloatField(
+        default=0,
         verbose_name=_("feedback weight"),
         # Translator: xgettext:no-python-format
-        help_text=_("The extent to which each adjudicator's overall score depends on feedback vs their base score. At 0, it is 100% drawn from their base score, at 1 it is 100% drawn from feedback."))
-    silent = models.BooleanField(default=False,
+        help_text=_(
+            "The extent to which each adjudicator's overall score depends on feedback vs their base score. At 0, it is 100% drawn from their base score, at 1 it is 100% drawn from feedback."
+        ),
+    )
+    silent = models.BooleanField(
+        default=False,
         # Translators: A silent round is a round for which results are not disclosed once the round is over.
         verbose_name=_("silent"),
-        help_text=_("If marked silent, information about this round (such as its results) will not be shown publicly."))
-    motions_released = models.BooleanField(default=False,
+        help_text=_(
+            "If marked silent, information about this round (such as its results) will not be shown publicly."
+        ),
+    )
+    motions_released = models.BooleanField(
+        default=False,
         verbose_name=_("motions released"),
-        help_text=_("Whether motions will appear on the public website, assuming that feature is turned on"))
+        help_text=_(
+            "Whether motions will appear on the public website, assuming that feature is turned on"
+        ),
+    )
     starts_at = models.DateTimeField(verbose_name=_("starts at"), blank=True, null=True)
 
-    weight = models.IntegerField(default=1,
+    weight = models.IntegerField(
+        default=1,
         verbose_name=_("weight"),
-        help_text=_("A factor for the points received in the round. For example, if 2, all points are doubled."))
+        help_text=_(
+            "A factor for the points received in the round. For example, if 2, all points are doubled."
+        ),
+    )
 
     class Meta:
-        constraints = [UniqueConstraint(fields=['tournament', 'seq'])]
-        verbose_name = _('round')
-        verbose_name_plural = _('rounds')
-        ordering = ['tournament', 'seq']
+        constraints = [UniqueConstraint(fields=["tournament", "seq"])]
+        verbose_name = _("round")
+        verbose_name_plural = _("rounds")
+        ordering = ["tournament", "seq"]
 
     def __str__(self):
         return "[%s] %s" % (self.tournament, self.name)
 
     def clean(self):
         errors = {
-            'break_category': [],
+            "break_category": [],
         }
 
         # Draw type must be consistent with stage
-        if (self.stage == Round.Stage.ELIMINATION) != (self.draw_type == Round.DrawType.ELIMINATION):
-            errors['draw_type'] = [ValidationError(_("The \"Elimination\" draw type is only for elimination rounds, where it is mandatory."))]
+        if (self.stage == Round.Stage.ELIMINATION) != (
+            self.draw_type == Round.DrawType.ELIMINATION
+        ):
+            errors["draw_type"] = [
+                ValidationError(
+                    _(
+                        'The "Elimination" draw type is only for elimination rounds, where it is mandatory.'
+                    )
+                )
+            ]
 
         # Break rounds must have a break category
         if (self.stage == Round.Stage.ELIMINATION) == (self.break_category is None):
-            errors['break_category'].append(ValidationError(_("An elimination round must have a break category and preliminary round must not.")))
+            errors["break_category"].append(
+                ValidationError(
+                    _(
+                        "An elimination round must have a break category and preliminary round must not."
+                    )
+                )
+            )
 
         if self.break_category and self.break_category.tournament_id != self.tournament_id:
-            errors['break_category'].append(ValidationError(_("Break category must be for the same tournament.")))
+            errors["break_category"].append(
+                ValidationError(_("Break category must be for the same tournament."))
+            )
 
         if any(len(v) > 0 for v in errors.values()):
             raise ValidationError({k: v for k, v in errors.items() if len(v) > 0})
@@ -374,22 +477,35 @@ class Round(models.Model):
     def duplicate_panellists(self):
         """Returns a QuerySet of adjudicators who are allocated twice in the round."""
         from participants.models import Adjudicator
-        return Adjudicator.objects.filter(debateadjudicator__debate__round=self).annotate(
-                Count('debateadjudicator')).filter(debateadjudicator__count__gt=1)
+
+        return (
+            Adjudicator.objects.filter(debateadjudicator__debate__round=self)
+            .annotate(Count("debateadjudicator"))
+            .filter(debateadjudicator__count__gt=1)
+        )
 
     @cached_property
     def duplicate_venues(self):
         """Returns a QuerySet of venues that are allocated twice in the round."""
         from venues.models import Venue
-        return Venue.objects.filter(debate__round=self).annotate(Count('debate')).filter(
-                debate__count__gt=1)
+
+        return (
+            Venue.objects.filter(debate__round=self)
+            .annotate(Count("debate"))
+            .filter(debate__count__gt=1)
+        )
 
     @cached_property
     def duplicate_team_names(self):
         """Returns a list of names of those teams allocated twice in the round."""
         from participants.models import Team
-        return Team.objects.filter(debateteam__debate__round=self).annotate(
-            Count('debateteam')).filter(debateteam__count__gt=1).values_list('short_name', flat=True)
+
+        return (
+            Team.objects.filter(debateteam__debate__round=self)
+            .annotate(Count("debateteam"))
+            .filter(debateteam__count__gt=1)
+            .values_list("short_name", flat=True)
+        )
 
     @cached_property
     def num_debates_without_chair(self):
@@ -397,9 +513,14 @@ class Round(models.Model):
         more than one chair."""
         from draw.models import DebateTeam
         from adjallocation.models import DebateAdjudicator
+
         debates_in_round = self.debate_set.exclude(debateteam__side=DebateTeam.Side.BYE).count()
-        debates_with_one_chair = self.debate_set.filter(debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR).annotate(
-                num_chairs=Count('debateadjudicator')).filter(num_chairs=1).count()
+        debates_with_one_chair = (
+            self.debate_set.filter(debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR)
+            .annotate(num_chairs=Count("debateadjudicator"))
+            .filter(num_chairs=1)
+            .count()
+        )
         return debates_in_round - debates_with_one_chair
 
     @cached_property
@@ -407,17 +528,27 @@ class Round(models.Model):
         """Returns the number of debates in the round, in which there are a
         positive and even number of voting judges."""
         from adjallocation.models import DebateAdjudicator
+
         debateadj_filter = ~Q(debateadjudicator__type=DebateAdjudicator.TYPE_TRAINEE)
-        debates_with_even_panel = self.debate_set.annotate(
-            panellists=Count('debateadjudicator', filter=debateadj_filter),
-            odd_panellists=Count('debateadjudicator', filter=debateadj_filter) % 2,
-        ).filter(panellists__gt=0, odd_panellists=0).count()
+        debates_with_even_panel = (
+            self.debate_set.annotate(
+                panellists=Count("debateadjudicator", filter=debateadj_filter),
+                odd_panellists=Count("debateadjudicator", filter=debateadj_filter) % 2,
+            )
+            .filter(panellists__gt=0, odd_panellists=0)
+            .count()
+        )
         return debates_with_even_panel
 
     @cached_property
     def num_debates_without_venue(self):
         from draw.models import DebateTeam
-        return self.debate_set.filter(venue__isnull=True).exclude(debateteam__side=DebateTeam.Side.BYE).count()
+
+        return (
+            self.debate_set.filter(venue__isnull=True)
+            .exclude(debateteam__side=DebateTeam.Side.BYE)
+            .count()
+        )
 
     @cached_property
     def num_debates_with_sides_unconfirmed(self):
@@ -427,23 +558,41 @@ class Round(models.Model):
     def unavailable_adjudicators_allocated(self):
         """Returns the number of adjudicators who are allocated but not available."""
         from participants.models import Adjudicator
+
         return Adjudicator.objects.filter(debateadjudicator__debate__round=self).exclude(
-            round_availabilities__round=self)
+            round_availabilities__round=self
+        )
 
     @cached_property
     def num_available_adjudicators_not_allocated(self):
         """Returns the number of adjudicators who are available but not allocated."""
         from participants.models import Adjudicator
-        return Adjudicator.objects.exclude(debateadjudicator__debate__round=self).filter(
-            round_availabilities__round=self).count()
+
+        return (
+            Adjudicator.objects.exclude(debateadjudicator__debate__round=self)
+            .filter(round_availabilities__round=self)
+            .count()
+        )
 
     # --------------------------------------------------------------------------
     # Draw retrieval methods
     # --------------------------------------------------------------------------
 
-    def debate_set_with_prefetches(self, filter_args=[], filter_kwargs={}, ordering=(F('venue__name').asc(nulls_last=True),),
-            teams=True, adjudicators=True, speakers=True, wins=False,
-            results=False, venues=True, institutions=False, check_ins=False, iron=False):
+    def debate_set_with_prefetches(
+        self,
+        filter_args=[],
+        filter_kwargs={},
+        ordering=(F("venue__name").asc(nulls_last=True),),
+        teams=True,
+        adjudicators=True,
+        speakers=True,
+        wins=False,
+        results=False,
+        venues=True,
+        institutions=False,
+        check_ins=False,
+        iron=False,
+    ):
         """Returns the debate set, with aff_team and neg_team populated.
         This is basically a prefetch-like operation, except that it also figures
         out which team is on which side, and sets attributes accordingly."""
@@ -454,40 +603,57 @@ class Round(models.Model):
 
         debates = self.debate_set.filter(*filter_args, **filter_kwargs)
         if results:
-            debates = debates.prefetch_related('ballotsubmission_set',
-                'ballotsubmission_set__submitter', 'ballotsubmission_set__participant_submitter')
+            debates = debates.prefetch_related(
+                "ballotsubmission_set",
+                "ballotsubmission_set__submitter",
+                "ballotsubmission_set__participant_submitter",
+            )
         if adjudicators:
             debates = debates.prefetch_related(
-                Prefetch('debateadjudicator_set',
-                    queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
+                Prefetch(
+                    "debateadjudicator_set",
+                    queryset=DebateAdjudicator.objects.select_related("adjudicator__institution"),
+                ),
             )
         if venues:
-            debates = debates.select_related('venue').prefetch_related('venue__venuecategory_set')
+            debates = debates.select_related("venue").prefetch_related("venue__venuecategory_set")
         if check_ins:
-            debates = debates.select_related('checkin_identifier')
+            debates = debates.select_related("checkin_identifier")
 
         if teams or wins or institutions or speakers or iron:
-            debateteam_prefetch_queryset = DebateTeam.objects.select_related('team')
+            debateteam_prefetch_queryset = DebateTeam.objects.select_related("team")
             if institutions:
-                debateteam_prefetch_queryset = debateteam_prefetch_queryset.select_related('team__institution')
+                debateteam_prefetch_queryset = debateteam_prefetch_queryset.select_related(
+                    "team__institution"
+                )
             if speakers:
                 debateteam_prefetch_queryset = debateteam_prefetch_queryset.prefetch_related(
-                    Prefetch('team__speaker_set', queryset=Speaker.objects.order_by('name')))
+                    Prefetch("team__speaker_set", queryset=Speaker.objects.order_by("name"))
+                )
             if iron:
                 debateteam_prefetch_queryset = debateteam_prefetch_queryset.annotate(
-                    iron=Count('teamscore', filter=Q(
-                        teamscore__has_ghost=True,
-                        teamscore__ballot_submission__confirmed=True,
-                    ), distinct=True),
-                    iron_prev=Count('team__debateteam__teamscore', filter=Q(
-                        team__debateteam__teamscore__has_ghost=True,
-                        team__debateteam__teamscore__ballot_submission__confirmed=True,
-                        team__debateteam__debate__round=self.prev,
-                    ), distinct=True),
+                    iron=Count(
+                        "teamscore",
+                        filter=Q(
+                            teamscore__has_ghost=True,
+                            teamscore__ballot_submission__confirmed=True,
+                        ),
+                        distinct=True,
+                    ),
+                    iron_prev=Count(
+                        "team__debateteam__teamscore",
+                        filter=Q(
+                            team__debateteam__teamscore__has_ghost=True,
+                            team__debateteam__teamscore__ballot_submission__confirmed=True,
+                            team__debateteam__debate__round=self.prev,
+                        ),
+                        distinct=True,
+                    ),
                 )
 
             debates = debates.prefetch_related(
-                Prefetch('debateteam_set', queryset=debateteam_prefetch_queryset))
+                Prefetch("debateteam_set", queryset=debateteam_prefetch_queryset)
+            )
 
         if ordering:
             debates = debates.order_by(*ordering)
@@ -534,7 +700,9 @@ class Round(models.Model):
     def _rounds_in_same_sequence(self):
         rounds = self.tournament.round_set.all()
         if self.is_break_round:
-            rounds = rounds.filter(Q(stage=Round.Stage.PRELIMINARY) | Q(break_category=self.break_category))
+            rounds = rounds.filter(
+                Q(stage=Round.Stage.PRELIMINARY) | Q(break_category=self.break_category)
+            )
         return rounds
 
     @cached_property
@@ -542,14 +710,14 @@ class Round(models.Model):
         """Returns the round that comes before this round. If this is a break
         round, then it returns the latest preceding round that is either in the
         same break category or is a preliminary round."""
-        return self._rounds_in_same_sequence().filter(seq__lt=self.seq).order_by('seq').last()
+        return self._rounds_in_same_sequence().filter(seq__lt=self.seq).order_by("seq").last()
 
     @cached_property
     def next(self):
         """Returns the round that comes after this round. If this is a break
         round, then it returns the next round that is either in the same break
         category or is a preliminary round."""
-        return self._rounds_in_same_sequence().filter(seq__gt=self.seq).order_by('seq').first()
+        return self._rounds_in_same_sequence().filter(seq__gt=self.seq).order_by("seq").first()
 
     @cached_property
     def is_last(self):
@@ -566,7 +734,7 @@ class Round(models.Model):
         # For performance, self._is_current may be set by Tournament.rounds_for_nav,
         # which should be kept consistent with this implementation.
         # This should also be kept consistent with Tournament.current_rounds.
-        if not hasattr(self, '_is_current'):
+        if not hasattr(self, "_is_current"):
             if self.completed:
                 self._is_current = False
             elif self._rounds_in_same_sequence().filter(seq__lt=self.seq, completed=False).exists():

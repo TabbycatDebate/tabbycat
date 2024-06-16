@@ -29,9 +29,13 @@ class VenueAllocator:
 
     def allocate(self, round, debates=None):
         if debates is None:
-            debates = round.debate_set_with_prefetches(speakers=False, institutions=True, filter_args=[~Q(debateteam__side=DebateTeam.Side.BYE)])
-        self._all_venues = list(round.active_venues.order_by('-priority'))
-        self._preferred_venues = self._all_venues[:len(debates)]
+            debates = round.debate_set_with_prefetches(
+                speakers=False,
+                institutions=True,
+                filter_args=[~Q(debateteam__side=DebateTeam.Side.BYE)],
+            )
+        self._all_venues = list(round.active_venues.order_by("-priority"))
+        self._preferred_venues = self._all_venues[: len(debates)]
 
         # take note of how many venues we expect to be short by (for error checking)
         self._venue_shortage = max(0, len(debates) - len(self._all_venues))
@@ -46,8 +50,11 @@ class VenueAllocator:
         # this set is only non-empty if there were too few venues overall
         debates_without_venues = [d for d in debates if d not in debate_venues]
         if len(debates_without_venues) != self._venue_shortage:
-            logger.error("Expected venue shortage %d, but %d debates without venues",
-                self._venue_shortage, len(debates_without_venues))
+            logger.error(
+                "Expected venue shortage %d, but %d debates without venues",
+                self._venue_shortage,
+                len(debates_without_venues),
+            )
         debate_venues.update({debate: None for debate in debates_without_venues})
 
         self.save_venues(debate_venues)
@@ -63,7 +70,7 @@ class VenueAllocator:
         relating to the teams, adjudicators, and institutions of the debate."""
 
         all_constraints = {}
-        for vc in VenueConstraint.objects.filter_for_debates(debates).prefetch_related('subject'):
+        for vc in VenueConstraint.objects.filter_for_debates(debates).prefetch_related("subject"):
             all_constraints.setdefault(vc.subject, []).append(vc)
 
         debate_constraints = []
@@ -160,12 +167,20 @@ class VenueAllocator:
         preferred venues."""
 
         if len(debates) - len(self._preferred_venues) != self._venue_shortage:
-            logger.error("preferred venues to unconstrained debates mismatch: "
-                "%s preferred venues, %d debates", len(self._preferred_venues), len(debates))
+            logger.error(
+                "preferred venues to unconstrained debates mismatch: "
+                "%s preferred venues, %d debates",
+                len(self._preferred_venues),
+                len(debates),
+            )
             # we'll still keep going, since zip() stops at the end of the shorter list
         elif len(debates) != len(self._preferred_venues):
-            logger.warning("%s preferred venues, %d debates, matches expected venue shortage %s",
-                len(self._preferred_venues), len(debates), self._venue_shortage)
+            logger.warning(
+                "%s preferred venues, %d debates, matches expected venue shortage %s",
+                len(self._preferred_venues),
+                len(debates),
+                self._venue_shortage,
+            )
 
         random.shuffle(debates)
         return {debate: venue for debate, venue in zip(debates, self._preferred_venues)}
@@ -173,4 +188,4 @@ class VenueAllocator:
     def save_venues(self, debate_venues):
         for debate, venue in debate_venues.items():
             debate.venue = venue
-        Debate.objects.bulk_update(debate_venues.keys(), ['venue'])
+        Debate.objects.bulk_update(debate_venues.keys(), ["venue"])

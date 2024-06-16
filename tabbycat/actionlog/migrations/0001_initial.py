@@ -11,23 +11,98 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('contenttypes', '0002_remove_content_type_name'),
+        ("contenttypes", "0002_remove_content_type_name"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ActionLogEntry',
+            name="ActionLogEntry",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('type', models.CharField(choices=[('ba.disc', 'Discarded ballot set'), ('ba.ckin', 'Checked in ballot set'), ('ba.crea', 'Created ballot set'), ('ba.edit', 'Edited ballot set'), ('ba.conf', 'Confirmed ballot set'), ('ba.subm', 'Submitted ballot set from the public form'), ('fb.subm', 'Submitted feedback from the public form'), ('fb.save', 'Saved feedback'), ('ts.edit', 'Edited adjudicator test score'), ('aj.note', 'Set adjudicator note'), ('aa.save', 'Saved adjudicator allocation'), ('aa.auto', 'Auto-allocated adjudicators'), ('ve.save', 'Saved a venue manual edit'), ('ve.auto', 'Auto-allocated venues'), ('ve.ca.edit', 'Edited venue categories'), ('dr.crea', 'Created draw'), ('dr.conf', 'Confirmed draw'), ('dr.rege', 'Regenerated draw'), ('dr.rele', 'Released draw'), ('dr.unre', 'Unreleased draw'), ('mu.save', 'Saved a matchup manual edit'), ('ms.save', 'Saved the sides status of a matchup'), ('dv.save', 'Saved divisions'), ('mo.edit', 'Added/edited motion'), ('mo.rele', 'Released motions'), ('mo.unre', 'Unreleased motions'), ('db.im.edit', 'Edited debate importance'), ('br.aj.set', 'Changed adjudicator breaking status'), ('br.el.edit', 'Edited break eligibility'), ('br.ca.edit', 'Edited break categories'), ('br.gene', 'Generated the team break for all categories'), ('br.upda', 'Edited breaking team remarks and updated all team breaks'), ('br.upd1', 'Edited breaking team remarks and updated this team break'), ('br.rm.edit', 'Edited breaking team remarks'), ('rd.st.set', 'Set start time'), ('rd.adva', 'Advanced the current round to'), ('av.tm.save', 'Edited teams availability'), ('av.aj.save', 'Edited adjudicators availability'), ('av.ve.save', 'Edited venue availability'), ('op.edit', 'Edited tournament options'), ('se.edit', 'Edited speaker category eligibility'), ('se.ca.edit', 'Edited speaker categories')], max_length=10, verbose_name='type')),
-                ('timestamp', models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='timestamp')),
-                ('ip_address', models.GenericIPAddressField(blank=True, null=True, verbose_name='IP address')),
-                ('object_id', models.PositiveIntegerField(blank=True, null=True, verbose_name='object ID')),
-                ('content_type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='contenttypes.ContentType', verbose_name='content type')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[
+                            ("ba.disc", "Discarded ballot set"),
+                            ("ba.ckin", "Checked in ballot set"),
+                            ("ba.crea", "Created ballot set"),
+                            ("ba.edit", "Edited ballot set"),
+                            ("ba.conf", "Confirmed ballot set"),
+                            ("ba.subm", "Submitted ballot set from the public form"),
+                            ("fb.subm", "Submitted feedback from the public form"),
+                            ("fb.save", "Saved feedback"),
+                            ("ts.edit", "Edited adjudicator test score"),
+                            ("aj.note", "Set adjudicator note"),
+                            ("aa.save", "Saved adjudicator allocation"),
+                            ("aa.auto", "Auto-allocated adjudicators"),
+                            ("ve.save", "Saved a venue manual edit"),
+                            ("ve.auto", "Auto-allocated venues"),
+                            ("ve.ca.edit", "Edited venue categories"),
+                            ("dr.crea", "Created draw"),
+                            ("dr.conf", "Confirmed draw"),
+                            ("dr.rege", "Regenerated draw"),
+                            ("dr.rele", "Released draw"),
+                            ("dr.unre", "Unreleased draw"),
+                            ("mu.save", "Saved a matchup manual edit"),
+                            ("ms.save", "Saved the sides status of a matchup"),
+                            ("dv.save", "Saved divisions"),
+                            ("mo.edit", "Added/edited motion"),
+                            ("mo.rele", "Released motions"),
+                            ("mo.unre", "Unreleased motions"),
+                            ("db.im.edit", "Edited debate importance"),
+                            ("br.aj.set", "Changed adjudicator breaking status"),
+                            ("br.el.edit", "Edited break eligibility"),
+                            ("br.ca.edit", "Edited break categories"),
+                            ("br.gene", "Generated the team break for all categories"),
+                            ("br.upda", "Edited breaking team remarks and updated all team breaks"),
+                            ("br.upd1", "Edited breaking team remarks and updated this team break"),
+                            ("br.rm.edit", "Edited breaking team remarks"),
+                            ("rd.st.set", "Set start time"),
+                            ("rd.adva", "Advanced the current round to"),
+                            ("av.tm.save", "Edited teams availability"),
+                            ("av.aj.save", "Edited adjudicators availability"),
+                            ("av.ve.save", "Edited venue availability"),
+                            ("op.edit", "Edited tournament options"),
+                            ("se.edit", "Edited speaker category eligibility"),
+                            ("se.ca.edit", "Edited speaker categories"),
+                        ],
+                        max_length=10,
+                        verbose_name="type",
+                    ),
+                ),
+                (
+                    "timestamp",
+                    models.DateTimeField(
+                        auto_now_add=True, db_index=True, verbose_name="timestamp"
+                    ),
+                ),
+                (
+                    "ip_address",
+                    models.GenericIPAddressField(blank=True, null=True, verbose_name="IP address"),
+                ),
+                (
+                    "object_id",
+                    models.PositiveIntegerField(blank=True, null=True, verbose_name="object ID"),
+                ),
+                (
+                    "content_type",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="contenttypes.ContentType",
+                        verbose_name="content type",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'action log',
-                'verbose_name_plural': 'action log entries',
+                "verbose_name": "action log",
+                "verbose_name_plural": "action log entries",
             },
         ),
     ]

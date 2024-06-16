@@ -5,11 +5,11 @@ import pprint
 import random
 from operator import itemgetter
 
-TEAMS = ['A', 'B', 'C', 'D']
-DRAW_FOR_WHOLE_TOURNAMENT = [['AB', 'CD'], ['AC', 'BD'], ['AB', 'CD']]
+TEAMS = ["A", "B", "C", "D"]
+DRAW_FOR_WHOLE_TOURNAMENT = [["AB", "CD"], ["AC", "BD"], ["AB", "CD"]]
 SPEAKERS_PER_TEAM = 3
 ADJS_PER_DEBATE = 3
-TOTAL_SCORE_MEAN  = 75 * 3.5
+TOTAL_SCORE_MEAN = 75 * 3.5
 TOTAL_SCORE_STDEV = 10
 
 METRICS = [
@@ -22,9 +22,15 @@ teamscores_by_team = {t: [] for t in TEAMS}
 
 # Comment out this line and add a new line setting up results to use doctored
 # scores.
-results = [{debate: {team: {"score": round(
-    random.normalvariate(75*3.5, 10)*2)/2} for team in debate} for debate in rd}
-    for rd in DRAW_FOR_WHOLE_TOURNAMENT]
+results = [
+    {
+        debate: {
+            team: {"score": round(random.normalvariate(75 * 3.5, 10) * 2) / 2} for team in debate
+        }
+        for debate in rd
+    }
+    for rd in DRAW_FOR_WHOLE_TOURNAMENT
+]
 
 # For example:
 # results = [{'AB': {'A': {'score': 269.5}, 'B': {'score': 254.0}},
@@ -42,7 +48,9 @@ print("")
 for rd in results:
     for debate in rd.values():
         teamscores = list(debate.values())
-        assert teamscores[0]["score"] != teamscores[1]["score"], "There was a draw, please try again."
+        assert (
+            teamscores[0]["score"] != teamscores[1]["score"]
+        ), "There was a draw, please try again."
         for this, other in ((0, 1), (1, 0)):
             teamscores[this]["margin"] = teamscores[this]["score"] - teamscores[other]["score"]
             teamscores[this]["win"] = teamscores[this]["score"] > teamscores[other]["score"]

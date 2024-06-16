@@ -8,13 +8,32 @@ import django.db.models.query_utils
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('venues', '0001_initial'),
+        ("venues", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='venueconstraint',
-            name='subject_content_type',
-            field=models.ForeignKey(limit_choices_to=django.db.models.query_utils.Q(django.db.models.query_utils.Q(('app_label', 'participants'), ('model', 'team'), _connector='AND'), django.db.models.query_utils.Q(('app_label', 'participants'), ('model', 'adjudicator'), _connector='AND'), django.db.models.query_utils.Q(('app_label', 'participants'), ('model', 'institution'), _connector='AND'), django.db.models.query_utils.Q(('app_label', 'divisions'), ('model', 'division'), _connector='AND'), _connector='OR'), on_delete=django.db.models.deletion.CASCADE, to='contenttypes.ContentType', verbose_name='subject content type'),
+            model_name="venueconstraint",
+            name="subject_content_type",
+            field=models.ForeignKey(
+                limit_choices_to=django.db.models.query_utils.Q(
+                    django.db.models.query_utils.Q(
+                        ("app_label", "participants"), ("model", "team"), _connector="AND"
+                    ),
+                    django.db.models.query_utils.Q(
+                        ("app_label", "participants"), ("model", "adjudicator"), _connector="AND"
+                    ),
+                    django.db.models.query_utils.Q(
+                        ("app_label", "participants"), ("model", "institution"), _connector="AND"
+                    ),
+                    django.db.models.query_utils.Q(
+                        ("app_label", "divisions"), ("model", "division"), _connector="AND"
+                    ),
+                    _connector="OR",
+                ),
+                on_delete=django.db.models.deletion.CASCADE,
+                to="contenttypes.ContentType",
+                verbose_name="subject content type",
+            ),
         ),
     ]

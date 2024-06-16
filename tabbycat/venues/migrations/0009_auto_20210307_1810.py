@@ -8,14 +8,24 @@ import utils.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contenttypes', '0002_remove_content_type_name'),
-        ('venues', '0008_auto_20200705_1525'),
+        ("contenttypes", "0002_remove_content_type_name"),
+        ("venues", "0008_auto_20200705_1525"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='venueconstraint',
-            name='subject_content_type',
-            field=utils.fields.LabelByNameForeignKey(limit_choices_to=models.Q(models.Q(('app_label', 'participants'), ('model', 'team')), models.Q(('app_label', 'participants'), ('model', 'adjudicator')), models.Q(('app_label', 'participants'), ('model', 'institution')), _connector='OR'), on_delete=django.db.models.deletion.CASCADE, to='contenttypes.contenttype', verbose_name='subject content type'),
+            model_name="venueconstraint",
+            name="subject_content_type",
+            field=utils.fields.LabelByNameForeignKey(
+                limit_choices_to=models.Q(
+                    models.Q(("app_label", "participants"), ("model", "team")),
+                    models.Q(("app_label", "participants"), ("model", "adjudicator")),
+                    models.Q(("app_label", "participants"), ("model", "institution")),
+                    _connector="OR",
+                ),
+                on_delete=django.db.models.deletion.CASCADE,
+                to="contenttypes.contenttype",
+                verbose_name="subject content type",
+            ),
         ),
     ]

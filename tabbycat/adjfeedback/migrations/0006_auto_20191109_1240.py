@@ -6,18 +6,21 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('participants', '0013_rename_test_score'),
-        ('tournaments', '0006_auto_20191109_1240'),
-        ('adjfeedback', '0005_auto_20180928_1441'),
+        ("participants", "0013_rename_test_score"),
+        ("tournaments", "0006_auto_20191109_1240"),
+        ("adjfeedback", "0005_auto_20180928_1441"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='AdjudicatorTestScoreHistory',
-            new_name='AdjudicatorBaseScoreHistory',
+            old_name="AdjudicatorTestScoreHistory",
+            new_name="AdjudicatorBaseScoreHistory",
         ),
         migrations.AlterModelOptions(
-            name='adjudicatorbasescorehistory',
-            options={'verbose_name': 'adjudicator base score history', 'verbose_name_plural': 'adjudicator base score histories'},
+            name="adjudicatorbasescorehistory",
+            options={
+                "verbose_name": "adjudicator base score history",
+                "verbose_name_plural": "adjudicator base score histories",
+            },
         ),
     ]

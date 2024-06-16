@@ -31,14 +31,17 @@ class BaseAdjudicatorAllocator:
         self.adjudicators = adjudicators
 
         if len(self.adjudicators) == 0:
-            info = _("There are no available adjudicators. Ensure there are "
-                     "adjudicators who have been marked as available for this "
-                     "round before auto-allocating.")
+            info = _(
+                "There are no available adjudicators. Ensure there are "
+                "adjudicators who have been marked as available for this "
+                "round before auto-allocating."
+            )
             logger.info(info)
             raise AdjudicatorAllocationError(info)
 
-        if (isinstance(debates, QuerySet) and debates.model == Debate) or \
-                (isinstance(debates, list) and len(debates) > 0 and isinstance(debates[0], Debate)):
+        if (isinstance(debates, QuerySet) and debates.model == Debate) or (
+            isinstance(debates, list) and len(debates) > 0 and isinstance(debates[0], Debate)
+        ):
             teams = Team.objects.filter(debateteam__debate__in=debates)
         else:
             teams = None

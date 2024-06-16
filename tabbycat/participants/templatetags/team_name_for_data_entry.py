@@ -12,10 +12,12 @@ def team_name_for_data_entry(team, config):
     see that docstring for more details."""
     if not team:
         return ""
-    if config == 'code':
+    if config == "code":
         return team.code_name
-    elif config == 'both':
-        return mark_safe(gettext("%(code_name)s <em>(%(real_name)s)</em>") % {
-            'code_name': team.code_name, 'real_name': team.short_name})
-    elif config == 'off':
+    elif config == "both":
+        return mark_safe(
+            gettext("%(code_name)s <em>(%(real_name)s)</em>")
+            % {"code_name": team.code_name, "real_name": team.short_name}
+        )
+    elif config == "off":
         return team.short_name

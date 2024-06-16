@@ -6,13 +6,27 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifications', '0004_expand_model'),
+        ("notifications", "0004_expand_model"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='sentmessagerecord',
-            name='event',
-            field=models.CharField(blank=True, choices=[('p', 'team points'), ('c', 'ballot confirmed'), ('f', 'feedback URL'), ('b', 'ballot URL'), ('u', 'landing page URL'), ('d', 'draw released'), ('t', 'team registration'), ('m', 'motion(s) released')], max_length=1, verbose_name='event'),
+            model_name="sentmessagerecord",
+            name="event",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("p", "team points"),
+                    ("c", "ballot confirmed"),
+                    ("f", "feedback URL"),
+                    ("b", "ballot URL"),
+                    ("u", "landing page URL"),
+                    ("d", "draw released"),
+                    ("t", "team registration"),
+                    ("m", "motion(s) released"),
+                ],
+                max_length=1,
+                verbose_name="event",
+            ),
         ),
     ]

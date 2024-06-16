@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('participants', '0003_auto_20180307_2202'),
+        ("participants", "0003_auto_20180307_2202"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='team',
-            name='code_name',
-            field=models.CharField(blank=True, help_text='Name used to obscure institutional identity on public-facing pages', max_length=150, verbose_name='code name'),
+            model_name="team",
+            name="code_name",
+            field=models.CharField(
+                blank=True,
+                help_text="Name used to obscure institutional identity on public-facing pages",
+                max_length=150,
+                verbose_name="code name",
+            ),
         ),
     ]

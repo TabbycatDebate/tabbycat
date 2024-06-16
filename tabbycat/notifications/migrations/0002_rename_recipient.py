@@ -6,14 +6,14 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('participants', '0004_auto_20180420_2040'),
-        ('notifications', '0001_initial'),
+        ("participants", "0004_auto_20180420_2040"),
+        ("notifications", "0001_initial"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='messagesentrecord',
-            old_name='recepient',
-            new_name='recipient',
+            model_name="messagesentrecord",
+            old_name="recepient",
+            new_name="recipient",
         ),
     ]

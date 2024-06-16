@@ -6,30 +6,30 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('motions', '0004_remove_league_fields'),
-        ('draw', '0004_remove_league_fields'),
-        ('participants', '0011_remove_league_fields'),
-        ('divisions', '0002_auto_20171110_0905'),
+        ("motions", "0004_remove_league_fields"),
+        ("draw", "0004_remove_league_fields"),
+        ("participants", "0011_remove_league_fields"),
+        ("divisions", "0002_auto_20171110_0905"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='division',
+            name="division",
             unique_together=set(),
         ),
         migrations.AlterIndexTogether(
-            name='division',
+            name="division",
             index_together=set(),
         ),
         migrations.RemoveField(
-            model_name='division',
-            name='tournament',
+            model_name="division",
+            name="tournament",
         ),
         migrations.RemoveField(
-            model_name='division',
-            name='venue_category',
+            model_name="division",
+            name="venue_category",
         ),
         migrations.DeleteModel(
-            name='Division',
+            name="Division",
         ),
     ]

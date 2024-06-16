@@ -10,25 +10,42 @@ import sys
 from os.path import abspath, dirname, join, relpath
 
 DEFAULT_DIR = relpath(join(dirname(__file__), "fixtures/"))
-MANAGE_PY = relpath(join(dirname(dirname((abspath(join(__file__))))), join("tabbycat", "manage.py")))
+MANAGE_PY = relpath(
+    join(dirname(dirname((abspath(join(__file__))))), join("tabbycat", "manage.py"))
+)
 
 # Arguments
-parser = argparse.ArgumentParser(description="Migrates all fixtures in a directory. "
-    "It's best to run this on a completely brand-new, unmigrated database.")
+parser = argparse.ArgumentParser(
+    description="Migrates all fixtures in a directory. "
+    "It's best to run this on a completely brand-new, unmigrated database."
+)
 
-parser.add_argument("old_commit", type=str,
-    help="Git commit (or branch name, etc.) before the migration")
-parser.add_argument("new_commit", type=str,
-    help="Git commit (or branch name, etc.) after the migration")
-parser.add_argument("--dry-run", action="store_true", default=False,
-    help="Print commands, don't run them.")
-parser.add_argument("--directory", type=str, default=DEFAULT_DIR,
-    help="Directory where fixtures are located, default: " + DEFAULT_DIR)
-parser.add_argument("--unmigrate", type=str, default=[], nargs="+", metavar="APP/MIGRATION",
+parser.add_argument(
+    "old_commit", type=str, help="Git commit (or branch name, etc.) before the migration"
+)
+parser.add_argument(
+    "new_commit", type=str, help="Git commit (or branch name, etc.) after the migration"
+)
+parser.add_argument(
+    "--dry-run", action="store_true", default=False, help="Print commands, don't run them."
+)
+parser.add_argument(
+    "--directory",
+    type=str,
+    default=DEFAULT_DIR,
+    help="Directory where fixtures are located, default: " + DEFAULT_DIR,
+)
+parser.add_argument(
+    "--unmigrate",
+    type=str,
+    default=[],
+    nargs="+",
+    metavar="APP/MIGRATION",
     help="App labels and migrations to use when unmigrating. These get passed "
     "to 'python manage.py migrate' when rolling back the migration, in "
     "preparation for the next fixture. Use the format: app_label/migration_name. "
-    "For example: --unmigrate adjallocation/0008 participants/0037 actionlog/0019")
+    "For example: --unmigrate adjallocation/0008 participants/0037 actionlog/0019",
+)
 
 args = parser.parse_args()
 
@@ -90,8 +107,10 @@ else:
         existing = migration_by_app.setdefault(app_label, int(migration_number))
         if int(migration_number) - 1 < existing:
             migration_by_app[app_label] = int(migration_number) - 1
-    unmigrations = [(app_label, "%04d" % (migration_number,)) for
-            app_label, migration_number in migration_by_app.items()]
+    unmigrations = [
+        (app_label, "%04d" % (migration_number,))
+        for app_label, migration_number in migration_by_app.items()
+    ]
 
 print_yellow("Unmigration specs:\n" + "\n".join("    %s %s" % spec for spec in unmigrations))
 
@@ -112,9 +131,25 @@ for fixture in fixtures:
     run_command(["git", "checkout", args.new_commit])
     run_command(["python", MANAGE_PY, "migrate", "--no-input"])
     run_command(["python", MANAGE_PY, "checkpreferences"])
-    run_command(["python", MANAGE_PY, "dumpdata", "--natural-foreign", "--natural-primary",
-            "-e=availability", "-e=contenttypes", "-e=options", "-e=auth.Permission",
-            "-e=admin.logentry", "-e=actionlog.actionlogentry", "-e=sessions", "-e=authtoken.token",
-            "--indent=4", "--format=json", "--output=" + path])
+    run_command(
+        [
+            "python",
+            MANAGE_PY,
+            "dumpdata",
+            "--natural-foreign",
+            "--natural-primary",
+            "-e=availability",
+            "-e=contenttypes",
+            "-e=options",
+            "-e=auth.Permission",
+            "-e=admin.logentry",
+            "-e=actionlog.actionlogentry",
+            "-e=sessions",
+            "-e=authtoken.token",
+            "--indent=4",
+            "--format=json",
+            "--output=" + path,
+        ]
+    )
 
 print_yellow("Migrated %d fixtures." % len(fixtures))

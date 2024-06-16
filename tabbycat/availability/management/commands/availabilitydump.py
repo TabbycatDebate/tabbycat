@@ -14,9 +14,13 @@ class Command(TournamentCommand):
         queryset = tournament.relevant_adjudicators.all()
 
         for rd in rounds:
-            queryset = queryset.prefetch_related(Prefetch('round_availabilities',
+            queryset = queryset.prefetch_related(
+                Prefetch(
+                    "round_availabilities",
                     queryset=RoundAvailability.objects.filter(round=rd),
-                    to_attr='available_%d' % rd.seq))
+                    to_attr="available_%d" % rd.seq,
+                )
+            )
 
         self.stdout.write("institution,name")
         for adj in queryset:
@@ -24,5 +28,5 @@ class Command(TournamentCommand):
                 adj.institution.code if adj.institution else "",
                 adj.name,
             ]
-            row.extend([str(len(getattr(adj, 'available_%d' % rd.seq)) > 0) for rd in rounds])
+            row.extend([str(len(getattr(adj, "available_%d" % rd.seq)) > 0) for rd in rounds])
             self.stdout.write(",".join(row))

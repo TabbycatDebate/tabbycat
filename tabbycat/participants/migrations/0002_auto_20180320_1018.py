@@ -12,12 +12,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('participants', '0001_initial'),
+        ("participants", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='adjudicator',
-            options={'verbose_name': 'adjudicator', 'verbose_name_plural': 'adjudicators'},
+            name="adjudicator",
+            options={"verbose_name": "adjudicator", "verbose_name_plural": "adjudicators"},
         ),
     ]

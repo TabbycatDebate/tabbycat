@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('participants', '0007_auto_20180909_2156'),
+        ("participants", "0007_auto_20180909_2156"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='adjudicator',
-            name='adj_core',
-            field=models.BooleanField(blank=True, default=False, verbose_name='adjudication core'),
+            model_name="adjudicator",
+            name="adj_core",
+            field=models.BooleanField(blank=True, default=False, verbose_name="adjudication core"),
         ),
         migrations.AlterField(
-            model_name='adjudicator',
-            name='independent',
-            field=models.BooleanField(blank=True, default=False, verbose_name='independent'),
+            model_name="adjudicator",
+            name="independent",
+            field=models.BooleanField(blank=True, default=False, verbose_name="independent"),
         ),
     ]

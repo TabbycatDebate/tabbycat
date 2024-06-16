@@ -15,47 +15,46 @@ register = template.Library()
 STATIC_PATH = settings.MEDIA_ROOT
 version_cache = {}
 
-rx = re.compile(r'^(.*)\.(.*?)$')
+rx = re.compile(r"^(.*)\.(.*?)$")
 
 
 @register.simple_tag
 def version(path_string, base_url=settings.MEDIA_URL):
 
-    if not hasattr(
-            settings,
-            'ENABLE_MEDIA_VERSIONING') or not settings.ENABLE_MEDIA_VERSIONING:
+    if not hasattr(settings, "ENABLE_MEDIA_VERSIONING") or not settings.ENABLE_MEDIA_VERSIONING:
         return base_url + path_string
 
     try:
         if path_string in version_cache:
             mtime = version_cache[path_string]
         else:
-            mtime = os.path.getmtime(os.path.join(settings.MEDIA_ROOT,
-                                                  path_string))
+            mtime = os.path.getmtime(os.path.join(settings.MEDIA_ROOT, path_string))
             version_cache[path_string] = mtime
 
-        return base_url + rx.sub(r'\1.%d.\2' % mtime, path_string)
+        return base_url + rx.sub(r"\1.%d.\2" % mtime, path_string)
     except Exception:
         return base_url + path_string
 
 
 @register.simple_tag(takes_context=True)
 def tournament_side_names(context, name_type):
-    side_names = [get_side_name(context['tournament'], 'aff', name_type),
-                  get_side_name(context['tournament'], 'neg', name_type)]
+    side_names = [
+        get_side_name(context["tournament"], "aff", name_type),
+        get_side_name(context["tournament"], "neg", name_type),
+    ]
     return side_names
 
 
 @register.simple_tag(takes_context=True)
 def debate_team_side_name(context, debate_team):
     # If returned directly from the object it will have to lookup tournament
-    return debate_team.get_side_name(context['tournament'])
+    return debate_team.get_side_name(context["tournament"])
 
 
 class TournamentURLNode(URLNode):
 
     def __init__(self, view_name, args, kwargs, asvar):
-        self._args = args      # static copy, as we modify self.args in render()
+        self._args = args  # static copy, as we modify self.args in render()
         self._kwargs = kwargs
         super().__init__(view_name, args, kwargs, asvar)
 
@@ -70,15 +69,17 @@ class TournamentURLNode(URLNode):
         # the string again, but it's better than copy-pasting the superclass's
         # method itself.
         try:
-            tournament_slug = context['tournament'].slug
+            tournament_slug = context["tournament"].slug
         except KeyError:
-            raise TemplateSyntaxError("tournamenturl can only be used in contexts with a tournament rtf ")
+            raise TemplateSyntaxError(
+                "tournamenturl can only be used in contexts with a tournament rtf "
+            )
         tournament_slug = Variable("'" + tournament_slug + "'")
-        self.args = list(self._args)      # make a copy in case render() gets called multiple times
+        self.args = list(self._args)  # make a copy in case render() gets called multiple times
         self.kwargs = dict(self._kwargs)
 
         if self.kwargs:
-            self.kwargs['tournament_slug'] = tournament_slug
+            self.kwargs["tournament_slug"] = tournament_slug
         else:
             self.args.insert(0, tournament_slug)
 
@@ -89,10 +90,10 @@ class TournamentAbsoluteURLNode(TournamentURLNode):
     def render(self, context):
         path = super(TournamentAbsoluteURLNode, self).render(context)
         if self.asvar:
-            context[self.asvar] = context['request'].build_absolute_uri(context[self.asvar])
+            context[self.asvar] = context["request"].build_absolute_uri(context[self.asvar])
             return path
         else:
-            return context['request'].build_absolute_uri(path)
+            return context["request"].build_absolute_uri(path)
 
 
 class RoundURLNode(URLNode):
@@ -105,7 +106,7 @@ class RoundURLNode(URLNode):
             self.round = args.pop(0)
         else:
             self.round = None  # None means take from context
-        self._args = args      # static copy, as we modify self.args in render()
+        self._args = args  # static copy, as we modify self.args in render()
         self._kwargs = kwargs
 
         super().__init__(view_name, args, kwargs, asvar)
@@ -114,15 +115,15 @@ class RoundURLNode(URLNode):
         """Add the round to the arguments, then render as usual."""
 
         # Similar comment as for TournamentURLNode.render()
-        round = self.round.resolve(context) if self.round else context['round']
+        round = self.round.resolve(context) if self.round else context["round"]
         tournament_slug = Variable("'" + round.tournament.slug + "'")
         round_seq = Variable("'%d'" % round.seq)
-        self.args = list(self._args)      # make a copy in case render() gets called multiple times
+        self.args = list(self._args)  # make a copy in case render() gets called multiple times
         self.kwargs = dict(self._kwargs)
 
         if self.kwargs:
-            self.kwargs['tournament_slug'] = tournament_slug
-            self.kwargs['round_seq'] = round_seq
+            self.kwargs["tournament_slug"] = tournament_slug
+            self.kwargs["round_seq"] = round_seq
         else:
             self.args = [tournament_slug, round_seq] + self.args
 
@@ -138,13 +139,15 @@ def get_url_args(parser, token):
 
     bits = token.split_contents()
     if len(bits) < 2:
-        raise TemplateSyntaxError("'%s' takes at least one argument, the name of a url()." % bits[0])
+        raise TemplateSyntaxError(
+            "'%s' takes at least one argument, the name of a url()." % bits[0]
+        )
     viewname = parser.compile_filter(bits[1])
     args = []
     kwargs = {}
     asvar = None
     bits = bits[2:]
-    if len(bits) >= 2 and bits[-2] == 'as':
+    if len(bits) >= 2 and bits[-2] == "as":
         asvar = bits[-1]
         bits = bits[:-2]
 
@@ -188,7 +191,7 @@ def roundurl(parser, token):
 @register.simple_tag(takes_context=True)
 def person_display_name(context, person):
     # If returned directly from the object it will have to lookup tournament
-    return person.get_public_name(context['tournament'])
+    return person.get_public_name(context["tournament"])
 
 
 @register.filter
@@ -207,7 +210,7 @@ def prev_value(value, arg):
         return None
 
 
-@register.filter(name='times')
+@register.filter(name="times")
 def times(number):
     return list(range(number))
 
@@ -228,29 +231,29 @@ def get_unit(type):
 @register.simple_tag
 def percentage(number_a, number_b):
     if number_b > 0:
-        return number_a / number_b * 100 # Used for progress bars
+        return number_a / number_b * 100  # Used for progress bars
     else:
         return 0
 
 
 @register.filter
 def subtract(value, arg):
-    return value - arg # Used in BP Motion Stats
+    return value - arg  # Used in BP Motion Stats
 
 
-@register.filter(name='abbreviatename')
+@register.filter(name="abbreviatename")
 def abbreviatename(name):
     """Takes a two-part name and returns an abbreviation like 'E.Lučić'."""
     parts = name.split(" ")
-    return "%s.%s" % (parts[0][:5], parts[-1][:5]) # Used for barcodes
+    return "%s.%s" % (parts[0][:5], parts[-1][:5])  # Used for barcodes
 
 
 @register.simple_tag
 def prep_time():
-    return (datetime.now() + timedelta(minutes=15)).strftime('%Y-%m-%dT%H:%M')
+    return (datetime.now() + timedelta(minutes=15)).strftime("%Y-%m-%dT%H:%M")
 
 
 @register.simple_tag(takes_context=True)
 def haspermission(context, permission):
     # If returned directly from the object it will have to lookup tournament
-    return has_permission(context['user'], permission, context['tournament'])
+    return has_permission(context["user"], permission, context["tournament"])

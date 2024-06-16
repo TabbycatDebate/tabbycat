@@ -13,8 +13,8 @@ class MultiValueChoicePreference(ChoicePreference):
 
     def get_field_kwargs(self):
         field_kwargs = super().get_field_kwargs()
-        field_kwargs['nfields'] = self.nfields
-        field_kwargs['allow_empty'] = self.allow_empty
+        field_kwargs["nfields"] = self.nfields
+        field_kwargs["allow_empty"] = self.allow_empty
         return field_kwargs
 
     def validate(self, value):

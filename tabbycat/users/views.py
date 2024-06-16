@@ -31,21 +31,30 @@ class BlankSiteStartView(FormView):
     form_class = SuperuserCreationForm
     template_name = "blank_site_start.html"
     lock = Lock()
-    success_url = reverse_lazy('tabbycat-index')
+    success_url = reverse_lazy("tabbycat-index")
 
     def get(self, request):
         if User.objects.exists():
-            logger.warning("Tried to get the blank-site-start view when a user account already exists.")
-            return redirect('tabbycat-index')
+            logger.warning(
+                "Tried to get the blank-site-start view when a user account already exists."
+            )
+            return redirect("tabbycat-index")
 
         return super().get(request)
 
     def post(self, request):
         with self.lock:
             if User.objects.exists():
-                logger.warning("Tried to post the blank-site-start view when a user account already exists.")
-                messages.error(request, _("Whoops! It looks like someone's already created the first user account. Please log in."))
-                return redirect('login')
+                logger.warning(
+                    "Tried to post the blank-site-start view when a user account already exists."
+                )
+                messages.error(
+                    request,
+                    _(
+                        "Whoops! It looks like someone's already created the first user account. Please log in."
+                    ),
+                )
+                return redirect("login")
 
             return super().post(request)
 
@@ -66,25 +75,25 @@ class InviteUserView(LogActionMixin, AdministratorMixin, TournamentMixin, Passwo
     template_name = "invite_user.html"
     action_log_type = ActionLogEntry.ActionType.USER_INVITE
     page_title = _("Invite User")
-    page_emoji = '👤'
+    page_emoji = "👤"
 
-    subject_template_name = 'account_invitation_subject.txt'
-    email_template_name = 'account_invitation_email.html'
+    subject_template_name = "account_invitation_subject.txt"
+    email_template_name = "account_invitation_email.html"
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['tournament'] = self.tournament
+        kwargs["tournament"] = self.tournament
         return kwargs
 
     def get_success_url(self):
-        return reverse_tournament('options-tournament-index', self.tournament)
+        return reverse_tournament("options-tournament-index", self.tournament)
 
 
 class AcceptInvitationView(TournamentMixin, PasswordResetConfirmView):
     form_class = AcceptInvitationForm
-    success_url = reverse_lazy('tabbycat-index')
-    template_name = 'signup.html'
-    page_title = _('Accept Invitation')
+    success_url = reverse_lazy("tabbycat-index")
+    template_name = "signup.html"
+    page_title = _("Accept Invitation")
 
     def get_context_data(self, **kwargs):
         if not self.validlink:

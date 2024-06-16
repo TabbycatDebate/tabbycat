@@ -34,13 +34,18 @@ class BasePreformedPanelAllocator:
         self.round = round
         self.debates = debates
         self.panels = panels.prefetch_related(
-            Prefetch('preformedpaneladjudicator_set',
-                queryset=PreformedPanelAdjudicator.objects.select_related('adjudicator')))
+            Prefetch(
+                "preformedpaneladjudicator_set",
+                queryset=PreformedPanelAdjudicator.objects.select_related("adjudicator"),
+            )
+        )
 
         if len(self.panels) == 0:
-            info = _("There are no preformed panels to use. Have you allocated "
-                     "preformed panels for this round? If not, try just auto-allocating "
-                     "adjudicators instead.")
+            info = _(
+                "There are no preformed panels to use. Have you allocated "
+                "preformed panels for this round? If not, try just auto-allocating "
+                "adjudicators instead."
+            )
             logger.info(info)
             raise AdjudicatorAllocationError(info)
 

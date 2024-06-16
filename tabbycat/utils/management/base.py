@@ -32,16 +32,22 @@ class TournamentCommand(BaseCommand):
             dest="tournament_selection",
             metavar="TOURNAMENT",
             help="Slug of tournament(s), required if there is more than one tournament. "
-            "Can be specified multiple times to run the command on multiple tournaments.")
+            "Can be specified multiple times to run the command on multiple tournaments.",
+        )
         tournaments_group.add_argument(
             "--all-tournaments",
             action="store_true",
             help="Run on all tournaments in the database. "
-            "--tournament options are ignored if this is used.")
+            "--tournament options are ignored if this is used.",
+        )
 
     def _set_log_level(self, **options):
-        loglevel = [logging.WARNING, logging.INFO, logging.DEBUG, logging.DEBUG,
-                    ][options["verbosity"]]
+        loglevel = [
+            logging.WARNING,
+            logging.INFO,
+            logging.DEBUG,
+            logging.DEBUG,
+        ][options["verbosity"]]
         _set_log_level(loglevel)
 
     def get_tournaments(self, options):
@@ -54,15 +60,15 @@ class TournamentCommand(BaseCommand):
 
         elif options["all_tournaments"]:
             if options["tournament_selection"]:
-                raise CommandError(
-                    "You can't use --tournament and --all-tournaments together.")
+                raise CommandError("You can't use --tournament and --all-tournaments together.")
             options["__tournaments__"] = list(Tournament.objects.all())
 
         elif not options["tournament_selection"]:
             # If there is only one tournament, that'll do.
             if Tournament.objects.count() > 1:
                 raise CommandError(
-                    "You must specify a tournament, because there is more than one tournament in the database.")
+                    "You must specify a tournament, because there is more than one tournament in the database."
+                )
             options["__tournaments__"] = [Tournament.objects.get()]
 
         else:
@@ -81,7 +87,9 @@ class TournamentCommand(BaseCommand):
                     "There {verb} no tournament{s} with the following slug{s}: {slugs}".format(
                         verb="is" if len(bad_slugs) == 1 else "are",
                         s="" if len(bad_slugs) == 1 else "s",
-                        slugs=", ".join(bad_slugs)))
+                        slugs=", ".join(bad_slugs),
+                    )
+                )
 
             options["__tournaments__"] = tournaments
 
@@ -96,7 +104,8 @@ class TournamentCommand(BaseCommand):
         """Perform the command's actions on ``tournament``, a ``Tournament``
         instance corresponding to the slug on the command line."""
         raise NotImplementedError(
-            "subclasses of TournamentCommand must provide a handle_tournament() method.")
+            "subclasses of TournamentCommand must provide a handle_tournament() method."
+        )
 
 
 class RoundCommand(TournamentCommand):
@@ -128,44 +137,51 @@ class RoundCommand(TournamentCommand):
 
         group_description = "Options to select rounds on which to run command."
         if not self.confirm_round_destruction:
-            group_description += (" Every option adds the associated round(s); "
-            "duplicates are not filtered out. So, for example, "
-            "'--all-rounds 2' will run on round 2 twice.")
+            group_description += (
+                " Every option adds the associated round(s); "
+                "duplicates are not filtered out. So, for example, "
+                "'--all-rounds 2' will run on round 2 twice."
+            )
 
         rounds_group = parser.add_argument_group("round selection", group_description)
         rounds_group.add_argument(
             "round_selection",
             type=str,
-            nargs='+' if self.rounds_required else '*',
+            nargs="+" if self.rounds_required else "*",
             metavar="round",
             help="Seq numbers (if integers) or abbreviations (if not integers) "
             "of rounds. Multiple rounds can be specified. If a round's "
             "abbreviation is an integer, only its seq number may be used. If "
             "multiple tournaments are specified, the rounds must exist in "
-            "every tournament.")
+            "every tournament.",
+        )
 
         if self.confirm_round_destruction:
             rounds_group.add_argument(
                 "--confirm",
                 type=str,
-                nargs='+',
+                nargs="+",
                 metavar="ROUND",
                 help="If specified with the same arguments as the positional "
                 "arguments and in the same order, the user confirmation prompt "
-                "will be skipped.")
+                "will be skipped.",
+            )
         else:
             rounds_group.add_argument(
                 "--all-rounds",
                 action="store_true",
-                help="Run on all rounds in each specified tournament.")
+                help="Run on all rounds in each specified tournament.",
+            )
             rounds_group.add_argument(
                 "--prelim-rounds",
                 action="store_true",
-                help="Run on all prelim rounds in each specified tournament.")
+                help="Run on all prelim rounds in each specified tournament.",
+            )
             rounds_group.add_argument(
                 "--break-rounds",
                 action="store_true",
-                help="Run on all break rounds in each specified tournament.")
+                help="Run on all break rounds in each specified tournament.",
+            )
 
     def _get_round(self, tournament, specifier):
         if specifier.isdigit():
@@ -176,8 +192,11 @@ class RoundCommand(TournamentCommand):
         try:
             return tournament.round_set.get(**{spectype: specifier})
         except Round.DoesNotExist:
-            raise CommandError("The tournament {tournament!r} has no round with {type} {spec!r}".format(
-                tournament=tournament.slug, type=spectype, spec=specifier))
+            raise CommandError(
+                "The tournament {tournament!r} has no round with {type} {spec!r}".format(
+                    tournament=tournament.slug, type=spectype, spec=specifier
+                )
+            )
 
     def get_rounds(self, options):
         """Returns a list of rounds implied by command-line arguments.
@@ -204,10 +223,17 @@ class RoundCommand(TournamentCommand):
 
     def _confirm_rounds(self, rounds, **options):
         if not options["confirm"]:
-            self.stdout.write(self.style.WARNING("WARNING! You are about to {} from the following rounds:".format(self.confirm_round_destruction)))
+            self.stdout.write(
+                self.style.WARNING(
+                    "WARNING! You are about to {} from the following rounds:".format(
+                        self.confirm_round_destruction
+                    )
+                )
+            )
             for r in rounds:
-                self.stdout.write(self.style.WARNING("  [{t}]: {r}".format(
-                    t=r.tournament.name, r=r.name)))
+                self.stdout.write(
+                    self.style.WARNING("  [{t}]: {r}".format(t=r.tournament.name, r=r.name))
+                )
             response = input("Are you sure? ")
             if response != "yes":
                 raise CommandError("Cancelled by user.")
@@ -227,8 +253,8 @@ class RoundCommand(TournamentCommand):
         """Perform the command's actions on ``round``, a ``Round``
         instance corresponding to the slug on the command line."""
         raise NotImplementedError(
-            "subclasses of RoundCommand must provide a handle_round() method.")
+            "subclasses of RoundCommand must provide a handle_round() method."
+        )
 
     def handle_tournament(self, tournament, **options):
-        raise NotImplementedError(
-            "subclasses of RoundCommand do not use handle_tournament().")
+        raise NotImplementedError("subclasses of RoundCommand do not use handle_tournament().")

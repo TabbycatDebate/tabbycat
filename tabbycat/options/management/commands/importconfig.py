@@ -10,12 +10,14 @@ class Command(TournamentCommand):
 
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)
-        parser.add_argument("file", type=argparse.FileType('r'),
-            help="Input file")
+        parser.add_argument("file", type=argparse.FileType("r"), help="Input file")
 
     def handle_tournament(self, tournament, **options):
-        config = json.load(options['file'])
+        config = json.load(options["file"])
         for key, value in config.items():
             tournament.preferences[key] = value
-        print("Imported {n:d} options to tournament {tournament}".format(
-            n=len(config), tournament=tournament))
+        print(
+            "Imported {n:d} options to tournament {tournament}".format(
+                n=len(config), tournament=tournament
+            )
+        )

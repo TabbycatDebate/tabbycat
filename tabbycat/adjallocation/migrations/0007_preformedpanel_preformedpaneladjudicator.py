@@ -7,35 +7,80 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('participants', '0007_auto_20180909_2156'),
-        ('tournaments', '0005_remove_tournament_current_round'),
-        ('adjallocation', '0006_auto_20180919_2143'),
+        ("participants", "0007_auto_20180909_2156"),
+        ("tournaments", "0005_remove_tournament_current_round"),
+        ("adjallocation", "0006_auto_20180919_2143"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PreformedPanel',
+            name="PreformedPanel",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('importance', models.FloatField(choices=[(-2, -2.0), (-1, -1.0), (0, 0.0), (1, 1.0), (2, 2.0)], default=0.0, verbose_name='importance')),
-                ('round', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tournaments.Round', verbose_name='round')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "importance",
+                    models.FloatField(
+                        choices=[(-2, -2.0), (-1, -1.0), (0, 0.0), (1, 1.0), (2, 2.0)],
+                        default=0.0,
+                        verbose_name="importance",
+                    ),
+                ),
+                (
+                    "round",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="tournaments.Round",
+                        verbose_name="round",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'preformed panel',
-                'verbose_name_plural': 'preformed panels',
+                "verbose_name": "preformed panel",
+                "verbose_name_plural": "preformed panels",
             },
         ),
         migrations.CreateModel(
-            name='PreformedPanelAdjudicator',
+            name="PreformedPanelAdjudicator",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('type', models.CharField(choices=[('C', 'chair'), ('P', 'panellist'), ('T', 'trainee')], max_length=2, verbose_name='type')),
-                ('adjudicator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='participants.Adjudicator', verbose_name='adjudicator')),
-                ('panel', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='adjallocation.PreformedPanel', verbose_name='panel')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[("C", "chair"), ("P", "panellist"), ("T", "trainee")],
+                        max_length=2,
+                        verbose_name="type",
+                    ),
+                ),
+                (
+                    "adjudicator",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="participants.Adjudicator",
+                        verbose_name="adjudicator",
+                    ),
+                ),
+                (
+                    "panel",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="adjallocation.PreformedPanel",
+                        verbose_name="panel",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'preformed panel adjudicator',
-                'verbose_name_plural': 'preformed panel adjudicators',
+                "verbose_name": "preformed panel adjudicator",
+                "verbose_name_plural": "preformed panel adjudicators",
             },
         ),
     ]

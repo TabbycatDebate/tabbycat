@@ -63,17 +63,23 @@ class BaseRankAnnotator:
         for key in metrics:
             annotation = annotations[key]
             if annotation.ascending:
-                ordering.append(annotation.get_ranking_annotation(min_field, min_rounds).asc(nulls_last=True))
+                ordering.append(
+                    annotation.get_ranking_annotation(min_field, min_rounds).asc(nulls_last=True)
+                )
             else:
-                ordering.append(annotation.get_ranking_annotation(min_field, min_rounds).desc(nulls_last=True))
+                ordering.append(
+                    annotation.get_ranking_annotation(min_field, min_rounds).desc(nulls_last=True)
+                )
         return ordering
 
     def get_annotated_queryset(self, queryset, annotators, min_field, min_rounds):
         self.queryset_annotated = True
-        return queryset.annotate(**{
-            self.key          : self.get_annotation(annotators, min_field, min_rounds),
-            self.key + '_tied': self.get_tied_annotation(annotators, min_field, min_rounds),
-        })
+        return queryset.annotate(
+            **{
+                self.key: self.get_annotation(annotators, min_field, min_rounds),
+                self.key + "_tied": self.get_tied_annotation(annotators, min_field, min_rounds),
+            }
+        )
 
     def get_annotation(self, annotators, min_field, min_rounds):
         raise NotImplementedError
@@ -81,18 +87,25 @@ class BaseRankAnnotator:
     def get_tied_annotation(self, annotators, min_field, min_rounds):
         annotations = {a.key: a for a in annotators}
         return Window(
-            expression=Count('id'),
-            partition_by=[annotations[key].get_ranking_annotation(min_field, min_rounds) for key in self.metrics],
+            expression=Count("id"),
+            partition_by=[
+                annotations[key].get_ranking_annotation(min_field, min_rounds)
+                for key in self.metrics
+            ],
         )
 
     def annotate_with_queryset(self, queryset, standings):
         """Annotates items with the given QuerySet, using the "metric" field."""
-        tied_key = self.key + '_tied'
+        tied_key = self.key + "_tied"
         for item in queryset:
-            standings.add_ranking(item, self.key, (getattr(item, self.key), getattr(item, tied_key) > 1))
+            standings.add_ranking(
+                item, self.key, (getattr(item, self.key), getattr(item, tied_key) > 1)
+            )
 
     def annotate_by_queryset(self, queryset, standings):
-        assert self.queryset_annotated, "get_annotated_queryset() must be run before annotate_by_queryset()"
+        assert (
+            self.queryset_annotated
+        ), "get_annotated_queryset() must be run before annotate_by_queryset()"
         self.annotate_with_queryset(queryset, standings)
 
 
@@ -155,7 +168,10 @@ class SubrankAnnotator(BaseRankWithinGroupAnnotator):
         return Window(
             expression=Rank(),
             order_by=self._get_ordering(self.metrics[1:], annotators, min_field, min_rounds),
-            partition_by=[annotations[key].get_ranking_annotation(min_field, min_rounds) for key in self.metrics[:1]],
+            partition_by=[
+                annotations[key].get_ranking_annotation(min_field, min_rounds)
+                for key in self.metrics[:1]
+            ],
         )
 
 
@@ -177,12 +193,16 @@ class RankFromInstitutionAnnotator(BaseRankWithinGroupAnnotator):
         return Window(
             expression=Rank(),
             order_by=self._get_ordering(self.metrics[1:], annotators, min_field, min_rounds),
-            partition_by=F('institution_id'),
+            partition_by=F("institution_id"),
         )
 
     def get_tied_annotation(self, annotators, min_field, min_rounds):
         annotations = {a.key: a for a in annotators}
         return Window(
-            expression=Count('id'),
-            partition_by=[F('institution_id')] + [annotations[key].get_ranking_annotation(min_field, min_rounds) for key in self.metrics],
+            expression=Count("id"),
+            partition_by=[F("institution_id")]
+            + [
+                annotations[key].get_ranking_annotation(min_field, min_rounds)
+                for key in self.metrics
+            ],
         )

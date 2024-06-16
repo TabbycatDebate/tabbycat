@@ -13,27 +13,55 @@ class TestMotionStatisticsTwoTeam(TestCase):
     just one debate and two motions."""
 
     def setUp(self):
-        self.tournament = Tournament.objects.create(slug="motions-twoteam", name="Motion statistics two-team")
-        self.tournament.preferences['debate_rules__teams_in_debate'] = 'two'
-        self.tournament.preferences['debate_rules__ballots_per_debate_prelim'] = 'per-adj'
-        team1 = Team.objects.create(tournament=self.tournament, reference="1", use_institution_prefix=False)
-        team2 = Team.objects.create(tournament=self.tournament, reference="2", use_institution_prefix=False)
+        self.tournament = Tournament.objects.create(
+            slug="motions-twoteam", name="Motion statistics two-team"
+        )
+        self.tournament.preferences["debate_rules__teams_in_debate"] = "two"
+        self.tournament.preferences["debate_rules__ballots_per_debate_prelim"] = "per-adj"
+        team1 = Team.objects.create(
+            tournament=self.tournament, reference="1", use_institution_prefix=False
+        )
+        team2 = Team.objects.create(
+            tournament=self.tournament, reference="2", use_institution_prefix=False
+        )
         rd = Round.objects.create(tournament=self.tournament, seq=1)
-        motion = Motion.objects.create(text="Motion", reference="Motion", tournament=self.tournament)
+        motion = Motion.objects.create(
+            text="Motion", reference="Motion", tournament=self.tournament
+        )
         debate = Debate.objects.create(round=rd)
         dt1 = DebateTeam.objects.create(debate=debate, team=team1, side=DebateTeam.Side.AFF)
         dt2 = DebateTeam.objects.create(debate=debate, team=team2, side=DebateTeam.Side.NEG)
         ballotsub = BallotSubmission.objects.create(debate=debate, motion=motion, confirmed=True)
-        TeamScore.objects.create(debate_team=dt1, ballot_submission=ballotsub,
-            margin=+2, points=1, score=101, win=True,  votes_given=1, votes_possible=1)
-        TeamScore.objects.create(debate_team=dt2, ballot_submission=ballotsub,
-            margin=-2, points=0, score=99, win=False, votes_given=0, votes_possible=1)
+        TeamScore.objects.create(
+            debate_team=dt1,
+            ballot_submission=ballotsub,
+            margin=+2,
+            points=1,
+            score=101,
+            win=True,
+            votes_given=1,
+            votes_possible=1,
+        )
+        TeamScore.objects.create(
+            debate_team=dt2,
+            ballot_submission=ballotsub,
+            margin=-2,
+            points=0,
+            score=99,
+            win=False,
+            votes_given=0,
+            votes_possible=1,
+        )
 
-        vetoed = Motion.objects.create(text="No one wants", reference="Vetoed", tournament=self.tournament)
-        DebateTeamMotionPreference.objects.create(debate_team=dt1, ballot_submission=ballotsub,
-            motion=vetoed, preference=3)
-        DebateTeamMotionPreference.objects.create(debate_team=dt2, ballot_submission=ballotsub,
-            motion=vetoed, preference=3)
+        vetoed = Motion.objects.create(
+            text="No one wants", reference="Vetoed", tournament=self.tournament
+        )
+        DebateTeamMotionPreference.objects.create(
+            debate_team=dt1, ballot_submission=ballotsub, motion=vetoed, preference=3
+        )
+        DebateTeamMotionPreference.objects.create(
+            debate_team=dt2, ballot_submission=ballotsub, motion=vetoed, preference=3
+        )
 
         RoundMotion.objects.create(round=rd, motion=motion, seq=1)
         RoundMotion.objects.create(round=rd, motion=vetoed, seq=2)
@@ -69,10 +97,14 @@ class TestMotionStatisticsBP(TestCase):
 
     def setUp(self):
         self.tournament = Tournament.objects.create(slug="motions-bp", name="Motion statistics BP")
-        self.tournament.preferences['debate_rules__teams_in_debate'] = 'bp'
-        self.tournament.preferences['debate_rules__ballots_per_debate_prelim'] = 'per-debate'
-        self.teams = {side: Team.objects.create(tournament=self.tournament, reference=side,
-                use_institution_prefix=False) for side in self.tournament.sides}
+        self.tournament.preferences["debate_rules__teams_in_debate"] = "bp"
+        self.tournament.preferences["debate_rules__ballots_per_debate_prelim"] = "per-debate"
+        self.teams = {
+            side: Team.objects.create(
+                tournament=self.tournament, reference=side, use_institution_prefix=False
+            )
+            for side in self.tournament.sides
+        }
 
     def tearDown(self):
         DebateTeam.objects.filter(team__tournament=self.tournament).delete()
@@ -80,15 +112,18 @@ class TestMotionStatisticsBP(TestCase):
 
     def test_prelim_statistics(self):
         rd = Round.objects.create(tournament=self.tournament, seq=1, stage=Round.Stage.PRELIMINARY)
-        motion = Motion.objects.create(text="Prelim motion", reference="Prelim", tournament=self.tournament)
+        motion = Motion.objects.create(
+            text="Prelim motion", reference="Prelim", tournament=self.tournament
+        )
         rd.roundmotion_set.create(motion=motion, seq=1)
         debate = Debate.objects.create(round=rd)
         ballotsub = BallotSubmission.objects.create(debate=debate, motion=motion, confirmed=True)
 
         for i, side in enumerate(self.tournament.sides):
             dt = DebateTeam.objects.create(debate=debate, team=self.teams[side], side=side)
-            TeamScore.objects.create(debate_team=dt, ballot_submission=ballotsub,
-                points=i, score=100+i)
+            TeamScore.objects.create(
+                debate_team=dt, ballot_submission=ballotsub, points=i, score=100 + i
+            )
 
         stats = MotionBPStatsCalculator(self.tournament)
         motion = next(stats.motions)
@@ -116,22 +151,25 @@ class TestMotionStatisticsBP(TestCase):
         self.assertEqual(motion.co_2_count, 0)
         self.assertEqual(motion.co_3_count, 1)
 
-        self.assertAlmostEqual(motion.counts_by_half['top'], 0.5)
-        self.assertAlmostEqual(motion.counts_by_half['bottom'], 2.5)
-        self.assertAlmostEqual(motion.counts_by_bench['gov'], 1)
-        self.assertAlmostEqual(motion.counts_by_bench['opp'], 2)
+        self.assertAlmostEqual(motion.counts_by_half["top"], 0.5)
+        self.assertAlmostEqual(motion.counts_by_half["bottom"], 2.5)
+        self.assertAlmostEqual(motion.counts_by_bench["gov"], 1)
+        self.assertAlmostEqual(motion.counts_by_bench["opp"], 2)
 
     def test_elim_statistics(self):
         rd = Round.objects.create(tournament=self.tournament, seq=1, stage=Round.Stage.ELIMINATION)
-        motion = Motion.objects.create(text="Elim motion", reference="Elim", tournament=self.tournament)
+        motion = Motion.objects.create(
+            text="Elim motion", reference="Elim", tournament=self.tournament
+        )
         rd.roundmotion_set.create(motion=motion, seq=1)
         debate = Debate.objects.create(round=rd)
         ballotsub = BallotSubmission.objects.create(debate=debate, motion=motion, confirmed=True)
 
         for side in self.tournament.sides:
             dt = DebateTeam.objects.create(debate=debate, team=self.teams[side], side=side)
-            TeamScore.objects.create(debate_team=dt, ballot_submission=ballotsub,
-                win=side in ['oo', 'cg'])
+            TeamScore.objects.create(
+                debate_team=dt, ballot_submission=ballotsub, win=side in ["oo", "cg"]
+            )
 
         stats = MotionBPStatsCalculator(self.tournament)
         motion = next(stats.motions)

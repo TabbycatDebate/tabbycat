@@ -16,7 +16,7 @@ class ModelAdmin(admin.ModelAdmin):
     def add_ip_to_message(self, request, message):
         ip_address = get_ip_address(request)
         if type(message) is list:  # JSON
-            message.append({'identity': {'ip': ip_address}})
+            message.append({"identity": {"ip": ip_address}})
         else:
             message += "\nIP: %s" % (ip_address,)
         return message
@@ -29,6 +29,7 @@ class ModelAdmin(admin.ModelAdmin):
 
     def log_deletion(self, request, object, object_repr, message=[]):
         from django.contrib.admin.models import DELETION, LogEntry
+
         return LogEntry.objects.log_action(
             user_id=request.user.pk,
             content_type_id=get_content_type_for_model(object).pk,
@@ -43,7 +44,7 @@ class TabbycatModelAdminFieldsMixin:
 
     @admin.display(description=_("Round"))
     def get_round(self, obj):
-        if hasattr(obj, 'debate'):
+        if hasattr(obj, "debate"):
             return obj.debate.round.name
         else:
             return obj.debate_team.debate.round.name
@@ -58,7 +59,7 @@ class TabbycatModelAdminFieldsMixin:
 
     @admin.display(description=_("Tournament"))
     def get_tournament(self, obj):
-        if hasattr(obj, 'round'):
+        if hasattr(obj, "round"):
             return obj.round.tournament
         else:
             return obj.debate.round.tournament
@@ -86,4 +87,5 @@ def custom_titled_filter(title):
             instance = admin.FieldListFilter.create(*args, **kwargs)
             instance.title = title
             return instance
+
     return Wrapper

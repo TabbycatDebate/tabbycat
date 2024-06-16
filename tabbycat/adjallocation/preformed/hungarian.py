@@ -16,9 +16,9 @@ class HungarianPreformedPanelAllocator(BasePreformedPanelAllocator):
         super().__init__(*args, **kwargs)
 
         t = self.tournament
-        self.conflict_penalty = t.pref('adj_conflict_penalty')
-        self.history_penalty = t.pref('adj_history_penalty')
-        self.mismatch_penalty = t.pref('preformed_panel_mismatch_penalty')
+        self.conflict_penalty = t.pref("adj_conflict_penalty")
+        self.history_penalty = t.pref("adj_history_penalty")
+        self.mismatch_penalty = t.pref("preformed_panel_mismatch_penalty")
 
         self.munkres = Munkres()
 
@@ -37,11 +37,14 @@ class HungarianPreformedPanelAllocator(BasePreformedPanelAllocator):
 
     def allocate(self):
         cost_matrix = [
-            [self.calc_cost(debate, panel) for panel in self.panels]
-            for debate in self.debates
+            [self.calc_cost(debate, panel) for panel in self.panels] for debate in self.debates
         ]
 
-        logger.info("optimizing panels (matrix size: %d debates by %d panels", len(cost_matrix), len(cost_matrix[0]))
+        logger.info(
+            "optimizing panels (matrix size: %d debates by %d panels",
+            len(cost_matrix),
+            len(cost_matrix[0]),
+        )
         indices = self.munkres.compute(cost_matrix)
         indices.sort()
         total_cost = sum(cost_matrix[i][j] for i, j in indices)

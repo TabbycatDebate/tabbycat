@@ -11,7 +11,12 @@ from results.models import TeamScore
 from tournaments.models import Round
 
 from .base import BaseStandingsGenerator
-from .metrics import BaseMetricAnnotator, metricgetter, QuerySetMetricAnnotator, RepeatedMetricAnnotator
+from .metrics import (
+    BaseMetricAnnotator,
+    metricgetter,
+    QuerySetMetricAnnotator,
+    RepeatedMetricAnnotator,
+)
 from .ranking import BasicRankAnnotator, RankFromInstitutionAnnotator, SubrankAnnotator
 
 logger = logging.getLogger(__name__)
@@ -20,6 +25,7 @@ logger = logging.getLogger(__name__)
 # ==============================================================================
 # Metric annotators
 # ==============================================================================
+
 
 class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     """Base class for annotators that metrics based on conditional aggregations
@@ -35,7 +41,7 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
 
     def get_field(self):
         """Subclasses with complicated fields override this method."""
-        return 'debateteam__teamscore__' + self.field
+        return "debateteam__teamscore__" + self.field
 
     def get_where_field(self):
         return self.get_field()
@@ -53,11 +59,16 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
         return annotation_filter
 
     def get_annotation(self, round=None):
-        return self.function(self.get_field(), filter=self.get_annotation_filter(round), output_field=self.output_field)
+        return self.function(
+            self.get_field(),
+            filter=self.get_annotation_filter(round),
+            output_field=self.output_field,
+        )
 
 
 class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for total number of points."""
+
     key = "points"
     name = _("points")
     abbr = _("Pts")
@@ -67,11 +78,12 @@ class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     output_field = PositiveIntegerField()
 
     def get_field(self):
-        return F(super().get_field()) * F('debateteam__debate__round__weight')
+        return F(super().get_field()) * F("debateteam__debate__round__weight")
 
 
 class WinsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for total number of wins."""
+
     key = "wins"
     name = _("wins")
     abbr = _("Wins")
@@ -83,6 +95,7 @@ class WinsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
 class TotalSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for total speaker score."""
+
     key = "speaks_sum"
     name = _("total speaker score")
     abbr = _("Spk")
@@ -93,6 +106,7 @@ class TotalSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
 class AverageSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for total speaker score."""
+
     key = "speaks_avg"
     name = _("average total speaker score")
     abbr = _("ATSS")
@@ -103,6 +117,7 @@ class AverageSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
 class SpeakerScoreStandardDeviationMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for total speaker score."""
+
     key = "speaks_stddev"
     name = _("speaker score standard deviation")
     abbr = _("SSD")
@@ -114,6 +129,7 @@ class SpeakerScoreStandardDeviationMetricAnnotator(TeamScoreQuerySetMetricAnnota
 
 class SumMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for sum of margins."""
+
     key = "margin_sum"
     name = _("sum of margins")
     abbr = _("Marg")
@@ -124,6 +140,7 @@ class SumMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
 class AverageMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for average margin."""
+
     key = "margin_avg"
     name = _("average margin")
     abbr = _("AWM")
@@ -134,6 +151,7 @@ class AverageMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
 class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for total substantive speaker score."""
+
     key = "speaks_ind_avg"
     name = _("average individual speaker score")
     abbr = _("AISS")
@@ -142,7 +160,7 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     combinable = False
 
     def get_field(self):
-        return 'debateteam__speakerscore__score'
+        return "debateteam__speakerscore__score"
 
     def get_annotation_filter(self, round=None):
         annotation_filter = Q(
@@ -157,7 +175,9 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         # `get_annotated_queryset()` below), in which case the filter doesn't
         # matter because the queryset is empty anyway.
         if self.tournament is not None:
-            annotation_filter &= Q(debateteam__speakerscore__position__lte=self.tournament.last_substantive_position)
+            annotation_filter &= Q(
+                debateteam__speakerscore__position__lte=self.tournament.last_substantive_position
+            )
 
         return annotation_filter
 
@@ -182,31 +202,36 @@ class BaseDrawStrengthMetricAnnotator(BaseMetricAnnotator):
         logger.info("Running opponents query for draw strength:")
 
         # Make a copy of teams queryset and annotate with opponents
-        opponents_filter = ~Q(debateteam__debate__debateteam__team_id=F('id'))
+        opponents_filter = ~Q(debateteam__debate__debateteam__team_id=F("id"))
         opponents_filter &= Q(debateteam__debate__round__stage=Round.Stage.PRELIMINARY)
         if round is not None:
             opponents_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
-        opponents_annotation = ArrayAgg('debateteam__debate__debateteam__team_id',
-                filter=opponents_filter)
+        opponents_annotation = ArrayAgg(
+            "debateteam__debate__debateteam__team_id", filter=opponents_filter
+        )
         logger.info("Opponents annotation: %s", str(opponents_annotation))
         teams_with_opponents = queryset.model.objects.annotate(opponent_ids=opponents_annotation)
         opponents_by_team = {team.id: team.opponent_ids or [] for team in teams_with_opponents}
 
         opp_metric_queryset = self.opponent_annotator().get_annotated_queryset(
-                queryset[0].tournament.team_set.all(), round)
+            queryset[0].tournament.team_set.all(), round
+        )
         opp_metric_queryset_teams = {team.id: team for team in opp_metric_queryset}
 
         for team in queryset:
             draw_strength = 0
             for opponent_id in opponents_by_team[team.id]:
-                opp_metric = getattr(opp_metric_queryset_teams[opponent_id], self.opponent_annotator.key)
-                if opp_metric is not None: # opp_metric is None when no debates have happened
+                opp_metric = getattr(
+                    opp_metric_queryset_teams[opponent_id], self.opponent_annotator.key
+                )
+                if opp_metric is not None:  # opp_metric is None when no debates have happened
                     draw_strength += opp_metric
             standings.add_metric(team, self.key, draw_strength)
 
 
 class DrawStrengthByWinsMetricAnnotator(BaseDrawStrengthMetricAnnotator):
     """Metric annotator for draw strength."""
+
     key = "draw_strength"  # keep this key for backwards compatibility
     name = _("draw strength by wins")
     abbr = _("DS")
@@ -215,6 +240,7 @@ class DrawStrengthByWinsMetricAnnotator(BaseDrawStrengthMetricAnnotator):
 
 class DrawStrengthBySpeakerScoreMetricAnnotator(BaseDrawStrengthMetricAnnotator):
     """Metric annotator for draw strength by score."""
+
     key = "draw_strength_speaks"
     name = _("draw strength by total speaker score")
     abbr = _("DSS")
@@ -232,14 +258,14 @@ class TeamPullupsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     abbr = _("PU")
 
     function = Count
-    where_value = ['pullup']
+    where_value = ["pullup"]
     exclude_unconfirmed = False
 
     def get_field(self):
-        return 'debateteam'
+        return "debateteam"
 
     def get_where_field(self):
-        return 'debateteam__flags__contains'
+        return "debateteam__flags__contains"
 
 
 class PullupDebatesMetricAnnotator(TeamPullupsMetricAnnotator):
@@ -253,7 +279,7 @@ class PullupDebatesMetricAnnotator(TeamPullupsMetricAnnotator):
     abbr = _("SPu")
 
     def get_where_field(self):
-        return 'debateteam__debate__flags__contains'
+        return "debateteam__debate__flags__contains"
 
 
 class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -274,16 +300,22 @@ class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         self.adjs_per_debate = adjs_per_debate
 
     def get_field(self):
-        return (Cast('debateteam__teamscore__votes_given', FloatField()) /
-            NullIf('debateteam__teamscore__votes_possible', 0, output_field=FloatField()) *
-            self.adjs_per_debate)
+        return (
+            Cast("debateteam__teamscore__votes_given", FloatField())
+            / NullIf("debateteam__teamscore__votes_possible", 0, output_field=FloatField())
+            * self.adjs_per_debate
+        )
 
     def annotate_with_queryset(self, queryset, standings):
         # If the number of ballots carried by every team is an integer, then
         # it's probably (though not certainly) the case that there are no
         # "weird" cases causing any fractional numbers of votes due to
         # normalization. In that case, convert all metrics to integers.
-        cast = int if all(t.num_adjs == int(t.num_adjs) for t in queryset if t.num_adjs is not None) else float
+        cast = (
+            int
+            if all(t.num_adjs == int(t.num_adjs) for t in queryset if t.num_adjs is not None)
+            else float
+        )
         for item in queryset:
             metric = item.num_adjs or 0
             standings.add_metric(item, self.key, cast(metric))
@@ -321,6 +353,7 @@ class NumberOfThirdsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
 class IronsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for total number of times the team had a duplicate speech."""
+
     key = "num_iron"
     name = _("number of times ironed")
     abbr = _("Irons")
@@ -353,10 +386,15 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
         if round is not None:
             ts = ts.filter(debate_team__debate__round__seq__lte=round.seq)
 
-        ts = ts.aggregate(Sum('points'))
-        logger.info("who beat whom, %s %s vs %s %s: %s",
-            tsi.team.short_name, key(tsi), other.team.short_name, key(other),
-            ts["points__sum"])
+        ts = ts.aggregate(Sum("points"))
+        logger.info(
+            "who beat whom, %s %s vs %s %s: %s",
+            tsi.team.short_name,
+            key(tsi),
+            other.team.short_name,
+            key(other),
+            ts["points__sum"],
+        )
         return ts
 
     def annotate(self, queryset, standings, round=None):
@@ -379,6 +417,7 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
 # Standings generator
 # ==============================================================================
 
+
 class TeamStandingsGenerator(BaseStandingsGenerator):
     """Class for generating standings. An instance is configured with metrics
     and rankings in the constructor, and an iterable of Team objects is passed
@@ -395,32 +434,32 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
     TIEBREAK_FUNCTIONS["institution"] = lambda x: x.sort(key=lambda y: y.team.institution.name)
 
     QUERYSET_TIEBREAK_FIELDS = BaseStandingsGenerator.QUERYSET_TIEBREAK_FIELDS.copy()
-    QUERYSET_TIEBREAK_FIELDS["shortname"] = 'short_name'
-    QUERYSET_TIEBREAK_FIELDS["institution"] = 'institution__name'
+    QUERYSET_TIEBREAK_FIELDS["shortname"] = "short_name"
+    QUERYSET_TIEBREAK_FIELDS["institution"] = "institution__name"
 
     metric_annotator_classes = {
-        "points"              : PointsMetricAnnotator,
-        "wins"                : WinsMetricAnnotator,
-        "speaks_sum"          : TotalSpeakerScoreMetricAnnotator,
-        "speaks_avg"          : AverageSpeakerScoreMetricAnnotator,
-        "speaks_ind_avg"      : AverageIndividualScoreMetricAnnotator,
-        "speaks_stddev"       : SpeakerScoreStandardDeviationMetricAnnotator,
-        "draw_strength"       : DrawStrengthByWinsMetricAnnotator,
+        "points": PointsMetricAnnotator,
+        "wins": WinsMetricAnnotator,
+        "speaks_sum": TotalSpeakerScoreMetricAnnotator,
+        "speaks_avg": AverageSpeakerScoreMetricAnnotator,
+        "speaks_ind_avg": AverageIndividualScoreMetricAnnotator,
+        "speaks_stddev": SpeakerScoreStandardDeviationMetricAnnotator,
+        "draw_strength": DrawStrengthByWinsMetricAnnotator,
         "draw_strength_speaks": DrawStrengthBySpeakerScoreMetricAnnotator,
-        "margin_sum"          : SumMarginMetricAnnotator,
-        "margin_avg"          : AverageMarginMetricAnnotator,
-        "npullups"            : TeamPullupsMetricAnnotator,
-        "pullup_debates"      : PullupDebatesMetricAnnotator,
-        "num_adjs"            : NumberOfAdjudicatorsMetricAnnotator,
-        "firsts"              : NumberOfFirstsMetricAnnotator,
-        "seconds"             : NumberOfSecondsMetricAnnotator,
-        "thirds"              : NumberOfThirdsMetricAnnotator,
-        "num_iron"            : IronsMetricAnnotator,
-        "wbw"                 : WhoBeatWhomMetricAnnotator,
+        "margin_sum": SumMarginMetricAnnotator,
+        "margin_avg": AverageMarginMetricAnnotator,
+        "npullups": TeamPullupsMetricAnnotator,
+        "pullup_debates": PullupDebatesMetricAnnotator,
+        "num_adjs": NumberOfAdjudicatorsMetricAnnotator,
+        "firsts": NumberOfFirstsMetricAnnotator,
+        "seconds": NumberOfSecondsMetricAnnotator,
+        "thirds": NumberOfThirdsMetricAnnotator,
+        "num_iron": IronsMetricAnnotator,
+        "wbw": WhoBeatWhomMetricAnnotator,
     }
 
     ranking_annotator_classes = {
-        "rank"            : BasicRankAnnotator,
-        "subrank"         : SubrankAnnotator,
+        "rank": BasicRankAnnotator,
+        "subrank": SubrankAnnotator,
         "institution_rank": RankFromInstitutionAnnotator,
     }

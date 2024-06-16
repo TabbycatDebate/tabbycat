@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('breakqual', '0002_auto_20171110_0905'),
+        ("breakqual", "0002_auto_20171110_0905"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='breakcategory',
-            name='limit',
-            field=models.IntegerField(default=0, help_text='At most this many teams will be shown on the public tab for this category, or use 0 for no limit', verbose_name='limit'),
+            model_name="breakcategory",
+            name="limit",
+            field=models.IntegerField(
+                default=0,
+                help_text="At most this many teams will be shown on the public tab for this category, or use 0 for no limit",
+                verbose_name="limit",
+            ),
         ),
     ]

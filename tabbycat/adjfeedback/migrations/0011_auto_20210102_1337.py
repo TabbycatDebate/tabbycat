@@ -7,18 +7,27 @@ import django_better_admin_arrayfield.models.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('adjfeedback', '0010_merge_20200904_1943'),
+        ("adjfeedback", "0010_merge_20200904_1943"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='adjudicatorfeedbackmanyanswer',
-            name='answer',
-            field=django_better_admin_arrayfield.models.fields.ArrayField(base_field=models.TextField(), size=None),
+            model_name="adjudicatorfeedbackmanyanswer",
+            name="answer",
+            field=django_better_admin_arrayfield.models.fields.ArrayField(
+                base_field=models.TextField(), size=None
+            ),
         ),
         migrations.AlterField(
-            model_name='adjudicatorfeedbackquestion',
-            name='choices',
-            field=django_better_admin_arrayfield.models.fields.ArrayField(base_field=models.TextField(), blank=True, default=list, help_text='Permissible choices for select one/multiple fields (ignored for other fields)', size=None, verbose_name='choices'),
+            model_name="adjudicatorfeedbackquestion",
+            name="choices",
+            field=django_better_admin_arrayfield.models.fields.ArrayField(
+                base_field=models.TextField(),
+                blank=True,
+                default=list,
+                help_text="Permissible choices for select one/multiple fields (ignored for other fields)",
+                size=None,
+                verbose_name="choices",
+            ),
         ),
     ]

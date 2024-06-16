@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('motions', '0002_auto_20171110_0905'),
+        ("motions", "0002_auto_20171110_0905"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='motion',
-            name='seq',
-            field=models.IntegerField(default=1, help_text='The order in which motions are displayed', verbose_name='sequence number'),
+            model_name="motion",
+            name="seq",
+            field=models.IntegerField(
+                default=1,
+                help_text="The order in which motions are displayed",
+                verbose_name="sequence number",
+            ),
         ),
     ]
