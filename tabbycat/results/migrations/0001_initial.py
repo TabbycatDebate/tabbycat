@@ -13,105 +13,277 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('participants', '0001_initial'),
-        ('motions', '0001_initial'),
-        ('draw', '0001_initial'),
-        ('adjallocation', '0003_auto_20171110_0905'),
+        ("participants", "0001_initial"),
+        ("motions", "0001_initial"),
+        ("draw", "0001_initial"),
+        ("adjallocation", "0003_auto_20171110_0905"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='BallotSubmission',
+            name="BallotSubmission",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('timestamp', models.DateTimeField(auto_now_add=True, verbose_name='timestamp')),
-                ('version', models.PositiveIntegerField(verbose_name='version')),
-                ('submitter_type', models.CharField(choices=[('T', 'Tab room'), ('P', 'Public')], max_length=1, verbose_name='submitter type')),
-                ('confirmed', models.BooleanField(default=False, verbose_name='confirmed')),
-                ('confirm_timestamp', models.DateTimeField(blank=True, null=True, verbose_name='confirm timestamp')),
-                ('ip_address', models.GenericIPAddressField(blank=True, null=True, verbose_name='IP address')),
-                ('discarded', models.BooleanField(default=False, verbose_name='discarded')),
-                ('confirmer', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='results_ballotsubmission_confirmed', to=settings.AUTH_USER_MODEL, verbose_name='confirmer')),
-                ('copied_from', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='results.BallotSubmission', verbose_name='copied from')),
-                ('debate', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='draw.Debate', verbose_name='debate')),
-                ('forfeit', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='draw.DebateTeam', verbose_name='forfeit')),
-                ('motion', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='motions.Motion', verbose_name='motion')),
-                ('submitter', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='results_ballotsubmission_submitted', to=settings.AUTH_USER_MODEL, verbose_name='submitter')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("timestamp", models.DateTimeField(auto_now_add=True, verbose_name="timestamp")),
+                ("version", models.PositiveIntegerField(verbose_name="version")),
+                (
+                    "submitter_type",
+                    models.CharField(
+                        choices=[("T", "Tab room"), ("P", "Public")],
+                        max_length=1,
+                        verbose_name="submitter type",
+                    ),
+                ),
+                ("confirmed", models.BooleanField(default=False, verbose_name="confirmed")),
+                (
+                    "confirm_timestamp",
+                    models.DateTimeField(blank=True, null=True, verbose_name="confirm timestamp"),
+                ),
+                (
+                    "ip_address",
+                    models.GenericIPAddressField(blank=True, null=True, verbose_name="IP address"),
+                ),
+                ("discarded", models.BooleanField(default=False, verbose_name="discarded")),
+                (
+                    "confirmer",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="results_ballotsubmission_confirmed",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="confirmer",
+                    ),
+                ),
+                (
+                    "copied_from",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="results.BallotSubmission",
+                        verbose_name="copied from",
+                    ),
+                ),
+                (
+                    "debate",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="draw.Debate",
+                        verbose_name="debate",
+                    ),
+                ),
+                (
+                    "forfeit",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="draw.DebateTeam",
+                        verbose_name="forfeit",
+                    ),
+                ),
+                (
+                    "motion",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="motions.Motion",
+                        verbose_name="motion",
+                    ),
+                ),
+                (
+                    "submitter",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="results_ballotsubmission_submitted",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="submitter",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'ballot submission',
-                'verbose_name_plural': 'ballot submissions',
+                "verbose_name": "ballot submission",
+                "verbose_name_plural": "ballot submissions",
             },
         ),
         migrations.CreateModel(
-            name='SpeakerScore',
+            name="SpeakerScore",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('score', results.models.ScoreField(verbose_name='score')),
-                ('position', models.IntegerField(verbose_name='position')),
-                ('ghost', models.BooleanField(default=False, help_text='If checked, this score does not count towards the speaker tab. This is typically checked for speeches where someone spoke twice to make up for an absent teammate (sometimes known as "iron-person" or "iron-man" speeches).', verbose_name='ghost')),
-                ('ballot_submission', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='results.BallotSubmission', verbose_name='ballot submission')),
-                ('debate_team', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='draw.DebateTeam', verbose_name='debate team')),
-                ('speaker', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='participants.Speaker', verbose_name='speaker')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("score", results.models.ScoreField(verbose_name="score")),
+                ("position", models.IntegerField(verbose_name="position")),
+                (
+                    "ghost",
+                    models.BooleanField(
+                        default=False,
+                        help_text='If checked, this score does not count towards the speaker tab. This is typically checked for speeches where someone spoke twice to make up for an absent teammate (sometimes known as "iron-person" or "iron-man" speeches).',
+                        verbose_name="ghost",
+                    ),
+                ),
+                (
+                    "ballot_submission",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="results.BallotSubmission",
+                        verbose_name="ballot submission",
+                    ),
+                ),
+                (
+                    "debate_team",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="draw.DebateTeam",
+                        verbose_name="debate team",
+                    ),
+                ),
+                (
+                    "speaker",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="participants.Speaker",
+                        verbose_name="speaker",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'speaker score',
-                'verbose_name_plural': 'speaker scores',
+                "verbose_name": "speaker score",
+                "verbose_name_plural": "speaker scores",
             },
         ),
         migrations.CreateModel(
-            name='SpeakerScoreByAdj',
+            name="SpeakerScoreByAdj",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('score', results.models.ScoreField(verbose_name='score')),
-                ('position', models.IntegerField(verbose_name='position')),
-                ('ballot_submission', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='results.BallotSubmission', verbose_name='ballot submission')),
-                ('debate_adjudicator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='adjallocation.DebateAdjudicator', verbose_name='debate adjudicator')),
-                ('debate_team', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='draw.DebateTeam', verbose_name='debate team')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("score", results.models.ScoreField(verbose_name="score")),
+                ("position", models.IntegerField(verbose_name="position")),
+                (
+                    "ballot_submission",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="results.BallotSubmission",
+                        verbose_name="ballot submission",
+                    ),
+                ),
+                (
+                    "debate_adjudicator",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="adjallocation.DebateAdjudicator",
+                        verbose_name="debate adjudicator",
+                    ),
+                ),
+                (
+                    "debate_team",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="draw.DebateTeam",
+                        verbose_name="debate team",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'speaker score by adjudicator',
-                'verbose_name_plural': 'speaker scores by adjudicator',
+                "verbose_name": "speaker score by adjudicator",
+                "verbose_name_plural": "speaker scores by adjudicator",
             },
         ),
         migrations.CreateModel(
-            name='TeamScore',
+            name="TeamScore",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('points', models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='points')),
-                ('win', models.NullBooleanField(verbose_name='win')),
-                ('margin', results.models.ScoreField(blank=True, null=True, verbose_name='margin')),
-                ('score', results.models.ScoreField(blank=True, null=True, verbose_name='score')),
-                ('votes_given', models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='votes given')),
-                ('votes_possible', models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='votes possible')),
-                ('forfeit', models.BooleanField(default=False, help_text='Debate was a forfeit (True for both winning and forfeiting teams)', verbose_name='forfeit')),
-                ('ballot_submission', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='results.BallotSubmission', verbose_name='ballot submission')),
-                ('debate_team', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='draw.DebateTeam', verbose_name='debate team')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "points",
+                    models.PositiveSmallIntegerField(blank=True, null=True, verbose_name="points"),
+                ),
+                ("win", models.NullBooleanField(verbose_name="win")),
+                ("margin", results.models.ScoreField(blank=True, null=True, verbose_name="margin")),
+                ("score", results.models.ScoreField(blank=True, null=True, verbose_name="score")),
+                (
+                    "votes_given",
+                    models.PositiveSmallIntegerField(
+                        blank=True, null=True, verbose_name="votes given"
+                    ),
+                ),
+                (
+                    "votes_possible",
+                    models.PositiveSmallIntegerField(
+                        blank=True, null=True, verbose_name="votes possible"
+                    ),
+                ),
+                (
+                    "forfeit",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Debate was a forfeit (True for both winning and forfeiting teams)",
+                        verbose_name="forfeit",
+                    ),
+                ),
+                (
+                    "ballot_submission",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="results.BallotSubmission",
+                        verbose_name="ballot submission",
+                    ),
+                ),
+                (
+                    "debate_team",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="draw.DebateTeam",
+                        verbose_name="debate team",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'team score',
-                'verbose_name_plural': 'team scores',
+                "verbose_name": "team score",
+                "verbose_name_plural": "team scores",
             },
         ),
         migrations.AlterUniqueTogether(
-            name='teamscore',
-            unique_together=set([('debate_team', 'ballot_submission')]),
+            name="teamscore",
+            unique_together=set([("debate_team", "ballot_submission")]),
         ),
         migrations.AlterUniqueTogether(
-            name='speakerscorebyadj',
-            unique_together=set([('debate_adjudicator', 'debate_team', 'position', 'ballot_submission')]),
+            name="speakerscorebyadj",
+            unique_together=set(
+                [("debate_adjudicator", "debate_team", "position", "ballot_submission")]
+            ),
         ),
         migrations.AlterIndexTogether(
-            name='speakerscorebyadj',
-            index_together=set([('ballot_submission', 'debate_adjudicator')]),
+            name="speakerscorebyadj",
+            index_together=set([("ballot_submission", "debate_adjudicator")]),
         ),
         migrations.AlterUniqueTogether(
-            name='speakerscore',
-            unique_together=set([('debate_team', 'position', 'ballot_submission')]),
+            name="speakerscore",
+            unique_together=set([("debate_team", "position", "ballot_submission")]),
         ),
         migrations.AlterUniqueTogether(
-            name='ballotsubmission',
-            unique_together=set([('debate', 'version')]),
+            name="ballotsubmission",
+            unique_together=set([("debate", "version")]),
         ),
     ]

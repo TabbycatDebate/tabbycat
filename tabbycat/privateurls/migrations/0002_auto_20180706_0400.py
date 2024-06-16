@@ -6,19 +6,19 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('privateurls', '0001_initial'),
+        ("privateurls", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='privateurlsentmailrecord',
-            name='adjudicator',
+            model_name="privateurlsentmailrecord",
+            name="adjudicator",
         ),
         migrations.RemoveField(
-            model_name='privateurlsentmailrecord',
-            name='speaker',
+            model_name="privateurlsentmailrecord",
+            name="speaker",
         ),
         migrations.DeleteModel(
-            name='PrivateUrlSentMailRecord',
+            name="PrivateUrlSentMailRecord",
         ),
     ]

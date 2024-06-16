@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tournaments', '0008_round_weight'),
+        ("tournaments", "0008_round_weight"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='round',
-            name='weight',
-            field=models.IntegerField(default=1, help_text='A factor for the points received in the round. For example, if 2, all points are doubled.', verbose_name='weight'),
+            model_name="round",
+            name="weight",
+            field=models.IntegerField(
+                default=1,
+                help_text="A factor for the points received in the round. For example, if 2, all points are doubled.",
+                verbose_name="weight",
+            ),
         ),
     ]

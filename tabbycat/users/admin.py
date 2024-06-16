@@ -13,20 +13,22 @@ from .models import Group, Membership, UserPermission
 # Authentication and Authorization
 # ==============================================================================
 
-admin.site.unregister(AuthGroup) # No need to show groups
+admin.site.unregister(AuthGroup)  # No need to show groups
 
 
 class UserPermissionInline(admin.TabularInline):
     model = UserPermission
-    fields = ('permission', 'tournament')
+    fields = ("permission", "tournament")
 
 
 class CustomUserLabelsMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['is_staff'].help_text = _("Users with staff status can"
+        self.fields["is_staff"].help_text = _(
+            "Users with staff status can"
             " view and edit the Edit Database area. This is potentially "
-            "dangerous and should be reserved for the actual tab director(s).")
+            "dangerous and should be reserved for the actual tab director(s)."
+        )
 
 
 class UserChangeFormExtended(CustomUserLabelsMixin, UserChangeForm):
@@ -38,34 +40,45 @@ class UserCreationFormExtended(CustomUserLabelsMixin, UserCreationForm):
 
 
 class UserAdmin(BaseUserAdmin):
-    list_display = ('username', 'email', 'is_active', 'is_staff', 'is_superuser')
+    list_display = ("username", "email", "is_active", "is_staff", "is_superuser")
     inlines = (UserPermissionInline,)
 
-    fieldsets = ( # Hide groups and user permission fields
-        (_('Personal info'), {'fields': ('username', 'email', 'password')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'membership')}),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+    fieldsets = (  # Hide groups and user permission fields
+        (_("Personal info"), {"fields": ("username", "email", "password")}),
+        (_("Permissions"), {"fields": ("is_active", "is_staff", "is_superuser", "membership")}),
+        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
 
-    add_fieldsets = ( # Set permissions when creating
-        (None, {
-            'fields': ('username', 'password1', 'password2', 'email', 'is_staff', 'is_superuser', 'membership'),
-        }),
+    add_fieldsets = (  # Set permissions when creating
+        (
+            None,
+            {
+                "fields": (
+                    "username",
+                    "password1",
+                    "password2",
+                    "email",
+                    "is_staff",
+                    "is_superuser",
+                    "membership",
+                ),
+            },
+        ),
     )
 
-    add_form_template = 'admin/change_form.html'
+    add_form_template = "admin/change_form.html"
     add_form = UserCreationFormExtended
     form = UserChangeFormExtended
 
 
 @admin.register(UserPermission)
 class UserPermissionAdmin(admin.ModelAdmin):
-    list_display = ('user', 'permission', 'tournament')
+    list_display = ("user", "permission", "tournament")
 
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
-    list_display = ('name', 'tournament')
+    list_display = ("name", "tournament")
 
 
 User = get_user_model()

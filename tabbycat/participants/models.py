@@ -18,43 +18,55 @@ logger = logging.getLogger(__name__)
 
 
 class Region(models.Model):
-    name = models.CharField(db_index=True, max_length=100,
-        verbose_name=_("name"))
+    name = models.CharField(db_index=True, max_length=100, verbose_name=_("name"))
 
     class Meta:
         verbose_name = _("region")
         verbose_name_plural = _("regions")
 
     def __str__(self):
-        return '%s' % self.name
+        return "%s" % self.name
 
 
 class InstitutionManager(LookupByNameFieldsMixin, models.Manager):
-    name_fields = ['code', 'name']
+    name_fields = ["code", "name"]
 
 
 class Institution(models.Model):
-    name = models.CharField(max_length=100,
+    name = models.CharField(
+        max_length=100,
         verbose_name=_("name"),
         # Translators: Change the examples to institutions native to your language; keep consistent between strings
-        help_text=_("The institution's full name, e.g., \"University of Cambridge\", \"Victoria University of Wellington\""))
-    code = models.CharField(max_length=20,
+        help_text=_(
+            'The institution\'s full name, e.g., "University of Cambridge", "Victoria University of Wellington"'
+        ),
+    )
+    code = models.CharField(
+        max_length=20,
         verbose_name=_("code"),
         # Translators: Change the examples to institutions native to your language; keep consistent between strings
-        help_text=_("What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\""))
-    region = models.ForeignKey(Region, models.SET_NULL, blank=True, null=True,
-        verbose_name=_("region"))
+        help_text=_(
+            'What the institution is typically called for short, e.g., "Cambridge", "Vic Wellington"'
+        ),
+    )
+    region = models.ForeignKey(
+        Region, models.SET_NULL, blank=True, null=True, verbose_name=_("region")
+    )
 
-    venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='institution',
-            content_type_field='subject_content_type', object_id_field='subject_id')
+    venue_constraints = GenericRelation(
+        "venues.VenueConstraint",
+        related_query_name="institution",
+        content_type_field="subject_content_type",
+        object_id_field="subject_id",
+    )
 
     objects = InstitutionManager()
 
     class Meta:
         constraints = [
-            UniqueConstraint(fields=['name', 'code']),
+            UniqueConstraint(fields=["name", "code"]),
         ]
-        ordering = ['name']
+        ordering = ["name"]
         verbose_name = _("institution")
         verbose_name_plural = _("institutions")
 
@@ -63,32 +75,45 @@ class Institution(models.Model):
 
 
 class SpeakerCategory(models.Model):
-    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
-        verbose_name=_("tournament"))
-    name = models.CharField(max_length=50,
+    tournament = models.ForeignKey(
+        "tournaments.Tournament", models.CASCADE, verbose_name=_("tournament")
+    )
+    name = models.CharField(
+        max_length=50,
         verbose_name=_("name"),
         # Translators: Translate ESL to the acronym for "<target language> as a second/foreign language", not "English"
-        help_text=_("Name to be displayed, e.g., \"Novice\", \"ESL\""))
+        help_text=_('Name to be displayed, e.g., "Novice", "ESL"'),
+    )
     slug = models.SlugField(
         verbose_name=_("slug"),
         # Translators: Translate esl to the acronym for "<target language> as a second/foreign language", not "English"
-        help_text=_("Slug for URLs, e.g., \"novice\", \"esl\""))
+        help_text=_('Slug for URLs, e.g., "novice", "esl"'),
+    )
     seq = models.IntegerField(
         verbose_name=_("sequence number"),
-        help_text=_("The order in which the categories are displayed"))
-    limit = models.IntegerField(default=0,
+        help_text=_("The order in which the categories are displayed"),
+    )
+    limit = models.IntegerField(
+        default=0,
         verbose_name=_("limit"),
-        help_text=_("At most this many speakers will be shown on the public tab for this category, or use 0 for no limit"))
-    public = models.BooleanField(default=True,
+        help_text=_(
+            "At most this many speakers will be shown on the public tab for this category, or use 0 for no limit"
+        ),
+    )
+    public = models.BooleanField(
+        default=True,
         verbose_name=_("public"),
-        help_text=_("If checked, this category will be included in the speaker category tabs shown to the public"))
+        help_text=_(
+            "If checked, this category will be included in the speaker category tabs shown to the public"
+        ),
+    )
 
     class Meta:
         constraints = [
-            UniqueConstraint(fields=['tournament', 'seq']),
-            UniqueConstraint(fields=['tournament', 'slug']),
+            UniqueConstraint(fields=["tournament", "seq"]),
+            UniqueConstraint(fields=["tournament", "slug"]),
         ]
-        ordering = ['tournament', 'seq']
+        ordering = ["tournament", "seq"]
         verbose_name = _("speaker category")
         verbose_name_plural = _("speaker categories")
 
@@ -97,34 +122,56 @@ class SpeakerCategory(models.Model):
 
 
 class Person(models.Model):
-    name = models.CharField(max_length=70, db_index=True,
-        verbose_name=_("name"))
-    email = models.EmailField(blank=True, null=True,
-        verbose_name=_("email address"))
-    phone = models.CharField(max_length=40, blank=True,
-        verbose_name=_("phone"))
-    anonymous = models.BooleanField(default=False,
+    name = models.CharField(max_length=70, db_index=True, verbose_name=_("name"))
+    email = models.EmailField(blank=True, null=True, verbose_name=_("email address"))
+    phone = models.CharField(max_length=40, blank=True, verbose_name=_("phone"))
+    anonymous = models.BooleanField(
+        default=False,
         verbose_name=_("anonymous"),
-        help_text=_("Anonymous persons will have their name and team redacted on public tab releases"))
-    code_name = models.CharField(max_length=25, blank=True,
+        help_text=_(
+            "Anonymous persons will have their name and team redacted on public tab releases"
+        ),
+    )
+    code_name = models.CharField(
+        max_length=25,
+        blank=True,
         verbose_name=_("code name"),
-        help_text=_("Name used to obscure real name on public-facing pages"))
+        help_text=_("Name used to obscure real name on public-facing pages"),
+    )
 
-    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24, # uses null=True to allow multiple people to have no URL key
-        verbose_name=_("URL key"))
+    url_key = models.SlugField(
+        blank=True,
+        null=True,
+        unique=True,
+        max_length=24,  # uses null=True to allow multiple people to have no URL key
+        verbose_name=_("URL key"),
+    )
 
-    GENDER_MALE = 'M'
-    GENDER_FEMALE = 'F'
-    GENDER_OTHER = 'O'
-    GENDER_CHOICES = ((GENDER_MALE,   _("male")),
-                      (GENDER_FEMALE, _("female")),
-                      (GENDER_OTHER,  _("other")))
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True,
+    GENDER_MALE = "M"
+    GENDER_FEMALE = "F"
+    GENDER_OTHER = "O"
+    GENDER_CHOICES = (
+        (GENDER_MALE, _("male")),
+        (GENDER_FEMALE, _("female")),
+        (GENDER_OTHER, _("other")),
+    )
+    gender = models.CharField(
+        max_length=1,
+        choices=GENDER_CHOICES,
+        blank=True,
         verbose_name=_("gender"),
-        help_text=_("Gender is displayed in the adjudicator allocation interface, and nowhere else"))
-    pronoun = models.CharField(max_length=10, blank=True,
+        help_text=_(
+            "Gender is displayed in the adjudicator allocation interface, and nowhere else"
+        ),
+    )
+    pronoun = models.CharField(
+        max_length=10,
+        blank=True,
         verbose_name=_("pronoun"),
-        help_text=_("If printing ballots using Tabbycat, there is the option to pre-print pronouns"))
+        help_text=_(
+            "If printing ballots using Tabbycat, there is the option to pre-print pronouns"
+        ),
+    )
 
     class Meta:
         verbose_name = _("person")
@@ -134,87 +181,128 @@ class Person(models.Model):
         return str(self.name)
 
     def get_public_name(self, tournament):
-        if tournament.pref('participant_code_names') == 'off':
+        if tournament.pref("participant_code_names") == "off":
             return self.name
         return self.code_name
 
 
 class TeamManager(LookupByNameFieldsMixin, models.Manager):
-    name_fields = ['short_name', 'long_name']
+    name_fields = ["short_name", "long_name"]
 
     def get_queryset(self):
-        return super().get_queryset().select_related('institution')
+        return super().get_queryset().select_related("institution")
 
 
 class Team(models.Model):
-    reference = models.CharField(blank=True, max_length=150,
+    reference = models.CharField(
+        blank=True,
+        max_length=150,
         verbose_name=_("full name/suffix"),
-        help_text=_("Do not include institution name (see \"uses institutional prefix\" below)"))
-    short_reference = models.CharField(blank=True, max_length=35,
+        help_text=_('Do not include institution name (see "uses institutional prefix" below)'),
+    )
+    short_reference = models.CharField(
+        blank=True,
+        max_length=35,
         verbose_name=_("short name/suffix"),
-        help_text=_("The decoded name shown in the draw, not including institution name (see \"uses institutional prefix\" below)"))
-    code_name = models.CharField(blank=True, max_length=150,
+        help_text=_(
+            'The decoded name shown in the draw, not including institution name (see "uses institutional prefix" below)'
+        ),
+    )
+    code_name = models.CharField(
+        blank=True,
+        max_length=150,
         verbose_name=_("code name"),
-        help_text=_("Name used to obscure institutional identity on public-facing pages"))
+        help_text=_("Name used to obscure institutional identity on public-facing pages"),
+    )
 
-    short_name = models.CharField(editable=False, max_length=20+1+35,  # Max institution code + space + short_reference max
+    short_name = models.CharField(
+        editable=False,
+        max_length=20 + 1 + 35,  # Max institution code + space + short_reference max
         verbose_name=_("short name"),
-        help_text=_("The decoded name shown in the draw, including institution name. (This is autogenerated.)"))
-    long_name = models.CharField(editable=False, max_length=100+1+150,  # Max institution name + space + reference max
+        help_text=_(
+            "The decoded name shown in the draw, including institution name. (This is autogenerated.)"
+        ),
+    )
+    long_name = models.CharField(
+        editable=False,
+        max_length=100 + 1 + 150,  # Max institution name + space + reference max
         verbose_name=_("long name"),
-        help_text=_("The full name of the team, including institution name. (This is autogenerated.)"))
+        help_text=_(
+            "The full name of the team, including institution name. (This is autogenerated.)"
+        ),
+    )
 
-    institution = models.ForeignKey(Institution, models.SET_NULL, blank=True, null=True,
-        verbose_name=_("institution"))
-    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
-        verbose_name=_("tournament"))
-    use_institution_prefix = models.BooleanField(default=False,
+    institution = models.ForeignKey(
+        Institution, models.SET_NULL, blank=True, null=True, verbose_name=_("institution")
+    )
+    tournament = models.ForeignKey(
+        "tournaments.Tournament", models.CASCADE, verbose_name=_("tournament")
+    )
+    use_institution_prefix = models.BooleanField(
+        default=False,
         verbose_name=_("Uses institutional prefix"),
-        help_text=_("If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\""))
-    break_categories = models.ManyToManyField('breakqual.BreakCategory', blank=True,
-        verbose_name=_("break categories"))
+        help_text=_('If ticked, a team called "1" from Victoria will be shown as "Victoria 1"'),
+    )
+    break_categories = models.ManyToManyField(
+        "breakqual.BreakCategory", blank=True, verbose_name=_("break categories")
+    )
 
-    seed = models.PositiveIntegerField(blank=True, null=True, verbose_name=_("seed"),
-        help_text=_("Used as initial ranking to power-pair the first round"))
+    seed = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        verbose_name=_("seed"),
+        help_text=_("Used as initial ranking to power-pair the first round"),
+    )
 
-    institution_conflicts = models.ManyToManyField('Institution',
-        through='adjallocation.TeamInstitutionConflict',
-        related_name='team_inst_conflicts',
-        verbose_name=_("institution conflicts"))
+    institution_conflicts = models.ManyToManyField(
+        "Institution",
+        through="adjallocation.TeamInstitutionConflict",
+        related_name="team_inst_conflicts",
+        verbose_name=_("institution conflicts"),
+    )
 
-    round_availabilities = GenericRelation('availability.RoundAvailability')
-    venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='team',
-            content_type_field='subject_content_type', object_id_field='subject_id')
+    round_availabilities = GenericRelation("availability.RoundAvailability")
+    venue_constraints = GenericRelation(
+        "venues.VenueConstraint",
+        related_query_name="team",
+        content_type_field="subject_content_type",
+        object_id_field="subject_id",
+    )
 
-    TYPE_NONE = 'N'
-    TYPE_SWING = 'S'
-    TYPE_COMPOSITE = 'C'
-    TYPE_BYE = 'B'
+    TYPE_NONE = "N"
+    TYPE_SWING = "S"
+    TYPE_COMPOSITE = "C"
+    TYPE_BYE = "B"
     TYPE_CHOICES = (
         (TYPE_NONE, _("none")),
         (TYPE_SWING, _("swing")),
         (TYPE_COMPOSITE, _("composite")),
         (TYPE_BYE, _("bye")),
     )
-    type = models.CharField(max_length=1, choices=TYPE_CHOICES, default=TYPE_NONE,
-        verbose_name=_("type"))
+    type = models.CharField(
+        max_length=1, choices=TYPE_CHOICES, default=TYPE_NONE, verbose_name=_("type")
+    )
 
-    emoji = models.CharField(max_length=3, default=None, choices=EMOJI_FIELD_CHOICES,
-        blank=True, null=True,   # uses null=True to allow multiple teams to have no emoji
-        verbose_name=_("emoji"))
+    emoji = models.CharField(
+        max_length=3,
+        default=None,
+        choices=EMOJI_FIELD_CHOICES,
+        blank=True,
+        null=True,  # uses null=True to allow multiple teams to have no emoji
+        verbose_name=_("emoji"),
+    )
 
     class Meta:
         constraints = [
             # Enforce for blank references also - two teams from the same
             # institution can't both be unlabelled. However, Django won't
             # enforce this for null institutions.
-            UniqueConstraint(fields=['reference', 'institution', 'tournament']),
-
+            UniqueConstraint(fields=["reference", "institution", "tournament"]),
             # Not enforced for blank emoji (null=True is set on emoji)
-            UniqueConstraint(fields=['emoji', 'tournament']),
+            UniqueConstraint(fields=["emoji", "tournament"]),
         ]
-        indexes = [models.Index(fields=['tournament', 'institution', 'short_reference'])]
-        ordering = ['tournament', 'institution', 'short_reference']
+        indexes = [models.Index(fields=["tournament", "institution", "short_reference"])]
+        ordering = ["tournament", "institution", "short_reference"]
         verbose_name = _("team")
         verbose_name_plural = _("teams")
 
@@ -232,7 +320,7 @@ class Team(models.Model):
                 short_name += " " + str(reference)[:35]
             return short_name
         else:
-            return str(reference)[:20+1+35]
+            return str(reference)[: 20 + 1 + 35]
 
     def _construct_long_name(self):
         institution = self.institution
@@ -250,6 +338,7 @@ class Team(models.Model):
 
     def break_rank_for_category(self, category):
         from breakqual.models import BreakingTeam
+
         try:
             bt = BreakingTeam.objects.get(break_category=category, team=self)
         except BreakingTeam.DoesNotExist:
@@ -257,8 +346,7 @@ class Team(models.Model):
         return bt.break_rank
 
     def get_debates(self, before_round):
-        dts = self.debateteam_set.select_related('debate').order_by(
-            'debate__round__seq')
+        dts = self.debateteam_set.select_related("debate").order_by("debate__round__seq")
         if before_round is not None:
             dts = dts.filter(debate__round__seq__lt=before_round)
         return [dt.debate for dt in dts]
@@ -275,8 +363,10 @@ class Team(models.Model):
             return self._wins_count
         except AttributeError:
             from results.models import TeamScore
-            self._wins_count = TeamScore.objects.filter(ballot_submission__confirmed=True,
-                    debate_team__team=self, win=True).count()
+
+            self._wins_count = TeamScore.objects.filter(
+                ballot_submission__confirmed=True, debate_team__team=self, win=True
+            ).count()
             return self._wins_count
 
     @property
@@ -289,9 +379,12 @@ class Team(models.Model):
             return self._points
         except AttributeError:
             from standings.teams import PointsMetricAnnotator
+
             self._points = self.__class__.objects.filter(
                 id=self.id,
-            ).aggregate(p=Coalesce(PointsMetricAnnotator().get_annotation(), Value(0)))['p']
+            ).aggregate(
+                p=Coalesce(PointsMetricAnnotator().get_annotation(), Value(0))
+            )["p"]
             return self._points
 
     @cached_property
@@ -311,10 +404,13 @@ class Team(models.Model):
 
     def prev_debate(self, round_seq):
         from draw.models import DebateTeam
+
         try:
-            return DebateTeam.objects.filter(
-                debate__round__seq__lt=round_seq,
-                team=self).order_by('-debate__round__seq')[0].debate
+            return (
+                DebateTeam.objects.filter(debate__round__seq__lt=round_seq, team=self)
+                .order_by("-debate__round__seq")[0]
+                .debate
+            )
         except IndexError:
             return None
 
@@ -322,11 +418,17 @@ class Team(models.Model):
         # Require reference and short_reference if use_institution_prefix is False
         errors = {}
         if self.use_institution_prefix and self.institution is None:
-            errors['institution'] = _("Teams must have an institution if they are using the institutional prefix.")
+            errors["institution"] = _(
+                "Teams must have an institution if they are using the institutional prefix."
+            )
         if not self.use_institution_prefix and not self.reference:
-            errors['reference'] = _("Teams must have a full name if they don't use the institutional prefix.")
+            errors["reference"] = _(
+                "Teams must have a full name if they don't use the institutional prefix."
+            )
         if not self.use_institution_prefix and not self.short_reference:
-            errors['short_reference'] = _("Teams must have a short name if they don't use the institutional prefix.")
+            errors["short_reference"] = _(
+                "Teams must have a short name if they don't use the institutional prefix."
+            )
         if errors:
             raise ValidationError(errors)
 
@@ -338,10 +440,10 @@ class Team(models.Model):
 
 
 class Speaker(Person):
-    team = models.ForeignKey(Team, models.CASCADE,
-        verbose_name=_("team"))
-    categories = models.ManyToManyField(SpeakerCategory, blank=True,
-        verbose_name=_("speaker categories"))
+    team = models.ForeignKey(Team, models.CASCADE, verbose_name=_("team"))
+    categories = models.ManyToManyField(
+        SpeakerCategory, blank=True, verbose_name=_("speaker categories")
+    )
 
     class Meta:
         verbose_name = _("speaker")
@@ -359,45 +461,63 @@ class AdjudicatorManager(models.Manager):
     use_for_related_fields = True
 
     def get_queryset(self):
-        return super(AdjudicatorManager, self).get_queryset().select_related('institution')
+        return super(AdjudicatorManager, self).get_queryset().select_related("institution")
 
 
 class Adjudicator(Person):
-    institution = models.ForeignKey(Institution, models.SET_NULL, blank=True, null=True,
-        verbose_name=_("institution"))
+    institution = models.ForeignKey(
+        Institution, models.SET_NULL, blank=True, null=True, verbose_name=_("institution")
+    )
     # cascade to avoid unattached adjudicator pollution when deleting tournaments
-    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE, blank=True, null=True,
+    tournament = models.ForeignKey(
+        "tournaments.Tournament",
+        models.CASCADE,
+        blank=True,
+        null=True,
         verbose_name=_("tournament"),
-        help_text=_("Adjudicators not assigned to any tournament can be shared between tournaments"))
-    base_score = models.FloatField(default=0,
-        verbose_name=_("base score"))
+        help_text=_(
+            "Adjudicators not assigned to any tournament can be shared between tournaments"
+        ),
+    )
+    base_score = models.FloatField(default=0, verbose_name=_("base score"))
 
-    institution_conflicts = models.ManyToManyField('Institution',
-        through='adjallocation.AdjudicatorInstitutionConflict',
-        related_name='adj_inst_conflicts',
-        verbose_name=_("institution conflicts"))
-    team_conflicts = models.ManyToManyField('Team',
-        through='adjallocation.AdjudicatorTeamConflict',
-        related_name='adj_team_conflicts',
-        verbose_name=_("team conflicts"))
-    adjudicator_conflicts = models.ManyToManyField('Adjudicator',
-        through='adjallocation.AdjudicatorAdjudicatorConflict',
-        related_name='adj_adj_conflicts',
-        verbose_name=_("adjudicator conflicts"))
+    institution_conflicts = models.ManyToManyField(
+        "Institution",
+        through="adjallocation.AdjudicatorInstitutionConflict",
+        related_name="adj_inst_conflicts",
+        verbose_name=_("institution conflicts"),
+    )
+    team_conflicts = models.ManyToManyField(
+        "Team",
+        through="adjallocation.AdjudicatorTeamConflict",
+        related_name="adj_team_conflicts",
+        verbose_name=_("team conflicts"),
+    )
+    adjudicator_conflicts = models.ManyToManyField(
+        "Adjudicator",
+        through="adjallocation.AdjudicatorAdjudicatorConflict",
+        related_name="adj_adj_conflicts",
+        verbose_name=_("adjudicator conflicts"),
+    )
 
-    trainee = models.BooleanField(default=False,
+    trainee = models.BooleanField(
+        default=False,
         verbose_name=_("always trainee"),
-        help_text=_("If checked, this adjudicator will never be auto-allocated a voting position, regardless of their score"))
-    breaking = models.BooleanField(default=False,
-        verbose_name=_("breaking"))
-    independent = models.BooleanField(default=False, blank=True,
-        verbose_name=_("independent"))
-    adj_core = models.BooleanField(default=False, blank=True,
-        verbose_name=_("adjudication core"))
+        help_text=_(
+            "If checked, this adjudicator will never be auto-allocated a voting position, regardless of their score"
+        ),
+    )
+    breaking = models.BooleanField(default=False, verbose_name=_("breaking"))
+    independent = models.BooleanField(default=False, blank=True, verbose_name=_("independent"))
+    adj_core = models.BooleanField(default=False, blank=True, verbose_name=_("adjudication core"))
 
-    round_availabilities = GenericRelation('availability.RoundAvailability')
-    venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='adjudicator',
-            content_type_field='subject_content_type', object_id_field='subject_id')
+    round_availabilities = GenericRelation("availability.RoundAvailability")
+    venue_constraints = GenericRelation(
+        "venues.VenueConstraint",
+        related_query_name="adjudicator",
+        content_type_field="subject_content_type",
+        object_id_field="subject_id",
+    )
 
     objects = AdjudicatorManager()
 
@@ -424,7 +544,10 @@ class Adjudicator(Person):
 
     @cached_property
     def score(self):
-        warn("Adjudicator.score is inefficient; consider using Adjudicator.weighted_score() instead.", stacklevel=2)
+        warn(
+            "Adjudicator.score is inefficient; consider using Adjudicator.weighted_score() instead.",
+            stacklevel=2,
+        )
         if self.tournament:
             weight = self.tournament.current_round.feedback_weight
         else:
@@ -436,9 +559,12 @@ class Adjudicator(Person):
             return self._feedback_score_cache
         except AttributeError:
             from adjallocation.models import DebateAdjudicator
-            self._feedback_score_cache = self.adjudicatorfeedback_set.filter(confirmed=True, ignored=False).exclude(
-                source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).aggregate(
-                    avg=models.Avg('score'))['avg']
+
+            self._feedback_score_cache = (
+                self.adjudicatorfeedback_set.filter(confirmed=True, ignored=False)
+                .exclude(source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE)
+                .aggregate(avg=models.Avg("score"))["avg"]
+            )
             return self._feedback_score_cache
 
     @property

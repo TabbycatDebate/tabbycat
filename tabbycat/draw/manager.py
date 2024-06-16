@@ -22,37 +22,45 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 OPTIONS_TO_CONFIG_MAPPING = {
-    "avoid_institution"     : "draw_rules__avoid_same_institution",
-    "avoid_history"         : "draw_rules__avoid_team_history",
-    "history_penalty"       : "draw_rules__team_history_penalty",
-    "institution_penalty"   : "draw_rules__team_institution_penalty",
+    "avoid_institution": "draw_rules__avoid_same_institution",
+    "avoid_history": "draw_rules__avoid_team_history",
+    "history_penalty": "draw_rules__team_history_penalty",
+    "institution_penalty": "draw_rules__team_institution_penalty",
     "pullup_debates_penalty": "draw_rules__pullup_debates_penalty",
-    "side_penalty"          : "draw_rules__side_penalty",
-    "pairing_penalty"       : "draw_rules__pairing_penalty",
-    "side_allocations"      : "draw_rules__draw_side_allocations",
-    "avoid_conflicts"       : "draw_rules__draw_avoid_conflicts",
-    "odd_bracket"           : "draw_rules__draw_odd_bracket",
-    "pairing_method"        : "draw_rules__draw_pairing_method",
-    "pullup_restriction"    : "draw_rules__draw_pullup_restriction",
-    "pullup"                : "draw_rules__bp_pullup_distribution",
-    "position_cost"         : "draw_rules__bp_position_cost",
-    "assignment_method"     : "draw_rules__bp_assignment_method",
-    "renyi_order"           : "draw_rules__bp_renyi_order",
-    "exponent"              : "draw_rules__bp_position_cost_exponent",
+    "side_penalty": "draw_rules__side_penalty",
+    "pairing_penalty": "draw_rules__pairing_penalty",
+    "side_allocations": "draw_rules__draw_side_allocations",
+    "avoid_conflicts": "draw_rules__draw_avoid_conflicts",
+    "odd_bracket": "draw_rules__draw_odd_bracket",
+    "pairing_method": "draw_rules__draw_pairing_method",
+    "pullup_restriction": "draw_rules__draw_pullup_restriction",
+    "pullup": "draw_rules__bp_pullup_distribution",
+    "position_cost": "draw_rules__bp_position_cost",
+    "assignment_method": "draw_rules__bp_assignment_method",
+    "renyi_order": "draw_rules__bp_renyi_order",
+    "exponent": "draw_rules__bp_position_cost_exponent",
 }
 
 
 def DrawManager(round, active_only=True):  # noqa: N802 (factory function)
-    teams_in_debate = round.tournament.pref('teams_in_debate')
+    teams_in_debate = round.tournament.pref("teams_in_debate")
     try:
         klass = DRAW_MANAGER_CLASSES[(teams_in_debate, round.draw_type)]
     except KeyError:
-        if teams_in_debate == 'two':
-            raise DrawUserError(_("The draw type %(type)s can't be used with two-team formats.") % {'type': round.get_draw_type_display()})
-        elif teams_in_debate == 'bp':
-            raise DrawUserError(_("The draw type %(type)s can't be used with British Parliamentary.") % {'type': round.get_draw_type_display()})
+        if teams_in_debate == "two":
+            raise DrawUserError(
+                _("The draw type %(type)s can't be used with two-team formats.")
+                % {"type": round.get_draw_type_display()}
+            )
+        elif teams_in_debate == "bp":
+            raise DrawUserError(
+                _("The draw type %(type)s can't be used with British Parliamentary.")
+                % {"type": round.get_draw_type_display()}
+            )
         else:
-            raise DrawUserError(_("Unrecognised \"teams in debate\" option: %(option)s") % {'option': teams_in_debate})
+            raise DrawUserError(
+                _('Unrecognised "teams in debate" option: %(option)s') % {"option": teams_in_debate}
+            )
     logger.debug("Using draw manager class: %s", klass.__name__)
     return klass(round, active_only)
 
@@ -64,11 +72,11 @@ class BaseDrawManager:
 
     def __init__(self, round, active_only=True):
         self.round = round
-        self.teams_in_debate = self.round.tournament.pref('teams_in_debate')
+        self.teams_in_debate = self.round.tournament.pref("teams_in_debate")
         self.active_only = active_only
 
     def get_relevant_options(self):
-        if self.teams_in_debate == 'two':
+        if self.teams_in_debate == "two":
             return [
                 "avoid_institution",
                 "avoid_history",
@@ -83,14 +91,14 @@ class BaseDrawManager:
             return []
 
     def n_byes(self, n_teams):
-        if self.round.tournament.pref('bye_team_selection') != 'off':
+        if self.round.tournament.pref("bye_team_selection") != "off":
             return n_teams % len(self.round.tournament.sides)
         return 0
 
     def get_generator_type(self):
         return self.generator_type
 
-    def get_teams(self) -> Tuple[List['Team'], List['Team']]:
+    def get_teams(self) -> Tuple[List["Team"], List["Team"]]:
         if self.active_only:
             teams = self.round.active_teams.all()
         else:
@@ -130,16 +138,23 @@ class BaseDrawManager:
             if team in tsas:
                 team.allocated_side = tsas[team]
 
-    def _make_debates(self, pairings: List['BasePairing']) -> None:
+    def _make_debates(self, pairings: List["BasePairing"]) -> None:
         random.shuffle(pairings)  # to avoid IDs indicating room ranks
 
         debates = {}
         debateteams = []
 
         for pairing in pairings:
-            debate = Debate(round=self.round, bracket=pairing.bracket, room_rank=pairing.room_rank, flags=pairing.flags)
-            if (self.round.tournament.pref('draw_side_allocations') == "manual-ballot" or
-                    self.round.is_break_round):
+            debate = Debate(
+                round=self.round,
+                bracket=pairing.bracket,
+                room_rank=pairing.room_rank,
+                flags=pairing.flags,
+            )
+            if (
+                self.round.tournament.pref("draw_side_allocations") == "manual-ballot"
+                or self.round.is_break_round
+            ):
                 debate.sides_confirmed = False
             debates[pairing] = debate
 
@@ -148,13 +163,15 @@ class BaseDrawManager:
 
         for pairing, debate in debates.items():
             for team, side in zip(pairing.teams, self.round.tournament.sides):
-                dt = DebateTeam(debate=debate, team=team, side=side, flags=pairing.get_team_flags(team))
+                dt = DebateTeam(
+                    debate=debate, team=team, side=side, flags=pairing.get_team_flags(team)
+                )
                 debateteams.append(dt)
 
         DebateTeam.objects.bulk_create(debateteams)
         logger.debug("Created %d debate teams", len(debateteams))
 
-    def _make_bye_debates(self, byes: List['Team'], room_rank: int) -> None:
+    def _make_bye_debates(self, byes: List["Team"], room_rank: int) -> None:
         """We'd want the room rank as to always show byes at the bottom"""
         for i, bye in enumerate(byes, start=room_rank + 1):
             debate = Debate(round=self.round, bracket=-1, room_rank=i)
@@ -163,8 +180,12 @@ class BaseDrawManager:
             dt = DebateTeam(debate=debate, team=bye, side=DebateTeam.Side.BYE)
             dt.save()
 
-            if self.round.tournament.pref('bye_team_results') == 'points':
-                bs = BallotSubmission(submitter_type=BallotSubmission.Submitter.AUTOMATION, confirmed=True, debate=debate)
+            if self.round.tournament.pref("bye_team_results") == "points":
+                bs = BallotSubmission(
+                    submitter_type=BallotSubmission.Submitter.AUTOMATION,
+                    confirmed=True,
+                    debate=debate,
+                )
                 bs.save()
                 TeamScore.objects.create(ballot_submission=bs, debate_team=dt, points=1, win=True)
 
@@ -195,8 +216,9 @@ class BaseDrawManager:
 
         generator_type = self.get_generator_type()
         logger.debug("Using generator type: %s", generator_type)
-        drawer = DrawGenerator(self.teams_in_debate, generator_type, teams,
-                results=results, rrseq=rrseq, **options)
+        drawer = DrawGenerator(
+            self.teams_in_debate, generator_type, teams, results=results, rrseq=rrseq, **options
+        )
         pairings = drawer.generate()
         self._make_debates(pairings)
 
@@ -211,7 +233,7 @@ class RandomDrawManager(BaseDrawManager):
 
     def get_relevant_options(self):
         options = super().get_relevant_options()
-        if self.teams_in_debate == 'two':
+        if self.teams_in_debate == "two":
             options.extend(["avoid_conflicts", "side_allocations"])
         return options
 
@@ -228,22 +250,31 @@ class PowerPairedDrawManager(BaseDrawManager):
 
     def get_relevant_options(self):
         options = super().get_relevant_options()
-        if self.teams_in_debate == 'two':
-            options.extend([
-                "avoid_conflicts", "odd_bracket", "pairing_method",
-                "pullup_restriction", "side_allocations",
-            ])
-        elif self.teams_in_debate == 'bp':
-            options.extend(["pullup", "position_cost", "assignment_method", "renyi_order", "exponent"])
+        if self.teams_in_debate == "two":
+            options.extend(
+                [
+                    "avoid_conflicts",
+                    "odd_bracket",
+                    "pairing_method",
+                    "pullup_restriction",
+                    "side_allocations",
+                ]
+            )
+        elif self.teams_in_debate == "bp":
+            options.extend(
+                ["pullup", "position_cost", "assignment_method", "renyi_order", "exponent"]
+            )
         return options
 
-    def get_teams(self) -> Tuple[List['Team'], List['Team']]:
+    def get_teams(self) -> Tuple[List["Team"], List["Team"]]:
         """Get teams in ranked order."""
         teams = add(*super().get_teams())
         teams = self.round.tournament.team_set.filter(id__in=[t.id for t in teams])
 
-        metrics = self.round.tournament.pref('team_standings_precedence')
-        pullup_metric = BasePowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.round.tournament.pref('draw_pullup_restriction')]
+        metrics = self.round.tournament.pref("team_standings_precedence")
+        pullup_metric = BasePowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[
+            self.round.tournament.pref("draw_pullup_restriction")
+        ]
         extra_metrics = {pullup_metric} if pullup_metric is not None else set()
 
         pullup_debates_penalty = self.round.tournament.pref("pullup_debates_penalty")
@@ -251,14 +282,16 @@ class PowerPairedDrawManager(BaseDrawManager):
             extra_metrics.add("pullup_debates")
         extra_metrics -= set(metrics)
 
-        generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random", extra_metrics=list(extra_metrics))
+        generator = TeamStandingsGenerator(
+            metrics, ("rank", "subrank"), tiebreak="random", extra_metrics=list(extra_metrics)
+        )
         standings = generator.generate(teams, round=self.round.prev)
 
         ranked = []
         for standing in standings:
             team = standing.team
             team.points = next(standing.itermetrics(), 0) or 0
-            team.subrank = standing.get_ranking('subrank')
+            team.subrank = standing.get_ranking("subrank")
             if pullup_debates_penalty > 0:
                 team.pullup_debates = standing.metrics.get("pullup_debates", 0)
             if pullup_metric:
@@ -267,12 +300,12 @@ class PowerPairedDrawManager(BaseDrawManager):
 
         n_byes = self.n_byes(len(ranked))
         if n_byes:
-            if self.round.tournament.pref('bye_team_selection') == 'random':
+            if self.round.tournament.pref("bye_team_selection") == "random":
                 byes = []
                 for i in range(n_byes):
                     byes.append(ranked.pop(random.randrange(len(ranked))))
                 return ranked, byes
-            elif self.round.tournament.pref('bye_team_selection') == 'lowest':
+            elif self.round.tournament.pref("bye_team_selection") == "lowest":
                 return ranked[:-n_byes], ranked[-n_byes:]
             else:
                 raise RuntimeError("Bye team(s) created without recognized selection option")
@@ -285,13 +318,13 @@ class SeededDrawManager(BaseDrawManager):
 
     def get_relevant_options(self):
         options = super().get_relevant_options()
-        if self.teams_in_debate == 'two':
+        if self.teams_in_debate == "two":
             options.extend(["avoid_conflicts", "pairing_method", "side_allocations"])
-        elif self.teams_in_debate == 'bp':
+        elif self.teams_in_debate == "bp":
             options.extend(["assignment_method"])
         return options
 
-    def get_teams(self) -> Tuple[List['Team'], List['Team']]:
+    def get_teams(self) -> Tuple[List["Team"], List["Team"]]:
         """Get teams in seeded order."""
         teams = add(*super().get_teams())
         random.shuffle(teams)
@@ -300,7 +333,7 @@ class SeededDrawManager(BaseDrawManager):
         byes = []
         n_byes = self.n_byes(len(teams))
         if n_byes:
-            if self.round.tournament.pref('bye_team_selection') == 'lowest':
+            if self.round.tournament.pref("bye_team_selection") == "lowest":
                 teams, byes = teams[:-n_byes], teams[-n_byes:]
             else:
                 for i in range(n_byes):
@@ -316,9 +349,13 @@ class RoundRobinDrawManager(BaseDrawManager):
     generator_type = "round_robin"
 
     def get_rrseq(self):
-        prior_rrs = list(self.round.tournament.round_set.filter(draw_type=Round.DrawType.ROUNDROBIN).order_by('seq'))
+        prior_rrs = list(
+            self.round.tournament.round_set.filter(draw_type=Round.DrawType.ROUNDROBIN).order_by(
+                "seq"
+            )
+        )
         try:
-            rr_seq = prior_rrs.index(self.round) + 1 # Dont 0-index
+            rr_seq = prior_rrs.index(self.round) + 1  # Dont 0-index
         except ValueError:
             raise RuntimeError("Tried to calculate an effective round robin seq but couldn't")
 
@@ -328,17 +365,25 @@ class RoundRobinDrawManager(BaseDrawManager):
 class BaseEliminationDrawManager(BaseDrawManager):
     result_pairing_class = None
 
-    def get_teams(self) -> Tuple[List['Team'], List['Team']]:
+    def get_teams(self) -> Tuple[List["Team"], List["Team"]]:
         breaking_teams = self.round.break_category.breakingteam_set_competing.order_by(
-                'break_rank').select_related('team')
+            "break_rank"
+        ).select_related("team")
         return [bt.team for bt in breaking_teams], []
 
     def get_results(self):
         if self.round.prev is not None and self.round.prev.is_break_round:
-            debates = self.round.prev.debate_set_with_prefetches(ordering=('room_rank',), results=True,
-                    adjudicators=False, speakers=False, venues=False)
-            pairings = [self.result_pairing_class.from_debate(debate, tournament=self.round.tournament)
-                        for debate in debates]
+            debates = self.round.prev.debate_set_with_prefetches(
+                ordering=("room_rank",),
+                results=True,
+                adjudicators=False,
+                speakers=False,
+                venues=False,
+            )
+            pairings = [
+                self.result_pairing_class.from_debate(debate, tournament=self.round.tournament)
+                for debate in debates
+            ]
             return pairings
         else:
             return None
@@ -360,7 +405,9 @@ class BPEliminationDrawManager(BaseEliminationDrawManager):
     def get_generator_type(self):
         break_size = self.round.break_category.break_size
         if break_size % 6 == 0 and ispow2(break_size // 6):
-            nprev_rounds = self.round.break_category.round_set.filter(seq__lt=self.round.seq).count()
+            nprev_rounds = self.round.break_category.round_set.filter(
+                seq__lt=self.round.seq
+            ).count()
             if nprev_rounds == 0:
                 return "partial_elimination"
             elif nprev_rounds == 1:
@@ -373,19 +420,24 @@ class BPEliminationDrawManager(BaseEliminationDrawManager):
             else:
                 return "first_elimination"
         else:
-            raise DrawUserError(_("The break size (%(size)d) for this break category was invalid. "
-                "It must be either six times or four times a power of two.") % {'size': break_size})
+            raise DrawUserError(
+                _(
+                    "The break size (%(size)d) for this break category was invalid. "
+                    "It must be either six times or four times a power of two."
+                )
+                % {"size": break_size}
+            )
 
 
 DRAW_MANAGER_CLASSES = {
-    ('two', Round.DrawType.RANDOM): RandomDrawManager,
-    ('two', Round.DrawType.POWERPAIRED): PowerPairedDrawManager,
-    ('two', Round.DrawType.ROUNDROBIN): RoundRobinDrawManager,
-    ('two', Round.DrawType.MANUAL): ManualDrawManager,
-    ('two', Round.DrawType.ELIMINATION): EliminationDrawManager,
-    ('two', Round.DrawType.SEEDED): SeededDrawManager,
-    ('bp', Round.DrawType.RANDOM): RandomDrawManager,
-    ('bp', Round.DrawType.MANUAL): ManualDrawManager,
-    ('bp', Round.DrawType.POWERPAIRED): PowerPairedDrawManager,
-    ('bp', Round.DrawType.ELIMINATION): BPEliminationDrawManager,
+    ("two", Round.DrawType.RANDOM): RandomDrawManager,
+    ("two", Round.DrawType.POWERPAIRED): PowerPairedDrawManager,
+    ("two", Round.DrawType.ROUNDROBIN): RoundRobinDrawManager,
+    ("two", Round.DrawType.MANUAL): ManualDrawManager,
+    ("two", Round.DrawType.ELIMINATION): EliminationDrawManager,
+    ("two", Round.DrawType.SEEDED): SeededDrawManager,
+    ("bp", Round.DrawType.RANDOM): RandomDrawManager,
+    ("bp", Round.DrawType.MANUAL): ManualDrawManager,
+    ("bp", Round.DrawType.POWERPAIRED): PowerPairedDrawManager,
+    ("bp", Round.DrawType.ELIMINATION): BPEliminationDrawManager,
 }

@@ -11,40 +11,127 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='BreakCategory',
+            name="BreakCategory",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text='Name to be displayed, e.g., "ESL"', max_length=50, verbose_name='name')),
-                ('slug', models.SlugField(help_text='Slug for URLs, e.g., "esl"', verbose_name='slug')),
-                ('seq', models.IntegerField(help_text='The order in which the categories are displayed', verbose_name='sequence number')),
-                ('break_size', models.IntegerField(help_text='Number of breaking teams in this category', validators=[django.core.validators.MinValueValidator(2)], verbose_name='break size')),
-                ('is_general', models.BooleanField(help_text='True if most teams eligible for this category, e.g. Open, False otherwise', verbose_name='is general')),
-                ('priority', models.IntegerField(help_text='If a team breaks in multiple categories, higher priority numbers take precedence; teams can break into multiple categories if and only if they all have the same priority', verbose_name='priority')),
-                ('rule', models.CharField(choices=[('standard', 'Standard'), ('aida-1996', 'AIDA 1996'), ('aida-2016-easters', 'AIDA 2016 (Easters)'), ('aida-2016-australs', 'AIDA 2016 (Australs)'), ('wadl-div-first', 'WADL division winners first'), ('wadl-div-guaranteed', 'WADL division winners guaranteed')], default='standard', help_text='Rule for how the break is calculated (most tournaments should use "Standard")', max_length=25, verbose_name='rule')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        help_text='Name to be displayed, e.g., "ESL"',
+                        max_length=50,
+                        verbose_name="name",
+                    ),
+                ),
+                (
+                    "slug",
+                    models.SlugField(help_text='Slug for URLs, e.g., "esl"', verbose_name="slug"),
+                ),
+                (
+                    "seq",
+                    models.IntegerField(
+                        help_text="The order in which the categories are displayed",
+                        verbose_name="sequence number",
+                    ),
+                ),
+                (
+                    "break_size",
+                    models.IntegerField(
+                        help_text="Number of breaking teams in this category",
+                        validators=[django.core.validators.MinValueValidator(2)],
+                        verbose_name="break size",
+                    ),
+                ),
+                (
+                    "is_general",
+                    models.BooleanField(
+                        help_text="True if most teams eligible for this category, e.g. Open, False otherwise",
+                        verbose_name="is general",
+                    ),
+                ),
+                (
+                    "priority",
+                    models.IntegerField(
+                        help_text="If a team breaks in multiple categories, higher priority numbers take precedence; teams can break into multiple categories if and only if they all have the same priority",
+                        verbose_name="priority",
+                    ),
+                ),
+                (
+                    "rule",
+                    models.CharField(
+                        choices=[
+                            ("standard", "Standard"),
+                            ("aida-1996", "AIDA 1996"),
+                            ("aida-2016-easters", "AIDA 2016 (Easters)"),
+                            ("aida-2016-australs", "AIDA 2016 (Australs)"),
+                            ("wadl-div-first", "WADL division winners first"),
+                            ("wadl-div-guaranteed", "WADL division winners guaranteed"),
+                        ],
+                        default="standard",
+                        help_text='Rule for how the break is calculated (most tournaments should use "Standard")',
+                        max_length=25,
+                        verbose_name="rule",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'break category',
-                'ordering': ['tournament', 'seq'],
-                'verbose_name_plural': 'break categories',
+                "verbose_name": "break category",
+                "ordering": ["tournament", "seq"],
+                "verbose_name_plural": "break categories",
             },
         ),
         migrations.CreateModel(
-            name='BreakingTeam',
+            name="BreakingTeam",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('rank', models.IntegerField(verbose_name='rank')),
-                ('break_rank', models.IntegerField(blank=True, null=True, verbose_name='break rank')),
-                ('remark', models.CharField(blank=True, choices=[('C', 'Capped'), ('I', 'Ineligible'), ('D', 'Different break'), ('d', 'Disqualified'), ('t', 'Lost coin toss'), ('w', 'Withdrawn')], help_text="Used to explain why an otherwise-qualified team didn't break", max_length=1, null=True, verbose_name='remark')),
-                ('break_category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='breakqual.BreakCategory', verbose_name='break category')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("rank", models.IntegerField(verbose_name="rank")),
+                (
+                    "break_rank",
+                    models.IntegerField(blank=True, null=True, verbose_name="break rank"),
+                ),
+                (
+                    "remark",
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            ("C", "Capped"),
+                            ("I", "Ineligible"),
+                            ("D", "Different break"),
+                            ("d", "Disqualified"),
+                            ("t", "Lost coin toss"),
+                            ("w", "Withdrawn"),
+                        ],
+                        help_text="Used to explain why an otherwise-qualified team didn't break",
+                        max_length=1,
+                        null=True,
+                        verbose_name="remark",
+                    ),
+                ),
+                (
+                    "break_category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="breakqual.BreakCategory",
+                        verbose_name="break category",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'breaking team',
-                'verbose_name_plural': 'breaking teams',
+                "verbose_name": "breaking team",
+                "verbose_name_plural": "breaking teams",
             },
         ),
     ]

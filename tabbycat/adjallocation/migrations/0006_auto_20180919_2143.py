@@ -6,27 +6,27 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('participants', '0006_auto_20180807_2132'),
-        ('adjallocation', '0005_populate_teaminstitutionconflict'),
+        ("participants", "0006_auto_20180807_2132"),
+        ("adjallocation", "0005_populate_teaminstitutionconflict"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='AdjudicatorConflict',
-            new_name='AdjudicatorTeamConflict',
+            old_name="AdjudicatorConflict",
+            new_name="AdjudicatorTeamConflict",
         ),
         migrations.RenameField(
-            model_name='adjudicatoradjudicatorconflict',
-            old_name='adjudicator',
-            new_name='adjudicator1',
+            model_name="adjudicatoradjudicatorconflict",
+            old_name="adjudicator",
+            new_name="adjudicator1",
         ),
         migrations.RenameField(
-            model_name='adjudicatoradjudicatorconflict',
-            old_name='conflict_adjudicator',
-            new_name='adjudicator2',
+            model_name="adjudicatoradjudicatorconflict",
+            old_name="conflict_adjudicator",
+            new_name="adjudicator2",
         ),
         migrations.AlterUniqueTogether(
-            name='adjudicatoradjudicatorconflict',
-            unique_together={('adjudicator1', 'adjudicator2')},
+            name="adjudicatoradjudicatorconflict",
+            unique_together={("adjudicator1", "adjudicator2")},
         ),
     ]

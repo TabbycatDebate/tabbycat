@@ -11,61 +11,89 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('participants', '0001_initial'),
-        ('draw', '0001_initial'),
-        ('adjallocation', '0002_debateadjudicator_adjudicator'),
+        ("participants", "0001_initial"),
+        ("draw", "0001_initial"),
+        ("adjallocation", "0002_debateadjudicator_adjudicator"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='debateadjudicator',
-            name='debate',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='draw.Debate', verbose_name='debate'),
+            model_name="debateadjudicator",
+            name="debate",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="draw.Debate", verbose_name="debate"
+            ),
         ),
         migrations.AddField(
-            model_name='adjudicatorinstitutionconflict',
-            name='adjudicator',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='participants.Adjudicator', verbose_name='adjudicator'),
+            model_name="adjudicatorinstitutionconflict",
+            name="adjudicator",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="participants.Adjudicator",
+                verbose_name="adjudicator",
+            ),
         ),
         migrations.AddField(
-            model_name='adjudicatorinstitutionconflict',
-            name='institution',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='participants.Institution', verbose_name='institution'),
+            model_name="adjudicatorinstitutionconflict",
+            name="institution",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="participants.Institution",
+                verbose_name="institution",
+            ),
         ),
         migrations.AddField(
-            model_name='adjudicatorconflict',
-            name='adjudicator',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='participants.Adjudicator', verbose_name='adjudicator'),
+            model_name="adjudicatorconflict",
+            name="adjudicator",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="participants.Adjudicator",
+                verbose_name="adjudicator",
+            ),
         ),
         migrations.AddField(
-            model_name='adjudicatorconflict',
-            name='team',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='participants.Team', verbose_name='team'),
+            model_name="adjudicatorconflict",
+            name="team",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="participants.Team",
+                verbose_name="team",
+            ),
         ),
         migrations.AddField(
-            model_name='adjudicatoradjudicatorconflict',
-            name='adjudicator',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='adjudicatoradjudicatorconflict_source_set', to='participants.Adjudicator', verbose_name='adjudicator 1'),
+            model_name="adjudicatoradjudicatorconflict",
+            name="adjudicator",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="adjudicatoradjudicatorconflict_source_set",
+                to="participants.Adjudicator",
+                verbose_name="adjudicator 1",
+            ),
         ),
         migrations.AddField(
-            model_name='adjudicatoradjudicatorconflict',
-            name='conflict_adjudicator',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='adjudicatoradjudicatorconflict_target_set', to='participants.Adjudicator', verbose_name='adjudicator 2'),
+            model_name="adjudicatoradjudicatorconflict",
+            name="conflict_adjudicator",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="adjudicatoradjudicatorconflict_target_set",
+                to="participants.Adjudicator",
+                verbose_name="adjudicator 2",
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='debateadjudicator',
-            unique_together=set([('debate', 'adjudicator')]),
+            name="debateadjudicator",
+            unique_together=set([("debate", "adjudicator")]),
         ),
         migrations.AlterUniqueTogether(
-            name='adjudicatorinstitutionconflict',
-            unique_together=set([('adjudicator', 'institution')]),
+            name="adjudicatorinstitutionconflict",
+            unique_together=set([("adjudicator", "institution")]),
         ),
         migrations.AlterUniqueTogether(
-            name='adjudicatorconflict',
-            unique_together=set([('adjudicator', 'team')]),
+            name="adjudicatorconflict",
+            unique_together=set([("adjudicator", "team")]),
         ),
         migrations.AlterUniqueTogether(
-            name='adjudicatoradjudicatorconflict',
-            unique_together=set([('adjudicator', 'conflict_adjudicator')]),
+            name="adjudicatoradjudicatorconflict",
+            unique_together=set([("adjudicator", "conflict_adjudicator")]),
         ),
     ]

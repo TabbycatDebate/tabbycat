@@ -8,4 +8,4 @@ class DirectPreformedPanelAllocator(BasePreformedPanelAllocator):
     key = "direct"
 
     def allocate(self):
-        return self.debates.order_by('room_rank'), self.panels.order_by('room_rank')
+        return self.debates.order_by("room_rank"), self.panels.order_by("room_rank")

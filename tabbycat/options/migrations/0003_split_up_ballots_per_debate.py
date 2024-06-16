@@ -4,8 +4,8 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('options', '0002_move_welcome_message'),
-        ('tournaments', '0001_initial'),
+        ("options", "0002_move_welcome_message"),
+        ("tournaments", "0001_initial"),
     ]
 
     operations = [

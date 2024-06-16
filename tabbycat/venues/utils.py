@@ -13,16 +13,18 @@ def venue_conflicts_display(debates):
     participant had constraints and *none* of their constraints were met."""
 
     constraints = {}
-    for vc in VenueConstraint.objects.filter_for_debates(debates).select_related('category'):
+    for vc in VenueConstraint.objects.filter_for_debates(debates).select_related("category"):
         constraints.setdefault((vc.subject_content_type_id, vc.subject_id), []).append(vc)
 
-    def _add_constraint_message(debate, instance, venue, success_message, failure_message, message_args):
+    def _add_constraint_message(
+        debate, instance, venue, success_message, failure_message, message_args
+    ):
         key = (ContentType.objects.get_for_model(instance).id, instance.id)
         if key not in constraints:
             return
         for constraint in constraints[key]:
             if constraint.category in venue.venuecategory_set.all():
-                message_args['category'] = escape(constraint.category.name)
+                message_args["category"] = escape(constraint.category.name)
                 conflict_messages[debate].append(("success", success_message % message_args))
                 return
         else:
@@ -35,21 +37,37 @@ def venue_conflicts_display(debates):
             continue
 
         for team in debate.teams:
-            _add_constraint_message(debate, team, venue,
+            _add_constraint_message(
+                debate,
+                team,
+                venue,
                 _("Room constraint of %(name)s met (%(category)s)"),
                 _("Room does not meet any constraint of %(name)s"),
-                {'name': escape(team.short_name)})
+                {"name": escape(team.short_name)},
+            )
 
             if team.institution is not None:
-                _add_constraint_message(debate, team.institution, venue,
-                    _("Room constraint of %(team)s met (%(category)s, via institution %(institution)s)"),
-                    _("Room does not meet any constraint of institution %(institution)s (%(team)s)"),
-                    {'institution': escape(team.institution.code), 'team': escape(team.short_name)})
+                _add_constraint_message(
+                    debate,
+                    team.institution,
+                    venue,
+                    _(
+                        "Room constraint of %(team)s met (%(category)s, via institution %(institution)s)"
+                    ),
+                    _(
+                        "Room does not meet any constraint of institution %(institution)s (%(team)s)"
+                    ),
+                    {"institution": escape(team.institution.code), "team": escape(team.short_name)},
+                )
 
         for adjudicator in debate.adjudicators.all():
-            _add_constraint_message(debate, adjudicator, venue,
+            _add_constraint_message(
+                debate,
+                adjudicator,
+                venue,
                 _("Room constraint of %(name)s met (%(category)s)"),
                 _("Room does not meet any constraint of %(name)s"),
-                {'name': escape(adjudicator.name)})
+                {"name": escape(adjudicator.name)},
+            )
 
     return conflict_messages

@@ -21,13 +21,23 @@ from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
 from users.permissions import has_permission
 from utils.misc import redirect_round, redirect_tournament, reverse_round, reverse_tournament
-from utils.mixins import (AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin,
-                          WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin)
+from utils.mixins import (
+    AdministratorMixin,
+    AssistantMixin,
+    CacheMixin,
+    TabbycatPageTitlesMixin,
+    WarnAboutDatabaseUseMixin,
+    WarnAboutLegacySendgridConfigVarsMixin,
+)
 from utils.views import PostOnlyRedirectView
 
-from .forms import (RoundWeightForm, SetCurrentRoundMultipleBreakCategoriesForm,
-                    SetCurrentRoundSingleBreakCategoryForm, TournamentConfigureForm,
-                    TournamentStartForm)
+from .forms import (
+    RoundWeightForm,
+    SetCurrentRoundMultipleBreakCategoriesForm,
+    SetCurrentRoundSingleBreakCategoryForm,
+    TournamentConfigureForm,
+    TournamentStartForm,
+)
 from .mixins import RoundMixin, TournamentMixin
 from .models import Tournament
 from .utils import get_side_name
@@ -36,60 +46,74 @@ User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
-class PublicSiteIndexView(WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin, TemplateView):
-    template_name = 'site_index.html'
+class PublicSiteIndexView(
+    WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin, TemplateView
+):
+    template_name = "site_index.html"
 
     def get(self, request, *args, **kwargs):
         tournaments = Tournament.objects.all()
-        if request.GET.get('redirect', '') == 'false':
+        if request.GET.get("redirect", "") == "false":
             return super().get(request, *args, **kwargs)
         if tournaments.count() == 1 and not request.user.is_authenticated:
-            logger.debug('One tournament only, user is: %s, redirecting to tournament-public-index', request.user)
-            return redirect_tournament('tournament-public-index', tournaments.first())
+            logger.debug(
+                "One tournament only, user is: %s, redirecting to tournament-public-index",
+                request.user,
+            )
+            return redirect_tournament("tournament-public-index", tournaments.first())
         elif not tournaments.exists() and not User.objects.exists():
-            logger.debug('No users and no tournaments, redirecting to blank-site-start')
-            return redirect('blank-site-start')
+            logger.debug("No users and no tournaments, redirecting to blank-site-start")
+            return redirect("blank-site-start")
         else:
             return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        kwargs['tournaments'] = Tournament.objects.filter(active=True)
-        kwargs['inactive'] = Tournament.objects.filter(active=False)
+        kwargs["tournaments"] = Tournament.objects.filter(active=True)
+        kwargs["inactive"] = Tournament.objects.filter(active=False)
         return super().get_context_data(**kwargs)
 
 
 class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
-    template_name = 'public_tournament_index.html'
+    template_name = "public_tournament_index.html"
 
     def get_context_data(self, **kwargs):
-        kwargs['public_index'] = True
+        kwargs["public_index"] = True
         return super().get_context_data(**kwargs)
 
 
-class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin, TemplateView):
+class BaseTournamentDashboardHomeView(
+    TournamentMixin, WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin, TemplateView
+):
 
     def get_context_data(self, **kwargs):
         t = self.tournament
-        updates = 10 # Number of items to fetch
+        updates = 10  # Number of items to fetch
 
         kwargs["round"] = t.current_round
         kwargs["tournament_slug"] = t.slug
         kwargs["readthedocs_version"] = settings.READTHEDOCS_VERSION
-        kwargs["blank"] = not (t.team_set.exists() or t.adjudicator_set.exists() or t.venue_set.exists())
+        kwargs["blank"] = not (
+            t.team_set.exists() or t.adjudicator_set.exists() or t.venue_set.exists()
+        )
 
-        action_perm = has_permission(self.request.user, 'view.actionlogentry', self.tournament)
+        action_perm = has_permission(self.request.user, "view.actionlogentry", self.tournament)
         if action_perm:
-            actions = ActionLogEntry.objects.filter(tournament=t).prefetch_related(
-                        'content_object', 'user').order_by('-timestamp')[:updates]
+            actions = (
+                ActionLogEntry.objects.filter(tournament=t)
+                .prefetch_related("content_object", "user")
+                .order_by("-timestamp")[:updates]
+            )
             kwargs["initialActions"] = json.dumps([a.serialize for a in actions])
         else:
             kwargs["initialActions"] = json.dumps([])
 
-        results_perm = has_permission(self.request.user, 'view.ballotsubmission', self.tournament)
+        results_perm = has_permission(self.request.user, "view.ballotsubmission", self.tournament)
         if results_perm:
             debates = t.current_round.debate_set.filter(
                 ballotsubmission__confirmed=True,
-            ).order_by('-ballotsubmission__timestamp')[:updates]
+            ).order_by(
+                "-ballotsubmission__timestamp"
+            )[:updates]
             populate_confirmed_ballots(debates, results=True)
             subs = [d._confirmed_ballot.serialize_like_actionlog for d in debates]
             kwargs["initialBallots"] = json.dumps(subs)
@@ -98,69 +122,82 @@ class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin
 
         status = t.current_round.draw_status
         kwargs["total_debates"] = t.current_round.debate_set.count()
-        graph_perm = has_permission(self.request.user, 'view.ballotsubmission.graph', self.tournament)
+        graph_perm = has_permission(
+            self.request.user, "view.ballotsubmission.graph", self.tournament
+        )
         if (status == Round.Status.CONFIRMED or status == Round.Status.RELEASED) and graph_perm:
             ballots = BallotSubmission.objects.filter(
-                debate__round=t.current_round, discarded=False).select_related(
-                'submitter', 'debate')
-            stats = [{'ballot': bs.serialize(t)} for bs in ballots]
+                debate__round=t.current_round, discarded=False
+            ).select_related("submitter", "debate")
+            stats = [{"ballot": bs.serialize(t)} for bs in ballots]
             kwargs["initial_graph_data"] = json.dumps(stats)
         else:
             kwargs["initial_graph_data"] = json.dumps([])
 
-        kwargs["overview_permissions"] = json.dumps({
-            "graph": graph_perm,
-            "actionlog": action_perm,
-            "results": results_perm,
-        })
+        kwargs["overview_permissions"] = json.dumps(
+            {
+                "graph": graph_perm,
+                "actionlog": action_perm,
+                "results": results_perm,
+            }
+        )
 
         return super().get_context_data(**kwargs)
 
 
 class TournamentAssistantHomeView(AssistantMixin, BaseTournamentDashboardHomeView):
-    template_name = 'assistant_tournament_index.html'
+    template_name = "assistant_tournament_index.html"
 
 
 class TournamentAdminHomeView(AdministratorMixin, BaseTournamentDashboardHomeView):
-    template_name = 'tournament_index.html'
+    template_name = "tournament_index.html"
     view_permission = True
 
 
 class CompleteRoundCheckView(AdministratorMixin, RoundMixin, TemplateView):
-    template_name = 'round_complete_check.html'
+    template_name = "round_complete_check.html"
 
     def get_context_data(self, **kwargs):
         prior_rounds_not_completed = self.tournament.round_set.filter(
             Q(break_category=self.round.break_category) | Q(break_category__isnull=True),
-            completed=False, seq__lt=self.round.seq,
+            completed=False,
+            seq__lt=self.round.seq,
         )
-        kwargs['number_of_prior_rounds_not_completed'] = prior_rounds_not_completed.count()
-        kwargs['prior_rounds_not_completed'] = format_html_join(
+        kwargs["number_of_prior_rounds_not_completed"] = prior_rounds_not_completed.count()
+        kwargs["prior_rounds_not_completed"] = format_html_join(
             ", ",
-            "<a href=\"{}\" class=\"alert-link\">{}</a>",
-            ((reverse_round('tournament-complete-round-check', r), r.name)
-                for r in prior_rounds_not_completed),
+            '<a href="{}" class="alert-link">{}</a>',
+            (
+                (reverse_round("tournament-complete-round-check", r), r.name)
+                for r in prior_rounds_not_completed
+            ),
         )
 
-        kwargs['num_unconfirmed'] = self.round.debate_set.filter(
-            result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
-        kwargs['increment_ok'] = kwargs['num_unconfirmed'] == 0
-        kwargs['emails_sent'] = BulkNotification.objects.filter(
-            tournament=self.tournament, round=self.round, event=BulkNotification.EventType.POINTS).exists()
+        kwargs["num_unconfirmed"] = self.round.debate_set.filter(
+            result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]
+        ).count()
+        kwargs["increment_ok"] = kwargs["num_unconfirmed"] == 0
+        kwargs["emails_sent"] = BulkNotification.objects.filter(
+            tournament=self.tournament, round=self.round, event=BulkNotification.EventType.POINTS
+        ).exists()
         return super().get_context_data(**kwargs)
 
 
 class CompleteRoundToggleSilentView(AdministratorMixin, RoundMixin, PostOnlyRedirectView):
-    round_redirect_pattern_name = 'tournament-complete-round-check'
+    round_redirect_pattern_name = "tournament-complete-round-check"
 
     def post(self, request, *args, **kwargs):
         self.round.silent = request.POST["state"] != "True"
         self.round.save()
 
         if self.round.silent:
-            messages.success(request, _("%(round)s has been marked as silent.") % {'round': self.round.name})
+            messages.success(
+                request, _("%(round)s has been marked as silent.") % {"round": self.round.name}
+            )
         else:
-            messages.success(request, _("%(round)s has been unmarked as silent.") % {'round': self.round.name})
+            messages.success(
+                request, _("%(round)s has been unmarked as silent.") % {"round": self.round.name}
+            )
 
         return super().post(request, *args, **kwargs)
 
@@ -177,44 +214,77 @@ class CompleteRoundView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnly
         incomplete_rounds = self.tournament.round_set.filter(completed=False)
 
         if not incomplete_rounds.exists():
-            messages.success(request, _("%(round)s has been marked as completed. "
-                "All rounds are now completed, so you're done with the tournament! "
-                "Congratulations!") % {'round': self.round.name})
-            return redirect_tournament('tournament-admin-home', self.tournament)
+            messages.success(
+                request,
+                _(
+                    "%(round)s has been marked as completed. "
+                    "All rounds are now completed, so you're done with the tournament! "
+                    "Congratulations!"
+                )
+                % {"round": self.round.name},
+            )
+            return redirect_tournament("tournament-admin-home", self.tournament)
 
         elif not self.round.next:
-            messages.success(request, _("%(round)s has been marked as completed. "
-                "That's the last round in that sequence! Going back to the first "
-                "round that hasn't been marked as completed.") % {'round': self.round.name})
+            messages.success(
+                request,
+                _(
+                    "%(round)s has been marked as completed. "
+                    "That's the last round in that sequence! Going back to the first "
+                    "round that hasn't been marked as completed."
+                )
+                % {"round": self.round.name},
+            )
             # guaranteed to exist, otherwise the first 'if' statement would have been false
-            round_for_redirect = incomplete_rounds.order_by('seq').first()
-            return redirect_round('availability-index', round_for_redirect)
+            round_for_redirect = incomplete_rounds.order_by("seq").first()
+            return redirect_round("availability-index", round_for_redirect)
 
-        if (self.round.stage == Round.Stage.PRELIMINARY and
-                self.round.next.stage == Round.Stage.ELIMINATION):
+        if (
+            self.round.stage == Round.Stage.PRELIMINARY
+            and self.round.next.stage == Round.Stage.ELIMINATION
+        ):
 
             incomplete_prelim_rounds = incomplete_rounds.filter(stage=Round.Stage.PRELIMINARY)
 
             if not incomplete_prelim_rounds.exists():
-                messages.success(request, _("%(round)s has been marked as completed. "
-                    "You've made it to the end of the preliminary rounds! Congratulations! "
-                    "The next step is to generate the break.") % {'round': self.round.name})
-                return redirect_tournament('breakqual-index', self.tournament)
+                messages.success(
+                    request,
+                    _(
+                        "%(round)s has been marked as completed. "
+                        "You've made it to the end of the preliminary rounds! Congratulations! "
+                        "The next step is to generate the break."
+                    )
+                    % {"round": self.round.name},
+                )
+                return redirect_tournament("breakqual-index", self.tournament)
 
             else:
-                messages.success(request, _("%(round)s has been marked as completed. "
-                    "That was the last preliminary round, but one or more preliminary "
-                    "rounds are still not completed. Going back to the first incomplete "
-                    "preliminary round.") % {'round': self.round.name})
-                round_for_redirect = incomplete_prelim_rounds.order_by('seq').first()
-                return redirect_round('availability-index', round_for_redirect)
+                messages.success(
+                    request,
+                    _(
+                        "%(round)s has been marked as completed. "
+                        "That was the last preliminary round, but one or more preliminary "
+                        "rounds are still not completed. Going back to the first incomplete "
+                        "preliminary round."
+                    )
+                    % {"round": self.round.name},
+                )
+                round_for_redirect = incomplete_prelim_rounds.order_by("seq").first()
+                return redirect_round("availability-index", round_for_redirect)
 
         else:
-            messages.success(request, _("%(this_round)s has been marked as completed. "
-                "Moving on to %(next_round)s! Woohoo! Keep it up!") % {
-                'this_round': self.round.name, 'next_round': self.round.next.name,
-            })
-            return redirect_round('availability-index', self.round.next)
+            messages.success(
+                request,
+                _(
+                    "%(this_round)s has been marked as completed. "
+                    "Moving on to %(next_round)s! Woohoo! Keep it up!"
+                )
+                % {
+                    "this_round": self.round.name,
+                    "next_round": self.round.next.name,
+                },
+            )
+            return redirect_round("availability-index", self.round.next)
 
 
 class CreateTournamentView(AdministratorMixin, WarnAboutDatabaseUseMixin, CreateView):
@@ -227,37 +297,39 @@ class CreateTournamentView(AdministratorMixin, WarnAboutDatabaseUseMixin, Create
 
     def get_context_data(self, **kwargs):
         demo_datasets = [
-            ('minimal8team', _("8-team generic dataset")),
-            ('australs24team', _("24-team Australs dataset")),
-            ('bp88team', _("88-team BP dataset")),
+            ("minimal8team", _("8-team generic dataset")),
+            ("australs24team", _("24-team Australs dataset")),
+            ("bp88team", _("88-team BP dataset")),
         ]
-        kwargs['demo_datasets'] = demo_datasets
+        kwargs["demo_datasets"] = demo_datasets
         demo_slugs = [slug for slug, _ in demo_datasets]
-        kwargs['preexisting'] = Tournament.objects.filter(slug__in=demo_slugs).values_list('slug', flat=True)
+        kwargs["preexisting"] = Tournament.objects.filter(slug__in=demo_slugs).values_list(
+            "slug", flat=True
+        )
         return super().get_context_data(**kwargs)
 
     def get_success_url(self):
-        t = Tournament.objects.order_by('id').last()
-        return reverse_tournament('tournament-configure', tournament=t)
+        t = Tournament.objects.order_by("id").last()
+        return reverse_tournament("tournament-configure", tournament=t)
 
 
 class ConfigureTournamentView(AdministratorMixin, TournamentMixin, UpdateView):
     model = Tournament
     form_class = TournamentConfigureForm
     template_name = "configure_tournament.html"
-    slug_url_kwarg = 'tournament_slug'
+    slug_url_kwarg = "tournament_slug"
 
     def get_success_url(self):
         t = self.tournament
-        return reverse_tournament('tournament-admin-home', tournament=t)
+        return reverse_tournament("tournament-admin-home", tournament=t)
 
 
 class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
-    template_name = 'set_current_round.html'
-    slug_url_kwarg = 'tournament_slug'
-    redirect_field_name = 'next'
-    page_title = _('Set Current Round')
-    page_emoji = '🙏'
+    template_name = "set_current_round.html"
+    slug_url_kwarg = "tournament_slug"
+    redirect_field_name = "next"
+    page_title = _("Set Current Round")
+    page_emoji = "🙏"
 
     def get_form_class(self):
         if self.tournament.breakcategory_set.count() <= 1:
@@ -267,16 +339,16 @@ class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['tournament'] = self.tournament
+        kwargs["tournament"] = self.tournament
         return kwargs
 
     def get_redirect_to(self, use_default=True):
         redirect_to = self.request.POST.get(
             self.redirect_field_name,
-            self.request.GET.get(self.redirect_field_name, ''),
+            self.request.GET.get(self.redirect_field_name, ""),
         )
         if not redirect_to and use_default:
-            return reverse_tournament('tournament-admin-home', tournament=self.tournament)
+            return reverse_tournament("tournament-admin-home", tournament=self.tournament)
         else:
             return redirect_to
 
@@ -286,6 +358,7 @@ class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
 
     def get_success_url(self):
         from django.utils.http import url_has_allowed_host_and_scheme
+
         # Copied from django.contrib.auth.views.LoginView.get_success_url
         redirect_to = self.get_redirect_to(use_default=True)
         url_is_safe = url_has_allowed_host_and_scheme(
@@ -299,19 +372,21 @@ class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update({
-            self.redirect_field_name: self.get_redirect_to(use_default=False),
-        })
+        context.update(
+            {
+                self.redirect_field_name: self.get_redirect_to(use_default=False),
+            }
+        )
         return context
 
 
 class SetRoundWeightingsView(AdministratorMixin, TournamentMixin, FormView):
-    template_name = 'set_round_weights.html'
+    template_name = "set_round_weights.html"
     form_class = RoundWeightForm
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['tournament'] = self.tournament
+        kwargs["tournament"] = self.tournament
         return kwargs
 
     def form_valid(self, form):
@@ -320,7 +395,7 @@ class SetRoundWeightingsView(AdministratorMixin, TournamentMixin, FormView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_tournament('options-tournament-index', self.tournament)
+        return reverse_tournament("options-tournament-index", self.tournament)
 
 
 class FixDebateTeamsView(AdministratorMixin, TournamentMixin, TemplateView):
@@ -328,11 +403,11 @@ class FixDebateTeamsView(AdministratorMixin, TournamentMixin, TemplateView):
 
     def get_incomplete_debates(self):
         annotations = {  # annotates with the number of DebateTeams on each side in the debate
-            side: Count('debateteam', filter=Q(debateteam__side=side), distinct=True)
+            side: Count("debateteam", filter=Q(debateteam__side=side), distinct=True)
             for side in self.tournament.sides
         }
         debates = Debate.objects.filter(round__tournament=self.tournament)
-        debates = debates.prefetch_related('debateteam_set__team').annotate(**annotations)
+        debates = debates.prefetch_related("debateteam_set__team").annotate(**annotations)
 
         # A debate is incomplete if there isn't exactly one team on each side
         incomplete_debates = debates.filter(~Q(**{side: 1 for side in self.tournament.sides}))
@@ -349,8 +424,10 @@ class FixDebateTeamsView(AdministratorMixin, TournamentMixin, TemplateView):
         return incomplete_debates
 
     def get_context_data(self, **kwargs):
-        kwargs['side_names'] = [get_side_name(self.tournament, side, 'full') for side in self.tournament.sides]
-        kwargs['incomplete_debates'] = self.get_incomplete_debates()
+        kwargs["side_names"] = [
+            get_side_name(self.tournament, side, "full") for side in self.tournament.sides
+        ]
+        kwargs["incomplete_debates"] = self.get_incomplete_debates()
         return super().get_context_data(**kwargs)
 
     def dispatch(self, request, *args, **kwargs):
@@ -359,5 +436,5 @@ class FixDebateTeamsView(AdministratorMixin, TournamentMixin, TemplateView):
 
 
 class StyleGuideView(TemplateView, TabbycatPageTitlesMixin):
-    template_name = 'admin/style_guide.html'
-    page_subtitle = 'Contextual sub title'
+    template_name = "admin/style_guide.html"
+    page_subtitle = "Contextual sub title"

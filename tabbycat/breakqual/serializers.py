@@ -6,4 +6,4 @@ from .models import BreakCategory
 class BreakCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = BreakCategory
-        fields = ('id', 'name', 'seq')
+        fields = ("id", "name", "seq")

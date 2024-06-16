@@ -31,7 +31,10 @@ def metricgetter(items, negate=None):
             return tuple(x.metrics[item] or 0 for item in items)
 
     else:
-        assert len(items) == len(negate), "items had %d items but negate had %d" % (len(items), len(negate))
+        assert len(items) == len(negate), "items had %d items but negate had %d" % (
+            len(items),
+            len(negate),
+        )
         coeffs = [-1 if neg else 1 for neg in negate]
 
         def metricitemgetter(x):
@@ -98,10 +101,13 @@ class RepeatedMetricAnnotator(BaseMetricAnnotator):
 
 class QuerySetMetricAnnotator(BaseMetricAnnotator):
     """Base class for annotators that metrics based on conditional aggregations."""
+
     combinable = True
 
     def get_annotation(self, round):
-        raise NotImplementedError("Subclasses of QuerySetMetricAnnotator must implement get_annotation().")
+        raise NotImplementedError(
+            "Subclasses of QuerySetMetricAnnotator must implement get_annotation()."
+        )
 
     def get_annotated_queryset(self, queryset, round=None):
         """Returns a QuerySet annotated with the metric given."""

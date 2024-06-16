@@ -11,18 +11,24 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('venues', '0001_initial'),
-        ('draw', '0001_initial'),
+        ("venues", "0001_initial"),
+        ("draw", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='debate',
-            name='venue',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='venues.Venue', verbose_name='venue'),
+            model_name="debate",
+            name="venue",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="venues.Venue",
+                verbose_name="venue",
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='teamsideallocation',
-            unique_together=set([('round', 'team')]),
+            name="teamsideallocation",
+            unique_together=set([("round", "team")]),
         ),
     ]

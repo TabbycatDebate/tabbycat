@@ -25,11 +25,16 @@ class Identifier(PolymorphicModel):
 
     instance_attr = None
 
-    validate_alphanumeric = RegexValidator(r'^[0-9]{6}$',
-        message=_("The barcode must contain exactly six digits."))
-    barcode = models.CharField(unique=True, max_length=20,
-        validators=[validate_alphanumeric], default=generate_identifier,
-        verbose_name=_("barcode"))
+    validate_alphanumeric = RegexValidator(
+        r"^[0-9]{6}$", message=_("The barcode must contain exactly six digits.")
+    )
+    barcode = models.CharField(
+        unique=True,
+        max_length=20,
+        validators=[validate_alphanumeric],
+        default=generate_identifier,
+        verbose_name=_("barcode"),
+    )
 
     @property
     def owner(self):
@@ -39,17 +44,21 @@ class Identifier(PolymorphicModel):
 
     def __str__(self):
         return gettext("%(classname)s %(barcode)s") % {
-            'classname': self.__class__.__name__,
-            'barcode': str(self.barcode),
+            "classname": self.__class__.__name__,
+            "barcode": str(self.barcode),
         }
 
 
 class PersonIdentifier(Identifier):
 
-    instance_attr = 'person'
+    instance_attr = "person"
 
-    person = models.OneToOneField('participants.Person', models.CASCADE,
-        verbose_name=_("person"), related_name='checkin_identifier')
+    person = models.OneToOneField(
+        "participants.Person",
+        models.CASCADE,
+        verbose_name=_("person"),
+        related_name="checkin_identifier",
+    )
 
     class Meta:
         verbose_name = _("person identifier")
@@ -58,10 +67,11 @@ class PersonIdentifier(Identifier):
 
 class DebateIdentifier(Identifier):
 
-    instance_attr = 'debate'
+    instance_attr = "debate"
 
-    debate = models.OneToOneField('draw.Debate', models.CASCADE,
-        verbose_name=_("debate"), related_name='checkin_identifier')
+    debate = models.OneToOneField(
+        "draw.Debate", models.CASCADE, verbose_name=_("debate"), related_name="checkin_identifier"
+    )
 
     class Meta:
         verbose_name = _("debate identifier")
@@ -70,10 +80,11 @@ class DebateIdentifier(Identifier):
 
 class VenueIdentifier(Identifier):
 
-    instance_attr = 'venue'
+    instance_attr = "venue"
 
-    venue = models.OneToOneField('venues.Venue', models.CASCADE,
-        verbose_name=("venue"), related_name='checkin_identifier')
+    venue = models.OneToOneField(
+        "venues.Venue", models.CASCADE, verbose_name=("venue"), related_name="checkin_identifier"
+    )
 
     class Meta:
         verbose_name = _("room identifier")
@@ -83,13 +94,14 @@ class VenueIdentifier(Identifier):
 class Event(models.Model):
     """A timestamped record caused by an identifier being scanned, etc."""
 
-    identifier = models.ForeignKey(Identifier, models.CASCADE,
-                                   verbose_name=_("identifier"))
+    identifier = models.ForeignKey(Identifier, models.CASCADE, verbose_name=_("identifier"))
     # timezone.now used over auto_add so times are visible/editable in admin
-    time = models.DateTimeField(db_index=True, default=timezone.now,
-                                verbose_name=_("check-in time"))
-    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
-                                   verbose_name=_("tournament"))
+    time = models.DateTimeField(
+        db_index=True, default=timezone.now, verbose_name=_("check-in time")
+    )
+    tournament = models.ForeignKey(
+        "tournaments.Tournament", models.CASCADE, verbose_name=_("tournament")
+    )
 
     class Meta:
         verbose_name = _("check-in event")
@@ -97,7 +109,7 @@ class Event(models.Model):
 
     def serialize(self):
         return {
-            'id': self.id,
-            'identifier': self.identifier.barcode,
-            'time': timezone.localtime(self.time).strftime("%a, %d %b %Y %H:%M:%S"),
+            "id": self.id,
+            "identifier": self.identifier.barcode,
+            "time": timezone.localtime(self.time).strftime("%a, %d %b %Y %H:%M:%S"),
         }

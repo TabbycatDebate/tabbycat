@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('options', '0006_convert_public_draw'),
+        ("options", "0006_convert_public_draw"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='tournamentpreferencemodel',
-            name='name',
-            field=models.CharField(db_index=True, max_length=150, verbose_name='Name'),
+            model_name="tournamentpreferencemodel",
+            name="name",
+            field=models.CharField(db_index=True, max_length=150, verbose_name="Name"),
         ),
         migrations.AlterField(
-            model_name='tournamentpreferencemodel',
-            name='raw_value',
-            field=models.TextField(blank=True, null=True, verbose_name='Raw Value'),
+            model_name="tournamentpreferencemodel",
+            name="raw_value",
+            field=models.TextField(blank=True, null=True, verbose_name="Raw Value"),
         ),
     ]

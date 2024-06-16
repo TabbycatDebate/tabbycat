@@ -49,18 +49,20 @@ def fill_scoresheet_randomly(scoresheet, tournament, nattempts=1000):
         if scoresheet.uses_scores:
             for side, pos in product(scoresheet.sides, scoresheet.positions):
                 if pos == tournament.reply_position:
-                    step = tournament.pref('reply_score_step')
-                    start = tournament.pref('reply_score_min') / step
-                    stop = tournament.pref('reply_score_max') / step
+                    step = tournament.pref("reply_score_step")
+                    start = tournament.pref("reply_score_min") / step
+                    stop = tournament.pref("reply_score_max") / step
                 else:
-                    step = tournament.pref('score_step')
-                    start = tournament.pref('score_min') / step
-                    stop = tournament.pref('score_max') / step
+                    step = tournament.pref("score_step")
+                    start = tournament.pref("score_min") / step
+                    stop = tournament.pref("score_max") / step
                 score = random.randint(start, stop) * step
                 scoresheet.set_score(side, pos, score)
 
         if scoresheet.uses_declared_winners:
-            scoresheet.set_declared_winners(random.sample(scoresheet.sides, scoresheet.number_winners))
+            scoresheet.set_declared_winners(
+                random.sample(scoresheet.sides, scoresheet.number_winners)
+            )
 
         if scoresheet.is_valid():
             break
@@ -100,12 +102,14 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False, r
     if result.uses_speakers:
         for side in t.sides:
             speakers = list(debate.get_team(side).speakers)  # fix order
-            for i in range(1, t.last_substantive_position+1):
-                result.set_speaker(side, i, speakers[i-1])
+            for i in range(1, t.last_substantive_position + 1):
+                result.set_speaker(side, i, speakers[i - 1])
                 result.set_ghost(side, i, False)
 
             if t.reply_position is not None:
-                reply_speaker = random.randint(0, t.last_substantive_position-2) if reply_random else 0
+                reply_speaker = (
+                    random.randint(0, t.last_substantive_position - 2) if reply_random else 0
+                )
                 result.set_speaker(side, t.reply_position, speakers[reply_speaker])
                 result.set_ghost(side, t.reply_position, False)
 
@@ -126,7 +130,7 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False, r
         motion = sample[0]
         bsub.motion = motion
 
-        if t.pref('motion_vetoes_enabled') and len(sample) == len(t.sides) + 1:
+        if t.pref("motion_vetoes_enabled") and len(sample) == len(t.sides) + 1:
             for i, side in enumerate(t.sides, 1):
                 dt = debate.get_dt(side)
                 dt.debateteammotionpreference_set.create(
@@ -147,24 +151,33 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False, r
         debate.result_status = Debate.STATUS_DRAFT
     debate.save()
 
-    if t.pref('teams_in_debate') == 'two':
-        logger.info("%(debate)s won by %(team)s on %(motion)s", {
-            'debate': debate.matchup,
-            'team': result.winning_side(),
-            'motion': bsub.motion and bsub.motion.reference or "<No motion>",
-        })
-    elif t.pref('teams_in_debate') == 'bp':
+    if t.pref("teams_in_debate") == "two":
+        logger.info(
+            "%(debate)s won by %(team)s on %(motion)s",
+            {
+                "debate": debate.matchup,
+                "team": result.winning_side(),
+                "motion": bsub.motion and bsub.motion.reference or "<No motion>",
+            },
+        )
+    elif t.pref("teams_in_debate") == "bp":
         if result.uses_declared_winners:
-            logger.info("%(debate)s: %(advancing)s on %(motion)s", {
-                'debate': debate.matchup,
-                'advancing': ", ".join(result.get_winner()),
-                'motion': bsub.motion and bsub.motion.reference or "<No motion>",
-            })
+            logger.info(
+                "%(debate)s: %(advancing)s on %(motion)s",
+                {
+                    "debate": debate.matchup,
+                    "advancing": ", ".join(result.get_winner()),
+                    "motion": bsub.motion and bsub.motion.reference or "<No motion>",
+                },
+            )
         else:
-            logger.info("%(debate)s: %(ranked)s on %(motion)s", {
-                'debate': debate.matchup,
-                'ranked': ", ".join(result.scoresheet.ranked_sides()),
-                'motion': bsub.motion and bsub.motion.reference or "<No motion>",
-            })
+            logger.info(
+                "%(debate)s: %(ranked)s on %(motion)s",
+                {
+                    "debate": debate.matchup,
+                    "ranked": ", ".join(result.scoresheet.ranked_sides()),
+                    "motion": bsub.motion and bsub.motion.reference or "<No motion>",
+                },
+            )
 
     return result

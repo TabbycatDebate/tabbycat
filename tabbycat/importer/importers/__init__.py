@@ -4,6 +4,6 @@ from . import anorak
 from . import boots
 
 importer_registry = {
-    'anorak': anorak.AnorakTournamentDataImporter,
-    'boots': boots.BootsTournamentDataImporter,
+    "anorak": anorak.AnorakTournamentDataImporter,
+    "boots": boots.BootsTournamentDataImporter,
 }

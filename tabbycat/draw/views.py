@@ -29,9 +29,14 @@ from participants.utils import get_side_history
 from standings.base import StandingsError
 from standings.teams import TeamStandingsGenerator
 from standings.views import BaseStandingsView
-from tournaments.mixins import (CurrentRoundMixin, DebateDragAndDropMixin,
-    OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin,
-    TournamentMixin)
+from tournaments.mixins import (
+    CurrentRoundMixin,
+    DebateDragAndDropMixin,
+    OptionalAssistantTournamentPageMixin,
+    PublicTournamentPageMixin,
+    RoundMixin,
+    TournamentMixin,
+)
 from tournaments.models import Round
 from tournaments.utils import get_side_name
 from users.permissions import Permission
@@ -49,8 +54,12 @@ from .manager import DrawManager
 from .models import Debate, TeamSideAllocation
 from .prefetch import populate_history
 from .serializers import EditDebateTeamsDebateSerializer, EditDebateTeamsTeamSerializer
-from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilder,
-        PositionBalanceReportSummaryTableBuilder, PublicDrawTableBuilder)
+from .tables import (
+    AdminDrawTableBuilder,
+    PositionBalanceReportDrawTableBuilder,
+    PositionBalanceReportSummaryTableBuilder,
+    PublicDrawTableBuilder,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -63,9 +72,9 @@ class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
     is intended for consumption by the public, the table is always built as if
     it were a public view."""
 
-    template_name = 'draw_display_by.html'
-    sort_key = 'venue'
-    page_emoji = '👏'
+    template_name = "draw_display_by.html"
+    sort_key = "venue"
+    page_emoji = "👏"
     empty_table_title = gettext_lazy("No debates in this round")
 
     @property
@@ -74,17 +83,20 @@ class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
 
     def get_page_title(self):
         if len(self.rounds) == 1:
-            return _("Draw for %(round)s") % {'round': self.rounds[0].name}
+            return _("Draw for %(round)s") % {"round": self.rounds[0].name}
         else:
             return _("Draws for Current Rounds")
 
     def get_page_subtitle(self):
-        if len(self.rounds) == 1 and getattr(self.rounds[0], 'starts_at', None):
+        if len(self.rounds) == 1 and getattr(self.rounds[0], "starts_at", None):
             return _("debates start at %(time)s (in %(time_zone)s)") % {
-                     'time': self.rounds[0].starts_at.strftime('%H:%M'),
-                     'time_zone': get_current_timezone_name()}
-        elif any(getattr(r, 'starts_at', None) for r in self.rounds):
-            return _("start times in time zone: %(time_zone)s") % {'time_zone': get_current_timezone_name()}
+                "time": self.rounds[0].starts_at.strftime("%H:%M"),
+                "time_zone": get_current_timezone_name(),
+            }
+        elif any(getattr(r, "starts_at", None) for r in self.rounds):
+            return _("start times in time zone: %(time_zone)s") % {
+                "time_zone": get_current_timezone_name()
+            }
         else:
             return ""
 
@@ -103,16 +115,18 @@ class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
     def get_tables(self):
 
         # If the view has debates specified specifically, use those in a single table
-        if hasattr(self, 'get_debates'):
-            table = PublicDrawTableBuilder(view=self, sort_key=self.sort_key,
-                    admin=False, empty_title=self.empty_table_title)
+        if hasattr(self, "get_debates"):
+            table = PublicDrawTableBuilder(
+                view=self, sort_key=self.sort_key, admin=False, empty_title=self.empty_table_title
+            )
             self.populate_table(self.get_debates(), table)
             return [table]
 
         # If there's only one round, use that in a single table
         if len(self.rounds) == 1:
-            table = PublicDrawTableBuilder(view=self, sort_key=self.sort_key,
-                    admin=False, empty_title=self.empty_table_title)
+            table = PublicDrawTableBuilder(
+                view=self, sort_key=self.sort_key, admin=False, empty_title=self.empty_table_title
+            )
             debates = self.get_debates_for_round(self.rounds[0])
             self.populate_table(debates, table)
             return [table]
@@ -125,12 +139,17 @@ class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
                     "debate starts at %(time)s",
                     "debates start at %(time)s",
                     debates.count(),
-                ) % {'round_name': r.name, 'time': r.starts_at.strftime('%H:%M')}
+                ) % {"round_name": r.name, "time": r.starts_at.strftime("%H:%M")}
             else:
                 subtitle = ""
-            table = PublicDrawTableBuilder(view=self, sort_key=self.sort_key,
-                admin=False, title=r.name, subtitle=subtitle,
-                empty_title=self.empty_table_title)
+            table = PublicDrawTableBuilder(
+                view=self,
+                sort_key=self.sort_key,
+                admin=False,
+                title=r.name,
+                subtitle=subtitle,
+                empty_title=self.empty_table_title,
+            )
             self.populate_table(debates, table)
             tables.append(table)
 
@@ -154,7 +173,7 @@ class BaseDisplayDrawForSpecificRoundTableView(RoundMixin, BaseDisplayDrawTableV
 
 class BaseDisplayDrawForCurrentRoundsTableView(BaseDisplayDrawTableView):
 
-    tables_orientation = 'rows'
+    tables_orientation = "rows"
 
     @property
     def rounds(self):
@@ -183,7 +202,7 @@ class PublicDrawMixin(PublicTournamentPageMixin):
 
     def get_template_names(self):
         if not self.draws_available:
-            return ['draw_not_released.html']
+            return ["draw_not_released.html"]
         return super().get_template_names()
 
     def get_tables(self):
@@ -193,7 +212,7 @@ class PublicDrawMixin(PublicTournamentPageMixin):
 
     def get_page_emoji(self):
         if not self.draws_available:
-            return '😴'
+            return "😴"
         return super().get_page_emoji()
 
     def get_page_subtitle(self):
@@ -205,24 +224,26 @@ class PublicDrawMixin(PublicTournamentPageMixin):
 class PublicDrawForRoundView(PublicDrawMixin, BaseDisplayDrawForSpecificRoundTableView):
 
     def is_page_enabled(self, tournament):
-        return tournament.pref('public_draw') == 'all-released'
+        return tournament.pref("public_draw") == "all-released"
 
 
 class PublicDrawForCurrentRoundsView(PublicDrawMixin, BaseDisplayDrawForCurrentRoundsTableView):
 
     def is_page_enabled(self, tournament):
-        return tournament.pref('public_draw') == 'current'
+        return tournament.pref("public_draw") == "current"
 
 
 class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, BaseDisplayDrawTableView):
-    public_page_preference = 'enable_mass_draws'
+    public_page_preference = "enable_mass_draws"
 
     @property
     def rounds(self):
         return []
 
     def get_page_title(self):
-        return _("All Debates for All Rounds of %(tournament)s") % {'tournament': self.tournament.name}
+        return _("All Debates for All Rounds of %(tournament)s") % {
+            "tournament": self.tournament.name
+        }
 
     def get_page_subtitle(self):
         return None
@@ -235,8 +256,9 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, BaseDisplayDra
         super().populate_table(debates, table, highlight=highlight)
 
     def get_draw(self):
-        all_rounds = Round.objects.filter(tournament=self.tournament,
-                                          draw_status=Round.Status.RELEASED)
+        all_rounds = Round.objects.filter(
+            tournament=self.tournament, draw_status=Round.Status.RELEASED
+        )
         draw = []
         for round in all_rounds:
             draw.extend(round.debate_set_with_prefetches())
@@ -247,12 +269,13 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, BaseDisplayDra
 # Viewing Draw (Briefing Room)
 # ==============================================================================
 
+
 class BriefingRoomDrawTableMixin:
     """Mixin for views that get projected in the briefing room, to be accessed
     only by admins and assistants."""
 
     def get_context_data(self, **kwargs):
-        kwargs['no_popovers'] = True
+        kwargs["no_popovers"] = True
         return super().get_context_data(**kwargs)
 
 
@@ -263,16 +286,19 @@ class BriefingRoomDrawByVenueTableMixin(BriefingRoomDrawTableMixin):
 
 class BriefingRoomDrawByTeamTableMixin(BriefingRoomDrawTableMixin):
 
-    sort_key = '' # Leave with default sort order
+    sort_key = ""  # Leave with default sort order
 
     def populate_table(self, debates, table):
         # unicodedata.normalize gets accented characters (e.g. "Éothéod") to sort correctly
         byes = [d for d in debates if d.is_bye]
         debates = [d for d in debates if not d.is_bye]
 
-        draw_by_team = [(debate, debate.get_team(side)) for debate, side in product(debates, self.tournament.sides)]
-        draw_by_team.extend([(debate, debate.get_team('bye')) for debate in byes])
-        draw_by_team.sort(key=lambda x: unicodedata.normalize('NFKD', table._team_short_name(x[1])))
+        draw_by_team = [
+            (debate, debate.get_team(side))
+            for debate, side in product(debates, self.tournament.sides)
+        ]
+        draw_by_team.extend([(debate, debate.get_team("bye")) for debate in byes])
+        draw_by_team.sort(key=lambda x: unicodedata.normalize("NFKD", table._team_short_name(x[1])))
 
         if len(draw_by_team) == 0:
             debates, teams = [], []  # next line can't unpack if draw_by_team is empty
@@ -281,63 +307,81 @@ class BriefingRoomDrawByTeamTableMixin(BriefingRoomDrawTableMixin):
         super().populate_table(debates, table, highlight=teams)
 
 
-class AdminDrawDisplayForSpecificRoundByVenueView(AdministratorMixin,
-        BriefingRoomDrawByVenueTableMixin, BaseDisplayDrawForSpecificRoundTableView):
+class AdminDrawDisplayForSpecificRoundByVenueView(
+    AdministratorMixin, BriefingRoomDrawByVenueTableMixin, BaseDisplayDrawForSpecificRoundTableView
+):
     view_permission = Permission.VIEW_BRIEFING_DRAW
 
 
-class AdminDrawDisplayForSpecificRoundByTeamView(AdministratorMixin,
-        BriefingRoomDrawByTeamTableMixin, BaseDisplayDrawForSpecificRoundTableView):
+class AdminDrawDisplayForSpecificRoundByTeamView(
+    AdministratorMixin, BriefingRoomDrawByTeamTableMixin, BaseDisplayDrawForSpecificRoundTableView
+):
     view_permission = Permission.VIEW_BRIEFING_DRAW
 
 
-class AdminDrawDisplayForCurrentRoundsByVenueView(AdministratorMixin,
-        BriefingRoomDrawByVenueTableMixin, BaseDisplayDrawForCurrentRoundsTableView):
+class AdminDrawDisplayForCurrentRoundsByVenueView(
+    AdministratorMixin, BriefingRoomDrawByVenueTableMixin, BaseDisplayDrawForCurrentRoundsTableView
+):
     view_permission = Permission.VIEW_BRIEFING_DRAW
 
 
-class AdminDrawDisplayForCurrentRoundsByTeamView(AdministratorMixin,
-        BriefingRoomDrawByTeamTableMixin, BaseDisplayDrawForCurrentRoundsTableView):
+class AdminDrawDisplayForCurrentRoundsByTeamView(
+    AdministratorMixin, BriefingRoomDrawByTeamTableMixin, BaseDisplayDrawForCurrentRoundsTableView
+):
     view_permission = Permission.VIEW_BRIEFING_DRAW
 
 
-class AssistantDrawDisplayForSpecificRoundByVenueView(OptionalAssistantTournamentPageMixin,
-        BriefingRoomDrawByVenueTableMixin, BaseDisplayDrawForSpecificRoundTableView):
-    assistant_page_permissions = ['all_areas', 'results_draw']
+class AssistantDrawDisplayForSpecificRoundByVenueView(
+    OptionalAssistantTournamentPageMixin,
+    BriefingRoomDrawByVenueTableMixin,
+    BaseDisplayDrawForSpecificRoundTableView,
+):
+    assistant_page_permissions = ["all_areas", "results_draw"]
 
     def is_page_enabled(self, tournament):
         return self.round.is_current and super().is_page_enabled(tournament)
 
 
-class AssistantDrawDisplayForSpecificRoundByTeamView(OptionalAssistantTournamentPageMixin,
-        BriefingRoomDrawByTeamTableMixin, BaseDisplayDrawForSpecificRoundTableView):
-    assistant_page_permissions = ['all_areas', 'results_draw']
+class AssistantDrawDisplayForSpecificRoundByTeamView(
+    OptionalAssistantTournamentPageMixin,
+    BriefingRoomDrawByTeamTableMixin,
+    BaseDisplayDrawForSpecificRoundTableView,
+):
+    assistant_page_permissions = ["all_areas", "results_draw"]
 
     def is_page_enabled(self, tournament):
         return self.round.is_current and super().is_page_enabled(tournament)
 
 
-class AssistantDrawDisplayForCurrentRoundsByVenueView(OptionalAssistantTournamentPageMixin,
-        BriefingRoomDrawByVenueTableMixin, BaseDisplayDrawForCurrentRoundsTableView):
-    assistant_page_permissions = ['all_areas', 'results_draw']
+class AssistantDrawDisplayForCurrentRoundsByVenueView(
+    OptionalAssistantTournamentPageMixin,
+    BriefingRoomDrawByVenueTableMixin,
+    BaseDisplayDrawForCurrentRoundsTableView,
+):
+    assistant_page_permissions = ["all_areas", "results_draw"]
 
 
-class AssistantDrawDisplayForCurrentRoundsByTeamView(OptionalAssistantTournamentPageMixin,
-        BriefingRoomDrawByTeamTableMixin, BaseDisplayDrawForCurrentRoundsTableView):
-    assistant_page_permissions = ['all_areas', 'results_draw']
+class AssistantDrawDisplayForCurrentRoundsByTeamView(
+    OptionalAssistantTournamentPageMixin,
+    BriefingRoomDrawByTeamTableMixin,
+    BaseDisplayDrawForCurrentRoundsTableView,
+):
+    assistant_page_permissions = ["all_areas", "results_draw"]
 
 
 # ==============================================================================
 # Draw Alerts Utilities (Admin)
 # ==============================================================================
 
+
 class AdminDrawUtilitiesMixin:
     """Shared between the admin draw and admin display pages."""
 
     def get_draw(self):
-        if not hasattr(self, '_draw'):
-            self._draw = self.round.debate_set_with_prefetches(ordering=('room_rank',),
-                    institutions=True, venues=True)
+        if not hasattr(self, "_draw"):
+            self._draw = self.round.debate_set_with_prefetches(
+                ordering=("room_rank",), institutions=True, venues=True
+            )
         return self._draw
 
     @cached_property
@@ -354,16 +398,20 @@ class AdminDrawUtilitiesMixin:
         data = super().get_context_data(**kwargs)
 
         def _count(conflicts):
-            return [len([x for x in c if x[0] != 'success']) > 0 for c in conflicts.values()].count(True)
+            return [len([x for x in c if x[0] != "success"]) > 0 for c in conflicts.values()].count(
+                True
+            )
 
-        data['debates_with_adj_conflicts'] = _count(self.adjudicator_conflicts)
-        data['debates_with_venue_conflicts'] = _count(self.venue_conflicts)
-        data['active_adjs'] = self.round.active_adjudicators.count()
-        data['debates_in_round'] = self.round.debate_set.count()
-        data['preformed_panels_in_round'] = self.round.preformedpanel_set.count()
-        if hasattr(self, 'highlighted_cells_exist'):
-            data['highlighted_cells_exist'] = self.highlighted_cells_exist
-        data['expected_nmotions'] = 3 if self.tournament.pref('enable_motions') else (self.round.motion_set.count() or 1)
+        data["debates_with_adj_conflicts"] = _count(self.adjudicator_conflicts)
+        data["debates_with_venue_conflicts"] = _count(self.venue_conflicts)
+        data["active_adjs"] = self.round.active_adjudicators.count()
+        data["debates_in_round"] = self.round.debate_set.count()
+        data["preformed_panels_in_round"] = self.round.preformedpanel_set.count()
+        if hasattr(self, "highlighted_cells_exist"):
+            data["highlighted_cells_exist"] = self.highlighted_cells_exist
+        data["expected_nmotions"] = (
+            3 if self.tournament.pref("enable_motions") else (self.round.motion_set.count() or 1)
+        )
         return data
 
 
@@ -371,35 +419,39 @@ class AdminDrawUtilitiesMixin:
 # Draw Display Index (Admin)
 # ==============================================================================
 
+
 class BaseDrawDisplayIndexView(AdminDrawUtilitiesMixin, RoundMixin, TemplateView):
     pass
 
 
 class AdminDrawDisplayView(AdministratorMixin, BaseDrawDisplayIndexView):
-    template_name = 'draw_display_admin.html'
+    template_name = "draw_display_admin.html"
     view_permission = True
 
 
-class AssistantDrawDisplayView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDrawDisplayIndexView):
-    template_name = 'draw_display_assistant.html'
-    assistant_page_permissions = ['all_areas', 'results_draw']
+class AssistantDrawDisplayView(
+    CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDrawDisplayIndexView
+):
+    template_name = "draw_display_assistant.html"
+    assistant_page_permissions = ["all_areas", "results_draw"]
 
 
 class EmailAdjudicatorAssignmentsView(RoundTemplateEmailCreateView):
     page_subtitle = _("Adjudicator Assignments")
 
     event = BulkNotification.EventType.ADJ_DRAW
-    subject_template = 'adj_email_subject'
-    message_template = 'adj_email_message'
+    subject_template = "adj_email_subject"
+    message_template = "adj_email_message"
 
-    round_redirect_pattern_name = 'draw-display'
+    round_redirect_pattern_name = "draw-display"
 
     dadj_type_display = dict(DebateAdjudicator.TYPE_CHOICES)
 
     def get_extra(self):
         extra = super().get_extra()
-        extra['url'] = self.request.build_absolute_uri(
-            reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': '0'}))[:-2]
+        extra["url"] = self.request.build_absolute_uri(
+            reverse_tournament("privateurls-person-index", self.tournament, kwargs={"url_key": "0"})
+        )[:-2]
         return extra
 
     def get_person_type(self, person, **kwargs):
@@ -408,21 +460,31 @@ class EmailAdjudicatorAssignmentsView(RoundTemplateEmailCreateView):
     def get_table(self):
         table = super().get_table()
 
-        table.add_column({'key': 'pos', 'title': _("Position")}, [{
-            'text': self.dadj_type_display[p.position],
-        } for p in self.get_queryset()])
+        table.add_column(
+            {"key": "pos", "title": _("Position")},
+            [
+                {
+                    "text": self.dadj_type_display[p.position],
+                }
+                for p in self.get_queryset()
+            ],
+        )
 
         return table
 
     def get_queryset(self):
         return Adjudicator.objects.filter(debateadjudicator__debate__round=self.round).annotate(
-            position=Subquery(DebateAdjudicator.objects.filter(adjudicator_id=OuterRef('pk'), debate__round=self.round).values('type')[:1]),
+            position=Subquery(
+                DebateAdjudicator.objects.filter(
+                    adjudicator_id=OuterRef("pk"), debate__round=self.round
+                ).values("type")[:1]
+            ),
         )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = [
-            {'id': pos, 'name': d} for pos, d in DebateAdjudicator.TYPE_CHOICES
+        context["categories"] = [
+            {"id": pos, "name": d} for pos, d in DebateAdjudicator.TYPE_CHOICES
         ]
         return context
 
@@ -431,18 +493,21 @@ class EmailTeamAssignmentsView(RoundTemplateEmailCreateView):
     page_subtitle = _("Team Pairings")
 
     event = BulkNotification.EventType.TEAM_DRAW
-    subject_template = 'team_draw_email_subject'
-    message_template = 'team_draw_email_message'
+    subject_template = "team_draw_email_subject"
+    message_template = "team_draw_email_message"
 
-    round_redirect_pattern_name = 'draw-display'
+    round_redirect_pattern_name = "draw-display"
 
     def get_queryset(self):
-        return Speaker.objects.filter(team__debateteam__debate__round=self.round).select_related('team')
+        return Speaker.objects.filter(team__debateteam__debate__round=self.round).select_related(
+            "team"
+        )
 
 
 # ==============================================================================
 # Draw Creation (Admin)
 # ==============================================================================
+
 
 class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, VueTableTemplateView):
     detailed = False
@@ -451,30 +516,32 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
 
     def get_page_title(self):
         round = self.round
-        self.page_emoji = '👀'
+        self.page_emoji = "👀"
         if round.draw_status == Round.Status.NONE:
             title = _("No Draw")
         elif round.draw_status == Round.Status.DRAFT:
             title = _("Draft Draw")
         elif round.draw_status in [Round.Status.CONFIRMED, Round.Status.RELEASED]:
-            self.page_emoji = '👏'
+            self.page_emoji = "👏"
             title = _("Draw")
         else:
             logger.error("Unrecognised draw status: %s", round.draw_status)
             title = _("Draw")
-        return title % {'round': round.name}
+        return title % {"round": round.name}
 
     def get_bp_position_balance_table(self):
         draw = self.get_draw()
         teams = Team.objects.filter(debateteam__debate__round=self.round)
         side_histories_before = get_side_history(teams, self.tournament.sides, self.round.prev.seq)
         side_histories_now = get_side_history(teams, self.tournament.sides, self.round.seq)
-        metrics = self.tournament.pref('team_standings_precedence')
+        metrics = self.tournament.pref("team_standings_precedence")
         generator = TeamStandingsGenerator(metrics[0:1], ())
         standings = generator.generate(teams, round=self.round.prev)
         draw_table = PositionBalanceReportDrawTableBuilder(view=self)
         draw_table.build(draw, teams, side_histories_before, side_histories_now, standings)
-        self.highlighted_cells_exist = any(draw_table.get_imbalance_category(team) is not None for team in teams)
+        self.highlighted_cells_exist = any(
+            draw_table.get_imbalance_category(team) is not None for team in teams
+        )
         return draw_table
 
     def get_standard_table(self):
@@ -482,14 +549,17 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
 
         if r.is_break_round:
             sort_key = "room-rank"
-            sort_order = 'asc'
+            sort_order = "asc"
         else:
             sort_key = "bracket"
-            sort_order = 'desc'
+            sort_order = "desc"
 
-        table = AdminDrawTableBuilder(view=self, sort_key=sort_key,
-                                      sort_order=sort_order,
-                                      empty_title=_("No debates in this round"))
+        table = AdminDrawTableBuilder(
+            view=self,
+            sort_key=sort_key,
+            sort_order=sort_order,
+            empty_title=_("No debates in this round"),
+        )
 
         draw = self.get_draw()
         populate_history(draw)
@@ -505,17 +575,24 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
         # For draw details and draw draft pages
         if (r.draw_status == Round.Status.DRAFT or self.detailed) and r.prev:
             teams = Team.objects.filter(debateteam__debate__round=r)
-            metrics = self.tournament.pref('team_standings_precedence')
+            metrics = self.tournament.pref("team_standings_precedence")
 
-            if self.tournament.pref('teams_in_debate') == 'two':
-                pullup_metric = BasePowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.tournament.pref('draw_pullup_restriction')]
+            if self.tournament.pref("teams_in_debate") == "two":
+                pullup_metric = BasePowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[
+                    self.tournament.pref("draw_pullup_restriction")
+                ]
             else:
                 pullup_metric = None
 
             # subrank only makes sense if there's a second metric to rank on
-            rankings = ('rank', 'subrank') if len(metrics) > 1 else ('rank',)
-            generator = TeamStandingsGenerator(metrics, rankings,
-                extra_metrics=(pullup_metric,) if pullup_metric and pullup_metric not in metrics else ())
+            rankings = ("rank", "subrank") if len(metrics) > 1 else ("rank",)
+            generator = TeamStandingsGenerator(
+                metrics,
+                rankings,
+                extra_metrics=(
+                    (pullup_metric,) if pullup_metric and pullup_metric not in metrics else ()
+                ),
+            )
             standings = generator.generate(teams, round=r.prev)
             if not r.is_break_round:
                 table.add_debate_ranking_columns(draw, standings)
@@ -529,7 +606,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
         table.add_draw_conflicts_columns(draw, self.venue_conflicts, self.adjudicator_conflicts)
 
         if not r.is_break_round:
-            table.highlight_rows_by_column_value(column=0) # highlight first row of a new bracket
+            table.highlight_rows_by_column_value(column=0)  # highlight first row of a new bracket
 
         return table
 
@@ -537,9 +614,12 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
         r = self.round
         if r.draw_status == Round.Status.NONE:
             return TabbycatTableBuilder(view=self)  # blank
-        elif self.tournament.pref('teams_in_debate') == 'bp' and \
-                r.draw_status == Round.Status.DRAFT and r.prev is not None and \
-                not r.is_break_round:
+        elif (
+            self.tournament.pref("teams_in_debate") == "bp"
+            and r.draw_status == Round.Status.DRAFT
+            and r.prev is not None
+            and not r.is_break_round
+        ):
             return self.get_bp_position_balance_table()
         else:
             return self.get_standard_table()
@@ -548,14 +628,14 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
         for side in self.tournament.sides:
             # Translators: e.g. "Affirmative: Break rank"
             tooltip = _("%(side)s: Break rank") % {
-                'side': get_side_name(self.tournament, side, 'full'),
+                "side": get_side_name(self.tournament, side, "full"),
             }
             tooltip = tooltip.capitalize()
             # Translators: "BR" stands for "Break rank"
-            key = format_html("{}<br>{}", get_side_name(self.tournament, side, 'abbr'), _("BR"))
+            key = format_html("{}<br>{}", get_side_name(self.tournament, side, "abbr"), _("BR"))
 
             table.add_column(
-                {'tooltip': tooltip, 'key': key, 'text': key},
+                {"tooltip": tooltip, "key": key, "text": key},
                 [d.get_team(side).break_rank_for_category(category) for d in draw],
             )
 
@@ -573,7 +653,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
 
 class AdminDrawWithDetailsView(AdminDrawView):
     detailed = True
-    page_emoji = '👀'
+    page_emoji = "👀"
     use_template_subtitle = False  # Use the "for Round n" subtitle
 
     def get_page_title(self):
@@ -586,17 +666,17 @@ class AdminDrawWithDetailsView(AdminDrawView):
 class PositionBalanceReportView(RoundMixin, AdministratorMixin, VueTableTemplateView):
     page_emoji = "⚖"
     page_title = _("Position Balance Report")
-    tables_orientation = 'rows'
+    tables_orientation = "rows"
 
     def get_context_data(self, **kwargs):
-        kwargs['cost_func'] = self.get_position_cost_function_str()
+        kwargs["cost_func"] = self.get_position_cost_function_str()
         return super().get_context_data(**kwargs)
 
     def get_position_cost_function_str(self):
-        cost_func = self.tournament.pref('bp_position_cost')
-        if cost_func == 'entropy':
-            renyi_order = self.tournament.pref('bp_renyi_order')
-            cost_func_str = _("Rényi entropy of order %(order)s" % {'order': renyi_order})
+        cost_func = self.tournament.pref("bp_position_cost")
+        if cost_func == "entropy":
+            renyi_order = self.tournament.pref("bp_renyi_order")
+            cost_func_str = _("Rényi entropy of order %(order)s" % {"order": renyi_order})
             if renyi_order == 1:
                 # Translators: This is appended to the string "Rényi entropy of order 1.0"
                 cost_func_str += _(" (<i>i.e.</i>, Shannon entropy)")
@@ -610,7 +690,7 @@ class PositionBalanceReportView(RoundMixin, AdministratorMixin, VueTableTemplate
                 return "Unknown"  # don't translate, should never happen
 
     def get_tables(self):
-        if self.tournament.pref('teams_in_debate') != 'bp':
+        if self.tournament.pref("teams_in_debate") != "bp":
             logger.warning("Tried to access position balance report for a non-BP tournament")
             return []
         if self.round.prev is None:
@@ -620,17 +700,19 @@ class PositionBalanceReportView(RoundMixin, AdministratorMixin, VueTableTemplate
             logger.warning("Tried to access position balance report for a break round")
             return []
 
-        draw = self.round.debate_set_with_prefetches(ordering=('room_rank',), institutions=True)
+        draw = self.round.debate_set_with_prefetches(ordering=("room_rank",), institutions=True)
         teams = Team.objects.filter(debateteam__debate__round=self.round)
         side_histories_before = get_side_history(teams, self.tournament.sides, self.round.prev.seq)
         side_histories_now = get_side_history(teams, self.tournament.sides, self.round.seq)
-        metrics = self.tournament.pref('team_standings_precedence')
+        metrics = self.tournament.pref("team_standings_precedence")
         generator = TeamStandingsGenerator(metrics[0:1], ())
         standings = generator.generate(teams, round=self.round.prev)
 
-        summary_table = PositionBalanceReportSummaryTableBuilder(view=self,
-                title=_("Teams with position imbalances"),
-                empty_title=_("No teams with position imbalances! Hooray!") + " 😊")
+        summary_table = PositionBalanceReportSummaryTableBuilder(
+            view=self,
+            title=_("Teams with position imbalances"),
+            empty_title=_("No teams with position imbalances! Hooray!") + " 😊",
+        )
         summary_table.build(draw, teams, side_histories_before, side_histories_now, standings)
 
         draw_table = PositionBalanceReportDrawTableBuilder(view=self, title=_("Annotated draw"))
@@ -640,22 +722,23 @@ class PositionBalanceReportView(RoundMixin, AdministratorMixin, VueTableTemplate
 
     def get_template_names(self):
         # Show an error page if this isn't a BP tournament or if it's the first round
-        if self.tournament.pref('teams_in_debate') != 'bp':
-            return ['position_balance_nonbp.html']
+        if self.tournament.pref("teams_in_debate") != "bp":
+            return ["position_balance_nonbp.html"]
         elif self.round.prev is None:
-            return ['position_balance_round1.html']
+            return ["position_balance_round1.html"]
         elif self.round.is_break_round:
-            return ['position_balance_break.html']
+            return ["position_balance_break.html"]
         else:
-            return ['position_balance.html']
+            return ["position_balance.html"]
 
 
 # ==============================================================================
 # Draw Status POSTS
 # ==============================================================================
 
+
 class DrawStatusEdit(LogActionMixin, AdministratorMixin, RoundMixin, PostOnlyRedirectView):
-    round_redirect_pattern_name = 'draw'
+    round_redirect_pattern_name = "draw"
     view_permission = Permission.GENERATE_DEBATE
 
 
@@ -665,49 +748,75 @@ class CreateDrawView(DrawStatusEdit):
 
     def post(self, request, *args, **kwargs):
         if self.round.draw_status != Round.Status.NONE:
-            messages.error(request, _("Could not create draw for %(round)s, there was already a draw!") % {'round': self.round.name})
+            messages.error(
+                request,
+                _("Could not create draw for %(round)s, there was already a draw!")
+                % {"round": self.round.name},
+            )
             return super().post(request, *args, **kwargs)
 
         try:
             manager = DrawManager(self.round)
             manager.create()
         except DrawUserError as e:
-            messages.error(request, mark_safe(_(
-                "<p>The draw could not be created, for the following reason: "
-                "<em>%(message)s</em></p>\n"
-                "<p>Please fix this issue before attempting to create the draw.</p>",
-            ) % {'message': str(e)}))
+            messages.error(
+                request,
+                mark_safe(
+                    _(
+                        "<p>The draw could not be created, for the following reason: "
+                        "<em>%(message)s</em></p>\n"
+                        "<p>Please fix this issue before attempting to create the draw.</p>",
+                    )
+                    % {"message": str(e)}
+                ),
+            )
             logger.warning("User error creating draw: " + str(e), exc_info=True)
-            return HttpResponseRedirect(reverse_round('availability-index', self.round))
+            return HttpResponseRedirect(reverse_round("availability-index", self.round))
         except DrawFatalError as e:
-            messages.error(request, mark_safe(_(
-                "<p>The draw could not be created, because the following error occurred: "
-                "<em>%(message)s</em></p>\n"
-                "<p>If this issue persists and you're not sure how to resolve it, please "
-                "contact the developers.</p>",
-            ) % {'message': str(e)}))
+            messages.error(
+                request,
+                mark_safe(
+                    _(
+                        "<p>The draw could not be created, because the following error occurred: "
+                        "<em>%(message)s</em></p>\n"
+                        "<p>If this issue persists and you're not sure how to resolve it, please "
+                        "contact the developers.</p>",
+                    )
+                    % {"message": str(e)}
+                ),
+            )
             logger.exception("Fatal error creating draw: " + str(e))
-            return HttpResponseRedirect(reverse_round('availability-index', self.round))
+            return HttpResponseRedirect(reverse_round("availability-index", self.round))
         except StandingsError as e:
             message = _(
                 "<p>The team standings could not be generated, because the following error occurred: "
                 "<em>%(message)s</em></p>\n"
                 "<p>Because generating the draw uses the current team standings, this "
                 "prevents the draw from being generated.</p>",
-            ) % {'message': str(e)}
-            standings_options_url = reverse_tournament('options-tournament-section', self.tournament, kwargs={'section': 'standings'})
-            instructions = BaseStandingsView.admin_standings_error_instructions % {'standings_options_url': standings_options_url}
+            ) % {"message": str(e)}
+            standings_options_url = reverse_tournament(
+                "options-tournament-section", self.tournament, kwargs={"section": "standings"}
+            )
+            instructions = BaseStandingsView.admin_standings_error_instructions % {
+                "standings_options_url": standings_options_url
+            }
             messages.error(request, mark_safe(message + instructions))
             logger.exception("Error generating standings for draw: " + str(e))
-            return HttpResponseRedirect(reverse_round('availability-index', self.round))
+            return HttpResponseRedirect(reverse_round("availability-index", self.round))
 
         relevant_adj_venue_constraints = VenueConstraint.objects.filter(
-                adjudicator__in=self.tournament.relevant_adjudicators)
+            adjudicator__in=self.tournament.relevant_adjudicators
+        )
         if not relevant_adj_venue_constraints.exists():
             allocate_venues(self.round)
         else:
-            messages.warning(request, _("Rooms were not auto-allocated because there are one or more adjudicator room constraints. "
-                "You should run room allocations after allocating adjudicators."))
+            messages.warning(
+                request,
+                _(
+                    "Rooms were not auto-allocated because there are one or more adjudicator room constraints. "
+                    "You should run room allocations after allocating adjudicators."
+                ),
+            )
 
         self.log_action()
         return super().post(request, *args, **kwargs)
@@ -722,7 +831,7 @@ class ConfirmDrawCreationView(DrawStatusEdit):
                 messages.error(request, _("There is no draw."))
             else:
                 messages.info(request, _("The draw had already been confirmed."))
-            return HttpResponseRedirect(reverse_round('draw', self.round))
+            return HttpResponseRedirect(reverse_round("draw", self.round))
 
         self.round.draw_status = Round.Status.CONFIRMED
         self.round.save()
@@ -732,7 +841,7 @@ class ConfirmDrawCreationView(DrawStatusEdit):
 
 class DrawRegenerateView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ActionType.DRAW_REGENERATE
-    round_redirect_pattern_name = 'availability-index'
+    round_redirect_pattern_name = "availability-index"
 
     def post(self, request, *args, **kwargs):
         delete_round_draw(self.round)
@@ -749,7 +858,7 @@ class ConfirmDrawRegenerationView(AdministratorMixin, TemplateView):
 class DrawReleaseView(DrawStatusEdit):
     edit_permission = Permission.RELEASE_DRAW
     action_log_type = ActionLogEntry.ActionType.DRAW_RELEASE
-    round_redirect_pattern_name = 'draw-display'
+    round_redirect_pattern_name = "draw-display"
 
     def post(self, request, *args, **kwargs):
         if self.round.draw_status != Round.Status.CONFIRMED:
@@ -757,7 +866,7 @@ class DrawReleaseView(DrawStatusEdit):
                 messages.info(request, _("The draw has already been released."))
             else:
                 messages.error(request, _("The draw must be confirmed before being released."))
-            return HttpResponseRedirect(reverse_round('draw', self.round))
+            return HttpResponseRedirect(reverse_round("draw", self.round))
 
         self.round.draw_status = Round.Status.RELEASED
         self.round.save()
@@ -770,12 +879,12 @@ class DrawReleaseView(DrawStatusEdit):
 class DrawUnreleaseView(DrawStatusEdit):
     edit_permission = Permission.UNRELEASE_DRAW
     action_log_type = ActionLogEntry.ActionType.DRAW_UNRELEASE
-    round_redirect_pattern_name = 'draw-display'
+    round_redirect_pattern_name = "draw-display"
 
     def post(self, request, *args, **kwargs):
         if self.round.draw_status != Round.Status.RELEASED:
             messages.info(request, _("The draw had been unreleased."))
-            return HttpResponseRedirect(reverse_round('draw', self.round))
+            return HttpResponseRedirect(reverse_round("draw", self.round))
 
         self.round.draw_status = Round.Status.CONFIRMED
         self.round.save()
@@ -787,16 +896,22 @@ class DrawUnreleaseView(DrawStatusEdit):
 class SetRoundStartTimeView(DrawStatusEdit):
     edit_permission = Permission.EDIT_STARTTIME
     action_log_type = ActionLogEntry.ActionType.ROUND_START_TIME_SET
-    round_redirect_pattern_name = 'draw-display'
+    round_redirect_pattern_name = "draw-display"
 
     def post(self, request, *args, **kwargs):
         time_text = request.POST["start_time"]
         try:
             time = datetime.datetime.strptime(time_text, "%H:%M").time()
         except ValueError:
-            messages.error(request, _("Sorry, \"%(input)s\" isn't a valid time. It must "
-                           "be in 24-hour format, with a colon, for "
-                           "example: \"13:57\".") % {'input': time_text})
+            messages.error(
+                request,
+                _(
+                    'Sorry, "%(input)s" isn\'t a valid time. It must '
+                    "be in 24-hour format, with a colon, for "
+                    'example: "13:57".'
+                )
+                % {"input": time_text},
+            )
             return super().post(request, *args, **kwargs)
 
         self.round.starts_at = time
@@ -811,6 +926,7 @@ class SetRoundStartTimeView(DrawStatusEdit):
 # Sides Editing and Viewing
 # ==============================================================================
 
+
 class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
 
     page_title = gettext_lazy("Side Pre-Allocations")
@@ -822,7 +938,9 @@ class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
         tsas = dict()
         for tsa in TeamSideAllocation.objects.filter(round__in=rounds):
             try:
-                tsas[(tsa.team.id, tsa.round.seq)] = get_side_name(self.tournament, tsa.side, 'abbr')
+                tsas[(tsa.team.id, tsa.round.seq)] = get_side_name(
+                    self.tournament, tsa.side, "abbr"
+                )
             except ValueError:
                 pass
 
@@ -841,18 +959,18 @@ class SideAllocationsView(AdministratorMixin, BaseSideAllocationsView):
 
 
 class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsView):
-    public_page_preference = 'public_side_allocations'
+    public_page_preference = "public_side_allocations"
 
 
 class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = "edit_debate_teams.html"
     page_title = gettext_lazy("Edit Matchups")
-    prefetch_teams = False # Fetched in full as get_serialised
+    prefetch_teams = False  # Fetched in full as get_serialised
     edit_permission = Permission.EDIT_DEBATETEAMS
 
     def get_serialised_allocatable_items(self):
         # TODO: account for shared teams
-        teams = Team.objects.filter(tournament=self.tournament).prefetch_related('speaker_set')
+        teams = Team.objects.filter(tournament=self.tournament).prefetch_related("speaker_set")
         teams = annotate_availability(teams, self.round)
         populate_win_counts(teams)
         serialized_teams = EditDebateTeamsTeamSerializer(teams, many=True)
@@ -860,4 +978,5 @@ class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateVi
 
     def debates_or_panels_factory(self, debates):
         return EditDebateTeamsDebateSerializer(
-            debates, many=True, context={'sides': self.tournament.sides})
+            debates, many=True, context={"sides": self.tournament.sides}
+        )

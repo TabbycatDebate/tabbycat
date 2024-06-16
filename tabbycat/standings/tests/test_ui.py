@@ -5,16 +5,19 @@ from utils.tests import SeleniumTournamentTestCase
 
 class CoreStandingsTests(SeleniumTournamentTestCase):
 
-    set_preferences = ['tab_release__speaker_tab_released',
-                       'tab_release__team_tab_released',
-                       'tab_release__replies_tab_released',
-                       'tab_release__motion_tab_released']
+    set_preferences = [
+        "tab_release__speaker_tab_released",
+        "tab_release__team_tab_released",
+        "tab_release__replies_tab_released",
+        "tab_release__motion_tab_released",
+    ]
 
     def test_speaker_standings(self):
-        test_url = self.reverse_url('standings-public-tab-speaker')
-        self.selenium.get('%s%s' % (self.live_server_url, test_url))
+        test_url = self.reverse_url("standings-public-tab-speaker")
+        self.selenium.get("%s%s" % (self.live_server_url, test_url))
         WebDriverWait(self.selenium, 5).until(
-            lambda driver: driver.find_element_by_css_selector('.table'))
+            lambda driver: driver.find_element_by_css_selector(".table")
+        )
 
         tbody = self.selenium.find_elements_by_css_selector(".table tbody")[0]
         rows = tbody.find_elements_by_tag_name("tr")
@@ -34,10 +37,11 @@ class CoreStandingsTests(SeleniumTournamentTestCase):
         assert_row_state(rows[50], str(51), "Phil Lyons")
 
     def test_reply_standings(self):
-        test_url = self.reverse_url('standings-public-tab-replies')
-        self.selenium.get('%s%s' % (self.live_server_url, test_url))
+        test_url = self.reverse_url("standings-public-tab-replies")
+        self.selenium.get("%s%s" % (self.live_server_url, test_url))
         WebDriverWait(self.selenium, 5).until(
-            lambda driver: driver.find_element_by_css_selector('.table'))
+            lambda driver: driver.find_element_by_css_selector(".table")
+        )
 
         tbody = self.selenium.find_elements_by_css_selector(".table tbody")[0]
         rows = tbody.find_elements_by_tag_name("tr")

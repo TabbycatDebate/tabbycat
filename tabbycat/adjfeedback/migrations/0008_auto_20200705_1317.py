@@ -9,18 +9,32 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('adjfeedback', '0007_auto_20200613_2006'),
+        ("adjfeedback", "0007_auto_20200613_2006"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='adjudicatorfeedback',
-            name='confirmer',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='adjfeedback_adjudicatorfeedback_confirmed', to=settings.AUTH_USER_MODEL, verbose_name='confirmer'),
+            model_name="adjudicatorfeedback",
+            name="confirmer",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="adjfeedback_adjudicatorfeedback_confirmed",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="confirmer",
+            ),
         ),
         migrations.AlterField(
-            model_name='adjudicatorfeedback',
-            name='submitter',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='adjfeedback_adjudicatorfeedback_submitted', to=settings.AUTH_USER_MODEL, verbose_name='submitter'),
+            model_name="adjudicatorfeedback",
+            name="submitter",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="adjfeedback_adjudicatorfeedback_submitted",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="submitter",
+            ),
         ),
     ]

@@ -6,13 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tournaments', '0009_auto_20201126_0037'),
+        ("tournaments", "0009_auto_20201126_0037"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='round',
-            name='draw_type',
-            field=models.CharField(choices=[('R', 'Random'), ('M', 'Manual'), ('D', 'Round-robin'), ('P', 'Power-paired'), ('E', 'Elimination'), ('S', 'Seeded')], help_text='Which draw method to use', max_length=1, verbose_name='draw type'),
+            model_name="round",
+            name="draw_type",
+            field=models.CharField(
+                choices=[
+                    ("R", "Random"),
+                    ("M", "Manual"),
+                    ("D", "Round-robin"),
+                    ("P", "Power-paired"),
+                    ("E", "Elimination"),
+                    ("S", "Seeded"),
+                ],
+                help_text="Which draw method to use",
+                max_length=1,
+                verbose_name="draw type",
+            ),
         ),
     ]

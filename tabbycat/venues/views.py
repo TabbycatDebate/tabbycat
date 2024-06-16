@@ -27,42 +27,47 @@ class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateV
     view_permission = Permission.VIEW_ROOMALLOCATIONS
     template_name = "edit_debate_venues.html"
     page_title = gettext_lazy("Edit Rooms")
-    prefetch_venues = False # Fetched in full as get_serialised
+    prefetch_venues = False  # Fetched in full as get_serialised
 
     def debates_or_panels_factory(self, debates):
         return EditDebateVenuesDebateSerializer(
-            debates, many=True, context={'sides': self.tournament.sides})
+            debates, many=True, context={"sides": self.tournament.sides}
+        )
 
     def get_serialised_allocatable_items(self):
-        venues = Venue.objects.filter(tournament=self.tournament).prefetch_related('venuecategory_set')
+        venues = Venue.objects.filter(tournament=self.tournament).prefetch_related(
+            "venuecategory_set"
+        )
         venues = annotate_availability(venues, self.round)
         serialized_venues = EditDebateVenuesVenueSerializer(venues, many=True)
         return self.json_render(serialized_venues.data)
 
     def get_extra_info(self):
         p_range = Venue.objects.filter(tournament=self.tournament).aggregate(
-            min=Min('priority'), max=Max('priority'))
+            min=Min("priority"), max=Max("priority")
+        )
         info = super().get_extra_info()
-        info['highlights']['priority'] = ranks_dictionary(
-            self.tournament, p_range['min'], p_range['max'])
+        info["highlights"]["priority"] = ranks_dictionary(
+            self.tournament, p_range["min"], p_range["max"]
+        )
         # Most recently created venues take priority in getting the highlight
-        vcs = VenueCategory.objects.order_by('id').reverse()
-        info['highlights']['category'] = [{'pk': vc.id, 'fields': {'name': vc.name}} for vc in vcs]
+        vcs = VenueCategory.objects.order_by("id").reverse()
+        info["highlights"]["category"] = [{"pk": vc.id, "fields": {"name": vc.name}} for vc in vcs]
         return info
 
 
 class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, ModelFormSetView):
     view_permission = Permission.VIEW_ROOMCATEGORIES
     edit_permission = Permission.EDIT_ROOMCATEGORIES
-    template_name = 'venue_categories_edit.html'
+    template_name = "venue_categories_edit.html"
     formset_model = VenueCategory
     action_log_type = ActionLogEntry.ActionType.VENUE_CATEGORIES_EDIT
 
     def get_formset_factory_kwargs(self):
-        queryset = self.tournament.relevant_venues.prefetch_related('venuecategory_set')
+        queryset = self.tournament.relevant_venues.prefetch_related("venuecategory_set")
         formset_factory_kwargs = {
-            'form': venuecategoryform_factory(venues_queryset=queryset),
-            'extra': 3,
+            "form": venuecategoryform_factory(venues_queryset=queryset),
+            "extra": 3,
         }
         return formset_factory_kwargs
 
@@ -71,7 +76,7 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
         # Show relevant venues; not all venues
         venues = self.tournament.relevant_venues.all()
         for form in formset:
-            form.fields['venues'].queryset = venues
+            form.fields["venues"].queryset = venues
         return formset
 
     def get_formset_queryset(self):
@@ -84,26 +89,27 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
                 category.tournament = self.tournament
                 category.save()
 
-            message = ngettext("Saved room category: %(list)s",
+            message = ngettext(
+                "Saved room category: %(list)s",
                 "Saved venue categories: %(list)s",
                 len(self.instances),
-            ) % {'list': ", ".join(category.name for category in self.instances)}
+            ) % {"list": ", ".join(category.name for category in self.instances)}
             messages.success(self.request, message)
         else:
             messages.success(self.request, _("No changes were made to the room categories."))
 
         if "add_more" in self.request.POST:
-            return redirect_tournament('venues-categories', self.tournament)
+            return redirect_tournament("venues-categories", self.tournament)
         return super().formset_valid(formset)
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_tournament('importer-simple-index', self.tournament)
+        return reverse_tournament("importer-simple-index", self.tournament)
 
 
 class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, ModelFormSetView):
     view_permission = Permission.VIEW_ROOMCONSTRAINTS
     edit_permission = Permission.EDIT_ROOMCONSTRAINTS
-    template_name = 'venue_constraints_edit.html'
+    template_name = "venue_constraints_edit.html"
     formset_model = VenueConstraint
     action_log_type = ActionLogEntry.ActionType.VENUE_CONSTRAINTS_EDIT
 
@@ -111,20 +117,20 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
         # Need to build a dynamic choices list for the widget; so override the
         # standard method of getting args
         formset_factory_kwargs = {
-            'fields': ('subject_content_type', 'subject_id', 'category', 'priority'),
-            'labels': {
-                'subject_content_type': 'Constrainee Type',
-                'subject_id': 'Constrainee ID',
-                'category': 'Room Category',
+            "fields": ("subject_content_type", "subject_id", "category", "priority"),
+            "labels": {
+                "subject_content_type": "Constrainee Type",
+                "subject_id": "Constrainee ID",
+                "category": "Room Category",
             },
-            'help_texts': {
-                'subject_id': 'Delete the existing number and start typing the name of the person/team/institution you want to constrain to lookup their ID.',
+            "help_texts": {
+                "subject_id": "Delete the existing number and start typing the name of the person/team/institution you want to constrain to lookup their ID.",
             },
-            'widgets': {
-                'subject_content_type': Select(attrs={'data-filter': True}),
-                'subject_id': SelectPrepopulated(data_list=self.subject_choices()),
+            "widgets": {
+                "subject_content_type": Select(attrs={"data-filter": True}),
+                "subject_id": SelectPrepopulated(data_list=self.subject_choices()),
             },
-            'extra': 8,
+            "extra": 8,
         }
         return formset_factory_kwargs
 
@@ -141,14 +147,14 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
 
         options = []
 
-        adjudicators = self.tournament.relevant_adjudicators.values('id', 'name')
-        options.extend([(a['id'], _('%s (Adjudicator)') % a['name']) for a in adjudicators])
+        adjudicators = self.tournament.relevant_adjudicators.values("id", "name")
+        options.extend([(a["id"], _("%s (Adjudicator)") % a["name"]) for a in adjudicators])
 
-        teams = self.tournament.team_set.values('id', 'short_name')
-        options.extend([(t['id'], _('%s (Team)') % t['short_name']) for t in teams])
+        teams = self.tournament.team_set.values("id", "short_name")
+        options.extend([(t["id"], _("%s (Team)") % t["short_name"]) for t in teams])
 
-        institutions = Institution.objects.values('id', 'name')
-        options.extend([(i['id'], _('%s (Institution)') % i['name']) for i in institutions])
+        institutions = Institution.objects.values("id", "name")
+        options.extend([(i["id"], _("%s (Institution)") % i["name"]) for i in institutions])
 
         return sorted(options, key=lambda x: x[1])
 
@@ -156,12 +162,13 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
         result = super().formset_valid(formset)
         if self.instances:
             count = len(self.instances)
-            message = ngettext("Saved %(count)d room constraint.",
-                "Saved %(count)d room constraints.", count) % {'count': count}
+            message = ngettext(
+                "Saved %(count)d room constraint.", "Saved %(count)d room constraints.", count
+            ) % {"count": count}
             messages.success(self.request, message)
         if "add_more" in self.request.POST:
-            return redirect_tournament('venues-constraints', self.tournament)
+            return redirect_tournament("venues-constraints", self.tournament)
         return result
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_tournament('importer-simple-index', self.tournament)
+        return reverse_tournament("importer-simple-index", self.tournament)

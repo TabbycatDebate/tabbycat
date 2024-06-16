@@ -53,16 +53,12 @@ class BasePairing:
         """
         if tournament is None:
             tournament = debate.round.tournament
-        teams = [debate.get_team(side) for side in cls.sides] # order matters
+        teams = [debate.get_team(side) for side in cls.sides]  # order matters
         bracket = debate.bracket
         room_rank = debate.room_rank
         flags = debate.flags
-        team_flags = {
-            debate.get_team(side): debate.get_dt(side).flags
-            for side in tournament.sides
-        }
-        return cls(teams, bracket=bracket, room_rank=room_rank, flags=flags,
-                team_flags=team_flags)
+        team_flags = {debate.get_team(side): debate.get_dt(side).flags for side in tournament.sides}
+        return cls(teams, bracket=bracket, room_rank=room_rank, flags=flags, team_flags=team_flags)
 
     def add_flag(self, flag):
         self.flags.append(flag)
@@ -92,15 +88,16 @@ class BasePairing:
 class Pairing(BasePairing):
     """Pairing class for two-team formats."""
 
-    sides = ['aff', 'neg']
+    sides = ["aff", "neg"]
 
     def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}):
         super().__init__(teams, bracket, room_rank, flags, team_flags)
         assert len(self.teams) == 2, "There must be two teams in a Pairing"
 
     def __repr__(self):
-        return ("<{p.__class__.__name__}: {p.teams[0]} vs {p.teams[1]} "
-            "({p.bracket}/{p.room_rank})>").format(p=self)
+        return (
+            "<{p.__class__.__name__}: {p.teams[0]} vs {p.teams[1]} " "({p.bracket}/{p.room_rank})>"
+        ).format(p=self)
 
     def balance_sides(self):
         """Puts whoever has the biggest (aff - neg) difference on the negative
@@ -127,7 +124,9 @@ class Pairing(BasePairing):
         except AttributeError:
             # In theory redundant, since DrawGenerators should use check_teams_for_attribute
             # to check for this.
-            raise DrawFatalError("For conflict avoidance, teams must have an attribute 'institution'.")
+            raise DrawFatalError(
+                "For conflict avoidance, teams must have an attribute 'institution'."
+            )
 
     @property
     def conflict_hist(self):
@@ -175,7 +174,7 @@ class ResultPairing(Pairing):
 class BPPairing(BasePairing):
     """Pairing class for British Parliamentary."""
 
-    sides = ['og', 'oo', 'cg', 'co']
+    sides = ["og", "oo", "cg", "co"]
 
     def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}):
         super().__init__(teams, bracket, room_rank, flags, team_flags)
@@ -183,7 +182,8 @@ class BPPairing(BasePairing):
 
     def __repr__(self):
         return "<{p.__class__.__name__}: {teams} ({p.bracket}/{p.room_rank})>".format(
-            teams=", ".join(map(str, self.teams)), p=self)
+            teams=", ".join(map(str, self.teams)), p=self
+        )
 
 
 class BPEliminationResultPairing(BPPairing):
@@ -198,7 +198,9 @@ class BPEliminationResultPairing(BPPairing):
     @classmethod
     def from_debate(cls, debate, tournament=None):
         instance = super().from_debate(debate, tournament)
-        advancing = debate.confirmed_ballot.result.advancing_teams() if debate.confirmed_ballot else []
+        advancing = (
+            debate.confirmed_ballot.result.advancing_teams() if debate.confirmed_ballot else []
+        )
         instance.set_advancing(advancing)
         return instance
 

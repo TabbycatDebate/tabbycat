@@ -8,7 +8,8 @@ import django.db.models.deletion
 
 def create_migration_sql_query(model):
     return migrations.RunSQL(
-        "UPDATE checkins_identifier ci SET polymorphic_ctype_id=(SELECT id FROM django_content_type WHERE app_label='checkins' AND model='%s' LIMIT 1) FROM checkins_%s c WHERE c.identifier_ptr_id=ci.id AND ci.polymorphic_ctype_id IS NULL;" % (model, model),
+        "UPDATE checkins_identifier ci SET polymorphic_ctype_id=(SELECT id FROM django_content_type WHERE app_label='checkins' AND model='%s' LIMIT 1) FROM checkins_%s c WHERE c.identifier_ptr_id=ci.id AND ci.polymorphic_ctype_id IS NULL;"
+        % (model, model),
         migrations.RunSQL.noop,
     )
 
@@ -16,26 +17,42 @@ def create_migration_sql_query(model):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contenttypes', '0002_remove_content_type_name'),
-        ('checkins', '0002_auto_20180420_2044'),
+        ("contenttypes", "0002_remove_content_type_name"),
+        ("checkins", "0002_auto_20180420_2044"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='identifier',
-            options={'base_manager_name': 'objects'},
+            name="identifier",
+            options={"base_manager_name": "objects"},
         ),
         migrations.AddField(
-            model_name='identifier',
-            name='polymorphic_ctype',
-            field=models.ForeignKey(editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='polymorphic_checkins.identifier_set+', to='contenttypes.ContentType'),
+            model_name="identifier",
+            name="polymorphic_ctype",
+            field=models.ForeignKey(
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="polymorphic_checkins.identifier_set+",
+                to="contenttypes.ContentType",
+            ),
         ),
         migrations.AlterField(
-            model_name='identifier',
-            name='barcode',
-            field=models.CharField(default=checkins.models.generate_identifier, max_length=20, unique=True, validators=[django.core.validators.RegexValidator('^[0-9]{6}$', message='The barcode must contain exactly six digits.')], verbose_name='barcode'),
+            model_name="identifier",
+            name="barcode",
+            field=models.CharField(
+                default=checkins.models.generate_identifier,
+                max_length=20,
+                unique=True,
+                validators=[
+                    django.core.validators.RegexValidator(
+                        "^[0-9]{6}$", message="The barcode must contain exactly six digits."
+                    )
+                ],
+                verbose_name="barcode",
+            ),
         ),
-        create_migration_sql_query('personidentifier'),
-        create_migration_sql_query('debateidentifier'),
-        create_migration_sql_query('venueidentifier'),
+        create_migration_sql_query("personidentifier"),
+        create_migration_sql_query("debateidentifier"),
+        create_migration_sql_query("venueidentifier"),
     ]

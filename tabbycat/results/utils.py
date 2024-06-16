@@ -23,12 +23,12 @@ def get_status_meta(debate):
 
 
 def readable_ballotsub_result(debateresult):
-    """ Make a human-readable representation of a debate result """
+    """Make a human-readable representation of a debate result"""
 
     def get_display_name(dt, t, use_codes):
         return {
-            'team': dt.team.code_name if use_codes else dt.team.short_name,
-            'side': dt.get_side_abbr(t),
+            "team": dt.team.code_name if use_codes else dt.team.short_name,
+            "side": dt.get_side_abbr(t),
         }
 
     def format_dt(dt, t, use_codes):
@@ -39,30 +39,40 @@ def readable_ballotsub_result(debateresult):
     use_codes = use_team_code_names(t, True)
 
     try:
-        if t.pref('teams_in_debate') == 'two':
-            result_winner = _("%(team)s (%(side)s) won") % get_display_name(debateresult.winning_dt(), t, use_codes)
+        if t.pref("teams_in_debate") == "two":
+            result_winner = _("%(team)s (%(side)s) won") % get_display_name(
+                debateresult.winning_dt(), t, use_codes
+            )
             # Translators: The team here is the losing team
-            result = _("vs %(team)s (%(side)s)") % get_display_name(debateresult.losing_dt(), t, use_codes)
+            result = _("vs %(team)s (%(side)s)") % get_display_name(
+                debateresult.losing_dt(), t, use_codes
+            )
         elif not debateresult.is_voting and debateresult.is_elimination:
             result_winner = _("Advancing: %(advancing_list)s<br>") % {
-                'advancing_list': ", ".join(format_dt(dt, t, use_codes) for dt in debateresult.advancing_dt()),
+                "advancing_list": ", ".join(
+                    format_dt(dt, t, use_codes) for dt in debateresult.advancing_dt()
+                ),
             }
             result = _("Eliminated: %(eliminated_list)s")
             result = result % {
-                'eliminated_list': ", ".join(format_dt(dt, t, use_codes) for dt in debateresult.eliminated_dt()),
+                "eliminated_list": ", ".join(
+                    format_dt(dt, t, use_codes) for dt in debateresult.eliminated_dt()
+                ),
             }
 
         else:  # BP preliminary round
             ordered = debateresult.get_ranked_dt()
 
-            result_winner = _("1st: %(first_team)s<br>") % {'first_team':  format_dt(ordered[0], t, use_codes)}
-            result = _("2nd: %(second_team)s<br>\n"
-                       "3rd: %(third_team)s<br>\n"
-                       "4th: %(fourth_team)s")
+            result_winner = _("1st: %(first_team)s<br>") % {
+                "first_team": format_dt(ordered[0], t, use_codes)
+            }
+            result = _(
+                "2nd: %(second_team)s<br>\n" "3rd: %(third_team)s<br>\n" "4th: %(fourth_team)s"
+            )
             result = result % {
-                'second_team': format_dt(ordered[1], t, use_codes),
-                'third_team':  format_dt(ordered[2], t, use_codes),
-                'fourth_team': format_dt(ordered[3], t, use_codes),
+                "second_team": format_dt(ordered[1], t, use_codes),
+                "third_team": format_dt(ordered[2], t, use_codes),
+                "fourth_team": format_dt(ordered[3], t, use_codes),
             }
 
     except (IndexError, AttributeError):
@@ -71,7 +81,7 @@ def readable_ballotsub_result(debateresult):
             matchup = debateresult.debate.matchup_codes
         else:
             matchup = debateresult.debate.matchup
-        result_winner = _("Error with result for %(debate)s") % {'debate': matchup}
+        result_winner = _("Error with result for %(debate)s") % {"debate": matchup}
         result = ""
 
     return result_winner, result
@@ -85,14 +95,14 @@ def get_result_status_stats(round):
     in, but whose results are not entered."""
 
     # query looks like: [{'result_status': 'C', 'result_status__count': 8}, ...]
-    query = round.debate_set.values('result_status').annotate(Count('result_status')).order_by()
+    query = round.debate_set.values("result_status").annotate(Count("result_status")).order_by()
 
     # The query doesn't return zeroes where appropriate - for statuses with no
     # debates, it just omits the item altogether. So initialize a dict:
     choices = [code for code, name in Debate.STATUS_CHOICES]
     stats = dict.fromkeys(choices, 0)
     for item in query:
-        stats[item['result_status']] = item['result_status__count']
+        stats[item["result_status"]] = item["result_status__count"]
 
     return stats
 
@@ -106,6 +116,7 @@ def populate_identical_ballotsub_lists(ballotsubs):
     speakers and all speaker scores."""
 
     from .prefetch import populate_results
+
     populate_results(ballotsubs)
 
     for ballotsub in ballotsubs:
@@ -122,21 +133,29 @@ def populate_identical_ballotsub_lists(ballotsubs):
 
 _BP_POSITION_NAMES = [
     # Translators: Abbreviation for Prime Minister
-    [gettext_lazy("PM"),
-    # Translators: Abbreviation for Deputy Prime Minister
-     gettext_lazy("DPM")],
+    [
+        gettext_lazy("PM"),
+        # Translators: Abbreviation for Deputy Prime Minister
+        gettext_lazy("DPM"),
+    ],
     # Translators: Abbreviation for Leader of the Opposition
-    [gettext_lazy("LO"),
-    # Translators: Abbreviation for Deputy Leader of the Opposition
-     gettext_lazy("DLO")],
+    [
+        gettext_lazy("LO"),
+        # Translators: Abbreviation for Deputy Leader of the Opposition
+        gettext_lazy("DLO"),
+    ],
     # Translators: Abbreviation for Member for the Government
-    [gettext_lazy("MG"),
-    # Translators: Abbreviation for Government Whip
-     gettext_lazy("GW")],
+    [
+        gettext_lazy("MG"),
+        # Translators: Abbreviation for Government Whip
+        gettext_lazy("GW"),
+    ],
     # Translators: Abbreviation for Member for the Opposition
-    [gettext_lazy("MO"),
-    # Translators: Abbreviation for Opposition Whip
-     gettext_lazy("OW")],
+    [
+        gettext_lazy("MO"),
+        # Translators: Abbreviation for Opposition Whip
+        gettext_lazy("OW"),
+    ],
 ]
 
 
@@ -145,18 +164,21 @@ def side_and_position_names(tournament):
     names, all being translated human-readable names. This should eventually
     be extended to return an appropriate list for the tournament configuration.
     """
-    sides = [get_side_name(tournament, side, 'full').title() for side in tournament.sides]
+    sides = [get_side_name(tournament, side, "full").title() for side in tournament.sides]
 
-    if tournament.pref('teams_in_debate') == 'bp' \
-            and tournament.last_substantive_position == 2 \
-            and tournament.reply_position is None:
+    if (
+        tournament.pref("teams_in_debate") == "bp"
+        and tournament.last_substantive_position == 2
+        and tournament.reply_position is None
+    ):
 
         for side, positions in zip(sides, _BP_POSITION_NAMES):
             yield side, positions
 
     else:
         for side in sides:
-            positions = [_("Reply") if pos == tournament.reply_position
-                else ordinal(pos)
-                for pos in tournament.positions]
+            positions = [
+                _("Reply") if pos == tournament.reply_position else ordinal(pos)
+                for pos in tournament.positions
+            ]
             yield side, positions

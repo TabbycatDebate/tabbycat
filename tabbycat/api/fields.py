@@ -5,7 +5,12 @@ from django.db.models import Q
 from django.urls import get_script_prefix, resolve, Resolver404
 from django.utils.encoding import uri_to_iri
 from drf_spectacular.utils import extend_schema_field
-from rest_framework.relations import Hyperlink, HyperlinkedIdentityField, HyperlinkedRelatedField, SlugRelatedField
+from rest_framework.relations import (
+    Hyperlink,
+    HyperlinkedIdentityField,
+    HyperlinkedRelatedField,
+    SlugRelatedField,
+)
 from rest_framework.reverse import reverse
 from rest_framework.serializers import CharField, Field
 
@@ -17,10 +22,10 @@ from .utils import is_staff
 
 
 class TournamentHyperlinkedRelatedField(HyperlinkedRelatedField):
-    default_tournament_field = 'tournament'
+    default_tournament_field = "tournament"
 
     def __init__(self, *args, **kwargs):
-        self.tournament_field = kwargs.pop('tournament_field', self.default_tournament_field)
+        self.tournament_field = kwargs.pop("tournament_field", self.default_tournament_field)
         super().__init__(*args, **kwargs)
 
     def use_pk_only_optimization(self):
@@ -32,7 +37,7 @@ class TournamentHyperlinkedRelatedField(HyperlinkedRelatedField):
     def get_url_kwargs(self, obj):
         lookup_value = getattr(obj, self.lookup_field)
         kwargs = {
-            'tournament_slug': self.get_tournament(obj).slug,
+            "tournament_slug": self.get_tournament(obj).slug,
             self.lookup_url_kwarg: lookup_value,
         }
         return kwargs
@@ -48,19 +53,26 @@ class TournamentHyperlinkedRelatedField(HyperlinkedRelatedField):
         return self.get_queryset().get(**lookup_kwargs)
 
     def lookup_kwargs(self):
-        return {self.tournament_field: self.context['tournament']}
+        return {self.tournament_field: self.context["tournament"]}
 
     def get_queryset(self):
-        return super().get_queryset().filter(**self.lookup_kwargs()).select_related(self.tournament_field)
+        return (
+            super()
+            .get_queryset()
+            .filter(**self.lookup_kwargs())
+            .select_related(self.tournament_field)
+        )
 
 
-class TournamentHyperlinkedIdentityField(TournamentHyperlinkedRelatedField, HyperlinkedIdentityField):
+class TournamentHyperlinkedIdentityField(
+    TournamentHyperlinkedRelatedField, HyperlinkedIdentityField
+):
     pass
 
 
 class RoundHyperlinkedRelatedField(TournamentHyperlinkedRelatedField):
-    default_tournament_field = 'round__tournament'
-    round_field = 'round'
+    default_tournament_field = "round__tournament"
+    round_field = "round"
 
     def get_tournament(self, obj):
         return self.get_round(obj).tournament
@@ -70,11 +82,11 @@ class RoundHyperlinkedRelatedField(TournamentHyperlinkedRelatedField):
 
     def get_url_kwargs(self, obj):
         kwargs = super().get_url_kwargs(obj)
-        kwargs['round_seq'] = self.get_round(obj).seq
+        kwargs["round_seq"] = self.get_round(obj).seq
         return kwargs
 
     def lookup_kwargs(self):
-        return {self.round_field: self.context['round']}
+        return {self.round_field: self.context["round"]}
 
     def get_queryset(self):
         return super().get_queryset().select_related(self.round_field)
@@ -85,22 +97,22 @@ class RoundHyperlinkedIdentityField(RoundHyperlinkedRelatedField, HyperlinkedIde
 
 
 class DebateHyperlinkedIdentityField(RoundHyperlinkedIdentityField):
-    default_tournament_field = 'debate__round__tournament'
-    round_field = 'debate__round'
+    default_tournament_field = "debate__round__tournament"
+    round_field = "debate__round"
 
     def get_round(self, obj):
         return obj.debate.round
 
     def get_url_kwargs(self, obj):
         kwargs = super().get_url_kwargs(obj)
-        kwargs['debate_pk'] = obj.debate.pk
+        kwargs["debate_pk"] = obj.debate.pk
         return kwargs
 
     def lookup_kwargs(self):
-        return {'debate': self.context['debate']}
+        return {"debate": self.context["debate"]}
 
     def get_queryset(self):
-        return super().get_queryset().select_related('debate')
+        return super().get_queryset().select_related("debate")
 
 
 class AnonymisingParticipantNameField(CharField):
@@ -113,15 +125,15 @@ class AnonymisingParticipantNameField(CharField):
         if not is_staff(self.context):
             if instance.anonymous:
                 return None
-            return instance.get_public_name(self.context['tournament'])
+            return instance.get_public_name(self.context["tournament"])
         return super().to_representation(instance.name)
 
 
 class AnonymisingHyperlinkedTournamentRelatedField(TournamentHyperlinkedRelatedField):
-    default_tournament_field = 'team__tournament'
+    default_tournament_field = "team__tournament"
 
     def __init__(self, view_name=None, queryset=Speaker.objects.all(), **kwargs):
-        self.null_when = kwargs.pop('anonymous_source')
+        self.null_when = kwargs.pop("anonymous_source")
         super().__init__(view_name=view_name, queryset=queryset, **kwargs)
 
     def to_representation(self, value):
@@ -136,15 +148,21 @@ class AdjudicatorFeedbackIdentityField(RoundHyperlinkedIdentityField):
 
     def get_url_kwargs(self, obj):
         kwargs = super().get_url_kwargs(obj)
-        kwargs.pop('round_seq')
+        kwargs.pop("round_seq")
         return kwargs
 
     def lookup_kwargs(self):
         return {}  # More complicated lookup than with kwargs
 
     def get_queryset(self):
-        return super().get_queryset().filter(
-            Q(source_adjudicator__debate__round=self.context['round']) | Q(source_team__debate__round=self.context['round']))
+        return (
+            super()
+            .get_queryset()
+            .filter(
+                Q(source_adjudicator__debate__round=self.context["round"])
+                | Q(source_team__debate__round=self.context["round"])
+            )
+        )
 
 
 class CreatableSlugRelatedField(SlugRelatedField):
@@ -153,59 +171,61 @@ class CreatableSlugRelatedField(SlugRelatedField):
             # get_or_create returns (obj, created?) - only want the object
             return self.get_queryset().get_or_create(**{self.slug_field: data})[0]
         except (TypeError, ValueError):
-            self.fail('invalid')
+            self.fail("invalid")
 
 
 class ParticipantAvailabilityForeignKeyField(TournamentHyperlinkedRelatedField):
-    default_tournament_field = 'round__tournament'
+    default_tournament_field = "round__tournament"
 
     def get_tournament(self, obj):
         return obj.round.tournament
 
     def get_url_kwargs(self, obj):
         return {
-            'tournament_slug': self.get_tournament(obj).slug,
-            'pk': obj.object_id,
+            "tournament_slug": self.get_tournament(obj).slug,
+            "pk": obj.object_id,
         }
 
     def get_url(self, obj, view_name, request, format):
-        view_name = 'api-%s-detail' % obj.content_type.model
+        view_name = "api-%s-detail" % obj.content_type.model
         return super().get_url(obj, view_name, request, format)
 
     def get_object(self, view_name, view_args, view_kwargs):
         return {
-            'api-adjudicator-detail': Adjudicator,
-            'api-team-detail': Team,
-            'api-venue-detail': Venue,
-        }[view_name].objects.get(tournament__slug=view_kwargs['tournament_slug'], pk=view_kwargs['pk'])
+            "api-adjudicator-detail": Adjudicator,
+            "api-team-detail": Team,
+            "api-venue-detail": Venue,
+        }[view_name].objects.get(
+            tournament__slug=view_kwargs["tournament_slug"], pk=view_kwargs["pk"]
+        )
 
     def to_internal_value(self, data):
         try:
-            http_prefix = data.startswith(('http:', 'https:'))
+            http_prefix = data.startswith(("http:", "https:"))
         except AttributeError:
-            self.fail('incorrect_type', data_type=type(data).__name__)
+            self.fail("incorrect_type", data_type=type(data).__name__)
 
         if http_prefix:
             # If needed, convert absolute URLs to relative path
             data = parse.urlparse(data).path
             prefix = get_script_prefix()
             if data.startswith(prefix):
-                data = '/' + data[len(prefix):]
+                data = "/" + data[len(prefix) :]
 
         data = uri_to_iri(parse.unquote(data))
 
         try:
             match = resolve(data)
         except Resolver404:
-            self.fail('no_match')
+            self.fail("no_match")
 
-        if match.view_name.split("-")[1] not in ['team', 'adjudicator', 'venue']:
-            self.fail('incorrect_match')
+        if match.view_name.split("-")[1] not in ["team", "adjudicator", "venue"]:
+            self.fail("incorrect_match")
 
         try:
             return self.get_object(match.view_name, match.args, match.kwargs)
         except (ObjectDoesNotExist, ValueError, TypeError):
-            self.fail('does_not_exist')
+            self.fail("does_not_exist")
 
 
 class BaseSourceField(TournamentHyperlinkedRelatedField):
@@ -216,7 +236,7 @@ class BaseSourceField(TournamentHyperlinkedRelatedField):
     well as using an attribute from it, which would not be possible for fear of
     nulls."""
 
-    view_name = ''  # View and model/queryset is dynamic on the object
+    view_name = ""  # View and model/queryset is dynamic on the object
 
     def get_queryset(self):
         return self.model.objects.all()
@@ -225,7 +245,7 @@ class BaseSourceField(TournamentHyperlinkedRelatedField):
         return obj
 
     def to_representation(self, value):
-        format = self.context.get('format', None)
+        format = self.context.get("format", None)
         if format and self.format and self.format != format:
             format = self.format
 
@@ -245,46 +265,55 @@ class BaseSourceField(TournamentHyperlinkedRelatedField):
             return data
 
         try:
-            http_prefix = data.startswith(('http:', 'https:'))
+            http_prefix = data.startswith(("http:", "https:"))
         except AttributeError:
-            self.fail('incorrect_type', data_type=type(data).__name__)
+            self.fail("incorrect_type", data_type=type(data).__name__)
 
         if http_prefix:
             # If needed, convert absolute URLs to relative path
             data = parse.urlparse(data).path
             prefix = get_script_prefix()
             if data.startswith(prefix):
-                data = '/' + data[len(prefix):]
+                data = "/" + data[len(prefix) :]
 
         data = uri_to_iri(data)
         try:
             match = resolve(data)
         except Resolver404:
-            self.fail('no_match')
+            self.fail("no_match")
 
         self.model = {view: model for view, (model, field) in self.models.items()}[match.view_name]
 
         try:
             return self.get_object(match.view_name, match.args, match.kwargs)
         except self.model.DoesNotExist:
-            self.fail('does_not_exist')
+            self.fail("does_not_exist")
 
 
 class ParticipantSourceField(BaseSourceField):
-    field_source_name = 'participant_submitter'
+    field_source_name = "participant_submitter"
     models = {
-        'api-speaker-detail': (Speaker, 'participant_submitter'),
-        'api-adjudicator-detail': (Adjudicator, 'participant_submitter'),
+        "api-speaker-detail": (Speaker, "participant_submitter"),
+        "api-adjudicator-detail": (Adjudicator, "participant_submitter"),
     }
 
     def get_url_options(self, value, format):
         for view_name, (model, field) in self.models.items():
             obj = getattr(value.participant_submitter, model.__name__.lower(), None)
             if obj is not None:
-                return self.get_url(obj, view_name, self.context['request'], format)
+                return self.get_url(obj, view_name, self.context["request"], format)
 
 
-@extend_schema_field({'anyOf': [{"type": "number"}, {"type": "boolean"}, {"type": "string"}, {"type": "array", "items": {"type": "string"}}]})
+@extend_schema_field(
+    {
+        "anyOf": [
+            {"type": "number"},
+            {"type": "boolean"},
+            {"type": "string"},
+            {"type": "array", "items": {"type": "string"}},
+        ]
+    }
+)
 class AnyField(Field):
     def to_representation(self, value):
         return value

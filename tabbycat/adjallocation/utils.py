@@ -25,38 +25,62 @@ def adjudicator_conflicts_display(debates):
         for adj, team in product(debate.adjudicators.all(), debate.teams):
 
             if conflicts.personal_conflict_adj_team(adj, team):
-                conflict_messages[debate].append(("danger", _(
-                    "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> "
-                    "(personal)",
-                ) % {'adjudicator': escape(adj.name), 'team': escape(team.short_name)}))
+                conflict_messages[debate].append(
+                    (
+                        "danger",
+                        _(
+                            "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> "
+                            "(personal)",
+                        )
+                        % {"adjudicator": escape(adj.name), "team": escape(team.short_name)},
+                    )
+                )
 
             for institution in conflicts.conflicting_institutions_adj_team(adj, team):
-                conflict_messages[debate].append(("danger", _(
-                    "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> "
-                    "via institution <strong>%(institution)s</strong>",
-                ) % {
-                    'adjudicator': escape(adj.name),
-                    'team': escape(team.short_name),
-                    'institution': escape(institution.code),
-                }))
+                conflict_messages[debate].append(
+                    (
+                        "danger",
+                        _(
+                            "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> "
+                            "via institution <strong>%(institution)s</strong>",
+                        )
+                        % {
+                            "adjudicator": escape(adj.name),
+                            "team": escape(team.short_name),
+                            "institution": escape(institution.code),
+                        },
+                    )
+                )
 
         for adj1, adj2 in combinations(debate.adjudicators.all(), 2):
 
             if conflicts.personal_conflict_adj_adj(adj1, adj2):
-                conflict_messages[debate].append(("danger", _(
-                    "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> "
-                    "(personal)",
-                ) % {'adjudicator1': escape(adj1.name), 'adjudicator2': escape(adj2.name)}))
+                conflict_messages[debate].append(
+                    (
+                        "danger",
+                        _(
+                            "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> "
+                            "(personal)",
+                        )
+                        % {"adjudicator1": escape(adj1.name), "adjudicator2": escape(adj2.name)},
+                    )
+                )
 
             for institution in conflicts.conflicting_institutions_adj_adj(adj1, adj2):
-                conflict_messages[debate].append(("warning", _(
-                    "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> "
-                    "via institution <strong>%(institution)s</strong>",
-                ) % {
-                    'adjudicator1': escape(adj1.name),
-                    'adjudicator2': escape(adj2.name),
-                    'institution': escape(institution.code),
-                }))
+                conflict_messages[debate].append(
+                    (
+                        "warning",
+                        _(
+                            "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> "
+                            "via institution <strong>%(institution)s</strong>",
+                        )
+                        % {
+                            "adjudicator1": escape(adj1.name),
+                            "adjudicator2": escape(adj2.name),
+                            "institution": escape(institution.code),
+                        },
+                    )
+                )
 
     return conflict_messages
 
@@ -73,11 +97,11 @@ def percentile(n, percent, key=lambda x: x):
     """
     if not n:
         return None
-    k = (len(n)-1) * percent
+    k = (len(n) - 1) * percent
     f = math.floor(k)
     c = math.ceil(k)
     if f == c:
         return key(n[int(k)])
-    d0 = key(n[int(f)]) * (c-k)
-    d1 = key(n[int(c)]) * (k-f)
-    return d0+d1
+    d0 = key(n[int(f)]) * (c - k)
+    d1 = key(n[int(c)]) * (k - f)
+    return d0 + d1

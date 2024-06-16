@@ -7,13 +7,13 @@ from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 class SpeakerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Speaker
-        fields = ('id', 'name', 'gender')
+        fields = ("id", "name", "gender")
 
 
 class SpeakerCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SpeakerCategory
-        fields = ('name',)
+        fields = ("name",)
 
 
 class InstitutionSerializer(serializers.ModelSerializer):
@@ -21,7 +21,7 @@ class InstitutionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Institution
-        fields = ('id', 'name', 'code', 'region')
+        fields = ("id", "name", "code", "region")
 
 
 class AdjudicatorSerializer(serializers.ModelSerializer):
@@ -33,7 +33,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Adjudicator
-        fields = ('id', 'name', 'gender', 'institution')
+        fields = ("id", "name", "gender", "institution")
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -47,5 +47,13 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = ('id', 'short_name', 'long_name', 'code_name', 'points',
-                  'institution', 'speakers', 'break_categories')
+        fields = (
+            "id",
+            "short_name",
+            "long_name",
+            "code_name",
+            "points",
+            "institution",
+            "speakers",
+            "break_categories",
+        )

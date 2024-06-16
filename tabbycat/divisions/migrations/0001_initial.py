@@ -11,21 +11,38 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('tournaments', '0001_initial'),
+        ("tournaments", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Division',
+            name="Division",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50, verbose_name='Name or suffix')),
-                ('seq', models.IntegerField(blank=True, help_text='The order in which divisions are displayed', null=True)),
-                ('time_slot', models.TimeField(blank=True, null=True)),
-                ('tournament', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tournaments.Tournament')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("name", models.CharField(max_length=50, verbose_name="Name or suffix")),
+                (
+                    "seq",
+                    models.IntegerField(
+                        blank=True,
+                        help_text="The order in which divisions are displayed",
+                        null=True,
+                    ),
+                ),
+                ("time_slot", models.TimeField(blank=True, null=True)),
+                (
+                    "tournament",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="tournaments.Tournament"
+                    ),
+                ),
             ],
             options={
-                'ordering': ['tournament', 'seq'],
+                "ordering": ["tournament", "seq"],
             },
         ),
     ]

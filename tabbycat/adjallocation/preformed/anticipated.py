@@ -25,7 +25,7 @@ def calculate_anticipated_draw(round):
     "next round").
     """
 
-    nteamsindebate = 4 if round.tournament.pref('teams_in_debate') == 'bp' else 2
+    nteamsindebate = 4 if round.tournament.pref("teams_in_debate") == "bp" else 2
 
     if round.prev is None or not round.prev.debate_set.exists() or round.is_break_round:
         # Special cases: If this is the first round, everyone will be on zero.
@@ -59,11 +59,13 @@ def calculate_anticipated_draw(round):
         return [(0, 0, 0) for i in range(npanels)]
 
     # 1. Take the (actual) draw of the last round, with team points
-    debates = round.prev.debate_set_with_prefetches(ordering=('room_rank',),
-        teams=True, adjudicators=False, speakers=False, venues=False)
+    debates = round.prev.debate_set_with_prefetches(
+        ordering=("room_rank",), teams=True, adjudicators=False, speakers=False, venues=False
+    )
     if round.prev.prev:
-        populate_win_counts([team for debate in debates for team in debate.teams],
-            round=round.prev.prev)
+        populate_win_counts(
+            [team for debate in debates for team in debate.teams], round=round.prev.prev
+        )
     else:
         # just say everyone is on zero (since no rounds have finished yet)
         for debate in debates:
@@ -82,7 +84,7 @@ def calculate_anticipated_draw(round):
         # one bracket; in these cases it's easy to prove this closed-form
         # guarantee for what the teams in that room will look like afterwards.
         if highest - lowest <= 1:
-            points_after = [(lowest+i, highest+i) for i in points_available]
+            points_after = [(lowest + i, highest + i) for i in points_available]
 
         # For more complicated rooms (e.g. [9, 8, 8, 7]), it gets harder; just
         # use brute force. For few enough rooms this won't be too bad a hit.
@@ -92,7 +94,9 @@ def calculate_anticipated_draw(round):
                 outcome = [n + r for n, r in zip(points_now, result)]
                 outcome.sort(reverse=True)
                 possible_outcomes.append(outcome)
-            points_after = [(min(team_after), max(team_after)) for team_after in zip(*possible_outcomes)]
+            points_after = [
+                (min(team_after), max(team_after)) for team_after in zip(*possible_outcomes)
+            ]
 
         team_points_after.extend(points_after)
 
@@ -107,7 +111,9 @@ def calculate_anticipated_draw(round):
         live_thresholds = calculate_live_thresholds(open_category, round.tournament, round)
         liveness_by_lower = [determine_liveness(live_thresholds, x) for x in lowers]
         liveness_by_upper = [determine_liveness(live_thresholds, x) for x in uppers]
-        liveness_by_team = [x == 'live' or y == 'live' for x, y in zip(liveness_by_lower, liveness_by_upper)]
+        liveness_by_team = [
+            x == "live" or y == "live" for x, y in zip(liveness_by_lower, liveness_by_upper)
+        ]
         liveness = [x.count(True) for x in zip(*([iter(liveness_by_team)] * nteamsindebate))]
     else:
         liveness = [0] * len(debates)

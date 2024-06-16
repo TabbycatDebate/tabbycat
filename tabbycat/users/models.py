@@ -10,13 +10,17 @@ from .permissions import PERM_CACHE_KEY, Permission
 
 class UserPermission(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, verbose_name=_("user"))
-    permission = models.CharField(max_length=50, choices=Permission.choices, verbose_name=_("permission"))
-    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE, verbose_name=_("tournament"))
+    permission = models.CharField(
+        max_length=50, choices=Permission.choices, verbose_name=_("permission")
+    )
+    tournament = models.ForeignKey(
+        "tournaments.Tournament", models.CASCADE, verbose_name=_("tournament")
+    )
 
     class Meta:
         verbose_name = _("user permission")
         verbose_name_plural = _("user permissions")
-        unique_together = [('user', 'permission', 'tournament')]
+        unique_together = [("user", "permission", "tournament")]
 
     def __str__(self):
         return "%s: %s (%s)" % (self.user.username, self.permission, self.tournament.slug)
@@ -32,14 +36,20 @@ class UserPermission(models.Model):
 
 class Group(models.Model):
     name = models.CharField(max_length=100, verbose_name=_("name"))
-    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE, verbose_name=_("tournament"))
-    permissions = ChoiceArrayField(blank=True, default=list,
-        base_field=models.CharField(max_length=50, choices=Permission.choices), verbose_name=_("permissions"))
+    tournament = models.ForeignKey(
+        "tournaments.Tournament", models.CASCADE, verbose_name=_("tournament")
+    )
+    permissions = ChoiceArrayField(
+        blank=True,
+        default=list,
+        base_field=models.CharField(max_length=50, choices=Permission.choices),
+        verbose_name=_("permissions"),
+    )
 
     class Meta:
         verbose_name = _("group")
         verbose_name_plural = _("groups")
-        unique_together = [('name', 'tournament')]
+        unique_together = [("name", "tournament")]
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.tournament.slug)
@@ -52,12 +62,22 @@ class Membership(models.Model):
     class Meta:
         verbose_name = _("group membership")
         verbose_name_plural = _("group memberships")
-        unique_together = [('user', 'group')]
+        unique_together = [("user", "group")]
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        cache.set_many({PERM_CACHE_KEY % (self.user_id, self.group.tournament.slug, str(perm)): True for perm in self.group.permissions})
+        cache.set_many(
+            {
+                PERM_CACHE_KEY % (self.user_id, self.group.tournament.slug, str(perm)): True
+                for perm in self.group.permissions
+            }
+        )
 
     def delete(self, *args, **kwargs):
-        cache.delete_many([PERM_CACHE_KEY % (self.user_id, self.group.tournament.slug, str(perm)) for perm in self.group.permissions])
+        cache.delete_many(
+            [
+                PERM_CACHE_KEY % (self.user_id, self.group.tournament.slug, str(perm))
+                for perm in self.group.permissions
+            ]
+        )
         return super().delete(*args, **kwargs)

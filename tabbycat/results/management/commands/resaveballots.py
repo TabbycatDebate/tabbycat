@@ -11,8 +11,11 @@ class Command(TournamentCommand):
     def handle_tournament(self, tournament, **options):
         ballotsubs = BallotSubmission.objects.filter(debate__round__tournament=tournament)
 
-        self.stdout.write("Resaving {:d} ballots in tournament \"{:s}\"...".format(
-                ballotsubs.count(), tournament.name))
+        self.stdout.write(
+            'Resaving {:d} ballots in tournament "{:s}"...'.format(
+                ballotsubs.count(), tournament.name
+            )
+        )
 
         populate_results(ballotsubs)
         for bsub in ballotsubs:

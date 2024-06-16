@@ -12,13 +12,19 @@ def venuecategoryform_factory(venues_queryset):
 
     class VenueCategoryForm(ModelForm):
 
-        venues = ModelMultipleChoiceField(queryset=venues_queryset,
-            widget=SelectMultiple(attrs={'size': 10}), required=False)
+        venues = ModelMultipleChoiceField(
+            queryset=venues_queryset, widget=SelectMultiple(attrs={"size": 10}), required=False
+        )
         venues.choices = venue_choices  # can't be passed as keyword argument
 
         class Meta:
             model = VenueCategory
-            fields = ('name', 'description', 'display_in_venue_name',
-                       'display_in_public_tooltip', 'venues')
+            fields = (
+                "name",
+                "description",
+                "display_in_venue_name",
+                "display_in_public_tooltip",
+                "venues",
+            )
 
     return VenueCategoryForm

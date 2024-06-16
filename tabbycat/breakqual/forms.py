@@ -9,6 +9,7 @@ from .models import BreakingTeam
 # Breaking teams form
 # ==============================================================================
 
+
 class BreakingTeamsForm(forms.Form):
     """Updates the remarks on breaking teams and regenerates the break."""
 
@@ -20,10 +21,10 @@ class BreakingTeamsForm(forms.Form):
 
     @staticmethod
     def _fieldname_remark(team):  # Team not BreakingTeam
-        return 'remark_%(team)d' % {'team': team.id}
+        return "remark_%(team)d" % {"team": team.id}
 
     def get_remark_field(self, team):  # Team not BreakingTeam
-        return self[self._fieldname_remark(team)].as_widget(attrs={'class': 'form-control'})
+        return self[self._fieldname_remark(team)].as_widget(attrs={"class": "form-control"})
 
     def _bt(self, team):
         return self._bts_by_team_id[team.id]
@@ -34,7 +35,9 @@ class BreakingTeamsForm(forms.Form):
     def _create_and_initialise_fields(self):
         """Dynamically generate fields, one Select for each BreakingTeam."""
         for team in self.category.breaking_teams.all():
-            self.fields[self._fieldname_remark(team)] = OptionalChoiceField(choices=BreakingTeam.REMARK_CHOICES, required=False)
+            self.fields[self._fieldname_remark(team)] = OptionalChoiceField(
+                choices=BreakingTeam.REMARK_CHOICES, required=False
+            )
             try:
                 self.initial[self._fieldname_remark(team)] = self._bt(team).remark
             except KeyError:

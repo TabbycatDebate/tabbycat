@@ -7,39 +7,49 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifications', '0007_migrate_data'),
+        ("notifications", "0007_migrate_data"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='sentmessagerecord',
-            options={'verbose_name': 'sent message', 'verbose_name_plural': 'sent messages'},
+            name="sentmessagerecord",
+            options={"verbose_name": "sent message", "verbose_name_plural": "sent messages"},
         ),
         migrations.AlterField(
-            model_name='sentmessagerecord',
-            name='recipient',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='participants.Person', verbose_name='recipient'),
+            model_name="sentmessagerecord",
+            name="recipient",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="participants.Person",
+                verbose_name="recipient",
+            ),
         ),
         migrations.AlterField(
-            model_name='sentmessagerecord',
-            name='notification',
-            field=models.ForeignKey(null=False, on_delete=django.db.models.deletion.CASCADE, to='notifications.BulkNotification', verbose_name='notification'),
+            model_name="sentmessagerecord",
+            name="notification",
+            field=models.ForeignKey(
+                null=False,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="notifications.BulkNotification",
+                verbose_name="notification",
+            ),
         ),
         migrations.RemoveField(
-            model_name='sentmessagerecord',
-            name='event',
+            model_name="sentmessagerecord",
+            name="event",
         ),
         migrations.RemoveField(
-            model_name='sentmessagerecord',
-            name='round',
+            model_name="sentmessagerecord",
+            name="round",
         ),
         migrations.RemoveField(
-            model_name='sentmessagerecord',
-            name='tournament',
+            model_name="sentmessagerecord",
+            name="tournament",
         ),
         migrations.AlterField(
-            model_name='bulknotification',
-            name='timestamp',
-            field=models.DateTimeField(auto_now_add=True, verbose_name='timestamp')
+            model_name="bulknotification",
+            name="timestamp",
+            field=models.DateTimeField(auto_now_add=True, verbose_name="timestamp"),
         ),
     ]

@@ -7,18 +7,60 @@ import utils.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('draw', '0006_merge_20200904_1639'),
+        ("draw", "0006_merge_20200904_1639"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='debate',
-            name='flags',
-            field=utils.fields.ChoiceArrayField(base_field=models.CharField(choices=[('max_swapped', 'Too many swaps'), ('1u1d_hist', 'One-up-one-down (history)'), ('1u1d_inst', 'One-up-one-down (institution)'), ('1u1d_other', 'One-up-one-down (to accommodate)'), ('bub_up_hist', 'Bubble up (history)'), ('bub_dn_hist', 'Bubble down (history)'), ('bub_up_inst', 'Bubble up (institution)'), ('bub_dn_inst', 'Bubble down (institution)'), ('bub_up_accom', 'Bubble up (to accommodate)'), ('bub_dn_accom', 'Bubble down (to accommodate)'), ('no_bub_updn', "Can't bubble up/down"), ('pullup', 'Pull-up team')], max_length=15), blank=True, default=list, size=None),
+            model_name="debate",
+            name="flags",
+            field=utils.fields.ChoiceArrayField(
+                base_field=models.CharField(
+                    choices=[
+                        ("max_swapped", "Too many swaps"),
+                        ("1u1d_hist", "One-up-one-down (history)"),
+                        ("1u1d_inst", "One-up-one-down (institution)"),
+                        ("1u1d_other", "One-up-one-down (to accommodate)"),
+                        ("bub_up_hist", "Bubble up (history)"),
+                        ("bub_dn_hist", "Bubble down (history)"),
+                        ("bub_up_inst", "Bubble up (institution)"),
+                        ("bub_dn_inst", "Bubble down (institution)"),
+                        ("bub_up_accom", "Bubble up (to accommodate)"),
+                        ("bub_dn_accom", "Bubble down (to accommodate)"),
+                        ("no_bub_updn", "Can't bubble up/down"),
+                        ("pullup", "Pull-up team"),
+                    ],
+                    max_length=15,
+                ),
+                blank=True,
+                default=list,
+                size=None,
+            ),
         ),
         migrations.AlterField(
-            model_name='debateteam',
-            name='flags',
-            field=utils.fields.ChoiceArrayField(base_field=models.CharField(choices=[('max_swapped', 'Too many swaps'), ('1u1d_hist', 'One-up-one-down (history)'), ('1u1d_inst', 'One-up-one-down (institution)'), ('1u1d_other', 'One-up-one-down (to accommodate)'), ('bub_up_hist', 'Bubble up (history)'), ('bub_dn_hist', 'Bubble down (history)'), ('bub_up_inst', 'Bubble up (institution)'), ('bub_dn_inst', 'Bubble down (institution)'), ('bub_up_accom', 'Bubble up (to accommodate)'), ('bub_dn_accom', 'Bubble down (to accommodate)'), ('no_bub_updn', "Can't bubble up/down"), ('pullup', 'Pull-up team')], max_length=15), blank=True, default=list, size=None),
+            model_name="debateteam",
+            name="flags",
+            field=utils.fields.ChoiceArrayField(
+                base_field=models.CharField(
+                    choices=[
+                        ("max_swapped", "Too many swaps"),
+                        ("1u1d_hist", "One-up-one-down (history)"),
+                        ("1u1d_inst", "One-up-one-down (institution)"),
+                        ("1u1d_other", "One-up-one-down (to accommodate)"),
+                        ("bub_up_hist", "Bubble up (history)"),
+                        ("bub_dn_hist", "Bubble down (history)"),
+                        ("bub_up_inst", "Bubble up (institution)"),
+                        ("bub_dn_inst", "Bubble down (institution)"),
+                        ("bub_up_accom", "Bubble up (to accommodate)"),
+                        ("bub_dn_accom", "Bubble down (to accommodate)"),
+                        ("no_bub_updn", "Can't bubble up/down"),
+                        ("pullup", "Pull-up team"),
+                    ],
+                    max_length=15,
+                ),
+                blank=True,
+                default=list,
+                size=None,
+            ),
         ),
     ]

@@ -9,7 +9,7 @@ from results.models import SpeakerScore, TeamScore
 logger = logging.getLogger(__name__)
 
 
-def add_team_round_results(standings, rounds, opponents=False, lookup=None, id_attr='instance_id'):
+def add_team_round_results(standings, rounds, opponents=False, lookup=None, id_attr="instance_id"):
     """Sets, on each item `info` in `standings`, an attribute
     `info.round_results` to be a list of `TeamScore` objects, one for each round
     in `rounds` (in the same order), relating to the team associated with that
@@ -24,12 +24,14 @@ def add_team_round_results(standings, rounds, opponents=False, lookup=None, id_a
     """
 
     if lookup is None:
+
         def lookup(standings, x):
             return standings.get_standing(x)
 
     team_ids = [getattr(info, id_attr) for info in standings]
     teamscores = TeamScore.objects.select_related(
-        'debate_team__team', 'debate_team__debate__round').filter(
+        "debate_team__team", "debate_team__debate__round"
+    ).filter(
         ballot_submission__confirmed=True,
         debate_team__debate__round__in=rounds,
         debate_team__team_id__in=team_ids,
@@ -39,7 +41,11 @@ def add_team_round_results(standings, rounds, opponents=False, lookup=None, id_a
         populate_opponents([ts.debate_team for ts in teamscores])
     else:
         teamscores = teamscores.prefetch_related(
-            Prefetch('debate_team__debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')))
+            Prefetch(
+                "debate_team__debate__debateteam_set",
+                queryset=DebateTeam.objects.select_related("team"),
+            )
+        )
 
     for info in standings:
         info.round_results = [None] * len(rounds)
@@ -52,15 +58,26 @@ def add_team_round_results(standings, rounds, opponents=False, lookup=None, id_a
 
 def add_team_round_results_public(teams, rounds, opponents=False):
     """Sets, on each item `t` in `teams`, the following attributes:
-      - `t.round_results`, a list of `TeamScore` objects, one for each round in
-        `rounds` (in the same order), relating to the team `t`.
-      - `t.points`, the number of points that team has from the rounds in
-        `rounds`.
+    - `t.round_results`, a list of `TeamScore` objects, one for each round in
+      `rounds` (in the same order), relating to the team `t`.
+    - `t.points`, the number of points that team has from the rounds in
+      `rounds`.
     """
-    add_team_round_results(teams, rounds, opponents=opponents,
-        lookup=(lambda teams, x: [t for t in teams if t == x][0]), id_attr='id')
+    add_team_round_results(
+        teams,
+        rounds,
+        opponents=opponents,
+        lookup=(lambda teams, x: [t for t in teams if t == x][0]),
+        id_attr="id",
+    )
     for team in teams:
-        team.points = sum([(ts.points or 0) * ts.debate_team.debate.round.weight for ts in team.round_results if ts is not None])
+        team.points = sum(
+            [
+                (ts.points or 0) * ts.debate_team.debate.round.weight
+                for ts in team.round_results
+                if ts is not None
+            ]
+        )
 
 
 def add_speaker_round_results(standings, rounds, tournament, replies=False):
@@ -72,10 +89,14 @@ def add_speaker_round_results(standings, rounds, tournament, replies=False):
     """
 
     speaker_ids = [info.instance_id for info in standings]
-    speaker_scores = SpeakerScore.objects.select_related('speaker',
-        'ballot_submission', 'debate_team__debate__round').filter(
-        ballot_submission__confirmed=True, debate_team__debate__round__in=rounds,
-        speaker_id__in=speaker_ids, ghost=False)
+    speaker_scores = SpeakerScore.objects.select_related(
+        "speaker", "ballot_submission", "debate_team__debate__round"
+    ).filter(
+        ballot_submission__confirmed=True,
+        debate_team__debate__round__in=rounds,
+        speaker_id__in=speaker_ids,
+        ghost=False,
+    )
 
     if replies:
         speaker_scores = speaker_scores.filter(position=tournament.reply_position)

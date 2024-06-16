@@ -34,22 +34,22 @@ def suppress_logs(name, level, returnto=logging.NOTSET):
         with suppress_logs('results.result', logging.WARNING): # or other level
             # test code
     """
-    if '.' not in name and returnto == logging.NOTSET:
+    if "." not in name and returnto == logging.NOTSET:
         logger.warning("Top-level modules (%s) should not be passed to suppress_logs", name)
 
     suppressed_logger = logging.getLogger(name)
-    suppressed_logger.setLevel(level+1)
+    suppressed_logger.setLevel(level + 1)
     yield
     suppressed_logger.setLevel(returnto)
 
 
 class CompletedTournamentTestMixin:
     """Mixin providing a few convenience functions for tests:
-      - Loads a completed demonstration tournament
-      - Assumes URLs are from said tournament and, optionally, a particular round
+    - Loads a completed demonstration tournament
+    - Assumes URLs are from said tournament and, optionally, a particular round
     """
 
-    fixtures = ['after_round_4.json']
+    fixtures = ["after_round_4.json"]
     round_seq = None
     use_post = False
 
@@ -67,7 +67,7 @@ class CompletedTournamentTestMixin:
         """Convenience function for reversing a URL for the demo tournament,
         and the round if one is specified in the class."""
         if self.round_seq is not None:
-            kwargs.setdefault('round_seq', self.round_seq)
+            kwargs.setdefault("round_seq", self.round_seq)
         return reverse_tournament(view_name, self.tournament, kwargs=kwargs)
 
     def get_response(self, view_name, use_post=False, **kwargs):
@@ -77,12 +77,15 @@ class CompletedTournamentTestMixin:
 
     def assertResponseOK(self, response):  # noqa: N802
         if response.status_code in [301, 302]:
-            self.fail("View %r gave response with status code %d, redirecting "
-                      "to %s (expected 200)" %
-                      (self.view_name, response.status_code, response.url))
+            self.fail(
+                "View %r gave response with status code %d, redirecting "
+                "to %s (expected 200)" % (self.view_name, response.status_code, response.url)
+            )
         elif response.status_code != 200:
-            self.fail("View %r gave response with status code %d (expected 200)" %
-                      (self.view_name, response.status_code))
+            self.fail(
+                "View %r gave response with status code %d (expected 200)"
+                % (self.view_name, response.status_code)
+            )
 
     def assertResponsePermissionDenied(self, response):  # noqa: N802
         self.assertEqual(response.status_code, 403)
@@ -125,8 +128,8 @@ class AuthenticatedTournamentViewSimpleLoadTextMixin(SingleViewTestMixin):
         self.client.logout()
         response = self.get_response()
         target_url = self.reverse_url(self.view_name, **self.get_view_reverse_kwargs())
-        login_url = reverse('login')
-        expected_url = add_query_string_parameter(login_url, 'next', target_url)
+        login_url = reverse("login")
+        expected_url = add_query_string_parameter(login_url, "next", target_url)
         self.assertRedirects(response, expected_url)  # in django.test.SimpleTestCase
 
 
@@ -135,7 +138,7 @@ class AssistantTournamentViewSimpleLoadTestMixin(AuthenticatedTournamentViewSimp
     and don't when user is logged out."""
 
     def authenticate(self):
-        user, _ = get_user_model().objects.get_or_create(username='test_assistant')
+        user, _ = get_user_model().objects.get_or_create(username="test_assistant")
         self.client.force_login(user)
 
         # Double-check authentication, raise error if it looks wrong
@@ -148,7 +151,7 @@ class AdminTournamentViewSimpleLoadTestMixin(AuthenticatedTournamentViewSimpleLo
     don't when user is logged out."""
 
     def authenticate(self):
-        user, _ = get_user_model().objects.get_or_create(username='test_admin', is_superuser=True)
+        user, _ = get_user_model().objects.get_or_create(username="test_admin", is_superuser=True)
         self.client.force_login(user)
 
         # Double-check authentication, raise error if it looks wrong
@@ -174,7 +177,7 @@ class ConditionalTournamentTestsMixin(SingleViewTestMixin):
         raise NotImplementedError
 
     def test_view_enabled(self):
-        values = getattr(self, 'view_toggle_on_values', [self.view_toggle_on_value])
+        values = getattr(self, "view_toggle_on_values", [self.view_toggle_on_value])
         for value in values:
             with self.subTest(value=value):
                 self.tournament.preferences[self.view_toggle_preference] = value
@@ -183,12 +186,12 @@ class ConditionalTournamentTestsMixin(SingleViewTestMixin):
                 self.validate_response(response)
 
     def test_view_disabled(self):
-        values = getattr(self, 'view_toggle_off_values', [self.view_toggle_off_value])
+        values = getattr(self, "view_toggle_off_values", [self.view_toggle_off_value])
         for value in values:
             with self.subTest(value=value):
                 self.tournament.preferences[self.view_toggle_preference] = value
-                with self.assertLogs('tournaments.mixins', logging.WARNING):
-                    with suppress_logs('django.request', logging.WARNING):
+                with self.assertLogs("tournaments.mixins", logging.WARNING):
+                    with suppress_logs("django.request", logging.WARNING):
                         response = self.get_response()
                 self.assertResponsePermissionDenied(response)
 
@@ -204,7 +207,9 @@ class TournamentTestCase(SingleViewTestMixin, TestCase):
     """Extension of django.test.TestCase that provides methods for testing a
     populated view on a tournament, with a prepopulated database.
     Selenium tests can't inherit from this otherwise fixtures won't be loaded;
-    as per https://stackoverflow.com/questions/12041315/how-to-have-django-test-case-and-selenium-server-use-same-database"""
+    as per https://stackoverflow.com/questions/12041315/how-to-have-django-test-case-and-selenium-server-use-same-database
+    """
+
     pass
 
 
@@ -212,20 +217,22 @@ class TableViewTestsMixin:
     """Mixin providing utility functions for table views."""
 
     def get_table_data(self, response):
-        self.assertIn('tables_data', response.context)
-        return json.loads(response.context['tables_data'])
+        self.assertIn("tables_data", response.context)
+        return json.loads(response.context["tables_data"])
 
     def assertNoTables(self, response):  # noqa: N802
         data = self.get_table_data(response)
         self.assertEqual(len(data), 0)
 
-    def assertResponseTableRowCountsEqual(self, response, counts, allow_vacuous=False):  # noqa: N802
+    def assertResponseTableRowCountsEqual(  # noqa: N802
+        self, response, counts, allow_vacuous=False
+    ):
         data = self.get_table_data(response)
         self.assertEqual(len(counts), len(data))
         for count, table in zip(counts, data):
             if not allow_vacuous:
                 self.assertNotEqual(count, 0)  # check the test isn't vacuous
-            self.assertEqual(count, len(table['data']))
+            self.assertEqual(count, len(table["data"]))
 
 
 class ConditionalTableViewTestsMixin(TableViewTestsMixin, ConditionalTournamentTestsMixin):
@@ -251,13 +258,18 @@ class BaseMinimalTournamentTestCase(TestCase):
         for i in range(4):
             ins = Institution.objects.create(code="INS%s" % i, name="Institution %s" % i)
             for j in range(3):
-                t = Team.objects.create(tournament=self.tournament, institution=ins,
-                         reference="Team%s%s" % (i, j))
+                t = Team.objects.create(
+                    tournament=self.tournament, institution=ins, reference="Team%s%s" % (i, j)
+                )
                 for k in range(2):
                     Speaker.objects.create(team=t, name="Speaker%s%s%s" % (i, j, k))
             for j in range(2):
-                Adjudicator.objects.create(tournament=self.tournament, institution=ins,
-                                           name="Adjudicator%s%s" % (i, j), base_score=0)
+                Adjudicator.objects.create(
+                    tournament=self.tournament,
+                    institution=ins,
+                    name="Adjudicator%s%s" % (i, j),
+                    base_score=0,
+                )
 
         for i in range(8):
             Venue.objects.create(name="Venue %s" % i, priority=i, tournament=self.tournament)
@@ -269,7 +281,7 @@ class BaseMinimalTournamentTestCase(TestCase):
         self.tournament.delete()
 
 
-@tag('selenium') # Tagged so we can exclude from CI
+@tag("selenium")  # Tagged so we can exclude from CI
 class SeleniumTestCase(StaticLiveServerTestCase):
     """Used to verify rendered html and javascript functionality on the site as
     rendered. Opens a Chrome window and checks for JS/DOM state on the fixture
@@ -280,15 +292,15 @@ class SeleniumTestCase(StaticLiveServerTestCase):
         super().setUpClass()
         # Capabilities provide access to JS console
         capabilities = DesiredCapabilities.CHROME
-        capabilities['loggingPrefs'] = {'browser': 'ALL'}
+        capabilities["loggingPrefs"] = {"browser": "ALL"}
         cls.selenium = WebDriver(desired_capabilities=capabilities)
         cls.selenium.implicitly_wait(10)
 
     def test_no_js_errors(self):
         # Check console for errors; fail the test if so
-        for entry in self.selenium.get_log('browser'):
-            if entry['level'] == 'SEVERE':
-                raise RuntimeError('Page loaded in selenium has a JS error')
+        for entry in self.selenium.get_log("browser"):
+            if entry["level"] == "SEVERE":
+                raise RuntimeError("Page loaded in selenium has a JS error")
 
     @classmethod
     def tearDownClass(cls):
@@ -297,7 +309,7 @@ class SeleniumTestCase(StaticLiveServerTestCase):
 
 
 class SeleniumTournamentTestCase(SingleViewTestMixin, SeleniumTestCase):
-    """ Basically reimplementing BaseTournamentTest; but use cls not self """
+    """Basically reimplementing BaseTournamentTest; but use cls not self"""
 
     set_preferences = None
     unset_preferences = None

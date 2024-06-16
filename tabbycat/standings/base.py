@@ -73,12 +73,16 @@ class StandingInfo:
 
     def add_metric(self, name, value):
         if name in self.metrics:
-            raise ValueError("There is already a metric {!r} for this {}".format(name, self.model_verbose_name))
+            raise ValueError(
+                "There is already a metric {!r} for this {}".format(name, self.model_verbose_name)
+            )
         self.metrics[name] = value
 
     def add_ranking(self, name, value):
         if name in self.rankings:
-            raise ValueError("There is already a ranking {!r} for this {}".format(name, self.model_verbose_name))
+            raise ValueError(
+                "There is already a ranking {!r} for this {}".format(name, self.model_verbose_name)
+            )
         self.rankings[name] = value
 
     def itermetrics(self):
@@ -256,7 +260,9 @@ class Standings:
         self.ranked = True
 
     def filter(self, include_filter):
-        self.infos = {instance: info for instance, info in self.infos.items() if include_filter(info)}
+        self.infos = {
+            instance: info for instance, info in self.infos.items() if include_filter(info)
+        }
 
     def set_rank_limit(self, rank_limit):
         """Sets the rank limit on these standings. This doesn't affect the data
@@ -277,11 +283,11 @@ class BaseStandingsGenerator:
     }
 
     TIEBREAK_FUNCTIONS = {
-        "random"     : random.shuffle,
+        "random": random.shuffle,
     }
 
     QUERYSET_TIEBREAK_FIELDS = {
-        "random"     : '?',
+        "random": "?",
     }
 
     metric_annotator_classes = {}
@@ -315,7 +321,10 @@ class BaseStandingsGenerator:
             standings.filter(self.options["include_filter"])
 
     def get_rank_filter(self):
-        return lambda info: info.metrics[self.options["rank_filter"][0]] >= self.options["rank_filter"][1]
+        return (
+            lambda info: info.metrics[self.options["rank_filter"][0]]
+            >= self.options["rank_filter"][1]
+        )
 
     def generate(self, queryset, round=None):
         """Generates standings for the objects in queryset. Returns a
@@ -334,14 +343,20 @@ class BaseStandingsGenerator:
         # calculating the metrics (e.g., if it filters teams by participation in
         # a round), so make a new queryset to pass to the metric annotators that
         # relies on a nested ID selection instead.
-        queryset_for_metrics = queryset.model.objects.filter(id__in=queryset.values_list('id', flat=True))
+        queryset_for_metrics = queryset.model.objects.filter(
+            id__in=queryset.values_list("id", flat=True)
+        )
 
-        self._annotate_metrics(queryset_for_metrics, self.distinct_queryset_metric_annotators, standings, round)
+        self._annotate_metrics(
+            queryset_for_metrics, self.distinct_queryset_metric_annotators, standings, round
+        )
 
         for annotator in self.queryset_metric_annotators:
             queryset_for_metrics = annotator.get_annotated_queryset(queryset_for_metrics, round)
 
-        if len(self.precedence) > 0 and set(self.precedence) <= {a.key for a in self.queryset_metric_annotators}:
+        if len(self.precedence) > 0 and set(self.precedence) <= {
+            a.key for a in self.queryset_metric_annotators
+        }:
             # If there is a precedence and all used metrics are combinable aggregation-based,
             # we can use SQL window functions for rankings
             return self.generate_from_queryset(queryset_for_metrics, standings, round)
@@ -363,7 +378,9 @@ class BaseStandingsGenerator:
         aggregations present from the queryset (no repeated metrics)"""
 
         for annotator in self.ranking_annotators:
-            queryset = annotator.get_annotated_queryset(queryset, self.queryset_metric_annotators, *self.options["rank_filter"])
+            queryset = annotator.get_annotated_queryset(
+                queryset, self.queryset_metric_annotators, *self.options["rank_filter"]
+            )
 
         self._annotate_metrics(queryset, self.non_queryset_annotators, standings, round)
 
@@ -423,7 +440,7 @@ class BaseStandingsGenerator:
             try:
                 klass = self.metric_annotator_classes[metric]
             except KeyError:
-                raise StandingsError(_("Unrecognized metric code: \"%(code)s\"") % {'code': metric})
+                raise StandingsError(_('Unrecognized metric code: "%(code)s"') % {"code": metric})
 
             if issubclass(klass, RepeatedMetricAnnotator):
                 earlier_keys = tuple(m for m in self.precedence[0:i] if m != metric)
@@ -444,7 +461,9 @@ class BaseStandingsGenerator:
             if ranked:
                 self.precedence.append(annotator.key)
 
-        self.non_queryset_annotators = [a for a in self.metric_annotators if a not in self.distinct_queryset_metric_annotators]
+        self.non_queryset_annotators = [
+            a for a in self.metric_annotators if a not in self.distinct_queryset_metric_annotators
+        ]
 
     def _interpret_rankings(self, rankings):
         """Given a list of rankings, sets `self.ranking_annotators` to the
@@ -472,7 +491,7 @@ class BaseStandingsGenerator:
                 continue
             if not annotator.listed:
                 continue
-            if hasattr(annotator, 'choice_name'):
+            if hasattr(annotator, "choice_name"):
                 choice_name = annotator.choice_name.capitalize()
             else:
                 choice_name = annotator.name.capitalize()

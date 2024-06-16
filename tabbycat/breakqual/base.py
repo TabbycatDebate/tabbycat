@@ -84,7 +84,7 @@ class BaseBreakGenerator:
                     annotator_class = TeamStandingsGenerator.metric_annotator_classes[metric]
                 except KeyError:
                     return "<unknown metric>"
-                if hasattr(annotator_class, 'choice_name'):
+                if hasattr(annotator_class, "choice_name"):
                     name = annotator_class.choice_name
                 else:
                     name = annotator_class.name
@@ -97,9 +97,10 @@ class BaseBreakGenerator:
                     "The %(rule)s break qualification rule is missing the following "
                     "required metrics in the team standings precedence: %(missing)s",
                     len(missing_metrics),
-                ) % {
-                    'rule': self.category.get_rule_display(),
-                    'missing': ", ".join(_metric_name(metric) for metric in missing_metrics),
+                )
+                % {
+                    "rule": self.category.get_rule_display(),
+                    "missing": ", ".join(_metric_name(metric) for metric in missing_metrics),
                 },
             )
 
@@ -115,7 +116,7 @@ class BaseBreakGenerator:
     def retrieve_standings(self):
         """Retrieves standings and places them in `self.standings`."""
 
-        metrics = self.category.tournament.pref('team_standings_precedence')
+        metrics = self.category.tournament.pref("team_standings_precedence")
         self.check_required_metrics(metrics)
 
         generator = TeamStandingsGenerator(metrics, self.rankings)
@@ -144,7 +145,7 @@ class BaseBreakGenerator:
         existing_remark_teams = self.team_queryset.filter(
             breakingteam__break_category=self.category,
             breakingteam__remark__isnull=False,
-        ).exclude(breakingteam__remark__exact='')
+        ).exclude(breakingteam__remark__exact="")
         different_break_teams = self.team_queryset.exclude(
             breakingteam__remark=BreakingTeam.REMARK_INELIGIBLE,
             breakingteam__break_category__priority__gt=self.category.priority,
@@ -210,13 +211,14 @@ class BaseBreakGenerator:
 
         # first, breaking teams
         break_rank = 1
-        rank = 0 # rank is referenced after the loop, so initialize first
+        rank = 0  # rank is referenced after the loop, so initialize first
         for rank, group in groupby(self.breaking_teams, key=lambda tsi: tsi.get_ranking("rank")):
             group = list(group)
             for tsi in group:
                 bt, _ = BreakingTeam.objects.update_or_create(
-                    break_category=self.category, team=tsi.team,
-                    defaults={'rank': rank, 'break_rank': break_rank, 'remark': None},
+                    break_category=self.category,
+                    team=tsi.team,
+                    defaults={"rank": rank, "break_rank": break_rank, "remark": None},
                 )
                 bts_to_keep.append(bt.id)
                 logger.info("Breaking in %s (rank %s): %s", bt.break_rank, rank, bt.team)
@@ -228,19 +230,22 @@ class BaseBreakGenerator:
                     break_rank -= excess
 
         # then, excluded teams
-        if not hasattr(self, 'hide_excluded_teams_from'):
+        if not hasattr(self, "hide_excluded_teams_from"):
             self.hide_excluded_teams_from = rank
 
         for tsi, remark in self.excluded_teams.items():
             rank = tsi.get_ranking("rank")
             if rank < self.hide_excluded_teams_from:
-                defaults = {'rank': tsi.get_ranking("rank"), 'break_rank': None}
+                defaults = {"rank": tsi.get_ranking("rank"), "break_rank": None}
                 if remark is not None:
-                    defaults['remark'] = remark
+                    defaults["remark"] = remark
                 bt, _ = BreakingTeam.objects.update_or_create(
-                    break_category=self.category, team=tsi.team, defaults=defaults)
+                    break_category=self.category, team=tsi.team, defaults=defaults
+                )
                 bts_to_keep.append(bt.id)
-                logger.info("Excluded from break (%s, %s): %s", bt.rank, bt.get_remark_display(), bt.team)
+                logger.info(
+                    "Excluded from break (%s, %s): %s", bt.rank, bt.get_remark_display(), bt.team
+                )
 
         # finally, delete stray BreakingTeam objects
         self.category.breakingteam_set.exclude(id__in=bts_to_keep).delete()
@@ -249,15 +254,15 @@ class BaseBreakGenerator:
 @register
 class StandardBreakGenerator(BaseBreakGenerator):
     key = "standard"
-    rankings = ('rank',)
+    rankings = ("rank",)
 
     def compute_break(self):
-        self.breaking_teams = self.eligible_teams[:self.break_size]
+        self.breaking_teams = self.eligible_teams[: self.break_size]
 
         # If the last spot is tied, add all tied teams
         if len(self.eligible_teams) >= self.break_size:
-            last_rank = self.eligible_teams[self.break_size-1].get_ranking("rank")
-            for tsi in self.eligible_teams[self.break_size:]:
+            last_rank = self.eligible_teams[self.break_size - 1].get_ranking("rank")
+            for tsi in self.eligible_teams[self.break_size :]:
                 if tsi.get_ranking("rank") != last_rank:
                     break
                 self.breaking_teams.append(tsi)

@@ -4,5 +4,7 @@ from tournaments.mixins import TournamentWebsocketMixin
 from utils.mixins import LoginRequiredWebsocketMixin
 
 
-class ActionLogEntryConsumer(LoginRequiredWebsocketMixin, TournamentWebsocketMixin, JsonWebsocketConsumer):
-    group_prefix = 'actionlogs'
+class ActionLogEntryConsumer(
+    LoginRequiredWebsocketMixin, TournamentWebsocketMixin, JsonWebsocketConsumer
+):
+    group_prefix = "actionlogs"

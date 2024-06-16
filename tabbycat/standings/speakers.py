@@ -18,13 +18,14 @@ logger = logging.getLogger(__name__)
 # Metric annotators
 # ==============================================================================
 
+
 class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     """Base class for annotators for metrics based on conditional aggregations
     of SpeakerScore instances."""
 
     function = None  # Must be set by subclasses
     replies = False
-    field = 'speakerscore__score'
+    field = "speakerscore__score"
 
     def get_annotation(self, round):
         """Returns a QuerySet annotated with the metric given. All positional
@@ -40,13 +41,16 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
         if self.replies:
             annotation_filter &= Q(speakerscore__position=round.tournament.reply_position)
         else:
-            annotation_filter &= Q(speakerscore__position__lte=round.tournament.last_substantive_position)
+            annotation_filter &= Q(
+                speakerscore__position__lte=round.tournament.last_substantive_position
+            )
 
         return self.function(self.field, filter=annotation_filter)
 
 
 class TotalSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for total speaker score."""
+
     key = "total"
     name = _("total")
     abbr = _("Total")
@@ -55,6 +59,7 @@ class TotalSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
 
 class AverageSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for average speaker score."""
+
     key = "average"
     name = _("average")
     abbr = _("Avg")
@@ -81,11 +86,12 @@ class SpeakerTeamPointsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
         if round is not None:
             annotation_filter &= Q(team__debateteam__debate__round__seq__lte=round.seq)
 
-        return Sum('team__debateteam__teamscore__points', filter=annotation_filter)
+        return Sum("team__debateteam__teamscore__points", filter=annotation_filter)
 
 
 class StandardDeviationSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for standard deviation of speaker score."""
+
     key = "stdev"
     name = _("standard deviation")
     abbr = _("Stdev")
@@ -95,6 +101,7 @@ class StandardDeviationSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnn
 
 class NumberOfSpeechesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for number of speeches given."""
+
     key = "count"
     name = _("number of speeches given")
     abbr = _("Num")
@@ -103,6 +110,7 @@ class NumberOfSpeechesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
 
 class TotalReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for total reply score."""
+
     key = "replies_sum"
     name = _("total")
     abbr = _("Total")
@@ -113,6 +121,7 @@ class TotalReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
 
 class AverageReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for average reply score."""
+
     key = "replies_avg"
     name = _("average")
     abbr = _("Avg")
@@ -123,6 +132,7 @@ class AverageReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
 
 class StandardDeviationReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for standard deviation of reply score."""
+
     key = "replies_stddev"
     name = _("standard deviation")
     abbr = _("Stdev")
@@ -134,6 +144,7 @@ class StandardDeviationReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnot
 
 class NumberOfRepliesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for number of replies given."""
+
     key = "replies_count"
     name = _("replies given")
     abbr = _("Num")
@@ -144,12 +155,13 @@ class NumberOfRepliesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
 
 class TrimmedMeanSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for trimmed mean speaker score."""
+
     key = "trimmed_mean"
     name = _("trimmed mean (high-low drop)")
     abbr = _("Trim")
 
     class SpeechCount(NumberOfSpeechesMetricAnnotator):
-        key = 'speech_count'
+        key = "speech_count"
 
     class MaximumScore(SpeakerScoreQuerySetMetricAnnotator):
         function = Max
@@ -171,25 +183,27 @@ class TrimmedMeanSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator
         lowest = self.MinimumScore().get_annotation(round)
 
         return Case(
-            When(speech_count__gt=2, then=(total - highest - lowest) / (F('speech_count') - 2)),
-            When(speech_count__gt=0, then=total / F('speech_count')),
+            When(speech_count__gt=2, then=(total - highest - lowest) / (F("speech_count") - 2)),
+            When(speech_count__gt=0, then=total / F("speech_count")),
             output_field=FloatField(),
         )
 
 
 class SpeakerScoreRankingsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for standard deviation of speaker score."""
+
     key = "srank"
     name = _("speech ranks")
     abbr = _("SRank")
     function = Sum
     ascending = True
-    field = 'speakerscore__rank'
+    field = "speakerscore__rank"
 
 
 # ==============================================================================
 # Standings generator
 # ==============================================================================
+
 
 class SpeakerStandingsGenerator(BaseStandingsGenerator):
     """Class for generating speaker standings. An instance is configured with
@@ -204,26 +218,28 @@ class SpeakerStandingsGenerator(BaseStandingsGenerator):
 
     TIEBREAK_FUNCTIONS = BaseStandingsGenerator.TIEBREAK_FUNCTIONS.copy()
     TIEBREAK_FUNCTIONS["name"] = lambda x: x.sort(key=lambda y: y.speaker.name)
-    TIEBREAK_FUNCTIONS["institution"] = lambda x: x.sort(key=lambda y: y.speaker.team.institution.name)
+    TIEBREAK_FUNCTIONS["institution"] = lambda x: x.sort(
+        key=lambda y: y.speaker.team.institution.name
+    )
 
     QUERYSET_TIEBREAK_FIELDS = BaseStandingsGenerator.QUERYSET_TIEBREAK_FIELDS.copy()
-    QUERYSET_TIEBREAK_FIELDS["name"] = 'name'
-    QUERYSET_TIEBREAK_FIELDS["institution"] = 'team__institution__name'
+    QUERYSET_TIEBREAK_FIELDS["name"] = "name"
+    QUERYSET_TIEBREAK_FIELDS["institution"] = "team__institution__name"
 
     metric_annotator_classes = {
-        "total"         : TotalSpeakerScoreMetricAnnotator,
-        "average"       : AverageSpeakerScoreMetricAnnotator,
-        "trimmed_mean"  : TrimmedMeanSpeakerScoreMetricAnnotator,
-        "team_points"   : SpeakerTeamPointsMetricAnnotator,
-        "stdev"         : StandardDeviationSpeakerScoreMetricAnnotator,
-        "count"         : NumberOfSpeechesMetricAnnotator,
-        "replies_sum"   : TotalReplyScoreMetricAnnotator,
-        "replies_avg"   : AverageReplyScoreMetricAnnotator,
+        "total": TotalSpeakerScoreMetricAnnotator,
+        "average": AverageSpeakerScoreMetricAnnotator,
+        "trimmed_mean": TrimmedMeanSpeakerScoreMetricAnnotator,
+        "team_points": SpeakerTeamPointsMetricAnnotator,
+        "stdev": StandardDeviationSpeakerScoreMetricAnnotator,
+        "count": NumberOfSpeechesMetricAnnotator,
+        "replies_sum": TotalReplyScoreMetricAnnotator,
+        "replies_avg": AverageReplyScoreMetricAnnotator,
         "replies_stddev": StandardDeviationReplyScoreMetricAnnotator,
-        "replies_count" : NumberOfRepliesMetricAnnotator,
-        "srank"         : SpeakerScoreRankingsMetricAnnotator,
+        "replies_count": NumberOfRepliesMetricAnnotator,
+        "srank": SpeakerScoreRankingsMetricAnnotator,
     }
 
     ranking_annotator_classes = {
-        "rank"     : BasicRankAnnotator,
+        "rank": BasicRankAnnotator,
     }

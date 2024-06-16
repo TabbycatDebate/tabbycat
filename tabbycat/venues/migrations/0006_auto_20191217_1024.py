@@ -7,19 +7,31 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tournaments', '0006_auto_20191109_1240'),
-        ('venues', '0005_remove_league_fields'),
+        ("tournaments", "0006_auto_20191109_1240"),
+        ("venues", "0005_remove_league_fields"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='venuecategory',
-            name='tournament',
-            field=models.ForeignKey(blank=False, null=True, on_delete=django.db.models.deletion.CASCADE, to='tournaments.Tournament', verbose_name='tournament'),
+            model_name="venuecategory",
+            name="tournament",
+            field=models.ForeignKey(
+                blank=False,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="tournaments.Tournament",
+                verbose_name="tournament",
+            ),
         ),
         migrations.AlterField(
-            model_name='venue',
-            name='tournament',
-            field=models.ForeignKey(blank=False, null=True, on_delete=django.db.models.deletion.CASCADE, to='tournaments.Tournament', verbose_name='tournament'),
+            model_name="venue",
+            name="tournament",
+            field=models.ForeignKey(
+                blank=False,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="tournaments.Tournament",
+                verbose_name="tournament",
+            ),
         ),
     ]

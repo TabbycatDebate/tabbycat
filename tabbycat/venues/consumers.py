@@ -11,8 +11,8 @@ from .serializers import SimpleDebateVenueSerializer
 class VenuesWorkerConsumer(EditDebateOrPanelWorkerMixin):
 
     def allocate_debate_venues(self, event):
-        round = Round.objects.get(pk=event['extra']['round_id'])
-        group = event['extra']['group_name']
+        round = Round.objects.get(pk=event["extra"]["round_id"])
+        group = event["extra"]["group_name"]
 
         if round.draw_status == Round.Status.RELEASED:
             self.return_error(group, _("Draw is already released, unrelease draw to assign rooms."))
@@ -22,8 +22,8 @@ class VenuesWorkerConsumer(EditDebateOrPanelWorkerMixin):
             return
 
         allocate_venues(round)
-        self.log_action(event['extra'], round, ActionLogEntry.ActionType.VENUES_AUTOALLOCATE)
+        self.log_action(event["extra"], round, ActionLogEntry.ActionType.VENUES_AUTOALLOCATE)
 
         content = self.reserialize_debates(SimpleDebateVenueSerializer, round)
         msg = _("Successfully auto-allocated rooms to debates.")
-        self.return_response(content, group, msg, 'success')
+        self.return_response(content, group, msg, "success")

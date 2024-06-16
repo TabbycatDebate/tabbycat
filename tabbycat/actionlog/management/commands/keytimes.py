@@ -16,18 +16,18 @@ class Command(TournamentCommand):
         writer = csv.writer(self.stdout)
 
         headings = [
-            'round',
-            'create',
-            'importance',
-            'adj-auto',
-            'adj-done',
-            'venues',
-            'motion',
-            'starts-at',
-            'first-in',
-            'first-conf',
-            'last-in',
-            'last-conf',
+            "round",
+            "create",
+            "importance",
+            "adj-auto",
+            "adj-done",
+            "venues",
+            "motion",
+            "starts-at",
+            "first-in",
+            "first-conf",
+            "last-in",
+            "last-conf",
         ]
         writer.writerow(headings)
 
@@ -35,10 +35,12 @@ class Command(TournamentCommand):
 
         for round in rounds:
 
-            queryset = round.actionlogentry_set.order_by('timestamp')
+            queryset = round.actionlogentry_set.order_by("timestamp")
 
             # Find the last adj save before venue allocation
-            venues_last_allocated = queryset.filter(type=ActionLogEntry.ActionType.VENUES_AUTOALLOCATE).last()
+            venues_last_allocated = queryset.filter(
+                type=ActionLogEntry.ActionType.VENUES_AUTOALLOCATE
+            ).last()
             adj_saves = queryset.filter(type=ActionLogEntry.ActionType.ADJUDICATORS_SAVE)
             if venues_last_allocated:
                 adj_saves = adj_saves.filter(timestamp__lte=venues_last_allocated.timestamp)
@@ -46,26 +48,34 @@ class Command(TournamentCommand):
 
             entries = [
                 queryset.filter(type=ActionLogEntry.ActionType.DRAW_CREATE).first(),
-                queryset.filter(type__in=[
-                    ActionLogEntry.ActionType.DEBATE_IMPORTANCE_EDIT,
-                    ActionLogEntry.ActionType.DEBATE_IMPORTANCE_AUTO,
-                ]).first(),
-                queryset.filter(type__in=[
-                    ActionLogEntry.ActionType.ADJUDICATORS_AUTO,
-                    ActionLogEntry.ActionType.PREFORMED_PANELS_DEBATES_AUTO,
-                ]).first(),
+                queryset.filter(
+                    type__in=[
+                        ActionLogEntry.ActionType.DEBATE_IMPORTANCE_EDIT,
+                        ActionLogEntry.ActionType.DEBATE_IMPORTANCE_AUTO,
+                    ]
+                ).first(),
+                queryset.filter(
+                    type__in=[
+                        ActionLogEntry.ActionType.ADJUDICATORS_AUTO,
+                        ActionLogEntry.ActionType.PREFORMED_PANELS_DEBATES_AUTO,
+                    ]
+                ).first(),
                 last_adj_save,
                 venues_last_allocated,
                 # "start at" times goes here
-                queryset.filter(type__in=[
-                    ActionLogEntry.ActionType.BALLOT_CREATE,
-                    ActionLogEntry.ActionType.BALLOT_SUBMIT,
-                ]).first(),
+                queryset.filter(
+                    type__in=[
+                        ActionLogEntry.ActionType.BALLOT_CREATE,
+                        ActionLogEntry.ActionType.BALLOT_SUBMIT,
+                    ]
+                ).first(),
                 queryset.filter(type=ActionLogEntry.ActionType.BALLOT_CONFIRM).first(),
-                queryset.filter(type__in=[
-                    ActionLogEntry.ActionType.BALLOT_CREATE,
-                    ActionLogEntry.ActionType.BALLOT_SUBMIT,
-                ]).last(),
+                queryset.filter(
+                    type__in=[
+                        ActionLogEntry.ActionType.BALLOT_CREATE,
+                        ActionLogEntry.ActionType.BALLOT_SUBMIT,
+                    ]
+                ).last(),
                 queryset.filter(type=ActionLogEntry.ActionType.BALLOT_CONFIRM).last(),
             ]
             times = [timezone.localtime(entry.timestamp) if entry else None for entry in entries]

@@ -6,13 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('breakqual', '0004_auto_20190530_2257'),
+        ("breakqual", "0004_auto_20190530_2257"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='breakcategory',
-            name='rule',
-            field=models.CharField(choices=[('standard', 'Standard'), ('aida-1996', 'AIDA 1996'), ('aida-2016-easters', 'AIDA 2016 (Easters)'), ('aida-2016-australs', 'AIDA 2016 (Australs)'), ('aida-2019-australs-open', 'AIDA 2019 (Australs, Dynamic Cap)')], default='standard', help_text='Rule for how the break is calculated (most tournaments should use "Standard")', max_length=25, verbose_name='rule'),
+            model_name="breakcategory",
+            name="rule",
+            field=models.CharField(
+                choices=[
+                    ("standard", "Standard"),
+                    ("aida-1996", "AIDA 1996"),
+                    ("aida-2016-easters", "AIDA 2016 (Easters)"),
+                    ("aida-2016-australs", "AIDA 2016 (Australs)"),
+                    ("aida-2019-australs-open", "AIDA 2019 (Australs, Dynamic Cap)"),
+                ],
+                default="standard",
+                help_text='Rule for how the break is calculated (most tournaments should use "Standard")',
+                max_length=25,
+                verbose_name="rule",
+            ),
         ),
     ]

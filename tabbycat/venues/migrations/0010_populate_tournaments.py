@@ -4,13 +4,13 @@ from django.db import migrations, models
 
 
 def find_venue_tournament(apps, schema_editor):
-    Venue = apps.get_model('venues', 'Venue')
-    Debate = apps.get_model('draw', 'Debate')
+    Venue = apps.get_model("venues", "Venue")
+    Debate = apps.get_model("draw", "Debate")
 
     venues = []
     venue_qs = Venue.objects.prefetch_related(
-        models.Prefetch('debate_set__round', queryset=Debate.objects.order_by('round').all()),
-        'venuecategory_set',
+        models.Prefetch("debate_set__round", queryset=Debate.objects.order_by("round").all()),
+        "venuecategory_set",
     ).filter(tournament__isnull=True)
     for v in venue_qs:
         cats = [c for c in v.venuecategory_set.all()]
@@ -28,13 +28,13 @@ def find_venue_tournament(apps, schema_editor):
                 v.debate_set.set(debates)
                 v.venuecategory_set.set(cats)
                 v.save()
-    Venue.objects.bulk_update(venues, ['tournament_id'])
+    Venue.objects.bulk_update(venues, ["tournament_id"])
 
 
 def find_venuecat_tournament(apps, schema_editor):
-    VenueCategory = apps.get_model('venues', 'VenueCategory')
+    VenueCategory = apps.get_model("venues", "VenueCategory")
     venuecategories = []
-    for vc in VenueCategory.objects.prefetch_related('venues').filter(tournament__isnull=True):
+    for vc in VenueCategory.objects.prefetch_related("venues").filter(tournament__isnull=True):
         venue_sets = dict(groupby(vc.venues.all(), key=lambda x: x.tournament_id))
         tournaments = set(venue_sets.keys())
         if len(tournaments) == 1:
@@ -48,15 +48,17 @@ def find_venuecat_tournament(apps, schema_editor):
                 vc.tournament_id = tournament_id
                 vc.venues.set(venues)
                 vc.save()
-    VenueCategory.objects.bulk_update(venuecategories, ['tournament_id'])
+    VenueCategory.objects.bulk_update(venuecategories, ["tournament_id"])
 
 
 def find_venue_tournament_via_category(apps, schema_editor):
-    Venue = apps.get_model('venues', 'Venue')
-    VenueCategory = apps.get_model('venues', 'VenueCategory')
+    Venue = apps.get_model("venues", "Venue")
+    VenueCategory = apps.get_model("venues", "VenueCategory")
     venues = []
     venue_qs = Venue.objects.prefetch_related(
-        models.Prefetch('venuecategory_set', queryset=VenueCategory.objects.filter(tournament__isnull=False)),
+        models.Prefetch(
+            "venuecategory_set", queryset=VenueCategory.objects.filter(tournament__isnull=False)
+        ),
     ).filter(tournament__isnull=True)
     for v in venue_qs:
         category_sets = dict(groupby(v.venuecategory_set.all(), key=lambda x: x.tournament_id))
@@ -75,7 +77,7 @@ def find_venue_tournament_via_category(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('venues', '0009_auto_20210307_1810'),
+        ("venues", "0009_auto_20210307_1810"),
     ]
 
     operations = [

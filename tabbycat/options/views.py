@@ -57,7 +57,9 @@ class MultiPreferenceFormView(PreferenceFormView):
             raise Http404
 
 
-class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, TournamentMixin, MultiPreferenceFormView):
+class TournamentPreferenceFormView(
+    AdministratorMixin, LogActionMixin, TournamentMixin, MultiPreferenceFormView
+):
     possible_registries = [global_preferences_registry, tournament_preferences_registry]
     section = None
     template_name = "preferences_section_set.html"
@@ -67,21 +69,24 @@ class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, Tournamen
     action_log_type = ActionLogEntry.ActionType.OPTIONS_EDIT
 
     def form_valid(self, *args, **kwargs):
-        messages.success(self.request, _("Tournament options (%(section)s) saved.") % {'section': self.section.verbose_name})
+        messages.success(
+            self.request,
+            _("Tournament options (%(section)s) saved.") % {"section": self.section.verbose_name},
+        )
         return super().form_valid(*args, **kwargs)
 
     def get_success_url(self):
-        return reverse_tournament('options-tournament-index', self.tournament)
+        return reverse_tournament("options-tournament-index", self.tournament)
 
     def get_form_class(self, *args, **kwargs):
-        section = self.kwargs.get('section', None)
+        section = self.kwargs.get("section", None)
         form_class = tournament_preference_form_builder(instance=self.tournament, section=section)
         return form_class
 
 
 class SetPresetPreferencesView(AdministratorMixin, LogActionMixin, TournamentMixin, FormView):
     template_name = "preset_edit.html"
-    page_emoji = '❔'
+    page_emoji = "❔"
     view_permission = Permission.VIEW_SETTINGS
     edit_permission = Permission.EDIT_SETTINGS
 
@@ -100,10 +105,13 @@ class SetPresetPreferencesView(AdministratorMixin, LogActionMixin, TournamentMix
             raise Http404(str(e))
 
     def get_success_url(self):
-        return reverse_tournament('options-tournament-index', self.tournament)
+        return reverse_tournament("options-tournament-index", self.tournament)
 
     def form_valid(self, form):
         form.update_preferences()
-        messages.success(self.request, _("Tournament options saved based on preset "
-                "%(name)s.") % {'name': self.get_selected_preset().name})
+        messages.success(
+            self.request,
+            _("Tournament options saved based on preset " "%(name)s.")
+            % {"name": self.get_selected_preset().name},
+        )
         return super().form_valid(form)

@@ -4,7 +4,7 @@ from django.forms import ChoiceField, MultiValueField, MultiWidget, Select
 
 logger = logging.getLogger(__name__)
 
-EMPTY_CHOICE = '__no_choice__'
+EMPTY_CHOICE = "__no_choice__"
 
 
 class MultiSelect(MultiWidget):
@@ -26,13 +26,13 @@ class MultiSelect(MultiWidget):
 class MultiValueChoiceField(MultiValueField):
 
     def __init__(self, *args, **kwargs):
-        self.nfields = kwargs.pop('nfields', 5)
-        allow_empty = kwargs.pop('allow_empty', False)
+        self.nfields = kwargs.pop("nfields", 5)
+        allow_empty = kwargs.pop("allow_empty", False)
 
-        choices = kwargs.pop('choices')
+        choices = kwargs.pop("choices")
         choices = list(choices)
         if allow_empty:
-            choices.insert(0, (EMPTY_CHOICE, '--------'))
+            choices.insert(0, (EMPTY_CHOICE, "--------"))
 
         fields = tuple(ChoiceField(choices=choices) for i in range(self.nfields))
         self.widget = MultiSelect(nfields=self.nfields, choices=choices)

@@ -39,11 +39,11 @@ def populate_feedback_scores(adjudicators):
     adjs_annotated = Adjudicator.objects.filter(
         id__in=adjs_by_id.keys(),
         adjudicatorfeedback__in=adjfeedbacks,
-    ).annotate(feedback_score_annotation=Avg('adjudicatorfeedback__score'))
+    ).annotate(feedback_score_annotation=Avg("adjudicatorfeedback__score"))
 
     for adj in adjs_annotated:
         adjs_by_id[adj.id]._feedback_score_cache = adj.feedback_score_annotation
 
     for adj in adjudicators:
-        if not hasattr(adj, '_feedback_score_cache'):
+        if not hasattr(adj, "_feedback_score_cache"):
             adj._feedback_score_cache = None

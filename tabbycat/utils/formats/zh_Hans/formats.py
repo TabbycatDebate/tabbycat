@@ -1,1 +1,1 @@
-BADGE_DATETIME_FORMAT = 'n月j日 H:i'  # '2月8日 16:33'
+BADGE_DATETIME_FORMAT = "n月j日 H:i"  # '2月8日 16:33'

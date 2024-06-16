@@ -34,7 +34,7 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
     """
 
     if feedback_paths is None:
-        feedback_paths = debateadj.debate.round.tournament.pref('feedback_paths')
+        feedback_paths = debateadj.debate.round.tournament.pref("feedback_paths")
     if feedback_paths not in [o[0] for o in FeedbackPaths.choices]:
         logger.error("Unrecognised preference: %s", feedback_paths)
 
@@ -46,22 +46,32 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
     except IndexError:
         pass
     else:
-        if hasattr(test_dadj, 'submitted'):
+        if hasattr(test_dadj, "submitted"):
             for dadj in debateadj.debate.debateadjudicator_set.all():
-                if hasattr(dadj, 'submitted'):
+                if hasattr(dadj, "submitted"):
                     dadj.adjudicator.submitted = dadj.submitted
 
     if debate is None:
         debate = debateadj.debate
     adjudicators = debate.adjudicators
 
-    if feedback_paths == 'no-adjs':
+    if feedback_paths == "no-adjs":
         targets = []
-    elif feedback_paths == 'all-adjs' or debateadj.type == DebateAdjudicator.TYPE_CHAIR:
-        targets = [(adj, pos) for adj, pos in adjudicators.with_positions() if adj.id != debateadj.adjudicator_id]
-    elif feedback_paths == 'with-p-on-p' and debateadj.type == DebateAdjudicator.TYPE_PANEL:
-        targets = [(adj, pos) for adj, pos in adjudicators.with_positions() if adj.id != debateadj.adjudicator_id and pos != AdjudicatorAllocation.POSITION_TRAINEE]
-    elif feedback_paths in ['with-t-on-c', 'with-p-on-p'] or (feedback_paths == 'with-p-on-c' and debateadj.type == DebateAdjudicator.TYPE_PANEL):
+    elif feedback_paths == "all-adjs" or debateadj.type == DebateAdjudicator.TYPE_CHAIR:
+        targets = [
+            (adj, pos)
+            for adj, pos in adjudicators.with_positions()
+            if adj.id != debateadj.adjudicator_id
+        ]
+    elif feedback_paths == "with-p-on-p" and debateadj.type == DebateAdjudicator.TYPE_PANEL:
+        targets = [
+            (adj, pos)
+            for adj, pos in adjudicators.with_positions()
+            if adj.id != debateadj.adjudicator_id and pos != AdjudicatorAllocation.POSITION_TRAINEE
+        ]
+    elif feedback_paths in ["with-t-on-c", "with-p-on-p"] or (
+        feedback_paths == "with-p-on-c" and debateadj.type == DebateAdjudicator.TYPE_PANEL
+    ):
         if adjudicators.has_chair:
             targets = [(adjudicators.chair, AdjudicatorAllocation.POSITION_CHAIR)]
         else:
@@ -76,22 +86,37 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
 def get_feedback_overview(t, adjudicators):
     """Collates feedback statistics for the feedback overview."""
 
-    rounds = list(t.prelim_rounds(until=t.current_round))  # force to list for performance in next querysets
+    rounds = list(
+        t.prelim_rounds(until=t.current_round)
+    )  # force to list for performance in next querysets
 
-    annotated_adjs = adjudicators.filter(id__in=[adj.id for adj in adjudicators]).prefetch_related(
-        Prefetch('adjudicatorfeedback_set', to_attr='adjfeedback_for_rounds',
-            queryset=AdjudicatorFeedback.objects.filter(
-                Q(source_adjudicator__debate__round__in=rounds) | Q(source_team__debate__round__in=rounds),
-                confirmed=True,
-                ignored=False,
-            ).exclude(
-                source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE,
-            ).select_related('source_adjudicator__debate__round', 'source_team__debate__round'),
-        ),
-        Prefetch('debateadjudicator_set', to_attr='debateadjs_for_rounds',
-            queryset=DebateAdjudicator.objects.filter(
-                debate__round__in=rounds).select_related('debate__round')),
-    ).annotate(debates=Count('debateadjudicator'))
+    annotated_adjs = (
+        adjudicators.filter(id__in=[adj.id for adj in adjudicators])
+        .prefetch_related(
+            Prefetch(
+                "adjudicatorfeedback_set",
+                to_attr="adjfeedback_for_rounds",
+                queryset=AdjudicatorFeedback.objects.filter(
+                    Q(source_adjudicator__debate__round__in=rounds)
+                    | Q(source_team__debate__round__in=rounds),
+                    confirmed=True,
+                    ignored=False,
+                )
+                .exclude(
+                    source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE,
+                )
+                .select_related("source_adjudicator__debate__round", "source_team__debate__round"),
+            ),
+            Prefetch(
+                "debateadjudicator_set",
+                to_attr="debateadjs_for_rounds",
+                queryset=DebateAdjudicator.objects.filter(debate__round__in=rounds).select_related(
+                    "debate__round"
+                ),
+            ),
+        )
+        .annotate(debates=Count("debateadjudicator"))
+    )
     annotated_adjs_by_id = {adj.id: adj for adj in annotated_adjs}
 
     for adj in adjudicators:
@@ -124,7 +149,7 @@ def feedback_stats(adj, rounds):
     }
 
     # Start with base score
-    feedback_data = [{'x': 0, 'y': adj.base_score, 'position': "Base Score"}]
+    feedback_data = [{"x": 0, "y": adj.base_score, "position": "Base Score"}]
 
     # Sort into rounds
     feedback_by_round = {r: [] for r in rounds}
@@ -138,11 +163,13 @@ def feedback_stats(adj, rounds):
     for r in rounds:
         scores = [fb.score for fb in feedback_by_round[r]]
         if scores and debateadjs_by_round[r]:
-            feedback_data.append({
-                'x': r.seq,
-                'y': round(mean(scores), 2),  # average score
-                'position_class': adj_classes[debateadjs_by_round[r].type],
-                'position': debateadjs_by_round[r].get_type_display(),
-            })
+            feedback_data.append(
+                {
+                    "x": r.seq,
+                    "y": round(mean(scores), 2),  # average score
+                    "position_class": adj_classes[debateadjs_by_round[r].type],
+                    "position": debateadjs_by_round[r].get_type_display(),
+                }
+            )
 
     return feedback_data

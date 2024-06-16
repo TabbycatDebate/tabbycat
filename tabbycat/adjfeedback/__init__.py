@@ -1,1 +1,1 @@
-default_app_config = 'adjfeedback.apps.AdjFeedbackConfig'
+default_app_config = "adjfeedback.apps.AdjFeedbackConfig"

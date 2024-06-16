@@ -12,7 +12,9 @@ class TestRoundChecks(TestCase):
     """Tests the checks in the Round model for potential allocation errors."""
 
     def setUp(self):
-        self.tournament = Tournament.objects.create(slug="roundcheckstest", name="Round checks test")
+        self.tournament = Tournament.objects.create(
+            slug="roundcheckstest", name="Round checks test"
+        )
         self.round = Round.objects.create(tournament=self.tournament, seq=1)
         self.debates = []
         self.venues = []
@@ -21,12 +23,18 @@ class TestRoundChecks(TestCase):
         for i in [1, 2]:
             venue = Venue.objects.create(name=f"Venue {i}", priority=0)
             debate = Debate.objects.create(round=self.round, room_rank=i, venue=venue)
-            team1 = Team.objects.create(tournament=self.tournament, reference=f"Team {i}A", use_institution_prefix=False)
-            team2 = Team.objects.create(tournament=self.tournament, reference=f"Team {i}B", use_institution_prefix=False)
+            team1 = Team.objects.create(
+                tournament=self.tournament, reference=f"Team {i}A", use_institution_prefix=False
+            )
+            team2 = Team.objects.create(
+                tournament=self.tournament, reference=f"Team {i}B", use_institution_prefix=False
+            )
             adj = Adjudicator.objects.create(tournament=self.tournament, name=f"Adjudicator {i}")
             DebateTeam.objects.create(debate=debate, team=team1, side=DebateTeam.Side.AFF)
             DebateTeam.objects.create(debate=debate, team=team2, side=DebateTeam.Side.NEG)
-            DebateAdjudicator.objects.create(debate=debate, adjudicator=adj, type=DebateAdjudicator.TYPE_CHAIR)
+            DebateAdjudicator.objects.create(
+                debate=debate, adjudicator=adj, type=DebateAdjudicator.TYPE_CHAIR
+            )
             self.debates.append(debate)
             self.venues.append(venue)
             self.teams.append([team1, team2])
@@ -38,8 +46,9 @@ class TestRoundChecks(TestCase):
 
     def test_duplicate_panellists(self):
         self.assertEqual(self.round.duplicate_panellists.count(), 0)
-        DebateAdjudicator.objects.create(debate=self.debates[1], adjudicator=self.adjs[0],
-            type=DebateAdjudicator.TYPE_PANEL)
+        DebateAdjudicator.objects.create(
+            debate=self.debates[1], adjudicator=self.adjs[0], type=DebateAdjudicator.TYPE_PANEL
+        )
         self.assertEqual(self.round.duplicate_panellists.count(), 1)
         self.assertEqual(self.round.duplicate_panellists.first(), self.adjs[0])
 
@@ -63,7 +72,9 @@ class TestRoundChecks(TestCase):
     def test_num_debates_without_chair(self):
         self.assertEqual(self.round.num_debates_without_chair, 0)
         del self.round.num_debates_without_chair
-        DebateAdjudicator.objects.filter(debate=self.debates[0]).update(type=DebateAdjudicator.TYPE_PANEL)
+        DebateAdjudicator.objects.filter(debate=self.debates[0]).update(
+            type=DebateAdjudicator.TYPE_PANEL
+        )
         self.assertEqual(self.round.num_debates_without_chair, 1)
         del self.round.num_debates_without_chair
         DebateAdjudicator.objects.filter(debate=self.debates[0]).delete()
@@ -72,13 +83,15 @@ class TestRoundChecks(TestCase):
     def test_num_debates_with_even_panel(self):
         self.assertEqual(self.round.num_debates_with_even_panel, 0)
         del self.round.num_debates_with_even_panel
-        DebateAdjudicator.objects.create(debate=self.debates[0], adjudicator=self.adjs[1],
-            type=DebateAdjudicator.TYPE_PANEL)
+        DebateAdjudicator.objects.create(
+            debate=self.debates[0], adjudicator=self.adjs[1], type=DebateAdjudicator.TYPE_PANEL
+        )
         self.assertEqual(self.round.num_debates_with_even_panel, 1)
         trainee = Adjudicator.objects.create(tournament=self.tournament, name="Trainee")
         del self.round.num_debates_with_even_panel
-        DebateAdjudicator.objects.create(debate=self.debates[0], adjudicator=trainee,
-            type=DebateAdjudicator.TYPE_TRAINEE)
+        DebateAdjudicator.objects.create(
+            debate=self.debates[0], adjudicator=trainee, type=DebateAdjudicator.TYPE_TRAINEE
+        )
         self.assertEqual(self.round.num_debates_with_even_panel, 1)
 
     def test_num_debates_without_venue(self):

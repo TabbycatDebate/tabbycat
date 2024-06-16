@@ -8,41 +8,72 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('adjfeedback', '0006_auto_20191109_1240'),
+        ("adjfeedback", "0006_auto_20191109_1240"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='adjudicatorfeedbackquestion',
-            name='choices_temp',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.TextField(), blank=True, help_text="Permissible choices for select one/multiple fields (ignored for other fields)", size=None, verbose_name='choices', default=list),
+            model_name="adjudicatorfeedbackquestion",
+            name="choices_temp",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.TextField(),
+                blank=True,
+                help_text="Permissible choices for select one/multiple fields (ignored for other fields)",
+                size=None,
+                verbose_name="choices",
+                default=list,
+            ),
         ),
         migrations.RunSQL(
             sql="UPDATE adjfeedback_adjudicatorfeedbackquestion SET choices_temp=string_to_array(choices, '//');",
             reverse_sql="UPDATE adjfeedback_adjudicatorfeedbackquestion SET choices=array_to_string(choices_temp, '//');",
         ),
         migrations.RemoveField(
-            model_name='adjudicatorfeedbackquestion',
-            name='choices',
+            model_name="adjudicatorfeedbackquestion",
+            name="choices",
         ),
         migrations.RenameField(
-            model_name='adjudicatorfeedbackquestion',
-            old_name='choices_temp',
-            new_name='choices',
+            model_name="adjudicatorfeedbackquestion",
+            old_name="choices_temp",
+            new_name="choices",
         ),
         migrations.CreateModel(
-            name='AdjudicatorFeedbackManyAnswer',
+            name="AdjudicatorFeedbackManyAnswer",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('answer', django.contrib.postgres.fields.ArrayField(base_field=models.TextField(), size=None)),
-                ('feedback', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='adjfeedback.AdjudicatorFeedback', verbose_name='feedback')),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='adjfeedback.AdjudicatorFeedbackQuestion', verbose_name='question')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "answer",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.TextField(), size=None
+                    ),
+                ),
+                (
+                    "feedback",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="adjfeedback.AdjudicatorFeedback",
+                        verbose_name="feedback",
+                    ),
+                ),
+                (
+                    "question",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="adjfeedback.AdjudicatorFeedbackQuestion",
+                        verbose_name="question",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'adjudicator feedback multiple select answer',
-                'verbose_name_plural': 'adjudicator feedback multiple select answers',
-                'abstract': False,
-                'unique_together': {('question', 'feedback')},
+                "verbose_name": "adjudicator feedback multiple select answer",
+                "verbose_name_plural": "adjudicator feedback multiple select answers",
+                "abstract": False,
+                "unique_together": {("question", "feedback")},
             },
         ),
         migrations.RunSQL(

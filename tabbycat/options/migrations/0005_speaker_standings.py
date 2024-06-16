@@ -4,7 +4,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('options', '0004_convert_tournament_staff'),
+        ("options", "0004_convert_tournament_staff"),
     ]
 
     operations = [

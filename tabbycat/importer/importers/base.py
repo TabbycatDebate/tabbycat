@@ -6,14 +6,19 @@ import re
 from collections import Counter
 from types import GeneratorType
 
-from django.core.exceptions import FieldError, MultipleObjectsReturned, ObjectDoesNotExist, ValidationError
+from django.core.exceptions import (
+    FieldError,
+    MultipleObjectsReturned,
+    ObjectDoesNotExist,
+    ValidationError,
+)
 
-NON_FIELD_ERRORS = '__all__'
+NON_FIELD_ERRORS = "__all__"
 DUPLICATE_INFO = 19  # Logging level just below INFO
-logging.addLevelName(DUPLICATE_INFO, 'DUPLICATE_INFO')
+logging.addLevelName(DUPLICATE_INFO, "DUPLICATE_INFO")
 
-TRUE_VALUES = ('true', 'yes', 't', 'y', '1')
-FALSE_VALUES = ('false', 'no', 'f', 'n', '0')
+TRUE_VALUES = ("true", "yes", "t", "y", "1")
+FALSE_VALUES = ("false", "no", "f", "n", "0")
 
 
 def convert_bool(value):
@@ -22,32 +27,36 @@ def convert_bool(value):
     elif value.lower() in FALSE_VALUES:
         return False
     else:
-        raise ValueError('Invalid boolean value: %s' % (value,))
+        raise ValueError("Invalid boolean value: %s" % (value,))
 
 
 def make_interpreter(DELETE=[], **kwargs):  # noqa: N803
     """Convenience function for building an interpreter. The default interpreter
     (i.e. the one returned if no arguments are passed to this function) just
     removes blank values."""
+
     def interpreter(lineno, line):
         # remove blank and unwanted values
         line = {
-            fieldname: value for fieldname, value in line.items() if (
-                value != '' and
-                value is not None and
-                fieldname not in DELETE and
-                not any(callable(delete) and delete(fieldname) for delete in DELETE)
+            fieldname: value
+            for fieldname, value in line.items()
+            if (
+                value != ""
+                and value is not None
+                and fieldname not in DELETE
+                and not any(callable(delete) and delete(fieldname) for delete in DELETE)
             )
         }
 
         # populate interpreted values
         for fieldname, interpret in kwargs.items():
-            if not callable(interpret): # if it's a value, always populate
+            if not callable(interpret):  # if it's a value, always populate
                 line[fieldname] = interpret
-            elif fieldname in line: # if it's a function, interpret only if already there
+            elif fieldname in line:  # if it's a function, interpret only if already there
                 line[fieldname] = interpret(line[fieldname])
 
         return line
+
     return interpreter
 
 
@@ -60,13 +69,15 @@ def make_lookup(name, choices):
     choices must be specified as lower-case. For example, one entry in the
     choices dict might be: {('female', 'f'): 'F'}
     """
+
     def lookup(val):
         if not val:
-            return ''
+            return ""
         for k, v in choices.items():
             if val.lower().replace("-", " ") in k:
                 return v
         raise ValueError("Unrecognised value for %s: %s" % (name, val))
+
     return staticmethod(lookup)
 
 
@@ -95,7 +106,12 @@ class TournamentDataImporterError(Exception):
             if self.field == NON_FIELD_ERRORS:
                 return "line %d, creating %s: %s" % (self.lineno, self.model, self.message)
             else:
-                return "line %d, creating %s, in field '%s': %s" % (self.lineno, self.model, self.field, self.message)
+                return "line %d, creating %s, in field '%s': %s" % (
+                    self.lineno,
+                    self.model,
+                    self.field,
+                    self.message,
+                )
 
     def __init__(self):
         self.entries = []
@@ -116,11 +132,11 @@ class TournamentDataImporterError(Exception):
 
     def update_with_validation_error(self, lineno, model, ve):
         """Adds the information in a Django ValidationError to this error."""
-        if hasattr(ve, 'error_dict'):
+        if hasattr(ve, "error_dict"):
             for field, error_list in list(ve.error_dict.items()):
                 for error in error_list:
                     self.add(lineno, model, "; ".join(error), field)
-        elif hasattr(ve, 'error_list'):
+        elif hasattr(ve, "error_list"):
             for error in ve.error_list:
                 self.add(lineno, model, "; ".join(error), NON_FIELD_ERRORS)
         else:
@@ -155,11 +171,13 @@ class BaseTournamentDataImporter(object):
 
     def __init__(self, tournament, **kwargs):
         self.tournament = tournament
-        self.strict = kwargs.get('strict', True)
-        self.logger = kwargs.get('logger', None) or logging.getLogger(__name__) # don't evaluate default unless necessary
-        if 'loglevel' in kwargs:
-            self.logger.setLevel(kwargs['loglevel'])
-        self.expect_unique = kwargs.get('expect_unique', True)
+        self.strict = kwargs.get("strict", True)
+        self.logger = kwargs.get("logger", None) or logging.getLogger(
+            __name__
+        )  # don't evaluate default unless necessary
+        if "loglevel" in kwargs:
+            self.logger.setLevel(kwargs["loglevel"])
+        self.expect_unique = kwargs.get("expect_unique", True)
         self.reset_counts()
 
     def reset_counts(self):
@@ -203,7 +221,7 @@ class BaseTournamentDataImporter(object):
         `expect_unique` is False, it will just skip objects that would be
         duplicates and log a DUPLICATE_INFO message to say so.
         """
-        if hasattr(csvfile, 'seek') and callable(csvfile.seek):
+        if hasattr(csvfile, "seek") and callable(csvfile.seek):
             csvfile.seek(0)
         reader = csv.DictReader(csvfile)
         kwargs_seen = list()
@@ -212,9 +230,11 @@ class BaseTournamentDataImporter(object):
         if expect_unique is None:
             expect_unique = self.expect_unique
         skipped_because_existing = 0
-        boolean_fields = [field.name for field in model._meta.get_fields()
-                          if hasattr(field, 'get_internal_type') and
-                          field.get_internal_type() == 'BooleanField']
+        boolean_fields = [
+            field.name
+            for field in model._meta.get_fields()
+            if hasattr(field, "get_internal_type") and field.get_internal_type() == "BooleanField"
+        ]
 
         for lineno, line in enumerate(reader, start=2):
 
@@ -227,9 +247,14 @@ class BaseTournamentDataImporter(object):
             try:
                 kwargs_list = interpreter(lineno, line)
                 if isinstance(kwargs_list, GeneratorType):
-                    kwargs_list = list(kwargs_list) # force evaluation
-            except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError,
-                    TypeError, IndexError) as e:
+                    kwargs_list = list(kwargs_list)  # force evaluation
+            except (
+                ObjectDoesNotExist,
+                MultipleObjectsReturned,
+                ValueError,
+                TypeError,
+                IndexError,
+            ) as e:
                 message = "Couldn't parse line: " + str(e)
                 errors.add(lineno, model, message)
                 continue
@@ -257,7 +282,12 @@ class BaseTournamentDataImporter(object):
                 if boolean_error:
                     continue
 
-                description = model.__name__ + "(" + ", ".join(["%s=%r" % args for args in kwargs.items()]) + ")"
+                description = (
+                    model.__name__
+                    + "("
+                    + ", ".join(["%s=%r" % args for args in kwargs.items()])
+                    + ")"
+                )
 
                 # Check if it's a duplicate
                 kwargs_expect_unique = kwargs.copy()
@@ -282,13 +312,22 @@ class BaseTournamentDataImporter(object):
                 except FieldError as e:
                     match = re.match(r"Cannot resolve keyword '(\w+)' into field.", str(e))
                     if match:
-                        message = "There's an unrecognized column header in this file: {}".format(match.group(1))
+                        message = "There's an unrecognized column header in this file: {}".format(
+                            match.group(1)
+                        )
                         self.logger.error(message)
-                        self.logger.error("I was trying to import %s at the time.", model._meta.verbose_name_plural)
+                        self.logger.error(
+                            "I was trying to import %s at the time.",
+                            model._meta.verbose_name_plural,
+                        )
                         self.logger.error("The original error was: " + str(e))
-                        self.logger.error("If you're writing a new importer, it might be that you "
-                                "need to delete some columns from the dict in your interpreter.")
-                        self.logger.error("If using construct_interpreter(), you can do this with the DELETE argument.")
+                        self.logger.error(
+                            "If you're writing a new importer, it might be that you "
+                            "need to delete some columns from the dict in your interpreter."
+                        )
+                        self.logger.error(
+                            "If using construct_interpreter(), you can do this with the DELETE argument."
+                        )
                         raise TournamentDataImporterFatalError(message)
                     else:
                         raise
@@ -335,7 +374,9 @@ class BaseTournamentDataImporter(object):
 
         self.logger.info("Imported %d %s", len(instances), model._meta.verbose_name_plural)
         if skipped_because_existing:
-            self.logger.info("(skipped %d %s)", skipped_because_existing, model._meta.verbose_name_plural)
+            self.logger.info(
+                "(skipped %d %s)", skipped_because_existing, model._meta.verbose_name_plural
+            )
 
         self.counts.update({model: len(instances)})
 

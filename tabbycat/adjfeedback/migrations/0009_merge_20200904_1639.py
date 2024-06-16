@@ -6,9 +6,8 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('adjfeedback', '0007_auto_20200613_1527'),
-        ('adjfeedback', '0008_auto_20200705_1317'),
+        ("adjfeedback", "0007_auto_20200613_1527"),
+        ("adjfeedback", "0008_auto_20200705_1317"),
     ]
 
-    operations = [
-    ]
+    operations = []

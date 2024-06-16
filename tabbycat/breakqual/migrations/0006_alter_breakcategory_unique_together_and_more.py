@@ -7,39 +7,48 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('breakqual', '0005_remove_league_fields'),
-        ('participants', '0021_team_seed'),
-        ('tournaments', '0010_alter_round_draw_type'),
+        ("breakqual", "0005_remove_league_fields"),
+        ("participants", "0021_team_seed"),
+        ("tournaments", "0010_alter_round_draw_type"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='breakcategory',
+            name="breakcategory",
             unique_together=set(),
         ),
         migrations.AlterUniqueTogether(
-            name='breakingteam',
+            name="breakingteam",
             unique_together=set(),
         ),
         migrations.AlterIndexTogether(
-            name='breakcategory',
+            name="breakcategory",
             index_together=set(),
         ),
         migrations.AlterField(
-            model_name='breakcategory',
-            name='is_general',
-            field=models.BooleanField(help_text='Are teams eligible for this break by default', verbose_name='is general'),
+            model_name="breakcategory",
+            name="is_general",
+            field=models.BooleanField(
+                help_text="Are teams eligible for this break by default", verbose_name="is general"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='breakcategory',
-            constraint=utils.models.UniqueConstraint(fields=('tournament', 'seq'), name='breakqu_breakcategory_tournament__seq_uniq'),
+            model_name="breakcategory",
+            constraint=utils.models.UniqueConstraint(
+                fields=("tournament", "seq"), name="breakqu_breakcategory_tournament__seq_uniq"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='breakcategory',
-            constraint=utils.models.UniqueConstraint(fields=('tournament', 'slug'), name='breakqu_breakcategory_tournament__slug_uniq'),
+            model_name="breakcategory",
+            constraint=utils.models.UniqueConstraint(
+                fields=("tournament", "slug"), name="breakqu_breakcategory_tournament__slug_uniq"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='breakingteam',
-            constraint=utils.models.UniqueConstraint(fields=('break_category', 'team'), name='breakqu_breakingteam_break_category__team_uniq'),
+            model_name="breakingteam",
+            constraint=utils.models.UniqueConstraint(
+                fields=("break_category", "team"),
+                name="breakqu_breakingteam_break_category__team_uniq",
+            ),
         ),
     ]

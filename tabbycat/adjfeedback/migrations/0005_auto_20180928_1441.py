@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('adjfeedback', '0004_adjudicatorfeedback_ignored'),
+        ("adjfeedback", "0004_adjudicatorfeedback_ignored"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='adjudicatorfeedbackquestion',
-            name='choices',
-            field=models.TextField(blank=True, help_text="Permissible choices for select one/multiple fields, separated by '//' (ignored for other fields)", verbose_name='choices'),
+            model_name="adjudicatorfeedbackquestion",
+            name="choices",
+            field=models.TextField(
+                blank=True,
+                help_text="Permissible choices for select one/multiple fields, separated by '//' (ignored for other fields)",
+                verbose_name="choices",
+            ),
         ),
     ]

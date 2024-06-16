@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 class BaseAidaBreakGenerator(StandardBreakGenerator):
     key = None
-    rankings = ('rank', 'institution_rank')
+    rankings = ("rank", "institution_rank")
     institution_cap = 3
 
     def compute_break(self):
@@ -43,7 +43,12 @@ class Aida1996BreakGenerator(BaseAidaBreakGenerator):
         for tsi in self.eligible_teams:
             institution_rank = tsi.get_ranking("institution_rank")
             if institution_rank > self.institution_cap:
-                logger.info("Capped out, institution rank %d, cap %d: %s", institution_rank, self.institution_cap, tsi.team)
+                logger.info(
+                    "Capped out, institution rank %d, cap %d: %s",
+                    institution_rank,
+                    self.institution_cap,
+                    tsi.team,
+                )
                 self.capped_teams.append(tsi)
 
         for tsi in self.capped_teams:
@@ -52,7 +57,7 @@ class Aida1996BreakGenerator(BaseAidaBreakGenerator):
 
 
 class BaseAida2016BreakGenerator(BaseAidaBreakGenerator):
-    required_metrics = ('wins',)
+    required_metrics = ("wins",)
 
     def exclude_capped_teams(self):
         """Excludes teams that are subject to the institution cap."""
@@ -61,12 +66,14 @@ class BaseAida2016BreakGenerator(BaseAidaBreakGenerator):
             return
 
         # ii. Discard teams with fewer wins than the nth ranked team
-        min_wins = self.eligible_teams[self.break_size-1].metrics["wins"]
-        self.eligible_teams = [tsi for tsi in self.eligible_teams if tsi.metrics["wins"] >= min_wins]
+        min_wins = self.eligible_teams[self.break_size - 1].metrics["wins"]
+        self.eligible_teams = [
+            tsi for tsi in self.eligible_teams if tsi.metrics["wins"] >= min_wins
+        ]
 
         # natural_break_cutoff is the (true) rank of the last breaking team,
         # not allowing for the cap but allowing for ineligible teams.
-        natural_break_cutoff = self.eligible_teams[self.break_size-1].get_ranking("rank")
+        natural_break_cutoff = self.eligible_teams[self.break_size - 1].get_ranking("rank")
         self.capped_teams = []
 
         # iii. Set aside teams that are capped out
@@ -75,10 +82,17 @@ class BaseAida2016BreakGenerator(BaseAidaBreakGenerator):
             if institution_rank is None:
                 continue
             elif institution_rank > 1 and tsi.get_ranking("rank") > natural_break_cutoff:
-                logger.info("Capped out post-cutoff, institution rank %d: %s", institution_rank, tsi.team)
+                logger.info(
+                    "Capped out post-cutoff, institution rank %d: %s", institution_rank, tsi.team
+                )
                 self.capped_teams.append(tsi)
             elif institution_rank > self.institution_cap:
-                logger.info("Capped out pre-cutoff, institution rank %d, cap %d: %s", institution_rank, self.institution_cap, tsi.team)
+                logger.info(
+                    "Capped out pre-cutoff, institution rank %d, cap %d: %s",
+                    institution_rank,
+                    self.institution_cap,
+                    tsi.team,
+                )
                 self.capped_teams.append(tsi)
 
         # iv. Reinsert capped teams if there are too few breaking
@@ -104,7 +118,9 @@ class BaseAida2016BreakGenerator(BaseAidaBreakGenerator):
         reinsert = []
         number_to_reinsert = self.break_size - len(self.eligible_teams) + len(self.capped_teams)
 
-        for _, group in groupby(teams_eligible_for_reinsertion, key=lambda tsi: tuple(tsi.itermetrics())):
+        for _, group in groupby(
+            teams_eligible_for_reinsertion, key=lambda tsi: tuple(tsi.itermetrics())
+        ):
             group = list(group)
             reinsert.extend(group)
             logger.info("Reinserting: %s", str(group))
@@ -130,8 +146,11 @@ class Aida2016EastersBreakGenerator(BaseAida2016BreakGenerator):
 
     def reinsert_capped_teams(self):
         # Easters rules give teams capped out post-cutoff priority
-        post_cutoff_capped_teams = [tsi for tsi in self.capped_teams
-            if tsi.get_ranking("institution_rank") <= self.institution_cap]
+        post_cutoff_capped_teams = [
+            tsi
+            for tsi in self.capped_teams
+            if tsi.get_ranking("institution_rank") <= self.institution_cap
+        ]
         self._reinsert_capped_teams(post_cutoff_capped_teams)
         self._reinsert_capped_teams(self.capped_teams)
 
@@ -146,6 +165,7 @@ class Aida2019AustralsBreakGenerator(BaseAida2016AustralsBreakGenerator):
     """Calculates the number of teams by which the break exceeds the base of 16
     teams. Then expands the institutional cap by 1 team for every 8 additional
     teams."""
+
     key = "aida-2019-australs-open"
 
     def compute_break(self):
@@ -155,5 +175,9 @@ class Aida2019AustralsBreakGenerator(BaseAida2016AustralsBreakGenerator):
     def calculate_cap(self):
         additional_teams = self.break_size - 16 if self.break_size >= 16 else 0
         self.institution_cap = 3 + math.floor(additional_teams / 8)
-        logger.info("Break size of %d teams exceeds the 16-team base by %d. The institutional cap is set at %d.",
-                self.break_size, additional_teams, self.institution_cap)
+        logger.info(
+            "Break size of %d teams exceeds the 16-team base by %d. The institutional cap is set at %d.",
+            self.break_size,
+            additional_teams,
+            self.institution_cap,
+        )

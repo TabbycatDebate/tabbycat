@@ -9,10 +9,10 @@ logger = logging.getLogger(__name__)
 class AdjudicatorAllocation:
     """Class for handling the adjudicators on a panel."""
 
-    POSITION_CHAIR = 'c'
-    POSITION_ONLY = 'o'
-    POSITION_PANELLIST = 'p'
-    POSITION_TRAINEE = 't'
+    POSITION_CHAIR = "c"
+    POSITION_ONLY = "o"
+    POSITION_PANELLIST = "p"
+    POSITION_TRAINEE = "t"
 
     def __init__(self, container, chair=None, panellists=None, trainees=None, from_db=False):
         """The `container` is a model instance that relates to adjudicators via
@@ -30,7 +30,9 @@ class AdjudicatorAllocation:
 
         if from_db:
             if chair or panellists or trainees:
-                warn("The chair, panellists and trainees arguments are ignored when from_db is used.")
+                warn(
+                    "The chair, panellists and trainees arguments are ignored when from_db is used."
+                )
             self.chair = None
             self.panellists = []
             self.trainees = []
@@ -47,7 +49,7 @@ class AdjudicatorAllocation:
             # there isn't a prefetch done, we add a prefetch here to avoid
             # duplicate adjudicator SQLqueries.
             if not debateadjs._prefetch_done:
-                debateadjs = debateadjs.prefetch_related('adjudicator')
+                debateadjs = debateadjs.prefetch_related("adjudicator")
 
             for a in debateadjs:
                 if a.type == DebateAdjudicator.TYPE_CHAIR:
@@ -93,10 +95,12 @@ class AdjudicatorAllocation:
         return item == self.chair or item in self.panellists or item in self.trainees
 
     def __eq__(self, other):
-        return self.container == other.container and \
-            self.chair == other.chair and \
-            set(self.panellists) == set(other.panellists) and \
-            set(self.trainees) == set(other.trainees)
+        return (
+            self.container == other.container
+            and self.chair == other.chair
+            and set(self.panellists) == set(other.panellists)
+            and set(self.trainees) == set(other.trainees)
+        )
 
     # ==========================================================================
     # Booleans and other quick properties
@@ -201,5 +205,8 @@ class AdjudicatorAllocation:
             if not adj:
                 continue
             _, created = self.container.related_adjudicator_set.update_or_create(
-                    adjudicator=adj, defaults={'type': t})
-            logger.debug("%s: %s, %s, %s", "Created" if created else "Updated", self.container, adj, t)
+                adjudicator=adj, defaults={"type": t}
+            )
+            logger.debug(
+                "%s: %s, %s, %s", "Created" if created else "Updated", self.container, adj, t
+            )

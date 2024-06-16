@@ -7,21 +7,23 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('breakqual', '0006_alter_breakcategory_unique_together_and_more'),
-        ('tournaments', '0011_alter_round_starts_at'),
+        ("breakqual", "0006_alter_breakcategory_unique_together_and_more"),
+        ("tournaments", "0011_alter_round_starts_at"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='round',
+            name="round",
             unique_together=set(),
         ),
         migrations.AlterIndexTogether(
-            name='round',
+            name="round",
             index_together=set(),
         ),
         migrations.AddConstraint(
-            model_name='round',
-            constraint=utils.models.UniqueConstraint(fields=('tournament', 'seq'), name='tournam_round_tournament__seq_uniq'),
+            model_name="round",
+            constraint=utils.models.UniqueConstraint(
+                fields=("tournament", "seq"), name="tournam_round_tournament__seq_uniq"
+            ),
         ),
     ]

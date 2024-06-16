@@ -1,1 +1,1 @@
-default_app_config = 'breakqual.apps.BreakQualConfig'
+default_app_config = "breakqual.apps.BreakQualConfig"

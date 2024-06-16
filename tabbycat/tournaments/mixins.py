@@ -22,8 +22,12 @@ from participants.models import Institution, Speaker
 from participants.prefetch import populate_win_counts
 from participants.serializers import InstitutionSerializer
 from tournaments.serializers import RoundSerializer, TournamentSerializer
-from utils.misc import (add_query_string_parameter, redirect_tournament,
-                        reverse_round, reverse_tournament)
+from utils.misc import (
+    add_query_string_parameter,
+    redirect_tournament,
+    reverse_round,
+    reverse_tournament,
+)
 from utils.mixins import AssistantMixin, CacheMixin, TabbycatPageTitlesMixin
 from utils.serializers import django_rest_json_render
 
@@ -36,6 +40,7 @@ logger = logging.getLogger(__name__)
 # Mixins providing access to tournament and round from URL
 # ==============================================================================
 
+
 class TournamentFromUrlMixin:
     """Provides the `tournament` property, looking in the cache and URL path,
     and keeping its own local cache.
@@ -44,6 +49,7 @@ class TournamentFromUrlMixin:
     be inherited via `TournamentMixin` (for views) or `TournamentWebsocketMixin`
     (for websocket consumers).
     """
+
     tournament_slug_url_kwarg = "tournament_slug"
     tournament_cache_key = "{slug}_object"
     tournament_redirect_pattern_name = None
@@ -80,13 +86,15 @@ class TournamentMixin(TabbycatPageTitlesMixin, TournamentFromUrlMixin):
     regular expression. They should then call `self.tournament` to
     retrieve the tournament.
     """
+
     def get_redirect_url(self, *args, **kwargs):
         # Override if self.tournament_redirect_pattern_name is specified,
         # otherwise just pass down the chain
         if self.tournament_redirect_pattern_name:
             try:
-                return reverse_tournament(self.tournament_redirect_pattern_name,
-                        self.tournament, args=args, kwargs=kwargs)
+                return reverse_tournament(
+                    self.tournament_redirect_pattern_name, self.tournament, args=args, kwargs=kwargs
+                )
             except NoReverseMatch:
                 logger.warning("No reverse match for %s", self.tournament_redirect_pattern_name)
                 pass
@@ -96,48 +104,75 @@ class TournamentMixin(TabbycatPageTitlesMixin, TournamentFromUrlMixin):
     def dispatch(self, request, *args, **kwargs):
         t = self.tournament
 
-        if not getattr(settings, 'DISABLE_SENTRY', False):
+        if not getattr(settings, "DISABLE_SENTRY", False):
             from sentry_sdk import set_context
-            set_context("Tabbycat debug info", {
-                "Tab director email": getattr(settings, 'TAB_DIRECTOR_EMAIL', "not provided"),
-                "Tournament preferences": self.tournament.preferences.all(),
-            })
+
+            set_context(
+                "Tabbycat debug info",
+                {
+                    "Tab director email": getattr(settings, "TAB_DIRECTOR_EMAIL", "not provided"),
+                    "Tournament preferences": self.tournament.preferences.all(),
+                },
+            )
 
         # Lack of current_round caused by creating a tournament without rounds
         if t.current_round is None:
-            if hasattr(self.request, 'user') and self.request.user.is_superuser:
-                messages.warning(request, _("You've been redirected to this "
-                    "page because tournament %(tournament)s has no rounds. "
-                    "Please create some before returning to the admin site.") %
-                    {'tournament': t.name})
-                admin_url = reverse('admin:tournaments_round_changelist')
+            if hasattr(self.request, "user") and self.request.user.is_superuser:
+                messages.warning(
+                    request,
+                    _(
+                        "You've been redirected to this "
+                        "page because tournament %(tournament)s has no rounds. "
+                        "Please create some before returning to the admin site."
+                    )
+                    % {"tournament": t.name},
+                )
+                admin_url = reverse("admin:tournaments_round_changelist")
                 return redirect(admin_url)
             else:
                 logger.warning("Current round wasn't set, redirecting to site index")
-                messages.warning(request, _("There's a problem with the data "
-                    "for the tournament %(tournament)s. Please contact a "
-                    "tab director and ask them to investigate.") %
-                    {'tournament': t.name})
-                url = add_query_string_parameter(reverse('tabbycat-index'), 'redirect', 'false')
+                messages.warning(
+                    request,
+                    _(
+                        "There's a problem with the data "
+                        "for the tournament %(tournament)s. Please contact a "
+                        "tab director and ask them to investigate."
+                    )
+                    % {"tournament": t.name},
+                )
+                url = add_query_string_parameter(reverse("tabbycat-index"), "redirect", "false")
                 return redirect(url)
 
         try:
             return super().dispatch(request, *args, **kwargs)
         except (MultipleDebateTeamsError, NoDebateTeamFoundError):
-            if hasattr(self.request, 'user') and self.request.user.is_superuser:
-                logger.warning("Debate team side assignment error, redirecting "
-                               "to tournament-fix-debate-teams")
-                messages.warning(request, _("You've been redirected to this "
-                    "page because of a problem with how teams are assigned to "
-                    "sides in a debate."))
-                return redirect_tournament('tournament-fix-debate-teams', t)
+            if hasattr(self.request, "user") and self.request.user.is_superuser:
+                logger.warning(
+                    "Debate team side assignment error, redirecting "
+                    "to tournament-fix-debate-teams"
+                )
+                messages.warning(
+                    request,
+                    _(
+                        "You've been redirected to this "
+                        "page because of a problem with how teams are assigned to "
+                        "sides in a debate."
+                    ),
+                )
+                return redirect_tournament("tournament-fix-debate-teams", t)
             else:
-                logger.warning("Debate team side assignment error, redirecting "
-                               "to tournament-public-index")
-                messages.warning(request, _("There's a problem with how teams "
-                    "are assigned to sides in a debate. The tab director will "
-                    "need to resolve this issue."))
-                return redirect_tournament('tournament-public-index', t)
+                logger.warning(
+                    "Debate team side assignment error, redirecting " "to tournament-public-index"
+                )
+                messages.warning(
+                    request,
+                    _(
+                        "There's a problem with how teams "
+                        "are assigned to sides in a debate. The tab director will "
+                        "need to resolve this issue."
+                    ),
+                )
+                return redirect_tournament("tournament-public-index", t)
 
 
 class TournamentWebsocketMixin(TournamentFromUrlMixin):
@@ -148,6 +183,7 @@ class TournamentWebsocketMixin(TournamentFromUrlMixin):
     stream; the name of the group is a concatenation of this and the tournament
     slug.
     """
+
     group_prefix = None
 
     def get_url_kwargs(self):
@@ -155,28 +191,34 @@ class TournamentWebsocketMixin(TournamentFromUrlMixin):
 
     def group_name(self):
         if self.group_prefix is None:
-            raise ImproperlyConfigured("group_prefix must be specified on subclasses of TournamentWebsocketMixin")
-        return self.group_prefix + '_' + self.tournament.slug
+            raise ImproperlyConfigured(
+                "group_prefix must be specified on subclasses of TournamentWebsocketMixin"
+            )
+        return self.group_prefix + "_" + self.tournament.slug
 
     def send_error(self, error, message, original_content):
         # Need to forcibly decode the string (for translations)
-        self.send_json({
-            'error': force_str(error),
-            'message': force_str(message),
-            'original_content': original_content,
-            'component_id': original_content['component_id'],
-        })
+        self.send_json(
+            {
+                "error": force_str(error),
+                "message": force_str(message),
+                "original_content": original_content,
+                "component_id": original_content["component_id"],
+            }
+        )
         return super()
 
     def connect(self):
         async_to_sync(self.channel_layer.group_add)(
-            self.group_name(), self.channel_name,
+            self.group_name(),
+            self.channel_name,
         )
         super().connect()
 
     def disconnect(self, message):
         async_to_sync(self.channel_layer.group_discard)(
-            self.group_name(), self.channel_name,
+            self.group_name(),
+            self.channel_name,
         )
         super().disconnect(message)
 
@@ -189,6 +231,7 @@ class RoundFromUrlMixin(TournamentFromUrlMixin):
     be inherited via `RoundMixin` (for views) or `RoundWebsocketMixin` (for
     websocket consumers).
     """
+
     round_seq_url_kwarg = "round_seq"
     round_cache_key = "{slug}_{seq}_object"
     round_redirect_pattern_name = None
@@ -231,9 +274,12 @@ class RoundMixin(RoundFromUrlMixin, TournamentMixin):
     """
 
     def get_page_subtitle(self):
-        if not getattr(self, "page_subtitle") and not getattr(self, "use_template_subtitle", False) \
-                and self.round is not None:
-            return _("for %(round)s") % {'round': self.round.name}
+        if (
+            not getattr(self, "page_subtitle")
+            and not getattr(self, "use_template_subtitle", False)
+            and self.round is not None
+        ):
+            return _("for %(round)s") % {"round": self.round.name}
         else:
             return super().get_page_subtitle()
 
@@ -242,8 +288,9 @@ class RoundMixin(RoundFromUrlMixin, TournamentMixin):
         # otherwise just pass down the chain
         if self.round_redirect_pattern_name:
             try:
-                return reverse_round(self.round_redirect_pattern_name,
-                                     self.round, args=args, kwargs=kwargs)
+                return reverse_round(
+                    self.round_redirect_pattern_name, self.round, args=args, kwargs=kwargs
+                )
             except NoReverseMatch:
                 pass
         return super().get_redirect_url(*args, **kwargs)
@@ -260,9 +307,10 @@ class RoundWebsocketMixin(RoundFromUrlMixin, TournamentWebsocketMixin):
     This mixin includes `TournamentWebsocketMixin`, so classes using it do not
     need to explicitly inherit from both.
     """
+
     def group_name(self):
         tournament_path = super().group_name()
-        return tournament_path + '_' + str(self.round.seq)
+        return tournament_path + "_" + str(self.round.seq)
 
 
 class CurrentRoundMixin(RoundMixin, ContextMixin):
@@ -275,13 +323,14 @@ class CurrentRoundMixin(RoundMixin, ContextMixin):
 
     def get_context_data(self, **kwargs):
         # Middleware won't find this in the URL, so add it ourselves
-        kwargs['round'] = self.round
+        kwargs["round"] = self.round
         return super().get_context_data(**kwargs)
 
 
 # ==============================================================================
 # Mixins regulating public and assistant tournament views
 # ==============================================================================
+
 
 class TournamentAccessControlledPageMixin(TournamentMixin):
     """Base mixin for views that can be enabled and disabled by a tournament
@@ -294,7 +343,7 @@ class TournamentAccessControlledPageMixin(TournamentMixin):
         return TemplateResponse(
             request=self.request,
             template=self.template_403_name,
-            context={'user_role': self._user_role},
+            context={"user_role": self._user_role},
             status=403,
         )
 
@@ -365,12 +414,13 @@ class OptionalAssistantTournamentPageMixin(AssistantMixin, TournamentAccessContr
             return False
         if self.assistant_page_permissions is None:
             raise ImproperlyConfigured("assistant_page_permissions isn't set on this view.")
-        return tournament.pref('assistant_access') in self.assistant_page_permissions
+        return tournament.pref("assistant_access") in self.assistant_page_permissions
 
 
 # ==============================================================================
 # Mixins extending SingleObjectMixin for tournaments
 # ==============================================================================
+
 
 class SingleObjectFromTournamentMixin(SingleObjectMixin, TournamentMixin):
     """Mixin for views that relate to a single object that is part of a
@@ -378,7 +428,7 @@ class SingleObjectFromTournamentMixin(SingleObjectMixin, TournamentMixin):
     tournament."""
 
     allow_null_tournament = False
-    tournament_field_name = 'tournament'
+    tournament_field_name = "tournament"
 
     def get_queryset(self):
         # Filter for this tournament; if self.allow_null_tournament is True,
@@ -399,11 +449,12 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
     `model` field of the class as they would for `SingleObjectMixin`. This model
     should have a slug field called `url_key`.
     """
-    slug_field = 'url_key'
-    slug_url_kwarg = 'url_key'
+
+    slug_field = "url_key"
+    slug_url_kwarg = "url_key"
 
     def get_context_data(self, **kwargs):
-        kwargs['private_url'] = True
+        kwargs["private_url"] = True
         return super().get_context_data(**kwargs)
 
 
@@ -411,41 +462,42 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
 # Drag-and-drop mixins
 # ==============================================================================
 
+
 class DragAndDropMixin(RoundMixin):
 
     def get_extra_info(self):
-        """ Unlike meta_info everything under extra info is json serialised
+        """Unlike meta_info everything under extra info is json serialised
         automatically. Designed for simple key/value pairs"""
-        extra_info = {} # Set by view for top bar toggles
-        extra_info['codeNames'] = self.tournament.pref('team_code_names')
-        extra_info['highlights'] = {}
+        extra_info = {}  # Set by view for top bar toggles
+        extra_info["codeNames"] = self.tournament.pref("team_code_names")
+        extra_info["highlights"] = {}
 
         bcs = self.tournament.breakcategory_set.all()
         serialised_bcs = []
         for bc in bcs:
             safe, dead = calculate_live_thresholds(bc, self.tournament, self.round)
             serialised_bc = {
-                'pk': bc.id,
-                'fields': {'name': bc.name, 'safe': safe, 'dead': dead},
+                "pk": bc.id,
+                "fields": {"name": bc.name, "safe": safe, "dead": dead},
             }
             serialised_bcs.append(serialised_bc)
 
         if self.round.stage == self.round.Stage.PRELIMINARY:
-            extra_info['highlights']['break'] = serialised_bcs
+            extra_info["highlights"]["break"] = serialised_bcs
 
-        extra_info['backUrl'] = reverse_round('draw', self.round)
-        extra_info['backLabel'] = _("Return to Draw")
+        extra_info["backUrl"] = reverse_round("draw", self.round)
+        extra_info["backLabel"] = _("Return to Draw")
         return extra_info
 
     def get_meta_info(self):
-        """ Data universal to all allocation views; these are accessed
-        directly from the template so only the value & not the key are JSON. """
+        """Data universal to all allocation views; these are accessed
+        directly from the template so only the value & not the key are JSON."""
         serialized_round = RoundSerializer(self.round)
         serialized_tournament = TournamentSerializer(self.tournament)
         return {
-            'round': self.json_render(serialized_round.data),
-            'tournament': self.json_render(serialized_tournament.data),
-            'extra': json.dumps(self.get_extra_info()),
+            "round": self.json_render(serialized_round.data),
+            "tournament": self.json_render(serialized_tournament.data),
+            "extra": json.dumps(self.get_extra_info()),
         }
 
     def json_render(self, data):
@@ -463,10 +515,10 @@ class DragAndDropMixin(RoundMixin):
         return self.json_render(serialized_draw.data)
 
     def get_context_data(self, **kwargs):
-        kwargs['vueDebatesOrPanels'] = self.get_serialised_debates_or_panels()
-        kwargs['vueAllocatableItems'] = self.get_serialised_allocatable_items()
-        kwargs['vueInstitutions'] = self.get_serialised_institutions()
-        kwargs['vueMetaInfo'] = self.get_meta_info()
+        kwargs["vueDebatesOrPanels"] = self.get_serialised_debates_or_panels()
+        kwargs["vueAllocatableItems"] = self.get_serialised_allocatable_items()
+        kwargs["vueInstitutions"] = self.get_serialised_institutions()
+        kwargs["vueMetaInfo"] = self.get_meta_info()
         return super().get_context_data(**kwargs)
 
 
@@ -476,28 +528,42 @@ class DebateDragAndDropMixin(DragAndDropMixin):
     prefetch_venues = True
 
     def get_draw_or_panels_objects(self):
-        selects = ('round__tournament', 'venue')
+        selects = ("round__tournament", "venue")
         prefetches = ()
         if self.prefetch_venues:
-            prefetches += ('venue__venuecategory_set',)
+            prefetches += ("venue__venuecategory_set",)
         if self.prefetch_adjs:
-            prefetches += (Prefetch('debateadjudicator_set',
-                queryset=DebateAdjudicator.objects.select_related('adjudicator')),)
+            prefetches += (
+                Prefetch(
+                    "debateadjudicator_set",
+                    queryset=DebateAdjudicator.objects.select_related("adjudicator"),
+                ),
+            )
         if self.prefetch_teams:
-            prefetches += (Prefetch('debateteam_set',
-                queryset=DebateTeam.objects.select_related('team').prefetch_related(
-                    Prefetch('team__speaker_set', queryset=Speaker.objects.order_by('name')),
-                    'team__break_categories',
-                )),
+            prefetches += (
+                Prefetch(
+                    "debateteam_set",
+                    queryset=DebateTeam.objects.select_related("team").prefetch_related(
+                        Prefetch("team__speaker_set", queryset=Speaker.objects.order_by("name")),
+                        "team__break_categories",
+                    ),
+                ),
             )
         else:
-            prefetches += (Prefetch('debateteam_set',
-                queryset=DebateTeam.objects.select_related('team').prefetch_related(
-                    'team__break_categories',
-                )),
+            prefetches += (
+                Prefetch(
+                    "debateteam_set",
+                    queryset=DebateTeam.objects.select_related("team").prefetch_related(
+                        "team__break_categories",
+                    ),
+                ),
             )
 
-        draw = self.round.debate_set.exclude(debateteam__side=DebateTeam.Side.BYE).select_related(*selects).prefetch_related(*prefetches)
+        draw = (
+            self.round.debate_set.exclude(debateteam__side=DebateTeam.Side.BYE)
+            .select_related(*selects)
+            .prefetch_related(*prefetches)
+        )
 
         if self.prefetch_teams:
             populate_win_counts([dt.team for debate in draw for dt in debate.debateteam_set.all()])

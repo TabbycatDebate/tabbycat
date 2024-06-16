@@ -22,7 +22,7 @@ print(draw_dir)
 del draw_dir
 
 from draw.generator import DrawGenerator  # noqa: E402 (has to come after path modification above)
-from draw.tests.utils import TestTeam     # noqa: E402 (has to come after path modification above)
+from draw.tests.utils import TestTeam  # noqa: E402 (has to come after path modification above)
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("rounds", type=int, help="Number of rounds")
@@ -37,7 +37,7 @@ K = args.insts
 assert T % 2 == 0
 
 teams = list()
-for i in range(1, T+1):
+for i in range(1, T + 1):
     team = TestTeam(i, random.choice(string.ascii_uppercase[:K]), 0, list(), side_history=[0, 0])
     teams.append(team)
 
@@ -77,13 +77,25 @@ for i in range(R):
             team.points += 1
 
 for team in sorted(teams, key=lambda x: x.points, reverse=True):
-    print("({id}, '{inst}', {points}, {hist}, {side_history}),".format(
-        id=team.id, inst=team.institution, points=team.points,
-        hist=[t.id for t in team.hist], side_history=team.side_history))
+    print(
+        "({id}, '{inst}', {points}, {hist}, {side_history}),".format(
+            id=team.id,
+            inst=team.institution,
+            points=team.points,
+            hist=[t.id for t in team.hist],
+            side_history=team.side_history,
+        )
+    )
 
 print("")
 
 for team in sorted(teams, key=lambda x: x.points, reverse=True):
-    print("{id}, {inst}, {points}, {hist}, {side_history}".format(
-        id=team.id, inst=team.institution, points=team.points,
-        hist=", ".join([str(t.id) for t in team.hist]), side_history=team.side_history))
+    print(
+        "{id}, {inst}, {points}, {hist}, {side_history}".format(
+            id=team.id,
+            inst=team.institution,
+            points=team.points,
+            hist=", ".join([str(t.id) for t in team.hist]),
+            side_history=team.side_history,
+        )
+    )

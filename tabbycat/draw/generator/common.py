@@ -17,6 +17,7 @@ class DrawUserError(BaseDrawError):
 
     Because DrawUserErrors expected and rectifier, the strings that go into them
     should be internationalised (marked for translation)."""
+
     pass
 
 
@@ -27,12 +28,12 @@ class DrawFatalError(BaseDrawError):
     and shown to the user as an error message. However, because they should
     never happen, their messages are not internationalised, since that just
     creates unnecessary work for translators."""
+
     pass
 
 
 class BaseDrawGenerator:
-    """Base class for generators for all draw types, for both two-team and BP.
-    """
+    """Base class for generators for all draw types, for both two-team and BP."""
 
     # Subclasses must define BASE_DEFAULT_OPTIONS
 
@@ -48,22 +49,33 @@ class BaseDrawGenerator:
 
         if self.requires_even_teams:
             if not len(self.teams) % self.TEAMS_PER_DEBATE == 0:
-                raise DrawUserError(_("The number of teams presented for the draw was not "
-                        "a multiple of %(num)d.") % {'num': self.TEAMS_PER_DEBATE})
+                raise DrawUserError(
+                    _(
+                        "The number of teams presented for the draw was not "
+                        "a multiple of %(num)d."
+                    )
+                    % {"num": self.TEAMS_PER_DEBATE}
+                )
             if not self.teams:
                 raise DrawUserError(_("There were no teams for the draw."))
 
         if results is None and self.requires_prev_results:
-            raise TypeError("'results' is required for draw of type {0:s}".format(
-                    self.__class__.__name__))
+            raise TypeError(
+                "'results' is required for draw of type {0:s}".format(self.__class__.__name__)
+            )
 
         if results is not None and not self.requires_prev_results:
-            logger.warning("'results' not required for draw of type %s, will probably be ignored",
-                    self.__class__.__name__)
+            logger.warning(
+                "'results' not required for draw of type %s, will probably be ignored",
+                self.__class__.__name__,
+            )
 
         if rrseq is None and self.requires_rrseq:
-            raise TypeError("'rrseq' (round robin sequence) is required for draw of type {0:s}".format(
-                    self.__class__.__name__))
+            raise TypeError(
+                "'rrseq' (round robin sequence) is required for draw of type {0:s}".format(
+                    self.__class__.__name__
+                )
+            )
 
         # Compute the full dictionary of default options
         self.options = self.BASE_DEFAULT_OPTIONS.copy()
@@ -119,8 +131,11 @@ class BaseDrawGenerator:
         has_attribute = [hasattr(x, name) for x in self.teams]
         if not all(has_attribute):
             offending_teams = has_attribute.count(False)
-            raise DrawFatalError("{0} out of {1} teams don't have a '{name}' attribute.".format(
-                offending_teams, len(self.teams), name=name))
+            raise DrawFatalError(
+                "{0} out of {1} teams don't have a '{name}' attribute.".format(
+                    offending_teams, len(self.teams), name=name
+                )
+            )
 
         if choices:
             attribute_value_valid = [getattr(x, name) in choices for x in self.teams]
@@ -131,7 +146,9 @@ class BaseDrawGenerator:
 
         if not all(attribute_value_valid):
             offending_teams = attribute_value_valid.count(False)
-            message = "{0} out of {1} teams have an invalid '{name}' attribute.".format(offending_teams, len(self.teams), name=name)
+            message = "{0} out of {1} teams have an invalid '{name}' attribute.".format(
+                offending_teams, len(self.teams), name=name
+            )
             if choices:
                 message += " Valid choices: " + ", ".join(map(repr, choices))
             raise DrawFatalError(message)
@@ -156,18 +173,18 @@ class BasePairDrawGenerator(BaseDrawGenerator):
         "avoid_institution" - if True, draw tries to avoid pairing teams that
             are from the same institution.
         "side_penalty" - A penalty to apply when optimizing with side balance
-        """
+    """
 
     BASE_DEFAULT_OPTIONS = {
-        "side_allocations"      : "balance",
-        "avoid_history"         : True,
-        "avoid_institution"     : True,
-        "history_penalty"       : 1e3,
-        "institution_penalty"   : 1,
-        "side_penalty"          : 0,
+        "side_allocations": "balance",
+        "avoid_history": True,
+        "avoid_institution": True,
+        "history_penalty": 1e3,
+        "institution_penalty": 1,
+        "side_penalty": 0,
         "pullup_debates_penalty": 0,
-        "pairing_penalty"       : 0,
-        "avoid_conflicts"       : "off",
+        "pairing_penalty": 0,
+        "avoid_conflicts": "off",
     }
 
     TEAMS_PER_DEBATE = 2
@@ -196,7 +213,11 @@ class BasePairDrawGenerator(BaseDrawGenerator):
             for pairing in pairings:
                 pairing.shuffle_sides()
         elif self.options["side_allocations"] not in ["none", "preallocated"]:
-            raise ValueError("side_allocations setting not recognized: {0!r}".format(self.options["side_allocations"]))
+            raise ValueError(
+                "side_allocations setting not recognized: {0!r}".format(
+                    self.options["side_allocations"]
+                )
+            )
 
 
 class BaseBPDrawGenerator(BaseDrawGenerator):
@@ -224,6 +245,7 @@ class ManualDrawGenerator(BaseDrawGenerator):
     """Returns an empty draw.
     Since this doesn't really do anything, it works for both two-team and BP.
     """
+
     DEFAULT_OPTIONS = {}
     BASE_DEFAULT_OPTIONS = {}
     requires_even_teams = False

@@ -8,7 +8,7 @@ from .models import Round
 logger = logging.getLogger(__name__)
 
 SIDE_NAMES = {
-    'aff-neg': {
+    "aff-neg": {
         "aff_full": _("affirmative"),
         "neg_full": _("negative"),
         "aff_team": _("affirmative team"),
@@ -16,7 +16,7 @@ SIDE_NAMES = {
         "aff_abbr": _("Aff"),
         "neg_abbr": _("Neg"),
     },
-    'gov-opp': {
+    "gov-opp": {
         "aff_full": _("government"),
         "neg_full": _("opposition"),
         "aff_team": _("government team"),
@@ -24,7 +24,7 @@ SIDE_NAMES = {
         "aff_abbr": _("Gov"),
         "neg_abbr": _("Opp"),
     },
-    'prop-opp': {
+    "prop-opp": {
         "aff_full": _("proposition"),
         "neg_full": _("opposition"),
         "aff_team": _("proposition team"),
@@ -32,7 +32,7 @@ SIDE_NAMES = {
         "aff_abbr": _("Prop"),
         "neg_abbr": _("Opp"),
     },
-    'pro-con': {
+    "pro-con": {
         "aff_full": _("pro"),
         "neg_full": _("con"),
         "aff_team": _("pro team"),
@@ -40,7 +40,7 @@ SIDE_NAMES = {
         "aff_abbr": _("Pro"),
         "neg_abbr": _("Con"),
     },
-    'appellant-respondent': {
+    "appellant-respondent": {
         "aff_full": _("appellant"),
         "neg_full": _("respondent"),
         "aff_team": _("appellant team"),
@@ -73,16 +73,16 @@ def auto_make_rounds(tournament, num_rounds):
     a more advanced import method should be used."""
     silent_threshold = num_rounds * 2 / 3
 
-    for i in range(1, num_rounds+1):
+    for i in range(1, num_rounds + 1):
         Round(
             tournament=tournament,
             seq=i,
-            name=gettext("Round %(number)d") % {'number': i},
+            name=gettext("Round %(number)d") % {"number": i},
             # Translators: This stands for "Round %(number)d".
-            abbreviation=gettext("R%(number)d") % {'number': i},
+            abbreviation=gettext("R%(number)d") % {"number": i},
             stage=Round.Stage.PRELIMINARY,
             draw_type=Round.DrawType.RANDOM if (i == 1) else Round.DrawType.POWERPAIRED,
-            feedback_weight=min((i-1)*0.1, 0.5),
+            feedback_weight=min((i - 1) * 0.1, 0.5),
             silent=(i > silent_threshold),
         ).save()
 
@@ -91,7 +91,12 @@ def get_side_name_choices():
     """Returns a list of choices for position names suitable for presentation in
     a form."""
     return [
-        (code, force_str(names["aff_full"]).capitalize() + ", " + force_str(names["neg_full"]).capitalize())
+        (
+            code,
+            force_str(names["aff_full"]).capitalize()
+            + ", "
+            + force_str(names["neg_full"]).capitalize(),
+        )
         for code, names in SIDE_NAMES.items()
     ]
 
@@ -103,21 +108,25 @@ def get_side_name(tournament, side, name_type):
     will return something like "Affirmative" or "Proposition" or "Gobierno",
     depending on the side name option and language setting.
     """
-    if side in ('aff', 'neg'):
-        names = SIDE_NAMES.get(tournament.pref('side_names'), SIDE_NAMES['aff-neg'])
+    if side in ("aff", "neg"):
+        names = SIDE_NAMES.get(tournament.pref("side_names"), SIDE_NAMES["aff-neg"])
         return force_str(names["%s_%s" % (side, name_type)])
-    elif side in ('og', 'oo', 'cg', 'co'):
+    elif side in ("og", "oo", "cg", "co"):
         return force_str(BP_SIDE_NAMES["%s_%s" % (side, name_type)])
-    elif side == 'bye':
-        return 'bye'
+    elif side == "bye":
+        return "bye"
     else:
-        raise ValueError("get_side_name() side must be one of: 'aff', 'neg', 'og', 'oo', 'cg', 'co', 'bye', not: %r" % (side,))
+        raise ValueError(
+            "get_side_name() side must be one of: 'aff', 'neg', 'og', 'oo', 'cg', 'co', 'bye', not: %r"
+            % (side,)
+        )
 
 
 def _get_side_name(name_type):
     def _wrapped(tournament):
-        names = SIDE_NAMES.get(tournament.pref('side_names'), SIDE_NAMES['aff-neg'])
+        names = SIDE_NAMES.get(tournament.pref("side_names"), SIDE_NAMES["aff-neg"])
         return force_str(names[name_type])
+
     return _wrapped
 
 
@@ -133,9 +142,9 @@ def _get_side_name(name_type):
 # when the tournament is known, which is only ever true at runtime.
 # Example usage: "The %s team faces the %s team." % (aff_name(tournament), neg_name(tournament))
 
-aff_name = _get_side_name('aff_full')
-neg_name = _get_side_name('neg_full')
-aff_abbr = _get_side_name('aff_abbr')
-neg_abbr = _get_side_name('neg_abbr')
-aff_team = _get_side_name('aff_team')
-neg_team = _get_side_name('neg_team')
+aff_name = _get_side_name("aff_full")
+neg_name = _get_side_name("neg_full")
+aff_abbr = _get_side_name("aff_abbr")
+neg_abbr = _get_side_name("neg_abbr")
+aff_team = _get_side_name("aff_team")
+neg_team = _get_side_name("neg_team")

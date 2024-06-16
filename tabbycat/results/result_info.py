@@ -56,9 +56,9 @@ class TeamSheetInfo:
         self.team = dt.team
         self.side = dt.side
 
-        metric_kwargs = {'side': dt.side}
+        metric_kwargs = {"side": dt.side}
         if adj is not None:
-            metric_kwargs['adj'] = adj
+            metric_kwargs["adj"] = adj
             self.points = int(result.teamscorebyadj_field_win(**metric_kwargs))
             self.score = result.teamscorebyadj_field_score(**metric_kwargs)
             self.win = result.teamscorebyadj_field_win(**metric_kwargs)
@@ -73,8 +73,10 @@ class TeamSheetInfo:
 
 class SheetInfo:
     def __init__(self, result, d_adj=None):
-        self.adjudicator = getattr(d_adj, 'adjudicator', None)
-        self.teams = [TeamSheetInfo(result, self.adjudicator, dt) for dt in result.debateteams.values()]
+        self.adjudicator = getattr(d_adj, "adjudicator", None)
+        self.teams = [
+            TeamSheetInfo(result, self.adjudicator, dt) for dt in result.debateteams.values()
+        ]
 
 
 class DebateResultInfo:

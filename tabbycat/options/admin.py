@@ -9,6 +9,7 @@ from .models import TournamentPreferenceModel
 # Preferences
 # ==============================================================================
 
+
 @admin.register(TournamentPreferenceModel)
 class TournamentPreferenceAdmin(PerInstancePreferenceAdmin):
     pass

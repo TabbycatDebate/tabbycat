@@ -16,7 +16,9 @@ class Migration(migrations.Migration):
             field=models.DateTimeField(blank=True, null=True, verbose_name="starts at"),
         ),
         migrations.RunSQL(
-            "WITH first_ballot AS (SELECT DISTINCT ON (round_id) d.round_id, bs.timestamp FROM results_ballotsubmission bs INNER JOIN draw_debate d ON d.id=bs.debate_id ORDER BY round_id, timestamp) UPDATE tournaments_round r SET starts_at_=fb.timestamp::date + r.starts_at AT TIME ZONE '" + settings.TIME_ZONE + "' FROM first_ballot fb WHERE r.id=fb.round_id;",
+            "WITH first_ballot AS (SELECT DISTINCT ON (round_id) d.round_id, bs.timestamp FROM results_ballotsubmission bs INNER JOIN draw_debate d ON d.id=bs.debate_id ORDER BY round_id, timestamp) UPDATE tournaments_round r SET starts_at_=fb.timestamp::date + r.starts_at AT TIME ZONE '"
+            + settings.TIME_ZONE
+            + "' FROM first_ballot fb WHERE r.id=fb.round_id;",
             migrations.RunSQL.noop,
         ),
         migrations.RemoveField(

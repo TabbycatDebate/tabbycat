@@ -6,9 +6,8 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('adjfeedback', '0009_adjudicatorfeedback_participant_submitter'),
-        ('adjfeedback', '0009_merge_20200904_1639'),
+        ("adjfeedback", "0009_adjudicatorfeedback_participant_submitter"),
+        ("adjfeedback", "0009_merge_20200904_1639"),
     ]
 
-    operations = [
-    ]
+    operations = []

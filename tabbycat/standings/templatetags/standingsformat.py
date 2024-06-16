@@ -8,8 +8,8 @@ register = template.Library()
 @register.filter
 def metricformat(value):
     if isinstance(value, float):
-        value = "{0:.2f}".format(value).split('.')
-        return value[0] + '<small class="text-muted">' + '.' + value[1] + '</small>'
+        value = "{0:.2f}".format(value).split(".")
+        return value[0] + '<small class="text-muted">' + "." + value[1] + "</small>"
     else:
         return str(value)
 

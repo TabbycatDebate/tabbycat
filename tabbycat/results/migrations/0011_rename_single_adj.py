@@ -7,18 +7,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('results', '0010_merge_20210919_1206'),
+        ("results", "0010_merge_20210919_1206"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='ballotsubmission',
-            old_name='partial',
-            new_name='single_adj',
+            model_name="ballotsubmission",
+            old_name="partial",
+            new_name="single_adj",
         ),
         migrations.AlterField(
-            model_name='ballotsubmission',
-            name='single_adj',
-            field=models.BooleanField(default=False, help_text='Whether this submission represents only the submitting adjudicator on a panel, when individual adjudicator ballots are enabled.', verbose_name='single adjudicator'),
+            model_name="ballotsubmission",
+            name="single_adj",
+            field=models.BooleanField(
+                default=False,
+                help_text="Whether this submission represents only the submitting adjudicator on a panel, when individual adjudicator ballots are enabled.",
+                verbose_name="single adjudicator",
+            ),
         ),
     ]

@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('venues', '0007_auto_20200608_1134'),
+        ("venues", "0007_auto_20200608_1134"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='venue',
-            name='url',
-            field=models.URLField(blank=True, help_text='A URL that contains extra information about this room, e.g. a map or a meeting link (for online tournaments)', verbose_name='URL'),
+            model_name="venue",
+            name="url",
+            field=models.URLField(
+                blank=True,
+                help_text="A URL that contains extra information about this room, e.g. a map or a meeting link (for online tournaments)",
+                verbose_name="URL",
+            ),
         ),
     ]

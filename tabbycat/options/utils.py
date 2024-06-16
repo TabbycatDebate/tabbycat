@@ -15,9 +15,11 @@ def use_team_code_names(tournament, admin, user=AnonymousUser()):
     preferences of `tournament` and whether the request is for an admin view.
     `admin` should be True if the request is for an admin view and False if not.
     """
-    if tournament.pref('team_code_names') in ['admin-tooltips-real', 'everywhere']:
+    if tournament.pref("team_code_names") in ["admin-tooltips-real", "everywhere"]:
         return True
-    if tournament.pref('team_code_names') == 'admin-tooltips-code' and not (admin and has_permission(user, Permission.VIEW_DECODED_TEAMS, tournament)):
+    if tournament.pref("team_code_names") == "admin-tooltips-code" and not (
+        admin and has_permission(user, Permission.VIEW_DECODED_TEAMS, tournament)
+    ):
         return True
     return False
 
@@ -29,13 +31,13 @@ def use_team_code_names_data_entry(tournament, tabroom):
     use_team_code_names() above, because during data entry, the paper ballots
     will have code names on them, so it's easier for data entry staff to look
     at them by code name."""
-    pref = tournament.pref('team_code_names')
-    if pref in ['off', 'all-tooltips']:
-        return 'off'
-    elif pref in ['admin-tooltips-code', 'admin-tooltips-real']:
-        return 'both' if tabroom else 'code'
-    elif pref == 'everywhere':
-        return 'code'
+    pref = tournament.pref("team_code_names")
+    if pref in ["off", "all-tooltips"]:
+        return "off"
+    elif pref in ["admin-tooltips-code", "admin-tooltips-real"]:
+        return "both" if tabroom else "code"
+    elif pref == "everywhere":
+        return "code"
 
 
 def validate_metric_duplicates(generator, value):
@@ -44,5 +46,7 @@ def validate_metric_duplicates(generator, value):
     duplicates = [c for c in classes if not c.repeatable and classes.count(c) > 1]
     if duplicates:
         duplicates_str = ", ".join(list(set(force_str(c.name) for c in duplicates)))
-        raise ValidationError(_("The following metrics can't be listed twice: "
-                "%(duplicates)s") % {'duplicates': duplicates_str})
+        raise ValidationError(
+            _("The following metrics can't be listed twice: " "%(duplicates)s")
+            % {"duplicates": duplicates_str}
+        )

@@ -1,1 +1,1 @@
-default_app_config = 'tournaments.apps.TournamentsConfig'
+default_app_config = "tournaments.apps.TournamentsConfig"

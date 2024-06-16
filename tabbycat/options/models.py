@@ -9,8 +9,9 @@ from .registries import tournament_preferences_registry
 
 class TournamentPreferenceModel(PerInstancePreferenceModel):
 
-    instance = models.ForeignKey(Tournament, models.CASCADE, related_name="preferences",
-        verbose_name=_("instance"))
+    instance = models.ForeignKey(
+        Tournament, models.CASCADE, related_name="preferences", verbose_name=_("instance")
+    )
     registry = tournament_preferences_registry
 
     class Meta(PerInstancePreferenceModel.Meta):

@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tournaments', '0002_remove_tournament_welcome_msg'),
+        ("tournaments", "0002_remove_tournament_welcome_msg"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='round',
-            name='completed',
-            field=models.BooleanField(default=False, help_text='True if the round is over, which normally means all results have been entered and confirmed', verbose_name='completed'),
+            model_name="round",
+            name="completed",
+            field=models.BooleanField(
+                default=False,
+                help_text="True if the round is over, which normally means all results have been entered and confirmed",
+                verbose_name="completed",
+            ),
         ),
     ]

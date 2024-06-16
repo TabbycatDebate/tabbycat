@@ -11,57 +11,179 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('participants', '0001_initial'),
-        ('tournaments', '0001_initial'),
-        ('divisions', '0001_initial'),
+        ("participants", "0001_initial"),
+        ("tournaments", "0001_initial"),
+        ("divisions", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Debate',
+            name="Debate",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('bracket', models.FloatField(default=0, verbose_name='bracket')),
-                ('room_rank', models.IntegerField(default=0, verbose_name='room rank')),
-                ('time', models.DateTimeField(blank=True, help_text='The time/date of a debate if it is specifically scheduled', null=True, verbose_name='time')),
-                ('flags', models.CharField(blank=True, max_length=100)),
-                ('importance', models.IntegerField(choices=[(-2, -2), (-1, -1), (0, 0), (1, 1), (2, 2)], default=0, verbose_name='importance')),
-                ('result_status', models.CharField(choices=[('N', 'none'), ('P', 'postponed'), ('D', 'draft'), ('C', 'confirmed')], default='N', max_length=1, verbose_name='result status')),
-                ('ballot_in', models.BooleanField(default=False, verbose_name='ballot in')),
-                ('sides_confirmed', models.BooleanField(default=True, help_text='If unchecked, the sides assigned to teams in this debate are just placeholders.', verbose_name='sides confirmed')),
-                ('division', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='divisions.Division', verbose_name='division')),
-                ('round', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tournaments.Round', verbose_name='round')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("bracket", models.FloatField(default=0, verbose_name="bracket")),
+                ("room_rank", models.IntegerField(default=0, verbose_name="room rank")),
+                (
+                    "time",
+                    models.DateTimeField(
+                        blank=True,
+                        help_text="The time/date of a debate if it is specifically scheduled",
+                        null=True,
+                        verbose_name="time",
+                    ),
+                ),
+                ("flags", models.CharField(blank=True, max_length=100)),
+                (
+                    "importance",
+                    models.IntegerField(
+                        choices=[(-2, -2), (-1, -1), (0, 0), (1, 1), (2, 2)],
+                        default=0,
+                        verbose_name="importance",
+                    ),
+                ),
+                (
+                    "result_status",
+                    models.CharField(
+                        choices=[
+                            ("N", "none"),
+                            ("P", "postponed"),
+                            ("D", "draft"),
+                            ("C", "confirmed"),
+                        ],
+                        default="N",
+                        max_length=1,
+                        verbose_name="result status",
+                    ),
+                ),
+                ("ballot_in", models.BooleanField(default=False, verbose_name="ballot in")),
+                (
+                    "sides_confirmed",
+                    models.BooleanField(
+                        default=True,
+                        help_text="If unchecked, the sides assigned to teams in this debate are just placeholders.",
+                        verbose_name="sides confirmed",
+                    ),
+                ),
+                (
+                    "division",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="divisions.Division",
+                        verbose_name="division",
+                    ),
+                ),
+                (
+                    "round",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="tournaments.Round",
+                        verbose_name="round",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'debate',
-                'verbose_name_plural': 'debates',
+                "verbose_name": "debate",
+                "verbose_name_plural": "debates",
             },
         ),
         migrations.CreateModel(
-            name='DebateTeam',
+            name="DebateTeam",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('side', models.CharField(choices=[('aff', 'affirmative'), ('neg', 'negative'), ('og', 'opening government'), ('oo', 'opening opposition'), ('cg', 'closing government'), ('co', 'closing opposition')], max_length=3, verbose_name='side')),
-                ('flags', models.CharField(blank=True, max_length=100)),
-                ('debate', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='draw.Debate', verbose_name='debate')),
-                ('team', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='participants.Team', verbose_name='team')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "side",
+                    models.CharField(
+                        choices=[
+                            ("aff", "affirmative"),
+                            ("neg", "negative"),
+                            ("og", "opening government"),
+                            ("oo", "opening opposition"),
+                            ("cg", "closing government"),
+                            ("co", "closing opposition"),
+                        ],
+                        max_length=3,
+                        verbose_name="side",
+                    ),
+                ),
+                ("flags", models.CharField(blank=True, max_length=100)),
+                (
+                    "debate",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="draw.Debate",
+                        verbose_name="debate",
+                    ),
+                ),
+                (
+                    "team",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="participants.Team",
+                        verbose_name="team",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'debate team',
-                'verbose_name_plural': 'debate teams',
+                "verbose_name": "debate team",
+                "verbose_name_plural": "debate teams",
             },
         ),
         migrations.CreateModel(
-            name='TeamSideAllocation',
+            name="TeamSideAllocation",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('side', models.CharField(choices=[('aff', 'affirmative'), ('neg', 'negative'), ('og', 'opening government'), ('oo', 'opening opposition'), ('cg', 'closing government'), ('co', 'closing opposition')], max_length=3, verbose_name='side')),
-                ('round', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tournaments.Round', verbose_name='round')),
-                ('team', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='participants.Team', verbose_name='team')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "side",
+                    models.CharField(
+                        choices=[
+                            ("aff", "affirmative"),
+                            ("neg", "negative"),
+                            ("og", "opening government"),
+                            ("oo", "opening opposition"),
+                            ("cg", "closing government"),
+                            ("co", "closing opposition"),
+                        ],
+                        max_length=3,
+                        verbose_name="side",
+                    ),
+                ),
+                (
+                    "round",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="tournaments.Round",
+                        verbose_name="round",
+                    ),
+                ),
+                (
+                    "team",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="participants.Team",
+                        verbose_name="team",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'team side allocation',
-                'verbose_name_plural': 'team side allocations',
+                "verbose_name": "team side allocation",
+                "verbose_name_plural": "team side allocations",
             },
         ),
     ]

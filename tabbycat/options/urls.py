@@ -4,17 +4,17 @@ from . import views
 
 urlpatterns = [
     # Overview
-    path('',
-        views.TournamentConfigIndexView.as_view(),
-        name='options-tournament-index'),
-
+    path("", views.TournamentConfigIndexView.as_view(), name="options-tournament-index"),
     # Presets
-    path('presets/<slug:preset_name>/confirm/',
+    path(
+        "presets/<slug:preset_name>/confirm/",
         views.SetPresetPreferencesView.as_view(),
-        name="options-presets-confirm"),
-
+        name="options-presets-confirm",
+    ),
     # Per Type
-    path('<slug:section>/',
+    path(
+        "<slug:section>/",
         views.TournamentPreferenceFormView.as_view(),
-        name="options-tournament-section"),
+        name="options-tournament-section",
+    ),
 ]

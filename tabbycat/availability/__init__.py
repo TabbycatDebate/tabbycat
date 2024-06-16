@@ -1,1 +1,1 @@
-default_app_config = 'availability.apps.AvailabilityConfig'
+default_app_config = "availability.apps.AvailabilityConfig"
