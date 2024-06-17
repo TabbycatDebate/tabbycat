@@ -23,7 +23,7 @@ from participants.models import Adjudicator, Institution, Region, Speaker, Speak
 from participants.utils import populate_code_names
 from privateurls.utils import populate_url_keys
 from results.mixins import TabroomSubmissionFieldsMixin
-from results.models import BallotSubmission, SpeakerScore, TeamScore
+from results.models import BallotSubmission, ScoreCriterion, SpeakerScore, TeamScore
 from results.result import DebateResult, ResultError
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
@@ -1182,6 +1182,13 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                 )
 
                 class SpeechSerializer(serializers.Serializer):
+                    class CriteriaSerializer(serializers.Serializer):
+                        criterion = fields.TournamentHyperlinkedRelatedField(
+                            view_name='api-score-criteria-detail',
+                            queryset=ScoreCriterion.objects.all(),
+                        )
+                        score = serializers.FloatField()
+
                     ghost = serializers.BooleanField(required=False, help_text=SpeakerScore._meta.get_field('ghost').help_text)
                     score = serializers.FloatField()
                     rank = serializers.IntegerField(required=False)
@@ -1191,6 +1198,8 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                         queryset=Speaker.objects.all(),
                         tournament_field='team__tournament',
                     )
+
+                    criteria = CriteriaSerializer(required=False, many=True)
 
                     def save(self, **kwargs):
                         """Requires `result`, `side`, `seq`, and `adjudicator` as extra"""
@@ -1206,6 +1215,8 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                         result.set_score(*speaker_args, self.validated_data['score'])
                         if kwargs.get('rank') is not None:
                             result.set_speaker_rank(*speaker_args, self.validated_data['rank'])
+                        for criterion_score in self.validated_data.get('criteria', []):
+                            result.set_criterion_score(*speaker_args, criterion_score.criterion, criterion_score.score)
 
                         return result
 
@@ -1508,4 +1519,12 @@ class GroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Group
+        exclude = ('tournament',)
+
+
+class ScoreCriterionSerializer(serializers.ModelSerializer):
+    url = fields.TournamentHyperlinkedIdentityField(view_name='api-score-criteria-detail')
+
+    class Meta:
+        model = ScoreCriterion
         exclude = ('tournament',)

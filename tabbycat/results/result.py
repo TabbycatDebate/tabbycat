@@ -106,6 +106,9 @@ def DebateResult(ballotsub, *args, **kwargs):  # noqa: N802 (factory function)
     r = kwargs.pop('round', ballotsub.debate.round)
     tournament = kwargs.pop('tournament', r.tournament)
     result_class = get_result_class(ballotsub, r, tournament)
+    if result_class.uses_speakers and 'criteria' not in kwargs:
+        from .models import ScoreCriterion
+        kwargs['criteria'] = ScoreCriterion.objects.filter(tournament=tournament)
     return result_class(ballotsub, *args, **kwargs)
 
 
