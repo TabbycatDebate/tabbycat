@@ -590,10 +590,12 @@ class ScheduleEvent(models.Model):
 
     class Types(models.TextChoices):
         CHECK_IN = 'C', _("Check-in")
+        BRIEFING = 'I', _("Briefing")
         DRAW = 'T', _("Draw/motion announcement")
         PREP = 'P', _("Preparation time")
         DEBATE = 'D', _("Debate")
         ADJUDICATION = 'J', _("Adjudication")
+        REST = 'R', _("Meal/break")
         BREAK = 'B', _("Break announcement")
         AWARDS = 'A', _("Award ceremony")
         OTHER = 'O', _("Other")
