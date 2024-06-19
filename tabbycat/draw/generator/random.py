@@ -1,6 +1,7 @@
 """Draw generators for randomly drawn rounds, both two-team and BP."""
 
 import random
+from itertools import islice
 
 from django.utils.translation import gettext as _
 
@@ -8,6 +9,15 @@ from .common import BaseBPDrawGenerator, BaseDrawGenerator, BasePairDrawGenerato
 from .graph import GraphAllocatedSidesMixin, GraphGeneratorMixin
 from .pairing import Pairing, PolyPairing
 from ..types import DebateSide
+
+
+def batched(iterable, n):
+    # Polyfill for Python 3.12
+    if n < 1:
+        raise ValueError('n must be at least one')
+    iterator = iter(iterable)
+    while batch := tuple(islice(iterator, n)):
+        yield batch
 
 
 class RandomPairingsMixin:
@@ -18,8 +28,7 @@ class RandomPairingsMixin:
     def make_random_pairings(self, teams_in_debate):
         teams = list(self.teams)  # Make a copy
         random.shuffle(teams)
-        args = [iter(teams)] * teams_in_debate  # recipe from Python itertools docs
-        pairings = [self.pairing_class(teams=t, bracket=0, room_rank=0, num_sides=len(t)) for t in zip(*args)]
+        pairings = [self.pairing_class(teams=t, bracket=0, room_rank=0, num_sides=len(t)) for t in batched(teams, teams_in_debate)]
         return pairings
 
 
@@ -155,6 +164,7 @@ class RandomPolyDrawGenerator(RandomPairingsMixin, BaseDrawGenerator):
     requires_prev_result = False
     pairing_class = PolyPairing
 
+    BASE_DEFAULT_OPTIONS = {}
     DEFAULT_OPTIONS = {}
 
     def __init__(self, *args, teams_in_debate: int, **kwargs):

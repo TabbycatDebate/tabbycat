@@ -46,6 +46,8 @@ class BaseDrawGenerator:
         self.results = results
         self.rrseq = rrseq
 
+        kwargs.pop('teams_in_debate', None)
+
         if self.requires_even_teams:
             if not len(self.teams) % self.TEAMS_IN_DEBATE == 0:
                 raise DrawUserError(_("The number of teams presented for the draw was not "

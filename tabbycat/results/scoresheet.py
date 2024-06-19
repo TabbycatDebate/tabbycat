@@ -210,6 +210,21 @@ class PolyScoresheet(ScoresMixin, BasePolyScoresheet):
         return set()
 
 
+class PolyNoWinScoresheet(ScoresMixin, BasePolyScoresheet):
+
+    def is_valid(self):
+        return super().is_valid()
+
+    def rank(self, side):
+        return None
+
+    def ranked_sides(self):
+        return []
+
+    def winners(self):
+        return set()
+
+
 class PolyEliminationScoresheet(DeclaredWinnersMixin, BasePolyScoresheet):
 
     def __init__(self, *args, **kwargs):

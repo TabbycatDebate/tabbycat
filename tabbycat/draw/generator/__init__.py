@@ -4,7 +4,8 @@ from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError, Manual
 from .pairing import ResultPairing, BPEliminationResultPairing
 from .elimination import FirstEliminationDrawGenerator, SubsequentEliminationDrawGenerator
 from .powerpair import AustralsPowerPairedDrawGenerator, GraphPowerPairedDrawGenerator, AustralsPowerPairedWithAllocatedSidesDrawGenerator, GraphPowerPairedWithAllocatedSidesDrawGenerator
-from .random import RandomBPDrawGenerator, GraphRandomDrawGenerator, GraphRandomWithAllocatedSidesDrawGenerator, SwapRandomDrawGenerator, SwapRandomWithAllocatedSidesDrawGenerator
+from .random import (RandomBPDrawGenerator, RandomPolyDrawGenerator, GraphRandomDrawGenerator,
+    GraphRandomWithAllocatedSidesDrawGenerator, SwapRandomDrawGenerator, SwapRandomWithAllocatedSidesDrawGenerator)
 from .bphungarian import BPHungarianDrawGenerator
 from .bpelimination import (PartialBPEliminationDrawGenerator, AfterPartialBPEliminationDrawGenerator,
     FirstBPEliminationDrawGenerator, SubsequentBPEliminationDrawGenerator)
@@ -99,4 +100,5 @@ def DrawGenerator(teams_in_debate, draw_type, teams, results=None, rrseq=None, *
     else:
         klass = get_poly_generator(draw_type)
 
+    kwargs['teams_in_debate'] = teams_in_debate
     return klass(teams, results, rrseq, **kwargs)

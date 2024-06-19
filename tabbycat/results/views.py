@@ -269,11 +269,10 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
         use_team_code_names = use_team_code_names_data_entry(self.tournament, self.tabroom)
         kwargs['use_team_code_names'] = use_team_code_names
 
-        sides = self.tournament.sides
         if use_team_code_names == 'off':
-            kwargs['debate_name'] = _(" vs ").join(self.debate.get_team(side).short_name for side in sides)
+            kwargs['debate_name'] = _(" vs ").join(team.short_name for team in self.debate.teams)
         else:
-            kwargs['debate_name'] = _(" vs ").join(self.debate.get_team(side).code_name for side in sides)
+            kwargs['debate_name'] = _(" vs ").join(team.code_name for team in self.debate.teams)
         kwargs['page_subtitle'] = _("%(matchup)s: %(round)s @ %(room)s") % {
             'round': self.debate.round.name,
             'room': getattr(self.debate.venue, 'display_name', _("N/A")),

@@ -40,7 +40,6 @@ OPTIONS_TO_CONFIG_MAPPING = {
     "assignment_method"     : "draw_rules__bp_assignment_method",
     "renyi_order"           : "draw_rules__bp_renyi_order",
     "exponent"              : "draw_rules__bp_position_cost_exponent",
-    "teams_in_debate"       : "debate_rules__teams_in_debate",
 }
 
 
@@ -73,9 +72,8 @@ class BaseDrawManager:
         self.active_only = active_only
 
     def get_relevant_options(self):
-        options = []
         if self.teams_in_debate == 2:
-            options.extend([
+            return [
                 "avoid_institution",
                 "avoid_history",
                 "history_penalty",
@@ -84,10 +82,8 @@ class BaseDrawManager:
                 "side_penalty",
                 "pairing_penalty",
                 "avoid_conflicts",
-            ])
-        elif self.round.tournament.pref('margin_includes_dissenters'):
-            options.extend(["teams_in_debate"])
-        return options
+            ]
+        return []
 
     def n_byes(self, n_teams):
         if self.round.tournament.pref('bye_team_selection') != 'off':

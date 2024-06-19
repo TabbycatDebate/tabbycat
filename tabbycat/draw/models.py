@@ -96,7 +96,7 @@ class Debate(models.Model):
             # Translators: This goes between teams in a debate, e.g. "Auckland 1
             # vs Vic Wellington 1". Mind the leading and trailing spaces.
             return gettext(" vs ").join(self.get_team(side).short_name for side in sides)
-        except (ObjectDoesNotExist, MultipleObjectsReturned, KeyError):
+        except (ObjectDoesNotExist, MultipleObjectsReturned, IndexError):
             return self._teams_and_sides_display()
 
     def _teams_and_sides_display(self):
@@ -149,7 +149,7 @@ class Debate(models.Model):
         self._multiple_found = []
         self._team_properties = {}
 
-        for dt in dts:
+        for dt in sorted(dts, key=lambda dt: dt.side):
             self._dts.append(dt)
             self._teams.append(dt.team)
             team_key = '%d_team' % dt.side
@@ -171,7 +171,7 @@ class Debate(models.Model):
     def debateteams(self):
         if not hasattr(self, '_teams'):
             self._populate_teams()
-        return sorted(self._dts, key=lambda dt: dt.side)
+        return self._dts
 
     def debateteams_ordered(self):
         for side in self.round.tournament.sides:

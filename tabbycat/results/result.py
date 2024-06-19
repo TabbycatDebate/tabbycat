@@ -50,7 +50,7 @@ from draw.types import DebateSide
 
 from .result_info import DebateResultInfo
 from .scoresheet import (HighPointWinsRequiredScoresheet, LowPointWinsAllowedScoresheet, PolyEliminationScoresheet,
-    PolyScoresheet, ResultOnlyScoresheet, TiedPointWinsAllowedScoresheet)
+    PolyNoWinScoresheet, PolyScoresheet, ResultOnlyScoresheet, TiedPointWinsAllowedScoresheet)
 from .utils import side_and_position_names
 
 if TYPE_CHECKING:
@@ -168,7 +168,11 @@ class BaseDebateResult:
         self.ballotsub = ballotsub
         self.debate = ballotsub.debate
         self.tournament = self.debate.round.tournament
-        self.sides = self.tournament.sides
+
+        if self.tournament.pref('margin_includes_dissenters') and self.tournament.pref('teams_in_debate') != 2:
+            self.sides = list(range(1+max(*[dt.side for dt in self.debate.debateteams])))
+        else:
+            self.sides = self.tournament.sides
 
         # Needed here (not in ScoresMixin) as is called by `.scoresheet_class`
         self.winners_declared = self.tournament.pref('winners_in_ballots')
@@ -259,7 +263,7 @@ class BaseDebateResult:
         if not self.debate.sides_confirmed:
             return  # don't load if sides aren't confirmed
 
-        d_teams = self.debate.debateteam_set.select_related('team', 'team__tournament').all()
+        d_teams = self.debate.debateteams
         if set(dt.side for dt in d_teams) != set(self.sides):
             raise ResultError("Debate has invalid sides.")
 
@@ -661,7 +665,9 @@ class DebateResultWithScoresMixin:
 
     @property
     def scoresheet_class(self):
-        if len(self.sides) > 4:
+        if self.tournament.pref('teams_in_debate') != 2:
+            if self.tournament.pref('margin_includes_dissenters'):
+                return PolyNoWinScoresheet
             return PolyScoresheet
         return {
             'none': HighPointWinsRequiredScoresheet,
@@ -842,7 +848,7 @@ class ConsensusDebateResult(BaseDebateResult):
     def scoresheet_class(self):
         if len(self.sides) == 2:
             return super().scoresheet_class
-        elif len(self.sides) > 2:
+        else:
             return PolyEliminationScoresheet
 
     def load_scoresheets(self):
@@ -968,7 +974,7 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
     def scoresheet_class(self):
         if len(self.sides) == 2:
             return super().scoresheet_class
-        elif len(self.sides) > 2:
+        else:
             return PolyScoresheet
 
     def load_scoresheets(self):
