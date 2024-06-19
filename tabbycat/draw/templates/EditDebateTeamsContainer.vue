@@ -25,11 +25,11 @@
         <div slot="teams" :class="[sides.count > 2 ? 'flex-36' : 'flex-52',
                                    'flex-truncate border-right d-flex flex-nowrap']">
 
-          <droppable-item v-for="side in sides" :handle-drop="moveTeam" :key="side"
+          <droppable-item v-for="(team, side) in allDebatesOrPanels[debate.id].teams" :handle-drop="moveTeam" :key="side"
                           :drop-context="{ 'assignment': debate.id, 'position': side }"
                           class="flex-5 flex-truncate">
-            <draggable-team v-if="debate.teams[side]" :item="allTeams[debate.teams[side]]" class="flex-fill"
-                            :drag-payload="{ 'item': debate.teams[side], 'assignment': debate.id, 'position': side }">
+            <draggable-team v-if="team" :item="allTeams[team]" class="flex-fill"
+                            :drag-payload="{ 'item': team, 'assignment': debate.id, 'position': side }">
             </draggable-team>
           </droppable-item>
 

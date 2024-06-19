@@ -237,9 +237,9 @@ class BaseMotionStatisticsView(TournamentMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
     def get_statistics(self, *args, **kwargs):
-        if self.tournament.pref('teams_in_debate') == 'two':
+        if self.tournament.pref('teams_in_debate') == 2:
             return self.two_team_statistics_generator(self.tournament, *args, **kwargs)
-        else:
+        elif self.tournament.pref('teams_in_debate') == 4 and not self.tournament.pref('margin_includes_dissenters'):
             return self.bp_statistics_generator(self.tournament, *args, **kwargs)
 
 

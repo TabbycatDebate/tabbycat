@@ -8,6 +8,7 @@ from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError
 from .graph import GraphAllocatedSidesMixin, GraphGeneratorMixin
 from .one_up_one_down import OneUpOneDownSwapper
 from .pairing import Pairing
+from ..types import DebateSide
 
 
 class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
@@ -485,7 +486,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
 
     def __init__(self, *args, **kwargs):
         super(PowerPairedWithAllocatedSidesDrawGenerator, self).__init__(*args, **kwargs)
-        self.check_teams_for_attribute("allocated_side", choices=["aff", "neg"])
+        self.check_teams_for_attribute("allocated_side", choices=[DebateSide.AFF, DebateSide.NEG])
 
     def _make_raw_brackets(self):
         """Returns an OrderedDict mapping bracket names (normally numbers)
@@ -496,7 +497,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
         while len(teams) > 0:
             top_team = teams.pop(0)
             points = top_team.points
-            pool = {"aff": list(), "neg": list()}
+            pool = [[], []]
             pool[top_team.allocated_side].append(top_team)
             while len(teams) > 0 and teams[0].points == points:
                 team = teams.pop(0)
@@ -567,11 +568,11 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
                 pullups_needed_teams.extend(pullup_teams)
 
             # Then, figure out if we need any pullups in *this* bracket.
-            aff_surplus = len(pool["aff"]) - len(pool["neg"])  # Could be negative
+            aff_surplus = len(pool[DebateSide.AFF]) - len(pool[DebateSide.NEG])  # Could be negative
             if aff_surplus > 0:
-                new_pullups_needed_for.append((pool["neg"], "neg", aff_surplus))
+                new_pullups_needed_for.append((pool[DebateSide.NEG], DebateSide.NEG, aff_surplus))
             elif aff_surplus < 0:
-                new_pullups_needed_for.append((pool["aff"], "aff", -aff_surplus))
+                new_pullups_needed_for.append((pool[DebateSide.AFF], DebateSide.AFF, -aff_surplus))
 
             # Assign the new pullups-needed list, then start again!
             pullups_needed_for = new_pullups_needed_for
@@ -595,20 +596,20 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
 
             # First, check for unfilled intermediate brackets
             for unfilled_points, unfilled_pool in unfilled.items():
-                aff_surplus = len(unfilled_pool["aff"]) - len(unfilled_pool["neg"])
+                aff_surplus = len(unfilled_pool[DebateSide.AFF]) - len(unfilled_pool[DebateSide.NEG])
                 if aff_surplus > 0:
                     # Take the top teams from negative pool as appropriate.
                     # Note that there may not be enough teams; if there aren't,
                     # then this line just takes all of them.
-                    unfilled_pool["neg"].extend(pool["neg"][:aff_surplus])
-                    del pool["neg"][:aff_surplus]
+                    unfilled_pool[DebateSide.NEG].extend(pool[DebateSide.NEG][:aff_surplus])
+                    del pool[DebateSide.NEG][:aff_surplus]
                 elif aff_surplus < 0:
                     # Take the top teams from affirmative pool as appropriate.
-                    unfilled_pool["aff"].extend(pool["aff"][:-aff_surplus])
-                    del pool["aff"][:-aff_surplus]
+                    unfilled_pool[DebateSide.AFF].extend(pool[DebateSide.AFF][:-aff_surplus])
+                    del pool[DebateSide.AFF][:-aff_surplus]
                 # If the bubble now looks good, move it to the main brackets and
                 # mark it for deletion from the unfilled buffer.
-                if len(unfilled_pool["aff"]) == len(unfilled_pool["neg"]):
+                if len(unfilled_pool[DebateSide.AFF]) == len(unfilled_pool[DebateSide.NEG]):
                     new[unfilled_points] = unfilled_pool
                     to_delete_from_unfilled.append(unfilled_points)
 
@@ -617,16 +618,16 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
                 del unfilled[unfilled_points]
 
             # Find lesser and greater of number of aff and neg teams.
-            nums_teams = list(map(len, list(pool.values())))
+            nums_teams = list(map(len, pool))
             n = min(nums_teams)
             m = max(nums_teams)
 
             # Assign the main bracket
-            new[points] = {"aff": pool["aff"][:n], "neg": pool["neg"][:n]}
+            new[points] = [pool[DebateSide.AFF][:n], pool[DebateSide.NEG][:n]]
 
             # Assign the intermediate bracket, if any
             if m > n:
-                unfilled[points-0.5] = {"aff": pool["aff"][n:], "neg": pool["neg"][n:]}
+                unfilled[points-0.5] = [pool[DebateSide.AFF][n:], pool[DebateSide.NEG][n:]]
 
         if unfilled:
             raise DrawFatalError("There are still unfilled intermediate brackets!\n" + repr(unfilled))
@@ -648,7 +649,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
 
         new = OrderedDict()
         unfilled = OrderedDict()
-        intermediates = OrderedDict()  # Values are lists of {"aff", "neg"} dicts
+        intermediates = OrderedDict()
         for points, pool in brackets.items():
 
             to_delete_from_unfilled = []
@@ -656,31 +657,25 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
             # First, check for unfilled intermediate brackets
             for unfilled_points, unfilled_pool in unfilled.items():
                 intermediates.setdefault(unfilled_points, list())
-                if unfilled_pool["aff"] and unfilled_pool["neg"]:
+                if unfilled_pool[DebateSide.AFF] and unfilled_pool[DebateSide.NEG]:
                     raise DrawFatalError("An unfilled pool unexpectedly had both affirmative and negative teams.")
-                elif unfilled_pool["aff"]:
+                elif unfilled_pool[DebateSide.AFF]:
                     # In a new bracket, take the lesser of how many excess affirmative
                     # teams there are, and how many negative teams in the pool we have.
-                    num_teams = min(len(unfilled_pool["aff"]), len(pool["neg"]))
-                    intermediates[unfilled_points].append({
-                        "aff": unfilled_pool["aff"][:num_teams],
-                        "neg": pool["neg"][:num_teams],
-                    })
-                    del unfilled_pool["aff"][:num_teams]
-                    del pool["neg"][:num_teams]
-                elif unfilled_pool["neg"]:
+                    num_teams = min(len(unfilled_pool[DebateSide.AFF]), len(pool[DebateSide.NEG]))
+                    intermediates[unfilled_points].append([unfilled_pool[DebateSide.AFF][:num_teams], pool[DebateSide.NEG][:num_teams]])
+                    del unfilled_pool[DebateSide.AFF][:num_teams]
+                    del pool[DebateSide.NEG][:num_teams]
+                elif unfilled_pool[DebateSide.NEG]:
                     # Take the top teams from affirmative pool as appropriate.
-                    num_teams = min(len(unfilled_pool["neg"]), len(pool["aff"]))
-                    intermediates[unfilled_points].append({
-                        "aff": pool["aff"][:num_teams],
-                        "neg": unfilled_pool["neg"][:num_teams],
-                    })
-                    del pool["aff"][:num_teams]
-                    del unfilled_pool["neg"][:num_teams]
+                    num_teams = min(len(unfilled_pool[DebateSide.NEG]), len(pool[DebateSide.AFF]))
+                    intermediates[unfilled_points].append([pool[DebateSide.AFF][:num_teams], unfilled_pool[DebateSide.NEG][:num_teams]])
+                    del pool[DebateSide.AFF][:num_teams]
+                    del unfilled_pool[DebateSide.NEG][:num_teams]
                 # If we've exhausted the unfilled pool, add all these
                 # intermediate brackets to the main list of brackets and mark
                 # them for deletion from the unfilled buffer.
-                if not unfilled_pool["aff"] and not unfilled_pool["neg"]:
+                if not unfilled_pool[DebateSide.AFF] and not unfilled_pool[DebateSide.NEG]:
                     num_brackets = len(intermediates[unfilled_points])
                     for i, intermediate_pool in enumerate(intermediates[unfilled_points], start=1):
                         intermediate_points = unfilled_points - i / (num_brackets + 1)
@@ -692,16 +687,16 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
                 del unfilled[unfilled_points]
 
             # Find lesser and greater of number of aff and neg teams.
-            nums_teams = list(map(len, list(pool.values())))
+            nums_teams = list(map(len, pool))
             n = min(nums_teams)
             m = max(nums_teams)
 
             # Assign the main bracket
-            new[points] = {"aff": pool["aff"][:n], "neg": pool["neg"][:n]}
+            new[points] = [pool[DebateSide.AFF][:n], pool[DebateSide.NEG][:n]]
 
             # Take note of the excess teams, if any
             if m > n:
-                unfilled[points] = {"aff": pool["aff"][n:], "neg": pool["neg"][n:]}
+                unfilled[points] = [pool[DebateSide.AFF][n:], pool[DebateSide.NEG][n:]]
 
         if unfilled:
             raise DrawFatalError("There are still unfilled intermediate brackets!\n" + repr(unfilled))
@@ -731,10 +726,10 @@ class AustralsPowerPairedWithAllocatedSidesDrawGenerator(AustralsPairingMixin, P
         pairings = OrderedDict()
         i = 1
         for points, pool in brackets.items():
-            assert len(pool["aff"]) == len(pool["neg"])
+            assert len(pool[DebateSide.AFF]) == len(pool[DebateSide.NEG])
             bracket = list()
             presort_func(pool)
-            for teams in zip(pool["aff"], pool["neg"]):
+            for teams in zip(pool[DebateSide.AFF], pool[DebateSide.NEG]):
                 pairing = Pairing(teams=teams, bracket=points, room_rank=i)
                 bracket.append(pairing)
                 i = i + 1
@@ -750,12 +745,12 @@ class AustralsPowerPairedWithAllocatedSidesDrawGenerator(AustralsPairingMixin, P
     @classmethod
     def _pairings_fold(cls, brackets):
         def fold(pool):
-            pool["neg"].reverse()
+            pool[DebateSide.NEG].reverse()
         return cls._pairings(brackets, fold)
 
     @classmethod
     def _pairings_random(cls, brackets):
         def shuffle(pool):
-            random.shuffle(pool["aff"])
-            random.shuffle(pool["neg"])
+            random.shuffle(pool[DebateSide.AFF])
+            random.shuffle(pool[DebateSide.NEG])
         return cls._pairings(brackets, shuffle)

@@ -19,16 +19,16 @@ function refresh_totals(scoresheet) {
   // Fix the branching logic here into something cleaner
   var allClasses = 'btn-dark btn-secondary btn-success btn-primary btn-warning btn-danger btn-info';
 
-  if ("{{ pref.teams_in_debate }}" === 'two') {
+  if ("{{ pref.teams_in_debate }}" === 2) {
     // 2-team
-    $aff_total = $('.aff_total', $scoresheet);
-    $neg_total = $('.neg_total', $scoresheet);
-    $aff_rank = $('.aff_rank', $scoresheet);
-    $neg_rank = $('.neg_rank', $scoresheet);
-    $aff_margin = $('.aff_margin', $scoresheet);
-    $neg_margin = $('.neg_margin', $scoresheet);
-    var aff = sum($('.aff.score input', $scoresheet));
-    var neg = sum($('.neg.score input', $scoresheet));
+    $aff_total = $('.0_total', $scoresheet);
+    $neg_total = $('.1_total', $scoresheet);
+    $aff_rank = $('.0_rank', $scoresheet);
+    $neg_rank = $('.1_rank', $scoresheet);
+    $aff_margin = $('.0_margin', $scoresheet);
+    $neg_margin = $('.1_margin', $scoresheet);
+    var aff = sum($('.side-0.score input', $scoresheet));
+    var neg = sum($('.side-1.score input', $scoresheet));
     $aff_total.text(aff);
     $neg_total.text(neg);
 
@@ -58,28 +58,26 @@ function refresh_totals(scoresheet) {
     }
   } else {
     // BP
-    var positions = ['og', 'oo', 'cg', 'co']
-    var totals_elements = {}
-    var margins_elements = {}
-    var total_scores = {}
-    var rank_elements = {}
+    var totals_elements = []
+    var margins_elements = []
+    var total_scores = []
+    var rank_elements = []
 
-    for (var i = 0; i < positions.length; i++) {
-      var team = positions[i];
-      totals_elements[team] = $('.' + team + '_total', $scoresheet);
-      margins_elements[team] = $('.' + team + '_margin', $scoresheet);
-      rank_elements[team] = $('.' + team + '_rank', $scoresheet);
-      var team_total = sum($('.' + team + '.score input', $scoresheet));
+    for (var i = 0; i < 4; i++) {
+      totals_elements[i] = $(`.${i}_total`, $scoresheet);
+      margins_elements[i] = $(`.${i}_margin`, $scoresheet);
+      rank_elements[i] = $(`.${i}_rank`, $scoresheet);
+      var team_total = sum($(`.side-${i}.score input`, $scoresheet));
       // Update totals scores only if both speaker scores have been entered
       if (team_total > 99) {
-        total_scores[team] = team_total
-        totals_elements[team].text(total_scores[team]);
+        total_scores[i] = team_total
+        totals_elements[i].text(total_scores[i]);
       }
     }
 
     // Create new dict with total scores sorted high-low
-    var sortedScores = Object.keys(total_scores).map(function(key) {
-      return [key, total_scores[key]];
+    var sortedScores = total_scores.map(function(val, i) {
+      return [i, val];
     });
     sortedScores.sort(function(first, second) {
       return second[1] - first[1];

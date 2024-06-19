@@ -1,4 +1,5 @@
 import logging
+from typing import Union
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -7,6 +8,7 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+from draw.types import DebateSide
 from participants.models import Person
 from utils.managers import LookupByNameFieldsMixin
 from utils.models import UniqueConstraint
@@ -75,16 +77,15 @@ class Tournament(models.Model):
             return self._prefs[name]
 
     @property
-    def sides(self):
+    def sides(self) -> Union[list[DebateSide], list[int]]:
         """Returns a list of side codes."""
         option = self.pref('teams_in_debate')
-        if option == 'two':
-            return ['aff', 'neg']
-        elif option == 'bp':
-            return ['og', 'oo', 'cg', 'co']
+        if option == 2:
+            return [DebateSide.AFF, DebateSide.NEG]
+        elif option == 4:
+            return [DebateSide.OG, DebateSide.OO, DebateSide.CG, DebateSide.CO]
         else:
-            logger.error("Invalid sides option: %s", option)
-            return ['aff', 'neg']  # return default, just to keep it going
+            return list(range(option))
 
     @property
     def last_substantive_position(self):
@@ -395,9 +396,8 @@ class Round(models.Model):
     def num_debates_without_chair(self):
         """Returns the number of debates in the round that lack a chair, or have
         more than one chair."""
-        from draw.models import DebateTeam
         from adjallocation.models import DebateAdjudicator
-        debates_in_round = self.debate_set.exclude(debateteam__side=DebateTeam.Side.BYE).count()
+        debates_in_round = self.debate_set.exclude(debateteam__side=DebateSide.BYE.value).count()
         debates_with_one_chair = self.debate_set.filter(debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR).annotate(
                 num_chairs=Count('debateadjudicator')).filter(num_chairs=1).count()
         return debates_in_round - debates_with_one_chair
@@ -416,8 +416,7 @@ class Round(models.Model):
 
     @cached_property
     def num_debates_without_venue(self):
-        from draw.models import DebateTeam
-        return self.debate_set.filter(venue__isnull=True).exclude(debateteam__side=DebateTeam.Side.BYE).count()
+        return self.debate_set.filter(venue__isnull=True).exclude(debateteam__side=DebateSide.BYE.value).count()
 
     @cached_property
     def num_debates_with_sides_unconfirmed(self):

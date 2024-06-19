@@ -1,6 +1,6 @@
 {% load add_field_css debate_tags i18n %}
 
-<div class="list-group-item js-team-speakers {{ team.side_code }} s{{ position.pos }}">
+<div class="list-group-item js-team-speakers side-{{ team.side_code }} s{{ position.pos }}">
   <div class="row">
     <div class="col-2 pt-2 p-lg-2 pr-0 p-1 speaker-position-label">
       {{ position.name }}
@@ -33,13 +33,13 @@
     </div>
 
     {% if position.srank %}
-      <div class="col-4 form-group {{ team.side_code }} pr-md-2 pr-1 srank {{ position.srank_errors|yesno:'error,' }}">
+      <div class="col-4 form-group side-{{ team.side_code }} pr-md-2 pr-1 srank {{ position.srank_errors|yesno:'error,' }}">
         {{ position.srank|addcss:"form-control" }}
         {{ position.srank.errors }}
       </div>
     {% endif %}
 
-    <div class="col-4 form-group {{ team.side_code }} pr-md-2 pr-1 score {{ position.score_errors|yesno:'error,' }}">
+    <div class="col-4 form-group side-{{ team.side_code }} pr-md-2 pr-1 score {{ position.score_errors|yesno:'error,' }}">
       {{ position.score|addcss:"form-control" }}
       {{ position.score.errors }}
     </div>

@@ -1,8 +1,9 @@
 import unittest
 
-from ..scoresheet import (BPScoresheet, HighPointWinsRequiredScoresheet,
-    LowPointWinsAllowedScoresheet, ResultOnlyScoresheet,
-    TiedPointWinsAllowedScoresheet)
+from draw.types import DebateSide
+
+from ..scoresheet import (HighPointWinsRequiredScoresheet, LowPointWinsAllowedScoresheet,
+    PolyScoresheet, ResultOnlyScoresheet, TiedPointWinsAllowedScoresheet)
 
 
 def on_all_testdata(test_fn):
@@ -19,31 +20,31 @@ def on_all_testdata(test_fn):
 
 class TestTwoTeamScoresheets(unittest.TestCase):
 
-    sides = ['aff', 'neg']
+    sides = [DebateSide.AFF, DebateSide.NEG]
 
     testdata = dict()
     testdata[1] = {  # normal
         'positions': [1, 2, 3, 4],
         'scores': [[75.0, 76.0, 74.0, 38.0], [76.0, 73.0, 75.0, 37.5]],
-        'declared_winner': 'aff',
+        'declared_winner': DebateSide.AFF,
         'complete_scores': True,
         'complete_declared': True,
         'totals': [263, 261.5],
-        'calculated_winner': 'aff',
+        'calculated_winner': DebateSide.AFF,
     }
     testdata[2] = {  # low-point win
         'positions': [1, 2, 3],
         'scores': [[73.0, 70.0, 40.0], [80.0, 78.0, 38.5]],
-        'declared_winner': 'aff',
+        'declared_winner': DebateSide.AFF,
         'complete_scores': True,
         'complete_declared': True,
         'totals': [183.0, 196.5],
-        'calculated_winner': 'neg',
+        'calculated_winner': DebateSide.NEG,
     }
     testdata[3] = {  # tie-point win
         'positions': [1, 2, 3, 4],
         'scores': [[75.0, 76.0, 77.0, 38.5], [76.0, 78.0, 75.0, 37.5]],
-        'declared_winner': 'neg',
+        'declared_winner': DebateSide.NEG,
         'complete_scores': True,
         'complete_declared': True,
         'totals': [266.5, 266.5],
@@ -52,7 +53,7 @@ class TestTwoTeamScoresheets(unittest.TestCase):
     testdata[4] = {  # incomplete
         'positions': [1, 2, 3, 4],
         'scores': [[75.0, 76.0, 77.0, 38.5], [76.0, 78.0, None, 37.5]],
-        'declared_winner': 'neg',
+        'declared_winner': DebateSide.NEG,
         'complete_scores': False,
         'complete_declared': True,
         'totals': [266.5, None],
@@ -65,7 +66,7 @@ class TestTwoTeamScoresheets(unittest.TestCase):
         'complete_scores': True,
         'complete_declared': False,
         'totals': [183.0, 196.5],
-        'calculated_winner': 'neg',
+        'calculated_winner': DebateSide.NEG,
     }
 
     def load_scores(self, scoresheet, testdata):
@@ -138,9 +139,9 @@ class TestTwoTeamScoresheets(unittest.TestCase):
         self.assertRaises(AssertionError, scoresheet.set_declared_winners, set(['hello']))
 
 
-class TestBPScoresheets(unittest.TestCase):
+class TestPolyScoresheets(unittest.TestCase):
 
-    sides = ['og', 'oo', 'cg', 'co']
+    sides = [DebateSide.OG, DebateSide.OO, DebateSide.CG, DebateSide.CO]
     positions = [1, 2]
 
     testdata = {}
@@ -148,25 +149,25 @@ class TestBPScoresheets(unittest.TestCase):
     testdata[1] = {  # normal
         'scores': [[76, 69], [76, 70], [72, 85], [69, 85]],
         'complete': True,
-        'ranks': ['cg', 'co', 'oo', 'og'],
+        'ranks': [DebateSide.CG, DebateSide.CO, DebateSide.OO, DebateSide.OG],
         'totals': [145, 146, 157, 154],
     }
     testdata[1] = {  # normal
         'scores': [[75, 75], [75, 74], [75, 76], [76, 76]],
         'complete': True,
-        'ranks': ['co', 'cg', 'og', 'oo'],
+        'ranks': [DebateSide.CO, DebateSide.CG, DebateSide.OG, DebateSide.OO],
         'totals': [150, 149, 151, 152],
     }
     testdata[1] = {  # tie-point
         'scores': [[84, 81], [80, 69], [81, 68], [85, 68]],
         'complete': True,
-        'ranks': None,
+        'ranks': [],
         'totals': [165, 149, 149, 153],
     }
     testdata[2] = { # incomplete
         'scores': [[84, None], [80, 69], [None, 68], [85, 68]],
         'complete': False,
-        'ranks': None,
+        'ranks': [],
         'totals': [None, 149, None, 153],
     }
 
@@ -177,7 +178,7 @@ class TestBPScoresheets(unittest.TestCase):
 
     @on_all_testdata
     def test_bp_scoresheet(self, testdata):
-        scoresheet = BPScoresheet(self.positions)
+        scoresheet = PolyScoresheet(self.positions, self.sides)
         self.load_scores(scoresheet, testdata)
         self.assertEqual(scoresheet.is_complete(), testdata['complete'])
         self.assertEqual(scoresheet.ranked_sides(), testdata['ranks'])
@@ -192,4 +193,4 @@ class TestBPScoresheets(unittest.TestCase):
         for side, scores_for_side in zip(self.sides, testdata['scores']):
             for position, score in zip(self.positions, scores_for_side):
                 self.assertEqual(scoresheet.get_score(side, position), score)
-        self.assertEqual(scoresheet.is_valid(), testdata['ranks'] is not None)
+        self.assertEqual(scoresheet.is_valid(), len(testdata['ranks']) > 0)

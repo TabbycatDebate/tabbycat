@@ -3,6 +3,7 @@ import logging
 from django.test import TestCase
 
 from draw.models import Debate, DebateTeam
+from draw.types import DebateSide
 from participants.models import Adjudicator, Institution, Speaker, Team
 from results.models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
 from results.result import ConsensusDebateResultWithScores, DebateResultByAdjudicatorWithScores, ResultError    # absolute import to keep logger's name consistent
@@ -88,7 +89,7 @@ def bad_load_assertion_test(test_fn):
 
 class BaseTestDebateResult(TestCase):
 
-    SIDES = ['aff', 'neg']
+    SIDES = [DebateSide.AFF, DebateSide.NEG]
 
     def setUp(self):
         self.tournament = Tournament.objects.create(slug="resulttest", name="ResultTest")
@@ -105,7 +106,7 @@ class BaseTestDebateResult(TestCase):
         rd = Round.objects.create(tournament=self.tournament, seq=1, abbreviation="R1")
         self.debate = Debate.objects.create(round=rd, venue=venue)
 
-        sides = [DebateTeam.Side.AFF, DebateTeam.Side.NEG]
+        sides = [0, 1]
         for team, side in zip(Team.objects.all(), sides):
             DebateTeam.objects.create(debate=self.debate, team=team, side=side)
 
@@ -197,21 +198,21 @@ class GeneralSpeakerTestsMixin:
         result = self.get_result()
         neg_speaker = self.teams[1].speaker_set.first()
         with self.assertLogs('results.result', level=logging.ERROR):
-            result.set_speaker('aff', 1, neg_speaker)
+            result.set_speaker(DebateSide.AFF, 1, neg_speaker)
 
     def test_save_speaker_with_unknown_sides(self):
         self._unset_sides()
         result = self.save_blank_result()
         speaker = self.teams[0].speaker_set.first()
-        self.assertRaises(TypeError, result.set_speaker, 'aff', 1, speaker)
+        self.assertRaises(TypeError, result.set_speaker, DebateSide.AFF, 1, speaker)
 
     @incomplete_test
     def test_unfilled_debateteam(self, result):
-        result.debateteams["aff"] = None
+        result.debateteams[DebateSide.AFF] = None
 
     @incomplete_test
     def test_unfilled_speaker(self, result):
-        result.speakers["neg"][1] = None
+        result.speakers[DebateSide.NEG][1] = None
 
     @bad_load_assertion_test
     def test_extraneous_debateteam(self, result):
@@ -227,11 +228,11 @@ class GeneralSpeakerTestsMixin:
 
     @bad_load_assertion_test
     def test_extraneous_speaker(self, result):
-        result.speakers["aff"][5] = None
+        result.speakers[DebateSide.AFF][5] = None
 
     @bad_load_assertion_test
     def test_extraneous_ghost(self, result):
-        result.ghosts["aff"][5] = None
+        result.ghosts[DebateSide.AFF][5] = None
 
 
 # ==============================================================================
@@ -249,7 +250,7 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
 
     testdata['high'] = { # standard high-point win
         'input': {
-            'declared_winners': ['aff', 'neg', 'neg'],
+            'declared_winners': [DebateSide.AFF, DebateSide.NEG, DebateSide.NEG],
             'scores': [[[75.0, 76.0, 74.0, 38.0], [76.0, 73.0, 75.0, 37.5]],
                        [[74.0, 75.0, 76.0, 37.0], [77.0, 74.0, 74.0, 38.0]],
                        [[75.0, 75.0, 75.0, 37.5], [76.0, 78.0, 77.0, 37.0]]]},
@@ -269,8 +270,8 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
             'num_adjs_for_team': [1, 2],
             'sheets_valid': [True, True, True],
             'valid': True,
-            'winner': 'neg',
-            'winner_by_adj': ['aff', 'neg', 'neg']},
+            'winner': DebateSide.NEG,
+            'winner_by_adj': [DebateSide.AFF, DebateSide.NEG, DebateSide.NEG]},
         'low-allowed': {
             'majority_adjs': [1, 2],
             'majority_margins': [-3.25, 3.25],
@@ -279,8 +280,8 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
             'num_adjs_for_team': [1, 2],
             'sheets_valid': [True, True, True],
             'valid': True,
-            'winner': 'neg',
-            'winner_by_adj': ['aff', 'neg', 'neg']},
+            'winner': DebateSide.NEG,
+            'winner_by_adj': [DebateSide.AFF, DebateSide.NEG, DebateSide.NEG]},
         'tied-allowed': {
             'majority_adjs': [1, 2],
             'majority_margins': [-3.25, 3.25],
@@ -289,13 +290,13 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
             'num_adjs_for_team': [1, 2],
             'sheets_valid': [True, True, True],
             'valid': True,
-            'winner': 'neg',
-            'winner_by_adj': ['aff', 'neg', 'neg']},
+            'winner': DebateSide.NEG,
+            'winner_by_adj': [DebateSide.AFF, DebateSide.NEG, DebateSide.NEG]},
     }
 
     testdata['low'] = { # contains low-point wins that reverse the result
         'input': {
-            'declared_winners': ['aff', 'aff', 'neg'],
+            'declared_winners': [DebateSide.AFF, DebateSide.AFF, DebateSide.NEG],
             'scores': [[[73.0, 76.0, 79.0, 37.5], [77.0, 77.0, 78.0, 39.0]],
                        [[79.0, 80.0, 70.0, 36.0], [78.0, 79.0, 73.0, 37.0]],
                        [[73.0, 70.0, 77.0, 35.0], [76.0, 76.0, 77.0, 37.0]]]},
@@ -316,8 +317,8 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
             'num_adjs_for_team': [0, 3],
             'sheets_valid': [True, True, True],
             'valid': True,
-            'winner': 'neg',
-            'winner_by_adj': ['neg', 'neg', 'neg']},
+            'winner': DebateSide.NEG,
+            'winner_by_adj': [DebateSide.NEG, DebateSide.NEG, DebateSide.NEG]},
         'low-allowed': {
             'majority_adjs': [0, 1],
             'majority_margins': [-3.75, 3.75],
@@ -326,17 +327,17 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
             'num_adjs_for_team': [2, 1],
             'sheets_valid': [True, True, True],
             'valid': True,
-            'winner': 'aff',
-            'winner_by_adj': ['aff', 'aff', 'neg']},
+            'winner': DebateSide.AFF,
+            'winner_by_adj': [DebateSide.AFF, DebateSide.AFF, DebateSide.NEG]},
         'tied-allowed': {
             'sheets_valid': [False, False, True],
             'valid': False,
-            'winner_by_adj': [None, None, 'neg']},
+            'winner_by_adj': [None, None, DebateSide.NEG]},
     }
 
     testdata['tie'] = { # contains three tied-point wins
         'input': {
-            'declared_winners': ['neg', 'aff', 'neg'],
+            'declared_winners': [DebateSide.NEG, DebateSide.AFF, DebateSide.NEG],
             'scores': [[[73.0, 72.0, 78.0, 40.0], [73.0, 75.0, 75.0, 40.0]],
                       [[79.0, 73.0, 77.0, 39.5], [79.0, 75.0, 75.0, 39.5]],
                       [[75.0, 78.0, 77.0, 38.0], [72.0, 78.0, 80.0, 38.0]]]},
@@ -360,8 +361,8 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
             'num_adjs_for_team': [1, 2],
             'sheets_valid': [True, True, True],
             'valid': True,
-            'winner': 'neg',
-            'winner_by_adj': ['neg', 'aff', 'neg']},
+            'winner': DebateSide.NEG,
+            'winner_by_adj': [DebateSide.NEG, DebateSide.AFF, DebateSide.NEG]},
         'tied-allowed': {
             'majority_adjs': [0, 2],
             'majority_margins': [0.0, 0.0],
@@ -370,13 +371,13 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
             'num_adjs_for_team': [1, 2],
             'sheets_valid': [True, True, True],
             'valid': True,
-            'winner': 'neg',
-            'winner_by_adj': ['neg', 'aff', 'neg']},
+            'winner': DebateSide.NEG,
+            'winner_by_adj': [DebateSide.NEG, DebateSide.AFF, DebateSide.NEG]},
     }
 
     testdata['solo'] = {  # just one adjudicator
         'input': {
-            'declared_winners': ['neg'],
+            'declared_winners': [DebateSide.NEG],
             'scores': [[[74.0, 76.0, 37.5], [74.0, 77.0, 37.0]]]},
         'num_adjs': 1,
         'num_speakers_per_team': 2,
@@ -393,8 +394,8 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
             'num_adjs_for_team': [0, 1],
             'sheets_valid': [True],
             'valid': True,
-            'winner': 'neg',
-            'winner_by_adj': ['neg']},
+            'winner': DebateSide.NEG,
+            'winner_by_adj': [DebateSide.NEG]},
         'low-allowed': {
             'majority_adjs': [0],
             'majority_margins': [-0.5, 0.5],
@@ -403,8 +404,8 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
             'num_adjs_for_team': [0, 1],
             'sheets_valid': [True],
             'valid': True,
-            'winner': 'neg',
-            'winner_by_adj': ['neg']},
+            'winner': DebateSide.NEG,
+            'winner_by_adj': [DebateSide.NEG]},
         'tied-allowed': {
             'majority_adjs': [0],
             'majority_margins': [-0.5, 0.5],
@@ -413,8 +414,8 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
             'num_adjs_for_team': [0, 1],
             'sheets_valid': [True],
             'valid': True,
-            'winner': 'neg',
-            'winner_by_adj': ['neg']},
+            'winner': DebateSide.NEG,
+            'winner_by_adj': [DebateSide.NEG]},
     }
 
     testdata['even'] = { # even panel, chair gets casting vote, note this is a low-point win
@@ -431,10 +432,10 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
             'num_adjs_for_team': [1, 1],
             'sheets_valid': [True, True],
             'valid': True,
-            'winner': 'neg',
-            'winner_by_adj': ['neg', 'aff']},
+            'winner': DebateSide.NEG,
+            'winner_by_adj': [DebateSide.NEG, DebateSide.AFF]},
         'input': {
-            'declared_winners': ['neg', 'aff'],
+            'declared_winners': [DebateSide.NEG, DebateSide.AFF],
             'scores': [[[80.0, 74.0, 35.5], [79.0, 76.0, 39.0]], [[80.0, 79.0, 37.5], [73.0, 71.0, 39.5]]]},
         'low-allowed': {
             'majority_adjs': [0],
@@ -444,8 +445,8 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
             'num_adjs_for_team': [1, 1],
             'sheets_valid': [True, True],
             'valid': True,
-            'winner': 'neg',
-            'winner_by_adj': ['neg', 'aff']},
+            'winner': DebateSide.NEG,
+            'winner_by_adj': [DebateSide.NEG, DebateSide.AFF]},
         'num_adjs': 2,
         'num_speakers_per_team': 2,
         'tied-allowed': {
@@ -456,8 +457,8 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
             'num_adjs_for_team': [1, 1],
             'sheets_valid': [True, True],
             'valid': True,
-            'winner': 'neg',
-            'winner_by_adj': ['neg', 'aff']},
+            'winner': DebateSide.NEG,
+            'winner_by_adj': [DebateSide.NEG, DebateSide.AFF]},
     }
 
     def save_scores_to_result(self, testdata, result):
@@ -621,7 +622,7 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
 
     @incomplete_test
     def test_unfilled_scoresheet_score(self, result):
-        result.scoresheets[self.adjs[0]].scores["aff"][1] = None
+        result.scoresheets[self.adjs[0]].scores[DebateSide.AFF][1] = None
 
     @bad_load_assertion_test
     def test_extraneous_scoresheet(self, result):
@@ -634,43 +635,43 @@ class TestConsensusDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDeba
     testdata = dict()
 
     testdata['high'] = {
-        'declared_winner': 'aff',
+        'declared_winner': DebateSide.AFF,
         'scores': [[75.0, 76.0, 74.0, 38.0], [76.0, 73.0, 75.0, 37.5]],
         'num_adjs': 3,
         'num_speakers_per_team': 3,
         'totals': [263.0, 261.5],
         'margins': [1.5, -1.5],
-        'high-required': {'valid': True, 'winner': 'aff'},
-        'low-allowed': {'valid': True, 'winner': 'aff'},
-        'tied-allowed': {'valid': True, 'winner': 'aff'},
+        'high-required': {'valid': True, 'winner': DebateSide.AFF},
+        'low-allowed': {'valid': True, 'winner': DebateSide.AFF},
+        'tied-allowed': {'valid': True, 'winner': DebateSide.AFF},
     }
 
     testdata['low'] = { # contains low-point wins that reverse the result
-        'declared_winners': 'aff',
+        'declared_winners': DebateSide.AFF,
         'scores': [[73.0, 76.0, 79.0, 37.5], [77.0, 77.0, 78.0, 39.0]],
         'num_adjs': 3,
         'num_speakers_per_team': 3,
         'totals': [265.5, 271.0],
         'margins': [-5.5, 5.5],
-        'high-required': {'valid': True, 'winner': 'neg'},
-        'low-allowed': {'valid': True, 'winner': 'aff'},
+        'high-required': {'valid': True, 'winner': DebateSide.NEG},
+        'low-allowed': {'valid': True, 'winner': DebateSide.AFF},
         'tied-allowed': {'valid': False, 'winner': None},
     }
 
     testdata['tie'] = { # contains low-point wins that reverse the result
-        'declared_winners': 'neg',
+        'declared_winners': DebateSide.NEG,
         'scores': [[73.0, 72.0, 78.0, 40.0], [73.0, 75.0, 75.0, 40.0]],
         'num_adjs': 3,
         'num_speakers_per_team': 3,
         'totals': [263.0, 263.0],
         'margins': [0.0, 0.0],
         'high-required': {'valid': False, 'winner': None},
-        'low-allowed': {'valid': True, 'winner': 'neg'},
-        'tied-allowed': {'valid': True, 'winner': 'neg'},
+        'low-allowed': {'valid': True, 'winner': DebateSide.NEG},
+        'tied-allowed': {'valid': True, 'winner': DebateSide.NEG},
     }
 
     testdata['two-speakers'] = {  # two speakers per team
-        'declared_winners': 'neg',
+        'declared_winners': DebateSide.NEG,
         'scores': [[74.0, 76.0, 37.5], [74.0, 77.0, 37.0]],
         'num_adjs': 1,
         'num_speakers_per_team': 2,
@@ -679,9 +680,9 @@ class TestConsensusDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDeba
         'common': {
             'scores': [[74.0, 76.0, 37.5], [74.0, 77.0, 37.0]],
             'totals_by_adj': [[187.5, 188.0]]},
-        'high-required': {'valid': True, 'winner': 'neg'},
-        'low-allowed': {'valid': True, 'winner': 'neg'},
-        'tied-allowed': {'valid': True, 'winner': 'neg'},
+        'high-required': {'valid': True, 'winner': DebateSide.NEG},
+        'low-allowed': {'valid': True, 'winner': DebateSide.NEG},
+        'tied-allowed': {'valid': True, 'winner': DebateSide.NEG},
     }
 
     def save_scores_to_result(self, testdata, result):
@@ -763,4 +764,4 @@ class TestConsensusDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDeba
 
     @incomplete_test
     def test_unfilled_scoresheet_score(self, result):
-        result.scoresheet.scores["aff"][1] = None
+        result.scoresheet.scores[DebateSide.AFF][1] = None

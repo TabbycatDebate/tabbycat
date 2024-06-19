@@ -41,7 +41,7 @@ class TournamentPreferenceFormTests(TestCase):
             ('scoring', (('reply_score_min', Decimal('100')), ('reply_score_max', Decimal('0')))),
             ('feedback', (('adj_min_score', 100), ('adj_max_score', 0))),
             ('draw_rules', (('draw_side_allocations', 'balance'), ('draw_odd_bracket', 'intermediate1'))),
-            ('debate_rules', (('ballots_per_debate_prelim', 'per-adj'), ('teams_in_debate', 'bp'))),
+            ('debate_rules', (('ballots_per_debate_prelim', 'per-adj'), ('teams_in_debate', 4))),
             ('data_entry', (('public_use_password', True), ('public_password', ''))),
             ('ui_options', (('team_code_names', 'everywhere'), ('show_team_institutions', True))),
         ]

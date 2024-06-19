@@ -70,7 +70,7 @@ class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
             'debate_team__debate__round',
             'debate_team__team__institution',
         )
-        if self.tournament.pref('teams_in_debate') == 'bp':
+        if self.tournament.pref('teams_in_debate') == 4:
             team_scores.filter(debate_team__debate__round__stage=Round.Stage.PRELIMINARY)
             kwargs["top_team_scores"] = team_scores.order_by('-score')[:9]
             kwargs["bottom_team_scores"] = team_scores.order_by('score')[:9]
@@ -444,7 +444,7 @@ class BaseTeamStandingsView(BaseStandingsView):
         self.limit_rank_display(standings)
 
         rounds = self.get_rounds()
-        opponents = self.tournament.pref('teams_in_debate') == 'two'
+        opponents = self.tournament.pref('teams_in_debate') == 2
         add_team_round_results(standings, rounds, opponents=opponents)
         self.populate_result_missing(standings)
 
@@ -591,12 +591,12 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
 
         # Can't use prefetch.populate_win_counts, since that doesn't exclude
         # silent rounds and future rounds appropriately
-        opponents = self.tournament.pref('teams_in_debate') == 'two'
+        opponents = self.tournament.pref('teams_in_debate') == 2
         add_team_round_results_public(teams, rounds, opponents=opponents)
 
         # Pre-sort, as Vue tables can't do two sort keys
         teams = sorted(teams, key=lambda t: (-t.points, getattr(t, name_attr)))
-        key, title = ('points', _("Points")) if self.tournament.pref('teams_in_debate') == 'bp' else ('wins', _("Wins"))
+        key, title = ('points', _("Points")) if self.tournament.pref('teams_in_debate') == 4 else ('wins', _("Wins"))
         header = {'key': key, 'tooltip': title, 'icon': 'bar-chart'}
 
         table = TabbycatTableBuilder(view=self, sort_order='desc')

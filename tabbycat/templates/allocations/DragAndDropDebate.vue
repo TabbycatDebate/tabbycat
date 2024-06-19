@@ -46,24 +46,9 @@
       </div>
     </slot>
     <slot name="teams">
-      <div class="vc-bp-grid flex-12 flex-truncate" v-if="sides.length === 4 && debateOrPanel.teams">
-        <div :class="['d-flex flex-truncate align-items-center']" v-for="side in sides">
-          <inline-team v-if="debateOrPanel.teams[side]" :debate-id="debateOrPanel.id"
-                       :is-elimination="isElimination" :team="debateOrPanel.teams[side]"
-                       :key="debateOrPanel.teams[side].id"></inline-team>
-          <div v-else class="bg-danger small text-white text-uppercase px-2 py-1 flex-fill d-flex align-items-center">
-            No {{ side }} team
-          </div>
-        </div>
-      </div>
-      <div class="d-flex flex-column flex-6 flex-truncate" v-if="sides.length === 2 && debateOrPanel.teams">
-        <div :class="['d-flex flex-fill align-items-center']" v-for="side in sides">
-          <inline-team v-if="debateOrPanel.teams[side]" :debate-id="debateOrPanel.id"
-                       :is-elimination="isElimination" :team="debateOrPanel.teams[side]"
-                       :key="debateOrPanel.teams[side].id"></inline-team>
-          <div v-else class="bg-danger small text-white text-uppercase px-2 py-1 flex-fill d-flex align-items-center">
-            No {{ side }} team
-          </div>
+      <div class="teams-list" :style="{ flex: (maxTeams + maxTeams % 2) * 3, 'flex-direction': 'row !important', 'flex-wrap': 'wrap' }" v-if="debateOrPanel.teams">
+        <div :class="['d-flex flex-fill flex-truncate align-items-center']" v-for="team in debateOrPanel.teams">
+          <inline-team :debate-id="debateOrPanel.id" :is-elimination="isElimination" :team="team" :key="team.id" v-if="team !== null"/>
         </div>
       </div>
     </slot>
@@ -93,7 +78,7 @@ import InlineTeam from '../../draw/templates/InlineTeam.vue'
 
 export default {
   components: { InlineTeam },
-  props: ['debateOrPanel'],
+  props: ['debateOrPanel', 'maxTeams'],
   computed: {
     sides: function () {
       return this.$store.state.tournament.sides

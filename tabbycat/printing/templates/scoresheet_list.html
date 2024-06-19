@@ -89,7 +89,7 @@
         // From Django
         round: '{{ round.name|force_escape }}',
         hasReplies: {% if pref.reply_scores_enabled %}true{% else %}false{% endif %},
-        isBP: {% if pref.teams_in_debate == 'two' %}false{% else %}true{% endif %},
+        isBP: {% if pref.teams_in_debate == 2 %}false{% else %}true{% endif %},
         speakersCount: {{ pref.substantive_speakers }},
         showDigits: {% if pref.ballots_confirm_digits %}true{% else %}false{% endif %},
         hideMotions: {% if pref.ballots_hide_motions %}true{% else %}false{% endif %},

@@ -39,7 +39,7 @@ def readable_ballotsub_result(debateresult):
     use_codes = use_team_code_names(t, True)
 
     try:
-        if t.pref('teams_in_debate') == 'two':
+        if t.pref('teams_in_debate') == 2:
             result_winner = _("%(team)s (%(side)s) won") % get_display_name(debateresult.winning_dt(), t, use_codes)
             # Translators: The team here is the losing team
             result = _("vs %(team)s (%(side)s)") % get_display_name(debateresult.losing_dt(), t, use_codes)
@@ -147,7 +147,7 @@ def side_and_position_names(tournament):
     """
     sides = [get_side_name(tournament, side, 'full').title() for side in tournament.sides]
 
-    if tournament.pref('teams_in_debate') == 'bp' \
+    if tournament.pref('teams_in_debate') == 4 \
             and tournament.last_substantive_position == 2 \
             and tournament.reply_position is None:
 

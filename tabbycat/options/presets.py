@@ -100,7 +100,7 @@ class AustralsPreferences(PreferencesPreset):
     draw_rules__draw_pairing_method            = 'slide'
     draw_rules__draw_avoid_conflicts           = 'one_up_one_down'
     # Debate Rules
-    debate_rules__teams_in_debate              = 'two'
+    debate_rules__teams_in_debate              = 2
     debate_rules__ballots_per_debate_prelim    = 'per-adj'
     debate_rules__ballots_per_debate_elim      = 'per-adj'
     debate_rules__substantive_speakers         = 3
@@ -130,7 +130,7 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     scoring__teamscore_includes_ghosts         = True  # WUDC 34.9.3.2
     # Debate Rules
     debate_rules__substantive_speakers         = 2
-    debate_rules__teams_in_debate              = 'bp'
+    debate_rules__teams_in_debate              = 4
     debate_rules__ballots_per_debate_prelim    = 'per-debate'
     debate_rules__ballots_per_debate_elim      = 'per-debate'
     debate_rules__speakers_in_ballots          = 'prelim'

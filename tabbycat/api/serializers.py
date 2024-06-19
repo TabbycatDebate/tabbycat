@@ -958,10 +958,15 @@ class DebateAdjudicatorSerializer(serializers.Serializer):
 class RoundPairingSerializer(serializers.ModelSerializer):
     class DebateTeamSerializer(serializers.ModelSerializer):
         team = fields.TournamentHyperlinkedRelatedField(view_name='api-team-detail', queryset=Team.objects.all())
+        side = fields.SideChoiceField(required=False)
 
         class Meta:
             model = DebateTeam
             fields = ('team', 'side')
+
+        def save(self, **kwargs):
+            kwargs['side'] = kwargs.get('side', kwargs['seq'])
+            return super().save(**kwargs)
 
     class PairingLinksSerializer(serializers.Serializer):
         ballots = fields.RoundHyperlinkedIdentityField(
@@ -991,15 +996,16 @@ class RoundPairingSerializer(serializers.ModelSerializer):
         exclude = ('round', 'flags')
 
     def create(self, validated_data):
-        teams_data = validated_data.pop('debateteam_set')
+        teams_data = validated_data.pop('debateteam_set', [])
         adjs_data = validated_data.pop('adjudicators', None)
 
         validated_data['round'] = self.context['round']
         debate = super().create(validated_data)
 
-        teams = self.DebateTeamSerializer(many=True)
-        teams._validated_data = teams_data  # Data was already validated
-        teams.save(debate=debate)
+        teams = self.DebateTeamSerializer()
+        for i, team in enumerate(teams_data):
+            teams._validated_data = teams_data  # Data was already validated
+            teams.save(debate=debate, seq=i)
 
         if adjs_data is not None:
             adjudicators = DebateAdjudicatorSerializer()
@@ -1171,7 +1177,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         class SheetSerializer(serializers.Serializer):
 
             class TeamResultSerializer(serializers.Serializer):
-                side = serializers.ChoiceField(choices=DebateTeam.Side.choices)
+                side = fields.SideChoiceField(required=False)
                 points = serializers.IntegerField(required=False)
                 win = serializers.BooleanField(required=False)
                 score = serializers.FloatField(required=False, allow_null=True)
@@ -1230,9 +1236,10 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
 
                 def save(self, **kwargs):
                     result = kwargs['result']
+                    side = self.validated_data.get('side', kwargs['seq'])
 
-                    if result.get_scoresheet_class().uses_declared_winners and self.validated_data.get('win', False):
-                        args = [self.validated_data['side']]
+                    if result.scoresheet_class.uses_declared_winners and self.validated_data.get('win', False):
+                        args = [side]
                         if kwargs.get('adjudicator') is not None and not result.ballotsub.single_adj:
                             args.insert(0, kwargs.get('adjudicator'))
                         result.add_winner(*args)
@@ -1242,7 +1249,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                         speech_serializer._validated_data = speech
                         speech_serializer.save(
                             result=result,
-                            side=self.validated_data['side'],
+                            side=side,
                             seq=i,
                             adjudicator=kwargs.get('adjudicator'),
                         )
@@ -1266,16 +1273,16 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                 debate = self.context.get('debate')
                 if len(value) != debate.debateteam_set.count():
                     raise serializers.ValidationError('Incorrect number of teams')
-                for team in value:
-                    if debate.get_team(team['side']) != team['team']:
+                for i, team in enumerate(value):
+                    if debate.get_team(i) != team['team']:
                         raise serializers.ValidationError('Inconsistent team')
                 return value
 
             def save(self, **kwargs):
                 team_serializer = self.TeamResultSerializer(context=self.context)
-                for team in self.validated_data.get('teams', []):
+                for i, team in enumerate(self.validated_data.get('teams', [])):
                     team_serializer._validated_data = team
-                    team_serializer.save(result=kwargs['result'], adjudicator=self.validated_data.get('adjudicator'))
+                    team_serializer.save(result=kwargs['result'], adjudicator=self.validated_data.get('adjudicator'), seq=i)
                 return kwargs['result']
 
         sheets = SheetSerializer(many=True, required=True)

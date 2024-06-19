@@ -113,7 +113,7 @@ def calculate_live_thresholds(bc, tournament, round):
 
     if bc.break_size <= 1 or total_teams == 0:
         return None, None # Bad input
-    elif tournament.pref('teams_in_debate') == 'bp':
+    elif tournament.pref('teams_in_debate') == 4:
         safe, dead = liveness_bp(bc.is_general, round.seq, bc.break_size,
                             total_teams, total_rounds, team_scores)
     else:

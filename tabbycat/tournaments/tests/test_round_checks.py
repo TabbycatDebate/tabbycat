@@ -3,6 +3,7 @@ from django.test import TestCase
 from adjallocation.models import DebateAdjudicator
 from availability.utils import set_availability
 from draw.models import Debate, DebateTeam
+from draw.types import DebateSide
 from participants.models import Adjudicator, Team
 from tournaments.models import Round, Tournament
 from venues.models import Venue
@@ -24,8 +25,8 @@ class TestRoundChecks(TestCase):
             team1 = Team.objects.create(tournament=self.tournament, reference=f"Team {i}A", use_institution_prefix=False)
             team2 = Team.objects.create(tournament=self.tournament, reference=f"Team {i}B", use_institution_prefix=False)
             adj = Adjudicator.objects.create(tournament=self.tournament, name=f"Adjudicator {i}")
-            DebateTeam.objects.create(debate=debate, team=team1, side=DebateTeam.Side.AFF)
-            DebateTeam.objects.create(debate=debate, team=team2, side=DebateTeam.Side.NEG)
+            DebateTeam.objects.create(debate=debate, team=team1, side=DebateSide.AFF)
+            DebateTeam.objects.create(debate=debate, team=team2, side=DebateSide.NEG)
             DebateAdjudicator.objects.create(debate=debate, adjudicator=adj, type=DebateAdjudicator.TYPE_CHAIR)
             self.debates.append(debate)
             self.venues.append(venue)
@@ -52,8 +53,8 @@ class TestRoundChecks(TestCase):
 
     def test_duplicate_team_names(self):
         self.assertEqual(self.round.duplicate_team_names.count(), 0)
-        self.debates[0].aff_dt.team = self.teams[1][0]
-        self.debates[0].aff_dt.save()
+        self.debates[0].debateteams[DebateSide.AFF].team = self.teams[1][0]
+        self.debates[0].debateteams[DebateSide.AFF].save()
         self.assertEqual(self.round.duplicate_team_names.count(), 1)
         self.assertEqual(self.round.duplicate_team_names.first(), self.teams[1][0].short_name)
 

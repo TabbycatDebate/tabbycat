@@ -10,6 +10,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
 from draw.models import Debate, DebateTeam
+from draw.types import DebateSide
 from options.utils import use_team_code_names_data_entry
 from participants.models import Speaker, Team
 from participants.templatetags.team_name_for_data_entry import team_name_for_data_entry
@@ -243,7 +244,7 @@ class BaseBallotSetForm(BaseResultForm):
         self.adjudicators = list(self.debate.adjudicators.voting())
         self.motions = self.debate.round.roundmotion_set.order_by('seq').select_related('motion')
 
-        self.sides = self.tournament.sides
+        self.sides = sorted([dt.side for dt in self.debate.debateteam_set.all()])
         self.positions = self.tournament.positions
         self.last_substantive_position = self.tournament.last_substantive_position  # also used in template
         self.reply_position = self.tournament.reply_position  # also used in template
@@ -263,7 +264,7 @@ class BaseBallotSetForm(BaseResultForm):
         self.bypassing_checks = self.tournament.pref('disable_ballot_confirms') and not self.ballotsub.single_adj
         self.max_margin = self.tournament.pref('maximum_margin')
         self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
-                               self.tournament.pref('teams_in_debate') == 'two')
+                               self.tournament.pref('teams_in_debate') == 2)
         self.using_speaker_ranks = self.tournament.pref('speaker_ranks') != 'none'
 
     # --------------------------------------------------------------------------
@@ -272,7 +273,7 @@ class BaseBallotSetForm(BaseResultForm):
 
     @staticmethod
     def _fieldname_motion_veto(side):
-        return '%(side)s_motion_veto' % {'side': side}
+        return '%(side)d_motion_veto' % {'side': side}
 
     # --------------------------------------------------------------------------
     # Form set-up
@@ -346,7 +347,7 @@ class BaseBallotSetForm(BaseResultForm):
         # If sides are already confirmed, initialise the sides choice field
         if self.choosing_sides and self.ballotsub.debate.sides_confirmed:
             try:
-                initial['choose_sides'] = str(self.debate.aff_team.id) + "," + str(self.debate.neg_team.id)
+                initial['choose_sides'] = str(self.debate.teams[DebateSide.AFF].id) + "," + str(self.debate.teams[DebateSide.NEG].id)
             except DebateTeam.DoesNotExist:
                 pass
 
@@ -459,11 +460,11 @@ class ScoresMixin:
 
     @staticmethod
     def _fieldname_speaker(side, pos):
-        return '%(side)s_speaker_s%(pos)d' % {'side': side, 'pos': pos}
+        return '%(side)d_speaker_s%(pos)d' % {'side': side, 'pos': pos}
 
     @staticmethod
     def _fieldname_ghost(side, pos):
-        return '%(side)s_ghost_s%(pos)d' % {'side': side, 'pos': pos}
+        return '%(side)d_ghost_s%(pos)d' % {'side': side, 'pos': pos}
 
     # --------------------------------------------------------------------------
     # Form set-up
@@ -477,8 +478,11 @@ class ScoresMixin:
                 queryset = Speaker.objects.filter(team__in=self.debate.teams)
             else:
                 queryset = self.debate.get_team(side).speakers
+
             self.fields[self._fieldname_speaker(side, pos)] = forms.ModelChoiceField(
                 queryset=queryset, required=True)
+            if len(queryset) == 1:
+                self.fields[self._fieldname_speaker(side, pos)].initial = queryset[0]
 
             # 3(b). Ghost fields
             self.fields[self._fieldname_ghost(side, pos)] = forms.BooleanField(required=False,
@@ -654,11 +658,11 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
     @staticmethod
     def _fieldname_score(side, pos):
-        return '%(side)s_score_s%(pos)d' % {'side': side, 'pos': pos}
+        return '%(side)d_score_s%(pos)d' % {'side': side, 'pos': pos}
 
     @staticmethod
     def _fieldname_srank(side, pos):
-        return '%(side)s_srank_s%(pos)d' % {'side': side, 'pos': pos}
+        return '%(side)d_srank_s%(pos)d' % {'side': side, 'pos': pos}
 
     @staticmethod
     def _fieldname_declared_winner():
@@ -805,7 +809,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
     @staticmethod
     def _fieldname_score(adj, side, pos):
-        return '%(side)s_score_a%(adj)d_s%(pos)d' % {'adj': adj.id, 'side': side, 'pos': pos}
+        return '%(side)d_score_a%(adj)d_s%(pos)d' % {'adj': adj.id, 'side': side, 'pos': pos}
 
     @staticmethod
     def _fieldname_declared_winner(adj):
@@ -928,9 +932,9 @@ class TeamsMixin:
 
     def create_team_selector(self):
         # 3(a). List of teams in multiple-select
-        side_choices = [(side, _("%(team)s (%(side)s)") % {
+        side_choices = [(side.value, _("%(team)s (%(side)s)") % {
             'team': team_name_for_data_entry(self.debate.get_team(side), self.use_codes),
-            'side': self._side_name(side)}) for side in self.tournament.sides]
+            'side': self._side_name(side)}) for side in self.sides]
         return forms.MultipleChoiceField(choices=side_choices,
                 widget=forms.CheckboxSelectMultiple)
 
@@ -987,7 +991,7 @@ class SingleEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        num_advancing = int(self.tournament.pref('teams_in_debate') == 'bp' and not self.debate.round.is_last) + 1
+        num_advancing = len(self.sides) // 2 if not self.debate.round.is_last else 1
         if self._fieldname_advancing() in cleaned_data and len(cleaned_data[self._fieldname_advancing()]) != num_advancing:
             self.add_error(self._fieldname_advancing(), forms.ValidationError(
                 ngettext(
