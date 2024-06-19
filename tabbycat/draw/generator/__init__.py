@@ -71,6 +71,15 @@ def get_bp_generator(draw_type):
         raise ValueError("Unrecognised draw type for BP draw: {}".format(draw_type))
 
 
+def get_poly_generator(draw_type):
+    try:
+        return {
+            "random": RandomPolyDrawGenerator,
+        }[draw_type]
+    except KeyError:
+        raise ValueError("Unrecognised draw type for poly draw: {}".format(draw_type))
+
+
 def DrawGenerator(teams_in_debate, draw_type, teams, results=None, rrseq=None, **kwargs):  # noqa: N802 (factory function)
     """Factory for draw objects.
     Takes a list of options and returns an appropriate subclass of BaseDrawGenerator.
@@ -84,10 +93,10 @@ def DrawGenerator(teams_in_debate, draw_type, teams, results=None, rrseq=None, *
     elif teams_in_debate == 2:
         klass = get_two_team_generator(draw_type, **kwargs)
 
-    elif teams_in_debate > 2:
+    elif teams_in_debate == 4:
         klass = get_bp_generator(draw_type)
 
     else:
-        raise ValueError("Unrecognised teams-per-debate option: {}".format(teams_in_debate))
+        klass = get_poly_generator(draw_type)
 
-    return klass(teams, results, rrseq, teams_in_debate=teams_in_debate, **kwargs)
+    return klass(teams, results, rrseq, **kwargs)

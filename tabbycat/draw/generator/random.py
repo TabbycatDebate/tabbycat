@@ -4,22 +4,22 @@ import random
 
 from django.utils.translation import gettext as _
 
-from .common import BaseBPDrawGenerator, BasePairDrawGenerator, DrawUserError
+from .common import BaseBPDrawGenerator, BaseDrawGenerator, BasePairDrawGenerator, DrawUserError
 from .graph import GraphAllocatedSidesMixin, GraphGeneratorMixin
 from .pairing import Pairing, PolyPairing
 from ..types import DebateSide
 
 
 class RandomPairingsMixin:
-    """Provides actual random part of it, generic to pair and BP draws.
-    Classes using this mixin must define self.teams_in_debate.
+    """Provides actual random part of it, generic to pair, BP, and PS draws.
+    Classes using this mixin must define teams_in_debate.
     """
 
-    def make_random_pairings(self):
+    def make_random_pairings(self, teams_in_debate):
         teams = list(self.teams)  # Make a copy
         random.shuffle(teams)
-        args = [iter(teams)] * self.teams_in_debate  # recipe from Python itertools docs
-        pairings = [self.pairing_class(teams=t, bracket=0, room_rank=0, num_sides=self.teams_in_debate) for t in zip(*args)]
+        args = [iter(teams)] * teams_in_debate  # recipe from Python itertools docs
+        pairings = [self.pairing_class(teams=t, bracket=0, room_rank=0, num_sides=len(t)) for t in zip(*args)]
         return pairings
 
 
@@ -41,7 +41,7 @@ class BaseRandomDrawGenerator(RandomPairingsMixin, BasePairDrawGenerator):
     DEFAULT_OPTIONS = {"max_swap_attempts": 20, "avoid_conflicts": "off"}
 
     def generate(self):
-        self._draw = self.make_random_pairings()
+        self._draw = self.make_random_pairings(self.TEAMS_IN_DEBATE)
         self.avoid_conflicts(self._draw)  # Operates in-place
         self.allocate_sides(self._draw)  # Operates in-place
         return self._draw
@@ -51,7 +51,7 @@ class BaseRandomDrawGenerator(RandomPairingsMixin, BasePairDrawGenerator):
 
 
 class GraphRandomDrawMixin:
-    def make_random_pairings(self):
+    def make_random_pairings(self, teams_in_debate):
         return self.generate_pairings({0: self._get_pools()})[0]
 
 
@@ -120,7 +120,7 @@ class GraphRandomWithAllocatedSidesDrawGenerator(GraphAllocatedSidesMixin, Graph
 
 class SwapRandomWithAllocatedSidesDrawGenerator(SwapRandomDrawMixin, BaseRandomWithAllocatedSidesDrawGenerator):
 
-    def make_random_pairings(self):
+    def make_random_pairings(self, teams_in_debate):
         aff_teams = [t for t in self.teams if t.allocated_side == DebateSide.AFF]
         neg_teams = [t for t in self.teams if t.allocated_side == DebateSide.NEG]
 
@@ -145,5 +145,22 @@ class RandomBPDrawGenerator(RandomPairingsMixin, BaseBPDrawGenerator):
     DEFAULT_OPTIONS = {}
 
     def generate(self):
-        self._draw = self.make_random_pairings()
+        self._draw = self.make_random_pairings(self.TEAMS_IN_DEBATE)
+        return self._draw
+
+
+class RandomPolyDrawGenerator(RandomPairingsMixin, BaseDrawGenerator):
+
+    requires_even_teams = False
+    requires_prev_result = False
+    pairing_class = PolyPairing
+
+    DEFAULT_OPTIONS = {}
+
+    def __init__(self, *args, teams_in_debate: int, **kwargs):
+        self.teams_in_debate = teams_in_debate
+        super().__init__(*args, **kwargs)
+
+    def generate(self):
+        self._draw = self.make_random_pairings(self.teams_in_debate)
         return self._draw

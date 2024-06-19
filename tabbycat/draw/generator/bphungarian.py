@@ -290,7 +290,7 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
             points_in_room = set(team.points for team in teams)
             if not all([x in allowed for x in points_in_room]):
                 logger.error("Teams with points %s in room that should only have %s", allowed, points_in_room)
-            pairing = PolyPairing(teams=teams, bracket=level, room_rank=i, num_sides=self.teams_in_debate)
+            pairing = PolyPairing(teams=teams, bracket=level, room_rank=i, num_sides=4)
             pairings.append(pairing)
 
             for team in teams:
