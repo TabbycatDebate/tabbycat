@@ -186,7 +186,7 @@ class Debate(models.Model):
         """dt = DebateTeam"""
         if not hasattr(self, '_team_properties'):
             self._populate_teams()
-        return self._team_properties['%d_dt' % side]
+        return self._dts[side]
 
     # --------------------------------------------------------------------------
     # Other properties

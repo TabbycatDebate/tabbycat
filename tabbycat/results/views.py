@@ -91,8 +91,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
         iron_speeches = []
         use_code_names = use_team_code_names_data_entry(self.tournament, True)
         for d in self._get_draw():
-            for side in self.tournament.sides:
-                debateteam = d.get_dt(side)
+            for debateteam in d.debateteams:
                 if debateteam.iron > 0 or debateteam.iron_prev:
                     iron_speeches.append({
                         'venue': d.venue.display_name if d.venue else None,
