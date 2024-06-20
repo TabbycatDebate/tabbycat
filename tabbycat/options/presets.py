@@ -362,6 +362,33 @@ class APDAPreferences(PreferencesPreset):
     standings__speaker_standings_precedence    = ['average', 'srank', 'trimmed_mean']
 
 
+class PublicSpeaking(PreferencesPreset):
+    name = _("Public Speaking")
+    show_in_list = True
+    description = _("Arbitrary number of teams per room, one speech each, no team points")
+
+    scoring__score_min                         = Decimal('50')
+    scoring__score_max                         = Decimal('99')
+    scoring__score_step                        = Decimal('1')
+    scoring__maximum_margin                    = 0.0
+    scoring__margin_includes_dissenters        = True  # Disables win/rank calculations
+    # Debate Rules
+    debate_rules__substantive_speakers         = 1
+    debate_rules__teams_in_debate              = 6
+    debate_rules__ballots_per_debate_prelim    = 'per-adj'
+    debate_rules__ballots_per_debate_elim      = 'per-adj'
+    debate_rules__speakers_in_ballots          = 'prelim'
+    debate_rules__side_names                   = '1-2'
+    debate_rules__reply_scores_enabled         = False
+    motions__motion_vetoes_enabled             = False
+    motions__enable_motions                    = False
+    # Draw Rules
+    draw_rules__avoid_same_institution         = False
+    draw_rules__avoid_team_history             = False
+    # Standings
+    standings__team_standings_precedence       = ['speaks_avg']
+
+
 class PublicInformation(PreferencesPreset):
     name         = _("Public Information Options")
     show_in_list = False
