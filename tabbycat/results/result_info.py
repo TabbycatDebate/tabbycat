@@ -23,7 +23,13 @@ standardized format, equivalent to:
                             "speaker": Speaker,
                             "score": float,
                             "ghost": bool,
-                            "rank": int
+                            "rank": int,
+                            "criteria": [
+                                {
+                                    "criterion": ScoreCriterion,
+                                    "score": float
+                                }
+                            ]
                         }
                     ]
                 }
@@ -32,6 +38,18 @@ standardized format, equivalent to:
     ]
 }
 """
+
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .models import ScoreCriterion
+
+
+@dataclass
+class CriterionScore:
+    criterion: 'ScoreCriterion'
+    score: float
 
 
 class SpeechInfo:
@@ -44,11 +62,15 @@ class SpeechInfo:
             srank = result.get_speaker_rank(side, pos)
             if srank is not None:
                 self.rank = srank
+            if len(result.criteria) > 0:
+                self.criteria = [CriterionScore(key, val) for key, val in result.scoresheet.criteria_scores.items()]
         else:
             self.score = result.speakerscorebyadj_field_score(adj, side, pos)
             srank = result.get_speaker_rank(adj, side, pos)
             if srank is not None:
                 self.rank = srank
+            if len(result.criteria) > 0:
+                self.criteria = [CriterionScore(key, val) for key, val in result.scoresheets[adj].criteria_scores.items()]
 
 
 class TeamSheetInfo:

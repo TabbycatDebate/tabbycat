@@ -27,6 +27,16 @@ function refresh_totals(scoresheet) {
     $neg_rank = $('.1_rank', $scoresheet);
     $aff_margin = $('.0_margin', $scoresheet);
     $neg_margin = $('.1_margin', $scoresheet);
+    if ($('.criteria', $scoresheet)) {
+      for (const side of [0, 1]) {
+        for (const speaker of [...$(`.side-${side}.score`, $scoresheet)]) {
+          const criteria = $('.criterion input', speaker);
+          var weighted = 0;
+          criteria.each((i, c) => {weighted += c.value * c.attributes.weight.value})
+          speaker.querySelector('input.total').value = weighted;
+        }
+      }
+    }
     var aff = sum($('.side-0.score input', $scoresheet));
     var neg = sum($('.side-1.score input', $scoresheet));
     $aff_total.text(aff);
@@ -63,11 +73,22 @@ function refresh_totals(scoresheet) {
     var total_scores = []
     var rank_elements = []
 
-    for (var i = 0; i < 4; i++) {
-      totals_elements[i] = $(`.${i}_total`, $scoresheet);
-      margins_elements[i] = $(`.${i}_margin`, $scoresheet);
-      rank_elements[i] = $(`.${i}_rank`, $scoresheet);
-      var team_total = sum($(`.side-${i}.score input`, $scoresheet));
+    for (var i = 0; i < positions.length; i++) {
+      var team = positions[i];
+      totals_elements[team] = $('.' + i + '_total', $scoresheet);
+      margins_elements[team] = $('.' + i + '_margin', $scoresheet);
+      rank_elements[team] = $('.' + i + '_rank', $scoresheet);
+      if ($('.criteria', $scoresheet)) {
+        for (const side of positions) {
+          for (const speaker of [...$(`.${i}.score`, $scoresheet)]) {
+            const criteria = $('.criterion input', speaker);
+            var weighted = 0;
+            criteria.each((i, c) => {weighted += c.value * c.attributes.weight.value})
+            speaker.querySelector('input.total').value = weighted;
+          }
+        }
+      }
+      var team_total = sum($('.' + i + '.score input.total', $scoresheet));
       // Update totals scores only if both speaker scores have been entered
       if (team_total > 99) {
         total_scores[i] = team_total

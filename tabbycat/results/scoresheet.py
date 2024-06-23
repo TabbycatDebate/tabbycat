@@ -58,8 +58,10 @@ class ScoresMixin:
     def __init__(self, positions, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.positions = positions
+        self.criteria = kwargs.get('criteria', [])
         self.scores = {side: dict.fromkeys(self.positions, None) for side in self.sides}
         self.speaker_ranks = {side: dict.fromkeys(self.positions, None) for side in self.sides}
+        self.criteria_scores = {side: {pos: dict.fromkeys(self.criteria, None) for pos in self.positions} for side in self.sides}
 
     def is_complete(self):
         scores_complete = all(self.scores[s][p] is not None for s in self.sides
@@ -67,7 +69,8 @@ class ScoresMixin:
         return super().is_complete() and scores_complete
 
     def set_score(self, side, position, score):
-        self.scores[side][position] = score
+        if len(self.criteria) == 0:
+            self.scores[side][position] = score
 
     def get_score(self, side, position):
         return self.scores[side][position]
@@ -77,6 +80,17 @@ class ScoresMixin:
 
     def get_speaker_rank(self, side: str, position: int) -> int:
         return self.speaker_ranks[side][position]
+
+    def set_criterion_score(self, side: str, position: int, criterion, score):
+        self.criteria_scores[side][position][criterion] = score
+        weighted_score = float(score) * criterion.weight
+        if self.scores[side][position] is None:
+            self.scores[side][position] = weighted_score
+        else:
+            self.scores[side][position] += weighted_score
+
+    def get_criterion_score(self, side: str, position: int, criterion):
+        return self.criteria_scores[side][position][criterion]
 
     def get_total(self, side):
         scores = [self.scores[side][p] for p in self.positions]

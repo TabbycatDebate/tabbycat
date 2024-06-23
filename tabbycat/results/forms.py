@@ -17,6 +17,7 @@ from participants.templatetags.team_name_for_data_entry import team_name_for_dat
 from tournaments.utils import get_side_name
 
 from .consumers import BallotResultConsumer, BallotStatusConsumer
+from .models import ScoreCriterion
 from .result import (ConsensusDebateResult, ConsensusDebateResultWithScores,
                      DebateResultByAdjudicator, DebateResultByAdjudicatorWithScores)
 from .utils import get_status_meta, side_and_position_names
@@ -142,12 +143,14 @@ class BaseResultForm(forms.Form):
 
     def __init__(self, ballotsub, tabroom, password=False, *args, **kwargs):
         self.ballotsub = ballotsub
-        self.result = kwargs.pop('result', self.result_class(self.ballotsub))
-        self.filled = kwargs.pop('filled', False)
-        super().__init__(*args, **kwargs)
 
         self.debate = ballotsub.debate
         self.tournament = self.debate.round.tournament
+        self.criteria = ScoreCriterion.objects.filter(tournament=self.tournament)
+
+        self.result = kwargs.pop('result', self.result_class(self.ballotsub, criteria=self.criteria))
+        self.filled = kwargs.pop('filled', False)
+        super().__init__(*args, **kwargs)
 
         self.has_tournament_password = password and self.tournament.pref('public_use_password')
         self.tabroom = tabroom
@@ -619,7 +622,7 @@ class ScoresMixin:
         for team in self.debate.teams:
             yield self['team_%d' % team.id]
 
-    def scoresheet(self, fieldname_score_func, fieldname_srank_func=None):
+    def scoresheet(self, fieldname_score_func, fieldname_srank_func=None, fieldname_criterion_func=None):
         """Returns a list of dictionaries for a single scoresheet, to allow for
         easy iteration of the form. The function `fieldname_score_func` should
         take two arguments `(side, pos)`. This function is called by the
@@ -639,6 +642,7 @@ class ScoresMixin:
                     "speaker": self[self._fieldname_speaker(side, pos)],
                     "ghost": self[self._fieldname_ghost(side, pos)],
                     "score": self[fieldname_score_func(side, pos)],
+                    "criteria": [(criterion, self[fieldname_criterion_func(side, pos, criterion)]) for criterion in self.criteria],
                 }
                 if fieldname_srank_func:
                     spk_dict["srank"] = self[fieldname_srank_func(side, pos)]
@@ -668,6 +672,10 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
     def _fieldname_declared_winner():
         return 'declared_winner'
 
+    @staticmethod
+    def _fieldname_criterion_score(side, pos, criterion):
+        return '%(side)s_criterion_s%(pos)d_c%(criterion)d' % {'side': side, 'pos': pos, 'criterion': criterion.id}
+
     def create_score_fields(self):
         """Adds the speaker score fields:
          - <side>_score_s#,  one for each score
@@ -679,6 +687,14 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 tournament=self.tournament,
                 required=True,
             )
+            for criterion in self.criteria:
+                self.fields[self._fieldname_criterion_score(side, pos, criterion)] = forms.DecimalField(
+                    min_value=criterion.min_score,
+                    max_value=criterion.max_score,
+                    step_size=criterion.step,
+                    required=criterion.required,
+                    widget=forms.NumberInput(attrs={'class': 'number', 'weight': criterion.weight}),
+                )
             if self.using_speaker_ranks:
                 nspeeches = len(self.sides) * len(self.positions)
                 self.fields[self._fieldname_srank(side, pos)] = forms.IntegerField(required=True, min_value=1, max_value=nspeeches, step_size=1)
@@ -694,6 +710,8 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
             initial[self._fieldname_score(side, pos)] = score
             if self.using_speaker_ranks:
                 initial[self._fieldname_srank(side, pos)] = result.get_speaker_rank(side, pos)
+            for criterion in self.criteria:
+                initial[self._fieldname_criterion_score(side, pos, criterion)] = result.get_criterion_score(side, pos, criterion)
 
         if self.using_declared_winner:
             initial[self._fieldname_declared_winner()] = result.winning_side()
@@ -779,7 +797,10 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
     def populate_result_with_scores(self, result):
         for side, pos in product(self.sides, self.positions):
             score = self.cleaned_data[self._fieldname_score(side, pos)]
-            result.set_score(side, pos, score)
+            for criterion in self.criteria:
+                result.set_criterion_score(side, pos, criterion, self.cleaned_data[self._fieldname_criterion_score(side, pos, criterion)])
+            if len(self.criteria) == 0:
+                result.set_score(side, pos, score)
 
             if self.using_speaker_ranks:
                 result.set_speaker_rank(side, pos, self.cleaned_data[self._fieldname_srank(side, pos)])
@@ -794,7 +815,11 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
     def scoresheets(self):
         """Generates a sequence of nested dicts that allows for easy iteration
         through the form. Used in the ballot_set.html.html template."""
-        sheets = [{"teams": self.scoresheet(self._fieldname_score, self._fieldname_srank if self.using_speaker_ranks else None)}]
+        sheets = [{"teams": self.scoresheet(
+            self._fieldname_score,
+            self._fieldname_srank if self.using_speaker_ranks else None,
+            fieldname_criterion_func=lambda side, pos, criterion: self._fieldname_criterion_score(side, pos, criterion),
+        )}]
 
         if self.using_declared_winner:
             sheets[0]['declared_winner'] = self[self._fieldname_declared_winner()]
@@ -815,6 +840,10 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
     def _fieldname_declared_winner(adj):
         return 'declared_winner_a%(adj)d' % {'adj': adj.id}
 
+    @staticmethod
+    def _fieldname_criterion_score(adj, side, pos, criterion):
+        return '%(side)s_criterion_a%(adj)d_s%(pos)d_c%(criterion)d' % {'adj': adj.id, 'side': side, 'pos': pos, 'criterion': criterion.id}
+
     def create_score_fields(self):
         """Adds the speaker score fields:
          - <side>_score_a#_s#,  one for each score
@@ -823,10 +852,19 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
             scorefield = ReplyScoreField if (pos == self.reply_position) else SubstantiveScoreField
             for adj in self.adjudicators:
                 self.fields[self._fieldname_score(adj, side, pos)] = scorefield(
-                    widget=forms.NumberInput(attrs={'class': 'required number'}),
+                    widget=forms.NumberInput(attrs={'class': 'required number'} if self.criteria else {'class': 'number'}),
                     tournament=self.tournament,
-                    required=True,
+                    required=not self.criteria.exists(),
+                    disabled=self.criteria.exists(),
                 )
+                for criterion in self.criteria:
+                    self.fields[self._fieldname_criterion_score(adj, side, pos, criterion)] = forms.DecimalField(
+                        min_value=criterion.min_score,
+                        max_value=criterion.max_score,
+                        step_size=criterion.step,
+                        required=criterion.required,
+                        widget=forms.NumberInput(attrs={'class': 'number', 'weight': criterion.weight}),
+                    )
         if self.using_declared_winner:
             for adj in self.adjudicators:
                 self.fields[self._fieldname_declared_winner(adj)] = self.create_declared_winner_dropdown()
@@ -838,6 +876,8 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
             for side, pos in product(self.sides, self.positions):
                 score = result.get_score(adj, side, pos)
                 initial[self._fieldname_score(adj, side, pos)] = score
+                for criterion in self.criteria:
+                    initial[self._fieldname_criterion_score(adj, side, pos, criterion)] = result.get_criterion_score(adj, side, pos, criterion)
 
             if self.using_declared_winner:
                 initial[self._fieldname_declared_winner(adj)] = result.get_winner(adj)
@@ -862,7 +902,11 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
     def clean_scoresheet(self, cleaned_data):
         for adj in self.adjudicators:
             try:
-                side_totals = {side: sum(cleaned_data[self._fieldname_score(adj, side, pos)]
+                if self.criteria:
+                    side_totals = {side: sum(float(cleaned_data[self._fieldname_criterion_score(adj, side, pos, criterion)] or 0) * criterion.weight
+                           for pos in self.positions for criterion in self.criteria) for side in self.sides}
+                else:
+                    side_totals = {side: sum(cleaned_data[self._fieldname_score(adj, side, pos)]
                            for pos in self.positions) for side in self.sides}
                 totals = list(side_totals.values())
 
@@ -898,7 +942,10 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
         for adj in self.adjudicators:
             for side, pos in product(self.sides, self.positions):
                 score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
-                result.set_score(adj, side, pos, score)
+                for criterion in self.criteria:
+                    result.set_criterion_score(adj, side, pos, criterion, self.cleaned_data[self._fieldname_criterion_score(adj, side, pos, criterion)] or 0)
+                if len(self.criteria) == 0:
+                    result.set_score(adj, side, pos, score)
 
             if self.declared_winner not in ['none', 'high-points']:
                 result.set_winners(adj, {self.cleaned_data.get(self._fieldname_declared_winner(adj))})
@@ -915,6 +962,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 "adjudicator": adj,
                 "teams": self.scoresheet(
                     lambda side, pos: self._fieldname_score(adj, side, pos),
+                    fieldname_criterion_func=lambda side, pos, criterion: self._fieldname_criterion_score(adj, side, pos, criterion),
                 ),
             }
             if self.using_declared_winner:

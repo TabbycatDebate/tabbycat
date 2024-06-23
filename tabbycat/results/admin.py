@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _, ngettext_lazy
 from draw.models import DebateTeam
 from utils.admin import ModelAdmin, TabbycatModelAdminFieldsMixin
 
-from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore, TeamScoreByAdj
+from .models import BallotSubmission, ScoreCriterion, SpeakerCriterionScore, SpeakerCriterionScoreByAdj, SpeakerScore, SpeakerScoreByAdj, TeamScore, TeamScoreByAdj
 from .prefetch import populate_results
 
 
@@ -148,3 +148,33 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
             Prefetch('ballot_submission__debate__debateteam_set',
                 queryset=DebateTeam.objects.select_related('team')),
         ).annotate(speaker_name=Subquery(speaker_person.values('speaker__name')))
+
+
+# ==============================================================================
+# SpeakerCriterionScore
+# ==============================================================================
+
+@admin.register(SpeakerCriterionScore)
+class SpeakerCriterionScoreAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
+    list_display = ('id', 'criterion', 'speaker_score', 'score')
+    search_fields = ('criterion', 'score', 'speaker_score')
+
+
+# ==============================================================================
+# SpeakerCriterionScoreByAdj
+# ==============================================================================
+
+@admin.register(SpeakerCriterionScoreByAdj)
+class SpeakerCriterionScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
+    list_display = ('id', 'criterion', 'speaker_score_by_adj', 'score')
+    search_fields = ('criterion', 'score', 'speaker_score_by_adj')
+
+
+# ==============================================================================
+# SpeakerCriterion
+# ==============================================================================
+
+@admin.register(ScoreCriterion)
+class ScoreCriterionAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
+    list_display = ('id', 'tournament', 'name', 'seq')
+    search_fields = ('tournament', 'name')

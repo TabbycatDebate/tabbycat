@@ -41,7 +41,7 @@ from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from .consumers import BallotStatusConsumer
 from .forms import (broadcast_results, PerAdjudicatorBallotSetForm, PerAdjudicatorEliminationBallotSetForm,
                     SingleBallotSetForm, SingleEliminationBallotSetForm)
-from .models import BallotSubmission, TeamScore
+from .models import BallotSubmission, ScoreCriterion, TeamScore
 from .prefetch import populate_confirmed_ballots, populate_results
 from .result import DebateResult, get_class_name
 from .tables import ResultsTableBuilder
@@ -583,7 +583,8 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
         for rm in RoundMotion.objects.filter(round_id=self.debate.round_id):
             self.round_motions[rm.motion_id] = rm
 
-        self.result = DebateResult(self.ballotsub, round=self.round, tournament=self.tournament)
+        criteria = ScoreCriterion.objects.filter(tournament=self.tournament)
+        self.result = DebateResult(self.ballotsub, round=self.round, tournament=self.tournament, criteria=criteria)
 
         self.vetos = None
         self.prefilled = False
@@ -661,7 +662,8 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
             populate_results(bses, self.tournament)
 
             # Handle result conflicts
-            merged_result = DebateResult(merged_bs, tournament=self.tournament)
+            criteria = ScoreCriterion.objects.filter(tournament=self.tournament)
+            merged_result = DebateResult(merged_bs, tournament=self.tournament, criteria=criteria)
             errors = merged_result.populate_from_merge(*[b.result for b in bses])
 
             if len(errors) == 0:
@@ -955,7 +957,8 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
         self.merged_ballots = bses
 
         # Handle result conflicts
-        self.result = DebateResult(self.ballotsub, tournament=self.tournament)
+        criteria = ScoreCriterion.objects.filter(tournament=self.tournament)
+        self.result = DebateResult(self.ballotsub, tournament=self.tournament, criteria=criteria)
         self.errors = self.result.populate_from_merge(*[b.result for b in bses])
 
         # Handle motion conflicts

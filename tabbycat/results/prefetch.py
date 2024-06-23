@@ -95,9 +95,11 @@ def populate_results(ballotsubs, tournament=None):
     results_by_debate_id = {}
     results_by_ballotsub_id = {}
 
+    criteria = tournament.scorecriterion_set.all()
+
     # Create the DebateResults
     for ballotsub in ballotsubs:
-        result = DebateResult(ballotsub, load=False)
+        result = DebateResult(ballotsub, load=False, criteria=criteria)
         result.init_blank_buffer()
 
         ballotsub._result = result
@@ -119,7 +121,7 @@ def populate_results(ballotsubs, tournament=None):
     speakerscores = SpeakerScore.objects.filter(
         ballot_submission__in=ballotsubs,
         position__in=positions,
-    ).select_related('speaker', 'speaker__team__tournament', 'debate_team')
+    ).select_related('speaker', 'speaker__team__tournament', 'debate_team').prefetch_related('speakercriterionscore_set__criterion')
 
     for ss in speakerscores:
         result = results_by_ballotsub_id[ss.ballot_submission_id]
@@ -128,8 +130,12 @@ def populate_results(ballotsubs, tournament=None):
             result.ghosts[ss.debate_team.side][ss.position] = ss.ghost
 
             if not result.is_voting:
-                result.set_score(ss.debate_team.side, ss.position, ss.score)
-                result.set_speaker_rank(ss.debate_team.side, ss.position, ss.rank)
+                if len(ss.speakercriterionscore_set.all()) > 0:
+                    for criterion_score in ss.speakercriterionscore_set.all():
+                        result.set_criterion_score(ss.debate_team.side, ss.position, criterion_score.criterion, criterion_score.score)
+                else:
+                    result.set_score(ss.debate_team.side, ss.position, ss.score)
+                    result.set_speaker_rank(ss.debate_team.side, ss.position, ss.rank)
 
     # Populate scoresheets (load_scoresheets)
     debateadjs = DebateAdjudicator.objects.filter(
@@ -142,18 +148,22 @@ def populate_results(ballotsubs, tournament=None):
         for result in results_by_debate_id[da.debate_id]:
             if result.is_voting:
                 result.debateadjs[da.adjudicator] = da
-                result.scoresheets[da.adjudicator] = result.scoresheet_class(positions, sides=range(nsides_per_debate[da.debate_id]))
+                result.scoresheets[da.adjudicator] = result.scoresheet_class(positions, sides=range(nsides_per_debate[da.debate_id]), criteria=criteria)
 
     ssbas = SpeakerScoreByAdj.objects.filter(
         ballot_submission__in=ballotsubs,
         position__in=positions,
-    ).select_related('debate_adjudicator__adjudicator__institution', 'debate_team')
+    ).select_related('debate_adjudicator__adjudicator__institution', 'debate_team').prefetch_related('speakercriterionscorebyadj_set__criterion')
 
     for ssba in ssbas:
         result = results_by_ballotsub_id[ssba.ballot_submission_id]
         if result.uses_speakers and result.is_voting:
-            result.set_score(ssba.debate_adjudicator.adjudicator, ssba.debate_team.side,
-                ssba.position, ssba.score)
+            if len(ssba.speakercriterionscorebyadj_set.all()) > 0:
+                for criterion_score in ssba.speakercriterionscorebyadj_set.all():
+                    result.set_criterion_score(ssba.debate_adjudicator.adjudicator, ssba.debate_team.side, ssba.position, criterion_score.criterion, criterion_score.score)
+            else:
+                result.set_score(ssba.debate_adjudicator.adjudicator, ssba.debate_team.side,
+                    ssba.position, ssba.score)
 
     # Populate advancing (load_advancing)
     teamscores = TeamScore.objects.filter(

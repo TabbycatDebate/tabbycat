@@ -1299,3 +1299,16 @@ class UserViewSet(AdministratorAPIMixin, ModelViewSet):
 )
 class GroupViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.GroupSerializer
+
+
+@extend_schema(tags=['scorecriteria'], parameters=[tournament_parameter])
+@extend_schema_view(
+    list=extend_schema(summary="List all score criteria in tournament"),
+    create=extend_schema(summary="Create score criterion"),
+    retrieve=extend_schema(summary="Get score criterion", parameters=[id_parameter]),
+    update=extend_schema(summary="Update score criterion", parameters=[id_parameter]),
+    partial_update=extend_schema(summary="Patch score criterion", parameters=[id_parameter]),
+    destroy=extend_schema(summary="Delete score criterion", parameters=[id_parameter]),
+)
+class ScoreCriterionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
+    serializer_class = serializers.ScoreCriterionSerializer
