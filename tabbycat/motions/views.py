@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import OuterRef, Prefetch, Q, Subquery
+from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
 from django.views.generic.base import TemplateView
@@ -177,6 +178,15 @@ class ReleaseMotionsView(BaseReleaseMotionsView):
     @property
     def message_text(self):
         return ngettext("Released the motion.", "Released the motions.", self.round.motion_set.count())
+
+    def post(self, request, *args, **kwargs):
+        preparation_time = self.tournament.pref('preparation_time')
+
+        if preparation_time > -1:
+            self.round.starts_at = timezone.now() + timezone.timedelta(minutes=preparation_time)
+            self.round.save()
+
+        return super().post(request, *args, **kwargs)
 
 
 class UnreleaseMotionsView(BaseReleaseMotionsView):
