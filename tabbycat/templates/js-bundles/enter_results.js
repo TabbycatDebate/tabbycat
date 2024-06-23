@@ -73,22 +73,19 @@ function refresh_totals(scoresheet) {
     var total_scores = []
     var rank_elements = []
 
-    for (var i = 0; i < positions.length; i++) {
-      var team = positions[i];
-      totals_elements[team] = $('.' + i + '_total', $scoresheet);
-      margins_elements[team] = $('.' + i + '_margin', $scoresheet);
-      rank_elements[team] = $('.' + i + '_rank', $scoresheet);
+    for (var i = 0; i < $('.scoresheet > div').length; i++) {
+      totals_elements[i] = $('.' + i + '_total', $scoresheet);
+      margins_elements[i] = $('.' + i + '_margin', $scoresheet);
+      rank_elements[i] = $('.' + i + '_rank', $scoresheet);
       if ($('.criteria', $scoresheet)) {
-        for (const side of positions) {
-          for (const speaker of [...$(`.${i}.score`, $scoresheet)]) {
-            const criteria = $('.criterion input', speaker);
-            var weighted = 0;
-            criteria.each((i, c) => {weighted += c.value * c.attributes.weight.value})
-            speaker.querySelector('input.total').value = weighted;
-          }
+        for (const speaker of [...$(`.${i}.score`, $scoresheet)]) {
+          const criteria = $('.criterion input', speaker);
+          var weighted = 0;
+          criteria.each((i, c) => {weighted += c.value * c.attributes.weight.value})
+          speaker.querySelector('input.total').value = weighted;
         }
       }
-      var team_total = sum($('.' + i + '.score input.total', $scoresheet));
+      var team_total = sum($(`.side-${i}.score input.total`, $scoresheet));
       // Update totals scores only if both speaker scores have been entered
       if (team_total > 99) {
         total_scores[i] = team_total
