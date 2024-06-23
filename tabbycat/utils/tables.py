@@ -928,8 +928,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def add_debate_results_columns(self, debates, iron=False, n_cols=None):
         all_sides_confirmed = all(debate.sides_confirmed for debate in debates)  # should already be fetched
         n_cols = n_cols or len(self.tournament.sides)
-        side_abbrs = {side: get_side_name(self.tournament, side, 'abbr')
-            for side in range(n_cols)}
+        side_abbrs = {side: get_side_name(self.tournament, side, 'abbr') for side in range(n_cols)}
 
         results_data = []
         for debate in debates:
@@ -987,7 +986,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             results_header = [{
                 'title': get_side_name(self.tournament, side, 'abbr'),
                 'key': get_side_name(self.tournament, side, 'abbr'),
-            } for side in self.tournament.sides]
+            } for side in range(n_cols)]
         else:
             results_header = [{
                 'title': _("Team %(num)d") % {'num': i},
