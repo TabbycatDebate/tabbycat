@@ -610,6 +610,8 @@ class UseSpeakerRanks(ChoicePreference):
         ('high-points', 'Require ranking speeches, ranks congruent with speaker scores'),
     )
     default = 'none'
+
+
 @tournament_preferences_registry.register
 class PreparationTime(IntegerPreference):
     help_text = _("How long, in minutes, after motion release does the round start (-1 to deactivate")
@@ -617,6 +619,7 @@ class PreparationTime(IntegerPreference):
     section = debate_rules
     name = 'preparation_time'
     default = -1
+
 
 # ==============================================================================
 standings = Section('standings', verbose_name=_("Standings"))
