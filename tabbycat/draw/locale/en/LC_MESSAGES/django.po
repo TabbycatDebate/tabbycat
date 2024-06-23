@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -240,35 +240,11 @@ msgid " vs "
 msgstr ""
 
 #: draw/models.py
-msgid "affirmative"
-msgstr ""
-
-#: draw/models.py
-msgid "negative"
-msgstr ""
-
-#: draw/models.py
-msgid "opening government"
-msgstr ""
-
-#: draw/models.py
-msgid "opening opposition"
-msgstr ""
-
-#: draw/models.py
-msgid "closing government"
-msgstr ""
-
-#: draw/models.py
-msgid "closing opposition"
-msgstr ""
-
-#: draw/models.py
 msgid "team"
 msgstr ""
 
 #: draw/models.py
-msgid "side"
+msgid "side sequence"
 msgstr ""
 
 #: draw/models.py
@@ -297,6 +273,11 @@ msgid "lost"
 msgstr ""
 
 #: draw/models.py
+#, python-format
+msgid "Team %d"
+msgstr ""
+
+#: draw/models.py
 msgid "team side allocation"
 msgstr ""
 
@@ -309,6 +290,10 @@ msgstr ""
 #: draw/tables.py
 #, python-format
 msgid "%(side)s: %(metric)s"
+msgstr ""
+
+#: draw/tables.py
+msgid "Bye"
 msgstr ""
 
 #: draw/tables.py
