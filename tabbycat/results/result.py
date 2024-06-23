@@ -42,7 +42,7 @@ import logging
 from functools import wraps
 from itertools import product
 from statistics import mean
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
@@ -54,7 +54,10 @@ from .scoresheet import (HighPointWinsRequiredScoresheet, LowPointWinsAllowedSco
 from .utils import side_and_position_names
 
 if TYPE_CHECKING:
+    from tournaments.models import Tournament
     from participants.models import Adjudicator
+
+    from .models import SpeakerScore, SpeakerScoreByAdj
 
 logger = logging.getLogger(__name__)
 
@@ -88,6 +91,12 @@ def get_result_class(ballotsub, round=None, tournament=None):
 
 def get_class_name(ballotsub, round, tournament=None):
     return get_result_class(ballotsub, round, tournament).__name__
+
+
+def is_integer_step(tournament: 'Tournament', ss: Union['SpeakerScore', 'SpeakerScoreByAdj']) -> bool:
+    return (
+        ss.position > tournament.pref('substantive_speakers') and tournament.pref('reply_score_step') == int(tournament.pref('reply_score_step'))
+    ) or (ss.position >= tournament.pref('substantive_speakers') and tournament.pref('score_step') == int(tournament.pref('score_step')))
 
 
 def DebateResult(ballotsub, *args, **kwargs):  # noqa: N802 (factory function)
@@ -999,9 +1008,14 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
         for ss in speakerscores:
             if len(ss.speakercriterionscore_set.all()) > 0:
                 for criterion_score in ss.speakercriterionscore_set.all():
-                    self.set_criterion_score(ss.debate_team.side, ss.position, criterion_score.criterion, criterion_score.score)
+                    integer_step = criterion_score.criterion.step
+                    cs = int(criterion_score.score) if integer_step and int(criterion_score.score) == criterion_score.score else criterion_score.score
+                    self.set_criterion_score(ss.debate_team.side, ss.position, criterion_score.criterion, cs)
             else:
-                self.set_score(ss.debate_team.side, ss.position, ss.score)
+                integer_step = is_integer_step(self.tournament, ss)
+
+                score = int(ss.score) if integer_step and int(ss.score) == ss.score else ss.score
+                self.set_score(ss.debate_team.side, ss.position, score)
             self.set_speaker_rank(ss.debate_team.side, ss.position, ss.rank)
 
     def set_score(self, side, position, score):
@@ -1082,10 +1096,14 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
         for ssba in speakerscorebyadjs:
             if len(ssba.speakercriterionscorebyadj_set.all()) > 0:
                 for criterion_score in ssba.speakercriterionscorebyadj_set.all():
-                    self.set_criterion_score(ssba.debate_adjudicator.adjudicator, ssba.debate_team.side, ssba.position, criterion_score.criterion, criterion_score.score)
+                    integer_step = criterion_score.criterion.step == int(criterion_score.criterion.step)
+                    cs = int(criterion_score.score) if integer_step and int(criterion_score.score) == criterion_score.score else criterion_score.score
+                    self.set_criterion_score(ssba.debate_adjudicator.adjudicator, ssba.debate_team.side, ssba.position, criterion_score.criterion, cs)
             else:
+                integer_step = is_integer_step(self.tournament, ssba)
+                score = int(ssba.score) if integer_step and int(ssba.score) == ssba.score else ssba.score
                 self.set_score(ssba.debate_adjudicator.adjudicator,
-                               ssba.debate_team.side, ssba.position, ssba.score)
+                               ssba.debate_team.side, ssba.position, score)
 
     def merge_speaker_result(self, result: BaseDebateResult, adj: 'Adjudicator') -> list[ResultError]:
         errors = self.merge_speaker_order(result)

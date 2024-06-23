@@ -61,7 +61,7 @@ class ScoresMixin:
         self.criteria = kwargs.get('criteria', [])
         self.scores = {side: dict.fromkeys(self.positions, None) for side in self.sides}
         self.speaker_ranks = {side: dict.fromkeys(self.positions, None) for side in self.sides}
-        self.criteria_scores = {side: {pos: dict.fromkeys(self.criteria, None) for pos in self.positions} for side in self.sides}
+        self.criteria_scores = {side: {pos: dict.fromkeys(self.criteria, 0) for pos in self.positions} for side in self.sides}
 
     def is_complete(self):
         scores_complete = all(self.scores[s][p] is not None for s in self.sides
