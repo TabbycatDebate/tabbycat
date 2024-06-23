@@ -108,8 +108,7 @@ def DebateResult(ballotsub, *args, **kwargs):  # noqa: N802 (factory function)
     tournament = kwargs.pop('tournament', r.tournament)
     result_class = get_result_class(ballotsub, r, tournament)
     if result_class.uses_speakers and 'criteria' not in kwargs:
-        from .models import ScoreCriterion
-        kwargs['criteria'] = ScoreCriterion.objects.filter(tournament=tournament)
+        kwargs['criteria'] = tournament.scorecriterion_set.all()
     return result_class(ballotsub, *args, **kwargs)
 
 
@@ -155,7 +154,7 @@ class BaseDebateResult:
     uses_declared_winners = True
     uses_speakers = False
 
-    def __init__(self, ballotsub, load=True):
+    def __init__(self, ballotsub, load=True, **kwargs):
         """Constructor.
         `ballotsub` must be a BallotSubmission.
 
@@ -172,7 +171,9 @@ class BaseDebateResult:
         self.debate = ballotsub.debate
         self.tournament = self.debate.round.tournament
 
-        if self.tournament.pref('margin_includes_dissenters') and self.tournament.pref('teams_in_debate') != 2:
+        if 'sides' in kwargs:
+            self.sides = kwargs['sides']
+        elif self.tournament.pref('margin_includes_dissenters') and self.tournament.pref('teams_in_debate') != 2:
             self.sides = list(range(1+max(*[dt.side for dt in self.debate.debateteams])))
         else:
             self.sides = self.tournament.sides
@@ -392,8 +393,8 @@ class DebateResultByAdjudicator(BaseDebateResult):
 
     is_voting = True
 
-    def __init__(self, ballotsub, load=True):
-        super().__init__(ballotsub, load=load)
+    def __init__(self, ballotsub, load=True, **kwargs):
+        super().__init__(ballotsub, load=load, **kwargs)
         self._decision_calculated = False
 
     # --------------------------------------------------------------------------
@@ -654,8 +655,8 @@ class DebateResultWithScoresMixin:
     uses_declared_winners = False
     uses_speakers = True
 
-    def __init__(self, ballotsub, criteria=[], load=True):
-        super().__init__(ballotsub, load=False)
+    def __init__(self, ballotsub, load=True, criteria=[], **kwargs):
+        super().__init__(ballotsub, load=False, **kwargs)
 
         self.positions = self.tournament.positions
         self.criteria = criteria or []

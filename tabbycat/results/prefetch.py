@@ -95,11 +95,15 @@ def populate_results(ballotsubs, tournament=None):
     results_by_debate_id = {}
     results_by_ballotsub_id = {}
 
+    debateteams = DebateTeam.objects.filter(
+        debate__ballotsubmission__in=ballotsubs,
+    ).select_related('team', 'team__tournament').order_by('debate_id').distinct()
+    nsides_per_debate = {d_id: max(*[dt.side for dt in dts]) + 1 for d_id, dts in groupby(debateteams, key=lambda dt: dt.debate_id)}
     criteria = tournament.scorecriterion_set.all()
 
     # Create the DebateResults
     for ballotsub in ballotsubs:
-        result = DebateResult(ballotsub, load=False, criteria=criteria)
+        result = DebateResult(ballotsub, load=False, sides=range(nsides_per_debate[ballotsub.debate_id]), criteria=criteria)
         result.init_blank_buffer()
 
         ballotsub._result = result
@@ -107,12 +111,6 @@ def populate_results(ballotsubs, tournament=None):
         results_by_ballotsub_id[ballotsub.id] = result
 
     # Populate debateteams (load_debateteams)
-    debateteams = DebateTeam.objects.filter(
-        debate__ballotsubmission__in=ballotsubs,
-    ).select_related('team', 'team__tournament').order_by('debate_id').distinct()
-
-    nsides_per_debate = {d_id: max(*[dt.side for dt in dts]) + 1 for d_id, dts in groupby(debateteams, key=lambda dt: dt.debate_id)}
-
     for dt in debateteams:
         for result in results_by_debate_id[dt.debate_id]:
             result.debateteams[dt.side] = dt
