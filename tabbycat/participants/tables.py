@@ -1,4 +1,5 @@
 from django.db.models import Max, Prefetch
+from django.db.models.functions import Coalesce
 from django.utils.html import escape
 from django.utils.translation import gettext as _
 
@@ -73,7 +74,7 @@ class AdjudicatorDebateTable:
         populate_confirmed_ballots(debates, motions=True, results=True)
 
         table.add_round_column([debate.round for debate in debates])
-        table.add_debate_results_columns(debates, n_cols=Debate.objects.filter(id__in=[d.id for d in debates]).aggregate(n=Max('debateteam__side'))['n']+1)
+        table.add_debate_results_columns(debates, n_cols=Debate.objects.filter(id__in=[d.id for d in debates]).aggregate(n=Coalesce(Max('debateteam__side'), len(view.tournament.sides)-1))['n']+1)
         table.add_debate_adjudicators_column(debates, show_splits=True, highlight_adj=participant)
 
         if table.admin or view.tournament.pref('public_motions'):
