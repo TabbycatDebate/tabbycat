@@ -19,7 +19,7 @@ function refresh_totals(scoresheet) {
   // Fix the branching logic here into something cleaner
   var allClasses = 'btn-dark btn-secondary btn-success btn-primary btn-warning btn-danger btn-info';
 
-  if ("{{ pref.teams_in_debate }}" === 2) {
+  if ("{{ pref.teams_in_debate }}" == 2) {
     // 2-team
     $aff_total = $('.0_total', $scoresheet);
     $neg_total = $('.1_total', $scoresheet);
@@ -37,8 +37,8 @@ function refresh_totals(scoresheet) {
         }
       }
     }
-    var aff = sum($('.side-0.score input', $scoresheet));
-    var neg = sum($('.side-1.score input', $scoresheet));
+    var aff = sum($('.side-0.score input.total', $scoresheet));
+    var neg = sum($('.side-1.score input.total', $scoresheet));
     $aff_total.text(aff);
     $neg_total.text(neg);
 

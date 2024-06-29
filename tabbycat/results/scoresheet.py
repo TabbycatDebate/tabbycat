@@ -64,8 +64,11 @@ class ScoresMixin:
         self.criteria_scores = {side: {pos: dict.fromkeys(self.criteria, 0) for pos in self.positions} for side in self.sides}
 
     def is_complete(self):
-        scores_complete = all(self.scores[s][p] is not None for s in self.sides
-                for p in self.positions)
+        if len(self.criteria) == 0:
+            scores_complete = all(self.scores[s][p] is not None for s in self.sides
+                    for p in self.positions)
+        else:
+            scores_complete = True
         return super().is_complete() and scores_complete
 
     def set_score(self, side, position, score):
@@ -74,7 +77,7 @@ class ScoresMixin:
 
     def get_score(self, side: str, position: int):
         if len(self.criteria) > 0:
-            return sum(score.score * type(score.score)(criterion.weight) for criterion, score in self.criteria_scores[side][position].items())
+            return sum(score * type(score)(criterion.weight) for criterion, score in self.criteria_scores[side][position].items())
         return self.scores[side][position]
 
     def set_speaker_rank(self, side, position, score):
@@ -90,7 +93,7 @@ class ScoresMixin:
         return self.criteria_scores[side][position][criterion]
 
     def get_total(self, side):
-        scores = [self.scores[side][p] for p in self.positions]
+        scores = [self.get_score(side, p) for p in self.positions]
         if None in scores:
             return None
         return sum(scores)

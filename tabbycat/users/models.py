@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from utils.fields import ChoiceArrayField
+from utils.models import UniqueConstraint
 
 from .permissions import PERM_CACHE_KEY, Permission
 
@@ -14,9 +15,9 @@ class UserPermission(models.Model):
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE, verbose_name=_("tournament"))
 
     class Meta:
+        constraints = [UniqueConstraint(fields=['user', 'permission', 'tournament'])]
         verbose_name = _("user permission")
         verbose_name_plural = _("user permissions")
-        unique_together = [('user', 'permission', 'tournament')]
 
     def __str__(self):
         return "%s: %s (%s)" % (self.user.username, self.permission, self.tournament.slug)
@@ -37,9 +38,9 @@ class Group(models.Model):
         base_field=models.CharField(max_length=50, choices=Permission.choices), verbose_name=_("permissions"))
 
     class Meta:
+        constraints = [UniqueConstraint(fields=['name', 'tournament'])]
         verbose_name = _("group")
         verbose_name_plural = _("groups")
-        unique_together = [('name', 'tournament')]
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.tournament.slug)
@@ -50,9 +51,9 @@ class Membership(models.Model):
     group = models.ForeignKey(Group, models.CASCADE, verbose_name=_("group"))
 
     class Meta:
+        constraints = [UniqueConstraint(fields=['user', 'group'])]
         verbose_name = _("group membership")
         verbose_name_plural = _("group memberships")
-        unique_together = [('user', 'group')]
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

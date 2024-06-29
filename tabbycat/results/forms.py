@@ -1,4 +1,5 @@
 import logging
+from decimal import Decimal
 from itertools import product
 from typing import TYPE_CHECKING
 
@@ -689,9 +690,9 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
             )
             for criterion in self.criteria:
                 self.fields[self._fieldname_criterion_score(side, pos, criterion)] = forms.DecimalField(
-                    min_value=criterion.min_score,
-                    max_value=criterion.max_score,
-                    step_size=criterion.step,
+                    min_value=Decimal(str(criterion.min_score)),
+                    max_value=Decimal(str(criterion.max_score)),
+                    step_size=Decimal(str(criterion.step)),
                     required=criterion.required,
                     widget=forms.NumberInput(attrs={'class': 'number', 'weight': criterion.weight}),
                 )
@@ -859,9 +860,9 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 )
                 for criterion in self.criteria:
                     self.fields[self._fieldname_criterion_score(adj, side, pos, criterion)] = forms.DecimalField(
-                        min_value=criterion.min_score,
-                        max_value=criterion.max_score,
-                        step_size=criterion.step,
+                        min_value=Decimal(str(criterion.min_score)),
+                        max_value=Decimal(str(criterion.max_score)),
+                        step_size=Decimal(str(criterion.step)),
                         required=criterion.required,
                         widget=forms.NumberInput(attrs={'class': 'number', 'weight': criterion.weight}),
                     )
