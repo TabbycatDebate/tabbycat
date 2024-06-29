@@ -807,7 +807,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 result.set_speaker_rank(side, pos, self.cleaned_data[self._fieldname_srank(side, pos)])
 
         if self.declared_winner not in ['none', 'high-points']:
-            result.set_winners({self.cleaned_data[self._fieldname_declared_winner()]})
+            result.set_winners({int(self.cleaned_data[self._fieldname_declared_winner()])})
 
     # --------------------------------------------------------------------------
     # Template access methods
@@ -949,7 +949,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
                     result.set_score(adj, side, pos, score)
 
             if self.declared_winner not in ['none', 'high-points']:
-                result.set_winners(adj, {self.cleaned_data.get(self._fieldname_declared_winner(adj))})
+                result.set_winners(adj, {int(self.cleaned_data.get(self._fieldname_declared_winner(adj)))})
 
     # --------------------------------------------------------------------------
     # Template access methods
@@ -981,7 +981,7 @@ class TeamsMixin:
 
     def create_team_selector(self):
         # 3(a). List of teams in multiple-select
-        side_choices = [(side.value, _("%(team)s (%(side)s)") % {
+        side_choices = [(side, _("%(team)s (%(side)s)") % {
             'team': team_name_for_data_entry(self.debate.get_team(side), self.use_codes),
             'side': self._side_name(side)}) for side in self.sides]
         return forms.MultipleChoiceField(choices=side_choices,
@@ -1054,7 +1054,7 @@ class SingleEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
         return cleaned_data
 
     def populate_result_with_wins(self, result):
-        result.set_winners(set(self.cleaned_data[self._fieldname_advancing()]))
+        result.set_winners(set(int(adv) for adv in self.cleaned_data[self._fieldname_advancing()]))
 
     def scoresheets(self):
         return [{'advancing': self[self._fieldname_advancing()]}]
@@ -1093,7 +1093,7 @@ class PerAdjudicatorEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
 
     def populate_result_with_wins(self, result):
         for adj in self.adjudicators:
-            result.set_winners(adj, set(self.cleaned_data[self._fieldname_advancing(adj)]))
+            result.set_winners(adj, set(int(adv) for adv in self.cleaned_data[self._fieldname_advancing(adj)]))
 
     def scoresheets(self):
         for adj in self.adjudicators:
