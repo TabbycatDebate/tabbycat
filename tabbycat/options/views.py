@@ -12,6 +12,7 @@ from dynamic_preferences.views import PreferenceFormView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import TournamentMixin
+from users.permissions import Permission
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 
@@ -24,6 +25,7 @@ logger = logging.getLogger(__name__)
 
 class TournamentConfigIndexView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = "preferences_index.html"
+    view_permission = True
 
     def get_preset_options(self):
         """Returns a list of all preset classes."""
@@ -59,8 +61,10 @@ class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, Tournamen
     possible_registries = [global_preferences_registry, tournament_preferences_registry]
     section = None
     template_name = "preferences_section_set.html"
+    view_permission = Permission.VIEW_SETTINGS
+    edit_permission = Permission.EDIT_SETTINGS
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT
+    action_log_type = ActionLogEntry.ActionType.OPTIONS_EDIT
 
     def form_valid(self, *args, **kwargs):
         messages.success(self.request, _("Tournament options (%(section)s) saved.") % {'section': self.section.verbose_name})
@@ -78,8 +82,10 @@ class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, Tournamen
 class SetPresetPreferencesView(AdministratorMixin, LogActionMixin, TournamentMixin, FormView):
     template_name = "preset_edit.html"
     page_emoji = '❔'
+    view_permission = Permission.VIEW_SETTINGS
+    edit_permission = Permission.EDIT_SETTINGS
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT
+    action_log_type = ActionLogEntry.ActionType.OPTIONS_EDIT
 
     def get_page_title(self):
         return _("Apply Preset: %s") % self.get_selected_preset().name

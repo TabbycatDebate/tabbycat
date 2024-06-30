@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-03-25 04:12\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-08-11 16:01\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
@@ -23,7 +23,7 @@ msgstr "Tính khả dụng"
 
 #: availability/models.py
 msgid "content type"
-msgstr ""
+msgstr "loại nội dung"
 
 #: availability/models.py
 msgid "object id"
@@ -35,11 +35,11 @@ msgstr "vòng"
 
 #: availability/models.py
 msgid "round availability"
-msgstr ""
+msgstr "tính khả dụng của vòng"
 
 #: availability/models.py
 msgid "round availabilities"
-msgstr ""
+msgstr "tính khả dụng của vòng"
 
 #: availability/templates/availability_index.html
 msgid "Mark All Breaking Adjs as Available"
@@ -108,7 +108,7 @@ msgstr ""
 
 #: availability/templates/availability_index.html
 #, python-format
-msgid "This is the first round, but its draw type is <strong>%(draw_type)s</strong>. Did you intend for it to be <strong>Random</strong> instead? You can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's draw type in the Edit Database area.</a>"
+msgid "This is the first round, but its draw type is <strong>%(draw_type)s</strong>. Did you intend for it to be <strong>Random</strong> or <strong>Seeded</strong> instead? You can <a href=\"%(change_round_url)s\" class=\"alert-link\">edit this round's draw type in the Edit Database area.</a>"
 msgstr ""
 
 #: availability/templates/availability_index.html
@@ -307,14 +307,14 @@ msgstr[0] ""
 #, python-format
 msgid "; %(nbypassing)d team is bypassing it"
 msgid_plural "; %(nbypassing)d teams are bypassing it"
-msgstr[0] ""
+msgstr[0] "Đội %(nbypassing)d bỏ qua nó"
 
 #. Translators: nadvancing in this string is always at least 2
 #: availability/views.py
 #, python-format
 msgid "%(nadvancing)s advancing team is debating this round"
 msgid_plural "%(nadvancing)s advancing teams are debating this round"
-msgstr[0] ""
+msgstr[0] "Đội thắng %(nadvancing)s tranh biện trong vòng này"
 
 #: availability/views.py
 msgid "Active Now"
@@ -327,7 +327,7 @@ msgstr "Hoạt động ở %(prev_round)s"
 
 #: availability/views.py
 msgid "Checked-In"
-msgstr ""
+msgstr "Đã điểm danh"
 
 #: availability/views.py
 msgid "Team Availability"
@@ -371,5 +371,5 @@ msgstr ""
 
 #: availability/views.py
 msgid "Checked in all teams, adjudicators and rooms from previous round."
-msgstr ""
+msgstr "Đã điểm danh tất cả các đội, giám khảo và phòng từ vòng trước."
 

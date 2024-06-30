@@ -1,0 +1,431 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:56\n"
+"Last-Translator: \n"
+"Language-Team: Asturian\n"
+"Language: ast_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: ast\n"
+"X-Crowdin-File: /develop/tabbycat/actionlog/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 920\n"
+
+#: actionlog/apps.py
+msgid "Action Log"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Changed adjudicator breaking status"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created adjudicator"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited adjudicator"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Set adjudicator note"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Auto-allocated adjudicators"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Saved adjudicator allocation"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited adjudicators availability"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited availability"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited teams availability"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited room availability"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Checked in ballot set"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Confirmed ballot set"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created ballot set"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Discarded ballot set"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited ballot set"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Submitted ballot set from the public form"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited break categories"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Deleted team break for category"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited breaking team remarks"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited break eligibility"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Generated the team break for all categories"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Generated the team break for one category"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited breaking team remarks and updated all team breaks"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited breaking team remarks and updated this team break"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Generated check in identifiers for adjudicators"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Generated check in identifiers for speakers"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Generated check in identifiers for rooms"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited adjudicator-adjudicator conflicts"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited adjudicator-institution conflicts"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited adjudicator-team conflicts"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited team-institution conflicts"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created debate"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited debate"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Auto-prioritized debate importance"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited debate importance"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Saved divisions"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Confirmed draw"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created draw"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Regenerated draw"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Released draw"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Unreleased draw"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created feedback question"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited feedback question"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Saved feedback"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Submitted feedback from the public form"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created institution"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited institution"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Saved a matchup manual edit"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Added/edited motion"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Released motions"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Unreleased motions"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited tournament options"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Auto-allocated adjudicators to preformed panels"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited preformed panel adjudicator"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created preformed panels"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Auto-allocated preformed panels to debates"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Deleted preformed panels"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Auto-prioritized preformed panels"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited preformed panel importance"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Advanced the current round to"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Marked round as completed"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created round"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited round"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Set start time"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Saved the sides status of a matchup"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Imported adjudicators using the simple importer"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Imported institutions using the simple importer"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Imported teams using the simple importer"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Imported rooms using the simple importer"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited speaker categories"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created speaker"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited speaker"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited speaker category eligibility"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created team"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited team"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited adjudicator base score"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created tournament"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited tournament"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Updated adjudicator scores in bulk"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Invited user to the instance"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited room categories"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created room category"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited room constraints"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created room"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited room"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Auto-allocated rooms"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Saved a room manual edit"
+msgstr ""
+
+#: actionlog/models.py
+msgid "API"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Web"
+msgstr ""
+
+#: actionlog/models.py
+msgid "type"
+msgstr ""
+
+#: actionlog/models.py
+msgid "timestamp"
+msgstr ""
+
+#: actionlog/models.py
+msgid "user"
+msgstr ""
+
+#: actionlog/models.py
+msgid "IP address"
+msgstr ""
+
+#: actionlog/models.py
+msgid "tournament"
+msgstr ""
+
+#: actionlog/models.py
+msgid "round"
+msgstr ""
+
+#: actionlog/models.py
+msgid "content type"
+msgstr ""
+
+#: actionlog/models.py
+msgid "object ID"
+msgstr ""
+
+#: actionlog/models.py
+msgid "agent"
+msgstr ""
+
+#: actionlog/models.py
+msgid "action log"
+msgstr ""
+
+#: actionlog/models.py
+msgid "action log entries"
+msgstr ""
+
+#: actionlog/models.py
+msgid "All log entries require at least one of a user and an IP address."
+msgstr ""
+
+#: actionlog/models.py
+msgid "anonymous"
+msgstr ""
+

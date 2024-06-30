@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
 "PO-Revision-Date: 2019-07-11 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -287,6 +287,10 @@ msgid "The ballot you submitted"
 msgstr ""
 
 #: utils/tables.py
+msgid "No Ballot"
+msgstr ""
+
+#: utils/tables.py
 msgid "View/Edit Ballot"
 msgstr ""
 
@@ -297,6 +301,14 @@ msgstr ""
 #. Translators: "TBC" stands for "to be confirmed".
 #: utils/tables.py
 msgid "TBC"
+msgstr ""
+
+#: utils/tables.py
+msgid "Bye"
+msgstr ""
+
+#: utils/tables.py
+msgid "Team was given a bye this round"
 msgstr ""
 
 #: utils/tables.py

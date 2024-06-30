@@ -4,6 +4,8 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from utils.models import UniqueConstraint
+
 
 class BreakCategory(models.Model):
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
@@ -51,9 +53,11 @@ class BreakCategory(models.Model):
         return "[{}] {}".format(self.tournament.slug, self.name)
 
     class Meta:
-        unique_together = [('tournament', 'seq'), ('tournament', 'slug')]
+        constraints = [
+            UniqueConstraint(fields=['tournament', 'seq']),
+            UniqueConstraint(fields=['tournament', 'slug']),
+        ]
         ordering = ['tournament', 'seq']
-        index_together = ['tournament', 'seq']
         verbose_name = _("break category")
         verbose_name_plural = _("break categories")
 
@@ -65,7 +69,7 @@ class BreakCategory(models.Model):
 
     @property
     def num_break_rounds(self):
-        if self.tournament.pref('teams_in_debate') == 'bp':
+        if self.tournament.pref('teams_in_debate') == 4:
             return math.ceil(math.log2(self.break_size / 2))
         else:
             return math.ceil(math.log2(self.break_size))
@@ -100,6 +104,6 @@ class BreakingTeam(models.Model):
         help_text=_("Used to explain why an otherwise-qualified team didn't break"))
 
     class Meta:
-        unique_together = [('break_category', 'team')]
+        constraints = [UniqueConstraint(fields=['break_category', 'team'])]
         verbose_name = _("breaking team")
         verbose_name_plural = _("breaking teams")

@@ -48,6 +48,7 @@
         v-for="debate in sortedDebatesOrPanels"
         :key="debate.id"
         :debateOrPanel="debate"
+        :maxTeams="maxTeams"
       >
         <debate-or-panel-importance
           slot="importance"
@@ -97,5 +98,10 @@ export default {
       new ones.`,
     noDebatesInline: 'There are no debates created for this round.',
   }),
+  computed: {
+    maxTeams: function () {
+      return Math.max(...this.sortedDebatesOrPanels.map(d => d.teams.length))
+    },
+  },
 }
 </script>

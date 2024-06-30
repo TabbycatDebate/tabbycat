@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
-"PO-Revision-Date: 2023-03-27 09:26\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 22:00\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Kazakh\n"
 "Language: kk_KZ\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: tournaments/apps.py
 msgid "Tournaments"
-msgstr ""
+msgstr "Турнирлер"
 
 #: tournaments/forms.py
 msgid "Number of preliminary rounds"
@@ -36,7 +36,7 @@ msgstr ""
 
 #: tournaments/forms.py
 msgid "Did you agree with their decision?"
-msgstr ""
+msgstr "Шешіммен келісесіз бе?"
 
 #: tournaments/forms.py
 msgid "Agree?"
@@ -56,7 +56,7 @@ msgid "Format Configuration"
 msgstr ""
 
 #: tournaments/forms.py
-msgid "Apply a standard set of settings to match a common debate format"
+msgid "Apply a standard set of settings to match a common debate format. These can be changed afterwards and should be checked for your needs."
 msgstr ""
 
 #: tournaments/forms.py
@@ -65,6 +65,14 @@ msgstr ""
 
 #: tournaments/forms.py
 msgid "Show non-sensitive information on the public-facing side of this site, like draws (once released) and the motions of previous rounds"
+msgstr ""
+
+#: tournaments/forms.py
+msgid "Participant Data Entry"
+msgstr ""
+
+#: tournaments/forms.py
+msgid "Whether participants can submit ballots and feedback themselves, and how they do so"
 msgstr ""
 
 #: tournaments/forms.py
@@ -135,7 +143,7 @@ msgstr ""
 
 #: tournaments/models.py
 msgid "name"
-msgstr ""
+msgstr "аты"
 
 #: tournaments/models.py
 msgid "The full name, e.g. \"Australasian Intervarsity Debating Championships 2016\""
@@ -175,11 +183,11 @@ msgstr "турнир"
 
 #: tournaments/models.py
 msgid "tournaments"
-msgstr ""
+msgstr "турнирлер"
 
 #: tournaments/models.py
 msgid "Random"
-msgstr ""
+msgstr "Кездейсоқ"
 
 #: tournaments/models.py
 msgid "Manual"
@@ -195,6 +203,10 @@ msgstr ""
 
 #: tournaments/models.py
 msgid "Elimination"
+msgstr ""
+
+#: tournaments/models.py
+msgid "Seeded"
 msgstr ""
 
 #: tournaments/models.py
@@ -320,15 +332,15 @@ msgid "rounds"
 msgstr ""
 
 #: tournaments/models.py
-msgid "A round in the elimination stage must have its draw type set to \"Elimination\"."
+msgid "The \"Elimination\" draw type is only for elimination rounds, where it is mandatory."
 msgstr ""
 
 #: tournaments/models.py
-msgid "A round in the preliminary stage cannot have its draw type set to \"Elimination\"."
+msgid "An elimination round must have a break category and preliminary round must not."
 msgstr ""
 
 #: tournaments/models.py
-msgid "Elimination rounds must have a break category."
+msgid "Break category must be for the same tournament."
 msgstr ""
 
 #: tournaments/templates/assistant_tournament_index.html
@@ -384,11 +396,10 @@ msgstr ""
 
 #: tournaments/templates/create_tournament.html
 msgid "Create New Tournament"
-msgstr ""
+msgstr "Жаңа турнир жасау"
 
 #: tournaments/templates/create_tournament.html
-#, python-format
-msgid "Tabbycat is free to use for non-profit and non-fundraising tournaments (although donations are encouraged). If your tournament is run for profit or for fundraising, please note that there is a <a href=\"%(donations_url)s\">required payment</a>. For more details, see the <a href=\"https://tabbycat.readthedocs.io/en/stable/about/licence.html\"> Tabbycat licence agreement</a>."
+msgid "Tabbycat is free to use, although <a href=\"https://opencollective.com/tabbycat\">donations</a> are encouraged."
 msgstr ""
 
 #: tournaments/templates/create_tournament.html
@@ -502,7 +513,7 @@ msgstr ""
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Team Tab"
-msgstr ""
+msgstr "Топтардың тізімі"
 
 #: tournaments/templates/public_tournament_index.html
 #, python-format
@@ -511,7 +522,7 @@ msgstr ""
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Speaker Tab"
-msgstr ""
+msgstr "Ойыншылардың тізімі"
 
 #: tournaments/templates/public_tournament_index.html
 #, python-format
@@ -524,15 +535,15 @@ msgstr ""
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Adjudicator Tab"
-msgstr ""
+msgstr "Төрешілер тізімі"
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Motions Tab"
-msgstr ""
+msgstr "Қарарлар тізімі"
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Sides"
-msgstr ""
+msgstr "Тараптар"
 
 #: tournaments/templates/public_tournament_index.html
 #, python-format
@@ -558,11 +569,11 @@ msgstr ""
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Results"
-msgstr ""
+msgstr "Нәтиже"
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Motions"
-msgstr ""
+msgstr "Қарарлар"
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Team Standings"
@@ -575,7 +586,7 @@ msgstr ""
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Breaking Adjudicators"
-msgstr ""
+msgstr "Іріктеуден өткен төрешілер"
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Diversity"
@@ -583,15 +594,15 @@ msgstr ""
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Participants"
-msgstr ""
+msgstr "Қатысушылар"
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Institutions"
-msgstr ""
+msgstr "Қауымдастықтар"
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Feedback Progress"
-msgstr ""
+msgstr "Кері байланыс беру деңгейі"
 
 #: tournaments/templates/public_tournament_index.html
 #, python-format
@@ -600,7 +611,7 @@ msgstr ""
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Enter Feedback"
-msgstr ""
+msgstr "Кері байланыс беру"
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Tournament Staff"
@@ -612,7 +623,7 @@ msgstr ""
 
 #: tournaments/templates/round_complete_check.html
 msgid "Enter Results"
-msgstr ""
+msgstr "Нәтижелерді толтыру"
 
 #: tournaments/templates/round_complete_check.html
 msgid "Emails have already been sent."
@@ -624,6 +635,14 @@ msgstr ""
 
 #: tournaments/templates/round_complete_check.html
 msgid "Email Team Points"
+msgstr ""
+
+#: tournaments/templates/round_complete_check.html
+msgid "Unmark as Silent"
+msgstr ""
+
+#: tournaments/templates/round_complete_check.html
+msgid "Mark as Silent"
 msgstr ""
 
 #: tournaments/templates/round_complete_check.html
@@ -666,17 +685,12 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: tournaments/templates/round_complete_check.html
-#, python-format
-msgid "<p>This round is a silent round.</p> <p> Even though public view of results is enabled, results for <em>this</em> round will still be hidden from public view after completing this round. <p> <p> You can change which rounds are silent in the <a href=\"%(round_changelist_url)s\">Edit Database area</a>. </p>"
+msgid "<p>This round is a silent round.</p> <p> Even though public view of results is enabled, results for <em>this</em> round will still be hidden from public view after completing this round. <p> <p> You can change whether this round is silent using the button above. </p>"
 msgstr ""
 
 #: tournaments/templates/round_complete_check.html
 #, python-format
-msgid "<p><strong> Results for %(round)s will be published online once you mark this round as complete! </strong></p> <p> This round is <em>not</em> a silent round, and public view of results is enabled. </p> <p> If you want to keep the results for just this round hidden, you can mark this round as silent in the <a href=\"%(round_changelist_url)s\">Edit Database area</a>. </p> <p> If you want to disable the public view of results, you can do so in the <a href=\"%(public_features_url)s\">tournament configuration</a>. </p>"
-msgstr ""
-
-#: tournaments/templates/set_current_round.html
-msgid "Set Current Round"
+msgid "<p><strong> Results for %(round)s will be published online once you mark this round as complete! </strong></p> <p> This round is <em>not</em> a silent round, and public view of results is enabled. </p> <p> If you want to keep the results for just this round hidden, you can mark this round as silent using the button above. </p> <p> If you want to disable the public view of results, you can do so in the <a href=\"%(public_features_url)s\">tournament configuration</a>. </p>"
 msgstr ""
 
 #: tournaments/templates/set_current_round.html
@@ -698,6 +712,11 @@ msgstr ""
 msgid "The tournament <strong>%(tournament)s</strong> has no rounds. You'll need to <a href=\"%(round_changelist_url)s\">add rounds and associate them with this tournament</a> before you can set the current round."
 msgstr ""
 
+#: tournaments/templates/set_current_round.html
+msgctxt "button"
+msgid "Set Current Rounds"
+msgstr ""
+
 #: tournaments/templates/set_round_weights.html
 msgctxt "page title"
 msgid "Set Round Weights for Tapered Scoring"
@@ -714,7 +733,7 @@ msgstr ""
 
 #: tournaments/templates/site_index.html
 msgid "Welcome!"
-msgstr ""
+msgstr "Сәлем, пікірсайысышы!"
 
 #: tournaments/templates/site_index.html
 msgid "It looks like there aren't any tournaments on this site. Would you like to create one?"
@@ -734,15 +753,15 @@ msgstr ""
 
 #: tournaments/templates/site_index.html
 msgid "New Tournament"
-msgstr ""
+msgstr "Жаңа турнир"
 
 #: tournaments/templates/site_index.html
 msgid "Edit Database Area"
-msgstr ""
+msgstr "Мәліметтер жинағын өзгерту"
 
 #: tournaments/templates/site_index.html
 msgid "Send a Test Email"
-msgstr ""
+msgstr "Тексеруге арналған поштаны жіберу"
 
 #: tournaments/templates/site_index.html
 msgid "Import DebateXML"
@@ -764,7 +783,7 @@ msgstr ""
 
 #: tournaments/templates/tournament_index.html
 #, python-format
-msgid "We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would make a donation to the project in order to support its ongoing development and maintenance. For a tournament of this size, we suggest a donation of <strong>$%(amount)s</strong>. Note that if your tournament is run for profit, or for fundraising, making this payment is a mandatory condition of Tabbycat's software license. <a href=\"%(url)s\">Learn more about donating.</a>"
+msgid "We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would make a donation to the project in order to support its ongoing development and maintenance. For a tournament of this size, we suggest a donation of <strong>$%(amount)s</strong>. <a href=\"https://opencollective.com/tabbycat\">Learn more about donating.</a>"
 msgstr ""
 
 #: tournaments/templates/tournament_index.html
@@ -800,10 +819,6 @@ msgstr ""
 msgid "Go to the results area to enter ballots for %(round)s"
 msgstr ""
 
-#: tournaments/templates/tournament_index.html
-msgid "You have enabled a URL that allows users to create new accounts. You should <strong>disable it once the tournament starts</strong>."
-msgstr ""
-
 #: tournaments/templates/tournament_index_links.html
 #, python-format
 msgid "Administrator area for <strong>%(tn)s</strong>"
@@ -821,51 +836,51 @@ msgstr ""
 
 #: tournaments/utils.py
 msgid "affirmative"
-msgstr ""
+msgstr "жақтаушы"
 
 #: tournaments/utils.py
 msgid "negative"
-msgstr ""
+msgstr "даттаушы"
 
 #: tournaments/utils.py
 msgid "affirmative team"
-msgstr ""
+msgstr "жақтаушы топ"
 
 #: tournaments/utils.py
 msgid "negative team"
-msgstr ""
+msgstr "даттаушы топ"
 
 #: tournaments/utils.py
 msgid "Aff"
-msgstr ""
+msgstr "Жақ"
 
 #: tournaments/utils.py
 msgid "Neg"
-msgstr ""
+msgstr "Дат"
 
 #: tournaments/utils.py
 msgid "government"
-msgstr ""
+msgstr "үкімет"
 
 #: tournaments/utils.py
 msgid "opposition"
-msgstr ""
+msgstr "оппозиция"
 
 #: tournaments/utils.py
 msgid "government team"
-msgstr ""
+msgstr "үкімет тобы"
 
 #: tournaments/utils.py
 msgid "opposition team"
-msgstr ""
+msgstr "оппозиция тобы"
 
 #: tournaments/utils.py
 msgid "Gov"
-msgstr ""
+msgstr "Үкі"
 
 #: tournaments/utils.py
 msgid "Opp"
-msgstr ""
+msgstr "Опп"
 
 #: tournaments/utils.py
 msgid "proposition"
@@ -928,56 +943,64 @@ msgid "Res"
 msgstr ""
 
 #: tournaments/utils.py
-msgid "opening government"
+msgid "1st team"
 msgstr ""
+
+#: tournaments/utils.py
+msgid "2nd team"
+msgstr ""
+
+#: tournaments/utils.py
+msgid "opening government"
+msgstr "ашушы үкімет"
 
 #: tournaments/utils.py
 msgid "opening opposition"
-msgstr ""
+msgstr "ашушы оппозиция"
 
 #: tournaments/utils.py
 msgid "closing government"
-msgstr ""
+msgstr "жабушы үкімет"
 
 #: tournaments/utils.py
 msgid "closing opposition"
-msgstr ""
+msgstr "жабушы оппозиция"
 
 #: tournaments/utils.py
 msgid "opening government team"
-msgstr ""
+msgstr "ашушы үкімет тобы"
 
 #: tournaments/utils.py
 msgid "opening opposition team"
-msgstr ""
+msgstr "ашушы оппозиция тобы"
 
 #: tournaments/utils.py
 msgid "closing government team"
-msgstr ""
+msgstr "жабушы үкімет тобы"
 
 #: tournaments/utils.py
 msgid "closing opposition team"
-msgstr ""
+msgstr "жабушы оппозиция тобы"
 
 #: tournaments/utils.py
 msgctxt "BP position"
 msgid "OG"
-msgstr ""
+msgstr "АҮ"
 
 #: tournaments/utils.py
 msgctxt "BP position"
 msgid "OO"
-msgstr ""
+msgstr "АО"
 
 #: tournaments/utils.py
 msgctxt "BP position"
 msgid "CG"
-msgstr ""
+msgstr "ЖҮ"
 
 #: tournaments/utils.py
 msgctxt "BP position"
 msgid "CO"
-msgstr ""
+msgstr "ЖО"
 
 #: tournaments/utils.py
 #, python-format
@@ -988,6 +1011,25 @@ msgstr ""
 #: tournaments/utils.py
 #, python-format
 msgid "R%(number)d"
+msgstr ""
+
+#: tournaments/utils.py
+msgid "bye"
+msgstr ""
+
+#: tournaments/utils.py
+#, python-format
+msgid "Team %d"
+msgstr ""
+
+#: tournaments/views.py
+#, python-format
+msgid "%(round)s has been marked as silent."
+msgstr ""
+
+#: tournaments/views.py
+#, python-format
+msgid "%(round)s has been unmarked as silent."
 msgstr ""
 
 #: tournaments/views.py
@@ -1025,6 +1067,10 @@ msgstr ""
 
 #: tournaments/views.py
 msgid "88-team BP dataset"
+msgstr ""
+
+#: tournaments/views.py
+msgid "Set Current Round"
 msgstr ""
 
 #: tournaments/views.py

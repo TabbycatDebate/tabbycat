@@ -7,9 +7,9 @@ from django.utils.encoding import uri_to_iri
 from drf_spectacular.utils import extend_schema_field
 from rest_framework.relations import Hyperlink, HyperlinkedIdentityField, HyperlinkedRelatedField, SlugRelatedField
 from rest_framework.reverse import reverse
-from rest_framework.serializers import CharField, Field
+from rest_framework.serializers import CharField, Field, IntegerField
 
-
+from draw.types import DebateSide
 from participants.models import Adjudicator, Speaker, Team
 from venues.models import Venue
 
@@ -149,6 +149,8 @@ class AdjudicatorFeedbackIdentityField(RoundHyperlinkedIdentityField):
 
 class CreatableSlugRelatedField(SlugRelatedField):
     def to_internal_value(self, data):
+        if data is None:
+            return None
         try:
             # get_or_create returns (obj, created?) - only want the object
             return self.get_queryset().get_or_create(**{self.slug_field: data})[0]
@@ -291,3 +293,33 @@ class AnyField(Field):
 
     def to_internal_value(self, data):
         return data
+
+
+@extend_schema_field({'anyOf': [{"type": "number"}, {"type": "string", "enum": [ds.name.lower() for ds in DebateSide]}]})
+class SideChoiceField(IntegerField):
+
+    def to_internal_value(self, data):
+        if isinstance(data, str):
+            if len(data) > self.MAX_STRING_LENGTH:
+                self.fail('max_string_length')
+            try:
+                return DebateSide[data.upper()].value
+            except KeyError:
+                self.fail('invalid')
+
+        try:
+            data = int(self.re_decimal.sub('', str(data)))
+        except (ValueError, TypeError):
+            self.fail('invalid')
+        return data
+
+    def to_representation(self, value):
+        t = self.context['tournament']
+        if t.pref('side_names') != '1-2':
+            if value == -1:
+                return 'bye'
+            if t.pref('teams_in_debate') == 2:
+                return ['aff', 'neg'][value]
+            if t.pref('teams_in_debate') == 4:
+                return ['og', 'oo', 'cg', 'co'][value]
+        return int(value)

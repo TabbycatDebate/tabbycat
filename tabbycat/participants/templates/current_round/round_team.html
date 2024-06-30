@@ -3,7 +3,7 @@
 {# Position and opponent #}
 
 {# (Two-team formats) #}
-{% if pref.teams_in_debate == 'two' %}
+{% if pref.teams_in_debate == 2 %}
   <div class="list-group-item lead {% if draw_released %}active{% else %}list-group-item-dark{% endif %}">
   {% team_record_link debateteam.opponent.team admin_page as opponent %}
 
@@ -31,7 +31,7 @@
   </div>
 
 {# (British Parliamentary) #}
-{% elif pref.teams_in_debate == 'bp' %}
+{% elif pref.teams_in_debate == 4 %}
 
   {% if debate.sides_confirmed %}
     <div class="list-group-item {% if draw_released %}lead active{% else %}list-group-item-dark{% endif %}">

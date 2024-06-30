@@ -22,6 +22,7 @@ from participants.models import Adjudicator, Institution, Person, Team
 from participants.utils import populate_code_names
 from tournaments.mixins import TournamentMixin
 from tournaments.models import Tournament
+from users.permissions import Permission
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import PostOnlyRedirectView
@@ -40,6 +41,7 @@ logger = logging.getLogger(__name__)
 
 class ImporterSimpleIndexView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = 'simple_import_index.html'
+    view_permission = True
 
 
 class BaseImportWizardView(AdministratorMixin, LogActionMixin, TournamentMixin, SessionWizardView):
@@ -96,11 +98,12 @@ class BaseImportWizardView(AdministratorMixin, LogActionMixin, TournamentMixin, 
 
 class ImportInstitutionsWizardView(BaseImportWizardView):
     model = Institution
+    edit_permission = Permission.ADD_INSTITUTIONS
     form_list = [
         ('raw', ImportInstitutionsRawForm),
         ('details', modelformset_factory(Institution, fields=('name', 'code'), extra=0)),
     ]
-    action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_INSTITUTIONS
+    action_log_type = ActionLogEntry.ActionType.SIMPLE_IMPORT_INSTITUTIONS
 
     def get_details_form_initial(self):
         return self.get_cleaned_data_for_step('raw')['institutions_raw']
@@ -111,11 +114,12 @@ class ImportInstitutionsWizardView(BaseImportWizardView):
 
 class ImportVenuesWizardView(BaseImportWizardView):
     model = Venue
+    edit_permission = Permission.ADD_ROOMS
     form_list = [
         ('raw', ImportVenuesRawForm),
         ('details', modelformset_factory(Venue, form=VenueDetailsForm, extra=0)),
     ]
-    action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_VENUES
+    action_log_type = ActionLogEntry.ActionType.SIMPLE_IMPORT_VENUES
 
     def get_form_kwargs(self, step):
         if step == 'details':
@@ -170,11 +174,12 @@ class BaseImportByInstitutionWizardView(BaseImportWizardView):
 
 class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
     model = Team
+    edit_permission = Permission.ADD_TEAMS
     form_list = [
         ('numbers', ImportTeamsNumbersForm),
         ('details', modelformset_factory(Team, form=TeamDetailsForm, formset=TeamDetailsFormSet, extra=0)),
     ]
-    action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_TEAMS
+    action_log_type = ActionLogEntry.ActionType.SIMPLE_IMPORT_TEAMS
 
     def get_details_instance_initial(self, i):
         return {'reference': str(i), 'use_institution_prefix': True}
@@ -192,11 +197,12 @@ class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
 
 class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
     model = Adjudicator
+    edit_permission = Permission.ADD_ADJUDICATORS
     form_list = [
         ('numbers', ImportAdjudicatorsNumbersForm),
         ('details', modelformset_factory(Adjudicator, form=AdjudicatorDetailsForm, extra=0)),
     ]
-    action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_ADJUDICATORS
+    action_log_type = ActionLogEntry.ActionType.SIMPLE_IMPORT_ADJUDICATORS
 
     def get_default_base_score(self):
         """Returns the midpoint of the configured allowable score range."""
@@ -271,9 +277,11 @@ class TournamentImportArchiveView(AdministratorMixin, FormView):
 class ExportArchiveIndexView(AdministratorMixin, TournamentMixin, TemplateView):
 
     template_name = 'archive_export_index.html'
+    view_permission = Permission.EXPORT_XML
 
 
 class ExportArchiveAllView(AdministratorMixin, TournamentMixin, View):
+    view_permission = Permission.EXPORT_XML
 
     def get(self, request, *args, **kwargs):
         response = HttpResponse(self.get_xml(), content_type='text/xml; charset=utf-8')

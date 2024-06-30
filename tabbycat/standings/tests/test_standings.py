@@ -4,6 +4,7 @@ from django.test import TestCase
 
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
+from draw.types import DebateSide
 from participants.models import Adjudicator, Institution, Speaker, Team
 from results.models import BallotSubmission, SpeakerScore, TeamScore
 from tournaments.models import Round, Tournament
@@ -29,8 +30,8 @@ class TestTrivialStandings(TestCase):
         for i in [1, 2]:
             rd = Round.objects.create(tournament=self.tournament, seq=i)
             debate = Debate.objects.create(round=rd, flags=['pullup'])
-            dt1 = DebateTeam.objects.create(debate=debate, team=self.team1, side=DebateTeam.Side.AFF, flags=['pullup'])
-            dt2 = DebateTeam.objects.create(debate=debate, team=self.team2, side=DebateTeam.Side.NEG)
+            dt1 = DebateTeam.objects.create(debate=debate, team=self.team1, side=DebateSide.AFF, flags=['pullup'])
+            dt2 = DebateTeam.objects.create(debate=debate, team=self.team2, side=DebateSide.NEG)
             DebateAdjudicator.objects.create(debate=debate, adjudicator=adj, type=DebateAdjudicator.TYPE_CHAIR)
             ballotsub = BallotSubmission.objects.create(debate=debate, confirmed=True)
             TeamScore.objects.create(debate_team=dt1, ballot_submission=ballotsub,
@@ -212,8 +213,8 @@ class IgnorableDebateMixin:
         adj = Adjudicator.objects.get()
         rd = Round.objects.create(tournament=self.tournament, seq=3)
         debate = Debate.objects.create(round=rd)
-        dt1 = DebateTeam.objects.create(debate=debate, team=self.team1, side=DebateTeam.Side.AFF)
-        dt2 = DebateTeam.objects.create(debate=debate, team=self.team2, side=DebateTeam.Side.NEG)
+        dt1 = DebateTeam.objects.create(debate=debate, team=self.team1, side=DebateSide.AFF)
+        dt2 = DebateTeam.objects.create(debate=debate, team=self.team2, side=DebateSide.NEG)
         DebateAdjudicator.objects.create(debate=debate, adjudicator=adj, type=DebateAdjudicator.TYPE_CHAIR)
         ballotsub = BallotSubmission.objects.create(debate=debate, confirmed=True)
         TeamScore.objects.create(debate_team=dt1, ballot_submission=ballotsub,
@@ -320,7 +321,7 @@ class TestBasicStandings(TestCase):
             Venue.objects.create(name="Venue {:d}".format(i), priority=10)
         adjs = list(Adjudicator.objects.all())
         venues = list(Venue.objects.all())
-        sides = [DebateTeam.Side.AFF, DebateTeam.Side.NEG]
+        sides = [DebateSide.AFF, DebateSide.NEG]
 
         for r, debatedict in enumerate(testdata["teamscores"]):
             rd = Round.objects.create(tournament=tournament, seq=r, abbreviation="R{:d}".format(r))

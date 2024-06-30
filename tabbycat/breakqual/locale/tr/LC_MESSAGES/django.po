@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
-"PO-Revision-Date: 2023-05-25 23:54\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-07-04 21:50\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -69,8 +69,8 @@ msgid "is general"
 msgstr "geneldir"
 
 #: breakqual/models.py
-msgid "True if most teams eligible for this category, e.g. Open, False otherwise"
-msgstr "Çoğu takım bu kategoriye uygunsa doğrudur, örneğin Açık, Aksi takdirde Yanlış"
+msgid "Are teams eligible for this break by default"
+msgstr ""
 
 #: breakqual/models.py
 msgid "priority"
@@ -506,6 +506,10 @@ msgstr "Aşağıdaki break kategorileri için takım breakleri oluşturuldu: %(c
 #: breakqual/views.py
 msgid "Breaking Adjudicators"
 msgstr "Break Olan Jüriler"
+
+#: breakqual/views.py
+msgid "Four-team formats require the break size to be either six times or four times a power of two."
+msgstr ""
 
 #: breakqual/views.py
 msgid "Break Eligibility"

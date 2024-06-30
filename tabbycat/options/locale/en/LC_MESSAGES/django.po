@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
 "PO-Revision-Date: 2019-07-11 23:49\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -444,6 +444,42 @@ msgstr ""
 msgid "No trainee adjudicators"
 msgstr ""
 
+#: options/preferences.py
+msgid "How to handle teams who were marked available yet excluded froma round (a bye)"
+msgstr ""
+
+#: options/preferences.py
+msgid "Bye team results"
+msgstr ""
+
+#: options/preferences.py
+msgid "Treat bye teams as absent"
+msgstr ""
+
+#: options/preferences.py
+msgid "Attribute a win to bye teams, without speaks"
+msgstr ""
+
+#: options/preferences.py
+msgid "If creating a draw with an uneven number of teams, how to decide who gets the bye (won't be allocated)"
+msgstr ""
+
+#: options/preferences.py
+msgid "Bye team selection method"
+msgstr ""
+
+#: options/preferences.py
+msgid "Don't choose bye teams"
+msgstr ""
+
+#: options/preferences.py
+msgid "Choose bye teams randomly"
+msgstr ""
+
+#: options/preferences.py
+msgid "Choose lowest ranking teams"
+msgstr ""
+
 #: options/preferences.py options/templates/preferences_index.html
 msgid "Feedback"
 msgstr ""
@@ -493,6 +529,10 @@ msgid "Panellists on eachother and chairs, trainees on chairs, chairs on everyon
 msgstr ""
 
 #: options/preferences.py
+msgid "Neither chairs, nor panellists nor trainees"
+msgstr ""
+
+#: options/preferences.py
 msgid "Expect feedback to be submitted by teams on"
 msgstr ""
 
@@ -506,6 +546,10 @@ msgstr ""
 
 #: options/preferences.py
 msgid "All adjudicators in their panels (including trainees)"
+msgstr ""
+
+#: options/preferences.py
+msgid "No one"
 msgstr ""
 
 #: options/preferences.py
@@ -537,19 +581,11 @@ msgid "Debate Rules"
 msgstr ""
 
 #: options/preferences.py
-msgid "Two-team format (e.g. Australs, WSDC) or British Parliamentary"
+msgid "How many teams are in each debate (normally 2 but 4 for BP)"
 msgstr ""
 
 #: options/preferences.py
-msgid "Teams in debate"
-msgstr ""
-
-#: options/preferences.py
-msgid "Two-team format"
-msgstr ""
-
-#: options/preferences.py
-msgid "British Parliamentary (four teams)"
+msgid "Number of teams per debate"
 msgstr ""
 
 #: options/preferences.py
@@ -660,6 +696,14 @@ msgstr ""
 msgid "Use of speech ranks"
 msgstr ""
 
+#: options/preferences.py
+msgid "How long, in minutes, after motion release does the round start (-1 to deactivate"
+msgstr ""
+
+#: options/preferences.py
+msgid "Preparation Time"
+msgstr ""
+
 #: options/preferences.py options/templates/preferences_index.html
 msgid "Standings"
 msgstr ""
@@ -686,11 +730,6 @@ msgstr ""
 
 #: options/preferences.py
 msgid "Team standings precedence"
-msgstr ""
-
-#: options/preferences.py
-#, python-format
-msgid "The following metrics can't be listed twice: %(duplicates)s"
 msgstr ""
 
 #: options/preferences.py
@@ -1345,22 +1384,6 @@ msgstr ""
 msgid "Enable API access"
 msgstr ""
 
-#: options/preferences.py
-msgid "A key that enables a secret URL that lets visitors create their own assistant user accounts. The URL takes the form of: YOUR_SITE'S_BASE_URL/accounts/signup/KEY/"
-msgstr ""
-
-#: options/preferences.py
-msgid "Assistant account creation key"
-msgstr ""
-
-#: options/preferences.py
-msgid "A key that enables a secret URL that lets visitors create their own administrator user accounts. The URL takes the form of: YOUR_SITE'S_BASE_URL/accounts/signup/KEY/"
-msgstr ""
-
-#: options/preferences.py
-msgid "Administrator account creation key"
-msgstr ""
-
 #: options/presets.py
 msgid "Enable Public Information"
 msgstr ""
@@ -1431,6 +1454,22 @@ msgstr ""
 
 #: options/presets.py
 msgid "3 vs 3 with replies, chosen motions, prop/opp side labels, and all adjudicators can receive feedback from teams."
+msgstr ""
+
+#: options/presets.py
+msgid "APDA Rules"
+msgstr ""
+
+#: options/presets.py
+msgid "2 vs 2 with speech rankings and byes"
+msgstr ""
+
+#: options/presets.py
+msgid "Public Speaking"
+msgstr ""
+
+#: options/presets.py
+msgid "Arbitrary number of teams per room, one speech each, no team points"
 msgstr ""
 
 #: options/presets.py
@@ -1534,49 +1573,24 @@ msgid "Rounds can be weighted so that certain rounds are worth more team points.
 msgstr ""
 
 #: options/templates/preferences_index.html
+msgid "Invite User to Create an Account"
+msgstr ""
+
+#: options/templates/preferences_index.html
+msgid "Users can be created through an invitation link sent to their email, with associated permissions."
+msgstr ""
+
+#: options/templates/preferences_index.html
 msgid "Presets"
 msgstr ""
 
 #: options/templates/preferences_index.html
-msgid "These modify common settings for basic rules; double check our <a href=\"https://tabbycat.readthedocs.io/\" target=\"_blank\">documentation</a> to ensure they are correct for your tournament. Each links will display what settings it changes before applying them."
+msgid "These show changes to your configuration for common situations and debate formats. You may apply these settings or modify them for your tournament directly on the preset's page."
 msgstr ""
 
 #: options/templates/preferences_index.html
 #, python-format
 msgid "Apply %(preset)s"
-msgstr ""
-
-#: options/templates/preferences_presets_complete.html
-#, python-format
-msgid "Presets Applied: %(preset_title)s"
-msgstr ""
-
-#: options/templates/preferences_presets_complete.html
-#: options/templates/preferences_presets_confirm.html
-#: options/templates/preferences_section_set.html
-msgid "Back to Configuration"
-msgstr ""
-
-#: options/templates/preferences_presets_complete.html
-msgid "Preferences that were changed"
-msgstr ""
-
-#: options/templates/preferences_presets_confirm.html
-#, python-format
-msgid "Confirm Presets: %(preset_title)s"
-msgstr ""
-
-#: options/templates/preferences_presets_confirm.html
-msgid "Preferences that will not change"
-msgstr ""
-
-#: options/templates/preferences_presets_confirm.html
-msgid "Preferences that will change"
-msgstr ""
-
-#: options/templates/preferences_presets_confirm.html
-#, python-format
-msgid "Apply Presets: %(preset_title)s"
 msgstr ""
 
 #: options/templates/preferences_section_set.html
@@ -1589,6 +1603,38 @@ msgstr ""
 msgid "Edit Configuration: %(section)s"
 msgstr ""
 
+#: options/templates/preferences_section_set.html
+#: options/templates/preset_edit.html
+msgid "Back to Configuration"
+msgstr ""
+
+#: options/templates/preset_edit.html
+#, python-format
+msgid "This preference will be changed"
+msgid_plural "These %(counter)s preferences will be changed"
+msgstr[0] ""
+msgstr[1] ""
+
+#: options/templates/preset_edit.html
+#, python-format
+msgid "This preference will not change"
+msgid_plural "These %(counter)s preferences will not change"
+msgstr[0] ""
+msgstr[1] ""
+
+#: options/templates/preset_edit.html
+msgid "Apply Changes"
+msgstr ""
+
+#: options/templates/preset_edit.html
+msgid "Presets are provided as a convenience only and may not be up to date with a debating format's rules or the expectations of your circuit. Please double-check everything to ensure it matches your needs."
+msgstr ""
+
+#: options/utils.py
+#, python-format
+msgid "The following metrics can't be listed twice: %(duplicates)s"
+msgstr ""
+
 #: options/views.py
 #, python-format
 msgid "Tournament options (%(section)s) saved."
@@ -1596,5 +1642,10 @@ msgstr ""
 
 #: options/views.py
 #, python-format
-msgid "Tournament options saved according to preset %(name)s."
+msgid "Apply Preset: %s"
+msgstr ""
+
+#: options/views.py
+#, python-format
+msgid "Tournament options saved based on preset %(name)s."
 msgstr ""

@@ -9,60 +9,68 @@ logger = logging.getLogger(__name__)
 
 SIDE_NAMES = {
     'aff-neg': {
-        "aff_full": _("affirmative"),
-        "neg_full": _("negative"),
-        "aff_team": _("affirmative team"),
-        "neg_team": _("negative team"),
-        "aff_abbr": _("Aff"),
-        "neg_abbr": _("Neg"),
+        "0_full": _("affirmative"),
+        "1_full": _("negative"),
+        "0_team": _("affirmative team"),
+        "1_team": _("negative team"),
+        "0_abbr": _("Aff"),
+        "1_abbr": _("Neg"),
     },
     'gov-opp': {
-        "aff_full": _("government"),
-        "neg_full": _("opposition"),
-        "aff_team": _("government team"),
-        "neg_team": _("opposition team"),
-        "aff_abbr": _("Gov"),
-        "neg_abbr": _("Opp"),
+        "0_full": _("government"),
+        "1_full": _("opposition"),
+        "0_team": _("government team"),
+        "1_team": _("opposition team"),
+        "0_abbr": _("Gov"),
+        "1_abbr": _("Opp"),
     },
     'prop-opp': {
-        "aff_full": _("proposition"),
-        "neg_full": _("opposition"),
-        "aff_team": _("proposition team"),
-        "neg_team": _("opposition team"),
-        "aff_abbr": _("Prop"),
-        "neg_abbr": _("Opp"),
+        "0_full": _("proposition"),
+        "1_full": _("opposition"),
+        "0_team": _("proposition team"),
+        "1_team": _("opposition team"),
+        "0_abbr": _("Prop"),
+        "1_abbr": _("Opp"),
     },
     'pro-con': {
-        "aff_full": _("pro"),
-        "neg_full": _("con"),
-        "aff_team": _("pro team"),
-        "neg_team": _("con team"),
-        "aff_abbr": _("Pro"),
-        "neg_abbr": _("Con"),
+        "0_full": _("pro"),
+        "1_full": _("con"),
+        "0_team": _("pro team"),
+        "1_team": _("con team"),
+        "0_abbr": _("Pro"),
+        "1_abbr": _("Con"),
     },
     'appellant-respondent': {
-        "aff_full": _("appellant"),
-        "neg_full": _("respondent"),
-        "aff_team": _("appellant team"),
-        "neg_team": _("respondent team"),
-        "aff_abbr": _("App"),
-        "neg_abbr": _("Res"),
+        "0_full": _("appellant"),
+        "1_full": _("respondent"),
+        "0_team": _("appellant team"),
+        "1_team": _("respondent team"),
+        "0_abbr": _("App"),
+        "1_abbr": _("Res"),
+    },
+    '1-2': {
+        '0_full': '1',
+        '1_full': '2',
+        "0_team": _("1st team"),
+        "1_team": _("2nd team"),
+        "0_abbr": '1',
+        "1_abbr": '2',
     },
 }
 
 BP_SIDE_NAMES = {  # stop-gap before this system gets refactored
-    "og_full": _("opening government"),
-    "oo_full": _("opening opposition"),
-    "cg_full": _("closing government"),
-    "co_full": _("closing opposition"),
-    "og_team": _("opening government team"),
-    "oo_team": _("opening opposition team"),
-    "cg_team": _("closing government team"),
-    "co_team": _("closing opposition team"),
-    "og_abbr": pgettext_lazy("BP position", "OG"),
-    "oo_abbr": pgettext_lazy("BP position", "OO"),
-    "cg_abbr": pgettext_lazy("BP position", "CG"),
-    "co_abbr": pgettext_lazy("BP position", "CO"),
+    "0_full": _("opening government"),
+    "1_full": _("opening opposition"),
+    "2_full": _("closing government"),
+    "3_full": _("closing opposition"),
+    "0_team": _("opening government team"),
+    "1_team": _("opening opposition team"),
+    "2_team": _("closing government team"),
+    "3_team": _("closing opposition team"),
+    "0_abbr": pgettext_lazy("BP position", "OG"),
+    "1_abbr": pgettext_lazy("BP position", "OO"),
+    "2_abbr": pgettext_lazy("BP position", "CG"),
+    "3_abbr": pgettext_lazy("BP position", "CO"),
 }
 
 
@@ -91,27 +99,29 @@ def get_side_name_choices():
     """Returns a list of choices for position names suitable for presentation in
     a form."""
     return [
-        (code, force_str(names["aff_full"]).capitalize() + ", " + force_str(names["neg_full"]).capitalize())
+        (code, force_str(names["0_full"]).capitalize() + ", " + force_str(names["1_full"]).capitalize())
         for code, names in SIDE_NAMES.items()
     ]
 
 
-def get_side_name(tournament, side, name_type):
+def get_side_name(tournament, side: int, name_type) -> str:
     """Like aff_name, neg_name, etc., but can be used when the side is not known
     at compile time. Example:
         get_side_name(tournament, "aff", "full")
     will return something like "Affirmative" or "Proposition" or "Gobierno",
     depending on the side name option and language setting.
     """
-    if side in ('aff', 'neg'):
+    if side == -1:
+        return gettext('bye')
+    elif tournament is None or tournament.pref('side_names') == '1-2':
+        return gettext('Team %d') % (side + 1)
+    elif tournament.pref('teams_in_debate') == 2:
         names = SIDE_NAMES.get(tournament.pref('side_names'), SIDE_NAMES['aff-neg'])
-        return force_str(names["%s_%s" % (side, name_type)])
-    elif side in ('og', 'oo', 'cg', 'co'):
-        return force_str(BP_SIDE_NAMES["%s_%s" % (side, name_type)])
-    elif side == 'bye':
-        return 'bye'
+        return force_str(names["%d_%s" % (side, name_type)])
+    elif tournament.pref('teams_in_debate') == 4:
+        return force_str(BP_SIDE_NAMES.get("%d_%s" % (side, name_type), '%d' % (side + 1)))
     else:
-        raise ValueError("get_side_name() side must be one of: 'aff', 'neg', 'og', 'oo', 'cg', 'co', 'bye', not: %r" % (side,))
+        return gettext('Team %d') % (side + 1)
 
 
 def _get_side_name(name_type):
@@ -133,9 +143,9 @@ def _get_side_name(name_type):
 # when the tournament is known, which is only ever true at runtime.
 # Example usage: "The %s team faces the %s team." % (aff_name(tournament), neg_name(tournament))
 
-aff_name = _get_side_name('aff_full')
-neg_name = _get_side_name('neg_full')
-aff_abbr = _get_side_name('aff_abbr')
-neg_abbr = _get_side_name('neg_abbr')
-aff_team = _get_side_name('aff_team')
-neg_team = _get_side_name('neg_team')
+aff_name = _get_side_name('0_full')
+neg_name = _get_side_name('1_full')
+aff_abbr = _get_side_name('0_abbr')
+neg_abbr = _get_side_name('1_abbr')
+aff_team = _get_side_name('0_team')
+neg_team = _get_side_name('1_team')

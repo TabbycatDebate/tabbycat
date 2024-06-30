@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
-"PO-Revision-Date: 2023-02-12 06:15\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 22:00\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -289,6 +289,10 @@ msgid "The ballot you submitted"
 msgstr "crwdns34602:0crwdne34602:0"
 
 #: utils/tables.py
+msgid "No Ballot"
+msgstr "crwdns52870:0crwdne52870:0"
+
+#: utils/tables.py
 msgid "View/Edit Ballot"
 msgstr "crwdns33698:0crwdne33698:0"
 
@@ -300,6 +304,14 @@ msgstr "crwdns33702:0crwdne33702:0"
 #: utils/tables.py
 msgid "TBC"
 msgstr "crwdns33704:0crwdne33704:0"
+
+#: utils/tables.py
+msgid "Bye"
+msgstr "crwdns52872:0crwdne52872:0"
+
+#: utils/tables.py
+msgid "Team was given a bye this round"
+msgstr "crwdns52874:0crwdne52874:0"
 
 #: utils/tables.py
 msgid "Team iron-personed this round and the last."

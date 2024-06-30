@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _, ngettext_lazy
 from draw.models import DebateTeam
 from utils.admin import ModelAdmin, TabbycatModelAdminFieldsMixin
 
-from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore, TeamScoreByAdj
+from .models import BallotSubmission, ScoreCriterion, SpeakerCriterionScore, SpeakerCriterionScoreByAdj, SpeakerScore, SpeakerScoreByAdj, TeamScore, TeamScoreByAdj
 from .prefetch import populate_results
 
 
@@ -119,8 +119,7 @@ class SpeakerScoreAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
 
 @admin.register(SpeakerScoreByAdj)
 class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
-    list_display = ('id', 'ballot_submission', 'get_round', 'get_adj_name', 'get_team',
-                    'get_speaker_name', 'position', 'score')
+    list_display = ('id', 'ballot_submission', 'get_round', 'get_adj_name', 'get_team', 'position', 'get_speaker_name', 'score')
     search_fields = ('debate_team__debate__round__seq',
                      'debate_team__team__short_name', 'debate_team__team__institution__name',
                      'debate_adjudicator__adjudicator__name')
@@ -128,6 +127,10 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_filter = ('debate_team__debate__round', 'debate_adjudicator__adjudicator__name',
                    'debate_adjudicator__type')
     raw_id_fields = ('debate_team', 'debate_adjudicator', 'ballot_submission')
+
+    @admin.display(description=_("Speaker"))
+    def get_speaker_name(self, obj):
+        return obj.speaker_name
 
     def get_queryset(self, request):
         speaker_person = SpeakerScore.objects.filter(
@@ -140,7 +143,38 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
             'ballot_submission__debate__round__tournament',
             'debate_adjudicator__adjudicator',
             'debate_team__team__tournament',
+            'debate_team__debate__round__tournament',
         ).prefetch_related(
             Prefetch('ballot_submission__debate__debateteam_set',
                 queryset=DebateTeam.objects.select_related('team')),
         ).annotate(speaker_name=Subquery(speaker_person.values('speaker__name')))
+
+
+# ==============================================================================
+# SpeakerCriterionScore
+# ==============================================================================
+
+@admin.register(SpeakerCriterionScore)
+class SpeakerCriterionScoreAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
+    list_display = ('id', 'criterion', 'speaker_score', 'score')
+    search_fields = ('criterion', 'score', 'speaker_score')
+
+
+# ==============================================================================
+# SpeakerCriterionScoreByAdj
+# ==============================================================================
+
+@admin.register(SpeakerCriterionScoreByAdj)
+class SpeakerCriterionScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
+    list_display = ('id', 'criterion', 'speaker_score_by_adj', 'score')
+    search_fields = ('criterion', 'score', 'speaker_score_by_adj')
+
+
+# ==============================================================================
+# SpeakerCriterion
+# ==============================================================================
+
+@admin.register(ScoreCriterion)
+class ScoreCriterionAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
+    list_display = ('id', 'tournament', 'name', 'seq')
+    search_fields = ('tournament', 'name')

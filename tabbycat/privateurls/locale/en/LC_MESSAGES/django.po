@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
 "PO-Revision-Date: 2019-07-11 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -117,6 +117,10 @@ msgstr ""
 
 #: privateurls/templates/public_url_landing.html
 msgid "You are not currently checked in."
+msgstr ""
+
+#: privateurls/templates/public_url_landing.html
+msgid "Show barcode for check-in"
 msgstr ""
 
 #: privateurls/templates/public_url_landing.html

@@ -3,6 +3,8 @@ from collections import OrderedDict
 import munkres
 import networkx as nx
 
+from ..types import DebateSide
+
 
 def sign(n: int) -> int:
     """Sign function for integers, -1, 0, or 1"""
@@ -86,11 +88,11 @@ class GraphAllocatedSidesMixin(GraphGeneratorMixin):
         i = 0
         for points, pool in brackets.items():
             pairings[points] = []
-            n_teams = len(pool['aff']) + len(pool['neg'])
-            matrix = [[self.assignment_cost(aff, neg, n_teams) for neg in pool['neg']] for aff in pool['aff']]
+            n_teams = len(pool[DebateSide.AFF]) + len(pool[DebateSide.NEG])
+            matrix = [[self.assignment_cost(aff, neg, n_teams) for neg in pool[DebateSide.NEG]] for aff in pool[DebateSide.AFF]]
 
             for i_aff, i_neg in munkres.Munkres().compute(matrix):
                 i += 1
-                pairings[points].append(Pairing(teams=[pool['aff'][i_aff], pool['neg'][i_neg]], bracket=points, room_rank=i))
+                pairings[points].append(Pairing(teams=[pool[DebateSide.AFF][i_aff], pool[DebateSide.NEG][i_neg]], bracket=points, room_rank=i))
 
         return pairings

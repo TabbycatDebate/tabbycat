@@ -22,6 +22,7 @@ from options.utils import use_team_code_names
 from tournaments.mixins import (PublicTournamentPageMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
+from users.permissions import Permission
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.tables import TabbycatTableBuilder
@@ -50,7 +51,7 @@ class BaseParticipantsListView(TournamentMixin, VueTableTemplateView):
 
         speakers = Speaker.objects.filter(team__tournament=self.tournament).select_related(
                 'team', 'team__institution').prefetch_related('team__speaker_set', 'categories')
-        if use_team_code_names(self.tournament, self.admin):
+        if use_team_code_names(self.tournament, self.admin, user=self.request.user):
             speakers = speakers.order_by('team__code_name')
         else:
             speakers = speakers.order_by('team__short_name')
@@ -69,6 +70,7 @@ class BaseParticipantsListView(TournamentMixin, VueTableTemplateView):
 
 
 class AdminParticipantsListView(AdministratorMixin, BaseParticipantsListView):
+    view_permission = Permission.VIEW_PARTICIPANTS
     template_name = 'participants_list.html'
     admin = True
 
@@ -118,6 +120,7 @@ class BaseInstitutionsListView(TournamentMixin, VueTableTemplateView):
 
 
 class AdminInstitutionsListView(AdministratorMixin, BaseInstitutionsListView):
+    view_permission = Permission.VIEW_INSTITUTIONS
     template_name = 'participants_list.html'
     admin = True
 
@@ -151,6 +154,7 @@ class BaseCodeNamesListView(TournamentMixin, VueTableTemplateView):
 
 class AdminCodeNamesListView(AdministratorMixin, BaseCodeNamesListView):
     template_name = 'participants_list.html'
+    view_permission = Permission.VIEW_DECODED_TEAMS
 
 
 class AssistantCodeNamesListView(AssistantMixin, BaseCodeNamesListView):
@@ -192,7 +196,7 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
         return super().get_queryset().select_related('institution__region')
 
     def use_team_code_names(self):
-        return use_team_code_names(self.tournament, self.admin)
+        return use_team_code_names(self.tournament, self.admin, user=self.request.user)
 
     @staticmethod
     def allocations_set(obj, admin, tournament):
@@ -284,6 +288,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
 
 class TeamRecordView(AdministratorMixin, BaseTeamRecordView):
     admin = True
+    view_permission = Permission.VIEW_TEAMS
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related(
@@ -295,6 +300,7 @@ class TeamRecordView(AdministratorMixin, BaseTeamRecordView):
 
 class AdjudicatorRecordView(AdministratorMixin, BaseAdjudicatorRecordView):
     admin = True
+    view_permission = Permission.VIEW_ADJUDICATORS
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related(
@@ -323,10 +329,10 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
     # uniqueness checks will work. Since this is a superuser form, they can
     # access all tournaments anyway, so tournament forgery wouldn't be a
     # security risk.
-
+    view_permission = Permission.VIEW_SPEAKER_CATEGORIES
     template_name = 'speaker_categories_edit.html'
     formset_model = SpeakerCategory
-    action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_CATEGORIES_EDIT
+    action_log_type = ActionLogEntry.ActionType.SPEAKER_CATEGORIES_EDIT
 
     url_name = 'participants-speaker-categories-edit'
     success_url = 'participants-list'
@@ -386,6 +392,7 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
     template_name = 'edit_speaker_eligibility.html'
     page_title = _("Speaker Category Eligibility")
     page_emoji = '🍯'
+    edit_permission = Permission.EDIT_SPEAKER_CATEGORIES
 
     def get_table(self):
         table = TabbycatTableBuilder(view=self, sort_key='team')
@@ -414,7 +421,7 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
 
 
 class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMixin, View):
-    action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT
+    action_log_type = ActionLogEntry.ActionType.SPEAKER_ELIGIBILITY_EDIT
     participant_model = Speaker
     many_to_many_field = 'categories'
 

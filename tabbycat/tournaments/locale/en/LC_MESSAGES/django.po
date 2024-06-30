@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
 "PO-Revision-Date: 2019-07-11 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -54,7 +54,7 @@ msgid "Format Configuration"
 msgstr ""
 
 #: tournaments/forms.py
-msgid "Apply a standard set of settings to match a common debate format"
+msgid "Apply a standard set of settings to match a common debate format. These can be changed afterwards and should be checked for your needs."
 msgstr ""
 
 #: tournaments/forms.py
@@ -817,10 +817,6 @@ msgstr ""
 msgid "Go to the results area to enter ballots for %(round)s"
 msgstr ""
 
-#: tournaments/templates/tournament_index.html
-msgid "You have enabled a URL that allows users to create new accounts. You should <strong>disable it once the tournament starts</strong>."
-msgstr ""
-
 #: tournaments/templates/tournament_index_links.html
 #, python-format
 msgid "Administrator area for <strong>%(tn)s</strong>"
@@ -945,6 +941,14 @@ msgid "Res"
 msgstr ""
 
 #: tournaments/utils.py
+msgid "1st team"
+msgstr ""
+
+#: tournaments/utils.py
+msgid "2nd team"
+msgstr ""
+
+#: tournaments/utils.py
 msgid "opening government"
 msgstr ""
 
@@ -1005,6 +1009,15 @@ msgstr ""
 #: tournaments/utils.py
 #, python-format
 msgid "R%(number)d"
+msgstr ""
+
+#: tournaments/utils.py
+msgid "bye"
+msgstr ""
+
+#: tournaments/utils.py
+#, python-format
+msgid "Team %d"
 msgstr ""
 
 #: tournaments/views.py

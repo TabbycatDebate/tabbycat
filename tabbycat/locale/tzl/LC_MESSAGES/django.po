@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:58\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:58\n"
 "Last-Translator: \n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -103,7 +103,7 @@ msgstr "crwdns30600:0crwdne30600:0"
 msgid "check-in time"
 msgstr "crwdns30602:0crwdne30602:0"
 
-#: checkins/models.py
+#: checkins/models.py users/models.py
 msgid "tournament"
 msgstr "crwdns30604:0crwdne30604:0"
 
@@ -238,6 +238,22 @@ msgid "Bengali"
 msgstr "crwdns51570:0crwdne51570:0"
 
 #: settings/core.py
+msgid "Bulgarian"
+msgstr "crwdns52297:0crwdne52297:0"
+
+#: settings/core.py
+msgid "Catalan"
+msgstr "crwdns52299:0crwdne52299:0"
+
+#: settings/core.py
+msgid "Czech"
+msgstr "crwdns52301:0crwdne52301:0"
+
+#: settings/core.py
+msgid "German"
+msgstr "crwdns52303:0crwdne52303:0"
+
+#: settings/core.py
 msgid "English"
 msgstr "crwdns30686:0crwdne30686:0"
 
@@ -250,12 +266,28 @@ msgid "French"
 msgstr "crwdns30690:0crwdne30690:0"
 
 #: settings/core.py
+msgid "Hebrew"
+msgstr "crwdns52305:0crwdne52305:0"
+
+#: settings/core.py
+msgid "Hindi"
+msgstr "crwdns52307:0crwdne52307:0"
+
+#: settings/core.py
 msgid "Indonesian"
 msgstr "crwdns51810:0crwdne51810:0"
 
 #: settings/core.py
+msgid "Italian"
+msgstr "crwdns52309:0crwdne52309:0"
+
+#: settings/core.py
 msgid "Japanese"
 msgstr "crwdns30692:0crwdne30692:0"
+
+#: settings/core.py
+msgid "Kazakh"
+msgstr "crwdns52311:0crwdne52311:0"
 
 #: settings/core.py
 msgid "Malay"
@@ -266,8 +298,20 @@ msgid "Portuguese"
 msgstr "crwdns30694:0crwdne30694:0"
 
 #: settings/core.py
+msgid "Romanian"
+msgstr "crwdns52313:0crwdne52313:0"
+
+#: settings/core.py
 msgid "Russian"
 msgstr "crwdns35540:0crwdne35540:0"
+
+#: settings/core.py
+msgid "Turkish"
+msgstr "crwdns52315:0crwdne52315:0"
+
+#: settings/core.py
+msgid "Vietnamese"
+msgstr "crwdns52317:0crwdne52317:0"
 
 #: settings/core.py
 msgid "Simplified Chinese"
@@ -370,8 +414,8 @@ msgid "This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 msgstr "crwdns30728:0%(tabbycat_version)scrwdnd30728:0%(tabbycat_codename)scrwdne30728:0"
 
 #: templates/footer.html
-msgid "Tabbycat is a source-available project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments."
-msgstr "crwdns51272:0crwdne51272:0"
+msgid "Tabbycat is an open-source project developed by volunteers and is free to use."
+msgstr "crwdns52319:0crwdne52319:0"
 
 #: templates/footer.html
 #, python-format
@@ -383,8 +427,8 @@ msgid "Learn more about donating."
 msgstr "crwdns30734:0crwdne30734:0"
 
 #: templates/footer.html
-msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated."
-msgstr "crwdns52056:0crwdne52056:0"
+msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated and help us to continue to develop, support, and maintain Tabbycat."
+msgstr "crwdns52321:0crwdne52321:0"
 
 #: templates/footer.html
 msgid "Still timing debates with the stopwatch app?"
@@ -393,7 +437,7 @@ msgstr "crwdns30738:0crwdne30738:0"
 #: templates/footer.html
 #, python-format
 msgid "Using an app designed for debate timekeeping makes speaking and adjudicating easier! Check out <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/iPad) or <a href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper</a> (Android)."
-msgstr "crwdns30740:0%20crwdnd30740:0%3crwdnd30740:0%26crwdnd30740:0%3crwdne30740:0"
+msgstr "crwdns30740:0%20crwdnd30740:0%%3Dtabbycat%%crwdnd30740:0%3crwdne30740:0"
 
 #: templates/footer.html
 msgid "Our Organisation"
@@ -403,7 +447,7 @@ msgstr "crwdns51944:0crwdne51944:0"
 msgid "Tabbycat is supported by the <a href=\"https://tabbycat-debate.org/\">Tabbycat Debate Association</a>, a non-profit for advancing open debate technology."
 msgstr "crwdns52193:0crwdne52193:0"
 
-#: templates/footer.html
+#: templates/footer.html users/groups.py
 msgid "Language"
 msgstr "crwdns35542:0crwdne35542:0"
 
@@ -874,16 +918,12 @@ msgid "If this wasn't you, that probably means someone else typed your email add
 msgstr "crwdns51588:0%(protocol)scrwdnd51588:0%(domain)scrwdne51588:0"
 
 #: templates/registration/password_reset_form.html
-msgid "Enter your email address below, and we'll email you a password reset link."
-msgstr "crwdns51590:0crwdne51590:0"
+msgid "Password Reset"
+msgstr "crwdns52488:0crwdne52488:0"
 
 #: templates/registration/password_reset_form.html
-msgid "Please enter a valid email address."
-msgstr "crwdns51592:0crwdne51592:0"
-
-#: templates/registration/password_reset_form.html users/forms.py
-msgid "Email address"
-msgstr "crwdns51594:0crwdne51594:0"
+msgid "Enter your email address below, and we'll email you a password reset link."
+msgstr "crwdns51590:0crwdne51590:0"
 
 #: templates/registration/password_reset_form.html
 msgctxt "button"
@@ -913,38 +953,568 @@ msgid "Users with staff status can view and edit the Edit Database area. This is
 msgstr "crwdns30956:0crwdne30956:0"
 
 #: users/admin.py
-msgid "Superusers have full access all areas of Tabbycat necessary to run a tournament. Users who are not superusers are still able to perform data entry tasks such as adding results and feedback but can't access confidential areas such as the Breaks and Feedback sections. Chief adjudicators and their deputies are generally given superuser status if they know what they are doing."
-msgstr "crwdns30958:0crwdne30958:0"
+msgid "Personal info"
+msgstr "crwdns52490:0crwdne52490:0"
+
+#: users/admin.py
+msgid "Permissions"
+msgstr "crwdns52492:0crwdne52492:0"
+
+#: users/admin.py
+msgid "Important dates"
+msgstr "crwdns52494:0crwdne52494:0"
+
+#: users/forms.py
+msgid "Email address"
+msgstr "crwdns51594:0crwdne51594:0"
+
+#: users/forms.py
+msgid "Username"
+msgstr "crwdns52496:0crwdne52496:0"
+
+#: users/groups.py
+msgid "Equity"
+msgstr "crwdns52498:0crwdne52498:0"
+
+#: users/groups.py
+msgid "Adjudication Core"
+msgstr "crwdns52500:0crwdne52500:0"
+
+#: users/groups.py
+msgid "Tabulation Director"
+msgstr "crwdns52502:0crwdne52502:0"
+
+#: users/groups.py
+msgid "Tabulation Assistant"
+msgstr "crwdns52504:0crwdne52504:0"
+
+#: users/models.py
+msgid "user"
+msgstr "crwdns52506:0crwdne52506:0"
+
+#: users/models.py
+msgid "permission"
+msgstr "crwdns52508:0crwdne52508:0"
+
+#: users/models.py
+msgid "user permission"
+msgstr "crwdns52510:0crwdne52510:0"
+
+#: users/models.py
+msgid "user permissions"
+msgstr "crwdns52512:0crwdne52512:0"
+
+#: users/models.py
+msgid "name"
+msgstr "crwdns52514:0crwdne52514:0"
+
+#: users/models.py
+msgid "permissions"
+msgstr "crwdns52516:0crwdne52516:0"
+
+#: users/models.py
+msgid "group"
+msgstr "crwdns52518:0crwdne52518:0"
+
+#: users/models.py
+msgid "groups"
+msgstr "crwdns52520:0crwdne52520:0"
+
+#: users/models.py
+msgid "group membership"
+msgstr "crwdns52522:0crwdne52522:0"
+
+#: users/models.py
+msgid "group memberships"
+msgstr "crwdns52524:0crwdne52524:0"
+
+#: users/permissions.py
+msgid "view adjudicator-team conflicts"
+msgstr "crwdns52526:0crwdne52526:0"
+
+#: users/permissions.py
+msgid "edit adjudicator-team conflicts"
+msgstr "crwdns52528:0crwdne52528:0"
+
+#: users/permissions.py
+msgid "view adjudicator-adjudicator conflicts"
+msgstr "crwdns52530:0crwdne52530:0"
+
+#: users/permissions.py
+msgid "edit adjudicator-adjudicator conflicts"
+msgstr "crwdns52532:0crwdne52532:0"
+
+#: users/permissions.py
+msgid "view adjudicator-institution conflicts"
+msgstr "crwdns52534:0crwdne52534:0"
+
+#: users/permissions.py
+msgid "edit adjudicator-institution conflicts"
+msgstr "crwdns52536:0crwdne52536:0"
+
+#: users/permissions.py
+msgid "view team-institution conflicts"
+msgstr "crwdns52538:0crwdne52538:0"
+
+#: users/permissions.py
+msgid "edit team-institution conflicts"
+msgstr "crwdns52540:0crwdne52540:0"
+
+#: users/permissions.py
+msgid "view action log entries"
+msgstr "crwdns52542:0crwdne52542:0"
+
+#: users/permissions.py
+msgid "view teams"
+msgstr "crwdns52544:0crwdne52544:0"
+
+#: users/permissions.py
+msgid "add teams"
+msgstr "crwdns52546:0crwdne52546:0"
+
+#: users/permissions.py
+msgid "view decoded team names"
+msgstr "crwdns52548:0crwdne52548:0"
+
+#: users/permissions.py
+msgid "View names of anonymized participants"
+msgstr "crwdns52550:0crwdne52550:0"
+
+#: users/permissions.py
+msgid "view adjudicators"
+msgstr "crwdns52552:0crwdne52552:0"
+
+#: users/permissions.py
+msgid "add adjudicators"
+msgstr "crwdns52554:0crwdne52554:0"
+
+#: users/permissions.py
+msgid "view rooms"
+msgstr "crwdns52556:0crwdne52556:0"
+
+#: users/permissions.py
+msgid "add rooms"
+msgstr "crwdns52558:0crwdne52558:0"
+
+#: users/permissions.py
+msgid "view institutions"
+msgstr "crwdns52560:0crwdne52560:0"
+
+#: users/permissions.py
+msgid "add institutions"
+msgstr "crwdns52562:0crwdne52562:0"
+
+#: users/permissions.py
+msgid "view participants"
+msgstr "crwdns52564:0crwdne52564:0"
+
+#: users/permissions.py
+msgid "view participants' gender information"
+msgstr "crwdns52566:0crwdne52566:0"
+
+#: users/permissions.py
+msgid "view participants' contact information"
+msgstr "crwdns52568:0crwdne52568:0"
+
+#: users/permissions.py
+msgid "view participants' real names"
+msgstr "crwdns52570:0crwdne52570:0"
+
+#: users/permissions.py
+msgid "view participants' institution"
+msgstr "crwdns52572:0crwdne52572:0"
+
+#: users/permissions.py
+msgid "view round availabilities for teams"
+msgstr "crwdns52574:0crwdne52574:0"
+
+#: users/permissions.py
+msgid "view round availabilities for adjudicators"
+msgstr "crwdns52576:0crwdne52576:0"
+
+#: users/permissions.py
+msgid "view round availabilities for rooms"
+msgstr "crwdns52578:0crwdne52578:0"
+
+#: users/permissions.py
+msgid "edit round availabilities for teams"
+msgstr "crwdns52580:0crwdne52580:0"
+
+#: users/permissions.py
+msgid "edit round availabilities for adjudicators"
+msgstr "crwdns52582:0crwdne52582:0"
+
+#: users/permissions.py
+msgid "edit round availabilities for rooms"
+msgstr "crwdns52584:0crwdne52584:0"
+
+#: users/permissions.py
+msgid "view round availabilities"
+msgstr "crwdns52586:0crwdne52586:0"
+
+#: users/permissions.py
+msgid "edit round availabilities"
+msgstr "crwdns52588:0crwdne52588:0"
+
+#: users/permissions.py
+msgid "view room constraints"
+msgstr "crwdns52590:0crwdne52590:0"
+
+#: users/permissions.py
+msgid "view room categories"
+msgstr "crwdns52592:0crwdne52592:0"
+
+#: users/permissions.py
+msgid "edit room constraints"
+msgstr "crwdns52594:0crwdne52594:0"
+
+#: users/permissions.py
+msgid "edit room categories"
+msgstr "crwdns52596:0crwdne52596:0"
+
+#: users/permissions.py
+msgid "view debates (draw)"
+msgstr "crwdns52598:0crwdne52598:0"
+
+#: users/permissions.py
+msgid "view debates (detailed draw)"
+msgstr "crwdns52600:0crwdne52600:0"
+
+#: users/permissions.py
+msgid "generate debates (draw)"
+msgstr "crwdns52602:0crwdne52602:0"
+
+#: users/permissions.py
+msgid "edit debate teams (pairings)"
+msgstr "crwdns52604:0crwdne52604:0"
+
+#: users/permissions.py
+msgid "view debate adjudicators (allocations)"
+msgstr "crwdns52606:0crwdne52606:0"
+
+#: users/permissions.py
+msgid "edit debate adjudicators (allocations)"
+msgstr "crwdns52608:0crwdne52608:0"
+
+#: users/permissions.py
+msgid "view room allocations"
+msgstr "crwdns52610:0crwdne52610:0"
+
+#: users/permissions.py
+msgid "edit room allocations"
+msgstr "crwdns52612:0crwdne52612:0"
+
+#: users/permissions.py
+msgid "edit and confirm outround team positions"
+msgstr "crwdns52614:0crwdne52614:0"
+
+#: users/permissions.py
+msgid "view confirmed ballots"
+msgstr "crwdns52616:0crwdne52616:0"
+
+#: users/permissions.py
+msgid "edit non-confirmed ballots"
+msgstr "crwdns52618:0crwdne52618:0"
+
+#: users/permissions.py
+msgid "view any ballot"
+msgstr "crwdns52620:0crwdne52620:0"
+
+#: users/permissions.py
+msgid "edit any ballot"
+msgstr "crwdns52622:0crwdne52622:0"
+
+#: users/permissions.py
+msgid "create ballots"
+msgstr "crwdns52624:0crwdne52624:0"
+
+#: users/permissions.py
+msgid "confirm/discard any ballot"
+msgstr "crwdns52626:0crwdne52626:0"
+
+#: users/permissions.py
+msgid "confirm/discard others' ballots"
+msgstr "crwdns52628:0crwdne52628:0"
+
+#: users/permissions.py
+msgid "view ballot graph"
+msgstr "crwdns52630:0crwdne52630:0"
+
+#: users/permissions.py
+msgid "view results entry page"
+msgstr "crwdns52632:0crwdne52632:0"
+
+#: users/permissions.py
+msgid "view motion per round"
+msgstr "crwdns52634:0crwdne52634:0"
+
+#: users/permissions.py
+msgid "edit motion per round"
+msgstr "crwdns52636:0crwdne52636:0"
+
+#: users/permissions.py
+msgid "release draw to public"
+msgstr "crwdns52638:0crwdne52638:0"
+
+#: users/permissions.py
+msgid "release motion to public"
+msgstr "crwdns52640:0crwdne52640:0"
+
+#: users/permissions.py
+msgid "unrelease draw to public"
+msgstr "crwdns52642:0crwdne52642:0"
+
+#: users/permissions.py
+msgid "unrelease motion to public"
+msgstr "crwdns52644:0crwdne52644:0"
+
+#: users/permissions.py
+msgid "add debate start time"
+msgstr "crwdns52646:0crwdne52646:0"
+
+#: users/permissions.py
+msgid "view draws"
+msgstr "crwdns52648:0crwdne52648:0"
+
+#: users/permissions.py
+msgid "view draws (for the briefing room)"
+msgstr "crwdns52650:0crwdne52650:0"
+
+#: users/permissions.py
+msgid "display motion (for the briefing room)"
+msgstr "crwdns52652:0crwdne52652:0"
+
+#: users/permissions.py
+msgid "view tournament configuration"
+msgstr "crwdns52654:0crwdne52654:0"
+
+#: users/permissions.py
+msgid "edit tournament configuration"
+msgstr "crwdns52656:0crwdne52656:0"
+
+#: users/permissions.py
+msgid "view existing preformed panels"
+msgstr "crwdns52658:0crwdne52658:0"
+
+#: users/permissions.py
+msgid "edit preformed panels"
+msgstr "crwdns52660:0crwdne52660:0"
+
+#: users/permissions.py
+msgid "view the overviews of standings"
+msgstr "crwdns52662:0crwdne52662:0"
+
+#: users/permissions.py
+msgid "view the most recent team standings"
+msgstr "crwdns52664:0crwdne52664:0"
+
+#: users/permissions.py
+msgid "view the most recent speaker standings"
+msgstr "crwdns52666:0crwdne52666:0"
+
+#: users/permissions.py
+msgid "view the most recent replies standings"
+msgstr "crwdns52668:0crwdne52668:0"
+
+#: users/permissions.py
+msgid "view the most recent motions tab"
+msgstr "crwdns52670:0crwdne52670:0"
+
+#: users/permissions.py
+msgid "view the diversity tab"
+msgstr "crwdns52672:0crwdne52672:0"
+
+#: users/permissions.py
+msgid "view overview of judge feedback"
+msgstr "crwdns52674:0crwdne52674:0"
+
+#: users/permissions.py
+msgid "bulk update judge scores"
+msgstr "crwdns52676:0crwdne52676:0"
+
+#: users/permissions.py
+msgid "edit base scores of judges"
+msgstr "crwdns52678:0crwdne52678:0"
+
+#: users/permissions.py
+msgid "view feedback"
+msgstr "crwdns52680:0crwdne52680:0"
+
+#: users/permissions.py
+msgid "toggle ignore feedback"
+msgstr "crwdns52682:0crwdne52682:0"
+
+#: users/permissions.py
+msgid "toggle confirm feedback"
+msgstr "crwdns52684:0crwdne52684:0"
+
+#: users/permissions.py
+msgid "view feedback unsubmitted tab"
+msgstr "crwdns52686:0crwdne52686:0"
+
+#: users/permissions.py
+msgid "add feedback"
+msgstr "crwdns52688:0crwdne52688:0"
+
+#: users/permissions.py
+msgid "view adjudicator break"
+msgstr "crwdns52690:0crwdne52690:0"
+
+#: users/permissions.py
+msgid "edit adjudicator break"
+msgstr "crwdns52692:0crwdne52692:0"
+
+#: users/permissions.py
+msgid "edit feedback questions"
+msgstr "crwdns52694:0crwdne52694:0"
+
+#: users/permissions.py
+msgid "edit break eligibility"
+msgstr "crwdns52696:0crwdne52696:0"
+
+#: users/permissions.py
+msgid "view break eligibility"
+msgstr "crwdns52698:0crwdne52698:0"
+
+#: users/permissions.py
+msgid "edit break categories"
+msgstr "crwdns52700:0crwdne52700:0"
+
+#: users/permissions.py
+msgid "view break categories"
+msgstr "crwdns52702:0crwdne52702:0"
+
+#: users/permissions.py
+msgid "view speaker categories"
+msgstr "crwdns52704:0crwdne52704:0"
+
+#: users/permissions.py
+msgid "edit speaker categories"
+msgstr "crwdns52706:0crwdne52706:0"
+
+#: users/permissions.py
+msgid "view speaker eligibility"
+msgstr "crwdns52708:0crwdne52708:0"
+
+#: users/permissions.py
+msgid "edit speaker eligibility"
+msgstr "crwdns52710:0crwdne52710:0"
+
+#: users/permissions.py
+msgid "view break overview"
+msgstr "crwdns52712:0crwdne52712:0"
+
+#: users/permissions.py
+msgid "view breaks"
+msgstr "crwdns52714:0crwdne52714:0"
+
+#: users/permissions.py
+msgid "generate all breaks"
+msgstr "crwdns52716:0crwdne52716:0"
+
+#: users/permissions.py
+msgid "view private urls"
+msgstr "crwdns52718:0crwdne52718:0"
+
+#: users/permissions.py
+msgid "view private urls email list"
+msgstr "crwdns52720:0crwdne52720:0"
+
+#: users/permissions.py
+msgid "generate private URLs"
+msgstr "crwdns52722:0crwdne52722:0"
+
+#: users/permissions.py
+msgid "send private URLs"
+msgstr "crwdns52724:0crwdne52724:0"
+
+#: users/permissions.py
+msgid "view checkins"
+msgstr "crwdns52726:0crwdne52726:0"
+
+#: users/permissions.py
+msgid "edit participant check-in"
+msgstr "crwdns52728:0crwdne52728:0"
+
+#: users/permissions.py
+msgid "edit room check-in"
+msgstr "crwdns52730:0crwdne52730:0"
+
+#: users/permissions.py
+msgid "edit round attributes"
+msgstr "crwdns52732:0crwdne52732:0"
+
+#: users/permissions.py
+msgid "delete rounds"
+msgstr "crwdns52734:0crwdne52734:0"
+
+#: users/permissions.py
+msgid "create rounds"
+msgstr "crwdns52736:0crwdne52736:0"
+
+#: users/permissions.py
+msgid "view email statuses"
+msgstr "crwdns52738:0crwdne52738:0"
+
+#: users/permissions.py
+msgid "send participants email messages"
+msgstr "crwdns52740:0crwdne52740:0"
+
+#: users/permissions.py
+msgid "export DebateXML"
+msgstr "crwdns52742:0crwdne52742:0"
+
+#: users/permissions.py
+msgid "view settings"
+msgstr "crwdns52744:0crwdne52744:0"
+
+#: users/permissions.py
+msgid "edit settings"
+msgstr "crwdns52746:0crwdne52746:0"
+
+#: users/templates/account_invitation_email.html
+msgid "Hello!"
+msgstr "crwdns52748:0crwdne52748:0"
+
+#: users/templates/account_invitation_email.html
+#, python-format
+msgid "An administrator for the Tabbycat site hosting %(name)s has invited you to create an user account on their site, at %(protocol)s://%(domain)s."
+msgstr "crwdns52750:0%(name)scrwdnd52750:0%(protocol)scrwdnd52750:0%(domain)scrwdne52750:0"
+
+#: users/templates/account_invitation_email.html
+msgid "If you accept, please use the link below to activate your account"
+msgstr "crwdns52752:0crwdne52752:0"
+
+#: users/templates/account_invitation_email.html
+msgid "If you do not accept, there is no action to be taken."
+msgstr "crwdns52754:0crwdne52754:0"
+
+#: users/templates/account_invitation_subject.txt
+#, python-format
+msgid "Invitation to join Tabbycat site for %(name)s"
+msgstr "crwdns52756:0%(name)scrwdne52756:0"
 
 #: users/templates/admin/auth/delete_user_warning.html
 msgid "<strong>Warning:</strong> You shouldn't delete users from the database once they've done something, because the database logs actions taken by those users, and deleting the users also deletes the related logs. If you wish to deactivate a user account, go back to edit the user, click on the “Permissions” tab, unchecked the “Active” box, and save the user."
 msgstr "crwdns51668:0crwdne51668:0"
 
-#: users/templates/signup.html
-msgid "Sign-Up"
-msgstr "crwdns52059:0crwdne52059:0"
+#: users/templates/invite_user.html
+msgid "Back to Configuration"
+msgstr "crwdns52758:0crwdne52758:0"
+
+#: users/templates/invite_user.html
+msgctxt "button"
+msgid "Invite User"
+msgstr "crwdns52760:0crwdne52760:0"
 
 #: users/templates/signup.html
 msgctxt "page title"
-msgid "Create a New Administrator Account"
-msgstr "crwdns52061:0crwdne52061:0"
-
-#: users/templates/signup.html
-msgctxt "page title"
-msgid "Create a New Assistant Account"
-msgstr "crwdns52063:0crwdne52063:0"
+msgid "Create a new Account"
+msgstr "crwdns52762:0crwdne52762:0"
 
 #: users/templates/signup.html
 msgid "Create Account"
 msgstr "crwdns52065:0crwdne52065:0"
-
-#: users/views.py
-msgid "You have successfully created a new administrator account."
-msgstr "crwdns52067:0crwdne52067:0"
-
-#: users/views.py
-msgid "You have successfully created a new assistant account."
-msgstr "crwdns52069:0crwdne52069:0"
 
 #: users/views.py
 msgid "Whoops! It looks like someone's already created the first user account. Please log in."
@@ -954,4 +1524,12 @@ msgstr "crwdns52071:0crwdne52071:0"
 #, python-format
 msgid "Welcome! You've created an account for %s."
 msgstr "crwdns52073:0%scrwdne52073:0"
+
+#: users/views.py
+msgid "Invite User"
+msgstr "crwdns52764:0crwdne52764:0"
+
+#: users/views.py
+msgid "Accept Invitation"
+msgstr "crwdns52766:0crwdne52766:0"
 

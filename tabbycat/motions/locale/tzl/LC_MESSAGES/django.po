@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:25-0400\n"
-"PO-Revision-Date: 2023-02-12 06:28\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:59\n"
 "Last-Translator: \n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -141,7 +141,7 @@ msgstr "crwdns31016:0%(level)scrwdne31016:0"
 #: motions/statistics.py
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing %(evidence)s to suggest that this motion was imbalanced — at a %(level)s level of significance."
-msgstr "crwdns31018:0%(chisq)crwdnd31018:0%(evidence)scrwdnd31018:0%(level)scrwdne31018:0"
+msgstr "crwdns31018:0%(chisq).3fcrwdnd31018:0%(evidence)scrwdnd31018:0%(level)scrwdne31018:0"
 
 #: motions/statistics.py
 msgid "probably balanced"
@@ -150,7 +150,7 @@ msgstr "crwdns31020:0crwdne31020:0"
 #: motions/statistics.py
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that this motion was imbalanced at any level of significance."
-msgstr "crwdns31022:0%(chisq)crwdne31022:0"
+msgstr "crwdns31022:0%(chisq).3fcrwdne31022:0"
 
 #: motions/templates/motion_global_statistics.html
 #: motions/templates/motion_round_statistics.html
@@ -324,6 +324,13 @@ msgstr "crwdns31110:0crwdne31110:0"
 
 #: motions/templates/show.html
 #, python-format
+msgid "Motion for %(round)s"
+msgid_plural "Motions for %(round)s"
+msgstr[0] "crwdns52323:1%(round)scrwdne52323:1"
+msgstr[1] "crwdns52323:5%(round)scrwdne52323:5"
+
+#: motions/templates/show.html
+#, python-format
 msgid "Reveal Info Slide for %(round)s"
 msgid_plural "Reveal Info Slides for %(round)s"
 msgstr[0] "crwdns51300:1%(round)scrwdne51300:1"
@@ -341,12 +348,12 @@ msgid "There are no motions for this round entered into Tabbycat."
 msgstr "crwdns31116:0crwdne31116:0"
 
 #: motions/utils.py
-msgid "Not all latest ballots list the same motion, so could not be merged."
-msgstr "crwdns52075:0crwdne52075:0"
+msgid "Not all latest ballots have the same motion. The correct motion must be set manually."
+msgstr "crwdns52768:0crwdne52768:0"
 
 #: motions/utils.py
-msgid "Motion vetos are inconsistent, so could not be merged."
-msgstr "crwdns52077:0crwdne52077:0"
+msgid "Motion vetos are inconsistent; they must be set manually."
+msgstr "crwdns52770:0crwdne52770:0"
 
 #: motions/views.py
 msgid "The motion has been saved."

@@ -14,6 +14,7 @@ from tournaments.models import Round
 from .generator import BPEliminationResultPairing, DrawGenerator, DrawUserError, ResultPairing
 from .generator.utils import ispow2
 from .models import Debate, DebateTeam
+from .types import DebateSide
 
 if TYPE_CHECKING:
     from participants.models import Team
@@ -45,11 +46,14 @@ OPTIONS_TO_CONFIG_MAPPING = {
 def DrawManager(round, active_only=True):  # noqa: N802 (factory function)
     teams_in_debate = round.tournament.pref('teams_in_debate')
     try:
-        klass = DRAW_MANAGER_CLASSES[(teams_in_debate, round.draw_type)]
+        if teams_in_debate in [2, 4]:
+            klass = DRAW_MANAGER_CLASSES[(teams_in_debate, round.draw_type)]
+        else:
+            klass = DRAW_MANAGER_CLASSES[(None, round.draw_type)]
     except KeyError:
-        if teams_in_debate == 'two':
+        if teams_in_debate == 2:
             raise DrawUserError(_("The draw type %(type)s can't be used with two-team formats.") % {'type': round.get_draw_type_display()})
-        elif teams_in_debate == 'bp':
+        elif teams_in_debate == 4:
             raise DrawUserError(_("The draw type %(type)s can't be used with British Parliamentary.") % {'type': round.get_draw_type_display()})
         else:
             raise DrawUserError(_("Unrecognised \"teams in debate\" option: %(option)s") % {'option': teams_in_debate})
@@ -68,7 +72,7 @@ class BaseDrawManager:
         self.active_only = active_only
 
     def get_relevant_options(self):
-        if self.teams_in_debate == 'two':
+        if self.teams_in_debate == 2:
             return [
                 "avoid_institution",
                 "avoid_history",
@@ -79,8 +83,7 @@ class BaseDrawManager:
                 "pairing_penalty",
                 "avoid_conflicts",
             ]
-        else:
-            return []
+        return []
 
     def n_byes(self, n_teams):
         if self.round.tournament.pref('bye_team_selection') != 'off':
@@ -160,7 +163,7 @@ class BaseDrawManager:
             debate = Debate(round=self.round, bracket=-1, room_rank=i)
             debate.save()
 
-            dt = DebateTeam(debate=debate, team=bye, side=DebateTeam.Side.BYE)
+            dt = DebateTeam(debate=debate, team=bye, side=DebateSide.BYE)
             dt.save()
 
             if self.round.tournament.pref('bye_team_results') == 'points':
@@ -211,7 +214,7 @@ class RandomDrawManager(BaseDrawManager):
 
     def get_relevant_options(self):
         options = super().get_relevant_options()
-        if self.teams_in_debate == 'two':
+        if self.teams_in_debate == 2:
             options.extend(["avoid_conflicts", "side_allocations"])
         return options
 
@@ -228,12 +231,12 @@ class PowerPairedDrawManager(BaseDrawManager):
 
     def get_relevant_options(self):
         options = super().get_relevant_options()
-        if self.teams_in_debate == 'two':
+        if self.teams_in_debate == 2:
             options.extend([
                 "avoid_conflicts", "odd_bracket", "pairing_method",
                 "pullup_restriction", "side_allocations",
             ])
-        elif self.teams_in_debate == 'bp':
+        elif self.teams_in_debate == 4:
             options.extend(["pullup", "position_cost", "assignment_method", "renyi_order", "exponent"])
         return options
 
@@ -285,9 +288,9 @@ class SeededDrawManager(BaseDrawManager):
 
     def get_relevant_options(self):
         options = super().get_relevant_options()
-        if self.teams_in_debate == 'two':
+        if self.teams_in_debate == 2:
             options.extend(["avoid_conflicts", "pairing_method", "side_allocations"])
-        elif self.teams_in_debate == 'bp':
+        elif self.teams_in_debate == 4:
             options.extend(["assignment_method"])
         return options
 
@@ -378,14 +381,17 @@ class BPEliminationDrawManager(BaseEliminationDrawManager):
 
 
 DRAW_MANAGER_CLASSES = {
-    ('two', Round.DrawType.RANDOM): RandomDrawManager,
-    ('two', Round.DrawType.POWERPAIRED): PowerPairedDrawManager,
-    ('two', Round.DrawType.ROUNDROBIN): RoundRobinDrawManager,
-    ('two', Round.DrawType.MANUAL): ManualDrawManager,
-    ('two', Round.DrawType.ELIMINATION): EliminationDrawManager,
-    ('two', Round.DrawType.SEEDED): SeededDrawManager,
-    ('bp', Round.DrawType.RANDOM): RandomDrawManager,
-    ('bp', Round.DrawType.MANUAL): ManualDrawManager,
-    ('bp', Round.DrawType.POWERPAIRED): PowerPairedDrawManager,
-    ('bp', Round.DrawType.ELIMINATION): BPEliminationDrawManager,
+    (2, Round.DrawType.RANDOM): RandomDrawManager,
+    (2, Round.DrawType.POWERPAIRED): PowerPairedDrawManager,
+    (2, Round.DrawType.ROUNDROBIN): RoundRobinDrawManager,
+    (2, Round.DrawType.MANUAL): ManualDrawManager,
+    (2, Round.DrawType.ELIMINATION): EliminationDrawManager,
+    (2, Round.DrawType.SEEDED): SeededDrawManager,
+    (4, Round.DrawType.RANDOM): RandomDrawManager,
+    (4, Round.DrawType.MANUAL): ManualDrawManager,
+    (4, Round.DrawType.POWERPAIRED): PowerPairedDrawManager,
+    (4, Round.DrawType.ELIMINATION): BPEliminationDrawManager,
+    (None, Round.DrawType.RANDOM): RandomDrawManager,
+    (None, Round.DrawType.MANUAL): ManualDrawManager,
+    (None, Round.DrawType.ELIMINATION): EliminationDrawManager,
 }

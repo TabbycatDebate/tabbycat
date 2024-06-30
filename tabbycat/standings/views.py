@@ -18,6 +18,7 @@ from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
+from users.permissions import Permission
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
@@ -36,6 +37,7 @@ logger = logging.getLogger(__name__)
 class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
 
     template_name = 'standings_index.html'
+    view_permission = Permission.VIEW_STANDINGS_OVERVIEW
 
     def get_context_data(self, **kwargs):
         speaks = SpeakerScore.objects.filter(
@@ -68,7 +70,7 @@ class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
             'debate_team__debate__round',
             'debate_team__team__institution',
         )
-        if self.tournament.pref('teams_in_debate') == 'bp':
+        if self.tournament.pref('teams_in_debate') == 4:
             team_scores.filter(debate_team__debate__round__stage=Round.Stage.PRELIMINARY)
             kwargs["top_team_scores"] = team_scores.order_by('-score')[:9]
             kwargs["bottom_team_scores"] = team_scores.order_by('score')[:9]
@@ -279,7 +281,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
     def cast_round_results(self, standings, rounds, step_preference):
         """For use by subclasses. Casts round results to integers if appropriate
         according to tournament preferences."""
-        if self.tournament.pref(step_preference).is_integer():
+        if self.tournament.pref(step_preference) % 1 == 0:
             is_consensus_by_round = [self.tournament.ballots_per_debate(r.stage) == 'per-debate' for r in rounds]
             for info in standings:
                 for i, is_consensus in enumerate(is_consensus_by_round):
@@ -321,6 +323,7 @@ class BaseSubstantiveSpeakerStandingsView(BaseSpeakerStandingsView):
 
 class SpeakerStandingsView(AdministratorMixin, BaseSubstantiveSpeakerStandingsView):
     template_name = 'speaker_standings.html'  # add info alerts
+    view_permission = Permission.VIEW_SPEAKERSSTANDINGS
 
 
 class PublicSpeakerTabView(PublicTabMixin, BaseSubstantiveSpeakerStandingsView):
@@ -347,7 +350,7 @@ class BaseSpeakerCategoryStandingsView(SingleObjectFromTournamentMixin, BaseSubs
 
 
 class SpeakerCategoryStandingsView(AdministratorMixin, BaseSpeakerCategoryStandingsView):
-    pass
+    view_permission = Permission.VIEW_SPEAKERSSTANDINGS
 
 
 class PublicSpeakerCategoryTabView(PublicTabMixin, BaseSpeakerCategoryStandingsView):
@@ -403,6 +406,7 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
 
 class ReplyStandingsView(AdministratorMixin, BaseReplyStandingsView):
     template_name = 'reply_standings.html'  # add an info alert
+    view_permission = Permission.VIEW_REPLIESSTANDINGS
 
 
 class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
@@ -440,7 +444,7 @@ class BaseTeamStandingsView(BaseStandingsView):
         self.limit_rank_display(standings)
 
         rounds = self.get_rounds()
-        opponents = self.tournament.pref('teams_in_debate') == 'two'
+        opponents = self.tournament.pref('teams_in_debate') == 2
         add_team_round_results(standings, rounds, opponents=opponents)
         self.populate_result_missing(standings)
 
@@ -486,6 +490,7 @@ class TeamStandingsView(AdministratorMixin, BaseTeamStandingsView):
     """Superuser team standings view."""
     template_name = 'team_standings.html'  # add info alerts
     rankings = ('rank',)
+    view_permission = Permission.VIEW_TEAMSTANDINGS
 
     def show_ballots(self):
         return True
@@ -526,6 +531,7 @@ class BaseBreakCategoryStandingsView(SingleObjectFromTournamentMixin, BaseTeamSt
 class BreakCategoryStandingsView(AdministratorMixin, BaseBreakCategoryStandingsView):
     """Superuser team standings view for a break category."""
     rankings = ('rank',)
+    view_permission = Permission.VIEW_TEAMSTANDINGS
 
     def show_ballots(self):
         return True
@@ -585,12 +591,12 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
 
         # Can't use prefetch.populate_win_counts, since that doesn't exclude
         # silent rounds and future rounds appropriately
-        opponents = self.tournament.pref('teams_in_debate') == 'two'
+        opponents = self.tournament.pref('teams_in_debate') == 2
         add_team_round_results_public(teams, rounds, opponents=opponents)
 
         # Pre-sort, as Vue tables can't do two sort keys
         teams = sorted(teams, key=lambda t: (-t.points, getattr(t, name_attr)))
-        key, title = ('points', _("Points")) if self.tournament.pref('teams_in_debate') == 'bp' else ('wins', _("Wins"))
+        key, title = ('points', _("Points")) if self.tournament.pref('teams_in_debate') == 4 else ('wins', _("Wins"))
         header = {'key': key, 'tooltip': title, 'icon': 'bar-chart'}
 
         table = TabbycatTableBuilder(view=self, sort_order='desc')
@@ -621,6 +627,7 @@ class BaseDiversityStandingsView(TournamentMixin, TemplateView):
 class DiversityStandingsView(AdministratorMixin, BaseDiversityStandingsView):
 
     for_public = False
+    view_permission = Permission.VIEW_DIVERSITYTAB
 
 
 class PublicDiversityStandingsView(PublicTournamentPageMixin, BaseDiversityStandingsView):

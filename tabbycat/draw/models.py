@@ -1,4 +1,5 @@
 import logging
+from typing import TYPE_CHECKING
 
 from django.contrib.humanize.templatetags.humanize import ordinal
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
@@ -7,8 +8,13 @@ from django.utils.translation import gettext, gettext_lazy as _
 
 from tournaments.utils import get_side_name
 from utils.fields import ChoiceArrayField
+from utils.models import UniqueConstraint
 
 from .generator import DRAW_FLAG_DESCRIPTIONS
+from .types import DebateSide
+
+if TYPE_CHECKING:
+    from participants.models import Team
 
 logger = logging.getLogger(__name__)
 
@@ -66,11 +72,7 @@ class Debate(models.Model):
 
     def __str__(self):
         description = "[{}/{}/{}] ".format(self.round.tournament.slug, self.round.abbreviation, self.id)
-        try:
-            description += self.matchup
-        except Exception:
-            logger.exception("Error rendering Debate.matchup in Debate.__str__")
-            description += "<error showing teams>"
+        description += self.matchup
         return description
 
     @property
@@ -94,11 +96,11 @@ class Debate(models.Model):
             # Translators: This goes between teams in a debate, e.g. "Auckland 1
             # vs Vic Wellington 1". Mind the leading and trailing spaces.
             return gettext(" vs ").join(self.get_team(side).short_name for side in sides)
-        except (ObjectDoesNotExist, MultipleObjectsReturned):
+        except (ObjectDoesNotExist, MultipleObjectsReturned, IndexError):
             return self._teams_and_sides_display()
 
     def _teams_and_sides_display(self):
-        return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_side_display())
+        return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_side_name())
                 for dt in self.debateteam_set.all()])
 
     @property
@@ -112,7 +114,7 @@ class Debate(models.Model):
             sides = self.round.tournament.sides
             return gettext(" vs ").join(self.get_team(side).code_name for side in sides)
         except (IndexError, ObjectDoesNotExist, MultipleObjectsReturned):
-            return ", ".join(["%s (%s)" % (dt.team.code_name, dt.get_side_display())
+            return ", ".join(["%s (%s)" % (dt.team.code_name, dt.get_side_name())
                 for dt in self.debateteam_set.all()])
 
     # --------------------------------------------------------------------------
@@ -143,33 +145,19 @@ class Debate(models.Model):
             dts = dts.select_related('team')
 
         self._teams = []
+        self._dts = []
         self._multiple_found = []
         self._team_properties = {}
 
-        for dt in dts:
+        for dt in sorted(dts, key=lambda dt: dt.side):
+            self._dts.append(dt)
             self._teams.append(dt.team)
-            team_key = '%s_team' % dt.side
-            dt_key = '%s_dt' % dt.side
+            team_key = '%d_team' % dt.side
+            dt_key = '%d_dt' % dt.side
             if team_key in self._team_properties:
                 self._multiple_found.extend([team_key, dt_key])
             self._team_properties[team_key] = dt.team
             self._team_properties[dt_key] = dt
-
-    def _team_property(attr):  # noqa: N805
-        """Used to construct properties that rely on self._populate_teams()."""
-        @property
-        def _property(self):
-            if not hasattr(self, '_team_properties'):
-                self._populate_teams()
-            if attr in self._multiple_found:
-                raise MultipleDebateTeamsError("Multiple debate teams found for '%s' in debate ID %d. "
-                    "Teams in debate are: %s." % (attr, self.id, self._teams_and_sides_display()))
-            try:
-                return self._team_properties[attr]
-            except KeyError:
-                raise NoDebateTeamFoundError("No debate team found for '%s' in debate ID %d. "
-                    "Teams in debate are: %s." % (attr, self.id, self._teams_and_sides_display()))
-        return _property
 
     @property
     def teams(self):
@@ -179,31 +167,26 @@ class Debate(models.Model):
             self._populate_teams()
         return self._teams
 
+    @property
+    def debateteams(self):
+        if not hasattr(self, '_teams'):
+            self._populate_teams()
+        return self._dts
+
     def debateteams_ordered(self):
         for side in self.round.tournament.sides:
             yield self.get_dt(side)
 
-    aff_team = _team_property('aff_team')
-    neg_team = _team_property('neg_team')
-    bye_team = _team_property('bye_team')
-    og_team = _team_property('og_team')
-    oo_team = _team_property('oo_team')
-    cg_team = _team_property('cg_team')
-    co_team = _team_property('co_team')
-    aff_dt = _team_property('aff_dt')
-    neg_dt = _team_property('neg_dt')
-    bye_dt = _team_property('bye_dt')
-    og_dt = _team_property('og_dt')
-    oo_dt = _team_property('oo_dt')
-    cg_dt = _team_property('cg_dt')
-    co_dt = _team_property('co_dt')
+    def get_team(self, side: int) -> 'Team':
+        if not hasattr(self, '_team_properties'):
+            self._populate_teams()
+        return self.teams[side]
 
-    def get_team(self, side):
-        return getattr(self, '%s_team' % side)
-
-    def get_dt(self, side):
+    def get_dt(self, side: int) -> 'DebateTeam':
         """dt = DebateTeam"""
-        return getattr(self, '%s_dt' % side)
+        if not hasattr(self, '_team_properties'):
+            self._populate_teams()
+        return self._dts[side]
 
     # --------------------------------------------------------------------------
     # Other properties
@@ -227,7 +210,7 @@ class Debate(models.Model):
         try:
             return self._history
         except AttributeError:
-            self._history = self.aff_team.seen(self.neg_team, before_round=self.round.seq)
+            self._history = self.teams[DebateSide.AFF].seen(self.teams[DebateSide.NEG], before_round=self.round.seq)
             return self._history
 
     @property
@@ -250,26 +233,17 @@ class Debate(models.Model):
     def is_bye(self):
         if not hasattr(self, '_team_properties'):
             self._populate_teams()
-        return 'bye_dt' in self._team_properties
+        return '-1_dt' in self._team_properties
 
 
 class DebateTeamManager(models.Manager):
     use_for_related_fields = True
 
     def get_queryset(self):
-        return super().get_queryset().select_related('debate')
+        return super().get_queryset().order_by('side').select_related('debate')
 
 
 class DebateTeam(models.Model):
-
-    class Side(models.TextChoices):
-        AFF = 'aff', _("affirmative")
-        NEG = 'neg', _("negative")
-        OG = 'og', _("opening government")
-        OO = 'oo', _("opening opposition")
-        CG = 'cg', _("closing government")
-        CO = 'co', _("closing opposition")
-        BYE = 'bye', _("bye")
 
     objects = DebateTeamManager()
 
@@ -277,8 +251,7 @@ class DebateTeam(models.Model):
         verbose_name=_("debate"))
     team = models.ForeignKey('participants.Team', models.PROTECT,
         verbose_name=_("team"))
-    side = models.CharField(max_length=3, choices=Side.choices,
-        verbose_name=_("side"))
+    side = models.IntegerField(verbose_name=_("side sequence"))
 
     flags = ChoiceArrayField(base_field=models.CharField(max_length=15, choices=DRAW_FLAG_DESCRIPTIONS), blank=True, default=list)
 
@@ -294,7 +267,7 @@ class DebateTeam(models.Model):
         try:
             return self._opponent
         except AttributeError:
-            if self.side == self.Side.BYE:
+            if self.side == DebateSide.BYE:
                 self._opponent = None
                 return self._opponent
 
@@ -307,7 +280,7 @@ class DebateTeam(models.Model):
             return self._opponent
 
     def get_result_display(self):
-        if self.team.tournament.pref('teams_in_debate') == 'bp':
+        if self.team.tournament.pref('teams_in_debate') == 4:
             if self.points is not None:
                 return gettext("placed %(place)s") % {'place': ordinal(4 - self.points)}
             else:
@@ -359,7 +332,7 @@ class DebateTeam(models.Model):
             return get_side_name(tournament or self.debate.round.tournament,
                                  self.side, name_type)
         except KeyError:
-            return self.get_side_display()  # fallback
+            return gettext('Team %d') % (self.side + 1)  # fallback
 
     def get_side_abbr(self, tournament=None):
         """Convenience function, mainly for use in templates."""
@@ -384,10 +357,9 @@ class TeamSideAllocation(models.Model):
         verbose_name=_("round"))
     team = models.ForeignKey('participants.Team', models.CASCADE,
         verbose_name=_("team"))
-    side = models.CharField(max_length=3, choices=DebateTeam.Side.choices,
-        verbose_name=_("side"))
+    side = models.IntegerField(verbose_name=_("side sequence"))
 
     class Meta:
-        unique_together = [('round', 'team')]
+        constraints = [UniqueConstraint(fields=['round', 'team'])]
         verbose_name = _("team side allocation")
         verbose_name_plural = _("team side allocations")

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:56\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:55\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -22,76 +22,156 @@ msgid "Action Log"
 msgstr "Catatan Tindakan"
 
 #: actionlog/models.py
-msgid "Discarded ballot set"
-msgstr "Membuang balot"
+msgid "Changed adjudicator breaking status"
+msgstr "Mengubah status kelolosan (breaking) juri"
 
 #: actionlog/models.py
-msgid "Checked in ballot set"
-msgstr "Melakukan check-in balot"
+msgid "Created adjudicator"
+msgstr ""
 
 #: actionlog/models.py
-msgid "Created ballot set"
-msgstr "Membuat balot"
-
-#: actionlog/models.py
-msgid "Edited ballot set"
-msgstr "Menyunting balot"
-
-#: actionlog/models.py
-msgid "Confirmed ballot set"
-msgstr "Mengkonfirmasi balot"
-
-#: actionlog/models.py
-msgid "Submitted ballot set from the public form"
-msgstr "Memasukkan balot melalui form publik"
-
-#: actionlog/models.py
-msgid "Submitted feedback from the public form"
-msgstr "Memasukkan penilaian juri melalui form publik"
-
-#: actionlog/models.py
-msgid "Saved feedback"
-msgstr "Menyimpan penilaian juri"
-
-#: actionlog/models.py
-msgid "Edited adjudicator base score"
-msgstr "Menyunting nilai awal juri"
+msgid "Edited adjudicator"
+msgstr ""
 
 #: actionlog/models.py
 msgid "Set adjudicator note"
 msgstr "Menyimpan catatan juri"
 
 #: actionlog/models.py
-msgid "Saved adjudicator allocation"
-msgstr "Simpan alokasi juri"
-
-#: actionlog/models.py
 msgid "Auto-allocated adjudicators"
 msgstr "Mengalokasikan juri secara otomatis"
 
 #: actionlog/models.py
-msgid "Saved a room manual edit"
-msgstr "Menyimpan suntingan ruangan secara manual"
+msgid "Saved adjudicator allocation"
+msgstr "Simpan alokasi juri"
 
 #: actionlog/models.py
-msgid "Auto-allocated rooms"
-msgstr "Mengalokasikan ruangan secara otomatis"
+msgid "Edited adjudicators availability"
+msgstr "Menyunting kehadiran juri"
 
 #: actionlog/models.py
-msgid "Edited room categories"
-msgstr "Menyunting kategori ruangan"
+msgid "Edited availability"
+msgstr ""
 
 #: actionlog/models.py
-msgid "Edited room constraints"
-msgstr "Menyunting pembatasan ruangan"
+msgid "Edited teams availability"
+msgstr "Menyunting kehadiran tim"
 
 #: actionlog/models.py
-msgid "Created draw"
-msgstr "Menciptakan draw"
+msgid "Edited room availability"
+msgstr "Menyunting ketersediaan ruangan"
+
+#: actionlog/models.py
+msgid "Checked in ballot set"
+msgstr "Melakukan check-in balot"
+
+#: actionlog/models.py
+msgid "Confirmed ballot set"
+msgstr "Mengkonfirmasi balot"
+
+#: actionlog/models.py
+msgid "Created ballot set"
+msgstr "Membuat balot"
+
+#: actionlog/models.py
+msgid "Discarded ballot set"
+msgstr "Membuang balot"
+
+#: actionlog/models.py
+msgid "Edited ballot set"
+msgstr "Menyunting balot"
+
+#: actionlog/models.py
+msgid "Submitted ballot set from the public form"
+msgstr "Memasukkan balot melalui form publik"
+
+#: actionlog/models.py
+msgid "Edited break categories"
+msgstr "Menyunting kategori break"
+
+#: actionlog/models.py
+msgid "Deleted team break for category"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited breaking team remarks"
+msgstr "Menyunting situasi breaking team"
+
+#: actionlog/models.py
+msgid "Edited break eligibility"
+msgstr "Menyunting eligibilitas break"
+
+#: actionlog/models.py
+msgid "Generated the team break for all categories"
+msgstr "Membuat team break untuk semua kategori"
+
+#: actionlog/models.py
+msgid "Generated the team break for one category"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited breaking team remarks and updated all team breaks"
+msgstr "Menyunting situasi breaking team dan memperbarui seluruh team break"
+
+#: actionlog/models.py
+msgid "Edited breaking team remarks and updated this team break"
+msgstr "Menyunting situasi breaking team dan memperbarui team break ini saja"
+
+#: actionlog/models.py
+msgid "Generated check in identifiers for adjudicators"
+msgstr "Membuat kode check-in unik untuk juri"
+
+#: actionlog/models.py
+msgid "Generated check in identifiers for speakers"
+msgstr "Membuat kode check-in unik untuk pendebat"
+
+#: actionlog/models.py
+msgid "Generated check in identifiers for rooms"
+msgstr "Membuat kode check-in unik untuk ruangan"
+
+#: actionlog/models.py
+msgid "Edited adjudicator-adjudicator conflicts"
+msgstr "Menyunting konflik juri dengan juri"
+
+#: actionlog/models.py
+msgid "Edited adjudicator-institution conflicts"
+msgstr "Menyunting konflik juri dengan institusi"
+
+#: actionlog/models.py
+msgid "Edited adjudicator-team conflicts"
+msgstr "Menyunting konflik juri dengan tim"
+
+#: actionlog/models.py
+msgid "Edited team-institution conflicts"
+msgstr "Menyunting konflik tim dengan institusi"
+
+#: actionlog/models.py
+msgid "Created debate"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited debate"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Auto-prioritized debate importance"
+msgstr "Melakukan prioritasiasi tingkat kepentingan debat secara otomatis"
+
+#: actionlog/models.py
+msgid "Edited debate importance"
+msgstr "Menyunting prioritasiasi tingkat kepentingan debat"
+
+#: actionlog/models.py
+msgid "Saved divisions"
+msgstr ""
 
 #: actionlog/models.py
 msgid "Confirmed draw"
 msgstr "Mengkonfirmasi draw"
+
+#: actionlog/models.py
+msgid "Created draw"
+msgstr "Menciptakan draw"
 
 #: actionlog/models.py
 msgid "Regenerated draw"
@@ -106,16 +186,32 @@ msgid "Unreleased draw"
 msgstr "Menarik publikasi draw"
 
 #: actionlog/models.py
+msgid "Created feedback question"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited feedback question"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Saved feedback"
+msgstr "Menyimpan penilaian juri"
+
+#: actionlog/models.py
+msgid "Submitted feedback from the public form"
+msgstr "Memasukkan penilaian juri melalui form publik"
+
+#: actionlog/models.py
+msgid "Created institution"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited institution"
+msgstr ""
+
+#: actionlog/models.py
 msgid "Saved a matchup manual edit"
 msgstr "Menyimpan suntingan matchup manual"
-
-#: actionlog/models.py
-msgid "Saved the sides status of a matchup"
-msgstr "Menyimpan status posisi sebuah matchup"
-
-#: actionlog/models.py
-msgid "Saved divisions"
-msgstr ""
 
 #: actionlog/models.py
 msgid "Added/edited motion"
@@ -130,136 +226,8 @@ msgid "Unreleased motions"
 msgstr "Menarik publikasi mosi"
 
 #: actionlog/models.py
-msgid "Auto-prioritized debate importance"
-msgstr "Melakukan prioritasiasi tingkat kepentingan debat secara otomatis"
-
-#: actionlog/models.py
-msgid "Edited debate importance"
-msgstr "Menyunting prioritasiasi tingkat kepentingan debat"
-
-#: actionlog/models.py
-msgid "Changed adjudicator breaking status"
-msgstr "Mengubah status kelolosan (breaking) juri"
-
-#: actionlog/models.py
-msgid "Edited break eligibility"
-msgstr "Menyunting eligibilitas break"
-
-#: actionlog/models.py
-msgid "Edited break categories"
-msgstr "Menyunting kategori break"
-
-#: actionlog/models.py
-msgid "Generated the team break for all categories"
-msgstr "Membuat team break untuk semua kategori"
-
-#: actionlog/models.py
-msgid "Edited breaking team remarks and updated all team breaks"
-msgstr "Menyunting situasi breaking team dan memperbarui seluruh team break"
-
-#: actionlog/models.py
-msgid "Edited breaking team remarks and updated this team break"
-msgstr "Menyunting situasi breaking team dan memperbarui team break ini saja"
-
-#: actionlog/models.py
-msgid "Edited breaking team remarks"
-msgstr "Menyunting situasi breaking team"
-
-#: actionlog/models.py
-msgid "Set start time"
-msgstr "Mengatur waktu mulai"
-
-#: actionlog/models.py
-msgid "Advanced the current round to"
-msgstr "Melanjutkan ronde ini menuju"
-
-#: actionlog/models.py
-msgid "Marked round as completed"
-msgstr "Menandai ronde telah tuntas"
-
-#: actionlog/models.py
-msgid "Edited teams availability"
-msgstr "Menyunting kehadiran tim"
-
-#: actionlog/models.py
-msgid "Edited adjudicators availability"
-msgstr "Menyunting kehadiran juri"
-
-#: actionlog/models.py
-msgid "Edited room availability"
-msgstr "Menyunting ketersediaan ruangan"
-
-#: actionlog/models.py
 msgid "Edited tournament options"
 msgstr "Menyunting opsi turnamen"
-
-#: actionlog/models.py
-msgid "Edited speaker category eligibility"
-msgstr "Menyunting eligibilitas kategori pendebat"
-
-#: actionlog/models.py
-msgid "Edited speaker categories"
-msgstr "Menyunting kategori pembicara"
-
-#: actionlog/models.py
-msgid "Imported institutions using the simple importer"
-msgstr "Mengimpor institusi dengan importir sederhana"
-
-#: actionlog/models.py
-msgid "Imported rooms using the simple importer"
-msgstr "Mengimpor ruangan dengan importir sederhana"
-
-#: actionlog/models.py
-msgid "Imported teams using the simple importer"
-msgstr "Mengimpor tim dengan importir sederhana"
-
-#: actionlog/models.py
-msgid "Imported adjudicators using the simple importer"
-msgstr "Mengimpor juri dengan importir sederhana"
-
-#: actionlog/models.py
-msgid "Updated adjudicator scores in bulk"
-msgstr "Memperbarui nilai juri secara masal"
-
-#: actionlog/models.py
-msgid "Edited adjudicator-team conflicts"
-msgstr "Menyunting konflik juri dengan tim"
-
-#: actionlog/models.py
-msgid "Edited adjudicator-adjudicator conflicts"
-msgstr "Menyunting konflik juri dengan juri"
-
-#: actionlog/models.py
-msgid "Edited adjudicator-institution conflicts"
-msgstr "Menyunting konflik juri dengan institusi"
-
-#: actionlog/models.py
-msgid "Edited team-institution conflicts"
-msgstr "Menyunting konflik tim dengan institusi"
-
-#: actionlog/models.py
-msgid "Generated check in identifiers for speakers"
-msgstr "Membuat kode check-in unik untuk pendebat"
-
-#: actionlog/models.py
-msgid "Generated check in identifiers for adjudicators"
-msgstr "Membuat kode check-in unik untuk juri"
-
-#: actionlog/models.py
-msgid "Generated check in identifiers for rooms"
-msgstr "Membuat kode check-in unik untuk ruangan"
-
-#: actionlog/models.py
-msgid "Created preformed panels"
-msgstr "Membuat rancangan panel"
-
-#: actionlog/models.py
-msgid "Auto-prioritized preformed panels"
-msgstr "Prioritasisasi rancangan panel secara otomatis"
-
-#: actionlog/models.py
-msgid "Edited preformed panel importance"
-msgstr "Menyunting tingkat kepentingan rancangan panel"
 
 #: actionlog/models.py
 msgid "Auto-allocated adjudicators to preformed panels"
@@ -270,8 +238,144 @@ msgid "Edited preformed panel adjudicator"
 msgstr "Menyunting juri dalam rancangan panel"
 
 #: actionlog/models.py
+msgid "Created preformed panels"
+msgstr "Membuat rancangan panel"
+
+#: actionlog/models.py
 msgid "Auto-allocated preformed panels to debates"
 msgstr "Mengalokasikan rancangan panel kepada debat secara otomatis"
+
+#: actionlog/models.py
+msgid "Deleted preformed panels"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Auto-prioritized preformed panels"
+msgstr "Prioritasisasi rancangan panel secara otomatis"
+
+#: actionlog/models.py
+msgid "Edited preformed panel importance"
+msgstr "Menyunting tingkat kepentingan rancangan panel"
+
+#: actionlog/models.py
+msgid "Advanced the current round to"
+msgstr "Melanjutkan ronde ini menuju"
+
+#: actionlog/models.py
+msgid "Marked round as completed"
+msgstr "Menandai ronde telah tuntas"
+
+#: actionlog/models.py
+msgid "Created round"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited round"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Set start time"
+msgstr "Mengatur waktu mulai"
+
+#: actionlog/models.py
+msgid "Saved the sides status of a matchup"
+msgstr "Menyimpan status posisi sebuah matchup"
+
+#: actionlog/models.py
+msgid "Imported adjudicators using the simple importer"
+msgstr "Mengimpor juri dengan importir sederhana"
+
+#: actionlog/models.py
+msgid "Imported institutions using the simple importer"
+msgstr "Mengimpor institusi dengan importir sederhana"
+
+#: actionlog/models.py
+msgid "Imported teams using the simple importer"
+msgstr "Mengimpor tim dengan importir sederhana"
+
+#: actionlog/models.py
+msgid "Imported rooms using the simple importer"
+msgstr "Mengimpor ruangan dengan importir sederhana"
+
+#: actionlog/models.py
+msgid "Edited speaker categories"
+msgstr "Menyunting kategori pembicara"
+
+#: actionlog/models.py
+msgid "Created speaker"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited speaker"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited speaker category eligibility"
+msgstr "Menyunting eligibilitas kategori pendebat"
+
+#: actionlog/models.py
+msgid "Created team"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited team"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited adjudicator base score"
+msgstr "Menyunting nilai awal juri"
+
+#: actionlog/models.py
+msgid "Created tournament"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited tournament"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Updated adjudicator scores in bulk"
+msgstr "Memperbarui nilai juri secara masal"
+
+#: actionlog/models.py
+msgid "Invited user to the instance"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited room categories"
+msgstr "Menyunting kategori ruangan"
+
+#: actionlog/models.py
+msgid "Created room category"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited room constraints"
+msgstr "Menyunting pembatasan ruangan"
+
+#: actionlog/models.py
+msgid "Created room"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited room"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Auto-allocated rooms"
+msgstr "Mengalokasikan ruangan secara otomatis"
+
+#: actionlog/models.py
+msgid "Saved a room manual edit"
+msgstr "Menyimpan suntingan ruangan secara manual"
+
+#: actionlog/models.py
+msgid "API"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Web"
+msgstr ""
 
 #: actionlog/models.py
 msgid "type"
@@ -304,6 +408,10 @@ msgstr "tipe konten"
 #: actionlog/models.py
 msgid "object ID"
 msgstr "object ID"
+
+#: actionlog/models.py
+msgid "agent"
+msgstr ""
 
 #: actionlog/models.py
 msgid "action log"

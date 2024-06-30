@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:57\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:57\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Language: bn_BD\n"
@@ -43,48 +43,47 @@ msgstr "সূত্র/উৎস"
 
 #: adjfeedback/admin.py
 msgid "Feedback timestamp and version"
-msgstr ""
+msgstr "প্রতিক্রিয়া টাইমস্ট্যাম্প এবং সংস্করণ"
 
 #: adjfeedback/admin.py
 #, python-format
 msgid "%(timestamp)s (version %(version)s)"
-msgstr ""
+msgstr "%(timestamp)s (সংস্করণ %(version)s)"
 
 #: adjfeedback/admin.py
 #, python-format
 msgid "1 feedback submission was marked as confirmed. Note that this may have caused other feedback submissions to be marked as unconfirmed."
 msgid_plural "%(count)d feedback submissions were marked as confirmed. Note that this may have caused other feedback submissions to be marked as unconfirmed."
-msgstr[0] "1 প্রতিক্রিয়া উপস্হাপন সমূহ নিশ্চিত আকারে চিহ্নিত করা হয়েছে.\n"
-"মনে রাখবেন যে ইহা অন্যান্য উপস্হাপন সমূহের অনিশ্চিত আকারে চিহ্নিত হওয়ার কারণ হিসেবে দাড়িয়েছিল."
-msgstr[1] ""
+msgstr[0] "1টি প্রতিক্রিয়া জমা নিশ্চিত করা হিসাবে চিহ্নিত করা হয়েছে৷ মনে রাখবেন যে এটি অন্য প্রতিক্রিয়া জমাগুলিকে অসমর্থিত হিসাবে চিহ্নিত করার কারণ হতে পারে৷"
+msgstr[1] "%(count)d টি প্রতিক্রিয়া জমা নিশ্চিত করা হিসাবে চিহ্নিত করা হয়েছে৷ মনে রাখবেন যে এটি অন্য প্রতিক্রিয়া জমাগুলিকে অসমর্থিত হিসাবে চিহ্নিত করার কারণ হতে পারে৷"
 
 #: adjfeedback/admin.py
 #, python-format
 msgid "1 feedback submission was not marked as confirmed, probably because other feedback submissions that conflict with it were also marked as confirmed."
 msgid_plural "%(count)d feedback submissions were not marked as confirmed, probably because other feedback submissions that conflict with them were also marked as confirmed."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1টি প্রতিক্রিয়া জমা নিশ্চিত করা হিসাবে চিহ্নিত করা হয়নি, সম্ভবত কারণ এটির সাথে বিরোধপূর্ণ অন্যান্য প্রতিক্রিয়া জমাগুলিকেও নিশ্চিত হিসাবে চিহ্নিত করা হয়েছিল।"
+msgstr[1] "%(count)d প্রতিক্রিয়া জমাগুলি নিশ্চিত হিসাবে চিহ্নিত করা হয়নি, সম্ভবত কারণ তাদের সাথে বিরোধপূর্ণ অন্যান্য প্রতিক্রিয়া জমাগুলিকেও নিশ্চিত হিসাবে চিহ্নিত করা হয়েছিল৷"
 
 #: adjfeedback/admin.py
 #, python-format
 msgid "1 feedback submission was marked as unconfirmed."
 msgid_plural "%(count)d feedback submissions were marked as unconfirmed."
 msgstr[0] ""
-msgstr[1] ""
+msgstr[1] "%(count)d ফিডব্যাক জমাগুলিকে নিশ্চিত করা হয়নি বলে চিহ্নিত করা হয়েছে৷"
 
 #: adjfeedback/admin.py
 #, python-format
 msgid "1 feedback submission is now ignored."
 msgid_plural "%(count)d feedback submissions are now ignored."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1টি প্রতিক্রিয়া জমা এখন উপেক্ষা করা হয়েছে৷"
+msgstr[1] "%(count)d প্রতিক্রিয়া জমা এখন উপেক্ষা করা হয়।"
 
 #: adjfeedback/admin.py
 #, python-format
 msgid "1 feedback submission is now recognized."
 msgid_plural "%(count)d feedback submissions are now recognized."
 msgstr[0] ""
-msgstr[1] ""
+msgstr[1] "প্রতিক্রিয়া জমা এখন স্বীকৃত হয়।"
 
 #: adjfeedback/apps.py
 msgid "Adjudicator Feedback"
@@ -263,11 +262,11 @@ msgstr "বিচারক প্রতিক্রিয়া স্ট্র�
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback multiple select answer"
-msgstr ""
+msgstr "বিচারক প্রতিক্রিয়া একাধিক নির্বাচন উত্তর"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback multiple select answers"
-msgstr ""
+msgstr "বিচারক প্রতিক্রিয়া একাধিক নির্বাচন উত্তর"
 
 #: adjfeedback/models.py
 msgid "checkbox"
@@ -359,7 +358,7 @@ msgstr "অপরিহার্য"
 
 #: adjfeedback/models.py
 msgid "Whether participants are required to fill out this field"
-msgstr ""
+msgstr "অংশগ্রহণকারীদের এই ক্ষেত্রটি পূরণ করতে হবে কিনা"
 
 #: adjfeedback/models.py
 msgid "minimum value"
@@ -379,178 +378,182 @@ msgstr "সংখ্যাযুক্ত ক্ষেত্রগুলির �
 
 #: adjfeedback/models.py
 msgid "choices"
-msgstr ""
+msgstr "পছন্দ"
 
 #: adjfeedback/models.py
 msgid "Permissible choices for select one/multiple fields (ignored for other fields)"
-msgstr ""
+msgstr "এক/একাধিক ক্ষেত্র নির্বাচনের জন্য অনুমোদিত পছন্দ (অন্যান্য ক্ষেত্রের জন্য উপেক্ষা করা)"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback question"
-msgstr ""
+msgstr "বিচারক প্রতিক্রিয়া প্রশ্ন"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback questions"
-msgstr ""
+msgstr "বিচারক প্রতিক্রিয়া প্রশ্নসমূহ"
 
 #: adjfeedback/models.py adjfeedback/views.py
 msgid "ignored"
-msgstr ""
+msgstr "উপেক্ষা"
 
 #: adjfeedback/models.py
 msgid "Whether the feedback should affect the adjudicator's score"
-msgstr ""
+msgstr "প্রতিক্রিয়া বিচারকের স্কোরকে প্রভাবিত করবে কিনা"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback"
-msgstr ""
+msgstr "বিচারক প্রতিক্রিয়া"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedbacks"
-msgstr ""
+msgstr "বিচারক প্রতিক্রিয়াসমূহ"
 
 #: adjfeedback/models.py
 msgid "Either the source adjudicator or source team wasn't specified."
-msgstr ""
+msgstr "হয় উৎস বিচারকারী বা উৎস দল নির্দিষ্ট করা হয়নি।"
 
 #: adjfeedback/models.py
 msgid "There was both a source adjudicator and a source team."
-msgstr ""
+msgstr "একটি উত্স বিচারক এবং একটি উত্স দল উভয় ছিল।"
 
 #: adjfeedback/models.py
 msgid "There is no adjudicator specified as the target for this feedback. Perhaps they were deleted?"
-msgstr ""
+msgstr "এই প্রতিক্রিয়ার লক্ষ্য হিসাবে নির্দিষ্ট কোন বিচারক নেই। সম্ভবত তারা মুছে ফেলা হয়েছে?"
 
 #: adjfeedback/models.py
 msgid "Adjudicator did not see this debate."
-msgstr ""
+msgstr "বিচারক এই বিতর্ক দেখেননি।"
 
 #: adjfeedback/tables.py
 msgid "Whether the adj is marked as breaking (click to mark)"
-msgstr ""
+msgstr "বিচারক ব্রেকিং হিসাবে চিহ্নিত করা হয়েছে কিনা (চিহ্নিত করতে ক্লিক করুন)"
 
 #: adjfeedback/tables.py
 msgid "N/A"
-msgstr ""
+msgstr "অপ্রযোজ্য"
 
 #: adjfeedback/tables.py
 msgid "Current weighted score"
-msgstr ""
+msgstr "বর্তমান ওজনযুক্ত স্কোর"
 
 #: adjfeedback/tables.py
 msgid "This adjudicator's current rating."
-msgstr ""
+msgstr "এই বিচারকের বর্তমান রেটিং।"
 
 #: adjfeedback/tables.py
 msgid "Base score result"
-msgstr ""
+msgstr "বেস স্কোর ফলাফল"
 
 #: adjfeedback/tables.py
 msgid "Click to edit base score"
-msgstr ""
+msgstr "বেইজ স্কোর সম্পাদনা করতে ক্লিক করুন"
 
 #: adjfeedback/tables.py
 msgid "Assigned base score"
-msgstr ""
+msgstr "নির্ধারিত বেইজ স্কোর"
 
 #: adjfeedback/tables.py
 msgid "The current difference between an adjudicator's base score and current score"
-msgstr ""
+msgstr "একজন বিচারকের বেস স্কোর এবং বর্তমান স্কোরের মধ্যে বর্তমান পার্থক্য"
 
 #: adjfeedback/tables.py
 msgid "The difference between this adjudicator's base score and current score"
-msgstr ""
+msgstr "একজন বিচারকের বেস স্কোর এবং বর্তমান স্কোরের মধ্যে বর্তমান পার্থক্য"
 
 #: adjfeedback/tables.py
 msgid "The standard deviation of this adjudicator's current scores; with larger numbers meaning less consistent feedback scores."
-msgstr ""
+msgstr "এই বিচারকের বর্তমান স্কোরের আদর্শ বিচ্যুতি; কম সামঞ্জস্যপূর্ণ প্রতিক্রিয়া স্কোর মানে বড় সংখ্যা সঙ্গে।"
 
 #: adjfeedback/tables.py
 msgid "The standard deviation of this adjudicator's current scores"
-msgstr ""
+msgstr "এই বিচারকের বর্তমান স্কোরের আদর্শ বিচ্যুতি"
 
 #: adjfeedback/tables.py
 msgid "Feedback Per Round"
-msgstr ""
+msgstr "প্রতি রাউন্ড প্রতিক্রিয়া"
 
 #: adjfeedback/tables.py
 msgid "Hover over the data points to show the average score received in that round"
-msgstr ""
+msgstr "সেই রাউন্ডে প্রাপ্ত গড় স্কোর দেখানোর জন্য ডেটা পয়েন্টের উপর ঘুরুন"
 
 #: adjfeedback/tables.py
 #, python-format
 msgid "View %(count)s<br>feedback"
 msgid_plural "View %(count)s<br>feedbacks"
 msgstr[0] ""
-msgstr[1] ""
+msgstr[1] "দেখুন %(count)s<br>প্রতিক্রিয়াসমূহ"
 
 #: adjfeedback/tables.py
 msgid "Unsubmitted feedback ballots"
-msgstr ""
+msgstr "জমা না দেওয়া প্রতিক্রিয়া ব্যালট"
 
 #: adjfeedback/tables.py
 msgid "View Missing Feedback"
-msgstr ""
+msgstr "অনুপস্থিত প্রতিক্রিয়া দেখুন"
 
 #: adjfeedback/templates/add_feedback.html
 msgid "Who is the feedback from?"
-msgstr ""
+msgstr "কার কাছ থেকে প্রতিক্রিয়া?"
 
 #: adjfeedback/templates/add_feedback.html
 #: adjfeedback/templates/enter_feedback.html
 msgid "Enter Feedback"
-msgstr ""
+msgstr "প্রতিক্রিয়া লিখুন"
 
 #: adjfeedback/templates/enter_feedback.html
 #: adjfeedback/templates/public_add_feedback.html
 #, python-format
 msgid "Add Feedback from %(name)s"
-msgstr ""
+msgstr "%(name)s থেকে প্রতিক্রিয়া যোগ করুন"
 
 #: adjfeedback/templates/enter_feedback.html
 #: adjfeedback/templates/feedback_base.html
 msgid "Add Feedback"
-msgstr ""
+msgstr "প্রতিক্রিয়া যোগ করুন"
 
 #: adjfeedback/templates/enter_feedback.html
 msgid "There are no feedback options because no rounds have been released to the public yet. Check back when they have!"
-msgstr ""
+msgstr "কোনো প্রতিক্রিয়ার বিকল্প নেই কারণ এখনও জনসাধারণের কাছে কোনো রাউন্ড প্রকাশ করা হয়নি। তারা আছে যখন ফিরে দেখুন!"
 
 #: adjfeedback/templates/enter_feedback.html
 msgid "This tournament expects you to submit feedback <strong>only on the adjudicator who delivered the adjudication</strong>. Do not submit feedback on other adjudicators."
-msgstr ""
+msgstr "এই টুর্নামেন্টটি আশা করে যে আপনি <strong>শুধুমাত্র সেই বিচারকের উপর মতামত জমা দেবেন যিনি রায় প্রদান করেছেন</strong>। অন্যান্য বিচারকদের প্রতিক্রিয়া জমা দেবেন না।"
 
 #: adjfeedback/templates/enter_feedback.html
 msgid "This tournament expects you to submit feedback on all of the adjudicators on the panel (including trainees)."
+msgstr "এই টুর্নামেন্ট আশা করে যে আপনি প্যানেলের সমস্ত বিচারকদের (শিক্ষার্থী সহ) প্রতিক্রিয়া জমা দেবেন।"
+
+#: adjfeedback/templates/enter_feedback.html
+msgid "This tournament doesn't expect you to submit feedback on any of the adjudicators on the panel (including trainees)."
 msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
 msgid "There are some problems with this feedback submission. Please review and correct them."
-msgstr ""
+msgstr "এই প্রতিক্রিয়া জমা দিয়ে কিছু সমস্যা আছে. পর্যালোচনা করুন এবং তাদের সংশোধন করুন।"
 
 #: adjfeedback/templates/enter_feedback.html
 msgid "When submitting this form your IP address will be stored for logging purposes."
-msgstr ""
+msgstr "এই ফর্মটি জমা দেওয়ার সময় আপনার আইপি ঠিকানাটি লগিংয়ের উদ্দেশ্যে সংরক্ষণ করা হবে।"
 
 #: adjfeedback/templates/feedback_base.html
 msgid "Overview"
-msgstr ""
+msgstr "সংক্ষিপ্ত বিবরণ"
 
 #: adjfeedback/templates/feedback_base.html
 msgid "Latest"
-msgstr ""
+msgstr "সর্বশেষ:"
 
 #: adjfeedback/templates/feedback_base.html
 msgid "Unsubmitted"
-msgstr ""
+msgstr "জমাকৃত নয়"
 
 #: adjfeedback/templates/feedback_base.html
 msgid "Important"
-msgstr ""
+msgstr "গুরুত্বপূর্ণ"
 
 #: adjfeedback/templates/feedback_base.html
 msgid "Comments"
-msgstr ""
+msgstr "মন্তব্য"
 
 #: adjfeedback/templates/feedback_base.html
 msgid "By Source"
@@ -697,6 +700,11 @@ msgstr ""
 
 #: adjfeedback/templates/feedback_overview.html
 #, python-format
+msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> disallows adjudicators to submit feedback on other members of the panel (including trainees)."
+msgstr ""
+
+#: adjfeedback/templates/feedback_overview.html
+#, python-format
 msgid "There is <strong>%(nadjs_outside_range)s adjudicator</strong> with a score <strong>outside the permitted range</strong> of adjudicator scores, which is currently set as %(min_score)s to %(max_score)s. This can cause adjudicator auto-allocation to behave in unexpected ways. If you'd like to use a wider score range, you can configure this in <a href=\"%(feedback_settings_url)s\" class=\"alert-link\"> feedback settings</a>."
 msgid_plural "There are <strong>%(nadjs_outside_range)s adjudicators</strong> with scores <strong>outside the permitted range</strong> of adjudicator scores, which is currently set as %(min_score)s to %(max_score)s. This can cause adjudicator auto-allocation to behave in unexpected ways. If you'd like to use a wider score range, you can configure this in <a href=\"%(feedback_settings_url)s\" class=\"alert-link\"> feedback settings</a>."
 msgstr[0] ""
@@ -813,87 +821,87 @@ msgstr ""
 #: adjfeedback/templates/update_adjudicator_scores.html
 msgctxt "page title"
 msgid "Update Adjudicator Scores"
-msgstr ""
+msgstr "বিচারকের স্কোর আপডেট করুন"
 
 #: adjfeedback/templates/update_adjudicator_scores.html
 #, python-format
 msgid "There aren't any adjudicators in this tournament, so you can't update any scores. You might want to <a href=\"%(import_url)s\" class=\"alert-link\">import some adjudicators</a> first."
-msgstr ""
+msgstr "এই টুর্নামেন্টে কোনো বিচারক নেই, তাই আপনি কোনো স্কোর আপডেট করতে পারবেন না। আপনি হয়ত প্রথমে <a href=\"%(import_url)s\" class=\"alert-link\">কিছু বিচারক আমদানি করতে চান</a>৷"
 
 #: adjfeedback/templates/update_adjudicator_scores.html
 msgid "Paste a list of adjudicators' names and their new scores, in the format: <code>adjudicator,score</code>. For example:"
-msgstr ""
+msgstr "বিচারকদের নামের তালিকা এবং তাদের নতুন স্কোর, বিন্যাসে পেস্ট করুন: <code>বিচারক,স্কোর</code>। উদাহরণ স্বরূপ:"
 
 #: adjfeedback/templates/update_adjudicator_scores.html
 msgid "The adjudicators' names must match their names in the tab system exactly."
-msgstr ""
+msgstr "বিচারকদের নাম অবশ্যই ট্যাব সিস্টেমে তাদের নামের সাথে মিলবে।"
 
 #: adjfeedback/templates/update_adjudicator_scores.html
 msgid "There are some problems with the data on this form:"
-msgstr ""
+msgstr "এই ফর্মের ডেটাতে কিছু সমস্যা আছে:"
 
 #: adjfeedback/templates/update_adjudicator_scores.html
 msgid "Submit"
-msgstr ""
+msgstr "জমা"
 
 #: adjfeedback/views.py
 msgid "Feedback Overview"
-msgstr ""
+msgstr "প্রতিক্রিয়া সংক্ষিপ্ত বিবরণ"
 
 #: adjfeedback/views.py
 msgid "Find Feedback on Adjudicator"
-msgstr ""
+msgstr "বিচারকের উপর প্রতিক্রিয়া খুঁজুন"
 
 #: adjfeedback/views.py
 #, python-format
 msgid "%(count)d feedback"
 msgid_plural "%(count)d feedbacks"
 msgstr[0] ""
-msgstr[1] ""
+msgstr[1] "%(count)d প্রতিক্রিয়াসমূহ"
 
 #: adjfeedback/views.py
 msgid "Feedbacks"
-msgstr ""
+msgstr "প্রতিক্রিয়াসমূহ"
 
 #: adjfeedback/views.py
 msgid "Find Feedback"
-msgstr ""
+msgstr "প্রতিক্রিয়া খুঁজুন"
 
 #: adjfeedback/views.py
 msgid "From Teams"
-msgstr ""
+msgstr "দল হতে"
 
 #: adjfeedback/views.py
 msgid "From Adjudicators"
-msgstr ""
+msgstr "বিচারক হতে"
 
 #: adjfeedback/views.py
 msgid "Latest Feedback"
-msgstr ""
+msgstr "সর্বশেষ প্রতিক্রিয়া"
 
 #: adjfeedback/views.py
 msgid "(30 most recent)"
-msgstr ""
+msgstr "(সর্বশেষ ৩০টি)"
 
 #: adjfeedback/views.py
 msgid "Only Comments"
-msgstr ""
+msgstr "শুধুমাত্র মন্তব্য"
 
 #: adjfeedback/views.py
 msgid "(250 most recent)"
-msgstr ""
+msgstr "(সর্বশেষ ২৫০টি)"
 
 #: adjfeedback/views.py
 msgid "Important Feedback"
-msgstr ""
+msgstr "গুরুত্বপূর্ণ প্রতিক্রিয়া"
 
 #: adjfeedback/views.py
 msgid "(rating was much higher/lower than expected)"
-msgstr ""
+msgstr "(রেটিং প্রত্যাশার চেয়ে অনেক বেশি/কম ছিল)"
 
 #: adjfeedback/views.py
 msgid "A Team"
-msgstr ""
+msgstr "দল"
 
 #: adjfeedback/views.py
 msgid "Team"
@@ -905,7 +913,7 @@ msgstr "প্রতিষ্ঠান"
 
 #: adjfeedback/views.py
 msgid "An Adjudicator"
-msgstr ""
+msgstr "বিচারক"
 
 #: adjfeedback/views.py
 msgid "Adjudicator"
@@ -914,54 +922,54 @@ msgstr "বিচারক"
 #: adjfeedback/views.py
 #, python-format
 msgid "Feedback from %(source)s on %(target)s added."
-msgstr ""
+msgstr "%(source)s থেকে %(target)s যোগ করা হয়েছে।"
 
 #: adjfeedback/views.py
 #, python-format
 msgid "Thanks, %(source)s! Your feedback on %(target)s has been recorded."
-msgstr ""
+msgstr "ধন্যবাদ, %(source)s! %(target)s এ আপনার প্রতিক্রিয়া রেকর্ড করা হয়েছে।"
 
 #: adjfeedback/views.py
 #, python-format
 msgid "Whoops! I didn't recognise that adjudicator: %(adjudicator)s"
-msgstr ""
+msgstr "উফফফ! আমি সেই বিচারককে চিনতে পারিনি: %(adjudicator)s"
 
 #: adjfeedback/views.py
 msgid "Whoops! The value isn't a valid base score."
-msgstr ""
+msgstr "উফফফ! মানটি একটি বৈধ বেইজ স্কোর নয়।"
 
 #: adjfeedback/views.py
 msgid "Feedback Progress"
-msgstr ""
+msgstr "প্রতিক্রিয়া অগ্রগতি"
 
 #: adjfeedback/views.py
 #, python-format
 msgid "%(nmissing)d missing feedback submission (%(fulfilled).1f%% returned)"
 msgid_plural "%(nmissing)d missing feedback submissions (%(fulfilled).1f%% returned)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(nmissing)d অনুপস্থিত প্রতিক্রিয়া জমা (%(fulfilled)। 1f%% ফিরে এসেছে)"
+msgstr[1] "%(nmissing)d অনুপস্থিত প্রতিক্রিয়া জমা (%(fulfilled)। 1f%% ফিরে এসেছে)"
 
 #: adjfeedback/views.py
 #, python-format
 msgid "Feedback for %(adjudicator)s from %(source)s is now %(result)s."
-msgstr ""
+msgstr "%(source)s থেকে %(adjudicator)s এর জন্য প্রতিক্রিয়া এখন %(result)s।"
 
 #: adjfeedback/views.py
 msgid "confirmed"
-msgstr ""
+msgstr "নিশ্চিত"
 
 #: adjfeedback/views.py
 msgid "un-confirmed"
-msgstr ""
+msgstr "অনিশ্চিত"
 
 #: adjfeedback/views.py
 msgid "un-ignored"
-msgstr ""
+msgstr "অ-উপেক্ষিত"
 
 #: adjfeedback/views.py
 #, python-format
 msgid "Updated base score for %(count)d adjudicator."
 msgid_plural "Updated base scores for %(count)d adjudicators."
 msgstr[0] ""
-msgstr[1] ""
+msgstr[1] "%(count)d বিচারকদের জন্য বেস স্কোর আপডেট করা হয়েছে।"
 

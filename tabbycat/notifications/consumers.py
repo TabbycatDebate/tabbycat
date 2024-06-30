@@ -1,7 +1,7 @@
 import json
-import random
 from dataclasses import asdict
 from email.utils import formataddr
+from time import time
 from typing import Any, Dict, List, Optional, Tuple, Type, Union
 
 from channels.consumer import SyncConsumer
@@ -91,7 +91,7 @@ class NotificationQueueConsumer(SyncConsumer):
             data = asdict(instance)
             data['USER'] = recipient.name
 
-            hook_id = str(bulk_notification.id) + "-" + str(recipient.id) + "-" + str(random.randint(1000, 9999))
+            hook_id = str(bulk_notification.id) + "-" + str(recipient.id) + "-" + str(int(time()))[4:]
             context = Context(data)
             body = html_body.render(context)
             email = mail.EmailMultiAlternatives(

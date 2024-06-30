@@ -6,9 +6,9 @@
   {% person_display_name debateadjudicator.adjudicator as adjudicator_name %}
 
   {# (Two-team formats) #}
-  {% if pref.teams_in_debate == 'two' %}
-    {% team_record_link debate.aff_team admin_page as aff %}
-    {% team_record_link debate.neg_team admin_page as neg %}
+  {% if pref.teams_in_debate == 2 %}
+    {% team_record_link debate.teams.0 admin_page as aff %}
+    {% team_record_link debate.teams.1 admin_page as neg %}
 
     {% if debate.adjudicators|length > 1 and debateadjudicator.type == debateadjudicator.TYPE_CHAIR %}
       {% if grammatical_person == "3" %}
@@ -79,7 +79,7 @@
     {% endif %}
 
   {# (British Parliamentary) #}
-  {% elif pref.teams_in_debate == 'bp' %}
+  {% elif pref.teams_in_debate == 4 %}
 
     {% if debate.adjudicators|length > 1 and debateadjudicator.type == debateadjudicator.TYPE_CHAIR %}
       {% if grammatical_person == "3" %}

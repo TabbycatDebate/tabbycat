@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:56\n"
+"PO-Revision-Date: 2023-07-23 17:30\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
@@ -35,7 +35,7 @@ msgstr[0] "%(count)s điểm nhỏ hơn điểm cho phép của giám khảo (%(
 
 #: adjallocation/allocators/hungarian.py
 msgid "There are no adjudicators eligible to be a chair or panellist. Try changing the \"Minimum feedback score required to be allocated as chair or panellist\" setting to something lower than at least some adjudicators' current scores, and try again."
-msgstr "Không có giám khảo nào hợp lệ để làm giám khảo chính hay giám khảo phụ. Hãy thử chỉnh \"điểm phản hồi thấp nhất để được phân bổ làm giám khảo chính hoặc giám khảo phụ\" xuống thấp hơn điểm của một số giám khảo hiện tại, rồi quay lại."
+msgstr "Không có giám khảo nào hợp lệ để làm chủ tọa hay panellist. Hãy thử chỉnh \"điểm feedback thấp nhất để được phân bổ làm chủ tọa hoặc panellist\" xuống thấp hơn điểm của một số giám khảo hiện tại, rồi quay lại."
 
 #: adjallocation/allocators/hungarian.py
 msgid "There are no debates for this round. Maybe you haven't created a draw yet?"
@@ -49,7 +49,7 @@ msgstr "Có %(debate_count)s trận tranh biện nhưng chỉ có %(adj_count)s 
 #: adjallocation/allocators/hungarian.py
 #, python-format
 msgid "There are %(panel_debates)s panel debates but only %(panellists)s available panellists (less than %(needed)s)."
-msgstr "Hiện tại có %(panel_debates)s bàn giám khảo nhưng chỉ có %(panellists)s giám khảo phụ sẵn sàng (ít hơn %(needed)s)."
+msgstr "Hiện tại có %(panel_debates)s bàn giám khảo nhưng chỉ có %(panellists)s panellist sẵn sàng (ít hơn %(needed)s)."
 
 #: adjallocation/allocators/hungarian.py
 #, python-format
@@ -130,11 +130,11 @@ msgstr "Đã tạo thành công bàn giám khảo cho vòng này."
 
 #: adjallocation/models.py
 msgid "chair"
-msgstr "giám khảo chính"
+msgstr "chủ tọa"
 
 #: adjallocation/models.py
 msgid "panellist"
-msgstr "giám khảo phụ"
+msgstr "panellist"
 
 #: adjallocation/models.py
 msgid "trainee"

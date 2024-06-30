@@ -17,6 +17,7 @@ from participants.tables import AdjudicatorDebateTable, TeamDebateTable
 from participants.views import BaseRecordView
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin, TournamentMixin
 from tournaments.models import Round
+from users.permissions import Permission
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
@@ -60,6 +61,7 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
 
 class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
 
+    view_permission = Permission.VIEW_PRIVATE_URLS
     template_name = 'private_urls.html'
     tables_orientation = 'columns'
 
@@ -113,6 +115,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
 class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRedirectView):
 
     tournament_redirect_pattern_name = 'privateurls-list'
+    edit_permission = Permission.GENERATE_PRIVATE_URLS
 
     def post(self, request: 'HttpRequest', *args, **kwargs) -> 'HttpResponseRedirect':
         tournament = self.tournament
@@ -149,7 +152,8 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
 
 class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView):
     page_subtitle = _("Private URLs")
-
+    view_permission = Permission.VIEW_PRIVATE_URLS_EMAIL_LIST
+    edit_permission = Permission.SEND_PRIVATE_URLS
     event = BulkNotification.EventType.URL
     subject_template = 'url_email_subject'
     message_template = 'url_email_message'
@@ -209,6 +213,7 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
         try:
             checkin_id = PersonIdentifier.objects.get(person=self.object)
             kwargs['checkins_used'] = True
+            kwargs['identifier'] = checkin_id
 
             checkins = get_unexpired_checkins(t, 'checkin_window_people')
 

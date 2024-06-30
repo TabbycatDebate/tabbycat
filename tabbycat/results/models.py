@@ -8,7 +8,9 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from motions.models import RoundMotion
+from tournaments.models import Tournament
 from utils.misc import badge_datetime_format, reverse_tournament
+from utils.models import UniqueConstraint
 
 from .result import DebateResult
 from .utils import readable_ballotsub_result
@@ -67,7 +69,7 @@ class Submission(models.Model):
 
     @property
     def _unique_filter_args(self):
-        return dict((arg, getattr(self, arg)) for arg in self._meta.unique_together[0]
+        return dict((arg, getattr(self, arg)) for arg in self._meta.constraints[0].fields
                     if arg != 'version')
 
     def _unique_unconfirm_args(self):
@@ -117,7 +119,7 @@ class BallotSubmission(Submission):
                     "when individual adjudicator ballots are enabled."))
 
     class Meta:
-        unique_together = [('debate', 'version')]
+        constraints = [UniqueConstraint(fields=['debate', 'version'])]
         verbose_name = _("ballot submission")
         verbose_name_plural = _("ballot submissions")
 
@@ -176,7 +178,7 @@ class BallotSubmission(Submission):
         if self.confirm_timestamp and self.confirmed:
             confirmed = timezone.localtime(self.confirm_timestamp).isoformat()
 
-        if tournament.pref('enable_blind_checks') and tournament.pref('teams_in_debate') == 'bp':
+        if tournament.pref('enable_blind_checks') and tournament.pref('teams_in_debate') == 4:
             admin_url = 'results-ballotset-edit'
             assistant_url = 'results-assistant-ballotset-edit'
         else:
@@ -235,8 +237,10 @@ class TeamScoreByAdj(models.Model):
         verbose_name=_("score"))
 
     class Meta:
-        unique_together = [('debate_adjudicator', 'debate_team', 'ballot_submission')]
-        index_together = ['ballot_submission', 'debate_adjudicator']
+        constraints = [
+            UniqueConstraint(fields=['debate_adjudicator', 'debate_team', 'ballot_submission']),
+        ]
+        indexes = [models.Index(fields=['ballot_submission', 'debate_adjudicator'])]
         verbose_name = _("team score by adjudicator")
         verbose_name_plural = _("team scores by adjudicator")
 
@@ -269,9 +273,10 @@ class SpeakerScoreByAdj(models.Model):
     position = models.IntegerField(verbose_name=_("position"))
 
     class Meta:
-        unique_together = [('debate_adjudicator', 'debate_team', 'position',
-                            'ballot_submission')]
-        index_together = ['ballot_submission', 'debate_adjudicator']
+        constraints = [
+            UniqueConstraint(fields=['debate_adjudicator', 'debate_team', 'position', 'ballot_submission']),
+        ]
+        indexes = [models.Index(fields=['ballot_submission', 'debate_adjudicator'])]
         verbose_name = _("speaker score by adjudicator")
         verbose_name_plural = _("speaker scores by adjudicator")
 
@@ -317,7 +322,7 @@ class TeamScore(models.Model):
     has_ghost = models.BooleanField(null=True, blank=True, verbose_name=_("has ghost score"))
 
     class Meta:
-        unique_together = [('debate_team', 'ballot_submission')]
+        constraints = [UniqueConstraint(fields=['debate_team', 'ballot_submission'])]
         verbose_name = _("team score")
         verbose_name_plural = _("team scores")
 
@@ -360,7 +365,7 @@ class SpeakerScore(models.Model):
     objects = SpeakerScoreManager()
 
     class Meta:
-        unique_together = [('debate_team', 'position', 'ballot_submission')]
+        constraints = [UniqueConstraint(fields=['debate_team', 'position', 'ballot_submission'])]
         verbose_name = _("speaker score")
         verbose_name_plural = _("speaker scores")
 
@@ -376,3 +381,60 @@ class SpeakerScore(models.Model):
         if self.ballot_submission.debate != self.debate_team.debate:
             raise ValidationError(_("The ballot submission and debate team must "
                     "relate to the same debate."))
+
+
+class ScoreCriterion(models.Model):
+    """Score criterion for speaker score"""
+    tournament = models.ForeignKey(Tournament, models.CASCADE,
+        verbose_name=_("tournament"))
+    name = models.CharField(max_length=20,
+        verbose_name=("name"))
+    seq = models.IntegerField(verbose_name=_("sequence"))
+    weight = models.FloatField(verbose_name=_("weight"))
+    min_score = ScoreField(verbose_name=_("minimum score"))
+    max_score = ScoreField(verbose_name=_("maximum score"))
+    step = models.FloatField(verbose_name=_("step"))
+    required = models.BooleanField(default=True,
+        verbose_name="required")
+
+    class Meta:
+        constraints = [UniqueConstraint(fields=['tournament', 'seq'])]
+        verbose_name = _("score criterion")
+        verbose_name_plural = _("score criteria")
+
+    def __str__(self):
+        return ("{0.name} at {0.tournament}").format(self)
+
+
+class SpeakerCriterionScore(models.Model):
+
+    score = ScoreField(verbose_name=_("score"))
+    criterion = models.ForeignKey(ScoreCriterion, models.CASCADE,
+        verbose_name=_("score criterion"))
+    speaker_score = models.ForeignKey(SpeakerScore, models.CASCADE,
+        verbose_name="speaker score")
+
+    class Meta:
+        constraints = [UniqueConstraint(fields=['speaker_score', 'criterion'])]
+        verbose_name = _("speaker score for criterion")
+        verbose_name_plural = _("speaker scores for criteria")
+
+    def __str__(self):
+        return ("[{0.speaker_score_id}/{0.id}] {0.score} for {0.criterion_id}").format(self)
+
+
+class SpeakerCriterionScoreByAdj(models.Model):
+
+    score = ScoreField(verbose_name=_("score"))
+    criterion = models.ForeignKey(ScoreCriterion, models.CASCADE,
+        verbose_name=_("score criterion"))
+    speaker_score_by_adj = models.ForeignKey(SpeakerScoreByAdj, models.CASCADE,
+        verbose_name="speaker score")
+
+    class Meta:
+        constraints = [UniqueConstraint(fields=['speaker_score_by_adj', 'criterion'])]
+        verbose_name = _("speaker score for criterion by adjudicator")
+        verbose_name_plural = _("speaker scores for criteria by adjudicator")
+
+    def __str__(self):
+        return ("[{0.speaker_score_by_adj_id}/{0.id}] {0.score} for {0.criterion_id}").format(self)

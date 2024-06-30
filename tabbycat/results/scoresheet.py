@@ -10,6 +10,8 @@ since the scoresheet classes don't know about team identities, the word "team"
 should not appear in any of them.
 """
 
+from draw.types import DebateSide
+
 
 class BaseScoresheet:
 
@@ -32,7 +34,7 @@ class BaseScoresheet:
         return True
 
     def winners(self):
-        """Returns {'aff'} is the affirmative team won, and {'neg'} if the negative
+        """Returns {DebateSide.AFF} is the affirmative team won, and {DebateSide.NEG} if the negative
         team won. `self._get_winners()` must be implemented by subclasses."""
         if not self.is_complete():
             return set()
@@ -56,18 +58,26 @@ class ScoresMixin:
     def __init__(self, positions, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.positions = positions
+        self.criteria = kwargs.get('criteria', [])
         self.scores = {side: dict.fromkeys(self.positions, None) for side in self.sides}
         self.speaker_ranks = {side: dict.fromkeys(self.positions, None) for side in self.sides}
+        self.criteria_scores = {side: {pos: dict.fromkeys(self.criteria, 0) for pos in self.positions} for side in self.sides}
 
     def is_complete(self):
-        scores_complete = all(self.scores[s][p] is not None for s in self.sides
-                for p in self.positions)
+        if len(self.criteria) == 0:
+            scores_complete = all(self.scores[s][p] is not None for s in self.sides
+                    for p in self.positions)
+        else:
+            scores_complete = True
         return super().is_complete() and scores_complete
 
     def set_score(self, side, position, score):
-        self.scores[side][position] = score
+        if len(self.criteria) == 0:
+            self.scores[side][position] = score
 
-    def get_score(self, side, position):
+    def get_score(self, side: str, position: int):
+        if len(self.criteria) > 0:
+            return sum(score * type(score)(criterion.weight) for criterion, score in self.criteria_scores[side][position].items())
         return self.scores[side][position]
 
     def set_speaker_rank(self, side, position, score):
@@ -76,8 +86,14 @@ class ScoresMixin:
     def get_speaker_rank(self, side: str, position: int) -> int:
         return self.speaker_ranks[side][position]
 
+    def set_criterion_score(self, side: str, position: int, criterion, score):
+        self.criteria_scores[side][position][criterion] = score
+
+    def get_criterion_score(self, side: str, position: int, criterion):
+        return self.criteria_scores[side][position][criterion]
+
     def get_total(self, side):
-        scores = [self.scores[side][p] for p in self.positions]
+        scores = [self.get_score(side, p) for p in self.positions]
         if None in scores:
             return None
         return sum(scores)
@@ -117,7 +133,7 @@ class DeclaredWinnersMixin:
 
 class BaseTwoTeamScoresheet(BaseScoresheet):
 
-    sides = ['aff', 'neg']
+    sides = [DebateSide.AFF, DebateSide.NEG]
     number_winners = 1
 
     def is_valid(self):
@@ -139,12 +155,12 @@ class HighPointWinsRequiredScoresheet(ScoresMixin, BaseTwoTeamScoresheet):
     This is the standard type of scoresheet in Asia and Oceania."""
 
     def _get_winners(self):
-        aff_total = self.get_total('aff')
-        neg_total = self.get_total('neg')
+        aff_total = self.get_total(DebateSide.AFF)
+        neg_total = self.get_total(DebateSide.NEG)
         if aff_total > neg_total:
-            return {'aff'}
+            return {DebateSide.AFF}
         elif neg_total > aff_total:
-            return {'neg'}
+            return {DebateSide.NEG}
         else:
             return set()
 
@@ -156,12 +172,12 @@ class TiedPointWinsAllowedScoresheet(DeclaredWinnersMixin, ScoresMixin, BaseTwoT
     (e.g. aff has higher score but neg declared), the winners is None."""
 
     def _get_winners(self):
-        aff_total = self.get_total('aff')
-        neg_total = self.get_total('neg')
-        if aff_total >= neg_total and 'aff' in self.declared_winners:
-            return {'aff'}
-        elif neg_total >= aff_total and 'neg' in self.declared_winners:
-            return {'neg'}
+        aff_total = self.get_total(DebateSide.AFF)
+        neg_total = self.get_total(DebateSide.NEG)
+        if aff_total >= neg_total and DebateSide.AFF in self.declared_winners:
+            return {DebateSide.AFF}
+        elif neg_total >= aff_total and DebateSide.NEG in self.declared_winners:
+            return {DebateSide.NEG}
         else:
             return set()
 
@@ -172,14 +188,16 @@ class LowPointWinsAllowedScoresheet(ScoresMixin, ResultOnlyScoresheet):
     pass
 
 
-class BaseBPScoresheet(BaseScoresheet):
-    """This is a stub scoresheet for BP with only its sides as the scoresheet
+class BasePolyScoresheet(BaseScoresheet):
+    """This is a stub scoresheet for >2-team formats with only its sides as the scoresheet
     class changes by stage."""
 
-    sides = ['og', 'oo', 'cg', 'co']
+    def __init__(self, sides, *args, **kwargs):
+        self.sides = sides
+        super().__init__(*args, **kwargs)
 
 
-class BPScoresheet(ScoresMixin, BaseBPScoresheet):
+class PolyScoresheet(ScoresMixin, BasePolyScoresheet):
 
     def is_valid(self):
         if not super().is_valid():
@@ -197,7 +215,7 @@ class BPScoresheet(ScoresMixin, BaseBPScoresheet):
 
     def ranked_sides(self):
         if not self.is_valid():
-            return None
+            return []
         total_by_side = [(self.get_total(side), side) for side in self.sides]
         total_by_side.sort(reverse=True)
         return [side for total, side in total_by_side]
@@ -206,7 +224,22 @@ class BPScoresheet(ScoresMixin, BaseBPScoresheet):
         return set()
 
 
-class BPEliminationScoresheet(DeclaredWinnersMixin, BaseBPScoresheet):
+class PolyNoWinScoresheet(ScoresMixin, BasePolyScoresheet):
+
+    def is_valid(self):
+        return super().is_valid()
+
+    def rank(self, side):
+        return None
+
+    def ranked_sides(self):
+        return []
+
+    def winners(self):
+        return set()
+
+
+class PolyEliminationScoresheet(DeclaredWinnersMixin, BasePolyScoresheet):
 
     def __init__(self, *args, **kwargs):
         """Initializer for BP elimination scoresheets.

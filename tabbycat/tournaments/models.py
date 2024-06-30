@@ -1,4 +1,5 @@
 import logging
+from typing import Union
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -7,8 +8,10 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+from draw.types import DebateSide
 from participants.models import Person
 from utils.managers import LookupByNameFieldsMixin
+from utils.models import UniqueConstraint
 
 logger = logging.getLogger(__name__)
 
@@ -74,16 +77,15 @@ class Tournament(models.Model):
             return self._prefs[name]
 
     @property
-    def sides(self):
+    def sides(self) -> Union[list[DebateSide], list[int]]:
         """Returns a list of side codes."""
         option = self.pref('teams_in_debate')
-        if option == 'two':
-            return ['aff', 'neg']
-        elif option == 'bp':
-            return ['og', 'oo', 'cg', 'co']
+        if option == 2:
+            return [DebateSide.AFF, DebateSide.NEG]
+        elif option == 4:
+            return [DebateSide.OG, DebateSide.OO, DebateSide.CG, DebateSide.CO]
         else:
-            logger.error("Invalid sides option: %s", option)
-            return ['aff', 'neg']  # return default, just to keep it going
+            return list(range(option))
 
     @property
     def last_substantive_position(self):
@@ -125,10 +127,10 @@ class Tournament(models.Model):
         the value in question is in fact an integer before casting."""
         if self.ballots_per_debate(stage) == 'per-adj':
             return False
-        if not self.pref('score_step').is_integer():
+        if not self.pref('score_step').as_integer_ratio()[1] == 1:
             return False
         if (self.pref('reply_scores_enabled') and
-                not self.pref('reply_score_step').is_integer()):
+                not self.pref('reply_score_step').as_integer_ratio()[1] == 1):
             return False
         return True
 
@@ -331,18 +333,17 @@ class Round(models.Model):
     motions_released = models.BooleanField(default=False,
         verbose_name=_("motions released"),
         help_text=_("Whether motions will appear on the public website, assuming that feature is turned on"))
-    starts_at = models.TimeField(verbose_name=_("starts at"), blank=True, null=True)
+    starts_at = models.DateTimeField(verbose_name=_("starts at"), blank=True, null=True)
 
     weight = models.IntegerField(default=1,
         verbose_name=_("weight"),
         help_text=_("A factor for the points received in the round. For example, if 2, all points are doubled."))
 
     class Meta:
+        constraints = [UniqueConstraint(fields=['tournament', 'seq'])]
         verbose_name = _('round')
         verbose_name_plural = _('rounds')
-        unique_together = [('tournament', 'seq')]
         ordering = ['tournament', 'seq']
-        index_together = ['tournament', 'seq']
 
     def __str__(self):
         return "[%s] %s" % (self.tournament, self.name)
@@ -395,9 +396,8 @@ class Round(models.Model):
     def num_debates_without_chair(self):
         """Returns the number of debates in the round that lack a chair, or have
         more than one chair."""
-        from draw.models import DebateTeam
         from adjallocation.models import DebateAdjudicator
-        debates_in_round = self.debate_set.exclude(debateteam__side=DebateTeam.Side.BYE).count()
+        debates_in_round = self.debate_set.exclude(debateteam__side=DebateSide.BYE.value).count()
         debates_with_one_chair = self.debate_set.filter(debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR).annotate(
                 num_chairs=Count('debateadjudicator')).filter(num_chairs=1).count()
         return debates_in_round - debates_with_one_chair
@@ -416,8 +416,7 @@ class Round(models.Model):
 
     @cached_property
     def num_debates_without_venue(self):
-        from draw.models import DebateTeam
-        return self.debate_set.filter(venue__isnull=True).exclude(debateteam__side=DebateTeam.Side.BYE).count()
+        return self.debate_set.filter(venue__isnull=True).exclude(debateteam__side=DebateSide.BYE.value).count()
 
     @cached_property
     def num_debates_with_sides_unconfirmed(self):

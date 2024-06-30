@@ -2,6 +2,40 @@
 Change Log
 ==========
 
+2.9.0 (Ragdoll)
+---------
+*Release date: 1 July 2024*
+
+- Added a setting to expect no feedback from teams or adjudicators. Thanks Daan Koning!
+- Allowed scores to be given in any increments.
+- Actions taken through the API are now logged.
+- Participants' private URLs now show their barcode for checkin. Thank you to Miha Frangež!
+  - Private URLs include the info-slide for the current round if available and public.
+  - The API includes participants' barcode numbers on participant endpoints.
+- Debates can be configured to have an arbitrary number of teams, for public speaking tournaments.
+  - Per-adjudicator ballots for more than 2-team formats can be enabled, disabling team win and ranking metrics if the "Margins includes dissenters" setting is activated.
+  - Speakers in single-speaker teams are pre-selected in ballots.
+  - A preset has been added with default settings for public speaking.
+  - API: Side attributes for pairings and ballots should now be implied by sequence.
+- Implemented basic user permissions:
+  - Users can be invited to create an account with access to specific tournaments.
+  - Users can be assigned to specific groups and permissions with accesses within tournaments. Thanks to Valerie Pang for cataloging the permissions!
+  - Default groups are created for "Tabulation," "Adjudication Core," and "Equity" in each tournament.
+  - API: New endpoints for groups and users are added.
+- Custom scoring criteria can be added through "Edit Database" to be shown on ballots. The assigned speaker score becomes the weighted sum of the given scores on the criteria. Thanks to Trần Trang Linh for this new feature!
+  - Criteria can be added through the Edit Database.
+- Ballot merging is made more stable and revamped, with the help of Trần Trang Linh:
+  - The specific fields are now marked as failing, rather than all related ones.
+  - Ballots can be automatically merged when all eligible ballots received, on enabling a setting.
+- Installation methods are improved:
+  - Docker installations are more rapid and responsive to code changes.
+  - The "deploy to Heroku" script is updated for the new URL scheme and plans.
+- Plenty of new team emojis, thanks to Peta Hillier!
+- Bug fixes!
+  - Fixed access to the "Edit Database" views for Speaker scores and by adjudicator.
+- Upgraded to Python 3.11 and Django 5.
+
+
 2.8.1
 -----
 *Release date: 27 January 2024*

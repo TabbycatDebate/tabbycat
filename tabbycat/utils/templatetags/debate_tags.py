@@ -1,5 +1,6 @@
 import os
 import re
+from datetime import datetime, timedelta
 from random import randint
 
 from django import template
@@ -7,7 +8,9 @@ from django.conf import settings
 from django.template.base import kwarg_re, TemplateSyntaxError, Variable
 from django.template.defaulttags import URLNode
 
+from draw.types import DebateSide
 from tournaments.utils import get_side_name
+from users.permissions import has_permission
 
 register = template.Library()
 STATIC_PATH = settings.MEDIA_ROOT
@@ -39,8 +42,8 @@ def version(path_string, base_url=settings.MEDIA_URL):
 
 @register.simple_tag(takes_context=True)
 def tournament_side_names(context, name_type):
-    side_names = [get_side_name(context['tournament'], 'aff', name_type),
-                  get_side_name(context['tournament'], 'neg', name_type)]
+    side_names = [get_side_name(context['tournament'], DebateSide.AFF, name_type),
+                  get_side_name(context['tournament'], DebateSide.NEG, name_type)]
     return side_names
 
 
@@ -241,3 +244,14 @@ def abbreviatename(name):
     """Takes a two-part name and returns an abbreviation like 'E.Lučić'."""
     parts = name.split(" ")
     return "%s.%s" % (parts[0][:5], parts[-1][:5]) # Used for barcodes
+
+
+@register.simple_tag
+def prep_time():
+    return (datetime.now() + timedelta(minutes=15)).strftime('%Y-%m-%dT%H:%M')
+
+
+@register.simple_tag(takes_context=True)
+def haspermission(context, permission):
+    # If returned directly from the object it will have to lookup tournament
+    return has_permission(context['user'], permission, context['tournament'])

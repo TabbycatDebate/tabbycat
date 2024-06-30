@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 01:00\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:59\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -57,7 +57,7 @@ msgstr "Ver URLs"
 
 #: privateurls/templates/private_urls_nav.html
 msgid "Print Teams' URLs"
-msgstr ""
+msgstr "Mostrar las URLs de los equipos"
 
 #: privateurls/templates/private_urls_nav.html
 msgid "Print Adjudicators' URLs"
@@ -77,7 +77,7 @@ msgstr ""
 
 #: privateurls/templates/private_urls_nav.html
 msgid "Generate URLs"
-msgstr ""
+msgstr "Generar URLs"
 
 #: privateurls/templates/private_urls_nav.html
 msgid "All participants already have private URLs."
@@ -85,7 +85,7 @@ msgstr ""
 
 #: privateurls/templates/public_url_landing.html
 msgid "Private URL"
-msgstr ""
+msgstr "URL privada"
 
 #: privateurls/templates/public_url_landing.html
 #, python-format
@@ -109,7 +109,7 @@ msgstr ""
 
 #: privateurls/templates/public_url_landing.html
 msgid "Check in"
-msgstr ""
+msgstr "Registrarse"
 
 #. Translators: Include the full-stop; English doesn't because "a.m." already has a full stop.
 #: privateurls/templates/public_url_landing.html
@@ -119,16 +119,20 @@ msgstr ""
 
 #: privateurls/templates/public_url_landing.html
 msgid "You are not currently checked in."
+msgstr "En estos momentos no te encuentras registrado."
+
+#: privateurls/templates/public_url_landing.html
+msgid "Show barcode for check-in"
 msgstr ""
 
 #: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "Submit Ballot for %(round)s"
-msgstr ""
+msgstr "Enviar ballot para %(round)s"
 
 #: privateurls/templates/public_url_landing.html
 msgid "Submit Feedback"
-msgstr ""
+msgstr "Enviar feedback"
 
 #: privateurls/templates/public_url_landing.html
 #, python-format
@@ -141,7 +145,7 @@ msgstr ""
 
 #: privateurls/views.py
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: privateurls/views.py
 msgid "Speakers"

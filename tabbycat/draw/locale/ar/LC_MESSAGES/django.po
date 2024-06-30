@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:25-0400\n"
-"PO-Revision-Date: 2023-02-12 06:27\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:57\n"
 "Last-Translator: \n"
 "Language-Team: Arabic\n"
 "Language: ar_SA\n"
@@ -248,36 +248,12 @@ msgid " vs "
 msgstr "ضد"
 
 #: draw/models.py
-msgid "affirmative"
-msgstr "موالاة"
-
-#: draw/models.py
-msgid "negative"
-msgstr "معارضة"
-
-#: draw/models.py
-msgid "opening government"
-msgstr "موالاة أولى "
-
-#: draw/models.py
-msgid "opening opposition"
-msgstr "معارضة أولى"
-
-#: draw/models.py
-msgid "closing government"
-msgstr "موالاة ثانية"
-
-#: draw/models.py
-msgid "closing opposition"
-msgstr "معارضة ثانية "
-
-#: draw/models.py
 msgid "team"
 msgstr "فريق"
 
 #: draw/models.py
-msgid "side"
-msgstr "موقف"
+msgid "side sequence"
+msgstr ""
 
 #: draw/models.py
 msgid "debate team"
@@ -305,6 +281,11 @@ msgid "lost"
 msgstr ""
 
 #: draw/models.py
+#, python-format
+msgid "Team %d"
+msgstr ""
+
+#: draw/models.py
 msgid "team side allocation"
 msgstr "تخصيص مواقف الفرق "
 
@@ -317,6 +298,10 @@ msgstr "تخصيصات مواقف الفرق "
 #: draw/tables.py
 #, python-format
 msgid "%(side)s: %(metric)s"
+msgstr ""
+
+#: draw/tables.py
+msgid "Bye"
 msgstr ""
 
 #: draw/tables.py
@@ -1196,12 +1181,32 @@ msgid "Rooms were not auto-allocated because there are one or more adjudicator r
 msgstr "لم يتم تخصيص الأماكن بشكل تلقائي نظرا لوجود قيود على مكان واحد أو أكثر. يجب تشغيل تخصيصات المكان بعد تخصيص المحكمين."
 
 #: draw/views.py
+msgid "There is no draw."
+msgstr ""
+
+#: draw/views.py
+msgid "The draw had already been confirmed."
+msgstr ""
+
+#: draw/views.py
 msgid "Deleted the draw. You can now recreate it as normal."
 msgstr "مسح القرعة ، يمكنك الان اعادة انشاء أخرى "
 
 #: draw/views.py
+msgid "The draw has already been released."
+msgstr ""
+
+#: draw/views.py
+msgid "The draw must be confirmed before being released."
+msgstr ""
+
+#: draw/views.py
 msgid "Released the draw."
 msgstr "اعلنت القرعة"
+
+#: draw/views.py
+msgid "The draw had been unreleased."
+msgstr ""
 
 #: draw/views.py
 msgid "Unreleased the draw."

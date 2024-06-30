@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
-"PO-Revision-Date: 2023-02-12 06:14\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 22:00\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -29,6 +29,10 @@ msgid_plural "Resaved results for %(count)d ballot submissions."
 msgstr[0] "crwdns51966:1%(count)dcrwdne51966:1"
 msgstr[1] "crwdns51966:5%(count)dcrwdne51966:5"
 
+#: results/admin.py
+msgid "Speaker"
+msgstr "crwdns52832:0crwdne52832:0"
+
 #: results/apps.py results/templates/public_results_index.html results/views.py
 msgid "Results"
 msgstr "crwdns32384:0crwdne32384:0"
@@ -40,15 +44,6 @@ msgstr "crwdns51746:0crwdne51746:0"
 #: results/forms.py
 msgid "That password isn't correct."
 msgstr "crwdns32386:0crwdne32386:0"
-
-#: results/forms.py
-msgid "Please enter a whole number."
-msgstr "crwdns32388:0crwdne32388:0"
-
-#: results/forms.py
-#, python-format
-msgid "Please enter a multiple of %s."
-msgstr "crwdns32390:0%scrwdne32390:0"
 
 #: results/forms.py
 msgid "The ballot set can't be both discarded and confirmed."
@@ -121,7 +116,15 @@ msgstr "crwdns32416:0%(teams)scrwdne32416:0"
 #: results/forms.py
 #, python-format
 msgid "The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_margin).1f)."
-msgstr "crwdns32418:0%(margin)crwdnd32418:0%(max_margin)crwdne32418:0"
+msgstr "crwdns32418:0%(margin).1fcrwdnd32418:0%(max_margin).1fcrwdne32418:0"
+
+#: results/forms.py
+msgid "Ranks cannot be tied."
+msgstr "crwdns52373:0crwdne52373:0"
+
+#: results/forms.py
+msgid "Ranks must correspond to speaker scores"
+msgstr "crwdns52375:0crwdne52375:0"
 
 #: results/forms.py
 #, python-format
@@ -136,7 +139,7 @@ msgstr "crwdns51752:0%(adjudicator)scrwdne51752:0"
 #: results/forms.py
 #, python-format
 msgid "The margin (%(margin).1f) in the ballot of adjudicator %(adjudicator)s exceeds the maximum allowable margin (%(max_margin).1f)."
-msgstr "crwdns51402:0%(margin)crwdnd51402:0%(adjudicator)scrwdnd51402:0%(max_margin)crwdne51402:0"
+msgstr "crwdns51402:0%(margin).1fcrwdnd51402:0%(adjudicator)scrwdnd51402:0%(max_margin).1fcrwdne51402:0"
 
 #: results/forms.py
 msgid "Sides for this debate are not confirmed. You can't save a result for this debate until the sides have been confirmed in the draw."
@@ -160,6 +163,10 @@ msgstr "crwdns32434:0crwdne32434:0"
 #: results/models.py
 msgid "Public"
 msgstr "crwdns32436:0crwdne32436:0"
+
+#: results/models.py
+msgid "Automation"
+msgstr "crwdns52834:0crwdne52834:0"
 
 #: results/models.py
 msgid "timestamp"
@@ -235,8 +242,8 @@ msgstr "crwdns32466:0crwdne32466:0"
 
 #: results/models.py
 #, python-format
-msgid "Debate is in round %(round)d but motion (%(motion)s) is from round %(motion_round)d"
-msgstr "crwdns32468:0%(round)dcrwdnd32468:0%(motion)scrwdnd32468:0%(motion_round)dcrwdne32468:0"
+msgid "Debate is in round %(round)d but motion (%(motion)s) is not in round"
+msgstr "crwdns52377:0%(round)dcrwdnd52377:0%(motion)scrwdne52377:0"
 
 #: results/models.py
 msgid "A ballot can't be both confirmed and discarded!"
@@ -315,6 +322,10 @@ msgid "speaker"
 msgstr "crwdns32502:0crwdne32502:0"
 
 #: results/models.py
+msgid "rank"
+msgstr "crwdns52379:0crwdne52379:0"
+
+#: results/models.py
 msgid "ghost"
 msgstr "crwdns32504:0crwdne32504:0"
 
@@ -337,6 +348,54 @@ msgstr "crwdns32512:0crwdne32512:0"
 #: results/models.py
 msgid "The ballot submission and debate team must relate to the same debate."
 msgstr "crwdns32514:0crwdne32514:0"
+
+#: results/models.py
+msgid "tournament"
+msgstr "crwdns52836:0crwdne52836:0"
+
+#: results/models.py
+msgid "sequence"
+msgstr "crwdns52838:0crwdne52838:0"
+
+#: results/models.py
+msgid "weight"
+msgstr "crwdns52840:0crwdne52840:0"
+
+#: results/models.py
+msgid "minimum score"
+msgstr "crwdns52842:0crwdne52842:0"
+
+#: results/models.py
+msgid "maximum score"
+msgstr "crwdns52844:0crwdne52844:0"
+
+#: results/models.py
+msgid "step"
+msgstr "crwdns52846:0crwdne52846:0"
+
+#: results/models.py
+msgid "score criterion"
+msgstr "crwdns52848:0crwdne52848:0"
+
+#: results/models.py
+msgid "score criteria"
+msgstr "crwdns52850:0crwdne52850:0"
+
+#: results/models.py
+msgid "speaker score for criterion"
+msgstr "crwdns52852:0crwdne52852:0"
+
+#: results/models.py
+msgid "speaker scores for criteria"
+msgstr "crwdns52854:0crwdne52854:0"
+
+#: results/models.py
+msgid "speaker score for criterion by adjudicator"
+msgstr "crwdns52856:0crwdne52856:0"
+
+#: results/models.py
+msgid "speaker scores for criteria by adjudicator"
+msgstr "crwdns52858:0crwdne52858:0"
 
 #: results/tables.py
 msgid "Whether this debate's ballot has been checked in"
@@ -459,10 +518,6 @@ msgstr "crwdns32574:0crwdne32574:0"
 #: results/templates/assistant_results.html
 msgid "This page automatically updates with the new ballot entries and checkins as they occur."
 msgstr "crwdns35286:0crwdne35286:0"
-
-#: results/templates/assistant_results.html
-msgid "This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Results can't be entered while this configuration is in place. Please ask an administrator to change this configuration."
-msgstr "crwdns32576:0crwdne32576:0"
 
 #: results/templates/assistant_results.html
 msgid "Currently there are no motions entered for this round, so debate results cannot be entered. Please ask an administrator to add motions."
@@ -1077,17 +1132,4 @@ msgstr "crwdns32818:0crwdne32818:0"
 #: results/views.py
 msgid "Merge Ballots"
 msgstr "crwdns52133:0crwdne52133:0"
-
-#: results/views.py
-msgid "The speaking order in the ballots is inconsistent, so could not be merged."
-msgstr "crwdns52135:0crwdne52135:0"
-
-#: results/views.py
-msgid "Duplicate speeches are marked inconsistently, so could not be merged."
-msgstr "crwdns52137:0crwdne52137:0"
-
-#: results/views.py
-#, python-format
-msgid " This error was caught in <a href='%(ballot_url)s'>%(adjudicator)s's ballot</a> for %(speaker)s (%(team)s)."
-msgstr "crwdns52139:0%(ballot_url)scrwdnd52139:0%(adjudicator)scrwdnd52139:0%(speaker)scrwdnd52139:0%(team)scrwdne52139:0"
 

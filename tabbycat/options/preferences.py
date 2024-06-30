@@ -1,9 +1,11 @@
+from decimal import Decimal
+
 from django.core.validators import MinValueValidator, validate_slug
 from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 from dynamic_preferences.preferences import Section
 from dynamic_preferences.registries import global_preferences_registry
-from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, LongStringPreference, StringPreference
+from dynamic_preferences.types import BooleanPreference, ChoicePreference, DecimalPreference, FloatPreference, IntegerPreference, LongStringPreference, StringPreference
 
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
@@ -20,30 +22,30 @@ scoring = Section('scoring', verbose_name=_("Score Rules"))
 
 
 @tournament_preferences_registry.register
-class MinimumSpeakerScore(FloatPreference):
+class MinimumSpeakerScore(DecimalPreference):
     help_text = _("Minimum allowed score for substantive speeches")
     section = scoring
     name = 'score_min'
     verbose_name = _("Minimum speaker score")
-    default = 68.0
+    default = Decimal('68')
 
 
 @tournament_preferences_registry.register
-class MaximumSpeakerScore(FloatPreference):
+class MaximumSpeakerScore(DecimalPreference):
     verbose_name = _("Maximum speaker score")
     help_text = _("Maximum allowed score for substantive speeches")
     section = scoring
     name = 'score_max'
-    default = 82.0
+    default = Decimal('82')
 
 
 @tournament_preferences_registry.register
-class SpeakerScoreStep(FloatPreference):
+class SpeakerScoreStep(DecimalPreference):
     verbose_name = _("Speaker score step")
     help_text = _("Score steps allowed for substantive speeches, e.g. full points (1) or half points (0.5)")
     section = scoring
     name = 'score_step'
-    default = 1.0
+    default = Decimal('1')
 
 
 @tournament_preferences_registry.register
@@ -57,30 +59,30 @@ class MaximumMargin(FloatPreference):
 
 
 @tournament_preferences_registry.register
-class MinimumReplyScore(FloatPreference):
+class MinimumReplyScore(DecimalPreference):
     help_text = _("Minimum allowed score for reply speeches")
     verbose_name = _("Minimum reply score")
     section = scoring
     name = 'reply_score_min'
-    default = 34.0
+    default = Decimal('34.0')
 
 
 @tournament_preferences_registry.register
-class MaximumReplyScore(FloatPreference):
+class MaximumReplyScore(DecimalPreference):
     help_text = _("Maximum allowed score for reply speeches")
     verbose_name = _("Maximum reply score")
     section = scoring
     name = 'reply_score_max'
-    default = 41.0
+    default = Decimal('41.0')
 
 
 @tournament_preferences_registry.register
-class ReplyScoreStep(FloatPreference):
+class ReplyScoreStep(DecimalPreference):
     help_text = _("Score steps allowed for reply speeches, e.g. full points (1) or half points (0.5)")
     verbose_name = _("Reply score step")
     section = scoring
     name = 'reply_score_step'
-    default = 0.5
+    default = Decimal('0.5')
 
 
 @tournament_preferences_registry.register
@@ -442,6 +444,7 @@ class FeedbackPaths(ChoicePreference):
         ('with-t-on-c', _("Panellists and trainees on chairs, vice-versa")),
         ('all-adjs', _("All adjudicators (including trainees) on each other")),
         ('with-p-on-p', _("Panellists on eachother and chairs, trainees on chairs, chairs on everyone")),
+        ('no-adjs', _("Neither chairs, nor panellists nor trainees")),
     )
     default = 'with-p-on-c'
 
@@ -455,6 +458,7 @@ class FeedbackFromTeams(ChoicePreference):
     choices = (
         ('orallist', _("Orallist only (voting panellists permitted, with prompts to select orallist)")),
         ('all-adjs', _("All adjudicators in their panels (including trainees)")),
+        ('no-one', _("No one")),
     )
     default = 'orallist'
 
@@ -494,16 +498,12 @@ debate_rules = Section('debate_rules', verbose_name=_("Debate Rules"))
 
 
 @tournament_preferences_registry.register
-class TeamsInDebate(ChoicePreference):
-    help_text = _("Two-team format (e.g. Australs, WSDC) or British Parliamentary")
-    verbose_name = _("Teams in debate")
+class TeamsInDebate(IntegerPreference):
+    help_text = _("How many teams are in each debate (normally 2 but 4 for BP)")
+    verbose_name = _("Number of teams per debate")
     section = debate_rules
     name = 'teams_in_debate'
-    choices = (
-        ('two', _("Two-team format")),
-        ('bp', _("British Parliamentary (four teams)")),
-    )
-    default = 'two'
+    default = 2
 
 
 @tournament_preferences_registry.register
@@ -610,6 +610,15 @@ class UseSpeakerRanks(ChoicePreference):
         ('high-points', 'Require ranking speeches, ranks congruent with speaker scores'),
     )
     default = 'none'
+
+
+@tournament_preferences_registry.register
+class PreparationTime(IntegerPreference):
+    help_text = _("How long, in minutes, after motion release does the round start (-1 to deactivate")
+    verbose_name = _("Preparation Time")
+    section = debate_rules
+    name = 'preparation_time'
+    default = -1
 
 
 # ==============================================================================

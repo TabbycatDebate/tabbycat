@@ -4,7 +4,8 @@ from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError, Manual
 from .pairing import ResultPairing, BPEliminationResultPairing
 from .elimination import FirstEliminationDrawGenerator, SubsequentEliminationDrawGenerator
 from .powerpair import AustralsPowerPairedDrawGenerator, GraphPowerPairedDrawGenerator, AustralsPowerPairedWithAllocatedSidesDrawGenerator, GraphPowerPairedWithAllocatedSidesDrawGenerator
-from .random import RandomBPDrawGenerator, GraphRandomDrawGenerator, GraphRandomWithAllocatedSidesDrawGenerator, SwapRandomDrawGenerator, SwapRandomWithAllocatedSidesDrawGenerator
+from .random import (RandomBPDrawGenerator, RandomPolyDrawGenerator, GraphRandomDrawGenerator,
+    GraphRandomWithAllocatedSidesDrawGenerator, SwapRandomDrawGenerator, SwapRandomWithAllocatedSidesDrawGenerator)
 from .bphungarian import BPHungarianDrawGenerator
 from .bpelimination import (PartialBPEliminationDrawGenerator, AfterPartialBPEliminationDrawGenerator,
     FirstBPEliminationDrawGenerator, SubsequentBPEliminationDrawGenerator)
@@ -71,7 +72,16 @@ def get_bp_generator(draw_type):
         raise ValueError("Unrecognised draw type for BP draw: {}".format(draw_type))
 
 
-def DrawGenerator(teams_per_debate, draw_type, teams, results=None, rrseq=None, **kwargs):  # noqa: N802 (factory function)
+def get_poly_generator(draw_type):
+    try:
+        return {
+            "random": RandomPolyDrawGenerator,
+        }[draw_type]
+    except KeyError:
+        raise ValueError("Unrecognised draw type for poly draw: {}".format(draw_type))
+
+
+def DrawGenerator(teams_in_debate, draw_type, teams, results=None, rrseq=None, **kwargs):  # noqa: N802 (factory function)
     """Factory for draw objects.
     Takes a list of options and returns an appropriate subclass of BaseDrawGenerator.
     'draw_type' is mandatory and can be any of 'random', 'power_paired',
@@ -81,13 +91,14 @@ def DrawGenerator(teams_per_debate, draw_type, teams, results=None, rrseq=None, 
     if draw_type == "manual":
         klass = ManualDrawGenerator
 
-    elif teams_per_debate == 'two':
+    elif teams_in_debate == 2:
         klass = get_two_team_generator(draw_type, **kwargs)
 
-    elif teams_per_debate == 'bp':
+    elif teams_in_debate == 4:
         klass = get_bp_generator(draw_type)
 
     else:
-        raise ValueError("Unrecognised teams-per-debate option: {}".format(teams_per_debate))
+        klass = get_poly_generator(draw_type)
 
+    kwargs['teams_in_debate'] = teams_in_debate
     return klass(teams, results, rrseq, **kwargs)

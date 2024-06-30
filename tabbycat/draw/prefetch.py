@@ -6,6 +6,7 @@ from django.db.models import OuterRef, Subquery
 from django.db.models.expressions import RawSQL
 
 from .models import Debate, DebateTeam
+from .types import DebateSide
 
 logger = logging.getLogger(__name__)
 
@@ -56,11 +57,11 @@ def populate_history(debates):
             JOIN draw_debateteam AS past_aff_dt ON past_aff_dt.debate_id = past_debate.id
             JOIN draw_debateteam AS past_neg_dt ON past_neg_dt.debate_id = past_debate.id
             JOIN tournaments_round AS past_round ON past_debate.round_id = past_round.id
-            WHERE this_aff_dt.side = 'aff'
-            AND   this_neg_dt.side = 'neg'
+            WHERE this_aff_dt.side = %d
+            AND   this_neg_dt.side = %d
             AND   past_aff_dt.team_id = this_aff_dt.team_id
             AND   past_neg_dt.team_id = this_neg_dt.team_id
-            AND   past_round.seq < this_round.seq""",
+            AND   past_round.seq < this_round.seq""" % (DebateSide.AFF.value, DebateSide.NEG.value),
             ()),
     )
 

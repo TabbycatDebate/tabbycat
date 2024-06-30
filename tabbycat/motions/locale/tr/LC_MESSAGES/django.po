@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:25-0400\n"
-"PO-Revision-Date: 2023-05-25 23:54\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:58\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -176,8 +176,8 @@ msgstr[1] "%(side)sdan %(ndebates)s takımdan %(advancing)s ilerledi. (%(percent
 #, python-format
 msgid "%(eliminated)s of %(ndebates)s team on %(side)s (%(percentage)s%%) were eliminated"
 msgid_plural "%(eliminated)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) were eliminated"
-msgstr[0] "%(side)sdan %(ndebates)s takımdan %(advancing)s elendi. (%(percentage)s%%)"
-msgstr[1] "%(side)sdan %(ndebates)s takımdan %(advancing)s elendi. (%(percentage)s%%)"
+msgstr[0] "%(side)sdan %(ndebates)s takımdan %(eliminated)s elendi. (%(percentage)s%%)"
+msgstr[1] "%(side)sdan %(ndebates)s takımdan %(eliminated)s elendi. (%(percentage)s%%)"
 
 #: motions/templates/motion_statistics_bp_elim.html
 msgid "advanced"
@@ -324,6 +324,13 @@ msgstr "Bu turun önergesi henüz yayınlanmadı."
 
 #: motions/templates/show.html
 #, python-format
+msgid "Motion for %(round)s"
+msgid_plural "Motions for %(round)s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: motions/templates/show.html
+#, python-format
 msgid "Reveal Info Slide for %(round)s"
 msgid_plural "Reveal Info Slides for %(round)s"
 msgstr[0] "%(round)s için Bilgi Slaytını Göster"
@@ -341,12 +348,12 @@ msgid "There are no motions for this round entered into Tabbycat."
 msgstr "Bu tur için Tabbycat'e girilmiş herhangi bir önerge yoktur."
 
 #: motions/utils.py
-msgid "Not all latest ballots list the same motion, so could not be merged."
-msgstr "En son ballotların hepsinde aynı önerge yok, bu nedenle birleştirilemezler."
+msgid "Not all latest ballots have the same motion. The correct motion must be set manually."
+msgstr ""
 
 #: motions/utils.py
-msgid "Motion vetos are inconsistent, so could not be merged."
-msgstr "Önerge vetoları tutarsızdır, bu nedenle birleştirilemez."
+msgid "Motion vetos are inconsistent; they must be set manually."
+msgstr ""
 
 #: motions/views.py
 msgid "The motion has been saved."

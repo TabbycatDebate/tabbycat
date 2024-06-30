@@ -1,5 +1,7 @@
 from itertools import islice, zip_longest
 
+from django.db.models import Max
+from django.db.models.functions import Coalesce
 from django.utils.encoding import force_str
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
@@ -17,7 +19,7 @@ class BaseDrawTableBuilder(TabbycatTableBuilder):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.side_history_separator = " " if self.tournament.pref('teams_in_debate') == 'bp' else " / "
+        self.side_history_separator = " " if self.tournament.pref('teams_in_debate') == 4 else " / "
 
     def highlight_rows_by_column_value(self, column):
         highlighted_rows = [i for i in range(1, len(self.data))
@@ -59,28 +61,30 @@ class PublicDrawTableBuilder(BaseDrawTableBuilder):
 
     def add_debate_team_columns(self, debates, highlight=[]):
         all_sides_confirmed = all(debate.sides_confirmed for debate in debates)  # should already be fetched
+        n_cols = debates.aggregate(n=Coalesce(Max('debateteam__side'), 0))['n'] + 1
 
-        for i, side in enumerate(self.tournament.sides, start=1):
+        for side in range(n_cols):
             # For BP team names are often longer than the full position label
-            if self.tournament.pref('teams_in_debate') == 'bp':
+            if self.tournament.pref('teams_in_debate') > 2:
                 side_name = get_side_name(self.tournament, side, 'abbr')
             else:
                 side_name = get_side_name(self.tournament, side, 'full').title()
 
             team_data = []
             for debate, hl in zip_longest(debates, highlight):
-                if debate.is_bye:
-                    if i == 1:  # 1-indexed loop
-                        team = debate.get_team('bye')
-                        team_data.append(self._team_cell(team, subtext=_("Bye"), show_emoji=True, highlight=team == hl))
-                    else:
-                        team_data.append({'text': self.BLANK_TEXT})
-                else:
-                    team = debate.get_team(side)
-                    subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_name
-                    team_data.append(self._team_cell(team, subtext=subtext, show_emoji=True, highlight=team == hl))
+                if side >= len(debate.teams):
+                    team_data.append({'text': self.BLANK_TEXT})
+                    continue
 
-            title = side_name if all_sides_confirmed else _("Team %(num)d") % {'num': i}
+                team = debate.get_team(side)
+                if debate.is_bye and side == 0:
+                    team_data.append(self._team_cell(team, subtext=_("Bye"), show_emoji=True, highlight=team == hl))
+                    continue
+
+                subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_name
+                team_data.append(self._team_cell(team, subtext=subtext, show_emoji=True, highlight=team == hl))
+
+            title = side_name if all_sides_confirmed else _("Team %(num)d") % {'num': side + 1}
             header = {'key': side, 'title': title}
             self.add_column(header, team_data)
 
@@ -155,7 +159,7 @@ class AdminDrawTableBuilder(PublicDrawTableBuilder):
                 return 99999
 
         # In BP, only list first two metrics, there's not enough space for more
-        limit = 2 if self.tournament.pref('teams_in_debate') == 'bp' else None
+        limit = 2 if self.tournament.pref('teams_in_debate') > 2 else None
 
         return self._add_debate_standing_columns(debates, standings, 'itermetrics',
                 'metrics_info', metricformat, formatsort, limit)

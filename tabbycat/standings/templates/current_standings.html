@@ -5,7 +5,7 @@
   {% if not pref.all_results_released %}
     {% trans "It also excludes results from silent rounds (if any) and from the current round." as silent_round_sentence %}
   {% endif %}
-  {% if pref.teams_in_debate == 'bp' %}
+  {% if pref.teams_in_debate == 4 %}
     {% blocktrans trimmed asvar p1 %}
       This list is sorted by team points, then alphabetically by team name. It
       does not indicate each team's ranking within each bracket.

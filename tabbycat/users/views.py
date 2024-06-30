@@ -64,7 +64,7 @@ class InviteUserView(LogActionMixin, AdministratorMixin, TournamentMixin, Passwo
 
     form_class = InviteUserForm
     template_name = "invite_user.html"
-    action_log_type = ActionLogEntry.ACTION_TYPE_USER_INVITE
+    action_log_type = ActionLogEntry.ActionType.USER_INVITE
     page_title = _("Invite User")
     page_emoji = '👤'
 

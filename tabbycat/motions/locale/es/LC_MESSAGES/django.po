@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:25-0400\n"
-"PO-Revision-Date: 2023-02-12 06:28\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:58\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -95,43 +95,43 @@ msgstr "El orden en que se muestran las mociones"
 
 #: motions/models.py
 msgid "round motion"
-msgstr ""
+msgstr "moción de la ronda"
 
 #: motions/models.py
 msgid "round motions"
-msgstr ""
+msgstr "mociones de la ronda"
 
 #: motions/statistics.py
 msgid "extremely strong evidence"
-msgstr ""
+msgstr "evidencia extremadamente fuerte"
 
 #: motions/statistics.py
 msgid "strong evidence"
-msgstr ""
+msgstr "evidencia fuerte"
 
 #: motions/statistics.py
 msgid "moderate evidence"
-msgstr ""
+msgstr "evidencia moderada"
 
 #: motions/statistics.py
 msgid "weak evidence"
-msgstr ""
+msgstr "evidencia débil"
 
 #: motions/statistics.py
 msgid "very weak evidence"
-msgstr ""
+msgstr "evidencia muy débil"
 
 #: motions/statistics.py
 msgid "extremely weak evidence"
-msgstr ""
+msgstr "evidencia extremadamente débil"
 
 #: motions/statistics.py
 msgid "balance inconclusive"
-msgstr ""
+msgstr "balance inconcluso"
 
 #: motions/statistics.py
 msgid "too few debates to get a meaningful statistic"
-msgstr ""
+msgstr "muy pocos debates para obtener una estadística significativa"
 
 #: motions/statistics.py
 #, python-format
@@ -145,7 +145,7 @@ msgstr ""
 
 #: motions/statistics.py
 msgid "probably balanced"
-msgstr ""
+msgstr "probablemente desequilibrado"
 
 #: motions/statistics.py
 #, python-format
@@ -156,7 +156,7 @@ msgstr ""
 #: motions/templates/motion_round_statistics.html
 #: motions/templates/public_motions.html
 msgid "View Info Slide"
-msgstr ""
+msgstr "Ver Info Slide"
 
 #: motions/templates/motion_statistics_bp_elim.html
 #, python-format
@@ -190,7 +190,7 @@ msgstr ""
 
 #: motions/templates/motion_statistics_bp_elim.html
 msgid "eliminated"
-msgstr ""
+msgstr "eliminado"
 
 #: motions/templates/motion_statistics_bp_elim.html
 msgctxt "abbreviation for 'eliminated', used when not enough space"
@@ -209,11 +209,11 @@ msgstr ""
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Government"
-msgstr ""
+msgstr "Gobierno"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Opposition"
-msgstr ""
+msgstr "Oposición"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Average Points per bench"
@@ -221,11 +221,11 @@ msgstr ""
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Opening"
-msgstr ""
+msgstr "Altas"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Closing"
-msgstr ""
+msgstr "Bajas"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Average Points per half"
@@ -259,7 +259,7 @@ msgstr[1] ""
 
 #: motions/templates/motion_statistics_twoteam.html
 msgid "No teams debated this motion"
-msgstr ""
+msgstr "Ningún equipo ha debatido esta moción"
 
 #: motions/templates/motion_statistics_twoteam.html
 #, python-format
@@ -270,17 +270,17 @@ msgstr[1] ""
 
 #: motions/templates/motion_statistics_twoteam.html
 msgid "No teams vetoed this motion"
-msgstr ""
+msgstr "Ningún equipo ha vetado esta moción"
 
 #: motions/templates/motions_edit.html
 msgid "Edit Motion"
 msgid_plural "Edit Motions"
-msgstr[0] ""
+msgstr[0] "Editar moción"
 msgstr[1] ""
 
 #: motions/templates/motions_edit.html
 msgid "Display Draw"
-msgstr ""
+msgstr "Mostrar el draw"
 
 #: motions/templates/motions_edit.html
 msgid "This will replace all existing motions for this round. The motions themselves will still be in the database."
@@ -292,7 +292,7 @@ msgstr ""
 
 #: motions/templates/motions_edit.html
 msgid "Use Existing Motions"
-msgstr ""
+msgstr "Utilizar mociones ya existentes"
 
 #: motions/templates/motions_edit.html
 msgid "The motion for this round is currently publicly displayed because it was released. Any changes made here will be publicly visible as well as soon as they are saved."
@@ -303,12 +303,12 @@ msgstr[1] ""
 #: motions/templates/motions_edit.html
 msgid "Save Motion"
 msgid_plural "Save Motions"
-msgstr[0] ""
+msgstr[0] "Guardar moción"
 msgstr[1] ""
 
 #: motions/templates/motions_info.html
 msgid "Info Slide"
-msgstr ""
+msgstr "Info Slide"
 
 #: motions/templates/public_motions.html
 msgid "There are no motions available for this round."
@@ -321,6 +321,13 @@ msgstr ""
 #: motions/templates/public_motions.html
 msgid "The motion for this round has not been released."
 msgstr ""
+
+#: motions/templates/show.html
+#, python-format
+msgid "Motion for %(round)s"
+msgid_plural "Motions for %(round)s"
+msgstr[0] ""
+msgstr[1] ""
 
 #: motions/templates/show.html
 #, python-format
@@ -341,11 +348,11 @@ msgid "There are no motions for this round entered into Tabbycat."
 msgstr ""
 
 #: motions/utils.py
-msgid "Not all latest ballots list the same motion, so could not be merged."
+msgid "Not all latest ballots have the same motion. The correct motion must be set manually."
 msgstr ""
 
 #: motions/utils.py
-msgid "Motion vetos are inconsistent, so could not be merged."
+msgid "Motion vetos are inconsistent; they must be set manually."
 msgstr ""
 
 #: motions/views.py

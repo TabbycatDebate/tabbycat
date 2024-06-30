@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 01:01\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-07-04 21:55\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -177,6 +177,14 @@ msgstr "crwdns32880:0crwdne32880:0"
 msgid "Trim"
 msgstr "crwdns32882:0crwdne32882:0"
 
+#: standings/speakers.py
+msgid "speech ranks"
+msgstr "crwdns52381:0crwdne52381:0"
+
+#: standings/speakers.py
+msgid "SRank"
+msgstr "crwdns52383:0crwdne52383:0"
+
 #: standings/teams.py
 msgid "points"
 msgstr "crwdns32894:0crwdne32894:0"
@@ -258,12 +266,20 @@ msgid "DSS"
 msgstr "crwdns35306:0crwdne35306:0"
 
 #: standings/teams.py
-msgid "number of pullups before this round"
-msgstr "crwdns35308:0crwdne35308:0"
+msgid "number of pullups"
+msgstr "crwdns52385:0crwdne52385:0"
 
 #: standings/teams.py
 msgid "PU"
 msgstr "crwdns35310:0crwdne35310:0"
+
+#: standings/teams.py
+msgid "number of times in pullup debates"
+msgstr "crwdns52387:0crwdne52387:0"
+
+#: standings/teams.py
+msgid "SPu"
+msgstr "crwdns52389:0crwdne52389:0"
 
 #: standings/teams.py
 msgid "number of adjudicators who voted for this team"

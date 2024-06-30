@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from draw.models import Debate, DebateTeam
+from draw.types import DebateSide
 from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
 from motions.statistics import MotionBPStatsCalculator, MotionTwoTeamStatsCalculator
 from participants.models import Team
@@ -14,15 +15,15 @@ class TestMotionStatisticsTwoTeam(TestCase):
 
     def setUp(self):
         self.tournament = Tournament.objects.create(slug="motions-twoteam", name="Motion statistics two-team")
-        self.tournament.preferences['debate_rules__teams_in_debate'] = 'two'
+        self.tournament.preferences['debate_rules__teams_in_debate'] = 2
         self.tournament.preferences['debate_rules__ballots_per_debate_prelim'] = 'per-adj'
         team1 = Team.objects.create(tournament=self.tournament, reference="1", use_institution_prefix=False)
         team2 = Team.objects.create(tournament=self.tournament, reference="2", use_institution_prefix=False)
         rd = Round.objects.create(tournament=self.tournament, seq=1)
         motion = Motion.objects.create(text="Motion", reference="Motion", tournament=self.tournament)
         debate = Debate.objects.create(round=rd)
-        dt1 = DebateTeam.objects.create(debate=debate, team=team1, side=DebateTeam.Side.AFF)
-        dt2 = DebateTeam.objects.create(debate=debate, team=team2, side=DebateTeam.Side.NEG)
+        dt1 = DebateTeam.objects.create(debate=debate, team=team1, side=DebateSide.AFF)
+        dt2 = DebateTeam.objects.create(debate=debate, team=team2, side=DebateSide.NEG)
         ballotsub = BallotSubmission.objects.create(debate=debate, motion=motion, confirmed=True)
         TeamScore.objects.create(debate_team=dt1, ballot_submission=ballotsub,
             margin=+2, points=1, score=101, win=True,  votes_given=1, votes_possible=1)
@@ -46,21 +47,21 @@ class TestMotionStatisticsTwoTeam(TestCase):
         stats = MotionTwoTeamStatsCalculator(self.tournament)
         for m in stats.motions:
             if m.reference == "Motion":
-                self.assertEqual(m.aff_wins, 1)
-                self.assertEqual(m.neg_wins, 0)
-                self.assertEqual(m.aff_vetoes, 0)
-                self.assertEqual(m.neg_vetoes, 0)
-                self.assertEqual(m.aff_win_percentage, 100)
-                self.assertEqual(m.neg_win_percentage, 0)
-                self.assertEqual(m.aff_veto_percentage, 0)
-                self.assertEqual(m.neg_veto_percentage, 0)
+                self.assertEqual(m.s0_wins, 1)
+                self.assertEqual(m.s1_wins, 0)
+                self.assertEqual(m.s0_vetoes, 0)
+                self.assertEqual(m.s1_vetoes, 0)
+                self.assertEqual(m.s0_win_percentage, 100)
+                self.assertEqual(m.s1_win_percentage, 0)
+                self.assertEqual(m.s0_veto_percentage, 0)
+                self.assertEqual(m.s1_veto_percentage, 0)
             if m.reference == "Vetoed":
-                self.assertEqual(m.aff_wins, 0)
-                self.assertEqual(m.neg_wins, 0)
-                self.assertEqual(m.aff_vetoes, 1)
-                self.assertEqual(m.neg_vetoes, 1)
-                self.assertEqual(m.aff_veto_percentage, 50)
-                self.assertEqual(m.neg_veto_percentage, 50)
+                self.assertEqual(m.s0_wins, 0)
+                self.assertEqual(m.s1_wins, 0)
+                self.assertEqual(m.s0_vetoes, 1)
+                self.assertEqual(m.s1_vetoes, 1)
+                self.assertEqual(m.s0_veto_percentage, 50)
+                self.assertEqual(m.s1_veto_percentage, 50)
 
 
 class TestMotionStatisticsBP(TestCase):
@@ -69,7 +70,7 @@ class TestMotionStatisticsBP(TestCase):
 
     def setUp(self):
         self.tournament = Tournament.objects.create(slug="motions-bp", name="Motion statistics BP")
-        self.tournament.preferences['debate_rules__teams_in_debate'] = 'bp'
+        self.tournament.preferences['debate_rules__teams_in_debate'] = 4
         self.tournament.preferences['debate_rules__ballots_per_debate_prelim'] = 'per-debate'
         self.teams = {side: Team.objects.create(tournament=self.tournament, reference=side,
                 use_institution_prefix=False) for side in self.tournament.sides}
@@ -94,27 +95,27 @@ class TestMotionStatisticsBP(TestCase):
         motion = next(stats.motions)
         assert motion.reference == "Prelim"
 
-        self.assertEqual(motion.og_average, 0)
-        self.assertEqual(motion.oo_average, 1)
-        self.assertEqual(motion.cg_average, 2)
-        self.assertEqual(motion.co_average, 3)
+        self.assertEqual(motion.s0_average, 0)
+        self.assertEqual(motion.s1_average, 1)
+        self.assertEqual(motion.s2_average, 2)
+        self.assertEqual(motion.s3_average, 3)
 
-        self.assertEqual(motion.og_0_count, 1)
-        self.assertEqual(motion.og_1_count, 0)
-        self.assertEqual(motion.og_2_count, 0)
-        self.assertEqual(motion.og_3_count, 0)
-        self.assertEqual(motion.oo_0_count, 0)
-        self.assertEqual(motion.oo_1_count, 1)
-        self.assertEqual(motion.oo_2_count, 0)
-        self.assertEqual(motion.oo_3_count, 0)
-        self.assertEqual(motion.cg_0_count, 0)
-        self.assertEqual(motion.cg_1_count, 0)
-        self.assertEqual(motion.cg_2_count, 1)
-        self.assertEqual(motion.cg_3_count, 0)
-        self.assertEqual(motion.co_0_count, 0)
-        self.assertEqual(motion.co_1_count, 0)
-        self.assertEqual(motion.co_2_count, 0)
-        self.assertEqual(motion.co_3_count, 1)
+        self.assertEqual(motion.s0_0_count, 1)
+        self.assertEqual(motion.s0_1_count, 0)
+        self.assertEqual(motion.s0_2_count, 0)
+        self.assertEqual(motion.s0_3_count, 0)
+        self.assertEqual(motion.s1_0_count, 0)
+        self.assertEqual(motion.s1_1_count, 1)
+        self.assertEqual(motion.s1_2_count, 0)
+        self.assertEqual(motion.s1_3_count, 0)
+        self.assertEqual(motion.s2_0_count, 0)
+        self.assertEqual(motion.s2_1_count, 0)
+        self.assertEqual(motion.s2_2_count, 1)
+        self.assertEqual(motion.s2_3_count, 0)
+        self.assertEqual(motion.s3_0_count, 0)
+        self.assertEqual(motion.s3_1_count, 0)
+        self.assertEqual(motion.s3_2_count, 0)
+        self.assertEqual(motion.s3_3_count, 1)
 
         self.assertAlmostEqual(motion.counts_by_half['top'], 0.5)
         self.assertAlmostEqual(motion.counts_by_half['bottom'], 2.5)
@@ -131,17 +132,17 @@ class TestMotionStatisticsBP(TestCase):
         for side in self.tournament.sides:
             dt = DebateTeam.objects.create(debate=debate, team=self.teams[side], side=side)
             TeamScore.objects.create(debate_team=dt, ballot_submission=ballotsub,
-                win=side in ['oo', 'cg'])
+                win=side in [DebateSide.OO, DebateSide.CG])
 
         stats = MotionBPStatsCalculator(self.tournament)
         motion = next(stats.motions)
         assert motion.reference == "Elim"
 
-        self.assertEqual(motion.og_advancing, 0)
-        self.assertEqual(motion.oo_advancing, 1)
-        self.assertEqual(motion.cg_advancing, 1)
-        self.assertEqual(motion.co_advancing, 0)
-        self.assertEqual(motion.og_eliminated, 1)
-        self.assertEqual(motion.oo_eliminated, 0)
-        self.assertEqual(motion.cg_eliminated, 0)
-        self.assertEqual(motion.co_eliminated, 1)
+        self.assertEqual(motion.s0_advancing, 0)
+        self.assertEqual(motion.s1_advancing, 1)
+        self.assertEqual(motion.s2_advancing, 1)
+        self.assertEqual(motion.s3_advancing, 0)
+        self.assertEqual(motion.s0_eliminated, 1)
+        self.assertEqual(motion.s1_eliminated, 0)
+        self.assertEqual(motion.s2_eliminated, 0)
+        self.assertEqual(motion.s3_eliminated, 1)

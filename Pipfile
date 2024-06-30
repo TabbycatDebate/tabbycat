@@ -51,4 +51,4 @@ sphinx-rtd-theme = "*"
 sphinx-intl = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.11"

@@ -2,7 +2,8 @@
 # run the application specified. docker-compose does not use this.
 
 # Grab a python image
-FROM python:3.9
+FROM python:3.11
+SHELL ["/bin/bash", "--login", "-c"]
 
 # Just needed for all things python (note this is setting an env variable)
 ENV PYTHONUNBUFFERED 1
@@ -12,14 +13,13 @@ ENV IN_DOCKER 1
 # Setup Node/NPM
 RUN apt-get update
 RUN apt-get install -y curl nginx
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
-RUN apt-get install -y nodejs npm
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
 # Copy all our files into the baseimage and cd to that directory
-RUN mkdir /tcd
 WORKDIR /tcd
-# Can this be skipped? Takes ages
-ADD . /tcd/
+COPY . /tcd/
+
+RUN nvm install && nvm use
 
 # Set git to use HTTPS (SSH is often blocked by firewalls)
 RUN git config --global url."https://".insteadOf git://

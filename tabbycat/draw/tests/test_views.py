@@ -1,6 +1,5 @@
 from django.test import TestCase
 
-from draw.models import DebateTeam
 from tournaments.models import Round
 from utils.tests import AdminTournamentViewSimpleLoadTestMixin, CompletedTournamentTestMixin, ConditionalTableViewTestsMixin, TableViewTestsMixin
 
@@ -100,8 +99,8 @@ class PublicDrawPreliminaryCurrentRoundTest(CompletedTournamentTestMixin, TableV
 
         keys = [c['key'] for c in table['head']]
         venue_column_index = keys.index('venue')
-        aff_column_index = keys.index('aff')
-        neg_column_index = keys.index('neg')
+        aff_column_index = keys.index('0')
+        neg_column_index = keys.index('1')
 
         venues = [c[venue_column_index]['text'] for c in table['data']]
         pairings = [
@@ -172,8 +171,8 @@ class PublicDrawEliminationCurrentRoundTest(CompletedTournamentTestMixin, TableV
         ngf_debate = self.ngf.debate_set.create()
         aff = self.tournament.team_set.get(id=4)
         neg = self.tournament.team_set.get(id=6)
-        ngf_debate.debateteam_set.create(team=aff, side=DebateTeam.Side.AFF)
-        ngf_debate.debateteam_set.create(team=neg, side=DebateTeam.Side.NEG)
+        ngf_debate.debateteam_set.create(team=aff, side=0)
+        ngf_debate.debateteam_set.create(team=neg, side=1)
 
         response = self.get_response('draw-public-current-rounds')
         self.assertResponseTableRowCountsEqual(response, [4, 2, 1])

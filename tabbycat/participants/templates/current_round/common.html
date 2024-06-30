@@ -3,21 +3,21 @@
 {# Round start time #}
 {% if current_round.starts_at %}
   <div class="list-group-item">
-    {% blocktrans trimmed with start_time=current_round.starts_at %}
+    {% blocktrans trimmed with start_time=current_round.starts_at|time:'H:i' %}
       The round begins at {{ start_time }}
     {% endblocktrans %}
   </div>
 {% endif %} {# current_round.starts_at #}
 
 {# Teams (only in BP -- in two-team, it's displayed above) #}
-{% if pref.teams_in_debate == 'bp' %}
+{% if pref.teams_in_debate == 4 %}
   <div class="list-group-item">
     <strong>{% trans "Teams:" %}</strong>
     {% for dt in debate.debateteams_ordered %}
       {% team_record_link dt.team admin_page %}{% if debate.sides_confirmed %} ({% debate_team_side_name dt %}){% endif %}{% if not forloop.last %},{% endif %}
     {% endfor %}
   </div>
-{% endif %} {# pref.teams_in_debate == 'bp' #}
+{% endif %} {# pref.teams_in_debate == 4 #}
 
 {# Adjudicators #}
 {% if not pref.no_panellist_position or not pref.no_trainee_position %}
@@ -54,16 +54,33 @@
         <em>{% trans "Motions are not released to public." %}</em><br />
       {% endif %}
       {% if debate.round.motion_set.all|length == 1 %}
-        <strong>{% trans "Motion:" %}</strong> {{ debate.round.motion_set.first.text }}
+        {% with motion=debate.round.motion_set.first %}
+        <strong>{% trans "Motion:" %}</strong> {{ motion.text }}
+            {% if motion.info_slide %}
+              <span class="h6 badge badge-light text-secondary mx-auto mb-3 mt-0 hover-target"
+                    data-toggle="modal" data-target="#info_{{ motion.id }}">
+                {% trans "View Info Slide" %}
+              </span>
+              {% include 'motions_info.html' %}
+            {% endif %}
+        {% endwith %}
       {% else %}
+        <h6>Motions</h6>
+        <ol>
         {% for rm in debate.round.roundmotion_set.all %}
-          <strong>
-            {% blocktrans trimmed with seq=rm.seq %}
-              Motion {{ seq }}:
-            {% endblocktrans %}
-          </strong>
-          {{ rm.motion.text }}<br />
+          <li value="{{ rm.seq }}">
+            {{ rm.motion.text }}
+
+            {% if rm.motion.info_slide %}
+              <span class="h6 badge badge-light text-secondary mx-auto mb-3 mt-0 hover-target"
+                    data-toggle="modal" data-target="#info_{{ rm.motion.id }}">
+                {% trans "View Info Slide" %}
+              </span>
+              {% include 'motions_info.html' with motion=rm.motion %}
+            {% endif %}
+          </li>
         {% endfor %}
+      </ol>
       {% endif %}
     {% else %} {# elif not (current_round.motions_released or admin_page) #}
       <em>{% trans "The motion(s) for this round haven't yet been released." %}</em>

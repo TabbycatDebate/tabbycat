@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-06-21 14:26\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:57\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -161,7 +161,7 @@ msgstr ""
 #: adjfeedback/forms.py
 #, python-format
 msgid "This line (for %(adjudicator)s) didn't have a score"
-msgstr ""
+msgstr "%(adjudicator)sのためのこの行にはスコアがありません。"
 
 #: adjfeedback/forms.py
 #, python-format
@@ -185,7 +185,7 @@ msgstr ""
 
 #: adjfeedback/forms.py
 msgid "There were no scores to import."
-msgstr ""
+msgstr "インポートするスコアがありませんでした。"
 
 #: adjfeedback/models.py
 msgid "adjudicator"
@@ -205,11 +205,11 @@ msgstr "タイムスタンプ"
 
 #: adjfeedback/models.py
 msgid "adjudicator base score history"
-msgstr ""
+msgstr "ジャッジのベースコアの履歴"
 
 #: adjfeedback/models.py
 msgid "adjudicator base score histories"
-msgstr ""
+msgstr "ジャッジのベースコアの履歴"
 
 #: adjfeedback/models.py
 msgid "question"
@@ -281,7 +281,7 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "float"
-msgstr ""
+msgstr "小数"
 
 #: adjfeedback/models.py
 msgid "text"
@@ -313,7 +313,7 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "name"
-msgstr ""
+msgstr "名前"
 
 #: adjfeedback/models.py
 msgid "A short name for the question, e.g., \"Agree with decision\""
@@ -321,7 +321,7 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "reference"
-msgstr ""
+msgstr "参照"
 
 #: adjfeedback/models.py
 msgid "Code-compatible reference, e.g., \"agree_with_decision\""
@@ -329,7 +329,7 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "from adjudicator"
-msgstr ""
+msgstr "ジャッジから"
 
 #: adjfeedback/models.py
 msgid "Adjudicators should be asked this question (about other adjudicators)"
@@ -337,7 +337,7 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "from team"
-msgstr ""
+msgstr "チームから"
 
 #: adjfeedback/models.py
 msgid "Teams should be asked this question"
@@ -345,11 +345,11 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "answer type"
-msgstr ""
+msgstr "回答のタイプ"
 
 #: adjfeedback/models.py
 msgid "required"
-msgstr ""
+msgstr "必須項目"
 
 #: adjfeedback/models.py
 msgid "Whether participants are required to fill out this field"
@@ -357,7 +357,7 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "minimum value"
-msgstr ""
+msgstr "最小値"
 
 #: adjfeedback/models.py
 msgid "Minimum allowed value for numeric fields (ignored for text or boolean fields)"
@@ -381,15 +381,15 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback question"
-msgstr ""
+msgstr "ジャッジのフィードバックへの質問"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback questions"
-msgstr ""
+msgstr "ジャッジのフィードバックへの質問"
 
 #: adjfeedback/models.py adjfeedback/views.py
 msgid "ignored"
-msgstr ""
+msgstr "反映されていません"
 
 #: adjfeedback/models.py
 msgid "Whether the feedback should affect the adjudicator's score"
@@ -397,11 +397,11 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback"
-msgstr ""
+msgstr "ジャッジへのフィードバック"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedbacks"
-msgstr ""
+msgstr "ジャッジへのフィードバック"
 
 #: adjfeedback/models.py
 msgid "Either the source adjudicator or source team wasn't specified."
@@ -417,7 +417,7 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "Adjudicator did not see this debate."
-msgstr ""
+msgstr "このディベートにジャッジは参加しませんでした。"
 
 #: adjfeedback/tables.py
 msgid "Whether the adj is marked as breaking (click to mark)"
@@ -425,27 +425,27 @@ msgstr ""
 
 #: adjfeedback/tables.py
 msgid "N/A"
-msgstr ""
+msgstr "該当なし"
 
 #: adjfeedback/tables.py
 msgid "Current weighted score"
-msgstr ""
+msgstr "現在の加重スコア"
 
 #: adjfeedback/tables.py
 msgid "This adjudicator's current rating."
-msgstr ""
+msgstr "このジャッジの現時点での評価"
 
 #: adjfeedback/tables.py
 msgid "Base score result"
-msgstr ""
+msgstr "ベーススコアの結果"
 
 #: adjfeedback/tables.py
 msgid "Click to edit base score"
-msgstr ""
+msgstr "ベーススコアを編集"
 
 #: adjfeedback/tables.py
 msgid "Assigned base score"
-msgstr ""
+msgstr "ベーススコアの割当"
 
 #: adjfeedback/tables.py
 msgid "The current difference between an adjudicator's base score and current score"
@@ -465,7 +465,7 @@ msgstr ""
 
 #: adjfeedback/tables.py
 msgid "Feedback Per Round"
-msgstr ""
+msgstr "ラウンドごとのフィードバック"
 
 #: adjfeedback/tables.py
 msgid "Hover over the data points to show the average score received in that round"
@@ -475,7 +475,7 @@ msgstr ""
 #, python-format
 msgid "View %(count)s<br>feedback"
 msgid_plural "View %(count)s<br>feedbacks"
-msgstr[0] ""
+msgstr[0] "フィードバック%(count)s<br>を参照"
 
 #: adjfeedback/tables.py
 msgid "Unsubmitted feedback ballots"
@@ -483,11 +483,11 @@ msgstr ""
 
 #: adjfeedback/tables.py
 msgid "View Missing Feedback"
-msgstr ""
+msgstr "不足しているフィードバックを表示"
 
 #: adjfeedback/templates/add_feedback.html
 msgid "Who is the feedback from?"
-msgstr ""
+msgstr "フィードバックの提出者"
 
 #: adjfeedback/templates/add_feedback.html
 #: adjfeedback/templates/enter_feedback.html
@@ -518,6 +518,10 @@ msgid "This tournament expects you to submit feedback on all of the adjudicators
 msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
+msgid "This tournament doesn't expect you to submit feedback on any of the adjudicators on the panel (including trainees)."
+msgstr ""
+
+#: adjfeedback/templates/enter_feedback.html
 msgid "There are some problems with this feedback submission. Please review and correct them."
 msgstr ""
 
@@ -539,7 +543,7 @@ msgstr "未提出"
 
 #: adjfeedback/templates/feedback_base.html
 msgid "Important"
-msgstr ""
+msgstr "重要"
 
 #: adjfeedback/templates/feedback_base.html
 msgid "Comments"
@@ -686,6 +690,11 @@ msgstr ""
 #: adjfeedback/templates/feedback_overview.html
 #, python-format
 msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects all adjudicators (including trainees) to submit feedback on every other member of the panel (including trainees)."
+msgstr ""
+
+#: adjfeedback/templates/feedback_overview.html
+#, python-format
+msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> disallows adjudicators to submit feedback on other members of the panel (including trainees)."
 msgstr ""
 
 #: adjfeedback/templates/feedback_overview.html

@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from collections.abc import Mapping
-from functools import partialmethod
+from datetime import date, datetime, time
+from functools import partial, partialmethod
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError as DjangoValidationError
@@ -13,7 +14,7 @@ from rest_framework.fields import get_error_detail, SkipField
 from rest_framework.settings import api_settings
 
 from adjallocation.models import DebateAdjudicator, PreformedPanel
-from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
+from adjfeedback.models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory, BreakingTeam
 from draw.models import Debate, DebateTeam
 from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
@@ -22,11 +23,13 @@ from participants.models import Adjudicator, Institution, Region, Speaker, Speak
 from participants.utils import populate_code_names
 from privateurls.utils import populate_url_keys
 from results.mixins import TabroomSubmissionFieldsMixin
-from results.models import BallotSubmission, SpeakerScore, TeamScore
+from results.models import BallotSubmission, ScoreCriterion, SpeakerScore, TeamScore
 from results.result import DebateResult, ResultError
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.models import Round, Tournament
+from users.models import Group
+from users.permissions import has_permission, Permission
 from venues.models import Venue, VenueCategory, VenueConstraint
 
 from . import fields
@@ -56,14 +59,14 @@ class V1RootSerializer(serializers.Serializer):
     class V1LinksSerializer(serializers.Serializer):
         tournaments = serializers.HyperlinkedIdentityField(view_name='api-tournament-list')
         institutions = serializers.HyperlinkedIdentityField(view_name='api-global-institution-list')
-        users = serializers.HyperlinkedIdentityField(view_name='api-users-list')
+        users = serializers.HyperlinkedIdentityField(view_name='api-user-list')
 
     _links = V1LinksSerializer(source='*', read_only=True)
 
 
 class CheckinSerializer(serializers.Serializer):
     object = serializers.HyperlinkedIdentityField(view_name='api-root')
-    barcode = serializers.IntegerField()
+    barcode = serializers.CharField()
     checked = serializers.BooleanField()
     timestamp = serializers.DateTimeField()
 
@@ -147,6 +150,7 @@ class RoundSerializer(serializers.ModelSerializer):
         text = serializers.CharField(source='motion.text', max_length=500, required=False)
         reference = serializers.CharField(source='motion.reference', max_length=100, required=False)
         info_slide = serializers.CharField(source='motion.info_slide', required=False)
+        info_slide_plain = serializers.CharField(source='motion.info_slide_plain', read_only=True)
         seq = serializers.IntegerField(read_only=True)
 
         class Meta:
@@ -158,7 +162,12 @@ class RoundSerializer(serializers.ModelSerializer):
             if isinstance(motion_data, Motion):  # If passed in a URL - Becomes an object
                 validated_data['motion'] = motion_data
             else:
-                validated_data['motion'] = Motion(text=motion_data['text'], reference=motion_data['reference'], info_slide=motion_data.get('info_slide', ''), tournament=self.context['tournament'])
+                validated_data['motion'] = Motion(
+                    text=motion_data['text'],
+                    reference=motion_data['reference'],
+                    info_slide=motion_data.get('info_slide', ''),
+                    tournament=self.context['tournament'],
+                )
                 validated_data['motion'].save()
 
             return super().create(validated_data)
@@ -167,6 +176,18 @@ class RoundSerializer(serializers.ModelSerializer):
         pairing = fields.TournamentHyperlinkedIdentityField(
             view_name='api-pairing-list',
             lookup_field='seq', lookup_url_kwarg='round_seq')
+        availabilities = fields.TournamentHyperlinkedIdentityField(view_name='api-availability-list', lookup_field='seq', lookup_url_kwarg='round_seq')
+        preformed_panels = fields.TournamentHyperlinkedIdentityField(view_name='api-preformedpanel-list', lookup_field='seq', lookup_url_kwarg='round_seq')
+
+    class TimeOrDateTimeField(serializers.DateTimeField):
+        def to_internal_value(self, value):
+            try:
+                value = time.fromisoformat(value)
+            except ValueError:
+                return super().to_internal_value(value)
+
+            value = datetime.combine(date.today(), value)
+            return super().to_internal_value(value)
 
     url = fields.TournamentHyperlinkedIdentityField(
         view_name='api-round-detail',
@@ -176,16 +197,19 @@ class RoundSerializer(serializers.ModelSerializer):
         queryset=BreakCategory.objects.all(),
         allow_null=True, required=False)
     motions = RoundMotionSerializer(many=True, source='roundmotion_set', required=False)
+    starts_at = TimeOrDateTimeField(required=False, allow_null=True)
 
     _links = RoundLinksSerializer(source='*', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if not is_staff(kwargs.get('context')):
-            self.fields.pop('feedback_weight')
+            with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=kwargs['context']['tournament'])
+            if not with_permission(permission=Permission.VIEW_FEEDBACK_OVERVIEW):
+                self.fields.pop('feedback_weight')
 
             # Can't show in a ListSerializer
-            if isinstance(self.instance, QuerySet) or not self.instance.motions_released:
+            if not with_permission(permission=Permission.VIEW_MOTION) and (isinstance(self.instance, QuerySet) or not self.instance.motions_released):
                 self.fields.pop('motions')
 
     class Meta:
@@ -204,6 +228,9 @@ class RoundSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         motions_data = validated_data.pop('roundmotion_set', [])
+        if len(motions_data) > 0 and not has_permission(self.context['request'].user, Permission.EDIT_MOTION, self.context['tournament']):
+            raise serializers.PermissionDenied('Editing motions disallowed')
+
         round = super().create(validated_data)
 
         if len(motions_data) > 0:
@@ -218,6 +245,8 @@ class RoundSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         motions_data = validated_data.pop('roundmotion_set', [])
+        if len(motions_data) > 0 and not has_permission(self.context['request'].user, Permission.EDIT_MOTION, self.context['tournament']):
+            raise serializers.PermissionDenied('Editing motions disallowed')
         for i, roundmotion in enumerate(motions_data, start=1):
             roundmotion['seq'] = i
 
@@ -315,6 +344,7 @@ class MotionSerializer(serializers.ModelSerializer):
 
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-motion-detail')
     rounds = RoundsSerializer(many=True, source='roundmotion_set')
+    info_slide_plain = serializers.CharField(read_only=True)
 
     class Meta:
         model = Motion
@@ -436,8 +466,14 @@ class PartialBreakingTeamSerializer(BreakingTeamSerializer):
         model = BreakingTeam
         fields = ('team', 'remark')
 
+    def validate_team(self, value):
+        try:
+            return self.context['break_category'].breakingteam_set.get(team=value)
+        except BreakingTeam.DoesNotExist:
+            raise serializers.ValidationError('Team is not included in break')
+
     def save(self, **kwargs):
-        bt = self.context['break_category'].breakingteam_set.get(team=self.validated_data['team'])
+        bt = self.validated_data['team']
         bt.remark = self.validated_data.get('remark', '')
         bt.save()
         return bt
@@ -457,17 +493,25 @@ class SpeakerSerializer(serializers.ModelSerializer):
         queryset=SpeakerCategory.objects.all(),
     )
     _links = SpeakerLinksSerializer(source='*', read_only=True)
+    barcode = serializers.CharField(source='checkin_identifier.barcode', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if not is_staff(kwargs.get('context')):
-            self.fields.pop('gender')
-            self.fields.pop('email')
-            self.fields.pop('phone')
-            self.fields.pop('pronoun')
-            self.fields.pop('url_key')
+            t = kwargs['context']['tournament']
+            with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=t)
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_CONTACT):
+                self.fields.pop('email')
+                self.fields.pop('phone')
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_GENDER):
+                self.fields.pop('gender')
+                self.fields.pop('pronoun')
+            if not with_permission(permission=Permission.VIEW_PRIVATE_URLS):
+                self.fields.pop('url_key')
+            if not with_permission(permission=Permission.VIEW_CHECKIN):
+                self.fields.pop('barcode')
 
-            if kwargs['context']['tournament'].pref('participant_code_names') == 'everywhere':
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_DECODED) and t.pref('participant_code_names') == 'everywhere':
                 self.fields.pop('name')
 
     class Meta:
@@ -520,32 +564,46 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
     )
     venue_constraints = VenueConstraintSerializer(many=True, required=False)
     _links = AdjudicatorLinksSerializer(source='*', read_only=True)
+    barcode = serializers.CharField(source='checkin_identifier.barcode', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # Remove private fields in the public endpoint if needed
         if not is_staff(kwargs.get('context')):
-            self.fields.pop('institution_conflicts')
-            self.fields.pop('team_conflicts')
-            self.fields.pop('adjudicator_conflicts')
-            self.fields.pop('venue_constraints')
-
             t = kwargs['context']['tournament']
-            if not t.pref('show_adjudicator_institutions'):
+            with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=t)
+
+            if not with_permission(permission=Permission.VIEW_ADJ_INST_CONFLICTS):
+                self.fields.pop('institution_conflicts')
+            if not with_permission(permission=Permission.VIEW_ADJ_TEAM_CONFLICTS):
+                self.fields.pop('team_conflicts')
+            if not with_permission(permission=Permission.VIEW_ADJ_ADJ_CONFLICTS):
+                self.fields.pop('adjudicator_conflicts')
+            if not with_permission(permission=Permission.VIEW_ROOMCONSTRAINTS):
+                self.fields.pop('venue_constraints')
+
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_INST) and not t.pref('show_adjudicator_institutions'):
                 self.fields.pop('institution')
-            if not t.pref('public_breaking_adjs'):
+            if not with_permission(permission=Permission.VIEW_ADJ_BREAK) and not t.pref('public_breaking_adjs'):
                 self.fields.pop('breaking')
-            if t.pref('participant_code_names') == 'everywhere':
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_DECODED) and not t.pref('participant_code_names') == 'everywhere':
                 self.fields.pop('name')
 
-            self.fields.pop('base_score')
-            self.fields.pop('trainee')
-            self.fields.pop('gender')
-            self.fields.pop('email')
-            self.fields.pop('phone')
-            self.fields.pop('pronoun')
-            self.fields.pop('url_key')
+            if not with_permission(permission=Permission.VIEW_FEEDBACK_OVERVIEW):
+                self.fields.pop('base_score')
+                self.fields.pop('trainee')
+
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_CONTACT):
+                self.fields.pop('email')
+                self.fields.pop('phone')
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_GENDER):
+                self.fields.pop('gender')
+                self.fields.pop('pronoun')
+            if not with_permission(permission=Permission.VIEW_PRIVATE_URLS):
+                self.fields.pop('url_key')
+            if not with_permission(permission=Permission.VIEW_CHECKIN):
+                self.fields.pop('barcode')
 
     class Meta:
         model = Adjudicator
@@ -581,6 +639,10 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
             vc = VenueConstraintSerializer(many=True, context=self.context)
             vc._validated_data = venue_constraints  # Data was already validated
             vc.save(adjudicator=instance)
+
+        if 'base_score' in validated_data and validated_data['base_score'] != instance.base_score:
+            AdjudicatorBaseScoreHistory.objects.create(
+                adjudicator=instance, round=self.context['tournament'].current_round, score=validated_data['base_score'])
 
         if self.partial:
             # Avoid removing conflicts if merely PATCHing
@@ -632,20 +694,25 @@ class TeamSerializer(serializers.ModelSerializer):
 
         # Remove private fields in the public endpoint if needed
         if not is_staff(kwargs.get('context')):
-            self.fields.pop('institution_conflicts')
-            self.fields.pop('venue_constraints')
-
             t = kwargs['context']['tournament']
-            if t.pref('team_code_names') in ('admin-tooltips-code', 'admin-tooltips-real', 'everywhere'):
+            with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=t)
+
+            if not with_permission(permission=Permission.VIEW_TEAM_INST_CONFLICTS):
+                self.fields.pop('institution_conflicts')
+            if not with_permission(permission=Permission.VIEW_ROOMCONSTRAINTS):
+                self.fields.pop('venue_constraints')
+
+            if not with_permission(permission=Permission.VIEW_DECODED_TEAMS) and t.pref('team_code_names') in ('admin-tooltips-code', 'admin-tooltips-real', 'everywhere'):
                 self.fields.pop('institution')
                 self.fields.pop('use_institution_prefix')
                 self.fields.pop('reference')
                 self.fields.pop('short_reference')
                 self.fields.pop('short_name')
                 self.fields.pop('long_name')
-            elif not t.pref('show_team_institutions'):
+            elif not with_permission(permission=Permission.VIEW_PARTICIPANT_INST) and not t.pref('show_team_institutions'):
                 self.fields.pop('institution')
                 self.fields.pop('use_institution_prefix')
+
             if not t.pref('public_break_categories'):
                 self.fields.pop('break_categories')
 
@@ -732,7 +799,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
 class InstitutionSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='api-global-institution-detail')
-    region = fields.CreatableSlugRelatedField(slug_field='name', queryset=Region.objects.all(), required=False)
+    region = fields.CreatableSlugRelatedField(slug_field='name', queryset=Region.objects.all(), required=False, allow_null=True)
     venue_constraints = VenueConstraintSerializer(many=True, required=False)
 
     class Meta:
@@ -743,7 +810,9 @@ class InstitutionSerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
 
         if not is_staff(kwargs.get('context')):
-            self.fields.pop('venue_constraints')
+            with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=kwargs['context']['tournament'])
+            if not with_permission(permission=Permission.VIEW_ROOMCONSTRAINTS):
+                self.fields.pop('venue_constraints')
 
     def create(self, validated_data):
         venue_constraints = validated_data.pop('venue_constraints', [])
@@ -785,8 +854,10 @@ class PerTournamentInstitutionSerializer(InstitutionSerializer):
         super().__init__(*args, **kwargs)
 
         if not is_staff(kwargs.get('context')):
-            self.fields.pop('teams')
-            self.fields.pop('adjudicators')
+            with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=kwargs['context']['tournament'])
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_INST):
+                self.fields.pop('teams')
+                self.fields.pop('adjudicators')
 
 
 class VenueSerializer(serializers.ModelSerializer):
@@ -887,10 +958,20 @@ class DebateAdjudicatorSerializer(serializers.Serializer):
 class RoundPairingSerializer(serializers.ModelSerializer):
     class DebateTeamSerializer(serializers.ModelSerializer):
         team = fields.TournamentHyperlinkedRelatedField(view_name='api-team-detail', queryset=Team.objects.all())
+        side = fields.SideChoiceField(required=False)
 
         class Meta:
             model = DebateTeam
             fields = ('team', 'side')
+
+        def save(self, **kwargs):
+            kwargs['side'] = kwargs.get('side', kwargs['seq'])
+            return super().save(**kwargs)
+
+    class PairingLinksSerializer(serializers.Serializer):
+        ballots = fields.RoundHyperlinkedIdentityField(
+            view_name='api-ballot-list',
+            lookup_field='pk', lookup_url_kwarg='debate_pk')
 
     url = fields.RoundHyperlinkedIdentityField(view_name='api-pairing-detail', lookup_url_kwarg='debate_pk')
     venue = fields.TournamentHyperlinkedRelatedField(view_name='api-venue-detail', queryset=Venue.objects.all(),
@@ -898,28 +979,33 @@ class RoundPairingSerializer(serializers.ModelSerializer):
     teams = DebateTeamSerializer(many=True, source='debateteam_set')
     adjudicators = DebateAdjudicatorSerializer(required=False, allow_null=True)
 
+    _links = PairingLinksSerializer(source='*', read_only=True)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if not is_staff(kwargs.get('context')):
-            self.fields.pop('bracket')
-            self.fields.pop('room_rank')
-            self.fields.pop('importance')
-            self.fields.pop('result_status')
+            with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=kwargs['context']['tournament'])
+            if not with_permission(permission=Permission.VIEW_ADMIN_DRAW):
+                self.fields.pop('bracket')
+                self.fields.pop('room_rank')
+                self.fields.pop('importance')
+                self.fields.pop('result_status')
 
     class Meta:
         model = Debate
         exclude = ('round', 'flags')
 
     def create(self, validated_data):
-        teams_data = validated_data.pop('debateteam_set')
+        teams_data = validated_data.pop('debateteam_set', [])
         adjs_data = validated_data.pop('adjudicators', None)
 
         validated_data['round'] = self.context['round']
         debate = super().create(validated_data)
 
-        teams = self.DebateTeamSerializer(many=True)
-        teams._validated_data = teams_data  # Data was already validated
-        teams.save(debate=debate)
+        teams = self.DebateTeamSerializer()
+        for i, team in enumerate(teams_data):
+            teams._validated_data = teams_data  # Data was already validated
+            teams.save(debate=debate, seq=i)
 
         if adjs_data is not None:
             adjudicators = DebateAdjudicatorSerializer()
@@ -1091,7 +1177,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
         class SheetSerializer(serializers.Serializer):
 
             class TeamResultSerializer(serializers.Serializer):
-                side = serializers.ChoiceField(choices=DebateTeam.Side.choices)
+                side = fields.SideChoiceField(required=False)
                 points = serializers.IntegerField(required=False)
                 win = serializers.BooleanField(required=False)
                 score = serializers.FloatField(required=False, allow_null=True)
@@ -1102,6 +1188,13 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                 )
 
                 class SpeechSerializer(serializers.Serializer):
+                    class CriteriaSerializer(serializers.Serializer):
+                        criterion = fields.TournamentHyperlinkedRelatedField(
+                            view_name='api-score-criteria-detail',
+                            queryset=ScoreCriterion.objects.all(),
+                        )
+                        score = serializers.FloatField()
+
                     ghost = serializers.BooleanField(required=False, help_text=SpeakerScore._meta.get_field('ghost').help_text)
                     score = serializers.FloatField()
                     rank = serializers.IntegerField(required=False)
@@ -1111,6 +1204,8 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                         queryset=Speaker.objects.all(),
                         tournament_field='team__tournament',
                     )
+
+                    criteria = CriteriaSerializer(required=False, many=True)
 
                     def save(self, **kwargs):
                         """Requires `result`, `side`, `seq`, and `adjudicator` as extra"""
@@ -1126,6 +1221,8 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                         result.set_score(*speaker_args, self.validated_data['score'])
                         if kwargs.get('rank') is not None:
                             result.set_speaker_rank(*speaker_args, self.validated_data['rank'])
+                        for criterion_score in self.validated_data.get('criteria', []):
+                            result.set_criterion_score(*speaker_args, criterion_score.criterion, criterion_score.score)
 
                         return result
 
@@ -1150,9 +1247,10 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
 
                 def save(self, **kwargs):
                     result = kwargs['result']
+                    side = self.validated_data.get('side', kwargs['seq'])
 
-                    if result.get_scoresheet_class().uses_declared_winners and self.validated_data.get('win', False):
-                        args = [self.validated_data['side']]
+                    if result.scoresheet_class.uses_declared_winners and self.validated_data.get('win', False):
+                        args = [side]
                         if kwargs.get('adjudicator') is not None and not result.ballotsub.single_adj:
                             args.insert(0, kwargs.get('adjudicator'))
                         result.add_winner(*args)
@@ -1162,7 +1260,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                         speech_serializer._validated_data = speech
                         speech_serializer.save(
                             result=result,
-                            side=self.validated_data['side'],
+                            side=side,
                             seq=i,
                             adjudicator=kwargs.get('adjudicator'),
                         )
@@ -1186,16 +1284,16 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                 debate = self.context.get('debate')
                 if len(value) != debate.debateteam_set.count():
                     raise serializers.ValidationError('Incorrect number of teams')
-                for team in value:
-                    if debate.get_team(team['side']) != team['team']:
+                for i, team in enumerate(value):
+                    if debate.get_team(i) != team['team']:
                         raise serializers.ValidationError('Inconsistent team')
                 return value
 
             def save(self, **kwargs):
                 team_serializer = self.TeamResultSerializer(context=self.context)
-                for team in self.validated_data.get('teams', []):
+                for i, team in enumerate(self.validated_data.get('teams', [])):
                     team_serializer._validated_data = team
-                    team_serializer.save(result=kwargs['result'], adjudicator=self.validated_data.get('adjudicator'))
+                    team_serializer.save(result=kwargs['result'], adjudicator=self.validated_data.get('adjudicator'), seq=i)
                 return kwargs['result']
 
         sheets = SheetSerializer(many=True, required=True)
@@ -1398,11 +1496,22 @@ class TeamRoundScoresSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name='api-users-detail')
+
+    class TournamentPermissionsSerializer(serializers.Serializer):
+        tournament = serializers.HyperlinkedIdentityField(view_name='api-tournament-detail', lookup_field='slug', lookup_url_kwarg='tournament_slug')
+        groups = fields.TournamentHyperlinkedRelatedField(many=True, view_name='api-group-detail', queryset=Group.objects.all(), default=[])
+        permissions = serializers.ListField(child=serializers.ChoiceField(choices=Permission.choices), required=False)
+
+    url = serializers.HyperlinkedIdentityField(view_name='api-user-detail')
+    tournaments = TournamentPermissionsSerializer(many=True, required=False)
 
     class Meta:
         model = get_user_model()
-        fields = ('url', 'id', 'username', 'password', 'email', 'is_staff', 'is_superuser', 'is_active')
+        fields = ('id', 'url', 'username', 'password', 'is_superuser', 'is_staff', 'email', 'is_active', 'date_joined', 'last_login', 'tournaments')
+        read_only_fields = ('date_joined', 'last_login')
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
 
     def create(self, validated_data):
         user = self.Meta.model(**validated_data)
@@ -1410,3 +1519,19 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    url = fields.TournamentHyperlinkedIdentityField(view_name='api-group-detail')
+
+    class Meta:
+        model = Group
+        exclude = ('tournament',)
+
+
+class ScoreCriterionSerializer(serializers.ModelSerializer):
+    url = fields.TournamentHyperlinkedIdentityField(view_name='api-score-criteria-detail')
+
+    class Meta:
+        model = ScoreCriterion
+        exclude = ('tournament',)

@@ -39,8 +39,8 @@ parser.add_argument(
     help="Git branch to push (defaults to current branch)")
 
 parser.add_argument(
-    "--pg-plan", "--postgresql-plan", type=str, default="mini",
-    help="Heroku Postgres plan (default mini)")
+    "--pg-plan", "--postgresql-plan", type=str, default="essential-0",
+    help="Heroku Postgres plan (default essential-0)")
 
 parser.add_argument(
     "--web-dynos", type=str, default="1",

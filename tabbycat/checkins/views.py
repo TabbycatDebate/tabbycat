@@ -15,6 +15,7 @@ from options.utils import use_team_code_names
 from participants.models import Person, Speaker
 from participants.serializers import InstitutionSerializer
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
+from users.permissions import Permission
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import PostOnlyRedirectView
@@ -37,6 +38,7 @@ class CheckInPreScanView(TournamentMixin, TemplateView):
 
 class AdminCheckInPreScanView(AdministratorMixin, CheckInPreScanView):
     scan_view = 'admin-checkin-scan'
+    edit_permission = Permission.EDIT_PARTICIPANT_CHECKIN
 
 
 class AssistantCheckInPreScanView(AssistantMixin, CheckInPreScanView):
@@ -63,9 +65,11 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
     page_title = _("People's Check-In Statuses")
     window_preference = 'checkin_window_people'
 
+    edit_permission = Permission.EDIT_PARTICIPANT_CHECKIN
+
     def get_context_data(self, **kwargs):
 
-        team_codes = use_team_code_names(self.tournament, admin=self.for_admin)
+        team_codes = use_team_code_names(self.tournament, admin=self.for_admin, user=self.request.user)
         kwargs["team_codes"] = json.dumps(team_codes)
 
         adjudicators = []
@@ -104,6 +108,8 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
 class AdminCheckInPeopleStatusView(AdministratorMixin, CheckInPeopleStatusView):
     scan_view = 'admin-checkin-scan'
+    view_permission = Permission.VIEW_CHECKIN
+    edit_permission = Permission.EDIT_PARTICIPANT_CHECKIN
 
 
 class AssistantCheckInPeopleStatusView(AssistantMixin, CheckInPeopleStatusView):
@@ -138,6 +144,8 @@ class CheckInVenuesStatusView(BaseCheckInStatusView):
 
 class AdminCheckInVenuesStatusView(AdministratorMixin, CheckInVenuesStatusView):
     scan_view = 'admin-checkin-scan'
+    view_permission = Permission.VIEW_CHECKIN
+    edit_permission = Permission.EDIT_ROOM_CHECKIN
 
 
 class AssistantCheckInVenuesStatusView(AssistantMixin, CheckInVenuesStatusView):
@@ -192,7 +200,7 @@ class CheckInIdentifiersView(SegregatedCheckinsMixin, TemplateView):
 
 
 class AdminCheckInIdentifiersView(AdministratorMixin, CheckInIdentifiersView):
-    pass
+    view_permission = Permission.VIEW_CHECKIN
 
 
 class AssistantCheckInIdentifiersView(AssistantMixin, CheckInIdentifiersView):
@@ -201,14 +209,15 @@ class AssistantCheckInIdentifiersView(AssistantMixin, CheckInIdentifiersView):
 
 class AdminCheckInGenerateView(AdministratorMixin, LogActionMixin,
                                TournamentMixin, PostOnlyRedirectView):
+    edit_permission = Permission.VIEW_CHECKIN
 
     def get_action_log_type(self):
         if self.kwargs["kind"] == "speakers":
-            return ActionLogEntry.ACTION_TYPE_CHECKIN_SPEAK_GENERATE
+            return ActionLogEntry.ActionType.CHECKIN_SPEAK_GENERATE
         elif self.kwargs["kind"] == "adjudicators":
-            return ActionLogEntry.ACTION_TYPE_CHECKIN_ADJ_GENERATE
+            return ActionLogEntry.ActionType.CHECKIN_ADJ_GENERATE
         elif self.kwargs["kind"] == "venues":
-            return ActionLogEntry.ACTION_TYPE_CHECKIN_VENUES_GENERATE
+            return ActionLogEntry.ActionType.CHECKIN_VENUES_GENERATE
 
     # Providing tournament_slug_url_kwarg isn't working for some reason; so use:
     def get_redirect_url(self, *args, **kwargs):
@@ -247,7 +256,7 @@ class CheckInPrintablesView(SegregatedCheckinsMixin, TemplateView):
 
 
 class AdminCheckInPrintablesView(AdministratorMixin, CheckInPrintablesView):
-    pass
+    view_permission = Permission.VIEW_CHECKIN
 
 
 class AssistantCheckInPrintablesView(AssistantMixin, CheckInPrintablesView):

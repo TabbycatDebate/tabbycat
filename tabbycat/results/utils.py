@@ -39,7 +39,7 @@ def readable_ballotsub_result(debateresult):
     use_codes = use_team_code_names(t, True)
 
     try:
-        if t.pref('teams_in_debate') == 'two':
+        if t.pref('teams_in_debate') == 2:
             result_winner = _("%(team)s (%(side)s) won") % get_display_name(debateresult.winning_dt(), t, use_codes)
             # Translators: The team here is the losing team
             result = _("vs %(team)s (%(side)s)") % get_display_name(debateresult.losing_dt(), t, use_codes)
@@ -75,15 +75,6 @@ def readable_ballotsub_result(debateresult):
         result = ""
 
     return result_winner, result
-
-
-def set_float_or_int(number, step_value):
-    """Used to ensure the values sent through to the frontend <input> are
-    either Ints or Floats such that the validation can handle them properly"""
-    if step_value.is_integer():
-        return int(number)
-    else:
-        return number
 
 
 def get_result_status_stats(round):
@@ -156,7 +147,7 @@ def side_and_position_names(tournament):
     """
     sides = [get_side_name(tournament, side, 'full').title() for side in tournament.sides]
 
-    if tournament.pref('teams_in_debate') == 'bp' \
+    if tournament.pref('teams_in_debate') == 4 \
             and tournament.last_substantive_position == 2 \
             and tournament.reply_position is None:
 

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:57\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:54\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese\n"
 "Language: pt_PT\n"
@@ -524,6 +524,10 @@ msgid "This tournament expects you to submit feedback on all of the adjudicators
 msgstr "Este torneio espera que você avalie todos os juízes na mesa (incluindo aprendizes)."
 
 #: adjfeedback/templates/enter_feedback.html
+msgid "This tournament doesn't expect you to submit feedback on any of the adjudicators on the panel (including trainees)."
+msgstr ""
+
+#: adjfeedback/templates/enter_feedback.html
 msgid "There are some problems with this feedback submission. Please review and correct them."
 msgstr "Há alguns problemas com a submissão desta avaliação. Por favor, reveja e conserte-os."
 
@@ -693,6 +697,11 @@ msgstr ""
 #, python-format
 msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects all adjudicators (including trainees) to submit feedback on every other member of the panel (including trainees)."
 msgstr "A atual <a href=\"%(option_url)s\" class=\"alert-link\">configuração de avaliação</a> permite e espera que todos os juízes (incluindo os aprendizes) enviem avaliações sobre todos os outros membros da mesa (incluindo aprendizes)."
+
+#: adjfeedback/templates/feedback_overview.html
+#, python-format
+msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> disallows adjudicators to submit feedback on other members of the panel (including trainees)."
+msgstr ""
 
 #: adjfeedback/templates/feedback_overview.html
 #, python-format

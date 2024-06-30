@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -348,11 +348,11 @@ msgid "There are no motions for this round entered into Tabbycat."
 msgstr ""
 
 #: motions/utils.py
-msgid "Not all latest ballots list the same motion, so could not be merged."
+msgid "Not all latest ballots have the same motion. The correct motion must be set manually."
 msgstr ""
 
 #: motions/utils.py
-msgid "Motion vetos are inconsistent, so could not be merged."
+msgid "Motion vetos are inconsistent; they must be set manually."
 msgstr ""
 
 #: motions/views.py

@@ -1,5 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from html2text import html2text
+
+from utils.models import UniqueConstraint
 
 
 class Motion(models.Model):
@@ -27,6 +30,17 @@ class Motion(models.Model):
     def __str__(self):
         return self.text
 
+    def clean_fields(self, exclude=None):
+        super().clean_fields(exclude=exclude)
+        if html2text(self.info_slide or '').isspace() and 'info_slide' not in exclude:
+            self.info_slide = ''
+
+    @property
+    def info_slide_plain(self):
+        if (self.info_slide or '').startswith('<p'):
+            return html2text(self.info_slide).strip()
+        return self.info_slide
+
 
 class DebateTeamMotionPreference(models.Model):
     """Represents a motion preference submitted by a debate team."""
@@ -41,7 +55,7 @@ class DebateTeamMotionPreference(models.Model):
         verbose_name=_("ballot submission"))
 
     class Meta:
-        unique_together = [('debate_team', 'preference', 'ballot_submission')]
+        constraints = [UniqueConstraint(fields=['debate_team', 'preference', 'ballot_submission'])]
         verbose_name = _("debate team motion preference")
         verbose_name_plural = _("debate team motion preferences")
 
@@ -68,8 +82,8 @@ class RoundMotion(models.Model):
         help_text=_("The order in which motions are displayed"))
 
     class Meta:
+        constraints = [UniqueConstraint(fields=['round', 'seq'])]
         ordering = ('round', 'seq')
-        unique_together = ('round', 'seq')
         verbose_name = _("round motion")
         verbose_name_plural = _("round motions")
 

@@ -146,7 +146,7 @@ class BallotsEmailGenerator(NotificationContextGenerator):
 
             for side, (side_name, pos_names) in zip(tournament.sides, side_and_position_names(tournament)):
                 side_string = ""
-                if tournament.pref('teams_in_debate') == 'bp':
+                if tournament.pref('teams_in_debate') == 4:
                     side_string += _("<li>%(side)s: %(team)s (%(points)d points with %(speaks)s total speaks)")
                     points = 4 - scoresheet.rank(side)
                 else:
