@@ -116,7 +116,7 @@ msgstr "crwdns32416:0%(teams)scrwdne32416:0"
 #: results/forms.py
 #, python-format
 msgid "The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_margin).1f)."
-msgstr "crwdns32418:0%(margin)crwdnd32418:0%(max_margin)crwdne32418:0"
+msgstr "crwdns32418:0%(margin).1fcrwdnd32418:0%(max_margin).1fcrwdne32418:0"
 
 #: results/forms.py
 msgid "Ranks cannot be tied."
@@ -139,7 +139,7 @@ msgstr "crwdns51752:0%(adjudicator)scrwdne51752:0"
 #: results/forms.py
 #, python-format
 msgid "The margin (%(margin).1f) in the ballot of adjudicator %(adjudicator)s exceeds the maximum allowable margin (%(max_margin).1f)."
-msgstr "crwdns51402:0%(margin)crwdnd51402:0%(adjudicator)scrwdnd51402:0%(max_margin)crwdne51402:0"
+msgstr "crwdns51402:0%(margin).1fcrwdnd51402:0%(adjudicator)scrwdnd51402:0%(max_margin).1fcrwdne51402:0"
 
 #: results/forms.py
 msgid "Sides for this debate are not confirmed. You can't save a result for this debate until the sides have been confirmed in the draw."

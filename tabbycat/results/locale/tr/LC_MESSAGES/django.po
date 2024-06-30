@@ -886,7 +886,7 @@ msgstr "Maça Göre Görüntüle"
 #: results/templates/public_results_index.html
 #, python-format
 msgid "Results for %(round)s"
-msgstr "%(tur)s için sonuçlar"
+msgstr "%(round)s için sonuçlar"
 
 #: results/templates/public_results_not_available.html
 #: results/templates/public_results_silent.html
@@ -1067,7 +1067,7 @@ msgstr "%(matchup)s için ballotda yapılan düzenlemeler kaydedildi."
 #: results/views.py
 #, python-format
 msgid "Thanks, %(user)s! Your ballot for %(debate)s has been recorded."
-msgstr "Teşekkürler, %(user)! %(debate)s için ballotunuz kaydedildi."
+msgstr "Teşekkürler, %(user)s! %(debate)s için ballotunuz kaydedildi."
 
 #: results/views.py
 msgid "The draw for this round hasn't been released yet."
