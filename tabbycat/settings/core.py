@@ -22,7 +22,7 @@ SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.9.0-dev'
+TABBYCAT_VERSION = '2.9.0'
 TABBYCAT_CODENAME = 'Ragdoll'
 READTHEDOCS_VERSION = 'v2.9.0'
 
@@ -58,6 +58,7 @@ django.conf.locale.LANG_INFO = LANG_INFO
 
 LANGUAGES = [
     ('ar', _('Arabic')),
+    ('ast', _('Asturian')),
     ('bn', _('Bengali')),
     ('bg', _('Bulgarian')),
     ('ca', _('Catalan')),

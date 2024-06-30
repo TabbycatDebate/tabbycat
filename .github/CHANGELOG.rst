@@ -4,7 +4,7 @@ Change Log
 
 2.9.0 (Ragdoll)
 ---------
-*Release date: TBD*
+*Release date: 1 July 2024*
 
 - Added a setting to expect no feedback from teams or adjudicators. Thanks Daan Koning!
 - Allowed scores to be given in any increments.
