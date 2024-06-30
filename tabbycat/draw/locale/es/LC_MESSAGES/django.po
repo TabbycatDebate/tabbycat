@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:57\n"
+"PO-Revision-Date: 2024-06-30 16:31\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -275,7 +275,7 @@ msgstr "perdió "
 #: draw/models.py
 #, python-format
 msgid "Team %d"
-msgstr ""
+msgstr "Equipo %d"
 
 #: draw/models.py
 msgid "team side allocation"
@@ -417,76 +417,76 @@ msgstr ""
 
 #: draw/templates/admin/draw/debateteam/edit_warning.html
 msgid "Tabbycat requires that there be <strong>exactly</strong> one debate team for each side, and no other debate teams, in each debate. If you edit debate teams in the database, you must ensure that this remains the case. If you don't do this correctly, many pages <strong>will</strong> crash."
-msgstr ""
+msgstr "Tabbycat requiere que todos los debates tengan <strong>exactamente</strong> un equipo de debate por cada lado, y ningún otro equipo de debate, en todo momento. Si borra cualquier equipo de debate, debe entonces reemplazar cada uno con un nuevo equipo en el mismo debate, o borrar los asociados al debate. Si no hace esto correctamente, muchas paginas <strong>se bloquearan</strong>."
 
 #: draw/templates/draw_alerts_adjudicators.html
 #, python-format
 msgid "1 debate does not have a chair."
 msgid_plural "%(ndebates)s debates do not have a chair."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 Debate no tiene juez."
+msgstr[1] "%(ndebates)s Debates no tienen juez."
 
 #: draw/templates/draw_alerts_adjudicators.html
 #, python-format
 msgid "<strong>%(adjudicators)s</strong> is adjudicating multiple debates."
 msgid_plural "The following <strong>%(nadjs)s</strong> adjudicators are adjudicating multiple debates: <strong>%(adjudicators)s</strong>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<strong>%(adjudicators)s</strong> Está adjudicando múltiples debates."
+msgstr[1] "Los siguientes adjudicadores <strong>%(nadjs)s</strong> no están disponibles en esta ronda, pero están asignados a los debates: <strong>%(adjudicators)s</strong>"
 
 #: draw/templates/draw_alerts_adjudicators.html
 #, python-format
 msgid "1 debate has a panel with an even number of adjudicators."
 msgid_plural "%(ndebates)s debates have panels with an even number of adjudicators."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 debate tiene un panel con un número uniforme de adjudicadores."
+msgstr[1] "Los debates de %(ndebates)s tienen paneles con un número par de adjudicadores."
 
 #: draw/templates/draw_alerts_adjudicators.html
 #, python-format
 msgid "1 debate has an adjudicator conflict."
 msgid_plural "%(ndebates)s debates have adjudicator conflicts."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 debate tiene un conflicto de adjudicadores."
+msgstr[1] "Los debates de %(ndebates)s tienen conflictos adjudicadores."
 
 #: draw/templates/draw_alerts_adjudicators.html
 #, python-format
 msgid "<strong>%(adjudicators)s</strong> is unavailable this round, but is assigned to a debate."
 msgid_plural "The following <strong>%(nadjs)s</strong> adjudicators are unavailable this round, but are assigned to debates: <strong>%(adjudicators)s</strong>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<strong>%(adjudicators)s</strong> No está disponible en esta ronda, pero está asignado a un debate."
+msgstr[1] "Los siguientes adjudicadores <strong>%(nadjs)s</strong> no están disponibles en esta ronda, pero están asignados a debates: <strong>%(adjudicators)s</strong>"
 
 #: draw/templates/draw_alerts_adjudicators.html
 #, python-format
 msgid "1 adjudicator is available but not assigned to a debate."
 msgid_plural "%(ndebates)s adjudicators are available but not assigned to a debate."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 adjudicador está disponible pero no asignado a un debate."
+msgstr[1] "Los adjudicadores %(ndebates)s están disponibles pero no están asignados a un debate."
 
 #: draw/templates/draw_alerts_teams.html
 #, python-format
 msgid "<strong>%(teams)s</strong> is competing in multiple debates."
 msgid_plural "The following <strong>%(nteams)s</strong> teams are competing in multiple debates: <strong>%(teams)s</strong>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<strong>%(teams)s</strong> está compitiendo en múltiples debates."
+msgstr[1] "Los siguientes equipos <strong>%(nteams)s</strong> compiten en múltiples debates: <strong>%(teams)s</strong>"
 
 #: draw/templates/draw_alerts_venues.html
 #, python-format
 msgid "1 debate does not have a room."
 msgid_plural "%(ndebates)s debates do not have a room."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 Debate no tiene sala."
+msgstr[1] "%(ndebates)s Debates no tienen sala."
 
 #: draw/templates/draw_alerts_venues.html
 #, python-format
 msgid "There are multiple debates in <strong>%(rooms)s</strong>."
 msgid_plural "The following <strong>%(ndebates)s</strong> rooms have multiple debates in them: <strong>%(rooms)s</strong>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Hay múltiples debates en <strong>%(rooms)s</strong>."
+msgstr[1] "Las siguientes salas <strong>%(ndebates)s</strong> tienen múltiples debates en ellas: <strong>%(rooms)s</strong>"
 
 #: draw/templates/draw_alerts_venues.html
 #, python-format
 msgid "1 debate has a room constraint violation."
 msgid_plural "%(ndebates)s debates have room constraint violations."
-msgstr[0] ""
+msgstr[0] "1 Debate tiene violaciones de restricciones de sala."
 msgstr[1] ""
 
 #: draw/templates/draw_base.html
