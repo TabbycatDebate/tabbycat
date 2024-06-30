@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:25-0400\n"
-"PO-Revision-Date: 2023-02-12 06:27\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-25 15:35\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Language: it_IT\n"
@@ -21,202 +21,202 @@ msgstr ""
 #, python-format
 msgid "%(count)d debate was marked as having its sides confirmed."
 msgid_plural "%(count)d debates were marked as having their sides confirmed."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Il dibattito %(count)d è stato marcato con il side da dibattere confermato."
+msgstr[1] "%(count)d dibattiti sono stati marcato con il side da dibattere confermato."
 
 #: draw/admin.py
 msgid "Mark sides as not confirmed"
-msgstr ""
+msgstr "Imposta il side come non confermato"
 
 #: draw/admin.py
 #, python-format
 msgid "%(count)d debate was marked as having its sides not confirmed."
 msgid_plural "%(count)d debates were marked as having their sides not confirmed."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)d dibattito è stato contrassegnato con il side da dibattere non confermato."
+msgstr[1] "%(count)d dibattiti sono stati contrassegnati con il side da dibattere non confermato."
 
 #: draw/apps.py draw/views.py
 msgid "Draw"
-msgstr ""
+msgstr "Sorteggio"
 
 #: draw/generator/__init__.py
 msgid "Too many swaps"
-msgstr ""
+msgstr "Troppi scambi"
 
 #: draw/generator/__init__.py
 msgid "One-up-one-down (history)"
-msgstr ""
+msgstr "Uno su, uno giu (cronologia)"
 
 #: draw/generator/__init__.py
 msgid "One-up-one-down (institution)"
-msgstr ""
+msgstr "Uno su, uno giu (istituto)"
 
 #: draw/generator/__init__.py
 msgid "One-up-one-down (to accommodate)"
-msgstr ""
+msgstr "Uno su, uno giu (per sistemare)"
 
 #: draw/generator/__init__.py
 msgid "Bubble up (history)"
-msgstr ""
+msgstr "Bolla su (cronologia)"
 
 #: draw/generator/__init__.py
 msgid "Bubble down (history)"
-msgstr ""
+msgstr "Bolla giu (cronologia)"
 
 #: draw/generator/__init__.py
 msgid "Bubble up (institution)"
-msgstr ""
+msgstr "Bolla su (istituto)"
 
 #: draw/generator/__init__.py
 msgid "Bubble down (institution)"
-msgstr ""
+msgstr "Bolla giù (istituto)"
 
 #: draw/generator/__init__.py
 msgid "Bubble up (to accommodate)"
-msgstr ""
+msgstr "Bolla su (per sistemare)"
 
 #: draw/generator/__init__.py
 msgid "Bubble down (to accommodate)"
-msgstr ""
+msgstr "Bolla giu (per sistemare)"
 
 #: draw/generator/__init__.py
 msgid "Can't bubble up/down"
-msgstr ""
+msgstr "Impossibile fare bolla su/giù"
 
 #: draw/generator/__init__.py
 msgid "Pull-up team"
-msgstr ""
+msgstr "Squadra in pull-up"
 
 #: draw/generator/bpelimination.py draw/generator/elimination.py
 #, python-format
 msgid "%d debates in the previous round don't have a result."
-msgstr ""
+msgstr "%d dibattiti nel round precedente non hanno un risultato."
 
 #: draw/generator/bpelimination.py
 #, python-format
 msgid "%d debates in the previous round don't have exactly two teams advancing."
-msgstr ""
+msgstr "%d dibattiti nel round precedente non hanno esattamente due squadre in avanzamento."
 
 #: draw/generator/bpelimination.py
 #, python-format
 msgid "The room ranks of the partial elimination round indicate that an odd number of teams (%(nbypassing)d) bypassed it."
-msgstr ""
+msgstr "I ranghi delle aule del round di eliminazione parziale indicano che un numero dispari di squadre (%(nbypassing)d) lo ha bypassato."
 
 #: draw/generator/bpelimination.py
 #, python-format
 msgid "The room ranks of the partial elimination round indicate that %(nbypassing)d teams bypassed it, but %(nadvancing)d teams advanced from it."
-msgstr ""
+msgstr "I ranghi di stanza del round di eliminazione parziale indicano che le squadre %(nbypassing)d lo hanno bypassato, ma le squadre %(nadvancing)d hanno avanzato."
 
 #: draw/generator/bpelimination.py
 #, python-format
 msgid "The number of debates (%d) in the last round is not a power of two."
-msgstr ""
+msgstr "Il numero di dibattiti (%d) nell'ultimo round non è una potenza di due."
 
 #: draw/generator/bphungarian.py
 #, python-format
 msgid "The Rényi order can't be negative, and it's currently set to %(alpha)f."
-msgstr ""
+msgstr "L'ordine di Rényi non può essere negativo, ed è attualmente impostato su %(alpha)f."
 
 #: draw/generator/common.py
 #, python-format
 msgid "The number of teams presented for the draw was not a multiple of %(num)d."
-msgstr ""
+msgstr "Il numero di squadre presentate per il sorteggio non era un multiplo di %(num)d."
 
 #: draw/generator/common.py
 msgid "There were no teams for the draw."
-msgstr ""
+msgstr "Non c'erano squadre per il pareggio."
 
 #: draw/generator/elimination.py
 #, python-format
 msgid "There are only %d teams breaking in this category; there need to be at least two to generate an elimination round draw."
-msgstr ""
+msgstr "Ci sono solo%d squadre di break in questa categoria; ci devono essere almeno due squadre per generare un round ad eliminazione."
 
 #: draw/generator/elimination.py
 #, python-format
 msgid "The number of teams (%d) in this round is not a power of two."
-msgstr ""
+msgstr "Il numero di squadre (%d) in questo round non è una potenza di due."
 
 #: draw/generator/powerpair.py
 #, python-format
 msgid "%(noninteger)d out of %(total)d teams have a noninteger first metric in the team standings. Intermediate brackets require the first team standings metric to be an integer (typically points or wins)."
-msgstr ""
+msgstr "%(noninteger)d di %(total)d squadre hanno una prima metrica non intera nella classifica del team. Le fasce intermedie richiedono che la prima nella classifica dei team abbia un numero intero (di solito punti o vittorie)."
 
 #: draw/generator/random.py
 #, python-format
 msgid "There were %(aff_count)d affirmative teams but %(neg_count)d negative teams."
-msgstr ""
+msgstr "Ci sono stati %(aff_count)d squadre affermative ma %(neg_count)d squadre negative."
 
 #: draw/generator/random.py
 msgid "One or more teams had an allocated side that wasn't affirmative or negative."
-msgstr ""
+msgstr "Una o più squadre avevano un lato assegnato che non era affermativo o negativo."
 
 #: draw/manager.py
 #, python-format
 msgid "The draw type %(type)s can't be used with two-team formats."
-msgstr ""
+msgstr "Il tipo di sorteggio %(type)s non può essere usato con formati a due squadre."
 
 #: draw/manager.py
 #, python-format
 msgid "The draw type %(type)s can't be used with British Parliamentary."
-msgstr ""
+msgstr "Il tipo di sorteggio %(type)s non può essere usato con il British Parliamentary."
 
 #: draw/manager.py
 #, python-format
 msgid "Unrecognised \"teams in debate\" option: %(option)s"
-msgstr ""
+msgstr "Opzione \"team in dibattito\" non riconosciuta: %(option)s"
 
 #: draw/manager.py
 #, python-format
 msgid "The break size (%(size)d) for this break category was invalid. It must be either six times or four times a power of two."
-msgstr ""
+msgstr "La dimensione del break (%(size)d) per questa categoria di break non è valida. Deve essere sei volte o quattro volte una potenza di due."
 
 #: draw/models.py
 msgid "none"
-msgstr ""
+msgstr "nessuno"
 
 #: draw/models.py
 msgid "postponed"
-msgstr ""
+msgstr "posticipata"
 
 #: draw/models.py
 msgid "draft"
-msgstr ""
+msgstr "bozza"
 
 #: draw/models.py
 msgid "confirmed"
-msgstr ""
+msgstr "confermato"
 
 #: draw/models.py
 msgid "round"
-msgstr ""
+msgstr "round"
 
 #: draw/models.py
 msgid "room"
-msgstr ""
+msgstr "aula"
 
 #: draw/models.py
 msgid "bracket"
-msgstr ""
+msgstr "gruppo"
 
 #: draw/models.py
 msgid "room rank"
-msgstr ""
+msgstr "grado aula"
 
 #: draw/models.py
 msgid "importance"
-msgstr ""
+msgstr "importanza"
 
 #: draw/models.py
 msgid "result status"
-msgstr ""
+msgstr "stato risultati"
 
 #: draw/models.py
 msgid "sides confirmed"
-msgstr ""
+msgstr "side confermati"
 
 #: draw/models.py
 msgid "If unchecked, the sides assigned to teams in this debate are just placeholders."
-msgstr ""
+msgstr "Se non selezionato, i side assegnati a questo dibattito saranno dei semplici segnaposto."
 
 #: draw/models.py
 msgid "debate"
@@ -224,131 +224,117 @@ msgstr "dibattito"
 
 #: draw/models.py
 msgid "debates"
-msgstr ""
+msgstr "dibattiti"
 
 #. Translators: This is appended to a list of teams, e.g. "Auckland
 #. 1, Vic Wellington 1 (sides not confirmed)". Mind the leading
 #. space.
 #: draw/models.py
 msgid " (sides not confirmed)"
-msgstr ""
+msgstr " (side non confermati)"
 
 #. Translators: This goes between teams in a debate, e.g. "Auckland 1
 #. vs Vic Wellington 1". Mind the leading and trailing spaces.
 #: draw/models.py
 msgid " vs "
-msgstr ""
-
-#: draw/models.py
-msgid "affirmative"
-msgstr ""
-
-#: draw/models.py
-msgid "negative"
-msgstr ""
-
-#: draw/models.py
-msgid "opening government"
-msgstr ""
-
-#: draw/models.py
-msgid "opening opposition"
-msgstr ""
-
-#: draw/models.py
-msgid "closing government"
-msgstr ""
-
-#: draw/models.py
-msgid "closing opposition"
-msgstr ""
+msgstr " vs "
 
 #: draw/models.py
 msgid "team"
 msgstr "squadra"
 
 #: draw/models.py
-msgid "side"
-msgstr ""
+msgid "side sequence"
+msgstr "sequenza side"
 
 #: draw/models.py
 msgid "debate team"
-msgstr ""
+msgstr "team di dibattito"
 
 #: draw/models.py
 msgid "debate teams"
-msgstr ""
+msgstr "team di dibattito"
 
 #: draw/models.py
 #, python-format
 msgid "placed %(place)s"
-msgstr ""
+msgstr "posizionato %(place)s"
 
 #: draw/models.py
 msgid "result unknown"
-msgstr ""
+msgstr "risultato sconosciuto"
 
 #: draw/models.py
 msgid "won"
-msgstr ""
+msgstr "vinto"
 
 #: draw/models.py
 msgid "lost"
-msgstr ""
+msgstr "perso"
+
+#: draw/models.py
+#, python-format
+msgid "Team %d"
+msgstr "Squadra %d"
 
 #: draw/models.py
 msgid "team side allocation"
-msgstr ""
+msgstr "allocazione side squadra"
 
 #: draw/models.py
 msgid "team side allocations"
-msgstr ""
+msgstr "allocazione side squadra"
 
 #. Translators: e.g. "Affirmative: Rank", "Government: Draw strength",
 #. "Opening government: Total speaker score", "Closing opposition: Number of firsts"
 #: draw/tables.py
 #, python-format
 msgid "%(side)s: %(metric)s"
-msgstr ""
+msgstr "%(side)s: %(metric)s"
+
+#: draw/tables.py
+msgid "Bye"
+msgstr "Ciao"
 
 #: draw/tables.py
 #, python-format
 msgid "Team %(num)d"
-msgstr ""
+msgstr "Squadra %(num)d"
 
 #: draw/tables.py
 msgid "Room rank of this debate"
-msgstr ""
+msgstr "Rango aula di questo dibattito"
 
 #: draw/tables.py
 msgid "Bracket of this debate"
-msgstr ""
+msgstr "Ramo di questo dibattito"
 
 #: draw/tables.py
 msgid "side history<br>\n"
 "(number of times the team has been on each side before this round)"
-msgstr ""
+msgstr "cronologia side<br>\n"
+"(numero di volte che la squadra è stata in ogni side prima di questo round)"
 
 #. Translators: Abbreviation for "side history"
 #: draw/tables.py
 msgid "SH"
-msgstr ""
+msgstr "CS"
 
 #: draw/tables.py
 msgid "Went from balanced to imbalanced"
-msgstr ""
+msgstr "Andato da equilibrato a squilibrato"
 
 #: draw/tables.py
 msgid "Went from imbalanced to balanced"
-msgstr ""
+msgstr "Andato da squilibrato a equilibrato"
 
 #: draw/tables.py
 msgid "Best improvement possible, still imbalanced"
-msgstr ""
+msgstr "Miglioramento al massimo possibile, ancora squilibrato"
 
 #: draw/tables.py
 msgid "Was imbalanced and still imbalanced"
-msgstr ""
+msgstr "Era squilibrato e lo è ancora"
 
 #: draw/tables.py
 msgid "No metrics in the team standings precedence"
@@ -505,7 +491,7 @@ msgstr[1] ""
 
 #: draw/templates/draw_base.html
 msgid "Availability"
-msgstr ""
+msgstr "Disponibilità"
 
 #: draw/templates/draw_base.html draw/templates/draw_status_draft.html
 msgid "Edit Sides/Matchups"
@@ -554,7 +540,7 @@ msgstr ""
 
 #: draw/templates/draw_display_admin.html
 msgid "View Draw"
-msgstr ""
+msgstr "Visualizza sorteggio"
 
 #: draw/templates/draw_display_admin.html
 #, python-format
@@ -606,23 +592,23 @@ msgstr ""
 
 #: draw/templates/draw_display_admin.html
 msgid "You have not generated a draw for this round yet. There is nothing to release."
-msgstr ""
+msgstr "Non hai ancora generato un sorteggio per questo round. Non c'è nulla da rilasciare."
 
 #: draw/templates/draw_display_admin.html
 msgid "The draw for this round is still in a draft state. Confirm the draw before releasing it."
-msgstr ""
+msgstr "Il sorteggio per questo round è ancora in stato di bozza. Confermare il sorteggio prima di rilasciarlo."
 
 #: draw/templates/draw_display_admin.html
 msgid "Unrelease draw to public"
-msgstr ""
+msgstr "Disattiva il rilascio del sorteggio al pubblico"
 
 #: draw/templates/draw_display_admin.html
 msgid "The draw has been released publicly."
-msgstr ""
+msgstr "Il sorteggio è stato rilasciato pubblicamente."
 
 #: draw/templates/draw_display_admin.html
 msgid "View public draw page"
-msgstr ""
+msgstr "Visualizza pagina pubblica del draw"
 
 #: draw/templates/draw_display_admin.html
 #, python-format
@@ -1093,11 +1079,31 @@ msgid "Rooms were not auto-allocated because there are one or more adjudicator r
 msgstr ""
 
 #: draw/views.py
+msgid "There is no draw."
+msgstr ""
+
+#: draw/views.py
+msgid "The draw had already been confirmed."
+msgstr ""
+
+#: draw/views.py
 msgid "Deleted the draw. You can now recreate it as normal."
 msgstr ""
 
 #: draw/views.py
+msgid "The draw has already been released."
+msgstr ""
+
+#: draw/views.py
+msgid "The draw must be confirmed before being released."
+msgstr ""
+
+#: draw/views.py
 msgid "Released the draw."
+msgstr ""
+
+#: draw/views.py
+msgid "The draw had been unreleased."
 msgstr ""
 
 #: draw/views.py

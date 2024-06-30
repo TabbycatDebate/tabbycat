@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
-"PO-Revision-Date: 2023-02-12 06:15\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 22:00\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -56,8 +56,8 @@ msgid "Format Configuration"
 msgstr "crwdns33102:0crwdne33102:0"
 
 #: tournaments/forms.py
-msgid "Apply a standard set of settings to match a common debate format"
-msgstr "crwdns33104:0crwdne33104:0"
+msgid "Apply a standard set of settings to match a common debate format. These can be changed afterwards and should be checked for your needs."
+msgstr "crwdns52860:0crwdne52860:0"
 
 #: tournaments/forms.py
 msgid "Public Configuration"
@@ -66,6 +66,14 @@ msgstr "crwdns33106:0crwdne33106:0"
 #: tournaments/forms.py
 msgid "Show non-sensitive information on the public-facing side of this site, like draws (once released) and the motions of previous rounds"
 msgstr "crwdns33108:0crwdne33108:0"
+
+#: tournaments/forms.py
+msgid "Participant Data Entry"
+msgstr "crwdns52391:0crwdne52391:0"
+
+#: tournaments/forms.py
+msgid "Whether participants can submit ballots and feedback themselves, and how they do so"
+msgstr "crwdns52393:0crwdne52393:0"
 
 #: tournaments/forms.py
 msgid "<strong>Tabulation:</strong> [list tabulation staff here]<br /><strong>Equity:</strong> [list equity members here]<br /><strong>Organisation:</strong> [list organising committee members here]<br /><strong>Adjudication:</strong> [list chief adjudicators here]"
@@ -198,6 +206,10 @@ msgid "Elimination"
 msgstr "crwdns33156:0crwdne33156:0"
 
 #: tournaments/models.py
+msgid "Seeded"
+msgstr "crwdns52395:0crwdne52395:0"
+
+#: tournaments/models.py
 msgid "Preliminary"
 msgstr "crwdns33158:0crwdne33158:0"
 
@@ -320,16 +332,16 @@ msgid "rounds"
 msgstr "crwdns33208:0crwdne33208:0"
 
 #: tournaments/models.py
-msgid "A round in the elimination stage must have its draw type set to \"Elimination\"."
-msgstr "crwdns33210:0crwdne33210:0"
+msgid "The \"Elimination\" draw type is only for elimination rounds, where it is mandatory."
+msgstr "crwdns52397:0crwdne52397:0"
 
 #: tournaments/models.py
-msgid "A round in the preliminary stage cannot have its draw type set to \"Elimination\"."
-msgstr "crwdns33212:0crwdne33212:0"
+msgid "An elimination round must have a break category and preliminary round must not."
+msgstr "crwdns52399:0crwdne52399:0"
 
 #: tournaments/models.py
-msgid "Elimination rounds must have a break category."
-msgstr "crwdns33214:0crwdne33214:0"
+msgid "Break category must be for the same tournament."
+msgstr "crwdns52401:0crwdne52401:0"
 
 #: tournaments/templates/assistant_tournament_index.html
 msgid "Dashboard"
@@ -387,9 +399,8 @@ msgid "Create New Tournament"
 msgstr "crwdns33246:0crwdne33246:0"
 
 #: tournaments/templates/create_tournament.html
-#, python-format
-msgid "Tabbycat is free to use for non-profit and non-fundraising tournaments (although donations are encouraged). If your tournament is run for profit or for fundraising, please note that there is a <a href=\"%(donations_url)s\">required payment</a>. For more details, see the <a href=\"https://tabbycat.readthedocs.io/en/stable/about/licence.html\"> Tabbycat licence agreement</a>."
-msgstr "crwdns52237:0%(donations_url)scrwdne52237:0"
+msgid "Tabbycat is free to use, although <a href=\"https://opencollective.com/tabbycat\">donations</a> are encouraged."
+msgstr "crwdns52403:0crwdne52403:0"
 
 #: tournaments/templates/create_tournament.html
 msgid "Just trying out Tabbycat?"
@@ -627,6 +638,14 @@ msgid "Email Team Points"
 msgstr "crwdns33372:0crwdne33372:0"
 
 #: tournaments/templates/round_complete_check.html
+msgid "Unmark as Silent"
+msgstr "crwdns52405:0crwdne52405:0"
+
+#: tournaments/templates/round_complete_check.html
+msgid "Mark as Silent"
+msgstr "crwdns52407:0crwdne52407:0"
+
+#: tournaments/templates/round_complete_check.html
 #, python-format
 msgid "Mark %(round)s as Completed"
 msgstr "crwdns51464:0%(round)scrwdne51464:0"
@@ -666,18 +685,13 @@ msgstr[0] "crwdns33380:1%(num_unconfirmed)scrwdne33380:1"
 msgstr[1] "crwdns33380:5%(num_unconfirmed)scrwdne33380:5"
 
 #: tournaments/templates/round_complete_check.html
-#, python-format
-msgid "<p>This round is a silent round.</p> <p> Even though public view of results is enabled, results for <em>this</em> round will still be hidden from public view after completing this round. <p> <p> You can change which rounds are silent in the <a href=\"%(round_changelist_url)s\">Edit Database area</a>. </p>"
-msgstr "crwdns35322:0%(round_changelist_url)scrwdne35322:0"
+msgid "<p>This round is a silent round.</p> <p> Even though public view of results is enabled, results for <em>this</em> round will still be hidden from public view after completing this round. <p> <p> You can change whether this round is silent using the button above. </p>"
+msgstr "crwdns52409:0crwdne52409:0"
 
 #: tournaments/templates/round_complete_check.html
 #, python-format
-msgid "<p><strong> Results for %(round)s will be published online once you mark this round as complete! </strong></p> <p> This round is <em>not</em> a silent round, and public view of results is enabled. </p> <p> If you want to keep the results for just this round hidden, you can mark this round as silent in the <a href=\"%(round_changelist_url)s\">Edit Database area</a>. </p> <p> If you want to disable the public view of results, you can do so in the <a href=\"%(public_features_url)s\">tournament configuration</a>. </p>"
-msgstr "crwdns51474:0%(round)scrwdnd51474:0%(round_changelist_url)scrwdnd51474:0%(public_features_url)scrwdne51474:0"
-
-#: tournaments/templates/set_current_round.html
-msgid "Set Current Round"
-msgstr "crwdns33386:0crwdne33386:0"
+msgid "<p><strong> Results for %(round)s will be published online once you mark this round as complete! </strong></p> <p> This round is <em>not</em> a silent round, and public view of results is enabled. </p> <p> If you want to keep the results for just this round hidden, you can mark this round as silent using the button above. </p> <p> If you want to disable the public view of results, you can do so in the <a href=\"%(public_features_url)s\">tournament configuration</a>. </p>"
+msgstr "crwdns52411:0%(round)scrwdnd52411:0%(public_features_url)scrwdne52411:0"
 
 #: tournaments/templates/set_current_round.html
 msgid "Back to Configuration"
@@ -697,6 +711,11 @@ msgstr "crwdns51478:0%(tournament)scrwdne51478:0"
 #, python-format
 msgid "The tournament <strong>%(tournament)s</strong> has no rounds. You'll need to <a href=\"%(round_changelist_url)s\">add rounds and associate them with this tournament</a> before you can set the current round."
 msgstr "crwdns51480:0%(tournament)scrwdnd51480:0%(round_changelist_url)scrwdne51480:0"
+
+#: tournaments/templates/set_current_round.html
+msgctxt "button"
+msgid "Set Current Rounds"
+msgstr "crwdns52413:0crwdne52413:0"
 
 #: tournaments/templates/set_round_weights.html
 msgctxt "page title"
@@ -764,8 +783,8 @@ msgstr "crwdns33422:0crwdne33422:0"
 
 #: tournaments/templates/tournament_index.html
 #, python-format
-msgid "We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would make a donation to the project in order to support its ongoing development and maintenance. For a tournament of this size, we suggest a donation of <strong>$%(amount)s</strong>. Note that if your tournament is run for profit, or for fundraising, making this payment is a mandatory condition of Tabbycat's software license. <a href=\"%(url)s\">Learn more about donating.</a>"
-msgstr "crwdns33424:0%(amount)scrwdnd33424:0%(url)scrwdne33424:0"
+msgid "We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would make a donation to the project in order to support its ongoing development and maintenance. For a tournament of this size, we suggest a donation of <strong>$%(amount)s</strong>. <a href=\"https://opencollective.com/tabbycat\">Learn more about donating.</a>"
+msgstr "crwdns52415:0%(amount)scrwdne52415:0"
 
 #: tournaments/templates/tournament_index.html
 msgid "Welcome to your new tournament!"
@@ -799,10 +818,6 @@ msgstr "crwdns51490:0%(round)scrwdne51490:0"
 #, python-format
 msgid "Go to the results area to enter ballots for %(round)s"
 msgstr "crwdns52245:0%(round)scrwdne52245:0"
-
-#: tournaments/templates/tournament_index.html
-msgid "You have enabled a URL that allows users to create new accounts. You should <strong>disable it once the tournament starts</strong>."
-msgstr "crwdns52149:0crwdne52149:0"
 
 #: tournaments/templates/tournament_index_links.html
 #, python-format
@@ -928,6 +943,14 @@ msgid "Res"
 msgstr "crwdns33516:0crwdne33516:0"
 
 #: tournaments/utils.py
+msgid "1st team"
+msgstr "crwdns52862:0crwdne52862:0"
+
+#: tournaments/utils.py
+msgid "2nd team"
+msgstr "crwdns52864:0crwdne52864:0"
+
+#: tournaments/utils.py
 msgid "opening government"
 msgstr "crwdns33518:0crwdne33518:0"
 
@@ -990,6 +1013,25 @@ msgstr "crwdns33542:0%(number)dcrwdne33542:0"
 msgid "R%(number)d"
 msgstr "crwdns33544:0%(number)dcrwdne33544:0"
 
+#: tournaments/utils.py
+msgid "bye"
+msgstr "crwdns52866:0crwdne52866:0"
+
+#: tournaments/utils.py
+#, python-format
+msgid "Team %d"
+msgstr "crwdns52868:0%dcrwdne52868:0"
+
+#: tournaments/views.py
+#, python-format
+msgid "%(round)s has been marked as silent."
+msgstr "crwdns52417:0%(round)scrwdne52417:0"
+
+#: tournaments/views.py
+#, python-format
+msgid "%(round)s has been unmarked as silent."
+msgstr "crwdns52419:0%(round)scrwdne52419:0"
+
 #: tournaments/views.py
 #, python-format
 msgid "%(round)s has been marked as completed. All rounds are now completed, so you're done with the tournament! Congratulations!"
@@ -1026,6 +1068,10 @@ msgstr "crwdns33562:0crwdne33562:0"
 #: tournaments/views.py
 msgid "88-team BP dataset"
 msgstr "crwdns33564:0crwdne33564:0"
+
+#: tournaments/views.py
+msgid "Set Current Round"
+msgstr "crwdns33386:0crwdne33386:0"
 
 #: tournaments/views.py
 msgid "Successfully set round weights for tapered scoring."

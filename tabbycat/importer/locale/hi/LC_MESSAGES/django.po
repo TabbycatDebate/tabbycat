@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:58\n"
+"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"PO-Revision-Date: 2023-07-04 21:54\n"
 "Last-Translator: \n"
 "Language-Team: Hindi\n"
 "Language: hi_IN\n"
@@ -59,6 +59,10 @@ msgid "Speakers' names"
 msgstr ""
 
 #: importer/forms.py
+msgid "Can be separated by newlines, tabs or commas"
+msgstr ""
+
+#: importer/forms.py
 msgid "Speakers' email addresses"
 msgstr ""
 
@@ -87,10 +91,6 @@ msgid "One speaker's name per line"
 msgstr ""
 
 #: importer/forms.py
-msgid "Can be separated by newlines, tabs or commas"
-msgstr ""
-
-#: importer/forms.py
 #, python-format
 msgid "Speaker %d"
 msgstr ""
@@ -98,6 +98,22 @@ msgstr ""
 #: importer/forms.py
 #, python-format
 msgid "speaker%d@example.edu"
+msgstr ""
+
+#: importer/forms.py
+msgid "Unseeded"
+msgstr ""
+
+#: importer/forms.py
+msgid "Free seed"
+msgstr ""
+
+#: importer/forms.py
+msgid "Half seed"
+msgstr ""
+
+#: importer/forms.py
+msgid "Full seed"
 msgstr ""
 
 #: importer/forms.py

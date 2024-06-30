@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:59\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:59\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -20,6 +20,26 @@ msgstr ""
 
 #: options/apps.py
 msgid "Tournament Options"
+msgstr ""
+
+#: options/forms.py
+msgid "Mininum score must be less than maximum score"
+msgstr ""
+
+#: options/forms.py
+msgid "Intermediate 1 or 2 require preallocated sides"
+msgstr ""
+
+#: options/forms.py
+msgid "Four-team formats require consensus ballots"
+msgstr ""
+
+#: options/forms.py
+msgid "Must set a password if using a password is enabled"
+msgstr ""
+
+#: options/forms.py
+msgid "Showing team institutions defeats the purpose of code names"
 msgstr ""
 
 #: options/models.py
@@ -179,6 +199,30 @@ msgid "Avoid team history"
 msgstr "Избегать историю команд"
 
 #: options/preferences.py
+msgid "Penalty applied by conflict avoidance method for teams being in a pullup many times. Leave 0 for no penalty."
+msgstr ""
+
+#: options/preferences.py
+msgid "Previously saw pullup penalty"
+msgstr ""
+
+#: options/preferences.py
+msgid "Penalty applied by minimum cost matching to prefer pairings that balance sides."
+msgstr ""
+
+#: options/preferences.py
+msgid "Side balance penalty"
+msgstr ""
+
+#: options/preferences.py
+msgid "Penalty applied by minimum cost matching to prefer pairings that follow the draw pairing method."
+msgstr ""
+
+#: options/preferences.py
+msgid "Pairing deviation penalty"
+msgstr ""
+
+#: options/preferences.py
 msgid "How odd brackets are resolved (see documentation for further details)"
 msgstr "Как разрешаются нечетные группы команд (смотри документацию для более подробной информации)"
 
@@ -281,6 +325,10 @@ msgstr "Выкл"
 #: options/preferences.py
 msgid "One-up-one-down"
 msgstr "Одна вверх одна вниз"
+
+#: options/preferences.py
+msgid "Minimum cost matching"
+msgstr ""
 
 #: options/preferences.py
 msgid "If using pull-ups, restrict which teams can be pulled up. Two-team formats only. Has no effect on BP or intermediate brackets."
@@ -398,6 +446,42 @@ msgstr "Скрыть позиции вингов без права голоса 
 msgid "No trainee adjudicators"
 msgstr "Нет вингов без права голоса"
 
+#: options/preferences.py
+msgid "How to handle teams who were marked available yet excluded froma round (a bye)"
+msgstr ""
+
+#: options/preferences.py
+msgid "Bye team results"
+msgstr ""
+
+#: options/preferences.py
+msgid "Treat bye teams as absent"
+msgstr ""
+
+#: options/preferences.py
+msgid "Attribute a win to bye teams, without speaks"
+msgstr ""
+
+#: options/preferences.py
+msgid "If creating a draw with an uneven number of teams, how to decide who gets the bye (won't be allocated)"
+msgstr ""
+
+#: options/preferences.py
+msgid "Bye team selection method"
+msgstr ""
+
+#: options/preferences.py
+msgid "Don't choose bye teams"
+msgstr ""
+
+#: options/preferences.py
+msgid "Choose bye teams randomly"
+msgstr ""
+
+#: options/preferences.py
+msgid "Choose lowest ranking teams"
+msgstr ""
+
 #: options/preferences.py options/templates/preferences_index.html
 msgid "Feedback"
 msgstr "Обратная связь"
@@ -443,6 +527,14 @@ msgid "All adjudicators (including trainees) on each other"
 msgstr "Все судьи (включая вингов без права голоса) друг на друга"
 
 #: options/preferences.py
+msgid "Panellists on eachother and chairs, trainees on chairs, chairs on everyone"
+msgstr ""
+
+#: options/preferences.py
+msgid "Neither chairs, nor panellists nor trainees"
+msgstr ""
+
+#: options/preferences.py
 msgid "Expect feedback to be submitted by teams on"
 msgstr "Ожидает обратную связь от команд на"
 
@@ -457,6 +549,10 @@ msgstr "Только дающий разбор (разрешены голоса�
 #: options/preferences.py
 msgid "All adjudicators in their panels (including trainees)"
 msgstr "Все судьи в своих коллегиях (включая вингов без права голоса)"
+
+#: options/preferences.py
+msgid "No one"
+msgstr ""
 
 #: options/preferences.py
 msgid "Show unexpected feedback submissions in participants pages"
@@ -487,20 +583,12 @@ msgid "Debate Rules"
 msgstr "Правила дебатов"
 
 #: options/preferences.py
-msgid "Two-team format (e.g. Australs, WSDC) or British Parliamentary"
-msgstr "Формат двух команд (например, австралийский или всемирный школьный) или БПФ"
+msgid "How many teams are in each debate (normally 2 but 4 for BP)"
+msgstr ""
 
 #: options/preferences.py
-msgid "Teams in debate"
-msgstr "Команды в дебатах"
-
-#: options/preferences.py
-msgid "Two-team format"
-msgstr "Формат двух команд"
-
-#: options/preferences.py
-msgid "British Parliamentary (four teams)"
-msgstr "Британский парламентский формат (4 команды)"
+msgid "Number of teams per debate"
+msgstr ""
 
 #: options/preferences.py
 msgid "Whether panels submit a ballot each or a single ballot for a debate during the preliminary rounds. Note: BP must use one per debate."
@@ -602,6 +690,22 @@ msgstr ""
 msgid "Require reply speaker to have given a substantive speech"
 msgstr ""
 
+#: options/preferences.py
+msgid "Whether and how to use speech ranks within a debate"
+msgstr ""
+
+#: options/preferences.py
+msgid "Use of speech ranks"
+msgstr ""
+
+#: options/preferences.py
+msgid "How long, in minutes, after motion release does the round start (-1 to deactivate"
+msgstr ""
+
+#: options/preferences.py
+msgid "Preparation Time"
+msgstr ""
+
 #: options/preferences.py options/templates/preferences_index.html
 msgid "Standings"
 msgstr "Положение"
@@ -629,11 +733,6 @@ msgstr "Метрики, используемые для ранжирования
 #: options/preferences.py
 msgid "Team standings precedence"
 msgstr "Первенство положения команд"
-
-#: options/preferences.py
-#, python-format
-msgid "The following metrics can't be listed twice: %(duplicates)s"
-msgstr "Следующие метрики не могут быть перечислены дважды: %(duplicates)s"
 
 #: options/preferences.py
 msgid "Metrics to calculate, but not used to rank teams"
@@ -783,15 +882,15 @@ msgstr "Могут ли судьи сами отправлять бэллоты 
 msgid "Ballot submissions from adjudicators"
 msgstr "Представление судьями бэллотов"
 
-#: options/preferences.py
+#: options/preferences.py options/presets.py
 msgid "Disabled (tab staff only)"
 msgstr "Отключено (только для тэбмастеров)"
 
-#: options/preferences.py
+#: options/preferences.py options/presets.py
 msgid "Use private URLs"
 msgstr "Использовать личные URL"
 
-#: options/preferences.py
+#: options/preferences.py options/presets.py
 msgid "Use publicly accessible form"
 msgstr "Использовать общедоступные формы"
 
@@ -1143,6 +1242,26 @@ msgstr "Включает элемент, при котором наведени�
 msgid "Show speakers in draw"
 msgstr "Показывать спикеров в сетке"
 
+#: options/preferences.py
+msgid "Input team seed in simple team importer"
+msgstr ""
+
+#: options/preferences.py
+msgid "Enable team seed in importer"
+msgstr ""
+
+#: options/preferences.py
+msgid "Do not ask for team seed"
+msgstr ""
+
+#: options/preferences.py
+msgid "Ask for numeric team seed"
+msgstr ""
+
+#: options/preferences.py
+msgid "Ask for descriptive team seed name"
+msgstr ""
+
 #: options/preferences.py options/templates/preferences_index.html
 msgid "Notifications"
 msgstr "Уведомления"
@@ -1194,94 +1313,6 @@ msgstr "Тело письма для email, отправляемых судья�
 #: options/preferences.py
 msgid "Ballot receipt message"
 msgstr "Сообщение о получении бэллота"
-
-#: options/preferences.py
-msgid "The subject line for emails sent to speakers with their team points."
-msgstr "Строка темы для email отправляемых спикерам с их командными баллами."
-
-#: options/preferences.py
-msgid "Team points subject line"
-msgstr "Строка темы командные баллы"
-
-#: options/preferences.py
-msgid "The message body for emails sent to speakers with their team points."
-msgstr "Тело письма для email отправляемых спикерам с их командными баллами."
-
-#: options/preferences.py
-msgid "Team points message"
-msgstr "Сообщение о командных баллах"
-
-#: options/preferences.py
-msgid "The subject-line for emails sent to adjudicators with their assignments."
-msgstr "Строка темы для email отправляемых судьям с их назначениями на дебаты."
-
-#: options/preferences.py
-msgid "Adjudicator draw subject line"
-msgstr "Строка темы для судейской сетки"
-
-#: options/preferences.py
-msgid "The message body for emails sent to adjudicators with their assignments."
-msgstr "Тело письма для email отправляемых судьям с их назначениями на дебаты."
-
-#: options/preferences.py
-msgid "Adjudicator draw message"
-msgstr "Сообщение о сетке судей"
-
-#: options/preferences.py
-msgid "The subject-line for emails sent to teams with their draw."
-msgstr "Строка темы для email отправляемых командам с их сеткой."
-
-#: options/preferences.py
-msgid "Team draw subject line"
-msgstr "Строка темы сетка команд"
-
-#: options/preferences.py
-msgid "The message body for emails sent to participants with their private URLs."
-msgstr "Тело письма для email отправляемых участникам с их личными URL."
-
-#: options/preferences.py
-msgid "Private URL notification message"
-msgstr "Уведомление о приватном URL"
-
-#: options/preferences.py
-msgid "The subject-line for emails sent to participants with their private URLs."
-msgstr "Строка темы для email отправляемых участникам с их личными URL."
-
-#: options/preferences.py
-msgid "Private URL notification subject line"
-msgstr "Строка темы уведомления о личном URL"
-
-#: options/preferences.py
-msgid "The subject-line for emails sent to participants on motion release."
-msgstr "Строка темы для email отправляемых участникам об опубликовании темы."
-
-#: options/preferences.py
-msgid "Motion release notification subject line"
-msgstr "Строка темы уведомления об опубликовании темы"
-
-#: options/preferences.py
-msgid "The message body for emails sent to participants on motion release."
-msgstr "Тело сообщения для email, отправляемых участникам о публикации темы."
-
-#: options/preferences.py
-msgid "Motion release notification message"
-msgstr "Сообщение о публикации темы"
-
-#: options/preferences.py
-msgid "The subject-line for emails sent to participants informing them of their team registration."
-msgstr "Строка темы для email, отправляемых участникам об их командной регистрации."
-
-#: options/preferences.py
-msgid "Team registration notification subject line"
-msgstr "Строка темы уведомления о командной регистрации"
-
-#: options/preferences.py
-msgid "The message body for emails sent to participants informing them of their team registration."
-msgstr "Тело письма для email, отправляемых участникам об их командной регистрации."
-
-#: options/preferences.py
-msgid "Team registration notification message"
-msgstr "Сообщение о регистрации команды"
 
 #: options/preferences.py options/templates/preferences_index.html
 msgid "Motions"
@@ -1353,26 +1384,6 @@ msgstr ""
 
 #: options/preferences.py
 msgid "Enable API access"
-msgstr ""
-
-#: options/preferences.py
-msgid "A key that enables a secret URL that lets visitors create their own assistant user accounts. The URL takes the form of: YOUR_SITE'S_BASE_URL/accounts/signup/KEY/"
-msgstr ""
-
-#: options/preferences.py
-msgid "Assistant account creation key"
-msgstr ""
-
-#: options/preferences.py
-msgid "A key that enables a secret URL that lets visitors create their own administrator user accounts. The URL takes the form of: YOUR_SITE'S_BASE_URL/accounts/signup/KEY/"
-msgstr ""
-
-#: options/preferences.py
-msgid "Administrator account creation key"
-msgstr ""
-
-#: options/presets.py
-msgid "Public Information Options"
 msgstr ""
 
 #: options/presets.py
@@ -1448,6 +1459,26 @@ msgid "3 vs 3 with replies, chosen motions, prop/opp side labels, and all adjudi
 msgstr ""
 
 #: options/presets.py
+msgid "APDA Rules"
+msgstr ""
+
+#: options/presets.py
+msgid "2 vs 2 with speech rankings and byes"
+msgstr ""
+
+#: options/presets.py
+msgid "Public Speaking"
+msgstr ""
+
+#: options/presets.py
+msgid "Arbitrary number of teams per room, one speech each, no team points"
+msgstr ""
+
+#: options/presets.py
+msgid "Public Information Options"
+msgstr ""
+
+#: options/presets.py
 msgid "For tournaments hosted online: this sets it up so that people can access the draw and other generally useful information via the tab site."
 msgstr ""
 
@@ -1467,24 +1498,17 @@ msgstr ""
 msgid "Enables participant data entry through private URLs."
 msgstr ""
 
+#: options/presets.py
+msgid "Use Public Forms"
+msgstr ""
+
+#: options/presets.py
+msgid "Enables participant data entry through public forms."
+msgstr ""
+
 #: options/templates/preferences_index.html
 msgid "Configuration"
 msgstr "Настройки"
-
-#: options/templates/preferences_index.html
-#, python-format
-msgid "Your draw rules specify four teams per-debate but your ballot setting specifies that adjudicators submit independent ballots. These settings <strong>are not compatible and will cause results entry to crash</strong>. You need to go back to the <a href=\"%(options_url)s\" class=\"alert-link\">Debate Rules section</a> and change your configuration to use consensus ballots."
-msgstr ""
-
-#: options/templates/preferences_index.html
-#, python-format
-msgid "You do not use preallocated side allocation yet the odd bracket resolution method uses preallocated sides. This will cause draw generation to fail. You need to edit odd bracket resolution, avoiding <i>Intermediate 1</i> and <i>Intermediate 2</i> in the <a href=\"%(options_url)s\" class=\"alert-link\">Draw Rules section</a>."
-msgstr ""
-
-#: options/templates/preferences_index.html
-#, python-format
-msgid "You both have team code names enabled, and team institutions showing on public pages. If your objective in enabling team code names is to obscure team institutions, this probably defeats the purpose of code names. You can edit these settings in the <a href=\"%(ui_url)s\" class=\"alert-link\">UI Options section</a>."
-msgstr "У вас одновременно включено использование кодовых названий команд и отображение клубов, к которым они принадлежат. Кодовые названия обычно используются, чтобы скрыть клуб, к которому принадлежит команда, так что сейчас эта настройка не имеет смысла. Вы можете изменить эти настройки в разделе <a href=\"%(ui_url)s\" class=\"alert-link\">опции UI</a>."
 
 #: options/templates/preferences_index.html
 msgid "The range of scores that can awarded to speeches, replies, and teams"
@@ -1551,50 +1575,25 @@ msgid "Rounds can be weighted so that certain rounds are worth more team points.
 msgstr ""
 
 #: options/templates/preferences_index.html
+msgid "Invite User to Create an Account"
+msgstr ""
+
+#: options/templates/preferences_index.html
+msgid "Users can be created through an invitation link sent to their email, with associated permissions."
+msgstr ""
+
+#: options/templates/preferences_index.html
 msgid "Presets"
 msgstr "Настройки"
 
 #: options/templates/preferences_index.html
-msgid "These modify common settings for basic rules; double check our <a href=\"https://tabbycat.readthedocs.io/\" target=\"_blank\">documentation</a> to ensure they are correct for your tournament. Each links will display what settings it changes before applying them."
-msgstr "Это изменяет общие настройки для основных правил; внимательно ознакомьтесь с нашей документацией <a href=\"https://tabbycat.readthedocs.io/\" target=\"_blank\"></a>, чтобы убедиться, что они подходят для вашего турнира. Каждая ссылка покажет, какие настройки они изменяют перед их применением."
+msgid "These show changes to your configuration for common situations and debate formats. You may apply these settings or modify them for your tournament directly on the preset's page."
+msgstr ""
 
 #: options/templates/preferences_index.html
 #, python-format
 msgid "Apply %(preset)s"
 msgstr "Применить %(preset)s"
-
-#: options/templates/preferences_presets_complete.html
-#, python-format
-msgid "Presets Applied: %(preset_title)s"
-msgstr "Применены настройки: %(preset_title)s"
-
-#: options/templates/preferences_presets_complete.html
-#: options/templates/preferences_presets_confirm.html
-#: options/templates/preferences_section_set.html
-msgid "Back to Configuration"
-msgstr "Вернуться к настройкам"
-
-#: options/templates/preferences_presets_complete.html
-msgid "Preferences that were changed"
-msgstr "Настройки, которые были изменены"
-
-#: options/templates/preferences_presets_confirm.html
-#, python-format
-msgid "Confirm Presets: %(preset_title)s"
-msgstr "Подтвердите настройки: %(preset_title)s"
-
-#: options/templates/preferences_presets_confirm.html
-msgid "Preferences that will not change"
-msgstr "Настройки, которые не будут изменены"
-
-#: options/templates/preferences_presets_confirm.html
-msgid "Preferences that will change"
-msgstr "Настройки, которые будут изменены"
-
-#: options/templates/preferences_presets_confirm.html
-#, python-format
-msgid "Apply Presets: %(preset_title)s"
-msgstr "Применить настройки: %(preset_title)s"
 
 #: options/templates/preferences_section_set.html
 #, python-format
@@ -1606,6 +1605,42 @@ msgstr "Настройки: %(section)s"
 msgid "Edit Configuration: %(section)s"
 msgstr "Изменить настройки: %(section)s"
 
+#: options/templates/preferences_section_set.html
+#: options/templates/preset_edit.html
+msgid "Back to Configuration"
+msgstr "Вернуться к настройкам"
+
+#: options/templates/preset_edit.html
+#, python-format
+msgid "This preference will be changed"
+msgid_plural "These %(counter)s preferences will be changed"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: options/templates/preset_edit.html
+#, python-format
+msgid "This preference will not change"
+msgid_plural "These %(counter)s preferences will not change"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: options/templates/preset_edit.html
+msgid "Apply Changes"
+msgstr ""
+
+#: options/templates/preset_edit.html
+msgid "Presets are provided as a convenience only and may not be up to date with a debating format's rules or the expectations of your circuit. Please double-check everything to ensure it matches your needs."
+msgstr ""
+
+#: options/utils.py
+#, python-format
+msgid "The following metrics can't be listed twice: %(duplicates)s"
+msgstr "Следующие метрики не могут быть перечислены дважды: %(duplicates)s"
+
 #: options/views.py
 #, python-format
 msgid "Tournament options (%(section)s) saved."
@@ -1613,6 +1648,11 @@ msgstr "Опции турнира (%(section)s) сохранены."
 
 #: options/views.py
 #, python-format
-msgid "Tournament options saved according to preset %(name)s."
-msgstr "Опции турнира сохранены в соответствии с настройками %(name)s."
+msgid "Apply Preset: %s"
+msgstr ""
+
+#: options/views.py
+#, python-format
+msgid "Tournament options saved based on preset %(name)s."
+msgstr ""
 

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:25-0400\n"
-"PO-Revision-Date: 2023-03-27 09:26\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:58\n"
 "Last-Translator: \n"
 "Language-Team: Kazakh\n"
 "Language: kk_KZ\n"
@@ -37,7 +37,7 @@ msgstr[1] ""
 
 #: draw/apps.py draw/views.py
 msgid "Draw"
-msgstr ""
+msgstr "Кесте"
 
 #: draw/generator/__init__.py
 msgid "Too many swaps"
@@ -172,19 +172,19 @@ msgstr ""
 
 #: draw/models.py
 msgid "none"
-msgstr ""
+msgstr "ешқайсысы"
 
 #: draw/models.py
 msgid "postponed"
-msgstr ""
+msgstr "кейінге қалдырылған"
 
 #: draw/models.py
 msgid "draft"
-msgstr ""
+msgstr "жоспар"
 
 #: draw/models.py
 msgid "confirmed"
-msgstr ""
+msgstr "бекітілген"
 
 #: draw/models.py
 msgid "round"
@@ -192,7 +192,7 @@ msgstr "ойын"
 
 #: draw/models.py
 msgid "room"
-msgstr ""
+msgstr "аудитория"
 
 #: draw/models.py
 msgid "bracket"
@@ -200,19 +200,19 @@ msgstr ""
 
 #: draw/models.py
 msgid "room rank"
-msgstr ""
+msgstr "ойын деңгейі"
 
 #: draw/models.py
 msgid "importance"
-msgstr ""
+msgstr "маңызы"
 
 #: draw/models.py
 msgid "result status"
-msgstr ""
+msgstr "нәтиже сипаты"
 
 #: draw/models.py
 msgid "sides confirmed"
-msgstr ""
+msgstr "тараптар бекітілген"
 
 #: draw/models.py
 msgid "If unchecked, the sides assigned to teams in this debate are just placeholders."
@@ -224,7 +224,7 @@ msgstr "пікірсайыс"
 
 #: draw/models.py
 msgid "debates"
-msgstr ""
+msgstr "Ойындар"
 
 #. Translators: This is appended to a list of teams, e.g. "Auckland
 #. 1, Vic Wellington 1 (sides not confirmed)". Mind the leading
@@ -237,47 +237,23 @@ msgstr ""
 #. vs Vic Wellington 1". Mind the leading and trailing spaces.
 #: draw/models.py
 msgid " vs "
-msgstr ""
-
-#: draw/models.py
-msgid "affirmative"
-msgstr ""
-
-#: draw/models.py
-msgid "negative"
-msgstr ""
-
-#: draw/models.py
-msgid "opening government"
-msgstr ""
-
-#: draw/models.py
-msgid "opening opposition"
-msgstr ""
-
-#: draw/models.py
-msgid "closing government"
-msgstr ""
-
-#: draw/models.py
-msgid "closing opposition"
-msgstr ""
+msgstr " қарсы "
 
 #: draw/models.py
 msgid "team"
 msgstr "топ"
 
 #: draw/models.py
-msgid "side"
+msgid "side sequence"
 msgstr ""
 
 #: draw/models.py
 msgid "debate team"
-msgstr ""
+msgstr "пікірталастырушы топ"
 
 #: draw/models.py
 msgid "debate teams"
-msgstr ""
+msgstr "пікірталастырушы топтар"
 
 #: draw/models.py
 #, python-format
@@ -290,10 +266,15 @@ msgstr ""
 
 #: draw/models.py
 msgid "won"
-msgstr ""
+msgstr "жеңген"
 
 #: draw/models.py
 msgid "lost"
+msgstr "жеңілген"
+
+#: draw/models.py
+#, python-format
+msgid "Team %d"
 msgstr ""
 
 #: draw/models.py
@@ -309,6 +290,10 @@ msgstr ""
 #: draw/tables.py
 #, python-format
 msgid "%(side)s: %(metric)s"
+msgstr ""
+
+#: draw/tables.py
+msgid "Bye"
 msgstr ""
 
 #: draw/tables.py
@@ -406,7 +391,7 @@ msgstr ""
 
 #: draw/tables.py
 msgid "Sides"
-msgstr ""
+msgstr "Тараптар"
 
 #: draw/tables.py
 msgid "position cost"
@@ -505,7 +490,7 @@ msgstr[1] ""
 
 #: draw/templates/draw_base.html
 msgid "Availability"
-msgstr ""
+msgstr "Түгендеу"
 
 #: draw/templates/draw_base.html draw/templates/draw_status_draft.html
 msgid "Edit Sides/Matchups"
@@ -513,7 +498,7 @@ msgstr ""
 
 #: draw/templates/draw_base.html
 msgid "Redo Draw"
-msgstr ""
+msgstr "Кестені қайта жасау"
 
 #: draw/templates/draw_base.html
 msgid "Draw Details"
@@ -526,7 +511,7 @@ msgstr ""
 #: draw/templates/draw_base.html draw/templates/draw_display_admin.html
 #: draw/templates/draw_display_assistant.html
 msgid "Display Draw"
-msgstr ""
+msgstr "Кестені көрсету"
 
 #: draw/templates/draw_confirm_regeneration.html
 msgid "Confirm draw regeneration"
@@ -535,7 +520,7 @@ msgstr ""
 #: draw/templates/draw_confirm_regeneration.html
 #: draw/templates/draw_subpage.html
 msgid "Back to Draw"
-msgstr ""
+msgstr "Кестені қайтару"
 
 #: draw/templates/draw_confirm_regeneration.html
 #, python-format
@@ -554,7 +539,7 @@ msgstr ""
 
 #: draw/templates/draw_display_admin.html
 msgid "View Draw"
-msgstr ""
+msgstr "Ойын кестесін көру"
 
 #: draw/templates/draw_display_admin.html
 #, python-format
@@ -563,15 +548,15 @@ msgstr ""
 
 #: draw/templates/draw_display_admin.html
 msgid "Add Start Time"
-msgstr ""
+msgstr "Басталу уақытын жазу"
 
 #: draw/templates/draw_display_admin.html
 msgid "Enter Results"
-msgstr ""
+msgstr "Нәтижелерді толтыру"
 
 #: draw/templates/draw_display_admin.html
 msgid "Motion Details"
-msgstr ""
+msgstr "Қарар"
 
 #: draw/templates/draw_display_admin.html
 #, python-format
@@ -583,7 +568,7 @@ msgstr[1] ""
 #: draw/templates/draw_display_admin.html
 msgid "Edit the motion"
 msgid_plural "Edit motions"
-msgstr[0] ""
+msgstr[0] "Қарарды өзгерту"
 msgstr[1] ""
 
 #: draw/templates/draw_display_admin.html
@@ -597,7 +582,7 @@ msgstr ""
 #: draw/templates/draw_display_admin.html
 msgid "Enter a motion"
 msgid_plural "Enter motions"
-msgstr[0] ""
+msgstr[0] "Қарарды жазу"
 msgstr[1] ""
 
 #: draw/templates/draw_display_admin.html
@@ -757,7 +742,7 @@ msgstr ""
 #: draw/templates/draw_display_admin.html
 #: draw/templates/draw_display_assistant.html
 msgid "Display Motions"
-msgstr ""
+msgstr "Қарарды көрсету"
 
 #: draw/templates/draw_display_admin.html
 msgid "Email Motions"
@@ -785,55 +770,55 @@ msgstr ""
 
 #: draw/templates/draw_display_by.html
 msgid "Scroll Speed"
-msgstr ""
+msgstr "Айналдыру жылдамдығы"
 
 #: draw/templates/draw_display_by.html
 msgid "Fast"
-msgstr ""
+msgstr "Жылдам"
 
 #: draw/templates/draw_display_by.html
 msgid "Medium"
-msgstr ""
+msgstr "Орташа"
 
 #: draw/templates/draw_display_by.html
 msgid "Slow"
-msgstr ""
+msgstr "Жай"
 
 #: draw/templates/draw_display_by.html
 msgid "Extra Slow"
-msgstr ""
+msgstr "Өте жай"
 
 #: draw/templates/draw_display_by.html
 msgid "Hide Adjudicators"
-msgstr ""
+msgstr "Төрешілерді жасыру"
 
 #: draw/templates/draw_display_by.html
 msgid "Show Adjudicators"
-msgstr ""
+msgstr "Төрешілерді көрсету"
 
 #: draw/templates/draw_display_by.html
 msgid "Text Size"
-msgstr ""
+msgstr "Мәтіннің өлшемі"
 
 #: draw/templates/draw_display_by.html
 msgid "Tiny"
-msgstr ""
+msgstr "Кішкентай"
 
 #: draw/templates/draw_display_by.html
 msgid "Small"
-msgstr ""
+msgstr "Шағын"
 
 #: draw/templates/draw_display_by.html
 msgid "Large"
-msgstr ""
+msgstr "Үлкен"
 
 #: draw/templates/draw_display_by.html
 msgid "Huge"
-msgstr ""
+msgstr "Ірі"
 
 #: draw/templates/draw_display_by.html
 msgid "Stop Scroll"
-msgstr ""
+msgstr "Айналдыруды тоқтату"
 
 #: draw/templates/draw_not_released.html
 #, python-format
@@ -905,11 +890,11 @@ msgstr[1] ""
 
 #: draw/templates/draw_status_draft.html
 msgid "Delete Draw"
-msgstr ""
+msgstr "Кестені өшіру"
 
 #: draw/templates/draw_status_draft.html
 msgid "Confirm Draw"
-msgstr ""
+msgstr "Кестені бекіту"
 
 #: draw/templates/draw_status_draft.html
 #, python-format
@@ -1093,11 +1078,31 @@ msgid "Rooms were not auto-allocated because there are one or more adjudicator r
 msgstr ""
 
 #: draw/views.py
+msgid "There is no draw."
+msgstr ""
+
+#: draw/views.py
+msgid "The draw had already been confirmed."
+msgstr ""
+
+#: draw/views.py
 msgid "Deleted the draw. You can now recreate it as normal."
 msgstr ""
 
 #: draw/views.py
+msgid "The draw has already been released."
+msgstr ""
+
+#: draw/views.py
+msgid "The draw must be confirmed before being released."
+msgstr ""
+
+#: draw/views.py
 msgid "Released the draw."
+msgstr ""
+
+#: draw/views.py
+msgid "The draw had been unreleased."
 msgstr ""
 
 #: draw/views.py

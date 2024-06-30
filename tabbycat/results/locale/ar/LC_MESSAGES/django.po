@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
-"PO-Revision-Date: 2023-02-12 06:14\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 22:00\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Arabic\n"
 "Language: ar_SA\n"
@@ -33,6 +33,10 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
+#: results/admin.py
+msgid "Speaker"
+msgstr ""
+
 #: results/apps.py results/templates/public_results_index.html results/views.py
 msgid "Results"
 msgstr "النتائج"
@@ -44,15 +48,6 @@ msgstr ""
 #: results/forms.py
 msgid "That password isn't correct."
 msgstr "كلمة المرور خاطئة"
-
-#: results/forms.py
-msgid "Please enter a whole number."
-msgstr "الرجاء إدخال عدد صحيح (دون كسور)"
-
-#: results/forms.py
-#, python-format
-msgid "Please enter a multiple of %s."
-msgstr "الرجاء ادخال أحد مضاعفات العدد %s"
 
 #: results/forms.py
 msgid "The ballot set can't be both discarded and confirmed."
@@ -132,6 +127,14 @@ msgid "The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_mar
 msgstr "الهوامش ( %(margin).1f تجاوز الوقت المحدد ) (%(max_margin).1f )"
 
 #: results/forms.py
+msgid "Ranks cannot be tied."
+msgstr ""
+
+#: results/forms.py
+msgid "Ranks must correspond to speaker scores"
+msgstr ""
+
+#: results/forms.py
 #, python-format
 msgid "The total scores for the teams are the same (i.e. a draw) for adjudicator %(adjudicator)s."
 msgstr "مجموع نتائج الفرقين متساويين (تعادل) من قبل المحكم %(adjudicator)s."
@@ -172,6 +175,10 @@ msgstr "غرفة التحكم"
 #: results/models.py
 msgid "Public"
 msgstr "عمومي"
+
+#: results/models.py
+msgid "Automation"
+msgstr ""
 
 #: results/models.py
 msgid "timestamp"
@@ -247,8 +254,8 @@ msgstr "تسليم النتائج"
 
 #: results/models.py
 #, python-format
-msgid "Debate is in round %(round)d but motion (%(motion)s) is from round %(motion_round)d"
-msgstr "مناظرة في هذه الجولة %(round)d و لكن القضية (%(motion)s ) من الجولة %(motion_round)d"
+msgid "Debate is in round %(round)d but motion (%(motion)s) is not in round"
+msgstr ""
 
 #: results/models.py
 msgid "A ballot can't be both confirmed and discarded!"
@@ -327,6 +334,10 @@ msgid "speaker"
 msgstr "متحدث"
 
 #: results/models.py
+msgid "rank"
+msgstr "الترتيب"
+
+#: results/models.py
 msgid "ghost"
 msgstr "ظل "
 
@@ -349,6 +360,54 @@ msgstr "يجب أن يكون فريق المناظرة والمحدثون من �
 #: results/models.py
 msgid "The ballot submission and debate team must relate to the same debate."
 msgstr "يجب أن يكون فريق المناظرة و النتيجة  من نفس المناظرة "
+
+#: results/models.py
+msgid "tournament"
+msgstr "بطولة"
+
+#: results/models.py
+msgid "sequence"
+msgstr ""
+
+#: results/models.py
+msgid "weight"
+msgstr ""
+
+#: results/models.py
+msgid "minimum score"
+msgstr ""
+
+#: results/models.py
+msgid "maximum score"
+msgstr ""
+
+#: results/models.py
+msgid "step"
+msgstr ""
+
+#: results/models.py
+msgid "score criterion"
+msgstr ""
+
+#: results/models.py
+msgid "score criteria"
+msgstr ""
+
+#: results/models.py
+msgid "speaker score for criterion"
+msgstr ""
+
+#: results/models.py
+msgid "speaker scores for criteria"
+msgstr ""
+
+#: results/models.py
+msgid "speaker score for criterion by adjudicator"
+msgstr ""
+
+#: results/models.py
+msgid "speaker scores for criteria by adjudicator"
+msgstr ""
 
 #: results/tables.py
 msgid "Whether this debate's ballot has been checked in"
@@ -477,10 +536,6 @@ msgstr "إدخال النتائج"
 #: results/templates/assistant_results.html
 msgid "This page automatically updates with the new ballot entries and checkins as they occur."
 msgstr ""
-
-#: results/templates/assistant_results.html
-msgid "This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Results can't be entered while this configuration is in place. Please ask an administrator to change this configuration."
-msgstr "يتم تعيين تكوين هذه البطولة على <strong>البرلمان البريطاني </strong> مع <strong>بطاقة اقتراع من شخصين لكل مرشحتحكيم </strong> هذه المجموعة غير مسموح بها: يجب أن تستخدم نظام البرلمان البريطاني في الإقرارات الإجماع. لا يمكن إدخال النتائج أثناء وجود هذا الاعدادات . من فضلك اطلب من مسؤول لتغيير هذه الاعدادات ."
 
 #: results/templates/assistant_results.html
 msgid "Currently there are no motions entered for this round, so debate results cannot be entered. Please ask an administrator to add motions."
@@ -1120,18 +1175,5 @@ msgstr "محكم"
 
 #: results/views.py
 msgid "Merge Ballots"
-msgstr ""
-
-#: results/views.py
-msgid "The speaking order in the ballots is inconsistent, so could not be merged."
-msgstr ""
-
-#: results/views.py
-msgid "Duplicate speeches are marked inconsistently, so could not be merged."
-msgstr ""
-
-#: results/views.py
-#, python-format
-msgid " This error was caught in <a href='%(ballot_url)s'>%(adjudicator)s's ballot</a> for %(speaker)s (%(team)s)."
 msgstr ""
 

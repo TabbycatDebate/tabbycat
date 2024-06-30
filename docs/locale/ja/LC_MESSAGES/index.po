@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-05 17:27\n"
+"PO-Revision-Date: 2023-07-13 04:57\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -20,29 +20,29 @@ msgstr ""
 
 #: ../../index.rst:18
 msgid "Installation"
-msgstr ""
+msgstr "インストール"
 
 #: ../../index.rst:32
 msgid "Using Tabbycat"
-msgstr ""
+msgstr "Tabbycatの使い方"
 
 #: ../../index.rst:41
 msgid "Tabbing Guide"
-msgstr ""
+msgstr "ガイド"
 
 #: ../../index.rst:52
 msgid "Feature notes"
-msgstr ""
+msgstr "新機能のハイライト"
 
 #: ../../index.rst:75
 msgid "About"
-msgstr ""
+msgstr "Tabbycatについて"
 
 #: ../../index.rst:8
 msgid "Tabbycat User Guide"
-msgstr ""
+msgstr "ユーザーガイド"
 
 #: ../../index.rst:10
 msgid "Tabbycat is a draw tabulation system for parliamentary debate tournaments. It supports two-team formats such as Australs, World Schools, Asians, Australian Easters and all New Zealand formats, as well as British Parliamentary (WUDC). It is also highly configurable, supporting many custom variations of the above formats too. If you're looking for a general overview of the software, check out our `README on Github <https://github.com/TabbycatDebate/tabbycat>`_."
-msgstr ""
+msgstr "Tabbycatは、パーラメンタリーディベートの大会のためのドロー集計システムです。 Australs、World Schools、Asian、Austrlian Easters、ニュージーランドのすべてのフォーマット、British Parliamentary（WUDC）などのディベートフォーマットをサポートしています。 またフォーマットをカスタマイズすることも可能で、上記の他のバリエーエーションもサポートしています。General Overviewを探している場合は、Github <https://github.com/TabbycatDebate/tabbycat>のREADMEを参照してください。"
 

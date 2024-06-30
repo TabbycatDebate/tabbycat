@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:25-0400\n"
-"PO-Revision-Date: 2023-02-12 06:27\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:57\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -192,7 +192,7 @@ msgstr "ronda"
 
 #: draw/models.py
 msgid "room"
-msgstr ""
+msgstr "sala"
 
 #: draw/models.py
 msgid "bracket"
@@ -220,11 +220,11 @@ msgstr "Si no está chequeado, los lados asignados a los equipos en este debate 
 
 #: draw/models.py
 msgid "debate"
-msgstr ""
+msgstr "debate"
 
 #: draw/models.py
 msgid "debates"
-msgstr ""
+msgstr "debates"
 
 #. Translators: This is appended to a list of teams, e.g. "Auckland
 #. 1, Vic Wellington 1 (sides not confirmed)". Mind the leading
@@ -240,36 +240,12 @@ msgid " vs "
 msgstr " vs "
 
 #: draw/models.py
-msgid "affirmative"
-msgstr "afirmativo"
-
-#: draw/models.py
-msgid "negative"
-msgstr "negativo"
-
-#: draw/models.py
-msgid "opening government"
-msgstr "alta de gobierno"
-
-#: draw/models.py
-msgid "opening opposition"
-msgstr "alta de oposición "
-
-#: draw/models.py
-msgid "closing government"
-msgstr "baja de gobierno "
-
-#: draw/models.py
-msgid "closing opposition"
-msgstr "baja de oposición "
-
-#: draw/models.py
 msgid "team"
 msgstr "equipo"
 
 #: draw/models.py
-msgid "side"
-msgstr "do"
+msgid "side sequence"
+msgstr ""
 
 #: draw/models.py
 msgid "debate team"
@@ -297,6 +273,11 @@ msgid "lost"
 msgstr "perdió "
 
 #: draw/models.py
+#, python-format
+msgid "Team %d"
+msgstr ""
+
+#: draw/models.py
 msgid "team side allocation"
 msgstr ""
 
@@ -309,6 +290,10 @@ msgstr ""
 #: draw/tables.py
 #, python-format
 msgid "%(side)s: %(metric)s"
+msgstr ""
+
+#: draw/tables.py
+msgid "Bye"
 msgstr ""
 
 #: draw/tables.py
@@ -514,11 +499,11 @@ msgstr ""
 
 #: draw/templates/draw_base.html
 msgid "Redo Draw"
-msgstr ""
+msgstr "Rehacer el draw"
 
 #: draw/templates/draw_base.html
 msgid "Draw Details"
-msgstr ""
+msgstr "Detalles del draw"
 
 #: draw/templates/draw_base.html
 msgid "Position Balance"
@@ -531,12 +516,12 @@ msgstr ""
 
 #: draw/templates/draw_confirm_regeneration.html
 msgid "Confirm draw regeneration"
-msgstr ""
+msgstr "Confirmar draw generado"
 
 #: draw/templates/draw_confirm_regeneration.html
 #: draw/templates/draw_subpage.html
 msgid "Back to Draw"
-msgstr ""
+msgstr "Volver al draw"
 
 #: draw/templates/draw_confirm_regeneration.html
 #, python-format
@@ -568,11 +553,11 @@ msgstr ""
 
 #: draw/templates/draw_display_admin.html
 msgid "Enter Results"
-msgstr ""
+msgstr "Introducir resultados"
 
 #: draw/templates/draw_display_admin.html
 msgid "Motion Details"
-msgstr ""
+msgstr "Detalles de la moción"
 
 #: draw/templates/draw_display_admin.html
 #, python-format
@@ -584,8 +569,8 @@ msgstr[1] ""
 #: draw/templates/draw_display_admin.html
 msgid "Edit the motion"
 msgid_plural "Edit motions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Editar moción"
+msgstr[1] "Editar mociones"
 
 #: draw/templates/draw_display_admin.html
 msgid "Your configuration/format requires motions to be specified as part of ballot entry. Make sure they are added before results come in!"
@@ -1094,11 +1079,31 @@ msgid "Rooms were not auto-allocated because there are one or more adjudicator r
 msgstr ""
 
 #: draw/views.py
+msgid "There is no draw."
+msgstr ""
+
+#: draw/views.py
+msgid "The draw had already been confirmed."
+msgstr ""
+
+#: draw/views.py
 msgid "Deleted the draw. You can now recreate it as normal."
 msgstr ""
 
 #: draw/views.py
+msgid "The draw has already been released."
+msgstr ""
+
+#: draw/views.py
+msgid "The draw must be confirmed before being released."
+msgstr ""
+
+#: draw/views.py
 msgid "Released the draw."
+msgstr ""
+
+#: draw/views.py
+msgid "The draw had been unreleased."
 msgstr ""
 
 #: draw/views.py

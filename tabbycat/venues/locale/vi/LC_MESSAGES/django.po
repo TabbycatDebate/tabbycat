@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 01:02\n"
+"PO-Revision-Date: 2023-08-11 16:01\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
@@ -24,19 +24,19 @@ msgstr "Phòng"
 
 #: venues/consumers.py
 msgid "Draw is already released, unrelease draw to assign rooms."
-msgstr ""
+msgstr "Bảng đấu đã được công bố, hủy công bố bảng đấu để phân lại phòng."
 
 #: venues/consumers.py
 msgid "Draw is not confirmed, confirm draw to assign rooms."
-msgstr ""
+msgstr "Bảng đấu chưa được xác nhận, xác nhận bảng đấu để phân phòng."
 
 #: venues/consumers.py
 msgid "Successfully auto-allocated rooms to debates."
-msgstr ""
+msgstr "Đã tự động phân bổ thành công phòng cho các trận tranh biện."
 
 #: venues/models.py
 msgid "name"
-msgstr ""
+msgstr "tên"
 
 #: venues/models.py
 msgid "priority"

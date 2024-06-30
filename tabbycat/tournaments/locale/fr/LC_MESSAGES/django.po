@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
-"PO-Revision-Date: 2023-02-12 15:51\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 23:07\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -56,8 +56,8 @@ msgid "Format Configuration"
 msgstr "Configuration de format"
 
 #: tournaments/forms.py
-msgid "Apply a standard set of settings to match a common debate format"
-msgstr "Appliquer un ensemble standard de paramètres correspondant à un format de débat qui est commun"
+msgid "Apply a standard set of settings to match a common debate format. These can be changed afterwards and should be checked for your needs."
+msgstr ""
 
 #: tournaments/forms.py
 msgid "Public Configuration"
@@ -66,6 +66,14 @@ msgstr "Configuration d'accès du public"
 #: tournaments/forms.py
 msgid "Show non-sensitive information on the public-facing side of this site, like draws (once released) and the motions of previous rounds"
 msgstr "Afficher des informations non sensibles sur les pages accessibles au public, par ex., les tirages publiés et les motions des joutes antérieurs"
+
+#: tournaments/forms.py
+msgid "Participant Data Entry"
+msgstr "Saisie des données de participant"
+
+#: tournaments/forms.py
+msgid "Whether participants can submit ballots and feedback themselves, and how they do so"
+msgstr "Si les participants peuvent soumettre les feuilles et évaluations eux-même et comment ils le feront"
 
 #: tournaments/forms.py
 msgid "<strong>Tabulation:</strong> [list tabulation staff here]<br /><strong>Equity:</strong> [list equity members here]<br /><strong>Organisation:</strong> [list organising committee members here]<br /><strong>Adjudication:</strong> [list chief adjudicators here]"
@@ -198,6 +206,10 @@ msgid "Elimination"
 msgstr "Élimination"
 
 #: tournaments/models.py
+msgid "Seeded"
+msgstr "Apparié"
+
+#: tournaments/models.py
 msgid "Preliminary"
 msgstr "Préliminaire"
 
@@ -320,16 +332,16 @@ msgid "rounds"
 msgstr "joutes"
 
 #: tournaments/models.py
-msgid "A round in the elimination stage must have its draw type set to \"Elimination\"."
-msgstr "Il faut que le type du tirage d'une joute de l'étape éliminatoire soit « Éliminatoire »."
+msgid "The \"Elimination\" draw type is only for elimination rounds, where it is mandatory."
+msgstr "Le type de tirage « Élimination » est uniquement destiné aux joutes éliminatoires, où il est obligatoire."
 
 #: tournaments/models.py
-msgid "A round in the preliminary stage cannot have its draw type set to \"Elimination\"."
-msgstr "Il ne faut pas que le type du tirage d'une joute de l'étape préliminaire soit « Éliminatoire »."
+msgid "An elimination round must have a break category and preliminary round must not."
+msgstr "Une joute éliminatoire doit avoir une catégorie de qualification et les joutes préliminaires ne doivent pas en avoir."
 
 #: tournaments/models.py
-msgid "Elimination rounds must have a break category."
-msgstr "Il faut que les joutes à élimination aient un catégorie de break."
+msgid "Break category must be for the same tournament."
+msgstr "La catégorie de qualification doit être du même tournoi."
 
 #: tournaments/templates/assistant_tournament_index.html
 msgid "Dashboard"
@@ -387,9 +399,8 @@ msgid "Create New Tournament"
 msgstr "Créer nouveau tournoi"
 
 #: tournaments/templates/create_tournament.html
-#, python-format
-msgid "Tabbycat is free to use for non-profit and non-fundraising tournaments (although donations are encouraged). If your tournament is run for profit or for fundraising, please note that there is a <a href=\"%(donations_url)s\">required payment</a>. For more details, see the <a href=\"https://tabbycat.readthedocs.io/en/stable/about/licence.html\"> Tabbycat licence agreement</a>."
-msgstr "Tabbycat est gratuit à utiliser pour les tournois à but non lucratif et qui ne sont pas pour la collecte des fonds (toutefois, les dons sont encouragés). Si votre tournoi est à but lucratif ou pour la collecte des fonds, veuillez noter qu'il existe un <a href=\"%(donations_url)s\">paiement obligatoire</a>. Pour plus de détails, lisez <a href=\"https://tabbycat.readthedocs.io/en/stable/about/licence.html\">l'accord de licence de Tabbycat</a>."
+msgid "Tabbycat is free to use, although <a href=\"https://opencollective.com/tabbycat\">donations</a> are encouraged."
+msgstr "Tabbycat est gratuit à utiliser, mais les <a href=\"https://opencollective.com/tabbycat\">dons</a> sont encouragés."
 
 #: tournaments/templates/create_tournament.html
 msgid "Just trying out Tabbycat?"
@@ -627,6 +638,14 @@ msgid "Email Team Points"
 msgstr "Envoyer la note des équipes par courriel"
 
 #: tournaments/templates/round_complete_check.html
+msgid "Unmark as Silent"
+msgstr ""
+
+#: tournaments/templates/round_complete_check.html
+msgid "Mark as Silent"
+msgstr ""
+
+#: tournaments/templates/round_complete_check.html
 #, python-format
 msgid "Mark %(round)s as Completed"
 msgstr "Marquer %(round)s comme Achevée"
@@ -666,18 +685,13 @@ msgstr[0] "Il y a encore %(num_unconfirmed)s feuille qui est pas confirmée. Vou
 msgstr[1] "Il y a encore %(num_unconfirmed)s feuilles qui ne sont pas confirmées. Vous ne devriez <strong>pas</strong> avancer à la prochaine joute."
 
 #: tournaments/templates/round_complete_check.html
-#, python-format
-msgid "<p>This round is a silent round.</p> <p> Even though public view of results is enabled, results for <em>this</em> round will still be hidden from public view after completing this round. <p> <p> You can change which rounds are silent in the <a href=\"%(round_changelist_url)s\">Edit Database area</a>. </p>"
-msgstr "<p>Cette joute est silencieuse.</p><p>Même si le visionnement public des résultats est activé, les résultats pour <em>cette</em> joute seront encore cachés du public après ayant fini cette joute.<p><p>Vous pouvez changer quelles joutes sont silencieuses dans la <a href=\"%(round_changelist_url)s\">zone de la base de données</a>.</p>"
+msgid "<p>This round is a silent round.</p> <p> Even though public view of results is enabled, results for <em>this</em> round will still be hidden from public view after completing this round. <p> <p> You can change whether this round is silent using the button above. </p>"
+msgstr ""
 
 #: tournaments/templates/round_complete_check.html
 #, python-format
-msgid "<p><strong> Results for %(round)s will be published online once you mark this round as complete! </strong></p> <p> This round is <em>not</em> a silent round, and public view of results is enabled. </p> <p> If you want to keep the results for just this round hidden, you can mark this round as silent in the <a href=\"%(round_changelist_url)s\">Edit Database area</a>. </p> <p> If you want to disable the public view of results, you can do so in the <a href=\"%(public_features_url)s\">tournament configuration</a>. </p>"
-msgstr "<p><strong>Les résultats pour %(round)s seront publiés en-ligne lorsque vous marquez cette joute comme achevée !</strong></p><p>Cette joute n'est <em>pas</em> silencieuse et les résultats sont public.</p><p>Si vous voulez garder les résultats cachés juste pour cette joute, vous pouvez marquer la joute comme silencieuse dans la <a href=\"%(round_changelist_url)s\">zone de la base de données</a>.</p><p>Si vous voulez désactiver la vue publique des résultats, vous pouvez dans les <a href=\"%(public_features_url)s\">options du tournoi</a>.</p>"
-
-#: tournaments/templates/set_current_round.html
-msgid "Set Current Round"
-msgstr "Modifier la joute actuelle"
+msgid "<p><strong> Results for %(round)s will be published online once you mark this round as complete! </strong></p> <p> This round is <em>not</em> a silent round, and public view of results is enabled. </p> <p> If you want to keep the results for just this round hidden, you can mark this round as silent using the button above. </p> <p> If you want to disable the public view of results, you can do so in the <a href=\"%(public_features_url)s\">tournament configuration</a>. </p>"
+msgstr ""
 
 #: tournaments/templates/set_current_round.html
 msgid "Back to Configuration"
@@ -697,6 +711,11 @@ msgstr "Sur cette page, vous pouvez mettre la <strong>joute actuelle</strong> du
 #, python-format
 msgid "The tournament <strong>%(tournament)s</strong> has no rounds. You'll need to <a href=\"%(round_changelist_url)s\">add rounds and associate them with this tournament</a> before you can set the current round."
 msgstr "Le tournoi <strong>%(tournament)s</strong> n’a aucune joute. Vous aurez besoin d’en <a href=\"%(round_changelist_url)s\">ajouter et de les associer avec ce tournoi</a> avant que vous puissiez régler la joute actuelle."
+
+#: tournaments/templates/set_current_round.html
+msgctxt "button"
+msgid "Set Current Rounds"
+msgstr ""
 
 #: tournaments/templates/set_round_weights.html
 msgctxt "page title"
@@ -764,8 +783,8 @@ msgstr "Se connecter comme administrateur"
 
 #: tournaments/templates/tournament_index.html
 #, python-format
-msgid "We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would make a donation to the project in order to support its ongoing development and maintenance. For a tournament of this size, we suggest a donation of <strong>$%(amount)s</strong>. Note that if your tournament is run for profit, or for fundraising, making this payment is a mandatory condition of Tabbycat's software license. <a href=\"%(url)s\">Learn more about donating.</a>"
-msgstr "Nous espérons que vous avez aimé utiliser Tabbycat pour votre tournoi. Nous apprécierions que vous fassiez une donation au projet afin de soutenir son développement et entretien continu. D'un tournoi de cette taille, nous suggérons une donation de <strong>%(amount)s $</strong>. Notez que si votre tournoi est à but lucratif, ou est pour lever des fonds, ce paiement est une condition obligatoire de la licence de logiciel de Tabbycat. <a href=\"%(url)s\">Savoir plus des donations.</a>"
+msgid "We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would make a donation to the project in order to support its ongoing development and maintenance. For a tournament of this size, we suggest a donation of <strong>$%(amount)s</strong>. <a href=\"https://opencollective.com/tabbycat\">Learn more about donating.</a>"
+msgstr ""
 
 #: tournaments/templates/tournament_index.html
 msgid "Welcome to your new tournament!"
@@ -799,10 +818,6 @@ msgstr "Allez à la zone de tirage afin d'attribuer les juges aux débats de %(r
 #, python-format
 msgid "Go to the results area to enter ballots for %(round)s"
 msgstr "Allez à la zone de résultats afin de saisir les feuilles pour %(round)s"
-
-#: tournaments/templates/tournament_index.html
-msgid "You have enabled a URL that allows users to create new accounts. You should <strong>disable it once the tournament starts</strong>."
-msgstr ""
 
 #: tournaments/templates/tournament_index_links.html
 #, python-format
@@ -928,6 +943,14 @@ msgid "Res"
 msgstr "Rép"
 
 #: tournaments/utils.py
+msgid "1st team"
+msgstr ""
+
+#: tournaments/utils.py
+msgid "2nd team"
+msgstr ""
+
+#: tournaments/utils.py
 msgid "opening government"
 msgstr "premier gouvernement"
 
@@ -990,6 +1013,25 @@ msgstr "Joute %(number)d"
 msgid "R%(number)d"
 msgstr "J%(number)d"
 
+#: tournaments/utils.py
+msgid "bye"
+msgstr "sans adversaire"
+
+#: tournaments/utils.py
+#, python-format
+msgid "Team %d"
+msgstr "Équipe %d"
+
+#: tournaments/views.py
+#, python-format
+msgid "%(round)s has been marked as silent."
+msgstr "%(round)s est désormais silencieux."
+
+#: tournaments/views.py
+#, python-format
+msgid "%(round)s has been unmarked as silent."
+msgstr "%(round)s n'est plus silencieux."
+
 #: tournaments/views.py
 #, python-format
 msgid "%(round)s has been marked as completed. All rounds are now completed, so you're done with the tournament! Congratulations!"
@@ -1026,6 +1068,10 @@ msgstr "données à 24 équipes d'Australs"
 #: tournaments/views.py
 msgid "88-team BP dataset"
 msgstr "données à 88 équipes de PB"
+
+#: tournaments/views.py
+msgid "Set Current Round"
+msgstr "Modifier la joute actuelle"
 
 #: tournaments/views.py
 msgid "Successfully set round weights for tapered scoring."

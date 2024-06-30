@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:25-0400\n"
-"PO-Revision-Date: 2023-02-12 06:28\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:51\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Language: it_IT\n"
@@ -297,8 +297,8 @@ msgstr "Usa le mozioni esistenti"
 #: motions/templates/motions_edit.html
 msgid "The motion for this round is currently publicly displayed because it was released. Any changes made here will be publicly visible as well as soon as they are saved."
 msgid_plural "The motions for this round are currently publicly displayed because they were released. Any changes made here will be publicly visible as well as soon as they are saved."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "La mozione per questo round è attualmente visualizzata pubblicamente perché è stata rilasciata. Qualsiasi modifica apportata qui sarà visibile pubblicamente non appena sarà salvata."
+msgstr[1] "Le mozioni per questo round sono attualmente visualizzate al pubblico perché sono state rilasciate. Qualsiasi modifica apportata qui sarà visibile pubblicamente non appena saranno salvate."
 
 #: motions/templates/motions_edit.html
 msgid "Save Motion"
@@ -324,6 +324,13 @@ msgstr "La mozione per questo round non è stata rilasciata."
 
 #: motions/templates/show.html
 #, python-format
+msgid "Motion for %(round)s"
+msgid_plural "Motions for %(round)s"
+msgstr[0] "Mozione per %(round)s"
+msgstr[1] "Mozioni per %(round)s"
+
+#: motions/templates/show.html
+#, python-format
 msgid "Reveal Info Slide for %(round)s"
 msgid_plural "Reveal Info Slides for %(round)s"
 msgstr[0] "Rivela la slide di informazioni per %(round)s"
@@ -341,12 +348,12 @@ msgid "There are no motions for this round entered into Tabbycat."
 msgstr "Non ci sono mozioni per questo round inserite in Tabbycat."
 
 #: motions/utils.py
-msgid "Not all latest ballots list the same motion, so could not be merged."
-msgstr "Non tutti gli ultimi ballot mostrano la stessa mozione, quindi non possono essere uniti."
+msgid "Not all latest ballots have the same motion. The correct motion must be set manually."
+msgstr ""
 
 #: motions/utils.py
-msgid "Motion vetos are inconsistent, so could not be merged."
-msgstr "I veti sulla mozione non sono consistenti, quindi non possono essere uniti."
+msgid "Motion vetos are inconsistent; they must be set manually."
+msgstr ""
 
 #: motions/views.py
 msgid "The motion has been saved."
@@ -368,7 +375,7 @@ msgstr[1] "%(count)d mozioni eliminate."
 
 #: motions/views.py
 msgid "Motions cannot be copied to the first round."
-msgstr ""
+msgstr "Le mozioni non possono essere copiate nel primo round."
 
 #: motions/views.py
 #, python-format
@@ -380,14 +387,14 @@ msgstr[1] "%(count)d mozioni del round precedente riutilizzate."
 #: motions/views.py
 msgid "Released the motion."
 msgid_plural "Released the motions."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Mozione rilasciata."
+msgstr[1] "Mozioni rilasciate."
 
 #: motions/views.py
 msgid "Unreleased the motion."
 msgid_plural "Unreleased the motions."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Mozione non rilasciata."
+msgstr[1] "Mozioni non rilasciate."
 
 #: motions/views.py
 msgid "Round Motions"

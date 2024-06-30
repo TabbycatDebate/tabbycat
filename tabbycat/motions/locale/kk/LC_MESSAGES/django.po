@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:25-0400\n"
-"PO-Revision-Date: 2023-03-27 09:26\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:58\n"
 "Last-Translator: \n"
 "Language-Team: Kazakh\n"
 "Language: kk_KZ\n"
@@ -19,31 +19,31 @@ msgstr ""
 
 #: motions/apps.py motions/templates/public_motions.html
 msgid "Motions"
-msgstr ""
+msgstr "Қарарлар"
 
 #: motions/models.py
 msgid "text"
-msgstr ""
+msgstr "мәтін"
 
 #: motions/models.py
 msgid "The full motion e.g., \"This House would straighten all bananas\""
-msgstr ""
+msgstr "Қарарды толық жазыңыз, мысалы, \"Бұл палата Қазақ дебатын дамытады\""
 
 #: motions/models.py
 msgid "reference"
-msgstr ""
+msgstr "сілтеме"
 
 #: motions/models.py
 msgid "Shortcode for the motion, e.g., \"Bananas\""
-msgstr ""
+msgstr "Қарарды қысқартып жазыңыз, мысалы, \"Қазақ дебаты\""
 
 #: motions/models.py
 msgid "info slide"
-msgstr ""
+msgstr "түсініктеме"
 
 #: motions/models.py
 msgid "The information slide for this topic; if it has one"
-msgstr ""
+msgstr "Осы тақырыпқа түсініктеме"
 
 #: motions/models.py
 msgid "tournament"
@@ -51,27 +51,27 @@ msgstr "турнир"
 
 #: motions/models.py
 msgid "rounds"
-msgstr ""
+msgstr "ойындар"
 
 #: motions/models.py
 msgid "motion"
-msgstr ""
+msgstr "қарар"
 
 #: motions/models.py
 msgid "motions"
-msgstr ""
+msgstr "қарарлар"
 
 #: motions/models.py
 msgid "debate team"
-msgstr ""
+msgstr "пікірталастырушы топ"
 
 #: motions/models.py
 msgid "preferences"
-msgstr ""
+msgstr "артықшылықтар"
 
 #: motions/models.py
 msgid "ballot submission"
-msgstr ""
+msgstr "төреші парағын тапсыру"
 
 #: motions/models.py
 msgid "debate team motion preference"
@@ -95,7 +95,7 @@ msgstr ""
 
 #: motions/models.py
 msgid "round motion"
-msgstr ""
+msgstr "ойын қарары"
 
 #: motions/models.py
 msgid "round motions"
@@ -205,31 +205,31 @@ msgstr ""
 #: motions/templates/motion_statistics_bp_elim.html
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "No results for this motion"
-msgstr ""
+msgstr "Бұл қарар бойынша талдау жоқ"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Government"
-msgstr ""
+msgstr "Үкімет"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Opposition"
-msgstr ""
+msgstr "Оппозиция"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Average Points per bench"
-msgstr ""
+msgstr "Тараптар бойынша орташа ұпай"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Opening"
-msgstr ""
+msgstr "Ашушы"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Closing"
-msgstr ""
+msgstr "Жабушы"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Average Points per half"
-msgstr ""
+msgstr "Үстелдер бойынша орташа ұпай"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 #, python-format
@@ -275,12 +275,12 @@ msgstr ""
 #: motions/templates/motions_edit.html
 msgid "Edit Motion"
 msgid_plural "Edit Motions"
-msgstr[0] ""
+msgstr[0] "Қарарды өзгерту"
 msgstr[1] ""
 
 #: motions/templates/motions_edit.html
 msgid "Display Draw"
-msgstr ""
+msgstr "Кестені көрсету"
 
 #: motions/templates/motions_edit.html
 msgid "This will replace all existing motions for this round. The motions themselves will still be in the database."
@@ -303,12 +303,12 @@ msgstr[1] ""
 #: motions/templates/motions_edit.html
 msgid "Save Motion"
 msgid_plural "Save Motions"
-msgstr[0] ""
+msgstr[0] "Қарарды сақтау"
 msgstr[1] ""
 
 #: motions/templates/motions_info.html
 msgid "Info Slide"
-msgstr ""
+msgstr "Ақпарат"
 
 #: motions/templates/public_motions.html
 msgid "There are no motions available for this round."
@@ -321,6 +321,13 @@ msgstr ""
 #: motions/templates/public_motions.html
 msgid "The motion for this round has not been released."
 msgstr ""
+
+#: motions/templates/show.html
+#, python-format
+msgid "Motion for %(round)s"
+msgid_plural "Motions for %(round)s"
+msgstr[0] ""
+msgstr[1] ""
 
 #: motions/templates/show.html
 #, python-format
@@ -341,16 +348,16 @@ msgid "There are no motions for this round entered into Tabbycat."
 msgstr ""
 
 #: motions/utils.py
-msgid "Not all latest ballots list the same motion, so could not be merged."
+msgid "Not all latest ballots have the same motion. The correct motion must be set manually."
 msgstr ""
 
 #: motions/utils.py
-msgid "Motion vetos are inconsistent, so could not be merged."
+msgid "Motion vetos are inconsistent; they must be set manually."
 msgstr ""
 
 #: motions/views.py
 msgid "The motion has been saved."
-msgstr ""
+msgstr "Қарар сақталды."
 
 #: motions/views.py
 #, python-format
@@ -395,5 +402,5 @@ msgstr ""
 
 #: motions/views.py
 msgid "Motion Statistics"
-msgstr ""
+msgstr "Қарар статистикасы"
 

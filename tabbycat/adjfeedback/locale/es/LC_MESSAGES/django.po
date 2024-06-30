@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 00:56\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:57\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: adjfeedback/admin.py
 msgid "Integer scales must have a minimum and maximum"
-msgstr ""
+msgstr "Las escalas numéricas deben tener un mínimo y un máximo"
 
 #: adjfeedback/admin.py
 msgid "target"
@@ -132,7 +132,7 @@ msgstr ""
 #. Translators: e.g. "Megan Pearson (chair)", with adjpos="chair"
 #: adjfeedback/forms.py
 msgid "Submitted - "
-msgstr ""
+msgstr "Enviado - "
 
 #. Translators: e.g. "Megan Pearson (panellist)", with round="Round 3", adjpos="panellist"
 #: adjfeedback/forms.py
@@ -190,7 +190,7 @@ msgstr ""
 
 #: adjfeedback/forms.py
 msgid "There were no scores to import."
-msgstr ""
+msgstr "No había resultados para importar."
 
 #: adjfeedback/models.py
 msgid "adjudicator"
@@ -434,7 +434,7 @@ msgstr ""
 
 #: adjfeedback/tables.py
 msgid "Current weighted score"
-msgstr ""
+msgstr "Puntaje ponderado actual"
 
 #: adjfeedback/tables.py
 msgid "This adjudicator's current rating."
@@ -521,6 +521,10 @@ msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
 msgid "This tournament expects you to submit feedback on all of the adjudicators on the panel (including trainees)."
+msgstr ""
+
+#: adjfeedback/templates/enter_feedback.html
+msgid "This tournament doesn't expect you to submit feedback on any of the adjudicators on the panel (including trainees)."
 msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
@@ -693,6 +697,11 @@ msgstr ""
 #, python-format
 msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> allows and expects all adjudicators (including trainees) to submit feedback on every other member of the panel (including trainees)."
 msgstr "La <a href=\"%(option_url)s\" class=\"alert-link\">configuración de retroalimentación</a> actual permite y espera que todos los jueces (incluyendo trainees) envíen retroalimentación sobre todos los miembros del panel (incluyendo trainees)."
+
+#: adjfeedback/templates/feedback_overview.html
+#, python-format
+msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> disallows adjudicators to submit feedback on other members of the panel (including trainees)."
+msgstr ""
 
 #: adjfeedback/templates/feedback_overview.html
 #, python-format

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 01:00\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:59\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Hindi\n"
 "Language: hi_IN\n"
@@ -69,50 +69,50 @@ msgstr[1] ""
 
 #: participants/apps.py participants/views.py
 msgid "Participants"
-msgstr ""
+msgstr "प्रतिभागी"
 
 #: participants/models.py
 msgid "name"
-msgstr ""
+msgstr "नाम"
 
 #: participants/models.py
 msgid "region"
-msgstr ""
+msgstr "क्षेत्र"
 
 #: participants/models.py
 msgid "regions"
-msgstr ""
+msgstr "क्षेत्र"
 
 #. Translators: Change the examples to institutions native to your language; keep consistent between strings
 #: participants/models.py
 msgid "The institution's full name, e.g., \"University of Cambridge\", \"Victoria University of Wellington\""
-msgstr ""
+msgstr "संस्थान का पूरा नाम, जैसे, \"किरोड़ीमल महाविद्यालय\", \"कथन सूरी\""
 
 #: participants/models.py
 msgid "code"
-msgstr ""
+msgstr "कोड"
 
 #. Translators: Change the examples to institutions native to your language; keep consistent between strings
 #: participants/models.py
 msgid "What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\""
-msgstr ""
+msgstr "संस्था को आम तौर पर संक्षेप में क्या कहा जाता है, उदाहरण के लिए, \"KMC\", \"KMC2\""
 
 #: participants/models.py
 msgid "institution"
-msgstr ""
+msgstr "संस्थान"
 
 #: participants/models.py
 msgid "institutions"
-msgstr ""
+msgstr "संस्थान"
 
 #: participants/models.py
 msgid "tournament"
-msgstr ""
+msgstr "प्रतियोगिता"
 
 #. Translators: Translate ESL to the acronym for "<target language> as a second/foreign language", not "English"
 #: participants/models.py
 msgid "Name to be displayed, e.g., \"Novice\", \"ESL\""
-msgstr ""
+msgstr "प्रदर्शित नाम, जैसे, \"नवगंतुक\", \"उद्भव\""
 
 #: participants/models.py
 msgid "slug"
@@ -133,7 +133,7 @@ msgstr ""
 
 #: participants/models.py
 msgid "limit"
-msgstr ""
+msgstr "सीमा"
 
 #: participants/models.py
 msgid "At most this many speakers will be shown on the public tab for this category, or use 0 for no limit"
@@ -265,6 +265,14 @@ msgstr ""
 
 #: participants/models.py
 msgid "break categories"
+msgstr ""
+
+#: participants/models.py
+msgid "seed"
+msgstr ""
+
+#: participants/models.py
+msgid "Used as initial ranking to power-pair the first round"
 msgstr ""
 
 #: participants/models.py
@@ -525,8 +533,7 @@ msgid "Motion:"
 msgstr ""
 
 #: participants/templates/current_round/common.html
-#, python-format
-msgid "Motion %(seq)s:"
+msgid "View Info Slide"
 msgstr ""
 
 #: participants/templates/current_round/common.html

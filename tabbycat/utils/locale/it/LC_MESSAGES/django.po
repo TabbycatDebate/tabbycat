@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-12 02:04-0400\n"
-"PO-Revision-Date: 2023-02-12 06:15\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-25 15:35\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Italian\n"
 "Language: it_IT\n"
@@ -44,7 +44,7 @@ msgstr "Mozione"
 
 #: utils/admin.py
 msgid "Confirmed"
-msgstr ""
+msgstr "Confermato"
 
 #: utils/admin.py
 msgid "Adjudicator"
@@ -289,6 +289,10 @@ msgid "The ballot you submitted"
 msgstr "Il ballot che hai inviato"
 
 #: utils/tables.py
+msgid "No Ballot"
+msgstr ""
+
+#: utils/tables.py
 msgid "View/Edit Ballot"
 msgstr "Visualizza/Modifica ballot"
 
@@ -302,16 +306,24 @@ msgid "TBC"
 msgstr "DaConf"
 
 #: utils/tables.py
-msgid "Team iron-personed this round and the last."
+msgid "Bye"
+msgstr "Ciao"
+
+#: utils/tables.py
+msgid "Team was given a bye this round"
 msgstr ""
+
+#: utils/tables.py
+msgid "Team iron-personed this round and the last."
+msgstr "Squadra con persona iron in questo round e nell'ultimo."
 
 #: utils/tables.py
 msgid "Team iron-personed this round."
-msgstr ""
+msgstr "Squadra con persona iron questo round."
 
 #: utils/tables.py
 msgid "Team iron-personed last round."
-msgstr ""
+msgstr "Squadra con persona iron in questo round."
 
 #: utils/tables.py
 #, python-format

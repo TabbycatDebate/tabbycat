@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-03-27 09:26\n"
+"POT-Creation-Date: 2024-06-24 07:48+1000\n"
+"PO-Revision-Date: 2024-06-23 21:57\n"
 "Last-Translator: \n"
 "Language-Team: Kazakh\n"
 "Language: kk_KZ\n"
@@ -19,27 +19,27 @@ msgstr ""
 
 #: adjfeedback/admin.py
 msgid "Integer scales must have a minimum and maximum"
-msgstr ""
+msgstr "Бүтін бағанның ең азы және ең көбі болуы тиіс"
 
 #: adjfeedback/admin.py
 msgid "target"
-msgstr ""
+msgstr "мақсат"
 
 #: adjfeedback/admin.py adjfeedback/models.py
 msgid "source adjudicator"
-msgstr ""
+msgstr "ақпарат беруші төреші"
 
 #: adjfeedback/admin.py adjfeedback/models.py
 msgid "source team"
-msgstr ""
+msgstr "ақпарат беруші топ"
 
 #: adjfeedback/admin.py
 msgid "Target"
-msgstr ""
+msgstr "Мақсат"
 
 #: adjfeedback/admin.py
 msgid "Source"
-msgstr ""
+msgstr "Ақпарат беруші"
 
 #: adjfeedback/admin.py
 msgid "Feedback timestamp and version"
@@ -95,7 +95,7 @@ msgstr "ойынның бас төрешісі"
 
 #: adjfeedback/forms.py
 msgid "solo"
-msgstr ""
+msgstr "дара"
 
 #: adjfeedback/forms.py
 msgid "panellist"
@@ -127,7 +127,7 @@ msgstr ""
 
 #: adjfeedback/forms.py
 msgid "Ignored"
-msgstr ""
+msgstr "Жауап берілмеген"
 
 #. Translators: e.g. "Megan Pearson (chair)", with adjpos="chair"
 #: adjfeedback/forms.py
@@ -142,7 +142,7 @@ msgstr ""
 
 #: adjfeedback/forms.py
 msgid "-- Adjudicators --"
-msgstr ""
+msgstr "-- Төрешілер --"
 
 #: adjfeedback/forms.py
 msgid "Adjudicator this feedback is about"
@@ -202,11 +202,11 @@ msgstr "ойын"
 
 #: adjfeedback/models.py
 msgid "score"
-msgstr ""
+msgstr "ұпай"
 
 #: adjfeedback/models.py
 msgid "timestamp"
-msgstr ""
+msgstr "уақыт белгісі"
 
 #: adjfeedback/models.py
 msgid "adjudicator base score history"
@@ -218,15 +218,15 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "question"
-msgstr ""
+msgstr "сұрақ"
 
 #: adjfeedback/models.py
 msgid "feedback"
-msgstr ""
+msgstr "кері байланыс"
 
 #: adjfeedback/models.py
 msgid "answer"
-msgstr ""
+msgstr "жауап"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback boolean answer"
@@ -298,11 +298,11 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "select one"
-msgstr ""
+msgstr "біреуін таңдау"
 
 #: adjfeedback/models.py
 msgid "select multiple"
-msgstr ""
+msgstr "бірнешеуін таңдау"
 
 #: adjfeedback/models.py
 msgid "tournament"
@@ -318,7 +318,7 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "name"
-msgstr ""
+msgstr "аты"
 
 #: adjfeedback/models.py
 msgid "A short name for the question, e.g., \"Agree with decision\""
@@ -358,7 +358,7 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "Whether participants are required to fill out this field"
-msgstr ""
+msgstr "Қатысушылар осы жолақты толтыруы тиіс пе"
 
 #: adjfeedback/models.py
 msgid "minimum value"
@@ -394,7 +394,7 @@ msgstr ""
 
 #: adjfeedback/models.py adjfeedback/views.py
 msgid "ignored"
-msgstr ""
+msgstr "жауап берілмеген"
 
 #: adjfeedback/models.py
 msgid "Whether the feedback should affect the adjudicator's score"
@@ -402,11 +402,11 @@ msgstr ""
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback"
-msgstr ""
+msgstr "төрешіге берілген кері байланыс"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedbacks"
-msgstr ""
+msgstr "төрешіге берілген кері байланыстар"
 
 #: adjfeedback/models.py
 msgid "Either the source adjudicator or source team wasn't specified."
@@ -430,7 +430,7 @@ msgstr ""
 
 #: adjfeedback/tables.py
 msgid "N/A"
-msgstr ""
+msgstr "Қолжетімсіз"
 
 #: adjfeedback/tables.py
 msgid "Current weighted score"
@@ -498,7 +498,7 @@ msgstr ""
 #: adjfeedback/templates/add_feedback.html
 #: adjfeedback/templates/enter_feedback.html
 msgid "Enter Feedback"
-msgstr ""
+msgstr "Кері байланыс беру"
 
 #: adjfeedback/templates/enter_feedback.html
 #: adjfeedback/templates/public_add_feedback.html
@@ -509,7 +509,7 @@ msgstr ""
 #: adjfeedback/templates/enter_feedback.html
 #: adjfeedback/templates/feedback_base.html
 msgid "Add Feedback"
-msgstr ""
+msgstr "Кері байланыс беру"
 
 #: adjfeedback/templates/enter_feedback.html
 msgid "There are no feedback options because no rounds have been released to the public yet. Check back when they have!"
@@ -521,6 +521,10 @@ msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
 msgid "This tournament expects you to submit feedback on all of the adjudicators on the panel (including trainees)."
+msgstr ""
+
+#: adjfeedback/templates/enter_feedback.html
+msgid "This tournament doesn't expect you to submit feedback on any of the adjudicators on the panel (including trainees)."
 msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
@@ -545,11 +549,11 @@ msgstr ""
 
 #: adjfeedback/templates/feedback_base.html
 msgid "Important"
-msgstr ""
+msgstr "Маңызды"
 
 #: adjfeedback/templates/feedback_base.html
 msgid "Comments"
-msgstr ""
+msgstr "Пікірлер"
 
 #: adjfeedback/templates/feedback_base.html
 msgid "By Source"
@@ -651,7 +655,7 @@ msgstr ""
 
 #: adjfeedback/templates/feedback_card.html
 msgid "Confirm"
-msgstr ""
+msgstr "Растау"
 
 #: adjfeedback/templates/feedback_card.html
 msgid "Ignored feedback is counted as having been submitted, but does not affect this adjudicator's score."
@@ -696,6 +700,11 @@ msgstr ""
 
 #: adjfeedback/templates/feedback_overview.html
 #, python-format
+msgid "The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback configuration</a> disallows adjudicators to submit feedback on other members of the panel (including trainees)."
+msgstr ""
+
+#: adjfeedback/templates/feedback_overview.html
+#, python-format
 msgid "There is <strong>%(nadjs_outside_range)s adjudicator</strong> with a score <strong>outside the permitted range</strong> of adjudicator scores, which is currently set as %(min_score)s to %(max_score)s. This can cause adjudicator auto-allocation to behave in unexpected ways. If you'd like to use a wider score range, you can configure this in <a href=\"%(feedback_settings_url)s\" class=\"alert-link\"> feedback settings</a>."
 msgid_plural "There are <strong>%(nadjs_outside_range)s adjudicators</strong> with scores <strong>outside the permitted range</strong> of adjudicator scores, which is currently set as %(min_score)s to %(max_score)s. This can cause adjudicator auto-allocation to behave in unexpected ways. If you'd like to use a wider score range, you can configure this in <a href=\"%(feedback_settings_url)s\" class=\"alert-link\"> feedback settings</a>."
 msgstr[0] ""
@@ -719,7 +728,7 @@ msgstr ""
 
 #: adjfeedback/templates/overview_breakdowns.html
 msgid "Feedback"
-msgstr ""
+msgstr "Кері байланыс"
 
 #: adjfeedback/templates/overview_breakdowns.html
 #, python-format
@@ -852,19 +861,19 @@ msgstr[1] ""
 
 #: adjfeedback/views.py
 msgid "Feedbacks"
-msgstr ""
+msgstr "Кері байланыс"
 
 #: adjfeedback/views.py
 msgid "Find Feedback"
-msgstr ""
+msgstr "Кері байланысты іздеу"
 
 #: adjfeedback/views.py
 msgid "From Teams"
-msgstr ""
+msgstr "Қатысушылар"
 
 #: adjfeedback/views.py
 msgid "From Adjudicators"
-msgstr ""
+msgstr "Төрешілер"
 
 #: adjfeedback/views.py
 msgid "Latest Feedback"
@@ -876,7 +885,7 @@ msgstr ""
 
 #: adjfeedback/views.py
 msgid "Only Comments"
-msgstr ""
+msgstr "Тек пікірлер"
 
 #: adjfeedback/views.py
 msgid "(250 most recent)"
@@ -884,7 +893,7 @@ msgstr ""
 
 #: adjfeedback/views.py
 msgid "Important Feedback"
-msgstr ""
+msgstr "Маңызды кері байланыс"
 
 #: adjfeedback/views.py
 msgid "(rating was much higher/lower than expected)"
@@ -892,23 +901,23 @@ msgstr ""
 
 #: adjfeedback/views.py
 msgid "A Team"
-msgstr ""
+msgstr "Топ"
 
 #: adjfeedback/views.py
 msgid "Team"
-msgstr ""
+msgstr "Топ"
 
 #: adjfeedback/views.py
 msgid "Institution"
-msgstr ""
+msgstr "Қауымдастық"
 
 #: adjfeedback/views.py
 msgid "An Adjudicator"
-msgstr ""
+msgstr "Төреші"
 
 #: adjfeedback/views.py
 msgid "Adjudicator"
-msgstr ""
+msgstr "Төреші"
 
 #: adjfeedback/views.py
 #, python-format
@@ -931,7 +940,7 @@ msgstr ""
 
 #: adjfeedback/views.py
 msgid "Feedback Progress"
-msgstr ""
+msgstr "Кері байланыс беру деңгейі"
 
 #: adjfeedback/views.py
 #, python-format
@@ -947,15 +956,15 @@ msgstr ""
 
 #: adjfeedback/views.py
 msgid "confirmed"
-msgstr ""
+msgstr "бекітілген"
 
 #: adjfeedback/views.py
 msgid "un-confirmed"
-msgstr ""
+msgstr "бекітілмеген"
 
 #: adjfeedback/views.py
 msgid "un-ignored"
-msgstr ""
+msgstr "жауап берілген"
 
 #: adjfeedback/views.py
 #, python-format

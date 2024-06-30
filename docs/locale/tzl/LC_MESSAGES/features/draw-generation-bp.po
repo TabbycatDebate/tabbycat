@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-11-18 21:01\n"
+"PO-Revision-Date: 2024-06-23 22:01\n"
 "Last-Translator: \n"
 "Language-Team: Talossan\n"
 "MIME-Version: 1.0\n"
@@ -442,11 +442,11 @@ msgstr "crwdns48021:0:math:crwdnd48021:0{simple}crwdnd48021:0{h}crwdnd48021:0:ma
 
 #: ../../features/draw-generation-bp.rst:183
 msgid "C_\\mathrm{simple}(\\mathbf{h},s) = \\mathbf{h}[s] - \\min_{s' \\in\\mathcal{S}} \\mathbf{h}[s']"
-msgstr "crwdns48023:0{simple}crwdnd48023:0{h}crwdnd48023:0{h}crwdnd48023:0[s]crwdnd48023:0{S}crwdnd48023:0{h}crwdne48023:0"
+msgstr "crwdns48023:0{simple}crwdnd48023:0{h}crwdnd48023:0{h}crwdnd48023:0{S}crwdnd48023:0{h}crwdne48023:0"
 
 #: ../../features/draw-generation-bp.rst:187
 msgid "where :math:`\\mathbf{h}[s]` is the element of :math:`\\mathbf{h}` corresponding to position :math:`s`."
-msgstr "crwdns48025:0:math:crwdnd48025:0{h}crwdnd48025:0[s]crwdnd48025:0:math:crwdnd48025:0{h}crwdnd48025:0:math:crwdne48025:0"
+msgstr "crwdns48025:0:math:crwdnd48025:0{h}crwdnd48025:0:math:crwdnd48025:0{h}crwdnd48025:0:math:crwdne48025:0"
 
 #: ../../features/draw-generation-bp.rst:190
 msgid "Rényi entropy"
@@ -494,7 +494,7 @@ msgstr "crwdns48047:0:math:crwdnd48047:0%Ccrwdnd48047:0:math:crwdne48047:0"
 
 #: ../../features/draw-generation-bp.rst:220
 msgid "H_\\alpha(p) = \\frac{1}{1-\\alpha} \\log_2 \\left( \\sum_{s\\in\\mathcal{S}} (p[s])^\\alpha \\right), \\qquad \\alpha \\ne 1."
-msgstr "crwdns48049:0{1}crwdnd48049:0{S}crwdnd48049:0[s]crwdne48049:0"
+msgstr "crwdns48049:0{1}crwdnd48049:0{S}crwdne48049:0"
 
 #: ../../features/draw-generation-bp.rst:224
 msgid "In the special (limiting) case where :math:`\\alpha=1`, it reduces to the `Shannon entropy <https://en.wikipedia.org/wiki/Shannon_entropy>`_,"
@@ -502,7 +502,7 @@ msgstr "crwdns48051:0:math:crwdne48051:0"
 
 #: ../../features/draw-generation-bp.rst:226
 msgid "H_1(p) =-\\sum_{s\\in\\mathcal{S}} p[s] \\log_2 p[s]."
-msgstr "crwdns48053:0{S}crwdnd48053:0[s]crwdnd48053:0[s]crwdne48053:0"
+msgstr "crwdns48053:0{S}crwdne48053:0"
 
 #: ../../features/draw-generation-bp.rst:230
 msgid "Note that for all :math:`\\alpha`, :math:`0 \\le H_\\alpha(p) \\le \\log_2(4) = 2` (since there are four positions in BP)."

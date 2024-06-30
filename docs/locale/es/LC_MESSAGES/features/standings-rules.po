@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-05 17:13\n"
+"PO-Revision-Date: 2024-02-19 18:00\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -60,7 +60,7 @@ msgstr ""
 
 #: ../../features/standings-rules.rst:36
 msgid "Wins"
-msgstr ""
+msgstr "Victorias"
 
 #: ../../features/standings-rules.rst:37
 msgid "How many debates the team has won."
@@ -180,7 +180,7 @@ msgstr ""
 
 #: ../../features/standings-rules.rst:103
 msgid "Who-beat-whom"
-msgstr ""
+msgstr "Quién-venció-a-quién"
 
 #: ../../features/standings-rules.rst:104
 msgid "If there are exactly two teams tied on all metrics earlier in the precedence than this one, then check if the teams have faced each other. If they have, the team that won their encounter is ranked higher. If they have seen each other more than once, the team that has won more of their encounters is ranked higher."
@@ -204,7 +204,7 @@ msgstr ""
 
 #: ../../features/standings-rules.rst:135
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #: ../../features/standings-rules.rst:136
 msgid "The sum of all speaker scores attained by the speaker. Note that if a speaker misses a round, they'll typically be relegated to the bottom of the speaker standings by this metric."
