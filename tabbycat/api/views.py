@@ -333,8 +333,8 @@ class BreakingTeamsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenerateBr
     def update(self, request, *args, **kwargs):
         serializer = serializers.PartialBreakingTeamSerializer(data=request.data, context=self.get_serializer_context())
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        self.log_action(type=ActionLogEntry.ActionType.BREAK_UPDATE_ONE)
+        self.obj = serializer.save()
+        self.log_action(type=ActionLogEntry.ActionType.BREAK_UPDATE_ONE, agent=ActionLogEntry.Agent.API)
 
         return self.create(request, *args, **kwargs)
 
@@ -357,8 +357,8 @@ class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
     destroy_permission = Permission.ADD_INSTITUTIONS
 
     def perform_create(self, serializer):
-        serializer.save()
-        self.log_action(type=self.action_log_type_created)
+        self.obj = serializer.save()
+        self.log_action(type=self.action_log_type_created, agent=ActionLogEntry.Agent.API)
 
     def get_queryset(self):
         filters = Q()
@@ -497,8 +497,8 @@ class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet)
     destroy_permission = Permission.ADD_TEAMS
 
     def perform_create(self, serializer):
-        serializer.save()
-        self.log_action(type=self.action_log_type_created)
+        self.obj = serializer.save()
+        self.log_action(type=self.action_log_type_created, agent=ActionLogEntry.Agent.API)
 
     def get_queryset(self):
         category_prefetch = Prefetch('categories', queryset=SpeakerCategory.objects.all().select_related('tournament'))
@@ -1070,7 +1070,8 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     destroy_permission = Permission.EDIT_FEEDBACK_CONFIRM
 
     def perform_create(self, serializer):
-        serializer.save()
+        self.obj = serializer.save()
+        self.log_action(type=self.action_log_type_created, agent=ActionLogEntry.Agent.API)
 
     def get_queryset(self):
         query_params = self.request.query_params
