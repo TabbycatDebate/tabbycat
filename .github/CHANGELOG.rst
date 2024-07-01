@@ -27,6 +27,7 @@ Change Log
 - Ballot merging is made more stable and revamped, with the help of Trần Trang Linh:
   - The specific fields are now marked as failing, rather than all related ones.
   - Ballots can be automatically merged when all eligible ballots received, on enabling a setting.
+- Debate start times can now include the date, and can be set automatically on motion release. Thanks Trudeau Okech for the automation!
 - Installation methods are improved:
   - Docker installations are more rapid and responsive to code changes.
   - The "deploy to Heroku" script is updated for the new URL scheme and plans.

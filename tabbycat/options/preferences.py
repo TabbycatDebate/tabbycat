@@ -614,7 +614,7 @@ class UseSpeakerRanks(ChoicePreference):
 
 @tournament_preferences_registry.register
 class PreparationTime(IntegerPreference):
-    help_text = _("How long, in minutes, after motion release does the round start (-1 to deactivate")
+    help_text = _("How long, in minutes, after motion release does the round start (-1 to deactivate)")
     verbose_name = _("Preparation Time")
     section = debate_rules
     name = 'preparation_time'
