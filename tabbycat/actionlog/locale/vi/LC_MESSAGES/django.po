@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:56\n"
+"PO-Revision-Date: 2024-07-02 13:41\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
@@ -219,7 +219,7 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Released motions"
-msgstr ""
+msgstr "Kiến nghị đã công bố"
 
 #: actionlog/models.py
 msgid "Unreleased motions"
@@ -267,19 +267,19 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Created round"
-msgstr ""
+msgstr "Vòng đã tạo"
 
 #: actionlog/models.py
 msgid "Edited round"
-msgstr ""
+msgstr "Vòng đã chỉnh sửa"
 
 #: actionlog/models.py
 msgid "Set start time"
-msgstr ""
+msgstr "Thời gian bắt đầu"
 
 #: actionlog/models.py
 msgid "Saved the sides status of a matchup"
-msgstr ""
+msgstr "Các phe đã lưu cho bảng đấu"
 
 #: actionlog/models.py
 msgid "Imported adjudicators using the simple importer"
