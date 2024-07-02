@@ -27,7 +27,7 @@ function refresh_totals(scoresheet) {
     $neg_rank = $('.1_rank', $scoresheet);
     $aff_margin = $('.0_margin', $scoresheet);
     $neg_margin = $('.1_margin', $scoresheet);
-    if ($('.criteria', $scoresheet)) {
+    if ($('.criterion', $scoresheet).length) {
       for (const side of [0, 1]) {
         for (const speaker of [...$(`.side-${side}.score`, $scoresheet)]) {
           const criteria = $('.criterion input', speaker);
@@ -77,7 +77,7 @@ function refresh_totals(scoresheet) {
       totals_elements[i] = $('.' + i + '_total', $scoresheet);
       margins_elements[i] = $('.' + i + '_margin', $scoresheet);
       rank_elements[i] = $('.' + i + '_rank', $scoresheet);
-      if ($('.criteria', $scoresheet)) {
+      if ($('.criterion', $scoresheet).length) {
         for (const speaker of [...$(`.${i}.score`, $scoresheet)]) {
           const criteria = $('.criterion input', speaker);
           var weighted = 0;
