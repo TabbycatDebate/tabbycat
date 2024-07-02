@@ -587,7 +587,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
                 self.fields.pop('institution')
             if not with_permission(permission=Permission.VIEW_ADJ_BREAK) and not t.pref('public_breaking_adjs'):
                 self.fields.pop('breaking')
-            if not with_permission(permission=Permission.VIEW_PARTICIPANT_DECODED) and not t.pref('participant_code_names') == 'everywhere':
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_DECODED) and t.pref('participant_code_names') == 'everywhere':
                 self.fields.pop('name')
 
             if not with_permission(permission=Permission.VIEW_FEEDBACK_OVERVIEW):
