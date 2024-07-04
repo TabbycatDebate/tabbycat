@@ -583,3 +583,40 @@ class Round(models.Model):
     @property
     def ballots_per_debate(self):
         return self.tournament.ballots_per_debate(self.stage)
+
+
+class ScheduleEvent(models.Model):
+
+    class Types(models.TextChoices):
+        CHECK_IN = 'C', _("Check-in")
+        BRIEFING = 'I', _("Briefing")
+        DRAW = 'T', _("Draw/motion announcement")
+        PREP = 'P', _("Preparation time")
+        DEBATE = 'D', _("Debate")
+        ADJUDICATION = 'J', _("Adjudication")
+        REST = 'R', _("Meal/break")
+        BREAK = 'B', _("Break announcement")
+        AWARDS = 'A', _("Award ceremony")
+        OTHER = 'O', _("Other")
+
+    tournament = models.ForeignKey(Tournament, models.CASCADE, verbose_name=_("tournament"),
+                                   help_text=_("The tournament the event takes place in"))
+    title = models.CharField(max_length=100, verbose_name=_("title"), help_text=_("e.g. \"Lunch\""))
+    type = models.CharField(max_length=1, choices=Types.choices, default=Types.OTHER, verbose_name=_("event type"),
+                            help_text=_("What sort of event this is, use \"Other\" if the type is not available"))
+
+    start_time = models.DateTimeField(verbose_name=_("start time"),
+                                      help_text=_("The time the event starts"))
+    end_time = models.DateTimeField(blank=True, null=True, verbose_name=_("end time"),
+                                    help_text=_("The time at which the event ends, may be empty"))
+
+    round = models.ForeignKey(Round, models.PROTECT, blank=True, null=True, verbose_name=_("round"),
+                              help_text=_("If the event belongs to a specific round, which round"))
+
+    class Meta:
+        verbose_name = _('schedule event')
+        verbose_name_plural = _('schedule events')
+        ordering = ['tournament', 'start_time']
+
+    def __str__(self):
+        return "[%s] %s (%s)" % (self.tournament, self.title, self.start_time)
