@@ -189,6 +189,8 @@ class BPEliminationResultPairing(PolyPairing):
     This class is the data structure expected by DrawGenerator classes, when
     taking information about the results of the previous round."""
 
+    sides = [DebateSide.OG, DebateSide.OO, DebateSide.CG, DebateSide.CO]
+
     def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}, advancing=[]):
         super().__init__(teams, bracket, room_rank, 4, flags, team_flags)
         self.set_advancing(advancing)
