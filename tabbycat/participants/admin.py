@@ -65,6 +65,15 @@ class TournamentInstitutionAdmin(ModelAdmin):
     )
     search_fields = ('institution__name', 'tournament__name')
 
+# ==============================================================================
+# Tournament institution
+# ==============================================================================
+
+@admin.register(Coach)
+class CoachAdmin(ModelAdmin):
+    list_display = ('name', 'instituion', 'email','region')
+    ordering = ('name', )
+    search_fields = ('name', )
 
 # ==============================================================================
 # Speaker

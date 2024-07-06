@@ -160,6 +160,23 @@ class Person(models.Model):
             return self.name
         return self.code_name
 
+class Coach(Person):
+    institution = models.ForeignKey(Institution, models.SET_NULL, blank=True, null=True,
+        verbose_name=_("institution"))
+
+    class Meta:
+        verbose_name = _("coach")
+        verbose_name_plural = _("coaches")
+
+    def __str__(self):
+        if self.institution is None:
+            return self.name
+        else:
+            return "%s (%s)" % (self.name, self.institution.code)
+
+    @property
+    def region(self):
+        return self.institution.region if self.institution else None
 
 class TeamManager(LookupByNameFieldsMixin, models.Manager):
     name_fields = ['short_name', 'long_name']
