@@ -141,8 +141,7 @@ class Person(models.Model):
 class Coach(Person):
     institution = models.ForeignKey(Institution, models.SET_NULL, blank=True, null=True,
         verbose_name=_("institution"))
-    team = models.ForeignKey(Team, models.CASCADE,
-        verbose_name=_("team"))
+
     class Meta:
         verbose_name = _("coach")
         verbose_name_plural = _("coaches")
