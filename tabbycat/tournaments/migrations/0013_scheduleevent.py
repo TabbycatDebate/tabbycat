@@ -34,10 +34,12 @@ class Migration(migrations.Migration):
                     models.CharField(
                         choices=[
                             ("C", "Check-in"),
+                            ("I", "Briefing"),
                             ("T", "Draw/motion announcement"),
                             ("P", "Preparation time"),
                             ("D", "Debate"),
                             ("J", "Adjudication"),
+                            ("R", "Meal/break"),
                             ("B", "Break announcement"),
                             ("A", "Award ceremony"),
                             ("O", "Other"),
