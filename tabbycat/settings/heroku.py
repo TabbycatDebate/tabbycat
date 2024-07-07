@@ -104,14 +104,8 @@ CHANNEL_LAYERS = {
 # ==============================================================================
 
 if environ.get('EMAIL_HOST', ''):
-    SERVER_EMAIL = environ['DEFAULT_FROM_EMAIL']
-    DEFAULT_FROM_EMAIL = environ['DEFAULT_FROM_EMAIL']
-    EMAIL_HOST = environ['EMAIL_HOST']
-    EMAIL_HOST_USER = environ['EMAIL_HOST_USER']
-    EMAIL_HOST_PASSWORD = environ['EMAIL_HOST_PASSWORD']
-    EMAIL_PORT = int(environ.get('EMAIL_PORT', 587))
-    EMAIL_USE_TLS = environ.get('EMAIL_USE_TLS', 'true').lower() == 'true'
-
+    # Email is already configured in core.py
+    pass
 elif environ.get('SENDGRID_API_KEY', ''):
     SERVER_EMAIL = environ.get('DEFAULT_FROM_EMAIL', 'root@localhost')
     DEFAULT_FROM_EMAIL = environ.get('DEFAULT_FROM_EMAIL', 'notconfigured@tabbycatsite')

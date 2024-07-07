@@ -16,7 +16,10 @@ MANAGERS = ADMINS
 DEBUG = bool(int(os.environ['DEBUG'])) if 'DEBUG' in os.environ else False
 ENABLE_DEBUG_TOOLBAR = False # Must default to false; overriden in Dev config
 DISABLE_SENTRY = True # Overriden in Heroku config
+
 SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
+if os.environ.get('DJANGO_SECRET_KEY', ''):
+    SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # ==============================================================================
 # Version
@@ -433,6 +436,18 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# ==============================================================================
+# Email sending
+# ==============================================================================
+if os.environ.get('EMAIL_HOST', ''):
+    SERVER_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
+    DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
+    EMAIL_HOST = os.environ['EMAIL_HOST']
+    EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+    EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+    EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+    EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'true').lower() == 'true'
 
 # ==============================================================================
 # Push Notifications (WebPush)
