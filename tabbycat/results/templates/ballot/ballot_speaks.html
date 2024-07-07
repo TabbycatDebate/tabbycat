@@ -1,12 +1,12 @@
 {% load add_field_css debate_tags i18n %}
 
 <div class="list-group-item js-team-speakers side-{{ team.side_code }} s{{ position.pos }}">
-  <div class="row">
-    <div class="col-2 pt-2 p-lg-2 pr-0 p-1 speaker-position-label">
+  <div class="row flex-column flex-md-row">
+    <div class="col-4 col-md-2 pt-2 p-lg-2 pr-0 p-md-1 speaker-position-label">
       {{ position.name }}
     </div>
 
-    <div class="col mb-0 pr-md-2 pr-1 form-group {{ position.speaker.errors|yesno:'error,' }}">
+    <div class="col mb-0 mb-3 pr-md-2 pr-1 form-group {{ position.speaker.errors|yesno:'error,' }}">
 
       {% if forloop.parentloop.parentloop.first %}
 
@@ -39,16 +39,19 @@
       </div>
     {% endif %}
 
-    <div class="col-4 form-group side-{{ team.side_code }} pr-md-2 pr-1 score {{ position.score_errors|yesno:'error,' }}">
+    <div class="col col-md-4 form-group side-{{ team.side_code }} pr-md-2 pr-1 score {{ position.score_errors|yesno:'error,' }}">
       {% for criterion, field in position.criteria %}
-      <div class="criterion">
+      <div class="criterion mb-3 w-auto">
         {{ criterion.name }}
         {{ field|addcss:"form-control" }}
         {{ field.errors }}
       </div>
       {% endfor %}
-      {{ position.score|addcss:"form-control total" }}
-      {{ position.score.errors }}
+      <div>
+        {{ position.score|addcss:"form-control total" }}
+        {{ position.score.errors }}
+      </div>
+
     </div>
 
   </div>
