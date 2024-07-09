@@ -8,6 +8,7 @@ from channels.layers import get_channel_layer
 from actionlog.models import ActionLogEntry
 from adjallocation.serializers import SimpleDebateAllocationSerializer, SimpleDebateImportanceSerializer
 from tournaments.mixins import RoundWebsocketMixin
+from users.permissions import Permission
 from utils.mixins import SuperuserRequiredWebsocketMixin
 from venues.serializers import SimpleDebateVenueSerializer
 
@@ -122,6 +123,7 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
     adjudicators_serializer = SimpleDebateAllocationSerializer
     venues_serializer = SimpleDebateVenueSerializer
     teams_serializer = EditDebateTeamsDebateSerializer
+    access_permission = Permission.EDIT_DEBATEADJUDICATORS
 
     def receive_json(self, content):
         for key in content.keys():
