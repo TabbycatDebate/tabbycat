@@ -241,7 +241,7 @@ class BasePrintableRandomisedURLs(TournamentMixin, AdministratorMixin, TemplateV
             qr_code = qrcode.make(abs_url, image_factory=svg.SvgPathImage)
 
             participant['url'] = abs_url
-            participant['qr'] = ' '.join(qr_code._generate_subpaths())
+            participant['qr'] = qr_code.path.get('d')
 
         return participants
 
