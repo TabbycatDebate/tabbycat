@@ -108,8 +108,10 @@ class LoginRequiredWebsocketMixin(AccessWebsocketMixin):
 
 class SuperuserRequiredWebsocketMixin(AccessWebsocketMixin):
 
+    access_permission = False
+
     def access_permitted(self):
-        return self.scope["user"].is_superuser
+        return has_permission(self.scope["user"], self.access_permission, self.tournament)
 
 
 # ==============================================================================

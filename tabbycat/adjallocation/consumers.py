@@ -11,6 +11,7 @@ from breakqual.utils import calculate_live_thresholds
 from draw.consumers import BaseAdjudicatorContainerConsumer, EditDebateOrPanelWorkerMixin
 from participants.prefetch import populate_win_counts
 from tournaments.models import Round
+from users.permissions import Permission
 
 from .allocators.base import AdjudicatorAllocationError
 from .allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
@@ -31,6 +32,7 @@ class PanelEditConsumer(BaseAdjudicatorContainerConsumer):
     model = PreformedPanel
     importance_serializer = SimplePanelImportanceSerializer
     adjudicators_serializer = SimplePanelAllocationSerializer
+    access_permission = Permission.EDIT_PREFORMEDPANELS
 
 
 class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
