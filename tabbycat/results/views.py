@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.db import ProgrammingError
 from django.db.models import Count, Max, Q, Window
-from django.db.models.functions import Rank
+from django.db.models.functions import Coalesce, Rank
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
@@ -83,7 +83,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
         if self.tournament.pref('enable_postponements'):
             table.add_debate_postponement_column(draw)
         table.add_debate_venue_columns(draw, for_admin=True)
-        table.add_debate_results_columns(draw, iron=True, n_cols=self._get_draw().aggregate(n=Max('debateteam__side'))['n']+1)
+        table.add_debate_results_columns(draw, iron=True, n_cols=self._get_draw().aggregate(n=Coalesce(Max('debateteam__side'), self.tournament.pref('teams_in_debate')-1))['n']+1)
         table.add_debate_adjudicators_column(draw, show_splits=True, for_admin=True)
         return table
 
