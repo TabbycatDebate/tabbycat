@@ -191,6 +191,7 @@ class ActionLogEntry(models.Model):
         return {
             'id': self.id,
             'user': self.user.username if self.user else self.ip_address or _("anonymous"),
+            'agent': self.agent,
             'type': self.get_type_display(),
             # As the team names are passed in the content of the message for all users,
             # must assume they don't have permission for real names
