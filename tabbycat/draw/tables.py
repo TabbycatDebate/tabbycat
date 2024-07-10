@@ -61,7 +61,7 @@ class PublicDrawTableBuilder(BaseDrawTableBuilder):
 
     def add_debate_team_columns(self, debates, highlight=[]):
         all_sides_confirmed = all(debate.sides_confirmed for debate in debates)  # should already be fetched
-        n_cols = debates.aggregate(n=Coalesce(Max('debateteam__side'), 0))['n'] + 1
+        n_cols = debates.aggregate(n=Coalesce(Max('debateteam__side'), self.tournament.pref('teams_in_debate')-1))['n'] + 1
 
         for side in range(n_cols):
             # For BP team names are often longer than the full position label
