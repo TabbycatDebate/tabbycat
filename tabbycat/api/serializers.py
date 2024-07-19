@@ -1275,7 +1275,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
 
             def validate_adjudicator(self, value):
                 # Make sure adj is in debate
-                if not self.context.get('debate').debateadjudicator_set.filter(adjudicator=value).exists():
+                if value and not self.context.get('debate').debateadjudicator_set.filter(adjudicator=value).exists():
                     raise serializers.ValidationError('Adjudicator must be in debate')
                 return value
 
