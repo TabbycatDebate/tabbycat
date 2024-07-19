@@ -10,6 +10,7 @@ from django.db.models import QuerySet
 from django.utils import timezone
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.fields import get_error_detail, SkipField
 from rest_framework.settings import api_settings
 
@@ -22,14 +23,14 @@ from participants.emoji import pick_unused_emoji
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
 from participants.utils import populate_code_names
 from privateurls.utils import populate_url_keys
-from results.mixins import TabroomSubmissionFieldsMixin
-from results.models import BallotSubmission, ScoreCriterion, SpeakerScore, TeamScore
+from results.models import BallotSubmission, ScoreCriterion, SpeakerScore, Submission, TeamScore
 from results.result import DebateResult, ResultError
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.models import Round, Tournament
 from users.models import Group
 from users.permissions import has_permission, Permission
+from utils.misc import get_ip_address
 from venues.models import Venue, VenueCategory, VenueConstraint
 
 from . import fields
@@ -1042,7 +1043,7 @@ class FeedbackQuestionSerializer(serializers.ModelSerializer):
     validate_seq = partialmethod(_validate_field, 'seq')
 
 
-class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer):
+class FeedbackSerializer(serializers.ModelSerializer):
 
     class SubmitterSourceField(fields.BaseSourceField):
         field_source_name = 'source'
@@ -1102,6 +1103,12 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
             'submitter_type', 'participant_submitter', 'submitter',
             'confirmer', 'confirm_timestamp', 'ip_address', 'private_url')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not is_staff(kwargs.get('context')):
+            self.fields.pop('ip_address')
+            self.fields.pop('ignored')
+
     def validate(self, data):
         source = data.pop('source')
         debate = data.pop('debate')
@@ -1123,21 +1130,28 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
             raise serializers.ValidationError("Target is not in debate")
 
         # Also move the source field into participant_specific fields
-        if isinstance(source, Team):
-            try:
-                data['source_team'] = source.debateteam_set.get(debate=debate)
-            except DebateTeam.DoesNotExist:
-                raise serializers.ValidationError("Source is not in debate")
-        elif isinstance(source, Adjudicator):
-            try:
-                data['source_adjudicator'] = source.debateadjudicator_set.get(debate=debate)
-            except DebateAdjudicator.DoesNotExist:
-                raise serializers.ValidationError("Source is not in debate")
+        participant = self.context['participant_requester']
+        source_type = type(source)
+        type_name = source_type.__name__.lower()
+        if participant and getattr(participant, type_name, None) != source:
+            raise PermissionDenied("Participant may only submit feedback from themselves")
+        related_field = getattr(source, 'debate%s_set' % type_name)
+        try:
+            data['source_%s' % type_name] = related_field.get(debate=debate)
+        except related_field.rel.related_model.DoesNotExist:
+            raise serializers.ValidationError("Source is not in debate")
 
         return super().validate(data)
 
-    def get_request(self):
-        return self.context['request']
+    def get_submitter_fields(self):
+        participant = self.context['participant_requester']
+        request = self.context['request']
+        return {
+            'participant_submitter': request.auth if participant else None,
+            'submitter': participant or request.user,
+            'submitter_type': Submission.Submitter.PUBLIC if participant else Submission.Submitter.TABROOM,
+            'ip_address': get_ip_address(request),
+        }
 
     def create(self, validated_data):
         answers = validated_data.pop('get_answers')
@@ -1171,7 +1185,7 @@ class FeedbackSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializ
         return super().update(instance, validated_data)
 
 
-class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer):
+class BallotSerializer(serializers.ModelSerializer):
 
     class ResultSerializer(serializers.Serializer):
         class SheetSerializer(serializers.Serializer):
@@ -1356,8 +1370,27 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
             'submitter_type', 'submitter', 'participant_submitter',
             'confirmer', 'confirm_timestamp', 'ip_address', 'private_url')
 
-    def get_request(self):
-        return self.context['request']
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not is_staff(kwargs.get('context')):
+            self.fields.pop('ip_address')
+
+    def clean_confirmed(self, value):
+        if value and self.context.get('participant_requester'):
+            raise PermissionDenied("Public cannot confirm ballot")
+        return value
+
+    def get_submitter_fields(self):
+        participant = self.context['participant_requester']
+        request = self.context['request']
+        if participant is not None and not self.context['debate'].debateadjudicator_set.filter(adjudicator_id=participant.id).exists():
+            raise PermissionDenied('Authenticated adjudicator is not in debate')
+        return {
+            'participant_submitter': participant,
+            'submitter': participant or request.user,
+            'submitter_type': Submission.Submitter.PUBLIC if participant else Submission.Submitter.TABROOM,
+            'ip_address': get_ip_address(request),
+        }
 
     def create(self, validated_data):
         result_data = validated_data.pop('result').pop('get_result_info')
@@ -1373,7 +1406,10 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
             debateadj_count = self.context['debate'].debateadjudicator_set.exclude(type=DebateAdjudicator.TYPE_TRAINEE).count()
             if debateadj_count > 1:
                 if len(result_data['sheets']) == 1:
-                    validated_data['participant_submitter'] = result_data['sheets'][0]['adjudicator']
+                    validated_data['participant_submitter'] = result_data['sheets'][0].get('adjudicator', validated_data['participant_submitter'])
+                    p_sub = validated_data['participant_submitter']
+                    if self.context['participant_requester'] is not None and p_sub is not None and p_sub != self.context['participant_requester']:
+                        raise PermissionDenied('Cannot submit single-adjudicator ballot for someone else')
                     validated_data['single_adj'] = True
                 elif validated_data.get('single_adj', False):
                     raise serializers.ValidationError({'single_adj': 'Single-adjudicator ballots can only have one scoresheet'})
@@ -1381,8 +1417,10 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
                     raise serializers.ValidationError({
                         'result': 'Voting ballots must either have one scoresheet or ballots from all voting adjudicators',
                     })
-        elif len(result_data['sheets']) > 1:
-            raise serializers.ValidationError({'result': 'Consensus ballots can only have one scoresheet'})
+        else:
+            if len(result_data['sheets']) > 1:
+                raise serializers.ValidationError({'result': 'Consensus ballots can only have one scoresheet'})
+            validated_data['single_adj'] = self.context['tournament'].pref('individual_ballots')
 
         ballot = super().create(validated_data)
 

@@ -1,7 +1,27 @@
 from dynamic_preferences.registries import global_preferences_registry
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
+from participants.models import Person
 from users.permissions import has_permission
+
+
+class URLKeyAuthentication(TokenAuthentication):
+    keyword = 'Key'
+    model = Person
+
+    def authenticate_credentials(self, key):
+        model = self.get_model()
+        if not key:
+            raise AuthenticationFailed('No URL key provided.')
+
+        try:
+            person = model.objects.select_related('adjudicator__tournament', 'speaker__team__tournament').get(url_key=key)
+        except model.DoesNotExist:
+            raise AuthenticationFailed('Invalid URL key.')
+
+        return (None, person)
 
 
 class APIEnabledPermission(BasePermission):
