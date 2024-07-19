@@ -1,15 +1,16 @@
 from django import forms
 from django.contrib import admin, messages
+from django.contrib.contenttypes.admin import GenericTabularInline
+from django.contrib.contenttypes.prefetch import GenericPrefetch
 from django.db.models import Prefetch
-from django.utils.translation import gettext, gettext_lazy as _, ngettext
+from django.utils.translation import gettext_lazy as _, ngettext
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
 from draw.models import DebateTeam
 from utils.admin import custom_titled_filter, ModelAdmin
 
-from .models import (AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackBooleanAnswer,
-    AdjudicatorFeedbackFloatAnswer, AdjudicatorFeedbackIntegerAnswer, AdjudicatorFeedbackManyAnswer,
-    AdjudicatorFeedbackQuestion, AdjudicatorFeedbackStringAnswer)
+from .models import (AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion,
+    BooleanAnswer, FloatAnswer, IntegerAnswer, ManyAnswer, StringAnswer)
 
 
 # ==============================================================================
@@ -57,46 +58,20 @@ class AdjudicatorFeedbackQuestionAdmin(DynamicArrayMixin, ModelAdmin):
 # Adjudicator feedback answers
 # ==============================================================================
 
-@admin.register(AdjudicatorFeedbackBooleanAnswer)
-@admin.register(AdjudicatorFeedbackFloatAnswer)
-@admin.register(AdjudicatorFeedbackIntegerAnswer)
-@admin.register(AdjudicatorFeedbackManyAnswer)
-@admin.register(AdjudicatorFeedbackStringAnswer)
-class AdjudicatorFeedbackAnswerAdmin(ModelAdmin):
-    list_display = ('question', 'get_target', 'get_source', 'answer', 'get_feedback_description')
-    list_select_related = ('question', 'feedback__adjudicator',
-                           'feedback__source_adjudicator__adjudicator',
-                           'feedback__source_team__team')
-    list_filter  = (
-        'question', 'answer',
-        ('feedback__adjudicator__name', custom_titled_filter(_('target'))),
-        ('feedback__source_adjudicator__adjudicator__name', custom_titled_filter(_('source adjudicator'))),
-        ('feedback__source_team__team__short_name', custom_titled_filter(_('source team'))),
-    )
-    raw_id_fields = ('feedback',)
+@admin.register(BooleanAnswer)
+@admin.register(FloatAnswer)
+@admin.register(IntegerAnswer)
+@admin.register(ManyAnswer)
+@admin.register(StringAnswer)
+class AnswerAdmin(ModelAdmin):
+    list_display = ('question', 'answer', 'content_object')
 
-    @admin.display(description=_("Target"))
-    def get_target(self, obj):
-        return obj.feedback.adjudicator.name
-
-    @admin.display(description=_("Source"))
-    def get_source(self, obj):
-        if obj.feedback.source_team and obj.feedback.source_adjudicator:
-            return "<ERROR: both source team and source adjudicator>"
-        elif obj.feedback.source_team:
-            return obj.feedback.source_team.team.short_name
-        elif obj.feedback.source_adjudicator:
-            return obj.feedback.source_adjudicator.adjudicator.name
-
-    @admin.display(description=_("Feedback timestamp and version"))
-    def get_feedback_description(self, obj):
-        return gettext("%(timestamp)s (version %(version)s)") % {
-            'timestamp': obj.feedback.timestamp.isoformat(),
-            'version': obj.feedback.version,
-        }
+    def get_queryset(self, request):
+        prefetch = GenericPrefetch("content_object", [AdjudicatorFeedback.objects.select_related('source_team__team', 'source_adjudicator__adjudicator', 'adjudicator').all()])
+        return super().get_queryset(request).prefetch_related(prefetch)
 
 
-class BaseAdjudicatorFeedbackAnswerInline(admin.TabularInline):
+class BaseAdjudicatorFeedbackAnswerInline(GenericTabularInline):
     model = None  # Must be set by subclasses
     fields = ('question', 'answer')
     extra = 1

@@ -207,7 +207,8 @@ class Tournament(models.Model):
 
     @cached_property
     def adj_feedback_questions(self):
-        return self.adjudicatorfeedbackquestion_set.order_by("seq")
+        from adjfeedback.models import AdjudicatorFeedbackQuestion
+        return AdjudicatorFeedbackQuestion.objects.filter(tournament=self).order_by("seq")
 
     def break_categories_nongeneral(self):
         return self.breakcategory_set.exclude(is_general=True)

@@ -217,22 +217,22 @@ class FeedbackMixin(TournamentMixin):
         populate_wins_for_debateteams([f.source_team for f in feedbacks if f.source_team is not None])
 
         # Can't prefetch an abstract model effectively; so get all answers...
-        questions = list(self.tournament.adj_feedback_questions)
+        questions = list(self.tournament.adj_feedback_questions.prefetch_related(*AdjudicatorFeedbackQuestion.answer_type_rels))
         if self.only_comments:
             long_text = AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT
             questions = [q for q in questions if q.answer_type == long_text]
 
         for question in questions:
-            question.answers = list(question.answer_set.values())
+            question.answers = [a for a in question.answer_set.all()]
 
         for feedback in feedbacks:
             feedback.items = []
             # ...and stitch them together manually
             for question in questions:
                 for answer in question.answers:
-                    if answer['feedback_id'] == feedback.id:
+                    if answer.object_id == feedback.id:
                         feedback.items.append({'question': question,
-                                               'answer': answer['answer']})
+                                               'answer': answer.answer})
                         break # Should only be one match
 
         if self.only_comments:

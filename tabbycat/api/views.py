@@ -23,7 +23,7 @@ from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from actionlog.models import ActionLogEntry
 from adjallocation.models import PreformedPanel
 from adjallocation.preformed.anticipated import calculate_anticipated_draw
-from adjfeedback.models import AdjudicatorFeedbackQuestion
+from adjfeedback.models import AdjudicatorFeedback
 from availability.models import RoundAvailability
 from breakqual.models import BreakCategory
 from breakqual.views import GenerateBreakMixin
@@ -1092,10 +1092,10 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
 
         answers_prefetch = [
             Prefetch(
-                typ.__name__.lower() + "_set",
-                queryset=typ.objects.all().select_related('question', 'question__tournament'),
+                typ,
+                queryset=getattr(AdjudicatorFeedback, typ).rel.model.objects.select_related('question__tournament'),
             )
-            for typ in AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE.keys()
+            for typ in AdjudicatorFeedback.answer_rels
         ]
         return super().get_queryset().filter(filters).select_related(
             'adjudicator', 'adjudicator__tournament',
