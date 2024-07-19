@@ -1401,11 +1401,11 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
 
     def update(self, instance, validated_data):
         if validated_data['confirmed'] and not instance.confirmed:
-            validated_data['confirmer'] = self.context['request'].user
-            validated_data['confirm_timestamp'] = timezone.now()
+            instance.confirmer = self.context['request'].user
+            instance.confirm_timestamp = timezone.now()
 
-        instance.confirmed = validated_data['confirmed']
-        instance.discarded = validated_data['discarded']
+        instance.confirmed = validated_data.get('confirmed', instance.confirmed)
+        instance.discarded = validated_data.get('discarded', instance.discarded)
         instance.save()
         return instance
 
