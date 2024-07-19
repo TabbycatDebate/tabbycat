@@ -604,6 +604,33 @@ class BallotSerializerTests(APITestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(str(response.data['result']['sheets'][0]['adjudicator'][0]), 'Adjudicator must be in debate')
 
+    def test_null_adj(self):
+        self.tournament.preferences['debate_rules__ballots_per_debate_prelim'] = 'per-debate'
+        self.tournament.preferences['debate_rules__speakers_in_ballots'] = 'never'
+
+        client = APIClient()
+        client.force_authenticate(user=self.user)
+        response = client.post(reverse_round('api-ballot-list', self.round, kwargs={'debate_pk': self.debate.pk}), {
+            'result': {
+                'sheets': [{
+                    'adjudicator': None,
+                    'teams': [
+                        {
+                            'side': 'aff',
+                            'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t1.pk}),
+                            'win': True,
+                        },
+                        {
+                            'side': 'neg',
+                            'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t2.pk}),
+                            'win': False,
+                        },
+                    ],
+                }],
+            },
+        })
+        self.assertEqual(response.status_code, 201)
+
     def test_single_adj_many_ballots_fail(self):
         self.tournament.preferences['debate_rules__ballots_per_debate_prelim'] = 'per-adj'
         self.tournament.preferences['debate_rules__speakers_in_ballots'] = 'never'
