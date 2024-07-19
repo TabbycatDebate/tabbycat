@@ -1,7 +1,5 @@
 from itertools import islice, zip_longest
 
-from django.db.models import Max
-from django.db.models.functions import Coalesce
 from django.utils.encoding import force_str
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
@@ -61,7 +59,7 @@ class PublicDrawTableBuilder(BaseDrawTableBuilder):
 
     def add_debate_team_columns(self, debates, highlight=[]):
         all_sides_confirmed = all(debate.sides_confirmed for debate in debates)  # should already be fetched
-        n_cols = debates.aggregate(n=Coalesce(Max('debateteam__side'), 0))['n'] + 1
+        n_cols = max([dt.side for debate in debates for dt in debate.debateteams], default=self.tournament.pref('teams_in_debate') - 1) + 1
 
         for side in range(n_cols):
             # For BP team names are often longer than the full position label

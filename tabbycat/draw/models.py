@@ -180,7 +180,10 @@ class Debate(models.Model):
     def get_team(self, side: int) -> 'Team':
         if not hasattr(self, '_team_properties'):
             self._populate_teams()
-        return self.teams[side]
+        try:
+            return self.teams[side]
+        except IndexError:
+            return None
 
     def get_dt(self, side: int) -> 'DebateTeam':
         """dt = DebateTeam"""

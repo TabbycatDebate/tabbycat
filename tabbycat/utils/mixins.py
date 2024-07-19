@@ -73,9 +73,13 @@ class AdministratorMixin(UserPassesTestMixin, ContextMixin):
     def test_func(self) -> bool:
         if not hasattr(self, 'tournament'):
             return self.request.user.is_superuser
+
+        view_perm = False
         if self.request.method == 'GET' and self.get_view_permission() is not None:
-            return has_permission(self.request.user, self.get_view_permission(), self.tournament)
-        if self.request.method in ['POST', 'PUT'] and self.get_edit_permission() is not None:
+            view_perm = has_permission(self.request.user, self.get_view_permission(), self.tournament)
+            if view_perm:
+                return True
+        if (not view_perm or self.request.method in ['POST', 'PUT']) and self.get_edit_permission() is not None:
             return has_permission(self.request.user, self.get_edit_permission(), self.tournament)
         return self.request.user.is_superuser
 
@@ -108,8 +112,10 @@ class LoginRequiredWebsocketMixin(AccessWebsocketMixin):
 
 class SuperuserRequiredWebsocketMixin(AccessWebsocketMixin):
 
+    access_permission = False
+
     def access_permitted(self):
-        return self.scope["user"].is_superuser
+        return has_permission(self.scope["user"], self.access_permission, self.tournament)
 
 
 # ==============================================================================
