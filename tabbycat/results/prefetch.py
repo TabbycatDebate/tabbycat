@@ -103,7 +103,7 @@ def populate_results(ballotsubs, tournament=None):
 
     # Create the DebateResults
     for ballotsub in ballotsubs:
-        result = DebateResult(ballotsub, load=False, sides=range(nsides_per_debate[ballotsub.debate_id]), criteria=criteria)
+        result = DebateResult(ballotsub, load=False, sides=range(nsides_per_debate.get(ballotsub.debate_id, tournament.pref('teams_in_debate'))), criteria=criteria)
         result.init_blank_buffer()
 
         ballotsub._result = result
