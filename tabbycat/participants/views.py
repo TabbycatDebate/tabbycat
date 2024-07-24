@@ -392,7 +392,7 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
     template_name = 'edit_speaker_eligibility.html'
     page_title = _("Speaker Category Eligibility")
     page_emoji = '🍯'
-    edit_permission = Permission.EDIT_SPEAKER_CATEGORIES
+    edit_permission = Permission.EDIT_SPEAKER_ELIGIBILITY
 
     def get_table(self):
         table = TabbycatTableBuilder(view=self, sort_key='team')
