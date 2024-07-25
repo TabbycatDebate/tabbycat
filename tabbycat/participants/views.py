@@ -424,6 +424,7 @@ class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMi
     action_log_type = ActionLogEntry.ActionType.SPEAKER_ELIGIBILITY_EDIT
     participant_model = Speaker
     many_to_many_field = 'categories'
+    edit_permission = Permission.EDIT_SPEAKER_ELIGIBILITY
 
     def set_category_eligibility(self, participant, sent_status):
         category_id = sent_status['type']
