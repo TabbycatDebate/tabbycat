@@ -587,7 +587,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
                 self.fields.pop('institution')
             if not with_permission(permission=Permission.VIEW_ADJ_BREAK) and not t.pref('public_breaking_adjs'):
                 self.fields.pop('breaking')
-            if not with_permission(permission=Permission.VIEW_PARTICIPANT_DECODED) and not t.pref('participant_code_names') == 'everywhere':
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_DECODED) and t.pref('participant_code_names') == 'everywhere':
                 self.fields.pop('name')
 
             if not with_permission(permission=Permission.VIEW_FEEDBACK_OVERVIEW):
@@ -1275,7 +1275,7 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
 
             def validate_adjudicator(self, value):
                 # Make sure adj is in debate
-                if not self.context.get('debate').debateadjudicator_set.filter(adjudicator=value).exists():
+                if value and not self.context.get('debate').debateadjudicator_set.filter(adjudicator=value).exists():
                     raise serializers.ValidationError('Adjudicator must be in debate')
                 return value
 
@@ -1401,11 +1401,11 @@ class BallotSerializer(TabroomSubmissionFieldsMixin, serializers.ModelSerializer
 
     def update(self, instance, validated_data):
         if validated_data['confirmed'] and not instance.confirmed:
-            validated_data['confirmer'] = self.context['request'].user
-            validated_data['confirm_timestamp'] = timezone.now()
+            instance.confirmer = self.context['request'].user
+            instance.confirm_timestamp = timezone.now()
 
-        instance.confirmed = validated_data['confirmed']
-        instance.discarded = validated_data['discarded']
+        instance.confirmed = validated_data.get('confirmed', instance.confirmed)
+        instance.discarded = validated_data.get('discarded', instance.discarded)
         instance.save()
         return instance
 

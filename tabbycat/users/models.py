@@ -36,6 +36,7 @@ class Group(models.Model):
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE, verbose_name=_("tournament"))
     permissions = ChoiceArrayField(blank=True, default=list,
         base_field=models.CharField(max_length=50, choices=Permission.choices), verbose_name=_("permissions"))
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Membership', related_name='group_set')
 
     class Meta:
         constraints = [UniqueConstraint(fields=['name', 'tournament'])]

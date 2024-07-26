@@ -96,7 +96,7 @@ def get_class_name(ballotsub, round, tournament=None):
 def is_integer_step(tournament: 'Tournament', ss: Union['SpeakerScore', 'SpeakerScoreByAdj']) -> bool:
     return (
         ss.position > tournament.pref('substantive_speakers') and tournament.pref('reply_score_step') == int(tournament.pref('reply_score_step'))
-    ) or (ss.position >= tournament.pref('substantive_speakers') and tournament.pref('score_step') == int(tournament.pref('score_step')))
+    ) or (ss.position <= tournament.pref('substantive_speakers') and tournament.pref('score_step') == int(tournament.pref('score_step')))
 
 
 def DebateResult(ballotsub, *args, **kwargs):  # noqa: N802 (factory function)

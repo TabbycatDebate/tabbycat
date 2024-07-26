@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from options.utils import use_team_code_names_data_entry
 from tournaments.mixins import TournamentWebsocketMixin
+from users.permissions import has_permission, Permission
 
 from .models import Event, Identifier
 from .utils import get_unexpired_checkins
@@ -14,10 +15,12 @@ class CheckInEventConsumer(TournamentWebsocketMixin, JsonWebsocketConsumer):
 
     group_prefix = 'checkins'
 
+    edit_permission = Permission.EDIT_PARTICIPANT_CHECKIN
+
     def receive_json(self, content):
         # Because the public can receive but not send checkins we need to
         # re-authenticate here:
-        if not self.scope["user"].is_authenticated:
+        if not has_permission(self.scope["user"], self.edit_permission, self.tournament):
             return
 
         # Send message to room group about the new checkin

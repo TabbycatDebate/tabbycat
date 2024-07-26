@@ -21,6 +21,11 @@ class UserPermissionInline(admin.TabularInline):
     fields = ('permission', 'tournament')
 
 
+class MembershipInline(admin.TabularInline):
+    model = Membership
+    fields = ('group',)
+
+
 class CustomUserLabelsMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -30,32 +35,35 @@ class CustomUserLabelsMixin:
 
 
 class UserChangeFormExtended(CustomUserLabelsMixin, UserChangeForm):
-    membership = ModelMultipleChoiceField(queryset=Membership.objects.all(), required=False)
+    group_set = ModelMultipleChoiceField(queryset=Group.objects.all(), required=False)
 
 
 class UserCreationFormExtended(CustomUserLabelsMixin, UserCreationForm):
-    membership = ModelMultipleChoiceField(queryset=Membership.objects.all(), required=False)
+    group_set = ModelMultipleChoiceField(queryset=Group.objects.all(), required=False)
 
 
 class UserAdmin(BaseUserAdmin):
     list_display = ('username', 'email', 'is_active', 'is_staff', 'is_superuser')
-    inlines = (UserPermissionInline,)
+    inlines = (UserPermissionInline, MembershipInline)
 
     fieldsets = ( # Hide groups and user permission fields
         (_('Personal info'), {'fields': ('username', 'email', 'password')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'membership')}),
+        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
 
     add_fieldsets = ( # Set permissions when creating
         (None, {
-            'fields': ('username', 'password1', 'password2', 'email', 'is_staff', 'is_superuser', 'membership'),
+            'fields': ('username', 'password1', 'password2', 'email', 'is_staff', 'is_superuser', 'group_set'),
         }),
     )
 
     add_form_template = 'admin/change_form.html'
     add_form = UserCreationFormExtended
     form = UserChangeFormExtended
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('group_set')
 
 
 @admin.register(UserPermission)

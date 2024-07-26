@@ -92,6 +92,7 @@ class EditDebateAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
     prefetch_adjs = True # Fetched in full as get_serialised
 
     view_permission = Permission.VIEW_DEBATEADJUDICATORS
+    edit_permission = Permission.EDIT_DEBATEADJUDICATORS
 
     def get_extra_info(self):
         info = super().get_extra_info()
@@ -108,6 +109,7 @@ class EditPanelAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
     page_title = gettext_lazy("Edit Panels")
 
     view_permission = Permission.VIEW_PREFORMEDPANELS
+    edit_permission = Permission.EDIT_PREFORMEDPANELS
 
     def get_extra_info(self):
         info = super().get_extra_info()

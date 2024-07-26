@@ -7,7 +7,7 @@ from draw.models import DebateTeam
 from tournaments.models import Tournament
 
 from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore, TeamScoreByAdj
-from .result import DebateResult
+from .result import DebateResult, is_integer_step
 
 
 def populate_wins(debates):
@@ -103,7 +103,7 @@ def populate_results(ballotsubs, tournament=None):
 
     # Create the DebateResults
     for ballotsub in ballotsubs:
-        result = DebateResult(ballotsub, load=False, sides=range(nsides_per_debate[ballotsub.debate_id]), criteria=criteria)
+        result = DebateResult(ballotsub, load=False, sides=range(nsides_per_debate.get(ballotsub.debate_id, tournament.pref('teams_in_debate'))), criteria=criteria)
         result.init_blank_buffer()
 
         ballotsub._result = result
@@ -128,11 +128,14 @@ def populate_results(ballotsubs, tournament=None):
             result.ghosts[ss.debate_team.side][ss.position] = ss.ghost
 
             if not result.is_voting:
+                int_step = is_integer_step(tournament, ss)
                 if len(ss.speakercriterionscore_set.all()) > 0:
                     for criterion_score in ss.speakercriterionscore_set.all():
-                        result.set_criterion_score(ss.debate_team.side, ss.position, criterion_score.criterion, criterion_score.score)
+                        score = criterion_score.score
+                        score = int(score) if int_step and int(score) == score else score
+                        result.set_criterion_score(ss.debate_team.side, ss.position, criterion_score.criterion, score)
                 else:
-                    result.set_score(ss.debate_team.side, ss.position, ss.score)
+                    result.set_score(ss.debate_team.side, ss.position, int(ss.score) if int_step and ss.score % 1 == 0 else ss.score)
                     result.set_speaker_rank(ss.debate_team.side, ss.position, ss.rank)
 
     # Populate scoresheets (load_scoresheets)
@@ -155,13 +158,16 @@ def populate_results(ballotsubs, tournament=None):
 
     for ssba in ssbas:
         result = results_by_ballotsub_id[ssba.ballot_submission_id]
+        int_step = is_integer_step(tournament, ssba)
         if result.uses_speakers and result.is_voting:
             if len(ssba.speakercriterionscorebyadj_set.all()) > 0:
                 for criterion_score in ssba.speakercriterionscorebyadj_set.all():
-                    result.set_criterion_score(ssba.debate_adjudicator.adjudicator, ssba.debate_team.side, ssba.position, criterion_score.criterion, criterion_score.score)
+                    score = criterion_score.score
+                    score = int(criterion_score.score) if int_step and criterion_score.score % 1 == 0 else score
+                    result.set_criterion_score(ssba.debate_adjudicator.adjudicator, ssba.debate_team.side, ssba.position, criterion_score.criterion, score)
             else:
                 result.set_score(ssba.debate_adjudicator.adjudicator, ssba.debate_team.side,
-                    ssba.position, ssba.score)
+                    ssba.position, int(ssba.score) if int_step and ssba.score % 1 == 0 else ssba.score)
 
     # Populate advancing (load_advancing)
     teamscores = TeamScore.objects.filter(

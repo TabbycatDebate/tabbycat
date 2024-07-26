@@ -2,6 +2,7 @@ import datetime
 import logging
 import unicodedata
 from itertools import product
+from zoneinfo import ZoneInfo
 
 from django.contrib import messages
 from django.db.models import OuterRef, Subquery
@@ -82,7 +83,7 @@ class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
     def get_page_subtitle(self):
         if len(self.rounds) == 1 and getattr(self.rounds[0], 'starts_at', None):
             return _("debates start at %(time)s (in %(time_zone)s)") % {
-                     'time': self.rounds[0].starts_at.strftime('%H:%M'),
+                     'time': self.rounds[0].starts_at.astimezone(ZoneInfo(get_current_timezone_name())).strftime('%H:%M'),
                      'time_zone': get_current_timezone_name()}
         elif any(getattr(r, 'starts_at', None) for r in self.rounds):
             return _("start times in time zone: %(time_zone)s") % {'time_zone': get_current_timezone_name()}
@@ -126,7 +127,7 @@ class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
                     "debate starts at %(time)s",
                     "debates start at %(time)s",
                     debates.count(),
-                ) % {'round_name': r.name, 'time': r.starts_at.strftime('%H:%M')}
+                ) % {'round_name': r.name, 'time': r.starts_at.astimezone(ZoneInfo(get_current_timezone_name())).strftime('%H:%M')}
             else:
                 subtitle = ""
             table = PublicDrawTableBuilder(view=self, sort_key=self.sort_key,

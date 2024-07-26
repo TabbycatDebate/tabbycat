@@ -1,7 +1,6 @@
 from itertools import islice, zip_longest
+from typing import List, Optional, TYPE_CHECKING
 
-from django.db.models import Max
-from django.db.models.functions import Coalesce
 from django.utils.encoding import force_str
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
@@ -13,6 +12,10 @@ from tournaments.utils import get_side_name
 from utils.tables import TabbycatTableBuilder
 
 from .generator.bphungarian import BPHungarianDrawGenerator
+
+if TYPE_CHECKING:
+    from participants.models import Team
+    from .models import Debate
 
 
 class BaseDrawTableBuilder(TabbycatTableBuilder):
@@ -59,11 +62,13 @@ class BaseDrawTableBuilder(TabbycatTableBuilder):
 
 class PublicDrawTableBuilder(BaseDrawTableBuilder):
 
+    def get_sides(self, debates: List['Debate']) -> int:
+        return max([dt.side for debate in debates for dt in debate.debateteams], default=self.tournament.pref('teams_in_debate') - 1) + 1
+
     def add_debate_team_columns(self, debates, highlight=[]):
         all_sides_confirmed = all(debate.sides_confirmed for debate in debates)  # should already be fetched
-        n_cols = debates.aggregate(n=Coalesce(Max('debateteam__side'), 0))['n'] + 1
 
-        for side in range(n_cols):
+        for side in range(self.get_sides(debates)):
             # For BP team names are often longer than the full position label
             if self.tournament.pref('teams_in_debate') > 2:
                 side_name = get_side_name(self.tournament, side, 'abbr')
@@ -114,21 +119,21 @@ class AdminDrawTableBuilder(PublicDrawTableBuilder):
 
         self.add_column(header, [_fmt(debate.bracket) for debate in debates])
 
-    def _debate_standings_headers(self, standings, info_method, limit=None):
+    def _debate_standings_headers(self, standings, info_method, sides, limit=None):
         info_list = getattr(standings, info_method)()
         headers = []
         for i, info in enumerate(islice(info_list, limit)):
-            for side in self.tournament.sides:
+            for side in range(sides):
                 header = self._prepend_side_header(side, info['name'], info['abbr'])
                 headers.append(header)
         return headers
 
     def _add_debate_standing_columns(self, debates, standings, itermethod, infomethod, formattext, formatsort, limit=None):
-        standings_by_debate = [standings.get_standings(
-                [d.get_team(side) for side in self.tournament.sides]) if not d.is_bye else None for d in debates]
+        standings_by_debate = [standings.get_standings(d.teams) if not d.is_bye else None for d in debates]
+        sides = self.get_sides(debates)
         cells = []
 
-        ncols = len(list(getattr(standings, infomethod)())) * len(self.tournament.sides)
+        ncols = len(list(getattr(standings, infomethod)())) * sides
         for debate in standings_by_debate:
             if debate is None:
                 row = [self.BLANK_TEXT] * ncols
@@ -141,9 +146,11 @@ class AdminDrawTableBuilder(PublicDrawTableBuilder):
                         if i == 0:
                             cell['class'] = 'highlight-col'
                         row.append(cell)
+                    for i in range(sides - len(metrics)):
+                        row.append({'text': self.BLANK_TEXT})
             cells.append(row)
 
-        headers = self._debate_standings_headers(standings, infomethod, limit)
+        headers = self._debate_standings_headers(standings, infomethod, sides, limit)
         self.add_columns(headers, cells)
 
     def add_debate_metric_columns(self, debates, standings):
@@ -172,7 +179,14 @@ class AdminDrawTableBuilder(PublicDrawTableBuilder):
 
     def add_debate_side_history_columns(self, debates, round):
         # Teams should be prefetched in debates, so don't use a new Team queryset to collate teams
-        teams_by_side = [[d.get_team(side) if not d.is_bye else None for d in debates] for side in self.tournament.sides]
+
+        def get_team_or_none(debate: 'Debate', side: int) -> Optional['Team']:
+            try:
+                return debate.get_team(side)
+            except IndexError:
+                return None
+
+        teams_by_side = [[get_team_or_none(d, side) if not d.is_bye else None for d in debates] for side in range(self.get_sides(debates))]
         all_teams = [team for d in debates for team in d.teams]
         side_histories = get_side_history(all_teams, self.tournament.sides, round.seq)
 
