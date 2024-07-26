@@ -745,7 +745,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
         else:
             if len(totals) == 2:
                 max_teams = [side for side, total in side_totals.items() if total == max(totals)]
-                high_point_declared = cleaned_data.get(self._fieldname_declared_winner()) in max_teams
+                high_point_declared = int(cleaned_data.get(self._fieldname_declared_winner())) in max_teams
 
                 # Check that no teams had the same total
                 if totals[0] == totals[1] and self.declared_winner in ['none', 'high-points']:
@@ -916,7 +916,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
             else:
                 if len(totals) == 2:
                     max_teams = [side for side, total in side_totals.items() if total == max(totals)]
-                    high_point_declared = cleaned_data.get(self._fieldname_declared_winner(adj)) in max_teams
+                    high_point_declared = int(cleaned_data.get(self._fieldname_declared_winner(adj))) in max_teams
 
                     # Check that it was not a draw.
                     if totals[0] == totals[1] and self.declared_winner in ['none', 'high-points']:
