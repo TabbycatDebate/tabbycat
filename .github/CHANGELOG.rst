@@ -2,6 +2,25 @@
 Change Log
 ==========
 
+2.9.1
+-----
+*Release date: 26 July 2024*
+
+- Fixed crash when creating draws for BP elimination rounds.
+- Fixed crash on draw page when there is no draw.
+- Fixed result popovers not including CO.
+- Improved the display of ballots with criteria on mobile.
+- Fixed crash when printing private URL link pages.
+- Added permission checks for real-time actions (checkins and adjudicator allocation).
+- Fixed group membership field in Edit DB.
+- Added permissions for preformed panels and speaker eligibility views.
+- Ensured score criteria fields are shown in correct order.
+- Corrected error message when motion in ballot is not assigned to the correct round.
+- Used site timezone for displaying round start time.
+- API: Consensus ballots no longer require an adjudicator, and gets the confirming user saved.
+- Fixed draw details table for public speaking rounds.
+
+
 2.9.0 (Ragdoll)
 ---------
 *Release date: 1 July 2024*
