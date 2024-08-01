@@ -336,6 +336,8 @@ class DebateTeam(models.Model):
 
     def get_side_abbr(self, tournament=None):
         """Convenience function, mainly for use in templates."""
+        if tournament is None:
+            tournament = self.team.tournament
         return self.get_side_name(tournament, 'abbr')
 
 

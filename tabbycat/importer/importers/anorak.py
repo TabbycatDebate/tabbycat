@@ -346,6 +346,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             tournament=self.tournament,
             answer_type=self.lookup_feedback_answer_type,
             choices=lambda c: c.split('//'),
+            for_content_type=ContentType.objects.get_for_model(fm.AdjudicatorFeedback),
         )
 
         self._import(f, fm.AdjudicatorFeedbackQuestion, question_interpreter)

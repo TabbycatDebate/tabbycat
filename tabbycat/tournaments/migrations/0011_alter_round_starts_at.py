@@ -7,6 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     dependencies = [
         ("tournaments", "0010_alter_round_draw_type"),
+        ('results', '0010_merge_20210919_1206'),
     ]
 
     operations = [
