@@ -310,22 +310,33 @@ class WSDCPreferences(AustralsPreferences):
     description  = _("3 vs 3 with replies, chosen motions, prop/opp side labels, "
         "and all adjudicators can receive feedback from teams.")
 
-    # Rules source = http://mkf2v40tlr04cjqkt2dtlqbr.wpengine.netdna-cdn.com/wp-content/uploads/2014/05/WSDC-Debate-Rules-U-2015.pdf
+    # Rules source = https://www.wsdcdebating.org/_files/ugd/669183_399cb065fe31455b9371bd8dfdf7e0d1.pdf
     # Score (strictly specified in the rules)
     scoring__score_min                         = Decimal('60')
     scoring__score_max                         = Decimal('80')
-    scoring__score_step                        = Decimal('1')
+    scoring__score_step                        = Decimal('0.5')
     scoring__reply_score_min                   = Decimal('30.0')
     scoring__reply_score_max                   = Decimal('40.0')
     scoring__reply_score_step                  = Decimal('0.5')
+    scoring__margin_includes_dissenters        = True # Important
     # Debates
     motions__motion_vetoes_enabled             = False # Single motions per round
     motions__enable_motions                    = False
     debate_rules__side_names                   = 'prop-opp'
     # Draws (exact mechanism is up to the host)
+    # Draw source = https://www.wsdcdebating.org/_files/ugd/669183_acd9f3bd3ab3482ebead22ae0da74fa7.pdf
     draw_rules__avoid_same_institution         = False
+    draw_rules__avoid_team_history             = True # Rule 3.9
+    draw_rules__draw_pairing_method            = 'fold' # Rule 3.8
+    draw_rules__draw_odd_bracket               = 'pullup_top' # Rule 3.7
+    # Tabbycat currently does not support WSDC-style pull up and so not fully support WSDC-style draw creation.
+    # Hence, this below setting is the closest that we can manage to achive.
+    # TODO: Update when Tabbycat can support WSDC pull-up.
+    draw_rules__draw_side_allocations          = 'balance'
+    draw_rules__draw_avoid_conflicts           = 'one_up_one_down'
+    draw_rules__draw_pullup_restriction        = 'lowest_ds_wins'
     # Standings
-    standings__team_standings_precedence       = ['wins', 'num_adjs', 'speaks_avg']
+    standings__team_standings_precedence       = ['wins', 'num_adjs', 'speaks_avg'] # Rule 3.2 (2023 version)
     standings__speaker_standings_precedence    = ['average']  # speakers sub in/out
     # UI Options
     ui_options__show_team_institutions         = False
