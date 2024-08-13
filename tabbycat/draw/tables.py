@@ -65,7 +65,10 @@ class PublicDrawTableBuilder(BaseDrawTableBuilder):
     def get_sides(self, debates: List['Debate']) -> int:
         return max([dt.side for debate in debates for dt in debate.debateteams], default=self.tournament.pref('teams_in_debate') - 1) + 1
 
-    def add_debate_team_columns(self, debates, highlight=[]):
+    def add_debate_team_columns(self, debates, highlight=None):
+        if highlight is None:
+            highlight = []
+
         all_sides_confirmed = all(debate.sides_confirmed for debate in debates)  # should already be fetched
 
         for side in range(self.get_sides(debates)):

@@ -48,7 +48,10 @@ class TournamentPreferenceForm(PreferenceForm):
         return self.cleaned_data
 
 
-def tournament_preference_form_builder(instance, preferences=[], **kwargs):
+def tournament_preference_form_builder(instance, preferences=None, **kwargs):
+    if preferences is None:
+        preferences = []
+
     if kwargs.get('section') in [str(s) for s in global_preferences_registry.sections()]:
         # Check for global preferences
         return preference_form_builder(GlobalPreferenceForm, preferences, **kwargs)

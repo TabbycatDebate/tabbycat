@@ -664,11 +664,11 @@ class DebateResultWithScoresMixin:
     uses_declared_winners = False
     uses_speakers = True
 
-    def __init__(self, ballotsub, load=True, criteria=[], **kwargs):
+    def __init__(self, ballotsub, load=True, criteria=None, **kwargs):
         super().__init__(ballotsub, load=False, **kwargs)
 
         self.positions = self.tournament.positions
-        self.criteria = criteria or []
+        self.criteria = [] if criteria is None else criteria
 
         if load:
             if self.ballotsub.id is None:

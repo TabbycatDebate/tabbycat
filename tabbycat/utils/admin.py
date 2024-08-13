@@ -27,8 +27,12 @@ class ModelAdmin(admin.ModelAdmin):
     def log_change(self, request, object, message):
         return super().log_change(request, object, self.add_ip_to_message(request, message))
 
-    def log_deletion(self, request, object, object_repr, message=[]):
+    def log_deletion(self, request, object, object_repr, message=None):
         from django.contrib.admin.models import DELETION, LogEntry
+
+        if message is None:
+            message = []
+
         return LogEntry.objects.log_action(
             user_id=request.user.pk,
             content_type_id=get_content_type_for_model(object).pk,
