@@ -158,7 +158,7 @@ if sys.version_info >= (3, 3) and shutil.which("heroku") is None:
     exit(1)
 
 # Create the app with addons
-addons = ["papertrail", "heroku-postgresql:%s" % args.pg_plan, "rediscloud:30"]
+addons = ["papertrail", "heroku-postgresql:%s" % args.pg_plan, "rediscloud:30", "heroku-redis:mini"]
 command = ["heroku", "apps:create", "--stack", "heroku-22"]
 
 if addons:
@@ -169,10 +169,6 @@ output = get_output_from_command(command)
 match = re.search(r"https://([\w_-]+?)(?:-\w{12})?\.herokuapp\.com/\s+\|\s+(https://git.heroku.com/[\w_-]+.git)", output)
 urlname = match.group(1)
 heroku_url = match.group(2)
-
-# Add the redis add-ons (the heroku one needs a config flag)
-run_heroku_command(["addons:create", "heroku-redis:mini",
-                    "--maxmemory_policy", "allkeys-lru", "--timeout", "1800"])
 
 # Set build packs
 run_heroku_command(["buildpacks:set", "https://github.com/heroku/heroku-buildpack-nginx.git"])
