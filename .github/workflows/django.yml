@@ -84,7 +84,7 @@ jobs:
         with:
           fetch-depth: 1
       - name: Build Docker image (dev)
-        run: docker-compose -f docker-compose.yml build
+        run: docker compose -f docker-compose.yml build
 
   build-docker-prod:
 
@@ -95,4 +95,4 @@ jobs:
         with:
           fetch-depth: 1
       - name: Build Docker image (prod)
-        run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
+        run: docker compose -f docker-compose.yml -f docker-compose.prod.yml build
