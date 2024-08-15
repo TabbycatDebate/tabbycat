@@ -748,7 +748,7 @@ class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPI
     def get_max_round(self):
         if self.request.query_params.get('round'):
             return Round.objects.get(tournament=self.tournament, seq=int(self.request.query_params.get('round')))
-        return None
+        return Round.objects.filter(tournament=self.tournament).order_by('seq').last()
 
     @extend_schema(tags=['standings'], parameters=[
         tournament_parameter,
