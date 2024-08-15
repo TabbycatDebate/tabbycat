@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2023-07-04 21:46\n"
+"PO-Revision-Date: 2024-08-15 09:30\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Czech\n"
 "Language: cs_CZ\n"
@@ -491,7 +491,7 @@ msgstr ""
 
 #: standings/templates/standings_menu.html
 msgid "Speakers"
-msgstr ""
+msgstr "Mluvčí"
 
 #: standings/templates/standings_menu.html
 msgctxt "Substantive speeches"
