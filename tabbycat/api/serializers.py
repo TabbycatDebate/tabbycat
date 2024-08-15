@@ -621,7 +621,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         if len(venue_constraints) > 0:
             vc = VenueConstraintSerializer(many=True, context=self.context)
             vc._validated_data = venue_constraints  # Data was already validated
-            vc.save(adjudicator=adj)
+            vc.save(subject=adj)
 
         if url_key is None:  # If explicitly null (and not just an empty string)
             populate_url_keys([adj])
@@ -639,7 +639,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         if len(venue_constraints) > 0:
             vc = VenueConstraintSerializer(many=True, context=self.context)
             vc._validated_data = venue_constraints  # Data was already validated
-            vc.save(adjudicator=instance)
+            vc.save(subject=instance)
 
         if 'base_score' in validated_data and validated_data['base_score'] != instance.base_score:
             AdjudicatorBaseScoreHistory.objects.create(
@@ -772,7 +772,7 @@ class TeamSerializer(serializers.ModelSerializer):
         if len(venue_constraints) > 0:
             vc = VenueConstraintSerializer(many=True, context=self.context)
             vc._validated_data = venue_constraints  # Data was already validated
-            vc.save(team=team)
+            vc.save(subject=team)
 
         if team.institution is not None:
             team.teaminstitutionconflict_set.get_or_create(institution=team.institution)
@@ -789,7 +789,7 @@ class TeamSerializer(serializers.ModelSerializer):
         if len(venue_constraints) > 0:
             vc = VenueConstraintSerializer(many=True, context=self.context)
             vc._validated_data = venue_constraints  # Data was already validated
-            vc.save(institution=instance)
+            vc.save(subject=instance)
 
         if self.partial:
             # Avoid removing conflicts if merely PATCHing
@@ -823,7 +823,7 @@ class InstitutionSerializer(serializers.ModelSerializer):
         if len(venue_constraints) > 0:
             vc = VenueConstraintSerializer(many=True, context=self.context)
             vc._validated_data = venue_constraints  # Data was already validated
-            vc.save(institution=institution)
+            vc.save(subject=institution)
 
         return institution
 
@@ -832,7 +832,7 @@ class InstitutionSerializer(serializers.ModelSerializer):
         if len(venue_constraints) > 0:
             vc = VenueConstraintSerializer(many=True, context=self.context)
             vc._validated_data = venue_constraints  # Data was already validated
-            vc.save(institution=instance)
+            vc.save(subject=instance)
 
         return super().update(instance, validated_data)
 
