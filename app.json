@@ -9,13 +9,7 @@
     "papertrail",
     "rediscloud:30",
     "heroku-postgresql:essential-0",
-    {
-      "plan": "heroku-redis:mini",
-      "options": {
-        "maxmemory-policy": "allkeys-lru",
-        "timeout": 1800
-      }
-    }
+    "heroku-redis:mini"
   ],
   "env": {
     "DJANGO_SECRET_KEY": {
