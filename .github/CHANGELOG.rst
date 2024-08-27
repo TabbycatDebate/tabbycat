@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+2.10.0
+------
+*Release date: TBD*
+
+
 2.9.2
 -----
 *Release date: 27 August 2024*
