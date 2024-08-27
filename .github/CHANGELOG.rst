@@ -2,6 +2,17 @@
 Change Log
 ==========
 
+2.9.2
+-----
+*Release date: 27 August 2024*
+
+- Fixed declared winners dropdown triggering validation error
+- API: Fixed saving venue constraints
+- API: Fixed accessing speaker standings when no round specified
+- Heroku: Removed deprecated Redis options
+- GitHub Actions: Used current Docker Compose command
+
+
 2.9.1
 -----
 *Release date: 26 July 2024*
