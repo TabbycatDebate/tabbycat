@@ -12,6 +12,7 @@ from actionlog.models import ActionLogEntry
 from notifications.models import BulkNotification
 from notifications.views import RoleColumnMixin, RoundTemplateEmailCreateView
 from participants.models import Speaker
+from results.models import BallotSubmission
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 PublicTournamentPageMixin, RoundMixin, TournamentMixin)
 from tournaments.models import Round
@@ -84,6 +85,9 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
 
         for motion in formset.deleted_objects:
             motion.delete()
+
+        if len(motions) == 1 and motions[0].created:
+            BallotSubmission.objects.filter(debate__round=self.round, motion__isnull=True).update(motion=motions[0])
 
         for i, motion in enumerate(motions, start=1):
             if not motion.created:  # Do not re-create associated RoundMotion if merely modifying

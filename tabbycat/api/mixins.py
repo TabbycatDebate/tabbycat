@@ -11,6 +11,8 @@ from .permissions import APIEnabledPermission, IsAdminOrReadOnly, PerTournamentP
 
 
 class APILogActionMixin(LogActionMixin):
+    """
+    """
     action_log_content_object_attr = 'obj'
 
     def perform_create(self, serializer):

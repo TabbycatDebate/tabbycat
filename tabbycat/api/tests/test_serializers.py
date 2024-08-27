@@ -485,6 +485,7 @@ class BallotSerializerTests(APITestCase):
                 }],
             },
         })
+        print(response.data)
         self.assertEqual(response.status_code, 201)
 
     def test_team_not_in_debate(self):
