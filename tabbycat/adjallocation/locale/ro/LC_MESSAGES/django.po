@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2024-08-20 23:29\n"
+"PO-Revision-Date: 2024-08-29 17:02\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Language: ro_RO\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: adjallocation/allocators/base.py
 msgid "There are no available adjudicators. Ensure there are adjudicators who have been marked as available for this round before auto-allocating."
-msgstr ""
+msgstr "Nu există arbitri disponibili. Verificați că destui arbitri sunt marcați ca disponibili pentru runda curentă înaintea folosirii alocării automate. "
 
 #: adjallocation/allocators/hungarian.py
 #, python-format
@@ -33,13 +33,13 @@ msgstr[2] ""
 #, python-format
 msgid "%(count)s score is smaller than the minimum permitted adjudicator score (%(score).1f)."
 msgid_plural "%(count)s scores are smaller than the minimum permitted adjudicator score (%(score).1f)."
-msgstr[0] ""
+msgstr[0] "%(count)s scorul arbitrului este mai mic decât scorul minim admis %(score)"
 msgstr[1] ""
 msgstr[2] ""
 
 #: adjallocation/allocators/hungarian.py
 msgid "There are no adjudicators eligible to be a chair or panellist. Try changing the \"Minimum feedback score required to be allocated as chair or panellist\" setting to something lower than at least some adjudicators' current scores, and try again."
-msgstr ":"
+msgstr "Nu există arbitri eligibili pentru a fi arbitru principal sau secundar. Încercați modificarea opțiunii „Scorul minim al unui arbitru pentru a fi alocat ca arbitru principal sau secundar” la o valoare mai mică decât valoarea scorurilor unor arbitri și încercați încă o dată. "
 
 #: adjallocation/allocators/hungarian.py
 msgid "There are no debates for this round. Maybe you haven't created a draw yet?"
@@ -58,11 +58,11 @@ msgstr ""
 #: adjallocation/allocators/hungarian.py
 #, python-format
 msgid "There are %(debates_count)s debates but only %(voting_count)s voting adjudicators."
-msgstr ""
+msgstr "Există %(debates_count)s meciuri însă doar %(voting_count)s arbitri eligibili pentru poziția de arbitru principal sau secundar."
 
 #: adjallocation/apps.py
 msgid "Adjudicator Allocation"
-msgstr ""
+msgstr "Alocarea arbitrilor"
 
 #: adjallocation/consumers.py
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
@@ -84,7 +84,7 @@ msgstr ""
 #, python-format
 msgid "Successfully auto-allocated adjudicators to debates. However, there was a warning:"
 msgid_plural "Successfully auto-allocated adjudicators to debates. However, there were %(count)d warnings:"
-msgstr[0] ""
+msgstr[0] ":"
 msgstr[1] ""
 msgstr[2] ""
 
