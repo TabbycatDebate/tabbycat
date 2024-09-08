@@ -72,6 +72,7 @@ class APIRootView(PublicAPIMixin, GenericAPIView):
             },
             "timezone": settings.TIME_ZONE,
             "version": settings.TABBYCAT_VERSION,
+            "version_name": settings.TABBYCAT_CODENAME,
         })
 
 

@@ -54,6 +54,7 @@ class RootSerializer(serializers.Serializer):
     _links = RootLinksSerializer(source='*', read_only=True)
     timezone = serializers.CharField(allow_blank=False, read_only=True)
     version = serializers.CharField()
+    version_name = serializers.CharField()
 
 
 class V1RootSerializer(serializers.Serializer):
