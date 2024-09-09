@@ -17,8 +17,11 @@ from rest_framework.settings import api_settings
 from adjallocation.models import DebateAdjudicator, PreformedPanel
 from adjfeedback.models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory, BreakingTeam
+from draw.manager import DrawManager
 from draw.models import Debate, DebateTeam
 from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
+from options.preferences import (BPAssignmentMethod, BPPositionCost, BPPullupDistribution, DrawAvoidConflicts,
+    DrawOddBracket, DrawPairingMethod, DrawPullupRestriction, DrawSideAllocations)
 from participants.emoji import pick_unused_emoji
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
 from participants.utils import populate_code_names
@@ -1031,6 +1034,33 @@ class RoundPairingSerializer(serializers.ModelSerializer):
             adjudicators.save(debate=instance)
 
         return super().update(instance, validated_data)
+
+
+class DrawGenerationSerializer(serializers.Serializer):
+    class OptionsSerializer(serializers.Serializer):
+        avoid_institution = serializers.BooleanField(required=False)
+        avoid_history = serializers.BooleanField(required=False)
+        history_penalty = serializers.IntegerField(required=False)
+        institution_penalty = serializers.IntegerField(required=False)
+        pullup_debates_penalty = serializers.IntegerField(required=False)
+        side_penalty = serializers.IntegerField(required=False)
+        pairing_penalty = serializers.IntegerField(required=False)
+        side_allocations = serializers.ChoiceField(choices=DrawSideAllocations.choices, required=False, help_text=DrawSideAllocations.help_text)
+        avoid_conflicts = serializers.ChoiceField(choices=DrawAvoidConflicts.choices, required=False, help_text=DrawAvoidConflicts.help_text)
+        odd_bracket = serializers.ChoiceField(choices=DrawOddBracket.choices, required=False, help_text=DrawOddBracket.help_text)
+        pairing_method = serializers.ChoiceField(choices=DrawPairingMethod.choices, required=False, help_text=DrawPairingMethod.help_text)
+        pullup_restriction = serializers.ChoiceField(choices=DrawPullupRestriction.choices, required=False, help_text=DrawPullupRestriction.help_text)
+        pullup = serializers.ChoiceField(choices=BPPullupDistribution.choices, required=False, help_text=BPPullupDistribution.help_text)
+        position_cost = serializers.ChoiceField(choices=BPPositionCost.choices, required=False, help_text=BPPositionCost.help_text)
+        assignment_method = serializers.ChoiceField(choices=BPAssignmentMethod.choices, required=False, help_text=BPAssignmentMethod.help_text)
+        renyi_order = serializers.FloatField(required=False)
+        exponent = serializers.FloatField(required=False)
+
+    draw_type = serializers.ChoiceField(choices=Round.DrawType.choices, required=False, help_text=Round._meta.get_field('draw_type').help_text)
+    options = OptionsSerializer(required=False, help_text="Options for draw generation; defaults to tournament preferences")
+
+    def save(self, **kwargs):
+        return DrawManager(self.context['round'], draw_type=self.validated_data.get('draw_type')).create(self.validated_data.get('options', {}))
 
 
 class FeedbackQuestionSerializer(serializers.ModelSerializer):

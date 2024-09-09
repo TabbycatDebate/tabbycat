@@ -12,7 +12,7 @@ from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
 from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.fields import DateTimeField
-from rest_framework.generics import GenericAPIView, get_object_or_404, RetrieveUpdateAPIView
+from rest_framework.generics import CreateAPIView, GenericAPIView, get_object_or_404, RetrieveUpdateAPIView
 from rest_framework.mixins import ListModelMixin
 from rest_framework.permissions import BasePermission, IsAdminUser
 from rest_framework.response import Response
@@ -967,6 +967,31 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
         self.get_queryset().delete()
         self.log_action(ActionLogEntry.ActionType.DRAW_REGENERATE)
         return Response(status=204)  # No content
+
+
+@extend_schema(
+    tags=['debates'],
+    parameters=round_parameters,
+    request=serializers.DrawGenerationSerializer,
+    responses={201: serializers.RoundPairingSerializer(many=True)},
+    summary="Generate draw for round",
+)
+class GeneratePairingView(RoundAPIMixin, AdministratorAPIMixin, CreateAPIView):
+    create_permission = Permission.GENERATE_DEBATE
+    serializer_class = serializers.DrawGenerationSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        draw = self.perform_create(serializer)
+        response_serializer = serializers.RoundPairingSerializer(draw, many=True)
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(response_serializer.data, status=201, headers=headers)
+
+    def perform_create(self, serializer):
+        return serializer.save()
 
 
 @extend_schema(tags=['results'], parameters=debate_parameters)

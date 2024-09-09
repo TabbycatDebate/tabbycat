@@ -92,6 +92,9 @@ urlpatterns = [
                             path('',
                                 views.PairingViewSet.as_view({'get': 'list', 'post': 'create', 'delete': 'delete_all'}),
                                 name='api-pairing-list'),
+                            path('/generate-draw',
+                                views.GeneratePairingView.as_view(),
+                                name='api-generate-pairing'),
                             path('/<int:debate_pk>', include([
                                 path('',
                                     views.PairingViewSet.as_view(detail_methods),
