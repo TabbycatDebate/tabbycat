@@ -16,6 +16,7 @@ class RootTests(APITestCase):
             "_links": {"v1": "http://testserver/api/v1"},
             "timezone": settings.TIME_ZONE,
             "version": settings.TABBYCAT_VERSION,
+            "version_name": settings.TABBYCAT_CODENAME,
         })
 
     def test_api_disabled_root(self):

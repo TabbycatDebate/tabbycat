@@ -43,9 +43,9 @@ OPTIONS_TO_CONFIG_MAPPING = {
 }
 
 
-def DrawManager(round, active_only=True, draw_type=None):  # noqa: N802 (factory function)
+def DrawManager(round: Round, active_only: bool = True, draw_type: Round.DrawType | str | None = None):  # noqa: N802 (factory function)
     teams_in_debate = round.tournament.pref('teams_in_debate')
-    draw_type |= round.draw_type
+    draw_type = draw_type or round.draw_type
     try:
         if teams_in_debate in [2, 4]:
             klass = DRAW_MANAGER_CLASSES[(teams_in_debate, round.draw_type)]
@@ -179,7 +179,7 @@ class BaseDrawManager:
     def delete(self):
         self.round.debate_set.all().delete()
 
-    def create(self, options: dict) -> list[Debate]:
+    def create(self, options: dict | None = None) -> list[Debate]:
         """Generates a draw and populates the database with it."""
 
         if self.round.draw_status != Round.Status.NONE:
@@ -187,9 +187,10 @@ class BaseDrawManager:
 
         self.delete()
 
-        options = dict()
+        if options is None:
+            options = dict()
         for key in self.get_relevant_options():
-            if options[key] is None:
+            if key not in options:
                 options[key] = self.round.tournament.preferences[OPTIONS_TO_CONFIG_MAPPING[key]]
         if options.get("side_allocations") == "manual-ballot":
             options["side_allocations"] = "balance"
