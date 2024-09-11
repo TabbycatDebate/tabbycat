@@ -147,7 +147,7 @@ class BaseBreakGenerator:
             breakingteam__remark__isnull=False,
         ).exclude(breakingteam__remark__exact='')
         different_break_teams = self.team_queryset.exclude(
-            breakingteam__remark=BreakingTeam.REMARK_INELIGIBLE,
+            breakingteam__remark=BreakingTeam.Remark.REMARK_INELIGIBLE,
             breakingteam__break_category__priority__gt=self.category.priority,
         ).filter(
             breakingteam__break_category__priority__gt=self.category.priority,
@@ -163,10 +163,10 @@ class BaseBreakGenerator:
                 self.excluded_teams[tsi] = None
             elif tsi.team in ineligible_teams:
                 logger.debug("Excluding %s because it is ineligible", tsi.team)
-                self.excluded_teams[tsi] = BreakingTeam.REMARK_INELIGIBLE
+                self.excluded_teams[tsi] = BreakingTeam.Remark.REMARK_INELIGIBLE
             elif tsi.team in different_break_teams:
                 logger.debug("Excluding %s because it broke in a different break", tsi.team)
-                self.excluded_teams[tsi] = BreakingTeam.REMARK_DIFFERENT_BREAK
+                self.excluded_teams[tsi] = BreakingTeam.Remark.REMARK_DIFFERENT_BREAK
             else:
                 self.eligible_teams.append(tsi)
 
@@ -222,7 +222,7 @@ class BaseBreakGenerator:
                         "rank": rank,
                         "break_rank": break_rank,
                         "remark": (
-                            BreakingTeam.REMARK_RESERVE
+                            BreakingTeam.Remark.REMARK_RESERVE
                             if self.break_size < rank <= self.reserve_size + self.break_size
                             else None
                         ),

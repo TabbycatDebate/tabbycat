@@ -34,7 +34,7 @@ class BreakingTeamsForm(forms.Form):
     def _create_and_initialise_fields(self):
         """Dynamically generate fields, one Select for each BreakingTeam."""
         for team in self.category.breaking_teams.all():
-            self.fields[self._fieldname_remark(team)] = OptionalChoiceField(choices=BreakingTeam.REMARK_CHOICES, required=False)
+            self.fields[self._fieldname_remark(team)] = OptionalChoiceField(choices=BreakingTeam.Remark, required=False)
             try:
                 self.initial[self._fieldname_remark(team)] = self._bt(team).remark
             except KeyError:

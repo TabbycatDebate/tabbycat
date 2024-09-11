@@ -136,6 +136,6 @@ class BreakingTeamsViewsetTests(CompletedTournamentTestMixin, APITestCase):
         self.client.login(username="admin", password="admin")
         response = self.client.patch(reverse('api-breakcategory-break', kwargs={'tournament_slug': self.tournament.slug, 'pk': 1}), {
             'team': 'http://testserver/api/v1/tournaments/demo/teams/7',
-            'remark': BreakingTeam.REMARK_WITHDRAWN,
+            'remark': BreakingTeam.Remark.REMARK_WITHDRAWN,
         }, content_type='application/json')
         self.assertEqual(len(response.data), 16)

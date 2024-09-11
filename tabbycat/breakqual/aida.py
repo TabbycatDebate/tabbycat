@@ -48,7 +48,7 @@ class Aida1996BreakGenerator(BaseAidaBreakGenerator):
 
         for tsi in self.capped_teams:
             self.eligible_teams.remove(tsi)
-            self.excluded_teams[tsi] = BreakingTeam.REMARK_CAPPED
+            self.excluded_teams[tsi] = BreakingTeam.Remark.REMARK_CAPPED
 
 
 class BaseAida2016BreakGenerator(BaseAidaBreakGenerator):

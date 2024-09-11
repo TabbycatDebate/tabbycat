@@ -87,23 +87,16 @@ class BreakingTeam(models.Model):
     break_rank = models.IntegerField(blank=True, null=True,
         verbose_name=_("break rank"))
 
-    REMARK_CAPPED = 'C'
-    REMARK_INELIGIBLE = 'I'
-    REMARK_DIFFERENT_BREAK = 'D'
-    REMARK_DISQUALIFIED = 'd'
-    REMARK_LOST_COIN_TOSS = 't'
-    REMARK_WITHDRAWN = 'w'
-    REMARK_RESERVE = 'R'
-    REMARK_CHOICES = (
-        (REMARK_CAPPED, _("Capped")),
-        (REMARK_INELIGIBLE, _("Ineligible")),
-        (REMARK_DIFFERENT_BREAK, _("Different break")),
-        (REMARK_DISQUALIFIED, _("Disqualified")),
-        (REMARK_LOST_COIN_TOSS, _("Lost coin toss")),
-        (REMARK_WITHDRAWN, _("Withdrawn")),
-        (REMARK_RESERVE, _("Reserve")),
-    )
-    remark = models.CharField(max_length=1, choices=REMARK_CHOICES, blank=True, null=True,
+    class Remark(models.TextChoices):
+        REMARK_CAPPED = 'C', _("Capped")
+        REMARK_INELIGIBLE = 'I', _("Ineligible")
+        REMARK_DIFFERENT_BREAK = 'D', _("Different break")
+        REMARK_DISQUALIFIED = 'd', _("Disqualified")
+        REMARK_LOST_COIN_TOSS = 't', _("Lost coin toss")
+        REMARK_WITHDRAWN = 'w', _("Withdrawn")
+        REMARK_RESERVE = 'R', _("Reserve")
+        REMARK_ABSENT = 'A', _("Absent")
+    remark = models.CharField(max_length=1, choices=Remark, blank=True, null=True,
                               verbose_name=_("remark"),
                               help_text=_("Used to explain why an otherwise-qualified team didn't break"))
 
