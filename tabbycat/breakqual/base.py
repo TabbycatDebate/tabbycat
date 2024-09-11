@@ -63,6 +63,7 @@ class BaseBreakGenerator:
         """`category` is a BreakCategory instance."""
         self.category = category
         self.break_size = category.break_size
+        self.reserve_size = category.reserve_size
 
     def generate(self):
         self.set_team_queryset()
@@ -215,8 +216,17 @@ class BaseBreakGenerator:
             group = list(group)
             for tsi in group:
                 bt, _ = BreakingTeam.objects.update_or_create(
-                    break_category=self.category, team=tsi.team,
-                    defaults={'rank': rank, 'break_rank': break_rank, 'remark': None},
+                    break_category=self.category,
+                    team=tsi.team,
+                    defaults={
+                        "rank": rank,
+                        "break_rank": break_rank,
+                        "remark": (
+                            BreakingTeam.REMARK_RESERVE
+                            if self.break_size < rank <= self.reserve_size + self.break_size
+                            else None
+                        ),
+                    },
                 )
                 bts_to_keep.append(bt.id)
                 logger.info("Breaking in %s (rank %s): %s", bt.break_rank, rank, bt.team)
@@ -255,9 +265,18 @@ class StandardBreakGenerator(BaseBreakGenerator):
         self.breaking_teams = self.eligible_teams[:self.break_size]
 
         # If the last spot is tied, add all tied teams
+        tied_teams_count = 0
         if len(self.eligible_teams) >= self.break_size:
             last_rank = self.eligible_teams[self.break_size-1].get_ranking("rank")
             for tsi in self.eligible_teams[self.break_size:]:
                 if tsi.get_ranking("rank") != last_rank:
                     break
                 self.breaking_teams.append(tsi)
+                tied_teams_count += 1
+
+        # Then add the reserve teams (these are later marked as "reserve" in the
+        # populate database section)
+        reserve = self.eligible_teams[
+            self.break_size + tied_teams_count : self.break_size + tied_teams_count + self.reserve_size
+        ]
+        self.breaking_teams.extend(reserve)
