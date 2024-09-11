@@ -371,7 +371,7 @@ class SpeakerScore(models.Model):
 
     def __str__(self):
         return ("[{0.ballot_submission_id}/{0.id}] {0.score} at {0.position} for "
-            "{0.speaker.name} in {0.debate_team!s}").format(self)
+            "{0.speaker.get_public_name()} in {0.debate_team!s}").format(self)
 
     def clean(self):
         super().clean()

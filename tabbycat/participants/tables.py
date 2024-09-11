@@ -1,3 +1,5 @@
+from typing import Iterable
+
 from django.db.models import Max, Prefetch
 from django.db.models.functions import Coalesce
 from django.utils.html import escape
@@ -15,7 +17,7 @@ from utils.tables import TabbycatTableBuilder
 
 class TeamResultTableBuilder(TabbycatTableBuilder):
 
-    def add_cumulative_team_points_column(self, teamscores):
+    def add_cumulative_team_points_column(self, teamscores: Iterable[TeamScore]):
         """It is assumed that `teamscores` is ordered by round number; the
         caller must ensure that this is the case."""
         cumul = 0
@@ -34,10 +36,10 @@ class TeamResultTableBuilder(TabbycatTableBuilder):
         header = {'key': 'cumulative', 'tooltip': tooltip, 'icon': 'trending-up'}
         self.add_column(header, data)
 
-    def add_speaker_scores_column(self, teamscores):
+    def add_speaker_scores_column(self, teamscores: Iterable[TeamScore]):
         data = [{
             'text': ", ".join([metricformat(ss.score) for ss in ts.debate_team.speaker_scores]) or "—",
-            'tooltip': "<br>".join(["%s for %s" % (metricformat(ss.score), escape(ss.speaker)) for ss in ts.debate_team.speaker_scores]),
+            'tooltip': "<br>".join(["%s for %s" % (metricformat(ss.score), escape(ss.speaker.get_public_name(self.tournament))) for ss in ts.debate_team.speaker_scores]),
         } for ts in teamscores]
         header = {'key': 'speaks', 'tooltip': _("Speaker scores<br>(in speaking order)"), 'text': _("Speaks")}
         self.add_column(header, data)

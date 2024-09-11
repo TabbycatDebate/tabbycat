@@ -134,6 +134,8 @@ class Person(models.Model):
         return str(self.name)
 
     def get_public_name(self, tournament):
+        if self.anonymous:
+            return "Redacted"
         if tournament.pref('participant_code_names') == 'off':
             return self.name
         return self.code_name
