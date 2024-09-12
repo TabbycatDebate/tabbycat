@@ -198,6 +198,51 @@ class BaseBreakGenerator:
         """
         raise NotImplementedError("Subclasses must implement compute_break()")
 
+    def exclude_reserve_teams(self):
+        # counts the number of ranks we have encountered
+        # we will mark the last `self.reserve_size` ranks as participants
+        self.reserve_teams = []
+
+        needle = -1
+
+        # rank of the last team
+        current_rank = self.breaking_teams[-1].get_ranking("rank")
+        ranks_added = 1
+
+        while True:
+            # check if current team has the same rank as the previous one
+            tsi = self.breaking_teams[needle]
+            rank_of_team = tsi.get_ranking("rank")
+            if rank_of_team == current_rank:
+                self.reserve_teams.append(tsi)
+                needle -= 1
+                continue
+
+            assert rank_of_team < current_rank
+
+            # once we have added all the ranks in which some teams could be
+            # reserve teams, finish
+            if self.reserve_size <= ranks_added:
+                break
+
+            assert ranks_added < self.reserve_size
+
+            # in this case we have still not added sufficient ranks to have all
+            # the reserve teams, so add the next rank
+            current_rank = rank_of_team
+            self.reserve_teams.append(tsi)
+            logger.info(f"Reserve team {tsi.team}")
+            needle -= 1
+            ranks_added += 1
+
+            # once we have enough teams to fill the reserve we are done
+            if abs(needle) > self.reserve_size:
+                break
+
+        for tsi in self.reserve_teams:
+            self.breaking_teams.remove(tsi)
+            self.excluded_teams[tsi] = BreakingTeam.Remark.REMARK_RESERVE
+
     def populate_database(self):
         """Populates the database with BreakingTeam instances for each team
         representing in `self.breaking_teams`, and those teams in
@@ -243,7 +288,9 @@ class BaseBreakGenerator:
 
         for tsi, remark in self.excluded_teams.items():
             rank = tsi.get_ranking("rank")
-            if rank < self.hide_excluded_teams_from:
+            # show all teams who would have broken were they not excluded as well as all the reserve
+            # teams
+            if rank < self.hide_excluded_teams_from or remark == BreakingTeam.Remark.REMARK_RESERVE:
                 defaults = {'rank': tsi.get_ranking("rank"), 'break_rank': None}
                 if remark is not None:
                     defaults['remark'] = remark
@@ -275,8 +322,9 @@ class StandardBreakGenerator(BaseBreakGenerator):
                 tied_teams_count += 1
 
         # Then add the reserve teams (these are later marked as "reserve" in the
-        # populate database section)
+        # populate database function)
         reserve = self.eligible_teams[
-            self.break_size + tied_teams_count : self.break_size + tied_teams_count + self.reserve_size
+            self.break_size + tied_teams_count : self.break_size + self.reserve_size
         ]
         self.breaking_teams.extend(reserve)
+        assert len(self.breaking_teams) == self.reserve_size + self.break_size
