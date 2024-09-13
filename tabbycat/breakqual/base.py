@@ -4,6 +4,7 @@ generator (which just takes the top teams)."""
 import logging
 from itertools import groupby
 
+from django.db.models import Q
 from django.utils.encoding import force_str
 from django.utils.translation import ngettext
 
@@ -70,6 +71,7 @@ class BaseBreakGenerator:
         self.retrieve_standings()
         self.filter_eligible_teams()
         self.compute_break()
+        self.add_reserve_teams()
         self.populate_database()
 
     def check_required_metrics(self, metrics):
@@ -145,9 +147,9 @@ class BaseBreakGenerator:
         existing_remark_teams = self.team_queryset.filter(
             breakingteam__break_category=self.category,
             breakingteam__remark__isnull=False,
-        ).exclude(breakingteam__remark__exact='')
+        ).exclude(Q(breakingteam__remark__exact='') | Q(breakingteam__remark=BreakingTeam.Remark.RESERVE))
         different_break_teams = self.team_queryset.exclude(
-            breakingteam__remark=BreakingTeam.Remark.REMARK_INELIGIBLE,
+            breakingteam__remark__in=[BreakingTeam.Remark.INELIGIBLE, BreakingTeam.Remark.RESERVE],
             breakingteam__break_category__priority__gt=self.category.priority,
         ).filter(
             breakingteam__break_category__priority__gt=self.category.priority,
@@ -163,10 +165,10 @@ class BaseBreakGenerator:
                 self.excluded_teams[tsi] = None
             elif tsi.team in ineligible_teams:
                 logger.debug("Excluding %s because it is ineligible", tsi.team)
-                self.excluded_teams[tsi] = BreakingTeam.Remark.REMARK_INELIGIBLE
+                self.excluded_teams[tsi] = BreakingTeam.Remark.INELIGIBLE
             elif tsi.team in different_break_teams:
                 logger.debug("Excluding %s because it broke in a different break", tsi.team)
-                self.excluded_teams[tsi] = BreakingTeam.Remark.REMARK_DIFFERENT_BREAK
+                self.excluded_teams[tsi] = BreakingTeam.Remark.DIFFERENT_BREAK
             else:
                 self.eligible_teams.append(tsi)
 
@@ -198,50 +200,20 @@ class BaseBreakGenerator:
         """
         raise NotImplementedError("Subclasses must implement compute_break()")
 
-    def exclude_reserve_teams(self):
+    def add_reserve_teams(self):
         # counts the number of ranks we have encountered
         # we will mark the last `self.reserve_size` ranks as participants
-        self.reserve_teams = []
+        number_to_add = self.category.break_size + self.category.reserve_size - len(self.breaking_teams)
 
-        needle = -1
-
-        # rank of the last team
-        current_rank = self.breaking_teams[-1].get_ranking("rank")
-        ranks_added = 1
-
-        while True:
-            # check if current team has the same rank as the previous one
-            tsi = self.breaking_teams[needle]
-            rank_of_team = tsi.get_ranking("rank")
-            if rank_of_team == current_rank:
-                self.reserve_teams.append(tsi)
-                needle -= 1
+        last_rank = self.breaking_teams[-1].get_ranking("rank")
+        for tsi in self.eligible_teams[self.break_size:]:
+            if (cur_rank := tsi.get_ranking("rank")) < last_rank:
+                last_rank = cur_rank
                 continue
-
-            assert rank_of_team < current_rank
-
-            # once we have added all the ranks in which some teams could be
-            # reserve teams, finish
-            if self.reserve_size <= ranks_added:
+            if number_to_add <= 0 and cur_rank != last_rank:
                 break
-
-            assert ranks_added < self.reserve_size
-
-            # in this case we have still not added sufficient ranks to have all
-            # the reserve teams, so add the next rank
-            current_rank = rank_of_team
-            self.reserve_teams.append(tsi)
-            logger.info(f"Reserve team {tsi.team}")
-            needle -= 1
-            ranks_added += 1
-
-            # once we have enough teams to fill the reserve we are done
-            if abs(needle) > self.reserve_size:
-                break
-
-        for tsi in self.reserve_teams:
-            self.breaking_teams.remove(tsi)
-            self.excluded_teams[tsi] = BreakingTeam.Remark.REMARK_RESERVE
+            self.excluded_teams[tsi] = BreakingTeam.Remark.RESERVE
+            number_to_add -= 1
 
     def populate_database(self):
         """Populates the database with BreakingTeam instances for each team
@@ -266,11 +238,7 @@ class BaseBreakGenerator:
                     defaults={
                         "rank": rank,
                         "break_rank": break_rank,
-                        "remark": (
-                            BreakingTeam.Remark.REMARK_RESERVE
-                            if self.break_size < rank <= self.reserve_size + self.break_size
-                            else None
-                        ),
+                        "remark": None,
                     },
                 )
                 bts_to_keep.append(bt.id)
@@ -290,7 +258,7 @@ class BaseBreakGenerator:
             rank = tsi.get_ranking("rank")
             # show all teams who would have broken were they not excluded as well as all the reserve
             # teams
-            if rank < self.hide_excluded_teams_from or remark == BreakingTeam.Remark.REMARK_RESERVE:
+            if rank < self.hide_excluded_teams_from or remark is BreakingTeam.Remark.RESERVE:
                 defaults = {'rank': tsi.get_ranking("rank"), 'break_rank': None}
                 if remark is not None:
                     defaults['remark'] = remark
@@ -320,11 +288,3 @@ class StandardBreakGenerator(BaseBreakGenerator):
                     break
                 self.breaking_teams.append(tsi)
                 tied_teams_count += 1
-
-        # Then add the reserve teams (these are later marked as "reserve" in the
-        # populate database function)
-        reserve = self.eligible_teams[
-            self.break_size + tied_teams_count : self.break_size + self.reserve_size
-        ]
-        self.breaking_teams.extend(reserve)
-        assert len(self.breaking_teams) == self.reserve_size + self.break_size

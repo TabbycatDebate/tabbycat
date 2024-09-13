@@ -88,17 +88,18 @@ class BreakingTeam(models.Model):
         verbose_name=_("break rank"))
 
     class Remark(models.TextChoices):
-        REMARK_CAPPED = 'C', _("Capped")
-        REMARK_INELIGIBLE = 'I', _("Ineligible")
-        REMARK_DIFFERENT_BREAK = 'D', _("Different break")
-        REMARK_DISQUALIFIED = 'd', _("Disqualified")
-        REMARK_LOST_COIN_TOSS = 't', _("Lost coin toss")
-        REMARK_WITHDRAWN = 'w', _("Withdrawn")
-        REMARK_RESERVE = 'R', _("Reserve")
-        REMARK_ABSENT = 'A', _("Absent")
-    remark = models.CharField(max_length=1, choices=Remark, blank=True, null=True,
-                              verbose_name=_("remark"),
-                              help_text=_("Used to explain why an otherwise-qualified team didn't break"))
+        CAPPED = 'C', _("Capped")
+        INELIGIBLE = 'I', _("Ineligible")
+        DIFFERENT_BREAK = 'D', _("Different break")
+        DISQUALIFIED = 'd', _("Disqualified")
+        LOST_COIN_TOSS = 't', _("Lost coin toss")
+        WITHDRAWN = 'w', _("Withdrawn")
+        RESERVE = 'R', _("Reserve")
+        ABSENT = 'A', _("Absent")
+
+    remark = models.CharField(max_length=1, choices=Remark.choices, blank=True, null=True,
+        verbose_name=_("remark"),
+        help_text=_("Used to explain why an otherwise-qualified team didn't break"))
 
     class Meta:
         constraints = [UniqueConstraint(fields=['break_category', 'team'])]
