@@ -744,20 +744,20 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
         else:
             if len(totals) == 2:
-                max_teams = [side for side, total in side_totals.items() if total == max(totals)]
-                high_point_declared = int(cleaned_data.get(self._fieldname_declared_winner())) in max_teams
-
                 # Check that no teams had the same total
                 if totals[0] == totals[1] and self.declared_winner in ['none', 'high-points']:
                     self.add_error(None, forms.ValidationError(
                         _("The total scores for the teams are the same (i.e. a draw)."),
                         code='draw',
                     ))
-                elif self.declared_winner in ['high-points', 'tied-points'] and not high_point_declared:
-                    self.add_error(None, forms.ValidationError(
-                        _("The declared winner does not correspond to the team with the highest score."),
-                        code='wrong_winner',
-                    ))
+                elif self.declared_winner in ['high-points', 'tied-points']:
+                    max_teams = [side for side, total in side_totals.items() if total == max(totals)]
+
+                    if int(cleaned_data.get(self._fieldname_declared_winner())) not in max_teams:
+                        self.add_error(None, forms.ValidationError(
+                            _("The declared winner does not correspond to the team with the highest score."),
+                            code='wrong_winner',
+                        ))
 
             elif len(totals) > 2:
                 for total in set(totals):
@@ -915,20 +915,20 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
             else:
                 if len(totals) == 2:
-                    max_teams = [side for side, total in side_totals.items() if total == max(totals)]
-                    high_point_declared = int(cleaned_data.get(self._fieldname_declared_winner(adj))) in max_teams
-
                     # Check that it was not a draw.
                     if totals[0] == totals[1] and self.declared_winner in ['none', 'high-points']:
                         self.add_error(None, forms.ValidationError(
                             _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adjudicator)s."),
                             params={'adjudicator': adj.get_public_name(self.tournament)}, code='draw',
                         ))
-                    elif self.declared_winner in ['high-points', 'tied-points'] and not high_point_declared:
-                        self.add_error(None, forms.ValidationError(
-                            _("The declared winner does not correspond to the team with the highest score for adjudicator %(adjudicator)s."),
-                            params={'adjudicator': adj.get_public_name(self.tournament)}, code='wrong_winner',
-                        ))
+                    elif self.declared_winner in ['high-points', 'tied-points']:
+                        max_teams = [side for side, total in side_totals.items() if total == max(totals)]
+
+                        if int(cleaned_data.get(self._fieldname_declared_winner(adj))) not in max_teams:
+                            self.add_error(None, forms.ValidationError(
+                                _("The declared winner does not correspond to the team with the highest score for adjudicator %(adjudicator)s."),
+                                params={'adjudicator': adj.get_public_name(self.tournament)}, code='wrong_winner',
+                            ))
 
                 # Check that the margin did not exceed the maximum permissible.
                 margin = abs(totals[0] - totals[1])
