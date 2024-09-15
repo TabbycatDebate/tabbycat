@@ -3,6 +3,12 @@
 
 {% block page-subnav-sections %}{% endblock %}<!-- No need for searching -->
 
+{% block head-title %}
+  <span class="emoji">{{ page_emoji }}</span>
+  {% person_display_name adjudicator as name %}
+  {% blocktranslate trimmed with name=name %}Record for {{ name }}{% endblocktranslate %}
+{% endblock %}
+
 {% block content %}
 
   <div class="card-deck">
