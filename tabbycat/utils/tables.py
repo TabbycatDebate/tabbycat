@@ -6,6 +6,7 @@ from django.db.models import Exists, OuterRef, Prefetch
 from django.template.loader import render_to_string
 from django.utils.encoding import force_str
 from django.utils.html import escape
+from django.utils.safestring import SafeString
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
@@ -24,6 +25,10 @@ from .mixins import AdministratorMixin
 
 logger = logging.getLogger(__name__)
 _draw_flags_dict = dict(DRAW_FLAG_DESCRIPTIONS)
+
+
+def escape_if_unsafe(s):
+    return s if type(s) is SafeString else escape(s)
 
 
 class BaseTableBuilder:
@@ -232,13 +237,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
         adj_short_name = adj.get_public_name(self.tournament).split(" ")[0]
         if self.admin:
             return {
-                'text': _("View %(a)s's %(d)s Record") % {'a': escape(adj_short_name), 'd': suffix},
+                'text': _("View %(a)s's %(d)s Record") % {'a': escape_if_unsafe(adj_short_name), 'd': suffix},
                 'link': reverse_tournament('participants-adjudicator-record',
                     self.tournament, kwargs={'pk': adj.pk}),
             }
         elif self.tournament.pref('public_record'):
             return {
-                'text': _("View %(a)s's %(d)s Record") % {'a': escape(adj_short_name), 'd': suffix},
+                'text': _("View %(a)s's %(d)s Record") % {'a': escape_if_unsafe(adj_short_name), 'd': suffix},
                 'link': reverse_tournament('participants-public-adjudicator-record',
                     self.tournament, kwargs={'pk': adj.pk}),
             }
@@ -391,7 +396,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         if self._show_speakers_in_draw:
             cell['popover']['content'].append({
-                'text': ", ".join([escape(s.get_public_name(self.tournament)) for s in opp.speakers]),
+                'text': ", ".join([escape_if_unsafe(s.get_public_name(self.tournament)) for s in opp.speakers]),
             })
 
         if self._show_record_links:
@@ -488,11 +493,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if adj.anonymous and not self.admin:
                 adj_data.append(self.REDACTED_CELL)
             else:
-                cell = {'text': escape(adj.get_public_name(self.tournament))}
+                cell = {'text': escape_if_unsafe(adj.get_public_name(self.tournament))}
                 if adj.anonymous:
                     cell['class'] = 'admin-redacted'
                 if self._show_record_links:
-                    cell['popover'] = {'title': escape(adj.get_public_name(self.tournament)), 'content': [self._adjudicator_record_link(adj)]}
+                    cell['popover'] = {'title': escape_if_unsafe(adj.get_public_name(self.tournament)), 'content': [self._adjudicator_record_link(adj)]}
                 if subtext == 'institution' and adj.institution is not None:
                     cell['subtext'] = escape(adj.institution.code)
                 adj_data.append(cell)
@@ -535,7 +540,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         def construct_text(adjs_data):
             adjs_list = []
             for a in adjs_data:
-                adj_str = '<span class="d-inline">' + escape(a['adj'].get_public_name(self.tournament))
+                adj_str = '<span class="d-inline">' + escape_if_unsafe(a['adj'].get_public_name(self.tournament))
                 symbol = self.ADJ_SYMBOLS.get(a['position'])
                 if symbol:
                     adj_str += "<i class='adj-symbol'>%s</i>" % symbol
@@ -559,7 +564,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     descriptors.append(escape(a['adj'].institution.code))
                 if a.get('split', False):
                     descriptors.append("<span class='text-danger'>" + _("in minority") + "</span>")
-                text = escape(a['adj'].get_public_name(self.tournament))
+                text = escape_if_unsafe(a['adj'].get_public_name(self.tournament))
 
                 descriptors = " (%s)" % (", ".join(descriptors)) if descriptors else ""
 
@@ -661,7 +666,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 speaker_data.append(self.REDACTED_CELL)
             else:
                 cell = {
-                    'text': escape(speaker.get_public_name(self.tournament)),
+                    'text': escape_if_unsafe(speaker.get_public_name(self.tournament)),
                     'class': 'no-wrap' if len(speaker.get_public_name(self.tournament)) < 20 else '',
                 }
                 if anonymous:
