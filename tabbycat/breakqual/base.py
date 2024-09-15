@@ -4,6 +4,7 @@ generator (which just takes the top teams)."""
 import logging
 from itertools import groupby
 
+from django.db.models import Q
 from django.utils.encoding import force_str
 from django.utils.translation import ngettext
 
@@ -63,12 +64,14 @@ class BaseBreakGenerator:
         """`category` is a BreakCategory instance."""
         self.category = category
         self.break_size = category.break_size
+        self.reserve_size = category.reserve_size
 
     def generate(self):
         self.set_team_queryset()
         self.retrieve_standings()
         self.filter_eligible_teams()
         self.compute_break()
+        self.add_reserve_teams()
         self.populate_database()
 
     def check_required_metrics(self, metrics):
@@ -144,9 +147,9 @@ class BaseBreakGenerator:
         existing_remark_teams = self.team_queryset.filter(
             breakingteam__break_category=self.category,
             breakingteam__remark__isnull=False,
-        ).exclude(breakingteam__remark__exact='')
+        ).exclude(Q(breakingteam__remark__exact='') | Q(breakingteam__remark=BreakingTeam.Remark.RESERVE))
         different_break_teams = self.team_queryset.exclude(
-            breakingteam__remark=BreakingTeam.REMARK_INELIGIBLE,
+            breakingteam__remark__in=[BreakingTeam.Remark.INELIGIBLE, BreakingTeam.Remark.RESERVE],
             breakingteam__break_category__priority__gt=self.category.priority,
         ).filter(
             breakingteam__break_category__priority__gt=self.category.priority,
@@ -162,10 +165,10 @@ class BaseBreakGenerator:
                 self.excluded_teams[tsi] = None
             elif tsi.team in ineligible_teams:
                 logger.debug("Excluding %s because it is ineligible", tsi.team)
-                self.excluded_teams[tsi] = BreakingTeam.REMARK_INELIGIBLE
+                self.excluded_teams[tsi] = BreakingTeam.Remark.INELIGIBLE
             elif tsi.team in different_break_teams:
                 logger.debug("Excluding %s because it broke in a different break", tsi.team)
-                self.excluded_teams[tsi] = BreakingTeam.REMARK_DIFFERENT_BREAK
+                self.excluded_teams[tsi] = BreakingTeam.Remark.DIFFERENT_BREAK
             else:
                 self.eligible_teams.append(tsi)
 
@@ -197,6 +200,21 @@ class BaseBreakGenerator:
         """
         raise NotImplementedError("Subclasses must implement compute_break()")
 
+    def add_reserve_teams(self):
+        # counts the number of ranks we have encountered
+        # we will mark the last `self.reserve_size` ranks as participants
+        number_to_add = self.category.break_size + self.category.reserve_size - len(self.breaking_teams)
+
+        last_rank = self.breaking_teams[-1].get_ranking("rank")
+        for tsi in self.eligible_teams[self.break_size:]:
+            if (cur_rank := tsi.get_ranking("rank")) < last_rank:
+                last_rank = cur_rank
+                continue
+            if number_to_add <= 0 and cur_rank != last_rank:
+                break
+            self.excluded_teams[tsi] = BreakingTeam.Remark.RESERVE
+            number_to_add -= 1
+
     def populate_database(self):
         """Populates the database with BreakingTeam instances for each team
         representing in `self.breaking_teams`, and those teams in
@@ -215,8 +233,13 @@ class BaseBreakGenerator:
             group = list(group)
             for tsi in group:
                 bt, _ = BreakingTeam.objects.update_or_create(
-                    break_category=self.category, team=tsi.team,
-                    defaults={'rank': rank, 'break_rank': break_rank, 'remark': None},
+                    break_category=self.category,
+                    team=tsi.team,
+                    defaults={
+                        "rank": rank,
+                        "break_rank": break_rank,
+                        "remark": None,
+                    },
                 )
                 bts_to_keep.append(bt.id)
                 logger.info("Breaking in %s (rank %s): %s", bt.break_rank, rank, bt.team)
@@ -233,7 +256,9 @@ class BaseBreakGenerator:
 
         for tsi, remark in self.excluded_teams.items():
             rank = tsi.get_ranking("rank")
-            if rank < self.hide_excluded_teams_from:
+            # show all teams who would have broken were they not excluded as well as all the reserve
+            # teams
+            if rank < self.hide_excluded_teams_from or remark is BreakingTeam.Remark.RESERVE:
                 defaults = {'rank': tsi.get_ranking("rank"), 'break_rank': None}
                 if remark is not None:
                     defaults['remark'] = remark
@@ -255,9 +280,11 @@ class StandardBreakGenerator(BaseBreakGenerator):
         self.breaking_teams = self.eligible_teams[:self.break_size]
 
         # If the last spot is tied, add all tied teams
+        tied_teams_count = 0
         if len(self.eligible_teams) >= self.break_size:
             last_rank = self.eligible_teams[self.break_size-1].get_ranking("rank")
             for tsi in self.eligible_teams[self.break_size:]:
                 if tsi.get_ranking("rank") != last_rank:
                     break
                 self.breaking_teams.append(tsi)
+                tied_teams_count += 1

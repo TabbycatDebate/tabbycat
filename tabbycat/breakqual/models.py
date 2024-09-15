@@ -20,8 +20,10 @@ class BreakCategory(models.Model):
         verbose_name=_("sequence number"),
         help_text=_("The order in which the categories are displayed"))
     break_size = models.IntegerField(validators=[MinValueValidator(2)],
-        verbose_name=_("break size"),
-        help_text=_("Number of breaking teams in this category"))
+                                     verbose_name=_("break size"),
+                                     help_text=_("Number of breaking teams in this category"))
+    reserve_size = models.PositiveIntegerField(default=0, verbose_name=_("Reserve size"),
+                                       help_text=_("Number of reserve teams in this category."))
     is_general = models.BooleanField(
         verbose_name=_("is general"),
         help_text=_("Are teams eligible for this break by default"))
@@ -85,21 +87,17 @@ class BreakingTeam(models.Model):
     break_rank = models.IntegerField(blank=True, null=True,
         verbose_name=_("break rank"))
 
-    REMARK_CAPPED = 'C'
-    REMARK_INELIGIBLE = 'I'
-    REMARK_DIFFERENT_BREAK = 'D'
-    REMARK_DISQUALIFIED = 'd'
-    REMARK_LOST_COIN_TOSS = 't'
-    REMARK_WITHDRAWN = 'w'
-    REMARK_CHOICES = (
-        (REMARK_CAPPED, _("Capped")),
-        (REMARK_INELIGIBLE, _("Ineligible")),
-        (REMARK_DIFFERENT_BREAK, _("Different break")),
-        (REMARK_DISQUALIFIED, _("Disqualified")),
-        (REMARK_LOST_COIN_TOSS, _("Lost coin toss")),
-        (REMARK_WITHDRAWN, _("Withdrawn")),
-    )
-    remark = models.CharField(max_length=1, choices=REMARK_CHOICES, blank=True, null=True,
+    class Remark(models.TextChoices):
+        CAPPED = 'C', _("Capped")
+        INELIGIBLE = 'I', _("Ineligible")
+        DIFFERENT_BREAK = 'D', _("Different break")
+        DISQUALIFIED = 'd', _("Disqualified")
+        LOST_COIN_TOSS = 't', _("Lost coin toss")
+        WITHDRAWN = 'w', _("Withdrawn")
+        RESERVE = 'R', _("Reserve")
+        ABSENT = 'A', _("Absent")
+
+    remark = models.CharField(max_length=1, choices=Remark.choices, blank=True, null=True,
         verbose_name=_("remark"),
         help_text=_("Used to explain why an otherwise-qualified team didn't break"))
 
