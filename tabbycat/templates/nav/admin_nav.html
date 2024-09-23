@@ -272,11 +272,13 @@
   {% endfor %}
 
   <div class="list-group-item d-inline-block">
-    <a href="{% url 'logout' %}" data-parent="#sidebar"
-     class="collapsed">
-      <i data-feather="log-out"></i>
-      <span class="d-none d-md-inline">{% trans "Log Out" %}</span>
-    </a>
+    <form id="logout-form" action="{% url 'logout' %}" data-parent="#sidebar" method="post" class="collapsed">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-link">
+        <i data-feather="log-out"></i>
+        <span class="d-none d-md-inline">{% trans "Log Out" %}</span>
+      </button>
+    </form>
   </div>
 
 </div>
