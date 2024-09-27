@@ -63,6 +63,25 @@ class Institution(models.Model):
         return str(self.name)
 
 
+class TournamentInstitution(models.Model):
+    tournament = models.ForeignKey(
+        "tournaments.Tournament", models.CASCADE, verbose_name=_("tournament"),
+    )
+    institution = models.ForeignKey(
+        Institution, models.CASCADE, verbose_name=_("institution"),
+    )
+    teams_requested = models.PositiveIntegerField(
+        verbose_name=_("Team slots requested"),
+    )
+    teams_allocated = models.PositiveIntegerField(verbose_name=_("Team slots allocated"))
+    adjudicators_requested = models.PositiveIntegerField(
+        verbose_name=_("Adjudicator slots requested"),
+    )
+    adjudicators_allocated = models.PositiveIntegerField(
+        verbose_name=_("Adjudicator slots allocated"),
+    )
+
+
 class SpeakerCategory(models.Model):
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
         verbose_name=_("tournament"))

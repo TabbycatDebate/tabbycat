@@ -16,7 +16,15 @@ from utils.admin import ModelAdmin
 from venues.admin import VenueConstraintInline
 
 from .emoji import pick_unused_emoji, populate_code_names_from_emoji, set_emoji
-from .models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
+from .models import (
+    Adjudicator,
+    Institution,
+    Region,
+    Speaker,
+    SpeakerCategory,
+    Team,
+    TournamentInstitution,
+)
 
 
 # ==============================================================================
@@ -38,6 +46,24 @@ class InstitutionAdmin(ModelAdmin):
     list_select_related = ('region',)
     ordering = ('name', )
     search_fields = ('name', )
+
+# ==============================================================================
+# Tournament institution
+# ==============================================================================
+
+
+@admin.register(TournamentInstitution)
+class TournamentInstitutionAdmin(ModelAdmin):
+    list_filter = ('institution', 'tournament')
+    list_display = (
+        'institution',
+        'tournament',
+        'teams_requested',
+        'teams_allocated',
+        'adjudicators_requested',
+        'adjudicators_allocated',
+    )
+    search_fields = ('institution__name', 'tournament__name')
 
 
 # ==============================================================================
