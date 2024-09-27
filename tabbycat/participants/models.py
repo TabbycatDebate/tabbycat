@@ -160,9 +160,14 @@ class Person(models.Model):
             return self.name
         return self.code_name
 
+
 class Coach(Person):
-    institution = models.ForeignKey(Institution, models.SET_NULL, blank=True, null=True,
-        verbose_name=_("institution"))
+    tournament_institution = models.ForeignKey(
+        TournamentInstitution,
+        models.CASCADE,
+        blank=True,
+        verbose_name=_("tournament institution"),
+    )
 
     class Meta:
         verbose_name = _("coach")
@@ -177,6 +182,7 @@ class Coach(Person):
     @property
     def region(self):
         return self.institution.region if self.institution else None
+
 
 class TeamManager(LookupByNameFieldsMixin, models.Manager):
     name_fields = ['short_name', 'long_name']

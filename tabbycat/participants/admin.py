@@ -18,6 +18,7 @@ from venues.admin import VenueConstraintInline
 from .emoji import pick_unused_emoji, populate_code_names_from_emoji, set_emoji
 from .models import (
     Adjudicator,
+    Coach,
     Institution,
     Region,
     Speaker,
@@ -66,18 +67,25 @@ class TournamentInstitutionAdmin(ModelAdmin):
     search_fields = ('institution__name', 'tournament__name')
 
 # ==============================================================================
-# Tournament institution
+# Coach
 # ==============================================================================
+
 
 @admin.register(Coach)
 class CoachAdmin(ModelAdmin):
-    list_display = ('name', 'instituion', 'email','region')
-    ordering = ('name', )
+    list_display = (
+        "name",
+        "tournament_institution",
+        "email",
+        "region",
+    )
+    ordering = ("name",)
     search_fields = ('name', )
 
 # ==============================================================================
 # Speaker
 # ==============================================================================
+
 
 @admin.register(Speaker)
 class SpeakerAdmin(ModelAdmin):
