@@ -58,6 +58,7 @@ class Permission(TextChoices):
     VIEW_DEBATE = 'view.debate', _("view debates (draw)")
     VIEW_ADMIN_DRAW = 'view.debate.admin', _("view debates (detailed draw)")
     GENERATE_DEBATE = 'generate.debate', _("generate debates (draw)")
+    DELETE_DEBATE = 'delete.debate', _("delete debates (draw)")
     EDIT_DEBATETEAMS = 'edit.debateteam', _("edit debate teams (pairings)")
     VIEW_DEBATEADJUDICATORS = 'view.debateadjudicator', _("view debate adjudicators (allocations)")
     EDIT_DEBATEADJUDICATORS = 'edit.debateadjudicator', _("edit debate adjudicators (allocations)")

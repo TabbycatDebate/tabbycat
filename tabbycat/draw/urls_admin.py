@@ -21,11 +21,8 @@ urlpatterns = [
         path('confirm/',
             views.ConfirmDrawCreationView.as_view(),
             name='draw-confirm'),
-        path('regenerate/confirm/',
-            views.ConfirmDrawRegenerationView.as_view(),
-            name='draw-confirm-regenerate'),
         path('regenerate/',
-            views.DrawRegenerateView.as_view(),
+            views.ConfirmDrawRegenerationView.as_view(),
             name='draw-regenerate'),
 
         # Email
