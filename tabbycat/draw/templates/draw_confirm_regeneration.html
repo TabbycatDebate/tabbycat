@@ -29,11 +29,12 @@
 
   <form method="POST" action="{% roundurl 'draw-regenerate' %}">
     {% csrf_token %}
-    <button class="btn btn-block btn-danger " type="submit">
-      {% blocktrans trimmed with round=round.name %}
-      Yes, I want to delete the current draw for {{ round }}
-      {% endblocktrans %}
-    </button>
+    {% include "components/form-main.html" %}
+
+    {% blocktrans trimmed with round=round.name asvar title %}
+    Yes, I want to delete the current draw for {{ round }}
+    {% endblocktrans %}
+    {% include "components/form-submit.html" with type='danger' %}
   </form>
 
 {% endblock %}
