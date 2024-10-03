@@ -13,6 +13,10 @@ tabbycat/static/jsi18n/
 tabbycat/static/vue/
 tabbycat/static/fonts/
 
+# IDE files
+.idea/
+.vscode/
+
 # Translations
 .tx/
 
