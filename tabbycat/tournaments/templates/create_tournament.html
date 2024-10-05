@@ -32,6 +32,7 @@
         {% for slug, demo in demo_datasets %}
           <div class="col col-md-4">
             <form action="{% url 'load-demo' %}" method="POST">
+              {% csrf_token %}
               <input type="hidden" name="source" value="{{ slug }}">
               <button type="submit" class="btn btn-info btn-block">
                 {% blocktrans trimmed %}
