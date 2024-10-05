@@ -78,7 +78,8 @@
   border-right: 0;
   padding: 0;
 
-  a {
+  a,
+  form > button {
     color: $sidebar-muted-text;
     display: block;
 
@@ -223,16 +224,20 @@
 // Applies just to tablets
 @include media-breakpoint-up(md) {
 
-  .admin-sidebar .list-group-item a {
-    font-size: 12px;
-    padding: 0.5rem 0.5rem;
+  .admin-sidebar .list-group-item {
 
-    .feather {
-      width: 12px;
-      height: 12px;
-      padding-right: 2px;
-      margin-right: 0;
-      padding-bottom: 2px;
+    a,
+    form > button {
+      font-size: 12px;
+      padding: 0.5rem 0.5rem;
+
+      .feather {
+        width: 12px;
+        height: 12px;
+        padding-right: 2px;
+        margin-right: 0;
+        padding-bottom: 2px;
+      }
     }
   }
 
@@ -258,20 +263,24 @@
 // Applies just to screens
 @include media-breakpoint-up(lg) {
 
-  .admin-sidebar .list-group-item a {
-    font-size: $font-size-base;
-    padding: 0.5rem 1rem;
+  .admin-sidebar .list-group-item {
 
-    .feather {
-      width: 20px;
-      height: 16px;
-      padding-right: 4px;
-    }
+    a,
+    form > button {
+      font-size: $font-size-base;
+      padding: 0.5rem 1rem;
 
-    .feather-chevron-down,
-    .feather-chevron-up {
-      margin-top: 2px;
-      margin-right: 0;
+      .feather {
+        width: 20px;
+        height: 16px;
+        padding-right: 4px;
+      }
+
+      .feather-chevron-down,
+      .feather-chevron-up {
+        margin-top: 2px;
+        margin-right: 0;
+      }
     }
   }
 
