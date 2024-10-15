@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:51\n"
+"PO-Revision-Date: 2024-10-15 17:29\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -27,11 +27,11 @@ msgstr "Ha cambiado el estatus de break del juez"
 
 #: actionlog/models.py
 msgid "Created adjudicator"
-msgstr ""
+msgstr "Crear Juez"
 
 #: actionlog/models.py
 msgid "Edited adjudicator"
-msgstr ""
+msgstr "Editar Juez"
 
 #: actionlog/models.py
 msgid "Set adjudicator note"
@@ -51,7 +51,7 @@ msgstr "Ha editado la disponibilidad de los jueces"
 
 #: actionlog/models.py
 msgid "Edited availability"
-msgstr ""
+msgstr "Editar disponibilidad"
 
 #: actionlog/models.py
 msgid "Edited teams availability"
@@ -91,7 +91,7 @@ msgstr "Ha editados las categorías del break"
 
 #: actionlog/models.py
 msgid "Deleted team break for category"
-msgstr ""
+msgstr "Eliminar el break del equipo para la categoría"
 
 #: actionlog/models.py
 msgid "Edited breaking team remarks"
@@ -107,7 +107,7 @@ msgstr "Ha generado el break de equipos para todas las categorías"
 
 #: actionlog/models.py
 msgid "Generated the team break for one category"
-msgstr ""
+msgstr "Se generó el break del equipo para una categoría"
 
 #: actionlog/models.py
 msgid "Edited breaking team remarks and updated all team breaks"
@@ -143,15 +143,15 @@ msgstr "Editar los conflictos juez-equipo"
 
 #: actionlog/models.py
 msgid "Edited team-institution conflicts"
-msgstr ""
+msgstr "Conflictos entre equipos e instituciones editados"
 
 #: actionlog/models.py
 msgid "Created debate"
-msgstr ""
+msgstr "Debate creado"
 
 #: actionlog/models.py
 msgid "Edited debate"
-msgstr ""
+msgstr "Debate editado"
 
 #: actionlog/models.py
 msgid "Auto-prioritized debate importance"
@@ -187,11 +187,11 @@ msgstr "Ha despublicado el cuadro"
 
 #: actionlog/models.py
 msgid "Created feedback question"
-msgstr ""
+msgstr "Pregunta de retroalimentación creada"
 
 #: actionlog/models.py
 msgid "Edited feedback question"
-msgstr ""
+msgstr "Pregunta de retroalimentación editada"
 
 #: actionlog/models.py
 msgid "Saved feedback"
