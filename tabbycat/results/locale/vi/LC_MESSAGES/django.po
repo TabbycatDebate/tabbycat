@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 22:00\n"
+"PO-Revision-Date: 2024-09-09 17:22\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
@@ -20,17 +20,17 @@ msgstr ""
 
 #: results/admin.py
 msgid "Resave results"
-msgstr ""
+msgstr "Lưu kết quả"
 
 #: results/admin.py
 #, python-format
 msgid "Resaved results for %(count)d ballot submission."
 msgid_plural "Resaved results for %(count)d ballot submissions."
-msgstr[0] ""
+msgstr[0] "Lưu các kết quả cho %(count)d phiếu điểm."
 
 #: results/admin.py
 msgid "Speaker"
-msgstr ""
+msgstr "Người nói"
 
 #: results/apps.py results/templates/public_results_index.html results/views.py
 msgid "Results"
@@ -38,19 +38,19 @@ msgstr "Kết quả"
 
 #: results/forms.py
 msgid "Tournament password"
-msgstr ""
+msgstr "Mật khẩu của giải đấu"
 
 #: results/forms.py
 msgid "That password isn't correct."
-msgstr ""
+msgstr "Mật khẩu không chính xác."
 
 #: results/forms.py
 msgid "The ballot set can't be both discarded and confirmed."
-msgstr ""
+msgstr "Phiếu điểm không thể bị loại bỏ và xác nhận cùng lúc."
 
 #: results/forms.py
 msgid "The debate status can't be confirmed unless one of the ballot sets is confirmed."
-msgstr ""
+msgstr "Tình trạng trận tranh biện không thể được xác nhận trừ khi phiếu điểm được xác nhận."
 
 #: results/forms.py
 msgid "---------"
@@ -59,12 +59,12 @@ msgstr ""
 #: results/forms.py
 #, python-format
 msgid "%(aff_team)s affirmed, %(neg_team)s negated"
-msgstr ""
+msgstr "%(aff_team)s đã ủng hộ, %(neg_team)s đã phản đối"
 
 #: results/forms.py
 #, python-format
 msgid "%(side)s's motion veto"
-msgstr ""
+msgstr "Phủ quyết kiến nghị của %(side)s"
 
 #: results/forms.py
 #, python-format
@@ -73,11 +73,11 @@ msgstr "%(team)s (%(side)s)"
 
 #: results/forms.py
 msgid "Winner"
-msgstr ""
+msgstr "Đội chiến thắng"
 
 #: results/forms.py
 msgid "Mark as a duplicate speech"
-msgstr ""
+msgstr "Đánh dấu là bài nói thay thế"
 
 #: results/forms.py
 #, python-format
@@ -256,11 +256,11 @@ msgstr "đội"
 
 #: results/models.py
 msgid "win"
-msgstr ""
+msgstr "thắng"
 
 #: results/models.py
 msgid "margin"
-msgstr ""
+msgstr "khoảng cách điểm"
 
 #: results/models.py
 msgid "score"
@@ -320,7 +320,7 @@ msgstr ""
 
 #: results/models.py
 msgid "rank"
-msgstr ""
+msgstr "xếp hạng"
 
 #: results/models.py
 msgid "ghost"

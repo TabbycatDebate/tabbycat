@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-05 17:19\n"
+"PO-Revision-Date: 2024-08-29 17:02\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../../features/adjudicator-allocation.rst:5
 msgid "Adjudicator Allocation"
-msgstr ""
+msgstr "Alocarea arbitrilor"
 
 #: ../../features/adjudicator-allocation.rst:7
 msgid "The adjudicator allocation screen offers the ability to automatically generate an allocation and/or allow you to create or edit an allocation manually. This interface is somewhat complex as it attempts to provide all of the information needed to inform allocation while also providing a number of automatic and manual tools for the allocation process itself."
