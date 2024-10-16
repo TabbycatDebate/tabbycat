@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-10-15 17:29\n"
+"PO-Revision-Date: 2024-10-16 18:29\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -203,11 +203,11 @@ msgstr "Ha entregado feedback desde el formulario publico"
 
 #: actionlog/models.py
 msgid "Created institution"
-msgstr ""
+msgstr "Crear una institución"
 
 #: actionlog/models.py
 msgid "Edited institution"
-msgstr ""
+msgstr "Institución editada"
 
 #: actionlog/models.py
 msgid "Saved a matchup manual edit"
@@ -231,23 +231,23 @@ msgstr "Ha editado las opciones del torneo"
 
 #: actionlog/models.py
 msgid "Auto-allocated adjudicators to preformed panels"
-msgstr ""
+msgstr "Asignación automática de jueces a paneles preformados"
 
 #: actionlog/models.py
 msgid "Edited preformed panel adjudicator"
-msgstr ""
+msgstr "Juez de panel preformado editado"
 
 #: actionlog/models.py
 msgid "Created preformed panels"
-msgstr ""
+msgstr "Paneles preformados creados"
 
 #: actionlog/models.py
 msgid "Auto-allocated preformed panels to debates"
-msgstr ""
+msgstr "Paneles preformados asignados automáticamente a los debates"
 
 #: actionlog/models.py
 msgid "Deleted preformed panels"
-msgstr ""
+msgstr "Paneles preformados borrados"
 
 #: actionlog/models.py
 msgid "Auto-prioritized preformed panels"
