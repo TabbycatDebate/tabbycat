@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:57\n"
+"PO-Revision-Date: 2024-10-16 19:50\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -23,7 +23,7 @@ msgstr "Las escalas numéricas deben tener un mínimo y un máximo"
 
 #: adjfeedback/admin.py
 msgid "target"
-msgstr ""
+msgstr "target"
 
 #: adjfeedback/admin.py adjfeedback/models.py
 msgid "source adjudicator"
@@ -35,7 +35,7 @@ msgstr "equipo fuente"
 
 #: adjfeedback/admin.py
 msgid "Target"
-msgstr ""
+msgstr "Target"
 
 #: adjfeedback/admin.py
 msgid "Source"
@@ -43,7 +43,7 @@ msgstr "Fuente"
 
 #: adjfeedback/admin.py
 msgid "Feedback timestamp and version"
-msgstr ""
+msgstr "Fecha y versión de Feedback"
 
 #: adjfeedback/admin.py
 #, python-format
@@ -724,7 +724,7 @@ msgstr "Distribución del Puntaje (el rango es %(min_score)s–%(max_score)s)"
 
 #: adjfeedback/templates/overview_breakdowns.html
 msgid "Base"
-msgstr ""
+msgstr "Base"
 
 #: adjfeedback/templates/overview_breakdowns.html
 msgid "Feedback"
