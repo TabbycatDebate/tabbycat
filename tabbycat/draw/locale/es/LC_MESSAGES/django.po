@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-30 18:16\n"
+"PO-Revision-Date: 2024-10-16 19:50\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -860,7 +860,7 @@ msgstr ""
 
 #: draw/templates/draw_status_confirmed.html
 msgid "Preformed Panels"
-msgstr ""
+msgstr "Paneles prereformados"
 
 #: draw/templates/draw_status_confirmed.html
 #, python-format
