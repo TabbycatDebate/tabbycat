@@ -24,6 +24,7 @@
 {% block content %}
 
   <form  enctype="multipart/form-data" method="post">
+    {% csrf_token %}
     <div class="card mt-3">
 
       {% include "components/form-main.html" with double=True %}
