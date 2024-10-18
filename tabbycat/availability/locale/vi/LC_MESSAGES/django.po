@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2023-08-11 16:01\n"
+"PO-Revision-Date: 2024-07-02 15:21\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: availability/apps.py availability/views.py
 msgid "Availability"
-msgstr "Tính khả dụng"
+msgstr "Đánh dấu Sẵn sàng"
 
 #: availability/models.py
 msgid "content type"
@@ -35,15 +35,15 @@ msgstr "vòng"
 
 #: availability/models.py
 msgid "round availability"
-msgstr "tính khả dụng của vòng"
+msgstr "tình trạng vòng đấu"
 
 #: availability/models.py
 msgid "round availabilities"
-msgstr "tính khả dụng của vòng"
+msgstr "tình trạng của các vòng đấu"
 
 #: availability/templates/availability_index.html
 msgid "Mark All Breaking Adjs as Available"
-msgstr ""
+msgstr "Đánh dấu tất cả giám khảo đã bước vào vòng loại trực tiếp là Sẵn sàng"
 
 #: availability/templates/availability_index.html
 msgid "Mark Everything as Available"
@@ -52,7 +52,7 @@ msgstr "Đánh dấu tất cả là khả dụng"
 #: availability/templates/availability_index.html
 #, python-format
 msgid "Copy Availability from %(prev_round)s"
-msgstr "Sao chép tính khả dụng từ vòng %(prev_round)s"
+msgstr "Sao chép tình trạng từ vòng %(prev_round)s"
 
 #: availability/templates/availability_index.html
 msgid "View Draw"
@@ -61,7 +61,7 @@ msgstr "Hiển thị bảng đấu"
 #: availability/templates/availability_index.html
 #, python-format
 msgid "%(previous_unconfirmed)s debates from %(round)s do not have a completed ballot — this may lead to a draw that fails or is incorrect"
-msgstr ""
+msgstr "Có %(previous_unconfirmed)s phòng đấu từ vòng %(round)s chưa hoàn thành phiếu điểm — điều này có khả năng khiến cho việc tạo bảng đấu thất bại hoặc thiếu chính xác"
 
 #: availability/templates/availability_index.html
 msgid "Generate Draw"
@@ -69,11 +69,11 @@ msgstr "Tạo bảng đấu"
 
 #: availability/templates/availability_index.html
 msgid "The draw cannot be generated until some teams have been marked as available."
-msgstr ""
+msgstr "Không thể tạo bảng đấu cho tới khi vài đội được điểm danh."
 
 #: availability/templates/availability_index.html
 msgid "The draw cannot be generated until some adjudicators have been marked as available."
-msgstr "Không thể tạo bảng đấu cho tới khi vài giám khảo được đánh dấu là khả dụng."
+msgstr "Không thể tạo bảng đấu cho tới khi vài giám khảo được đánh dấu là sẵn sàng."
 
 #: availability/templates/availability_index.html
 msgid "The draw cannot be generated until some rooms have been marked as available."
@@ -85,21 +85,21 @@ msgstr "Không có đủ phòng khả dụng cho các trận tranh biện - có 
 
 #: availability/templates/availability_index.html
 msgid "There aren't enough adjudicators marked as available for the number of debates — the draw may not generate properly."
-msgstr "Không có đủ giám khảo khả dụng cho các trận tranh biện - có thể có lỗi trong việc tạo bảng đấu."
+msgstr "Không có đủ giám khảo sẵn sàng cho các phòng đấu - bảng đấu có thể không được tạo."
 
 #: availability/templates/availability_index.html
 msgid "There is an uneven number of teams marked as available — the draw may not generate properly."
-msgstr "Số đội khả dụng là số lẻ - có thể có lỗi trong việc tạo bảng đấu."
+msgstr "Số đội đã điểm danh là số lẻ - có thể có lỗi trong việc tạo bảng đấu."
 
 #: availability/templates/availability_index.html
 msgid "The number of teams marked as available is not a multiple of 4 — the draw may not generate properly."
-msgstr "Số đội khả dụng không chia hết cho 4 - có thể có lỗi trong việc tạo bảng đấu."
+msgstr "Số đội đã điểm danh không chia hết cho 4 - có thể có lỗi trong việc tạo bảng đấu."
 
 #: availability/templates/availability_index.html
 #, python-format
 msgid "One debate from %(prev_round)s <strong>does not have a completed ballot</strong>. This may lead to a draw that fails or is incorrect, depending on your draw rules. <a href=\"%(prev_round_results_url)s\" class=\"alert-link\"> Enter results from %(prev_round)s. </a>"
 msgid_plural "%(previous_unconfirmed)s debates from %(prev_round)s <strong>do not have a completed ballot</strong>. This may lead to a draw that fails or is incorrect, depending on your draw rules. <a href=\"%(prev_round_results_url)s\" class=\"alert-link\"> Enter results from %(prev_round)s. </a>"
-msgstr[0] ""
+msgstr[0] "Một phòng đấu từ %(prev_round)s <strong>chưa hoàn thành phiếu điểm</strong>. Điều này có khả năng khiến cho việc tạo bảng đấu thất bại hoặc thiếu chính xác, dựa vào tính chất bảng đấu. <a href=\"%(prev_round_results_url)s\" class=\"alert-link\"> Nhập kết quả từ %(prev_round)s. </a>"
 
 #: availability/templates/availability_index.html
 #, python-format
@@ -109,7 +109,7 @@ msgstr ""
 #: availability/templates/availability_index.html
 #, python-format
 msgid "This is the first round, but its draw type is <strong>%(draw_type)s</strong>. Did you intend for it to be <strong>Random</strong> or <strong>Seeded</strong> instead? You can <a href=\"%(change_round_url)s\" class=\"alert-link\">edit this round's draw type in the Edit Database area.</a>"
-msgstr ""
+msgstr "Đây là vòng đầu tiên, nhưng phương thức xếp đội đang là <strong>%(draw_type)s</strong>. Thay vào đó, bạn có muốn chuyển đổi thành <strong>Random</strong> hoặc <strong>Seeded</strong> hay không? Bạn có thể <a href=\"%(change_round_url)s\" class=\"alert-link\"> chỉnh sửa phương thức xếp đội của vòng này trong Khu vực chỉnh sửa Hệ thống"
 
 #: availability/templates/availability_index.html
 #, python-format
@@ -146,15 +146,15 @@ msgstr "Bỏ chọn tất cả"
 
 #: availability/templates/base_availability.html
 msgid "Check-Ins"
-msgstr ""
+msgstr "Điểm danh"
 
 #: availability/templates/base_availability.html
 msgid "Check In All Breaking"
-msgstr ""
+msgstr "Điểm danh tất cả người tham gia đã vào vòng loại trực tiếp"
 
 #: availability/templates/base_availability.html
 msgid "Copy from Previous"
-msgstr "Sao chép từ phần trước"
+msgstr "Sao chép từ trước"
 
 #: availability/templates/base_availability.html
 msgid "Save Selected"
@@ -174,23 +174,23 @@ msgstr "Phòng"
 
 #: availability/templates/checkin_progress.html
 msgid "Mark teams as available"
-msgstr "Đánh dấu khả dụng cho các đội"
+msgstr "Đánh dấu điểm danh cho các đội"
 
 #: availability/templates/checkin_progress.html
 msgid "No need to set team availability"
-msgstr "Không cần phải đánh dấu khả dụng cho các đội"
+msgstr "Không cần phải đánh dấu điểm danh cho các đội"
 
 #: availability/templates/checkin_progress.html
 msgid "There is an uneven number of teams marked as available for this round."
-msgstr "Số đội khả dụng trong vòng này là số lẻ."
+msgstr "Số đội đã điểm danh trong vòng này là số lẻ."
 
 #: availability/templates/checkin_progress.html
 msgid "The number of teams marked as available for this round is not a multiple of 4."
-msgstr "Số đội khả dụng trong vòng này không chia hết cho 4."
+msgstr "Số đội đã điểm danh trong vòng này không chia hết cho 4."
 
 #: availability/templates/checkin_progress.html
 msgid "Edit team availability"
-msgstr "Chỉnh sửa tính khả dụng của các đội"
+msgstr "Chỉnh sửa trạng thái của các đội"
 
 #: availability/templates/checkin_progress.html
 #, python-format
@@ -202,29 +202,29 @@ msgstr[0] ""
 #, python-format
 msgid "%(count)s adjudicator who was not available last round, is available this round."
 msgid_plural "%(count)s adjudicators who were not available last round, are available this round."
-msgstr[0] "%(count)s giám khảo không khả dụng ở vòng trước khả dụng ở vòng này."
+msgstr[0] "%(count)s giám khảo không sẵn sàng ở vòng trước sẵn sàng ở vòng này."
 
 #: availability/templates/checkin_progress.html
 #, python-format
 msgid "The following %(count)s adjudicator, who was not available last round, is available this round: %(adjs_list)s"
 msgid_plural "The following %(count)s adjudicators, who were not available last round, are available this round: %(adjs_list)s"
-msgstr[0] "%(count)s giám khảo không khả dụng ở vòng trước khả dụng ở vòng này: %(adjs_list)s"
+msgstr[0] "%(count)s giám khảo không sẵn sàng ở vòng trước sẵn sàng ở vòng này: %(adjs_list)s"
 
 #: availability/templates/checkin_progress.html
 #, python-format
 msgid "%(count)s adjudicator who was available last round, is not available this round."
 msgid_plural "%(count)s adjudicators who were available last round, are not available this round."
-msgstr[0] "%(count)s giám khảo khả dụng vòng trước không khả dụng ở vòng này."
+msgstr[0] "%(count)s giám khảo sẵn sàng vòng trước không sẵn sàng ở vòng này."
 
 #: availability/templates/checkin_progress.html
 #, python-format
 msgid "The following %(count)s adjudicator, who was available last round, is not available this round: %(adjs_list)s"
 msgid_plural "The following %(count)s adjudicators, who were available last round, are not available this round: %(adjs_list)s"
-msgstr[0] "%(count)s giám khảo khả dụng vòng trước không khả dụng ở vòng này: %(adjs_list)s"
+msgstr[0] "%(count)s giám khảo sẵn sàng vòng trước không sẵn sàng ở vòng này: %(adjs_list)s"
 
 #: availability/templates/checkin_progress.html
 msgid "Mark adjudicators as available"
-msgstr "Đánh dấu khả dụng cho các giám khảo"
+msgstr "Đánh dấu sẵn sàng cho các giám khảo"
 
 #. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
 #: availability/templates/checkin_progress.html
@@ -235,7 +235,7 @@ msgstr[0] ""
 
 #: availability/templates/checkin_progress.html
 msgid "Edit adjudicator availability"
-msgstr "Chỉnh sửa tính khả dụng của giám khảo"
+msgstr "Chỉnh sửa tình trạng của giám khảo"
 
 #: availability/templates/checkin_progress.html
 #, python-format
@@ -280,7 +280,7 @@ msgstr[0] ""
 
 #: availability/templates/checkin_progress.html
 msgid "Edit room availability"
-msgstr "Chỉnh sửa tính khả dụng của các phòng"
+msgstr "Chỉnh sửa trạng thái của các phòng"
 
 #: availability/views.py
 msgid "no teams are debating"
@@ -331,11 +331,11 @@ msgstr "Đã điểm danh"
 
 #: availability/views.py
 msgid "Team Availability"
-msgstr "Tính khả dụng của đội"
+msgstr "Tình trạng của đội"
 
 #: availability/views.py
 msgid "Adjudicator Availability"
-msgstr "Tính khả dụng của giám khảo"
+msgstr "Tình trạng của giám khảo"
 
 #: availability/views.py
 msgid "Room Availability"
@@ -351,7 +351,7 @@ msgstr "Hiển thị tên (cho bảng đấu)"
 
 #: availability/views.py
 msgid "Categories"
-msgstr "Bảng"
+msgstr "Hạng mục"
 
 #: availability/views.py
 msgid "Priority"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:57\n"
+"PO-Revision-Date: 2024-10-16 19:50\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -275,7 +275,7 @@ msgstr "perdió "
 #: draw/models.py
 #, python-format
 msgid "Team %d"
-msgstr ""
+msgstr "Equipo %d"
 
 #: draw/models.py
 msgid "team side allocation"
@@ -361,7 +361,7 @@ msgstr "Después "
 
 #: draw/tables.py
 msgid "Side history after this round"
-msgstr ""
+msgstr "Historial del equipo después de esta ronda"
 
 #: draw/tables.py
 msgid "Cost"
@@ -369,7 +369,7 @@ msgstr "Costo "
 
 #: draw/tables.py
 msgid "Position cost"
-msgstr ""
+msgstr "Coste de posición"
 
 #: draw/tables.py
 msgid "Status"
@@ -384,11 +384,11 @@ msgstr "Equipos con esta cantidad de puntos son permitidos en este debate <br>\n
 #: draw/tables.py
 #, python-format
 msgid "%(team)s: %(metric)s"
-msgstr ""
+msgstr "%(team)s: %(metric)s"
 
 #: draw/tables.py
 msgid "side history before this round"
-msgstr ""
+msgstr "historial del equipo antes de esta ronda"
 
 #: draw/tables.py
 msgid "Sides"
@@ -396,7 +396,7 @@ msgstr "Lados"
 
 #: draw/tables.py
 msgid "position cost"
-msgstr ""
+msgstr "coste de posición"
 
 #: draw/templates/admin/draw/debateteam/delete_warning.html
 msgid "STOP!!! Read this first! Deleting debate teams from the database may crash Tabbycat!"
@@ -409,84 +409,84 @@ msgstr "Tabbycat requiere que todos los debates tengan <strong>exactamente</stro
 #: draw/templates/admin/draw/debateteam/delete_warning.html
 #: draw/templates/admin/draw/debateteam/edit_warning.html
 msgid "This is a common source of errors. If it happens to you, check the debates (under the Draw section in this Edit Database area) and ensure that all of them have exactly one affirmative and one negative team."
-msgstr ""
+msgstr "Esta es una fuente común de errores. Si le sucede a usted, revise los debates (bajo la sección de Draw en esta área de Editar base de datos) y asegúrese de que todos ellos tengan exactamente un equipo afirmativo y un equipo negativo."
 
 #: draw/templates/admin/draw/debateteam/edit_warning.html
 msgid "WARNING!!! If you are editing debate teams, read this first!"
-msgstr ""
+msgstr "¡¡¡ATENCIÓN!!! ¡Si estás editando equipos de debate, lee esto primero!"
 
 #: draw/templates/admin/draw/debateteam/edit_warning.html
 msgid "Tabbycat requires that there be <strong>exactly</strong> one debate team for each side, and no other debate teams, in each debate. If you edit debate teams in the database, you must ensure that this remains the case. If you don't do this correctly, many pages <strong>will</strong> crash."
-msgstr ""
+msgstr "Tabbycat requiere que todos los debates tengan <strong>exactamente</strong> un equipo de debate por cada lado, y ningún otro equipo de debate, en todo momento. Si borra cualquier equipo de debate, debe entonces reemplazar cada uno con un nuevo equipo en el mismo debate, o borrar los asociados al debate. Si no hace esto correctamente, muchas paginas <strong>se bloquearan</strong>."
 
 #: draw/templates/draw_alerts_adjudicators.html
 #, python-format
 msgid "1 debate does not have a chair."
 msgid_plural "%(ndebates)s debates do not have a chair."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 Debate no tiene juez."
+msgstr[1] "%(ndebates)s Debates no tienen juez."
 
 #: draw/templates/draw_alerts_adjudicators.html
 #, python-format
 msgid "<strong>%(adjudicators)s</strong> is adjudicating multiple debates."
 msgid_plural "The following <strong>%(nadjs)s</strong> adjudicators are adjudicating multiple debates: <strong>%(adjudicators)s</strong>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<strong>%(adjudicators)s</strong> Está adjudicando múltiples debates."
+msgstr[1] "Los siguientes adjudicadores <strong>%(nadjs)s</strong> no están disponibles en esta ronda, pero están asignados a los debates: <strong>%(adjudicators)s</strong>"
 
 #: draw/templates/draw_alerts_adjudicators.html
 #, python-format
 msgid "1 debate has a panel with an even number of adjudicators."
 msgid_plural "%(ndebates)s debates have panels with an even number of adjudicators."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 debate tiene un panel con un número uniforme de adjudicadores."
+msgstr[1] "Los debates de %(ndebates)s tienen paneles con un número par de adjudicadores."
 
 #: draw/templates/draw_alerts_adjudicators.html
 #, python-format
 msgid "1 debate has an adjudicator conflict."
 msgid_plural "%(ndebates)s debates have adjudicator conflicts."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 debate tiene un conflicto de adjudicadores."
+msgstr[1] "Los debates de %(ndebates)s tienen conflictos adjudicadores."
 
 #: draw/templates/draw_alerts_adjudicators.html
 #, python-format
 msgid "<strong>%(adjudicators)s</strong> is unavailable this round, but is assigned to a debate."
 msgid_plural "The following <strong>%(nadjs)s</strong> adjudicators are unavailable this round, but are assigned to debates: <strong>%(adjudicators)s</strong>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<strong>%(adjudicators)s</strong> No está disponible en esta ronda, pero está asignado a un debate."
+msgstr[1] "Los siguientes adjudicadores <strong>%(nadjs)s</strong> no están disponibles en esta ronda, pero están asignados a debates: <strong>%(adjudicators)s</strong>"
 
 #: draw/templates/draw_alerts_adjudicators.html
 #, python-format
 msgid "1 adjudicator is available but not assigned to a debate."
 msgid_plural "%(ndebates)s adjudicators are available but not assigned to a debate."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 adjudicador está disponible pero no asignado a un debate."
+msgstr[1] "Los adjudicadores %(ndebates)s están disponibles pero no están asignados a un debate."
 
 #: draw/templates/draw_alerts_teams.html
 #, python-format
 msgid "<strong>%(teams)s</strong> is competing in multiple debates."
 msgid_plural "The following <strong>%(nteams)s</strong> teams are competing in multiple debates: <strong>%(teams)s</strong>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<strong>%(teams)s</strong> está compitiendo en múltiples debates."
+msgstr[1] "Los siguientes equipos <strong>%(nteams)s</strong> compiten en múltiples debates: <strong>%(teams)s</strong>"
 
 #: draw/templates/draw_alerts_venues.html
 #, python-format
 msgid "1 debate does not have a room."
 msgid_plural "%(ndebates)s debates do not have a room."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 Debate no tiene sala."
+msgstr[1] "%(ndebates)s Debates no tienen sala."
 
 #: draw/templates/draw_alerts_venues.html
 #, python-format
 msgid "There are multiple debates in <strong>%(rooms)s</strong>."
 msgid_plural "The following <strong>%(ndebates)s</strong> rooms have multiple debates in them: <strong>%(rooms)s</strong>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Hay múltiples debates en <strong>%(rooms)s</strong>."
+msgstr[1] "Las siguientes salas <strong>%(ndebates)s</strong> tienen múltiples debates en ellas: <strong>%(rooms)s</strong>"
 
 #: draw/templates/draw_alerts_venues.html
 #, python-format
 msgid "1 debate has a room constraint violation."
 msgid_plural "%(ndebates)s debates have room constraint violations."
-msgstr[0] ""
+msgstr[0] "1 Debate tiene violaciones de restricciones de sala."
 msgstr[1] ""
 
 #: draw/templates/draw_base.html
@@ -860,7 +860,7 @@ msgstr ""
 
 #: draw/templates/draw_status_confirmed.html
 msgid "Preformed Panels"
-msgstr ""
+msgstr "Paneles prereformados"
 
 #: draw/templates/draw_status_confirmed.html
 #, python-format
@@ -1080,46 +1080,46 @@ msgstr ""
 
 #: draw/views.py
 msgid "There is no draw."
-msgstr ""
+msgstr "No hay draw."
 
 #: draw/views.py
 msgid "The draw had already been confirmed."
-msgstr ""
+msgstr "El draw ya había sido confirmado."
 
 #: draw/views.py
 msgid "Deleted the draw. You can now recreate it as normal."
-msgstr ""
+msgstr "El draw ha sido eliminado. Ahora puedes recrearlo."
 
 #: draw/views.py
 msgid "The draw has already been released."
-msgstr ""
+msgstr "El draw ya ha sido publicado."
 
 #: draw/views.py
 msgid "The draw must be confirmed before being released."
-msgstr ""
+msgstr "El Draw debe ser confirmado antes de publicarlo."
 
 #: draw/views.py
 msgid "Released the draw."
-msgstr ""
+msgstr "Ha publicado el Draw."
 
 #: draw/views.py
 msgid "The draw had been unreleased."
-msgstr ""
+msgstr "El Draw no había sido publicado."
 
 #: draw/views.py
 msgid "Unreleased the draw."
-msgstr ""
+msgstr "Ha despublicado el Draw."
 
 #: draw/views.py
 #, python-format
 msgid "Sorry, \"%(input)s\" isn't a valid time. It must be in 24-hour format, with a colon, for example: \"13:57\"."
-msgstr ""
+msgstr "Lo siento,\"%(input)s\" no es un formato de hora válido. Debe estar en formato de 24 horas, con dos puntos, por ejemplo: \"13:57\"."
 
 #: draw/views.py
 msgid "Side Pre-Allocations"
-msgstr ""
+msgstr "Asignaciones previas de equipos"
 
 #: draw/views.py
 msgid "Edit Matchups"
-msgstr ""
+msgstr "Editar enfrentamientos"
 

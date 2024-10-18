@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:59\n"
+"PO-Revision-Date: 2024-07-02 15:21\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
@@ -20,11 +20,11 @@ msgstr ""
 
 #: options/apps.py
 msgid "Tournament Options"
-msgstr ""
+msgstr "Tùy chọn của giải đấu"
 
 #: options/forms.py
 msgid "Mininum score must be less than maximum score"
-msgstr ""
+msgstr "Điểm tối thiểu bắt buộc phải thấp hơn điểm tối đa"
 
 #: options/forms.py
 msgid "Intermediate 1 or 2 require preallocated sides"
@@ -32,11 +32,11 @@ msgstr ""
 
 #: options/forms.py
 msgid "Four-team formats require consensus ballots"
-msgstr ""
+msgstr "Luật 4 đội yêu cầu phiếu điểm đồng thuận"
 
 #: options/forms.py
 msgid "Must set a password if using a password is enabled"
-msgstr ""
+msgstr "Cài đặt mật khẩu là bắt buộc khi tính năng mật khẩu được bật"
 
 #: options/forms.py
 msgid "Showing team institutions defeats the purpose of code names"
@@ -44,15 +44,15 @@ msgstr ""
 
 #: options/models.py
 msgid "instance"
-msgstr ""
+msgstr "thay thế"
 
 #: options/models.py
 msgid "tournament preference"
-msgstr ""
+msgstr "mức độ ưu tiên của giải đấu"
 
 #: options/models.py
 msgid "tournament preferences"
-msgstr ""
+msgstr "các mức độ ưu tiên của giải đấu"
 
 #: options/preferences.py options/templates/preferences_index.html
 msgid "Score Rules"
@@ -60,7 +60,7 @@ msgstr "Điểm nói"
 
 #: options/preferences.py
 msgid "Minimum allowed score for substantive speeches"
-msgstr ""
+msgstr "Điểm tối thiểu cho bài nói chính"
 
 #: options/preferences.py
 msgid "Minimum speaker score"
@@ -72,15 +72,15 @@ msgstr "Điểm tối đa của người nói"
 
 #: options/preferences.py
 msgid "Maximum allowed score for substantive speeches"
-msgstr ""
+msgstr "Điểm tối đa cho bài nói chính"
 
 #: options/preferences.py
 msgid "Speaker score step"
-msgstr ""
+msgstr "Bước nhảy điểm"
 
 #: options/preferences.py
 msgid "Score steps allowed for substantive speeches, e.g. full points (1) or half points (0.5)"
-msgstr ""
+msgstr "Bước nhảy điểm cho phép đối với bài nói chính, ví dụ: Điểm tròn (1) hoặc điểm phẩy (0.5)"
 
 #: options/preferences.py
 msgid "The largest amount by which one team can beat another (0 means no limit)"
@@ -88,11 +88,11 @@ msgstr ""
 
 #: options/preferences.py
 msgid "Maximum margin"
-msgstr ""
+msgstr "Khoảng cách điểm tối đa"
 
 #: options/preferences.py
 msgid "Minimum allowed score for reply speeches"
-msgstr ""
+msgstr "Điểm tối thiểu cho bài nói phản hồi"
 
 #: options/preferences.py
 msgid "Minimum reply score"
@@ -100,7 +100,7 @@ msgstr ""
 
 #: options/preferences.py
 msgid "Maximum allowed score for reply speeches"
-msgstr ""
+msgstr "Điểm tối đa cho bài nói phản hồi"
 
 #: options/preferences.py
 msgid "Maximum reply score"
@@ -108,7 +108,7 @@ msgstr ""
 
 #: options/preferences.py
 msgid "Score steps allowed for reply speeches, e.g. full points (1) or half points (0.5)"
-msgstr ""
+msgstr "Bước nhảy điểm cho phép đối với bài nói phản hồi, ví dụ: Điểm tròn (1) hoặc điểm phẩy (0.5)"
 
 #: options/preferences.py
 msgid "Reply score step"
@@ -116,7 +116,7 @@ msgstr ""
 
 #: options/preferences.py
 msgid "If checked, a team's winning margin includes dissenting adjudicators"
-msgstr ""
+msgstr "Nếu được chọn, điểm nói đội thắng bao gồm cả điểm của giám khảo là thiểu số"
 
 #: options/preferences.py
 msgid "Margin includes dissenters"
@@ -124,11 +124,11 @@ msgstr ""
 
 #: options/preferences.py
 msgid "If checked, all speaker scores, including for duplicate speeches, will be counted for team scores"
-msgstr ""
+msgstr "Nếu được chọn, tất cả điểm nói, bao gồm cả những bài nói thay thế, sẽ được tính cho tổng điểm của đội thi"
 
 #: options/preferences.py
 msgid "Team score includes ghosts"
-msgstr ""
+msgstr "Điểm của đội bao gồm cả điểm ảo"
 
 #: options/preferences.py options/templates/preferences_index.html
 msgid "Draw Rules"
@@ -188,7 +188,7 @@ msgstr ""
 
 #: options/preferences.py
 msgid "Avoid same institution"
-msgstr ""
+msgstr "Hạn chế các đội cùng đơn vị gặp nhau"
 
 #: options/preferences.py
 msgid "If checked, the draw will try to avoid having teams see each other twice"
@@ -196,7 +196,7 @@ msgstr ""
 
 #: options/preferences.py
 msgid "Avoid team history"
-msgstr ""
+msgstr "Hạn chế các đội đã từng gặp nhau gặp lại"
 
 #: options/preferences.py
 msgid "Penalty applied by conflict avoidance method for teams being in a pullup many times. Leave 0 for no penalty."
@@ -232,7 +232,7 @@ msgstr ""
 
 #: options/preferences.py
 msgid "Pull up from top"
-msgstr ""
+msgstr "Làm tròn bảng đấu từ trên xuống"
 
 #: options/preferences.py
 msgid "Pull up from bottom"
