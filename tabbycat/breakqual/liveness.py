@@ -26,7 +26,9 @@ def get_bp_coefficients(nrounds):
     return half_row + half_row[-2::-1]
 
 
-def liveness_twoteam(is_general, current_round, break_size, total_teams, total_rounds, team_scores=[]):
+def liveness_twoteam(is_general, current_round, break_size, total_teams, total_rounds, team_scores=None):
+    if team_scores is None:
+        team_scores = []
 
     if total_teams < break_size or (not is_general and len(team_scores) <= break_size):
         return 0, -1  # special case, everyone is safe
@@ -64,7 +66,8 @@ def liveness_twoteam(is_general, current_round, break_size, total_teams, total_r
     return safe, dead
 
 
-def liveness_bp(is_general, current_round, break_size, total_teams, total_rounds, team_scores=[]):
+def liveness_bp(is_general, current_round, break_size, total_teams, total_rounds, team_scores=None):
+    team_scores = [] if team_scores is None else team_scores
 
     if total_teams < break_size or (not is_general and len(team_scores) <= break_size):
         return -1, -1  # special case, everyone is safe
@@ -103,9 +106,11 @@ def liveness_bp(is_general, current_round, break_size, total_teams, total_rounds
 
         # The dead score is the highest score from which a team can no longer
         # 'catch' a team in the last breaking spot.
+
+        # All are live if no team scores exist (i.e. Round 1)
+        dead = -1
+
         if len(team_scores) >= break_size - 1:
             dead = team_scores[break_size-1] - points_to_go - 1
-        else:
-            dead = -1 # All are live if no team scores exist (i.e. Round 1)
 
     return safe, dead

@@ -808,12 +808,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
             } for ranking in standing.iterrankings()])
         self.add_columns(headers, data)
 
-    def add_metric_columns(self, standings, integer_score_columns=[]):
+    def add_metric_columns(self, standings, integer_score_columns=None):
         """`integer_score_columns`, if given, indicates which metrics to cast to
         an int if the metric's value is an integer. For example, if the
         tournament preferences are such that the total speaker score should
         always be an integer, a list containing the string 'total' or
         'speaks_sum' should be passed in via this argument."""
+        if integer_score_columns is None:
+            integer_score_columns = []
 
         headers = self._standings_headers(standings.metrics_info())
         data = []
