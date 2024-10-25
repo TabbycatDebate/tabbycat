@@ -49,8 +49,8 @@
 {# Motions #}
 {% if pref.public_motions or admin_page %}
   <div class="list-group-item {% if not pref.public_motions or not current_round.motions_released %}list-group-item-dark{% endif %}">
-    {% if current_round.motions_released or admin_page %}
-      {% if not current_round.motions_released %}
+    {% if debate.round.motions_released or admin_page %}
+      {% if not debate.round.motions_released %}
         <em>{% trans "Motions are not released to public." %}</em><br />
       {% endif %}
       {% if debate.round.motion_set.all|length == 1 %}
@@ -82,8 +82,8 @@
         {% endfor %}
       </ol>
       {% endif %}
-    {% else %} {# elif not (current_round.motions_released or admin_page) #}
+    {% else %} {# elif not (debate.round.motions_released or admin_page) #}
       <em>{% trans "The motion(s) for this round haven't yet been released." %}</em>
-    {% endif %} {# current_round.motions_released or admin_page #}
+    {% endif %} {# debate.round.motions_released or admin_page #}
   </div>
 {% endif %} {# pref.public_motions or admin_page #}
