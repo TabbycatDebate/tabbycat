@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from django.core.validators import MinValueValidator, validate_slug
+from django.core.validators import EmailValidator, MinValueValidator, validate_slug
 from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 from dynamic_preferences.preferences import Section
@@ -1272,6 +1272,7 @@ class ReplyToEmailAddress(StringPreference):
     section = email
     name = 'reply_to_address'
     default = ""
+    field_kwargs = {'validators': [EmailValidator()]}
 
 
 @tournament_preferences_registry.register
