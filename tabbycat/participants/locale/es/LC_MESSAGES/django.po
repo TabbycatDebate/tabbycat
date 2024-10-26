@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-10-16 19:50\n"
+"PO-Revision-Date: 2024-10-26 21:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -427,7 +427,7 @@ msgstr ""
 #: participants/templates/adjudicator_registration_card.html
 #: participants/templates/team_registration_card.html
 msgid "Institutional Conflicts:"
-msgstr ""
+msgstr "Conflictos Institucionales:"
 
 #: participants/templates/adjudicator_registration_card.html
 #: participants/templates/team_registration_card.html
@@ -513,12 +513,12 @@ msgstr[1] "Jueces:"
 #: participants/templates/current_round/common.html
 msgctxt "chair icon"
 msgid "Ⓒ"
-msgstr ""
+msgstr "Ⓒ"
 
 #: participants/templates/current_round/common.html
 msgctxt "trainee icon"
 msgid "Ⓣ"
-msgstr ""
+msgstr "Ⓣ"
 
 #: participants/templates/current_round/common.html
 msgid "There are no panellists or trainees assigned to this debate."
@@ -553,7 +553,7 @@ msgstr "%(adjudicator)s es el <strong>juez principal</strong> y adjudica a %(aff
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "You are the <strong>chair</strong> adjudicating %(aff)s vs %(neg)s in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
-msgstr ""
+msgstr "Eres la <strong> principal </strong> adjudicando %(aff)s vs %(neg)s en <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
