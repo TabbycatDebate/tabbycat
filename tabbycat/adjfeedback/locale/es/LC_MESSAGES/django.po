@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-10-16 19:50\n"
+"PO-Revision-Date: 2024-10-26 21:48\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -127,7 +127,7 @@ msgstr "Puntaje general (%(min)d=peor;%(max)d=mejor)*"
 
 #: adjfeedback/forms.py
 msgid "Ignored"
-msgstr ""
+msgstr "Ignorado"
 
 #. Translators: e.g. "Megan Pearson (chair)", with adjpos="chair"
 #: adjfeedback/forms.py
@@ -161,7 +161,7 @@ msgstr "%(name)s(el juez principal dio retroalimentación oral)"
 #: adjfeedback/forms.py
 #, python-format
 msgid "%(name)s (panellist gave oral as chair rolled)"
-msgstr ""
+msgstr "%(name)s (panelista brindó retroalimentación oral)"
 
 #: adjfeedback/forms.py
 #, python-format
@@ -181,7 +181,7 @@ msgstr ""
 #: adjfeedback/forms.py
 #, python-format
 msgid "There is no adjudicator in this tournament with the name \"%(adjudicator)s\""
-msgstr ""
+msgstr "No hay juez en este torneo con el nombre\"%(adjudicator)s\""
 
 #: adjfeedback/forms.py
 #, python-format
@@ -438,7 +438,7 @@ msgstr "Puntaje ponderado actual"
 
 #: adjfeedback/tables.py
 msgid "This adjudicator's current rating."
-msgstr ""
+msgstr "La calificación actual de este juez."
 
 #: adjfeedback/tables.py
 msgid "Base score result"
@@ -446,7 +446,7 @@ msgstr ""
 
 #: adjfeedback/tables.py
 msgid "Click to edit base score"
-msgstr ""
+msgstr "Haga clic para editar la puntuación base"
 
 #: adjfeedback/tables.py
 msgid "Assigned base score"
@@ -489,7 +489,7 @@ msgstr ""
 
 #: adjfeedback/tables.py
 msgid "View Missing Feedback"
-msgstr ""
+msgstr "Ver Retroalimentación Faltante"
 
 #: adjfeedback/templates/add_feedback.html
 msgid "Who is the feedback from?"
@@ -498,7 +498,7 @@ msgstr ""
 #: adjfeedback/templates/add_feedback.html
 #: adjfeedback/templates/enter_feedback.html
 msgid "Enter Feedback"
-msgstr ""
+msgstr "Introducir Retroalimentación"
 
 #: adjfeedback/templates/enter_feedback.html
 #: adjfeedback/templates/public_add_feedback.html
@@ -509,7 +509,7 @@ msgstr ""
 #: adjfeedback/templates/enter_feedback.html
 #: adjfeedback/templates/feedback_base.html
 msgid "Add Feedback"
-msgstr ""
+msgstr "Añadir Retroalimentación"
 
 #: adjfeedback/templates/enter_feedback.html
 msgid "There are no feedback options because no rounds have been released to the public yet. Check back when they have!"
