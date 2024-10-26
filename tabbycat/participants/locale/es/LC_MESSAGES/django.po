@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-10-26 21:48\n"
+"PO-Revision-Date: 2024-10-26 22:44\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -460,7 +460,7 @@ msgstr "Limitaciones de sala:"
 
 #: participants/templates/admin/participants/adjudicator/change_form.html
 msgid "<strong>Don't forget:</strong> If this adjudicator should be conflicted against their own institution, you should add this conflict <strong>now</strong> in the <strong>Adjudicator-institution conflicts</strong> tab above, because the own-institution conflict is <strong>not</strong> automatically created when using this form."
-msgstr ""
+msgstr "<strong>No olvidar:</strong> Si este juez debería presentar una incompatibilidad contra su propia institución, deberías añadir esta incompatibilidad <strong>ahora</strong> en la pestaña <strong>Incompatibilidades juez-institución</strong> de arriba, porque la propia incompatibilidad juez-institución <strong>no</strong> se crea automáticamente al usar este formulario."
 
 #: participants/templates/admin/participants/delete_debateteam_warning.html
 #, python-format
