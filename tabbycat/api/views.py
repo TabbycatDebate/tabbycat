@@ -1215,6 +1215,7 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
 class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
     serializer_class = serializers.AvailabilitiesSerializer  # Isn't actually used
     action_log_type_updated = ActionLogEntry.ActionType.AVAIL_SAVE
+    action_log_content_object_attr = None
 
     list_permission = Permission.VIEW_ROUNDAVAILABILITIES
     create_permission = Permission.EDIT_ROUNDAVAILABILITIES
