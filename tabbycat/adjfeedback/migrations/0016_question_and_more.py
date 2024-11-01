@@ -48,17 +48,29 @@ answer_migrations = [
                 verbose_name="content type",
             ),
         ),
-        migrations.RenameField(
-            model_name=table,
-            old_name="feedback",
-            new_name="object",
-        ),
-        migrations.AlterField(
-            model_name=table,
-            name="object_id",
-            field=models.PositiveIntegerField(verbose_name="object id"),
-            preserve_default=False,
-        ),
+        migrations.SeparateDatabaseAndState(database_operations=[
+            migrations.RenameField(
+                model_name=table,
+                old_name="feedback",
+                new_name="object",
+            ),
+            migrations.AlterField(
+                model_name=table,
+                name="object_id",
+                field=models.PositiveIntegerField(verbose_name="object id"),
+                preserve_default=False,
+            ),
+        ], state_operations=[
+            migrations.RemoveField(
+                model_name=table,
+                name="feedback",
+            ),
+            migrations.AddField(
+                model_name=table,
+                name="object_id",
+                field=models.PositiveIntegerField(verbose_name="object id"),
+            ),
+        ]),
         migrations.AlterField(
             model_name=table,
             name="question",
@@ -72,7 +84,7 @@ answer_migrations = [
             model_name=table,
             constraint=utils.models.UniqueConstraint(
                 fields=("question", "content_type", "object_id"),
-                name=f"adjfeed_{table}_question__content_type__object_id_uniq",
+                name=f"adjfeed_{table[19:]}_question__content_type__object_id_uniq",
             ),
         ),
         migrations.RenameModel(table, table[19:]),
