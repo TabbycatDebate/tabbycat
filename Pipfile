@@ -43,7 +43,7 @@ networkx = "*" # Avoid its dependencies (SciPy)
 
 [dev-packages]
 pre-commit = "*"
-selenium = "==3.141.*"
+selenium = "==4.26.*"
 django-debug-toolbar = "*"
 sphinx = "*"
 sphinx-autobuild = "*"
