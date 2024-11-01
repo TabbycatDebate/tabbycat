@@ -29,7 +29,7 @@
     "@babel/core": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
     "@popperjs/core": "^2.6.0",
-    "@sentry/browser": "^5.30.0",
+    "@sentry/browser": "^8.36.0",
     "@sentry/integrations": "^5.30.0",
     "@vue/cli-plugin-babel": "^5.0.4",
     "@vue/cli-service": "^5.0.4",
