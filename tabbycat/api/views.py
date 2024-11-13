@@ -23,7 +23,6 @@ from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from actionlog.models import ActionLogEntry
 from adjallocation.models import PreformedPanel
 from adjallocation.preformed.anticipated import calculate_anticipated_draw
-from adjfeedback.models import AdjudicatorFeedback
 from availability.models import RoundAvailability
 from breakqual.models import BreakCategory
 from breakqual.views import GenerateBreakMixin
@@ -366,6 +365,14 @@ class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
         if self.request.query_params.get('region'):
             filters &= Q(region__name=self.request.query_params['region'])
 
+        answers_prefetch = [
+            Prefetch(
+                typ,
+                queryset=getattr(self.model, typ).rel.model.objects.select_related('question__tournament'),
+            )
+            for typ in self.model.answer_rels
+        ]
+
         return Institution.objects.filter(
             Q(adjudicator__tournament=self.tournament) | Q(team__tournament=self.tournament),
             filters,
@@ -373,6 +380,7 @@ class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
             Prefetch('team_set', queryset=self.tournament.team_set.all()),
             Prefetch('adjudicator_set', queryset=self.tournament.adjudicator_set.all()),
             'venue_constraints__category__tournament',
+            *answers_prefetch,
         )
 
 
@@ -397,6 +405,21 @@ class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     destroy_permission = Permission.ADD_TEAMS
 
     def get_queryset(self):
+        team_answers_prefetch = [
+            Prefetch(
+                typ,
+                queryset=getattr(self.model, typ).rel.model.objects.select_related('question__tournament'),
+            )
+            for typ in self.model.answer_rels
+        ]
+        spk_answers_prefetch = [
+            Prefetch(
+                typ,
+                queryset=getattr(Speaker, typ).rel.model.objects.select_related('question__tournament'),
+            )
+            for typ in Speaker.answer_rels
+        ]
+
         category_prefetch = Prefetch('categories', queryset=SpeakerCategory.objects.all().select_related('tournament'))
         if not self.request.user or not self.request.user.is_staff:
             category_prefetch.queryset = category_prefetch.queryset.filter(public=True)
@@ -404,8 +427,9 @@ class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
         return super().get_queryset().select_related('tournament').prefetch_related(
             Prefetch(
                 'speaker_set',
-                queryset=Speaker.objects.all().prefetch_related(category_prefetch).select_related('team__tournament', 'checkin_identifier'),
+                queryset=Speaker.objects.all().prefetch_related(category_prefetch, *spk_answers_prefetch).select_related('team__tournament', 'checkin_identifier'),
             ),
+            *team_answers_prefetch,
             'institution_conflicts', 'venue_constraints__category__tournament',
             'break_categories', 'break_categories__tournament',
         )
@@ -441,10 +465,19 @@ class AdjudicatorViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
         if self.request.query_params.get('break') and self.get_break_permission():
             filters &= Q(breaking=True)
 
+        answers_prefetch = [
+            Prefetch(
+                typ,
+                queryset=getattr(self.model, typ).rel.model.objects.select_related('question__tournament'),
+            )
+            for typ in self.model.answer_rels
+        ]
+
         return super().get_queryset().select_related('checkin_identifier').prefetch_related(
             'team_conflicts', 'team_conflicts__tournament',
             'adjudicator_conflicts', 'adjudicator_conflicts__tournament',
             'institution_conflicts', 'venue_constraints__category__tournament',
+            *answers_prefetch,
         ).filter(filters)
 
 
@@ -503,10 +536,19 @@ class SpeakerViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet)
 
     def get_queryset(self):
         category_prefetch = Prefetch('categories', queryset=SpeakerCategory.objects.all().select_related('tournament'))
+
+        answers_prefetch = [
+            Prefetch(
+                typ,
+                queryset=getattr(self.model, typ).rel.model.objects.select_related('question__tournament'),
+            )
+            for typ in self.model.answer_rels
+        ]
+
         if not self.request.user or not self.request.user.is_staff:
             category_prefetch.queryset = category_prefetch.queryset.filter(public=True)
 
-        return super().get_queryset().select_related('checkin_identifier').prefetch_related(category_prefetch)
+        return super().get_queryset().select_related('checkin_identifier').prefetch_related(category_prefetch, *answers_prefetch)
 
 
 @extend_schema(tags=['venues'], parameters=[tournament_parameter])
@@ -1086,6 +1128,26 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
         return self.retrieve(request, *args, **kwargs)
 
 
+@extend_schema(tags=['questions'], parameters=[tournament_parameter])
+@extend_schema_view(
+    list=extend_schema(summary="List tournament questions"),
+    create=extend_schema(summary="Create question"),
+    retrieve=extend_schema(summary="Get question", parameters=[id_parameter]),
+    update=extend_schema(summary="Update question", parameters=[id_parameter]),
+    partial_update=extend_schema(summary="Patch question", parameters=[id_parameter]),
+    destroy=extend_schema(summary="Delete question", parameters=[id_parameter]),
+)
+class QuestionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
+    serializer_class = serializers.QuestionSerializer
+    action_log_type_created = ActionLogEntry.ActionType.QUESTION_CREATE
+    action_log_type_updated = ActionLogEntry.ActionType.QUESTION_EDIT
+
+    list_permission = True
+    create_permission = Permission.EDIT_QUESTIONS
+    update_permission = Permission.EDIT_QUESTIONS
+    destroy_permission = Permission.DELETE_QUESTIONS
+
+
 @extend_schema(tags=['feedback'], parameters=[tournament_parameter])
 @extend_schema_view(
     list=extend_schema(summary="List tournament feedback questions", parameters=[
@@ -1146,7 +1208,7 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     action_log_type_updated = ActionLogEntry.ActionType.FEEDBACK_SAVE
 
     authentication_classes = [URLKeyAuthentication]
-    permission_classes = [APIEnabledPermission, CustomPermission | PerTournamentPermissionRequired | IsAdminUser]
+    permission_classes = [APIEnabledPermission]
 
     list_permission = Permission.VIEW_FEEDBACK
     create_permission = Permission.ADD_FEEDBACK
@@ -1196,9 +1258,9 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
         answers_prefetch = [
             Prefetch(
                 typ,
-                queryset=getattr(AdjudicatorFeedback, typ).rel.model.objects.select_related('question__tournament'),
+                queryset=getattr(self.model, typ).rel.model.objects.select_related('question__tournament'),
             )
-            for typ in AdjudicatorFeedback.answer_rels
+            for typ in self.model.answer_rels
         ]
         return super().get_queryset().filter(filters).select_related(
             'adjudicator', 'adjudicator__tournament',

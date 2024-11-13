@@ -10,6 +10,7 @@ from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
+from registration.models import BooleanAnswer, FloatAnswer, IntegerAnswer, ManyAnswer, QuestionMixin, StringAnswer
 from utils.managers import LookupByNameFieldsMixin
 from utils.models import UniqueConstraint
 
@@ -63,7 +64,7 @@ class Institution(models.Model):
         return str(self.name)
 
 
-class TournamentInstitution(models.Model):
+class TournamentInstitution(QuestionMixin, models.Model):
     tournament = models.ForeignKey(
         "tournaments.Tournament", models.CASCADE, verbose_name=_("tournament"),
     )
@@ -80,6 +81,22 @@ class TournamentInstitution(models.Model):
     adjudicators_allocated = models.PositiveIntegerField(
         verbose_name=_("Adjudicator slots allocated"),
     )
+
+    string_answers = GenericRelation(StringAnswer)
+    many_answers = GenericRelation(ManyAnswer)
+    integer_answers = GenericRelation(IntegerAnswer)
+    float_answers = GenericRelation(FloatAnswer)
+    boolean_answers = GenericRelation(BooleanAnswer)
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=['tournament', 'institution']),
+        ]
+        verbose_name = _("tournament institution")
+        verbose_name_plural = _("tournament institutions")
+
+    def __str__(self):
+        return "%s (%s)" % (self.name, self.tournament.short_name)
 
 
 class SpeakerCategory(models.Model):
@@ -116,7 +133,7 @@ class SpeakerCategory(models.Model):
         return "[{}] {}".format(self.tournament.slug, self.name)
 
 
-class Person(models.Model):
+class Person(QuestionMixin, models.Model):
     name = models.CharField(max_length=70, db_index=True,
         verbose_name=_("name"))
     email = models.EmailField(blank=True, null=True,
@@ -145,6 +162,12 @@ class Person(models.Model):
     pronoun = models.CharField(max_length=10, blank=True,
         verbose_name=_("pronoun"),
         help_text=_("If printing ballots using Tabbycat, there is the option to pre-print pronouns"))
+
+    string_answers = GenericRelation(StringAnswer)
+    many_answers = GenericRelation(ManyAnswer)
+    integer_answers = GenericRelation(IntegerAnswer)
+    float_answers = GenericRelation(FloatAnswer)
+    boolean_answers = GenericRelation(BooleanAnswer)
 
     class Meta:
         verbose_name = _("person")
@@ -191,7 +214,7 @@ class TeamManager(LookupByNameFieldsMixin, models.Manager):
         return super().get_queryset().select_related('institution')
 
 
-class Team(models.Model):
+class Team(QuestionMixin, models.Model):
     reference = models.CharField(blank=True, max_length=150,
         verbose_name=_("full name/suffix"),
         help_text=_("Do not include institution name (see \"uses institutional prefix\" below)"))
@@ -247,6 +270,12 @@ class Team(models.Model):
     emoji = models.CharField(max_length=3, default=None, choices=EMOJI_FIELD_CHOICES,
         blank=True, null=True,   # uses null=True to allow multiple teams to have no emoji
         verbose_name=_("emoji"))
+
+    string_answers = GenericRelation(StringAnswer)
+    many_answers = GenericRelation(ManyAnswer)
+    integer_answers = GenericRelation(IntegerAnswer)
+    float_answers = GenericRelation(FloatAnswer)
+    boolean_answers = GenericRelation(BooleanAnswer)
 
     class Meta:
         constraints = [

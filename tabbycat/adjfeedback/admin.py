@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin, messages
 from django.contrib.contenttypes.admin import GenericTabularInline
-from django.contrib.contenttypes.prefetch import GenericPrefetch
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Prefetch
 from django.utils.translation import gettext_lazy as _, ngettext
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
@@ -9,8 +9,7 @@ from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 from draw.models import DebateTeam
 from utils.admin import custom_titled_filter, ModelAdmin
 
-from .models import (AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion,
-    BooleanAnswer, FloatAnswer, IntegerAnswer, ManyAnswer, StringAnswer)
+from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 
 
 # ==============================================================================
@@ -35,7 +34,7 @@ class AdjudicatorBaseScoreHistoryAdmin(ModelAdmin):
 class QuestionForm(forms.ModelForm):
     class Meta:
         model = AdjudicatorFeedbackQuestion
-        fields = '__all__'
+        exclude = ('for_content_type',)
 
     def clean(self):
         integer_scale = AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE
@@ -43,6 +42,10 @@ class QuestionForm(forms.ModelForm):
             if not self.cleaned_data.get('min_value') or not self.cleaned_data.get('max_value'):
                 raise forms.ValidationError(_("Integer scales must have a minimum and maximum"))
         return self.cleaned_data
+
+    def save_model(self, request, obj, form, change):
+        obj.for_content_type = ContentType.objects.get(app_label="adjfeedback", model="adjudicatorfeedback")
+        super().save_model(request, obj, form, change)
 
 
 @admin.register(AdjudicatorFeedbackQuestion)
@@ -57,18 +60,6 @@ class AdjudicatorFeedbackQuestionAdmin(DynamicArrayMixin, ModelAdmin):
 # ==============================================================================
 # Adjudicator feedback answers
 # ==============================================================================
-
-@admin.register(BooleanAnswer)
-@admin.register(FloatAnswer)
-@admin.register(IntegerAnswer)
-@admin.register(ManyAnswer)
-@admin.register(StringAnswer)
-class AnswerAdmin(ModelAdmin):
-    list_display = ('question', 'answer', 'content_object')
-
-    def get_queryset(self, request):
-        prefetch = GenericPrefetch("content_object", [AdjudicatorFeedback.objects.select_related('source_team__team', 'source_adjudicator__adjudicator', 'adjudicator').all()])
-        return super().get_queryset(request).prefetch_related(prefetch)
 
 
 class BaseAdjudicatorFeedbackAnswerInline(GenericTabularInline):

@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.models import ContentType
 from django.core.cache import cache
 from django.forms import CharField, ChoiceField, Form, ModelChoiceField, ModelForm
 from django.forms.fields import IntegerField, NumberInput
@@ -38,14 +39,17 @@ class TournamentStartForm(ModelForm):
 
     @staticmethod
     def add_default_feedback_questions(tournament):
+        content_type = ContentType.objects.get(app_label="adjfeedback", model="adjudicatorfeedback")
         agree = AdjudicatorFeedbackQuestion(
             tournament=tournament, seq=2, required=True,
+            for_content_type=content_type,
             text=_("Did you agree with their decision?"), name=_("Agree?"),
             reference="agree", from_adj=True, from_team=True,
             answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_SELECT)
         agree.save()
         comments = AdjudicatorFeedbackQuestion(
             tournament=tournament, seq=3, required=False,
+            for_content_type=content_type,
             text=_("Comments"), name=_("Comments"),
             reference="comments", from_adj=True, from_team=True,
             answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT)

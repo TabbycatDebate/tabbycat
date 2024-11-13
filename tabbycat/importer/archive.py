@@ -1,5 +1,6 @@
 from xml.etree.ElementTree import Element, SubElement
 
+from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Prefetch, Q
 from django.utils.text import slugify
@@ -451,9 +452,12 @@ class Importer:
     def import_questions(self):
         self.questions = {}
 
+        content_type = ContentType.objects.get(app_label="adjfeedback", model="adjudicatorfeedback")
+
         for i, question in enumerate(self.root.findall('question'), 1):
             q = AdjudicatorFeedbackQuestion(
                 tournament=self.tournament, seq=i, text=question.text,
+                for_content_type=content_type,
                 name=question.get('name'), reference=slugify(question.get('name')[:50]),
                 from_adj=question.get('from-adjudicators') == 'true', from_team=question.get('from-teams') == 'true',
                 answer_type=question.get('type'), required=False,

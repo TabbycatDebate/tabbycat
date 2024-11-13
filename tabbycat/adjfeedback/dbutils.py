@@ -13,6 +13,7 @@ from django.contrib.auth import get_user_model
 from adjallocation.models import DebateAdjudicator
 from draw.models import DebateTeam
 from participants.models import Adjudicator, Team
+from registration.models import BooleanAnswer, FloatAnswer, IntegerAnswer, ManyAnswer, StringAnswer
 
 from . import models as fm
 
@@ -143,31 +144,31 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
             if fb.source_adjudicator and not question.from_adj:
                 continue
 
-            if question.answer_type_class == fm.AdjudicatorFeedbackBooleanAnswer:
+            if question.answer_type_class is BooleanAnswer:
                 answer = random.choice([None, True, False])
                 if answer is None:
                     continue
-            elif question.answer_type_class == fm.AdjudicatorFeedbackIntegerAnswer:
+            elif question.answer_type_class is IntegerAnswer:
                 min_value = int(question.min_value) or 0
                 max_value = int(question.max_value) or 10
                 answer = random.randrange(min_value, max_value+1)
-            elif question.answer_type_class == fm.AdjudicatorFeedbackFloatAnswer:
+            elif question.answer_type_class is FloatAnswer:
                 min_value = question.min_value or 0
                 max_value = question.max_value or 10
                 answer = random.uniform(min_value, max_value)
-            elif question.answer_type_class == fm.AdjudicatorFeedbackStringAnswer:
+            elif question.answer_type_class is StringAnswer:
                 if question.answer_type == fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT:
                     answer = random.choice(COMMENTS[score])
                 elif question.answer_type == fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT:
                     answer = random.choice(question.choices)
                 else:
                     answer = random.choice(WORDS[score])
-            elif question.answer_type_class == fm.AdjudicatorFeedbackManyAnswer:
+            elif question.answer_type_class is ManyAnswer:
                 answer = random.sample(question.choices, random.randint(0, len(question.choices_for_field)))
             else:
                 raise TypeError("Answer type class not recognized: " + question.answer_type_class.__name__)
 
-            question.answer_type_class(question=question, feedback=fb, answer=answer).save()
+            question.answer_type_class(question=question, content_object=fb, answer=answer).save()
 
         name = source.name if isinstance(source, Adjudicator) else source.short_name
         logger.info("[%s] %s on %s: %s", debate.round.tournament.slug, name, adj, score)
