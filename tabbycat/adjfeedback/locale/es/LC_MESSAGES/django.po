@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-10-26 21:48\n"
+"PO-Revision-Date: 2024-11-18 19:51\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -394,7 +394,7 @@ msgstr "preguntas de retroalimentación del juez"
 
 #: adjfeedback/models.py adjfeedback/views.py
 msgid "ignored"
-msgstr ""
+msgstr "ignorado"
 
 #: adjfeedback/models.py
 msgid "Whether the feedback should affect the adjudicator's score"
@@ -549,7 +549,7 @@ msgstr ""
 
 #: adjfeedback/templates/feedback_base.html
 msgid "Important"
-msgstr ""
+msgstr "Importante"
 
 #: adjfeedback/templates/feedback_base.html
 msgid "Comments"
@@ -940,7 +940,7 @@ msgstr ""
 
 #: adjfeedback/views.py
 msgid "Feedback Progress"
-msgstr ""
+msgstr "Progreso de Comentarios"
 
 #: adjfeedback/views.py
 #, python-format
