@@ -40,7 +40,7 @@ class QuestionForm(forms.ModelForm):
     def clean(self):
         integer_scale = AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE
         if self.cleaned_data.get('answer_type') == integer_scale:
-            if not self.cleaned_data.get('min_value') or not self.cleaned_data.get('max_value'):
+            if self.cleaned_data.get('min_value') is None or self.cleaned_data.get('max_value') is None:
                 raise forms.ValidationError(_("Integer scales must have a minimum and maximum"))
         return self.cleaned_data
 
