@@ -42,6 +42,8 @@ class QuestionForm(forms.ModelForm):
         if self.cleaned_data.get('answer_type') == integer_scale:
             if self.cleaned_data.get('min_value') is None or self.cleaned_data.get('max_value') is None:
                 raise forms.ValidationError(_("Integer scales must have a minimum and maximum"))
+            if self.cleaned_data['max_value'] < self.cleaned_data['min_value']:
+                raise forms.ValidationError(_("Maximum value must be greater than the minimum"))
         return self.cleaned_data
 
 
