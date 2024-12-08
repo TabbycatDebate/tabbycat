@@ -13,6 +13,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from options.utils import use_team_code_names
 from participants.models import Person, Speaker
+from breakqual.models import BreakingTeam
 from participants.serializers import InstitutionSerializer
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 from users.permissions import Permission
@@ -68,6 +69,11 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
     edit_permission = Permission.EDIT_PARTICIPANT_CHECKIN
 
     def get_context_data(self, **kwargs):
+        #TODO: Find whether this is a break round or not
+        is_break_round = False
+        if is_break_round:
+            breaking_teams = BreakingTeam.objects.filter( break_category__tournament=self.tournament).select_related('team', 'team__institution', 'break_category', 'break_category__tournament').all()
+            breaking_team_ids = set(breaking_team.team.id for breaking_team in breaking_teams)
 
         team_codes = use_team_code_names(self.tournament, admin=self.for_admin, user=self.request.user)
         kwargs["team_codes"] = json.dumps(team_codes)
@@ -89,6 +95,9 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
         speakers = []
         for speaker in Speaker.objects.filter(team__tournament=self.tournament).select_related('team', 'team__institution', 'checkin_identifier'):
+            if is_break_round:
+                if speaker.team.id not in breaking_team_ids:
+                    continue
             try:
                 code = speaker.checkin_identifier.barcode
             except ObjectDoesNotExist:
