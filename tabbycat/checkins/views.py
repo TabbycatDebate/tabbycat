@@ -68,12 +68,13 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
     edit_permission = Permission.EDIT_PARTICIPANT_CHECKIN
 
-    def get_context_data(self, **kwargs):
+    def is_break_round(self):
+        """Checks if the current round is a break round."""
         break_rounds = self.tournament.break_rounds()
-        is_break_round = False
-        if self.tournament.current_round in break_rounds:
-            is_break_round = True
-        if is_break_round:
+        return self.tournament.current_round in break_rounds
+
+    def get_context_data(self, **kwargs):
+        if self.is_break_round():
             breaking_teams = BreakingTeam.objects.filter(break_category__tournament=self.tournament).select_related('team', 'team__institution', 'break_category', 'break_category__tournament').all()
             breaking_team_ids = set(breaking_team.team.id for breaking_team in breaking_teams)
 
@@ -97,7 +98,7 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
         speakers = []
         for speaker in Speaker.objects.filter(team__tournament=self.tournament).select_related('team', 'team__institution', 'checkin_identifier'):
-            if is_break_round and speaker.team.id not in breaking_team_ids:
+            if self.is_break_round() and speaker.team.id not in breaking_team_ids:
                 continue
             try:
                 code = speaker.checkin_identifier.barcode
