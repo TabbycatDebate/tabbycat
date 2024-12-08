@@ -97,9 +97,8 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
         speakers = []
         for speaker in Speaker.objects.filter(team__tournament=self.tournament).select_related('team', 'team__institution', 'checkin_identifier'):
-            if is_break_round:
-                if speaker.team.id not in breaking_team_ids:
-                    continue
+            if is_break_round and speaker.team.id not in breaking_team_ids:
+                continue
             try:
                 code = speaker.checkin_identifier.barcode
             except ObjectDoesNotExist:
