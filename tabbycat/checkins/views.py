@@ -69,8 +69,10 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
     edit_permission = Permission.EDIT_PARTICIPANT_CHECKIN
 
     def get_context_data(self, **kwargs):
-        #TODO: Find whether this is a break round or not
+        break_rounds = self.tournament.break_rounds()
         is_break_round = False
+        if self.tournament.current_round in break_rounds:
+            is_break_round = True
         if is_break_round:
             breaking_teams = BreakingTeam.objects.filter( break_category__tournament=self.tournament).select_related('team', 'team__institution', 'break_category', 'break_category__tournament').all()
             breaking_team_ids = set(breaking_team.team.id for breaking_team in breaking_teams)
