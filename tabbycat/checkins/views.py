@@ -73,10 +73,13 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
         break_rounds = self.tournament.break_rounds()
         return self.tournament.current_round in break_rounds
 
+    def get_breaking_team_ids(self):
+        breaking_teams = BreakingTeam.objects.filter(break_category__tournament=self.tournament).select_related('team', 'team__institution', 'break_category', 'break_category__tournament').all()
+        return set(breaking_team.team.id for breaking_team in breaking_teams)
+
     def get_context_data(self, **kwargs):
         if self.is_break_round():
-            breaking_teams = BreakingTeam.objects.filter(break_category__tournament=self.tournament).select_related('team', 'team__institution', 'break_category', 'break_category__tournament').all()
-            breaking_team_ids = set(breaking_team.team.id for breaking_team in breaking_teams)
+            breaking_team_ids = self.get_breaking_team_ids()
 
         team_codes = use_team_code_names(self.tournament, admin=self.for_admin, user=self.request.user)
         kwargs["team_codes"] = json.dumps(team_codes)
