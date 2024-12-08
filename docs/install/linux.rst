@@ -28,7 +28,7 @@ Short version
 ::
 
   curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -    # add Node.js source repository
-  sudo apt install python3.9 python3-distutils pipenv postgresql libpq-dev nodejs gcc g++ make
+  sudo apt install python3.11 python3-distutils pipenv postgresql libpq-dev nodejs gcc g++ make
   git clone https://github.com/TabbycatDebate/tabbycat.git
   cd tabbycat
   git checkout master
@@ -63,16 +63,16 @@ First, you need to install all of the software on which Tabbycat depends, if you
 
 1(a). Python
 ------------
-Tabbycat uses Python 3.9.  You probably already have Python 3, but you'll also need the development package in order to install Psycopg2 later.  You'll also want `Pipenv <https://pipenv.pypa.io/en/latest/>`_, if you don't already have it. Install::
+Tabbycat uses Python 3.11.  You probably already have Python 3, but you'll also need the development package in order to install Psycopg2 later.  You'll also want `Pipenv <https://pipenv.pypa.io/en/latest/>`_, if you don't already have it. Install::
 
-    $ sudo apt install python3.9 python3-distutils pipenv
+    $ sudo apt install python3.11 python3-distutils pipenv
 
 Check the version::
 
     $ python3 --version
-    Python 3.9.12
+    Python 3.11.10
 
-.. warning:: Tabbycat does not support Python 2. You must use Python 3.9.
+.. warning:: Tabbycat does not support Python 2. You must use Python 3.11.
 
 .. admonition:: Advanced users
    :class: tip

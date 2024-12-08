@@ -30,14 +30,14 @@ First, you need to install all of the software on which Tabbycat depends, if you
 
 1(a). Python
 --------------------------------------------------------------------------------
-Tabbycat requires Python 3.9. macOS only comes with Python 2.7, so you'll need to install this. You can download the latest version from the `Python website <https://www.python.org/downloads/>`_.
+Tabbycat requires Python 3.11. macOS only comes with Python 2.7, so you'll need to install this. You can download the latest version from the `Python website <https://www.python.org/downloads/>`_.
 
 The executable will probably be called ``python3``, rather than ``python``. Check::
 
     $ python3 --version
-    Python 3.9.12
+    Python 3.11.10
 
-.. warning:: Tabbycat does not support Python 2. You must use Python 3.9.
+.. warning:: Tabbycat does not support Python 2. You must use Python 3.11.
 
 You'll also need to install `Pipenv <https://pipenv.pypa.io/en/latest/>`_::
 
