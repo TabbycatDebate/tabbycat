@@ -12,8 +12,8 @@ from django.views.generic.base import TemplateView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from options.utils import use_team_code_names
-from participants.models import Person, Speaker
 from breakqual.models import BreakingTeam
+from participants.models import Person, Speaker
 from participants.serializers import InstitutionSerializer
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 from users.permissions import Permission
@@ -74,7 +74,7 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
         if self.tournament.current_round in break_rounds:
             is_break_round = True
         if is_break_round:
-            breaking_teams = BreakingTeam.objects.filter( break_category__tournament=self.tournament).select_related('team', 'team__institution', 'break_category', 'break_category__tournament').all()
+            breaking_teams = BreakingTeam.objects.filter(break_category__tournament=self.tournament).select_related('team', 'team__institution', 'break_category', 'break_category__tournament').all()
             breaking_team_ids = set(breaking_team.team.id for breaking_team in breaking_teams)
 
         team_codes = use_team_code_names(self.tournament, admin=self.for_admin, user=self.request.user)
