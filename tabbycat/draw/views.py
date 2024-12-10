@@ -718,6 +718,7 @@ class CreateDrawView(DrawStatusEdit):
 
 
 class ConfirmDrawCreationView(DrawStatusEdit):
+    edit_permission = Permission.GENERATE_DEBATE
     action_log_type = ActionLogEntry.ActionType.DRAW_CONFIRM
 
     def post(self, request, *args, **kwargs):
@@ -737,6 +738,7 @@ class ConfirmDrawCreationView(DrawStatusEdit):
 class ConfirmDrawRegenerationView(LogActionMixin, AdministratorMixin, RoundMixin, FormView):
     template_name = "draw_confirm_regeneration.html"
     view_permission = Permission.DELETE_DEBATE
+    edit_permission = Permission.DELETE_DEBATE
     form_class = ConfirmDrawDeletionForm
 
     action_log_type = ActionLogEntry.ActionType.DRAW_REGENERATE
