@@ -23,7 +23,7 @@ from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
 from options.preferences import (BPAssignmentMethod, BPPositionCost, BPPullupDistribution, DrawAvoidConflicts,
     DrawOddBracket, DrawPairingMethod, DrawPullupRestriction, DrawSideAllocations)
 from participants.emoji import pick_unused_emoji
-from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
+from participants.models import Adjudicator, Institution, Person, Region, Speaker, SpeakerCategory, Team
 from participants.utils import populate_code_names
 from privateurls.utils import populate_url_keys
 from results.models import BallotSubmission, ScoreCriterion, SpeakerScore, Submission, TeamScore
@@ -1604,3 +1604,18 @@ class ScoreCriterionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScoreCriterion
         exclude = ('tournament',)
+
+
+class ParticipantIdentificationSerializer(serializers.ModelSerializer):
+    class ParticipantIdField(fields.BaseSourceField):
+        field_source_name = 'pk'
+        models = {
+            'api-speaker-detail': (Speaker, 'pk'),
+            'api-adjudicator-detail': (Adjudicator, 'pk'),
+        }
+
+    url = ParticipantIdField()
+
+    class Meta:
+        model = Person
+        fields = '__all__'

@@ -1417,3 +1417,11 @@ class GroupViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
 )
 class ScoreCriterionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.ScoreCriterionSerializer
+
+
+class ParticipantIdentificationView(TournamentAPIMixin, ModelViewSet):
+    serializer_class = serializers.ParticipantIdentificationSerializer
+    authentication_classes = [URLKeyAuthentication]
+
+    def get_object(self):
+        return self.request.auth
