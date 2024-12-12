@@ -78,8 +78,7 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
         return set(breaking_team.team.id for breaking_team in breaking_teams)
 
     def get_context_data(self, **kwargs):
-        if self.is_break_round():
-            breaking_team_ids = self.get_breaking_team_ids()
+        breaking_team_ids = self.get_breaking_team_ids()
 
         team_codes = use_team_code_names(self.tournament, admin=self.for_admin, user=self.request.user)
         kwargs["team_codes"] = json.dumps(team_codes)
@@ -101,8 +100,9 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
         speakers = []
         for speaker in Speaker.objects.filter(team__tournament=self.tournament).select_related('team', 'team__institution', 'checkin_identifier'):
-            if self.is_break_round() and speaker.team.id not in breaking_team_ids:
-                continue
+            breaking = False;
+            if speaker.team.id in breaking_team_ids:
+                breaking = True
             try:
                 code = speaker.checkin_identifier.barcode
             except ObjectDoesNotExist:
@@ -114,8 +114,10 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
                 'identifier': [code], 'locked': False,
                 'team': speaker.team.code_name if team_codes else speaker.team.short_name,
                 'institution': institution,
+                'breaking': breaking,
             })
         kwargs["speakers"] = json.dumps(speakers)
+        kwargs["is_break_round"] = self.is_break_round()
 
         return super().get_context_data(**kwargs)
 
