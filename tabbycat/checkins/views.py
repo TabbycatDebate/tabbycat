@@ -100,7 +100,7 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
         speakers = []
         for speaker in Speaker.objects.filter(team__tournament=self.tournament).select_related('team', 'team__institution', 'checkin_identifier'):
-            breaking = False;
+            breaking = False
             if speaker.team.id in breaking_team_ids:
                 breaking = True
             try:
