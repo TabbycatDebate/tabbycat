@@ -13,6 +13,7 @@
                                :team-codes="teamCodes"
                                :for-admin="forAdmin"
                                :team-size="teamSize"
+                               :breaking-team-short-names="breakingTeamShortNames"
                                :is-break-round="isBreakRound">
     </check-in-status-container>
   </div>
@@ -31,6 +32,7 @@
       'teamCodes': {{ team_codes }},
       'forAdmin': {% if for_admin %}true{% else %}false{% endif %},
       'teamSize': {{ team_size }},
+      'breakingTeamShortNames': {{ breaking_team_short_names|safe }},
       'isBreakRound': {% if is_break_round %}true{% else %}false{% endif %},
     }
   </script>
