@@ -73,12 +73,12 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
         break_rounds = self.tournament.break_rounds()
         return self.tournament.current_round in break_rounds
 
-    def get_breaking_team_ids(self):
+    def get_breaking_team_short_names(self):
         breaking_teams = BreakingTeam.objects.filter(break_category__tournament=self.tournament).select_related('team', 'team__institution', 'break_category', 'break_category__tournament').all()
-        return set(breaking_team.team.id for breaking_team in breaking_teams)
+        return set(breaking_team.team.short_name for breaking_team in breaking_teams)
 
     def get_context_data(self, **kwargs):
-        breaking_team_ids = self.get_breaking_team_ids()
+        breaking_team_short_names = self.get_breaking_team_short_names()
 
         team_codes = use_team_code_names(self.tournament, admin=self.for_admin, user=self.request.user)
         kwargs["team_codes"] = json.dumps(team_codes)
@@ -94,14 +94,14 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
             adjudicators.append({
                 'id': adj.id, 'name': adj.get_public_name(self.tournament), 'type': 'Adjudicator',
                 'identifier': [code], 'locked': False, 'independent': adj.independent,
-                'institution': institution,
+                'institution': institution, 'breaking': adj.breaking,
             })
         kwargs["adjudicators"] = json.dumps(adjudicators)
 
         speakers = []
         for speaker in Speaker.objects.filter(team__tournament=self.tournament).select_related('team', 'team__institution', 'checkin_identifier'):
             breaking = False
-            if speaker.team.id in breaking_team_ids:
+            if speaker.team.code_name in breaking_team_short_names:
                 breaking = True
             try:
                 code = speaker.checkin_identifier.barcode
@@ -118,6 +118,7 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
             })
         kwargs["speakers"] = json.dumps(speakers)
         kwargs["is_break_round"] = self.is_break_round()
+        kwargs["breaking_team_short_names"] = json.dumps(list(breaking_team_short_names))
 
         return super().get_context_data(**kwargs)
 
