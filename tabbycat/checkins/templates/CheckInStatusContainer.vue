@@ -17,16 +17,17 @@
       </div>
 
         <!-- Filter for Breaking status -->
-        <div class="btn-group mb-md-0 mb-3">
-            <button v-for="(optionState, optionKey) in filterByBreaking"
-                    :key="optionKey" type="button"
+        <div class="btn-group mb-md-0 mb-3" v-if="this.isBreakRound">
+            <button
+                    v-for="(optionState, optionKey) in filterByBreaking || {}"
+                    :key="optionKey"
+                    type="button"
                     :class="['btn btn-outline-primary', optionState ? 'active' : '']"
                     @click="setListContext('filterByBreaking', optionKey, !optionState)">
                 <span v-if="optionKey === 'All'" v-text="gettext('All')"></span>
                 <span v-if="optionKey === 'Breaking'" v-text="gettext('Breaking')"></span>
             </button>
         </div>
-
 
         <div class="btn-group mb-md-0 mb-3" v-if="!isForVenues">
         <button v-for="(optionState, optionKey) in this.filterByType"
@@ -158,8 +159,8 @@ export default {
         All: true, Absent: false, Present: false,
       },
       filterByBreaking: {
-          All: true,
-          Breaking: false,
+        All: true,
+        Breaking: false,
       },
       sockets: ['checkins'],
       // Keep internal copy as events needs to be mutated by the websocket
@@ -174,6 +175,8 @@ export default {
     tournamentSlug: String,
     forAdmin: Boolean,
     teamSize: Number,
+    breakingTeamShortNames: Array,
+    isBreakRound: Boolean,
   },
   computed: {
     statsAbsent: function () {
@@ -237,8 +240,8 @@ export default {
     },
     entitiesBySortingSetting: function () {
       if (this.filterByBreaking.Breaking === true) {
-          return this.entitiesByBreaking;
-      }else if (this.sortByGroup.Category === true) {
+        return this.entitiesByBreaking
+      } else if (this.sortByGroup.Category === true) {
         return this.venuesByCategory
       } else if (this.sortByGroup.Priority === true) {
         return this.venuesByPriority
@@ -252,12 +255,26 @@ export default {
       return this.entitiesByTime
     },
     entitiesByBreaking: function () {
-        if (this.filterByBreaking.All) {
-            return this.entitiesByPresence; // No filter, return all entities by presence
-        } else if (this.filterByBreaking.Breaking) {
-            return _.filter(this.entitiesByPresence, p => p.breaking === true); // Only show breaking entities
+      const isBreaking = (entityByPresence) => {
+        if (entityByPresence.type === 'Adjudicator') {
+          return entityByPresence.breaking
+        } else if (this.breakingTeamShortNames.includes(entityByPresence.name)) {
+          return true
         }
-        return _.filter(this.entitiesByPresence, p => p.breaking !== true); // Only show non-breaking entities
+        return false
+      }
+      if (this.filterByBreaking.All) {
+        return this.entitiesByPresence // No filter
+      } else if (this.filterByBreaking.Breaking) {
+        console.log('Breaking Teams and Adjudicators')
+        // print each object in the array
+        const temp = this.entitiesByPresence.filter(isBreaking)
+        for (let i = 0; i < temp.length; i++) {
+          console.log(temp[i])
+        }
+        return this.entitiesByPresence.filter(isBreaking)
+      }
+      return this.entitiesByPresence
     },
     tournamentSlugForWSPath: function () {
       return this.tournamentSlug
