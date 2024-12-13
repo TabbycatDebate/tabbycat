@@ -16,7 +16,19 @@
         </button>
       </div>
 
-      <div class="btn-group mb-md-0 mb-3" v-if="!isForVenues">
+        <!-- Filter for Breaking status -->
+        <div class="btn-group mb-md-0 mb-3">
+            <button v-for="(optionState, optionKey) in filterByBreaking"
+                    :key="optionKey" type="button"
+                    :class="['btn btn-outline-primary', optionState ? 'active' : '']"
+                    @click="setListContext('filterByBreaking', optionKey, !optionState)">
+                <span v-if="optionKey === 'All'" v-text="gettext('All')"></span>
+                <span v-if="optionKey === 'Breaking'" v-text="gettext('Breaking')"></span>
+            </button>
+        </div>
+
+
+        <div class="btn-group mb-md-0 mb-3" v-if="!isForVenues">
         <button v-for="(optionState, optionKey) in this.filterByType"
                 :key="optionKey" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
@@ -145,6 +157,10 @@ export default {
       filterByPresence: {
         All: true, Absent: false, Present: false,
       },
+      filterByBreaking: {
+          All: true,
+          Breaking: false,
+      },
       sockets: ['checkins'],
       // Keep internal copy as events needs to be mutated by the websocket
       // pushed changes and the data is never updated by the parent
@@ -220,7 +236,9 @@ export default {
       })
     },
     entitiesBySortingSetting: function () {
-      if (this.sortByGroup.Category === true) {
+      if (this.filterByBreaking.Breaking === true) {
+          return this.entitiesByBreaking;
+      }else if (this.sortByGroup.Category === true) {
         return this.venuesByCategory
       } else if (this.sortByGroup.Priority === true) {
         return this.venuesByPriority
@@ -232,6 +250,14 @@ export default {
         return this.entitiesByTime
       }
       return this.entitiesByTime
+    },
+    entitiesByBreaking: function () {
+        if (this.filterByBreaking.All) {
+            return this.entitiesByPresence; // No filter, return all entities by presence
+        } else if (this.filterByBreaking.Breaking) {
+            return _.filter(this.entitiesByPresence, p => p.breaking === true); // Only show breaking entities
+        }
+        return _.filter(this.entitiesByPresence, p => p.breaking !== true); // Only show non-breaking entities
     },
     tournamentSlugForWSPath: function () {
       return this.tournamentSlug
