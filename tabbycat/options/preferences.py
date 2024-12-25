@@ -921,6 +921,7 @@ class AssistantAccess(ChoicePreference):
         ('all_areas', _("All areas (results entry, draw display, and motions)")),
         ('results_draw', _("Just results entry and draw display")),
         ('results_only', _("Only results entry")),
+        ('none', _("No access")),
     )
 
 
