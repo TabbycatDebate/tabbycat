@@ -666,7 +666,7 @@ class TeamStandingsExtraMetrics(MultiValueChoicePreference):
     verbose_name = _("Team standings extra metrics")
     section = standings
     name = 'team_standings_extra_metrics'
-    choices = TeamStandingsGenerator.get_metric_choices(ranked_only=False)
+    choices = TeamStandingsGenerator.get_metric_choices(ranked_only=False, for_extra=True)
     nfields = 5
     allow_empty = True
     default = []
@@ -694,7 +694,7 @@ class SpeakerStandingsExtraMetrics(MultiValueChoicePreference):
     verbose_name = _("Speaker standings extra metrics")
     section = standings
     name = 'speaker_standings_extra_metrics'
-    choices = SpeakerStandingsGenerator.get_metric_choices(ranked_only=False)
+    choices = SpeakerStandingsGenerator.get_metric_choices(ranked_only=False, for_extra=True)
     nfields = 5
     allow_empty = True
     default = ['stdev', 'count']

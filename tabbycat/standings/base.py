@@ -216,7 +216,6 @@ class Standings:
         self._ranking_specs.append((key, name, abbr, icon))
 
     def add_metric(self, instance, key, value):
-        assert not self.ranked, "Can't add metrics once standings object is sorted"
         self.get_standing(instance).add_metric(key, value)
 
     def add_ranking(self, instance, key, value):
@@ -347,7 +346,8 @@ class BaseStandingsGenerator:
             return self.generate_from_queryset(queryset_for_metrics, standings, round)
 
         # Otherwise (not all precedence metrics are SQL-based), need to sort Standings
-        self._annotate_metrics(queryset_for_metrics, self.non_queryset_annotators, standings, round)
+        non_qs_ranked_annotators = [annotator for annotator in self.non_queryset_annotators if annotator.key in self.precedence]
+        self._annotate_metrics(queryset_for_metrics, non_qs_ranked_annotators, standings, round)
 
         standings.sort(self.precedence, self._tiebreak_func)
 
@@ -355,6 +355,10 @@ class BaseStandingsGenerator:
             logger.debug("Running ranking annotator: %s", annotator.name)
             annotator.run(standings)
         logger.debug("Ranking annotators done.")
+
+        # Do Draw Strength by Rank annotator after ranking standings
+        non_qs_extra_annotators = [annotator for annotator in self.non_queryset_annotators if annotator.key not in self.precedence]
+        self._annotate_metrics(queryset_for_metrics, non_qs_extra_annotators, standings, round)
 
         return standings
 
@@ -364,8 +368,6 @@ class BaseStandingsGenerator:
 
         for annotator in self.ranking_annotators:
             queryset = annotator.get_annotated_queryset(queryset, self.queryset_metric_annotators, *self.options["rank_filter"])
-
-        self._annotate_metrics(queryset, self.non_queryset_annotators, standings, round)
 
         # Can use window functions to rank standings if all are from queryset
         for annotator in self.ranking_annotators:
@@ -384,6 +386,10 @@ class BaseStandingsGenerator:
         queryset = queryset.order_by(*ordering_keys)
 
         standings.sort_from_rankings(tiebreak_func)
+
+        # Add metrics that aren't used for ranking (done afterwards for "draw strength by rank")
+        self._annotate_metrics(queryset, self.non_queryset_annotators, standings, round)
+
         return standings
 
     @staticmethod
@@ -465,17 +471,13 @@ class BaseStandingsGenerator:
         return self.TIEBREAK_FUNCTIONS[self.options["tiebreak"]]
 
     @classmethod
-    def get_metric_choices(cls, ranked_only=True):
+    def get_metric_choices(cls, ranked_only=True, for_extra=False):
         choices = []
         for key, annotator in cls.metric_annotator_classes.items():
-            if not ranked_only and annotator.ranked_only:
+            if (not ranked_only and annotator.ranked_only) or not annotator.listed or (not for_extra and annotator.extra_only):
                 continue
-            if not annotator.listed:
-                continue
-            if hasattr(annotator, 'choice_name'):
-                choice_name = annotator.choice_name.capitalize()
-            else:
-                choice_name = annotator.name.capitalize()
+
+            choice_name = annotator.choice_name.capitalize() if hasattr(annotator, 'choice_name') else annotator.name.capitalize()
             choices.append((key, choice_name))
         choices.sort(key=lambda x: x[1])
         return choices
