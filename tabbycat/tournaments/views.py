@@ -19,7 +19,7 @@ from notifications.models import BulkNotification
 from results.models import BallotSubmission
 from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
-from users.permissions import has_permission
+from users.permissions import has_permission, Permission
 from utils.misc import redirect_round, redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import (AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin,
                           WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin)
@@ -128,6 +128,7 @@ class TournamentAdminHomeView(AdministratorMixin, BaseTournamentDashboardHomeVie
 
 class CompleteRoundCheckView(AdministratorMixin, RoundMixin, TemplateView):
     template_name = 'round_complete_check.html'
+    view_permission = True
 
     def get_context_data(self, **kwargs):
         prior_rounds_not_completed = self.tournament.round_set.filter(
@@ -152,6 +153,7 @@ class CompleteRoundCheckView(AdministratorMixin, RoundMixin, TemplateView):
 
 class CompleteRoundToggleSilentView(AdministratorMixin, RoundMixin, PostOnlyRedirectView):
     round_redirect_pattern_name = 'tournament-complete-round-check'
+    edit_permission = Permission.SILENCE_ROUND
 
     def post(self, request, *args, **kwargs):
         self.round.silent = request.POST["state"] != "True"
@@ -168,6 +170,7 @@ class CompleteRoundToggleSilentView(AdministratorMixin, RoundMixin, PostOnlyRedi
 class CompleteRoundView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnlyRedirectView):
 
     action_log_type = ActionLogEntry.ActionType.ROUND_COMPLETE
+    edit_permission = Permission.CONFIRM_ROUND
 
     def post(self, request, *args, **kwargs):
         self.round.completed = True
@@ -259,6 +262,9 @@ class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
     page_title = _('Set Current Round')
     page_emoji = '🙏'
 
+    view_permission = True
+    edit_permission = Permission.CONFIRM_ROUND
+
     def get_form_class(self):
         if self.tournament.breakcategory_set.count() <= 1:
             return SetCurrentRoundSingleBreakCategoryForm
@@ -308,6 +314,8 @@ class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
 class SetRoundWeightingsView(AdministratorMixin, TournamentMixin, FormView):
     template_name = 'set_round_weights.html'
     form_class = RoundWeightForm
+    view_permission = True
+    edit_permission = Permission.EDIT_ROUND
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
