@@ -11,6 +11,7 @@ from tournaments.models import Round
 from .base import BaseStandingsGenerator
 from .metrics import QuerySetMetricAnnotator
 from .ranking import BasicRankAnnotator
+from .teams import NumberOfAdjudicatorsMetricAnnotator as TeamsAnnotator
 
 logger = logging.getLogger(__name__)
 
@@ -132,11 +133,11 @@ class SpeakerNumberOfThirdsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
 
 
 class NumberOfAdjudicatorsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
-    key = "num_adjs"
-    name = _("number of adjudicators who voted for this team")
-    abbr = _("Ballots")
-    choice_name = _("votes/ballots carried")
-    function = Sum
+    key = TeamsAnnotator.key
+    name = TeamsAnnotator.name
+    abbr = TeamsAnnotator.abbr
+    choice_name = TeamsAnnotator.choice_name
+    function = TeamsAnnotator.function
 
     def __init__(self, adjs_per_debate=3):
         self.adjs_per_debate = adjs_per_debate
@@ -146,11 +147,8 @@ class NumberOfAdjudicatorsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
             NullIf('team__debateteam__teamscore__votes_possible', 0, output_field=FloatField()) *
             self.adjs_per_debate)
 
-    def annotate_with_queryset(self, queryset, standings):
-        cast = int if all(t.num_adjs == int(t.num_adjs) for t in queryset if t.num_adjs is not None) else float
-        for item in queryset:
-            metric = item.num_adjs or 0
-            standings.add_metric(item, self.key, cast(metric))
+    # Use the annotate_with_queryset from teams
+    annotate_with_queryset = TeamsAnnotator.annotate_with_queryset
 
 
 class StandardDeviationSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
