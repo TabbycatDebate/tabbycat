@@ -23,26 +23,41 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     """Base class for annotators for metrics based on conditional aggregations
     of SpeakerScore instances."""
 
-    function = None  # Must be set by subclasses
+    function = None
     replies = False
     field = 'speakerscore__score'
+    where_value = None
+    team_related = False
+
+    def build_filter(self, round):
+        """Builds the common filter Q object for annotations."""
+        if self.team_related:
+            annotation_filter = Q(
+                team__debateteam__teamscore__ballot_submission__confirmed=True,
+                team__debateteam__debate__round__stage=Round.Stage.PRELIMINARY,
+            )
+            if self.where_value is not None:
+                annotation_filter &= Q(team__debateteam__teamscore__win=self.where_value)
+        else:
+            annotation_filter = Q(
+                speakerscore__ballot_submission__confirmed=True,
+                speakerscore__debate_team__debate__round__seq__lte=round.seq,
+                speakerscore__debate_team__debate__round__stage=Round.Stage.PRELIMINARY,
+                speakerscore__ghost=False,
+            )
+            if self.replies:
+                annotation_filter &= Q(speakerscore__position=round.tournament.reply_position)
+            else:
+                annotation_filter &= Q(speakerscore__position__lte=round.tournament.last_substantive_position)
+
+        if round is not None:
+            annotation_filter &= Q(team__debateteam__debate__round__seq__lte=round.seq)
+
+        return annotation_filter
 
     def get_annotation(self, round):
-        """Returns a QuerySet annotated with the metric given. All positional
-        arguments from the third onwards, and all keyword arguments, are passed
-        to get_annotation_metric_query_str()."""
-
-        annotation_filter = Q(
-            speakerscore__ballot_submission__confirmed=True,
-            speakerscore__debate_team__debate__round__seq__lte=round.seq,
-            speakerscore__debate_team__debate__round__stage=Round.Stage.PRELIMINARY,
-            speakerscore__ghost=False,
-        )
-        if self.replies:
-            annotation_filter &= Q(speakerscore__position=round.tournament.reply_position)
-        else:
-            annotation_filter &= Q(speakerscore__position__lte=round.tournament.last_substantive_position)
-
+        """Returns a QuerySet annotated with the metric."""
+        annotation_filter = self.build_filter(round)
         return self.function(self.field, filter=annotation_filter)
 
 
@@ -63,26 +78,13 @@ class AverageSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
 
 
 class SpeakerTeamPointsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
-
+    """Metric annotator for team points."""
     key = "team_points"
     name = _("team points")
     abbr = _("Team")
-
-    combinable = False
-
-    def get_annotation(self, round):
-        """Returns a QuerySet annotated with the metric given. All positional
-        arguments from the third onwards, and all keyword arguments, are passed
-        to get_annotation_metric_query_str()."""
-
-        annotation_filter = Q(
-            team__debateteam__teamscore__ballot_submission__confirmed=True,
-            team__debateteam__debate__round__stage=Round.Stage.PRELIMINARY,
-        )
-        if round is not None:
-            annotation_filter &= Q(team__debateteam__debate__round__seq__lte=round.seq)
-
-        return Sum('team__debateteam__teamscore__points', filter=annotation_filter)
+    team_related = True
+    field = 'team__debateteam__teamscore__points'
+    function = Sum
 
 
 class SpeakerTeamWinsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -90,94 +92,43 @@ class SpeakerTeamWinsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     key = "team_wins"
     name = _("Wins")
     abbr = _("Wins")
-
-    combinable = False
-
+    team_related = True
     function = Count
+    field = 'team__debateteam__teamscore__win'
     where_value = True
-
-    def get_annotation(self, round):
-        """Returns a QuerySet annotated with the number of wins for the team of the speaker."""
-        annotation_filter = Q(
-            team__debateteam__teamscore__ballot_submission__confirmed=True,
-            team__debateteam__debate__round__stage=Round.Stage.PRELIMINARY,
-            team__debateteam__teamscore__win=self.where_value,
-        )
-        if round is not None:
-            annotation_filter &= Q(team__debateteam__debate__round__seq__lte=round.seq)
-
-        return self.function('team__debateteam__teamscore__win', filter=annotation_filter)
 
 
 class SpeakerFirstsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for counting the number of first-place finishes (points = 3) for a speaker's team."""
-
     key = "firsts"
     name = _("number of firsts")
     abbr = _("1sts")
-
+    team_related = True
     function = Count
-    field = "points"
-    where_value = 3
-
-    def get_annotation(self, round):
-        """Returns a QuerySet annotated with the number of first-place finishes for a speaker's team."""
-
-        annotation_filter = Q(
-            team__debateteam__teamscore__ballot_submission__confirmed=True,
-            team__debateteam__debate__round__stage=Round.Stage.PRELIMINARY,
-            team__debateteam__teamscore__points=self.where_value,
-        )
-        if round is not None:
-            annotation_filter &= Q(team__debateteam__debate__round__seq__lte=round.seq)
-
-        return self.function('team__debateteam__teamscore__points', filter=annotation_filter)
+    field = 'team__debateteam__teamscore__points'
+    where_value = Q(team__debateteam__teamscore__points=3)
 
 
 class SpeakerNumberOfSecondsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for counting the number of second-place finishes (points = 2) for a speaker's team."""
-
     key = "seconds"
     name = _("number of seconds")
     abbr = _("2nds")
-
     function = Count
-    field = "points"
-    where_value = 2
-
-    def get_annotation(self, round):
-        """Returns a QuerySet annotated with the number of second-place finishes for a speaker's team."""
-
-        annotation_filter = Q(
-            team__debateteam__teamscore__ballot_submission__confirmed=True,
-            team__debateteam__debate__round__stage=Round.Stage.PRELIMINARY,
-            team__debateteam__teamscore__points=self.where_value,
-        )
-        if round is not None:
-            annotation_filter &= Q(team__debateteam__debate__round__seq__lte=round.seq)
-
-        return self.function('team__debateteam__teamscore__points', filter=annotation_filter)
+    field = 'team__debateteam__teamscore__points'
+    where_value = Q(team__debateteam__teamscore__points=2)
+    team_related = True
 
 
 class SpeakerNumberOfThirdsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
+    """Metric annotator for counting the number of third-place finishes (points = 1) for a speaker's team."""
     key = "thirds"
     name = _("number of thirds")
     abbr = _("3rds")
-
     function = Count
-    field = "points"
-    where_value = 1
-
-    def get_annotation(self, round):
-        annotation_filter = Q(
-            team__debateteam__teamscore__ballot_submission__confirmed=True,
-            team__debateteam__debate__round__stage=Round.Stage.PRELIMINARY,
-            team__debateteam__teamscore__points=self.where_value,
-        )
-        if round is not None:
-            annotation_filter &= Q(team__debateteam__debate__round__seq__lte=round.seq)
-
-        return self.function('team__debateteam__teamscore__points', filter=annotation_filter)
+    field = 'team__debateteam__teamscore__points'
+    where_value = Q(team__debateteam__teamscore__points=1)
+    team_related = True
 
 
 class NumberOfAdjudicatorsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
