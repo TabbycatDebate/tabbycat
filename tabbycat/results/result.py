@@ -229,7 +229,7 @@ class BaseDebateResult:
         """Raise an AssertionError if there is some problem with the data
         structure. External initialisers might find this helpful. Subclasses
         should extend this method as necessary."""
-        assert set(self.debateteams) == set(self.sides)
+        assert set(self.debateteams) == {-1} or set(self.debateteams) == set(self.sides)
 
     def is_complete(self):
         """Returns True if all elements of the results have been populated;

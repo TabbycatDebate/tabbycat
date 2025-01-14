@@ -3,7 +3,7 @@ import os
 from typing import Optional, TYPE_CHECKING
 
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db import connection
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -84,9 +84,12 @@ class AdministratorMixin(UserPassesTestMixin, ContextMixin):
         return self.request.user.is_superuser
 
 
-class AssistantMixin(LoginRequiredMixin, ContextMixin):
+class AssistantMixin(UserPassesTestMixin, ContextMixin):
     """Mixin for views that are for assistants."""
     view_role = "assistant"
+
+    def test_func(self) -> bool:
+        return self.request.user.is_authenticated and (self.request.user.is_staff or not hasattr(self, 'tournament') or self.tournament.pref('assistant_access') != 'none')
 
     def get_context_data(self, **kwargs):
         kwargs["user_role"] = self.view_role

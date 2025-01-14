@@ -98,7 +98,7 @@ def populate_results(ballotsubs, tournament=None):
     debateteams = DebateTeam.objects.filter(
         debate__ballotsubmission__in=ballotsubs,
     ).select_related('team', 'team__tournament').order_by('debate_id').distinct()
-    nsides_per_debate = {d_id: max(*[dt.side for dt in dts]) + 1 for d_id, dts in groupby(debateteams, key=lambda dt: dt.debate_id)}
+    nsides_per_debate = {d_id: max([dt.side for dt in dts]) + 1 for d_id, dts in groupby(debateteams, key=lambda dt: dt.debate_id)}
     criteria = tournament.scorecriterion_set.all()
 
     # Create the DebateResults

@@ -10,6 +10,7 @@ from django.views.generic.base import TemplateView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from availability.utils import annotate_availability
+from options.utils import use_team_code_names
 from participants.models import Adjudicator, Region
 from participants.prefetch import populate_feedback_scores
 from tournaments.mixins import DebateDragAndDropMixin, TournamentMixin
@@ -143,7 +144,7 @@ class PanelAdjudicatorsIndexView(AdministratorMixin, TournamentMixin, TemplateVi
 class TeamChoiceField(ModelChoiceField):
 
     def label_from_instance(self, obj):
-        return obj.short_name
+        return obj.code_name if self.use_code_names else obj.short_name
 
 
 class BaseAdjudicatorConflictsView(LogActionMixin, AdministratorMixin, TournamentMixin, ModelFormSetView):
@@ -205,10 +206,12 @@ class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
     def get_formset(self):
         formset = super().get_formset()
         all_adjs = self.tournament.adjudicator_set.order_by('name').all()
-        all_teams = self.tournament.team_set.order_by('short_name').all()
+        use_code_names = use_team_code_names(self.tournament, admin=True, user=self.request.user)
+        all_teams = self.tournament.team_set.order_by('code_name' if use_code_names else 'short_name').all()
         for form in formset:
             form.fields['adjudicator'].queryset = all_adjs  # order alphabetically
             form.fields['team'].queryset = all_teams        # order alphabetically
+            form.fields['team'].use_code_names = use_code_names
         return formset
 
     def get_formset_queryset(self):
@@ -336,9 +339,11 @@ class TeamInstitutionConflictsView(BaseAdjudicatorConflictsView):
 
     def get_formset(self):
         formset = super().get_formset()
-        all_teams = self.tournament.team_set.order_by('short_name').all()
+        use_code_names = use_team_code_names(self.tournament, admin=True, user=self.request.user)
+        all_teams = self.tournament.team_set.order_by('code_name' if use_code_names else 'short_name').all()
         for form in formset:
             form.fields['team'].queryset = all_teams  # order alphabetically
+            form.fields['team'].use_code_names = use_code_names
         return formset
 
     def get_formset_queryset(self):
