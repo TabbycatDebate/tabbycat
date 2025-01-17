@@ -237,7 +237,7 @@ class MotionBPStatsCalculator:
             motion.counts_by_bench = {'gov': 0, 'opp': 0}
 
             for side in self.tournament.sides:
-                side_abbrv = get_side_name(self.tournament, side, 'abbr')
+                side_abbrv = (get_side_name(self.tournament, side, 'abbr')).lower()
                 average = getattr(motion, 's%d_average' % side)
                 if average is None:
                     continue
