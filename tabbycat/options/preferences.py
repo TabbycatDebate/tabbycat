@@ -281,6 +281,7 @@ class DrawPullupRestriction(ChoicePreference):
     name = 'draw_pullup_restriction'
     choices = (
         ('none', _("No restriction")),
+        ('least_ds_rank', _("Choose from teams who have the lowest draw strength by rank so far")),
         ('least_to_date', _("Choose from teams who have been pulled up the fewest times so far")),
         ('lowest_ds_wins', _("Choose from teams with the lowest draw strength by wins so far")),
         ('lowest_ds_speaks', _("Choose from teams with the lowest draw strength by speaks so far")),

@@ -41,6 +41,9 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
                                  wins (indicative of having been against easier teams)
             "lowest_ds_speaks" - Choose from teams who have the lowest draw strength by
                                  speaks (indicative of having been against easier teams)
+            "lowest_ds_rank"   - Choose from teams who have the lowest straw strength by
+                                 rank (i.e. we sum up the rankings of all the previous
+                                 opponents and pick the team with the lowest total score).
 
         "pairing_method" - How to pair teams. Permitted values:
             (best explained by example, these examples have a ten-team bracket)
@@ -132,6 +135,7 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
         "least_to_date": "npullups",
         "lowest_ds_wins": "draw_strength",
         "lowest_ds_speaks": "draw_strength_speaks",
+        "lowest_ds_rank": "draw_strength_rank",
         "none": None,
     }
 
