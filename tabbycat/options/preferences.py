@@ -214,6 +214,7 @@ class DrawOddBracket(ChoicePreference):
     section = draw_rules
     name = 'draw_odd_bracket'
     choices = (
+        ('pullup_lowest_ds_rank', _("Pull up from the lowest draw strength by rank.")),
         ('pullup_top', _("Pull up from top")),
         ('pullup_bottom', _("Pull up from bottom")),
         ('pullup_middle', _("Pull up from middle")),
@@ -286,6 +287,15 @@ class DrawPullupRestriction(ChoicePreference):
         ('lowest_ds_speaks', _("Choose from teams with the lowest draw strength by speaks so far")),
     )
     default = 'none'
+
+
+@tournament_preferences_registry.register
+class DrawPullupPenalty(IntegerPreference):
+    help_text = _("Penalty applied by minimum cost matching to prefer pullups.")
+    verbose_name = _("Pullup penalty")
+    section = draw_rules
+    name = 'draw_pullup_penalty'
+    default = 0
 
 
 @tournament_preferences_registry.register
