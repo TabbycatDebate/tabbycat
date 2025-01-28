@@ -9,6 +9,7 @@ import participants.models as pm
 import venues.models as vm
 from draw.models import DebateTeam
 from importer.importers import DUPLICATE_INFO, importer_registry, TournamentDataImporterFatalError
+from tournaments.forms import TournamentStartForm
 from tournaments.models import Tournament
 from tournaments.utils import auto_make_rounds
 
@@ -205,6 +206,7 @@ class Command(BaseCommand):
         slug, name, short_name = self.resolve_tournament_fields()
         self.check_existing_tournament(slug)
         self.tournament = self.create_tournament(slug, name, short_name)
+        TournamentStartForm.add_default_permission_groups(self.tournament)
 
     def make_rounds(self):
         """Makes rounds using an automatic rounds maker if --auto-rounds is
