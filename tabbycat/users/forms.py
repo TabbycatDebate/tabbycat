@@ -34,7 +34,7 @@ class InviteUserForm(PasswordResetForm):
                 'username': email.split("@")[0],
             },
         )
-        if created is True:
+        if created:
             user.membership_set.create(group=self.cleaned_data['role'])
         return [user]
 
