@@ -507,27 +507,30 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
         table.add_debate_team_columns(draw)
 
         # For draw details and draw draft pages
-        if (r.draw_status == Round.Status.DRAFT or self.detailed) and r.prev:
-            teams = Team.objects.filter(debateteam__debate__round=r)
-            metrics = self.tournament.pref('team_standings_precedence')
+        if r.draw_status is Round.Status.DRAFT or self.detailed:
+            if r.prev:
+                teams = Team.objects.filter(debateteam__debate__round=r)
+                metrics = self.tournament.pref('team_standings_precedence')
 
-            if self.tournament.pref('teams_in_debate') == 2:
-                pullup_metric = BasePowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.tournament.pref('draw_pullup_restriction')]
-            else:
-                pullup_metric = None
+                if self.tournament.pref('teams_in_debate') == 2:
+                    pullup_metric = BasePowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.tournament.pref('draw_pullup_restriction')]
+                else:
+                    pullup_metric = None
 
-            # subrank only makes sense if there's a second metric to rank on
-            rankings = ('rank', 'subrank') if len(metrics) > 1 else ('rank',)
-            generator = TeamStandingsGenerator(metrics, rankings,
-                extra_metrics=(pullup_metric,) if pullup_metric and pullup_metric not in metrics else ())
-            standings = generator.generate(teams, round=r.prev)
-            if not r.is_break_round:
-                table.add_debate_ranking_columns(draw, standings)
-            else:
-                self._add_break_rank_columns(table, draw, r.break_category)
-            table.add_debate_metric_columns(draw, standings)
-            table.add_debate_side_history_columns(draw, r.prev)
-        elif not (r.draw_status == Round.Status.DRAFT or self.detailed):
+                # subrank only makes sense if there's a second metric to rank on
+                rankings = ('rank', 'subrank') if len(metrics) > 1 else ('rank',)
+                generator = TeamStandingsGenerator(metrics, rankings,
+                    extra_metrics=(pullup_metric,) if pullup_metric and pullup_metric not in metrics else ())
+                standings = generator.generate(teams, round=r.prev)
+                if not r.is_break_round:
+                    table.add_debate_ranking_columns(draw, standings)
+                else:
+                    self._add_break_rank_columns(table, draw, r.break_category)
+                table.add_debate_metric_columns(draw, standings)
+                table.add_debate_side_history_columns(draw, r.prev)
+            elif r.draw_type is Round.DrawType.SEEDED:
+                table.add_debate_seed_columns(draw)
+        else:
             table.add_debate_adjudicators_column(draw, show_splits=False, for_admin=True)
 
         table.add_draw_conflicts_columns(draw, self.venue_conflicts, self.adjudicator_conflicts)
