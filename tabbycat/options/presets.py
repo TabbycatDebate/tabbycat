@@ -149,7 +149,7 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     draw_rules__bp_assignment_method           = 'hungarian_preshuffled'
     # Standings Rules
     standings__standings_missed_debates        = -1 # Speakers always show
-    standings__team_standings_precedence       = ['points', 'speaks_sum', 'firsts', 'seconds']
+    standings__team_standings_precedence       = ['points', 'speaks_sum', 'firsts', 'seconds', 'draw_strength']
     standings__speaker_standings_precedence    = ['total'] # constitutional
     standings__speaker_standings_extra_metrics = ['average', 'stdev']
     # Feedback Rules
