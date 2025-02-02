@@ -972,6 +972,7 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
                 messages.error(self.request, e)
 
         # Vetos
+        self.vetos = None
         try:
             self.vetos = merge_motion_vetos(self.ballotsub, bs_motions)
         except ValidationError as e:

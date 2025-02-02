@@ -3,7 +3,8 @@ import logging
 
 from django.contrib import messages
 from django.db.models import Prefetch
-from django.forms import ModelChoiceField
+from django.forms import ChoiceField, ModelChoiceField
+from django.forms.models import ModelChoiceIterator
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.base import TemplateView
 
@@ -11,7 +12,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from availability.utils import annotate_availability
 from options.utils import use_team_code_names
-from participants.models import Adjudicator, Region
+from participants.models import Adjudicator, Institution, Region
 from participants.prefetch import populate_feedback_scores
 from tournaments.mixins import DebateDragAndDropMixin, TournamentMixin
 from users.permissions import has_permission, Permission
@@ -141,7 +142,31 @@ class PanelAdjudicatorsIndexView(AdministratorMixin, TournamentMixin, TemplateVi
 # Conflict formset views
 # ==============================================================================
 
-class TeamChoiceField(ModelChoiceField):
+class DedupModelChoiceIterator(ModelChoiceIterator):
+    def __iter__(self):
+        if self.field.empty_label is not None:
+            yield ("", self.field.empty_label)
+        for obj in self.queryset:
+            yield self.choice(obj)
+
+
+class DedupModelChoiceField(ModelChoiceField):
+    iterator = DedupModelChoiceIterator
+
+    def __deepcopy__(self, memo):
+        return super(ChoiceField, self).__deepcopy__(memo)
+
+    def _get_queryset(self):
+        return self._queryset
+
+    def _set_queryset(self, queryset):
+        self._queryset = queryset
+        self.widget.choices = self.choices
+
+    queryset = property(_get_queryset, _set_queryset)
+
+
+class TeamChoiceField(DedupModelChoiceField):
 
     def label_from_instance(self, obj):
         return obj.code_name if self.use_code_names else obj.short_name
@@ -200,7 +225,7 @@ class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
     formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
     formset_factory_kwargs.update({
         'fields': ('adjudicator', 'team'),
-        'field_classes': {'team': TeamChoiceField},
+        'field_classes': {'adjudicator': DedupModelChoiceField, 'team': TeamChoiceField},
     })
 
     def get_formset(self):
@@ -247,7 +272,10 @@ class AdjudicatorAdjudicatorConflictsView(BaseAdjudicatorConflictsView):
     save_text = gettext_lazy("Save Adjudicator-Adjudicator Conflicts")
     same_view = 'adjallocation-conflicts-adj-adj'
     formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
-    formset_factory_kwargs.update({'fields': ('adjudicator1', 'adjudicator2')})
+    formset_factory_kwargs.update({
+        'fields': ('adjudicator1', 'adjudicator2'),
+        'field_classes': {'adjudicator1': DedupModelChoiceField, 'adjudicator2': DedupModelChoiceField},
+    })
 
     def get_formset(self):
         formset = super().get_formset()
@@ -290,13 +318,18 @@ class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
     save_text = gettext_lazy("Save Adjudicator-Institution Conflicts")
     same_view = 'adjallocation-conflicts-adj-inst'
     formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
-    formset_factory_kwargs.update({'fields': ('adjudicator', 'institution')})
+    formset_factory_kwargs.update({
+        'fields': ('adjudicator', 'institution'),
+        'field_classes': {'adjudicator': DedupModelChoiceField, 'institution': DedupModelChoiceField},
+    })
 
     def get_formset(self):
         formset = super().get_formset()
         all_adjs = self.tournament.adjudicator_set.order_by('name').all()
+        insts = Institution.objects.all()
         for form in formset:
             form.fields['adjudicator'].queryset = all_adjs  # order alphabetically
+            form.fields['institution'].queryset = insts
         return formset
 
     def get_formset_queryset(self):
@@ -334,16 +367,19 @@ class TeamInstitutionConflictsView(BaseAdjudicatorConflictsView):
     formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
     formset_factory_kwargs.update({
         'fields': ('team', 'institution'),
-        'field_classes': {'team': TeamChoiceField},
+        'field_classes': {'team': TeamChoiceField, 'institution': DedupModelChoiceField},
     })
 
     def get_formset(self):
         formset = super().get_formset()
         use_code_names = use_team_code_names(self.tournament, admin=True, user=self.request.user)
         all_teams = self.tournament.team_set.order_by('code_name' if use_code_names else 'short_name').all()
+        all_teams = self.tournament.team_set.order_by('short_name').all()
+        insts = Institution.objects.all()
         for form in formset:
             form.fields['team'].queryset = all_teams  # order alphabetically
             form.fields['team'].use_code_names = use_code_names
+            form.fields['institution'].queryset = insts
         return formset
 
     def get_formset_queryset(self):

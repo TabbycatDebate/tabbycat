@@ -6,6 +6,12 @@
     {% trans "Debate Information" as title %}
     {% include "components/form-title.html" %}
 
+    {% if pref.ballot_introduction %}
+        <div class="list-group-item">
+          <p>{{ pref.ballot_introduction|safe }}</p>
+        </div>
+    {% endif %}
+
     {% if form.choose_sides %}
       <div class="list-group-item">
         {% include "components/form-field.html" with field=form.choose_sides %}

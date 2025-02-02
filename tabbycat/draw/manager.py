@@ -320,6 +320,7 @@ class SeededDrawManager(BaseDrawManager):
 
         for team in teams:
             team.points = 0
+            team.subrank = team.seed + 1
 
         return teams, byes
 

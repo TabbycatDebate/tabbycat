@@ -95,6 +95,17 @@ class MarginIncludesDissent(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class BallotIntroduction(LongStringPreference):
+    help_text = _("Any explanatory text needed to introduce the ballot form, e.g. speaker scale")
+    verbose_name = _("Ballot introduction/explanation")
+    section = scoring
+    name = 'ballot_introduction'
+    default = ''
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
+    field_kwargs = {'required': False}
+
+
+@tournament_preferences_registry.register
 class TeamScoreIncludesGhost(BooleanPreference):
     help_text = _("If checked, all speaker scores, including for duplicate speeches, will be counted for team scores")
     verbose_name = _("Team score includes ghosts")
