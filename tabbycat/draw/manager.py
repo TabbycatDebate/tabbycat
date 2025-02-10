@@ -35,6 +35,7 @@ OPTIONS_TO_CONFIG_MAPPING = {
     "odd_bracket"           : "draw_rules__draw_odd_bracket",
     "pairing_method"        : "draw_rules__draw_pairing_method",
     "pullup_restriction"    : "draw_rules__draw_pullup_restriction",
+    "max_times_per_side"    : "draw_rules__max_times_per_side",
     "pullup"                : "draw_rules__bp_pullup_distribution",
     "position_cost"         : "draw_rules__bp_position_cost",
     "assignment_method"     : "draw_rules__bp_assignment_method",

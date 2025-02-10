@@ -8,6 +8,7 @@ from ..types import DebateSide
 
 if TYPE_CHECKING:
     from participants.models import Team
+    from typing import Optional
 
 
 def sign(n: int) -> int:
@@ -23,7 +24,7 @@ class GraphGeneratorMixin:
         """Graph optimisation avoids conflicts, so method is extraneous."""
         pass
 
-    def assignment_cost(self, t1, t2, size, bracket=None):
+    def assignment_cost(self, t1, t2, size, bracket=None) -> Optional[int]:
         if t1 is t2:  # Same team
             return
 
@@ -37,6 +38,13 @@ class GraphGeneratorMixin:
         if self.options["side_allocations"] == "balance" and self.options["side_penalty"] > 0:
             t1_affs, t1_negs = t1.side_history
             t2_affs, t2_negs = t2.side_history
+
+            if self.options["max_times_on_one_side"] > 0:
+                if t1_affs > self.options["max_times_on_one_side"]\
+                   or t1_negs > self.options["max_times_on_one_side"]\
+                   or t2_affs > self.options["max_times_on_one_side"]\
+                   or t2_negs > self.options["max_times_on_one_side"]:
+                    return None
 
             # Only declare an imbalance if both sides have been on the same side more often
             # Affs are positive, negs are negative. If teams have opposite signs, negative imbalance
