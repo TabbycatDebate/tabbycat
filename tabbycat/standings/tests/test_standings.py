@@ -45,7 +45,7 @@ class TestTrivialStandings(TestCase):
 
     def get_standings(self, generator):
         with suppress_logs('standings.metrics', logging.INFO):
-            standings = generator.generate(self.tournament.team_set.all())
+            standings = generator.generate(self.tournament.team_set.all(), tournament=self.tournament)
         return standings
 
     def set_up_speaker_scores(self, position):
@@ -75,7 +75,7 @@ class TestTrivialStandings(TestCase):
     def test_nothing(self):
         # just test that it does not crash
         generator = TeamStandingsGenerator((), ())
-        generator.generate(self.tournament.team_set.all())
+        generator.generate(self.tournament.team_set.all(), tournament=self.tournament)
 
     def test_no_metrics(self):
         generator = TeamStandingsGenerator((), ('rank', 'subrank'))
@@ -348,7 +348,7 @@ class TestBasicStandings(TestCase):
                     generator = TeamStandingsGenerator(metrics, self.rankings)
                     with suppress_logs('standings.teams', logging.INFO), \
                             suppress_logs('standings.metrics', logging.INFO):
-                        standings = generator.generate(tournament.team_set.all())
+                        standings = generator.generate(tournament.team_set.all(), tournament=tournament)
 
                     self.assertEqual(len(standings), len(testdata["standings"]))
                     self.assertEqual(standings.metric_keys, list(metrics))
@@ -379,7 +379,7 @@ class TestMissingStandings(TestCase):
 
     def get_standings(self, generator):
         with suppress_logs('standings.metrics', logging.INFO):
-            return generator.generate(self.tournament.team_set.all())
+            return generator.generate(self.tournament.team_set.all(), tournament=self.tournament)
 
     def test_num_adjs_missing(self):
         generator = TeamStandingsGenerator(('num_adjs',), ())

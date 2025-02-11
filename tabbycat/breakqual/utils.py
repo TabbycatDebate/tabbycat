@@ -23,7 +23,7 @@ def get_breaking_teams(category, prefetch=(), rankings=('rank',)):
     teams = category.breaking_teams.all().prefetch_related(*prefetch)
     metrics = category.tournament.pref('team_standings_precedence')
     generator = TeamStandingsGenerator(metrics, rankings)
-    standings = generator.generate(teams)
+    standings = generator.generate(teams, tournament=category.tournament)
 
     breakingteams_by_team_id = {bt.team_id: bt for bt in category.breakingteam_set.all()}
 

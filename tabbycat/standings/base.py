@@ -3,6 +3,7 @@
 import logging
 import random
 
+from django.db.models import Q
 from django.utils.translation import gettext as _
 
 from .metrics import metricgetter, QuerySetMetricAnnotator, RepeatedMetricAnnotator
@@ -316,7 +317,7 @@ class BaseStandingsGenerator:
     def get_rank_filter(self):
         return lambda info: info.metrics[self.options["rank_filter"][0]] >= self.options["rank_filter"][1]
 
-    def generate(self, queryset, round=None):
+    def generate(self, queryset, tournament=None, round=None):
         """Generates standings for the objects in queryset. Returns a
         Standings object.
 
@@ -333,7 +334,15 @@ class BaseStandingsGenerator:
         # calculating the metrics (e.g., if it filters teams by participation in
         # a round), so make a new queryset to pass to the metric annotators that
         # relies on a nested ID selection instead.
-        queryset_for_metrics = queryset.model.objects.filter(id__in=queryset.values_list('id', flat=True))
+        #
+        # We may re-add the tournament filter if available in order to use its index
+        # for faster querying.
+
+        tournament_q = Q()
+        if round or tournament:
+            tournament_q &= Q(**{self.tournament_field: tournament or round.tournament})
+
+        queryset_for_metrics = queryset.model.objects.filter(tournament_q, id__in=queryset.values_list('id', flat=True))
 
         self._annotate_metrics(queryset_for_metrics, self.distinct_queryset_metric_annotators, standings, round)
 

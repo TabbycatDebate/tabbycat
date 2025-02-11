@@ -457,3 +457,5 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "subrank"         : SubrankAnnotator,
         "institution_rank": RankFromInstitutionAnnotator,
     }
+
+    tournament_field = 'tournament'

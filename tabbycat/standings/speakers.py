@@ -304,3 +304,5 @@ class SpeakerStandingsGenerator(BaseStandingsGenerator):
     ranking_annotator_classes = {
         "rank"     : BasicRankAnnotator,
     }
+
+    tournament_field = 'team__tournament'
