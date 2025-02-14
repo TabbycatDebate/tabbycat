@@ -175,7 +175,7 @@ export default {
     tournamentSlug: String,
     forAdmin: Boolean,
     teamSize: Number,
-    breakingTeamShortNames: Array,
+    breakingTeamIds: Array,
     isBreakRound: Boolean,
   },
   computed: {
@@ -240,6 +240,7 @@ export default {
     },
     entitiesBySortingSetting: function () {
       if (this.filterByBreaking.Breaking === true) {
+          console.log('Breaking Teams and Adjudicators inside entitiesBySortingSetting')
         return this.entitiesByBreaking
       } else if (this.sortByGroup.Category === true) {
         return this.venuesByCategory
@@ -258,7 +259,7 @@ export default {
       const isBreaking = (entityByPresence) => {
         if (entityByPresence.type === 'Adjudicator') {
           return entityByPresence.breaking
-        } else if (this.breakingTeamShortNames.includes(entityByPresence.name)) {
+        } else if (this.breakingTeamIds.includes(entityByPresence.name)) {
           return true
         }
         return false
@@ -343,10 +344,13 @@ export default {
       return this.isForVenues ? this.getToolTipForVenue(entity) : this.getToolTipForPerson(entity)
     },
     setListContext: function (metaKey, selectedKey, selectedValue) {
+        console.log(`Setting list context ${metaKey} ${selectedKey} ${selectedValue}`)
       _.forEach(this[metaKey], (value, key) => {
         if (key === selectedKey) {
+            console.log(`Setting ${metaKey} ${key} to ${selectedValue}`)
           this[metaKey][key] = selectedValue
         } else {
+            console.log(`Setting ${metaKey} ${key} to false`)
           this[metaKey][key] = false
         }
       })
