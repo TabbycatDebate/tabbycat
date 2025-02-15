@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-08-09 13:27\n"
+"PO-Revision-Date: 2025-02-15 07:22\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -20,29 +20,29 @@ msgstr ""
 
 #: notifications/apps.py
 msgid "Notifications"
-msgstr ""
+msgstr "通知"
 
 #: notifications/forms.py
 msgid "Recipient email address"
-msgstr ""
+msgstr "受信者のメールアドレス"
 
 #: notifications/forms.py
 #, python-format
 msgid "Test email from %(host)s"
-msgstr ""
+msgstr "%(host)sからのテストメール"
 
 #: notifications/forms.py
 #, python-format
 msgid "Congratulations! If you're reading this message, your email backend on %(host)s looks all good to go!"
-msgstr ""
+msgstr "おめでとうございます！%(host)sのメール用のバックエンドサービスが正常に動作しているようです！"
 
 #: notifications/forms.py
 msgid "Subject"
-msgstr ""
+msgstr "件名"
 
 #: notifications/forms.py
 msgid "Message"
-msgstr ""
+msgstr "メッセージ"
 
 #: notifications/models.py
 msgid "email"
@@ -58,15 +58,15 @@ msgstr "受取人"
 
 #: notifications/models.py
 msgid "method"
-msgstr ""
+msgstr "方法"
 
 #: notifications/models.py
 msgid "context"
-msgstr ""
+msgstr "コンテキスト"
 
 #: notifications/models.py
 msgid "notification"
-msgstr ""
+msgstr "通知"
 
 #: notifications/models.py
 msgid "timestamp"
@@ -74,63 +74,63 @@ msgstr "タイムスタンプ"
 
 #: notifications/models.py
 msgid "sent message"
-msgstr ""
+msgstr "送信済みメッセージ"
 
 #: notifications/models.py
 msgid "sent messages"
-msgstr ""
+msgstr "送信済みメッセージ"
 
 #: notifications/models.py
 msgid "team points"
-msgstr ""
+msgstr "チームの点数"
 
 #: notifications/models.py
 msgid "ballot confirmed"
-msgstr ""
+msgstr "バロットを承認済み"
 
 #: notifications/models.py
 msgid "feedback URL"
-msgstr ""
+msgstr "フィードバックのURL"
 
 #: notifications/models.py
 msgid "ballot URL"
-msgstr ""
+msgstr "バロットのURL"
 
 #: notifications/models.py
 msgid "landing page URL"
-msgstr ""
+msgstr "ランディングページのURL"
 
 #: notifications/models.py
 msgid "adjudicator draw released"
-msgstr ""
+msgstr "ジャッジの対戦表を公開"
 
 #: notifications/models.py
 msgid "team registration"
-msgstr ""
+msgstr "チーム登録"
 
 #: notifications/models.py
 msgid "adjudicator registration"
-msgstr ""
+msgstr "ジャッジ登録"
 
 #: notifications/models.py
 msgid "motion(s) released"
-msgstr ""
+msgstr "論題リリース"
 
 #: notifications/models.py
 msgid "team draw released"
-msgstr ""
+msgstr "チームの対戦表を公開"
 
 #: notifications/models.py
 msgid "custom message"
-msgstr ""
+msgstr "カスタムメッセージ"
 
 #: notifications/models.py
 msgid "event"
-msgstr ""
+msgstr "イベント"
 
 #: notifications/models.py
 msgid "tournament"
-msgstr "トーナメント"
+msgstr "大会"
 
 #: notifications/models.py
 msgid "round"
@@ -138,85 +138,85 @@ msgstr "ラウンド"
 
 #: notifications/models.py
 msgid "subject template"
-msgstr ""
+msgstr "件名テンプレート"
 
 #: notifications/models.py
 msgid "body template"
-msgstr ""
+msgstr "本文テンプレート"
 
 #: notifications/models.py
 msgid "bulk notification"
-msgstr ""
+msgstr "一括通知"
 
 #: notifications/models.py
 msgid "bulk notifications"
-msgstr ""
+msgstr "一括通知"
 
 #: notifications/models.py
 msgid "Processed"
-msgstr ""
+msgstr "処理済み"
 
 #: notifications/models.py
 msgid "Dropped"
-msgstr ""
+msgstr "ドロップ済み"
 
 #: notifications/models.py
 msgid "Deferred"
-msgstr ""
+msgstr "延期済み"
 
 #: notifications/models.py
 msgid "Delivered"
-msgstr ""
+msgstr "配信済み"
 
 #: notifications/models.py
 msgid "Bounced"
-msgstr ""
+msgstr "バウンス済み"
 
 #: notifications/models.py
 msgid "Opened"
-msgstr ""
+msgstr "開封済み"
 
 #: notifications/models.py
 msgid "Clicked"
-msgstr ""
+msgstr "クリック済み"
 
 #: notifications/models.py
 msgid "Unsubscribed"
-msgstr ""
+msgstr "購読解除済み"
 
 #: notifications/models.py
 msgid "Marked as spam"
-msgstr ""
+msgstr "スパムとしてマーク済み"
 
 #: notifications/models.py
 msgid "Unsubscribed from group"
-msgstr ""
+msgstr "グループから購読解除済み"
 
 #: notifications/models.py
 msgid "Resubscribed to group"
-msgstr ""
+msgstr "グループに再購読済み"
 
 #: notifications/models.py
 msgid "email message"
-msgstr ""
+msgstr "メールのメッセージ"
 
 #: notifications/models.py
 msgid "email status"
-msgstr ""
+msgstr "メールの状況"
 
 #: notifications/models.py
 msgid "email statuses"
-msgstr ""
+msgstr "メールの状況"
 
 #: notifications/templates/email_participants.html
 #, python-format
 msgid "You have not specified a reply-to address. This means that participants may not reply to the message if they have questions. Please set one in the <a href=\"%(notifications_options_url)s\">Notifications section of the preferences</a>."
-msgstr ""
+msgstr "返信先のアドレスを指定していません。これにより、参加者が質問がある場合にメッセージに返信できない可能性があります。<a href=\"%(notifications_options_url)s\">通知設定</a>で設定してください。"
 
 #: notifications/templates/email_participants.html
 #, python-format
 msgid "The webhook URL for use in SendGrid is <a href=\"%(notifications_webhook_url)s\">%(notifications_webhook_url)s</a>. Please point the HTTP POST URL in <a href=\"https://app.sendgrid.com/settings/mail_settings\">SendGrid</a> to that."
-msgstr ""
+msgstr "SendGridで使用するWebhook URLは<a href=\"%(notifications_webhook_url)s\">%(notifications_webhook_url)s</a>です。<a href=\"https://app.sendgrid.com/settings/mail_settings\">SendGrid</a>のHTTP POST URLをそれに設定してください。"
 
 #: notifications/templates/email_participants.html
 msgid "Send Message(s)"
@@ -224,58 +224,58 @@ msgstr "メッセージを送信"
 
 #: notifications/templates/email_statuses.html
 msgid "Emails can be sent by Tabbycat for a variety of purposes. Emails are sent when specific preferences are enabled (i.e. enabling Ballot Receipts) or through actions available on specific pages (i.e. the Draw Display page for matchups; or the Participants page for team registration). This page shows the status of previously-sent emails."
-msgstr ""
+msgstr "さまざまな目的でTabbycatからメールを送信できます。特定の設定（e.g. バロットレシート）を有効にした場合や、特定のページで行うアクションを通じて（e.g. 対戦表の表示ページやチーム登録のための参加者ページ）メールが送信されます。このページでは、以前に送信されたメールの状況を表示しています。"
 
 #: notifications/templates/notifications_nav.html notifications/views.py
 msgid "Email Statuses"
-msgstr ""
+msgstr "メール状況"
 
 #: notifications/templates/notifications_nav.html
 #: notifications/templates/test_email.html
 msgid "Send Test Email"
-msgstr ""
+msgstr "テストメールを送信"
 
 #: notifications/templates/notifications_nav.html
 msgid "Send Custom Email"
-msgstr ""
+msgstr "カスタムメールを送信"
 
 #: notifications/templates/test_email.html
 msgctxt "page title"
 msgid "Send Test Email"
-msgstr ""
+msgstr "テストメールを送信"
 
 #: notifications/templates/test_email.html
 msgid "You can use this form to send a test email, to check that your email backend settings are working, before you try to send email notifications to participants."
-msgstr ""
+msgstr "このフォームからテストメールを送信し、参加者にメール通知を送信する前にメールのバックエンド設定が正常か確認できます。"
 
 #: notifications/templates/test_email.html
 #, python-format
 msgid "The email will be sent from: <strong>%(default_from_email)s</strong>. If this doesn't look right, change the <code>DEFAULT_FROM_EMAIL</code> config var in Heroku (or environment variable)."
-msgstr ""
+msgstr "メールは<strong>%(default_from_email)s</strong>から送信されます。これが正しくない場合は、Herokuの<code>DEFAULT_FROM_EMAIL</code>設定変数（または環境変数）を変更してください。"
 
 #: notifications/templates/test_email.html
 msgid "Go back to the site home page"
-msgstr ""
+msgstr "ホームページに戻る"
 
 #: notifications/utils.py
 msgid "the chair"
-msgstr ""
+msgstr "チェア"
 
 #: notifications/utils.py
 msgid "the only"
-msgstr ""
+msgstr "唯一の"
 
 #: notifications/utils.py
 msgid "a panellist"
-msgstr ""
+msgstr "パネル"
 
 #: notifications/utils.py
 msgid "a trainee"
-msgstr ""
+msgstr "トレイニー"
 
 #: notifications/utils.py
 msgid "TBA"
-msgstr ""
+msgstr "未定"
 
 #: notifications/utils.py
 #, python-format
@@ -285,20 +285,20 @@ msgstr ""
 #: notifications/utils.py
 #, python-format
 msgid "<li>%(side)s: %(team)s (%(points)d points with %(speaks)s total speaks)"
-msgstr ""
+msgstr "<li>%(side)s: %(team)s （%(points)d点、スピーカースコア合計%(speaks)s）"
 
 #: notifications/utils.py
 #, python-format
 msgid "<li>%(side)s: %(team)s (%(points)s - %(speaks)s total speaks)"
-msgstr ""
+msgstr "<li>%(side)s: %(team)s （%(points)s点、スピーカースコア合計%(speaks)s）"
 
 #: notifications/utils.py
 msgid "Win"
-msgstr ""
+msgstr "勝ち"
 
 #: notifications/utils.py
 msgid "Loss"
-msgstr ""
+msgstr "負け"
 
 #: notifications/utils.py
 #, python-format
@@ -317,29 +317,29 @@ msgstr ""
 #: notifications/views.py
 #, python-format
 msgid "The email (SMTP) server returned an error sending the test email: [SMTP code %(code)d] %(error)s"
-msgstr ""
+msgstr "テストメールの送信中にメール（SMTP）サーバーがエラーを返しました：[SMTPコード %(code)d] %(error)s"
 
 #: notifications/views.py
 msgid "Hint: If the error is about sender identity verification in SendGrid, and you've already completed the steps in SendGrid, it may be that you need to update the DEFAULT_FROM_EMAIL config var in Heroku to match your verified sender identity."
-msgstr ""
+msgstr "ヒント：エラーがSendGridでの送信者の身元確認に関するものであり、SendGridでの手順を既に完了している場合、HerokuのDEFAULT_FROM_EMAIL設定変数を確認済みの送信者の身元に一致するように更新する必要があるかもしれません。"
 
 #: notifications/views.py
 #, python-format
 msgid "There was an error sending the test email: %(error)s"
-msgstr ""
+msgstr "テストメールの送信中にエラーが発生しました：%(error)s"
 
 #: notifications/views.py
 #, python-format
 msgid "A test email has been sent to %(recipient)s."
-msgstr ""
+msgstr "テストメールを%(recipient)sに送信しました。"
 
 #: notifications/views.py
 msgid "N/A"
-msgstr ""
+msgstr "該当なし"
 
 #: notifications/views.py
 msgid "Not known"
-msgstr ""
+msgstr "不明"
 
 #: notifications/views.py
 #, python-format
@@ -353,11 +353,11 @@ msgstr ""
 
 #: notifications/views.py
 msgid "Timeline"
-msgstr ""
+msgstr "タイムライン"
 
 #: notifications/views.py
 msgid "Participant"
-msgstr ""
+msgstr "参加者"
 
 #: notifications/views.py
 msgid "Email address"
@@ -369,33 +369,33 @@ msgstr "状態"
 
 #: notifications/views.py
 msgid "Time"
-msgstr ""
+msgstr "時間"
 
 #: notifications/views.py
 msgid "Email Participants"
-msgstr ""
+msgstr "参加者にメールを送信"
 
 #: notifications/views.py
 #, python-format
 msgid "%(email_count)s email has been queued for sending."
 msgid_plural "%(email_count)s emails have been queued for sending."
-msgstr[0] ""
+msgstr[0] "%(email_count)s 件のメールを送信待ちキューに追加しました。"
 
 #: notifications/views.py
 msgid "No emails were sent — likely because no recipients were selected."
-msgstr ""
+msgstr "メールを送信しませんでした。おそらく受信者を選択していないためです。"
 
 #: notifications/views.py
 msgid "Send Email"
-msgstr ""
+msgstr "メールを送信"
 
 #: notifications/views.py
 msgid "Not Provided"
-msgstr ""
+msgstr "なし"
 
 #: notifications/views.py
 msgid "Role"
-msgstr ""
+msgstr "役割"
 
 #: notifications/views.py
 msgid "Adjudicator"
@@ -403,7 +403,7 @@ msgstr "ジャッジ"
 
 #: notifications/views.py
 msgid "Speaker"
-msgstr ""
+msgstr "スピーカー"
 
 #: notifications/views.py
 msgid "Speakers"
