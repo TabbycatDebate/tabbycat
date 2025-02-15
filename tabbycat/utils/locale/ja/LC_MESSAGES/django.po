@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 22:00\n"
+"PO-Revision-Date: 2025-02-15 07:22\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -28,7 +28,7 @@ msgstr "チーム"
 
 #: utils/admin.py
 msgid "Speaker"
-msgstr ""
+msgstr "スピーカー"
 
 #: utils/admin.py utils/tables.py
 msgid "Tournament"
@@ -44,7 +44,7 @@ msgstr "モーション"
 
 #: utils/admin.py
 msgid "Confirmed"
-msgstr ""
+msgstr "承認済み"
 
 #: utils/admin.py
 msgid "Adjudicator"
@@ -80,22 +80,22 @@ msgstr ""
 
 #: utils/tables.py
 msgid "Redacted"
-msgstr ""
+msgstr "リダクト済み"
 
 #: utils/tables.py
 #, python-format
 msgid "View %(a)s's %(d)s Record"
-msgstr ""
+msgstr "%(a)sの%(d)sの記録を表示"
 
 #: utils/tables.py
 #, python-format
 msgid "View %(team)s's Record"
-msgstr ""
+msgstr "%(team)sの記録を表示"
 
 #: utils/tables.py
 #, python-format
 msgid "Code name: <strong>%(name)s</strong>"
-msgstr "コードネーム：<strong>%(name)s</strong>"
+msgstr "コード名：<strong>%(name)s</strong>"
 
 #: utils/tables.py
 #, python-format
@@ -105,12 +105,12 @@ msgstr "実名：<strong>%(name)s</strong>"
 #: utils/tables.py
 #, python-format
 msgid "%(team)s won"
-msgstr "%(team)sが勝ち"
+msgstr "%(team)sの勝利"
 
 #: utils/tables.py
 #, python-format
 msgid "%(team)s lost"
-msgstr "%(team)sが負け"
+msgstr "%(team)sの敗北"
 
 #: utils/tables.py
 #, python-format
@@ -125,7 +125,7 @@ msgstr "%(team)sが%(place)s位"
 #: utils/tables.py
 #, python-format
 msgid "%(team)s is advancing"
-msgstr ""
+msgstr "%(team)sが進出"
 
 #: utils/tables.py
 #, python-format
@@ -134,16 +134,16 @@ msgstr "%(team)sが敗退"
 
 #: utils/tables.py
 msgid "View/edit debate ballot"
-msgstr "ディベートのバロットを確認/修正"
+msgstr "試合のバロットを確認/修正"
 
 #: utils/tables.py
 msgid "View debate ballot"
-msgstr "ディベートのバロットを確認"
+msgstr "試合のバロットを確認"
 
 #: utils/tables.py
 #, python-format
 msgid " vs %(opposition)s"
-msgstr ""
+msgstr "対%(opposition)s"
 
 #: utils/tables.py
 #, python-format
@@ -167,12 +167,12 @@ msgstr "合計スピーカースコア：<strong>%s</strong>"
 
 #: utils/tables.py
 msgid "Teams in debate:"
-msgstr ""
+msgstr "試合のチーム："
 
 #: utils/tables.py
 #, python-format
 msgid "%(team)s (%(side)s)"
-msgstr ""
+msgstr "%(team)s（%(side)s）"
 
 #: utils/tables.py
 msgid "??"
@@ -180,11 +180,11 @@ msgstr ""
 
 #: utils/tables.py
 msgid "advancing"
-msgstr ""
+msgstr "進出"
 
 #: utils/tables.py
 msgid "Advancing"
-msgstr ""
+msgstr "進出"
 
 #: utils/tables.py
 msgid "eliminated"
@@ -209,11 +209,11 @@ msgstr "名前"
 
 #: utils/tables.py
 msgid "Institution"
-msgstr "大学・団体"
+msgstr "インステ"
 
 #: utils/tables.py
 msgid "Member of the Adjudication Core"
-msgstr "アッジュコアのメンバー"
+msgstr "審査委員のメンバー"
 
 #: utils/tables.py
 msgid "Independent Adjudicator"
@@ -225,11 +225,11 @@ msgstr "常にトレイニー"
 
 #: utils/tables.py
 msgid "in minority"
-msgstr ""
+msgstr "マイノリティ"
 
 #: utils/tables.py
 msgid "Debate Adjudicators"
-msgstr ""
+msgstr "試合のジャッジ"
 
 #: utils/tables.py
 msgid "Categories"
@@ -237,7 +237,7 @@ msgstr "カテゴリー"
 
 #: utils/tables.py
 msgid "Category"
-msgstr ""
+msgstr "カテゴリー"
 
 #: utils/tables.py
 #, python-format
@@ -257,35 +257,35 @@ msgstr "ラウンド部屋"
 #, python-format
 msgid "Teams have met once"
 msgid_plural "Teams have met %(count)d times"
-msgstr[0] ""
+msgstr[0] "チーム同士が%(count)d回試合しています。"
 
 #: utils/tables.py
 msgid "Teams are from the same institution"
-msgstr "両チームとも同じ大学・団体です"
+msgstr "両チームとも同じインステです"
 
 #: utils/tables.py
 msgid "Conflicts/Flags"
-msgstr ""
+msgstr "コンフリクト・フラグ"
 
 #: utils/tables.py
 msgid "The confirmed ballot"
-msgstr ""
+msgstr "承認済みバロット"
 
 #: utils/tables.py
 msgid "No ballot"
-msgstr ""
+msgstr "バロットなし"
 
 #: utils/tables.py
 msgid "No scores"
-msgstr ""
+msgstr "スコアなし"
 
 #: utils/tables.py
 msgid "View Ballot"
-msgstr ""
+msgstr "バロットを表示"
 
 #: utils/tables.py
 msgid "The ballot you submitted"
-msgstr ""
+msgstr "あなたが提出したバロット"
 
 #: utils/tables.py
 msgid "No Ballot"
@@ -293,7 +293,7 @@ msgstr "バロットなし"
 
 #: utils/tables.py
 msgid "View/Edit Ballot"
-msgstr ""
+msgstr "バロットを表示/編集"
 
 #: utils/tables.py
 msgid "Result"
@@ -310,19 +310,19 @@ msgstr ""
 
 #: utils/tables.py
 msgid "Team was given a bye this round"
-msgstr ""
+msgstr "今のラウンドはbye"
 
 #: utils/tables.py
 msgid "Team iron-personed this round and the last."
-msgstr ""
+msgstr "前回と今回のラウンドでアイアンしました。"
 
 #: utils/tables.py
 msgid "Team iron-personed this round."
-msgstr ""
+msgstr "今回のラウンドでアイアンしました。"
 
 #: utils/tables.py
 msgid "Team iron-personed last round."
-msgstr ""
+msgstr "前回のラウンド"
 
 #: utils/tables.py
 #, python-format
@@ -331,9 +331,9 @@ msgstr "チーム%(num)d"
 
 #: utils/tables.py
 msgid "Postpone"
-msgstr ""
+msgstr "延期する"
 
 #: utils/views.py
 msgid "Whoops! You're not meant to type that URL into your browser."
-msgstr ""
+msgstr "おっと！そのURLはブラウザに打ち込む用のものではありません。"
 
