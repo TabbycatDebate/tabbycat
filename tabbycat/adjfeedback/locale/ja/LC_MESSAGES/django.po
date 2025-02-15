@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2025-02-15 05:49\n"
+"PO-Revision-Date: 2025-02-15 07:22\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -225,43 +225,43 @@ msgstr "回答"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback boolean answer"
-msgstr ""
+msgstr "ジャッジフィードバックのはい/いいえ回答"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback boolean answers"
-msgstr ""
+msgstr "ジャッジフィードバックのはい/いいえ回答"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback integer answer"
-msgstr ""
+msgstr "ジャッジフィードバックの整数回答"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback integer answers"
-msgstr ""
+msgstr "ジャッジフィードバックの整数回答"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback float answer"
-msgstr ""
+msgstr "ジャッジフィードバックの小数回答"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback float answers"
-msgstr ""
+msgstr "ジャッジフィードバックの小数回答"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback string answer"
-msgstr ""
+msgstr "ジャッジフィードバックの文字列回答"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback string answers"
-msgstr ""
+msgstr "ジャッジフィードバックの文字列回答"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback multiple select answer"
-msgstr ""
+msgstr "ジャッジフィードバックの複数選択回答"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback multiple select answers"
-msgstr ""
+msgstr "ジャッジフィードバックの複数選択回答"
 
 #: adjfeedback/models.py
 msgid "checkbox"
@@ -564,7 +564,7 @@ msgstr "スコアを一括で更新"
 #: adjfeedback/templates/feedback_by_source.html
 #, python-format
 msgid "Feedback %(source_type)s %(source_name)s"
-msgstr ""
+msgstr "フィードバック%(source_type)s %(source_name)s"
 
 #: adjfeedback/templates/feedback_by_source.html
 #, python-format
