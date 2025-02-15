@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-05 17:23\n"
+"PO-Revision-Date: 2025-02-15 07:22\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -56,19 +56,19 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:24
 msgid "Pull up from top"
-msgstr ""
+msgstr "最上位をプルアップ"
 
 #: ../../features/draw-generation.rst:25
 msgid "Pull up from bottom"
-msgstr ""
+msgstr "最下位をプルアップ"
 
 #: ../../features/draw-generation.rst:26
 msgid "Pull up from middle"
-msgstr ""
+msgstr "中央をプルアップ"
 
 #: ../../features/draw-generation.rst:27
 msgid "Pull up at random"
-msgstr ""
+msgstr "ランダムにプルアップ"
 
 #: ../../features/draw-generation.rst:29
 msgid "If sides are `Random` or `Balance`:"
@@ -104,15 +104,15 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:41 ../../features/draw-generation.rst:51
 msgid "Random"
-msgstr ""
+msgstr "ランダム"
 
 #: ../../features/draw-generation.rst:42
 msgid "Balance"
-msgstr ""
+msgstr "バランス"
 
 #: ../../features/draw-generation.rst:43
 msgid "Pre-allocated"
-msgstr ""
+msgstr "事前割り当て"
 
 #: ../../features/draw-generation.rst:44
 msgid "Manual ballot"
@@ -128,15 +128,15 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:48
 msgid "Slide"
-msgstr ""
+msgstr "スライド"
 
 #: ../../features/draw-generation.rst:49
 msgid "Fold"
-msgstr ""
+msgstr "折りたたみ"
 
 #: ../../features/draw-generation.rst:50
 msgid "Adjacent"
-msgstr ""
+msgstr "隣接"
 
 #: ../../features/draw-generation.rst:53
 msgid ":ref:`Conflict avoidance method <draw-conflict-avoidance>`"
@@ -148,7 +148,7 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:55
 msgid "Off"
-msgstr ""
+msgstr "なし"
 
 #: ../../features/draw-generation.rst:56
 msgid "One-up-one-down"
@@ -164,15 +164,15 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:60
 msgid "No restriction"
-msgstr ""
+msgstr "制限なし"
 
 #: ../../features/draw-generation.rst:61
 msgid "Choose from teams who have been pulled up the fewest times so far"
-msgstr ""
+msgstr "最もプルアップ回数が少ないチームから選択"
 
 #: ../../features/draw-generation.rst:62
 msgid "Choose from teams with the lowest draw strength by speaks so far"
-msgstr ""
+msgstr "最も対戦相手のスピーカースコアの合計が少ないチームから選択"
 
 #: ../../features/draw-generation.rst:64
 msgid "The valid options for intermediate brackets change depending on whether sides are pre-allocated, but these are **not** checked for validity. If you choose an invalid combination, Tabbycat will just crash. This won't corrupt the database, but it might be momentarily annoying."
@@ -336,7 +336,7 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:153
 msgid "Pairing method"
-msgstr ""
+msgstr "ペアリング方法"
 
 #: ../../features/draw-generation.rst:154
 msgid "It's easiest to describe these by example, using a ten-team bracket:"
@@ -364,7 +364,7 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:166
 msgid "Conflict avoidance method"
-msgstr ""
+msgstr "コンフリクト回避方法"
 
 #: ../../features/draw-generation.rst:167
 msgid "A **conflict** is when two teams would face each other that have seen each other before, or are from the same institutions. Some tournaments have a preference against allowing this if it's avoidable within certain limits. The **draw avoid conflicts** option allows you to specify how."
@@ -404,7 +404,7 @@ msgstr ""
 
 #: ../../features/draw-generation.rst:187
 msgid "Pullup restriction"
-msgstr ""
+msgstr "プルアップ制限"
 
 #: ../../features/draw-generation.rst:188
 msgid "You can restrict which teams can be pulled up by configuring the draw generator to choose a pullup team from among only those teams who are the \"best off\" according to a given metric. If several teams are equally \"best off\" within the lower bracket, the draw generator chooses among them using the same **pull-up method** already specified (*e.g.*, \"pull up from top\")"
