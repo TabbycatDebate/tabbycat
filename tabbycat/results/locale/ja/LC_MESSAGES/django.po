@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 22:00\n"
+"PO-Revision-Date: 2025-02-15 05:49\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -179,7 +179,7 @@ msgstr ""
 
 #: results/models.py
 msgid "confirmed"
-msgstr ""
+msgstr "承認済み"
 
 #: results/models.py
 msgid "from private URL"
@@ -854,7 +854,7 @@ msgstr[0] ""
 
 #: results/templates/public_enter_results.html
 msgid "When submitting this form your IP address will be stored for logging purposes."
-msgstr ""
+msgstr "フィードバックを提出するとき、ログ目的であなたのIPアドレスが収集されます。"
 
 #: results/templates/public_enter_results_error.html
 #, python-format
