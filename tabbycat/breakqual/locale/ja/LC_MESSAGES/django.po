@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2025-02-15 05:49\n"
+"PO-Revision-Date: 2025-02-15 07:22\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -25,7 +25,7 @@ msgstr "ブレイク要件"
 #, python-format
 msgid "The %(rule)s break qualification rule is missing the following required metric in the team standings precedence: %(missing)s"
 msgid_plural "The %(rule)s break qualification rule is missing the following required metrics in the team standings precedence: %(missing)s"
-msgstr[0] ""
+msgstr[0] "ブレイクのルールを%(rule)sにするには、以下のチーム順位付けの指標が必須です：%(missing)s"
 
 #: breakqual/models.py
 msgid "tournament"
