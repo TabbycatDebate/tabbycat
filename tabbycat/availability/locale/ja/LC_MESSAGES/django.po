@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2025-02-15 05:49\n"
+"PO-Revision-Date: 2025-02-15 07:22\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -196,7 +196,7 @@ msgstr "チームの参加状況を編集"
 #, python-format
 msgid "One adjudicator does not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available."
 msgid_plural "%(count)s adjudicators do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available."
-msgstr[0] ""
+msgstr[0] "%(count)s人のジャッジに関連する大会が設定されていません。参加可能にしたい場合、データベース編集エリアで「大会」欄を設定してください。"
 
 #: availability/templates/checkin_progress.html
 #, python-format
@@ -231,7 +231,7 @@ msgstr "ジャッジの参加状況を編集"
 #, python-format
 msgid "There needs to be at least one adjudicator marked as available, given the number of debates."
 msgid_plural "There need to be at least %(required_count)s adjudicators marked as available, given the number of debates."
-msgstr[0] ""
+msgstr[0] "試合数から、%(required_count)s人以上のジャッジが参加可能である必要があります。"
 
 #: availability/templates/checkin_progress.html
 msgid "Edit adjudicator availability"
@@ -265,7 +265,7 @@ msgstr[0] "以下の前回利用できた%(count)s部屋が今回は利用でき
 #, python-format
 msgid "One room does not have an associated tournament. Set its 'Tournament' field in the Edit Database area if you want it to be marked as available."
 msgid_plural "%(count)s rooms do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available."
-msgstr[0] ""
+msgstr[0] "%(count)s部屋に関連する大会が設定されていません。利用可能にしたい場合、データベース編集エリアで「大会」欄を設定してください。"
 
 #: availability/templates/checkin_progress.html
 msgid "Mark rooms as available"
@@ -276,7 +276,7 @@ msgstr "部屋の利用状況を編集"
 #, python-format
 msgid "There needs to be at least one room marked as available, given the number of debates."
 msgid_plural "There need to be at least %(required_count)s rooms marked as available, given the number of debates."
-msgstr[0] ""
+msgstr[0] "試合数から、%(required_count)s部屋以上が利用可能である必要があります。"
 
 #: availability/templates/checkin_progress.html
 msgid "Edit room availability"
