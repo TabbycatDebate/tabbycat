@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 22:00\n"
+"PO-Revision-Date: 2025-02-15 05:49\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -159,7 +159,7 @@ msgstr ""
 
 #: tournaments/models.py
 msgid "sequence number"
-msgstr ""
+msgstr "順番"
 
 #: tournaments/models.py
 msgid "A number that determines the relative order in which tournaments are displayed on the homepage."
@@ -543,7 +543,7 @@ msgstr "モーションタブ"
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Sides"
-msgstr ""
+msgstr "サイド"
 
 #: tournaments/templates/public_tournament_index.html
 #, python-format
@@ -552,7 +552,7 @@ msgstr "%(round)sの対戦表"
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Draws for Current Rounds"
-msgstr ""
+msgstr "現在進行中のラウンドの対戦表"
 
 #: tournaments/templates/public_tournament_index.html
 #, python-format
@@ -582,11 +582,11 @@ msgstr "チーム順位"
 #: tournaments/templates/public_tournament_index.html
 #, python-format
 msgid "%(category)s Break"
-msgstr ""
+msgstr "%(category)sブレイク"
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Breaking Adjudicators"
-msgstr ""
+msgstr "ブレイクするジャッジ"
 
 #: tournaments/templates/public_tournament_index.html
 msgid "Diversity"
@@ -1018,7 +1018,7 @@ msgstr ""
 #: tournaments/utils.py
 #, python-format
 msgid "Team %d"
-msgstr ""
+msgstr "チーム%d"
 
 #: tournaments/views.py
 #, python-format
