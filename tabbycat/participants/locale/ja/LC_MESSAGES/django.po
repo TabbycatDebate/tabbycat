@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2025-02-15 05:49\n"
+"PO-Revision-Date: 2025-02-15 07:22\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -21,47 +21,47 @@ msgstr ""
 #: participants/admin.py
 #, python-format
 msgid "The team can't be in a break category of a different tournament. Please remove: %(category)s"
-msgstr ""
+msgstr "他の大会のブレイクカテゴリーにチームが含まれています。削除してください：%(category)s"
 
 #: participants/admin.py
 msgid "Emoji & Code"
-msgstr ""
+msgstr "絵文字・コード"
 
 #: participants/admin.py
 msgid "Delete URL Key"
-msgstr ""
+msgstr "URLキーを削除"
 
 #: participants/admin.py
 #, python-format
 msgid "%(count)d speaker had their URL key removed."
 msgid_plural "%(count)d speakers had their URL keys removed."
-msgstr[0] ""
+msgstr[0] "%(count)d人のスピーカーのURLキーを削除しました。"
 
 #: participants/admin.py
 msgid "Reset emoji"
-msgstr ""
+msgstr "絵文字をリセット"
 
 #: participants/admin.py
 #, python-format
 msgid "%(count)d team had their emoji reset."
 msgid_plural "%(count)d teams had their emojis reset."
-msgstr[0] ""
+msgstr[0] "%(count)dチームの絵文字をリセットしました。"
 
 #: participants/admin.py
 msgid "Reset code name"
-msgstr ""
+msgstr "コード名をリセット"
 
 #: participants/admin.py
 #, python-format
 msgid "%(count)d team had their code name reset."
 msgid_plural "%(count)d teams had their code names reset."
-msgstr[0] ""
+msgstr[0] "%(count)dチームのコード名をリセットしました。"
 
 #: participants/admin.py
 #, python-format
 msgid "%(count)d adjudicator had their URL key removed."
 msgid_plural "%(count)d adjudicators had their URL keys removed."
-msgstr[0] ""
+msgstr[0] "%(count)d人のジャッジのURLキーを削除しました。"
 
 #: participants/apps.py participants/views.py
 msgid "Participants"
@@ -73,42 +73,42 @@ msgstr "名前"
 
 #: participants/models.py
 msgid "region"
-msgstr ""
+msgstr "地域"
 
 #: participants/models.py
 msgid "regions"
-msgstr ""
+msgstr "地域"
 
 #. Translators: Change the examples to institutions native to your language; keep consistent between strings
 #: participants/models.py
 msgid "The institution's full name, e.g., \"University of Cambridge\", \"Victoria University of Wellington\""
-msgstr ""
+msgstr "インステのフルネーム。e.g.「東京大学」「慶應義塾大学」"
 
 #: participants/models.py
 msgid "code"
-msgstr ""
+msgstr "略称"
 
 #. Translators: Change the examples to institutions native to your language; keep consistent between strings
 #: participants/models.py
 msgid "What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\""
-msgstr ""
+msgstr "インステの略称。e.g.「東大」「慶應」"
 
 #: participants/models.py
 msgid "institution"
-msgstr "インスティチューション"
+msgstr "インステ"
 
 #: participants/models.py
 msgid "institutions"
-msgstr ""
+msgstr "インステ"
 
 #: participants/models.py
 msgid "tournament"
-msgstr "トーナメント"
+msgstr "大会"
 
 #. Translators: Translate ESL to the acronym for "<target language> as a second/foreign language", not "English"
 #: participants/models.py
 msgid "Name to be displayed, e.g., \"Novice\", \"ESL\""
-msgstr ""
+msgstr "表示名。e.g.「初心者」「第二言語としての日本語話者」"
 
 #: participants/models.py
 msgid "slug"
@@ -117,7 +117,7 @@ msgstr "スラグ"
 #. Translators: Translate esl to the acronym for "<target language> as a second/foreign language", not "English"
 #: participants/models.py
 msgid "Slug for URLs, e.g., \"novice\", \"esl\""
-msgstr ""
+msgstr "URLに使用されるスラグ。e.g.「novice」「jsl」"
 
 #: participants/models.py
 msgid "sequence number"
@@ -129,27 +129,27 @@ msgstr "カテゴリーの表示される順番"
 
 #: participants/models.py
 msgid "limit"
-msgstr "制限"
+msgstr "表示制限"
 
 #: participants/models.py
 msgid "At most this many speakers will be shown on the public tab for this category, or use 0 for no limit"
-msgstr ""
+msgstr "タブ公開時に上位何人のスピーカーがこのカテゴリーに表示されるか。全員表示する場合、「0」としてください。"
 
 #: participants/models.py
 msgid "public"
-msgstr ""
+msgstr "公開"
 
 #: participants/models.py
 msgid "If checked, this category will be included in the speaker category tabs shown to the public"
-msgstr ""
+msgstr "チェックすると、スピーカーカテゴリータブ公開時にこのカテゴリーが表示されます"
 
 #: participants/models.py
 msgid "speaker category"
-msgstr ""
+msgstr "スピーカーカテゴリー"
 
 #: participants/models.py
 msgid "speaker categories"
-msgstr ""
+msgstr "スピーカーカテゴリー"
 
 #: participants/models.py
 msgid "email address"
@@ -157,7 +157,7 @@ msgstr ""
 
 #: participants/models.py
 msgid "phone"
-msgstr ""
+msgstr "電話番号"
 
 #: participants/models.py
 msgid "anonymous"
@@ -165,19 +165,19 @@ msgstr "匿名"
 
 #: participants/models.py
 msgid "Anonymous persons will have their name and team redacted on public tab releases"
-msgstr ""
+msgstr "匿名にすると、タブ公開時に名前とチームが匿名化されます"
 
 #: participants/models.py
 msgid "code name"
-msgstr ""
+msgstr "コード名"
 
 #: participants/models.py
 msgid "Name used to obscure real name on public-facing pages"
-msgstr ""
+msgstr "公開されるページで本名の代わりに使用される名前"
 
 #: participants/models.py
 msgid "URL key"
-msgstr ""
+msgstr "URLキー"
 
 #: participants/models.py
 msgid "male"
@@ -185,27 +185,27 @@ msgstr "男性"
 
 #: participants/models.py
 msgid "female"
-msgstr ""
+msgstr "女性"
 
 #: participants/models.py
 msgid "other"
-msgstr ""
+msgstr "その他"
 
 #: participants/models.py
 msgid "gender"
-msgstr ""
+msgstr "ジェンダー"
 
 #: participants/models.py
 msgid "Gender is displayed in the adjudicator allocation interface, and nowhere else"
-msgstr ""
+msgstr "ジェンダーはジャッジ配置のUI以外では表示されません"
 
 #: participants/models.py
 msgid "pronoun"
-msgstr ""
+msgstr "代名詞"
 
 #: participants/models.py
 msgid "If printing ballots using Tabbycat, there is the option to pre-print pronouns"
-msgstr ""
+msgstr "バロットを印刷する場合、代名詞をあらかじめ印刷できます。"
 
 #: participants/models.py
 msgid "person"
@@ -213,51 +213,51 @@ msgstr "人"
 
 #: participants/models.py
 msgid "persons"
-msgstr ""
+msgstr "人"
 
 #: participants/models.py
 msgid "full name/suffix"
-msgstr ""
+msgstr "フルネーム・接尾語"
 
 #: participants/models.py
 msgid "Do not include institution name (see \"uses institutional prefix\" below)"
-msgstr ""
+msgstr "インステ名を含めないでください（下の「冒頭にインステ名を使用」を使用してください）"
 
 #: participants/models.py
 msgid "short name/suffix"
-msgstr ""
+msgstr "ショートネーム・接尾語"
 
 #: participants/models.py
 msgid "The decoded name shown in the draw, not including institution name (see \"uses institutional prefix\" below)"
-msgstr ""
+msgstr "対戦表で表示される名前。インステ名を含めないでください（下の「冒頭にインステ名を使用」を使用してください）"
 
 #: participants/models.py
 msgid "Name used to obscure institutional identity on public-facing pages"
-msgstr ""
+msgstr "インステ情報を秘匿する際に使用される仮称"
 
 #: participants/models.py
 msgid "short name"
-msgstr ""
+msgstr "ショートネーム"
 
 #: participants/models.py
 msgid "The decoded name shown in the draw, including institution name. (This is autogenerated.)"
-msgstr ""
+msgstr "インステ名を含んだ、対戦表で表示される名前（自動生成）。"
 
 #: participants/models.py
 msgid "long name"
-msgstr ""
+msgstr "ロングネーム"
 
 #: participants/models.py
 msgid "The full name of the team, including institution name. (This is autogenerated.)"
-msgstr ""
+msgstr "インステ名を含んだ、フルネーム（自動生成）。"
 
 #: participants/models.py
 msgid "Uses institutional prefix"
-msgstr ""
+msgstr "冒頭にインステ名を使用"
 
 #: participants/models.py
 msgid "If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\""
-msgstr ""
+msgstr "チェックすると、例えば東京大学の「1」というチームは「東京大学1」と表示されます。"
 
 #: participants/models.py
 msgid "break categories"
@@ -265,15 +265,15 @@ msgstr "ブレイクカテゴリー"
 
 #: participants/models.py
 msgid "seed"
-msgstr ""
+msgstr "シード値"
 
 #: participants/models.py
 msgid "Used as initial ranking to power-pair the first round"
-msgstr ""
+msgstr "最初のラウンドでパワーペアリングを行う際の最初の順位として使用されます。"
 
 #: participants/models.py
 msgid "institution conflicts"
-msgstr "大学・団体コンフリクト"
+msgstr "インステコンフリクト"
 
 #: participants/models.py
 msgid "none"
@@ -281,11 +281,11 @@ msgstr "なし"
 
 #: participants/models.py
 msgid "swing"
-msgstr ""
+msgstr "スイング・シャドー"
 
 #: participants/models.py
 msgid "composite"
-msgstr ""
+msgstr "混合・ジョイント"
 
 #: participants/models.py
 msgid "bye"
@@ -293,7 +293,7 @@ msgstr ""
 
 #: participants/models.py
 msgid "type"
-msgstr "タイプ"
+msgstr "種類"
 
 #: participants/models.py
 msgid "emoji"
@@ -309,59 +309,59 @@ msgstr "チーム"
 
 #: participants/models.py
 msgid "Teams must have an institution if they are using the institutional prefix."
-msgstr ""
+msgstr "冒頭にインステ名を使用する場合、インステを選択する必要があります。"
 
 #: participants/models.py
 msgid "Teams must have a full name if they don't use the institutional prefix."
-msgstr ""
+msgstr "冒頭にインステ名を使用しない場合、フルネームを指定する必要があります。"
 
 #: participants/models.py
 msgid "Teams must have a short name if they don't use the institutional prefix."
-msgstr ""
+msgstr "冒頭にインステ名を使用しない場合、ショートネームを指定する必要があります。"
 
 #: participants/models.py
 msgid "speaker"
-msgstr ""
+msgstr "スピーカー"
 
 #: participants/models.py
 msgid "speakers"
-msgstr ""
+msgstr "スピーカー"
 
 #: participants/models.py
 msgid "Adjudicators not assigned to any tournament can be shared between tournaments"
-msgstr ""
+msgstr "大会を指定していないジャッジは、複数の大会でシェアすることができます"
 
 #: participants/models.py
 msgid "base score"
-msgstr ""
+msgstr "ベーススコア"
 
 #: participants/models.py
 msgid "team conflicts"
-msgstr ""
+msgstr "チームコンフリクト"
 
 #: participants/models.py
 msgid "adjudicator conflicts"
-msgstr ""
+msgstr "ジャッジコンフリクト"
 
 #: participants/models.py
 msgid "always trainee"
-msgstr ""
+msgstr "常にトレイニー"
 
 #: participants/models.py
 msgid "If checked, this adjudicator will never be auto-allocated a voting position, regardless of their score"
-msgstr ""
+msgstr "チェックすると、このジャッジはジャッジスコアに関わらず決して投票権のある役職に配置されません。"
 
 #: participants/models.py
 msgid "breaking"
-msgstr ""
+msgstr "ブレイクする"
 
 #: participants/models.py
 msgid "independent"
-msgstr ""
+msgstr "インディペンデント（Independent Adjudicator/IA）"
 
 #: participants/models.py
 msgid "adjudication core"
-msgstr ""
+msgstr "審査委員（Adjudication Core/AC）"
 
 #: participants/models.py
 msgid "adjudicator"
@@ -369,61 +369,61 @@ msgstr "ジャッジ"
 
 #: participants/models.py
 msgid "adjudicators"
-msgstr ""
+msgstr "ジャッジ"
 
 #: participants/tables.py
 msgid "Points after this debate"
-msgstr ""
+msgstr "試合後の点数"
 
 #: participants/tables.py
 msgid "Wins after this debate"
-msgstr ""
+msgstr "試合後の勝ち数"
 
 #: participants/tables.py
 msgid "Speaker scores<br>(in speaking order)"
-msgstr ""
+msgstr "スピーカースコア<br>（スピーチ順）"
 
 #: participants/tables.py
 msgid "Speaks"
-msgstr ""
+msgstr "スピーカースコア"
 
 #: participants/templates/adjudicator_record.html
 #: participants/templates/team_record.html
 #, python-format
 msgid "About %(name)s"
-msgstr ""
+msgstr "%(name)sについて"
 
 #: participants/templates/adjudicator_registration_card.html
 msgid "Independent adjudicator"
-msgstr ""
+msgstr "インディペンデントジャッジ（Independent adjudicator）"
 
 #: participants/templates/adjudicator_registration_card.html
 msgid "Member of the adjudication core"
-msgstr ""
+msgstr "審査委員（Adjudication Core）のメンバー"
 
 #: participants/templates/adjudicator_registration_card.html
 #: participants/templates/team_registration_card.html
 msgid "Institution:"
-msgstr ""
+msgstr "インステ："
 
 #: participants/templates/adjudicator_registration_card.html
 #: participants/templates/team_registration_card.html
 msgid "Unaffiliated"
-msgstr ""
+msgstr "無所属"
 
 #: participants/templates/adjudicator_registration_card.html
 #: participants/templates/team_registration_card.html
 msgid "Region:"
-msgstr ""
+msgstr "地域："
 
 #: participants/templates/adjudicator_registration_card.html
 msgid "The institutional affiliations of adjudicators are not public at this tournament."
-msgstr ""
+msgstr "ジャッジのインステは非公開です"
 
 #: participants/templates/adjudicator_registration_card.html
 #: participants/templates/team_registration_card.html
 msgid "Institutional Conflicts:"
-msgstr ""
+msgstr "インステコンフリクト："
 
 #: participants/templates/adjudicator_registration_card.html
 #: participants/templates/team_registration_card.html
@@ -433,11 +433,11 @@ msgstr ""
 #: participants/templates/adjudicator_registration_card.html
 #: participants/templates/team_registration_card.html
 msgid "None"
-msgstr ""
+msgstr "なし"
 
 #: participants/templates/adjudicator_registration_card.html
 msgid "Team Conflicts:"
-msgstr ""
+msgstr "チームコンフリクト："
 
 #: participants/templates/adjudicator_registration_card.html
 #: participants/templates/team_registration_card.html
@@ -447,54 +447,54 @@ msgstr ""
 #: participants/templates/adjudicator_registration_card.html
 #: participants/templates/team_registration_card.html
 msgid "Adjudicator Conflicts:"
-msgstr ""
+msgstr "ジャッジコンフリクト："
 
 #: participants/templates/adjudicator_registration_card.html
 #: participants/templates/team_registration_card.html
 msgid "Room Constraints:"
-msgstr ""
+msgstr "部屋の制約条件："
 
 #: participants/templates/admin/participants/adjudicator/change_form.html
 msgid "<strong>Don't forget:</strong> If this adjudicator should be conflicted against their own institution, you should add this conflict <strong>now</strong> in the <strong>Adjudicator-institution conflicts</strong> tab above, because the own-institution conflict is <strong>not</strong> automatically created when using this form."
-msgstr ""
+msgstr "<strong>忘れないで：</strong>自身の所属するインステに対してコンフリクトがあるべきな場合、<strong>この場で</strong>上のジャッジ・インステ間コンフリクトのタブから追加してください。このフォームからではインステコンフリクトは<strong>自動的に登録されません</strong>。"
 
 #: participants/templates/admin/participants/delete_debateteam_warning.html
 #, python-format
 msgid "<strong>Warning:</strong> If there are “debate team” objects in the above list, <strong>you probably shouldn't delete this %(object_name)s</strong>."
-msgstr ""
+msgstr "<strong>警告：</strong>上のリストの中に「ディベートチーム」のオブジェクトがある場合、<strong>この%(object_name)sを削除するべきではありません。</strong>"
 
 #: participants/templates/admin/participants/delete_debateteam_warning.html
 #, python-format
 msgid "<strong>Warning:</strong> If there are “debate team” objects in the above list, <strong>you probably shouldn't delete the selected %(objects_name)s</strong>."
-msgstr ""
+msgstr "<strong>警告：</strong>上のリストの中に「ディベートチーム」のオブジェクトがある場合、<strong>選択した%(objects_name)sを削除するべきではありません</strong>。"
 
 #. Translators: This follows the above sentence in the same paragraph.
 #: participants/templates/admin/participants/delete_debateteam_warning.html
 msgid "This is especially the case if any team that would be deleted has already participated in a debate. If a team already has a result entered for it, deleting the team also deletes those results, <strong>which normally breaks the tab</strong>, even if you think you don't need those results anymore. If a team has debated and is withdrawing from the tournament, you should <strong>not</strong> delete it. Just mark the team inactive under the “Availability” section of the Tabbycat admin area."
-msgstr ""
+msgstr "特に、削除しようとしているチームが既に試合に参加している場合には削除するべきではありません。既にそのチームに関連した結果が存在している場合、チームを削除すると関連する結果まで削除されてしまいます。これにより、多くの場合その試合の結果が必要でなくとも<strong>タブがクラッシュします</strong>。そのチームが既に試合をしたあとに大会を去ろうとしている場合、<strong>削除するべきではありません</strong>。代わりに、管理者エリアの「参加・利用状況」のセクションから、チームを欠席とすれば問題ありません。"
 
 #: participants/templates/admin/participants/delete_debateteam_warning.html
 msgid "Note that deleting an institution also deletes all teams from that institution."
-msgstr ""
+msgstr "インステを削除すると、そのインステのすべてのチームも削除されることに気を付けてください。"
 
 #: participants/templates/admin/participants/delete_debateteam_warning.html
 #, python-format
 msgid "If you're very sure about deleting this %(object_name)s, please delete the above objects first, and be sure to heed the warning that you will see on the “debate team” objects page before proceeding."
-msgstr ""
+msgstr "%(object_name)sを削除しても大丈夫な自信がある場合、まず上記のオブジェクトを削除し、「ディベートチーム」オブジェクトページで表示される警告についても確認してください。"
 
 #: participants/templates/admin/participants/delete_debateteam_warning.html
 #, python-format
 msgid "If you're very sure about deleting these %(objects_name)s, please delete the above objects first, and be sure to heed the warning that you will see on the “debate team” objects page before proceeding."
-msgstr ""
+msgstr "%(objects_name)sを削除しても大丈夫な自信がある場合、まず上記のオブジェクトを削除し、「ディベートチーム」オブジェクトページで表示される警告についても確認してください。"
 
 #: participants/templates/admin/participants/team/change_form.html
 msgid "<strong>Don't forget:</strong> If this team should be conflicted against its own institution, you should add this conflict <strong>now</strong> in the <strong>Team-institution conflicts</strong> tab above, because the own-institution conflict is <strong>not</strong> automatically created when using this form."
-msgstr ""
+msgstr "<strong>忘れないで：</strong>自身の所属するインステに対してコンフリクトがあるべきな場合、<strong>この場で</strong>上のチーム・インステ間コンフリクトのタブから追加してください。このフォームからではインステコンフリクトは<strong>自動的に登録されません</strong>。"
 
 #: participants/templates/current_round/common.html
 #, python-format
 msgid "The round begins at %(start_time)s"
-msgstr ""
+msgstr "%(start_time)sに試合開始"
 
 #: participants/templates/current_round/common.html
 msgid "Teams:"
@@ -503,7 +503,7 @@ msgstr "チーム："
 #: participants/templates/current_round/common.html
 msgid "Adjudicator:"
 msgid_plural "Adjudicators:"
-msgstr[0] ""
+msgstr[0] "ジャッジ："
 
 #: participants/templates/current_round/common.html
 msgctxt "chair icon"
@@ -517,15 +517,15 @@ msgstr ""
 
 #: participants/templates/current_round/common.html
 msgid "There are no panellists or trainees assigned to this debate."
-msgstr ""
+msgstr "パネリスト・トレイニーはいません"
 
 #: participants/templates/current_round/common.html
 msgid "Motions are not released to public."
-msgstr ""
+msgstr "論題は公開されていません。"
 
 #: participants/templates/current_round/common.html
 msgid "Motion:"
-msgstr ""
+msgstr "論題："
 
 #: participants/templates/current_round/common.html
 msgid "View Info Slide"
@@ -533,264 +533,264 @@ msgstr "インフォスライドを表示"
 
 #: participants/templates/current_round/common.html
 msgid "The motion(s) for this round haven't yet been released."
-msgstr ""
+msgstr "このラウンドの論題はまだ公開されていません。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "%(adjudicator)s is the <strong>chair</strong> adjudicating %(aff)s vs %(neg)s in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
-msgstr ""
+msgstr "%(adjudicator)sは<a href=\"%(url)s\"><strong>%(room)s</strong></a>の%(aff)s対%(neg)sの試合の<strong>チェア</strong>です。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "%(adjudicator)s is the <strong>chair</strong> adjudicating %(aff)s vs %(neg)s in <strong>%(room)s</strong>."
-msgstr ""
+msgstr "%(adjudicator)sは<strong>%(room)s</strong>の%(aff)s対%(neg)sの試合の<strong>チェア</strong>です。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "You are the <strong>chair</strong> adjudicating %(aff)s vs %(neg)s in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
-msgstr ""
+msgstr "あなたは<a href=\"%(url)s\"><strong>%(room)s</strong></a>の%(aff)s対%(neg)sの試合の<strong>チェア</strong>です。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "You are the <strong>chair</strong> adjudicating %(aff)s vs %(neg)s in <strong>%(room)s</strong>."
-msgstr ""
+msgstr "あなたは<strong>%(room)s</strong>の%(aff)s対%(neg)sの試合の<strong>チェア</strong>です。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "%(adjudicator)s is a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
-msgstr ""
+msgstr "%(adjudicator)sは<a href=\"%(url)s\"><strong>%(room)s</strong></a>の%(aff)s対%(neg)sの試合の<strong>%(type)s</strong>です。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "%(adjudicator)s is a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s in <strong>%(room)s</strong>."
-msgstr ""
+msgstr "%(adjudicator)sは<strong>%(room)s</strong>の%(aff)s対%(neg)sの試合の<strong>%(type)s</strong>です。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "You are a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
-msgstr ""
+msgstr "あなたは<a href=\"%(url)s\"><strong>%(room)s</strong></a>の%(aff)s対%(neg)sの試合の<strong>%(type)s</strong>です。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "You are a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s in <strong>%(room)s</strong>."
-msgstr ""
+msgstr "あなたは<strong>%(room)s</strong>の%(aff)s対%(neg)sの試合の<strong>%(type)s</strong>です。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "%(adjudicator)s is adjudicating %(aff)s vs %(neg)s in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
-msgstr ""
+msgstr "%(adjudicator)sは<a href=\"%(url)s\"><strong>%(room)s</strong></a>の%(aff)s対%(neg)sの試合のジャッジです。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "%(adjudicator)s is adjudicating %(aff)s vs %(neg)s in <strong>%(room)s</strong>."
-msgstr ""
+msgstr "%(adjudicator)sは<strong>%(room)s</strong>の%(aff)s対%(neg)sの試合のジャッジです。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "You are adjudicating %(aff)s vs %(neg)s in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
-msgstr ""
+msgstr "あなたは<a href=\"%(url)s\"><strong>%(room)s</strong></a>の%(aff)s対%(neg)sの試合のジャッジです。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "You are adjudicating %(aff)s vs %(neg)s in <strong>%(room)s</strong>."
-msgstr ""
+msgstr "あなたは<strong>%(room)s</strong>の%(aff)s対%(neg)sの試合のジャッジです。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "%(adjudicator)s is the <strong>chair</strong> adjudicating in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
-msgstr ""
+msgstr "%(adjudicator)sは<a href=\"%(url)s\"><strong>%(room)s</strong></a>の試合の<strong>チェア</strong>です。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "%(adjudicator)s is the <strong>chair</strong> adjudicating in <strong>%(room)s</strong>."
-msgstr ""
+msgstr "%(adjudicator)sは<strong>%(room)s</strong>の試合の<strong>チェア</strong>です。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "You are the <strong>chair</strong> adjudicating in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
-msgstr ""
+msgstr "あなたは<a href=\"%(url)s\"><strong>%(room)s</strong></a>の試合の<strong>チェア</strong>です。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "You are the <strong>chair</strong> adjudicating in <strong>%(room)s</strong>."
-msgstr ""
+msgstr "あなたは<strong>%(room)s</strong>の試合の<strong>チェア</strong>です。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "%(adjudicator)s is a <strong>%(type)s</strong> adjudicating in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
-msgstr ""
+msgstr "%(adjudicator)sは<a href=\"%(url)s\"><strong>%(room)s</strong></a>の試合の<strong>%(type)s</strong>です。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "%(adjudicator)s is a <strong>%(type)s</strong> adjudicating in <strong>%(room)s</strong>."
-msgstr ""
+msgstr "%(adjudicator)sは<strong>%(room)s</strong>の試合の<strong>%(type)s</strong>です。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "You are a <strong>%(type)s</strong> adjudicating in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
-msgstr ""
+msgstr "あなたは<a href=\"%(url)s\"><strong>%(room)s</strong></a>の試合の<strong>%(type)s</strong>です。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "You are a <strong>%(type)s</strong> adjudicating in <strong>%(room)s</strong>."
-msgstr ""
+msgstr "あなたは<strong>%(room)s</strong>の試合の<strong>%(type)s</strong>です。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "%(adjudicator)s is adjudicating in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
-msgstr ""
+msgstr "%(adjudicator)sは<a href=\"%(url)s\"><strong>%(room)s</strong></a>の試合のジャッジです。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "%(adjudicator)s is adjudicating in <strong>%(room)s</strong>."
-msgstr ""
+msgstr "%(adjudicator)sは<strong>%(room)s</strong>の試合のジャッジです。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "You are adjudicating in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
-msgstr ""
+msgstr "あなたは<a href=\"%(url)s\"><strong>%(room)s</strong></a>の試合のジャッジです。"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "You are adjudicating in <strong>%(room)s</strong>."
-msgstr ""
+msgstr "あなたは<strong>%(room)s</strong>の試合のジャッジです。"
 
 #: participants/templates/current_round/round_team.html
 #, python-format
 msgid "%(team)s is debating as the <strong>%(side)s</strong> team against <strong>%(opponent)s</strong>."
-msgstr ""
+msgstr "%(team)sは<strong>%(side)s</strong>チームとして<strong>%(opponent)s</strong>と対戦します。"
 
 #: participants/templates/current_round/round_team.html
 #, python-format
 msgid "You are debating as the <strong>%(side)s</strong> team against <strong>%(opponent)s</strong>."
-msgstr ""
+msgstr "あなたは<strong>%(side)s</strong>チームとして<strong>%(opponent)s</strong>と対戦します。"
 
 #: participants/templates/current_round/round_team.html
 #, python-format
 msgid "%(team)s is debating against <strong>%(opponent)s</strong>."
-msgstr ""
+msgstr "%(team)sは<strong>%(opponent)s</strong>と対戦します。"
 
 #: participants/templates/current_round/round_team.html
 #, python-format
 msgid "You are debating against <strong>%(opponent)s</strong>."
-msgstr ""
+msgstr "あなたは<strong>%(opponent)s</strong>と対戦します。"
 
 #: participants/templates/current_round/round_team.html
 #, python-format
 msgid "%(team)s is debating as the <strong>%(side)s</strong> team."
-msgstr ""
+msgstr "%(team)sは<strong>%(side)s</strong>チームとして対戦します。"
 
 #: participants/templates/current_round/round_team.html
 #, python-format
 msgid "You are debating as the <strong>%(side)s</strong> team."
-msgstr ""
+msgstr "あなたは<strong>%(side)s</strong>チームとして対戦します。"
 
 #: participants/templates/current_round/round_team.html
 #, python-format
 msgid "%(team)s's debate is in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
-msgstr ""
+msgstr "%(team)sの試合は<a href=\"%(url)s\"><strong>%(room)s</strong></a>で行われます。"
 
 #: participants/templates/current_round/round_team.html
 #, python-format
 msgid "%(team)s's debate is in <strong>%(room)s</strong>."
-msgstr ""
+msgstr "%(team)sの試合は<strong>%(room)s</strong>で行われます。"
 
 #: participants/templates/current_round/round_team.html
 #, python-format
 msgid "Your debate is in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
-msgstr ""
+msgstr "あなたの試合は<a href=\"%(url)s\"><strong>%(room)s</strong></a>で行われます。"
 
 #: participants/templates/current_round/round_team.html
 #, python-format
 msgid "Your debate is in <strong>%(room)s</strong>."
-msgstr ""
+msgstr "あなたの試合は<strong>%(room)s</strong>で行われます。"
 
 #: participants/templates/edit_speaker_eligibility.html
 #, python-format
 msgid "It looks like there aren't any speaker categories are defined. If you'd like to produce category-specific speaker tabs, such as a novice or ESL tab, use the <a href=\"%(categories_url)s\" class=\"alert-link\">Speaker Categories</a> page to define them, then return to this page to set speaker eligibility."
-msgstr ""
+msgstr "スピーカーカテゴリーが存在しないようです。初心者（novice）や英語第二言語話者（ESL）などのカテゴリー別にスピーカータブを作成したい場合、<a href=\"%(categories_url)s\" class=\"alert-link\">スピーカーカテゴリー</a>のページから作成し、このページに戻り資格を編集してください。"
 
 #: participants/templates/feedback_progress_panel.html
 msgid "Feedback Returns"
-msgstr ""
+msgstr "フィードバック状況"
 
 #: participants/templates/feedback_progress_panel.html
 #, python-format
 msgid "Has submitted feedback for <strong>%(adjudicator)s</strong>"
-msgstr ""
+msgstr "<strong>%(adjudicator)s</strong>へのフィードバックを提出済み"
 
 #: participants/templates/feedback_progress_panel.html
 #, python-format
 msgid "Has not submitted feedback for one of: <strong>%(adjudicators)s</strong> (whoever gave the oral adjudication)"
-msgstr ""
+msgstr "<strong>%(adjudicators)s</strong>のいずれか（講評を行った人）にフィードバックを提出していません"
 
 #: participants/templates/feedback_progress_panel.html
 #, python-format
 msgid "Has not submitted feedback for <strong>%(adjudicator)s</strong>"
-msgstr ""
+msgstr "<strong>%(adjudicator)s</strong>にフィードバックを提出していません"
 
 #: participants/templates/feedback_progress_panel.html
 msgid "More feedback submissions than expected for this debate:"
-msgstr ""
+msgstr "想定しているより多くのフィードバックが提出されています："
 
 #: participants/templates/feedback_progress_panel.html
 #, python-format
 msgid "Unexpected feedback submission for <strong>%(adjudicator)s</strong>"
-msgstr ""
+msgstr "<strong>%(adjudicator)s</strong>への異常なフィードバック"
 
 #: participants/templates/feedback_progress_panel.html
 #, python-format
 msgid "%(name)s doesn't have any feedback to submit."
-msgstr ""
+msgstr "%(name)sはフィードバックを出す必要がありません。"
 
 #: participants/templates/in_this_round.html
 #, python-format
 msgid "In This Round (%(round)s)"
-msgstr ""
+msgstr "現在のラウンド（%(round)s）"
 
 #: participants/templates/in_this_round.html
 msgid "In This Round"
-msgstr ""
+msgstr "現在のラウンド"
 
 #: participants/templates/in_this_round.html
 msgid "(Not Released to Public)"
-msgstr ""
+msgstr "（公には非表示）"
 
 #: participants/templates/in_this_round.html
 msgid "Room TBA"
-msgstr ""
+msgstr "部屋未決定"
 
 #: participants/templates/in_this_round.html
 #, python-format
 msgid "%(adjudicator)s is not adjudicating this round."
-msgstr ""
+msgstr "%(adjudicator)sはこのラウンドはジャッジしません。"
 
 #: participants/templates/in_this_round.html
 msgid "You are not adjudicating this round."
-msgstr ""
+msgstr "あなたはこのラウンドはジャッジしません。"
 
 #: participants/templates/in_this_round.html
 #, python-format
 msgid "It looks like %(team)s is competing in %(ndebates)s debate this round."
 msgid_plural "It looks like %(team)s is competing in %(ndebates)s debates this round."
-msgstr[0] ""
+msgstr[0] "%(team)sはこのラウンドの%(ndebates)s試合に出場することになっているようです。"
 
 #: participants/templates/in_this_round.html
 msgid "If this is an error, please contact a tab director immediately."
-msgstr ""
+msgstr "間違いだと思う場合、今すぐにタブディレクターに連絡してください。"
 
 #: participants/templates/in_this_round.html
 #, python-format
 msgid "%(team)s does not have a debate this round."
-msgstr ""
+msgstr "%(team)sはこのラウンドは試合をしません。"
 
 #: participants/templates/in_this_round.html
 msgid "You do not have a debate this round."
-msgstr ""
+msgstr "あなたはこのラウンドは試合をしません。"
 
 #: participants/templates/in_this_round.html
 msgid "The draw for this round hasn't yet been released."
-msgstr ""
+msgstr "このラウンドの対戦表はまだ公開されていません。"
 
 #: participants/templates/participants_subnav.html
 msgid "Participants List"
@@ -798,15 +798,15 @@ msgstr "参加者リスト"
 
 #: participants/templates/participants_subnav.html
 msgid "Institutions List"
-msgstr ""
+msgstr "インステリスト"
 
 #: participants/templates/participants_subnav.html
 msgid "Emails have already been sent."
-msgstr ""
+msgstr "既にメールを送信済みです"
 
 #: participants/templates/participants_subnav.html
 msgid "Email Team Registrations"
-msgstr ""
+msgstr "チーム登録をメール"
 
 #: participants/templates/participants_subnav.html participants/views.py
 msgid "Code Names"
@@ -815,69 +815,69 @@ msgstr "コード名"
 #: participants/templates/participants_subnav.html
 #: participants/templates/speaker_categories_edit.html
 msgid "Speaker Categories"
-msgstr ""
+msgstr "スピーカーカテゴリー"
 
 #: participants/templates/participants_subnav.html
 msgid "Speaker Eligibility"
-msgstr ""
+msgstr "スピーカー資格"
 
 #: participants/templates/speaker_categories_edit.html
 msgid "Speaker categories allow category-specific speaker tabs to be produced, <i>e.g.</i>, for novice or ESL categories. On this page, you can define what speaker categories exist. After you've defined the categories, you can set speaker eligibility on the Speaker Eligibility page."
-msgstr ""
+msgstr "スピーカーカテゴリーを使えばカテゴリー別（e.g.初心者（novice）、英語第二言語話者（ESL））にスピーカータブを作成できます。このページではスピーカーカテゴリーの種類を管理できます。カテゴリーを指定した後、スピーカー資格のページからスピーカー資格を編集できます。"
 
 #: participants/templates/speaker_categories_edit.html
 #, python-format
 msgid "If you want to delete speaker categories, use the <a href=\"%(edit_db_url)s\" class=\"alert-link\">Edit Database</a> area."
-msgstr ""
+msgstr "スピーカーカテゴリーを削除したい場合、<a href=\"%(edit_db_url)s\" class=\"alert-link\">データベース編集</a>エリアから削除してください。"
 
 #: participants/templates/speaker_categories_edit.html
 msgid "Save Speaker Categories"
-msgstr ""
+msgstr "スピーカーカテゴリーを保存"
 
 #: participants/templates/team_registration_card.html
 msgid "Team name:"
-msgstr ""
+msgstr "チーム名："
 
 #: participants/templates/team_registration_card.html
 msgid "Full team name:"
-msgstr ""
+msgstr "チーム名（フルネーム）："
 
 #: participants/templates/team_registration_card.html
 msgid "Short team name:"
-msgstr ""
+msgstr "チーム名（ショートネーム）："
 
 #: participants/templates/team_registration_card.html
 msgid "Code name:"
-msgstr ""
+msgstr "コード名："
 
 #: participants/templates/team_registration_card.html
 msgid "No code name assigned"
-msgstr ""
+msgstr "コード名無し"
 
 #: participants/templates/team_registration_card.html
 msgid "Emoji:"
-msgstr ""
+msgstr "絵文字："
 
 #: participants/templates/team_registration_card.html
 msgid "No emoji assigned"
-msgstr ""
+msgstr "絵文字なし"
 
 #: participants/templates/team_registration_card.html
 msgid "Speakers:"
-msgstr ""
+msgstr "スピーカー："
 
 #: participants/templates/team_registration_card.html
 msgid "Eligible for break categories:"
-msgstr ""
+msgstr "ブレイク資格："
 
 #: participants/templates/team_registration_card.html
 msgid "Speaker categories:"
-msgstr ""
+msgstr "スピーカーカテゴリー"
 
 #: participants/templatetags/team_name_for_data_entry.py
 #, python-format
 msgid "%(code_name)s <em>(%(real_name)s)</em>"
-msgstr ""
+msgstr "%(code_name)s <em>（%(real_name)s）</em>"
 
 #: participants/views.py
 msgid "Adjudicators"
@@ -889,19 +889,19 @@ msgstr "スピーカー"
 
 #: participants/views.py
 msgid "Institutions"
-msgstr "大学・団体"
+msgstr "インステ"
 
 #: participants/views.py
 msgid "Code"
-msgstr ""
+msgstr "コード"
 
 #: participants/views.py
 msgid "Full name"
-msgstr ""
+msgstr "フルネーム"
 
 #: participants/views.py
 msgid "Region"
-msgstr ""
+msgstr "地域"
 
 #: participants/views.py
 msgid "Teams"
@@ -909,31 +909,31 @@ msgstr "チーム"
 
 #: participants/views.py
 msgid "Number of teams"
-msgstr ""
+msgstr "チーム数"
 
 #: participants/views.py
 msgid "Adjs"
-msgstr ""
+msgstr "ジャッジ"
 
 #: participants/views.py
 msgid "Number of adjudicators, excluding independents"
-msgstr ""
+msgstr "ジャッジ数（インディペンデントを除く）"
 
 #: participants/views.py
 msgid "IAs"
-msgstr ""
+msgstr "インディベンデントジャッジ（IA）"
 
 #: participants/views.py
 msgid "Number of independent adjudicators"
-msgstr ""
+msgstr "インディベンデントジャッジの数"
 
 #: participants/views.py
 msgid "Code name"
-msgstr ""
+msgstr "コード名"
 
 #: participants/views.py
 msgid "Team Registration"
-msgstr ""
+msgstr "チーム登録"
 
 #: participants/views.py
 msgid "Results"
@@ -942,23 +942,23 @@ msgstr "結果"
 #: participants/views.py
 #, python-format
 msgid "Record for %(name)s"
-msgstr ""
+msgstr "%(name)sの記録"
 
 #: participants/views.py
 msgid "Previous Rounds"
-msgstr ""
+msgstr "過去のラウンド"
 
 #: participants/views.py
 #, python-format
 msgid "Saved category: %(list)s"
 msgid_plural "Saved categories: %(list)s"
-msgstr[0] ""
+msgstr[0] "カテゴリーを保存しました：%(list)s"
 
 #: participants/views.py
 msgid "No changes were made to the categories."
-msgstr ""
+msgstr "カテゴリーに変更はありませんでした"
 
 #: participants/views.py
 msgid "Speaker Category Eligibility"
-msgstr ""
+msgstr "スピーカーカテゴリー資格"
 
