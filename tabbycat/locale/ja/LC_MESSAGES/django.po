@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:58\n"
+"PO-Revision-Date: 2025-02-15 05:49\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -750,7 +750,7 @@ msgstr "バロットを入力する"
 
 #: templates/nav/round_panel.html
 msgid "Availability"
-msgstr "可用性"
+msgstr "参加・利用状況"
 
 #: templates/nav/round_panel.html
 msgid "Draw"
