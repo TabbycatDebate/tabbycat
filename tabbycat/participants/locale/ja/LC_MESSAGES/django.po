@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:59\n"
+"PO-Revision-Date: 2025-02-15 05:49\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -121,11 +121,11 @@ msgstr ""
 
 #: participants/models.py
 msgid "sequence number"
-msgstr ""
+msgstr "順番"
 
 #: participants/models.py
 msgid "The order in which the categories are displayed"
-msgstr ""
+msgstr "カテゴリーの表示される順番"
 
 #: participants/models.py
 msgid "limit"
@@ -261,7 +261,7 @@ msgstr ""
 
 #: participants/models.py
 msgid "break categories"
-msgstr ""
+msgstr "ブレイクカテゴリー"
 
 #: participants/models.py
 msgid "seed"
@@ -277,7 +277,7 @@ msgstr "大学・団体コンフリクト"
 
 #: participants/models.py
 msgid "none"
-msgstr ""
+msgstr "なし"
 
 #: participants/models.py
 msgid "swing"
