@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-05 17:11\n"
+"PO-Revision-Date: 2025-02-15 07:22\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -64,23 +64,23 @@ msgstr ""
 
 #: ../../features/team-code-names.rst:49
 msgid "Do not use code names"
-msgstr ""
+msgstr "コード名を使用しない"
 
 #: ../../features/team-code-names.rst:50
 msgid "Use real names everywhere, and show code names in tooltips"
-msgstr ""
+msgstr "本名を使用・ヒントにコード名を表示"
 
 #: ../../features/team-code-names.rst:51
 msgid "Use code names for public; real names with code names in tooltips for admins"
-msgstr ""
+msgstr "公にはコード名を使用・管理者のヒントにはコード名付きの本名を使用"
 
 #: ../../features/team-code-names.rst:52
 msgid "Use code names for public; code names with real names in tooltips for admins"
-msgstr ""
+msgstr "公にはコード名を使用・管理者のヒントには本名付きのコード名を使用"
 
 #: ../../features/team-code-names.rst:53
 msgid "Use code names everywhere; do not use tooltips (real names show in some admin views)"
-msgstr ""
+msgstr "コード名のみを使用・ヒントなし（但し一部のページでは管理者に見えます）"
 
 #: ../../features/team-code-names.rst:55
 msgid "\"Code names in tooltips\" means that the code name will display in the details box that appears when you roll over a team's name, and similarly for real names."
