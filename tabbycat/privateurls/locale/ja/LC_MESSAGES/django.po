@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:53\n"
+"PO-Revision-Date: 2025-02-15 07:22\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -20,64 +20,64 @@ msgstr ""
 
 #: privateurls/apps.py
 msgid "Private URL Management"
-msgstr "プライベートURL管理"
+msgstr "Private URL管理"
 
 #: privateurls/templates/private_urls.html privateurls/views.py
 msgid "Private URLs"
-msgstr ""
+msgstr "Private URL"
 
 #: privateurls/templates/private_urls.html
 msgid "The private URLs for ballot and/or feedback submission from participants are given below."
-msgstr ""
+msgstr "参加者がバロット・フィードバック提出に使用するPrivate URLは以下の通りです。"
 
 #: privateurls/templates/private_urls.html
 msgid "Private URLs are used to allow participants to submit ballots and/or feedback online. You should use them if you have a means of distributing crazy-looking URLs to participants, and are too worried about fraud to use a publicly accessible page where <em>anyone</em> can enter <em>any</em> submission. The URLs will look something like this:"
-msgstr ""
+msgstr "Private URLは参加者がオンラインでバロット・フィードバックを提出するのに使用されます。変なURLを参加者に配布する手段があり、<strong>誰でも何でも</strong>送信できる公開フォームページでは不正が怖い場合に使用するべきです。Private URLはこのような感じのリンクになります："
 
 #: privateurls/templates/private_urls.html
 msgid "Anyone with the URL can access the relevant data entry page. The idea is that it's hard to guess another key (the random-looking string), so you should make each URL accessible only to the participant in question. <a href=\"https://tabbycat.readthedocs.io/en/latest/features/data-entry.html#private-urls\"> Read more about private URLs.</a>"
-msgstr ""
+msgstr "このリンクを持っている人は全員関連したデータ入力ページにアクセスできます。ただし、他の人のキー（ランダムな文字列）を当てるのは難しいため、該当の参加者にのみリンクを共有すれば問題ないでしょう。<a href=\"https://tabbycat.readthedocs.io/en/latest/features/data-entry.html#private-urls\">Private URLについてより詳しく知りたい場合はこちら。</a>"
 
 #: privateurls/templates/private_urls.html
 #, python-format
 msgid "Neither <strong>participant ballot submissions</strong>, <strong>participant feedback submissions</strong>, nor <strong>participant self-checkins</strong> are configured to be from private URLs. Any generated URLs will not be useful unless you configure those settings accordingly on the <a href=\"%(data_entry_options_url)s\">tournament configuration page</a>."
-msgstr ""
+msgstr "Private URLからの<strong>バロット提出、フィードバック提出、セルフチェックイン</strong>のいずれも有効になっていません。<a href=\"%(data_entry_options_url)s\">設定ページ</a>で設定しない限り、URLを配布する意味がありません。"
 
 #: privateurls/templates/private_urls.html
 msgid "There are no private URLs assigned."
-msgstr "プライベートURLが割り当てられていません。"
+msgstr "Private URLが割り当てられていません。"
 
 #: privateurls/templates/private_urls.html
 msgid "Generate Private URLs"
-msgstr ""
+msgstr "Private URLを発行"
 
 #: privateurls/templates/private_urls_nav.html
 msgid "View URLs"
-msgstr "URLを表示する"
+msgstr "URLを表示"
 
 #: privateurls/templates/private_urls_nav.html
 msgid "Print Teams' URLs"
-msgstr ""
+msgstr "チームのURLを印刷"
 
 #: privateurls/templates/private_urls_nav.html
 msgid "Print Adjudicators' URLs"
-msgstr ""
+msgstr "ジャッジのURLを印刷"
 
 #: privateurls/templates/private_urls_nav.html
 msgid "All reachable participants have already been sent their private URLs."
-msgstr ""
+msgstr "連絡可能な参加者には全員既にPrivate URLを送信してあります。"
 
 #: privateurls/templates/private_urls_nav.html
 msgid "Email URLs"
-msgstr ""
+msgstr "URLをメール送信"
 
 #: privateurls/templates/private_urls_nav.html
 msgid "This button only generates private URLs for participants who do not already have one."
-msgstr "このボタンはまだプライベートURLを保有していない参加者分を作成します。"
+msgstr "まだPrivate URLがない人の分を発行します。"
 
 #: privateurls/templates/private_urls_nav.html
 msgid "Generate URLs"
-msgstr ""
+msgstr "URLを発行"
 
 #: privateurls/templates/private_urls_nav.html
 msgid "All participants already have private URLs."
@@ -85,12 +85,12 @@ msgstr "すべての参加者にプライベートURLが割り当てられてい
 
 #: privateurls/templates/public_url_landing.html
 msgid "Private URL"
-msgstr ""
+msgstr "Private URL"
 
 #: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "for %(name)s"
-msgstr ""
+msgstr "%(name)s用"
 
 #: privateurls/templates/public_url_landing.html
 #, python-format
@@ -100,52 +100,52 @@ msgstr ""
 #: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can submit results and/or feedback for your debates. You may bookmark this page and return here after each debate for the available actions."
-msgstr ""
+msgstr "これはあなた（%(name)s）個人用にカスタマイズされたURLです。<strong>他人に共有しないでください</strong>ーこのURLを持っている人なら誰でもあなたの試合の結果・フィードバックを送信できてしまいます。ブックマークをして試合終了後に戻って来れます。"
 
 #: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "Revoke check-in from %(check_time)s"
-msgstr ""
+msgstr "%(check_time)sのチェックインを取り消す"
 
 #: privateurls/templates/public_url_landing.html
 msgid "Check in"
-msgstr ""
+msgstr "チェックインする"
 
 #. Translators: Include the full-stop; English doesn't because "a.m." already has a full stop.
 #: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "You have been checked in at %(check_time)s"
-msgstr ""
+msgstr "%(check_time)sにチェックインしました"
 
 #: privateurls/templates/public_url_landing.html
 msgid "You are not currently checked in."
-msgstr ""
+msgstr "現在チェックインが完了していません。"
 
 #: privateurls/templates/public_url_landing.html
 msgid "Show barcode for check-in"
-msgstr ""
+msgstr "チェックイン用のバーコードを表示"
 
 #: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "Submit Ballot for %(round)s"
-msgstr ""
+msgstr "%(round)sのバロットを提出"
 
 #: privateurls/templates/public_url_landing.html
 msgid "Submit Feedback"
-msgstr ""
+msgstr "フィードバックを提出"
 
 #: privateurls/templates/public_url_landing.html
 #, python-format
 msgid "Registration (%(name)s)"
-msgstr ""
+msgstr "登録内容（%(name)s）"
 
 #: privateurls/views.py
 msgid "no URL"
-msgstr "URL なし"
+msgstr "URLなし"
 
 #: privateurls/views.py
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: privateurls/views.py
 msgid "Speakers"
@@ -157,25 +157,25 @@ msgstr "ジャッジ"
 
 #: privateurls/views.py
 msgid "All participants already have private URLs. If you want to delete them, use the Edit Database area."
-msgstr ""
+msgstr "すでにすべての参加者にPrivate URLが発行されています。削除したければ、データベース編集エリアから削除してください。"
 
 #: privateurls/views.py
 #, python-format
 msgid "A private URL was generated for %(nblank_people)d person."
 msgid_plural "Private URLs were generated for all %(nblank_people)d people."
-msgstr[0] ""
+msgstr[0] "%(nblank_people)d人分のPrivate URLを発行しました。"
 
 #: privateurls/views.py
 #, python-format
 msgid "The already-existing private URL for %(nexisting_people)d person was left intact."
 msgid_plural "The already-existing private URLs for %(nexisting_people)d people were left intact."
-msgstr[0] ""
+msgstr[0] "既に存在する%(nexisting_people)d人分のPrivate URLに変更はありません。"
 
 #: privateurls/views.py
 msgid "URL Key"
-msgstr ""
+msgstr "URLキー"
 
 #: privateurls/views.py
 msgid "Debates"
-msgstr ""
+msgstr "試合"
 
