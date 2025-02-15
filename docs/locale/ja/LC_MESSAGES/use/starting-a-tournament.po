@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2025-02-15 07:22\n"
+"PO-Revision-Date: 2025-02-15 10:33\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -60,15 +60,15 @@ msgstr ":ref:`adjudicator-feedback`に記述されているように、ジャッ
 
 #: ../../use/starting-a-tournament.rst:30
 msgid "Authentication and Authorisation > Users"
-msgstr ""
+msgstr "認証と認可 > ユーザー"
 
 #: ../../use/starting-a-tournament.rst:28
 msgid "Here you can add new admin users (those with full access) as well as new assistant users those (who can only do common data-entry tasks but not edit or view the full tab interface). See :ref:`user-accounts` for information on how to do this."
-msgstr ""
+msgstr "ここでは、新しい管理者ユーザー（フルアクセス権を持つユーザー）と新しいアシスタントユーザー（一般的なデータ入力タスクは行えるがすべてのインターフェースの編集や表示はできないユーザー）を追加できます。これを行う方法については :ref:`user-accounts`を参照してください。"
 
 #: ../../use/starting-a-tournament.rst:30
 msgid "The people you're adding accounts for should be physically present when you do this, so that they can enter their password."
-msgstr ""
+msgstr "アカウントを作成する対象の人は、アカウントを作成するときにパスワードを要求されるので物理的に傍にいるべきです。"
 
 #: ../../use/starting-a-tournament.rst:33
 msgid "Participants > Regions"
@@ -76,15 +76,15 @@ msgstr ""
 
 #: ../../use/starting-a-tournament.rst:33
 msgid "Optionally, each institution may belong to a *Region*. An institution's region is used within the adjudicator allocation process to visually identify teams and adjudicators for the purposes of highlighting diversity issues.  These have traditionally been used for geographic regions (such as Oceania), although could be repurposed as arbitrary markers of information — for example they could be used to denote teams from a particular State, institutional size, or circuit."
-msgstr ""
+msgstr "各インステは任意で**地域**に所属できます。ダイバーシティーを確保するために、チーム・ジャッジの所属するインステの地域はジャッジの配置の際に視覚的に表示されます。通常、地理的な地域（オセアニア地域など）の表示に使用されますが、任意の情報のマーカーとしてもしようできますー例えば、特定の国、インステサイズやサーキット出身のチームを表示するために使用できます。"
 
 #: ../../use/starting-a-tournament.rst:41
 msgid "Participants > Adjudicators"
-msgstr ""
+msgstr "参加者 > ジャッジ"
 
 #: ../../use/starting-a-tournament.rst:36
 msgid "An adjudicators *Base Score* represents their relative ability to judge important rooms, where adjudicators with higher numbers will, relative to the other adjudicators, be placed in better roles (ie as Chairs) and in the rooms you deem most important in each round. If you are running a small tournament, and plan to do your allocations manually, you can set everyone's number to the same amount."
-msgstr ""
+msgstr "ジャッジの**ベーススコア**は重要なラウンドを審査できる相対的な能力を示します。点数の高いジャッジは他のジャッジに比べ、より良い役職（すなわち、チェア）やより重要とみなされる試合にアロケされます。小さな大会を運営しておりアロケを手動で行う場合、全員の点数を同じ値にしても問題ありません。"
 
 #: ../../use/starting-a-tournament.rst:37
 msgid "For larger tournaments, particularly those that collect feedback, see the :ref:`adjudicator-feedback` section for more information on how base scores and other variables influence the automated allocation process."
