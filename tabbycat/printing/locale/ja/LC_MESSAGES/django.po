@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 01:00\n"
+"PO-Revision-Date: 2025-02-15 07:22\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -25,71 +25,71 @@ msgstr "フィードバックフォーム"
 #: printing/templates/feedback_list.html
 #, python-format
 msgid "Printable Feedback Forms for %(round)s"
-msgstr ""
+msgstr "%(round)sの印刷用フィードバックフォーム"
 
 #: printing/templates/feedback_list.html
 msgid "No feedback questions have been added for either teams or adjudicators to answer."
-msgstr ""
+msgstr "チーム・ジャッジへの質問がありません。"
 
 #: printing/templates/feedback_list.html
 msgid "No feedback questions have been added for teams to answer."
-msgstr "チームのフィードバックには質問はありません。"
+msgstr "チームへの質問がありません。"
 
 #: printing/templates/feedback_list.html
 msgid "No feedback questions have been added for adjudicators to answer."
-msgstr "ジャッジのフィードバックには質問はありません。"
+msgstr "ジャッジへの質問がありません。"
 
 #: printing/templates/feedback_list.html
 #, python-format
 msgid "%(first_sentence)s Check the <a href=\"https://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html\" target=\"_blank\">documentation</a> for information on how to add these (otherwise these forms will be quite bare)."
-msgstr ""
+msgstr "%(first_sentence)s追加方法については、<a href=\"https://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html\" target=\"_blank\">ドキュメンテーション</a>を参照してください。"
 
 #: printing/templates/feedback_list.html
 msgid "There are no feedback sheets available — perhaps adjudicators have not been allocated?"
-msgstr ""
+msgstr "フィードバックシートがありません。ジャッジが配置されていない可能性があります。"
 
 #: printing/templates/printables_list.html
 msgid "Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate <strong>page orientation</strong>, to turn off <strong>headers/footers</strong> and turn on <strong>background graphics</strong>. Works best in Chrome."
-msgstr "Ctrl+PでPDFとして保存ができます。まだ途中"
+msgstr "Ctrl+Pで印刷またはPDFとして保存できます。適切な<strong>ページの向き</strong>を設定し、<strong>ヘッダー/フッター</strong>をオフにし、<strong>背景グラフィック</strong>をオンにしてください。Chromeが最適です。"
 
 #: printing/templates/randomised_url_sheets.html
 #, python-format
 msgid "Printable %(sheet)s URLs"
-msgstr ""
+msgstr "印刷可能な%(sheet)s URL"
 
 #: printing/templates/randomised_url_sheets.html
 msgid "This page is designed to be printed as double-sided A4 sheets, with the outside facing side showing the participant name and the inside facing side showing the URL. Use CTRL-P to print; for best results use Chrome."
-msgstr ""
+msgstr "A4で両面印刷するようにデザインされています。外側には参加者名、内側にはURLが表示されます。印刷するにはCtrl+Pを使用してください。Chrome推奨。"
 
 #: printing/templates/randomised_url_sheets.html
 #, python-format
 msgid "Private URL for %(name)s (%(group)s)"
-msgstr ""
+msgstr "%(name)s（%(group)s）のPrivate URL"
 
 #: printing/templates/randomised_url_sheets.html
 msgid "Please bookmark the following URL, you will use it to submit forms throughout the tournament:"
-msgstr ""
+msgstr "以下のURLをブックマークに追加してください（大会中フォームの送信に使います）："
 
 #: printing/templates/scoresheet_list.html
 msgid "Printable Scoresheets"
-msgstr ""
+msgstr "印刷用スコアシート"
 
 #: printing/templates/scoresheet_list.html
 #, python-format
 msgid "for %(round)s"
-msgstr ""
+msgstr "%(round)s用"
 
 #: printing/templates/scoresheet_list.html
 msgid "Edit Motion(s)"
-msgstr ""
+msgstr "論題を編集"
 
 #: printing/templates/scoresheet_list.html
 msgid "There are no scoresheets available — perhaps the round has not been drawn?"
-msgstr "表示できるスコアシートがありません。……もしかすると、ラウンドがまだ設定されていないのかもしれません。"
+msgstr "スコアシートがありません。ラウンドの対戦表が生成されていない可能性があります。"
 
 #: printing/templates/scoresheet_list.html
 msgid "Edit Ballot Motions"
-msgstr ""
+msgstr "バロットの論題を編集"
 
 #: printing/templates/scoresheet_list.html
 msgid "&times;"
@@ -97,19 +97,19 @@ msgstr ""
 
 #: printing/templates/scoresheet_list.html
 msgid "Editing motions here will not save them permanently — it will only update the text used in the printed ballots below. This can be useful if using placeholder motions (to ensure confidentiality) in Tabbycat, but you still want to print ballots with correct motions."
-msgstr ""
+msgstr "ここでの編集は一時的なもので、下の印刷用のバロットの論題の文章にのみ適用されます。（機密保持のために）仮の論題を入力していて、正しい論題をバロットに印刷したい場合に便利です。"
 
 #: printing/templates/scoresheet_list.html
 msgid "Motion"
-msgstr ""
+msgstr "論題"
 
 #: printing/templates/scoresheet_list.html
 msgid "Changes to motions will update in the displayed ballots automatically"
-msgstr ""
+msgstr "論題を編集すると自動的にバロットの表示に反映されます"
 
 #: printing/templates/scoresheet_list.html
 msgid "Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication."
-msgstr ""
+msgstr "スピーチはx分、スピーカースコアの範囲はx～xです。x分間で投票先を決めてください。"
 
 #: printing/views.py
 msgid "Overall Score"
@@ -117,7 +117,7 @@ msgstr "合計点数"
 
 #: printing/views.py
 msgid "Unaffiliated"
-msgstr ""
+msgstr "無所属"
 
 #: printing/views.py
 msgid "Team"
