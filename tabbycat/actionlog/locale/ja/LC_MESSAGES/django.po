@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:53\n"
+"PO-Revision-Date: 2025-02-15 07:22\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -27,11 +27,11 @@ msgstr "ジャッジのブレイク状況を変更"
 
 #: actionlog/models.py
 msgid "Created adjudicator"
-msgstr ""
+msgstr "ジャッジを作成"
 
 #: actionlog/models.py
 msgid "Edited adjudicator"
-msgstr ""
+msgstr "ジャッジを編集"
 
 #: actionlog/models.py
 msgid "Set adjudicator note"
@@ -51,7 +51,7 @@ msgstr "ジャッジの有効/非有効を編集"
 
 #: actionlog/models.py
 msgid "Edited availability"
-msgstr ""
+msgstr "参加・利用状況を編集"
 
 #: actionlog/models.py
 msgid "Edited teams availability"
@@ -91,7 +91,7 @@ msgstr "編集済ブレイクカテゴリー"
 
 #: actionlog/models.py
 msgid "Deleted team break for category"
-msgstr ""
+msgstr "カテゴリーのチームブレイクを削除"
 
 #: actionlog/models.py
 msgid "Edited breaking team remarks"
@@ -107,7 +107,7 @@ msgstr "作成済みの全カテゴリーにおけるチームブレイク"
 
 #: actionlog/models.py
 msgid "Generated the team break for one category"
-msgstr ""
+msgstr "カテゴリーのチームブレイクを生成"
 
 #: actionlog/models.py
 msgid "Edited breaking team remarks and updated all team breaks"
@@ -147,11 +147,11 @@ msgstr "チーム・インスティチューション間のコンフリクトを
 
 #: actionlog/models.py
 msgid "Created debate"
-msgstr ""
+msgstr "試合を生成"
 
 #: actionlog/models.py
 msgid "Edited debate"
-msgstr ""
+msgstr "試合を編集"
 
 #: actionlog/models.py
 msgid "Auto-prioritized debate importance"
@@ -187,11 +187,11 @@ msgstr "未公開の対戦表"
 
 #: actionlog/models.py
 msgid "Created feedback question"
-msgstr ""
+msgstr "フィードバックの質問事項を作成"
 
 #: actionlog/models.py
 msgid "Edited feedback question"
-msgstr ""
+msgstr "フィードバックの質問事項を編集"
 
 #: actionlog/models.py
 msgid "Saved feedback"
@@ -203,11 +203,11 @@ msgstr "パブリックフォームから提出されたフィードバック一
 
 #: actionlog/models.py
 msgid "Created institution"
-msgstr ""
+msgstr "インステを作成"
 
 #: actionlog/models.py
 msgid "Edited institution"
-msgstr ""
+msgstr "インステを編集"
 
 #: actionlog/models.py
 msgid "Saved a matchup manual edit"
@@ -247,7 +247,7 @@ msgstr "事前作成されたパネルをディベートに自動配置しまし
 
 #: actionlog/models.py
 msgid "Deleted preformed panels"
-msgstr ""
+msgstr "事前設定されたパネルを削除"
 
 #: actionlog/models.py
 msgid "Auto-prioritized preformed panels"
@@ -267,11 +267,11 @@ msgstr "ラウンドを完了したとして記録しました"
 
 #: actionlog/models.py
 msgid "Created round"
-msgstr ""
+msgstr "ラウンドを作成"
 
 #: actionlog/models.py
 msgid "Edited round"
-msgstr ""
+msgstr "ラウンドを編集"
 
 #: actionlog/models.py
 msgid "Set start time"
@@ -303,11 +303,11 @@ msgstr "編集済みスピーカーカテゴリー"
 
 #: actionlog/models.py
 msgid "Created speaker"
-msgstr ""
+msgstr "スピーカーを作成"
 
 #: actionlog/models.py
 msgid "Edited speaker"
-msgstr ""
+msgstr "スピーカーを編集"
 
 #: actionlog/models.py
 msgid "Edited speaker category eligibility"
@@ -315,11 +315,11 @@ msgstr "スピーカーカテゴリーのブレイク資格を編集"
 
 #: actionlog/models.py
 msgid "Created team"
-msgstr ""
+msgstr "チームを作成"
 
 #: actionlog/models.py
 msgid "Edited team"
-msgstr ""
+msgstr "チームを編集"
 
 #: actionlog/models.py
 msgid "Edited adjudicator base score"
@@ -327,11 +327,11 @@ msgstr "編集済みのジャッジの基礎スコア"
 
 #: actionlog/models.py
 msgid "Created tournament"
-msgstr ""
+msgstr "大会を作成"
 
 #: actionlog/models.py
 msgid "Edited tournament"
-msgstr ""
+msgstr "大会を編集"
 
 #: actionlog/models.py
 msgid "Updated adjudicator scores in bulk"
@@ -339,7 +339,7 @@ msgstr "ジャッジスコアを一括で更新しました"
 
 #: actionlog/models.py
 msgid "Invited user to the instance"
-msgstr ""
+msgstr "ユーザーをインスタンスに招待"
 
 #: actionlog/models.py
 msgid "Edited room categories"
@@ -347,7 +347,7 @@ msgstr "編集済みのラウンド部屋カテゴリー"
 
 #: actionlog/models.py
 msgid "Created room category"
-msgstr ""
+msgstr "部屋カテゴリーを作成"
 
 #: actionlog/models.py
 msgid "Edited room constraints"
@@ -355,11 +355,11 @@ msgstr "会場の各種制約を編集しました"
 
 #: actionlog/models.py
 msgid "Created room"
-msgstr ""
+msgstr "部屋を作成"
 
 #: actionlog/models.py
 msgid "Edited room"
-msgstr ""
+msgstr "部屋を編集"
 
 #: actionlog/models.py
 msgid "Auto-allocated rooms"
@@ -371,11 +371,11 @@ msgstr "会場のマニュアル編集を保存しました"
 
 #: actionlog/models.py
 msgid "API"
-msgstr ""
+msgstr "API"
 
 #: actionlog/models.py
 msgid "Web"
-msgstr ""
+msgstr "Web"
 
 #: actionlog/models.py
 msgid "type"
@@ -411,7 +411,7 @@ msgstr "オブジェクトID"
 
 #: actionlog/models.py
 msgid "agent"
-msgstr ""
+msgstr "エージェント"
 
 #: actionlog/models.py
 msgid "action log"
