@@ -133,6 +133,7 @@ class FeedbackOverview(AdministratorMixin, BaseFeedbackOverview):
         table.add_breaking_checkbox(adjudicators)
         table.add_weighted_score_columns(adjudicators, scores)
         table.add_base_score_columns(adjudicators, editable=True)
+        table.add_feedback_only_columns(adjudicators)
         table.add_score_difference_columns(adjudicators, scores)
         table.add_score_variance_columns(adjudicators)
         table.add_feedback_graphs(adjudicators)

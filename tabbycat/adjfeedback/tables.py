@@ -74,6 +74,19 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
         self.add_column(test_header, test_data)
 
+    def add_feedback_only_columns(self, adjudicators):
+        feedback_header = {
+            'key': 'feedback-only',
+            'icon': 'file',
+            'tooltip': _("Feedback average"),
+        }
+        feedback_data = [{
+            'text': adj.feedback_score,
+            'tooltip': _("This adjudicator's feedback average"),
+        } for adj in adjudicators]
+
+        self.add_column(feedback_header, feedback_data)
+
     def add_score_difference_columns(self, adjudicators, scores):
         diff_header = {
             'key': 'score-difference',
