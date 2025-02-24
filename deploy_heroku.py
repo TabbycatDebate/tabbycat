@@ -170,11 +170,6 @@ match = re.search(r"https://([\w_-]+?)(?:-\w{12})?\.herokuapp\.com/\s+\|\s+(http
 urlname = match.group(1)
 heroku_url = match.group(2)
 
-# Set build packs
-run_heroku_command(["buildpacks:set", "https://github.com/heroku/heroku-buildpack-nginx.git"])
-run_heroku_command(["buildpacks:add", "heroku/nodejs"])
-run_heroku_command(["buildpacks:add", "heroku/python"])
-
 # Set config variables
 command = ["config:set", "DISABLE_COLLECTSTATIC=1", "ON_HEROKU=1", "USING_NGINX=1"]
 secret_key = get_random_secret_key()
@@ -196,6 +191,11 @@ if args.time_zone:
     command.append("TIME_ZONE=%s" % args.time_zone)
 
 run_heroku_command(command)
+
+# Set build packs
+run_heroku_command(["buildpacks:set", "https://github.com/heroku/heroku-buildpack-nginx.git"])
+run_heroku_command(["buildpacks:add", "heroku/nodejs"])
+run_heroku_command(["buildpacks:add", "heroku/python"])
 
 # Set up a remote, if applicable
 if args.git_remote:
@@ -233,11 +233,6 @@ if args.import_tournament:
     if args.tournament_short_name:
         command += ["--short-name", args.tournament_short_name]
     run_heroku_command(command)
-
-# Create superuser
-print_yellow("Now creating a superuser for the Heroku site.")
-print_yellow("You'll need to respond to the prompts:")
-run_heroku_command(["run", "python", "tabbycat/manage.py", "createsuperuser"])
 
 # Open in browser
 if args.open:

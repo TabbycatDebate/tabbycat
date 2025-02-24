@@ -1321,26 +1321,8 @@ class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
     update_permission = Permission.EDIT_PREFORMEDPANELS
     destroy_permission = Permission.EDIT_PREFORMEDPANELS
 
-    @property
-    def debate(self):
-        if hasattr(self, '_debate'):
-            return self._debate
-
-        self._debate = get_object_or_404(PreformedPanel, pk=self.kwargs.get('debate_pk'))
-        return self._debate
-
-    def lookup_kwargs(self):
-        return {'debate': self.debate}
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['debate'] = self.debate
-        return context
-
     def get_queryset(self):
         return super().get_queryset().select_related('round', 'round__tournament').prefetch_related(
-            'debateteam_set', 'debateteam_set__team', 'debateteam_set__team__tournament',
-            'preformedpaneladjudicator_set', 'preformedpaneladjudicator_set__adjudicator',
             'preformedpaneladjudicator_set__adjudicator__tournament',
         )
 

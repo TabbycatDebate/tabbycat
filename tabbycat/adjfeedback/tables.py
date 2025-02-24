@@ -139,10 +139,10 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'text': ngettext(
                 "View %(count)s<br>feedback",
                 "View %(count)s<br>feedbacks",
-                len(adj.feedback_data) - 1,
-            ) % {'count': len(adj.feedback_data) - 1}, # -1 to account for base score
+                adj.feedback_count,
+            ) % {'count': adj.feedback_count}, # -1 to account for base score
             'class': 'view-feedback',
-            'sort': len(adj.feedback_data) - 1,
+            'sort': adj.feedback_count,
             'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.pk}),
         } for adj in adjudicators]
         self.add_column(link_head, link_cell)
