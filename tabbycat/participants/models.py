@@ -10,7 +10,7 @@ from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
-from registration.models import BooleanAnswer, FloatAnswer, IntegerAnswer, ManyAnswer, QuestionMixin, StringAnswer
+from registration.models import Answer
 from utils.managers import LookupByNameFieldsMixin
 from utils.models import UniqueConstraint
 
@@ -64,7 +64,7 @@ class Institution(models.Model):
         return str(self.name)
 
 
-class TournamentInstitution(QuestionMixin, models.Model):
+class TournamentInstitution(models.Model):
     tournament = models.ForeignKey(
         "tournaments.Tournament", models.CASCADE, verbose_name=_("tournament"),
     )
@@ -82,11 +82,7 @@ class TournamentInstitution(QuestionMixin, models.Model):
         verbose_name=_("Adjudicator slots allocated"),
     )
 
-    string_answers = GenericRelation(StringAnswer)
-    many_answers = GenericRelation(ManyAnswer)
-    integer_answers = GenericRelation(IntegerAnswer)
-    float_answers = GenericRelation(FloatAnswer)
-    boolean_answers = GenericRelation(BooleanAnswer)
+    answers = GenericRelation(Answer)
 
     class Meta:
         constraints = [
@@ -133,7 +129,7 @@ class SpeakerCategory(models.Model):
         return "[{}] {}".format(self.tournament.slug, self.name)
 
 
-class Person(QuestionMixin, models.Model):
+class Person(models.Model):
     name = models.CharField(max_length=70, db_index=True,
         verbose_name=_("name"))
     email = models.EmailField(blank=True, null=True,
@@ -163,11 +159,7 @@ class Person(QuestionMixin, models.Model):
         verbose_name=_("pronoun"),
         help_text=_("If printing ballots using Tabbycat, there is the option to pre-print pronouns"))
 
-    string_answers = GenericRelation(StringAnswer)
-    many_answers = GenericRelation(ManyAnswer)
-    integer_answers = GenericRelation(IntegerAnswer)
-    float_answers = GenericRelation(FloatAnswer)
-    boolean_answers = GenericRelation(BooleanAnswer)
+    answers = GenericRelation(Answer)
 
     class Meta:
         verbose_name = _("person")
@@ -214,7 +206,7 @@ class TeamManager(LookupByNameFieldsMixin, models.Manager):
         return super().get_queryset().select_related('institution')
 
 
-class Team(QuestionMixin, models.Model):
+class Team(models.Model):
     reference = models.CharField(blank=True, max_length=150,
         verbose_name=_("full name/suffix"),
         help_text=_("Do not include institution name (see \"uses institutional prefix\" below)"))
@@ -271,11 +263,7 @@ class Team(QuestionMixin, models.Model):
         blank=True, null=True,   # uses null=True to allow multiple teams to have no emoji
         verbose_name=_("emoji"))
 
-    string_answers = GenericRelation(StringAnswer)
-    many_answers = GenericRelation(ManyAnswer)
-    integer_answers = GenericRelation(IntegerAnswer)
-    float_answers = GenericRelation(FloatAnswer)
-    boolean_answers = GenericRelation(BooleanAnswer)
+    answers = GenericRelation(Answer)
 
     class Meta:
         constraints = [

@@ -2,13 +2,9 @@ from django.contrib import admin
 
 from utils.admin import ModelAdmin
 
-from .models import BooleanAnswer, FloatAnswer, IntegerAnswer, ManyAnswer, StringAnswer
+from .models import Answer
 
 
-@admin.register(BooleanAnswer)
-@admin.register(FloatAnswer)
-@admin.register(IntegerAnswer)
-@admin.register(ManyAnswer)
-@admin.register(StringAnswer)
+@admin.register(Answer)
 class AnswerAdmin(ModelAdmin):
     list_display = ('question', 'answer', 'content_object')

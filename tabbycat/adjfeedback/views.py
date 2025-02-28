@@ -217,9 +217,9 @@ class FeedbackMixin(TournamentMixin):
         populate_wins_for_debateteams([f.source_team for f in feedbacks if f.source_team is not None])
 
         # Can't prefetch an abstract model effectively; so get all answers...
-        questions = list(self.tournament.adj_feedback_questions.prefetch_related(*AdjudicatorFeedbackQuestion.answer_type_rels))
+        questions = list(self.tournament.adj_feedback_questions.prefetch_related('answer_set'))
         if self.only_comments:
-            long_text = AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT
+            long_text = AdjudicatorFeedbackQuestion.AnswerType.LONGTEXT
             questions = [q for q in questions if q.answer_type == long_text]
 
         for question in questions:

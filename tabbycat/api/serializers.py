@@ -16,7 +16,7 @@ from rest_framework.fields import get_error_detail, SkipField
 from rest_framework.settings import api_settings
 
 from adjallocation.models import DebateAdjudicator, PreformedPanel
-from adjfeedback.models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion, Question
+from adjfeedback.models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory, BreakingTeam
 from draw.manager import DrawManager
 from draw.models import Debate, DebateTeam
@@ -27,6 +27,7 @@ from participants.emoji import pick_unused_emoji
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
 from participants.utils import populate_code_names
 from privateurls.utils import populate_url_keys
+from registration.models import Answer, Question
 from results.models import BallotSubmission, ScoreCriterion, SpeakerScore, Submission, TeamScore
 from results.result import DebateResult, ResultError
 from standings.speakers import SpeakerStandingsGenerator
@@ -556,8 +557,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
         # Create answers
         for answer in answers:
             question = answer['question']
-            model = Question.ANSWER_TYPE_CLASSES[question.answer_type]
-            obj = model(question=question, content_object=speaker, answer=answer['answer'])
+            obj = Answer(question=question, content_object=speaker, answer=answer['answer'])
             try:
                 obj.save()
             except TypeError as e:
@@ -682,8 +682,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         # Create answers
         for answer in answers:
             question = answer['question']
-            model = Question.ANSWER_TYPE_CLASSES[question.answer_type]
-            obj = model(question=question, content_object=adj, answer=answer['answer'])
+            obj = Answer(question=question, content_object=adj, answer=answer['answer'])
             try:
                 obj.save()
             except TypeError as e:
@@ -849,8 +848,7 @@ class TeamSerializer(serializers.ModelSerializer):
         # Create answers
         for answer in answers:
             question = answer['question']
-            model = Question.ANSWER_TYPE_CLASSES[question.answer_type]
-            obj = model(question=question, content_object=team, answer=answer['answer'])
+            obj = Answer(question=question, content_object=team, answer=answer['answer'])
             try:
                 obj.save()
             except TypeError as e:
@@ -1258,8 +1256,7 @@ class FeedbackSerializer(serializers.ModelSerializer):
         # Create answers
         for answer in answers:
             question = answer['question']
-            model = AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[question.answer_type]
-            obj = model(question=question, content_object=feedback, answer=answer['answer'])
+            obj = Answer(question=question, content_object=feedback, answer=answer['answer'])
             try:
                 obj.save()
             except TypeError as e:

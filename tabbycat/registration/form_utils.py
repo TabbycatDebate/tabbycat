@@ -1,3 +1,4 @@
+import json
 import logging
 
 from django import forms
@@ -69,15 +70,15 @@ class CustomQuestionsFormMixin:
 
     def _make_question_field(self, question):
         match question.answer_type:
-            case question.ANSWER_TYPE_BOOLEAN_SELECT:
+            case question.AnswerType.BOOLEAN_SELECT:
                 field = BooleanSelectField()
-            case question.ANSWER_TYPE_BOOLEAN_CHECKBOX:
+            case question.AnswerType.BOOLEAN_CHECKBOX:
                 field = forms.BooleanField(required=False)
-            case question.ANSWER_TYPE_INTEGER_TEXTBOX:
+            case question.AnswerType.INTEGER_TEXTBOX:
                 min_value = int(question.min_value) if question.min_value else None
                 max_value = int(question.max_value) if question.max_value else None
                 field = forms.IntegerField(min_value=min_value, max_value=max_value)
-            case question.ANSWER_TYPE_INTEGER_SCALE:
+            case question.AnswerType.INTEGER_SCALE:
                 min_value = int(question.min_value) if question.min_value is not None else None
                 max_value = int(question.max_value) if question.max_value is not None else None
                 if min_value is None or max_value is None:
@@ -85,20 +86,20 @@ class CustomQuestionsFormMixin:
                     field = forms.IntegerField()
                 else:
                     field = IntegerScaleField(min_value=min_value, max_value=max_value)
-            case question.ANSWER_TYPE_FLOAT:
+            case question.AnswerType.FLOAT:
                 field = forms.FloatField(min_value=question.min_value, max_value=question.max_value)
-            case question.ANSWER_TYPE_TEXT:
+            case question.AnswerType.TEXT:
                 field = forms.CharField()
-            case question.ANSWER_TYPE_LONGTEXT:
+            case question.AnswerType.LONGTEXT:
                 field = forms.CharField(widget=forms.Textarea)
-            case question.ANSWER_TYPE_SINGLE_SELECT:
+            case question.AnswerType.SINGLE_SELECT:
                 field = OptionalChoiceField(choices=question.choices_for_field)
-            case question.ANSWER_TYPE_MULTIPLE_SELECT:
+            case question.AnswerType.MULTIPLE_SELECT:
                 field = forms.MultipleChoiceField(choices=question.choices_for_field, widget=BlockCheckboxWidget())
         field.label = question.text
 
         # Required checkbox fields don't really make sense; so override the behaviour?
-        if question.answer_type is not question.ANSWER_TYPE_BOOLEAN_CHECKBOX:
+        if question.answer_type is not question.AnswerType.BOOLEAN_CHECKBOX:
             if question.required:
                 field.label += "*"
             field.required = self._enforce_required and question.required
@@ -108,5 +109,8 @@ class CustomQuestionsFormMixin:
     def save_answers(self, obj):
         for question in self.get_custom_question_queryset():
             response = self.cleaned_data[self.question_field_name(question)]
-            if response is not None and response != "":
-                question.answer_type_class(content_object=obj, question=question, answer=response).save()
+            if response is not None:
+                if question.answer_type is question.AnswerType.MULTIPLE_SELECT:
+                    response = json.dumps(response)
+                if response != "":
+                    question.answer_set.create(content_object=obj, answer=response)

@@ -6,7 +6,7 @@ from django.utils.html import escape
 from django.utils.translation import gettext, gettext_lazy as _
 
 from adjallocation.models import DebateAdjudicator
-from registration.models import BooleanAnswer, FloatAnswer, IntegerAnswer, ManyAnswer, Question, QuestionMixin, StringAnswer
+from registration.models import Answer, Question
 from results.models import Submission
 from utils.models import UniqueConstraint
 
@@ -61,7 +61,7 @@ class AdjudicatorFeedbackQuestion(Question):
         return question
 
 
-class AdjudicatorFeedback(QuestionMixin, Submission):
+class AdjudicatorFeedback(Submission):
     adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE, db_index=True,
         verbose_name=_("adjudicator"))
     score = models.FloatField(verbose_name=_("score"))
@@ -76,11 +76,7 @@ class AdjudicatorFeedback(QuestionMixin, Submission):
         verbose_name=_("ignored"),
         help_text=_("Whether the feedback should affect the adjudicator's score"))
 
-    string_answers = GenericRelation(StringAnswer)
-    many_answers = GenericRelation(ManyAnswer)
-    integer_answers = GenericRelation(IntegerAnswer)
-    float_answers = GenericRelation(FloatAnswer)
-    boolean_answers = GenericRelation(BooleanAnswer)
+    answers = GenericRelation(Answer)
 
     class Meta:
         constraints = [

@@ -15,6 +15,7 @@ from options.presets import (AustralianEastersPreferences, AustralsPreferences, 
                              UADCPreferences, WSDCPreferences)
 from participants.emoji import EMOJI_BY_NAME
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
+from registration.models import Answer
 from results.models import BallotSubmission, Submission
 from results.prefetch import populate_confirmed_ballots, populate_wins
 from results.result import DebateResult
@@ -246,7 +247,7 @@ class Exporter:
 
                 for question in self.t.adjudicatorfeedbackquestion_set.all():
                     try:
-                        answer = AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[question.answer_type].objects.get(
+                        answer = Answer.objects.get(
                             feedback=feedback,
                             question=question,
                         )
@@ -676,8 +677,5 @@ class Importer:
                     question = self.questions[answer.get('question')]
 
                     cast_answer = answer.text
-                    # if question.answer_type in AdjudicatorFeedbackQuestion.NUMERICAL_ANSWER_TYPES:
-                    #     cast_answer = float(cast_answer)
-
-                    answer = AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[question.answer_type](
+                    answer = Answer(
                         question=question, answer=cast_answer, feedback=feedback_obj)

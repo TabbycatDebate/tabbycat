@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _, ngettext
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
 from draw.models import DebateTeam
+from registration.models import Answer
 from utils.admin import custom_titled_filter, ModelAdmin
 
 from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
@@ -37,7 +38,7 @@ class QuestionForm(forms.ModelForm):
         exclude = ('for_content_type',)
 
     def clean(self):
-        integer_scale = AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE
+        integer_scale = AdjudicatorFeedbackQuestion.AnswerType.INTEGER_SCALE
         if self.cleaned_data.get('answer_type') == integer_scale:
             if not self.cleaned_data.get('min_value') or not self.cleaned_data.get('max_value'):
                 raise forms.ValidationError(_("Integer scales must have a minimum and maximum"))
@@ -62,16 +63,15 @@ class AdjudicatorFeedbackQuestionAdmin(DynamicArrayMixin, ModelAdmin):
 # ==============================================================================
 
 
-class BaseAdjudicatorFeedbackAnswerInline(GenericTabularInline):
-    model = None  # Must be set by subclasses
+class AdjudicatorFeedbackAnswerInline(GenericTabularInline):
+    model = Answer
     fields = ('question', 'answer')
     extra = 1
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "question":
-            kwargs["queryset"] = AdjudicatorFeedbackQuestion.objects.filter(
-                answer_type__in=AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE[self.model])
-        return super(BaseAdjudicatorFeedbackAnswerInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
+            kwargs["queryset"] = AdjudicatorFeedbackQuestion.objects.all()
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 class RoundListFilter(admin.SimpleListFilter):
@@ -104,6 +104,7 @@ class AdjudicatorFeedbackAdmin(ModelAdmin):
         ('source_adjudicator__adjudicator__name', custom_titled_filter(_('source adjudicator'))),
         ('source_team__team__short_name', custom_titled_filter(_('source team'))),
     )
+    inlines       = [AdjudicatorFeedbackAnswerInline]
     actions       = ('mark_as_confirmed', 'mark_as_unconfirmed', 'ignore_feedback', 'recognize_feedback')
 
     def get_queryset(self, request):
@@ -124,14 +125,6 @@ class AdjudicatorFeedbackAdmin(ModelAdmin):
             return "<ERROR: both source team and source adjudicator>"
         else:
             return obj.source_team or obj.source_adjudicator
-
-    # Dynamically generate inline tables for different answer types
-    inlines = []
-    for _answer_type_class in AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE:
-        _inline_class = type(
-            _answer_type_class.__name__ + "Inline", (BaseAdjudicatorFeedbackAnswerInline,),
-            {"model": _answer_type_class, "__module__": __name__})
-        inlines.append(_inline_class)
 
     def mark_as_confirmed(self, request, queryset):
         original_count = queryset.count()

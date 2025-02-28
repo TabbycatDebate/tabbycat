@@ -153,248 +153,7 @@ class Migration(migrations.Migration):
                     },
                 ),
                 migrations.CreateModel(
-                    name="ManyAnswer",
-                    fields=[
-                        (
-                            "id",
-                            models.BigAutoField(
-                                auto_created=True,
-                                primary_key=True,
-                                serialize=False,
-                                verbose_name="ID",
-                            ),
-                        ),
-                        ("object_id", models.PositiveIntegerField(verbose_name="object id")),
-                        (
-                            "answer",
-                            django_better_admin_arrayfield.models.fields.ArrayField(
-                                base_field=models.TextField(), size=None
-                            ),
-                        ),
-                        (
-                            "content_type",
-                            models.ForeignKey(
-                                limit_choices_to=models.Q(
-                                    models.Q(
-                                        ("app_label", "adjfeedback"),
-                                        ("model", "adjudicatorfeedback"),
-                                    ),
-                                    models.Q(
-                                        ("app_label", "participants"),
-                                        ("model", "tournamentinstitution"),
-                                    ),
-                                    models.Q(
-                                        ("app_label", "participants"), ("model", "speaker")
-                                    ),
-                                    models.Q(
-                                        ("app_label", "participants"), ("model", "adjudicator")
-                                    ),
-                                    models.Q(("app_label", "participants"), ("model", "coach")),
-                                    models.Q(
-                                        ("app_label", "participants"), ("model", "person")
-                                    ),
-                                    models.Q(("app_label", "participants"), ("model", "team")),
-                                    _connector="OR",
-                                ),
-                                on_delete=django.db.models.deletion.CASCADE,
-                                to="contenttypes.contenttype",
-                                verbose_name="content type",
-                            ),
-                        ),
-                        (
-                            "question",
-                            models.ForeignKey(
-                                on_delete=django.db.models.deletion.CASCADE,
-                                to="registration.question",
-                                verbose_name="question",
-                            ),
-                        ),
-                    ],
-                    options={
-                        "verbose_name": "multiple select answer",
-                        "verbose_name_plural": "multiple select answers",
-                        "abstract": False,
-                    },
-                ),
-                migrations.CreateModel(
-                    name="IntegerAnswer",
-                    fields=[
-                        (
-                            "id",
-                            models.BigAutoField(
-                                auto_created=True,
-                                primary_key=True,
-                                serialize=False,
-                                verbose_name="ID",
-                            ),
-                        ),
-                        ("object_id", models.PositiveIntegerField(verbose_name="object id")),
-                        ("answer", models.IntegerField(verbose_name="answer")),
-                        (
-                            "content_type",
-                            models.ForeignKey(
-                                limit_choices_to=models.Q(
-                                    models.Q(
-                                        ("app_label", "adjfeedback"),
-                                        ("model", "adjudicatorfeedback"),
-                                    ),
-                                    models.Q(
-                                        ("app_label", "participants"),
-                                        ("model", "tournamentinstitution"),
-                                    ),
-                                    models.Q(
-                                        ("app_label", "participants"), ("model", "speaker")
-                                    ),
-                                    models.Q(
-                                        ("app_label", "participants"), ("model", "adjudicator")
-                                    ),
-                                    models.Q(("app_label", "participants"), ("model", "coach")),
-                                    models.Q(
-                                        ("app_label", "participants"), ("model", "person")
-                                    ),
-                                    models.Q(("app_label", "participants"), ("model", "team")),
-                                    _connector="OR",
-                                ),
-                                on_delete=django.db.models.deletion.CASCADE,
-                                to="contenttypes.contenttype",
-                                verbose_name="content type",
-                            ),
-                        ),
-                        (
-                            "question",
-                            models.ForeignKey(
-                                on_delete=django.db.models.deletion.CASCADE,
-                                to="registration.question",
-                                verbose_name="question",
-                            ),
-                        ),
-                    ],
-                    options={
-                        "verbose_name": "integer answer",
-                        "verbose_name_plural": "integer answers",
-                        "abstract": False,
-                    },
-                ),
-                migrations.CreateModel(
-                    name="FloatAnswer",
-                    fields=[
-                        (
-                            "id",
-                            models.BigAutoField(
-                                auto_created=True,
-                                primary_key=True,
-                                serialize=False,
-                                verbose_name="ID",
-                            ),
-                        ),
-                        ("object_id", models.PositiveIntegerField(verbose_name="object id")),
-                        ("answer", models.FloatField(verbose_name="answer")),
-                        (
-                            "content_type",
-                            models.ForeignKey(
-                                limit_choices_to=models.Q(
-                                    models.Q(
-                                        ("app_label", "adjfeedback"),
-                                        ("model", "adjudicatorfeedback"),
-                                    ),
-                                    models.Q(
-                                        ("app_label", "participants"),
-                                        ("model", "tournamentinstitution"),
-                                    ),
-                                    models.Q(
-                                        ("app_label", "participants"), ("model", "speaker")
-                                    ),
-                                    models.Q(
-                                        ("app_label", "participants"), ("model", "adjudicator")
-                                    ),
-                                    models.Q(("app_label", "participants"), ("model", "coach")),
-                                    models.Q(
-                                        ("app_label", "participants"), ("model", "person")
-                                    ),
-                                    models.Q(("app_label", "participants"), ("model", "team")),
-                                    _connector="OR",
-                                ),
-                                on_delete=django.db.models.deletion.CASCADE,
-                                to="contenttypes.contenttype",
-                                verbose_name="content type",
-                            ),
-                        ),
-                        (
-                            "question",
-                            models.ForeignKey(
-                                on_delete=django.db.models.deletion.CASCADE,
-                                to="registration.question",
-                                verbose_name="question",
-                            ),
-                        ),
-                    ],
-                    options={
-                        "verbose_name": "float answer",
-                        "verbose_name_plural": "float answers",
-                        "abstract": False,
-                    },
-                ),
-                migrations.CreateModel(
-                    name="BooleanAnswer",
-                    fields=[
-                        (
-                            "id",
-                            models.BigAutoField(
-                                auto_created=True,
-                                primary_key=True,
-                                serialize=False,
-                                verbose_name="ID",
-                            ),
-                        ),
-                        ("object_id", models.PositiveIntegerField(verbose_name="object id")),
-                        ("answer", models.BooleanField(verbose_name="answer")),
-                        (
-                            "content_type",
-                            models.ForeignKey(
-                                limit_choices_to=models.Q(
-                                    models.Q(
-                                        ("app_label", "adjfeedback"),
-                                        ("model", "adjudicatorfeedback"),
-                                    ),
-                                    models.Q(
-                                        ("app_label", "participants"),
-                                        ("model", "tournamentinstitution"),
-                                    ),
-                                    models.Q(
-                                        ("app_label", "participants"), ("model", "speaker")
-                                    ),
-                                    models.Q(
-                                        ("app_label", "participants"), ("model", "adjudicator")
-                                    ),
-                                    models.Q(("app_label", "participants"), ("model", "coach")),
-                                    models.Q(
-                                        ("app_label", "participants"), ("model", "person")
-                                    ),
-                                    models.Q(("app_label", "participants"), ("model", "team")),
-                                    _connector="OR",
-                                ),
-                                on_delete=django.db.models.deletion.CASCADE,
-                                to="contenttypes.contenttype",
-                                verbose_name="content type",
-                            ),
-                        ),
-                        (
-                            "question",
-                            models.ForeignKey(
-                                on_delete=django.db.models.deletion.CASCADE,
-                                to="registration.question",
-                                verbose_name="question",
-                            ),
-                        ),
-                    ],
-                    options={
-                        "verbose_name": "boolean answer",
-                        "verbose_name_plural": "boolean answers",
-                        "abstract": False,
-                    },
-                ),
-                migrations.CreateModel(
-                    name="StringAnswer",
+                    name="Answer",
                     fields=[
                         (
                             "id",
@@ -452,51 +211,41 @@ class Migration(migrations.Migration):
                         "abstract": False,
                     },
                 ),
-                migrations.AddConstraint(
-                    model_name="manyanswer",
-                    constraint=utils.models.UniqueConstraint(
-                        fields=("question", "content_type", "object_id"),
-                        name="registr_manyanswer_question__content_type__object_id_uniq",
-                    ),
-                ),
-                migrations.AddConstraint(
-                    model_name="integeranswer",
-                    constraint=utils.models.UniqueConstraint(
-                        fields=("question", "content_type", "object_id"),
-                        name="registr_integeranswer_question__content_type__object_id_uniq",
-                    ),
-                ),
-                migrations.AddConstraint(
-                    model_name="floatanswer",
-                    constraint=utils.models.UniqueConstraint(
-                        fields=("question", "content_type", "object_id"),
-                        name="registr_floatanswer_question__content_type__object_id_uniq",
-                    ),
-                ),
-                migrations.AddConstraint(
-                    model_name="booleananswer",
-                    constraint=utils.models.UniqueConstraint(
-                        fields=("question", "content_type", "object_id"),
-                        name="registr_booleananswer_question__content_type__object_id_uniq",
-                    ),
-                ),
-                migrations.AddConstraint(
-                    model_name="stringanswer",
-                    constraint=utils.models.UniqueConstraint(
-                        fields=("question", "content_type", "object_id"),
-                        name="registr_stringanswer_question__content_type__object_id_uniq",
-                    ),
-                ),
             ],
         ),
         migrations.SeparateDatabaseAndState(
             database_operations=[
                 migrations.RunSQL(
-                    f"ALTER INDEX adjfeed_{table}_question__content_type__object_id_uniq RENAME TO registr_{table}_question__content_type__object_id_uniq;",
-                    f"ALTER INDEX registr_{table}_question__content_type__object_id_uniq RENAME TO adjfeed_{table}_question__content_type__object_id_uniq;",
-                )
-                for table in ('booleananswer', 'floatanswer', 'integeranswer', 'manyanswer', 'stringanswer')
+                    f"ALTER INDEX adjfeed_stringanswer_question__content_type__object_id_uniq RENAME TO registr_answer_question__content_type__object_id_uniq;",
+                    f"ALTER INDEX registr_answer_question__content_type__object_id_uniq RENAME TO adjfeed_stringanswer_question__content_type__object_id_uniq;",
+                ),
             ],
-            state_operations=[]
+            state_operations=[
+                migrations.AddConstraint(
+                    model_name="answer",
+                    constraint=utils.models.UniqueConstraint(
+                        fields=("question", "content_type", "object_id"),
+                        name="registr_answer_question__content_type__object_id_uniq",
+                    ),
+                ),
+            ]
+        ),
+        migrations.AlterModelOptions(
+            name="answer",
+            options={"verbose_name": "answer", "verbose_name_plural": "answers"},
+        ),
+        migrations.AddIndex(
+            model_name="answer",
+            index=models.Index(
+                fields=["content_type", "object_id"],
+                name="registratio_content_ac834a_idx",
+            ),
+        ),
+        migrations.AddConstraint(
+            model_name="question",
+            constraint=utils.models.UniqueConstraint(
+                fields=("tournament", "for_content_type", "seq"),
+                name="registr_question_tournament__for_content_type__seq_uniq",
+            ),
         ),
     ]

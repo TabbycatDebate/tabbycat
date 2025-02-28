@@ -335,15 +335,15 @@ class AnswerSerializer(Serializer):
 
     def validate(self, data):
         # Convert answer to correct type
-        model = Question.ANSWER_TYPE_CLASSES[data['question'].answer_type]
-        if type(data['answer']) != model.ANSWER_TYPE:
-            raise ValidationError({'answer': 'The answer must be of type %s' % model.ANSWER_TYPE.__name__})
+        typ = Question.ANSWER_TYPE_TYPES[data['question'].answer_type]
+        if type(data['answer']) != typ:
+            raise ValidationError({'answer': 'The answer must be of type %s' % typ.__name__})
 
-        data['answer'] = model.ANSWER_TYPE(data['answer'])
+        data['answer'] = typ(data['answer'])
 
         option_error = ValidationError({'answer': 'Answer must be in set of options'})
         if len(data['question'].choices) > 0:
-            if model.ANSWER_TYPE is list and len(set(data['answer']) - set(data['question'].choices)) > 0:
+            if typ is list and len(set(data['answer']) - set(data['question'].choices)) > 0:
                 raise option_error
             if data['answer'] not in data['question'].choices:
                 raise option_error

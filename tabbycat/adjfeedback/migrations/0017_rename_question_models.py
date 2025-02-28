@@ -10,53 +10,56 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RenameModel(
+            old_name="StringAnswer",
+            new_name="Answer",
+        ),
+        migrations.RunSQL(
+            "INSERT INTO adjfeedback_answer (content_type_id, object_id, question_id, answer) SELECT content_type_id, object_id, question_id, CASE answer WHEN 't' THEN 'True' WHEN 'f' THEN 'False' ELSE 'None' END AS answer FROM adjfeedback_booleananswer;",
+            "INSERT INTO adjfeedback_booleananswer (content_type_id, object_id, question_id, answer) SELECT a.content_type_id, a.object_id, a.question_id, CASE a.answer WHEN 'True' THEN 't' WHEN 'False' THEN 'f' ELSE NULL END AS answer FROM adjfeedback_answer a INNER JOIN adjfeedback_question q ON a.question_id=q.id WHERE q.answer_type IN ('bc', 'bs');",
+        ),
+        migrations.RunSQL(
+            "INSERT INTO adjfeedback_answer (content_type_id, object_id, question_id, answer) SELECT content_type_id, object_id, question_id, answer::text AS answer FROM adjfeedback_integeranswer;",
+            "INSERT INTO adjfeedback_integeranswer (content_type_id, object_id, question_id, answer) SELECT a.content_type_id, a.object_id, a.question_id, a.answer::int FROM adjfeedback_answer a INNER JOIN adjfeedback_question q ON a.question_id=q.id WHERE q.answer_type IN ('i', 'is');",
+        ),
+        migrations.RunSQL(
+            "INSERT INTO adjfeedback_answer (content_type_id, object_id, question_id, answer) SELECT content_type_id, object_id, question_id, answer::text AS answer FROM adjfeedback_floatanswer;",
+            "INSERT INTO adjfeedback_floatanswer (content_type_id, object_id, question_id, answer) SELECT a.content_type_id, a.object_id, a.question_id, a.answer::float FROM adjfeedback_answer a INNER JOIN adjfeedback_question q ON a.question_id=q.id WHERE q.answer_type='f';",
+        ),
+        migrations.RunSQL(
+            "INSERT INTO adjfeedback_answer (content_type_id, object_id, question_id, answer) SELECT content_type_id, object_id, question_id, array_to_json(answer) AS answer FROM adjfeedback_manyanswer;",
+            "INSERT INTO adjfeedback_manyanswer (content_type_id, object_id, question_id, answer) SELECT a.content_type_id, a.object_id, a.question_id, array_agg(vals) FROM adjfeedback_answer a INNER JOIN adjfeedback_question q ON a.question_id=q.id CROSS JOIN json_array_elements(a.answer) val(vals) WHERE q.answer_type='ms' GROUP BY a.id;",
+        ),
+        migrations.DeleteModel(
+            name="BooleanAnswer",
+        ),
+        migrations.DeleteModel(
+            name="FloatAnswer",
+        ),
+        migrations.DeleteModel(
+            name="IntegerAnswer",
+        ),
+        migrations.DeleteModel(
+            name="ManyAnswer",
+        ),
         migrations.SeparateDatabaseAndState(
             database_operations=[
                 migrations.AlterModelTable(
-                    name=table,
-                    table=f'registration_{table}',
-                )
-                for table in ('booleananswer', 'floatanswer', 'integeranswer', 'manyanswer', 'stringanswer', 'question')
+                    name='question',
+                    table='registration_question',
+                ),
+                migrations.AlterModelTable(
+                    name='answer',
+                    table='registration_answer',
+                ),
             ],
             state_operations=[
                 migrations.RemoveField(
-                    model_name="booleananswer",
-                    name="content_type",
-                ),
-                migrations.RemoveField(
-                    model_name="booleananswer",
+                    model_name="answer",
                     name="question",
                 ),
                 migrations.RemoveField(
-                    model_name="floatanswer",
-                    name="content_type",
-                ),
-                migrations.RemoveField(
-                    model_name="floatanswer",
-                    name="question",
-                ),
-                migrations.RemoveField(
-                    model_name="integeranswer",
-                    name="content_type",
-                ),
-                migrations.RemoveField(
-                    model_name="integeranswer",
-                    name="question",
-                ),
-                migrations.RemoveField(
-                    model_name="manyanswer",
-                    name="content_type",
-                ),
-                migrations.RemoveField(
-                    model_name="manyanswer",
-                    name="question",
-                ),
-                migrations.RemoveField(
-                    model_name="stringanswer",
-                    name="question",
-                ),
-                migrations.RemoveField(
-                    model_name="stringanswer",
+                    model_name="answer",
                     name="content_type",
                 ),
                 migrations.RemoveField(
@@ -68,22 +71,10 @@ class Migration(migrations.Migration):
                     name="tournament",
                 ),
                 migrations.DeleteModel(
-                    name="booleananswer",
-                ),
-                migrations.DeleteModel(
-                    name="floatanswer",
-                ),
-                migrations.DeleteModel(
-                    name="integeranswer",
-                ),
-                migrations.DeleteModel(
-                    name="manyanswer",
-                ),
-                migrations.DeleteModel(
                     name="Question",
                 ),
                 migrations.DeleteModel(
-                    name="stringanswer",
+                    name="answer",
                 ),
             ],
         ),
