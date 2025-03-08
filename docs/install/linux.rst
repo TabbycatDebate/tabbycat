@@ -33,7 +33,7 @@ Short version
   cd tabbycat
   git checkout master
   sudo -u postgres createuser myusername --createdb --pwprompt       # skip if not first time
-  createdb -O myusername mydatabasename                              # -O designates the owner of the database
+  sudo -u postgres createdb -O myusername mydatabasename             # -O designates the owner of the database
 
 Then create **settings/local.py** as described :ref:`below <local-settings-linux>`, then::
 
@@ -165,7 +165,7 @@ a. Create a new user account with a password, replacing ``myusername`` with what
 
 b. Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running, and replace ``myusername`` with the username you used in the previous command::
 
-    $ createdb -O myusername mydatabasename
+    $ sudo -u postgres createdb -O myusername mydatabasename
 
 
 .. _install-linux-tabbycat:
