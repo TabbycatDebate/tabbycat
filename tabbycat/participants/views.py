@@ -292,6 +292,9 @@ class TeamRecordView(AdministratorMixin, BaseTeamRecordView):
             'teaminstitutionconflict_set__institution',
             'adjudicatorteamconflict_set__adjudicator',
             'venue_constraints__category',
+            'answers__question',
+            'break_categories',
+            Prefetch('speaker_set', queryset=Speaker.objects.all().prefetch_related('answers__question', 'categories')),
         )
 
 
@@ -304,6 +307,7 @@ class AdjudicatorRecordView(AdministratorMixin, BaseAdjudicatorRecordView):
             'adjudicatorinstitutionconflict_set__institution',
             'adjudicatorteamconflict_set__team',
             'venue_constraints__category',
+            'answers__question',
         )
 
 

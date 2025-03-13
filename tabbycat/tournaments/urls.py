@@ -25,6 +25,7 @@ urlpatterns = [
     path('results/',                include('results.urls_public')),
     path('standings/',              include('standings.urls_public')),
     path('tab/',                    include('standings.urls_public')),
+    path('registration/',           include('registration.urls_public')),
 
     # Application URLs for admin pages
     path('admin/allocations/',      include('adjallocation.urls')),
@@ -44,6 +45,7 @@ urlpatterns = [
     path('admin/standings/',        include('standings.urls_admin')),
     path('admin/users/',            include('users.urls_admin')),
     path('admin/venues/',           include('venues.urls_admin')),
+    path('admin/registration/',     include('registration.urls_admin')),
 
     # Application URLs for assistant pages
     path('assistant/feedback/',     include('adjfeedback.urls_assistant')),

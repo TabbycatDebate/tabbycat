@@ -74,12 +74,13 @@ class TournamentInstitution(models.Model):
     teams_requested = models.PositiveIntegerField(
         verbose_name=_("Team slots requested"),
     )
-    teams_allocated = models.PositiveIntegerField(verbose_name=_("Team slots allocated"))
+    teams_allocated = models.PositiveIntegerField(verbose_name=_("Team slots allocated"), default=0)
     adjudicators_requested = models.PositiveIntegerField(
         verbose_name=_("Adjudicator slots requested"),
     )
     adjudicators_allocated = models.PositiveIntegerField(
         verbose_name=_("Adjudicator slots allocated"),
+        default=0,
     )
 
     answers = GenericRelation(Answer)
@@ -92,7 +93,7 @@ class TournamentInstitution(models.Model):
         verbose_name_plural = _("tournament institutions")
 
     def __str__(self):
-        return "%s (%s)" % (self.name, self.tournament.short_name)
+        return "%s (%s)" % (self.institution.name, self.tournament.short_name)
 
 
 class SpeakerCategory(models.Model):
@@ -189,14 +190,14 @@ class Coach(Person):
         verbose_name_plural = _("coaches")
 
     def __str__(self):
-        if self.institution is None:
+        if self.tournament_institution.institution is None:
             return self.name
         else:
-            return "%s (%s)" % (self.name, self.institution.code)
+            return "%s (%s)" % (self.name, self.tournament_institution.institution.code)
 
     @property
     def region(self):
-        return self.institution.region if self.institution else None
+        return self.tournament_institution.institution.region if self.tournament_institution else None
 
 
 class TeamManager(LookupByNameFieldsMixin, models.Manager):
@@ -387,13 +388,13 @@ class Team(models.Model):
             errors['institution'] = _("Teams must have an institution if they are using the institutional prefix.")
         if not self.use_institution_prefix and not self.reference:
             errors['reference'] = _("Teams must have a full name if they don't use the institutional prefix.")
-        if not self.use_institution_prefix and not self.short_reference:
-            errors['short_reference'] = _("Teams must have a short name if they don't use the institutional prefix.")
         if errors:
             raise ValidationError(errors)
 
     def save(self, *args, **kwargs):
         # Override the short and long names before saving
+        if self.short_reference is None:
+            self.short_reference = self.reference[:35]
         self.short_name = self._construct_short_name()
         self.long_name = self._construct_long_name()
         super().save(*args, **kwargs)

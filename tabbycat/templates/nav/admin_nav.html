@@ -109,6 +109,27 @@
     </div>
   {% endif %}
 
+  <div class="list-group-item d-inline-block">
+    <a href="#setuph" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false">
+       <i data-feather="pen-tool"></i>
+       <span class="d-none d-md-inline">{% trans "Registration" %}</span>
+       <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
+       <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
+    </a>
+    <div class="collapse" id="setuph">
+      <a href="{% tournamenturl 'reg-institution-list' %}"
+         class="list-group-item" data-parent="#setuph">
+        <span class="circle-icon small-circle"></span><i data-feather="home"></i>{% trans "Institutions" %}
+      </a>
+      <a href="{% tournamenturl 'reg-team-list' %}" class="list-group-item" data-parent="#setuph">
+        <span class="circle-icon small-circle"></span><i data-feather="users"></i>{% trans "Teams" %}
+      </a>
+      <a href="{% tournamenturl 'reg-adjudicator-list' %}"
+         class="list-group-item" data-parent="#setuph">
+        <span class="circle-icon small-circle"></span><i data-feather="columns"></i>{% trans "Adjudicators" %}
+      </a>
+    </div>
+  </div>
 
   <div class="list-group-item d-inline-block">
     <a href="#checkinh" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"

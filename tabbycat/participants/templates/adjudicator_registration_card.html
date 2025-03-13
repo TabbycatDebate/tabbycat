@@ -47,6 +47,22 @@
     {% if admin_page %}
       <div class="list-group-item list-group-item-secondary">
         <div>
+          <strong>{% trans "Custom Questions:" %}</strong>
+
+          <details>
+            <summary>{{ adjudicator.name }}</summary>
+
+            <ul>
+              {% for answer in adjudicator.answers.all %}
+                <li><strong>{{ answer.question.name }}</strong>: {{ answer.answer }}</li>
+              {% endfor %}
+            </ul>
+          </details>
+        </div>
+      </div>
+
+      <div class="list-group-item list-group-item-secondary">
+        <div>
           <strong>{% trans "Institutional Conflicts:" %}</strong>
           {% for ic in adjudicator.adjudicatorinstitutionconflict_set.all %}
             {{ ic.institution.name }}{% if not forloop.last %}{% trans "; " %}{% endif %}

@@ -1781,6 +1781,7 @@ EMOJI_FIELD_CHOICES = [(emoji, emoji + " " + name) for emoji, _, name in EMOJI_L
 
 # The random options are a reduced set
 EMOJI_RANDOM_OPTIONS = [(emoji, name) for emoji, include, name in EMOJI_LIST if include]
+EMOJI_RANDOM_FIELD_CHOICES = [(emoji, emoji + " " + name) for emoji, include, name in EMOJI_LIST if include]
 
 EMOJI_NAMES = {emoji: name for emoji, _, name in EMOJI_LIST}
 

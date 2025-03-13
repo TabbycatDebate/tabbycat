@@ -8,6 +8,13 @@ register = template.Library()
 
 
 @register.simple_tag(takes_context=True)
+def team_name(context, team, admin):
+    if use_team_code_names(context['tournament'], admin, user=context['user']):
+        return team.code_name
+    return team.short_name
+
+
+@register.simple_tag(takes_context=True)
 def team_record_link(context, team, admin, style=True):
     """Team record links are used often, so this template tag just reduces
     clutter in templates, in particular in translated strings."""

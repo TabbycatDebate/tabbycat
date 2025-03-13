@@ -1,11 +1,13 @@
 from decimal import Decimal
 
 from django.core.validators import EmailValidator, MinValueValidator, validate_slug
+from django.forms import SelectMultiple
 from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 from dynamic_preferences.preferences import Section
 from dynamic_preferences.registries import global_preferences_registry
-from dynamic_preferences.types import BooleanPreference, ChoicePreference, DecimalPreference, FloatPreference, IntegerPreference, LongStringPreference, StringPreference
+from dynamic_preferences.types import (BooleanPreference, ChoicePreference, DecimalPreference, FloatPreference,
+    IntegerPreference, LongStringPreference, MultipleChoicePreference, StringPreference)
 
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
@@ -1511,3 +1513,80 @@ class EnableAPIAccess(BooleanPreference):
     section = global_settings
     name = 'enable_api'
     default = True
+
+
+# ==============================================================================
+registration = Section('registration', verbose_name=_('Registration'))
+# ==============================================================================
+
+
+@tournament_preferences_registry.register
+class SpeakersInTeam(IntegerPreference):
+    help_text = _("How many speakers should each team have")
+    verbose_name = _("Speakers per team")
+    section = registration
+    name = 'speakers_in_team'
+    default = 3
+
+
+@tournament_preferences_registry.register
+class AutomaticTeamName(ChoicePreference):
+    help_text = _("How should team names be assigned")
+    verbose_name = _("Team name standard")
+    section = registration
+    name = 'team_name_generator'
+    default = 'user'
+    choices = (
+        ('user', _("Assigned by user")),
+        ('alphabetical', _("Alphabetical (Team A, Team B, ...)")),
+        ('numerical', _("Numerical (Team 1, Team 2, ...)")),
+        ('initials', _("Speaker initials (Team CZ, Team BT, ...)")),
+    )
+
+
+@tournament_preferences_registry.register
+class TeamRegistrationFields(MultipleChoicePreference):
+    help_text = _("Which fields should teams be allowed to submit")
+    verbose_name = _("Customizable team fields")
+    section = registration
+    name = 'reg_team_fields'
+    default = ('use_institution_prefix', 'emoji')
+    choices = (
+        ('use_institution_prefix', _('Prefix name with institution')),
+        ('code_name', _("Code name")),
+        ('break_categories', _("Break categories")),
+        ('seed', _("Seed")),
+        ('emoji', _("Emoji")),
+    )
+    widget = SelectMultiple(attrs={'size': 5})
+
+
+@tournament_preferences_registry.register
+class SpeakerRegistrationFields(MultipleChoicePreference):
+    help_text = _("Which fields should speakers be allowed to submit")
+    verbose_name = _("Customizable speaker fields")
+    section = registration
+    name = 'reg_speaker_fields'
+    default = ('email',)
+    choices = (
+        ('email', _("Email address")),
+        ('phone', _("Phone number")),
+        ('gender', _("Gender")),
+        ('categories', _("Public speaker categories")),
+    )
+    widget = SelectMultiple(attrs={'size': 5})
+
+
+@tournament_preferences_registry.register
+class AdjudicatorRegistrationFields(MultipleChoicePreference):
+    help_text = _("Which fields should adjudicators be allowed to submit")
+    verbose_name = _("Customizable adjudicator fields")
+    section = registration
+    name = 'reg_adjudicator_fields'
+    default = ('email',)
+    choices = (
+        ('email', _("Email address")),
+        ('phone', _("Phone number")),
+        ('gender', _("Gender")),
+    )
+    widget = SelectMultiple(attrs={'size': 5})

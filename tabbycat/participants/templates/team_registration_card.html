@@ -1,4 +1,4 @@
-{% load debate_tags i18n %}
+{% load debate_tags participant_link i18n %}
 
 <div class="card mt-md-3">
   <div class="list-group list-group-flush">
@@ -103,6 +103,33 @@
     {% endif %}
 
     {% if admin_page %}
+      <div class="list-group-item list-group-item-secondary">
+        <div>
+          <strong>{% trans "Custom Questions:" %}</strong>
+          <details>
+            <summary><strong>{% team_name team admin_page %}</strong></summary>
+
+            <ul>
+              {% for answer in team.answers.all %}
+                <li><strong>{{ answer.question.name }}</strong>: {{ answer.answer }}</li>
+              {% endfor %}
+            </ul>
+          </details>
+
+          {% for speaker in team.speakers %}
+            <details>
+              <summary>{{ speaker.name }}</summary>
+
+              <ul>
+                {% for answer in speaker.answers.all %}
+                  <li><strong>{{ answer.question.name }}</strong>: {{ answer.answer }}</li>
+                {% endfor %}
+              </ul>
+            </details>
+          {% endfor %}
+        </div>
+      </div>
+
       <div class="list-group-item list-group-item-secondary">
 
         <div>
