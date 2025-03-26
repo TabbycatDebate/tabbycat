@@ -40,10 +40,7 @@ class GraphGeneratorMixin:
             t2_affs, t2_negs = t2.side_history
 
             if self.options["max_times_on_one_side"] > 0:
-                if t1_affs > self.options["max_times_on_one_side"]\
-                   or t1_negs > self.options["max_times_on_one_side"]\
-                   or t2_affs > self.options["max_times_on_one_side"]\
-                   or t2_negs > self.options["max_times_on_one_side"]:
+                if max(t1_affs, t1_negs, t2_affs, t1_negs) > self.options["max_times_on_one_side"]:
                     return None
 
             # Only declare an imbalance if both sides have been on the same side more often
