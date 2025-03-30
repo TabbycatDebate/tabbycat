@@ -994,7 +994,13 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
 
     def get_queryset(self):
         filters = Q()
-        if self.request.query_params.get('confirmed') or not self.request.user.is_staff:
+
+        if isinstance(self.participant_requester, Adjudicator):
+            filters &= Q(debate__debateadjudicator_set__adjudicator_id=self.participant_requester.id)
+        if isinstance(self.participant_requester, Team):
+            filters &= Q(debate__debateteam_set__team_id=self.participant_requester.id)
+
+        if self.request.query_params.get('confirmed') or not (getattr(self.request.user, 'is_staff', False) or self.participant_requester):
             filters &= Q(confirmed=True)
         return super().get_queryset().filter(filters).prefetch_related(
             'debateteammotionpreference_set__motion__tournament',
