@@ -133,7 +133,6 @@ class RoundSerializerTests(CompletedTournamentTestMixin, APITestCase):
             'draw_type': 'P',
             'starts_at': '00:00:00',
         })
-        print(response.data)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(datetime.fromisoformat(response.data['starts_at']), datetime.combine(date.today(), time(0, 0, 0, tzinfo=tz)))
 
@@ -485,7 +484,6 @@ class BallotSerializerTests(APITestCase):
                 }],
             },
         })
-        print(response.data)
         self.assertEqual(response.status_code, 201)
 
     def test_team_not_in_debate(self):
@@ -935,3 +933,86 @@ class BallotSerializerTests(APITestCase):
         })
         self.assertEqual(response.status_code, 400)
         self.assertEqual(str(response.data['result']['sheets'][0]['teams'][0]['non_field_errors'][0]), 'Score must be the sum of speech scores.')
+
+
+class PairingSerializerTests(APITestCase):
+
+    def setUp(self):
+        logging.disable(logging.CRITICAL)
+        self.user = User.objects.create_superuser(username='admin1', password='admin', is_active=True)
+        self.tournament = Tournament.objects.create(slug='apitest')
+        self.round = Round.objects.create(seq=1, tournament=self.tournament)
+
+        CanadianParliamentaryPreferences.save(self.tournament)
+
+        self.t1 = Team.objects.create(tournament=self.tournament, reference='A')
+        self.t2 = Team.objects.create(tournament=self.tournament, reference='B')
+        self.t3 = Team.objects.create(tournament=self.tournament, reference='C')
+
+        self.a1 = Adjudicator.objects.create(name='A1', tournament=self.tournament)
+        self.a2 = Adjudicator.objects.create(name='A2', tournament=self.tournament)
+        self.a3 = Adjudicator.objects.create(name='A3', tournament=self.tournament)
+
+    def tearDown(self):
+        self.round.debate_set.all().delete()
+        self.tournament.actionlogentry_set.all().delete()
+        self.tournament.delete()
+        self.user.delete()
+        logging.disable(logging.NOTSET)
+
+    def test_can_create_pairing_no_sides(self):
+        client = APIClient()
+        client.force_authenticate(user=self.user)
+        response = client.post(reverse_round('api-pairing-list', self.round), {
+            'teams': [
+                {
+                    'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t1.pk}),
+                },
+                {
+                    'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t2.pk}),
+                },
+            ],
+        })
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual([dt.team for dt in self.round.debate_set.prefetch_related('debateteam_set__team').first().debateteam_set.order_by('side')], [self.t1, self.t2])
+
+    def test_can_create_pairing_sides_precedence(self):
+        client = APIClient()
+        client.force_authenticate(user=self.user)
+        response = client.post(reverse_round('api-pairing-list', self.round), {
+            'teams': [
+                {
+                    'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t2.pk}),
+                    'side': 'neg',
+                },
+                {
+                    'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t1.pk}),
+                    'side': 'aff',
+                },
+            ],
+        })
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual([dt.team for dt in self.round.debate_set.prefetch_related('debateteam_set__team').first().debateteam_set.order_by('side')], [self.t1, self.t2])
+
+    def test_can_create_pairing_adjudicators(self):
+        client = APIClient()
+        client.force_authenticate(user=self.user)
+        response = client.post(reverse_round('api-pairing-list', self.round), {
+            'teams': [
+                {
+                    'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t1.pk}),
+                },
+                {
+                    'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t2.pk}),
+                },
+            ],
+            'adjudicators': {
+                'chair': reverse_tournament('api-adjudicator-detail', self.tournament, kwargs={'pk': self.a1.pk}),
+                'panellists': [
+                    reverse_tournament('api-adjudicator-detail', self.tournament, kwargs={'pk': self.a2.pk}),
+                    reverse_tournament('api-adjudicator-detail', self.tournament, kwargs={'pk': self.a3.pk}),
+                ],
+                'trainees': [],
+            },
+        })
+        self.assertEqual(response.status_code, 201)
