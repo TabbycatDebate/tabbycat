@@ -77,7 +77,7 @@ class PerTournamentPermissionRequired(BasePermission):
         }).get(getattr(view, 'action', view.request.method), False)
 
     def has_permission(self, request, view):
-        if not hasattr(view, 'tournament'):
+        if not hasattr(view, 'tournament') or not request.user:
             return True
         perm = self.get_required_permission(view)
         return has_permission(request.user, perm, view.tournament)
