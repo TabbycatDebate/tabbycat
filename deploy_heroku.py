@@ -212,8 +212,8 @@ print_yellow("Waiting for Heroku Redis to provision (may take up to 5 minutes)..
 while not redis_provisioned:
     time.sleep(30)
     redis_output = subprocess.check_output(redis_status_command).decode().split("\n")
-    for stat in redis_output:
-        match = re.match(r"^Status:\s+available","Status: available")
+    for status in redis_output:
+        match = re.match(r"^Status:\s+available",status)
         if match:
             redis_provisioned = True
             break
