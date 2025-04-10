@@ -271,6 +271,12 @@ class BaseSourceField(TournamentHyperlinkedRelatedField):
         except self.model.DoesNotExist:
             self.fail('does_not_exist')
 
+    def get_url_options(self, value, format):
+        for view_name, (model, field) in self.models.items():
+            obj = getattr(value, model.__name__.lower(), None)
+            if obj is not None:
+                return self.get_url(obj, view_name, self.context['request'], format)
+
 
 class ParticipantSourceField(BaseSourceField):
     field_source_name = 'participant_submitter'

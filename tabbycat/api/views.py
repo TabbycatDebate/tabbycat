@@ -10,6 +10,7 @@ from django.db.models import Count, Prefetch, Q
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
 from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.fields import DateTimeField
 from rest_framework.generics import CreateAPIView, GenericAPIView, get_object_or_404, RetrieveUpdateAPIView
@@ -668,10 +669,10 @@ class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
 class PersonCheckinMixin:
     class CustomPermission(BasePermission):
         def has_permission(self, request, view):
-            return view.tournament.pref('participant_ballots') == 'private-urls' and view.participant_requester and request.method != 'POST'
+            return request.user is None or view.tournament.pref('participant_ballots') == 'private-urls' and view.participant_requester and request.method != 'POST'
 
-    authentication_classes = [URLKeyAuthentication]
-    permission_classes = [APIEnabledPermission, CustomPermission | PerTournamentPermissionRequired | IsAdminUser]
+    authentication_classes = [TokenAuthentication, SessionAuthentication, URLKeyAuthentication]
+    permission_classes = [APIEnabledPermission, PerTournamentPermissionRequired, CustomPermission]
 
     @property
     def participant_requester(self):
@@ -1008,7 +1009,7 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
 
     class CustomPermission(BasePermission):
         def has_permission(self, request, view):
-            return (
+            return request.user is None or (
                 (view.action in ['list', 'retrieve', 'create'] and view.tournament.pref('participant_ballots') == 'private-urls' and view.participant_requester) or
                 (view.action == 'create' and view.tournament.pref('participant_ballots') == 'public') or
                 (view.action in ['list', 'retrieve'] and view.tournament.pref('private_ballots_released') is True)
@@ -1020,8 +1021,8 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     tournament_field = 'debate__round__tournament'
     round_field = 'debate__round'
 
-    authentication_classes = [URLKeyAuthentication]
-    permission_classes = [APIEnabledPermission, PublicPreferencePermission | CustomPermission | PerTournamentPermissionRequired]
+    authentication_classes = [TokenAuthentication, SessionAuthentication, URLKeyAuthentication]
+    permission_classes = [APIEnabledPermission, PerTournamentPermissionRequired, PublicPreferencePermission | CustomPermission]
 
     list_permission = Permission.VIEW_BALLOTSUBMISSIONS
     create_permission = Permission.ADD_BALLOTSUBMISSIONS
@@ -1063,11 +1064,11 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
         filters = Q()
 
         if isinstance(self.participant_requester, Adjudicator):
-            filters &= Q(debate__debateadjudicator_set__adjudicator_id=self.participant_requester.id)
+            filters &= Q(debate__debateadjudicator__adjudicator_id=self.participant_requester.id)
         if isinstance(self.participant_requester, Team):
             filters &= Q(debate__debateteam_set__team_id=self.participant_requester.id)
 
-        if self.request.query_params.get('confirmed') or not (self.request.user.is_staff or self.participant_requester):
+        if self.request.query_params.get('confirmed') or not (getattr(self.request.user, 'is_staff', False) or self.participant_requester):
             filters &= Q(confirmed=True)
         return super().get_queryset().filter(filters).prefetch_related(
             'debateteammotionpreference_set__motion__tournament',
@@ -1135,7 +1136,7 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
 
     class CustomPermission(BasePermission):
         def has_permission(self, request, view):
-            return (
+            return request.user is None or (
                 (view.action in ['list', 'retrieve', 'create'] and view.tournament.pref('participant_feedback') == 'private-urls' and view.participant_requester) or
                 (view.action == 'create' and view.tournament.pref('participant_feedback') == 'public')
             )
@@ -1145,8 +1146,8 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     action_log_type_created = ActionLogEntry.ActionType.FEEDBACK_SAVE
     action_log_type_updated = ActionLogEntry.ActionType.FEEDBACK_SAVE
 
-    authentication_classes = [URLKeyAuthentication]
-    permission_classes = [APIEnabledPermission, CustomPermission | PerTournamentPermissionRequired | IsAdminUser]
+    authentication_classes = [TokenAuthentication, SessionAuthentication, URLKeyAuthentication]
+    permission_classes = [APIEnabledPermission, PerTournamentPermissionRequired, CustomPermission]
 
     list_permission = Permission.VIEW_FEEDBACK
     create_permission = Permission.ADD_FEEDBACK
@@ -1399,3 +1400,11 @@ class GroupViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
 )
 class ScoreCriterionViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
     serializer_class = serializers.ScoreCriterionSerializer
+
+
+class ParticipantIdentificationView(TournamentAPIMixin, ModelViewSet):
+    serializer_class = serializers.ParticipantIdentificationSerializer
+    authentication_classes = [URLKeyAuthentication]
+
+    def get_object(self):
+        return self.request.auth
