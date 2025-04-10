@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.postgres.forms import SimpleArrayField
 from django.db.models import Prefetch
 from django.forms import modelformset_factory
 from django.shortcuts import get_object_or_404
@@ -13,6 +14,7 @@ from utils.tables import TabbycatTableBuilder
 from utils.views import ModelFormSetView, VueTableTemplateView
 
 from .forms import AdjudicatorForm, InstitutionCoachForm, SpeakerForm, TeamForm, TournamentInstitutionForm
+from .models import Question
 
 
 class CustomQuestionFormMixin:
@@ -258,4 +260,19 @@ class AdjudicatorRegistrationTableView(TournamentMixin, AdministratorMixin, VueT
 
 
 class CustomQuestionFormsetView(TournamentMixin, AdministratorMixin, ModelFormSetView):
-    pass
+    formset_model = Question
+    formset_factory_kwargs = {
+        'fields': ['name', 'text', 'help_text', 'answer_type', 'required', 'min_value', 'max_value', 'choices'],
+        'field_classes': {'choices': SimpleArrayField},
+    }
+    question_model = None
+    template_name = 'venue_categories_edit.html'
+
+    page_emoji = '❓'
+    page_title = gettext_lazy("Custom Questions")
+
+    def get_page_subtitle(self):
+        return _("for %s") % self.question_model._meta.verbose_name_plural
+
+    def get_formset_queryset(self):
+        return super().get_formset_queryset().filter(for_content_type=ContentType.objects.get_for_model(self.question_model)).order_by('seq')
