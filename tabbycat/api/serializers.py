@@ -1620,3 +1620,29 @@ class ParticipantIdentificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
         fields = '__all__'
+
+
+class FullRoundPairingSerializer(RoundPairingSerializer):
+    confirmed_ballot = BallotSerializer()
+
+
+class FullRoundSerializer(RoundSerializer):
+    pairings = FullRoundPairingSerializer(many=True, source='debate_set')
+    preformed_panels = PreformedPanelSerializer(many=True, source='preformedpanel_set')
+
+
+class FullAdjudicatorSerializer(AdjudicatorSerializer):
+    feedback = FeedbackSerializer(many=True, source='adjudicatorfeedback_set')
+
+
+class FullTournamentSerializer(TournamentSerializer):
+    rounds = FullRoundSerializer(many=True, source='round_set')
+    teams = TeamSerializer(many=True, source='team_set')
+    adjudicators = FullAdjudicatorSerializer(many=True, source='adjudicator_set')
+    break_categories = BreakCategorySerializer(many=True, source='breakcategory_set')
+    speaker_categories = SpeakerCategorySerializer(many=True, source='speakercategory_set')
+    venues = VenueSerializer(many=True, source='venue_set')
+    venue_categories = VenueCategorySerializer(many=True, source='venuecategory_set')
+    score_criteria = ScoreCriterionSerializer(many=True, source='scorecriterion_set')
+    # institutions = InstitutionSerializer(many=True)
+    # feedback_questions = FeedbackQuestionSerializer(many=True, source='question_set')

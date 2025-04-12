@@ -38,6 +38,9 @@ urlpatterns = [
                     views.TournamentViewSet.as_view(detail_methods),
                     name='api-tournament-detail'),
 
+                path('/full', views.FullTournamentViewSet.as_view({'get': 'retrieve'}),
+                    name='api-tournament-full'),
+
                 path('/motions', include([
                     path('',
                         views.MotionViewSet.as_view(list_methods),
