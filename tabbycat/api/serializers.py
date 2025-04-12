@@ -1136,7 +1136,7 @@ class FeedbackSerializer(serializers.ModelSerializer):
     url = fields.AdjudicatorFeedbackIdentityField(view_name='api-feedback-detail')
     adjudicator = fields.TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail', queryset=Adjudicator.objects.all())
     source = SubmitterSourceField(source='*')
-    participant_submitter = fields.ParticipantSourceField(allow_null=True)
+    participant_submitter = fields.ParticipantSourceField(allow_null=True, required=False)
     debate = DebateHyperlinkedRelatedField(view_name='api-pairing-detail', queryset=Debate.objects.all(), lookup_url_kwarg='debate_pk')
     answers = FeedbackAnswerSerializer(many=True, source='get_answers', required=False)
 
@@ -1158,7 +1158,7 @@ class FeedbackSerializer(serializers.ModelSerializer):
         debate = data.pop('debate')
 
         source_type = 'from_team' if isinstance(source, Team) else 'from_adj'
-        required_questions = self.context['tournament'].adjudicatorfeedbackquestion_set.filter(required=True, **{source_type: True})
+        required_questions = AdjudicatorFeedbackQuestion.objects.filter(tournament=self.context['tournament'], required=True, **{source_type: True})
         answers = data.get('get_answers', [])
 
         if len(set(required_questions) - set(a['question'] for a in answers)) > 0:
