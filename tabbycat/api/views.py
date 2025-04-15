@@ -680,7 +680,10 @@ class PersonCheckinMixin:
             return person
 
     def get_queryset(self):
-        return super().get_queryset().filter(id=self.participant_requester.id)
+        p_filter = Q()
+        if self.participant_requester.id is not None:
+            p_filter &= Q(id=self.participant_requester.id)
+        return super().get_queryset().filter(p_filter)
 
 
 @extend_schema(tags=['adjudicators'])
