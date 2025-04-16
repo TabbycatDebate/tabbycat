@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm, UserCreationForm, UsernameField
 from django.utils.translation import gettext_lazy as _
-from users.models import Membership # added 14/5/25 to allow for group membership in the InviteUserForm
+from .models import Membership
 
 
 class SuperuserCreationForm(UserCreationForm):
@@ -42,14 +42,9 @@ class InviteUserForm(PasswordResetForm):
 
         return [user]
 
-
     def save(self, *args, **kwargs):
-        kwargs['extra_email_context'] = {
-            **(kwargs.get('extra_email_context') or {}),
-            'tournament': self.tournament,
-        }
+        kwargs['extra_email_context'] = {**(kwargs['extra_email_context'] or {}), 'tournament': self.tournament}
         return super().save(*args, **kwargs)
-
 
 
 class AcceptInvitationForm(SetPasswordForm):
