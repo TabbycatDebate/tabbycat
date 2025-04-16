@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm, UserCreationForm, UsernameField
 from django.utils.translation import gettext_lazy as _
 
+from .models import Membership
+
 
 class SuperuserCreationForm(UserCreationForm):
     """A form that creates a superuser from the given username and password."""
@@ -34,7 +36,11 @@ class InviteUserForm(PasswordResetForm):
                 'username': email.split("@")[0],
             },
         )
-        user.membership_set.add(group=self.cleaned_data['role'])
+        Membership.objects.get_or_create(
+            user=user,
+            group=self.cleaned_data['role'],
+        )
+
         return [user]
 
     def save(self, *args, **kwargs):
