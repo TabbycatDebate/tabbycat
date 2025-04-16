@@ -937,7 +937,10 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
             elif t == 'ghost':
                 field = form._fieldname_ghost(side, pos)
             elif t == 'winners':
-                field = form._fieldname_declared_winner()
+                if isinstance(form, SingleEliminationBallotSetForm):
+                    field = form._fieldname_advancing()
+                else:
+                    field = form._fieldname_declared_winner()
             elif t == 'scores':
                 field = form._fieldname_score(side, pos)
             elif t == 'speaker_ranks':
@@ -950,24 +953,34 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
         super().populate_objects()
         self.round = self.debate.round
 
-        bses = BallotSubmission.objects.filter(
-            debate=self.debate, participant_submitter__isnull=False, discarded=False, single_adj=True,
-        ).annotate(ordering=Window(Rank(), partition_by="participant_submitter", order_by="-version")).filter(ordering=1).select_related('participant_submitter')
-        populate_results(bses, self.tournament)
-        self.merged_ballots = bses
+        if prefill:
+            bses = BallotSubmission.objects.filter(
+                debate=self.debate, participant_submitter__isnull=False, discarded=False, single_adj=True,
+            ).annotate(ordering=Window(Rank(), partition_by="participant_submitter", order_by="-version")).filter(ordering=1).select_related('participant_submitter')
+            populate_results(bses, self.tournament)
+            self.merged_ballots = bses
 
         # Handle result conflicts
         criteria = ScoreCriterion.objects.filter(tournament=self.tournament)
         self.result = DebateResult(self.ballotsub, tournament=self.tournament, criteria=criteria)
-        self.errors = self.result.populate_from_merge(*[b.result for b in bses])
+        self.errors = self.result.populate_from_merge(*[b.result for b in bses]) if prefill else []
 
-        # Handle motion conflicts
-        bs_motions = BallotSubmission.objects.filter(
-            id__in=[b.id for b in bses], motion__isnull=False,
-        ).prefetch_related('debateteammotionpreference_set__debate_team')
-        if self.tournament.pref('enable_motions'):
+        if prefill:
+            # Handle motion conflicts
+            bs_motions = BallotSubmission.objects.filter(
+                id__in=[b.id for b in bses], motion__isnull=False,
+            ).prefetch_related('debateteammotionpreference_set__debate_team')
+            if self.tournament.pref('enable_motions'):
+                try:
+                    merge_motions(self.ballotsub, bs_motions)
+                except ValidationError as e:
+                    messages.error(self.request, e)
+
+        # Vetos
+        self.vetos = None
+        if prefill:
             try:
-                merge_motions(self.ballotsub, bs_motions)
+                self.vetos = merge_motion_vetos(self.ballotsub, bs_motions)
             except ValidationError as e:
                 messages.error(self.request, e)
 
