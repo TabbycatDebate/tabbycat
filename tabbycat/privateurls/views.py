@@ -3,7 +3,7 @@ from typing import Any, Dict, List, TYPE_CHECKING
 
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Exists, OuterRef, Q
+from django.db.models import Exists, OuterRef, Prefetch, Q
 from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
@@ -12,7 +12,7 @@ from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
 from notifications.models import BulkNotification, SentMessage
 from notifications.views import RoleColumnMixin, TournamentTemplateEmailCreateView
-from participants.models import Adjudicator, Person, Speaker
+from participants.models import Adjudicator, Person, Speaker, SpeakerCategory
 from participants.tables import AdjudicatorDebateTable, TeamDebateTable
 from participants.views import BaseRecordView
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin, TournamentMixin
@@ -198,7 +198,8 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
 
     def get_queryset(self) -> 'QuerySet[Person]':
         return self.model.objects.filter(
-            Q(adjudicator__tournament=self.tournament) | Q(speaker__team__tournament=self.tournament))
+            Q(adjudicator__tournament=self.tournament) | Q(speaker__team__tournament=self.tournament)).prefetch_related(
+            Prefetch('speaker__categories', queryset=SpeakerCategory.objects.filter(public=True)))
 
     def get_table(self) -> TabbycatTableBuilder:
         if hasattr(self.object, 'adjudicator'):
