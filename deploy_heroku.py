@@ -213,7 +213,7 @@ while not redis_provisioned:
     time.sleep(30)
     redis_output = subprocess.check_output(redis_status_command).decode().split("\n")
     for status in redis_output:
-        match = re.match(r"^Status:\s+available",status)
+        match = re.match(r"^Status:\s+available", status)
         if match:
             redis_provisioned = True
             break
