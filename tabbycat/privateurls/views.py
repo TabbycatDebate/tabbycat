@@ -185,7 +185,7 @@ class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView
 
 
 class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTournamentPageMixin, VueTableTemplateView):
-    template_name = 'public_url_landing.html'
+    template_name = 'private_url_landing.html'
     model = Person
 
     slug_field = 'url_key'
