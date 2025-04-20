@@ -309,7 +309,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
             'DebateResultByAdjudicatorWithScores': PerAdjudicatorBallotSetForm,
             'ConsensusDebateResult': SingleEliminationBallotSetForm,
             'ConsensusDebateResultWithScores': SingleBallotSetForm,
-        }[get_class_name(self.ballotsub, self.debate.round, self.tournament)]
+        }[get_class_name(self.ballotsub, self.debate.round, self.tournament, True)]
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -514,6 +514,11 @@ class BaseEditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
         self.round_motions = {}
         for rm in RoundMotion.objects.filter(round_id=self.debate.round_id):
             self.round_motions[rm.motion_id] = rm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['result'] = DebateResult(self.ballotsub, tournament=self.tournament)
+        return kwargs
 
 
 class AdminEditBallotSetView(AdministratorBallotSetMixin, BaseEditBallotSetView):

@@ -469,11 +469,19 @@ class ScoresMixin:
     def _fieldname_ghost(side, pos):
         return '%(side)d_ghost_s%(pos)d' % {'side': side, 'pos': pos}
 
+    @staticmethod
+    def _fieldname_forfeit(side):
+        return '%(side)d_forfeit' % {'side': side}
+
     # --------------------------------------------------------------------------
     # Form set-up
     # --------------------------------------------------------------------------
 
     def create_participant_fields(self):
+        if len(self.sides) == 2:
+            for side in self.sides:
+                self.fields[self._fieldname_forfeit(side)] = forms.BooleanField(required=False)
+
         for side, pos in product(self.sides, self.positions):
 
             # 3(a). Speaker identity
@@ -483,7 +491,7 @@ class ScoresMixin:
                 queryset = self.debate.get_team(side).speakers
 
             self.fields[self._fieldname_speaker(side, pos)] = forms.ModelChoiceField(
-                queryset=queryset, required=True)
+                queryset=queryset, required=False)
             if len(queryset) == 1:
                 self.fields[self._fieldname_speaker(side, pos)].initial = queryset[0]
 
@@ -509,6 +517,11 @@ class ScoresMixin:
         debate. Making this its own function allows subclasses to extend this so
         that it can use the same DebateResult as the super class."""
         initial = {}
+        if all(result.teamscore_field_score(side) is None for side in self.sides) and result.get_winner():
+            forfeiter = next(iter(set(self.sides) - result.get_winner()))
+            initial[self._fieldname_forfeit(forfeiter)] = True
+            return initial
+
         for side, pos in product(self.sides, self.positions):
             initial[self._fieldname_speaker(side, pos)] = result.get_speaker(side, pos)
             initial[self._fieldname_ghost(side, pos)] = result.get_ghost(side, pos)
@@ -537,13 +550,21 @@ class ScoresMixin:
         if None in teams:
             logger.warning("Team identities not found")
 
+        if count := [cleaned_data.get(self._fieldname_forfeit(side), False) for side in self.sides].count(True):
+            if count > 1:
+                self.add_error(None, forms.ValidationError(_("Only one team can forfeit"), code='multi_forfeit'))
+            return
+
         for side, team in zip(self.sides, teams):
 
             speaker_positions = dict()
             for pos in range(1, self.last_substantive_position + 1):
                 speaker = cleaned_data.get(self._fieldname_speaker(side, pos))
                 if speaker is None:
-                    logger.warning("Field '%s' not found", self._fieldname_speaker(side, pos))
+                    self.add_error(
+                        self._fieldname_speaker(side, pos),
+                        forms.ValidationError(_("This field is required."), code="required"),
+                    )
                     continue
 
                 # The speaker must be on the relevant team.
@@ -601,6 +622,15 @@ class ScoresMixin:
     # --------------------------------------------------------------------------
 
     def save_participant_fields(self, result):
+        for side in self.sides:
+            if self.cleaned_data.get(self._fieldname_forfeit(side), False):
+                self.ballotsub.forfeit = True
+                result = ConsensusDebateResult(self.ballotsub, criteria=self.criteria)
+                result.set_winners(set(self.sides) - {side})
+
+                self.result = result
+                return
+
         for side, pos in product(self.sides, self.positions):
             speaker = self.cleaned_data[self._fieldname_speaker(side, pos)]
             result.set_speaker(side, pos, speaker)
@@ -634,6 +664,7 @@ class ScoresMixin:
                 "side_name": side_name,
                 "team": self.debate.get_team(side),
                 "speakers": [],
+                "forfeit": self[self._fieldname_forfeit(side)],
             }
             for pos, pos_name in zip(self.positions, pos_names):
                 spk_dict = {
@@ -683,27 +714,30 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
         for side, pos in product(self.sides, self.positions):
             scorefield = ReplyScoreField if (pos == self.reply_position) else SubstantiveScoreField
             self.fields[self._fieldname_score(side, pos)] = scorefield(
-                widget=forms.NumberInput(attrs={'class': 'required number'}),
+                widget=forms.NumberInput(attrs={'class': 'number'}),
                 tournament=self.tournament,
-                required=True,
+                required=False,
             )
             for criterion in self.criteria:
                 self.fields[self._fieldname_criterion_score(side, pos, criterion)] = forms.DecimalField(
                     min_value=Decimal(str(criterion.min_score)),
                     max_value=Decimal(str(criterion.max_score)),
                     step_size=Decimal(str(criterion.step)),
-                    required=criterion.required,
+                    required=False,
                     widget=forms.NumberInput(attrs={'class': 'number', 'weight': criterion.weight}),
                 )
             if self.using_speaker_ranks:
                 nspeeches = len(self.sides) * len(self.positions)
-                self.fields[self._fieldname_srank(side, pos)] = forms.IntegerField(required=True, min_value=1, max_value=nspeeches, step_size=1)
+                self.fields[self._fieldname_srank(side, pos)] = forms.IntegerField(required=False, min_value=1, max_value=nspeeches, step_size=1)
 
         if self.using_declared_winner:
             self.fields[self._fieldname_declared_winner()] = self.create_declared_winner_dropdown()
 
     def initial_from_result(self, result):
         initial = super().initial_from_result(result)
+
+        if self.ballotsub.forfeit:
+            return initial
 
         for side, pos in product(self.sides, self.positions):
             score = result.get_score(side, pos)
@@ -734,6 +768,28 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
     # --------------------------------------------------------------------------
 
     def clean_scoresheet(self, cleaned_data):
+        if any(cleaned_data.get(self._fieldname_forfeit(side), False) for side in self.sides):
+            return
+
+        should_skip = False
+        for side, pos in product(self.sides, self.positions):
+            if cleaned_data[self._fieldname_score(side, pos)] is None and not self.criteria.exists():
+                self.add_error(self._fieldname_score(side, pos), forms.ValidationError(
+                    _("This field is required."),
+                    code='required',
+                ))
+                should_skip = True
+
+            for criterion in self.criteria:
+                if cleaned_data[self._fieldname_criterion_score(side, pos, criterion)] is None and criterion.required:
+                    self.add_error(
+                        self._fieldname_criterion_score(side, pos, criterion),
+                        forms.ValidationError(_("This field is required."), code='required'),
+                    )
+                    should_skip = True
+        if should_skip:
+            return
+
         try:
             side_totals = {side: sum(cleaned_data[self._fieldname_score(side, pos)]
                            for pos in self.positions) for side in self.sides}
@@ -783,6 +839,9 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
             rank_scores = []
             for side, pos in product(self.sides, self.positions):
                 rank = cleaned_data[self._fieldname_srank(side, pos)]
+                if rank is None:
+                    self.add_error(self._fieldname_srank(side, pos), forms.ValidationError(_("This field is required."), code='required'))
+                    continue
                 ranks.add(rank)
                 rank_scores.append((rank, cleaned_data[self._fieldname_score(side, pos)]))
 
@@ -852,9 +911,9 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
             scorefield = ReplyScoreField if (pos == self.reply_position) else SubstantiveScoreField
             for adj in self.adjudicators:
                 self.fields[self._fieldname_score(adj, side, pos)] = scorefield(
-                    widget=forms.NumberInput(attrs={'class': 'required number'} if self.criteria else {'class': 'number'}),
+                    widget=forms.NumberInput(attrs={'class': 'number'}),
                     tournament=self.tournament,
-                    required=not self.criteria.exists(),
+                    required=False,
                     disabled=self.criteria.exists(),
                 )
                 for criterion in self.criteria:
@@ -862,7 +921,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
                         min_value=Decimal(str(criterion.min_score)),
                         max_value=Decimal(str(criterion.max_score)),
                         step_size=Decimal(str(criterion.step)),
-                        required=criterion.required,
+                        required=False,
                         widget=forms.NumberInput(attrs={'class': 'number', 'weight': criterion.weight}),
                     )
         if self.using_declared_winner:
@@ -871,6 +930,9 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
     def initial_from_result(self, result):
         initial = super().initial_from_result(result)
+
+        if self.ballotsub.forfeit:
+            return initial
 
         for adj in self.adjudicators:
             for side, pos in product(self.sides, self.positions):
@@ -901,6 +963,25 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
     def clean_scoresheet(self, cleaned_data):
         for adj in self.adjudicators:
+            should_skip = False
+            for side, pos in product(self.sides, self.positions):
+                if cleaned_data[self._fieldname_score(adj, side, pos)] is None and not self.criteria.exists():
+                    self.add_error(self._fieldname_score(adj, side, pos), forms.ValidationError(
+                        _("This field is required."),
+                        code='required',
+                    ))
+                    should_skip = True
+
+                for criterion in self.criteria:
+                    if cleaned_data[self._fieldname_criterion_score(adj, side, pos, criterion)] is None and criterion.required:
+                        self.add_error(
+                            self._fieldname_criterion_score(adj, side, pos, criterion),
+                            forms.ValidationError(_("This field is required."), code='required'),
+                        )
+                        should_skip = True
+            if should_skip:
+                continue
+
             try:
                 if self.criteria:
                     side_totals = {side: sum(float(cleaned_data[self._fieldname_criterion_score(adj, side, pos, criterion)] or 0) * criterion.weight

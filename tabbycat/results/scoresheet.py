@@ -124,7 +124,7 @@ class DeclaredWinnersMixin:
         self.declared_winners = winners
 
     def identical(self, other):
-        return super().identical(other) and set(self.declared_winners) == set(other.declared_winners)
+        return super().identical(other) and set(self._get_winners()) == set(other._get_winners())
 
     def _get_winners(self):
         assert len(self.declared_winners) == self.number_winners, "There can only be this number of winners: %d" % self.number_winners

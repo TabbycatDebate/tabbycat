@@ -117,6 +117,9 @@ class BallotSubmission(Submission):
         verbose_name=_("single adjudicator"),
         help_text=_("Whether this submission represents only the submitting adjudicator on a panel, "
                     "when individual adjudicator ballots are enabled."))
+    forfeit = models.BooleanField(default=False,
+        verbose_name=_("forfeit"),
+        help_text=_("Whether a team had forfeited the debate and so speaker scores were exceptionally not attributed."))
 
     class Meta:
         constraints = [UniqueConstraint(fields=['debate', 'version'])]

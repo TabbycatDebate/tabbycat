@@ -642,6 +642,17 @@ class PreparationTime(IntegerPreference):
     default = -1
 
 
+@tournament_preferences_registry.register
+class EnableForfeits(BooleanPreference):
+    help_text = _(
+        "Whether there should be an option in ballot forms to mark a team as having forfeitted "
+        "a round, rendering the debate win/loss without speaker scores")
+    verbose_name = _("Enable forfeits")
+    section = debate_rules
+    name = 'enable_forfeits'
+    default = False
+
+
 # ==============================================================================
 standings = Section('standings', verbose_name=_("Standings"))
 # ==============================================================================
