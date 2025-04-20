@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.edit import FormView
 from formtools.wizard.views import SessionWizardView
 
-from participants.models import Speaker, TournamentInstitution
+from participants.models import Coach, Speaker, TournamentInstitution
 from tournaments.mixins import TournamentMixin
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
@@ -31,9 +31,15 @@ class InstitutionalRegistrationMixin:
         ti = TournamentInstitution.objects.filter(tournament=self.tournament, coach__url_key=self.kwargs['url_key']).select_related('institution')
         return get_object_or_404(ti).institution
 
+    @property
+    def institution(self):
+        if not hasattr(self, '_institution'):
+            self._institution = self.get_institution()
+        return self._institution
+
     def get_form_kwargs(self, step=None):
         kwargs = super().get_form_kwargs()
-        kwargs['institution'] = self.get_institution()
+        kwargs['institution'] = self.institution
         return kwargs
 
 
@@ -130,11 +136,7 @@ class CreateSpeakerFormView(TournamentMixin, CustomQuestionFormMixin, FormView):
 
 class InstitutionalLandingPageView(TournamentMixin, InstitutionalRegistrationMixin, VueTableTemplateView):
 
-    @property
-    def institution(self):
-        if not hasattr(self, '_institution'):
-            self._institution = self.get_institution()
-        return self._institution
+    template_name = 'coach_private_url.html'
 
     def get_adj_table(self):
         adjudicators = self.tournament.adjudicator_set.filter(institution=self.institution)
@@ -153,6 +155,11 @@ class InstitutionalLandingPageView(TournamentMixin, InstitutionalRegistrationMix
 
     def get_tables(self):
         return [self.get_adj_table(), self.get_team_table()]
+
+    def get_context_data(self, **kwargs):
+        kwargs["coach"] = get_object_or_404(Coach, tournament_institution__tournament=self.tournament, url_key=kwargs['url_key'])
+        kwargs["institution"] = self.institution
+        return super().get_context_data(**kwargs)
 
 
 class InstitutionalCreateTeamFormView(InstitutionalRegistrationMixin, BaseCreateTeamFormView):

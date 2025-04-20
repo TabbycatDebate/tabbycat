@@ -1,0 +1,58 @@
+{% extends "tables/base_vue_table.html" %}
+{% load i18n static debate_tags %}
+
+{% block page-title %}{% trans "Private URL" %}{% endblock %}
+{% block head-title %}{% trans "Private URL" %}{% endblock %}
+
+{% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
+
+{% block sub-title %}
+  {% blocktrans trimmed with name=coach.name institution=institution.name %}for {{ name }} ({{ institution }}){% endblocktrans %}
+{% endblock %}
+
+{% block page-alerts %}
+
+  {% blocktrans trimmed with name=coach.name institution=institution.name asvar p1 %}
+    The URL of this page is personalised to you, {{ name }}. <strong>Do not
+    share it with anyone;</strong> anyone who knows this URL can manage participants for {{ institution }}.
+    You may bookmark this page and return here after each debate for the available actions.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="warning" %}
+
+{% endblock %}
+
+{% block content %}
+
+  <div class="card-deck">
+    <div class="card mb-3 panel-default">
+      {% tournamenturl 'reg-inst-create-adj' url_key as url %}
+      {% blocktrans trimmed asvar text %}Register Adjudicator{% endblocktrans %}
+      {% include "components/item-action.html" with icon="user-plus" %}
+
+      <div class="list-group-item">
+        <em>Placeholder for invitation link</em>
+      </div>
+    </div>
+
+    <div class="card mb-3 panel-default">
+      {% tournamenturl 'reg-inst-create-team' url_key as url %}
+      {% blocktrans trimmed asvar text %}Register Team{% endblocktrans %}
+      {% include "components/item-action.html" with icon="user-plus" %}
+
+      <div class="list-group-item">
+        <em>Placeholder for invitation link</em>
+      </div>
+    </div>
+  </div>
+
+  <div class="list-group">
+    {% tournamenturl 'reg-inst-create-team' url_key as url %}
+    {% blocktrans trimmed asvar text %}View invoice{% endblocktrans %}
+    {% include "components/item-action.html" with icon="dollar-sign" %}
+  </div>
+
+  <div class="mt-md-4">
+    {{ block.super }} {# this is the Vue table, which is populated with the registered participants #}
+  </div>
+
+{% endblock %}
