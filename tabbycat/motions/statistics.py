@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy
 
 from draw.types import DebateSide
 from tournaments.models import Round
+from tournaments.utils import get_side_name
 
 from .models import Motion, RoundMotion
 
@@ -236,16 +237,17 @@ class MotionBPStatsCalculator:
             motion.counts_by_bench = {'gov': 0, 'opp': 0}
 
             for side in self.tournament.sides:
+                side_abbrv = (get_side_name(self.tournament, side, 'abbr')).lower()
                 average = getattr(motion, 's%d_average' % side)
                 if average is None:
                     continue
-                motion.averages.append((side, average, average / 6 * 100))
+                motion.averages.append((side_abbrv, average, average / 6 * 100))
                 counts = []
                 for points in [3, 2, 1, 0]:
                     count = getattr(motion, 's%d_%d_count' % (side, points))
                     percentage = count / motion.ndebates * 100 if motion.ndebates > 0 else 0
                     counts.append((points, count, percentage))
-                motion.counts_by_side.append((side, counts))
+                motion.counts_by_side.append((side_abbrv, counts))
 
                 if side == DebateSide.OG or side == DebateSide.OO:
                     motion.counts_by_half['top'] += (average / 2)
@@ -295,11 +297,12 @@ class MotionBPStatsCalculator:
             motion.counts_by_side = []
 
             for side in self.tournament.sides:
+                side_abbr = get_side_name(self.tournament, side, 'abbr')
                 advancing = getattr(motion, 's%d_advancing' % side)
                 advancing_pc = advancing / motion.ndebates * 100 if motion.ndebates > 0 else 0
                 eliminated = getattr(motion, 's%d_eliminated' % side)
                 eliminated_pc = eliminated / motion.ndebates * 100 if motion.ndebates > 0 else 0
-                motion.counts_by_side.append((side, advancing, advancing_pc, eliminated, eliminated_pc))
+                motion.counts_by_side.append((side_abbr, advancing, advancing_pc, eliminated, eliminated_pc))
 
 
 class RoundMotionBPStatsCalculator(MotionBPStatsCalculator):

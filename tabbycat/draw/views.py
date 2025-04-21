@@ -15,6 +15,7 @@ from django.utils.timezone import get_current_timezone_name
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
 from django.views.generic.base import TemplateView
+from django.views.generic.edit import FormView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -46,6 +47,7 @@ from venues.models import VenueConstraint
 from venues.utils import venue_conflicts_display
 
 from .dbutils import delete_round_draw
+from .forms import ConfirmDrawDeletionForm
 from .generator import DrawFatalError, DrawUserError
 from .manager import DrawManager
 from .models import Debate, TeamSideAllocation
@@ -716,6 +718,7 @@ class CreateDrawView(DrawStatusEdit):
 
 
 class ConfirmDrawCreationView(DrawStatusEdit):
+    edit_permission = Permission.GENERATE_DEBATE
     action_log_type = ActionLogEntry.ActionType.DRAW_CONFIRM
 
     def post(self, request, *args, **kwargs):
@@ -732,20 +735,27 @@ class ConfirmDrawCreationView(DrawStatusEdit):
         return super().post(request, *args, **kwargs)
 
 
-class DrawRegenerateView(DrawStatusEdit):
+class ConfirmDrawRegenerationView(LogActionMixin, AdministratorMixin, RoundMixin, FormView):
+    template_name = "draw_confirm_regeneration.html"
+    view_permission = Permission.DELETE_DEBATE
+    edit_permission = Permission.DELETE_DEBATE
+    form_class = ConfirmDrawDeletionForm
+
     action_log_type = ActionLogEntry.ActionType.DRAW_REGENERATE
     round_redirect_pattern_name = 'availability-index'
 
-    def post(self, request, *args, **kwargs):
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['round'] = self.round
+        return kwargs
+
+    def form_valid(self, form):
         delete_round_draw(self.round)
-        self.log_action()
-        messages.success(request, _("Deleted the draw. You can now recreate it as normal."))
-        return super().post(request, *args, **kwargs)
+        messages.success(self.request, _("Deleted the draw. You can now recreate it as normal."))
+        return super().form_valid(form)
 
-
-class ConfirmDrawRegenerationView(AdministratorMixin, TemplateView):
-    template_name = "draw_confirm_regeneration.html"
-    view_permission = Permission.GENERATE_DEBATE
+    def get_success_url(self):
+        return self.get_redirect_url()
 
 
 class DrawReleaseView(DrawStatusEdit):

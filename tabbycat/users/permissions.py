@@ -58,6 +58,7 @@ class Permission(TextChoices):
     VIEW_DEBATE = 'view.debate', _("view debates (draw)")
     VIEW_ADMIN_DRAW = 'view.debate.admin', _("view debates (detailed draw)")
     GENERATE_DEBATE = 'generate.debate', _("generate debates (draw)")
+    DELETE_DEBATE = 'delete.debate', _("delete debates (draw)")
     EDIT_DEBATETEAMS = 'edit.debateteam', _("edit debate teams (pairings)")
     VIEW_DEBATEADJUDICATORS = 'view.debateadjudicator', _("view debate adjudicators (allocations)")
     EDIT_DEBATEADJUDICATORS = 'edit.debateadjudicator', _("edit debate adjudicators (allocations)")
@@ -145,6 +146,8 @@ class Permission(TextChoices):
     EDIT_ROUND = 'edit.round', _("edit round attributes")
     DELETE_ROUND = 'delete.round', _("delete rounds")
     CREATE_ROUND = 'add.round', _("create rounds")
+    CONFIRM_ROUND = 'confirm.round', _("confirm rounds")
+    SILENCE_ROUND = 'silence.round', _("silence rounds")
 
     VIEW_EMAIL_STATUSES = 'view.emails', _("view email statuses")
     SEND_EMAILS = 'send.emails', _("send participants email messages")

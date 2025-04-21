@@ -1,8 +1,9 @@
 <script>
 import ModalErrorMixin from '../errors/ModalErrorMixin.vue'
+import CookieMixin from './CookieMixin.vue'
 
 export default {
-  mixins: [ModalErrorMixin],
+  mixins: [ModalErrorMixin, CookieMixin],
   methods: {
     ajaxSave: function (
       url, payload, message, completeFunction, failFunction,
@@ -10,9 +11,12 @@ export default {
     ) {
       const self = this
       const dataPayload = JSON.stringify(payload)
+      const csrftoken = this.getCookie('csrftoken')
       $.ajax({
         type: 'POST',
         url: url,
+        headers: { 'X-CSRFToken': csrftoken },
+        mode: 'same-origin',
         data: dataPayload,
         contentType: 'application/json',
         dataType: 'json',

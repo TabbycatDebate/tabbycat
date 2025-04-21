@@ -994,7 +994,13 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
 
     def get_queryset(self):
         filters = Q()
-        if self.request.query_params.get('confirmed') or not self.request.user.is_staff:
+
+        if isinstance(self.participant_requester, Adjudicator):
+            filters &= Q(debate__debateadjudicator_set__adjudicator_id=self.participant_requester.id)
+        if isinstance(self.participant_requester, Team):
+            filters &= Q(debate__debateteam_set__team_id=self.participant_requester.id)
+
+        if self.request.query_params.get('confirmed') or not (getattr(self.request.user, 'is_staff', False) or self.participant_requester):
             filters &= Q(confirmed=True)
         return super().get_queryset().filter(filters).prefetch_related(
             'debateteammotionpreference_set__motion__tournament',
@@ -1217,26 +1223,8 @@ class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
     update_permission = Permission.EDIT_PREFORMEDPANELS
     destroy_permission = Permission.EDIT_PREFORMEDPANELS
 
-    @property
-    def debate(self):
-        if hasattr(self, '_debate'):
-            return self._debate
-
-        self._debate = get_object_or_404(PreformedPanel, pk=self.kwargs.get('debate_pk'))
-        return self._debate
-
-    def lookup_kwargs(self):
-        return {'debate': self.debate}
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['debate'] = self.debate
-        return context
-
     def get_queryset(self):
         return super().get_queryset().select_related('round', 'round__tournament').prefetch_related(
-            'debateteam_set', 'debateteam_set__team', 'debateteam_set__team__tournament',
-            'preformedpaneladjudicator_set', 'preformedpaneladjudicator_set__adjudicator',
             'preformedpaneladjudicator_set__adjudicator__tournament',
         )
 

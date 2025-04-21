@@ -13,7 +13,7 @@
 }
 
 // Fix bad inheritance
-.list-group-item .btn .feather {
+.list-group-item .btn:not(.btn-link) .feather {
   margin-right: 0;
 }
 

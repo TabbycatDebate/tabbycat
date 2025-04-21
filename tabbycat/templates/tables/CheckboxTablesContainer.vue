@@ -28,6 +28,7 @@
           <form v-if="roundInfo.break === 'True' && roundInfo.model === 'participants.Adjudicator'"
                 :action="urls.breakingAdjs" method="post">
             <button class="btn btn-primary" type="submit">
+              <input type="hidden" name="csrfmiddlewaretoken" :value="csrftoken">
               <i data-feather="star"></i> {{ gettext("Set Breaking") }}
             </button>
           </form>
@@ -77,9 +78,10 @@ import _ from 'lodash'
 import AutoSaveCounter from '../../templates/allocations/AutoSaveCounter.vue'
 import TablesContainer from './TablesContainer.vue'
 import AjaxMixin from '../ajax/AjaxMixin.vue'
+import CookieMixin from '../ajax/CookieMixin.vue'
 
 export default {
-  mixins: [AjaxMixin],
+  mixins: [AjaxMixin, CookieMixin],
   components: { AutoSaveCounter, TablesContainer },
   props: {
     tablesData: Array,
@@ -110,6 +112,9 @@ export default {
         })
       })
       return checked
+    },
+    csrftoken: function () {
+      return this.getCookie('csrftoken')
     },
   },
   methods: {

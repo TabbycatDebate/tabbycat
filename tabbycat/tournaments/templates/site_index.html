@@ -76,9 +76,24 @@
     {% url 'password_change' as url %}
     {% include "components/item-action.html" with icon="rotate-cw" %}
 
-    {% blocktrans asvar text %}Log Out ({{ user }}){% endblocktrans %}
-    {% url 'logout' as url %}
-    {% include "components/item-action.html" with icon="log-out" %}
+    <form id="logout-link-form" method="post" action="{% url 'logout' %}" class="list-group-item list-group-item-action text-primary">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-link p-0 list-group-item-action text-primary">
+        <div class="row align-items-center">
+          <div class="col-auto pr-1">
+            <i data-feather="log-out"></i>
+          </div>
+
+          <div class="col pl-0 pr-0">
+            {% blocktrans %}Log Out ({{ user }}){% endblocktrans %}
+          </div>
+
+          <div class="col-auto pr-1">
+            <i data-feather="chevron-right"></i>
+          </div>
+        </div>
+      </button>
+    </form>
 
   {% else %}
 

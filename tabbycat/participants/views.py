@@ -266,9 +266,6 @@ class BaseAdjudicatorRecordView(BaseRecordView):
 
     table_title = _("Previous Rounds")
 
-    def get_page_title(self):
-        return _("Record for %(name)s") % {'name': self.object.get_public_name(self.tournament)}
-
     def _get_adj_adj_conflicts(self):
         adjs = []
         for ac in self.object.adjudicatoradjudicatorconflict_source_set.all():
