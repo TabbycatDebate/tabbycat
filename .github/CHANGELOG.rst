@@ -7,6 +7,26 @@ Change Log
 *Release date: TBD*
 
 
+2.9.3
+-----
+*Release date: 21 April 2025*
+
+- API: Fixed accessing ballots, preformed panels, and saving nested objects
+- Updated the SendGrid webhook handling
+- Made the Heroku deployment script more resilient. Thanks to Oleksii Stroganov for their work!
+- Prevented redacted participant names from being publicly revealed. Thank you to Varun Lodaya for your help!
+- Added extra steps and permissions to avoid accidentally deleting draws + results
+- Corrected colours used in motion statistics. Thanks to Teymour Aldridge for their PR!
+- Restarted automatic documentation generation
+- Fixed merging BP elimination ballots
+- Allowed users to be re-invited, with a success message. Thank you to Teymour and Tim Beyer for the contributions!
+- Used POST requests to log out
+- Added option to disable the Assistant area entirely
+- Added CSRF protection to overlooked page forms. Thanks for Teymour for their coverage!
+- Covered missing pages and actions with permissions
+- Fixed adjudicator feedback questions not allowing "0"
+
+
 2.9.2
 -----
 *Release date: 27 August 2024*
