@@ -74,6 +74,15 @@ urlpatterns = [
                         name='api-score-criteria-detail'),
                 ])),
 
+                path('/questions', include([
+                    path('',
+                        views.QuestionViewSet.as_view(list_methods),
+                        name='api-question-list'),
+                    path('/<int:pk>',
+                        views.QuestionViewSet.as_view(detail_methods),
+                        name='api-question-detail'),
+                ])),
+
                 path('/rounds', include([
                     path('',
                         views.RoundViewSet.as_view(list_methods),

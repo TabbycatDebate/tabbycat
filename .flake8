@@ -18,4 +18,4 @@ max-line-length = 200
 exclude = docs, data, migrations, node_modules, venv, */__init__.py, tabbycat/settings/*.py, emoji.py
 
 import-order-style = edited
-application-import-names = actionlog,adjallocation,adjfeedback,availability,breakqual,checkins,divisions,draw,importer,motions,notifications,options,participants,printing,privateurls,results,settings,standings,tournaments,users,utils,venues
+application-import-names = actionlog,adjallocation,adjfeedback,availability,breakqual,checkins,divisions,draw,importer,motions,notifications,options,participants,printing,privateurls,registration,results,settings,standings,tournaments,users,utils,venues

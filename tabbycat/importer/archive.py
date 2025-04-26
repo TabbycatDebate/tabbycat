@@ -1,5 +1,6 @@
 from xml.etree.ElementTree import Element, SubElement
 
+from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Prefetch, Q
 from django.utils.text import slugify
@@ -14,6 +15,7 @@ from options.presets import (AustralianEastersPreferences, AustralsPreferences, 
                              UADCPreferences, WSDCPreferences)
 from participants.emoji import EMOJI_BY_NAME
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
+from registration.models import Answer
 from results.models import BallotSubmission, Submission
 from results.prefetch import populate_confirmed_ballots, populate_wins
 from results.result import DebateResult
@@ -245,7 +247,7 @@ class Exporter:
 
                 for question in self.t.adjudicatorfeedbackquestion_set.all():
                     try:
-                        answer = AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[question.answer_type].objects.get(
+                        answer = Answer.objects.get(
                             feedback=feedback,
                             question=question,
                         )
@@ -451,9 +453,12 @@ class Importer:
     def import_questions(self):
         self.questions = {}
 
+        content_type = ContentType.objects.get(app_label="adjfeedback", model="adjudicatorfeedback")
+
         for i, question in enumerate(self.root.findall('question'), 1):
             q = AdjudicatorFeedbackQuestion(
                 tournament=self.tournament, seq=i, text=question.text,
+                for_content_type=content_type,
                 name=question.get('name'), reference=slugify(question.get('name')[:50]),
                 from_adj=question.get('from-adjudicators') == 'true', from_team=question.get('from-teams') == 'true',
                 answer_type=question.get('type'), required=False,
@@ -672,8 +677,5 @@ class Importer:
                     question = self.questions[answer.get('question')]
 
                     cast_answer = answer.text
-                    # if question.answer_type in AdjudicatorFeedbackQuestion.NUMERICAL_ANSWER_TYPES:
-                    #     cast_answer = float(cast_answer)
-
-                    answer = AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[question.answer_type](
+                    answer = Answer(
                         question=question, answer=cast_answer, feedback=feedback_obj)

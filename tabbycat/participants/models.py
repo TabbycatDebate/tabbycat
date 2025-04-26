@@ -10,6 +10,7 @@ from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
+from registration.models import Answer
 from utils.managers import LookupByNameFieldsMixin
 from utils.models import UniqueConstraint
 
@@ -81,6 +82,18 @@ class TournamentInstitution(models.Model):
         verbose_name=_("Adjudicator slots allocated"),
     )
 
+    answers = GenericRelation(Answer)
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=['tournament', 'institution']),
+        ]
+        verbose_name = _("tournament institution")
+        verbose_name_plural = _("tournament institutions")
+
+    def __str__(self):
+        return "%s (%s)" % (self.name, self.tournament.short_name)
+
 
 class SpeakerCategory(models.Model):
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
@@ -145,6 +158,8 @@ class Person(models.Model):
     pronoun = models.CharField(max_length=10, blank=True,
         verbose_name=_("pronoun"),
         help_text=_("If printing ballots using Tabbycat, there is the option to pre-print pronouns"))
+
+    answers = GenericRelation(Answer)
 
     class Meta:
         verbose_name = _("person")
@@ -247,6 +262,8 @@ class Team(models.Model):
     emoji = models.CharField(max_length=3, default=None, choices=EMOJI_FIELD_CHOICES,
         blank=True, null=True,   # uses null=True to allow multiple teams to have no emoji
         verbose_name=_("emoji"))
+
+    answers = GenericRelation(Answer)
 
     class Meta:
         constraints = [

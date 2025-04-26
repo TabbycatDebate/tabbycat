@@ -54,15 +54,15 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
     })
 
     lookup_feedback_answer_type = make_lookup("feedback answer type", {
-        "checkbox": fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_CHECKBOX,
-        ("yes no select", "yesno"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_SELECT,
-        ("integer textbox", "int", "integer"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_TEXTBOX,
-        ("integer scale", "scale"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE,
-        "float": fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_FLOAT,
-        "text": fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_TEXT,
-        ("textbox", "long text", "longtext"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT,
-        ("select single", "single select"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT,
-        ("select multiple", "multiple select"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_MULTIPLE_SELECT,
+        "checkbox": fm.AdjudicatorFeedbackQuestion.AnswerType.BOOLEAN_CHECKBOX,
+        ("yes no select", "yesno"): fm.AdjudicatorFeedbackQuestion.AnswerType.BOOLEAN_SELECT,
+        ("integer textbox", "int", "integer"): fm.AdjudicatorFeedbackQuestion.AnswerType.INTEGER_TEXTBOX,
+        ("integer scale", "scale"): fm.AdjudicatorFeedbackQuestion.AnswerType.INTEGER_SCALE,
+        "float": fm.AdjudicatorFeedbackQuestion.AnswerType.FLOAT,
+        "text": fm.AdjudicatorFeedbackQuestion.AnswerType.TEXT,
+        ("textbox", "long text", "longtext"): fm.AdjudicatorFeedbackQuestion.AnswerType.LONGTEXT,
+        ("select single", "single select"): fm.AdjudicatorFeedbackQuestion.AnswerType.SINGLE_SELECT,
+        ("select multiple", "multiple select"): fm.AdjudicatorFeedbackQuestion.AnswerType.MULTIPLE_SELECT,
     })
 
     def _adj_lookup(self, x):
@@ -275,6 +275,7 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
             tournament=self.tournament,
             answer_type=self.lookup_feedback_answer_type,
             choices=lambda c: c.split('//'),
+            for_content_type=ContentType.objects.get_for_model(fm.AdjudicatorFeedback),
         )
 
         self._import(f, fm.AdjudicatorFeedbackQuestion, interpreter)

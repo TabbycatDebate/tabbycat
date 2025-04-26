@@ -13,9 +13,9 @@ from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from importer.forms import ImportValidationError
 from participants.models import Adjudicator, Speaker, Team
+from registration.form_utils import CustomQuestionsFormMixin
 from results.forms import TournamentPasswordField
 from tournaments.models import Round
-from utils.forms import OptionalChoiceField
 
 from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback
 from .utils import expected_feedback_targets
@@ -34,46 +34,6 @@ ADJUDICATOR_POSITION_NAMES = {
 # General, but only used here
 # ==============================================================================
 
-class SpacedRadioWidget(forms.RadioSelect):
-    template_name = 'spaced_choice_widget.html'
-
-
-class IntegerScaleField(forms.IntegerField):
-    """Class to do integer scale fields."""
-    widget = SpacedRadioWidget()
-
-    def __init__(self, *args, **kwargs):
-        super(IntegerScaleField, self).__init__(*args, **kwargs)
-        self.widget.choices = tuple((i, str(i)) for i in range(self.min_value, self.max_value+1))
-
-
-class BlankUnknownBooleanSelect(forms.NullBooleanSelect):
-    """Uses '--------' instead of 'Unknown' for the None choice."""
-
-    def __init__(self, attrs=None):
-        choices = (
-            ('1', '--------'),
-            # Translators: Please leave this blank, it should be left for the base Django translations.
-            ('2', gettext_lazy('Yes')),
-            # Translators: Please leave this blank, it should be left for the base Django translations.
-            ('3', gettext_lazy('No')),
-        )
-        # skip the NullBooleanSelect constructor
-        super(forms.NullBooleanSelect, self).__init__(attrs, choices)
-
-
-class BooleanSelectField(forms.NullBooleanField):
-    """Widget to do boolean select fields following our conventions.
-    Specifically, if 'required', checks that an option was chosen."""
-    widget = BlankUnknownBooleanSelect
-
-    def clean(self, value):
-        value = super(BooleanSelectField, self).clean(value)
-        if self.required and value is None:
-            # Translators: Please leave this blank, it should be left for the base Django translations.
-            raise forms.ValidationError(_("This field is required."))
-        return value
-
 
 class RequiredTypedChoiceField(forms.TypedChoiceField):
     def clean(self, value):
@@ -85,18 +45,10 @@ class RequiredTypedChoiceField(forms.TypedChoiceField):
 
 
 # ==============================================================================
-# Feedback Fields
-# ==============================================================================
-
-class BlockCheckboxWidget(forms.CheckboxSelectMultiple):
-    template_name = 'spaced_choice_widget.html'
-
-
-# ==============================================================================
 # Feedback Forms
 # ==============================================================================
 
-class BaseFeedbackForm(forms.Form):
+class BaseFeedbackForm(CustomQuestionsFormMixin, forms.Form):
     """Base class for all dynamically-created feedback forms. Contains all
     question fields."""
 
@@ -119,42 +71,8 @@ class BaseFeedbackForm(forms.Form):
         adjudicator = Adjudicator.objects.get(id=int(adj_id))
         return debate, adjudicator
 
-    def _make_question_field(self, question):
-        if question.answer_type == question.ANSWER_TYPE_BOOLEAN_SELECT:
-            field = BooleanSelectField()
-        elif question.answer_type == question.ANSWER_TYPE_BOOLEAN_CHECKBOX:
-            field = forms.BooleanField(required=False)
-        elif question.answer_type == question.ANSWER_TYPE_INTEGER_TEXTBOX:
-            min_value = int(question.min_value) if question.min_value else None
-            max_value = int(question.max_value) if question.max_value else None
-            field = forms.IntegerField(min_value=min_value, max_value=max_value)
-        elif question.answer_type == question.ANSWER_TYPE_INTEGER_SCALE:
-            min_value = int(question.min_value) if question.min_value is not None else None
-            max_value = int(question.max_value) if question.max_value is not None else None
-            if min_value is None or max_value is None:
-                logger.error("Integer scale %r has no min_value or no max_value" % question.reference)
-                field = forms.IntegerField()
-            else:
-                field = IntegerScaleField(min_value=min_value, max_value=max_value)
-        elif question.answer_type == question.ANSWER_TYPE_FLOAT:
-            field = forms.FloatField(min_value=question.min_value, max_value=question.max_value)
-        elif question.answer_type == question.ANSWER_TYPE_TEXT:
-            field = forms.CharField()
-        elif question.answer_type == question.ANSWER_TYPE_LONGTEXT:
-            field = forms.CharField(widget=forms.Textarea)
-        elif question.answer_type == question.ANSWER_TYPE_SINGLE_SELECT:
-            field = OptionalChoiceField(choices=question.choices_for_field)
-        elif question.answer_type == question.ANSWER_TYPE_MULTIPLE_SELECT:
-            field = forms.MultipleChoiceField(choices=question.choices_for_field, widget=BlockCheckboxWidget())
-        field.label = question.text
-
-        # Required checkbox fields don't really make sense; so override the behaviour?
-        if question.answer_type != question.ANSWER_TYPE_BOOLEAN_CHECKBOX:
-            if question.required:
-                field.label += "*"
-            field.required = self._enforce_required and question.required
-
-        return field
+    def get_custom_question_queryset(self):
+        return self._tournament.adj_feedback_questions.filter(**self.question_filter)
 
     def _create_fields(self):
         """Creates dynamic fields in the form."""
@@ -165,8 +83,7 @@ class BaseFeedbackForm(forms.Form):
                 'min': int(adj_min_score), 'max': int(adj_max_score)})
         self.fields['score'] = forms.FloatField(min_value=adj_min_score, max_value=adj_max_score, label=score_label)
 
-        for question in self._tournament.adj_feedback_questions.filter(**self.question_filter):
-            self.fields[question.reference] = self._make_question_field(question)
+        self.add_question_fields()
 
         # Tournament password field, if applicable
         if self._use_tournament_password and self._tournament.pref('public_use_password'):
@@ -190,11 +107,7 @@ class BaseFeedbackForm(forms.Form):
             af.ignored = self.cleaned_data['ignored']
 
         af.save()
-
-        for question in self._tournament.adj_feedback_questions.filter(**self.question_filter):
-            response = self.cleaned_data[question.reference]
-            if response is not None and response != "":
-                question.answer_type_class(content_object=af, question=question, answer=response).save()
+        self.save_answers(af)
 
         return af
 

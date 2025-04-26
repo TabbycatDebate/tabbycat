@@ -109,6 +109,8 @@ class ActionLogEntry(models.Model):
         VENUE_EDIT                        = 've.edit', _("Edited room")
         VENUES_AUTOALLOCATE               = 've.auto', _("Auto-allocated rooms")
         VENUES_SAVE                       = 've.save', _("Saved a room manual edit")
+        QUESTION_CREATE                   = 'qu.crea', _("Created question")
+        QUESTION_EDIT                     = 'qu.edit', _("Edited question")
 
     class Agent(models.TextChoices):
         API = 'a', _("API")

@@ -157,6 +157,10 @@ class Permission(TextChoices):
     VIEW_SETTINGS = 'view.settings', _("view settings")
     EDIT_SETTINGS = 'edit.settings', _("edit settings")
 
+    EDIT_QUESTIONS = 'edit.questions', _("edit general questions")
+    DELETE_QUESTIONS = 'delete.questions', _("delete general questions")
+    VIEW_CUSTOM_ANSWERS = 'view.answers', _("view answers to general questions")
+
 
 permission_type = Union[Permission, bool]
 
