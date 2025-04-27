@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:57\n"
+"PO-Revision-Date: 2024-07-10 12:24\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "Language: cs_CZ\n"
@@ -41,7 +41,7 @@ msgstr[3] ""
 
 #: draw/apps.py draw/views.py
 msgid "Draw"
-msgstr ""
+msgstr "Los"
 
 #: draw/generator/__init__.py
 msgid "Too many swaps"
@@ -148,11 +148,11 @@ msgstr ""
 #: draw/generator/random.py
 #, python-format
 msgid "There were %(aff_count)d affirmative teams but %(neg_count)d negative teams."
-msgstr ""
+msgstr "Bylo tam %(aff_count)d afirmativních týmů, ale %(neg_count)d negačních týmů."
 
 #: draw/generator/random.py
 msgid "One or more teams had an allocated side that wasn't affirmative or negative."
-msgstr ""
+msgstr "Jeden nebo více týmů měl přidělenou stranu, která nebyla afirmativní ani negační."
 
 #: draw/manager.py
 #, python-format

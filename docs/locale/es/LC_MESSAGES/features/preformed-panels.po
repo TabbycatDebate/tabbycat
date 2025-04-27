@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-05 17:12\n"
+"PO-Revision-Date: 2024-10-16 19:50\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../../features/preformed-panels.rst:5
 msgid "Preformed Panels"
-msgstr ""
+msgstr "Paneles prereformados"
 
 #: ../../features/preformed-panels.rst:7
 msgid "Preformed panels, also known as a 'shadow draw', allow adjudicator panels to be created *before* a round has been drawn and then applied once its draw is ready. This means that panel formation can be done during periods outside the normal time pressure of finalising a draw for release. This can save a lot of time at large tournaments, or at tournaments where the adjudication core wants to carefully control the specific combination of adjudicators within panels."

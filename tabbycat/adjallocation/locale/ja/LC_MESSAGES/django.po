@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-07-02 13:44\n"
+"PO-Revision-Date: 2025-02-15 07:22\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: adjallocation/allocators/base.py
 msgid "There are no available adjudicators. Ensure there are adjudicators who have been marked as available for this round before auto-allocating."
-msgstr "ジャッジ可能な人がいません。自動アロケーションをする前に、ジャッジ可能とマークされている人がいることを確認してください。"
+msgstr "参加するジャッジがいません。自動配置をする前に、ジャッジ可能とマークされている人がいることを確認してください。"
 
 #: adjallocation/allocators/hungarian.py
 #, python-format
@@ -40,52 +40,52 @@ msgstr "チェア又はパネルに割り当てられるジャッジがいませ
 
 #: adjallocation/allocators/hungarian.py
 msgid "There are no debates for this round. Maybe you haven't created a draw yet?"
-msgstr "このラウンドにはディベーターがいません。まだ対戦表を作っていませんか？"
+msgstr "このラウンドにはディベーターがいません。まだ対戦表を作っていない可能性があります。"
 
 #: adjallocation/allocators/hungarian.py
 #, python-format
 msgid "There are %(debate_count)s debates but only %(adj_count)s voting adjudicators."
-msgstr "%(debate_count)s 試合ありますが、 投票可能なジャッジが%(adj_count)s人しかいません。"
+msgstr "%(debate_count)s試合ありますが、 %(adj_count)s人のジャッジしか投票できません。"
 
 #: adjallocation/allocators/hungarian.py
 #, python-format
 msgid "There are %(panel_debates)s panel debates but only %(panellists)s available panellists (less than %(needed)s)."
-msgstr "%(panel_debates)s つのパネル部屋がありますが、 %(panellists)s 人のパネル( %(needed)s 以下)しかいません。"
+msgstr "%(panel_debates)sつのパネル部屋がありますが、%(panellists)s人のパネル(必要数%(needed)s)しかいません。"
 
 #: adjallocation/allocators/hungarian.py
 #, python-format
 msgid "There are %(debates_count)s debates but only %(voting_count)s voting adjudicators."
-msgstr "%(debates_count)s 人のディベーターがいますが、%(voting_count)s 人のジャッジしか投票できません。"
+msgstr "%(debates_count)sつの試合がありますが、%(voting_count)s人のジャッジしか投票できません。"
 
 #: adjallocation/apps.py
 msgid "Adjudicator Allocation"
-msgstr "ジャッジ配置"
+msgstr "ジャッジの配置"
 
 #: adjallocation/consumers.py
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
-msgstr "対戦表が既に公開されてしまっています。ジャッジの自動配置を再度行う場合は一度対戦表を非公開に戻してください。"
+msgstr "対戦表が既に公開されています。再度ジャッジの自動配置を行うには一度対戦表を非公開に戻してください。"
 
 #: adjallocation/consumers.py
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
-msgstr "対戦表が確定されていません。ジャッジの自動配置を行うために対戦表を確定させてください。"
+msgstr "対戦表が確定していません。ジャッジの自動配置を行うには対戦表を確定させてください。"
 
 #: adjallocation/consumers.py
 msgid "There are no preformed panels available to allocate."
-msgstr "配置できるジャッジが用意されていません。"
+msgstr "配置できる事前設定されたパネルがありません。"
 
 #: adjallocation/consumers.py
 msgid "Successfully auto-allocated preformed panels to debates."
-msgstr "事前に用意されたパネルジャッジをディベートに自動で配置することに成功しました。"
+msgstr "事前設定されたパネルを試合に自動で配置しました。"
 
 #: adjallocation/consumers.py
 #, python-format
 msgid "Successfully auto-allocated adjudicators to debates. However, there was a warning:"
 msgid_plural "Successfully auto-allocated adjudicators to debates. However, there were %(count)d warnings:"
-msgstr[0] "ディベートにジャッジを自動で割り当てることに成功しました。以下の警告があります（ %(count)d 個）。"
+msgstr[0] "試合にジャッジを自動配置しました。以下の%(count)dつの警告があります："
 
 #: adjallocation/consumers.py
 msgid "Successfully auto-allocated adjudicators to debates."
-msgstr "ジャッジを自動で配置することに成功しました。"
+msgstr "試合にジャッジを自動配置しました。"
 
 #: adjallocation/consumers.py
 msgid "There aren't any panels to fill. Create panels first."
@@ -95,19 +95,19 @@ msgstr "パネルがいません。まずパネルを作成してください。
 #, python-format
 msgid "Successfully auto-allocated adjudicators to preformed panels. However, there was a warning:"
 msgid_plural "Successfully auto-allocated adjudicators to preformed panels. However, there were %(count)d warnings:"
-msgstr[0] "事前設定したパネルににジャッジを自動で割り当てることに成功しました。以下の警告があります（ %(count)d 個）。"
+msgstr[0] "試合に事前設定したパネルを自動配置しました。以下の%(count)dつの警告があります。"
 
 #: adjallocation/consumers.py
 msgid "Successfully auto-allocated adjudicators to preformed panels."
-msgstr "ジャッジを自動で事前に用意されたパネルの枠に配置することに成功しました。"
+msgstr "ジャッジを自動で事前設定しました。"
 
 #: adjallocation/consumers.py
 msgid "You have no break category set as 'is general' so debate importances can't be calculated."
-msgstr "「一般」として設定されたブレイクカテゴリーがないため、ディベートの重要度を計算できません。"
+msgstr "「一般」として設定されたブレイクカテゴリーがないため、試合の重要度を計算できません。"
 
 #: adjallocation/consumers.py
 msgid "Succesfully auto-prioritised debates."
-msgstr "ディベートの優先度の自動設定に成功しました。"
+msgstr "ディベートの優先度を自動設定しました。"
 
 #: adjallocation/consumers.py
 msgid "You have no break category set as 'is general' so panel importances can't be calculated."
@@ -115,19 +115,19 @@ msgstr "「一般」として設定されたブレイクカテゴリーがない
 
 #: adjallocation/consumers.py
 msgid "Succesfully auto-prioritised preformed panels."
-msgstr "用意されたパネル枠の優先度の自動設定に成功しました。"
+msgstr "事前設定されたパネルの優先度を自動設定しました。"
 
 #: adjallocation/consumers.py
 msgid "Since this is the first round, the preformed panels aren't annotated with brackets and liveness."
-msgstr "これが初戦のため、用意されたパネル枠には勝ち点や生存度で注釈をつけることができません。"
+msgstr "これが初戦のため、事前設定されたパネルには勝ち点や生存度を関連させることはできません。"
 
 #: adjallocation/consumers.py
 msgid "The previous round's draw doesn't exist, so preformed panels can't be annotated with brackets and liveness."
-msgstr "1つ前の試合は対戦表がまだないため、用意されたパネル枠には勝ち点や生存度で注釈をつけることができません。"
+msgstr "前の試合の対戦表がまだないため、事前設定されたパネルには勝ち点や生存度を関連させることはできません。"
 
 #: adjallocation/consumers.py
 msgid "Succesfully created new preformed panels for this round."
-msgstr "このラウンドに新しくパネル枠を作ることに成功しました。"
+msgstr "新しく事前設定されたパネルを作成しました。"
 
 #: adjallocation/models.py
 msgid "chair"
@@ -155,7 +155,7 @@ msgstr "タイプ"
 
 #: adjallocation/models.py
 msgid "available?"
-msgstr "有効ですか？"
+msgstr "参加可能？"
 
 #: adjallocation/models.py
 msgid "debate adjudicator"
@@ -195,23 +195,23 @@ msgstr "ジャッジ間コンフリクト"
 
 #: adjallocation/models.py
 msgid "institution"
-msgstr "インスティチューション"
+msgstr "インステ"
 
 #: adjallocation/models.py
 msgid "adjudicator-institution conflict"
-msgstr "ジャッジ・インスティチューション間のコンフリクト"
+msgstr "ジャッジ・インステ間コンフリクト"
 
 #: adjallocation/models.py
 msgid "adjudicator-institution conflicts"
-msgstr "ジャッジ・インスティチューション間のコンフリクト"
+msgstr "ジャッジ・インステ間コンフリクト"
 
 #: adjallocation/models.py
 msgid "team-institution conflict"
-msgstr "チーム・大学（または団体）間のコンフリクト"
+msgstr "チーム・インステ間コンフリクト"
 
 #: adjallocation/models.py
 msgid "team-institution conflicts"
-msgstr "チーム・大学（または団体）間のコンフリクト"
+msgstr "チーム・インステ間コンフリクト"
 
 #: adjallocation/models.py
 msgid "round"
@@ -275,7 +275,7 @@ msgstr "事前設定されたパネルジャッジ"
 
 #: adjallocation/preformed/base.py
 msgid "There are no preformed panels to use. Have you allocated preformed panels for this round? If not, try just auto-allocating adjudicators instead."
-msgstr "使用できる事前設定されたパネルはいません。このラウンドに事前設定したパネルを配置済みですか？もし配置が済んでいなければ、代わりにジャッジの自動配置をお試しください。"
+msgstr "使用できる事前設定されたパネルはありせん。個のラウンドのパネルを事前に設定しましたか？事前設定していなければ、代わりにジャッジの自動配置をお試しください。"
 
 #: adjallocation/templates/preformed_index.html adjallocation/views.py
 msgid "Preformed Panels"
@@ -283,16 +283,16 @@ msgstr "事前設定されたパネル"
 
 #: adjallocation/templates/preformed_index.html
 msgid "A preformed panel is a defined group of adjudicators that is specified for a round before its draw has been generated. You can then manually or automatically apply these panels during the normal adjudicator allocation process. This can make allocations faster or allow you to create more considered panels of adjudicators."
-msgstr "「事前設定されたパネル」はドロー生成前にラウンドに割り当てられたジャッジグループと定義されています。これらのパネルは通常のジャッジアロケーション作業の間に、自動もしくは手動で適用できます。より早くアロケーションを行うことができ、または配慮の行き届いたパネル配置を実現できます。"
+msgstr "「事前設定されたパネル」は、対戦表生成前に各ラウンドに設定されたジャッジのグループです。このパネルは通常のジャッジアロケーション作業の間に、自動もしくは手動で作成できます。より早くアロケーションを行うことができ、または配慮の行き届いたパネル配置を実現できます。"
 
 #: adjallocation/templates/preformed_index.html
 msgid "Note that only adjudicators who have been marked as 'available' for that round will be able to be allocated for that round, so you may need to set their availability in advance."
-msgstr "「参加可能」と表示されているジャッジのみがそのラウンドに割り当てられているか確認してください。 事前にジャッジの参加可否を設定する必要がある場合があります。"
+msgstr "「参加可能」と表示されているジャッジのみがそのラウンドに配置できます。 事前にジャッジの参加状況を設定する必要がある場合があります。"
 
 #: adjallocation/templates/preformed_index.html
 #, python-format
 msgid "Edit Preformed Panels for %(round)s"
-msgstr "%(round)sの事前設定されたパネルを編集する"
+msgstr "%(round)sの事前設定されたパネルを編集"
 
 #: adjallocation/utils.py
 #, python-format
@@ -302,7 +302,7 @@ msgstr "コンフリクト：<strong>%(adjudicator)s</strong>・<strong>%(team)s
 #: adjallocation/utils.py
 #, python-format
 msgid "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> via institution <strong>%(institution)s</strong>"
-msgstr "コンフリクト：<strong>%(adjudicator)s</strong>・<strong>%(team)s</strong>（<strong>%(institution)s</strong>・大学/団体）"
+msgstr "コンフリクト：<strong>%(adjudicator)s</strong>・<strong>%(team)s</strong>（インステ<strong>%(institution)s</strong>関連）"
 
 #: adjallocation/utils.py
 #, python-format
@@ -312,7 +312,7 @@ msgstr "コンフリクト：<strong>%(adjudicator1)s</strong>・<strong>%(adjud
 #: adjallocation/utils.py
 #, python-format
 msgid "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> via institution <strong>%(institution)s</strong>"
-msgstr "コンフリクト：<strong>%(adjudicator1)s</strong>・<strong>%(adjudicator2)s</strong>（<strong>%(institution)s</strong>・大学/団体）"
+msgstr "コンフリクト：<strong>%(adjudicator1)s</strong>・<strong>%(adjudicator2)s</strong>（インステ<strong>%(institution)s</strong>関連）"
 
 #: adjallocation/views.py
 msgid "Male"
@@ -332,11 +332,11 @@ msgstr "不明"
 
 #: adjallocation/views.py
 msgid "Edit Allocation"
-msgstr "アロケーションを編集する"
+msgstr "アロケーションを編集"
 
 #: adjallocation/views.py
 msgid "Edit Panels"
-msgstr "パネルを編集する"
+msgstr "パネルを編集"
 
 #: adjallocation/views.py
 msgid "Return to Panels Overview"
@@ -348,23 +348,23 @@ msgstr "ジャッジ・チーム間コンフリクト"
 
 #: adjallocation/views.py
 msgid "Save Adjudicator-Team Conflicts"
-msgstr "ジャッジ・チーム間のコンフリクトを保存する"
+msgstr "ジャッジ・チーム間コンフリクトを保存"
 
 #: adjallocation/views.py
 #, python-format
 msgid "Saved %(count)d adjudicator-team conflict."
 msgid_plural "Saved %(count)d adjudicator-team conflicts."
-msgstr[0] "%(count)d件のジャッジ・チーム間コンフリクトが保存されました。"
+msgstr[0] "%(count)d件のジャッジ・チーム間コンフリクトを保存しました。"
 
 #: adjallocation/views.py
 #, python-format
 msgid "Deleted %(count)d adjudicator-team conflict."
 msgid_plural "Deleted %(count)d adjudicator-team conflicts."
-msgstr[0] "%(count)d件のジャッジ・チーム間コンフリクトが削除されました。"
+msgstr[0] "%(count)d件のジャッジ・チーム間コンフリクトを削除しました。"
 
 #: adjallocation/views.py
 msgid "No changes were made to adjudicator-team conflicts."
-msgstr "ジャッジ・チーム間のコンフリクトに変更された点はありません。"
+msgstr "ジャッジ・チーム間コンフリクトに変更はありません。"
 
 #: adjallocation/views.py
 msgid "Adjudicator-Adjudicator Conflicts"
@@ -372,69 +372,69 @@ msgstr "ジャッジ間コンフリクト"
 
 #: adjallocation/views.py
 msgid "Save Adjudicator-Adjudicator Conflicts"
-msgstr "ジャッジ間コンフリクトを保存する"
+msgstr "ジャッジ間コンフリクトを保存"
 
 #: adjallocation/views.py
 #, python-format
 msgid "Saved %(count)d adjudicator-adjudicator conflict."
 msgid_plural "Saved %(count)d adjudicator-adjudicator conflicts."
-msgstr[0] "%(count)d件のジャッジ間コンフリクトを保存されました。"
+msgstr[0] "%(count)d件のジャッジ間コンフリクトを保存しました。"
 
 #: adjallocation/views.py
 #, python-format
 msgid "Deleted %(count)d adjudicator-adjudicator conflict."
 msgid_plural "Deleted %(count)d adjudicator-adjudicator conflicts."
-msgstr[0] "%(count)d件のジャッジ間コンフリクトを削除されました。"
+msgstr[0] "%(count)d件のジャッジ間コンフリクトを削除しました。"
 
 #: adjallocation/views.py
 msgid "No changes were made to adjudicator-adjudicator conflicts."
-msgstr "ジャッジ間コンフリクトに変更された点はありません。"
+msgstr "ジャッジ間コンフリクトに変更はありません。"
 
 #: adjallocation/views.py
 msgid "Adjudicator-Institution Conflicts"
-msgstr "ジャッジ・インスティチューション間のコンフリクト"
+msgstr "ジャッジ・インステ間コンフリクト"
 
 #: adjallocation/views.py
 msgid "Save Adjudicator-Institution Conflicts"
-msgstr "ジャッジ・インスティチューション間のコンフリクトを保存する"
+msgstr "ジャッジ・インステ間コンフリクトを保存"
 
 #: adjallocation/views.py
 #, python-format
 msgid "Saved %(count)d adjudicator-institution conflict."
 msgid_plural "Saved %(count)d adjudicator-institution conflicts."
-msgstr[0] "%(count)d件のジャッジ・インスティチューション間のコンフリクトが保存されました。"
+msgstr[0] "%(count)d件のジャッジ・インステ間コンフリクトを保存しました。"
 
 #: adjallocation/views.py
 #, python-format
 msgid "Deleted %(count)d adjudicator-institution conflict."
 msgid_plural "Deleted %(count)d adjudicator-institution conflicts."
-msgstr[0] "%(count)d件のジャッジ・インスティチューション間のコンフリクトが削除されました。"
+msgstr[0] "%(count)d件のジャッジ・インステ間コンフリクトを削除しました。"
 
 #: adjallocation/views.py
 msgid "No changes were made to adjudicator-institution conflicts."
-msgstr "ジャッジ・インスティチューション間のコンフリクトに変更された点はありません。"
+msgstr "ジャッジ・インステ間コンフリクトに変更はありません。"
 
 #: adjallocation/views.py
 msgid "Team-Institution Conflicts"
-msgstr "チーム・大学（または団体）間のコンフリクト"
+msgstr "チーム・インステ間コンフリクト"
 
 #: adjallocation/views.py
 msgid "Save Team-Institution Conflicts"
-msgstr "チーム・大学（または団体）間のコンフリクトを保存する"
+msgstr "チーム・インステ間コンフリクトを保存"
 
 #: adjallocation/views.py
 #, python-format
 msgid "Saved %(count)d team-institution conflict."
 msgid_plural "Saved %(count)d team-institution conflicts."
-msgstr[0] "%(count)d個のチーム・大学（または団体）間のコンフリクトを保存しました。"
+msgstr[0] "%(count)d件のチーム・インステ間コンフリクトを保存しました。"
 
 #: adjallocation/views.py
 #, python-format
 msgid "Deleted %(count)d team-institution conflict."
 msgid_plural "Deleted %(count)d team-institution conflicts."
-msgstr[0] "%(count)d個のチーム・大学（または団体）間のコンフリクトを削除しました。"
+msgstr[0] "%(count)d個のチーム・インステ間コンフリクトを削除しました。"
 
 #: adjallocation/views.py
 msgid "No changes were made to team-institution conflicts."
-msgstr "チーム・大学（または団体）間のコンフリクトに変更はありません。"
+msgstr "チーム・インステ間コンフリクトに変更はありません。"
 

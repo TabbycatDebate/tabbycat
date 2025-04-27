@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-05 17:26\n"
+"PO-Revision-Date: 2024-06-30 18:16\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -20,47 +20,47 @@ msgstr ""
 
 #: ../../use/running-a-tournament.rst:5
 msgid "Running a Tournament"
-msgstr ""
+msgstr "Organizando un torneo"
 
 #: ../../use/running-a-tournament.rst:7
 msgid "Once you've finished the steps in :ref:`starting-a-tournament`, you're ready to go! This page outlines what you would do for each round during the tournament. After the tournament, proceed to :ref:`finishing-a-tournament`."
-msgstr ""
+msgstr "Una vez que hayas terminado los pasos en :ref:`starting-a-tournament`, ¡estás listo para ir! Esta página describe lo que harías por cada ronda durante el torneo. Después del torneo procede a :ref:`finishing-a-tournament`."
 
 #: ../../use/running-a-tournament.rst:9
 msgid "This is all done from the admin area (*i.e.*, by the tab director or adjudication core member). In the admin area, tournament-wide pages (feedback, standings, and break) are at the top of the left-hand menu, while round-specific pages (availability, draw, display, motions, and results) are in dropdown's organised by each round's abbreviation."
-msgstr ""
+msgstr "Todo esto se hace desde el área de administración (*i.e.*, por el director de tabulaciones o jefe de adjudicación). En el área de administración, las páginas de todo el torneo (comentarios, clasificaciones y breaks) están en la parte superior del menú de la izquierda, mientras que las páginas redondas específicas (disponibilidad, dibujo, visualización, movimientos y resultados) están organizadas por la abreviatura de cada ronda."
 
 #: ../../use/running-a-tournament.rst:11
 msgid "The basic workflow for each round is:"
-msgstr ""
+msgstr "El flujo de trabajo básico para cada ronda es:"
 
 #: ../../use/running-a-tournament.rst:13
 msgid ":ref:`Mark the teams, adjudicators, and venues present as available <availability>`"
-msgstr ""
+msgstr ":ref:`Marca los equipos, adjudicadores y salas como disponibles <availability>`"
 
 #: ../../use/running-a-tournament.rst:14
 msgid ":ref:`Generate the draw <generating-the-draw>` and allocate the adjudicators"
-msgstr ""
+msgstr ":ref:`Genera el draw <generating-the-draw>` y asigna los adjudicadores"
 
 #: ../../use/running-a-tournament.rst:15
 msgid ":ref:`Show/release the draw <releasing-the-draw>`"
-msgstr ""
+msgstr ":ref:`Mostrar/liberar el draw <releasing-the-draw>`"
 
 #: ../../use/running-a-tournament.rst:16
 msgid ":ref:`Release/enter <releasing-the-motions>` the motions"
-msgstr ""
+msgstr ":ref:`Soltar/ingresar <releasing-the-motions>` las mociones"
 
 #: ../../use/running-a-tournament.rst:17
 msgid "Have the debates"
-msgstr ""
+msgstr "Tener los debates"
 
 #: ../../use/running-a-tournament.rst:18
 msgid ":ref:`Enter results <entering-results>`"
-msgstr ""
+msgstr ":ref:`Introduzca los resultados <entering-results>`"
 
 #: ../../use/running-a-tournament.rst:19
 msgid ":ref:`Advance to the next round <advancing-round>`"
-msgstr ""
+msgstr ":ref:`Avanza a la siguiente ronda <advancing-round>`"
 
 #: ../../use/running-a-tournament.rst:24
 msgid "Availability"
@@ -68,35 +68,35 @@ msgstr "Disponibilidad"
 
 #: ../../use/running-a-tournament.rst:26
 msgid "**Set availability.** For each round, you need to set the venue, team and adjudicator availability. If any of those are not marked as available they will not be used within the draw; so this feature is mostly useful for when adjudicators or venues are only available for certain rounds."
-msgstr ""
+msgstr "**Establecer disponibilidad.** Para cada ronda, debes establecer la disponibilidad, el equipo y la disponibilidad del adjudicador. Si alguno de ellos no está marcado como disponible, no se utilizará dentro del empate; por lo que esta característica es principalmente útil para cuando los adjudicadores o locales sólo están disponibles para ciertas rondas."
 
 #: ../../use/running-a-tournament.rst:28
 msgid "To do this, click the round in the menu, then click **Check-Ins**. Here you can then go to the availability pages for venue, teams, and adjudicators, or check in everything at once. When you've set everything appropriately use the **Generate Draw** button in the top right to advance."
-msgstr ""
+msgstr "Para ello, haz clic en la ronda del menú, luego haz clic en **Check-Ins**. Aquí usted puede ir a las páginas de disponibilidad para las salas, equipos y adjudicadores, o comprobar todo a la vez. Cuando hayas configurado todo correctamente, usa el botón **Generar Draw** en la parte superior derecha para avanzar."
 
 #: ../../use/running-a-tournament.rst:34
 msgid "You can set availabilities in advance of the current round — ie if you know the venue/adjudicator schedules their availabilities can be set ahead of time."
-msgstr ""
+msgstr "Puede establecer la disponibilidad de antemano de la ronda actual – es decir, si sabe que la sala o el adjudicador programan su disponibilidad, pueden establecerse con antelación."
 
 #: ../../use/running-a-tournament.rst:37
 msgid "Generating the draw"
-msgstr ""
+msgstr "Generando el draw"
 
 #: ../../use/running-a-tournament.rst:39
 msgid "**Confirm the draft draw**. After advancing from availability section you will first be shown a draft draw that details how the draw was formulated, pointing out pull-ups and conflict swaps and the like."
-msgstr ""
+msgstr "**Confirme el borrador del draw**. Después de avanzar desde la sección de disponibilidad se le mostrará primero un borrador que detalla cómo se formuló el sorteo, señalando \"pull-ups\" y \"swaps\" de conflictos y similares."
 
 #: ../../use/running-a-tournament.rst:43
 msgid "The draft draw is for you to double-check. While there are some basic tests on the draw algorithm, it never hurts to sanity-check it again."
-msgstr ""
+msgstr "El borrador del draw es para que usted realice una doble comprobación. Aunque hay algunas pruebas básicas en el algoritmo de draw, no daña el verificar, compruébalo de nuevo."
 
 #: ../../use/running-a-tournament.rst:45
 msgid "If you *do* find something wrong with a draft draw, you can edit the match-ups, but please also let us know what the problem was! You can find our contact details in the :ref:`authors` section."
-msgstr ""
+msgstr "¡Si usted *encuentra* algo mal con un borrador del draw, usted puede editar las rondas pero por favor háganoslo saber cuál fue el problema! Puedes encontrar nuestros datos de contacto en la sección de `authors` de :ref."
 
 #: ../../use/running-a-tournament.rst:47
 msgid "Once on the confirmed draw page you can click **Edit Adjudicators**."
-msgstr ""
+msgstr "Una vez en la página del draw confirmada puedes hacer clic en **Editar adjudicadores**."
 
 #: ../../use/running-a-tournament.rst:51
 msgid "**Allocate the adjudicators**. Changes here will auto-save; feel free to return to the **Draw** when needed. See :ref:`adjudicator allocation <adjudicator-allocation>` for more details about the allocation process."

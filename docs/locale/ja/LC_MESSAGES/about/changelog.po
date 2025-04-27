@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-05 17:21\n"
+"PO-Revision-Date: 2025-02-15 07:22\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -20,23 +20,23 @@ msgstr ""
 
 #: ../../../CHANGELOG.rst:3
 msgid "Change Log"
-msgstr ""
+msgstr "リリースノート"
 
 #: ../../../CHANGELOG.rst:6
 msgid "2.4.0 (Maine)"
-msgstr ""
+msgstr "2.4.0 (Maine)"
 
 #: ../../../CHANGELOG.rst:7
 msgid "*Release date: ?*"
-msgstr ""
+msgstr "*公開日：?*"
 
 #: ../../../CHANGELOG.rst:9
 msgid "Added support for Russian, and shortened the language selector"
-msgstr ""
+msgstr "ロシア語機能を追加、言語選択欄を短縮化しました"
 
 #: ../../../CHANGELOG.rst:10
 msgid "Renamed 'test score' to 'base score'"
-msgstr ""
+msgstr "「テストスコア」を「ベーススコア」に改名しました"
 
 #: ../../../CHANGELOG.rst:11
 msgid "Divisions-specific features have been deprecated and removed"
@@ -44,7 +44,7 @@ msgstr ""
 
 #: ../../../CHANGELOG.rst:12
 msgid "Moved the 'Edit Database' menu item to the dropdown with the logo in the admin navigation"
-msgstr ""
+msgstr "管理者用ナビゲーションの「データベース編集」のメニュー項目をロゴの下のドロップダウンに移動しました"
 
 #: ../../../CHANGELOG.rst:13
 msgid "Pull-ups can now be restricted to teams with the lowest draw strength (by speaker or team points) of their bracket"

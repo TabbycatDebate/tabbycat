@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:58\n"
+"PO-Revision-Date: 2025-02-15 07:22\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: motions/apps.py motions/templates/public_motions.html
 msgid "Motions"
-msgstr "モーション"
+msgstr "論題"
 
 #: motions/models.py
 msgid "text"
@@ -35,7 +35,7 @@ msgstr "参照"
 
 #: motions/models.py
 msgid "Shortcode for the motion, e.g., \"Bananas\""
-msgstr "モーションの短略"
+msgstr "モーションの短略名"
 
 #: motions/models.py
 msgid "info slide"
@@ -43,12 +43,11 @@ msgstr "インフォスライド"
 
 #: motions/models.py
 msgid "The information slide for this topic; if it has one"
-msgstr "このモーションのインフォスライドです。\n"
-"もしあれば入力してください。"
+msgstr "このモーションのインフォスライド。もしあれば入力してください。"
 
 #: motions/models.py
 msgid "tournament"
-msgstr "トーナメント"
+msgstr "大会"
 
 #: motions/models.py
 msgid "rounds"
@@ -76,11 +75,11 @@ msgstr "バロットの提出"
 
 #: motions/models.py
 msgid "debate team motion preference"
-msgstr ""
+msgstr "ディベートチームの論題選択"
 
 #: motions/models.py
 msgid "debate team motion preferences"
-msgstr ""
+msgstr "ディベートチームの論題選択"
 
 #: motions/models.py
 msgid "round"
@@ -88,70 +87,70 @@ msgstr "ラウンド"
 
 #: motions/models.py
 msgid "sequence number"
-msgstr ""
+msgstr "順番"
 
 #: motions/models.py
 msgid "The order in which motions are displayed"
-msgstr ""
+msgstr "論題が表示される順番"
 
 #: motions/models.py
 msgid "round motion"
-msgstr "モーション"
+msgstr "ラウンドの論題"
 
 #: motions/models.py
 msgid "round motions"
-msgstr "モーション"
+msgstr "ラウンドの論題"
 
 #: motions/statistics.py
 msgid "extremely strong evidence"
-msgstr ""
+msgstr "非常に強い"
 
 #: motions/statistics.py
 msgid "strong evidence"
-msgstr ""
+msgstr "強い"
 
 #: motions/statistics.py
 msgid "moderate evidence"
-msgstr ""
+msgstr "ある程度の"
 
 #: motions/statistics.py
 msgid "weak evidence"
-msgstr ""
+msgstr "弱い"
 
 #: motions/statistics.py
 msgid "very weak evidence"
-msgstr ""
+msgstr "非常に弱い"
 
 #: motions/statistics.py
 msgid "extremely weak evidence"
-msgstr ""
+msgstr "非常に弱い"
 
 #: motions/statistics.py
 msgid "balance inconclusive"
-msgstr ""
+msgstr "結論出せず"
 
 #: motions/statistics.py
 msgid "too few debates to get a meaningful statistic"
-msgstr ""
+msgstr "有意な統計を出すには試合数が少なすぎます"
 
 #: motions/statistics.py
 #, python-format
 msgid "imbalanced at %(level)s level"
-msgstr ""
+msgstr "%(level)s水準でバランスに偏り"
 
 #: motions/statistics.py
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing %(evidence)s to suggest that this motion was imbalanced — at a %(level)s level of significance."
-msgstr ""
+msgstr "χ²検定値は%(chisq).3fで、この論題に有意水準%(level)sの%(evidence)s偏りがあることを示します。"
 
 #: motions/statistics.py
 msgid "probably balanced"
-msgstr ""
+msgstr "サイドバランスに問題なし"
 
 #: motions/statistics.py
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that this motion was imbalanced at any level of significance."
-msgstr ""
+msgstr "χ²検定値は%(chisq).3fで、偏りは検出できません。"
 
 #: motions/templates/motion_global_statistics.html
 #: motions/templates/motion_round_statistics.html
@@ -163,59 +162,59 @@ msgstr "インフォスライドを表示"
 #, python-format
 msgid "results from %(ndebates)s debate"
 msgid_plural "results from %(ndebates)s debates"
-msgstr[0] ""
+msgstr[0] "%(ndebates)s試合の結果"
 
 #: motions/templates/motion_statistics_bp_elim.html
 #, python-format
 msgid "%(advancing)s of %(ndebates)s team on %(side)s (%(percentage)s%%) advanced"
 msgid_plural "%(advancing)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) advanced"
-msgstr[0] ""
+msgstr[0] "%(side)sの%(advancing)s/%(ndebates)sチームが進出（%(percentage)s%%）"
 
 #: motions/templates/motion_statistics_bp_elim.html
 #, python-format
 msgid "%(eliminated)s of %(ndebates)s team on %(side)s (%(percentage)s%%) were eliminated"
 msgid_plural "%(eliminated)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) were eliminated"
-msgstr[0] ""
+msgstr[0] "%(side)sの%(eliminated)s/%(ndebates)sチームが敗退（%(percentage)s%%）"
 
 #: motions/templates/motion_statistics_bp_elim.html
 msgid "advanced"
-msgstr ""
+msgstr "進出"
 
 #: motions/templates/motion_statistics_bp_elim.html
 msgctxt "abbreviation for 'advanced', used when not enough space"
 msgid "adv."
-msgstr ""
+msgstr "進出"
 
 #: motions/templates/motion_statistics_bp_elim.html
 msgid "eliminated"
-msgstr ""
+msgstr "敗退"
 
 #: motions/templates/motion_statistics_bp_elim.html
 msgctxt "abbreviation for 'eliminated', used when not enough space"
 msgid "elim."
-msgstr ""
+msgstr "敗退"
 
 #: motions/templates/motion_statistics_bp_elim.html
 #, python-format
 msgid "%(side)s results distribution"
-msgstr ""
+msgstr "%(side)s結果分布"
 
 #: motions/templates/motion_statistics_bp_elim.html
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "No results for this motion"
-msgstr "このモーションの結果はありません。"
+msgstr "このモーションの結果はありません"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Government"
-msgstr "Goverment"
+msgstr "肯定"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Opposition"
-msgstr "Opposition"
+msgstr "否定"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Average Points per bench"
-msgstr ""
+msgstr "ベンチごとの平均点"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Opening"
@@ -227,61 +226,61 @@ msgstr "クロージング"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Average Points per half"
-msgstr ""
+msgstr "ハーフごとの平均点"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 #, python-format
 msgid "average points per position (%(ndebates)s debate)"
 msgid_plural "average points per position (%(ndebates)s debates)"
-msgstr[0] ""
+msgstr[0] "サイドごとの平均点（%(ndebates)s試合）"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 #, python-format
 msgid "%(count)s result for %(side)s (%(percentage)s%%) were for %(points)s points"
 msgid_plural "%(count)s results for %(side)s (%(percentage)s%%) were for %(points)s points"
-msgstr[0] ""
+msgstr[0] "%(side)sの%(count)sチーム（%(percentage)s%%）が%(points)s点"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 #, python-format
 msgid "%(side)s results"
-msgstr ""
+msgstr "%(side)s結果"
 
 #: motions/templates/motion_statistics_twoteam.html
 #, python-format
 msgid "%(count)s %(side)s win"
 msgid_plural "%(count)s %(side)s wins"
-msgstr[0] ""
+msgstr[0] "%(side)s側%(count)s勝"
 
 #: motions/templates/motion_statistics_twoteam.html
 msgid "No teams debated this motion"
-msgstr "この論題について議論したチームはありません"
+msgstr "この論題を扱ったチーム無し"
 
 #: motions/templates/motion_statistics_twoteam.html
 #, python-format
 msgid "%(count)s %(side)s veto"
 msgid_plural "%(count)s %(side)s vetoes"
-msgstr[0] ""
+msgstr[0] "%(side)s側%(count)s拒否（veto）"
 
 #: motions/templates/motion_statistics_twoteam.html
 msgid "No teams vetoed this motion"
-msgstr ""
+msgstr "この論題を拒否（veto）したチーム無し"
 
 #: motions/templates/motions_edit.html
 msgid "Edit Motion"
 msgid_plural "Edit Motions"
-msgstr[0] "論題の編集"
+msgstr[0] "論題を編集"
 
 #: motions/templates/motions_edit.html
 msgid "Display Draw"
-msgstr "対戦表を公開する"
+msgstr "対戦表を公開"
 
 #: motions/templates/motions_edit.html
 msgid "This will replace all existing motions for this round. The motions themselves will still be in the database."
-msgstr ""
+msgstr "このラウンドのすべての論題を置き換えますが、論題自体はデータベースには残ります。"
 
 #: motions/templates/motions_edit.html
 msgid "Reuse Motions from Last Round"
-msgstr "前回のラウンドからの論題を再利用する"
+msgstr "前回のラウンドの論題を再利用"
 
 #: motions/templates/motions_edit.html
 msgid "Use Existing Motions"
@@ -290,7 +289,7 @@ msgstr "既存の論題を使用"
 #: motions/templates/motions_edit.html
 msgid "The motion for this round is currently publicly displayed because it was released. Any changes made here will be publicly visible as well as soon as they are saved."
 msgid_plural "The motions for this round are currently publicly displayed because they were released. Any changes made here will be publicly visible as well as soon as they are saved."
-msgstr[0] ""
+msgstr[0] "このラウンドの論題は既にリリースされているため誰でも閲覧可能です。論題への変更は即座に公に反映されます。"
 
 #: motions/templates/motions_edit.html
 msgid "Save Motion"
@@ -307,83 +306,83 @@ msgstr "このラウンドには利用可能な論題はありません。"
 
 #: motions/templates/public_motions.html
 msgid "The motions for this round have not been released."
-msgstr ""
+msgstr "まだ論題をリリースしていません。"
 
 #: motions/templates/public_motions.html
 msgid "The motion for this round has not been released."
-msgstr ""
+msgstr "まだ論題をリリースしていません。"
 
 #: motions/templates/show.html
 #, python-format
 msgid "Motion for %(round)s"
 msgid_plural "Motions for %(round)s"
-msgstr[0] ""
+msgstr[0] "%(round)sの論題"
 
 #: motions/templates/show.html
 #, python-format
 msgid "Reveal Info Slide for %(round)s"
 msgid_plural "Reveal Info Slides for %(round)s"
-msgstr[0] ""
+msgstr[0] "%(round)sのインフォスライドを表示"
 
 #: motions/templates/show.html
 #, python-format
 msgid "Reveal Motion for %(round)s"
 msgid_plural "Reveal Motions for %(round)s"
-msgstr[0] ""
+msgstr[0] "%(round)sの論題を表示"
 
 #: motions/templates/show.html
 msgid "There are no motions for this round entered into Tabbycat."
-msgstr ""
+msgstr "論題が入力されていません。"
 
 #: motions/utils.py
 msgid "Not all latest ballots have the same motion. The correct motion must be set manually."
-msgstr ""
+msgstr "異なる論題が入力されているバロットがあります。手動で正しい論題を設定してください。"
 
 #: motions/utils.py
 msgid "Motion vetos are inconsistent; they must be set manually."
-msgstr ""
+msgstr "論題の拒否（veto）が一貫していません。手動で正しい論題を設定してください。"
 
 #: motions/views.py
 msgid "The motion has been saved."
-msgstr "モーションが保存されました。"
+msgstr "モーションを保存しました。"
 
 #: motions/views.py
 #, python-format
 msgid "%(count)d motion has been saved."
 msgid_plural "%(count)d motions have been saved."
-msgstr[0] ""
+msgstr[0] "%(count)dつの論題を保存しました。"
 
 #: motions/views.py
 #, python-format
 msgid "%(count)d motion has been deleted."
 msgid_plural "%(count)d motions have been deleted."
-msgstr[0] ""
+msgstr[0] "%(count)dつの論題を削除しました。"
 
 #: motions/views.py
 msgid "Motions cannot be copied to the first round."
-msgstr ""
+msgstr "最初のラウンドに論題をコピーできません。"
 
 #: motions/views.py
 #, python-format
 msgid "Reused the motion from the previous round."
 msgid_plural "Reused the %(count)d motions from the previous round."
-msgstr[0] ""
+msgstr[0] "前のラウンドから%(count)dつの論題を再利用しました。"
 
 #: motions/views.py
 msgid "Released the motion."
 msgid_plural "Released the motions."
-msgstr[0] ""
+msgstr[0] "論題をリリースしました。"
 
 #: motions/views.py
 msgid "Unreleased the motion."
 msgid_plural "Unreleased the motions."
-msgstr[0] ""
+msgstr[0] "論題のリリースを取り消しました。"
 
 #: motions/views.py
 msgid "Round Motions"
-msgstr ""
+msgstr "ラウンドの論題"
 
 #: motions/views.py
 msgid "Motion Statistics"
-msgstr ""
+msgstr "論題の統計"
 

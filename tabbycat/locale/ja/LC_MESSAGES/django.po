@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:58\n"
+"PO-Revision-Date: 2025-02-15 07:22\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -19,15 +19,15 @@ msgstr ""
 
 #: api/apps.py
 msgid "Application Programming Interface"
-msgstr ""
+msgstr "アプリケーション・プログラミング・インターフェイス(API)"
 
 #: checkins/admin.py
 msgid "Type"
-msgstr ""
+msgstr "種類"
 
 #: checkins/admin.py
 msgid "Checkin time"
-msgstr ""
+msgstr "チェックイン時刻"
 
 #: checkins/apps.py templates/nav/admin_nav.html
 #: templates/nav/assistant_nav.html templates/nav/public_nav.html
@@ -36,19 +36,19 @@ msgstr "チェックイン"
 
 #: checkins/consumers.py
 msgid "Sent checkin identifier doesn't exist"
-msgstr ""
+msgstr "この識別コードはありません"
 
 #: checkins/consumers.py
 msgid "Checkins"
-msgstr ""
+msgstr "チェックイン"
 
 #: checkins/consumers.py
 msgid "No checkin identifiers exist for sent barcodes"
-msgstr ""
+msgstr "このバーコードに対応する識別コードはありません"
 
 #: checkins/models.py
 msgid "The barcode must contain exactly six digits."
-msgstr ""
+msgstr "バーコードは6桁の数字である必要があります。"
 
 #: checkins/models.py
 msgid "barcode"
@@ -69,15 +69,15 @@ msgstr "人"
 
 #: checkins/models.py
 msgid "person identifier"
-msgstr "個人の識別子"
+msgstr "個人の識別コード"
 
 #: checkins/models.py
 msgid "person identifiers"
-msgstr "個人の識別子"
+msgstr "個人の識別コード"
 
 #: checkins/models.py
 msgid "debate"
-msgstr "ディベート"
+msgstr "試合"
 
 #: checkins/models.py
 msgid "debate identifier"
@@ -89,11 +89,11 @@ msgstr "ディベートの識別コード"
 
 #: checkins/models.py
 msgid "room identifier"
-msgstr "ラウンド部屋の識別コード"
+msgstr "部屋の識別コード"
 
 #: checkins/models.py
 msgid "room identifiers"
-msgstr "ラウンド部屋の識別コード"
+msgstr "部屋の識別コード"
 
 #: checkins/models.py
 msgid "identifier"
@@ -109,85 +109,84 @@ msgstr "大会"
 
 #: checkins/models.py
 msgid "check-in event"
-msgstr ""
+msgstr "チェックインのイベント"
 
 #: checkins/models.py
 msgid "check-in events"
-msgstr ""
+msgstr "チェックインのイベント"
 
 #: checkins/templates/checkin_ids.html
 msgid "With identifiers"
-msgstr ""
+msgstr "識別コードあり"
 
 #: checkins/templates/checkin_ids.html
 msgid "View as barcodes"
-msgstr ""
+msgstr "バーコードとして表示"
 
 #: checkins/templates/checkin_ids.html
 msgid "Generate missing identifiers"
-msgstr "欠けている識別コードを作成する"
+msgstr "不足している識別コードを作成"
 
 #: checkins/templates/checkin_ids.html
 msgid "Generate all identifiers"
-msgstr "すべての識別コードを作成する"
+msgstr "すべての識別コードを作成"
 
 #: checkins/templates/checkin_ids.html
 msgid "There are no identifiers available to view. An admin will need to generate them."
-msgstr "表示すべき識別コードがありません。\n"
-"管理者が作成する必要があります。"
+msgstr "表示すべき識別コードがありません。管理者が作成する必要があります。"
 
 #: checkins/templates/checkin_printables.html
 msgid "Each of the barcodes below is also an image file that can be downloaded individually. If you want to download them all at once try using a 'bulk downloader' extension/plugin for your browser, such as <a href=\"https://chrome.google.com/webstore/detail/svg-export/naeaaedieihlkmdajjefioajbbdbdjgp?hl=en-GB\">this one (for Chrome)</a>. To download them as a list you can go to Check-Ins section of the Edit Database area and copy/paste from the relevant table."
-msgstr ""
+msgstr "下のそれぞれのバーコードは、個別に画像としてダウンロードできます。もし一括でダウンロードしたい場合、<a href=\"https://chrome.google.com/webstore/detail/svg-export/naeaaedieihlkmdajjefioajbbdbdjgp?hl=en-GB\">この拡張機能（Chrome用）</a>のような一括ダウンロードの拡張機能やプラグインを試してみてください。リストとしてダウンロードする場合、データベース編集エリアのチェックイン関連のセクションから、対象の表をコピー・ペーストすることで達成できます。"
 
 #: checkins/templates/checkin_printables.html
 msgid "You can use Ctrl+P for printing or saving the barcodes PDF. Be sure to set the appropriate <strong>page orientation</strong>, to turn off <strong>headers/footers</strong> and turn on <strong>background graphics</strong>. Works best in Chrome."
-msgstr ""
+msgstr "Ctrl+PでバーコードのPDFを印刷またはPDFとして保存できます。適切な<strong>ページの向き</strong>を設定し、<strong>ヘッダー/フッター</strong>をオフにし、<strong>背景グラフィック</strong>をオンにしてください。Chromeが最適です。"
 
 #: checkins/templates/checkin_scan.html
 msgid "To scan an identifier type the number below (it will auto-submit). You can also use a barcode scanner (configured to work as a keyboard) or scan from a webcam or phone camera using the button below."
-msgstr ""
+msgstr "識別コードを読み込むには、以下に数字を打ち込んでください（自動的に送信されます）。（キーボードとして機能するように設定された）バーコードスキャナーを使用したり、下のボタンからウェブカメラや携帯のカメラを使用したりすることもできます。"
 
 #: checkins/utils.py
 #, python-format
 msgid "Not checked in (barcode %(barcode)s)"
-msgstr ""
+msgstr "チェックイン未完了（バーコード%(barcode)s）"
 
 #: checkins/utils.py
 msgid "Not checked in; no barcode assigned"
-msgstr ""
+msgstr "チェックイン未完了・バーコードがありません"
 
 #: checkins/utils.py
 #, python-format
 msgid "checked in at %(time)s"
-msgstr ""
+msgstr "%(time)sにチェックイン済み"
 
 #: checkins/utils.py
 #, python-format
 msgid "%(speaker)s checked in at %(time)s."
-msgstr ""
+msgstr "%(speaker)sは%(time)sにチェックインしました。"
 
 #: checkins/utils.py
 #, python-format
 msgid "%(speaker)s is missing."
-msgstr ""
+msgstr "%(speaker)sがいません。"
 
 #: checkins/views.py templates/nav/admin_nav.html
 #: templates/nav/assistant_nav.html
 msgid "Scan Identifiers"
-msgstr ""
+msgstr "識別コードをスキャン"
 
 #: checkins/views.py
 msgid "People's Check-In Statuses"
-msgstr ""
+msgstr "参加者のチェックイン状況"
 
 #: checkins/views.py
 msgid "Rooms' Check-In Statuses"
-msgstr ""
+msgstr "部屋のチェックイン状況"
 
 #: checkins/views.py templates/nav/admin_nav.html
 msgid "Make Identifiers"
-msgstr ""
+msgstr "識別コードを作成"
 
 #: checkins/views.py templates/nav/admin_nav.html
 msgid "Speakers"
@@ -199,12 +198,12 @@ msgstr "ジャッジ"
 
 #: checkins/views.py
 msgid "Rooms"
-msgstr "ラウンド部屋"
+msgstr "部屋"
 
 #: checkins/views.py
 #, python-format
 msgid "Generated identifiers for %s"
-msgstr "%sの識別コード"
+msgstr "%sの識別コードを作成しました"
 
 #: checkins/views.py
 msgid "Identifiers"
@@ -212,23 +211,23 @@ msgstr "識別コード"
 
 #: checkins/views.py
 msgid "Could not check you in as you do not have an identifying code — your tab director may need to make you an identifier."
-msgstr ""
+msgstr "識別コードが存在しないためチェックインに失敗しました。タブ管理者に識別コードを作成してもらう必要があります。"
 
 #: checkins/views.py
 msgid "You have revoked your check-in."
-msgstr ""
+msgstr "チェックインをキャンセルしました。"
 
 #: checkins/views.py
 msgid "Whoops! Looks like your check-in was already revoked."
-msgstr ""
+msgstr "おっと！既にチェックインがキャンセルされているみたいです。"
 
 #: checkins/views.py
 msgid "Whoops! Looks like you're already checked in."
-msgstr ""
+msgstr "おっと！既にチェックインしているようです。"
 
 #: checkins/views.py
 msgid "You are now checked in."
-msgstr ""
+msgstr "チェックインしました。"
 
 #: settings/core.py
 msgid "Arabic"
@@ -236,23 +235,23 @@ msgstr "アラビア語"
 
 #: settings/core.py
 msgid "Bengali"
-msgstr ""
+msgstr "ベンガル語"
 
 #: settings/core.py
 msgid "Bulgarian"
-msgstr ""
+msgstr "ブルガリア語"
 
 #: settings/core.py
 msgid "Catalan"
-msgstr ""
+msgstr "カタルーニャ語"
 
 #: settings/core.py
 msgid "Czech"
-msgstr ""
+msgstr "チェコ語"
 
 #: settings/core.py
 msgid "German"
-msgstr ""
+msgstr "ドイツ語"
 
 #: settings/core.py
 msgid "English"
@@ -268,19 +267,19 @@ msgstr "フランス語"
 
 #: settings/core.py
 msgid "Hebrew"
-msgstr ""
+msgstr "ヘブライ語"
 
 #: settings/core.py
 msgid "Hindi"
-msgstr ""
+msgstr "ヒンディー語"
 
 #: settings/core.py
 msgid "Indonesian"
-msgstr ""
+msgstr "インドネシア語"
 
 #: settings/core.py
 msgid "Italian"
-msgstr ""
+msgstr "イタリア語"
 
 #: settings/core.py
 msgid "Japanese"
@@ -288,7 +287,7 @@ msgstr "日本語"
 
 #: settings/core.py
 msgid "Kazakh"
-msgstr ""
+msgstr "カザフ語"
 
 #: settings/core.py
 msgid "Malay"
@@ -300,7 +299,7 @@ msgstr "ポルトガル語"
 
 #: settings/core.py
 msgid "Romanian"
-msgstr ""
+msgstr "ルーマニア語"
 
 #: settings/core.py
 msgid "Russian"
@@ -308,19 +307,19 @@ msgstr "ロシア語"
 
 #: settings/core.py
 msgid "Turkish"
-msgstr ""
+msgstr "トルコ語"
 
 #: settings/core.py
 msgid "Vietnamese"
-msgstr ""
+msgstr "ベトナム語"
 
 #: settings/core.py
 msgid "Simplified Chinese"
-msgstr ""
+msgstr "簡体字中国語"
 
 #: settings/core.py
 msgid "Translation"
-msgstr ""
+msgstr "翻訳"
 
 #: templates/admin/delete_protected_message.html
 msgid "You need to delete the above objects first."
@@ -328,20 +327,20 @@ msgstr "まず上記のものを削除しないといけません。"
 
 #: templates/admin/style_guide.html
 msgid "This style of info card announces critical information. <a href=\"\">Link</a>."
-msgstr ""
+msgstr "このインフォカードは重大な情報の報告に使用されます。<a href=\"\">リンク</a>。"
 
 #: templates/admin/style_guide.html
 msgid "This style of info card announces general <a href=\"\">information</a>."
-msgstr ""
+msgstr "このインフォカードは普通の情報の報告に使用されます。<a href=\"\">リンク</a>。"
 
 #: templates/admin/style_guide.html
 msgctxt "page title"
 msgid "Form Title"
-msgstr ""
+msgstr "フォームタイトル"
 
 #: templates/admin/style_guide.html
 msgid "Sub Title Title"
-msgstr ""
+msgstr "サブタイトル"
 
 #: templates/admin/style_guide.html templates/registration/login.html
 msgctxt "button"
@@ -351,7 +350,7 @@ msgstr "ログイン"
 #: templates/admin/style_guide.html templates/registration/login.html
 msgctxt "button"
 msgid "I forgot my password"
-msgstr "自分のパスワード忘れちゃった"
+msgstr "パスワードを忘れた場合"
 
 #: templates/base.html
 msgid "Tabbycat"
@@ -360,92 +359,92 @@ msgstr ""
 #: templates/base.html
 #, python-format
 msgid "The tab for %(tournament)s runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats"
-msgstr ""
+msgstr "%(tournament)sの大会の対戦表管理はTabbycatで行われています。Tabbycatは、様々な議会形式の対戦表を管理するためのオープンソースの対戦表システムです。"
 
 #: templates/base.html
 msgid "This tab runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats"
-msgstr ""
+msgstr "この対戦表管理はTabbycatで行われています。Tabbycatは、様々な議会形式の対戦表を管理するためのオープンソースの対戦表システムです。"
 
 #: templates/components/form-errors.html
 msgid "Whoops! There was an error with one or more fields."
-msgstr ""
+msgstr "おっと！一つ以上の項目で問題があります。"
 
 #: templates/components/formset.html
 msgid "Save and Add More"
-msgstr "保存し、さらに追加する"
+msgstr "保存し、さらに追加"
 
 #: templates/errors/assistant_403.html templates/errors/public_403.html
 msgid "Permission Denied (403)"
-msgstr "アクセス権限がなし（403）"
+msgstr "アクセス権限なし（403）"
 
 #: templates/errors/assistant_403.html
 #, python-format
 msgid "This assistant page isn't enabled for this tournament. <a href=\"%(url)s\">Back to the assistant home page.</a>"
-msgstr ""
+msgstr "このアシスタント用のページは有効になっていません。<a href=\"%(url)s\">アシスタントのトップページに戻る。</a>"
 
 #: templates/errors/database_limit_warning.html
 #, python-format
 msgid "You're currently using %(nrows)s row in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
 msgid_plural "You're currently using %(nrows)s rows in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
-msgstr[0] ""
+msgstr[0] "現在、データベースが%(nrows)s行使用しています。Herokuのデータベースを有料版にアップグレードしていない場合、最大10000行しか使用できません。既に上限に近いので、<a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">データベースをアップグレード</a>しない限りはこのサイトで<strong>これ以上新しい大会を作るべきではありません</strong>"
 
 #: templates/errors/legacy_sendgrid_warning.html
 msgid "It looks like you're using the old SendGrid config vars on Heroku, <code>SENDGRID_USERNAME</code> and <code>SENDGRID_PASSWORD</code>. These are now deprecated (as of version 2.6), and will stop working in a future version of Tabbycat. Please change your config vars to use <code>SENDGRID_API_KEY</code> instead. For more information, please see <a href=\"https://tabbycat.readthedocs.io/en/stable/features/notifications.html#configuring-an-email-provider\"> our documentation on this topic</a>."
-msgstr ""
+msgstr "Herokuで旧式のSendGridの設定変数の<code>SENDGRID_USERNAME</code>と<code>SENDGRID_PASSWORD</code>をしているようです。これらの変数はバージョン2.6で廃止予定となり、将来的には使用できなくなる予定です。代わりに設定変数として<code>SENDGRID_API_KEY</code>を使用するように変更してください。詳しくは、<a href=\"https://tabbycat.readthedocs.io/en/stable/features/notifications.html#configuring-an-email-provider\">ドキュメンテーション</a>を参照してください。"
 
 #: templates/errors/public_403.html
 #, python-format
 msgid "Whoops! This page isn't enabled for this tournament. <a href=\"%(url)s\">Back to the tournament home page.</a>"
-msgstr ""
+msgstr "おっと！この大会ではこのページは有効になっていません。<a href=\"%(url)s\">大会ページに戻る。</a>"
 
 #: templates/errors/public_403.html
 #, python-format
 msgid "Whoops! This page isn't enabled for this tournament. <a href=\"%(url)s\">Back to the home page.</a>"
-msgstr ""
+msgstr "おっと！この大会ではこのページは有効になっていません。<a href=\"%(url)s\">大会ページに戻る。</a>"
 
 #: templates/footer.html
 #, python-format
 msgid "%(tournament)s runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
-msgstr ""
+msgstr "%(tournament)sはTabbycat %(tabbycat_version)s (%(tabbycat_codename)s)上で実行されています"
 
 #: templates/footer.html
 #, python-format
 msgid "This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
-msgstr ""
+msgstr "このサイトはTabbycat %(tabbycat_version)s (%(tabbycat_codename)s)上で実行されています"
 
 #: templates/footer.html
 msgid "Tabbycat is an open-source project developed by volunteers and is free to use."
-msgstr ""
+msgstr "Tabbycatは有志者によって開発された無料で使用できるオープンソースプロジェクトです。"
 
 #: templates/footer.html
 #, python-format
 msgid "For a tournament of this size, we suggest <a href=\"https://opencollective.com/tabbycat/contribute/licensing-29466/checkout?amount=%(amount)s\">a donation of <strong>$%(amount)s</strong></a>."
-msgstr ""
+msgstr "この規模の大会では、<a href=\"https://opencollective.com/tabbycat/contribute/licensing-29466/checkout?amount=%(amount)s\"><strong>$%(amount)s</strong>の寄付</a>を推奨しています。"
 
 #: templates/footer.html
 msgid "Learn more about donating."
-msgstr ""
+msgstr "寄付についてより詳しく知りたい。"
 
 #: templates/footer.html
 msgid "<a href=\"https://opencollective.com/tabbycat\">Donations to Tabbycat from individuals or organisations</a> are much appreciated and help us to continue to develop, support, and maintain Tabbycat."
-msgstr ""
+msgstr "<a href=\"https://opencollective.com/tabbycat\">個人や団体単位での寄付</a>はとてもありがたく、Tabbycatの開発、支援と保守に役立ちます。"
 
 #: templates/footer.html
 msgid "Still timing debates with the stopwatch app?"
-msgstr ""
+msgstr "いまだにストップウォッチアプリで時間計測をしていませんか？"
 
 #: templates/footer.html
 #, python-format
 msgid "Using an app designed for debate timekeeping makes speaking and adjudicating easier! Check out <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/iPad) or <a href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper</a> (Android)."
-msgstr ""
+msgstr "ディベートのタイムキープ用にデザインされたアプリを使用した方がスピーチもジャッジも楽になります！<a href=\"https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a>（iPhone/iPad用）か<a href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper</a>（Android用）を試してみてください。"
 
 #: templates/footer.html
 msgid "Our Organisation"
-msgstr ""
+msgstr "我々について"
 
 #: templates/footer.html
 msgid "Tabbycat is supported by the <a href=\"https://tabbycat-debate.org/\">Tabbycat Debate Association</a>, a non-profit for advancing open debate technology."
-msgstr ""
+msgstr "Tabbycatはディベートテクノロジーを発展させる非営利な<a href=\"https://tabbycat-debate.org/\">Tabbycat Debate Association</a>により支援されています。"
 
 #: templates/footer.html users/groups.py
 msgid "Language"
@@ -457,7 +456,7 @@ msgstr ""
 
 #: templates/footer.html
 msgid "Documentation"
-msgstr ""
+msgstr "ドキュメンテーション"
 
 #: templates/footer.html
 msgid "Support"
@@ -469,43 +468,43 @@ msgstr ""
 
 #: templates/footer.html
 msgid "Set Up A Copy"
-msgstr ""
+msgstr "コピーを作る"
 
 #: templates/footer.html
 msgid "Change Language"
-msgstr "言語設定"
+msgstr "言語を変更"
 
 #: templates/footer.html
 msgid "Use this language"
-msgstr "この言語を利用する"
+msgstr "この言語に変更"
 
 #: templates/nav/admin_nav.html templates/nav/top_nav_base.html
 msgid "Tabbycat Logo"
-msgstr ""
+msgstr "Tabbycatのロゴ"
 
 #: templates/nav/admin_nav.html templates/nav/top_nav_base.html
 msgid "Site Home"
-msgstr ""
+msgstr "トップページ"
 
 #: templates/nav/admin_nav.html
 msgid "New Tournament"
-msgstr ""
+msgstr "新しい大会"
 
 #: templates/nav/admin_nav.html templates/nav/top_nav_base.html
 msgid "Edit Database"
-msgstr "データ管理"
+msgstr "データベースを編集"
 
 #: templates/nav/admin_nav.html
 msgid "Admin Area"
-msgstr ""
+msgstr "管理者エリア"
 
 #: templates/nav/admin_nav.html
 msgid "Assistant Area"
-msgstr ""
+msgstr "アシスタントエリア"
 
 #: templates/nav/admin_nav.html
 msgid "Public Area"
-msgstr ""
+msgstr "公開エリア"
 
 #: templates/nav/admin_nav.html
 msgid "Overview"
@@ -513,11 +512,11 @@ msgstr "概要"
 
 #: templates/nav/admin_nav.html
 msgid "Setup"
-msgstr ""
+msgstr "セットアップ"
 
 #: templates/nav/admin_nav.html
 msgid "Configuration"
-msgstr ""
+msgstr "設定"
 
 #: templates/nav/admin_nav.html
 msgid "Import Data"
@@ -530,11 +529,11 @@ msgstr "参加者"
 
 #: templates/nav/admin_nav.html
 msgid "Private URLs"
-msgstr ""
+msgstr "Private URL"
 
 #: templates/nav/admin_nav.html
 msgid "Emails"
-msgstr ""
+msgstr "メール"
 
 #: templates/nav/admin_nav.html
 msgid "Preformed Panels"
@@ -542,7 +541,7 @@ msgstr "事前設定されたパネル"
 
 #: templates/nav/admin_nav.html
 msgid "Export XML"
-msgstr ""
+msgstr "XMLとして出力"
 
 #: templates/nav/admin_nav.html templates/nav/public_nav.html
 msgid "Sides"
@@ -550,7 +549,7 @@ msgstr "サイド"
 
 #: templates/nav/admin_nav.html templates/nav/assistant_nav.html
 msgid "People's Status"
-msgstr "人の状況"
+msgstr "参加者の状況"
 
 #: templates/nav/admin_nav.html
 msgid "Rooms' Status"
@@ -574,11 +573,11 @@ msgstr "コメント"
 
 #: templates/nav/admin_nav.html
 msgid "Find by Source"
-msgstr ""
+msgstr "送信者から探す"
 
 #: templates/nav/admin_nav.html
 msgid "Find by Target"
-msgstr "ターゲットから探す"
+msgstr "送信対象から探す"
 
 #: templates/nav/admin_nav.html
 msgid "Unsubmitted"
@@ -586,11 +585,11 @@ msgstr "未提出"
 
 #: templates/nav/admin_nav.html
 msgid "Add Feedback"
-msgstr "フィードバックを追加する"
+msgstr "フィードバックを追加"
 
 #: templates/nav/admin_nav.html
 msgid "Bulk Update"
-msgstr ""
+msgstr "一括更新"
 
 #: templates/nav/admin_nav.html templates/nav/public_nav.html
 msgid "Standings"
@@ -598,7 +597,7 @@ msgstr "順位"
 
 #: templates/nav/admin_nav.html
 msgid "All Teams"
-msgstr ""
+msgstr "全チーム"
 
 #: templates/nav/admin_nav.html
 msgid "Teams"
@@ -607,24 +606,24 @@ msgstr "チーム"
 #: templates/nav/admin_nav.html templates/nav/public_nav.html
 #, python-format
 msgid "%(category)s Teams"
-msgstr "%(category)sのチーム"
+msgstr "%(category)sチーム"
 
 #: templates/nav/admin_nav.html
 msgid "All Speakers"
-msgstr ""
+msgstr "全スピーカー"
 
 #: templates/nav/admin_nav.html templates/nav/public_nav.html
 #, python-format
 msgid "%(category)s Speakers"
-msgstr "%(category)sのスピーカー"
+msgstr "%(category)sスピーカー"
 
 #: templates/nav/admin_nav.html
 msgid "Replies"
-msgstr ""
+msgstr "リプライ"
 
 #: templates/nav/admin_nav.html templates/nav/public_nav.html
 msgid "Motions"
-msgstr "モーション"
+msgstr "論題"
 
 #: templates/nav/admin_nav.html templates/nav/public_nav.html
 msgid "Diversity"
@@ -641,15 +640,15 @@ msgstr ""
 
 #: templates/nav/admin_nav.html
 msgid "Adjudicators'"
-msgstr ""
+msgstr "ジャッジ"
 
 #: templates/nav/admin_nav.html
 msgid "Edit Categories"
-msgstr ""
+msgstr "ブレイクカテゴリーを編集"
 
 #: templates/nav/admin_nav.html
 msgid "Edit Eligibility"
-msgstr ""
+msgstr "ブレイクカテゴリー資格を編集"
 
 #: templates/nav/admin_nav.html templates/nav/top_nav_base.html
 msgid "Log Out"
@@ -657,11 +656,11 @@ msgstr "ログアウト"
 
 #: templates/nav/assistant_nav.html
 msgid "Enter Results"
-msgstr "結果を入力する"
+msgstr "結果を入力"
 
 #: templates/nav/assistant_nav.html templates/nav/public_nav.html
 msgid "Enter Feedback"
-msgstr "フィードバックを入力する"
+msgstr "フィードバックを入力"
 
 #: templates/nav/assistant_nav.html
 msgid "Participants List"
@@ -669,7 +668,7 @@ msgstr "参加者リスト"
 
 #: templates/nav/assistant_nav.html templates/nav/public_nav.html
 msgid "Institutions"
-msgstr "大学・団体"
+msgstr "インステ"
 
 #: templates/nav/assistant_nav.html
 msgid "Code Names"
@@ -677,7 +676,7 @@ msgstr "コード名"
 
 #: templates/nav/assistant_nav.html
 msgid "View Identifiers"
-msgstr ""
+msgstr "識別コードを表示"
 
 #: templates/nav/assistant_nav.html
 msgid "Room's Status"
@@ -685,7 +684,7 @@ msgstr "ラウンド部屋の状況"
 
 #: templates/nav/assistant_nav.html
 msgid "Display/Print Draw"
-msgstr "対戦表を公開/プリントする"
+msgstr "対戦表を公開/プリント"
 
 #: templates/nav/public_nav.html
 msgid "Team Tab"
@@ -709,11 +708,11 @@ msgstr "モーションのタブ"
 
 #: templates/nav/public_nav.html
 msgid "By round"
-msgstr ""
+msgstr "ラウンドごと"
 
 #: templates/nav/public_nav.html
 msgid "Globally"
-msgstr ""
+msgstr "グローバル"
 
 #: templates/nav/public_nav.html
 msgid "Draws"
@@ -721,7 +720,7 @@ msgstr "対戦表"
 
 #: templates/nav/public_nav.html
 msgid "No Draws Available"
-msgstr ""
+msgstr "現在閲覧できる対戦表はありません"
 
 #: templates/nav/public_nav.html
 #, python-format
@@ -730,7 +729,7 @@ msgstr "%(round)sの対戦表"
 
 #: templates/nav/public_nav.html
 msgid "Current Draws"
-msgstr ""
+msgstr "現在の対戦表"
 
 #: templates/nav/public_nav.html templates/nav/round_panel.html
 msgid "Results"
@@ -746,11 +745,11 @@ msgstr "フィードバック状況"
 
 #: templates/nav/public_nav.html
 msgid "Enter Ballot"
-msgstr "バロットを入力する"
+msgstr "バロットを入力"
 
 #: templates/nav/round_panel.html
 msgid "Availability"
-msgstr "可用性"
+msgstr "参加・利用状況"
 
 #: templates/nav/round_panel.html
 msgid "Draw"
@@ -758,22 +757,22 @@ msgstr "対戦表"
 
 #: templates/nav/round_panel.html
 msgid "Display"
-msgstr ""
+msgstr "公開・表示"
 
 #: templates/nav/top_nav_base.html
 #, python-format
 msgid "Administrator area for <strong>%(tournament)s</strong>"
-msgstr ""
+msgstr "<strong>%(tournament)s</strong>の管理者エリア"
 
 #: templates/nav/top_nav_base.html
 #, python-format
 msgid "Assistant area for <strong>%(tournament)s</strong>"
-msgstr ""
+msgstr "<strong>%(tournament)s</strong>のアシスタントエリア"
 
 #: templates/nav/top_nav_base.html
 #, python-format
 msgid "Public area for <strong>%(tournament)s</strong>"
-msgstr ""
+msgstr "<strong>%(tournament)s</strong>の公開エリア"
 
 #: templates/nav/top_nav_base.html
 msgid "Login"
@@ -781,12 +780,12 @@ msgstr "ログイン"
 
 #: templates/registration/logged_out.html
 msgid "Goodbye"
-msgstr ""
+msgstr "さようなら"
 
 #: templates/registration/logged_out.html
 #, python-format
 msgid "You have been logged out. <a href=\"%(login_url)s\">Log in again?</a>"
-msgstr ""
+msgstr "ログアウトしました。<a href=\"%(login_url)s\">再びログインする。</a>"
 
 #: templates/registration/login.html
 msgctxt "page title"
@@ -796,15 +795,15 @@ msgstr "ログイン"
 #: templates/registration/login.html
 msgctxt "page title"
 msgid "Log in to Tabbycat"
-msgstr "Tabbycatにログインする"
+msgstr "Tabbycatにログイン"
 
 #: templates/registration/login.html
 msgid "Your username and password didn't match."
-msgstr "ユーザーネームとパスワードが一致しません"
+msgstr "ユーザーネームとパスワードが一致しませんでした。"
 
 #: templates/registration/login.html
 msgid "Your account doesn't have access to this page. To proceed, please log in with an account that has access."
-msgstr "あなたのアカウントからではこのページにはアクセスできません。アクセスできるアカウントからログインしてください。"
+msgstr "あなたのアカウントにはこのページのアクセス権がありません。アクセスできるアカウントからログインしてください。"
 
 #: templates/registration/login.html
 msgid "Please log in to see this page."
@@ -821,7 +820,7 @@ msgstr "パスワードが変更されました。"
 
 #: templates/registration/password_change_done.html
 msgid "Go to the home page"
-msgstr "ホームページへ移る"
+msgstr "ホームページへ"
 
 #: templates/registration/password_change_form.html
 msgctxt "page title"
@@ -831,11 +830,11 @@ msgstr "パスワード変更"
 #: templates/registration/password_change_form.html
 #, python-format
 msgid "API Token: <samp>%(api_token)s</samp>"
-msgstr ""
+msgstr "APIトークン：<samp>%(api_token)s</samp>"
 
 #: templates/registration/password_change_form.html
 msgid "The API token will allow you to authorize external applications to access the site as staff."
-msgstr ""
+msgstr "APIトークンを使うと、外部アプリケーションからスタッフとしてサイトにアクセスできます。"
 
 #: templates/registration/password_change_form.html
 msgid "Please enter your old password, then enter a new one."
@@ -845,7 +844,7 @@ msgstr "前のパスワードを入力してください。そのあとに、新
 #: templates/registration/password_reset_confirm.html
 msgctxt "button"
 msgid "Change my password"
-msgstr "パスワードを変更する"
+msgstr "パスワードを変更"
 
 #: templates/registration/password_change_form.html
 #: templates/registration/password_reset_confirm.html
@@ -859,23 +858,23 @@ msgstr "パスワード変更完了しました"
 
 #: templates/registration/password_reset_complete.html
 msgid "Your password has been reset."
-msgstr "あなたのパスワードは変更されました。"
+msgstr "あなたのパスワードがリセットされました。"
 
 #: templates/registration/password_reset_complete.html
 #: templates/registration/password_reset_done.html
 msgid "Go to the login page"
-msgstr "ログインページへ移る"
+msgstr "ログインページへ"
 
 #: templates/registration/password_reset_confirm.html
 msgctxt "page title"
 msgid "Password Reset Confirmation"
-msgstr ""
+msgstr "パスワードリセットの確認"
 
 #: templates/registration/password_reset_confirm.html
 #: templates/registration/password_reset_form.html
 msgctxt "page title"
 msgid "Password Reset"
-msgstr ""
+msgstr "パスワードをリセットしました"
 
 #: templates/registration/password_reset_confirm.html
 msgid "Please enter a new password (twice):"
@@ -883,16 +882,16 @@ msgstr "新しいパスワードを入力してください（2回）"
 
 #: templates/registration/password_reset_confirm.html
 msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
-msgstr "パスワード変更のためのリンクが使用できません。もうすでに使ってる可能性があるので、改めて変更手続きを行ってください。"
+msgstr "パスワード変更用リンクが無効です。既に使ってる可能性があるので、新しいリクエストをしてください。"
 
 #: templates/registration/password_reset_done.html
 msgctxt "page title"
 msgid "Password reset email sent"
-msgstr "パスワード変更のためのメールが送信されました"
+msgstr "パスワード変更用のメールが送信されました"
 
 #: templates/registration/password_reset_done.html
 msgid "We've emailed you instructions for setting your password, if an account exists with the email address you entered. You should receive them shortly."
-msgstr "新しいパスワードにするための手続きのメールを送りました。もうまもなく受診されると思いますので、ご確認ください。"
+msgstr "新しいパスワードにするための手続きのメールを送りました。すぐに届くので、ご確認ください。"
 
 #: templates/registration/password_reset_done.html
 msgid "If you don't receive an email, please make sure you've entered the address you registered with, and check your spam folder."
@@ -906,7 +905,7 @@ msgstr "%(user)s、こんにちは！"
 #: templates/registration/password_reset_email.html
 #, python-format
 msgid "Someone asked for a password reset for the email address %(email)s on the Tabbycat site at %(protocol)s://%(domain)s."
-msgstr "誰かが、%(email)sのアカウントの%(protocol)s://%(domain)sのTabbycatのサイトのパスワード変更申請を行おうとしています。"
+msgstr "誰かが%(protocol)s://%(domain)sのTabbycatの%(email)sのパスワード変更申請をしました。"
 
 #: templates/registration/password_reset_email.html
 msgid "If this was you, follow the link below to reset your password:"
@@ -915,54 +914,54 @@ msgstr "もしこれがあなたであれば、パスワードをリセットす
 #: templates/registration/password_reset_email.html
 #, python-format
 msgid "If this wasn't you, that probably means someone else typed your email address into the password reset form on the Tabbycat site at %(protocol)s://%(domain)s."
-msgstr ""
+msgstr "もし身に覚えが無ければ、誰かが%(protocol)s://%(domain)sのサイトのパスワードリセットフォームにあなたのメールを打ち込んだということになります。"
 
 #: templates/registration/password_reset_form.html
 msgid "Password Reset"
-msgstr ""
+msgstr "パスワードをリセット"
 
 #: templates/registration/password_reset_form.html
 msgid "Enter your email address below, and we'll email you a password reset link."
-msgstr ""
+msgstr "以下のメールアドレス宛にリセット用のリンクをお送りします。"
 
 #: templates/registration/password_reset_form.html
 msgctxt "button"
 msgid "Reset my password"
-msgstr "パスワードを変更する"
+msgstr "パスワードを変更"
 
 #: templates/registration/password_reset_form.html
 msgid "Back to the login page"
-msgstr "ログインページへ移る"
+msgstr "ログインページに戻る"
 
 #: templates/registration/password_reset_subject.txt
 #, python-format
 msgid "Password reset on Tabbycat site at %(domain)s"
-msgstr ""
+msgstr "%(domain)sのサイトのパスワードをリセット"
 
 #: urls.py
 #, python-format
 msgid "Hi, %(user)s — you just logged in!"
-msgstr "%(user)s、こんにちは！ログインできました！"
+msgstr "%(user)s、こんにちは！ログインしました！"
 
 #: urls.py
 msgid "Welcome! You just logged in!"
-msgstr "ようこそ！ログインできました！"
+msgstr "ようこそ！ログインしました！"
 
 #: users/admin.py
 msgid "Users with staff status can view and edit the Edit Database area. This is potentially dangerous and should be reserved for the actual tab director(s)."
-msgstr ""
+msgstr "スタッフ権限を持つユーザはデータベース編集エリアの閲覧・変更ができます。これは危険性があり、タブディレクターに与えられるべきです。"
 
 #: users/admin.py
 msgid "Personal info"
-msgstr ""
+msgstr "個人情報"
 
 #: users/admin.py
 msgid "Permissions"
-msgstr ""
+msgstr "権限"
 
 #: users/admin.py
 msgid "Important dates"
-msgstr ""
+msgstr "重要な日付"
 
 #: users/forms.py
 msgid "Email address"
@@ -970,23 +969,23 @@ msgstr ""
 
 #: users/forms.py
 msgid "Username"
-msgstr ""
+msgstr "ユーザー名"
 
 #: users/groups.py
 msgid "Equity"
-msgstr ""
+msgstr "エクイティ"
 
 #: users/groups.py
 msgid "Adjudication Core"
-msgstr ""
+msgstr "審査委員"
 
 #: users/groups.py
 msgid "Tabulation Director"
-msgstr ""
+msgstr "タブディレクター"
 
 #: users/groups.py
 msgid "Tabulation Assistant"
-msgstr ""
+msgstr "タブアシスタント"
 
 #: users/models.py
 msgid "user"
@@ -994,15 +993,15 @@ msgstr "ユーザー"
 
 #: users/models.py
 msgid "permission"
-msgstr ""
+msgstr "権限"
 
 #: users/models.py
 msgid "user permission"
-msgstr ""
+msgstr "ユーザー権限"
 
 #: users/models.py
 msgid "user permissions"
-msgstr ""
+msgstr "ユーザー権限"
 
 #: users/models.py
 msgid "name"
@@ -1010,526 +1009,526 @@ msgstr "名前"
 
 #: users/models.py
 msgid "permissions"
-msgstr ""
+msgstr "権限"
 
 #: users/models.py
 msgid "group"
-msgstr ""
+msgstr "グループ"
 
 #: users/models.py
 msgid "groups"
-msgstr ""
+msgstr "グループ"
 
 #: users/models.py
 msgid "group membership"
-msgstr ""
+msgstr "グループメンバーシップ"
 
 #: users/models.py
 msgid "group memberships"
-msgstr ""
+msgstr "グループメンバーシップ"
 
 #: users/permissions.py
 msgid "view adjudicator-team conflicts"
-msgstr ""
+msgstr "ジャッジ・チーム間コンフリクトの閲覧"
 
 #: users/permissions.py
 msgid "edit adjudicator-team conflicts"
-msgstr ""
+msgstr "ジャッジ・チーム間コンフリクトの編集"
 
 #: users/permissions.py
 msgid "view adjudicator-adjudicator conflicts"
-msgstr ""
+msgstr "ジャッジ間コンフリクトの閲覧"
 
 #: users/permissions.py
 msgid "edit adjudicator-adjudicator conflicts"
-msgstr ""
+msgstr "ジャッジ間コンフリクトの編集"
 
 #: users/permissions.py
 msgid "view adjudicator-institution conflicts"
-msgstr ""
+msgstr "ジャッジ・インステ間コンフリクトの閲覧"
 
 #: users/permissions.py
 msgid "edit adjudicator-institution conflicts"
-msgstr ""
+msgstr "ジャッジ・インステ間コンフリクトの編集"
 
 #: users/permissions.py
 msgid "view team-institution conflicts"
-msgstr ""
+msgstr "チーム・インステ間コンフリクトの閲覧"
 
 #: users/permissions.py
 msgid "edit team-institution conflicts"
-msgstr ""
+msgstr "チーム・インステ間コンフリクトの編集"
 
 #: users/permissions.py
 msgid "view action log entries"
-msgstr ""
+msgstr "アクションログの閲覧"
 
 #: users/permissions.py
 msgid "view teams"
-msgstr ""
+msgstr "チームの閲覧"
 
 #: users/permissions.py
 msgid "add teams"
-msgstr ""
+msgstr "チームの追加"
 
 #: users/permissions.py
 msgid "view decoded team names"
-msgstr ""
+msgstr "コード名を外したチーム名の閲覧"
 
 #: users/permissions.py
 msgid "View names of anonymized participants"
-msgstr ""
+msgstr "匿名参加者の名前の閲覧"
 
 #: users/permissions.py
 msgid "view adjudicators"
-msgstr ""
+msgstr "ジャッジの閲覧"
 
 #: users/permissions.py
 msgid "add adjudicators"
-msgstr ""
+msgstr "ジャッジの追加"
 
 #: users/permissions.py
 msgid "view rooms"
-msgstr ""
+msgstr "部屋の閲覧"
 
 #: users/permissions.py
 msgid "add rooms"
-msgstr ""
+msgstr "部屋の追加"
 
 #: users/permissions.py
 msgid "view institutions"
-msgstr ""
+msgstr "インステの閲覧"
 
 #: users/permissions.py
 msgid "add institutions"
-msgstr ""
+msgstr "インステの追加"
 
 #: users/permissions.py
 msgid "view participants"
-msgstr ""
+msgstr "参加者の表示"
 
 #: users/permissions.py
 msgid "view participants' gender information"
-msgstr ""
+msgstr "参加者の性別の閲覧"
 
 #: users/permissions.py
 msgid "view participants' contact information"
-msgstr ""
+msgstr "参加者の連絡情報の閲覧"
 
 #: users/permissions.py
 msgid "view participants' real names"
-msgstr ""
+msgstr "参加者の本名の閲覧"
 
 #: users/permissions.py
 msgid "view participants' institution"
-msgstr ""
+msgstr "参加者のインステの閲覧"
 
 #: users/permissions.py
 msgid "view round availabilities for teams"
-msgstr ""
+msgstr "チームのラウンドの参加状況の閲覧"
 
 #: users/permissions.py
 msgid "view round availabilities for adjudicators"
-msgstr ""
+msgstr "ジャッジのラウンドの参加状況の閲覧"
 
 #: users/permissions.py
 msgid "view round availabilities for rooms"
-msgstr ""
+msgstr "部屋のラウンドの利用状況の閲覧"
 
 #: users/permissions.py
 msgid "edit round availabilities for teams"
-msgstr ""
+msgstr "チームのラウンドの参加状況の編集"
 
 #: users/permissions.py
 msgid "edit round availabilities for adjudicators"
-msgstr ""
+msgstr "ジャッジのラウンドの参加状況の編集"
 
 #: users/permissions.py
 msgid "edit round availabilities for rooms"
-msgstr ""
+msgstr "部屋のラウンドの利用状況の編集"
 
 #: users/permissions.py
 msgid "view round availabilities"
-msgstr ""
+msgstr "部屋の利用状況の閲覧"
 
 #: users/permissions.py
 msgid "edit round availabilities"
-msgstr ""
+msgstr "部屋の利用状況の編集"
 
 #: users/permissions.py
 msgid "view room constraints"
-msgstr ""
+msgstr "部屋の制約条件の閲覧"
 
 #: users/permissions.py
 msgid "view room categories"
-msgstr ""
+msgstr "部屋のカテゴリーの閲覧"
 
 #: users/permissions.py
 msgid "edit room constraints"
-msgstr ""
+msgstr "部屋の制約条件の編集"
 
 #: users/permissions.py
 msgid "edit room categories"
-msgstr ""
+msgstr "部屋のカテゴリーの編集"
 
 #: users/permissions.py
 msgid "view debates (draw)"
-msgstr ""
+msgstr "対戦表・試合の閲覧"
 
 #: users/permissions.py
 msgid "view debates (detailed draw)"
-msgstr ""
+msgstr "詳しい対戦表の閲覧"
 
 #: users/permissions.py
 msgid "generate debates (draw)"
-msgstr ""
+msgstr "対戦表の生成"
 
 #: users/permissions.py
 msgid "edit debate teams (pairings)"
-msgstr ""
+msgstr "対戦表のチームの編集"
 
 #: users/permissions.py
 msgid "view debate adjudicators (allocations)"
-msgstr ""
+msgstr "対戦表のジャッジの閲覧"
 
 #: users/permissions.py
 msgid "edit debate adjudicators (allocations)"
-msgstr ""
+msgstr "対戦表のジャッジの編集"
 
 #: users/permissions.py
 msgid "view room allocations"
-msgstr ""
+msgstr "部屋の配置の閲覧"
 
 #: users/permissions.py
 msgid "edit room allocations"
-msgstr ""
+msgstr "部屋の配置の編集"
 
 #: users/permissions.py
 msgid "edit and confirm outround team positions"
-msgstr ""
+msgstr "合うとラウンドのチーム配置の編集・承認"
 
 #: users/permissions.py
 msgid "view confirmed ballots"
-msgstr ""
+msgstr "承認済みバロットの閲覧"
 
 #: users/permissions.py
 msgid "edit non-confirmed ballots"
-msgstr ""
+msgstr "未承認バロットの編集"
 
 #: users/permissions.py
 msgid "view any ballot"
-msgstr ""
+msgstr "任意のバロットの閲覧"
 
 #: users/permissions.py
 msgid "edit any ballot"
-msgstr ""
+msgstr "任意のバロットの編集"
 
 #: users/permissions.py
 msgid "create ballots"
-msgstr ""
+msgstr "バロットの作成"
 
 #: users/permissions.py
 msgid "confirm/discard any ballot"
-msgstr ""
+msgstr "任意のバロットの承認・破棄"
 
 #: users/permissions.py
 msgid "confirm/discard others' ballots"
-msgstr ""
+msgstr "他人のバロットの承認・破棄"
 
 #: users/permissions.py
 msgid "view ballot graph"
-msgstr ""
+msgstr "バロットグラフの閲覧"
 
 #: users/permissions.py
 msgid "view results entry page"
-msgstr ""
+msgstr "結果入力ページの閲覧"
 
 #: users/permissions.py
 msgid "view motion per round"
-msgstr ""
+msgstr "ラウンドごとの論題の閲覧"
 
 #: users/permissions.py
 msgid "edit motion per round"
-msgstr ""
+msgstr "ラウンドごとの論題の編集"
 
 #: users/permissions.py
 msgid "release draw to public"
-msgstr ""
+msgstr "対戦表の公開"
 
 #: users/permissions.py
 msgid "release motion to public"
-msgstr ""
+msgstr "論題の公開"
 
 #: users/permissions.py
 msgid "unrelease draw to public"
-msgstr ""
+msgstr "対戦表の公開取り消し"
 
 #: users/permissions.py
 msgid "unrelease motion to public"
-msgstr ""
+msgstr "論題の公開取り消し"
 
 #: users/permissions.py
 msgid "add debate start time"
-msgstr ""
+msgstr "試合の開始時刻の追加"
 
 #: users/permissions.py
 msgid "view draws"
-msgstr ""
+msgstr "対戦表の閲覧"
 
 #: users/permissions.py
 msgid "view draws (for the briefing room)"
-msgstr ""
+msgstr "対戦表の閲覧（OR向け）"
 
 #: users/permissions.py
 msgid "display motion (for the briefing room)"
-msgstr ""
+msgstr "論題の表示（OR向け）"
 
 #: users/permissions.py
 msgid "view tournament configuration"
-msgstr ""
+msgstr "大会設定の閲覧"
 
 #: users/permissions.py
 msgid "edit tournament configuration"
-msgstr ""
+msgstr "大会設定の編集"
 
 #: users/permissions.py
 msgid "view existing preformed panels"
-msgstr ""
+msgstr "事前設定されたパネルの閲覧"
 
 #: users/permissions.py
 msgid "edit preformed panels"
-msgstr ""
+msgstr "事前設定されたパネルの編集"
 
 #: users/permissions.py
 msgid "view the overviews of standings"
-msgstr ""
+msgstr "順位の概要の閲覧"
 
 #: users/permissions.py
 msgid "view the most recent team standings"
-msgstr ""
+msgstr "直近のチーム順位の閲覧"
 
 #: users/permissions.py
 msgid "view the most recent speaker standings"
-msgstr ""
+msgstr "直近のスピーカー順位の閲覧"
 
 #: users/permissions.py
 msgid "view the most recent replies standings"
-msgstr ""
+msgstr "直近のリプライ順位の閲覧"
 
 #: users/permissions.py
 msgid "view the most recent motions tab"
-msgstr ""
+msgstr "直近の論題ページの閲覧"
 
 #: users/permissions.py
 msgid "view the diversity tab"
-msgstr ""
+msgstr "直近のダイバーシティページの閲覧"
 
 #: users/permissions.py
 msgid "view overview of judge feedback"
-msgstr ""
+msgstr "ジャッジフィードバックの概要の閲覧"
 
 #: users/permissions.py
 msgid "bulk update judge scores"
-msgstr ""
+msgstr "ジャッジスコアの一括更新"
 
 #: users/permissions.py
 msgid "edit base scores of judges"
-msgstr ""
+msgstr "ジャッジのベーススコアの編集"
 
 #: users/permissions.py
 msgid "view feedback"
-msgstr ""
+msgstr "フィードバックの閲覧"
 
 #: users/permissions.py
 msgid "toggle ignore feedback"
-msgstr ""
+msgstr "フィードバックの無視状況の変更"
 
 #: users/permissions.py
 msgid "toggle confirm feedback"
-msgstr ""
+msgstr "フィードバックの承認状況の変更"
 
 #: users/permissions.py
 msgid "view feedback unsubmitted tab"
-msgstr ""
+msgstr "未提出フィードバックページの閲覧"
 
 #: users/permissions.py
 msgid "add feedback"
-msgstr ""
+msgstr "フィードバックの追加"
 
 #: users/permissions.py
 msgid "view adjudicator break"
-msgstr ""
+msgstr "ジャッジブレイクの閲覧"
 
 #: users/permissions.py
 msgid "edit adjudicator break"
-msgstr ""
+msgstr "ジャッジブレイクの編集"
 
 #: users/permissions.py
 msgid "edit feedback questions"
-msgstr ""
+msgstr "フィードバックの質問事項の編集"
 
 #: users/permissions.py
 msgid "edit break eligibility"
-msgstr ""
+msgstr "ブレイク資格の編集"
 
 #: users/permissions.py
 msgid "view break eligibility"
-msgstr ""
+msgstr "ブレイク資格の閲覧"
 
 #: users/permissions.py
 msgid "edit break categories"
-msgstr ""
+msgstr "ブレイクカテゴリーの編集"
 
 #: users/permissions.py
 msgid "view break categories"
-msgstr ""
+msgstr "ブレイクカテゴリーの閲覧"
 
 #: users/permissions.py
 msgid "view speaker categories"
-msgstr ""
+msgstr "スピーカーカテゴリーの閲覧"
 
 #: users/permissions.py
 msgid "edit speaker categories"
-msgstr ""
+msgstr "スピーカーカテゴリーの編集"
 
 #: users/permissions.py
 msgid "view speaker eligibility"
-msgstr ""
+msgstr "スピーカー資格の閲覧"
 
 #: users/permissions.py
 msgid "edit speaker eligibility"
-msgstr ""
+msgstr "スピーカー資格の編集"
 
 #: users/permissions.py
 msgid "view break overview"
-msgstr ""
+msgstr "ブレイクの概要の閲覧"
 
 #: users/permissions.py
 msgid "view breaks"
-msgstr ""
+msgstr "ブレイクの閲覧"
 
 #: users/permissions.py
 msgid "generate all breaks"
-msgstr ""
+msgstr "全ブレイクの生成"
 
 #: users/permissions.py
 msgid "view private urls"
-msgstr ""
+msgstr "private URLの閲覧"
 
 #: users/permissions.py
 msgid "view private urls email list"
-msgstr ""
+msgstr "private URLのメールリストの閲覧"
 
 #: users/permissions.py
 msgid "generate private URLs"
-msgstr ""
+msgstr "private URLの生成"
 
 #: users/permissions.py
 msgid "send private URLs"
-msgstr ""
+msgstr "private URLの送信"
 
 #: users/permissions.py
 msgid "view checkins"
-msgstr ""
+msgstr "チェックインの閲覧"
 
 #: users/permissions.py
 msgid "edit participant check-in"
-msgstr ""
+msgstr "参加者のチェックインの編集"
 
 #: users/permissions.py
 msgid "edit room check-in"
-msgstr ""
+msgstr "部屋のチェックインの編集"
 
 #: users/permissions.py
 msgid "edit round attributes"
-msgstr ""
+msgstr "ラウンドの属性の編集"
 
 #: users/permissions.py
 msgid "delete rounds"
-msgstr ""
+msgstr "ラウンドの削除"
 
 #: users/permissions.py
 msgid "create rounds"
-msgstr ""
+msgstr "ラウンドの作成"
 
 #: users/permissions.py
 msgid "view email statuses"
-msgstr ""
+msgstr "メール状況の閲覧"
 
 #: users/permissions.py
 msgid "send participants email messages"
-msgstr ""
+msgstr "参加者へのメール送信"
 
 #: users/permissions.py
 msgid "export DebateXML"
-msgstr ""
+msgstr "DebateXMLの出力"
 
 #: users/permissions.py
 msgid "view settings"
-msgstr ""
+msgstr "設定の閲覧"
 
 #: users/permissions.py
 msgid "edit settings"
-msgstr ""
+msgstr "設定の編集"
 
 #: users/templates/account_invitation_email.html
 msgid "Hello!"
-msgstr ""
+msgstr "こんにちは！"
 
 #: users/templates/account_invitation_email.html
 #, python-format
 msgid "An administrator for the Tabbycat site hosting %(name)s has invited you to create an user account on their site, at %(protocol)s://%(domain)s."
-msgstr ""
+msgstr "%(name)sのTabbycatサイトの管理者が、あなたをサイトにユーザーアカウントを作成するよう招待しました。%(protocol)s://%(domain)sで確認してください。"
 
 #: users/templates/account_invitation_email.html
 msgid "If you accept, please use the link below to activate your account"
-msgstr ""
+msgstr "受け入れるなら、以下のリンクを使ってアカウントを有効化してください"
 
 #: users/templates/account_invitation_email.html
 msgid "If you do not accept, there is no action to be taken."
-msgstr ""
+msgstr "受け入れないなら、何もしなくても大丈夫です。"
 
 #: users/templates/account_invitation_subject.txt
 #, python-format
 msgid "Invitation to join Tabbycat site for %(name)s"
-msgstr ""
+msgstr "%(name)sのTabbycatサイトへの招待"
 
 #: users/templates/admin/auth/delete_user_warning.html
 msgid "<strong>Warning:</strong> You shouldn't delete users from the database once they've done something, because the database logs actions taken by those users, and deleting the users also deletes the related logs. If you wish to deactivate a user account, go back to edit the user, click on the “Permissions” tab, unchecked the “Active” box, and save the user."
-msgstr ""
+msgstr "<strong>警告：</strong>ユーザが何かを行った後にユーザをデータベースから削除するべきではありません。データベースはユーザが行ったアクションを記録しており、ユーザを削除するとそれに関連するログも削除されます。ユーザアカウントを無効にしたい場合は、ユーザの編集に戻り、「権限」タブをクリックし、「アクティブ」のチェックを外してください。"
 
 #: users/templates/invite_user.html
 msgid "Back to Configuration"
-msgstr ""
+msgstr "設定に戻る"
 
 #: users/templates/invite_user.html
 msgctxt "button"
 msgid "Invite User"
-msgstr ""
+msgstr "ユーザーを招待"
 
 #: users/templates/signup.html
 msgctxt "page title"
 msgid "Create a new Account"
-msgstr ""
+msgstr "新しいアカウントを作成"
 
 #: users/templates/signup.html
 msgid "Create Account"
-msgstr ""
+msgstr "アカウントを作成"
 
 #: users/views.py
 msgid "Whoops! It looks like someone's already created the first user account. Please log in."
-msgstr ""
+msgstr "おっと！既に誰かが最初のユーザーアカウントを作成したようです。ログインしてください。"
 
 #: users/views.py
 #, python-format
 msgid "Welcome! You've created an account for %s."
-msgstr ""
+msgstr "ようこそ！%sのアカウントを作成しました。"
 
 #: users/views.py
 msgid "Invite User"
-msgstr ""
+msgstr "ユーザーを招待"
 
 #: users/views.py
 msgid "Accept Invitation"
-msgstr ""
+msgstr "招待を受け入れる"
 

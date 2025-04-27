@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:58\n"
+"PO-Revision-Date: 2024-10-26 21:48\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -71,7 +71,7 @@ msgstr "preferencia"
 
 #: motions/models.py
 msgid "ballot submission"
-msgstr ""
+msgstr "Envío de ballots"
 
 #: motions/models.py
 msgid "debate team motion preference"
@@ -136,7 +136,7 @@ msgstr "muy pocos debates para obtener una estadística significativa"
 #: motions/statistics.py
 #, python-format
 msgid "imbalanced at %(level)s level"
-msgstr ""
+msgstr "desequilibrado a un %(level)s"
 
 #: motions/statistics.py
 #, python-format
@@ -162,8 +162,8 @@ msgstr "Ver Info Slide"
 #, python-format
 msgid "results from %(ndebates)s debate"
 msgid_plural "results from %(ndebates)s debates"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "resultados de un debate"
+msgstr[1] "resultados de %(ndebates)s debates"
 
 #: motions/templates/motion_statistics_bp_elim.html
 #, python-format
@@ -181,12 +181,12 @@ msgstr[1] ""
 
 #: motions/templates/motion_statistics_bp_elim.html
 msgid "advanced"
-msgstr ""
+msgstr "clasificó"
 
 #: motions/templates/motion_statistics_bp_elim.html
 msgctxt "abbreviation for 'advanced', used when not enough space"
 msgid "adv."
-msgstr ""
+msgstr "clas."
 
 #: motions/templates/motion_statistics_bp_elim.html
 msgid "eliminated"
@@ -195,7 +195,7 @@ msgstr "eliminado"
 #: motions/templates/motion_statistics_bp_elim.html
 msgctxt "abbreviation for 'eliminated', used when not enough space"
 msgid "elim."
-msgstr ""
+msgstr "elim."
 
 #: motions/templates/motion_statistics_bp_elim.html
 #, python-format
@@ -205,7 +205,7 @@ msgstr ""
 #: motions/templates/motion_statistics_bp_elim.html
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "No results for this motion"
-msgstr ""
+msgstr "Sin resultados para esta moción"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Government"
@@ -357,7 +357,7 @@ msgstr ""
 
 #: motions/views.py
 msgid "The motion has been saved."
-msgstr ""
+msgstr "Esta moción ha sido guardada."
 
 #: motions/views.py
 #, python-format
@@ -398,9 +398,9 @@ msgstr[1] ""
 
 #: motions/views.py
 msgid "Round Motions"
-msgstr ""
+msgstr "Mociones de las Rondas"
 
 #: motions/views.py
 msgid "Motion Statistics"
-msgstr ""
+msgstr "Estadística de las Mociones"
 

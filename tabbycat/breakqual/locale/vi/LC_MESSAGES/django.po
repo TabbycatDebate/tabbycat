@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2023-08-11 16:01\n"
+"PO-Revision-Date: 2024-09-09 18:32\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
@@ -37,7 +37,7 @@ msgstr "tên"
 
 #: breakqual/models.py
 msgid "Name to be displayed, e.g., \"ESL\""
-msgstr ""
+msgstr "Tên hiển thị"
 
 #: breakqual/models.py
 msgid "slug"
@@ -45,7 +45,7 @@ msgstr ""
 
 #: breakqual/models.py
 msgid "Slug for URLs, e.g., \"esl\""
-msgstr ""
+msgstr "Tên miền cho url"
 
 #: breakqual/models.py
 msgid "sequence number"
@@ -53,7 +53,7 @@ msgstr "số thứ tự"
 
 #: breakqual/models.py
 msgid "The order in which the categories are displayed"
-msgstr ""
+msgstr "Thứ tự hiển thị của các bảng"
 
 #: breakqual/models.py
 msgid "break size"
@@ -61,7 +61,7 @@ msgstr ""
 
 #: breakqual/models.py
 msgid "Number of breaking teams in this category"
-msgstr ""
+msgstr "Số lượng đội thi break ở bảng này"
 
 #: breakqual/models.py
 msgid "is general"
@@ -69,11 +69,11 @@ msgstr ""
 
 #: breakqual/models.py
 msgid "Are teams eligible for this break by default"
-msgstr ""
+msgstr "Các đội có được mặc định là đủ điều kiện break không"
 
 #: breakqual/models.py
 msgid "priority"
-msgstr ""
+msgstr "ưu tiên"
 
 #: breakqual/models.py
 msgid "If a team breaks in multiple categories, higher priority numbers take precedence; teams can break into multiple categories if and only if they all have the same priority"
@@ -81,15 +81,15 @@ msgstr ""
 
 #: breakqual/models.py
 msgid "limit"
-msgstr ""
+msgstr "giới hạn"
 
 #: breakqual/models.py
 msgid "At most this many teams will be shown on the public tab for this category, or use 0 for no limit"
-msgstr ""
+msgstr "Số lượng đội tối đa sẽ được hiển thị công khai, hoặc điền 0 nếu không có giới hạn"
 
 #: breakqual/models.py
 msgid "Standard"
-msgstr ""
+msgstr "Tiêu chuẩn"
 
 #: breakqual/models.py
 msgid "AIDA 1996"
@@ -109,23 +109,23 @@ msgstr ""
 
 #: breakqual/models.py
 msgid "rule"
-msgstr ""
+msgstr "luật"
 
 #: breakqual/models.py
 msgid "Rule for how the break is calculated (most tournaments should use \"Standard\")"
-msgstr ""
+msgstr "Cách tính break (hầu hết các giải đấu sử dụng luật \"Tiêu chuẩn\")"
 
 #: breakqual/models.py
 msgid "breaking teams"
-msgstr ""
+msgstr "các đội break"
 
 #: breakqual/models.py
 msgid "break category"
-msgstr ""
+msgstr "bảng xét break"
 
 #: breakqual/models.py
 msgid "break categories"
-msgstr ""
+msgstr "các bảng xét break"
 
 #: breakqual/models.py
 msgid "team"
@@ -133,11 +133,11 @@ msgstr "đội"
 
 #: breakqual/models.py
 msgid "rank"
-msgstr ""
+msgstr "xếp hạng"
 
 #: breakqual/models.py
 msgid "break rank"
-msgstr ""
+msgstr "thứ hạng break"
 
 #: breakqual/models.py
 msgid "Capped"
@@ -145,27 +145,27 @@ msgstr ""
 
 #: breakqual/models.py
 msgid "Ineligible"
-msgstr ""
+msgstr "Không đủ điều kiện"
 
 #: breakqual/models.py
 msgid "Different break"
-msgstr ""
+msgstr "Break ở bảng khác"
 
 #: breakqual/models.py
 msgid "Disqualified"
-msgstr ""
+msgstr "Bị loại"
 
 #: breakqual/models.py
 msgid "Lost coin toss"
-msgstr ""
+msgstr "Thua tung đồng xu"
 
 #: breakqual/models.py
 msgid "Withdrawn"
-msgstr ""
+msgstr "Bị rút ra"
 
 #: breakqual/models.py
 msgid "remark"
-msgstr ""
+msgstr "lưu ý"
 
 #: breakqual/models.py
 msgid "Used to explain why an otherwise-qualified team didn't break"
@@ -254,7 +254,7 @@ msgstr ""
 
 #: breakqual/templates/breaking_teams.html
 msgid "publicly visible"
-msgstr ""
+msgstr "hiển thị công khai"
 
 #: breakqual/templates/breaking_teams.html
 msgid "not publicly visible"
@@ -370,86 +370,86 @@ msgstr ""
 #. Translators: abbreviation for "double-octofinals"
 #: breakqual/utils.py
 msgid "Double-Octofinals"
-msgstr ""
+msgstr "Vòng 1/16"
 
 #: breakqual/utils.py
 msgid "DOF"
-msgstr ""
+msgstr "Vòng 1/16"
 
 #. Translators: abbreviation for "triple-octofinals"
 #: breakqual/utils.py
 msgid "Triple-Octofinals"
-msgstr ""
+msgstr "Vòng 1/32"
 
 #: breakqual/utils.py
 msgid "TOF"
-msgstr ""
+msgstr "Vòng 1/32"
 
 #. Translators: abbreviation for "finals" - first character of category name
 #: breakqual/utils.py
 #, python-format
 msgid "%s Finals"
-msgstr ""
+msgstr "%s Chung kết"
 
 #: breakqual/utils.py
 #, python-format
 msgid "%sF"
-msgstr ""
+msgstr "%s Chung kết"
 
 #. Translators: abbreviation for "semifinals" - first character of category name
 #: breakqual/utils.py
 #, python-format
 msgid "%s Semifinals"
-msgstr ""
+msgstr "%s Bán kết"
 
 #: breakqual/utils.py
 #, python-format
 msgid "%sSF"
-msgstr ""
+msgstr "%s Bán kết"
 
 #. Translators: abbreviation for "quarterfinals" - first character of category name
 #: breakqual/utils.py
 #, python-format
 msgid "%s Quarterfinals"
-msgstr ""
+msgstr "%s Tứ kết"
 
 #: breakqual/utils.py
 #, python-format
 msgid "%sQF"
-msgstr ""
+msgstr "%s Tứ kết"
 
 #. Translators: abbreviation for "octofinals" - first character of category name
 #: breakqual/utils.py
 #, python-format
 msgid "%s Octofinals"
-msgstr ""
+msgstr "%s Vòng 1/8"
 
 #: breakqual/utils.py
 #, python-format
 msgid "%sOF"
-msgstr ""
+msgstr "%s Vòng 1/8"
 
 #. Translators: abbreviation for "double-octofinals" - first character of category name
 #: breakqual/utils.py
 #, python-format
 msgid "%s Double-Octofinals"
-msgstr ""
+msgstr "%s Vòng 1/16"
 
 #: breakqual/utils.py
 #, python-format
 msgid "%sDOF"
-msgstr ""
+msgstr "%s Vòng 1/16"
 
 #. Translators: abbreviation for "triple-octofinals" - first character of category name
 #: breakqual/utils.py
 #, python-format
 msgid "%s Triple-Octofinals"
-msgstr ""
+msgstr "%s Vòng 1/32"
 
 #: breakqual/utils.py
 #, python-format
 msgid "%sTOF"
-msgstr ""
+msgstr "%s Vòng 1/32"
 
 #. Translators: "UBR" stands for "unknown break round" (used as a fallback when we don't know what it's called)
 #: breakqual/utils.py
@@ -473,38 +473,38 @@ msgstr ""
 #: breakqual/views.py
 #, python-format
 msgid "There was an error generating the break for category %(category)s: %(message)s"
-msgstr ""
+msgstr "Có lỗi xảy ra trong quá trình xếp break cho bảng đấu này %(category)s: %(message)s"
 
 #: breakqual/views.py
 msgid "Eligible for"
-msgstr ""
+msgstr "Đủ điều kiện cho"
 
 #: breakqual/views.py
 msgid "Edit Remark"
-msgstr ""
+msgstr "Chỉnh sửa lưu ý"
 
 #: breakqual/views.py
 #, python-format
 msgid "Changes to breaking team remarks saved and teams break updated for the following break categories: %(categories)s."
-msgstr ""
+msgstr "Thay đổi về lưu ý cho đội break đã được lưu và các đội break đã được cập nhật trong các bảng xét break sau: %(categories)s."
 
 #: breakqual/views.py
 #, python-format
 msgid "Changes to breaking team remarks saved and teams break updated for break category %(category)s."
-msgstr ""
+msgstr "Thay đổi về lưu ý cho đội break đã được lưu và các đội break đã được cập nhật trong bảng xét break %(category)s."
 
 #: breakqual/views.py
 msgid "Changes to breaking team remarks saved."
-msgstr ""
+msgstr "Thay đổi về lưu ý cho đội break đã được lưu."
 
 #: breakqual/views.py
 #, python-format
 msgid "Teams break generated for the following break categories: %(categories)s."
-msgstr ""
+msgstr "Các đội break đã được sắp xếp cho bảng xét break sau: %(categories)s."
 
 #: breakqual/views.py
 msgid "Breaking Adjudicators"
-msgstr ""
+msgstr "Các giám khảo break"
 
 #: breakqual/views.py
 msgid "Four-team formats require the break size to be either six times or four times a power of two."
@@ -512,12 +512,12 @@ msgstr ""
 
 #: breakqual/views.py
 msgid "Break Eligibility"
-msgstr ""
+msgstr "Điều kiện để break"
 
 #: breakqual/views.py
 #, python-format
 msgid "%s Speakers"
-msgstr ""
+msgstr "%s Tranh biện viên"
 
 #: breakqual/views.py
 #, python-format

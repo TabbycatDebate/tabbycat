@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:58\n"
+"PO-Revision-Date: 2024-07-10 12:24\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "Language: cs_CZ\n"
@@ -23,11 +23,11 @@ msgstr "Teze"
 
 #: motions/models.py
 msgid "text"
-msgstr ""
+msgstr "text"
 
 #: motions/models.py
 msgid "The full motion e.g., \"This House would straighten all bananas\""
-msgstr ""
+msgstr "Celé znění teze, např. \"Tato vláda by narovnala všechny banány\""
 
 #: motions/models.py
 msgid "reference"
@@ -63,11 +63,11 @@ msgstr "teze"
 
 #: motions/models.py
 msgid "debate team"
-msgstr ""
+msgstr "debatní tým"
 
 #: motions/models.py
 msgid "preferences"
-msgstr ""
+msgstr "preference"
 
 #: motions/models.py
 msgid "ballot submission"
@@ -131,7 +131,7 @@ msgstr ""
 
 #: motions/statistics.py
 msgid "too few debates to get a meaningful statistic"
-msgstr ""
+msgstr "příliš málo debat pro smysluplnou statistiku"
 
 #: motions/statistics.py
 #, python-format
@@ -215,11 +215,11 @@ msgstr ""
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Government"
-msgstr ""
+msgstr "Vláda"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Opposition"
-msgstr ""
+msgstr "Opozice"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Average Points per bench"
@@ -266,12 +266,12 @@ msgid "%(count)s %(side)s win"
 msgid_plural "%(count)s %(side)s wins"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[2] "%(count)s %(side)s výher"
+msgstr[3] "%(count)s %(side)s výher"
 
 #: motions/templates/motion_statistics_twoteam.html
 msgid "No teams debated this motion"
-msgstr ""
+msgstr "Žádné týmy nedebatovaly tuto tezi"
 
 #: motions/templates/motion_statistics_twoteam.html
 #, python-format
@@ -284,7 +284,7 @@ msgstr[3] ""
 
 #: motions/templates/motion_statistics_twoteam.html
 msgid "No teams vetoed this motion"
-msgstr ""
+msgstr "Žádné týmy nevetovaly tuto tezi"
 
 #: motions/templates/motions_edit.html
 msgid "Edit Motion"
@@ -296,7 +296,7 @@ msgstr[3] ""
 
 #: motions/templates/motions_edit.html
 msgid "Display Draw"
-msgstr ""
+msgstr "Zobrazit Los"
 
 #: motions/templates/motions_edit.html
 msgid "This will replace all existing motions for this round. The motions themselves will still be in the database."
@@ -383,7 +383,7 @@ msgstr ""
 
 #: motions/views.py
 msgid "The motion has been saved."
-msgstr ""
+msgstr "Teze byla uložena."
 
 #: motions/views.py
 #, python-format

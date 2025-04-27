@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2023-03-23 07:48\n"
+"PO-Revision-Date: 2025-02-15 05:49\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -106,7 +106,7 @@ msgstr ""
 #: ../../features/adjudicator-feedback.rst:39
 #: ../../features/adjudicator-feedback.rst:41
 msgid "choices"
-msgstr ""
+msgstr "選択肢"
 
 #: ../../features/adjudicator-feedback.rst:41
 msgid "**select multiple**"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:57\n"
+"PO-Revision-Date: 2024-07-02 15:21\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
@@ -28,11 +28,11 @@ msgstr "Đội"
 
 #: utils/admin.py
 msgid "Speaker"
-msgstr ""
+msgstr "Tranh biện viên"
 
 #: utils/admin.py utils/tables.py
 msgid "Tournament"
-msgstr "Giải"
+msgstr "Giải đấu"
 
 #: utils/admin.py utils/tables.py
 msgid "Side"
@@ -44,7 +44,7 @@ msgstr "Kiến nghị"
 
 #: utils/admin.py
 msgid "Confirmed"
-msgstr ""
+msgstr "Đã xác nhận"
 
 #: utils/admin.py
 msgid "Adjudicator"
@@ -68,7 +68,7 @@ msgstr "chủ tọa"
 
 #: utils/tables.py
 msgid "panellist"
-msgstr "panellist"
+msgstr "giám khảo cánh"
 
 #: utils/tables.py
 msgid "trainee"
@@ -80,22 +80,22 @@ msgstr ""
 
 #: utils/tables.py
 msgid "Redacted"
-msgstr "Ẩn bớt"
+msgstr "Đã bị xóa"
 
 #: utils/tables.py
 #, python-format
 msgid "View %(a)s's %(d)s Record"
-msgstr "Xem %(d)s hồ sơ của %(a)s"
+msgstr "Xem %(d)s thông tin của %(a)s"
 
 #: utils/tables.py
 #, python-format
 msgid "View %(team)s's Record"
-msgstr "Xem hồ sơ của %(team)s"
+msgstr "Xem thông tin của %(team)s"
 
 #: utils/tables.py
 #, python-format
 msgid "Code name: <strong>%(name)s</strong>"
-msgstr "Tên ký hiệu: <strong>%(name)s</strong>"
+msgstr "Mật danh: <strong>%(name)s</strong>"
 
 #: utils/tables.py
 #, python-format
@@ -120,7 +120,7 @@ msgstr "%(team)s không có kết quả"
 #: utils/tables.py
 #, python-format
 msgid "%(team)s placed %(place)s"
-msgstr "Đội %(team)s xếp thứ %(place)s"
+msgstr "Đội %(team)s xếp hạng %(place)s"
 
 #: utils/tables.py
 #, python-format
@@ -205,15 +205,15 @@ msgstr "Xếp thứ %(place)s"
 
 #: utils/tables.py
 msgid "Name"
-msgstr "Tên thí sinh"
+msgstr "Tên"
 
 #: utils/tables.py
 msgid "Institution"
-msgstr "Tổ chức"
+msgstr "Đơn vị"
 
 #: utils/tables.py
 msgid "Member of the Adjudication Core"
-msgstr "Thành viên của ban chuyên môn"
+msgstr "Thành viên Ban Chuyên môn"
 
 #: utils/tables.py
 msgid "Independent Adjudicator"
@@ -261,11 +261,11 @@ msgstr[0] "Các đội đã gặp %(count)d lần"
 
 #: utils/tables.py
 msgid "Teams are from the same institution"
-msgstr "Hai đội có chung tổ chức"
+msgstr "Hai đội cùng đơn vị"
 
 #: utils/tables.py
 msgid "Conflicts/Flags"
-msgstr "Xung đột/Chú ý"
+msgstr "Mâu thuẫn/Chú ý"
 
 #: utils/tables.py
 msgid "The confirmed ballot"
@@ -285,11 +285,11 @@ msgstr "Xem phiếu kết quả"
 
 #: utils/tables.py
 msgid "The ballot you submitted"
-msgstr "Phiếu kết quả mà bạn đã gửi"
+msgstr "Phiếu kết quả bạn đã nhập"
 
 #: utils/tables.py
 msgid "No Ballot"
-msgstr ""
+msgstr "Không có phiếu kết quả"
 
 #: utils/tables.py
 msgid "View/Edit Ballot"
@@ -306,23 +306,23 @@ msgstr "đang xác nhận"
 
 #: utils/tables.py
 msgid "Bye"
-msgstr ""
+msgstr "Trống lượt đấu"
 
 #: utils/tables.py
 msgid "Team was given a bye this round"
-msgstr ""
+msgstr "Đội thi không có mặt trong vòng đấu này"
 
 #: utils/tables.py
 msgid "Team iron-personed this round and the last."
-msgstr ""
+msgstr "Đội thi có lượt nói thay thế ở vòng này và vòng trước."
 
 #: utils/tables.py
 msgid "Team iron-personed this round."
-msgstr ""
+msgstr "Đội thi có lượt nói thay thế ở vòng này."
 
 #: utils/tables.py
 msgid "Team iron-personed last round."
-msgstr ""
+msgstr "Đội thi có lượt nói thay thế ở vòng trước."
 
 #: utils/tables.py
 #, python-format
