@@ -92,7 +92,10 @@ class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
         else:
             return ""
 
-    def populate_table(self, debates, table, highlight=[]):
+    def populate_table(self, debates, table, highlight=None):
+        if highlight is None:
+            highlight = []
+
         table.add_debate_venue_columns(debates)
         table.add_debate_team_columns(debates, highlight)
         table.add_debate_adjudicators_column(debates, show_splits=False)
@@ -234,7 +237,10 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, BaseDisplayDra
     def get_page_emoji(self):
         return None
 
-    def populate_table(self, debates, table, highlight=[]):
+    def populate_table(self, debates, table, highlight=None):
+        if highlight is None:
+            highlight = []
+
         table.add_round_column(d.round for d in debates)
         super().populate_table(debates, table, highlight=highlight)
 
