@@ -175,6 +175,9 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
     def get_queryset(self):
         return self.model.objects.filter(tournament=self.tournament)
 
+    def get_identifiers(self, inst):
+        return [{"identifier": inst.barcode, "checked": inst.checked_in}]
+
     def get_table(self):
         table = TabbycatTableBuilder(view=self, sort_key=self.sort_key)
         queryset = utils.annotate_availability(self.get_queryset(), self.round)
@@ -199,7 +202,7 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
 
         checked_in_header = {'key': "tournament", 'title': _('Checked-In')}
         checked_in_data = [{
-            'sort': inst.checked_in, 'icon': inst.checked_icon, 'tooltip': inst.checked_tooltip,
+            'sort': inst.checked_in, 'icon': inst.checked_icon, 'identifiers': self.get_identifiers(inst),
         } for inst in queryset]
         table.add_column(checked_in_header, checked_in_data)
 
@@ -219,7 +222,7 @@ class AvailabilityTypeTeamView(AvailabilityTypeBase):
     update_view = 'availability-update-teams'
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('speaker_set').prefetch_related('speaker_set__checkin_identifier')
+        return super().get_queryset().prefetch_related('speaker_set', 'speaker_set__checkin_identifier')
 
     @staticmethod
     def add_description_columns(table, teams):
@@ -228,6 +231,9 @@ class AvailabilityTypeTeamView(AvailabilityTypeBase):
     @staticmethod
     def annotate_checkins(queryset, t):
         return get_checkins(queryset, t, 'checkin_window_people')
+
+    def get_identifiers(self, inst):
+        return [{"identifier": s.barcode, "checked": s.checked_in} for s in inst.speaker_set.all()]
 
 
 class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
