@@ -12,9 +12,10 @@ adjudicator).
 import logging
 from operator import attrgetter
 
+from django.db.models import Count, F, Q
+
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
-from draw.models import DebateTeam
 from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
 
@@ -372,58 +373,57 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
         return trackers
 
 
-def get_feedback_progress(tournament):
-    """Returns a list of FeedbackProgressForTeam objects and a list of
-    FeedbackProgressForAdjudicator objects.
+def get_feedback_progress_statistics(tournament):
+    """Returns a tuple ([Team], [Adjudicator]), with statistics of the number
+    of feedback submitted, missing, and expected. Using Progress objects would
+    be too costly for use when only aggregate statistics are needed."""
 
-    This function pre-populates the FeedbackProgress objects to avoid needing
-    duplicate SQL queries for every team and adjudicator, so it should be used
-    for performance when the feedback progress of all teams and adjudicators is
-    needed."""
+    if tournament.pref('feedback_from_teams') == 'orallist':
+        teams_expected_filter = Q(debateteam__debate__debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR)
+    else:  # 'all-adjs'
+        teams_expected_filter = Q()
+    teams = tournament.team_set.annotate(
+        num_submitted=Count('debateteam__adjudicatorfeedback', filter=Q(debateteam__adjudicatorfeedback__confirmed=True)),
+    ).prefetch_related('speaker_set').all()
+    by_team_id = {t.id: t for t in teams}
+    ts = tournament.team_set.filter(id__in=by_team_id.keys()).annotate(
+        num_expected=Count('debateteam__debate__debateadjudicator', filter=Q(
+            debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
+            debateteam__debate__round__silent=False,
+            debateteam__debate__ballotsubmission__confirmed=True,
+        ) & teams_expected_filter))
+    for t in ts.all():
+        o_t = by_team_id[t.id]
+        o_t.num_expected = t.num_expected
+        o_t.num_missing = t.num_expected - o_t.num_submitted
 
-    teams_progress = []
-    adjs_progress = []
+    adjudicators = tournament.adjudicator_set.annotate(
+        num_submitted=Count('debateadjudicator__adjudicatorfeedback', filter=Q(debateadjudicator__adjudicatorfeedback__confirmed=True)),
+    ).all()
+    by_adj_id = {adj.id: adj for adj in adjudicators}
 
-    teams = tournament.team_set.prefetch_related('speaker_set').all()
+    exclude_self_filter = ~Q(debateadjudicator__debate__debateadjudicator__adjudicator_id=F('id'))
+    when_chair_filter = Q(debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR)
+    adj_expected_filter = {
+        'minimal': when_chair_filter,
+        'with-t-on-c': ~Q(debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR) & Q(
+            debateadjudicator__debate__debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR,
+        ) | when_chair_filter,
+        'with-p-on-c': Q(
+            debateadjudicator__type=DebateAdjudicator.TYPE_PANEL,
+            debateadjudicator__debate__debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR,
+        ) | when_chair_filter,
+        'all-adjs': Q(),
+    }[tournament.pref('feedback_paths')]
+    adjs = tournament.adjudicator_set.filter(id__in=by_adj_id.keys()).annotate(
+        num_expected=Count('debateadjudicator__debate__debateadjudicator', filter=Q(
+            debateadjudicator__debate__round__stage=Round.STAGE_PRELIMINARY,
+            debateadjudicator__debate__ballotsubmission__confirmed=True,
+        ) & exclude_self_filter & adj_expected_filter),
+    ).all()
+    for adj in adjs:
+        o_adj = by_adj_id[adj.id]
+        o_adj.num_expected = adj.num_expected
+        o_adj.num_missing = adj.num_expected - o_adj.num_submitted
 
-    submitted_feedback_by_team_id = {team.id: [] for team in teams}
-    submitted_feedback_teams = AdjudicatorFeedback.objects.filter(
-            source_team__team__in=teams).select_related('source_team')
-    submitted_feedback_teams = FeedbackProgressForTeam._submitted_feedback_queryset_operations(submitted_feedback_teams)
-    for feedback in submitted_feedback_teams:
-        submitted_feedback_by_team_id[feedback.source_team.team_id].append(feedback)
-
-    debateteams_by_team_id = {team.id: [] for team in teams}
-    debateteams = DebateTeam.objects.filter(team__in=teams)
-    debateteams = FeedbackProgressForTeam._debateteam_queryset_operations(debateteams)
-    for debateteam in debateteams:
-        debateteams_by_team_id[debateteam.team_id].append(debateteam)
-
-    for team in teams:
-        progress = FeedbackProgressForTeam(team)
-        progress._submitted_feedback = submitted_feedback_by_team_id[team.id]
-        progress._debateteams = debateteams_by_team_id[team.id]
-        teams_progress.append(progress)
-
-    adjudicators = tournament.adjudicator_set.all()
-
-    submitted_feedback_by_adj_id = {adj.id: [] for adj in adjudicators}
-    submitted_feedback_adjs = AdjudicatorFeedback.objects.filter(
-            source_adjudicator__adjudicator__in=adjudicators).select_related('source_adjudicator')
-    submitted_feedback_adjs = FeedbackProgressForAdjudicator._submitted_feedback_queryset_operations(submitted_feedback_adjs)
-    for feedback in submitted_feedback_adjs:
-        submitted_feedback_by_adj_id[feedback.source_adjudicator.adjudicator_id].append(feedback)
-
-    debateadjs_by_adj_id = {adj.id: [] for adj in adjudicators}
-    debateadjs = DebateAdjudicator.objects.filter(adjudicator__in=adjudicators)
-    debateadjs = FeedbackProgressForAdjudicator._debateadjudicator_queryset_operations(debateadjs)
-    for debateadj in debateadjs:
-        debateadjs_by_adj_id[debateadj.adjudicator_id].append(debateadj)
-
-    for adj in adjudicators:
-        progress = FeedbackProgressForAdjudicator(adj)
-        progress._submitted_feedback = submitted_feedback_by_adj_id[adj.id]
-        progress._debateadjudicators = debateadjs_by_adj_id[adj.id]
-        adjs_progress.append(progress)
-
-    return teams_progress, adjs_progress
+    return by_team_id.values(), by_adj_id.values()
