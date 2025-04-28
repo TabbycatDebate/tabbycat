@@ -34,7 +34,7 @@ elif os.environ.get('ON_RENDER', ''):
     base_settings.append('render.py')
     root.info('SPLIT_SETTINGS: imported render.py')
 else:
-    base_settings.append('local.py')
+    base_settings.append('heroku.py')  # Chỉ sử dụng cấu hình cho Heroku
     if os.environ.get('LOCAL_DEVELOPMENT', ''):
         base_settings.append('development.py')
         root.info('SPLIT_SETTINGS: imported local.py & development.py')
