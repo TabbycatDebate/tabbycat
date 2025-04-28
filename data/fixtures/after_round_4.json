@@ -1711,7 +1711,7 @@
     }
 },
 {
-    "model": "adjfeedback.question",
+    "model": "registration.question",
     "pk": 1,
     "fields": {
         "tournament": 1,
@@ -1730,7 +1730,7 @@
     }
 },
 {
-    "model": "adjfeedback.question",
+    "model": "registration.question",
     "pk": 2,
     "fields": {
         "tournament": 1,
@@ -1749,7 +1749,7 @@
     }
 },
 {
-    "model": "adjfeedback.question",
+    "model": "registration.question",
     "pk": 3,
     "fields": {
         "tournament": 1,
@@ -1768,7 +1768,7 @@
     }
 },
 {
-    "model": "adjfeedback.question",
+    "model": "registration.question",
     "pk": 4,
     "fields": {
         "tournament": 1,
@@ -1787,7 +1787,7 @@
     }
 },
 {
-    "model": "adjfeedback.question",
+    "model": "registration.question",
     "pk": 5,
     "fields": {
         "tournament": 1,
@@ -1806,7 +1806,7 @@
     }
 },
 {
-    "model": "adjfeedback.question",
+    "model": "registration.question",
     "pk": 6,
     "fields": {
         "tournament": 1,
@@ -1825,7 +1825,7 @@
     }
 },
 {
-    "model": "adjfeedback.question",
+    "model": "registration.question",
     "pk": 7,
     "fields": {
         "tournament": 1,
@@ -1844,7 +1844,7 @@
     }
 },
 {
-    "model": "adjfeedback.question",
+    "model": "registration.question",
     "pk": 8,
     "fields": {
         "tournament": 1,
@@ -1863,7 +1863,7 @@
     }
 },
 {
-    "model": "adjfeedback.question",
+    "model": "registration.question",
     "pk": 9,
     "fields": {
         "tournament": 1,
@@ -1882,7 +1882,7 @@
     }
 },
 {
-    "model": "adjfeedback.question",
+    "model": "registration.question",
     "pk": 10,
     "fields": {
         "tournament": 1,
@@ -1901,7 +1901,7 @@
     }
 },
 {
-    "model": "adjfeedback.question",
+    "model": "registration.question",
     "pk": 11,
     "fields": {
         "tournament": 1,

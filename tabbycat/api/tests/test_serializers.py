@@ -1059,7 +1059,7 @@ class FeedbackSerializerTests(APITestCase):
             reference='TestQ', for_content_type=ContentType.objects.get_for_model(AdjudicatorFeedback),
             seq=1, text='TestQ',
             name='TestQ',
-            answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT,
+            answer_type=AdjudicatorFeedbackQuestion.AnswerType.LONGTEXT,
             required=True,
         )
 
@@ -1081,7 +1081,7 @@ class FeedbackSerializerTests(APITestCase):
             reference='TestQ', for_content_type=ContentType.objects.get_for_model(AdjudicatorFeedback),
             seq=1, text='TestQ',
             name='TestQ',
-            answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_TEXTBOX,
+            answer_type=AdjudicatorFeedbackQuestion.AnswerType.INTEGER_TEXTBOX,
             required=True,
         )
 

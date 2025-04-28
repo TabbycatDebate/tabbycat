@@ -555,7 +555,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         barcode = validated_data.pop('checkin_identifier', {}).get('barcode', None)
         url_key = validated_data.pop('url_key', None)
-        answers = validated_data.pop('get_answers')
+        answers = validated_data.pop('get_answers', [])
 
         if url_key is not None and len(url_key) != 0:  # Let an empty string be null for the uniqueness constraint
             validated_data['url_key'] = url_key
@@ -680,7 +680,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         venue_constraints = validated_data.pop('venue_constraints', [])
         barcode = validated_data.pop('checkin_identifier', {}).get('barcode', None)
         url_key = validated_data.pop('url_key', None)
-        answers = validated_data.pop('get_answers')
+        answers = validated_data.pop('get_answers', [])
 
         if url_key is not None and len(url_key) != 0:  # Let an empty string be null for the uniqueness constraint
             validated_data['url_key'] = url_key
@@ -832,7 +832,7 @@ class TeamSerializer(serializers.ModelSerializer):
         speakers_data = validated_data.pop('speakers', [])
         break_categories = validated_data.pop('break_categories', [])
         venue_constraints = validated_data.pop('venue_constraints', [])
-        answers = validated_data.pop('get_answers')
+        answers = validated_data.pop('get_answers', [])
 
         emoji, code_name = pick_unused_emoji(validated_data['tournament'].id)
         if 'emoji' not in validated_data or validated_data.get('emoji') is None:
@@ -1197,7 +1197,7 @@ class FeedbackSerializer(serializers.ModelSerializer):
     source = SubmitterSourceField(source='*')
     participant_submitter = fields.ParticipantSourceField(allow_null=True, required=False)
     debate = DebateHyperlinkedRelatedField(view_name='api-pairing-detail', queryset=Debate.objects.all(), lookup_url_kwarg='debate_pk')
-    answers = fields.AnswerSerializer(many=True, source='get_answers', required=False)
+    answers = fields.AdjAnswerSerializer(many=True, source='get_answers', required=False)
 
     class Meta:
         model = AdjudicatorFeedback
@@ -1257,7 +1257,7 @@ class FeedbackSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        answers = validated_data.pop('get_answers')
+        answers = validated_data.pop('get_answers', [])
 
         validated_data.update(self.get_submitter_fields())
         if validated_data.get('confirmed', False):

@@ -9,9 +9,10 @@ from rest_framework.relations import Hyperlink, HyperlinkedIdentityField, Hyperl
 from rest_framework.reverse import reverse
 from rest_framework.serializers import CharField, Field, IntegerField, Serializer, ValidationError
 
-from adjfeedback.models import Question
+from adjfeedback.models import AdjudicatorFeedbackQuestion
 from draw.types import DebateSide
 from participants.models import Adjudicator, Speaker, Team
+from registration.models import Question
 from venues.models import Venue
 
 from .utils import is_staff
@@ -357,3 +358,10 @@ class AnswerSerializer(Serializer):
             raise option_error
 
         return super().validate(data)
+
+
+class AdjAnswerSerializer(AnswerSerializer):
+    question = TournamentHyperlinkedRelatedField(
+        view_name='api-feedbackquestion-detail',
+        queryset=AdjudicatorFeedbackQuestion.objects.all(),
+    )
