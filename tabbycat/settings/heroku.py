@@ -87,7 +87,10 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [environ.get('REDIS_URL')],
+            "hosts": [{
+                "address": environ.get('REDIS_URL'),
+                "ssl_cert_reqs": None,
+            }],
             # Remove channels from groups after 3 hours
             # This matches websocket_timeout in Daphne
             "group_expiry": 10800,
