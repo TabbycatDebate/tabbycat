@@ -114,8 +114,8 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
         kwargs['ballots'] = json.dumps(ballots)
         kwargs['questions'] = json.dumps(self.questions_dict())
 
-        kwargs['team_questions_exist'] = self.tournament.adjudicatorfeedbackquestion_set.filter(from_team=True).exists()
-        kwargs['adj_questions_exist'] = self.tournament.adjudicatorfeedbackquestion_set.filter(from_adj=True).exists()
+        kwargs['team_questions_exist'] = AdjudicatorFeedbackQuestion.objects.filter(tournament=self.t, from_team=True).exists()
+        kwargs['adj_questions_exist'] = AdjudicatorFeedbackQuestion.objects.filter(tournament=self.t, from_adj=True).exists()
 
         return super().get_context_data(**kwargs)
 
