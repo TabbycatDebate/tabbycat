@@ -1,4 +1,5 @@
 import os
+import dj_database_url
 
 from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
@@ -33,7 +34,7 @@ READTHEDOCS_VERSION = 'v2.9.3'
 USE_I18N = True
 USE_TZ = True
 LANGUAGE_CODE = 'en'
-TIME_ZONE = os.environ.get('TIME_ZONE', 'Australia/Melbourne')
+TIME_ZONE = os.environ.get('TIME_ZONE', 'Asia/Ho_Chi_Minh')
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
@@ -212,8 +213,12 @@ TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 * 120
 # Default non-heroku cache is to use local memory
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    },
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.environ.get('REDISCLOUD_URL', 'redis://127.0.0.1:6379/1'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
 }
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
@@ -312,9 +317,7 @@ X_FRAME_OPTIONS = 'SAMEORIGIN' # Necessary to get Django-Summernote working beca
 # ==============================================================================
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-    },
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
