@@ -679,4 +679,8 @@ class Importer:
 
                     cast_answer = answer.text
                     answer = Answer(
-                        question=question, answer=cast_answer, feedback=feedback_obj)
+                        question=question,
+                        answer=cast_answer,
+                        object_id=feedback_obj.id,
+                        content_type=question.for_content_type,
+                    )
