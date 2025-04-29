@@ -1625,10 +1625,30 @@ class ParticipantIdentificationSerializer(serializers.ModelSerializer):
 class FullRoundPairingSerializer(RoundPairingSerializer):
     confirmed_ballot = BallotSerializer()
 
+    def create(self, validated_data):
+        confirmed_ballot = validated_data.pop('confirmed_ballot', None)
+        debate = super().create(validated_data)
+
+        if confirmed_ballot is not None:
+            save_related(BallotSerializer, confirmed_ballot, self.context, {'debate': debate})
+
+        return debate
+
 
 class FullRoundSerializer(RoundSerializer):
     pairings = FullRoundPairingSerializer(many=True, source='debate_set')
     preformed_panels = PreformedPanelSerializer(many=True, source='preformedpanel_set')
+
+    def create(self, validated_data):
+        pairings = validated_data.pop('debate_set', [])
+        preformed_panels = validated_data.pop('preformedpanel_set', [])
+
+        round = super().create(validated_data)
+
+        save_related(FullRoundPairingSerializer, pairings, self.context, {'round': round})
+        save_related(PreformedPanelSerializer, preformed_panels, self.context, {'round': round})
+
+        return round
 
 
 class FullAdjudicatorSerializer(AdjudicatorSerializer):
