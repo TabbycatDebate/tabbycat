@@ -248,4 +248,15 @@ class Migration(migrations.Migration):
                 name="registr_question_tournament__for_content_type__seq_uniq",
             ),
         ),
+        migrations.AddField(
+            model_name="question",
+            name="help_text",
+            field=models.CharField(
+                blank=True,
+                default="",
+                help_text="Additional context for the question",
+                verbose_name="help text",
+            ),
+            preserve_default=False,
+        ),
     ]

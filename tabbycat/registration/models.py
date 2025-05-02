@@ -79,6 +79,8 @@ class Question(models.Model):
     text = models.CharField(max_length=255,
         verbose_name=_("text"),
         help_text=_("The question displayed to participants, e.g., \"Did you agree with the decision?\""))
+    help_text = models.CharField(verbose_name=_("help text"), blank=True,
+        help_text=_("Additional context for the question"))
     name = models.CharField(max_length=30,
         verbose_name=_("name"),
         help_text=_("A short name for the question, e.g., \"Agree with decision\""))

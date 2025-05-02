@@ -57,6 +57,8 @@ class BlockCheckboxWidget(forms.CheckboxSelectMultiple):
 
 class CustomQuestionsFormMixin:
 
+    _enforce_required = True
+
     def get_custom_question_queryset(self):
         return self.tournament.question_set.filter(for_content_type=ContentType.objects.get_for_model(self._meta.model)).order_by('seq')
 
@@ -97,6 +99,8 @@ class CustomQuestionsFormMixin:
             case question.AnswerType.MULTIPLE_SELECT:
                 field = forms.MultipleChoiceField(choices=question.choices_for_field, widget=BlockCheckboxWidget())
         field.label = question.text
+        if question.help_text:
+            field.help_text = question.help_text
 
         # Required checkbox fields don't really make sense; so override the behaviour?
         if question.answer_type is not question.AnswerType.BOOLEAN_CHECKBOX:
