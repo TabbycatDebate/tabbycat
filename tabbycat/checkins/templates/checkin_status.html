@@ -12,7 +12,9 @@
                                :assistant-url="assistantUrl"
                                :team-codes="teamCodes"
                                :for-admin="forAdmin"
-                               :team-size="teamSize">
+                               :team-size="teamSize"
+                               :breaking-team-ids="breakingTeamIds"
+                               :is-break-round="isBreakRound">
     </check-in-status-container>
   </div>
 
@@ -30,6 +32,8 @@
       'teamCodes': {{ team_codes }},
       'forAdmin': {% if for_admin %}true{% else %}false{% endif %},
       'teamSize': {{ team_size }},
+      breakingTeamIds: {% if breaking_team_ids %}{{ breaking_team_ids|safe }}{% else %}null{% endif %},
+      'isBreakRound': {% if is_break_round %}true{% else %}false{% endif %},
     }
   </script>
   {{ block.super }}

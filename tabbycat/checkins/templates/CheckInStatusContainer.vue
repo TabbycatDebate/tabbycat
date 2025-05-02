@@ -16,7 +16,20 @@
         </button>
       </div>
 
-      <div class="btn-group mb-md-0 mb-3" v-if="!isForVenues">
+        <!-- Filter for Breaking status -->
+        <div class="btn-group mb-md-0 mb-3" v-if="this.isBreakRound">
+            <button
+                    v-for="(optionState, optionKey) in filterByBreaking || {}"
+                    :key="optionKey"
+                    type="button"
+                    :class="['btn btn-outline-primary', optionState ? 'active' : '']"
+                    @click="setListContext('filterByBreaking', optionKey, !optionState)">
+                <span v-if="optionKey === 'All'" v-text="gettext('All')"></span>
+                <span v-if="optionKey === 'Breaking'" v-text="gettext('Breaking')"></span>
+            </button>
+        </div>
+
+        <div class="btn-group mb-md-0 mb-3" v-if="!isForVenues">
         <button v-for="(optionState, optionKey) in this.filterByType"
                 :key="optionKey" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
@@ -145,6 +158,10 @@ export default {
       filterByPresence: {
         All: true, Absent: false, Present: false,
       },
+      filterByBreaking: {
+        All: true,
+        Breaking: false,
+      },
       sockets: ['checkins'],
       // Keep internal copy as events needs to be mutated by the websocket
       // pushed changes and the data is never updated by the parent
@@ -158,6 +175,8 @@ export default {
     tournamentSlug: String,
     forAdmin: Boolean,
     teamSize: Number,
+    breakingTeamIds: Array,
+    isBreakRound: Boolean,
   },
   computed: {
     statsAbsent: function () {
@@ -220,7 +239,10 @@ export default {
       })
     },
     entitiesBySortingSetting: function () {
-      if (this.sortByGroup.Category === true) {
+      if (this.filterByBreaking.Breaking === true) {
+          console.log('Breaking Teams and Adjudicators inside entitiesBySortingSetting')
+        return this.entitiesByBreaking
+      } else if (this.sortByGroup.Category === true) {
         return this.venuesByCategory
       } else if (this.sortByGroup.Priority === true) {
         return this.venuesByPriority
@@ -232,6 +254,28 @@ export default {
         return this.entitiesByTime
       }
       return this.entitiesByTime
+    },
+    entitiesByBreaking: function () {
+      const isBreaking = (entityByPresence) => {
+        if (entityByPresence.type === 'Adjudicator') {
+          return entityByPresence.breaking
+        } else if (this.breakingTeamIds.includes(entityByPresence.name)) {
+          return true
+        }
+        return false
+      }
+      if (this.filterByBreaking.All) {
+        return this.entitiesByPresence // No filter
+      } else if (this.filterByBreaking.Breaking) {
+        console.log('Breaking Teams and Adjudicators')
+        // print each object in the array
+        const temp = this.entitiesByPresence.filter(isBreaking)
+        for (let i = 0; i < temp.length; i++) {
+          console.log(temp[i])
+        }
+        return this.entitiesByPresence.filter(isBreaking)
+      }
+      return this.entitiesByPresence
     },
     tournamentSlugForWSPath: function () {
       return this.tournamentSlug
@@ -300,10 +344,13 @@ export default {
       return this.isForVenues ? this.getToolTipForVenue(entity) : this.getToolTipForPerson(entity)
     },
     setListContext: function (metaKey, selectedKey, selectedValue) {
+        console.log(`Setting list context ${metaKey} ${selectedKey} ${selectedValue}`)
       _.forEach(this[metaKey], (value, key) => {
         if (key === selectedKey) {
+            console.log(`Setting ${metaKey} ${key} to ${selectedValue}`)
           this[metaKey][key] = selectedValue
         } else {
+            console.log(`Setting ${metaKey} ${key} to false`)
           this[metaKey][key] = false
         }
       })
