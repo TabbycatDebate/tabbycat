@@ -1473,3 +1473,20 @@ class ParticipantIdentificationView(TournamentAPIMixin, ModelViewSet):
 
     def get_object(self):
         return self.request.auth
+
+
+class FullTournamentViewSet(TournamentAPIMixin, ModelViewSet):
+    serializer_class = serializers.FullTournamentSerializer
+    lookup_field = 'slug'
+    lookup_url_kwarg = 'tournament_slug'
+
+    def get_queryset(self):
+        return Tournament.objects.all().prefetch_related(
+            'team_set__tournament',
+            'team_set__speaker_set__categories__tournament',
+            'team_set__breakcategory_set__tournament',
+            'adjudicator_set__tournament',
+            'round_set__roundmotion_set__motion',
+            'round_set__debate_set__debateteam_set__team__tournament',
+            'round_set__debate_set__debateadjudicator_set__adjudicator__tournament',
+        )
