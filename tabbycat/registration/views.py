@@ -9,6 +9,7 @@ from formtools.wizard.views import SessionWizardView
 
 from participants.models import Coach, Speaker, TournamentInstitution
 from tournaments.mixins import TournamentMixin
+from users.permissions import Permission
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import ModelFormSetView, VueTableTemplateView
@@ -194,6 +195,8 @@ class InstitutionRegistrationTableView(TournamentMixin, AdministratorMixin, VueT
     page_emoji = '🏫'
     page_title = gettext_lazy("Institutional Registration")
 
+    view_permission = Permission.VIEW_REGISTRATION
+
     def get_table(self):
         t_institutions = self.tournament.tournamentinstitution_set.select_related('institution').prefetch_related(
             'answers__question',
@@ -222,6 +225,8 @@ class InstitutionRegistrationTableView(TournamentMixin, AdministratorMixin, VueT
 class TeamRegistrationTableView(TournamentMixin, AdministratorMixin, VueTableTemplateView):
     page_emoji = '👯'
     page_title = gettext_lazy("Team Registration")
+
+    view_permission = Permission.VIEW_REGISTRATION
 
     def get_table(self):
         def get_speaker(team, i):
@@ -254,6 +259,8 @@ class AdjudicatorRegistrationTableView(TournamentMixin, AdministratorMixin, VueT
     page_emoji = '👂'
     page_title = gettext_lazy("Adjudicator Registration")
 
+    view_permission = Permission.VIEW_REGISTRATION
+
     def get_table(self):
         adjudicators = self.tournament.adjudicator_set.select_related('institution').prefetch_related('answers__question').all()
 
@@ -274,6 +281,9 @@ class CustomQuestionFormsetView(TournamentMixin, AdministratorMixin, ModelFormSe
     }
     question_model = None
     template_name = 'venue_categories_edit.html'
+
+    view_permission = True
+    edit_permission = Permission.EDIT_QUESTIONS
 
     page_emoji = '❓'
     page_title = gettext_lazy("Custom Questions")

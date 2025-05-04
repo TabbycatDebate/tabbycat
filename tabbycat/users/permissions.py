@@ -159,6 +159,8 @@ class Permission(TextChoices):
     DELETE_QUESTIONS = 'delete.questions', _("delete general questions")
     VIEW_CUSTOM_ANSWERS = 'view.answers', _("view answers to general questions")
 
+    VIEW_REGISTRATION = 'view.registration', _("view registration responses")
+
 
 permission_type = Union[Permission, bool]
 
