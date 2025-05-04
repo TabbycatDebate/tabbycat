@@ -1445,6 +1445,7 @@
         "slug": "open",
         "seq": 10,
         "break_size": 8,
+        "reserve_size": 0,
         "is_general": true,
         "priority": 30,
         "limit": 0,
@@ -1460,6 +1461,7 @@
         "slug": "esl",
         "seq": 20,
         "break_size": 4,
+        "reserve_size": 0,
         "is_general": false,
         "priority": 20,
         "limit": 0,
@@ -1475,6 +1477,7 @@
         "slug": "novice",
         "seq": 30,
         "break_size": 2,
+        "reserve_size": 0,
         "is_general": false,
         "priority": 10,
         "limit": 0,
@@ -5428,7 +5431,8 @@
         "debate": 7,
         "motion": 3,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -5450,7 +5454,8 @@
         "debate": 3,
         "motion": 2,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -5472,7 +5477,8 @@
         "debate": 11,
         "motion": 2,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -5494,7 +5500,8 @@
         "debate": 1,
         "motion": 1,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -5516,7 +5523,8 @@
         "debate": 5,
         "motion": 1,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -5538,7 +5546,8 @@
         "debate": 6,
         "motion": 2,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -5560,7 +5569,8 @@
         "debate": 9,
         "motion": 1,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -5582,7 +5592,8 @@
         "debate": 4,
         "motion": 2,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -5604,7 +5615,8 @@
         "debate": 8,
         "motion": 3,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -5626,7 +5638,8 @@
         "debate": 12,
         "motion": 2,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -5648,7 +5661,8 @@
         "debate": 10,
         "motion": 1,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -5670,7 +5684,8 @@
         "debate": 2,
         "motion": 1,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
