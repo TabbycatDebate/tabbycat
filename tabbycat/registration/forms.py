@@ -23,6 +23,10 @@ class TournamentInstitutionForm(CustomQuestionsFormMixin, forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.add_question_fields()
 
+        if not self.tournament.pref('reg_institution_slots'):
+            self.fields.pop('teams_requested')
+            self.fields.pop('adjudicators_requested')
+
     class Meta:
         model = TournamentInstitution
         exclude = ('tournament', 'institution', 'teams_allocated', 'adjudicators_allocated')
@@ -88,7 +92,7 @@ class TeamForm(CustomQuestionsFormMixin, forms.ModelForm):
 
     class Meta:
         model = Team
-        fields = ('reference', 'institution', 'use_institution_prefix', 'seed', 'emoji')
+        fields = ('reference', 'institution', 'use_institution_prefix', 'code_name', 'emoji', 'seed', 'break_categories')
 
     def save(self):
         self.instance.tournament = self.tournament
@@ -140,10 +144,11 @@ class AdjudicatorForm(CustomQuestionsFormMixin, forms.ModelForm):
         model = Adjudicator
         fields = ('name', 'institution', 'email', 'phone', 'gender')
 
-    def clean(self):
-        raise
-
     def save(self):
+        self.instance.tournament = self.tournament
+        if self.institution:
+            self.instance.institution = self.institution
+
         obj = super().save()
         self.save_answers(obj)
         return obj

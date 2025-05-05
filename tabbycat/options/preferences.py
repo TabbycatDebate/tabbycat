@@ -1590,3 +1590,48 @@ class AdjudicatorRegistrationFields(MultipleChoicePreference):
         ('gender', _("Gender")),
     )
     widget = SelectMultiple(attrs={'size': 5})
+
+
+@tournament_preferences_registry.register
+class EnableInstitutionRegistration(BooleanPreference):
+    help_text = _("Allow institutions to register for the tournament")
+    verbose_name = _("Enable institutional registration")
+    section = registration
+    name = 'institution_registration'
+    default = False
+
+
+@tournament_preferences_registry.register
+class EnableInstitutionParticipantRegistration(BooleanPreference):
+    help_text = _("Allow institutions to register participants (up to their allocated slots)")
+    verbose_name = _("Enable institutional participant registration")
+    section = registration
+    name = 'institution_participant_registration'
+    default = False
+
+
+@tournament_preferences_registry.register
+class ParticipantSlots(BooleanPreference):
+    help_text = _("Whether to require institutions to declare the number of teams and adjudicators it wishes to send with approval required before registering.")
+    verbose_name = _("Use participant slots")
+    section = registration
+    name = 'reg_institution_slots'
+    default = False
+
+
+@tournament_preferences_registry.register
+class EnableOpenTeamRegistration(BooleanPreference):
+    help_text = _("Allow teams to register independently to an institution")
+    verbose_name = _("Enable open team registration")
+    section = registration
+    name = 'open_team_registration'
+    default = False
+
+
+@tournament_preferences_registry.register
+class EnableOpenAdjRegistration(BooleanPreference):
+    help_text = _("Allow adjudicators to register independently to an institution")
+    verbose_name = _("Enable open adjudicator registration")
+    section = registration
+    name = 'open_adj_registration'
+    default = False

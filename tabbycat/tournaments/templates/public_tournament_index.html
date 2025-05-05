@@ -215,6 +215,26 @@
 
       </div>
 
+      <div class="list-group mt-2">
+        {% if pref.institution_registration %}
+          {% trans "Register Institution" as text %}
+          {% tournamenturl 'reg-create-institution' as url %}
+          {% include "components/item-action.html" with icon="home" %}
+        {% endif %}
+
+        {% if pref.open_team_registration %}
+          {% trans "Register Open Team" as text %}
+          {% tournamenturl 'reg-create-team' as url %}
+          {% include "components/item-action.html" with icon="users" %}
+        {% endif %}
+
+        {% if pref.open_adj_registration %}
+          {% trans "Register Open Adjudicator" as text %}
+          {% tournamenturl 'reg-create-adjudicator' as url %}
+          {% include "components/item-action.html" with icon="columns" %}
+        {% endif %}
+      </div>
+
       {% if pref.tournament_staff %}
         <div class="card mt-3">
           <div class="card-header h6">

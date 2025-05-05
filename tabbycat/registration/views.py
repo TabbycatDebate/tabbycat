@@ -1,15 +1,21 @@
+from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.forms import SimpleArrayField
 from django.db.models import Prefetch
 from django.forms import modelformset_factory
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
-from django.views.generic.edit import FormView
+from django.views.generic.edit import CreateView
 from formtools.wizard.views import SessionWizardView
 
+from actionlog.mixins import LogActionMixin
+from actionlog.models import ActionLogEntry
 from participants.models import Coach, Speaker, TournamentInstitution
-from tournaments.mixins import TournamentMixin
+from privateurls.utils import populate_url_keys
+from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 from users.permissions import Permission
+from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import ModelFormSetView, VueTableTemplateView
@@ -43,8 +49,11 @@ class InstitutionalRegistrationMixin:
         kwargs['institution'] = self.institution
         return kwargs
 
+    def get_success_url(self):
+        return reverse_tournament('reg-inst-landing', self.tournament, kwargs={'url_key': self.kwargs['url_key']})
 
-class CreateInstitutionFormView(TournamentMixin, CustomQuestionFormMixin, SessionWizardView):
+
+class CreateInstitutionFormView(LogActionMixin, PublicTournamentPageMixin, CustomQuestionFormMixin, SessionWizardView):
     form_list = [
         ('institution', TournamentInstitutionForm),
         ('coach', InstitutionCoachForm),
@@ -53,21 +62,36 @@ class CreateInstitutionFormView(TournamentMixin, CustomQuestionFormMixin, Sessio
     page_emoji = '🏫'
     page_title = gettext_lazy("Register Institution")
 
+    public_page_preference = 'institution_registration'
+    action_log_type = ActionLogEntry.ActionType.INSTITUTION_REGISTER
+
+    def get_success_url(self, coach):
+        return reverse_tournament('reg-inst-landing', self.tournament, kwargs={'url_key': coach.url_key})
+
     def done(self, form_list, form_dict, **kwargs):
         t_inst = form_dict['institution'].save()
+        self.object = t_inst
 
         coach_form = form_dict['coach']
         coach_form.instance.tournament_institution = t_inst
-        coach_form.save()
+        coach = coach_form.save()
+        populate_url_keys(coach)
+
+        messages.success(self.request, _("Your institution %s has been registered!") % t_inst.institution.name)
+        self.log_action()
+        return HttpResponseRedirect(self.get_success_url(coach))
 
 
-class BaseCreateTeamFormView(TournamentMixin, CustomQuestionFormMixin, SessionWizardView):
+class BaseCreateTeamFormView(LogActionMixin, PublicTournamentPageMixin, CustomQuestionFormMixin, SessionWizardView):
     form_list = [
         ('team', TeamForm),
         ('speaker', modelformset_factory(Speaker, form=SpeakerForm, extra=0)),
     ]
     template_name = 'wizard_registration_form.html'
     page_emoji = '👯'
+
+    public_page_preference = 'open_team_registration'
+    action_log_type = ActionLogEntry.ActionType.TEAM_REGISTER
 
     def get_page_title(self):
         match self.steps.current:
@@ -99,6 +123,9 @@ class BaseCreateTeamFormView(TournamentMixin, CustomQuestionFormMixin, SessionWi
     def get_speaker_queryset(self):
         return Speaker.objects.none()
 
+    def get_success_url(self):
+        return reverse_tournament('tournament-public-index', self.tournament)
+
     def get_form(self, step=None, data=None, files=None):
         form = super().get_form(step, data, files)
 
@@ -108,20 +135,31 @@ class BaseCreateTeamFormView(TournamentMixin, CustomQuestionFormMixin, SessionWi
 
     def done(self, form_list, form_dict, **kwargs):
         team = form_dict['team'].save()
+        self.object = team
 
         for speaker in form_dict['speaker']:
             speaker.instance.team = team
             speaker.save()
 
+        messages.success(self.request, _("Your team %s has been registered!") % team.short_name)
+        self.log_action()
+        return HttpResponseRedirect(self.get_success_url())
 
-class BaseCreateAdjudicatorFormView(TournamentMixin, CustomQuestionFormMixin, FormView):
+
+class BaseCreateAdjudicatorFormView(LogActionMixin, PublicTournamentPageMixin, CustomQuestionFormMixin, CreateView):
     form_class = AdjudicatorForm
     template_name = 'adjudicator_registration_form.html'
     page_emoji = '👂'
     page_title = gettext_lazy("Register Adjudicator")
 
+    public_page_preference = 'open_adj_registration'
+    action_log_type = ActionLogEntry.ActionType.ADJUDICATOR_REGISTER
 
-class CreateSpeakerFormView(TournamentMixin, CustomQuestionFormMixin, FormView):
+    def get_success_url(self):
+        return reverse_tournament('tournament-public-index', self.tournament)
+
+
+class CreateSpeakerFormView(TournamentMixin, CustomQuestionFormMixin, CreateView):
     form_class = SpeakerForm
     template_name = 'adjudicator_registration_form.html'
     page_emoji = '👄'
@@ -165,6 +203,8 @@ class InstitutionalLandingPageView(TournamentMixin, InstitutionalRegistrationMix
 
 class InstitutionalCreateTeamFormView(InstitutionalRegistrationMixin, BaseCreateTeamFormView):
 
+    public_page_preference = 'institution_participant_registration'
+
     def get_page_subtitle(self):
         if self.steps.current == 'team':
             return _("from %s") % self.institution.name
@@ -172,6 +212,8 @@ class InstitutionalCreateTeamFormView(InstitutionalRegistrationMixin, BaseCreate
 
 
 class InstitutionalCreateAdjudicatorFormView(InstitutionalRegistrationMixin, BaseCreateAdjudicatorFormView):
+
+    public_page_preference = 'institution_participant_registration'
 
     def get_page_subtitle(self):
         return _("from %s") % self.institution.name

@@ -73,10 +73,12 @@ class TournamentInstitution(models.Model):
     )
     teams_requested = models.PositiveIntegerField(
         verbose_name=_("Team slots requested"),
+        default=0,
     )
     teams_allocated = models.PositiveIntegerField(verbose_name=_("Team slots allocated"), default=0)
     adjudicators_requested = models.PositiveIntegerField(
         verbose_name=_("Adjudicator slots requested"),
+        default=0,
     )
     adjudicators_allocated = models.PositiveIntegerField(
         verbose_name=_("Adjudicator slots allocated"),

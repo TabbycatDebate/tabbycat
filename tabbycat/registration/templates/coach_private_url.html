@@ -25,9 +25,13 @@
 
   <div class="card-deck">
     <div class="card mb-3 panel-default">
-      {% tournamenturl 'reg-inst-create-adj' url_key as url %}
-      {% blocktrans trimmed asvar text %}Register Adjudicator{% endblocktrans %}
-      {% include "components/item-action.html" with icon="user-plus" %}
+      {% if pref.institution_participant_registration %}
+        {% tournamenturl 'reg-inst-create-adj' url_key as url %}
+        {% blocktrans trimmed asvar text %}Register Adjudicator{% endblocktrans %}
+        {% include "components/item-action.html" with icon="user-plus" %}
+      {% else %}
+        {% trans "Participant registration is not yet open" %}
+      {% endif %}
 
       <div class="list-group-item">
         <em>Placeholder for invitation link</em>
@@ -35,9 +39,13 @@
     </div>
 
     <div class="card mb-3 panel-default">
-      {% tournamenturl 'reg-inst-create-team' url_key as url %}
-      {% blocktrans trimmed asvar text %}Register Team{% endblocktrans %}
-      {% include "components/item-action.html" with icon="user-plus" %}
+      {% if pref.institution_participant_registration %}
+        {% tournamenturl 'reg-inst-create-team' url_key as url %}
+        {% blocktrans trimmed asvar text %}Register Team{% endblocktrans %}
+        {% include "components/item-action.html" with icon="user-plus" %}
+      {% else %}
+        {% trans "Participant registration is not yet open" %}
+      {% endif %}
 
       <div class="list-group-item">
         <em>Placeholder for invitation link</em>

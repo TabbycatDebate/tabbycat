@@ -111,6 +111,9 @@ class ActionLogEntry(models.Model):
         VENUES_SAVE                       = 've.save', _("Saved a room manual edit")
         QUESTION_CREATE                   = 'qu.crea', _("Created question")
         QUESTION_EDIT                     = 'qu.edit', _("Edited question")
+        INSTITUTION_REGISTER              = 'inst.reg', _("Registered institution")
+        TEAM_REGISTER                     = 'te.reg', _("Registered team")
+        ADJUDICATOR_REGISTER              = 'aj.reg', _("Registered adjudicator")
 
     class Agent(models.TextChoices):
         API = 'a', _("API")
