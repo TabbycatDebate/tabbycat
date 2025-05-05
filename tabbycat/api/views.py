@@ -136,8 +136,8 @@ class TournamentPreferenceViewSet(TournamentFromUrlMixin, AdministratorAPIMixin,
     queryset = TournamentPreferenceModel.objects.all()
     serializer_class = PreferenceSerializer
 
-    list_permission = Permission.VIEW_TOURNAMENTPREFERENCEMODEL
-    update_permission = Permission.EDIT_TOURNAMENTPREFERENCEMODEL
+    list_permission = Permission.VIEW_SETTINGS
+    update_permission = Permission.EDIT_SETTINGS
 
     action_log_content_object_attr = 'obj'
     action_log_type_updated = ActionLogEntry.ActionType.OPTIONS_EDIT
@@ -967,7 +967,7 @@ class TeamRoundStandingsRoundsView(TournamentAPIMixin, TournamentPublicAPIMixin,
 )
 class PairingViewSet(RoundAPIMixin, ModelViewSet):
 
-    class Permission(PublicPreferencePermission):
+    class CustomPermission(PublicPreferencePermission):
         def get_tournament_preference(self, view, op):
             t = view.tournament
             r = view.round
@@ -992,12 +992,12 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
     round_released_field = 'draw_status'
     round_released_value = Round.Status.RELEASED
 
-    """list_permission = Permission.VIEW_DEBATE
+    list_permission = Permission.VIEW_DEBATE
     create_permission = Permission.GENERATE_DEBATE
-    update_permission = Permission.GENERATE_DEBATE
-    destroy_permission = Permission.GENERATE_DEBATE"""
+    # update_permission = Permission.EDIT_DEBATETEAMS
+    destroy_permission = Permission.DELETE_DEBATE
 
-    permission_classes = [APIEnabledPermission, Permission | PerTournamentPermissionRequired]
+    permission_classes = [APIEnabledPermission, CustomPermission | PerTournamentPermissionRequired]
 
     action_log_type_created = ActionLogEntry.ActionType.DEBATE_CREATE
     action_log_type_updated = ActionLogEntry.ActionType.DEBATE_EDIT

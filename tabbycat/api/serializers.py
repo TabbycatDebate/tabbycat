@@ -1048,9 +1048,17 @@ class RoundPairingSerializer(serializers.ModelSerializer):
         team = fields.TournamentHyperlinkedRelatedField(view_name='api-team-detail', queryset=Team.objects.all())
         side = fields.SideChoiceField(required=False)
 
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            if not is_staff(kwargs.get('context')):
+                with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=kwargs['context']['tournament'])
+                if not with_permission(permission=Permission.VIEW_ADMIN_DRAW):
+                    self.fields.pop('flags')
+
         class Meta:
             model = DebateTeam
-            fields = ('team', 'side')
+            fields = ('team', 'side', 'flags')
+            read_only_fields = ('flags',)
 
         def save(self, **kwargs):
             seq = kwargs.pop('seq')
@@ -1082,15 +1090,20 @@ class RoundPairingSerializer(serializers.ModelSerializer):
                 self.fields.pop('room_rank')
                 self.fields.pop('importance')
                 self.fields.pop('result_status')
+                self.fields.pop('flags')
 
     class Meta:
         model = Debate
-        exclude = ('round', 'flags')
+        exclude = ('round',)
+        read_only_fields = ('flags',)
 
     def create(self, validated_data):
         teams_data = validated_data.pop('debateteam_set', [])
         adjs_data = validated_data.pop('adjudicators', None)
         barcode = validated_data.pop('checkin_identifier', {}).get('barcode', None)
+
+        user = self.context['request'].user
+        tournament = self.context['tournament']
 
         validated_data['round'] = self.context['round']
         debate = super().create(validated_data)
@@ -1101,22 +1114,27 @@ class RoundPairingSerializer(serializers.ModelSerializer):
         for i, team in enumerate(teams_data):
             save_related(self.DebateTeamSerializer, team, self.context, {'debate': debate, 'seq': i})
 
-        if adjs_data is not None:
+        if adjs_data is not None and has_permission(user, Permission.EDIT_DEBATEADJUDICATORS, tournament):
             save_related(DebateAdjudicatorSerializer, adjs_data, self.context, {'debate': debate})
 
         return debate
 
     def update(self, instance, validated_data):
         handle_update_barcode(instance, validated_data)
-        for team in validated_data.pop('debateteam_set', []):
-            try:
-                DebateTeam.objects.update_or_create(debate=instance, side=team.get('side'), defaults={
-                    'team': team.get('team'),
-                })
-            except (IntegrityError, TypeError) as e:
-                raise serializers.ValidationError(e)
+        dt_set = validated_data.pop('debateteam_set', [])
+        user = self.context['request'].user
+        tournament = self.context['tournament']
 
-        if (adjs_data := validated_data.pop('adjudicators', None)) is not None:
+        if has_permission(user, Permission.EDIT_DEBATETEAMS, tournament):
+            for team in dt_set:
+                try:
+                    DebateTeam.objects.update_or_create(debate=instance, side=team.get('side'), defaults={
+                        'team': team.get('team'),
+                    })
+                except (IntegrityError, TypeError) as e:
+                    raise serializers.ValidationError(e)
+
+        if (adjs_data := validated_data.pop('adjudicators', None)) is not None and has_permission(user, Permission.EDIT_DEBATEADJUDICATORS, tournament):
             save_related(DebateAdjudicatorSerializer, adjs_data, self.context, {'debate': instance})
 
         return super().update(instance, validated_data)

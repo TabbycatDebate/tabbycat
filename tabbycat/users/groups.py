@@ -45,7 +45,6 @@ class AdjudicationCore(BaseGroup):
         Permission.EDIT_DEBATEADJUDICATORS,
         Permission.EDIT_FEEDBACK_CONFIRM,
         Permission.EDIT_FEEDBACK_IGNORE,
-        Permission.EDIT_JUDGESCORES_BULK,
         Permission.EDIT_BASEJUDGESCORES_IND,
         Permission.EDIT_MOTION,
         Permission.EDIT_STARTTIME,

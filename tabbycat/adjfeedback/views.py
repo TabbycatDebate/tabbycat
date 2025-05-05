@@ -795,7 +795,7 @@ class IgnoreFeedbackView(BaseFeedbackToggleView):
 class UpdateAdjudicatorScoresView(AdministratorMixin, LogActionMixin, TournamentMixin, FormView):
     template_name = 'update_adjudicator_scores.html'
     form_class = UpdateAdjudicatorScoresForm
-    edit_permission = Permission.EDIT_JUDGESCORES_BULK
+    edit_permission = Permission.EDIT_BASEJUDGESCORES_IND
     action_log_type = ActionLogEntry.ActionType.UPDATE_ADJUDICATOR_SCORES
 
     def get_context_data(self, **kwargs):

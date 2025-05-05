@@ -152,8 +152,6 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
 
 class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView):
     page_subtitle = _("Private URLs")
-    view_permission = Permission.VIEW_PRIVATE_URLS_EMAIL_LIST
-    edit_permission = Permission.SEND_PRIVATE_URLS
     event = BulkNotification.EventType.URL
     subject_template = 'url_email_subject'
     message_template = 'url_email_message'
