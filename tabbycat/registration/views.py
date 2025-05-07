@@ -27,7 +27,10 @@ from .models import Question
 class CustomQuestionFormMixin:
 
     def get_form_kwargs(self, step=None):
-        kwargs = super().get_form_kwargs()
+        if step is not None:
+            kwargs = super().get_form_kwargs(step)
+        else:
+            kwargs = super().get_form_kwargs()
         kwargs['tournament'] = self.tournament
         return kwargs
 
@@ -45,7 +48,10 @@ class InstitutionalRegistrationMixin:
         return self._institution
 
     def get_form_kwargs(self, step=None):
-        kwargs = super().get_form_kwargs()
+        if step is not None:
+            kwargs = super().get_form_kwargs(step)
+        else:
+            kwargs = super().get_form_kwargs()
         kwargs['institution'] = self.institution
         return kwargs
 
@@ -110,14 +116,15 @@ class BaseCreateTeamFormView(LogActionMixin, PublicTournamentPageMixin, CustomQu
             if team_form.is_valid():
                 team = team_form.instance
                 team.tournament = self.tournament
+                team.institution = self.institution
                 return _("for %s") % team._construct_short_name()
         return ''
 
     def get_form_kwargs(self, step=None):
-        kwargs = super().get_form_kwargs()
+        kwargs = super().get_form_kwargs(step)
         if step == 'speaker':
+            kwargs.update({'queryset': self.get_speaker_queryset(), 'form_kwargs': {'tournament': self.tournament}})
             kwargs.pop('tournament')
-            kwargs |= {'queryset': self.get_speaker_queryset(), 'form_kwargs': self.get_form_kwargs()}
         return kwargs
 
     def get_speaker_queryset(self):
@@ -157,6 +164,11 @@ class BaseCreateAdjudicatorFormView(LogActionMixin, PublicTournamentPageMixin, C
 
     def get_success_url(self):
         return reverse_tournament('tournament-public-index', self.tournament)
+
+    def form_valid(self, form):
+        obj = form.save()
+        messages.success(self.request, _("Your adjudicator %s has been registered!") % obj.name)
+        return super().form_valid(form)
 
 
 class CreateSpeakerFormView(TournamentMixin, CustomQuestionFormMixin, CreateView):
@@ -209,6 +221,12 @@ class InstitutionalCreateTeamFormView(InstitutionalRegistrationMixin, BaseCreate
         if self.steps.current == 'team':
             return _("from %s") % self.institution.name
         return super().get_page_subtitle()
+
+    def get_form_kwargs(self, step=None):
+        kwargs = super().get_form_kwargs(step)
+        if step == 'speaker':
+            kwargs.pop('institution')
+        return kwargs
 
 
 class InstitutionalCreateAdjudicatorFormView(InstitutionalRegistrationMixin, BaseCreateAdjudicatorFormView):

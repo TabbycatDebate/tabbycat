@@ -74,7 +74,8 @@ class TeamForm(CustomQuestionsFormMixin, forms.ModelForm):
             self.fields.pop('reference')
 
         if self.institution is not None:
-            self.fields.pop('institution')
+            self.fields['institution'].widget = forms.HiddenInput()
+            self.fields['institution'].initial = self.tournament
 
         if 'emoji' in self.fields:
             used_emoji = self.tournament.team_set.filter(emoji__isnull=False).values_list('emoji', flat=True)
@@ -96,6 +97,7 @@ class TeamForm(CustomQuestionsFormMixin, forms.ModelForm):
 
     def save(self):
         self.instance.tournament = self.tournament
+        self.instance.institution = self.institution
         obj = super().save()
         self.save_answers(obj)
         return obj
@@ -136,7 +138,8 @@ class AdjudicatorForm(CustomQuestionsFormMixin, forms.ModelForm):
             self.fields.pop(field)
 
         if self.institution is not None:
-            self.fields.pop('institution')
+            self.fields['institution'].widget = forms.HiddenInput()
+            self.fields['institution'].initial = self.institution
 
         self.add_question_fields()
 

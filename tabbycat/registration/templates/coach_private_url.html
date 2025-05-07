@@ -30,7 +30,9 @@
         {% blocktrans trimmed asvar text %}Register Adjudicator{% endblocktrans %}
         {% include "components/item-action.html" with icon="user-plus" %}
       {% else %}
-        {% trans "Participant registration is not yet open" %}
+        <div class="alert alert-warning">
+          {% trans "Participant registration is not yet open" %}
+        </div>
       {% endif %}
 
       <div class="list-group-item">
@@ -44,7 +46,9 @@
         {% blocktrans trimmed asvar text %}Register Team{% endblocktrans %}
         {% include "components/item-action.html" with icon="user-plus" %}
       {% else %}
-        {% trans "Participant registration is not yet open" %}
+        <div class="alert alert-warning">
+          {% trans "Participant registration is not yet open" %}
+        </div>
       {% endif %}
 
       <div class="list-group-item">
