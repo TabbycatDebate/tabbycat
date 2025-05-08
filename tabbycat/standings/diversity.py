@@ -3,10 +3,13 @@ from django.utils.translation import gettext as _
 
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
-from participants.models import Adjudicator, Person, Speaker, SpeakerCategory, Team
+from participants.models import Person, Speaker, SpeakerCategory
 from participants.utils import regions_ordered
 from results.models import SpeakerScore
 from tournaments.models import Round
+
+
+gendered_types = (Person.GENDER_FEMALE, Person.GENDER_MALE)
 
 
 class Percentile(Aggregate):
@@ -132,22 +135,22 @@ def get_diversity_data_sets(t, for_public):
 
     speakers = Speaker.objects.filter(team__tournament=t)
 
-    if Speaker.objects.filter(team__tournament=t).count() > 0:
+    if speakers.count() > 0:
         data_sets['speakers_gender'].append(compile_gender_counts(_("All"), speakers, 'gender'))
 
     if t.pref('public_breaking_teams') is True or for_public is False:
-        if Speaker.objects.filter(team__tournament=t).filter(team__breakingteam__isnull=False).count() > 0:
+        if speakers.filter(team__breakingteam__isnull=False).count() > 0:
             data_sets['speakers_gender'].append(compile_gender_counts(_("Breaking"),
                     speakers.filter(team__breakingteam__isnull=False), 'gender'))
 
     for sc in SpeakerCategory.objects.filter(tournament=t).order_by('seq'):
-        if Speaker.objects.filter(categories=sc).count() > 0:
+        if speakers.filter(categories=sc).count() > 0:
             data_sets['speakers_categories'].append(compile_gender_counts(sc.name,
                     speakers.filter(categories=sc), 'gender'))
             data_sets['speakers_categories'].append(compile_gender_counts(_("Not %(category)s") % {'category': sc.name},
                     speakers.exclude(categories=sc), 'gender'))
 
-    if Team.objects.exclude(institution__region__isnull=True).exists():
+    if t.team_set.exclude(institution__region__isnull=True).exists():
         data_sets['speakers_region'].append(compile_grouped_counts(_("All Speakers"), speakers,
                 F('team__institution__region__id'), region_values, region_labels))
 
@@ -165,11 +168,11 @@ def get_diversity_data_sets(t, for_public):
     if adjudicators.count() > 0:
         data_sets['adjudicators_gender'].append(compile_gender_counts(_("All"), adjudicators, 'gender'))
 
-    if Adjudicator.objects.filter(tournament=t).filter(independent=True).exists():
+    if adjudicators.filter(independent=True).exists():
         data_sets['adjudicators_gender'].append(compile_gender_counts(_("IAs"),
             adjudicators.filter(independent=True), 'gender'))
 
-    if (t.pref('public_breaking_adjs') is True or for_public is False) and Adjudicator.objects.filter(breaking=True).exists():
+    if (t.pref('public_breaking_adjs') is True or for_public is False) and adjudicators.filter(breaking=True).exists():
         data_sets['adjudicators_gender'].append(compile_gender_counts(_("Breaking"),
             adjudicators.filter(breaking=True), 'gender'))
 
@@ -183,7 +186,7 @@ def get_diversity_data_sets(t, for_public):
     data_sets['adjudicators_position'] = compile_grouped_gender_counts(titles, debateadjs,
             'adjudicator__gender', 'type', adjtypes)
 
-    if Adjudicator.objects.exclude(institution__region__isnull=True).exists():
+    if adjudicators.exclude(institution__region__isnull=True).exists():
         data_sets['adjudicators_region'].append(compile_grouped_counts(_("All"), adjudicators,
                 F('institution__region__id'), region_values, region_labels))
 
@@ -196,7 +199,7 @@ def get_diversity_data_sets(t, for_public):
     # ==========================================================================
 
     # Don't show data if genders have not been set
-    data_sets['gendered_adjudicators'] = Adjudicator.objects.filter(gender="M").count() + Adjudicator.objects.filter(gender="F").count()
+    data_sets['gendered_adjudicators'] = adjudicators.filter(gender__in=gendered_types).count()
     if data_sets['gendered_adjudicators'] > 0:
 
         adjfeedbacks = AdjudicatorFeedback.objects.filter(adjudicator__tournament=t, confirmed=True)
@@ -234,7 +237,7 @@ def get_diversity_data_sets(t, for_public):
     # ==========================================================================
 
     # Don't show data if genders have not been set
-    data_sets['gendered_speakers'] = Speaker.objects.filter(gender="M").count() + Speaker.objects.filter(gender="F").count()
+    data_sets['gendered_speakers'] = speakers.filter(gender__in=gendered_types).count()
     if data_sets['gendered_speakers'] > 0:
 
         speakerscores = SpeakerScore.objects.filter(speaker__team__tournament=t, ballot_submission__confirmed=True)

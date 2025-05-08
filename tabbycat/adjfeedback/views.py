@@ -133,6 +133,7 @@ class FeedbackOverview(AdministratorMixin, BaseFeedbackOverview):
         table.add_breaking_checkbox(adjudicators)
         table.add_weighted_score_columns(adjudicators, scores)
         table.add_base_score_columns(adjudicators, editable=True)
+        table.add_feedback_only_columns(adjudicators)
         table.add_score_difference_columns(adjudicators, scores)
         table.add_score_variance_columns(adjudicators)
         table.add_feedback_graphs(adjudicators)
@@ -794,7 +795,7 @@ class IgnoreFeedbackView(BaseFeedbackToggleView):
 class UpdateAdjudicatorScoresView(AdministratorMixin, LogActionMixin, TournamentMixin, FormView):
     template_name = 'update_adjudicator_scores.html'
     form_class = UpdateAdjudicatorScoresForm
-    edit_permission = Permission.EDIT_JUDGESCORES_BULK
+    edit_permission = Permission.EDIT_BASEJUDGESCORES_IND
     action_log_type = ActionLogEntry.ActionType.UPDATE_ADJUDICATOR_SCORES
 
     def get_context_data(self, **kwargs):

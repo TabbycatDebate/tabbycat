@@ -197,7 +197,7 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
     """Adds provision for a textarea input for speakers."""
 
     # widgets are set in form constructor
-    speakers = forms.CharField(required=True, label=_("Speakers' names"), help_text=_("Can be separated by newlines, tabs or commas"))
+    speakers = forms.CharField(required=True, label=_("Speakers' names"), help_text=_("Can be separated by newlines, tabs, commas or ampersands"))
     emails = forms.CharField(required=False, label=_("Speakers' email addresses"),
         help_text=_("Optional, useful to include if distributing private URLs, list in same order as speakers' names"))
     short_reference = forms.CharField(widget=forms.HiddenInput, required=False) # doesn't actually do anything, just placeholder to avoid validation failure
@@ -249,7 +249,7 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
     @staticmethod
     def _split_lines(data):
         """Split into list of names or emails; removing blank lines."""
-        items = data.replace('\t', '\n').replace(',', '\n')
+        items = data.replace('\t', '\n').replace(',', '\n').replace('&', '\n')
         items = items.split('\n')
         items = [item.strip() for item in items]
         items = [item for item in items if item]

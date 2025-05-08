@@ -122,7 +122,7 @@ class BaseBreakGenerator:
         self.check_required_metrics(metrics)
 
         generator = TeamStandingsGenerator(metrics, self.rankings)
-        generated = generator.generate(self.team_queryset)
+        generated = generator.generate(self.team_queryset, tournament=self.category.tournament)
         self.standings = list(generated)
 
     def filter_eligible_teams(self):

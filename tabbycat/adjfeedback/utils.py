@@ -98,6 +98,7 @@ def get_feedback_overview(t, adjudicators):
         annotated_adj = annotated_adjs_by_id[adj.id]
         adj.debates = annotated_adj.debates
         adj.feedback_data = feedback_stats(annotated_adj, rounds)
+        adj.feedback_count = feedback_count(annotated_adj)
         adj.feedback_variance = feedback_variance(annotated_adj, rounds)
 
     return adjudicators
@@ -110,6 +111,10 @@ def feedback_variance(adj, rounds):
         return stdev(feedback_scores)
     else:
         return None
+
+
+def feedback_count(adj):
+    return len(adj.adjfeedback_for_rounds)
 
 
 def feedback_stats(adj, rounds):

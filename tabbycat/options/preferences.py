@@ -97,6 +97,17 @@ class MarginIncludesDissent(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class BallotIntroduction(LongStringPreference):
+    help_text = _("Any explanatory text needed to introduce the ballot form, e.g. speaker scale")
+    verbose_name = _("Ballot introduction/explanation")
+    section = scoring
+    name = 'ballot_introduction'
+    default = ''
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
+    field_kwargs = {'required': False}
+
+
+@tournament_preferences_registry.register
 class TeamScoreIncludesGhost(BooleanPreference):
     help_text = _("If checked, all speaker scores, including for duplicate speeches, will be counted for team scores")
     verbose_name = _("Team score includes ghosts")
@@ -216,6 +227,7 @@ class DrawOddBracket(ChoicePreference):
     section = draw_rules
     name = 'draw_odd_bracket'
     choices = (
+        ('pullup_lowest_ds_rank', _("Pull up from the lowest draw strength by rank")),
         ('pullup_top', _("Pull up from top")),
         ('pullup_bottom', _("Pull up from bottom")),
         ('pullup_middle', _("Pull up from middle")),
@@ -288,6 +300,15 @@ class DrawPullupRestriction(ChoicePreference):
         ('lowest_ds_speaks', _("Choose from teams with the lowest draw strength by speaks so far")),
     )
     default = 'none'
+
+
+@tournament_preferences_registry.register
+class DrawPullupPenalty(IntegerPreference):
+    help_text = _("Penalty applied when determining which teams to pull up (for minimum cost matching)")
+    verbose_name = _("Pullup penalty")
+    section = draw_rules
+    name = 'draw_pullup_penalty'
+    default = 0
 
 
 @tournament_preferences_registry.register
@@ -668,7 +689,7 @@ class TeamStandingsExtraMetrics(MultiValueChoicePreference):
     verbose_name = _("Team standings extra metrics")
     section = standings
     name = 'team_standings_extra_metrics'
-    choices = TeamStandingsGenerator.get_metric_choices(ranked_only=False)
+    choices = TeamStandingsGenerator.get_metric_choices(ranked_only=False, for_extra=True)
     nfields = 5
     allow_empty = True
     default = []
@@ -696,7 +717,7 @@ class SpeakerStandingsExtraMetrics(MultiValueChoicePreference):
     verbose_name = _("Speaker standings extra metrics")
     section = standings
     name = 'speaker_standings_extra_metrics'
-    choices = SpeakerStandingsGenerator.get_metric_choices(ranked_only=False)
+    choices = SpeakerStandingsGenerator.get_metric_choices(ranked_only=False, for_extra=True)
     nfields = 5
     allow_empty = True
     default = ['stdev', 'count']
@@ -923,6 +944,7 @@ class AssistantAccess(ChoicePreference):
         ('all_areas', _("All areas (results entry, draw display, and motions)")),
         ('results_draw', _("Just results entry and draw display")),
         ('results_only', _("Only results entry")),
+        ('none', _("No access")),
     )
 
 

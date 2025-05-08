@@ -1,8 +1,9 @@
 <script>
 import ModalErrorMixin from '../errors/ModalErrorMixin.vue'
+import CookieMixin from './CookieMixin.vue'
 
 export default {
-  mixins: [ModalErrorMixin],
+  mixins: [ModalErrorMixin, CookieMixin],
   methods: {
     ajaxSave: function (
       url, payload, message, completeFunction, failFunction,
@@ -10,22 +11,7 @@ export default {
     ) {
       const self = this
       const dataPayload = JSON.stringify(payload)
-      function getCookie (name) {
-        let cookieValue = null
-        if (document.cookie && document.cookie !== '') {
-          const cookies = document.cookie.split(';')
-          for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim()
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-              cookieValue = decodeURIComponent(cookie.substring(name.length + 1))
-              break
-            }
-          }
-        }
-        return cookieValue
-      }
-      const csrftoken = getCookie('csrftoken')
+      const csrftoken = this.getCookie('csrftoken')
       $.ajax({
         type: 'POST',
         url: url,

@@ -1,9 +1,13 @@
 from collections import OrderedDict
+from typing import TYPE_CHECKING
 
 import munkres
 import networkx as nx
 
 from ..types import DebateSide
+
+if TYPE_CHECKING:
+    from participants.models import Team
 
 
 def sign(n: int) -> int:
@@ -48,6 +52,9 @@ class GraphGeneratorMixin:
 
         return penalty
 
+    def get_n_teams(self, teams: list['Team']) -> int:
+        return len(teams)
+
     def generate_pairings(self, brackets):
         """Creates an undirected weighted graph for each bracket and gets the minimum weight matching"""
         from .pairing import Pairing
@@ -56,7 +63,7 @@ class GraphGeneratorMixin:
         for j, (points, teams) in enumerate(brackets.items()):
             pairings[points] = []
             graph = nx.Graph()
-            n_teams = len(teams)
+            n_teams = self.get_n_teams(teams)
             for t1 in teams:
                 for t2 in teams:
                     penalty = self.assignment_cost(t1, t2, n_teams, j)

@@ -255,6 +255,10 @@ urlpatterns = [
                         name='api-group-detail'),
                 ])),
 
+                path('/me',
+                    views.ParticipantIdentificationView.as_view({'get': 'retrieve'}),
+                    name='api-tournament-detail'),
+
                 path('/', include(pref_router.urls)),  # Preferences
             ])),
         ])),

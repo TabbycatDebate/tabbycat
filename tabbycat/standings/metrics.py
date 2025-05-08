@@ -57,6 +57,7 @@ class BaseMetricAnnotator:
     abbr = None  # must be set by subclasses
     icon = None
     ranked_only = False
+    extra_only = False
     repeatable = False
     listed = True
     ascending = False  # if True, this metric is sorted in ascending order, not descending

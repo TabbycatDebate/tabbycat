@@ -3,9 +3,11 @@ import zoneinfo
 from datetime import date, datetime, time
 
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
 from rest_framework.test import APIClient, APITestCase
 
 from adjallocation.models import DebateAdjudicator
+from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from draw.models import Debate, DebateTeam
 from draw.types import DebateSide
 from motions.models import Motion, RoundMotion
@@ -133,7 +135,6 @@ class RoundSerializerTests(CompletedTournamentTestMixin, APITestCase):
             'draw_type': 'P',
             'starts_at': '00:00:00',
         })
-        print(response.data)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(datetime.fromisoformat(response.data['starts_at']), datetime.combine(date.today(), time(0, 0, 0, tzinfo=tz)))
 
@@ -485,7 +486,6 @@ class BallotSerializerTests(APITestCase):
                 }],
             },
         })
-        print(response.data)
         self.assertEqual(response.status_code, 201)
 
     def test_team_not_in_debate(self):
@@ -935,3 +935,166 @@ class BallotSerializerTests(APITestCase):
         })
         self.assertEqual(response.status_code, 400)
         self.assertEqual(str(response.data['result']['sheets'][0]['teams'][0]['non_field_errors'][0]), 'Score must be the sum of speech scores.')
+
+
+class PairingSerializerTests(APITestCase):
+
+    def setUp(self):
+        logging.disable(logging.CRITICAL)
+        self.user = User.objects.create_superuser(username='admin1', password='admin', is_active=True)
+        self.tournament = Tournament.objects.create(slug='apitest')
+        self.round = Round.objects.create(seq=1, tournament=self.tournament)
+
+        CanadianParliamentaryPreferences.save(self.tournament)
+
+        self.t1 = Team.objects.create(tournament=self.tournament, reference='A')
+        self.t2 = Team.objects.create(tournament=self.tournament, reference='B')
+        self.t3 = Team.objects.create(tournament=self.tournament, reference='C')
+
+        self.a1 = Adjudicator.objects.create(name='A1', tournament=self.tournament)
+        self.a2 = Adjudicator.objects.create(name='A2', tournament=self.tournament)
+        self.a3 = Adjudicator.objects.create(name='A3', tournament=self.tournament)
+
+    def tearDown(self):
+        self.round.debate_set.all().delete()
+        self.tournament.actionlogentry_set.all().delete()
+        self.tournament.delete()
+        self.user.delete()
+        logging.disable(logging.NOTSET)
+
+    def test_can_create_pairing_no_sides(self):
+        client = APIClient()
+        client.force_authenticate(user=self.user)
+        response = client.post(reverse_round('api-pairing-list', self.round), {
+            'teams': [
+                {
+                    'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t1.pk}),
+                },
+                {
+                    'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t2.pk}),
+                },
+            ],
+        })
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual([dt.team for dt in self.round.debate_set.prefetch_related('debateteam_set__team').first().debateteam_set.order_by('side')], [self.t1, self.t2])
+
+    def test_can_create_pairing_sides_precedence(self):
+        client = APIClient()
+        client.force_authenticate(user=self.user)
+        response = client.post(reverse_round('api-pairing-list', self.round), {
+            'teams': [
+                {
+                    'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t2.pk}),
+                    'side': 'neg',
+                },
+                {
+                    'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t1.pk}),
+                    'side': 'aff',
+                },
+            ],
+        })
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual([dt.team for dt in self.round.debate_set.prefetch_related('debateteam_set__team').first().debateteam_set.order_by('side')], [self.t1, self.t2])
+
+    def test_can_create_pairing_adjudicators(self):
+        client = APIClient()
+        client.force_authenticate(user=self.user)
+        response = client.post(reverse_round('api-pairing-list', self.round), {
+            'teams': [
+                {
+                    'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t1.pk}),
+                },
+                {
+                    'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t2.pk}),
+                },
+            ],
+            'adjudicators': {
+                'chair': reverse_tournament('api-adjudicator-detail', self.tournament, kwargs={'pk': self.a1.pk}),
+                'panellists': [
+                    reverse_tournament('api-adjudicator-detail', self.tournament, kwargs={'pk': self.a2.pk}),
+                    reverse_tournament('api-adjudicator-detail', self.tournament, kwargs={'pk': self.a3.pk}),
+                ],
+                'trainees': [],
+            },
+        })
+        self.assertEqual(response.status_code, 201)
+
+
+class FeedbackSerializerTests(APITestCase):
+
+    def setUp(self):
+        logging.disable(logging.CRITICAL)
+        self.user = User.objects.create_superuser(username='admin1', password='admin', is_active=True)
+        self.tournament = Tournament.objects.create(slug='apitest')
+        self.round = Round.objects.create(seq=1, tournament=self.tournament)
+
+        CanadianParliamentaryPreferences.save(self.tournament)
+
+        self.t1 = Team.objects.create(tournament=self.tournament, reference='A')
+        self.t2 = Team.objects.create(tournament=self.tournament, reference='B')
+
+        self.a1 = Adjudicator.objects.create(name='A1', tournament=self.tournament)
+        self.a2 = Adjudicator.objects.create(name='A2', tournament=self.tournament)
+        self.a3 = Adjudicator.objects.create(name='A3', tournament=self.tournament)
+
+        self.debate = Debate.objects.create(round=self.round)
+        for i, team in enumerate([self.t1, self.t2]):
+            DebateTeam.objects.create(debate=self.debate, team=team, side=i)
+
+        DebateAdjudicator.objects.create(debate=self.debate, adjudicator=self.a1, type=DebateAdjudicator.TYPE_CHAIR)
+        DebateAdjudicator.objects.create(debate=self.debate, adjudicator=self.a2, type=DebateAdjudicator.TYPE_PANEL)
+        DebateAdjudicator.objects.create(debate=self.debate, adjudicator=self.a3, type=DebateAdjudicator.TYPE_TRAINEE)
+
+    def tearDown(self):
+        self.round.debate_set.all().delete()
+        self.tournament.actionlogentry_set.all().delete()
+        self.tournament.delete()
+        self.user.delete()
+        logging.disable(logging.NOTSET)
+
+    def test_team_missing_required_question(self):
+        AdjudicatorFeedbackQuestion.objects.create(
+            tournament=self.tournament,
+            from_adj=True, from_team=True,
+            reference='TestQ', for_content_type=ContentType.objects.get_for_model(AdjudicatorFeedback),
+            seq=1, text='TestQ',
+            name='TestQ',
+            answer_type=AdjudicatorFeedbackQuestion.AnswerType.LONGTEXT,
+            required=True,
+        )
+
+        self.client.login(username="admin1", password="admin")
+        response = self.client.post(reverse_tournament('api-feedback-list', self.tournament), {
+            'adjudicator': reverse_tournament('api-adjudicator-detail', self.tournament, kwargs={'pk': self.a1.pk}),
+            'source': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t1.pk}),
+            'debate': reverse_round('api-pairing-detail', self.round, kwargs={'debate_pk': self.debate.pk}),
+            'answers': [],
+            'score': 10,
+        })
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data['non_field_errors'][0], 'Answer to required question is missing')
+
+    def test_team_question_wrong_type(self):
+        question = AdjudicatorFeedbackQuestion.objects.create(
+            tournament=self.tournament,
+            from_adj=True, from_team=True,
+            reference='TestQ', for_content_type=ContentType.objects.get_for_model(AdjudicatorFeedback),
+            seq=1, text='TestQ',
+            name='TestQ',
+            answer_type=AdjudicatorFeedbackQuestion.AnswerType.INTEGER_TEXTBOX,
+            required=True,
+        )
+
+        self.client.login(username="admin1", password="admin")
+        response = self.client.post(reverse_tournament('api-feedback-list', self.tournament), {
+            'adjudicator': reverse_tournament('api-adjudicator-detail', self.tournament, kwargs={'pk': self.a1.pk}),
+            'source': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t1.pk}),
+            'debate': reverse_round('api-pairing-detail', self.round, kwargs={'debate_pk': self.debate.pk}),
+            'answers': [{
+                'question': reverse_tournament('api-feedbackquestion-detail', self.tournament, kwargs={'pk': question.pk}),
+                'answer': 'Awesome!',
+            }],
+            'score': 10,
+        })
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data['answers'][0]['answer'][0], 'The answer must be of type int')

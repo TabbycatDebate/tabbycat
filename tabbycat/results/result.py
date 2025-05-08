@@ -229,7 +229,7 @@ class BaseDebateResult:
         """Raise an AssertionError if there is some problem with the data
         structure. External initialisers might find this helpful. Subclasses
         should extend this method as necessary."""
-        assert set(self.debateteams) == set(self.sides)
+        assert set(self.debateteams) == {-1} or set(self.debateteams) == set(self.sides)
 
     def is_complete(self):
         """Returns True if all elements of the results have been populated;
@@ -936,7 +936,7 @@ class ConsensusDebateResult(BaseDebateResult):
         for result in results:
             errors.extend(self.merge_speaker_result(result))
             if self.scoresheet_class.uses_declared_winners:
-                if self.get_winner() is None:
+                if self.get_winner() is None or len(self.get_winner()) == 0:
                     self.set_winners(result.scoresheet.winners())
                 elif self.get_winner() != result.scoresheet.winners():
                     errors.append(ResultError("Winners are not identical", "winners", result.scoresheet.winners(), None))

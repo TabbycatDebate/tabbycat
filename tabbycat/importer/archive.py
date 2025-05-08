@@ -245,10 +245,11 @@ class Exporter:
                     feedback_tag.set('source-team', TEAM_PREFIX + str(feedback.source_team.team_id))
                     feedback_tag.set('debate', DEBATE_PREFIX + str(feedback.source_team.debate_id))
 
-                for question in self.t.adjudicatorfeedbackquestion_set.all():
+                for question in AdjudicatorFeedbackQuestion.objects.filter(tournament=self.t):
                     try:
                         answer = Answer.objects.get(
-                            feedback=feedback,
+                            content_type=question.for_content_type,
+                            object_id=feedback.id,
                             question=question,
                         )
                     except ObjectDoesNotExist:
@@ -312,7 +313,7 @@ class Exporter:
             venue_tag.text = venue.name
 
     def add_questions(self):
-        for question in self.t.adjudicatorfeedbackquestion_set.all():
+        for question in AdjudicatorFeedbackQuestion.objects.filter(tournament=self.t):
             question_tag = SubElement(self.root, 'question', {
                 'id': QUESTION_PREFIX + str(question.id),
                 'name': question.name,
@@ -678,4 +679,8 @@ class Importer:
 
                     cast_answer = answer.text
                     answer = Answer(
-                        question=question, answer=cast_answer, feedback=feedback_obj)
+                        question=question,
+                        answer=cast_answer,
+                        object_id=feedback_obj.id,
+                        content_type=question.for_content_type,
+                    )

@@ -171,6 +171,28 @@ class AdminDrawTableBuilder(PublicDrawTableBuilder):
         return self._add_debate_standing_columns(debates, standings, 'itermetrics',
                 'metrics_info', metricformat, formatsort, limit)
 
+    def add_debate_seed_columns(self, debates):
+        sides = self.get_sides(debates)
+        headers = []
+        cells = []
+
+        for debate in debates:
+            if debate is None:
+                row = [self.BLANK_TEXT] * sides
+            else:
+                row = []
+                for team in debate.teams:
+                    row.append({'text': team.seed, 'sort': team.seed})
+                for i in range(sides - len(debate.teams)):
+                    row.append({'text': self.BLANK_TEXT})
+            cells.append(row)
+
+        for side in range(sides):
+            header = self._prepend_side_header(side, 'Seed', 'seed')
+            headers.append(header)
+
+        self.add_columns(headers, cells)
+
     def add_debate_ranking_columns(self, debates, standings):
         def formatsort(x):
             return x[0] or 99999

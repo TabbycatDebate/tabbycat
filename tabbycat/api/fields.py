@@ -9,9 +9,10 @@ from rest_framework.relations import Hyperlink, HyperlinkedIdentityField, Hyperl
 from rest_framework.reverse import reverse
 from rest_framework.serializers import CharField, Field, IntegerField, Serializer, ValidationError
 
-from adjfeedback.models import Question
+from adjfeedback.models import AdjudicatorFeedbackQuestion
 from draw.types import DebateSide
 from participants.models import Adjudicator, Speaker, Team
+from registration.models import Question
 from venues.models import Venue
 
 from .utils import is_staff
@@ -272,6 +273,12 @@ class BaseSourceField(TournamentHyperlinkedRelatedField):
         except self.model.DoesNotExist:
             self.fail('does_not_exist')
 
+    def get_url_options(self, value, format):
+        for view_name, (model, field) in self.models.items():
+            obj = getattr(value, model.__name__.lower(), None)
+            if obj is not None:
+                return self.get_url(obj, view_name, self.context['request'], format)
+
 
 class ParticipantSourceField(BaseSourceField):
     field_source_name = 'participant_submitter'
@@ -351,3 +358,10 @@ class AnswerSerializer(Serializer):
             raise option_error
 
         return super().validate(data)
+
+
+class AdjAnswerSerializer(AnswerSerializer):
+    question = TournamentHyperlinkedRelatedField(
+        view_name='api-feedbackquestion-detail',
+        queryset=AdjudicatorFeedbackQuestion.objects.all(),
+    )

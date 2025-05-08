@@ -205,6 +205,38 @@ class BaseDrawStrengthMetricAnnotator(BaseMetricAnnotator):
             standings.add_metric(team, self.key, draw_strength)
 
 
+class DrawStrengthByRankMetricAnnotator(BaseMetricAnnotator):
+    key = "draw_strength_rank"
+    name = _("draw strength by rank")
+    abbr = _("DSR")
+
+    ascending = True
+    extra_only = True  # Cannot rank based on ranking
+
+    def annotate(self, queryset, standings, round=None):
+        if not queryset.exists():
+            return
+
+        logger.info("Running opponents query for rank draw strength:")
+
+        # Make a copy of teams queryset and annotate with opponents
+        opponents_filter = ~Q(debateteam__debate__debateteam__team_id=F('id'))
+        opponents_filter &= Q(debateteam__debate__round__stage=Round.Stage.PRELIMINARY)
+        if round is not None:
+            opponents_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
+        opponents_annotation = ArrayAgg('debateteam__debate__debateteam__team_id',
+                filter=opponents_filter)
+        logger.info("Opponents annotation: %s", str(opponents_annotation))
+        teams_with_opponents = queryset.model.objects.annotate(opponent_ids=opponents_annotation)
+        opponents_by_team = {team.id: team.opponent_ids or [] for team in teams_with_opponents}
+        teams_by_id = {team.id: team for team in teams_with_opponents}
+
+        for team in queryset:
+            ranks = [standings.infos[teams_by_id[opponent_id]].rankings['rank'][0] for opponent_id in opponents_by_team[team.id]]
+            ranks_without_none = [rank for rank in ranks if rank is not None]
+            standings.add_metric(team, self.key, sum(ranks_without_none))
+
+
 class DrawStrengthByWinsMetricAnnotator(BaseDrawStrengthMetricAnnotator):
     """Metric annotator for draw strength."""
     key = "draw_strength"  # keep this key for backwards compatibility
@@ -407,6 +439,7 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "speaks_stddev"       : SpeakerScoreStandardDeviationMetricAnnotator,
         "draw_strength"       : DrawStrengthByWinsMetricAnnotator,
         "draw_strength_speaks": DrawStrengthBySpeakerScoreMetricAnnotator,
+        "draw_strength_rank"  : DrawStrengthByRankMetricAnnotator,
         "margin_sum"          : SumMarginMetricAnnotator,
         "margin_avg"          : AverageMarginMetricAnnotator,
         "npullups"            : TeamPullupsMetricAnnotator,
@@ -424,3 +457,5 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "subrank"         : SubrankAnnotator,
         "institution_rank": RankFromInstitutionAnnotator,
     }
+
+    tournament_field = 'tournament'

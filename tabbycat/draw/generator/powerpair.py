@@ -1,6 +1,6 @@
 import random
 from collections import OrderedDict
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from django.utils.translation import gettext as _
 
@@ -9,6 +9,9 @@ from .graph import GraphAllocatedSidesMixin, GraphGeneratorMixin
 from .one_up_one_down import OneUpOneDownSwapper
 from .pairing import Pairing
 from ..types import DebateSide
+
+if TYPE_CHECKING:
+    from participants.models import Team
 
 
 class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
@@ -276,6 +279,11 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
 
 
 class GraphCostMixin:
+
+    def get_n_teams(self, teams: list['Team']) -> int:
+        # Use max subrank to get the penalties for match deviations;
+        # necessary for enumerated seed values
+        return max([t.subrank for t in teams if t.subrank is not None])
 
     def assignment_cost(self, t1, t2, size, bracket=None):
         penalty = super().assignment_cost(t1, t2, size)

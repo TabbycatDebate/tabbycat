@@ -74,6 +74,19 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
         self.add_column(test_header, test_data)
 
+    def add_feedback_only_columns(self, adjudicators):
+        feedback_header = {
+            'key': 'feedback-only',
+            'icon': 'file',
+            'tooltip': _("Feedback average"),
+        }
+        feedback_data = [{
+            'text': adj.feedback_score,
+            'tooltip': _("This adjudicator's feedback average"),
+        } for adj in adjudicators]
+
+        self.add_column(feedback_header, feedback_data)
+
     def add_score_difference_columns(self, adjudicators, scores):
         diff_header = {
             'key': 'score-difference',
@@ -126,10 +139,10 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'text': ngettext(
                 "View %(count)s<br>feedback",
                 "View %(count)s<br>feedbacks",
-                len(adj.feedback_data) - 1,
-            ) % {'count': len(adj.feedback_data) - 1}, # -1 to account for base score
+                adj.feedback_count,
+            ) % {'count': adj.feedback_count}, # -1 to account for base score
             'class': 'view-feedback',
-            'sort': len(adj.feedback_data) - 1,
+            'sort': adj.feedback_count,
             'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.pk}),
         } for adj in adjudicators]
         self.add_column(link_head, link_cell)

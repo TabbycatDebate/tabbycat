@@ -28,12 +28,12 @@ Short version
 ::
 
   curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -    # add Node.js source repository
-  sudo apt install python3.9 python3-distutils pipenv postgresql libpq-dev nodejs gcc g++ make
+  sudo apt install python3.11 python3-distutils pipenv postgresql libpq-dev nodejs gcc g++ make
   git clone https://github.com/TabbycatDebate/tabbycat.git
   cd tabbycat
   git checkout master
   sudo -u postgres createuser myusername --createdb --pwprompt       # skip if not first time
-  createdb -O myusername mydatabasename                              # -O designates the owner of the database
+  sudo -u postgres createdb -O myusername mydatabasename             # -O designates the owner of the database
 
 Then create **settings/local.py** as described :ref:`below <local-settings-linux>`, then::
 
@@ -63,16 +63,16 @@ First, you need to install all of the software on which Tabbycat depends, if you
 
 1(a). Python
 ------------
-Tabbycat uses Python 3.9.  You probably already have Python 3, but you'll also need the development package in order to install Psycopg2 later.  You'll also want `Pipenv <https://pipenv.pypa.io/en/latest/>`_, if you don't already have it. Install::
+Tabbycat uses Python 3.11.  You probably already have Python 3, but you'll also need the development package in order to install Psycopg2 later.  You'll also want `Pipenv <https://pipenv.pypa.io/en/latest/>`_, if you don't already have it. Install::
 
-    $ sudo apt install python3.9 python3-distutils pipenv
+    $ sudo apt install python3.11 python3-distutils pipenv
 
 Check the version::
 
     $ python3 --version
-    Python 3.9.12
+    Python 3.11.10
 
-.. warning:: Tabbycat does not support Python 2. You must use Python 3.9.
+.. warning:: Tabbycat does not support Python 2. You must use Python 3.11.
 
 .. admonition:: Advanced users
    :class: tip
@@ -165,7 +165,7 @@ a. Create a new user account with a password, replacing ``myusername`` with what
 
 b. Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running, and replace ``myusername`` with the username you used in the previous command::
 
-    $ createdb -O myusername mydatabasename
+    $ sudo -u postgres createdb -O myusername mydatabasename
 
 
 .. _install-linux-tabbycat:

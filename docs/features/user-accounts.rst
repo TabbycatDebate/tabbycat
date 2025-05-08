@@ -4,74 +4,73 @@
 User Accounts
 =============
 
-For obvious reasons, user logins are required to data entry and administrative functions. Conceptually, there are four levels of access:
+For obvious reasons, user logins are required to data entry and administrative functions. Conceptually, there are different levels of access:
 
 .. list-table::
   :header-rows: 1
   :stub-columns: 1
-  :widths: 15 15 25 45
+  :widths: 15 25 45
 
   * - Access
-    - Should be used by
     - Grants access to
     - Is capable of
 
-  * - Public
-    - The public
-    - Publicly available information.
-    - Viewing things, and submitting new ballots/feedback if electronic submission is permitted by the tournament.
+  * - Public (no login)
+    - Publicly available information
+    - Viewing pages marked as public as permitted by the tournament
 
-  * - Assistant
-    - Data entry helpers
-    - The assistant area
-    - Entering, confirming and printing ballots and feedback, checking in ballots and people, and displaying the draw.
+  * - Private URL (no login)
+    - Individualised information and data entry
+    - Submitting new ballots/feedback/checkins as permitted by the tournament
 
-  * - Superuser
-    - Chief adjudicators
-    - The administrator and assistant areas
-    - Generating draws, allocating adjudicators and venues, and editing ballots, feedback and adjudicator scores.
+  * - Regular user
+    - Administrator and assistant areas based on permissions
+    - Manage tournaments to the extent permitted
 
-  * - Staff and superuser
-    - Tab director
-    - The administrator, assistant and Edit Database areas
-    - Editing the database directly.
+  * - Super-user
+    - The administrator and assistant areas for all tournaments
+    - Manage any tournament
 
-If a user account on the tab system belongs to someone who is also a participant in the tournament (*e.g.*, a chief adjudicator), these two capacities are completely separate. User accounts are only used to regulate access to administrative functions. Tabbycat doesn't know about any relationship between user accounts, and who is participating in the tournament.
+  * - Staff
+    - The Edit Database area
+    - Editing the database directly
+
+If a user account on the tab system belongs to someone who is also a participant in the tournament (*e.g.*, a chief adjudicator), these two accesses are completely separate. User accounts are only used to regulate access to administrative functions. Tabbycat doesn't know about any relationship between user accounts, and who is participating in the tournament.
 
 Account roles
 =============
 
-You should create an account for each person who needs to access the tab system. When you create an account in the Edit Database area, there are checkboxes for **Superuser status** and **Staff access**. Superusers have access to the administrator area, and staff have access to the Edit Database area. You should grant permissions as follows:
+You should create individual accounts for each person who needs to access the tab system.
 
-- Tab directors should get both superuser and staff status.
-- Chief adjudicators and their deputies should get superuser status, but not staff status.
-- Tab assistants (helping only with data entry) should get neither superuser nor staff status.
+Tournament participants (other than tournament officials) do not need an account. Everything they need to know can be accessed without an account. If you're using electronic ballots or electronic feedback, they access these using a URL that only they know (see :ref:`private-urls`).
 
-Tournament participants (other than tab staff) do not need an account. Everything they need to know can be accessed without an account. If you're using electronic ballots or electronic feedback, they access these using a URL that only they know (see :ref:`private-urls`).
-
-When doing data entry, users with superuser status should use the **assistant area**. The administrator area is intended for managing the tournament, and should **not** in general be used for data entry. Specifically, the administrator area lacks checks that are important for data integrity assurance. It should be used only to override the normal :ref:`data entry <data-entry>` procedure, for example, to unconfirm or modify a ballot.
+When doing data entry, users should use the **assistant area**. The administrator area is intended for managing the tournament, and should **not** in general be used for data entry. Specifically, the administrator area lacks checks that are important for data integrity assurance. It should be used only to override the normal :ref:`data entry <data-entry>` procedure, for example, to unconfirm or modify a ballot.
 
 The **Edit Database** interface should not be used except where it is actually necessary. There are a few functions which require this, but as a principle, it shouldn't be used as a matter of course.
 
-.. note:: In theory, you could grant an account staff status but not superuser status. But then they'd be allowed to edit the database, but not run the tournament, which would be weird.
+.. note:: In theory, you could grant an account staff status but not super-user status. But then they'd be allowed to edit the database, but not run the tournament, which would be weird.
 
-Allow users to create accounts.
-===============================
+User permissions
+================
 
-If you wish to allow select staff to create their own accounts, you can do so:
+In addition to account roles, Tabbycat has a concept of per-tournament permissions, where users can be assigned to only have access to specific parts of the administrator side of specific tournaments. These permissions can also be combined into "groups" to give standardized accesses to many users at once, such as CAs. When creating a tournament, a few default groups are created. Note that the assistant areas will still be accessible, to the extent of the "Assistant user access" tournament setting.
 
-1. Go to the Configuration area of any tournament.
+Groups can only be created or modified through Edit Database, as well as assigning specific permissions to users. Users may be added to a group through the invitation feature described below.
 
-2. Select the **Global Settings** section.
+Invite people to create accounts
+================================
 
-3. Specify a secret password for the types of account creation you wish to enable. This should be hard to guess (don't just use "Admin" or your tournament name).
+If you wish to invite a tournament official to create their own account and assign permissions, you can do so:
 
-4. Provide the password of the desired account type to people needing an account. This password is part of a link to the signup form. This form is available with the URL path ``/accounts/signup/KEY/``, replacing ``KEY`` with the password.
+1. Go to the Configuration area of the tournament.
+2. Select the **Invite User to Create an Account** action.
+3. Enter the email of the person to invite, and their role in the tournament.
+4. They will receive an email with a link for them to create an account. The link expires after 24 hours.
 
-.. note:: It is not possible to create a link that automatically gives super-user access. You should either manually create other superusers, or use the admin interface to promote them once they have created an account this way.
+.. note:: It is not possible to create a link that automatically gives super-user or staff access. You should either manually create other super-users, or use the admin interface to promote them once they have created an account this way.
 
-Adding accounts manually.
-=========================
+Creating accounts manually
+==========================
 
 To add an account:
 
