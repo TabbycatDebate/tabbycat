@@ -11,7 +11,7 @@
       {% if forloop.parentloop.parentloop.first %}
 
         {# On the first form, display the speaker selection dropdown. #}
-        {{ position.speaker|addcss:"js-speaker form-control custom-select required" }}
+        {{ position.speaker|addcss:"js-speaker form-control custom-select" }}
         {{ position.speaker.errors }}
 
         <div class="iron-person small pt-0 m-0 form-check form-check-inline" style="display: none;"

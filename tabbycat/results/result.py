@@ -66,7 +66,7 @@ class ResultError(RuntimeError):
     pass
 
 
-def get_result_class(ballotsub, round=None, tournament=None):
+def get_result_class(ballotsub, round=None, tournament=None, overwrite_forfeit=False):
     if round is None:
         round = ballotsub.round
     if tournament is None:
@@ -76,8 +76,9 @@ def get_result_class(ballotsub, round=None, tournament=None):
     ballots_per_debate = round.ballots_per_debate
     scores_in_debate = tournament.pref('speakers_in_ballots')
 
-    if ballots_per_debate == 'per-debate' or ballotsub.single_adj:
-        if ((teams_in_debate > 2 or scores_in_debate == 'prelim') and round.is_break_round) or scores_in_debate == 'never':
+    forfeit = ballotsub.forfeit and not overwrite_forfeit
+    if ballots_per_debate == 'per-debate' or ballotsub.single_adj or forfeit:
+        if ((teams_in_debate > 2 or scores_in_debate == 'prelim') and round.is_break_round) or scores_in_debate == 'never' or forfeit:
             return ConsensusDebateResult
         return ConsensusDebateResultWithScores
     elif ballots_per_debate == 'per-adj' and (teams_in_debate == 2 or tournament.pref('margin_includes_dissenters')):
@@ -89,8 +90,8 @@ def get_result_class(ballotsub, round=None, tournament=None):
                 (ballots_per_debate, teams_in_debate))
 
 
-def get_class_name(ballotsub, round, tournament=None):
-    return get_result_class(ballotsub, round, tournament).__name__
+def get_class_name(ballotsub, round, tournament=None, overwrite_forfeit=False):
+    return get_result_class(ballotsub, round, tournament, overwrite_forfeit).__name__
 
 
 def is_integer_step(tournament: 'Tournament', ss: Union['SpeakerScore', 'SpeakerScoreByAdj']) -> bool:

@@ -212,6 +212,20 @@ $('.score input').change(function() {
   refresh_totals($(this).parents('.scoresheet'));
 });
 
+function checkForfeit() {
+  const anyChecked = document.querySelectorAll('input.forfeit-check:checked').length;
+  if (anyChecked) {
+    [...document.querySelectorAll('.js-speaker,.total')].forEach(el => { el.disabled = true; });
+  } else {
+    [...document.querySelectorAll('.js-speaker,.total')].forEach(el => { el.disabled = false; });
+  }
+}
+
+checkForfeit();
+[...document.querySelectorAll('input.forfeit-check')].forEach((checkbox) => {
+  checkbox.addEventListener('change', checkForfeit);
+});
+
 $('.js-team-speakers select').change(update_speakers).each(update_speaker);
 
 // Show/hide on initial input

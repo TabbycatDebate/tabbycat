@@ -2198,6 +2198,7 @@
         "slug": "open",
         "seq": 10,
         "break_size": 8,
+        "reserve_size": 0,
         "is_general": true,
         "priority": 10,
         "limit": 0,
@@ -2213,6 +2214,7 @@
         "slug": "esl",
         "seq": 20,
         "break_size": 4,
+        "reserve_size": 0,
         "is_general": false,
         "priority": 20,
         "limit": 0,
@@ -2228,6 +2230,7 @@
         "slug": "novice",
         "seq": 30,
         "break_size": 2,
+        "reserve_size": 0,
         "is_general": false,
         "priority": 30,
         "limit": 0,
@@ -7834,7 +7837,8 @@
         "debate": 12,
         "motion": 3,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -7856,7 +7860,8 @@
         "debate": 11,
         "motion": 2,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -7878,7 +7883,8 @@
         "debate": 10,
         "motion": 2,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -7900,7 +7906,8 @@
         "debate": 9,
         "motion": 1,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -7922,7 +7929,8 @@
         "debate": 8,
         "motion": 3,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -7944,7 +7952,8 @@
         "debate": 7,
         "motion": 2,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -7966,7 +7975,8 @@
         "debate": 6,
         "motion": 2,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -7988,7 +7998,8 @@
         "debate": 5,
         "motion": 3,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8010,7 +8021,8 @@
         "debate": 4,
         "motion": 1,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8032,7 +8044,8 @@
         "debate": 3,
         "motion": 3,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8054,7 +8067,8 @@
         "debate": 2,
         "motion": 1,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8076,7 +8090,8 @@
         "debate": 1,
         "motion": 2,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8098,7 +8113,8 @@
         "debate": 24,
         "motion": 4,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8120,7 +8136,8 @@
         "debate": 23,
         "motion": 6,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8142,7 +8159,8 @@
         "debate": 22,
         "motion": 5,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8164,7 +8182,8 @@
         "debate": 21,
         "motion": 4,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8186,7 +8205,8 @@
         "debate": 20,
         "motion": 4,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8208,7 +8228,8 @@
         "debate": 19,
         "motion": 6,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8230,7 +8251,8 @@
         "debate": 18,
         "motion": 6,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8252,7 +8274,8 @@
         "debate": 17,
         "motion": 4,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8274,7 +8297,8 @@
         "debate": 16,
         "motion": 4,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8296,7 +8320,8 @@
         "debate": 15,
         "motion": 4,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8318,7 +8343,8 @@
         "debate": 14,
         "motion": 5,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8340,7 +8366,8 @@
         "debate": 13,
         "motion": 4,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8362,7 +8389,8 @@
         "debate": 25,
         "motion": 9,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8384,7 +8412,8 @@
         "debate": 26,
         "motion": 9,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8406,7 +8435,8 @@
         "debate": 27,
         "motion": 9,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8428,7 +8458,8 @@
         "debate": 28,
         "motion": 9,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8450,7 +8481,8 @@
         "debate": 29,
         "motion": 9,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8472,7 +8504,8 @@
         "debate": 30,
         "motion": 8,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8494,7 +8527,8 @@
         "debate": 31,
         "motion": 7,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8516,7 +8550,8 @@
         "debate": 32,
         "motion": 9,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8538,7 +8573,8 @@
         "debate": 33,
         "motion": 9,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8560,7 +8596,8 @@
         "debate": 34,
         "motion": 9,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8582,7 +8619,8 @@
         "debate": 35,
         "motion": 9,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8604,7 +8642,8 @@
         "debate": 36,
         "motion": 7,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8626,7 +8665,8 @@
         "debate": 37,
         "motion": 12,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8648,7 +8688,8 @@
         "debate": 38,
         "motion": 12,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8670,7 +8711,8 @@
         "debate": 39,
         "motion": 12,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8692,7 +8734,8 @@
         "debate": 40,
         "motion": 10,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8714,7 +8757,8 @@
         "debate": 41,
         "motion": 12,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8736,7 +8780,8 @@
         "debate": 42,
         "motion": 12,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8758,7 +8803,8 @@
         "debate": 43,
         "motion": 12,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8780,7 +8826,8 @@
         "debate": 44,
         "motion": 11,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8802,7 +8849,8 @@
         "debate": 45,
         "motion": 12,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8824,7 +8872,8 @@
         "debate": 46,
         "motion": 11,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8846,7 +8895,8 @@
         "debate": 47,
         "motion": 11,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
@@ -8868,7 +8918,8 @@
         "debate": 48,
         "motion": 12,
         "discarded": false,
-        "single_adj": false
+        "single_adj": false,
+        "forfeit": false
     }
 },
 {
