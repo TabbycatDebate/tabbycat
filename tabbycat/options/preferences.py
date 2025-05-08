@@ -221,6 +221,17 @@ class PairingPenalty(IntegerPreference):
 
 
 @tournament_preferences_registry.register
+class MaxTimesPerSide(IntegerPreference):
+    help_text = _("Hard preference applied by minimum cost matching to disallow pairings where a team would debate\
+                   more than this many times on the same side. WARNING: if you set this to a low value, the draw\
+                   algorithm may be unable to find a valid draw.")
+    verbose_name = _("Maximum number of times per side")
+    section = draw_rules
+    name = 'max_times_per_side'
+    default = 5
+
+
+@tournament_preferences_registry.register
 class DrawOddBracket(ChoicePreference):
     help_text = _("How odd brackets are resolved (see documentation for further details)")
     verbose_name = _("Odd bracket resolution method")

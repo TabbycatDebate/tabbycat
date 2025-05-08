@@ -285,7 +285,7 @@ class GraphCostMixin:
         # necessary for enumerated seed values
         return max([t.subrank for t in teams if t.subrank is not None])
 
-    def assignment_cost(self, t1, t2, size, bracket=None):
+    def assignment_cost(self, t1, t2, size, bracket=None) -> Optional[int]:
         penalty = super().assignment_cost(t1, t2, size)
         if penalty is None:
             return None
@@ -294,7 +294,6 @@ class GraphCostMixin:
         has_pullup = 'pullup' in self.team_flags.get(t1, []) or 'pullup' in self.team_flags.get(t2, [])
         if self.options["pullup_debates_penalty"] and has_pullup:
             penalty += max(t1.pullup_debates, t2.pullup_debates) * self.options["pullup_debates_penalty"]
-
         if self.options["pairing_method"] != "random":
             subpool_penalty_func = self.get_option_function("pairing_method", self.PAIRING_FUNCTIONS)
 
