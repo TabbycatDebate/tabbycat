@@ -138,3 +138,11 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
         gcm = GraphPowerPairedDrawGenerator([team, team])
         gcm.options = {'pullup_debates_penalty': 1, 'pairing_method': 'fold', 'avoid_history': False, 'avoid_institution': False, 'side_allocations': False, 'pairing_penalty': 1}
         self.assertEqual(gcm.assignment_cost(team, team, 2), None)
+
+    def test_none_max_side_balance_penalty(self):
+        teams = [TestTeam(1, 'A', side_history=(2, 0), subrank=1), TestTeam(2, 'B', side_history=(1, 1), subrank=2)]
+        gcm = GraphPowerPairedDrawGenerator(teams)
+        gcm.options = {'side_allocations': 'balance', 'max_times_on_one_side': 2,
+                       'avoid_history': False, 'avoid_institution': False, 'side_penalty': 1, 'pairing_method': 'fold', 'pairing_penalty': 1, 'pullup_debates_penalty': 1}
+        cost = gcm.assignment_cost(*teams, 2)
+        self.assertEqual(cost, None)
