@@ -17,23 +17,36 @@ class BaseGroup:
 
 
 class Equity(BaseGroup):
-    # Permissions to manage conflicts/constraints, view participant info
     name = _("Equity")
     permissions = [
-        Permission.EDIT_ROOMCATEGORIES,
-        Permission.EDIT_ROOMCONSTRAINTS,
+        # View and edit all conflicts
+        Permission.VIEW_ADJ_TEAM_CONFLICTS,
+        Permission.EDIT_ADJ_TEAM_CONFLICTS,
+        Permission.VIEW_ADJ_ADJ_CONFLICTS,
         Permission.EDIT_ADJ_ADJ_CONFLICTS,
+        Permission.VIEW_ADJ_INST_CONFLICTS,
         Permission.EDIT_ADJ_INST_CONFLICTS,
-        Permission.EDIT_ADJ_INST_CONFLICTS,
+        Permission.VIEW_TEAM_INST_CONFLICTS,
         Permission.EDIT_TEAM_INST_CONFLICTS,
+
+        # Room constraints
+        Permission.VIEW_ROOMCONSTRAINTS,
+        Permission.EDIT_ROOMCONSTRAINTS,
+        Permission.VIEW_ROOMCATEGORIES,
+        Permission.EDIT_ROOMCATEGORIES,
+
+        # Participant identity info
         Permission.VIEW_PARTICIPANTS,
-        Permission.VIEW_TEAMS,
-        Permission.VIEW_ADJUDICATORS,
-        Permission.VIEW_ROOMS,
-        Permission.VIEW_INSTITUTIONS,
+        Permission.VIEW_PARTICIPANT_GENDER,
+        Permission.VIEW_PARTICIPANT_CONTACT,
+        Permission.VIEW_PARTICIPANT_DECODED,
+        Permission.VIEW_PARTICIPANT_INST,
         Permission.VIEW_DECODED_TEAMS,
         Permission.VIEW_ANONYMOUS,
-        Permission.VIEW_ADMIN_DRAW,
+
+        # Supporting context
+        Permission.VIEW_INSTITUTIONS,
+        Permission.VIEW_ADJUDICATORS,
     ]
 
 
@@ -41,33 +54,45 @@ class AdjudicationCore(BaseGroup):
     # Permissions to make [preformed] allocations, view feedback, and create motions
     name = _("Adjudication Core")
     permissions = [
-        Permission.EDIT_BASEJUDGESCORES_IND,
-        Permission.EDIT_DEBATEADJUDICATORS,
+        # Feedback
+        Permission.ADD_FEEDBACK,
+        Permission.VIEW_FEEDBACK,
         Permission.EDIT_FEEDBACK_CONFIRM,
         Permission.EDIT_FEEDBACK_IGNORE,
+<<<<<<< HEAD
+=======
+        Permission.EDIT_FEEDBACKQUESTION,
+        Permission.VIEW_FEEDBACK_UNSUBMITTED,
+        Permission.VIEW_FEEDBACK_OVERVIEW,
+
+        # Judging and scoring
+>>>>>>> 602f25638 (Update default permissions for Equity and Adjudication Core groups)
         Permission.EDIT_BASEJUDGESCORES_IND,
+        Permission.EDIT_JUDGESCORES_BULK,
+        Permission.EDIT_ADJ_BREAK,
+        Permission.VIEW_ADJ_BREAK,
+
+        # Motions
         Permission.EDIT_MOTION,
-        Permission.EDIT_STARTTIME,
-        Permission.EDIT_PREFORMEDPANELS,
         Permission.RELEASE_MOTION,
         Permission.UNRELEASE_MOTION,
-        Permission.EDIT_ROOMALLOCATIONS,
-        Permission.EDIT_ALLOCATESIDES,
-        Permission.EDIT_ADJ_BREAK,
+
+        # Adjudicator allocations
+        Permission.EDIT_DEBATEADJUDICATORS,
+        Permission.EDIT_PREFORMEDPANELS,
+        Permission.VIEW_DEBATEADJUDICATORS,
+
+        # Standings and tabs
         Permission.VIEW_BREAK,
         Permission.VIEW_BREAK_OVERVIEW,
-        Permission.VIEW_MOTIONSTAB,
-        Permission.VIEW_DIVERSITYTAB,
-        Permission.VIEW_STANDINGS_OVERVIEW,
         Permission.VIEW_TEAMSTANDINGS,
         Permission.VIEW_SPEAKERSSTANDINGS,
         Permission.VIEW_REPLIESSTANDINGS,
-        Permission.VIEW_FEEDBACK,
-        Permission.ADD_FEEDBACK,
-        Permission.VIEW_PARTICIPANTS,
-        Permission.VIEW_TEAMS,
-        Permission.VIEW_ADJUDICATORS,
-        Permission.VIEW_ROOMS,
+        Permission.VIEW_STANDINGS_OVERVIEW,
+        Permission.VIEW_MOTIONSTAB,
+        Permission.VIEW_DIVERSITYTAB,
+
+        # Supporting context
         Permission.VIEW_INSTITUTIONS,
         Permission.VIEW_DECODED_TEAMS,
         Permission.VIEW_ANONYMOUS,
