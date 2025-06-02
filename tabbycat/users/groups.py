@@ -56,17 +56,15 @@ class AdjudicationCore(BaseGroup):
     # Permissions to make [preformed] allocations, view feedback, and create motions
     name = _("Adjudication Core")
     permissions = [
-        # Feedback
-        Permission.ADD_FEEDBACK,
-        Permission.VIEW_FEEDBACK,
         Permission.EDIT_FEEDBACK_IGNORE,
-        Permission.EDIT_BASEJUDGESCORES_IND,
-        Permission.EDIT_JUDGESCORES_BULK,
-        Permission.EDIT_ADJ_BREAK,
-        Permission.VIEW_ADJ_BREAK,
         Permission.EDIT_FEEDBACKQUESTION,
         Permission.VIEW_FEEDBACK_UNSUBMITTED,
         Permission.VIEW_FEEDBACK_OVERVIEW,
+
+        # Judging and scoring
+        Permission.EDIT_BASEJUDGESCORES_IND,
+        Permission.EDIT_ADJ_BREAK,
+        Permission.VIEW_ADJ_BREAK,
 
         # Motions
         Permission.EDIT_MOTION,
