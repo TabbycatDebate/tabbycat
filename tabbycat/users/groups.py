@@ -60,18 +60,13 @@ class AdjudicationCore(BaseGroup):
         Permission.ADD_FEEDBACK,
         Permission.VIEW_FEEDBACK,
         Permission.EDIT_FEEDBACK_IGNORE,
-<<<<<<< HEAD
-=======
-        Permission.EDIT_FEEDBACKQUESTION,
-        Permission.VIEW_FEEDBACK_UNSUBMITTED,
-        Permission.VIEW_FEEDBACK_OVERVIEW,
-
-        # Judging and scoring
->>>>>>> 602f25638 (Update default permissions for Equity and Adjudication Core groups)
         Permission.EDIT_BASEJUDGESCORES_IND,
         Permission.EDIT_JUDGESCORES_BULK,
         Permission.EDIT_ADJ_BREAK,
         Permission.VIEW_ADJ_BREAK,
+        Permission.EDIT_FEEDBACKQUESTION,
+        Permission.VIEW_FEEDBACK_UNSUBMITTED,
+        Permission.VIEW_FEEDBACK_OVERVIEW,
 
         # Motions
         Permission.EDIT_MOTION,
