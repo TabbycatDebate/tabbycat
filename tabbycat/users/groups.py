@@ -45,8 +45,10 @@ class Equity(BaseGroup):
         Permission.VIEW_ANONYMOUS,
 
         # Supporting context
-        Permission.VIEW_INSTITUTIONS,
+        Permission.VIEW_TEAMS,
         Permission.VIEW_ADJUDICATORS,
+        Permission.VIEW_ROOMS,
+        Permission.VIEW_INSTITUTIONS,
     ]
 
 
@@ -57,7 +59,6 @@ class AdjudicationCore(BaseGroup):
         # Feedback
         Permission.ADD_FEEDBACK,
         Permission.VIEW_FEEDBACK,
-        Permission.EDIT_FEEDBACK_CONFIRM,
         Permission.EDIT_FEEDBACK_IGNORE,
 <<<<<<< HEAD
 =======
@@ -93,6 +94,10 @@ class AdjudicationCore(BaseGroup):
         Permission.VIEW_DIVERSITYTAB,
 
         # Supporting context
+        Permission.VIEW_PARTICIPANTS,
+        Permission.VIEW_TEAMS,
+        Permission.VIEW_ADJUDICATORS,
+        Permission.VIEW_ROOMS,
         Permission.VIEW_INSTITUTIONS,
         Permission.VIEW_DECODED_TEAMS,
         Permission.VIEW_ANONYMOUS,
