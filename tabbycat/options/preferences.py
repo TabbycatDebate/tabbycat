@@ -466,7 +466,7 @@ class MinimumAdjScore(FloatPreference):
     verbose_name = _("Minimum adjudicator score")
     section = feedback
     name = 'adj_min_score'
-    default = 0.0
+    default = 1.0
 
 
 @tournament_preferences_registry.register
