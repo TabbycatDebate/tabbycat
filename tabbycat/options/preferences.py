@@ -475,7 +475,7 @@ class MaximumAdjScore(FloatPreference):
     verbose_name = _("Maximum adjudicator score")
     section = feedback
     name = 'adj_max_score'
-    default = 5.0
+    default = 10
 
 
 @tournament_preferences_registry.register
