@@ -46,7 +46,7 @@ class BaseParticipantsListView(TournamentMixin, VueTableTemplateView):
 
     def get_tables(self):
         adjudicators = self.tournament.adjudicator_set.select_related('institution')
-        adjs_table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key="name")
+        adjs_table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key="name", admin=self.admin)
         adjs_table.add_adjudicator_columns(adjudicators)
 
         speakers = Speaker.objects.filter(team__tournament=self.tournament).select_related(
