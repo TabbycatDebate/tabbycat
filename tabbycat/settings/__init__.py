@@ -33,6 +33,9 @@ elif os.environ.get('ON_HEROKU', ''):
 elif os.environ.get('ON_RENDER', ''):
     base_settings.append('render.py')
     root.info('SPLIT_SETTINGS: imported render.py')
+elif os.environ.get('ON_DIGITALOCEAN', ''):
+    base_settings.append('digitalocean.py')
+    root.info('SPLIT_SETTINGS: imported digitalocean.py')
 else:
     base_settings.append('local.py')
     if os.environ.get('LOCAL_DEVELOPMENT', ''):

@@ -1,0 +1,6 @@
+# Additional requirements for Digital Ocean deployment
+psycopg2-binary==2.9.7
+gunicorn==21.2.0
+daphne==4.0.0
+channels-redis==4.1.0
+django-redis==5.3.0
