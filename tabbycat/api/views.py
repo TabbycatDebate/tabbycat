@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Prefetch, Q
+from django.utils.translation import gettext as _
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
 from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
@@ -18,6 +19,7 @@ from rest_framework.mixins import ListModelMixin
 from rest_framework.permissions import BasePermission, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework.serializers import ValidationError
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
@@ -814,9 +816,16 @@ class SubstantiveSpeakerStandingsView(BaseStandingsView):
     list_permission = Permission.VIEW_SPEAKERSSTANDINGS
 
     def get_queryset(self):
-        category = self.request.query_params.get('category', None)
+        category = self.request.query_params.get('category')
         if category is not None:
-            return super().get_queryset().filter(categories__pk=category)
+            try:
+                category_id = int(category)
+                return super().get_queryset().filter(categories__pk=category_id)
+            except (ValueError, TypeError):
+                raise ValidationError({
+                    'category': _("The category specified is not a valid integer."),
+                })
+
         return super().get_queryset()
 
     @property
@@ -859,7 +868,13 @@ class TeamStandingsView(BaseStandingsView):
     def get_queryset(self):
         category = self.request.query_params.get('category', None)
         if category is not None:
-            return super().get_queryset().filter(break_categories__pk=category)
+            try:
+                category_id = int(category)
+                return super().get_queryset().filter(break_categories__pk=category_id)
+            except (ValueError, TypeError):
+                raise ValidationError({
+                    'category': _("The category specified is not a valid integer."),
+                })
         return super().get_queryset()
 
 
