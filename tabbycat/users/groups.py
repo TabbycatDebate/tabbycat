@@ -149,3 +149,13 @@ class Registration(BaseGroup):
         Permission.VIEW_CUSTOM_ANSWERS,
         Permission.VIEW_REGISTRATION,
     ]
+
+class Access(BaseGroup):
+    name = _("Access")
+    permissions = [
+        Permission.EDIT_ROOMCONSTRAINTS,
+        Permission.EDIT_ROOMCATEGORIES,
+        Permission.VIEW_ROOMCATEGORIES,
+        Permission.VIEW_ROOMCONSTRAINTS,
+        Permission.VIEW_ROOMALLOCATIONS,
+    ]
