@@ -17,6 +17,8 @@ from tournaments.models import Tournament
 from utils.misc import add_query_string_parameter, reverse_tournament
 from venues.models import Venue
 
+V1_ROOT_URL = "http://testserver/api/v1"
+
 logger = logging.getLogger(__name__)
 
 
