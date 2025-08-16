@@ -1,7 +1,7 @@
 import unittest
 
 from .utils import TestTeam
-from ..generator.powerpair import GraphCostMixin, GraphPowerPairedDrawGenerator
+from ..generator.powerpair import GraphPowerPairedDrawGenerator, PowerPairedGraphCostMixin
 from ..types import DebateSide
 
 DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side=DebateSide.AFF), TestTeam(2, 'B', allocated_side=DebateSide.NEG)]
@@ -23,7 +23,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             A - G: 2
             A - H: 3"""
             with self.subTest(i=i):
-                self.assertEqual(GraphCostMixin._pairings_slide([teams[0].subrank, team.subrank], 8), abs(i - 4))
+                self.assertEqual(PowerPairedGraphCostMixin._pairings_slide([teams[0].subrank, team.subrank], 8), abs(i - 4))
 
     def test_pairings_slide_deviation(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), subrank=i+1) for i in range(8)]
@@ -39,7 +39,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             D - G: 1
             D - H: 0"""
             with self.subTest(i=i):
-                self.assertEqual(GraphCostMixin._pairings_slide([teams[3].subrank, team.subrank], 8), 4 - abs(i - 3))
+                self.assertEqual(PowerPairedGraphCostMixin._pairings_slide([teams[3].subrank, team.subrank], 8), 4 - abs(i - 3))
 
     def test_pairings_fold_deviation_top(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), subrank=i+1) for i in range(8)]
@@ -55,7 +55,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             A - G: 1
             A - H: 0"""
             with self.subTest(i=i):
-                self.assertEqual(GraphCostMixin._pairings_fold([teams[0].subrank, team.subrank], 8), 7-i)
+                self.assertEqual(PowerPairedGraphCostMixin._pairings_fold([teams[0].subrank, team.subrank], 8), 7-i)
 
     def test_pairings_fold_deviation(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), subrank=i+1) for i in range(8)]
@@ -71,13 +71,13 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             D - G: 2
             D - H: 3"""
             with self.subTest(i=i):
-                self.assertEqual(GraphCostMixin._pairings_fold([teams[3].subrank, team.subrank], 8), abs(4-i))
+                self.assertEqual(PowerPairedGraphCostMixin._pairings_fold([teams[3].subrank, team.subrank], 8), abs(4-i))
         return [abs(4-i) for i in range(8)]
 
     def test_pairings_random_deviation_zero(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), subrank=i+1) for i in range(8)]
         # Always 0
-        self.assertEqual(GraphCostMixin._pairings_random([teams[0].subrank, teams[1].subrank], 8), 0)
+        self.assertEqual(PowerPairedGraphCostMixin._pairings_random([teams[0].subrank, teams[1].subrank], 8), 0)
 
     def test_pairings_adjacent_deviation_top(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), subrank=i+1) for i in range(8)]
@@ -93,7 +93,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             A - G: 5
             A - H: 6"""
             with self.subTest(i=i):
-                self.assertEqual(GraphCostMixin._pairings_adjacent([teams[0].subrank, team.subrank], 8), i-1)
+                self.assertEqual(PowerPairedGraphCostMixin._pairings_adjacent([teams[0].subrank, team.subrank], 8), i-1)
 
     def test_pairings_adjacent_deviation(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), subrank=i+1) for i in range(8)]
@@ -109,7 +109,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             D - G: 2
             D - H: 3"""
             with self.subTest(i=i):
-                self.assertEqual(GraphCostMixin._pairings_adjacent([teams[3].subrank, team.subrank], 8), abs(i - 3) - 1)
+                self.assertEqual(PowerPairedGraphCostMixin._pairings_adjacent([teams[3].subrank, team.subrank], 8), abs(i - 3) - 1)
         return [abs(i - 3) - 1 for i in range(8)]
 
     def test_pairings_fold_adj_deviation(self):
@@ -117,31 +117,31 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
         methods = [self.test_pairings_fold_deviation, self.test_pairings_adjacent_deviation]
         for i, method in enumerate(methods):
             for j, (team, expected) in enumerate(zip(teams, method())):
-                self.assertEqual(GraphCostMixin._pairings_fold_top_adjacent_rest([teams[3].subrank, team.subrank], 8, bracket=i), expected)
+                self.assertEqual(PowerPairedGraphCostMixin._pairings_fold_top_adjacent_rest([teams[3].subrank, team.subrank], 8, bracket=i), expected)
 
     def test_add_pullup_penalty(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), points=i, subrank=i+1, pullup_debates=i+1) for i in range(2)]
         gcm = GraphPowerPairedDrawGenerator(teams)
         gcm.options = {'pullup_debates_penalty': 1, 'pairing_method': 'random', 'avoid_history': False, 'avoid_institution': False, 'side_allocations': False}
         gcm.team_flags = {teams[0]: ['pullup']}
-        self.assertEqual(gcm.assignment_cost(*teams, 2), 2)
+        self.assertEqual(gcm.assignment_cost(*teams, 2, [], {t: [] for t in teams}), 2)
 
     def test_add_subrank_pullup(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), subrank=(None if i else 1)) for i in range(2)]
         gcm = GraphPowerPairedDrawGenerator(teams)
         gcm.options = {'pullup_debates_penalty': 1, 'pairing_method': 'fold', 'avoid_history': False, 'avoid_institution': False, 'side_allocations': False, 'pairing_penalty': 1}
-        self.assertEqual(gcm.assignment_cost(*teams, 2), 0)
+        self.assertEqual(gcm.assignment_cost(*teams, 2, [], {t: [] for t in teams}), 0)
 
     def test_none_self_penalty(self):
         team = TestTeam(1, 'A')
         gcm = GraphPowerPairedDrawGenerator([team, team])
         gcm.options = {'pullup_debates_penalty': 1, 'pairing_method': 'fold', 'avoid_history': False, 'avoid_institution': False, 'side_allocations': False, 'pairing_penalty': 1}
-        self.assertEqual(gcm.assignment_cost(team, team, 2), None)
+        self.assertEqual(gcm.assignment_cost(team, team, 2, [], {t: [] for t in [team]}), None)
 
     def test_none_max_side_balance_penalty(self):
         teams = [TestTeam(1, 'A', side_history=(2, 0), subrank=1), TestTeam(2, 'B', side_history=(1, 1), subrank=2)]
         gcm = GraphPowerPairedDrawGenerator(teams)
         gcm.options = {'side_allocations': 'balance', 'max_times_on_one_side': 1,
                        'avoid_history': False, 'avoid_institution': False, 'side_penalty': 1, 'pairing_method': 'fold', 'pairing_penalty': 1, 'pullup_debates_penalty': 1}
-        cost = gcm.assignment_cost(*teams, 2)
+        cost = gcm.assignment_cost(*teams, 2, [], {t: [] for t in teams})
         self.assertEqual(cost, None)

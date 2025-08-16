@@ -29,6 +29,11 @@ logger = logging.getLogger(__name__)
 _draw_flags_dict = dict(DRAW_FLAG_DESCRIPTIONS)
 
 
+def get_flag_description(flag):
+    flag_parts = flag.split('|')
+    return _draw_flags_dict.get(flag_parts[0], flag_parts[0]) + (_(' × %s') % flag_parts[1] if len(flag_parts) == 2 and int(flag_parts[1]) > 1 else '')
+
+
 def escape_if_unsafe(s):
     return s if type(s) is SafeString else escape(s)
 
@@ -759,11 +764,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
         conflicts_by_debate = []
         for debate in debates:
             # conflicts is a list of (level, message) tuples
-            conflicts = [("secondary", _draw_flags_dict.get(flag, flag)) for flag in debate.flags]
+            conflicts = [("secondary", get_flag_description(flag)) for flag in debate.flags]
             if not debate.is_bye:
                 conflicts += [("secondary", "%(team)s: %(flag)s" % {
                             'team': self._team_short_name(dt.team),
-                            'flag': _draw_flags_dict.get(flag, flag),
+                            'flag': get_flag_description(flag),
                         }) for dt in debate.debateteams for flag in dt.flags]
 
             if self.tournament.pref('avoid_team_history'):

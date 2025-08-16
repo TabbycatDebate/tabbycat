@@ -25,6 +25,11 @@ DRAW_FLAG_DESCRIPTIONS = (
     ("bub_dn_accom", _("Bubble down (to accommodate)")),
     ("no_bub_updn", _("Can't bubble up/down")),
     ("pullup", _("Pull-up team")),
+    ("side_imb", _("Side imbalance")),
+    ("seen_pullup", _("Team previously saw pullup")),
+    ("deviation", _("Pairing deviation")),
+    ("history", _("History conflict")),
+    ("inst", _("Institution conflict")),
 )
 
 def get_two_team_generator(draw_type, avoid_conflicts='australs', side_allocations=None, **kwargs):

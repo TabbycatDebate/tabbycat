@@ -451,18 +451,18 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
             pairing_penalty=1,
         ),
         [(12,  2, [], [], ['pullup'], True),
-         (3,  14, [], [], [], True),
-         (17, 11, [], [], [], True),  # Prefers a 2-pairing deviation
+         (3,  14, ['deviation|1'], [], [], True),
+         (17, 11, ['deviation|2'], [], [], True),  # Prefers a 2-pairing deviation
          (8,   6, [], [], [], True),
-         (4,   7, [], [], ['pullup'], True),
-         (9,  24, [], [], [], False),
-         (15, 23, [], [], [], True),
+         (4,   7, ['deviation|1'], [], ['pullup'], True),
+         (9,  24, ['deviation|1'], [], [], False),
+         (15, 23, ['deviation|1'], [], [], True),
          (18, 25, [], [], [], False),
          (22,  1, [], [], ['pullup'], True),
          (5,  21, [], [], [], True),
-         (10, 20, [], [], [], False),
+         (10, 20, ['deviation|2'], [], [], False),
          (16, 26, [], [], [], True),
-         (19, 13, [], [], ['pullup'], True)]]
+         (19, 13, ['deviation|2'], [], ['pullup'], True)]]
 
     expected[6] = [  # Should be identical to [5]
         dict(
@@ -478,19 +478,19 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
             pairing_penalty=1,
             pullup_penalty=10,
         ),
-        [(12,  2, [], [], ['pullup'], True),
-         (3,  14, [], [], [], True),
-         (17, 11, [], [], [], True),
+        [(12,  2, [], [], ['pullup|1'], True),
+         (3,  14, ['deviation|1'], [], [], True),
+         (17, 11, ['deviation|2'], [], [], True),
          (8,   6, [], [], [], True),
-         (4,   7, [], [], ['pullup'], True),
-         (9,  24, [], [], [], False),
-         (15, 23, [], [], [], True),
+         (4,   7, ['deviation|1'], [], ['pullup|1'], True),
+         (9,  24, ['deviation|1'], [], [], False),
+         (15, 23, ['deviation|1'], [], [], True),
          (18, 25, [], [], [], False),
-         (22,  1, [], [], ['pullup'], True),
+         (22,  1, [], [], ['pullup|1'], True),
          (5,  21, [], [], [], True),
-         (10, 20, [], [], [], False),
+         (10, 20, ['deviation|2'], [], [], False),
          (16, 26, [], [], [], True),
-         (19, 13, [], [], ['pullup'], True)]]
+         (19, 13, ['deviation|2'], [], ['pullup|1'], True)]]
 
     combinations = [(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6)]
 
@@ -510,19 +510,20 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
                     actual_teams = tuple([t.id for t in actual.teams])
                     expected_teams = (exp_aff, exp_neg)
 
-                    if same_affs:
-                        self.assertEqual(set(actual_teams), set(expected_teams))
-                    else:
-                        self.assertEqual(actual_teams, expected_teams)
+                    with self.subTest(aff=exp_aff, neg=exp_neg):
+                        if same_affs:
+                            self.assertEqual(set(actual_teams), set(expected_teams))
+                        else:
+                            self.assertEqual(actual_teams, expected_teams)
 
-                    self.assertEqual(actual.flags, exp_flags)
+                        self.assertEqual(actual.flags, exp_flags)
 
-                    if exp_aff == actual.teams[0].id:
-                        self.assertEqual(actual.get_team_flags(actual.teams[0]), exp_aff_flags)
-                        self.assertEqual(actual.get_team_flags(actual.teams[1]), exp_neg_flags)
-                    else:
-                        self.assertEqual(actual.get_team_flags(actual.teams[1]), exp_aff_flags)
-                        self.assertEqual(actual.get_team_flags(actual.teams[0]), exp_neg_flags)
+                        if exp_aff == actual.teams[0].id:
+                            self.assertEqual(actual.get_team_flags(actual.teams[0]), exp_aff_flags)
+                            self.assertEqual(actual.get_team_flags(actual.teams[1]), exp_neg_flags)
+                        else:
+                            self.assertEqual(actual.get_team_flags(actual.teams[1]), exp_aff_flags)
+                            self.assertEqual(actual.get_team_flags(actual.teams[0]), exp_neg_flags)
 
 
 class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.TestCase):
