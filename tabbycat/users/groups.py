@@ -158,4 +158,10 @@ class Access(BaseGroup):
         Permission.VIEW_ROOMCATEGORIES,
         Permission.VIEW_ROOMCONSTRAINTS,
         Permission.VIEW_ROOMALLOCATIONS,
+        Permission.VIEW_ACTIONLOGENTRIES,
+        Permission.VIEW_TEAMS,
+        Permission.VIEW_ADJUDICATORS,
+        Permission.VIEW_ROOMS,
+        Permission.VIEW_PARTICIPANTS,
+        Permission.VIEW_ROUNDAVAILABILITIES
     ]
