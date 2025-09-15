@@ -164,5 +164,5 @@ class Access(BaseGroup):
         Permission.VIEW_ADJUDICATORS,
         Permission.VIEW_ROOMS,
         Permission.VIEW_PARTICIPANTS,
-        Permission.VIEW_ROUNDAVAILABILITIES
+        Permission.VIEW_ROUNDAVAILABILITIES,
     ]
