@@ -150,6 +150,7 @@ class Registration(BaseGroup):
         Permission.VIEW_REGISTRATION,
     ]
 
+
 class Access(BaseGroup):
     name = _("Access")
     permissions = [
