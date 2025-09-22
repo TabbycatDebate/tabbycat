@@ -49,6 +49,14 @@ class TournamentPreferenceForm(PreferenceForm):
 
 
 def tournament_preference_form_builder(instance, preferences=[], **kwargs):
+    if kwargs.get('section') == 'all_sections':
+
+        return preference_form_builder(
+            TournamentPreferenceForm,
+            preferences=[],
+            model={'instance': instance},
+        )
+
     if kwargs.get('section') in [str(s) for s in global_preferences_registry.sections()]:
         # Check for global preferences
         return preference_form_builder(GlobalPreferenceForm, preferences, **kwargs)

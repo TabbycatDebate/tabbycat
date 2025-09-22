@@ -82,6 +82,12 @@
       {% trans "Settings which can affect all tournaments on the site" as description %}
       {% include "components/item-action.html" with type="primary" emoji="🌏" text=title extra=description %}
 
+      {% tournamenturl 'options-tournament-section' section='all_sections' as url %}
+      {% trans "Preferance List" as title %}
+      {% trans "All preferance options in one place" as description %}
+      {% include "components/item-action.html" with type="primary" emoji="📋" text=title extra=description %}
+
+
     </ul>
   </div>
 

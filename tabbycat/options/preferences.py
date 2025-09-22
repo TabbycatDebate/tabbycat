@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from django import forms
 from django.core.validators import EmailValidator, MinValueValidator, validate_slug
 from django.forms import SelectMultiple
 from django.utils.translation import gettext_lazy as _
@@ -16,6 +17,25 @@ from tournaments.utils import get_side_name_choices
 from .models import tournament_preferences_registry
 from .types import MultiValueChoicePreference
 from .utils import validate_metric_duplicates
+
+
+# ==============================================================================
+all_sections = Section('all_sections', verbose_name=_("All Preferances"))
+# ==============================================================================
+
+
+@tournament_preferences_registry.register
+class DummyAllSectionsPreference(StringPreference):
+    section = all_sections
+    name = 'dummy_all_sections'
+    default = ''
+    verbose_name = 'All Sections Placeholder'
+
+    def get_field_kwargs(self):
+        kwargs = super().get_field_kwargs()
+        kwargs['widget'] = forms.HiddenInput
+        return kwargs
+
 
 # ==============================================================================
 scoring = Section('scoring', verbose_name=_("Score Rules"))
