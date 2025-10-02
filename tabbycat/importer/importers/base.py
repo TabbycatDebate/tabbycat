@@ -25,10 +25,13 @@ def convert_bool(value):
         raise ValueError('Invalid boolean value: %s' % (value,))
 
 
-def make_interpreter(DELETE=[], **kwargs):  # noqa: N803
+def make_interpreter(DELETE=None, **kwargs):  # noqa: N803
     """Convenience function for building an interpreter. The default interpreter
     (i.e. the one returned if no arguments are passed to this function) just
     removes blank values."""
+    if DELETE is None:
+        DELETE = []
+
     def interpreter(lineno, line):
         # remove blank and unwanted values
         line = {

@@ -37,10 +37,15 @@ class BasePairing:
     This is a base class for functionality common to both two-team pairings and
     BP pairings."""
 
-    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}):
+    def __init__(self, teams, bracket, room_rank, flags=None, team_flags=None):
         """'teams' must be a list of two teams, or four teams if it's for BP.
         'bracket' and 'room_rank' are both integers.
         'flags' is a list of strings."""
+        if flags is None:
+            flags = []
+        if team_flags is None:
+            team_flags = {}
+
         self.teams = list(teams)
         self.bracket = bracket
         self.room_rank = room_rank
@@ -95,7 +100,7 @@ class Pairing(BasePairing):
 
     sides = [DebateSide.AFF, DebateSide.NEG]
 
-    def __init__(self, teams, bracket, room_rank, num_sides=2, flags=[], team_flags={}):
+    def __init__(self, teams, bracket, room_rank, num_sides=2, flags=None, team_flags=None):
         super().__init__(teams, bracket, room_rank, flags, team_flags)
         assert len(self.teams) == 2, "There must be two teams in a Pairing"
 
@@ -147,7 +152,7 @@ class ResultPairing(Pairing):
     This class is the data structure expected by DrawGenerator classes, when
     taking information about the results of the previous round."""
 
-    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}, winner=None):
+    def __init__(self, teams, bracket, room_rank, flags=None, team_flags=None, winner=None):
         super().__init__(teams, bracket, room_rank, flags, team_flags)
         self.set_winner(winner)
 
@@ -176,7 +181,7 @@ class ResultPairing(Pairing):
 class PolyPairing(BasePairing):
     """Pairing class for British Parliamentary and Public Speaking."""
 
-    def __init__(self, teams, bracket, room_rank, num_sides=4, flags=[], team_flags={}):
+    def __init__(self, teams, bracket, room_rank, num_sides=4, flags=None, team_flags=None):
         super().__init__(teams, bracket, room_rank, flags, team_flags)
 
     def __repr__(self):
@@ -191,7 +196,7 @@ class BPEliminationResultPairing(PolyPairing):
 
     sides = [DebateSide.OG, DebateSide.OO, DebateSide.CG, DebateSide.CO]
 
-    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}, advancing=[]):
+    def __init__(self, teams, bracket, room_rank, flags=None, team_flags=None, advancing=None):
         super().__init__(teams, bracket, room_rank, 4, flags, team_flags)
         self.set_advancing(advancing)
 

@@ -441,7 +441,7 @@ class Round(models.Model):
     # Draw retrieval methods
     # --------------------------------------------------------------------------
 
-    def debate_set_with_prefetches(self, filter_args=[], filter_kwargs={}, ordering=(F('venue__name').asc(nulls_last=True),),
+    def debate_set_with_prefetches(self, filter_args=None, filter_kwargs=None, ordering=(F('venue__name').asc(nulls_last=True),),
             teams=True, adjudicators=True, speakers=True, wins=False,
             results=False, venues=True, institutions=False, check_ins=False, iron=False):
         """Returns the debate set, with aff_team and neg_team populated.
@@ -451,6 +451,10 @@ class Round(models.Model):
         from draw.models import DebateTeam
         from participants.models import Speaker
         from results.prefetch import populate_confirmed_ballots, populate_wins, populate_checkins
+        if filter_args is None:
+            filter_args = []
+        if filter_kwargs is None:
+            filter_kwargs = {}
 
         debates = self.debate_set.filter(*filter_args, **filter_kwargs)
         if results:

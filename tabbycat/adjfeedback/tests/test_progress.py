@@ -61,13 +61,15 @@ class TestFeedbackProgress(TestCase):
     def _da(self, debate, a):
         return DebateAdjudicator.objects.get(debate=debate, adjudicator=self._adj(a))
 
-    def _create_debate(self, teams, adjs, votes, trainees=[], venue=None):
+    def _create_debate(self, teams, adjs, votes, trainees=None, venue=None):
         """Enters a debate into the database, using the teams and adjudicators specified.
         `votes` should be a string (or iterable of characters) indicating "a" for affirmative or
             "n" for negative, e.g. "ann" if the chair was rolled in a decision for the negative.
         The method will give the winning team all 76s and the losing team all 74s.
         The first adjudicator is the chair; the rest are panellists."""
 
+        if trainees is None:
+            trainees = []
         if venue is None:
             venue = Venue.objects.first()
         debate = Debate.objects.create(round=self.rd, venue=venue)
@@ -134,7 +136,10 @@ class TestFeedbackProgress(TestCase):
     # From team
     # ==========================================================================
 
-    def assertExpectedFromTeamTracker(self, debate, t, expected, fulfilled, count, submissions, targets, tracker_kwargs={}): # noqa
+    def assertExpectedFromTeamTracker(self, debate, t, expected, fulfilled, count, submissions, targets, tracker_kwargs=None): # noqa
+        if tracker_kwargs is None:
+            tracker_kwargs = {}
+
         tracker = FeedbackExpectedSubmissionFromTeamTracker(self._dt(debate, t), **tracker_kwargs)
         self.assertIs(tracker.expected, expected)
         self.assertIs(tracker.fulfilled, fulfilled)
