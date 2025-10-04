@@ -40,6 +40,9 @@ drf-spectacular = "*"
 daphne = "*"
 drf-link-header-pagination = "*"
 networkx = "*" # Avoid its dependencies (SciPy)
+stripe = "*"
+requests = "*"
+cryptography = "*"
 
 [dev-packages]
 pre-commit = "*"

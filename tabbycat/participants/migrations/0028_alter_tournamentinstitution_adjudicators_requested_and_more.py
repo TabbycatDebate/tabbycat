@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='person',
             name='last_name',
-            field=models.CharField(help_text='The last name may be used for team names or code names', max_length=70, null=True, verbose_name='last name'),
+            field=models.CharField(blank=True, help_text='The last name may be used for team names or code names', max_length=70, null=True, verbose_name='last name'),
         ),
         migrations.AlterField(
             model_name='tournamentinstitution',

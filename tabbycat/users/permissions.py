@@ -157,6 +157,13 @@ class Permission(TextChoices):
     VIEW_EVENTS = 'view.events', _("view events")
 
     VIEW_REGISTRATION = 'view.registration', _("view registration responses")
+    EDIT_PAYMENT_PLATFORMS = 'edit.paymentplatform', _("edit payment platform links")
+    VIEW_PRODUCTS = 'view.products', _("view products")
+    EDIT_PRODUCTS = 'edit.products', _("edit products")
+    VIEW_INVOICES = 'view.invoices', _("view posted invoices")
+    CREATE_INVOICE = 'add.invoices', _("create new invoices")
+    VIEW_PAYMENTS = 'view.payments', _("view payment statuses")
+    ADD_PAYMENT = 'add.payment', _("record payments")
 
 
 permission_type = Union[Permission, bool]

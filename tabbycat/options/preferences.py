@@ -9,6 +9,7 @@ from dynamic_preferences.registries import global_preferences_registry
 from dynamic_preferences.types import (BooleanPreference, ChoicePreference, DecimalPreference, FloatPreference,
     IntegerPreference, LongStringPreference, MultipleChoicePreference, StringPreference)
 
+from registration.types import Currency
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.utils import get_side_name_choices
@@ -1765,3 +1766,56 @@ class TeamRegisterMessage(LongStringPreference):
     default = ""
     widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
     field_kwargs = {'required': False}
+
+
+@tournament_preferences_registry.register
+class MissingAdjudicatorRule(ChoicePreference):
+    help_text = _("If charging a missing adjudicator fee per institution, how to determine the fee")
+    verbose_name = _("Missing adjudicator fee rule")
+    section = registration
+    name = 'missing_adj_rule'
+    choices = (
+        ('', _("None")),
+        ('N', _("N=N (Equal number of teams and adjudicators)")),
+        ('N-1', _("N-1 (One fewer adjudicators required than teams)")),
+        ('N/2', _("N/2 (Require half the adjudicators to the number of teams, rounded down)")),
+    )
+    default = ''
+    functions = {
+        '': lambda a, t: 0,
+        'N': lambda a, t: t - a,
+        'N-1': lambda a, t: t - a - 1,
+        'N/2': lambda a, t: t // 2 - a,
+    }
+
+
+@tournament_preferences_registry.register
+class BillingStandard(ChoicePreference):
+    help_text = _("How should institutions be billed for their participants")
+    verbose_name = _("Institutional billing standard")
+    section = registration
+    name = 'inst_billing_standard'
+    choices = (
+        ('active_participants', _("Bill based on the number of participants registered")),
+        ('allocated', _("Bill based on the number of participants allocated")),
+    )
+    default = 'active_participants'
+
+
+@tournament_preferences_registry.register
+class BillingCurrency(ChoicePreference):
+    help_text = _("In which currency should items be charged?")
+    verbose_name = _("Billing currency")
+    section = registration
+    name = 'billing_currency'
+    choices = Currency.choices
+    default = Currency.cad
+
+
+@tournament_preferences_registry.register
+class AllowPartialPayments(BooleanPreference):
+    help_text = _("Whether people paying an invoice can input how much they'll pay at a time")
+    verbose_name = _("Allow partial payments")
+    section = registration
+    name = 'partial_payments'
+    default = False

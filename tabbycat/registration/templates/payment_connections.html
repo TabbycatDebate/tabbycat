@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load add_field_css debate_tags i18n %}
+
+{% block content %}
+
+  <form id="stripeForm" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="platform" value="stripe"/>
+
+    <div class="card">
+      <div class="list-group list-group-flush">
+
+        {% if has_stripe_connection %}
+          <div class="list-group-item pb-4">
+            {% trans "Stripe account already linked." %}
+          </div>
+        {% else %}
+          {% trans "Connect Stripe" as title %}
+          {% include "components/form-submit.html" %}
+        {% endif %}
+
+      </div>
+    </div>
+  </form>
+
+{% endblock content %}

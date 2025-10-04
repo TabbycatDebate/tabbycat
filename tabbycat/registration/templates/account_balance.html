@@ -1,0 +1,26 @@
+{% extends "tables/base_vue_table.html" %}
+{% load debate_tags i18n %}
+
+{% block content %}
+
+{{ block.super }}
+
+<form action="." method="POST">
+  {% csrf_token %}
+
+  {% include "components/form-main.html" %}
+
+  <div class="card">
+    <div class="card-body row">
+      <button class="btn btn-primary btn-block btn-success" type="submit" name="save_update_all">
+        {% trans "Save allocations" %}
+      </button>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script></script>
+{% endblock js %}

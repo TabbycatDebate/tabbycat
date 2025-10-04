@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load add_field_css debate_tags i18n %}
+
+{% block head-title %}<span class="emoji">🏷️</span> {% trans "Products" %}{% endblock %}
+{% block page-title %}🏷️{% trans "Products" %}{% endblock %}
+
+{% block content %}
+
+  {% trans "Save Products" as save_text %}
+  {% include "components/formset.html" with double=True %}
+
+{% endblock content %}

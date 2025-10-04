@@ -7,7 +7,7 @@ from django.utils.translation import gettext, gettext_lazy as _
 
 from adjallocation.models import DebateAdjudicator
 from registration.models import Answer, Question
-from results.models import Submission
+from results.submission_model import Submission
 from utils.models import UniqueConstraint
 
 

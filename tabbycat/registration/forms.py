@@ -1,14 +1,18 @@
 import random
+from math import log10
 
 from django import forms
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 
+from options.preferences import MissingAdjudicatorRule
 from participants.emoji import EMOJI_RANDOM_FIELD_CHOICES, pick_unused_emoji
 from participants.models import Adjudicator, Coach, Institution, Speaker, Team, TournamentInstitution
 from privateurls.utils import populate_url_keys
 
 from .form_utils import CustomQuestionsFormMixin
+from .models import LineItem, PriceItem
+from .payment_utils import add_item
 
 
 class TournamentInstitutionForm(CustomQuestionsFormMixin, forms.ModelForm):
@@ -260,8 +264,62 @@ class ParticipantAllocationForm(forms.Form):
 
     def save(self):
         qs = self.tournament.tournamentinstitution_set.select_related('institution').all()
+
+        items = self.tournament.priceitem_set.filter(active=True, item_type__in=[
+            PriceItem.ItemType.PARTICIPANT, PriceItem.ItemType.TEAM, PriceItem.ItemType.SPEAKER,
+            PriceItem.ItemType.ADJUDICATOR, PriceItem.ItemType.MISSING_ADJ,
+        ])
+        new_cart_items = []
         for t_inst in qs:
             institution = t_inst.institution
+
+            if self.tournament.pref('inst_billing_standard') == 'allocated':
+                n_adjs = self.cleaned_data[self._fieldname_adjs_allocated(institution)] - t_inst.adjudicators_allocated
+                n_teams = self.cleaned_data[self._fieldname_teams_allocated(institution)] - t_inst.teams_allocated
+
+                missing_adj_rule = MissingAdjudicatorRule.functions[self.tournament.pref('missing_adj_rule')]
+                before_missing = max(missing_adj_rule(t_inst.adjudicators_allocated, t_inst.teams_allocated), 0)
+                after_missing = missing_adj_rule(self.cleaned_data[self._fieldname_adjs_allocated(institution)], self.cleaned_data[self._fieldname_teams_allocated(institution)])
+                new_missing = max(after_missing - before_missing, 0)
+
+                cart_items = [
+                    ci for ci in
+                    [
+                        add_item(items, PriceItem.ItemType.ADJUDICATOR, n_adjs),
+                        add_item(items, PriceItem.ItemType.TEAM, n_teams),
+                        add_item(items, PriceItem.ItemType.SPEAKER, n_teams * self.tournament.pref('speakers_in_team')),
+                        add_item(items, PriceItem.ItemType.PARTICIPANT, n_adjs + n_teams * self.tournament.pref('speakers_in_team')),
+                        add_item(items, PriceItem.ItemType.MISSING_ADJ, new_missing),
+                    ]
+                    if ci is not None and ci.quantity
+                ]
+                for ci in cart_items:
+                    ci.institution = institution
+                new_cart_items.extend(cart_items)
+
             t_inst.teams_allocated = self.cleaned_data[self._fieldname_teams_allocated(institution)]
             t_inst.adjudicators_allocated = self.cleaned_data[self._fieldname_adjs_allocated(institution)]
         TournamentInstitution.objects.bulk_update(qs, ['teams_allocated', 'adjudicators_allocated'])
+        LineItem.objects.bulk_create(new_cart_items)
+
+
+class PriceItemForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields['item_type'].disabled = True
+
+
+class CreatePaymentForm(forms.Form):
+    def __init__(self, currency, max_value, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['amount'] = forms.DecimalField(min_value=0, max_value=max_value, decimal_places=int(log10(currency.minor_unit)))
+
+
+class FinishPayPalIntegrationForm(forms.Form):
+    tracking_id = forms.CharField(widget=forms.HiddenInput(), required=True)
+    merchant_id = forms.CharField(widget=forms.HiddenInput(), required=True)
+
+
+class PayPalCaptureOrderForm(forms.Form):
+    order_id = forms.CharField()

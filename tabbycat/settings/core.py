@@ -1,4 +1,5 @@
 import os
+from decimal import Decimal
 
 from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
@@ -404,3 +405,22 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# ==============================================================================
+# Payment processors for registration
+# ==============================================================================
+
+STRIPE_PUBLIC_API_KEY = os.environ.get('STRIPE_PUBLIC_API_KEY')
+STRIPE_PRIVATE_API_KEY = os.environ.get('STRIPE_PRIVATE_API_KEY')
+STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')
+
+PAYPAL_CLIENT_ID = os.environ.get('PAYPAL_CLIENT_ID')
+PAYPAL_CLIENT_SECRET = os.environ.get('PAYPAL_CLIENT_SECRET')
+PAYPAL_BUILD_NOTATION_CODE = os.environ.get('PAYPAL_BN_CODE')
+PAYPAL_WEBHOOK_ID = os.environ.get('PAYPAL_WEBHOOK_ID')
+
+PAYMENT_FEE_PERCENTAGE = Decimal('0')
+PAYMENT_FEE_FIXED = {
+    'cad': Decimal('0'),
+    'usd': Decimal('0'),
+}

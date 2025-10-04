@@ -1,0 +1,28 @@
+{% extends "tables/base_vue_table.html" %}
+{% load debate_tags i18n %}
+
+{% block page-subnav-sections %}
+<div class="btn-group flex-wrap">
+  <a class="btn btn-outline-primary"
+     href="{% tournamenturl 'reg-payments-connect' %}">
+    {% trans "Connections" %}
+  </a>
+</div>
+{% endblock %}
+{% block page-subnav-actions %}
+<div class="btn-group flex-wrap">
+    <div class="btn btn-outline-primary disabled">{% trans "Create" %}</div>
+  <a class="btn btn-outline-primary" href="{% tournamenturl 'reg-products-edit' %}">
+      {% trans "Products" %}
+  </a>
+  <a class="btn btn-outline-primary" href="{% tournamenturl 'reg-create-discount' %}">
+      {% trans "Discount" %}
+  </a>
+  <a class="btn btn-outline-primary" href="{% tournamenturl 'reg-create-invoice' %}">
+      {% trans "Invoice" %}
+  </a>
+  <a class="btn btn-outline-primary" href="{% tournamenturl 'reg-create-payment' %}">
+      {% trans "Payment" %}
+  </a>
+</div>
+{% endblock %}

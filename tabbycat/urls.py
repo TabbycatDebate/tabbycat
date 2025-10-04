@@ -73,6 +73,8 @@ urlpatterns = [
     path('archive/',
         include('importer.urls_archive')),
 
+    path('registration/', include('registration.urls_global')),
+
     # Tournament URLs
     path('<slug:tournament_slug>/',
         include('tournaments.urls')),

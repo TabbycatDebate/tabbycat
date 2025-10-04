@@ -62,13 +62,11 @@
     </div>
   </div>
 
-  {% if False %}
-    <div class="list-group">
-      {% tournamenturl 'reg-inst-create-team' url_key as url %}
-      {% blocktrans trimmed asvar text %}View invoice{% endblocktrans %}
-      {% include "components/item-action.html" with icon="dollar-sign" %}
-    </div>
-  {% endif %}
+  <div class="list-group">
+    {% tournamenturl 'reg-inst-invoice-balance' url_key as url %}
+    {% blocktrans trimmed asvar text %}View invoice{% endblocktrans %}
+    {% include "components/item-action.html" with icon="dollar-sign" %}
+  </div>
 
   <div class="mt-md-4">
     {{ block.super }} {# this is the Vue table, which is populated with the registered participants #}
