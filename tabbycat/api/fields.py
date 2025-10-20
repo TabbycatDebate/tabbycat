@@ -32,7 +32,7 @@ class TournamentRelatedFieldMixin:
         return False
 
     def get_tournament(self, obj):
-        return obj.tournament
+        return self.context.get('tournament', obj.tournament)
 
     def get_object(self, view_name, view_args, view_kwargs):
         lookup_value = view_kwargs[self.lookup_url_kwarg]
@@ -78,10 +78,10 @@ class RoundHyperlinkedRelatedField(TournamentHyperlinkedRelatedField):
     round_field = 'round'
 
     def get_tournament(self, obj):
-        return self.get_round(obj).tournament
+        return super().get_tournament(round := self.get_round(obj)) or round.tournament
 
     def get_round(self, obj):
-        return obj.round
+        return self.context.get('round', obj.round)
 
     def get_url_kwargs(self, obj):
         kwargs = super().get_url_kwargs(obj)
