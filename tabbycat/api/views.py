@@ -45,7 +45,7 @@ from venues.models import Venue, VenueCategory
 from . import serializers
 from .fields import ParticipantAvailabilityForeignKeyField
 from .mixins import AdministratorAPIMixin, APILogActionMixin, PublicAPIMixin, RoundAPIMixin, TournamentAPIMixin, TournamentPublicAPIMixin
-from .permissions import APIEnabledPermission, PerTournamentPermissionRequired, PublicPreferencePermission, URLKeyAuthentication
+from .permissions import PerTournamentPermissionRequired, PublicPreferencePermission, URLKeyAuthentication
 from .query_serializers import (
     AdjudicatorParamsSerializer, AvailabilitiesParamsSerializer, BallotParamsSerializer, FeedbackParamsSerializer, FeedbackQuestionParamsSerializer,
     InstitutionParamsSerializer, SpeakerRoundStandingsRoundsParamsSerializer, SpeakerStandingsParamsSerializer, StandingsParamsSerializer,
@@ -701,7 +701,7 @@ class PersonCheckinMixin:
             return (view.tournament.pref('public_checkins_submit') == 'private-urls' and view.participant_requester) or request.method != 'POST'
 
     authentication_classes = [TokenAuthentication, SessionAuthentication, URLKeyAuthentication]
-    permission_classes = [APIEnabledPermission, PerTournamentPermissionRequired | CustomPermission]
+    permission_classes = [PerTournamentPermissionRequired | CustomPermission]
 
     @property
     def participant_requester(self):
@@ -1023,7 +1023,7 @@ class PairingViewSet(RoundAPIMixin, ModelViewSet):
     # update_permission = Permission.EDIT_DEBATETEAMS
     destroy_permission = Permission.DELETE_DEBATE
 
-    permission_classes = [APIEnabledPermission, CustomPermission | PerTournamentPermissionRequired]
+    permission_classes = [CustomPermission | PerTournamentPermissionRequired]
 
     action_log_type_created = ActionLogEntry.ActionType.DEBATE_CREATE
     action_log_type_updated = ActionLogEntry.ActionType.DEBATE_EDIT
@@ -1093,7 +1093,7 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     round_field = 'debate__round'
 
     authentication_classes = [TokenAuthentication, SessionAuthentication, URLKeyAuthentication]
-    permission_classes = [APIEnabledPermission, PerTournamentPermissionRequired | PublicPreferencePermission | CustomPermission]
+    permission_classes = [PerTournamentPermissionRequired | PublicPreferencePermission | CustomPermission]
 
     list_permission = Permission.VIEW_BALLOTSUBMISSIONS
     create_permission = Permission.ADD_BALLOTSUBMISSIONS
@@ -1244,7 +1244,7 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     action_log_type_updated = ActionLogEntry.ActionType.FEEDBACK_SAVE
 
     authentication_classes = [TokenAuthentication, SessionAuthentication, URLKeyAuthentication]
-    permission_classes = [APIEnabledPermission, PerTournamentPermissionRequired | CustomPermission]
+    permission_classes = [PerTournamentPermissionRequired | CustomPermission]
 
     list_permission = Permission.VIEW_FEEDBACK
     create_permission = Permission.ADD_FEEDBACK

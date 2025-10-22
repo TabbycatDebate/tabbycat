@@ -5,7 +5,6 @@ from django.forms import SelectMultiple
 from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 from dynamic_preferences.preferences import Section
-from dynamic_preferences.registries import global_preferences_registry
 from dynamic_preferences.types import (BooleanPreference, ChoicePreference, DecimalPreference, FloatPreference,
     IntegerPreference, LongStringPreference, MultipleChoicePreference, StringPreference)
 
@@ -1583,20 +1582,6 @@ class EnableMotionReuse(BooleanPreference):
     section = motions
     name = 'enable_motion_reuse'
     default = False
-
-
-# ==============================================================================
-global_settings = Section('global', verbose_name=_('Global Settings'))
-# ==============================================================================
-
-
-@global_preferences_registry.register
-class EnableAPIAccess(BooleanPreference):
-    help_text = _("Enables external applications to access the site through a dedicated interface, subject to public information settings.")
-    verbose_name = _("Enable API access")
-    section = global_settings
-    name = 'enable_api'
-    default = True
 
 
 # ==============================================================================

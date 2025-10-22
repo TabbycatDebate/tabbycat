@@ -7,7 +7,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from tournaments.models import Round, Tournament
 
-from .permissions import APIEnabledPermission, IsAdminOrReadOnly, PerTournamentPermissionRequired, PublicIfReleasedPermission, PublicPreferencePermission
+from .permissions import IsAdminOrReadOnly, PerTournamentPermissionRequired, PublicIfReleasedPermission, PublicPreferencePermission
 
 
 class APILogActionMixin(LogActionMixin):
@@ -75,16 +75,16 @@ class RoundAPIMixin(TournamentAPIMixin):
 
 
 class AdministratorAPIMixin:
-    permission_classes = [APIEnabledPermission, IsAdminUser | PerTournamentPermissionRequired]
+    permission_classes = [IsAdminUser | PerTournamentPermissionRequired]
 
 
 class TournamentPublicAPIMixin:
-    permission_classes = [APIEnabledPermission, PublicPreferencePermission | PerTournamentPermissionRequired]
+    permission_classes = [PublicPreferencePermission | PerTournamentPermissionRequired]
 
 
 class OnReleasePublicAPIMixin(TournamentPublicAPIMixin):
-    permission_classes = [APIEnabledPermission, PublicIfReleasedPermission | PerTournamentPermissionRequired]
+    permission_classes = [PublicIfReleasedPermission | PerTournamentPermissionRequired]
 
 
 class PublicAPIMixin:
-    permission_classes = [APIEnabledPermission, IsAdminOrReadOnly | PerTournamentPermissionRequired]
+    permission_classes = [IsAdminOrReadOnly | PerTournamentPermissionRequired]

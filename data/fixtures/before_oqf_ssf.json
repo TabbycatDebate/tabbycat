@@ -25820,14 +25820,5 @@
             22
         ]
     }
-},
-{
-    "model": "dynamic_preferences.globalpreferencemodel",
-    "pk": 1,
-    "fields": {
-        "section": "global",
-        "name": "enable_api",
-        "raw_value": "True"
-    }
 }
 ]

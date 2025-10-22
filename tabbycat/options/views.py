@@ -6,7 +6,6 @@ from django.utils.text import slugify
 from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
-from dynamic_preferences.registries import global_preferences_registry
 from dynamic_preferences.views import PreferenceFormView
 
 from actionlog.mixins import LogActionMixin
@@ -58,7 +57,7 @@ class MultiPreferenceFormView(PreferenceFormView):
 
 
 class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, TournamentMixin, MultiPreferenceFormView):
-    possible_registries = [global_preferences_registry, tournament_preferences_registry]
+    possible_registries = [tournament_preferences_registry]
     section = None
     template_name = "preferences_section_set.html"
     view_permission = Permission.VIEW_SETTINGS

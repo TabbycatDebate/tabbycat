@@ -3,7 +3,6 @@ import json
 from django.conf import settings
 from django.test import Client
 from django.urls import reverse
-from dynamic_preferences.registries import global_preferences_registry
 from rest_framework.test import APITestCase
 
 from utils.tests import CompletedTournamentTestMixin, V1_ROOT_URL
@@ -20,14 +19,6 @@ class RootTests(APITestCase):
             "version": settings.TABBYCAT_VERSION,
             "version_name": settings.TABBYCAT_CODENAME,
         })
-
-    def test_api_disabled_root(self):
-        global_preferences_registry.manager()['global__enable_api'] = False
-        response = self.client.get(reverse('api-root'))
-        self.assertEqual(response.status_code, 401)
-
-        # Re-enable API as tearDown
-        global_preferences_registry.manager()['global__enable_api'] = True
 
     def test_get_v1_root(self):
         response = self.client.get(reverse('api-v1-root'))
