@@ -41,4 +41,25 @@ else:
     else:
         root.info('SPLIT_SETTINGS: imported local.py')
 
-include(*base_settings)
+# Make local settings optional: on some build environments (Heroku slug compile)
+# the repository may not include a `local.py`. To avoid raising OSError during
+# collectstatic or other build-time management commands, only include files
+# that actually exist on disk, and keep `local.py` optional.
+settings_dir = os.path.dirname(__file__)
+final_includes = []
+for s in base_settings:
+    # compute the filesystem path for the candidate settings file
+    candidate = os.path.join(settings_dir, s)
+    if os.path.exists(candidate):
+        # file exists — include it (wrap local.py with optional() for clarity)
+        final_includes.append(optional(s) if s.endswith('local.py') else s)
+    else:
+        # file missing
+        if s.endswith('local.py'):
+            root.info(f"SPLIT_SETTINGS: skipping missing optional settings file: {s}")
+            # don't include missing optional local.py
+            continue
+        # For required files, raise a clear error so builds fail loudly
+        raise OSError(f'No such file: {candidate}')
+
+include(*final_includes)
