@@ -6,6 +6,7 @@ import DragAndDropActions from '../../templates/allocations/DragAndDropActions.v
 import DroppableItem from '../../templates/allocations/DroppableItem.vue'
 import { useDragAndDropStore } from '../../templates/allocations/DragAndDropStore.js'
 import { useDragAndDropContainer } from '../../templates/composables/useDragAndDropContainer.js'
+import { useDjangoI18n } from '../../templates/composables/useDjangoI18n.js'
 
 import DraggableTeam from './DraggableTeam.vue'
 import DebateSideStatus from './DebateSideStatus.vue'
@@ -15,6 +16,7 @@ const props = defineProps({
 })
 
 const store = useDragAndDropStore()
+const { gettext } = useDjangoI18n()
 
 const getUnallocatedItemFromDebateOrPanel = (debateOrPanel) => {
   const itemIDs = []
@@ -82,7 +84,24 @@ const { allDebatesOrPanels, sortedDebatesOrPanels, debatesOrPanelsCount, unalloc
     :handle-unused-drop="moveTeam"
   >
     <template #actions>
-      <drag-and-drop-actions :count="debatesOrPanelsCount" />
+      <drag-and-drop-actions :count="debatesOrPanelsCount">
+        <template #default-highlights>
+          <button
+            class="btn conflictable conflicts-toolbar hover-histories-2-ago"
+            data-toggle="tooltip"
+            title="Has been in the same debate previously."
+          >
+            {{ gettext('Seen') }}
+          </button>
+          <button
+            class="btn conflictable conflicts-toolbar hover-institution"
+            data-toggle="tooltip"
+            title="Is from the same institution."
+          >
+            {{ gettext('Institution') }}
+          </button>
+        </template>
+      </drag-and-drop-actions>
     </template>
 
     <template #extra-messages>

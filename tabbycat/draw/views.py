@@ -2,7 +2,7 @@ import datetime
 import json
 import logging
 import unicodedata
-from itertools import product
+from itertools import combinations, product
 from zoneinfo import ZoneInfo
 
 from django.conf import settings
@@ -956,9 +956,39 @@ class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateVi
     prefetch_teams = False # Fetched in full as get_serialised
     edit_permission = Permission.EDIT_DEBATETEAMS
 
+    def _get_team_histories_map(self):
+        now_seq = self.round.seq
+        histories = {}
+        debates = Debate.objects.filter(
+            round__tournament=self.tournament,
+            round__seq__lt=now_seq,
+        ).select_related('round').prefetch_related('debateteam_set')
+
+        for debate in debates:
+            team_ids = [dt.team_id for dt in debate.debateteam_set.all()]
+            if len(team_ids) < 2:
+                continue
+            ago = now_seq - debate.round.seq
+            for a, b in combinations(team_ids, 2):
+                histories.setdefault(a, {'team': []})['team'].append({'id': b, 'ago': ago})
+                histories.setdefault(b, {'team': []})['team'].append({'id': a, 'ago': ago})
+        return histories
+
+    def get_extra_info(self):
+        info = super().get_extra_info()
+        teams = Team.objects.filter(tournament=self.tournament).only('id', 'institution_id')
+        team_institution_clashes = {}
+        for t in teams:
+            if t.institution_id:
+                team_institution_clashes[t.id] = {'institution': [{'id': t.institution_id}]}
+        team_histories = self._get_team_histories_map()
+        info['clashes'] = {'teams': team_institution_clashes, 'adjudicators': {}}
+        info['histories'] = {'teams': team_histories, 'adjudicators': {}}
+        return info
+
     def get_serialised_allocatable_items(self):
         # TODO: account for shared teams
-        teams = Team.objects.filter(tournament=self.tournament).prefetch_related('speaker_set')
+        teams = Team.objects.filter(tournament=self.tournament).prefetch_related('speaker_set', 'break_categories')
         teams = annotate_availability(teams, self.round)
         populate_win_counts(teams)
         serialized_teams = EditDebateTeamsTeamSerializer(teams, many=True)
