@@ -47,7 +47,8 @@
 {% endif %} {# not pref.no_panellist_position or not pref.no_trainee_position #}
 
 {# Motions #}
-{% if pref.public_motions or admin_page %}
+{% haspermission "view.roundmotion" as motions_perm %}
+{% if pref.public_motions or (admin_page and motions_perm) %}
   <div class="list-group-item {% if not pref.public_motions or not current_round.motions_released %}list-group-item-dark{% endif %}">
     {% if debate.round.motions_released or admin_page %}
       {% if not debate.round.motions_released %}
