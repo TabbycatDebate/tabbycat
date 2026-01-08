@@ -1053,6 +1053,13 @@ class SplitVotingBallots(BooleanPreference):
     name = 'individual_ballots'
     default = False
 
+@tournament_preferences_registry.register
+class EnableWSDCCriteriaBreakdown(BooleanPreference):
+    help_text = _("If checked, ballot entry will show WSDC score criteria breakdown fields and calculate totals automatically.")
+    verbose_name = _("Enable WSDC score criteria breakdown")
+    section = data_entry
+    name = 'wsdc_score_criteria_breakdown'
+    default = False
 
 # ==============================================================================
 public_features = Section('public_features', verbose_name=_("Public Features"))

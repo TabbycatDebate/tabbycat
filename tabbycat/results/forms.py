@@ -9,6 +9,7 @@ from django import forms
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
+from django.db import transaction
 
 from draw.models import Debate, DebateTeam
 from draw.types import DebateSide
@@ -27,6 +28,91 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+def ensure_wsdc_score_criteria(tournament):
+    """Si el toggle WSDC está ON, asegura que existan criterios y rangos WSDC."""
+    if not tournament.pref('wsdc_score_criteria_breakdown'):
+        return
+
+    # Import local para evitar ciclos al cargar el módulo
+    from .models import ScoreCriterion
+
+    substantive = [
+        (1, "Content",  Decimal("24"), Decimal("32"), Decimal("0.5"), 1.0),
+        (2, "Style",    Decimal("24"), Decimal("32"), Decimal("0.5"), 1.0),
+        (3, "Strategy", Decimal("12"), Decimal("16"), Decimal("0.5"), 1.0),
+        (4, "POIs",     Decimal("-2"), Decimal("2"),  Decimal("0.5"), 1.0),
+    ]
+    reply = [
+        (1, "Content",  Decimal("12"), Decimal("16"), Decimal("0.5"), 1.0),
+        (2, "Style",    Decimal("12"), Decimal("16"), Decimal("0.5"), 1.0),
+        (3, "Strategy", Decimal("6"),  Decimal("8"),  Decimal("0.5"), 1.0),
+    ]
+
+    with transaction.atomic():
+        for seq, name, mn, mx, step, weight in substantive:
+            obj, _ = ScoreCriterion.objects.get_or_create(
+                tournament=tournament,
+                is_reply=False,
+                seq=seq,
+                defaults={
+                    "name": name,
+                    "min_score": mn,
+                    "max_score": mx,
+                    "step": float(step),
+                    "weight": float(weight),
+                    "required": True,
+                },
+            )
+            # “Upsert” suave: si ya existe pero con valores distintos, lo corrige
+            changed = (
+                obj.name != name or
+                obj.min_score != mn or
+                obj.max_score != mx or
+                float(obj.step) != float(step) or
+                float(obj.weight) != float(weight) or
+                obj.required is not True
+            )
+            if changed:
+                obj.name = name
+                obj.min_score = mn
+                obj.max_score = mx
+                obj.step = float(step)
+                obj.weight = float(weight)
+                obj.required = True
+                obj.save()
+
+        for seq, name, mn, mx, step, weight in reply:
+            obj, _ = ScoreCriterion.objects.get_or_create(
+                tournament=tournament,
+                is_reply=True,
+                seq=seq,
+                defaults={
+                    "name": name,
+                    "min_score": mn,
+                    "max_score": mx,
+                    "step": float(step),
+                    "weight": float(weight),
+                    "required": True,
+                },
+            )
+            changed = (
+                obj.name != name or
+                obj.min_score != mn or
+                obj.max_score != mx or
+                float(obj.step) != float(step) or
+                float(obj.weight) != float(weight) or
+                obj.required is not True
+            )
+            if changed:
+                obj.name = name
+                obj.min_score = mn
+                obj.max_score = mx
+                obj.step = float(step)
+                obj.weight = float(weight)
+                obj.required = True
+                obj.save()
+
+
 
 class FormConstructionError(Exception):
     pass
@@ -35,6 +121,26 @@ class FormConstructionError(Exception):
 # ==============================================================================
 # Result/ballot custom fields
 # ==============================================================================
+
+class PrettyNumberInput(forms.NumberInput):
+    """Muestra 28 en vez de 28.0, y 28.5 se queda 28.5."""
+    def format_value(self, value):
+        if value in (None, ''):
+            return ''
+        try:
+            d = Decimal(str(value))
+        except Exception:
+            return super().format_value(value)
+
+        # Si es entero exacto, renderiza sin decimales
+        if d == d.to_integral_value():
+            return str(int(d))
+
+        # Si tiene decimales, quita ceros al final: 28.50 -> 28.5
+        s = format(d.normalize(), 'f')  # evita notación científica
+        return s
+
+
 
 class TournamentPasswordField(forms.CharField):
 
@@ -146,7 +252,16 @@ class BaseResultForm(forms.Form):
 
         self.debate = ballotsub.debate
         self.tournament = self.debate.round.tournament
-        self.criteria = self.debate.round.tournament.scorecriterion_set.all().order_by('seq')
+
+        ensure_wsdc_score_criteria(self.tournament)
+
+        all_criteria = self.debate.round.tournament.scorecriterion_set.all().order_by('seq')
+
+        self.substantive_criteria = all_criteria.filter(is_reply=False)
+        self.reply_criteria = all_criteria.filter(is_reply=True)
+
+        self.criteria = all_criteria
+
 
         self.result = kwargs.pop('result', self.result_class(self.ballotsub, criteria=self.criteria))
         self.filled = kwargs.pop('filled', False)
@@ -504,6 +619,24 @@ class ScoresMixin:
 
         self.create_score_fields()
 
+    def criteria_for_pos(self, pos):
+        base = (
+            self.reply_criteria
+            if (self.using_replies and pos == self.reply_position)
+            else self.substantive_criteria
+        )
+
+        logger.warning(
+            "criteria_for_pos(pos=%s) using_replies=%s reply_position=%s last_sub=%s wsdc_breakdown=%s",
+            pos, self.using_replies, self.reply_position, self.last_substantive_position,
+            self.tournament.pref('wsdc_score_criteria_breakdown'),
+        )
+
+        if not self.tournament.pref('wsdc_score_criteria_breakdown'):
+            return base.none()
+
+        return base
+
     def list_participant_fields(self):
         order = []
         for side, pos in product(self.sides, self.positions):
@@ -672,13 +805,14 @@ class ScoresMixin:
                         else None),
             }
             for pos, pos_name in zip(self.positions, pos_names):
+                criteria = self.criteria_for_pos(pos)
                 spk_dict = {
                     "pos": pos,
                     "name": pos_name,
                     "speaker": self[self._fieldname_speaker(side, pos)],
                     "ghost": self[self._fieldname_ghost(side, pos)],
                     "score": self[fieldname_score_func(side, pos)],
-                    "criteria": [(criterion, self[fieldname_criterion_func(side, pos, criterion)]) for criterion in self.criteria],
+                    "criteria": [(criterion, self[fieldname_criterion_func(side, pos, criterion)]) for criterion in criteria],
                 }
                 if fieldname_srank_func:
                     spk_dict["srank"] = self[fieldname_srank_func(side, pos)]
@@ -714,29 +848,46 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
     def create_score_fields(self):
         """Adds the speaker score fields:
-         - <side>_score_s#,  one for each score
+        - <side>_score_s#,  one for each score (total, auto-calculated if criteria exist)
+        - criterion fields per speech
         """
         for side, pos in product(self.sides, self.positions):
             scorefield = ReplyScoreField if (pos == self.reply_position) else SubstantiveScoreField
-            self.fields[self._fieldname_score(side, pos)] = scorefield(
-                widget=forms.NumberInput(attrs={'class': 'number'}),
+            criteria = self.criteria_for_pos(pos)
+            has_criteria = criteria.exists()
+
+            # Total score (visible siempre; bloqueado si hay criterios)
+            field = scorefield(
+                widget=PrettyNumberInput(attrs={'class': 'number'}),
                 tournament=self.tournament,
                 required=False,
             )
-            for criterion in self.criteria:
+            if has_criteria:
+                field.widget.attrs['readonly'] = 'readonly'   # ✅ bloquea sin romper el submit
+            self.fields[self._fieldname_score(side, pos)] = field
+
+            # Criteria scores (solo los que correspondan a ese speech)
+            for criterion in criteria:
                 self.fields[self._fieldname_criterion_score(side, pos, criterion)] = forms.DecimalField(
                     min_value=Decimal(str(criterion.min_score)),
                     max_value=Decimal(str(criterion.max_score)),
                     step_size=Decimal(str(criterion.step)),
                     required=False,
-                    widget=forms.NumberInput(attrs={'class': 'number', 'weight': criterion.weight}),
+                    widget=PrettyNumberInput(attrs={'class': 'number', 'weight': criterion.weight}),
                 )
+
             if self.using_speaker_ranks:
                 nspeeches = len(self.sides) * len(self.positions)
-                self.fields[self._fieldname_srank(side, pos)] = forms.IntegerField(required=False, min_value=1, max_value=nspeeches, step_size=1)
+                self.fields[self._fieldname_srank(side, pos)] = forms.IntegerField(
+                    required=False,
+                    min_value=1,
+                    max_value=nspeeches,
+                    step_size=1,
+                )
 
         if self.using_declared_winner:
             self.fields[self._fieldname_declared_winner()] = self.create_declared_winner_dropdown()
+
 
     def initial_from_result(self, result):
         initial = super().initial_from_result(result)
@@ -749,7 +900,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
             initial[self._fieldname_score(side, pos)] = score
             if self.using_speaker_ranks:
                 initial[self._fieldname_srank(side, pos)] = result.get_speaker_rank(side, pos)
-            for criterion in self.criteria:
+            for criterion in self.criteria_for_pos(pos):
                 initial[self._fieldname_criterion_score(side, pos, criterion)] = result.get_criterion_score(side, pos, criterion)
 
         if self.using_declared_winner:
@@ -778,14 +929,16 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
         should_skip = False
         for side, pos in product(self.sides, self.positions):
-            if cleaned_data[self._fieldname_score(side, pos)] is None and not self.criteria.exists():
+            criteria = self.criteria_for_pos(pos)
+
+            if cleaned_data[self._fieldname_score(side, pos)] is None and not criteria.exists():
                 self.add_error(self._fieldname_score(side, pos), forms.ValidationError(
                     _("This field is required."),
                     code='required',
                 ))
                 should_skip = True
 
-            for criterion in self.criteria:
+            for criterion in criteria:
                 if cleaned_data[self._fieldname_criterion_score(side, pos, criterion)] is None and criterion.required:
                     self.add_error(
                         self._fieldname_criterion_score(side, pos, criterion),
@@ -794,7 +947,16 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                     should_skip = True
         if should_skip:
             return
+        for side, pos in product(self.sides, self.positions):
+            criteria = self.criteria_for_pos(pos)
+            if criteria.exists():
+                computed = Decimal('0')
+                for criterion in criteria:
+                    val = cleaned_data.get(self._fieldname_criterion_score(side, pos, criterion)) or 0
+                    computed += Decimal(str(val)) * Decimal(str(criterion.weight))
 
+                cleaned_data[self._fieldname_score(side, pos)] = computed
+        
         try:
             side_totals = {side: sum(cleaned_data[self._fieldname_score(side, pos)]
                            for pos in self.positions) for side in self.sides}
@@ -860,10 +1022,23 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
     def populate_result_with_scores(self, result):
         for side, pos in product(self.sides, self.positions):
-            score = self.cleaned_data[self._fieldname_score(side, pos)]
-            for criterion in self.criteria:
-                result.set_criterion_score(side, pos, criterion, self.cleaned_data[self._fieldname_criterion_score(side, pos, criterion)])
-            if len(self.criteria) == 0:
+            criteria = self.criteria_for_pos(pos)
+            if criteria.exists():
+                total = Decimal('0')
+                for criterion in criteria:
+                    val = self.cleaned_data.get(self._fieldname_criterion_score(side, pos, criterion)) or Decimal('0')
+
+                    # asegúrate que sea Decimal (por si vino como float o str)
+                    val = Decimal(str(val))
+
+                    result.set_criterion_score(side, pos, criterion, val)
+                    total += val * Decimal(str(criterion.weight))
+
+                result.set_score(side, pos, total)  # guarda total calculado
+            else:
+                score = self.cleaned_data[self._fieldname_score(side, pos)]
+                if score is not None:
+                    score = Decimal(str(score))
                 result.set_score(side, pos, score)
 
             if self.using_speaker_ranks:
@@ -910,28 +1085,42 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
     def create_score_fields(self):
         """Adds the speaker score fields:
-         - <side>_score_a#_s#,  one for each score
+        - <side>_score_a#_s#,  one for each score (total)
+        - criterion fields per speech (substantive vs reply)
         """
         for side, pos in product(self.sides, self.positions):
             scorefield = ReplyScoreField if (pos == self.reply_position) else SubstantiveScoreField
+
+            criteria = self.criteria_for_pos(pos)
+            has_criteria = criteria.exists()
+
             for adj in self.adjudicators:
-                self.fields[self._fieldname_score(adj, side, pos)] = scorefield(
-                    widget=forms.NumberInput(attrs={'class': 'number'}),
+                # TOTAL (visible siempre; readonly si hay criterios)
+                field = scorefield(
+                    widget=PrettyNumberInput(attrs={'class': 'number'}),
                     tournament=self.tournament,
                     required=False,
-                    disabled=self.criteria.exists(),
                 )
-                for criterion in self.criteria:
+
+                if has_criteria:
+                    field.widget.attrs['readonly'] = 'readonly'  # 👈 clave
+
+                self.fields[self._fieldname_score(adj, side, pos)] = field
+
+                # CRITERIOS (solo los que correspondan a ese speech)
+                for criterion in criteria:
                     self.fields[self._fieldname_criterion_score(adj, side, pos, criterion)] = forms.DecimalField(
                         min_value=Decimal(str(criterion.min_score)),
                         max_value=Decimal(str(criterion.max_score)),
                         step_size=Decimal(str(criterion.step)),
                         required=False,
-                        widget=forms.NumberInput(attrs={'class': 'number', 'weight': criterion.weight}),
+                        widget=PrettyNumberInput(attrs={'class': 'number', 'weight': criterion.weight}),
                     )
+
         if self.using_declared_winner:
             for adj in self.adjudicators:
                 self.fields[self._fieldname_declared_winner(adj)] = self.create_declared_winner_dropdown()
+
 
     def initial_from_result(self, result):
         initial = super().initial_from_result(result)
@@ -943,7 +1132,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
             for side, pos in product(self.sides, self.positions):
                 score = result.get_score(adj, side, pos)
                 initial[self._fieldname_score(adj, side, pos)] = score
-                for criterion in self.criteria:
+                for criterion in self.criteria_for_pos(pos):
                     initial[self._fieldname_criterion_score(adj, side, pos, criterion)] = result.get_criterion_score(adj, side, pos, criterion)
 
             if self.using_declared_winner:
@@ -973,71 +1162,118 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
         for adj in self.adjudicators:
             should_skip = False
             for side, pos in product(self.sides, self.positions):
-                if cleaned_data[self._fieldname_score(adj, side, pos)] is None and not self.criteria.exists():
-                    self.add_error(self._fieldname_score(adj, side, pos), forms.ValidationError(
-                        _("This field is required."),
-                        code='required',
-                    ))
-                    should_skip = True
+                criteria = self.criteria_for_pos(pos)
+                score_field = self._fieldname_score(adj, side, pos)
 
-                for criterion in self.criteria:
-                    if cleaned_data[self._fieldname_criterion_score(adj, side, pos, criterion)] is None and criterion.required:
-                        self.add_error(
-                            self._fieldname_criterion_score(adj, side, pos, criterion),
-                            forms.ValidationError(_("This field is required."), code='required'),
-                        )
+
+                logger.error(
+                    "DEBUG SCORE %s | POST=%r | cleaned=%r | type(cleaned)=%r | in_fields=%r",
+                    score_field,
+                    self.data.get(score_field),
+                    cleaned_data.get(score_field),
+                    type(cleaned_data.get(score_field)),
+                    score_field in self.fields,
+                )
+
+                # Si el campo no existe en el form, no lo intentes leer del cleaned_data
+                if score_field in self.fields:
+                    if cleaned_data.get(score_field) is None and not criteria.exists():
+                        self.add_error(score_field, forms.ValidationError(
+                            _("This field is required."),
+                            code='required',
+                        ))
                         should_skip = True
+                        
+                    for criterion in criteria:
+                        crit_field = self._fieldname_criterion_score(adj, side, pos, criterion)
+
+                        if crit_field in self.fields and cleaned_data.get(crit_field) is None and criterion.required:
+                            self.add_error(
+                                crit_field,
+                                forms.ValidationError(_("This field is required."), code='required'),
+                            )
+                            should_skip = True
             if should_skip:
                 continue
-
+        
+            # 2) Auto-calcular total por speech si ese speech tiene criterios
+            for side, pos in product(self.sides, self.positions):
+                criteria = self.criteria_for_pos(pos)
+                if criteria.exists():
+                    computed = Decimal('0')
+                    for criterion in criteria:
+                        crit_field = self._fieldname_criterion_score(adj, side, pos, criterion)
+                        val = cleaned_data.get(crit_field) or 0
+                        computed += Decimal(str(val)) * Decimal(str(criterion.weight))
+                    cleaned_data[self._fieldname_score(adj, side, pos)] = computed
+            # 3) Totales por equipo = suma de los totales por speech (ya sean manuales o computados)
             try:
-                if self.criteria:
-                    side_totals = {side: sum(float(cleaned_data[self._fieldname_criterion_score(adj, side, pos, criterion)] or 0) * criterion.weight
-                           for pos in self.positions for criterion in self.criteria) for side in self.sides}
-                else:
-                    side_totals = {side: sum(cleaned_data[self._fieldname_score(adj, side, pos)]
-                           for pos in self.positions) for side in self.sides}
+                side_totals = {
+                    side: sum(
+                        cleaned_data[self._fieldname_score(adj, side, pos)]
+                        for pos in self.positions
+                    )
+                    for side in self.sides
+                }
                 totals = list(side_totals.values())
 
             except KeyError as e:
                 logger.warning("Field %s not found", str(e))
-
-            else:
-                if len(totals) == 2:
-                    # Check that it was not a draw.
-                    if totals[0] == totals[1] and self.declared_winner in ['none', 'high-points']:
+                continue
+            
+            # 4) Validaciones de draw / winner / margen (igual que tu lógica)
+            if len(totals) == 2:
+                if totals[0] == totals[1] and self.declared_winner in ['none', 'high-points']:
+                    self.add_error(None, forms.ValidationError(
+                        _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adjudicator)s."),
+                        params={'adjudicator': adj.get_public_name(self.tournament)},
+                        code='draw',
+                    ))
+                elif self.declared_winner in ['high-points', 'tied-points']:
+                    max_teams = [side for side, total in side_totals.items() if total == max(totals)]
+                    if int(cleaned_data.get(self._fieldname_declared_winner(adj))) not in max_teams:
                         self.add_error(None, forms.ValidationError(
-                            _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adjudicator)s."),
-                            params={'adjudicator': adj.get_public_name(self.tournament)}, code='draw',
+                            _("The declared winner does not correspond to the team with the highest score for adjudicator %(adjudicator)s."),
+                            params={'adjudicator': adj.get_public_name(self.tournament)},
+                            code='wrong_winner',
                         ))
-                    elif self.declared_winner in ['high-points', 'tied-points']:
-                        max_teams = [side for side, total in side_totals.items() if total == max(totals)]
 
-                        if int(cleaned_data.get(self._fieldname_declared_winner(adj))) not in max_teams:
-                            self.add_error(None, forms.ValidationError(
-                                _("The declared winner does not correspond to the team with the highest score for adjudicator %(adjudicator)s."),
-                                params={'adjudicator': adj.get_public_name(self.tournament)}, code='wrong_winner',
-                            ))
-
-                # Check that the margin did not exceed the maximum permissible.
                 margin = abs(totals[0] - totals[1])
                 if self.max_margin and margin > self.max_margin:
                     self.add_error(None, forms.ValidationError(
                         _("The margin (%(margin).1f) in the ballot of adjudicator %(adjudicator)s exceeds the maximum allowable margin (%(max_margin).1f)."),
-                        params={'adjudicator': adj.get_public_name(self.tournament), 'margin': margin, 'max_margin': self.max_margin}, code='max_margin',
+                        params={
+                            'adjudicator': adj.get_public_name(self.tournament),
+                            'margin': margin,
+                            'max_margin': self.max_margin
+                        },
+                        code='max_margin',
                     ))
 
     def populate_result_with_scores(self, result):
         for adj in self.adjudicators:
             for side, pos in product(self.sides, self.positions):
-                score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
-                for criterion in self.criteria:
-                    result.set_criterion_score(adj, side, pos, criterion, self.cleaned_data[self._fieldname_criterion_score(adj, side, pos, criterion)] or 0)
-                if len(self.criteria) == 0:
+                criteria = self.criteria_for_pos(pos)
+
+                if criteria.exists():
+                    total = Decimal('0')
+                    for criterion in criteria:
+                        val = self.cleaned_data.get(self._fieldname_criterion_score(adj, side, pos, criterion)) or Decimal('0')
+                        val = Decimal(str(val))
+
+                        result.set_criterion_score(adj, side, pos, criterion, val)
+                        total += val * Decimal(str(criterion.weight))
+
+                    result.set_score(adj, side, pos, total)
+                else:
+                    score = self.cleaned_data.get(self._fieldname_score(adj, side, pos))
+                    if score is not None:
+                        score = Decimal(str(score))
                     result.set_score(adj, side, pos, score)
 
             if self.declared_winner not in ['none', 'high-points']:
                 result.set_winners(adj, {int(self.cleaned_data.get(self._fieldname_declared_winner(adj)))})
+
 
     # --------------------------------------------------------------------------
     # Template access methods

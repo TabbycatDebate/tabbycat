@@ -399,9 +399,16 @@ class ScoreCriterion(models.Model):
     step = models.FloatField(verbose_name=_("step"))
     required = models.BooleanField(default=True,
         verbose_name="required")
+    
+    is_reply = models.BooleanField(
+        default=False,
+        verbose_name=_("is reply criterion"),
+        help_text=_("If checked, this criterion applies to reply speeches only.")
+    )
+
 
     class Meta:
-        constraints = [UniqueConstraint(fields=['tournament', 'seq'])]
+        constraints = [models.UniqueConstraint(fields=['tournament', 'is_reply', 'seq'], name='results_scorecriterion_tourn_isreply_seq_uniq'),]
         verbose_name = _("score criterion")
         verbose_name_plural = _("score criteria")
 

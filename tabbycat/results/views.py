@@ -956,14 +956,15 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
                 field = form._fieldname_score(side, pos)
             elif t == 'speaker_ranks':
                 field = form._fieldname_srank(side, pos)
-            form.cleaned_data = {}
+            if not hasattr(form, "cleaned_data"):
+                form.cleaned_data = {}
             form.add_error(field, ValidationError(msg))
         return form
 
     def populate_objects(self, prefill=True):
         super().populate_objects()
         self.round = self.debate.round
-
+        self.merged_ballots = []   # <- SIEMPRE existe
         if prefill:
             bses = BallotSubmission.objects.filter(
                 debate=self.debate, participant_submitter__isnull=False, discarded=False, single_adj=True,
@@ -997,7 +998,8 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
 
     def get_all_ballotsubs(self):
         q = super().get_all_ballotsubs()
-        merged = {b.id for b in self.merged_ballots}
+        merged_ballots = getattr(self, "merged_ballots", [])
+        merged = {b.id for b in merged_ballots}
         for b in q:
             b.merged = b.id in merged
         return q
