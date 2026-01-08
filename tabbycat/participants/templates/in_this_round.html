@@ -19,7 +19,7 @@
     </div>
 
     {% haspermission "view.debate" as draw_perm %}
-    {% if draw_released or (admin_page and draw_perm) %}
+    {% if draw_released or admin_page and draw_perm %}
 
       {% trans "Room TBA" as venue_tba %}
 
@@ -87,7 +87,7 @@
         {% endfor %}
       {% endif %}
 
-    {% else %} {# elif not (draw_released or admin_page) #}
+    {% else %} {# elif not draw_released and not admin_page #}
 
       <div class="list-group-item">
         <em>{% trans "The draw for this round hasn't yet been released." %}</em>
