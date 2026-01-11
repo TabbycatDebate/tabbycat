@@ -20,7 +20,7 @@ from .utils import validate_metric_duplicates
 
 
 # ==============================================================================
-all_sections = Section('all_sections', verbose_name=_("All Preferances"))
+all_sections = Section('all_sections', verbose_name=_("All Preferences"))
 # ==============================================================================
 
 
