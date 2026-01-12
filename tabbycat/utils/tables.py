@@ -1021,6 +1021,25 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_column(header, results)
 
     def add_schedule_event_columns(self, schedule_events):
+
+        tournament_days_verbose = {}
+        for ev in schedule_events:
+            temp_variable = timezone.localtime(ev.start_time).strftime("%A, %b %d")
+            if temp_variable in tournament_days_verbose.keys():
+                ev.show_day_flag = False
+            else:
+                tournament_days_verbose[temp_variable] = len(tournament_days_verbose.keys()) + 1
+                ev.show_day_flag = True
+
+        tournament_days = []
+        for ev in schedule_events:
+            if ev.show_day_flag:
+                tournament_days.append("Day " + str(tournament_days_verbose[timezone.localtime(ev.start_time).strftime("%A, %b %d")]) + " of tournament")
+            else:
+                tournament_days.append("")
+
+        self.add_column({'title': _("Day of tournamnet"), 'key': _("Day")}, tournament_days)
+
         self.add_column({'title': _("Event"), 'key': _("Event")}, [ev.title for ev in schedule_events])
 
         starts = [
