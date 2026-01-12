@@ -1038,7 +1038,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             else:
                 tournament_days.append("")
 
-        self.add_column({'title': _("Day of tournamnet"), 'key': _("Day")}, tournament_days)
+        self.add_column({'title': _(""), 'key': _("Day")}, tournament_days)
 
         self.add_column({'title': _("Event"), 'key': _("Event")}, [ev.title for ev in schedule_events])
 
