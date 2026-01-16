@@ -1,5 +1,6 @@
 import logging
 import warnings
+from datetime import timedelta
 
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.humanize.templatetags.humanize import ordinal
@@ -1043,3 +1044,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
             for ev in schedule_events
         ]
         self.add_column({'title': _("End Time"), 'key': _("End Time")}, ends)
+
+        delayed_starts = []
+        for ev in schedule_events:
+            defualt_start = timezone.localtime(ev.start_time)
+            if timezone.localdate(defualt_start) != timezone.localdate() or ev.undelayable:
+                delayed_starts.append("")
+                continue
+            delayed_time = defualt_start + timedelta(minutes=self.tournament.delay)
+            delayed_starts.append(delayed_time.strftime("%H:%M") + f" (+{self.tournament.delay} minutes)")
+
+        if delayed_starts.count("") != len(delayed_starts):
+            self.add_column({'title': _("Delayed Start Time"), 'key': _("Delayed Start")}, delayed_starts)

@@ -306,7 +306,7 @@ class ScheduleEventForm(ModelForm):
 
     class Meta:
         model = ScheduleEvent
-        fields = ('tournament', 'type', 'title', 'start_time', 'end_time', 'round')
+        fields = ('tournament', 'type', 'title', 'start_time', 'end_time', 'round', 'undelayable')
         widgets = {
             'tournament': HiddenInput(),
             'start_time': DateTimeInput(attrs={'type': 'datetime-local'}),

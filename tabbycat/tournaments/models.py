@@ -134,6 +134,11 @@ class Tournament(models.Model):
             return False
         return True
 
+    @property
+    def delay(self):
+        """Returns an intiger representing how delayed the tournament is in minutes."""
+        return self.pref('manual_delay')
+
     # --------------------------------------------------------------------------
     # Permalinks
     # --------------------------------------------------------------------------
@@ -623,6 +628,9 @@ class ScheduleEvent(models.Model):
 
     round = models.ForeignKey(Round, models.PROTECT, blank=True, null=True, verbose_name=_("round"),
                               help_text=_("If the event belongs to a specific round, which round"))
+
+    undelayable = models.BooleanField(verbose_name="Do not delay event", default=False,
+                                       help_text=_("Tick this box if this event cannot be delayed, e.g. a social event with reservations."))
 
     class Meta:
         verbose_name = _('schedule event')

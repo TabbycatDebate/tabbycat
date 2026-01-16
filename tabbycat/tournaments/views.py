@@ -454,4 +454,5 @@ class PublicScheduleView(PublicTournamentPageMixin, VueTableTemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['schedule_timezone_label'] = get_current_timezone_name()
+        context['delay'] = self.tournament.delay
         return context
