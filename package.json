@@ -32,7 +32,7 @@
     "@sentry/browser": "^5.30.0",
     "@sentry/integrations": "^5.30.0",
     "@vue/cli-plugin-babel": "^5.0.4",
-    "@vue/cli-service": "^5.0.4",
+    "@vue/cli-service": "^5.0.8",
     "ajv": "7.0.0",
     "bootstrap": "^4.6.1",
     "browserify": "17.0.x",
