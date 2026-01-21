@@ -1,6 +1,8 @@
 import json
-
+from actionlog.mixins import LogActionMixin
+from actionlog.models import ActionLogEntry
 from asgiref.sync import async_to_sync
+from breakqual.models import BreakingTeam
 from channels.layers import get_channel_layer
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -8,9 +10,6 @@ from django.http.response import Http404
 from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView
-
-from actionlog.mixins import LogActionMixin
-from actionlog.models import ActionLogEntry
 from options.utils import use_team_code_names
 from participants.models import Person, Speaker
 from participants.serializers import InstitutionSerializer
@@ -67,7 +66,17 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
     edit_permission = Permission.EDIT_PARTICIPANT_CHECKIN
 
+    def is_break_round(self):
+        """Checks if the current round is a break round."""
+        break_rounds = self.tournament.break_rounds()
+        return self.tournament.current_round in break_rounds
+
+    def get_breaking_team_ids(self):
+        breaking_teams = BreakingTeam.objects.filter(break_category__tournament=self.tournament).select_related('team', 'team__institution', 'break_category', 'break_category__tournament').all()
+        return set(breaking_team.team.id for breaking_team in breaking_teams)
+
     def get_context_data(self, **kwargs):
+        breaking_team_ids = self.get_breaking_team_ids()
 
         team_codes = use_team_code_names(self.tournament, admin=self.for_admin, user=self.request.user)
         kwargs["team_codes"] = json.dumps(team_codes)
@@ -83,12 +92,15 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
             adjudicators.append({
                 'id': adj.id, 'name': adj.get_public_name(self.tournament), 'type': 'Adjudicator',
                 'identifier': [code], 'locked': False, 'independent': adj.independent,
-                'institution': institution,
+                'institution': institution, 'breaking': adj.breaking,
             })
         kwargs["adjudicators"] = json.dumps(adjudicators)
 
         speakers = []
         for speaker in Speaker.objects.filter(team__tournament=self.tournament).select_related('team', 'team__institution', 'checkin_identifier'):
+            breaking = False
+            if speaker.team.id in breaking_team_ids:
+                breaking = True
             try:
                 code = speaker.checkin_identifier.barcode
             except ObjectDoesNotExist:
@@ -100,8 +112,11 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
                 'identifier': [code], 'locked': False,
                 'team': speaker.team.code_name if team_codes else speaker.team.short_name,
                 'institution': institution,
+                'breaking': breaking,
             })
         kwargs["speakers"] = json.dumps(speakers)
+        kwargs["is_break_round"] = self.is_break_round()
+        kwargs["breaking_team_ids"] = json.dumps(list(breaking_team_ids))
 
         return super().get_context_data(**kwargs)
 
