@@ -213,6 +213,9 @@ class TournamentSerializer(serializers.ModelSerializer):
         preferences = serializers.HyperlinkedIdentityField(
             view_name='tournamentpreferencemodel-list',
             lookup_field='slug', lookup_url_kwarg='tournament_slug')
+        schedule_events = serializers.HyperlinkedIdentityField(
+            view_name='api-scheduleevent-list',
+            lookup_field='slug', lookup_url_kwarg='tournament_slug')
 
     _links = TournamentLinksSerializer(source='*', read_only=True)
 
