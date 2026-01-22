@@ -116,6 +116,8 @@ class ActionLogEntry(models.Model):
         ADJUDICATOR_REGISTER              = 'aj.reg', _("Registered adjudicator")
         SPEAKER_REGISTER                  = 'sp.reg', _("Registered speaker")
         REGISTRATION_CONFIRM              = 're.conf', _("Confirmed registration")
+        SCHEDULE_EVENT_CREATE             = 'sc.crea', _("Created schedule event")
+        SCHEDULE_EVENT_EDIT               = 'sc.edit', _("Edited schedule event")
 
     class Agent(models.TextChoices):
         API = 'a', _("API")

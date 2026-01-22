@@ -598,6 +598,29 @@ class VenueCategoryViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
             Prefetch('venues', queryset=Venue.objects.select_related('tournament').filter(tournament__isnull=False)))
 
 
+@extend_schema(tags=['schedule'], parameters=[tournament_parameter])
+@extend_schema_view(
+    list=extend_schema(summary="List tournament schedule events"),
+    create=extend_schema(summary="Create schedule event"),
+    retrieve=extend_schema(summary="Get schedule event", parameters=[id_parameter]),
+    update=extend_schema(summary="Update schedule event", parameters=[id_parameter]),
+    partial_update=extend_schema(summary="Patch schedule event", parameters=[id_parameter]),
+    destroy=extend_schema(summary="Delete schedule event", parameters=[id_parameter]),
+)
+class ScheduleEventViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
+    serializer_class = serializers.ScheduleEventSerializer
+    action_log_type_created = ActionLogEntry.ActionType.SCHEDULE_EVENT_CREATE
+    action_log_type_updated = ActionLogEntry.ActionType.SCHEDULE_EVENT_EDIT
+
+    list_permission = Permission.VIEW_EVENTS
+    create_permission = Permission.EDIT_EVENTS
+    update_permission = Permission.EDIT_EVENTS
+    destroy_permission = Permission.EDIT_EVENTS
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('tournament', 'round').order_by('start_time')
+
+
 @extend_schema(tags=['checkins'], parameters=[tournament_parameter, id_parameter])
 class BaseCheckinsView(AdministratorAPIMixin, TournamentAPIMixin, APIView):
     name = "Check-ins"

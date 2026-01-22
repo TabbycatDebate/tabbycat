@@ -246,6 +246,15 @@ urlpatterns = [
                         name='api-venuecategory-detail'),
                 ])),
 
+                path('/schedule-events', include([
+                    path('',
+                        views.ScheduleEventViewSet.as_view(list_methods),
+                        name='api-scheduleevent-list'),
+                    path('/<int:pk>',
+                        views.ScheduleEventViewSet.as_view(detail_methods),
+                        name='api-scheduleevent-detail'),
+                ])),
+
                 path('/user-groups', include([
                     path('',
                         views.GroupViewSet.as_view(list_methods),
