@@ -1,0 +1,33 @@
+name: Code Quality
+on: pull_request
+
+jobs:
+  # Linting job, uses the existing pre-commit as the standard for tools
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4  # Latest stable version
+      - name: Python setup
+        uses: actions/setup-python@v4
+        with:
+          python-version-file: '.python-version'
+      - name: Cache pipenv dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.local/share/virtualenvs
+          key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }} # Cache key based on hash of Pipfile.lock for CI speed
+          restore-keys: |
+            ${{ runner.os }}-pipenv-
+      - name: Node setup
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'  # Cache npm dependencies
+      - name: Install dependencies
+        run: |
+          pip install pre-commit
+          npm ci
+      - name: Run pre-commit
+        run: |
+          pre-commit install --install-hooks
+          pre-commit run --all-files

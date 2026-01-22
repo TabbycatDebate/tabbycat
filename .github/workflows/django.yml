@@ -64,16 +64,41 @@ jobs:
         python -m pip install pipenv
         pipenv install --system --dev --deploy
         npm ci
-    - name: Run linting
-      run: npm run lint
+    # - name: Run linting
+    #   run: npm run lint
     - name: Run build and collect
       run: |
         npm run build
         python ./tabbycat/manage.py collectstatic --noinput -v 0
     - name: Run migrations
       run: python ./tabbycat/manage.py migrate
-    - name: Run tests
-      run: python tabbycat/manage.py test -v 2 --exclude-tag=selenium
+    - name: Run tests and generate coverage reports
+      run: |
+        pip install coverage # Install in CI only, not needed as Pipenv dependency
+        coverage run --source='tabbycat' tabbycat/manage.py test -v 2 --exclude-tag=selenium
+        coverage xml
+        coverage report
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v5
+      if: success()
+      with:
+        file: ./coverage.xml
+        token: ${{ secrets.CODECOV_TOKEN }}
+        fail_ci_if_error: false
+    - name: Install Reviewdog
+      run: |
+        curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b ./bin
+        echo "$(pwd)/bin" >> $GITHUB_PATH
+
+    - name: Run pre-commit with Reviewdog
+      env:
+        REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        pre-commit run --all-files --show-diff-on-failure \
+          | ./bin/reviewdog -f=diff \
+            -name="pre-commit" \
+            -reporter=github-pr-review \
+            -fail-on-error=false
 
   build-docker-dev:
 

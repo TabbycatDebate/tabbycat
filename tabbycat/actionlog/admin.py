@@ -31,3 +31,5 @@ class ActionLogEntryAdmin(ModelAdmin):
 
     def delete_queryset(self, request, queryset):
         return False
+
+
