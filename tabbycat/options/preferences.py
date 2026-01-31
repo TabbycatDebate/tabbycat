@@ -1217,6 +1217,15 @@ class PublicSchedule(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class ManualDelay(IntegerPreference):
+    help_text = _("Manually set the publicly displayed delay in your tournament.")
+    verbose_name = _("Manually set how delayed the tournament is")
+    section = public_features
+    name = 'manual_delay'
+    default = 0
+
+
+@tournament_preferences_registry.register
 class TournamentStaff(LongStringPreference):
     help_text = _("List of tournament staff, to be displayed on the tournament home page. Leave this blank or with the default text if you want to not show this information.")
     verbose_name = _("Tournament staff")
