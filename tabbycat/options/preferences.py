@@ -1210,7 +1210,7 @@ class FeedbackProgress(BooleanPreference):
 @tournament_preferences_registry.register
 class PublicSchedule(BooleanPreference):
     help_text = _("Enables the public page showing the schedule")
-    verbose_name = _("Enable public view of shedule")
+    verbose_name = _("Enable public view of schedule")
     section = public_features
     name = 'public_schedule'
     default = False
