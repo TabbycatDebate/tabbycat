@@ -28,7 +28,7 @@ Short version
 ::
 
   curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -    # add Node.js source repository
-  sudo apt install python3.11 python3-distutils pipenv postgresql libpq-dev nodejs gcc g++ make
+  sudo apt install python3.11 python3-distutils pipenv postgresql libpq-dev nodejs gcc g++ make redis-server
   git clone https://github.com/TabbycatDebate/tabbycat.git
   cd tabbycat
   git checkout master
@@ -111,6 +111,15 @@ Tabbycat requires Node and its package manager to compile front-end dependencies
 Some of the Python packages require GCC, G++ and Make in order to install::
 
     $ sudo apt install gcc g++ make
+
+1(e). Redis
+-----------
+  *Redis is an in-memory data structure store, used as a message broker.*
+
+Tabbycat requires Redis to handle asynchronous background tasks (like adjudicator allocation) and real-time updates. Install and start Redis using::
+
+    $ sudo apt install redis-server
+    $ sudo systemctl enable --now redis-server
 
 .. _install-linux-source-code:
 

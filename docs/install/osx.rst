@@ -59,6 +59,14 @@ You'll need to use the PostgreSQL command-line tools, so run the command that th
 
 Download and run the `node.js 8 macOS Installer (.pkg) <https://nodejs.org/dist/v12.18.1/node-v12.18.1.pkg>`_
 
+1(d). Redis
+--------------------------------------------------------------------------------
+
+Tabbycat requires `Redis <https://redis.io/>`_ to handle asynchronous background tasks (like adjudicator allocation) and real-time updates. You can install it using `Homebrew <https://brew.sh/>`_::
+
+  $ brew install redis
+  $ brew services start redis
+
 2. Get the source code
 ================================================================================
 

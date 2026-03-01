@@ -57,3 +57,12 @@ CACHES = { # Use a dummy cache in development
 
 # Use the cache with database write through for local sessions
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}
