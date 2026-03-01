@@ -6,7 +6,8 @@ from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Avg, Count, Prefetch, Q
+from django.db.models.functions import Coalesce
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
 from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
@@ -14,7 +15,7 @@ from push_notifications.api.rest_framework import WebPushDeviceViewSet as BaseWe
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.fields import DateTimeField
-from rest_framework.generics import CreateAPIView, GenericAPIView, get_object_or_404, RetrieveUpdateAPIView
+from rest_framework.generics import CreateAPIView, GenericAPIView, get_object_or_404, ListAPIView, RetrieveUpdateAPIView
 from rest_framework.mixins import ListModelMixin
 from rest_framework.permissions import BasePermission, IsAdminUser
 from rest_framework.response import Response
@@ -23,8 +24,9 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from actionlog.models import ActionLogEntry
-from adjallocation.models import PreformedPanel
+from adjallocation.models import DebateAdjudicator, PreformedPanel
 from adjallocation.preformed.anticipated import calculate_anticipated_draw
+from adjfeedback.models import AdjudicatorFeedback
 from availability.models import RoundAvailability
 from breakqual.models import BreakCategory
 from breakqual.views import GenerateBreakMixin
@@ -964,6 +966,44 @@ class TeamStandingsView(BaseStandingsView):
         if category := self.params.get('category', None):
             return super().get_queryset().filter(break_categories__pk=category.id)
         return super().get_queryset()
+
+
+@extend_schema(tags=['standings'], parameters=[tournament_parameter])
+@extend_schema_view(
+    get=extend_schema(
+        summary="Get adjudicator standings",
+        responses=serializers.AdjudicatorStandingsSerializer(many=True),
+    ),
+)
+class AdjudicatorStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, ListAPIView):
+    """List adjudicator standings (base score, final weighted score, per-round scores). Public field visibility is conditioned on adjudicators_tab_released and adjudicators_tab_shows."""
+    serializer_class = serializers.AdjudicatorStandingsSerializer
+    access_preference = 'adjudicators_tab_released'
+    list_permission = Permission.VIEW_FEEDBACK_OVERVIEW
+
+    def get_queryset(self):
+        feedback_weight = self.tournament.current_round.feedback_weight
+        adjs = self.tournament.adjudicator_set.select_related('tournament').prefetch_related(
+            'debateadjudicator_set__debate__round__tournament',
+        ).all()
+        feedback_scores = dict(
+            AdjudicatorFeedback.objects.filter(
+                adjudicator__in=adjs, confirmed=True, ignored=False,
+            ).exclude(source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).values('adjudicator_id').annotate(avg=Avg('score')),
+        )
+        round_feedback = {
+            (fb['adjudicator_id'], fb['round_id']): fb['avg_score']
+            for fb in AdjudicatorFeedback.objects.filter(
+                adjudicator__in=adjs, confirmed=True, ignored=False,
+            ).exclude(source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).annotate(
+                round_id=Coalesce("source_adjudicator__debate__round_id", "source_team__debate__round_id"),
+            ).values('adjudicator_id', 'round_id').annotate(avg_score=Avg('score'))
+        }
+        for adj in adjs:
+            adj.final_score = adj.base_score * (1 - feedback_weight) + (feedback_weight * feedback_scores.get(adj.pk, 0))
+            for d_adj in adj.debateadjudicator_set.all():
+                d_adj.score = round_feedback.get((adj.pk, d_adj.debate.round_id))
+        return adjs
 
 
 @extend_schema(tags=['standings'], parameters=[

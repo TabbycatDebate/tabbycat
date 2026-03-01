@@ -56,6 +56,14 @@ SIDE_NAMES = {
         "0_abbr": '1',
         "1_abbr": '2',
     },
+    'pl-def': {
+        "0_full": _("plaintiff/prosecution"),
+        "1_full": _("defense"),
+        "0_team": _("plaintiff/prosecution team"),
+        "1_team": _("defense team"),
+        "0_abbr": _("Pl"),
+        "1_abbr": _("Def"),
+    },
 }
 
 BP_SIDE_NAMES = {  # stop-gap before this system gets refactored

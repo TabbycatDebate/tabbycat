@@ -6,29 +6,26 @@ const props = defineProps({
   cellData: Object,
 })
 
-const emit = defineEmits(['toggle-checked', 'update-sort', 'update-checked'])
+const emit = defineEmits(['toggle-checked', 'update-sort'])
 
 const { ajaxSave } = useAjax()
 
-const updateChecked = (value) => {
-  emit('update-checked', { id: props.cellData.id, checked: value })
-}
-
-const checkUpdate = () => {
+const checkUpdate = (newChecked) => {
   if (props.cellData.noSave) {
     return
   }
   const cd = props.cellData
-  const checked = cd.checked
+  cd.checked = newChecked
+  cd.sort = newChecked
   if (_.isUndefined(props.cellData.saveURL)) {
     emit('toggle-checked', cd)
   } else {
-    const message = `${cd.id}'s ${cd.type} status as ${checked}`
+    const message = `${cd.id}'s ${cd.type} status as ${newChecked}`
     const payload = { id: cd.id }
-    payload[cd.type] = checked
+    payload[cd.type] = newChecked
     ajaxSave(cd.saveURL, payload, message, null, null, null)
   }
-  emit('update-sort', { id: cd.id, sort: checked })
+  emit('update-sort', { id: cd.id, sort: newChecked })
 }
 </script>
 
@@ -47,7 +44,7 @@ const checkUpdate = () => {
         class="form-check-input position-static"
         :name="cellData.name"
         :value="cellData.value"
-        @change="updateChecked($event.target.checked); checkUpdate()"
+        @change="checkUpdate($event.target.checked)"
       >
     </div>
   </td>

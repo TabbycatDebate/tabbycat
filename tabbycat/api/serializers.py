@@ -1129,6 +1129,43 @@ class SpeakerStandingsSerializer(BaseStandingsSerializer):
         return super().get_metrics(obj)
 
 
+class AdjudicatorStandingsRoundSerializer(serializers.Serializer):
+    """One round's score in adjudicator standings."""
+    round = fields.TournamentHyperlinkedRelatedField(
+        view_name='api-round-detail',
+        lookup_field='seq', lookup_url_kwarg='round_seq',
+        queryset=Round.objects.all(),
+        source='debate.round',
+    )
+    type = serializers.ChoiceField(choices=DebateAdjudicator.TYPE_CHOICES)
+    score = serializers.FloatField()
+
+
+class AdjudicatorStandingsSerializer(serializers.Serializer):
+    """Adjudicator standings with per-round scores. Field visibility for public is conditioned on adjudicators_tab_released and adjudicators_tab_shows."""
+    adjudicator = fields.TournamentHyperlinkedRelatedField(
+        view_name='api-adjudicator-detail',
+        queryset=Adjudicator.objects.all(),
+        source='*',
+    )
+    rounds = AdjudicatorStandingsRoundSerializer(many=True, source='debateadjudicator_set')
+    base_score = serializers.FloatField()
+    final_score = serializers.FloatField()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not is_staff(kwargs.get('context')):
+            t = kwargs['context']['tournament']
+            with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=kwargs['context']['tournament'])
+            if not with_permission(permission=Permission.VIEW_FEEDBACK_OVERVIEW):
+                if t.pref('adjudicators_tab_shows') == 'test':
+                    self.fields.pop('rounds')
+                    self.fields.pop('final_score')
+                if t.pref('adjudicators_tab_shows') == 'final':
+                    self.fields.pop('rounds')
+                    self.fields.pop('base_score')
+
+
 class DebateAdjudicatorSerializer(serializers.Serializer):
     adjudicators = Adjudicator.objects.all()
     chair = fields.TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail', queryset=adjudicators)
