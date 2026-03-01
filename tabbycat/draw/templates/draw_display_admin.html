@@ -446,7 +446,7 @@
 
 {% block js %}
   {{ block.super }}
-  <script>
+  <script type="module">
     $(document).ready( function() { // Use the fake submit buttons as real submission
       $("#triggerReleaseDrawForm").click( function() {
         $("#releaseDrawForm").submit();

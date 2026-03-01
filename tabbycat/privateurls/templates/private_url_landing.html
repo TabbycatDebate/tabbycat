@@ -137,7 +137,7 @@
 
 {% block js %}
   {{ block.super }}
-  <script>
+  <script type="module">
     $(document).ready( function() { // Use the fake submit buttons as real submission
       $("#triggerCheckInForm").click( function() {
         $("#checkInForm").submit();
@@ -147,7 +147,7 @@
   </script>
 
   <!-- WebPush Subscription Logic -->
-  <script>
+  <script type="module">
     // Utility function to convert base64 to Uint8Array
     function urlBase64ToUint8Array(base64String) {
       var padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -266,7 +266,7 @@
   </script>
   {% if checkins_used %}
     <script src="{% static 'js/vendor/JsBarcode.all.min.js' %}"></script>
-    <script>
+    <script type="module">
       JsBarcode(".barcode-placeholder").init();
       $("#openBarcode").click( function() {
         $("#barcodeModal").modal('show');

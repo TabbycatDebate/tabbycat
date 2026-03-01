@@ -11,7 +11,7 @@ def debate_context(request):
         'all_tournaments': Tournament.objects.filter(active=True),
         'disable_sentry': getattr(settings, 'DISABLE_SENTRY', False),
         'on_local': getattr(settings, 'ON_LOCAL', False),
-        'hmr': getattr(settings, 'USE_WEBPACK_SERVER', False),
+        'hmr': getattr(settings, 'USE_VITE_SERVER', False),
     }
 
     if hasattr(request, 'tournament'):

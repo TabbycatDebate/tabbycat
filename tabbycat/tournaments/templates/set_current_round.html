@@ -69,7 +69,7 @@
 {% block js %}
   {{ block.super }}
 
-  <script>
+  <script type="module">
     $('#id_prelim').change(function () {
       if ($('#id_prelim').val() == 'all-completed') {
         $('select[id^=id_elim_]').prop('disabled', false);

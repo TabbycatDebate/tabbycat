@@ -69,7 +69,7 @@
 
 {% block js %}
   {{ block.super }}
-  <script>
+  <script type="module">
     function startScrolling() {
       {% if no_popovers %}
       $('.hover-target').css("pointer-events", "none")

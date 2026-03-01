@@ -64,7 +64,7 @@
 {% block js %}
   {{ block.super }}
   <script src="{% static 'js/vendor/jquery.validate.js' %}"></script>
-  <script>
+  <script type="module">
     $(document).ready( function() {
       {% include "js-bundles/enter_results.js" %}
     });

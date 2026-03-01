@@ -233,7 +233,7 @@
 
 {% block js %}
   {{ block.super }}
-  <script>
+  <script type="module">
     $(document).ready( function() {
       $("#createDraw").click(function(event) {
         $.fn.loadButton(event.target); // Prevent double submission
