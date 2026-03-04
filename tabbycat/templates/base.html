@@ -186,6 +186,7 @@
   {% block js %}
 
     <script src="{% statici18n LANGUAGE_CODE %}"></script>
+    <script src="{% static 'js/vendor/jquery.js' %}"></script>
     <script>
       window.buildData = { // Pass to Sentry
         version: '{% if tabbycat_version %}{{ tabbycat_version }}{% else %}?{% endif %}',

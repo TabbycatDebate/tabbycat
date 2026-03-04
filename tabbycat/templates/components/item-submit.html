@@ -1,12 +1,9 @@
-{% if alone %}<div class="list-group">{% endif %}
-
-  <a href="{{ url }}" {% if blank %}target="_blank"{% endif %} {% if id %}id="{{ id }}"{% endif %}
-   {% if data_toggle %}data-toggle="{{ data_toggle }}"{% endif %} {% if data_target %}data-target="{{ data_target }}"{% endif %}
-   class="{% if not child %}list-group-item {% endif %}list-group-item-action
+  <button type="submit"
+   class="item-submit {% if not child %}list-group-item {% endif %} list-group-item-action border-0 rounded-0 w-100 text-left m-0
    {% if to_complete %}
     bg-{% if type %}{{ type }}{% else %}primary{% endif %} text-white
    {% else %}
-    text-{% if type %}{{ type }}{% else %}primary{% endif %}
+    bg-white text-{% if type %}{{ type }}{% else %}primary{% endif %}
    {% endif %}">
 
     <div class="row align-items-center">
@@ -44,6 +41,4 @@
 
     </div>
 
-  </a>
-
-{% if alone == True %}</div>{% endif %}
+  </button>

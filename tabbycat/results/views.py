@@ -777,7 +777,7 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
         if error:
             return self.response_error(error)
 
-        return super().get(self, request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
 
 class PublicBallotScoresheetsView(BasePublicBallotScoresheetsView):

@@ -194,6 +194,9 @@ urlpatterns = [
                     path('',
                         views.AdjudicatorViewSet.as_view(list_methods),
                         name='api-adjudicator-list'),
+                    path('/standings',
+                        views.AdjudicatorStandingsView.as_view(),
+                        name='api-adjudicator-standings'),
                     path('/<int:pk>', include([
                         path('',
                             views.AdjudicatorViewSet.as_view(detail_methods),
