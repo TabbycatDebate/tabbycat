@@ -60,10 +60,15 @@ You'll need to use the PostgreSQL command-line tools, so run the command that th
 Download and run the `node.js 8 macOS Installer (.pkg) <https://nodejs.org/dist/v12.18.1/node-v12.18.1.pkg>`_
 
 1(d). Redis
---------------------------------------------------------------------------------
-
-Tabbycat requires `Redis <https://redis.io/>`_ to handle asynchronous background tasks (like adjudicator allocation) and real-time updates. You can install it using `Homebrew <https://brew.sh/>`_::
-
+-----------
+  *Redis is an in-memory data structure store, used as a message broker and cache.*
+ 
+Tabbycat requires Redis for two critical functions:
+ 
+  1. Asynchronous Background Tasks: Redis serves as a message broker for Django Channels, handling real-time features like live adjudicator allocation, check-ins updates, and round results display.
+ 
+  2. Page Caching: Redis caches frequently accessed public pages (draws, standings, results) to improve performance during high-traffic periods, especially during tournament events.
+ 
   $ brew install redis
   $ brew services start redis
 
