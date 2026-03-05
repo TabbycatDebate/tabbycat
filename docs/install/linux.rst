@@ -114,12 +114,22 @@ Some of the Python packages require GCC, G++ and Make in order to install::
 
 1(e). Redis
 -----------
-  *Redis is an in-memory data structure store, used as a message broker.*
+  *Redis is an in-memory data structure store, used as a message broker and cache.*
 
-Tabbycat requires Redis to handle asynchronous background tasks (like adjudicator allocation) and real-time updates. Install and start Redis using::
+Tabbycat requires Redis for two critical functions:
+
+  1. Asynchronous Background Tasks: Redis serves as a message broker for Django Channels, handling real-time features like live adjudicator allocation, check-ins updates, and round results display.
+
+  2. Page Caching: Redis caches frequently accessed public pages (draws, standings, results) to improve performance during high-traffic periods, especially during tournament events.
+
+Install and start Redis using::
 
     $ sudo apt install redis-server
     $ sudo systemctl enable --now redis-server
+
+After installation, Redis will automatically start and be configured to launch on system boot. You can verify it's running with::
+
+    $ sudo systemctl status redis-server
 
 .. _install-linux-source-code:
 

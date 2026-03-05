@@ -62,13 +62,13 @@ Download and run the `node.js 8 macOS Installer (.pkg) <https://nodejs.org/dist/
 1(d). Redis
 -----------
   *Redis is an in-memory data structure store, used as a message broker and cache.*
- 
+
 Tabbycat requires Redis for two critical functions:
- 
+
   1. Asynchronous Background Tasks: Redis serves as a message broker for Django Channels, handling real-time features like live adjudicator allocation, check-ins updates, and round results display.
- 
+
   2. Page Caching: Redis caches frequently accessed public pages (draws, standings, results) to improve performance during high-traffic periods, especially during tournament events.
- 
+
   $ brew install redis
   $ brew services start redis
 
