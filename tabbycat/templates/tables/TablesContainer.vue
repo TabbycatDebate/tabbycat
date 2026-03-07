@@ -15,6 +15,10 @@ const filterKey = ref('')
 
 const table = ref([])
 
+const setTableRef = (i) => (el) => {
+  table.value[i] = el
+}
+
 const tableClass = computed(() => {
   if (props.tablesData.length === 1) {
     return 'col-md-12'
@@ -86,7 +90,7 @@ const copyTableTrigger = (i) => {
             </small>
           </h4>
           <smart-table
-            ref="table"
+            :ref="setTableRef(i)"
             :table-headers="table.head"
             :table-content="table.data"
             :table-class="table.class"
