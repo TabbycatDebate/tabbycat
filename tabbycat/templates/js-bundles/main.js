@@ -258,7 +258,9 @@ if (typeof vueData !== 'undefined') {
       components: vueComponents,
       data: () => vueData,
     })
-    Sentry.addIntegration(Sentry.vueIntegration({ app }));
+    if (window.buildData.sentry === true) {
+      Sentry.addIntegration(Sentry.vueIntegration({ app }));
+    }
     app.use(pinia)
     useDragAndDropStore(pinia)
     app.mixin(vueTranslationMixin)
