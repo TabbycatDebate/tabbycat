@@ -10,6 +10,7 @@ const $ = window.jQuery
 import CheckboxTablesContainer from '../tables/CheckboxTablesContainer.vue'
 import TablesContainer from '../tables/TablesContainer.vue'
 // App Templates
+import EliminationBracketContainer from '../../breakqual/templates/EliminationBracketContainer.vue'
 import CheckInStatusContainer from '../../checkins/templates/CheckInStatusContainer.vue'
 import DiversityContainer from '../../participants/templates/DiversityContainer.vue'
 import PrintableBallot from '../../printing/templates/PrintableBallot.vue'
@@ -178,6 +179,8 @@ vueComponents.CheckboxTablesContainer = CheckboxTablesContainer
 vueComponents.ResultsTablesContainer = ResultsTablesContainer
 // Checkin Statuses
 vueComponents.CheckInStatusContainer = CheckInStatusContainer
+// Break Bracket
+vueComponents.EliminationBracketContainer = EliminationBracketContainer
 // Divisions Containers
 vueComponents.DiversityContainer = DiversityContainer
 vueComponents.TournamentOverviewContainer = TournamentOverviewContainer
