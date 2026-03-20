@@ -123,17 +123,33 @@
             </ul>
           </details>
 
+          {% haspermission "add.team" as add_team_perm %}
           {% for speaker in team.speakers %}
-            <details>
-              <summary>{{ speaker.name }}</summary>
+            <div class="d-flex align-items-start mb-1">
+              <details class="flex-grow-1">
+                <summary>{{ speaker.name }}</summary>
 
-              <ul>
-                {% for answer in speaker.answers.all %}
-                  <li><strong>{{ answer.question.name }}</strong>: {{ answer.answer }}</li>
-                {% endfor %}
-              </ul>
-            </details>
+                <ul>
+                  {% for answer in speaker.answers.all %}
+                    <li><strong>{{ answer.question.name }}</strong>: {{ answer.answer }}</li>
+                  {% endfor %}
+                </ul>
+              </details>
+              {% if add_team_perm %}
+                <a href="{% tournamenturl 'participants-team-speaker-delete' pk=team.pk speaker_pk=speaker.pk %}"
+                    class="btn btn-sm btn-outline-danger ml-2 flex-shrink-0">
+                  {% trans "Delete" %}
+                </a>
+              {% endif %}
+            </div>
           {% endfor %}
+          {% if add_team_perm %}
+            <div class="mt-2">
+              <a href="{% tournamenturl 'participants-team-speaker-add' pk=team.pk %}" class="btn btn-sm btn-success">
+                {% trans "Add Speaker" %}
+              </a>
+            </div>
+          {% endif %}
         </div>
       </div>
 

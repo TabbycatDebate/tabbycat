@@ -257,6 +257,15 @@ class SpeakerForm(CustomQuestionsFormMixin, forms.ModelForm):
         return obj
 
 
+class AdminSpeakerForm(SpeakerForm):
+    """Like SpeakerForm but for admin use: shows all speaker categories."""
+
+    def __init__(self, team, *args, **kwargs):
+        super().__init__(team, key=None, *args, **kwargs)
+        if 'categories' in self.fields:
+            self.fields['categories'].queryset = self.tournament.speakercategory_set.all()
+
+
 class AdjudicatorForm(CustomQuestionsFormMixin, forms.ModelForm):
 
     key = forms.CharField(widget=forms.HiddenInput(), required=False)
@@ -422,3 +431,5 @@ class SlotTransferRequestForm(forms.Form):
                 receiving_institution_email=data['receiving_institution_email'],
                 status=SlotTransferRequest.Status.PENDING,
             )
+
+

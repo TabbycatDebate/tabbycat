@@ -13,6 +13,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.utils.html import escape
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.base import View
+from django.views.generic.edit import FormView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -27,6 +28,7 @@ from tournaments.mixins import (PublicTournamentPageMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
 from users.permissions import Permission
+from registration.forms import AdminSpeakerForm
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.tables import TabbycatTableBuilder
@@ -362,6 +364,81 @@ class TeamRecordView(AdministratorMixin, BaseTeamRecordView):
             'break_categories',
             Prefetch('speaker_set', queryset=Speaker.objects.all().prefetch_related('answers__question', 'categories')),
         )
+
+
+class AdminCreateSpeakerView(LogActionMixin, AdministratorMixin, TournamentMixin, FormView):
+    template_name = 'speaker_create.html'
+    action_log_type = ActionLogEntry.ActionType.SPEAKER_CREATE
+    edit_permission = Permission.ADD_TEAMS
+
+    def get_team(self):
+        if not hasattr(self, '_team'):
+            self._team = Team.objects.get(tournament=self.tournament, pk=self.kwargs['pk'])
+        return self._team
+
+    def get_form(self, form_class=None):
+        return AdminSpeakerForm(self.get_team(), **self.get_form_kwargs())
+
+    def get_action_log_content_object(self):
+        return self.object
+
+    def get_page_title(self):
+        return _("Add Speaker to %(team)s") % {'team': self.get_team().short_name}
+
+    def get_context_data(self, **kwargs):
+        kwargs['team'] = self.get_team()
+        kwargs['team_record_url'] = reverse_tournament('participants-team-record', self.tournament, kwargs={'pk': self.get_team().pk})
+        kwargs['cancel_text'] = _("Cancel and return to team record")
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        self.object = form.save()
+        messages.success(self.request, _("%(name)s was added as a speaker.") % {'name': self.object.name})
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_tournament('participants-team-record', self.tournament, kwargs={'pk': self.get_team().pk})
+
+
+class AdminDeleteSpeakerView(LogActionMixin, AdministratorMixin, TournamentMixin, FormView):
+    template_name = 'speaker_confirm_delete.html'
+    action_log_type = ActionLogEntry.ActionType.SPEAKER_DELETE
+    edit_permission = Permission.ADD_TEAMS
+
+    def get_speaker(self):
+        if not hasattr(self, '_speaker'):
+            self._speaker = Speaker.objects.select_related('team__tournament').get(
+                pk=self.kwargs['speaker_pk'], team__tournament=self.tournament,
+            )
+        return self._speaker
+
+    def get_form(self, form_class=None):
+        from .forms import ConfirmSpeakerDeletionForm
+        return ConfirmSpeakerDeletionForm(self.get_speaker(), **self.get_form_kwargs())
+
+    def get_action_log_content_object(self):
+        return self.object
+
+    def get_page_title(self):
+        return _("Delete %(name)s") % {'name': self.get_speaker().name}
+
+    def get_context_data(self, **kwargs):
+        kwargs['speaker'] = self.get_speaker()
+        kwargs['team'] = self.get_speaker().team
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        self.object = self.get_speaker()
+        team_pk = self.object.team_id
+        speaker_name = self.object.name
+        self.log_action()
+        self.object.delete()
+        messages.success(self.request, _("%(name)s was deleted.") % {'name': speaker_name})
+        return redirect_tournament('participants-team-record', self.tournament, pk=team_pk)
+
+    def get_success_url(self):
+        return reverse_tournament('participants-team-record', self.tournament,
+                                  kwargs={'pk': self.get_speaker().team_id})
 
 
 class AdjudicatorRecordView(AdministratorMixin, BaseAdjudicatorRecordView):

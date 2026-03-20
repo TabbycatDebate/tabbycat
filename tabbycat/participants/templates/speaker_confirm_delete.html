@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load debate_tags i18n %}
+
+{% block head-title %}<span class="emoji">🗑</span> {% trans "Confirm Speaker Deletion" %}{% endblock %}
+{% block page-title %}{% trans "Confirm Speaker Deletion" %}{% endblock %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-outline-primary" href="{% tournamenturl 'participants-team-record' pk=team.pk %}">
+    <i data-feather="chevron-left"></i>{% trans "Back to Team Record" %}
+  </a>
+{% endblock %}
+
+{% block page-alerts %}
+
+  <div class="alert alert-danger">
+    {% blocktrans trimmed with name=speaker.name team=team.short_name %}
+      Do you really want to delete <strong>{{ name }}</strong> from {{ team }}?
+      This will permanently remove the speaker and <strong>cannot be undone</strong>.
+      Any ballot scores attributed to this speaker will also be deleted.
+    {% endblocktrans %}
+  </div>
+
+  <form method="POST" action="">
+    {% csrf_token %}
+    {% include "components/form-main.html" %}
+
+    {% blocktrans trimmed with name=speaker.name asvar title %}
+      Yes, delete {{ name }}
+    {% endblocktrans %}
+    {% include "components/form-submit.html" with type='danger' %}
+  </form>
+
+{% endblock %}
