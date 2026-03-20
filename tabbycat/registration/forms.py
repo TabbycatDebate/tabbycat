@@ -431,5 +431,3 @@ class SlotTransferRequestForm(forms.Form):
                 receiving_institution_email=data['receiving_institution_email'],
                 status=SlotTransferRequest.Status.PENDING,
             )
-
-
