@@ -87,6 +87,10 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
         kwargs['min_venues'] = teams['in_now'] // per_room_divisor
 
         kwargs['error_type'] = getattr(self, 'error_type', None)
+
+        if not self.round.prev:
+            kwargs['has_seeds'] = self.tournament.team_set.filter(seed__isnull=False).exists()
+
         return super().get_context_data(**kwargs)
 
     def _get_breaking_teams_dict(self):
