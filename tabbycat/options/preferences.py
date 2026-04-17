@@ -478,6 +478,15 @@ class MaximumAdjScore(FloatPreference):
 
 
 @tournament_preferences_registry.register
+class AdjScoreStep(FloatPreference):
+    help_text = _("Score step allowed when entering adjudicator feedback scores, e.g. full points (1) or half points (0.5)")
+    verbose_name = _("Adjudicator score step")
+    section = feedback
+    name = 'adj_score_step'
+    default = 1.0
+
+
+@tournament_preferences_registry.register
 class FeedbackPaths(ChoicePreference):
     help_text = _("Used to inform available choices in the feedback forms for adjudicators (both online and printed) and feedback progress")
     verbose_name = _("Allow and expect feedback to be submitted by")

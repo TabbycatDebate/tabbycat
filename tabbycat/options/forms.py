@@ -40,8 +40,18 @@ class TournamentPreferenceForm(PreferenceForm):
                 raise ValidationError({'debate_rules__teams_in_debate': _("Four-team formats require consensus ballots")})
 
         elif section == 'feedback':
-            if get_pref('adj_min_score') > get_pref('adj_max_score'):
+            adj_min_score = get_pref('adj_min_score')
+            adj_max_score = get_pref('adj_max_score')
+            if adj_min_score > adj_max_score:
                 raise ValidationError({'feedback__adj_min_score': score_range_msg, 'feedback__adj_max_score': score_range_msg})
+            adj_score_step = get_pref('adj_score_step')
+            if adj_score_step is not None:
+                if adj_score_step <= 0:
+                    raise ValidationError({'feedback__adj_score_step': _("Score step must be greater than 0.")})
+                if adj_score_step > adj_max_score:
+                    raise ValidationError({'feedback__adj_score_step': _(
+                        "Score step (%(step)s) cannot be greater than the maximum score (%(max)s).") % {
+                            'step': adj_score_step, 'max': adj_max_score}})
 
         elif section == 'data_entry':
             if get_pref('public_use_password') and len(get_pref('public_password')) == 0:

@@ -79,9 +79,11 @@ class BaseFeedbackForm(CustomQuestionsFormMixin, forms.Form):
         # Feedback questions defined for the tournament
         adj_min_score = self._tournament.pref('adj_min_score')
         adj_max_score = self._tournament.pref('adj_max_score')
+        adj_score_step = self._tournament.pref('adj_score_step')
         score_label = mark_safe(_("Overall score (%(min)d=worst; %(max)d=best)*") % {
                 'min': int(adj_min_score), 'max': int(adj_max_score)})
-        self.fields['score'] = forms.FloatField(min_value=adj_min_score, max_value=adj_max_score, label=score_label)
+        self.fields['score'] = forms.FloatField(
+            min_value=adj_min_score, max_value=adj_max_score, step_size=adj_score_step, label=score_label)
 
         self.add_question_fields()
 
