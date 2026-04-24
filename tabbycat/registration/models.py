@@ -14,12 +14,14 @@ CONTENT_TYPE_CHOICES = models.Q(app_label='adjfeedback', model='adjudicatorfeedb
                        models.Q(app_label='participants', model='tournamentinstitution') | \
                        models.Q(app_label='participants', model='speaker') | \
                        models.Q(app_label='participants', model='adjudicator') | \
+                       models.Q(app_label='participants', model='observer') | \
                        models.Q(app_label='participants', model='coach') | \
                        models.Q(app_label='participants', model='person') | \
                        models.Q(app_label='participants', model='team')
 
 PARTICIPANT_TYPE_CHOICES = models.Q(app_label='participants', model='speaker') | \
                            models.Q(app_label='participants', model='adjudicator') | \
+                           models.Q(app_label='participants', model='observer') | \
                            models.Q(app_label='participants', model='team') | \
                            models.Q(app_label='participants', model='institution')
 

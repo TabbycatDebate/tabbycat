@@ -36,7 +36,8 @@ from checkins.models import Event
 from checkins.utils import create_identifiers, get_unexpired_checkins
 from draw.models import Debate, DebateTeam
 from options.models import TournamentPreferenceModel
-from participants.models import Adjudicator, Institution, Person, Speaker, SpeakerCategory, Team
+from participants.models import Adjudicator, Institution, Observer, Person, Speaker, SpeakerCategory, Team
+from registration.models import Invitation
 from results.models import SpeakerScore, TeamScore
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
@@ -484,6 +485,57 @@ class AdjudicatorViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
             'institution_conflicts', 'venue_constraints__category__tournament',
             'answers__question__tournament',
         ).filter(filters)
+
+
+@extend_schema(tags=['observers'], parameters=[tournament_parameter])
+@extend_schema_view(
+    list=extend_schema(summary="Get observers in tournament"),
+    create=extend_schema(summary="Create observer"),
+    retrieve=extend_schema(summary="Get observer", parameters=[id_parameter]),
+    update=extend_schema(summary="Update observer", parameters=[id_parameter]),
+    partial_update=extend_schema(summary="Patch observer", parameters=[id_parameter]),
+    destroy=extend_schema(summary="Delete observer", parameters=[id_parameter]),
+)
+class ObserverViewSet(TournamentAPIMixin, ModelViewSet):
+    class ObserverRegistrationPermission(BasePermission):
+        """Observers are not listed publicly. Only POSTs are allowed from the public,
+        and only if open observer registration is enabled on the tournament or a
+        valid observer invitation key is provided as a ``key`` query parameter."""
+
+        def has_permission(self, request, view):
+            if request.user and request.user.is_staff:
+                return True
+            if request.method != 'POST':
+                return False
+
+            tournament = view.tournament
+            if tournament.pref('open_observer_registration'):
+                return True
+
+            key = request.query_params.get('key')
+            if not key:
+                return False
+            return Invitation.objects.filter(
+                tournament=tournament,
+                for_content_type=ContentType.objects.get_for_model(Observer),
+                url_key=key,
+            ).exists()
+
+    serializer_class = serializers.ObserverSerializer
+    action_log_type_created = ActionLogEntry.ActionType.OBSERVER_CREATE
+    action_log_type_updated = ActionLogEntry.ActionType.OBSERVER_EDIT
+
+    permission_classes = [ObserverRegistrationPermission | PerTournamentPermissionRequired]
+
+    list_permission = Permission.VIEW_OBSERVERS
+    create_permission = Permission.ADD_OBSERVERS
+    update_permission = Permission.ADD_OBSERVERS
+    destroy_permission = Permission.ADD_OBSERVERS
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('checkin_identifier', 'institution').prefetch_related(
+            'answers__question__tournament',
+        )
 
 
 @extend_schema(tags=['institutions'])

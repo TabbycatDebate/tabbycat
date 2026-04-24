@@ -1748,6 +1748,31 @@ class EnableOpenAdjRegistration(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class ObserverRegistrationFields(MultipleChoicePreference):
+    help_text = _("Which fields should observers be allowed to submit")
+    verbose_name = _("Customizable observer fields")
+    section = registration
+    name = 'reg_observer_fields'
+    default = ('email',)
+    choices = (
+        ('email', _("Email address")),
+        ('phone', _("Phone number")),
+        ('gender', _("Gender")),
+        ('institution', _("Institution")),
+    )
+    widget = SelectMultiple(attrs={'size': 5})
+
+
+@tournament_preferences_registry.register
+class EnableOpenObserverRegistration(BooleanPreference):
+    help_text = _("Allow observers to register for the tournament")
+    verbose_name = _("Enable open observer registration")
+    section = registration
+    name = 'open_observer_registration'
+    default = False
+
+
+@tournament_preferences_registry.register
 class CodeNameGenerator(ChoicePreference):
     help_text = _("If using code names, how should they be generated")
     verbose_name = _("Code name standard")
@@ -1803,6 +1828,17 @@ class TeamRegisterMessage(LongStringPreference):
     verbose_name = _("Team register message")
     section = registration
     name = 'team_register_message'
+    default = ""
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
+    field_kwargs = {'required': False}
+
+
+@tournament_preferences_registry.register
+class ObserverRegisterMessage(LongStringPreference):
+    help_text = _("Message to be displayed on the observer registration form")
+    verbose_name = _("Observer register message")
+    section = registration
+    name = 'observer_register_message'
     default = ""
     widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
     field_kwargs = {'required': False}

@@ -4,7 +4,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from participants.emoji import EMOJI_RANDOM_FIELD_CHOICES, pick_unused_emoji
-from participants.models import Adjudicator, Coach, Institution, Region, RegistrationStatus, Speaker, Team, TournamentInstitution
+from participants.models import Adjudicator, Coach, Institution, Observer, Region, RegistrationStatus, Speaker, Team, TournamentInstitution
 from privateurls.utils import populate_url_keys
 
 from .form_utils import CustomQuestionsFormMixin, get_answers_initial
@@ -308,6 +308,52 @@ class AdjudicatorForm(CustomQuestionsFormMixin, forms.ModelForm):
 
         if obj.institution:
             obj.adjudicatorinstitutionconflict_set.create(institution=obj.institution)
+        return obj
+
+
+class ObserverForm(CustomQuestionsFormMixin, forms.ModelForm):
+
+    key = forms.CharField(widget=forms.HiddenInput(), required=False)
+
+    def __init__(self, tournament, *args, institution=None, key=None, **kwargs):
+        self.tournament = tournament
+        self.institution = institution
+        super().__init__(*args, **kwargs)
+
+        if key:
+            self.fields['key'].initial = key
+
+        reg_fields = set(self.tournament.pref('reg_observer_fields'))
+        for field in ({'email', 'phone', 'gender'} - reg_fields):
+            self.fields.pop(field)
+
+        if 'institution' not in reg_fields and self.institution is None:
+            self.fields.pop('institution')
+        elif self.institution is not None:
+            self.fields['institution'].widget = forms.HiddenInput()
+            self.fields['institution'].initial = self.institution
+        else:
+            self.fields['institution'].required = False
+            self.fields['institution'].queryset = Institution.objects.filter(client=self.tournament.client)
+
+        self.add_question_fields()
+
+    class Meta:
+        model = Observer
+        fields = ('name', 'institution', 'email', 'phone', 'gender')
+        labels = {
+            'name': _("Full name"),
+        }
+
+    def save(self):
+        self.instance.tournament = self.tournament
+        self.instance.client = self.tournament.client
+        if self.institution:
+            self.instance.institution = self.institution
+
+        obj = super().save()
+        populate_url_keys([obj])
+        self.save_answers(obj)
         return obj
 
 

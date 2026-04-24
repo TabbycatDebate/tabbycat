@@ -246,6 +246,12 @@
           {% tournamenturl 'reg-create-adjudicator' as url %}
           {% include "components/item-action.html" with icon="columns" %}
         {% endif %}
+
+        {% if pref.open_observer_registration %}
+          {% trans "Register Open Observer" as text %}
+          {% tournamenturl 'reg-create-observer' as url %}
+          {% include "components/item-action.html" with icon="eye" %}
+        {% endif %}
       </div>
 
       {% if pref.tournament_staff %}

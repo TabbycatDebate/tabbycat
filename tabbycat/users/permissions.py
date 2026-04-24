@@ -32,6 +32,8 @@ class Permission(TextChoices):
     VIEW_ANONYMOUS = 'view.anonymous', _("View names of anonymized participants")
     VIEW_ADJUDICATORS = 'view.adj', _("view adjudicators")
     ADD_ADJUDICATORS = 'add.adj', _("add adjudicators")
+    VIEW_OBSERVERS = 'view.obs', _("view observers")
+    ADD_OBSERVERS = 'add.obs', _("add observers")
     VIEW_ROOMS = 'view.room', _("view rooms")
     ADD_ROOMS = 'add.room', _("add rooms")
     VIEW_INSTITUTIONS = 'view.inst', _("view institutions")

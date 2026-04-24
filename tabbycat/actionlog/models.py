@@ -118,6 +118,9 @@ class ActionLogEntry(models.Model):
         REGISTRATION_CONFIRM              = 're.conf', _("Confirmed registration")
         SCHEDULE_EVENT_CREATE             = 'sc.crea', _("Created schedule event")
         SCHEDULE_EVENT_EDIT               = 'sc.edit', _("Edited schedule event")
+        OBSERVER_REGISTER                 = 'ob.reg', _("Registered observer")
+        OBSERVER_CREATE                   = 'ob.crea', _("Created observer")
+        OBSERVER_EDIT                     = 'ob.edit', _("Edited observer")
 
     class Agent(models.TextChoices):
         API = 'a', _("API")

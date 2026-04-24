@@ -456,6 +456,26 @@ class AdjudicatorManager(models.Manager):
         return super().get_queryset().select_related('institution')
 
 
+class Observer(Person):
+    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
+        verbose_name=_("tournament"))
+    institution = models.ForeignKey(Institution, models.SET_NULL, blank=True, null=True,
+        verbose_name=_("institution"))
+
+    class Meta:
+        verbose_name = _("observer")
+        verbose_name_plural = _("observers")
+
+    def __str__(self):
+        if self.institution is None:
+            return self.name
+        return "%s (%s)" % (self.name, self.institution.code)
+
+    @property
+    def region(self):
+        return self.institution.region if self.institution else None
+
+
 class Adjudicator(Person):
     institution = models.ForeignKey(Institution, models.SET_NULL, blank=True, null=True,
         verbose_name=_("institution"))

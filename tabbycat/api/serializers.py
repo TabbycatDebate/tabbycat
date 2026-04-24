@@ -27,7 +27,7 @@ from notifications.models import ParticipantWebPushDevice
 from options.preferences import (BPAssignmentMethod, BPPositionCost, BPPullupDistribution, DrawAvoidConflicts,
     DrawOddBracket, DrawPairingMethod, DrawPullupRestriction, DrawSideAllocations)
 from participants.emoji import pick_unused_emoji
-from participants.models import Adjudicator, Coach, Institution, Person, Region, Speaker, SpeakerCategory, Team
+from participants.models import Adjudicator, Coach, Institution, Observer, Person, Region, Speaker, SpeakerCategory, Team
 from participants.utils import populate_code_names
 from privateurls.utils import populate_url_keys
 from registration.models import Answer, Question
@@ -194,6 +194,9 @@ class TournamentSerializer(serializers.ModelSerializer):
             lookup_field='slug', lookup_url_kwarg='tournament_slug')
         speakers = serializers.HyperlinkedIdentityField(
             view_name='api-speaker-list',
+            lookup_field='slug', lookup_url_kwarg='tournament_slug')
+        observers = serializers.HyperlinkedIdentityField(
+            view_name='api-observer-list',
             lookup_field='slug', lookup_url_kwarg='tournament_slug')
         venues = serializers.HyperlinkedIdentityField(
             view_name='api-venue-list',
@@ -779,6 +782,92 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
             for field in ['institution_conflicts', 'adjudicator_conflicts', 'team_conflicts']:
                 validated_data[field] = list(getattr(instance, field).all()) + validated_data.get(field, [])
 
+        return super().update(instance, validated_data)
+
+
+class ObserverSerializer(serializers.ModelSerializer):
+
+    class ObserverLinksSerializer(serializers.Serializer):
+        checkin = fields.TournamentHyperlinkedIdentityField(view_name='api-observer-checkin')
+
+    url = fields.TournamentHyperlinkedIdentityField(view_name='api-observer-detail')
+    name = fields.AnonymisingParticipantNameField()
+    institution = serializers.HyperlinkedRelatedField(
+        allow_null=True,
+        required=False,
+        view_name='api-global-institution-detail',
+        queryset=Institution.objects.all(),
+    )
+    _links = ObserverLinksSerializer(source='*', read_only=True)
+    barcode = serializers.CharField(source='checkin_identifier.barcode', required=False, allow_null=True)
+    answers = fields.AnswerSerializer(many=True, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if not is_staff(kwargs.get('context')):
+            t = kwargs['context']['tournament']
+            with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=t)
+
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_INST):
+                self.fields.pop('institution')
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_CONTACT):
+                self.fields.pop('email')
+                self.fields.pop('phone')
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_GENDER):
+                self.fields.pop('gender')
+                self.fields.pop('pronoun')
+            if not with_permission(permission=Permission.VIEW_PRIVATE_URLS):
+                self.fields.pop('url_key')
+            if not with_permission(permission=Permission.VIEW_CHECKIN):
+                self.fields.pop('barcode')
+            if not with_permission(permission=Permission.VIEW_CUSTOM_ANSWERS):
+                self.fields.pop('answers')
+            if not with_permission(permission=Permission.VIEW_PARTICIPANT_DECODED) and t.pref('participant_code_names') == 'everywhere':
+                self.fields.pop('name')
+
+    class Meta:
+        model = Observer
+        exclude = ('tournament', 'client')
+
+    def validate(self, data):
+        if not is_staff(self.context):
+            allowed_cts = ContentType.objects.filter(Q(app_label='participants', model='observer') | Q(app_label='participants', model='person'))
+            required_questions = self.context['tournament'].question_set.filter(required=True, for_content_type_id__in=allowed_cts)
+            answers = data.get('answers', [])
+
+            if len(set(required_questions) - set(a['question'] for a in answers)) > 0:
+                raise serializers.ValidationError("Answer to required question is missing")
+
+        return super().validate(data)
+
+    def create(self, validated_data):
+        validated_data['client'] = self.context['request'].tenant
+        barcode = validated_data.pop('checkin_identifier', {}).get('barcode', None)
+        url_key = validated_data.pop('url_key', None)
+        answers = validated_data.pop('answers', [])
+
+        if url_key is not None and len(url_key) != 0:
+            validated_data['url_key'] = url_key
+
+        observer = super().create(validated_data)
+
+        if barcode:
+            create_barcode(observer, barcode)
+
+        if url_key is None:
+            populate_url_keys([observer])
+
+        if validated_data.get('code_name') is None:
+            populate_code_names([observer])
+
+        save_related(fields.AnswerSerializer, answers, self.context, {'content_object': observer})
+
+        return observer
+
+    def update(self, instance, validated_data):
+        save_related(fields.AnswerSerializer, validated_data.pop('answers', []), self.context, {'content_object': instance})
+        handle_update_barcode(instance, validated_data)
         return super().update(instance, validated_data)
 
 

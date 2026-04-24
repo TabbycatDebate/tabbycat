@@ -206,6 +206,19 @@ urlpatterns = [
                             name='api-adjudicator-checkin'),
                     ])),
                 ])),
+                path('/observers', include([
+                    path('',
+                        views.ObserverViewSet.as_view(list_methods),
+                        name='api-observer-list'),
+                    path('/<int:pk>', include([
+                        path('',
+                            views.ObserverViewSet.as_view(detail_methods),
+                            name='api-observer-detail'),
+                        path('/checkin',
+                            views.ObserverCheckinsView.as_view(),
+                            name='api-observer-checkin'),
+                    ])),
+                ])),
                 path('/speakers', include([
                     path('',
                          views.SpeakerViewSet.as_view(list_methods),

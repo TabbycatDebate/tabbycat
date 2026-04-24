@@ -1,6 +1,6 @@
 from django.urls import include, path
 
-from participants.models import Adjudicator, Coach, Speaker, Team, TournamentInstitution
+from participants.models import Adjudicator, Coach, Observer, Person, Speaker, Team, TournamentInstitution
 
 from . import views
 
@@ -35,7 +35,16 @@ urlpatterns = [
             views.CustomQuestionFormsetView.as_view(question_model=Adjudicator, success_url='reg-adjudicator-list'),
             name='reg-adjudicator-questions'),
     ])),
+    path('observers/', include([
+        path('', views.ObserverRegistrationTableView.as_view(), name='reg-observer-list'),
+        path('questions/',
+            views.CustomQuestionFormsetView.as_view(question_model=Observer, success_url='reg-observer-list'),
+            name='reg-observer-questions'),
+    ])),
     path('speakers/questions/',
         views.CustomQuestionFormsetView.as_view(question_model=Speaker, success_url='reg-team-list'),
         name='reg-speaker-questions'),
+    path('people/questions/',
+        views.CustomQuestionFormsetView.as_view(question_model=Person, success_url='reg-adjudicator-list'),
+        name='reg-person-questions'),
 ]

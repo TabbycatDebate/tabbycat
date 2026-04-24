@@ -21,6 +21,7 @@ from .models import (
     Adjudicator,
     Coach,
     Institution,
+    Observer,
     Region,
     Speaker,
     SpeakerCategory,
@@ -302,3 +303,13 @@ class AdjudicatorAdmin(ModelAdmin):
             updated,
         ) % {'count': updated}
         self.message_user(request, message)
+
+
+@admin.register(Observer)
+class ObserverAdmin(ModelAdmin):
+    list_display = ('name', 'institution', 'tournament', 'gender')
+    search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code')
+    list_filter = ('tournament', 'institution')
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('tournament', 'institution')

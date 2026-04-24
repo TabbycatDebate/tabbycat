@@ -67,8 +67,18 @@ class CustomQuestionsFormMixin:
 
     _enforce_required = True
 
+    def get_custom_question_content_types(self):
+        from participants.models import Person
+        cts = [ContentType.objects.get_for_model(self._meta.model)]
+        if self._meta.model is not Person and issubclass(self._meta.model, Person):
+            cts.append(ContentType.objects.get_for_model(Person))
+        return cts
+
     def get_custom_question_queryset(self):
-        return self.tournament.question_set.filter(for_content_type=ContentType.objects.get_for_model(self._meta.model)).order_by('seq')
+        return self.tournament.question_set.filter(
+            for_content_type__in=self.get_custom_question_content_types(),
+            active=True,
+        ).order_by('for_content_type', 'seq')
 
     @staticmethod
     def question_field_name(question):

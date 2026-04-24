@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load add_field_css i18n %}
+
+{% block content %}
+
+<div class="row">
+
+    <form class="col-lg-8 ml-lg-auto mr-md-auto d-flex flex-column gap-3" action="." method="POST">
+
+      {% if pref.observer_register_message %}
+        <div class="card">
+          <div class="card-body pb-0">
+            {{ pref.observer_register_message|safe }}
+          </div>
+        </div>
+      {% endif %}
+
+      {% csrf_token %}
+      <div class="card">
+        {% include "components/form-main.html" %}
+      </div>
+
+      <div class="card">
+        {% trans "Register as Observer" context "button" as title %}
+        {% trans "Cancel and go back to the site home page" as subtitle %}
+        {% url 'tabbycat-index' as suburl %}
+        {% include "components/form-submit.html" %}
+      </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

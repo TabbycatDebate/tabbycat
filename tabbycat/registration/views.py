@@ -22,6 +22,8 @@ from participants.models import (
     Adjudicator,
     Coach,
     Institution,
+    Observer,
+    Person,
     RegistrationStatus,
     Speaker,
     Team,
@@ -38,6 +40,7 @@ from .forms import (
     AdjudicatorForm,
     InstitutionCoachForm,
     InstitutionEditForm,
+    ObserverForm,
     ParticipantAllocationForm,
     SlotTransferRequestForm,
     SpeakerForm,
@@ -510,6 +513,64 @@ class CreateSpeakerFormView(LogActionMixin, PublicTournamentPageMixin, CustomQue
         return super().form_valid(form)
 
 
+class BaseCreateObserverFormView(LogActionMixin, PublicTournamentPageMixin, CustomQuestionFormMixin, FormView):
+    form_class = ObserverForm
+    template_name = 'observer_registration_form.html'
+    page_emoji = '👀'
+    page_title = gettext_lazy("Register Observer")
+
+    public_page_preference = 'open_observer_registration'
+    action_log_type = ActionLogEntry.ActionType.OBSERVER_REGISTER
+
+    def get_page_subtitle(self):
+        if getattr(self, 'institution', None) is not None:
+            return _("from %s") % self.institution.name
+        return ''
+
+    def get_success_url(self):
+        return reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': self.object.url_key})
+
+    def form_valid(self, form):
+        self.object = form.save()
+        messages.success(self.request, _("You have been registered as an observer!"))
+        return super().form_valid(form)
+
+
+class PublicCreateObserverFormView(BaseCreateObserverFormView):
+
+    @property
+    def key(self):
+        return self.request.GET.get('key') or self.request.POST.get('key')
+
+    @property
+    def institution(self):
+        invitation = Invitation.objects.select_related('institution').filter(
+            tournament=self.tournament, for_content_type=ContentType.objects.get_for_model(Observer), url_key=self.key).first()
+        return getattr(invitation, 'institution', None)
+
+    def is_page_enabled(self, tournament):
+        if self.key:
+            return Invitation.objects.filter(
+                tournament=tournament,
+                for_content_type=ContentType.objects.get_for_model(Observer),
+                url_key=self.key,
+            ).exists()
+        return super().is_page_enabled(tournament)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        invitation = Invitation.objects.select_related('institution').filter(
+            tournament=self.tournament, for_content_type=ContentType.objects.get_for_model(Observer), url_key=self.key).first()
+        if invitation:
+            kwargs['institution'] = invitation.institution
+            kwargs['key'] = self.key
+        return kwargs
+
+
+class InstitutionalCreateObserverFormView(InstitutionalRegistrationMixin, BaseCreateObserverFormView):
+    public_page_preference = 'institution_participant_registration'
+
+
 class InstitutionalLandingPageView(TournamentMixin, InstitutionalRegistrationMixin, VueTableTemplateView):
 
     template_name = 'coach_private_url.html'
@@ -723,7 +784,12 @@ class InstitutionalCreateAdjudicatorFormView(InstitutionalRegistrationMixin, Bas
 
 def handle_question_columns(table: TabbycatTableBuilder, objects, questions=None, suffix=0) -> None:
     if questions is None:
-        questions = table.tournament.question_set.filter(for_content_type=ContentType.objects.get_for_model(objects.model)).order_by('seq')
+        cts = [ContentType.objects.get_for_model(objects.model)]
+        if objects.model is not Person and issubclass(objects.model, Person):
+            cts.append(ContentType.objects.get_for_model(Person))
+        questions = table.tournament.question_set.filter(
+            for_content_type__in=cts,
+        ).order_by('for_content_type', 'seq')
     question_columns = {q: [] for q in questions}
 
     for obj in objects:
@@ -911,6 +977,31 @@ class AdjudicatorRegistrationTableView(TournamentMixin, AdministratorMixin, VueT
         add_confirm_button_column(table, adjudicators, 'reg-adjudicator-confirm', self.request)
 
         handle_question_columns(table, adjudicators)
+
+        return table
+
+
+class ObserverRegistrationTableView(TournamentMixin, AdministratorMixin, VueTableTemplateView):
+    page_emoji = '👀'
+    page_title = gettext_lazy("Observer Registration")
+    template_name = 'answer_tables/observers.html'
+
+    view_permission = Permission.VIEW_OBSERVERS
+
+    def get_table(self):
+        observers = self.tournament.observer_set.select_related('institution').prefetch_related('answers__question').all()
+
+        table = TabbycatTableBuilder(view=self, title=_('Responses'), sort_key='name')
+        table.add_column({'key': 'name', 'title': _("Name")}, [obs.name for obs in observers])
+        table.add_column({'key': 'institution', 'title': _("Institution")}, [
+            obs.institution.name if obs.institution else '' for obs in observers
+        ])
+        table.add_column({'key': 'email', 'title': _("Email")}, [{
+            'text': obs.email or '',
+            'link': 'mailto:%s' % obs.email if obs.email else None,
+        } for obs in observers])
+
+        handle_question_columns(table, observers)
 
         return table
 
