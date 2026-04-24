@@ -55,7 +55,7 @@ from .forms import ConfirmDrawDeletionForm
 from .generator import DrawFatalError, DrawUserError
 from .manager import DrawManager
 from .models import Debate, TeamSideAllocation
-from .prefetch import populate_history
+from .prefetch import populate_history, populate_pullup_counts
 from .serializers import EditDebateTeamsDebateSerializer, EditDebateTeamsTeamSerializer
 from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilder,
         PositionBalanceReportSummaryTableBuilder, PublicDrawTableBuilder)
@@ -483,6 +483,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
 
         draw = self.get_draw()
         populate_history(draw)
+        populate_pullup_counts(draw)
 
         if r.is_break_round:
             table.add_room_rank_columns(draw)

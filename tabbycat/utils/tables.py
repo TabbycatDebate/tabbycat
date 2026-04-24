@@ -796,10 +796,17 @@ class TabbycatTableBuilder(BaseTableBuilder):
             # conflicts is a list of (level, message) tuples
             conflicts = [("secondary", _draw_flags_dict.get(flag, flag)) for flag in debate.flags]
             if not debate.is_bye:
-                conflicts += [("secondary", "%(team)s: %(flag)s" % {
+                for dt in debate.debateteams:
+                    for flag in dt.flags:
+                        pullup_count = getattr(dt, '_pullup_count', 0)
+                        if flag == 'pullup' and pullup_count > 0:
+                            flag_text = _("Pull-up team (%(ordinal)s pull-up)") % {'ordinal': ordinal(pullup_count)}
+                        else:
+                            flag_text = _draw_flags_dict.get(flag, flag)
+                        conflicts.append(("secondary", "%(team)s: %(flag)s" % {
                             'team': self._team_short_name(dt.team),
-                            'flag': _draw_flags_dict.get(flag, flag),
-                        }) for dt in debate.debateteams for flag in dt.flags]
+                            'flag': flag_text,
+                        }))
 
             if self.tournament.pref('avoid_team_history'):
                 history = debate.history
