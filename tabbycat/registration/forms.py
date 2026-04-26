@@ -257,13 +257,21 @@ class SpeakerForm(CustomQuestionsFormMixin, forms.ModelForm):
         return obj
 
 
-class AdminSpeakerForm(SpeakerForm):
-    """Like SpeakerForm but for admin use: shows all speaker categories."""
+class AdminSpeakerForm(forms.ModelForm):
 
-    def __init__(self, team, *args, **kwargs):
-        super().__init__(team, key=None, *args, **kwargs)
-        if 'categories' in self.fields:
-            self.fields['categories'].queryset = self.tournament.speakercategory_set.all()
+    def __init__(self, *args, team=None, **kwargs):
+        self.team = team
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = Speaker
+        fields = ('name', 'email')
+
+    def save(self, commit=True):
+        self.instance.team = self.team
+        obj = super().save(commit=commit)
+        populate_url_keys([obj])
+        return obj
 
 
 class AdjudicatorForm(CustomQuestionsFormMixin, forms.ModelForm):

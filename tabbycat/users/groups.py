@@ -137,6 +137,7 @@ class Registration(BaseGroup):
     name = _("Registration")
     permissions = [
         Permission.ADD_TEAMS,
+        Permission.DELETE_SPEAKER,
         Permission.VIEW_DECODED_TEAMS,
         Permission.VIEW_ANONYMOUS,
         Permission.ADD_ADJUDICATORS,

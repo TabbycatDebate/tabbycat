@@ -34,6 +34,7 @@ from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import ModelFormSetView, VueTableTemplateView
 
+from .forms import ConfirmSpeakerDeletionForm
 from .models import Adjudicator, Institution, Person, Speaker, SpeakerCategory, Team
 from .serializers import SpeakerSerializer
 from .tables import AdjudicatorDebateTable, TeamDebateTable
@@ -370,14 +371,17 @@ class AdminCreateSpeakerView(LogActionMixin, AdministratorMixin, TournamentMixin
     template_name = 'speaker_create.html'
     action_log_type = ActionLogEntry.ActionType.SPEAKER_CREATE
     edit_permission = Permission.ADD_TEAMS
+    form_class = AdminSpeakerForm
 
     def get_team(self):
         if not hasattr(self, '_team'):
             self._team = Team.objects.get(tournament=self.tournament, pk=self.kwargs['pk'])
         return self._team
 
-    def get_form(self, form_class=None):
-        return AdminSpeakerForm(self.get_team(), **self.get_form_kwargs())
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['team'] = self.get_team()
+        return kwargs
 
     def get_action_log_content_object(self):
         return self.object
@@ -403,7 +407,8 @@ class AdminCreateSpeakerView(LogActionMixin, AdministratorMixin, TournamentMixin
 class AdminDeleteSpeakerView(LogActionMixin, AdministratorMixin, TournamentMixin, FormView):
     template_name = 'speaker_confirm_delete.html'
     action_log_type = ActionLogEntry.ActionType.SPEAKER_DELETE
-    edit_permission = Permission.ADD_TEAMS
+    edit_permission = Permission.DELETE_SPEAKER
+    form_class = ConfirmSpeakerDeletionForm
 
     def get_speaker(self):
         if not hasattr(self, '_speaker'):
@@ -412,9 +417,10 @@ class AdminDeleteSpeakerView(LogActionMixin, AdministratorMixin, TournamentMixin
             )
         return self._speaker
 
-    def get_form(self, form_class=None):
-        from .forms import ConfirmSpeakerDeletionForm
-        return ConfirmSpeakerDeletionForm(self.get_speaker(), **self.get_form_kwargs())
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['speaker'] = self.get_speaker()
+        return kwargs
 
     def get_action_log_content_object(self):
         return self.object

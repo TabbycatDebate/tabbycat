@@ -28,6 +28,7 @@ class Permission(TextChoices):
 
     VIEW_TEAMS = 'view.team', _("view teams")
     ADD_TEAMS = 'add.team', _("add teams")
+    DELETE_SPEAKER = 'delete.speaker', _("delete speakers")
     VIEW_DECODED_TEAMS = 'view.teamname', _("view decoded team names")
     VIEW_ANONYMOUS = 'view.anonymous', _("View names of anonymized participants")
     VIEW_ADJUDICATORS = 'view.adj', _("view adjudicators")
