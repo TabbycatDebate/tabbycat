@@ -206,6 +206,15 @@ class TestTrivialStandings(TestCase):
         self.set_up_speaker_scores(2)
         self._base_metric_test({'wins': [2, 0], 'speaks_ind_avg': [101.5, 98.5]})
 
+    def test_metric_columns_follow_settings_order(self):
+        # Non-combinable metrics (e.g. AISS) are computed in an earlier pass than
+        # combinable ones; display order must still follow precedence + extras.
+        self.set_up_speaker_scores(1)
+        self.set_up_speaker_scores(2)
+        generator = TeamStandingsGenerator(('wins', 'speaks_ind_avg', 'points'), ())
+        standings = self.get_standings(generator)
+        self.assertEqual(standings.metric_keys, ['wins', 'speaks_ind_avg', 'points'])
+
 
 class IgnorableDebateMixin:
 
