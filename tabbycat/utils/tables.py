@@ -799,10 +799,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 for dt in debate.debateteams:
                     for flag in dt.flags:
                         if flag == 'pullup' and standings is not None:
-                            try:
-                                prev_pullups = standings.get_standing(dt.team).metrics.get('npullups', 0) or 0
-                            except ValueError:
-                                prev_pullups = 0
+                            prev_pullups = standings.get_standing(dt.team).metrics['npullups']
                             flag_text = _("Pull-up team (%(ordinal)s pull-up)") % {'ordinal': ordinal(prev_pullups + 1)}
                         else:
                             flag_text = _draw_flags_dict.get(flag, flag)
