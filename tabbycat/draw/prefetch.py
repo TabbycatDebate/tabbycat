@@ -2,7 +2,7 @@
 
 import logging
 
-from django.db.models import Count, OuterRef, Subquery
+from django.db.models import OuterRef, Subquery
 from django.db.models.expressions import RawSQL
 
 from .models import Debate, DebateTeam
@@ -67,31 +67,3 @@ def populate_history(debates):
 
     for debate in debates_annotated:
         debates_by_id[debate.id]._history = debate.past_debates
-
-
-def populate_pullup_counts(debates):
-    """Sets _pullup_count on each DebateTeam, giving the total number of times
-    that team has been pulled up up to and including the current round."""
-    if not debates:
-        return
-
-    round_seq = debates[0].round.seq
-    tournament = debates[0].round.tournament
-
-    debateteams = [dt for debate in debates for dt in debate.debateteams]
-    if not debateteams:
-        return
-
-    team_ids = [dt.team_id for dt in debateteams]
-
-    counts = DebateTeam.objects.filter(
-        team_id__in=team_ids,
-        debate__round__tournament=tournament,
-        debate__round__seq__lte=round_seq,
-        flags__contains=['pullup'],
-    ).values('team_id').annotate(count=Count('id'))
-
-    counts_by_team = {row['team_id']: row['count'] for row in counts}
-
-    for dt in debateteams:
-        dt._pullup_count = counts_by_team.get(dt.team_id, 0)

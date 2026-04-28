@@ -789,7 +789,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         }
         self.add_column(header, cells)
 
-    def add_draw_conflicts_columns(self, debates, venue_conflicts, adjudicator_conflicts):
+    def add_draw_conflicts_columns(self, debates, venue_conflicts, adjudicator_conflicts, standings=None):
 
         conflicts_by_debate = []
         for debate in debates:
@@ -798,9 +798,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if not debate.is_bye:
                 for dt in debate.debateteams:
                     for flag in dt.flags:
-                        pullup_count = getattr(dt, '_pullup_count', 0)
-                        if flag == 'pullup' and pullup_count > 0:
-                            flag_text = _("Pull-up team (%(ordinal)s pull-up)") % {'ordinal': ordinal(pullup_count)}
+                        if flag == 'pullup' and standings is not None:
+                            try:
+                                prev_pullups = standings.get_standing(dt.team).metrics.get('npullups', 0) or 0
+                            except ValueError:
+                                prev_pullups = 0
+                            flag_text = _("Pull-up team (%(ordinal)s pull-up)") % {'ordinal': ordinal(prev_pullups + 1)}
                         else:
                             flag_text = _draw_flags_dict.get(flag, flag)
                         conflicts.append(("secondary", "%(team)s: %(flag)s" % {
