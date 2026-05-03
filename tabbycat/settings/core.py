@@ -366,6 +366,7 @@ DYNAMIC_PREFERENCES = {
 # ==============================================================================
 
 REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'api.exceptions.api_exception_handler',
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],

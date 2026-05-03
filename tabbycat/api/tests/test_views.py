@@ -1,4 +1,5 @@
 import json
+from unittest.mock import patch
 
 from django.conf import settings
 from django.test import Client
@@ -31,6 +32,17 @@ class RootTests(APITestCase):
                 "users": V1_ROOT_URL + "/users",
             },
         })
+
+
+class APIExceptionHandlerTests(CompletedTournamentTestMixin, APITestCase):
+
+    @patch('api.views.TournamentViewSet.list', side_effect=RuntimeError('deliberate failure'))
+    def test_unhandled_exception_returns_json(self, _mock):
+        response = self.client.get(reverse('api-tournament-list'))
+        self.assertEqual(response.status_code, 500)
+        self.assertIn('application/json', response['Content-Type'])
+        payload = json.loads(response.content)
+        self.assertIn('detail', payload)
 
 
 class TournamentViewsetTests(CompletedTournamentTestMixin, APITestCase):
