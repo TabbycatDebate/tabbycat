@@ -7,9 +7,7 @@
   "logo": "https://raw.githubusercontent.com/TabbycatDebate/tabbycat/develop/tabbycat/static/logo-48x48.png",
   "addons": [
     "papertrail",
-    "rediscloud:30",
-    "heroku-postgresql:essential-0",
-    "heroku-redis:mini"
+    "heroku-postgresql:essential-0"
   ],
   "env": {
     "DJANGO_SECRET_KEY": {

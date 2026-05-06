@@ -28,7 +28,7 @@ Short version
 ::
 
   curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -    # add Node.js source repository
-  sudo apt install python3.11 python3-distutils pipenv postgresql libpq-dev nodejs gcc g++ make redis-server
+  sudo apt install python3.11 python3-distutils pipenv postgresql libpq-dev nodejs gcc g++ make
   git clone https://github.com/TabbycatDebate/tabbycat.git
   cd tabbycat
   git checkout master
@@ -45,6 +45,7 @@ That should open your Pipenv shell, then inside it run::
 
   cd tabbycat
   dj migrate
+  dj createcachetable
   npm run build
   dj collectstatic
   dj createsuperuser
@@ -112,24 +113,15 @@ Some of the Python packages require GCC, G++ and Make in order to install::
 
     $ sudo apt install gcc g++ make
 
-1(e). Redis
------------
-  *Redis is an in-memory data structure store, used as a message broker and cache.*
+1(e). Channels, caching, and PostgreSQL
+---------------------------------------
+Real-time pages (adjudicator allocation, check-ins, round results) and public page caching use your existing PostgreSQL database via `channels_postgres <https://github.com/danidee10/channels_postgres>`_ and Django's database cache backend. You do **not** need Redis for a normal installation.
 
-Tabbycat requires Redis for two critical functions:
+After running migrations, create the cache table (this is also done automatically on Heroku, Render, and Docker)::
 
-  1. Asynchronous Background Tasks: Redis serves as a message broker for Django Channels, handling real-time features like live adjudicator allocation, check-ins updates, and round results display.
+    $ dj createcachetable
 
-  2. Page Caching: Redis caches frequently accessed public pages (draws, standings, results) to improve performance during high-traffic periods, especially during tournament events.
-
-Install and start Redis using::
-
-    $ sudo apt install redis-server
-    $ sudo systemctl enable --now redis-server
-
-After installation, Redis will automatically start and be configured to launch on system boot. You can verify it's running with::
-
-    $ sudo systemctl status redis-server
+Advanced deployments can still use Redis by installing ``redis-server`` and the Python packages ``django-redis``, ``channels-redis``, and ``redis``, then setting ``TABBYCAT_USE_REDIS_CHANNELS_CACHE=1`` (Heroku/Render) or uncommenting the Redis blocks in **settings/local.py** (local installs). See **settings/heroku.py** for details.
 
 .. _install-linux-source-code:
 
@@ -233,6 +225,7 @@ e. Navigate to the **tabbycat** sub-directory, initialize the database, compile 
 
     (tabbycat-9BkbSRuB) $ cd tabbycat
     (tabbycat-9BkbSRuB) $ dj migrate
+    (tabbycat-9BkbSRuB) $ dj createcachetable
     (tabbycat-9BkbSRuB) $ npm run build
     (tabbycat-9BkbSRuB) $ dj collectstatic
     (tabbycat-9BkbSRuB) $ dj createsuperuser

@@ -146,6 +146,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'channels', # For Websockets / real-time connections (above whitenoise)
+    'channels_postgres',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django_summernote',  # Keep above our apps; as we unregister an admin model

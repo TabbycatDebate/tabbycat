@@ -103,29 +103,23 @@ One way to help mitigate this is to try and load those pages first yourself to e
 
 You can also increase the 1-minute timeout for the pages that are popular during the in-rounds, by going to the **Settings** section of your Heroku dashboard, clicking *Reveal Config Vars*, and creating a new key/value of ``PUBLIC_FAST_CACHE_TIMEOUT`` and ``180`` (to set the timeout to be 3 minutes i.e. 180 seconds). This should only be necessary as a last resort. Turning off public pages is also an option.
 
-If you ever need to clear the cache (say to force the site to quickly show an update to the speaker tab) you can install `Heroku's Command Line Interface <https://devcenter.heroku.com/articles/heroku-cli>`_ and run the following command, replacing ``YOUR_APP`` with your site's name in the Heroku dashboard::
-
-    $ echo "FLUSHALL\r\n QUIT" | heroku redis:cli -a YOUR_APP --confirm YOUR_APP
+If you ever need to clear the cache (say to force the site to quickly show an update to the speaker tab), the default setup stores cache rows in PostgreSQL. You can delete them from the ``tabbycat_cache`` table (for example using ``heroku pg:psql`` and ``DELETE FROM tabbycat_cache;``), or temporarily lower cache timeouts via config vars such as ``PUBLIC_FAST_CACHE_TIMEOUT``. If you use the optional Redis cache instead, you can flush it with ``heroku redis:cli``.
 
 Postgres Limits
 ===============
 
-The free tier of the Postgres database services has a limit of 20 'connections'. It is rare that a Tabbycat site will exceed this limit; most Australs-sized tournaments will see a maximum of 12 connections at any point in time.
+The free tier of the Postgres database services has a limit of 20 'connections'. It is rare that a Tabbycat site will exceed this limit; most Australs-sized tournaments will see a maximum of 12 connections at any point in time. Using PostgreSQL for channels and caching adds some concurrent connections (via ``psycopg`` pools); if you approach the limit, upgrade the database plan or switch channels/cache back to Redis with ``TABBYCAT_USE_REDIS_CHANNELS_CACHE=1``.
 
     .. image:: images/connections.png
 
 You can monitor this in your Heroku Dashboard by going to the **Resources** tab and clicking on the purple Postgres link. The **Connections** graph here will show you how close you are to the limit. The first tier up from the 'free' Hobby tiers (i.e. ``Standard-0``) has a connection limit of 120 which can be used to overcome these limits if you do encounter them.
 
-Redis Limits
-============
+Channels and cache on PostgreSQL
+=================================
 
-Tabbycat uses two types of Redis add-on. The official Heroku Redis add-on is used to enable the pages of Tabbycat that display live information, such as the check-ins page, the adjudicator allocation page, and the round results page. The Redis Labs Heroku add-on is used to enable the caching of pages, as described above.
+By default, live pages and public page caching use the same Heroku Postgres database as the rest of Tabbycat (`channels_postgres <https://github.com/danidee10/channels_postgres>`_ and Django's database cache). You do not need Redis add-ons for new deployments.
 
-Both types of add-on have connection limits that, if hit, will degrade performance. However, in practice these connection limits are very rarely hit because connections are maintained extremely briefly, or only for very particular types of traffic. As with Postgres, you can click-through to each add-on to examine how close your site is to hitting this connection limit.
-
-The default Redis Labs add-on has a connection limit of 30. This should be sufficient for almost all tournaments — only at WUDC-levels of traffic have we seen that limit breached (to a peak of 118). Upgrading the Redis Labs add-on to the first non-free tier expands the connection limit to 256. This upgrade should only be strictly required for WUDC, but is also a good precaution for EUDC/Australs scale tournaments.
-
-The official Heroku Redis has a connection limit of 20. Even at WUDC's scale the most connections ever observed were 13, so an upgrade should not be necessary.
+If you prefer the previous behaviour, set the config var ``TABBYCAT_USE_REDIS_CHANNELS_CACHE`` to ``1``, provision Redis, and add the ``django-redis``, ``channels-redis``, and ``redis`` packages to your environment.
 
 Mirror Admin Sites
 ==================
@@ -134,11 +128,11 @@ If you *really* want to be safe, or are unable to resolve traffic issues and una
 
 .. warning:: This requires some technical knowledge to setup and hasn't been rigorously tested. It works fine in our experience but we haven't tested it extensively. If using this make sure you backup (and now how to restore backups) before setting one up.
 
-To do so you would deploy a new copy of Tabbycat on Heroku as you normally would. Once the site has been setup, go to it in the Heroku Dashboard, click through to the **Resources** tab and remove the Postgres and Redis Add-ons. Using the `Heroku Command Line Interface <https://devcenter.heroku.com/articles/heroku-cli>`_ run this command, substituting ``YOUR_APP`` with your *primary* tab site's name (i.e. the app that you had initially setup before this)::
+To do so you would deploy a new copy of Tabbycat on Heroku as you normally would. Once the site has been setup, go to it in the Heroku Dashboard, click through to the **Resources** tab and remove the Postgres add-on (and any Redis add-ons, if present). Using the `Heroku Command Line Interface <https://devcenter.heroku.com/articles/heroku-cli>`_ run this command, substituting ``YOUR_APP`` with your *primary* tab site's name (i.e. the app that you had initially setup before this)::
 
     $ heroku config --app YOUR_APP
 
-Here, make a copy of the ``DATABASE_URL`` and ``REDIS_URL`` values. They should look like ``postgres://`` or ``redis://`` followed by a long set of numbers and characters. Once you have those, go to the *Settings* tab of the Heroku dashboard for your *mirror* tab site. Click **Reveal Config Vars**. There should be no set ``DATABASE_URL`` or ``REDIS_URL`` values here — if there are check you are on the right app and that the add-ons were removed as instructed earlier. If they are not set, then add in those values, with ``DATABASE_URL`` on the left, and that Postgres URL from earlier on the right. Do the same for ``REDIS_URL`` and the Redis URL. Then restart the app using the link under **More** in the top right.
+Copy the ``DATABASE_URL`` value. Go to the *Settings* tab of the Heroku dashboard for your *mirror* tab site, click **Reveal Config Vars**, and set ``DATABASE_URL`` to match the primary site. If you use optional Redis for channels or cache, also copy ``REDIS_URL`` (and related vars) from the primary app. Then restart the app using the link under **More** in the top right.
 
 Once you visit the mirror site it should be setup just like the original one, with changes made to one site also affecting the other as if they were just a single site.
 
@@ -151,8 +145,7 @@ As a quick and rough benchmark, here is a list of typical prices you would encou
         - A tournament of this size will require an upgraded database tier for the time when you are adding new data; i.e. during registration and rounds. Once the tab is released (and no further data changes needed) however you can downgrade it back to the ``Hobby Dev`` tier.
     - 1x ``Hobby Dyno`` ($7/month each) run all day for 7 days = ~$2
         - As recommended, 1 hobby dyno should be run as a baseline in order to see the metrics dashboard; but this can be downgraded a day or so after the tab has been released and traffic is sparse.
-    - 1X ``Redis Labs 100mb Plan`` ($10/month) run for 7 days = ~$2
-        - The upgraded version of Redis is worth running as a precaution while the site is showing draws and the full tab
+    - Optional Redis for channels/cache (if not using the default PostgreSQL setup) — similar monthly cost to managed Redis add-ons if you choose that path
     - 3x ``Standard 1X Dyno`` ($25/month each) run 10 hours a day for 4 days = ~$4
         - This higher quantity of dynos should only be necessary during traffic spikes (i.e. draw releases, immediately after round advances, and tab release) but unless you want to be constantly turning things on/off its usually easier just to upgrade them at the start of each day of in-rounds (or when the tab is published) and downgrade them at the end of each day. As mentioned earlier, you should occasionally check the *Dyno Load* in the Metrics area and adjust the number of dynos as needed.
     - ``Autoscaled Performance M Dynos`` ($250/month each) average of 5 run for 1 hour = ~$2

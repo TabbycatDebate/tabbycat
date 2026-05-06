@@ -2,9 +2,11 @@
 # Docker
 # ==============================================================================
 
-import os
+import copy
 
-ALLOWED_HOSTS = ["*"]
+from .postgres_channels_cache import postgres_channel_layers, postgres_database_cache
+
+ALLOWED_HOSTS = ['*']
 
 DATABASES = {
     'default': {
@@ -13,29 +15,10 @@ DATABASES = {
         'USER': 'tabbycat',
         'PASSWORD': 'tabbycat',
         'HOST': 'db',
-        'PORT': 5432, # Non-standard to prevent collisions,
-    }
+        'PORT': 5432,  # Non-standard to prevent collisions,
+    },
 }
 
-if bool(int(os.environ['DOCKER_REDIS'])) if 'DOCKER_REDIS' in os.environ else False:
-    CACHES = {
-        "default": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://redis:6379/1",
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                "SOCKET_CONNECT_TIMEOUT": 5,
-                "SOCKET_TIMEOUT": 60,
-            },
-        },
-    }
-
-    CHANNEL_LAYERS = {
-        "default": {
-            "BACKEND": "channels_redis.core.RedisChannelLayer",
-            "CONFIG": {
-                "hosts": [("redis", 6379)],
-                "group_expiry": 10800,
-            },
-        },
-    }
+DATABASES['channels_postgres'] = copy.deepcopy(DATABASES['default'])
+CACHES = postgres_database_cache()
+CHANNEL_LAYERS = postgres_channel_layers(copy.deepcopy(DATABASES['default']))

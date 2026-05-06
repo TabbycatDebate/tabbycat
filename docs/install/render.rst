@@ -42,6 +42,8 @@ Then, click "Apply" at the bottom of the page. The button will disappear.
 
 Wait it  a few minutes then go to your *Dashboard*. It may take up to 30 minutes for all items have a *STATUS* of "Deploy succeeded" or "Available" and you may need to refresh the page to see these updated status.
 
+Tabbycat on Render uses the same PostgreSQL database for data, Django Channels (real-time pages), and page caching. A separate Redis instance is not required. To use Redis instead, add a Render Redis service, set ``TABBYCAT_USE_REDIS_CHANNELS_CACHE=1``, and install the ``django-redis``, ``channels-redis``, and ``redis`` packages.
+
 3. Login
 ========
 

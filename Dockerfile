@@ -19,6 +19,9 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | b
 WORKDIR /tcd
 COPY . /tcd/
 
+ARG TABBYCAT_USE_REDIS_CHANNELS_CACHE=
+ENV TABBYCAT_USE_REDIS_CHANNELS_CACHE=${TABBYCAT_USE_REDIS_CHANNELS_CACHE}
+
 RUN nvm install && nvm use
 
 # Set git to use HTTPS (SSH is often blocked by firewalls)
@@ -26,7 +29,8 @@ RUN git config --global url."https://".insteadOf git://
 
 # Install our node/python requirements
 RUN pip install pipenv
-RUN pipenv install --system --deploy
+RUN pipenv install --system --deploy \
+    && ./bin/pipenv-install-redis-channels-cache.sh --deploy
 RUN npm ci
 
 # Compile all the static files

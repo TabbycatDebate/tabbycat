@@ -18,13 +18,11 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql
 
-  redis:
-    image: redis:6
-    volumes:
-      - redis_data:/data
-
   web:
-    build: .
+    build:
+      context: .
+      args:
+        TABBYCAT_USE_REDIS_CHANNELS_CACHE: "${TABBYCAT_USE_REDIS_CHANNELS_CACHE:-}"
     # Hack to wait until Postgres is up before running things
     command:
       [
@@ -36,21 +34,22 @@ services:
       ]
     depends_on:
       - db
-      - redis
     expose:
       - "8000"
     environment:
       - DEBUG=1
       - IN_DOCKER=1
       - DISABLE_SENTRY=1
-      - DOCKER_REDIS=1
       - USING_NGINX=1
     ports:
       - "8000:8000"
     working_dir: /tcd
 
   worker:
-    build: .
+    build:
+      context: .
+      args:
+        TABBYCAT_USE_REDIS_CHANNELS_CACHE: "${TABBYCAT_USE_REDIS_CHANNELS_CACHE:-}"
     # Hack to wait until migration is done before running things
     command:
       [
@@ -62,16 +61,13 @@ services:
       ]
     depends_on:
       - db
-      - redis
     environment:
       - DEBUG=1
       - IN_DOCKER=1
       - DISABLE_SENTRY=1
-      - DOCKER_REDIS=1
       - USING_NGINX=1
     working_dir: /tcd
 
 volumes:
   pgdata:
   node_modules:
-  redis_data:

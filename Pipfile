@@ -17,15 +17,13 @@ django-split-settings = "*"
 django-statici18n = "*"
 django-summernote = "*"
 dj-cmd = "*"
-django-redis = "*"
 django-cors-headers = "*"
 psycopg2-binary = "*"
 asgiref = "*"
 channels = "*"
-channels-redis = "*"
+channels-postgres = "*"
 ipython = "==7.*"
 munkres = "*"
-redis = "*"
 qrcode = "*"
 html2text = "*"
 defusedxml = "*"
@@ -41,6 +39,13 @@ daphne = "*"
 drf-link-header-pagination = "*"
 networkx = "*" # Avoid its dependencies (SciPy)
 django-push-notifications = {extras = ["wp"], version = "*"}
+
+# Installed only when TABBYCAT_USE_REDIS_CHANNELS_CACHE is set at build time; see
+# bin/pipenv-install-redis-channels-cache.sh and Dockerfile / render-compile / post_compile.
+[redis-channels-cache]
+django-redis = "*"
+channels-redis = "*"
+redis = "*"
 
 [dev-packages]
 pre-commit = "*"

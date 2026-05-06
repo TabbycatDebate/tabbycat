@@ -1,3 +1,4 @@
+import copy
 import logging
 from os import environ
 
@@ -5,9 +6,13 @@ import dj_database_url
 import sentry_sdk
 from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.redis import RedisIntegration
 
 from .core import TABBYCAT_VERSION
+from .postgres_channels_cache import postgres_channel_layers, postgres_database_cache
+
+
+def _truthy_env(name: str) -> bool:
+    return environ.get(name, '').lower() in ('1', 'true', 'yes')
 
 # ==============================================================================
 # Heroku
@@ -42,62 +47,48 @@ DATABASES = {
 }
 
 # ==============================================================================
-# Redis
+# Channels & cache (PostgreSQL by default; optional Redis)
 # ==============================================================================
 
-# Use a separate Redis addon for channels to reduce number of connections
-# With fallback for Tabbykitten installs (no addons) or pre-2.2 instances
-if environ.get('REDISCLOUD_URL'):
-    ALT_REDIS_URL = environ.get('REDISCLOUD_URL') # 30 clients on free
+# Set TABBYCAT_USE_REDIS_CHANNELS_CACHE=1 and provision Redis to use the legacy
+# Redis channel layer and django-redis. Matching packages live in Pipfile
+# [redis-channels-cache] and are installed at deploy when this var is set.
+USE_REDIS_CHANNELS_CACHE = _truthy_env('TABBYCAT_USE_REDIS_CHANNELS_CACHE')
+
+if USE_REDIS_CHANNELS_CACHE:
+    if environ.get('REDISCLOUD_URL'):
+        ALT_REDIS_URL = environ.get('REDISCLOUD_URL')
+    else:
+        ALT_REDIS_URL = environ.get('REDIS_URL')
+
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': ALT_REDIS_URL,
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                'SOCKET_CONNECT_TIMEOUT': 5,
+                'SOCKET_TIMEOUT': 60,
+            },
+        },
+    }
+
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                'hosts': [{
+                    'address': environ.get('REDIS_URL'),
+                    'ssl_cert_reqs': None,
+                }],
+                'group_expiry': 10800,
+            },
+        },
+    }
 else:
-    ALT_REDIS_URL = environ.get('REDIS_URL') # 20 clients on free
-
-# Connection/Pooling Notes
-# ========================
-# From testing each dyno seems to use, at a maximum, 8 connections for
-# serving standard traffic. Channels seems to use 1 connection per dyno.
-# Setting the connection pool could enforce limits to keep this under the
-# maximum, however that just shifts the point of failure to the pool's max
-# which is trickier to calibrate as it is traffic/dyno dependenent.
-# It seems that connections are essentially per-process (so 5 per dyno;
-# following the unicorn worker count) along with some left idle waiting to
-# be closed (Heroku by default closes after 5 minutes)
-# ========================
-# The below config sets a more aggressive timeout but does not limit
-# total connections — so the limit of 30 could be theoretically be hit if
-# running 4 or so dynos. If this becomes a problem then we need to implement
-# a pooling logic that ensures connections are shared amonst unicorn workers
-# ========================
-
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": ALT_REDIS_URL,
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            # "IGNORE_EXCEPTIONS": True, # Supresses ConnectionError at max
-            # "CONNECTION_POOL_KWARGS": {"max_connections": 5} # See above
-            "SOCKET_CONNECT_TIMEOUT": 5,
-            "SOCKET_TIMEOUT": 60,
-        },
-    },
-}
-
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [{
-                "address": environ.get('REDIS_URL'),
-                "ssl_cert_reqs": None,
-            }],
-            # Remove channels from groups after 3 hours
-            # This matches websocket_timeout in Daphne
-            "group_expiry": 10800,
-        },
-        # RedisChannelLayer should pool by default,
-    },
-}
+    DATABASES['channels_postgres'] = copy.deepcopy(DATABASES['default'])
+    CACHES = postgres_database_cache()
+    CHANNEL_LAYERS = postgres_channel_layers(copy.deepcopy(DATABASES['default']))
 
 # ==============================================================================
 # Email / SendGrid
@@ -140,13 +131,17 @@ elif environ.get('SENDGRID_USERNAME', ''):
 
 if not environ.get('DISABLE_SENTRY'):
     DISABLE_SENTRY = False
+    _sentry_integrations = [
+        DjangoIntegration(),
+        LoggingIntegration(event_level=logging.WARNING),
+    ]
+    if USE_REDIS_CHANNELS_CACHE:
+        from sentry_sdk.integrations.redis import RedisIntegration
+
+        _sentry_integrations.append(RedisIntegration())
     sentry_sdk.init(
         dsn="https://6bf2099f349542f4b9baf73ca9789597@o85113.ingest.sentry.io/185382",
-        integrations=[
-            DjangoIntegration(),
-            LoggingIntegration(event_level=logging.WARNING),
-            RedisIntegration(),
-        ],
+        integrations=_sentry_integrations,
         send_default_pii=True,
         release=TABBYCAT_VERSION,
     )

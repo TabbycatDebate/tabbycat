@@ -158,7 +158,7 @@ if sys.version_info >= (3, 3) and shutil.which("heroku") is None:
     exit(1)
 
 # Create the app with addons
-addons = ["papertrail", "heroku-postgresql:%s" % args.pg_plan, "rediscloud:30", "heroku-redis:mini"]
+addons = ["papertrail", "heroku-postgresql:%s" % args.pg_plan]
 command = ["heroku", "apps:create", "--stack", "heroku-22"]
 
 if addons:
@@ -204,22 +204,15 @@ if args.git_remote:
 else:
     remote_name = heroku_url
 
-# Wait for Redis provisioning, which can take a significant amount of time
-redis_provisioned = False
-redis_status_command = make_heroku_command(["redis:info"])
-print_yellow("Waiting for Heroku Redis to provision (may take up to 5 minutes)...")
+# Wait for Postgres to be attachable before the first deploy push
+print_yellow("Waiting for Heroku Postgres to be ready...")
+try:
+    run_heroku_command(["pg:wait"])
+except subprocess.CalledProcessError:
+    print_yellow("pg:wait was not successful; pausing briefly before deploy push...")
+    time.sleep(15)
 
-while not redis_provisioned:
-    time.sleep(30)
-    redis_output = subprocess.check_output(redis_status_command).decode().split("\n")
-    for status in redis_output:
-        match = re.match(r"^Status:\s+available", status)
-        if match:
-            redis_provisioned = True
-            break
-
-
-print("Heroku Redis is available, starting deployment")
+print("Continuing with deployment")
 
 # Push source code to Heroku
 push_spec = get_git_push_spec()

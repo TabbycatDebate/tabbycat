@@ -41,7 +41,7 @@ To begin this process, click the *Allocate* button in the top-left. If you have 
 
 Once you click *Auto-Allocate Adjudicators* the modal should disappear and your panels should appear. At large tournaments, and in the later rounds, it is not unheard of for this process to take a minute or longer.
 
-.. note:: If you are running a local installation and the allocator modal appears to hang on "Loading...", ensure that you have configured a :ref:`local Redis instance and are running a background worker <install-local>`.
+.. note:: If you are running a local installation and the allocator modal appears to hang on "Loading...", ensure PostgreSQL is running, you have run migrations and ``createcachetable``, and a background worker is running (see :ref:`install-local`).
 
 .. note:: You can re-run the automatic allocation process on top of an existing allocation. Thus it is worth tweaking your priorities or allocation settings if the allocation does not seem optimal to you. Also note that the allocation process is not deterministic — if you rerun it the panels will be different.
 
