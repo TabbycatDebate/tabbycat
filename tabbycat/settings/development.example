@@ -21,31 +21,41 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
 USE_WEBPACK_SERVER = True
 
 # ==============================================================================
-# Redis
+# Channels & cache (PostgreSQL by default; optional Redis)
 # ==============================================================================
 
+import copy
+
+from .postgres_channels_cache import postgres_channel_layers, postgres_database_cache
+
+# Set True to use Redis for channels and page cache instead of PostgreSQL.
+# Requires a running Redis server and: pip install django-redis channels-redis redis
 USE_REDIS_LOCALLY = False
 
-# Option to run channels/cache on Redis locally (requires redis install)
 if USE_REDIS_LOCALLY:
     CHANNEL_LAYERS = {
-        "default": {
-            "BACKEND": "channels_redis.core.RedisChannelLayer",
-            "CONFIG": {
-                "hosts": [("localhost", 6379)],
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                'hosts': [('localhost', 6379)],
+                'group_expiry': 10800,
             },
         },
     }
     CACHES = {
-        "default": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://127.0.0.1:6379/1",
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                "IGNORE_EXCEPTIONS": True, # Don't crash on say ConnectionError due to limits
-            }
-        }
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': 'redis://127.0.0.1:6379/1',
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                'IGNORE_EXCEPTIONS': True,
+            },
+        },
     }
+else:
+    DATABASES['channels_postgres'] = copy.deepcopy(DATABASES['default'])
+    CACHES = postgres_database_cache()
+    CHANNEL_LAYERS = postgres_channel_layers(copy.deepcopy(DATABASES['default']))
 
 # ==============================================================================
 # Debug Toolbar (development aid; helps diagnose queries and performance)

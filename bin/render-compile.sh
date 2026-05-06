@@ -5,12 +5,16 @@ set -o errexit
 echo "-----> Install dependencies"
 python -m pip install pipenv
 pipenv install --system
+./bin/pipenv-install-redis-channels-cache.sh
 
 echo "-----> I'm post-compile hook"
 cd ./tabbycat/
 
 echo "-----> Running database migration"
 python manage.py migrate --noinput
+
+echo "-----> Ensuring database cache table exists"
+python manage.py createcachetable --noinput
 
 echo "-----> Running dynamic preferences checks"
 python manage.py checkpreferences

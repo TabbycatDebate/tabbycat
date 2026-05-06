@@ -5,11 +5,18 @@
 
 set -eo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+"${REPO_ROOT}/bin/pipenv-install-redis-channels-cache.sh" --deploy
+
 echo "-----> I'm post-compile hook"
 cd ./tabbycat/
 
 echo "-----> Running database migration"
 python manage.py migrate --noinput
+
+echo "-----> Ensuring database cache table exists"
+python manage.py createcachetable --noinput
 
 echo "-----> Running dynamic preferences checks"
 python manage.py checkpreferences

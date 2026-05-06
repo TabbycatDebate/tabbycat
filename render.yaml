@@ -17,16 +17,6 @@ services:
         fromDatabase:
           name: tabbycat_database
           property: connectionString
-      - key: REDIS_HOST
-        fromService:
-          type: redis
-          name: tabbycat_redis
-          property: host
-      - key: REDIS_PORT
-        fromService:
-          type: redis
-          name: tabbycat_redis
-          property: port
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: PYTHON_VERSION
@@ -41,10 +31,3 @@ services:
         value: true
       - key: USING_NGINX
         value: 0 # Not 'false'; is cast
-  - type: redis
-    name: tabbycat_redis
-    ipAllowList: # required
-      - source: 0.0.0.0
-        description: everywhere
-    plan: free
-    maxmemoryPolicy: allkeys-lru # (default)
