@@ -7,6 +7,19 @@ from .preferences import tournament_preferences_registry
 
 class TournamentPreferenceForm(PreferenceForm):
     registry = tournament_preferences_registry
+    preset_apply_actions = ()
+    preset_action_rows = ()
+    preset_action_rows_pending = ()
+    preset_action_rows_already = ()
+
+    def iter_preference_fields(self):
+        """Bound fields for the preset apply UI, excluding optional preset_action__ checkboxes."""
+        visible = self.visible_fields
+        if callable(visible):
+            visible = visible()
+        for field in visible:
+            if not field.name.startswith('preset_action__'):
+                yield field
 
     def clean(self):
         super().clean()
@@ -65,5 +78,10 @@ class TournamentPreferenceForm(PreferenceForm):
 
 
 def tournament_preference_form_builder(instance, preferences=[], **kwargs):
-    return preference_form_builder(
+    FormClass = preference_form_builder(  # noqa: N806
         TournamentPreferenceForm, preferences, model={'instance': instance}, **kwargs)
+    # Django 5.1+ builds subclass fields from declared_fields merged along the MRO.
+    # dynamic_preferences only assigns base_fields after type(); keep declared_fields in
+    # sync so subclasses (e.g. preset forms with apply-action fields) still inherit prefs.
+    FormClass.declared_fields = FormClass.base_fields
+    return FormClass

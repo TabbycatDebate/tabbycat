@@ -1,13 +1,30 @@
 import logging
 from copy import copy
 from decimal import Decimal
+from typing import Any, Callable, NamedTuple
 
+from django import forms
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-from .forms import tournament_preference_form_builder
+from .forms import tournament_preference_form_builder, TournamentPreferenceForm
 
 logger = logging.getLogger(__name__)
+
+
+class PresetApplyAction(NamedTuple):
+    """Labelled side effect run when a preset is applied (not stored as a preference)."""
+
+    id: str
+    label: Any
+    apply: Callable[[Any], None]
+    default_enabled: bool = True
+    would_change: Callable[[Any], bool] | None = None
+
+    def is_changed_for_tournament(self, tournament: Any) -> bool:
+        if self.would_change is not None:
+            return self.would_change(tournament)
+        return True
 
 
 def _all_subclasses(cls):
@@ -55,6 +72,7 @@ def get_preset_from_slug(slug):
 
 class PreferencesPreset:
     show_in_list                               = False
+    apply_actions                              = ()
 
     @classmethod
     def get_preferences(cls):
@@ -63,12 +81,78 @@ class PreferencesPreset:
                 yield key
 
     @classmethod
+    def get_apply_actions(cls):
+        return cls.apply_actions
+
+    @classmethod
+    def _run_apply_actions(cls, tournament, selected_action_ids):
+        """selected_action_ids None: run each action where default_enabled (CLI / configure).
+        Otherwise run only ids present in the set (preset form checkboxes)."""
+        for action in cls.get_apply_actions():
+            if selected_action_ids is None:
+                if not action.default_enabled:
+                    continue
+            elif action.id not in selected_action_ids:
+                continue
+            logger.info("Applying preset action %s for tournament %s", action.id, tournament.slug)
+            action.apply(tournament)
+
+    @classmethod
     def get_form(cls, tournament, **kwargs):
-        form = tournament_preference_form_builder(tournament, [tuple(key.split('__', 1)[::-1]) for key in cls.get_preferences()])(**kwargs)
+        pref_tuples = [tuple(key.split('__', 1)[::-1]) for key in cls.get_preferences()]
+        BaseForm = tournament_preference_form_builder(tournament, pref_tuples)  # noqa: N806
+        action_specs = list(cls.get_apply_actions())
+        if action_specs:
+
+            def update_preferences(self, **kwargs):
+                # Not a normal class-body method: zero-arg super() is invalid here.
+                TournamentPreferenceForm.update_preferences(self, **kwargs)
+                inst = self.manager.instance
+                selected = {a.id for a in action_specs if self.cleaned_data.get(f'preset_action__{a.id}')}
+                cls._run_apply_actions(inst, selected)
+
+            attrs = {
+                'update_preferences': update_preferences,
+            }
+            for a in action_specs:
+                attrs[f'preset_action__{a.id}'] = forms.BooleanField(
+                    label=a.label,
+                    required=False,
+                    initial=a.default_enabled,
+                    widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+                )
+            FormClass = type('PresetFormWithApplyActions', (BaseForm,), attrs)  # noqa: N806
+            form = FormClass(**kwargs)
+            form.preset_action_rows = tuple((a, form[f'preset_action__{a.id}']) for a in action_specs)
+        else:
+            form = BaseForm(**kwargs)
+            form.preset_action_rows = ()
+
+        actions_by_id = {a.id: a for a in action_specs}
         for field in form:
+            if field.name.startswith('preset_action__'):
+                aid = field.name[len('preset_action__'):]
+                spec = actions_by_id.get(aid)
+                field.changed = spec.is_changed_for_tournament(tournament) if spec else True
+                continue
             # Copying required to avoid blanks added to list fields
             field.initial = copy(getattr(cls, field.name))
             field.changed = tournament.preferences[field.name] != getattr(cls, field.name)
+
+        if action_specs:
+            pending_rows, already_rows = [], []
+            for a in action_specs:
+                bf = form[f'preset_action__{a.id}']
+                if bf.changed:
+                    pending_rows.append((a, bf))
+                else:
+                    already_rows.append((a, bf))
+            form.preset_action_rows_pending = tuple(pending_rows)
+            form.preset_action_rows_already = tuple(already_rows)
+        else:
+            form.preset_action_rows_pending = ()
+            form.preset_action_rows_already = ()
+
         return form
 
     @classmethod
@@ -76,6 +160,7 @@ class PreferencesPreset:
         for pref in cls.get_preferences():
             logger.info(f"Setting {pref} to {getattr(cls, pref)}")
             tournament.preferences[pref] = getattr(cls, pref)
+        cls._run_apply_actions(tournament, None)
 
 
 class AustralsPreferences(PreferencesPreset):
@@ -349,6 +434,31 @@ class APDAPreferences(PreferencesPreset):
     show_in_list = True
     description = _("2 vs 2 with speech rankings and byes")
 
+    @staticmethod
+    def _apda_apply_seed_first_prelim_draw(tournament):
+        Round = tournament.round_set.model  # noqa: N806
+        first = tournament.round_set.filter(stage=Round.Stage.PRELIMINARY).order_by('seq').first()
+        if first is None:
+            return
+        first.draw_type = Round.DrawType.SEEDED
+        first.save(update_fields=['draw_type'])
+
+    @staticmethod
+    def _apda_seed_first_prelim_would_change(tournament):
+        Round = tournament.round_set.model  # noqa: N806
+        first = tournament.round_set.filter(stage=Round.Stage.PRELIMINARY).order_by('seq').first()
+        return first is not None and first.draw_type != Round.DrawType.SEEDED
+
+    apply_actions = (
+        PresetApplyAction(
+            id='seed_first_prelim_draw',
+            label=_('Set round 1 preliminary draw type to Seeded'),
+            apply=_apda_apply_seed_first_prelim_draw,
+            default_enabled=True,
+            would_change=_apda_seed_first_prelim_would_change,
+        ),
+    )
+
     scoring__score_min                         = Decimal('15')
     scoring__score_max                         = Decimal('40')
     motions__motion_vetoes_enabled             = False # Single motions per round
@@ -373,12 +483,33 @@ class APDAPreferences(PreferencesPreset):
     debate_rules__reply_scores_enabled         = False
     debate_rules__speaker_ranks                = 'any'
     standings__speaker_standings_precedence    = ['average', 'srank', 'trimmed_mean']
+    ui_options__show_seed_in_importer          = 'title'
 
 
 class PublicSpeaking(PreferencesPreset):
     name = _("Public Speaking")
     show_in_list = True
     description = _("Arbitrary number of teams per room, one speech each, no team points")
+
+    @staticmethod
+    def apply_all_draws_random(tournament):
+        Round = tournament.round_set.model  # noqa: N806
+        return tournament.round_set.filter(stage=Round.Stage.PRELIMINARY).update(draw_type=Round.DrawType.RANDOM)
+
+    @staticmethod
+    def are_some_draws_not_random(tournament):
+        Round = tournament.round_set.model  # noqa: N806
+        return tournament.round_set.filter(stage=Round.Stage.PRELIMINARY).exclude(draw_type=Round.DrawType.RANDOM).exists()
+
+    apply_actions = (
+        PresetApplyAction(
+            id='all_draws_random',
+            label=_('Set all preliminary draws to random (no power-pairing)'),
+            apply=apply_all_draws_random,
+            default_enabled=True,
+            would_change=are_some_draws_not_random,
+        ),
+    )
 
     scoring__score_min                         = Decimal('50')
     scoring__score_max                         = Decimal('99')
