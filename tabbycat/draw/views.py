@@ -538,7 +538,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
             return TabbycatTableBuilder(view=self)  # blank
         elif self.tournament.pref('teams_in_debate') == 4 and \
                 r.draw_status == Round.Status.DRAFT and r.prev is not None and \
-                not r.is_break_round:
+                not r.is_break_round and r.draw_type != Round.DrawType.ROUNDROBIN:
             return self.get_bp_position_balance_table()
         else:
             return self.get_standard_table()

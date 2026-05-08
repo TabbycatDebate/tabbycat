@@ -18,7 +18,7 @@ from users.models import Group
 
 from .models import Round, ScheduleEvent, Tournament
 from .signals import update_tournament_cache
-from .utils import auto_make_rounds
+from .utils import auto_make_rounds, DRAW_FORMAT_POWER_PAIRED, DRAW_FORMAT_RANDOM, DRAW_FORMAT_ROUND_ROBIN
 
 
 class TournamentStartForm(ModelForm):
@@ -60,9 +60,10 @@ class TournamentStartForm(ModelForm):
         for group in all_groups():
             Group.objects.create(name=group.name, permissions=group.permissions, tournament=tournament)
 
-    def save(self):
-        tournament = super(TournamentStartForm, self).save()
-        auto_make_rounds(tournament, self.cleaned_data["num_prelim_rounds"])
+    def save(self, commit=True, skip_rounds=False):
+        tournament = super(TournamentStartForm, self).save(commit=commit)
+        if commit and not skip_rounds:
+            auto_make_rounds(tournament, self.cleaned_data["num_prelim_rounds"])
 
         break_size = self.cleaned_data["break_size"]
         if break_size:
@@ -81,8 +82,6 @@ class TournamentStartForm(ModelForm):
 
         self.add_default_permission_groups(tournament)
         self.add_default_feedback_questions(tournament)
-        tournament.current_round = tournament.round_set.order_by('seq').first()
-        tournament.save()
 
         return tournament
 
@@ -91,7 +90,19 @@ class TournamentConfigureForm(ModelForm):
 
     class Meta:
         model = Tournament
-        fields = ('preset_rules', 'public_info')
+        fields = ('preset_rules', 'public_info', 'draw_format')
+
+    draw_format = ChoiceField(
+        choices=(
+            (DRAW_FORMAT_POWER_PAIRED, _("Power-paired")),
+            (DRAW_FORMAT_RANDOM, _("Random")),
+            (DRAW_FORMAT_ROUND_ROBIN, _("Round robin")),
+        ),
+        label=_("Draw format"),
+        help_text=_("How preliminary rounds are drawn. The first option matches Tabbycat’s usual default (random draw "
+                    "in round 1, then power-pairing). Round robin opens an extra step to set parallel panels and how "
+                    "many preliminary rounds to create."),
+    )
 
     preset_rules = ChoiceField(
         choices=presets_for_form(), # Tuple with (Preset_Index, Preset_Name)
@@ -122,7 +133,7 @@ class TournamentConfigureForm(ModelForm):
         widget=SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'}),
     )
 
-    def save(self):
+    def save(self, commit=True, skip_rounds=False):
         presets = list(all_presets())
         t = self.instance
 
@@ -145,11 +156,24 @@ class TournamentConfigureForm(ModelForm):
         if self.cleaned_data['tournament_staff'] != self.fields['tournament_staff'].initial:
             t.preferences["public_features__tournament_staff"] = self.cleaned_data["tournament_staff"]
 
-        # Create break rounds (need to do so after we know teams-per-room)
-        open_break = BreakCategory.objects.filter(tournament=t, is_general=True).first()
-        # Check there aren't already break rounds (i.e. when importing demos)
-        if open_break and not t.break_rounds().exists():
-            auto_make_break_rounds(open_break, t, False)
+        if commit and not skip_rounds:
+            # Create break rounds (need to do so after we know teams-per-room)
+            open_break = BreakCategory.objects.filter(tournament=t, is_general=True).first()
+            # Check there aren't already break rounds (i.e. when importing demos)
+            if open_break and not t.break_rounds().exists():
+                auto_make_break_rounds(open_break, t, False)
+
+
+class RoundRobinPrelimSetupForm(Form):
+    """Second step after choosing round robin on the configure tournament form."""
+
+    prelim_panels = IntegerField(
+        min_value=1,
+        initial=1,
+        label=_("Parallel preliminary panels per schedule slot"),
+        help_text=_("With 1, each schedule slot has one database round. With 2, Tabbycat creates two rounds per slot "
+                    "(e.g. A and B) that share the same “current round” slot for navigation and feedback."),
+    )
 
 
 class RoundWithCompleteOptionChoiceIterator(ModelChoiceIterator):

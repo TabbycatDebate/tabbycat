@@ -2083,6 +2083,7 @@
     "fields": {
         "round": 1,
         "venue": 21,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2097,6 +2098,7 @@
     "fields": {
         "round": 1,
         "venue": 23,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2111,6 +2113,7 @@
     "fields": {
         "round": 1,
         "venue": 14,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2125,6 +2128,7 @@
     "fields": {
         "round": 1,
         "venue": 18,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2139,6 +2143,7 @@
     "fields": {
         "round": 1,
         "venue": 1,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2153,6 +2158,7 @@
     "fields": {
         "round": 1,
         "venue": 19,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2167,6 +2173,7 @@
     "fields": {
         "round": 1,
         "venue": 22,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2181,6 +2188,7 @@
     "fields": {
         "round": 1,
         "venue": 17,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2195,6 +2203,7 @@
     "fields": {
         "round": 1,
         "venue": 16,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2209,6 +2218,7 @@
     "fields": {
         "round": 1,
         "venue": 20,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2223,6 +2233,7 @@
     "fields": {
         "round": 1,
         "venue": 13,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2237,6 +2248,7 @@
     "fields": {
         "round": 1,
         "venue": 15,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2251,6 +2263,7 @@
     "fields": {
         "round": 2,
         "venue": 17,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 3,
         "flags": "[]",
@@ -2265,6 +2278,7 @@
     "fields": {
         "round": 2,
         "venue": 20,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 12,
         "flags": "[]",
@@ -2279,6 +2293,7 @@
     "fields": {
         "round": 2,
         "venue": 1,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 6,
         "flags": "[]",
@@ -2293,6 +2308,7 @@
     "fields": {
         "round": 2,
         "venue": 22,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 7,
         "flags": "[]",
@@ -2307,6 +2323,7 @@
     "fields": {
         "round": 2,
         "venue": 23,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 4,
         "flags": "[\"1u1d_inst\"]",
@@ -2321,6 +2338,7 @@
     "fields": {
         "round": 2,
         "venue": 15,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 5,
         "flags": "[\"1u1d_other\"]",
@@ -2335,6 +2353,7 @@
     "fields": {
         "round": 2,
         "venue": 14,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 1,
         "flags": "[]",
@@ -2349,6 +2368,7 @@
     "fields": {
         "round": 2,
         "venue": 19,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 8,
         "flags": "[]",
@@ -2363,6 +2383,7 @@
     "fields": {
         "round": 2,
         "venue": 13,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 11,
         "flags": "[]",
@@ -2377,6 +2398,7 @@
     "fields": {
         "round": 2,
         "venue": 18,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 10,
         "flags": "[]",
@@ -2391,6 +2413,7 @@
     "fields": {
         "round": 2,
         "venue": 16,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 2,
         "flags": "[]",
@@ -2405,6 +2428,7 @@
     "fields": {
         "round": 2,
         "venue": 21,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 9,
         "flags": "[]",
@@ -2419,6 +2443,7 @@
     "fields": {
         "round": 3,
         "venue": 20,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 4,
         "flags": "[]",
@@ -2433,6 +2458,7 @@
     "fields": {
         "round": 3,
         "venue": 14,
+        "scheduled_at": null,
         "bracket": 2.0,
         "room_rank": 3,
         "flags": "[]",
@@ -2447,6 +2473,7 @@
     "fields": {
         "round": 3,
         "venue": 16,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 8,
         "flags": "[]",
@@ -2461,6 +2488,7 @@
     "fields": {
         "round": 3,
         "venue": 18,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 9,
         "flags": "[]",
@@ -2475,6 +2503,7 @@
     "fields": {
         "round": 3,
         "venue": 21,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 12,
         "flags": "[\"1u1d_other\"]",
@@ -2489,6 +2518,7 @@
     "fields": {
         "round": 3,
         "venue": 17,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 6,
         "flags": "[]",
@@ -2503,6 +2533,7 @@
     "fields": {
         "round": 3,
         "venue": 23,
+        "scheduled_at": null,
         "bracket": 2.0,
         "room_rank": 1,
         "flags": "[]",
@@ -2517,6 +2548,7 @@
     "fields": {
         "round": 3,
         "venue": 1,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 5,
         "flags": "[]",
@@ -2531,6 +2563,7 @@
     "fields": {
         "round": 3,
         "venue": 19,
+        "scheduled_at": null,
         "bracket": 2.0,
         "room_rank": 2,
         "flags": "[]",
@@ -2545,6 +2578,7 @@
     "fields": {
         "round": 3,
         "venue": 22,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 11,
         "flags": "[\"1u1d_inst\"]",
@@ -2559,6 +2593,7 @@
     "fields": {
         "round": 3,
         "venue": 13,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 10,
         "flags": "[]",
@@ -2573,6 +2608,7 @@
     "fields": {
         "round": 3,
         "venue": 15,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 7,
         "flags": "[]",
@@ -2587,6 +2623,7 @@
     "fields": {
         "round": 4,
         "venue": 23,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 7,
         "flags": "[]",
@@ -2601,6 +2638,7 @@
     "fields": {
         "round": 4,
         "venue": 16,
+        "scheduled_at": null,
         "bracket": 3.0,
         "room_rank": 1,
         "flags": "[]",
@@ -2615,6 +2653,7 @@
     "fields": {
         "round": 4,
         "venue": 18,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 9,
         "flags": "[]",
@@ -2629,6 +2668,7 @@
     "fields": {
         "round": 4,
         "venue": 15,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 8,
         "flags": "[]",
@@ -2643,6 +2683,7 @@
     "fields": {
         "round": 4,
         "venue": 21,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 10,
         "flags": "[]",
@@ -2657,6 +2698,7 @@
     "fields": {
         "round": 4,
         "venue": 13,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 12,
         "flags": "[]",
@@ -2671,6 +2713,7 @@
     "fields": {
         "round": 4,
         "venue": 17,
+        "scheduled_at": null,
         "bracket": 0.5,
         "room_rank": 11,
         "flags": "[]",
@@ -2685,6 +2728,7 @@
     "fields": {
         "round": 4,
         "venue": 1,
+        "scheduled_at": null,
         "bracket": 2.0,
         "room_rank": 5,
         "flags": "[]",
@@ -2699,6 +2743,7 @@
     "fields": {
         "round": 4,
         "venue": 19,
+        "scheduled_at": null,
         "bracket": 2.0,
         "room_rank": 6,
         "flags": "[]",
@@ -2713,6 +2758,7 @@
     "fields": {
         "round": 4,
         "venue": 22,
+        "scheduled_at": null,
         "bracket": 2.5,
         "room_rank": 2,
         "flags": "[]",
@@ -2727,6 +2773,7 @@
     "fields": {
         "round": 4,
         "venue": 14,
+        "scheduled_at": null,
         "bracket": 2.0,
         "room_rank": 4,
         "flags": "[]",
@@ -2741,6 +2788,7 @@
     "fields": {
         "round": 4,
         "venue": 20,
+        "scheduled_at": null,
         "bracket": 2.0,
         "room_rank": 3,
         "flags": "[]",
@@ -2755,6 +2803,7 @@
     "fields": {
         "round": 6,
         "venue": 23,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 1,
         "flags": "[]",
@@ -2769,6 +2818,7 @@
     "fields": {
         "round": 6,
         "venue": 22,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 2,
         "flags": "[]",
@@ -2783,6 +2833,7 @@
     "fields": {
         "round": 7,
         "venue": 9,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 2,
         "flags": "[]",
@@ -2797,6 +2848,7 @@
     "fields": {
         "round": 7,
         "venue": 16,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 1,
         "flags": "[]",
@@ -5883,6 +5935,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🌩",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -5903,6 +5956,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🎃",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -5923,6 +5977,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🆒",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -5943,6 +5998,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🍌",
+        "registration_status": "C",
         "break_categories": [
             1,
             2,
@@ -5965,6 +6021,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🆘",
+        "registration_status": "C",
         "break_categories": [
             1,
             2,
@@ -5987,6 +6044,7 @@
         "seed": null,
         "type": "N",
         "emoji": "💎",
+        "registration_status": "C",
         "break_categories": [
             1,
             2,
@@ -6009,6 +6067,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🕯",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6029,6 +6088,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🎖",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6049,6 +6109,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🖨",
+        "registration_status": "C",
         "break_categories": [
             1,
             2
@@ -6070,6 +6131,7 @@
         "seed": null,
         "type": "N",
         "emoji": "😴",
+        "registration_status": "C",
         "break_categories": [
             1,
             2
@@ -6091,6 +6153,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🌶",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6111,6 +6174,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🙌",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6131,6 +6195,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🖖",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6151,6 +6216,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🖕",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6171,6 +6237,7 @@
         "seed": null,
         "type": "N",
         "emoji": "⛏",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6191,6 +6258,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🐦",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6211,6 +6279,7 @@
         "seed": null,
         "type": "N",
         "emoji": "😮",
+        "registration_status": "C",
         "break_categories": [
             1,
             2
@@ -6232,6 +6301,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🌷",
+        "registration_status": "C",
         "break_categories": [
             1,
             2
@@ -6253,6 +6323,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🕵",
+        "registration_status": "C",
         "break_categories": [
             1,
             2,
@@ -6275,6 +6346,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🚬",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6295,6 +6367,7 @@
         "seed": null,
         "type": "N",
         "emoji": "👠",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6315,6 +6388,7 @@
         "seed": null,
         "type": "N",
         "emoji": "👓",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6335,6 +6409,7 @@
         "seed": null,
         "type": "N",
         "emoji": "👊",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6355,6 +6430,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🍓",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -7019,7 +7095,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7033,7 +7110,8 @@
         "trainee": false,
         "breaking": true,
         "independent": true,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7047,7 +7125,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7061,7 +7140,8 @@
         "trainee": false,
         "breaking": false,
         "independent": true,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7075,7 +7155,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7089,7 +7170,8 @@
         "trainee": false,
         "breaking": true,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7103,7 +7185,8 @@
         "trainee": false,
         "breaking": false,
         "independent": true,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7117,7 +7200,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7131,7 +7215,8 @@
         "trainee": false,
         "breaking": false,
         "independent": true,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7145,7 +7230,8 @@
         "trainee": false,
         "breaking": false,
         "independent": true,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7159,7 +7245,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7173,7 +7260,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7187,7 +7275,8 @@
         "trainee": false,
         "breaking": false,
         "independent": true,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7201,7 +7290,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7215,7 +7305,8 @@
         "trainee": false,
         "breaking": true,
         "independent": true,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7229,7 +7320,8 @@
         "trainee": false,
         "breaking": true,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7243,7 +7335,8 @@
         "trainee": false,
         "breaking": true,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7257,7 +7350,8 @@
         "trainee": false,
         "breaking": true,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7271,7 +7365,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7285,7 +7380,8 @@
         "trainee": false,
         "breaking": true,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7299,7 +7395,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7313,7 +7410,8 @@
         "trainee": false,
         "breaking": true,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7327,7 +7425,8 @@
         "trainee": false,
         "breaking": true,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7341,7 +7440,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7355,7 +7455,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7369,7 +7470,8 @@
         "trainee": false,
         "breaking": true,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7383,7 +7485,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7397,7 +7500,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7411,7 +7515,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -24823,6 +24928,7 @@
     "fields": {
         "tournament": 1,
         "seq": 1,
+        "schedule_group": 1,
         "completed": true,
         "name": "Round 1",
         "abbreviation": "R1",
@@ -24843,6 +24949,7 @@
     "fields": {
         "tournament": 1,
         "seq": 2,
+        "schedule_group": 2,
         "completed": true,
         "name": "Round 2",
         "abbreviation": "R2",
@@ -24863,6 +24970,7 @@
     "fields": {
         "tournament": 1,
         "seq": 3,
+        "schedule_group": 3,
         "completed": true,
         "name": "Round 3",
         "abbreviation": "R3",
@@ -24883,6 +24991,7 @@
     "fields": {
         "tournament": 1,
         "seq": 4,
+        "schedule_group": 4,
         "completed": false,
         "name": "Round 4",
         "abbreviation": "R4",
@@ -24903,6 +25012,7 @@
     "fields": {
         "tournament": 1,
         "seq": 5,
+        "schedule_group": 5,
         "completed": false,
         "name": "Open Quarterfinal",
         "abbreviation": "OQF",
@@ -24923,6 +25033,7 @@
     "fields": {
         "tournament": 1,
         "seq": 6,
+        "schedule_group": 6,
         "completed": false,
         "name": "ESL Semifinal",
         "abbreviation": "SSF",
@@ -24943,6 +25054,7 @@
     "fields": {
         "tournament": 1,
         "seq": 7,
+        "schedule_group": 7,
         "completed": false,
         "name": "Open Semifinal",
         "abbreviation": "OSF",
@@ -24963,6 +25075,7 @@
     "fields": {
         "tournament": 1,
         "seq": 8,
+        "schedule_group": 8,
         "completed": false,
         "name": "ESL Grand Final",
         "abbreviation": "SGF",
@@ -24983,6 +25096,7 @@
     "fields": {
         "tournament": 1,
         "seq": 9,
+        "schedule_group": 9,
         "completed": false,
         "name": "Novice Grand Final",
         "abbreviation": "NGF",
@@ -25003,6 +25117,7 @@
     "fields": {
         "tournament": 1,
         "seq": 10,
+        "schedule_group": 10,
         "completed": false,
         "name": "Open Grand Final",
         "abbreviation": "OGF",
@@ -25635,15 +25750,6 @@
         "min_value": null,
         "max_value": null,
         "choices": "[]"
-    }
-},
-{
-    "model": "dynamic_preferences.globalpreferencemodel",
-    "pk": 1,
-    "fields": {
-        "section": "global",
-        "name": "enable_api",
-        "raw_value": "True"
     }
 }
 ]

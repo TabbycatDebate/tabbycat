@@ -18,6 +18,7 @@ from options.utils import use_team_code_names
 from participants.models import Adjudicator, Institution, Region, Speaker
 from participants.prefetch import populate_feedback_scores, populate_win_counts
 from tournaments.mixins import DebateDragAndDropMixin, TournamentMixin
+from tournaments.models import Round
 from users.permissions import has_permission, Permission
 from utils.misc import ranks_dictionary, redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
@@ -123,8 +124,12 @@ class MultiRoundEditDebateAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView
                                          'round': self.round})
 
     def get_draw_or_panels_objects(self):
-        """Include debates from all current elimination rounds (one per break category)."""
-        if not self.round.is_break_round:
+        """Include debates from all concurrent rounds: elimination (per category)
+        or preliminary parallel panels (same ``schedule_group``)."""
+        parallel_prelims = (
+            self.round.stage == Round.Stage.PRELIMINARY and len(self.tournament.current_rounds) > 1
+        )
+        if not self.round.is_break_round and not parallel_prelims:
             return super().get_draw_or_panels_objects()
 
         prefetches = ()

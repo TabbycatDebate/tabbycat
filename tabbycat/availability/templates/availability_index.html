@@ -95,7 +95,7 @@
 
 {% block page-alerts %}
 
-  {% if previous_unconfirmed > 0 and round.prev %}
+  {% if previous_unconfirmed > 0 and round.prev and round.draw_type != round.DrawType.RANDOM and round.draw_type != round.DrawType.SEEDED and round.draw_type != round.DrawType.ROUNDROBIN %}
     <div class="alert alert-danger">
       <i data-feather="alert-circle"></i>
       {% roundurl 'results-round-list' round=round.prev as prev_round_results_url %}
@@ -202,7 +202,7 @@
     </div>
   {% endif %}
 
-  {% if has_seeds and round.draw_type != round.DrawType.SEEDED %}
+  {% if has_seeds and round.draw_type == round.DrawType.RANDOM %}
     <div class="alert alert-warning" id="seeded-draw-alert">
       <div class="row align-items-center">
         <div class="col-auto pr-1">

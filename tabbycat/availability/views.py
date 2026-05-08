@@ -41,11 +41,15 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
     view_permission = Permission.VIEW_ROUNDAVAILABILITIES
 
     def get_context_data(self, **kwargs):
-        if self.round.draw_type != Round.DrawType.RANDOM:
-            kwargs['previous_unconfirmed'] = self.round.prev.debate_set.filter(
-                result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
-
         if self.round.prev:
+            # Random, seeded, and round-robin draws do not use previous-round results.
+            if self.round.draw_type not in (
+                Round.DrawType.RANDOM,
+                Round.DrawType.SEEDED,
+                Round.DrawType.ROUNDROBIN,
+            ):
+                kwargs['previous_unconfirmed'] = self.round.prev.debate_set.filter(
+                    result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
             kwargs['new_adjs'] = Adjudicator.objects.filter(
                 round_availabilities__round=self.round,
             ).exclude(

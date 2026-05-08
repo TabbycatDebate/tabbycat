@@ -375,6 +375,30 @@ class APDAPreferences(PreferencesPreset):
     standings__speaker_standings_precedence    = ['average', 'srank', 'trimmed_mean']
 
 
+class RoundRobinTwoTeam(PreferencesPreset):
+    name = _("Round-robin (two-team)")
+    show_in_list = False
+    description = _("Two teams per room, preliminary rounds use round-robin (no random first round). "
+        "Conflict-avoidance options are less relevant because pairings are fixed by schedule.")
+
+    debate_rules__teams_in_debate = 2
+    draw_rules__avoid_team_history = False
+    draw_rules__avoid_same_institution = False
+    ui_options__show_seed_in_importer = 'numeric'
+
+
+class RoundRobinBP(PreferencesPreset):
+    name = _("Round-robin (British Parliamentary)")
+    show_in_list = False
+    description = _("BP with preset balanced round-robin tables for 16 or 28 teams. "
+        "Assign every team a unique seed from 1 to n before drawing.")
+
+    debate_rules__teams_in_debate = 4
+    draw_rules__avoid_team_history = False
+    draw_rules__avoid_same_institution = False
+    ui_options__show_seed_in_importer = 'numeric'
+
+
 class PublicSpeaking(PreferencesPreset):
     name = _("Public Speaking")
     show_in_list = True

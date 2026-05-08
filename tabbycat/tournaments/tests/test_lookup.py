@@ -8,7 +8,7 @@ class TestRoundLookup(TestCase):
 
     def setUp(self):
         self.tournament = Tournament.objects.create()
-        self.rd = Round.objects.create(tournament=self.tournament, name="A Test Round", abbreviation="ATR", seq=1)
+        self.rd = Round.objects.create(tournament=self.tournament, name="A Test Round", abbreviation="ATR", seq=1, schedule_group=1)
 
     def tearDown(self):
         self.rd.delete()

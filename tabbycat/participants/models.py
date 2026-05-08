@@ -252,7 +252,8 @@ class Team(models.Model):
         verbose_name=_("break categories"))
 
     seed = models.PositiveIntegerField(blank=True, null=True, verbose_name=_("seed"),
-        help_text=_("Used as initial ranking to power-pair the first round"))
+        help_text=_("Used as initial ranking to power-pair the first round, and to order teams for round-robin draws "
+            "(including BP preset schedules, which require unique seeds 1 through n)."))
 
     institution_conflicts = models.ManyToManyField('Institution',
         through='adjallocation.TeamInstitutionConflict',

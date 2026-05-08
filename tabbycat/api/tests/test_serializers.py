@@ -86,6 +86,7 @@ class RoundSerializerTests(CompletedTournamentTestMixin, APITestCase):
             "motions_released": False,
             "motions_status": "N",
             "weight": 1,
+            "schedule_group": 1,
         }
 
         self.round_seq = 1
@@ -256,7 +257,7 @@ class BallotSerializerTests(APITestCase):
         logging.disable(logging.CRITICAL)
         self.user = User.objects.create_superuser(username='admin1', password='admin', is_active=True)
         self.tournament = Tournament.objects.create(slug='apitest')
-        self.round = Round.objects.create(seq=1, tournament=self.tournament)
+        self.round = Round.objects.create(seq=1, schedule_group=1, tournament=self.tournament)
         self.debate = Debate.objects.create(round=self.round)
 
         CanadianParliamentaryPreferences.save(self.tournament)
@@ -1013,7 +1014,7 @@ class PairingSerializerTests(APITestCase):
         logging.disable(logging.CRITICAL)
         self.user = User.objects.create_superuser(username='admin1', password='admin', is_active=True)
         self.tournament = Tournament.objects.create(slug='apitest')
-        self.round = Round.objects.create(seq=1, tournament=self.tournament)
+        self.round = Round.objects.create(seq=1, schedule_group=1, tournament=self.tournament)
 
         CanadianParliamentaryPreferences.save(self.tournament)
 
@@ -1096,7 +1097,7 @@ class FeedbackSerializerTests(APITestCase):
         logging.disable(logging.CRITICAL)
         self.user = User.objects.create_superuser(username='admin1', password='admin', is_active=True)
         self.tournament = Tournament.objects.create(slug='apitest')
-        self.round = Round.objects.create(seq=1, tournament=self.tournament)
+        self.round = Round.objects.create(seq=1, schedule_group=1, tournament=self.tournament)
 
         CanadianParliamentaryPreferences.save(self.tournament)
 

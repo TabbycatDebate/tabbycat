@@ -230,6 +230,18 @@ class MaxTimesPerSide(IntegerPreference):
 
 
 @tournament_preferences_registry.register
+class PrelimPanels(IntegerPreference):
+    help_text = _("When greater than 1, consecutive preliminary rounds are treated as parallel panels in the same "
+        "schedule slot (e.g. A and B). Current-round navigation and feedback eligibility use the shared slot. "
+        "Round creation assigns schedule groups from this value.")
+    verbose_name = _("Preliminary panels per schedule slot")
+    section = draw_rules
+    name = 'prelim_panels'
+    default = 1
+    field_kwargs = {'validators': [MinValueValidator(1)]}
+
+
+@tournament_preferences_registry.register
 class DrawOddBracket(ChoicePreference):
     help_text = _("How odd brackets are resolved (see documentation for further details)")
     verbose_name = _("Odd bracket resolution method")

@@ -37,7 +37,7 @@ class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
         # Include rounds whether *either* motions are released *or* it's this
         # round or a previous round. The template checks motion_released again
         # and displays a "not released" message if motions are not released.
-        filter_q = Q(motions_status=Round.MotionsStatus.MOTIONS_RELEASED) | Q(seq__lte=self.tournament.current_round.seq)
+        filter_q = Q(motions_status=Round.MotionsStatus.MOTIONS_RELEASED) | Q(seq__lte=self.tournament.current_round_seq_limit)
 
         kwargs['rounds'] = self.tournament.round_set.filter(filter_q).order_by(
                 order_by).prefetch_related(Prefetch('roundmotion_set',
