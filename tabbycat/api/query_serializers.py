@@ -55,7 +55,7 @@ class SpeakerRoundStandingsRoundsParamsSerializer(serializers.Serializer):
 
 
 class BallotParamsSerializer(serializers.Serializer):
-    confirmed = serializers.BooleanField(required=False)
+    confirmed = serializers.BooleanField(required=False, allow_null=True)
 
 
 class FeedbackQuestionParamsSerializer(serializers.Serializer):
