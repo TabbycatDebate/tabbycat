@@ -1423,7 +1423,7 @@ class FeedbackSerializer(serializers.ModelSerializer):
         request = self.context['request']
         return {
             'participant_submitter': request.auth if participant else None,
-            'submitter': participant or request.user,
+            'submitter': request.user,
             'submitter_type': Submission.Submitter.PUBLIC if participant else Submission.Submitter.TABROOM,
             'ip_address': get_ip_address(request),
         }
@@ -1653,7 +1653,7 @@ class BallotSerializer(serializers.ModelSerializer):
             raise PermissionDenied('Authenticated adjudicator is not in debate')
         return {
             'participant_submitter': participant,
-            'submitter': participant or request.user,
+            'submitter': request.user,
             'submitter_type': Submission.Submitter.PUBLIC if participant else Submission.Submitter.TABROOM,
             'ip_address': get_ip_address(request),
         }

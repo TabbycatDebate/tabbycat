@@ -1253,6 +1253,8 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
 
         if params_serializer.validated_data.get('confirmed') or not (getattr(self.request.user, 'is_staff', False) or self.participant_requester):
             filters &= Q(confirmed=True)
+        elif params_serializer.validated_data.get('confirmed') is False:
+            filters &= Q(confirmed=False)
         return super().get_queryset().filter(filters).prefetch_related(
             'debateteammotionpreference_set__motion__tournament',
             'debateteammotionpreference_set__debate_team__team__tournament',
