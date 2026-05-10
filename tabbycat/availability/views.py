@@ -21,6 +21,7 @@ from draw.generator.utils import partial_break_round_split
 from draw.models import Debate
 from participants.models import Adjudicator, Team
 from tournaments.mixins import RoundMixin
+from tournaments.models import Round
 from users.permissions import Permission
 from utils.misc import reverse_round
 from utils.mixins import AdministratorMixin
@@ -40,10 +41,11 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
     view_permission = Permission.VIEW_ROUNDAVAILABILITIES
 
     def get_context_data(self, **kwargs):
-        if self.round.prev:
+        if self.round.draw_type != Round.DrawType.RANDOM:
             kwargs['previous_unconfirmed'] = self.round.prev.debate_set.filter(
                 result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
 
+        if self.round.prev:
             kwargs['new_adjs'] = Adjudicator.objects.filter(
                 round_availabilities__round=self.round,
             ).exclude(
@@ -73,7 +75,7 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
         # Basic check before enable the button to advance
         adjs = self._get_dict(self.tournament.relevant_adjudicators)
         venues = self._get_dict(self.tournament.relevant_venues)
-        kwargs['can_advance'] = teams['in_now'] > 1 and adjs['in_now'] > 0 and venues['in_now'] > 0
+        kwargs['can_advance'] = teams['in_now'] > 1 and adjs['in_now'] > 0
 
         # Order needs to be predictable when iterating through values
         kwargs['availability_info'] = OrderedDict([('teams', teams), ('adjs', adjs), ('venues', venues)])
@@ -87,6 +89,10 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
         kwargs['min_venues'] = teams['in_now'] // per_room_divisor
 
         kwargs['error_type'] = getattr(self, 'error_type', None)
+
+        if not self.round.prev:
+            kwargs['has_seeds'] = self.tournament.team_set.filter(seed__isnull=False).exists()
+
         return super().get_context_data(**kwargs)
 
     def _get_breaking_teams_dict(self):

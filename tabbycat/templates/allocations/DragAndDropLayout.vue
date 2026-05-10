@@ -1,36 +1,37 @@
-<template>
-  <div>
-
-    <section class="vc-header">
-      <slot name="actions"></slot><!-- Actions -->
-      <div class="" id="messages-container"><!-- Messages container--></div>
-      <slot name="extra-messages"></slot>
-    </section>
-
-    <section class="vc-debates-container border-top">
-      <slot name="headers"></slot><!-- Debates Header -->
-      <slot name="debates"></slot><!-- Debates -->
-    </section>
-
-    <drag-and-drop-unallocated-items :unallocatedItems="unallocatedItems"
-                                     :unallocatedComponent="unallocatedComponent"
-                                     :handle-unused-drop="handleUnusedDrop">
-    </drag-and-drop-unallocated-items>
-
-    <slot name="modals"></slot>
-
-    <hover-panel></hover-panel>
-
-  </div>
-</template>
-
-<script>
+<script setup>
 import DragAndDropUnallocatedItems from './DragAndDropUnallocatedItems.vue'
 import HoverPanel from './HoverPanel.vue'
 // The master layout for drag and drop screens; to using slots for content
 
-export default {
-  components: { DragAndDropUnallocatedItems, HoverPanel },
-  props: ['unallocatedItems', 'unallocatedComponent', 'handleUnusedDrop', 'handlePanelSwap'],
-}
+defineProps(['unallocatedItems', 'unallocatedComponent', 'handleUnusedDrop', 'handlePanelSwap'])
 </script>
+
+<template>
+  <div>
+    <section class="vc-header">
+      <slot name="actions" /><!-- Actions -->
+      <div
+        id="messages-container"
+        class=""
+      >
+        <!-- Messages container-->
+      </div>
+      <slot name="extra-messages" />
+    </section>
+
+    <section class="vc-debates-container border-top">
+      <slot name="headers" /><!-- Debates Header -->
+      <slot name="debates" /><!-- Debates -->
+    </section>
+
+    <drag-and-drop-unallocated-items
+      :unallocated-items="unallocatedItems"
+      :unallocated-component="unallocatedComponent"
+      :handle-unused-drop="handleUnusedDrop"
+    />
+
+    <slot name="modals" />
+
+    <hover-panel />
+  </div>
+</template>

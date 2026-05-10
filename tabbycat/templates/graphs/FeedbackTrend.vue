@@ -1,12 +1,5 @@
-<template>
-
-  <td class="unpadded-cell">
-    <div class="d3-graph d3-feedback-trend"></div>
-  </td>
-
-</template>
-
-<script>
+<script setup>
+import { computed, getCurrentInstance, onMounted, watch } from 'vue'
 import * as d3 from 'd3'
 
 // returns slope, intercept and r-square of the line
@@ -119,33 +112,47 @@ function initChart (vueContext) {
     })
 }
 
-export default {
-  props: {
-    cellData: Object,
-    width: { type: Number, default: 425 },
-    height: { type: Number, default: 55 },
-    padding: { type: Number, default: 6 },
-  },
-  computed: {
-    graphData: function () {
-      return this.cellData.graphData
-    },
-  },
-  mounted: function () {
-    if (typeof this.graphData !== 'undefined' && this.graphData.length > 0) {
-      initChart(this) // Only init if we have some info
-    }
-  },
-  watch: {
-    graphData: function () {
-      if (typeof this.graphData !== 'undefined' && this.graphData.length > 0) {
-        // Just remove and remake it as I cbf figuring out the in place update
-        const element = $(this.$el).children('.d3-graph')[0]
-        $(element).children('svg').remove()
-        initChart(this)
-      }
-    },
-  },
+
+const props = defineProps({
+  cellData: Object,
+  width: { type: Number, default: 425 },
+  height: { type: Number, default: 55 },
+  padding: { type: Number, default: 6 },
+})
+
+const graphData = computed(() => props.cellData?.graphData)
+
+const instance = getCurrentInstance()
+const proxy = instance?.proxy
+
+const render = () => {
+  if (Array.isArray(graphData.value) && graphData.value.length > 0 && proxy?.$el) {
+    initChart({
+      $el: proxy.$el,
+      width: props.width,
+      height: props.height,
+      padding: props.padding,
+      cellData: props.cellData,
+      graphData: graphData.value,
+    })
+  }
 }
 
+onMounted(() => {
+  render()
+})
+
+watch(graphData, () => {
+  if (Array.isArray(graphData.value) && graphData.value.length > 0 && proxy?.$el) {
+    const element = $(proxy.$el).children('.d3-graph')[0]
+    $(element).children('svg').remove()
+    render()
+  }
+})
 </script>
+
+<template>
+  <td class="unpadded-cell">
+    <div class="d3-graph d3-feedback-trend" />
+  </td>
+</template>

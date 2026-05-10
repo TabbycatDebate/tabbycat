@@ -1,15 +1,5 @@
-<template id="ballots-graph">
-  <div>
-
-    <div v-if="ballotStream.length === 0" class="text-center py-1">
-      No ballots in for this round yet
-    </div>
-    <div id="statusGraph" class="d3-graph" :style="{ height: graphHeight }"></div>
-
-  </div>
-</template>
-
-<script>
+<script setup>
+import { computed, onMounted, watch } from 'vue'
 import * as d3 from 'd3'
 
 function initChart (padding, data, total, setHeight) {
@@ -96,183 +86,186 @@ function initChart (padding, data, total, setHeight) {
     .call(d3.axisRight(y).tickValues(yAxisTicks).tickFormat(d3.format('d')))
 }
 
-export default {
-  props: {
-    height: { type: Number, default: 350 },
-    padding: { type: Number, default: 35 },
-    graphData: { type: Array, default: function () { return false } },
-    totalDebates: Number,
-  },
-  mounted: function () {
-    initChart(this.padding, this.ballotStream, this.totalDebates, this.height)
-  },
-  methods: {
-    addSeries: function (confirmed, draft, time) {
-      return {
-        confirmed: confirmed,
-        draft: draft,
-        none: this.totalDebates - confirmed - draft,
-        unix_time: time,
-      }
-    },
-  },
-  computed: {
-    graphHeight: function () {
-      // We need the statusGraph to grow once chart has been mounted
-      if (this.ballotStream.length > 1) {
-        return `${this.height}px`
-      }
-      return 0
-    },
-    timePadding: function () {
-      // Amount to pad the start and end of the graph by to show state
-      const defaultTime = 1000 * 60
-      if (this.earliestBallotTime && this.lastBallotTime) {
-        return Math.max(
-          Math.abs((this.lastBallotTime - this.earliestBallotTime) * 0.02),
-          defaultTime,
-        )
-      }
-      return defaultTime
-    },
-    ballots: function () {
-      // All ballots (including duplicates) sortest oldest to newest
-      const filteredBallots = []
-      const allBallots = this.graphData.map(item => item.ballot).sort((a, b) => {
-        // Need to sort by whatever timestamp is latest
-        let aLatestTimeStamp = a.created_timestamp
-        if (a.confirmed_timestamp !== null) {
-          aLatestTimeStamp = a.confirmed_timestamp
-        }
-        let bLatestTimeStamp = b.created_timestamp
-        if (b.confirmed_timestamp !== null) {
-          bLatestTimeStamp = b.confirmed_timestamp
-        }
-        return aLatestTimeStamp < bLatestTimeStamp
-      })
+const props = defineProps({
+  height: { type: Number, default: 350 },
+  padding: { type: Number, default: 35 },
+  graphData: { type: Array, default: function () { return [] } },
+  totalDebates: Number,
+})
 
-      if (allBallots.length === 0) {
-        return allBallots // Empty state
-      }
-
-      // Remove discarded ballots
-      allBallots.filter(ballot => ballot.discarded !== true)
-
-      // Check for previous ballots; only take most recent
-      allBallots.forEach((ballot) => {
-        const hasMatch = filteredBallots.findIndex(testBallot =>
-          testBallot.debate_id === ballot.debate_id)
-        if (hasMatch !== -1) filteredBallots.splice(hasMatch, 1)
-
-        // Need to parse the dates into unix time to get around TZ format issues
-        let created = null
-        if (ballot.created_timestamp !== null) {
-          created = new Date(ballot.created_timestamp).getTime()
-        }
-        let confirmed = null
-        if (ballot.confirmed_timestamp !== null) {
-          confirmed = new Date(ballot.confirmed_timestamp).getTime()
-        }
-
-        filteredBallots.push({
-          created_timestamp: created,
-          confirmed_timestamp: confirmed,
-          debate_id: ballot.debate_id,
-        })
-      })
-      return filteredBallots
-    },
-    earliestBallotTime: function () {
-      if (this.ballots.length === 0) {
-        return null
-      }
-      return this.ballots[0].created_timestamp
-    },
-    lastBallotTime: function () {
-      if (this.ballots.length === 0) {
-        return null
-      }
-      const latestBallot = this.ballots[this.ballots.length - 1]
-      if (latestBallot.confirmed_timestamp === null) {
-        return latestBallot.created_timestamp
-      }
-      return latestBallot.confirmed_timestamp
-    },
-    uniqueTimes: function () {
-      const createdTimes = this.ballots.map(item => item.created_timestamp)
-      const confirmedTimes = this.ballots.map(item => item.confirmed_timestamp)
-      const uniqueTimes = [...new Set([...createdTimes, ...confirmedTimes])]
-      // Remove null and sort by time
-      const uniqueFilteredTimes = uniqueTimes.filter(obj => obj).sort()
-      return uniqueFilteredTimes
-    },
-    ballotStream: function () {
-      // Formats ballots into a time series based on status
-      // Note this time series has essentially a duplicative structure, in that
-      // there are two items with the same status in the array; one with the
-      // start of that time period and one with the end
-
-      const ballotsSeries = []
-      if (this.ballots.length === 0) {
-        return ballotsSeries
-      }
-
-      for (let i = 0; i < this.uniqueTimes.length; i += 1) {
-        const periodStart = this.uniqueTimes[i]
-        let periodEnd
-        if (i === this.uniqueTimes.length - 1) {
-          periodEnd = periodStart + this.timePadding
-        } else {
-          periodEnd = this.uniqueTimes[i + 1]
-        }
-
-        // Calculate ballot status backwards
-        const draftByThen = this.ballots.reduce((count, ballot) => {
-          // If the created timestamp exists in it is AFTER the start of this time period
-          if (ballot.created_timestamp < periodEnd) {
-            // If the ballot is yet to be confirmed
-            if (ballot.confirmed_timestamp === null) {
-              return count + 1
-            }
-            // If the confirmed timestamp is yet to be confirmed
-            if (ballot.confirmed_timestamp + 1 > periodEnd) {
-              return count + 1
-            }
-          }
-          return count
-        }, 0)
-        const confirmedByThen = this.ballots.reduce((count, ballot) => {
-          // If the confirming timestamp exists in it is AFTER the start of this time period
-          if (ballot.confirmed_timestamp <= periodStart &&
-              ballot.confirmed_timestamp !== null) {
-            return count + 1
-          }
-          return count
-        }, 0)
-        // First measure
-        ballotsSeries.push(this.addSeries(confirmedByThen, draftByThen, periodStart))
-        // Second measure
-        ballotsSeries.push(this.addSeries(confirmedByThen, draftByThen, periodEnd))
-      }
-
-      // Add extra initial row so there is always the null state shown
-      ballotsSeries.splice(0, 0, this.addSeries(
-        0, 0,
-        ballotsSeries[0].unix_time,
-      ))
-      ballotsSeries.splice(0, 0, this.addSeries(
-        0, 0,
-        ballotsSeries[0].unix_time - this.timePadding,
-      ))
-
-      return ballotsSeries
-    },
-  },
-  watch: {
-    ballotStream: function () {
-      initChart(this.padding, this.ballotStream, this.totalDebates, this.height)
-    },
-  },
+const addSeries = (confirmed, draft, time) => {
+  return {
+    confirmed: confirmed,
+    draft: draft,
+    none: props.totalDebates - confirmed - draft,
+    unix_time: time,
+  }
 }
 
+const ballots = computed(() => {
+  const filteredBallots = []
+
+  const graphData = Array.isArray(props.graphData) ? props.graphData : []
+  const allBallots = graphData.map(item => item.ballot).sort((a, b) => {
+    let aLatestTimeStamp = a.created_timestamp
+    if (a.confirmed_timestamp !== null) {
+      aLatestTimeStamp = a.confirmed_timestamp
+    }
+    let bLatestTimeStamp = b.created_timestamp
+    if (b.confirmed_timestamp !== null) {
+      bLatestTimeStamp = b.confirmed_timestamp
+    }
+    return aLatestTimeStamp < bLatestTimeStamp
+  })
+
+  if (allBallots.length === 0) {
+    return allBallots
+  }
+
+  allBallots.filter(ballot => ballot.discarded !== true)
+
+  allBallots.forEach((ballot) => {
+    const hasMatch = filteredBallots.findIndex(testBallot =>
+      testBallot.debate_id === ballot.debate_id)
+    if (hasMatch !== -1) filteredBallots.splice(hasMatch, 1)
+
+    let created = null
+    if (ballot.created_timestamp !== null) {
+      created = new Date(ballot.created_timestamp).getTime()
+    }
+    let confirmed = null
+    if (ballot.confirmed_timestamp !== null) {
+      confirmed = new Date(ballot.confirmed_timestamp).getTime()
+    }
+
+    filteredBallots.push({
+      created_timestamp: created,
+      confirmed_timestamp: confirmed,
+      debate_id: ballot.debate_id,
+    })
+  })
+  return filteredBallots
+})
+
+const earliestBallotTime = computed(() => {
+  if (ballots.value.length === 0) {
+    return null
+  }
+  return ballots.value[0].created_timestamp
+})
+
+const lastBallotTime = computed(() => {
+  if (ballots.value.length === 0) {
+    return null
+  }
+  const latestBallot = ballots.value[ballots.value.length - 1]
+  if (latestBallot.confirmed_timestamp === null) {
+    return latestBallot.created_timestamp
+  }
+  return latestBallot.confirmed_timestamp
+})
+
+const timePadding = computed(() => {
+  const defaultTime = 1000 * 60
+  if (earliestBallotTime.value && lastBallotTime.value) {
+    return Math.max(
+      Math.abs((lastBallotTime.value - earliestBallotTime.value) * 0.02),
+      defaultTime,
+    )
+  }
+  return defaultTime
+})
+
+const uniqueTimes = computed(() => {
+  const createdTimes = ballots.value.map(item => item.created_timestamp)
+  const confirmedTimes = ballots.value.map(item => item.confirmed_timestamp)
+  const uniqueTimes = [...new Set([...createdTimes, ...confirmedTimes])]
+  const uniqueFilteredTimes = uniqueTimes.filter(obj => obj).sort()
+  return uniqueFilteredTimes
+})
+
+const ballotStream = computed(() => {
+  const ballotsSeries = []
+  if (ballots.value.length === 0) {
+    return ballotsSeries
+  }
+
+  for (let i = 0; i < uniqueTimes.value.length; i += 1) {
+    const periodStart = uniqueTimes.value[i]
+    let periodEnd
+    if (i === uniqueTimes.value.length - 1) {
+      periodEnd = periodStart + timePadding.value
+    } else {
+      periodEnd = uniqueTimes.value[i + 1]
+    }
+
+    const draftByThen = ballots.value.reduce((count, ballot) => {
+      if (ballot.created_timestamp < periodEnd) {
+        if (ballot.confirmed_timestamp === null) {
+          return count + 1
+        }
+        if (ballot.confirmed_timestamp + 1 > periodEnd) {
+          return count + 1
+        }
+      }
+      return count
+    }, 0)
+    const confirmedByThen = ballots.value.reduce((count, ballot) => {
+      if (ballot.confirmed_timestamp <= periodStart &&
+          ballot.confirmed_timestamp !== null) {
+        return count + 1
+      }
+      return count
+    }, 0)
+
+    ballotsSeries.push(addSeries(confirmedByThen, draftByThen, periodStart))
+    ballotsSeries.push(addSeries(confirmedByThen, draftByThen, periodEnd))
+  }
+
+  ballotsSeries.splice(0, 0, addSeries(
+    0, 0,
+    ballotsSeries[0].unix_time,
+  ))
+  ballotsSeries.splice(0, 0, addSeries(
+    0, 0,
+    ballotsSeries[0].unix_time - timePadding.value,
+  ))
+
+  return ballotsSeries
+})
+
+const graphHeight = computed(() => {
+  if (ballotStream.value.length > 1) {
+    return `${props.height}px`
+  }
+  return 0
+})
+
+const render = () => {
+  initChart(props.padding, ballotStream.value, props.totalDebates, props.height)
+}
+
+onMounted(() => {
+  render()
+})
+
+watch(ballotStream, () => {
+  render()
+})
 </script>
+
+<template id="ballots-graph">
+  <div>
+    <div
+      v-if="ballotStream.length === 0"
+      class="text-center py-1"
+    >
+      No ballots in for this round yet
+    </div>
+    <div
+      id="statusGraph"
+      class="d3-graph"
+      :style="{ height: graphHeight }"
+    />
+  </div>
+</template>

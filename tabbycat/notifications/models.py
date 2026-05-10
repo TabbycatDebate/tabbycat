@@ -55,6 +55,8 @@ class BulkNotification(models.Model):
         ADJ_REG = 'a', _("adjudicator registration")
         MOTIONS = 'm', _("motion(s) released")
         TEAM_DRAW = 'r', _("team draw released")
+        INSTITUTION_REG = 'i', _("institution registration")
+        SLOTS_ALLOCATED = 's', _("participant slots allocated")
         CUSTOM = '', _("custom message")
 
     event = models.CharField(max_length=20, choices=EventType.choices,

@@ -1,17 +1,5 @@
-<template>
-  <div :style="{ width: '49.5%', display: 'inline-block' }">
-
-    <h6 v-if="total > 0" class="text-center text-muted pt-0 mb-3">
-      {{ title }}<br>({{ total }})
-    </h6>
-    <h6 v-if="total === 0" class="text-center text-muted pt-1 mb-1">
-      no data for<br> {{ title }}
-    </h6>
-
-  </div>
-</template>
-
-<script>
+<script setup>
+import { computed, getCurrentInstance, onMounted } from 'vue'
 import * as d3 from 'd3'
 
 function InitChart (vueContext) {
@@ -65,49 +53,77 @@ function InitChart (vueContext) {
   })
 }
 
-export default {
-  props: {
-    title: String,
-    graphData: Array,
-    radius: { type: Number, default: 60 },
-    padding: { type: Number, default: 1 },
-    regions: Array,
-  },
-  mounted: function () {
-    if (this.graphData !== undefined && this.total > 0) {
-      InitChart(this) // Only init if we have some info
-    }
-  },
-  computed: {
-    total: function () {
-      let total = 0
-      for (let i = 0; i < this.graphData.length; i += 1) {
-        total += this.graphData[i].count
-      }
-      return total
-    },
-  },
-  methods: {
-    colorclass: function (label) {
-      if (this.regions === undefined) {
-        return `gender-display gender-${label.toLowerCase()}`
-      }
-      return `region-display region-${label}`
-    },
-    nicelabel: function (label) {
-      if (label === 'Male') {
-        return 'Male identifying'
-      } else if (label === 'NM') {
-        return 'Non-cis male identifying'
-      } else if (label === 'Unknown') {
-        return 'Unspecified or unrecorded'
-      }
-      return this.regions[label].name
-    },
-    percentage: function (quantity) {
-      return ` (${Math.round((quantity / this.total) * 100)}%)`
-    },
-  },
+
+const props = defineProps({
+  title: String,
+  graphData: Array,
+  radius: { type: Number, default: 60 },
+  padding: { type: Number, default: 1 },
+  regions: Array,
+})
+
+const instance = getCurrentInstance()
+const proxy = instance?.proxy
+
+const total = computed(() => {
+  const graphData = Array.isArray(props.graphData) ? props.graphData : []
+  let total = 0
+  for (let i = 0; i < graphData.length; i += 1) {
+    total += graphData[i].count
+  }
+  return total
+})
+
+const colorclass = (label) => {
+  if (props.regions === undefined) {
+    return `gender-display gender-${label.toLowerCase()}`
+  }
+  return `region-display region-${label}`
 }
 
+const nicelabel = (label) => {
+  if (label === 'Male') {
+    return 'Male identifying'
+  } else if (label === 'NM') {
+    return 'Non-cis male identifying'
+  } else if (label === 'Unknown') {
+    return 'Unspecified or unrecorded'
+  }
+  return props.regions[label].name
+}
+
+const percentage = (quantity) => {
+  return ` (${Math.round((quantity / total.value) * 100)}%)`
+}
+
+onMounted(() => {
+  if (props.graphData !== undefined && total.value > 0 && proxy?.$el) {
+    InitChart({
+      $el: proxy.$el,
+      radius: props.radius,
+      padding: props.padding,
+      graphData: props.graphData,
+      colorclass,
+      percentage,
+      nicelabel,
+    })
+  }
+})
 </script>
+
+<template>
+  <div :style="{ width: '49.5%', display: 'inline-block' }">
+    <h6
+      v-if="total > 0"
+      class="text-center text-muted pt-0 mb-3"
+    >
+      {{ title }}<br>({{ total }})
+    </h6>
+    <h6
+      v-if="total === 0"
+      class="text-center text-muted pt-1 mb-1"
+    >
+      no data for<br> {{ title }}
+    </h6>
+  </div>
+</template>

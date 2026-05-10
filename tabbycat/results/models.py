@@ -2,7 +2,7 @@ import logging
 from threading import Lock
 
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -140,12 +140,15 @@ class BallotSubmission(Submission):
         return self._result
 
     def clean(self):
-        # The motion must be from the relevant round
         super().clean()
-        if self.motion is not None and self.debate.round not in self.motion.rounds.all():
-            raise ValidationError(_("Debate is in %(round)s but motion (%(motion)s) is not in round") % {
-                    'round': self.debate.round.name,
-                    'motion': self.motion.reference})
+        try:
+            # The motion must be from the relevant round
+            if self.motion is not None and self.debate.round not in self.motion.rounds.all():
+                raise ValidationError(_("Debate is in %(round)s but motion (%(motion)s) is not in round") % {
+                        'round': self.debate.round.name,
+                        'motion': self.motion.reference})
+        except ObjectDoesNotExist:
+            pass
 
         if self.confirmed and self.discarded:
             raise ValidationError(_("A ballot can't be both confirmed and discarded!"))
@@ -258,10 +261,13 @@ class TeamScoreByAdj(models.Model):
 
     def clean(self):
         super().clean()
-        if (self.debate_team.debate != self.debate_adjudicator.debate or
-                self.debate_team.debate != self.ballot_submission.debate):
-            raise ValidationError(_("The debate team, debate adjudicator and ballot "
-                    "submission must all relate to the same debate."))
+        try:
+            if (self.debate_team.debate != self.debate_adjudicator.debate or
+                    self.debate_team.debate != self.ballot_submission.debate):
+                raise ValidationError(_("The debate team, debate adjudicator and ballot "
+                        "submission must all relate to the same debate."))
+        except ObjectDoesNotExist:
+            pass
 
 
 class SpeakerScoreByAdj(models.Model):
@@ -293,10 +299,13 @@ class SpeakerScoreByAdj(models.Model):
 
     def clean(self):
         super().clean()
-        if (self.debate_team.debate != self.debate_adjudicator.debate or
-                self.debate_team.debate != self.ballot_submission.debate):
-            raise ValidationError(_("The debate team, debate adjudicator and ballot "
-                    "submission must all relate to the same debate."))
+        try:
+            if (self.debate_team.debate != self.debate_adjudicator.debate or
+                    self.debate_team.debate != self.ballot_submission.debate):
+                raise ValidationError(_("The debate team, debate adjudicator and ballot "
+                        "submission must all relate to the same debate."))
+        except ObjectDoesNotExist:
+            pass
 
 
 class TeamScore(models.Model):
@@ -378,12 +387,15 @@ class SpeakerScore(models.Model):
 
     def clean(self):
         super().clean()
-        if self.debate_team.team != self.speaker.team:
-            raise ValidationError(_("The debate team and speaker must be from the "
-                    "same team."))
-        if self.ballot_submission.debate != self.debate_team.debate:
-            raise ValidationError(_("The ballot submission and debate team must "
+        try:
+            if self.debate_team.team != self.speaker.team:
+                raise ValidationError(_("The debate team and speaker must be from the "
+                        "same team."))
+            if self.ballot_submission.debate != self.debate_team.debate:
+                raise ValidationError(_("The ballot submission and debate team must "
                     "relate to the same debate."))
+        except ObjectDoesNotExist:
+            pass
 
 
 class ScoreCriterion(models.Model):

@@ -5,6 +5,8 @@ import math
 
 from django.contrib import messages
 from django.db.models import Count, F, Q
+from django.db.models.functions import Coalesce
+from django.forms import HiddenInput
 from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
 from django.utils.html import conditional_escape, escape
@@ -678,7 +680,7 @@ class SetAdjudicatorBreakingStatusView(AdministratorMixin, TournamentMixin, LogA
     def post(self, request, *args, **kwargs):
         body = self.request.body.decode('utf-8')
         posted_info = json.loads(body)
-        adjudicator = Adjudicator.objects.get(id=posted_info['id'])
+        adjudicator = Adjudicator.objects.get((Q(tournament=self.tournament) | Q(tournament=None)), id=posted_info['id'])
         adjudicator.breaking = posted_info['breaking']
         adjudicator.save()
         return JsonResponse(json.dumps(True), safe=False)
@@ -768,7 +770,9 @@ class PublicFeedbackProgress(PublicTournamentPageMixin, BaseFeedbackProgressView
 class BaseFeedbackToggleView(AdministratorMixin, TournamentMixin, PostOnlyRedirectView):
 
     def post(self, request, *args, **kwargs):
-        feedback = AdjudicatorFeedback.objects.get(id=kwargs['feedback_id'])
+        feedback = AdjudicatorFeedback.objects.annotate(
+            tournament_id=Coalesce(F('source_adjudicator__debate__round__tournament_id'), F('source_team__debate__round__tournament_id')),
+        ).get(tournament_id=self.tournament.id, id=kwargs['feedback_id'])
         feedback = self.modify_feedback(feedback)
         feedback.save()
 
@@ -856,9 +860,14 @@ class AdjFeedbackQuestionsFormset(CustomQuestionFormsetView):
     formset_model = AdjudicatorFeedbackQuestion
     formset_factory_kwargs = {
         'fields': [
+            'tournament', 'for_content_type',
             'name', 'reference', 'from_adj', 'from_team',
             'text', 'help_text', 'answer_type', 'required', 'min_value', 'max_value', 'choices',
         ],
+        'widgets': {
+            'tournament': HiddenInput,
+            'for_content_type': HiddenInput,
+        },
     }
     question_model = AdjudicatorFeedback
     success_url = 'adjfeedback-overview'

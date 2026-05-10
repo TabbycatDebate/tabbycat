@@ -43,18 +43,18 @@
     {% endif %}
 
     {% if pref.public_checkins_submit %}
-      <form action="{% tournamenturl 'checkins-public-submit' url_key %}" method="POST" id="checkInForm" class="list-group-item">
+      <form action="{% tournamenturl 'checkins-public-submit' url_key %}" method="POST" class="checkInForm">
         {% csrf_token %}
         {% if event %}
           <input type="hidden" name="action" value="revoke" />
           {% blocktrans trimmed with check_time=event.time asvar text %}
             Revoke check-in from {{ check_time }}
           {% endblocktrans %}
-          {% include "components/item-action.html" with id="triggerCheckInForm" url="" child=True type="warning" %}
+          {% include "components/item-submit.html" with type="warning" text=text %}
         {% else %}
           <input type="hidden" name="action" value="checkin" />
           {% trans "Check in" as text %}
-          {% include "components/item-action.html" with id="triggerCheckInForm" url="" child=True %}
+          {% include "components/item-submit.html" with text=text %}
         {% endif %}
       </form>
     {% elif checkins_used %}
@@ -72,7 +72,7 @@
 
     {% if checkins_used %}
       {% trans "Show barcode for check-in" as text %}
-      {% include "components/item-action.html" with id="openBarcode" url="" icon="grid" child=False %}
+      {% include "components/item-action.html" with id="openBarcode" url="#" icon="grid" child=False data_toggle="modal" data_target="#barcodeModal" %}
     {% endif %}
 
     {% if object.adjudicator and pref.participant_ballots == 'private-urls' %}
@@ -137,15 +137,6 @@
 
 {% block js %}
   {{ block.super }}
-  <script>
-    $(document).ready( function() { // Use the fake submit buttons as real submission
-      $("#triggerCheckInForm").click( function() {
-        $("#checkInForm").submit();
-        return false;
-      });
-    });
-  </script>
-
   <!-- WebPush Subscription Logic -->
   <script>
     // Utility function to convert base64 to Uint8Array
@@ -257,20 +248,21 @@
         });
     }
 
-    $(document).ready(function() {
-      $('#subscribePushNotifications').click(function() {
-        subscribeUser();
-        return false;
-      });
+    document.addEventListener('DOMContentLoaded', function() {
+      var btn = document.getElementById('subscribePushNotifications');
+      if (btn) {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          subscribeUser();
+        });
+      }
     });
   </script>
   {% if checkins_used %}
     <script src="{% static 'js/vendor/JsBarcode.all.min.js' %}"></script>
     <script>
-      JsBarcode(".barcode-placeholder").init();
-      $("#openBarcode").click( function() {
-        $("#barcodeModal").modal('show');
-        return false;
+      document.addEventListener('DOMContentLoaded', function() {
+        JsBarcode(".barcode-placeholder").init();
       });
     </script>
   {% endif %}

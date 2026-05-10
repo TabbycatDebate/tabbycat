@@ -305,6 +305,26 @@ SUMMERNOTE_CONFIG = {
     ],
     'disable_upload': True,
     'iframe': True, # Necessary; if just to compartmentalise jQuery dependency,
+    'js': (
+        '/static/js/vendor/summernote-cleaner.js',
+    ),
+    'js_for_inplace': (
+        '/static/js/vendor/summernote-cleaner.js',
+    ),
+    'summernote': {
+        'cleaner': {
+            'action': 'both',  # both|button|paste 'button' only cleans via toolbar button, 'paste' only cleans on paste, 'both' does both
+            'newline': '<br>',
+            'keepHtml': False,
+            'keepOnlyTags': ['<p>', '<br>', '<ul>', '<ol>', '<li>', '<b>', '<strong>', '<i>', '<em>', '<u>', '<a>'],
+            'keepClasses': False,
+            'badTags': ['style', 'script', 'applet', 'embed', 'noframes', 'noscript', 'html'],
+            'badAttributes': ['style', 'start'],
+            'limitChars': False,
+            'limitDisplay': 'both',
+            'limitStop': False,
+        },
+    },
 }
 
 X_FRAME_OPTIONS = 'SAMEORIGIN' # Necessary to get Django-Summernote working because of Django 3 changes
@@ -346,6 +366,7 @@ DYNAMIC_PREFERENCES = {
 # ==============================================================================
 
 REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'api.exceptions.api_exception_handler',
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],

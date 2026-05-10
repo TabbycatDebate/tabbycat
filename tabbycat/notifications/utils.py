@@ -302,6 +302,52 @@ class TeamSpeakerEmailGenerator(NotificationContextGenerator):
         return emails
 
 
+class InstitutionRegistrationEmailGenerator(NotificationContextGenerator):
+
+    @dataclass
+    class InstitutionRegistrationContext(EmailContextData):
+        URL: str
+        TOURN: str
+        INSTITUTION: str
+
+    context_class = InstitutionRegistrationContext
+
+    @classmethod
+    def generate(cls, to: 'QuerySet[Person]', url: str, tournament: 'Tournament') -> List[Tuple[EmailContextData, 'Person']]:
+        tourn_str = str(tournament)
+        return [(cls.context_class(URL=_create_url(url), TOURN=tourn_str, INSTITUTION=person.coach.tournament_institution.institution.name), person) for person in to]
+
+
+class SlotsAllocatedEmailGenerator(NotificationContextGenerator):
+
+    @dataclass
+    class SlotsAllocatedContext(EmailContextData):
+        TEAMS_ALLOCATED: int
+        ADJUDICATORS_ALLOCATED: int
+        INSTITUTION: str
+        URL: str
+        TOURN: str
+
+    context_class = SlotsAllocatedContext
+
+    @classmethod
+    def generate(cls, to: 'QuerySet[Person]', url: str, tournament: 'Tournament') -> List[Tuple[EmailContextData, 'Person']]:
+        tourn_str = str(tournament)
+        return [
+            (
+                cls.context_class(
+                    URL=_create_url(url),
+                    TOURN=tourn_str,
+                    INSTITUTION=person.coach.tournament_institution.institution.name,
+                    TEAMS_ALLOCATED=person.coach.tournament_institution.teams_allocated,
+                    ADJUDICATORS_ALLOCATED=person.coach.tournament_institution.adjudicators_allocated,
+                ),
+                person,
+            )
+            for person in to
+        ]
+
+
 class TeamDrawEmailGenerator(NotificationContextGenerator):
 
     @dataclass

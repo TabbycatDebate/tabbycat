@@ -82,6 +82,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         }
         feedback_data = [{
             'text': self.get_formatted_adj_score(adj.feedback_score),
+            'sort': adj.feedback_score,
             'tooltip': _("This adjudicator's feedback average"),
         } for adj in adjudicators]
 
@@ -109,6 +110,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         }
         diff_data = [{
             'text': '%0.1f' % adj.feedback_variance if adj.feedback_variance is not None else '',
+            'sort': adj.feedback_variance,
             'tooltip': _("The standard deviation of this adjudicator's current scores"),
         } for adj in adjudicators]
 
@@ -164,6 +166,22 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         }
         owed_data = [_owed_cell(progress) for progress in progress_list]
         self.add_column(owed_header, owed_data)
+
+        def _percentage_cell(progress):
+            p = progress.num_fulfilled() / progress.num_expected() * 100 if progress.num_expected() else 100
+            cell = {
+                'text': '%.1f%%' % p,
+                'sort': p,
+            }
+            return cell
+
+        percentage_header = {
+            'key': 'percent',
+            'icon': 'percent',
+            'tooltip': _("% Submitted"),
+        }
+        percentage_data = [_percentage_cell(progress) for progress in progress_list]
+        self.add_column(percentage_header, percentage_data)
 
         if self._show_record_links:
 

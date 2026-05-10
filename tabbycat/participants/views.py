@@ -1,5 +1,7 @@
 import json
 import logging
+from itertools import groupby
+from operator import itemgetter
 
 from django.conf import settings
 from django.contrib import messages
@@ -14,7 +16,9 @@ from django.views.generic.base import View
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
+from draw.models import DebateTeam
 from motions.models import RoundMotion
 from notifications.models import BulkNotification
 from notifications.views import TournamentTemplateEmailCreateView
@@ -28,7 +32,7 @@ from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import ModelFormSetView, VueTableTemplateView
 
-from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
+from .models import Adjudicator, Institution, Person, Speaker, SpeakerCategory, Team
 from .serializers import SpeakerSerializer
 from .tables import AdjudicatorDebateTable, TeamDebateTable
 
@@ -135,6 +139,56 @@ class PublicInstitutionsListView(PublicTournamentPageMixin, BaseInstitutionsList
     cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
 
 
+class InstitutionGenderDiversityView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
+    """View showing gender breakdown of speakers and adjudicators by institution."""
+
+    page_title = gettext_lazy("Institution Gender Diversity")
+    page_emoji = '📊'
+    template_name = 'participants_list.html'
+    view_permission = Permission.VIEW_PARTICIPANT_GENDER
+
+    def get_context_data(self, **kwargs):
+        kwargs['gender_diversity_nav'] = True
+        return super().get_context_data(**kwargs)
+
+    def get_table(self):
+        tournament = self.tournament
+        gender_choices = dict(Person.GENDER_CHOICES) | {'': _("N/A")}
+
+        # Get institutions with participants in this tournament
+        institutions = Institution.objects.filter(
+            Q(team__tournament=tournament) | Q(adjudicator__tournament=tournament, adjudicator__independent=False),
+        ).distinct().order_by('code')
+
+        speakers = {k: list(v) for k, v in groupby(Speaker.objects.filter(
+            team__tournament=tournament,
+        ).values('team__institution', 'gender').annotate(
+            count=Count('id'),
+        ).order_by('team__institution'), key=lambda x: x['team__institution'])}
+        adjudicators = {k: list(v) for k, v in groupby(Adjudicator.objects.filter(tournament=tournament, independent=False).values('institution', 'gender').annotate(
+            count=Count('id'),
+        ).order_by('institution'), key=lambda x: x['institution'])}
+
+        table = TabbycatTableBuilder(view=self, sort_key='institution')
+
+        table.add_column(
+            {'key': 'institution', 'title': _("Institution")},
+            [inst.name for inst in institutions],
+        )
+        for gender, label in gender_choices.items():
+            table.add_column(
+                {'key': f'speaker_{gender}', 'title': _("Speakers (%(gender)s)") % {'gender': label}},
+                [next((s['count'] for s in speakers.get(inst.id, []) if s['gender'] == gender), 0) for inst in institutions],
+            )
+        for gender, label in gender_choices.items():
+            table.add_column(
+                {'key': f'adjudicator_{gender}', 'title': _("Adjudicators (%(gender)s)") % {'gender': label}},
+                [next((s['count'] for s in adjudicators.get(inst.id, []) if s['gender'] == gender), 0) for inst in institutions],
+            )
+
+        return table
+
+
 class BaseCodeNamesListView(TournamentMixin, VueTableTemplateView):
 
     page_title = gettext_lazy("Code Names")
@@ -193,7 +247,10 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
     allow_null_tournament = True
 
     def get_queryset(self):
-        return super().get_queryset().select_related('institution__region')
+        qs = super().get_queryset() if not self.admin else self.model.objects.all_with_unconfirmed.filter(
+            Q(tournament=self.tournament) | Q(tournament__isnull=self.allow_null_tournament),
+        )
+        return qs.select_related('tournament', 'institution__region')
 
     def use_team_code_names(self):
         return use_team_code_names(self.tournament, self.admin, user=self.request.user)
@@ -201,6 +258,7 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
     @staticmethod
     def allocations_set(obj, admin, tournament):
         model_related = {'Team': 'debateteam_set', 'Adjudicator': 'debateadjudicator_set'}[type(obj).__name__]
+        draw_statuses = [Round.Status.RELEASED, Round.Status.TEAMS_RELEASED] if type(obj).__name__ == 'Team' else [Round.Status.RELEASED]
         try:
             qs = getattr(obj, model_related).filter(
                 debate__round__in=tournament.current_rounds).select_related('debate__round')
@@ -208,16 +266,20 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
                 qs = qs.prefetch_related(Prefetch('debate__round__roundmotion_set',
                     queryset=RoundMotion.objects.select_related('motion')))
             else:
-                qs = qs.filter(debate__round__draw_status=Round.Status.RELEASED).prefetch_related(
+                qs = qs.filter(debate__round__draw_status__in=draw_statuses).prefetch_related(
                     Prefetch('debate__round__roundmotion_set',
                         queryset=RoundMotion.objects.filter(round__motions_status=Round.MotionsStatus.MOTIONS_RELEASED).select_related('motion')))
             return qs
         except ObjectDoesNotExist:
             return None
 
+    @property
+    def draw_released(self):
+        return self.tournament.current_round.draw_status == Round.Status.RELEASED
+
     def get_context_data(self, **kwargs):
         kwargs['admin_page'] = self.admin
-        kwargs['draw_released'] = self.tournament.current_round.draw_status == Round.Status.RELEASED
+        kwargs['draw_released'] = self.draw_released
         kwargs['use_code_names'] = self.use_team_code_names()
         kwargs[self.model_kwarg] = self.allocations_set(self.object, self.admin, self.tournament)
 
@@ -247,6 +309,10 @@ class BaseTeamRecordView(BaseRecordView):
     def get_page_emoji(self):
         if self.tournament.pref('show_emoji'):
             return self.object.emoji
+
+    @property
+    def draw_released(self):
+        return self.tournament.current_round.draw_status in [Round.Status.RELEASED, Round.Status.TEAMS_RELEASED]
 
     def get_context_data(self, **kwargs):
         kwargs['team_short_name'] = self.object.code_name if self.use_team_code_names() else self.object.short_name
@@ -452,3 +518,90 @@ class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMi
             return JsonResponse({'status': 'false', 'message': message}, status=500)
 
         return JsonResponse(json.dumps(True), safe=False)
+
+
+class InstitutionAdjRuleView(TournamentMixin, AdministratorMixin, VueTableTemplateView):
+
+    page_title = gettext_lazy("Adjudicator Requirement")
+    page_emoji = '🔨'
+    template_name = 'participants_list.html'
+    admin = True
+
+    RULES = {
+        'N-1': lambda a, t: a < t - 1,
+    }
+
+    def get_table(self):
+
+        rounds = self.tournament.round_set.filter(stage=Round.Stage.PRELIMINARY).exclude(draw_status=Round.Status.NONE)
+        institutions = Institution.objects.filter(
+            Q(adjudicator__tournament=self.tournament) | Q(team__tournament=self.tournament),
+        ).distinct()
+        inst_teams = DebateTeam.objects.filter(
+            debate__round__stage=Round.Stage.PRELIMINARY,
+            team__tournament=self.tournament, team__institution_id__isnull=False,
+        ).exclude(
+            debate__round__draw_status=Round.Status.NONE,
+        ).order_by('team__institution_id').values('debate__round_id', 'team__institution_id').annotate(Count('id'))
+        inst_adju = DebateAdjudicator.objects.filter(
+            debate__round__stage=Round.Stage.PRELIMINARY,
+            adjudicator__tournament=self.tournament, adjudicator__institution_id__isnull=False,
+        ).exclude(
+            debate__round__draw_status=Round.Status.NONE,
+        ).order_by('adjudicator__institution_id').values('debate__round_id', 'adjudicator__institution_id').annotate(Count('id'))
+
+        reg_teams = {r['institution_id']: r['id__count'] for r in Team.objects.values('institution_id').annotate(Count('id'))}
+        reg_adjs = {
+            r['institution_id']: r['id__count'] for r in Adjudicator.objects.filter(independent=False).values('institution_id').annotate(Count('id'))
+        }
+
+        for inst_id, group in groupby(inst_teams, key=itemgetter('team__institution_id')):
+            institution = next((i for i in institutions if i.id == inst_id), None)
+            for r in group:
+                setattr(institution, 'r_%d_teams' % r['debate__round_id'], r['id__count'])
+        for inst_id, group in groupby(inst_adju, key=itemgetter('adjudicator__institution_id')):
+            institution = next((i for i in institutions if i.id == inst_id), None)
+            for r in group:
+                setattr(institution, 'r_%d_adjudicators' % r['debate__round_id'], r['id__count'])
+
+        table = TabbycatTableBuilder(
+            view=self,
+            data=institutions,
+            sort_key='code_name',
+        )
+
+        table.add_column(
+            {'key': 'code_name', 'title': _("Institution")},
+            [inst.code for inst in institutions],
+        )
+
+        def create_inst_cell(round_id, inst, teams=0, adju=0):
+            teams = getattr(inst, f"r_{round_id}_teams", teams)
+            adju = getattr(inst, f"r_{round_id}_adjudicators", adju)
+
+            cell = {'text': f"{teams}/{adju}"}
+
+            if self.RULES['N-1'](adju, teams):
+                cell['class'] = 'text-danger'
+            return cell
+
+        table.add_column(
+            {'key': 'reg', 'title': _("Registered")},
+            [create_inst_cell(0, inst, reg_teams[inst.id], reg_adjs[inst.id]) for inst in institutions],
+        )
+
+        for round in rounds:
+            table.add_column(
+                {
+                    'key': f'round_{round.id}',
+                    'title': round.name,
+                },
+                [create_inst_cell(round.id, inst) for inst in institutions],
+            )
+
+        return table
+
+    def get_context_data(self, **kwargs):
+        # These are used to choose the nav display
+        kwargs['adj_req_nav'] = True
+        return super().get_context_data(**kwargs)

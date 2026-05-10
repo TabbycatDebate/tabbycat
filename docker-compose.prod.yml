@@ -4,15 +4,14 @@
 # Note that this file extends and overrides what is specified in docker-compose.yml
 
 # Initial setup with
-# $ docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
+# $ docker compose -f docker-compose.yml -f docker-compose.prod.yml build
 
 # Can run management commands with
-# $ docker-compose run web /code/manage.py whatever
+# $ docker compose run web /code/manage.py whatever
 
-version: '3'
+version: "3"
 
 services:
-
   web:
     environment:
       - DEBUG=0

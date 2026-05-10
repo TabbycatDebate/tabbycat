@@ -11,6 +11,7 @@ from adjfeedback.models import AdjudicatorBaseScoreHistory
 from availability.admin import RoundAvailabilityInline
 from breakqual.models import BreakCategory
 from draw.models import TeamSideAllocation
+from registration.admin import AnswerInline
 from tournaments.models import Tournament
 from utils.admin import ModelAdmin
 from venues.admin import VenueConstraintInline
@@ -65,6 +66,11 @@ class TournamentInstitutionAdmin(ModelAdmin):
         'adjudicators_allocated',
     )
     search_fields = ('institution__name', 'tournament__name')
+    list_select_related = ('institution', 'tournament')
+    inlines = (AnswerInline,)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('answers__question')
 
 # ==============================================================================
 # Coach
@@ -81,6 +87,10 @@ class CoachAdmin(ModelAdmin):
     )
     ordering = ("name",)
     search_fields = ('name', )
+    inlines = (AnswerInline,)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('answers__question')
 
 # ==============================================================================
 # Speaker
@@ -94,6 +104,10 @@ class SpeakerAdmin(ModelAdmin):
     search_fields = ('name', 'team__short_name', 'team__long_name',
                      'team__institution__name', 'team__institution__code')
     raw_id_fields = ('team', )
+    inlines = (AnswerInline,)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('answers__question')
 
 
 # ==============================================================================
@@ -154,7 +168,7 @@ class AdjudicatorTeamConflictInline(admin.TabularInline):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'team':
-            kwargs["queryset"] = Team.objects.select_related('tournament')
+            kwargs["queryset"] = Team.objects.all_with_unconfirmed.select_related('tournament')
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
@@ -162,18 +176,19 @@ class AdjudicatorTeamConflictInline(admin.TabularInline):
 class TeamAdmin(ModelAdmin):
     form = TeamForm
     list_display = ('long_name', 'short_name', 'emoji_code', 'institution',
-                    'tournament')
+                    'tournament', 'registration_status')
     search_fields = ('reference', 'short_name', 'code_name', 'institution__name',
                      'institution__code', 'tournament__name')
-    list_filter = ('tournament', 'institution', 'break_categories')
+    list_filter = ('tournament', 'institution', 'break_categories', 'registration_status')
+    list_editable = ('registration_status',)
     inlines = (SpeakerInline, TeamSideAllocationInline, VenueConstraintInline,
                AdjudicatorTeamConflictInline, TeamInstitutionConflictInline,
-               RoundAvailabilityInline)
+               RoundAvailabilityInline, AnswerInline)
     actions = ['delete_url_key', 'assign_emoji', 'assign_code_names']
 
     def get_queryset(self, request):
-        # can't use select_related, because TeamManager always puts a select_related on this
-        return super().get_queryset(request).select_related('tournament')
+        # Show all teams including unconfirmed in admin
+        return Team.objects.all_with_unconfirmed.select_related('tournament').prefetch_related('answers__question')
 
     @admin.display(description=_("Emoji & Code"))
     def emoji_code(self, obj):
@@ -263,18 +278,18 @@ class AdjudicatorForm(forms.ModelForm):
 class AdjudicatorAdmin(ModelAdmin):
     form = AdjudicatorForm
     list_display = ('name', 'institution', 'tournament', 'trainee',
-                    'independent', 'adj_core', 'gender', 'base_score')
+                    'independent', 'adj_core', 'gender', 'base_score', 'registration_status')
     search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code')
-    list_filter = ('tournament', 'institution')
-    list_editable = ('independent', 'adj_core', 'trainee', 'base_score')
+    list_filter = ('tournament', 'institution', 'registration_status')
+    list_editable = ('independent', 'adj_core', 'trainee', 'base_score', 'registration_status')
     inlines = (AdjudicatorTeamConflictInline, AdjudicatorInstitutionConflictInline,
                AdjudicatorAdjudicatorConflictInline, AdjudicatorBaseScoreHistoryInline,
-               RoundAvailabilityInline)
+               RoundAvailabilityInline, AnswerInline)
     actions = ['delete_url_key']
 
     def get_queryset(self, request):
-        # can't use select_related, because TeamManager always puts a select_related on this
-        return super().get_queryset(request).select_related('tournament')
+        # Show all adjudicators including unconfirmed in admin
+        return Adjudicator.objects.all_with_unconfirmed.select_related('tournament').prefetch_related('answers__question')
 
     @admin.display(description=_("Delete URL Key"))
     def delete_url_key(self, request, queryset):

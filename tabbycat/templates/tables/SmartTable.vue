@@ -1,15 +1,136 @@
+<script setup>
+import _ from 'lodash'
+import { mkConfig, generateCsv, download } from 'export-to-csv'
+import { computed, defineAsyncComponent, toRef } from 'vue'
+import SmartHeader from './SmartHeader.vue'
+import SmartCell from './SmartCell.vue'
+import CheckCell from '../tables/CheckCell.vue'
+import BallotsCell from '../../results/templates/BallotsCell.vue'
+import { useSortableTable } from '../composables/useSortableTable.js'
+
+const FeedbackTrend = defineAsyncComponent(() => import('../graphs/FeedbackTrend.vue'))
+
+const props = defineProps({
+  tableHeaders: Array,
+  tableContent: Array,
+  tableClass: String,
+  emptyTitle: String,
+  highlightColumn: Number, // Column index to use for row highlighting (null/undefined = no highlighting)
+  defaultSortKey: {
+    type: String,
+    default: '',
+  },
+  defaultSortOrder: {
+    type: String,
+    default: '',
+  },
+  externalFilterKey: String,
+})
+
+const emit = defineEmits(['toggle-checked'])
+
+const rows = computed(() => {
+  const rows = []
+  for (let i = 0; i < props.tableContent.length; i += 1) {
+    const rowCells = []
+    for (let j = 0; j < props.tableContent[i].length; j += 1) {
+      rowCells.push(props.tableContent[i][j])
+    }
+    rows.push(rowCells)
+  }
+  return rows
+})
+
+const headers = computed(() => {
+  const headers = []
+  if (typeof (props.tableContent[0]) !== 'undefined') {
+    for (let i = 0; i < props.tableHeaders.length; i += 1) {
+      headers.push(props.tableHeaders[i])
+    }
+  }
+  return headers
+})
+
+const sortableData = computed(() => rows.value)
+
+const getSortableProperty = (row, orderedHeaderIndex) => {
+  const cell = row[orderedHeaderIndex]
+  const cellData = _.isUndefined(cell.sort) ? cell.text : cell.sort
+  return cellData
+}
+
+const {
+  sortKey,
+  sortOrder,
+  updateSorting,
+  dataFilteredByKey,
+} = useSortableTable({
+  headers,
+  sortableData,
+  getSortableProperty,
+  defaultSortKey: props.defaultSortKey,
+  defaultSortOrder: props.defaultSortOrder,
+  externalFilterKey: toRef(props, 'externalFilterKey'),
+})
+
+const getCellDataWithHighlight = (cellData, _cellIndex, rowIndex) => {
+  if (props.highlightColumn != null && rowIndex > 0) {
+    const currentRow = dataFilteredByKey.value[rowIndex]
+    const previousRow = dataFilteredByKey.value[rowIndex - 1]
+    const currentValue = getSortableProperty(currentRow, props.highlightColumn)
+    const previousValue = getSortableProperty(previousRow, props.highlightColumn)
+    if (currentValue !== previousValue) {
+      const modifiedCellData = { ...cellData }
+      const existingClass = modifiedCellData.class || ''
+      modifiedCellData.class = existingClass ? `${existingClass} highlight-row` : 'highlight-row'
+      return modifiedCellData
+    }
+  }
+  return cellData
+}
+
+const copyTableData = async () => {
+  const content = props.tableContent.map(row =>
+    row.reduce((acc, cell, index) => {
+      acc[props.tableHeaders[index].key] = (cell.text ? cell.text.replace(/<[^>]*>?/gm, '') : '')
+      return acc
+    }, {}),
+  )
+  const csvConfig = mkConfig({ useKeysAsHeaders: true })
+  const csvData = generateCsv(csvConfig)(content)
+  await navigator.clipboard.writeText(csvData)
+}
+
+defineExpose({ copyTableData })
+
+const componentMap = {
+  SmartCell,
+  'check-cell': CheckCell,
+  'ballots-cell': BallotsCell,
+  'feedback-trend': FeedbackTrend,
+}
+
+const resolveCellComponent = (cellData) => {
+  return componentMap[cellData.component] ?? SmartCell
+}
+</script>
+
 <template>
   <div class="table-responsive-md">
-    <table class="table" :class="tableClass" >
-
+    <table
+      class="table"
+      :class="tableClass"
+    >
       <thead>
         <tr>
-          <th v-for="header in headers" :key="header.key" @resort="updateSorting"
-              :header="header"
-              :sort-key="sortKey"
-              :sort-order="sortOrder"
-              is="smartHeader">
-          </th>
+          <smart-header
+            v-for="header in headers"
+            :key="header.key"
+            :header="header"
+            :sort-key="sortKey"
+            :sort-order="sortOrder"
+            @resort="updateSorting"
+          />
         </tr>
       </thead>
 
@@ -20,102 +141,15 @@
           </td>
         </tr>
         <tr v-for="(row, rowIndex) in dataFilteredByKey">
-          <td v-for="(cellData, cellIndex) in row" :key="cellIndex"
-              :cell-data="getCellDataWithHighlight(cellData, cellIndex, rowIndex)"
-              :is="cellData['component'] ? cellData['component'] : 'SmartCell'">
-          </td>
+          <component
+            :is="resolveCellComponent(cellData)"
+            v-for="(cellData, cellIndex) in row"
+            :key="cellIndex"
+            :cell-data="getCellDataWithHighlight(cellData, cellIndex, rowIndex)"
+            @toggle-checked="emit('toggle-checked', $event)"
+          />
         </tr>
       </tbody>
-
     </table>
   </div>
 </template>
-
-<script>
-import _ from 'lodash'
-import SmartHeader from './SmartHeader.vue'
-import SmartCell from './SmartCell.vue'
-import SortableTableMixin from '../tables/SortableTableMixin.vue'
-import CheckCell from '../tables/CheckCell.vue'
-import BallotsCell from '../../results/templates/BallotsCell.vue'
-
-export default {
-  mixins: [SortableTableMixin],
-  components: {
-    SmartHeader,
-    SmartCell,
-    CheckCell,
-    BallotsCell,
-    FeedbackTrend: () => import('../graphs/FeedbackTrend.vue'),
-  },
-  props: {
-    tableHeaders: Array,
-    tableContent: Array,
-    tableClass: String,
-    emptyTitle: String,
-    highlightColumn: Number, // Column index to use for row highlighting (null/undefined = no highlighting)
-  },
-  computed: {
-    rows: function () {
-      const rows = []
-      for (let i = 0; i < this.tableContent.length; i += 1) {
-        const rowCells = []
-        // For each row and cell type push it to the master list
-        for (let j = 0; j < this.tableContent[i].length; j += 1) {
-          rowCells.push(this.tableContent[i][j])
-        }
-        rows.push(rowCells)
-      }
-      return rows
-    },
-    headers: function () {
-      // For each cell in the rows push its head value to a consolidated list
-      const headers = []
-      if (typeof (this.tableContent[0]) !== 'undefined') { // Check table is not empty
-        for (let i = 0; i < this.tableHeaders.length; i += 1) {
-          headers.push(this.tableHeaders[i])
-        }
-      }
-      return headers
-    },
-    sortableData: function () {
-      return this.rows // Enables SortableTableMixin
-    },
-  },
-  methods: {
-    getSortableProperty (row, orderedHeaderIndex) {
-      const cell = row[orderedHeaderIndex]
-      const cellData = _.isUndefined(cell.sort) ? cell.text : cell.sort
-      return cellData
-    },
-    getCellDataWithHighlight (cellData, cellIndex, rowIndex) {
-      // Apply highlight-row class to all cells in rows where the highlight column value changes
-      // This creates visual separators between different bracket values
-      if (this.highlightColumn != null && rowIndex > 0) {
-        const currentRow = this.dataFilteredByKey[rowIndex]
-        const previousRow = this.dataFilteredByKey[rowIndex - 1]
-
-        // Get the sortable value from the highlight column (e.g., bracket column)
-        const currentValue = this.getSortableProperty(currentRow, this.highlightColumn)
-        const previousValue = this.getSortableProperty(previousRow, this.highlightColumn)
-
-        // If the value changed, add highlight-row class to all cells in this row
-        if (currentValue !== previousValue) {
-          const modifiedCellData = { ...cellData }
-          const existingClass = modifiedCellData.class || ''
-          modifiedCellData.class = existingClass ? `${existingClass} highlight-row` : 'highlight-row'
-          return modifiedCellData
-        }
-      }
-      return cellData
-    },
-    async copyTableData () {
-      let tableCSV = this.tableHeaders.map(x => x.key).join('\t') + '\r\n'
-      for (const row of this.tableContent) {
-        tableCSV += row.map(x => x.text ? x.text.replace(/<[^>]*>?/gm, '') : '').join('\t') + '\r\n'
-      }
-      await navigator.clipboard.writeText(tableCSV)
-    },
-  },
-}
-</script>

@@ -211,6 +211,7 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
         self.object = self.get_object()
         t = self.tournament
 
+        draw_released = False
         try:
             checkin_id = PersonIdentifier.objects.get(person=self.object)
             kwargs['checkins_used'] = True
@@ -227,16 +228,21 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
 
         if hasattr(self.object, 'adjudicator'):
             kwargs['debateadjudications'] = BaseRecordView.allocations_set(self.object.adjudicator, False, self.tournament)
+            draw_released = t.current_round.draw_status == Round.Status.RELEASED
         else:
             team = self.object.speaker.team
             kwargs['debateteams'] = BaseRecordView.allocations_set(team, False, self.tournament)
+            draw_released = t.current_round.draw_status in [
+                Round.Status.TEAMS_RELEASED,
+                Round.Status.RELEASED,
+            ]
 
             if invitation := team.invitation_set.first():
                 kwargs['speaker_invite_link'] = self.request.build_absolute_uri(
                     reverse_tournament('reg-create-speaker', self.tournament, kwargs={'pk': team.pk}) + '?key=' + invitation.url_key,
                 )
 
-        kwargs['draw_released'] = t.current_round.draw_status == Round.Status.RELEASED
+        kwargs['draw_released'] = draw_released
         kwargs['feedback_pref'] = t.pref('participant_feedback') == 'private-urls'
         kwargs['ballots_pref'] = t.pref('participant_ballots') == 'private-urls'
         kwargs['vapid_application_server_key'] = settings.PUSH_NOTIFICATIONS_SETTINGS['application_server_key']

@@ -4,11 +4,99 @@ from django.contrib import admin
 from django.db.models import OuterRef, Prefetch, Subquery
 from django.utils.translation import gettext_lazy as _, ngettext_lazy
 
+from draw.admin_widgets import BallotSubmissionScoreInlineDebateTeamRawIdMixin
 from draw.models import DebateTeam
 from utils.admin import ModelAdmin, TabbycatModelAdminFieldsMixin
 
 from .models import BallotSubmission, ScoreCriterion, SpeakerCriterionScore, SpeakerCriterionScoreByAdj, SpeakerScore, SpeakerScoreByAdj, TeamScore, TeamScoreByAdj
 from .prefetch import populate_results
+
+
+# ==============================================================================
+# BallotSubmission inlines (Jet shows each inline as a tab on the change form)
+# ==============================================================================
+
+class TeamScoreInline(BallotSubmissionScoreInlineDebateTeamRawIdMixin, admin.TabularInline):
+    model = TeamScore
+    extra = 0
+    ordering = ('debate_team__side',)
+    raw_id_fields = ('debate_team',)
+    show_change_link = True
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related(
+            'debate_team__team__tournament',
+            'debate_team__debate__round__tournament',
+        )
+
+
+class TeamScoreByAdjInline(BallotSubmissionScoreInlineDebateTeamRawIdMixin, admin.TabularInline):
+    model = TeamScoreByAdj
+    extra = 0
+    ordering = ('debate_adjudicator_id', 'debate_team__side')
+    raw_id_fields = ('debate_team', 'debate_adjudicator')
+    show_change_link = True
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related(
+            'debate_adjudicator__adjudicator',
+            'debate_team__team__tournament',
+            'debate_team__debate__round__tournament',
+        )
+
+
+class SpeakerScoreInline(BallotSubmissionScoreInlineDebateTeamRawIdMixin, admin.TabularInline):
+    model = SpeakerScore
+    extra = 0
+    ordering = ('debate_team__side', 'position')
+    raw_id_fields = ('debate_team', 'speaker')
+    show_change_link = True
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related(
+            'debate_team__team__tournament',
+            'debate_team__debate__round__tournament',
+            'speaker',
+        )
+
+
+class SpeakerScoreByAdjInline(BallotSubmissionScoreInlineDebateTeamRawIdMixin, admin.TabularInline):
+    model = SpeakerScoreByAdj
+    extra = 0
+    ordering = ('debate_adjudicator_id', 'debate_team__side', 'position')
+    raw_id_fields = ('debate_team', 'debate_adjudicator')
+    show_change_link = True
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related(
+            'debate_adjudicator__adjudicator',
+            'debate_team__team__tournament',
+            'debate_team__debate__round__tournament',
+        )
+
+
+class SpeakerCriterionScoreInline(admin.TabularInline):
+    model = SpeakerCriterionScore
+    extra = 0
+    raw_id_fields = ('criterion',)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related('criterion')
+
+
+class SpeakerCriterionScoreByAdjInline(admin.TabularInline):
+    model = SpeakerCriterionScoreByAdj
+    extra = 0
+    raw_id_fields = ('criterion',)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related('criterion')
 
 
 # ==============================================================================
@@ -23,14 +111,13 @@ class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     search_fields = ('debate__debateteam__team__short_name', 'debate__debateteam__team__institution__name')
     raw_id_fields = ('debate', 'motion')
     list_filter = ('debate__round', 'debate__round__tournament', 'submitter', 'confirmer')
-    # This incurs a massive performance hit
-    # inlines = (SpeakerScoreByAdjInline, SpeakerScoreInline, TeamScoreInline)
+    inlines = (TeamScoreInline, TeamScoreByAdjInline, SpeakerScoreInline, SpeakerScoreByAdjInline)
     actions = ['resave_ballots']
 
     def get_queryset(self, request):
         return super(BallotSubmissionAdmin, self).get_queryset(request).select_related(
             'submitter', 'confirmer', 'debate__round__tournament').prefetch_related(
-            Prefetch('debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')))
+            Prefetch('debate__debateteam_set', queryset=DebateTeam.objects.select_related('team__tournament', 'debate__round__tournament')))
 
     @admin.display(description=_("Resave results"))
     def resave_ballots(self, request, queryset):
@@ -103,14 +190,18 @@ class SpeakerScoreAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
                      'speaker__name')
     list_filter = ('score', 'debate_team__debate__round', 'ghost')
     raw_id_fields = ('debate_team', 'ballot_submission')
+    inlines = (SpeakerCriterionScoreInline,)
 
     def get_queryset(self, request):
+        crit = SpeakerCriterionScore.objects.select_related('criterion')
         return super(SpeakerScoreAdmin, self).get_queryset(request).select_related(
             'debate_team__debate__round',
             'debate_team__team__institution', 'debate_team__team__tournament',
             'ballot_submission').prefetch_related(
             Prefetch('ballot_submission__debate__debateteam_set',
-                queryset=DebateTeam.objects.select_related('team')))
+                queryset=DebateTeam.objects.select_related('team')),
+            Prefetch('speakercriterionscore_set', queryset=crit),
+        )
 
 
 # ==============================================================================
@@ -127,6 +218,7 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_filter = ('debate_team__debate__round', 'debate_adjudicator__adjudicator__name',
                    'debate_adjudicator__type')
     raw_id_fields = ('debate_team', 'debate_adjudicator', 'ballot_submission')
+    inlines = (SpeakerCriterionScoreByAdjInline,)
 
     @admin.display(description=_("Speaker"))
     def get_speaker_name(self, obj):
@@ -138,6 +230,7 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
             debate_team_id=OuterRef('debate_team_id'),
             position=OuterRef('position'),
         ).select_related('speaker')
+        crit_adj = SpeakerCriterionScoreByAdj.objects.select_related('criterion')
 
         return super(SpeakerScoreByAdjAdmin, self).get_queryset(request).select_related(
             'ballot_submission__debate__round__tournament',
@@ -147,6 +240,7 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
         ).prefetch_related(
             Prefetch('ballot_submission__debate__debateteam_set',
                 queryset=DebateTeam.objects.select_related('team')),
+            Prefetch('speakercriterionscorebyadj_set', queryset=crit_adj),
         ).annotate(speaker_name=Subquery(speaker_person.values('speaker__name')))
 
 

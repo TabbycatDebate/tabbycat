@@ -8,6 +8,26 @@ Change Log
 *Release date: TBD*
 
 
+2.11.1
+------
+*Release date: 2 March 2026*
+
+- Avoid merging ballots based on trainee submissions
+- Avoid sending password reset email on user invitation
+- Remove extraneous HTML when copying into Summernote
+- Fix error on motion/info-slide release
+- Avoid sending push notifications if not configured and fail silently
+- Add validation against setting graph-only pullup option; add error when using draw strength in Australs PP
+- Fix adjudicators disappearing from allocation screen in public speaking tournaments
+- Only show 'Release info-slide' button if round has info-slide
+- Skip teams that are not in standings when calculating draw strength
+- Set sides for bye debates when prefetching; skip adding results for bye debates in commands
+- Avoid crashing when creating tournaments due to blank required FKs
+- Fix duplicate header keys in registration institution table
+- Fix JQuery not being loaded in time; fix checkbox table checks not registering; use form-based submission where possible
+- Fix typo in preferences. Thank you to Polyxeni Damigou for their PR! (#2822)
+
+
 2.11.0 (Tonkinese)
 ------------------
 *Release date: 9 November 2025*

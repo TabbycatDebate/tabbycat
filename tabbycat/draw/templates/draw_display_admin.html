@@ -101,8 +101,6 @@
 
           {% trans "Unrelease draw to public" as un_release_text %}
           {% trans "Release draw with adjudicators" as full_release_text %}
-          <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-unrelease' %}">{% csrf_token %}</form>
-          <form id="fullReleaseDrawForm" method="POST" action="{% roundurl 'draw-release' %}">{% csrf_token %}</form>
           {% tournamenturl 'options-tournament-section' section='public_features' as alert_link %}
 
           {% if pref.public_draw != 'off' %}
@@ -124,13 +122,16 @@
             {% include "components/item-info.html" with nopad=True type="warning" %}
           {% endif %}
 
-          {% include "components/item-action.html" with id="triggerFullReleaseDrawForm" url="" text=full_release_text type="success" to_complete=True %}
-          {% include "components/item-action.html" with id="triggerReleaseDrawForm" url="" text=un_release_text %}
+          <form id="fullReleaseDrawForm" method="POST" action="{% roundurl 'draw-release' %}">{% csrf_token %}
+            {% include "components/item-submit.html" with text=full_release_text type="success" to_complete=True %}
+          </form>
+          <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-unrelease' %}">{% csrf_token %}
+            {% include "components/item-submit.html" with text=un_release_text %}
+          </form>
 
         {% elif round.draw_status == round.Status.RELEASED %}
 
           {% trans "Unrelease draw to public" as un_release_text %}
-          <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-unrelease' %}">{% csrf_token %}</form>
           {% tournamenturl 'options-tournament-section' section='public_features' as alert_link %}
 
           {% if pref.public_draw != 'off' %}
@@ -157,14 +158,14 @@
             {% include "components/item-info.html" with nopad=True type="warning" %}
           {% endif %}
 
-          {% include "components/item-action.html" with id="triggerReleaseDrawForm" url="" text=un_release_text %}
+          <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-unrelease' %}">{% csrf_token %}
+            {% include "components/item-submit.html" with text=un_release_text %}
+          </form>
 
         {% else %}
 
           {% trans "Release draw to public" as release_text %}
           {% trans "Release draw (teams only)" as teams_release_text %}
-          <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-release' %}">{% csrf_token %}</form>
-          <form id="teamsReleaseDrawForm" method="POST" action="{% roundurl 'draw-teams-release' %}">{% csrf_token %}</form>
 
           {% if pref.participant_ballots != 'off' or pref.participant_feedback != 'off' or pref.public_draw != 'off' %}
 
@@ -183,16 +184,24 @@
               {% include "components/item-info.html" with nopad=True type="info" %}
             {% endif %}
 
-            {% include "components/item-action.html" with type="success" id="triggerReleaseDrawForm" text=release_text url="" to_complete=True %}
-            {% include "components/item-action.html" with type="success" id="triggerTeamsReleaseDrawForm" text=teams_release_text url="" icon="users" %}
+            <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-release' %}">{% csrf_token %}
+              {% include "components/item-submit.html" with type="success" text=release_text to_complete=True %}
+            </form>
+            <form id="teamsReleaseDrawForm" method="POST" action="{% roundurl 'draw-teams-release' %}">{% csrf_token %}
+              {% include "components/item-submit.html" with type="success" text=teams_release_text icon="users" %}
+            </form>
 
           {% else %}
 
             {% trans "Your configuration doesn't have a public draw page or feedback/ballot submissions. There's no reason to release the draw." as text %}
             {% include "components/item-info.html" with nopad=True type="secondary" %}
 
-            {% include "components/item-action.html" with id="triggerReleaseDrawForm" text=release_text url="" %}
-            {% include "components/item-action.html" with id="triggerTeamsReleaseDrawForm" text=teams_release_text url="" icon="users" %}
+            <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-release' %}">{% csrf_token %}
+              {% include "components/item-submit.html" with text=release_text %}
+            </form>
+            <form id="teamsReleaseDrawForm" method="POST" action="{% roundurl 'draw-teams-release' %}">{% csrf_token %}
+              {% include "components/item-submit.html" with text=teams_release_text icon="users" %}
+            </form>
 
           {% endif %}
 
@@ -221,6 +230,11 @@
       {% plural %}
         Unrelease motions to public
       {% endblocktranslate %}
+      {% blocktranslate trimmed count counter=expected_nmotions asvar unrelease_infoslides_text %}
+        Unrelease info-slide to public
+      {% plural %}
+        Unrelease info-slides to public
+      {% endblocktranslate %}
 
       <div class="card-body">
         <h5 class="card-title mb-0">
@@ -244,10 +258,6 @@
 
         {% if round.motions_status == round.MotionsStatus.NOT_RELEASED %}
 
-          <form id="releaseInfoSlidesForm" method="POST" hidden
-                action="{% roundurl 'motions-release-infoslides' %}">{% csrf_token %}</form>
-          <form id="releaseMotionsForm" method="POST" hidden
-                action="{% roundurl 'motions-release' %}">{% csrf_token %}</form>
           {% if pref.participant_ballots != 'off' and pref.enable_motions %}
             {% trans "Your tournament is configured to require motions to be selected in ballots and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to be submitted." as text %}
             {% include "components/item-info.html" with nopad=True type="danger" %}
@@ -272,20 +282,27 @@
 
           {% if round.motion_set.exists %}
               {% if pref.enable_motions or pref.motion_vetoes_enabled or pref.public_motions %}
-                  {% include "components/item-action.html" with type="success" id="triggerReleaseInfoSlidesForm" text=release_infoslides_text url="" to_complete=True %}
-                  {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
+                  <form method="POST" action="{% roundurl 'motions-release' %}">{% csrf_token %}
+                    {% include "components/item-submit.html" with type="success" text=release_text to_complete=True %}
+                  </form>
+                  {% if has_info_slides %}
+                    <form method="POST" action="{% roundurl 'motions-release-infoslides' %}">{% csrf_token %}
+                      {% include "components/item-submit.html" with type="success" text=release_infoslides_text to_complete=True %}
+                    </form>
+                  {% endif %}
               {% else %}
-                  {% include "components/item-action.html" with id="triggerReleaseInfoSlidesForm" text=release_infoslides_text url="" %}
-                  {% include "components/item-action.html" with id="triggerReleaseMotionsForm" text=release_text url="" %}
+                  <form method="POST" action="{% roundurl 'motions-release' %}">{% csrf_token %}
+                    {% include "components/item-submit.html" with text=release_text %}
+                  </form>
+                  {% if has_info_slides %}
+                    <form method="POST" action="{% roundurl 'motions-release-infoslides' %}">{% csrf_token %}
+                      {% include "components/item-submit.html" with text=release_infoslides_text %}
+                    </form>
+                  {% endif %}
               {% endif %}
           {% endif %}
 
         {% elif round.motions_status == round.MotionsStatus.INFO_SLIDES_RELEASED %}
-
-          <form id="releaseMotionsForm" method="POST" hidden
-                action="{% roundurl 'motions-release' %}">{% csrf_token %}</form>
-          <form id="unreleaseMotionsForm" method="POST" hidden
-                action="{% roundurl 'motions-unrelease' %}">{% csrf_token %}</form>
 
           {% blocktranslate trimmed count counter=expected_nmotions asvar text %}
             Info-slides have been released. You can now release the full motions.
@@ -295,14 +312,16 @@
           {% include "components/item-info.html" with nopad=True type="info" %}
 
           {% if round.motion_set.exists %}
-              {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
-              {% include "components/item-action.html" with id="triggerUnreleaseMotionsForm" url="" text=unrelease_text %}
+              <form method="POST" action="{% roundurl 'motions-release' %}">{% csrf_token %}
+                {% include "components/item-submit.html" with type="success" text=release_text to_complete=True %}
+              </form>
+              <form method="POST" action="{% roundurl 'motions-unrelease' %}">{% csrf_token %}
+                {% include "components/item-submit.html" with text=unrelease_infoslides_text %}
+              </form>
           {% endif %}
 
         {% else %}
 
-          <form id="unreleaseMotionsForm" method="POST" hidden
-                action="{% roundurl 'motions-unrelease' %}">{% csrf_token %}</form>
           {# "and" takes precedence over "or" #}
           {% if pref.public_motions or pref.participant_ballots != 'off' and pref.enable_motions or pref.participant_ballots != 'off' and pref.motion_vetoes_enabled %}
 
@@ -326,7 +345,9 @@
             {% include "components/item-info.html" with nopad=True type="warning" %}
           {% endif %}
 
-          {% include "components/item-action.html" with id="triggerUnreleaseMotionsForm" url="" text=unrelease_text %}
+          <form method="POST" action="{% roundurl 'motions-unrelease' %}">{% csrf_token %}
+            {% include "components/item-submit.html" with text=unrelease_text %}
+          </form>
 
         {% endif %}
       </div>
@@ -434,35 +455,3 @@
 </div>
 
 {% endblock content %}
-
-{% block js %}
-  {{ block.super }}
-  <script>
-    $(document).ready( function() { // Use the fake submit buttons as real submission
-      $("#triggerReleaseDrawForm").click( function() {
-        $("#releaseDrawForm").submit();
-        return false;
-      });
-      $("#triggerTeamsReleaseDrawForm").click( function() {
-        $("#teamsReleaseDrawForm").submit();
-        return false;
-      });
-      $("#triggerFullReleaseDrawForm").click( function() {
-        $("#fullReleaseDrawForm").submit();
-        return false;
-      });
-      $("#triggerReleaseInfoSlidesForm").click( function() {
-        $("#releaseInfoSlidesForm").submit();
-        return false;
-      });
-      $("#triggerReleaseMotionsForm").click( function() {
-        $("#releaseMotionsForm").submit();
-        return false;
-      });
-      $("#triggerUnreleaseMotionsForm").click( function() {
-        $("#unreleaseMotionsForm").submit();
-        return false;
-      });
-    });
-  </script>
-{% endblock js %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load add_field_css i18n debate_tags %}
+
+{% block content %}
+
+<div class="row">
+  <form class="col-lg-8 ml-lg-auto mr-md-auto d-flex flex-column gap-3" action="." method="POST" id="slot-transfer-form">
+    {% csrf_token %}
+
+    <div class="card">
+      <form action="." method="POST">
+        {% csrf_token %}
+
+        {% include "components/form-main.html" %}
+
+        {% trans "Submit request" as title %}
+        {% trans "Cancel and return to private URL" as subtitle %}
+        {% tournamenturl 'reg-inst-landing' url_key=url_key as suburl %}
+        {% include "components/form-submit.html" %}
+      </form>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+
+<script>
+(function() {
+  const form = document.getElementById('slot-transfer-form');
+  if (!form) return;
+  const select = form.querySelector('select[name="receiving_institution"]');
+  const toggle = () => {
+    const showNew = select && (select.value === '' || select.value === null);
+    form.querySelector('input[name="receiving_institution_name"]').disabled = !showNew;
+    form.querySelector('input[name="receiving_institution_email"]').disabled = !showNew;
+  }
+  if (select) select.addEventListener('change', toggle);
+  toggle();
+})();
+</script>
+{% endblock %}
