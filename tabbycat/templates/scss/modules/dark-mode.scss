@@ -7,14 +7,15 @@
 [data-bs-theme="dark"] {
 
   //----------------------------------------------------------------------------
-  // Lighter accent colors for dark backgrounds (~20% lighter, same hue)
+  // Softer accent colors for dark backgrounds (lightly lifted + desaturated)
   //----------------------------------------------------------------------------
 
-  $dm-primary: lighten($purple, 20%);
-  $dm-success: lighten($green, 20%);
-  $dm-info: lighten($blue, 20%);
-  $dm-warning: lighten($orange, 20%);
-  $dm-danger: lighten($red, 20%);
+  $dm-primary: desaturate(lighten($purple, 12%), 10%);
+  $dm-success: desaturate(lighten($green, 10%), 20%);
+  $dm-info: desaturate(lighten($blue, 10%), 15%);
+  $dm-warning: desaturate(lighten($orange, 8%), 15%);
+  $dm-danger: desaturate(lighten($red, 10%), 10%);
+  $dm-link-hover: lighten($dm-primary, 8%);
 
   --bs-primary: #{$dm-primary};
   --bs-primary-rgb: #{red($dm-primary)}, #{green($dm-primary)}, #{blue($dm-primary)};
@@ -28,40 +29,32 @@
   --bs-danger-rgb: #{red($dm-danger)}, #{green($dm-danger)}, #{blue($dm-danger)};
   --bs-link-color: #{$dm-primary};
   --bs-link-color-rgb: #{red($dm-primary)}, #{green($dm-primary)}, #{blue($dm-primary)};
-  --bs-link-hover-color: #{lighten($purple, 25%)};
-  --bs-link-hover-color-rgb: #{red(lighten($purple, 25%))}, #{green(lighten($purple, 25%))}, #{blue(lighten($purple, 25%))};
+  --bs-link-hover-color: #{$dm-link-hover};
+  --bs-link-hover-color-rgb: #{red($dm-link-hover)}, #{green($dm-link-hover)}, #{blue($dm-link-hover)};
 
-  // Buttons
-  @each $name, $base in (primary: $purple, success: $green, info: $blue, warning: $orange, danger: $red) {
+  // Buttons — use the softer dm-* palette
+  @each $name, $dm in (primary: $dm-primary, success: $dm-success, info: $dm-info, warning: $dm-warning, danger: $dm-danger) {
     .btn-#{$name} {
-      --bs-btn-bg: #{lighten($base, 20%)};
-      --bs-btn-border-color: #{lighten($base, 20%)};
-      --bs-btn-hover-bg: #{lighten($base, 15%)};
-      --bs-btn-hover-border-color: #{lighten($base, 15%)};
-      --bs-btn-active-bg: #{lighten($base, 10%)};
-      --bs-btn-active-border-color: #{lighten($base, 10%)};
+      --bs-btn-bg: #{$dm};
+      --bs-btn-border-color: #{$dm};
+      --bs-btn-hover-bg: #{darken($dm, 6%)};
+      --bs-btn-hover-border-color: #{darken($dm, 6%)};
+      --bs-btn-active-bg: #{darken($dm, 12%)};
+      --bs-btn-active-border-color: #{darken($dm, 12%)};
+      --bs-btn-color: #fff;
+      --bs-btn-hover-color: #fff;
+      --bs-btn-active-color: #fff;
     }
   }
-
-  // In dark mode the lighter button bgs need dark text for legibility
-  .btn-success,
-  .btn-warning,
-  .btn-info {
-    --bs-btn-color: #000;
-    --bs-btn-hover-color: #000;
-    --bs-btn-active-color: #000;
-    --bs-btn-disabled-color: #000;
-  }
-  @each $name, $base in (primary: $purple, success: $green, info: $blue, warning: $orange, danger: $red) {
-
+  @each $name, $dm in (primary: $dm-primary, success: $dm-success, info: $dm-info, warning: $dm-warning, danger: $dm-danger) {
     .text-bg-#{$name} {
-      background-color: #{lighten($base, 20%)} !important;
+      background-color: #{$dm} !important;
     }
 
     .alert-#{$name} {
-      --bs-alert-bg: #{rgba(lighten($base, 20%), 0.15)};
-      --bs-alert-color: #{lighten($base, 30%)};
-      --bs-alert-border-color: #{rgba(lighten($base, 20%), 0.3)};
+      --bs-alert-bg: #{rgba($dm, 0.15)};
+      --bs-alert-color: #{lighten($dm, 15%)};
+      --bs-alert-border-color: #{rgba($dm, 0.3)};
     }
   }
 

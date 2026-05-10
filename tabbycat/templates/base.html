@@ -38,7 +38,7 @@
   {% endblock %}
 
 
-  <link rel="preload" href="{% static 'fonts/Inter-Regular.woff2' %}" as="font" type="font/woff2">
+  <link rel="preload" href="{% static 'fonts/Inter-Regular.woff2' %}" as="font" type="font/woff2" crossorigin>
   <link rel="icon" type="image/png" href="{% static 'logo-32x32.png' %}" sizes="32x32" />
   <link rel="icon" type="image/png" href="{% static 'logo-16x16.png' %}" sizes="16x16" />
   <link rel="mask-icon" href="{% static 'safari-tab.svg' %}" color="rgb(102, 61, 160)">
@@ -47,7 +47,7 @@
   {% block extra-head %}{% endblock %}
 
   {% if not hmr %}
-  <link href="{% static 'vue/js/app.js' %}" rel=preload as=script>
+  <link rel="modulepreload" href="{% static 'vue/js/app.js' %}">
   {% endif %}
 
   {% if not debug %}<!-- Analytics -->
