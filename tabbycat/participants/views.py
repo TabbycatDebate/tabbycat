@@ -279,6 +279,7 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs['admin_page'] = self.admin
+        kwargs['for_admin'] = self.admin
         kwargs['draw_released'] = self.draw_released
         kwargs['use_code_names'] = self.use_team_code_names()
         kwargs[self.model_kwarg] = self.allocations_set(self.object, self.admin, self.tournament)
@@ -315,7 +316,6 @@ class BaseTeamRecordView(BaseRecordView):
         return self.tournament.current_round.draw_status in [Round.Status.RELEASED, Round.Status.TEAMS_RELEASED]
 
     def get_context_data(self, **kwargs):
-        kwargs['team_short_name'] = self.object.code_name if self.use_team_code_names() else self.object.short_name
         kwargs['feedback_progress'] = FeedbackProgressForTeam(self.object, self.tournament)
         return super().get_context_data(**kwargs)
 

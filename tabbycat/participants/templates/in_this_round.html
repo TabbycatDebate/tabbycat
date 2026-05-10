@@ -48,16 +48,29 @@
         {% endfor %}
 
       {% elif debateteams != None %}
+      {% if team %}
+        {% team_name_for_display team as team_name %}
+      {% else %}
+        {% team_name_for_display object.speaker.team as team_name %}
+      {% endif %}
 
-        {% if debateteams|length > 1 %}
+        {% if debateteams|length > 1 and debateteams|any_dts_different_round %}
           <div class="list-group-item">
             <em>
               {# This is never in the singular, it's just needed to make pluralization work with i18n. #}
-              {% blocktrans trimmed with team=team_short_name count ndebates=debateteams|length %}
-                It looks like {{ team }} is competing in {{ ndebates }} debate this round.
-              {% plural %}
-                It looks like {{ team }} is competing in {{ ndebates }} debates this round.
-              {% endblocktrans %}
+              {% if grammatical_person == "3" %}
+                {% blocktrans trimmed with team=team_name count ndebates=debateteams|length %}
+                  It looks like {{ team }} is competing in {{ ndebates }} debate this round.
+                {% plural %}
+                  It looks like {{ team }} is competing in {{ ndebates }} debates this round.
+                {% endblocktrans %}
+              {% else %}
+                {% blocktrans trimmed with team=team_name count ndebates=debateteams|length %}
+                  It looks like you are competing in {{ ndebates }} debate this round.
+                {% plural %}
+                  It looks like you are competing in {{ ndebates }} debates this round.
+                {% endblocktrans %}
+              {% endif %}
               {% if not admin_page %}
                 {% trans "If this is an error, please contact a tab director immediately." %}
               {% endif %}
@@ -74,7 +87,7 @@
         <div class="list-group-item">
           <em>
             {% if grammatical_person == "3" %}
-              {% blocktrans trimmed with team=team_short_name %}
+              {% blocktrans trimmed with team=team_name %}
                 {{ team }} does not have a debate this round.
               {% endblocktrans %}
             {% else %}
