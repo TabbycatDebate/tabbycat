@@ -20,7 +20,7 @@
 {% endif %} {# pref.teams_in_debate == 4 #}
 
 {# Adjudicators #}
-{% if debate.round.draw_status != Round.Status.RELEASED and not admin_page %}
+{% if debate.round.draw_status != debate.round.Status.RELEASED and not admin_page %}
   <div class="list-group-item">
     <em>{% trans "The adjudicators for this debate have not yet been released." %}</em>
   </div>
