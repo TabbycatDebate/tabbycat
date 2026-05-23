@@ -315,7 +315,10 @@ class DrawPullupRestriction(ChoicePreference):
 
 @tournament_preferences_registry.register
 class DrawPullupPenalty(IntegerPreference):
-    help_text = _("Penalty applied when determining which teams to pull up (for minimum cost matching)")
+    help_text = _("Penalty applied when determining which teams to pull up (for minimum cost matching). "
+        "In BP, added to position costs when a team is placed above its points bracket; teams with "
+        "fewer prior pull-ups are preferred. Set high enough to take precedence over side balance "
+        "(e.g. 100000 with the default position cost exponent). Leave 0 for no preference.")
     verbose_name = _("Pullup penalty")
     section = draw_rules
     name = 'draw_pullup_penalty'

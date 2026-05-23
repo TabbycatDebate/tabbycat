@@ -147,6 +147,7 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     draw_rules__bp_renyi_order                 = 1.0
     draw_rules__bp_position_cost_exponent      = 4.0
     draw_rules__bp_assignment_method           = 'hungarian_preshuffled'
+    draw_rules__draw_pullup_penalty            = 100000
     # Standings Rules
     standings__standings_missed_debates        = -1 # Speakers always show
     standings__team_standings_precedence       = ['points', 'speaks_sum', 'firsts', 'seconds', 'draw_strength']

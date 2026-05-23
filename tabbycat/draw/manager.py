@@ -251,7 +251,7 @@ class PowerPairedDrawManager(BaseDrawManager):
                 "max_times_on_one_side", "pullup_penalty",
             ])
         elif self.teams_in_debate == 4:
-            options.extend(["pullup", "position_cost", "assignment_method", "renyi_order", "exponent"])
+            options.extend(["pullup", "position_cost", "assignment_method", "renyi_order", "exponent", "pullup_penalty"])
         return options
 
     def get_teams(self) -> Tuple[List['Team'], List['Team']]:
@@ -266,6 +266,9 @@ class PowerPairedDrawManager(BaseDrawManager):
         pullup_debates_penalty = self.round.tournament.pref("pullup_debates_penalty")
         if pullup_debates_penalty > 0:
             extra_metrics.add("pullup_debates")
+        pullup_penalty = self.round.tournament.pref("draw_pullup_penalty")
+        if pullup_penalty > 0:
+            extra_metrics.add("npullups")
         if self.round.tournament.pref("draw_odd_bracket") == 'pullup_lowest_ds_rank_npulls':
             extra_metrics |= {'npullups', 'draw_strength_rank'}
         extra_metrics -= set(metrics)
@@ -282,6 +285,8 @@ class PowerPairedDrawManager(BaseDrawManager):
                 team.pullup_debates = standing.metrics.get("pullup_debates", 0)
             if pullup_metric:
                 setattr(team, pullup_metric, standing.metrics[pullup_metric])
+            if pullup_penalty > 0:
+                team.npullups = standing.metrics.get('npullups', 0)
             if self.round.tournament.pref("draw_odd_bracket") == 'pullup_lowest_ds_rank_npulls':
                 team.npullups = standing.metrics.get('npullups')
                 team.draw_strength_rank = standing.metrics.get('draw_strength_rank')
