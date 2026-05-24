@@ -270,5 +270,5 @@ class SpeakerCriterionScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin)
 
 @admin.register(ScoreCriterion)
 class ScoreCriterionAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
-    list_display = ('id', 'tournament', 'name', 'seq')
+    list_display = ('id', 'tournament', 'name', 'seq', 'speech_type')
     search_fields = ('tournament', 'name')

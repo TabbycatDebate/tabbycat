@@ -400,11 +400,18 @@ class SpeakerScore(models.Model):
 
 class ScoreCriterion(models.Model):
     """Score criterion for speaker score"""
+    class SpeechType(models.TextChoices):
+        ALL = 'A', _("All speeches")
+        SUBSTANTIVE = 'S', _("Substantive speeches")
+        REPLY = 'R', _("Reply speeches")
+
     tournament = models.ForeignKey(Tournament, models.CASCADE,
         verbose_name=_("tournament"))
     name = models.CharField(max_length=20,
         verbose_name=("name"))
     seq = models.IntegerField(verbose_name=_("sequence"))
+    speech_type = models.CharField(max_length=1, choices=SpeechType.choices, default=SpeechType.ALL,
+        verbose_name=_("speech type"))
     weight = models.FloatField(verbose_name=_("weight"))
     min_score = ScoreField(verbose_name=_("minimum score"))
     max_score = ScoreField(verbose_name=_("maximum score"))
@@ -419,6 +426,17 @@ class ScoreCriterion(models.Model):
 
     def __str__(self):
         return ("{0.name} at {0.tournament}").format(self)
+
+    def applies_to_position(self, position, reply_position=None):
+        if self.speech_type == self.SpeechType.ALL:
+            return True
+        if reply_position is None:
+            return self.speech_type == self.SpeechType.SUBSTANTIVE
+        is_reply = position == reply_position
+        return (
+            (self.speech_type == self.SpeechType.REPLY and is_reply) or
+            (self.speech_type == self.SpeechType.SUBSTANTIVE and not is_reply)
+        )
 
 
 class SpeakerCriterionScore(models.Model):

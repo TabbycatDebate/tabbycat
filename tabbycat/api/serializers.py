@@ -1527,6 +1527,20 @@ class BallotSerializer(serializers.ModelSerializer):
                         raise serializers.ValidationError("Speakers must be in their team.")
                     return data
 
+                def validate_speeches(self, data):
+                    tournament = self.context['tournament']
+                    for seq, speech in enumerate(data, 1):
+                        for criterion_score in speech.get('criteria', []):
+                            criterion = criterion_score['criterion']
+                            if not criterion.applies_to_position(seq, tournament.reply_position):
+                                raise serializers.ValidationError(
+                                    "Score criterion %(criterion)s does not apply to speech position %(position)d." % {
+                                        'criterion': criterion.name,
+                                        'position': seq,
+                                    },
+                                )
+                    return data
+
                 def save(self, **kwargs):
                     result = kwargs['result']
                     side = self.validated_data.get('side', kwargs['seq'])
