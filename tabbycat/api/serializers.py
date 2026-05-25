@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import DatabaseError, IntegrityError, transaction
-from django.db.models import Q, QuerySet
+from django.db.models import Q
 from django.utils import timezone
 from drf_spectacular.utils import extend_schema_field
 from push_notifications.api.rest_framework import WebPushDeviceSerializer
@@ -301,7 +301,7 @@ class RoundSerializer(serializers.ModelSerializer):
                 self.fields.pop('feedback_weight')
 
             # Can't show in a ListSerializer
-            if not with_permission(permission=Permission.VIEW_MOTION) and (isinstance(self.instance, QuerySet) or self.instance.motions_status != Round.MotionsStatus.MOTIONS_RELEASED):
+            if not with_permission(permission=Permission.VIEW_MOTION) and (not isinstance(self.instance, Round) or self.instance.motions_status != Round.MotionsStatus.MOTIONS_RELEASED):
                 self.fields.pop('motions')
 
     class Meta:
