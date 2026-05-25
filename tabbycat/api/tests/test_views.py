@@ -105,6 +105,12 @@ class RoundViewsetTests(CompletedTournamentTestMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 10)
 
+    def test_get_paginated_round_list(self):
+        self.round_seq = None  # Unset since it isn't used for list
+        response = self.client.get(self.reverse_url('api-round-list'), {'limit': 100, 'offset': 0})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 10)
+
     def test_get_round_detail(self):
         response = self.client.get(self.reverse_url('api-round-detail'))
         self.assertEqual(response.status_code, 200)
