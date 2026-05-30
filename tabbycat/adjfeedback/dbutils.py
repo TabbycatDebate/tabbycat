@@ -5,14 +5,18 @@ These are mainly used in management commands, but in principle could be used
 by a front-end interface as well."""
 
 import itertools
+import json
 import logging
 import random
 
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
+
 
 from adjallocation.models import DebateAdjudicator
 from draw.models import DebateTeam
 from participants.models import Adjudicator, Team
+from registration.models import Answer
 
 from . import models as fm
 
@@ -167,7 +171,16 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
             else:
                 raise TypeError("Answer type class not recognized: " + question.ANSWER_TYPE_TYPES[question.answer_type].__name__)
 
-            question.answer_type_class(question=question, content_object=fb, answer=answer).save()
+            if isinstance(answer, list):
+                answer = json.dumps(answer) # Convert list to JSON string to preserve the list structure
+            else:
+                answer = str(answer) # Convert other types to string
+            Answer(
+                question=question,
+                content_type=ContentType.objects.get_for_model(fb),
+                object_id=fb.pk,
+                answer=answer,
+            ).save() # Use the new Answer model
 
         name = source.name if isinstance(source, Adjudicator) else source.short_name
         logger.info("[%s] %s on %s: %s", debate.round.tournament.slug, name, adj, score)

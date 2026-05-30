@@ -1,4 +1,3 @@
-from datetime import datetime
 from urllib import parse
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -9,13 +8,11 @@ from drf_spectacular.utils import extend_schema_field
 from rest_framework.fields import empty
 from rest_framework.relations import Hyperlink, HyperlinkedIdentityField, HyperlinkedRelatedField, PrimaryKeyRelatedField, SlugRelatedField
 from rest_framework.reverse import reverse
-from rest_framework.serializers import CharField, Field, IntegerField, ListField, Serializer, ValidationError
+from rest_framework.serializers import CharField, Field, IntegerField, ListField
 from rest_framework.utils import html
 
-from adjfeedback.models import AdjudicatorFeedbackQuestion
 from draw.types import DebateSide
 from participants.models import Adjudicator, Speaker, Team
-from registration.models import Question
 from venues.models import Venue
 
 from .utils import is_staff
@@ -99,9 +96,8 @@ class RoundHyperlinkedIdentityField(RoundHyperlinkedRelatedField, HyperlinkedIde
     pass
 
 
-class DebateHyperlinkedIdentityField(RoundHyperlinkedIdentityField):
+class DebateHyperlinkedRelatedField(RoundHyperlinkedRelatedField):
     default_tournament_field = 'debate__round__tournament'
-    round_field = 'debate__round'
 
     def get_round(self, obj):
         return obj.debate.round
@@ -115,7 +111,11 @@ class DebateHyperlinkedIdentityField(RoundHyperlinkedIdentityField):
         return {'debate': self.context['debate']}
 
     def get_queryset(self):
-        return super().get_queryset().select_related('debate')
+        return super().get_queryset().select_related('debate__round__tournament')
+
+
+class DebateHyperlinkedIdentityField(DebateHyperlinkedRelatedField, HyperlinkedIdentityField):
+    pass
 
 
 class AnonymisingParticipantNameField(CharField):
@@ -344,46 +344,6 @@ class SideChoiceField(IntegerField):
             if t.pref('teams_in_debate') == 4:
                 return ['og', 'oo', 'cg', 'co'][value]
         return int(value)
-
-
-class AnswerSerializer(Serializer):
-    question = TournamentHyperlinkedRelatedField(
-        view_name='api-question-detail',
-        queryset=Question.objects.all(),
-    )
-    answer = AnyField()
-
-    def validate(self, data):
-        # Convert answer to correct type
-        typ = Question.ANSWER_TYPE_TYPES[data['question'].answer_type]
-        if typ is datetime:
-            try:
-                data['answer'] = datetime.fromisoformat(data['answer'])
-            except ValueError:
-                raise ValidationError({'answer': 'The answer must be an ISO 8601 timestamp'})
-        if type(data['answer']) != typ:
-            raise ValidationError({'answer': 'The answer must be of type %s' % typ.__name__})
-
-        if typ is not datetime:
-            data['answer'] = typ(data['answer'])
-
-        option_error = ValidationError({'answer': 'Answer must be in set of options'})
-        if len(data['question'].choices) > 0:
-            if typ is list and len(set(data['answer']) - set(data['question'].choices)) > 0:
-                raise option_error
-            if data['answer'] not in data['question'].choices:
-                raise option_error
-        if (data['question'].min_value is not None and data['answer'] < data['question'].min_value) or (data['question'].max_value is not None and data['answer'] > data['question'].max_value):
-            raise option_error
-
-        return super().validate(data)
-
-
-class AdjAnswerSerializer(AnswerSerializer):
-    question = TournamentHyperlinkedRelatedField(
-        view_name='api-feedbackquestion-detail',
-        queryset=AdjudicatorFeedbackQuestion.objects.all(),
-    )
 
 
 class CharacterSeparatedField(ListField):

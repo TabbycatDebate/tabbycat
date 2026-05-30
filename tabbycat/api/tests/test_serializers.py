@@ -46,6 +46,7 @@ class TournamentSerializerTests(CompletedTournamentTestMixin, APITestCase):
                 "feedback": tournament_url + "/feedback",
                 "feedback_questions": tournament_url + "/feedback-questions",
                 "preferences": tournament_url + "/preferences",
+                "schedule_events": tournament_url + "/schedule-events",
             },
             "name": self.tournament.name,
             "short_name": self.tournament.short_name,
@@ -83,6 +84,7 @@ class RoundSerializerTests(CompletedTournamentTestMixin, APITestCase):
             "draw_status": "R",
             "silent": False,
             "motions_released": False,
+            "motions_status": "N",
             "weight": 1,
         }
 
@@ -97,7 +99,7 @@ class RoundSerializerTests(CompletedTournamentTestMixin, APITestCase):
 
     def test_include_motions_if_released(self):
         round = self.tournament.round_set.first()
-        round.motions_released = True
+        round.motions_status = Round.MotionsStatus.MOTIONS_RELEASED
         round.save()
 
         response = self.client.get(reverse_round('api-round-detail', self.tournament.round_set.first()))
@@ -1131,14 +1133,15 @@ class FeedbackSerializerTests(APITestCase):
             required=True,
         )
 
-        self.client.login(username="admin1", password="admin")
+        self.tournament.preferences['data_entry__participant_feedback'] = 'private-urls'
+        speaker = Speaker.objects.create(name='Test Speaker', team=self.t1, url_key='test-key')
         response = self.client.post(reverse_tournament('api-feedback-list', self.tournament), {
             'adjudicator': reverse_tournament('api-adjudicator-detail', self.tournament, kwargs={'pk': self.a1.pk}),
             'source': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t1.pk}),
             'debate': reverse_round('api-pairing-detail', self.round, kwargs={'debate_pk': self.debate.pk}),
             'answers': [],
             'score': 10,
-        })
+        }, HTTP_AUTHORIZATION=f'Key {speaker.url_key}')
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data['non_field_errors'][0], 'Answer to required question is missing')
 

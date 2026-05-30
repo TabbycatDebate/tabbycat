@@ -28,7 +28,7 @@ Short version
 ::
 
   curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -    # add Node.js source repository
-  sudo apt install python3.11 python3-distutils pipenv postgresql libpq-dev nodejs gcc g++ make
+  sudo apt install python3.11 python3-distutils pipenv postgresql libpq-dev nodejs gcc g++ make redis-server
   git clone https://github.com/TabbycatDebate/tabbycat.git
   cd tabbycat
   git checkout master
@@ -111,6 +111,25 @@ Tabbycat requires Node and its package manager to compile front-end dependencies
 Some of the Python packages require GCC, G++ and Make in order to install::
 
     $ sudo apt install gcc g++ make
+
+1(e). Redis
+-----------
+  *Redis is an in-memory data structure store, used as a message broker and cache.*
+
+Tabbycat requires Redis for two critical functions:
+
+  1. Asynchronous Background Tasks: Redis serves as a message broker for Django Channels, handling real-time features like live adjudicator allocation, check-ins updates, and round results display.
+
+  2. Page Caching: Redis caches frequently accessed public pages (draws, standings, results) to improve performance during high-traffic periods, especially during tournament events.
+
+Install and start Redis using::
+
+    $ sudo apt install redis-server
+    $ sudo systemctl enable --now redis-server
+
+After installation, Redis will automatically start and be configured to launch on system boot. You can verify it's running with::
+
+    $ sudo systemctl status redis-server
 
 .. _install-linux-source-code:
 
@@ -232,6 +251,51 @@ g. Open your browser and go to http://127.0.0.1:8000/ or http://localhost:8000/.
       :alt: Bare Tabbycat installation
 
 Naturally, your database is currently empty, so proceed to :ref:`importing initial data <importing-initial-data>`.
+
+5. Set up Webpush (Optional)
+=============================
+
+Webpush enables real-time push notifications to participants' browsers, allowing them to receive updates about draws, motions, and other tournament information without needing to refresh the page.
+
+Webpush requires VAPID (Voluntary Application Server Identification) keys for authentication. You'll need to generate these keys and configure them in your settings, such as with the ``py_vapid`` Python package::
+
+    (tabbycat-9BkbSRuB) $ pip install py-vapid
+
+Then generate the keys::
+
+    (tabbycat-9BkbSRuB) $ vapid --gen
+    (tabbycat-9BkbSRuB) $ vapid --applicationServerKey
+
+This will create new files ``private_key.pem`` and ``public_key.pem`` in the current directory that you'll need for the next step, as well as a ``applicationServerKey`` value.
+
+You can set the VAPID keys by setting them as environment variables or by adding them to your **settings/local.py** file.
+
+**Option 1: Using environment variables**
+
+Before starting Tabbycat, export the following environment variables (replace the placeholder values with your actual keys, without the header or footer)::
+
+    $ export WP_PRIVATE_KEY="<YOUR_PRIVATE_KEY>"
+    $ export WP_PUBLIC_KEY="<YOUR_PUBLIC_KEY>"
+    $ export WP_APPLICATION_SERVER_KEY="<YOUR_APPLICATION_SERVER_KEY>"
+
+**Option 2: Adding to local.py**
+
+Alternatively, add the following to your **tabbycat/settings/local.py** file:
+
+.. code:: python
+
+  PUSH_NOTIFICATIONS_SETTINGS = {
+      "WP_PRIVATE_KEY": "<YOUR_PRIVATE_KEY>",
+      "WP_PUBLIC_KEY": "<YOUR_PUBLIC_KEY>",
+      "WP_CLAIMS": {
+          "sub": "mailto:contact@tabbycat-debate.org"
+      },
+      "application_server_key": "<YOUR_APPLICATION_SERVER_KEY>"
+  }
+
+Replace ``<YOUR_PRIVATE_KEY>`` and ``<YOUR_PUBLIC_KEY>`` with the keys you generated, and ``<YOUR_APPLICATION_SERVER_KEY>`` with the value you got from ``vapid --applicationServerKey``.
+
+Participants will now be able to subscribe to push notifications from their browsers when they visit your site.
 
 Starting up an existing Tabbycat instance
 =========================================

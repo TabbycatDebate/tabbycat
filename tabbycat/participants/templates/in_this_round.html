@@ -18,7 +18,8 @@
       </h4>
     </div>
 
-    {% if draw_released or admin_page %}
+    {% haspermission "view.debate" as draw_perm %}
+    {% if admin_page and draw_perm or draw_released %}
 
       {% trans "Room TBA" as venue_tba %}
 

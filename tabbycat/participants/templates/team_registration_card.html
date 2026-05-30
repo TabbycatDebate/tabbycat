@@ -9,6 +9,12 @@
       </h4>
     </div>
 
+      {% if team.registration_status == 'U' %}
+        <div class="list-group-item">
+          <em class="text-danger">{% trans "Registration not confirmed by tournament staff; will not be included in the tournament until confirmed." %}</em>
+        </div>
+      {% endif %}
+
       <div class="list-group-item">
         {% if not use_code_names or private_url or admin_page %}
           {% if team.short_name == team.long_name %}
@@ -41,7 +47,7 @@
           <div>
             <strong>{% trans "Emoji:" %}</strong>
             {% if team.emoji %}
-              {{ team.emoji }}
+              <span class="emoji">{{ team.emoji }}</span>
             {% else %}
               <span class="text-muted">{% trans "No emoji assigned" %}</span>
             {% endif %}

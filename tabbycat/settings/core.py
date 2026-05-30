@@ -11,7 +11,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Overwritten in local.py or heroku.py
 # ==============================================================================
 
-ADMINS = ('Tabbycat Debate', 'contact@tabbycat-debate.org'),
+ADMINS = ['"Tabbycat Debate" <contact@tabbycat-debate.org>']
 MANAGERS = ADMINS
 DEBUG = bool(int(os.environ['DEBUG'])) if 'DEBUG' in os.environ else False
 ENABLE_DEBUG_TOOLBAR = False # Must default to false; overriden in Dev config
@@ -22,9 +22,9 @@ SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.11.0-dev'
-TABBYCAT_CODENAME = 'T'
-READTHEDOCS_VERSION = 'v2.11.0'
+TABBYCAT_VERSION = '2.12.0-dev'
+TABBYCAT_CODENAME = 'U'
+READTHEDOCS_VERSION = 'v2.12.0'
 
 # ==============================================================================
 # Internationalization and Localization
@@ -162,6 +162,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'drf_spectacular',
     'django_better_admin_arrayfield',
+    'push_notifications',
 )
 
 ROOT_URLCONF = 'urls'
@@ -304,6 +305,26 @@ SUMMERNOTE_CONFIG = {
     ],
     'disable_upload': True,
     'iframe': True, # Necessary; if just to compartmentalise jQuery dependency,
+    'js': (
+        '/static/js/vendor/summernote-cleaner.js',
+    ),
+    'js_for_inplace': (
+        '/static/js/vendor/summernote-cleaner.js',
+    ),
+    'summernote': {
+        'cleaner': {
+            'action': 'both',  # both|button|paste 'button' only cleans via toolbar button, 'paste' only cleans on paste, 'both' does both
+            'newline': '<br>',
+            'keepHtml': False,
+            'keepOnlyTags': ['<p>', '<br>', '<ul>', '<ol>', '<li>', '<b>', '<strong>', '<i>', '<em>', '<u>', '<a>'],
+            'keepClasses': False,
+            'badTags': ['style', 'script', 'applet', 'embed', 'noframes', 'noscript', 'html'],
+            'badAttributes': ['style', 'start'],
+            'limitChars': False,
+            'limitDisplay': 'both',
+            'limitStop': False,
+        },
+    },
 }
 
 X_FRAME_OPTIONS = 'SAMEORIGIN' # Necessary to get Django-Summernote working because of Django 3 changes
@@ -345,6 +366,7 @@ DYNAMIC_PREFERENCES = {
 # ==============================================================================
 
 REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'api.exceptions.api_exception_handler',
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],
@@ -404,3 +426,17 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# ==============================================================================
+# Push Notifications (WebPush)
+# ==============================================================================
+
+PUSH_NOTIFICATIONS_SETTINGS = {
+    "WP_PRIVATE_KEY": os.environ.get("WP_PRIVATE_KEY"),
+    "WP_PUBLIC_KEY": os.environ.get("WP_PUBLIC_KEY"),
+    "WP_CLAIMS": {
+        "sub": os.environ.get("WP_CLAIMS_EMAIL", "mailto:contact@tabbycat-debate.org")
+    },
+    "application_server_key": os.environ.get("WP_APPLICATION_SERVER_KEY")
+}
+ENABLE_PUSH_NOTIFICATIONS = os.environ.get("WP_PRIVATE_KEY") is not None

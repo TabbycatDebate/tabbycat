@@ -7,7 +7,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from tournaments.models import Round, Tournament
 
-from .permissions import APIEnabledPermission, IsAdminOrReadOnly, PerTournamentPermissionRequired, PublicIfReleasedPermission, PublicPreferencePermission
+from .permissions import IsAdminOrReadOnly, PerTournamentPermissionRequired, PublicIfReleasedPermission, PublicPreferencePermission
 
 
 class APILogActionMixin(LogActionMixin):
@@ -17,11 +17,13 @@ class APILogActionMixin(LogActionMixin):
 
     def perform_create(self, serializer):
         self.obj = serializer.save(**self.lookup_kwargs())
-        self.log_action(type=self.action_log_type_created, agent=ActionLogEntry.Agent.API)
+        if hasattr(self, 'action_log_type_created'):
+            self.log_action(type=self.action_log_type_created, agent=ActionLogEntry.Agent.API)
 
     def perform_update(self, serializer):
         self.obj = serializer.save()
-        self.log_action(type=self.action_log_type_updated, agent=ActionLogEntry.Agent.API)
+        if hasattr(self, 'action_log_type_updated'):
+            self.log_action(type=self.action_log_type_updated, agent=ActionLogEntry.Agent.API)
 
     def lookup_kwargs(self):
         return {}
@@ -75,16 +77,16 @@ class RoundAPIMixin(TournamentAPIMixin):
 
 
 class AdministratorAPIMixin:
-    permission_classes = [APIEnabledPermission, IsAdminUser | PerTournamentPermissionRequired]
+    permission_classes = [IsAdminUser | PerTournamentPermissionRequired]
 
 
 class TournamentPublicAPIMixin:
-    permission_classes = [APIEnabledPermission, PublicPreferencePermission | PerTournamentPermissionRequired]
+    permission_classes = [PublicPreferencePermission | PerTournamentPermissionRequired]
 
 
 class OnReleasePublicAPIMixin(TournamentPublicAPIMixin):
-    permission_classes = [APIEnabledPermission, PublicIfReleasedPermission | PerTournamentPermissionRequired]
+    permission_classes = [PublicIfReleasedPermission | PerTournamentPermissionRequired]
 
 
 class PublicAPIMixin:
-    permission_classes = [APIEnabledPermission, IsAdminOrReadOnly | PerTournamentPermissionRequired]
+    permission_classes = [IsAdminOrReadOnly | PerTournamentPermissionRequired]

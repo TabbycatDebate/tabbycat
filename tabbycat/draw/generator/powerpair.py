@@ -166,8 +166,6 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
         "pullup_random"              : "_pullup_random",
         "intermediate"               : "_intermediate_brackets",
         "intermediate_bubble_up_down": "_intermediate_brackets_with_bubble_up_down",
-        "pullup_lowest_ds_rank"      : "_pullup_lowest_ds_rank",
-        "pullup_lowest_ds_rank_npulls": "_pullup_lowest_ds_rank_npulls",
     }
 
     def resolve_odd_brackets(self, brackets):
@@ -358,6 +356,11 @@ class GraphCostMixin:
 
 class AustralsPairingMixin:
 
+    def resolve_odd_brackets(self, brackets):
+        if self.options['odd_bracket'] in ('pullup_lowest_ds_rank', 'pullup_lowest_ds_rank_npulls'):
+            raise DrawUserError(_("Draw strength pullups require 'Minimum cost matching (including pullups)' as the conflict avoidance method"))
+        return super().resolve_odd_brackets(brackets)
+
     def generate_pairings(self, brackets):
         """Returns a function taking an OrderedDict as returned by
         resolve_odd_brackets(), and returning a list of Debates."""
@@ -486,9 +489,21 @@ class GraphPowerPairedDrawGenerator(GraphCostMixin, GraphGeneratorMixin, BasePow
 
 class SingleGraphPowerPairedDrawGenerator(GraphCostMixin, GraphGeneratorMixin, BasePowerPairedDrawGenerator):
 
+    ODD_BRACKET_FUNCTIONS = {
+        "pullup_top"                 : "_pullup_top",
+        "pullup_bottom"              : "_pullup_bottom",
+        "pullup_middle"              : "_pullup_middle",
+        "pullup_random"              : "_pullup_random",
+        "pullup_lowest_ds_rank"      : "_pullup_lowest_ds_rank",
+        "pullup_lowest_ds_rank_npulls": "_pullup_lowest_ds_rank_npulls",
+    }
+
     def generate(self):
         max_points = max([t.points for t in self.teams if t.points is not None], default=0)
         self.n_teams_per_points = {i: len([t for t in self.teams if t.points == i]) for i in range(max_points+1)}
+
+        if 'intermediate' in self.options['odd_bracket']:
+            raise DrawUserError(_("Intermediate-type pullups require 'One-up-one-down' as the conflict avoidance method"))
 
         self.annotate_team_pullup_precedence(self.teams)
         pairings = self.generate_pairings({0: list(self.teams)})
@@ -571,7 +586,7 @@ class SingleGraphPowerPairedDrawGenerator(GraphCostMixin, GraphGeneratorMixin, B
 
     @staticmethod
     def _pullup_lowest_ds_rank(team, size=None):
-        return -team.draw_strength_rank
+        return -getattr(team, 'draw_strength_rank', 0)
 
     @staticmethod
     def _pullup_lowest_ds_rank_npulls(team, size=None):
@@ -618,6 +633,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
         "pairing_method"        : "fold",
         "avoid_conflicts"       : None,
         "pullup_restriction"    : "none",
+        "pullup_penalty"        : 0,
     }
 
     def __init__(self, *args, **kwargs):

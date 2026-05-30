@@ -1,5 +1,56 @@
-<template>
+<script setup>
+import DraggableAllocation from './DraggableAllocation.vue'
+import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useDragAndDropStore } from '../../templates/allocations/DragAndDropStore.js'
 
+const props = defineProps(['debateOrPanel', 'handleDebateOrPanelDrop', 'handlePanelSwap'])
+
+const store = useDragAndDropStore()
+const { allocatableItems } = storeToRefs(store)
+
+const average = (numbers) => numbers.reduce((a, b) => a + b) / numbers.length
+
+const uiRound = (number) => {
+  const fullRounded = Math.round(number * 10) / 10
+  return fullRounded.toPrecision(2)
+}
+
+const adjudicatorScores = computed(() => {
+  let adjIds = []
+  const scores = []
+  if (props.debateOrPanel.adjudicators.C.length > 0) {
+    adjIds.push(props.debateOrPanel.adjudicators.C[0])
+  }
+  adjIds = [...adjIds, ...props.debateOrPanel.adjudicators.P]
+  if (adjIds.length > 0) {
+    for (const adjID of adjIds) {
+      if (adjID in allocatableItems.value) {
+        scores.push(allocatableItems.value[adjID].score)
+      }
+    }
+  }
+  return scores.sort().reverse()
+})
+
+const averageScore = computed(() => {
+  if (adjudicatorScores.value.length > 0) {
+    return uiRound(average(adjudicatorScores.value))
+  }
+  return false
+})
+
+const averageVotingScore = computed(() => {
+  if (adjudicatorScores.value.length > 1) {
+    const votingMajority = Math.ceil(adjudicatorScores.value.length / 2)
+    const majorityScores = adjudicatorScores.value.slice(0, votingMajority)
+    return uiRound(average(majorityScores))
+  }
+  return false
+})
+</script>
+
+<template>
   <div class="d-flex flex-36 flex-truncate vue-droppable vue-droppable-parent">
     <draggable-allocation
       :handle-debate-or-panel-drop="handleDebateOrPanelDrop"
@@ -7,60 +58,6 @@
       :debate-or-panel="debateOrPanel"
       :average-score="averageScore"
       :average-voting-score="averageVotingScore"
-    ></draggable-allocation>
+    />
   </div>
-
 </template>
-
-<script>
-import { mapGetters } from 'vuex'
-
-import DraggableAllocation from './DraggableAllocation.vue'
-
-export default {
-  components: { DraggableAllocation },
-  props: ['debateOrPanel', 'handleDebateOrPanelDrop', 'handlePanelSwap'],
-  computed: {
-    ...mapGetters(['allocatableItems']),
-    adjudicatorScores: function () {
-      let adjIds = [] // Strange logic below is to avoid mutating VueX state
-      const scores = []
-      if (this.debateOrPanel.adjudicators.C.length > 0) {
-        adjIds.push(this.debateOrPanel.adjudicators.C[0])
-      }
-      adjIds = [...adjIds, ...this.debateOrPanel.adjudicators.P]
-      if (adjIds.length > 0) {
-        for (const adjID of adjIds) {
-          if (adjID in this.allocatableItems) {
-            scores.push(this.allocatableItems[adjID].score)
-          }
-        }
-      }
-      return scores.sort().reverse()
-    },
-    averageScore: function () {
-      if (this.adjudicatorScores.length > 0) {
-        return this.uiRound(this.average(this.adjudicatorScores))
-      }
-      return false
-    },
-    averageVotingScore: function () {
-      if (this.adjudicatorScores.length > 1) {
-        const votingMajority = Math.ceil(this.adjudicatorScores.length / 2)
-        const majorityScores = this.adjudicatorScores.slice(0, votingMajority)
-        return this.uiRound(this.average(majorityScores))
-      }
-      return false
-    },
-  },
-  methods: {
-    average: function (numbers) {
-      return numbers.reduce((a, b) => a + b) / numbers.length
-    },
-    uiRound: function (number) {
-      const fullRounded = Math.round(number * 10) / 10
-      return fullRounded.toPrecision(2)
-    },
-  },
-}
-</script>

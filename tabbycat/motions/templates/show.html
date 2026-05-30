@@ -71,42 +71,48 @@
           </div>
 
         {% endif %}
+
+        <div class="modal-footer d-flex justify-content-end">
+          <button type="button" class="btn btn-success" id="releaseMotionBtn" onclick="releaseMotions()">
+            {% trans "Release Motion" %}
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="modal fade" id="infoPop" tabindex="-1" role="dialog" aria-labelledby="infoPop" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-      <div class="modal-content {% if infos_length > 380 %}display-6{% elif infos_length > 280 %}display-5{% elif infos_length > 160 %}display-4{% elif infos_length > 130 %}display-3{% else %}display-2{% endif %}">
+      <div class="modal-content d-flex flex-column" style="height: 90vh;">
 
         {% if infos|length == 1 %}
 
-          <div class="modal-body d-flex align-items-center justify-content-center text-center">
-            <small>
+          <div class="modal-body d-flex align-items-center justify-content-center text-center flex-grow-1" id="infoSlideBody">
+            <div class="info-slide-content">
               {% if infos.0.motion.info_slide|slice:":2" == "<p" %}
                 {{ infos.0.motion.info_slide|safe }}
               {% else %}
                 {{ infos.0.motion.info_slide|linebreaks }}
               {% endif %}
-            </small>
+            </div>
           </div>
 
         {% else %}
 
-          <div class="modal-body d-flex flex-column">
+          <div class="modal-body d-flex flex-column flex-grow-1">
             {% for info in infos %}
               <div class="d-flex align-items-center flex-grow-1">
                 <p>
                   {% if motions|length > 1 %}
                     <span class="text-muted">{{ info.seq }}.</span>
                   {% endif %}
-                  <small>
+                  <span class="info-slide-content">
                     {% if info.motion.info_slide|slice:":2" == "<p" %}
                       {{ info.motion.info_slide|safe }}
                     {% else %}
                       {{ info.motion.info_slide|linebreaks }}
                     {% endif %}
-                  </small>
+                  </span>
                 </p>
               </div>
             {% endfor %}
@@ -114,8 +120,159 @@
 
         {% endif %}
 
+        <div class="modal-footer d-flex justify-content-end">
+          <button type="button" class="btn btn-info" id="releaseInfoSlideBtn" onclick="releaseInfoSlides()">
+            {% trans "Release Info Slide" %}
+          </button>
+        </div>
+
       </div>
     </div>
   </div>
 
 {% endblock content %}
+
+{% block extra-css %}
+  <style>
+    /* Auto-size info slide text to fill modal */
+    .info-slide-content {
+      font-size: 1rem;
+      width: 100%;
+    }
+
+    #infoSlideBody {
+      overflow: hidden;
+    }
+  </style>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script>
+    // Get CSRF token for API requests
+    function getCsrfToken() {
+      const name = 'csrftoken';
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    // Release motions via API
+    function releaseMotions() {
+      const btn = document.getElementById('releaseMotionBtn');
+      const apiUrl = '/api/v1/tournaments/{{ tournament.slug }}/rounds/{{ round.seq }}';
+
+      // Disable button and show loading state
+      btn.disabled = true;
+      btn.textContent = '{% trans "Releasing..." %}';
+
+      fetch(apiUrl, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCsrfToken()
+        },
+        body: JSON.stringify({
+          motions_released: true
+        })
+      })
+      .then(response => {
+        if (response.ok) {
+          btn.textContent = '{% trans "Motions are Released" %}';
+        } else {
+          return response.json().then(data => {
+            throw new Error(data.detail || 'Failed to release motions');
+          });
+        }
+      })
+      .catch(error => {
+        btn.textContent = '{% trans "Failed to release motions" %}';
+      });
+    }
+
+    // Release info slides via API
+    function releaseInfoSlides() {
+      const btn = document.getElementById('releaseInfoSlideBtn');
+      const apiUrl = '/api/v1/tournaments/{{ tournament.slug }}/rounds/{{ round.seq }}';
+
+      // Disable button and show loading state
+      btn.disabled = true;
+      btn.textContent = '{% trans "Releasing..." %}';
+
+      fetch(apiUrl, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCsrfToken()
+        },
+        body: JSON.stringify({
+          motions_status: '{{ round.MotionsStatus.INFO_SLIDES_RELEASED }}'
+        })
+      })
+      .then(response => {
+        if (response.ok) {
+          btn.textContent = '{% trans "Info-slides are released" %}';
+        } else {
+          return response.json().then(data => {
+            throw new Error(data.detail || 'Failed to release info slides');
+          });
+        }
+      })
+      .catch(error => {
+        btn.textContent = '{% trans "Failed to release info-slides" %}';
+      });
+    }
+
+    // Auto-size info slide text to fill modal vertically
+    function autoSizeInfoSlide() {
+      const infoSlideBody = document.getElementById('infoSlideBody');
+      if (!infoSlideBody) return;
+
+      const content = infoSlideBody.querySelector('.info-slide-content');
+      if (!content) return;
+
+      // Get available height
+      const availableHeight = infoSlideBody.clientHeight;
+
+      // Binary search for optimal font size
+      let minSize = 10;
+      let maxSize = 200;
+      let optimalSize = minSize;
+
+      while (minSize <= maxSize) {
+        const midSize = Math.floor((minSize + maxSize) / 2);
+        content.style.fontSize = midSize + 'px';
+
+        if (content.scrollHeight <= availableHeight) {
+          optimalSize = midSize;
+          minSize = midSize + 1;
+        } else {
+          maxSize = midSize - 1;
+        }
+      }
+
+      content.style.fontSize = optimalSize + 'px';
+    }
+
+    // Run auto-sizing when info slide modal is shown
+    $('#infoPop').on('shown.bs.modal', function () {
+      autoSizeInfoSlide();
+    });
+
+    // Re-run on window resize
+    window.addEventListener('resize', function() {
+      if ($('#infoPop').hasClass('show')) {
+        autoSizeInfoSlide();
+      }
+    });
+  </script>
+{% endblock %}

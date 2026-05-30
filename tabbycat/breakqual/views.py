@@ -85,6 +85,23 @@ class PublicBreakingTeamsView(PublicTournamentPageMixin, BaseBreakingTeamsView):
     public_page_preference = 'public_breaking_teams'
     cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
 
+    def get_table(self):
+        metrics_to_show = self.tournament.pref('public_break_metrics_to_show')
+        self.standings = self.get_standings()
+
+        if metrics_to_show != -1:
+            n = max(0, metrics_to_show)
+            self.standings.metric_keys = self.standings.metric_keys[:n]
+            self.standings._metric_specs = self.standings._metric_specs[:n]
+
+        table = TabbycatTableBuilder(view=self, title=escape(self.object.name), sort_key='Rk')
+        table.add_ranking_columns(self.standings)
+        table.add_column({'title': _("Break"), 'key': 'break'},
+                         [tsi.break_rank for tsi in self.standings])
+        table.add_team_columns([tsi.team for tsi in self.standings])
+        table.add_metric_columns(self.standings)
+        return table
+
 
 class GenerateBreakMixin:
 

@@ -1,45 +1,77 @@
 import random
 
 from django import forms
-from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 
 from participants.emoji import EMOJI_RANDOM_FIELD_CHOICES, pick_unused_emoji
-from participants.models import Adjudicator, Coach, Institution, Speaker, Team, TournamentInstitution
+from participants.models import Adjudicator, Coach, Institution, Region, RegistrationStatus, Speaker, Team, TournamentInstitution
 from privateurls.utils import populate_url_keys
 
-from .form_utils import CustomQuestionsFormMixin
+from .form_utils import CustomQuestionsFormMixin, get_answers_initial
+from .models import SlotTransferRequest
 
 
 class TournamentInstitutionForm(CustomQuestionsFormMixin, forms.ModelForm):
 
     institution_name = Institution._meta.get_field('name')
     institution_code = Institution._meta.get_field('code')
+    institution_region = Institution._meta.get_field('region')
 
-    name = forms.CharField(max_length=institution_name.max_length, label=capfirst(institution_name.verbose_name), help_text=institution_name.help_text)
-    code = forms.CharField(max_length=institution_code.max_length, label=capfirst(institution_code.verbose_name), help_text=institution_code.help_text)
+    name = forms.CharField(max_length=institution_name.max_length, label=_("Institution name"), help_text=institution_name.help_text)
+    code = forms.CharField(max_length=institution_code.max_length, label=_("Institution abbreviation"), help_text=institution_code.help_text)
+    region = forms.ModelChoiceField(
+        queryset=Region.objects.all(),
+        label=_("Institution region"),
+        help_text=institution_region.help_text,
+    )
+    key = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     field_order = ('name', 'code', 'teams_requested', 'adjudicators_requested')
 
-    def __init__(self, tournament, *args, **kwargs):
+    def __init__(self, tournament, *args, key=None, invitation=None, **kwargs):
         self.tournament = tournament
+        self.invitation = invitation
         super().__init__(*args, **kwargs)
+        if key:
+            self.fields['key'].initial = key
         self.add_question_fields()
 
-        if not self.tournament.pref('reg_institution_slots'):
-            self.fields.pop('teams_requested')
-            self.fields.pop('adjudicators_requested')
+        if not self.tournament.pref('reg_institution_slots') or invitation:
+            self.fields.pop('teams_requested', None)
+            self.fields.pop('adjudicators_requested', None)
+        if invitation:
+            self.initial.setdefault('name', invitation.institution_name or '')
+
+        if 'region' not in self.tournament.pref('reg_institution_fields'):
+            self.fields.pop('region')
+
+    def clean_name(self):
+        name = self.cleaned_data.get('name', '').strip()
+        existing_institution = TournamentInstitution.objects.filter(tournament=self.tournament, institution__name__iexact=name).exists()
+        if existing_institution:
+            raise forms.ValidationError(_("An institution with this name is already registered for this tournament."))
+        return name
 
     class Meta:
         model = TournamentInstitution
         exclude = ('tournament', 'institution', 'teams_allocated', 'adjudicators_allocated')
 
     def save(self):
-        inst, created = Institution.objects.get_or_create(name=self.cleaned_data.pop('name'), code=self.cleaned_data.pop('code'))
+        self.cleaned_data.pop('key', None)
+        name = self.cleaned_data.pop('name')
+        code = self.cleaned_data.pop('code')
+        region = self.cleaned_data.pop('region', None)
+        inst, created = Institution.objects.get_or_create(
+            name=name,
+            defaults={'region': region, 'code': code},
+        )
 
         obj = super().save(commit=False)
         obj.institution = inst
         obj.tournament = self.tournament
+        if self.invitation:
+            obj.teams_allocated = self.invitation.teams_allocated or 0
+            obj.adjudicators_allocated = self.invitation.adjudicators_allocated or 0
         obj.save()
         self.save_answers(obj)
 
@@ -47,10 +79,13 @@ class TournamentInstitutionForm(CustomQuestionsFormMixin, forms.ModelForm):
 
 
 class InstitutionCoachForm(CustomQuestionsFormMixin, forms.ModelForm):
+    key = forms.CharField(widget=forms.HiddenInput(), required=False)
 
-    def __init__(self, tournament, *args, **kwargs):
+    def __init__(self, tournament, *args, key=None, **kwargs):
         self.tournament = tournament
         super().__init__(*args, **kwargs)
+        if key:
+            self.fields['key'].initial = key
         self.add_question_fields()
 
     class Meta:
@@ -61,10 +96,54 @@ class InstitutionCoachForm(CustomQuestionsFormMixin, forms.ModelForm):
         }
 
     def save(self):
+        self.cleaned_data.pop('key', None)
         obj = super().save()
         populate_url_keys([obj])
-        self.save_answers(obj)
+        self.save_answers(obj, replace_existing=bool(obj.pk))
         return obj
+
+
+class InstitutionEditForm(forms.Form):
+    """Wrapper form for admin editing of institution + primary contact (coach) with separate sections."""
+
+    def __init__(self, tournament, t_inst, data=None, read_only=False, *args, **kwargs):
+        super().__init__(data=data, *args, **kwargs)
+        self.tournament = tournament
+        self.t_inst = t_inst
+        self.read_only = read_only
+        coach = t_inst.coach_set.first()
+
+        inst_initial = {
+            'name': t_inst.institution.name,
+            'code': t_inst.institution.code,
+            'region': t_inst.institution.region,
+            **get_answers_initial(t_inst),
+        }
+
+        coach_initial = get_answers_initial(coach) if coach else {}
+
+        self.institution_form = TournamentInstitutionForm(
+            tournament,
+            instance=t_inst,
+            initial=inst_initial,
+            data=data,
+            prefix='institution',
+        )
+        self.coach_form = InstitutionCoachForm(
+            tournament,
+            instance=coach,
+            initial=coach_initial,
+            data=data,
+            prefix='coach',
+        )
+
+        if read_only:
+            for form in (self.institution_form, self.coach_form):
+                for field in form.fields.values():
+                    field.disabled = True
+
+    def is_valid(self):
+        return self.institution_form.is_valid() and self.coach_form.is_valid()
 
 
 class TeamForm(CustomQuestionsFormMixin, forms.ModelForm):
@@ -97,7 +176,7 @@ class TeamForm(CustomQuestionsFormMixin, forms.ModelForm):
             self.fields['institution'].initial = self.institution
 
         if 'emoji' in self.fields:
-            used_emoji = self.tournament.team_set.filter(emoji__isnull=False).values_list('emoji', flat=True)
+            used_emoji = Team.objects.all_with_unconfirmed.filter(tournament=self.tournament, emoji__isnull=False).values_list('emoji', flat=True)
             self.fields['emoji'].choices = [e for e in EMOJI_RANDOM_FIELD_CHOICES if e[0] not in used_emoji]
             self.fields['emoji'].initial = random.choice(self.fields['emoji'].choices)[0]
 
@@ -130,6 +209,8 @@ class TeamForm(CustomQuestionsFormMixin, forms.ModelForm):
 
     def save(self):
         self.instance.tournament = self.tournament
+        if self.tournament.pref('registration_confirmation') == 'always' or (self.tournament.pref('registration_confirmation') == 'open' and self.institution is None):
+            self.instance.registration_status = RegistrationStatus.UNCONFIRMED
 
         if self.institution:
             self.instance.institution = self.institution
@@ -216,6 +297,8 @@ class AdjudicatorForm(CustomQuestionsFormMixin, forms.ModelForm):
 
     def save(self):
         self.instance.tournament = self.tournament
+        if self.tournament.pref('registration_confirmation') == 'always' or (self.tournament.pref('registration_confirmation') == 'open' and self.institution is None):
+            self.instance.registration_status = RegistrationStatus.UNCONFIRMED
         if self.institution:
             self.instance.institution = self.institution
 
@@ -265,3 +348,87 @@ class ParticipantAllocationForm(forms.Form):
             t_inst.teams_allocated = self.cleaned_data[self._fieldname_teams_allocated(institution)]
             t_inst.adjudicators_allocated = self.cleaned_data[self._fieldname_adjs_allocated(institution)]
         TournamentInstitution.objects.bulk_update(qs, ['teams_allocated', 'adjudicators_allocated'])
+
+
+class SlotTransferRequestForm(forms.Form):
+    receiving_institution = forms.ModelChoiceField(
+        queryset=TournamentInstitution.objects.none(),
+        label=_("Institution"),
+        required=False,
+        empty_label=_("Institution not listed"),
+    )
+    receiving_institution_name = forms.CharField(
+        max_length=100,
+        label=_("Institution name"),
+        required=False,
+        help_text=_("If the institution is not listed above, enter the name of the receiving institution here."),
+    )
+    receiving_institution_email = forms.EmailField(
+        label=_("Contact email"),
+        required=False,
+        help_text=_("If the institution is not listed above, enter the contact email for the receiving institution here."),
+    )
+    teams_to_transfer = forms.IntegerField(
+        min_value=0,
+        initial=0,
+        label=_("Team slots to transfer"),
+    )
+    adjudicators_to_transfer = forms.IntegerField(
+        min_value=0,
+        initial=0,
+        label=_("Adjudicator slots to transfer"),
+    )
+
+    def __init__(self, source_tournament_institution, *args, **kwargs):
+        self.source_tournament_institution = source_tournament_institution
+        self.tournament = source_tournament_institution.tournament
+        super().__init__(*args, **kwargs)
+        other_tis = TournamentInstitution.objects.filter(
+            tournament=self.tournament,
+        ).exclude(
+            pk=source_tournament_institution.pk,
+        ).select_related('institution').order_by('institution__name')
+        self.fields['receiving_institution'].queryset = other_tis
+
+        self.fields['teams_to_transfer'].widget.attrs.update({'max': source_tournament_institution.teams_allocated})
+        self.fields['adjudicators_to_transfer'].widget.attrs.update({'max': source_tournament_institution.adjudicators_allocated})
+
+    def clean(self):
+        data = super().clean()
+        if not data.get('receiving_institution'):
+            if not (data.get('receiving_institution_name') or '').strip():
+                self.add_error('receiving_institution_name', _("Please enter the name of the receiving institution."))
+            if not (data.get('receiving_institution_email') or '').strip():
+                self.add_error('receiving_institution_email', _("Please enter the contact email for the receiving institution."))
+
+        teams = data['teams_to_transfer']
+        adjs = data['adjudicators_to_transfer']
+        if teams <= 0 and adjs <= 0:
+            self.add_error('teams_to_transfer', _("Transfer at least one team or adjudicator slot."))
+        if teams > self.source_tournament_institution.teams_allocated:
+            self.add_error('teams_to_transfer', _("You cannot transfer more team slots than you have."))
+        if adjs > self.source_tournament_institution.adjudicators_allocated:
+            self.add_error('adjudicators_to_transfer', _("You cannot transfer more adjudicator slots than you have."))
+        return data
+
+    def save(self):
+        data = self.cleaned_data
+        if data['receiving_institution']:
+            return SlotTransferRequest.objects.create(
+                tournament=self.tournament,
+                source_tournament_institution=self.source_tournament_institution,
+                teams_transferred=data['teams_to_transfer'],
+                adjudicators_transferred=data['adjudicators_to_transfer'],
+                receiving_institution=data['receiving_institution'],
+                status=SlotTransferRequest.Status.PENDING,
+            )
+        else:
+            SlotTransferRequest.objects.create(
+                tournament=self.tournament,
+                source_tournament_institution=self.source_tournament_institution,
+                teams_transferred=data['teams_to_transfer'],
+                adjudicators_transferred=data['adjudicators_to_transfer'],
+                receiving_institution_name=data['receiving_institution_name'],
+                receiving_institution_email=data['receiving_institution_email'],
+                status=SlotTransferRequest.Status.PENDING,
+            )

@@ -2,8 +2,60 @@
 Change Log
 ==========
 
-2.11.0 (T)
-----------
+2.12.0 (TBD)
+------------
+
+*Release date: TBD*
+
+
+2.11.1
+------
+*Release date: 2 March 2026*
+
+- Avoid merging ballots based on trainee submissions
+- Avoid sending password reset email on user invitation
+- Remove extraneous HTML when copying into Summernote
+- Fix error on motion/info-slide release
+- Avoid sending push notifications if not configured and fail silently
+- Add validation against setting graph-only pullup option; add error when using draw strength in Australs PP
+- Fix adjudicators disappearing from allocation screen in public speaking tournaments
+- Only show 'Release info-slide' button if round has info-slide
+- Skip teams that are not in standings when calculating draw strength
+- Set sides for bye debates when prefetching; skip adding results for bye debates in commands
+- Avoid crashing when creating tournaments due to blank required FKs
+- Fix duplicate header keys in registration institution table
+- Fix JQuery not being loaded in time; fix checkbox table checks not registering; use form-based submission where possible
+- Fix typo in preferences. Thank you to Polyxeni Damigou for their PR! (#2822)
+
+
+2.11.0 (Tonkinese)
+------------------
+*Release date: 9 November 2025*
+
+- Improved publication control
+  - Created mechanism to release team draw before full draw with adjudicators, and info-slides before motions
+  - Motions and info-slides can be released from presentation interface
+- Improvements to allocation screens
+  - Allocations for concurrent rounds can be made on a single page, ensuring no double-booking
+  - The maximum number of times an adjudicator has met a team or other adjudicator is shown
+  - Room constraints are shown during room allocation
+- Participants can opt-in to receive personalised browser push notifications on draw and motion release
+- On draw deletion, panels can be transferred to preformed
+- Added feedback weight modal in Feedback Overview
+- Added default "access officer" permission group, and increased the scope of CA permissions
+- Show adjudicators' own ballot even when unconfirmed in private URL
+- Improve handling of ``{{ URL }}`` variable in private URL email template
+- Set draw table bracket highlights from frontend to be responsive with sorting.
+- Prevented conflicts when many people simultaneously generate a draw
+- API improvements:
+  - Most (except passwords) tournament preferences are now exposed publicly
+  - Used serializers to validate query parameters
+  - Added registration fields to tournament-institution endpoint
+  - Don't require registration question answers when authenticated
+  - Add user permissions when creating user
+  - Removed ability to disable the API. Thank you to Teymour Aldridge for their PR!
+  - Implemented initial tests for tournament and round APIs. Thank you to Séb for their work!
+- \+ bug fixes and optimizations!
 
 
 2.10.0 (Sphynx)

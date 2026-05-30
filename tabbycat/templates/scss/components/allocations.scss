@@ -7,6 +7,24 @@
   background-color: $body-bg; // Need contrast with button sections, so can't use white
 }
 
+// For InlineAdjudicator.vue
+.inline-adjudicator {
+  height: 100%;
+  position: relative;
+  border: 5px solid $white;
+
+  &:hover { // Need to override conflict hovers
+    background: $purple !important;
+    color: $white;
+    border-color: darken($purple, 7.5%) !important;
+  }
+
+  &.conflictable {
+    border-width: 5px; // For constraint panel outlines
+    border-style: solid;
+  }
+}
+
 // For DragAndDropDebate.vue
 .teams-list {
   display: grid;

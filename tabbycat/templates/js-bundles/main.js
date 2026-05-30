@@ -1,10 +1,10 @@
 // The base template with universal or near-universal functionality (imported on all pages)
-import Vue from 'vue'
-import VueTouch from 'vue-touch'
-import * as Sentry from '@sentry/browser'
-import * as Integrations from '@sentry/integrations'
+import { createApp, defineAsyncComponent } from 'vue'
+import { createPinia } from 'pinia'
+import * as Sentry from '@sentry/vue';
 import feather from 'feather-icons'
 import 'bootstrap' // Import bootstrap javascript plugins
+const $ = window.jQuery
 
 // Generic Templates
 import CheckboxTablesContainer from '../tables/CheckboxTablesContainer.vue'
@@ -21,29 +21,28 @@ import EditDebateAdjudicatorsContainer from '../../adjallocation/templates/EditD
 import EditPanelAdjudicatorsContainer from '../../adjallocation/templates/EditPanelAdjudicatorsContainer.vue'
 import EditDebateTeamsContainer from '../../draw/templates/EditDebateTeamsContainer.vue'
 import EditDebateVenuesContainer from '../../venues/templates/EditDebateVenuesContainer.vue'
-import store from '../../templates/allocations/DragAndDropStore'
+import { useDragAndDropStore } from '../../templates/allocations/DragAndDropStore'
 
 // Setup the main constructs used for custom components
-var vueComponents = {}
-
-// Setup jquery access
-var $ = require('jquery')
+const vueComponents = {}
 
 // Setup error logging (should happen before other imports)
 if (window.buildData.sentry === true) {
-  Sentry.init({
-    dsn: 'https://88a028d7eb504d93a1e4c92e077d6ce5@o85113.ingest.sentry.io/185378',
-    integrations: [new Integrations.Vue({ Vue, attachProps: true })],
-    release: window.buildData.version,
-  })
+  try {
+    Sentry.init({
+      dsn: 'https://88a028d7eb504d93a1e4c92e077d6ce5@o85113.ingest.sentry.io/185378',
+      release: window.buildData.version,
+      integrations: (integrations) =>
+        integrations.filter((integration) => integration.name !== "Vue"),
+    })
+  } catch (e) {
+    console.error('Failed to initialize Sentry:', e)
+  }
 }
 
 // -----------------------------------------------------------------------------
 // TCI: jQuery, Lodash, and Boostrap
 // -----------------------------------------------------------------------------
-
-global.jQuery = $ // Set for bootstrap
-window.$ = $ // Set for browser window
 
 // Add alerts programmatically
 $.fn.extend({
@@ -130,10 +129,10 @@ $(document).ready(() => {
   // IE 11 has no endsWith(); do a quick polyfill if that is the case
   // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
   if (!String.prototype.endsWith) {
-    // eslint-disable-next-line no-extend-native
+
     String.prototype.endsWith = function (search, thisLength) {
       if (thisLength === undefined || thisLength > this.length) {
-        // eslint-disable-next-line no-param-reassign
+
         thisLength = this.length
       }
       return this.substring(thisLength - search.length, thisLength) === search
@@ -198,7 +197,7 @@ vueComponents.BallotEntryContainer = BallotEntryContainer
 
 // Note the 3d graphs are async loaded inline as part of components: {}
 // Check-Ins (thus delays loading quagga)
-vueComponents.CheckInScanContainer = () => import('../../checkins/templates/CheckInScanContainer.vue')
+vueComponents.CheckInScanContainer = defineAsyncComponent(() => import('../../checkins/templates/CheckInScanContainer.vue'))
 
 // -----------------------------------------------------------------------------
 // Main Vue Instance
@@ -244,15 +243,7 @@ const vueTranslationMixin = {
   },
 }
 
-// This is an coordinating instance used for inter-component pub/sub interfaces
-// Only needed by the legay drag and drop screens
-const eventHub = new Vue()
-Vue.prototype.$eventHub = eventHub
-
-// Make a global mixin to provide translation functions
-Vue.mixin(vueTranslationMixin)
-// Provide support for tab events
-Vue.use(VueTouch, { name: 'v-touch' })
+const pinia = createPinia()
 
 // Only instantiate Vue if there is set vueData; otherwise the mount is missing
 if (typeof vueData !== 'undefined') {
@@ -260,11 +251,16 @@ if (typeof vueData !== 'undefined') {
   if ('tablesData' in vueData && vueData.tablesData === null) {
     // Is an empty table; do not mount
   } else {
-    new Vue({ // eslint-disable-line no-new
-      el: '#vueMount',
-      store, // Inject store into all root level components
+    const app = createApp({
       components: vueComponents,
-      data: vueData,
+      data: () => vueData,
     })
+    if (window.buildData.sentry === true) {
+      Sentry.addIntegration(Sentry.vueIntegration({ app }));
+    }
+    app.use(pinia)
+    useDragAndDropStore(pinia)
+    app.mixin(vueTranslationMixin)
+    app.mount('#vueMount')
   }
 }

@@ -1,161 +1,215 @@
+<script setup>
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import DroppableItem from './DroppableItem.vue'
+import { useDragAndDropStore } from './DragAndDropStore.js'
+import { useDjangoI18n } from '../composables/useDjangoI18n.js'
+
+const props = defineProps({
+  unallocatedItems: { type: Array, default: () => [] },
+  unallocatedComponent: { type: [Object, Function, String], required: true },
+  handleUnusedDrop: { type: Function, required: true },
+})
+
+const store = useDragAndDropStore()
+const { gettext } = useDjangoI18n()
+
+const resizeableElement = ref(null)
+const unallocatedHolder = ref(null)
+
+const showUnavailable = ref(false)
+const sorts = reactive({
+  drag: { label: 'Sort By Drag Order', active: true },
+  name: { label: 'Sort By Name', active: false },
+  score: { label: 'Sort By Score', active: false },
+})
+
+const height = ref(null)
+const minHeight = 55
+const maxHeight = 300
+const itemContainerHeight = ref(null)
+const startPosition = ref(null)
+
+const isVenue = computed(() => {
+  return props.unallocatedItems?.[0] && 'priority' in props.unallocatedItems[0]
+})
+
+const isTeam = computed(() => {
+  return props.unallocatedItems?.[0] && 'short_name' in props.unallocatedItems[0]
+})
+
+const filteredAll = computed(() => props.unallocatedItems)
+
+const filteredAvailable = computed(() => {
+  return props.unallocatedItems.slice(0).filter((item) => item.available)
+})
+
+const filteredUnallocatedItems = computed(() => {
+  return showUnavailable.value ? filteredAll.value : filteredAvailable.value
+})
+
+const sortedUnallocatedItemsByOrder = computed(() => {
+  return filteredUnallocatedItems.value.slice(0).sort((itemA, itemB) => {
+    return itemB.vue_last_modified - itemA.vue_last_modified
+  })
+})
+
+const sortedUnallocatedItemsByName = computed(() => {
+  const field = isVenue.value ? 'display_name' : (isTeam.value ? 'short_name' : 'name')
+  return filteredUnallocatedItems.value.slice(0).sort((itemA, itemB) => {
+    return itemA[field].localeCompare(itemB[field])
+  })
+})
+
+const sortedUnallocatedItemsByScore = computed(() => {
+  const field = isVenue.value ? 'priority' : (isTeam.value ? 'points' : 'score')
+  return filteredUnallocatedItems.value.slice(0).sort((itemA, itemB) => {
+    return itemB[field] - itemA[field]
+  })
+})
+
+const boundedHeight = (h) => {
+  if (h > maxHeight) {
+    return maxHeight
+  } else if (h < minHeight) {
+    return minHeight
+  }
+  return h
+}
+
+const activeSortKey = computed(() => {
+  const active = Object.entries(sorts).find(([, v]) => v.active)
+  return active ? active[0] : 'drag'
+})
+
+const currentSortingMethod = computed(() => {
+  const key = activeSortKey.value
+  if (key === 'name') return sortedUnallocatedItemsByName.value
+  if (key === 'score') return sortedUnallocatedItemsByScore.value
+  return sortedUnallocatedItemsByOrder.value
+})
+
+const setSort = (selectedKey) => {
+  Object.keys(sorts).forEach(key => {
+    sorts[key].active = selectedKey === key
+  })
+}
+
+const resizeEnd = (_event) => {
+  window.removeEventListener('mousemove', resizeMotion)
+  window.removeEventListener('mouseup', resizeEnd)
+}
+
+const resizeMotion = (event) => {
+  height.value = boundedHeight(window.innerHeight - event.clientY)
+  if (height.value > maxHeight || height.value < minHeight) {
+    resizeEnd(event)
+  }
+}
+
+const resizeStart = (event) => {
+  event.preventDefault()
+  startPosition.value = event.clientY
+  window.addEventListener('mousemove', resizeMotion)
+  window.addEventListener('mouseup', resizeEnd)
+}
+
+const unsetHoverPanel = () => {
+  store.unsetHoverPanel()
+}
+
+const unsetHoverConflicts = () => {
+  store.unsetHoverConflicts()
+}
+
+onMounted(() => {
+  if (resizeableElement.value) {
+    height.value = boundedHeight(resizeableElement.value.clientHeight)
+  }
+  if (unallocatedHolder.value) {
+    itemContainerHeight.value = unallocatedHolder.value.clientHeight
+  }
+  if (filteredAvailable.value.length === 0) {
+    showUnavailable.value = true
+  }
+})
+
+watch(() => props.unallocatedItems, async () => {
+  await nextTick()
+  if (!unallocatedHolder.value || itemContainerHeight.value === null || height.value === null) {
+    return
+  }
+  if (unallocatedHolder.value.clientHeight < itemContainerHeight.value) {
+    const difference = itemContainerHeight.value - unallocatedHolder.value.clientHeight
+    let newHeight = boundedHeight(height.value - difference)
+    if (newHeight < 82) {
+      newHeight = 82
+    }
+    height.value = newHeight
+  }
+  itemContainerHeight.value = unallocatedHolder.value.clientHeight
+})
+
+onBeforeUnmount(() => {
+  resizeEnd()
+})
+</script>
+
 <template>
-  <div class="navbar-light fixed-bottom d-flex border-top flex-column p-0"
-       :style="{height: height + 'px'}" ref="resizeableElement">
-
-    <droppable-item class="flex-grow-1 px-2 overflow-auto" :handle-drop="handleUnusedDrop"
-                    :drop-context="{ 'assignment': null, 'position': null }">
-
+  <div
+    ref="resizeableElement"
+    class="navbar-light fixed-bottom d-flex border-top flex-column p-0"
+    :style="{height: height + 'px'}"
+  >
+    <droppable-item
+      class="flex-grow-1 px-2 overflow-auto"
+      :handle-drop="handleUnusedDrop"
+      :drop-context="{ 'assignment': null, 'position': null }"
+    >
       <section class="mb-1 d-flex">
         <div class="small mt-2 pl-1 text-muted text-unselectable">
-          <span v-for="(value, key) in sorts" v-text="gettext(value.label)" @click="setSort(key)"
-                :class="['pr-2', value.active ? 'font-weight-bold' : 'hoverable']"></span>
+          <span
+            v-for="(value, key) in sorts"
+            :class="['pr-2', value.active ? 'font-weight-bold' : 'hoverable']"
+            @click="setSort(key)"
+          >{{ gettext(value.label) }}</span>
         </div>
-        <div class="vc-resize-handler flex-grow-1 mt-2 text-center"
-             @dragover.prevent @mousedown="resizeStart">
-          <i data-feather="menu" class="mx-auto d-block"></i>
+        <div
+          class="vc-resize-handler flex-grow-1 mt-2 text-center"
+          @dragover.prevent
+          @mousedown="resizeStart"
+        >
+          <i
+            data-feather="menu"
+            class="mx-auto d-block"
+          />
         </div>
         <div class="small text-muted mt-2 mx-1 text-unselectable">
-          <span @click="showUnavailable = false"
-                :class="['', !showUnavailable ? 'font-weight-bold' : 'hoverable']">
-              Show Available ({{ filteredAvailable.length }})
+          <span
+            :class="['', !showUnavailable ? 'font-weight-bold' : 'hoverable']"
+            @click="showUnavailable = false"
+          >
+            Show Available ({{ filteredAvailable.length }})
           </span>
-          <span @click="showUnavailable = true"
-                :class="['pl-2', showUnavailable ? 'font-weight-bold' : 'hoverable']">
-              Show All ({{ filteredAll.length }})
+          <span
+            :class="['pl-2', showUnavailable ? 'font-weight-bold' : 'hoverable']"
+            @click="showUnavailable = true"
+          >
+            Show All ({{ filteredAll.length }})
           </span>
         </div>
       </section>
-      <section class="d-flex flex-wrap pb-2" ref="unallocatedHolder">
-        <div v-for="item in currentSortingMethod" :is="unallocatedComponent" :item="item" :key="item.id"
-             :drag-payload="{ 'item': item.id, 'assignment': null, 'position': null }"></div>
+      <section
+        ref="unallocatedHolder"
+        class="d-flex flex-wrap pb-2"
+      >
+        <component
+          :is="unallocatedComponent"
+          v-for="item in currentSortingMethod"
+          :key="item.id"
+          :item="item"
+          :drag-payload="{ 'item': item.id, 'assignment': null, 'position': null }"
+        />
       </section>
-
     </droppable-item>
-
   </div>
 </template>
-
-<script>
-import { mapMutations } from 'vuex'
-
-import DroppableItem from './DroppableItem.vue'
-
-export default {
-  components: { DroppableItem },
-  data: function () {
-    return {
-      showUnavailable: false,
-      sorts: {
-        drag: {
-          label: 'Sort By Drag Order', active: true, property: 'sortedUnallocatedItemsByOrder',
-        },
-        name: {
-          label: 'Sort By Name', active: false, property: 'sortedUnallocatedItemsByName',
-        },
-        score: {
-          label: 'Sort By Score', active: false, property: 'sortedUnallocatedItemsByScore',
-        },
-      },
-      height: null,
-      minHeight: 55,
-      maxHeight: 300,
-      itemContainerHeight: null,
-    }
-  },
-  props: ['unallocatedItems', 'unallocatedComponent', 'handleUnusedDrop'],
-  mounted: function () {
-    this.height = this.boundedHeight(this.$refs.resizeableElement.clientHeight)
-    this.itemContainerHeight = this.$refs.unallocatedHolder.clientHeight
-    if (this.filteredAvailable.length === 0) {
-      this.showUnavailable = true // Show all adjs if none are available (prevents confusion)
-    }
-  },
-  watch: {
-    unallocatedItems: function (val, oldVal) {
-      this.$nextTick(function () {
-        // Reduce the height automatically as the items are dragged out
-        if (this.$refs.unallocatedHolder.clientHeight < this.itemContainerHeight) {
-          const difference = this.itemContainerHeight - this.$refs.unallocatedHolder.clientHeight
-          let newHeight = this.boundedHeight(this.height - difference)
-          if (newHeight < 82) { // Don't resize below a single row
-            newHeight = 82
-          }
-          this.height = newHeight
-        }
-        this.itemContainerHeight = this.$refs.unallocatedHolder.clientHeight
-      })
-    },
-  },
-  computed: {
-    isVenue: function () {
-      return this.unallocatedItems[0] && 'priority' in this.unallocatedItems[0]
-    },
-    isTeam: function () {
-      return this.unallocatedItems[0] && 'short_name' in this.unallocatedItems[0]
-    },
-    filteredUnallocatedItems: function () {
-      return this.showUnavailable ? this.filteredAll : this.filteredAvailable
-    },
-    filteredAll: function () {
-      return this.unallocatedItems
-    },
-    filteredAvailable: function () {
-      return this.unallocatedItems.slice(0).filter((item) => item.available)
-    },
-    currentSortingMethod: function () {
-      const activeKey = Object.values(this.sorts).filter(value => value.active)
-      return this[activeKey[0].property]
-    },
-    sortedUnallocatedItemsByOrder: function () {
-      return this.filteredUnallocatedItems.slice(0).sort((itemA, itemB) => {
-        return itemB.vue_last_modified - itemA.vue_last_modified
-      })
-    },
-    sortedUnallocatedItemsByName: function () {
-      const field = this.isVenue ? 'display_name' : (this.isTeam ? 'short_name' : 'name')
-      // Note slice makes a copy so we are not mutating
-      return this.filteredUnallocatedItems.slice(0).sort((itemA, itemB) => {
-        return itemA[field].localeCompare(itemB[field])
-      })
-    },
-    sortedUnallocatedItemsByScore: function () {
-      const field = this.isVenue ? 'priority' : (this.isTeam ? 'points' : 'score')
-      return this.filteredUnallocatedItems.slice(0).sort((itemA, itemB) => {
-        return itemB[field] - itemA[field]
-      })
-    },
-  },
-  methods: {
-    setSort: function (selectedKey) {
-      Object.keys(this.sorts).forEach(key => {
-        this.sorts[key].active = selectedKey === key
-      })
-    },
-    resizeStart: function (event) {
-      event.preventDefault()
-      this.startPosition = event.clientY
-      window.addEventListener('mousemove', this.resizeMotion)
-      window.addEventListener('mouseup', this.resizeEnd)
-    },
-    resizeMotion: function (event) {
-      this.height = this.boundedHeight(window.innerHeight - event.clientY)
-      if (this.height > this.maxHeight || this.height < this.minHeight) {
-        this.resizeEnd(event)
-      }
-    },
-    resizeEnd: function (event) {
-      window.removeEventListener('mousemove', this.resizeMotion)
-      window.removeEventListener('mouseup', this.resizeEnd)
-    },
-    boundedHeight: function (height) {
-      if (height > this.maxHeight) {
-        return this.maxHeight
-      } else if (height < this.minHeight) {
-        return this.minHeight
-      }
-      return height
-    },
-    ...mapMutations(['unsetHoverPanel', 'unsetHoverConflicts']),
-  },
-}
-</script>

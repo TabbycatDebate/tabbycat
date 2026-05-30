@@ -8,6 +8,12 @@
       </h4>
     </div>
 
+    {% if adjudicator.registration_status == 'U' %}
+      <div class="list-group-item">
+        <em class="text-danger">{% trans "Registration not confirmed by tournament staff; will not be included in the tournament until confirmed." %}</em>
+      </div>
+    {% endif %}
+
     {% if adjudicator.independent or adjudicator.adj_core %}
       <div class="list-group-item">
         <ul>

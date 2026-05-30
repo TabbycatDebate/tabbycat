@@ -1,10 +1,13 @@
 import datetime
+import json
 import logging
 import unicodedata
-from itertools import product
+from itertools import combinations, product
 from zoneinfo import ZoneInfo
 
+from django.conf import settings
 from django.contrib import messages
+from django.db import DatabaseError, transaction
 from django.db.models import OuterRef, Subquery
 from django.http import HttpResponseRedirect
 from django.utils import timezone
@@ -13,19 +16,20 @@ from django.utils.html import escape, format_html
 from django.utils.safestring import mark_safe
 from django.utils.timezone import get_current_timezone_name
 from django.utils.translation import gettext as _
-from django.utils.translation import gettext_lazy, ngettext
+from django.utils.translation import gettext_lazy, ngettext, override
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from adjallocation.models import DebateAdjudicator
+from adjallocation.models import DebateAdjudicator, PreformedPanel, PreformedPanelAdjudicator
 from adjallocation.utils import adjudicator_conflicts_display
 from availability.utils import annotate_availability
 from draw.generator.powerpair import BasePowerPairedDrawGenerator
 from notifications.models import BulkNotification
 from notifications.views import RoundTemplateEmailCreateView
 from options.preferences import BPPositionCost
+from options.utils import use_team_code_names
 from participants.models import Adjudicator, Speaker, Team
 from participants.prefetch import populate_win_counts
 from participants.utils import get_side_history
@@ -93,8 +97,9 @@ class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
         else:
             return ""
 
-    def populate_table(self, debates, table, highlight=[]):
+    def populate_table(self, debates, table, highlight=[], round=None):
         table.add_debate_venue_columns(debates)
+        table.add_debate_scheduled_at_column_if_needed(debates)
         table.add_debate_team_columns(debates, highlight)
         table.add_debate_adjudicators_column(debates, show_splits=False)
 
@@ -111,7 +116,7 @@ class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
         if hasattr(self, 'get_debates'):
             table = PublicDrawTableBuilder(view=self, sort_key=self.sort_key,
                     admin=False, empty_title=self.empty_table_title)
-            self.populate_table(self.get_debates(), table)
+            self.populate_table(self.get_debates(), table, round=None)
             return [table]
 
         # If there's only one round, use that in a single table
@@ -119,7 +124,7 @@ class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
             table = PublicDrawTableBuilder(view=self, sort_key=self.sort_key,
                     admin=False, empty_title=self.empty_table_title)
             debates = self.get_debates_for_round(self.rounds[0])
-            self.populate_table(debates, table)
+            self.populate_table(debates, table, round=self.rounds[0])
             return [table]
 
         tables = []
@@ -136,7 +141,7 @@ class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
             table = PublicDrawTableBuilder(view=self, sort_key=self.sort_key,
                 admin=False, title=r.name, subtitle=subtitle,
                 empty_title=self.empty_table_title)
-            self.populate_table(debates, table)
+            self.populate_table(debates, table, round=r)
             tables.append(table)
 
         return tables
@@ -178,13 +183,21 @@ class PublicDrawMixin(PublicTournamentPageMixin):
 
     @cached_property
     def draws_available(self):
-        return any(r.draw_status == Round.Status.RELEASED for r in self.rounds)
+        return any(r.draw_status in [Round.Status.RELEASED, Round.Status.TEAMS_RELEASED] for r in self.rounds)
 
     @classmethod
     def get_debates_for_round(cls, round):
-        if round.draw_status != Round.Status.RELEASED:
+        if round.draw_status not in [Round.Status.RELEASED, Round.Status.TEAMS_RELEASED]:
             return Debate.objects.none()
         return super().get_debates_for_round(round)
+
+    def populate_table(self, debates, table, highlight=[], round=None):
+        table.add_debate_venue_columns(debates)
+        table.add_debate_scheduled_at_column_if_needed(debates)
+        table.add_debate_team_columns(debates, highlight)
+
+        if getattr(round, 'draw_status', None) == Round.Status.RELEASED or (len(self.rounds) > 0 and all(r.draw_status == Round.Status.RELEASED for r in self.rounds)):
+            table.add_debate_adjudicators_column(debates, show_splits=False)
 
     def get_template_names(self):
         if not self.draws_available:
@@ -219,35 +232,6 @@ class PublicDrawForCurrentRoundsView(PublicDrawMixin, BaseDisplayDrawForCurrentR
         return tournament.pref('public_draw') == 'current'
 
 
-class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, BaseDisplayDrawTableView):
-    public_page_preference = 'enable_mass_draws'
-
-    @property
-    def rounds(self):
-        return []
-
-    def get_page_title(self):
-        return _("All Debates for All Rounds of %(tournament)s") % {'tournament': self.tournament.name}
-
-    def get_page_subtitle(self):
-        return None
-
-    def get_page_emoji(self):
-        return None
-
-    def populate_table(self, debates, table, highlight=[]):
-        table.add_round_column(d.round for d in debates)
-        super().populate_table(debates, table, highlight=highlight)
-
-    def get_draw(self):
-        all_rounds = Round.objects.filter(tournament=self.tournament,
-                                          draw_status=Round.Status.RELEASED)
-        draw = []
-        for round in all_rounds:
-            draw.extend(round.debate_set_with_prefetches())
-        return draw
-
-
 # ==============================================================================
 # Viewing Draw (Briefing Room)
 # ==============================================================================
@@ -270,7 +254,7 @@ class BriefingRoomDrawByTeamTableMixin(BriefingRoomDrawTableMixin):
 
     sort_key = '' # Leave with default sort order
 
-    def populate_table(self, debates, table):
+    def populate_table(self, debates, table, round=None):
         # unicodedata.normalize gets accented characters (e.g. "Éothéod") to sort correctly
         byes = [d for d in debates if d.is_bye]
         debates = [d for d in debates if not d.is_bye]
@@ -283,7 +267,7 @@ class BriefingRoomDrawByTeamTableMixin(BriefingRoomDrawTableMixin):
             debates, teams = [], []  # next line can't unpack if draw_by_team is empty
         else:
             debates, teams = zip(*draw_by_team)
-        super().populate_table(debates, table, highlight=teams)
+        super().populate_table(debates, table, highlight=teams, round=round)
 
 
 class AdminDrawDisplayForSpecificRoundByVenueView(AdministratorMixin,
@@ -369,6 +353,7 @@ class AdminDrawUtilitiesMixin:
         if hasattr(self, 'highlighted_cells_exist'):
             data['highlighted_cells_exist'] = self.highlighted_cells_exist
         data['expected_nmotions'] = 3 if self.tournament.pref('enable_motions') else (self.round.motion_set.count() or 1)
+        data['has_info_slides'] = self.round.motion_set.exclude(info_slide='').exists()
         return data
 
 
@@ -461,7 +446,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
             title = _("No Draw")
         elif round.draw_status == Round.Status.DRAFT:
             title = _("Draft Draw")
-        elif round.draw_status in [Round.Status.CONFIRMED, Round.Status.RELEASED]:
+        elif round.draw_status in [Round.Status.CONFIRMED, Round.Status.TEAMS_RELEASED, Round.Status.RELEASED]:
             self.page_emoji = '👏'
             title = _("Draw")
         else:
@@ -505,9 +490,11 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
             table.add_debate_bracket_columns(draw)
 
         table.add_debate_venue_columns(draw, for_admin=True)
+        table.add_debate_scheduled_at_column_if_needed(draw)
         table.add_debate_team_columns(draw)
 
         # For draw details and draw draft pages
+        standings = None
         if r.draw_status is Round.Status.DRAFT or self.detailed:
             if r.prev:
                 teams = Team.objects.filter(debateteam__debate__round=r)
@@ -520,8 +507,12 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
 
                 # subrank only makes sense if there's a second metric to rank on
                 rankings = ('rank', 'subrank') if len(metrics) > 1 else ('rank',)
-                generator = TeamStandingsGenerator(metrics, rankings,
-                    extra_metrics=(pullup_metric,) if pullup_metric and pullup_metric not in metrics else ())
+                extra_metrics = []
+                if pullup_metric and pullup_metric not in metrics:
+                    extra_metrics.append(pullup_metric)
+                if 'npullups' not in metrics and 'npullups' not in extra_metrics:
+                    extra_metrics.append('npullups')
+                generator = TeamStandingsGenerator(metrics, rankings, extra_metrics=tuple(extra_metrics))
                 standings = generator.generate(teams, round=r.prev)
                 if not r.is_break_round:
                     table.add_debate_ranking_columns(draw, standings)
@@ -534,10 +525,10 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
         else:
             table.add_debate_adjudicators_column(draw, show_splits=False, for_admin=True)
 
-        table.add_draw_conflicts_columns(draw, self.venue_conflicts, self.adjudicator_conflicts)
+        table.add_draw_conflicts_columns(draw, self.venue_conflicts, self.adjudicator_conflicts, standings)
 
         if not r.is_break_round:
-            table.highlight_rows_by_column_value(column=0) # highlight first row of a new bracket
+            table.highlight_column = 0  # Highlight based on first column (bracket)
 
         return table
 
@@ -572,7 +563,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
             return ["draw_status_none.html"]
         elif self.round.draw_status == Round.Status.DRAFT:
             return ["draw_status_draft.html"]
-        elif self.round.draw_status in [Round.Status.CONFIRMED, Round.Status.RELEASED]:
+        elif self.round.draw_status in [Round.Status.CONFIRMED, Round.Status.TEAMS_RELEASED, Round.Status.RELEASED]:
             return ["draw_status_confirmed.html"]
         else:
             logger.error("Unrecognised draw status: %s", self.round.draw_status)
@@ -672,13 +663,20 @@ class CreateDrawView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ActionType.DRAW_CREATE
 
     def post(self, request, *args, **kwargs):
-        if self.round.draw_status != Round.Status.NONE:
-            messages.error(request, _("Could not create draw for %(round)s, there was already a draw!") % {'round': self.round.name})
-            return super().post(request, *args, **kwargs)
-
         try:
-            manager = DrawManager(self.round)
-            manager.create()
+            # Use atomic transaction with select_for_update to prevent race conditions
+            with transaction.atomic():
+                round_locked = Round.objects.select_for_update(nowait=True).get(pk=self.round.pk)
+
+                if round_locked.draw_status != Round.Status.NONE:
+                    messages.error(request, _("Could not create draw for %(round)s, there is already a draw!") % {'round': round_locked.name})
+                    return super().post(request, *args, **kwargs)
+
+                self.round = round_locked
+
+                manager = DrawManager(self.round)
+                manager.create()
+
         except DrawUserError as e:
             messages.error(request, mark_safe(_(
                 "<p>The draw could not be created, for the following reason: "
@@ -707,6 +705,9 @@ class CreateDrawView(DrawStatusEdit):
             instructions = BaseStandingsView.admin_standings_error_instructions % {'standings_options_url': standings_options_url}
             messages.error(request, mark_safe(message + instructions))
             logger.exception("Error generating standings for draw: " + str(e))
+            return HttpResponseRedirect(reverse_round('availability-index', self.round))
+        except DatabaseError:
+            messages.error(request, _("The draw could not be created, because another user was also creating a draw."))
             return HttpResponseRedirect(reverse_round('availability-index', self.round))
 
         relevant_adj_venue_constraints = VenueConstraint.objects.filter(
@@ -754,6 +755,28 @@ class ConfirmDrawRegenerationView(LogActionMixin, AdministratorMixin, RoundMixin
         return kwargs
 
     def form_valid(self, form):
+        # If selected, overwrite preformed panels from current debates before deletion
+        if form.cleaned_data.get('overwrite_preformed_panels'):
+            with transaction.atomic():
+                self.round.preformedpanel_set.all().delete()
+                debates = Debate.objects.filter(round=self.round).prefetch_related('debateadjudicator_set__adjudicator')
+                for debate in debates:
+                    panel = PreformedPanel.objects.create(
+                        round=self.round,
+                        importance=float(debate.importance),
+                        bracket_min=debate.bracket,
+                        bracket_max=debate.bracket,
+                        room_rank=debate.room_rank,
+                        liveness=0,
+                    )
+                    for da in debate.debateadjudicator_set.all():
+                        PreformedPanelAdjudicator.objects.create(
+                            panel=panel,
+                            adjudicator=da.adjudicator,
+                            type=da.type,
+                        )
+            messages.success(self.request, _("Overwrote preformed panels with current panels."))
+
         delete_round_draw(self.round)
         messages.success(self.request, _("Deleted the draw. You can now recreate it as normal."))
         return super().form_valid(form)
@@ -768,7 +791,7 @@ class DrawReleaseView(DrawStatusEdit):
     round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
-        if self.round.draw_status != Round.Status.CONFIRMED:
+        if self.round.draw_status not in [Round.Status.CONFIRMED, Round.Status.TEAMS_RELEASED]:
             if self.round.draw_status == Round.Status.RELEASED:
                 messages.info(request, _("The draw has already been released."))
             else:
@@ -779,7 +802,74 @@ class DrawReleaseView(DrawStatusEdit):
         self.round.save()
         self.log_action()
 
+        if settings.ENABLE_PUSH_NOTIFICATIONS:
+            self.send_push_notifications()
+
         messages.success(request, _("Released the draw."))
+        return super().post(request, *args, **kwargs)
+
+    def send_push_notifications(self):
+        debates = self.round.debate_set.select_related('venue').prefetch_related(
+            'venue__venuecategory_set', 'debateadjudicator_set__adjudicator__participantwebpushdevice_set',
+            'debateteam_set__team__speaker_set__participantwebpushdevice_set',
+        ).all()
+        notification_title = _("%(tournament)s - %(round)s") % {'tournament': self.tournament.short_name, 'round': self.round.name}
+        use_code_names = use_team_code_names(self.tournament, admin=False)
+        for debate in debates:
+            matchup = debate.matchup_codes if use_code_names else debate.matchup
+            for d_adjudicator in debate.debateadjudicator_set.all():
+                for device in d_adjudicator.adjudicator.participantwebpushdevice_set.all():
+                    with override(device.language or 'en'):
+                        device.send_message(
+                            message=json.dumps({
+                                "title": notification_title,
+                                "message": ngettext(
+                                    "You are the %(type)s in %(venue)s, adjudicating %(matchup)s",
+                                    "You are a %(type)s in %(venue)s, adjudicating %(matchup)s",
+                                    1 if d_adjudicator.type == 'C' else 2,
+                                ) % {
+                                    'type': d_adjudicator.get_type_display(),
+                                    'venue': getattr(debate.venue, 'display_name', _('Room TBA')),
+                                    'matchup': matchup,
+                                },
+                                "url": self.request.build_absolute_uri(reverse_tournament('privateurls-person-index', self.tournament, {'url_key': d_adjudicator.adjudicator.url_key})),
+                            }),
+                        )
+            for d_team in debate.debateteam_set.all():
+                for speaker in d_team.team.speaker_set.all():
+                    for device in speaker.participantwebpushdevice_set.all():
+                        with override(device.language or 'en'):
+                            device.send_message(
+                                message=json.dumps({
+                                    "title": notification_title,
+                                    "message": _("You are the %(type)s in %(venue)s, with %(matchup)s") % {
+                                        'type': d_team.get_side_name(self.tournament),
+                                        'venue': getattr(debate.venue, 'display_name', _('Room TBA')),
+                                        'matchup': matchup,
+                                    },
+                                    "url": self.request.build_absolute_uri(reverse_tournament('privateurls-person-index', self.tournament, {'url_key': speaker.url_key})),
+                                }),
+                            )
+
+
+class DrawTeamsReleaseView(DrawStatusEdit):
+    edit_permission = Permission.RELEASE_DRAW
+    action_log_type = ActionLogEntry.ActionType.DRAW_RELEASE
+    round_redirect_pattern_name = 'draw-display'
+
+    def post(self, request, *args, **kwargs):
+        if self.round.draw_status != Round.Status.CONFIRMED:
+            if self.round.draw_status in [Round.Status.TEAMS_RELEASED, Round.Status.RELEASED]:
+                messages.info(request, _("The draw has already been released."))
+            else:
+                messages.error(request, _("The draw must be confirmed before being released."))
+            return HttpResponseRedirect(reverse_round('draw', self.round))
+
+        self.round.draw_status = Round.Status.TEAMS_RELEASED
+        self.round.save()
+        self.log_action()
+
+        messages.success(request, _("Released the draw (teams only)."))
         return super().post(request, *args, **kwargs)
 
 
@@ -789,7 +879,7 @@ class DrawUnreleaseView(DrawStatusEdit):
     round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
-        if self.round.draw_status != Round.Status.RELEASED:
+        if self.round.draw_status not in [Round.Status.RELEASED, Round.Status.TEAMS_RELEASED]:
             messages.info(request, _("The draw had been unreleased."))
             return HttpResponseRedirect(reverse_round('draw', self.round))
 
@@ -866,9 +956,39 @@ class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateVi
     prefetch_teams = False # Fetched in full as get_serialised
     edit_permission = Permission.EDIT_DEBATETEAMS
 
+    def _get_team_histories_map(self):
+        now_seq = self.round.seq
+        histories = {}
+        debates = Debate.objects.filter(
+            round__tournament=self.tournament,
+            round__seq__lt=now_seq,
+        ).select_related('round').prefetch_related('debateteam_set')
+
+        for debate in debates:
+            team_ids = [dt.team_id for dt in debate.debateteam_set.all()]
+            if len(team_ids) < 2:
+                continue
+            ago = now_seq - debate.round.seq
+            for a, b in combinations(team_ids, 2):
+                histories.setdefault(a, {'team': []})['team'].append({'id': b, 'ago': ago})
+                histories.setdefault(b, {'team': []})['team'].append({'id': a, 'ago': ago})
+        return histories
+
+    def get_extra_info(self):
+        info = super().get_extra_info()
+        teams = Team.objects.filter(tournament=self.tournament).only('id', 'institution_id')
+        team_institution_clashes = {}
+        for t in teams:
+            if t.institution_id:
+                team_institution_clashes[t.id] = {'institution': [{'id': t.institution_id}]}
+        team_histories = self._get_team_histories_map()
+        info['clashes'] = {'teams': team_institution_clashes, 'adjudicators': {}}
+        info['histories'] = {'teams': team_histories, 'adjudicators': {}}
+        return info
+
     def get_serialised_allocatable_items(self):
         # TODO: account for shared teams
-        teams = Team.objects.filter(tournament=self.tournament).prefetch_related('speaker_set')
+        teams = Team.objects.filter(tournament=self.tournament).prefetch_related('speaker_set', 'break_categories')
         teams = annotate_availability(teams, self.round)
         populate_win_counts(teams)
         serialized_teams = EditDebateTeamsTeamSerializer(teams, many=True)

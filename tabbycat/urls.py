@@ -78,9 +78,17 @@ urlpatterns = [
         include('tournaments.urls')),
 ]
 
-if settings.DEBUG and settings.ENABLE_DEBUG_TOOLBAR:  # Only serve debug toolbar when on DEBUG
-    import debug_toolbar
-    urlpatterns.append(path('__debug__/', include(debug_toolbar.urls)))
+if settings.DEBUG:
+    from django.views.static import serve
+    urlpatterns.extend([
+        path('robots.txt', serve, {'document_root': settings.STATIC_ROOT, 'path': 'root/robots.txt'}),
+        path('favicon.ico', serve, {'document_root': settings.STATIC_ROOT, 'path': 'root/favicon.ico'}),
+        path('navigatorPush.service.js', serve, {'document_root': settings.STATIC_ROOT, 'path': 'root/navigatorPush.service.js'}),
+    ])
+
+    if settings.ENABLE_DEBUG_TOOLBAR:  # Only serve debug toolbar when on DEBUG
+        import debug_toolbar
+        urlpatterns.append(path('__debug__/', include(debug_toolbar.urls)))
 
 
 # ==============================================================================

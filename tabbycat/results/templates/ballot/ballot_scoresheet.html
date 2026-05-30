@@ -9,7 +9,7 @@
         <div class="col mr-auto card-title pl-md-2 pl-1 {{ team.side_code }}-team-name">
           {% team_name_for_data_entry team.team use_team_code_names %}
         </div>
-        {% if pref.enable_forfeits %}
+        {% if team.forfeit %}
           <div>
             {{ team.forfeit|addcss:"forfeit-check" }} Forfeit
             {{ team.forfeit.errors }}

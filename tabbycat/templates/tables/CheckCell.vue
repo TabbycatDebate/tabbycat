@@ -1,50 +1,51 @@
+<script setup>
+import _ from 'lodash'
+import { useAjax } from '../composables/useAjax.js'
+
+const props = defineProps({
+  cellData: Object,
+})
+
+const emit = defineEmits(['toggle-checked', 'update-sort'])
+
+const { ajaxSave } = useAjax()
+
+const checkUpdate = (newChecked) => {
+  if (props.cellData.noSave) {
+    return
+  }
+  const cd = props.cellData
+  cd.checked = newChecked
+  cd.sort = newChecked
+  if (_.isUndefined(props.cellData.saveURL)) {
+    emit('toggle-checked', cd)
+  } else {
+    const message = `${cd.id}'s ${cd.type} status as ${newChecked}`
+    const payload = { id: cd.id }
+    payload[cd.type] = newChecked
+    ajaxSave(cd.saveURL, payload, message, null, null, null)
+  }
+  emit('update-sort', { id: cd.id, sort: newChecked })
+}
+</script>
+
 <template>
-
-  <td :class="cellData.class ? cellData.class : null" >
-
-    <span v-if="cellData.sort" hidden>
+  <td :class="cellData.class ? cellData.class : null">
+    <span
+      v-if="cellData.sort"
+      hidden
+    >
       {{ cellData.checked }}
     </span>
     <div class="table-check">
-      <input type="checkbox" class="form-check-input position-static"
-             :name="cellData.name" :value="cellData.value"
-             @change="checkUpdate" v-model.lazy="cellData.checked">
+      <input
+        :checked="cellData.checked"
+        type="checkbox"
+        class="form-check-input position-static"
+        :name="cellData.name"
+        :value="cellData.value"
+        @change="checkUpdate($event.target.checked)"
+      >
     </div>
-
   </td>
-
 </template>
-
-<script>
-import _ from 'lodash'
-import AjaxMixin from '../ajax/AjaxMixin.vue'
-
-export default {
-  mixins: [AjaxMixin],
-  props: {
-    cellData: Object,
-  },
-  methods: {
-    checkUpdate: function () {
-      if (this.cellData.noSave) {
-        return // Some uses of CheckboxTablesContainer, e.g. emails, don't save
-      }
-      const cd = this.cellData
-      const checked = cd.checked // This is currently the pre-clicked value
-      // Updates can be sent off individually via this component itself; or by
-      // communicating back up to the Coordinating Vue Container (where they
-      // can be handled in bulk or issue via a single bulk method)
-      if (_.isUndefined(this.cellData.saveURL)) {
-        this.$eventHub.$emit('toggle-checked', cd.id, checked, cd.type)
-      } else {
-        const message = `${cd.id}'s ${cd.type} status as ${checked}`
-        const payload = { id: cd.id }
-        payload[cd.type] = checked
-        this.ajaxSave(cd.saveURL, payload, message, null, null, null)
-      }
-      this.cellData.sort = checked // Needs to be kept in sync with checkbox state
-    },
-  },
-}
-
-</script>

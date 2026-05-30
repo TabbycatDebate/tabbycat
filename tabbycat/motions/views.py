@@ -1,15 +1,17 @@
+import json
+
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import OuterRef, Prefetch, Q, Subquery
 from django.utils import timezone
 from django.utils.translation import gettext as _
-from django.utils.translation import gettext_lazy, ngettext
+from django.utils.translation import gettext_lazy, ngettext, override
 from django.views.generic.base import TemplateView
 from django_summernote.widgets import SummernoteWidget
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from notifications.models import BulkNotification
+from notifications.models import BulkNotification, ParticipantWebPushDevice
 from notifications.views import RoleColumnMixin, RoundTemplateEmailCreateView
 from participants.models import Speaker
 from results.models import BallotSubmission
@@ -17,7 +19,7 @@ from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPa
                                 PublicTournamentPageMixin, RoundMixin, TournamentMixin)
 from tournaments.models import Round
 from users.permissions import Permission
-from utils.misc import redirect_round
+from utils.misc import redirect_round, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView, PostOnlyRedirectView
 
@@ -35,7 +37,7 @@ class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
         # Include rounds whether *either* motions are released *or* it's this
         # round or a previous round. The template checks motion_released again
         # and displays a "not released" message if motions are not released.
-        filter_q = Q(motions_released=True) | Q(seq__lte=self.tournament.current_round.seq)
+        filter_q = Q(motions_status=Round.MotionsStatus.MOTIONS_RELEASED) | Q(seq__lte=self.tournament.current_round.seq)
 
         kwargs['rounds'] = self.tournament.round_set.filter(filter_q).order_by(
                 order_by).prefetch_related(Prefetch('roundmotion_set',
@@ -165,9 +167,22 @@ class BaseReleaseMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, Pos
 
     def post(self, request, *args, **kwargs):
         round = self.round
-        round.motions_released = self.motions_released
+        round.motions_status = self.motions_status
         round.save()
         self.log_action()
+
+        if self.motions_status == Round.MotionsStatus.MOTIONS_RELEASED and settings.ENABLE_PUSH_NOTIFICATIONS:
+            n_motions = self.round.motion_set.count()
+            notification_title = _("%(tournament)s - %(round)s") % {'tournament': self.tournament.short_name, 'round': self.round.name}
+            for device in ParticipantWebPushDevice.objects.filter(tournament=self.tournament):
+                with override(device.language or 'en'):
+                    device.send_message(
+                        message=json.dumps({
+                            "title": notification_title,
+                            "message": ngettext("The motion has been released.", "The motions have been released.", n_motions),
+                            "url": self.request.build_absolute_uri(reverse_tournament('motions-public', self.tournament)),
+                        }),
+                    )
 
         messages.success(request, self.message_text)
         return super().post(request, *args, **kwargs)
@@ -177,7 +192,7 @@ class ReleaseMotionsView(BaseReleaseMotionsView):
     edit_permission = Permission.RELEASE_MOTION
 
     action_log_type = ActionLogEntry.ActionType.MOTIONS_RELEASE
-    motions_released = True
+    motions_status = Round.MotionsStatus.MOTIONS_RELEASED
 
     @property
     def message_text(self):
@@ -196,11 +211,22 @@ class ReleaseMotionsView(BaseReleaseMotionsView):
 class UnreleaseMotionsView(BaseReleaseMotionsView):
 
     action_log_type = ActionLogEntry.ActionType.MOTIONS_UNRELEASE
-    motions_released = False
+    motions_status = Round.MotionsStatus.NOT_RELEASED
 
     @property
     def message_text(self):
         return ngettext("Unreleased the motion.", "Unreleased the motions.", self.round.motion_set.count())
+
+
+class ReleaseInfoSlidesView(BaseReleaseMotionsView):
+    edit_permission = Permission.RELEASE_MOTION
+
+    action_log_type = ActionLogEntry.ActionType.MOTIONS_RELEASE
+    motions_status = Round.MotionsStatus.INFO_SLIDES_RELEASED
+
+    @property
+    def message_text(self):
+        return ngettext("Released the info-slide.", "Released the info-slides.", self.round.motion_set.count())
 
 
 class BaseDisplayMotionsView(RoundMixin, TemplateView):

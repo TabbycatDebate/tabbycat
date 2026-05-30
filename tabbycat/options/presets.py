@@ -334,7 +334,7 @@ class WSDCPreferences(AustralsPreferences):
     # Hence, this below setting is the closest that we can manage to achive.
     # TODO: Update when Tabbycat can support WSDC pull-up.
     draw_rules__draw_side_allocations          = 'balance'
-    draw_rules__draw_avoid_conflicts           = 'one_up_one_down'
+    draw_rules__draw_avoid_conflicts           = 'graph_one'
     draw_rules__draw_pullup_restriction        = 'lowest_ds_wins'
     # Standings
     standings__team_standings_precedence       = ['wins', 'num_adjs', 'speaks_avg'] # Rule 3.2 (2023 version)

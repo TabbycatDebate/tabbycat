@@ -45,7 +45,7 @@ Notes for specific operating systems:
 
     - If you're on macOS, press the Control key, click the icon for **osx_docker_start.command**, then choose Open from the shortcut menu.
     - If you're on Windows, open **windows_docker_start.bat**.
-    - If you're on Linux, open up a terminal in the Tabbycat folder (*i.e.* the folder containing ``README.md``) and run ``docker-compose up``.
+    - If you're on Linux, open up a terminal in the Tabbycat folder (*i.e.* the folder containing ``README.md``) and run ``docker compose up``.
 
 3. A terminal window should pop up and lots of text should scroll by. If this is your first time running Docker, it may take a while (30 minutes or more) to download the virtual machine. The last few lines will say something like:
 

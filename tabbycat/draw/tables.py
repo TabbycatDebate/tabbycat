@@ -25,14 +25,6 @@ class BaseDrawTableBuilder(TabbycatTableBuilder):
         super().__init__(*args, **kwargs)
         self.side_history_separator = " " if self.tournament.pref('teams_in_debate') == 4 else " / "
 
-    def highlight_rows_by_column_value(self, column):
-        highlighted_rows = [i for i in range(1, len(self.data))
-                if self.data[i][column] != self.data[i-1][column]]
-        for i in highlighted_rows:
-            self.data[i] = [self._convert_cell(cell) for cell in self.data[i]]
-            for cell in self.data[i]:
-                cell['class'] = cell.get('class', '') + ' highlight-row'
-
     def _prepend_side_header(self, side, name, abbr, text_only=False):
         # Translators: e.g. "Affirmative: Rank", "Government: Draw strength",
         # "Opening government: Total speaker score", "Closing opposition: Number of firsts"
@@ -387,7 +379,7 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
         for side in self.tournament.sides:
             self.add_all_columns_for_team(side)
 
-        self.highlight_rows_by_column_value(column=0) # highlight first row of a new bracket
+        self.highlight_column = 0  # highlight first row of a new bracket
 
     def add_permitted_points_column(self):
         if len(self.standings.metric_keys) == 0:  # special case: no metrics used

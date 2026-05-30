@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load add_field_css i18n debate_tags %}
+
+{% block content %}
+
+<!-- This form is read-only: coaches can view their institution and primary contact response but cannot edit. -->
+<div class="row">
+  <div class="col-lg-8 ml-lg-auto mr-md-auto">
+    <div class="alert alert-info mb-4">
+      {% trans "This form is read-only. You can view your institution's registration response below but cannot edit it here." %}
+    </div>
+
+    <div class="d-flex flex-column gap-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{% trans "Institution" %}</h5>
+          {% include "components/form-main.html" with form=form.institution_form %}
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{% trans "Primary contact" %}</h5>
+          {% include "components/form-main.html" with form=form.coach_form %}
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="list-group-item pt-4 pb-2">
+          <a href="{% tournamenturl 'reg-inst-landing' url_key=url_key %}" class="btn btn-block btn-primary">
+            {% trans "Back to your private URL" %}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

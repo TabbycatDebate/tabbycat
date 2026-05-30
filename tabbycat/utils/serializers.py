@@ -57,6 +57,10 @@ class DebateSerializerMixin(serializers.ModelSerializer):
     adjudicators = serializers.SerializerMethodField(read_only=True)
     teams = serializers.SerializerMethodField(read_only=True)
     sort_index = serializers.SerializerMethodField(read_only=True)
+    # Round metadata to enable multi-round grouping and routing
+    round_seq = serializers.SerializerMethodField(read_only=True)
+    round_name = serializers.SerializerMethodField(read_only=True)
+    round_id = serializers.SerializerMethodField(read_only=True)
 
     def adjudicator_representation(self, debate_or_panel_adj):
         return AdjudicatorSerializer(debate_or_panel_adj.adjudicator).data
@@ -84,7 +88,17 @@ class DebateSerializerMixin(serializers.ModelSerializer):
     def get_sort_index(self, obj):
         return 1 # Set on front-end; just need the attr set at load time for reactivity triggers
 
+    def get_round_seq(self, obj):
+        return obj.round.seq
+
+    def get_round_name(self, obj):
+        return obj.round.name
+
+    def get_round_id(self, obj):
+        return obj.round.id
+
     class Meta:
         model = Debate
         fields = ('id', 'bracket', 'room_rank', 'importance', 'result_status',
-                  'sides_confirmed', 'venue', 'teams', 'adjudicators', 'sort_index')
+                  'sides_confirmed', 'venue', 'teams', 'adjudicators', 'sort_index',
+                  'round_seq', 'round_name', 'round_id')

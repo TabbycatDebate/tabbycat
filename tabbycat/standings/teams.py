@@ -200,6 +200,8 @@ class BaseDrawStrengthMetricAnnotator(BaseMetricAnnotator):
         for team in queryset:
             draw_strength = 0
             for opponent_id in opponents_by_team[team.id]:
+                if opponent_id not in opp_metric_queryset_teams:
+                    continue
                 opp_metric = getattr(opp_metric_queryset_teams[opponent_id], self.opponent_annotator.key)
                 if opp_metric is not None: # opp_metric is None when no debates have happened
                     draw_strength += opp_metric
@@ -238,6 +240,8 @@ class DrawStrengthByRankMetricAnnotator(BaseMetricAnnotator):
         for team in queryset:
             ranks = []
             for opponent_id in opponents_by_team[team.id]:
+                if opponent_id not in teams_by_id:
+                    continue
                 if opponent := standings.infos.get(teams_by_id[opponent_id]):
                     ranks.append(opponent.rankings['rank'][0])
             ranks_without_none = [rank for rank in ranks if rank is not None]

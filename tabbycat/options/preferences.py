@@ -5,7 +5,6 @@ from django.forms import SelectMultiple
 from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 from dynamic_preferences.preferences import Section
-from dynamic_preferences.registries import global_preferences_registry
 from dynamic_preferences.types import (BooleanPreference, ChoicePreference, DecimalPreference, FloatPreference,
     IntegerPreference, LongStringPreference, MultipleChoicePreference, StringPreference)
 
@@ -476,6 +475,15 @@ class MaximumAdjScore(FloatPreference):
     section = feedback
     name = 'adj_max_score'
     default = 5.0
+
+
+@tournament_preferences_registry.register
+class AdjScoreStep(FloatPreference):
+    help_text = _("Score step allowed when entering adjudicator feedback scores, e.g. full points (1) or half points (0.5)")
+    verbose_name = _("Adjudicator score step")
+    section = feedback
+    name = 'adj_score_step'
+    default = 1.0
 
 
 @tournament_preferences_registry.register
@@ -1191,6 +1199,17 @@ class PublicBreakingTeams(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class PublicBreakMetricsToShow(IntegerPreference):
+    help_text = _("How many metrics from the team standings precedence to show on the public break page. "
+                  "For example, 2 shows only the first two metrics set in Standings. "
+                  "Use 0 to hide all metrics, or -1 to show all of them.")
+    verbose_name = _("Number of metrics to show on public break page")
+    section = public_features
+    name = 'public_break_metrics_to_show'
+    default = -1
+
+
+@tournament_preferences_registry.register
 class PublicBreakingAdjs(BooleanPreference):
     help_text = _("Enables the public page showing breaking adjudicators. Intended for use after the break announcement.")
     verbose_name = _("Release adjudicators break to public")
@@ -1211,7 +1230,7 @@ class FeedbackProgress(BooleanPreference):
 @tournament_preferences_registry.register
 class PublicSchedule(BooleanPreference):
     help_text = _("Enables the public page showing the schedule")
-    verbose_name = _("Enable public view of shedule")
+    verbose_name = _("Enable public view of schedule")
     section = public_features
     name = 'public_schedule'
     default = False
@@ -1425,7 +1444,7 @@ class PointsEmailMessageBody(LongStringPreference):
     name = 'team_points_email_message'
     default = ("<p>Hi {{ USER }},</p>"
         "After {{ ROUND }}, your team ({{ TEAM }}) currently has <strong>{{ POINTS }}</strong> wins in the {{ TOURN }}.</p>"
-        "<p>Current Standings: <a href='{{ URL }}'>{{ URL }}</a></p>")
+        "<p>Current Standings: {{ URL }}</p>")
 
 
 @tournament_preferences_registry.register
@@ -1483,7 +1502,7 @@ class PrivateUrlEmailMessage(LongStringPreference):
         "anyone, as anyone who knows it can submit forms on your behalf. This URL "
         "will not change throughout this tournament, so we suggest bookmarking it.</p>"
         "<p>Your personal private URL is:<br />"
-        "<a href='{{ URL }}'>{{ URL }}</a></p>")
+        "{{ URL }}</p>")
 
 
 @tournament_preferences_registry.register
@@ -1586,20 +1605,6 @@ class EnableMotionReuse(BooleanPreference):
 
 
 # ==============================================================================
-global_settings = Section('global', verbose_name=_('Global Settings'))
-# ==============================================================================
-
-
-@global_preferences_registry.register
-class EnableAPIAccess(BooleanPreference):
-    help_text = _("Enables external applications to access the site through a dedicated interface, subject to public information settings.")
-    verbose_name = _("Enable API access")
-    section = global_settings
-    name = 'enable_api'
-    default = True
-
-
-# ==============================================================================
 registration = Section('registration', verbose_name=_('Registration'))
 # ==============================================================================
 
@@ -1640,6 +1645,19 @@ class TeamRegistrationFields(MultipleChoicePreference):
         ('break_categories', _("Break categories")),
         ('seed', _("Seed")),
         ('emoji', _("Emoji")),
+    )
+    widget = SelectMultiple(attrs={'size': 5})
+
+
+@tournament_preferences_registry.register
+class InstitutionRegistrationFields(MultipleChoicePreference):
+    help_text = _("Which fields should institutions be allowed to submit")
+    verbose_name = _("Customizable institution fields")
+    section = registration
+    name = 'reg_institution_fields'
+    default = ()
+    choices = (
+        ('region', _("Region")),
     )
     widget = SelectMultiple(attrs={'size': 5})
 
@@ -1703,6 +1721,15 @@ class ParticipantSlots(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class InstitutionSlotTransfers(BooleanPreference):
+    help_text = _("Allow institutions to request transferring team or adjudicator slots to another institution (when participant slots are in use).")
+    verbose_name = _("Enable institution slot transfers")
+    section = registration
+    name = 'reg_institution_slot_transfers'
+    default = False
+
+
+@tournament_preferences_registry.register
 class EnableOpenTeamRegistration(BooleanPreference):
     help_text = _("Allow teams to register independently to an institution")
     verbose_name = _("Enable open team registration")
@@ -1735,6 +1762,20 @@ class CodeNameGenerator(ChoicePreference):
 
 
 @tournament_preferences_registry.register
+class RegistrationConfirmation(ChoicePreference):
+    help_text = _("Should registration be confirmed by tournament staff")
+    verbose_name = _("Registration confirmation")
+    section = registration
+    name = 'registration_confirmation'
+    choices = (
+        ('always', _("Always")),
+        ('open', _("Only for open (non-institutional) registration")),
+        ('never', _("Never")),
+    )
+    default = 'never'
+
+
+@tournament_preferences_registry.register
 class InstitutionRegisterMessage(LongStringPreference):
     help_text = _("Message to be displayed on the institution registration form")
     verbose_name = _("Institution register message")
@@ -1763,5 +1804,45 @@ class TeamRegisterMessage(LongStringPreference):
     section = registration
     name = 'team_register_message'
     default = ""
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
+    field_kwargs = {'required': False}
+
+
+@tournament_preferences_registry.register
+class InstitutionRegistrationEmailSubject(StringPreference):
+    help_text = _("Subject line for the email sent when an institution registers. Body can use {{ USER }} and {{ URL }} (coach's landing page).")
+    verbose_name = _("Institution registration email subject")
+    section = registration
+    name = 'institution_registration_email_subject'
+    default = "Institution registered for {{ TOURN }}"
+
+
+@tournament_preferences_registry.register
+class InstitutionRegistrationEmailBody(LongStringPreference):
+    help_text = _("Body of the email sent when an institution registers. Available: {{ USER }}, {{ URL }}.")
+    verbose_name = _("Institution registration email body")
+    section = registration
+    name = 'institution_registration_email_body'
+    default = "<p>Hi {{ USER }},</p><p>Your institution has been registered. You can manage your registration here: {{ URL }}</p>"
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
+    field_kwargs = {'required': False}
+
+
+@tournament_preferences_registry.register
+class SlotsAllocatedEmailSubject(StringPreference):
+    help_text = _("Subject line when participant slots are allocated. Body can use {{ USER }}, {{ TEAMS_ALLOCATED }}, {{ ADJUDICATORS_ALLOCATED }}, {{ INSTITUTION }}.")
+    verbose_name = _("Slots allocated email subject")
+    section = registration
+    name = 'slots_allocated_email_subject'
+    default = "Participant slots allocated for {{ INSTITUTION }}"
+
+
+@tournament_preferences_registry.register
+class SlotsAllocatedEmailBody(LongStringPreference):
+    help_text = _("Body of the email when participant slots are allocated. Available: {{ USER }}, {{ TEAMS_ALLOCATED }}, {{ ADJUDICATORS_ALLOCATED }}, {{ INSTITUTION }}.")
+    verbose_name = _("Slots allocated email body")
+    section = registration
+    name = 'slots_allocated_email_body'
+    default = "<p>Hi {{ USER }},</p><p>Your institution {{ INSTITUTION }} has been allocated {{ TEAMS_ALLOCATED }} team slot(s) and {{ ADJUDICATORS_ALLOCATED }} adjudicator slot(s).</p>"
     widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
     field_kwargs = {'required': False}

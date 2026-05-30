@@ -5,7 +5,7 @@ from django.utils import timezone
 
 from utils.admin import ModelAdmin, TabbycatModelAdminFieldsMixin
 
-from .models import BulkNotification, EmailStatus, SentMessage
+from .models import BulkNotification, EmailStatus, ParticipantWebPushDevice, SentMessage
 
 if TYPE_CHECKING:
     from django.db.models import Model, QuerySet
@@ -52,3 +52,15 @@ class EmailStatusAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     search_fields = ('email__message_id', 'email__recipient__name', 'email__email', 'email__recipient__email')
 
     precise_timestamp = precise_timestamp_isoformat(EmailStatus, 'timestamp')
+
+
+@admin.register(ParticipantWebPushDevice)
+class TabbycatWebPushDeviceAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
+    list_display = ('participant', 'browser', 'language', 'active', 'date_created')
+    list_filter = ('active', 'browser', 'language')
+    search_fields = ('participant__name', 'participant__email', 'registration_id')
+    readonly_fields = ('registration_id', 'p256dh', 'auth', 'date_created')
+    ordering = ('-date_created',)
+
+    def get_queryset(self, request: 'HttpRequest') -> 'QuerySet[ParticipantWebPushDevice]':
+        return super().get_queryset(request).select_related('participant', 'user')

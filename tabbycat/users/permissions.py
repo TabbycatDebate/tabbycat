@@ -133,6 +133,7 @@ class Permission(TextChoices):
     VIEW_CHECKIN = 'view.checkin', _("view checkins")
     EDIT_PARTICIPANT_CHECKIN = 'edit.participantcheckin', _("edit participant check-in")
     EDIT_ROOM_CHECKIN = 'edit.roomcheckin', _("edit room check-in")
+    EDIT_DEBATE_CHECKIN = 'edit.debatecheckin', _("edit debate check-in")
 
     EDIT_ROUND = 'edit.round', _("edit round attributes")
     DELETE_ROUND = 'delete.round', _("delete rounds")
@@ -157,6 +158,8 @@ class Permission(TextChoices):
     VIEW_EVENTS = 'view.events', _("view events")
 
     VIEW_REGISTRATION = 'view.registration', _("view registration responses")
+    EDIT_REGISTRATION = 'edit.registration', _("edit registration responses")
+    CONFIRM_REGISTRATION = 'confirm.registration', _("confirm registration responses")
 
 
 permission_type = Union[Permission, bool]

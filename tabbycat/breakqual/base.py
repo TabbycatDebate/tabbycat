@@ -44,7 +44,7 @@ class BaseBreakGenerator:
        and the rankings specified in the `rankings` class attribute.
 
     3. `filter_eligible_teams()`, which sets `self.excluded_teams` to a dict
-       mapping StandingInfo objects to BreakingTeam.REMARK_* constants, and sets
+       mapping StandingInfo objects to BreakingTeam.Remark.* constants, and sets
        `self.eligible_teams` to a list of StandingInfo objects for eligible
        teams, in the same order as they were found in `self.standings`.
 

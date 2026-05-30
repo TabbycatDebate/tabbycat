@@ -104,12 +104,30 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
     def return_attributes(self, original_content, serialized_content):
         """ Return the original JSON but with the generic debatesOrPanels key """
         original_content['debatesOrPanels'] = serialized_content.data
-        async_to_sync(get_channel_layer().group_send)(
-            self.group_name(), {
-                'type': 'broadcast_debates_or_panels',
-                'content': original_content,
-            },
-        )
+
+        # Determine which round sequences are affected by this change. If round_seq
+        # is present on items, broadcast to each relevant round-specific group so
+        # that all concurrent rounds' pages receive the update.
+        round_seqs = set()
+        try:
+            for item in original_content['debatesOrPanels']:
+                rs = item.get('round_seq', None)
+                if rs is not None:
+                    round_seqs.add(str(rs))
+        except Exception:
+            pass
+
+        # Always include the current consumer's round as a fallback
+        round_seqs.add(str(self.round.seq))
+
+        for seq in round_seqs:
+            group_name = f"{self.group_prefix}_{self.tournament.slug}_{seq}"
+            async_to_sync(get_channel_layer().group_send)(
+                group_name, {
+                    'type': 'broadcast_debates_or_panels',
+                    'content': original_content,
+                },
+            )
 
     def broadcast_debates_or_panels(self, event):
         self.send_json(event['content'])
@@ -228,9 +246,38 @@ class EditDebateOrPanelWorkerMixin(SyncConsumer):
             'debatesOrPanels': serialized_debates_or_panels.data,
             'message': {'text': message_text, 'type': message_type},
         }
-        async_to_sync(get_channel_layer().group_send)(
-            group_name, {
-                'type': 'broadcast_debates_or_panels',
-                'content': content,
-            },
-        )
+
+        # Broadcast to all affected round groups. Derive base (prefix + slug)
+        # from the provided group_name, then append each round_seq seen.
+        try:
+            base_prefix = group_name.rsplit('_', 1)[0]  # debates_<slug>
+        except Exception:
+            base_prefix = group_name
+
+        round_seqs = set()
+        try:
+            for item in serialized_debates_or_panels.data:
+                rs = item.get('round_seq', None)
+                if rs is not None:
+                    round_seqs.add(str(rs))
+        except Exception:
+            pass
+
+        # Fallback to the original group only if no round_seq info is present
+        if not round_seqs:
+            async_to_sync(get_channel_layer().group_send)(
+                group_name, {
+                    'type': 'broadcast_debates_or_panels',
+                    'content': content,
+                },
+            )
+            return
+
+        for seq in round_seqs:
+            target_group = f"{base_prefix}_{seq}"
+            async_to_sync(get_channel_layer().group_send)(
+                target_group, {
+                    'type': 'broadcast_debates_or_panels',
+                    'content': content,
+                },
+            )

@@ -19,6 +19,11 @@ from .emoji import EMOJI_FIELD_CHOICES
 logger = logging.getLogger(__name__)
 
 
+class RegistrationStatus(models.TextChoices):
+    UNCONFIRMED = 'U', _("Unconfirmed")
+    CONFIRMED = 'C', _("Confirmed")
+
+
 class Region(models.Model):
     name = models.CharField(db_index=True, max_length=100,
         verbose_name=_("name"))
@@ -208,6 +213,13 @@ class TeamManager(LookupByNameFieldsMixin, models.Manager):
     name_fields = ['short_name', 'long_name']
 
     def get_queryset(self):
+        return super().get_queryset().select_related('institution').filter(
+            registration_status=RegistrationStatus.CONFIRMED,
+        )
+
+    @property
+    def all_with_unconfirmed(self):
+        """Returns all teams including unconfirmed ones (for use in registration app)"""
         return super().get_queryset().select_related('institution')
 
 
@@ -267,6 +279,14 @@ class Team(models.Model):
     emoji = models.CharField(max_length=3, default=None, choices=EMOJI_FIELD_CHOICES,
         blank=True, null=True,   # uses null=True to allow multiple teams to have no emoji
         verbose_name=_("emoji"))
+
+    registration_status = models.CharField(
+        max_length=1,
+        choices=RegistrationStatus.choices,
+        default=RegistrationStatus.CONFIRMED,
+        verbose_name=_("registration status"),
+        help_text=_("Whether the team's registration has been confirmed by tournament staff"),
+    )
 
     answers = GenericRelation(Answer)
 
@@ -426,7 +446,14 @@ class AdjudicatorManager(models.Manager):
     use_for_related_fields = True
 
     def get_queryset(self):
-        return super(AdjudicatorManager, self).get_queryset().select_related('institution')
+        return super().get_queryset().select_related('institution').filter(
+            registration_status=RegistrationStatus.CONFIRMED,
+        )
+
+    @property
+    def all_with_unconfirmed(self):
+        """Returns all adjudicators including unconfirmed ones (for use in registration app)"""
+        return super().get_queryset().select_related('institution')
 
 
 class Adjudicator(Person):
@@ -461,6 +488,14 @@ class Adjudicator(Person):
         verbose_name=_("independent"))
     adj_core = models.BooleanField(default=False, blank=True,
         verbose_name=_("adjudication core"))
+
+    registration_status = models.CharField(
+        max_length=1,
+        choices=RegistrationStatus.choices,
+        default=RegistrationStatus.CONFIRMED,
+        verbose_name=_("registration status"),
+        help_text=_("Whether the adjudicator's registration has been confirmed by tournament staff"),
+    )
 
     round_availabilities = GenericRelation('availability.RoundAvailability')
     venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='adjudicator',

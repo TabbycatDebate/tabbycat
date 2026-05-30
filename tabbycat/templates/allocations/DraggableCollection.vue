@@ -1,31 +1,38 @@
+<script setup>
+import { useDragAndDropStore } from './DragAndDropStore.js'
+import { useDraggable } from '../composables/useDraggable.js'
+
+// Passed down from the parent because the trigger for the show/hide needs to be on this element
+
+const props = defineProps({
+  locked: {
+    type: Boolean,
+    default: false,
+  },
+  dragPayload: Object,
+})
+
+const store = useDragAndDropStore()
+const { dragStart, dragEnd, draggableClasses } = useDraggable(props)
+
+const dragStartPanel = (event) => {
+  store.setPanelDraggingTracker(true)
+  dragStart(event)
+}
+
+const dragEndPanel = (event) => {
+  store.setPanelDraggingTracker(false)
+  dragEnd(event)
+}
+</script>
+
 <template>
   <div
     draggable="true"
-    @drag="drag"
+    :class="draggableClasses"
     @dragstart="dragStartPanel"
     @dragend="dragEndPanel"
-    :class="['', draggableClasses]"
   >
-    <slot> </slot>
+    <slot />
   </div>
 </template>
-
-<script>
-import DraggableMixin from './DraggableMixin.vue'
-
-export default {
-  mixins: [DraggableMixin],
-  // Passed down from the parent because the trigger for the show/hide needs to be on this element
-  props: {},
-  methods: { // Need to track panel drag state globally to mutate UI to hide individual-drop affordances
-    dragStartPanel: function (event) {
-      this.$store.commit('setPanelDraggingTracker', true)
-      this.dragStart(event)
-    },
-    dragEndPanel: function (event) {
-      this.$store.commit('setPanelDraggingTracker', false)
-      this.dragEnd(event)
-    },
-  },
-}
-</script>

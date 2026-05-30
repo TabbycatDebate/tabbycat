@@ -14,7 +14,7 @@ class SimpleDebateVenueSerializer(DebateSerializerMixin):
 
     class Meta:
         model = DebateSerializerMixin.Meta.model
-        fields = ('id', 'venue')
+        fields = ('id', 'venue', 'round_seq', 'round_name')
 
 
 class EditDebateVenuesVenueSerializer(VenueSerializer, VueDraggableItemMixin):

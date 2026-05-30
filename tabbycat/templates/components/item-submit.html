@@ -1,0 +1,44 @@
+  <button type="submit"
+   class="item-submit {% if not child %}list-group-item {% endif %} list-group-item-action border-0 rounded-0 w-100 text-left m-0
+   {% if to_complete %}
+    bg-{% if type %}{{ type }}{% else %}primary{% endif %} text-white
+   {% else %}
+    bg-white text-{% if type %}{{ type }}{% else %}primary{% endif %}
+   {% endif %}">
+
+    <div class="row align-items-center">
+
+      <div class="col-auto pr-1">
+        {% if icon %}
+          <i data-feather="{{ icon }}"></i>
+        {% elif to_complete %}
+          <i data-feather="check-square"></i>
+        {% elif emoji %}
+          <span class="emoji">{{ emoji }}</span>
+        {% else %}
+          <i data-feather="edit"></i>
+        {% endif %}
+      </div>
+
+      <div class="col pl-0 pr-0">
+
+        {% if extra %}
+          <h5>{{ text|safe }}</h5>
+          {{ extra }}
+        {% else %}
+          {{ text|safe }}
+        {% endif %}
+
+        {% if subtext %}
+          <span class="text-muted">{{ subtext }}</span>
+        {% endif %}
+
+      </div>
+
+      <div class="col-auto pr-1">
+        <i data-feather="chevron-right"></i>
+      </div>
+
+    </div>
+
+  </button>

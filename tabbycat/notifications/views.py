@@ -167,15 +167,18 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
                         },
                     }
                     emails_status.append(status_cell)
-                    emails_time.append(formats.time_format(latest_status.timestamp.astimezone(tz=site_tz), use_l10n=True))
+                    emails_time.append({
+                        'text': formats.time_format(latest_status.timestamp.astimezone(tz=site_tz), use_l10n=True),
+                        'sort': latest_status.timestamp.timestamp(),
+                    })
                 else:
                     emails_status.append(self.NA_CELL)
                     emails_time.append(self.NA_CELL)
 
             table.add_column({'key': 'name', 'tooltip': _("Participant"), 'icon': 'user'}, emails_recipient)
             table.add_column({'key': 'email', 'tooltip': _("Email address"), 'icon': 'mail'}, emails_addresses)
-            table.add_column({'key': 'name', 'title': _("Status")}, emails_status)
-            table.add_column({'key': 'name', 'title': _("Time")}, emails_time)
+            table.add_column({'key': 'status', 'title': _("Status")}, emails_status)
+            table.add_column({'key': 'time', 'title': _("Time")}, emails_time)
 
             tables.append(table)
 

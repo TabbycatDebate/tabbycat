@@ -82,7 +82,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
         table.add_ballot_status_columns(draw, key="status")
         table.add_ballot_entry_columns(draw, self.view_role, self.request.user)
         if self.tournament.pref('enable_postponements'):
-            table.add_debate_postponement_column(draw)
+            table.add_debate_postponement_column(draw, self.request)
         table.add_debate_venue_columns(draw, for_admin=True)
         table.add_debate_results_columns(draw, iron=True, n_cols=self._get_draw().aggregate(n=Coalesce(Max('debateteam__side'), self.tournament.pref('teams_in_debate')-1))['n']+1)
         table.add_debate_adjudicators_column(draw, show_splits=True, for_admin=True)
@@ -569,7 +569,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
             return self.error_page(_("The draw for this round hasn't been released yet."))
 
         if (self.tournament.pref('enable_motions') or self.tournament.pref('motion_vetoes_enabled')) \
-                and not self.round.motions_released:
+                and self.round.motions_status != Round.MotionsStatus.MOTIONS_RELEASED:
             return self.error_page(_("The motions for this round haven't been released yet."))
 
         try:
@@ -623,14 +623,16 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
 
     def set_motions(self, former_ballot):
         if self.tournament.pref('enable_motions'):
-            self.ballotsub._roundmotion = self.round_motions[former_ballot.motion_id]
-            self.prefilled = True
+            self.ballotsub._roundmotion = self.round_motions.get(former_ballot.motion_id)
+            if self.ballotsub._roundmotion is not None:
+                self.prefilled = True
         if self.tournament.pref('motion_vetoes_enabled'):
             self.vetos = {}
             for dtmp in former_ballot.debateteammotionpreference_set.filter(preference=3):
                 self.vetos[dtmp.debate_team.side] = dtmp
-                self.vetos[dtmp.debate_team.side]._roundmotion = self.round_motions[dtmp.motion_id]
-            self.prefilled = True
+                self.vetos[dtmp.debate_team.side]._roundmotion = self.round_motions.get(dtmp.motion_id)
+            if self.vetos:
+                self.prefilled = True
 
     def error_page(self, message):
         # This bypasses the normal TemplateResponseMixin and ContextMixin
@@ -663,7 +665,9 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
             bses = BallotSubmission.objects.filter(
                 debate=self.debate, participant_submitter__isnull=False, discarded=False, single_adj=True,
             ).select_related('participant_submitter').annotate(ordering=Window(Rank(), partition_by="participant_submitter", order_by="-version")).filter(ordering=1)
-            if len(bses) != DebateAdjudicator.objects.filter(debate=self.debate).exclude(type=DebateAdjudicator.TYPE_TRAINEE).count():
+            missing_adjs = DebateAdjudicator.objects.filter(debate=self.debate).exclude(
+                type=DebateAdjudicator.TYPE_TRAINEE, adjudicator_id__in=[bs.participant_submitter_id for bs in bses]).count()
+            if missing_adjs:
                 return
             populate_results(bses, self.tournament)
 
@@ -775,7 +779,7 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
         if error:
             return self.response_error(error)
 
-        return super().get(self, request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
 
 class PublicBallotScoresheetsView(BasePublicBallotScoresheetsView):
