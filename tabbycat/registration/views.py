@@ -779,6 +779,7 @@ class InstitutionRegistrationTableView(TournamentMixin, AdministratorMixin, VueT
     template_name = 'answer_tables/institutions.html'
 
     view_permission = Permission.VIEW_REGISTRATION
+    edit_permission = Permission.EDIT_REGISTRATION_SLOTS
 
     def get_table(self):
         t_institutions = self.tournament.tournamentinstitution_set.select_related('institution').prefetch_related(

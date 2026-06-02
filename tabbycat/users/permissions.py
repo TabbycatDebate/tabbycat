@@ -161,6 +161,7 @@ class Permission(TextChoices):
     VIEW_REGISTRATION = 'view.registration', _("view registration responses")
     EDIT_REGISTRATION = 'edit.registration', _("edit registration responses")
     CONFIRM_REGISTRATION = 'confirm.registration', _("confirm registration responses")
+    EDIT_REGISTRATION_SLOTS = 'edit.registration.slots', _("edit institution slot allocations")
 
 
 permission_type = Union[Permission, bool]

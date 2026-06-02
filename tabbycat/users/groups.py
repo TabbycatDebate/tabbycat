@@ -152,6 +152,7 @@ class Registration(BaseGroup):
         Permission.DELETE_QUESTIONS,
         Permission.VIEW_CUSTOM_ANSWERS,
         Permission.VIEW_REGISTRATION,
+        Permission.EDIT_REGISTRATION_SLOTS,
     ]
 
 
