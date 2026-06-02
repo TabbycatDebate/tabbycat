@@ -386,7 +386,7 @@ class PublicCreateTeamFormView(BaseCreateTeamFormView):
         ).first()
         if not invitation or not tournament.pref('institution_participant_registration'):
             return False
-        if invitation.institution_id is not None and tournament.pref('reg_institution_slots'):
+        if invitation.institution_id is not None and tournament.pref('reg_institution_slots') and tournament.pref('reg_block_over_allocated'):
             t_inst = TournamentInstitution.objects.filter(
                 tournament=tournament, institution=invitation.institution,
             ).first()
@@ -467,7 +467,7 @@ class PublicCreateAdjudicatorFormView(BaseCreateAdjudicatorFormView):
         ).first()
         if not invitation or not tournament.pref('institution_participant_registration'):
             return False
-        if invitation.institution_id is not None and tournament.pref('reg_institution_slots'):
+        if invitation.institution_id is not None and tournament.pref('reg_institution_slots') and tournament.pref('reg_block_over_allocated'):
             t_inst = TournamentInstitution.objects.filter(
                 tournament=tournament, institution=invitation.institution,
             ).first()
@@ -1014,6 +1014,7 @@ class CustomQuestionFormsetView(TournamentMixin, AdministratorMixin, ModelFormSe
 class BaseConfirmRegistrationView(LogActionMixin, TournamentMixin, AdministratorMixin, PostOnlyRedirectView):
     edit_permission = Permission.CONFIRM_REGISTRATION
     action_log_type = ActionLogEntry.ActionType.REGISTRATION_CONFIRM
+    action_log_content_object_attr = 'object'
 
     def get_object(self):
         return get_object_or_404(self.model.objects.all_with_unconfirmed, tournament=self.tournament, pk=self.kwargs['pk'])

@@ -1739,6 +1739,15 @@ class ParticipantSlots(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class BlockRegistrationOverAllocated(BooleanPreference):
+    help_text = _("When participant slots are in use, block team and adjudicator registration once an institution's allocated slots are full.")
+    verbose_name = _("Block registration when over allocated slots")
+    section = registration
+    name = 'reg_block_over_allocated'
+    default = True
+
+
+@tournament_preferences_registry.register
 class InstitutionSlotTransfers(BooleanPreference):
     help_text = _("Allow institutions to request transferring team or adjudicator slots to another institution (when participant slots are in use).")
     verbose_name = _("Enable institution slot transfers")
