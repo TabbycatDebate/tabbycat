@@ -17,6 +17,7 @@ from formtools.wizard.views import SessionWizardView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from notifications.models import BulkNotification
+from notifications.views import TournamentTemplateEmailCreateView
 from participants.emoji import EMOJI_NAMES
 from participants.models import (
     Adjudicator,
@@ -896,6 +897,51 @@ class InstitutionRegistrationTableView(TournamentMixin, AdministratorMixin, VueT
         kwargs['adjs_registered'] = Adjudicator.objects.all_with_unconfirmed.filter(tournament=self.tournament, institution__isnull=False, adj_core=False, independent=False).count()
         kwargs['teams_registered'] = Team.objects.all_with_unconfirmed.filter(tournament=self.tournament, institution__isnull=False).count()
         return super().get_context_data(**kwargs)
+
+
+class EmailInstitutionCoachesView(TournamentTemplateEmailCreateView):
+    """Compose and send a custom email to institution contacts (coaches)."""
+
+    template_name = 'email_institution_coaches.html'
+    page_title = gettext_lazy("Email Institution Coaches")
+    page_emoji = '📧'
+    tournament_redirect_pattern_name = 'reg-email-coaches'
+    event = BulkNotification.EventType.INSTITUTION_CUSTOM
+
+    def get_initial(self):
+        return {}
+
+    def get_queryset(self):
+        return Coach.objects.filter(
+            tournament_institution__tournament=self.tournament,
+        ).select_related('tournament_institution__institution').order_by(
+            'tournament_institution__institution__name', 'name',
+        )
+
+    def get_default_send_queryset(self):
+        # Don't exclude coaches already emailed — custom messages can be re-sent.
+        return Coach.objects.none()
+
+    def default_send(self, p, default_send_queryset):
+        return False
+
+    def get_table(self):
+        table = super().get_table()
+        coaches = self.get_queryset()
+
+        table.add_column({'key': 'institution', 'title': _("Institution")}, [
+            c.tournament_institution.institution.name for c in coaches
+        ])
+        table.add_column({'key': 'teams', 'title': _("Teams (req. / alloc.)")}, [
+            '%d / %d' % (c.tournament_institution.teams_requested, c.tournament_institution.teams_allocated)
+            for c in coaches
+        ])
+        table.add_column({'key': 'adjudicators', 'title': _("Adjudicators (req. / alloc.)")}, [
+            '%d / %d' % (c.tournament_institution.adjudicators_requested, c.tournament_institution.adjudicators_allocated)
+            for c in coaches
+        ])
+
+        return table
 
 
 class TeamRegistrationTableView(TournamentMixin, AdministratorMixin, VueTableTemplateView):
