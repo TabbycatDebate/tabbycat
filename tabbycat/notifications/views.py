@@ -222,6 +222,11 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
     page_title = gettext_lazy("Email Participants")
     page_emoji = '📤'
     edit_permission = Permission.SEND_EMAILS
+    template_variables = [
+        ("USER", gettext_lazy("name of the recipient")),
+        ("TOURN", gettext_lazy("tournament name")),
+    ]
+    template_math_examples = []
 
     form_class = BasicEmailForm
 
@@ -231,6 +236,8 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
     def get_context_data(self, **kwargs) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['sg_webhook'] = EmailStatus.objects.filter(email__notification__tournament=self.tournament).exists()
+        context['template_variables'] = self.template_variables
+        context['template_math_examples'] = self.template_math_examples
 
         context['categories'] = [{'id': 'spk', 'name': "Email"}]
         return context
@@ -381,6 +388,7 @@ class TournamentTemplateEmailCreateView(TemplateEmailCreateView):
 class CustomEmailCreateView(RoleColumnMixin, TournamentTemplateEmailCreateView):
     tournament_redirect_pattern_name = 'notifications-email'
     event = BulkNotification.EventType.CUSTOM
+    template_variables = BaseSelectPeopleEmailView.template_variables
 
     def get_initial(self) -> Dict[str, str]:
         return {}  # Have everything unset
