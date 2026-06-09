@@ -7,6 +7,10 @@
 
 {% block page-alerts %}
 
+{% if form.errors %}
+  {% include "components/form-errors.html" with errors=form.errors %}
+{% endif %}
+
 {% if pref.reply_to_address == "" %}
   {% tournamenturl 'options-tournament-section' section='email' as notifications_options_url %}
   {% blocktrans trimmed asvar p1 %}

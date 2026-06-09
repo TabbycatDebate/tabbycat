@@ -255,6 +255,12 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
         """Whether the person should be emailed by default"""
         return p in default_send_queryset
 
+    def get_selected_recipients(self) -> Optional[set[int]]:
+        """Recipient IDs selected in the submitted form, if this is a POST request."""
+        if self.request.method != "POST":
+            return None
+        return {int(recipient_id) for recipient_id in self.request.POST.getlist('recipients')}
+
     def add_sent_notification(self, email_count: int) -> None:
         text = ngettext("%(email_count)s email has been queued for sending.",
                         "%(email_count)s emails have been queued for sending.",
@@ -272,10 +278,11 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
 
         queryset = self.get_queryset()
         default_send_queryset = self.get_default_send_queryset()
+        selected_recipients = self.get_selected_recipients()
 
         table.add_column({'key': 'send', 'title': _("Send Email")}, [{
             'component': 'check-cell',
-            'checked': self.default_send(p, default_send_queryset),
+            'checked': p.id in selected_recipients if selected_recipients is not None else self.default_send(p, default_send_queryset),
             'id': p.id,
             'name': 'recipients',
             'value': p.id,
