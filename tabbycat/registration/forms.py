@@ -52,6 +52,13 @@ class TournamentInstitutionForm(CustomQuestionsFormMixin, forms.ModelForm):
             raise forms.ValidationError(_("An institution with this name is already registered for this tournament."))
         return name
 
+    def clean_code(self):
+        code = self.cleaned_data.get('code', '').strip()
+        existing_institution = TournamentInstitution.objects.filter(tournament=self.tournament, institution__code__iexact=code).exists()
+        if existing_institution:
+            raise forms.ValidationError(_("An institution with this abbreviation is already registered for this tournament."))
+        return code
+
     class Meta:
         model = TournamentInstitution
         exclude = ('tournament', 'institution', 'teams_allocated', 'adjudicators_allocated')
@@ -196,6 +203,20 @@ class TeamForm(CustomQuestionsFormMixin, forms.ModelForm):
                 self.fields['break_categories'].queryset = bcs
 
         self.add_question_fields()
+
+    def clean_reference(self):
+        reference = self.cleaned_data.get('reference', '').strip()
+        if self.tournament.pref('team_name_generator') != 'user':
+            return reference
+
+        institution = self.institution or self.cleaned_data.get('institution')
+        if Team.objects.all_with_unconfirmed.filter(
+            tournament=self.tournament,
+            institution=institution,
+            reference=reference,
+        ).exists():
+            raise forms.ValidationError(_("A team with this name is already registered for this tournament."))
+        return reference
 
     class Meta:
         model = Team
