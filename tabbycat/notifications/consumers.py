@@ -2,11 +2,9 @@ import json
 import logging
 from dataclasses import asdict
 from email.utils import formataddr
-from time import time
-from typing import Any, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, Dict, List, Type, Union
 
 from channels.consumer import SyncConsumer
-from django.conf import settings
 from django.core import mail
 from django.template import Context, Template
 from html2text import html2text
@@ -15,6 +13,7 @@ from draw.models import Debate
 from participants.models import Person
 from tournaments.models import Round, Tournament
 
+from .email_tracking import build_hook_id, send_tracked_emails, tournament_from_email
 from .models import BulkNotification, EmailStatus, SentMessage
 from .utils import (AdjudicatorAssignmentEmailGenerator, BallotsEmailGenerator, InstitutionRegistrationEmailGenerator,
                     MotionReleaseEmailGenerator, NotificationContextGenerator, RandomizedUrlEmailGenerator,
@@ -38,33 +37,6 @@ class NotificationQueueConsumer(SyncConsumer):
         BulkNotification.EventType.CUSTOM: NotificationContextGenerator,
     }
 
-    @staticmethod
-    def _send(messages: List[mail.EmailMultiAlternatives], records: List[SentMessage]) -> None:
-        SentMessage.objects.bulk_create(records)
-        if not messages:
-            return
-
-        connection = mail.get_connection(fail_silently=False)
-        failed_events = []
-
-        connection.open()
-        for message, record in zip(messages, records):
-            try:
-                message.extra_headers['X-RECORDID'] = record.id
-                connection.send_messages([message])
-            except Exception as e:
-                failed_events.append(EmailStatus(email=record, event=EmailStatus.EventType.FAILED, data={'error': str(e)}))
-        connection.close()
-
-        EmailStatus.objects.bulk_create(failed_events)
-
-    @staticmethod
-    def _get_from_fields(t: Tournament) -> Tuple[str, Optional[List[str]]]:
-        from_email = formataddr((t.short_name, settings.DEFAULT_FROM_EMAIL))
-        if t.pref('reply_to_address'):
-            return from_email, [formataddr((t.pref('reply_to_name').strip(), t.pref('reply_to_address')))]
-        return from_email, None  # Shouldn't have array of None
-
     def email(self, event: Dict[str, Union[str, BulkNotification.EventType, List[int], Dict[str, Any]]]) -> None:
         # Get database objects
         if 'debate_id' in event['extra']:
@@ -81,7 +53,7 @@ class NotificationQueueConsumer(SyncConsumer):
             t = Tournament.objects.get(pk=event['extra'].pop('tournament_id'))
             event['extra']['tournament'] = t
 
-        from_email, reply_to = self._get_from_fields(t)
+        from_email, reply_to = tournament_from_email(t)
         notification_type = event['message']
 
         subject = Template(event['subject'])
@@ -108,7 +80,7 @@ class NotificationQueueConsumer(SyncConsumer):
         messages = []
         records = []
         for instance, recipient in contexts:
-            hook_id = str(bulk_notification.id) + "-" + str(recipient.id) + "-" + str(int(time()))[4:]
+            hook_id = build_hook_id(bulk_notification.id, recipient.id)
             data = None
             try:
                 data = asdict(instance)
@@ -143,4 +115,4 @@ class NotificationQueueConsumer(SyncConsumer):
                             context=data, message_id=raw_message['Message-ID'],
                             hook_id=hook_id, notification=bulk_notification))
 
-        self._send(messages, records)
+        send_tracked_emails(messages, records)
