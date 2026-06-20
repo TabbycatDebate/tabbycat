@@ -62,6 +62,17 @@
   </ul>
   <ul class="list-group mt-3">
 
+    {% tournamenturl 'adjallocation-n1rule-assignments' as url %}
+    {% trans "Add/Edit N-1 Rule Assignments" as text %}
+    {% include "components/item-action.html" with emoji="⚖️" %}
+
+    {% tournamenturl 'adjallocation-n1rule-status' as url %}
+    {% trans "N-1 Compliance" as text %}
+    {% include "components/item-action.html" with emoji="📊" %}
+
+  </ul>
+  <ul class="list-group mt-3">
+
     {% tournamenturl 'break-categories-edit' as url %}
     {% trans "Add/Edit Break Categories" as text %}
     {% include "components/item-action.html" with emoji="🎯" %}

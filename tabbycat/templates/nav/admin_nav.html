@@ -160,6 +160,10 @@
          class="list-group-item {% if checkins_venues_statuses %}active{% endif %}" data-parent="#checkinh">
         <i data-feather="map"></i>{% trans "Rooms' Status" %}
       </a>
+      <a href="{% tournamenturl 'adjallocation-n1rule-status' %}"
+         class="list-group-item" data-parent="#checkinh">
+        <i data-feather="check-square"></i>{% trans "N-1 Compliance" %}
+      </a>
     </div>
   </div>
 

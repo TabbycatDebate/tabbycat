@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<form method="POST">
+  {% csrf_token %}
+
+  <div class="card mt-3">
+    <div class="card-header">
+      <h5 class="mb-1">{% trans "Institutional Coverage" %}</h5>
+      <p class="mb-0 text-muted small">
+        {% blocktrans trimmed %}
+          Each judge listed here counts toward their institution's N-1 quota.
+          Deleting a row removes that judge from their institution's count.
+        {% endblocktrans %}
+      </p>
+    </div>
+
+    {% if inst_formset.non_form_errors %}
+      {% include "components/form-errors.html" with errors=inst_formset.non_form_errors %}
+    {% endif %}
+    {{ inst_formset.management_form }}
+
+    {% for form in inst_formset %}
+      {% if can_edit %}
+        {% include "components/form-main.html" with triple=True %}
+      {% else %}
+        {% include "components/form-main.html" with double=True %}
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <div class="card mt-3">
+    <div class="card-header">
+      <h5 class="mb-1">{% trans "Independent Team Coverage" %}</h5>
+      <p class="mb-0 text-muted small">
+        {% blocktrans trimmed %}
+          Assign one judge per independent team. If you assign an institutional
+          judge here, they will no longer count toward their institution's quota.
+        {% endblocktrans %}
+      </p>
+    </div>
+
+    {% if indep_formset.non_form_errors %}
+      {% include "components/form-errors.html" with errors=indep_formset.non_form_errors %}
+    {% endif %}
+    {{ indep_formset.management_form }}
+
+    {% for form in indep_formset %}
+      {% if can_edit %}
+        {% include "components/form-main.html" with triple=True %}
+      {% else %}
+        {% include "components/form-main.html" with double=True %}
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <div class="card mt-3">
+    <div class="list-group-item pt-3 pb-3">
+      <div class="row">
+        <div class="col">
+          <input class="btn btn-block btn-success" {% if not can_edit %}disabled{% endif %} type="submit" name="submit" value="{% trans 'Save N-1 Assignments' %}" />
+        </div>
+        <div class="col mt-md-0 mt-3">
+          <input class="btn btn-block btn-primary" {% if not can_edit %}disabled{% endif %} type="submit" name="add_more" value="{% trans 'Save and Add More' %}" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+</form>
+{% endblock content %}

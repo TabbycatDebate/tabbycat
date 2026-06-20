@@ -14,6 +14,9 @@ PERM_CACHE_KEY = "user_%d_%s_%s_permission"
 
 
 class Permission(TextChoices):
+    VIEW_N1_RULE_ASSIGNMENTS = 'view.n1ruleassignment', _("view N-1 rule assignments")
+    EDIT_N1_RULE_ASSIGNMENTS = 'edit.n1ruleassignment', _("edit N-1 rule assignments")
+
     VIEW_ADJ_TEAM_CONFLICTS = 'view.adjudicatorteamconflict', _("view adjudicator-team conflicts")
     EDIT_ADJ_TEAM_CONFLICTS = 'edit.adjudicatorteamconflict', _("edit adjudicator-team conflicts")
     VIEW_ADJ_ADJ_CONFLICTS = 'view.adjudicatoradjudicatorconflict', _("view adjudicator-adjudicator conflicts")
