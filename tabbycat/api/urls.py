@@ -188,6 +188,9 @@ urlpatterns = [
                         path('/rounds',
                             views.TeamRoundStandingsRoundsView.as_view({'get': 'list'}),
                             name='api-team-round-standings'),
+                        path('/current-rounds',
+                            views.TeamCurrentStandingsView.as_view({'get': 'list'}),
+                            name='api-team-current-standings'),
                     ])),
                 ])),
                 path('/adjudicators', include([

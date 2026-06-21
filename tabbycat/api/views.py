@@ -1088,6 +1088,52 @@ class TeamRoundStandingsRoundsView(TournamentAPIMixin, TournamentPublicAPIMixin,
         return qs
 
 
+@extend_schema(tags=['standings'], parameters=[
+    tournament_parameter,
+])
+@extend_schema_view(
+    list=extend_schema(summary="Get public team round results for current standings", responses=serializers.TeamCurrentStandingsSerializer(many=True)),
+)
+class TeamCurrentStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
+    """Returns per-round points/win per team, restricted to past non-silent
+    preliminary rounds (respecting the ``public_team_standings`` preference).
+    Speaks are excluded. Each round entry includes the team's side."""
+
+    serializer_class = serializers.TeamCurrentStandingsSerializer
+    access_preference = 'public_team_standings'
+
+    list_permission = Permission.VIEW_TEAMSTANDINGS
+
+    def _get_eligible_rounds(self):
+        tournament = self.tournament
+        if tournament.pref('all_results_released'):
+            return tournament.prelim_rounds()
+        return tournament.prelim_rounds(before=tournament.current_round).filter(silent=False)
+
+    def get_queryset(self):
+        ts_pf = Prefetch(
+            'teamscore_set',
+            queryset=TeamScore.objects.select_related(
+                'ballot_submission__debate__round__tournament',
+            ).filter(ballot_submission__confirmed=True),
+            to_attr='round_scores',
+        )
+        qs = super().get_queryset().prefetch_related(
+            Prefetch(
+                'debateteam_set',
+                queryset=DebateTeam.objects.filter(
+                    debate__round__in=self._get_eligible_rounds(),
+                ).prefetch_related(ts_pf).select_related('debate__round__tournament').order_by('debate__round__seq'),
+            ),
+        )
+
+        for t in qs:
+            for dt in t.debateteam_set.all():
+                dt.ballot = dt.round_scores[0] if dt.round_scores else TeamScore()
+
+        return qs
+
+
 @extend_schema(tags=['debates'], parameters=round_parameters)
 @extend_schema_view(
     list=extend_schema(summary="List pairings in round"),

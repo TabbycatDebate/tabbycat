@@ -1780,10 +1780,11 @@ class TeamRoundScoresSerializer(serializers.ModelSerializer):
         score = serializers.FloatField(source='ballot.score')
         has_ghost = serializers.BooleanField(source='ballot.has_ghost')
         win = serializers.BooleanField(source='ballot.win')
+        side = fields.SideChoiceField(read_only=True)
 
         class Meta:
             model = TeamScore
-            fields = ('round', 'ballot_url', 'points', 'score', 'has_ghost', 'win')
+            fields = ('round', 'ballot_url', 'points', 'score', 'has_ghost', 'win', 'side')
 
     team = fields.TournamentHyperlinkedIdentityField(view_name='api-team-detail')
     rounds = ScoreSerializer(many=True, source="debateteam_set")
@@ -1791,6 +1792,19 @@ class TeamRoundScoresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = ('team', 'rounds')
+
+
+class TeamCurrentStandingsSerializer(TeamRoundScoresSerializer):
+    """Like TeamRoundScoresSerializer but scoped to public current standings:
+    no speak data, adds side, intended for rounds filtered to past non-silent
+    prelim rounds by the view."""
+
+    class RoundResultSerializer(TeamRoundScoresSerializer.ScoreSerializer):
+
+        class Meta(TeamRoundScoresSerializer.ScoreSerializer.Meta):
+            fields = ('round', 'ballot_url', 'side', 'points', 'win')
+
+    rounds = RoundResultSerializer(many=True, source="debateteam_set")
 
 
 class UserSerializer(serializers.ModelSerializer):
