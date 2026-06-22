@@ -1487,7 +1487,8 @@ class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
         for model, participants in groupby(objs, key=type):
             contenttype = ContentType.objects.get_for_model(model)
             RoundAvailability.objects.bulk_create(
-                [RoundAvailability(content_type=contenttype, round=self.round, object_id=p.id) for p in participants])
+                [RoundAvailability(content_type=contenttype, round=self.round, object_id=p.id) for p in participants],
+                ignore_conflicts=True)
         self.log_action(type=self.action_log_type_updated, agent=ActionLogEntry.Agent.API)
         return self.get(request, *args, **kwargs)
 

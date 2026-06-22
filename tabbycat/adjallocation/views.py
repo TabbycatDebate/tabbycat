@@ -6,6 +6,7 @@ from django.db.models import Prefetch
 from django.forms import ChoiceField, ModelChoiceField
 from django.forms.models import ModelChoiceIterator, modelformset_factory
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
+from django.views import View
 from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
@@ -25,7 +26,7 @@ from utils.views import ModelFormSetView
 
 from .conflicts import ConflictsInfo, HistoryInfo
 from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
-                     AdjudicatorTeamConflict, N1RuleAssignment,
+                     AdjudicatorTeamConflict, N1RuleAssignment, N1RuleFinePayment,
                      PreformedPanelAdjudicator, TeamInstitutionConflict)
 from .serializers import EditDebateAdjsDebateSerializer, EditPanelAdjsPanelSerializer, EditPanelOrDebateAdjSerializer
 
@@ -521,7 +522,7 @@ class N1RuleAssignmentsView(LogActionMixin, AdministratorMixin, TournamentMixin,
             data=data,
         )
         all_adjs = self.tournament.adjudicator_set.order_by('name')
-        all_teams = self.tournament.team_set.order_by('short_name')
+        all_teams = self.tournament.team_set.filter(institution__isnull=True).order_by('short_name')
         can_edit = self._can_edit()
         for form in formset:
             form.fields['adjudicator'].queryset = all_adjs
@@ -622,6 +623,21 @@ class N1RuleStatusView(AdministratorMixin, TournamentMixin, TemplateView):
             institution__isnull=False,
         ).values_list('institution_id', flat=True).distinct())
 
+        fine_payments = {
+            fp.institution_id: fp.fines_paid
+            for fp in N1RuleFinePayment.objects.filter(
+                tournament=tournament,
+                institution__isnull=False,
+            )
+        }
+        team_fine_payments = {
+            fp.team_id: fp.fines_paid
+            for fp in N1RuleFinePayment.objects.filter(
+                tournament=tournament,
+                team__isnull=False,
+            )
+        }
+
         institutions_data = []
         for inst in Institution.objects.filter(id__in=inst_ids).order_by('name'):
             team_count = tournament.team_set.filter(institution=inst).count()
@@ -641,6 +657,7 @@ class N1RuleStatusView(AdministratorMixin, TournamentMixin, TemplateView):
                 'name': inst.name,
                 'team_count': team_count,
                 'assignments': judge_data,
+                'fines_paid': fine_payments.get(inst.id, 0),
             })
 
         independent_teams_data = []
@@ -659,6 +676,7 @@ class N1RuleStatusView(AdministratorMixin, TournamentMixin, TemplateView):
                 'id': team.id,
                 'name': team.short_name,
                 'assigned_adj': assigned_adj,
+                'fines_paid': team_fine_payments.get(team.id, 0),
             })
 
         kwargs['institutions'] = json.dumps(institutions_data)
@@ -667,3 +685,51 @@ class N1RuleStatusView(AdministratorMixin, TournamentMixin, TemplateView):
         kwargs['initial_strict_mode'] = json.dumps(strict)
         kwargs['csrf_token'] = get_token(self.request)
         return super().get_context_data(**kwargs)
+
+
+class N1RuleFinePaymentView(LogActionMixin, AdministratorMixin, TournamentMixin, View):
+    """AJAX endpoint to update the fine payment count for an institution or independent team."""
+
+    action_log_type = ActionLogEntry.ActionType.N1_RULE_FINES_EDIT
+    view_permission = Permission.VIEW_N1_RULE_ASSIGNMENTS
+    edit_permission = Permission.EDIT_N1_RULE_ASSIGNMENTS
+
+    def post(self, request, *args, **kwargs):
+        from django.http import JsonResponse
+        if not has_permission(request.user, self.edit_permission, self.tournament):
+            return JsonResponse({'error': 'Permission denied'}, status=403)
+
+        try:
+            data = json.loads(request.body)
+        except (json.JSONDecodeError, ValueError):
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+        try:
+            fines_paid = max(0, int(data.get('fines_paid', 0)))
+        except (TypeError, ValueError):
+            return JsonResponse({'error': 'Invalid fines_paid value'}, status=400)
+
+        institution_id = data.get('institution_id')
+        team_id = data.get('team_id')
+
+        if institution_id:
+            obj, _ = N1RuleFinePayment.objects.get_or_create(
+                tournament=self.tournament,
+                institution_id=institution_id,
+                defaults={'fines_paid': 0},
+            )
+            obj.fines_paid = fines_paid
+            obj.save(update_fields=['fines_paid'])
+        elif team_id:
+            obj, _ = N1RuleFinePayment.objects.get_or_create(
+                tournament=self.tournament,
+                team_id=team_id,
+                defaults={'fines_paid': 0},
+            )
+            obj.fines_paid = fines_paid
+            obj.save(update_fields=['fines_paid'])
+        else:
+            return JsonResponse({'error': 'institution_id or team_id required'}, status=400)
+
+        self.log_action()
+        return JsonResponse({'ok': True, 'fines_paid': fines_paid})

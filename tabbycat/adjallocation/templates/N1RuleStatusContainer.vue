@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const props = defineProps({
   institutions: Array,
@@ -8,6 +8,7 @@ const props = defineProps({
   initialStrictMode: Boolean,
   assignmentsUrl: String,
   saveSettingsUrl: String,
+  finesUrl: String,
   csrfToken: String,
 })
 
@@ -16,39 +17,86 @@ const strict = ref(props.initialStrictMode ?? false)
 const filterCompliance = ref('all')
 const viewSection = ref('both')
 const expandedId = ref(null)
-const saving = ref(false)
 const saveMsg = ref('')
+let saveTimer = null
+
+// Local reactive copies of fines so +/- updates reflect immediately
+const instFines = ref(Object.fromEntries((props.institutions ?? []).map(i => [i.id, i.fines_paid ?? 0])))
+const teamFines = ref(Object.fromEntries((props.independentTeams ?? []).map(t => [t.id, t.fines_paid ?? 0])))
 
 function instRequired(inst) {
   return Math.max(0, inst.team_count - 1)
 }
 
+function instCoverage(inst) {
+  const fines = instFines.value[inst.id] ?? 0
+  if (strict.value) {
+    const qualifying = inst.assignments.filter(j => j.rounds_judged >= m.value).length
+    return qualifying + fines
+  }
+  const totalRounds = inst.assignments.reduce((s, j) => s + j.rounds_judged, 0)
+  // each fine counts as M rounds
+  return totalRounds + fines * m.value
+}
+
+function instRequiredCoverage(inst) {
+  const required = instRequired(inst)
+  return strict.value ? required : required * m.value
+}
+
 function instCompliant(inst) {
   const required = instRequired(inst)
   if (required === 0) return true
-  if (strict.value) {
-    return inst.assignments.filter(j => j.rounds_judged >= m.value).length >= required
-  }
-  const total = inst.assignments.reduce((s, j) => s + j.rounds_judged, 0)
-  return total >= required * m.value
+  return instCoverage(inst) >= instRequiredCoverage(inst)
+}
+
+function instPartial(inst) {
+  const required = instRequired(inst)
+  if (required === 0) return false
+  const fines = instFines.value[inst.id] ?? 0
+  return !instCompliant(inst) && fines > 0
 }
 
 function teamCompliant(team) {
-  return !!team.assigned_adj && team.assigned_adj.rounds_judged >= m.value
+  const fines = teamFines.value[team.id] ?? 0
+  const hasJudge = !!team.assigned_adj && team.assigned_adj.rounds_judged >= m.value
+  return hasJudge || fines >= 1
 }
 
-function matchesFilter(compliant) {
+function teamPartial(team) {
+  // Independent teams only need 1 slot, so partial isn't possible — either fine covers it or not.
+  // But we expose it for symmetry.
+  return false
+}
+
+function instStatusClass(inst) {
+  if (instCompliant(inst)) return 'badge-success'
+  if (instPartial(inst)) return 'badge-warning'
+  return 'badge-danger'
+}
+
+function instStatusIcon(inst) {
+  if (instCompliant(inst)) return '✓'
+  if (instPartial(inst)) return '⚠'
+  return '✗'
+}
+
+function matchesFilter(compliant, partial) {
   if (filterCompliance.value === 'complying') return compliant
   if (filterCompliance.value === 'notComplying') return !compliant
   return true
 }
 
 const filteredInstitutions = computed(() =>
-  (props.institutions ?? []).filter(inst => matchesFilter(instCompliant(inst)))
+  (props.institutions ?? []).filter(inst =>
+    matchesFilter(instCompliant(inst), instPartial(inst))
+  )
 )
 
 const filteredTeams = computed(() =>
-  (props.independentTeams ?? []).filter(team => matchesFilter(teamCompliant(team)))
+  (props.independentTeams ?? []).filter(team =>
+    matchesFilter(teamCompliant(team), false)
+  )
 )
 
 const showInstitutions = computed(() =>
@@ -63,25 +111,54 @@ function toggleExpand(id) {
 }
 
 async function saveSettings() {
-  saving.value = true
-  saveMsg.value = ''
   try {
     const body = new FormData()
     body.append('csrfmiddlewaretoken', props.csrfToken)
     body.append('m_rounds', m.value)
     body.append('strict_mode', strict.value ? '1' : '0')
     const res = await fetch(props.saveSettingsUrl, { method: 'POST', body })
-    if (res.ok) {
-      saveMsg.value = 'Saved'
-      setTimeout(() => { saveMsg.value = '' }, 2000)
-    } else {
-      saveMsg.value = 'Error saving'
-    }
+    saveMsg.value = res.ok ? 'Saved' : 'Error saving'
   } catch {
     saveMsg.value = 'Error saving'
-  } finally {
-    saving.value = false
   }
+  setTimeout(() => { saveMsg.value = '' }, 2000)
+}
+
+watch([m, strict], () => {
+  clearTimeout(saveTimer)
+  saveTimer = setTimeout(saveSettings, 600)
+}, { flush: 'post' })
+
+async function updateFines(payload) {
+  try {
+    const res = await fetch(props.finesUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': props.csrfToken,
+      },
+      body: JSON.stringify(payload),
+    })
+    if (!res.ok) {
+      console.error('Failed to save fine payment')
+    }
+  } catch {
+    console.error('Network error saving fine payment')
+  }
+}
+
+function changeInstFines(inst, delta) {
+  const current = instFines.value[inst.id] ?? 0
+  const next = Math.max(0, current + delta)
+  instFines.value[inst.id] = next
+  updateFines({ institution_id: inst.id, fines_paid: next })
+}
+
+function changeTeamFines(team, delta) {
+  const current = teamFines.value[team.id] ?? 0
+  const next = Math.max(0, current + delta)
+  teamFines.value[team.id] = next
+  updateFines({ team_id: team.id, fines_paid: next })
 }
 </script>
 
@@ -114,10 +191,7 @@ async function saveSettings() {
             </small>
           </div>
 
-          <button class="btn btn-sm btn-success" :disabled="saving" @click="saveSettings">
-            {{ saving ? 'Saving…' : 'Save settings' }}
-          </button>
-          <span v-if="saveMsg" class="text-success small">{{ saveMsg }}</span>
+          <span v-if="saveMsg" class="small" :class="saveMsg === 'Saved' ? 'text-success' : 'text-danger'">{{ saveMsg }}</span>
 
           <a :href="assignmentsUrl" class="btn btn-sm btn-outline-secondary ml-auto">
             Edit Assignments
@@ -161,9 +235,8 @@ async function saveSettings() {
              class="list-group-item list-group-item-action p-0">
           <div class="d-flex align-items-center px-3 py-2"
                style="cursor:pointer" @click="toggleExpand('inst-' + inst.id)">
-            <span class="badge mr-2"
-                  :class="instCompliant(inst) ? 'badge-success' : 'badge-danger'">
-              {{ instCompliant(inst) ? '✓' : '✗' }}
+            <span class="badge mr-2" :class="instStatusClass(inst)">
+              {{ instStatusIcon(inst) }}
             </span>
             <strong>{{ inst.name }}</strong>
             <span class="text-muted ml-2 small">
@@ -187,6 +260,21 @@ async function saveSettings() {
               <span>{{ j.adj_name }}</span>
               <span class="ml-auto text-muted small">{{ j.rounds_judged }} / {{ m }} rounds</span>
             </div>
+            <!-- Fines row -->
+            <div class="d-flex align-items-center px-3 py-2">
+              <span class="text-muted small mr-3">Fines paid:</span>
+              <button class="btn btn-sm btn-outline-secondary px-2 py-0"
+                      @click.stop="changeInstFines(inst, -1)"
+                      :disabled="(instFines[inst.id] ?? 0) === 0">−</button>
+              <span class="mx-2 font-weight-bold">{{ instFines[inst.id] ?? 0 }}</span>
+              <button class="btn btn-sm btn-outline-secondary px-2 py-0"
+                      @click.stop="changeInstFines(inst, +1)">+</button>
+              <span class="text-muted small ml-3">
+                ({{ inst.assignments.length }} judge{{ inst.assignments.length !== 1 ? 's' : '' }}
+                + {{ instFines[inst.id] ?? 0 }} fine{{ (instFines[inst.id] ?? 0) !== 1 ? 's' : '' }}
+                / {{ instRequired(inst) }} required)
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -198,19 +286,28 @@ async function saveSettings() {
       <p v-if="filteredTeams.length === 0" class="text-muted">No independent teams to show.</p>
       <div class="card mt-1">
         <div v-for="team in filteredTeams" :key="team.id"
-             class="list-group-item d-flex align-items-center">
+             class="list-group-item d-flex align-items-center flex-wrap" style="gap:0.5rem">
           <span class="badge mr-2"
                 :class="teamCompliant(team) ? 'badge-success' : 'badge-danger'">
             {{ teamCompliant(team) ? '✓' : '✗' }}
           </span>
           <strong>{{ team.name }}</strong>
           <template v-if="team.assigned_adj">
-            <span class="ml-2 text-muted small">
+            <span class="text-muted small">
               {{ team.assigned_adj.name }}
               ({{ team.assigned_adj.rounds_judged }}/{{ m }} rounds)
             </span>
           </template>
-          <span v-else class="ml-2 text-muted small">No judge assigned</span>
+          <span v-else class="text-muted small">No judge assigned</span>
+          <div class="d-flex align-items-center ml-auto" style="gap:0.25rem">
+            <span class="text-muted small">Fines:</span>
+            <button class="btn btn-sm btn-outline-secondary px-2 py-0"
+                    @click="changeTeamFines(team, -1)"
+                    :disabled="(teamFines[team.id] ?? 0) === 0">−</button>
+            <span class="mx-1 font-weight-bold">{{ teamFines[team.id] ?? 0 }}</span>
+            <button class="btn btn-sm btn-outline-secondary px-2 py-0"
+                    @click="changeTeamFines(team, +1)">+</button>
+          </div>
         </div>
       </div>
     </template>

@@ -54,6 +54,7 @@ class ActionLogEntry(models.Model):
         CONFLICTS_ADJ_TEAM_EDIT           = 'ac.at.edit', _("Edited adjudicator-team conflicts")
         CONFLICTS_TEAM_INST_EDIT          = 'ac.ti.edit', _("Edited team-institution conflicts")
         N1_RULE_ASSIGNMENTS_EDIT          = 'n1.as.edit', _("Edited N-1 rule assignments")
+        N1_RULE_FINES_EDIT                = 'n1.fi.edit', _("Edited N-1 rule fine payments")
         DEBATE_CREATE                     = 'db.crea', _("Created debate")
         DEBATE_EDIT                       = 'db.edit', _("Edited debate")
         DEBATE_IMPORTANCE_AUTO            = 'db.im.auto', _("Auto-prioritized debate importance")

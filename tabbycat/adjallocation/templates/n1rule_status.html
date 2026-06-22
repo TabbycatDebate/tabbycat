@@ -11,6 +11,7 @@
       :initial-strict-mode="initialStrictMode"
       :assignments-url="assignmentsUrl"
       :save-settings-url="saveSettingsUrl"
+      :fines-url="finesUrl"
       :csrf-token="csrfToken">
     </n1-rule-status-container>
   </div>
@@ -26,6 +27,7 @@
       'initialStrictMode': {{ initial_strict_mode|safe }},
       'assignmentsUrl': '{% tournamenturl "adjallocation-n1rule-assignments" %}',
       'saveSettingsUrl': '{% tournamenturl "adjallocation-n1rule-status" %}',
+      'finesUrl': '{% tournamenturl "adjallocation-n1rule-fines" %}',
       'csrfToken': '{{ csrf_token }}',
     }
   </script>

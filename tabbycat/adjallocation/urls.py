@@ -38,5 +38,8 @@ urlpatterns = [
         path('status/',
             views.N1RuleStatusView.as_view(),
             name='adjallocation-n1rule-status'),
+        path('fines/',
+            views.N1RuleFinePaymentView.as_view(),
+            name='adjallocation-n1rule-fines'),
     ])),
 ]
