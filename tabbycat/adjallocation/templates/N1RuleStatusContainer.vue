@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { useDjangoI18n } from '../../templates/composables/useDjangoI18n.js'
 
 const props = defineProps({
   institutions: Array,
@@ -12,12 +13,15 @@ const props = defineProps({
   csrfToken: String,
 })
 
+const { gettext } = useDjangoI18n()
+
 const m = ref(props.initialMRounds ?? 3)
 const strict = ref(props.initialStrictMode ?? false)
 const filterCompliance = ref('all')
 const viewSection = ref('both')
 const expandedId = ref(null)
 const saveMsg = ref('')
+const saveMsgType = ref('success')
 let saveTimer = null
 
 // Local reactive copies of fines so +/- updates reflect immediately
@@ -63,12 +67,6 @@ function teamCompliant(team) {
   return hasJudge || fines >= 1
 }
 
-function teamPartial(team) {
-  // Independent teams only need 1 slot, so partial isn't possible — either fine covers it or not.
-  // But we expose it for symmetry.
-  return false
-}
-
 function instStatusClass(inst) {
   if (instCompliant(inst)) return 'badge-success'
   if (instPartial(inst)) return 'badge-warning'
@@ -89,21 +87,21 @@ function matchesFilter(compliant, partial) {
 
 const filteredInstitutions = computed(() =>
   (props.institutions ?? []).filter(inst =>
-    matchesFilter(instCompliant(inst), instPartial(inst))
-  )
+    matchesFilter(instCompliant(inst), instPartial(inst)),
+  ),
 )
 
 const filteredTeams = computed(() =>
   (props.independentTeams ?? []).filter(team =>
-    matchesFilter(teamCompliant(team), false)
-  )
+    matchesFilter(teamCompliant(team), false),
+  ),
 )
 
 const showInstitutions = computed(() =>
-  viewSection.value === 'both' || viewSection.value === 'institutions'
+  viewSection.value === 'both' || viewSection.value === 'institutions',
 )
 const showTeams = computed(() =>
-  viewSection.value === 'both' || viewSection.value === 'teams'
+  viewSection.value === 'both' || viewSection.value === 'teams',
 )
 
 function toggleExpand(id) {
@@ -117,9 +115,11 @@ async function saveSettings() {
     body.append('m_rounds', m.value)
     body.append('strict_mode', strict.value ? '1' : '0')
     const res = await fetch(props.saveSettingsUrl, { method: 'POST', body })
-    saveMsg.value = res.ok ? 'Saved' : 'Error saving'
+    saveMsg.value = res.ok ? gettext('Saved') : gettext('Error saving')
+    saveMsgType.value = res.ok ? 'success' : 'error'
   } catch {
-    saveMsg.value = 'Error saving'
+    saveMsg.value = gettext('Error saving')
+    saveMsgType.value = 'error'
   }
   setTimeout(() => { saveMsg.value = '' }, 2000)
 }
@@ -164,115 +164,213 @@ function changeTeamFines(team, delta) {
 
 <template>
   <div>
-
     <!-- Settings panel -->
     <div class="card mb-3">
       <div class="card-body py-3">
         <div class="d-flex flex-wrap align-items-center gap-3">
-
           <div class="d-flex align-items-center">
-            <label class="mb-0 mr-2 font-weight-bold">Minimum rounds (M):</label>
-            <input type="number" class="form-control form-control-sm" style="width:70px"
-                   v-model.number="m" min="1" />
+            <label class="mb-0 mr-2 font-weight-bold">{{ gettext('Minimum rounds (M):') }}</label>
+            <input
+              v-model.number="m"
+              type="number"
+              class="form-control form-control-sm"
+              style="width:70px"
+              min="1"
+            >
           </div>
 
           <div class="d-flex align-items-center">
-            <div class="btn-group" role="group">
-              <button type="button" class="btn btn-sm"
-                      :class="strict ? 'btn-outline-secondary' : 'btn-primary'"
-                      @click="strict = false">Non-strict</button>
-              <button type="button" class="btn btn-sm"
-                      :class="strict ? 'btn-primary' : 'btn-outline-secondary'"
-                      @click="strict = true">Strict</button>
+            <div
+              class="btn-group"
+              role="group"
+            >
+              <button
+                type="button"
+                class="btn btn-sm"
+                :class="strict ? 'btn-outline-secondary' : 'btn-primary'"
+                @click="strict = false"
+              >
+                {{ gettext('Non-strict') }}
+              </button>
+              <button
+                type="button"
+                class="btn btn-sm"
+                :class="strict ? 'btn-primary' : 'btn-outline-secondary'"
+                @click="strict = true"
+              >
+                {{ gettext('Strict') }}
+              </button>
             </div>
             <small class="text-muted ml-2">
-              <span v-if="strict">Each judge must individually cover M rounds</span>
-              <span v-else>Total rounds across judges ≥ (N-1) × M</span>
+              <span v-if="strict">{{ gettext('Each judge must individually cover M rounds') }}</span>
+              <span v-else>{{ gettext('Total rounds across judges ≥ (N-1) × M') }}</span>
             </small>
           </div>
 
-          <span v-if="saveMsg" class="small" :class="saveMsg === 'Saved' ? 'text-success' : 'text-danger'">{{ saveMsg }}</span>
+          <span
+            v-if="saveMsg"
+            class="small"
+            :class="saveMsgType === 'success' ? 'text-success' : 'text-danger'"
+          >{{ saveMsg }}</span>
 
-          <a :href="assignmentsUrl" class="btn btn-sm btn-outline-secondary ml-auto">
-            Edit Assignments
+          <a
+            :href="assignmentsUrl"
+            class="btn btn-sm btn-outline-secondary ml-auto"
+          >
+            {{ gettext('Edit Assignments') }}
           </a>
         </div>
       </div>
     </div>
 
     <!-- Filter controls -->
-    <div class="d-flex flex-wrap mb-3" style="gap:0.5rem">
-      <div class="btn-group" role="group">
-        <button type="button" class="btn btn-sm"
-                :class="filterCompliance === 'all' ? 'btn-primary' : 'btn-outline-secondary'"
-                @click="filterCompliance = 'all'">All</button>
-        <button type="button" class="btn btn-sm"
-                :class="filterCompliance === 'complying' ? 'btn-success' : 'btn-outline-secondary'"
-                @click="filterCompliance = 'complying'">Complying</button>
-        <button type="button" class="btn btn-sm"
-                :class="filterCompliance === 'notComplying' ? 'btn-danger' : 'btn-outline-secondary'"
-                @click="filterCompliance = 'notComplying'">Not complying</button>
+    <div
+      class="d-flex flex-wrap mb-3"
+      style="gap:0.5rem"
+    >
+      <div
+        class="btn-group"
+        role="group"
+      >
+        <button
+          type="button"
+          class="btn btn-sm"
+          :class="filterCompliance === 'all' ? 'btn-primary' : 'btn-outline-secondary'"
+          @click="filterCompliance = 'all'"
+        >
+          {{ gettext('All') }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm"
+          :class="filterCompliance === 'complying' ? 'btn-success' : 'btn-outline-secondary'"
+          @click="filterCompliance = 'complying'"
+        >
+          {{ gettext('Complying') }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm"
+          :class="filterCompliance === 'notComplying' ? 'btn-danger' : 'btn-outline-secondary'"
+          @click="filterCompliance = 'notComplying'"
+        >
+          {{ gettext('Not complying') }}
+        </button>
       </div>
-      <div class="btn-group" role="group">
-        <button type="button" class="btn btn-sm"
-                :class="viewSection === 'both' ? 'btn-primary' : 'btn-outline-secondary'"
-                @click="viewSection = 'both'">Both</button>
-        <button type="button" class="btn btn-sm"
-                :class="viewSection === 'institutions' ? 'btn-primary' : 'btn-outline-secondary'"
-                @click="viewSection = 'institutions'">Institutions</button>
-        <button type="button" class="btn btn-sm"
-                :class="viewSection === 'teams' ? 'btn-primary' : 'btn-outline-secondary'"
-                @click="viewSection = 'teams'">Independent Teams</button>
+      <div
+        class="btn-group"
+        role="group"
+      >
+        <button
+          type="button"
+          class="btn btn-sm"
+          :class="viewSection === 'both' ? 'btn-primary' : 'btn-outline-secondary'"
+          @click="viewSection = 'both'"
+        >
+          {{ gettext('Both') }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm"
+          :class="viewSection === 'institutions' ? 'btn-primary' : 'btn-outline-secondary'"
+          @click="viewSection = 'institutions'"
+        >
+          {{ gettext('Institutions') }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm"
+          :class="viewSection === 'teams' ? 'btn-primary' : 'btn-outline-secondary'"
+          @click="viewSection = 'teams'"
+        >
+          {{ gettext('Independent Teams') }}
+        </button>
       </div>
     </div>
 
     <!-- Institutions section -->
     <template v-if="showInstitutions">
-      <h5 class="mt-3">Institutions</h5>
-      <p v-if="filteredInstitutions.length === 0" class="text-muted">No institutions to show.</p>
+      <h5 class="mt-3">
+        {{ gettext('Institutions') }}
+      </h5>
+      <p
+        v-if="filteredInstitutions.length === 0"
+        class="text-muted"
+      >
+        {{ gettext('No institutions to show.') }}
+      </p>
       <div class="card mt-1">
-        <div v-for="inst in filteredInstitutions" :key="inst.id"
-             class="list-group-item list-group-item-action p-0">
-          <div class="d-flex align-items-center px-3 py-2"
-               style="cursor:pointer" @click="toggleExpand('inst-' + inst.id)">
-            <span class="badge mr-2" :class="instStatusClass(inst)">
+        <div
+          v-for="inst in filteredInstitutions"
+          :key="inst.id"
+          class="list-group-item list-group-item-action p-0"
+        >
+          <div
+            class="d-flex align-items-center px-3 py-2"
+            style="cursor:pointer"
+            @click="toggleExpand('inst-' + inst.id)"
+          >
+            <span
+              class="badge mr-2"
+              :class="instStatusClass(inst)"
+            >
               {{ instStatusIcon(inst) }}
             </span>
             <strong>{{ inst.name }}</strong>
             <span class="text-muted ml-2 small">
-              {{ inst.team_count }} team{{ inst.team_count !== 1 ? 's' : '' }}
-              · needs {{ instRequired(inst) }} judge{{ instRequired(inst) !== 1 ? 's' : '' }}
-              · {{ inst.assignments.length }} assigned
+              {{ inst.team_count }} {{ inst.team_count !== 1 ? gettext('teams') : gettext('team') }}
+              · {{ gettext('needs') }} {{ instRequired(inst) }} {{ instRequired(inst) !== 1 ? gettext('judges') : gettext('judge') }}
+              · {{ inst.assignments.length }} {{ gettext('assigned') }}
             </span>
             <span class="ml-auto text-muted small">
               {{ expandedId === 'inst-' + inst.id ? '▲' : '▼' }}
             </span>
           </div>
-          <div v-if="expandedId === 'inst-' + inst.id" class="border-top">
-            <div v-if="inst.assignments.length === 0" class="px-3 py-2 text-muted small">
-              No judges assigned.
+          <div
+            v-if="expandedId === 'inst-' + inst.id"
+            class="border-top"
+          >
+            <div
+              v-if="inst.assignments.length === 0"
+              class="px-3 py-2 text-muted small"
+            >
+              {{ gettext('No judges assigned.') }}
             </div>
-            <div v-for="j in inst.assignments" :key="j.adj_id"
-                 class="d-flex align-items-center px-3 py-2 border-bottom">
-              <span class="mr-2" :class="j.rounds_judged >= m ? 'text-success' : 'text-danger'">
+            <div
+              v-for="j in inst.assignments"
+              :key="j.adj_id"
+              class="d-flex align-items-center px-3 py-2 border-bottom"
+            >
+              <span
+                class="mr-2"
+                :class="j.rounds_judged >= m ? 'text-success' : 'text-danger'"
+              >
                 {{ j.rounds_judged >= m ? '✓' : '✗' }}
               </span>
               <span>{{ j.adj_name }}</span>
-              <span class="ml-auto text-muted small">{{ j.rounds_judged }} / {{ m }} rounds</span>
+              <span class="ml-auto text-muted small">{{ j.rounds_judged }} / {{ m }} {{ gettext('rounds') }}</span>
             </div>
             <!-- Fines row -->
             <div class="d-flex align-items-center px-3 py-2">
-              <span class="text-muted small mr-3">Fines paid:</span>
-              <button class="btn btn-sm btn-outline-secondary px-2 py-0"
-                      @click.stop="changeInstFines(inst, -1)"
-                      :disabled="(instFines[inst.id] ?? 0) === 0">−</button>
+              <span class="text-muted small mr-3">{{ gettext('Fines paid:') }}</span>
+              <button
+                class="btn btn-sm btn-outline-secondary px-2 py-0"
+                :disabled="(instFines[inst.id] ?? 0) === 0"
+                @click.stop="changeInstFines(inst, -1)"
+              >
+                −
+              </button>
               <span class="mx-2 font-weight-bold">{{ instFines[inst.id] ?? 0 }}</span>
-              <button class="btn btn-sm btn-outline-secondary px-2 py-0"
-                      @click.stop="changeInstFines(inst, +1)">+</button>
+              <button
+                class="btn btn-sm btn-outline-secondary px-2 py-0"
+                @click.stop="changeInstFines(inst, +1)"
+              >
+                +
+              </button>
               <span class="text-muted small ml-3">
-                ({{ inst.assignments.length }} judge{{ inst.assignments.length !== 1 ? 's' : '' }}
-                + {{ instFines[inst.id] ?? 0 }} fine{{ (instFines[inst.id] ?? 0) !== 1 ? 's' : '' }}
-                / {{ instRequired(inst) }} required)
+                ({{ inst.assignments.length }} {{ inst.assignments.length !== 1 ? gettext('judges') : gettext('judge') }}
+                + {{ instFines[inst.id] ?? 0 }} {{ (instFines[inst.id] ?? 0) !== 1 ? gettext('fines') : gettext('fine') }}
+                / {{ instRequired(inst) }} {{ gettext('required') }})
               </span>
             </div>
           </div>
@@ -282,35 +380,61 @@ function changeTeamFines(team, delta) {
 
     <!-- Independent teams section -->
     <template v-if="showTeams">
-      <h5 class="mt-4">Independent Teams</h5>
-      <p v-if="filteredTeams.length === 0" class="text-muted">No independent teams to show.</p>
+      <h5 class="mt-4">
+        {{ gettext('Independent Teams') }}
+      </h5>
+      <p
+        v-if="filteredTeams.length === 0"
+        class="text-muted"
+      >
+        {{ gettext('No independent teams to show.') }}
+      </p>
       <div class="card mt-1">
-        <div v-for="team in filteredTeams" :key="team.id"
-             class="list-group-item d-flex align-items-center flex-wrap" style="gap:0.5rem">
-          <span class="badge mr-2"
-                :class="teamCompliant(team) ? 'badge-success' : 'badge-danger'">
+        <div
+          v-for="team in filteredTeams"
+          :key="team.id"
+          class="list-group-item d-flex align-items-center flex-wrap"
+          style="gap:0.5rem"
+        >
+          <span
+            class="badge mr-2"
+            :class="teamCompliant(team) ? 'badge-success' : 'badge-danger'"
+          >
             {{ teamCompliant(team) ? '✓' : '✗' }}
           </span>
           <strong>{{ team.name }}</strong>
           <template v-if="team.assigned_adj">
             <span class="text-muted small">
               {{ team.assigned_adj.name }}
-              ({{ team.assigned_adj.rounds_judged }}/{{ m }} rounds)
+              ({{ team.assigned_adj.rounds_judged }}/{{ m }} {{ gettext('rounds') }})
             </span>
           </template>
-          <span v-else class="text-muted small">No judge assigned</span>
-          <div class="d-flex align-items-center ml-auto" style="gap:0.25rem">
-            <span class="text-muted small">Fines:</span>
-            <button class="btn btn-sm btn-outline-secondary px-2 py-0"
-                    @click="changeTeamFines(team, -1)"
-                    :disabled="(teamFines[team.id] ?? 0) === 0">−</button>
+          <span
+            v-else
+            class="text-muted small"
+          >{{ gettext('No judge assigned') }}</span>
+          <div
+            class="d-flex align-items-center ml-auto"
+            style="gap:0.25rem"
+          >
+            <span class="text-muted small">{{ gettext('Fines:') }}</span>
+            <button
+              class="btn btn-sm btn-outline-secondary px-2 py-0"
+              :disabled="(teamFines[team.id] ?? 0) === 0"
+              @click="changeTeamFines(team, -1)"
+            >
+              −
+            </button>
             <span class="mx-1 font-weight-bold">{{ teamFines[team.id] ?? 0 }}</span>
-            <button class="btn btn-sm btn-outline-secondary px-2 py-0"
-                    @click="changeTeamFines(team, +1)">+</button>
+            <button
+              class="btn btn-sm btn-outline-secondary px-2 py-0"
+              @click="changeTeamFines(team, +1)"
+            >
+              +
+            </button>
           </div>
         </div>
       </div>
     </template>
-
   </div>
 </template>

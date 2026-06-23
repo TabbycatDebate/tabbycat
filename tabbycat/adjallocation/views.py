@@ -642,8 +642,8 @@ class N1RuleStatusView(AdministratorMixin, TournamentMixin, TemplateView):
         for inst in Institution.objects.filter(id__in=inst_ids).order_by('name'):
             team_count = tournament.team_set.filter(institution=inst).count()
             inst_assignments = [a for a in assignments
-                                if (a.institution_id or a.adjudicator.institution_id) == inst.id
-                                and a.team_id is None]
+                                if (a.institution_id or a.adjudicator.institution_id) == inst.id and
+                                a.team_id is None]
             judge_data = [
                 {
                     'adj_id': a.adjudicator_id,
