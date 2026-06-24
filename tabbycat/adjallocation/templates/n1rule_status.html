@@ -9,6 +9,7 @@
       :independent-teams="independentTeams"
       :initial-m-rounds="initialMRounds"
       :initial-strict-mode="initialStrictMode"
+      :initial-institution-n-equals-n="initialInstitutionNEqualsN"
       :assignments-url="assignmentsUrl"
       :save-settings-url="saveSettingsUrl"
       :fines-url="finesUrl"
@@ -25,6 +26,7 @@
       'independentTeams': {{ independent_teams|safe }},
       'initialMRounds': {{ initial_m_rounds }},
       'initialStrictMode': {{ initial_strict_mode|safe }},
+      'initialInstitutionNEqualsN': {{ initial_institution_n_equals_n|safe }},
       'assignmentsUrl': '{% tournamenturl "adjallocation-n1rule-assignments" %}',
       'saveSettingsUrl': '{% tournamenturl "adjallocation-n1rule-status" %}',
       'finesUrl': '{% tournamenturl "adjallocation-n1rule-fines" %}',

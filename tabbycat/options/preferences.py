@@ -1872,3 +1872,15 @@ class N1RuleStrictInstitutions(BooleanPreference):
     section = n1_rule
     name = 'n1_rule_strict_institutions'
     default = False
+
+
+@tournament_preferences_registry.register
+class N1RuleInstitutionNEqualsN(BooleanPreference):
+    help_text = _(
+        "If checked (N=N), institutions must provide N judges for N teams. "
+        "If unchecked (N-1), institutions must provide N-1 judges for N teams."
+    )
+    verbose_name = _("N=N rule for institutions")
+    section = n1_rule
+    name = 'n1_rule_institution_n_equals_n'
+    default = False

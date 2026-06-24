@@ -7,6 +7,7 @@ const props = defineProps({
   independentTeams: Array,
   initialMRounds: Number,
   initialStrictMode: Boolean,
+  initialInstitutionNEqualsN: Boolean,
   assignmentsUrl: String,
   saveSettingsUrl: String,
   finesUrl: String,
@@ -17,6 +18,7 @@ const { gettext } = useDjangoI18n()
 
 const m = ref(props.initialMRounds ?? 3)
 const strict = ref(props.initialStrictMode ?? false)
+const nEqualsN = ref(props.initialInstitutionNEqualsN ?? false)
 const filterCompliance = ref('all')
 const viewSection = ref('both')
 const expandedId = ref(null)
@@ -29,7 +31,7 @@ const instFines = ref(Object.fromEntries((props.institutions ?? []).map(i => [i.
 const teamFines = ref(Object.fromEntries((props.independentTeams ?? []).map(t => [t.id, t.fines_paid ?? 0])))
 
 function instRequired(inst) {
-  return Math.max(0, inst.team_count - 1)
+  return nEqualsN.value ? inst.team_count : Math.max(0, inst.team_count - 1)
 }
 
 function instCoverage(inst) {
@@ -114,6 +116,7 @@ async function saveSettings() {
     body.append('csrfmiddlewaretoken', props.csrfToken)
     body.append('m_rounds', m.value)
     body.append('strict_mode', strict.value ? '1' : '0')
+    body.append('institution_n_equals_n', nEqualsN.value ? '1' : '0')
     const res = await fetch(props.saveSettingsUrl, { method: 'POST', body })
     saveMsg.value = res.ok ? gettext('Saved') : gettext('Error saving')
     saveMsgType.value = res.ok ? 'success' : 'error'
@@ -124,7 +127,7 @@ async function saveSettings() {
   setTimeout(() => { saveMsg.value = '' }, 2000)
 }
 
-watch([m, strict], () => {
+watch([m, strict, nEqualsN], () => {
   clearTimeout(saveTimer)
   saveTimer = setTimeout(saveSettings, 600)
 }, { flush: 'post' })
@@ -203,7 +206,35 @@ function changeTeamFines(team, delta) {
             </div>
             <small class="text-muted ml-2">
               <span v-if="strict">{{ gettext('Each judge must individually cover M rounds') }}</span>
-              <span v-else>{{ gettext('Total rounds across judges ≥ (N-1) × M') }}</span>
+              <span v-else>{{ gettext('Total rounds across judges ≥ required × M') }}</span>
+            </small>
+          </div>
+
+          <div class="d-flex align-items-center">
+            <div
+              class="btn-group"
+              role="group"
+            >
+              <button
+                type="button"
+                class="btn btn-sm"
+                :class="nEqualsN ? 'btn-outline-secondary' : 'btn-primary'"
+                @click="nEqualsN = false"
+              >
+                {{ gettext('N-1') }}
+              </button>
+              <button
+                type="button"
+                class="btn btn-sm"
+                :class="nEqualsN ? 'btn-primary' : 'btn-outline-secondary'"
+                @click="nEqualsN = true"
+              >
+                {{ gettext('N=N') }}
+              </button>
+            </div>
+            <small class="text-muted ml-2">
+              <span v-if="nEqualsN">{{ gettext('Institutions must provide N judges for N teams') }}</span>
+              <span v-else>{{ gettext('Institutions must provide N-1 judges for N teams') }}</span>
             </small>
           </div>
 
@@ -320,6 +351,7 @@ function changeTeamFines(team, delta) {
             <span class="text-muted ml-2 small">
               {{ inst.team_count }} {{ inst.team_count !== 1 ? gettext('teams') : gettext('team') }}
               · {{ gettext('needs') }} {{ instRequired(inst) }} {{ instRequired(inst) !== 1 ? gettext('judges') : gettext('judge') }}
+              ({{ nEqualsN ? gettext('N=N') : gettext('N-1') }})
               · {{ inst.assignments.length }} {{ gettext('assigned') }}
             </span>
             <span class="ml-auto text-muted small">

@@ -587,8 +587,10 @@ class N1RuleStatusView(AdministratorMixin, TournamentMixin, TemplateView):
         try:
             m = int(request.POST.get('m_rounds', 3))
             strict = request.POST.get('strict_mode') == '1'
+            n_equals_n = request.POST.get('institution_n_equals_n') == '1'
             self.tournament.preferences['n1_rule__n1_rule_min_rounds'] = m
             self.tournament.preferences['n1_rule__n1_rule_strict_institutions'] = strict
+            self.tournament.preferences['n1_rule__n1_rule_institution_n_equals_n'] = n_equals_n
             return JsonResponse({'ok': True})
         except (ValueError, TypeError):
             return JsonResponse({'error': 'Invalid values'}, status=400)
@@ -601,6 +603,7 @@ class N1RuleStatusView(AdministratorMixin, TournamentMixin, TemplateView):
         tournament = self.tournament
         m = tournament.pref('n1_rule_min_rounds')
         strict = tournament.pref('n1_rule_strict_institutions')
+        n_equals_n = tournament.pref('n1_rule_institution_n_equals_n')
 
         assignments = list(N1RuleAssignment.objects.filter(
             adjudicator__tournament=tournament,
@@ -683,6 +686,7 @@ class N1RuleStatusView(AdministratorMixin, TournamentMixin, TemplateView):
         kwargs['independent_teams'] = json.dumps(independent_teams_data)
         kwargs['initial_m_rounds'] = m
         kwargs['initial_strict_mode'] = json.dumps(strict)
+        kwargs['initial_institution_n_equals_n'] = json.dumps(n_equals_n)
         kwargs['csrf_token'] = get_token(self.request)
         return super().get_context_data(**kwargs)
 
