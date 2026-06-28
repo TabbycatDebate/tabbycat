@@ -201,7 +201,8 @@ class BaseResultForm(forms.Form):
                 self.debate.confirmed_ballot.save()
 
         # 2. Save ballot submission so that we can create related objects
-        if self.ballotsub.id is None:
+        new_ballotsub = self.ballotsub.id is None
+        if new_ballotsub:
             self.ballotsub.save()
 
         # 3. Save the specifics of the ballot
@@ -212,8 +213,12 @@ class BaseResultForm(forms.Form):
         self.ballotsub.confirmed = self.cleaned_data['confirmed']
         self.ballotsub.save()
 
-        self.debate.result_status = self.cleaned_data['debate_result_status']
-        self.debate.save()
+        new_status = self.cleaned_data['debate_result_status']
+        if (new_ballotsub and self.debate.result_status == Debate.STATUS_CONFIRMED and new_status == Debate.STATUS_DRAFT):
+            pass  # keep confirmed when a new ballot arrives after confirmation
+        else:
+            self.debate.result_status = new_status
+            self.debate.save()
 
         # Need to provide a timestamp immediately for BallotStatusConsumer
         # as it will broadcast before the view finishes assigning one
