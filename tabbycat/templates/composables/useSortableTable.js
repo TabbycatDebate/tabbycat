@@ -42,6 +42,10 @@ export function useSortableTable ({ headers, sortableData, getSortableProperty, 
       const bCellData = getSortableProperty(b, orderedHeaderIndex)
       if (aCellData === '' && bCellData === '') {
         return 0
+      } else if (aCellData === '') {
+        return 1
+      } else if (bCellData === '') {
+        return -1
       }
       if (_.isString(aCellData) || _.isString(bCellData)) {
         return String(aCellData).localeCompare(String(bCellData), undefined, { sensitivity: 'base' })

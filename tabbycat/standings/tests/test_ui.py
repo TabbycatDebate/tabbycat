@@ -35,8 +35,11 @@ class CoreStandingsTests(SeleniumTournamentTestCase):
 
     def test_speaker_categories(self):
 
-        sc = self.tournament.speakercategory_set.create(name='sc1', slug='sc1', seq=1, public=True)
-        sc.speaker_set.set(self.tournament.team_set.first().speaker_set.all())
+        sc1 = self.tournament.speakercategory_set.create(name='sc1', slug='sc1', seq=1, public=True)
+        sc1.speaker_set.set(self.tournament.team_set.first().speaker_set.all())
+
+        sc2 = self.tournament.speakercategory_set.create(name='sc2', slug='sc2', seq=2, public=True)
+        sc2.speaker_set.set(self.tournament.team_set.last().speaker_set.all())
 
         test_url = self.reverse_url('standings-public-tab-speaker')
         self.selenium.get('%s%s' % (self.live_server_url, test_url))
@@ -49,6 +52,9 @@ class CoreStandingsTests(SeleniumTournamentTestCase):
         rows = tbody.find_elements_by_tag_name("tr")
 
         category_sorter = self.selenium.find_element_by_css_selector("[data-original-title='Categories']")
+
+        # Click the category sorter twice to order from highest to lowest priority
+        category_sorter.click()
         category_sorter.click()
 
         def assert_row_state(row, rank, name):
@@ -57,8 +63,10 @@ class CoreStandingsTests(SeleniumTournamentTestCase):
             self.assertTrue(rank in rank_cell_text)
             self.assertTrue(name in name_cell_text)
 
-        assert_row_state(rows[0], "63=", "Georgia Crawford")
-        assert_row_state(rows[2], "10=", "Wanda Griffin")
+        assert_row_state(rows[0], "10=", "Wanda Griffin")
+        assert_row_state(rows[2], "63=", "Georgia Crawford")
+        assert_row_state(rows[3], "20", "Janie Daniels")
+        assert_row_state(rows[5], "60=", "Javier Chavez")
 
     def test_reply_standings(self):
         test_url = self.reverse_url('standings-public-tab-replies')
