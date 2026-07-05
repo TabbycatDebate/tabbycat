@@ -34,6 +34,10 @@ class CoreStandingsTests(SeleniumTournamentTestCase):
         assert_row_state(rows[50], str(51), "Phil Lyons")
 
     def test_speaker_categories(self):
+
+        sc = self.tournament.speakercategory_set.create(name='sc1', slug='sc1', seq=1, public=True)
+        sc.speaker_set.set(self.tournament.team_set.first().speaker_set.all())
+
         test_url = self.reverse_url('standings-public-tab-speaker')
         self.selenium.get('%s%s' % (self.live_server_url, test_url))
         WebDriverWait(self.selenium, 5).until(
@@ -54,7 +58,7 @@ class CoreStandingsTests(SeleniumTournamentTestCase):
             self.assertTrue(name in name_cell_text)
 
         assert_row_state(rows[0], "63=", "Georgia Crawford")
-        assert_row_state(rows[1], "10=", "Wanda Griffin")
+        assert_row_state(rows[2], "10=", "Wanda Griffin")
 
     def test_reply_standings(self):
         test_url = self.reverse_url('standings-public-tab-replies')

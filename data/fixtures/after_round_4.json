@@ -6361,24 +6361,12 @@
     }
 },
 {
-    "model":"participants.speakercategory",
-    "pk":1,
-    "fields": {
-        "tournament": 1,
-        "name": "Novice",
-        "slug": "novice",
-        "seq": 1,
-        "limit": 0,
-        "public": true
-    }
-},
-{
     "model": "participants.speaker",
     "pk": 1,
     "fields": {
         "person_ptr": 1,
         "team": 1,
-        "categories": [1]
+        "categories": []
     }
 },
 {
@@ -6387,7 +6375,7 @@
     "fields": {
         "person_ptr": 2,
         "team": 1,
-        "categories": [1]
+        "categories": []
     }
 },
 {
