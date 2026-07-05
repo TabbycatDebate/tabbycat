@@ -33,6 +33,29 @@ class CoreStandingsTests(SeleniumTournamentTestCase):
         # TODO: test people of equal ranks
         assert_row_state(rows[50], str(51), "Phil Lyons")
 
+    def test_speaker_categories(self):
+        test_url = self.reverse_url('standings-public-tab-speaker')
+        self.selenium.get('%s%s' % (self.live_server_url, test_url))
+        WebDriverWait(self.selenium, 5).until(
+            lambda driver: driver.find_element_by_css_selector('.table'))
+
+        table = self.selenium.find_elements_by_css_selector(".table")[0]
+
+        tbody = table.find_elements_by_tag_name("tbody")[0]
+        rows = tbody.find_elements_by_tag_name("tr")
+
+        category_sorter = self.selenium.find_element_by_css_selector("[data-original-title='Categories']")
+        category_sorter.click()
+
+        def assert_row_state(row, rank, name):
+            rank_cell_text = row.find_elements_by_tag_name("td")[0].text
+            name_cell_text = row.find_elements_by_tag_name("td")[1].text
+            self.assertTrue(rank in rank_cell_text)
+            self.assertTrue(name in name_cell_text)
+
+        assert_row_state(rows[0], "63=", "Georgia Crawford")
+        assert_row_state(rows[1], "10=", "Wanda Griffin")
+
     def test_reply_standings(self):
         test_url = self.reverse_url('standings-public-tab-replies')
         self.selenium.get('%s%s' % (self.live_server_url, test_url))
