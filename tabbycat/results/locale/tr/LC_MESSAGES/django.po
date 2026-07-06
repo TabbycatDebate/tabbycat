@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:47\n"
+"PO-Revision-Date: 2026-07-06 07:34\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -926,7 +926,7 @@ msgstr "Maça Göre Görüntüle"
 #: results/templates/public_results_index.html
 #, python-format
 msgid "Results for %(round)s"
-msgstr "%(round)s için sonuçlar"
+msgstr "%(tur)s için sonuçlar"
 
 #: results/templates/public_results_not_available.html
 #: results/templates/public_results_silent.html
@@ -1107,7 +1107,7 @@ msgstr "%(matchup)s için ballotda yapılan düzenlemeler kaydedildi."
 #: results/views.py
 #, python-format
 msgid "Thanks, %(user)s! Your ballot for %(debate)s has been recorded."
-msgstr "Teşekkürler, %(user)s! %(debate)s için ballotunuz kaydedildi."
+msgstr "Teşekkürler, %(user)! %(debate)s için ballotunuz kaydedildi."
 
 #: results/views.py
 msgid "The draw for this round hasn't been released yet."
