@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-06 09:40+1000\n"
-"PO-Revision-Date: 2025-07-05 23:49\n"
+"PO-Revision-Date: 2026-07-06 07:31\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -993,7 +993,7 @@ msgstr ""
 
 #: templates/nav/admin_nav.html
 msgid "Preformed Panels"
-msgstr "Paneles prereformados"
+msgstr "Paneles preformados"
 
 #: templates/nav/admin_nav.html
 msgid "Export XML"
