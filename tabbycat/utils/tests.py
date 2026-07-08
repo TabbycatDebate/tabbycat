@@ -3,6 +3,7 @@ import logging
 from contextlib import contextmanager
 from unittest import expectedFailure
 
+from django.conf import settings
 from django.contrib.auth import get_user, get_user_model
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.cache import cache
@@ -272,7 +273,7 @@ class BaseMinimalTournamentTestCase(TestCase):
 
 @tag('selenium') # Tagged so we can exclude from CI
 @override_settings( # StaticLiveServerTestCase uses debug static file paths
-    STORAGES={
+    STORAGES=settings.STORAGES | {
         "staticfiles": {
             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         },
