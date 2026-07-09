@@ -512,6 +512,11 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
                     extra_metrics.append(pullup_metric)
                 if 'npullups' not in metrics and 'npullups' not in extra_metrics:
                     extra_metrics.append('npullups')
+                if (
+                    self.tournament.pref('draw_odd_bracket') in ('pullup_lowest_ds_rank', 'pullup_lowest_ds_rank_npulls') and
+                    'draw_strength_rank' not in extra_metrics
+                ):
+                    extra_metrics.append('draw_strength_rank')
                 generator = TeamStandingsGenerator(metrics, rankings, extra_metrics=tuple(extra_metrics))
                 standings = generator.generate(teams, round=r.prev)
                 if not r.is_break_round:
