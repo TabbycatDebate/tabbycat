@@ -32,12 +32,15 @@ export function useDraggable (props) {
       event.dataTransfer.setData('text', JSON.stringify(props.dragPayload))
     }
     event.stopPropagation()
+    // Use 'dragover' on the window instead of 'drag' on the element because Firefox doesn't expose mouse position in 'drag'
+    window.addEventListener('dragover', drag)
   }
 
   const dragEnd = (event) => {
     isDragging.value = false
     scrollStop.value = true
     event.stopPropagation()
+    window.removeEventListener('dragover', drag)
   }
 
   const drag = (event) => {

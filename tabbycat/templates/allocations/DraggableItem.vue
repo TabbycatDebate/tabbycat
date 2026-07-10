@@ -61,7 +61,6 @@ const hideHovers = () => {
   <div
     draggable="true"
     :class="['d-flex m-1 align-items-center align-self-center', draggableClasses]"
-    @drag="drag"
     @dragstart="dragStart"
     @dragend="dragEnd"
     @mouseenter="showHovers"
