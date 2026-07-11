@@ -37,7 +37,7 @@ class TestFeedbackProgress(TestCase):
         for i in range(self.NUM_VENUES):
             Venue.objects.create(name=i, priority=i)
 
-        self.rd = Round.objects.create(tournament=self.tournament, seq=1, abbreviation="R1")
+        self.rd = Round.objects.create(tournament=self.tournament, seq=1, schedule_group=1, abbreviation="R1")
 
     def tearDown(self):
         DebateTeam.objects.all().delete()

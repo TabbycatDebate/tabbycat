@@ -10,6 +10,7 @@ from .random import (RandomBPDrawGenerator, RandomPolyDrawGenerator, GraphRandom
 from .bphungarian import BPHungarianDrawGenerator
 from .bpelimination import (PartialBPEliminationDrawGenerator, AfterPartialBPEliminationDrawGenerator,
     FirstBPEliminationDrawGenerator, SubsequentBPEliminationDrawGenerator)
+from .roundrobin import BPRoundRobinDrawGenerator, TwoTeamRoundRobinDrawGenerator
 
 
 DRAW_FLAG_DESCRIPTIONS = (
@@ -53,6 +54,8 @@ def get_two_team_generator(draw_type, avoid_conflicts='australs', side_allocatio
             if side_allocations == "preallocated":
                 return AustralsPowerPairedWithAllocatedSidesDrawGenerator
             return AustralsPowerPairedDrawGenerator
+        elif draw_type == "round_robin":
+            return TwoTeamRoundRobinDrawGenerator
     raise ValueError("Unrecognised draw type for two-team draw: {}".format(draw_type))
 
 
@@ -64,7 +67,8 @@ def get_bp_generator(draw_type):
             "partial_elimination": PartialBPEliminationDrawGenerator,
             "after_partial_elimination": AfterPartialBPEliminationDrawGenerator,
             "first_elimination": FirstBPEliminationDrawGenerator,
-            "elimination": SubsequentBPEliminationDrawGenerator
+            "elimination": SubsequentBPEliminationDrawGenerator,
+            "round_robin": BPRoundRobinDrawGenerator,
         }[draw_type]
     except KeyError:
         raise ValueError("Unrecognised draw type for BP draw: {}".format(draw_type))

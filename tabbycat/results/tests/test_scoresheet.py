@@ -1,4 +1,5 @@
 import unittest
+from dataclasses import dataclass
 
 from draw.types import DebateSide
 
@@ -16,6 +17,17 @@ def on_all_testdata(test_fn):
         for testdata in self.testdata.values():
             test_fn(self, testdata)
     return foo
+
+
+@dataclass(frozen=True)
+class Criterion:
+    weight: float
+    speech_type: str
+
+    def applies_to_position(self, position, reply_position=None):
+        if self.speech_type == 'all':
+            return True
+        return (self.speech_type == 'reply') == (position == reply_position)
 
 
 class TestTwoTeamScoresheets(unittest.TestCase):
@@ -137,6 +149,23 @@ class TestTwoTeamScoresheets(unittest.TestCase):
     def test_declared_winner_error(self):
         scoresheet = ResultOnlyScoresheet()
         self.assertRaises(AssertionError, scoresheet.set_declared_winners, set(['hello']))
+
+    def test_criteria_can_apply_to_substantive_or_reply_speeches(self):
+        substantive = Criterion(1, 'substantive')
+        reply = Criterion(1, 'reply')
+        scoresheet = HighPointWinsRequiredScoresheet(
+            [1, 2, 3, 4],
+            criteria=[substantive, reply],
+            reply_position=4,
+        )
+
+        scoresheet.set_criterion_score(DebateSide.AFF, 1, substantive, 80)
+        scoresheet.set_criterion_score(DebateSide.AFF, 1, reply, 40)
+        scoresheet.set_criterion_score(DebateSide.AFF, 4, substantive, 80)
+        scoresheet.set_criterion_score(DebateSide.AFF, 4, reply, 40)
+
+        self.assertEqual(scoresheet.get_score(DebateSide.AFF, 1), 80)
+        self.assertEqual(scoresheet.get_score(DebateSide.AFF, 4), 40)
 
 
 class TestPolyScoresheets(unittest.TestCase):

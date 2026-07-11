@@ -216,7 +216,7 @@
 
         {% if pref.public_draw == 'all-released' %}
           {% for r in tournament.round_set.all %}
-            {% if r.draw_status == r.Status.RELEASED %}
+            {% if r.draw_released_for_public %}
               {% blocktrans trimmed asvar text with round=r.name %}
                 Draw for {{ round }}
               {% endblocktrans %}

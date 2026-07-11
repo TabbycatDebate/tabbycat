@@ -99,7 +99,7 @@
 
         {% elif round.draw_status == round.Status.TEAMS_RELEASED %}
 
-          {% trans "Unrelease draw to public" as un_release_text %}
+          {% trans "Unrelease draw (teams only)" as un_release_text %}
           {% trans "Release draw with adjudicators" as full_release_text %}
           {% tournamenturl 'options-tournament-section' section='public_features' as alert_link %}
 
@@ -126,7 +126,7 @@
             {% include "components/item-submit.html" with text=full_release_text type="success" to_complete=True %}
           </form>
           <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-unrelease' %}">{% csrf_token %}
-            {% include "components/item-submit.html" with text=un_release_text %}
+            {% include "components/item-submit.html" with text=un_release_text type="secondary" icon="users" %}
           </form>
 
         {% elif round.draw_status == round.Status.RELEASED %}
@@ -188,7 +188,7 @@
               {% include "components/item-submit.html" with type="success" text=release_text to_complete=True %}
             </form>
             <form id="teamsReleaseDrawForm" method="POST" action="{% roundurl 'draw-teams-release' %}">{% csrf_token %}
-              {% include "components/item-submit.html" with type="success" text=teams_release_text icon="users" %}
+              {% include "components/item-submit.html" with type="secondary" text=teams_release_text icon="users" %}
             </form>
 
           {% else %}
@@ -200,7 +200,7 @@
               {% include "components/item-submit.html" with text=release_text %}
             </form>
             <form id="teamsReleaseDrawForm" method="POST" action="{% roundurl 'draw-teams-release' %}">{% csrf_token %}
-              {% include "components/item-submit.html" with text=teams_release_text icon="users" %}
+              {% include "components/item-submit.html" with type="secondary" text=teams_release_text icon="users" %}
             </form>
 
           {% endif %}
@@ -231,9 +231,9 @@
         Unrelease motions to public
       {% endblocktranslate %}
       {% blocktranslate trimmed count counter=expected_nmotions asvar unrelease_infoslides_text %}
-        Unrelease info-slide to public
+        Unrelease info-slide from public
       {% plural %}
-        Unrelease info-slides to public
+        Unrelease info-slides from public
       {% endblocktranslate %}
 
       <div class="card-body">
@@ -287,7 +287,7 @@
                   </form>
                   {% if has_info_slides %}
                     <form method="POST" action="{% roundurl 'motions-release-infoslides' %}">{% csrf_token %}
-                      {% include "components/item-submit.html" with type="success" text=release_infoslides_text to_complete=True %}
+                      {% include "components/item-submit.html" with type="secondary" text=release_infoslides_text icon="file-text" %}
                     </form>
                   {% endif %}
               {% else %}
@@ -296,7 +296,7 @@
                   </form>
                   {% if has_info_slides %}
                     <form method="POST" action="{% roundurl 'motions-release-infoslides' %}">{% csrf_token %}
-                      {% include "components/item-submit.html" with text=release_infoslides_text %}
+                      {% include "components/item-submit.html" with type="secondary" text=release_infoslides_text icon="file-text" %}
                     </form>
                   {% endif %}
               {% endif %}
@@ -316,7 +316,7 @@
                 {% include "components/item-submit.html" with type="success" text=release_text to_complete=True %}
               </form>
               <form method="POST" action="{% roundurl 'motions-unrelease' %}">{% csrf_token %}
-                {% include "components/item-submit.html" with text=unrelease_infoslides_text %}
+                {% include "components/item-submit.html" with type="secondary" text=unrelease_infoslides_text icon="file-text" %}
               </form>
           {% endif %}
 

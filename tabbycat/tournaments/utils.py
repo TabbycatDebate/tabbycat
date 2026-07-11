@@ -7,6 +7,12 @@ from .models import Round
 
 logger = logging.getLogger(__name__)
 
+# Values for TournamentConfigureForm / configure UI (not stored directly on Tournament).
+DRAW_FORMAT_POWER_PAIRED = 'power_paired'
+DRAW_FORMAT_RANDOM = 'random'
+DRAW_FORMAT_ROUND_ROBIN = 'round_robin'
+
+
 SIDE_NAMES = {
     'aff-neg': {
         "0_full": _("affirmative"),
@@ -82,23 +88,64 @@ BP_SIDE_NAMES = {  # stop-gap before this system gets refactored
 }
 
 
-def auto_make_rounds(tournament, num_rounds):
+def auto_make_rounds(tournament, num_rounds, panels=None):
     """Makes the number of rounds specified. The first one is random and the
     rest are all power-paired. The last third of rounds (rounded down) are silent.
     This is intended as a convenience function. For anything more complicated,
-    a more advanced import method should be used."""
+    a more advanced import method should be used.
+
+    If ``panels`` is None, ``draw_rules__prelim_panels`` is used. When that value
+    is greater than 1, each group of ``panels`` consecutive rounds shares one
+    ``schedule_group`` (parallel panels A/B)."""
+    if panels is None:
+        panels = max(1, int(tournament.pref('prelim_panels')))
     silent_threshold = num_rounds * 2 / 3
 
-    for i in range(1, num_rounds+1):
+    for i in range(1, num_rounds + 1):
+        schedule_group = (i - 1) // panels + 1
+        if panels > 1:
+            letter = chr(ord('A') + (i - 1) % panels)
+            name = gettext("Round %(slot)d (%(panel)s)") % {'slot': schedule_group, 'panel': letter}
+            abbreviation = gettext("R%(slot)d%(panel)s") % {'slot': schedule_group, 'panel': letter}
+        else:
+            name = gettext("Round %(number)d") % {'number': i}
+            abbreviation = gettext("R%(number)d") % {'number': i}
         Round(
             tournament=tournament,
             seq=i,
-            name=gettext("Round %(number)d") % {'number': i},
-            # Translators: This stands for "Round %(number)d".
-            abbreviation=gettext("R%(number)d") % {'number': i},
+            schedule_group=schedule_group,
+            name=name,
+            abbreviation=abbreviation,
             stage=Round.Stage.PRELIMINARY,
             draw_type=Round.DrawType.RANDOM if (i == 1) else Round.DrawType.POWERPAIRED,
-            feedback_weight=min((i-1)*0.1, 0.5),
+            feedback_weight=min((i - 1) * 0.1, 0.5),
+            silent=(i > silent_threshold),
+        ).save()
+
+
+def auto_make_rounds_rr(tournament, num_rounds, panels=1):
+    """Like ``auto_make_rounds`` but every preliminary round uses round-robin."""
+    panels = max(panels, int(tournament.pref('prelim_panels')))
+    silent_threshold = num_rounds * 2 / 3
+
+    for i in range(1, num_rounds * panels + 1):
+        schedule_group = (i - 1) // panels + 1
+        if panels > 1:
+            letter = chr(ord('A') + (i - 1) % panels)
+            name = gettext("Round %(slot)d (%(panel)s)") % {'slot': schedule_group, 'panel': letter}
+            abbreviation = gettext("R%(slot)-d%(panel)s") % {'slot': schedule_group, 'panel': letter}
+        else:
+            name = gettext("Round %(number)d") % {'number': i}
+            abbreviation = gettext("R%(number)d") % {'number': i}
+        Round(
+            tournament=tournament,
+            seq=i,
+            schedule_group=schedule_group,
+            name=name,
+            abbreviation=abbreviation,
+            stage=Round.Stage.PRELIMINARY,
+            draw_type=Round.DrawType.ROUNDROBIN,
+            feedback_weight=min((i - 1) * 0.1, 0.5),
             silent=(i > silent_threshold),
         ).save()
 

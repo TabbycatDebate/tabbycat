@@ -80,7 +80,7 @@ def get_result_class(ballotsub, round=None, tournament=None, overwrite_forfeit=F
 
     forfeit = ballotsub.forfeit and not overwrite_forfeit
     if ballots_per_debate == 'per-debate' or ballotsub.single_adj or forfeit:
-        if ((teams_in_debate > 2 or scores_in_debate == 'prelim') and round.is_break_round) or scores_in_debate == 'never' or forfeit:
+        if ((teams_in_debate > 2 or scores_in_debate == 'prelim') and round.is_break_round and scores_in_debate != 'always') or scores_in_debate == 'never' or forfeit:
             return ConsensusDebateResult
         return ConsensusDebateResultWithScores
     elif ballots_per_debate == 'per-adj' and (teams_in_debate == 2 or tournament.pref('margin_includes_dissenters')):
@@ -454,7 +454,8 @@ class DebateResultByAdjudicator(BaseDebateResult):
         self.scoresheets = {adj: self.scoresheet_class(
             sides=self.sides,
             positions=getattr(self, 'positions', None),
-            criteria=getattr(self, 'criteria', [])) for adj in self.debateadjs.keys()
+            criteria=getattr(self, 'criteria', []),
+            reply_position=getattr(self, 'reply_position', None)) for adj in self.debateadjs.keys()
         }
 
     def load_scoresheets(self):
@@ -671,6 +672,7 @@ class DebateResultWithScoresMixin:
         super().__init__(ballotsub, load=False, **kwargs)
 
         self.positions = self.tournament.positions
+        self.reply_position = self.tournament.reply_position
         self.criteria = criteria or []
 
         if load:
@@ -771,6 +773,8 @@ class DebateResultWithScoresMixin:
                 speaker_score, _ = self.ballotsub.speakerscore_set.update_or_create(debate_team=dt,
                     position=pos, defaults=self.get_defaults_fields('speakerscore', side, pos))
                 for criterion in self.criteria:
+                    if not criterion.applies_to_position(pos, self.reply_position):
+                        continue
                     speaker_score.speakercriterionscore_set.update_or_create(
                         criterion=criterion, defaults=self.get_defaults_fields('speakercriterionscore', side, pos, criterion))
 
@@ -860,7 +864,12 @@ class ConsensusDebateResult(BaseDebateResult):
 
     def init_blank_buffer(self):
         super().init_blank_buffer()
-        self.scoresheet = self.scoresheet_class(sides=self.sides, positions=getattr(self, 'positions', None), criteria=getattr(self, 'criteria', []))
+        self.scoresheet = self.scoresheet_class(
+            sides=self.sides,
+            positions=getattr(self, 'positions', None),
+            criteria=getattr(self, 'criteria', []),
+            reply_position=getattr(self, 'reply_position', None),
+        )
         if self.scoresheet_class is PolyEliminationScoresheet and self.debate.round.is_last:
             self.scoresheet.number_winners = 1
 
@@ -1031,6 +1040,8 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
         errors = self.merge_speaker_order(result)
         for side, pos in product(self.sides, self.positions):
             for criterion in self.criteria:
+                if not criterion.applies_to_position(pos, self.reply_position):
+                    continue
                 if self.get_criterion_score(side, pos, criterion) is None:
                     self.set_criterion_score(side, pos, criterion, result.get_criterion_score(side, pos, criterion))
                 elif self.get_criterion_score(side, pos, criterion) != result.get_criterion_score(side, pos, criterion):
@@ -1116,6 +1127,8 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
         for side, pos in product(self.sides, self.positions):
             if self.criteria:
                 for criterion in self.criteria:
+                    if not criterion.applies_to_position(pos, self.reply_position):
+                        continue
                     self.set_criterion_score(adj, side, pos, criterion, result.get_criterion_score(side, pos, criterion))
             else:
                 self.set_score(adj, side, pos, result.get_score(side, pos))
@@ -1133,6 +1146,8 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
                         debate_team=dt, debate_adjudicator=da, position=pos,
                         defaults=self.get_defaults_fields('speakerscorebyadj', adj, side, pos))
                     for criterion in self.criteria:
+                        if not criterion.applies_to_position(pos, self.reply_position):
+                            continue
                         speaker_score_by_adj.speakercriterionscorebyadj_set.update_or_create(
                             criterion=criterion, defaults=self.get_defaults_fields('speakercriterionscorebyadj', adj, side, pos, criterion))
 

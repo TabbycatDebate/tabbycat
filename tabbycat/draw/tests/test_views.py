@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from tournaments.models import Round
+from utils.misc import reverse_tournament
 from utils.tests import AdminTournamentViewSimpleLoadTestMixin, CompletedTournamentTestMixin, ConditionalTableViewTestsMixin, TableViewTestsMixin
 
 
@@ -60,6 +61,24 @@ class PublicDrawSpecificRoundTest(CompletedTournamentTestMixin, TableViewTestsMi
         response = self.get_response('draw-public-for-round')
         count = self.round.debate_set.count()
         self.assertResponseTableRowCountsEqual(response, [count])
+
+    def test_teams_released(self):
+        self.round.draw_status = Round.Status.TEAMS_RELEASED
+        self.round.save()
+
+        response = self.get_response('draw-public-for-round')
+        count = self.round.debate_set.count()
+        self.assertResponseTableRowCountsEqual(response, [count])
+
+    def test_teams_released_lists(self):
+        self.tournament.round_set.update(draw_status=Round.Status.CONFIRMED)
+        self.round.draw_status = Round.Status.TEAMS_RELEASED
+        self.round.save()
+
+        response = self.client.get(reverse_tournament('tournament-public-index', self.tournament))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Draw for {}".format(self.round.name))
+        self.assertContains(response, self.reverse_url('draw-public-for-round'), count=2)
 
 
 class PublicDrawPreliminaryCurrentRoundTest(CompletedTournamentTestMixin, TableViewTestsMixin, TestCase):

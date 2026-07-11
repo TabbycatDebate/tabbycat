@@ -230,6 +230,18 @@ class MaxTimesPerSide(IntegerPreference):
 
 
 @tournament_preferences_registry.register
+class PrelimPanels(IntegerPreference):
+    help_text = _("When greater than 1, consecutive preliminary rounds are treated as parallel panels in the same "
+        "schedule slot (e.g. A and B). Current-round navigation and feedback eligibility use the shared slot. "
+        "Round creation assigns schedule groups from this value.")
+    verbose_name = _("Preliminary panels per schedule slot")
+    section = draw_rules
+    name = 'prelim_panels'
+    default = 1
+    field_kwargs = {'validators': [MinValueValidator(1)]}
+
+
+@tournament_preferences_registry.register
 class DrawOddBracket(ChoicePreference):
     help_text = _("How odd brackets are resolved (see documentation for further details)")
     verbose_name = _("Odd bracket resolution method")
@@ -315,7 +327,10 @@ class DrawPullupRestriction(ChoicePreference):
 
 @tournament_preferences_registry.register
 class DrawPullupPenalty(IntegerPreference):
-    help_text = _("Penalty applied when determining which teams to pull up (for minimum cost matching)")
+    help_text = _("Penalty applied when determining which teams to pull up (for minimum cost matching). "
+        "In BP, added to position costs when a team is placed above its points bracket; teams with "
+        "fewer prior pull-ups are preferred. Set high enough to take precedence over side balance "
+        "(e.g. 100000 with the default position cost exponent). Leave 0 for no preference.")
     verbose_name = _("Pullup penalty")
     section = draw_rules
     name = 'draw_pullup_penalty'

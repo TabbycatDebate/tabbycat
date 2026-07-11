@@ -150,7 +150,7 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
     )
     debateadjs = DebateAdjudicator.objects.filter(
         debate__round__tournament=tournament, adjudicator=source,
-        debate__round__seq__lte=tournament.current_round.seq,
+        debate__round__seq__lte=tournament.current_round_seq_limit,
         debate__round__stage=Round.Stage.PRELIMINARY,
     ).order_by('-debate__round__seq').select_related('debate__round').prefetch_related(
         Prefetch(
@@ -221,7 +221,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
     # Only include non-silent rounds for teams.
     debates = Debate.objects.filter(
         debateteam__team=source, round__silent=False,
-        round__seq__lte=tournament.current_round.seq,
+        round__seq__lte=tournament.current_round_seq_limit,
         round__stage=Round.Stage.PRELIMINARY,
     ).order_by('-round__seq').prefetch_related(Prefetch(
         'debateadjudicator_set',

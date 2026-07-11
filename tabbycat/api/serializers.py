@@ -292,6 +292,7 @@ class RoundSerializer(serializers.ModelSerializer):
     starts_at = TimeOrDateTimeField(required=False, allow_null=True)
     motions_released = MotionsReleasedField(required=False, allow_null=True, source='motions_status')
     _links = RoundLinksSerializer(source='*', read_only=True)
+    schedule_group = serializers.IntegerField(required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -320,6 +321,7 @@ class RoundSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         motions_data = validated_data.pop('roundmotion_set', [])
+        validated_data['schedule_group'] = validated_data.get('schedule_group', validated_data['seq'])
         if len(motions_data) > 0 and not has_permission(self.context['request'].user, Permission.EDIT_MOTION, self.context['tournament']):
             raise serializers.PermissionDenied('Editing motions disallowed')
 
@@ -1527,6 +1529,20 @@ class BallotSerializer(serializers.ModelSerializer):
                         raise serializers.ValidationError("Speakers must be in their team.")
                     return data
 
+                def validate_speeches(self, data):
+                    tournament = self.context['tournament']
+                    for seq, speech in enumerate(data, 1):
+                        for criterion_score in speech.get('criteria', []):
+                            criterion = criterion_score['criterion']
+                            if not criterion.applies_to_position(seq, tournament.reply_position):
+                                raise serializers.ValidationError(
+                                    "Score criterion %(criterion)s does not apply to speech position %(position)d." % {
+                                        'criterion': criterion.name,
+                                        'position': seq,
+                                    },
+                                )
+                    return data
+
                 def save(self, **kwargs):
                     result = kwargs['result']
                     side = self.validated_data.get('side', kwargs['seq'])
@@ -1780,10 +1796,11 @@ class TeamRoundScoresSerializer(serializers.ModelSerializer):
         score = serializers.FloatField(source='ballot.score')
         has_ghost = serializers.BooleanField(source='ballot.has_ghost')
         win = serializers.BooleanField(source='ballot.win')
+        side = fields.SideChoiceField(read_only=True)
 
         class Meta:
             model = TeamScore
-            fields = ('round', 'ballot_url', 'points', 'score', 'has_ghost', 'win')
+            fields = ('round', 'ballot_url', 'points', 'score', 'has_ghost', 'win', 'side')
 
     team = fields.TournamentHyperlinkedIdentityField(view_name='api-team-detail')
     rounds = ScoreSerializer(many=True, source="debateteam_set")
@@ -1791,6 +1808,19 @@ class TeamRoundScoresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = ('team', 'rounds')
+
+
+class TeamCurrentStandingsSerializer(TeamRoundScoresSerializer):
+    """Like TeamRoundScoresSerializer but scoped to public current standings:
+    no speak data, adds side, intended for rounds filtered to past non-silent
+    prelim rounds by the view."""
+
+    class RoundResultSerializer(TeamRoundScoresSerializer.ScoreSerializer):
+
+        class Meta(TeamRoundScoresSerializer.ScoreSerializer.Meta):
+            fields = ('round', 'ballot_url', 'side', 'points', 'win')
+
+    rounds = RoundResultSerializer(many=True, source="debateteam_set")
 
 
 class UserSerializer(serializers.ModelSerializer):

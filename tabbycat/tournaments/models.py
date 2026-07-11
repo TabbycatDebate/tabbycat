@@ -187,16 +187,19 @@ class Tournament(models.Model):
             Count('motion'), Count('debate'),
         ).select_related('break_category')
         categories_where_current_found = []
-        prelim_current_found = False
+        prelim_anchor_group = None
 
         # Do this in bulk for performance. This should be kept consistent with
         # Round.is_current and Tournament.current_rounds.
         for r in rounds:
-            if r.completed or prelim_current_found:
+            if r.completed:
                 r._is_current = False
             elif not r.is_break_round:
-                r._is_current = True
-                prelim_current_found = True
+                if not r.completed and prelim_anchor_group is None:
+                    prelim_anchor_group = r.schedule_group
+                r._is_current = (
+                    not r.completed and prelim_anchor_group is not None and r.schedule_group == prelim_anchor_group
+                )
             elif r.debate__count > 0 and r.break_category not in categories_where_current_found:
                 categories_where_current_found.append(r.break_category)
                 r._is_current = True
@@ -232,10 +235,20 @@ class Tournament(models.Model):
         return current
 
     @cached_property
+    def current_round_seq_limit(self):
+        """Largest `seq` among `current_rounds` (for eligibility filters when parallel
+        preliminary panels use different sequence numbers)."""
+        crs = self.current_rounds
+        if not crs:
+            return 0
+        return max(r.seq for r in crs)
+
+    @cached_property
     def current_rounds(self):
         """List of all current rounds with existent draws. If a preliminary
-        round is the earliest non-completed round, then that's the only current
-        round. If all preliminary rounds are completed, then the earliest
+        round is the earliest non-completed round, then every incomplete preliminary
+        round in the same `schedule_group` as that round is current (parallel panels).
+        If all preliminary rounds are completed, then the earliest
         non-completed round with an existent draw in each category is a current
         round, and they're listed in the `seq` order of the break categories.
 
@@ -246,11 +259,16 @@ class Tournament(models.Model):
         # round set from the database, and process it in Python.
         rounds = getattr(self, 'current_round_set',
             self.round_set.filter(completed=False).annotate(Count('debate')).order_by('seq'))
+        rounds_list = list(rounds)
+        prelims = [r for r in rounds_list if not r.is_break_round]
+        if prelims:
+            anchor = min(prelims, key=lambda r: r.seq)
+            sg = anchor.schedule_group
+            return [r for r in prelims if r.schedule_group == sg]
+
         current_elim_rounds = {}
-        for r in rounds:
-            if not r.is_break_round:
-                return [r]  # short-circuit everything else
-            elif r.debate__count > 0:
+        for r in rounds_list:
+            if r.debate__count > 0:
                 current_elim_rounds.setdefault(r.break_category_id, r)
         return [
             current_elim_rounds.get(category.pk)
@@ -266,7 +284,7 @@ class Tournament(models.Model):
     def public_draws_available(self):
         """Returns True if draws are available for public viewing. Used in
         public navigation menus."""
-        return any(r.draw_status in [Round.Status.RELEASED, Round.Status.TEAMS_RELEASED] for r in self.current_rounds)
+        return any(r.draw_released_for_public for r in self.current_rounds)
 
 
 class RoundManager(LookupByNameFieldsMixin, models.Manager):
@@ -308,6 +326,10 @@ class Round(models.Model):
     tournament = models.ForeignKey(Tournament, models.CASCADE, verbose_name=_("tournament"))
     seq = models.PositiveIntegerField(verbose_name=_("sequence number"),
         help_text=_("A number that determines the order of the round, should count consecutively from 1 for the first round"))
+    schedule_group = models.PositiveIntegerField(
+        verbose_name=_("schedule group"),
+        help_text=_("Rounds in the same schedule slot (e.g. parallel panels A/B) share this value. "
+            "Defaults to the sequence number when each slot has only one round."))
     completed = models.BooleanField(default=False,
         verbose_name=_("completed"),
         help_text=_("True if the round is over, which normally means all results have been entered and confirmed"))
@@ -575,10 +597,16 @@ class Round(models.Model):
         if not hasattr(self, '_is_current'):
             if self.completed:
                 self._is_current = False
-            elif self._rounds_in_same_sequence().filter(seq__lt=self.seq, completed=False).exists():
-                self._is_current = False
             elif self.is_break_round and not self.debate_set.exists():
                 self._is_current = False
+            elif not self.is_break_round:
+                anchor = (self.tournament.round_set.filter(
+                    stage=Round.Stage.PRELIMINARY, completed=False,
+                ).order_by('seq').first())
+                if anchor is None:
+                    self._is_current = False
+                else:
+                    self._is_current = self.schedule_group == anchor.schedule_group
             else:
                 self._is_current = True
         return self._is_current
@@ -586,6 +614,10 @@ class Round(models.Model):
     @property
     def motions_good_for_public(self):
         return self.motions_status == self.MotionsStatus.MOTIONS_RELEASED or not self.motion_set.exists()
+
+    @property
+    def draw_released_for_public(self):
+        return self.draw_status in [self.Status.RELEASED, self.Status.TEAMS_RELEASED]
 
     @property
     def motions_released(self):

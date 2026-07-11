@@ -251,7 +251,7 @@ class PowerPairedDrawManager(BaseDrawManager):
                 "max_times_on_one_side", "pullup_penalty",
             ])
         elif self.teams_in_debate == 4:
-            options.extend(["pullup", "position_cost", "assignment_method", "renyi_order", "exponent"])
+            options.extend(["pullup", "position_cost", "assignment_method", "renyi_order", "exponent", "pullup_penalty"])
         return options
 
     def get_teams(self) -> Tuple[List['Team'], List['Team']]:
@@ -266,6 +266,9 @@ class PowerPairedDrawManager(BaseDrawManager):
         pullup_debates_penalty = self.round.tournament.pref("pullup_debates_penalty")
         if pullup_debates_penalty > 0:
             extra_metrics.add("pullup_debates")
+        pullup_penalty = self.round.tournament.pref("draw_pullup_penalty")
+        if pullup_penalty > 0:
+            extra_metrics.add("npullups")
         if self.round.tournament.pref("draw_odd_bracket") == 'pullup_lowest_ds_rank_npulls':
             extra_metrics |= {'npullups', 'draw_strength_rank'}
         extra_metrics -= set(metrics)
@@ -282,6 +285,8 @@ class PowerPairedDrawManager(BaseDrawManager):
                 team.pullup_debates = standing.metrics.get("pullup_debates", 0)
             if pullup_metric:
                 setattr(team, pullup_metric, standing.metrics[pullup_metric])
+            if pullup_penalty > 0:
+                team.npullups = standing.metrics.get('npullups', 0)
             if self.round.tournament.pref("draw_odd_bracket") == 'pullup_lowest_ds_rank_npulls':
                 team.npullups = standing.metrics.get('npullups')
                 team.draw_strength_rank = standing.metrics.get('draw_strength_rank')
@@ -339,14 +344,57 @@ class SeededDrawManager(BaseDrawManager):
 class RoundRobinDrawManager(BaseDrawManager):
     generator_type = "round_robin"
 
-    def get_rrseq(self):
-        prior_rrs = list(self.round.tournament.round_set.filter(draw_type=Round.DrawType.ROUNDROBIN).order_by('seq'))
-        try:
-            rr_seq = prior_rrs.index(self.round) + 1 # Dont 0-index
-        except ValueError:
-            raise RuntimeError("Tried to calculate an effective round robin seq but couldn't")
+    def get_relevant_options(self):
+        options = super().get_relevant_options()
+        if self.teams_in_debate == 2:
+            options.extend(["avoid_conflicts", "side_allocations"])
+        return options
 
-        return rr_seq
+    def get_teams(self) -> Tuple[List['Team'], List['Team']]:
+        """Order active teams by seed ascending (null seeds last), then name and id."""
+        teams, byes = super().get_teams()
+        teams = list(teams)
+        teams.sort(key=lambda t: (
+            t.seed or 0,
+            t.pk,
+        ))
+        return teams, byes
+
+    def create(self, options: dict | None = None) -> list[Debate]:
+        competing, _ = super().get_teams()
+        if self.teams_in_debate == 2 and any(t.seed is None for t in competing):
+            raise DrawUserError(_("Every team must have a seed set for round-robin draws. "
+                "Assign seeds before generating the draw."))
+        return super().create(options)
+
+    def get_rrseq(self):
+        """1-based index into the round-robin schedule (Berger or BP tables).
+
+        Parallel preliminary panels share a ``schedule_group`` and must use the
+        same RR round index; only the chronological order of distinct schedule
+        groups among preliminary round-robin rounds matters (not ``seq`` within
+        a slot).
+        """
+        rr_prelims = (
+            self.round.tournament.prelim_rounds()
+            .filter(draw_type=Round.DrawType.ROUNDROBIN)
+            .order_by('schedule_group', 'seq')
+        )
+        ordered_groups = []
+        seen = set()
+        for r in rr_prelims:
+            if r.schedule_group not in seen:
+                ordered_groups.append(r.schedule_group)
+                seen.add(r.schedule_group)
+        sg = self.round.schedule_group
+        try:
+            return ordered_groups.index(sg) + 1
+        except ValueError:
+            raise RuntimeError(
+                "Could not determine round-robin sequence index for round %s (schedule_group=%s); "
+                "expected schedule_group among preliminary round-robin rounds: %s"
+                % (self.round, sg, ordered_groups),
+            ) from None
 
 
 class BaseEliminationDrawManager(BaseDrawManager):
@@ -411,6 +459,7 @@ DRAW_MANAGER_CLASSES = {
     (4, Round.DrawType.RANDOM): RandomDrawManager,
     (4, Round.DrawType.MANUAL): ManualDrawManager,
     (4, Round.DrawType.POWERPAIRED): PowerPairedDrawManager,
+    (4, Round.DrawType.ROUNDROBIN): RoundRobinDrawManager,
     (4, Round.DrawType.ELIMINATION): BPEliminationDrawManager,
     (None, Round.DrawType.RANDOM): RandomDrawManager,
     (None, Round.DrawType.MANUAL): ManualDrawManager,

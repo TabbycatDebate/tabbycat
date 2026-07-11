@@ -1,5 +1,6 @@
 import logging
 from statistics import mean, stdev
+from types import SimpleNamespace
 
 from django.db.models import Count, Prefetch, Q
 
@@ -76,7 +77,10 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
 def get_feedback_overview(t, adjudicators):
     """Collates feedback statistics for the feedback overview."""
 
-    rounds = list(t.prelim_rounds(until=t.current_round))  # force to list for performance in next querysets
+    # Use the highest seq among parallel current prelims so all panels are included.
+    seq_lim = t.current_round_seq_limit
+    until_proxy = SimpleNamespace(seq=seq_lim) if seq_lim else t.current_round
+    rounds = list(t.prelim_rounds(until=until_proxy))  # force to list for performance in next querysets
 
     annotated_adjs = adjudicators.filter(id__in=[adj.id for adj in adjudicators]).prefetch_related(
         Prefetch('adjudicatorfeedback_set', to_attr='adjfeedback_for_rounds',

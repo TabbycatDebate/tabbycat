@@ -150,7 +150,12 @@ def populate_results(ballotsubs, tournament=None):
         for result in results_by_debate_id[da.debate_id]:
             if result.is_voting:
                 result.debateadjs[da.adjudicator] = da
-                result.scoresheets[da.adjudicator] = result.scoresheet_class(positions, sides=range(nsides_per_debate[da.debate_id]), criteria=criteria)
+                result.scoresheets[da.adjudicator] = result.scoresheet_class(
+                    positions,
+                    sides=range(nsides_per_debate[da.debate_id]),
+                    criteria=criteria,
+                    reply_position=tournament.reply_position,
+                )
 
     ssbas = SpeakerScoreByAdj.objects.filter(
         ballot_submission__in=ballotsubs,
