@@ -183,11 +183,11 @@ class PublicDrawMixin(PublicTournamentPageMixin):
 
     @cached_property
     def draws_available(self):
-        return any(r.draw_status in [Round.Status.RELEASED, Round.Status.TEAMS_RELEASED] for r in self.rounds)
+        return any(r.draw_released_for_public for r in self.rounds)
 
     @classmethod
     def get_debates_for_round(cls, round):
-        if round.draw_status not in [Round.Status.RELEASED, Round.Status.TEAMS_RELEASED]:
+        if not round.draw_released_for_public:
             return Debate.objects.none()
         return super().get_debates_for_round(round)
 

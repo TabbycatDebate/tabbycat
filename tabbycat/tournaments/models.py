@@ -266,7 +266,7 @@ class Tournament(models.Model):
     def public_draws_available(self):
         """Returns True if draws are available for public viewing. Used in
         public navigation menus."""
-        return any(r.draw_status in [Round.Status.RELEASED, Round.Status.TEAMS_RELEASED] for r in self.current_rounds)
+        return any(r.draw_released_for_public for r in self.current_rounds)
 
 
 class RoundManager(LookupByNameFieldsMixin, models.Manager):
@@ -586,6 +586,10 @@ class Round(models.Model):
     @property
     def motions_good_for_public(self):
         return self.motions_status == self.MotionsStatus.MOTIONS_RELEASED or not self.motion_set.exists()
+
+    @property
+    def draw_released_for_public(self):
+        return self.draw_status in [self.Status.RELEASED, self.Status.TEAMS_RELEASED]
 
     @property
     def motions_released(self):
