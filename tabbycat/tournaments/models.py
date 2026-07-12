@@ -396,6 +396,11 @@ class Round(models.Model):
         if any(len(v) > 0 for v in errors.values()):
             raise ValidationError({k: v for k, v in errors.items() if len(v) > 0})
 
+    def save(self, *args, **kwargs):
+        if self.schedule_group is None:
+            self.schedule_group = self.seq
+        super().save(*args, **kwargs)
+
     # --------------------------------------------------------------------------
     # Checks for potential errors
     # --------------------------------------------------------------------------
