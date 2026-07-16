@@ -5,7 +5,8 @@ from django.test import TestCase
 from draw.models import Debate, DebateTeam
 from draw.types import DebateSide
 from participants.models import Adjudicator, Institution, Speaker, Team
-from results.models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
+from results.models import (BallotSubmission, ScoreCriterion, SpeakerCriterionScore,
+    SpeakerCriterionScoreByAdj, SpeakerScore, SpeakerScoreByAdj, TeamScore)
 from results.result import ConsensusDebateResultWithScores, DebateResultByAdjudicatorWithScores, ResultError    # absolute import to keep logger's name consistent
 from tournaments.models import Round, Tournament
 from utils.tests import suppress_logs
@@ -628,6 +629,38 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
     def test_extraneous_scoresheet(self, result):
         result.scoresheets["not-an-adj"] = None
 
+    def test_blank_optional_criterion_score_by_adj_is_not_saved(self):
+        blank_result = self.save_blank_result()
+        required = ScoreCriterion.objects.create(
+            tournament=self.tournament, name="Required", seq=1, weight=1,
+            min_score=0, max_score=10, step=1, required=True,
+        )
+        optional = ScoreCriterion.objects.create(
+            tournament=self.tournament, name="Optional", seq=2, weight=1,
+            min_score=0, max_score=10, step=1, required=False,
+        )
+        result = self.debate_result_class(
+            blank_result.ballotsub, criteria=[required, optional],
+        )
+
+        for side, team in zip(self.SIDES, self.teams):
+            speakers = list(team.speaker_set.all())
+            for pos in result.positions:
+                result.set_speaker(side, pos, speakers[(pos - 1) % len(speakers)])
+                for adj in self.adjs:
+                    result.set_criterion_score(
+                        adj, side, pos, required,
+                        2 if side == DebateSide.AFF else 1,
+                    )
+
+        result.save()
+        self.assertFalse(
+            SpeakerCriterionScore.objects.filter(criterion=optional).exists(),
+        )
+        self.assertFalse(
+            SpeakerCriterionScoreByAdj.objects.filter(criterion=optional).exists(),
+        )
+
 
 class TestConsensusDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateResult):
 
@@ -741,6 +774,45 @@ class TestConsensusDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDeba
         for side in self.SIDES:
             self.assertIsNone(self._get_teamscore_in_db(side).votes_given)
             self.assertIsNone(self._get_teamscore_in_db(side).votes_possible)
+
+    def test_blank_optional_criterion_score_is_not_saved(self):
+        blank_result = self.save_blank_result()
+        required = ScoreCriterion.objects.create(
+            tournament=self.tournament, name="Required", seq=1, weight=1,
+            min_score=0, max_score=10, step=1, required=True,
+        )
+        optional = ScoreCriterion.objects.create(
+            tournament=self.tournament, name="Optional", seq=2, weight=1,
+            min_score=0, max_score=10, step=1, required=False,
+        )
+        result = self.debate_result_class(
+            blank_result.ballotsub, criteria=[required, optional],
+        )
+
+        for side, team in zip(self.SIDES, self.teams):
+            speakers = list(team.speaker_set.all())
+            for pos in result.positions:
+                result.set_speaker(side, pos, speakers[(pos - 1) % len(speakers)])
+                result.set_criterion_score(
+                    side, pos, required, 2 if side == DebateSide.AFF else 1,
+                )
+
+        result.save()
+        self.assertFalse(
+            SpeakerCriterionScore.objects.filter(criterion=optional).exists(),
+        )
+
+        result.set_criterion_score(DebateSide.AFF, 1, optional, 3)
+        result.save()
+        self.assertTrue(
+            SpeakerCriterionScore.objects.filter(criterion=optional).exists(),
+        )
+
+        result.set_criterion_score(DebateSide.AFF, 1, optional, None)
+        result.save()
+        self.assertFalse(
+            SpeakerCriterionScore.objects.filter(criterion=optional).exists(),
+        )
 
     # ==========================================================================
     # Irregular operation

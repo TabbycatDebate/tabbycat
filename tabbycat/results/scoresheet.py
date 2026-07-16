@@ -63,7 +63,7 @@ class ScoresMixin:
         self.scores = {side: dict.fromkeys(self.positions, None) for side in self.sides}
         self.speaker_ranks = {side: dict.fromkeys(self.positions, None) for side in self.sides}
         self.criteria_scores = {
-            side: {pos: dict.fromkeys(self.criteria_for_position(pos), 0) for pos in self.positions}
+            side: {pos: dict.fromkeys(self.criteria_for_position(pos), None) for pos in self.positions}
             for side in self.sides
         }
 
@@ -87,7 +87,10 @@ class ScoresMixin:
 
     def get_score(self, side: str, position: int):
         if len(self.criteria) > 0:
-            return sum(score * type(score)(criterion.weight) for criterion, score in self.criteria_scores[side][position].items())
+            return sum(
+                score * type(score)(criterion.weight) if score is not None else 0
+                for criterion, score in self.criteria_scores[side][position].items()
+            )
         return self.scores[side][position]
 
     def set_speaker_rank(self, side, position, score):

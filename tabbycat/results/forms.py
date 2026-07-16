@@ -1054,7 +1054,10 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
             for side, pos in product(self.sides, self.positions):
                 score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
                 for criterion in self.criteria_for_position(pos):
-                    result.set_criterion_score(adj, side, pos, criterion, self.cleaned_data[self._fieldname_criterion_score(adj, side, pos, criterion)] or 0)
+                    result.set_criterion_score(
+                        adj, side, pos, criterion,
+                        self.cleaned_data[self._fieldname_criterion_score(adj, side, pos, criterion)],
+                    )
                 if len(self.criteria) == 0:
                     result.set_score(adj, side, pos, score)
 

@@ -775,8 +775,11 @@ class DebateResultWithScoresMixin:
                 for criterion in self.criteria:
                     if not criterion.applies_to_position(pos, self.reply_position):
                         continue
+                    defaults = self.get_defaults_fields('speakercriterionscore', side, pos, criterion)
+                    if defaults['score'] is None and not criterion.required:
+                        continue
                     speaker_score.speakercriterionscore_set.update_or_create(
-                        criterion=criterion, defaults=self.get_defaults_fields('speakercriterionscore', side, pos, criterion))
+                        criterion=criterion, defaults=defaults)
 
     # --------------------------------------------------------------------------
     # Data setting and retrieval
@@ -1148,8 +1151,11 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
                     for criterion in self.criteria:
                         if not criterion.applies_to_position(pos, self.reply_position):
                             continue
+                        defaults = self.get_defaults_fields('speakercriterionscorebyadj', adj, side, pos, criterion)
+                        if defaults['score'] is None and not criterion.required:
+                            continue
                         speaker_score_by_adj.speakercriterionscorebyadj_set.update_or_create(
-                            criterion=criterion, defaults=self.get_defaults_fields('speakercriterionscorebyadj', adj, side, pos, criterion))
+                            criterion=criterion, defaults=defaults)
 
     def set_score(self, adjudicator, side, position, score):
         try:
@@ -1208,7 +1214,13 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
             return None
         if not self._decision_calculated:
             self._calculate_decision()
-        return mean(self.scoresheets[adj].get_criterion_score(side, pos, criterion) for adj in self.relevant_adjudicators())
+        scores = [
+            self.scoresheets[adj].get_criterion_score(side, pos, criterion)
+            for adj in self.relevant_adjudicators()
+        ]
+        if all(score is None for score in scores):
+            return None
+        return mean(0 if score is None else score for score in scores)
 
     def speakercriterionscorebyadj_field_score(self, adjudicator, side, pos, criterion):
         return self.scoresheets[adjudicator].get_criterion_score(side, pos, criterion)
