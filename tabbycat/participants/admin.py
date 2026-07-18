@@ -134,7 +134,49 @@ class TeamSideAllocationInline(admin.TabularInline):
     model = TeamSideAllocation
 
 
-class TeamForm(forms.ModelForm):
+class InstitutionConflictFormMixin:
+    """Adds and positions an institution-conflict checkbox on a participant form."""
+
+    create_institution_conflict = forms.BooleanField(
+        initial=True,
+        required=False,
+        label=_("Create institution conflict"),
+        help_text=_("Automatically create a conflict between the selected institution and this participant."),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        field_names = list(self.fields)
+        field_names.remove('create_institution_conflict')
+        field_names.insert(field_names.index('institution') + 1, 'create_institution_conflict')
+        self.order_fields(field_names)
+
+
+class InstitutionConflictAdminMixin:
+    institution_conflict_model = None
+    institution_conflict_object_field = None
+
+    def get_fields(self, request, obj=None):
+        field_names = list(super().get_fields(request, obj))
+        field_names.remove('create_institution_conflict')
+        field_names.insert(field_names.index('institution') + 1, 'create_institution_conflict')
+        return field_names
+
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        instance = form.instance
+        if ('institution' in form.changed_data and
+                form.cleaned_data.get('create_institution_conflict') and instance.institution_id):
+            self.institution_conflict_model.objects.bulk_create([
+                self.institution_conflict_model(
+                    institution=instance.institution,
+                    **{self.institution_conflict_object_field: instance},
+                ),
+            ], ignore_conflicts=True)
+
+
+class TeamForm(InstitutionConflictFormMixin, forms.ModelForm):
+
     class Meta:
         model = Team
         fields = '__all__'
@@ -173,8 +215,10 @@ class AdjudicatorTeamConflictInline(admin.TabularInline):
 
 
 @admin.register(Team)
-class TeamAdmin(ModelAdmin):
+class TeamAdmin(InstitutionConflictAdminMixin, ModelAdmin):
     form = TeamForm
+    institution_conflict_model = TeamInstitutionConflict
+    institution_conflict_object_field = 'team'
     list_display = ('long_name', 'short_name', 'emoji_code', 'institution',
                     'tournament', 'registration_status')
     search_fields = ('reference', 'short_name', 'code_name', 'institution__name',
@@ -264,7 +308,8 @@ class AdjudicatorBaseScoreHistoryInline(admin.TabularInline):
     extra = 1
 
 
-class AdjudicatorForm(forms.ModelForm):
+class AdjudicatorForm(InstitutionConflictFormMixin, forms.ModelForm):
+
     class Meta:
         model = Adjudicator
         fields = '__all__'
@@ -275,8 +320,10 @@ class AdjudicatorForm(forms.ModelForm):
 
 
 @admin.register(Adjudicator)
-class AdjudicatorAdmin(ModelAdmin):
+class AdjudicatorAdmin(InstitutionConflictAdminMixin, ModelAdmin):
     form = AdjudicatorForm
+    institution_conflict_model = AdjudicatorInstitutionConflict
+    institution_conflict_object_field = 'adjudicator'
     list_display = ('name', 'institution', 'tournament', 'trainee',
                     'independent', 'adj_core', 'gender', 'base_score', 'registration_status')
     search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code')
