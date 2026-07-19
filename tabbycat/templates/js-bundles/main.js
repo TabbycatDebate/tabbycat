@@ -3,8 +3,8 @@ import { createApp, defineAsyncComponent } from 'vue'
 import { createPinia } from 'pinia'
 import * as Sentry from '@sentry/vue';
 import feather from 'feather-icons'
-import $ from 'jquery'
 import 'bootstrap' // Import bootstrap javascript plugins
+const $ = window.jQuery
 
 // Generic Templates
 import CheckboxTablesContainer from '../tables/CheckboxTablesContainer.vue'
@@ -43,9 +43,6 @@ if (window.buildData.sentry === true) {
 // -----------------------------------------------------------------------------
 // TCI: jQuery, Lodash, and Boostrap
 // -----------------------------------------------------------------------------
-
-window.jQuery = $ // Set for bootstrap
-window.$ = $ // Set for browser window
 
 // Add alerts programmatically
 $.fn.extend({

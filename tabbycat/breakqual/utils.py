@@ -162,7 +162,8 @@ def auto_make_break_rounds(bc, tournament=None, prefix=False):
     if tournament is None:
         tournament = bc.tournament
 
-    num_rounds = tournament.round_set.all().aggregate(Max('seq'))['seq__max']
+    # Add 2 to make it easier to add break rounds later
+    num_rounds = tournament.round_set.all().aggregate(Max('seq'))['seq__max'] + 2
     round_names = get_break_category_round_names(bc) if prefix else BREAK_ROUND_NAMES
 
     # Translators: "UBR" stands for "unknown break round" (used as a fallback when we don't know what it's called)

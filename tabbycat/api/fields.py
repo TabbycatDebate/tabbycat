@@ -96,9 +96,8 @@ class RoundHyperlinkedIdentityField(RoundHyperlinkedRelatedField, HyperlinkedIde
     pass
 
 
-class DebateHyperlinkedIdentityField(RoundHyperlinkedIdentityField):
+class DebateHyperlinkedRelatedField(RoundHyperlinkedRelatedField):
     default_tournament_field = 'debate__round__tournament'
-    round_field = 'debate__round'
 
     def get_round(self, obj):
         return obj.debate.round
@@ -112,7 +111,11 @@ class DebateHyperlinkedIdentityField(RoundHyperlinkedIdentityField):
         return {'debate': self.context['debate']}
 
     def get_queryset(self):
-        return super().get_queryset().select_related('debate')
+        return super().get_queryset().select_related('debate__round__tournament')
+
+
+class DebateHyperlinkedIdentityField(DebateHyperlinkedRelatedField, HyperlinkedIdentityField):
+    pass
 
 
 class AnonymisingParticipantNameField(CharField):

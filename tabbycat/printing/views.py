@@ -12,6 +12,7 @@ from adjfeedback.utils import expected_feedback_targets
 from checkins.models import DebateIdentifier
 from checkins.utils import create_identifiers
 from draw.models import DebateTeam
+from draw.types import DebateSide
 from options.utils import use_team_code_names
 from participants.models import Adjudicator, Speaker
 from results.utils import side_and_position_names
@@ -133,7 +134,7 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
     template_name = 'scoresheet_list.html'
 
     def get_ballots_dicts(self):
-        draw = self.round.debate_set_with_prefetches(iron=True)
+        draw = self.round.debate_set_with_prefetches(iron=True).exclude(debateteam__side=DebateSide.BYE)
 
         # Create the DebateIdentifiers for the ballots if needed
         create_identifiers(DebateIdentifier, draw)

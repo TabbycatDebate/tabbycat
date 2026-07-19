@@ -17,6 +17,7 @@ module.exports = defineConfig(({ command }) => {
     resolve: {
       alias: {
         vue: 'vue/dist/vue.esm-bundler.js',
+        jquery: path.resolve(templatesRoot, 'js-bundles/jquery-shim.js'),
       },
     },
     server: {

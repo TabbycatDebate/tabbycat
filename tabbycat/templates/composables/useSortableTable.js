@@ -40,7 +40,11 @@ export function useSortableTable ({ headers, sortableData, getSortableProperty, 
     const sorted = sortableData.value.slice(0).sort((a, b) => {
       const aCellData = getSortableProperty(a, orderedHeaderIndex)
       const bCellData = getSortableProperty(b, orderedHeaderIndex)
-      if (aCellData === '' || bCellData === '') {
+      if (aCellData === '' && bCellData === '') {
+        return 0
+      } else if (aCellData === '') {
+        return 1
+      } else if (bCellData === '') {
         return -1
       }
       if (_.isString(aCellData) || _.isString(bCellData)) {

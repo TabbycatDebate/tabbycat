@@ -12,6 +12,7 @@ from django.utils.translation import ngettext
 
 from draw.models import Debate, DebateTeam
 from draw.types import DebateSide
+from motions.models import RoundMotion
 from options.utils import use_team_code_names_data_entry
 from participants.models import Speaker, Team
 from participants.templatetags.team_name_for_data_entry import team_name_for_data_entry
@@ -200,7 +201,8 @@ class BaseResultForm(forms.Form):
                 self.debate.confirmed_ballot.save()
 
         # 2. Save ballot submission so that we can create related objects
-        if self.ballotsub.id is None:
+        new_ballotsub = self.ballotsub.id is None
+        if new_ballotsub:
             self.ballotsub.save()
 
         # 3. Save the specifics of the ballot
@@ -211,8 +213,12 @@ class BaseResultForm(forms.Form):
         self.ballotsub.confirmed = self.cleaned_data['confirmed']
         self.ballotsub.save()
 
-        self.debate.result_status = self.cleaned_data['debate_result_status']
-        self.debate.save()
+        new_status = self.cleaned_data['debate_result_status']
+        if (new_ballotsub and self.debate.result_status == Debate.STATUS_CONFIRMED and new_status == Debate.STATUS_DRAFT):
+            pass  # keep confirmed when a new ballot arrives after confirmation
+        else:
+            self.debate.result_status = new_status
+            self.debate.save()
 
         # Need to provide a timestamp immediately for BallotStatusConsumer
         # as it will broadcast before the view finishes assigning one
@@ -269,6 +275,12 @@ class BaseBallotSetForm(BaseResultForm):
         self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
                                self.tournament.pref('teams_in_debate') == 2)
         self.using_speaker_ranks = self.tournament.pref('speaker_ranks') != 'none'
+
+    def criteria_for_position(self, position):
+        return [
+            criterion for criterion in self.criteria
+            if criterion.applies_to_position(position, self.reply_position)
+        ]
 
     # --------------------------------------------------------------------------
     # Field names and field convenience functions
@@ -361,7 +373,10 @@ class BaseBallotSetForm(BaseResultForm):
             if not self.ballotsub.motion and self.motions.count() == 1:
                 initial['motion'] = self.motions.get()
             else:
-                initial['motion'] = self.ballotsub.roundmotion
+                try:
+                    initial['motion'] = self.ballotsub.roundmotion
+                except RoundMotion.DoesNotExist:
+                    pass
 
         if self.ballotsub.id is not None or self.filled:
             if self.using_vetoes:
@@ -372,7 +387,10 @@ class BaseBallotSetForm(BaseResultForm):
                     else:
                         dtmp = self.vetos.get(side)
                     if dtmp:
-                        initial[self._fieldname_motion_veto(side)] = dtmp.roundmotion
+                        try:
+                            initial[self._fieldname_motion_veto(side)] = dtmp.roundmotion
+                        except RoundMotion.DoesNotExist:
+                            pass
 
             initial.update(self.initial_from_result(self.result))
 
@@ -478,7 +496,7 @@ class ScoresMixin:
     # --------------------------------------------------------------------------
 
     def _has_forfeit_fields(self):
-        return len(self.sides) == 2
+        return len(self.sides) == 2 and self.tournament.pref('enable_forfeits')
 
     def create_participant_fields(self):
         if self._has_forfeit_fields():
@@ -678,7 +696,7 @@ class ScoresMixin:
                     "speaker": self[self._fieldname_speaker(side, pos)],
                     "ghost": self[self._fieldname_ghost(side, pos)],
                     "score": self[fieldname_score_func(side, pos)],
-                    "criteria": [(criterion, self[fieldname_criterion_func(side, pos, criterion)]) for criterion in self.criteria],
+                    "criteria": [(criterion, self[fieldname_criterion_func(side, pos, criterion)]) for criterion in self.criteria_for_position(pos)],
                 }
                 if fieldname_srank_func:
                     spk_dict["srank"] = self[fieldname_srank_func(side, pos)]
@@ -723,7 +741,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 tournament=self.tournament,
                 required=False,
             )
-            for criterion in self.criteria:
+            for criterion in self.criteria_for_position(pos):
                 self.fields[self._fieldname_criterion_score(side, pos, criterion)] = forms.DecimalField(
                     min_value=Decimal(str(criterion.min_score)),
                     max_value=Decimal(str(criterion.max_score)),
@@ -749,7 +767,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
             initial[self._fieldname_score(side, pos)] = score
             if self.using_speaker_ranks:
                 initial[self._fieldname_srank(side, pos)] = result.get_speaker_rank(side, pos)
-            for criterion in self.criteria:
+            for criterion in self.criteria_for_position(pos):
                 initial[self._fieldname_criterion_score(side, pos, criterion)] = result.get_criterion_score(side, pos, criterion)
 
         if self.using_declared_winner:
@@ -785,7 +803,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 ))
                 should_skip = True
 
-            for criterion in self.criteria:
+            for criterion in self.criteria_for_position(pos):
                 if cleaned_data[self._fieldname_criterion_score(side, pos, criterion)] is None and criterion.required:
                     self.add_error(
                         self._fieldname_criterion_score(side, pos, criterion),
@@ -796,8 +814,12 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
             return
 
         try:
-            side_totals = {side: sum(cleaned_data[self._fieldname_score(side, pos)]
-                           for pos in self.positions) for side in self.sides}
+            if self.criteria.exists():
+                side_totals = {side: sum(float(cleaned_data[self._fieldname_criterion_score(side, pos, criterion)] or 0) * criterion.weight
+                               for pos in self.positions for criterion in self.criteria_for_position(pos)) for side in self.sides}
+            else:
+                side_totals = {side: sum(cleaned_data[self._fieldname_score(side, pos)]
+                               for pos in self.positions) for side in self.sides}
             totals = list(side_totals.values())
 
         except KeyError as e:
@@ -861,7 +883,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
     def populate_result_with_scores(self, result):
         for side, pos in product(self.sides, self.positions):
             score = self.cleaned_data[self._fieldname_score(side, pos)]
-            for criterion in self.criteria:
+            for criterion in self.criteria_for_position(pos):
                 result.set_criterion_score(side, pos, criterion, self.cleaned_data[self._fieldname_criterion_score(side, pos, criterion)])
             if len(self.criteria) == 0:
                 result.set_score(side, pos, score)
@@ -921,7 +943,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
                     required=False,
                     disabled=self.criteria.exists(),
                 )
-                for criterion in self.criteria:
+                for criterion in self.criteria_for_position(pos):
                     self.fields[self._fieldname_criterion_score(adj, side, pos, criterion)] = forms.DecimalField(
                         min_value=Decimal(str(criterion.min_score)),
                         max_value=Decimal(str(criterion.max_score)),
@@ -943,7 +965,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
             for side, pos in product(self.sides, self.positions):
                 score = result.get_score(adj, side, pos)
                 initial[self._fieldname_score(adj, side, pos)] = score
-                for criterion in self.criteria:
+                for criterion in self.criteria_for_position(pos):
                     initial[self._fieldname_criterion_score(adj, side, pos, criterion)] = result.get_criterion_score(adj, side, pos, criterion)
 
             if self.using_declared_winner:
@@ -980,7 +1002,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
                     ))
                     should_skip = True
 
-                for criterion in self.criteria:
+                for criterion in self.criteria_for_position(pos):
                     if cleaned_data[self._fieldname_criterion_score(adj, side, pos, criterion)] is None and criterion.required:
                         self.add_error(
                             self._fieldname_criterion_score(adj, side, pos, criterion),
@@ -993,7 +1015,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
             try:
                 if self.criteria:
                     side_totals = {side: sum(float(cleaned_data[self._fieldname_criterion_score(adj, side, pos, criterion)] or 0) * criterion.weight
-                           for pos in self.positions for criterion in self.criteria) for side in self.sides}
+                           for pos in self.positions for criterion in self.criteria_for_position(pos)) for side in self.sides}
                 else:
                     side_totals = {side: sum(cleaned_data[self._fieldname_score(adj, side, pos)]
                            for pos in self.positions) for side in self.sides}
@@ -1031,7 +1053,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
         for adj in self.adjudicators:
             for side, pos in product(self.sides, self.positions):
                 score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
-                for criterion in self.criteria:
+                for criterion in self.criteria_for_position(pos):
                     result.set_criterion_score(adj, side, pos, criterion, self.cleaned_data[self._fieldname_criterion_score(adj, side, pos, criterion)] or 0)
                 if len(self.criteria) == 0:
                     result.set_score(adj, side, pos, score)

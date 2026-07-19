@@ -8,14 +8,20 @@ import { useDjangoI18n } from '../../templates/composables/useDjangoI18n.js'
 
 const props = defineProps({
   initialEvents: Array,
-  assistantUrl: String,
   teamCodes: Boolean,
   tournamentSlug: String,
   forAdmin: Boolean,
-  teamSize: Number,
   speakers: Array,
   adjudicators: Array,
   venues: Array,
+  teamSize: {
+    type: Number,
+    default: 2,
+  },
+  prelimsCompleted: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { gettext, tct } = useDjangoI18n()
@@ -23,7 +29,9 @@ const { gettext, tct } = useDjangoI18n()
 const filterByPresence = ref({ All: true, Absent: false, Present: false })
 const events = ref([...(props.initialEvents ?? [])])
 
-const peopleFilterByType = ref({ All: true, Adjudicators: false, Debaters: false })
+const showCodeNames = ref(props.teamCodes)
+
+const peopleFilterByType = ref({ All: true, Adjudicators: false, Debaters: false, Breaking: false })
 const peopleSortByGroup = ref({ Institution: !props.teamCodes, Name: props.teamCodes, Time: false })
 const speakerGroupings = ref({ Speaker: false, Team: true })
 const venuesSortByGroup = ref({ Category: true, Name: false, Time: false, Priority: false })
@@ -32,6 +40,7 @@ const peopleFilterNames = {
   All: 'All',
   Adjudicators: 'Only Adjudicators',
   Debaters: 'Only Teams',
+  Breaking: 'Only Breaking',
 }
 
 const speakerGroupingNames = {
@@ -41,6 +50,17 @@ const speakerGroupingNames = {
 
 const isForVenues = computed(() => Array.isArray(props.venues))
 const filterByType = computed(() => (isForVenues.value ? null : peopleFilterByType.value))
+const filterByTypeOptions = computed(() => {
+  const f = peopleFilterByType.value
+  const options = []
+  _.forEach(f, (state, key) => {
+    if (key === 'Breaking' && !props.prelimsCompleted) {
+      return
+    }
+    options.push({ key, state })
+  })
+  return options
+})
 const sortByGroup = computed(() => (isForVenues.value ? venuesSortByGroup.value : peopleSortByGroup.value))
 
 const clock = (timeRead) => (`0${timeRead}`).slice(-2)
@@ -54,15 +74,23 @@ const annotatePeople = (list) => {
   })
 }
 
+// Show the toggle only when code names are the current primary display AND the payload
+// includes both fields (i.e. the server confirmed the user has permission to see real names).
+const canToggleNames = computed(() =>
+  (props.speakers ?? []).some(s => s.team_code_name && s.team_real_name),
+)
+
 const annotatedSpeakers = computed(() => {
   const speakers = annotatePeople([...(props.speakers ?? [])])
-  if (props.teamCodes) {
-    return speakers.map((speaker) => ({
-      ...speaker,
-      institution: { code: gettext('Anonymous (due to team codes)'), name: gettext('Anon') },
-    }))
-  }
-  return speakers
+  return speakers.map((speaker) => ({
+    ...speaker,
+    team: showCodeNames.value
+      ? (speaker.team_code_name ?? speaker.team)
+      : (speaker.team_real_name ?? speaker.team),
+    institution: showCodeNames.value
+      ? { code: gettext('Anonymous (due to team codes)'), name: gettext('Anon') }
+      : speaker.institution,
+  }))
 })
 
 const annotatedTeams = computed(() => {
@@ -79,6 +107,7 @@ const annotatedTeams = computed(() => {
       speakersIn: teamSpeakers.length - _.filter(teamSpeakers, ['status', false]).length,
       institution: institution,
       identifier: _.flatten(_.map(teamSpeakers, 'identifier')),
+      breaking: _.some(teamSpeakers, speaker => speaker.breaking),
     }
     if (_.filter(team.speakers, ['status', false]).length > 0) {
       team.status = false
@@ -112,18 +141,27 @@ const annotatedAdjudicators = computed(() => {
 })
 
 const peopleByType = computed(() => {
+  const f = filterByType.value
+  if (!f) {
+    return []
+  }
   const entities = []
-  if (filterByType.value.All || filterByType.value.Adjudicators) {
+  const includeAdjudicators = f.All || f.Adjudicators || f.Breaking
+  if (includeAdjudicators) {
     _.forEach(annotatedAdjudicators.value, (adjudicator) => { entities.push(adjudicator) })
   }
-  if (filterByType.value.All || filterByType.value.Debaters) {
+  const includeDebaters = f.All || f.Debaters || f.Breaking
+  if (includeDebaters) {
     _.forEach(annotatedDebaters.value, (speakerOrTeam) => { entities.push(speakerOrTeam) })
+  }
+  if (f.Breaking) {
+    return _.filter(entities, person => person.breaking)
   }
   return entities
 })
 
 const getToolTipForPerson = (entity) => {
-  if (!props.teamCodes && entity.type !== 'Team') {
+  if (!showCodeNames.value && entity.type !== 'Team') {
     if (entity.institution === null) {
       if (entity.identifier[0]) {
         const subs = [entity.name, entity.type, entity.identifier[0]]
@@ -413,9 +451,16 @@ const setListContext = (metaKey, selectedKey, selectedValue) => {
   })
 }
 
+const setNameDisplay = (useCodeNames) => {
+  showCodeNames.value = useCodeNames
+  if (useCodeNames) {
+    setListContext('sortByGroup', 'Name', true)
+  } else {
+    setListContext('sortByGroup', 'Institution', true)
+  }
+}
+
 const forAdmin = toRef(props, 'forAdmin')
-const assistantUrl = toRef(props, 'assistantUrl')
-const teamSize = toRef(props, 'teamSize')
 </script>
 
 <template>
@@ -447,13 +492,13 @@ const teamSize = toRef(props, 'teamSize')
         class="btn-group mb-md-0 mb-3"
       >
         <button
-          v-for="(optionState, optionKey) in filterByType"
-          :key="optionKey"
+          v-for="option in filterByTypeOptions"
+          :key="option.key"
           type="button"
-          :class="['btn btn-outline-primary', optionState ? 'active' : '']"
-          @click="setListContext('filterByType', optionKey, !optionState)"
+          :class="['btn btn-outline-primary', option.state ? 'active' : '']"
+          @click="setListContext('filterByType', option.key, !option.state)"
         >
-          {{ gettext(peopleFilterNames[optionKey]) }}
+          {{ gettext(peopleFilterNames[option.key]) }}
         </button>
       </div>
 
@@ -469,6 +514,26 @@ const teamSize = toRef(props, 'teamSize')
           @click="setListContext('speakerGroupings', optionKey, !optionState)"
         >
           {{ gettext(speakerGroupingNames[optionKey]) }}
+        </button>
+      </div>
+
+      <div
+        v-if="forAdmin && !isForVenues && canToggleNames"
+        class="btn-group mb-md-0 mb-3"
+      >
+        <button
+          type="button"
+          :class="['btn btn-outline-secondary', !showCodeNames ? 'active' : '']"
+          @click="setNameDisplay(false)"
+        >
+          {{ gettext('Real Names') }}
+        </button>
+        <button
+          type="button"
+          :class="['btn btn-outline-secondary', showCodeNames ? 'active' : '']"
+          @click="setNameDisplay(true)"
+        >
+          {{ gettext('Code Names') }}
         </button>
       </div>
 
@@ -503,13 +568,6 @@ const teamSize = toRef(props, 'teamSize')
     <div class="alert alert-info">
       {{ gettext('This page will live-update with new check-ins as they occur although the initial list may be up to a minute old.') }}
     </div>
-
-    <template v-if="assistantUrl">
-      <a
-        :href="assistantUrl"
-        target="_blank"
-      >{{ gettext('Open the assistant version.') }}</a>
-    </template>
 
     <div
       v-for="(entities, grouper) in entitiesBySortingSetting"

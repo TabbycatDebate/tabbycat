@@ -7,6 +7,19 @@ from .preferences import tournament_preferences_registry
 
 class TournamentPreferenceForm(PreferenceForm):
     registry = tournament_preferences_registry
+    preset_apply_actions = ()
+    preset_action_rows = ()
+    preset_action_rows_pending = ()
+    preset_action_rows_already = ()
+
+    def iter_preference_fields(self):
+        """Bound fields for the preset apply UI, excluding optional preset_action__ checkboxes."""
+        visible = self.visible_fields
+        if callable(visible):
+            visible = visible()
+        for field in visible:
+            if not field.name.startswith('preset_action__'):
+                yield field
 
     def clean(self):
         super().clean()
@@ -40,8 +53,18 @@ class TournamentPreferenceForm(PreferenceForm):
                 raise ValidationError({'debate_rules__teams_in_debate': _("Four-team formats require consensus ballots")})
 
         elif section == 'feedback':
-            if get_pref('adj_min_score') > get_pref('adj_max_score'):
+            adj_min_score = get_pref('adj_min_score')
+            adj_max_score = get_pref('adj_max_score')
+            if adj_min_score > adj_max_score:
                 raise ValidationError({'feedback__adj_min_score': score_range_msg, 'feedback__adj_max_score': score_range_msg})
+            adj_score_step = get_pref('adj_score_step')
+            if adj_score_step is not None:
+                if adj_score_step <= 0:
+                    raise ValidationError({'feedback__adj_score_step': _("Score step must be greater than 0.")})
+                if adj_score_step > adj_max_score:
+                    raise ValidationError({'feedback__adj_score_step': _(
+                        "Score step (%(step)s) cannot be greater than the maximum score (%(max)s).") % {
+                            'step': adj_score_step, 'max': adj_max_score}})
 
         elif section == 'data_entry':
             if get_pref('public_use_password') and len(get_pref('public_password')) == 0:
@@ -55,5 +78,10 @@ class TournamentPreferenceForm(PreferenceForm):
 
 
 def tournament_preference_form_builder(instance, preferences=[], **kwargs):
-    return preference_form_builder(
+    FormClass = preference_form_builder(  # noqa: N806
         TournamentPreferenceForm, preferences, model={'instance': instance}, **kwargs)
+    # Django 5.1+ builds subclass fields from declared_fields merged along the MRO.
+    # dynamic_preferences only assigns base_fields after type(); keep declared_fields in
+    # sync so subclasses (e.g. preset forms with apply-action fields) still inherit prefs.
+    FormClass.declared_fields = FormClass.base_fields
+    return FormClass

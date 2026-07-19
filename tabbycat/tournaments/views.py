@@ -6,15 +6,19 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, resolve_url
 from django.utils.html import format_html_join
 from django.utils.timezone import get_current_timezone_name
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import CreateView, FormView, UpdateView
+from django.views.generic.edit import FormView, UpdateView
+from formtools.wizard.views import SessionWizardView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from breakqual.models import BreakCategory
+from breakqual.utils import auto_make_break_rounds
 from draw.models import Debate
 from notifications.models import BulkNotification
 from results.models import BallotSubmission
@@ -27,15 +31,20 @@ from utils.mixins import (AdministratorMixin, AssistantMixin, CacheMixin, Tabbyc
 from utils.tables import TabbycatTableBuilder
 from utils.views import ModelFormSetView, PostOnlyRedirectView, VueTableTemplateView
 
-from .forms import (RoundWeightForm, ScheduleEventForm, SetCurrentRoundMultipleBreakCategoriesForm,
-                    SetCurrentRoundSingleBreakCategoryForm, TournamentConfigureForm,
-                    TournamentStartForm)
+from .forms import (clear_all_round_caches, RoundRobinPrelimSetupForm, RoundWeightForm, ScheduleEventForm,
+                    SetCurrentRoundMultipleBreakCategoriesForm, SetCurrentRoundSingleBreakCategoryForm,
+                    TournamentConfigureForm, TournamentStartForm)
 from .mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from .models import ScheduleEvent, Tournament
-from .utils import get_side_name
+from .utils import auto_make_rounds_rr, DRAW_FORMAT_ROUND_ROBIN, get_side_name
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
+
+
+def _create_tournament_wizard_show_rr_setup(wizard):
+    cfg = wizard.get_cleaned_data_for_step('configure')
+    return bool(cfg and cfg.get('draw_format') == DRAW_FORMAT_ROUND_ROBIN)
 
 
 class PublicSiteIndexView(WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin, TemplateView):
@@ -222,28 +231,63 @@ class CompleteRoundView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnly
             return redirect_round('availability-index', self.round.next)
 
 
-class CreateTournamentView(AdministratorMixin, WarnAboutDatabaseUseMixin, CreateView):
-    """This view allows a logged-in superuser to create a new tournament."""
+class CreateTournamentWizardView(AdministratorMixin, WarnAboutDatabaseUseMixin, SessionWizardView):
+    """Create a tournament and apply initial configuration in one wizard (session-backed)."""
 
-    model = Tournament
-    form_class = TournamentStartForm
+    form_list = [
+        ('basics', TournamentStartForm),
+        ('configure', TournamentConfigureForm),
+        ('rr_setup', RoundRobinPrelimSetupForm),
+    ]
+    condition_dict = {
+        'rr_setup': _create_tournament_wizard_show_rr_setup,
+    }
     template_name = "create_tournament.html"
     db_warning_severity = messages.ERROR
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, form, **kwargs):
+        context = super().get_context_data(form=form, **kwargs)
         demo_datasets = [
             ('minimal8team', _("8-team generic dataset")),
             ('australs24team', _("24-team Australs dataset")),
             ('bp88team', _("88-team BP dataset")),
         ]
-        kwargs['demo_datasets'] = demo_datasets
+        context['demo_datasets'] = demo_datasets
         demo_slugs = [slug for slug, _ in demo_datasets]
-        kwargs['preexisting'] = Tournament.objects.filter(slug__in=demo_slugs).values_list('slug', flat=True)
-        return super().get_context_data(**kwargs)
+        context['preexisting'] = Tournament.objects.filter(slug__in=demo_slugs).values_list('slug', flat=True)
+        return context
 
-    def get_success_url(self):
-        t = Tournament.objects.order_by('id').last()
-        return reverse_tournament('tournament-configure', tournament=t)
+    def get_form_kwargs(self, step=None, **kwargs):
+        kwargs = super().get_form_kwargs(step=step, **kwargs)
+        if step == 'configure':
+            kwargs.setdefault('instance', Tournament())
+        return kwargs
+
+    def done(self, form_list, form_dict, **kwargs):
+        configure = form_dict['configure']
+        draw_rr = configure.cleaned_data.get('draw_format') == DRAW_FORMAT_ROUND_ROBIN
+        rr_form = form_dict.get('rr_setup') if draw_rr else None
+        panels = max(1, int(rr_form.cleaned_data['prelim_panels'])) if rr_form else 1
+        skip_rounds = draw_rr and panels > 1
+
+        t = form_dict['basics'].save(skip_rounds=skip_rounds)
+        configure.instance = t
+        configure.save(skip_rounds=skip_rounds)
+
+        if draw_rr and rr_form:
+            num_rr = form_dict['basics'].cleaned_data['num_prelim_rounds']
+            t.preferences['draw_rules__prelim_panels'] = panels
+            if skip_rounds:
+                auto_make_rounds_rr(t, num_rr, panels=panels)
+                open_break = BreakCategory.objects.filter(tournament=t, is_general=True).first()
+                if open_break:
+                    auto_make_break_rounds(open_break, t, False)
+            else:
+                t.round_set.filter(stage=Round.Stage.PRELIMINARY).update(draw_type=Round.DrawType.ROUNDROBIN)
+            clear_all_round_caches(t)
+
+        messages.success(self.request, _("Tournament %(name)s is ready.") % {'name': t.short_name or t.name})
+        return HttpResponseRedirect(reverse_tournament('tournament-admin-home', tournament=t))
 
 
 class ConfigureTournamentView(AdministratorMixin, TournamentMixin, UpdateView):

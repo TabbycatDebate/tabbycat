@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import DatabaseError, IntegrityError, transaction
-from django.db.models import Q, QuerySet
+from django.db.models import Q
 from django.utils import timezone
 from drf_spectacular.utils import extend_schema_field
 from push_notifications.api.rest_framework import WebPushDeviceSerializer
@@ -292,6 +292,7 @@ class RoundSerializer(serializers.ModelSerializer):
     starts_at = TimeOrDateTimeField(required=False, allow_null=True)
     motions_released = MotionsReleasedField(required=False, allow_null=True, source='motions_status')
     _links = RoundLinksSerializer(source='*', read_only=True)
+    schedule_group = serializers.IntegerField(required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -301,7 +302,7 @@ class RoundSerializer(serializers.ModelSerializer):
                 self.fields.pop('feedback_weight')
 
             # Can't show in a ListSerializer
-            if not with_permission(permission=Permission.VIEW_MOTION) and (isinstance(self.instance, QuerySet) or self.instance.motions_status != Round.MotionsStatus.MOTIONS_RELEASED):
+            if not with_permission(permission=Permission.VIEW_MOTION) and (not isinstance(self.instance, Round) or self.instance.motions_status != Round.MotionsStatus.MOTIONS_RELEASED):
                 self.fields.pop('motions')
 
     class Meta:
@@ -320,6 +321,7 @@ class RoundSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         motions_data = validated_data.pop('roundmotion_set', [])
+        validated_data['schedule_group'] = validated_data.get('schedule_group', validated_data['seq'])
         if len(motions_data) > 0 and not has_permission(self.context['request'].user, Permission.EDIT_MOTION, self.context['tournament']):
             raise serializers.PermissionDenied('Editing motions disallowed')
 
@@ -1423,7 +1425,7 @@ class FeedbackSerializer(serializers.ModelSerializer):
         request = self.context['request']
         return {
             'participant_submitter': request.auth if participant else None,
-            'submitter': participant or request.user,
+            'submitter': request.user,
             'submitter_type': Submission.Submitter.PUBLIC if participant else Submission.Submitter.TABROOM,
             'ip_address': get_ip_address(request),
         }
@@ -1525,6 +1527,20 @@ class BallotSerializer(serializers.ModelSerializer):
                     speakers_team = set(s['speaker'].team_id for s in speeches)
                     if team is None or len(speakers_team) > 1 or (len(speakers_team) == 1 and team.id not in speakers_team):
                         raise serializers.ValidationError("Speakers must be in their team.")
+                    return data
+
+                def validate_speeches(self, data):
+                    tournament = self.context['tournament']
+                    for seq, speech in enumerate(data, 1):
+                        for criterion_score in speech.get('criteria', []):
+                            criterion = criterion_score['criterion']
+                            if not criterion.applies_to_position(seq, tournament.reply_position):
+                                raise serializers.ValidationError(
+                                    "Score criterion %(criterion)s does not apply to speech position %(position)d." % {
+                                        'criterion': criterion.name,
+                                        'position': seq,
+                                    },
+                                )
                     return data
 
                 def save(self, **kwargs):
@@ -1653,7 +1669,7 @@ class BallotSerializer(serializers.ModelSerializer):
             raise PermissionDenied('Authenticated adjudicator is not in debate')
         return {
             'participant_submitter': participant,
-            'submitter': participant or request.user,
+            'submitter': request.user,
             'submitter_type': Submission.Submitter.PUBLIC if participant else Submission.Submitter.TABROOM,
             'ip_address': get_ip_address(request),
         }
@@ -1744,9 +1760,11 @@ class PreformedPanelSerializer(serializers.ModelSerializer):
 class SpeakerRoundScoresSerializer(serializers.ModelSerializer):
     class RoundScoresSerializer(serializers.ModelSerializer):
         class RoundSpeechSerializer(serializers.ModelSerializer):
+            ballot_url = fields.DebateHyperlinkedRelatedField(view_name='api-ballot-detail', source='ballot_submission', queryset=BallotSubmission.objects.all(), allow_null=True)
+
             class Meta:
                 model = SpeakerScore
-                fields = ('score', 'position', 'ghost')
+                fields = ('score', 'position', 'ghost', 'rank', 'ballot_url')
 
         round = fields.TournamentHyperlinkedRelatedField(view_name='api-round-detail', source='debate.round',
             lookup_field='seq', lookup_url_kwarg='round_seq',
@@ -1773,13 +1791,16 @@ class TeamRoundScoresSerializer(serializers.ModelSerializer):
             lookup_field='seq', lookup_url_kwarg='round_seq',
             queryset=Round.objects.all())
 
+        ballot_url = fields.DebateHyperlinkedRelatedField(view_name='api-ballot-detail', source='ballot.ballot_submission', queryset=BallotSubmission.objects.all(), allow_null=True)
         points = serializers.IntegerField(source='ballot.points')
         score = serializers.FloatField(source='ballot.score')
         has_ghost = serializers.BooleanField(source='ballot.has_ghost')
+        win = serializers.BooleanField(source='ballot.win')
+        side = fields.SideChoiceField(read_only=True)
 
         class Meta:
             model = TeamScore
-            fields = ('round', 'points', 'score', 'has_ghost')
+            fields = ('round', 'ballot_url', 'points', 'score', 'has_ghost', 'win', 'side')
 
     team = fields.TournamentHyperlinkedIdentityField(view_name='api-team-detail')
     rounds = ScoreSerializer(many=True, source="debateteam_set")
@@ -1787,6 +1808,19 @@ class TeamRoundScoresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = ('team', 'rounds')
+
+
+class TeamCurrentStandingsSerializer(TeamRoundScoresSerializer):
+    """Like TeamRoundScoresSerializer but scoped to public current standings:
+    no speak data, adds side, intended for rounds filtered to past non-silent
+    prelim rounds by the view."""
+
+    class RoundResultSerializer(TeamRoundScoresSerializer.ScoreSerializer):
+
+        class Meta(TeamRoundScoresSerializer.ScoreSerializer.Meta):
+            fields = ('round', 'ballot_url', 'side', 'points', 'win')
+
+    rounds = RoundResultSerializer(many=True, source="debateteam_set")
 
 
 class UserSerializer(serializers.ModelSerializer):

@@ -11,7 +11,11 @@
     </label>
   {% endif %}
 
-  {{ field|addcss:"form-control" }}
+  {% if field|is_choice_widget %}
+    {{ field }}
+  {% else %}
+    {{ field|addcss:"form-control" }}
+  {% endif %}
 
   {% if field.help_text  %}
     <small class="form-text text-muted">{{ field.help_text|linebreaks }}</small>

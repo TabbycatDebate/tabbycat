@@ -4,6 +4,7 @@ import DraggableItem from '../../templates/allocations/DraggableItem.vue'
 import { useDragAndDropStore } from '../../templates/allocations/DragAndDropStore.js'
 import { useDjangoI18n } from '../../templates/composables/useDjangoI18n.js'
 import { useHighlightable } from '../../templates/composables/useHighlightable.js'
+import { useHoverConflictReceiver } from '../../templates/composables/useHoverConflictReceiver.js'
 
 const props = defineProps({
   item: Object,
@@ -50,8 +51,54 @@ const institutionCode = computed(() => {
 const highlightData = computed(() => props.item)
 const { highlightsCSS } = useHighlightable({ highlightData })
 
-const conflictsCSS = computed(() => '')
-const hoverConflictsCSS = computed(() => '')
+const clashableType = computed(() => 'team')
+const clashableID = computed(() => props.item?.id ?? null)
+
+const hoverReceiver = useHoverConflictReceiver({ clashableType, clashableID })
+const hoverConflictsCSS = hoverReceiver.hoverConflictsCSS
+
+const conflictsCSS = computed(() => {
+  const debateId = props.dragPayload?.assignment
+  if (!debateId || !props.item) {
+    return ''
+  }
+
+  const debate = store.allDebatesOrPanels[debateId]
+  if (!debate?.teams) {
+    return ''
+  }
+
+  const otherIds = Object.values(debate.teams).filter(
+    teamId => teamId !== null && teamId !== props.item.id,
+  )
+  if (otherIds.length === 0) {
+    return ''
+  }
+
+  if (props.item.institution) {
+    for (const otherId of otherIds) {
+      const otherTeam = store.allocatableItems[otherId]
+      if (otherTeam?.institution && otherTeam.institution === props.item.institution) {
+        return 'conflictable panel-institution'
+      }
+    }
+  }
+
+  const histories = store.teamHistoriesForItem(props.item.id)
+  if (histories?.team) {
+    let smallestAgo = 99
+    for (const history of histories.team) {
+      if (otherIds.includes(history.id) && history.ago < smallestAgo) {
+        smallestAgo = history.ago
+      }
+    }
+    if (smallestAgo !== 99) {
+      return `conflictable panel-histories-${smallestAgo}-ago`
+    }
+  }
+
+  return ''
+})
 </script>
 
 <template>
@@ -62,6 +109,9 @@ const hoverConflictsCSS = computed(() => '')
     :hover-panel="true"
     :hover-panel-item="hoverableData"
     :hover-panel-type="hoverableType"
+    :hover-conflicts="true"
+    :hover-conflicts-item="clashableID"
+    :hover-conflicts-type="clashableType"
   >
     <template #number>
       <span class="d-none"><span /></span>

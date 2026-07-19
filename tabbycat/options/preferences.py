@@ -230,6 +230,18 @@ class MaxTimesPerSide(IntegerPreference):
 
 
 @tournament_preferences_registry.register
+class PrelimPanels(IntegerPreference):
+    help_text = _("When greater than 1, consecutive preliminary rounds are treated as parallel panels in the same "
+        "schedule slot (e.g. A and B). Current-round navigation and feedback eligibility use the shared slot. "
+        "Round creation assigns schedule groups from this value.")
+    verbose_name = _("Preliminary panels per schedule slot")
+    section = draw_rules
+    name = 'prelim_panels'
+    default = 1
+    field_kwargs = {'validators': [MinValueValidator(1)]}
+
+
+@tournament_preferences_registry.register
 class DrawOddBracket(ChoicePreference):
     help_text = _("How odd brackets are resolved (see documentation for further details)")
     verbose_name = _("Odd bracket resolution method")
@@ -315,7 +327,10 @@ class DrawPullupRestriction(ChoicePreference):
 
 @tournament_preferences_registry.register
 class DrawPullupPenalty(IntegerPreference):
-    help_text = _("Penalty applied when determining which teams to pull up (for minimum cost matching)")
+    help_text = _("Penalty applied when determining which teams to pull up (for minimum cost matching). "
+        "In BP, added to position costs when a team is placed above its points bracket; teams with "
+        "fewer prior pull-ups are preferred. Set high enough to take precedence over side balance "
+        "(e.g. 100000 with the default position cost exponent). Leave 0 for no preference.")
     verbose_name = _("Pullup penalty")
     section = draw_rules
     name = 'draw_pullup_penalty'
@@ -475,6 +490,15 @@ class MaximumAdjScore(FloatPreference):
     section = feedback
     name = 'adj_max_score'
     default = 5.0
+
+
+@tournament_preferences_registry.register
+class AdjScoreStep(FloatPreference):
+    help_text = _("Score step allowed when entering adjudicator feedback scores, e.g. full points (1) or half points (0.5)")
+    verbose_name = _("Adjudicator score step")
+    section = feedback
+    name = 'adj_score_step'
+    default = 1.0
 
 
 @tournament_preferences_registry.register
@@ -1187,6 +1211,17 @@ class PublicBreakingTeams(BooleanPreference):
     section = public_features
     name = 'public_breaking_teams'
     default = False
+
+
+@tournament_preferences_registry.register
+class PublicBreakMetricsToShow(IntegerPreference):
+    help_text = _("How many metrics from the team standings precedence to show on the public break page. "
+                  "For example, 2 shows only the first two metrics set in Standings. "
+                  "Use 0 to hide all metrics, or -1 to show all of them.")
+    verbose_name = _("Number of metrics to show on public break page")
+    section = public_features
+    name = 'public_break_metrics_to_show'
+    default = -1
 
 
 @tournament_preferences_registry.register

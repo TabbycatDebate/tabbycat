@@ -244,11 +244,18 @@ class BaseCreateTeamFormView(LogActionMixin, PublicTournamentPageMixin, CustomQu
             form.max_num = self.tournament.pref('speakers_in_team')
         return form
 
+    @staticmethod
+    def _registered_speaker_instances(formset):
+        return [
+            form.instance for form in formset
+            if form.cleaned_data.get('name')
+        ]
+
     def done(self, form_list, form_dict, **kwargs):
         team = form_dict['team'].save()
-        speaker_objs = [s.instance for s in form_dict['speaker']]
+        speaker_objs = self._registered_speaker_instances(form_dict['speaker'])
         if self.tournament.pref('team_name_generator') != 'user':
-            reference = getattr(self, self.REFERENCE_GENERATORS[self.tournament.pref('team_name_generator')])(team, speaker_objs)
+            reference = getattr(self, self.REFERENCE_GENERATORS[self.tournament.pref('team_name_generator')])(team, speaker_objs, exclude_team=team)
             team.reference = reference
 
         team.code_name = getattr(self, self.CODE_NAME_GENERATORS[self.tournament.pref('code_name_generator')])(team, speaker_objs)
@@ -279,7 +286,7 @@ class BaseCreateTeamFormView(LogActionMixin, PublicTournamentPageMixin, CustomQu
         return HttpResponseRedirect(self.get_success_url())
 
     @staticmethod
-    def _alphabetical_reference(team, speakers=None):
+    def _alphabetical_reference(team, speakers=None, *, exclude_team=None):
         teams = Team.objects.all_with_unconfirmed.filter(tournament=team.tournament, institution=team.institution, reference__regex=r"^[A-Z]+$").values_list('reference', flat=True)
         team_numbers = []
         for existing_team in teams:
@@ -297,17 +304,47 @@ class BaseCreateTeamFormView(LogActionMixin, PublicTournamentPageMixin, CustomQu
         return ch
 
     @staticmethod
-    def _numerical_reference(team, speakers: Sequence[Speaker]):
+    def _numerical_reference(team, speakers: Sequence[Speaker], *, exclude_team=None):
         teams = Team.objects.all_with_unconfirmed.filter(tournament=team.tournament, institution=team.institution, reference__regex=r"^\d+$").values_list('reference', flat=True)
         team_numbers = [int(t) for t in teams]
         return str(max(team_numbers) + 1)
 
     @staticmethod
-    def _initials_reference(team, speakers: Sequence[Speaker]):
-        return "".join(s.last_name[0] for s in speakers)
+    def _team_reference_taken(team, reference, *, exclude_team=None):
+        qs = Team.objects.all_with_unconfirmed.filter(
+            tournament=team.tournament,
+            institution=team.institution,
+            reference=reference,
+        )
+        if exclude_team is not None and exclude_team.pk:
+            qs = qs.exclude(pk=exclude_team.pk)
+        return qs.exists()
 
     @staticmethod
-    def _custom_reference(team, speakers: Sequence[Speaker]):
+    def _initials_reference(team, speakers: Sequence[Speaker], *, exclude_team=None):
+        def reference_for_length(length):
+            return "".join((s.last_name or '')[:length] for s in speakers)
+
+        max_length = max((len(s.last_name or '') for s in speakers), default=0)
+        if max_length == 0:
+            return ''
+
+        for length in range(1, max_length + 1):
+            # Add subsequent letters if team name is taken
+            # Inst AB -> Inst AaBb -> Inst AaaBbb -> ...
+            reference = reference_for_length(length)
+            if reference and not BaseCreateTeamFormView._team_reference_taken(team, reference, exclude_team=exclude_team):
+                return reference
+
+        # If no unique reference found, add a numeric suffix: Inst AaaBbb2
+        reference = reference_for_length(max_length)
+        suffix = 2
+        while BaseCreateTeamFormView._team_reference_taken(team, f"{reference}{suffix}", exclude_team=exclude_team):
+            suffix += 1
+        return f"{reference}{suffix}"
+
+    @staticmethod
+    def _custom_reference(team, speakers: Sequence[Speaker], *, exclude_team=None):
         return team.reference
 
     @staticmethod
@@ -461,7 +498,7 @@ class PublicCreateAdjudicatorFormView(BaseCreateAdjudicatorFormView):
 
 class CreateSpeakerFormView(LogActionMixin, PublicTournamentPageMixin, CustomQuestionFormMixin, FormView):
     form_class = SpeakerForm
-    template_name = 'adjudicator_registration_form.html'
+    template_name = 'speaker_registration_form.html'
     page_emoji = '👄'
     page_title = gettext_lazy("Register Speaker")
     action_log_type = ActionLogEntry.ActionType.SPEAKER_REGISTER
@@ -482,7 +519,6 @@ class CreateSpeakerFormView(LogActionMixin, PublicTournamentPageMixin, CustomQue
         if self.key:
             team = Team.objects.all_with_unconfirmed.prefetch_related('speaker_set').filter(tournament=tournament, pk=self.kwargs['pk']).first()
             return (
-                tournament.pref('institution_participant_registration') and
                 Invitation.objects.filter(tournament=tournament, for_content_type=ContentType.objects.get_for_model(Speaker), team=team, url_key=self.key).exists() and
                 team.speaker_set.count() < tournament.pref('speakers_in_team')
             )
@@ -504,7 +540,7 @@ class CreateSpeakerFormView(LogActionMixin, PublicTournamentPageMixin, CustomQue
         team = self.object.team
         speakers = team.speaker_set.all()
         if self.tournament.pref('team_name_generator') == 'initials':
-            team.reference = BaseCreateTeamFormView._initials_reference(team, speakers)
+            team.reference = BaseCreateTeamFormView._initials_reference(team, speakers, exclude_team=team)
         if self.tournament.pref('code_name_generator') == 'last_names':
             team.code_name = BaseCreateTeamFormView._last_names_code_name(team, speakers)
         team.save()
@@ -620,6 +656,7 @@ class AdminEditInstitutionFormView(TournamentMixin, AdministratorMixin, FormView
         inst = t_inst.institution
         inst.name = inst_form.cleaned_data['name']
         inst.code = inst_form.cleaned_data['code']
+        inst.region = inst_form.cleaned_data.get('region', None)
         inst.save()
 
         if 'teams_requested' in inst_form.fields:

@@ -25,6 +25,7 @@ RUN nvm install && nvm use
 RUN git config --global url."https://".insteadOf git://
 
 # Install our node/python requirements
+RUN pip install --upgrade pip
 RUN pip install pipenv
 RUN pipenv install --system --deploy
 RUN npm ci

@@ -1,3 +1,4 @@
+from collections import defaultdict
 from copy import deepcopy
 from itertools import groupby
 
@@ -1023,14 +1024,19 @@ class SpeakerRoundStandingsRoundsView(TournamentAPIMixin, TournamentPublicAPIMix
     list_permission = Permission.VIEW_SPEAKERSSTANDINGS
 
     def get_queryset(self):
-        qs = super().get_queryset().prefetch_related(Prefetch('team__debateteam_set', queryset=DebateTeam.objects.all().select_related('debate__round__tournament')))
-        data = {s.id: s for s in qs.all()}
+        qs = super().get_queryset()
+        data = {s.id: s for s in qs}
+
+        # Bulk load debateteams for all speakers' teams (avoids N+1 from per-speaker access)
+        team_ids = list({s.team_id for s in data.values()})
+        debateteams_by_team_id = defaultdict(list)
+        for dt in DebateTeam.objects.filter(team_id__in=team_ids).select_related('debate__round__tournament'):
+            debateteams_by_team_id[dt.team_id].append(dt)
 
         params_serializer = SpeakerRoundStandingsRoundsParamsSerializer(data=self.request.query_params, context={'tournament': self.tournament})
         params_serializer.is_valid(raise_exception=True)
 
-        speaker_scores = SpeakerScore.objects.select_related('speaker', 'ballot_submission',
-            'debate_team__debate__round__tournament').filter(
+        speaker_scores = SpeakerScore.objects.select_related('speaker', 'ballot_submission__debate__round__tournament').filter(
             ballot_submission__confirmed=True, speaker_id__in=data.keys(),
         ).order_by('speaker_id', 'debate_team_id', 'position')
 
@@ -1042,7 +1048,7 @@ class SpeakerRoundStandingsRoundsView(TournamentAPIMixin, TournamentPublicAPIMix
             speaker_scores = speaker_scores.filter(position__lte=self.tournament.last_substantive_position)
 
         for spk in data.values():
-            spk.debateteams = deepcopy(spk.team.debateteam_set.all())
+            spk.debateteams = deepcopy(debateteams_by_team_id[spk.team_id])
             for dt in spk.debateteams:
                 dt.scores = []
 
@@ -1067,7 +1073,7 @@ class TeamRoundStandingsRoundsView(TournamentAPIMixin, TournamentPublicAPIMixin,
     list_permission = Permission.VIEW_TEAMSTANDINGS
 
     def get_queryset(self):
-        ts_pf = Prefetch('teamscore_set', queryset=TeamScore.objects.filter(ballot_submission__confirmed=True), to_attr='round_scores')
+        ts_pf = Prefetch('teamscore_set', queryset=TeamScore.objects.select_related('ballot_submission__debate__round__tournament').filter(ballot_submission__confirmed=True), to_attr='round_scores')
         qs = super().get_queryset().prefetch_related(
             Prefetch('debateteam_set', queryset=DebateTeam.objects.all().prefetch_related(ts_pf).select_related('debate__round__tournament')))
 
@@ -1078,6 +1084,52 @@ class TeamRoundStandingsRoundsView(TournamentAPIMixin, TournamentPublicAPIMixin,
                     dt.ballot = dt.round_scores[0]
                 else:
                     dt.ballot = TeamScore()
+
+        return qs
+
+
+@extend_schema(tags=['standings'], parameters=[
+    tournament_parameter,
+])
+@extend_schema_view(
+    list=extend_schema(summary="Get public team round results for current standings", responses=serializers.TeamCurrentStandingsSerializer(many=True)),
+)
+class TeamCurrentStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
+    """Returns per-round points/win per team, restricted to past non-silent
+    preliminary rounds (respecting the ``public_team_standings`` preference).
+    Speaks are excluded. Each round entry includes the team's side."""
+
+    serializer_class = serializers.TeamCurrentStandingsSerializer
+    access_preference = 'public_team_standings'
+
+    list_permission = Permission.VIEW_TEAMSTANDINGS
+
+    def _get_eligible_rounds(self):
+        tournament = self.tournament
+        if tournament.pref('all_results_released'):
+            return tournament.prelim_rounds()
+        return tournament.prelim_rounds(before=tournament.current_round).filter(silent=False)
+
+    def get_queryset(self):
+        ts_pf = Prefetch(
+            'teamscore_set',
+            queryset=TeamScore.objects.select_related(
+                'ballot_submission__debate__round__tournament',
+            ).filter(ballot_submission__confirmed=True),
+            to_attr='round_scores',
+        )
+        qs = super().get_queryset().prefetch_related(
+            Prefetch(
+                'debateteam_set',
+                queryset=DebateTeam.objects.filter(
+                    debate__round__in=self._get_eligible_rounds(),
+                ).prefetch_related(ts_pf).select_related('debate__round__tournament').order_by('debate__round__seq'),
+            ),
+        )
+
+        for t in qs:
+            for dt in t.debateteam_set.all():
+                dt.ballot = dt.round_scores[0] if dt.round_scores else TeamScore()
 
         return qs
 
@@ -1183,7 +1235,10 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
             return (
                 (view.action in ['list', 'retrieve', 'create'] and view.tournament.pref('participant_ballots') == 'private-urls' and view.participant_requester) or
                 (view.action == 'create' and view.tournament.pref('participant_ballots') == 'public') or
-                (view.action in ['list', 'retrieve'] and view.tournament.pref('private_ballots_released') is True)
+                (view.action in ['list', 'retrieve'] and (
+                    view.tournament.pref('private_ballots_released') or
+                    view.tournament.pref('ballots_released') or
+                    (view.tournament.pref('all_results_released') and view.tournament.pref('speaker_tab_released'))))
             )
 
     serializer_class = serializers.BallotSerializer
@@ -1193,7 +1248,7 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     round_field = 'debate__round'
 
     authentication_classes = [TokenAuthentication, SessionAuthentication, URLKeyAuthentication]
-    permission_classes = [PerTournamentPermissionRequired | PublicPreferencePermission | CustomPermission]
+    permission_classes = [PerTournamentPermissionRequired | CustomPermission]
 
     list_permission = Permission.VIEW_BALLOTSUBMISSIONS
     create_permission = Permission.ADD_BALLOTSUBMISSIONS
@@ -1225,7 +1280,7 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
         if hasattr(self, '_debate'):
             return self._debate
 
-        self._debate = get_object_or_404(Debate, pk=self.kwargs.get('debate_pk'))
+        self._debate = get_object_or_404(Debate, pk=self.kwargs.get('debate_pk'), round=self.round)
         return self._debate
 
     def lookup_kwargs(self):
@@ -1244,6 +1299,8 @@ class BallotViewSet(RoundAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
 
         if params_serializer.validated_data.get('confirmed') or not (getattr(self.request.user, 'is_staff', False) or self.participant_requester):
             filters &= Q(confirmed=True)
+        elif params_serializer.validated_data.get('confirmed') is False:
+            filters &= Q(confirmed=False)
         return super().get_queryset().filter(filters).prefetch_related(
             'debateteammotionpreference_set__motion__tournament',
             'debateteammotionpreference_set__debate_team__team__tournament',
@@ -1376,8 +1433,11 @@ class FeedbackViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
 
         # Disallow querying for feedback that they didn't submit
         if (person := self.participant_requester) is not None:
-            if self.action == 'list' and (query_params.get('source_type') != type(person).__name__.lower() or query_params.get('source') != str(person.id)):
-                raise PermissionDenied("URL key-authorized requests may only get the participants' objects")
+            match type(person).__name__.lower():
+                case 'adjudicator':
+                    filters &= Q(source_adjudicator__adjudicator_id=person.id)
+                case 'team':
+                    filters &= Q(source_team__team_id=person.id)
 
         if query_params.get('source_type') == 'adjudicator':
             filters &= Q(source_team__isnull=True)

@@ -103,7 +103,7 @@ class BaseTestDebateResult(TestCase):
 
         venue = Venue.objects.create(name="Venue", priority=10)
 
-        rd = Round.objects.create(tournament=self.tournament, seq=1, abbreviation="R1")
+        rd = Round.objects.create(tournament=self.tournament, seq=1, schedule_group=1, abbreviation="R1")
         self.debate = Debate.objects.create(round=rd, venue=venue)
 
         sides = [0, 1]

@@ -36,6 +36,10 @@
               {% roundurl 'edit-debate-adjudicators-multi' as url %}
               {% trans "Edit adjudicator allocations for all current rounds" as title %}
               {% include "components/item-action.html" with text=title type="primary" %}
+            {% elif tournament.current_rounds|length > 1 %}
+              {% roundurl 'edit-debate-adjudicators-multi' as url %}
+              {% trans "Edit adjudicator allocations for all panels in this schedule slot" as title %}
+              {% include "components/item-action.html" with text=title type="primary" %}
             {% endif %}
 
             {% roundurl 'edit-debate-adjudicators' as url %}

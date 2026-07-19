@@ -88,6 +88,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             line = round_interpreter_part(lineno, line)
             if line.get('seq') is None:
                 line['seq'] = lineno - 1
+            line['schedule_group'] = line['seq']
             return line
 
         self._import(f, tm.Round, round_interpreter)

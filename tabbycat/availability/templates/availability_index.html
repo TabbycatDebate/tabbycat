@@ -59,8 +59,8 @@
           {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
         </button>
       {% elif availability_info.venues.in_now == 0 %}
-        <button class="btn btn-danger disabled"
-          data-toggle="tooltip" title="{% trans "The draw cannot be generated until some rooms have been marked as available." %}">
+        <button class="btn btn-warning" id="createDraw"
+          data-toggle="tooltip" title="{% trans "No rooms are marked as available. You can still generate the draw and assign rooms later." %}">
           {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
         </button>
       {% elif min_venues > availability_info.venues.in_now %}
@@ -95,7 +95,7 @@
 
 {% block page-alerts %}
 
-  {% if previous_unconfirmed > 0 and round.prev %}
+  {% if previous_unconfirmed > 0 and round.prev and round.draw_type != round.DrawType.RANDOM and round.draw_type != round.DrawType.SEEDED and round.draw_type != round.DrawType.ROUNDROBIN %}
     <div class="alert alert-danger">
       <i data-feather="alert-circle"></i>
       {% roundurl 'results-round-list' round=round.prev as prev_round_results_url %}
@@ -202,6 +202,27 @@
     </div>
   {% endif %}
 
+  {% if has_seeds and round.draw_type == round.DrawType.RANDOM %}
+    <div class="alert alert-warning" id="seeded-draw-alert">
+      <div class="row align-items-center">
+        <div class="col-auto pr-1">
+          <i data-feather="alert-circle"></i>
+        </div>
+        <div class="col pl-0 pr-0">
+          {% blocktrans trimmed %}
+            One or more teams have a <strong>seed</strong> assigned, but this round's draw type
+            is not <strong>Seeded</strong>.
+          {% endblocktrans %}
+        </div>
+        <div class="col-auto pl-2">
+          <button class="btn btn-sm btn-warning" id="set-seeded-draw-btn" onclick="setSeededDrawType()">
+            {% trans "Set draw type to Seeded" %}
+          </button>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
   {% if pref.team_standings_precedence|length == 0 %}
     {% tournamenturl 'options-tournament-section' section='standings' as standings_config_url %}
     {% blocktrans trimmed asvar message %}
@@ -229,3 +250,39 @@
   </div>
 
 {% endblock content %}
+
+{% block js %}
+  {{ block.super }}
+  {% if has_seeds and round.draw_type != round.DrawType.SEEDED %}
+  <script>
+    function setSeededDrawType() {
+      const btn = document.getElementById('set-seeded-draw-btn');
+      btn.disabled = true;
+
+      const csrfToken = (document.cookie.split(';')
+        .map(c => c.trim())
+        .find(c => c.startsWith('csrftoken=')) || '').split('=')[1] || '';
+
+      fetch('/api/v1/tournaments/{{ tournament.slug }}/rounds/{{ round.seq }}', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({ draw_type: 'S' }),
+      })
+      .then(response => {
+        if (response.ok) {
+          window.location.reload();
+        } else {
+          return response.json().then(data => { throw new Error(data.detail || '{% trans "Request failed" %}'); });
+        }
+      })
+      .catch(error => {
+        btn.disabled = false;
+        alert(error.message);
+      });
+    }
+  </script>
+  {% endif %}
+{% endblock js %}

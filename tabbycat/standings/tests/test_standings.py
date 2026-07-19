@@ -28,7 +28,7 @@ class TestTrivialStandings(TestCase):
         self.team2 = Team.objects.create(tournament=self.tournament, reference="2", use_institution_prefix=False)
         adj = Adjudicator.objects.create(tournament=self.tournament, name="Adjudicator")
         for i in [1, 2]:
-            rd = Round.objects.create(tournament=self.tournament, seq=i)
+            rd = Round.objects.create(tournament=self.tournament, seq=i, schedule_group=i)
             debate = Debate.objects.create(round=rd, flags=['pullup'])
             dt1 = DebateTeam.objects.create(debate=debate, team=self.team1, side=DebateSide.AFF, flags=['pullup'])
             dt2 = DebateTeam.objects.create(debate=debate, team=self.team2, side=DebateSide.NEG)
@@ -52,7 +52,7 @@ class TestTrivialStandings(TestCase):
         speaker1 = Speaker.objects.create(team=self.team1, name="Speaker 1")
         speaker2 = Speaker.objects.create(team=self.team2, name="Speaker 2")
         for i in [1, 2]:
-            rd = Round.objects.get(tournament=self.tournament, seq=i)
+            rd = Round.objects.get(tournament=self.tournament, seq=i, schedule_group=i)
             dt1 = DebateTeam.objects.get(debate__round=rd, team=self.team1)
             dt2 = DebateTeam.objects.get(debate__round=rd, team=self.team2)
             ballotsub = BallotSubmission.objects.get(debate__round=rd)
@@ -211,7 +211,7 @@ class IgnorableDebateMixin:
 
     def set_up_ignorable_debate(self):
         adj = Adjudicator.objects.get()
-        rd = Round.objects.create(tournament=self.tournament, seq=3)
+        rd = Round.objects.create(tournament=self.tournament, seq=3, schedule_group=3)
         debate = Debate.objects.create(round=rd)
         dt1 = DebateTeam.objects.create(debate=debate, team=self.team1, side=DebateSide.AFF)
         dt2 = DebateTeam.objects.create(debate=debate, team=self.team2, side=DebateSide.NEG)
@@ -227,7 +227,7 @@ class IgnorableDebateMixin:
         super().set_up_speaker_scores(position)
         speaker1 = Speaker.objects.filter(team=self.team1, name="Speaker 1").first()
         speaker2 = Speaker.objects.filter(team=self.team2, name="Speaker 2").first()
-        rd = Round.objects.get(tournament=self.tournament, seq=3)
+        rd = Round.objects.get(tournament=self.tournament, seq=3, schedule_group=3)
         dt1 = DebateTeam.objects.get(debate__round=rd, team=self.team1)
         dt2 = DebateTeam.objects.get(debate__round=rd, team=self.team2)
         ballotsub = BallotSubmission.objects.get(debate__round=rd)
@@ -324,7 +324,7 @@ class TestBasicStandings(TestCase):
         sides = [DebateSide.AFF, DebateSide.NEG]
 
         for r, debatedict in enumerate(testdata["teamscores"]):
-            rd = Round.objects.create(tournament=tournament, seq=r, abbreviation="R{:d}".format(r))
+            rd = Round.objects.create(tournament=tournament, seq=r, schedule_group=r, abbreviation="R{:d}".format(r))
             for adj, venue, (teamnames, teamscores) in zip(adjs, venues, debatedict.items()):
                 debate = Debate.objects.create(round=rd, venue=venue)
                 for team, side in zip(teamnames, sides):
