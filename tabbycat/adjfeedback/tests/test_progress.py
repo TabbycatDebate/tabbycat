@@ -227,6 +227,21 @@ class TestFeedbackProgress(TestCase):
             self.assertExpectedFromTeamTracker(debate, t, True, True, 1, [feedback1], [0])
             self.assertExpectedFromTeamTracker(debate, t, True, True, 1, [feedback1], [0], {'enforce_orallist': False})
 
+    def test_multiple_submissions_allowed_when_only_orallist_expected(self):
+        self.tournament.preferences['feedback__feedback_from_teams'] = 'all-adjs-allowed'
+        debate = self._create_debate((0, 1), (0, 1, 2), "aan")
+        feedback1 = self._create_feedback(self._dt(debate, 0), 0)
+        feedback2 = self._create_feedback(self._dt(debate, 0), 1)
+
+        feedback1.refresh_from_db()
+        self.assertTrue(feedback1.confirmed)
+        self.assertTrue(feedback2.confirmed)
+
+        progress = FeedbackProgressForTeam(self._team(0))
+        self.assertEqual(progress.num_submitted(), 2)
+        self.assertEqual(progress.num_expected(), 1)
+        self.assertEqual(progress.num_fulfilled(), 1)
+
     # ==========================================================================
     # From adjudicator
     # ==========================================================================
@@ -306,9 +321,9 @@ class TestFeedbackProgress(TestCase):
         if adj3 is not None:
             self._create_feedback(self._dt(debate3, 0), adj3)
 
-    def assertTeamProgress(self, feedback_paths, show_splits, t, submitted, # noqa
+    def assertTeamProgress(self, feedback_policy, show_splits, t, submitted, # noqa
                            expected, fulfilled, unsubmitted, coverage):
-        self.tournament.preferences['feedback__feedback_from_teams'] = feedback_paths
+        self.tournament.preferences['feedback__feedback_from_teams'] = feedback_policy
         self.tournament.preferences['ui_options__show_splitting_adjudicators'] = show_splits
         progress = FeedbackProgressForTeam(self._team(t))
         self.assertEqual(progress.num_submitted(), submitted)
@@ -323,6 +338,7 @@ class TestFeedbackProgress(TestCase):
         self._create_team_progress_dataset(0, 4, 6)
         self.assertTeamProgress('orallist', True, 0, 3, 3, 3, 0, 1.0)
         self.assertTeamProgress('orallist', False, 0, 3, 3, 3, 0, 1.0)
+        self.assertTeamProgress('all-adjs-allowed', True, 0, 3, 3, 3, 0, 1.0)
 
     def test_team_progress_all_good_all_adjs(self):
         self.tournament.preferences['feedback__feedback_from_teams'] = 'all-adjs'
@@ -338,6 +354,14 @@ class TestFeedbackProgress(TestCase):
         self._create_feedback(self._dt(debate3, 0), 6)
         self.assertTeamProgress('all-adjs', True, 0, 7, 7, 7, 0, 1.0)
         self.assertTeamProgress('all-adjs', False, 0, 7, 7, 7, 0, 1.0)
+
+    def test_team_progress_all_voting_adjs_excludes_trainees(self):
+        self.tournament.preferences['feedback__feedback_from_teams'] = 'all-adjs'
+        debate = self._create_debate((0, 1), (0, 1, 2), "nnn", trainees=[3])
+        for adj in (0, 1, 2, 3):
+            self._create_feedback(self._dt(debate, 0), adj)
+        progress = self.assertTeamProgress('all-voting-adjs', True, 0, 4, 3, 3, 0, 1.0)
+        self.assertEqual(len(progress.unexpected_trackers()), 1)
 
     def test_team_progress_no_submissions(self):
         self.tournament.preferences['feedback__feedback_from_teams'] = 'all-adjs'

@@ -520,13 +520,16 @@ class FeedbackPaths(ChoicePreference):
 
 @tournament_preferences_registry.register
 class FeedbackFromTeams(ChoicePreference):
-    verbose_name = _("Expect feedback to be submitted by teams on")
+    verbose_name = _("Allow and expect feedback to be submitted by teams on")
     help_text = _("Used to inform available choices in the feedback forms for teams (both online and printed) and feedback progress; this option is used by, e.g., UADC")
     section = feedback
     name = 'feedback_from_teams'
     choices = (
         ('orallist', _("Orallist only (voting panellists permitted, with prompts to select orallist)")),
-        ('all-adjs', _("All adjudicators in their panels (including trainees)")),
+        ('all-voting-adjs-allowed', _("Allow all voting adjudicators, but only expect the orallist")),
+        ('all-adjs-allowed', _("Allow all adjudicators (including trainees), but only expect the orallist")),
+        ('all-voting-adjs', _("All voting adjudicators (excluding trainees)")),
+        ('all-adjs', _("All adjudicators (including trainees)")),
         ('no-one', _("No one")),
     )
     default = 'orallist'

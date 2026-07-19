@@ -18,7 +18,7 @@ from draw.models import DebateTeam
 from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
 
-from .utils import expected_feedback_targets
+from .utils import expected_feedback_targets, team_feedback_expected_targets
 
 logger = logging.getLogger(__name__)
 
@@ -69,9 +69,16 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
     """Represents a single piece of expected feedback from a team on any valid
     adjudicator in a panel."""
 
-    def __init__(self, source, enforce_orallist=True):
+    def __init__(self, source, enforce_orallist=True, allow_multiple=False):
         self.enforce_orallist = enforce_orallist
+        self.allow_multiple = allow_multiple
         return super().__init__(source)
+
+    @property
+    def fulfilled(self):
+        if self.allow_multiple:
+            return self.count >= 1
+        return super().fulfilled
 
     def acceptable_targets(self):
         """For a team, this must be the adjudicator who delivered the oral
@@ -257,8 +264,12 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
             tournament = team.tournament
         self.enforce_orallist = (tournament.pref("show_splitting_adjudicators") and
                                  tournament.pref("ballots_per_debate_prelim") == 'per-adj')
-        self.expect_orallists = tournament.pref("feedback_from_teams") in ['orallist', 'all-adjs']
-        self.expect_all_adjs = tournament.pref("feedback_from_teams") == 'all-adjs'
+        feedback_policy = tournament.pref("feedback_from_teams")
+        expected_targets = team_feedback_expected_targets(feedback_policy)
+        self.allow_multiple = feedback_policy in ['all-voting-adjs-allowed', 'all-adjs-allowed']
+        self.expect_orallists = expected_targets == 'orallist'
+        self.expect_all_voting_adjs = expected_targets == 'all-voting-adjs'
+        self.expect_all_adjs = expected_targets == 'all-adjs'
         super().__init__(tournament)
 
     @staticmethod
@@ -291,13 +302,14 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
 
     def get_expected_trackers(self):
         debateteams = self._get_debateteams()
-        if self.expect_all_adjs:
-            # If teams submit on all adjudicators, there is one tracker for each
+        if self.expect_all_voting_adjs or self.expect_all_adjs:
+            # If teams submit on every relevant adjudicator, there is one tracker for each
             # adjudicator in each debate for which there is a confirmed ballot
             # and the round is not silent.
             trackers = [FeedbackExpectedSubmissionFromTeamOnSingleAdjudicatorTracker(dt, adj)
                         for dt in debateteams
-                        for adj in dt.debate.adjudicators.all()]
+                        for adj in (dt.debate.adjudicators.all() if self.expect_all_adjs
+                                    else dt.debate.adjudicators.voting())]
             self._prefetch_tracker_acceptable_submissions(trackers,
                     attrgetter('source', 'target'),
                     attrgetter('source_team', 'adjudicator'))
@@ -306,7 +318,7 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
             # If teams submit only on orallists, there is one tracker for each
             # debate for which there is a confirmed ballot, and the round is not
             # silent.
-            trackers = [FeedbackExpectedSubmissionFromTeamTracker(dt, self.enforce_orallist)
+            trackers = [FeedbackExpectedSubmissionFromTeamTracker(dt, self.enforce_orallist, self.allow_multiple)
                         for dt in debateteams]
             self._prefetch_tracker_acceptable_submissions(trackers,
                         attrgetter('source'), attrgetter('source_team'))
