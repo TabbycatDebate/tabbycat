@@ -1,12 +1,14 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load debate_tags i18n %}
 
 {% block head-title %}<span class="emoji">👤</span> {% trans "Add Speaker" %}{% endblock %}
 {% block page-title %}{% trans "Add Speaker" %}{% endblock %}
 {% block page-subtitle %}{% blocktrans trimmed with name=team.short_name %}for {{ name }}{% endblocktrans %}{% endblock %}
 
 {% block page-subnav-sections %}
-  {% include "participants_subnav.html" %}
+  <a class="btn btn-outline-primary" href="{% tournamenturl 'participants-team-record' pk=team.pk %}">
+    <i data-feather="chevron-left"></i>{% trans "Back to Team Record" %}
+  </a>
 {% endblock %}
 
 {% block content %}

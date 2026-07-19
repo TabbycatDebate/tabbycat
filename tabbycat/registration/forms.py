@@ -262,16 +262,22 @@ class SpeakerForm(CustomQuestionsFormMixin, forms.ModelForm):
 
         self.fields['key'].initial = key
 
-        if not (self.tournament.pref('team_name_generator') == 'initials' or self.tournament.pref('code_name_generator') == 'last_names'):
-            self.fields.pop('last_name')
-
-        for field in ({'email', 'phone', 'gender', 'categories'} - set(self.tournament.pref('reg_speaker_fields'))):
+        for field in self.get_excluded_fields():
             self.fields.pop(field)
 
         if 'categories' in self.fields:
-            self.fields['categories'].queryset = self.tournament.speakercategory_set.filter(public=True)
+            self.fields['categories'].queryset = self.get_category_queryset()
 
         self.add_question_fields()
+
+    def get_excluded_fields(self):
+        excluded = {'email', 'phone', 'gender', 'categories'} - set(self.tournament.pref('reg_speaker_fields'))
+        if not (self.tournament.pref('team_name_generator') == 'initials' or self.tournament.pref('code_name_generator') == 'last_names'):
+            excluded.add('last_name')
+        return excluded
+
+    def get_category_queryset(self):
+        return self.tournament.speakercategory_set.filter(public=True)
 
     class Meta:
         model = Speaker
@@ -288,21 +294,22 @@ class SpeakerForm(CustomQuestionsFormMixin, forms.ModelForm):
         return obj
 
 
-class AdminSpeakerForm(forms.ModelForm):
+class AdminSpeakerForm(SpeakerForm):
+
+    _enforce_required = False
 
     def __init__(self, *args, team=None, **kwargs):
-        self.team = team
-        super().__init__(*args, **kwargs)
+        super().__init__(team, None, *args, **kwargs)
+        self.fields.pop('key')
+        for name, field in self.fields.items():
+            if name != 'name':
+                field.required = False
 
-    class Meta:
-        model = Speaker
-        fields = ('name', 'email')
+    def get_excluded_fields(self):
+        return set()
 
-    def save(self, commit=True):
-        self.instance.team = self.team
-        obj = super().save(commit=commit)
-        populate_url_keys([obj])
-        return obj
+    def get_category_queryset(self):
+        return self.tournament.speakercategory_set.all()
 
 
 class AdjudicatorForm(CustomQuestionsFormMixin, forms.ModelForm):
