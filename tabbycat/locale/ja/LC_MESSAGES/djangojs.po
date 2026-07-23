@@ -552,3 +552,119 @@ msgstr "ディベートの優先度"
 msgid "No code name set"
 msgstr "コード名なし"
 
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "Minimum rounds (M):"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "Non-strict"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "Strict"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "Each judge must individually cover M rounds"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "Total rounds across judges â¥ (N-1) Ã M"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "Saved"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "Error saving"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "Edit Assignments"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "Complying"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "Not complying"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "Both"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "Institutions"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "Independent Teams"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "No institutions to show."
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "No independent teams to show."
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "No judges assigned."
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "rounds"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "Fines paid:"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "required"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "No judge assigned"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "Fines:"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "needs"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "assigned"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "team"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "teams"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "judge"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "judges"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "fine"
+msgstr ""
+
+#: adjallocation/templates/N1RuleStatusContainer.vue:
+msgid "fines"
+msgstr ""

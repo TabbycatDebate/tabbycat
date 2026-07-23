@@ -1861,3 +1861,41 @@ class SlotsAllocatedEmailBody(LongStringPreference):
     default = "<p>Hi {{ USER }},</p><p>Your institution {{ INSTITUTION }} has been allocated {{ TEAMS_ALLOCATED }} team slot(s) and {{ ADJUDICATORS_ALLOCATED }} adjudicator slot(s).</p>"
     widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
     field_kwargs = {'required': False}
+
+
+# ==============================================================================
+n1_rule = Section('n1_rule', verbose_name=_("N-1 Rule"))
+# ==============================================================================
+
+
+@tournament_preferences_registry.register
+class N1RuleMinRounds(IntegerPreference):
+    help_text = _("Minimum number of preliminary rounds each assigned judge must individually cover for the N-1 rule")
+    verbose_name = _("N-1 rule minimum rounds (M)")
+    section = n1_rule
+    name = 'n1_rule_min_rounds'
+    default = 3
+
+
+@tournament_preferences_registry.register
+class N1RuleStrictInstitutions(BooleanPreference):
+    help_text = _(
+        "If checked (strict), each of the N-1 institutional judges must individually cover M rounds. "
+        "If unchecked (non-strict), the total rounds across all institutional judges must equal (N-1) × M."
+    )
+    verbose_name = _("Strict institutional N-1 enforcement")
+    section = n1_rule
+    name = 'n1_rule_strict_institutions'
+    default = False
+
+
+@tournament_preferences_registry.register
+class N1RuleInstitutionNEqualsN(BooleanPreference):
+    help_text = _(
+        "If checked (N=N), institutions must provide N judges for N teams. "
+        "If unchecked (N-1), institutions must provide N-1 judges for N teams."
+    )
+    verbose_name = _("N=N rule for institutions")
+    section = n1_rule
+    name = 'n1_rule_institution_n_equals_n'
+    default = False

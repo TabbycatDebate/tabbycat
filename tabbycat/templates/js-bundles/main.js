@@ -19,6 +19,7 @@ import TournamentOverviewContainer from '../../tournaments/templates/TournamentO
 // Allocations
 import EditDebateAdjudicatorsContainer from '../../adjallocation/templates/EditDebateAdjudicatorsContainer.vue'
 import EditPanelAdjudicatorsContainer from '../../adjallocation/templates/EditPanelAdjudicatorsContainer.vue'
+import N1RuleStatusContainer from '../../adjallocation/templates/N1RuleStatusContainer.vue'
 import EditDebateTeamsContainer from '../../draw/templates/EditDebateTeamsContainer.vue'
 import EditDebateVenuesContainer from '../../venues/templates/EditDebateVenuesContainer.vue'
 import { useDragAndDropStore } from '../../templates/allocations/DragAndDropStore'
@@ -188,6 +189,8 @@ vueComponents.EditDebateAdjudicatorsContainer = EditDebateAdjudicatorsContainer
 vueComponents.EditPanelAdjudicatorsContainer = EditPanelAdjudicatorsContainer
 vueComponents.EditDebateTeamsContainer = EditDebateTeamsContainer
 vueComponents.EditDebateVenuesContainer = EditDebateVenuesContainer
+// N-1 Rule
+vueComponents.N1RuleStatusContainer = N1RuleStatusContainer
 // Ballots New
 vueComponents.BallotEntryContainer = BallotEntryContainer
 

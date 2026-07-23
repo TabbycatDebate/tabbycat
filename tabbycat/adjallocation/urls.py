@@ -31,4 +31,15 @@ urlpatterns = [
             views.TeamInstitutionConflictsView.as_view(),
             name='adjallocation-conflicts-team-inst'),
     ])),
+    path('n1rule/', include([
+        path('assignments/',
+            views.N1RuleAssignmentsView.as_view(),
+            name='adjallocation-n1rule-assignments'),
+        path('status/',
+            views.N1RuleStatusView.as_view(),
+            name='adjallocation-n1rule-status'),
+        path('fines/',
+            views.N1RuleFinePaymentView.as_view(),
+            name='adjallocation-n1rule-fines'),
+    ])),
 ]

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block content %}
+
+  <div id="vueMount">
+    <n1-rule-status-container
+      :institutions="institutions"
+      :independent-teams="independentTeams"
+      :initial-m-rounds="initialMRounds"
+      :initial-strict-mode="initialStrictMode"
+      :initial-institution-n-equals-n="initialInstitutionNEqualsN"
+      :assignments-url="assignmentsUrl"
+      :save-settings-url="saveSettingsUrl"
+      :fines-url="finesUrl"
+      :csrf-token="csrfToken">
+    </n1-rule-status-container>
+  </div>
+
+{% endblock content %}
+
+{% block js %}
+  <script>
+    window.vueData = {
+      'institutions': {{ institutions|safe }},
+      'independentTeams': {{ independent_teams|safe }},
+      'initialMRounds': {{ initial_m_rounds }},
+      'initialStrictMode': {{ initial_strict_mode|safe }},
+      'initialInstitutionNEqualsN': {{ initial_institution_n_equals_n|safe }},
+      'assignmentsUrl': '{% tournamenturl "adjallocation-n1rule-assignments" %}',
+      'saveSettingsUrl': '{% tournamenturl "adjallocation-n1rule-status" %}',
+      'finesUrl': '{% tournamenturl "adjallocation-n1rule-fines" %}',
+      'csrfToken': '{{ csrf_token }}',
+    }
+  </script>
+  {{ block.super }}
+{% endblock js %}

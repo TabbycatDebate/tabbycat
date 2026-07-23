@@ -108,6 +108,64 @@ class TeamInstitutionConflict(models.Model):
 
 
 # ==============================================================================
+# N-1 Rule
+# ==============================================================================
+
+class N1RuleAssignment(models.Model):
+    adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE,
+        verbose_name=_("adjudicator"))
+    institution = models.ForeignKey('participants.Institution', models.SET_NULL, null=True, blank=True,
+        verbose_name=_("covered institution"))
+    team = models.ForeignKey('participants.Team', models.SET_NULL, null=True, blank=True,
+        verbose_name=_("independent team"))
+
+    class Meta:
+        constraints = [UniqueConstraint(fields=['adjudicator', 'institution'])]
+        verbose_name = _("N-1 rule assignment")
+        verbose_name_plural = _("N-1 rule assignments")
+
+    def __str__(self):
+        if self.team:
+            return '{} covers independent team {}'.format(self.adjudicator, self.team)
+        inst = self.institution or getattr(self.adjudicator, 'institution', None)
+        return '{} covers institution {}'.format(self.adjudicator, inst or '(none)')
+
+
+class N1RuleFinePayment(models.Model):
+    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
+        related_name='n1_fine_payments',
+        verbose_name=_("tournament"))
+    institution = models.ForeignKey('participants.Institution', models.SET_NULL,
+        null=True, blank=True,
+        verbose_name=_("institution"))
+    team = models.ForeignKey('participants.Team', models.SET_NULL,
+        null=True, blank=True,
+        verbose_name=_("independent team"))
+    fines_paid = models.PositiveIntegerField(default=0,
+        verbose_name=_("fines paid"))
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['tournament', 'institution'],
+                condition=models.Q(institution__isnull=False),
+                name='unique_n1fine_institution',
+            ),
+            models.UniqueConstraint(
+                fields=['tournament', 'team'],
+                condition=models.Q(team__isnull=False),
+                name='unique_n1fine_team',
+            ),
+        ]
+        verbose_name = _("N-1 rule fine payment")
+        verbose_name_plural = _("N-1 rule fine payments")
+
+    def __str__(self):
+        target = self.institution or self.team
+        return 'N-1 fines: {} paid for {}'.format(self.fines_paid, target)
+
+
+# ==============================================================================
 # Preformed panels
 # ==============================================================================
 
