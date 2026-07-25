@@ -146,10 +146,14 @@ class BaseBreakGenerator:
         institution cap. Such cases should be accounted for directly in the
         `compute_break()` method.
         """
-        existing_remark_teams = self.team_queryset.filter(
-            breakingteam__break_category=self.category,
-            breakingteam__remark__isnull=False,
-        ).exclude(Q(breakingteam__remark__exact='') | Q(breakingteam__remark=BreakingTeam.Remark.RESERVE))
+        existing_remark_team_ids = BreakingTeam.objects.filter(
+            break_category=self.category,
+        ).exclude(
+            Q(remark__isnull=True) |
+            Q(remark__exact='') |
+            Q(remark=BreakingTeam.Remark.RESERVE),
+        ).values_list('team_id', flat=True)
+        existing_remark_teams = self.team_queryset.filter(id__in=existing_remark_team_ids)
         different_break_teams = self.team_queryset.exclude(
             breakingteam__remark__in=[BreakingTeam.Remark.INELIGIBLE, BreakingTeam.Remark.RESERVE],
             breakingteam__break_category__priority__gt=self.category.priority,
