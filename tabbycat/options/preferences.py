@@ -831,6 +831,15 @@ class RepliesTabReleased(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class CriterionTabsReleased(BooleanPreference):
+    help_text = _("Enables public display of the per-criterion speaker tabs, e.g. a tab of the top speakers by 'Style'. Intended for use after the tournament.")
+    verbose_name = _("Release score criteria tabs to public")
+    section = tab_release
+    name = 'criterion_tabs_released'
+    default = False
+
+
+@tournament_preferences_registry.register
 class RepliesTabReleaseLimit(IntegerPreference):
     help_text = _("Only show scores for the top X repliers in the public tab (set to 0 to show all repliers).")
     verbose_name = _("Top replies cutoff")

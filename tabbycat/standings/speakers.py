@@ -1,11 +1,13 @@
 """Standings generator for speakers."""
 
 import logging
+from functools import partialmethod
 
 from django.db.models import Avg, Case, Count, F, FloatField, Max, Min, Q, StdDev, Sum, When
 from django.db.models.functions import Cast, NullIf
 from django.utils.translation import gettext_lazy as _
 
+from results.models import ScoreCriterion
 from tournaments.models import Round
 
 from .base import BaseStandingsGenerator
@@ -260,6 +262,99 @@ class SpeakerScoreRankingsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
 
 
 # ==============================================================================
+# Score criterion metric annotators
+# ==============================================================================
+
+class BaseCriterionMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
+    """Base class for metrics on a single score criterion. These are keyed by
+    the criterion's seq, so use criterion_metric_annotator_classes() to build
+    them for a tournament rather than instantiating these directly."""
+
+    field = 'speakerscore__speakercriterionscore__score'
+    key_prefix = None  # must be set by subclasses
+    name_format = None  # must be set by subclasses
+    abbr_format = None  # must be set by subclasses
+
+    # The criterion join gives one row per criterion per speech, which would
+    # inflate other aggregations if combined into the shared query.
+    combinable = False
+
+    # Set by views dedicated to a single criterion, where the criterion's name
+    # is already in the page title and would just repeat in every column.
+    standalone = False
+
+    def __init__(self, criterion):
+        self.criterion = criterion
+        self.key = self.build_key(criterion.seq)
+        self.name = self.name_format % {'criterion': criterion.name}
+        self.abbr = self.short_abbr if self.standalone else (
+            self.abbr_format % {'criterion': criterion.name})
+
+    @classmethod
+    def build_key(cls, seq):
+        return '%s%d' % (cls.key_prefix, seq)
+
+    @classmethod
+    def choice_label(cls):
+        return (cls.name_format % {'criterion': cls.criterion_name}).capitalize()
+
+    def get_position_filter(self, round):
+        """Mirrors ScoreCriterion.applies_to_position()."""
+        if self.criterion.speech_type == ScoreCriterion.SpeechType.REPLY:
+            return Q(speakerscore__position=round.tournament.reply_position)
+        if self.criterion.speech_type == ScoreCriterion.SpeechType.SUBSTANTIVE:
+            return Q(speakerscore__position__lte=round.tournament.last_substantive_position)
+        return Q()
+
+    def get_annotation(self, round):
+        return self.function(self.field, filter=Q(
+            speakerscore__ballot_submission__confirmed=True,
+            speakerscore__debate_team__debate__round__seq__lte=round.seq,
+            speakerscore__debate_team__debate__round__stage=Round.Stage.PRELIMINARY,
+            speakerscore__ghost=False,
+            speakerscore__speakercriterionscore__criterion=self.criterion,
+        ) & self.get_position_filter(round))
+
+
+class TotalCriterionScoreMetricAnnotator(BaseCriterionMetricAnnotator):
+    """Metric annotator for total score on a single criterion."""
+    key_prefix = "criterion_total_"
+    name_format = _("total for %(criterion)s")
+    abbr_format = _("%(criterion)s Total")
+    short_abbr = _("Total")
+    function = Sum
+
+
+class AverageCriterionScoreMetricAnnotator(BaseCriterionMetricAnnotator):
+    """Metric annotator for average score on a single criterion."""
+    key_prefix = "criterion_avg_"
+    name_format = _("average for %(criterion)s")
+    abbr_format = _("%(criterion)s Avg")
+    short_abbr = _("Avg")
+    function = Avg
+
+
+def criterion_metric_annotator_classes(tournament, standalone_criterion=None):
+    """Returns the metric annotator classes for every score criterion in the
+    tournament, keyed by metric key. Each binds its criterion, so that they can
+    be used like the classes in SpeakerStandingsGenerator's static dict.
+
+    `standalone_criterion`, if given, is the criterion whose page this is, and
+    so whose metrics should be labelled without repeating its name."""
+    classes = {}
+    for criterion in tournament.scorecriterion_set.all():
+        for base in (AverageCriterionScoreMetricAnnotator, TotalCriterionScoreMetricAnnotator):
+            key = base.build_key(criterion.seq)
+            classes[key] = type(base.__name__, (base,), {
+                '__init__': partialmethod(base.__init__, criterion),
+                'key': key,
+                'criterion_name': criterion.name,
+                'standalone': criterion == standalone_criterion,
+            })
+    return classes
+
+
+# ==============================================================================
 # Standings generator
 # ==============================================================================
 
@@ -306,3 +401,28 @@ class SpeakerStandingsGenerator(BaseStandingsGenerator):
     }
 
     tournament_field = 'team__tournament'
+
+    def __init__(self, metrics, rankings, extra_metrics=(), tournament=None,
+            standalone_criterion=None, **options):
+        # Score criteria are per-tournament rows, so their annotator classes
+        # can't live in the class-level dict; build them per instance.
+        if tournament is not None:
+            self.metric_annotator_classes = {
+                **self.metric_annotator_classes,
+                **criterion_metric_annotator_classes(tournament, standalone_criterion),
+            }
+        super().__init__(metrics, rankings, extra_metrics, **options)
+
+    @classmethod
+    def get_metric_choices(cls, ranked_only=True, for_extra=False, tournament=None):
+        """Adds this tournament's score criteria to the standard choices."""
+        choices = super().get_metric_choices(ranked_only=ranked_only, for_extra=for_extra)
+        if tournament is None:
+            return choices
+
+        criterion_choices = [
+            (key, annotator.choice_label())
+            for key, annotator in criterion_metric_annotator_classes(tournament).items()
+        ]
+        criterion_choices.sort(key=lambda x: x[1])
+        return choices + criterion_choices

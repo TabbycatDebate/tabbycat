@@ -834,6 +834,12 @@ def get_metrics_params(generator):
         },
     }
     desc_default = '; default is tournament settings'
+    if generator is SpeakerStandingsGenerator:
+        # Score criteria are per-tournament, so their metric keys can't be
+        # enumerated in a static schema.
+        desc_default += ('. Score criteria also provide the metrics '
+            '`criterion_avg_<seq>` and `criterion_total_<seq>`, where `<seq>` is '
+            "the criterion's sequence number")
     return [
         OpenApiParameter('metrics',
             description='Rank participants with these metrics' + desc_default,
@@ -917,12 +923,15 @@ class SubstantiveSpeakerStandingsView(BaseStandingsView):
 
     @property
     def generator_kwargs(self):
+        # Needed for the generator to build this tournament's score criterion metrics.
+        kwargs = {'tournament': self.tournament}
         missable = -1 if self.missable_preference is None else self.tournament.pref(self.missable_preference)
         if missable < 0:
-            return {}
+            return kwargs
         total_prelim_rounds = self.tournament.round_set.filter(
             stage=Round.Stage.PRELIMINARY).count()
-        return {'rank_filter': (self.missable_field, total_prelim_rounds - missable)}
+        kwargs['rank_filter'] = (self.missable_field, total_prelim_rounds - missable)
+        return kwargs
 
     def get_metrics(self):
         metrics, extra_metrics = super().get_metrics()

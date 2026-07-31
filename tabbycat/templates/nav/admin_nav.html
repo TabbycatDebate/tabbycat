@@ -251,6 +251,14 @@
           <i data-feather="speaker"></i>{% trans "Replies" %}
         </a>
       {% endif %}
+      {% for criterion in tournament.scorecriterion_set.all %}
+        <a class="list-group-item"
+           href="{% roundurl 'standings-criterion' round=current_round criterion=criterion.seq %}">
+          <i data-feather="target"></i>{% blocktrans trimmed with criterion=criterion.name %}
+            {{ criterion }} Speakers
+          {% endblocktrans %}
+        </a>
+      {% endfor %}
       <a class="list-group-item" href="{% tournamenturl 'motions-statistics'  %}">
         <i data-feather="crosshair"></i>{% trans "Motions" %}
       </a>

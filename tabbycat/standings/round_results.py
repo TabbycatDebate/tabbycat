@@ -1,10 +1,10 @@
 import logging
 
-from django.db.models import Prefetch
+from django.db.models import F, Prefetch
 
 from draw.models import DebateTeam
 from draw.prefetch import populate_opponents
-from results.models import SpeakerScore, TeamScore
+from results.models import ScoreCriterion, SpeakerScore, TeamScore
 
 logger = logging.getLogger(__name__)
 
@@ -63,12 +63,15 @@ def add_team_round_results_public(teams, rounds, opponents=False):
         team.points = sum([(ts.points or 0) * ts.debate_team.debate.round.weight for ts in team.round_results if ts is not None])
 
 
-def add_speaker_round_results(standings, rounds, tournament, replies=False):
+def add_speaker_round_results(standings, rounds, tournament, replies=False, criterion=None):
     """Sets, on each item `info` in `standings`, an attribute `info.scores` to
     be a list of ints, one for each round in `rounds`, each being the score
     received by the speaker associated with `info` in the corresponding round.
     If there is no score available for a speaker and round, the corresponding
     element will be `None`.
+
+    If `criterion` is given, the scores are that criterion's component scores
+    rather than the speeches' overall scores.
     """
 
     speaker_ids = [info.instance_id for info in standings]
@@ -77,7 +80,15 @@ def add_speaker_round_results(standings, rounds, tournament, replies=False):
         ballot_submission__confirmed=True, debate_team__debate__round__in=rounds,
         speaker_id__in=speaker_ids, ghost=False)
 
-    if replies:
+    if criterion is not None:
+        speaker_scores = speaker_scores.filter(
+            speakercriterionscore__criterion=criterion,
+        ).annotate(criterion_score=F('speakercriterionscore__score'))
+        if criterion.speech_type == ScoreCriterion.SpeechType.REPLY:
+            speaker_scores = speaker_scores.filter(position=tournament.reply_position)
+        elif criterion.speech_type == ScoreCriterion.SpeechType.SUBSTANTIVE:
+            speaker_scores = speaker_scores.filter(position__lte=tournament.last_substantive_position)
+    elif replies:
         speaker_scores = speaker_scores.filter(position=tournament.reply_position)
     else:
         speaker_scores = speaker_scores.filter(position__lte=tournament.last_substantive_position)
@@ -88,4 +99,5 @@ def add_speaker_round_results(standings, rounds, tournament, replies=False):
     round_lookup = {r: i for i, r in enumerate(rounds)}
     for ss in speaker_scores:
         info = standings.get_standing(ss.speaker)
-        info.scores[round_lookup[ss.debate_team.debate.round]] = ss.score
+        score = ss.criterion_score if criterion is not None else ss.score
+        info.scores[round_lookup[ss.debate_team.debate.round]] = score

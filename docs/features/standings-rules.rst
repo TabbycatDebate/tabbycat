@@ -168,6 +168,41 @@ that will be shown in the speaker standings, but won't be used to rank speakers.
       is normally used as an "extra" (unranked) metric, because it'd be weird
       to rank by number of speeches given, but you can if you want to.
 
+  * - Total for *[criterion]*
+    - The sum of the speaker's scores for a single :ref:`score criterion
+      <score-criteria-standings>`, e.g. their total score for *Style*.
+
+  * - Average for *[criterion]*
+    - The average of the speaker's scores for a single :ref:`score criterion
+      <score-criteria-standings>`, e.g. their average score for *Style*.
+
+
+.. _score-criteria-standings:
+
+Speaker standings by score criterion
+====================================
+
+If your tournament scores speeches against several **score criteria** (for
+example, *Style*, *Content* and *Strategy* in World Schools format), Tabbycat
+can rank speakers by any single criterion, in addition to ranking them by their
+overall speaker scores.
+
+Two metrics are added for each criterion you define, named after the criterion
+itself: **Total for [criterion]** and **Average for [criterion]**. These appear
+alongside the other metrics in the **speaker standings precedence** and
+**speaker standings extra metrics** settings, so you can also use a criterion to
+tie-break another metric, or display a criterion's scores without ranking by it.
+
+Each criterion additionally gets its own standings page, listing the top
+speakers by that criterion alone — for example, a "top speakers by *Style*"
+tab. These are linked from the speaker standings navigation. To show them to the
+public, enable **Release score criteria tabs to public** in the **Tab release**
+section of the tournament settings. Note that this releases the tabs for *all*
+criteria; it isn't currently possible to release them individually.
+
+Criteria that apply only to substantive or only to reply speeches are aggregated
+over just those speeches, matching how they're scored on the ballot.
+
 
 Motion balance
 ==============
