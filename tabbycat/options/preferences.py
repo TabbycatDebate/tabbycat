@@ -95,6 +95,31 @@ class MarginIncludesDissent(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class ScoreAggregationFunction(ChoicePreference):
+    help_text = _("How to combine multiple adjudicators' scores into a "
+        "single recorded score for a panel-judged debate. This affects "
+        "SpeakerScore, TeamScore and SpeakerCriterionScore values (and, "
+        "transitively, margins) for every panel-judged debate in this "
+        "tournament — changing it recalculates results the next time "
+        "each affected ballot is saved. 'Mean' averages all relevant "
+        "adjudicators' scores. 'Median' (required by KPDP rules) uses "
+        "the middle score for odd-sized panels; for even-sized panels, "
+        "where there is no single middle value, it falls back to the "
+        "mean, rounded up to the nearest whole number. Which "
+        "adjudicators count as 'relevant' is still controlled "
+        "separately by the 'Margin includes dissenting adjudicators' "
+        "option above.")
+    verbose_name = _("Panel score aggregation function")
+    section = scoring
+    name = 'score_aggregation_function'
+    choices = (
+        ('mean', _("Mean (average)")),
+        ('median', _("Median")),
+    )
+    default = 'mean'
+
+
+@tournament_preferences_registry.register
 class BallotIntroduction(LongStringPreference):
     help_text = _("Any explanatory text needed to introduce the ballot form, e.g. speaker scale")
     verbose_name = _("Ballot introduction/explanation")
