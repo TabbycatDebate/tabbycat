@@ -96,19 +96,8 @@ class MarginIncludesDissent(BooleanPreference):
 
 @tournament_preferences_registry.register
 class ScoreAggregationFunction(ChoicePreference):
-    help_text = _("How to combine multiple adjudicators' scores into a "
-        "single recorded score for a panel-judged debate. This affects "
-        "SpeakerScore, TeamScore and SpeakerCriterionScore values (and, "
-        "transitively, margins) for every panel-judged debate in this "
-        "tournament — changing it recalculates results the next time "
-        "each affected ballot is saved. 'Mean' averages all relevant "
-        "adjudicators' scores. 'Median' (required by KPDP rules) uses "
-        "the middle score for odd-sized panels; for even-sized panels, "
-        "where there is no single middle value, it falls back to the "
-        "mean, rounded up to the nearest whole number. Which "
-        "adjudicators count as 'relevant' is still controlled "
-        "separately by the 'Margin includes dissenting adjudicators' "
-        "option above.")
+    help_text = _("How is the speaker's score from a debate judged by multiple judges "
+        "calculated: Mean (default), or Median (required by KPDP rules).")
     verbose_name = _("Panel score aggregation function")
     section = scoring
     name = 'score_aggregation_function'
@@ -1109,11 +1098,7 @@ class SplitVotingBallots(BooleanPreference):
 @tournament_preferences_registry.register
 class AllowSelfSplitBallots(BooleanPreference):
     help_text = _("Allow a solo adjudicator (no panel) to declare their own decision as a "
-        "2:1 split rather than unanimous, per KPDP rules. When on, ballot entry for "
-        "solo-adjudicated debates gets an extra checkbox for this; when checked, the "
-        "losing team is recorded as having earned 1 of 3 notional votes (and the "
-        "winning team 2 of 3) instead of the usual 1 of 1, which affects any standings "
-        "metric based on votes/ballots carried.")
+        "2:1 split rather than unanimous, per KPDP rules.")
     verbose_name = _("Allow self-split ballots for solo adjudicators")
     section = data_entry
     name = 'allow_self_split_ballots'

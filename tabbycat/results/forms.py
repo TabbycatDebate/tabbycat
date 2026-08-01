@@ -275,6 +275,19 @@ class BaseBallotSetForm(BaseResultForm):
         self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
                                self.tournament.pref('teams_in_debate') == 2)
         self.using_speaker_ranks = self.tournament.pref('speaker_ranks') != 'none'
+        # Self-split ballots only make sense for a genuinely solo-adjudicated debate
+        # (regardless of which form class is used to submit it -- e.g. with individual
+        # ballots enabled, a solo debate is still submitted via SingleBallotSetForm), and
+        # only have any effect when the confirmed result ends up voting-based (`per-adj`),
+        # since that's the only result type that tracks votes_given/votes_possible.
+        self.allowing_self_split = (
+            len(self.adjudicators) == 1 and
+            self.tournament.ballots_per_debate(self.debate.round.stage) == 'per-adj' and
+            self.tournament.pref('allow_self_split_ballots'))
+
+    @staticmethod
+    def _fieldname_self_split():
+        return 'self_split'
 
     def criteria_for_position(self, position):
         return [
@@ -757,6 +770,12 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
         if self.using_declared_winner:
             self.fields[self._fieldname_declared_winner()] = self.create_declared_winner_dropdown()
 
+        if self.allowing_self_split:
+            self.fields[self._fieldname_self_split()] = forms.BooleanField(
+                label=_("This was a 2:1 split decision (self-declared)"),
+                required=False,
+            )
+
     def initial_from_result(self, result):
         initial = super().initial_from_result(result)
 
@@ -774,6 +793,9 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
         if self.using_declared_winner:
             initial[self._fieldname_declared_winner()] = result.winning_side()
 
+        if self.allowing_self_split:
+            initial[self._fieldname_self_split()] = self.ballotsub.self_split
+
         return initial
 
     def list_score_fields(self):
@@ -785,6 +807,8 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
         if self.using_declared_winner:
             order.append(self._fieldname_declared_winner())
+        if self.allowing_self_split:
+            order.append(self._fieldname_self_split())
         return order
 
     # --------------------------------------------------------------------------
@@ -895,6 +919,9 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
         if self.declared_winner not in ['none', 'high-points']:
             result.set_winners({int(self.cleaned_data[self._fieldname_declared_winner()])})
 
+        if self.allowing_self_split:
+            self.ballotsub.self_split = self.cleaned_data.get(self._fieldname_self_split(), False)
+
     # --------------------------------------------------------------------------
     # Template access methods
     # --------------------------------------------------------------------------
@@ -910,6 +937,8 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
         if self.using_declared_winner:
             sheets[0]['declared_winner'] = self[self._fieldname_declared_winner()]
+        if self.allowing_self_split:
+            sheets[0]['self_split'] = self[self._fieldname_self_split()]
         return sheets
 
 
@@ -918,15 +947,6 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
     adjudications."""
 
     result_class = DebateResultByAdjudicatorWithScores
-
-    def get_preferences_options(self):
-        super().get_preferences_options()
-        self.allowing_self_split = (
-            len(self.adjudicators) == 1 and self.tournament.pref('allow_self_split_ballots'))
-
-    @staticmethod
-    def _fieldname_self_split():
-        return 'self_split'
 
     @staticmethod
     def _fieldname_score(adj, side, pos):
