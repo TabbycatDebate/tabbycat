@@ -610,11 +610,20 @@ class DebateResultByAdjudicator(BaseDebateResult):
     def teamscore_field_win(self, side):
         return side == self._winner
 
+    def _is_self_split(self):
+        """True if this is a solo-adjudicated debate where the adjudicator has
+        declared their decision as a 2:1 split rather than unanimous (KPDP rules)."""
+        return len(self.scoresheets) == 1 and getattr(self.ballotsub, 'self_split', False)
+
     @_requires_decision(None)
     def teamscore_field_votes_given(self, side):
+        if self._is_self_split():
+            return 2 if side == self._winner else 1
         return len(self._adjs_by_side[side])
 
     def teamscore_field_votes_possible(self, side):
+        if self._is_self_split():
+            return 3
         return len(self.scoresheets)
 
     def teamscore_field_has_ghost(self, side):
@@ -643,8 +652,9 @@ class DebateResultByAdjudicator(BaseDebateResult):
         if not self._decision_calculated and len(self.sides) == 2:
             self._calculate_decision()
         majority = self.majority_adjudicators()
+        self_split = self._is_self_split()
         for adj, adjtype in self.debate.adjudicators.with_positions():
-            split = adj not in majority and adjtype != AdjudicatorAllocation.POSITION_TRAINEE
+            split = (adj not in majority and adjtype != AdjudicatorAllocation.POSITION_TRAINEE) or self_split
             yield adj, adjtype, split
 
     def as_dicts(self):

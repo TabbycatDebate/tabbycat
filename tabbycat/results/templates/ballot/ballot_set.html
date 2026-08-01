@@ -77,6 +77,11 @@
           {% include "components/form-field.html" with field=sheet.declared_winner %}
         </div>
       {% endif %}
+      {% if sheet.self_split %}
+        <div class="list-group-item">
+          {% include "components/form-check.html" with field=sheet.self_split %}
+        </div>
+      {% endif %}
     </div>
   </div>
 

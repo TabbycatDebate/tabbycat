@@ -919,6 +919,15 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
     result_class = DebateResultByAdjudicatorWithScores
 
+    def get_preferences_options(self):
+        super().get_preferences_options()
+        self.allowing_self_split = (
+            len(self.adjudicators) == 1 and self.tournament.pref('allow_self_split_ballots'))
+
+    @staticmethod
+    def _fieldname_self_split():
+        return 'self_split'
+
     @staticmethod
     def _fieldname_score(adj, side, pos):
         return '%(side)d_score_a%(adj)d_s%(pos)d' % {'adj': adj.id, 'side': side, 'pos': pos}
@@ -960,6 +969,12 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
             for adj in self.adjudicators:
                 self.fields[self._fieldname_declared_winner(adj)] = self.create_declared_winner_dropdown()
 
+        if self.allowing_self_split:
+            self.fields[self._fieldname_self_split()] = forms.BooleanField(
+                label=_("This was a 2:1 split decision (self-declared)"),
+                required=False,
+            )
+
     def initial_from_result(self, result):
         initial = super().initial_from_result(result)
 
@@ -976,6 +991,9 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
             if self.using_declared_winner:
                 initial[self._fieldname_declared_winner(adj)] = result.get_winner(adj)
 
+        if self.allowing_self_split:
+            initial[self._fieldname_self_split()] = self.ballotsub.self_split
+
         return initial
 
     def list_score_fields(self):
@@ -987,6 +1005,8 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
             if self.using_declared_winner:
                 order.append(self._fieldname_declared_winner(adj))
+        if self.allowing_self_split:
+            order.append(self._fieldname_self_split())
         return order
 
     # --------------------------------------------------------------------------
@@ -1066,6 +1086,9 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
             if self.declared_winner not in ['none', 'high-points']:
                 result.set_winners(adj, {int(self.cleaned_data.get(self._fieldname_declared_winner(adj)))})
 
+        if self.allowing_self_split:
+            self.ballotsub.self_split = self.cleaned_data.get(self._fieldname_self_split(), False)
+
     # --------------------------------------------------------------------------
     # Template access methods
     # --------------------------------------------------------------------------
@@ -1083,6 +1106,8 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
             }
             if self.using_declared_winner:
                 sheet_dict['declared_winner'] = self[self._fieldname_declared_winner(adj)]
+            if self.allowing_self_split:
+                sheet_dict['self_split'] = self[self._fieldname_self_split()]
             yield sheet_dict
 
 

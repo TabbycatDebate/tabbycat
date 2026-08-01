@@ -120,6 +120,10 @@ class BallotSubmission(Submission):
     forfeit = models.BooleanField(default=False,
         verbose_name=_("forfeit"),
         help_text=_("Whether a team had forfeited the debate and so speaker scores were exceptionally not attributed."))
+    self_split = models.BooleanField(default=False,
+        verbose_name=_("self-declared split"),
+        help_text=_("For solo-adjudicated debates: whether the adjudicator has declared their decision "
+                    "as a 2:1 split (rather than unanimous), per KPDP rules."))
 
     class Meta:
         constraints = [UniqueConstraint(fields=['debate', 'version'])]

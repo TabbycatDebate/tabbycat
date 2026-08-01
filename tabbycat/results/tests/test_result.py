@@ -598,6 +598,100 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
             self.assertEqual(nadjs, self._get_teamscore_in_db(side).votes_possible)
             self.assertEqual(nadjs, result.teamscore_field_votes_possible(side))
 
+    def test_self_split_votes_given_and_possible(self):
+        """Test that solo adjudicator with self_split=True gives 2 votes for winner, 1 for loser.
+
+        Without self_split: winner gets 1/1 vote, loser gets 0/1.
+        With self_split: winner gets 2/3 votes, loser gets 1/3.
+        This confirms the feature modifies voting totals as expected.
+        """
+        testdata = self.testdata['solo']
+
+        def set_self_split(result):
+            result.ballotsub.self_split = True
+            result.ballotsub.save()
+
+        self.save_complete_result(testdata, post_create=set_self_split)
+
+        result = self.get_result()
+        scoresheet_type = 'high-required'
+        winner = testdata[scoresheet_type]['winner']
+
+        # Winner should have votes_given=2, votes_possible=3
+        with suppress_logs('results.result', logging.WARNING):
+            self.assertEqual(2, self._get_teamscore_in_db(winner).votes_given)
+            self.assertEqual(3, self._get_teamscore_in_db(winner).votes_possible)
+            self.assertEqual(2, result.teamscore_field_votes_given(winner))
+            self.assertEqual(3, result.teamscore_field_votes_possible(winner))
+
+        # Loser should have votes_given=1, votes_possible=3
+        loser = DebateSide.AFF if winner == DebateSide.NEG else DebateSide.NEG
+        with suppress_logs('results.result', logging.WARNING):
+            self.assertEqual(1, self._get_teamscore_in_db(loser).votes_given)
+            self.assertEqual(3, self._get_teamscore_in_db(loser).votes_possible)
+            self.assertEqual(1, result.teamscore_field_votes_given(loser))
+            self.assertEqual(3, result.teamscore_field_votes_possible(loser))
+
+    def test_self_split_adjudicators_with_splits(self):
+        """Test that solo adjudicator with self_split=True is marked as split=True.
+
+        Without self_split: solo adjudicator has split=False (trivially unanimous).
+        With self_split: solo adjudicator has split=True (self-declared split).
+        """
+        testdata = self.testdata['solo']
+
+        def set_self_split(result):
+            result.ballotsub.self_split = True
+            result.ballotsub.save()
+
+        self.save_complete_result(testdata, post_create=set_self_split)
+
+        result = self.get_result()
+
+        # Get the adjudicators with splits generator
+        adjs_with_splits = list(result.adjudicators_with_splits())
+
+        # Should have exactly one adjudicator marked as split=True
+        self.assertEqual(len(adjs_with_splits), 1)
+        adj, adjtype, split = adjs_with_splits[0]
+        self.assertEqual(adj, self.adjs[0])  # The solo chair adjudicator
+        self.assertTrue(split)
+
+    def test_solo_default_behavior_unchanged(self):
+        """Regression test: solo adjudicator without self_split unchanged.
+
+        Confirms the feature is opt-in and doesn't change default behavior.
+        Without self_split (the default), should be 1/1 vote for winner, 0/1 for loser.
+        With self_split=False: split=False for the adjudicator.
+        """
+        testdata = self.testdata['solo']
+        self.save_complete_result(testdata)  # No post_create callback, self_split stays False
+
+        result = self.get_result()
+        scoresheet_type = 'high-required'
+        winner = testdata[scoresheet_type]['winner']
+
+        # Without self_split, winner should have votes_given=1, votes_possible=1
+        with suppress_logs('results.result', logging.WARNING):
+            self.assertEqual(1, self._get_teamscore_in_db(winner).votes_given)
+            self.assertEqual(1, self._get_teamscore_in_db(winner).votes_possible)
+            self.assertEqual(1, result.teamscore_field_votes_given(winner))
+            self.assertEqual(1, result.teamscore_field_votes_possible(winner))
+
+        # Loser should have votes_given=0, votes_possible=1
+        loser = DebateSide.AFF if winner == DebateSide.NEG else DebateSide.NEG
+        with suppress_logs('results.result', logging.WARNING):
+            self.assertEqual(0, self._get_teamscore_in_db(loser).votes_given)
+            self.assertEqual(1, self._get_teamscore_in_db(loser).votes_possible)
+            self.assertEqual(0, result.teamscore_field_votes_given(loser))
+            self.assertEqual(1, result.teamscore_field_votes_possible(loser))
+
+        # Adjudicators with splits should yield split=False
+        adjs_with_splits = list(result.adjudicators_with_splits())
+        self.assertEqual(len(adjs_with_splits), 1)
+        adj, adjtype, split = adjs_with_splits[0]
+        self.assertFalse(split)
+
     # ==========================================================================
     # Median aggregation tests
     # ==========================================================================

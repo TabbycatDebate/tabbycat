@@ -1106,6 +1106,20 @@ class SplitVotingBallots(BooleanPreference):
     default = False
 
 
+@tournament_preferences_registry.register
+class AllowSelfSplitBallots(BooleanPreference):
+    help_text = _("Allow a solo adjudicator (no panel) to declare their own decision as a "
+        "2:1 split rather than unanimous, per KPDP rules. When on, ballot entry for "
+        "solo-adjudicated debates gets an extra checkbox for this; when checked, the "
+        "losing team is recorded as having earned 1 of 3 notional votes (and the "
+        "winning team 2 of 3) instead of the usual 1 of 1, which affects any standings "
+        "metric based on votes/ballots carried.")
+    verbose_name = _("Allow self-split ballots for solo adjudicators")
+    section = data_entry
+    name = 'allow_self_split_ballots'
+    default = False
+
+
 # ==============================================================================
 public_features = Section('public_features', verbose_name=_("Public Features"))
 # ==============================================================================
