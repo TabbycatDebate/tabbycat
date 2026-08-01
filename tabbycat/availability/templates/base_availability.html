@@ -4,15 +4,17 @@
 {% block content %}
 
   <div id="vueMount">
-    <checkbox-tables-container  :tables-data=tablesData
-                                :categories=categories
-                                :round-info=roundInfo
-                                :translations=translations
-                                :urls=urls
-                                :navigation=navigation
-                                :hide-auto-save=hideAutoSave
-                                orientation={{ tables_orientation|safe }} >
-    </checkbox-tables-container>
+    <availability-table-container :tables-data=tablesData
+                                  :categories=categories
+                                  :round-info=roundInfo
+                                  :translations=translations
+                                  :urls=urls
+                                  :navigation=navigation
+                                  :hide-auto-save=hideAutoSave
+                                  orientation={{ tables_orientation|safe }}
+                                  tournament-slug="{{ tournament_slug }}"
+                                  speakers="{{ pref.substantive_speakers }}" >
+    </availability-table-container>
   </div>
 
 {% endblock content %}

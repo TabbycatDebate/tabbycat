@@ -10,6 +10,7 @@ const $ = window.jQuery
 import CheckboxTablesContainer from '../tables/CheckboxTablesContainer.vue'
 import TablesContainer from '../tables/TablesContainer.vue'
 // App Templates
+import AvailabilityTableContainer from '../../availability/templates/AvailabilityTableContainer.vue'
 import CheckInStatusContainer from '../../checkins/templates/CheckInStatusContainer.vue'
 import DiversityContainer from '../../participants/templates/DiversityContainer.vue'
 import PrintableBallot from '../../printing/templates/PrintableBallot.vue'
@@ -176,6 +177,7 @@ $(document).ready(() => {
 vueComponents.TablesContainer = TablesContainer
 vueComponents.CheckboxTablesContainer = CheckboxTablesContainer
 vueComponents.ResultsTablesContainer = ResultsTablesContainer
+vueComponents.AvailabilityTableContainer = AvailabilityTableContainer
 // Checkin Statuses
 vueComponents.CheckInStatusContainer = CheckInStatusContainer
 // Divisions Containers
