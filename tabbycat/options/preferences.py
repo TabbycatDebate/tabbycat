@@ -501,35 +501,67 @@ class AdjScoreStep(FloatPreference):
     default = 1.0
 
 
+FEEDBACK_PATHS_CHOICES = (
+    ('minimal', _("Chairs on panellists and trainees")),
+    ('with-p-on-c', _("Panellists on chairs, chairs on panellists and trainees")),
+    ('with-t-on-c', _("Panellists and trainees on chairs, chairs on panellists and trainees")),
+    ('all-adjs', _("All adjudicators (including trainees) on each other")),
+    ('with-p-on-p', _("Panellists on eachother and chairs, trainees on chairs, chairs on everyone")),
+    ('no-adjs', _("Neither chairs, nor panellists nor trainees")),
+)
+
+FEEDBACK_FROM_TEAMS_CHOICES = (
+    ('orallist', _("Orallist only (voting panellists permitted, with prompts to select orallist)")),
+    ('all-adjs', _("All adjudicators in their panels (including trainees)")),
+    ('no-one', _("No one")),
+)
+
+
 @tournament_preferences_registry.register
 class FeedbackPaths(ChoicePreference):
-    help_text = _("Used to inform available choices in the feedback forms for adjudicators (both online and printed) and feedback progress")
-    verbose_name = _("Allow and expect feedback to be submitted by")
+    verbose_name = _("Preliminary rounds: feedback from adjudicators on")
+    help_text = _("Who adjudicators may and are expected to submit feedback on, in preliminary rounds. Sets the "
+                  "choices in the online and printed feedback forms, and what counts as owed in feedback progress.")
     section = feedback
     name = 'feedback_paths'
-    choices = (
-        ('minimal', _("Chairs on panellists and trainees")),
-        ('with-p-on-c', _("Panellists on chairs, chairs on panellists and trainees")),
-        ('with-t-on-c', _("Panellists and trainees on chairs, chairs on panellists and trainees")),
-        ('all-adjs', _("All adjudicators (including trainees) on each other")),
-        ('with-p-on-p', _("Panellists on eachother and chairs, trainees on chairs, chairs on everyone")),
-        ('no-adjs', _("Neither chairs, nor panellists nor trainees")),
-    )
+    choices = FEEDBACK_PATHS_CHOICES
     default = 'with-p-on-c'
 
 
 @tournament_preferences_registry.register
+class FeedbackPathsElimination(ChoicePreference):
+    verbose_name = _("Elimination rounds: feedback from adjudicators on")
+    help_text = _("Who adjudicators may and are expected to submit feedback on, in elimination rounds. Feedback from "
+                  "elimination rounds is recorded and shown, but does not count towards adjudicators' scores. "
+                  "Set to \"Neither chairs, nor panellists nor trainees\" to collect none.")
+    section = feedback
+    name = 'feedback_paths_elim'
+    choices = FEEDBACK_PATHS_CHOICES
+    default = 'no-adjs'
+
+
+@tournament_preferences_registry.register
 class FeedbackFromTeams(ChoicePreference):
-    verbose_name = _("Expect feedback to be submitted by teams on")
-    help_text = _("Used to inform available choices in the feedback forms for teams (both online and printed) and feedback progress; this option is used by, e.g., UADC")
+    verbose_name = _("Preliminary rounds: feedback from teams on")
+    help_text = _("Who teams are expected to submit feedback on, in preliminary rounds. Sets the choices in the "
+                  "online and printed feedback forms, and what counts as owed in feedback progress; the "
+                  "\"all adjudicators\" option is used by, e.g., UADC.")
     section = feedback
     name = 'feedback_from_teams'
-    choices = (
-        ('orallist', _("Orallist only (voting panellists permitted, with prompts to select orallist)")),
-        ('all-adjs', _("All adjudicators in their panels (including trainees)")),
-        ('no-one', _("No one")),
-    )
+    choices = FEEDBACK_FROM_TEAMS_CHOICES
     default = 'orallist'
+
+
+@tournament_preferences_registry.register
+class FeedbackFromTeamsElimination(ChoicePreference):
+    verbose_name = _("Elimination rounds: feedback from teams on")
+    help_text = _("Who teams are expected to submit feedback on, in elimination rounds. Feedback from elimination "
+                  "rounds is recorded and shown, but does not count towards adjudicators' scores. "
+                  "Set to \"No one\" to collect none.")
+    section = feedback
+    name = 'feedback_from_teams_elim'
+    choices = FEEDBACK_FROM_TEAMS_CHOICES
+    default = 'no-one'
 
 
 @tournament_preferences_registry.register

@@ -15,6 +15,7 @@ from venues.models import Venue
 
 from ..progress import FeedbackExpectedSubmissionFromAdjudicatorTracker, FeedbackExpectedSubmissionFromTeamTracker
 from ..progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
+from ..utils import get_feedback_overview
 
 
 class TestFeedbackProgress(TestCase):
@@ -460,3 +461,176 @@ class TestFeedbackProgress(TestCase):
         self.tournament.preferences['feedback__show_unexpected_feedback'] = False
         progress = self.assertAdjudicatorProgress('with-p-on-c', 0, 3, 3, 0, 3, 0.0)
         self.assertEqual(len(progress.unexpected_trackers()), 0)
+
+
+class TestFeedbackProgressEliminationRounds(TestFeedbackProgress):
+    """Elimination rounds collect feedback under their own preferences.
+
+    Subclasses TestFeedbackProgress to reuse its fixtures and helpers, adding an
+    elimination round. This also re-runs every preliminary-round test above with
+    that round present, checking it doesn't disturb them.
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.elim_rd = Round.objects.create(tournament=self.tournament, seq=2, schedule_group=1,
+                abbreviation="EF", stage=Round.Stage.ELIMINATION)
+
+    def _create_elim_debate(self, *args, **kwargs):
+        """As _create_debate, but places the debate in the elimination round."""
+        prelim_rd, self.rd = self.rd, self.elim_rd
+        try:
+            return self._create_debate(*args, **kwargs)
+        finally:
+            self.rd = prelim_rd
+
+    def _set_prefs(self, prelim_paths=None, elim_paths=None, prelim_teams=None, elim_teams=None):
+        prefs = self.tournament.preferences
+        if prelim_paths is not None:
+            prefs['feedback__feedback_paths'] = prelim_paths
+        if elim_paths is not None:
+            prefs['feedback__feedback_paths_elim'] = elim_paths
+        if prelim_teams is not None:
+            prefs['feedback__feedback_from_teams'] = prelim_teams
+        if elim_teams is not None:
+            prefs['feedback__feedback_from_teams_elim'] = elim_teams
+
+    # ==========================================================================
+    # Defaults: elimination round feedback is off unless opted into
+    # ==========================================================================
+
+    def test_defaults_are_off(self):
+        self.assertEqual(self.tournament.pref('feedback_paths_elim'), 'no-adjs')
+        self.assertEqual(self.tournament.pref('feedback_from_teams_elim'), 'no-one')
+
+    def test_adjudicator_elim_not_expected_by_default(self):
+        self._create_elim_debate((0, 1), (0, 1, 2), "aan")
+        self._set_prefs(elim_paths='no-adjs')
+        progress = FeedbackProgressForAdjudicator(self._adj(0))
+        self.assertEqual(progress.num_expected(), 0)
+
+    def test_team_elim_not_expected_by_default(self):
+        self._create_elim_debate((0, 1), (0, 1, 2), "aan")
+        self._set_prefs(elim_teams='no-one')
+        progress = FeedbackProgressForTeam(self._team(0))
+        self.assertEqual(progress.num_expected(), 0)
+
+    # ==========================================================================
+    # Opting in
+    # ==========================================================================
+
+    def test_adjudicator_elim_expected_when_enabled(self):
+        debate = self._create_elim_debate((0, 1), (0, 1, 2), "aan")
+        self._set_prefs(elim_paths='minimal')
+        progress = FeedbackProgressForAdjudicator(self._adj(0))
+        self.assertEqual(progress.num_expected(), 2)
+        self.assertEqual(progress.num_fulfilled(), 0)
+
+        self._create_feedback(self._da(debate, 0), 1)
+        self._create_feedback(self._da(debate, 0), 2)
+        progress = FeedbackProgressForAdjudicator(self._adj(0))
+        self.assertEqual(progress.num_fulfilled(), 2)
+        self.assertAlmostEqual(progress.coverage(), 1.0)
+
+    def test_adjudicator_elim_respects_paths_choice(self):
+        self._create_elim_debate((0, 1), (0, 1, 2), "aan")
+        for paths, expected in [('minimal', 2), ('with-p-on-c', 2), ('all-adjs', 2)]:
+            self._set_prefs(elim_paths=paths)
+            progress = FeedbackProgressForAdjudicator(self._adj(0))
+            self.assertEqual(progress.num_expected(), expected, msg=paths)
+
+        # A panellist owes on the chair under with-p-on-c, but not under minimal.
+        self._set_prefs(elim_paths='minimal')
+        self.assertEqual(FeedbackProgressForAdjudicator(self._adj(1)).num_expected(), 0)
+        self._set_prefs(elim_paths='with-p-on-c')
+        self.assertEqual(FeedbackProgressForAdjudicator(self._adj(1)).num_expected(), 1)
+
+    def test_team_elim_expected_when_enabled(self):
+        debate = self._create_elim_debate((0, 1), (0, 1, 2), "aan")
+        self._set_prefs(elim_teams='orallist')
+        progress = FeedbackProgressForTeam(self._team(0))
+        self.assertEqual(progress.num_expected(), 1)
+
+        self._create_feedback(self._dt(debate, 0), 0)
+        progress = FeedbackProgressForTeam(self._team(0))
+        self.assertEqual(progress.num_fulfilled(), 1)
+
+    def test_team_elim_all_adjs(self):
+        self._create_elim_debate((0, 1), (0, 1, 2), "aan")
+        self._set_prefs(elim_teams='all-adjs')
+        progress = FeedbackProgressForTeam(self._team(0))
+        self.assertEqual(progress.num_expected(), 3)
+
+    # ==========================================================================
+    # Mixed tournaments: each round applies its own rule
+    # ==========================================================================
+
+    def test_adjudicator_mixed_stages(self):
+        """The case a single tournament-wide preference lookup would get wrong."""
+        self._create_debate((0, 1), (0, 1, 2), "aan")
+        self._create_elim_debate((0, 1), (0, 1, 2), "aan")
+
+        # Prelims on, elims off: only the preliminary debate is owed.
+        self._set_prefs(prelim_paths='minimal', elim_paths='no-adjs')
+        self.assertEqual(FeedbackProgressForAdjudicator(self._adj(0)).num_expected(), 2)
+
+        # Prelims off, elims on: only the elimination debate is owed.
+        self._set_prefs(prelim_paths='no-adjs', elim_paths='minimal')
+        self.assertEqual(FeedbackProgressForAdjudicator(self._adj(0)).num_expected(), 2)
+
+        # Both on: both debates are owed.
+        self._set_prefs(prelim_paths='minimal', elim_paths='minimal')
+        self.assertEqual(FeedbackProgressForAdjudicator(self._adj(0)).num_expected(), 4)
+
+        # Both off.
+        self._set_prefs(prelim_paths='no-adjs', elim_paths='no-adjs')
+        self.assertEqual(FeedbackProgressForAdjudicator(self._adj(0)).num_expected(), 0)
+
+    def test_adjudicator_mixed_stages_different_paths(self):
+        self._create_debate((0, 1), (0, 1, 2), "aan")
+        self._create_elim_debate((0, 1), (0, 1, 2), "aan")
+
+        # Panellist owes on the chair in prelims only.
+        self._set_prefs(prelim_paths='with-p-on-c', elim_paths='minimal')
+        self.assertEqual(FeedbackProgressForAdjudicator(self._adj(1)).num_expected(), 1)
+
+        # ...and in elims only.
+        self._set_prefs(prelim_paths='minimal', elim_paths='with-p-on-c')
+        self.assertEqual(FeedbackProgressForAdjudicator(self._adj(1)).num_expected(), 1)
+
+    def test_team_mixed_stages(self):
+        self._create_debate((0, 1), (0, 1, 2), "aan")
+        self._create_elim_debate((0, 1), (0, 1, 2), "aan")
+
+        self._set_prefs(prelim_teams='orallist', elim_teams='no-one')
+        self.assertEqual(FeedbackProgressForTeam(self._team(0)).num_expected(), 1)
+
+        self._set_prefs(prelim_teams='no-one', elim_teams='orallist')
+        self.assertEqual(FeedbackProgressForTeam(self._team(0)).num_expected(), 1)
+
+        # Different rules per stage: orallist (1) in prelims, all adjs (3) in elims.
+        self._set_prefs(prelim_teams='orallist', elim_teams='all-adjs')
+        self.assertEqual(FeedbackProgressForTeam(self._team(0)).num_expected(), 4)
+
+    # ==========================================================================
+    # Elimination round feedback does not affect adjudicator scores
+    # ==========================================================================
+
+    def test_elim_feedback_excluded_from_overview(self):
+        """Elimination feedback must not move the scores that drive allocation."""
+        self._set_prefs(elim_paths='all-adjs', elim_teams='all-adjs')
+        debate = self._create_elim_debate((0, 1), (0, 1, 2), "aan")
+
+        def overview_for_adj_1():
+            adjs = get_feedback_overview(self.tournament,
+                    Adjudicator.objects.filter(tournament=self.tournament))
+            return next(a for a in adjs if a.name == "1")
+
+        before = overview_for_adj_1()
+        self._create_feedback(self._da(debate, 0), 1)
+        self._create_feedback(self._dt(debate, 0), 1)
+        after = overview_for_adj_1()
+
+        self.assertEqual(after.feedback_count, before.feedback_count)
+        self.assertEqual(after.feedback_count, 0)
+        self.assertEqual(after.feedback_data, before.feedback_data)

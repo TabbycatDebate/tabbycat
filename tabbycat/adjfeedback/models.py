@@ -94,9 +94,12 @@ class AdjudicatorFeedback(Submission):
                 self.timestamp.isoformat())))
 
     def _unique_unconfirm_args(self):
+        from .utils import feedback_from_teams_pref
         kwargs = super()._unique_unconfirm_args()
-        if self.source_team is not None and self.source_team.debate.round.tournament.pref('feedback_from_teams') == 'orallist':
-            kwargs.pop('adjudicator')
+        if self.source_team is not None:
+            rd = self.source_team.debate.round
+            if feedback_from_teams_pref(rd.tournament, rd) == 'orallist':
+                kwargs.pop('adjudicator')
         return kwargs
 
     @cached_property

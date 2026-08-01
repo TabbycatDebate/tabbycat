@@ -18,7 +18,7 @@ from draw.models import DebateTeam
 from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
 
-from .utils import expected_feedback_targets
+from .utils import expected_feedback_targets, feedback_from_teams_pref, feedback_paths_pref
 
 logger = logging.getLogger(__name__)
 
@@ -255,17 +255,19 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         self.team = team
         if tournament is None:
             tournament = team.tournament
-        self.enforce_orallist = (tournament.pref("show_splitting_adjudicators") and
-                                 tournament.pref("ballots_per_debate_prelim") == 'per-adj')
-        self.expect_orallists = tournament.pref("feedback_from_teams") in ['orallist', 'all-adjs']
-        self.expect_all_adjs = tournament.pref("feedback_from_teams") == 'all-adjs'
+        self.tournament = tournament
+        self.show_splitting_adjudicators = tournament.pref("show_splitting_adjudicators")
         super().__init__(tournament)
+
+    def _enforce_orallist(self, rd):
+        ballots_pref = ("ballots_per_debate_elim" if rd.stage == Round.Stage.ELIMINATION
+                        else "ballots_per_debate_prelim")
+        return self.show_splitting_adjudicators and self.tournament.pref(ballots_pref) == 'per-adj'
 
     @staticmethod
     def _submitted_feedback_queryset_operations(queryset):
         # this is also used by get_feedback_progress
-        return queryset.filter(confirmed=True,
-            source_team__debate__round__stage=Round.Stage.PRELIMINARY).select_related(
+        return queryset.filter(confirmed=True).select_related(
             'adjudicator', 'adjudicator__institution', 'source_team__debate__round')
 
     def get_submitted_feedback(self):
@@ -278,7 +280,6 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         debateteams = queryset.filter(
             debate__ballotsubmission__confirmed=True,
             debate__round__silent=False,
-            debate__round__stage=Round.Stage.PRELIMINARY,
         ).select_related('debate', 'debate__round').prefetch_related(
             'debate__debateadjudicator_set__adjudicator')
         populate_confirmed_ballots([dt.debate for dt in debateteams], results=True)
@@ -290,30 +291,39 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         return self._debateteams
 
     def get_expected_trackers(self):
+        # The applicable preference depends on each round's stage, so debates are
+        # grouped by the rule applying to them.
         debateteams = self._get_debateteams()
-        if self.expect_all_adjs:
-            # If teams submit on all adjudicators, there is one tracker for each
-            # adjudicator in each debate for which there is a confirmed ballot
-            # and the round is not silent.
-            trackers = [FeedbackExpectedSubmissionFromTeamOnSingleAdjudicatorTracker(dt, adj)
-                        for dt in debateteams
-                        for adj in dt.debate.adjudicators.all()]
-            self._prefetch_tracker_acceptable_submissions(trackers,
+
+        all_adjs_dts, orallist_dts = [], []
+        for dt in debateteams:
+            team_paths = feedback_from_teams_pref(self.tournament, dt.debate.round)
+            if team_paths == 'all-adjs':
+                all_adjs_dts.append(dt)
+            elif team_paths == 'orallist':
+                orallist_dts.append(dt)
+
+        # If teams submit on all adjudicators, there is one tracker for each
+        # adjudicator in each debate for which there is a confirmed ballot
+        # and the round is not silent.
+        all_adjs_trackers = [FeedbackExpectedSubmissionFromTeamOnSingleAdjudicatorTracker(dt, adj)
+                             for dt in all_adjs_dts
+                             for adj in dt.debate.adjudicators.all()]
+        if all_adjs_trackers:
+            self._prefetch_tracker_acceptable_submissions(all_adjs_trackers,
                     attrgetter('source', 'target'),
                     attrgetter('source_team', 'adjudicator'))
 
-        elif self.expect_orallists:
-            # If teams submit only on orallists, there is one tracker for each
-            # debate for which there is a confirmed ballot, and the round is not
-            # silent.
-            trackers = [FeedbackExpectedSubmissionFromTeamTracker(dt, self.enforce_orallist)
-                        for dt in debateteams]
-            self._prefetch_tracker_acceptable_submissions(trackers,
+        # If teams submit only on orallists, there is one tracker for each
+        # debate for which there is a confirmed ballot, and the round is not
+        # silent.
+        orallist_trackers = [FeedbackExpectedSubmissionFromTeamTracker(dt, self._enforce_orallist(dt.debate.round))
+                             for dt in orallist_dts]
+        if orallist_trackers:
+            self._prefetch_tracker_acceptable_submissions(orallist_trackers,
                         attrgetter('source'), attrgetter('source_team'))
-        else:
-            trackers = []
 
-        return trackers
+        return all_adjs_trackers + orallist_trackers
 
 
 class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
@@ -325,15 +335,13 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
             tournament = adjudicator.tournament
         if tournament is None:
             logger.warning("No tournament specified and adjudicator %s has no tournament", adjudicator)
-        else:
-            self.feedback_paths = tournament.pref('feedback_paths')
+        self.tournament = tournament
         super().__init__(tournament)
 
     @staticmethod
     def _submitted_feedback_queryset_operations(queryset):
         # this is also used by get_feedback_progress
-        return queryset.filter(confirmed=True,
-            source_adjudicator__debate__round__stage=Round.Stage.PRELIMINARY).select_related(
+        return queryset.filter(confirmed=True).select_related(
             'adjudicator', 'adjudicator__institution', 'source_adjudicator__debate__round')
 
     def get_submitted_feedback(self):
@@ -345,7 +353,6 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
         # this is also used by get_feedback_progress
         return queryset.filter(
             debate__ballotsubmission__confirmed=True,
-            debate__round__stage=Round.Stage.PRELIMINARY,
         ).select_related('debate', 'debate__round').prefetch_related(
             'debate__debateadjudicator_set__adjudicator')
 
@@ -363,7 +370,8 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
 
         trackers = []
         for debateadj in debateadjs:
-            for target, _ in expected_feedback_targets(debateadj, self.feedback_paths):
+            paths = feedback_paths_pref(self.tournament, debateadj.debate.round)
+            for target, _ in expected_feedback_targets(debateadj, paths):
                 trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, target))
 
         self._prefetch_tracker_acceptable_submissions(trackers,

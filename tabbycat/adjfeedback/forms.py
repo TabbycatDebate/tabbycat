@@ -18,7 +18,7 @@ from results.forms import TournamentPasswordField
 from tournaments.models import Round
 
 from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback
-from .utils import expected_feedback_targets
+from .utils import expected_feedback_targets, feedback_from_teams_pref, feedback_paths_pref
 
 logger = logging.getLogger(__name__)
 
@@ -151,7 +151,6 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
     debateadjs = DebateAdjudicator.objects.filter(
         debate__round__tournament=tournament, adjudicator=source,
         debate__round__seq__lte=tournament.current_round_seq_limit,
-        debate__round__stage=Round.Stage.PRELIMINARY,
     ).order_by('-debate__round__seq').select_related('debate__round').prefetch_related(
         Prefetch(
             'debate__debateadjudicator_set',
@@ -166,7 +165,10 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
 
     choices = [(None, _("-- Adjudicators --"))]
     for debateadj in debateadjs:
-        targets = expected_feedback_targets(debateadj, tournament.pref('feedback_paths'))
+        paths = feedback_paths_pref(tournament, debateadj.debate.round)
+        targets = expected_feedback_targets(debateadj, paths)
+        if not targets:
+            continue
         round_choices = []
         for target, pos in targets:
             round_choices.append(adj_choice(target, debateadj.debate, pos))
@@ -200,13 +202,13 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
     """Constructs a FeedbackForm class specific to the given source team.
     Parameters are as for make_feedback_form_class."""
 
-    def adj_choice(adj, debate, pos):
+    def adj_choice(adj, debate, pos, team_paths):
         value = '%d-%d' % (debate.id, adj.id)
 
         display = _("Submitted - ") if adj.submitted else ""
         if pos == AdjudicatorAllocation.POSITION_ONLY:
             display += _("%(name)s")
-        elif tournament.pref('feedback_from_teams') == 'all-adjs':
+        elif team_paths == 'all-adjs':
             # Translators: e.g. "Megan Pearson (panellist)", with round="Round 3", adjpos="panellist"
             display += _("%(name)s (%(adjpos)s)")
         elif pos == AdjudicatorAllocation.POSITION_CHAIR:
@@ -222,8 +224,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
     debates = Debate.objects.filter(
         debateteam__team=source, round__silent=False,
         round__seq__lte=tournament.current_round_seq_limit,
-        round__stage=Round.Stage.PRELIMINARY,
-    ).order_by('-round__seq').prefetch_related(Prefetch(
+    ).order_by('-round__seq').select_related('round').prefetch_related(Prefetch(
         'debateadjudicator_set',
         queryset=DebateAdjudicator.objects.all().select_related('adjudicator').annotate(submitted=Exists(
             AdjudicatorFeedback.objects.filter(
@@ -244,16 +245,20 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
         # so that they pass to the AdjudicatorAllocation
         for da in debate.debateadjudicator_set.all():
             da.adjudicator.submitted = da.submitted
-        if tournament.pref('feedback_from_teams') == 'all-adjs':
+        team_paths = feedback_from_teams_pref(tournament, debate.round)
+        if team_paths == 'all-adjs':
             das = debate.adjudicators.with_positions()
-        elif tournament.pref('feedback_from_teams') == 'orallist':
+        elif team_paths == 'orallist':
             das = debate.adjudicators.voting_with_positions()
         else:
             das = []
 
+        if not das:
+            continue
+
         round_choices = []
         for adj, pos in das:
-            round_choices.append(adj_choice(adj, debate, pos))
+            round_choices.append(adj_choice(adj, debate, pos, team_paths))
         choices.append((debate.round.name, round_choices))
 
     class FeedbackForm(BaseFeedbackForm):
