@@ -436,8 +436,10 @@ class BaseCriterionStandingsView(SingleObjectFromTournamentMixin, BaseSubstantiv
 
     @property
     def missable_preference(self):
-        # Reply-only criteria are scored on the reply speech, so the number of
-        # substantive speeches given says nothing about how many were missed.
+        # A reply-only criterion is scored on the reply speech, so eligibility
+        # should follow replies given. Usually the reply speaker gives
+        # substantives too, but a speaker who only ever replies would otherwise
+        # be excluded from the tab for a criterion they were scored on.
         return 'standings_missed_replies' if self.is_reply_criterion else 'standings_missed_debates'
 
     @property

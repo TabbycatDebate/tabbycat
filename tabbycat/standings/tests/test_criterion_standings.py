@@ -254,8 +254,13 @@ class TestCriterionStandings(TestCase):
 
 
 class TestReplyCriterionStandings(TestCase):
-    """Tests the tab for a criterion scored only on reply speeches, where the
-    substantive speech counts don't describe how many speeches were missed."""
+    """Tests the tab for a criterion scored only on reply speeches.
+
+    In formats like WSDC the reply is given by one of the substantive speakers,
+    so the substantive speech count usually clears the eligibility threshold
+    anyway. These tests cover the case it doesn't: a speaker who gives replies
+    without giving substantives, whose substantive count says nothing about how
+    many replies they gave."""
 
     def setUp(self):
         self.tournament = Tournament.objects.create(slug="replycriteriontest",
@@ -263,8 +268,8 @@ class TestReplyCriterionStandings(TestCase):
         self.tournament.preferences['debate_rules__reply_scores_enabled'] = True
         self.tournament.preferences['debate_rules__substantive_speakers'] = 3
         self.tournament.preferences['standings__standings_missed_replies'] = 1
-        # Set explicitly: were the tab to rank on substantive speeches, this is
-        # what would leave every reply speaker unranked.
+        # Set explicitly: this is the threshold that would exclude a speaker who
+        # gives replies but no substantives, if the tab counted substantives.
         self.tournament.preferences['standings__standings_missed_debates'] = 1
         self.tournament.preferences['tab_release__criterion_tabs_released'] = True
 
@@ -326,8 +331,8 @@ class TestReplyCriterionStandings(TestCase):
         return {info.speaker: info.rankings.get('rank') for info in standings}
 
     def test_reply_speakers_are_ranked(self):
-        """Reply speakers give no substantive speeches, so ranking them against
-        the missed-debates count would leave the entire tab unranked."""
+        """A speaker who only ever gives the reply has no substantive speeches,
+        so ranking against the missed-debates count would leave them unranked."""
         ranks = self.get_ranks()
         self.assertIsNotNone(ranks[self.speaker1])
         self.assertIsNotNone(ranks[self.speaker2])
