@@ -201,7 +201,10 @@ section of the tournament settings. Note that this releases the tabs for *all*
 criteria; it isn't currently possible to release them individually.
 
 Criteria that apply only to substantive or only to reply speeches are aggregated
-over just those speeches, matching how they're scored on the ballot.
+over just those speeches, matching how they're scored on the ballot. A tab for a
+reply-only criterion also uses the **replies missable for standings eligibility**
+setting rather than its substantive equivalent, since a reply speaker's
+substantive speech count doesn't say anything about the replies they gave.
 
 
 Motion balance

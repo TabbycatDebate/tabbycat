@@ -430,6 +430,20 @@ class BaseCriterionStandingsView(SingleObjectFromTournamentMixin, BaseSubstantiv
     def standalone_criterion(self):
         return self.object
 
+    @property
+    def is_reply_criterion(self):
+        return self.object.speech_type == ScoreCriterion.SpeechType.REPLY
+
+    @property
+    def missable_preference(self):
+        # Reply-only criteria are scored on the reply speech, so the number of
+        # substantive speeches given says nothing about how many were missed.
+        return 'standings_missed_replies' if self.is_reply_criterion else 'standings_missed_debates'
+
+    @property
+    def missable_field(self):
+        return 'replies_count' if self.is_reply_criterion else 'count'
+
     def get_speakers(self):
         return Speaker.objects.filter(
             team__tournament=self.tournament,
@@ -437,15 +451,40 @@ class BaseCriterionStandingsView(SingleObjectFromTournamentMixin, BaseSubstantiv
         ).distinct()
 
     def get_metrics(self):
+        count_metric = 'replies_count' if self.is_reply_criterion else 'count'
         return (AverageCriterionScoreMetricAnnotator.build_key(self.object.seq),), (
-            TotalCriterionScoreMetricAnnotator.build_key(self.object.seq), 'count')
+            TotalCriterionScoreMetricAnnotator.build_key(self.object.seq), count_metric)
 
     def get_page_title(self):
         return _("%(criterion)s Speaker Standings") % {'criterion': self.object.name}
 
+    def integer_score_columns(self, rounds):
+        # The criterion's own total, rather than the overall speaker score total.
+        if self.object.step % 1 == 0:
+            return [TotalCriterionScoreMetricAnnotator.build_key(self.object.seq)]
+        return []
+
     def add_round_results(self, standings, rounds):
         add_speaker_round_results(standings, rounds, self.tournament, criterion=self.object)
-        self.cast_round_results(standings, rounds, 'score_step')
+        # The per-round columns hold criterion scores, so they follow the
+        # criterion's own step rather than the tournament's speaker score step.
+        if self.object.step % 1 == 0:
+            is_consensus_by_round = [
+                self.tournament.ballots_per_debate(rd.stage) == 'per-debate' for rd in rounds]
+            for info in standings:
+                for i, is_consensus in enumerate(is_consensus_by_round):
+                    if is_consensus and info.scores[i] is not None and info.scores[i].is_integer():
+                        info.scores[i] = int(info.scores[i])
+
+    def populate_result_missing(self, standings):
+        if not self.is_reply_criterion:
+            return super().populate_result_missing(standings)
+        # Only one speaker per team gives the reply, so a speaker without a
+        # score hasn't necessarily missed anything; follow the reply standings.
+        teams_seen = {info.speaker.team for info in standings
+            if len(info.scores) > 1 and info.scores[-1] is not None}
+        for info in standings:
+            info.result_missing = info.speaker.team not in teams_seen
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()

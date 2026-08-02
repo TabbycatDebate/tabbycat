@@ -1,3 +1,4 @@
+import json
 import logging
 
 from django.test import TestCase
@@ -250,3 +251,90 @@ class TestCriterionStandings(TestCase):
         with suppress_logs('django.request', logging.WARNING):
             response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
+
+
+class TestReplyCriterionStandings(TestCase):
+    """Tests the tab for a criterion scored only on reply speeches, where the
+    substantive speech counts don't describe how many speeches were missed."""
+
+    def setUp(self):
+        self.tournament = Tournament.objects.create(slug="replycriteriontest",
+            name="Reply criterion test")
+        self.tournament.preferences['debate_rules__reply_scores_enabled'] = True
+        self.tournament.preferences['debate_rules__substantive_speakers'] = 3
+        self.tournament.preferences['standings__standings_missed_replies'] = 1
+        # Set explicitly: were the tab to rank on substantive speeches, this is
+        # what would leave every reply speaker unranked.
+        self.tournament.preferences['standings__standings_missed_debates'] = 1
+        self.tournament.preferences['tab_release__criterion_tabs_released'] = True
+
+        self.team1 = Team.objects.create(tournament=self.tournament, reference="1",
+            use_institution_prefix=False)
+        self.team2 = Team.objects.create(tournament=self.tournament, reference="2",
+            use_institution_prefix=False)
+        self.speaker1 = Speaker.objects.create(team=self.team1, name="Speaker 1")
+        self.speaker2 = Speaker.objects.create(team=self.team2, name="Speaker 2")
+
+        self.reply_criterion = ScoreCriterion.objects.create(tournament=self.tournament,
+            name="Rebuttal", seq=1, weight=1, min_score=0, max_score=20, step=1,
+            speech_type=ScoreCriterion.SpeechType.REPLY)
+
+        adj = Adjudicator.objects.create(tournament=self.tournament, name="Adjudicator")
+        reply_scores = {self.speaker1: [16, 17], self.speaker2: [18, 19]}
+
+        for i in [1, 2]:
+            rd = Round.objects.create(tournament=self.tournament, seq=i, schedule_group=i,
+                completed=True)
+            debate = Debate.objects.create(round=rd)
+            dt1 = DebateTeam.objects.create(debate=debate, team=self.team1, side=DebateSide.AFF)
+            dt2 = DebateTeam.objects.create(debate=debate, team=self.team2, side=DebateSide.NEG)
+            DebateAdjudicator.objects.create(debate=debate, adjudicator=adj,
+                type=DebateAdjudicator.TYPE_CHAIR)
+            ballotsub = BallotSubmission.objects.create(debate=debate, confirmed=True)
+            TeamScore.objects.create(debate_team=dt1, ballot_submission=ballotsub,
+                margin=+2, points=1, score=100, win=True, votes_given=1, votes_possible=1)
+            TeamScore.objects.create(debate_team=dt2, ballot_submission=ballotsub,
+                margin=-2, points=0, score=100, win=False, votes_given=0, votes_possible=1)
+
+            # Each speaker only gives the reply, as a reply speaker typically would.
+            for speaker, dt in [(self.speaker1, dt1), (self.speaker2, dt2)]:
+                ss = SpeakerScore.objects.create(debate_team=dt, ballot_submission=ballotsub,
+                    speaker=speaker, position=self.tournament.reply_position, score=38)
+                SpeakerCriterionScore.objects.create(speaker_score=ss,
+                    criterion=self.reply_criterion, score=reply_scores[speaker][i - 1])
+
+    def tearDown(self):
+        DebateTeam.objects.filter(team__tournament=self.tournament).delete()
+        self.tournament.delete()
+
+    def get_rows(self):
+        url = reverse_tournament('standings-public-tab-criterion', self.tournament,
+            kwargs={'criterion': self.reply_criterion.seq})
+        with suppress_logs('standings.metrics', logging.INFO):
+            response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        tables_data = response.context['tables_data']
+        if isinstance(tables_data, str):
+            tables_data = json.loads(tables_data)
+        return tables_data[0]['data']
+
+    def test_reply_speakers_are_ranked(self):
+        """Reply speakers give no substantive speeches, so ranking them against
+        the missed-debates count would leave the entire tab unranked."""
+        ranks = [row[0]['text'] for row in self.get_rows()]
+        self.assertEqual(sorted(ranks), ["1", "2"])
+
+    def test_ranked_by_reply_criterion_scores(self):
+        rows = {row[1]['text']: row[0]['text'] for row in self.get_rows()}
+        self.assertEqual(rows["Speaker 2"], "1")  # 18, 19
+        self.assertEqual(rows["Speaker 1"], "2")  # 16, 17
+
+    def test_missing_replies_excludes_speaker_from_ranking(self):
+        """A speaker below the reply threshold is listed but not ranked."""
+        self.tournament.preferences['standings__standings_missed_replies'] = 0
+        SpeakerScore.objects.filter(speaker=self.speaker1,
+            debate_team__debate__round__seq=2).delete()
+
+        rows = {row[1]['text']: row[0]['text'] for row in self.get_rows()}
+        self.assertEqual(rows["Speaker 2"], "1")
+        self.assertEqual(rows["Speaker 1"], "")
