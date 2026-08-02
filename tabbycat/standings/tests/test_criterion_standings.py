@@ -1,7 +1,6 @@
-import json
 import logging
 
-from django.test import TestCase
+from django.test import RequestFactory, TestCase
 from django.urls import reverse
 
 from adjallocation.models import DebateAdjudicator
@@ -16,6 +15,7 @@ from utils.tests import suppress_logs
 
 from ..speakers import (AverageCriterionScoreMetricAnnotator, SpeakerStandingsGenerator,
     TotalCriterionScoreMetricAnnotator)
+from ..views import CriterionStandingsView
 
 
 class TestCriterionStandings(TestCase):
@@ -307,27 +307,35 @@ class TestReplyCriterionStandings(TestCase):
         DebateTeam.objects.filter(team__tournament=self.tournament).delete()
         self.tournament.delete()
 
-    def get_rows(self):
-        url = reverse_tournament('standings-public-tab-criterion', self.tournament,
-            kwargs={'criterion': self.reply_criterion.seq})
+    def get_ranks(self):
+        """Returns each speaker's rank on the criterion tab, as None if unranked.
+
+        This drives the view directly rather than fetching the page, because the
+        public tab pages are wrapped in `cache_page` and a cached response has no
+        template context to read the table out of."""
+        view = CriterionStandingsView()
+        view.request = RequestFactory().get('/')
+        view.kwargs = {
+            'tournament_slug': self.tournament.slug,
+            'round_seq': self.tournament.round_set.order_by('seq').last().seq,
+            'criterion': self.reply_criterion.seq,
+        }
+        view.object = self.reply_criterion
         with suppress_logs('standings.metrics', logging.INFO):
-            response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        tables_data = response.context['tables_data']
-        if isinstance(tables_data, str):
-            tables_data = json.loads(tables_data)
-        return tables_data[0]['data']
+            standings, rounds = view.get_standings()
+        return {info.speaker: info.rankings.get('rank') for info in standings}
 
     def test_reply_speakers_are_ranked(self):
         """Reply speakers give no substantive speeches, so ranking them against
         the missed-debates count would leave the entire tab unranked."""
-        ranks = [row[0]['text'] for row in self.get_rows()]
-        self.assertEqual(sorted(ranks), ["1", "2"])
+        ranks = self.get_ranks()
+        self.assertIsNotNone(ranks[self.speaker1])
+        self.assertIsNotNone(ranks[self.speaker2])
 
     def test_ranked_by_reply_criterion_scores(self):
-        rows = {row[1]['text']: row[0]['text'] for row in self.get_rows()}
-        self.assertEqual(rows["Speaker 2"], "1")  # 18, 19
-        self.assertEqual(rows["Speaker 1"], "2")  # 16, 17
+        ranks = self.get_ranks()
+        self.assertEqual(ranks[self.speaker2], (1, False))  # 18, 19
+        self.assertEqual(ranks[self.speaker1], (2, False))  # 16, 17
 
     def test_missing_replies_excludes_speaker_from_ranking(self):
         """A speaker below the reply threshold is listed but not ranked."""
@@ -335,6 +343,6 @@ class TestReplyCriterionStandings(TestCase):
         SpeakerScore.objects.filter(speaker=self.speaker1,
             debate_team__debate__round__seq=2).delete()
 
-        rows = {row[1]['text']: row[0]['text'] for row in self.get_rows()}
-        self.assertEqual(rows["Speaker 2"], "1")
-        self.assertEqual(rows["Speaker 1"], "")
+        ranks = self.get_ranks()
+        self.assertEqual(ranks[self.speaker2], (1, False))
+        self.assertIsNone(ranks[self.speaker1])
