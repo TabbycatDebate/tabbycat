@@ -68,6 +68,9 @@ class BaseBreakGenerator:
 
     def generate(self):
         self.set_team_queryset()
+        if self.break_size == 0:
+            self.category.breakingteam_set.all().delete()
+            return
         self.retrieve_standings()
         self.filter_eligible_teams()
         if len(self.eligible_teams) < self.break_size:
