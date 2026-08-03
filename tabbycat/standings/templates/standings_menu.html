@@ -19,6 +19,12 @@
       {% trans "Teams" %}
     {% endif %}
   </a>
+  {% if tournament.breakcategory_set.count > 0 %}
+    <a class="btn btn-outline-primary"
+       href="{% roundurl 'standings-team-categories' current_round %}">
+      {% trans "All Categories" %}
+    </a>
+  {% endif %}
   {% for category in tournament.break_categories_nongeneral %}
     <a class="btn btn-outline-primary"
        href="{% roundurl 'standings-break-category' round=current_round category=category.slug %}">
@@ -41,6 +47,12 @@
       {% trans "Speakers " %}
     {% endif %}
   </a>
+  {% if tournament.speakercategory_set.count > 0 %}
+    <a class="btn btn-outline-primary"
+       href="{% roundurl 'standings-speaker-categories' current_round %}">
+      {% trans "All Categories" %}
+    </a>
+  {% endif %}
   {% for category in tournament.speakercategory_set.all %}
     <a class="btn btn-outline-primary"
        href="{% roundurl 'standings-speaker-category' round=current_round category=category.slug %}">
