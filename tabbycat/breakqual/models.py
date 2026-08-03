@@ -1,10 +1,16 @@
 import math
 
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from utils.models import UniqueConstraint
+
+
+def validate_break_size(value):
+    if value == 1:
+        raise ValidationError(_("Break size must be zero or at least two."))
 
 
 class BreakCategory(models.Model):
@@ -19,7 +25,7 @@ class BreakCategory(models.Model):
     seq = models.IntegerField(
         verbose_name=_("sequence number"),
         help_text=_("The order in which the categories are displayed"))
-    break_size = models.IntegerField(validators=[MinValueValidator(2)],
+    break_size = models.IntegerField(validators=[MinValueValidator(0), validate_break_size],
                                      verbose_name=_("break size"),
                                      help_text=_("Number of breaking teams in this category"))
     reserve_size = models.PositiveIntegerField(default=0, verbose_name=_("Reserve size"),
@@ -71,6 +77,8 @@ class BreakCategory(models.Model):
 
     @property
     def num_break_rounds(self):
+        if self.break_size == 0:
+            return 0
         if self.tournament.pref('teams_in_debate') == 4:
             return math.ceil(math.log2(self.break_size / 2))
         else:
