@@ -5,6 +5,7 @@ import { computed, defineAsyncComponent, toRef } from 'vue'
 import SmartHeader from './SmartHeader.vue'
 import SmartCell from './SmartCell.vue'
 import CheckCell from '../tables/CheckCell.vue'
+import SideCell from '../tables/SideCell.vue'
 import BallotsCell from '../../results/templates/BallotsCell.vue'
 import { useSortableTable } from '../composables/useSortableTable.js'
 
@@ -106,6 +107,7 @@ defineExpose({ copyTableData })
 const componentMap = {
   SmartCell,
   'check-cell': CheckCell,
+  'side-cell': SideCell,
   'ballots-cell': BallotsCell,
   'feedback-trend': FeedbackTrend,
 }

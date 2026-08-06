@@ -1,0 +1,57 @@
+{% extends "tables/base_vue_table.html" %}
+{% load i18n %}
+
+{% block content %}
+
+  {% if editable_round %}
+    {% blocktrans trimmed with round=editable_round.name asvar bulk_confirm_message %}
+      This will overwrite the current side pre-allocations for every team in {{ round }}. Continue?
+    {% endblocktrans %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{% trans "Bulk-apply from a previous round" %}</h5>
+        <p class="card-text text-muted">
+          {% blocktrans trimmed with round=editable_round.name %}
+            Sets every team's side pre-allocation for {{ round }} from their
+            actual side in an earlier finished round, either the same side or
+            the opposite. Teams with no result in that round (e.g. a bye) are
+            left untouched.
+          {% endblocktrans %}
+        </p>
+
+        {% if source_round_choices %}
+          <form method="POST" action="{{ bulk_apply_url }}" class="form-inline"
+              onsubmit="return confirm('{{ bulk_confirm_message|escapejs }}')">
+            {% csrf_token %}
+            <input type="hidden" name="target_round_id" value="{{ editable_round.id }}">
+
+            <label class="mr-2" for="id_source_round_id">{% trans "Copy from:" %}</label>
+            <select name="source_round_id" id="id_source_round_id" class="form-control mr-3">
+              {% for round in source_round_choices %}
+                <option value="{{ round.id }}">{{ round.name }}</option>
+              {% endfor %}
+            </select>
+
+            <div class="form-check mr-3">
+              <input class="form-check-input" type="radio" name="direction" id="id_direction_same" value="same" checked>
+              <label class="form-check-label" for="id_direction_same">{% trans "Same side" %}</label>
+            </div>
+            <div class="form-check mr-3">
+              <input class="form-check-input" type="radio" name="direction" id="id_direction_opposite" value="opposite">
+              <label class="form-check-label" for="id_direction_opposite">{% trans "Opposite side" %}</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">{% trans "Apply to all teams" %}</button>
+          </form>
+        {% else %}
+          <p class="card-text text-muted mb-0">
+            {% trans "No finished rounds yet to copy from." %}
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  {{ block.super }}
+
+{% endblock content %}

@@ -9,7 +9,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.db import DatabaseError, transaction
 from django.db.models import OuterRef, Subquery
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.html import escape, format_html
@@ -17,7 +17,7 @@ from django.utils.safestring import mark_safe
 from django.utils.timezone import get_current_timezone_name
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext, override
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView
 
 from actionlog.mixins import LogActionMixin
@@ -54,12 +54,13 @@ from .dbutils import delete_round_draw
 from .forms import ConfirmDrawDeletionForm
 from .generator import DrawFatalError, DrawUserError
 from .manager import DrawManager
-from .models import Debate, TeamSideAllocation
+from .models import Debate, DebateTeam, TeamSideAllocation
 from .prefetch import populate_history
 from .serializers import EditDebateTeamsDebateSerializer, EditDebateTeamsTeamSerializer
 from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilder,
         PositionBalanceReportSummaryTableBuilder, PublicDrawTableBuilder)
 from .types import DebateSide
+from .utils import opposite_side
 
 logger = logging.getLogger(__name__)
 
@@ -934,10 +935,12 @@ class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
 
     def get_table(self):
         teams = self.tournament.team_set.all()
-        rounds = self.tournament.prelim_rounds()
+        rounds = list(self.tournament.prelim_rounds().order_by('seq'))
 
         tsas = dict()
+        tsa_values = dict()
         for tsa in TeamSideAllocation.objects.filter(round__in=rounds):
+            tsa_values[(tsa.team_id, tsa.round_id)] = tsa.side
             try:
                 tsas[(tsa.team.id, tsa.round.seq)] = get_side_name(self.tournament, tsa.side, 'abbr')
             except ValueError:
@@ -945,16 +948,150 @@ class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
 
         table = TabbycatTableBuilder(view=self)
         table.add_team_columns(teams)
-
         headers = [escape(round.abbreviation) for round in rounds]
-        data = [[tsas.get((team.id, round.seq), "—") for round in rounds] for team in teams]
-        table.add_columns(headers, data)
 
+        if not getattr(self, 'for_admin', False):
+            # Public page: unchanged read-only pre-allocation display.
+            data = [[tsas.get((team.id, round.seq), "—") for round in rounds] for team in teams]
+            table.add_columns(headers, data)
+            return table
+
+        # Admin page: rounds with a generated draw show the team's actual
+        # side (read-only, since editing the pre-allocation at that point is
+        # a no-op); the first round without a draw yet is editable; any
+        # further undrawn rounds fall back to the plain "—" placeholder
+        # (editing those is a documented stretch goal, not v1).
+        editable_round = next((r for r in rounds if r.draw_status == Round.Status.NONE), None)
+        drawn_round_ids = [r.id for r in rounds if r.draw_status != Round.Status.NONE]
+
+        actual_sides = dict()
+        if drawn_round_ids:
+            for dt in DebateTeam.objects.filter(
+                    debate__round_id__in=drawn_round_ids).select_related('debate'):
+                actual_sides[(dt.team_id, dt.debate.round_id)] = dt.side
+
+        side_options = [
+            {'value': side, 'label': get_side_name(self.tournament, side, 'full').capitalize()}
+            for side in self.tournament.sides
+        ]
+        update_url = reverse_tournament('draw-side-allocations-update', self.tournament)
+
+        data = []
+        for team in teams:
+            row = []
+            for round_ in rounds:
+                if editable_round is not None and round_.id == editable_round.id:
+                    row.append({
+                        'component': 'side-cell',
+                        'value': tsa_values.get((team.id, round_.id)),
+                        'options': side_options,
+                        'unallocatedLabel': _("Unallocated"),
+                        'teamId': team.id,
+                        'roundId': round_.id,
+                        'saveURL': update_url,
+                    })
+                elif round_.draw_status != Round.Status.NONE:
+                    side = actual_sides.get((team.id, round_.id))
+                    text = get_side_name(self.tournament, side, 'abbr') if side is not None else "—"
+                    row.append({'text': text})
+                else:
+                    row.append({'text': "—"})
+            data.append(row)
+
+        table.add_columns(headers, data)
         return table
 
 
 class SideAllocationsView(AdministratorMixin, BaseSideAllocationsView):
     view_permission = Permission.EDIT_ALLOCATESIDES
+    edit_permission = Permission.EDIT_ALLOCATESIDES
+    template_name = 'side_allocations.html'
+
+    def get_context_data(self, **kwargs):
+        rounds = list(self.tournament.prelim_rounds().order_by('seq'))
+        kwargs['editable_round'] = next((r for r in rounds if r.draw_status == Round.Status.NONE), None)
+        kwargs['source_round_choices'] = [r for r in rounds if r.draw_status in (
+            Round.Status.CONFIRMED, Round.Status.TEAMS_RELEASED, Round.Status.RELEASED)]
+        kwargs['bulk_apply_url'] = reverse_tournament('draw-side-allocations-bulk', self.tournament)
+        return super().get_context_data(**kwargs)
+
+
+class UpdateSidePreallocationView(AdministratorMixin, LogActionMixin, TournamentMixin, View):
+    edit_permission = Permission.EDIT_ALLOCATESIDES
+    action_log_type = ActionLogEntry.ActionType.SIDE_PREALLOCATIONS_SAVE
+
+    def post(self, request, *args, **kwargs):
+        try:
+            body = json.loads(request.body.decode('utf-8'))
+            team = self.tournament.team_set.get(pk=body['team_id'])
+            round_ = self.tournament.round_set.get(pk=body['round_id'])
+        except (KeyError, ValueError, Team.DoesNotExist, Round.DoesNotExist):
+            return JsonResponse({'status': 'false', 'message': _("Invalid team or round.")}, status=400)
+
+        if round_.draw_status != Round.Status.NONE:
+            message = _("Can't change a side pre-allocation once the draw for "
+                        "that round has been generated.")
+            return JsonResponse({'status': 'false', 'message': message}, status=400)
+
+        side = body.get('side')
+        if side is None:
+            TeamSideAllocation.objects.filter(round=round_, team=team).delete()
+        elif side not in self.tournament.sides:
+            return JsonResponse({'status': 'false', 'message': _("Invalid side.")}, status=400)
+        else:
+            TeamSideAllocation.objects.update_or_create(
+                round=round_, team=team, defaults={'side': side})
+
+        self.log_action()
+        return JsonResponse({'status': 'true'})
+
+
+class BulkApplySidePreallocationView(AdministratorMixin, LogActionMixin, TournamentMixin, PostOnlyRedirectView):
+    edit_permission = Permission.EDIT_ALLOCATESIDES
+    action_log_type = ActionLogEntry.ActionType.SIDE_PREALLOCATIONS_SAVE
+    tournament_redirect_pattern_name = 'draw-side-allocations'
+
+    def post(self, request, *args, **kwargs):
+        try:
+            target_round = self.tournament.round_set.get(pk=request.POST.get('target_round_id'))
+            source_round = self.tournament.round_set.get(pk=request.POST.get('source_round_id'))
+        except (ValueError, Round.DoesNotExist):
+            messages.error(request, _("Invalid round."))
+            return super().post(request, *args, **kwargs)
+
+        invert = request.POST.get('direction') == 'opposite'
+
+        if target_round.draw_status != Round.Status.NONE:
+            messages.error(request, _("Can't set side pre-allocations for a round whose draw "
+                        "has already been generated."))
+            return super().post(request, *args, **kwargs)
+        if source_round.draw_status not in (Round.Status.CONFIRMED, Round.Status.TEAMS_RELEASED, Round.Status.RELEASED):
+            messages.error(request, _("The source round must be a finished round with a confirmed draw."))
+            return super().post(request, *args, **kwargs)
+
+        teams_in_debate = self.tournament.pref('teams_in_debate')
+        actual_sides = dict(DebateTeam.objects.filter(
+            debate__round=source_round).values_list('team_id', 'side'))
+
+        applied = 0
+        skipped = 0
+        for team in self.tournament.team_set.all():
+            side = actual_sides.get(team.id)
+            if side is None or side == DebateSide.BYE:
+                skipped += 1
+                continue
+            new_side = opposite_side(side, teams_in_debate) if invert else side
+            TeamSideAllocation.objects.update_or_create(
+                round=target_round, team=team, defaults={'side': new_side})
+            applied += 1
+
+        self.log_action()
+        messages.success(request, ngettext(
+            "Set the side pre-allocation for %(applied)d team (skipped %(skipped)d with no result in %(round)s).",
+            "Set the side pre-allocation for %(applied)d teams (skipped %(skipped)d with no result in %(round)s).",
+            applied,
+        ) % {'applied': applied, 'skipped': skipped, 'round': source_round.name})
+        return super().post(request, *args, **kwargs)
 
 
 class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsView):
