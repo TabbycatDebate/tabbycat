@@ -141,6 +141,7 @@ class Standings:
 
         self.metric_keys = list()
         self.metric_ascending = dict()
+        self.metrics_with_none_lowest = set()
         self.ranking_keys = list()
         self._metric_specs = list()
         self._ranking_specs = list()
@@ -207,9 +208,11 @@ class Standings:
         except KeyError as e:
             raise ValueError("{!r} isn't in these standings.".format(e.args[0]))
 
-    def record_added_metric(self, key, name, abbr, icon, ascending):
+    def record_added_metric(self, key, name, abbr, icon, ascending, none_is_lowest=False):
         self.metric_keys.append(key)
         self.metric_ascending[key] = ascending
+        if none_is_lowest:
+            self.metrics_with_none_lowest.add(key)
         self._metric_specs.append((key, name, abbr, icon))
 
     def record_added_ranking(self, key, name, abbr, icon):

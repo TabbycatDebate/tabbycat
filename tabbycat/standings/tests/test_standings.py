@@ -1,6 +1,7 @@
 import logging
+from types import SimpleNamespace
 
-from django.test import TestCase
+from django.test import SimpleTestCase, TestCase
 
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
@@ -11,8 +12,40 @@ from tournaments.models import Round, Tournament
 from utils.tests import suppress_logs
 from venues.models import Venue
 
-from ..base import StandingsError
+from ..base import Standings, StandingsError
+from ..ranking import BasicRankAnnotator
 from ..teams import TeamStandingsGenerator
+
+
+class TestNoneMetricOrdering(SimpleTestCase):
+
+    class Instance:
+        _meta = SimpleNamespace(verbose_name='instance')
+
+        def __init__(self, id):
+            self.id = id
+
+    def test_none_can_sort_and_rank_below_zero(self):
+        none_instance = self.Instance(1)
+        zero_instance = self.Instance(2)
+        standings = Standings([none_instance, zero_instance])
+        standings.record_added_metric(
+            'progress',
+            'progress',
+            'Prog',
+            None,
+            ascending=False,
+            none_is_lowest=True,
+        )
+        standings.add_metric(none_instance, 'progress', None)
+        standings.add_metric(zero_instance, 'progress', 0)
+
+        standings.sort(('progress',))
+        BasicRankAnnotator(('progress',)).run(standings)
+
+        self.assertEqual(standings.get_instance_list(), [zero_instance, none_instance])
+        self.assertEqual(standings.get_standing(zero_instance).rankings['rank'], (1, False))
+        self.assertEqual(standings.get_standing(none_instance).rankings['rank'], (2, False))
 
 
 class TestTrivialStandings(TestCase):

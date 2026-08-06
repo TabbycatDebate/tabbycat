@@ -1,10 +1,11 @@
 """Standings generator for teams."""
 
 import logging
+from itertools import groupby
 from statistics import mean
 
 from django.contrib.postgres.aggregates import ArrayAgg
-from django.db.models import Avg, Count, F, FloatField, PositiveIntegerField, Q, StdDev, Sum
+from django.db.models import Avg, Count, F, FloatField, PositiveIntegerField, Prefetch, Q, StdDev, Sum
 from django.db.models.functions import Cast, NullIf
 from django.utils.translation import gettext_lazy as _
 
@@ -21,6 +22,52 @@ logger = logging.getLogger(__name__)
 # ==============================================================================
 # Metric annotators
 # ==============================================================================
+
+class ElimProgressMetricAnnotator(BaseMetricAnnotator):
+    """Metric for progress through the highest-priority general break."""
+
+    key = "elim_progress"
+    name = _("progression through elimination rounds")
+    abbr = _("Elim")
+    none_is_lowest = True
+
+    def annotate(self, queryset, standings, round=None):
+        tournament = getattr(round, 'tournament', None) or getattr(queryset.select_related('tournament').first(), 'tournament', None)
+        category = tournament.breakcategory_set.filter(is_general=True).order_by('-priority', 'seq').first()
+
+        category_rounds = Round.objects.filter(
+            break_category=category,
+            stage=Round.Stage.ELIMINATION,
+        )
+        if round is not None:
+            category_rounds = category_rounds.filter(seq__lte=round.seq)
+        round_levels = {
+            round_id: level
+            for level, round_id in enumerate(category_rounds.order_by('seq').values_list('id', flat=True))
+        }
+
+        debate_team_model = queryset.model.debateteam_set.rel.related_model
+        debate_teams = debate_team_model.objects.filter(
+            team_id__in=queryset.values_list('id', flat=True),
+            debate__round_id__in=round_levels,
+        ).prefetch_related(
+            Prefetch(
+                'teamscore_set',
+                queryset=TeamScore.objects.filter(ballot_submission__confirmed=True),
+                to_attr='confirmed_scores',
+            ),
+        ).order_by('team_id', '-debate__round__seq')
+
+        progress_by_team_id = {}
+        for team_id, rounds in groupby(debate_teams, key=lambda dt: dt.team_id):
+            last_round = next(iter(rounds))
+            won = bool(last_round.confirmed_scores and last_round.confirmed_scores[0].win)
+            progress = (round_levels[last_round.debate.round_id] * 2 + won) / 2
+            progress_by_team_id[team_id] = progress
+
+        for info in standings.infoview():
+            info.add_metric(self.key, progress_by_team_id.get(info.instance_id))
+
 
 class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     """Base class for annotators that metrics based on conditional aggregations
@@ -442,6 +489,7 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
     QUERYSET_TIEBREAK_FIELDS["institution"] = 'institution__name'
 
     metric_annotator_classes = {
+        "elim_progress"       : ElimProgressMetricAnnotator,
         "points"              : PointsMetricAnnotator,
         "wins"                : WinsMetricAnnotator,
         "speaks_sum"          : TotalSpeakerScoreMetricAnnotator,
