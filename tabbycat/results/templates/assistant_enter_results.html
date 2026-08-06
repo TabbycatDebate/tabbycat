@@ -18,6 +18,8 @@
     {% csrf_token %}
     {% include "ballot/ballot_set.html" %}
 
+    {% include "ballot/median_overview.html" %}
+
     <div class="card mt-3">
       <div class="card-body">
         {% if new and not form.confirmed.value %}
