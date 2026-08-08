@@ -7,9 +7,9 @@ from tournaments.models import Round
 from utils.misc import reverse_tournament
 from utils.tests import AdminTournamentViewSimpleLoadTestMixin, CompletedTournamentTestMixin, ConditionalTableViewTestsMixin, TableViewTestsMixin
 
-from ..dbutils import delete_round_draw
-from ..models import DebateTeam, TeamSideAllocation
-from ..utils import opposite_side
+from draw.dbutils import delete_round_draw
+from draw.models import DebateTeam, TeamSideAllocation
+from draw.utils import opposite_side
 
 
 class PublicDrawForSpecificRoundViewPermissionTest(ConditionalTableViewTestsMixin, TestCase):
