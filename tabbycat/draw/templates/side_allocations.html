@@ -3,19 +3,29 @@
 
 {% block content %}
 
+  <p class="text-muted">
+    {% blocktrans trimmed %}
+      Rounds that are finished, or already have a draw, show each team's
+      actual side for that round. Rounds that don't have a draw yet show the
+      current side pre-allocation, which can be edited directly in the table
+      below for the next round to be drawn.
+    {% endblocktrans %}
+  </p>
+
   {% if editable_round %}
-    {% blocktrans trimmed with round=editable_round.name asvar bulk_confirm_message %}
-      This will overwrite the current side pre-allocations for every team in {{ round }}. Continue?
+    {% blocktrans trimmed asvar bulk_confirm_message %}
+      This will overwrite the current side pre-allocations for every team in
+      the selected round. Continue?
     {% endblocktrans %}
     <div class="card mb-3">
       <div class="card-body">
         <h5 class="card-title">{% trans "Bulk-apply from a previous round" %}</h5>
         <p class="card-text text-muted">
-          {% blocktrans trimmed with round=editable_round.name %}
-            Sets every team's side pre-allocation for {{ round }} from their
-            actual side in an earlier finished round, either the same side or
-            the opposite. Teams with no result in that round (e.g. a bye) are
-            left untouched.
+          {% blocktrans trimmed %}
+            Sets every team's side pre-allocation for the chosen round from
+            their actual side in an earlier finished round, either the same
+            side or the opposite. Teams with no result in that round (e.g. a
+            bye) are left untouched.
           {% endblocktrans %}
         </p>
 
@@ -23,7 +33,13 @@
           <form method="POST" action="{{ bulk_apply_url }}" class="form-inline"
               onsubmit="return confirm('{{ bulk_confirm_message|escapejs }}')">
             {% csrf_token %}
-            <input type="hidden" name="target_round_id" value="{{ editable_round.id }}">
+
+            <label class="mr-2" for="id_target_round_id">{% trans "Set pre-allocations for:" %}</label>
+            <select name="target_round_id" id="id_target_round_id" class="form-control mr-3">
+              {% for round in target_round_choices %}
+                <option value="{{ round.id }}" {% if round.id == editable_round.id %}selected{% endif %}>{{ round.name }}</option>
+              {% endfor %}
+            </select>
 
             <label class="mr-2" for="id_source_round_id">{% trans "Copy from:" %}</label>
             <select name="source_round_id" id="id_source_round_id" class="form-control mr-3">

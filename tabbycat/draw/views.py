@@ -995,7 +995,11 @@ class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
                     text = get_side_name(self.tournament, side, 'abbr') if side is not None else "—"
                     row.append({'text': text})
                 else:
-                    row.append({'text': "—"})
+                    # A further undrawn round (not the immediately-next one):
+                    # not editable inline, but may already carry a
+                    # pre-allocation set via the bulk-apply tool, so show it
+                    # read-only rather than always "—".
+                    row.append({'text': tsas.get((team.id, round_.seq), "—")})
             data.append(row)
 
         table.add_columns(headers, data)
@@ -1010,6 +1014,7 @@ class SideAllocationsView(AdministratorMixin, BaseSideAllocationsView):
     def get_context_data(self, **kwargs):
         rounds = list(self.tournament.prelim_rounds().order_by('seq'))
         kwargs['editable_round'] = next((r for r in rounds if r.draw_status == Round.Status.NONE), None)
+        kwargs['target_round_choices'] = [r for r in rounds if r.draw_status == Round.Status.NONE]
         kwargs['source_round_choices'] = [r for r in rounds if r.draw_status in (
             Round.Status.CONFIRMED, Round.Status.TEAMS_RELEASED, Round.Status.RELEASED)]
         kwargs['bulk_apply_url'] = reverse_tournament('draw-side-allocations-bulk', self.tournament)

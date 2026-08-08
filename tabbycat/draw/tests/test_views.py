@@ -340,3 +340,39 @@ class SideAllocationsEditingTest(CompletedTournamentTestMixin, TestCase):
         })
         self.assertEqual(response.status_code, 302)
         self.assertFalse(TeamSideAllocation.objects.filter(round=self.target_round).exists())
+
+    def _add_further_undrawn_round(self):
+        """Adds another preliminary round (no draw yet) after round 4, so the
+        destination-round picker has more than one choice to select between.
+        Uses seq=11 since the after_round_4 fixture already has elimination
+        rounds occupying seq 5-10."""
+        return Round.objects.create(
+            tournament=self.tournament, seq=11, name="Round 5", abbreviation="R5",
+            stage=Round.Stage.PRELIMINARY, draw_type=Round.DrawType.POWERPAIRED,
+        )
+
+    def test_context_offers_all_undrawn_rounds_as_targets(self):
+        round5 = self._add_further_undrawn_round()
+
+        response = self.client.get(self.reverse_url('draw-side-allocations'))
+        self.assertEqual(response.status_code, 200)
+        self.assertCountEqual(
+            [r.id for r in response.context['target_round_choices']],
+            [self.target_round.id, round5.id])
+
+    def test_bulk_apply_can_target_a_further_undrawn_round(self):
+        round5 = self._add_further_undrawn_round()
+        source_sides = self._source_sides()
+
+        response = self.client.post(self.reverse_url('draw-side-allocations-bulk'), data={
+            'target_round_id': round5.id,
+            'source_round_id': self.source_round.id,
+            'direction': 'same',
+        })
+        self.assertEqual(response.status_code, 302)
+
+        for team_id, side in source_sides.items():
+            self.assertEqual(
+                TeamSideAllocation.objects.get(round=round5, team_id=team_id).side, side)
+        # The immediately-next round (round 4) must be untouched.
+        self.assertFalse(TeamSideAllocation.objects.filter(round=self.target_round).exists())
