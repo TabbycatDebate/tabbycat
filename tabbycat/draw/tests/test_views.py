@@ -3,13 +3,12 @@ import json
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from tournaments.models import Round
-from utils.misc import reverse_tournament
-from utils.tests import AdminTournamentViewSimpleLoadTestMixin, CompletedTournamentTestMixin, ConditionalTableViewTestsMixin, TableViewTestsMixin
-
 from draw.dbutils import delete_round_draw
 from draw.models import DebateTeam, TeamSideAllocation
 from draw.utils import opposite_side
+from tournaments.models import Round
+from utils.misc import reverse_tournament
+from utils.tests import AdminTournamentViewSimpleLoadTestMixin, CompletedTournamentTestMixin, ConditionalTableViewTestsMixin, TableViewTestsMixin
 
 
 class PublicDrawForSpecificRoundViewPermissionTest(ConditionalTableViewTestsMixin, TestCase):
