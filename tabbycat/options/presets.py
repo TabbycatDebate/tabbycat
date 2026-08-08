@@ -396,6 +396,68 @@ class WSDCPreferences(AustralsPreferences):
     description  = _("3 vs 3 with replies, chosen motions, prop/opp side labels, "
         "and all adjudicators can receive feedback from teams.")
 
+    score_criteria = (
+        ('Style', 'S', Decimal('24'), Decimal('32'), True),
+        ('Content', 'S', Decimal('24'), Decimal('32'), True),
+        ('Strategy', 'S', Decimal('12'), Decimal('16'), True),
+        ('POIs', 'S', Decimal('-2'), Decimal('2'), False),
+        ('Style', 'R', Decimal('12'), Decimal('16'), True),
+        ('Content', 'R', Decimal('12'), Decimal('16'), True),
+        ('Strategy', 'R', Decimal('6'), Decimal('8'), True),
+    )
+
+    @staticmethod
+    def _wsdc_score_criteria_match(tournament):
+        actual = list(tournament.scorecriterion_set.order_by('seq').values_list(
+            'seq', 'name', 'speech_type', 'weight', 'min_score', 'max_score', 'step', 'required',
+        ))
+        expected = [
+            (seq, name, speech_type, 1.0, min_score, max_score, 0.5, required)
+            for seq, (name, speech_type, min_score, max_score, required)
+            in enumerate(WSDCPreferences.score_criteria, start=1)
+        ]
+        return actual == expected
+
+    @staticmethod
+    def _apply_wsdc_score_criteria(tournament):
+        if WSDCPreferences._wsdc_score_criteria_match(tournament):
+            return
+
+        from django.db import transaction
+        from results.models import ScoreCriterion
+
+        with transaction.atomic():
+            tournament.scorecriterion_set.all().delete()
+            ScoreCriterion.objects.bulk_create([
+                ScoreCriterion(
+                    tournament=tournament,
+                    name=name,
+                    seq=seq,
+                    speech_type=speech_type,
+                    weight=1,
+                    min_score=min_score,
+                    max_score=max_score,
+                    step=0.5,
+                    required=required,
+                )
+                for seq, (name, speech_type, min_score, max_score, required)
+                in enumerate(WSDCPreferences.score_criteria, start=1)
+            ])
+
+    @staticmethod
+    def _wsdc_score_criteria_would_change(tournament):
+        return not WSDCPreferences._wsdc_score_criteria_match(tournament)
+
+    apply_actions = (
+        PresetApplyAction(
+            id='wsdc_score_criteria',
+            label=_('Replace score criteria with the WSDC criteria'),
+            apply=_apply_wsdc_score_criteria,
+            default_enabled=True,
+            would_change=_wsdc_score_criteria_would_change,
+        ),
+    )
+
     # Rules source = https://www.wsdcdebating.org/_files/ugd/669183_399cb065fe31455b9371bd8dfdf7e0d1.pdf
     # Score (strictly specified in the rules)
     scoring__score_min                         = Decimal('60')

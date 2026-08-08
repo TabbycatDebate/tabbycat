@@ -1,11 +1,14 @@
+from types import SimpleNamespace
+from unittest.mock import Mock
+
 from django import forms
-from django.test import TestCase
+from django.test import SimpleTestCase, TestCase
 
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from draw.types import DebateSide
 from participants.models import Adjudicator, Team
-from results.forms import PerAdjudicatorBallotSetForm
+from results.forms import PerAdjudicatorBallotSetForm, SingleBallotSetForm
 from results.models import BallotSubmission, ScoreCriterion
 from tournaments.models import Round, Tournament
 
@@ -59,3 +62,46 @@ class PerAdjudicatorBallotSetFormTests(TestCase):
 
         with self.assertRaises(forms.ValidationError):
             form.fields[field_name].clean(0)
+
+
+class Criteria(list):
+    def exists(self):
+        return bool(self)
+
+
+class TestSingleBallotSetFormScoreCriteria(SimpleTestCase):
+    def setUp(self):
+        self.criterion = SimpleNamespace(
+            id=1,
+            min_score=24,
+            max_score=32,
+            step=0.5,
+            weight=1,
+            required=True,
+            applies_to_position=lambda position, reply_position: True,
+        )
+        self.form = SingleBallotSetForm.__new__(SingleBallotSetForm)
+        self.form.sides = [1]
+        self.form.positions = [1]
+        self.form.reply_position = None
+        self.form.criteria = Criteria([self.criterion])
+        self.form.fields = {}
+        self.form.using_speaker_ranks = False
+        self.form.using_declared_winner = False
+        self.form.declared_winner = 'none'
+        self.form.tournament = Mock()
+        self.form.tournament.pref.side_effect = {
+            'score_min': 60,
+            'score_max': 80,
+            'score_step': 0.5,
+        }.__getitem__
+
+    def test_total_score_range_is_not_validated_when_using_criteria(self):
+        self.form.create_score_fields()
+        score_name = self.form._fieldname_score(1, 1)
+        score_field = self.form.fields[score_name]
+        self.assertTrue(score_field.disabled)
+
+        bound_form = forms.Form(data={score_name: '24'})
+        bound_form.fields[score_name] = score_field
+        self.assertTrue(bound_form.is_valid(), bound_form.errors)

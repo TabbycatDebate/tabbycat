@@ -740,6 +740,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 widget=forms.NumberInput(attrs={'class': 'number'}),
                 tournament=self.tournament,
                 required=False,
+                disabled=self.criteria.exists(),
             )
             for criterion in self.criteria_for_position(pos):
                 self.fields[self._fieldname_criterion_score(side, pos, criterion)] = forms.DecimalField(
