@@ -14,7 +14,7 @@ echo "-----> Running database migration"
 python manage.py migrate --noinput
 
 echo "-----> Ensuring database cache table exists"
-python manage.py createcachetable --noinput
+python manage.py createcachetable
 
 echo "-----> Running dynamic preferences checks"
 python manage.py checkpreferences

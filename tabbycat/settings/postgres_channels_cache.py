@@ -30,9 +30,21 @@ def postgres_channel_layers(
 ) -> dict[str, dict[str, Any]]:
     """Build CHANNEL_LAYERS for channels_postgres from a DATABASES['default']-style dict."""
     cfg = copy.deepcopy(default_db_config)
+
+    # ``channels_postgres`` constructs Django's PostgreSQL DatabaseWrapper
+    # directly, so it doesn't benefit from ConnectionHandler's normalisation of
+    # DATABASES. Django 5.2's wrapper expects these keys to be present even when
+    # their values are the defaults. Without TIME_ZONE in particular, Channels
+    # catches the resulting KeyError and misleadingly reports that no channel
+    # layer is configured.
+    cfg.setdefault('OPTIONS', {})
+    cfg.setdefault('TIME_ZONE', None)
+    for setting in ('NAME', 'USER', 'PASSWORD', 'HOST', 'PORT'):
+        cfg.setdefault(setting, '')
+
     return {
         'default': {
-            'BACKEND': 'channels_postgres.core.PostgresChannelLayer',
+            'BACKEND': 'utils.channel_layers.SingleListenerPostgresChannelLayer',
             'CONFIG': {
                 **cfg,
                 'group_expiry': group_expiry,

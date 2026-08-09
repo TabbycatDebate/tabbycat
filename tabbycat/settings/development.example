@@ -28,9 +28,14 @@ import copy
 
 from .postgres_channels_cache import postgres_channel_layers, postgres_database_cache
 
-# Set True to use Redis for channels and page cache instead of PostgreSQL.
-# Requires a running Redis server and: pip install django-redis channels-redis redis
-USE_REDIS_LOCALLY = False
+# Set TABBYCAT_USE_REDIS_CHANNELS_CACHE=1 to use Redis for channels and page
+# cache instead of PostgreSQL. Requires a running Redis server and:
+# pipenv install --categories=redis-channels-cache
+USE_REDIS_LOCALLY = os.environ.get('TABBYCAT_USE_REDIS_CHANNELS_CACHE', '').lower() in {
+    '1',
+    'true',
+    'yes',
+}
 
 if USE_REDIS_LOCALLY:
     CHANNEL_LAYERS = {
