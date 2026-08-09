@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 from contextlib import contextmanager
@@ -6,7 +7,7 @@ from unittest import expectedFailure
 from django.contrib.auth import get_user, get_user_model
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.cache import cache
-from django.test import tag, TestCase
+from django.test import SimpleTestCase, tag, TestCase
 from django.urls import reverse
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -14,12 +15,27 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from draw.models import DebateTeam
 from participants.models import Adjudicator, Institution, Speaker, Team
 from tournaments.models import Tournament
+from utils.channel_layers import SingleListenerPostgresChannelLayer
 from utils.misc import add_query_string_parameter, reverse_tournament
 from venues.models import Venue
 
 V1_ROOT_URL = "http://testserver/api/v1"
 
 logger = logging.getLogger(__name__)
+
+
+class SingleListenerPostgresChannelLayerTests(SimpleTestCase):
+
+    def test_only_one_listener_starts_for_concurrent_receives(self):
+        layer = object.__new__(SingleListenerPostgresChannelLayer)
+        layer.event_loop = None
+        layer.listener_task_is_running = None
+        layer._listener_task_starting = False
+
+        async def get_start_decisions():
+            return [layer._get_or_create_listener_task()[1] for _ in range(3)]
+
+        self.assertEqual(asyncio.run(get_start_decisions()), [True, False, False])
 
 
 @contextmanager
