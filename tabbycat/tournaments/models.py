@@ -672,9 +672,10 @@ class ScheduleEvent(models.Model):
         if self.title:
             return self.title
 
-        title_parts = [str(self.get_type_display())]
+        title_parts = []
         if self.round_id:
             title_parts.append(self.round.name)
+        title_parts.append(str(self.get_type_display()))
         return " — ".join(title_parts)
 
     def __str__(self):

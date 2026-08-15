@@ -77,7 +77,7 @@ class SetTournamentScheduleViewTest(TestCase):
         self.assertRedirects(response, self.url)
         event = ScheduleEvent.objects.get(tournament=self.tournament)
         self.assertEqual(event.title, '')
-        self.assertEqual(event.display_title, f'Debate — {round.name}')
+        self.assertEqual(event.display_title, f'{round.name} — Debate')
 
     def test_custom_title_overrides_automatic_title(self):
         round = self.tournament.round_set.first()

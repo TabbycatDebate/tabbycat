@@ -139,7 +139,7 @@ const initializeScheduleEditor = (root) => {
     const roundSelect = field(row, 'round')
     const typeLabel = typeSelect.options[typeSelect.selectedIndex]?.text || ''
     const roundLabel = roundSelect.options[roundSelect.selectedIndex]?.text || ''
-    return [typeLabel, roundSelect.value ? roundLabel : ''].filter(Boolean).join(' — ') || root.dataset.untitledLabel
+    return [roundSelect.value ? roundLabel : '', typeLabel].filter(Boolean).join(' — ') || root.dataset.untitledLabel
   }
 
   const updateTitleState = (row) => {
