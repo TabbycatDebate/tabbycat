@@ -93,6 +93,7 @@ class ActionLogEntry(models.Model):
         SIMPLE_IMPORT_VENUES              = 'si.venu', _("Imported rooms using the simple importer")
         SPEAKER_CATEGORIES_EDIT           = 'se.ca.edit', _("Edited speaker categories")
         SPEAKER_CREATE                    = 'sp.crea', _("Created speaker")
+        SPEAKER_DELETE                    = 'sp.del', _("Deleted speaker")
         SPEAKER_EDIT                      = 'sp.edit', _("Edited speaker")
         SPEAKER_ELIGIBILITY_EDIT          = 'se.edit', _("Edited speaker category eligibility")
         TEAM_CREATE                       = 'te.crea', _("Created team")
