@@ -1,0 +1,49 @@
+{% load i18n %}
+
+<section
+  class="card schedule-day mb-3"
+  data-schedule-day
+  data-date="{% if template_day %}__date__{% elif schedule_date %}{{ schedule_date|date:'Y-m-d' }}{% endif %}"
+>
+  <header class="card-header schedule-day-header d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center">
+      <span class="schedule-date-tile" data-day-number>
+        {% if template_day %}__day_number__{% elif schedule_date %}{{ schedule_date|date:"j" }}{% else %}?{% endif %}
+      </span>
+      <div>
+        <strong class="d-block" data-day-weekday>
+          {% if template_day %}__weekday__{% elif schedule_date %}{{ schedule_date|date:"l" }}{% else %}{% trans "Needs a date" %}{% endif %}
+        </strong>
+        <small class="text-muted" data-day-summary>
+          {% if template_day %}__day_summary__{% elif schedule_date %}{{ schedule_date|date:"F Y" }}{% else %}{% trans "Correct the start time below" %}{% endif %}
+        </small>
+      </div>
+    </div>
+    {% if can_edit or template_day %}
+      <button class="btn btn-outline-primary btn-sm" type="button" data-add-event>
+        <span data-feather="plus"></span>{% trans "Add event" %}
+      </button>
+    {% endif %}
+  </header>
+
+  <div class="schedule-grid-header" aria-hidden="true">
+    <span></span>
+    <span>{% trans "Start" %}</span>
+    <span>{% trans "End" %}</span>
+    <span>{% trans "Event type" %}</span>
+    <span>{% trans "Title" %}</span>
+    <span>{% trans "Round" %}</span>
+    <span>{% trans "Duration" %}</span>
+    <span></span>
+  </div>
+
+  <div data-schedule-rows>
+    {% for form in schedule_forms %}
+      {% include "tournament_schedule_event_row.html" %}
+    {% endfor %}
+  </div>
+
+  <div class="schedule-day-empty {% if schedule_forms %}d-none{% endif %}" data-day-empty>
+    {% trans "No events on this day yet." %}
+  </div>
+</section>

@@ -333,6 +333,6 @@ class ScheduleEventForm(ModelForm):
         fields = ('tournament', 'type', 'title', 'start_time', 'end_time', 'round')
         widgets = {
             'tournament': HiddenInput(),
-            'start_time': DateTimeInput(attrs={'type': 'datetime-local'}),
-            'end_time':   DateTimeInput(attrs={'type': 'datetime-local'}),
+            'start_time': DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'type': 'datetime-local'}),
+            'end_time':   DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'type': 'datetime-local'}),
         }

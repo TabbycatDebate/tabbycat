@@ -1,6 +1,7 @@
 import json
 import logging
 from collections import OrderedDict
+from datetime import date, datetime
 
 from django.conf import settings
 from django.contrib import messages
@@ -8,6 +9,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, resolve_url
+from django.utils import timezone
 from django.utils.html import format_html_join
 from django.utils.timezone import get_current_timezone_name
 from django.utils.translation import gettext_lazy as _
@@ -432,7 +434,7 @@ class SetTournamentScheduleView(AdministratorMixin, TournamentMixin, ModelFormSe
         kwargs = super().get_formset_factory_kwargs()
         kwargs.update({
             'form': self.form_class,
-            'extra': 3 * int(can_edit),
+            'extra': 0,
             'can_delete': can_edit,
         })
         return kwargs
@@ -454,6 +456,44 @@ class SetTournamentScheduleView(AdministratorMixin, TournamentMixin, ModelFormSe
 
     def get_formset_queryset(self):
         return self.tournament.scheduleevent_set.all()
+
+    @staticmethod
+    def _get_form_schedule_date(form):
+        value = form['start_time'].value()
+        if isinstance(value, datetime):
+            if timezone.is_aware(value):
+                value = timezone.localtime(value)
+            return value.date()
+        if isinstance(value, date):
+            return value
+        if isinstance(value, str):
+            try:
+                return date.fromisoformat(value[:10])
+            except ValueError:
+                pass
+        return None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        schedule_days = OrderedDict()
+        undated_forms = []
+        for form in context['formset']:
+            schedule_date = self._get_form_schedule_date(form)
+            if schedule_date is None:
+                undated_forms.append(form)
+            else:
+                schedule_days.setdefault(schedule_date, []).append(form)
+
+        context.update({
+            'schedule_days': [
+                {'date': schedule_date, 'forms': forms}
+                for schedule_date, forms in schedule_days.items()
+            ],
+            'undated_schedule_forms': undated_forms,
+            'schedule_event_count': sum(len(forms) for forms in schedule_days.values()),
+            'schedule_timezone_label': get_current_timezone_name(),
+        })
+        return context
 
     def formset_valid(self, formset):
         instances = formset.save(commit=False)
