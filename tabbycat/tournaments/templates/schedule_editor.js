@@ -134,6 +134,24 @@ const initializeScheduleEditor = (root) => {
     return new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' }).format(date)
   }
 
+  const automaticTitle = (row) => {
+    const typeSelect = field(row, 'type')
+    const roundSelect = field(row, 'round')
+    const typeLabel = typeSelect.options[typeSelect.selectedIndex]?.text || ''
+    const roundLabel = roundSelect.options[roundSelect.selectedIndex]?.text || ''
+    return [typeLabel, roundSelect.value ? roundLabel : ''].filter(Boolean).join(' — ') || root.dataset.untitledLabel
+  }
+
+  const updateTitleState = (row) => {
+    const titleInput = field(row, 'title')
+    const usesAutomaticTitle = titleInput.value.trim() === ''
+    const generatedTitle = automaticTitle(row)
+    row.querySelector('[data-automatic-title]').textContent = generatedTitle
+    row.querySelector('[data-automatic-title-state]').classList.toggle('d-none', !usesAutomaticTitle)
+    titleInput.placeholder = `${root.dataset.automaticTitlePlaceholder} ${generatedTitle}`
+    titleInput.classList.toggle('schedule-title-is-automatic', usesAutomaticTitle)
+  }
+
   const updatePreview = () => {
     const preview = root.querySelector('[data-schedule-preview]')
     preview.replaceChildren()
@@ -159,7 +177,8 @@ const initializeScheduleEditor = (root) => {
 
         const details = document.createElement('div')
         const title = document.createElement('strong')
-        title.textContent = field(row, 'title').value || root.dataset.untitledLabel
+        const customTitle = field(row, 'title').value.trim()
+        title.textContent = customTitle || automaticTitle(row)
         const meta = document.createElement('small')
         meta.className = 'd-block text-muted'
         const typeSelect = field(row, 'type')
@@ -167,6 +186,7 @@ const initializeScheduleEditor = (root) => {
         const typeLabel = typeSelect.options[typeSelect.selectedIndex]?.text || ''
         const roundLabel = roundSelect.options[roundSelect.selectedIndex]?.text || ''
         meta.textContent = roundSelect.value ? `${typeLabel} · ${roundLabel}` : typeLabel
+        meta.classList.toggle('d-none', customTitle === '')
 
         details.append(title, meta)
         item.append(time, details)
@@ -176,7 +196,10 @@ const initializeScheduleEditor = (root) => {
   }
 
   const refresh = () => {
-    visibleRows().forEach(updateDuration)
+    visibleRows().forEach(row => {
+      updateDuration(row)
+      updateTitleState(row)
+    })
     updateCounts()
     updatePreview()
   }
@@ -333,6 +356,7 @@ const initializeScheduleEditor = (root) => {
           row.dataset.eventType = control.value
         }
         updateDuration(row)
+        updateTitleState(row)
         updatePreview()
         markDirty()
       })
@@ -438,7 +462,7 @@ const initializeScheduleEditor = (root) => {
   function activateDay (day) {
     day.querySelector('[data-add-event]')?.addEventListener('click', () => {
       const row = createRow(day)
-      field(row, 'title').focus()
+      field(row, 'type').focus()
     })
   }
 
@@ -453,7 +477,7 @@ const initializeScheduleEditor = (root) => {
     }
     const day = createDay(input.value)
     const row = createRow(day)
-    field(row, 'title').focus()
+    field(row, 'type').focus()
   })
 
   root.querySelectorAll('[data-schedule-mode]').forEach(button => {

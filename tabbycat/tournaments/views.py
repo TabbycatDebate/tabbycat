@@ -455,7 +455,7 @@ class SetTournamentScheduleView(AdministratorMixin, TournamentMixin, ModelFormSe
         return formset
 
     def get_formset_queryset(self):
-        return self.tournament.scheduleevent_set.all()
+        return self.tournament.scheduleevent_set.select_related('round')
 
     @staticmethod
     def _get_form_schedule_date(form):
@@ -530,7 +530,7 @@ class PublicScheduleView(PublicTournamentPageMixin, VueTableTemplateView):
     cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
 
     def get_table(self):
-        events = self.tournament.scheduleevent_set.all()
+        events = self.tournament.scheduleevent_set.select_related('round')
         table = TabbycatTableBuilder(view=self, sort_key='start_time')
         table.add_schedule_event_columns(events)
         return table

@@ -1070,7 +1070,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_column(header, results)
 
     def add_schedule_event_columns(self, schedule_events):
-        self.add_column({'title': _("Event"), 'key': _("Event")}, [ev.title for ev in schedule_events])
+        self.add_column({'title': _("Event"), 'key': _("Event")}, [ev.display_title for ev in schedule_events])
 
         starts = [
             timezone.localtime(ev.start_time)

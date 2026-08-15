@@ -60,6 +60,7 @@
 .schedule-event-row {
   position: relative;
   padding: 0.7rem 1rem;
+  align-items: start;
   background: $white;
   border-bottom: 1px solid $gray-200;
   transition: background-color 120ms ease, opacity 120ms ease;
@@ -83,6 +84,40 @@
 
 .schedule-event-hidden {
   display: none;
+}
+
+.schedule-field-title {
+
+  .schedule-title-is-automatic {
+    border-style: dashed;
+  }
+}
+
+.schedule-title-hint {
+  margin-top: 0.28rem;
+  display: block;
+  overflow: hidden;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  strong {
+    color: $gray-700;
+    font-weight: $font-weight-normal;
+  }
+}
+
+.schedule-title-badge {
+  margin-right: 0.2rem;
+  padding: 0.05rem 0.25rem;
+  border-radius: 0.2rem;
+  color: darken(theme-color("info"), 25%);
+  background: lighten(theme-color("info"), 39%);
+  font-size: 0.62rem;
+  font-weight: $font-weight-bold;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .schedule-time-control {
@@ -112,6 +147,7 @@
   color: $gray-600;
   background: transparent;
   cursor: move;
+  align-self: center;
 
   &:hover,
   &:focus {
@@ -147,6 +183,7 @@
 
 .schedule-row-actions {
   display: flex;
+  align-self: center;
   justify-content: flex-end;
 
   .feather {
@@ -169,6 +206,7 @@
 }
 
 .schedule-duration {
+  align-self: center;
   color: $text-muted;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;

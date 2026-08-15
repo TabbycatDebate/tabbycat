@@ -649,7 +649,8 @@ class ScheduleEvent(models.Model):
 
     tournament = models.ForeignKey(Tournament, models.CASCADE, verbose_name=_("tournament"),
                                    help_text=_("The tournament the event takes place in"))
-    title = models.CharField(max_length=100, verbose_name=_("title"), help_text=_("e.g. \"Lunch\""))
+    title = models.CharField(max_length=100, blank=True, verbose_name=_("title"),
+                             help_text=_("Optional custom title; leave blank to use the event type and round"))
     type = models.CharField(max_length=1, choices=Types.choices, default=Types.OTHER, verbose_name=_("event type"),
                             help_text=_("What sort of event this is, use \"Other\" if the type is not available"))
 
@@ -666,5 +667,15 @@ class ScheduleEvent(models.Model):
         verbose_name_plural = _('schedule events')
         ordering = ['tournament', 'start_time']
 
+    @property
+    def display_title(self):
+        if self.title:
+            return self.title
+
+        title_parts = [str(self.get_type_display())]
+        if self.round_id:
+            title_parts.append(self.round.name)
+        return " — ".join(title_parts)
+
     def __str__(self):
-        return "[%s] %s (%s)" % (self.tournament, self.title, self.start_time)
+        return "[%s] %s (%s)" % (self.tournament, self.display_title, self.start_time)

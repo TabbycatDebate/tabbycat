@@ -45,8 +45,14 @@
   </div>
 
   <div class="schedule-field schedule-field-title">
-    <label for="{{ form.title.id_for_label }}">{% trans "Title" %}</label>
+    <label for="{{ form.title.id_for_label }}">
+      {% trans "Custom title" %} <span class="text-muted font-weight-normal">({% trans "optional" %})</span>
+    </label>
     {{ form.title|addcss:"form-control" }}
+    <small class="schedule-title-hint text-muted" data-automatic-title-state>
+      <span class="schedule-title-badge">{% trans "Auto" %}</span>
+      {% trans "Leave blank to show" %} “<strong data-automatic-title></strong>”
+    </small>
     {{ form.title.errors }}
   </div>
 
