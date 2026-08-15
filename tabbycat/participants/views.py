@@ -372,6 +372,7 @@ class AdminCreateSpeakerView(LogActionMixin, AdministratorMixin, TournamentMixin
     action_log_type = ActionLogEntry.ActionType.SPEAKER_CREATE
     edit_permission = Permission.ADD_TEAMS
     form_class = AdminSpeakerForm
+    action_log_content_object_attr = 'object'
 
     def get_team(self):
         if not hasattr(self, '_team'):
@@ -382,9 +383,6 @@ class AdminCreateSpeakerView(LogActionMixin, AdministratorMixin, TournamentMixin
         kwargs = super().get_form_kwargs()
         kwargs['team'] = self.get_team()
         return kwargs
-
-    def get_action_log_content_object(self):
-        return self.object
 
     def get_page_title(self):
         return _("Add Speaker to %(team)s") % {'team': self.get_team().short_name}
@@ -409,6 +407,7 @@ class AdminDeleteSpeakerView(LogActionMixin, AdministratorMixin, TournamentMixin
     action_log_type = ActionLogEntry.ActionType.SPEAKER_DELETE
     edit_permission = Permission.DELETE_SPEAKER
     form_class = ConfirmSpeakerDeletionForm
+    action_log_content_object_attr = 'object'
 
     def get_speaker(self):
         if not hasattr(self, '_speaker'):
@@ -421,9 +420,6 @@ class AdminDeleteSpeakerView(LogActionMixin, AdministratorMixin, TournamentMixin
         kwargs = super().get_form_kwargs()
         kwargs['speaker'] = self.get_speaker()
         return kwargs
-
-    def get_action_log_content_object(self):
-        return self.object
 
     def get_page_title(self):
         return _("Delete %(name)s") % {'name': self.get_speaker().name}
