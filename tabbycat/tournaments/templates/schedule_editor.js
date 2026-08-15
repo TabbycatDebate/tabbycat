@@ -148,7 +148,7 @@ const initializeScheduleEditor = (root) => {
     const generatedTitle = automaticTitle(row)
     row.querySelector('[data-automatic-title]').textContent = generatedTitle
     row.querySelector('[data-automatic-title-state]').classList.toggle('d-none', !usesAutomaticTitle)
-    titleInput.placeholder = `${root.dataset.automaticTitlePlaceholder} ${generatedTitle}`
+    titleInput.placeholder = generatedTitle
     titleInput.classList.toggle('schedule-title-is-automatic', usesAutomaticTitle)
   }
 

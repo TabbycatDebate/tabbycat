@@ -119,5 +119,4 @@ class SetTournamentScheduleViewTest(TestCase):
         response = self.client.get(self.url)
 
         self.assertContains(response, 'Custom title')
-        self.assertContains(response, 'data-automatic-title-placeholder="Automatic:"')
         self.assertContains(response, 'Leave blank to show')
