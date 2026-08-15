@@ -7,7 +7,7 @@
       <h4 class="card-title mb-0">
         {{ card_title|safe }}
       </h4>
-      {% if admin_page %}
+      {% if admin_page and user.is_staff %}
         <a href="{% url 'admin:participants_team_change' team.pk %}" class="btn btn-sm btn-outline-secondary">
           {% trans "Edit Database" %}
         </a>

@@ -2,10 +2,15 @@
 
 <div class="card mt-md-3">
   <div class="list-group list-group-flush">
-    <div class="list-group-item">
+    <div class="list-group-item d-flex justify-content-between align-items-center">
       <h4 class="card-title mb-0">
         {{ card_title|safe }}
       </h4>
+      {% if admin_page and user.is_staff %}
+        <a href="{% url 'admin:participants_adjudicator_change' adjudicator.pk %}" class="btn btn-sm btn-outline-secondary">
+          {% trans "Edit Database" %}
+        </a>
+      {% endif %}
     </div>
 
     {% if adjudicator.registration_status == 'U' %}
