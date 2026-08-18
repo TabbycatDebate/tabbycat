@@ -18,7 +18,7 @@ services:
       - POSTGRES_USER=tabbycat
       - POSTGRES_DB=tabbycat
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql
 
   redis:
     image: redis:6
