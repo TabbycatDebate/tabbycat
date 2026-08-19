@@ -649,7 +649,7 @@ class KPDPPreferences(PreferencesPreset):
     motions__enable_motion_reuse               = True
     # Draw Rules (penalty-weighted, as with APDA)
     draw_rules__draw_odd_bracket               = 'pullup_random'
-    draw_rules__draw_pairing_method            = 'fold'
+    draw_rules__draw_pairing_method            = 'adjacent'
     draw_rules__draw_avoid_conflicts           = 'graph'
     draw_rules__draw_pullup_restriction        = 'lowest_ds_wins'
     draw_rules__draw_pullup_penalty            = 100
