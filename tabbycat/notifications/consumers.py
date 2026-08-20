@@ -1,4 +1,5 @@
 import json
+import logging
 from dataclasses import asdict
 from email.utils import formataddr
 from time import time
@@ -19,6 +20,8 @@ from .utils import (AdjudicatorAssignmentEmailGenerator, BallotsEmailGenerator, 
                     MotionReleaseEmailGenerator, NotificationContextGenerator, RandomizedUrlEmailGenerator,
                     SlotsAllocatedEmailGenerator, StandingsEmailGenerator, TeamDrawEmailGenerator, TeamSpeakerEmailGenerator)
 
+logger = logging.getLogger(__name__)
+
 
 class NotificationQueueConsumer(SyncConsumer):
 
@@ -38,6 +41,8 @@ class NotificationQueueConsumer(SyncConsumer):
     @staticmethod
     def _send(messages: List[mail.EmailMultiAlternatives], records: List[SentMessage]) -> None:
         SentMessage.objects.bulk_create(records)
+        if not messages:
+            return
 
         connection = mail.get_connection(fail_silently=False)
         failed_events = []
@@ -103,23 +108,35 @@ class NotificationQueueConsumer(SyncConsumer):
         messages = []
         records = []
         for instance, recipient in contexts:
-            data = asdict(instance)
-            data['USER'] = recipient.name
-
             hook_id = str(bulk_notification.id) + "-" + str(recipient.id) + "-" + str(int(time()))[4:]
-            context = Context(data)
-            body = html_body.render(context)
-            email = mail.EmailMultiAlternatives(
-                subject=subject.render(context), body=html2text(body),
-                from_email=from_email, to=[formataddr((recipient.name.strip(), recipient.email))],
-                reply_to=reply_to, headers={
-                    'X-SMTPAPI': json.dumps({'unique_args': {'hook-id': hook_id}}),  # SendGrid-specific 'hook-id'
-                },
-            )
-            email.attach_alternative(body, "text/html")
-            messages.append(email)
+            data = None
+            try:
+                data = asdict(instance)
+                data['USER'] = recipient.name
 
-            raw_message = email.message()
+                context = Context(data)
+                body = html_body.render(context)
+                email = mail.EmailMultiAlternatives(
+                    subject=subject.render(context), body=html2text(body),
+                    from_email=from_email, to=[formataddr((recipient.name.strip(), recipient.email))],
+                    reply_to=reply_to, headers={
+                        'X-SMTPAPI': json.dumps({'unique_args': {'hook-id': hook_id}}),  # SendGrid-specific 'hook-id'
+                    },
+                )
+                email.attach_alternative(body, "text/html")
+                raw_message = email.message()
+            except Exception as e:
+                logger.warning("Failed to prepare email for recipient %s", recipient.id, exc_info=True)
+                failed_record = SentMessage.objects.create(
+                    recipient=recipient, email=recipient.email, method=SentMessage.METHOD_TYPE_EMAIL,
+                    context=data, hook_id=hook_id, notification=bulk_notification,
+                )
+                EmailStatus.objects.create(
+                    email=failed_record, event=EmailStatus.EventType.FAILED, data={'error': str(e)},
+                )
+                continue
+
+            messages.append(email)
             records.append(
                 SentMessage(recipient=recipient, email=recipient.email,
                             method=SentMessage.METHOD_TYPE_EMAIL,
