@@ -1,127 +1,28 @@
 {% extends "base.html" %}
-{% load add_field_css debate_tags i18n %}
+{% load i18n %}
 
 {% block head-title %}<span class="emoji">⌛</span> {% trans "Schedule" %}{% endblock %}
 {% block page-title %}⌛{% trans "Schedule" %}{% endblock %}
 
 {% block content %}
 
-  <div
-    id="schedule-editor"
-    class="schedule-editor"
-    data-can-edit="{% if can_edit %}true{% else %}false{% endif %}"
-    data-events-label="{% trans "events" %}"
-    data-event-label="{% trans "event" %}"
-    data-dragged-label="{% trans "Event moved; its time slot was updated." %}"
-    data-duplicated-label="{% trans "Event duplicated." %}"
-    data-deleted-label="{% trans "Event deleted." %}"
-    data-invalid-time-label="{% trans "Check time" %}"
-    data-untitled-label="{% trans "Untitled event" %}"
-  >
-    <div class="d-lg-flex justify-content-between align-items-start mb-3">
-      <div>
-        <p class="mb-1">
-          {% blocktrans trimmed %}
-            Build the public tournament schedule. Events are grouped by day and ordered by start time.
-          {% endblocktrans %}
-        </p>
-        <small class="text-muted">
-          {% blocktrans trimmed %}
-            Drag an event into another row's time slot to reorder it. Start and end times follow the slot.
-          {% endblocktrans %}
-        </small>
-      </div>
-      <div class="btn-group schedule-mode-switch mt-3 mt-lg-0" role="group" aria-label="{% trans "Schedule view" %}">
-        <button class="btn btn-secondary active" type="button" data-schedule-mode="edit">
-          <span data-feather="edit-3"></span>{% trans "Edit schedule" %}
-        </button>
-        <button class="btn btn-outline-secondary" type="button" data-schedule-mode="preview">
-          <span data-feather="eye"></span>{% trans "Public preview" %}
-        </button>
-      </div>
+  <form method="POST" id="schedule-form">
+    {% csrf_token %}
+    <div id="vueMount">
+      <schedule-editor-container :initial-data="scheduleEditorData"></schedule-editor-container>
     </div>
-
-    <form method="POST" id="schedule-form">
-      {% csrf_token %}
-
-      {% if formset.errors %}
-        {% include "components/form-errors.html" with errors=formset.non_form_errors %}
-      {% endif %}
-      {{ formset.management_form }}
-
-      <section data-schedule-panel="edit">
-        <div class="card schedule-toolbar mb-3">
-          <div class="card-body d-flex flex-wrap justify-content-between align-items-center py-3">
-            <div class="mb-2 mb-md-0">
-              <strong data-schedule-count>{{ schedule_event_count }} {% trans "events" %}</strong>
-              <span class="text-muted ml-2">
-                <span data-feather="clock"></span>
-                {% blocktrans trimmed with timezone=schedule_timezone_label %}
-                  Times shown in {{ timezone }}
-                {% endblocktrans %}
-              </span>
-            </div>
-            {% if can_edit %}
-              <div class="schedule-add-day d-flex align-items-center">
-                <label class="sr-only" for="schedule-new-day">{% trans "New schedule day" %}</label>
-                <input class="form-control mr-2" id="schedule-new-day" type="date">
-                <button class="btn btn-primary text-nowrap" type="button" data-add-day>
-                  <span data-feather="calendar"></span>{% trans "Add day" %}
-                </button>
-              </div>
-            {% endif %}
-          </div>
-        </div>
-
-        <div data-schedule-days>
-          {% for day in schedule_days %}
-            {% include "tournament_schedule_day.html" with schedule_date=day.date schedule_forms=day.forms %}
-          {% endfor %}
-
-          {% if undated_schedule_forms %}
-            {% include "tournament_schedule_day.html" with schedule_forms=undated_schedule_forms undated=True %}
-          {% endif %}
-        </div>
-
-        <div class="schedule-empty card text-center {% if schedule_days or undated_schedule_forms %}d-none{% endif %}" data-schedule-empty>
-          <div class="card-body py-5">
-            <span class="schedule-empty-icon" data-feather="calendar"></span>
-            <h5 class="mt-3">{% trans "No schedule events yet" %}</h5>
-            <p class="text-muted mb-0">{% trans "Choose a date above to start building the schedule." %}</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="d-none" data-schedule-panel="preview">
-        <div class="card schedule-preview">
-          <div class="card-body p-lg-4">
-            <h4 class="mb-1">{% trans "Tournament Schedule" %}</h4>
-            <p class="text-muted">{% trans "Preview of the schedule participants will see." %}</p>
-            <div data-schedule-preview></div>
-          </div>
-        </div>
-      </section>
-
-      {% if can_edit %}
-        <div class="schedule-save-bar">
-          <span class="text-muted d-none d-sm-inline" data-save-state>{% trans "Changes are not saved automatically." %}</span>
-          <button class="btn btn-success" type="submit" name="submit">
-            <span data-feather="save"></span>{% trans "Save Schedule" %}
-          </button>
-        </div>
-      {% endif %}
-    </form>
-
-    {% if can_edit %}
-      <template id="schedule-empty-form-template">
-        {% include "tournament_schedule_event_row.html" with form=formset.empty_form %}
-      </template>
-      <template id="schedule-day-template">
-        {% include "tournament_schedule_day.html" with template_day=True %}
-      </template>
-    {% endif %}
-
-    <div class="schedule-toast" role="status" aria-live="polite" data-schedule-toast></div>
-  </div>
+  </form>
 
 {% endblock content %}
+
+{% block js %}
+
+  {{ schedule_editor_data|json_script:"schedule-editor-data" }}
+  <script>
+    window.vueData = {
+      scheduleEditorData: JSON.parse(document.getElementById('schedule-editor-data').textContent),
+    }
+  </script>
+  {{ block.super }}
+
+{% endblock js %}

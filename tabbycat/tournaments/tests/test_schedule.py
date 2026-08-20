@@ -1,10 +1,13 @@
+import json
 from datetime import datetime
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from django.utils import timezone
+from django.utils import formats, timezone
 
 from tournaments.models import ScheduleEvent, Tournament
+from users.models import UserPermission
+from users.permissions import Permission
 from utils.misc import reverse_tournament
 
 
@@ -26,19 +29,22 @@ class SetTournamentScheduleViewTest(TestCase):
             start_time=timezone.make_aware(datetime(2026, 8, day, hour)),
         )
 
-    def test_groups_events_by_local_start_date(self):
+    def test_serializes_events_for_vue_editor(self):
         first = self.create_event('Registration', 15, 9)
         second = self.create_event('Round 1', 16, 10)
 
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context['schedule_days']), 2)
-        self.assertEqual(response.context['schedule_days'][0]['forms'][0].instance, first)
-        self.assertEqual(response.context['schedule_days'][1]['forms'][0].instance, second)
-        self.assertEqual(response.context['schedule_event_count'], 2)
-        self.assertContains(response, 'data-persisted="true"', count=2)
-        self.assertContains(response, 'value="2026-08-15T09:00"')
+        editor_data = response.context['schedule_editor_data']
+        self.assertEqual(editor_data['management']['initialForms'], 2)
+        self.assertEqual(editor_data['management']['totalForms'], 2)
+        self.assertEqual(editor_data['events'][0]['id'], str(first.pk))
+        self.assertEqual(editor_data['events'][0]['startDate'], '2026-08-15')
+        self.assertEqual(editor_data['events'][0]['startTime'], '09:00')
+        self.assertEqual(editor_data['events'][1]['id'], str(second.pk))
+        self.assertTrue(editor_data['canEdit'])
+        self.assertContains(response, '<schedule-editor-container')
 
     def test_dynamic_formset_event_can_be_created(self):
         response = self.client.post(self.url, {
@@ -58,6 +64,72 @@ class SetTournamentScheduleViewTest(TestCase):
         event = ScheduleEvent.objects.get(tournament=self.tournament)
         self.assertEqual(event.title, 'Opening briefing')
         self.assertEqual(event.type, ScheduleEvent.Types.BRIEFING)
+
+    def test_persisted_events_can_be_updated_and_deleted(self):
+        deleted = self.create_event('Registration', 15, 9)
+        updated = self.create_event('Briefing', 15, 10)
+
+        response = self.client.post(self.url, {
+            'form-TOTAL_FORMS': '2',
+            'form-INITIAL_FORMS': '2',
+            'form-MIN_NUM_FORMS': '0',
+            'form-MAX_NUM_FORMS': '1000',
+            'form-0-id': str(deleted.pk),
+            'form-0-tournament': str(self.tournament.pk),
+            'form-0-type': deleted.type,
+            'form-0-title': deleted.title,
+            'form-0-start_time': '2026-08-15T09:00',
+            'form-0-end_time': '',
+            'form-0-round': '',
+            'form-0-DELETE': 'on',
+            'form-1-id': str(updated.pk),
+            'form-1-tournament': str(self.tournament.pk),
+            'form-1-type': updated.type,
+            'form-1-title': 'Opening briefing',
+            'form-1-start_time': '2026-08-15T10:00',
+            'form-1-end_time': '',
+            'form-1-round': '',
+            'form-1-DELETE': '',
+        })
+
+        self.assertRedirects(response, self.url)
+        self.assertFalse(ScheduleEvent.objects.filter(pk=deleted.pk).exists())
+        updated.refresh_from_db()
+        self.assertEqual(updated.title, 'Opening briefing')
+
+    def test_invalid_post_rehydrates_values_and_errors(self):
+        response = self.client.post(self.url, {
+            'form-TOTAL_FORMS': '1',
+            'form-INITIAL_FORMS': '0',
+            'form-MIN_NUM_FORMS': '0',
+            'form-MAX_NUM_FORMS': '1000',
+            'form-0-tournament': str(self.tournament.pk),
+            'form-0-type': ScheduleEvent.Types.BRIEFING,
+            'form-0-title': 'Opening briefing',
+            'form-0-start_time': 'not-a-date',
+            'form-0-end_time': '',
+            'form-0-round': '',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        event_data = response.context['schedule_editor_data']['events'][0]
+        self.assertEqual(event_data['title'], 'Opening briefing')
+        self.assertEqual(event_data['startRaw'], 'not-a-date')
+        self.assertIn('start_time', event_data['errors'])
+
+    def test_view_only_user_receives_read_only_editor(self):
+        viewer = get_user_model().objects.create_user('schedule-viewer')
+        UserPermission.objects.create(
+            user=viewer,
+            tournament=self.tournament,
+            permission=Permission.VIEW_EVENTS,
+        )
+        self.client.force_login(viewer)
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['schedule_editor_data']['canEdit'])
 
     def test_blank_title_uses_event_type_and_round(self):
         round = self.tournament.round_set.first()
@@ -118,5 +190,34 @@ class SetTournamentScheduleViewTest(TestCase):
     def test_editor_explains_optional_automatic_title(self):
         response = self.client.get(self.url)
 
-        self.assertContains(response, 'Custom title')
-        self.assertContains(response, 'Leave blank to show')
+        self.assertContains(response, '<schedule-editor-container')
+        self.assertNotContains(response, 'schedule-title-badge')
+
+    def test_editor_data_is_safely_embedded(self):
+        self.create_event('</script><script>alert(1)</script>', 15, 9)
+
+        response = self.client.get(self.url)
+
+        self.assertNotContains(response, '</script><script>alert(1)</script>')
+        self.assertContains(response, r'\u003C/script\u003E\u003Cscript\u003E')
+
+    def test_public_schedule_is_separated_into_local_days(self):
+        first = self.create_event('<b>Registration</b>', 15, 9)
+        self.create_event('Round 1', 16, 10)
+        self.tournament.preferences['public_features__public_schedule'] = True
+
+        response = self.client.get(reverse_tournament('tournament-public-schedule', self.tournament))
+
+        self.assertEqual(response.status_code, 200)
+        tables = json.loads(response.context['tables_data'])
+        self.assertEqual(len(tables), 2)
+        self.assertEqual(tables[0]['title'], formats.date_format(
+            timezone.localtime(first.start_time).date(), format='DATE_FORMAT', use_l10n=True,
+        ))
+        self.assertEqual([header['key'] for header in tables[0]['head']], [
+            'event', 'start_time', 'end_time',
+        ])
+        self.assertEqual(tables[0]['data'][0][0]['text'], '&lt;b&gt;Registration&lt;/b&gt;')
+        self.assertEqual(tables[0]['data'][0][1]['text'], formats.time_format(
+            timezone.localtime(first.start_time), format='TIME_FORMAT', use_l10n=True,
+        ))

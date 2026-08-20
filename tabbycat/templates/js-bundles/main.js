@@ -15,8 +15,8 @@ import DiversityContainer from '../../participants/templates/DiversityContainer.
 import PrintableBallot from '../../printing/templates/PrintableBallot.vue'
 import BallotEntryContainer from '../../results/templates/BallotEntryContainer.vue'
 import ResultsTablesContainer from '../../results/templates/ResultsTablesContainer.vue'
+import ScheduleEditorContainer from '../../tournaments/templates/ScheduleEditorContainer.vue'
 import TournamentOverviewContainer from '../../tournaments/templates/TournamentOverviewContainer.vue'
-import '../../tournaments/templates/schedule_editor.js'
 // Allocations
 import EditDebateAdjudicatorsContainer from '../../adjallocation/templates/EditDebateAdjudicatorsContainer.vue'
 import EditPanelAdjudicatorsContainer from '../../adjallocation/templates/EditPanelAdjudicatorsContainer.vue'
@@ -181,6 +181,7 @@ vueComponents.ResultsTablesContainer = ResultsTablesContainer
 vueComponents.CheckInStatusContainer = CheckInStatusContainer
 // Divisions Containers
 vueComponents.DiversityContainer = DiversityContainer
+vueComponents.ScheduleEditorContainer = ScheduleEditorContainer
 vueComponents.TournamentOverviewContainer = TournamentOverviewContainer
 // Printables
 vueComponents.PrintableBallot = PrintableBallot

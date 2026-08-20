@@ -7,7 +7,7 @@ from django.db.models import Exists, OuterRef, Prefetch
 from django.middleware.csrf import get_token
 from django.utils import timezone
 from django.utils.encoding import force_str
-from django.utils.formats import date_format
+from django.utils.formats import date_format, time_format
 from django.utils.html import escape, format_html
 from django.utils.safestring import SafeString
 from django.utils.timezone import localtime
@@ -1069,22 +1069,27 @@ class TabbycatTableBuilder(BaseTableBuilder):
             ) for s in standings]
             self.add_column(header, results)
 
-    def add_schedule_event_columns(self, schedule_events):
-        self.add_column({'title': _("Event"), 'key': _("Event")}, [ev.display_title for ev in schedule_events])
+    def add_schedule_event_columns(self, schedule_events, include_date=True):
+        self.add_column(
+            {'title': _("Event"), 'key': 'event'},
+            [escape(ev.display_title) for ev in schedule_events],
+        )
+
+        def format_event_time(value):
+            value = timezone.localtime(value)
+            if include_date:
+                return date_format(value, format='DATETIME_FORMAT', use_l10n=True)
+            return time_format(value, format='TIME_FORMAT', use_l10n=True)
 
         starts = [
-            timezone.localtime(ev.start_time)
-                    .strftime("%A, %b %d,  %H:%M")
+            {'text': format_event_time(ev.start_time), 'sort': ev.start_time.timestamp()}
             for ev in schedule_events
         ]
-        self.add_column({'title': _("Start Time"), 'key': _("Start Time")}, starts)
+        self.add_column({'title': _("Start Time"), 'key': 'start_time'}, starts)
 
         ends = [
-            (
-                timezone.localtime(ev.end_time)
-                        .strftime("%A, %b %d, %H:%M")
-                if ev.end_time else ""
-            )
+            {'text': format_event_time(ev.end_time), 'sort': ev.end_time.timestamp()}
+            if ev.end_time else {'text': '', 'sort': ''}
             for ev in schedule_events
         ]
-        self.add_column({'title': _("End Time"), 'key': _("End Time")}, ends)
+        self.add_column({'title': _("End Time"), 'key': 'end_time'}, ends)
