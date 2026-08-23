@@ -7,6 +7,8 @@ from django.urls import reverse
 from rest_framework.test import APITestCase
 
 from availability.models import RoundAvailability
+from participants.models import Team
+from results.models import SpeakerScore
 from tournaments.models import Round
 from utils.tests import CompletedTournamentTestMixin, V1_ROOT_URL
 
@@ -180,6 +182,66 @@ class SpeakerCategoryViewsetTests(CompletedTournamentTestMixin, APITestCase):
         self.client.login(username="admin", password="admin")
         response = self.client.get(reverse('api-speakercategory-list', kwargs={'tournament_slug': self.tournament.slug}))
         self.assertEqual(len(response.data), 2)
+
+
+class SpeakerRoundStandingsViewsetTests(CompletedTournamentTestMixin, APITestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.client.login(username="admin", password="admin")
+
+    def get_speeches(self, params=None):
+        response = self.client.get(self.reverse_url('api-speaker-round-standings'), params or {})
+        self.assertEqual(response.status_code, 200)
+        return [
+            speech
+            for speaker in response.data
+            for round_data in speaker['rounds']
+            for speech in round_data['speeches']
+        ]
+
+    def test_defaults_to_substantive_speeches(self):
+        self.assertTrue(SpeakerScore.objects.filter(position=self.tournament.reply_position).exists())
+
+        speeches = self.get_speeches()
+
+        self.assertTrue(speeches)
+        self.assertTrue(all(speech['position'] <= self.tournament.last_substantive_position for speech in speeches))
+
+    def test_can_filter_for_reply_speeches(self):
+        speeches = self.get_speeches({'replies': 'true'})
+
+        self.assertTrue(speeches)
+        self.assertTrue(all(speech['position'] == self.tournament.reply_position for speech in speeches))
+
+    def test_can_filter_for_ghost_speeches(self):
+        SpeakerScore.objects.filter(ballot_submission__confirmed=True).update(ghost=True)
+
+        speeches = self.get_speeches({'ghost': 'true', 'substantive': 'false'})
+
+        self.assertTrue(speeches)
+        self.assertTrue(all(speech['ghost'] for speech in speeches))
+
+    def test_includes_scores_from_speakers_previous_team(self):
+        score = SpeakerScore.objects.filter(
+            ballot_submission__confirmed=True, position__lte=self.tournament.last_substantive_position,
+        ).select_related(
+            'speaker__team', 'debate_team__debate__round',
+        ).first()
+        speaker = score.speaker
+        new_team = Team.objects.filter(tournament=self.tournament).exclude(pk=speaker.team_id).first()
+        speaker.team = new_team
+        speaker.save(update_fields=['team'])
+
+        response = self.client.get(self.reverse_url('api-speaker-round-standings'))
+
+        self.assertEqual(response.status_code, 200)
+        speaker_data = next(item for item in response.data if item['speaker'].endswith('/%d' % speaker.pk))
+        previous_round = next(
+            item for item in speaker_data['rounds']
+            if item['round'].endswith('/%d' % score.debate_team.debate.round.seq)
+        )
+        self.assertIn(score.score, [speech['score'] for speech in previous_round['speeches']])
 
 
 class BreakEligibilityViewsetTests(CompletedTournamentTestMixin, APITestCase):

@@ -1,5 +1,5 @@
 from collections import defaultdict
-from copy import deepcopy
+from copy import copy
 from itertools import groupby
 
 from asgiref.sync import async_to_sync
@@ -1036,7 +1036,9 @@ class SpeakerRoundStandingsRoundsView(TournamentAPIMixin, TournamentPublicAPIMix
         params_serializer = SpeakerRoundStandingsRoundsParamsSerializer(data=self.request.query_params, context={'tournament': self.tournament})
         params_serializer.is_valid(raise_exception=True)
 
-        speaker_scores = SpeakerScore.objects.select_related('speaker', 'ballot_submission__debate__round__tournament').filter(
+        speaker_scores = SpeakerScore.objects.select_related(
+            'speaker', 'debate_team__debate__round__tournament', 'ballot_submission__debate__round__tournament',
+        ).filter(
             ballot_submission__confirmed=True, speaker_id__in=data.keys(),
         ).order_by('speaker_id', 'debate_team_id', 'position')
 
@@ -1048,14 +1050,29 @@ class SpeakerRoundStandingsRoundsView(TournamentAPIMixin, TournamentPublicAPIMix
             speaker_scores = speaker_scores.filter(position__lte=self.tournament.last_substantive_position)
 
         for spk in data.values():
-            spk.debateteams = deepcopy(debateteams_by_team_id[spk.team_id])
+            spk.debateteams = [copy(dt) for dt in debateteams_by_team_id[spk.team_id]]
             for dt in spk.debateteams:
                 dt.scores = []
 
         for speaker, all_scores in groupby(speaker_scores, key=lambda ss: ss.speaker_id):
             speaker_rounds = {dt.id: dt for dt in data[speaker].debateteams}
+            speaker_rounds_by_round = {dt.debate.round_id: dt for dt in data[speaker].debateteams}
             for dt, round_scores in groupby(all_scores, key=lambda ss: ss.debate_team_id):
-                speaker_rounds[dt].scores.extend(list(round_scores))
+                round_scores = list(round_scores)
+                if dt not in speaker_rounds:
+                    # A speaker can be moved to another team after ballots have
+                    # been submitted. Associate scores from their former team
+                    # with the current team's entry for that round, if it has
+                    # one, rather than returning the round twice.
+                    score_debate_team = round_scores[0].debate_team
+                    debate_team = speaker_rounds_by_round.get(score_debate_team.debate.round_id)
+                    if debate_team is None:
+                        debate_team = copy(score_debate_team)
+                        debate_team.scores = []
+                        data[speaker].debateteams.append(debate_team)
+                        speaker_rounds_by_round[debate_team.debate.round_id] = debate_team
+                    speaker_rounds[dt] = debate_team
+                speaker_rounds[dt].scores.extend(round_scores)
 
         return data.values()
 
