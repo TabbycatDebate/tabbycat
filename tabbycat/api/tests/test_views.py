@@ -6,6 +6,9 @@ from django.test import Client
 from django.urls import reverse
 from rest_framework.test import APITestCase
 
+from availability.models import RoundAvailability
+from participants.models import Team
+from results.models import SpeakerScore
 from tournaments.models import Round
 from utils.tests import CompletedTournamentTestMixin, V1_ROOT_URL
 
@@ -181,6 +184,66 @@ class SpeakerCategoryViewsetTests(CompletedTournamentTestMixin, APITestCase):
         self.assertEqual(len(response.data), 2)
 
 
+class SpeakerRoundStandingsViewsetTests(CompletedTournamentTestMixin, APITestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.client.login(username="admin", password="admin")
+
+    def get_speeches(self, params=None):
+        response = self.client.get(self.reverse_url('api-speaker-round-standings'), params or {})
+        self.assertEqual(response.status_code, 200)
+        return [
+            speech
+            for speaker in response.data
+            for round_data in speaker['rounds']
+            for speech in round_data['speeches']
+        ]
+
+    def test_defaults_to_substantive_speeches(self):
+        self.assertTrue(SpeakerScore.objects.filter(position=self.tournament.reply_position).exists())
+
+        speeches = self.get_speeches()
+
+        self.assertTrue(speeches)
+        self.assertTrue(all(speech['position'] <= self.tournament.last_substantive_position for speech in speeches))
+
+    def test_can_filter_for_reply_speeches(self):
+        speeches = self.get_speeches({'replies': 'true'})
+
+        self.assertTrue(speeches)
+        self.assertTrue(all(speech['position'] == self.tournament.reply_position for speech in speeches))
+
+    def test_can_filter_for_ghost_speeches(self):
+        SpeakerScore.objects.filter(ballot_submission__confirmed=True).update(ghost=True)
+
+        speeches = self.get_speeches({'ghost': 'true', 'substantive': 'false'})
+
+        self.assertTrue(speeches)
+        self.assertTrue(all(speech['ghost'] for speech in speeches))
+
+    def test_includes_scores_from_speakers_previous_team(self):
+        score = SpeakerScore.objects.filter(
+            ballot_submission__confirmed=True, position__lte=self.tournament.last_substantive_position,
+        ).select_related(
+            'speaker__team', 'debate_team__debate__round',
+        ).first()
+        speaker = score.speaker
+        new_team = Team.objects.filter(tournament=self.tournament).exclude(pk=speaker.team_id).first()
+        speaker.team = new_team
+        speaker.save(update_fields=['team'])
+
+        response = self.client.get(self.reverse_url('api-speaker-round-standings'))
+
+        self.assertEqual(response.status_code, 200)
+        speaker_data = next(item for item in response.data if item['speaker'].endswith('/%d' % speaker.pk))
+        previous_round = next(
+            item for item in speaker_data['rounds']
+            if item['round'].endswith('/%d' % score.debate_team.debate.round.seq)
+        )
+        self.assertIn(score.score, [speech['score'] for speech in previous_round['speeches']])
+
+
 class BreakEligibilityViewsetTests(CompletedTournamentTestMixin, APITestCase):
 
     def test_get_eligible_teams(self):
@@ -243,3 +306,43 @@ class BallotViewSetTests(CompletedTournamentTestMixin, APITestCase):
     def test_access_with_private_url(self):
         response = self.client.get(reverse('api-ballot-list', kwargs={'tournament_slug': self.tournament.slug, 'round_seq': 1, 'debate_pk': 12}), headers={"Authorization": "Key urlkey"})
         self.assertEqual(response.status_code, 200)
+
+
+class AvailabilitiesViewSetTests(CompletedTournamentTestMixin, APITestCase):
+    round_seq = 1
+
+    def setUp(self):
+        super().setUp()
+        self.client.login(username="admin", password="admin")
+        RoundAvailability.objects.filter(round=self.round).delete()
+        self.objects = {
+            'adjudicators': self.tournament.adjudicator_set.first(),
+            'teams': self.tournament.team_set.first(),
+            'venues': self.tournament.venue_set.first(),
+        }
+        for obj in self.objects.values():
+            RoundAvailability.objects.create(round=self.round, content_object=obj)
+
+    def get_availabilities(self, params=None):
+        response = self.client.get(self.reverse_url('api-availability-list'), params or {})
+        self.assertEqual(response.status_code, 200)
+        return response.data
+
+    def test_no_types_returns_no_availabilities(self):
+        self.assertEqual(self.get_availabilities(), [])
+
+    def test_filters_availabilities_by_requested_type(self):
+        for param, obj in self.objects.items():
+            with self.subTest(param=param):
+                availabilities = self.get_availabilities({param: 'true'})
+                self.assertEqual(len(availabilities), 1)
+                self.assertTrue(availabilities[0].endswith('/%d' % obj.pk))
+
+    def test_can_request_multiple_availability_types(self):
+        availabilities = self.get_availabilities({'teams': 'true', 'venues': 'true'})
+
+        self.assertEqual(len(availabilities), 2)
+        self.assertEqual(
+            {int(url.rsplit('/', 1)[-1]) for url in availabilities},
+            {self.objects['teams'].pk, self.objects['venues'].pk},
+        )

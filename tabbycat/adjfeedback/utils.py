@@ -12,6 +12,20 @@ from options.preferences import FeedbackPaths
 logger = logging.getLogger(__name__)
 
 
+def team_feedback_allowed_targets(feedback_from_teams):
+    if feedback_from_teams in ['all-adjs-allowed', 'all-adjs']:
+        return 'all-adjs'
+    if feedback_from_teams in ['all-voting-adjs-allowed', 'all-voting-adjs']:
+        return 'all-voting-adjs'
+    return feedback_from_teams
+
+
+def team_feedback_expected_targets(feedback_from_teams):
+    if feedback_from_teams in ['all-voting-adjs-allowed', 'all-adjs-allowed']:
+        return 'orallist'
+    return feedback_from_teams
+
+
 def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
     """Returns a list of adjudicators and positions (adj, pos), each being
     someone that the given DebateAdjudicator object is expected to give feedback

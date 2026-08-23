@@ -49,9 +49,9 @@ class TeamStandingsParamsSerializer(serializers.Serializer):
 
 
 class SpeakerRoundStandingsRoundsParamsSerializer(serializers.Serializer):
-    ghost = serializers.BooleanField(required=False)
-    replies = serializers.BooleanField(required=False)
-    substantive = serializers.BooleanField(required=False)
+    ghost = serializers.BooleanField(default=False)
+    replies = serializers.BooleanField(default=False)
+    substantive = serializers.BooleanField(default=True)
 
 
 class BallotParamsSerializer(serializers.Serializer):
@@ -77,6 +77,6 @@ class FeedbackParamsSerializer(serializers.Serializer):
 
 
 class AvailabilitiesParamsSerializer(serializers.Serializer):
-    adjudicators = serializers.BooleanField(required=False)
-    teams = serializers.BooleanField(required=False)
-    venues = serializers.BooleanField(required=False)
+    adjudicators = serializers.BooleanField(default=False)
+    teams = serializers.BooleanField(default=False)
+    venues = serializers.BooleanField(default=False)
