@@ -6,6 +6,7 @@ from django.test import Client
 from django.urls import reverse
 from rest_framework.test import APITestCase
 
+from availability.models import RoundAvailability
 from tournaments.models import Round
 from utils.tests import CompletedTournamentTestMixin, V1_ROOT_URL
 
@@ -243,3 +244,43 @@ class BallotViewSetTests(CompletedTournamentTestMixin, APITestCase):
     def test_access_with_private_url(self):
         response = self.client.get(reverse('api-ballot-list', kwargs={'tournament_slug': self.tournament.slug, 'round_seq': 1, 'debate_pk': 12}), headers={"Authorization": "Key urlkey"})
         self.assertEqual(response.status_code, 200)
+
+
+class AvailabilitiesViewSetTests(CompletedTournamentTestMixin, APITestCase):
+    round_seq = 1
+
+    def setUp(self):
+        super().setUp()
+        self.client.login(username="admin", password="admin")
+        RoundAvailability.objects.filter(round=self.round).delete()
+        self.objects = {
+            'adjudicators': self.tournament.adjudicator_set.first(),
+            'teams': self.tournament.team_set.first(),
+            'venues': self.tournament.venue_set.first(),
+        }
+        for obj in self.objects.values():
+            RoundAvailability.objects.create(round=self.round, content_object=obj)
+
+    def get_availabilities(self, params=None):
+        response = self.client.get(self.reverse_url('api-availability-list'), params or {})
+        self.assertEqual(response.status_code, 200)
+        return response.data
+
+    def test_no_types_returns_no_availabilities(self):
+        self.assertEqual(self.get_availabilities(), [])
+
+    def test_filters_availabilities_by_requested_type(self):
+        for param, obj in self.objects.items():
+            with self.subTest(param=param):
+                availabilities = self.get_availabilities({param: 'true'})
+                self.assertEqual(len(availabilities), 1)
+                self.assertTrue(availabilities[0].endswith('/%d' % obj.pk))
+
+    def test_can_request_multiple_availability_types(self):
+        availabilities = self.get_availabilities({'teams': 'true', 'venues': 'true'})
+
+        self.assertEqual(len(availabilities), 2)
+        self.assertEqual(
+            {int(url.rsplit('/', 1)[-1]) for url in availabilities},
+            {self.objects['teams'].pk, self.objects['venues'].pk},
+        )

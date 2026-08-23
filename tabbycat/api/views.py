@@ -1040,11 +1040,11 @@ class SpeakerRoundStandingsRoundsView(TournamentAPIMixin, TournamentPublicAPIMix
             ballot_submission__confirmed=True, speaker_id__in=data.keys(),
         ).order_by('speaker_id', 'debate_team_id', 'position')
 
-        if params_serializer.validated_data.get('ghost', False) == 'true':
+        if params_serializer.validated_data.get('ghost', False):
             speaker_scores = speaker_scores.filter(ghost=True)
-        if params_serializer.validated_data.get('replies', False) == 'true':
+        if params_serializer.validated_data.get('replies', False):
             speaker_scores = speaker_scores.filter(position=self.tournament.reply_position)
-        elif params_serializer.validated_data.get('substantive', 'true') == 'true':
+        elif params_serializer.validated_data.get('substantive', True):
             speaker_scores = speaker_scores.filter(position__lte=self.tournament.last_substantive_position)
 
         for spk in data.values():
@@ -1491,11 +1491,11 @@ class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
         params.is_valid(raise_exception=True)
 
         filters = Q()
-        if params.validated_data.get('adjudicators', 'false') == 'false':
+        if not params.validated_data['adjudicators']:
             filters |= Q(content_type__model='adjudicator')
-        if params.validated_data.get('teams', 'false') == 'false':
+        if not params.validated_data['teams']:
             filters |= Q(content_type__model='team')
-        if params.validated_data.get('venues', 'false') == 'false':
+        if not params.validated_data['venues']:
             filters |= Q(content_type__model='venue')
         return filters
 
