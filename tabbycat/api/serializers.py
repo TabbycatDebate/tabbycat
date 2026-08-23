@@ -2,6 +2,7 @@ from collections import OrderedDict
 from collections.abc import Mapping
 from datetime import date, datetime, time
 from functools import partial, partialmethod
+from typing import Optional
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -1102,11 +1103,11 @@ class BaseStandingsSerializer(serializers.Serializer):
     tied = serializers.SerializerMethodField()
     metrics = serializers.SerializerMethodField()
 
-    def get_rank(self, obj) -> int:
-        return obj.rankings['rank'][0]
+    def get_rank(self, obj) -> Optional[int]:
+        return obj.rankings['rank'][0] if 'rank' in obj.rankings else None
 
-    def get_tied(self, obj) -> bool:
-        return obj.rankings['rank'][1]
+    def get_tied(self, obj) -> Optional[bool]:
+        return obj.rankings['rank'][1] if 'rank' in obj.rankings else None
 
     def get_metrics(self, obj) -> list:
         return [{'metric': s, 'value': v} for s, v in obj.metrics.items()]
