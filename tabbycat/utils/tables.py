@@ -875,7 +875,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     sort = float(metric)
                 except (TypeError, ValueError):
                     sort = 99999
-                row.append({'text': metricformat(metric), 'sort': sort})
+                cell = {'text': metricformat(metric), 'sort': sort}
+                if isinstance(metric, float):
+                    cell['tooltip'] = str(metric)
+                row.append(cell)
             data.append(row)
         self.add_columns(headers, data)
 
