@@ -209,7 +209,7 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     show_in_list = True
 
     scoring__score_min                         = Decimal('50')
-    scoring__score_max                         = Decimal('99')
+    scoring__score_max                         = Decimal('100') # From the latest WUDC Constitution
     scoring__score_step                        = Decimal('1')
     scoring__maximum_margin                    = 0.0
     scoring__teamscore_includes_ghosts         = True  # WUDC 34.9.3.2
@@ -227,6 +227,7 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     # Draw Rules
     draw_rules__avoid_same_institution         = False
     draw_rules__avoid_team_history             = False
+    draw_rules__draw_odd_bracket               = 'pullup_random' # From the latest WUDC Constitution
     draw_rules__bp_pullup_distribution         = 'anywhere'
     draw_rules__bp_position_cost               = 'entropy'
     draw_rules__bp_renyi_order                 = 1.0
@@ -359,18 +360,18 @@ class UADCPreferences(AustralsPreferences):
 
     # Rules source = https://docs.google.com/document/d/10AVKBhev_OFRtorWsu2VB9B5V1a2f20425HYkC5ztMM/edit
     # Scoring
-    scoring__score_min                         = Decimal('69')  # From Rules Book
-    scoring__score_max                         = Decimal('81')  # From Rules Book
+    scoring__score_min                         = Decimal('67')  # From the latest 2024 UADC Constitution
+    scoring__score_max                         = Decimal('83')  # From the latest 2024 UADC Constitution
     scoring__score_step                        = Decimal('1')
-    scoring__reply_score_min                   = Decimal('34.5')  # Not specified; assuming half of substantive
-    scoring__reply_score_max                   = Decimal('42.0')  # Not specified; assuming half of substantive
+    scoring__reply_score_min                   = Decimal('33.5')  # Not specified; assuming half of substantive
+    scoring__reply_score_max                   = Decimal('41.0')  # Not specified; assuming half of substantive
     scoring__reply_score_step                  = Decimal('0.5')
     scoring__maximum_margin                    = 0.0   # TODO= check this
     scoring__margin_includes_dissenters        = False  # From Rules 20.3.2
     # Draws
     draw_rules__avoid_same_institution         = False
     draw_rules__avoid_team_history             = True
-    draw_rules__draw_odd_bracket               = 'pullup_top'  # From Rules 20.10
+    draw_rules__draw_odd_bracket               = 'intermediate_bubble_up_down'  # From the latest 2024 UADC Constitution
     draw_rules__draw_pullup_restriction        = 'least_to_date'  # From Rules 20.11
     draw_rules__draw_side_allocations          = 'balance'
     draw_rules__draw_pairing_method            = 'slide'  # From rules 20.9
