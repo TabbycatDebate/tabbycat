@@ -208,11 +208,12 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     description  = _("2 vs 2 vs 2 vs 2. Compliant with WUDC rules.")
     show_in_list = True
 
+    # WUDC Constitution: https://docs.google.com/document/d/19Hk8imODwOIr6zLCUUwqpAhSamoSqmL0ZdoeemY_XD0/edit?tab=t.0
     scoring__score_min                         = Decimal('50')
-    scoring__score_max                         = Decimal('99')
+    scoring__score_max                         = Decimal('100') # WUDC Schedule 1: 5.3
     scoring__score_step                        = Decimal('1')
     scoring__maximum_margin                    = 0.0
-    scoring__teamscore_includes_ghosts         = True  # WUDC 34.9.3.2
+    scoring__teamscore_includes_ghosts         = True  # WUDC 35.9.3.2
     # Debate Rules
     debate_rules__substantive_speakers         = 2
     debate_rules__teams_in_debate              = 4
@@ -357,21 +358,21 @@ class UADCPreferences(AustralsPreferences):
     description  = _("3 vs 3 with replies, chosen motions, and all adjudicators "
         "can receive feedback from teams.")
 
-    # Rules source = https://docs.google.com/document/d/10AVKBhev_OFRtorWsu2VB9B5V1a2f20425HYkC5ztMM/edit
+    # Rules source = https://docs.google.com/document/d/1yoRcSR3mufyzOTxbOTxnGvdfxS-ODscVPN3CzzoD3mQ/edit?tab=t.0#heading=h.scv1sbq5r6yj
+    # Handbook source = https://docs.google.com/document/d/1JoJa0oqDfW06vAQb3eBcAX37oG9p2g0hRO44vvCHv_Q/edit?tab=t.0
     # Scoring
-    scoring__score_min                         = Decimal('69')  # From Rules Book
-    scoring__score_max                         = Decimal('81')  # From Rules Book
+    scoring__score_min                         = Decimal('67')  # From Handbook 2.8.2
+    scoring__score_max                         = Decimal('83')  # From Handbook 2.8.2
     scoring__score_step                        = Decimal('1')
-    scoring__reply_score_min                   = Decimal('34.5')  # Not specified; assuming half of substantive
-    scoring__reply_score_max                   = Decimal('42.0')  # Not specified; assuming half of substantive
+    scoring__reply_score_min                   = Decimal('33.5')  # From Handbook 2.8.2
+    scoring__reply_score_max                   = Decimal('41.5')  # From Handbook 2.8.2
     scoring__reply_score_step                  = Decimal('0.5')
     scoring__maximum_margin                    = 0.0   # TODO= check this
     scoring__margin_includes_dissenters        = False  # From Rules 20.3.2
     # Draws
     draw_rules__avoid_same_institution         = False
     draw_rules__avoid_team_history             = True
-    draw_rules__draw_odd_bracket               = 'pullup_top'  # From Rules 20.10
-    draw_rules__draw_pullup_restriction        = 'least_to_date'  # From Rules 20.11
+    draw_rules__draw_odd_bracket               = 'intermediate_bubble_up_down'  # From Rules 20.6
     draw_rules__draw_side_allocations          = 'balance'
     draw_rules__draw_pairing_method            = 'slide'  # From rules 20.9
     draw_rules__draw_avoid_conflicts           = 'one_up_one_down'  # From rules 10.6.4
